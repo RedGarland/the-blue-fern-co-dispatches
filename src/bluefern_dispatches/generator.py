@@ -667,6 +667,14 @@ def write_text(path: Path, content: str, dry_run: bool, wrote: list[str]) -> Non
     path.write_text(content, encoding="utf-8")
 
 
+def write_bytes(path: Path, content: bytes, dry_run: bool, wrote: list[str]) -> None:
+    wrote.append(str(path))
+    if dry_run:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(content)
+
+
 def copy_asset(src: Path, dst: Path, dry_run: bool, wrote: list[str], warnings: list[str]) -> None:
     if not src.exists():
         warnings.append(f"Missing asset: {src}")
@@ -752,10 +760,20 @@ def page(
     body: str,
     site_name: str = "Dispatches From The Blue Fern Co.",
     *,
+    og_type: str = "website",
     description: str | None = None,
+    og_title: str | None = None,
     og_image: str | None = None,
+    og_image_width: int | None = None,
+    og_image_height: int | None = None,
     og_image_alt: str | None = None,
+    twitter_title: str | None = None,
 ) -> str:
+    title_meta = (
+        f'  <meta property="og:title" content="{html.escape(og_title or title)}">\n'
+        f'  <meta name="twitter:title" content="{html.escape(twitter_title or og_title or title)}">\n'
+    )
+    type_meta = f'  <meta property="og:type" content="{html.escape(og_type)}">\n'
     description_meta = ""
     if description:
         description_meta = (
@@ -766,6 +784,10 @@ def page(
     image_meta = ""
     if og_image:
         image_meta = f'  <meta property="og:image" content="{html.escape(og_image)}">\n  <meta name="twitter:image" content="{html.escape(og_image)}">\n'
+        if og_image_width:
+            image_meta += f'  <meta property="og:image:width" content="{og_image_width}">\n'
+        if og_image_height:
+            image_meta += f'  <meta property="og:image:height" content="{og_image_height}">\n'
         if og_image_alt:
             image_meta += f'  <meta property="og:image:alt" content="{html.escape(og_image_alt)}">\n  <meta name="twitter:image:alt" content="{html.escape(og_image_alt)}">\n'
     return f"""<!doctype html>
@@ -775,10 +797,10 @@ def page(
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{html.escape(title)}</title>
   <link rel="canonical" href="{html.escape(canonical)}">
-  <meta property="og:url" content="{html.escape(canonical)}">
-  <meta property="og:site_name" content="{html.escape(site_name)}">
+{type_meta}{title_meta}{description_meta}{image_meta}  <meta property="og:site_name" content="{html.escape(site_name)}">
   <meta name="twitter:card" content="summary_large_image">
-{description_meta}{image_meta}{favicon_links()}
+  <meta property="og:url" content="{html.escape(canonical)}">
+{favicon_links()}
   <link rel="stylesheet" href="{css_href}">
 </head>
 <body>
@@ -2453,12 +2475,20 @@ def build_site(
                     artifact_path = Path(str(artifact["path"]))
                     if not artifact_path.is_absolute():
                         artifact_path = root / artifact_path
-                    write_text(artifact_path, str(artifact["content"]), dry_run, wrote)
+                    content = artifact["content"]
+                    if isinstance(content, (bytes, bytearray)):
+                        write_bytes(artifact_path, bytes(content), dry_run, wrote)
+                    else:
+                        write_text(artifact_path, str(content), dry_run, wrote)
                 for artifact in care_line_signal_wire.get("site_artifacts") or []:
                     artifact_path = Path(str(artifact["path"]))
                     if not artifact_path.is_absolute():
                         artifact_path = root / artifact_path
-                    write_text(artifact_path, str(artifact["content"]), dry_run, wrote)
+                    content = artifact["content"]
+                    if isinstance(content, (bytes, bytearray)):
+                        write_bytes(artifact_path, bytes(content), dry_run, wrote)
+                    else:
+                        write_text(artifact_path, str(content), dry_run, wrote)
                 public_urls.extend(str(url) for url in care_line_signal_wire.get("public_urls") or [])
         except Exception as exc:
             errors.append(f"care-line signal wire generation failed: {exc}")

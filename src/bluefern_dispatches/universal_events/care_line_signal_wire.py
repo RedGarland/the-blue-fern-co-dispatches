@@ -2,11 +2,16 @@ from __future__ import annotations
 
 import html
 import json
+import subprocess
+import tempfile
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from hashlib import sha256
 from pathlib import Path
 from typing import Any
+from textwrap import wrap
+
+from bluefern_dispatches.care_line_social_cards import render_social_card_png_bytes, social_card_spec_for_event
 
 
 PHASE14E_DIR = Path("data") / "universal_events" / "shadow" / "care-line" / "phase14e-universal-events"
@@ -30,6 +35,8 @@ EXPECTED_EVENT_IDS = {
 SCHEMA_VERSION = "bluefern.care_line.phase14f.publication.v1"
 SHADOW_ARTIFACT_VERSION = "bluefern.care_line.phase14f.shadow.v1"
 BASE_URL = "https://dispatches.thebluefernco.com"
+SOCIAL_CARD_WIDTH = 1200
+SOCIAL_CARD_HEIGHT = 630
 
 
 @dataclass(frozen=True)
@@ -237,6 +244,93 @@ def _taxonomy_gap_note_for_event(event_type: str, public_label: str) -> str:
     return ""
 
 
+def _preview_lines(text: str, *, width: int, limit: int) -> list[str]:
+    cleaned = " ".join(str(text or "").split())
+    if not cleaned:
+        return []
+    lines: list[str] = []
+    for paragraph in cleaned.split(" | "):
+        lines.extend(wrap(paragraph, width=width) or [""])
+        if len(lines) >= limit:
+            break
+    return lines[:limit]
+
+
+def _event_social_card_svg(event: SignalWireEvent) -> str:
+    title_lines = _preview_lines(event.title, width=30, limit=2)
+    summary_lines = _preview_lines(event.public_summary, width=48, limit=3)
+    label = event.public_label.upper()
+    location = f"{event.facility_name} • {event.city}, {event.state}"
+    footer = "Reviewed source record • The Blue Fern Co."
+    lines: list[str] = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">',
+        "  <title>Care Line Signal Wire social card</title>",
+        f"  <desc>{html.escape(event.title)} from {html.escape(event.publisher)}</desc>",
+        '  <defs>',
+        '    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">',
+        '      <stop offset="0%" stop-color="#f7f0e7"/>',
+        '      <stop offset="100%" stop-color="#edf4fb"/>',
+        '    </linearGradient>',
+        '    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">',
+        '      <stop offset="0%" stop-color="#0d497a"/>',
+        '      <stop offset="100%" stop-color="#2f7bb8"/>',
+        '    </linearGradient>',
+        '  </defs>',
+        '  <rect width="1200" height="630" rx="36" fill="url(#bg)"/>',
+        '  <rect x="56" y="56" width="1088" height="518" rx="28" fill="#ffffff" fill-opacity="0.72" stroke="#d7e4ef"/>',
+        '  <rect x="56" y="56" width="1088" height="12" rx="6" fill="url(#accent)"/>',
+        '  <circle cx="1018" cy="120" r="70" fill="#dceaf6"/>',
+        '  <circle cx="1018" cy="120" r="42" fill="#0d497a"/>',
+        '  <path d="M1001 120h34M1018 103v34" stroke="#fff" stroke-width="10" stroke-linecap="round"/>',
+        '  <text x="96" y="128" fill="#0d497a" font-family="Georgia, Times New Roman, serif" font-size="26" font-weight="700" letter-spacing="4">THE BLUE FERN CO.</text>',
+        '  <text x="96" y="186" fill="#26485f" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" letter-spacing="2">CARE LINE SIGNAL WIRE</text>',
+        f'  <text x="96" y="240" fill="#0f2740" font-family="Georgia, Times New Roman, serif" font-size="58" font-weight="700">{html.escape(label)}</text>',
+    ]
+    y = 302
+    for line in title_lines:
+        lines.append(
+            f'  <text x="96" y="{y}" fill="#142433" font-family="Georgia, Times New Roman, serif" font-size="38" font-weight="700">{html.escape(line)}</text>'
+        )
+        y += 48
+    y += 12
+    for line in summary_lines:
+        lines.append(
+            f'  <text x="96" y="{y}" fill="#31485b" font-family="Arial, Helvetica, sans-serif" font-size="28">{html.escape(line)}</text>'
+        )
+        y += 38
+    lines.extend(
+        [
+            f'  <text x="96" y="518" fill="#4f6575" font-family="Arial, Helvetica, sans-serif" font-size="22">{html.escape(location)}</text>',
+            f'  <text x="96" y="560" fill="#4f6575" font-family="Arial, Helvetica, sans-serif" font-size="20">{html.escape(footer)}</text>',
+            "</svg>",
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
+def _social_card_asset(event: SignalWireEvent) -> dict[str, str]:
+    spec = social_card_spec_for_event(
+        event_id=event.event_id,
+        title=event.title,
+        facility_name=event.facility_name,
+        city=event.city,
+        state=event.state,
+        public_label=event.public_label,
+        effective_date=event.effective_date,
+    )
+    return {
+        "path": f"output/site/events/{event.event_id}/social-card.png",
+        "content": render_social_card_png_bytes(spec),
+        "url": spec["image_url"],
+        "alt": spec["alt_text"],
+        "headline": spec["headline"],
+        "location": spec["location"],
+        "category": spec["category"],
+        "date_line": spec["date_line"],
+    }
+
+
 def _utc_from_mtime(path: Path) -> str:
     stamp = datetime.fromtimestamp(path.stat().st_mtime, tz=timezone.utc)
     return stamp.isoformat().replace("+00:00", "Z")
@@ -348,32 +442,44 @@ def _event_from_record(
     )
 
 
-def _render_page(title: str, description: str, body: str, canonical: str) -> str:
-    return f"""<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{html.escape(title)}</title>
-  <meta name="description" content="{html.escape(description)}">
-  <link rel="canonical" href="{html.escape(canonical)}">
-  <link rel="stylesheet" href="/assets/site.css">
-</head>
-<body>
-  <header class="site-header">
+def _render_page(
+    title: str,
+    description: str,
+    body: str,
+    canonical: str,
+    *,
+    og_type: str = "website",
+    og_image: str | None = None,
+    og_image_alt: str | None = None,
+) -> str:
+    from bluefern_dispatches.generator import page
+
+    return page(
+        title,
+        canonical,
+        "/assets/site.css",
+        f'''  <header class="site-header">
     <a class="brand" href="/signals/">Care Line Signal Wire</a>
     <nav><a href="/signals/">Signals</a><a href="/care-line/">Care Line</a><a href="/">Home</a></nav>
   </header>
-{body}
-</body>
-</html>
-"""
+{body}''',
+        "The Blue Fern Co.",
+        og_type=og_type,
+        description=description,
+        og_title=title,
+        og_image=og_image,
+        og_image_width=SOCIAL_CARD_WIDTH if og_image else None,
+        og_image_height=SOCIAL_CARD_HEIGHT if og_image else None,
+        og_image_alt=og_image_alt,
+        twitter_title=title,
+    )
 
 
 def _render_event_page(event: SignalWireEvent) -> str:
     source_link = f'<a href="{html.escape(event.source_url)}" rel="noopener noreferrer" target="_blank">{html.escape(event.publisher)}</a>'
     evidence_block = html.escape(event.evidence_text)
     revision_status = f"        <li><strong>Revision status:</strong> {html.escape(event.revision_status)}</li>\\n" if event.revision_status else ""
+    social_card = _social_card_asset(event)
     body = f'''  <main class="briefing event-page">
     <p class="eyebrow">Care Line Signal Wire</p>
     <h1>{html.escape(event.title)}</h1>
@@ -407,7 +513,15 @@ def _render_event_page(event: SignalWireEvent) -> str:
       <p>This signal was published from a reviewed source record with preserved source lineage.</p>
     </section>
   </main>'''
-    return _render_page(event.title, f"Care Line Universal Event {event.event_id}", body, f"{BASE_URL}/events/{event.event_id}/")
+    return _render_page(
+        event.title,
+        event.public_summary,
+        body,
+        f"{BASE_URL}/events/{event.event_id}/",
+        og_type="article",
+        og_image=social_card["url"],
+        og_image_alt=social_card["alt"],
+    )
 
 
 def _render_index(events: list[SignalWireEvent]) -> str:
@@ -436,7 +550,12 @@ def _render_index(events: list[SignalWireEvent]) -> str:
       </ul>
     </section>
   </main>'''
-    return _render_page("Care Line Signal Wire", "Reverse-chronological verified Care Line universal events.", body, f"{BASE_URL}/signals/")
+    return _render_page(
+        "Care Line Signal Wire",
+        "Reverse-chronological verified Care Line universal events.",
+        body,
+        f"{BASE_URL}/signals/",
+    )
 
 
 def _render_feed(events: list[SignalWireEvent], *, title: str, link: str, description: str) -> str:
@@ -580,7 +699,8 @@ def build_care_line_signal_wire_publication(repo_root: Path, *, generated_at: st
         "candidate_ids": [event.candidate_id for event in events],
         "source_item_ids": [event.source_item_id for event in events],
         "source_urls": [event.source_url for event in events],
-        "public_urls": [f"{BASE_URL}/events/{event.event_id}/" for event in events],
+        "public_urls": [f"{BASE_URL}/events/{event.event_id}/" for event in events]
+        + [f"{BASE_URL}/events/{event.event_id}/social-card.png" for event in events],
         "signals_index_url": f"{BASE_URL}/signals/",
         "signals_feed_urls": [f"{BASE_URL}/signals/feed.xml", f"{BASE_URL}/care-line/signals/feed.xml"],
         "event_count": len(events),
@@ -722,6 +842,8 @@ Do not touch the Phase 14E reviewed records or the deferred evidence-review ledg
     ]
     site_artifacts = []
     for event in events:
+        social_card = _social_card_asset(event)
+        site_artifacts.append({"path": social_card["path"], "content": social_card["content"]})
         site_artifacts.append({"path": f"output/site/events/{event.event_id}/index.html", "content": _render_event_page(event)})
     index_html = _render_index(events)
     feed_html = _render_feed(

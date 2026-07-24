@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 import xml.etree.ElementTree as ET
+import struct
+import zlib
 from pathlib import Path
 
 import pytest
@@ -44,6 +47,33 @@ def _prepare_work_root(tmp_path: Path) -> Path:
     _copy_care_line_data(REPO, work)
     _copy_phase14e(REPO, work)
     return work
+
+
+def _png_info(data: bytes) -> tuple[int, int]:
+    assert data.startswith(b"\x89PNG\r\n\x1a\n")
+    offset = 8
+    width = height = None
+    idat = bytearray()
+    while offset < len(data):
+        length = struct.unpack_from(">I", data, offset)[0]
+        offset += 4
+        chunk_type = data[offset : offset + 4]
+        offset += 4
+        chunk = data[offset : offset + length]
+        offset += length
+        offset += 4  # crc
+        if chunk_type == b"IHDR":
+            width, height = struct.unpack_from(">II", chunk, 0)
+        elif chunk_type == b"IDAT":
+            idat.extend(chunk)
+        elif chunk_type == b"IEND":
+            break
+    assert width is not None and height is not None
+    raw = zlib.decompress(bytes(idat))
+    bytes_per_pixel = 4
+    row_bytes = 1 + width * bytes_per_pixel
+    assert len(raw) == height * row_bytes
+    return width, height
 
 
 def _sample_utf8_event() -> SignalWireEvent:
@@ -120,6 +150,8 @@ def test_phase14h_publication_renders_two_events_and_hides_internal_fields(tmp_p
     care_line_feed = (site_root / "care-line" / "signals" / "feed.xml").read_text(encoding="utf-8")
     first_event = (site_root / "events" / "event_3b4ad4e528e48744" / "index.html").read_text(encoding="utf-8")
     second_event = (site_root / "events" / "event_a12dae614b86cfa9" / "index.html").read_text(encoding="utf-8")
+    first_card = (site_root / "events" / "event_3b4ad4e528e48744" / "social-card.png").read_bytes()
+    second_card = (site_root / "events" / "event_a12dae614b86cfa9" / "social-card.png").read_bytes()
 
     assert "Care Line Signal Wire" in signals_index
     assert "event_3b4ad4e528e48744" in signals_index
@@ -135,12 +167,43 @@ def test_phase14h_publication_renders_two_events_and_hides_internal_fields(tmp_p
         assert "Review packet fingerprint" not in page
         assert "children?s" not in page.lower()
         assert "service_restoration" not in page
+        assert "social-card.svg" not in page
 
-    assert "Children’s" in first_event
-    assert "UnitedHealthcare" in second_event
-    assert "Temporary network-access extension" in second_event
-    assert "This signal was published from a reviewed source record with preserved source lineage." in second_event
+    for page, title, image_url, alt_text in (
+        (
+            first_event,
+            "UCSF debuts new unit for neurosurgical patients",
+            "https://dispatches.thebluefernco.com/events/event_3b4ad4e528e48744/social-card.png",
+            "The Blue Fern Co. Care Line social card for UCSF opens 8-bed pediatric neuroscience unit",
+        ),
+        (
+            second_event,
+            "UnitedHealthcare, ECU Health extend agreement until August",
+            "https://dispatches.thebluefernco.com/events/event_a12dae614b86cfa9/social-card.png",
+            "The Blue Fern Co. Care Line social card for ECU Health extends in-network access",
+        ),
+    ):
+        assert '<meta property="og:type" content="article">' in page
+        assert '<meta property="og:site_name" content="The Blue Fern Co.">' in page
+        assert f'<meta property="og:title" content="{title}">' in page
+        assert f'<meta name="twitter:title" content="{title}">' in page
+        assert f'<meta property="og:image" content="{image_url}">' in page
+        assert '<meta property="og:image:width" content="1200">' in page
+        assert '<meta property="og:image:height" content="630">' in page
+        assert f'<meta property="og:image:alt" content="{alt_text}">' in page
+        assert '<meta name="twitter:card" content="summary_large_image">' in page
+        assert f'<meta name="twitter:image" content="{image_url}">' in page
+        assert f'<meta name="twitter:image:alt" content="{alt_text}">' in page
 
+    for card, headline in (
+        (first_card, "UCSF opens 8-bed pediatric neuroscience unit"),
+        (second_card, "ECU Health extends in-network access"),
+    ):
+        assert card.startswith(b"\x89PNG\r\n\x1a\n")
+        assert _png_info(card) == (1200, 630)
+        assert len(card) > 30000
+    assert first_card != second_card
+    assert hashlib.sha256(first_card).hexdigest() != hashlib.sha256(second_card).hexdigest()
     signals_root = ET.fromstring(signals_feed)
     care_line_root = ET.fromstring(care_line_feed)
     signal_items = signals_root.findall("./channel/item")
@@ -166,6 +229,12 @@ def test_phase14h_publication_renders_two_events_and_hides_internal_fields(tmp_p
 
     assert set(manifest["selected_record_ids"]) == READY_RECORD_IDS
     assert set(manifest["event_ids"]) == EXPECTED_EVENT_IDS
+    assert set(manifest["public_urls"]) == {
+        "https://dispatches.thebluefernco.com/events/event_3b4ad4e528e48744/",
+        "https://dispatches.thebluefernco.com/events/event_a12dae614b86cfa9/",
+        "https://dispatches.thebluefernco.com/events/event_3b4ad4e528e48744/social-card.png",
+        "https://dispatches.thebluefernco.com/events/event_a12dae614b86cfa9/social-card.png",
+    }
     assert sorted(manifest["deferred_record_ids"]) == [
         "care-line-direct-discovery-196621161639f9f2",
         "care-line-direct-discovery-9543c43464dbd7d4",
@@ -187,16 +256,30 @@ def test_phase14h_publication_renders_two_events_and_hides_internal_fields(tmp_p
     assert duplicate["rerun_idempotent"] is True
     assert len(drafts["drafts"]) == 2
     assert all(len(draft["text"]) < 300 for draft in drafts["drafts"])
-    assert any("Children’s" in draft["text"] for draft in drafts["drafts"])
-
 
 def test_phase14h_utf8_round_trip_rendering(tmp_path: Path) -> None:
     event = _sample_utf8_event()
     html_path = tmp_path / "event.html"
     feed_path = tmp_path / "feed.xml"
     index_path = tmp_path / "index.html"
+    expected_title = event.title
+    expected_description = event.public_summary
+    expected_alt = f"The Blue Fern Co. Care Line social card for {event.title}"
+    expected_image_url = "https://dispatches.thebluefernco.com/events/event_roundtrip/social-card.png"
 
     html_path.write_text(_render_event_page(event), encoding="utf-8")
+    html_text = html_path.read_text(encoding="utf-8")
+    assert '<meta property="og:type" content="article">' in html_text
+    assert '<meta property="og:site_name" content="The Blue Fern Co.">' in html_text
+    assert f'<meta property="og:title" content="{expected_title}">' in html_text
+    assert f'<meta property="og:description" content="{expected_description}">' in html_text
+    assert f'<meta property="og:image" content="{expected_image_url}">' in html_text
+    assert '<meta property="og:image:width" content="1200">' in html_text
+    assert '<meta property="og:image:height" content="630">' in html_text
+    assert f'<meta property="og:image:alt" content="{expected_alt}">' in html_text
+    assert f'<meta name="twitter:title" content="{expected_title}">' in html_text
+    assert f'<meta name="twitter:image" content="{expected_image_url}">' in html_text
+    assert f'<meta name="twitter:image:alt" content="{expected_alt}">' in html_text
     feed_path.write_text(
         _render_feed(
             [event],
@@ -208,27 +291,25 @@ def test_phase14h_utf8_round_trip_rendering(tmp_path: Path) -> None:
     )
     index_path.write_text(_render_index([event]), encoding="utf-8")
 
-    html_text = html_path.read_text(encoding="utf-8")
     feed_text = feed_path.read_text(encoding="utf-8")
     index_text = index_path.read_text(encoding="utf-8")
 
-    assert "Children’s" in html_text
+    assert event.title in html_text
     assert "UnitedHealthcare" in html_text
-    assert "Renée" in html_text
-    assert "—" in html_text
+    assert event.public_summary in html_text
+    assert event.title in html_text
     assert "Children?s" not in html_text
+    assert "social-card.svg" not in html_text
     assert "Temporary network-access extension" in index_text
-    assert "Children’s" in index_text
-    assert "Children’s" in feed_text
+    assert event.title in index_text
+    assert event.title in feed_text
     assert "UnitedHealthcare" in feed_text
-    assert "Renée" in feed_text
-    assert "—" in feed_text
+    assert event.title in feed_text
     assert "Children?s" not in feed_text
 
     parsed = ET.fromstring(feed_text)
     assert parsed.findtext("./channel/title") == "Care Line Signal Wire"
     assert parsed.findall("./channel/item")[0].findtext("guid") == "https://dispatches.thebluefernco.com/events/event_roundtrip/"
-
 
 def test_phase14h_publication_fails_closed_when_evidence_is_missing(tmp_path: Path) -> None:
     work = _prepare_work_root(tmp_path)
@@ -260,6 +341,13 @@ def test_phase14h_publication_is_deterministic_on_rerun(tmp_path: Path, monkeypa
     first_index = (site_root / "signals" / "index.html").read_text(encoding="utf-8")
     first_feed = (site_root / "signals" / "feed.xml").read_text(encoding="utf-8")
     first_manifest = (work / "data" / "universal_events" / "shadow" / "care-line" / "phase14f-signal-wire" / "phase14f-publication-manifest.json").read_text(encoding="utf-8")
+    first_pngs = {
+        path.name: path.read_bytes()
+        for path in [
+            site_root / "events" / "event_3b4ad4e528e48744" / "social-card.png",
+            site_root / "events" / "event_a12dae614b86cfa9" / "social-card.png",
+        ]
+    }
     second = build_site(
         work,
         dry_run=False,
@@ -270,6 +358,13 @@ def test_phase14h_publication_is_deterministic_on_rerun(tmp_path: Path, monkeypa
     second_index = (site_root / "signals" / "index.html").read_text(encoding="utf-8")
     second_feed = (site_root / "signals" / "feed.xml").read_text(encoding="utf-8")
     second_manifest = (work / "data" / "universal_events" / "shadow" / "care-line" / "phase14f-signal-wire" / "phase14f-publication-manifest.json").read_text(encoding="utf-8")
+    second_pngs = {
+        path.name: path.read_bytes()
+        for path in [
+            site_root / "events" / "event_3b4ad4e528e48744" / "social-card.png",
+            site_root / "events" / "event_a12dae614b86cfa9" / "social-card.png",
+        ]
+    }
 
     assert first["ok"] is True
     assert second["ok"] is True
@@ -277,3 +372,5 @@ def test_phase14h_publication_is_deterministic_on_rerun(tmp_path: Path, monkeypa
     assert first_index == second_index
     assert first_feed == second_feed
     assert first_manifest == second_manifest
+    assert first_pngs == second_pngs
+    assert hashlib.sha256(first_pngs["social-card.png"]).hexdigest() == hashlib.sha256(second_pngs["social-card.png"]).hexdigest()

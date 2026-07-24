@@ -2440,8 +2440,8 @@ def build_site(
             if dispatch.edition_date not in edition_dates and public_edition_is_listable(site_root, dispatch.slug, dispatch.edition_date):
                 if not max_public_date or dispatch.edition_date <= max_public_date:
                     edition_dates = sorted([*edition_dates, dispatch.edition_date], reverse=True)
-                if dispatch.slug == "american-pressure" and edition_dates:
-                    _refresh_american_pressure_map_route(site_root, edition_dates[0], dry_run, wrote)
+            if dispatch.slug == "american-pressure" and edition_dates:
+                _refresh_american_pressure_map_route(site_root, edition_dates[0], dry_run, wrote)
             write_text(dispatch_public_root / "index.html", render_dispatch_index_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
             write_text(dispatch_public_root / "archive.html", render_archive_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
             write_text(dispatch_public_root / "rss.xml", render_rss_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)

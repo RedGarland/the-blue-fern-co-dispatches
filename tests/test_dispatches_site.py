@@ -169,14 +169,20 @@ def test_landing_page_links_and_blue_fern_scheme(built_site):
     assert index.exists()
     html = read(index)
     nav = html.split("<nav>", 1)[1].split("</nav>", 1)[0]
-    assert nav == '<a href="/gaza/">Gaza</a><a href="/food-line/">Food Line Dispatch</a>'
+    assert nav == (
+        '<a href="/gaza/">Gaza</a>'
+        '<a href="/american-pressure/">American Pressure</a>'
+        '<a href="/food-line/">Food Line Dispatch</a>'
+    )
     assert 'href="/gaza/"' in nav
+    assert 'href="/american-pressure/"' in nav
     assert 'href="/food-line/"' in nav
     assert 'href="/cascadia/"' not in nav
     assert 'href="/care-line/"' not in nav
-    assert html.count('class="dispatch-card"') == 2
-    assert 'href="/american-pressure/"' not in html
+    assert html.count('class="dispatch-card"') == 3
+    assert 'href="/american-pressure/"' in html
     assert "Dispatches From Gaza" in html
+    assert "The American Pressure Dispatch" in html
     assert "Food Line Dispatch" in html
     card_grid = html.split('<ul class="dispatch-grid">', 1)[1].split("</ul>", 1)[0]
     assert "The Care Line Dispatch" not in card_grid
@@ -314,20 +320,22 @@ def test_landing_page_uses_scalable_card_grid_and_copies_masthead(built_site):
     assert (work / "output" / "site" / "food-line" / "assets" / "food-line-logo.png").exists()
 
 
-def test_homepage_only_lists_gaza_and_food_line_cards(built_site):
+def test_homepage_lists_public_dispatch_cards(built_site):
     work, _, _ = built_site
     index = read(work / "output" / "site" / "index.html")
     nav = index.split("<nav>", 1)[1].split("</nav>", 1)[0]
     card_grid = index.split('<ul class="dispatch-grid">', 1)[1].split("</ul>", 1)[0]
     cards = re.findall(r'<li class="dispatch-card".*?<a href="([^"]+)">.*?<strong>([^<]+)</strong>', card_grid, re.DOTALL)
 
-    assert nav.count("<a ") == 2
+    assert nav.count("<a ") == 3
     assert 'href="/gaza/">Gaza</a>' in nav
+    assert 'href="/american-pressure/">American Pressure</a>' in nav
     assert 'href="/food-line/">Food Line Dispatch</a>' in nav
     assert 'href="/care-line/"' not in nav
     assert 'href="/cascadia/"' not in nav
     assert cards == [
         ("/gaza/", "Dispatches From Gaza"),
+        ("/american-pressure/", "The American Pressure Dispatch"),
         ("/food-line/", "Food Line Dispatch"),
     ]
     assert 'href="/care-line/"' not in card_grid
@@ -2366,7 +2374,7 @@ def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch):
     root_index = (work / "output" / "site" / "index.html").read_text(encoding="utf-8")
     assert "Dispatches From Gaza" in root_index
     assert "Food Line Dispatch" in root_index
-    assert "The American Pressure Dispatch" not in root_index
+    assert "The American Pressure Dispatch" in root_index
 
 
 def test_targeted_ap_publish_refreshes_map_date_label_and_payload(built_site):

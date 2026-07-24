@@ -1,0 +1,135 @@
+[
+  {
+    "story_id": "gaza-story-2026-07-24-002",
+    "title": "Four Palestinians killed as Israeli settlers raid occupied West Bank town",
+    "summary": "One Israeli was also killed near town of Tal in Nablus, according to Israel's Magen David Adom rescue services.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 80,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-24-aljazeera-middle-east-29a15e2db915"
+    ],
+    "source_ids": [
+      "gaza-2026-07-24-aljazeera-middle-east-29a15e2db915"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/7/24/four-palestinians-killed-as-israeli-settlers-raid-occupied-west-bank-town?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-24-aljazeera-middle-east-29a15e2db915",
+        "title": "Four Palestinians killed as Israeli settlers raid occupied West Bank town",
+        "url": "https://www.aljazeera.com/news/2026/7/24/four-palestinians-killed-as-israeli-settlers-raid-occupied-west-bank-town?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "One Israeli was also killed near town of Tal in Nablus, according to Israel's Magen David Adom rescue services."
+      }
+    ],
+    "generated_at": "2026-07-24T13:00:45.356381+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 80,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-31-008",
+    "prior_edition_date": "2026-05-31",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-24-001",
+    "title": "Four Palestinians and one Israeli killed in West Bank shooting",
+    "summary": "Palestinians say villagers came under attack by settlers, while the Israeli military says a Palestinian stole a weapon and opened fire on hikers.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 65,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-24-bbc-middle-east-c6c6046fd5d6"
+    ],
+    "source_ids": [
+      "gaza-2026-07-24-bbc-middle-east-c6c6046fd5d6"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/cx2rxmye4k3o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-24-bbc-middle-east-c6c6046fd5d6",
+        "title": "Four Palestinians and one Israeli killed in West Bank shooting",
+        "url": "https://www.bbc.co.uk/news/articles/cx2rxmye4k3o?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Palestinians say villagers came under attack by settlers, while the Israeli military says a Palestinian stole a weapon and opened fire on hikers."
+      }
+    ],
+    "generated_at": "2026-07-24T13:00:45.356381+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 65,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  }
+]

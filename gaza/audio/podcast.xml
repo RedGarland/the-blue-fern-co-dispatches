@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Fri, 24 Jul 2026 13:00:54 +0000</lastBuildDate>
+  <lastBuildDate>Sat, 25 Jul 2026 13:01:24 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for July 25, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-25-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-07-25-transcript.html</guid>
+    <pubDate>Sat, 25 Jul 2026 00:00:00 +0000</pubDate>
+    <description>Funerals held for four Palestinians killed in deadly West Bank shooting. Overnight funerals were held for four Palestinians killed near Nablus. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-07-25.mp3" length="1487232" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for July 24, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-24-transcript.html</link>

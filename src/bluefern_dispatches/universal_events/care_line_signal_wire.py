@@ -483,7 +483,7 @@ def _resolve_publication_state(
     return updated_events, {"schema_version": PUBLICATION_STATE_SCHEMA_VERSION, "events": state_events}
 
 
-def _find_latest_reviewed_records_path(repo_root: Path) -> Path | None:
+def _find_latest_reviewed_records_path(repo_root: Path, *, require_ready: bool = True) -> Path | None:
     base = repo_root / "data" / "dispatches" / "care-line" / "reviewed"
     if not base.exists():
         return None
@@ -494,7 +494,7 @@ def _find_latest_reviewed_records_path(repo_root: Path) -> Path | None:
         except Exception:
             continue
         record_ids = {_text(row, "producer_record_id", "care_line_record_id", "source_record_id") for row in rows}
-        if READY_RECORD_IDS.issubset(record_ids):
+        if not require_ready or READY_RECORD_IDS.issubset(record_ids):
             return path
     return None
 
@@ -740,9 +740,14 @@ def _normalized_event_payload(event: SignalWireEvent) -> dict[str, Any]:
     return payload
 
 
-def build_care_line_signal_wire_publication(repo_root: Path, *, generated_at: str | None = None) -> dict[str, Any]:
+def build_care_line_signal_wire_publication(
+    repo_root: Path,
+    *,
+    generated_at: str | None = None,
+    selected_event_ids: set[str] | None = None,
+) -> dict[str, Any]:
     repo_root = Path(repo_root)
-    reviewed_records_path = _find_latest_reviewed_records_path(repo_root)
+    reviewed_records_path = _find_latest_reviewed_records_path(repo_root, require_ready=selected_event_ids is None)
     phase14e_paths = _find_phase14e_paths(repo_root)
     if reviewed_records_path is None or phase14e_paths is None:
         return {
@@ -782,7 +787,17 @@ def build_care_line_signal_wire_publication(repo_root: Path, *, generated_at: st
         if _text(row, "care_line_record_id", "producer_record_id")
     }
 
-    selected_record_ids = [record_id for record_id in sorted(READY_RECORD_IDS) if record_id in reviewed_by_id]
+    proposed_event_by_record_id = {
+        record_id: _text(row.get("proposed_event_payload") or {}, "event_id")
+        for record_id, row in proposed_by_record_id.items()
+    }
+    if selected_event_ids is None:
+        selected_record_ids = [record_id for record_id in sorted(READY_RECORD_IDS) if record_id in reviewed_by_id]
+    else:
+        selected_record_ids = sorted(
+            record_id for record_id, event_id in proposed_event_by_record_id.items()
+            if event_id in selected_event_ids and record_id in reviewed_by_id
+        )
     deferred_record_ids = sorted(
         record_id
         for record_id, row in reviewed_by_id.items()
@@ -793,10 +808,10 @@ def build_care_line_signal_wire_publication(repo_root: Path, *, generated_at: st
         for record_id, row in reviewed_by_id.items()
         if _text(row, "universal_event_status", "evidence_review_current_status", "record_status") in {"excluded", "rejected"}
     )
-    missing_ready = sorted(READY_RECORD_IDS - set(selected_record_ids))
+    missing_ready = sorted(READY_RECORD_IDS - set(selected_record_ids)) if selected_event_ids is None else []
     if missing_ready:
         raise ValueError(f"missing universal-event-ready reviewed records: {', '.join(missing_ready)}")
-    unexpected_ready = sorted(record_id for record_id, row in reviewed_by_id.items() if _is_universal_event_ready(row) and record_id not in READY_RECORD_IDS)
+    unexpected_ready = [] if selected_event_ids is not None else sorted(record_id for record_id, row in reviewed_by_id.items() if _is_universal_event_ready(row) and record_id not in READY_RECORD_IDS)
     if unexpected_ready:
         raise ValueError(f"unexpected universal-event-ready reviewed records: {', '.join(unexpected_ready)}")
 
@@ -823,8 +838,10 @@ def build_care_line_signal_wire_publication(repo_root: Path, *, generated_at: st
             public_published_at=public_published_at,
             system_discovered_at=system_discovered_at,
         )
-        if event.event_id not in EXPECTED_EVENT_IDS:
+        if selected_event_ids is None and event.event_id not in EXPECTED_EVENT_IDS:
             raise ValueError(f"unexpected Care Line event id: {event.event_id}")
+        if selected_event_ids is not None and event.event_id not in selected_event_ids:
+            raise ValueError(f"selected release set contains an unexpected event id: {event.event_id}")
         provisional_events.append(event)
 
     provisional_events = sorted(provisional_events, key=lambda event: (event.announcement_date, event.event_id), reverse=True)
@@ -840,7 +857,7 @@ def build_care_line_signal_wire_publication(repo_root: Path, *, generated_at: st
     publication_last_updated_at = max((event.last_updated_at for event in events), default=publication_public_published_at)
     if len({payload["event_id"] for payload in event_payloads}) != len(event_payloads):
         raise ValueError("duplicate event ids detected in Care Line Signal Wire publication")
-    if {payload["event_id"] for payload in event_payloads} != EXPECTED_EVENT_IDS:
+    if selected_event_ids is None and {payload["event_id"] for payload in event_payloads} != EXPECTED_EVENT_IDS:
         raise ValueError("Care Line Signal Wire publication does not contain the two approved event ids")
 
     manifest = {

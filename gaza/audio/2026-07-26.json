@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-07-26",
+  "generated_at": "2026-07-26T13:00:57.512126Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-07-26.mp3",
+  "audio_url": "/gaza/audio/2026-07-26.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1421,
+  "tts_input_word_count": 221,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1505664,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-07-26T13:00:57.512090Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-07-26-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-07-26/",
+  "script_text": "This is the Gaza Dispatch audio briefing for July 26, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Four Palestinians and two Israelis killed in West Bank shooting. Palestinians say villagers came under attack by settlers, while the Israeli military says a Palestinian stole a weapon and opened fire on hikers. This was reported by BBC News.\n\n2. House of Hope: New film follows a Waldorf-inspired school in the West Bank. Documentary follows children under occupation and the couple who run a holistic primary school as. This was reported by Al Jazeera.\n\n3. Becoming the story: Injured journalists battle to leave Gaza for treatment. Gaza journalists injured or battling illness during the war are demanding urgent medical evacuation abroad. This was reported by Al Jazeera.\n\n4. 'No accountability for settler war crimes against Palestinians'. This was reported by Al Jazeera.\n\n5. Israeli settlers set fire to mosque in occupied West Bank. Israeli settlers set fire to Al-Rahma Mosque in Qusra, near Nablus, as Israeli forces arrested dozens of Palestinians. This was reported by Al Jazeera.\n\n6. Israeli protesters denounce deadly settler violence. Dozens of Israeli activists protested in Tel Aviv against settler violence in the occupied West Bank. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the July 26, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-07-26-bbc-middle-east-afdad08637d8",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/cx2rxmye4k3o?at_medium=RSS&at_campaign=rss",
+      "title": "Four Palestinians and two Israelis killed in West Bank shooting"
+    },
+    {
+      "source_record_id": "gaza-2026-07-26-aljazeera-middle-east-0aff20f07052",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/7/26/house-of-hope-new-film-follows-a-waldorf-inspired-school-in-the-west-bank?traffic_source=rss",
+      "title": "House of Hope: New film follows a Waldorf-inspired school in the West Bank"
+    },
+    {
+      "source_record_id": "gaza-2026-07-26-aljazeera-middle-east-03e7b8b82a08",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/features/2026/7/26/becoming-the-story-injured-journalists-battle-to-leave-gaza-for-treatment?traffic_source=rss",
+      "title": "Becoming the story: Injured journalists battle to leave Gaza for treatment"
+    },
+    {
+      "source_record_id": "gaza-2026-07-26-aljazeera-middle-east-bfc7b1796bd1",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/7/26/no-accountability-for-settler-war-crimes-against?traffic_source=rss",
+      "title": "'No accountability for settler war crimes against Palestinians'"
+    },
+    {
+      "source_record_id": "gaza-2026-07-26-aljazeera-middle-east-94a6ab840168",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/7/26/israeli-settlers-set-fire-to-mosque-in-occupied-west-bank?traffic_source=rss",
+      "title": "Israeli settlers set fire to mosque in occupied West Bank"
+    },
+    {
+      "source_record_id": "gaza-2026-07-26-aljazeera-middle-east-01b701c0b0e1",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/7/26/israeli-protesters-denounce-deadly-settler-violence?traffic_source=rss",
+      "title": "Israeli protesters denounce deadly settler violence"
+    }
+  ]
+}

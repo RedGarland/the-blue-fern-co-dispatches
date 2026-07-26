@@ -302,7 +302,15 @@ def _normalize_care_line_fixture_rows(
     return valid_rows
 
 
-def _build_care_line_dispatch(root: Path, now: str, edition_date: str, warnings: list[str], errors: list[str]) -> DispatchConfig:
+def _build_care_line_dispatch(
+    root: Path,
+    now: str,
+    edition_date: str,
+    warnings: list[str],
+    errors: list[str],
+    *,
+    publication_scope: dict[str, Any] | None = None,
+) -> DispatchConfig:
     data_root = root / "data" / "dispatches" / "care-line"
     registry_file = data_root / "pressure_source_registry.json"
     direct_fixture = data_root / "sources" / edition_date / "manual_sources.json"
@@ -332,7 +340,13 @@ def _build_care_line_dispatch(root: Path, now: str, edition_date: str, warnings:
         registry = []
     raw_payload, fixture_path = _care_line_fixtures(root, edition_date)
     rows = _normalize_care_line_fixture_rows(raw_payload, fixture_path, warnings, errors)
-    errors.extend(validate_care_line_manual_sources(rows))
+    # A guarded Signal Wire publication is selected from reviewed records and
+    # Universal Events.  The legacy discovery fixture is retained for
+    # traceability/artifact rendering, but its older schema must not become a
+    # blocking validator for an explicitly selected Signal Wire slice.
+    scoped_signal_wire = bool(publication_scope and publication_scope.get("selected_dispatches") == [CARE_LINE_DISPATCH_SLUG])
+    if not scoped_signal_wire:
+        errors.extend(validate_care_line_manual_sources(rows))
     if not rows:
         warnings.append("care-line has no fixture records; rendering a no-current-update edition")
     if fixture_path is None:
@@ -554,6 +568,7 @@ def seed_dispatches(
     warnings: list[str],
     errors: list[str],
     dispatch_seed_dates: dict[str, str] | None = None,
+    publication_scope: dict[str, Any] | None = None,
 ) -> list[DispatchConfig]:
     # Use explicit seed edition date if provided via env, otherwise default
     # to the current run date (the 'now' param is an ISO timestamp).
@@ -587,7 +602,14 @@ def seed_dispatches(
             detail_artifacts=[],
         ),
         _build_american_pressure_dispatch(root, now, ap_date, warnings, errors),
-        _build_care_line_dispatch(root, now, care_line_date, warnings, errors),
+        _build_care_line_dispatch(
+            root,
+            now,
+            care_line_date,
+            warnings,
+            errors,
+            publication_scope=publication_scope,
+        ),
         DispatchConfig(
             slug="cascadia",
             name="The Cascadia Briefing",
@@ -2277,7 +2299,52 @@ def build_site(
     generated_at = datetime.now(timezone.utc).isoformat()
     warnings: list[str] = []
     errors: list[str] = []
-    all_dispatches = seed_dispatches(root, generated_at, warnings, errors, dispatch_seed_dates=dispatch_seed_dates)
+    publication_scope: dict[str, Any] = {
+        "selected_dispatches": list(only_dispatches),
+        "selected_event_ids": [],
+        "selected_source_record_ids": [],
+        "generated_output_paths": [],
+        "publication_state_paths": [],
+        "approved_social_card_overrides": [],
+        "excluded_records": [],
+        "exclusion_reasons": {},
+    }
+    care_line_signal_wire: dict[str, Any] | None = None
+    if tuple(only_dispatches) == (CARE_LINE_DISPATCH_SLUG,):
+        try:
+            care_line_signal_wire = build_care_line_signal_wire_publication(root, generated_at=generated_at)
+            if not care_line_signal_wire.get("skipped"):
+                manifest = care_line_signal_wire.get("publication_manifest") or {}
+                publication_scope["selected_event_ids"] = list(manifest.get("event_ids") or [])
+                publication_scope["selected_source_record_ids"] = list(manifest.get("selected_record_ids") or [])
+                deferred = list(manifest.get("deferred_record_ids") or [])
+                closed = list(manifest.get("closed_record_ids") or [])
+                publication_scope["excluded_records"] = deferred + closed
+                publication_scope["exclusion_reasons"] = {
+                    **{record_id: "deferred or awaiting evidence review" for record_id in deferred},
+                    **{record_id: "rejected or closed from public release" for record_id in closed},
+                }
+                publication_scope["approved_social_card_overrides"] = sorted(
+                    str(event.get("event_id"))
+                    for event in (care_line_signal_wire.get("events") or [])
+                    if isinstance(event, dict) and event.get("event_id")
+                )
+                publication_scope["timestamp_decisions"] = {
+                    "public_published_at": manifest.get("public_published_at"),
+                    "last_updated_at": manifest.get("last_updated_at"),
+                    "content_hash_fields": list(manifest.get("public_content_hash_fields") or []),
+                }
+        except Exception as exc:
+            errors.append(f"care-line signal wire generation failed: {exc}")
+            care_line_signal_wire = {"ok": False, "skipped": False, "errors": [str(exc)]}
+    all_dispatches = seed_dispatches(
+        root,
+        generated_at,
+        warnings,
+        errors,
+        dispatch_seed_dates=dispatch_seed_dates,
+        publication_scope=publication_scope,
+    )
     dispatches = all_dispatches
     if only_dispatches:
         dispatches = [dispatch for dispatch in all_dispatches if dispatch.slug in only_dispatches]
@@ -2469,8 +2536,28 @@ def build_site(
             write_text(dispatch_public_root / "rss.xml", render_rss_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
     if not only_dispatches or CARE_LINE_DISPATCH_SLUG in only_dispatches:
         try:
-            care_line_signal_wire = build_care_line_signal_wire_publication(root, generated_at=generated_at)
+            if care_line_signal_wire is None:
+                care_line_signal_wire = build_care_line_signal_wire_publication(root, generated_at=generated_at)
             if care_line_signal_wire.get("ok") and not care_line_signal_wire.get("skipped"):
+                publication_scope["generated_output_paths"] = sorted(
+                    str(artifact.get("path"))
+                    for artifact in care_line_signal_wire.get("site_artifacts") or []
+                    if isinstance(artifact, dict) and artifact.get("path")
+                )
+                publication_scope["publication_state_paths"] = sorted(
+                    str(artifact.get("path"))
+                    for artifact in care_line_signal_wire.get("publication_state_artifacts") or []
+                    if isinstance(artifact, dict) and artifact.get("path")
+                )
+                for artifact in care_line_signal_wire.get("publication_state_artifacts") or []:
+                    artifact_path = Path(str(artifact["path"]))
+                    if not artifact_path.is_absolute():
+                        artifact_path = root / artifact_path
+                    content = artifact["content"]
+                    if isinstance(content, (bytes, bytearray)):
+                        write_bytes(artifact_path, bytes(content), dry_run, wrote)
+                    else:
+                        write_text(artifact_path, str(content), dry_run, wrote)
                 for artifact in care_line_signal_wire.get("shadow_artifacts") or []:
                     artifact_path = Path(str(artifact["path"]))
                     if not artifact_path.is_absolute():
@@ -2509,6 +2596,7 @@ def build_site(
         "gaza_archive_entries_written": gaza_reconcile.get("archive_entries", []),
         "warnings": warnings,
         "errors": errors,
+        "publication_scope": publication_scope,
         "paid_detail_excluded_from_public": True,
     }
 
@@ -2723,12 +2811,36 @@ def copy_public_site_to_pages(
         skip_diagnostics=skip_diagnostics,
     ):
         target = pages_repo / source.relative_to(site_root)
+        relative = source.relative_to(site_root).as_posix()
+        if tuple(only_dispatches) == (CARE_LINE_DISPATCH_SLUG,):
+            in_signal_scope = relative in {"signals/feed.xml", "care-line/signals/feed.xml"} or relative.startswith("events/")
+            if not in_signal_scope:
+                skipped.append(f"out-of-scope Care Line artifact: {target}")
+                continue
+        if (
+            tuple(only_dispatches) == (CARE_LINE_DISPATCH_SLUG,)
+            and target.exists()
+            and (relative.startswith("events/") or relative.startswith("signals/") or relative.startswith("care-line/signals/"))
+            and source.suffix.lower() in {".html", ".xml", ".json", ".txt", ".css"}
+            and source.read_text(encoding="utf-8") .replace("\r\n", "\n")
+            == target.read_text(encoding="utf-8", errors="replace").replace("\r\n", "\n")
+        ):
+            skipped.append(f"unchanged Care Line public artifact: {target}")
+            continue
+        if (
+            tuple(only_dispatches) == (CARE_LINE_DISPATCH_SLUG,)
+            and target.exists()
+            and source.suffix.lower() not in {".html", ".xml", ".json", ".txt", ".css"}
+            and source.read_bytes() == target.read_bytes()
+        ):
+            skipped.append(f"unchanged Care Line binary artifact: {target}")
+            continue
         copied.append(str(target))
         if dry_run:
             continue
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, target)
-    if not gaza_only_publish:
+    if not gaza_only_publish and tuple(only_dispatches) != (CARE_LINE_DISPATCH_SLUG,):
         cname = pages_repo / "CNAME"
         copied.append(str(cname))
         if not dry_run:

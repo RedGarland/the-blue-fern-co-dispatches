@@ -4,18 +4,20 @@ import html
 import json
 import subprocess
 import tempfile
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timezone
 from hashlib import sha256
 from pathlib import Path
 from typing import Any
 from textwrap import wrap
+import struct
 
 from bluefern_dispatches.care_line_social_cards import render_social_card_png_bytes, social_card_spec_for_event
 
 
 PHASE14E_DIR = Path("data") / "universal_events" / "shadow" / "care-line" / "phase14e-universal-events"
 PHASE14F_DIR = Path("data") / "universal_events" / "shadow" / "care-line" / "phase14f-signal-wire"
+PUBLICATION_STATE_PATH = Path("data") / "universal_events" / "publication-state" / "care-line-signal-wire.json"
 REVIEWED_RECORDS_PATH = Path("data") / "dispatches" / "care-line" / "reviewed" / "2026-07-22" / "reviewed_records.json"
 PROPOSED_EVENTS_PATH = PHASE14E_DIR / "phase14e-proposed-universal-events.json"
 VALIDATION_REPORT_PATH = PHASE14E_DIR / "phase14e-validation-report.json"
@@ -37,6 +39,36 @@ SHADOW_ARTIFACT_VERSION = "bluefern.care_line.phase14f.shadow.v1"
 BASE_URL = "https://dispatches.thebluefernco.com"
 SOCIAL_CARD_WIDTH = 1200
 SOCIAL_CARD_HEIGHT = 630
+APPROVED_SOCIAL_CARD_ASSET_RELATIVE_PATHS = {
+    "event_3b4ad4e528e48744": Path("assets") / "care-line" / "event_3b4ad4e528e48744.png",
+    "event_a12dae614b86cfa9": Path("assets") / "care-line" / "event_a12dae614b86cfa9.png",
+}
+APPROVED_SOCIAL_CARD_ALTS = {
+    "event_3b4ad4e528e48744": "The Blue Fern Co. Care Line social card for UCSF opens 8-bed pediatric neuroscience unit",
+    "event_a12dae614b86cfa9": "The Blue Fern Co. Care Line social card for ECU Health extends in-network access",
+}
+PUBLICATION_STATE_SCHEMA_VERSION = 1
+PUBLIC_CONTENT_HASH_FIELDS = (
+    "event_id",
+    "source_url",
+    "publisher",
+    "source_publication_date",
+    "source_publication_at",
+    "announcement_date",
+    "effective_date",
+    "title",
+    "public_label",
+    "public_summary",
+    "why_it_matters",
+    "revision_status",
+    "service_line",
+    "facility_name",
+    "city",
+    "state",
+    "country_code",
+    "evidence_text",
+    "verification_status",
+)
 
 
 @dataclass(frozen=True)
@@ -309,7 +341,34 @@ def _event_social_card_svg(event: SignalWireEvent) -> str:
     return "\n".join(lines) + "\n"
 
 
-def _social_card_asset(event: SignalWireEvent) -> dict[str, str]:
+def _social_card_asset(event: SignalWireEvent, repo_root: Path | None = None) -> dict[str, str]:
+    if repo_root is None:
+        repo_root = Path(__file__).resolve().parents[3]
+    approved_asset_relpath = APPROVED_SOCIAL_CARD_ASSET_RELATIVE_PATHS.get(event.event_id)
+    if approved_asset_relpath is not None:
+        approved_asset_path = approved_asset_relpath if approved_asset_relpath.is_absolute() else repo_root / approved_asset_relpath
+        if not approved_asset_path.exists():
+            raise FileNotFoundError(f"missing approved Care Line social card asset: {approved_asset_path}")
+        data = approved_asset_path.read_bytes()
+        if not data.startswith(b"\x89PNG\r\n\x1a\n"):
+            raise ValueError(f"approved Care Line social card asset is not a PNG: {approved_asset_path}")
+        width, height = struct.unpack_from(">II", data, 16)
+        if (width, height) != (SOCIAL_CARD_WIDTH, SOCIAL_CARD_HEIGHT):
+            raise ValueError(
+                f"approved Care Line social card asset has unexpected dimensions {(width, height)}: {approved_asset_path}"
+            )
+        return {
+            "path": f"output/site/events/{event.event_id}/social-card.png",
+            "content": data,
+            "url": f"{BASE_URL}/events/{event.event_id}/social-card.png",
+            "alt": APPROVED_SOCIAL_CARD_ALTS.get(event.event_id, f"The Blue Fern Co. Care Line social card for {event.title}"),
+            "headline": event.title,
+            "location": f"{event.facility_name}, {event.city}, {event.state}",
+            "category": event.public_label,
+            "date_line": event.effective_date,
+            "brand_name": "The Blue Fern Co.",
+            "section_label": "CARE LINE",
+        }
     spec = social_card_spec_for_event(
         event_id=event.event_id,
         title=event.title,
@@ -326,14 +385,102 @@ def _social_card_asset(event: SignalWireEvent) -> dict[str, str]:
         "alt": spec["alt_text"],
         "headline": spec["headline"],
         "location": spec["location"],
-        "category": spec["category"],
-        "date_line": spec["date_line"],
+        "category": spec["event_type_label"],
+        "date_line": spec["date_label"],
+        "brand_name": spec["brand_name"],
+        "section_label": spec["section_label"],
     }
 
 
 def _utc_from_mtime(path: Path) -> str:
     stamp = datetime.fromtimestamp(path.stat().st_mtime, tz=timezone.utc)
     return stamp.isoformat().replace("+00:00", "Z")
+
+
+def _publication_content_hash(event: SignalWireEvent) -> str:
+    payload = event.model_dump()
+    return _stable_json_hash({key: payload.get(key, "") for key in PUBLIC_CONTENT_HASH_FIELDS})
+
+
+def _load_publication_state(repo_root: Path) -> dict[str, Any]:
+    state_path = repo_root / PUBLICATION_STATE_PATH
+    if not state_path.exists():
+        return {"schema_version": PUBLICATION_STATE_SCHEMA_VERSION, "events": {}}
+    try:
+        payload = _load_json(state_path)
+    except Exception:
+        return {"schema_version": PUBLICATION_STATE_SCHEMA_VERSION, "events": {}}
+    if not isinstance(payload, dict):
+        return {"schema_version": PUBLICATION_STATE_SCHEMA_VERSION, "events": {}}
+    events = payload.get("events")
+    if not isinstance(events, dict):
+        events = {}
+    normalized_events: dict[str, dict[str, str]] = {}
+    for event_id, raw in events.items():
+        if not isinstance(raw, dict):
+            continue
+        public_published_at = _text(raw, "public_published_at")
+        last_updated_at = _text(raw, "last_updated_at")
+        public_content_hash = _text(raw, "public_content_hash")
+        if not public_published_at or not public_content_hash:
+            continue
+        normalized_events[str(event_id)] = {
+            "public_published_at": public_published_at,
+            "last_updated_at": last_updated_at or public_published_at,
+            "public_content_hash": public_content_hash,
+        }
+    return {
+        "schema_version": PUBLICATION_STATE_SCHEMA_VERSION,
+        "events": normalized_events,
+    }
+
+
+def _resolve_publication_state(
+    repo_root: Path,
+    event_payloads: list[SignalWireEvent],
+    *,
+    generated_at: str | None,
+    fallback_public_published_at: str,
+) -> tuple[list[SignalWireEvent], dict[str, Any]]:
+    existing_state = _load_publication_state(repo_root)
+    existing_events = existing_state.get("events") if isinstance(existing_state, dict) else {}
+    if not isinstance(existing_events, dict):
+        existing_events = {}
+    if not fallback_public_published_at:
+        fallback_public_published_at = generated_at or ""
+    updated_events: list[SignalWireEvent] = []
+    state_events: dict[str, dict[str, str]] = {}
+    revision_timestamp = generated_at or fallback_public_published_at
+    if not revision_timestamp:
+        revision_timestamp = _utc_from_mtime(repo_root / PHASE14E_DIR / "phase14e-proposed-universal-events.json")
+    for event in event_payloads:
+        existing_entry = existing_events.get(event.event_id) if isinstance(existing_events, dict) else None
+        content_hash = _publication_content_hash(event)
+        public_published_at = fallback_public_published_at or event.public_published_at
+        last_updated_at = public_published_at
+        if isinstance(existing_entry, dict):
+            existing_public_published_at = _text(existing_entry, "public_published_at")
+            existing_last_updated_at = _text(existing_entry, "last_updated_at") or existing_public_published_at
+            existing_content_hash = _text(existing_entry, "public_content_hash")
+            if existing_public_published_at:
+                public_published_at = existing_public_published_at
+            if existing_content_hash == content_hash:
+                last_updated_at = existing_last_updated_at or public_published_at
+            else:
+                last_updated_at = revision_timestamp or public_published_at
+        updated_events.append(
+            replace(
+                event,
+                public_published_at=public_published_at,
+                last_updated_at=last_updated_at,
+            )
+        )
+        state_events[event.event_id] = {
+            "public_published_at": public_published_at,
+            "last_updated_at": last_updated_at,
+            "public_content_hash": content_hash,
+        }
+    return updated_events, {"schema_version": PUBLICATION_STATE_SCHEMA_VERSION, "events": state_events}
 
 
 def _find_latest_reviewed_records_path(repo_root: Path) -> Path | None:
@@ -604,6 +751,7 @@ def build_care_line_signal_wire_publication(repo_root: Path, *, generated_at: st
             "reason": "phase14e_inputs_missing",
             "publication_manifest": {},
             "events": [],
+            "publication_state_artifacts": [],
             "site_artifacts": [],
             "shadow_artifacts": [],
             "public_urls": [],
@@ -652,7 +800,7 @@ def build_care_line_signal_wire_publication(repo_root: Path, *, generated_at: st
     if unexpected_ready:
         raise ValueError(f"unexpected universal-event-ready reviewed records: {', '.join(unexpected_ready)}")
 
-    events: list[SignalWireEvent] = []
+    provisional_events: list[SignalWireEvent] = []
     public_published_at = stable_public_published_at or generated_at or _utc_from_mtime(phase14e_paths["manifest"])
     system_discovered_at = _utc_from_mtime(phase14e_paths["proposed"])
     source_reviewed_at = _metadata_text(reviewed_by_id[selected_record_ids[0]], "evidence_review_reviewed_at") if selected_record_ids else ""
@@ -677,10 +825,19 @@ def build_care_line_signal_wire_publication(repo_root: Path, *, generated_at: st
         )
         if event.event_id not in EXPECTED_EVENT_IDS:
             raise ValueError(f"unexpected Care Line event id: {event.event_id}")
-        events.append(event)
+        provisional_events.append(event)
 
-    events = sorted(events, key=lambda event: (event.announcement_date, event.event_id), reverse=True)
+    provisional_events = sorted(provisional_events, key=lambda event: (event.announcement_date, event.event_id), reverse=True)
+    resolved_events, publication_state = _resolve_publication_state(
+        repo_root,
+        provisional_events,
+        generated_at=generated_at,
+        fallback_public_published_at=public_published_at,
+    )
+    events = sorted(resolved_events, key=lambda event: (event.announcement_date, event.event_id), reverse=True)
     event_payloads = [_normalized_event_payload(event) for event in events]
+    publication_public_published_at = events[0].public_published_at if events else public_published_at
+    publication_last_updated_at = max((event.last_updated_at for event in events), default=publication_public_published_at)
     if len({payload["event_id"] for payload in event_payloads}) != len(event_payloads):
         raise ValueError("duplicate event ids detected in Care Line Signal Wire publication")
     if {payload["event_id"] for payload in event_payloads} != EXPECTED_EVENT_IDS:
@@ -689,7 +846,7 @@ def build_care_line_signal_wire_publication(repo_root: Path, *, generated_at: st
     manifest = {
         "schema_version": SCHEMA_VERSION,
         "shadow_artifact_version": SHADOW_ARTIFACT_VERSION,
-        "generated_at": public_published_at,
+        "generated_at": publication_public_published_at,
         "reviewed_records_path": str(reviewed_records_path.as_posix()),
         "phase14e_dir": str(phase14e_paths["proposed"].parent.as_posix()),
         "selected_record_ids": selected_record_ids,
@@ -705,7 +862,9 @@ def build_care_line_signal_wire_publication(repo_root: Path, *, generated_at: st
         "signals_feed_urls": [f"{BASE_URL}/signals/feed.xml", f"{BASE_URL}/care-line/signals/feed.xml"],
         "event_count": len(events),
         "source_reviewed_at": source_reviewed_at,
-        "public_published_at": public_published_at,
+        "public_published_at": publication_public_published_at,
+        "last_updated_at": publication_last_updated_at,
+        "public_content_hash_fields": list(PUBLIC_CONTENT_HASH_FIELDS),
         "system_discovered_at": system_discovered_at,
         "taxonomy_gap_notes": [
             {
@@ -774,7 +933,9 @@ def build_care_line_signal_wire_publication(repo_root: Path, *, generated_at: st
         "signals_feed_urls": [f"{BASE_URL}/signals/feed.xml", f"{BASE_URL}/care-line/signals/feed.xml"],
         "event_pages": [f"{BASE_URL}/events/{event.event_id}/" for event in events],
         "source_reviewed_at": source_reviewed_at,
-        "public_published_at": public_published_at,
+        "public_published_at": publication_public_published_at,
+        "last_updated_at": publication_last_updated_at,
+        "public_content_hash_fields": list(PUBLIC_CONTENT_HASH_FIELDS),
         "taxonomy_gap_notes": [
             {
                 "event_id": event.event_id,
@@ -798,6 +959,9 @@ def build_care_line_signal_wire_publication(repo_root: Path, *, generated_at: st
         "dedupe_collapsed_record_pairs": [],
         "existing_universal_events_collided": [],
     }
+    state_artifacts = [
+        {"path": str((repo_root / PUBLICATION_STATE_PATH).as_posix()), "content": _json_text(publication_state)},
+    ]
     bluesky_drafts = {
         "schema_version": "bluefern.care_line.phase14f.bluesky_drafts.v1",
         "drafts": [
@@ -842,7 +1006,7 @@ Do not touch the Phase 14E reviewed records or the deferred evidence-review ledg
     ]
     site_artifacts = []
     for event in events:
-        social_card = _social_card_asset(event)
+        social_card = _social_card_asset(event, repo_root)
         site_artifacts.append({"path": social_card["path"], "content": social_card["content"]})
         site_artifacts.append({"path": f"output/site/events/{event.event_id}/index.html", "content": _render_event_page(event)})
     index_html = _render_index(events)
@@ -873,6 +1037,7 @@ Do not touch the Phase 14E reviewed records or the deferred evidence-review ledg
         "publication_manifest": manifest,
         "events": [event.model_dump() for event in events],
         "site_artifacts": site_artifacts,
+        "publication_state_artifacts": state_artifacts,
         "shadow_artifacts": shadow_artifacts,
         "public_urls": manifest["public_urls"] + [manifest["signals_index_url"], *manifest["signals_feed_urls"]],
         "validation_report": validation_report,

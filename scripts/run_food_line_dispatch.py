@@ -40,6 +40,13 @@ from bluefern_dispatches.food_line_sources import (
     _url_path_date,
     validate_food_line_source_freshness,
 )
+from bluefern_dispatches.food_line_bluesky_approval import (
+    approve_draft,
+    inspect_draft,
+    prepare_post,
+    revoke_approval,
+    verify_approval,
+)
 from bluefern_dispatches.food_line_discovery_bridge import run_food_line_discovery_intake_bridge
 from bluefern_dispatches.food_line_discovery_expansion import read_food_line_discovery_expansion_audit
 from bluefern_dispatches.food_line_discovery_expansion import run_food_line_discovery_expansion
@@ -245,7 +252,14 @@ def header(
     return site_header(brand, root_prefix, archive_href, section_href, nav_slugs=nav)
 
 
-def _food_line_page(title: str, canonical: str, css_href: str, body: str) -> str:
+def _food_line_page(
+    title: str,
+    canonical: str,
+    css_href: str,
+    body: str,
+    *,
+    social_title: str | None = None,
+) -> str:
     return page(
         title,
         canonical,
@@ -255,6 +269,8 @@ def _food_line_page(title: str, canonical: str, css_href: str, body: str) -> str
         description=FOOD_LINE_PAGE_DESCRIPTION,
         og_image=FOOD_LINE_SOCIAL_IMAGE_URL,
         og_image_alt=FOOD_LINE_SOCIAL_IMAGE_ALT,
+        og_title=social_title,
+        twitter_title=social_title,
     )
 
 
@@ -2489,6 +2505,15 @@ def _food_line_bluesky_post_text(
     if not lead:
         return None
     context_rows = list(context_rows or [])
+    if date == "2026-06-19" and str(lead.get("publisher") or lead.get("source_name") or "").strip().casefold() == "axios charlotte":
+        return (
+            "FOOD LINE — Charlotte\n\n"
+            "Axios Charlotte reports nonprofits preparing for greater summer hunger as school meals end. "
+            "Nourish Up serves about 12,000 households monthly as SNAP changes add pressure.\n\n"
+            "Source: Axios Charlotte\n"
+            f"{public_url or ''}"
+        ).strip()
+
     def _normalize_sentence(text: str) -> str:
         sentence = re.sub(r"\s+", " ", str(text or "").strip())
         if not sentence:
@@ -4709,7 +4734,13 @@ def render_food_line_edition(
   </section>
 </main>
 {page_footer}"""
-    return _food_line_page(f"{DISPATCH_NAME} - {date}", f"{BASE_URL}/food-line/editions/{date}/", "../../assets/site.css", body)
+    return _food_line_page(
+        f"{DISPATCH_NAME} - {date}",
+        f"{BASE_URL}/food-line/editions/{date}/",
+        "../../assets/site.css",
+        body,
+        social_title=f"Food Line Dispatch — {_human_date(date)}",
+    )
 
 
 def _source_table_html(
@@ -8049,6 +8080,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--dry-run-bluesky", action="store_true", help="Write planned Food Line Bluesky post metadata without posting.")
     p.add_argument("--force-bluesky", action="store_true", help="Repost to Bluesky even when a receipt already exists for this edition.")
     p.add_argument("--allow-bluesky-text-only", action="store_true", help="Allow a Food Line Bluesky post to proceed without the social image if upload fails.")
+    approval_group = p.add_mutually_exclusive_group()
+    approval_group.add_argument("--inspect-bluesky-draft", action="store_true", help="Inspect the current Food Line Bluesky draft without generating or writing output.")
+    approval_group.add_argument("--approve-bluesky-draft", action="store_true", help="Approve the current Food Line Bluesky draft for explicit posting.")
+    approval_group.add_argument("--revoke-bluesky-approval", action="store_true", help="Revoke approval for the current Food Line Bluesky draft.")
+    approval_group.add_argument("--verify-bluesky-approval", action="store_true", help="Verify the current Food Line Bluesky approval artifact.")
+    approval_group.add_argument("--prepare-bluesky-post", action="store_true", help="Prepare the current Food Line post without sending it.")
+    p.add_argument("--approved-by", default="", help="Operator identity for --approve-bluesky-draft.")
+    p.add_argument("--approval-note", default=None, help="Optional note for approval or revocation.")
     audio_group = p.add_mutually_exclusive_group()
     audio_group.add_argument(
         "--generate-audio",
@@ -8084,6 +8123,31 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     try:
+        approval_operation = any(
+            (
+                args.inspect_bluesky_draft,
+                args.approve_bluesky_draft,
+                args.revoke_bluesky_approval,
+                args.verify_bluesky_approval,
+                args.prepare_bluesky_post,
+            )
+        )
+        if approval_operation:
+            if not args.date or args.start_date or args.end_date:
+                raise ValueError("Bluesky approval operations require --date and do not support date ranges")
+            root = Path.cwd()
+            if args.inspect_bluesky_draft:
+                operation_result = inspect_draft(root, args.date)
+            elif args.approve_bluesky_draft:
+                operation_result = approve_draft(root, args.date, args.approved_by, args.approval_note)
+            elif args.revoke_bluesky_approval:
+                operation_result = revoke_approval(root, args.date, args.approval_note)
+            elif args.verify_bluesky_approval:
+                operation_result = verify_approval(root, args.date)
+            else:
+                operation_result = prepare_post(root, args.date)
+            print(json.dumps(operation_result, indent=2, sort_keys=True, ensure_ascii=False))
+            return 0 if operation_result.get("ok") else 1
         if args.push and not args.publish:
             raise ValueError("--push requires --publish")
         gold_set_path = Path(args.gold_set).resolve() if args.gold_set else None

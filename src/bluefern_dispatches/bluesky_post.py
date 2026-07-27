@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from typing import Any
 from urllib import error, request
 from bluefern_dispatches.generator import BASE_URL
+from bluefern_dispatches.food_line_bluesky_approval import verify_approval
 from bluefern_dispatches.gaza_audio import select_gaza_audio_stories
 from bluefern_dispatches.public_prose import sanitize_public_prose
 from bluefern_dispatches.story_dedupe import (
@@ -1730,7 +1731,8 @@ def maybe_post_food_line_dispatch_to_bluesky(
     elif not public_url or not str(public_url).strip():
         result["reason"] = "missing_public_url"
     else:
-        cleaned_post_text = " ".join(str(post_text or "").split())
+        cleaned_post_text = re.sub(r"[ \t]+", " ", str(post_text or "").replace("\r\n", "\n").strip())
+        cleaned_post_text = re.sub(r"\n{3,}", "\n\n", cleaned_post_text)
         if not cleaned_post_text:
             result["reason"] = "post_text_unavailable"
         else:
@@ -1738,6 +1740,12 @@ def maybe_post_food_line_dispatch_to_bluesky(
             result["card_title"] = _food_line_card_title(edition_date)
             result["card_description"] = _food_line_card_description(cleaned_post_text)
             result["edition_date_verified"] = True
+            if allow_publish and not dry_run:
+                approval = verify_approval(root, edition_date)
+                result["approval_status"] = approval
+                if not approval.get("ok"):
+                    result["reason"] = approval.get("reason")
+                    return result
             receipt = _load_post_state_for_same_public_url(root, FOOD_LINE_DISPATCH_SLUG, edition_date, str(public_url))
             if receipt and not force_post:
                 state_payload = {
@@ -1759,7 +1767,6 @@ def maybe_post_food_line_dispatch_to_bluesky(
                     "thumb_status": receipt.get("thumb_status"),
                     "posted_at": receipt.get("posted_at"),
                 }
-                _write_food_line_post_state(root, edition_date, state_payload)
                 return {
                     **result,
                     "status": "skipped",
@@ -1797,7 +1804,6 @@ def maybe_post_food_line_dispatch_to_bluesky(
                     "thumb_status": "not_attempted",
                     "posted_at": None,
                 }
-                _write_food_line_post_state(root, edition_date, state_payload)
                 return {
                     **result,
                     "status": "skipped",
@@ -1829,7 +1835,8 @@ def maybe_post_food_line_dispatch_to_bluesky(
             "thumb_status": "not_attempted",
             "posted_at": None,
         }
-        _write_food_line_post_state(root, edition_date, state_payload)
+        if allow_publish and not dry_run:
+            _write_food_line_post_state(root, edition_date, state_payload)
         return result
 
     handle = str(os.getenv("BLUESKY_HANDLE", "")).strip()
@@ -1980,5 +1987,6 @@ def maybe_post_food_line_dispatch_to_bluesky(
         "uploaded_thumb_bytes": result["uploaded_thumb_bytes"],
         "posted_at": None,
     }
-    _write_food_line_post_state(root, edition_date, state_payload)
+    if allow_publish and not dry_run:
+        _write_food_line_post_state(root, edition_date, state_payload)
     return result

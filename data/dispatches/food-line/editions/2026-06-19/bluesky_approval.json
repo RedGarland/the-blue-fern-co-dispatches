@@ -1,0 +1,14 @@
+{
+  "approval_note": null,
+  "approved": false,
+  "approved_at": null,
+  "approved_by": null,
+  "draft_content_hash": "281c56b7871dfa2050ba037cd7863b2781a9491bf29d85c1fe617e3afc783810",
+  "draft_text": "FOOD LINE — Charlotte\n\nAxios Charlotte reports nonprofits preparing for greater summer hunger as school meals end. Nourish Up serves about 12,000 households monthly as SNAP changes add pressure.\n\nSource: Axios Charlotte\nhttps://dispatches.thebluefernco.com/food-line/editions/2026-06-19/",
+  "edition_date": "2026-06-19",
+  "posting_model": "food_line_daily_edition_v1",
+  "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-06-19/",
+  "schema_version": 1,
+  "social_image_path": "assets/food-line-dispatch-social.png",
+  "social_image_sha256": "f17a41257783090988ff286bb5a0189d4ec5d732434779dcf92cf6c6cee95f21"
+}

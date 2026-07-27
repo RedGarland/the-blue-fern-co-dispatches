@@ -23,6 +23,7 @@ import scripts.publish_food_line_review_only as food_line_review_publish
 import scripts.run_food_line_dispatch as food_line
 import scripts.update_food_line_archive_for_review_only as food_line_archive_update
 import bluefern_dispatches.bluesky_post as bluesky_post
+import bluefern_dispatches.food_line_bluesky_approval as food_line_bluesky_approval
 import scripts.test_food_line_tts as food_line_tts
 import bluefern_dispatches.tts_provider as tts_provider
 from bluefern_dispatches.generator import public_edition_is_listable
@@ -4565,13 +4566,9 @@ def test_food_line_bluesky_dry_run_records_social_image_without_network(tmp_path
     )
 
     state_path = tmp_path / "data" / "dispatches" / "food-line" / "editions" / edition_date / "bluesky_post.json"
-    payload = json.loads(state_path.read_text(encoding="utf-8"))
     assert result["status"] == "skipped"
     assert result["reason"] == "dry_run"
-    assert payload["image_path"] == "assets/food-line-dispatch-social.png"
-    assert payload["image_alt"] == bluesky_post.FOOD_LINE_SOCIAL_IMAGE_ALT
-    assert payload["post_text"] == post_text
-    assert payload["public_url"] == public_url
+    assert not state_path.exists()
 
 
 def test_food_line_bluesky_dry_run_state_and_duplicate_guard(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -4598,11 +4595,29 @@ def test_food_line_bluesky_dry_run_state_and_duplicate_guard(tmp_path: Path, mon
         allow_publish=False,
         dry_run=True,
     )
-    dry_run_payload = json.loads(state_path.read_text(encoding="utf-8"))
     assert dry_run_result["reason"] == "dry_run"
-    assert dry_run_payload["status"] == "dry_run"
-    assert dry_run_payload["post_text"] == post_text
-    assert dry_run_payload["public_url"] == public_url
+    assert not state_path.exists()
+
+    manifest_path = tmp_path / "output" / "site" / "food-line" / "editions" / edition_date / "edition_manifest.json"
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "edition_date": edition_date,
+                "public_url": public_url,
+                "public_rendered": True,
+                "public_signal_count": 2,
+                "edition_mode": "current_update",
+                "validation_status": "ok",
+                "bluesky_post_ready": True,
+                "bluesky_post_text": post_text,
+            }
+        ),
+        encoding="utf-8",
+    )
+    approval_payload = food_line_bluesky_approval.build_pending_approval(tmp_path, edition_date)
+    approval_payload.update({"approved": True, "approved_at": "2026-06-11T00:00:00Z", "approved_by": "test"})
+    food_line_bluesky_approval.write_approval(tmp_path, approval_payload)
 
     state_path.write_text(
         json.dumps(

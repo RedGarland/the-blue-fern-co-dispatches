@@ -174,11 +174,19 @@ def _pages_repo_snapshot(pages_repo: Path) -> dict[str, Any]:
         "behind": None,
         "head_sha": None,
         "head_subject": None,
+        "working_tree_clean": None,
+        "index_clean": None,
+        "untracked_clean": None,
+        "diverged": None,
     }
     if not pages_repo.exists():
         return snapshot
     try:
         snapshot["status_branch"] = _git_status_branch(pages_repo)
+        status_lines = _git_status_lines(pages_repo)
+        snapshot["working_tree_clean"] = not status_lines
+        snapshot["index_clean"] = not any(line[:1] in {"A", "C", "D", "M", "R", "T", "U"} for line in status_lines)
+        snapshot["untracked_clean"] = not any(line.startswith("??") for line in status_lines)
         snapshot["branch"] = _git_branch(pages_repo)
         snapshot["head_sha"] = _git_head_sha(pages_repo)
         snapshot["head_subject"] = _git_head_subject(pages_repo)
@@ -189,6 +197,7 @@ def _pages_repo_snapshot(pages_repo: Path) -> dict[str, Any]:
         if len(parts) == 2:
             snapshot["behind"] = int(parts[0])
             snapshot["ahead"] = int(parts[1])
+            snapshot["diverged"] = snapshot["ahead"] > 0 and snapshot["behind"] > 0
     except Exception as exc:  # noqa: BLE001
         snapshot["error"] = str(exc)
     return snapshot

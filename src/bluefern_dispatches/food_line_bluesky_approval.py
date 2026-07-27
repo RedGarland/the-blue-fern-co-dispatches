@@ -6,15 +6,18 @@ import hashlib
 import json
 import os
 import tempfile
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 FOOD_LINE_POSTING_MODEL = "food_line_daily_edition_v1"
 FOOD_LINE_SOCIAL_IMAGE_PATH = "assets/food-line-dispatch-social.png"
 FOOD_LINE_SOCIAL_IMAGE_FILENAME = "food-line-dispatch-social.png"
 APPROVAL_FILENAME = "bluesky_approval.json"
 BASE_URL = "https://dispatches.thebluefernco.com"
+FOOD_LINE_MAX_AGE_DAYS = 3
+FOOD_LINE_PACIFIC_ZONE = "America/Los_Angeles"
 
 
 def public_url_for_edition(edition_date: str) -> str:
@@ -72,10 +75,52 @@ def _load_json(path: Path) -> dict[str, Any] | None:
     return payload if isinstance(payload, dict) else None
 
 
+def current_pacific_date() -> date:
+    return datetime.now(ZoneInfo(FOOD_LINE_PACIFIC_ZONE)).date()
+
+
+def freshness_status(edition_date: str | None, *, today: date | None = None, allow_archival: bool = False) -> dict[str, Any]:
+    value = str(edition_date or "").strip()
+    if not value:
+        return {"ok": False, "reason": "edition_date_missing", "edition_date": value, "archival_override": bool(allow_archival)}
+    try:
+        parsed = date.fromisoformat(value)
+    except ValueError:
+        return {"ok": False, "reason": "edition_date_invalid", "edition_date": value, "archival_override": bool(allow_archival)}
+    if parsed.isoformat() != value:
+        return {"ok": False, "reason": "edition_date_invalid", "edition_date": value, "archival_override": bool(allow_archival)}
+    current = today or current_pacific_date()
+    age_days = (current - parsed).days
+    if age_days > FOOD_LINE_MAX_AGE_DAYS and not allow_archival:
+        return {
+            "ok": False,
+            "reason": "edition_too_old",
+            "edition_date": value,
+            "current_pacific_date": current.isoformat(),
+            "age_days": age_days,
+            "max_age_days": FOOD_LINE_MAX_AGE_DAYS,
+            "archival_override": False,
+        }
+    return {
+        "ok": True,
+        "reason": None,
+        "edition_date": value,
+        "current_pacific_date": current.isoformat(),
+        "age_days": age_days,
+        "max_age_days": FOOD_LINE_MAX_AGE_DAYS,
+        "archival_override": bool(allow_archival),
+    }
+
+
 def _current_draft(project_root: Path, edition_date: str) -> dict[str, Any]:
     manifest = _load_json(_manifest_path(project_root, edition_date))
     if not manifest:
         return {"ok": False, "reason": "edition_not_bluesky_ready", "manifest": {}}
+    manifest_date = str(manifest.get("edition_date") or "").strip()
+    if not manifest_date:
+        return {"ok": False, "reason": "edition_date_missing", "manifest": manifest}
+    if manifest_date != str(edition_date or "").strip():
+        return {"ok": False, "reason": "edition_date_invalid", "manifest": manifest}
     public_url = str(manifest.get("public_url") or public_url_for_edition(edition_date)).strip()
     draft_text = str(manifest.get("bluesky_post_text") or "").strip()
     public_signal_count = int(manifest.get("public_signal_count") or 0)
@@ -132,7 +177,10 @@ def write_approval(project_root: Path, payload: dict[str, Any]) -> Path:
     return path
 
 
-def verify_approval(project_root: Path, edition_date: str) -> dict[str, Any]:
+def verify_approval(project_root: Path, edition_date: str | None, *, allow_archival: bool = False) -> dict[str, Any]:
+    date_check = freshness_status(edition_date, allow_archival=allow_archival)
+    if date_check["reason"] in {"edition_date_missing", "edition_date_invalid"}:
+        return {"ok": False, "reason": date_check["reason"], "edition_date": edition_date, "freshness": date_check}
     current = _current_draft(project_root, edition_date)
     if not current.get("ok"):
         return {"ok": False, "reason": current.get("reason"), "edition_date": edition_date, "public_url": current.get("public_url")}
@@ -140,6 +188,7 @@ def verify_approval(project_root: Path, edition_date: str) -> dict[str, Any]:
     approval = _load_json(path)
     if approval is None:
         return {"ok": False, "reason": "approval_missing", "approval_path": str(path), "edition_date": edition_date}
+    freshness = freshness_status(edition_date, allow_archival=allow_archival)
     public_url = str(current["public_url"])
     draft_text = str(current["draft_text"])
     image_hash = social_image_sha256(project_root)
@@ -149,7 +198,9 @@ def verify_approval(project_root: Path, edition_date: str) -> dict[str, Any]:
         public_url=public_url,
         social_image_hash=image_hash,
     )
-    if not bool(approval.get("approved")):
+    if not freshness.get("ok"):
+        reason = freshness["reason"]
+    elif not bool(approval.get("approved")):
         reason = "approval_not_granted"
     elif str(approval.get("public_url") or "") != public_url:
         reason = "public_url_mismatch"
@@ -173,6 +224,8 @@ def verify_approval(project_root: Path, edition_date: str) -> dict[str, Any]:
         "social_image_sha256": image_hash,
         "social_image_path": FOOD_LINE_SOCIAL_IMAGE_PATH,
         "posting_model": FOOD_LINE_POSTING_MODEL,
+        "freshness": freshness,
+        "archival_override": bool(allow_archival),
     }
 
 
@@ -182,6 +235,9 @@ def approve_draft(project_root: Path, edition_date: str, approved_by: str, appro
     current = _current_draft(project_root, edition_date)
     if not current.get("ok"):
         return {"ok": False, "reason": current.get("reason"), "edition_date": edition_date}
+    freshness = freshness_status(edition_date)
+    if not freshness.get("ok"):
+        return {"ok": False, "reason": freshness["reason"], "edition_date": edition_date, "freshness": freshness}
     payload = build_pending_approval(project_root, edition_date)
     payload.update(
         {
@@ -202,6 +258,19 @@ def revoke_approval(project_root: Path, edition_date: str, approval_note: str | 
     return {"ok": True, "reason": "approval_revoked", "approval_path": str(path), "approval": payload}
 
 
+def expire_approval(project_root: Path, edition_date: str, *, expired_at: str | None = None, approval_note: str | None = None) -> dict[str, Any]:
+    path = approval_path(project_root, edition_date)
+    existing = _load_json(path)
+    if existing is None:
+        return {"ok": False, "reason": "approval_missing", "approval_path": str(path), "edition_date": edition_date}
+    existing["approved"] = False
+    existing["approval_status"] = "expired_due_to_age"
+    existing["approval_expired_at"] = expired_at or datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    existing["approval_note"] = approval_note or "Expired due to edition age; historical approval retained for audit."
+    write_approval(project_root, existing)
+    return {"ok": True, "reason": "expired_due_to_age", "approval_path": str(path), "approval": existing}
+
+
 def inspect_draft(project_root: Path, edition_date: str) -> dict[str, Any]:
     current = _current_draft(project_root, edition_date)
     result = {
@@ -218,10 +287,13 @@ def inspect_draft(project_root: Path, edition_date: str) -> dict[str, Any]:
     return result
 
 
-def prepare_post(project_root: Path, edition_date: str) -> dict[str, Any]:
-    verification = verify_approval(project_root, edition_date)
+def prepare_post(project_root: Path, edition_date: str | None, *, allow_archival: bool = False) -> dict[str, Any]:
+    verification = verify_approval(project_root, edition_date, allow_archival=allow_archival)
     result = dict(verification)
     result["operation"] = "prepare-bluesky-post"
     result["sent"] = False
     result["image_path"] = verification.get("social_image_path")
+    result["post_classification"] = "archival / retrospective" if allow_archival else "normal"
+    if verification.get("ok") and allow_archival:
+        result["post_text"] = f"[ARCHIVAL / RETROSPECTIVE] {verification.get('draft_text')}"
     return result

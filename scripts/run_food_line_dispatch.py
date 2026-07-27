@@ -45,6 +45,7 @@ from bluefern_dispatches.food_line_bluesky_approval import (
     inspect_draft,
     prepare_post,
     revoke_approval,
+    expire_approval,
     verify_approval,
 )
 from bluefern_dispatches.food_line_discovery_bridge import run_food_line_discovery_intake_bridge
@@ -8084,8 +8085,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     approval_group.add_argument("--inspect-bluesky-draft", action="store_true", help="Inspect the current Food Line Bluesky draft without generating or writing output.")
     approval_group.add_argument("--approve-bluesky-draft", action="store_true", help="Approve the current Food Line Bluesky draft for explicit posting.")
     approval_group.add_argument("--revoke-bluesky-approval", action="store_true", help="Revoke approval for the current Food Line Bluesky draft.")
+    approval_group.add_argument("--expire-bluesky-approval", action="store_true", help="Expire approval for an old Food Line Bluesky draft while retaining audit fields.")
     approval_group.add_argument("--verify-bluesky-approval", action="store_true", help="Verify the current Food Line Bluesky approval artifact.")
     approval_group.add_argument("--prepare-bluesky-post", action="store_true", help="Prepare the current Food Line post without sending it.")
+    p.add_argument("--allow-archival-bluesky-post", action="store_true", help="Explicitly allow an approved old Food Line draft as archival/retrospective.")
     p.add_argument("--approved-by", default="", help="Operator identity for --approve-bluesky-draft.")
     p.add_argument("--approval-note", default=None, help="Optional note for approval or revocation.")
     audio_group = p.add_mutually_exclusive_group()
@@ -8128,6 +8131,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.inspect_bluesky_draft,
                 args.approve_bluesky_draft,
                 args.revoke_bluesky_approval,
+                args.expire_bluesky_approval,
                 args.verify_bluesky_approval,
                 args.prepare_bluesky_post,
             )
@@ -8142,10 +8146,12 @@ def main(argv: list[str] | None = None) -> int:
                 operation_result = approve_draft(root, args.date, args.approved_by, args.approval_note)
             elif args.revoke_bluesky_approval:
                 operation_result = revoke_approval(root, args.date, args.approval_note)
+            elif args.expire_bluesky_approval:
+                operation_result = expire_approval(root, args.date, approval_note=args.approval_note)
             elif args.verify_bluesky_approval:
                 operation_result = verify_approval(root, args.date)
             else:
-                operation_result = prepare_post(root, args.date)
+                operation_result = prepare_post(root, args.date, allow_archival=bool(args.allow_archival_bluesky_post))
             print(json.dumps(operation_result, indent=2, sort_keys=True, ensure_ascii=False))
             return 0 if operation_result.get("ok") else 1
         if args.push and not args.publish:
@@ -8261,6 +8267,7 @@ def main(argv: list[str] | None = None) -> int:
                         allow_publish=False,
                         dry_run=True,
                         allow_text_only=bool(args.allow_bluesky_text_only),
+                        allow_archival_bluesky_post=bool(args.allow_archival_bluesky_post),
                     )
                 elif args.publish and bool(result.get("pages_publish_copied")) and bool(result.get("ok")):
                     bluesky_result = maybe_post_food_line_dispatch_to_bluesky(
@@ -8276,6 +8283,7 @@ def main(argv: list[str] | None = None) -> int:
                         allow_publish=True,
                         dry_run=False,
                         allow_text_only=bool(args.allow_bluesky_text_only),
+                        allow_archival_bluesky_post=bool(args.allow_archival_bluesky_post),
                     )
                 elif args.dry_run:
                     bluesky_result = {

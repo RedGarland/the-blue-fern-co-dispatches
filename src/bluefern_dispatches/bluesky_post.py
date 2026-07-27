@@ -1692,6 +1692,7 @@ def maybe_post_food_line_dispatch_to_bluesky(
     allow_publish: bool = True,
     dry_run: bool = False,
     allow_text_only: bool = False,
+    allow_archival_bluesky_post: bool = False,
 ) -> dict[str, Any]:
     result: dict[str, Any] = {
         "status": "skipped",
@@ -1716,6 +1717,7 @@ def maybe_post_food_line_dispatch_to_bluesky(
         "public_signal_count": int(public_signal_count or 0),
         "dry_run": bool(dry_run),
         "forced_post": bool(force_post),
+        "archival_override": bool(allow_archival_bluesky_post),
     }
     root = project_root or Path.cwd()
     state_path = _dispatch_post_state_path(root, FOOD_LINE_DISPATCH_SLUG, edition_date)
@@ -1737,11 +1739,14 @@ def maybe_post_food_line_dispatch_to_bluesky(
             result["reason"] = "post_text_unavailable"
         else:
             result["post_text"] = cleaned_post_text
+            if allow_archival_bluesky_post:
+                result["post_text"] = f"[ARCHIVAL / RETROSPECTIVE] {cleaned_post_text}"
+                cleaned_post_text = result["post_text"]
             result["card_title"] = _food_line_card_title(edition_date)
             result["card_description"] = _food_line_card_description(cleaned_post_text)
             result["edition_date_verified"] = True
             if allow_publish and not dry_run:
-                approval = verify_approval(root, edition_date)
+                approval = verify_approval(root, edition_date, allow_archival=allow_archival_bluesky_post)
                 result["approval_status"] = approval
                 if not approval.get("ok"):
                     result["reason"] = approval.get("reason")

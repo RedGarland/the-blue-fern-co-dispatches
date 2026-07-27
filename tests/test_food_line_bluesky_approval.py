@@ -1,8 +1,16 @@
 import json
+from datetime import date
 from pathlib import Path
+
+import pytest
 
 from bluefern_dispatches import bluesky_post
 from bluefern_dispatches import food_line_bluesky_approval as approval
+
+
+@pytest.fixture(autouse=True)
+def _freeze_food_line_today(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(approval, "current_pacific_date", lambda: date(2026, 6, 20))
 
 
 def _fixture(tmp_path: Path, *, date: str = "2026-06-17", signals: int = 1) -> tuple[str, str]:
@@ -161,3 +169,72 @@ def test_both_pilot_drafts_are_traceable_and_within_limit() -> None:
         assert artifact["public_url"] in artifact["draft_text"]
         assert artifact["approved"] is False
         assert artifact["posting_model"] == approval.FOOD_LINE_POSTING_MODEL
+
+
+def test_freshness_boundary_is_three_calendar_days() -> None:
+    assert approval.freshness_status("2026-07-24", today=date(2026, 7, 27))["ok"] is True
+    old = approval.freshness_status("2026-07-23", today=date(2026, 7, 27))
+    assert old["reason"] == "edition_too_old"
+    assert old["age_days"] == 4
+
+
+def test_missing_and_invalid_edition_dates_fail_closed(tmp_path: Path) -> None:
+    assert approval.verify_approval(tmp_path, "")["reason"] == "edition_date_missing"
+    assert approval.verify_approval(tmp_path, "2026-7-27")["reason"] == "edition_date_invalid"
+
+
+def test_old_approved_draft_is_ineligible_for_verify_and_prepare(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _fixture(tmp_path)
+    _approved(tmp_path)
+    monkeypatch.setattr(approval, "current_pacific_date", lambda: date(2026, 7, 27))
+    assert approval.verify_approval(tmp_path, "2026-06-17")["reason"] == "edition_too_old"
+    prepared = approval.prepare_post(tmp_path, "2026-06-17")
+    assert prepared["reason"] == "edition_too_old"
+    assert prepared["sent"] is False
+
+
+def test_force_does_not_bypass_freshness(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    public_url, draft = _fixture(tmp_path)
+    _approved(tmp_path)
+    monkeypatch.setattr(approval, "current_pacific_date", lambda: date(2026, 7, 27))
+    monkeypatch.setattr(bluesky_post.request, "urlopen", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("network must not run")))
+    result = bluesky_post.maybe_post_food_line_dispatch_to_bluesky(
+        edition_date="2026-06-17", public_url=public_url, post_text=draft, run_succeeded=True,
+        public_rendered=True, public_signal_count=1, post_requested=True, project_root=tmp_path, force_post=True,
+    )
+    assert result["reason"] == "edition_too_old"
+
+
+def test_archival_override_bypasses_age_only_and_labels_payload(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _fixture(tmp_path)
+    _approved(tmp_path)
+    monkeypatch.setattr(approval, "current_pacific_date", lambda: date(2026, 7, 27))
+    prepared = approval.prepare_post(tmp_path, "2026-06-17", allow_archival=True)
+    assert prepared["ok"] is True
+    assert prepared["post_classification"] == "archival / retrospective"
+    assert prepared["post_text"].startswith("[ARCHIVAL / RETROSPECTIVE]")
+
+
+def test_archival_override_does_not_bypass_hash_or_send(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    public_url, draft = _fixture(tmp_path)
+    payload = _approved(tmp_path)
+    payload["draft_content_hash"] = "wrong"
+    approval.write_approval(tmp_path, payload)
+    monkeypatch.setattr(approval, "current_pacific_date", lambda: date(2026, 7, 27))
+    monkeypatch.setattr(bluesky_post.request, "urlopen", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("network must not run")))
+    result = bluesky_post.maybe_post_food_line_dispatch_to_bluesky(
+        edition_date="2026-06-17", public_url=public_url, post_text=draft, run_succeeded=True,
+        public_rendered=True, public_signal_count=1, post_requested=True, project_root=tmp_path,
+        allow_archival_bluesky_post=True,
+    )
+    assert result["reason"] == "draft_hash_mismatch"
+    assert not (tmp_path / "data" / "dispatches" / "food-line" / "editions" / "2026-06-17" / "bluesky_post.json").exists()
+
+
+def test_current_pilots_are_expired_or_unapproved() -> None:
+    june_17 = json.loads((Path("data/dispatches/food-line/editions/2026-06-17/bluesky_approval.json")).read_text(encoding="utf-8"))
+    june_19 = json.loads((Path("data/dispatches/food-line/editions/2026-06-19/bluesky_approval.json")).read_text(encoding="utf-8"))
+    assert june_17["approved"] is False
+    assert june_17["approval_status"] == "expired_due_to_age"
+    assert june_17["approved_by"] == "operator"
+    assert june_19["approved"] is False

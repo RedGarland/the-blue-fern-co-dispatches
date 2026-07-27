@@ -1,8 +1,10 @@
 {
-  "approval_note": null,
+  "approval_expired_at": "2026-07-27T22:30:18.436215Z",
+  "approval_note": "Expired due to edition age; historical approval retained for audit.",
+  "approval_status": "expired_due_to_age",
   "approved": false,
-  "approved_at": null,
-  "approved_by": null,
+  "approved_at": "2026-07-27T20:10:28.856782Z",
+  "approved_by": "operator",
   "draft_content_hash": "d4903e54104bbe8976f91e245335a74ae53c75623e546fbc92ba13fd21e1e5ef",
   "draft_text": "Food Line Dispatch, June 17, 2026: Stateline reports rising food insecurity pressure. A Washington State University research release adds national context on food-security disparities. https://dispatches.thebluefernco.com/food-line/editions/2026-06-17/",
   "edition_date": "2026-06-17",

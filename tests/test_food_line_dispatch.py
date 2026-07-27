@@ -4656,6 +4656,7 @@ def test_food_line_bluesky_dry_run_state_and_duplicate_guard(tmp_path: Path, mon
         project_root=tmp_path,
         allow_publish=True,
         dry_run=False,
+        allow_archival_bluesky_post=True,
     )
     assert duplicate_result["reason"] == "skipped_existing_receipt"
     assert duplicate_result["post_uri"] == "at://did:plc:example/app.bsky.feed.post/abc"

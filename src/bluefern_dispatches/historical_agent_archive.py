@@ -108,7 +108,7 @@ def _care_published_ids(root: Path) -> set[str]:
     return ids
 
 
-def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str, captured_at: str) -> tuple[list[dict[str, Any]], dict[str, int]]:
+def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str, captured_at: str, correction: dict[str, Any] | None = None) -> tuple[list[dict[str, Any]], dict[str, int]]:
     rows = _rows(payload)
     existing = _existing_text(root, domain)
     published_care = _care_published_ids(root) if domain == "care-line" else set()
@@ -118,10 +118,28 @@ def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str,
         if isinstance(payload, dict) and "raw_text" in payload and "findings" not in payload:
             record = dict(payload); record.update({"domain": domain, "historical_backfill": True, "review_status": "pending_review", "raw_sha256": raw_sha256, "deduplication_outcome": "needs_manual_review"})
             return [record], {"needs_manual_review": 1}
-        findings = adapt_food_line_agent_output(payload, agent_name=str(payload.get("agent_name") if isinstance(payload, dict) else "historical-agent"), agent_run_id=str(payload.get("agent_run_id") if isinstance(payload, dict) else ""), discovered_at=captured_at)
+        working_payload = payload
+        if correction:
+            target_url = str(correction.get("source_url") or "").rstrip("/").lower()
+            replacement = correction.get("replacement_exact_supporting_passage") or correction.get("supplemental_exact_supporting_passage")
+            if not target_url or not isinstance(replacement, str) or not replacement.strip(): raise ValueError("correction requires source_url and exact supporting passage")
+            working_payload = dict(payload) if isinstance(payload, dict) else payload
+            if isinstance(working_payload, dict):
+                working_payload["findings"] = [dict(row, exact_supporting_passage=replacement) if str(row.get("canonical_source_url") or row.get("source_url") or "").rstrip("/").lower() == target_url else row for row in _rows(payload)]
+        findings = adapt_food_line_agent_output(working_payload, agent_name=str(payload.get("agent_name") if isinstance(payload, dict) else "historical-agent"), agent_run_id=str(payload.get("agent_run_id") if isinstance(payload, dict) else ""), discovered_at=captured_at)
         for finding in findings:
             candidate = map_finding_to_food_line_candidate(finding, edition_date=(finding.source_published_at[:10] if finding.source_published_at[:10] else captured_at[:10]))
             candidate.update({"historical_backfill": True, "review_status": "pending_review", "raw_sha256": raw_sha256})
+            if correction:
+                candidate["evidence_correction_provenance"] = {
+                    "schema_version": correction.get("schema_version", ""),
+                    "raw_record_sha256": correction.get("raw_record_sha256", ""),
+                    "source_url": correction.get("source_url", ""),
+                    "reviewer": correction.get("reviewer", ""),
+                    "reviewed_at": correction.get("reviewed_at"),
+                    "approval_scope": correction.get("approval_scope", ""),
+                    "publication_approval": correction.get("publication_approval", False),
+                }
             key = finding.duplicate_key
             outcome = "duplicate_historical" if key and key in existing else ("invalid" if candidate.get("exclusion_reason") else "new_historical_candidate")
             candidate["deduplication_outcome"] = outcome; outcomes[outcome] += 1; normalized.append(candidate)

@@ -5,6 +5,7 @@ import hashlib
 import json
 import re
 from dataclasses import asdict, dataclass, field
+from collections.abc import Mapping
 from typing import Any
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
@@ -58,7 +59,7 @@ class FoodLineAgentFinding:
     confidence: str = ""
     source_role: str = ""
     evidence_level: str = ""
-    agent_query_context: dict[str, Any] = field(default_factory=dict)
+    agent_query_context: dict[str, Any] | str = field(default_factory=dict)
     duplicate_key: str = ""
     review_status: str = "pending_review"
     exclusion_reason: str = ""
@@ -77,6 +78,18 @@ def finding_from_payload(payload: dict[str, Any], *, agent_name: str, agent_run_
     identity = "|".join((agent_name, agent_run_id, duplicate_key, _slug(payload.get("exact_supporting_passage") or payload.get("passage"))))
     finding_id = "finding_" + hashlib.sha256(identity.encode("utf-8")).hexdigest()[:24]
     reason = "" if canonical and _text(payload.get("exact_supporting_passage") or payload.get("passage")) else "missing_traceable_source_or_supporting_passage"
+    if "agent_query_context" in payload:
+        query_context = payload.get("agent_query_context")
+    elif "query_context" in payload:
+        query_context = payload.get("query_context")
+    else:
+        query_context = None
+    if query_context is None:
+        query_context = {}
+    elif isinstance(query_context, Mapping):
+        query_context = dict(query_context)
+    elif not isinstance(query_context, str):
+        raise ValueError("agent_query_context must be a mapping, string, or null")
     return FoodLineAgentFinding(
         finding_id=finding_id, agent_name=agent_name, agent_run_id=agent_run_id,
         discovered_at=discovered_at, source_url=_text(payload.get("source_url") or source),
@@ -89,7 +102,7 @@ def finding_from_payload(payload: dict[str, Any], *, agent_name: str, agent_run_
         affected_groups=[_text(v) for v in payload.get("affected_groups") or [] if _text(v)],
         pressure_type=_text(payload.get("pressure_type")), confidence=_text(payload.get("confidence")),
         source_role=_text(payload.get("source_role")), evidence_level=_text(payload.get("evidence_level")),
-        agent_query_context=dict(payload.get("agent_query_context") or payload.get("query_context") or {}),
+        agent_query_context=query_context,
         duplicate_key=duplicate_key, review_status="pending_review", exclusion_reason=reason,
         raw_agent_payload=dict(payload),
     )

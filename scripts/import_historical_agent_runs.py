@@ -9,7 +9,7 @@ from bluefern_dispatches.historical_agent_archive import DOMAINS, SCHEMA_VERSION
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Preserve and normalize historical agent exports privately")
     parser.add_argument("operation", choices=["validate", "dry-run", "import", "inventory", "normalize", "report"])
-    parser.add_argument("--domain", choices=DOMAINS); parser.add_argument("--input", type=Path); parser.add_argument("--repo-root", type=Path, default=Path.cwd()); parser.add_argument("--captured-at", default="")
+    parser.add_argument("--domain", choices=DOMAINS); parser.add_argument("--input", type=Path); parser.add_argument("--correction", type=Path); parser.add_argument("--repo-root", type=Path, default=Path.cwd()); parser.add_argument("--captured-at", default="")
     args = parser.parse_args(argv)
     if args.operation == "inventory":
         result = build_inventory(args.repo_root)
@@ -26,8 +26,9 @@ def main(argv: list[str] | None = None) -> int:
     raw = args.input.read_bytes(); digest = sha256_bytes(raw); captured = args.captured_at or datetime.now(timezone.utc).isoformat()
     try: payload = json.loads(raw.decode("utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError): payload = {"raw_text": raw.decode("utf-8", errors="replace")}
-    normalized, outcomes = normalize_records(args.repo_root, args.domain, payload, raw_sha256=digest, captured_at=captured)
-    result = {"valid": validation["valid"], "domain": args.domain, "input_sha256": digest, "raw_record_count": 1, "normalized_finding_count": len(normalized), "outcomes": outcomes, "dry_run": args.operation in {"dry-run", "report"}}
+    correction = json.loads(args.correction.read_text(encoding="utf-8")) if args.correction else None
+    normalized, outcomes = normalize_records(args.repo_root, args.domain, payload, raw_sha256=digest, captured_at=captured, correction=correction)
+    result = {"valid": validation["valid"], "domain": args.domain, "input_sha256": digest, "raw_record_count": 1, "normalized_finding_count": len(normalized), "outcomes": outcomes, "correction_path": str(args.correction) if args.correction else "", "dry_run": args.operation in {"dry-run", "report"}}
     if args.operation in {"import", "normalize"}:
         base = archive_root(args.repo_root, args.domain); raw_path = base / "raw" / f"{digest}.json"; normalized_path = base / "normalized" / f"{digest}.json"; report_path = base / "reports" / f"{digest}.json"
         if raw_path.exists():

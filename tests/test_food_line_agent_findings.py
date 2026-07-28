@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import pytest
 
 from bluefern_dispatches.adapters.food_line_agent import adapt_food_line_agent_output, map_finding_to_food_line_candidate
 from bluefern_dispatches.agent_findings import duplicate_key_for, normalize_source_url
@@ -90,3 +91,34 @@ def test_import_records_hash_and_preserves_inbox_file(tmp_path: Path):
     assert artifact["input_sha256"] == result["input_sha256"]
     assert source.exists()
     assert (inbox / "processed/2026-07-28/run.json").exists()
+
+
+@pytest.mark.parametrize(
+    ("context", "expected"),
+    [({"query": "food access"}, {"query": "food access"}), ("literal query text", "literal query text"), (None, {})],
+)
+def test_agent_query_context_supported_types(context, expected):
+    payload = _row(agent_query_context=context)
+    finding = adapt_food_line_agent_output([payload], agent_name="fixture", agent_run_id="run-1", discovered_at="2026-07-27T00:00:00Z")[0]
+    assert finding.agent_query_context == expected
+
+
+def test_agent_query_context_omitted_becomes_empty_mapping():
+    payload = _row(); payload.pop("agent_query_context")
+    finding = adapt_food_line_agent_output([payload], agent_name="fixture", agent_run_id="run-1", discovered_at="2026-07-27T00:00:00Z")[0]
+    assert finding.agent_query_context == {}
+
+
+@pytest.mark.parametrize("context", [[], ["query"], 42, 3.14])
+def test_agent_query_context_unsupported_types_fail_closed(context):
+    with pytest.raises(ValueError, match="agent_query_context must be a mapping, string, or null"):
+        adapt_food_line_agent_output([_row(agent_query_context=context)], agent_name="fixture", agent_run_id="run-1")
+
+
+def test_supplied_historical_alert_shape_dry_runs_without_mutation():
+    source = Path("data/agent-history-staging/food-line/2026-07-28-food-line-source-watch.txt")
+    before = source.read_bytes()
+    result = process(Path("."), source, edition_date="2026-07-28", agent_name="Food Line Source Watch", agent_run_id="food-line-source-watch-20260728T194707Z-lacalfresh", dry_run=True)
+    assert result["would_write"] is False
+    assert source.read_bytes() == before
+    assert not Path("data/agent-history").exists()

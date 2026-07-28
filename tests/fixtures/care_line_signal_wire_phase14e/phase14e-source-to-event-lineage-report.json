@@ -1,0 +1,54 @@
+{
+  "records": [
+    {
+      "announcement_date": "2026-07-22",
+      "candidate_id": "candidate_2955a4afd73acd6f",
+      "care_line_record_id": "care-line-direct-discovery-fe1cba7829f11dc2",
+      "effective_date": "2026-07-22",
+      "event_type": "service_expansion",
+      "evidence_provenance": {
+        "source_item_id": "source_item_a9b44fdffc490425",
+        "source_url": "https://beckersspine.com/spine/ucsf-debuts-new-unit-for-neurosurgical-patients",
+        "supporting_passage": "UCSF Benioff Children’s Hospital San Francisco has opened an eight-bed Children’s Neuroscience Specialty Unit, expanding its inpatient capacity for children with neurologic and neurosurgical conditions."
+      },
+      "producer_provenance": {
+        "producer": "Care Line",
+        "producer_record_id": "care-line-direct-discovery-fe1cba7829f11dc2",
+        "raw_payload_hash": "31d1c358302efa1036fcf6306fc93194588f2bf2237484b2defd13d504dbba37"
+      },
+      "producer_record_id": "care-line-direct-discovery-fe1cba7829f11dc2",
+      "proposed_event_id": "event_3b4ad4e528e48744",
+      "publisher": "Care Line",
+      "service_line": "pediatrics",
+      "service_line_normalized": "pediatrics",
+      "source_url": "https://beckersspine.com/spine/ucsf-debuts-new-unit-for-neurosurgical-patients",
+      "supporting_passage": "UCSF Benioff Children’s Hospital San Francisco has opened an eight-bed Children’s Neuroscience Specialty Unit, expanding its inpatient capacity for children with neurologic and neurosurgical conditions."
+    },
+    {
+      "announcement_date": "2026-07-21",
+      "candidate_id": "candidate_8de3e338a07cd6d3",
+      "care_line_record_id": "care-line-direct-discovery-4a1461b9eccb0219",
+      "effective_date": "2026-08-06",
+      "event_type": "service_restoration",
+      "evidence_provenance": {
+        "source_item_id": "source_item_2674b521fbbc2e2f",
+        "source_url": "https://beckerspayer.com/contracting/north-carolina-system-to-start-going-out-of-network-with-unitedhealthcare-in-april",
+        "supporting_passage": "Hospitals under Greenville, N.C.-based ECU Health — a collaboration between East Carolina University and Vidant Health — will remain in network for some UnitedHealthcare plans through Aug. 6, the insurer and health system said."
+      },
+      "producer_provenance": {
+        "producer": "Care Line",
+        "producer_record_id": "care-line-direct-discovery-4a1461b9eccb0219",
+        "raw_payload_hash": "8369b02a60537cd5706f6b1e050192481bff5db94b637036571272ba41bb38c9"
+      },
+      "producer_record_id": "care-line-direct-discovery-4a1461b9eccb0219",
+      "proposed_event_id": "event_a12dae614b86cfa9",
+      "publisher": "Care Line",
+      "service_line": "other",
+      "service_line_normalized": null,
+      "source_url": "https://beckerspayer.com/contracting/north-carolina-system-to-start-going-out-of-network-with-unitedhealthcare-in-april",
+      "supporting_passage": "Hospitals under Greenville, N.C.-based ECU Health — a collaboration between East Carolina University and Vidant Health — will remain in network for some UnitedHealthcare plans through Aug. 6, the insurer and health system said."
+    }
+  ],
+  "schema_version": "bluefern.care_line.phase14e.lineage.v1",
+  "shadow_run_id": "shadow_run_29737fd2d78cdb6d"
+}

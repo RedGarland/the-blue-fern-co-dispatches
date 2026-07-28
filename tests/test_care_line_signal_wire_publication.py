@@ -28,6 +28,14 @@ from bluefern_dispatches.universal_events.care_line_signal_wire import (
 
 
 REPO = Path(__file__).resolve().parents[1]
+PHASE14E_FIXTURE = REPO / "tests" / "fixtures" / "care_line_signal_wire_phase14e"
+PHASE14E_FIXTURE_FILES = (
+    "phase14e-proposed-universal-events.json",
+    "phase14e-validation-report.json",
+    "phase14e-source-to-event-lineage-report.json",
+    "phase14e-duplicate-idempotency-report.json",
+    "shadow_run_29737fd2d78cdb6d.manifest.json",
+)
 
 
 def _copy_assets(repo: Path, work: Path) -> None:
@@ -39,10 +47,10 @@ def _copy_care_line_data(repo: Path, work: Path) -> None:
 
 
 def _copy_phase14e(repo: Path, work: Path) -> None:
-    shutil.copytree(
-        repo / "data" / "universal_events" / "shadow" / "care-line" / "phase14e-universal-events",
-        work / "data" / "universal_events" / "shadow" / "care-line" / "phase14e-universal-events",
-    )
+    target = work / "data" / "universal_events" / "shadow" / "care-line" / "phase14e-universal-events"
+    target.mkdir(parents=True, exist_ok=True)
+    for name in PHASE14E_FIXTURE_FILES:
+        shutil.copy2(PHASE14E_FIXTURE / name, target / name)
 
 
 def _prepare_work_root(tmp_path: Path) -> Path:
@@ -51,6 +59,11 @@ def _prepare_work_root(tmp_path: Path) -> Path:
     _copy_care_line_data(REPO, work)
     _copy_phase14e(REPO, work)
     return work
+
+
+def test_phase14h_uses_a_minimal_tracked_phase14e_fixture() -> None:
+    assert PHASE14E_FIXTURE.is_relative_to(REPO / "tests" / "fixtures")
+    assert sorted(path.name for path in PHASE14E_FIXTURE.iterdir()) == sorted(PHASE14E_FIXTURE_FILES)
 
 
 def _png_info(data: bytes) -> tuple[int, int]:

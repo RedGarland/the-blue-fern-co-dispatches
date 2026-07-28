@@ -1,0 +1,29 @@
+{
+  "adapter_version": "care-line-shadow-v1",
+  "date_from": "",
+  "date_to": "",
+  "file_hashes": {
+    "data/universal_events/shadow/care-line/phase14e-universal-events/reviewed_records.json": "a895fd8ff2e5e17be6f4c0d025bfe780c79deb7e6ba4a26dfa7a07df5f0a3871"
+  },
+  "input_files": [
+    {
+      "date": "",
+      "file_hash": "a895fd8ff2e5e17be6f4c0d025bfe780c79deb7e6ba4a26dfa7a07df5f0a3871",
+      "input_type": "canonical-reviewed-records",
+      "malformed_error": "",
+      "path": "data/universal_events/shadow/care-line/phase14e-universal-events/reviewed_records.json",
+      "record_count": 4
+    }
+  ],
+  "input_types": [
+    "canonical-reviewed-records"
+  ],
+  "malformed_files": [],
+  "manifest_version": "bluefern.care_line_shadow.manifest.v1",
+  "missing_dates": [],
+  "producer": "Care Line",
+  "record_counts": {
+    "data/universal_events/shadow/care-line/phase14e-universal-events/reviewed_records.json": 4
+  },
+  "resolver_version": "entity-resolver-v1"
+}

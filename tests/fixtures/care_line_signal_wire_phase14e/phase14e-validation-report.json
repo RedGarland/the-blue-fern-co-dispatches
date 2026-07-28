@@ -1,0 +1,933 @@
+{
+  "all_preview_ids_unique": true,
+  "deferred_record_ids": [],
+  "eligible_count": 2,
+  "excluded_count": 2,
+  "input_records": [
+    "care-line-direct-discovery-4a1461b9eccb0219",
+    "care-line-direct-discovery-fe1cba7829f11dc2",
+    "care-line-direct-discovery-196621161639f9f2",
+    "care-line-direct-discovery-9543c43464dbd7d4"
+  ],
+  "phase5_quality": {
+    "calibration_generated": true,
+    "eligibility": {
+      "eligible_candidates": 2,
+      "exclusion_analysis": {
+        "exclusions_by_event_classification": {},
+        "exclusions_by_input_type": {
+          "canonical-reviewed-records": 2
+        },
+        "exclusions_by_publisher": {
+          "Becker's Behavioral Health": 1,
+          "Becker's Hospital Review": 1
+        },
+        "exclusions_by_reason": {
+          "not_review_approved": 2
+        },
+        "exclusions_by_state": {},
+        "irrecoverable_exclusion_count": 2,
+        "potential_data_quality_defects": [],
+        "potential_taxonomy_gaps": [],
+        "recoverable_exclusion_count": 0,
+        "recoverable_from_another_structured_source": 0
+      },
+      "exclusions": 2
+    },
+    "eligible_candidates": 2,
+    "entity_resolution": {
+      "calibration": {
+        "administrative_region_conflict_count": 0,
+        "alias_collision_count": 0,
+        "ambiguity_rate": 0.0,
+        "automatic_match_coverage": 0.0,
+        "automatic_match_false_positive_count": 0,
+        "automatic_match_precision": null,
+        "created_new_rate": 0.0,
+        "health_system_facility_confusion_count": 0,
+        "identifier_conflict_count": 0,
+        "rejected_candidate_rate": 0.0,
+        "reviewed_mention_count": 0,
+        "sample_label": "insufficient_sample",
+        "schema_version": "bluefern.care_line.phase5.v1",
+        "top_1_candidate_accuracy": null,
+        "top_3_candidate_recall": null,
+        "unresolved_rate": 0.0
+      },
+      "candidate_matches": 0,
+      "mentions": 14,
+      "reviewed_decisions": 0
+    },
+    "input_coverage": {
+      "dates_examined": [
+        "2026-05-23",
+        "2026-06-18",
+        "2026-06-19",
+        "2026-07-22"
+      ],
+      "malformed_files": [],
+      "missing_dates": [],
+      "records_by_input_type": {
+        "canonical-reviewed-records": 4
+      },
+      "structured_files_discovered": 31
+    },
+    "mention_count": 14,
+    "promotion_preview_deterministic": true,
+    "promotion_readiness": {
+      "candidates_reviewed": 0,
+      "promotion_blocked": 2,
+      "promotion_eligible": 0,
+      "promotion_previews_generated": 2
+    },
+    "readiness": {
+      "blocking_conditions": [
+        "fewer_than_25_real_eligible_candidates",
+        "fewer_than_50_real_entity_mentions",
+        "required_human_review_sample_not_completed"
+      ],
+      "decision": "NOT READY FOR REVIEWED CARE LINE CANDIDATE PROMOTION"
+    },
+    "reviewed_mention_count": 0,
+    "sample_selection": {
+      "bounded": true,
+      "maximums": {
+        "dates": 365,
+        "records": 500
+      },
+      "schema_version": "bluefern.care_line.phase5.v1",
+      "selected_dates": [
+        "2026-05-23",
+        "2026-06-18",
+        "2026-06-19",
+        "2026-07-22"
+      ],
+      "selected_files": [
+        {
+          "date": "2026-05-23",
+          "input_type": "manual-sources",
+          "path": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-05-23/manual_sources.json",
+          "record_count": 5
+        },
+        {
+          "date": "2026-06-18",
+          "input_type": "discovered-sources",
+          "path": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-06-18/discovered_sources.json",
+          "record_count": 182
+        },
+        {
+          "date": "2026-06-19",
+          "input_type": "discovered-sources",
+          "path": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-06-19/discovered_sources.json",
+          "record_count": 177
+        },
+        {
+          "date": "2026-07-22",
+          "input_type": "manual-sources",
+          "path": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-07-22/manual_sources.json",
+          "record_count": 6
+        }
+      ],
+      "selected_record_count": 370,
+      "selection_rationale": "All available structured Care Line source files were selected because repository data is below Phase 5 maximums.",
+      "target": "at least 90 dates or 100 reviewed records"
+    },
+    "schema_version": "bluefern.care_line.phase5.quality.v1",
+    "shadow_run_id": "shadow_run_29737fd2d78cdb6d"
+  },
+  "preview_candidate_ids": [
+    "candidate_2955a4afd73acd6f",
+    "candidate_8de3e338a07cd6d3"
+  ],
+  "preview_event_ids": [
+    "event_3b4ad4e528e48744",
+    "event_a12dae614b86cfa9"
+  ],
+  "preview_records_have_required_provenance": true,
+  "ready_record_ids": [
+    "care-line-direct-discovery-fe1cba7829f11dc2",
+    "care-line-direct-discovery-4a1461b9eccb0219"
+  ],
+  "review_package": {
+    "review_items": [
+      {
+        "address": {
+          "address_line_1": "",
+          "country_code": "US",
+          "locality": "Greenville",
+          "postal_code": "",
+          "raw_address": "",
+          "region": "NC"
+        },
+        "blocking_rules": [],
+        "candidate_id": "candidate_8de3e338a07cd6d3",
+        "canonical_entity_summary": [],
+        "correction_history": [],
+        "entity_kind": "location",
+        "existing_aliases": [],
+        "existing_identifiers": [],
+        "existing_locations": [],
+        "external_identifiers": {},
+        "match_score_explanation": [],
+        "mention_fingerprint": "ff613d8ef88b72f6c4a5a011219604c20745750e9dde68a66ca64f23f3489e7c",
+        "mention_id": "mention_15e3336a84b3dffd",
+        "mention_role": "county",
+        "normalized_mention": "pitt",
+        "parent_owner_context": {},
+        "previous_decisions": [],
+        "producer_record_id": "care-line-direct-discovery-4a1461b9eccb0219",
+        "ranked_match_candidates": [],
+        "raw_mention": "Pitt",
+        "recommended_reviewer_action": "create_or_defer",
+        "related_care_line_records": [
+          "candidate_8de3e338a07cd6d3"
+        ],
+        "review_group": "unresolved",
+        "review_schema_version": "bluefern.care_line_shadow.review.v1",
+        "review_status": "pending",
+        "reviewer_notes": "",
+        "score_margin": null,
+        "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+        "source_evidence_excerpt": "Hospitals under Greenville, N.C.-based ECU Health — a collaboration between East Carolina University and Vidant Health — will remain in network for some UnitedHealthcare plans through Aug. 6, the insurer and health system said.",
+        "source_url": "https://beckerspayer.com/contracting/north-carolina-system-to-start-going-out-of-network-with-unitedhealthcare-in-april",
+        "suggested_action": "create_or_defer",
+        "supporting_evidence_text": "Hospitals under Greenville, N.C.-based ECU Health — a collaboration between East Carolina University and Vidant Health — will remain in network for some UnitedHealthcare plans through Aug. 6, the insurer and health system said.",
+        "thresholds": {
+          "ambiguity_margin": 0.08,
+          "auto_match_threshold": 0.92,
+          "review_threshold": 0.55
+        }
+      },
+      {
+        "address": {
+          "address_line_1": "",
+          "country_code": "US",
+          "locality": "San Francisco",
+          "postal_code": "",
+          "raw_address": "",
+          "region": "CA"
+        },
+        "blocking_rules": [],
+        "candidate_id": "candidate_2955a4afd73acd6f",
+        "canonical_entity_summary": [],
+        "correction_history": [],
+        "entity_kind": "organization",
+        "existing_aliases": [],
+        "existing_identifiers": [],
+        "existing_locations": [],
+        "external_identifiers": {},
+        "match_score_explanation": [],
+        "mention_fingerprint": "2498169d49dda021b1e5e14fe4c962ba333404099f6262f4e5893495570c2ab1",
+        "mention_id": "mention_17496b5db626c282",
+        "mention_role": "affected_provider",
+        "normalized_mention": "ucsf benioff children s hospital san francisco",
+        "parent_owner_context": {},
+        "previous_decisions": [],
+        "producer_record_id": "care-line-direct-discovery-fe1cba7829f11dc2",
+        "ranked_match_candidates": [],
+        "raw_mention": "UCSF Benioff Children?s Hospital San Francisco",
+        "recommended_reviewer_action": "create_or_defer",
+        "related_care_line_records": [
+          "candidate_2955a4afd73acd6f"
+        ],
+        "review_group": "unresolved",
+        "review_schema_version": "bluefern.care_line_shadow.review.v1",
+        "review_status": "pending",
+        "reviewer_notes": "",
+        "score_margin": null,
+        "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+        "source_evidence_excerpt": "UCSF Benioff Children’s Hospital San Francisco has opened an eight-bed Children’s Neuroscience Specialty Unit, expanding its inpatient capacity for children with neurologic and neurosurgical conditions.",
+        "source_url": "https://beckersspine.com/spine/ucsf-debuts-new-unit-for-neurosurgical-patients",
+        "suggested_action": "create_or_defer",
+        "supporting_evidence_text": "UCSF Benioff Children’s Hospital San Francisco has opened an eight-bed Children’s Neuroscience Specialty Unit, expanding its inpatient capacity for children with neurologic and neurosurgical conditions.",
+        "thresholds": {
+          "ambiguity_margin": 0.08,
+          "auto_match_threshold": 0.92,
+          "review_threshold": 0.55
+        }
+      },
+      {
+        "address": {
+          "address_line_1": "",
+          "country_code": "US",
+          "locality": "Greenville",
+          "postal_code": "",
+          "raw_address": "",
+          "region": "NC"
+        },
+        "blocking_rules": [],
+        "candidate_id": "candidate_8de3e338a07cd6d3",
+        "canonical_entity_summary": [],
+        "correction_history": [],
+        "entity_kind": "organization",
+        "existing_aliases": [],
+        "existing_identifiers": [],
+        "existing_locations": [],
+        "external_identifiers": {},
+        "match_score_explanation": [],
+        "mention_fingerprint": "80504aaceea1301c464c2ade6bd058d77fd977dbe181762865479d2b5a1c9f48",
+        "mention_id": "mention_1f83e83fd6a4cddd",
+        "mention_role": "affected_provider",
+        "normalized_mention": "ecu health hospitals",
+        "parent_owner_context": {},
+        "previous_decisions": [],
+        "producer_record_id": "care-line-direct-discovery-4a1461b9eccb0219",
+        "ranked_match_candidates": [],
+        "raw_mention": "ECU Health hospitals",
+        "recommended_reviewer_action": "create_or_defer",
+        "related_care_line_records": [
+          "candidate_8de3e338a07cd6d3"
+        ],
+        "review_group": "unresolved",
+        "review_schema_version": "bluefern.care_line_shadow.review.v1",
+        "review_status": "pending",
+        "reviewer_notes": "",
+        "score_margin": null,
+        "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+        "source_evidence_excerpt": "Hospitals under Greenville, N.C.-based ECU Health — a collaboration between East Carolina University and Vidant Health — will remain in network for some UnitedHealthcare plans through Aug. 6, the insurer and health system said.",
+        "source_url": "https://beckerspayer.com/contracting/north-carolina-system-to-start-going-out-of-network-with-unitedhealthcare-in-april",
+        "suggested_action": "create_or_defer",
+        "supporting_evidence_text": "Hospitals under Greenville, N.C.-based ECU Health — a collaboration between East Carolina University and Vidant Health — will remain in network for some UnitedHealthcare plans through Aug. 6, the insurer and health system said.",
+        "thresholds": {
+          "ambiguity_margin": 0.08,
+          "auto_match_threshold": 0.92,
+          "review_threshold": 0.55
+        }
+      },
+      {
+        "address": {
+          "address_line_1": "",
+          "country_code": "US",
+          "locality": "Greenville",
+          "postal_code": "",
+          "raw_address": "",
+          "region": "NC"
+        },
+        "blocking_rules": [],
+        "candidate_id": "candidate_8de3e338a07cd6d3",
+        "canonical_entity_summary": [],
+        "correction_history": [],
+        "entity_kind": "location",
+        "existing_aliases": [],
+        "existing_identifiers": [],
+        "existing_locations": [],
+        "external_identifiers": {},
+        "match_score_explanation": [],
+        "mention_fingerprint": "b8523b66b83842d8d54e89a6e885a2dbfcf90ec2ab8db6a1b5c3ebf012752e63",
+        "mention_id": "mention_4c6246689bf4433b",
+        "mention_role": "event_location",
+        "normalized_mention": "greenville nc",
+        "parent_owner_context": {},
+        "previous_decisions": [],
+        "producer_record_id": "care-line-direct-discovery-4a1461b9eccb0219",
+        "ranked_match_candidates": [],
+        "raw_mention": "Greenville, NC",
+        "recommended_reviewer_action": "create_or_defer",
+        "related_care_line_records": [
+          "candidate_8de3e338a07cd6d3"
+        ],
+        "review_group": "unresolved",
+        "review_schema_version": "bluefern.care_line_shadow.review.v1",
+        "review_status": "pending",
+        "reviewer_notes": "",
+        "score_margin": null,
+        "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+        "source_evidence_excerpt": "Hospitals under Greenville, N.C.-based ECU Health — a collaboration between East Carolina University and Vidant Health — will remain in network for some UnitedHealthcare plans through Aug. 6, the insurer and health system said.",
+        "source_url": "https://beckerspayer.com/contracting/north-carolina-system-to-start-going-out-of-network-with-unitedhealthcare-in-april",
+        "suggested_action": "create_or_defer",
+        "supporting_evidence_text": "Hospitals under Greenville, N.C.-based ECU Health — a collaboration between East Carolina University and Vidant Health — will remain in network for some UnitedHealthcare plans through Aug. 6, the insurer and health system said.",
+        "thresholds": {
+          "ambiguity_margin": 0.08,
+          "auto_match_threshold": 0.92,
+          "review_threshold": 0.55
+        }
+      },
+      {
+        "address": {
+          "address_line_1": "",
+          "country_code": "US",
+          "locality": "San Francisco",
+          "postal_code": "",
+          "raw_address": "",
+          "region": "CA"
+        },
+        "blocking_rules": [],
+        "candidate_id": "candidate_2955a4afd73acd6f",
+        "canonical_entity_summary": [],
+        "correction_history": [],
+        "entity_kind": "location",
+        "existing_aliases": [],
+        "existing_identifiers": [],
+        "existing_locations": [],
+        "external_identifiers": {},
+        "match_score_explanation": [],
+        "mention_fingerprint": "8074066a458d4313c96cff9752fb9910405c561c5d4247bdb040be0f90187d69",
+        "mention_id": "mention_54eb9a4827ac9a24",
+        "mention_role": "county",
+        "normalized_mention": "san francisco",
+        "parent_owner_context": {},
+        "previous_decisions": [],
+        "producer_record_id": "care-line-direct-discovery-fe1cba7829f11dc2",
+        "ranked_match_candidates": [],
+        "raw_mention": "San Francisco",
+        "recommended_reviewer_action": "create_or_defer",
+        "related_care_line_records": [
+          "candidate_2955a4afd73acd6f"
+        ],
+        "review_group": "unresolved",
+        "review_schema_version": "bluefern.care_line_shadow.review.v1",
+        "review_status": "pending",
+        "reviewer_notes": "",
+        "score_margin": null,
+        "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+        "source_evidence_excerpt": "UCSF Benioff Children’s Hospital San Francisco has opened an eight-bed Children’s Neuroscience Specialty Unit, expanding its inpatient capacity for children with neurologic and neurosurgical conditions.",
+        "source_url": "https://beckersspine.com/spine/ucsf-debuts-new-unit-for-neurosurgical-patients",
+        "suggested_action": "create_or_defer",
+        "supporting_evidence_text": "UCSF Benioff Children’s Hospital San Francisco has opened an eight-bed Children’s Neuroscience Specialty Unit, expanding its inpatient capacity for children with neurologic and neurosurgical conditions.",
+        "thresholds": {
+          "ambiguity_margin": 0.08,
+          "auto_match_threshold": 0.92,
+          "review_threshold": 0.55
+        }
+      },
+      {
+        "address": {
+          "address_line_1": "",
+          "country_code": "US",
+          "locality": "San Francisco",
+          "postal_code": "",
+          "raw_address": "",
+          "region": "CA"
+        },
+        "blocking_rules": [],
+        "candidate_id": "candidate_2955a4afd73acd6f",
+        "canonical_entity_summary": [],
+        "correction_history": [],
+        "entity_kind": "location",
+        "existing_aliases": [],
+        "existing_identifiers": [],
+        "existing_locations": [],
+        "external_identifiers": {},
+        "match_score_explanation": [],
+        "mention_fingerprint": "6951465b20d144bb1d30f7ccd5afb7c3ad4fc0cc86ca21e638bcb9f9d0b6de17",
+        "mention_id": "mention_55848faac61a3613",
+        "mention_role": "city",
+        "normalized_mention": "san francisco",
+        "parent_owner_context": {},
+        "previous_decisions": [],
+        "producer_record_id": "care-line-direct-discovery-fe1cba7829f11dc2",
+        "ranked_match_candidates": [],
+        "raw_mention": "San Francisco",
+        "recommended_reviewer_action": "create_or_defer",
+        "related_care_line_records": [
+          "candidate_2955a4afd73acd6f"
+        ],
+        "review_group": "unresolved",
+        "review_schema_version": "bluefern.care_line_shadow.review.v1",
+        "review_status": "pending",
+        "reviewer_notes": "",
+        "score_margin": null,
+        "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+        "source_evidence_excerpt": "UCSF Benioff Children’s Hospital San Francisco has opened an eight-bed Children’s Neuroscience Specialty Unit, expanding its inpatient capacity for children with neurologic and neurosurgical conditions.",
+        "source_url": "https://beckersspine.com/spine/ucsf-debuts-new-unit-for-neurosurgical-patients",
+        "suggested_action": "create_or_defer",
+        "supporting_evidence_text": "UCSF Benioff Children’s Hospital San Francisco has opened an eight-bed Children’s Neuroscience Specialty Unit, expanding its inpatient capacity for children with neurologic and neurosurgical conditions.",
+        "thresholds": {
+          "ambiguity_margin": 0.08,
+          "auto_match_threshold": 0.92,
+          "review_threshold": 0.55
+        }
+      },
+      {
+        "address": {
+          "address_line_1": "",
+          "country_code": "US",
+          "locality": "San Francisco",
+          "postal_code": "",
+          "raw_address": "",
+          "region": "CA"
+        },
+        "blocking_rules": [],
+        "candidate_id": "candidate_2955a4afd73acd6f",
+        "canonical_entity_summary": [],
+        "correction_history": [],
+        "entity_kind": "location",
+        "existing_aliases": [],
+        "existing_identifiers": [],
+        "existing_locations": [],
+        "external_identifiers": {},
+        "match_score_explanation": [],
+        "mention_fingerprint": "61c98c697e433af2da8d823bea9319847080fd14cf3b948172a96b5aa03999f2",
+        "mention_id": "mention_57ad7abad81bf76a",
+        "mention_role": "event_location",
+        "normalized_mention": "san francisco ca",
+        "parent_owner_context": {},
+        "previous_decisions": [],
+        "producer_record_id": "care-line-direct-discovery-fe1cba7829f11dc2",
+        "ranked_match_candidates": [],
+        "raw_mention": "San Francisco, CA",
+        "recommended_reviewer_action": "create_or_defer",
+        "related_care_line_records": [
+          "candidate_2955a4afd73acd6f"
+        ],
+        "review_group": "unresolved",
+        "review_schema_version": "bluefern.care_line_shadow.review.v1",
+        "review_status": "pending",
+        "reviewer_notes": "",
+        "score_margin": null,
+        "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+        "source_evidence_excerpt": "UCSF Benioff Children’s Hospital San Francisco has opened an eight-bed Children’s Neuroscience Specialty Unit, expanding its inpatient capacity for children with neurologic and neurosurgical conditions.",
+        "source_url": "https://beckersspine.com/spine/ucsf-debuts-new-unit-for-neurosurgical-patients",
+        "suggested_action": "create_or_defer",
+        "supporting_evidence_text": "UCSF Benioff Children’s Hospital San Francisco has opened an eight-bed Children’s Neuroscience Specialty Unit, expanding its inpatient capacity for children with neurologic and neurosurgical conditions.",
+        "thresholds": {
+          "ambiguity_margin": 0.08,
+          "auto_match_threshold": 0.92,
+          "review_threshold": 0.55
+        }
+      },
+      {
+        "address": {
+          "address_line_1": "",
+          "country_code": "US",
+          "locality": "San Francisco",
+          "postal_code": "",
+          "raw_address": "",
+          "region": "CA"
+        },
+        "blocking_rules": [],
+        "candidate_id": "candidate_2955a4afd73acd6f",
+        "canonical_entity_summary": [],
+        "correction_history": [],
+        "entity_kind": "location",
+        "existing_aliases": [],
+        "existing_identifiers": [],
+        "existing_locations": [],
+        "external_identifiers": {},
+        "match_score_explanation": [],
+        "mention_fingerprint": "d94a0dba878dac1609d37f80a311af8cb738cab7257fc28f8dee0684405d753a",
+        "mention_id": "mention_591f9afb1c02b21f",
+        "mention_role": "state",
+        "normalized_mention": "ca",
+        "parent_owner_context": {},
+        "previous_decisions": [],
+        "producer_record_id": "care-line-direct-discovery-fe1cba7829f11dc2",
+        "ranked_match_candidates": [],
+        "raw_mention": "CA",
+        "recommended_reviewer_action": "create_or_defer",
+        "related_care_line_records": [
+          "candidate_2955a4afd73acd6f"
+        ],
+        "review_group": "unresolved",
+        "review_schema_version": "bluefern.care_line_shadow.review.v1",
+        "review_status": "pending",
+        "reviewer_notes": "",
+        "score_margin": null,
+        "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+        "source_evidence_excerpt": "UCSF Benioff Children’s Hospital San Francisco has opened an eight-bed Children’s Neuroscience Specialty Unit, expanding its inpatient capacity for children with neurologic and neurosurgical conditions.",
+        "source_url": "https://beckersspine.com/spine/ucsf-debuts-new-unit-for-neurosurgical-patients",
+        "suggested_action": "create_or_defer",
+        "supporting_evidence_text": "UCSF Benioff Children’s Hospital San Francisco has opened an eight-bed Children’s Neuroscience Specialty Unit, expanding its inpatient capacity for children with neurologic and neurosurgical conditions.",
+        "thresholds": {
+          "ambiguity_margin": 0.08,
+          "auto_match_threshold": 0.92,
+          "review_threshold": 0.55
+        }
+      },
+      {
+        "address": {
+          "address_line_1": "",
+          "country_code": "US",
+          "locality": "Greenville",
+          "postal_code": "",
+          "raw_address": "",
+          "region": "NC"
+        },
+        "blocking_rules": [],
+        "candidate_id": "candidate_8de3e338a07cd6d3",
+        "canonical_entity_summary": [],
+        "correction_history": [],
+        "entity_kind": "organization",
+        "existing_aliases": [],
+        "existing_identifiers": [],
+        "existing_locations": [],
+        "external_identifiers": {},
+        "match_score_explanation": [],
+        "mention_fingerprint": "74670b954d5a2b5ee2d6420a005a47b1fe634dc47aad0ba3f5e22357611a37f8",
+        "mention_id": "mention_6eea9f7288b3846f",
+        "mention_role": "facility",
+        "normalized_mention": "ecu health hospitals",
+        "parent_owner_context": {},
+        "previous_decisions": [],
+        "producer_record_id": "care-line-direct-discovery-4a1461b9eccb0219",
+        "ranked_match_candidates": [],
+        "raw_mention": "ECU Health hospitals",
+        "recommended_reviewer_action": "create_or_defer",
+        "related_care_line_records": [
+          "candidate_8de3e338a07cd6d3"
+        ],
+        "review_group": "unresolved",
+        "review_schema_version": "bluefern.care_line_shadow.review.v1",
+        "review_status": "pending",
+        "reviewer_notes": "",
+        "score_margin": null,
+        "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+        "source_evidence_excerpt": "Hospitals under Greenville, N.C.-based ECU Health — a collaboration between East Carolina University and Vidant Health — will remain in network for some UnitedHealthcare plans through Aug. 6, the insurer and health system said.",
+        "source_url": "https://beckerspayer.com/contracting/north-carolina-system-to-start-going-out-of-network-with-unitedhealthcare-in-april",
+        "suggested_action": "create_or_defer",
+        "supporting_evidence_text": "Hospitals under Greenville, N.C.-based ECU Health — a collaboration between East Carolina University and Vidant Health — will remain in network for some UnitedHealthcare plans through Aug. 6, the insurer and health system said.",
+        "thresholds": {
+          "ambiguity_margin": 0.08,
+          "auto_match_threshold": 0.92,
+          "review_threshold": 0.55
+        }
+      },
+      {
+        "address": {
+          "address_line_1": "",
+          "country_code": "US",
+          "locality": "San Francisco",
+          "postal_code": "",
+          "raw_address": "",
+          "region": "CA"
+        },
+        "blocking_rules": [],
+        "candidate_id": "candidate_2955a4afd73acd6f",
+        "canonical_entity_summary": [],
+        "correction_history": [],
+        "entity_kind": "location",
+        "existing_aliases": [],
+        "existing_identifiers": [],
+        "existing_locations": [],
+        "external_identifiers": {},
+        "match_score_explanation": [],
+        "mention_fingerprint": "7ec225dd7b5def6d2b615dabc808570339c65141a366db631fda061a13d290f7",
+        "mention_id": "mention_77495353694a9720",
+        "mention_role": "facility_address",
+        "normalized_mention": "ucsf benioff children s hospital san francisco",
+        "parent_owner_context": {},
+        "previous_decisions": [],
+        "producer_record_id": "care-line-direct-discovery-fe1cba7829f11dc2",
+        "ranked_match_candidates": [],
+        "raw_mention": "UCSF Benioff Children?s Hospital San Francisco",
+        "recommended_reviewer_action": "create_or_defer",
+        "related_care_line_records": [
+          "candidate_2955a4afd73acd6f"
+        ],
+        "review_group": "unresolved",
+        "review_schema_version": "bluefern.care_line_shadow.review.v1",
+        "review_status": "pending",
+        "reviewer_notes": "",
+        "score_margin": null,
+        "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+        "source_evidence_excerpt": "UCSF Benioff Children’s Hospital San Francisco has opened an eight-bed Children’s Neuroscience Specialty Unit, expanding its inpatient capacity for children with neurologic and neurosurgical conditions.",
+        "source_url": "https://beckersspine.com/spine/ucsf-debuts-new-unit-for-neurosurgical-patients",
+        "suggested_action": "create_or_defer",
+        "supporting_evidence_text": "UCSF Benioff Children’s Hospital San Francisco has opened an eight-bed Children’s Neuroscience Specialty Unit, expanding its inpatient capacity for children with neurologic and neurosurgical conditions.",
+        "thresholds": {
+          "ambiguity_margin": 0.08,
+          "auto_match_threshold": 0.92,
+          "review_threshold": 0.55
+        }
+      },
+      {
+        "address": {
+          "address_line_1": "",
+          "country_code": "US",
+          "locality": "Greenville",
+          "postal_code": "",
+          "raw_address": "",
+          "region": "NC"
+        },
+        "blocking_rules": [],
+        "candidate_id": "candidate_8de3e338a07cd6d3",
+        "canonical_entity_summary": [],
+        "correction_history": [],
+        "entity_kind": "location",
+        "existing_aliases": [],
+        "existing_identifiers": [],
+        "existing_locations": [],
+        "external_identifiers": {},
+        "match_score_explanation": [],
+        "mention_fingerprint": "5e1ead09fc4b32c66665ad931996a3300cb7b26c97808591978dd8ebe366a011",
+        "mention_id": "mention_9aea144b296d4fa5",
+        "mention_role": "facility_address",
+        "normalized_mention": "ecu health hospitals",
+        "parent_owner_context": {},
+        "previous_decisions": [],
+        "producer_record_id": "care-line-direct-discovery-4a1461b9eccb0219",
+        "ranked_match_candidates": [],
+        "raw_mention": "ECU Health hospitals",
+        "recommended_reviewer_action": "create_or_defer",
+        "related_care_line_records": [
+          "candidate_8de3e338a07cd6d3"
+        ],
+        "review_group": "unresolved",
+        "review_schema_version": "bluefern.care_line_shadow.review.v1",
+        "review_status": "pending",
+        "reviewer_notes": "",
+        "score_margin": null,
+        "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+        "source_evidence_excerpt": "Hospitals under Greenville, N.C.-based ECU Health — a collaboration between East Carolina University and Vidant Health — will remain in network for some UnitedHealthcare plans through Aug. 6, the insurer and health system said.",
+        "source_url": "https://beckerspayer.com/contracting/north-carolina-system-to-start-going-out-of-network-with-unitedhealthcare-in-april",
+        "suggested_action": "create_or_defer",
+        "supporting_evidence_text": "Hospitals under Greenville, N.C.-based ECU Health — a collaboration between East Carolina University and Vidant Health — will remain in network for some UnitedHealthcare plans through Aug. 6, the insurer and health system said.",
+        "thresholds": {
+          "ambiguity_margin": 0.08,
+          "auto_match_threshold": 0.92,
+          "review_threshold": 0.55
+        }
+      },
+      {
+        "address": {
+          "address_line_1": "",
+          "country_code": "US",
+          "locality": "Greenville",
+          "postal_code": "",
+          "raw_address": "",
+          "region": "NC"
+        },
+        "blocking_rules": [],
+        "candidate_id": "candidate_8de3e338a07cd6d3",
+        "canonical_entity_summary": [],
+        "correction_history": [],
+        "entity_kind": "location",
+        "existing_aliases": [],
+        "existing_identifiers": [],
+        "existing_locations": [],
+        "external_identifiers": {},
+        "match_score_explanation": [],
+        "mention_fingerprint": "0c1cc7116103b11e92e6a94072504a27ae890652be7370467d6cb8d50bee82b3",
+        "mention_id": "mention_a96a4613a45dd4cc",
+        "mention_role": "state",
+        "normalized_mention": "nc",
+        "parent_owner_context": {},
+        "previous_decisions": [],
+        "producer_record_id": "care-line-direct-discovery-4a1461b9eccb0219",
+        "ranked_match_candidates": [],
+        "raw_mention": "NC",
+        "recommended_reviewer_action": "create_or_defer",
+        "related_care_line_records": [
+          "candidate_8de3e338a07cd6d3"
+        ],
+        "review_group": "unresolved",
+        "review_schema_version": "bluefern.care_line_shadow.review.v1",
+        "review_status": "pending",
+        "reviewer_notes": "",
+        "score_margin": null,
+        "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+        "source_evidence_excerpt": "Hospitals under Greenville, N.C.-based ECU Health — a collaboration between East Carolina University and Vidant Health — will remain in network for some UnitedHealthcare plans through Aug. 6, the insurer and health system said.",
+        "source_url": "https://beckerspayer.com/contracting/north-carolina-system-to-start-going-out-of-network-with-unitedhealthcare-in-april",
+        "suggested_action": "create_or_defer",
+        "supporting_evidence_text": "Hospitals under Greenville, N.C.-based ECU Health — a collaboration between East Carolina University and Vidant Health — will remain in network for some UnitedHealthcare plans through Aug. 6, the insurer and health system said.",
+        "thresholds": {
+          "ambiguity_margin": 0.08,
+          "auto_match_threshold": 0.92,
+          "review_threshold": 0.55
+        }
+      },
+      {
+        "address": {
+          "address_line_1": "",
+          "country_code": "US",
+          "locality": "Greenville",
+          "postal_code": "",
+          "raw_address": "",
+          "region": "NC"
+        },
+        "blocking_rules": [],
+        "candidate_id": "candidate_8de3e338a07cd6d3",
+        "canonical_entity_summary": [],
+        "correction_history": [],
+        "entity_kind": "location",
+        "existing_aliases": [],
+        "existing_identifiers": [],
+        "existing_locations": [],
+        "external_identifiers": {},
+        "match_score_explanation": [],
+        "mention_fingerprint": "6ce82bfc8e3f4595d1069e8fd42da18baa7cb9ab4a43867f6912635e17752bec",
+        "mention_id": "mention_ccfbc0c26366f4b1",
+        "mention_role": "city",
+        "normalized_mention": "greenville",
+        "parent_owner_context": {},
+        "previous_decisions": [],
+        "producer_record_id": "care-line-direct-discovery-4a1461b9eccb0219",
+        "ranked_match_candidates": [],
+        "raw_mention": "Greenville",
+        "recommended_reviewer_action": "create_or_defer",
+        "related_care_line_records": [
+          "candidate_8de3e338a07cd6d3"
+        ],
+        "review_group": "unresolved",
+        "review_schema_version": "bluefern.care_line_shadow.review.v1",
+        "review_status": "pending",
+        "reviewer_notes": "",
+        "score_margin": null,
+        "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+        "source_evidence_excerpt": "Hospitals under Greenville, N.C.-based ECU Health — a collaboration between East Carolina University and Vidant Health — will remain in network for some UnitedHealthcare plans through Aug. 6, the insurer and health system said.",
+        "source_url": "https://beckerspayer.com/contracting/north-carolina-system-to-start-going-out-of-network-with-unitedhealthcare-in-april",
+        "suggested_action": "create_or_defer",
+        "supporting_evidence_text": "Hospitals under Greenville, N.C.-based ECU Health — a collaboration between East Carolina University and Vidant Health — will remain in network for some UnitedHealthcare plans through Aug. 6, the insurer and health system said.",
+        "thresholds": {
+          "ambiguity_margin": 0.08,
+          "auto_match_threshold": 0.92,
+          "review_threshold": 0.55
+        }
+      },
+      {
+        "address": {
+          "address_line_1": "",
+          "country_code": "US",
+          "locality": "San Francisco",
+          "postal_code": "",
+          "raw_address": "",
+          "region": "CA"
+        },
+        "blocking_rules": [],
+        "candidate_id": "candidate_2955a4afd73acd6f",
+        "canonical_entity_summary": [],
+        "correction_history": [],
+        "entity_kind": "organization",
+        "existing_aliases": [],
+        "existing_identifiers": [],
+        "existing_locations": [],
+        "external_identifiers": {},
+        "match_score_explanation": [],
+        "mention_fingerprint": "f8fe3ecd4a255b57216f21b0e8f8f5fb6f91dddd92507ebfbca97f2ca12edd9a",
+        "mention_id": "mention_d5d9f83fc4d1ba72",
+        "mention_role": "facility",
+        "normalized_mention": "ucsf benioff children s hospital san francisco",
+        "parent_owner_context": {},
+        "previous_decisions": [],
+        "producer_record_id": "care-line-direct-discovery-fe1cba7829f11dc2",
+        "ranked_match_candidates": [],
+        "raw_mention": "UCSF Benioff Children?s Hospital San Francisco",
+        "recommended_reviewer_action": "create_or_defer",
+        "related_care_line_records": [
+          "candidate_2955a4afd73acd6f"
+        ],
+        "review_group": "unresolved",
+        "review_schema_version": "bluefern.care_line_shadow.review.v1",
+        "review_status": "pending",
+        "reviewer_notes": "",
+        "score_margin": null,
+        "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+        "source_evidence_excerpt": "UCSF Benioff Children’s Hospital San Francisco has opened an eight-bed Children’s Neuroscience Specialty Unit, expanding its inpatient capacity for children with neurologic and neurosurgical conditions.",
+        "source_url": "https://beckersspine.com/spine/ucsf-debuts-new-unit-for-neurosurgical-patients",
+        "suggested_action": "create_or_defer",
+        "supporting_evidence_text": "UCSF Benioff Children’s Hospital San Francisco has opened an eight-bed Children’s Neuroscience Specialty Unit, expanding its inpatient capacity for children with neurologic and neurosurgical conditions.",
+        "thresholds": {
+          "ambiguity_margin": 0.08,
+          "auto_match_threshold": 0.92,
+          "review_threshold": 0.55
+        }
+      }
+    ],
+    "shadow_run_id": "shadow_run_29737fd2d78cdb6d"
+  },
+  "review_summary": {
+    "candidate_ids": [
+      "candidate_2955a4afd73acd6f",
+      "candidate_8de3e338a07cd6d3"
+    ],
+    "counts_by_event_type": {
+      "service_expansion": 1,
+      "service_restoration": 1
+    },
+    "counts_by_exclusion_reason": {
+      "not_review_approved": 2
+    },
+    "counts_by_publisher": {},
+    "counts_by_service_line": {},
+    "counts_by_source_type": {},
+    "counts_by_state": {},
+    "input_files": [
+      {
+        "date": "",
+        "file_hash": "a895fd8ff2e5e17be6f4c0d025bfe780c79deb7e6ba4a26dfa7a07df5f0a3871",
+        "input_type": "canonical-reviewed-records",
+        "malformed_error": "",
+        "path": "data/universal_events/shadow/care-line/phase14e-universal-events/reviewed_records.json",
+        "record_count": 4
+      }
+    ],
+    "quality_metrics": {
+      "data_quality": {
+        "duplicate_producer_record_rate": null,
+        "missing_address_rate": null,
+        "missing_county_rate": null,
+        "missing_effective_date_rate": null,
+        "missing_identifier_rate": null,
+        "unknown_event_type_rate": null,
+        "unknown_service_line_rate": null
+      },
+      "ingestion": {
+        "candidate_creation_rate": 0.5,
+        "candidate_update_rate": 0.0,
+        "eligibility_rate": 0.5,
+        "exclusion_rate": 0.5,
+        "idempotent_existing_rate": 0.0,
+        "malformed_record_rate": 0.0
+      },
+      "resolution": {
+        "ambiguity_rate": 0.0,
+        "automatic_matchable_rate": 0.0,
+        "blocking_rule_rate": 0.0,
+        "candidate_matches_per_mention": 0.0,
+        "mentions_per_candidate": 7.0,
+        "unresolved_rate": 1.0
+      },
+      "review": {
+        "accepted_match_rate": null,
+        "correction_rate": null,
+        "created_new_rate": null,
+        "deferred_rate": null,
+        "rejected_match_rate": null,
+        "sample_label": "provisional_small_sample"
+      }
+    },
+    "run_summary": {
+      "adapter_version": "care-line-shadow-v1",
+      "ambiguous_mention_count": 0,
+      "automatically_matchable_mention_count": 0,
+      "check_only": false,
+      "created_candidate_count": 2,
+      "created_source_count": 2,
+      "created_source_item_count": 2,
+      "eligible_count": 2,
+      "error_count": 0,
+      "error_summaries": [],
+      "excluded_count": 2,
+      "existing_candidate_count": 0,
+      "input_record_count": 4,
+      "match_candidate_count": 0,
+      "mention_count": 14,
+      "producer": "Care Line",
+      "run_status": "ok",
+      "unresolved_mention_count": 14
+    },
+    "shadow_run_id": "shadow_run_29737fd2d78cdb6d"
+  },
+  "run_summary": {
+    "adapter_version": "care-line-shadow-v1",
+    "ambiguous_mention_count": 0,
+    "automatically_matchable_mention_count": 0,
+    "check_only": false,
+    "created_candidate_count": 2,
+    "created_source_count": 2,
+    "created_source_item_count": 2,
+    "eligible_count": 2,
+    "error_count": 0,
+    "error_summaries": [],
+    "excluded_count": 2,
+    "existing_candidate_count": 0,
+    "input_record_count": 4,
+    "match_candidate_count": 0,
+    "mention_count": 14,
+    "producer": "Care Line",
+    "run_status": "ok",
+    "unresolved_mention_count": 14
+  },
+  "schema_version": "bluefern.care_line.phase14e.validation.v1",
+  "shadow_run_id": "shadow_run_29737fd2d78cdb6d"
+}

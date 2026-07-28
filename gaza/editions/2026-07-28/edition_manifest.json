@@ -1,0 +1,83 @@
+{
+  "dispatch_name": "Dispatches From Gaza",
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-07-28",
+  "generated_at": "2026-07-28T13:00:43.816579+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-07-28/",
+  "local_output_path": "C:\\BlueFernRunner\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-07-28",
+  "local_dispatch_output_path": "C:\\BlueFernRunner\\Dispatches From The Blue Fern Co\\output\\dispatches\\gaza\\editions\\2026-07-28",
+  "local_backup_path": "C:\\BlueFernRunner\\Dispatches From The Blue Fern Co\\output\\tmp-backups-pages\\gaza\\2026-07-28",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 8,
+  "story_count": 5,
+  "source_adequacy_status": "limited_source_update",
+  "source_adequacy_label": "Limited-source update",
+  "publisher_count": 3,
+  "publishers": [
+    "Al Jazeera",
+    "BBC News",
+    "The Guardian"
+  ],
+  "source_adequacy_warnings": [
+    "This is a limited-source update generated from 8 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.",
+    "All saved source records for this edition came from Al Jazeera."
+  ],
+  "allow_post_edition_date_sources": false,
+  "post_edition_date_sources_included": false,
+  "post_edition_date_source_count": 0,
+  "source_manifest_path": "C:\\BlueFernRunner\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-07-28\\sources_manifest.json",
+  "curation_manifest_path": "C:\\BlueFernRunner\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-07-28\\curation_manifest.json",
+  "free_public_artifacts": [
+    "C:\\BlueFernRunner\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-07-28\\index.html",
+    "C:\\BlueFernRunner\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-07-28\\edition_manifest.json",
+    "C:\\BlueFernRunner\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-07-28\\sources_manifest.json",
+    "C:\\BlueFernRunner\\Dispatches From The Blue Fern Co\\output\\site\\gaza\\editions\\2026-07-28\\curation_manifest.json"
+  ],
+  "paid_or_detail_artifacts": [],
+  "detail_artifacts_publicly_exposed": false,
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "public_exposed": true,
+  "warnings": [
+    "suppressed 3 repeated/stale candidate sources via cross-edition dedupe",
+    "This is a limited-source update generated from 8 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.",
+    "All saved source records for this edition came from Al Jazeera.",
+    "manual supplement recommended: add source-backed records at C:\\BlueFernRunner\\Dispatches From The Blue Fern Co\\data\\dispatches\\gaza\\sources\\2026-07-28\\manual_sources.template.json",
+    "source diversity warning: rendered_story_count>=4_with_low_unique_rendered_publishers(<3), single_publisher_supplies_more_than_60_percent_of_rendered_stories"
+  ],
+  "errors": [],
+  "scheduled_run_local_time": "2026-07-28T06:00:00-07:00",
+  "actual_run_local_time": "2026-07-28T06:00:43-07:00",
+  "source_window_start_utc": "2026-07-26T20:58:36Z",
+  "source_window_end_utc": "2026-07-28T11:27:08Z",
+  "first_source_retrieved_at": "2026-07-28T13:00:41.282699Z",
+  "last_source_retrieved_at": "2026-07-28T13:00:41.282699Z",
+  "contains_later_same_day_update": false,
+  "later_same_day_update_count": 0,
+  "later_same_day_update_batch_count": 0,
+  "later_same_day_update_source_count": 0,
+  "contains_post_edition_date_update": false,
+  "post_edition_date_update_count": 0,
+  "post_edition_date_update_batch_count": 0,
+  "post_edition_date_update_source_count": 0,
+  "post_edition_date_retrieval_batches": [],
+  "retrieval_batches": [
+    {
+      "retrieved_at": "2026-07-28T13:00:41.282699Z",
+      "retrieved_at_local": "2026-07-28T06:00:41-07:00",
+      "retrieved_local_date": "2026-07-28",
+      "batch_classification": "scheduled_or_pre_scheduled_batch",
+      "source_record_ids": [
+        "gaza-2026-07-28-bbc-middle-east-feec6eaf4306",
+        "gaza-2026-07-28-bbc-middle-east-d576b1471b7d",
+        "gaza-2026-07-28-guardian-world-1ddfed7ee061",
+        "gaza-2026-07-28-aljazeera-middle-east-77de3f727a57",
+        "gaza-2026-07-28-aljazeera-middle-east-0d070f695dba",
+        "gaza-2026-07-28-aljazeera-middle-east-3ef78a457782",
+        "gaza-2026-07-28-aljazeera-middle-east-e66804f0a8ac",
+        "gaza-2026-07-28-aljazeera-middle-east-380d21d2fba8"
+      ],
+      "source_count": 8
+    }
+  ]
+}

@@ -124,3 +124,49 @@ def test_embedded_alerts_normalize_structured_findings_without_writes(tmp_path: 
         source = tmp_path / name; source.write_bytes(raw)
         assert main(["dry-run", "--domain", "food-line", "--input", str(source), "--repo-root", str(tmp_path)]) == 0
     assert not (tmp_path / "data/agent-history").exists()
+
+
+def test_evidence_insufficient_finding_is_archived_without_candidate(tmp_path: Path):
+    raw = _text_alert(envelope([row(exact_supporting_passage="General background only")]))
+    source = tmp_path / "invalid.md"; source.write_bytes(raw)
+    assert main(["import", "--domain", "food-line", "--input", str(source), "--repo-root", str(tmp_path)]) == 0
+    digest = hashlib.sha256(raw).hexdigest()
+    normalized = json.loads((tmp_path / "data/agent-history/food-line/normalized" / f"{digest}.json").read_text())
+    finding = normalized["findings"][0]
+    assert finding["archive_status"] == "archived"
+    assert finding["normalization_status"] == "completed_with_invalid_findings"
+    assert finding["historical_outcome"] == "archived_invalid"
+    assert finding["review_status"] == "excluded"
+    assert finding["candidate_created"] is False
+    assert finding["publication_eligible"] is False
+    assert finding["publication_approval"] is False
+    assert finding["exclusion_reason"] == "insufficient specific pressure evidence"
+    assert finding["evidence_text"] == "General background only"
+    assert base64.b64decode(json.loads((tmp_path / "data/agent-history/food-line/raw" / f"{digest}.json").read_text())["raw_bytes_base64"]) == raw
+    assert not (tmp_path / "data/dispatches/food-line/agent-intake").exists()
+    assert main(["import", "--domain", "food-line", "--input", str(source), "--repo-root", str(tmp_path)]) == 0
+    inventory = build_inventory(tmp_path)["domains"]["food-line"]
+    assert inventory["raw_run_count"] == 1
+    assert inventory["normalized_finding_count"] == 1
+    assert inventory["invalid_archived_count"] == 1
+    assert inventory["historical_candidate_count"] == 0
+    assert inventory["pending_review_count"] == 0
+
+
+def test_approved_correction_creates_revision_and_keeps_invalid_history(tmp_path: Path):
+    raw = _text_alert(envelope([row(exact_supporting_passage="General background only")]))
+    source = tmp_path / "invalid.md"; source.write_bytes(raw)
+    digest = hashlib.sha256(raw).hexdigest()
+    assert main(["import", "--domain", "food-line", "--input", str(source), "--repo-root", str(tmp_path)]) == 0
+    correction = {"schema_version": "food_line_historical_evidence_correction_v1", "raw_record_sha256": digest, "source_url": "https://example.com/story", "supplemental_exact_supporting_passage": "Food bank demand increased as households faced higher grocery costs.", "reviewer": "reviewer", "reviewed_at": "2026-07-29T00:00:00Z", "approved": True, "approval_scope": "historical_normalization_evidence_only", "publication_approval": False}
+    correction_path = tmp_path / "correction.json"; correction_path.write_text(json.dumps(correction), encoding="utf-8")
+    assert main(["import", "--domain", "food-line", "--input", str(source), "--correction", str(correction_path), "--repo-root", str(tmp_path)]) == 0
+    revisions = list((tmp_path / "data/agent-history/food-line/normalized").glob(f"revision-{digest[:16]}-*.json"))
+    assert len(revisions) == 1
+    revised = json.loads(revisions[0].read_text())
+    assert revised["findings"][0]["candidate_created"] is True
+    assert revised["findings"][0]["historical_outcome"] == "new_historical_candidate"
+    original = json.loads((tmp_path / "data/agent-history/food-line/normalized" / f"{digest}.json").read_text())
+    assert original["findings"][0]["historical_outcome"] == "archived_invalid"
+    assert main(["import", "--domain", "food-line", "--input", str(source), "--correction", str(correction_path), "--repo-root", str(tmp_path)]) == 0
+    assert len(list((tmp_path / "data/agent-history/food-line/normalized").glob(f"revision-{digest[:16]}-*.json"))) == 1

@@ -191,7 +191,16 @@ def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str,
                 }
             key = finding.duplicate_key
             outcome = "duplicate_historical" if key and key in existing else ("invalid" if candidate.get("exclusion_reason") else "new_historical_candidate")
-            candidate["deduplication_outcome"] = outcome; outcomes[outcome] += 1; normalized.append(candidate)
+            candidate["deduplication_outcome"] = outcome
+            candidate["historical_outcome"] = "archived_invalid" if outcome == "invalid" else outcome
+            candidate["candidate_created"] = outcome in {"new_historical_candidate", "matched_existing"}
+            candidate["publication_eligible"] = False if outcome == "invalid" else bool(candidate.get("eligible_for_review"))
+            candidate["publication_approval"] = False
+            if outcome == "invalid":
+                candidate.update({"archive_status": "archived", "normalization_status": "completed_with_invalid_findings", "review_status": "excluded"})
+            else:
+                candidate.update({"archive_status": "archived", "normalization_status": "completed"})
+            outcomes[outcome] += 1; normalized.append(candidate)
     else:
         for row in rows:
             source = str(row.get("canonical_source_url") or row.get("source_url") or row.get("url") or "")
@@ -223,5 +232,5 @@ def build_inventory(root: Path) -> dict[str, Any]:
         dates = [d for record in records for d in _date_values(record.get("source_published_at") or record.get("published_at") or record.get("event_date") or record.get("discovered_at"))]
         urls = {str(record.get("canonical_source_url") or record.get("source_url") or record.get("url")) for record in records if record.get("canonical_source_url") or record.get("source_url") or record.get("url")}
         outcomes = Counter(str(record.get("deduplication_outcome") or "needs_manual_review") for record in records)
-        inventory["domains"][domain] = {"raw_run_count": len(raw_files), "normalized_finding_count": len(records), "date_range": [min(dates), max(dates)] if dates else [], "unique_urls": len(urls), "duplicates": outcomes.get("duplicate_historical", 0), "matched_existing_records": outcomes.get("matched_existing", 0), "unmatched_records": outcomes.get("new_historical_candidate", 0), "invalid_records": outcomes.get("invalid", 0), "missing_dates": sum(1 for r in records if not _date_values(r.get("source_published_at") or r.get("published_at") or r.get("event_date"))), "missing_evidence": sum(1 for r in records if not str(r.get("exact_supporting_passage") or r.get("evidence") or r.get("summary") or "").strip()), "pending_review_count": sum(1 for r in records if r.get("review_status") == "pending_review")}
+        inventory["domains"][domain] = {"raw_run_count": len(raw_files), "normalized_finding_count": len(records), "date_range": [min(dates), max(dates)] if dates else [], "unique_urls": len(urls), "duplicates": outcomes.get("duplicate_historical", 0), "matched_existing_records": outcomes.get("matched_existing", 0), "unmatched_records": outcomes.get("new_historical_candidate", 0), "invalid_records": outcomes.get("invalid", 0), "historical_candidate_count": sum(1 for r in records if r.get("candidate_created") is True), "invalid_archived_count": sum(1 for r in records if r.get("historical_outcome") == "archived_invalid"), "needs_manual_review_count": sum(1 for r in records if r.get("deduplication_outcome") == "needs_manual_review"), "excluded_count": sum(1 for r in records if r.get("review_status") == "excluded"), "candidate_creation_count": sum(1 for r in records if r.get("candidate_created") is True), "publication_ready_count": sum(1 for r in records if r.get("publication_eligible") is True), "missing_dates": sum(1 for r in records if not _date_values(r.get("source_published_at") or r.get("published_at") or r.get("event_date"))), "missing_evidence": sum(1 for r in records if not str(r.get("exact_supporting_passage") or r.get("evidence") or r.get("evidence_text") or r.get("summary") or "").strip()), "pending_review_count": sum(1 for r in records if r.get("review_status") == "pending_review")}
     return inventory

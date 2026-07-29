@@ -22,7 +22,7 @@ python scripts/import_historical_agent_runs.py inventory
 python scripts/import_historical_agent_runs.py report --domain food-line --input <export>
 ```
 
-The importer accepts plain text, Markdown, JSON lists, and the Food Line agent envelope. Dry runs write nothing. No approval, publication, Pages, Bluesky, scheduler, or public output path is used.
+The importer accepts plain text, Markdown, JSON lists, and the Food Line agent envelope. A preserved text or Markdown alert containing exactly one labeled (`json`) or unlabeled fenced JSON object is normalized through that embedded envelope; the complete raw bytes and human-readable text remain private provenance. Multiple or malformed fences fail closed. Dry runs write nothing. No approval, publication, Pages, Bluesky, scheduler, or public output path is used.
 
 Food Line reuses the existing AgentFinding and Food Line pressure adapter and marks findings `pending_review` and `historical_backfill: true`. Care Line preserves event/source identity and does not requeue published event IDs. Gaza records are matched by source text against existing source/edition artifacts without creating stories. ICE records remain private with pending verification and support event category, date, location, agency/facility, injury/fatality, detention/removal/legal/policy, evidence, source, severity, and verification fields when present.
 

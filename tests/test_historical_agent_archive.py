@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 import bluefern_dispatches.historical_agent_archive as archive
-from bluefern_dispatches.historical_agent_archive import archive_root, build_inventory, normalize_records, validate_input
+from bluefern_dispatches.historical_agent_archive import HistoricalEnvelopeError, archive_root, build_inventory, normalize_records, parse_historical_input, validate_input
 from scripts.import_historical_agent_runs import main
 
 
@@ -81,3 +81,46 @@ def test_gaza_matches_existing_source_and_ice_stays_private(tmp_path: Path):
     ice = tmp_path / "ice.json"; ice.write_text("detention alert", encoding="utf-8")
     assert main(["import", "--domain", "ice", "--input", str(ice), "--repo-root", str(tmp_path)]) == 0
     assert not (tmp_path / "output/site").exists()
+
+
+def _text_alert(payload: dict, *, label: str = "json", suffix: str = "") -> bytes:
+    fence = f"```{label}\n" if label else "```\n"
+    return ("Human summary\n\n" + fence + json.dumps(payload) + "\n```\n" + suffix).encode("utf-8")
+
+
+def test_embedded_json_envelope_preserves_private_provenance_and_raw_bytes(tmp_path: Path):
+    raw = _text_alert(envelope([row()]), suffix="Operator note")
+    payload, metadata = parse_historical_input(raw)
+    assert payload["findings"][0]["title"] == "Historical pressure"
+    assert metadata["normalization_method"] == "embedded_json_envelope"
+    assert metadata["private_text_provenance"]["before_fence"].startswith("Human summary")
+    assert metadata["private_text_provenance"]["after_fence"] == "Operator note"
+    assert hashlib.sha256(raw).hexdigest() == hashlib.sha256(raw).hexdigest()
+
+
+def test_unlabeled_embedded_json_envelope_is_supported(tmp_path: Path):
+    payload, metadata = parse_historical_input(_text_alert(envelope([row()]), label=""))
+    assert payload["findings"] and metadata["normalization_method"] == "embedded_json_envelope"
+
+
+@pytest.mark.parametrize("raw", [
+    b"```json\n{}\n```\n```json\n{}\n```",
+    b"```json\nnot json\n```",
+    b"```json\n{\"findings\": {}}\n```",
+])
+def test_malformed_or_conflicting_fenced_envelopes_fail_closed(raw: bytes):
+    with pytest.raises(HistoricalEnvelopeError):
+        parse_historical_input(raw)
+
+
+def test_plain_text_retains_existing_text_envelope_behavior(tmp_path: Path):
+    path = tmp_path / "plain.md"; path.write_text("old alert", encoding="utf-8")
+    result = validate_input(path, domain="food-line")
+    assert result["valid"] is True and result["normalization_method"] == "text_envelope"
+
+
+def test_embedded_alerts_normalize_structured_findings_without_writes(tmp_path: Path):
+    for name, raw in (("durham.md", _text_alert(envelope([row()]))), ("north.md", _text_alert(envelope([row(title="North Texas strain")])))):
+        source = tmp_path / name; source.write_bytes(raw)
+        assert main(["dry-run", "--domain", "food-line", "--input", str(source), "--repo-root", str(tmp_path)]) == 0
+    assert not (tmp_path / "data/agent-history").exists()

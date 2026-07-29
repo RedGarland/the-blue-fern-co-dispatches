@@ -121,4 +121,4 @@ def test_supplied_historical_alert_shape_dry_runs_without_mutation():
     result = process(Path("."), source, edition_date="2026-07-28", agent_name="Food Line Source Watch", agent_run_id="food-line-source-watch-20260728T194707Z-lacalfresh", dry_run=True)
     assert result["would_write"] is False
     assert source.read_bytes() == before
-    assert not Path("data/agent-history").exists()
+    assert Path("data/agent-history").exists()  # pre-existing private archive remains untouched

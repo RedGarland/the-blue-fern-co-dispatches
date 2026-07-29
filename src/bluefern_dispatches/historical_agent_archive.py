@@ -18,6 +18,46 @@ DOMAINS = ("food-line", "care-line", "gaza", "ice")
 SCHEMA_VERSION = "historical_agent_raw_v1"
 
 
+class HistoricalEnvelopeError(ValueError):
+    """Raised when a preserved text envelope contains an invalid structured payload."""
+
+
+def parse_historical_input(raw: bytes) -> tuple[Any, dict[str, Any]]:
+    """Parse JSON or one embedded JSON fence without changing the preserved bytes."""
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeDecodeError:
+        text = raw.decode("utf-8", errors="replace")
+    try:
+        return json.loads(text), {"normalization_method": "structured_json"}
+    except json.JSONDecodeError:
+        pass
+
+    fence_pattern = re.compile(r"(?ms)^```([^\r\n`]*)\r?\n(.*?)^```[ \t]*(?:\r?\n|$)")
+    fences = list(fence_pattern.finditer(text))
+    if not fences:
+        return {"raw_text": text}, {"normalization_method": "text_envelope"}
+    if len(fences) != 1:
+        raise HistoricalEnvelopeError("text envelope must contain exactly one fenced JSON object")
+    fence = fences[0]
+    label = fence.group(1).strip().lower()
+    if label not in {"", "json"}:
+        raise HistoricalEnvelopeError("text envelope fence must be unlabeled or labeled json")
+    try:
+        payload = json.loads(fence.group(2))
+    except json.JSONDecodeError as exc:
+        raise HistoricalEnvelopeError("embedded JSON fence is invalid JSON") from exc
+    if not isinstance(payload, dict) or not isinstance(payload.get("findings"), list):
+        raise HistoricalEnvelopeError("embedded JSON fence is not a valid agent-run envelope")
+    return payload, {
+        "normalization_method": "embedded_json_envelope",
+        "private_text_provenance": {
+            "before_fence": text[: fence.start()],
+            "after_fence": text[fence.end() :],
+        },
+    }
+
+
 def canonical_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2, separators=(",", ": ")) + "\n"
 
@@ -49,14 +89,21 @@ def _date_values(value: Any) -> list[str]:
 
 def _load_source(path: Path) -> tuple[bytes, Any]:
     raw = path.read_bytes()
-    try: payload = json.loads(raw.decode("utf-8"))
-    except (UnicodeDecodeError, json.JSONDecodeError): payload = None
+    payload, _ = parse_historical_input(raw)
     return raw, payload
 
 
 def validate_input(path: Path, *, domain: str) -> dict[str, Any]:
-    raw, payload = _load_source(path)
-    result: dict[str, Any] = {"valid": True, "domain": domain, "input_sha256": sha256_bytes(raw), "source_format": "json" if payload is not None else "text", "finding_count": 0, "invalid_records": [], "missing_dates": [], "missing_evidence": [], "duplicates": [], "malformed_base64": False}
+    raw = path.read_bytes()
+    try:
+        payload, parse_metadata = parse_historical_input(raw)
+    except HistoricalEnvelopeError as exc:
+        return {"valid": False, "domain": domain, "input_sha256": sha256_bytes(raw), "source_format": "text", "finding_count": 0, "invalid_records": [], "missing_dates": [], "missing_evidence": [], "duplicates": [], "malformed_base64": False, "error": str(exc)}
+    result: dict[str, Any] = {"valid": True, "domain": domain, "input_sha256": sha256_bytes(raw), "source_format": "json" if parse_metadata["normalization_method"] == "structured_json" else "text", "finding_count": 0, "invalid_records": [], "missing_dates": [], "missing_evidence": [], "duplicates": [], "malformed_base64": False}
+    result["normalization_method"] = parse_metadata["normalization_method"]
+    if parse_metadata["normalization_method"] == "text_envelope":
+        result["finding_count"] = 1
+        return result
     if domain not in DOMAINS: result.update(valid=False, error="unsupported_domain"); return result
     if payload is None:
         if not raw.strip(): result.update(valid=False, error="empty_input")
@@ -108,7 +155,7 @@ def _care_published_ids(root: Path) -> set[str]:
     return ids
 
 
-def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str, captured_at: str, correction: dict[str, Any] | None = None) -> tuple[list[dict[str, Any]], dict[str, int]]:
+def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str, captured_at: str, correction: dict[str, Any] | None = None, normalization_metadata: dict[str, Any] | None = None) -> tuple[list[dict[str, Any]], dict[str, int]]:
     rows = _rows(payload)
     existing = _existing_text(root, domain)
     published_care = _care_published_ids(root) if domain == "care-line" else set()
@@ -117,6 +164,7 @@ def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str,
     if domain == "food-line":
         if isinstance(payload, dict) and "raw_text" in payload and "findings" not in payload:
             record = dict(payload); record.update({"domain": domain, "historical_backfill": True, "review_status": "pending_review", "raw_sha256": raw_sha256, "deduplication_outcome": "needs_manual_review"})
+            if normalization_metadata: record.update(normalization_metadata)
             return [record], {"needs_manual_review": 1}
         working_payload = payload
         if correction:
@@ -130,6 +178,7 @@ def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str,
         for finding in findings:
             candidate = map_finding_to_food_line_candidate(finding, edition_date=(finding.source_published_at[:10] if finding.source_published_at[:10] else captured_at[:10]))
             candidate.update({"historical_backfill": True, "review_status": "pending_review", "raw_sha256": raw_sha256})
+            if normalization_metadata: candidate.update(normalization_metadata)
             if correction:
                 candidate["evidence_correction_provenance"] = {
                     "schema_version": correction.get("schema_version", ""),

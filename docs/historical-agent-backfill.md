@@ -26,6 +26,22 @@ The importer accepts plain text, Markdown, JSON lists, and the Food Line agent e
 
 Food Line reuses the existing AgentFinding and Food Line pressure adapter and marks findings `pending_review` and `historical_backfill: true`. Care Line preserves event/source identity and does not requeue published event IDs. Gaza records are matched by source text against existing source/edition artifacts without creating stories. ICE records remain private with pending verification and support event category, date, location, agency/facility, injury/fatality, detention/removal/legal/policy, evidence, source, severity, and verification fields when present.
 
+## Care Line controlled historical batch
+
+Copy each first-batch export unchanged to `data/agent-history-staging/care-line/`.
+
+Private Care Line match targets are:
+
+- `data/universal_events/publication-state/care-line-signal-wire.json` — authoritative published event IDs and publication state.
+- `data/universal_events/shadow/care-line/phase14f-signal-wire/phase14f-source-to-event-lineage-report.json` — reviewed event, source-item, producer-record, canonical URL, and review-decision lineage.
+- `data/universal_events/shadow/care-line/phase14f-signal-wire/phase14f-proposed-universal-events.json` — private event identity and reviewed event fields.
+- `data/dispatches/care-line/reviewed/` and `data/dispatches/care-line/evidence-reviews/` — reviewed records and evidence decisions.
+- `data/dispatches/care-line/sources/` — private source snapshots and source-record identity.
+- `data/universal_events/publication-state/care-line-reviewed-event-queue.json` — queue identity/state when present.
+- `data/agent-history/care-line/normalized/` — prior private historical identities.
+
+Care normalization emits `matched_published_event`, `matched_reviewed_event`, `matched_existing_source`, `duplicate_historical`, `new_historical_candidate`, `archived_invalid`, or `needs_manual_review`. Published matches create provenance links only; reviewed/source matches are not duplicated; unmatched valid findings remain pending private review; evidence-insufficient findings are archived invalid; and no outcome is publication-ready. Reported historical queue actions are limited to `none`, `provenance_only`, and `historical_review_candidate`; historical imports never enqueue or publish.
+
 Evidence-insufficient Food Line findings are still preserved in the private historical archive as `archived_invalid` records with `review_status: excluded`, `candidate_created: false`, and `publication_eligible: false`. They never enter current intake, queues, editions, or approval state. A later approved evidence correction creates a separate normalized revision while retaining the original invalid record and raw bytes.
 
 ## Operator export procedure

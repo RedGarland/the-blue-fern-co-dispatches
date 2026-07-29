@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from bluefern_dispatches.historical_agent_archive import DOMAINS, SCHEMA_VERSION, HistoricalEnvelopeError, archive_root, atomic_json, build_inventory, normalize_records, parse_historical_input, sha256_bytes, validate_input
+from bluefern_dispatches.historical_agent_archive import DOMAINS, SCHEMA_VERSION, HistoricalEnvelopeError, _care_report, archive_root, atomic_json, build_inventory, normalize_records, parse_historical_input, sha256_bytes, validate_input
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Preserve and normalize historical agent exports privately")
@@ -29,8 +29,10 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({"valid": False, "domain": args.domain, "input_sha256": digest, "error": str(exc), "dry_run": args.operation in {"dry-run", "report"}}, ensure_ascii=False, sort_keys=True, indent=2)); return 1
     correction = json.loads(args.correction.read_text(encoding="utf-8")) if args.correction else None
     normalized, outcomes = normalize_records(args.repo_root, args.domain, payload, raw_sha256=digest, captured_at=captured, correction=correction, normalization_metadata=normalization_metadata)
-    candidate_count = sum(outcomes.get(key, 0) for key in ("new_historical_candidate", "matched_existing")); invalid_count = outcomes.get("invalid", 0)
+    candidate_count = sum(outcomes.get(key, 0) for key in ("new_historical_candidate", "matched_existing")); invalid_count = outcomes.get("invalid", 0) + outcomes.get("archived_invalid", 0)
     result = {"valid": validation["valid"], "domain": args.domain, "input_sha256": digest, "raw_record_count": 1, "normalized_finding_count": len(normalized), "outcomes": outcomes, "candidate_count": candidate_count, "invalid_finding_count": invalid_count, "outcome": "archived_invalid" if invalid_count and not candidate_count else ("candidate_ready" if candidate_count else "needs_manual_review"), "correction_path": str(args.correction) if args.correction else "", "normalization_method": normalization_metadata.get("normalization_method"), "dry_run": args.operation in {"dry-run", "report"}}
+    if args.domain == "care-line":
+        result["care_line_findings"] = [_care_report(record) for record in normalized]
     if args.operation in {"import", "normalize"}:
         base = archive_root(args.repo_root, args.domain); raw_path = base / "raw" / f"{digest}.json"; normalized_path = base / "normalized" / f"{digest}.json"; report_path = base / "reports" / f"{digest}.json"
         correction_digest = sha256_bytes(args.correction.read_bytes())[:16] if args.correction else ""

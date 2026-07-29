@@ -155,6 +155,96 @@ def _care_published_ids(root: Path) -> set[str]:
     return ids
 
 
+def _care_json_objects(root: Path) -> list[tuple[str, dict[str, Any]]]:
+    """Read only private Care Line JSON artifacts used for historical matching."""
+    bases = [
+        root / "data" / "universal_events" / "publication-state",
+        root / "data" / "universal_events" / "shadow" / "care-line",
+        root / "data" / "dispatches" / "care-line" / "reviewed",
+        root / "data" / "dispatches" / "care-line" / "evidence-reviews",
+        root / "data" / "dispatches" / "care-line" / "sources",
+        root / "data" / "dispatches" / "care-line" / "queue-runs",
+        root / "data" / "agent-history" / "care-line" / "normalized",
+    ]
+    objects: list[tuple[str, dict[str, Any]]] = []
+    for base in bases:
+        if not base.exists():
+            continue
+        for path in base.rglob("*.json"):
+            try:
+                value = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                continue
+
+            def visit(item: Any) -> None:
+                if isinstance(item, dict):
+                    objects.append((str(path.relative_to(root)), item))
+                    for child in item.values():
+                        visit(child)
+                elif isinstance(item, list):
+                    for child in item:
+                        visit(child)
+
+            visit(value)
+    return objects
+
+
+def care_line_match_targets(root: Path) -> dict[str, Any]:
+    """Build the private Care Line identity index; public output is never consulted."""
+    objects = _care_json_objects(root)
+    published: dict[str, str] = {}
+    reviewed: dict[str, str] = {}
+    sources: dict[str, list[dict[str, str]]] = {}
+    queue: dict[str, str] = {}
+    historical: set[str] = set()
+    ledger = root / "data" / "universal_events" / "publication-state" / "care-line-signal-wire.json"
+    try:
+        ledger_value = json.loads(ledger.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        ledger_value = {}
+    for event_id in (ledger_value.get("events", {}) if isinstance(ledger_value, dict) else {}):
+        published[str(event_id)] = str(ledger)
+
+    def clean_url(value: Any) -> str:
+        return str(value or "").strip().lower().split("?")[0].rstrip("/")
+
+    for path, item in objects:
+        event_id = str(item.get("event_id") or item.get("proposed_event_id") or "").strip()
+        source_url = clean_url(item.get("canonical_source_url") or item.get("source_url") or item.get("url"))
+        source_id = str(item.get("source_record_id") or item.get("producer_record_id") or item.get("source_item_id") or item.get("record_id") or "")
+        if source_url:
+            sources.setdefault(source_url, []).append({"path": path, "source_record_id": source_id, "event_id": event_id})
+        if event_id and event_id not in published:
+            status = str(item.get("review_status") or item.get("revision_status") or item.get("state") or item.get("status") or "").lower()
+            if ("queue" in path and status not in {"published", "failed", "rejected"}) or status in {"reviewed", "approved", "corrected", "review_ready", "approved_for_release", "queued", "publishing"}:
+                reviewed.setdefault(event_id, path)
+            if "queue" in path:
+                queue.setdefault(event_id, path)
+        if "agent-history" in path and (item.get("domain") == "care-line" or path.replace("\\", "/").startswith("data/agent-history/care-line/")):
+            identity = json.dumps({"url": clean_url(item.get("canonical_source_url") or item.get("source_url") or item.get("url")), "title": str(item.get("title") or item.get("headline") or "").lower().strip(), "date": str(item.get("source_published_at") or item.get("published_at") or item.get("event_date") or "")[:10]}, sort_keys=True)
+            historical.add(identity)
+    return {"published_events": published, "reviewed_events": reviewed, "sources": sources, "queue": queue, "historical_identities": historical}
+
+
+def _care_identity(row: dict[str, Any]) -> str:
+    return json.dumps({
+        "url": str(row.get("canonical_source_url") or row.get("source_url") or row.get("url") or "").lower().split("?")[0].rstrip("/"),
+        "title": str(row.get("title") or row.get("headline") or "").lower().strip(),
+        "date": str(row.get("source_published_at") or row.get("published_at") or row.get("event_date") or "")[:10],
+    }, sort_keys=True)
+
+
+def _care_report(record: dict[str, Any]) -> dict[str, Any]:
+    """Return the stable per-finding operational report contract."""
+    return {field: record.get(field) for field in (
+        "raw_sha256", "agent_name", "agent_run_id", "source_url", "canonical_source_url",
+        "source_published_at", "source_published_date", "event_date", "facility_name",
+        "organization", "location_name", "location", "service_affected", "service_line",
+        "event_type", "matched_event_id", "match_basis", "queue_action", "candidate_created",
+        "review_status", "publication_eligible", "exclusion_reason", "provenance_links",
+    )}
+
+
 def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str, captured_at: str, correction: dict[str, Any] | None = None, normalization_metadata: dict[str, Any] | None = None) -> tuple[list[dict[str, Any]], dict[str, int]]:
     rows = _rows(payload)
     existing = _existing_text(root, domain)
@@ -202,6 +292,7 @@ def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str,
                 candidate.update({"archive_status": "archived", "normalization_status": "completed"})
             outcomes[outcome] += 1; normalized.append(candidate)
     else:
+        care_targets = care_line_match_targets(root) if domain == "care-line" else None
         for row in rows:
             source = str(row.get("canonical_source_url") or row.get("source_url") or row.get("url") or "")
             event_id = str(row.get("event_id") or row.get("id") or "")
@@ -216,6 +307,52 @@ def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str,
             if domain == "care-line":
                 for field in ("source_snapshot_refs", "evidence_review_refs", "reviewed_record_refs", "universal_event_ids"):
                     record.setdefault(field, [])
+                assert care_targets is not None
+                normalized_source = source.lower().split("?")[0].rstrip("/")
+                source_matches = care_targets["sources"].get(normalized_source, [])
+                matched_event_id = event_id if event_id in care_targets["published_events"] or event_id in care_targets["reviewed_events"] else ""
+                match_basis = ""
+                if event_id in care_targets["published_events"]:
+                    historical_outcome, queue_action, match_basis = "matched_published_event", "provenance_only", "event_id"
+                    record.update({"review_status": "excluded", "candidate_created": False, "publication_eligible": False})
+                    matched_event_id = event_id
+                elif event_id in care_targets["reviewed_events"] or event_id in care_targets["queue"]:
+                    historical_outcome, queue_action, match_basis = "matched_reviewed_event", "none", "event_id"
+                    record.update({"review_status": "pending_review" if event_id in care_targets["queue"] and event_id not in care_targets["reviewed_events"] else "excluded", "candidate_created": False, "publication_eligible": False})
+                    matched_event_id = event_id
+                elif source_matches:
+                    matched_source_event = next((str(item.get("event_id")) for item in source_matches if item.get("event_id")), "")
+                    if _care_identity(row) in care_targets["historical_identities"]:
+                        historical_outcome, queue_action = "duplicate_historical", "none"
+                    elif matched_source_event in care_targets["published_events"]:
+                        historical_outcome, queue_action = "matched_published_event", "provenance_only"
+                    else:
+                        historical_outcome, queue_action = "matched_existing_source", "provenance_only"
+                    match_basis = "canonical_source_url"
+                    record.update({"review_status": "excluded", "candidate_created": False, "publication_eligible": False})
+                    matched_event_id = matched_source_event
+                elif _care_identity(row) in care_targets["historical_identities"]:
+                    historical_outcome, queue_action, match_basis = "duplicate_historical", "none", "historical_identity"
+                    record.update({"review_status": "excluded", "candidate_created": False, "publication_eligible": False})
+                elif not source and not event_id:
+                    historical_outcome, queue_action, match_basis = "needs_manual_review", "none", "missing_identity"
+                    record.update({"review_status": "pending_review", "candidate_created": False, "publication_eligible": False})
+                elif not str(row.get("exact_supporting_passage") or row.get("evidence") or row.get("evidence_text") or "").strip():
+                    historical_outcome, queue_action, match_basis = "archived_invalid", "none", "missing_exact_evidence"
+                    record.update({"review_status": "excluded", "candidate_created": False, "publication_eligible": False, "archive_status": "archived", "normalization_status": "completed_with_invalid_findings", "exclusion_reason": "missing exact supporting evidence"})
+                else:
+                    historical_outcome, queue_action, match_basis = "new_historical_candidate", "historical_review_candidate", "unmatched_valid_finding"
+                    record.update({"review_status": "pending_review", "candidate_created": True, "publication_eligible": False})
+                record.update({
+                    "historical_outcome": historical_outcome,
+                    "matched_event_id": matched_event_id,
+                    "match_basis": match_basis,
+                    "queue_action": queue_action,
+                    "provenance_links": [{"path": item["path"], "source_record_id": item.get("source_record_id", ""), "event_id": item.get("event_id", "")} for item in source_matches],
+                    "agent_name": str(payload.get("agent_name") if isinstance(payload, dict) else "historical-agent"),
+                    "agent_run_id": str(payload.get("agent_run_id") if isinstance(payload, dict) else ""),
+                })
+                outcome = historical_outcome
             if domain == "gaza": record.setdefault("provenance_links", [])
             outcomes[outcome] += 1; normalized.append(record)
     return normalized, dict(outcomes)

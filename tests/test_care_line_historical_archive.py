@@ -1,6 +1,8 @@
 import json
+import hashlib
 from pathlib import Path
 
+import pytest
 from bluefern_dispatches.historical_agent_archive import normalize_records
 from scripts.import_historical_agent_runs import main
 
@@ -108,3 +110,50 @@ def test_dry_run_report_contains_care_line_operational_fields(tmp_path: Path, ca
         assert field in item
     assert item["queue_action"] == "historical_review_candidate"
     assert item["publication_eligible"] is False
+
+
+def test_structured_care_sidecar_splits_prose_without_mutating_raw(tmp_path: Path, capsys):
+    raw_path = tmp_path / "data/agent-history-staging/care-line/alert.txt"
+    raw_path.parent.mkdir(parents=True)
+    raw = "Missouri source https://missouri.example/story\nDelaware source https://delaware.example/story\n"
+    raw_path.write_bytes(raw.encode("utf-8"))
+    digest = hashlib.sha256(raw_path.read_bytes()).hexdigest()
+    sidecar = {
+        "raw_sha256": digest,
+        "raw_file": "data/agent-history-staging/care-line/alert.txt",
+        "domain": "care-line",
+        "normalization_type": "prose_envelope_to_structured_findings",
+        "reviewer": "William Patton",
+        "reviewed_at": "2026-07-29T00:00:00Z",
+        "approved": True,
+        "approval_scope": "historical_normalization_only",
+        "publication_approval": False,
+        "findings": [
+            finding(source_url="https://missouri.example/story", event_type="permanent_service_closure", access_direction="access_loss"),
+            finding(source_url="https://delaware.example/story", event_type="planned_access_expansion", access_direction="access_expansion"),
+        ],
+    }
+    sidecar_path = tmp_path / "sidecar.json"
+    sidecar_path.write_text(json.dumps(sidecar), encoding="utf-8")
+    before = raw_path.read_bytes()
+    assert main(["dry-run", "--domain", "care-line", "--input", str(raw_path), "--correction", str(sidecar_path), "--repo-root", str(tmp_path)]) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["normalized_finding_count"] == 2
+    assert result["outcomes"] == {"archived_context": 1, "new_historical_candidate": 1}
+    assert raw_path.read_bytes() == before
+    assert not (tmp_path / "data/agent-history/care-line").exists()
+
+
+def test_care_sidecar_hash_mismatch_fails_closed(tmp_path: Path):
+    raw_path = tmp_path / "data/agent-history-staging/care-line/alert.txt"
+    raw_path.parent.mkdir(parents=True)
+    raw_path.write_text("https://example.org/story\n", encoding="utf-8")
+    sidecar_path = tmp_path / "sidecar.json"
+    sidecar_path.write_text(json.dumps({
+        "raw_sha256": "wrong", "raw_file": "data/agent-history-staging/care-line/alert.txt", "domain": "care-line",
+        "normalization_type": "prose_envelope_to_structured_findings", "approved": True,
+        "approval_scope": "historical_normalization_only", "publication_approval": False,
+        "findings": [finding(source_url="https://example.org/story")],
+    }), encoding="utf-8")
+    with pytest.raises(ValueError, match="raw_sha256"):
+        main(["dry-run", "--domain", "care-line", "--input", str(raw_path), "--correction", str(sidecar_path), "--repo-root", str(tmp_path)])

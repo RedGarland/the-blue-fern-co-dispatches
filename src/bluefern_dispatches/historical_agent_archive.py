@@ -238,15 +238,30 @@ def _care_report(record: dict[str, Any]) -> dict[str, Any]:
     """Return the stable per-finding operational report contract."""
     return {field: record.get(field) for field in (
         "raw_sha256", "agent_name", "agent_run_id", "source_url", "canonical_source_url",
-        "source_published_at", "source_published_date", "event_date", "facility_name",
-        "organization", "location_name", "location", "service_affected", "service_line",
-        "event_type", "matched_event_id", "match_basis", "queue_action", "candidate_created",
-        "review_status", "publication_eligible", "exclusion_reason", "provenance_links",
+        "source_published_at", "source_published_date", "event_date", "announcement_date", "effective_date",
+        "facility_name", "facility", "organization", "location_name", "location", "city", "county", "state",
+        "service_affected", "service_line", "event_type", "access_direction", "historical_outcome",
+        "matched_event_id", "match_basis", "queue_action", "candidate_created", "review_status",
+        "publication_eligible", "publication_approval", "exclusion_reason", "provenance_links",
     )}
 
 
 def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str, captured_at: str, correction: dict[str, Any] | None = None, normalization_metadata: dict[str, Any] | None = None) -> tuple[list[dict[str, Any]], dict[str, int]]:
     rows = _rows(payload)
+    if domain == "care-line" and correction is not None:
+        if correction.get("raw_sha256") != raw_sha256:
+            raise ValueError("Care Line normalization sidecar raw_sha256 does not match the preserved alert")
+        if correction.get("domain") != "care-line":
+            raise ValueError("Care Line normalization sidecar domain mismatch")
+        if correction.get("normalization_type") != "prose_envelope_to_structured_findings":
+            raise ValueError("unsupported Care Line normalization sidecar type")
+        if correction.get("approved") is not True or correction.get("approval_scope") != "historical_normalization_only":
+            raise ValueError("Care Line sidecar approval is not limited to historical normalization")
+        if correction.get("publication_approval") is not False:
+            raise ValueError("Care Line normalization sidecar cannot grant publication approval")
+        rows = [dict(row) for row in correction.get("findings", []) if isinstance(row, dict)]
+        if not rows or len(rows) != len(correction.get("findings", [])):
+            raise ValueError("Care Line normalization sidecar findings must be a non-empty list of objects")
     existing = _existing_text(root, domain)
     published_care = _care_published_ids(root) if domain == "care-line" else set()
     normalized: list[dict[str, Any]] = []
@@ -334,6 +349,9 @@ def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str,
                 elif _care_identity(row) in care_targets["historical_identities"]:
                     historical_outcome, queue_action, match_basis = "duplicate_historical", "none", "historical_identity"
                     record.update({"review_status": "excluded", "candidate_created": False, "publication_eligible": False})
+                elif str(row.get("access_direction") or "").lower() == "access_expansion" or str(row.get("event_type") or "").lower() in {"planned_access_expansion", "service_expansion"}:
+                    historical_outcome, queue_action, match_basis = "archived_context", "none", "access_expansion_not_loss_event"
+                    record.update({"review_status": "historical_context", "candidate_created": False, "publication_eligible": False, "exclusion_reason": "access expansion retained as historical context; not a loss-event candidate"})
                 elif not source and not event_id:
                     historical_outcome, queue_action, match_basis = "needs_manual_review", "none", "missing_identity"
                     record.update({"review_status": "pending_review", "candidate_created": False, "publication_eligible": False})
@@ -352,6 +370,16 @@ def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str,
                     "agent_name": str(payload.get("agent_name") if isinstance(payload, dict) else "historical-agent"),
                     "agent_run_id": str(payload.get("agent_run_id") if isinstance(payload, dict) else ""),
                 })
+                if correction is not None:
+                    record["normalization_sidecar"] = {
+                        "raw_sha256": correction.get("raw_sha256"),
+                        "normalization_type": correction.get("normalization_type"),
+                        "reviewer": correction.get("reviewer"),
+                        "reviewed_at": correction.get("reviewed_at"),
+                        "approved": correction.get("approved"),
+                        "approval_scope": correction.get("approval_scope"),
+                        "publication_approval": correction.get("publication_approval"),
+                    }
                 outcome = historical_outcome
             if domain == "gaza": record.setdefault("provenance_links", [])
             outcomes[outcome] += 1; normalized.append(record)
@@ -369,5 +397,6 @@ def build_inventory(root: Path) -> dict[str, Any]:
         dates = [d for record in records for d in _date_values(record.get("source_published_at") or record.get("published_at") or record.get("event_date") or record.get("discovered_at"))]
         urls = {str(record.get("canonical_source_url") or record.get("source_url") or record.get("url")) for record in records if record.get("canonical_source_url") or record.get("source_url") or record.get("url")}
         outcomes = Counter(str(record.get("deduplication_outcome") or "needs_manual_review") for record in records)
-        inventory["domains"][domain] = {"raw_run_count": len(raw_files), "normalized_finding_count": len(records), "date_range": [min(dates), max(dates)] if dates else [], "unique_urls": len(urls), "duplicates": outcomes.get("duplicate_historical", 0), "matched_existing_records": outcomes.get("matched_existing", 0), "unmatched_records": outcomes.get("new_historical_candidate", 0), "invalid_records": outcomes.get("invalid", 0), "historical_candidate_count": sum(1 for r in records if r.get("candidate_created") is True), "invalid_archived_count": sum(1 for r in records if r.get("historical_outcome") == "archived_invalid"), "needs_manual_review_count": sum(1 for r in records if r.get("deduplication_outcome") == "needs_manual_review"), "excluded_count": sum(1 for r in records if r.get("review_status") == "excluded"), "candidate_creation_count": sum(1 for r in records if r.get("candidate_created") is True), "publication_ready_count": sum(1 for r in records if r.get("publication_eligible") is True), "missing_dates": sum(1 for r in records if not _date_values(r.get("source_published_at") or r.get("published_at") or r.get("event_date"))), "missing_evidence": sum(1 for r in records if not str(r.get("exact_supporting_passage") or r.get("evidence") or r.get("evidence_text") or r.get("summary") or "").strip()), "pending_review_count": sum(1 for r in records if r.get("review_status") == "pending_review")}
+        historical_outcomes = Counter(str(record.get("historical_outcome") or record.get("deduplication_outcome") or "needs_manual_review") for record in records)
+        inventory["domains"][domain] = {"raw_run_count": len(raw_files), "normalized_finding_count": len(records), "date_range": [min(dates), max(dates)] if dates else [], "unique_urls": len(urls), "duplicates": historical_outcomes.get("duplicate_historical", 0), "matched_existing_records": outcomes.get("matched_existing", 0), "unmatched_records": historical_outcomes.get("new_historical_candidate", 0), "invalid_records": outcomes.get("invalid", 0) + historical_outcomes.get("archived_invalid", 0), "historical_candidate_count": sum(1 for r in records if r.get("candidate_created") is True), "invalid_archived_count": historical_outcomes.get("archived_invalid", 0), "archived_context_count": historical_outcomes.get("archived_context", 0), "matched_published_event_count": historical_outcomes.get("matched_published_event", 0), "matched_reviewed_event_count": historical_outcomes.get("matched_reviewed_event", 0), "matched_existing_source_count": historical_outcomes.get("matched_existing_source", 0), "duplicate_historical_count": historical_outcomes.get("duplicate_historical", 0), "new_historical_candidate_count": historical_outcomes.get("new_historical_candidate", 0), "needs_manual_review_count": historical_outcomes.get("needs_manual_review", 0), "excluded_count": sum(1 for r in records if r.get("review_status") == "excluded"), "candidate_creation_count": sum(1 for r in records if r.get("candidate_created") is True), "publication_ready_count": sum(1 for r in records if r.get("publication_eligible") is True), "missing_dates": sum(1 for r in records if not _date_values(r.get("source_published_at") or r.get("published_at") or r.get("event_date"))), "missing_evidence": sum(1 for r in records if not str(r.get("exact_supporting_passage") or r.get("evidence") or r.get("evidence_text") or r.get("summary") or "").strip()), "pending_review_count": sum(1 for r in records if r.get("review_status") == "pending_review")}
     return inventory

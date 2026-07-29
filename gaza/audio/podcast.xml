@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Tue, 28 Jul 2026 13:00:57 +0000</lastBuildDate>
+  <lastBuildDate>Wed, 29 Jul 2026 13:00:54 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for July 29, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-29-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-07-29-transcript.html</guid>
+    <pubDate>Wed, 29 Jul 2026 00:00:00 +0000</pubDate>
+    <description>'Israeli settlers laid siege to our home': Inside a Palestinian village under weekly attack. A home on the edge of al-Mughayyir has become a weekly frontline in the battle for the occupied West Bank. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-07-29.mp3" length="814464" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for July 28, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-28-transcript.html</link>

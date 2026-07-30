@@ -72,6 +72,49 @@ python scripts/import_historical_agent_runs.py batch-dry-run --domain gaza --inp
 
 Do not run `batch-import` until the operator supplies and reviews a real Gaza export. Historical Gaza import writes are restricted to the private raw archive, normalized record, report, and history index. They never rebuild an edition, update source counts, create a story, alter audio or podcast artifacts, change published timestamps, or write Pages.
 
+## ICE controlled historical batch
+
+Copy each complete, unchanged ICE export to `data/agent-history-staging/ice/`. Raw prose, Markdown, JSON envelopes, and structured findings are accepted. When a prose export needs structured normalization, put the reviewed sidecar under `data/agent-history-staging/ice/corrections/`. A sidecar authorizes historical normalization only: it must declare the raw SHA-256, the `ice` domain, stable finding identities, `approval_scope: historical_normalization_only`, and `publication_approval: false`. Hash, domain, identity, duplicate-finding, unsupported-fact, or publication-approval conflicts fail closed.
+
+Private ICE matching authority is limited to traceable records under:
+
+- `data/dispatches/ice/` for private incident, source, legal, facility, and contract identifiers when such records exist.
+- `data/dispatches/cascadia/detention_watch/source_registry.json` and `data/dispatches/cascadia/detention_watch/baseline_2026-05-26.json` for the current private detention-facility monitoring source IDs, facility identity, locations, claim classes, source references, and historical dates. Their placeholder URLs are fixtures and are not canonical URL authority.
+- `data/universal_events/` for non-seed private immigration-enforcement identities. Synthetic seed fixtures and placeholder URLs are not matching authority.
+- `data/agent-history/ice/normalized/` for previously archived historical identities.
+
+The repository currently has no real normalized ICE historical record. `data/agent-history/ice/reports/history-index.json` is the empty private inventory. `data/universal_events/seed/universal_events_seed.json` and the unreviewed immigration-related candidates under `data/dispatches/american-pressure/candidates/` are fixtures or intake material, not authoritative ICE incident matches. No public ICE dispatch pipeline is inferred from these records.
+
+Matching uses explicit incident, legal/docket, source, facility/contract, removal-flight, canonical-URL, or normalized historical identities. Event date, location, facility, agency, incident type, affected person or group, and removal destination are conflict checks or fingerprint components; a similar headline never establishes a match. Reports include the explicit match basis and any conflicting-field diagnostics.
+
+The controlled primary and secondary event categories are:
+
+- Enforcement and custody: `enforcement_operation`, `arrest_or_apprehension`, `detention_transfer`, `detention_capacity_change`, `detention_facility_opening`, `detention_facility_closure`, `detention_overcrowding`, `removal_or_deportation`, and `removal_flight`.
+- Harm and force: `death_in_custody`, `serious_injury`, `hospitalization`, `medical_emergency`, `suicide_or_self_harm`, `shooting_or_firearm_discharge`, `taser_use`, `physical_force`, `pursuit`, `tactical_deployment`, and `delayed_or_denied_care`.
+- Legal, policy, and investigation: `legal_ruling`, `lawsuit_or_settlement`, `civil_rights_investigation`, `misconduct_investigation`, `policy_change`, `287g_action`, and `sanctuary_or_local_response`.
+- Community and context: `demonstration_or_community_disruption`, `workforce_or_business_disruption`, `school_or_agricultural_disruption`, `humanitarian_response`, and `archived_context`.
+
+Severity is private review metadata based only on documented facts. `critical` covers a fatality or death in custody, a documented officer-involved shooting or firearm injury, mass casualty, serious force with serious injury, or an explicit urgent system-wide detention or humanitarian crisis. `high` may cover documented serious injury, hospitalization, self-harm, major overcrowding, large enforcement or removal activity, a broad court injunction, or verified widespread community disruption. `medium`, `low`, and `context` retain findings that do not meet those thresholds. Unsupported elevated severity fails closed instead of being inferred from rhetoric.
+
+ICE outcomes are `matched_existing_incident`, `matched_existing_source`, `matched_existing_legal_record`, `duplicate_historical`, `new_historical_candidate`, `archived_context`, `archived_invalid`, and `needs_manual_review`. Every result remains private, has `publication_eligible: false` and `publication_approval: false`, and performs no live queue action. New candidates remain `pending_review`; invalid findings are `excluded`; context-only records use `historical_context`. Human review is required before any later workflow may use a historical finding.
+
+Per-finding reports retain raw hash, source/event dates, category/subtype, severity, location/facility, agency, casualty counts, activity flags, evidence level, match result, candidate state, review state, exclusion reason, and publication ineligibility. Batch reports aggregate raw runs, normalized findings, critical/high findings, fatalities, deaths in custody, serious injuries, hospitalizations, force incidents, enforcement operations, detention changes, removals, legal and policy actions, community disruptions, duplicates, invalid findings, and pending review. Publication-ready count is always zero.
+
+Read-only first-batch checks:
+
+```powershell
+python scripts/import_historical_agent_runs.py batch-validate --domain ice --input-dir "data/agent-history-staging/ice"
+python scripts/import_historical_agent_runs.py batch-dry-run --domain ice --input-dir "data/agent-history-staging/ice"
+```
+
+After explicit operator review, the private import command is:
+
+```powershell
+python scripts/import_historical_agent_runs.py batch-import --domain ice --input-dir "data/agent-history-staging/ice"
+```
+
+Do not run it until the operator supplies and reviews a real ICE export. ICE imports may write only `data/agent-history/ice/{raw,normalized,reports}` and private batch/history-index records. They must never write a public dispatch, `output/site`, Pages, another domain, Bluesky state, schedules, or a public event or publication queue.
+
 ## Operator export procedure
 
 1. Open the historical alert or task result.

@@ -13,6 +13,13 @@ from pathlib import Path
 from typing import Any
 
 from .adapters.food_line_agent import adapt_food_line_agent_output, map_finding_to_food_line_candidate
+from .ice_historical import (
+    ice_aggregate_metrics,
+    ice_historical_identity,
+    ice_match_targets,
+    ice_report as _ice_report,
+    normalize_ice_record,
+)
 
 DOMAINS = ("food-line", "care-line", "gaza", "ice")
 SCHEMA_VERSION = "historical_agent_raw_v1"
@@ -633,8 +640,8 @@ def _normalize_gaza_record(
 
 def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str, captured_at: str, correction: dict[str, Any] | None = None, normalization_metadata: dict[str, Any] | None = None) -> tuple[list[dict[str, Any]], dict[str, int]]:
     rows = _rows(payload)
-    if domain in {"care-line", "gaza"} and correction is not None:
-        label = "Care Line" if domain == "care-line" else "Gaza"
+    if domain in {"care-line", "gaza", "ice"} and correction is not None:
+        label = {"care-line": "Care Line", "gaza": "Gaza", "ice": "ICE"}[domain]
         if correction.get("raw_sha256") != raw_sha256:
             raise ValueError(f"{label} normalization sidecar raw_sha256 does not match the preserved alert")
         if correction.get("domain") != domain:
@@ -648,6 +655,13 @@ def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str,
         rows = [dict(row) for row in correction.get("findings", []) if isinstance(row, dict)]
         if not rows or len(rows) != len(correction.get("findings", [])):
             raise ValueError(f"{label} normalization sidecar findings must be a non-empty list of objects")
+        if domain == "ice":
+            finding_ids = [str(row.get("finding_id") or "").strip() for row in rows]
+            identities = [ice_historical_identity(row) for row in rows]
+            if any(not finding_id for finding_id in finding_ids):
+                raise ValueError("ICE normalization sidecar findings require stable finding_id values")
+            if len(set(finding_ids)) != len(finding_ids) or len(set(identities)) != len(identities):
+                raise ValueError("ICE normalization sidecar contains conflicting findings")
     existing = _existing_text(root, domain)
     published_care = _care_published_ids(root) if domain == "care-line" else set()
     normalized: list[dict[str, Any]] = []
@@ -711,6 +725,25 @@ def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str,
                 }
             outcomes[outcome] += 1
             normalized.append(record)
+    elif domain == "ice":
+        targets = ice_match_targets(root)
+        for row in rows:
+            record, outcome = normalize_ice_record(row, payload=payload, raw_sha256=raw_sha256, targets=targets)
+            if normalization_metadata:
+                record.update(normalization_metadata)
+            if correction is not None:
+                record["normalization_sidecar"] = {
+                    "raw_sha256": correction.get("raw_sha256"),
+                    "raw_file": correction.get("raw_file"),
+                    "normalization_type": correction.get("normalization_type"),
+                    "reviewer": correction.get("reviewer"),
+                    "reviewed_at": correction.get("reviewed_at"),
+                    "approved": correction.get("approved"),
+                    "approval_scope": correction.get("approval_scope"),
+                    "publication_approval": correction.get("publication_approval"),
+                }
+            outcomes[outcome] += 1
+            normalized.append(record)
     else:
         care_targets = care_line_match_targets(root) if domain == "care-line" else None
         for row in rows:
@@ -720,10 +753,6 @@ def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str,
             if domain == "care-line" and event_id in published_care: outcome = "matched_existing"
             if not source and not event_id: outcome = "needs_manual_review"
             record = dict(row); record.update({"domain": domain, "historical_backfill": True, "review_status": "pending_review", "raw_sha256": raw_sha256, "deduplication_outcome": outcome})
-            if domain == "ice":
-                for field in ("event_category", "event_date", "location", "agency_facility", "injuries", "fatalities", "detention", "removal", "legal", "policy", "evidence", "sources", "severity"):
-                    record.setdefault(field, None)
-                record.setdefault("verification_status", "pending_review")
             if domain == "care-line":
                 for field in ("source_snapshot_refs", "evidence_review_refs", "reviewed_record_refs", "universal_event_ids"):
                     record.setdefault(field, [])
@@ -802,5 +831,8 @@ def build_inventory(root: Path) -> dict[str, Any]:
         urls = {str(record.get("canonical_source_url") or record.get("source_url") or record.get("url")) for record in records if record.get("canonical_source_url") or record.get("source_url") or record.get("url")}
         outcomes = Counter(str(record.get("deduplication_outcome") or "needs_manual_review") for record in records)
         historical_outcomes = Counter(str(record.get("historical_outcome") or record.get("deduplication_outcome") or "needs_manual_review") for record in records)
-        inventory["domains"][domain] = {"raw_run_count": len(raw_files), "normalized_finding_count": len(records), "date_range": [min(dates), max(dates)] if dates else [], "unique_urls": len(urls), "duplicates": historical_outcomes.get("duplicate_historical", 0), "matched_existing_records": outcomes.get("matched_existing", 0), "unmatched_records": historical_outcomes.get("new_historical_candidate", 0), "invalid_records": outcomes.get("invalid", 0) + historical_outcomes.get("archived_invalid", 0), "historical_candidate_count": sum(1 for r in records if r.get("candidate_created") is True), "invalid_archived_count": historical_outcomes.get("archived_invalid", 0), "archived_context_count": historical_outcomes.get("archived_context", 0), "matched_published_event_count": historical_outcomes.get("matched_published_event", 0), "matched_published_edition_count": historical_outcomes.get("matched_published_edition", 0), "matched_reviewed_event_count": historical_outcomes.get("matched_reviewed_event", 0), "matched_existing_source_count": historical_outcomes.get("matched_existing_source", 0), "matched_existing_cluster_count": historical_outcomes.get("matched_existing_cluster", 0), "duplicate_historical_count": historical_outcomes.get("duplicate_historical", 0), "new_historical_candidate_count": historical_outcomes.get("new_historical_candidate", 0), "needs_manual_review_count": historical_outcomes.get("needs_manual_review", 0), "excluded_count": sum(1 for r in records if r.get("review_status") == "excluded"), "candidate_creation_count": sum(1 for r in records if r.get("candidate_created") is True), "publication_ready_count": sum(1 for r in records if r.get("publication_eligible") is True), "missing_dates": sum(1 for r in records if not _date_values(r.get("source_published_at") or r.get("published_at") or r.get("event_date"))), "missing_evidence": sum(1 for r in records if not str(r.get("exact_supporting_passage") or r.get("evidence") or r.get("evidence_text") or r.get("summary") or "").strip()), "pending_review_count": sum(1 for r in records if r.get("review_status") == "pending_review")}
+        domain_inventory = {"raw_run_count": len(raw_files), "normalized_finding_count": len(records), "date_range": [min(dates), max(dates)] if dates else [], "unique_urls": len(urls), "duplicates": historical_outcomes.get("duplicate_historical", 0), "matched_existing_records": outcomes.get("matched_existing", 0), "unmatched_records": historical_outcomes.get("new_historical_candidate", 0), "invalid_records": outcomes.get("invalid", 0) + historical_outcomes.get("archived_invalid", 0), "historical_candidate_count": sum(1 for r in records if r.get("candidate_created") is True), "invalid_archived_count": historical_outcomes.get("archived_invalid", 0), "archived_context_count": historical_outcomes.get("archived_context", 0), "matched_published_event_count": historical_outcomes.get("matched_published_event", 0), "matched_published_edition_count": historical_outcomes.get("matched_published_edition", 0), "matched_reviewed_event_count": historical_outcomes.get("matched_reviewed_event", 0), "matched_existing_source_count": historical_outcomes.get("matched_existing_source", 0), "matched_existing_cluster_count": historical_outcomes.get("matched_existing_cluster", 0), "duplicate_historical_count": historical_outcomes.get("duplicate_historical", 0), "new_historical_candidate_count": historical_outcomes.get("new_historical_candidate", 0), "needs_manual_review_count": historical_outcomes.get("needs_manual_review", 0), "excluded_count": sum(1 for r in records if r.get("review_status") == "excluded"), "candidate_creation_count": sum(1 for r in records if r.get("candidate_created") is True), "publication_ready_count": sum(1 for r in records if r.get("publication_eligible") is True), "missing_dates": sum(1 for r in records if not _date_values(r.get("source_published_at") or r.get("published_at") or r.get("event_date"))), "missing_evidence": sum(1 for r in records if not str(r.get("exact_supporting_passage") or r.get("evidence") or r.get("evidence_text") or r.get("summary") or "").strip()), "pending_review_count": sum(1 for r in records if r.get("review_status") == "pending_review")}
+        if domain == "ice":
+            domain_inventory.update(ice_aggregate_metrics(records, raw_runs=len(raw_files)))
+        inventory["domains"][domain] = domain_inventory
     return inventory

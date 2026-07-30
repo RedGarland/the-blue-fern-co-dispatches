@@ -1,11 +1,12 @@
 from __future__ import annotations
-import argparse, base64, hashlib, io, json
+import argparse, base64, hashlib, io, json, re
 from contextlib import redirect_stdout
 from datetime import datetime, timezone
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from bluefern_dispatches.historical_agent_archive import DOMAINS, SCHEMA_VERSION, HistoricalEnvelopeError, _care_report, _gaza_report, archive_root, atomic_json, build_inventory, normalize_records, parse_historical_input, sha256_bytes, validate_input
+from bluefern_dispatches.historical_agent_archive import DOMAINS, SCHEMA_VERSION, HistoricalEnvelopeError, _care_report, _gaza_report, _ice_report, archive_root, atomic_json, build_inventory, normalize_records, parse_historical_input, sha256_bytes, validate_input
+from bluefern_dispatches.ice_historical import ice_aggregate_metrics
 
 SUPPORTED_BATCH_EXTENSIONS = {".txt", ".md", ".json"}
 IGNORED_BATCH_DIRECTORIES = {"corrections", "raw", "normalized", "reports", "batches", "archive"}
@@ -56,6 +57,91 @@ def _sidecar_payloads(input_dir: Path) -> list[tuple[Path, dict]]:
         if isinstance(value, dict):
             payloads.append((path, value))
     return payloads
+
+
+def _raw_supports_date(raw_text: str, value: object) -> bool:
+    token = str(value or "").strip()[:10]
+    if not token:
+        return True
+    if token in raw_text:
+        return True
+    try:
+        parsed = datetime.fromisoformat(token)
+    except ValueError:
+        return False
+    variants = {
+        f"{parsed.strftime('%B')} {parsed.day}, {parsed.year}",
+        f"{parsed.strftime('%b')} {parsed.day}, {parsed.year}",
+        f"{parsed.month}/{parsed.day}/{parsed.year}",
+        f"{parsed.month:02d}/{parsed.day:02d}/{parsed.year}",
+    }
+    lower_raw = raw_text.lower()
+    return any(variant.lower() in lower_raw for variant in variants)
+
+
+def _raw_supports_agency(raw_text: str, value: object) -> bool:
+    token = str(value or "").strip()
+    if not token:
+        return True
+    lower_raw = raw_text.lower()
+    if token.lower() in lower_raw:
+        return True
+    lower_token = token.lower()
+    if "immigration and customs enforcement" in lower_token and re.search(r"\bice\b", raw_text, flags=re.I):
+        return True
+    if "department of homeland security" in lower_token and re.search(r"\bdhs\b", raw_text, flags=re.I):
+        return True
+    return False
+
+
+def _raw_supports_count(evidence: str, field: str, value: object) -> bool:
+    if value in (None, ""):
+        return True
+    try:
+        number = int(value)
+    except (TypeError, ValueError):
+        return False
+    words = {
+        0: ("zero", "no"),
+        1: ("one",),
+        2: ("two",),
+        3: ("three",),
+        4: ("four",),
+        5: ("five",),
+        6: ("six",),
+        7: ("seven",),
+        8: ("eight",),
+        9: ("nine",),
+        10: ("ten",),
+    }
+    count_present = bool(re.search(rf"\b{number}\b", evidence)) or any(re.search(rf"\b{word}\b", evidence, flags=re.I) for word in words.get(number, ()))
+    concepts = {
+        "fatalities": ("fatal", "death", "died", "killed"),
+        "serious_injuries": ("serious injur", "injured"),
+        "hospitalizations": ("hospital"),
+    }
+    return count_present and any(concept in evidence.lower() for concept in concepts[field])
+
+
+def _validate_ice_sidecar_against_raw(raw_text: str, correction: dict) -> None:
+    for finding in correction.get("findings", []):
+        if not isinstance(finding, dict):
+            continue
+        passage = str(finding.get("exact_supporting_passage") or "")
+        if not passage or passage not in raw_text:
+            raise ValueError("ICE normalization sidecar exact supporting passage is not present in the preserved alert")
+        for field in ("event_date", "source_published_at"):
+            if not _raw_supports_date(raw_text, finding.get(field)):
+                raise ValueError(f"ICE normalization sidecar {field} is not supported by the preserved alert")
+        for field in ("location_name", "city", "county", "facility_name"):
+            token = str(finding.get(field) or "").strip()
+            if token and token.lower() not in raw_text.lower():
+                raise ValueError(f"ICE normalization sidecar {field} is not supported by the preserved alert")
+        if not _raw_supports_agency(raw_text, finding.get("agency")):
+            raise ValueError("ICE normalization sidecar agency is not supported by the preserved alert")
+        for field in ("fatalities", "serious_injuries", "hospitalizations"):
+            if not _raw_supports_count(passage, field, finding.get(field)):
+                raise ValueError(f"ICE normalization sidecar {field} is not supported by its exact passage")
 
 
 def _validate_sidecar_identity(input_path: Path, sidecar_path: Path, sidecar: dict) -> None:
@@ -131,13 +217,13 @@ def _batch_format(validation: dict) -> str:
     return str(validation.get("normalization_method") or validation.get("source_format") or "unknown")
 
 
-def _batch_aggregates(files: list[dict]) -> dict:
+def _batch_aggregates(files: list[dict], *, domain: str = "") -> dict:
     outcomes: dict[str, int] = {}
     for item in files:
         for key, count in (item.get("outcomes") or {}).items():
             outcomes[key] = outcomes.get(key, 0) + int(count)
     imported_statuses = {"imported", "archived", "revised"}
-    return {
+    result = {
         "total_files": len(files),
         "valid_files": sum(1 for item in files if item.get("validation_status") == "valid"),
         "imported_files": sum(1 for item in files if item.get("import_status") in imported_statuses),
@@ -153,6 +239,10 @@ def _batch_aggregates(files: list[dict]) -> dict:
         "needs_manual_review_records": outcomes.get("needs_manual_review", 0),
         "publication_ready_count": 0,
     }
+    if domain == "ice":
+        findings = [finding for item in files for finding in item.get("ice_findings", []) if isinstance(finding, dict)]
+        result.update(ice_aggregate_metrics(findings, raw_runs=len(files)))
+    return result
 
 
 def _batch_main(args: argparse.Namespace) -> int:
@@ -196,6 +286,8 @@ def _batch_main(args: argparse.Namespace) -> int:
                 entry["proposed_outcome"] = str(proposed.get("outcome") or "")
                 entry["outcomes"] = proposed.get("outcomes") or {}
                 entry["candidate_count"] = int(proposed.get("candidate_count") or 0)
+                if args.domain == "ice":
+                    entry["ice_findings"] = proposed.get("ice_findings") or []
         except Exception as exc:
             entry.update(status="failed", validation_status="invalid", error=f"{type(exc).__name__}: {exc}")
         entries.append(entry)
@@ -223,6 +315,8 @@ def _batch_main(args: argparse.Namespace) -> int:
             entry["status"] = entry["import_status"]
             entry["outcomes"] = imported.get("outcomes") or entry["outcomes"]
             entry["candidate_count"] = int(imported.get("candidate_count") or 0)
+            if args.domain == "ice":
+                entry["ice_findings"] = imported.get("ice_findings") or entry.get("ice_findings") or []
             digest = entry["sha256"]
             base = archive_root(args.repo_root, args.domain)
             entry["artifact_paths"] = {
@@ -243,7 +337,7 @@ def _batch_main(args: argparse.Namespace) -> int:
         "ordered_files": [entry["filename"] for entry in entries],
         "files": entries,
     }
-    result.update(_batch_aggregates(entries))
+    result.update(_batch_aggregates(entries, domain=args.domain))
     if operation == "import":
         result["status"] = "blocked_validation" if blocked_validation else ("partial_failed" if any(entry["status"] == "failed" for entry in entries) else ("partial_completed" if invalid else "completed"))
         report_path = archive_root(args.repo_root, args.domain) / "reports" / "batches" / f"{batch_id}.json"
@@ -285,8 +379,8 @@ def main(argv: list[str] | None = None) -> int:
     except HistoricalEnvelopeError as exc:
         print(json.dumps({"valid": False, "domain": args.domain, "input_sha256": digest, "error": str(exc), "dry_run": args.operation in {"dry-run", "report"}}, ensure_ascii=False, sort_keys=True, indent=2)); return 1
     correction = json.loads(args.correction.read_text(encoding="utf-8")) if args.correction else None
-    if args.domain in {"care-line", "gaza"} and correction is not None:
-        label = "Care Line" if args.domain == "care-line" else "Gaza"
+    if args.domain in {"care-line", "gaza", "ice"} and correction is not None:
+        label = {"care-line": "Care Line", "gaza": "Gaza", "ice": "ICE"}[args.domain]
         expected_raw = (args.repo_root / str(correction.get("raw_file") or "")).resolve()
         if expected_raw != args.input.resolve():
             raise ValueError(f"{label} normalization sidecar raw_file does not match the supplied alert")
@@ -295,7 +389,9 @@ def main(argv: list[str] | None = None) -> int:
             source_url = str(finding.get("source_url") or "") if isinstance(finding, dict) else ""
             if not source_url or source_url not in raw_text:
                 raise ValueError(f"{label} normalization sidecar source URL is not present in the preserved alert")
-        if args.domain == "gaza":
+        if args.domain == "ice":
+            _validate_ice_sidecar_against_raw(raw_text, correction)
+        if args.domain in {"gaza", "ice"}:
             normalization_metadata = dict(normalization_metadata)
             normalization_metadata["normalization_method"] = correction.get("normalization_type")
     normalized, outcomes = normalize_records(args.repo_root, args.domain, payload, raw_sha256=digest, captured_at=captured, correction=correction, normalization_metadata=normalization_metadata)
@@ -305,12 +401,14 @@ def main(argv: list[str] | None = None) -> int:
         result["care_line_findings"] = [_care_report(record) for record in normalized]
     if args.domain == "gaza":
         result["gaza_findings"] = [_gaza_report(record) for record in normalized]
+    if args.domain == "ice":
+        result["ice_findings"] = [_ice_report(record) for record in normalized]
     if args.operation in {"import", "normalize"}:
         base = archive_root(args.repo_root, args.domain); raw_path = base / "raw" / f"{digest}.json"; normalized_path = base / "normalized" / f"{digest}.json"; report_path = base / "reports" / f"{digest}.json"
         correction_digest = sha256_bytes(args.correction.read_bytes())[:16] if args.correction else ""
         if raw_path.exists() and correction_digest:
             base_normalized_path, base_report_path = normalized_path, report_path
-            if args.domain in {"care-line", "gaza"} and base_normalized_path.exists():
+            if args.domain in {"care-line", "gaza", "ice"} and base_normalized_path.exists():
                 try:
                     prior_normalized = json.loads(base_normalized_path.read_text(encoding="utf-8"))
                     already_applied = any((item.get("normalization_sidecar") or {}).get("raw_sha256") == digest for item in prior_normalized.get("findings", []))

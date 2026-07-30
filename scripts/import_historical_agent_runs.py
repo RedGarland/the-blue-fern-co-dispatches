@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from bluefern_dispatches.historical_agent_archive import DOMAINS, SCHEMA_VERSION, HistoricalEnvelopeError, _care_report, archive_root, atomic_json, build_inventory, normalize_records, parse_historical_input, sha256_bytes, validate_input
+from bluefern_dispatches.historical_agent_archive import DOMAINS, SCHEMA_VERSION, HistoricalEnvelopeError, _care_report, _gaza_report, archive_root, atomic_json, build_inventory, normalize_records, parse_historical_input, sha256_bytes, validate_input
 
 SUPPORTED_BATCH_EXTENSIONS = {".txt", ".md", ".json"}
 IGNORED_BATCH_DIRECTORIES = {"corrections", "raw", "normalized", "reports", "batches", "archive"}
@@ -147,7 +147,7 @@ def _batch_aggregates(files: list[dict]) -> dict:
         "candidates_created": sum(int(item.get("candidate_count") or 0) for item in files),
         "archived_invalid_findings": outcomes.get("archived_invalid", 0) + outcomes.get("invalid", 0),
         "archived_context_findings": outcomes.get("archived_context", 0),
-        "matched_published_records": outcomes.get("matched_published_event", 0),
+        "matched_published_records": outcomes.get("matched_published_event", 0) + outcomes.get("matched_published_edition", 0),
         "matched_reviewed_records": outcomes.get("matched_reviewed_event", 0),
         "duplicate_historical_records": outcomes.get("duplicate_historical", 0),
         "needs_manual_review_records": outcomes.get("needs_manual_review", 0),
@@ -292,10 +292,12 @@ def main(argv: list[str] | None = None) -> int:
             if not source_url or source_url not in raw_text:
                 raise ValueError("Care Line normalization sidecar source URL is not present in the preserved alert")
     normalized, outcomes = normalize_records(args.repo_root, args.domain, payload, raw_sha256=digest, captured_at=captured, correction=correction, normalization_metadata=normalization_metadata)
-    candidate_count = sum(outcomes.get(key, 0) for key in ("new_historical_candidate", "matched_existing")); invalid_count = outcomes.get("invalid", 0) + outcomes.get("archived_invalid", 0)
+    candidate_count = sum(1 for record in normalized if record.get("candidate_created") is True); invalid_count = outcomes.get("invalid", 0) + outcomes.get("archived_invalid", 0)
     result = {"valid": validation["valid"], "domain": args.domain, "input_sha256": digest, "raw_record_count": 1, "normalized_finding_count": len(normalized), "outcomes": outcomes, "candidate_count": candidate_count, "invalid_finding_count": invalid_count, "outcome": "archived_invalid" if invalid_count and not candidate_count else ("candidate_ready" if candidate_count else "needs_manual_review"), "correction_path": str(args.correction) if args.correction else "", "normalization_method": normalization_metadata.get("normalization_method"), "dry_run": args.operation in {"dry-run", "report"}}
     if args.domain == "care-line":
         result["care_line_findings"] = [_care_report(record) for record in normalized]
+    if args.domain == "gaza":
+        result["gaza_findings"] = [_gaza_report(record) for record in normalized]
     if args.operation in {"import", "normalize"}:
         base = archive_root(args.repo_root, args.domain); raw_path = base / "raw" / f"{digest}.json"; normalized_path = base / "normalized" / f"{digest}.json"; report_path = base / "reports" / f"{digest}.json"
         correction_digest = sha256_bytes(args.correction.read_bytes())[:16] if args.correction else ""

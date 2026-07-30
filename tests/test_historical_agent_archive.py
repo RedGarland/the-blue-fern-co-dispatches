@@ -77,7 +77,8 @@ def test_gaza_matches_existing_source_and_ice_stays_private(tmp_path: Path):
     source = tmp_path / "data/dispatches/gaza/sources/2026-01-01.json"; source.parent.mkdir(parents=True)
     source.write_text(json.dumps({"url": "https://example.com/gaza"}), encoding="utf-8")
     records, _ = normalize_records(tmp_path, "gaza", [{"source_url": "https://example.com/gaza", "event_date": "2026-01-01", "evidence": "alert"}], raw_sha256="x", captured_at="2026-07-28T00:00:00Z")
-    assert records[0]["deduplication_outcome"] == "matched_existing"
+    assert records[0]["historical_outcome"] == "matched_existing_source"
+    assert records[0]["candidate_created"] is False
     ice = tmp_path / "ice.json"; ice.write_text("detention alert", encoding="utf-8")
     assert main(["import", "--domain", "ice", "--input", str(ice), "--repo-root", str(tmp_path)]) == 0
     assert not (tmp_path / "output/site").exists()

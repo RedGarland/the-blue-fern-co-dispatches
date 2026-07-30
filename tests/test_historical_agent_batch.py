@@ -195,7 +195,8 @@ def test_cross_domain_batch_safety(tmp_path: Path, capsys):
     write_json(tmp_path / "data/dispatches/gaza/sources/existing.json", {"url": "https://example.com/gaza"})
     write_json(gaza_dir / "gaza.json", {"findings": [{"source_url": "https://example.com/gaza", "event_date": "2026-07-20", "evidence": "Historical report."}]})
     _, gaza = run_json(capsys, ["batch-dry-run", "--domain", "gaza", "--input-dir", str(gaza_dir), "--repo-root", str(tmp_path)])
-    assert gaza["files"][0]["outcomes"] == {"matched_existing": 1}
+    assert gaza["files"][0]["outcomes"] == {"matched_existing_source": 1}
+    assert gaza["files"][0]["candidate_count"] == 0
 
     ice_dir = tmp_path / "ice"
     write_json(ice_dir / "ice.json", {"findings": [{"source_url": "https://example.com/ice", "event_date": "2026-07-20", "evidence": "Private record."}]})

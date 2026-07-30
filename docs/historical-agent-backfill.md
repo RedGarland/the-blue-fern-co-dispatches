@@ -47,6 +47,31 @@ Care normalization emits `matched_published_event`, `matched_reviewed_event`, `m
 
 Evidence-insufficient Food Line findings are still preserved in the private historical archive as `archived_invalid` records with `review_status: excluded`, `candidate_created: false`, and `publication_eligible: false`. They never enter current intake, queues, editions, or approval state. A later approved evidence correction creates a separate normalized revision while retaining the original invalid record and raw bytes.
 
+## Gaza controlled historical batch
+
+Copy complete, unchanged Gaza exports to `data/agent-history-staging/gaza/`. Structured normalization sidecars, when required, belong under `data/agent-history-staging/gaza/corrections/`.
+
+Private Gaza matching authority is:
+
+- `data/records/editions.json` and `output/dispatches/gaza/editions/*/edition_manifest.json` for published edition identity and edition dates.
+- `data/dispatches/gaza/sources/*/manual_sources.json`, `raw/*/raw_sources.json`, `normalized/*/normalized_sources.json`, `output/dispatches/gaza/editions/*/sources_manifest.json`, and Gaza rows in `data/records/sources.json` for source URLs, source/manual IDs, publishers, source dates, roles, edition dates, and story use.
+- `data/records/story_memory.json`, private Gaza dedupe reports, and private curation manifests for exact story IDs, event-cluster IDs, topic fingerprints, normalized event keys, and source-to-cluster provenance.
+- `data/dispatches/gaza/editions/*/run_manifest.json` for private publication-run metadata. No separate private Gaza audio index currently exists; rendered audio pages and feeds are protected outputs, not matching authority.
+- `data/agent-history/gaza/normalized/` for prior historical identities.
+
+Gaza matching prefers canonical source URL and explicit source/story/cluster identifiers. A title match is accepted only as an exact normalized title + date + publisher composite; headline similarity alone is never sufficient. Conflicting dates, URLs, or identifiers do not get reconciled by fuzzy title matching.
+
+Gaza historical outcomes are `matched_published_edition`, `matched_existing_source`, `matched_existing_cluster`, `duplicate_historical`, `new_historical_candidate`, `archived_context`, `archived_invalid`, and `needs_manual_review`. Published, source, and cluster matches are provenance-only and create no story. Unmatched traceable findings remain private pending-review candidates. West Bank-only or explicit non-Gaza context is archived as context; findings without exact evidence are archived invalid. Every outcome has `publication_eligible: false` and `publication_approval: false`.
+
+Read-only first-batch checks:
+
+```powershell
+python scripts/import_historical_agent_runs.py batch-validate --domain gaza --input-dir "data/agent-history-staging/gaza"
+python scripts/import_historical_agent_runs.py batch-dry-run --domain gaza --input-dir "data/agent-history-staging/gaza"
+```
+
+Do not run `batch-import` until the operator supplies and reviews a real Gaza export. Historical Gaza import writes are restricted to the private raw archive, normalized record, report, and history index. They never rebuild an edition, update source counts, create a story, alter audio or podcast artifacts, change published timestamps, or write Pages.
+
 ## Operator export procedure
 
 1. Open the historical alert or task result.

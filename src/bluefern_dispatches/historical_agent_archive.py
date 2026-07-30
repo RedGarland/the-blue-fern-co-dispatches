@@ -633,20 +633,21 @@ def _normalize_gaza_record(
 
 def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str, captured_at: str, correction: dict[str, Any] | None = None, normalization_metadata: dict[str, Any] | None = None) -> tuple[list[dict[str, Any]], dict[str, int]]:
     rows = _rows(payload)
-    if domain == "care-line" and correction is not None:
+    if domain in {"care-line", "gaza"} and correction is not None:
+        label = "Care Line" if domain == "care-line" else "Gaza"
         if correction.get("raw_sha256") != raw_sha256:
-            raise ValueError("Care Line normalization sidecar raw_sha256 does not match the preserved alert")
-        if correction.get("domain") != "care-line":
-            raise ValueError("Care Line normalization sidecar domain mismatch")
+            raise ValueError(f"{label} normalization sidecar raw_sha256 does not match the preserved alert")
+        if correction.get("domain") != domain:
+            raise ValueError(f"{label} normalization sidecar domain mismatch")
         if correction.get("normalization_type") != "prose_envelope_to_structured_findings":
-            raise ValueError("unsupported Care Line normalization sidecar type")
+            raise ValueError(f"unsupported {label} normalization sidecar type")
         if correction.get("approved") is not True or correction.get("approval_scope") != "historical_normalization_only":
-            raise ValueError("Care Line sidecar approval is not limited to historical normalization")
+            raise ValueError(f"{label} sidecar approval is not limited to historical normalization")
         if correction.get("publication_approval") is not False:
-            raise ValueError("Care Line normalization sidecar cannot grant publication approval")
+            raise ValueError(f"{label} normalization sidecar cannot grant publication approval")
         rows = [dict(row) for row in correction.get("findings", []) if isinstance(row, dict)]
         if not rows or len(rows) != len(correction.get("findings", [])):
-            raise ValueError("Care Line normalization sidecar findings must be a non-empty list of objects")
+            raise ValueError(f"{label} normalization sidecar findings must be a non-empty list of objects")
     existing = _existing_text(root, domain)
     published_care = _care_published_ids(root) if domain == "care-line" else set()
     normalized: list[dict[str, Any]] = []
@@ -697,6 +698,17 @@ def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str,
             record, outcome = _normalize_gaza_record(row, payload=payload, raw_sha256=raw_sha256, targets=targets)
             if normalization_metadata:
                 record.update(normalization_metadata)
+            if correction is not None:
+                record["normalization_sidecar"] = {
+                    "raw_sha256": correction.get("raw_sha256"),
+                    "raw_file": correction.get("raw_file"),
+                    "normalization_type": correction.get("normalization_type"),
+                    "reviewer": correction.get("reviewer"),
+                    "reviewed_at": correction.get("reviewed_at"),
+                    "approved": correction.get("approved"),
+                    "approval_scope": correction.get("approval_scope"),
+                    "publication_approval": correction.get("publication_approval"),
+                }
             outcomes[outcome] += 1
             normalized.append(record)
     else:

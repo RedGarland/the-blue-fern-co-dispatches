@@ -215,3 +215,96 @@ def test_batch_validate_and_dry_run_write_nothing(tmp_path: Path, capsys):
         assert result["valid_files"] == 1
         assert result["publication_ready_count"] == 0
         assert not (tmp_path / "data/agent-history").exists()
+
+
+def gaza_prose_sidecar(root: Path, raw_path: Path, **extra) -> Path:
+    digest = hashlib.sha256(raw_path.read_bytes()).hexdigest()
+    value = {
+        "raw_sha256": digest,
+        "raw_file": raw_path.relative_to(root).as_posix(),
+        "domain": "gaza",
+        "normalization_type": "prose_envelope_to_structured_findings",
+        "reviewer": "fixture",
+        "reviewed_at": "2026-07-30T00:00:00Z",
+        "approved": True,
+        "approval_scope": "historical_normalization_only",
+        "publication_approval": False,
+        "findings": [finding(
+            "https://example.com/gaza-report?utm_source=agent",
+            canonical_source_url="https://example.com/gaza-report",
+            event_date="2026-07-25",
+            source_published_at="2026-07-30",
+            raw_finding_reference="development paragraph",
+        )],
+    }
+    value.update(extra)
+    path = raw_path.parent / "corrections" / "structured.json"
+    write_json(path, value)
+    return path
+
+
+def test_structured_gaza_sidecar_normalizes_prose_without_mutation(tmp_path: Path, capsys):
+    raw_path = tmp_path / "data/agent-history-staging/gaza/alert.txt"
+    raw_path.parent.mkdir(parents=True)
+    raw = (
+        "UNRWA reported an injury in Gaza on July 25, 2026.\n"
+        "https://example.com/gaza-report?utm_source=agent\n"
+    ).encode()
+    raw_path.write_bytes(raw)
+    sidecar = gaza_prose_sidecar(tmp_path, raw_path)
+    before = raw_path.read_bytes()
+    assert main(["dry-run", "--domain", "gaza", "--input", str(raw_path), "--correction", str(sidecar), "--repo-root", str(tmp_path)]) == 0
+    result = json.loads(capsys.readouterr().out)
+    record = result["gaza_findings"][0]
+    assert result["normalization_method"] == "prose_envelope_to_structured_findings"
+    assert result["outcomes"] == {"new_historical_candidate": 1}
+    assert record["canonical_source_url"] == "https://example.com/gaza-report"
+    assert record["event_date"] == "2026-07-25"
+    assert record["source_published_at"] == "2026-07-30"
+    assert record["candidate_created"] is True
+    assert record["publication_eligible"] is False
+    assert raw_path.read_bytes() == before
+    assert not (tmp_path / "data/agent-history/gaza").exists()
+
+
+def test_structured_gaza_sidecar_fails_closed_on_identity_or_approval(tmp_path: Path):
+    raw_path = tmp_path / "data/agent-history-staging/gaza/alert.txt"
+    raw_path.parent.mkdir(parents=True)
+    raw_path.write_text("https://example.com/gaza-report?utm_source=agent\n", encoding="utf-8")
+    sidecar = gaza_prose_sidecar(tmp_path, raw_path, publication_approval=True)
+    try:
+        main(["dry-run", "--domain", "gaza", "--input", str(raw_path), "--correction", str(sidecar), "--repo-root", str(tmp_path)])
+    except ValueError as exc:
+        assert "cannot grant publication approval" in str(exc)
+    else:
+        raise AssertionError("Gaza normalization sidecar must fail closed on publication approval")
+
+
+def test_structured_gaza_sidecar_import_is_idempotent(tmp_path: Path, capsys):
+    staging = tmp_path / "data/agent-history-staging/gaza"
+    raw_path = staging / "alert.txt"
+    raw_path.parent.mkdir(parents=True)
+    raw = (
+        "UNRWA reported an injury in Gaza on July 25, 2026.\n"
+        "https://example.com/gaza-report?utm_source=agent\n"
+    ).encode()
+    raw_path.write_bytes(raw)
+    gaza_prose_sidecar(tmp_path, raw_path)
+    args = ["batch-import", "--domain", "gaza", "--input-dir", str(staging), "--repo-root", str(tmp_path)]
+    assert main(args) == 0
+    first = json.loads(capsys.readouterr().out)
+    assert main(args) == 0
+    second = json.loads(capsys.readouterr().out)
+    digest = hashlib.sha256(raw).hexdigest()
+    stored = json.loads((tmp_path / f"data/agent-history/gaza/raw/{digest}.json").read_text(encoding="utf-8"))
+    normalized = json.loads((tmp_path / f"data/agent-history/gaza/normalized/{digest}.json").read_text(encoding="utf-8"))
+    assert first["imported_files"] == 1
+    assert second["idempotent_files"] == 1
+    assert base64.b64decode(stored["raw_bytes_base64"]) == raw
+    assert normalized["findings"][0]["normalization_sidecar"]["raw_sha256"] == digest
+    assert not list((tmp_path / "data/agent-history/gaza/normalized").glob("revision-*.json"))
+    history_index = json.loads((tmp_path / "data/agent-history/gaza/reports/history-index.json").read_text(encoding="utf-8"))
+    assert history_index["raw_run_count"] == 1
+    assert history_index["normalized_finding_count"] == 1
+    assert history_index["historical_candidate_count"] == 1
+    assert history_index["publication_ready_count"] == 0

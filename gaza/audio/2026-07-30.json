@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-07-30",
+  "generated_at": "2026-07-30T13:01:05.112714Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-07-30.mp3",
+  "audio_url": "/gaza/audio/2026-07-30.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1407,
+  "tts_input_word_count": 214,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1533696,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-07-30T13:01:05.112675Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-07-30-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-07-30/",
+  "script_text": "This is the Gaza Dispatch audio briefing for July 30, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Israeli raids and settler attacks intensify across the occupied West Bank. This was reported by Al Jazeera.\n\n2. Several children killed and wounded in Israeli attacks across Gaza. Israeli strikes hit multiple areas across Gaza overnight, including tents sheltering displaced families in al-Mawasi. This was reported by Al Jazeera.\n\n3. Israeli strikes kill at least four, including children, across Gaza Strip. Bombings take place as Hamas officials meet with Qatari, Egyptian and Turkish mediators in Cairo to discuss truce. This was reported by Al Jazeera.\n\n4. The Israeli-Palestinian conflict will not be solved with violence, military - The Jerusalem Post. The Israeli-Palestinian conflict will not be solved with violence, military. This was reported by The Jerusalem Post.\n\n5. India's arms sale to Israel risks complicity in Gaza genocide, Amnesty says. Rights group says India continues to support the Israeli military despite genocide 'broadcast worldwide on daily basis'. This was reported by Al Jazeera.\n\n6. Israel building new land barriers in Gaza and displacing families. Experts have told the BBC that the earthworks suggest. This was reported by BBC News.\n\nFor the full source-backed dispatch, read the July 30, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-07-30-aljazeera-middle-east-6f1809185195",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/7/30/israeli-raids-and-settler-attacks-intensify-across-the-occupied-west-bank?traffic_source=rss",
+      "title": "Israeli raids and settler attacks intensify across the occupied West Bank"
+    },
+    {
+      "source_record_id": "gaza-2026-07-30-aljazeera-middle-east-21f726b3bb2d",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/7/30/several-children-killed-and-wounded-in-israeli-attacks-across-gaza?traffic_source=rss",
+      "title": "Several children killed and wounded in Israeli attacks across Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-07-30-aljazeera-middle-east-c1ca2b2a3a9e",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/7/30/israeli-strikes-kill-at-least-four-including-children-across-gaza-strip?traffic_source=rss",
+      "title": "Israeli strikes kill at least four, including children, across Gaza Strip"
+    },
+    {
+      "source_record_id": "gaza-2026-07-30-jpost-gaza-accountability-query-ab1293ca3b04",
+      "publisher": "The Jerusalem Post",
+      "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9ZZHFUbHh1QkZFdjVTUTQtOExQS1phRkhCU2RrWjlybTB2aUItNnJoX3pwcC1sZ0hwX0pJTmVrMUhnLWVmZ2J3eEk5bnpsREdFZm1FZEd6RQ?oc=5",
+      "title": "The Israeli-Palestinian conflict will not be solved with violence, military - The Jerusalem Post"
+    },
+    {
+      "source_record_id": "gaza-2026-07-30-aljazeera-middle-east-1406dd180bd1",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/7/30/indias-arms-sale-to-israel-risks-complicity-in-gaza-genocide-amnesty-says?traffic_source=rss",
+      "title": "India's arms sale to Israel risks complicity in Gaza genocide, Amnesty says"
+    },
+    {
+      "source_record_id": "gaza-2026-07-30-bbc-middle-east-277e308cf758",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/cpvwjmme3p0o?at_medium=RSS&at_campaign=rss",
+      "title": "Israel building new land barriers in Gaza and displacing families"
+    }
+  ]
+}

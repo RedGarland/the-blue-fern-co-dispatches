@@ -1,0 +1,391 @@
+[
+  {
+    "story_id": "gaza-story-2026-07-30-004",
+    "title": "Israeli raids and settler attacks intensify across the occupied West Bank",
+    "summary": "",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 71,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-30-aljazeera-middle-east-6f1809185195"
+    ],
+    "source_ids": [
+      "gaza-2026-07-30-aljazeera-middle-east-6f1809185195"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/7/30/israeli-raids-and-settler-attacks-intensify-across-the-occupied-west-bank?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-30-aljazeera-middle-east-6f1809185195",
+        "title": "Israeli raids and settler attacks intensify across the occupied West Bank",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/7/30/israeli-raids-and-settler-attacks-intensify-across-the-occupied-west-bank?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israeli raids and settler attacks intensify across the occupied West Bank"
+      }
+    ],
+    "generated_at": "2026-07-30T13:00:47.786340+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 71,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-29-001",
+    "prior_edition_date": "2026-07-29",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-30-005",
+    "title": "Several children killed and wounded in Israeli attacks across Gaza",
+    "summary": "Israeli strikes hit multiple areas across Gaza overnight, including tents sheltering displaced families in al-Mawasi.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 69,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-30-aljazeera-middle-east-21f726b3bb2d"
+    ],
+    "source_ids": [
+      "gaza-2026-07-30-aljazeera-middle-east-21f726b3bb2d"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/7/30/several-children-killed-and-wounded-in-israeli-attacks-across-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-30-aljazeera-middle-east-21f726b3bb2d",
+        "title": "Several children killed and wounded in Israeli attacks across Gaza",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/7/30/several-children-killed-and-wounded-in-israeli-attacks-across-gaza?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israeli strikes hit multiple areas across Gaza overnight, including tents sheltering displaced families in al-Mawasi."
+      }
+    ],
+    "generated_at": "2026-07-30T13:00:47.786340+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 69,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-28-008",
+    "prior_edition_date": "2026-06-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-30-003",
+    "title": "Israeli strikes kill at least four, including children, across Gaza Strip",
+    "summary": "Bombings take place as Hamas officials meet with Qatari, Egyptian and Turkish mediators in Cairo to discuss truce.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 61,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-30-aljazeera-middle-east-c1ca2b2a3a9e"
+    ],
+    "source_ids": [
+      "gaza-2026-07-30-aljazeera-middle-east-c1ca2b2a3a9e"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/7/30/israeli-strikes-kill-at-least-four-including-children-across-gaza-strip?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-30-aljazeera-middle-east-c1ca2b2a3a9e",
+        "title": "Israeli strikes kill at least four, including children, across Gaza Strip",
+        "url": "https://www.aljazeera.com/news/2026/7/30/israeli-strikes-kill-at-least-four-including-children-across-gaza-strip?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Bombings take place as Hamas officials meet with Qatari, Egyptian and Turkish mediators in Cairo to discuss truce."
+      }
+    ],
+    "generated_at": "2026-07-30T13:00:47.786340+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 61,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-05-004",
+    "prior_edition_date": "2026-06-05",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-30-007",
+    "title": "The Israeli-Palestinian conflict will not be solved with violence, military - The Jerusalem Post",
+    "summary": "The Israeli-Palestinian conflict will not be solved with violence, military. The Jerusalem Post.",
+    "category": "military_conduct_accountability",
+    "story_scope": "core_gaza",
+    "score": 52,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-30-jpost-gaza-accountability-query-ab1293ca3b04"
+    ],
+    "source_ids": [
+      "gaza-2026-07-30-jpost-gaza-accountability-query-ab1293ca3b04"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9ZZHFUbHh1QkZFdjVTUTQtOExQS1phRkhCU2RrWjlybTB2aUItNnJoX3pwcC1sZ0hwX0pJTmVrMUhnLWVmZ2J3eEk5bnpsREdFZm1FZEd6RQ?oc=5"
+    ],
+    "publisher_names": [
+      "The Jerusalem Post"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-30-jpost-gaza-accountability-query-ab1293ca3b04",
+        "title": "The Israeli-Palestinian conflict will not be solved with violence, military - The Jerusalem Post",
+        "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9ZZHFUbHh1QkZFdjVTUTQtOExQS1phRkhCU2RrWjlybTB2aUItNnJoX3pwcC1sZ0hwX0pJTmVrMUhnLWVmZ2J3eEk5bnpsREdFZm1FZEd6RQ?oc=5",
+        "publisher": "The Jerusalem Post",
+        "summary_or_snippet": "The Israeli-Palestinian conflict will not be solved with violence, military The Jerusalem Post"
+      }
+    ],
+    "generated_at": "2026-07-30T13:00:47.786340+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 52,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "gaza_adjacent_context",
+    "claim_status": "gaza_adjacent_context",
+    "context_only": true,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-30-006",
+    "title": "India's arms sale to Israel risks complicity in Gaza genocide, Amnesty says",
+    "summary": "Rights group says India continues to support the Israeli military despite genocide 'broadcast worldwide on daily basis'.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 46,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-30-aljazeera-middle-east-1406dd180bd1"
+    ],
+    "source_ids": [
+      "gaza-2026-07-30-aljazeera-middle-east-1406dd180bd1"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/7/30/indias-arms-sale-to-israel-risks-complicity-in-gaza-genocide-amnesty-says?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-30-aljazeera-middle-east-1406dd180bd1",
+        "title": "India's arms sale to Israel risks complicity in Gaza genocide, Amnesty says",
+        "url": "https://www.aljazeera.com/news/2026/7/30/indias-arms-sale-to-israel-risks-complicity-in-gaza-genocide-amnesty-says?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Rights group says India continues to support the Israeli military despite genocide 'broadcast worldwide on daily basis'."
+      }
+    ],
+    "generated_at": "2026-07-30T13:00:47.786340+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 46,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-07-30-001",
+    "title": "Israel building new land barriers in Gaza and displacing families",
+    "summary": "Experts have told the BBC that the earthworks suggest. Israel is planning for a long-term internal border.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-07-30-bbc-middle-east-277e308cf758"
+    ],
+    "source_ids": [
+      "gaza-2026-07-30-bbc-middle-east-277e308cf758"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/cpvwjmme3p0o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-07-30-bbc-middle-east-277e308cf758",
+        "title": "Israel building new land barriers in Gaza and displacing families",
+        "url": "https://www.bbc.co.uk/news/articles/cpvwjmme3p0o?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Experts have told the BBC that the earthworks suggest Israel is planning for a long-term internal border."
+      }
+    ],
+    "generated_at": "2026-07-30T13:00:47.786340+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  }
+]

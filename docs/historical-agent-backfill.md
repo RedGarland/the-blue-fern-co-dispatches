@@ -20,6 +20,9 @@ python scripts/import_historical_agent_runs.py import --domain food-line --input
 python scripts/import_historical_agent_runs.py normalize --domain food-line --input <export>
 python scripts/import_historical_agent_runs.py inventory
 python scripts/import_historical_agent_runs.py report --domain food-line --input <export>
+python scripts/import_historical_agent_runs.py batch-validate --domain care-line --input-dir data/agent-history-staging/care-line
+python scripts/import_historical_agent_runs.py batch-dry-run --domain care-line --input-dir data/agent-history-staging/care-line
+python scripts/import_historical_agent_runs.py batch-import --domain care-line --input-dir data/agent-history-staging/care-line
 ```
 
 The importer accepts plain text, Markdown, JSON lists, and the Food Line agent envelope. A preserved text or Markdown alert containing exactly one labeled (`json`) or unlabeled fenced JSON object is normalized through that embedded envelope; the complete raw bytes and human-readable text remain private provenance. Multiple or malformed fences fail closed. Dry runs write nothing. No approval, publication, Pages, Bluesky, scheduler, or public output path is used.
@@ -56,3 +59,21 @@ Evidence-insufficient Food Line findings are still preserved in the private hist
 8. Preserve the raw archive permanently.
 
 Do not assume repository access to ChatGPT task history, and do not scan arbitrary Downloads or install a watcher. No real historical data is imported by this change.
+
+## Controlled batch workflow
+
+1. Copy each complete, unchanged alert directly into the domain staging folder.
+2. Put approved normalization sidecars under the staging folder's `corrections/` directory when needed.
+3. Run `batch-validate`.
+4. Run `batch-dry-run`.
+5. Review the aggregate counts, deterministic file order, sidecar matches, and every per-file outcome.
+6. Run `batch-import` explicitly.
+7. Rerun the identical `batch-import` command and confirm `idempotent_noop` for every previously imported file.
+
+Batch discovery accepts `.txt`, `.md`, and `.json` files directly inside the supplied directory. Hidden, temporary, unsupported, correction, and archive-output files are ignored. Add `--recursive` only when nested alert directories are intentional.
+
+The batch ID is a deterministic hash of the domain and ordered raw-file hashes. File order uses normalized relative paths. `batch-validate` and `batch-dry-run` write nothing. `batch-import` writes a private report to `data/agent-history/<domain>/reports/batches/<batch-id>.json`.
+
+By default, one validation or sidecar failure blocks every import in the batch. `--allow-partial-import` explicitly permits valid files to import while invalid files remain unchanged and reported. Sidecars are matched by raw SHA-256 and checked against declared raw path, domain, and run or finding identity when present. Hash, path, domain, identity, and approval conflicts fail closed; filenames alone never establish a match, and multiple matches fail closed.
+
+Batch imports use the existing single-file domain protections. They do not enqueue Care Line events, insert Food Line current intake, create Gaza stories, expose ICE records, grant publication approval, generate editions, or write Pages, Bluesky, or scheduler state.

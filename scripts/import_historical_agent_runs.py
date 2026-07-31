@@ -532,12 +532,279 @@ def _renormalize_ice(args: argparse.Namespace) -> int:
     return 0
 
 
+def _review_historical_candidate(args: argparse.Namespace) -> int:
+    supported_decisions = {
+        ("ice", "substantively-valid"): {
+            "audit_decision": "accept_substantively_valid_historical_candidate",
+            "recommended_disposition": "substantively_valid_historical_candidate",
+            "new_status": "substantively_reviewed",
+        },
+    }
+    decision_spec = supported_decisions.get((args.domain, args.decision))
+    if decision_spec is None:
+        supported = ", ".join(
+            f"{domain}:{decision}"
+            for domain, decision in sorted(supported_decisions)
+        )
+        raise ValueError(
+            "unsupported historical substantive review decision "
+            f"{args.domain!r}:{args.decision!r}; supported decisions: {supported}"
+        )
+
+    raw_sha = str(args.raw_sha or "")
+    if not re.fullmatch(r"[0-9a-f]{64}", raw_sha):
+        raise ValueError("--raw-sha must be an exact lowercase SHA-256 digest")
+    expected_review_sha = str(args.review_artifact_sha256 or "")
+    if not re.fullmatch(r"[0-9a-f]{64}", expected_review_sha):
+        raise ValueError(
+            "--review-artifact-sha256 must be an exact lowercase SHA-256 digest"
+        )
+
+    repo_root = args.repo_root.resolve()
+    base = archive_root(repo_root, args.domain)
+    raw_path = base / "raw" / f"{raw_sha}.json"
+    normalized_path = base / "normalized" / f"{raw_sha}.json"
+    report_path = base / "reports" / f"{raw_sha}.json"
+    required_paths = (raw_path, normalized_path, report_path)
+    missing = [str(path) for path in required_paths if not path.is_file()]
+    if missing:
+        raise ValueError(
+            "historical review target is incomplete; missing: " + ", ".join(missing)
+        )
+
+    review_path = args.review_artifact.resolve()
+    reviews_root = (base / "reviews").resolve()
+    try:
+        review_relative = review_path.relative_to(reviews_root)
+    except ValueError as exc:
+        raise ValueError(
+            f"review artifact must be under the private review root {reviews_root}"
+        ) from exc
+    if not review_relative.parts or review_relative.parts[0].lower() == "decisions":
+        raise ValueError("review artifact must be an independent substantive review")
+    if not review_path.is_file():
+        raise ValueError(f"review artifact does not exist: {review_path}")
+
+    actual_review_sha = sha256_bytes(review_path.read_bytes())
+    if actual_review_sha != expected_review_sha:
+        raise ValueError(
+            "review artifact SHA-256 mismatch: "
+            f"expected {expected_review_sha}, found {actual_review_sha}"
+        )
+
+    raw_record = json.loads(raw_path.read_text(encoding="utf-8"))
+    normalized_record = json.loads(normalized_path.read_text(encoding="utf-8"))
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    review = json.loads(review_path.read_text(encoding="utf-8"))
+    for label, payload in (
+        ("raw archive", raw_record),
+        ("normalized record", normalized_record),
+        ("import report", report),
+        ("substantive review", review),
+    ):
+        if not isinstance(payload, dict):
+            raise ValueError(f"{label} must be a JSON object")
+        if payload.get("domain") != args.domain:
+            raise ValueError(f"{label} domain does not match {args.domain!r}")
+    if raw_record.get("raw_sha256") != raw_sha:
+        raise ValueError("raw archive SHA-256 identity does not match")
+    if normalized_record.get("raw_sha256") != raw_sha:
+        raise ValueError("normalized record SHA-256 identity does not match")
+    if report.get("input_sha256") != raw_sha:
+        raise ValueError("import report SHA-256 identity does not match")
+    if review.get("raw_sha256") != raw_sha:
+        raise ValueError("substantive review SHA-256 identity does not match")
+
+    encoded_raw = raw_record.get("raw_bytes_base64")
+    if not isinstance(encoded_raw, str):
+        raise ValueError("historical raw archive raw_bytes_base64 is missing")
+    try:
+        decoded_raw = base64.b64decode(encoded_raw, validate=True)
+    except (ValueError, TypeError) as exc:
+        raise ValueError("historical raw archive raw_bytes_base64 is malformed") from exc
+    if sha256_bytes(decoded_raw) != raw_sha:
+        raise ValueError("historical raw archive bytes do not match the requested SHA-256")
+
+    findings = normalized_record.get("findings")
+    if not isinstance(findings, list) or not findings:
+        raise ValueError("historical normalized record contains no findings")
+    finding_id = review.get("normalized_finding_id")
+    if not isinstance(finding_id, str) or not finding_id:
+        raise ValueError("substantive review normalized_finding_id is missing")
+    matching_indexes = [
+        index
+        for index, finding in enumerate(findings)
+        if isinstance(finding, dict) and finding.get("finding_id") == finding_id
+    ]
+    if len(matching_indexes) != 1:
+        raise ValueError(
+            "substantive review must identify exactly one normalized finding"
+        )
+    finding_index = matching_indexes[0]
+    finding = findings[finding_index]
+
+    required_review_values = {
+        "recommended_disposition": decision_spec["recommended_disposition"],
+        "archive_mutation_authorized": False,
+        "publication_authorized": False,
+        "current_review_status": "pending_review",
+        "current_queue_action": "none",
+        "current_publication_eligible": False,
+        "current_publication_approval": False,
+    }
+    for key, expected in required_review_values.items():
+        if review.get(key) != expected:
+            raise ValueError(
+                f"substantive review {key} must be exactly {expected!r}"
+            )
+    severity_review = review.get("severity_review")
+    if not isinstance(severity_review, dict) or severity_review.get("current_severity") != "high":
+        raise ValueError("substantive review must preserve severity high")
+    if finding.get("historical_outcome") != "new_historical_candidate":
+        raise ValueError(
+            "only a new_historical_candidate may receive this substantive decision"
+        )
+    if finding.get("severity") != "high":
+        raise ValueError("ICE substantive-valid decision requires severity high")
+    if finding.get("queue_action") != "none":
+        raise ValueError("historical candidate queue_action must be none")
+    if finding.get("publication_eligible") is not False:
+        raise ValueError("historical candidate publication_eligible must be false")
+    if finding.get("publication_approval") is not False:
+        raise ValueError("historical candidate publication_approval must be false")
+
+    decisions_dir = base / "reviews" / "decisions"
+    audit_path = decisions_dir / (
+        f"{raw_sha[:24]}-accept-substantively-valid.json"
+    )
+    immutable_audit_values = {
+        "schema_version": "historical_substantive_review_decision_v1",
+        "domain": args.domain,
+        "raw_sha256": raw_sha,
+        "normalized_finding_id": finding_id,
+        "review_artifact_sha256": actual_review_sha,
+        "operator": args.operator,
+        "decision": decision_spec["audit_decision"],
+        "previous_review_status": "pending_review",
+        "new_review_status": decision_spec["new_status"],
+        "historical_outcome": finding.get("historical_outcome"),
+        "severity": finding.get("severity"),
+        "queue_action": "none",
+        "publication_eligible": False,
+        "publication_approval": False,
+        "publication_authorized": False,
+        "queue_authorized": False,
+        "archive_content_change_authorized": False,
+    }
+    inventory_before = build_inventory(repo_root)["domains"][args.domain]
+    previous_status = finding.get("review_status")
+
+    if previous_status == decision_spec["new_status"]:
+        if not audit_path.is_file():
+            raise ValueError(
+                "finding is substantively reviewed but its decision audit is missing"
+            )
+        existing_audit = json.loads(audit_path.read_text(encoding="utf-8"))
+        if not isinstance(existing_audit, dict):
+            raise ValueError("existing substantive decision audit must be a JSON object")
+        for key, expected in immutable_audit_values.items():
+            if existing_audit.get(key) != expected:
+                raise ValueError(
+                    f"existing substantive decision audit conflicts at {key}"
+                )
+        result = {
+            "status": "idempotent_noop",
+            "domain": args.domain,
+            "raw_sha256": raw_sha,
+            "normalized_finding_id": finding_id,
+            "review_status": previous_status,
+            "review_artifact_sha256": actual_review_sha,
+            "decision_audit_path": str(audit_path),
+            "inventory": inventory_before,
+        }
+        print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))
+        return 0
+
+    if previous_status != "pending_review":
+        raise ValueError(
+            "historical candidate review status must be pending_review or "
+            f"{decision_spec['new_status']}"
+        )
+    if audit_path.exists():
+        raise ValueError(
+            "a substantive decision audit already exists for a pending candidate"
+        )
+
+    updated_record = json.loads(json.dumps(normalized_record, ensure_ascii=False))
+    updated_finding = updated_record["findings"][finding_index]
+    updated_finding["review_status"] = decision_spec["new_status"]
+    before_without_status = {
+        key: value for key, value in finding.items() if key != "review_status"
+    }
+    after_without_status = {
+        key: value for key, value in updated_finding.items() if key != "review_status"
+    }
+    if before_without_status != after_without_status:
+        raise RuntimeError(
+            "substantive review attempted to change immutable finding content"
+        )
+
+    decided_at = datetime.now(timezone.utc).isoformat()
+    try:
+        review_artifact_display = review_path.relative_to(repo_root).as_posix()
+    except ValueError:
+        review_artifact_display = review_path.as_posix()
+    audit = {
+        **immutable_audit_values,
+        "review_artifact_path": review_artifact_display,
+        "decided_at": decided_at,
+        "normalized_record_sha256_before": sha256_bytes(normalized_path.read_bytes()),
+        "normalized_record_sha256_after": sha256_bytes(
+            canonical_json(updated_record).encode("utf-8")
+        ),
+        "changed_fields": ["findings[].review_status"],
+        "notes": [
+            "Attribute aggregate figures to Reuters' review of internal federal data and state that DHS confirmed the information-sharing relationship.",
+            "Do not describe the complete dataset as public, all arrested people as children, or 460,000 leads as 460,000 unique people.",
+            "Do not add unsupported criminal-history, geographic, or case-outcome detail.",
+            "Treat the gunpoint arrest as one documented case, not a national force pattern.",
+            "Do not claim data sharing alone caused longer ORR custody.",
+            "Keep government positions, allegations, and unknowns separate.",
+        ],
+    }
+    decisions_dir.mkdir(parents=True, exist_ok=True)
+    atomic_json(audit_path, audit)
+    atomic_json(normalized_path, updated_record)
+    inventory_after = build_inventory(repo_root)["domains"][args.domain]
+    index_path = base / "reports" / "history-index.json"
+    atomic_json(index_path, inventory_after)
+    result = {
+        "status": "review_status_updated",
+        "domain": args.domain,
+        "raw_sha256": raw_sha,
+        "normalized_finding_id": finding_id,
+        "previous_review_status": previous_status,
+        "new_review_status": decision_spec["new_status"],
+        "review_artifact_sha256": actual_review_sha,
+        "decision_audit_path": str(audit_path),
+        "inventory_before": inventory_before,
+        "inventory_after": inventory_after,
+    }
+    print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Preserve and normalize historical agent exports privately")
-    parser.add_argument("operation", choices=["validate", "dry-run", "import", "inventory", "normalize", "report", "renormalize", "batch-validate", "batch-dry-run", "batch-import"])
+    parser.add_argument("operation", choices=["validate", "dry-run", "import", "inventory", "normalize", "report", "renormalize", "review", "batch-validate", "batch-dry-run", "batch-import"])
     parser.add_argument("--domain", choices=DOMAINS); parser.add_argument("--input", type=Path); parser.add_argument("--input-dir", type=Path); parser.add_argument("--correction", type=Path); parser.add_argument("--repo-root", type=Path, default=Path.cwd()); parser.add_argument("--captured-at", default="")
     parser.add_argument("--recursive", action="store_true"); parser.add_argument("--allow-partial-import", action="store_true")
     parser.add_argument("--maintenance-reason", default="add first-class ICE detection_date from an explicit raw-alert field")
+    parser.add_argument("--raw-sha")
+    parser.add_argument("--decision")
+    parser.add_argument("--review-artifact", type=Path)
+    parser.add_argument("--review-artifact-sha256")
+    parser.add_argument("--operator", default="William Patton")
     args = parser.parse_args(argv)
     if args.operation.startswith("batch-"):
         if not args.domain or not args.input_dir:
@@ -552,6 +819,21 @@ def main(argv: list[str] | None = None) -> int:
             if args.input is None:
                 for domain in DOMAINS: atomic_json(archive_root(args.repo_root, domain) / "reports" / "history-index.json", full_result["domains"][domain])
         print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2)); return 0
+    if args.operation == "review":
+        missing = [
+            name
+            for name, value in (
+                ("--domain", args.domain),
+                ("--raw-sha", args.raw_sha),
+                ("--decision", args.decision),
+                ("--review-artifact", args.review_artifact),
+                ("--review-artifact-sha256", args.review_artifact_sha256),
+            )
+            if not value
+        ]
+        if missing:
+            parser.error("review requires " + ", ".join(missing))
+        return _review_historical_candidate(args)
     if not args.domain or not args.input: parser.error("--domain and --input are required")
     if args.operation == "renormalize":
         return _renormalize_ice(args)

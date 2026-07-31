@@ -110,6 +110,97 @@ def sidecar(root: Path, raw_path: Path, *, overrides: dict | None = None) -> Pat
     return path
 
 
+def substantive_review_fixture(root: Path) -> tuple[list[str], dict[str, Path]]:
+    raw_bytes = b"private historical ICE fixture\n"
+    raw_sha = hashlib.sha256(raw_bytes).hexdigest()
+    base = root / "data/agent-history/ice"
+    raw_path = base / "raw" / f"{raw_sha}.json"
+    normalized_path = base / "normalized" / f"{raw_sha}.json"
+    report_path = base / "reports" / f"{raw_sha}.json"
+    review_path = base / "reviews" / f"{raw_sha}-substantive-review.json"
+    write_json(
+        raw_path,
+        {
+            "domain": "ice",
+            "raw_sha256": raw_sha,
+            "raw_bytes_base64": base64.b64encode(raw_bytes).decode("ascii"),
+        },
+    )
+    write_json(
+        normalized_path,
+        {
+            "schema_version": "historical_agent_normalized_v1",
+            "domain": "ice",
+            "raw_sha256": raw_sha,
+            "findings": [
+                {
+                    "finding_id": "ice-reviewed-fixture",
+                    "historical_outcome": "new_historical_candidate",
+                    "deduplication_outcome": "new_historical_candidate",
+                    "candidate_created": True,
+                    "review_status": "pending_review",
+                    "severity": "high",
+                    "event_category": "enforcement_operation",
+                    "queue_action": "none",
+                    "publication_eligible": False,
+                    "publication_approval": False,
+                    "source_published_at": "2026-07-28",
+                    "source_url": "https://www.reuters.com/world/us/fixture/",
+                    "exact_supporting_passage": "Reuters reported a documented enforcement operation.",
+                }
+            ],
+        },
+    )
+    write_json(
+        report_path,
+        {
+            "domain": "ice",
+            "input_sha256": raw_sha,
+            "status": "imported",
+        },
+    )
+    write_json(
+        review_path,
+        {
+            "schema_version": "ice_substantive_historical_review_v1",
+            "domain": "ice",
+            "raw_sha256": raw_sha,
+            "normalized_finding_id": "ice-reviewed-fixture",
+            "recommended_disposition": "substantively_valid_historical_candidate",
+            "archive_mutation_authorized": False,
+            "publication_authorized": False,
+            "current_review_status": "pending_review",
+            "current_queue_action": "none",
+            "current_publication_eligible": False,
+            "current_publication_approval": False,
+            "severity_review": {"current_severity": "high"},
+            "editorial_restrictions": ["Keep aggregate claims attributed."],
+        },
+    )
+    review_sha = hashlib.sha256(review_path.read_bytes()).hexdigest()
+    args = [
+        "review",
+        "--domain",
+        "ice",
+        "--raw-sha",
+        raw_sha,
+        "--decision",
+        "substantively-valid",
+        "--review-artifact",
+        str(review_path),
+        "--review-artifact-sha256",
+        review_sha,
+        "--repo-root",
+        str(root),
+    ]
+    return args, {
+        "raw": raw_path,
+        "normalized": normalized_path,
+        "report": report_path,
+        "review": review_path,
+    }
+
+
 def test_ice_contract_contains_every_required_field():
     expected = {
         "finding_id", "agent_name", "agent_run_id", "source_url", "canonical_source_url",
@@ -776,3 +867,142 @@ def test_explicit_renormalization_updates_only_detection_date_and_is_idempotent(
     assert repeated["inventory"]["normalized_finding_count"] == 1
     assert repeated["inventory"]["pending_review"] == 1
     assert repeated["inventory"]["publication_ready_count"] == 0
+
+
+def test_substantive_review_changes_only_private_status_and_is_idempotent(
+    tmp_path: Path,
+    capsys,
+):
+    protected = [
+        tmp_path / "output/site/marker.txt",
+        tmp_path / "bluefern-dispatches-pages/marker.txt",
+        tmp_path / "data/agent-history/food-line/marker.txt",
+        tmp_path / "data/agent-history/care-line/marker.txt",
+        tmp_path / "data/agent-history/gaza/marker.txt",
+        tmp_path / "data/universal_events/publication-state/marker.txt",
+        tmp_path / "data/dispatches/ice/queue/marker.txt",
+        tmp_path / "data/bluesky/marker.txt",
+        tmp_path / "schedules/marker.txt",
+    ]
+    for path in protected:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("unchanged", encoding="utf-8")
+
+    args, paths = substantive_review_fixture(tmp_path)
+    original = {
+        name: path.read_bytes()
+        for name, path in paths.items()
+    }
+    before_normalized = json.loads(original["normalized"].decode("utf-8"))
+
+    code, accepted = run_json(capsys, args)
+    assert code == 0
+    assert accepted["status"] == "review_status_updated"
+    assert accepted["previous_review_status"] == "pending_review"
+    assert accepted["new_review_status"] == "substantively_reviewed"
+    assert accepted["inventory_before"]["pending_substantive_review"] == 1
+    assert accepted["inventory_before"]["substantively_reviewed"] == 0
+    assert accepted["inventory_after"]["raw_runs"] == 1
+    assert accepted["inventory_after"]["normalized_findings"] == 1
+    assert accepted["inventory_after"]["historical_candidate_count"] == 1
+    assert accepted["inventory_after"]["pending_substantive_review"] == 0
+    assert accepted["inventory_after"]["substantively_reviewed"] == 1
+    assert accepted["inventory_after"]["queue_entries"] == 0
+    assert accepted["inventory_after"]["publication_ready_count"] == 0
+
+    after_normalized = json.loads(paths["normalized"].read_text(encoding="utf-8"))
+    expected = json.loads(json.dumps(before_normalized))
+    expected["findings"][0]["review_status"] = "substantively_reviewed"
+    assert after_normalized == expected
+    assert paths["raw"].read_bytes() == original["raw"]
+    assert paths["report"].read_bytes() == original["report"]
+    assert paths["review"].read_bytes() == original["review"]
+    assert all(path.read_text(encoding="utf-8") == "unchanged" for path in protected)
+
+    audit_path = Path(accepted["decision_audit_path"])
+    audit = json.loads(audit_path.read_text(encoding="utf-8"))
+    assert audit["decision"] == "accept_substantively_valid_historical_candidate"
+    assert audit["operator"] == "William Patton"
+    assert audit["previous_review_status"] == "pending_review"
+    assert audit["new_review_status"] == "substantively_reviewed"
+    assert audit["historical_outcome"] == "new_historical_candidate"
+    assert audit["severity"] == "high"
+    assert audit["queue_action"] == "none"
+    assert audit["publication_eligible"] is False
+    assert audit["publication_approval"] is False
+    assert audit["publication_authorized"] is False
+    assert audit["queue_authorized"] is False
+    assert audit["archive_content_change_authorized"] is False
+    assert audit["changed_fields"] == ["findings[].review_status"]
+    assert len(list(audit_path.parent.glob("*.json"))) == 1
+
+    no_op_hashes = {
+        "normalized": hashlib.sha256(paths["normalized"].read_bytes()).hexdigest(),
+        "audit": hashlib.sha256(audit_path.read_bytes()).hexdigest(),
+        "index": hashlib.sha256(
+            (tmp_path / "data/agent-history/ice/reports/history-index.json").read_bytes()
+        ).hexdigest(),
+    }
+    decided_at = audit["decided_at"]
+    code, repeated = run_json(capsys, args)
+    assert code == 0
+    assert repeated["status"] == "idempotent_noop"
+    assert repeated["inventory"]["pending_substantive_review"] == 0
+    assert repeated["inventory"]["substantively_reviewed"] == 1
+    assert repeated["inventory"]["queue_entries"] == 0
+    assert repeated["inventory"]["publication_ready_count"] == 0
+    assert hashlib.sha256(paths["normalized"].read_bytes()).hexdigest() == no_op_hashes["normalized"]
+    assert hashlib.sha256(audit_path.read_bytes()).hexdigest() == no_op_hashes["audit"]
+    assert hashlib.sha256(
+        (tmp_path / "data/agent-history/ice/reports/history-index.json").read_bytes()
+    ).hexdigest() == no_op_hashes["index"]
+    assert json.loads(audit_path.read_text(encoding="utf-8"))["decided_at"] == decided_at
+    assert len(list(audit_path.parent.glob("*.json"))) == 1
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        ({"recommended_disposition": "publish"}, "recommended_disposition"),
+        ({"archive_mutation_authorized": True}, "archive_mutation_authorized"),
+        ({"publication_authorized": True}, "publication_authorized"),
+        ({"normalized_finding_id": "wrong-finding"}, "exactly one normalized finding"),
+        ({"raw_sha256": "0" * 64}, "substantive review SHA-256 identity"),
+    ],
+)
+def test_substantive_review_fails_closed_on_authorization_and_identity_mismatch(
+    tmp_path: Path,
+    mutation: dict,
+    message: str,
+):
+    args, paths = substantive_review_fixture(tmp_path)
+    review = json.loads(paths["review"].read_text(encoding="utf-8"))
+    review.update(mutation)
+    write_json(paths["review"], review)
+    args[args.index("--review-artifact-sha256") + 1] = hashlib.sha256(
+        paths["review"].read_bytes()
+    ).hexdigest()
+    normalized_before = paths["normalized"].read_bytes()
+
+    with pytest.raises(ValueError, match=message):
+        main(args)
+
+    assert paths["normalized"].read_bytes() == normalized_before
+    assert not (tmp_path / "data/agent-history/ice/reviews/decisions").exists()
+
+
+def test_substantive_review_rejects_artifact_hash_and_unsupported_decision(
+    tmp_path: Path,
+):
+    args, paths = substantive_review_fixture(tmp_path)
+    normalized_before = paths["normalized"].read_bytes()
+    args[args.index("--review-artifact-sha256") + 1] = "0" * 64
+    with pytest.raises(ValueError, match="review artifact SHA-256 mismatch"):
+        main(args)
+    assert paths["normalized"].read_bytes() == normalized_before
+
+    args, paths = substantive_review_fixture(tmp_path)
+    args[args.index("--decision") + 1] = "publish"
+    with pytest.raises(ValueError, match="unsupported historical substantive review decision"):
+        main(args)
+    assert paths["normalized"].read_bytes() == normalized_before

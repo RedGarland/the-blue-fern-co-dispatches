@@ -816,5 +816,20 @@ def ice_aggregate_metrics(records: list[dict[str, Any]], *, raw_runs: int | None
         "duplicates": sum(1 for row in records if row.get("historical_outcome") == "duplicate_historical"),
         "invalid_findings": sum(1 for row in records if row.get("historical_outcome") == "archived_invalid"),
         "pending_review": sum(1 for row in records if row.get("review_status") == "pending_review"),
+        "pending_substantive_review": sum(
+            1
+            for row in records
+            if row.get("historical_outcome") == "new_historical_candidate"
+            and row.get("review_status") == "pending_review"
+        ),
+        "substantively_reviewed": sum(
+            1 for row in records if row.get("review_status") == "substantively_reviewed"
+        ),
+        "queue_entries": sum(
+            1
+            for row in records
+            if row.get("queue_action")
+            not in {None, "", "none", "provenance_only", "historical_review_candidate"}
+        ),
         "publication_ready_count": 0,
     }

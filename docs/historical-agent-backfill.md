@@ -119,6 +119,14 @@ python scripts/import_historical_agent_runs.py renormalize --domain ice --input 
 
 `renormalize` verifies the immutable raw bytes, raw SHA-256, normalized-record identity, sidecar identity, historical-only approval scope, and raw evidence. It changes only an absent approved `detection_date`, preserves the original per-record import report and historical outcome, creates no finding or candidate, and writes a private audit under `data/agent-history/ice/reports/maintenance/`. The audit records old/new values and normalized digests, source evidence, sidecar digest, reviewer, scope, maintenance time, and `publication_approval: false`. Repeating the command returns `idempotent_noop`.
 
+An operator may accept an independent substantive review for an existing ICE historical candidate with the status-only private review command:
+
+```powershell
+python scripts/import_historical_agent_runs.py review --domain ice --raw-sha <raw-sha256> --decision substantively-valid --review-artifact "data/agent-history/ice/reviews/<review>.json" --review-artifact-sha256 <review-sha256>
+```
+
+The command supports only the fail-closed `ice:substantively-valid` decision. It verifies the immutable raw bytes, raw and finding identities, exact review-artifact digest, `substantively_valid_historical_candidate` recommendation, review authorization flags, current severity, and private queue/publication state. A successful transition changes only `review_status` from `pending_review` to `substantively_reviewed`, updates the private ICE inventory, and writes one deterministic audit under `data/agent-history/ice/reviews/decisions/`. It does not change evidence, factual fields, historical outcome, queue action, or publication eligibility/approval. Repeating the identical command returns `idempotent_noop` without rewriting the decision timestamp, normalized record, inventory, or audit.
+
 Read-only first-batch checks:
 
 ```powershell

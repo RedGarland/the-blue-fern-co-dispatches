@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Thu, 30 Jul 2026 13:01:05 +0000</lastBuildDate>
+  <lastBuildDate>Fri, 31 Jul 2026 13:01:10 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for July 31, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-31-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-07-31-transcript.html</guid>
+    <pubDate>Fri, 31 Jul 2026 00:00:00 +0000</pubDate>
+    <description>Trump to meet cabinet at Camp David as Iran war drags on - US politics live. President grapples with finding a resolution to Middle East conflict that has pushed up gasoline prices ahead of vital midterm elections Sign up for the US Breaking News email. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-07-31.mp3" length="2066688" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for July 30, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-07-30-transcript.html</link>

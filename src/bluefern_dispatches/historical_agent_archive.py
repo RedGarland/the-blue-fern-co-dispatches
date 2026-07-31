@@ -297,6 +297,107 @@ def _json_dicts(value: Any) -> list[dict[str, Any]]:
     return objects
 
 
+def food_line_match_targets(root: Path) -> dict[str, Any]:
+    """Build exact Food Line public, intake, source, and historical indexes."""
+
+    categorized_paths: dict[str, list[Path]] = {
+        "editions": [
+            root / "output" / "dispatches" / "food-line" / "editions",
+            root / "output" / "site" / "food-line" / "editions",
+        ],
+        "intake": [
+            root / "data" / "dispatches" / "food-line" / "agent-intake",
+        ],
+        "inbox": [
+            root / "data" / "dispatches" / "food-line" / "agent-inbox",
+        ],
+        "source_ledgers": [
+            root / "data" / "dispatches" / "food-line" / "sources",
+            root / "data" / "dispatches" / "food-line" / "normalized",
+            root / "data" / "dispatches" / "food-line" / "curated",
+            root / "data" / "dispatches" / "food-line" / "editions",
+            root / "data" / "dispatches" / "food-line" / "source_registry.json",
+            root / "data" / "dispatches" / "food-line" / "pressure_source_registry.json",
+            root / "data" / "records" / "sources.json",
+        ],
+    }
+
+    def files_for(path: Path) -> list[Path]:
+        if path.is_file():
+            return [path]
+        if not path.exists():
+            return []
+        return [
+            candidate
+            for candidate in path.rglob("*")
+            if candidate.is_file()
+            and candidate.suffix.lower() in {".csv", ".html", ".json", ".jsonl", ".md", ".txt"}
+        ]
+
+    categorized_urls: dict[str, dict[str, list[str]]] = {
+        category: {} for category in categorized_paths
+    }
+    url_pattern = re.compile(r"https?://[^\s\"'<>]+", flags=re.I)
+    url_fields = ("canonical_url", "canonical_source_url", "source_url", "url")
+    for category, configured_paths in categorized_paths.items():
+        for path in sorted(
+            {candidate for configured in configured_paths for candidate in files_for(configured)}
+        ):
+            relative = str(path.relative_to(root))
+            urls: set[str] = set()
+            if path.suffix.lower() in {".json", ".jsonl"}:
+                for item in _json_dicts(_json_value(path)):
+                    for field in url_fields:
+                        url = _clean_url(item.get(field))
+                        if url:
+                            urls.add(url)
+            try:
+                text = path.read_text(encoding="utf-8", errors="ignore")
+            except OSError:
+                text = ""
+            urls.update(_clean_url(match) for match in url_pattern.findall(text))
+            for url in sorted(url for url in urls if url):
+                categorized_urls[category].setdefault(url, []).append(relative)
+
+    historical: list[dict[str, str]] = []
+    historical_root = root / "data" / "agent-history" / "food-line" / "normalized"
+    if historical_root.exists():
+        for path in sorted(historical_root.rglob("*.json")):
+            relative = str(path.relative_to(root))
+            for item in _json_dicts(_json_value(path)):
+                finding_id = str(
+                    item.get("finding_id")
+                    or item.get("agent_finding_id")
+                    or item.get("candidate_id")
+                    or ""
+                )
+                duplicate_key = str(item.get("agent_duplicate_key") or "")
+                url = _clean_url(
+                    item.get("canonical_url")
+                    or item.get("canonical_source_url")
+                    or item.get("source_url")
+                    or item.get("url")
+                )
+                published_date = str(
+                    item.get("source_published_date")
+                    or item.get("source_published_at")
+                    or item.get("published_at")
+                    or ""
+                )[:10]
+                if finding_id or duplicate_key or url:
+                    historical.append(
+                        {
+                            "agent_duplicate_key": duplicate_key,
+                            "finding_id": finding_id,
+                            "path": relative,
+                            "source_published_date": published_date,
+                            "source_url": url,
+                        }
+                    )
+
+    return {**categorized_urls, "historical": historical}
+
+
 def gaza_match_targets(root: Path) -> dict[str, Any]:
     """Build Gaza's private edition, source, cluster, and historical identity indexes."""
     editions: dict[str, dict[str, str]] = {}
@@ -860,7 +961,11 @@ def build_inventory(root: Path) -> dict[str, Any]:
             "pending_substantive_review": sum(
                 1
                 for record in records
-                if record.get("historical_outcome") == "new_historical_candidate"
+                if (
+                    record.get("historical_outcome")
+                    or record.get("deduplication_outcome")
+                )
+                == "new_historical_candidate"
                 and record.get("review_status") == "pending_review"
             ),
             "queue_entries": sum(

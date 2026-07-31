@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from bluefern_dispatches.historical_agent_archive import DOMAINS, SCHEMA_VERSION, HistoricalEnvelopeError, _care_report, _gaza_report, _ice_report, archive_root, atomic_json, build_inventory, canonical_json, care_line_match_targets, gaza_match_targets, normalize_records, parse_historical_input, sha256_bytes, validate_input
+from bluefern_dispatches.historical_agent_archive import DOMAINS, SCHEMA_VERSION, HistoricalEnvelopeError, _care_report, _gaza_report, _ice_report, archive_root, atomic_json, build_inventory, canonical_json, care_line_match_targets, food_line_match_targets, gaza_match_targets, normalize_records, parse_historical_input, sha256_bytes, validate_input
 from bluefern_dispatches.ice_historical import explicit_detection_date_text, extract_detection_date, ice_aggregate_metrics, normalize_detection_date
 
 SUPPORTED_BATCH_EXTENSIONS = {".txt", ".md", ".json"}
@@ -553,6 +553,15 @@ def _review_historical_candidate(args: argparse.Namespace) -> int:
             "queue_action": "none",
             "finding_queue_actions": (None, "", "none"),
         },
+        ("food-line", "substantively-valid"): {
+            "audit_decision": "accept_substantively_valid_historical_candidate",
+            "recommended_disposition": "substantively_valid_historical_candidate",
+            "new_status": "substantively_reviewed",
+            "queue_action": "none",
+            "finding_queue_actions": (None, "", "none"),
+            "review_queue_action_required": False,
+            "allow_legacy_publication_flags": True,
+        },
     }
     decision_spec = supported_decisions.get((args.domain, args.decision))
     if decision_spec is None:
@@ -645,10 +654,21 @@ def _review_historical_candidate(args: argparse.Namespace) -> int:
     finding_id = review.get("normalized_finding_id")
     if not isinstance(finding_id, str) or not finding_id:
         raise ValueError("substantive review normalized_finding_id is missing")
+    finding_id_fields = (
+        ("finding_id", "agent_finding_id", "candidate_id")
+        if args.domain == "food-line"
+        else ("finding_id",)
+    )
     matching_indexes = [
         index
         for index, finding in enumerate(findings)
-        if isinstance(finding, dict) and finding.get("finding_id") == finding_id
+        if isinstance(finding, dict)
+        and finding_id
+        in {
+            str(finding.get(field) or "")
+            for field in finding_id_fields
+            if finding.get(field)
+        }
     ]
     if len(matching_indexes) != 1:
         raise ValueError(
@@ -662,16 +682,20 @@ def _review_historical_candidate(args: argparse.Namespace) -> int:
         "archive_mutation_authorized": False,
         "publication_authorized": False,
         "current_review_status": "pending_review",
-        "current_queue_action": decision_spec["queue_action"],
         "current_publication_eligible": False,
         "current_publication_approval": False,
     }
+    if decision_spec.get("review_queue_action_required", True):
+        required_review_values["current_queue_action"] = decision_spec["queue_action"]
     for key, expected in required_review_values.items():
         if review.get(key) != expected:
             raise ValueError(
                 f"substantive review {key} must be exactly {expected!r}"
             )
-    if finding.get("historical_outcome") != "new_historical_candidate":
+    historical_outcome = finding.get("historical_outcome")
+    if args.domain == "food-line" and not historical_outcome:
+        historical_outcome = finding.get("deduplication_outcome")
+    if historical_outcome != "new_historical_candidate":
         raise ValueError(
             "only a new_historical_candidate may receive this substantive decision"
         )
@@ -684,10 +708,16 @@ def _review_historical_candidate(args: argparse.Namespace) -> int:
             "historical candidate queue_action must be one of "
             f"{allowed_finding_queue_actions!r}"
         )
-    if finding.get("publication_eligible") is not False:
-        raise ValueError("historical candidate publication_eligible must be false")
-    if finding.get("publication_approval") is not False:
-        raise ValueError("historical candidate publication_approval must be false")
+    if decision_spec.get("allow_legacy_publication_flags"):
+        if finding.get("publication_eligible") not in (None, False):
+            raise ValueError("historical candidate publication_eligible must be false")
+        if finding.get("publication_approval") not in (None, False):
+            raise ValueError("historical candidate publication_approval must be false")
+    else:
+        if finding.get("publication_eligible") is not False:
+            raise ValueError("historical candidate publication_eligible must be false")
+        if finding.get("publication_approval") is not False:
+            raise ValueError("historical candidate publication_approval must be false")
 
     domain_audit_values: dict[str, object]
     if args.domain == "ice":
@@ -820,7 +850,211 @@ def _review_historical_candidate(args: argparse.Namespace) -> int:
             "materiality_assessment": materiality_value,
             "service_line": service_line,
         }
-    else:
+    elif args.domain == "food-line":
+        if review.get("schema_version") != "food_line_substantive_historical_review_v1":
+            raise ValueError(
+                "Food Line substantive review schema_version must be exactly "
+                "'food_line_substantive_historical_review_v1'"
+            )
+        if review.get("review_type") != "substantive_historical_review":
+            raise ValueError(
+                "Food Line substantive review review_type must be exactly "
+                "'substantive_historical_review'"
+            )
+        if review.get("edition_authorized") is not False:
+            raise ValueError("Food Line substantive review edition_authorized must be false")
+
+        finding_identities = {
+            str(finding.get(field) or "")
+            for field in finding_id_fields
+            if finding.get(field)
+        }
+        if finding_identities != {finding_id}:
+            raise ValueError(
+                "Food Line historical candidate finding identity fields do not match"
+            )
+
+        provenance = review.get("provenance_verification")
+        if not isinstance(provenance, dict):
+            raise ValueError("Food Line substantive review provenance_verification is missing")
+        review_run_id = str(
+            review.get("agent_run_id") or provenance.get("agent_run_id") or ""
+        )
+        run_ids = {
+            str(value)
+            for value in (
+                raw_record.get("agent_run_id"),
+                normalized_record.get("agent_run_id"),
+                finding.get("agent_run_id"),
+                review_run_id,
+            )
+            if value
+        }
+        if len(run_ids) != 1 or not review_run_id:
+            raise ValueError("Food Line substantive review agent_run_id does not match")
+        if provenance.get("original_historical_outcome") != historical_outcome:
+            raise ValueError(
+                "Food Line substantive review historical outcome does not match"
+            )
+
+        taxonomy = review.get("taxonomy_review")
+        if not isinstance(taxonomy, dict):
+            raise ValueError("Food Line substantive review taxonomy_review is missing")
+        pressure_signal_review = taxonomy.get("pressure_signal")
+        pressure_type_review = taxonomy.get("pressure_type")
+        location_scope_review = taxonomy.get("location_scope")
+        if not all(
+            isinstance(value, dict)
+            for value in (
+                pressure_signal_review,
+                pressure_type_review,
+                location_scope_review,
+            )
+        ):
+            raise ValueError("Food Line substantive review taxonomy fields are incomplete")
+        if finding.get("pressure_signal") is not True or pressure_signal_review.get(
+            "current_value"
+        ) is not True:
+            raise ValueError("Food Line substantive review pressure_signal must be true")
+        pressure_type = str(finding.get("pressure_type") or "")
+        if not pressure_type or pressure_type_review.get("current_value") != pressure_type:
+            raise ValueError("Food Line substantive review pressure_type does not match")
+        location_name = str(finding.get("location_name") or "").strip()
+        location_scope = str(finding.get("location_scope") or "").strip()
+        if (
+            not location_name
+            or not location_scope
+            or location_scope_review.get("current_value") != location_scope
+        ):
+            raise ValueError("Food Line substantive review location identity does not match")
+        development = review.get("development_assessment")
+        review_geography = (
+            str(development.get("geographic_scope") or "")
+            if isinstance(development, dict)
+            else ""
+        )
+        if location_name.casefold() not in review_geography.casefold():
+            raise ValueError("Food Line substantive review geographic scope does not match")
+
+        materiality = review.get("materiality_assessment")
+        materiality_value = (
+            materiality.get("assessment") if isinstance(materiality, dict) else None
+        )
+        if materiality_value not in {
+            "high_food_access_impact",
+            "moderate_food_access_impact",
+            "limited_food_access_impact",
+            "food_access_impact_unclear",
+        }:
+            raise ValueError(
+                "Food Line substantive review materiality_assessment is invalid"
+            )
+
+        duplicate_check = review.get("duplicate_and_public_record_check")
+        if not isinstance(duplicate_check, dict) or duplicate_check.get(
+            "candidate_remains_distinct"
+        ) is not True:
+            raise ValueError(
+                "Food Line substantive review must preserve a distinct private candidate"
+            )
+        for field in (
+            "canonical_source_url_match",
+            "edition_match",
+            "historical_duplicate",
+            "normalized_event_fingerprint_match",
+            "prior_intake_match",
+            "public_claim_or_source_ledger_match",
+            "source_match",
+        ):
+            if duplicate_check.get(field) is not None:
+                raise ValueError(
+                    "Food Line substantive review duplicate check is not clear at "
+                    f"{field}"
+                )
+
+        editorial_restrictions = review.get("editorial_restrictions")
+        if (
+            not isinstance(editorial_restrictions, list)
+            or not editorial_restrictions
+            or not all(
+                isinstance(item, str) and item.strip()
+                for item in editorial_restrictions
+            )
+        ):
+            raise ValueError(
+                "Food Line substantive review editorial_restrictions are missing"
+            )
+
+        targets = food_line_match_targets(repo_root)
+        source_url = str(
+            finding.get("canonical_url")
+            or finding.get("canonical_source_url")
+            or finding.get("source_url")
+            or finding.get("url")
+            or ""
+        ).strip().lower().split("?")[0].rstrip("/")
+        if not source_url:
+            raise ValueError("Food Line historical candidate canonical source URL is missing")
+        public_or_intake_matches = {
+            category: targets[category].get(source_url, [])
+            for category in ("editions", "intake", "inbox", "source_ledgers")
+            if targets[category].get(source_url)
+        }
+        if public_or_intake_matches:
+            raise ValueError(
+                "Food Line historical candidate now matches an exact public, intake, "
+                "inbox, or source-ledger record"
+            )
+
+        current_relative = str(normalized_path.relative_to(repo_root))
+        duplicate_key = str(finding.get("agent_duplicate_key") or "")
+        source_published_date = str(
+            finding.get("source_published_date")
+            or finding.get("source_published_at")
+            or finding.get("published_at")
+            or ""
+        )[:10]
+        historical_matches = []
+        for candidate in targets["historical"]:
+            if candidate.get("path") == current_relative:
+                continue
+            same_finding = bool(finding_id) and candidate.get("finding_id") == finding_id
+            same_duplicate_key = bool(duplicate_key) and candidate.get(
+                "agent_duplicate_key"
+            ) == duplicate_key
+            same_source_event = (
+                bool(source_url)
+                and candidate.get("source_url") == source_url
+                and candidate.get("source_published_date") == source_published_date
+            )
+            if same_finding or same_duplicate_key or same_source_event:
+                historical_matches.append(candidate)
+        if historical_matches:
+            raise ValueError(
+                "Food Line historical candidate now matches a prior historical record"
+            )
+
+        principal_source = review.get("source_assessment", {}).get(
+            "principal_source", {}
+        )
+        review_source_url = str(
+            principal_source.get("url") if isinstance(principal_source, dict) else ""
+        ).strip().lower().split("?")[0].rstrip("/")
+        if review_source_url != source_url:
+            raise ValueError("Food Line substantive review source URL does not match")
+
+        domain_audit_values = {
+            "agent_run_id": review_run_id,
+            "editorial_restrictions": list(editorial_restrictions),
+            "edition_authorized": False,
+            "intake_authorized": False,
+            "location_name": location_name,
+            "location_scope": location_scope,
+            "map_authorized": False,
+            "materiality_assessment": materiality_value,
+            "pressure_type": pressure_type,
+        }
+    elif args.domain == "gaza":
         if review.get("schema_version") != "gaza_substantive_historical_review_v1":
             raise ValueError(
                 "Gaza substantive review schema_version must be exactly "
@@ -1052,7 +1286,7 @@ def _review_historical_candidate(args: argparse.Namespace) -> int:
         "decision": decision_spec["audit_decision"],
         "previous_review_status": "pending_review",
         "new_review_status": decision_spec["new_status"],
-        "historical_outcome": finding.get("historical_outcome"),
+        "historical_outcome": historical_outcome,
         "queue_action": decision_spec["queue_action"],
         "publication_eligible": False,
         "publication_approval": False,

@@ -856,6 +856,31 @@ def build_inventory(root: Path) -> dict[str, Any]:
         outcomes = Counter(str(record.get("deduplication_outcome") or "needs_manual_review") for record in records)
         historical_outcomes = Counter(str(record.get("historical_outcome") or record.get("deduplication_outcome") or "needs_manual_review") for record in records)
         domain_inventory = {"raw_run_count": len(raw_files), "normalized_finding_count": len(records), "date_range": [min(dates), max(dates)] if dates else [], "unique_urls": len(urls), "duplicates": historical_outcomes.get("duplicate_historical", 0), "matched_existing_records": outcomes.get("matched_existing", 0), "unmatched_records": historical_outcomes.get("new_historical_candidate", 0), "invalid_records": outcomes.get("invalid", 0) + historical_outcomes.get("archived_invalid", 0), "historical_candidate_count": sum(1 for r in records if r.get("candidate_created") is True), "invalid_archived_count": historical_outcomes.get("archived_invalid", 0), "archived_context_count": historical_outcomes.get("archived_context", 0), "matched_published_event_count": historical_outcomes.get("matched_published_event", 0), "matched_published_edition_count": historical_outcomes.get("matched_published_edition", 0), "matched_reviewed_event_count": historical_outcomes.get("matched_reviewed_event", 0), "matched_existing_source_count": historical_outcomes.get("matched_existing_source", 0), "matched_existing_cluster_count": historical_outcomes.get("matched_existing_cluster", 0), "duplicate_historical_count": historical_outcomes.get("duplicate_historical", 0), "new_historical_candidate_count": historical_outcomes.get("new_historical_candidate", 0), "needs_manual_review_count": historical_outcomes.get("needs_manual_review", 0), "excluded_count": sum(1 for r in records if r.get("review_status") == "excluded"), "candidate_creation_count": sum(1 for r in records if r.get("candidate_created") is True), "publication_ready_count": sum(1 for r in records if r.get("publication_eligible") is True), "missing_dates": sum(1 for r in records if not _date_values(r.get("source_published_at") or r.get("published_at") or r.get("event_date"))), "missing_evidence": sum(1 for r in records if not str(r.get("exact_supporting_passage") or r.get("evidence") or r.get("evidence_text") or r.get("summary") or "").strip()), "pending_review_count": sum(1 for r in records if r.get("review_status") == "pending_review")}
+        domain_inventory.update({
+            "pending_substantive_review": sum(
+                1
+                for record in records
+                if record.get("historical_outcome") == "new_historical_candidate"
+                and record.get("review_status") == "pending_review"
+            ),
+            "queue_entries": sum(
+                1
+                for record in records
+                if record.get("queue_action")
+                not in {
+                    None,
+                    "",
+                    "none",
+                    "provenance_only",
+                    "historical_review_candidate",
+                }
+            ),
+            "substantively_reviewed": sum(
+                1
+                for record in records
+                if record.get("review_status") == "substantively_reviewed"
+            ),
+        })
         if domain == "ice":
             domain_inventory.update(ice_aggregate_metrics(records, raw_runs=len(raw_files)))
         inventory["domains"][domain] = domain_inventory

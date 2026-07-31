@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from bluefern_dispatches.historical_agent_archive import DOMAINS, SCHEMA_VERSION, HistoricalEnvelopeError, _care_report, _gaza_report, _ice_report, archive_root, atomic_json, build_inventory, canonical_json, normalize_records, parse_historical_input, sha256_bytes, validate_input
+from bluefern_dispatches.historical_agent_archive import DOMAINS, SCHEMA_VERSION, HistoricalEnvelopeError, _care_report, _gaza_report, _ice_report, archive_root, atomic_json, build_inventory, canonical_json, care_line_match_targets, normalize_records, parse_historical_input, sha256_bytes, validate_input
 from bluefern_dispatches.ice_historical import explicit_detection_date_text, extract_detection_date, ice_aggregate_metrics, normalize_detection_date
 
 SUPPORTED_BATCH_EXTENSIONS = {".txt", ".md", ".json"}
@@ -538,6 +538,13 @@ def _review_historical_candidate(args: argparse.Namespace) -> int:
             "audit_decision": "accept_substantively_valid_historical_candidate",
             "recommended_disposition": "substantively_valid_historical_candidate",
             "new_status": "substantively_reviewed",
+            "queue_action": "none",
+        },
+        ("care-line", "substantively-valid"): {
+            "audit_decision": "accept_substantively_valid_historical_candidate",
+            "recommended_disposition": "substantively_valid_historical_candidate",
+            "new_status": "substantively_reviewed",
+            "queue_action": "historical_review_candidate",
         },
     }
     decision_spec = supported_decisions.get((args.domain, args.decision))
@@ -648,7 +655,7 @@ def _review_historical_candidate(args: argparse.Namespace) -> int:
         "archive_mutation_authorized": False,
         "publication_authorized": False,
         "current_review_status": "pending_review",
-        "current_queue_action": "none",
+        "current_queue_action": decision_spec["queue_action"],
         "current_publication_eligible": False,
         "current_publication_approval": False,
     }
@@ -657,44 +664,179 @@ def _review_historical_candidate(args: argparse.Namespace) -> int:
             raise ValueError(
                 f"substantive review {key} must be exactly {expected!r}"
             )
-    severity_review = review.get("severity_review")
-    if not isinstance(severity_review, dict) or severity_review.get("current_severity") != "high":
-        raise ValueError("substantive review must preserve severity high")
     if finding.get("historical_outcome") != "new_historical_candidate":
         raise ValueError(
             "only a new_historical_candidate may receive this substantive decision"
         )
-    if finding.get("severity") != "high":
-        raise ValueError("ICE substantive-valid decision requires severity high")
-    if finding.get("queue_action") != "none":
-        raise ValueError("historical candidate queue_action must be none")
+    if finding.get("queue_action") != decision_spec["queue_action"]:
+        raise ValueError(
+            "historical candidate queue_action must be "
+            f"{decision_spec['queue_action']!r}"
+        )
     if finding.get("publication_eligible") is not False:
         raise ValueError("historical candidate publication_eligible must be false")
     if finding.get("publication_approval") is not False:
         raise ValueError("historical candidate publication_approval must be false")
 
+    domain_audit_values: dict[str, object]
+    if args.domain == "ice":
+        severity_review = review.get("severity_review")
+        if not isinstance(severity_review, dict) or severity_review.get("current_severity") != "high":
+            raise ValueError("substantive review must preserve severity high")
+        if finding.get("severity") != "high":
+            raise ValueError("ICE substantive-valid decision requires severity high")
+        domain_audit_values = {
+            "severity": "high",
+        }
+    else:
+        if review.get("schema_version") != "care_line_substantive_historical_review_v1":
+            raise ValueError(
+                "Care Line substantive review schema_version must be exactly "
+                "'care_line_substantive_historical_review_v1'"
+            )
+        if review.get("review_type") != "substantive_historical_review":
+            raise ValueError(
+                "Care Line substantive review review_type must be exactly "
+                "'substantive_historical_review'"
+            )
+        if review.get("queue_authorized") is not False:
+            raise ValueError("Care Line substantive review queue_authorized must be false")
+        duplicate_check = review.get("duplicate_and_live_record_check")
+        if (
+            not isinstance(duplicate_check, dict)
+            or duplicate_check.get("historical_candidate_remains_distinct") is not True
+            or duplicate_check.get("existing_published_event") is not None
+            or duplicate_check.get("existing_reviewed_live_candidate") is not None
+            or duplicate_check.get("live_reviewed_event_queue_entry") is not None
+        ):
+            raise ValueError(
+                "Care Line substantive review must preserve a distinct private candidate"
+            )
+        materiality = review.get("materiality_assessment")
+        materiality_value = (
+            materiality.get("assessment") if isinstance(materiality, dict) else None
+        )
+        if materiality_value not in {
+            "high_access_impact",
+            "moderate_access_impact",
+            "limited_access_impact",
+            "access_impact_unclear",
+            "context_only",
+        }:
+            raise ValueError(
+                "Care Line substantive review materiality_assessment is invalid"
+            )
+        taxonomy = review.get("taxonomy_review")
+        if not isinstance(taxonomy, dict):
+            raise ValueError("Care Line substantive review taxonomy_review is missing")
+        event_type_review = taxonomy.get("event_type")
+        service_line_review = taxonomy.get("service_line")
+        event_status_review = taxonomy.get("event_status")
+        effective_date_review = taxonomy.get("effective_date")
+        if not all(
+            isinstance(value, dict)
+            for value in (
+                event_type_review,
+                service_line_review,
+                event_status_review,
+                effective_date_review,
+            )
+        ):
+            raise ValueError(
+                "Care Line substantive review taxonomy fields are incomplete"
+            )
+        if event_type_review.get("current_value") != finding.get("event_type"):
+            raise ValueError(
+                "Care Line substantive review event_type does not match normalized finding"
+            )
+        if effective_date_review.get("value") != finding.get("effective_date"):
+            raise ValueError(
+                "Care Line substantive review effective_date does not match normalized finding"
+            )
+        service_line = service_line_review.get("value")
+        event_status = event_status_review.get("value")
+        if not isinstance(service_line, str) or not service_line:
+            raise ValueError("Care Line substantive review service_line is missing")
+        if event_status != "scheduled":
+            raise ValueError(
+                "Care Line substantive review event_status must be exactly 'scheduled'"
+            )
+        editorial_restrictions = review.get("editorial_restrictions")
+        if (
+            not isinstance(editorial_restrictions, list)
+            or not editorial_restrictions
+            or not all(
+                isinstance(item, str) and item.strip()
+                for item in editorial_restrictions
+            )
+        ):
+            raise ValueError(
+                "Care Line substantive review editorial_restrictions are missing"
+            )
+
+        care_targets = care_line_match_targets(repo_root)
+        event_id = str(finding.get("event_id") or finding.get("matched_event_id") or "")
+        if (
+            event_id
+            and (
+                event_id in care_targets["published_events"]
+                or event_id in care_targets["reviewed_events"]
+                or event_id in care_targets["queue"]
+            )
+        ):
+            raise ValueError(
+                "Care Line historical candidate now matches a live or published event"
+            )
+        source_url = str(
+            finding.get("canonical_source_url") or finding.get("source_url") or ""
+        ).strip().lower().split("?")[0].rstrip("/")
+        live_source_matches = [
+            item
+            for item in care_targets["sources"].get(source_url, [])
+            if not str(item.get("path") or "").replace("\\", "/").startswith(
+                "data/agent-history/care-line/"
+            )
+        ]
+        if live_source_matches:
+            raise ValueError(
+                "Care Line historical candidate now matches a live source record"
+            )
+        domain_audit_values = {
+            "effective_date": finding.get("effective_date"),
+            "editorial_restrictions": list(editorial_restrictions),
+            "event_status": event_status,
+            "event_type": finding.get("event_type"),
+            "materiality_assessment": materiality_value,
+            "service_line": service_line,
+        }
+
     decisions_dir = base / "reviews" / "decisions"
     audit_path = decisions_dir / (
         f"{raw_sha[:24]}-accept-substantively-valid.json"
     )
+    try:
+        review_artifact_display = review_path.relative_to(repo_root).as_posix()
+    except ValueError:
+        review_artifact_display = review_path.as_posix()
     immutable_audit_values = {
         "schema_version": "historical_substantive_review_decision_v1",
         "domain": args.domain,
         "raw_sha256": raw_sha,
         "normalized_finding_id": finding_id,
+        "review_artifact_path": review_artifact_display,
         "review_artifact_sha256": actual_review_sha,
         "operator": args.operator,
         "decision": decision_spec["audit_decision"],
         "previous_review_status": "pending_review",
         "new_review_status": decision_spec["new_status"],
         "historical_outcome": finding.get("historical_outcome"),
-        "severity": finding.get("severity"),
-        "queue_action": "none",
+        "queue_action": decision_spec["queue_action"],
         "publication_eligible": False,
         "publication_approval": False,
         "publication_authorized": False,
         "queue_authorized": False,
         "archive_content_change_authorized": False,
+        **domain_audit_values,
     }
     inventory_before = build_inventory(repo_root)["domains"][args.domain]
     previous_status = finding.get("review_status")
@@ -750,28 +892,24 @@ def _review_historical_candidate(args: argparse.Namespace) -> int:
         )
 
     decided_at = datetime.now(timezone.utc).isoformat()
-    try:
-        review_artifact_display = review_path.relative_to(repo_root).as_posix()
-    except ValueError:
-        review_artifact_display = review_path.as_posix()
     audit = {
         **immutable_audit_values,
-        "review_artifact_path": review_artifact_display,
         "decided_at": decided_at,
         "normalized_record_sha256_before": sha256_bytes(normalized_path.read_bytes()),
         "normalized_record_sha256_after": sha256_bytes(
             canonical_json(updated_record).encode("utf-8")
         ),
         "changed_fields": ["findings[].review_status"],
-        "notes": [
+    }
+    if args.domain == "ice":
+        audit["notes"] = [
             "Attribute aggregate figures to Reuters' review of internal federal data and state that DHS confirmed the information-sharing relationship.",
             "Do not describe the complete dataset as public, all arrested people as children, or 460,000 leads as 460,000 unique people.",
             "Do not add unsupported criminal-history, geographic, or case-outcome detail.",
             "Treat the gunpoint arrest as one documented case, not a national force pattern.",
             "Do not claim data sharing alone caused longer ORR custody.",
             "Keep government positions, allegations, and unknowns separate.",
-        ],
-    }
+        ]
     decisions_dir.mkdir(parents=True, exist_ok=True)
     atomic_json(audit_path, audit)
     atomic_json(normalized_path, updated_record)

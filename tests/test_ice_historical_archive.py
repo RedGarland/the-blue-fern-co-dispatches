@@ -6,7 +6,12 @@ from pathlib import Path
 import pytest
 
 from bluefern_dispatches.historical_agent_archive import normalize_records
-from bluefern_dispatches.ice_historical import ICE_EVENT_CATEGORIES, ICE_SCHEMA_FIELDS
+from bluefern_dispatches.ice_historical import (
+    ICE_EVENT_CATEGORIES,
+    ICE_SCHEMA_FIELDS,
+    extract_detection_date,
+    normalize_detection_date,
+)
 from scripts.import_historical_agent_runs import main
 
 
@@ -108,7 +113,7 @@ def sidecar(root: Path, raw_path: Path, *, overrides: dict | None = None) -> Pat
 def test_ice_contract_contains_every_required_field():
     expected = {
         "finding_id", "agent_name", "agent_run_id", "source_url", "canonical_source_url",
-        "publisher", "source_published_at", "event_date", "title", "exact_supporting_passage",
+        "publisher", "source_published_at", "event_date", "detection_date", "title", "exact_supporting_passage",
         "summary", "event_category", "event_subtype", "severity", "location_name", "city",
         "county", "state_or_territory", "facility_name", "agency", "affected_population",
         "fatalities", "serious_injuries", "hospitalizations", "detention_activity",
@@ -514,3 +519,260 @@ def test_district_of_columbia_is_distinct_from_states(tmp_path: Path):
     ))
     assert record["state_or_territory"] == "District of Columbia"
     assert record["state_or_territory"] not in {"Washington", "District of Columbia State"}
+
+
+def test_detection_date_is_explicit_optional_and_distinct_from_other_dates(tmp_path: Path):
+    record, _ = normalize(
+        tmp_path,
+        finding(
+            event_date="2025-01 through 2026-07-28",
+            source_published_at="2026-07-28",
+            detection_date="2026-07-30",
+        ),
+    )
+    assert record["event_date"] == "2025-01 through 2026-07-28"
+    assert record["source_published_at"] == "2026-07-28"
+    assert record["detection_date"] == "2026-07-30"
+    missing, _ = normalize(tmp_path, finding(finding_id="missing-detection"))
+    assert missing["detection_date"] is None
+    timestamped, _ = normalize(
+        tmp_path,
+        finding(finding_id="timestamped", detection_date="2026-07-30T14:30:00Z"),
+    )
+    assert timestamped["detection_date"] == "2026-07-30T14:30:00Z"
+
+
+def test_explicit_prose_and_markdown_detection_dates_normalize_without_ambient_inference(tmp_path: Path):
+    markdown = "* **Detection Date:** July 30, 2026\n"
+    prose, _ = normalize(tmp_path, finding(finding_id="markdown-date", raw_text=markdown))
+    assert prose["detection_date"] == "2026-07-30"
+    assert extract_detection_date(markdown) == "2026-07-30"
+    assert normalize_detection_date(None) is None
+
+    source = tmp_path / "2026-08-15-ice-alert.json"
+    write_json(source, envelope(finding(finding_id="filename-only", detection_date=None)))
+    source.touch()
+    payload = json.loads(source.read_text(encoding="utf-8"))
+    normalized, _ = normalize_records(
+        tmp_path,
+        "ice",
+        payload,
+        raw_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
+        captured_at="2026-09-01T12:00:00Z",
+    )
+    assert normalized[0]["detection_date"] is None
+
+
+@pytest.mark.parametrize("invalid", ["2026-02-30", "2026-07-30T25:00:00Z", 20260730, ["2026-07-30"]])
+def test_impossible_or_unsupported_detection_dates_fail_validation(
+    tmp_path: Path,
+    capsys,
+    invalid: object,
+):
+    source = tmp_path / "ice-alert.json"
+    write_json(source, envelope(finding(detection_date=invalid)))
+    code, result = run_json(
+        capsys,
+        ["validate", "--domain", "ice", "--input", str(source), "--repo-root", str(tmp_path)],
+    )
+    assert code == 1
+    assert result["valid"] is False
+    assert result["invalid_detection_dates"] == [0]
+
+
+def test_sidecar_detection_date_requires_matching_explicit_raw_field(tmp_path: Path, capsys):
+    raw_path = tmp_path / "data/agent-history-staging/ice/alert.md"
+    raw_path.parent.mkdir(parents=True)
+    raw_path.write_text(
+        "* **Detection Date:** July 30, 2026\n\n"
+        "ICE reported one person was hospitalized in El Paso on July 1, 2026. "
+        "The report was published July 2, 2026. "
+        "https://www.ice.gov/news/releases/prose-incident\n",
+        encoding="utf-8",
+    )
+    correction = sidecar(tmp_path, raw_path)
+    value = json.loads(correction.read_text(encoding="utf-8"))
+    value["findings"][0]["detection_date"] = "2026-07-30"
+    write_json(correction, value)
+    code, result = run_json(
+        capsys,
+        [
+            "dry-run",
+            "--domain",
+            "ice",
+            "--input",
+            str(raw_path),
+            "--correction",
+            str(correction),
+            "--repo-root",
+            str(tmp_path),
+        ],
+    )
+    assert code == 0
+    assert result["ice_findings"][0]["detection_date"] == "2026-07-30"
+
+    value["findings"][0]["detection_date"] = "2026-07-31"
+    write_json(correction, value)
+    with pytest.raises(ValueError, match="conflicts"):
+        main(
+            [
+                "dry-run",
+                "--domain",
+                "ice",
+                "--input",
+                str(raw_path),
+                "--correction",
+                str(correction),
+                "--repo-root",
+                str(tmp_path),
+            ]
+        )
+    value["findings"][0]["detection_date"] = "2026-07-30T12:00:00Z"
+    write_json(correction, value)
+    with pytest.raises(ValueError, match="conflicts"):
+        main(
+            [
+                "dry-run",
+                "--domain",
+                "ice",
+                "--input",
+                str(raw_path),
+                "--correction",
+                str(correction),
+                "--repo-root",
+                str(tmp_path),
+            ]
+        )
+
+
+def test_explicit_renormalization_updates_only_detection_date_and_is_idempotent(
+    tmp_path: Path,
+    capsys,
+):
+    protected = [
+        tmp_path / "output/site/marker.txt",
+        tmp_path / "bluefern-dispatches-pages/marker.txt",
+        tmp_path / "data/agent-history/food-line/marker.txt",
+        tmp_path / "data/agent-history/care-line/marker.txt",
+        tmp_path / "data/agent-history/gaza/marker.txt",
+        tmp_path / "data/universal_events/publication-state/marker.txt",
+        tmp_path / "data/dispatches/ice/queue/marker.txt",
+        tmp_path / "data/bluesky/marker.txt",
+    ]
+    for path in protected:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("unchanged", encoding="utf-8")
+
+    raw_path = tmp_path / "data/agent-history-staging/ice/alert.md"
+    raw_path.parent.mkdir(parents=True)
+    raw_path.write_text(
+        "* **Detection Date:** July 30, 2026\n\n"
+        "ICE reported one person was hospitalized in El Paso on July 1, 2026. "
+        "The report was published July 2, 2026. "
+        "https://www.ice.gov/news/releases/prose-incident\n",
+        encoding="utf-8",
+    )
+    correction = sidecar(tmp_path, raw_path)
+    import_args = [
+        "import",
+        "--domain",
+        "ice",
+        "--input",
+        str(raw_path),
+        "--correction",
+        str(correction),
+        "--repo-root",
+        str(tmp_path),
+    ]
+    code, imported = run_json(capsys, import_args)
+    assert code == 0
+    digest = hashlib.sha256(raw_path.read_bytes()).hexdigest()
+    raw_archive = tmp_path / f"data/agent-history/ice/raw/{digest}.json"
+    normalized_path = tmp_path / f"data/agent-history/ice/normalized/{digest}.json"
+    report_path = tmp_path / f"data/agent-history/ice/reports/{digest}.json"
+
+    legacy = json.loads(normalized_path.read_text(encoding="utf-8"))
+    legacy["findings"][0].pop("detection_date", None)
+    legacy["findings"][0].pop("last_normalized_at", None)
+    legacy.pop("last_normalized_at", None)
+    write_json(normalized_path, legacy)
+    original_normalized = json.loads(normalized_path.read_text(encoding="utf-8"))
+    original_raw_bytes = raw_archive.read_bytes()
+    original_raw_digest = hashlib.sha256(original_raw_bytes).hexdigest()
+    original_report_bytes = report_path.read_bytes()
+    assert original_normalized["findings"][0]["historical_outcome"] == "new_historical_candidate"
+    assert original_normalized["findings"][0]["candidate_created"] is True
+
+    sidecar_value = json.loads(correction.read_text(encoding="utf-8"))
+    sidecar_value["findings"][0]["detection_date"] = "2026-07-30"
+    write_json(correction, sidecar_value)
+
+    batch_args = [
+        "batch-import",
+        "--domain",
+        "ice",
+        "--input-dir",
+        str(raw_path.parent),
+        "--repo-root",
+        str(tmp_path),
+    ]
+    code, ordinary = run_json(capsys, batch_args)
+    assert code == 0
+    assert ordinary["idempotent_files"] == 1
+    assert json.loads(normalized_path.read_text(encoding="utf-8")) == original_normalized
+
+    renormalize_args = [
+        "renormalize",
+        "--domain",
+        "ice",
+        "--input",
+        str(raw_path),
+        "--repo-root",
+        str(tmp_path),
+    ]
+    code, revised = run_json(capsys, renormalize_args)
+    assert code == 0
+    assert revised["status"] == "renormalized"
+    assert revised["changed_fields"] == [
+        {
+            "field": "detection_date",
+            "finding_id": "ice-finding-1",
+            "old_value": None,
+            "new_value": "2026-07-30",
+        }
+    ]
+    updated = json.loads(normalized_path.read_text(encoding="utf-8"))
+    expected_finding = dict(original_normalized["findings"][0], detection_date="2026-07-30")
+    assert updated["findings"][0] == expected_finding
+    assert updated["last_normalized_at"]
+    assert updated["findings"][0]["historical_outcome"] == "new_historical_candidate"
+    assert updated["findings"][0]["candidate_created"] is True
+    assert updated["findings"][0]["review_status"] == "pending_review"
+    assert updated["findings"][0]["publication_eligible"] is False
+    assert updated["findings"][0]["publication_approval"] is False
+    assert raw_archive.read_bytes() == original_raw_bytes
+    assert hashlib.sha256(raw_archive.read_bytes()).hexdigest() == original_raw_digest
+    assert report_path.read_bytes() == original_report_bytes
+    assert all(path.read_text(encoding="utf-8") == "unchanged" for path in protected)
+
+    audit = json.loads(Path(revised["maintenance_audit_path"]).read_text(encoding="utf-8"))
+    assert audit["raw_sha256"] == digest
+    assert audit["changed_fields"] == revised["changed_fields"]
+    assert audit["source_evidence"]["raw_value"] == "July 30, 2026"
+    assert audit["publication_approval"] is False
+    assert revised["inventory_before"]["raw_run_count"] == 1
+    assert revised["inventory_after"]["raw_run_count"] == 1
+    assert revised["inventory_after"]["normalized_finding_count"] == 1
+    assert revised["inventory_after"]["historical_candidate_count"] == 1
+    assert revised["inventory_after"]["pending_review"] == 1
+    assert revised["inventory_after"]["publication_ready_count"] == 0
+
+    revised_digest = hashlib.sha256(normalized_path.read_bytes()).hexdigest()
+    code, repeated = run_json(capsys, renormalize_args)
+    assert code == 0
+    assert repeated["status"] == "idempotent_noop"
+    assert hashlib.sha256(normalized_path.read_bytes()).hexdigest() == revised_digest
+    assert repeated["inventory"]["raw_run_count"] == 1
+    assert repeated["inventory"]["normalized_finding_count"] == 1
+    assert repeated["inventory"]["pending_review"] == 1
+    assert repeated["inventory"]["publication_ready_count"] == 0

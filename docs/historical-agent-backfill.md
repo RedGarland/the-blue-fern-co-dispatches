@@ -9,7 +9,7 @@ gaza/{raw,normalized,reports}
 ice/{raw,normalized,reports}
 ```
 
-Raw records are content-addressed by SHA-256, retain the original text and original bytes (base64), and are written atomically. Reimporting identical bytes is an idempotent no-op. Historical data is never treated as current merely because it was imported today. `captured_at`, `original_run_at`, source publication/event dates, and `imported_at` remain separate.
+Raw records are content-addressed by SHA-256, retain the original text and original bytes (base64), and are written atomically. Reimporting identical bytes is an idempotent no-op. Historical data is never treated as current merely because it was imported today. Event dates or intervals, source publication dates, agent detection dates, `captured_at`, `original_run_at`, `imported_at`, and normalization-maintenance times remain separate.
 
 ## Commands
 
@@ -27,7 +27,7 @@ python scripts/import_historical_agent_runs.py batch-import --domain care-line -
 
 The importer accepts plain text, Markdown, JSON lists, and the Food Line agent envelope. A preserved text or Markdown alert containing exactly one labeled (`json`) or unlabeled fenced JSON object is normalized through that embedded envelope; the complete raw bytes and human-readable text remain private provenance. Multiple or malformed fences fail closed. Dry runs write nothing. No approval, publication, Pages, Bluesky, scheduler, or public output path is used.
 
-Food Line reuses the existing AgentFinding and Food Line pressure adapter and marks findings `pending_review` and `historical_backfill: true`. Care Line preserves event/source identity and does not requeue published event IDs. Gaza records are matched by source text against existing source/edition artifacts without creating stories. ICE records remain private with pending verification and support event category, date, location, agency/facility, injury/fatality, detention/removal/legal/policy, evidence, source, severity, and verification fields when present.
+Food Line reuses the existing AgentFinding and Food Line pressure adapter and marks findings `pending_review` and `historical_backfill: true`. Care Line preserves event/source identity and does not requeue published event IDs. Gaza records are matched by source text against existing source/edition artifacts without creating stories. ICE records remain private with pending verification and support event category, event date or interval, source publication date, detection date, location, agency/facility, injury/fatality, detention/removal/legal/policy, evidence, source, severity, and verification fields when present.
 
 ## Care Line controlled historical batch
 
@@ -83,7 +83,7 @@ Private ICE matching authority is limited to traceable records under:
 - `data/universal_events/` for non-seed private immigration-enforcement identities. Synthetic seed fixtures and placeholder URLs are not matching authority.
 - `data/agent-history/ice/normalized/` for previously archived historical identities.
 
-The repository currently has no real normalized ICE historical record. `data/agent-history/ice/reports/history-index.json` is the empty private inventory. `data/universal_events/seed/universal_events_seed.json` and the unreviewed immigration-related candidates under `data/dispatches/american-pressure/candidates/` are fixtures or intake material, not authoritative ICE incident matches. No public ICE dispatch pipeline is inferred from these records.
+The ICE historical tree may contain privately imported findings and maintenance audits. `data/universal_events/seed/universal_events_seed.json` and the unreviewed immigration-related candidates under `data/dispatches/american-pressure/candidates/` are fixtures or intake material, not authoritative ICE incident matches. No public ICE dispatch pipeline is inferred from historical records.
 
 Matching uses explicit incident, legal/docket, source, facility/contract, removal-flight, canonical-URL, or normalized historical identities. Event date, location, facility, agency, incident type, affected person or group, and removal destination are conflict checks or fingerprint components; a similar headline never establishes a match. Reports include the explicit match basis and any conflicting-field diagnostics.
 
@@ -98,7 +98,26 @@ Severity is private review metadata based only on documented facts. `critical` c
 
 ICE outcomes are `matched_existing_incident`, `matched_existing_source`, `matched_existing_legal_record`, `duplicate_historical`, `new_historical_candidate`, `archived_context`, `archived_invalid`, and `needs_manual_review`. Every result remains private, has `publication_eligible: false` and `publication_approval: false`, and performs no live queue action. New candidates remain `pending_review`; invalid findings are `excluded`; context-only records use `historical_context`. Human review is required before any later workflow may use a historical finding.
 
-Per-finding reports retain raw hash, source/event dates, category/subtype, severity, location/facility, agency, casualty counts, activity flags, evidence level, match result, candidate state, review state, exclusion reason, and publication ineligibility. Batch reports aggregate raw runs, normalized findings, critical/high findings, fatalities, deaths in custody, serious injuries, hospitalizations, force incidents, enforcement operations, detention changes, removals, legal and policy actions, community disruptions, duplicates, invalid findings, and pending review. Publication-ready count is always zero.
+Per-finding reports retain raw hash, event date or interval, source publication date, agent detection date, archive capture time, import time, category/subtype, severity, location/facility, agency, casualty counts, activity flags, evidence level, match result, candidate state, review state, exclusion reason, and publication ineligibility. `last_normalized_at` appears only after an explicit maintenance operation. Batch reports aggregate raw runs, normalized findings, critical/high findings, fatalities, deaths in custody, serious injuries, hospitalizations, force incidents, enforcement operations, detention changes, removals, legal and policy actions, community disruptions, duplicates, invalid findings, and pending review. Publication-ready count is always zero.
+
+ICE date meanings are intentionally non-interchangeable:
+
+- `event_date` or `event_period` describes when the underlying event occurred.
+- `source_published_at` describes when the source was published.
+- `detection_date` describes when the agent explicitly detected the finding. A date-only value is stored as `YYYY-MM-DD`; an explicit source timestamp may retain ISO 8601 time precision.
+- `captured_at` describes when the raw export entered archive processing.
+- `imported_at` describes when the immutable raw archive was first written.
+- `last_normalized_at` describes an explicitly authorized normalization-maintenance operation.
+
+Detection dates are optional. Missing values remain JSON null. They are parsed only from a structured `detection_date` value or an explicit raw-alert `Detection Date` field. They are never inferred from filenames, directories, source publication dates, event dates, file timestamps, run IDs, capture times, or import times. Impossible dates and raw/sidecar conflicts fail closed.
+
+An already archived ICE record is not silently rewritten by `import` or `batch-import`. After a reviewed sidecar explicitly authorizes a newly supported field, use the private maintenance command:
+
+```powershell
+python scripts/import_historical_agent_runs.py renormalize --domain ice --input "data/agent-history-staging/ice/<alert>"
+```
+
+`renormalize` verifies the immutable raw bytes, raw SHA-256, normalized-record identity, sidecar identity, historical-only approval scope, and raw evidence. It changes only an absent approved `detection_date`, preserves the original per-record import report and historical outcome, creates no finding or candidate, and writes a private audit under `data/agent-history/ice/reports/maintenance/`. The audit records old/new values and normalized digests, source evidence, sidecar digest, reviewer, scope, maintenance time, and `publication_approval: false`. Repeating the command returns `idempotent_noop`.
 
 Read-only first-batch checks:
 

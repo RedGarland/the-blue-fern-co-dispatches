@@ -5,8 +5,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from bluefern_dispatches.historical_agent_archive import DOMAINS, SCHEMA_VERSION, HistoricalEnvelopeError, _care_report, _gaza_report, _ice_report, archive_root, atomic_json, build_inventory, normalize_records, parse_historical_input, sha256_bytes, validate_input
-from bluefern_dispatches.ice_historical import ice_aggregate_metrics
+from bluefern_dispatches.historical_agent_archive import DOMAINS, SCHEMA_VERSION, HistoricalEnvelopeError, _care_report, _gaza_report, _ice_report, archive_root, atomic_json, build_inventory, canonical_json, normalize_records, parse_historical_input, sha256_bytes, validate_input
+from bluefern_dispatches.ice_historical import explicit_detection_date_text, extract_detection_date, ice_aggregate_metrics, normalize_detection_date
 
 SUPPORTED_BATCH_EXTENSIONS = {".txt", ".md", ".json"}
 IGNORED_BATCH_DIRECTORIES = {"corrections", "raw", "normalized", "reports", "batches", "archive"}
@@ -124,6 +124,7 @@ def _raw_supports_count(evidence: str, field: str, value: object) -> bool:
 
 
 def _validate_ice_sidecar_against_raw(raw_text: str, correction: dict) -> None:
+    raw_detection_date = extract_detection_date(raw_text)
     for finding in correction.get("findings", []):
         if not isinstance(finding, dict):
             continue
@@ -133,6 +134,12 @@ def _validate_ice_sidecar_against_raw(raw_text: str, correction: dict) -> None:
         for field in ("event_date", "source_published_at"):
             if not _raw_supports_date(raw_text, finding.get(field)):
                 raise ValueError(f"ICE normalization sidecar {field} is not supported by the preserved alert")
+        if finding.get("detection_date") not in (None, ""):
+            sidecar_detection_date = normalize_detection_date(finding.get("detection_date"))
+            if raw_detection_date is None:
+                raise ValueError("ICE normalization sidecar detection_date lacks an explicit raw-alert Detection Date")
+            if sidecar_detection_date != raw_detection_date:
+                raise ValueError("ICE normalization sidecar detection_date conflicts with the preserved alert")
         for field in ("location_name", "city", "county", "facility_name"):
             token = str(finding.get(field) or "").strip()
             if token and token.lower() not in raw_text.lower():
@@ -352,11 +359,185 @@ def _batch_main(args: argparse.Namespace) -> int:
     return 1 if invalid else 0
 
 
+def _renormalize_ice(args: argparse.Namespace) -> int:
+    if args.domain != "ice":
+        raise ValueError("renormalize currently supports only the ice domain")
+    repo_root = args.repo_root.resolve()
+    input_path = args.input.resolve()
+    raw = input_path.read_bytes()
+    digest = sha256_bytes(raw)
+    raw_text = raw.decode("utf-8", errors="replace")
+    base = archive_root(repo_root, "ice")
+    raw_path = base / "raw" / f"{digest}.json"
+    normalized_path = base / "normalized" / f"{digest}.json"
+    report_path = base / "reports" / f"{digest}.json"
+    if not raw_path.is_file() or not normalized_path.is_file() or not report_path.is_file():
+        raise ValueError("renormalize requires an existing raw, normalized, and per-record private archive")
+
+    correction_path = args.correction.resolve() if args.correction else discover_sidecar(
+        input_path,
+        input_dir=input_path.parent,
+        repo_root=repo_root,
+        domain="ice",
+        raw_sha256=digest,
+    )
+    if correction_path is None:
+        raise ValueError("renormalize requires an approved ICE normalization sidecar")
+    correction = json.loads(correction_path.read_text(encoding="utf-8"))
+    expected_raw = (repo_root / str(correction.get("raw_file") or "")).resolve()
+    if expected_raw != input_path:
+        raise ValueError("ICE normalization sidecar raw_file does not match the supplied alert")
+    _validate_ice_sidecar_against_raw(raw_text, correction)
+    payload, normalization_metadata = parse_historical_input(raw)
+    normalize_records(
+        repo_root,
+        "ice",
+        payload,
+        raw_sha256=digest,
+        captured_at="",
+        correction=correction,
+        normalization_metadata=normalization_metadata,
+    )
+
+    raw_record = json.loads(raw_path.read_text(encoding="utf-8"))
+    if raw_record.get("raw_sha256") != digest:
+        raise ValueError("archived raw SHA-256 does not match the supplied alert")
+    try:
+        archived_bytes = base64.b64decode(str(raw_record.get("raw_bytes_base64") or ""), validate=True)
+    except (ValueError, TypeError) as exc:
+        raise ValueError("archived raw bytes are invalid") from exc
+    if archived_bytes != raw or sha256_bytes(archived_bytes) != digest:
+        raise ValueError("archived raw bytes differ from the supplied immutable alert")
+
+    prior_bytes = normalized_path.read_bytes()
+    prior = json.loads(prior_bytes.decode("utf-8"))
+    if prior.get("raw_sha256") != digest:
+        raise ValueError("normalized record identity does not match the supplied raw SHA-256")
+    findings = prior.get("findings")
+    if not isinstance(findings, list):
+        raise ValueError("normalized ICE record has no findings list")
+    existing_by_id = {
+        str(item.get("finding_id") or ""): item
+        for item in findings
+        if isinstance(item, dict) and item.get("finding_id")
+    }
+    changed_fields: list[dict] = []
+    for sidecar_finding in correction.get("findings", []):
+        if not isinstance(sidecar_finding, dict) or sidecar_finding.get("detection_date") in (None, ""):
+            continue
+        finding_id = str(sidecar_finding.get("finding_id") or "")
+        existing = existing_by_id.get(finding_id)
+        if existing is None:
+            raise ValueError(f"approved sidecar finding is absent from normalized record: {finding_id}")
+        new_value = normalize_detection_date(sidecar_finding.get("detection_date"))
+        old_value = normalize_detection_date(existing.get("detection_date"))
+        if old_value not in (None, new_value):
+            raise ValueError("renormalize refuses to replace a conflicting existing detection_date")
+        if old_value != new_value:
+            changed_fields.append(
+                {
+                    "field": "detection_date",
+                    "finding_id": finding_id,
+                    "old_value": old_value,
+                    "new_value": new_value,
+                }
+            )
+
+    sidecar_digest = sha256_bytes(correction_path.read_bytes())
+    audit_path = base / "reports" / "maintenance" / f"{digest[:16]}-{sidecar_digest[:16]}.json"
+    inventory_before = build_inventory(repo_root)["domains"]["ice"]
+    if not changed_fields:
+        result = {
+            "status": "idempotent_noop",
+            "domain": "ice",
+            "raw_sha256": digest,
+            "normalized_path": str(normalized_path),
+            "report_path": str(report_path),
+            "maintenance_audit_path": str(audit_path),
+            "detection_date": next(
+                (
+                    normalize_detection_date(item.get("detection_date"))
+                    for item in findings
+                    if isinstance(item, dict) and item.get("detection_date") not in (None, "")
+                ),
+                None,
+            ),
+            "inventory": inventory_before,
+            "publication_approval": False,
+        }
+        print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))
+        return 0
+
+    maintenance_at = datetime.now(timezone.utc).isoformat()
+    updated = json.loads(json.dumps(prior, ensure_ascii=False))
+    updated_by_id = {
+        str(item.get("finding_id") or ""): item
+        for item in updated["findings"]
+        if isinstance(item, dict) and item.get("finding_id")
+    }
+    for change in changed_fields:
+        updated_by_id[change["finding_id"]]["detection_date"] = change["new_value"]
+    updated["last_normalized_at"] = maintenance_at
+    previous_digest = sha256_bytes(prior_bytes)
+    new_digest = sha256_bytes(canonical_json(updated).encode("utf-8"))
+    raw_detection_text = explicit_detection_date_text(raw_text)
+    audit = {
+        "schema_version": "historical_normalization_maintenance_v1",
+        "domain": "ice",
+        "raw_sha256": digest,
+        "normalized_record_identity": f"{digest}.json",
+        "normalized_record_path": str(normalized_path),
+        "original_import_report_path": str(report_path),
+        "previous_normalized_record_digest": previous_digest,
+        "new_normalized_record_digest": new_digest,
+        "changed_fields": changed_fields,
+        "reason": args.maintenance_reason,
+        "source_evidence": {
+            "location": "raw alert field: Detection Date",
+            "raw_value": raw_detection_text,
+            "normalized_value": extract_detection_date(raw_text),
+        },
+        "sidecar_path": str(correction_path),
+        "sidecar_sha256": sidecar_digest,
+        "reviewer": correction.get("reviewer"),
+        "approval_scope": correction.get("approval_scope"),
+        "maintenance_timestamp": maintenance_at,
+        "captured_at": raw_record.get("captured_at"),
+        "imported_at": raw_record.get("imported_at"),
+        "last_normalized_at": maintenance_at,
+        "publication_approval": False,
+    }
+    atomic_json(audit_path, audit)
+    atomic_json(normalized_path, updated)
+    inventory_after = build_inventory(repo_root)["domains"]["ice"]
+    history_index_path = base / "reports" / "history-index.json"
+    atomic_json(history_index_path, inventory_after)
+    result = {
+        "status": "renormalized",
+        "domain": "ice",
+        "raw_sha256": digest,
+        "normalized_path": str(normalized_path),
+        "report_path": str(report_path),
+        "maintenance_audit_path": str(audit_path),
+        "history_index_path": str(history_index_path),
+        "previous_normalized_record_digest": previous_digest,
+        "new_normalized_record_digest": new_digest,
+        "changed_fields": changed_fields,
+        "detection_date": changed_fields[0]["new_value"],
+        "inventory_before": inventory_before,
+        "inventory_after": inventory_after,
+        "publication_approval": False,
+    }
+    print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Preserve and normalize historical agent exports privately")
-    parser.add_argument("operation", choices=["validate", "dry-run", "import", "inventory", "normalize", "report", "batch-validate", "batch-dry-run", "batch-import"])
+    parser.add_argument("operation", choices=["validate", "dry-run", "import", "inventory", "normalize", "report", "renormalize", "batch-validate", "batch-dry-run", "batch-import"])
     parser.add_argument("--domain", choices=DOMAINS); parser.add_argument("--input", type=Path); parser.add_argument("--input-dir", type=Path); parser.add_argument("--correction", type=Path); parser.add_argument("--repo-root", type=Path, default=Path.cwd()); parser.add_argument("--captured-at", default="")
     parser.add_argument("--recursive", action="store_true"); parser.add_argument("--allow-partial-import", action="store_true")
+    parser.add_argument("--maintenance-reason", default="add first-class ICE detection_date from an explicit raw-alert field")
     args = parser.parse_args(argv)
     if args.operation.startswith("batch-"):
         if not args.domain or not args.input_dir:
@@ -372,6 +553,8 @@ def main(argv: list[str] | None = None) -> int:
                 for domain in DOMAINS: atomic_json(archive_root(args.repo_root, domain) / "reports" / "history-index.json", full_result["domains"][domain])
         print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2)); return 0
     if not args.domain or not args.input: parser.error("--domain and --input are required")
+    if args.operation == "renormalize":
+        return _renormalize_ice(args)
     validation = validate_input(args.input, domain=args.domain)
     if args.operation == "validate": print(json.dumps(validation, ensure_ascii=False, sort_keys=True, indent=2)); return 0 if validation["valid"] else 1
     raw = args.input.read_bytes(); digest = sha256_bytes(raw); captured = args.captured_at or datetime.now(timezone.utc).isoformat()
@@ -430,9 +613,22 @@ def main(argv: list[str] | None = None) -> int:
                 atomic_json(report_path, result)
             else: result["status"] = "idempotent_noop"
         else:
-            record = {"schema_version": SCHEMA_VERSION, "domain": args.domain, "agent_name": payload.get("agent_name", "historical-agent") if isinstance(payload, dict) else "historical-agent", "agent_run_id": payload.get("agent_run_id", "") if isinstance(payload, dict) else "", "captured_at": captured, "original_run_at": payload.get("started_at", "") if isinstance(payload, dict) else "", "search_window": payload.get("search_window", {}) if isinstance(payload, dict) else {}, "source_format": validation["source_format"], "raw_text": raw.decode("utf-8", errors="replace"), "raw_bytes_base64": base64.b64encode(raw).decode("ascii"), "raw_sha256": digest, "source_chat_or_export_reference": "", "normalization_status": "pending_review", "imported_at": datetime.now(timezone.utc).isoformat()}
+            imported_at = datetime.now(timezone.utc).isoformat()
+            if args.domain == "ice":
+                for item in normalized:
+                    item["captured_at"] = captured
+                    item["imported_at"] = imported_at
+                    item["last_normalized_at"] = None
+                result["ice_findings"] = [_ice_report(item) for item in normalized]
+                result["captured_at"] = captured
+                result["imported_at"] = imported_at
+                result["last_normalized_at"] = None
+            record = {"schema_version": SCHEMA_VERSION, "domain": args.domain, "agent_name": payload.get("agent_name", "historical-agent") if isinstance(payload, dict) else "historical-agent", "agent_run_id": payload.get("agent_run_id", "") if isinstance(payload, dict) else "", "captured_at": captured, "original_run_at": payload.get("started_at", "") if isinstance(payload, dict) else "", "search_window": payload.get("search_window", {}) if isinstance(payload, dict) else {}, "source_format": validation["source_format"], "raw_text": raw.decode("utf-8", errors="replace"), "raw_bytes_base64": base64.b64encode(raw).decode("ascii"), "raw_sha256": digest, "source_chat_or_export_reference": "", "normalization_status": "pending_review", "imported_at": imported_at}
             record.update(normalization_metadata)
-            atomic_json(raw_path, record); atomic_json(normalized_path, {"schema_version": "historical_agent_normalized_v1", "domain": args.domain, "raw_sha256": digest, "normalization_method": normalization_metadata.get("normalization_method"), "private_text_provenance": normalization_metadata.get("private_text_provenance"), "agent_run_id": payload.get("agent_run_id", "") if isinstance(payload, dict) else "", "started_at": payload.get("started_at", "") if isinstance(payload, dict) else "", "completed_at": payload.get("completed_at", "") if isinstance(payload, dict) else "", "search_window": payload.get("search_window", {}) if isinstance(payload, dict) else {}, "findings": normalized}); result["status"] = "imported"; atomic_json(report_path, result)
+            normalized_envelope = {"schema_version": "historical_agent_normalized_v1", "domain": args.domain, "raw_sha256": digest, "normalization_method": normalization_metadata.get("normalization_method"), "private_text_provenance": normalization_metadata.get("private_text_provenance"), "agent_run_id": payload.get("agent_run_id", "") if isinstance(payload, dict) else "", "started_at": payload.get("started_at", "") if isinstance(payload, dict) else "", "completed_at": payload.get("completed_at", "") if isinstance(payload, dict) else "", "search_window": payload.get("search_window", {}) if isinstance(payload, dict) else {}, "findings": normalized}
+            if args.domain == "ice":
+                normalized_envelope.update({"captured_at": captured, "imported_at": imported_at, "last_normalized_at": None})
+            atomic_json(raw_path, record); atomic_json(normalized_path, normalized_envelope); result["status"] = "imported"; atomic_json(report_path, result)
     print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2)); return 0 if validation["valid"] else 1
 
 if __name__ == "__main__": raise SystemExit(main())

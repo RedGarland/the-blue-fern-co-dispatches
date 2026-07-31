@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import re
 from collections import Counter
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
@@ -55,6 +56,7 @@ ICE_SCHEMA_FIELDS = (
     "publisher",
     "source_published_at",
     "event_date",
+    "detection_date",
     "title",
     "exact_supporting_passage",
     "summary",
@@ -225,6 +227,60 @@ def _date(value: Any) -> str:
     token = str(value or "").strip()
     match = re.search(r"20\d{2}-\d{2}-\d{2}", token)
     return match.group(0) if match else token[:10]
+
+
+def normalize_detection_date(value: Any) -> str | None:
+    """Normalize only an explicitly supplied ICE detection date or timestamp."""
+    if value is None or value == "":
+        return None
+    if not isinstance(value, str):
+        raise ValueError("ICE detection_date must be an ISO date, ISO timestamp, or null")
+    token = value.strip()
+    if not token:
+        return None
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", token):
+        try:
+            return date.fromisoformat(token).isoformat()
+        except ValueError as exc:
+            raise ValueError(f"invalid ICE detection_date: {token}") from exc
+    if re.search(r"[T ]\d{2}:\d{2}", token):
+        try:
+            parsed = datetime.fromisoformat(token.replace("Z", "+00:00"))
+        except ValueError as exc:
+            raise ValueError(f"invalid ICE detection_date timestamp: {token}") from exc
+        normalized = parsed.isoformat()
+        return normalized[:-6] + "Z" if normalized.endswith("+00:00") else normalized
+    for pattern in ("%B %d, %Y", "%b %d, %Y"):
+        try:
+            return datetime.strptime(token, pattern).date().isoformat()
+        except ValueError:
+            continue
+    raise ValueError(f"invalid ICE detection_date: {token}")
+
+
+def explicit_detection_date_text(raw_text: str) -> str | None:
+    """Return an explicit Detection Date field value without inferring one."""
+    values: list[str] = []
+    for line in raw_text.splitlines():
+        plain = line.replace("*", "").replace("`", "").strip()
+        match = re.match(r"(?i)^[-+]\s*", plain)
+        if match:
+            plain = plain[match.end() :].strip()
+        field = re.match(r'(?i)^["\']?detection[ _-]date["\']?\s*:\s*(.+?)\s*,?$', plain)
+        if not field:
+            continue
+        value = field.group(1).strip().strip('"\'').rstrip(",").strip()
+        if value:
+            values.append(value)
+    normalized = {normalize_detection_date(value) for value in values}
+    if len(normalized) > 1:
+        raise ValueError("conflicting explicit ICE detection dates in preserved alert")
+    return values[0] if values else None
+
+
+def extract_detection_date(raw_text: str) -> str | None:
+    value = explicit_detection_date_text(raw_text)
+    return normalize_detection_date(value)
 
 
 def _incident_fingerprint(row: dict[str, Any]) -> str:
@@ -520,6 +576,10 @@ def normalize_ice_record(
     raw_sha256: str,
     targets: dict[str, Any],
 ) -> tuple[dict[str, Any], str]:
+    detection_value = row.get("detection_date")
+    if detection_value in (None, "") and isinstance(row.get("raw_text"), str):
+        detection_value = extract_detection_date(row["raw_text"])
+    detection_date = normalize_detection_date(detection_value)
     primary, secondary, invalid_categories = _categories(row)
     category_set = set(secondary)
     if primary:
@@ -628,6 +688,7 @@ def normalize_ice_record(
             "publisher": row.get("publisher") or None,
             "source_published_at": row.get("source_published_at") or row.get("published_at") or None,
             "event_date": row.get("event_date") or None,
+            "detection_date": detection_date,
             "title": row.get("title") or row.get("headline") or None,
             "exact_supporting_passage": evidence or None,
             "summary": row.get("summary") or None,
@@ -681,6 +742,10 @@ def ice_report(record: dict[str, Any]) -> dict[str, Any]:
         "publisher",
         "source_published_at",
         "event_date",
+        "detection_date",
+        "captured_at",
+        "imported_at",
+        "last_normalized_at",
         "title",
         "event_category",
         "secondary_event_categories",

@@ -14,10 +14,12 @@ from typing import Any
 
 from .adapters.food_line_agent import adapt_food_line_agent_output, map_finding_to_food_line_candidate
 from .ice_historical import (
+    extract_detection_date,
     ice_aggregate_metrics,
     ice_historical_identity,
     ice_match_targets,
     ice_report as _ice_report,
+    normalize_detection_date,
     normalize_ice_record,
 )
 
@@ -105,11 +107,17 @@ def validate_input(path: Path, *, domain: str) -> dict[str, Any]:
     try:
         payload, parse_metadata = parse_historical_input(raw)
     except HistoricalEnvelopeError as exc:
-        return {"valid": False, "domain": domain, "input_sha256": sha256_bytes(raw), "source_format": "text", "finding_count": 0, "invalid_records": [], "missing_dates": [], "missing_evidence": [], "duplicates": [], "malformed_base64": False, "error": str(exc)}
-    result: dict[str, Any] = {"valid": True, "domain": domain, "input_sha256": sha256_bytes(raw), "source_format": "json" if parse_metadata["normalization_method"] == "structured_json" else "text", "finding_count": 0, "invalid_records": [], "missing_dates": [], "missing_evidence": [], "duplicates": [], "malformed_base64": False}
+        return {"valid": False, "domain": domain, "input_sha256": sha256_bytes(raw), "source_format": "text", "finding_count": 0, "invalid_records": [], "invalid_detection_dates": [], "missing_dates": [], "missing_evidence": [], "duplicates": [], "malformed_base64": False, "error": str(exc)}
+    result: dict[str, Any] = {"valid": True, "domain": domain, "input_sha256": sha256_bytes(raw), "source_format": "json" if parse_metadata["normalization_method"] == "structured_json" else "text", "finding_count": 0, "invalid_records": [], "invalid_detection_dates": [], "missing_dates": [], "missing_evidence": [], "duplicates": [], "malformed_base64": False}
     result["normalization_method"] = parse_metadata["normalization_method"]
     if parse_metadata["normalization_method"] == "text_envelope":
         result["finding_count"] = 1
+        if domain == "ice":
+            try:
+                extract_detection_date(str(payload.get("raw_text") or ""))
+            except ValueError:
+                result["invalid_detection_dates"].append(0)
+                result["valid"] = False
         return result
     if domain not in DOMAINS: result.update(valid=False, error="unsupported_domain"); return result
     if payload is None:
@@ -128,12 +136,17 @@ def validate_input(path: Path, *, domain: str) -> dict[str, Any]:
     seen: set[str] = set()
     for index, row in enumerate(rows):
         if not isinstance(row, dict): result["invalid_records"].append(index); continue
+        if domain == "ice" and "detection_date" in row:
+            try:
+                normalize_detection_date(row.get("detection_date"))
+            except ValueError:
+                result["invalid_detection_dates"].append(index)
         identity = json.dumps({"url": str(row.get("canonical_source_url") or row.get("source_url") or row.get("url") or "").lower().split("?")[0].rstrip("/"), "title": str(row.get("title") or row.get("headline") or "").lower().strip(), "date": str(row.get("source_published_at") or row.get("published_at") or row.get("event_date") or "")[:10]}, sort_keys=True)
         if identity in seen: result["duplicates"].append(index)
         seen.add(identity)
         if not _date_values(row.get("source_published_at") or row.get("published_at") or row.get("event_date") or row.get("discovered_at")): result["missing_dates"].append(index)
         if not str(row.get("exact_supporting_passage") or row.get("evidence") or row.get("summary") or row.get("summary_or_snippet") or "").strip(): result["missing_evidence"].append(index)
-    result["valid"] = not (result["invalid_records"] or result["missing_dates"] or result["missing_evidence"] or result["malformed_base64"])
+    result["valid"] = not (result["invalid_records"] or result["invalid_detection_dates"] or result["missing_dates"] or result["missing_evidence"] or result["malformed_base64"])
     return result
 
 
@@ -727,8 +740,19 @@ def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str,
             normalized.append(record)
     elif domain == "ice":
         targets = ice_match_targets(root)
+        explicit_raw_detection = (
+            extract_detection_date(str(payload.get("raw_text") or ""))
+            if isinstance(payload, dict) and isinstance(payload.get("raw_text"), str)
+            else None
+        )
         for row in rows:
+            row = dict(row)
+            if row.get("detection_date") in (None, "") and explicit_raw_detection:
+                row["detection_date"] = explicit_raw_detection
             record, outcome = normalize_ice_record(row, payload=payload, raw_sha256=raw_sha256, targets=targets)
+            record["captured_at"] = captured_at
+            record.setdefault("imported_at", None)
+            record.setdefault("last_normalized_at", None)
             if normalization_metadata:
                 record.update(normalization_metadata)
             if correction is not None:

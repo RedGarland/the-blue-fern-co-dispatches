@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from bluefern_dispatches.historical_agent_archive import DOMAINS, SCHEMA_VERSION, HistoricalEnvelopeError, _care_report, _gaza_report, _ice_report, archive_root, atomic_json, build_inventory, canonical_json, care_line_match_targets, normalize_records, parse_historical_input, sha256_bytes, validate_input
+from bluefern_dispatches.historical_agent_archive import DOMAINS, SCHEMA_VERSION, HistoricalEnvelopeError, _care_report, _gaza_report, _ice_report, archive_root, atomic_json, build_inventory, canonical_json, care_line_match_targets, gaza_match_targets, normalize_records, parse_historical_input, sha256_bytes, validate_input
 from bluefern_dispatches.ice_historical import explicit_detection_date_text, extract_detection_date, ice_aggregate_metrics, normalize_detection_date
 
 SUPPORTED_BATCH_EXTENSIONS = {".txt", ".md", ".json"}
@@ -546,6 +546,13 @@ def _review_historical_candidate(args: argparse.Namespace) -> int:
             "new_status": "substantively_reviewed",
             "queue_action": "historical_review_candidate",
         },
+        ("gaza", "substantively-valid"): {
+            "audit_decision": "accept_substantively_valid_historical_candidate",
+            "recommended_disposition": "substantively_valid_historical_candidate",
+            "new_status": "substantively_reviewed",
+            "queue_action": "none",
+            "finding_queue_actions": (None, "", "none"),
+        },
     }
     decision_spec = supported_decisions.get((args.domain, args.decision))
     if decision_spec is None:
@@ -668,10 +675,14 @@ def _review_historical_candidate(args: argparse.Namespace) -> int:
         raise ValueError(
             "only a new_historical_candidate may receive this substantive decision"
         )
-    if finding.get("queue_action") != decision_spec["queue_action"]:
+    allowed_finding_queue_actions = decision_spec.get(
+        "finding_queue_actions",
+        (decision_spec["queue_action"],),
+    )
+    if finding.get("queue_action") not in allowed_finding_queue_actions:
         raise ValueError(
-            "historical candidate queue_action must be "
-            f"{decision_spec['queue_action']!r}"
+            "historical candidate queue_action must be one of "
+            f"{allowed_finding_queue_actions!r}"
         )
     if finding.get("publication_eligible") is not False:
         raise ValueError("historical candidate publication_eligible must be false")
@@ -688,7 +699,7 @@ def _review_historical_candidate(args: argparse.Namespace) -> int:
         domain_audit_values = {
             "severity": "high",
         }
-    else:
+    elif args.domain == "care-line":
         if review.get("schema_version") != "care_line_substantive_historical_review_v1":
             raise ValueError(
                 "Care Line substantive review schema_version must be exactly "
@@ -808,6 +819,218 @@ def _review_historical_candidate(args: argparse.Namespace) -> int:
             "event_type": finding.get("event_type"),
             "materiality_assessment": materiality_value,
             "service_line": service_line,
+        }
+    else:
+        if review.get("schema_version") != "gaza_substantive_historical_review_v1":
+            raise ValueError(
+                "Gaza substantive review schema_version must be exactly "
+                "'gaza_substantive_historical_review_v1'"
+            )
+        if review.get("review_type") != "substantive_historical_review":
+            raise ValueError(
+                "Gaza substantive review review_type must be exactly "
+                "'substantive_historical_review'"
+            )
+        if review.get("edition_authorized") is not False:
+            raise ValueError("Gaza substantive review edition_authorized must be false")
+        if review.get("current_historical_outcome") != finding.get(
+            "historical_outcome"
+        ):
+            raise ValueError(
+                "Gaza substantive review historical outcome does not match "
+                "normalized finding"
+            )
+
+        expected_finding_values = {
+            "event_type": "humanitarian_worker_injury",
+            "gaza_role": "humanitarian_operations_and_safety",
+            "source_role": "primary_un_humanitarian_report",
+            "evidence_level": "primary_report_qualified_incident",
+            "confidence": "moderate_high",
+            "operational_impact": "unknown",
+            "event_date": "2026-07-25",
+            "source_published_at": "2026-07-30",
+        }
+        for key, expected in expected_finding_values.items():
+            if finding.get(key) != expected:
+                raise ValueError(
+                    f"Gaza historical candidate {key} must be exactly {expected!r}"
+                )
+
+        date_assessment = review.get("date_assessment")
+        if not isinstance(date_assessment, dict):
+            raise ValueError("Gaza substantive review date_assessment is missing")
+        if date_assessment.get("event_date") != finding.get("event_date"):
+            raise ValueError(
+                "Gaza substantive review event_date does not match normalized finding"
+            )
+        if date_assessment.get("report_publication_date") != finding.get(
+            "source_published_at"
+        ):
+            raise ValueError(
+                "Gaza substantive review source publication date does not match "
+                "normalized finding"
+            )
+
+        materiality = review.get("materiality_assessment")
+        materiality_value = (
+            materiality.get("assessment") if isinstance(materiality, dict) else None
+        )
+        if materiality_value != "operating_impact_unclear":
+            raise ValueError(
+                "Gaza substantive review materiality_assessment must be exactly "
+                "'operating_impact_unclear'"
+            )
+        operational_impact = review.get("operational_impact_assessment")
+        if (
+            not isinstance(operational_impact, dict)
+            or operational_impact.get("assessment") != finding.get("operational_impact")
+        ):
+            raise ValueError(
+                "Gaza substantive review operational_impact does not match "
+                "normalized finding"
+            )
+
+        taxonomy = review.get("taxonomy_review")
+        if not isinstance(taxonomy, dict):
+            raise ValueError("Gaza substantive review taxonomy_review is missing")
+        taxonomy_fields = {
+            "event_type": "event_type",
+            "gaza_role": "gaza_role",
+            "source_role": "source_role",
+            "evidence_level": "evidence_level",
+            "confidence": "confidence",
+            "operational_impact": "operational_impact",
+        }
+        for review_key, finding_key in taxonomy_fields.items():
+            value = taxonomy.get(review_key)
+            if (
+                not isinstance(value, dict)
+                or value.get("current_value") != finding.get(finding_key)
+            ):
+                raise ValueError(
+                    f"Gaza substantive review {review_key} does not match "
+                    "normalized finding"
+                )
+
+        attribution = review.get("attribution_assessment")
+        safe_wording = (
+            str(attribution.get("safe_future_wording") or "")
+            if isinstance(attribution, dict)
+            else ""
+        )
+        if "reportedly" not in safe_wording.lower():
+            raise ValueError(
+                "Gaza substantive review must preserve qualified attribution"
+            )
+        editorial_restrictions = review.get("editorial_restrictions")
+        if (
+            not isinstance(editorial_restrictions, list)
+            or not editorial_restrictions
+            or not all(
+                isinstance(item, str) and item.strip()
+                for item in editorial_restrictions
+            )
+        ):
+            raise ValueError(
+                "Gaza substantive review editorial_restrictions are missing"
+            )
+
+        duplicate_check = review.get("duplicate_and_authoritative_match_check")
+        if (
+            not isinstance(duplicate_check, dict)
+            or duplicate_check.get("historical_candidate_remains_distinct") is not True
+            or duplicate_check.get("existing_edition_match") is not None
+            or duplicate_check.get("existing_source_match") is not None
+            or duplicate_check.get("existing_story_cluster_match") is not None
+            or duplicate_check.get("existing_historical_match") is not None
+        ):
+            raise ValueError(
+                "Gaza substantive review must preserve a distinct private candidate"
+            )
+
+        targets = gaza_match_targets(repo_root)
+        source_url = str(
+            finding.get("canonical_source_url") or finding.get("source_url") or ""
+        ).strip().lower().split("?")[0].rstrip("/")
+        source_matches = list(targets["sources_by_url"].get(source_url, []))
+        source_identifier = str(
+            finding.get("manual_source_identifier")
+            or finding.get("source_record_id")
+            or finding.get("source_id")
+            or ""
+        )
+        if source_identifier:
+            source_matches.extend(
+                targets["sources_by_id"].get(source_identifier, [])
+            )
+        cluster_matches = list(targets["clusters_by_url"].get(source_url, []))
+        for key in (
+            "event_cluster_id",
+            "cluster_id",
+            "story_id",
+            "topic_fingerprint",
+            "normalized_event_key",
+        ):
+            identifier = str(finding.get(key) or "")
+            if identifier:
+                cluster_matches.extend(targets["clusters_by_id"].get(identifier, []))
+        if source_matches or cluster_matches:
+            raise ValueError(
+                "Gaza historical candidate now matches an authoritative source or "
+                "cluster record"
+            )
+        if finding.get("matched_edition_date") or finding.get(
+            "matched_source_or_cluster_id"
+        ):
+            raise ValueError(
+                "Gaza historical candidate now carries an authoritative match"
+            )
+
+        duplicate_findings = []
+        normalized_root = base / "normalized"
+        for candidate_path in normalized_root.rglob("*.json"):
+            if candidate_path.resolve() == normalized_path.resolve():
+                continue
+            try:
+                candidate_record = json.loads(
+                    candidate_path.read_text(encoding="utf-8")
+                )
+            except (OSError, ValueError):
+                continue
+            for candidate in candidate_record.get("findings", []):
+                if not isinstance(candidate, dict):
+                    continue
+                candidate_url = str(
+                    candidate.get("canonical_source_url")
+                    or candidate.get("source_url")
+                    or ""
+                ).strip().lower().split("?")[0].rstrip("/")
+                same_identity = candidate.get("finding_id") == finding_id
+                same_incident = bool(source_url) and candidate_url == source_url and (
+                    candidate.get("event_date") == finding.get("event_date")
+                    or candidate.get("source_published_at")
+                    == finding.get("source_published_at")
+                )
+                if same_identity or same_incident:
+                    duplicate_findings.append(str(candidate_path))
+        if duplicate_findings:
+            raise ValueError(
+                "Gaza historical candidate now matches a prior historical record"
+            )
+
+        domain_audit_values = {
+            "audio_authorized": False,
+            "cluster_authorized": False,
+            "editorial_restrictions": list(editorial_restrictions),
+            "edition_authorized": False,
+            "event_date": finding.get("event_date"),
+            "event_type": finding.get("event_type"),
+            "gaza_role": finding.get("gaza_role"),
+            "materiality_assessment": materiality_value,
+            "operational_impact": finding.get("operational_impact"),
+            "source_published_at": finding.get("source_published_at"),
+            "source_record_authorized": False,
         }
 
     decisions_dir = base / "reviews" / "decisions"

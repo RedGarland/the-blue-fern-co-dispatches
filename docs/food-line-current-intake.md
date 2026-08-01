@@ -14,6 +14,8 @@ its qualified structured findings to the private agent inbox:
 ```powershell
 python scripts/run_food_line_discovery_expansion.py `
   --date YYYY-MM-DD `
+  --profile daily-current `
+  --max-run-minutes 30 `
   --export-agent-inbox `
   --agent-inbox-dir data/dispatches/food-line/agent-inbox
 ```
@@ -29,8 +31,11 @@ reporting and appear in the export result as exclusions.
 
 When no finding qualifies, no empty inbox file is written. The durable discovery
 audit records `agent_inbox_export.status: no_exportable_findings`, the run ID,
-counts, exclusions, and the would-be envelope hash. This avoids an inbox file
-that the existing adapter cannot import while preserving coverage accountability.
+counts, exclusions, and the would-be envelope hash. This status is permitted
+only after bounded collection reaches `completed` or
+`completed_with_exclusions`. Partial, timed-out, cancelled, and failed runs
+block export and preserve an exact resume command. See
+`docs/food-line-bounded-source-watch.md`.
 
 Step 2 validates and consumes inbox exports:
 

@@ -61,6 +61,7 @@ GOOGLE_ASSET_DOMAINS = (
     "ogp.me",
 )
 GOOGLE_NEWS_REJECTED_URL_SAMPLE_LIMIT = 25
+_ACTIVE_REQUEST_TIMEOUT_SECONDS = 15
 COMMON_PUBLISHER_SUBDOMAINS = ("www.", "m.", "amp.")
 KNOWN_PUBLISHER_CANONICAL_DOMAINS = {
     "benefitspro": {"benefitspro.com"},
@@ -473,6 +474,16 @@ DEFAULT_METROS: list[dict[str, str]] = [
 
 def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def set_food_line_request_timeout(seconds: int) -> None:
+    """Set the request bound for one isolated discovery worker process."""
+    global _ACTIVE_REQUEST_TIMEOUT_SECONDS
+    _ACTIVE_REQUEST_TIMEOUT_SECONDS = max(1, int(seconds))
+
+
+def _request_timeout_seconds() -> int:
+    return max(1, int(_ACTIVE_REQUEST_TIMEOUT_SECONDS))
 
 
 def _nonempty(value: Any) -> str:
@@ -1780,7 +1791,7 @@ def _project_fetch_with_metadata(url: str, *, timeout: int = 15) -> tuple[bytes,
 
 def _fetch_url(fetcher: Any, url: str) -> tuple[bytes, str]:
     try:
-        return fetcher(url, timeout=15), ""
+        return fetcher(url, timeout=_request_timeout_seconds()), ""
     except Exception as exc:  # noqa: BLE001
         return b"", f"{type(exc).__name__}: {exc}"
 
@@ -1788,9 +1799,9 @@ def _fetch_url(fetcher: Any, url: str) -> tuple[bytes, str]:
 def _fetch_url_with_metadata(fetcher: Any, url: str) -> tuple[bytes, str, dict[str, Any]]:
     try:
         if getattr(fetcher, "__module__", "").endswith("food_line_sources") and getattr(fetcher, "__name__", "") == "_fetch":
-            payload, meta = _project_fetch_with_metadata(url, timeout=15)
+            payload, meta = _project_fetch_with_metadata(url, timeout=_request_timeout_seconds())
             return payload, "", meta
-        result = fetcher(url, timeout=15)
+        result = fetcher(url, timeout=_request_timeout_seconds())
         if isinstance(result, dict):
             payload = result.get("payload")
             if isinstance(payload, str):
@@ -2757,7 +2768,11 @@ def _google_news_rpc_request(article_id: str, timestamp: str, signature: str) ->
         },
     )
     try:
-        with urllib.request.urlopen(request, timeout=15, context=ssl._create_unverified_context()) as response:  # noqa: S310
+        with urllib.request.urlopen(
+            request,
+            timeout=_request_timeout_seconds(),
+            context=ssl._create_unverified_context(),
+        ) as response:  # noqa: S310
             text = response.read(500_000).decode("utf-8", errors="replace")
     except Exception as exc:  # noqa: BLE001
         return "", f"{type(exc).__name__}: {exc}"
@@ -3402,16 +3417,22 @@ def run_food_line_discovery_expansion(
     dry_run: bool = False,
     export_agent_inbox: bool = False,
     agent_inbox_dir: Path | None = None,
+    query_plan_override: list[dict[str, Any]] | None = None,
+    include_candidate_records: bool = False,
 ) -> dict[str, Any]:
     date_text = validate_date(edition_date)
     fetch = resolve_food_line_fetcher(fetcher)
     config = load_food_line_discovery_expansion_config(root)
     configured_direct_sources = [row for row in config.get("direct_sources") or [] if isinstance(row, dict)]
-    query_plan = build_food_line_discovery_query_plan(
-        root,
-        date_text,
-        lookback_days=query_lookback_days,
-        lookahead_days=query_lookahead_days,
+    query_plan = (
+        [dict(row) for row in query_plan_override]
+        if query_plan_override is not None
+        else build_food_line_discovery_query_plan(
+            root,
+            date_text,
+            lookback_days=query_lookback_days,
+            lookahead_days=query_lookahead_days,
+        )
     )
     configured_lanes = sorted({_query_family_to_lane(_nonempty(row.get("query_family"))) for row in query_plan if _nonempty(row.get("query_family"))})
     query_plan = _sample_query_plan_across_families(query_plan, max_queries)
@@ -4709,6 +4730,8 @@ def run_food_line_discovery_expansion(
         audit_summary["agent_inbox_export"] = agent_export_result
         if not dry_run:
             _write_json(audit_json_path, audit_summary)
+    if include_candidate_records:
+        audit_summary["_candidate_records"] = candidates
     return audit_summary
 
 
@@ -4734,10 +4757,10 @@ def read_food_line_discovery_expansion_audit(root: Path, edition_date: str) -> d
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run the Food Line discovery expansion layer.")
-    parser.add_argument("--date", required=True, help="Edition date in YYYY-MM-DD format.")
+    parser.add_argument("--date", help="Edition date in YYYY-MM-DD format.")
     parser.add_argument("--manual-fallback-file", help="Optional JSON list of manual fallback records.")
     parser.add_argument("--edition-mode", default="current_update", choices=("current_update", "no_current_update"))
-    parser.add_argument("--max-results-per-query", type=int, default=10)
+    parser.add_argument("--max-results-per-query", type=int, default=None)
     parser.add_argument("--max-queries", type=int, default=None)
     parser.add_argument("--query-lookback-days", type=int, default=1)
     parser.add_argument("--query-lookahead-days", type=int, default=1)
@@ -4746,6 +4769,21 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--export-agent-inbox", action="store_true", help="Write one private food_line_agent_run_v1 envelope after discovery.")
     parser.add_argument("--agent-inbox-dir", default="data/dispatches/food-line/agent-inbox", help="Private agent inbox destination.")
+    parser.add_argument("--profile", choices=("daily-current", "supplemental", "smoke"), help="Use durable bounded execution.")
+    parser.add_argument("--run-id", help="Explicit ID for a new bounded run.")
+    parser.add_argument("--resume-run", help="Resume an existing bounded run ID.")
+    parser.add_argument("--status-run", help="Inspect an existing bounded run ID without collection.")
+    parser.add_argument("--legacy-unbounded", action="store_true", help="Explicit compatibility mode; not for production.")
+    parser.add_argument("--priority-tier", action="append", choices=("tier1", "tier2", "tier3"), help="Tier to execute; repeat as needed.")
+    parser.add_argument("--max-run-minutes", type=float)
+    parser.add_argument("--max-partition-minutes", type=float)
+    parser.add_argument("--max-query-seconds", type=float)
+    parser.add_argument("--per-request-timeout-seconds", type=int)
+    parser.add_argument("--max-retries", type=int)
+    parser.add_argument("--partition-size", type=int)
+    parser.add_argument("--max-partitions", type=int)
+    parser.add_argument("--max-workers", type=int)
+    parser.add_argument("--progress-interval-seconds", type=int)
     return parser
 
 
@@ -4753,13 +4791,58 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     root = Path.cwd()
+    if args.status_run:
+        from bluefern_dispatches.food_line_bounded_discovery import inspect_bounded_run
+
+        result = inspect_bounded_run(root, args.status_run, args.date)
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+        return 0
+    bounded = not bool(args.legacy_unbounded)
+    if bounded:
+        from bluefern_dispatches.food_line_bounded_discovery import run_bounded_food_line_discovery
+
+        if args.manual_fallback_file or args.dry_run:
+            parser.error("manual fallback and legacy dry-run require --legacy-unbounded")
+        agent_inbox = Path(args.agent_inbox_dir)
+        if not agent_inbox.is_absolute():
+            agent_inbox = root / agent_inbox
+        result = run_bounded_food_line_discovery(
+            root,
+            args.date,
+            profile=args.profile or "daily-current",
+            run_id=args.run_id,
+            resume_run=args.resume_run,
+            priority_tiers=args.priority_tier,
+            export_agent_inbox=bool(args.export_agent_inbox),
+            agent_inbox_dir=agent_inbox.resolve(),
+            max_partitions=args.max_partitions,
+            overrides={
+                "max_run_minutes": args.max_run_minutes,
+                "max_partition_minutes": args.max_partition_minutes,
+                "max_query_seconds": args.max_query_seconds,
+                "per_request_timeout_seconds": args.per_request_timeout_seconds,
+                "max_retries": args.max_retries,
+                "partition_size": args.partition_size,
+                "max_workers": args.max_workers,
+                "progress_interval_seconds": args.progress_interval_seconds,
+                "max_results_per_query": args.max_results_per_query,
+                "query_lookback_days": args.query_lookback_days,
+                "query_lookahead_days": args.query_lookahead_days,
+                "public_claim_lookback_days": args.public_claim_lookback_days,
+                "public_claim_lookahead_days": args.public_claim_lookahead_days,
+            },
+        )
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+        return 0 if result.get("status") in {"completed", "completed_with_exclusions"} else 2
+    if not args.date:
+        parser.error("--date is required unless --status-run is used")
     manual_path = Path(args.manual_fallback_file).resolve() if args.manual_fallback_file else None
     result = run_food_line_discovery_expansion(
         root,
         args.date,
         manual_fallback_path=manual_path,
         edition_mode=args.edition_mode,
-        max_results_per_query=args.max_results_per_query,
+        max_results_per_query=args.max_results_per_query or 10,
         max_queries=args.max_queries,
         query_lookback_days=args.query_lookback_days,
         query_lookahead_days=args.query_lookahead_days,

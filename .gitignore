@@ -52,5 +52,6 @@ bluefern-dispatches-pages/
 # Food Line large/generated operational artifacts
 data/dispatches/food-line/candidate_source_registry.json
 data/dispatches/food-line/discovery_gap/
+data/dispatches/food-line/discovery-runs/
 data/dispatches/food-line/editions/
 data/dispatches/food-line/sources/

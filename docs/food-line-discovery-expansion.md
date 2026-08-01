@@ -1,5 +1,11 @@
 # Food Line Discovery Expansion
 
+Production execution is bounded, partitioned, checkpointed, and resumable.
+Use the `daily-current` profile described in
+`docs/food-line-bounded-source-watch.md`. Plain CLI execution also defaults
+to that profile; `--legacy-unbounded` is compatibility-only and must not be
+used for routine collection.
+
 This layer broadens Food Line source discovery without changing publication rules.
 
 ## Purpose

@@ -28,10 +28,15 @@ python scripts/import_food_line_agent_findings.py validate --input <path-to-agen
 Create a current source-watch export without publishing:
 
 ```powershell
-python scripts/run_food_line_discovery_expansion.py --date YYYY-MM-DD --export-agent-inbox --agent-inbox-dir data/dispatches/food-line/agent-inbox
+python scripts/run_food_line_discovery_expansion.py --date YYYY-MM-DD --profile daily-current --max-run-minutes 30 --export-agent-inbox --agent-inbox-dir data/dispatches/food-line/agent-inbox
 ```
 
 Validation reports envelope validity, count, invalid URLs, missing evidence or publication dates, within-run duplicates, and fields requiring human review. The private inbox is `data/dispatches/food-line/agent-inbox/`; imported inputs are preserved under `processed/YYYY-MM-DD/`. No Downloads scan or filesystem watcher is used.
+
+The bounded runner exports only from `completed` or
+`completed_with_exclusions` required coverage. Partial, timed-out, cancelled,
+and failed runs record `blocked_incomplete_collection`, remain resumable, and
+never fabricate `no_exportable_findings`.
 
 ## Scheduled-agent handoff
 

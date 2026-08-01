@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-01",
+  "generated_at": "2026-08-01T13:01:03.270756Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-08-01.mp3",
+  "audio_url": "/gaza/audio/2026-08-01.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1910,
+  "tts_input_word_count": 305,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1909632,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-08-01T13:01:03.270734Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-08-01-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-01/",
+  "script_text": "This is the Gaza Dispatch audio briefing for August 1, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. EU relations, climate crisis and Gaza: why Ed Miliband is fired up by Foreign Office challenges. Labour veteran is said to relish role that requires careful negotiation of Trump and impending G20 leadership Extraordinarily, given the importance of geopolitics, the office of foreign secretary has sometimes appeared a consolation prize in British politics, perhaps reflecting the transfer of responsibility to Downing Street or the Cabinet Office. This was reported by The Guardian.\n\n2. Israel launches attacks across Gaza one day after Hamas agrees to disarm. Israeli attacks across Gaza have killed at least two Palestinians, hours after Hamas agreed to a draft peace deal. This was reported by Al Jazeera.\n\n3. Justice department admits reflecting pool damage not caused by vandals as it moves to drop charges against Olympian - as it happened. This blog is now closed. This was reported by The Guardian.\n\n4. Bowen: Plan for Hamas to disarm faces big obstacles, yet it offers rare hope for Gaza. The realities of politics, war, zero trust, the deaths of thousands and the destruction of Gaza will make any agreement very complicated. This was reported by BBC News.\n\n5. Is Israel really ready to withdraw from Gaza? Netanyahu faces political turmoil over Gaza disarmament plan tied to Israel's potential withdrawal from the enclave. This was reported by Al Jazeera.\n\n6. Hamas agrees to Trump's plan to disarm in Gaza - The Latest. Donald Trump has declared a breakthrough in negotiations over the disarmament of Hamas in Gaza and the withdrawal of Israeli forces, but Israeli government officials have voiced scepticism over the deal. This was reported by The Guardian.\n\nFor the full source-backed dispatch, read the August 1, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-08-01-guardian-world-5a3ae97470c5",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/politics/2026/aug/01/eu-relations-climate-crisis-gaza-ed-miliband-foreign-office-challenges",
+      "title": "EU relations, climate crisis and Gaza: why Ed Miliband is fired up by Foreign Office challenges"
+    },
+    {
+      "source_record_id": "gaza-2026-08-01-aljazeera-middle-east-d98d15006516",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/1/israel-launches-attacks-across-gaza-one-day-after-hamas-agrees-to-disarm?traffic_source=rss",
+      "title": "Israel launches attacks across Gaza one day after Hamas agrees to disarm"
+    },
+    {
+      "source_record_id": "gaza-2026-08-01-guardian-world-446d2359496f",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/us-news/live/2026/jul/31/donald-trump-cabinet-camp-david-iran-midterms-gaza-latest-news-updates",
+      "title": "Justice department admits reflecting pool damage not caused by vandals as it moves to drop charges against Olympian - as it happened"
+    },
+    {
+      "source_record_id": "gaza-2026-08-01-bbc-middle-east-d055c2de1c00",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/c2dkje4p4klo?at_medium=RSS&at_campaign=rss",
+      "title": "Bowen: Plan for Hamas to disarm faces big obstacles, yet it offers rare hope for Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-08-01-aljazeera-middle-east-4c16e1c0f57e",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/8/1/is-israel-really-ready-to-withdraw-from-gaza?traffic_source=rss",
+      "title": "Is Israel really ready to withdraw from Gaza?"
+    },
+    {
+      "source_record_id": "gaza-2026-08-01-guardian-world-e834bf2ebc29",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/news/audio/2026/jul/31/hamas-agrees-trump-plan-disarm-gaza-the-latest",
+      "title": "Hamas agrees to Trump's plan to disarm in Gaza - The Latest"
+    }
+  ]
+}

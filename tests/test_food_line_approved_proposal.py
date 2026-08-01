@@ -187,6 +187,10 @@ def test_canonical_generation_records_hashes_and_keeps_private_ids_out_of_html(
     assert manifest["publication_status"] == "unpublished"
     assert manifest["pages_status"] == "not_synced"
     assert manifest["audio_status"] == "not_generated"
+    assert manifest["source_freshness_status"] == "passed"
+    assert manifest["freshness_window_days"] == 3
+    assert f"editions/{DATE}/" in (tmp_path / "output/site/food-line/index.html").read_text(encoding="utf-8")
+    assert f"editions/{DATE}/" in (tmp_path / "output/site/food-line/archive.html").read_text(encoding="utf-8")
     html_text = "\n".join(path.read_text(encoding="utf-8") for path in edition.glob("*.html"))
     assert SUMMARY in html_text
     assert "about 960 people" in html_text

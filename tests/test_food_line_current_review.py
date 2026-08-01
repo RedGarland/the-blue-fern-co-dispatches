@@ -132,7 +132,7 @@ def test_editorial_decision_never_grants_publication_authority() -> None:
     assert payload["items"][0]["editorial_status"] == "approve"
     assert payload["items"][0]["publication_eligible"] is False
     proposed = build_proposed_edition(payload)
-    assert proposed["draft_status"] == "draft_unpublished"
+    assert proposed["draft_status"] == "draft_pending_editorial_review"
     assert proposed["selected_item_count"] == 1
     assert proposed["publication_eligible"] is False
     assert proposed["publication_approval"] is False
@@ -140,7 +140,7 @@ def test_editorial_decision_never_grants_publication_authority() -> None:
 
 def test_pending_item_can_enter_private_preview_without_publication_authority() -> None:
     proposed = build_proposed_edition(_queue([_item()]))
-    assert proposed["draft_status"] == "draft_unpublished"
+    assert proposed["draft_status"] == "draft_pending_editorial_review"
     assert proposed["selected_item_count"] == 1
     assert proposed["publication_eligible"] is False
     assert proposed["publication_approval"] is False

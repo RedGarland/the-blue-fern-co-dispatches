@@ -115,6 +115,28 @@ def test_agent_query_context_unsupported_types_fail_closed(context):
         adapt_food_line_agent_output([_row(agent_query_context=context)], agent_name="fixture", agent_run_id="run-1")
 
 
+def test_explicit_pantries_that_cannot_continue_operating_are_service_reductions():
+    passage = (
+        "The pantry provided food to an average of 960 people and distributed approximately 34,000 pounds "
+        "of food each month. Building conditions and repair costs made it impossible to continue operating "
+        "the pantry safely and sustainably."
+    )
+    finding = adapt_food_line_agent_output(
+        [_row(exact_supporting_passage=passage, source_published_at="2026-07-28T16:26:00-05:00")],
+        agent_name="fixture",
+        agent_run_id="run-superior",
+        discovered_at="2026-07-31T03:44:00Z",
+    )[0]
+
+    candidate = map_finding_to_food_line_candidate(finding, edition_date="2026-07-31")
+
+    assert candidate["pressure_signal"] is True
+    assert candidate["pressure_type"] == "service reduction"
+    assert "pantry closure" in candidate["pressure_summary"]
+    assert candidate["evidence_text"] == passage
+    assert candidate["eligible_for_review"] is True
+
+
 def test_supplied_historical_alert_shape_dry_runs_without_mutation():
     source = Path("data/agent-history-staging/food-line/2026-07-28-food-line-source-watch.txt")
     before = source.read_bytes()

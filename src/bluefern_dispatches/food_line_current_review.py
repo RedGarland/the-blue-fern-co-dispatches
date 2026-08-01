@@ -340,7 +340,7 @@ def build_proposed_edition(queue: dict[str, Any]) -> dict[str, Any]:
     ]
     publisher_counts = Counter(item["source"] for item in public_items)
     state_counts = Counter(item["state"] or "unspecified" for item in public_items)
-    status = "blocked_no_reviewable_current_signals" if blocked else "draft_unpublished"
+    status = "blocked_no_reviewable_current_signals" if blocked else "draft_pending_editorial_review"
     generation_note = (
         "No reader-facing edition was assembled because the private current queue contains no reviewable current signals."
         if blocked

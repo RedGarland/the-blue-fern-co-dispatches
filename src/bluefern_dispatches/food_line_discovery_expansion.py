@@ -24,6 +24,7 @@ from bluefern_dispatches.food_line_sources import (
     resolve_food_line_fetcher,
     validate_date,
 )
+from bluefern_dispatches.food_line_agent_export import export_food_line_agent_run
 
 DISPATCH_SLUG = "food-line"
 DISCOVERY_DIR_NAME = "discovery"
@@ -3399,6 +3400,8 @@ def run_food_line_discovery_expansion(
     public_claim_lookback_days: int = 0,
     public_claim_lookahead_days: int = 0,
     dry_run: bool = False,
+    export_agent_inbox: bool = False,
+    agent_inbox_dir: Path | None = None,
 ) -> dict[str, Any]:
     date_text = validate_date(edition_date)
     fetch = resolve_food_line_fetcher(fetcher)
@@ -4684,6 +4687,28 @@ def run_food_line_discovery_expansion(
             "",
         ]
         audit_md_path.write_text("\n".join(md_lines), encoding="utf-8")
+    if export_agent_inbox:
+        if dry_run:
+            agent_export_result = {
+                "status": "dry_run_no_write",
+                "finding_count": sum(1 for row in candidates if bool(row.get("public_claim_eligible"))),
+                "excluded_count": sum(1 for row in candidates if not bool(row.get("public_claim_eligible"))),
+            }
+        else:
+            agent_export_result = export_food_line_agent_run(
+                candidates,
+                edition_date=date_text,
+                destination=agent_inbox_dir or root / "data" / "dispatches" / DISPATCH_SLUG / "agent-inbox",
+                started_at=discovered_at,
+                completed_at=_utc_now(),
+                coverage_notes=(
+                    f"Food Line source watch checked {len(query_rows)} query/source rows for {date_text}; "
+                    f"discovery candidates={len(candidates)}."
+                ),
+            )
+        audit_summary["agent_inbox_export"] = agent_export_result
+        if not dry_run:
+            _write_json(audit_json_path, audit_summary)
     return audit_summary
 
 
@@ -4719,6 +4744,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--public-claim-lookback-days", type=int, default=0)
     parser.add_argument("--public-claim-lookahead-days", type=int, default=0)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--export-agent-inbox", action="store_true", help="Write one private food_line_agent_run_v1 envelope after discovery.")
+    parser.add_argument("--agent-inbox-dir", default="data/dispatches/food-line/agent-inbox", help="Private agent inbox destination.")
     return parser
 
 
@@ -4739,6 +4766,8 @@ def main(argv: list[str] | None = None) -> int:
         public_claim_lookback_days=args.public_claim_lookback_days,
         public_claim_lookahead_days=args.public_claim_lookahead_days,
         dry_run=bool(args.dry_run),
+        export_agent_inbox=bool(args.export_agent_inbox),
+        agent_inbox_dir=(root / args.agent_inbox_dir).resolve() if not Path(args.agent_inbox_dir).is_absolute() else Path(args.agent_inbox_dir).resolve(),
     )
     print(json.dumps(result, indent=2, ensure_ascii=False))
     return 0 if result.get("ok") else 1

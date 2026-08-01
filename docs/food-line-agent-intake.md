@@ -1,6 +1,6 @@
 # Food Line Agent-to-Intake Bridge (Phase 1)
 
-The repository currently has no accessible scheduled Food Line agent result file or notification payload. The observable scheduled interface is `scripts/run_runner_dispatch.ps1`, which runs the normal Food Line discovery/dispatch workflow. Phase 1 therefore accepts an operator-supplied JSON fixture at that boundary; no production agent run is claimed or imported.
+The Food Line discovery expansion runner can now emit the established agent envelope when explicitly requested. The export remains unscheduled and private; normal source-watch behavior is unchanged without the flag.
 
 Agent findings are private and review-only. The schema is `food_line_agent_finding_v1` in `bluefern_dispatches.agent_findings`. It preserves the publisher URL, canonical HTTPS URL, source publication time, exact supporting passage, separate summary, query context, run identity, and private raw payload. IDs are deterministic; duplicate keys use canonical URL, normalized title, and publisher and exclude discovery time. `review_status` is always `pending_review` on import.
 
@@ -23,6 +23,12 @@ Validate without writing:
 
 ```powershell
 python scripts/import_food_line_agent_findings.py validate --input <path-to-agent-run.json>
+```
+
+Create a current source-watch export without publishing:
+
+```powershell
+python scripts/run_food_line_discovery_expansion.py --date YYYY-MM-DD --export-agent-inbox --agent-inbox-dir data/dispatches/food-line/agent-inbox
 ```
 
 Validation reports envelope validity, count, invalid URLs, missing evidence or publication dates, within-run duplicates, and fields requiring human review. The private inbox is `data/dispatches/food-line/agent-inbox/`; imported inputs are preserved under `processed/YYYY-MM-DD/`. No Downloads scan or filesystem watcher is used.

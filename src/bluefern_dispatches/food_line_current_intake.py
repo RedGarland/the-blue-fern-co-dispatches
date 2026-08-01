@@ -171,11 +171,14 @@ def process_batch(root: Path, *, edition_date: str, inbox: Path | None = None, b
     rejected = any(row.get("status") == "rejected" for row in errors)
     failed = any(row.get("status") == "failed" for row in errors)
     status = "success" if not errors else "success_with_exclusions" if (rejected and (imports or dry_runs)) else "partial_failure" if failed and (imports or dry_runs) else "failed"
+    idempotent_noop_count = sum(1 for result in imports if result.get("status") == "idempotent_noop")
     report = {
         "schema_version": REPORT_SCHEMA, "status": status, "edition_date": edition_date,
         "inbox": str(inbox), "discovered_file_count": len(files),
         "accepted_file_count": len(checks), "dry_run_count": len(dry_runs),
-        "import_count": len(imports), "errors": errors,
+        "import_count": len(imports) - idempotent_noop_count,
+        "import_attempt_count": len(imports), "idempotent_noop_count": idempotent_noop_count,
+        "errors": errors,
         "queue": {key: value for key, value in queue_result.items() if key != "queue"},
         "proposal": proposal_result,
         "publication_side_effects": {"public_output": False, "pages": False, "bluesky": False, "audio": False, "maps": False, "schedule": False},
@@ -221,6 +224,8 @@ def _refresh_queue(root: Path, edition_date: str) -> dict[str, Any]:
             try:
                 finding_id = str(candidate.get("candidate_id") or candidate.get("agent_finding_id") or "")
                 item = _review_item(candidate, finding_id=finding_id, artifact_path=artifact.relative_to(root).as_posix(), edition_date=edition_date)
+                if item["freshness_check"]["age_days"] < 0 or item["freshness_check"]["age_days"] > 3:
+                    continue
             except (KeyError, TypeError, ValueError):
                 continue
             previous = existing.get(item["review_item_id"])

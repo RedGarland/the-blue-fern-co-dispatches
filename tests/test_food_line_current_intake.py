@@ -82,6 +82,16 @@ def test_material_change_returns_decided_item_to_rereview(tmp_path: Path):
     assert changed["rereview_required"] is True
 
 
+def test_stale_valid_export_is_private_but_excluded_from_current_queue(tmp_path: Path):
+    inbox = tmp_path / "inbox"; inbox.mkdir()
+    source = inbox / "stale.json"
+    source.write_text(json.dumps(_envelope("run-stale", _row(source_published_at="2026-07-28"))), encoding="utf-8")
+    result = process_batch(tmp_path, edition_date="2026-08-01", inbox=inbox, build_review_queue=True, build_proposed=True)
+    assert result["status"] == "success"
+    assert result["import_count"] == 1
+    assert result["proposal"]["draft_status"] == "blocked_no_reviewable_current_signals"
+
+
 def test_repeat_batch_is_idempotent_and_preserves_operator_decision(tmp_path: Path):
     inbox = tmp_path / "inbox"; inbox.mkdir()
     source = inbox / "run.json"; source.write_text(json.dumps(_envelope("run-one", _row())), encoding="utf-8")
@@ -96,7 +106,8 @@ def test_repeat_batch_is_idempotent_and_preserves_operator_decision(tmp_path: Pa
     write_json_atomic(queue_path, queue)
     second = process_batch(tmp_path, edition_date="2026-08-01", inbox=inbox, build_review_queue=True, build_proposed=True)
     final = json.loads(queue_path.read_text(encoding="utf-8"))
-    assert first["import_count"] == 1 and second["import_count"] == 1
+    assert first["import_count"] == 1 and second["import_count"] == 0
+    assert second["idempotent_noop_count"] == 1
     assert final["items"][0]["editorial_status"] == "approve"
     assert final["items"][0]["decision_audit"]["decided_at"] == "2026-08-01T02:00:00Z"
     assert second["proposal"]["draft_status"] == "draft_approved_pending_publication"

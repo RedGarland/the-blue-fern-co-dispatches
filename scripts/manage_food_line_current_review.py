@@ -14,6 +14,7 @@ from bluefern_dispatches.food_line_current_review import (
     PRIVATE_QUEUE_PATH,
     apply_editorial_decision,
     load_queue,
+    payload_sha256,
     queue_summary,
     write_json_atomic,
     write_proposed_edition,
@@ -56,6 +57,7 @@ def main(argv: list[str] | None = None) -> int:
             result["queue_path"] = str(queue_path)
             result["mutation"] = "none"
         elif args.command == "decide":
+            before_sha256 = payload_sha256(queue)
             apply_editorial_decision(
                 queue,
                 review_item_id=args.review_item_id,
@@ -66,9 +68,20 @@ def main(argv: list[str] | None = None) -> int:
                 proposed_public_headline=args.headline,
                 proposed_public_summary=args.summary,
             )
-            write_json_atomic(queue_path, queue)
+            after_sha256 = payload_sha256(queue)
+            mutation = "none" if before_sha256 == after_sha256 else "updated"
+            if mutation == "updated":
+                write_json_atomic(queue_path, queue)
             result = queue_summary(queue)
-            result.update({"queue_path": str(queue_path), "decision": args.decision, "review_item_id": args.review_item_id})
+            result.update(
+                {
+                    "queue_path": str(queue_path),
+                    "decision": args.decision,
+                    "review_item_id": args.review_item_id,
+                    "mutation": mutation,
+                    "status": "idempotent_noop" if mutation == "none" else "decision_recorded",
+                }
+            )
         else:
             from bluefern_dispatches.food_line_current_review import build_proposed_edition
 

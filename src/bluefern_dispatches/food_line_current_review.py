@@ -291,6 +291,21 @@ def apply_editorial_decision(
     item = matches[0]
     if decision == "approve_with_edit" and not (proposed_public_headline or proposed_public_summary):
         raise ValueError("approve_with_edit requires an edited headline or summary")
+    normalized_note = str(editorial_note or "").strip()
+    normalized_operator = decided_by.strip()
+    requested_headline = item["proposed_public_headline"] if proposed_public_headline is None else proposed_public_headline.strip()
+    requested_summary = item["proposed_public_summary"] if proposed_public_summary is None else proposed_public_summary.strip()
+    existing_audit = item.get("decision_audit") if isinstance(item.get("decision_audit"), dict) else {}
+    if (
+        item["editorial_status"] == decision
+        and item["editorial_note"] == normalized_note
+        and item["proposed_public_headline"] == requested_headline
+        and item["proposed_public_summary"] == requested_summary
+        and existing_audit.get("decided_by") == normalized_operator
+        and existing_audit.get("decision") == decision
+        and item["publication_eligible"] is False
+    ):
+        return queue
     if proposed_public_headline is not None:
         if not proposed_public_headline.strip():
             raise ValueError("proposed_public_headline must not be empty")
@@ -300,10 +315,10 @@ def apply_editorial_decision(
             raise ValueError("proposed_public_summary must not be empty")
         item["proposed_public_summary"] = proposed_public_summary.strip()
     item["editorial_status"] = decision
-    item["editorial_note"] = str(editorial_note or "").strip()
+    item["editorial_note"] = normalized_note
     item["decision_audit"] = {
         "decided_at": decided_at,
-        "decided_by": decided_by.strip(),
+        "decided_by": normalized_operator,
         "decision": decision,
     }
     item["publication_eligible"] = False
@@ -340,10 +355,22 @@ def build_proposed_edition(queue: dict[str, Any]) -> dict[str, Any]:
     ]
     publisher_counts = Counter(item["source"] for item in public_items)
     state_counts = Counter(item["state"] or "unspecified" for item in public_items)
-    status = "blocked_no_reviewable_current_signals" if blocked else "draft_pending_editorial_review"
+    status_counts = Counter(str(item["editorial_status"]) for item in validated["items"])
+    approved_item_count = status_counts["approve"] + status_counts["approve_with_edit"]
+    pending_item_count = status_counts["pending_editorial_review"]
+    rejected_item_count = status_counts["reject"]
+    status = (
+        "blocked_no_reviewable_current_signals"
+        if blocked
+        else "draft_approved_pending_publication"
+        if pending_item_count == 0 and approved_item_count == len(public_items)
+        else "draft_pending_editorial_review"
+    )
     generation_note = (
         "No reader-facing edition was assembled because the private current queue contains no reviewable current signals."
         if blocked
+        else "Private editorial preview assembled from approved current-review items; final publication approval is still required and no public output was generated."
+        if status == "draft_approved_pending_publication"
         else "Private editorial preview assembled from current-review items that are pending or approved; no public output was generated."
     )
     return {
@@ -357,6 +384,9 @@ def build_proposed_edition(queue: dict[str, Any]) -> dict[str, Any]:
         "source_queue_path": PRIVATE_QUEUE_PATH.as_posix(),
         "source_queue_sha256": payload_sha256(validated),
         "selected_item_count": len(public_items),
+        "approved_item_count": approved_item_count,
+        "pending_item_count": pending_item_count,
+        "rejected_item_count": rejected_item_count,
         "items": public_items,
         "layout": {
             "eyebrow_status": "FOOD LINE — PRIVATE DRAFT / UNPUBLISHED",
@@ -365,7 +395,7 @@ def build_proposed_edition(queue: dict[str, Any]) -> dict[str, Any]:
             "edition_summary": (
                 "No proposed current edition is available for editorial decision."
                 if blocked
-                else f"{len(public_items)} current, source-traceable food-pressure signals are proposed for editorial review."
+                else f"This edition tracks {len(public_items)} current, source-traceable food-pressure {'signal' if len(public_items) == 1 else 'signals'}."
             ),
             "todays_read": public_items[:1],
             "at_a_glance": public_items,
@@ -375,23 +405,26 @@ def build_proposed_edition(queue: dict[str, Any]) -> dict[str, Any]:
                 "publishers": dict(sorted(publisher_counts.items())),
                 "states": dict(sorted(state_counts.items())),
             },
-            "source_note": "Every proposed item retains its canonical source URL and source publication date. Inclusion in this preview and editorial approval do not grant publication authority.",
+            "source_note": "Every item retains its canonical source URL and source publication date.",
         },
     }
 
 
 def render_operator_markdown(queue: dict[str, Any], proposed: dict[str, Any]) -> str:
+    layout = proposed["layout"]
     lines = [
-        f"# Food Line proposed edition — {proposed['edition_date']}",
+        f"# {layout['h1']}",
         "",
-        "**PRIVATE DRAFT — UNPUBLISHED — NOT PUBLICATION-ELIGIBLE**",
+        f"**{layout['eyebrow_status']}**",
         "",
-        str(proposed["layout"]["generation_note"]),
+        str(layout["generation_note"]),
         "",
-        "## Proposed reader-facing preview",
+        str(layout["edition_summary"]),
+        "",
+        "## Today’s Read",
         "",
     ]
-    if not proposed["items"]:
+    if not layout["todays_read"]:
         lines.extend(
             [
                 "No edition items were proposed. No current nonhistorical repository signal is available for editorial review.",
@@ -399,10 +432,10 @@ def render_operator_markdown(queue: dict[str, Any], proposed: dict[str, Any]) ->
             ]
         )
     else:
-        for item in proposed["items"]:
+        for item in layout["todays_read"]:
             lines.extend(
                 [
-                    f"### {item['rank']}. {item['headline']}",
+                    f"### {item['headline']}",
                     "",
                     f"{item['summary']}",
                     "",
@@ -414,6 +447,43 @@ def render_operator_markdown(queue: dict[str, Any], proposed: dict[str, Any]) ->
                     "",
                 ]
             )
+    lines.extend(["## At a Glance", ""])
+    if layout["at_a_glance"]:
+        for item in layout["at_a_glance"]:
+            location = f"{item['location_name']}, {item['state']}".strip(", ")
+            lines.append(f"- [{item['headline']}]({item['source_url']}) — {location}")
+        lines.append("")
+    else:
+        lines.extend(["No current signals are proposed.", ""])
+    lines.extend(["## Core Food Pressure Signals", ""])
+    if layout["core_food_pressure_signals"]:
+        for item in layout["core_food_pressure_signals"]:
+            lines.append(f"- **{item['headline']}** — {item['why_it_matters']}")
+        lines.append("")
+    else:
+        lines.extend(["No core signals are proposed.", ""])
+    lines.extend(["## Other Food Line Signals", ""])
+    if layout["other_food_line_signals"]:
+        for item in layout["other_food_line_signals"]:
+            lines.append(f"- **{item['headline']}** — {item['why_it_matters']}")
+        lines.append("")
+    else:
+        lines.extend(["No additional current signals are proposed.", ""])
+    publisher_mix = ", ".join(f"{name}: {count}" for name, count in layout["source_mix"]["publishers"].items()) or "None"
+    state_mix = ", ".join(f"{name}: {count}" for name, count in layout["source_mix"]["states"].items()) or "None"
+    lines.extend(
+        [
+            "## Source Mix",
+            "",
+            f"- Publishers — {publisher_mix}",
+            f"- States — {state_mix}",
+            "",
+            "## Source Note",
+            "",
+            str(layout["source_note"]),
+            "",
+        ]
+    )
     lines.extend(["## Operator decision summary", ""])
     if not queue["items"]:
         lines.extend(

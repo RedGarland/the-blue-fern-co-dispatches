@@ -13,6 +13,8 @@ from bluefern_dispatches.food_line_current_review import (
     apply_editorial_decision,
     build_proposed_edition,
     load_queue,
+    payload_sha256,
+    render_operator_markdown,
     validate_queue,
     write_json_atomic,
     write_proposed_edition,
@@ -132,8 +134,11 @@ def test_editorial_decision_never_grants_publication_authority() -> None:
     assert payload["items"][0]["editorial_status"] == "approve"
     assert payload["items"][0]["publication_eligible"] is False
     proposed = build_proposed_edition(payload)
-    assert proposed["draft_status"] == "draft_pending_editorial_review"
+    assert proposed["draft_status"] == "draft_approved_pending_publication"
     assert proposed["selected_item_count"] == 1
+    assert proposed["approved_item_count"] == 1
+    assert proposed["pending_item_count"] == 0
+    assert proposed["rejected_item_count"] == 0
     assert proposed["publication_eligible"] is False
     assert proposed["publication_approval"] is False
 
@@ -142,8 +147,27 @@ def test_pending_item_can_enter_private_preview_without_publication_authority() 
     proposed = build_proposed_edition(_queue([_item()]))
     assert proposed["draft_status"] == "draft_pending_editorial_review"
     assert proposed["selected_item_count"] == 1
+    assert proposed["approved_item_count"] == 0
+    assert proposed["pending_item_count"] == 1
     assert proposed["publication_eligible"] is False
     assert proposed["publication_approval"] is False
+
+
+def test_identical_editorial_decision_preserves_original_audit_timestamp() -> None:
+    payload = _queue([_item()])
+    kwargs = {
+        "review_item_id": "food-line-current-001",
+        "decision": "approve",
+        "decided_by": "operator",
+        "editorial_note": "Approved for draft assembly only.",
+    }
+    apply_editorial_decision(payload, decided_at="2026-07-31T17:00:00Z", **kwargs)
+    first_hash = payload_sha256(payload)
+
+    apply_editorial_decision(payload, decided_at="2026-07-31T18:00:00Z", **kwargs)
+
+    assert payload_sha256(payload) == first_hash
+    assert payload["items"][0]["decision_audit"]["decided_at"] == "2026-07-31T17:00:00Z"
 
 
 def test_empty_queue_writes_only_private_blocked_preview(tmp_path: Path) -> None:
@@ -155,3 +179,22 @@ def test_empty_queue_writes_only_private_blocked_preview(tmp_path: Path) -> None
     assert markdown_path.exists()
     assert not (tmp_path / "output/site").exists()
     assert json.loads(json_path.read_text(encoding="utf-8"))["published"] is False
+
+
+def test_operator_preview_uses_established_food_line_structure() -> None:
+    queue = _queue([_item()])
+    proposed = build_proposed_edition(queue)
+    preview = render_operator_markdown(queue, proposed)
+
+    for heading in (
+        "## Today’s Read",
+        "## At a Glance",
+        "## Core Food Pressure Signals",
+        "## Other Food Line Signals",
+        "## Source Mix",
+        "## Source Note",
+    ):
+        assert heading in preview
+    assert "review_item_id" not in preview
+    assert "This edition tracks 1 current, source-traceable food-pressure signal." in preview
+    assert "editorial approval" not in proposed["layout"]["source_note"]

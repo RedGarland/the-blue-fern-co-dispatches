@@ -24,6 +24,16 @@ Dry-run behavior:
 - does not push
 - does not leave the Pages repo dirty
 
+For an approved-proposal Food Line release, use the generated exact-delta manifest:
+
+```powershell
+python scripts\validate_publish_scope.py --dispatch food-line --date YYYY-MM-DD --release-manifest "data/dispatches/food-line/review/releases/YYYY-MM-DD.json" --source-repo-root . --pages-repo-root .\bluefern-dispatches-pages --allow-pages --strict
+
+python scripts\sync_pages_from_source.py --dispatch food-line --dates YYYY-MM-DD --require-source-branch BRANCH --pages-branch gh-pages --source-repo . --pages-repo .\bluefern-dispatches-pages --release-manifest "data/dispatches/food-line/review/releases/YYYY-MM-DD.json" --dry-run
+```
+
+Release-manifest validation hashes every source and pre-sync Pages file, verifies the exact source-to-Pages mapping and action, requires a clean Pages checkout, and fails if a generated edition file is missing from the manifest. Unrelated source-repository dirt is ignored only because it is absent from the hashed copy plan; it is neither copied nor treated as release input.
+
 ## Commit And Push
 
 ```powershell
@@ -74,7 +84,7 @@ That means it refuses to copy:
 ## What It Refuses To Do
 
 - run from a wrong source branch
-- sync from a dirty source repo
+- sync from a dirty source repo unless an exact, hash-validated release manifest excludes the unrelated dirt
 - sync into a dirty Pages repo
 - sync from the wrong Pages branch
 - copy unexpected Pages paths

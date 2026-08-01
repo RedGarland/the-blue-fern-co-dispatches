@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 from pathlib import Path
+
+from bluefern_dispatches.food_line_approved_proposal import build_release_manifest, write_json_deterministic
 
 
 def _load_validator_module():
@@ -141,3 +144,93 @@ def test_invalid_date_argument_fails(capsys) -> None:
     captured = capsys.readouterr()
     assert exit_code == 1
     assert "Invalid date '2026-13-40'" in captured.err
+
+
+def _release_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
+    source = tmp_path / "source"
+    pages = tmp_path / "pages"
+    edition = source / "output/site/food-line/editions/2026-06-19"
+    edition.mkdir(parents=True)
+    pages.mkdir()
+    site = source / "output/site/food-line"
+    (site / "index.html").write_text("index", encoding="utf-8")
+    (site / "archive.html").write_text("archive", encoding="utf-8")
+    for filename in ("index.html", "source_table.html", "claim_ledger.html", "sources_manifest.json", "curation_manifest.json", "edition_manifest.json"):
+        (edition / filename).write_text(filename, encoding="utf-8")
+    payload = build_release_manifest(
+        root=source,
+        pages_root=pages,
+        edition_date="2026-06-19",
+        source_commit="test",
+        source_paths=[site / "index.html", site / "archive.html", *sorted(edition.iterdir())],
+    )
+    manifest = source / "release.json"
+    write_json_deterministic(manifest, payload)
+    return source, pages, manifest
+
+
+def test_strict_release_manifest_validates_exact_delta_and_ignores_unrelated_dirt(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest = _release_fixture(tmp_path)
+    (source / "unrelated.txt").write_text("dirty but not referenced", encoding="utf-8")
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+    )
+    assert errors == []
+
+
+def test_strict_release_manifest_rejects_unexpected_cross_domain_path(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest = _release_fixture(tmp_path)
+    gaza = source / "output/site/gaza/index.html"
+    gaza.parent.mkdir(parents=True)
+    gaza.write_text("gaza", encoding="utf-8")
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload["entries"].append(
+        {
+            "source_path": "output/site/gaza/index.html",
+            "pages_path": "gaza/index.html",
+            "action": "add",
+            "source_sha256": __import__("hashlib").sha256(gaza.read_bytes()).hexdigest(),
+            "pages_sha256_before": None,
+        }
+    )
+    write_json_deterministic(manifest, payload)
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+    )
+    assert any("outside the declared food-line publish scope" in error for error in errors)
+    assert any("unexpected Food Line publication files" in error for error in errors)
+
+
+def test_strict_release_manifest_rejects_omitted_generated_file(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest = _release_fixture(tmp_path)
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload["entries"] = [entry for entry in payload["entries"] if not entry["source_path"].endswith("claim_ledger.html")]
+    write_json_deterministic(manifest, payload)
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+    )
+    assert any("omits generated Food Line publication files" in error for error in errors)

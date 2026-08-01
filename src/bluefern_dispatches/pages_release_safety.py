@@ -199,7 +199,7 @@ def _build_copy_plan(source_root: Path, pages_repo: Path, dispatch: str, dates: 
     )
 
 
-def _validate_declared_scope(plan: CopyPlan, pages_branch: str) -> list[str]:
+def _validate_declared_scope(plan: CopyPlan, pages_branch: str, release_manifest: Path | None = None) -> list[str]:
     errors: list[str] = []
     for date_text in plan.dates:
         source_paths = [str(path.relative_to(plan.source_root)) for path in plan.source_paths if f"/editions/{date_text}/" in _normalize_relpath(path)]
@@ -223,6 +223,7 @@ def _validate_declared_scope(plan: CopyPlan, pages_branch: str) -> list[str]:
                 strict=True,
                 source_changed_paths=source_paths,
                 pages_changed_paths=pages_paths,
+                release_manifest_path=release_manifest,
             )
         )
     return errors
@@ -340,6 +341,7 @@ def sync_pages_from_source(
     cache_bust: str | None = None,
     report_file: Path | None = None,
     fetch_status: Callable[[str, int], int] | None = None,
+    release_manifest: Path | None = None,
 ) -> dict[str, Any]:
     if live_check_only and (commit or push):
         return {
@@ -364,6 +366,8 @@ def sync_pages_from_source(
     selected_dates = _parse_dates(dates)
     if not selected_dates:
         return {"ok": False, "errors": ["At least one YYYY-MM-DD date must be provided."]}
+    if release_manifest is not None and len(selected_dates) != 1:
+        return {"ok": False, "errors": ["--release-manifest currently requires exactly one release date."]}
 
     source_root = (source_repo or Path(__file__).resolve().parents[2]).resolve()
     pages_root = (pages_repo or (source_root / DEFAULT_PAGES_REPO_NAME)).resolve()
@@ -391,9 +395,9 @@ def sync_pages_from_source(
 
     if source_branch != require_source_branch:
         errors.append(f"source branch mismatch: expected {require_source_branch}, found {source_branch or '<detached>'}")
-    if not dry_run and not _repo_clean(source_root):
+    if not dry_run and release_manifest is None and not _repo_clean(source_root):
         errors.append(f"source repo must be clean before sync: {source_root}")
-    if not dry_run and not _repo_clean(pages_root):
+    if (not dry_run or release_manifest is not None) and not _repo_clean(pages_root):
         errors.append(f"pages repo must be clean before sync: {pages_root}")
     if pages_pre_branch != pages_branch:
         errors.append(f"pages repo branch mismatch: expected {pages_branch}, found {pages_pre_branch or '<detached>'}")
@@ -443,7 +447,7 @@ def sync_pages_from_source(
             "source_status": _source_status_text(source_root),
             "pages_status": _pages_status_text(pages_root),
         }
-    scope_errors = _validate_declared_scope(plan, pages_branch)
+    scope_errors = _validate_declared_scope(plan, pages_branch, release_manifest=release_manifest)
     pre_copy_errors = []
     pre_copy_errors.extend(public_site_contains_detail_artifacts(source_root / "output" / "site"))
     pre_copy_errors.extend(public_site_contains_blocked_public_text(source_root / "output" / "site"))
@@ -479,6 +483,21 @@ def sync_pages_from_source(
 
     planned_source_paths = [path.relative_to(source_root).as_posix() for path in plan.source_paths]
     planned_pages_paths = [path.relative_to(pages_root).as_posix() for path in plan.pages_paths]
+    delta_entries: list[dict[str, Any]] = []
+    for source_path, pages_path in zip(plan.source_paths, plan.pages_paths):
+        if not pages_path.exists():
+            action = "add"
+        elif source_path.read_bytes() == pages_path.read_bytes():
+            action = "unchanged"
+        else:
+            action = "modify"
+        delta_entries.append(
+            {
+                "source_path": source_path.relative_to(source_root).as_posix(),
+                "pages_path": pages_path.relative_to(pages_root).as_posix(),
+                "action": action,
+            }
+        )
 
     if dry_run or live_check_only:
         live_check_result = _live_check(selected_dates, cache_bust=cache_bust, fetch_status=fetch_status) if live_check or live_check_only else None
@@ -501,6 +520,11 @@ def sync_pages_from_source(
             "pages_status": _pages_status_text(pages_root),
             "planned_source_paths": planned_source_paths,
             "planned_pages_paths": planned_pages_paths,
+            "delta_entries": delta_entries,
+            "additions": [entry["pages_path"] for entry in delta_entries if entry["action"] == "add"],
+            "modifications": [entry["pages_path"] for entry in delta_entries if entry["action"] == "modify"],
+            "unchanged": [entry["pages_path"] for entry in delta_entries if entry["action"] == "unchanged"],
+            "deletions": [],
             "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates),
             "allowed_source_prefixes": _allowed_source_prefixes(dispatch, selected_dates),
             "warnings": warnings,
@@ -732,6 +756,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--live-check-only", action="store_true", help="Run only URL checks for the selected dates.")
     parser.add_argument("--cache-bust", help="Optional cache-bust token appended to live-check URLs.")
     parser.add_argument("--report-file", help="Optional JSON report file path.")
+    parser.add_argument("--release-manifest", help="Exact release manifest to validate before any source-to-Pages copy.")
     return parser
 
 
@@ -752,6 +777,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         live_check_only=bool(args.live_check_only),
         cache_bust=args.cache_bust,
         report_file=Path(args.report_file).resolve() if args.report_file else None,
+        release_manifest=Path(args.release_manifest).resolve() if args.release_manifest else None,
     )
     print(json.dumps(report, indent=2))
     return 0 if report.get("ok") else 1

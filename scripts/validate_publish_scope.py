@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import hashlib
+import json
 import re
 import subprocess
 import sys
@@ -186,6 +188,109 @@ def _git_status_porcelain(repo_root: Path) -> list[str]:
     return paths
 
 
+def _sha256_file(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _release_manifest_delta(
+    *,
+    manifest_path: Path,
+    dispatch: str,
+    declared_date: dt.date | None,
+    source_repo_root: Path,
+    pages_repo_root: Path | None,
+) -> tuple[list[str], list[str], list[str]]:
+    errors: list[str] = []
+    source_paths: list[str] = []
+    pages_paths: list[str] = []
+    try:
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        return [], [], [f"Unable to read release manifest {manifest_path}: {exc}"]
+    if not isinstance(payload, dict):
+        return [], [], ["release manifest must be a JSON object"]
+    if payload.get("schema_version") != "food_line_release_manifest_v1":
+        errors.append("release manifest schema_version must be food_line_release_manifest_v1")
+    if payload.get("dispatch") != dispatch:
+        errors.append("release manifest dispatch does not match --dispatch")
+    if declared_date is not None and payload.get("edition_date") != declared_date.isoformat():
+        errors.append("release manifest edition_date does not match --date")
+    if payload.get("deletions") not in ([], None):
+        errors.append("release manifest deletions are not authorized for this Food Line release")
+    if payload.get("shared_files") not in ([], None):
+        errors.append("release manifest shared files require a separate explicit authorization")
+    entries = payload.get("entries")
+    if not isinstance(entries, list) or not entries:
+        errors.append("release manifest must contain a non-empty entries list")
+        return source_paths, pages_paths, errors
+    seen_source: set[str] = set()
+    seen_pages: set[str] = set()
+    source_root = source_repo_root.resolve()
+    pages_root = pages_repo_root.resolve() if pages_repo_root is not None else None
+    for index, entry in enumerate(entries):
+        if not isinstance(entry, dict):
+            errors.append(f"release manifest entry {index} must be an object")
+            continue
+        source_rel = _normalize_path(str(entry.get("source_path") or ""))
+        pages_rel = _normalize_path(str(entry.get("pages_path") or ""))
+        if not source_rel or not pages_rel:
+            errors.append(f"release manifest entry {index} requires source_path and pages_path")
+            continue
+        if source_rel in seen_source or pages_rel in seen_pages:
+            errors.append(f"release manifest contains a duplicate source or Pages path: {source_rel} -> {pages_rel}")
+            continue
+        seen_source.add(source_rel)
+        seen_pages.add(pages_rel)
+        source_paths.append(source_rel)
+        pages_paths.append(pages_rel)
+        expected_pages = source_rel.removeprefix("output/site/") if source_rel.startswith("output/site/") else ""
+        if pages_rel != expected_pages:
+            errors.append(f"release manifest source-to-Pages mapping is invalid: {source_rel} -> {pages_rel}")
+        source_file = (source_root / source_rel).resolve()
+        try:
+            source_file.relative_to(source_root)
+        except ValueError:
+            errors.append(f"release manifest source path resolves outside the source repo: {source_rel}")
+            continue
+        if not source_file.is_file():
+            errors.append(f"release manifest source file is missing: {source_rel}")
+            continue
+        actual_source_sha = _sha256_file(source_file)
+        if str(entry.get("source_sha256") or "").lower() != actual_source_sha:
+            errors.append(f"release manifest source SHA-256 mismatch: {source_rel}")
+        target = pages_root / pages_rel if pages_root is not None else None
+        if target is None or not target.exists():
+            expected_action = "add"
+            target_sha = None
+        elif not target.is_file():
+            errors.append(f"release manifest Pages destination is not a file: {pages_rel}")
+            continue
+        else:
+            target_sha = _sha256_file(target)
+            expected_action = "unchanged" if target_sha == actual_source_sha else "modify"
+        if entry.get("action") != expected_action:
+            errors.append(f"release manifest action for {pages_rel} is stale: expected {expected_action}")
+        recorded_target_sha = entry.get("pages_sha256_before")
+        if recorded_target_sha != target_sha:
+            errors.append(f"release manifest pre-sync Pages SHA-256 is stale: {pages_rel}")
+
+    if dispatch == "food-line" and declared_date is not None:
+        edition_dir = source_root / "output" / "site" / "food-line" / "editions" / declared_date.isoformat()
+        expected_paths = {
+            "output/site/food-line/index.html",
+            "output/site/food-line/archive.html",
+        }
+        if edition_dir.is_dir():
+            expected_paths.update(path.relative_to(source_root).as_posix() for path in edition_dir.rglob("*") if path.is_file())
+        missing = sorted(expected_paths - set(source_paths))
+        extra = sorted(set(source_paths) - expected_paths)
+        if missing:
+            errors.append("release manifest omits generated Food Line publication files: " + ", ".join(missing))
+        if extra:
+            errors.append("release manifest contains unexpected Food Line publication files: " + ", ".join(extra))
+    return source_paths, pages_paths, errors
+
+
 def _scope_for_dispatch(dispatch: str) -> ScopePaths:
     if dispatch == "sitewide":
         return ScopePaths(source_prefixes=SITEWIDE_SOURCE_PREFIXES, pages_prefixes=SITEWIDE_PAGES_PREFIXES)
@@ -264,6 +369,7 @@ def validate_publish_scope(
     strict: bool = False,
     source_changed_paths: Sequence[str] | None = None,
     pages_changed_paths: Sequence[str] | None = None,
+    release_manifest_path: Path | str | None = None,
 ) -> list[str]:
     errors: list[str] = []
 
@@ -284,6 +390,27 @@ def validate_publish_scope(
     if allow_pages and pages_repo_root is None:
         errors.append("--allow-pages requires --pages-repo-root so the Pages repo can be inspected.")
 
+    if release_manifest_path is not None:
+        if not strict:
+            errors.append("--release-manifest requires --strict")
+        if pages_repo_root is None or not allow_pages:
+            errors.append("--release-manifest requires --allow-pages and --pages-repo-root")
+        else:
+            source_changed_paths, pages_changed_paths, manifest_errors = _release_manifest_delta(
+                manifest_path=Path(release_manifest_path).resolve(),
+                dispatch=dispatch,
+                declared_date=declared_date,
+                source_repo_root=Path(source_repo_root),
+                pages_repo_root=Path(pages_repo_root),
+            )
+            errors.extend(manifest_errors)
+            try:
+                dirty_pages = _git_status_porcelain(Path(pages_repo_root))
+            except RuntimeError as exc:
+                errors.append(str(exc))
+            else:
+                if dirty_pages:
+                    errors.append("Pages repo must be clean before release-manifest synchronization: " + ", ".join(dirty_pages))
     if source_changed_paths is None:
         try:
             source_changed_paths = _git_status_porcelain(Path(source_repo_root))
@@ -341,6 +468,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--allow-map", action="store_true", help="Explicitly allow map artifacts.")
     parser.add_argument("--allow-bluesky", action="store_true", help="Explicitly allow Bluesky state/post artifacts.")
     parser.add_argument("--strict", action="store_true", help="Fail closed on publish-sensitive files outside the declared scope.")
+    parser.add_argument("--release-manifest", help="Validate the exact source-to-Pages delta declared by a deterministic release manifest.")
     return parser
 
 
@@ -365,6 +493,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         allow_map=args.allow_map,
         allow_bluesky=args.allow_bluesky,
         strict=args.strict,
+        release_manifest_path=args.release_manifest,
     )
 
     if errors:
@@ -381,6 +510,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     if pages_repo_root is not None:
         print(f"- Pages repo root: {pages_repo_root}")
     print(f"- Strict mode: {bool(args.strict)}")
+    if args.release_manifest:
+        print(f"- Release manifest: {Path(args.release_manifest).resolve()}")
     if args.allow_pages:
         print("- Pages repo inspection enabled.")
     if args.allow_audio:

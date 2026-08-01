@@ -44,4 +44,12 @@ python scripts/manage_food_line_current_review.py propose --dry-run
 python scripts/manage_food_line_current_review.py propose
 ```
 
-The real `propose` command writes only the private proposed-edition JSON and Markdown paths above. It never invokes public rendering, Pages synchronization, audio, maps, Bluesky, publication ledgers, or schedulers. Publishing still requires the established Food Line generation, review, publish-scope validation, and explicit publish workflow.
+The real `propose` command writes only the private proposed-edition JSON and Markdown paths above. It never invokes public rendering, Pages synchronization, audio, maps, Bluesky, publication ledgers, or schedulers.
+
+After every selected item has an `approve` or `approve_with_edit` decision, canonical local generation is a separate guarded step:
+
+```powershell
+python scripts/run_food_line_dispatch.py --date YYYY-MM-DD --approved-proposal "data/dispatches/food-line/review/proposed-editions/YYYY-MM-DD.json" --skip-bluesky --no-generate-audio
+```
+
+This command verifies the proposal and current-review queue hashes, dates, identities, decisions, operator audit fields, source evidence, HTTPS URLs, freshness, duplicate state, and nonhistorical intake boundary. It generates unpublished source output and a private release manifest. It does not grant publication approval, sync Pages, post to Bluesky, generate audio or maps, or change a schedule.

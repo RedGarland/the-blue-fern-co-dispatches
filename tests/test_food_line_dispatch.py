@@ -4858,7 +4858,7 @@ def test_food_line_review_only_render_uses_only_candidate_review_records(tmp_pat
     assert result["source_count"] == 1
     assert result["public_eligible_candidate_count"] == 1
     assert "Today’s Food Line found 1 reported pressure signal." in edition_html
-    assert "Source mix: 1 signals from 1 publishers." in edition_html
+    assert "Source mix: 1 signal from 1 publisher." in edition_html
     assert "Nationally, FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children." in edition_html
     assert "In United States" not in edition_html
     assert "FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children." in edition_html
@@ -4973,7 +4973,7 @@ def test_food_line_review_only_render_source_url_selector_renders_only_selected_
     assert result["source_count"] == 1
     assert result["selected_candidate_count"] == 1
     assert "Today’s Food Line found 1 reported pressure signal." in edition_html
-    assert "Source mix: 1 signals from 1 publishers." in edition_html
+    assert "Source mix: 1 signal from 1 publisher." in edition_html
     assert "Greater Boston Food Bank to spend record-breaking $65M on food in 2026 - Boston Herald" in edition_html
     assert "Boston Herald reported that Greater Boston Food Bank expects to spend a record $65M on food in 2026 as need grows." in edition_html
     assert "Summer meal programs expect increased demand this year" not in edition_html

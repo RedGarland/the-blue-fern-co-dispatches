@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 import bluefern_dispatches.pages_release_safety as pages_release_safety
+from bluefern_dispatches.food_line_approved_proposal import build_release_manifest, write_json_deterministic
 
 
 def _run_git(repo: Path, *args: str) -> None:
@@ -52,6 +53,22 @@ def _write_food_line_site(source_root: Path, dates: list[str]) -> None:
 def _commit_repo(repo: Path, message: str = "update") -> None:
     _run_git(repo, "add", "-A")
     _run_git(repo, "commit", "-m", message)
+
+
+def _release_manifest(source: Path, pages: Path, date_text: str) -> Path:
+    site = source / "output/site/food-line"
+    edition = site / "editions" / date_text
+    source_paths = [site / "index.html", site / "archive.html", *sorted(path for path in edition.iterdir() if path.is_file())]
+    payload = build_release_manifest(
+        root=source,
+        pages_root=pages,
+        edition_date=date_text,
+        source_commit=_git_output(source, "rev-parse", "HEAD"),
+        source_paths=source_paths,
+    )
+    path = source / "data/dispatches/food-line/review/releases" / f"{date_text}.json"
+    write_json_deterministic(path, payload)
+    return path
 
 
 @pytest.fixture()
@@ -291,3 +308,53 @@ def test_script_does_not_require_audio_map_podcast_assets_support(release_repos:
     assert "output/site/food-line/map/index.html" not in planned
     assert "output/site/food-line/podcast.xml" not in planned
     assert all("output/site/assets" not in path for path in planned)
+
+
+def test_release_manifest_dry_run_ignores_unrelated_source_dirt_and_writes_nothing(
+    release_repos: tuple[Path, Path],
+) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-06-19"])
+    _commit_repo(source, "food line site")
+    manifest = _release_manifest(source, pages, "2026-06-19")
+    (source / "unrelated-dirty.txt").write_text("not in release", encoding="utf-8")
+    before_status = _git_output(pages, "status", "--porcelain=v1", "--untracked-files=all")
+    before_files = sorted(path.relative_to(pages).as_posix() for path in pages.rglob("*") if path.is_file() and ".git" not in path.parts)
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-06-19"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        dry_run=True,
+        release_manifest=manifest,
+    )
+
+    assert report["ok"] is True
+    assert len(report["additions"]) == 8
+    assert report["modifications"] == []
+    assert report["deletions"] == []
+    assert _git_output(pages, "status", "--porcelain=v1", "--untracked-files=all") == before_status
+    assert sorted(path.relative_to(pages).as_posix() for path in pages.rglob("*") if path.is_file() and ".git" not in path.parts) == before_files
+
+
+def test_release_manifest_requires_clean_pages_even_for_dry_run(release_repos: tuple[Path, Path]) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-06-19"])
+    _commit_repo(source, "food line site")
+    manifest = _release_manifest(source, pages, "2026-06-19")
+    (pages / "dirty.txt").write_text("dirty", encoding="utf-8")
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-06-19"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        dry_run=True,
+        release_manifest=manifest,
+    )
+
+    assert report["ok"] is False
+    assert any("pages repo must be clean before sync" in error for error in report["errors"])

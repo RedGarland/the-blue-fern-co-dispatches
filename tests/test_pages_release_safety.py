@@ -358,3 +358,77 @@ def test_release_manifest_requires_clean_pages_even_for_dry_run(release_repos: t
 
     assert report["ok"] is False
     assert any("pages repo must be clean before sync" in error for error in report["errors"])
+
+
+def test_git_native_repository_validation_accepts_linked_worktree_and_rejects_invalid_shapes(
+    release_repos: tuple[Path, Path],
+    tmp_path: Path,
+) -> None:
+    source, _pages = release_repos
+    linked = tmp_path / "linked-source"
+    _run_git(source, "worktree", "add", "--detach", str(linked), "HEAD")
+    try:
+        assert pages_release_safety._repo_is_git_repo(source)
+        assert pages_release_safety._repo_is_git_repo(linked)
+
+        fake = tmp_path / "fake"
+        fake.mkdir()
+        (fake / ".git").write_text("not a gitdir", encoding="utf-8")
+        assert not pages_release_safety._repo_is_git_repo(fake)
+
+        nonrepo = tmp_path / "nonrepo"
+        nonrepo.mkdir()
+        assert not pages_release_safety._repo_is_git_repo(nonrepo)
+
+        bare = tmp_path / "bare.git"
+        subprocess.run(["git", "init", "--bare", str(bare)], check=True, capture_output=True, text=True)
+        assert not pages_release_safety._repo_is_git_repo(bare)
+        assert not pages_release_safety._repo_is_git_repo(source / "output")
+    finally:
+        _run_git(source, "worktree", "remove", "--force", str(linked))
+
+
+def test_detached_source_requires_exact_verified_remote_branch_head(
+    release_repos: tuple[Path, Path],
+    tmp_path: Path,
+) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-06-19"])
+    _commit_repo(source, "food line site")
+    linked = tmp_path / "linked-source"
+    _run_git(source, "worktree", "add", "--detach", str(linked), "HEAD")
+    try:
+        manifest = _release_manifest(linked, pages, "2026-06-19")
+        blocked = pages_release_safety.sync_pages_from_source(
+            dispatch="food-line",
+            dates=["2026-06-19"],
+            require_source_branch="add/pages-repo-default",
+            source_repo=linked,
+            pages_repo=pages,
+            dry_run=True,
+            release_manifest=manifest,
+            allow_detached_source_at_required_branch_head=True,
+        )
+        assert blocked["ok"] is False
+        assert any("unable to resolve origin/add/pages-repo-default" in error for error in blocked["errors"])
+
+        origin = tmp_path / "origin.git"
+        subprocess.run(["git", "init", "--bare", str(origin)], check=True, capture_output=True, text=True)
+        _run_git(source, "remote", "add", "origin", str(origin))
+        _run_git(source, "push", "origin", "add/pages-repo-default")
+        manifest = _release_manifest(linked, pages, "2026-06-19")
+        accepted = pages_release_safety.sync_pages_from_source(
+            dispatch="food-line",
+            dates=["2026-06-19"],
+            require_source_branch="add/pages-repo-default",
+            source_repo=linked,
+            pages_repo=pages,
+            dry_run=True,
+            release_manifest=manifest,
+            allow_detached_source_at_required_branch_head=True,
+        )
+        assert accepted["ok"] is True
+        assert accepted["source_branch_verification"] == "detached_head_verified_against_required_remote_branch"
+        assert accepted["additions"]
+    finally:
+        _run_git(source, "worktree", "remove", "--force", str(linked))

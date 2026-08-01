@@ -94,16 +94,48 @@ def _repo_head(repo: Path) -> str:
 def _repo_is_git_repo(repo: Path) -> bool:
     if not repo.exists() or not repo.is_dir():
         return False
-    git_dir = repo / ".git"
-    if not git_dir.is_dir():
+    inside = _git_stdout(repo, "rev-parse", "--is-inside-work-tree")
+    if inside != "true":
         return False
-    result = _run_git(repo, "rev-parse", "--is-inside-work-tree")
-    return result.returncode == 0 and result.stdout.strip().lower() == "true"
+    top_level = _git_stdout(repo, "rev-parse", "--show-toplevel")
+    if not top_level or Path(top_level).resolve() != repo.resolve():
+        return False
+    if not _git_stdout(repo, "rev-parse", "--git-dir"):
+        return False
+    if _run_git(repo, "status", "--porcelain=v1", "--untracked-files=all").returncode != 0:
+        return False
+    return bool(_git_stdout(repo, "rev-parse", "HEAD"))
 
 
-def _repo_is_broken_gitlink(repo: Path) -> bool:
-    git_dir = repo / ".git"
-    return git_dir.exists() and not git_dir.is_dir()
+def _detached_source_verification(
+    repo: Path,
+    required_branch: str,
+    source_commit: str,
+    release_manifest: Path | None,
+    allow_detached: bool,
+) -> tuple[bool, str, str | None]:
+    if not allow_detached:
+        return False, "detached_source_requires_explicit_verification", None
+    if not required_branch or not source_commit:
+        return False, "detached_source_verification_failed", "missing required branch or source HEAD"
+    if release_manifest is None:
+        return False, "detached_source_verification_failed", "release manifest provenance is required for detached source verification"
+    remote_ref = f"origin/{required_branch}"
+    remote_head = _git_stdout(repo, "rev-parse", remote_ref)
+    if not remote_head:
+        return False, "detached_source_verification_failed", f"unable to resolve {remote_ref}"
+    if source_commit != remote_head:
+        return False, "detached_source_verification_failed", f"HEAD {source_commit} does not equal {remote_ref} {remote_head}"
+    ancestor_check = _run_git(repo, "merge-base", "--is-ancestor", source_commit, remote_ref)
+    if ancestor_check.returncode != 0:
+        return False, "detached_source_verification_failed", f"{source_commit} is not an ancestor of {remote_ref}"
+    try:
+        payload = json.loads(release_manifest.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        return False, "detached_source_verification_failed", f"unable to read release manifest: {exc}"
+    if payload.get("source_commit") != source_commit:
+        return False, "detached_source_verification_failed", "release manifest source_commit does not match detached HEAD"
+    return True, "detached_head_verified_against_required_remote_branch", None
 
 
 def _parse_date(value: str) -> str:
@@ -342,6 +374,7 @@ def sync_pages_from_source(
     report_file: Path | None = None,
     fetch_status: Callable[[str, int], int] | None = None,
     release_manifest: Path | None = None,
+    allow_detached_source_at_required_branch_head: bool = False,
 ) -> dict[str, Any]:
     if live_check_only and (commit or push):
         return {
@@ -376,10 +409,6 @@ def sync_pages_from_source(
         return {"ok": False, "errors": [f"source repo root does not exist: {source_root}"]}
     if not pages_root.exists() or not pages_root.is_dir():
         return {"ok": False, "errors": [f"pages repo does not exist: {pages_root}"]}
-    if _repo_is_broken_gitlink(source_root):
-        return {"ok": False, "errors": [f"source repo .git is not a directory: {source_root / '.git'}"]}
-    if _repo_is_broken_gitlink(pages_root):
-        return {"ok": False, "errors": [f"pages repo .git is not a directory: {pages_root / '.git'}"]}
     if not _repo_is_git_repo(source_root):
         return {"ok": False, "errors": [f"source repo is not a git repository: {source_root}"]}
     if not _repo_is_git_repo(pages_root):
@@ -392,8 +421,21 @@ def sync_pages_from_source(
 
     errors: list[str] = []
     warnings: list[str] = []
+    source_branch_verification = "branch_verified"
 
-    if source_branch != require_source_branch:
+    if source_branch == require_source_branch:
+        source_branch_verification = "required_source_branch_checked_out"
+    elif not source_branch and allow_detached_source_at_required_branch_head:
+        verified, source_branch_verification, verification_error = _detached_source_verification(
+            source_root,
+            require_source_branch,
+            source_commit,
+            release_manifest,
+            allow_detached=True,
+        )
+        if not verified and verification_error:
+            errors.append(verification_error)
+    else:
         errors.append(f"source branch mismatch: expected {require_source_branch}, found {source_branch or '<detached>'}")
     if not dry_run and release_manifest is None and not _repo_clean(source_root):
         errors.append(f"source repo must be clean before sync: {source_root}")
@@ -409,6 +451,7 @@ def sync_pages_from_source(
             "dates": list(selected_dates),
             "source_branch": source_branch,
             "source_commit": source_commit,
+            "source_branch_verification": source_branch_verification,
             "pages_branch": pages_branch,
             "pages_pre_release_commit": pages_pre_commit,
             "pages_pre_release_branch": pages_pre_branch,
@@ -433,6 +476,7 @@ def sync_pages_from_source(
             "dates": list(selected_dates),
             "source_branch": source_branch,
             "source_commit": source_commit,
+            "source_branch_verification": source_branch_verification,
             "pages_branch": pages_branch,
             "pages_pre_release_commit": pages_pre_commit,
             "pages_pre_release_branch": pages_pre_branch,
@@ -460,6 +504,7 @@ def sync_pages_from_source(
             "dates": list(selected_dates),
             "source_branch": source_branch,
             "source_commit": source_commit,
+            "source_branch_verification": source_branch_verification,
             "pages_branch": pages_branch,
             "pages_pre_release_commit": pages_pre_commit,
             "pages_pre_release_branch": pages_pre_branch,
@@ -507,6 +552,7 @@ def sync_pages_from_source(
             "dates": list(selected_dates),
             "source_branch": source_branch,
             "source_commit": source_commit,
+            "source_branch_verification": source_branch_verification,
             "pages_branch": pages_branch,
             "pages_pre_release_commit": pages_pre_commit,
             "pages_pre_release_branch": pages_pre_branch,
@@ -552,6 +598,7 @@ def sync_pages_from_source(
             "dates": list(selected_dates),
             "source_branch": source_branch,
             "source_commit": source_commit,
+            "source_branch_verification": source_branch_verification,
             "pages_branch": pages_branch,
             "pages_pre_release_commit": pages_pre_commit,
             "pages_pre_release_branch": pages_pre_branch,
@@ -585,6 +632,7 @@ def sync_pages_from_source(
             "dates": list(selected_dates),
             "source_branch": source_branch,
             "source_commit": source_commit,
+            "source_branch_verification": source_branch_verification,
             "pages_branch": pages_branch,
             "pages_pre_release_commit": pages_pre_commit,
             "pages_pre_release_branch": pages_pre_branch,
@@ -715,6 +763,7 @@ def sync_pages_from_source(
         "dates": list(selected_dates),
         "source_branch": source_branch,
         "source_commit": source_commit,
+        "source_branch_verification": source_branch_verification,
         "pages_branch": pages_branch,
         "pages_pre_release_commit": pages_pre_commit,
         "pages_pre_release_branch": pages_pre_branch,
@@ -757,6 +806,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--cache-bust", help="Optional cache-bust token appended to live-check URLs.")
     parser.add_argument("--report-file", help="Optional JSON report file path.")
     parser.add_argument("--release-manifest", help="Exact release manifest to validate before any source-to-Pages copy.")
+    parser.add_argument(
+        "--allow-detached-source-at-required-branch-head",
+        action="store_true",
+        help="Allow a detached source only when HEAD exactly matches origin/<required-branch> and release provenance.",
+    )
     return parser
 
 
@@ -778,6 +832,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         cache_bust=args.cache_bust,
         report_file=Path(args.report_file).resolve() if args.report_file else None,
         release_manifest=Path(args.release_manifest).resolve() if args.release_manifest else None,
+        allow_detached_source_at_required_branch_head=args.allow_detached_source_at_required_branch_head,
     )
     print(json.dumps(report, indent=2))
     return 0 if report.get("ok") else 1

@@ -87,28 +87,15 @@ Explicit live Gaza command:
 
 Add `-GenerateAudio` only when the scheduled Gaza run should also create dated audio artifacts.
 
-Recommended Task Scheduler action for Food Line:
+The old Food Line action using `run_runner_dispatch.ps1 -Dispatch food-line`
+must remain disabled: that compatibility path invokes publication, Pages push,
+Bluesky, audio, and map-capable dispatch generation.
 
-```text
-Program/script:
-powershell.exe
-```
-
-```text
-Arguments:
--NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\BlueFernRunner\Dispatches From The Blue Fern Co\scripts\run_runner_dispatch.ps1" -Dispatch food-line -RepoRoot "C:\BlueFernRunner\Dispatches From The Blue Fern Co"
-```
-
-Wrapper behavior:
-
-1. Sync source repo to `origin/add/pages-repo-default`.
-2. Sync Pages repo to `origin/gh-pages`.
-3. Run `python scripts\preflight_repo_state.py` logic through `scripts\runner_repo_maintenance.py sync`.
-4. Fail early if either repo is dirty or on the wrong branch.
-5. Run the dispatch command from the clean runner clone.
-6. Re-check both repos after the run.
-7. Clean only approved generated/temp paths in the source repo.
-8. Fail if risky drift remains.
+The production private-only Food Line schedule now uses a separate clean runner
+checkout and three guarded tasks. See
+[Food Line daily source-watch scheduler](./food-line-daily-scheduler.md) for the
+05:30 source watch, 06:00 same-ID status/resume, and 06:10 private intake flow.
+No publication task is part of that sequence.
 
 ## Smoke Test
 

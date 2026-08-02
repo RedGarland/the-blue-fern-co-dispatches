@@ -40,6 +40,8 @@ from bluefern_dispatches.public_site_shell import (
     render_about as render_public_about,
     render_dispatch_directory as render_public_dispatch_directory,
     render_homepage as render_public_homepage,
+    render_dispatch_landing as render_public_dispatch_landing,
+    render_global_header,
     render_methodology as render_public_methodology,
     stylesheet as render_public_stylesheet,
 )
@@ -847,20 +849,15 @@ def header(
     *,
     nav_slugs: tuple[str, ...] | None = None,
 ) -> str:
-    root_links = []
-    for slug in nav_slugs or ("gaza", "cascadia", "food-line"):
-        if not dispatch_public_visible(slug):
-            continue
-        root_links.append(f'<a href="/{slug}/">{html.escape(DISPATCH_LABELS.get(slug, slug.title()))}</a>')
-    nav = "".join(root_links)
-    if archive_href:
-        section_link = f'<a href="{section_href}">{html.escape(brand)}</a>' if section_href else ""
-        nav = f'<a href="/">Dispatches Home</a>{section_link}<a href="{archive_href}">Archive</a><a href="{root_prefix}rss.xml">RSS</a>'
-    return f"""  <header class="site-header">
-    <a class="brand" href="/"><span class="brand-kicker">The Blue Fern Co.</span><span class="brand-title">Dispatches From The Blue Fern Co.</span></a>
-    <nav aria-label="Primary">{nav}</nav>
-  </header>"""
-
+    primary = render_global_header("dispatches")
+    if not archive_href:
+        return primary
+    links = [f'<a href="{html.escape(archive_href)}">Archive</a>']
+    if section_href:
+        links.insert(0, f'<a href="{html.escape(section_href)}">{html.escape(brand)}</a>')
+    if "food-line" not in f"{archive_href} {section_href or ''} {root_prefix}":
+        links.append(f'<a href="{html.escape(root_prefix)}rss.xml">RSS</a>')
+    return primary.replace('</header>', f'<nav class="dispatch-subnav" aria-label="Dispatch">{"".join(links)}</nav></header>')
 
 def footer(asset_prefix: str) -> str:
     return f"""  <footer class="site-footer">
@@ -2425,7 +2422,8 @@ def build_site(
         write_text(dispatch_public_root / "assets" / "site.css", render_public_stylesheet(root), dry_run, wrote)
         write_text(dispatch_public_root / "index.html", render_dispatch_index(dispatch), dry_run, wrote)
         write_text(dispatch_public_root / "archive.html", render_archive(dispatch), dry_run, wrote)
-        write_text(dispatch_public_root / "rss.xml", render_rss(dispatch), dry_run, wrote)
+        if dispatch.slug != "food-line":
+            write_text(dispatch_public_root / "rss.xml", render_rss(dispatch), dry_run, wrote)
         copied_real_edition = (
             (
                 dispatch.slug in {"cascadia", "gaza", "american-pressure", "food-line", CARE_LINE_DISPATCH_SLUG}
@@ -2544,7 +2542,8 @@ def build_site(
                 _refresh_american_pressure_map_route(site_root, edition_dates[0], dry_run, wrote)
             write_text(dispatch_public_root / "index.html", render_dispatch_index_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
             write_text(dispatch_public_root / "archive.html", render_archive_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
-            write_text(dispatch_public_root / "rss.xml", render_rss_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
+            if dispatch.slug != "food-line":
+                write_text(dispatch_public_root / "rss.xml", render_rss_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
     if not only_dispatches or CARE_LINE_DISPATCH_SLUG in only_dispatches:
         try:
             if care_line_signal_wire is None:
@@ -2594,6 +2593,9 @@ def build_site(
     # editions come from the released output tree, never from private queues.
     write_text(site_root / "index.html", render_public_homepage(site_root), dry_run, wrote)
     write_text(site_root / "dispatches" / "index.html", render_public_dispatch_directory(site_root), dry_run, wrote)
+    for landing_slug in ("gaza", "food-line", "care-line"):
+        if (site_root / landing_slug / "index.html").exists():
+            write_text(site_root / landing_slug / "index.html", render_public_dispatch_landing(site_root, landing_slug), dry_run, wrote)
     write_text(site_root / "methodology" / "index.html", render_public_methodology(), dry_run, wrote)
     write_text(site_root / "about" / "index.html", render_public_about(), dry_run, wrote)
     ensure_public_html_favicons(site_root, dry_run, wrote)

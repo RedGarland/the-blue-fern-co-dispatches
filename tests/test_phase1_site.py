@@ -3,6 +3,7 @@ from pathlib import Path
 import json
 
 from bluefern_dispatches.phase1_site import PUBLIC_STATUSES, public_editions, public_model, render_site
+from bluefern_dispatches.public_site_shell import stylesheet, render_dispatch_landing
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -51,3 +52,63 @@ def test_no_update_and_mojibake_are_excluded_from_production_preview(tmp_path):
     assert "PRIVATE PHASE 1 PROTOTYPE" not in rendered
     assert not any(marker in rendered for marker in ("Ã‚", "Ãƒ", "ï¿½", "�"))
     assert all((output / route).exists() for route in ("index.html", "dispatches/index.html", "methodology/index.html", "about/index.html"))
+
+
+def test_recovered_responsive_shell_rules_and_button_contrast(tmp_path):
+    root = tmp_path / "site"
+    (root / "assets").mkdir(parents=True)
+    (root / "assets" / "site.css").write_text("", encoding="utf-8")
+    css = stylesheet(root)
+    assert "overflow-x:hidden" in css
+    assert "flex-wrap:wrap" in css
+    assert "flex-direction:column" in css
+    assert "grid-template-columns:1fr" in css
+    assert "img{display:block;max-width:100%" in css
+    assert "background:#1E3F4F;color:#fffdf8" in css
+
+
+def test_food_line_latest_date_url_and_no_rss_link(tmp_path):
+    root = tmp_path / "site"
+    food = root / "food-line"
+    (food / "editions" / "2026-07-31").mkdir(parents=True)
+    (food / "index.html").write_text("<h1>Food Line</h1>", encoding="utf-8")
+    (food / "archive.html").write_text("<h1>Archive</h1>", encoding="utf-8")
+    (food / "editions" / "2026-07-31" / "index.html").write_text("<h3>Superior food pantry closes after more than 30 years</h3>", encoding="utf-8")
+    (food / "editions" / "2026-07-31" / "edition_manifest.json").write_text(json.dumps({"public_rendered": True, "story_count": 1}), encoding="utf-8")
+    (root / "assets").mkdir(parents=True)
+    (root / "assets" / "site.css").write_text("", encoding="utf-8")
+    landing = render_dispatch_landing(root, "food-line")
+    assert "July 31, 2026" in landing
+    assert "/food-line/editions/2026-07-31/" in landing
+    assert "/food-line/rss.xml" not in landing
+
+
+def test_public_source_headline_and_no_update_exclusion(tmp_path):
+    root = tmp_path / "site"
+    for slug in ("gaza", "food-line"):
+        (root / slug / "editions" / "2026-07-31").mkdir(parents=True)
+        (root / slug / "index.html").write_text("<h1>Dispatch</h1>", encoding="utf-8")
+        (root / slug / "editions" / "2026-07-31" / "index.html").write_text("<h3>Visible public headline</h3>", encoding="utf-8")
+        (root / slug / "editions" / "2026-07-31" / "edition_manifest.json").write_text(json.dumps({"public_rendered": True, "story_count": 1}), encoding="utf-8")
+    (root / "gaza" / "editions" / "2026-07-30").mkdir(parents=True)
+    (root / "gaza" / "editions" / "2026-07-30" / "index.html").write_text("<h3>No current update</h3>", encoding="utf-8")
+    (root / "gaza" / "editions" / "2026-07-30" / "edition_manifest.json").write_text(json.dumps({"public_rendered": True, "edition_mode": "no_update", "story_count": 0}), encoding="utf-8")
+    (root / "assets").mkdir(parents=True)
+    (root / "assets" / "site.css").write_text("", encoding="utf-8")
+    rendered = render_site(root, tmp_path / "preview")
+    homepage = (tmp_path / "preview" / "index.html").read_text(encoding="utf-8")
+    assert "Public source headline" in homepage
+    assert "No current update" not in homepage
+
+
+def test_care_line_logo_path_is_canonical(tmp_path):
+    root = tmp_path / "site"
+    (root / "care-line" / "editions" / "2026-07-22").mkdir(parents=True)
+    (root / "care-line" / "index.html").write_text("<h1>Care Line</h1>", encoding="utf-8")
+    (root / "care-line" / "archive.html").write_text("<h1>Archive</h1>", encoding="utf-8")
+    (root / "care-line" / "editions" / "2026-07-22" / "index.html").write_text("<h3>Care access signal</h3>", encoding="utf-8")
+    (root / "care-line" / "editions" / "2026-07-22" / "edition_manifest.json").write_text(json.dumps({"public_rendered": True, "story_count": 1}), encoding="utf-8")
+    (root / "assets").mkdir(parents=True)
+    (root / "assets" / "site.css").write_text("", encoding="utf-8")
+    landing = render_dispatch_landing(root, "care-line")
+    assert 'src="assets/care-line-logo.png"' in landing

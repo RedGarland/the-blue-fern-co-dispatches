@@ -92,9 +92,11 @@ def _json(path: Path) -> dict:
 
 
 def _clean(value: object) -> str:
-    return str(value or "").replace("Ã‚Â·", "·").replace("Ã‚", "").replace("Ãƒ", "").replace("â€”", "—").replace("â€“", "–").replace("â†’", "→").replace("â€œ", "“").replace("â€", "”").replace("â€™", "’").replace("â€¦", "…").replace("âœ¦", "✦").replace("�", "")
-
-
+    text = str(value or "")
+    replacements = {"Â·": "·", "â†’": "→", "â€”": "—", "â€“": "–", "â€œ": "“", "â€": "”", "â€™": "’", "â€¦": "…", "âœ¦": "✦", "ï¿½": ""}
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+    return text
 def _count(payload: dict, *keys: str) -> int | None:
     for key in keys:
         value = payload.get(key)
@@ -157,19 +159,18 @@ def public_model(site_root: Path) -> tuple[list[Dispatch], list[Edition]]:
 
 def _nav(active: str = "home") -> str:
     links = [("/", "Home", "home"), ("/dispatches/", "Dispatches", "dispatches"), ("/methodology/", "Methodology", "methodology"), ("/about/", "About", "about")]
-    rendered = "".join(f'<a href="{href}"{(" class=\"is-active\" aria-current=\"page\"" if active == key else "")}>{label}</a>' for href, label, key in links)
-    return f'<header class="site-header"><a class="brand" href="/"><span class="brand-kicker">The Blue Fern Co.</span><span class="brand-title">Dispatches From The Blue Fern Co.</span></a><nav aria-label="Primary">{rendered}</nav></header>'
-
-
+    rendered = []
+    for href, label, key in links:
+        current = ' class="is-active" aria-current="page"' if active == key else ""
+        rendered.append(f'<a href="{href}"{current}>{label}</a>')
+    return '<header class="site-header"><a class="brand" href="/"><span class="brand-kicker">The Blue Fern Co.</span><span class="brand-title">Dispatches From The Blue Fern Co.</span></a><nav aria-label="Primary">' + "".join(rendered) + '</nav></header>'
 def _page(title: str, body: str, active: str = "home") -> str:
     return f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{html.escape(title)}</title><link rel="stylesheet" href="/assets/site-phase1.css"></head><body>{_nav(active)}<main>{body}</main><footer class="site-footer"><div><strong>The Blue Fern Co.</strong><p>Source-backed public briefings for reading, research, and accountability.</p></div><p><a href="/methodology/">How we work</a> · <a href="/about/">About this project</a></p></footer></body></html>'
 
 
 def _edition_card(item: Edition) -> str:
     meta = " · ".join(value for value in (item.location, f"{item.source_count} public sources" if item.source_count is not None else "") if value) or "Public edition"
-    return f'<article class="edition-card"><p class="eyebrow">{html.escape(LABELS[item.slug])} · {html.escape(item.display_date)}</p><h3><a href="{item.url}">{html.escape(item.headline)}</a></h3><p class="edition-summary">{html.escape(item.summary or "Published public development")}</p><p class="edition-meta">{html.escape(meta)}</p></article>'
-
-
+    return f'<article class="edition-card"><p class="eyebrow">Public source headline · {html.escape(LABELS[item.slug])} · {html.escape(item.display_date)}</p><h3><a href="{item.url}">{html.escape(item.headline)}</a></h3><p class="edition-summary">{html.escape(item.summary or "Published public development")}</p><p class="edition-meta">{html.escape(meta)}</p></article>'
 def _dispatch_card(item: Dispatch, compact: bool = False) -> str:
     latest = item.latest
     latest_html = f'<p class="latest-label">Latest public development</p><h3 class="latest-headline"><a href="{latest.url}">{html.escape(latest.headline)}</a></h3><p class="date-line">{html.escape(latest.display_date)}</p>' if latest else '<p class="latest-label">Current public status</p><h3 class="latest-headline">No public edition indexed</h3>'
@@ -195,6 +196,8 @@ BASE_CSS = ":root{--ink:#1E3F4F;--paper:#EFE7DA;--muted:#4E6B79;--white:#fffdf8;
 MOBILE_FIX = "@media(max-width:800px){.site-header{flex-direction:column;align-items:stretch}.site-header nav{width:100%;gap:.65rem}}@media(max-width:560px){body{overflow-x:hidden}.site-header,.site-footer,main{width:calc(100vw - 1.5rem);max-width:calc(100vw - 1.5rem)}.hero,.section-block,.section-heading,.hero h1,.lede{width:100%;max-width:100%;overflow-wrap:anywhere}.hero h1{font-size:clamp(1.55rem,8vw,2.5rem);letter-spacing:-.02em;word-break:break-word}.lede{font-size:1.05rem;line-height:1.45;word-break:break-word}.section-heading h2{font-size:clamp(1.45rem,7vw,2.2rem);overflow-wrap:anywhere}.latest-headline{font-size:1.18rem;overflow-wrap:anywhere}}"
 
 
+CORRECTION_CSS = ".site-header{flex-wrap:wrap}.site-header nav{min-width:0;max-width:100%;flex-wrap:wrap}.brand,.brand-title,.lede,.latest-headline{min-width:0;max-width:100%;overflow-wrap:anywhere;word-break:break-word}.actions,.card-actions{display:flex;flex-wrap:wrap;min-width:0;max-width:100%}.button{background:#1E3F4F;color:#fffdf8;border:1px solid #1E3F4F}.button--quiet{background:#EFE7DA;color:#1E3F4F;border:1px solid #1E3F4F}img{display:block;max-width:100%;height:auto}@media(max-width:800px){.site-header{flex-direction:column;align-items:stretch}.site-header nav{width:100%;gap:.65rem 1rem}.actions,.card-actions{flex-direction:column;align-items:stretch}.actions>* ,.card-actions>*{width:100%;max-width:100%}}@media(max-width:560px){html,body{max-width:100%;overflow-x:hidden}.site-header,.site-footer,main{width:calc(100% - 1.5rem);max-width:100%}.active-grid,.quiet-grid,.edition-grid,.directory-list,.closing-grid{grid-template-columns:1fr}.hero h1,.section-heading h2,.latest-headline{overflow-wrap:anywhere;word-break:break-word}}@media(min-width:1600px){main{padding-top:4rem}.hero{padding-bottom:4rem}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}"
+
 def render_site(site_root: Path, output_root: Path) -> dict[str, int]:
     dispatches, recent = public_model(site_root)
     output_root.mkdir(parents=True, exist_ok=True)
@@ -202,12 +205,18 @@ def render_site(site_root: Path, output_root: Path) -> dict[str, int]:
     assets.mkdir(exist_ok=True)
     shutil.copy2(site_root / "assets" / "site.css", assets / "site-legacy.css")
     for name in ("bluefern.png", "dispatches-from-blue-fern-co.png"):
-        shutil.copy2(site_root / "assets" / name, assets / name)
-    (assets / "site-phase1.css").write_text(BASE_CSS + MOBILE_CSS + MOBILE_FIX, encoding="utf-8")
+        source = site_root / "assets" / name
+        if source.exists():
+            shutil.copy2(source, assets / name)
+    (assets / "site-phase1.css").write_text(BASE_CSS + MOBILE_CSS + MOBILE_FIX + CORRECTION_CSS, encoding="utf-8")
     for slug in ("gaza", "food-line", "care-line", "cascadia", "american-pressure"):
         source = site_root / slug
         if source.exists():
             shutil.copytree(source, output_root / slug, dirs_exist_ok=True)
+    from .public_site_shell import render_dispatch_landing
+    for slug in ("gaza", "food-line", "care-line"):
+        if (site_root / slug / "index.html").exists():
+            (output_root / slug / "index.html").write_text(render_dispatch_landing(site_root, slug), encoding="utf-8")
     for page in output_root.rglob("*.html"):
         page.write_text(_clean(_text(page)), encoding="utf-8")
     (output_root / "index.html").write_text(_page("Dispatches From The Blue Fern Co.", _home(dispatches, recent)), encoding="utf-8")

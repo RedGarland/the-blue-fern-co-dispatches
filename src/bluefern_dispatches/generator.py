@@ -36,6 +36,13 @@ from bluefern_dispatches.care_line_sources import (
 )
 from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
 from bluefern_dispatches.public_prose import html_contains_public_prose_violations
+from bluefern_dispatches.public_site_shell import (
+    render_about as render_public_about,
+    render_dispatch_directory as render_public_dispatch_directory,
+    render_homepage as render_public_homepage,
+    render_methodology as render_public_methodology,
+    stylesheet as render_public_stylesheet,
+)
 from bluefern_dispatches.universal_events.care_line_signal_wire import build_care_line_signal_wire_publication
 
 
@@ -51,7 +58,7 @@ DEFAULT_PAGES_BRANCH = "gh-pages"
 ROOT_MASTHEAD_ASSET = "dispatches-from-blue-fern-co.png"
 CASCADIA_LOGO_ASSET = "cascadia-logo-placeholder.png"
 FAVICON_ASSETS = ["favicon.ico", "favicon-32x32.png", "favicon-16x16.png", "apple-touch-icon.png"]
-PUBLIC_SITE_ASSETS = ["site.css", "gaza-logo.png", "bluefern.png", CASCADIA_LOGO_ASSET, ROOT_MASTHEAD_ASSET, *FAVICON_ASSETS]
+PUBLIC_SITE_ASSETS = ["site.css", "gaza-logo.png", "bluefern.png", "bluefern.ico", CASCADIA_LOGO_ASSET, ROOT_MASTHEAD_ASSET, *FAVICON_ASSETS]
 ROOT_DESCRIPTION = "Source-based dispatches from The Blue Fern Co., organized for public reading, research, and accountability."
 CASCADIA_PUBLIC_DESCRIPTION = "The Cascadia Briefing is a weekly, source-backed regional briefing for Washington, Oregon, and Idaho, tracking public systems, infrastructure, health, safety, environment, economy, and resilience."
 CASCADIA_RSS_DESCRIPTION = "Weekly source-backed regional briefings for Washington, Oregon, and Idaho."
@@ -850,8 +857,8 @@ def header(
         section_link = f'<a href="{section_href}">{html.escape(brand)}</a>' if section_href else ""
         nav = f'<a href="/">Dispatches Home</a>{section_link}<a href="{archive_href}">Archive</a><a href="{root_prefix}rss.xml">RSS</a>'
     return f"""  <header class="site-header">
-    <a class="brand" href="{root_prefix}index.html">{html.escape(brand)}</a>
-    <nav>{nav}</nav>
+    <a class="brand" href="/"><span class="brand-kicker">The Blue Fern Co.</span><span class="brand-title">Dispatches From The Blue Fern Co.</span></a>
+    <nav aria-label="Primary">{nav}</nav>
   </header>"""
 
 
@@ -861,6 +868,7 @@ def footer(asset_prefix: str) -> str:
       <a href="{BLUE_FERN_URL}/" target="_blank" rel="noopener noreferrer"><img class="publisher-mark" src="{asset_prefix}assets/bluefern.png" alt="The Blue Fern Co."></a>
       <p class="publisher-label">Published by <a href="{BLUE_FERN_URL}/" target="_blank" rel="noopener noreferrer">The Blue Fern Company</a></p>
     </div>
+    <p><a href="/methodology/">How we work</a> · <a href="/about/">About this project</a></p>
   </footer>"""
 
 
@@ -2292,9 +2300,10 @@ def build_site(
     public_max_dates: dict[str, str] | None = None,
     dispatch_seed_dates: dict[str, str] | None = None,
     pages_repo: Path | None = None,
+    site_root_override: Path | None = None,
 ) -> dict[str, Any]:
     root = root.resolve()
-    site_root = root / "output" / "site"
+    site_root = (site_root_override or (root / "output" / "site")).resolve()
     detail_roots = [root / "output" / name for name in DETAIL_ROOT_NAMES]
     generated_at = datetime.now(timezone.utc).isoformat()
     warnings: list[str] = []
@@ -2363,6 +2372,7 @@ def build_site(
 
     for asset in PUBLIC_SITE_ASSETS:
         copy_asset(root / "assets" / asset, site_root / "assets" / asset, dry_run, wrote, warnings)
+    write_text(site_root / "assets" / "site.css", render_public_stylesheet(root), dry_run, wrote)
     copy_asset(root / "assets" / "food-line-logo.png", site_root / "food-line" / "assets" / "food-line-logo.png", dry_run, wrote, warnings)
     copy_asset(root / "assets" / "food-line-dispatch-social.png", site_root / "food-line" / "assets" / "food-line-dispatch-social.png", dry_run, wrote, warnings)
     copy_asset(root / "assets" / "care-line-logo.png", site_root / "care-line" / "assets" / "care-line-logo.png", dry_run, wrote, warnings)
@@ -2410,8 +2420,9 @@ def build_site(
         dispatch_public_root = site_root / dispatch.slug
         dispatch_public_edition = dispatch_public_root / "editions" / dispatch.edition_date
         backup_dir = backup_root / dispatch.slug / dispatch.edition_date
-        for asset in ["site.css", dispatch.logo, "bluefern.png"]:
+        for asset in [dispatch.logo, "bluefern.png"]:
             copy_asset(root / "assets" / asset, dispatch_public_root / "assets" / asset, dry_run, wrote, warnings)
+        write_text(dispatch_public_root / "assets" / "site.css", render_public_stylesheet(root), dry_run, wrote)
         write_text(dispatch_public_root / "index.html", render_dispatch_index(dispatch), dry_run, wrote)
         write_text(dispatch_public_root / "archive.html", render_archive(dispatch), dry_run, wrote)
         write_text(dispatch_public_root / "rss.xml", render_rss(dispatch), dry_run, wrote)
@@ -2579,6 +2590,12 @@ def build_site(
                 public_urls.extend(str(url) for url in care_line_signal_wire.get("public_urls") or [])
         except Exception as exc:
             errors.append(f"care-line signal wire generation failed: {exc}")
+    # Render shared site surfaces after dispatch bodies exist so latest public
+    # editions come from the released output tree, never from private queues.
+    write_text(site_root / "index.html", render_public_homepage(site_root), dry_run, wrote)
+    write_text(site_root / "dispatches" / "index.html", render_public_dispatch_directory(site_root), dry_run, wrote)
+    write_text(site_root / "methodology" / "index.html", render_public_methodology(), dry_run, wrote)
+    write_text(site_root / "about" / "index.html", render_public_about(), dry_run, wrote)
     ensure_public_html_favicons(site_root, dry_run, wrote)
     return {
         "ok": not errors,
@@ -3795,6 +3812,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--commit", action="store_true", help="Commit copied Pages repo changes locally.")
     parser.add_argument("--no-push", action="store_true", help="Explicitly skip push. Push is always skipped by this publisher.")
+    parser.add_argument("--output-root", help="Private output root for an integration preview; never used for Pages sync.")
     parser.add_argument(
         "--allow-listing-shrink",
         action="store_true",
@@ -3838,6 +3856,7 @@ def main(argv: list[str] | None = None) -> int:
             only_dispatches=only_dispatches,
             public_max_dates=public_max_dates,
             dispatch_seed_dates=dispatch_seed_dates,
+            site_root_override=Path(args.output_root) if args.output_root else None,
         )
         result_errors = list(result.get("errors", []))
         if args.expect_date:

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import html
+import re
 import shutil
 from pathlib import Path
 
@@ -95,10 +96,12 @@ _LEGACY_STYLESHEET = stylesheet
 def stylesheet(source_root: Path) -> str:
     css = _LEGACY_STYLESHEET(source_root)
     css = css.replace("overflow-x:hidden", "overflow-x:visible")
+    css = re.sub(r'\.brand:before\{[^}]*\}', "", css)
     css = css.replace(".card-rule{position:absolute;top:0;left:0;width:34%;height:5px;background:var(--muted)}", "")
     css = css.replace(".hero-mark{font-size:1.4rem;color:var(--muted)}", "")
     css = css.replace(".brand:before{content:'✦';color:var(--muted);font-size:1.15rem}", "")
     css += ".brand{display:flex;align-items:center;gap:.65rem}.brand-mark{width:38px;height:38px;object-fit:contain;flex:none}.brand-text{display:flex;flex-direction:column;min-width:0;max-width:calc(100% - 2.5rem);overflow-wrap:anywhere}.brand-title{max-width:100%;font-size:clamp(.92rem,4.8vw,1.12rem);overflow-wrap:anywhere;word-break:break-word}.footer-brand{display:flex;align-items:center;gap:.65rem;min-width:0}.footer-mark{width:30px;height:30px;object-fit:contain;flex:none}.topic-badge{display:inline-block;width:max-content;margin:0 0 .8rem;padding:.28rem .55rem;border:1px solid var(--ink);border-radius:999px;background:var(--white);font:800 .68rem/1.2 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase}.topic-badge--gaza{border-color:#1E3F4F}.topic-badge--food-line{border-color:#7c5a2d}.topic-badge--care-line{border-color:#6b4c6d}.topic-badge--cascadia{border-color:#3f6a59}.topic-badge--american-pressure{border-color:#8a4f3d}.topic-badge--ice-activity-and-consequences{border-color:#5b5b5b}.edition-card h3{margin:.25rem 0 .35rem}.edition-source{margin:0 0 .7rem;font:700 .72rem/1.2 system-ui,sans-serif;letter-spacing:.04em;color:var(--muted)}.site-footer{align-items:center}@media(max-width:560px){.brand-mark{width:32px;height:32px}.brand-text{max-width:calc(100% - 2.25rem)}.brand-title{font-size:.92rem}.footer-mark{width:28px;height:28px}}"
+    css += ".dispatch-card .card-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.85rem;min-height:0;height:auto;padding:0;margin:0}.dispatch-card .card-actions a{display:inline-flex;align-items:center;flex:0 0 auto;min-height:0;height:auto;width:auto;max-width:100%;padding:0;margin:0;line-height:1.2}.dispatch-card .card-actions .button{display:inline-block;width:auto;min-height:0;height:auto;padding:.72rem 1.1rem}.dispatch-card .card-actions .text-link,.dispatch-card .card-actions .support-link{display:inline-flex;width:auto;min-height:0;height:auto;padding:0}.edition-source,.date-line{white-space:normal;overflow-wrap:anywhere}@media(max-width:800px){.dispatch-card .card-actions{flex-direction:row;align-items:center}.dispatch-card .card-actions .button{width:100%;flex:1 0 100%}.dispatch-card .card-actions .text-link,.dispatch-card .card-actions .support-link{width:auto;flex:0 0 auto}}"
     css += ".site-header{align-items:center;padding:.8rem 0 .75rem}.brand{display:flex;flex-direction:row;align-items:center;gap:.7rem}.brand-mark{width:44px;height:44px;object-fit:contain;flex:none}.footer-brand{display:flex;align-items:center;gap:.7rem;min-width:0}.footer-mark{width:36px;height:36px;object-fit:contain;flex:none}.edition-source{margin:0 0 .25rem}.edition-published{margin:0 0 .55rem;font:500 .72rem/1.3 system-ui,sans-serif;color:var(--muted)}.edition-provenance{margin:0 0 .55rem;font:500 .72rem/1.3 system-ui,sans-serif;color:var(--muted)}.edition-meta{margin:0}.topic-badge{padding:.34rem .65rem;margin-bottom:.85rem}@media(max-width:560px){.site-header,.site-footer,main{width:calc(100% - 1.5rem);max-width:calc(100% - 1.5rem)}.brand{width:100%;max-width:100%;flex:0 0 auto}.brand-mark{width:42px;height:42px}.brand-text{max-width:calc(100% - 3.2rem)}.brand-title{font-size:.9rem;line-height:1.1}.site-header nav{width:100%;max-width:100%;gap:.65rem 1rem}.actions{width:100%;max-width:100%}.actions>.button{width:100%;max-width:100%}.edition-grid{grid-template-columns:1fr;width:100%;max-width:100%}.edition-card{width:100%;max-width:100%;overflow-wrap:anywhere}.footer-mark{width:32px;height:32px}}"
     return css
 
@@ -109,5 +112,5 @@ def render_site_shell_stylesheet(source_root: Path) -> str:
 
 
 def render_about() -> str:
-    body = '<section class="page-intro"><p class="eyebrow">The project</p><h1>About Blue Fern Dispatches</h1><p>Dispatches From The Blue Fern Co. is a source-based public dispatch system for reporting on systems, access, pressure, and accountability.</p><p>Gaza and Food Line are Active. Care Line is a Pilot. Cascadia is currently paused. Its public archive remains available through May 31, 2026.</p></section>'
+    body = '<section class="page-intro"><p class="eyebrow">The project</p><h1>About Blue Fern Dispatches</h1><p>Dispatches From The Blue Fern Co. is a source-based public dispatch system for reporting on systems, access, pressure, and accountability.</p><p>Gaza and Food Line are Active. Care Line is a Pilot. Cascadia is currently paused. Its latest public edition is May 5, 2026; its latest substantive development was published May 3, 2026, and its public archive remains available through May 31, 2026.</p></section>'
     return _page("About", body, "about")

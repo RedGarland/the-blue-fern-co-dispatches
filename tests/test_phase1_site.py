@@ -255,7 +255,7 @@ def test_phase1c_timestamp_and_metadata_hierarchy(tmp_path):
     item = public_editions(root, "gaza")[0]
     card = _edition_card(item)
     assert item.headline == "Gaza public development title"
-    assert f"Aug 3, 2026 {chr(183)} 6:00 AM PT" in card
+    assert "Aug 3, 2026 &middot; 6:00 AM PT" in card
     assert "Middle East crisis live" not in card
     assert card.index("topic-badge") < card.index("<h3>") < card.index("edition-source") < card.index("edition-provenance") < card.index("edition-meta")
     assert "Published public development" not in card
@@ -269,7 +269,7 @@ def test_phase1c_source_count_grammar_and_separate_publication_date():
     assert _source_count_label(2) == "2 public sources"
     card = _edition_card(Edition("food-line", "2026-07-31", "/food-line/editions/2026-07-31/", "Food pressure", "Published", 1, None, 1, published_at="2026-08-01T10:21:30-07:00"))
     assert "July 31, 2026 edition" in card
-    assert f"Published Aug 1, 2026 {chr(183)} 10:21 AM PT" in card
+    assert "Published Aug 1, 2026 &middot; 10:21 AM PT" in card
     assert "1 public source" in card
     assert "1 public sources" not in card
 
@@ -313,3 +313,25 @@ def test_phase1c_original_brand_asset_and_favicon_are_preserved():
     assert original.exists()
     assert hashlib.sha256(original.read_bytes()).hexdigest() == "b7b600bf5e87af4ad037703fc75201df4c52bebfc5616f32c2369d14c269ae54"
     assert favicon.exists()
+
+def test_phase1c_root_card_actions_override_legacy_dimensions(tmp_path):
+    root = tmp_path / "site"
+    (root / "assets").mkdir(parents=True)
+    (root / "assets" / "site.css").write_text("", encoding="utf-8")
+    css = stylesheet(root)
+    for selector in (".dispatch-card .card-actions a", ".dispatch-card .card-actions .button", ".dispatch-card .card-actions .text-link", ".dispatch-card .card-actions .support-link"):
+        assert selector in css
+    assert ".dispatch-card .card-actions{display:flex" in css
+    assert "min-height:0;height:auto" in css
+
+
+def test_phase1c_safe_middle_dot_and_cascadia_description():
+    from bluefern_dispatches.phase1_site import Dispatch, Edition, _dispatch_card
+    card = _dispatch_card(Dispatch("gaza", "Dispatches From Gaza", "Active", "", "Daily", "/gaza/", "/gaza/archive.html", Edition("gaza", "2026-08-03", "/gaza/editions/2026-08-03/", "Gaza title", "Published", 4, None, 1, published_at="2026-08-03T06:00:57-07:00")))
+    assert "&middot;" in card
+    assert " ? " not in card
+    from bluefern_dispatches.public_site_shell import render_about
+    about = render_about()
+    assert "latest public edition is May 5, 2026" in about
+    assert "latest substantive development was published May 3, 2026" in about
+    assert "archive remains available through May 31, 2026" in about

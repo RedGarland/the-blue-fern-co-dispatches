@@ -16,7 +16,7 @@ PUBLIC_STATUSES = ("Active", "Pilot", "In development", "Paused", "Archived")
 STATUS_BY_SLUG = {"gaza": "Active", "food-line": "Active", "care-line": "Pilot", "cascadia": "Paused", "american-pressure": "In development", "ice-activity-and-consequences": "In development"}
 LABELS = {"gaza": "Dispatches From Gaza", "food-line": "Food Line Dispatch", "care-line": "The Care Line Dispatch", "cascadia": "The Cascadia Briefing", "american-pressure": "The American Pressure Dispatch", "ice-activity-and-consequences": "ICE Activity and Consequences"}
 CADENCE = {"gaza": "Daily", "food-line": "Daily", "care-line": "Pilot publication", "cascadia": "Weekly · currently paused", "american-pressure": "Weekly workflow", "ice-activity-and-consequences": "Not yet recurring"}
-DESCRIPTIONS = {"gaza": "Daily source-backed reporting from Gaza.", "food-line": "Source-backed reporting on food-access pressure and household strain.", "care-line": "A pilot Signal Wire for source-backed healthcare-access pressure.", "cascadia": "A weekly regional briefing whose public record currently stops at May 5, 2026.", "american-pressure": "A developing weekly product about pressures reshaping household life.", "ice-activity-and-consequences": "A proposed reporting area; no recurring public edition is currently established."}
+DESCRIPTIONS = {"gaza": "Daily source-backed reporting from Gaza.", "food-line": "Source-backed reporting on food-access pressure and household strain.", "care-line": "A pilot Signal Wire for source-backed healthcare-access pressure.", "cascadia": "Cascadia is paused. Its latest public edition is May 5, 2026; its latest substantive development was published May 3, 2026, and its public archive remains available through May 31, 2026.", "american-pressure": "A developing weekly product about pressures reshaping household life.", "ice-activity-and-consequences": "A proposed reporting area; no recurring public edition is currently established."}
 
 
 @dataclass(frozen=True)
@@ -94,7 +94,7 @@ def _json(path: Path) -> dict:
 
 def _clean(value: object) -> str:
     text = str(value or "")
-    replacements = {"&middot;": "·", "â†’": "→", "â€”": "—", "â€“": "–", "â€œ": "“", "â€": "”", "â€™": "’", "â€¦": "…", "âœ¦": "✦", "ï¿½": ""}
+    replacements = {"â†’": "→", "â€”": "—", "â€“": "–", "â€œ": "“", "â€": "”", "â€™": "’", "â€¦": "…", "âœ¦": "✦", "ï¿½": ""}
     for old, new in replacements.items():
         text = text.replace(old, new)
     return text
@@ -379,7 +379,7 @@ def _display_timestamp(value: str | None, fallback: str) -> str:
         parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
         if parsed.tzinfo is not None:
             parsed = parsed.astimezone(ZoneInfo("America/Los_Angeles"))
-        return f"{parsed.strftime('%b')} {parsed.day}, {parsed.year} · {parsed.strftime('%I:%M %p').lstrip('0')} PT"
+        return f"{parsed.strftime('%b')} {parsed.day}, {parsed.year} &middot; {parsed.strftime('%I:%M %p').lstrip('0')} PT"
     except (TypeError, ValueError):
         return fallback
 
@@ -405,7 +405,7 @@ def _edition_card(item: Edition) -> str:
     source_count = f"{item.source_count} public sources" if item.source_count is not None else "Public edition"
     topic = TOPIC_LABELS.get(item.slug, item.slug.replace("-", " ").title())
     timestamp = _display_timestamp(item.published_at, item.display_date)
-    return f'<article class="edition-card edition-card--{html.escape(item.slug)}"><p class="topic-badge topic-badge--{html.escape(item.slug)}">{html.escape(topic)}</p><h3><a href="{item.url}">{html.escape(item.headline)}</a></h3><p class="edition-source">{html.escape(LABELS[item.slug])} · {html.escape(timestamp)}</p><p class="edition-provenance">Based on public source reporting</p><p class="edition-meta">{html.escape(source_count)}</p></article>'
+    return f'<article class="edition-card edition-card--{html.escape(item.slug)}"><p class="topic-badge topic-badge--{html.escape(item.slug)}">{html.escape(topic)}</p><h3><a href="{item.url}">{html.escape(item.headline)}</a></h3><p class="edition-source">{html.escape(LABELS[item.slug])} · {html.escape(timestamp).replace("&amp;middot;", "&middot;")}</p><p class="edition-provenance">Based on public source reporting</p><p class="edition-meta">{html.escape(source_count)}</p></article>'
 
 
 
@@ -413,7 +413,7 @@ def _dispatch_card(item: Dispatch, compact: bool = False) -> str:
     latest = item.latest
     if latest:
         timestamp = _display_timestamp(latest.published_at, latest.display_date)
-        latest_html = f'<p class="latest-label">Latest public development</p><h3 class="latest-headline"><a href="{latest.url}">{html.escape(latest.headline)}</a></h3><p class="date-line">{html.escape(item.name)} &middot; {html.escape(timestamp)}</p><p class="edition-provenance">Based on public source reporting</p>'
+        latest_html = f'<p class="latest-label">Latest public development</p><h3 class="latest-headline"><a href="{latest.url}">{html.escape(latest.headline)}</a></h3><p class="date-line">{html.escape(item.name)} &middot; {html.escape(timestamp).replace("&amp;middot;", "&middot;")}</p><p class="edition-provenance">Based on public source reporting</p>'
         actions = f'<a class="button" href="{latest.url}">Read latest</a>'
     else:
         latest_html = '<p class="latest-label">Current public status</p><h3 class="latest-headline">No public edition indexed</h3>'
@@ -473,15 +473,16 @@ def _edition_card(item: Edition) -> str:
     count = _source_count_label(item.source_count)
     edition_date = item.display_date
     timestamp = _display_timestamp(item.published_at, "")
-    source = f"{LABELS[item.slug]} ? {edition_date}"
+    source = f"{LABELS[item.slug]} &middot; {edition_date}"
     published = ""
     if timestamp:
         if _publication_same_day(item):
-            source = f"{LABELS[item.slug]} ? {timestamp}"
+            source = f"{LABELS[item.slug]} &middot; {timestamp}"
         else:
-            source = f"{LABELS[item.slug]} ? {edition_date} edition"
-            published = f'<p class="edition-published">Published {html.escape(timestamp)}</p>'
-    return f'<article class="edition-card edition-card--{html.escape(item.slug)}"><p class="topic-badge topic-badge--{html.escape(item.slug)}">{html.escape(topic)}</p><h3><a href="{item.url}">{html.escape(item.headline)}</a></h3><p class="edition-source">{html.escape(source)}</p>{published}<p class="edition-provenance">Based on public source reporting</p><p class="edition-meta">{html.escape(count)}</p></article>'
+            source = f"{LABELS[item.slug]} &middot; {edition_date} edition"
+            published = f'<p class="edition-published">Published {html.escape(timestamp).replace("&amp;middot;", "&middot;")}</p>'
+    source_html = html.escape(source).replace("&amp;middot;", "&middot;")
+    return f'<article class="edition-card edition-card--{html.escape(item.slug)}"><p class="topic-badge topic-badge--{html.escape(item.slug)}">{html.escape(topic)}</p><h3><a href="{item.url}">{html.escape(item.headline)}</a></h3><p class="edition-source">{source_html}</p>{published}<p class="edition-provenance">Based on public source reporting</p><p class="edition-meta">{html.escape(count)}</p></article>'
 
 
 def _dispatch_card(item: Dispatch, compact: bool = False) -> str:
@@ -491,7 +492,7 @@ def _dispatch_card(item: Dispatch, compact: bool = False) -> str:
         actions = f'<a class="button" href="{latest.url}">Read latest edition</a>'
     elif latest:
         timestamp = _display_timestamp(latest.published_at, latest.display_date)
-        latest_html = f'<p class="latest-label">Latest public development</p><h3 class="latest-headline"><a href="{latest.url}">{html.escape(latest.headline)}</a></h3><p class="date-line">{html.escape(item.name)} ? {html.escape(timestamp)}</p><p class="edition-provenance">Based on public source reporting</p>'
+        latest_html = f'<p class="latest-label">Latest public development</p><h3 class="latest-headline"><a href="{latest.url}">{html.escape(latest.headline)}</a></h3><p class="date-line">{html.escape(item.name)} &middot; {html.escape(timestamp).replace("&amp;middot;", "&middot;")}</p><p class="edition-provenance">Based on public source reporting</p>'
         actions = f'<a class="button" href="{latest.url}">Read latest</a>'
     else:
         latest_html = '<p class="latest-label">Latest public status</p><h3 class="latest-headline">No public edition indexed</h3>'

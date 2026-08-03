@@ -287,11 +287,11 @@ def _nav(active: str = "home") -> str:
     for href, label, key in links:
         current = ' class="is-active" aria-current="page"' if active == key else ""
         rendered.append(f'<a href="{href}"{current}>{label}</a>')
-    return '<header class="site-header"><a class="brand" href="/"><img class="brand-mark" src="/assets/bluefern.ico" alt="The Blue Fern Co. logo"><span class="brand-text"><span class="brand-kicker">The Blue Fern Co.</span><span class="brand-title">Dispatches From The Blue Fern Co.</span></span></a><nav aria-label="Primary">' + "".join(rendered) + "</nav></header>"
+    return '<header class="site-header"><a class="brand" href="/"><img class="brand-mark" src="/assets/bluefern.png" alt="The Blue Fern Co. logo"><span class="brand-text"><span class="brand-kicker">The Blue Fern Co.</span><span class="brand-title">Dispatches From The Blue Fern Co.</span></span></a><nav aria-label="Primary">' + "".join(rendered) + "</nav></header>"
 
 
 def _page(title: str, body: str, active: str = "home") -> str:
-    return f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/assets/bluefern.ico"><title>{html.escape(title)}</title><link rel="stylesheet" href="/assets/site-phase1.css"></head><body>{_nav(active)}<main>{body}</main><footer class="site-footer"><div class="footer-brand"><img class="footer-mark" src="/assets/bluefern.ico" alt="The Blue Fern Co. logo"><div><strong>The Blue Fern Co.</strong><p>Source-backed public briefings for reading, research, and accountability.</p></div></div><p><a href="/methodology/">How we work</a> · <a href="/about/">About this project</a></p></footer></body></html>'
+    return f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/assets/bluefern.ico"><title>{html.escape(title)}</title><link rel="stylesheet" href="/assets/site-phase1.css"></head><body>{_nav(active)}<main>{body}</main><footer class="site-footer"><div class="footer-brand"><img class="footer-mark" src="/assets/bluefern.png" alt="The Blue Fern Co. logo"><div><strong>The Blue Fern Co.</strong><p>Source-backed public briefings for reading, research, and accountability.</p></div></div><p><a href="/methodology/">How we work</a> · <a href="/about/">About this project</a></p></footer></body></html>'
 
 
 def _edition_card(item: Edition) -> str:

@@ -185,8 +185,9 @@ def test_phase1b_root_shell_removes_card_rules_and_adds_branding(tmp_path):
     css = (output / "assets" / "site.css").read_text(encoding="utf-8")
     assert "card-rule" not in rendered
     assert ".card-rule" not in css
-    assert 'src="/assets/bluefern.ico"' in rendered
+    assert 'src="/assets/bluefern.png"' in rendered
     assert 'href="/assets/bluefern.ico"' in rendered
+    assert ".brand:before" not in css
     assert (output / "assets" / "bluefern.ico").exists()
 
 

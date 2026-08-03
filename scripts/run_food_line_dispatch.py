@@ -256,7 +256,8 @@ def header(
     nav_slugs: tuple[str, ...] | None = None,
 ) -> str:
     nav = nav_slugs or ("gaza", "cascadia", "food-line")
-    return site_header(brand, root_prefix, archive_href, section_href, nav_slugs=nav)
+    rendered = site_header(brand, root_prefix, archive_href, section_href, nav_slugs=nav)
+    return rendered.replace(f'<a href="{root_prefix}rss.xml">RSS</a>', "")
 
 
 def _food_line_page(
@@ -1569,12 +1570,13 @@ def _public_source_table_rows_html(
 ) -> str:
     continuing_rows = list(continuing_rows or [])
     if not rows:
-        return "<tr><td colspan='16'>No verified pressure sources were published today.</td></tr>"
+        return "<tr><td colspan='17'>No verified pressure sources were published today.</td></tr>"
     return "".join(
         "<tr>"
         f"<td>{html.escape(str(s.get('source_record_id') or ''))}</td>"
         f"<td>{html.escape(str(s.get('title') or ''))}</td>"
         f"<td>{html.escape(str(s.get('publisher') or ''))}</td>"
+        f"<td>{html.escape(str(s.get('source_lineage') or ''))}</td>"
         f"<td>{html.escape(str(s.get('location_name') or s.get('state') or ''))}</td>"
         f"<td><a href=\"{html.escape(str(s.get('url') or ''))}\" target=\"_blank\" rel=\"noopener noreferrer\">{html.escape(str(s.get('url') or ''))}</a></td>"
         f"<td>{html.escape(_food_line_public_source_family_label(s))}</td>"
@@ -3002,7 +3004,7 @@ def _food_line_public_signal_context_line(row: dict[str, Any]) -> str:
 
 def _food_line_public_signal_item_html(row: dict[str, Any]) -> str:
     title = html.escape(str(row.get("title") or ""))
-    approved_summary = str(row.get("approved_public_summary") or "").strip()
+    approved_summary = str(row.get("approved_card_summary") or row.get("approved_public_summary") or "").strip()
     summary = approved_summary or _food_line_public_summary_sentence(row, max_words=45)
     source_title = html.escape(str(row.get("title") or "Source"))
     source_url = html.escape(str(row.get("url") or ""))
@@ -3344,7 +3346,8 @@ def _food_line_at_a_glance_items(
     if primary_row:
         public_rows = _food_line_public_story_rows(sources, primary_row, continuing_rows)
         for row in public_rows[:3]:
-            items.append(f"<li>{html.escape(_food_line_public_signal_reader_label(row))}</li>")
+            label = str(row.get("approved_glance_label") or "").strip() or _food_line_public_signal_reader_label(row)
+            items.append(f"<li>{html.escape(label)}</li>")
     else:
         items.append(f"<li>{html.escape(_food_line_no_current_secondary_note())}</li>")
     return "".join(items)
@@ -3669,6 +3672,9 @@ def _food_line_archive_location_fragment(row: dict[str, Any]) -> str:
 
 
 def _food_line_archive_signal_fragment(row: dict[str, Any]) -> str:
+    approved_label = str(row.get("approved_archive_label") or "").strip()
+    if approved_label:
+        return approved_label
     location = _food_line_archive_location_fragment(row)
     text = " ".join(
         part.strip().lower()
@@ -4657,6 +4663,7 @@ def render_food_line_edition(
     continuing_rows: list[dict[str, Any]],
     edition_mode: str = "current_update",
     display_public_rows: list[dict[str, Any]] | None = None,
+    edition_headline: str = "",
 ) -> str:
     pressure_rows = _public_source_rows(sources)
     reviewed_count = len(sources)
@@ -4728,6 +4735,7 @@ def render_food_line_edition(
         policy_section_html = f"<h2>Policy / Benefits Signals</h2>{f'<div>{policy_items}</div>' if policy_items else '<p>No policy / benefits signals qualified today.</p>'}"
         provider_section_html = f"<h2>Provider / Operations Signals</h2>{f'<div>{provider_items}</div>' if provider_items else '<p>No provider / operations signals qualified today.</p>'}"
     page_footer = footer("../../")
+    headline_html = f"<h2 class=\"food-line-edition-headline\">{html.escape(edition_headline)}</h2>" if edition_headline else ""
     body = f"""{_food_line_theme_styles()}
 {header(DISPATCH_NAME, "../../", "../../archive.html", "/food-line/")}
 <main class="container briefing food-line-shell">
@@ -4736,6 +4744,7 @@ def render_food_line_edition(
     <p class="eyebrow">{eyebrow_label} / {_human_date(date)}</p>
     <p>Generated from saved source records available for {_human_date(date)}.</p>
     <h1>{DISPATCH_NAME}</h1>
+    {headline_html}
     {summary_html}
   </section>
   <section class="food-line-panel">
@@ -4759,11 +4768,11 @@ def render_food_line_edition(
 </main>
 {page_footer}"""
     return _food_line_page(
-        f"{DISPATCH_NAME} - {date}",
+        edition_headline or f"{DISPATCH_NAME} - {date}",
         f"{BASE_URL}/food-line/editions/{date}/",
         "../../assets/site.css",
         body,
-        social_title=f"Food Line Dispatch — {_human_date(date)}",
+        social_title=edition_headline or f"Food Line Dispatch — {_human_date(date)}",
     )
 
 
@@ -4847,7 +4856,7 @@ def _source_table_html(
         f"<p><a href=\"./claim_ledger.html\">Open the claim ledger</a></p>"
         f"<table class='food-line-source-table'>"
         "<tr>"
-        "<th>Record ID</th><th>Title</th><th>Publisher</th><th>Location</th><th>Source link</th><th>Source family</th><th>How it was used</th><th>Issue</th><th>What happened</th><th>What the source says</th><th>Verification status</th><th>Who may be affected</th><th>Used on public page</th><th>source_freshness_status</th><th>source_freshness_date_basis</th><th>source_public_story_eligible</th>"
+        "<th>Record ID</th><th>Title</th><th>Publisher</th><th>Source lineage</th><th>Location</th><th>Source link</th><th>Source family</th><th>How it was used</th><th>Issue</th><th>What happened</th><th>What the source says</th><th>Verification status</th><th>Who may be affected</th><th>Used on public page</th><th>source_freshness_status</th><th>source_freshness_date_basis</th><th>source_public_story_eligible</th>"
         "</tr>"
         f"{rows}</table></section></main>{page_footer}"
     )
@@ -7025,6 +7034,7 @@ def _run_food_line_approved_proposal(root: Path, date: str, approved_proposal_pa
         continuing_rows,
         edition_mode="current_update",
         display_public_rows=sources,
+        edition_headline=str(bundle.proposal.get("edition_headline") or "").strip(),
     )
     source_table = _source_table_html(
         date,
@@ -7114,7 +7124,7 @@ def _run_food_line_approved_proposal(root: Path, date: str, approved_proposal_pa
         _write_json(edition_dir / "sources_manifest.json", sources)
         _write_json(edition_dir / "curation_manifest.json", {"stories": sources})
         _write_json(edition_dir / "edition_manifest.json", manifest)
-    _update_index_archive(root, date, mission, max_edition_date=date)
+    _update_index_archive(root, date, mission)
 
     site_root = root / "output" / "site" / DISPATCH_SLUG
     release_sources = [site_root / "index.html", site_root / "archive.html"]

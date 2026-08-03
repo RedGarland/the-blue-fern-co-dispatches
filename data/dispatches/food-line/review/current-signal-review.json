@@ -1,0 +1,138 @@
+{
+  "schema_version": "food_line_current_signal_review_v1",
+  "edition_date": "2026-07-28",
+  "production_scope": "current_nonhistorical_only",
+  "items": [
+    {
+      "affected_groups": [
+        "CalFresh recipients",
+        "people seeking food assistance in Los Angeles County"
+      ],
+      "canonical_source_url": "https://www.latimes.com/food/story/2026-07-28/calfresh-cuts-push-la-families-farmers-to-brink",
+      "confidence": "high",
+      "decision_audit": {
+        "decided_at": "2026-08-03T23:17:40.1350109+00:00",
+        "decided_by": "William Patton",
+        "decision": "approve"
+      },
+      "duplicate_check": {
+        "matched_records": [],
+        "status": "not_published"
+      },
+      "editorial_status": "approve",
+      "evidence_level": "established secondary reporting with named provider testimony",
+      "exact_supporting_passage": "According to Grissom, some of the increased demand can be attributed to changes in work requirements for CalFresh recipients.",
+      "freshness_check": {
+        "age_days": 0,
+        "edition_date": "2026-07-28",
+        "status": "current"
+      },
+      "location_scope": "Los Angeles County",
+      "pressure_type": "demand strain",
+      "proposed_card_summary": "The Los Angeles Times reported that Grissom attributed part of increased food-assistance demand in Los Angeles County to changes in CalFresh work requirements.",
+      "proposed_glance_label": "Los Angeles County: A provider attributed part of increased food-assistance demand to changes in CalFresh work requirements.",
+      "proposed_archive_label": "Los Angeles County demand strain",
+      "proposed_public_headline": "Los Angeles provider reports CalFresh-related demand strain",
+      "proposed_public_summary": "The Los Angeles Times reported that Food Access Los Angeles Executive Director Jennifer Grissom attributed part of increased food-assistance demand in Los Angeles County to changes in CalFresh work requirements.",
+      "proposed_rank": 1,
+      "publication_eligible": false,
+      "publisher": "Los Angeles Times",
+      "review_item_id": "food-line-current-20260728-los-angeles",
+      "source_artifact_path": "data/dispatches/food-line/agent-intake/2026-07-28/editorial-recovery.json",
+      "source_finding_or_intake_id": "finding_13d1d5612c0d298f74627516",
+      "source_lineage": "Los Angeles Times original reporting",
+      "source_published_at": "2026-07-28T03:00:00-07:00",
+      "source_url": "https://www.latimes.com/food/story/2026-07-28/calfresh-cuts-push-la-families-farmers-to-brink",
+      "state": "CA",
+      "uncertainty_note": "The cited passage does not quantify the increase or support a uniform countywide effect.",
+      "why_it_matters": "A named provider's observation supports a bounded demand-strain signal for Los Angeles County."
+    },
+    {
+      "affected_groups": [
+        "households affected by benefit loss",
+        "residents seeking emergency food assistance"
+      ],
+      "canonical_source_url": "https://abc11.com/post/new-food-lion-feeds-hunger-solution-center-opens-durham-insecurity-grows-nc/19590094",
+      "confidence": "high",
+      "decision_audit": {
+        "decided_at": "2026-08-03T23:17:40.1350109+00:00",
+        "decided_by": "William Patton",
+        "decision": "approve_with_edit"
+      },
+      "duplicate_check": {
+        "matched_records": [],
+        "status": "not_published"
+      },
+      "editorial_status": "approve_with_edit",
+      "evidence_level": "local news report with named provider attribution",
+      "exact_supporting_passage": "Food Bank leaders say the loss of benefits, combined with rising food costs, has increased demand for emergency food assistance across North Carolina and heightened the need for expanded community resources.",
+      "freshness_check": {
+        "age_days": 0,
+        "edition_date": "2026-07-28",
+        "status": "current"
+      },
+      "location_scope": "North Carolina",
+      "pressure_type": "demand strain",
+      "proposed_card_summary": "ABC11 reported that Food Bank leaders attributed increased demand for emergency food assistance across North Carolina to benefit losses and rising food costs.",
+      "proposed_glance_label": "North Carolina: Food Bank leaders attributed increased emergency-food demand to benefit losses and rising food costs.",
+      "proposed_archive_label": "North Carolina demand strain",
+      "proposed_public_headline": "Food Bank leaders report increased emergency-food demand across North Carolina",
+      "proposed_public_summary": "ABC11 reported that Food Bank leaders attributed increased demand for emergency food assistance across North Carolina to benefit losses and rising food costs.",
+      "proposed_rank": 2,
+      "publication_eligible": false,
+      "publisher": "ABC11 WTVD",
+      "review_item_id": "food-line-current-20260728-north-carolina",
+      "source_artifact_path": "data/dispatches/food-line/agent-intake/2026-07-28/editorial-recovery.json",
+      "source_finding_or_intake_id": "finding_7954785944cb79fd3d8e9a26",
+      "source_lineage": "ABC11 WTVD original reporting",
+      "source_published_at": "2026-07-28T22:35:00-04:00",
+      "source_url": "https://abc11.com/post/new-food-lion-feeds-hunger-solution-center-opens-durham-insecurity-grows-nc/19590094",
+      "state": "NC",
+      "uncertainty_note": "The cited passage does not provide a demand total, comparison period, or separate measure for any city or county.",
+      "why_it_matters": "The reported increase in emergency-food demand supports a current statewide food-access pressure signal."
+    },
+    {
+      "affected_groups": [
+        "people relying on charitable food assistance in the North Texas Food Bank and Tarrant Area Food Bank service regions"
+      ],
+      "canonical_source_url": "https://www.keranews.org/news/2026-07-28/north-texans-experience-increasing-level-of-food-insecurity-snap-food-banks",
+      "confidence": "high",
+      "decision_audit": {
+        "decided_at": "2026-08-03T23:17:40.1350109+00:00",
+        "decided_by": "William Patton",
+        "decision": "approve_with_edit"
+      },
+      "duplicate_check": {
+        "matched_records": [],
+        "status": "not_published"
+      },
+      "editorial_status": "approve_with_edit",
+      "evidence_level": "public-media republication with named provider testimony",
+      "exact_supporting_passage": "Food banks and the charitable food system have become increasingly strained as dependence upon them has increased.",
+      "freshness_check": {
+        "age_days": 0,
+        "edition_date": "2026-07-28",
+        "status": "current"
+      },
+      "location_scope": "North Texas Food Bank and Tarrant Area Food Bank service regions",
+      "pressure_type": "demand strain",
+      "proposed_card_summary": "KERA News reported that food banks serving the North Texas Food Bank and Tarrant Area Food Bank regions were under increased strain as reliance on charitable food assistance rose.",
+      "proposed_glance_label": "North Texas: KERA News reported demand strain in the North Texas Food Bank and Tarrant Area Food Bank service regions as charitable-food reliance rose.",
+      "proposed_archive_label": "North Texas food-bank service-region demand strain",
+      "proposed_public_headline": "North Texas food banks report demand strain as charitable-food reliance rises",
+      "proposed_public_summary": "KERA News reported that food banks serving the North Texas Food Bank and Tarrant Area Food Bank regions were under increased strain as reliance on charitable food assistance rose.",
+      "proposed_rank": 3,
+      "publication_eligible": false,
+      "publisher": "KERA News",
+      "review_item_id": "food-line-current-20260728-north-texas",
+      "source_artifact_path": "data/dispatches/food-line/agent-intake/2026-07-28/editorial-recovery.json",
+      "source_finding_or_intake_id": "finding_06a40b1d16bc6be48d03c848",
+      "source_lineage": "KERA News republication of Fort Worth Report reporting",
+      "source_published_at": "2026-07-28T09:28:00-05:00",
+      "source_url": "https://www.keranews.org/news/2026-07-28/north-texans-experience-increasing-level-of-food-insecurity-snap-food-banks",
+      "state": "TX",
+      "uncertainty_note": "The cited passage does not quantify current demand growth, establish a uniform condition throughout both service regions, or show service reduction or unmet need.",
+      "why_it_matters": "The reported condition supports a demand-strain signal bounded to the two named food-bank service regions."
+    }
+  ]
+}

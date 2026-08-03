@@ -19,6 +19,10 @@ SUMMARY = (
 )
 SOURCE_URL = "https://www.northernnewsnow.com/2026/07/28/superior-food-pantry-closing-after-more-than-30-years/"
 CANONICAL_URL = SOURCE_URL.rstrip("/")
+EDITION_HEADLINE = "Food-assistance providers report rising demand"
+CARD_SUMMARY = "Northern News Now reported that the Superior pantry closed after its final distribution."
+GLANCE_LABEL = "Superior: A pantry closed after its final distribution."
+ARCHIVE_LABEL = "Superior pantry closure"
 
 
 def _write_json(path: Path, payload: object) -> None:
@@ -44,6 +48,9 @@ def _fixture(root: Path) -> tuple[Path, dict, dict]:
         "location_scope": "Superior and Douglas County, Wisconsin",
         "pressure_type": "food_pantry_closure",
         "proposed_public_headline": "Superior food pantry closes after more than 30 years",
+        "proposed_card_summary": CARD_SUMMARY,
+        "proposed_glance_label": GLANCE_LABEL,
+        "proposed_archive_label": ARCHIVE_LABEL,
         "proposed_public_summary": SUMMARY,
         "proposed_rank": 1,
         "publication_eligible": False,
@@ -53,6 +60,7 @@ def _fixture(root: Path) -> tuple[Path, dict, dict]:
         "source_finding_or_intake_id": "finding_test",
         "source_published_at": "2026-07-28T16:26:00-05:00",
         "source_url": SOURCE_URL,
+        "source_lineage": "Northern News Now original reporting",
         "state": "Wisconsin",
         "uncertainty_note": "Available reporting does not establish equivalent replacement capacity.",
         "why_it_matters": "The closure removes a substantial local food-distribution site.",
@@ -69,6 +77,9 @@ def _fixture(root: Path) -> tuple[Path, dict, dict]:
         "rank": 1,
         "headline": item["proposed_public_headline"],
         "summary": SUMMARY,
+        "card_summary": CARD_SUMMARY,
+        "glance_label": GLANCE_LABEL,
+        "archive_label": ARCHIVE_LABEL,
         "why_it_matters": item["why_it_matters"],
         "uncertainty_note": item["uncertainty_note"],
         "source": "Northern News Now",
@@ -86,6 +97,7 @@ def _fixture(root: Path) -> tuple[Path, dict, dict]:
         "published": False,
         "publication_eligible": False,
         "publication_approval": False,
+        "edition_headline": EDITION_HEADLINE,
         "selected_item_count": 1,
         "approved_item_count": 1,
         "pending_item_count": 0,
@@ -113,6 +125,10 @@ def test_approved_proposal_loads_one_source_backed_current_signal(tmp_path: Path
     row = bundle.source_rows[0]
     assert row["url"] == SOURCE_URL
     assert row["approved_public_summary"] == SUMMARY
+    assert row["approved_card_summary"] == CARD_SUMMARY
+    assert row["approved_glance_label"] == GLANCE_LABEL
+    assert row["approved_archive_label"] == ARCHIVE_LABEL
+    assert row["source_lineage"] == "Northern News Now original reporting"
     assert row["location_name"] == "Superior and Douglas County, Wisconsin"
     assert row["map_eligible"] is False
 
@@ -193,6 +209,10 @@ def test_canonical_generation_records_hashes_and_keeps_private_ids_out_of_html(
     assert f"editions/{DATE}/" in (tmp_path / "output/site/food-line/archive.html").read_text(encoding="utf-8")
     html_text = "\n".join(path.read_text(encoding="utf-8") for path in edition.glob("*.html"))
     assert SUMMARY in html_text
+    assert EDITION_HEADLINE in html_text
+    assert CARD_SUMMARY in html_text
+    assert GLANCE_LABEL in html_text
+    assert "Northern News Now original reporting" in html_text
     assert "about 960 people" in html_text
     assert "approximately 34,000 pounds" in html_text
     assert "960 households" not in html_text
@@ -206,5 +226,6 @@ def test_canonical_generation_records_hashes_and_keeps_private_ids_out_of_html(
     assert not (tmp_path / "output/site/food-line/audio").exists()
     assert not (tmp_path / "output/site/food-line/map").exists()
     assert not (tmp_path / "output/site/food-line/podcast.xml").exists()
+    assert "rss.xml" not in html_text
     assert not (tmp_path / "data/bluesky").exists()
     assert not (tmp_path / "schedules").exists()

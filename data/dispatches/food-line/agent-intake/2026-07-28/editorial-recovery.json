@@ -1,0 +1,54 @@
+{
+  "schema_version": "food_line_current_editorial_recovery_v1",
+  "edition_date": "2026-07-28",
+  "created_at": "2026-08-03T23:17:40.1350109+00:00",
+  "production_scope": "current_nonhistorical_only",
+  "source_artifact_role": "approved_editorial_recovery_import",
+  "input_hashes": {
+    "approved_signals.csv": "7f55e89da7c7fa78cb155205c807d04ae0cca8b7f6d627a87f48d2ed9a04ff20",
+    "draft-claim-ledger.csv": "aa772ba3adb2b729f4747b3684ca090193fe23301014a84106b1c295872185eb",
+    "draft-manifest.json": "eb979dba4251e5267edcd09bbecc6875977d89577db7d25abddd36b5d27e8149",
+    "draft-source-table.csv": "e634541610f098f9a793a86e9bb1750c700149499bdd0d83c0cbd068645d6751",
+    "edition-draft.md": "8d4e3eb72fd32122aa1fa3bd0c276861fe8d4480435b4033e80f4124b5fa5ee7",
+    "editorial-checklist.md": "8a6dcd97822acf9902ce5ec3c4bf1a9b1083aa6a0e68b6aaabd6a9e4b2073217",
+    "editorial-review.md": "72e71800c6b4c84e1874acdbe17ca8bcf003f37676ef431cc3ba70f6d18157f7",
+    "north-texas-corrected-review.json": "970b1404694153bc6d214c39413b071828d0ed4aa0f68cb52c369629afe490f7"
+  },
+  "signals": [
+    {
+      "candidate_id": "finding_13d1d5612c0d298f74627516",
+      "editorial_decision": "APPROVE",
+      "raw_sha256": "b178d3eb7163a5e506eaf8cbc1cb39fc5eafc45f09cb7cbb4befe4f5ec086521",
+      "source_url": "https://www.latimes.com/food/story/2026-07-28/calfresh-cuts-push-la-families-farmers-to-brink",
+      "source_published_at": "2026-07-28T03:00:00-07:00",
+      "exact_supporting_passage": "According to Grissom, some of the increased demand can be attributed to changes in work requirements for CalFresh recipients."
+    },
+    {
+      "candidate_id": "finding_7954785944cb79fd3d8e9a26",
+      "editorial_decision": "APPROVE_WITH_CORRECTION",
+      "raw_sha256": "2b3d762b229c365e94c5851574d278b298c598a77985d620fc6483539fc9e195",
+      "source_url": "https://abc11.com/post/new-food-lion-feeds-hunger-solution-center-opens-durham-insecurity-grows-nc/19590094",
+      "source_published_at": "2026-07-28T22:35:00-04:00",
+      "exact_supporting_passage": "Food Bank leaders say the loss of benefits, combined with rising food costs, has increased demand for emergency food assistance across North Carolina and heightened the need for expanded community resources.",
+      "correction": "Use the source-supported statewide geography and exclude the facility opening from the pressure signal.",
+      "interactive_verification": {
+        "status": "verified",
+        "verified_at": "2026-08-03T23:17:40.1350109+00:00",
+        "title": "Durham hunger center opens as food insecurity rises, SNAP benefits lost across NC",
+        "publisher": "ABC11 WTVD",
+        "source_date": "2026-07-28T22:35:00-04:00"
+      }
+    },
+    {
+      "candidate_id": "finding_06a40b1d16bc6be48d03c848",
+      "editorial_decision": "APPROVE_WITH_CORRECTION",
+      "raw_sha256": "b4b7227b29696f9454b4b68123c8a329bc5bd9ea73995e2e4056210e320cd1b4",
+      "raw_evidence_changed": false,
+      "source_url": "https://www.keranews.org/news/2026-07-28/north-texans-experience-increasing-level-of-food-insecurity-snap-food-banks",
+      "source_published_at": "2026-07-28T09:28:00-05:00",
+      "exact_supporting_passage": "Food banks and the charitable food system have become increasingly strained as dependence upon them has increased.",
+      "correction": "Classify as demand strain, remove rural residents, and bound geography to the North Texas Food Bank and Tarrant Area Food Bank service regions.",
+      "source_lineage": "KERA News republication of Fort Worth Report reporting"
+    }
+  ]
+}

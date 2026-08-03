@@ -248,13 +248,13 @@ def render_phase1a_site(site_root: Path, output_root: Path) -> dict[str, object]
     output_root.mkdir(parents=True, exist_ok=True)
     assets = output_root / "assets"
     assets.mkdir(exist_ok=True)
-    (output_root / "index.html").write_text(render_homepage(site_root), encoding="utf-8")
+    (output_root / "index.html").write_text(_clean(render_homepage(site_root)), encoding="utf-8")
     (output_root / "dispatches").mkdir(exist_ok=True)
-    (output_root / "dispatches" / "index.html").write_text(render_dispatch_directory(site_root), encoding="utf-8")
+    (output_root / "dispatches" / "index.html").write_text(_clean(render_dispatch_directory(site_root)), encoding="utf-8")
     (output_root / "methodology").mkdir(exist_ok=True)
-    (output_root / "methodology" / "index.html").write_text(render_methodology(), encoding="utf-8")
+    (output_root / "methodology" / "index.html").write_text(_clean(render_methodology()), encoding="utf-8")
     (output_root / "about").mkdir(exist_ok=True)
-    (output_root / "about" / "index.html").write_text(render_about(), encoding="utf-8")
+    (output_root / "about" / "index.html").write_text(_clean(render_about()), encoding="utf-8")
     (assets / "site.css").write_text(render_site_shell_stylesheet(site_root), encoding="utf-8")
     return {
         "scope": "phase1a-root-foundation",

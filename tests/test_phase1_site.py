@@ -53,19 +53,25 @@ def test_phase1a_homepage_uses_real_dispatch_destinations_and_excludes_dispatch_
         "methodology/index.html",
         "about/index.html",
         "assets/site.css",
+        "assets/bluefern.png",
+        "assets/dispatches-from-blue-fern-co.png",
     }
 
 
 def test_phase1a_homepage_card_actions_resolve_against_public_site(tmp_path):
     output = tmp_path / "phase1a"
+    (output / "assets").mkdir(parents=True)
+    (output / "assets" / "bluefern.ico").write_bytes(b"confirmed branding fixture")
     site_root = ROOT / "output" / "site"
     render_phase1a_site(site_root, output)
     homepage = (output / "index.html").read_text(encoding="utf-8")
     for href in re.findall(r'href="([^"]+)"', homepage):
         if href.startswith(("http:", "https:", "#")):
             continue
-        target_root = output if href in ("/", "/dispatches/", "/methodology/", "/about/") else site_root
+        target_root = output if href in ("/", "/dispatches/", "/methodology/", "/about/") or href.startswith("/assets/") else site_root
         target = target_root / href.lstrip("/")
+        if href.startswith("/assets/") and not target.exists():
+            target = site_root / href.lstrip("/")
         if href.endswith("/"):
             target = target / "index.html"
         assert target.exists(), href
@@ -166,3 +172,46 @@ def test_care_line_logo_path_is_canonical(tmp_path):
     (root / "assets" / "site.css").write_text("", encoding="utf-8")
     landing = render_dispatch_landing(root, "care-line")
     assert 'src="assets/care-line-logo.png"' in landing
+
+
+def test_phase1b_root_shell_removes_card_rules_and_adds_branding(tmp_path):
+    root = tmp_path / "site"
+    (root / "assets").mkdir(parents=True)
+    (root / "assets" / "site.css").write_text("", encoding="utf-8")
+    (root / "assets" / "bluefern.ico").write_bytes(b"confirmed branding fixture")
+    output = tmp_path / "phase1b"
+    render_phase1a_site(root, output)
+    rendered = "\n".join(path.read_text(encoding="utf-8") for path in output.rglob("*.html"))
+    css = (output / "assets" / "site.css").read_text(encoding="utf-8")
+    assert "card-rule" not in rendered
+    assert ".card-rule" not in css
+    assert 'src="/assets/bluefern.ico"' in rendered
+    assert 'href="/assets/bluefern.ico"' in rendered
+    assert (output / "assets" / "bluefern.ico").exists()
+
+
+def test_phase1b_topic_badges_are_textual_and_slug_derived():
+    from bluefern_dispatches.phase1_site import TOPIC_LABELS, _edition_card, Edition
+
+    for slug, label in TOPIC_LABELS.items():
+        card = _edition_card(Edition(slug, "2026-07-31", f"/{slug}/", "A visible headline", "Published", 1, None, 1))
+        assert f'class="edition-card edition-card--{slug}"' in card
+        assert f'class="topic-badge topic-badge--{slug}"' in card
+        assert f">{label}</p>" in card
+        assert card.index("topic-badge") < card.index("<h3>")
+    assert "topic-badge" in _edition_card(Edition("gaza", "2026-07-31", "/gaza/", "A visible headline", "Published", 1, None, 1))
+
+
+def test_phase1b_currentness_dates_remain_approved(tmp_path):
+    root = tmp_path / "current-public-site"
+    for slug, edition_date in (("gaza", "2026-07-23"), ("food-line", "2026-07-31"), ("care-line", "2026-07-22")):
+        edition = root / slug / "editions" / edition_date
+        edition.mkdir(parents=True)
+        (edition / "index.html").write_text("<h3>Approved public development</h3>", encoding="utf-8")
+        (edition / "edition_manifest.json").write_text(json.dumps({"public_rendered": True, "story_count": 1}), encoding="utf-8")
+    dispatches, recent = public_model(root)
+    latest = {item.slug: item for item in dispatches if item.latest}
+    assert latest["gaza"].latest.date == "2026-07-23"
+    assert latest["food-line"].latest.date == "2026-07-31"
+    assert latest["care-line"].latest.date == "2026-07-22"
+    assert {item.slug for item in recent if item.substantive} >= {"gaza", "food-line"}

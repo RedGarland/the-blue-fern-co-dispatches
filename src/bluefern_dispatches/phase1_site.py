@@ -262,3 +262,63 @@ def render_phase1a_site(site_root: Path, output_root: Path) -> dict[str, object]
         "dispatch_owned_paths": [],
         "private_paths": [],
     }
+
+
+# Phase 1B root-shell refinements.  These definitions intentionally override
+# the earlier Phase 1A helpers while leaving dispatch-owned renderers alone.
+TOPIC_LABELS = {
+    "gaza": "Gaza",
+    "food-line": "Food access",
+    "care-line": "Healthcare access",
+    "cascadia": "Cascadia",
+    "american-pressure": "American pressure",
+    "ice-activity-and-consequences": "ICE activity",
+}
+
+
+def _nav(active: str = "home") -> str:
+    links = [
+        ("/", "Home", "home"),
+        ("/dispatches/", "Dispatches", "dispatches"),
+        ("/methodology/", "Methodology", "methodology"),
+        ("/about/", "About", "about"),
+    ]
+    rendered = []
+    for href, label, key in links:
+        current = ' class="is-active" aria-current="page"' if active == key else ""
+        rendered.append(f'<a href="{href}"{current}>{label}</a>')
+    return '<header class="site-header"><a class="brand" href="/"><img class="brand-mark" src="/assets/bluefern.ico" alt="The Blue Fern Co. logo"><span class="brand-text"><span class="brand-kicker">The Blue Fern Co.</span><span class="brand-title">Dispatches From The Blue Fern Co.</span></span></a><nav aria-label="Primary">' + "".join(rendered) + "</nav></header>"
+
+
+def _page(title: str, body: str, active: str = "home") -> str:
+    return f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/assets/bluefern.ico"><title>{html.escape(title)}</title><link rel="stylesheet" href="/assets/site-phase1.css"></head><body>{_nav(active)}<main>{body}</main><footer class="site-footer"><div class="footer-brand"><img class="footer-mark" src="/assets/bluefern.ico" alt="The Blue Fern Co. logo"><div><strong>The Blue Fern Co.</strong><p>Source-backed public briefings for reading, research, and accountability.</p></div></div><p><a href="/methodology/">How we work</a> · <a href="/about/">About this project</a></p></footer></body></html>'
+
+
+def _edition_card(item: Edition) -> str:
+    meta = " · ".join(value for value in (item.location, f"{item.source_count} public sources" if item.source_count is not None else "") if value) or "Public edition"
+    topic = TOPIC_LABELS.get(item.slug, item.slug.replace("-", " ").title())
+    return f'<article class="edition-card edition-card--{html.escape(item.slug)}"><p class="topic-badge topic-badge--{html.escape(item.slug)}">{html.escape(topic)}</p><h3><a href="{item.url}">{html.escape(item.headline)}</a></h3><p class="edition-source">Public source headline · {html.escape(LABELS[item.slug])} · {html.escape(item.display_date)}</p><p class="edition-summary">{html.escape(item.summary or "Published public development")}</p><p class="edition-meta">{html.escape(meta)}</p></article>'
+
+
+def _dispatch_card(item: Dispatch, compact: bool = False) -> str:
+    latest = item.latest
+    latest_html = f'<p class="latest-label">Latest public development</p><h3 class="latest-headline"><a href="{latest.url}">{html.escape(latest.headline)}</a></h3><p class="date-line">{html.escape(latest.display_date)}</p>' if latest else '<p class="latest-label">Current public status</p><h3 class="latest-headline">No public edition indexed</h3>'
+    actions = f'<a class="button" href="{latest.url}">Read latest</a>' if latest else ""
+    if item.archive_url:
+        actions += f'<a class="text-link" href="{item.archive_url}">Archive</a>'
+    actions += "".join(f'<a class="support-link" href="{href}">{label}</a>' for label, href in item.public_links)
+    card_class = "dispatch-card--compact" if compact else "dispatch-card--featured"
+    return f'<article class="dispatch-card {card_class}"><p class="status">{html.escape(item.status)}</p>{latest_html}<h2>{html.escape(item.name)}</h2><p class="card-description">{html.escape(item.description)}</p><p class="cadence">{html.escape(item.cadence)}</p><div class="card-actions">{actions}</div></article>'
+
+
+_LEGACY_RENDER_PHASE1A_SITE = render_phase1a_site
+
+
+def render_phase1a_site(site_root: Path, output_root: Path) -> dict[str, object]:
+    result = _LEGACY_RENDER_PHASE1A_SITE(site_root, output_root)
+    assets = output_root / "assets"
+    for name in ("bluefern.png", "dispatches-from-blue-fern-co.png", "bluefern.ico"):
+        source = site_root / "assets" / name
+        if source.exists():
+            shutil.copy2(source, assets / name)
+    return result

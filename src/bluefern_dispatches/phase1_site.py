@@ -320,7 +320,7 @@ def render_phase1a_site(site_root: Path, output_root: Path) -> dict[str, object]
     assets = output_root / "assets"
     for name in ("bluefern.png", "bluefern-mark.png", "dispatches-from-blue-fern-co.png", "bluefern.ico"):
         source = site_root / "assets" / name
-        if not source.exists() and name == "bluefern-mark.png":
+        if not source.exists() and name in {"bluefern-mark.png", "bluefern.ico"}:
             source = Path(__file__).resolve().parents[2] / "assets" / name
         if source.exists():
             shutil.copy2(source, assets / name)

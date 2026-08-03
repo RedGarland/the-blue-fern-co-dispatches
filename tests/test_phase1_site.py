@@ -55,8 +55,9 @@ def test_phase1a_homepage_uses_real_dispatch_destinations_and_excludes_dispatch_
         "methodology/index.html",
         "about/index.html",
         "assets/site.css",
+        "assets/bluefern.ico",
         "assets/bluefern.png",
-            "assets/bluefern-mark.png",
+        "assets/bluefern-mark.png",
         "assets/dispatches-from-blue-fern-co.png",
     }
 
@@ -313,6 +314,19 @@ def test_phase1c_original_brand_asset_and_favicon_are_preserved():
     assert original.exists()
     assert hashlib.sha256(original.read_bytes()).hexdigest() == "b7b600bf5e87af4ad037703fc75201df4c52bebfc5616f32c2369d14c269ae54"
     assert favicon.exists()
+    assert favicon.read_bytes()[:4] == b"\x00\x00\x01\x00"
+
+
+def test_phase1c_root_shell_falls_back_to_intended_favicon(tmp_path):
+    root = tmp_path / "site"
+    (root / "assets").mkdir(parents=True)
+    (root / "assets" / "site.css").write_text("", encoding="utf-8")
+    output = tmp_path / "phase1c"
+    render_phase1a_site(root, output)
+    assert (output / "assets" / "bluefern.ico").read_bytes() == (ROOT / "assets" / "bluefern.ico").read_bytes()
+    for route in PHASE1A_ROUTES:
+        rendered = (output / route).read_text(encoding="utf-8")
+        assert '<link rel="icon" href="/assets/bluefern.ico">' in rendered
 
 def test_phase1c_root_card_actions_override_legacy_dimensions(tmp_path):
     root = tmp_path / "site"
@@ -323,6 +337,9 @@ def test_phase1c_root_card_actions_override_legacy_dimensions(tmp_path):
         assert selector in css
     assert ".dispatch-card .card-actions{display:flex" in css
     assert "min-height:0;height:auto" in css
+    assert ".dispatch-card .card-actions .button,.dispatch-card .card-actions .button:visited{background:#1E3F4F;color:#fffdf8" in css
+    assert ".dispatch-card .card-actions .button:hover{background:#2F6F88;color:#fffdf8" in css
+    assert ".dispatch-card .card-actions .button:focus,.dispatch-card .card-actions .button:focus-visible{background:#1E3F4F;color:#fffdf8" in css
 
 
 def test_phase1c_safe_middle_dot_and_cascadia_description():

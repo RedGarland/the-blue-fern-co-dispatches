@@ -1,8 +1,16 @@
 from pathlib import Path
 
 import json
+import re
 
-from bluefern_dispatches.phase1_site import PUBLIC_STATUSES, public_editions, public_model, render_site
+from bluefern_dispatches.phase1_site import (
+    PHASE1A_ROUTES,
+    PUBLIC_STATUSES,
+    public_editions,
+    public_model,
+    render_phase1a_site,
+    render_site,
+)
 from bluefern_dispatches.public_site_shell import stylesheet, render_dispatch_landing
 
 
@@ -15,6 +23,52 @@ def test_phase1_model_uses_public_editions_only():
     assert next(item for item in dispatches if item.slug == "cascadia").status == "Paused"
     assert editions
     assert all("review" not in str(item.url) for item in editions)
+
+
+def test_phase1a_homepage_uses_real_dispatch_destinations_and_excludes_dispatch_scope(tmp_path):
+    output = tmp_path / "phase1a"
+    site_root = ROOT / "output" / "site"
+    result = render_phase1a_site(site_root, output)
+    homepage = (output / "index.html").read_text(encoding="utf-8")
+    assert "/care-line/" in homepage
+    assert "/cascadia/archive.html" in homepage
+    assert not any(
+        bad in homepage
+        for bad in (
+            "/care-line/editions/2026-05-23/",
+            "/cascadia/editions/2026-05-04/",
+            "/cascadia/editions/2026-05-05/",
+        )
+    )
+    assert result["routes"] == list(PHASE1A_ROUTES)
+    assert result["dispatch_owned_paths"] == []
+    assert result["private_paths"] == []
+    assert "output/detail" not in homepage
+    assert "output/paid" not in homepage
+    assert "No current update" not in homepage
+    assert all((site_root / route.lstrip("/")).exists() for route in ("/care-line/", "/cascadia/archive.html"))
+    assert {path.relative_to(output).as_posix() for path in output.rglob("*") if path.is_file()} == {
+        "index.html",
+        "dispatches/index.html",
+        "methodology/index.html",
+        "about/index.html",
+        "assets/site.css",
+    }
+
+
+def test_phase1a_homepage_card_actions_resolve_against_public_site(tmp_path):
+    output = tmp_path / "phase1a"
+    site_root = ROOT / "output" / "site"
+    render_phase1a_site(site_root, output)
+    homepage = (output / "index.html").read_text(encoding="utf-8")
+    for href in re.findall(r'href="([^"]+)"', homepage):
+        if href.startswith(("http:", "https:", "#")):
+            continue
+        target_root = output if href in ("/", "/dispatches/", "/methodology/", "/about/") else site_root
+        target = target_root / href.lstrip("/")
+        if href.endswith("/"):
+            target = target / "index.html"
+        assert target.exists(), href
 
 
 def test_phase1_preview_contains_real_navigation_and_no_private_roots(tmp_path):

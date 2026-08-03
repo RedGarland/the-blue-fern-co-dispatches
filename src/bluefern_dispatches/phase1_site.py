@@ -129,7 +129,8 @@ def _edition(site_root: Path, slug: str, edition_date: str) -> Edition:
     mode = str(manifest.get("edition_mode") or "").lower()
     no_update = "no_update" in mode or "no current update" in headline.lower() or int(manifest.get("public_signal_count", manifest.get("story_count", 0)) or 0) == 0
     structured = bool(story or manifest.get("lead_headline") or manifest.get("lead_title") or manifest.get("primary_signal_title") or fallback != f"Edition for {edition_date}")
-    return Edition(slug, edition_date, f"/{slug}/editions/{edition_date}/", headline, _clean(manifest.get("public_status") or manifest.get("edition_mode") or "Published").replace("_", " ").title(), _count(manifest, "source_count", "included_source_count") or _count(sources, "sources", "records"), _count(manifest, "publisher_count", "included_publisher_count"), _count(manifest, "signal_count", "story_count", "included_story_count") or _count(curation, "stories", "records"), _clean(story.get("summary") or story.get("description") or manifest.get("lead_summary") or ""), _clean(story.get("location") or story.get("geography") or ""), str(story.get("url") or story.get("source_url") or manifest.get("lead_source_canonical_url") or "") or None, no_update, structured and not no_update)
+    homepage_url = {"care-line": "/care-line/", "cascadia": "/cascadia/archive.html"}.get(slug, f"/{slug}/editions/{edition_date}/")
+    return Edition(slug, edition_date, homepage_url, headline, _clean(manifest.get("public_status") or manifest.get("edition_mode") or "Published").replace("_", " ").title(), _count(manifest, "source_count", "included_source_count") or _count(sources, "sources", "records"), _count(manifest, "publisher_count", "included_publisher_count"), _count(manifest, "signal_count", "story_count", "included_story_count") or _count(curation, "stories", "records"), _clean(story.get("summary") or story.get("description") or manifest.get("lead_summary") or ""), _clean(story.get("location") or story.get("geography") or ""), str(story.get("url") or story.get("source_url") or manifest.get("lead_source_canonical_url") or "") or None, no_update, structured and not no_update)
 
 
 def public_editions(site_root: Path, slug: str) -> list[Edition]:
@@ -229,3 +230,35 @@ def render_site(site_root: Path, output_root: Path) -> dict[str, int]:
     (output_root / "about" / "index.html").write_text(_page("About", '<section class="page-intro"><p class="eyebrow">The project</p><h1>About Blue Fern Dispatches</h1><p>Dispatches From The Blue Fern Co. is a source-based public dispatch system for reporting on systems, access, pressure, and accountability.</p><p>Gaza and Food Line are Active. Care Line is a Pilot. Cascadia is Paused: its latest visible public edition is May 5, 2026, and no currently operating weekly publication task was found.</p></section>', "about"), encoding="utf-8")
     routes = ("index.html", "dispatches/index.html", "methodology/index.html", "about/index.html", "gaza/index.html", "food-line/index.html", "care-line/index.html")
     return {"dispatches": len(dispatches), "recent_editions": len(recent), "copied_dispatch_roots": 5, "valid_routes": sum((output_root / route).exists() for route in routes)}
+
+
+PHASE1A_ROUTES = ("index.html", "dispatches/index.html", "methodology/index.html", "about/index.html")
+
+
+def render_phase1a_site(site_root: Path, output_root: Path) -> dict[str, object]:
+    """Render only the root-site foundation; dispatch-owned paths are untouched."""
+    from .public_site_shell import (
+        render_about,
+        render_dispatch_directory,
+        render_homepage,
+        render_methodology,
+        render_site_shell_stylesheet,
+    )
+
+    output_root.mkdir(parents=True, exist_ok=True)
+    assets = output_root / "assets"
+    assets.mkdir(exist_ok=True)
+    (output_root / "index.html").write_text(render_homepage(site_root), encoding="utf-8")
+    (output_root / "dispatches").mkdir(exist_ok=True)
+    (output_root / "dispatches" / "index.html").write_text(render_dispatch_directory(site_root), encoding="utf-8")
+    (output_root / "methodology").mkdir(exist_ok=True)
+    (output_root / "methodology" / "index.html").write_text(render_methodology(), encoding="utf-8")
+    (output_root / "about").mkdir(exist_ok=True)
+    (output_root / "about" / "index.html").write_text(render_about(), encoding="utf-8")
+    (assets / "site.css").write_text(render_site_shell_stylesheet(site_root), encoding="utf-8")
+    return {
+        "scope": "phase1a-root-foundation",
+        "routes": list(PHASE1A_ROUTES),
+        "dispatch_owned_paths": [],
+        "private_paths": [],
+    }

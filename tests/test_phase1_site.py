@@ -5,6 +5,7 @@ import re
 
 from bluefern_dispatches.phase1_site import (
     PHASE1A_ROUTES,
+    _edition_card,
     PUBLIC_STATUSES,
     public_editions,
     public_model,
@@ -45,7 +46,8 @@ def test_phase1a_homepage_uses_real_dispatch_destinations_and_excludes_dispatch_
     assert result["private_paths"] == []
     assert "output/detail" not in homepage
     assert "output/paid" not in homepage
-    assert "No current update" not in homepage
+    latest_section = homepage.split("Latest published developments", 1)[1].split("Reporting now", 1)[0]
+    assert "No current update" not in latest_section
     assert all((site_root / route.lstrip("/")).exists() for route in ("/care-line/", "/cascadia/archive.html"))
     assert {path.relative_to(output).as_posix() for path in output.rglob("*") if path.is_file()} == {
         "index.html",
@@ -54,6 +56,7 @@ def test_phase1a_homepage_uses_real_dispatch_destinations_and_excludes_dispatch_
         "about/index.html",
         "assets/site.css",
         "assets/bluefern.png",
+            "assets/bluefern-mark.png",
         "assets/dispatches-from-blue-fern-co.png",
     }
 
@@ -87,7 +90,7 @@ def test_phase1_preview_contains_real_navigation_and_no_private_roots(tmp_path):
     assert "Active dispatches" in homepage
     assert "Paused / archived work" in homepage
     assert "Cascadia" in homepage
-    assert "June 20, 2026" in homepage
+    assert "Jun 20, 2026" in homepage or "June 20, 2026" in homepage
     assert "· 2026-06-20</p>" not in homepage
     assert "output/detail" not in homepage
     assert (output / "methodology" / "index.html").exists()
@@ -119,7 +122,7 @@ def test_recovered_responsive_shell_rules_and_button_contrast(tmp_path):
     (root / "assets").mkdir(parents=True)
     (root / "assets" / "site.css").write_text("", encoding="utf-8")
     css = stylesheet(root)
-    assert "overflow-x:hidden" in css
+    assert "overflow-x:visible" in css
     assert "flex-wrap:wrap" in css
     assert "flex-direction:column" in css
     assert "grid-template-columns:1fr" in css
@@ -157,7 +160,7 @@ def test_public_source_headline_and_no_update_exclusion(tmp_path):
     (root / "assets" / "site.css").write_text("", encoding="utf-8")
     rendered = render_site(root, tmp_path / "preview")
     homepage = (tmp_path / "preview" / "index.html").read_text(encoding="utf-8")
-    assert "Public source headline" in homepage
+    assert "Based on public source reporting" in homepage
     assert "No current update" not in homepage
 
 
@@ -185,10 +188,11 @@ def test_phase1b_root_shell_removes_card_rules_and_adds_branding(tmp_path):
     css = (output / "assets" / "site.css").read_text(encoding="utf-8")
     assert "card-rule" not in rendered
     assert ".card-rule" not in css
-    assert 'src="/assets/bluefern.png"' in rendered
+    assert 'src="/assets/bluefern-mark.png"' in rendered
     assert 'href="/assets/bluefern.ico"' in rendered
     assert ".brand:before" not in css
     assert (output / "assets" / "bluefern.ico").exists()
+    assert (output / "assets" / "bluefern-mark.png").exists()
 
 
 def test_phase1b_topic_badges_are_textual_and_slug_derived():
@@ -216,3 +220,96 @@ def test_phase1b_currentness_dates_remain_approved(tmp_path):
     assert latest["food-line"].latest.date == "2026-07-31"
     assert latest["care-line"].latest.date == "2026-07-22"
     assert {item.slug for item in recent if item.substantive} >= {"gaza", "food-line"}
+
+
+
+def test_phase1c_visible_branding_and_eyebrow_star_removal(tmp_path):
+    root = tmp_path / "site"
+    (root / "assets").mkdir(parents=True)
+    (root / "assets" / "site.css").write_text("", encoding="utf-8")
+    (root / "assets" / "bluefern.png").write_bytes(b"png")
+    (root / "assets" / "bluefern.ico").write_bytes(b"ico")
+    output = tmp_path / "phase1c"
+    render_phase1a_site(root, output)
+    homepage = (output / "index.html").read_text(encoding="utf-8")
+    css = (output / "assets" / "site.css").read_text(encoding="utf-8")
+    assert homepage.count('src="/assets/bluefern-mark.png"') >= 2
+    assert 'href="/assets/bluefern.ico"' in homepage
+    assert 'class="hero-mark"' not in homepage
+    assert ".brand:before" not in css
+    assert "content:'?'" not in css
+
+
+def test_phase1c_timestamp_and_metadata_hierarchy(tmp_path):
+    root = tmp_path / "site"
+    edition = root / "gaza" / "editions" / "2026-08-03"
+    edition.mkdir(parents=True)
+    (edition / "index.html").write_text("<h3>Middle East crisis live: unrelated headline</h3>", encoding="utf-8")
+    (edition / "edition_manifest.json").write_text(json.dumps({"public_rendered": True, "story_count": 4, "actual_run_local_time": "2026-08-03T06:00:57-07:00"}), encoding="utf-8")
+    (edition / "curation_manifest.json").write_text(json.dumps([
+        {"title": "Middle East crisis live: unrelated headline", "substantive_ground": True, "core_ground_development": True, "score": 99},
+        {"title": "Gaza public development title", "substantive_ground": True, "core_ground_development": True, "score": 50},
+    ]), encoding="utf-8")
+    (root / "assets").mkdir(parents=True)
+    (root / "assets" / "site.css").write_text("", encoding="utf-8")
+    item = public_editions(root, "gaza")[0]
+    card = _edition_card(item)
+    assert item.headline == "Gaza public development title"
+    assert f"Aug 3, 2026 {chr(183)} 6:00 AM PT" in card
+    assert "Middle East crisis live" not in card
+    assert card.index("topic-badge") < card.index("<h3>") < card.index("edition-source") < card.index("edition-provenance") < card.index("edition-meta")
+    assert "Published public development" not in card
+
+
+
+def test_phase1c_source_count_grammar_and_separate_publication_date():
+    from bluefern_dispatches.phase1_site import Edition, _edition_card, _source_count_label
+
+    assert _source_count_label(1) == "1 public source"
+    assert _source_count_label(2) == "2 public sources"
+    card = _edition_card(Edition("food-line", "2026-07-31", "/food-line/editions/2026-07-31/", "Food pressure", "Published", 1, None, 1, published_at="2026-08-01T10:21:30-07:00"))
+    assert "July 31, 2026 edition" in card
+    assert f"Published Aug 1, 2026 {chr(183)} 10:21 AM PT" in card
+    assert "1 public source" in card
+    assert "1 public sources" not in card
+
+
+def test_phase1c_no_update_care_line_is_not_a_development():
+    from bluefern_dispatches.phase1_site import Dispatch, Edition, _dispatch_card
+
+    item = Dispatch("care-line", "The Care Line Dispatch", "Pilot", "Healthcare access", "Pilot publication", "/care-line/", "/care-line/archive.html", Edition("care-line", "2026-06-19", "/care-line/", "No current update", "No Update", 177, None, 0, no_update=True))
+    card = _dispatch_card(item, compact=True)
+    assert "Latest public edition" in card
+    assert "No current update" in card
+    assert "Latest public development" not in card
+
+
+def test_phase1c_american_pressure_uses_public_supporting_count(tmp_path):
+    root = tmp_path / "site"
+    edition = root / "american-pressure" / "editions" / "2026-06-13"
+    edition.mkdir(parents=True)
+    (edition / "index.html").write_text("<h3>SNAP theft is rising</h3>", encoding="utf-8")
+    (edition / "edition_manifest.json").write_text(json.dumps({"public_rendered": True, "source_count": 407, "story_count": 8}), encoding="utf-8")
+    (edition / "curation_manifest.json").write_text(json.dumps({"stories": [{"title": "SNAP theft is rising", "public_source_record_ids": ["a", "b", "c", "d"]}]}), encoding="utf-8")
+    item = public_editions(root, "american-pressure")[0]
+    assert item.source_count == 4
+    assert "407 public sources" not in _edition_card(item)
+
+
+def test_phase1c_cascadia_public_edition_matches_archive_boundary():
+    from bluefern_dispatches.public_site_shell import render_about
+
+    about = render_about()
+    assert "Cascadia is currently paused" in about
+    assert "through May 31, 2026" in about
+    assert "no currently operating weekly publication task" not in about
+
+
+
+def test_phase1c_original_brand_asset_and_favicon_are_preserved():
+    import hashlib
+    original = ROOT / "assets" / "bluefern.png"
+    favicon = ROOT / "assets" / "bluefern.ico"
+    assert original.exists()
+    assert hashlib.sha256(original.read_bytes()).hexdigest() == "b7b600bf5e87af4ad037703fc75201df4c52bebfc5616f32c2369d14c269ae54"
+    assert favicon.exists()

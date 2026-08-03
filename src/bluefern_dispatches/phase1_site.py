@@ -236,7 +236,12 @@ def render_site(site_root: Path, output_root: Path) -> dict[str, int]:
 PHASE1A_ROUTES = ("index.html", "dispatches/index.html", "methodology/index.html", "about/index.html")
 
 
-def render_phase1a_site(site_root: Path, output_root: Path) -> dict[str, object]:
+def render_phase1a_site(
+    site_root: Path,
+    output_root: Path,
+    *,
+    shell_asset_root: Path | None = None,
+) -> dict[str, object]:
     """Render only the root-site foundation; dispatch-owned paths are untouched."""
     from .public_site_shell import (
         render_about,
@@ -256,7 +261,7 @@ def render_phase1a_site(site_root: Path, output_root: Path) -> dict[str, object]
     (output_root / "methodology" / "index.html").write_text(_clean(render_methodology()), encoding="utf-8")
     (output_root / "about").mkdir(exist_ok=True)
     (output_root / "about" / "index.html").write_text(_clean(render_about()), encoding="utf-8")
-    (assets / "site.css").write_text(render_site_shell_stylesheet(site_root), encoding="utf-8")
+    (assets / "site.css").write_text(render_site_shell_stylesheet(shell_asset_root or site_root), encoding="utf-8")
     return {
         "scope": "phase1a-root-foundation",
         "routes": list(PHASE1A_ROUTES),
@@ -315,11 +320,17 @@ def _dispatch_card(item: Dispatch, compact: bool = False) -> str:
 _LEGACY_RENDER_PHASE1A_SITE = render_phase1a_site
 
 
-def render_phase1a_site(site_root: Path, output_root: Path) -> dict[str, object]:
-    result = _LEGACY_RENDER_PHASE1A_SITE(site_root, output_root)
+def render_phase1a_site(
+    site_root: Path,
+    output_root: Path,
+    *,
+    shell_asset_root: Path | None = None,
+) -> dict[str, object]:
+    result = _LEGACY_RENDER_PHASE1A_SITE(site_root, output_root, shell_asset_root=shell_asset_root)
     assets = output_root / "assets"
+    asset_root = shell_asset_root or site_root
     for name in ("bluefern.png", "bluefern-mark.png", "dispatches-from-blue-fern-co.png", "bluefern.ico"):
-        source = site_root / "assets" / name
+        source = asset_root / "assets" / name
         if not source.exists() and name in {"bluefern-mark.png", "bluefern.ico"}:
             source = Path(__file__).resolve().parents[2] / "assets" / name
         if source.exists():
@@ -363,7 +374,7 @@ def _public_development_title(slug: str, manifest: dict, curation: object, fallb
 
 
 def _public_timestamp(manifest: dict) -> str | None:
-    for key in ("published_at", "publication_datetime", "actual_run_local_time", "scheduled_run_local_time"):
+    for key in ("published_at", "publication_datetime", "actual_run_local_time"):
         value = manifest.get(key)
         if isinstance(value, str) and value.strip():
             return value

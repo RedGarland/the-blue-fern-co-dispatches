@@ -2,6 +2,7 @@ from pathlib import Path
 
 import json
 import re
+import pytest
 
 from bluefern_dispatches.phase1_site import (
     PHASE1A_ROUTES,
@@ -106,6 +107,68 @@ def test_newer_public_edition_wins_over_older_fixture(tmp_path):
         (directory / "edition_manifest.json").write_text(json.dumps({"public_rendered": True, "story_count": 1}), encoding="utf-8")
     assert public_editions(root, "food-line")[0].date == "2026-07-31"
     assert public_editions(root, "food-line")[0].headline == "Newer public item"
+
+
+def test_phase1_current_pages_tree_wins_over_stale_local_output(tmp_path):
+    stale_local = tmp_path / "stale-local-output"
+    pages = tmp_path / "current-pages-tree"
+    output = tmp_path / "root-shell"
+
+    def write_edition(root: Path, slug: str, edition_date: str, headline: str, *, no_update: bool) -> None:
+        dispatch = root / slug
+        edition = dispatch / "editions" / edition_date
+        edition.mkdir(parents=True, exist_ok=True)
+        (dispatch / "index.html").write_text(f"<h1>{slug}</h1>", encoding="utf-8")
+        (dispatch / "archive.html").write_text("<h1>Archive</h1>", encoding="utf-8")
+        (edition / "index.html").write_text(f"<h3>{headline}</h3>", encoding="utf-8")
+        (edition / "edition_manifest.json").write_text(
+            json.dumps(
+                {
+                    "public_rendered": True,
+                    "edition_mode": "no_current_update" if no_update else "current_update",
+                    "story_count": 0 if no_update else 1,
+                    "public_signal_count": 0 if no_update else 1,
+                    "lead_headline": headline,
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    (stale_local / "assets").mkdir(parents=True)
+    (stale_local / "assets" / "site.css").write_text("", encoding="utf-8")
+    write_edition(stale_local, "gaza", "2026-06-20", "Stale Gaza public development", no_update=False)
+    write_edition(stale_local, "food-line", "2026-06-20", "No current update", no_update=True)
+
+    write_edition(pages, "gaza", "2026-08-01", "Older Gaza no-update edition", no_update=True)
+    write_edition(pages, "gaza", "2026-08-03", "Current Gaza public development", no_update=False)
+    write_edition(pages, "food-line", "2026-07-30", "Older Food Line no-update edition", no_update=True)
+    write_edition(pages, "food-line", "2026-07-31", "Current Food Line public development", no_update=False)
+
+    dispatches, _recent = public_model(pages)
+    latest = {item.slug: item.latest for item in dispatches}
+    assert latest["gaza"] and latest["gaza"].date == "2026-08-03"
+    assert latest["food-line"] and latest["food-line"].date == "2026-07-31"
+    assert public_editions(pages, "gaza")[1].no_update is True
+    assert public_editions(pages, "food-line")[1].no_update is True
+
+    render_phase1a_site(pages, output, shell_asset_root=stale_local)
+    rendered = (output / "index.html").read_text(encoding="utf-8") + (output / "dispatches" / "index.html").read_text(encoding="utf-8")
+    assert "Current Gaza public development" in rendered
+    assert "Current Food Line public development" in rendered
+    assert "August 3, 2026" in rendered
+    assert "July 31, 2026" in rendered
+    assert "Older Gaza no-update edition" not in rendered
+    assert "Older Food Line no-update edition" not in rendered
+    assert "Stale Gaza public development" not in rendered
+    assert "June 20, 2026" not in rendered
+
+
+def test_phase1_build_rejects_stale_source_output_as_discovery(tmp_path):
+    from scripts.build_phase1a_site import main
+
+    with pytest.raises(SystemExit) as exc:
+        main(["--site-root", str(ROOT / "output" / "site"), "--output-root", str(tmp_path / "blocked")])
+    assert exc.value.code == 2
 
 
 def test_no_update_and_mojibake_are_excluded_from_production_preview(tmp_path):
@@ -260,6 +323,29 @@ def test_phase1c_timestamp_and_metadata_hierarchy(tmp_path):
     assert "Middle East crisis live" not in card
     assert card.index("topic-badge") < card.index("<h3>") < card.index("edition-source") < card.index("edition-provenance") < card.index("edition-meta")
     assert "Published public development" not in card
+
+
+def test_phase1c_scheduled_time_is_not_presented_as_publication_time(tmp_path):
+    root = tmp_path / "site"
+    edition = root / "gaza" / "editions" / "2026-08-03"
+    edition.mkdir(parents=True)
+    (edition / "index.html").write_text("<h3>Gaza public development title</h3>", encoding="utf-8")
+    (edition / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "public_rendered": True,
+                "story_count": 1,
+                "lead_headline": "Gaza public development title",
+                "scheduled_run_local_time": "2026-08-03T06:00:00-07:00",
+            }
+        ),
+        encoding="utf-8",
+    )
+    item = public_editions(root, "gaza")[0]
+    assert item.published_at is None
+    card = _edition_card(item)
+    assert "August 3, 2026" in card
+    assert "6:00 AM PT" not in card
 
 
 

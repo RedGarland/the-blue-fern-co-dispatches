@@ -34,7 +34,8 @@ def _init_repo(root: Path, branch: str, *, empty_commit: bool = False) -> Path:
     return root
 
 
-def _write_food_line_site(source_root: Path, dates: list[str]) -> None:
+def _write_food_line_site(source_root: Path, dates: list[str], *, approved_dates: set[str] | None = None) -> None:
+    approved_dates = approved_dates or set()
     site_root = source_root / "output" / "site" / "food-line"
     site_root.mkdir(parents=True, exist_ok=True)
     (site_root / "index.html").write_text("<html>Food Line index</html>", encoding="utf-8")
@@ -43,7 +44,21 @@ def _write_food_line_site(source_root: Path, dates: list[str]) -> None:
         edition = site_root / "editions" / date_text
         edition.mkdir(parents=True, exist_ok=True)
         (edition / "index.html").write_text(f"<html>{date_text}</html>", encoding="utf-8")
-        (edition / "edition_manifest.json").write_text(json.dumps({"edition_date": date_text}), encoding="utf-8")
+        manifest = {"edition_date": date_text}
+        if date_text in approved_dates:
+            manifest.update(
+                {
+                    "generation_mode": "approved_current_review_proposal",
+                    "publication_status": "unpublished",
+                    "publication_approval": False,
+                    "publication_eligible": False,
+                    "pages_status": "not_synced",
+                    "public_release_status": "not_published",
+                    "pages_release_status": "not_synced",
+                    "public_url": f"https://dispatches.thebluefernco.com/food-line/editions/{date_text}/",
+                }
+            )
+        (edition / "edition_manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
         (edition / "sources_manifest.json").write_text(json.dumps([{"source_record_id": "src-1"}]), encoding="utf-8")
         (edition / "curation_manifest.json").write_text(json.dumps([{"story_id": "story-1"}]), encoding="utf-8")
         (edition / "source_table.html").write_text("<table><tr><td>1</td></tr></table>", encoding="utf-8")
@@ -358,6 +373,86 @@ def test_release_manifest_requires_clean_pages_even_for_dry_run(release_repos: t
 
     assert report["ok"] is False
     assert any("pages repo must be clean before sync" in error for error in report["errors"])
+
+
+def test_sync_marks_approved_proposal_pages_manifest_as_live_and_keeps_source_pre_release(
+    release_repos: tuple[Path, Path]
+) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-07-28"], approved_dates={"2026-07-28"})
+    _commit_repo(source, "food line approved proposal")
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-07-28"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+    )
+
+    assert report["ok"] is True
+    source_manifest = json.loads((source / "output" / "site" / "food-line" / "editions" / "2026-07-28" / "edition_manifest.json").read_text(encoding="utf-8"))
+    pages_manifest = json.loads((pages / "food-line" / "editions" / "2026-07-28" / "edition_manifest.json").read_text(encoding="utf-8"))
+    assert source_manifest["publication_status"] == "unpublished"
+    assert source_manifest["pages_status"] == "not_synced"
+    assert source_manifest["public_release_status"] == "not_published"
+    assert source_manifest["pages_release_status"] == "not_synced"
+    assert pages_manifest["publication_status"] == "unpublished"
+    assert pages_manifest["pages_status"] == "not_synced"
+    assert pages_manifest["public_release_status"] == "published"
+    assert pages_manifest["pages_release_status"] == "synced"
+
+
+def test_sync_rerun_is_idempotent_for_live_approved_proposal_manifest(
+    release_repos: tuple[Path, Path]
+) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-07-28"], approved_dates={"2026-07-28"})
+    _commit_repo(source, "food line approved proposal")
+
+    first = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-07-28"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+    )
+    assert first["ok"] is True
+
+    second = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-07-28"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+    )
+    assert second["ok"] is True
+    assert second["commit_status"] == "no-changes"
+
+
+def test_sync_marks_july_28_and_july_31_pages_manifests_live(
+    release_repos: tuple[Path, Path]
+) -> None:
+    source, pages = release_repos
+    dates = ["2026-07-28", "2026-07-31"]
+    _write_food_line_site(source, dates, approved_dates=set(dates))
+    _commit_repo(source, "food line july releases")
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=dates,
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+    )
+
+    assert report["ok"] is True
+    for date_text in dates:
+        manifest = json.loads((pages / "food-line" / "editions" / date_text / "edition_manifest.json").read_text(encoding="utf-8"))
+        assert manifest["publication_status"] == "unpublished"
+        assert manifest["pages_status"] == "not_synced"
+        assert manifest["public_release_status"] == "published"
+        assert manifest["pages_release_status"] == "synced"
 
 
 def test_git_native_repository_validation_accepts_linked_worktree_and_rejects_invalid_shapes(

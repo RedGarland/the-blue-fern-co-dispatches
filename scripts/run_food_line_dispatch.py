@@ -53,6 +53,7 @@ from bluefern_dispatches.food_line_discovery_expansion import read_food_line_dis
 from bluefern_dispatches.food_line_discovery_expansion import run_food_line_discovery_expansion
 from bluefern_dispatches.food_line_approved_proposal import (
     build_release_manifest,
+    initialize_public_release_status,
     load_approved_proposal,
     sha256_file,
     write_json_deterministic,
@@ -7113,6 +7114,7 @@ def _run_food_line_approved_proposal(root: Path, date: str, approved_proposal_pa
         "bluesky_post_text": None,
         "bluesky_post_ready": False,
     }
+    initialize_public_release_status(manifest)
     edition_dirs = (
         root / "output" / "site" / DISPATCH_SLUG / "editions" / date,
         root / "output" / "dispatches" / DISPATCH_SLUG / "editions" / date,
@@ -7156,6 +7158,8 @@ def _run_food_line_approved_proposal(root: Path, date: str, approved_proposal_pa
         "publication_status": "unpublished",
         "publication_approval": False,
         "pages_status": "not_synced",
+        "public_release_status": "not_published",
+        "pages_release_status": "not_synced",
         "bluesky_status": "not_posted",
         "audio_status": "not_generated",
         "map_status": "not_published",

@@ -15,6 +15,12 @@ ACCEPTED_FRESHNESS_STATUSES = {"current", "accepted", "within_window"}
 PROPOSAL_SCHEMA = "food_line_proposed_edition_v1"
 QUEUE_SCHEMA = "food_line_current_signal_review_v1"
 RELEASE_SCHEMA = "food_line_release_manifest_v1"
+PUBLIC_RELEASE_STATUS_FIELD = "public_release_status"
+PAGES_RELEASE_STATUS_FIELD = "pages_release_status"
+PENDING_PUBLIC_RELEASE_STATUS = "not_published"
+PUBLISHED_PUBLIC_RELEASE_STATUS = "published"
+PENDING_PAGES_RELEASE_STATUS = "not_synced"
+SYNCED_PAGES_RELEASE_STATUS = "synced"
 
 
 @dataclass(frozen=True)
@@ -344,3 +350,16 @@ def build_release_manifest(
 def write_json_deterministic(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def initialize_public_release_status(manifest: dict[str, Any]) -> None:
+    manifest[PUBLIC_RELEASE_STATUS_FIELD] = PENDING_PUBLIC_RELEASE_STATUS
+    manifest[PAGES_RELEASE_STATUS_FIELD] = PENDING_PAGES_RELEASE_STATUS
+
+
+def finalize_public_release_status(manifest: dict[str, Any]) -> bool:
+    if str(manifest.get("generation_mode") or "").strip() != "approved_current_review_proposal":
+        return False
+    manifest[PUBLIC_RELEASE_STATUS_FIELD] = PUBLISHED_PUBLIC_RELEASE_STATUS
+    manifest[PAGES_RELEASE_STATUS_FIELD] = SYNCED_PAGES_RELEASE_STATUS
+    return True

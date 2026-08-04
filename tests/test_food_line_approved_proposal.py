@@ -202,6 +202,8 @@ def test_canonical_generation_records_hashes_and_keeps_private_ids_out_of_html(
     assert manifest["approved_proposal_sha256"] == hashlib.sha256(proposal_path.read_bytes()).hexdigest()
     assert manifest["publication_status"] == "unpublished"
     assert manifest["pages_status"] == "not_synced"
+    assert manifest["public_release_status"] == "not_published"
+    assert manifest["pages_release_status"] == "not_synced"
     assert manifest["audio_status"] == "not_generated"
     assert manifest["source_freshness_status"] == "passed"
     assert manifest["freshness_window_days"] == 3

@@ -13,6 +13,7 @@ from datetime import date as dt_date
 from pathlib import Path
 from typing import Any, Callable, Sequence
 
+from bluefern_dispatches.food_line_approved_proposal import finalize_public_release_status
 from bluefern_dispatches.generator import public_site_contains_blocked_public_text, public_site_contains_detail_artifacts
 from scripts.validate_publish_scope import validate_publish_scope
 
@@ -261,22 +262,45 @@ def _validate_declared_scope(plan: CopyPlan, pages_branch: str, release_manifest
     return errors
 
 
-def _copy_file(source: Path, target: Path) -> None:
+def _copy_file(source: Path, target: Path, dispatch: str) -> None:
     target.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(source, target)
+    target.write_bytes(_target_file_bytes(source, target, dispatch))
 
 
-def _copy_edition_dir(source_dir: Path, target_dir: Path) -> None:
+def _copy_edition_dir(source_dir: Path, target_dir: Path, dispatch: str) -> None:
     if target_dir.exists():
         shutil.rmtree(target_dir)
-    shutil.copytree(source_dir, target_dir)
+    for source_file in sorted(path for path in source_dir.rglob("*") if path.is_file()):
+        target_file = target_dir / source_file.relative_to(source_dir)
+        target_file.parent.mkdir(parents=True, exist_ok=True)
+        target_file.write_bytes(_target_file_bytes(source_file, target_file, dispatch))
+
+
+def _target_file_bytes(source: Path, target: Path, dispatch: str) -> bytes:
+    raw = source.read_bytes()
+    if dispatch != "food-line":
+        return raw
+    if source.name != "edition_manifest.json":
+        return raw
+    target_parts = {part.lower() for part in target.parts}
+    if "food-line" not in target_parts or "editions" not in target_parts:
+        return raw
+    try:
+        payload = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return raw
+    if not isinstance(payload, dict):
+        return raw
+    if not finalize_public_release_status(payload):
+        return raw
+    return json.dumps(payload, indent=2).encode("utf-8")
 
 
 def _copy_selection(plan: CopyPlan) -> None:
     for source, target in plan.root_files:
-        _copy_file(source, target)
+        _copy_file(source, target, plan.dispatch)
     for source_dir, target_dir in plan.edition_dirs:
-        _copy_edition_dir(source_dir, target_dir)
+        _copy_edition_dir(source_dir, target_dir, plan.dispatch)
 
 
 def _pages_changed_paths(pages_repo: Path) -> list[str]:
@@ -530,9 +554,10 @@ def sync_pages_from_source(
     planned_pages_paths = [path.relative_to(pages_root).as_posix() for path in plan.pages_paths]
     delta_entries: list[dict[str, Any]] = []
     for source_path, pages_path in zip(plan.source_paths, plan.pages_paths):
+        target_bytes = _target_file_bytes(source_path, pages_path, dispatch)
         if not pages_path.exists():
             action = "add"
-        elif source_path.read_bytes() == pages_path.read_bytes():
+        elif target_bytes == pages_path.read_bytes():
             action = "unchanged"
         else:
             action = "modify"

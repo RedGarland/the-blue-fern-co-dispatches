@@ -53,3 +53,5 @@ python scripts/run_food_line_dispatch.py --date YYYY-MM-DD --approved-proposal "
 ```
 
 This command verifies the proposal and current-review queue hashes, dates, identities, decisions, operator audit fields, source evidence, HTTPS URLs, freshness, duplicate state, and nonhistorical intake boundary. It generates unpublished source output and a private release manifest. It does not grant publication approval, sync Pages, post to Bluesky, generate audio or maps, or change a schedule.
+
+For approved-proposal editions, `publication_status` and `pages_status` remain generation-state fields in source output. A successful Pages release adds separate live-release fields on the public Pages copy: `public_release_status` and `pages_release_status`.

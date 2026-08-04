@@ -19,6 +19,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--run-date", required=True)
     parser.add_argument("--source-limit", type=int, default=None)
     parser.add_argument("--fetch-timeout", type=int, default=20)
+    parser.add_argument("--max-items-per-source", type=int, default=25)
+    parser.add_argument("--active-queue-limit", type=int, default=150)
+    parser.add_argument("--low-priority-cap", type=int, default=25)
     parser.add_argument("--include-manual-review", action="store_true")
     parser.add_argument("--exclude-partial", action="store_true")
     parser.add_argument("--allow-insecure-tls", action="store_true")
@@ -31,6 +34,9 @@ def main(argv: list[str] | None = None) -> int:
         allow_insecure_tls=args.allow_insecure_tls,
         source_limit=args.source_limit,
         fetch_timeout=args.fetch_timeout,
+        max_items_per_source=args.max_items_per_source,
+        active_queue_limit=args.active_queue_limit,
+        low_priority_cap=args.low_priority_cap,
     )
     print(json.dumps(result, indent=2, sort_keys=True, ensure_ascii=False))
     return 0

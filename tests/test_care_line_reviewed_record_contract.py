@@ -173,3 +173,16 @@ def test_18_duplicate_candidate_record_is_not_ready():
 def test_19_source_explicit_confirmed_provenance_is_allowed():
     provenance = FieldProvenance(value="Example Clinic", provenance_type="source_explicit", source_field="title", supporting_text="Example Clinic announces closure", confidence=1.0, review_status="confirmed")
     assert provenance.review_status == "confirmed"
+
+
+def test_20_legacy_service_expansion_requires_prior_loss_link_for_publishable_use():
+    record = complete_record(
+        event_type="service_expansion",
+        event_type_raw="service_expansion",
+        service_line="urgent_care",
+        permanence="temporary_or_unknown",
+        claim_summary="The clinic will add urgent care appointments.",
+        supporting_passage="The clinic is expanding urgent care access.",
+    )
+    assert record.service_expansion_requires_prior_loss_link is True
+    assert "service_expansion_requires_prior_loss_link" in {issue.code for issue in record.validation_issues()}

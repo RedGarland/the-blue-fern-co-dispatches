@@ -141,6 +141,37 @@ def test_tribal_service_area_scope_is_supported() -> None:
     assert record.validation_issues() == []
 
 
+def test_legacy_service_expansion_is_readable_but_not_publishable_without_prior_loss_link() -> None:
+    record = sample_record(
+        event_type="service_expansion",
+        event_type_raw="service_expansion",
+        service_line="urgent_care",
+        permanence="temporary_or_unknown",
+        care_line_public_eligible=True,
+        claim_summary="The provider is adding urgent care appointments.",
+        supporting_passage="The clinic is expanding urgent care hours and appointments.",
+    )
+    assert record.canonical_event_type == "SERVICE_RESTORATION"
+    assert record.service_expansion_requires_prior_loss_link is True
+    assert "service_expansion_requires_prior_loss_link" in {issue.code for issue in record.validation_issues()}
+    assert record.universal_event_eligible is False
+
+
+def test_legacy_service_expansion_can_qualify_when_linked_to_prior_loss() -> None:
+    record = sample_record(
+        event_type="service_expansion",
+        event_type_raw="service_expansion",
+        service_line="urgent_care",
+        permanence="temporary_or_unknown",
+        prior_access_loss_event_id="event_prior_loss_urgent_care",
+        claim_summary="The provider is restoring urgent care access after a previous cut.",
+        supporting_passage="The clinic said the new urgent care schedule restores access after last month's service reduction.",
+    )
+    assert record.canonical_event_type == "SERVICE_RESTORATION"
+    assert record.service_expansion_requires_prior_loss_link is False
+    assert "service_expansion_requires_prior_loss_link" not in {issue.code for issue in record.validation_issues()}
+
+
 def test_event_taxonomy_distinguishes_closure_relocation_and_temporary_suspension() -> None:
     assert normalize_event_type("facility_closure")[1] == "FACILITY_CLOSURE"
     assert normalize_event_type("facility_relocation")[1] == "RELOCATION"
@@ -228,4 +259,76 @@ def test_public_location_labels_are_deterministic() -> None:
         jurisdiction_display="Arizona",
     )
     assert label == "Example Clinic, Phoenix, Arizona"
+
+
+def test_territory_public_location_priority_prefers_locality_over_county_equivalent() -> None:
+    label = deterministic_public_location_label(
+        facility_name="San Juan Community Clinic",
+        locality="San Juan",
+        county_equivalent="San Juan Municipio",
+        jurisdiction_display="Puerto Rico",
+    )
+    assert label == "San Juan Community Clinic, San Juan, Puerto Rico"
+
+
+def test_territory_public_location_priority_uses_island_without_fabricated_county() -> None:
+    label = deterministic_public_location_label(
+        facility_name="Charlotte Amalie Clinic",
+        jurisdiction_display="U.S. Virgin Islands",
+        island="St. Thomas",
+    )
+    assert label == "Charlotte Amalie Clinic, St. Thomas, U.S. Virgin Islands"
+
+
+@pytest.mark.parametrize(
+    ("facility_name", "locality", "island", "jurisdiction_display", "expected"),
+    [
+        ("Dededo Health Center", "Dededo", "", "Guam", "Dededo Health Center, Dededo, Guam"),
+        ("Saipan Family Clinic", "", "Saipan", "Northern Mariana Islands", "Saipan Family Clinic, Saipan, Northern Mariana Islands"),
+        ("Pago Pago Outreach Clinic", "Pago Pago", "Tutuila", "American Samoa", "Pago Pago Outreach Clinic, Pago Pago, American Samoa"),
+    ],
+)
+def test_territory_location_rules_cover_multiple_territories(
+    facility_name: str,
+    locality: str,
+    island: str,
+    jurisdiction_display: str,
+    expected: str,
+) -> None:
+    label = deterministic_public_location_label(
+        facility_name=facility_name,
+        locality=locality,
+        island=island,
+        jurisdiction_display=jurisdiction_display,
+    )
+    assert label == expected
+
+
+def test_tribal_nation_label_is_used_for_nation_specific_facility_event() -> None:
+    label = deterministic_public_location_label(
+        facility_name="Cherokee Nation Outpatient Clinic",
+        tribal_nation="Cherokee Nation",
+        jurisdiction_display="Oklahoma",
+    )
+    assert label == "Cherokee Nation Outpatient Clinic, Cherokee Nation, Oklahoma"
+
+
+def test_tribal_service_area_label_is_used_for_multi_community_operational_region() -> None:
+    label = deterministic_public_location_label(
+        tribal_nation="Cherokee Nation",
+        tribal_service_area="Northern Plains tribal health service area",
+        jurisdiction_display="South Dakota",
+    )
+    assert label == "Northern Plains tribal health service area, South Dakota"
+
+
+def test_locality_still_outranks_tribal_labels_when_supported() -> None:
+    label = deterministic_public_location_label(
+        facility_name="River Valley Tribal Clinic",
+        locality="Browning",
+        tribal_nation="Blackfeet Nation",
+        tribal_service_area="Blackfeet service area",
+        jurisdiction_display="Montana",
+    )
+    assert label == "River Valley Tribal Clinic, Browning, Montana"
 

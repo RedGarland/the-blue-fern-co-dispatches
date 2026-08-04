@@ -562,24 +562,33 @@ def deterministic_public_location_label(
     county_equivalent: str = "",
     jurisdiction_display: str = "",
     service_region: str = "",
+    tribal_nation: str = "",
     tribal_service_area: str = "",
     island: str = "",
 ) -> str:
     if facility_name and locality and jurisdiction_display:
         return f"{facility_name}, {locality}, {jurisdiction_display}"
+    if facility_name and island and jurisdiction_display:
+        return f"{facility_name}, {island}, {jurisdiction_display}"
+    if facility_name and county_equivalent and jurisdiction_display:
+        return f"{facility_name}, {county_equivalent}, {jurisdiction_display}"
+    if facility_name and tribal_nation and jurisdiction_display:
+        return f"{facility_name}, {tribal_nation}, {jurisdiction_display}"
     if facility_name and jurisdiction_display:
         return f"{facility_name}, {jurisdiction_display}"
+    if locality and jurisdiction_display:
+        return f"{locality}, {jurisdiction_display}"
+    if island and jurisdiction_display:
+        return f"{island}, {jurisdiction_display}"
+    if county_equivalent and jurisdiction_display:
+        return f"{county_equivalent}, {jurisdiction_display}"
     if service_region and jurisdiction_display:
         return f"{service_region}, {jurisdiction_display}"
     if tribal_service_area and jurisdiction_display:
         return f"{tribal_service_area}, {jurisdiction_display}"
-    if locality and jurisdiction_display:
-        return f"{locality}, {jurisdiction_display}"
-    if county_equivalent and jurisdiction_display:
-        return f"{county_equivalent}, {jurisdiction_display}"
-    if island and jurisdiction_display:
-        return f"{island}, {jurisdiction_display}"
-    return jurisdiction_display or locality or county_equivalent or service_region or tribal_service_area or island or facility_name
+    if tribal_nation and jurisdiction_display:
+        return f"{tribal_nation}, {jurisdiction_display}"
+    return jurisdiction_display or locality or island or county_equivalent or service_region or tribal_service_area or tribal_nation or facility_name
 
 
 class FieldProvenance(BaseModel):
@@ -747,7 +756,9 @@ class CareLineReviewedRecord(BaseModel):
             if self.event_type in NON_OPERATIONAL_EVENT_TYPES:
                 object.__setattr__(self, "canonical_event_type", "")
             else:
+                raw_event_type = self.event_type_raw or self.event_type
                 normalized_event_type, canonical_event_type = normalize_event_type(self.event_type)
+                object.__setattr__(self, "event_type_raw", raw_event_type)
                 object.__setattr__(self, "event_type", normalized_event_type)
                 object.__setattr__(self, "canonical_event_type", canonical_event_type)
         if self.service_line:
@@ -814,6 +825,7 @@ class CareLineReviewedRecord(BaseModel):
                 county_equivalent=self.county_equivalent_name or self.county,
                 jurisdiction_display=self.jurisdiction_display or self.state,
                 service_region=self.service_region,
+                tribal_nation=self.tribal_nation,
                 tribal_service_area=self.tribal_service_area,
                 island=self.island_name,
             ),
@@ -889,6 +901,10 @@ class CareLineReviewedRecord(BaseModel):
     def universal_event_eligible(self) -> bool:
         return self.universal_event_status == "universal_event_ready" and not self.is_withdrawn and not self.duplicate_of_record_id and not self.validation_issues()
 
+    @property
+    def service_expansion_requires_prior_loss_link(self) -> bool:
+        return (self.event_type_raw == "service_expansion" or self.event_type == "service_expansion") and not self.prior_access_loss_event_id.strip()
+
     def validation_profile(self) -> str:
         if self.event_type in FACILITY_EVENT_TYPES:
             return "facility_event"
@@ -917,6 +933,16 @@ class CareLineReviewedRecord(BaseModel):
             issues.append(ValidationIssue(field="supporting_passage", code="missing_evidence", message="supporting passage is required"))
         if self.event_type in SERVICE_EVENT_TYPES and self.service_line in {"", "unknown"}:
             issues.append(ValidationIssue(field="service_line", code="missing_service_line", message="service-line event requires a reviewed service line"))
+        if self.service_expansion_requires_prior_loss_link and (
+            self.universal_event_status == "universal_event_ready" or self.care_line_public_eligible or self.workflow_state == "APPROVED"
+        ):
+            issues.append(
+                ValidationIssue(
+                    field="prior_access_loss_event_id",
+                    code="service_expansion_requires_prior_loss_link",
+                    message="legacy service_expansion is compatibility-only and requires a linked prior access-loss event before it can qualify as a pressure/restoration signal",
+                )
+            )
         if self.event_type in OWNERSHIP_EVENT_TYPES and not (self.former_owner.strip() or self.new_owner.strip() or self.operator_name.strip()):
             issues.append(ValidationIssue(field="new_owner", code="missing_owner_or_operator", message="ownership/operator event requires former/new owner or operator"))
         if self.event_type in FACILITY_EVENT_TYPES and not self.permanence.strip():

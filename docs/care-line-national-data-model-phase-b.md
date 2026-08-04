@@ -88,6 +88,31 @@ The record contract also supports:
 
 Territory localities are not forced into a county field.
 
+Deterministic public-location priority:
+
+1. facility + locality + jurisdiction
+2. facility + island + jurisdiction
+3. facility + county-equivalent + jurisdiction
+4. facility + tribal nation + jurisdiction
+5. facility + jurisdiction
+6. locality + jurisdiction
+7. island + jurisdiction
+8. county-equivalent + jurisdiction
+9. service region + jurisdiction
+10. tribal service area + jurisdiction
+11. tribal nation + jurisdiction
+12. jurisdiction only
+
+This keeps territory display source-supported without inventing county labels and keeps jurisdiction explicit.
+
+Tribal label rule:
+
+- `tribal_nation` identifies the sovereign or recognized tribal entity associated with the event
+- `tribal_service_area` identifies an operational or multi-community care-coverage area
+- nation-specific facility or tribal-government events should label with the tribal nation when no stronger locality label is available
+- multi-community operational restrictions should label with the tribal service area
+- locality and jurisdiction still outrank tribal labels when the source supports a more specific non-sensitive public location
+
 ## Event taxonomy
 
 Canonical Phase B event taxonomy:
@@ -118,6 +143,13 @@ Backward-compatible legacy values still accepted by the schema include:
 - `service_expansion`
 
 Those values normalize to the nearest controlled Phase B category without changing current public output.
+
+Event-rule closeout:
+
+- generic `service_expansion` is a legacy compatibility value, not a standalone publishable pressure event
+- restoration of previously lost service belongs under `SERVICE_RESTORATION`
+- reopening of a facility belongs under `REOPENING`
+- a reviewed record that still uses legacy `service_expansion` remains readable, but it fails pressure/public eligibility unless it links to a prior access-loss event through `prior_access_loss_event_id`
 
 ## Service-line taxonomy
 

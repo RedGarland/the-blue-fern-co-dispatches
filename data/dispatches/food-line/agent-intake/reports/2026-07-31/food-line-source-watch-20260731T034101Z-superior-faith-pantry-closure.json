@@ -1,0 +1,16 @@
+{
+  "agent_run_id": "food-line-source-watch-20260731T034101Z-superior-faith-pantry-closure",
+  "counts": {
+    "eligible_for_review": 1
+  },
+  "dry_run": false,
+  "duplicate_keys": [
+    "152a4cc873903b41643ebcc20d85e12994c8b3147aa086e29135c758e2b99f16"
+  ],
+  "edition_date": "2026-07-31",
+  "finding_ids": [
+    "finding_48b492255edda92746442df1"
+  ],
+  "input_sha256": "069c15161913ecb703e55a0483e315e0f0f4c7ebd1d8a08efe2e76ce82dd078d",
+  "schema_version": "food_line_agent_intake_report_v1"
+}

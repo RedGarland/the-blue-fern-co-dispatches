@@ -1,0 +1,180 @@
+{
+  "agent_name": "Food Line Source Watch",
+  "agent_run_id": "food-line-source-watch-20260731T034101Z-superior-faith-pantry-closure",
+  "candidate_rows": [
+    {
+      "affected_groups": [],
+      "agent_duplicate_key": "152a4cc873903b41643ebcc20d85e12994c8b3147aa086e29135c758e2b99f16",
+      "agent_finding_id": "finding_48b492255edda92746442df1",
+      "agent_name": "Food Line Source Watch",
+      "agent_run_id": "food-line-source-watch-20260731T034101Z-superior-faith-pantry-closure",
+      "candidate_id": "finding_48b492255edda92746442df1",
+      "canonical_url": "https://www.northernnewsnow.com/2026/07/28/superior-food-pantry-closing-after-more-than-30-years",
+      "eligible_for_review": true,
+      "evidence_level": "news report",
+      "evidence_text": "The pantry opened in 1994 and served residents across Douglas County. It recently provided food to an average of 960 people and distributed approximately 34,000 pounds of food each month. Leaders said the church building’s aging condition and the cost of necessary repairs made it impossible to continue operating the pantry safely and sustainably.",
+      "evidence_text_basis": "page_text_excerpt",
+      "exclusion_reason": "",
+      "freshness_disqualification_reason": "",
+      "freshness_role": "dated_recent_signal",
+      "freshness_status": "fresh_recent_signal",
+      "location_name": "Superior",
+      "location_scope": "state_local",
+      "map_eligible": true,
+      "non_promotable_reason": "",
+      "pressure_reason": "matched service reduction",
+      "pressure_signal": true,
+      "pressure_summary": "Northern News Now reported a pantry closure in Superior.",
+      "pressure_type": "service reduction",
+      "promotable": true,
+      "published_at": "2026-07-28T16:26:00-05:00",
+      "publisher": "Northern News Now",
+      "raw_agent_payload": {
+        "affected_groups": [
+          "Douglas County residents using Faith Food Pantry",
+          "households relying on emergency food assistance",
+          "approximately 960 recent monthly pantry users"
+        ],
+        "agent_query_context": {
+          "discovery_basis": "A local report documented the pantry's final distribution, operating reason for closure, countywide service area and recent monthly service volume.",
+          "focus": "Newly discovered United States food-access pressure involving permanent food-pantry closure, loss of distribution capacity and documented effects on current users.",
+          "newness_note": "The source was published on July 28, 2026, but was newly identified during the July 31 search window and was not included in an earlier Food Line edition."
+        },
+        "canonical_source_url": "https://www.northernnewsnow.com/2026/07/28/superior-food-pantry-closing-after-more-than-30-years/",
+        "confidence": "high",
+        "evidence_level": "documented_service_closure_with_reported_service_volume",
+        "exact_supporting_passage": "The pantry opened in 1994 and served residents across Douglas County. It recently provided food to an average of 960 people and distributed approximately 34,000 pounds of food each month. Leaders said the church building’s aging condition and the cost of necessary repairs made it impossible to continue operating the pantry safely and sustainably.",
+        "exclusion_reason": null,
+        "location_name": "Superior",
+        "location_scope": "Superior and Douglas County, Wisconsin",
+        "pressure_type": "food_pantry_closure",
+        "publisher": "Northern News Now",
+        "raw_agent_payload": {
+          "access_effect": "The closure removes an established Douglas County food-distribution site with substantial documented monthly use. The named replacement is across the state line in Duluth and operates during two limited weekly service windows.",
+          "documented_conditions": {
+            "facility": "Faith Food Pantry at Faith United Methodist Church",
+            "final_distribution_date": "2026-07-28",
+            "operating_since": "1994",
+            "recent_average_people_served": 960,
+            "recent_monthly_food_distribution": "Approximately 34,000 pounds",
+            "referral_hours": "Tuesdays and Fridays from 10:00 a.m. to 1:00 p.m.",
+            "referral_location": "Second Harvest Northland, 2302 Commonwealth Avenue, Duluth, Minnesota",
+            "reported_closure_reason": "The aging condition of the church building and the cost of necessary repairs made continued safe and sustainable operation impossible."
+          },
+          "uncertainty_note": "The source does not report how many users lack transportation to Duluth, whether Second Harvest Northland can absorb the displaced demand, whether other Superior pantries have available capacity, or whether Faith Food Pantry will reopen at another location."
+        },
+        "review_status": "pending_review",
+        "source_published_at": "2026-07-28T16:26:00-05:00",
+        "source_role": "local_news_report_with_named_operator",
+        "source_url": "https://www.northernnewsnow.com/2026/07/28/superior-food-pantry-closing-after-more-than-30-years/",
+        "state": "Wisconsin",
+        "summary": "Faith Food Pantry at Faith United Methodist Church in Superior closed after its final scheduled distribution on July 28, 2026. The pantry had served residents across Douglas County and recently averaged about 960 people and 34,000 pounds of food distributed monthly. The closure was attributed to the unsafe condition of the aging church building and the cost of repairs. People seeking assistance were directed to Second Harvest Northland in Duluth, Minnesota.",
+        "title": "Superior food pantry closing after more than 30 years"
+      },
+      "rejected": false,
+      "rejection_reason": "",
+      "review_status": "pending_review",
+      "source_family": "local_news",
+      "source_name": "Northern News Now",
+      "source_published_date": "2026-07-28",
+      "source_purpose": "current_news",
+      "source_role": "local_signal",
+      "source_role_allowed": "pressure_evidence",
+      "source_url": "https://www.northernnewsnow.com/2026/07/28/superior-food-pantry-closing-after-more-than-30-years/",
+      "state": "WISCONSIN",
+      "summary_or_snippet": "Faith Food Pantry at Faith United Methodist Church in Superior closed after its final scheduled distribution on July 28, 2026. The pantry had served residents across Douglas County and recently averaged about 960 people and 34,000 pounds of food distributed monthly. The closure was attributed to the unsafe condition of the aging church building and the cost of repairs. People seeking assistance were directed to Second Harvest Northland in Duluth, Minnesota.",
+      "title": "Superior food pantry closing after more than 30 years",
+      "url": "https://www.northernnewsnow.com/2026/07/28/superior-food-pantry-closing-after-more-than-30-years"
+    }
+  ],
+  "completed_at": "2026-07-31T03:44:00Z",
+  "counts": {
+    "eligible_for_review": 1
+  },
+  "coverage_notes": "The Superior finding is being supplied as a complete current, nonhistorical Food Line agent export. It documents the closure of an established pantry with reported service volume and a named alternative whose equivalent accessibility and capacity are not established.",
+  "findings": [
+    {
+      "affected_groups": [
+        "Douglas County residents using Faith Food Pantry",
+        "households relying on emergency food assistance",
+        "approximately 960 recent monthly pantry users"
+      ],
+      "agent_name": "Food Line Source Watch",
+      "agent_query_context": {
+        "discovery_basis": "A local report documented the pantry's final distribution, operating reason for closure, countywide service area and recent monthly service volume.",
+        "focus": "Newly discovered United States food-access pressure involving permanent food-pantry closure, loss of distribution capacity and documented effects on current users.",
+        "newness_note": "The source was published on July 28, 2026, but was newly identified during the July 31 search window and was not included in an earlier Food Line edition."
+      },
+      "agent_run_id": "food-line-source-watch-20260731T034101Z-superior-faith-pantry-closure",
+      "canonical_source_url": "https://www.northernnewsnow.com/2026/07/28/superior-food-pantry-closing-after-more-than-30-years",
+      "confidence": "high",
+      "discovered_at": "2026-07-31T03:44:00Z",
+      "duplicate_key": "152a4cc873903b41643ebcc20d85e12994c8b3147aa086e29135c758e2b99f16",
+      "evidence_level": "documented_service_closure_with_reported_service_volume",
+      "exact_supporting_passage": "The pantry opened in 1994 and served residents across Douglas County. It recently provided food to an average of 960 people and distributed approximately 34,000 pounds of food each month. Leaders said the church building’s aging condition and the cost of necessary repairs made it impossible to continue operating the pantry safely and sustainably.",
+      "exclusion_reason": "",
+      "finding_id": "finding_48b492255edda92746442df1",
+      "location_name": "Superior",
+      "location_scope": "Superior and Douglas County, Wisconsin",
+      "pressure_type": "food_pantry_closure",
+      "publisher": "Northern News Now",
+      "raw_agent_payload": {
+        "affected_groups": [
+          "Douglas County residents using Faith Food Pantry",
+          "households relying on emergency food assistance",
+          "approximately 960 recent monthly pantry users"
+        ],
+        "agent_query_context": {
+          "discovery_basis": "A local report documented the pantry's final distribution, operating reason for closure, countywide service area and recent monthly service volume.",
+          "focus": "Newly discovered United States food-access pressure involving permanent food-pantry closure, loss of distribution capacity and documented effects on current users.",
+          "newness_note": "The source was published on July 28, 2026, but was newly identified during the July 31 search window and was not included in an earlier Food Line edition."
+        },
+        "canonical_source_url": "https://www.northernnewsnow.com/2026/07/28/superior-food-pantry-closing-after-more-than-30-years/",
+        "confidence": "high",
+        "evidence_level": "documented_service_closure_with_reported_service_volume",
+        "exact_supporting_passage": "The pantry opened in 1994 and served residents across Douglas County. It recently provided food to an average of 960 people and distributed approximately 34,000 pounds of food each month. Leaders said the church building’s aging condition and the cost of necessary repairs made it impossible to continue operating the pantry safely and sustainably.",
+        "exclusion_reason": null,
+        "location_name": "Superior",
+        "location_scope": "Superior and Douglas County, Wisconsin",
+        "pressure_type": "food_pantry_closure",
+        "publisher": "Northern News Now",
+        "raw_agent_payload": {
+          "access_effect": "The closure removes an established Douglas County food-distribution site with substantial documented monthly use. The named replacement is across the state line in Duluth and operates during two limited weekly service windows.",
+          "documented_conditions": {
+            "facility": "Faith Food Pantry at Faith United Methodist Church",
+            "final_distribution_date": "2026-07-28",
+            "operating_since": "1994",
+            "recent_average_people_served": 960,
+            "recent_monthly_food_distribution": "Approximately 34,000 pounds",
+            "referral_hours": "Tuesdays and Fridays from 10:00 a.m. to 1:00 p.m.",
+            "referral_location": "Second Harvest Northland, 2302 Commonwealth Avenue, Duluth, Minnesota",
+            "reported_closure_reason": "The aging condition of the church building and the cost of necessary repairs made continued safe and sustainable operation impossible."
+          },
+          "uncertainty_note": "The source does not report how many users lack transportation to Duluth, whether Second Harvest Northland can absorb the displaced demand, whether other Superior pantries have available capacity, or whether Faith Food Pantry will reopen at another location."
+        },
+        "review_status": "pending_review",
+        "source_published_at": "2026-07-28T16:26:00-05:00",
+        "source_role": "local_news_report_with_named_operator",
+        "source_url": "https://www.northernnewsnow.com/2026/07/28/superior-food-pantry-closing-after-more-than-30-years/",
+        "state": "Wisconsin",
+        "summary": "Faith Food Pantry at Faith United Methodist Church in Superior closed after its final scheduled distribution on July 28, 2026. The pantry had served residents across Douglas County and recently averaged about 960 people and 34,000 pounds of food distributed monthly. The closure was attributed to the unsafe condition of the aging church building and the cost of repairs. People seeking assistance were directed to Second Harvest Northland in Duluth, Minnesota.",
+        "title": "Superior food pantry closing after more than 30 years"
+      },
+      "review_status": "pending_review",
+      "source_published_at": "2026-07-28T16:26:00-05:00",
+      "source_role": "local_news_report_with_named_operator",
+      "source_url": "https://www.northernnewsnow.com/2026/07/28/superior-food-pantry-closing-after-more-than-30-years/",
+      "state": "WISCONSIN",
+      "summary": "Faith Food Pantry at Faith United Methodist Church in Superior closed after its final scheduled distribution on July 28, 2026. The pantry had served residents across Douglas County and recently averaged about 960 people and 34,000 pounds of food distributed monthly. The closure was attributed to the unsafe condition of the aging church building and the cost of repairs. People seeking assistance were directed to Second Harvest Northland in Duluth, Minnesota.",
+      "title": "Superior food pantry closing after more than 30 years"
+    }
+  ],
+  "input_filename": "food-line-source-watch-20260731T034101Z-superior-faith-pantry-closure.json",
+  "input_sha256": "069c15161913ecb703e55a0483e315e0f0f4c7ebd1d8a08efe2e76ce82dd078d",
+  "schema_version": "food_line_agent_intake_v1",
+  "search_window": {
+    "end": "2026-07-31T03:44:00Z",
+    "start": "2026-07-31T00:47:18Z"
+  },
+  "started_at": "2026-07-31T03:41:01Z"
+}

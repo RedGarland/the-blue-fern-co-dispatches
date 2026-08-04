@@ -1,0 +1,63 @@
+{
+  "stories": [
+    {
+      "source_record_id": "food_line_source_1f9bd60b55f3e27f",
+      "title": "Superior food pantry closes after more than 30 years",
+      "url": "https://www.northernnewsnow.com/2026/07/28/superior-food-pantry-closing-after-more-than-30-years/",
+      "canonical_source_url": "https://www.northernnewsnow.com/2026/07/28/superior-food-pantry-closing-after-more-than-30-years",
+      "publisher": "Northern News Now",
+      "published_at": "2026-07-28T16:26:00-05:00",
+      "source_published_date": "2026-07-28T16:26:00-05:00",
+      "retrieved_at": "2026-08-01T05:57:31.156360+00:00",
+      "summary_or_snippet": "Faith Food Pantry in Superior closed after its final distribution on July 28. The pantry had recently served about 960 people and distributed approximately 34,000 pounds of food per month across Douglas County. People seeking assistance were directed to Second Harvest Northland in Duluth, but available reporting does not establish whether that alternative has sufficient capacity or equivalent accessibility.",
+      "pressure_summary": "Faith Food Pantry in Superior closed after its final distribution on July 28. The pantry had recently served about 960 people and distributed approximately 34,000 pounds of food per month across Douglas County. People seeking assistance were directed to Second Harvest Northland in Duluth, but available reporting does not establish whether that alternative has sufficient capacity or equivalent accessibility.",
+      "approved_public_summary": "Faith Food Pantry in Superior closed after its final distribution on July 28. The pantry had recently served about 960 people and distributed approximately 34,000 pounds of food per month across Douglas County. People seeking assistance were directed to Second Harvest Northland in Duluth, but available reporting does not establish whether that alternative has sufficient capacity or equivalent accessibility.",
+      "approved_why_it_matters": "The closure removes a substantial local food-distribution site and may shift demand and transportation burdens to other providers.",
+      "approved_uncertainty_note": "Available reporting does not establish whether Second Harvest Northland has sufficient capacity or equivalent accessibility for displaced Faith Food Pantry users.",
+      "evidence_text": "The pantry opened in 1994 and served residents across Douglas County. It recently provided food to an average of 960 people and distributed approximately 34,000 pounds of food each month. Leaders said the church building\u2019s aging condition and the cost of necessary repairs made it impossible to continue operating the pantry safely and sustainably.",
+      "exact_supporting_passage": "The pantry opened in 1994 and served residents across Douglas County. It recently provided food to an average of 960 people and distributed approximately 34,000 pounds of food each month. Leaders said the church building\u2019s aging condition and the cost of necessary repairs made it impossible to continue operating the pantry safely and sustainably.",
+      "evidence_text_basis": "operator_reviewed_exact_passage",
+      "evidence_level": "documented_service_closure_with_reported_service_volume",
+      "confidence": "high",
+      "pressure_signal": true,
+      "pressure_verification_status": "source_text_verified",
+      "pressure_type": "food_pantry_closure",
+      "pressure_reason": "approved current-review source documents a food-access pressure signal",
+      "pressure_match_terms": [
+        "pantry",
+        "closed",
+        "distributed"
+      ],
+      "source_role": "local_signal",
+      "source_family": "local_news",
+      "source_type": "approved_proposal",
+      "source_purpose": "current_news",
+      "collector_source_type": "manual_review",
+      "location_name": "Superior and Douglas County, Wisconsin",
+      "state": "Wisconsin",
+      "location_scope": "local",
+      "affected_groups": [
+        "Douglas County residents using Faith Food Pantry",
+        "households relying on emergency food assistance",
+        "approximately 960 recent monthly pantry users"
+      ],
+      "supported_product_geography": true,
+      "source_public_story_eligible": true,
+      "freshness_status": "current",
+      "source_freshness_status": "current",
+      "source_freshness_date_basis": "source_published_at",
+      "freshness_role": "current",
+      "primary_eligible": true,
+      "qualifies_for_public_inclusion": true,
+      "public_inclusion_reason": "",
+      "public_inclusion_bucket": "included_as_lead",
+      "included": true,
+      "included_as_lead": true,
+      "review_status": "approved",
+      "traceability_status": "traceable",
+      "public_claim_eligible": true,
+      "public_claim_blockers": [],
+      "map_eligible": false
+    }
+  ]
+}

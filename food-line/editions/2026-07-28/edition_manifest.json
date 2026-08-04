@@ -75,6 +75,8 @@
   "publication_approval": false,
   "publication_eligible": false,
   "pages_status": "not_synced",
+  "public_release_status": "published",
+  "pages_release_status": "synced",
   "bluesky_status": "not_posted",
   "audio_status": "not_generated",
   "map_status": "not_published",

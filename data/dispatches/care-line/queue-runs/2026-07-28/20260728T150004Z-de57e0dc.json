@@ -1,0 +1,77 @@
+{
+  "completed_at": "2026-07-28T15:00:04.953500Z",
+  "enqueue": {
+    "added": [],
+    "dry_run": false,
+    "excluded": [
+      {
+        "event_id": "",
+        "reason": "missing stable event lineage",
+        "source_record_id": "care-line-direct-discovery-196621161639f9f2"
+      },
+      {
+        "event_id": "",
+        "reason": "missing stable event lineage",
+        "source_record_id": "care-line-direct-discovery-1ca33817c06119bc"
+      },
+      {
+        "event_id": "event_a12dae614b86cfa9",
+        "reason": "event is already published",
+        "source_record_id": "care-line-direct-discovery-4a1461b9eccb0219"
+      },
+      {
+        "event_id": "",
+        "reason": "missing stable event lineage",
+        "source_record_id": "care-line-direct-discovery-8accd0f62b550cc4"
+      },
+      {
+        "event_id": "",
+        "reason": "missing stable event lineage",
+        "source_record_id": "care-line-direct-discovery-9543c43464dbd7d4"
+      },
+      {
+        "event_id": "event_3b4ad4e528e48744",
+        "reason": "event is already published",
+        "source_record_id": "care-line-direct-discovery-fe1cba7829f11dc2"
+      }
+    ],
+    "operation": "enqueue",
+    "queue_after": 0,
+    "queue_before": 0,
+    "reviewed_records_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\care-line\\reviewed\\2026-07-22\\reviewed_records.json"
+  },
+  "inspection": {
+    "counts_by_state": {},
+    "queue": [],
+    "queue_path": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/universal_events/publication-state/care-line-reviewed-event-queue.json",
+    "reviewed_records_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\care-line\\reviewed\\2026-07-22\\reviewed_records.json",
+    "schema_version": 1
+  },
+  "lock": {
+    "path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\universal_events\\publication-state\\care-line-reviewed-event-queue.lock",
+    "stale_recovered": false
+  },
+  "ok": true,
+  "publication_dry_run": {
+    "ok": true,
+    "site_artifacts": [],
+    "status": "nothing_to_publish"
+  },
+  "queue_path": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/universal_events/publication-state/care-line-reviewed-event-queue.json",
+  "release_set": {
+    "excluded": [],
+    "operation": "release-set",
+    "proposed_files": [],
+    "proposed_publication_scope": {
+      "dispatch": "care-line",
+      "event_ids": []
+    },
+    "selected_event_ids": [],
+    "selected_queue_ids": [],
+    "selected_source_record_ids": [],
+    "timestamp_decisions": "publication state retains first public publication timestamps; no timestamps are assigned during selection"
+  },
+  "run_id": "20260728T150004Z-de57e0dc",
+  "started_at": "2026-07-28T15:00:04.949144Z",
+  "status": "nothing_to_publish"
+}

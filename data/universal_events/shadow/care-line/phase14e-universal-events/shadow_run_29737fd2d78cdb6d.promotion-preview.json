@@ -1,0 +1,97 @@
+{
+  "promotion_previews": [
+    {
+      "blocking_conditions": [
+        "candidate_not_approved",
+        "promotion_review_not_approved",
+        "unresolved_required_mention:event_location",
+        "unresolved_required_mention:facility"
+      ],
+      "candidate_id": "candidate_2955a4afd73acd6f",
+      "care_line_record_id": "care-line-direct-discovery-fe1cba7829f11dc2",
+      "evidence_links": [
+        {
+          "source_item_id": "source_item_a9b44fdffc490425",
+          "source_url": "https://beckersspine.com/spine/ucsf-debuts-new-unit-for-neurosurgical-patients",
+          "supporting_passage": "UCSF Benioff Children’s Hospital San Francisco has opened an eight-bed Children’s Neuroscience Specialty Unit, expanding its inpatient capacity for children with neurologic and neurosurgical conditions."
+        }
+      ],
+      "healthcare_attributes": {
+        "care_line_evidence_level": "publisher_source",
+        "change_direction": "expanded_or_restored",
+        "effective_date_text": "2026-07-22",
+        "facility_name_raw": "UCSF Benioff Children?s Hospital San Francisco",
+        "service_line": "pediatrics",
+        "service_line_normalized": "pediatrics",
+        "temporary_or_permanent": "permanent"
+      },
+      "producer_provenance": {
+        "producer": "Care Line",
+        "producer_record_id": "care-line-direct-discovery-fe1cba7829f11dc2",
+        "raw_payload_hash": "31d1c358302efa1036fcf6306fc93194588f2bf2237484b2defd13d504dbba37"
+      },
+      "promotion_eligible": false,
+      "promotion_review": {},
+      "proposed_event_payload": {
+        "announcement_date": "2026-07-22",
+        "domain": "healthcare_access",
+        "effective_date": "2026-07-22",
+        "event_id": "event_3b4ad4e528e48744",
+        "event_type": "service_expansion",
+        "published_date": "2026-07-22T00:00:00",
+        "status": "announced",
+        "summary": "",
+        "title": "UCSF debuts new unit for neurosurgical patients"
+      },
+      "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+      "warnings": []
+    },
+    {
+      "blocking_conditions": [
+        "candidate_not_approved",
+        "promotion_review_not_approved",
+        "unresolved_required_mention:event_location",
+        "unresolved_required_mention:facility"
+      ],
+      "candidate_id": "candidate_8de3e338a07cd6d3",
+      "care_line_record_id": "care-line-direct-discovery-4a1461b9eccb0219",
+      "evidence_links": [
+        {
+          "source_item_id": "source_item_2674b521fbbc2e2f",
+          "source_url": "https://beckerspayer.com/contracting/north-carolina-system-to-start-going-out-of-network-with-unitedhealthcare-in-april",
+          "supporting_passage": "Hospitals under Greenville, N.C.-based ECU Health — a collaboration between East Carolina University and Vidant Health — will remain in network for some UnitedHealthcare plans through Aug. 6, the insurer and health system said."
+        }
+      ],
+      "healthcare_attributes": {
+        "care_line_evidence_level": "publisher_source",
+        "change_direction": "expanded_or_restored",
+        "effective_date_text": "2026-08-06",
+        "facility_name_raw": "ECU Health hospitals",
+        "service_line": "other",
+        "temporary_or_permanent": "temporary_or_unknown"
+      },
+      "producer_provenance": {
+        "producer": "Care Line",
+        "producer_record_id": "care-line-direct-discovery-4a1461b9eccb0219",
+        "raw_payload_hash": "8369b02a60537cd5706f6b1e050192481bff5db94b637036571272ba41bb38c9"
+      },
+      "promotion_eligible": false,
+      "promotion_review": {},
+      "proposed_event_payload": {
+        "announcement_date": "2026-07-21",
+        "domain": "healthcare_access",
+        "effective_date": "2026-08-06",
+        "event_id": "event_a12dae614b86cfa9",
+        "event_type": "service_restoration",
+        "published_date": "2026-07-21T00:00:00",
+        "status": "completed",
+        "summary": "",
+        "title": "UnitedHealthcare, ECU Health extend agreement until August"
+      },
+      "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+      "warnings": []
+    }
+  ],
+  "schema_version": "bluefern.care_line.phase5.v1",
+  "shadow_run_id": "shadow_run_29737fd2d78cdb6d"
+}

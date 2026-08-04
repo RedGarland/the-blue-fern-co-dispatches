@@ -1,0 +1,2330 @@
+[
+  {
+    "address_line_1": "",
+    "address_line_2": "",
+    "announcement_date": "2026-07-22",
+    "authoritative_intake": {
+      "canonical_hostname": "beckersbehavioralhealth.com",
+      "intake_record_id": "care-line-phase12-intake-63adb428923162cf",
+      "override_reason": "",
+      "schema_version": "bluefern.care_line.authoritative_source_intake.v1",
+      "source_fingerprint": "f7c3885404b4312e2f4f74633dec864e19cd3e12e45aea190ebb016079d4e900",
+      "validation_warnings": []
+    },
+    "canonical_url": "https://beckersbehavioralhealth.com/behavioral-health-news/yale-new-haven-childrens-hospital-launches-pediatric-crisis-center",
+    "care_line_review_status": "reviewed",
+    "city": "New Haven",
+    "claim_supported": "Support: Yale New Haven Children?s Hospital launches a pediatric crisis center for children and adolescents.",
+    "confidence": "reviewed",
+    "context_only": false,
+    "country_code": "US",
+    "county": "New Haven",
+    "date_precision": "day",
+    "discovery_provenance": {
+      "discovery_date": null,
+      "discovery_file": null,
+      "discovery_record_id": "care-line-direct-discovery-196621161639f9f2",
+      "headline": null,
+      "proposal_fingerprint": "a1f6df3f8d26c15d7e22d2e1336bf0802a6c9a2b5741ebfab70c083e9cecc097",
+      "reported_publication_date": null,
+      "reported_publisher": null,
+      "snippet": null,
+      "source_payload_fingerprint": "057993f2e026fb4e6cd5f2adc58b9f38916c6a2bed0366621f3429802bffb704",
+      "wrapper_url": null
+    },
+    "duplicate_of_record_id": "",
+    "effective_date": "2026-07-22",
+    "event_type": "service_expansion",
+    "evidence_level": "publisher_source",
+    "evidence_strength": "reviewed",
+    "evidence_text": "Support: Yale New Haven Children?s Hospital launches a pediatric crisis center for children and adolescents.",
+    "excluded": false,
+    "facility_name": "Yale New Haven Children?s Hospital",
+    "facility_type": "",
+    "field_provenance": {
+      "address_line_1": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "address_line_2": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "announcement_date": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "2026-07-22"
+      },
+      "canonical_source_url": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "https://www.beckersbehavioralhealth.com/behavioral-health-news/yale-new-haven-childrens-hospital-launches-pediatric-crisis-center"
+      },
+      "care_line_public_eligible": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "True"
+      },
+      "city": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "New Haven"
+      },
+      "country_code": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "US"
+      },
+      "county": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "New Haven"
+      },
+      "date_precision": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "day"
+      },
+      "discovery_date": {
+        "prior_value": "",
+        "provenance_type": "discovery_metadata",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "2026-07-22"
+      },
+      "discovery_record_id": {
+        "prior_value": "care-line-direct-discovery-196621161639f9f2",
+        "provenance_type": "discovery_metadata",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "care-line-direct-discovery-196621161639f9f2"
+      },
+      "duplicate_of_record_id": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "effective_date": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "2026-07-22"
+      },
+      "event_type": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "service_expansion"
+      },
+      "evidence_level": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "publisher_source"
+      },
+      "evidence_strength": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "reviewed"
+      },
+      "facility_name": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "Yale New Haven Children?s Hospital"
+      },
+      "facility_type": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "former_owner": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "intake_record_id": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "care-line-phase12-intake-63adb428923162cf"
+      },
+      "is_primary_source": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "False"
+      },
+      "new_owner": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "operator_name": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "parent_organization": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "permanence": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "permanent"
+      },
+      "postal_code": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "provider_name": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "Yale New Haven Children?s Hospital"
+      },
+      "publication_date": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "2026-07-22"
+      },
+      "publisher": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "Becker's Behavioral Health"
+      },
+      "review_notes": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "Support: Yale New Haven Children?s Hospital launches a pediatric crisis center for children and adolescents."
+      },
+      "review_reason": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion."
+      },
+      "reviewed_at": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "reviewer": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "Codex"
+      },
+      "schema_version": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "bluefern.care_line.authoritative_source_intake.v1"
+      },
+      "service_line": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "behavioral_health"
+      },
+      "source_role": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "clinic_operations_signal"
+      },
+      "source_title": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "Yale New Haven Children’s Hospital launches pediatric crisis center"
+      },
+      "source_type": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "publisher_article"
+      },
+      "state": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "CT"
+      },
+      "supersedes_intake_record_id": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "supporting_passage": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "universal_event_eligible": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": "True"
+      },
+      "withdrawal_status": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+        "reviewer": "Codex",
+        "value": ""
+      }
+    },
+    "former_owner": "",
+    "included": true,
+    "intake_record_id": "care-line-phase12-intake-63adb428923162cf",
+    "is_primary_source": false,
+    "is_withdrawn": false,
+    "location_name": "New Haven, CT",
+    "new_owner": "",
+    "operator": "",
+    "operator_name": "",
+    "parent_organization": "",
+    "permanence": "permanent",
+    "postal_code": "",
+    "pressure_signal": true,
+    "producer": "Care Line",
+    "producer_record_id": "care-line-direct-discovery-196621161639f9f2",
+    "provider_name": "Yale New Haven Children?s Hospital",
+    "public_status": "public_approved",
+    "publication_date": "2026-07-22",
+    "published_at": "2026-07-22",
+    "publisher": "Becker's Behavioral Health",
+    "qualifies_for_public_inclusion": true,
+    "record_status": "active",
+    "review_reason": "Approved: A pediatric behavioral crisis center launch is a concrete service expansion.",
+    "review_status": "reviewed",
+    "reviewed_at": "",
+    "reviewer": "Codex",
+    "schema_version": "bluefern.care_line.reviewed_source.v1",
+    "service_line": "behavioral_health",
+    "source_family": "publisher_article",
+    "source_public_story_eligible": true,
+    "source_record_id": "care-line-direct-discovery-196621161639f9f2",
+    "source_role": "clinic_operations_signal",
+    "source_title": "Yale New Haven Children’s Hospital launches pediatric crisis center",
+    "source_type": "publisher_article",
+    "source_url": "https://beckersbehavioralhealth.com/behavioral-health-news/yale-new-haven-childrens-hospital-launches-pediatric-crisis-center",
+    "state": "CT",
+    "supersedes_record_id": "",
+    "supporting_passage": "Support: Yale New Haven Children?s Hospital launches a pediatric crisis center for children and adolescents.",
+    "title": "Yale New Haven Children’s Hospital launches pediatric crisis center",
+    "universal_event_type": "service_expansion",
+    "url": "https://beckersbehavioralhealth.com/behavioral-health-news/yale-new-haven-childrens-hospital-launches-pediatric-crisis-center",
+    "withdrawn": false
+  },
+  {
+    "address_line_1": "",
+    "address_line_2": "",
+    "announcement_date": "2026-07-22",
+    "authoritative_intake": {
+      "canonical_hostname": "beckershospitalreview.com",
+      "intake_record_id": "care-line-phase12-intake-b52cad78b31ae0c6",
+      "override_reason": "",
+      "schema_version": "bluefern.care_line.authoritative_source_intake.v1",
+      "source_fingerprint": "442d7463fde4cf1cda19f34970a3a217fe295ee797a6778c30b913d1e1d1944c",
+      "validation_warnings": []
+    },
+    "canonical_url": "https://beckershospitalreview.com/finance/illinois-hospital-gets-6-more-months-to-reopen",
+    "care_line_review_status": "reviewed",
+    "city": "Oak Park",
+    "claim_supported": "Support: the hospital resumed hospital-based clinic and outpatient testing services on April 15, the general surgery clinic was reopening that week, and full operations were targeted for early July.",
+    "confidence": "reviewed",
+    "context_only": false,
+    "country_code": "US",
+    "county": "Cook",
+    "date_precision": "day",
+    "discovery_provenance": {
+      "discovery_date": null,
+      "discovery_file": null,
+      "discovery_record_id": "care-line-direct-discovery-1ca33817c06119bc",
+      "headline": null,
+      "proposal_fingerprint": "7bdd3f7328947de795c5b13276decad4b0953218096080027a7dfc0f12b82ce7",
+      "reported_publication_date": null,
+      "reported_publisher": null,
+      "snippet": null,
+      "source_payload_fingerprint": "8bd0fdc0d45b4fbc2a9fac7b313ca43a044be02470c9b11cdca97d4b349a3f68",
+      "wrapper_url": null
+    },
+    "duplicate_of_record_id": "",
+    "effective_date": "2026-07-22",
+    "event_type": "facility_reopening",
+    "evidence_level": "publisher_source",
+    "evidence_strength": "reviewed",
+    "evidence_text": "Support: the hospital resumed hospital-based clinic and outpatient testing services on April 15, the general surgery clinic was reopening that week, and full operations were targeted for early July.",
+    "excluded": false,
+    "facility_name": "West Suburban Medical Center",
+    "facility_type": "",
+    "field_provenance": {
+      "address_line_1": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "address_line_2": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "announcement_date": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "2026-07-22"
+      },
+      "canonical_source_url": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "https://www.beckershospitalreview.com/finance/illinois-hospital-gets-6-more-months-to-reopen"
+      },
+      "care_line_public_eligible": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "True"
+      },
+      "city": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "Oak Park"
+      },
+      "country_code": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "US"
+      },
+      "county": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "Cook"
+      },
+      "date_precision": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "day"
+      },
+      "discovery_date": {
+        "prior_value": "",
+        "provenance_type": "discovery_metadata",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "2026-07-22"
+      },
+      "discovery_record_id": {
+        "prior_value": "care-line-direct-discovery-1ca33817c06119bc",
+        "provenance_type": "discovery_metadata",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "care-line-direct-discovery-1ca33817c06119bc"
+      },
+      "duplicate_of_record_id": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "effective_date": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "2026-07-22"
+      },
+      "event_type": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "facility_reopening"
+      },
+      "evidence_level": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "publisher_source"
+      },
+      "evidence_strength": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "reviewed"
+      },
+      "facility_name": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "West Suburban Medical Center"
+      },
+      "facility_type": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "former_owner": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "intake_record_id": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "care-line-phase12-intake-b52cad78b31ae0c6"
+      },
+      "is_primary_source": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "False"
+      },
+      "new_owner": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "operator_name": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "parent_organization": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "permanence": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "temporary_or_unknown"
+      },
+      "postal_code": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "provider_name": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "West Suburban Medical Center"
+      },
+      "publication_date": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "2026-07-22"
+      },
+      "publisher": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "Becker's Hospital Review"
+      },
+      "review_notes": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "Support: the hospital resumed hospital-based clinic and outpatient testing services on April 15, the general surgery clinic was reopening that week, and full operations were targeted for early July."
+      },
+      "review_reason": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "Approved: Hospital reopening process is concrete and time-bounded."
+      },
+      "reviewed_at": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "reviewer": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "Codex"
+      },
+      "schema_version": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "bluefern.care_line.authoritative_source_intake.v1"
+      },
+      "service_line": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "inpatient_care"
+      },
+      "source_role": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "clinic_operations_signal"
+      },
+      "source_title": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "Illinois hospital gets 6 more months to reopen"
+      },
+      "source_type": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "publisher_article"
+      },
+      "state": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "IL"
+      },
+      "supersedes_intake_record_id": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "supporting_passage": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "universal_event_eligible": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": "True"
+      },
+      "withdrawal_status": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+        "reviewer": "Codex",
+        "value": ""
+      }
+    },
+    "former_owner": "",
+    "included": true,
+    "intake_record_id": "care-line-phase12-intake-b52cad78b31ae0c6",
+    "is_primary_source": false,
+    "is_withdrawn": false,
+    "location_name": "Oak Park, IL",
+    "new_owner": "",
+    "operator": "",
+    "operator_name": "",
+    "parent_organization": "",
+    "permanence": "temporary_or_unknown",
+    "postal_code": "",
+    "pressure_signal": true,
+    "producer": "Care Line",
+    "producer_record_id": "care-line-direct-discovery-1ca33817c06119bc",
+    "provider_name": "West Suburban Medical Center",
+    "public_status": "public_approved",
+    "publication_date": "2026-07-22",
+    "published_at": "2026-07-22",
+    "publisher": "Becker's Hospital Review",
+    "qualifies_for_public_inclusion": true,
+    "record_status": "active",
+    "review_reason": "Approved: Hospital reopening process is concrete and time-bounded.",
+    "review_status": "reviewed",
+    "reviewed_at": "",
+    "reviewer": "Codex",
+    "schema_version": "bluefern.care_line.reviewed_source.v1",
+    "service_line": "inpatient_care",
+    "source_family": "publisher_article",
+    "source_public_story_eligible": true,
+    "source_record_id": "care-line-direct-discovery-1ca33817c06119bc",
+    "source_role": "clinic_operations_signal",
+    "source_title": "Illinois hospital gets 6 more months to reopen",
+    "source_type": "publisher_article",
+    "source_url": "https://beckershospitalreview.com/finance/illinois-hospital-gets-6-more-months-to-reopen",
+    "state": "IL",
+    "supersedes_record_id": "",
+    "supporting_passage": "Support: the hospital resumed hospital-based clinic and outpatient testing services on April 15, the general surgery clinic was reopening that week, and full operations were targeted for early July.",
+    "title": "Illinois hospital gets 6 more months to reopen",
+    "universal_event_type": "facility_reopening",
+    "url": "https://beckershospitalreview.com/finance/illinois-hospital-gets-6-more-months-to-reopen",
+    "withdrawn": false
+  },
+  {
+    "address_line_1": "",
+    "address_line_2": "",
+    "announcement_date": "2026-07-21",
+    "authoritative_intake": {
+      "canonical_hostname": "beckerspayer.com",
+      "intake_record_id": "care-line-phase12-intake-58adb651d5211eb2",
+      "override_reason": "",
+      "schema_version": "bluefern.care_line.authoritative_source_intake.v1",
+      "source_fingerprint": "7fad04d6ef731e3f39d4be42fb940292f23e0843fc09de108c45ea5c5e4be8c5",
+      "validation_warnings": []
+    },
+    "canonical_url": "https://beckerspayer.com/contracting/north-carolina-system-to-start-going-out-of-network-with-unitedhealthcare-in-april",
+    "care_line_review_status": "reviewed",
+    "city": "Greenville",
+    "claim_supported": "Support: ECU Health hospitals will remain in network for some UnitedHealthcare plans through Aug. 6, rather than July 15, so hospital access continues for affected members.",
+    "confidence": "reviewed",
+    "context_only": false,
+    "country_code": "US",
+    "county": "Pitt",
+    "date_precision": "day",
+    "discovery_provenance": {
+      "discovery_date": null,
+      "discovery_file": null,
+      "discovery_record_id": "care-line-direct-discovery-4a1461b9eccb0219",
+      "headline": null,
+      "proposal_fingerprint": "df79cddf77186d531e2fbcc55ec9d3d39bd56a277b6da19f414c2b4aebc5c94d",
+      "reported_publication_date": null,
+      "reported_publisher": null,
+      "snippet": null,
+      "source_payload_fingerprint": "4a1de698c0be2cd6ef27603f43912aa14eb9cd9e0ea6ed9697e773289de49ee5",
+      "wrapper_url": null
+    },
+    "duplicate_of_record_id": "",
+    "effective_date": "2026-08-06",
+    "event_type": "service_restoration",
+    "evidence_level": "publisher_source",
+    "evidence_strength": "reviewed",
+    "evidence_text": "Support: ECU Health hospitals will remain in network for some UnitedHealthcare plans through Aug. 6, rather than July 15, so hospital access continues for affected members.",
+    "excluded": false,
+    "facility_name": "ECU Health hospitals",
+    "facility_type": "",
+    "field_provenance": {
+      "address_line_1": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "address_line_2": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "announcement_date": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "2026-07-21"
+      },
+      "canonical_source_url": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "https://www.beckerspayer.com/contracting/north-carolina-system-to-start-going-out-of-network-with-unitedhealthcare-in-april"
+      },
+      "care_line_public_eligible": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "True"
+      },
+      "city": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "Greenville"
+      },
+      "country_code": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "US"
+      },
+      "county": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "Pitt"
+      },
+      "date_precision": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "day"
+      },
+      "discovery_date": {
+        "prior_value": "",
+        "provenance_type": "discovery_metadata",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "2026-07-22"
+      },
+      "discovery_record_id": {
+        "prior_value": "care-line-direct-discovery-4a1461b9eccb0219",
+        "provenance_type": "discovery_metadata",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "care-line-direct-discovery-4a1461b9eccb0219"
+      },
+      "duplicate_of_record_id": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "effective_date": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "2026-08-06"
+      },
+      "event_type": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "service_restoration"
+      },
+      "evidence_level": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "publisher_source"
+      },
+      "evidence_strength": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "reviewed"
+      },
+      "facility_name": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "ECU Health hospitals"
+      },
+      "facility_type": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "former_owner": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "intake_record_id": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "care-line-phase12-intake-58adb651d5211eb2"
+      },
+      "is_primary_source": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "False"
+      },
+      "new_owner": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "operator_name": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "parent_organization": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "permanence": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "temporary_or_unknown"
+      },
+      "postal_code": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "provider_name": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "ECU Health"
+      },
+      "publication_date": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "2026-07-21"
+      },
+      "publisher": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "Becker's Payer Issues"
+      },
+      "review_notes": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "Support: ECU Health hospitals will remain in network for some UnitedHealthcare plans through Aug. 6, rather than July 15, so hospital access continues for affected members."
+      },
+      "review_reason": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "Approved: Network access was extended, preserving patient access to ECU Health hospitals."
+      },
+      "reviewed_at": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "reviewer": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "Codex"
+      },
+      "schema_version": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "bluefern.care_line.authoritative_source_intake.v1"
+      },
+      "service_line": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "other"
+      },
+      "source_role": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "clinic_operations_signal"
+      },
+      "source_title": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "UnitedHealthcare, ECU Health extend agreement until August"
+      },
+      "source_type": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "publisher_article"
+      },
+      "state": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "NC"
+      },
+      "supersedes_intake_record_id": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "supporting_passage": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "universal_event_eligible": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": "True"
+      },
+      "withdrawal_status": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+        "reviewer": "Codex",
+        "value": ""
+      }
+    },
+    "former_owner": "",
+    "included": true,
+    "intake_record_id": "care-line-phase12-intake-58adb651d5211eb2",
+    "is_primary_source": false,
+    "is_withdrawn": false,
+    "location_name": "Greenville, NC",
+    "new_owner": "",
+    "operator": "",
+    "operator_name": "",
+    "parent_organization": "",
+    "permanence": "temporary_or_unknown",
+    "postal_code": "",
+    "pressure_signal": true,
+    "producer": "Care Line",
+    "producer_record_id": "care-line-direct-discovery-4a1461b9eccb0219",
+    "provider_name": "ECU Health",
+    "public_status": "public_approved",
+    "publication_date": "2026-07-21",
+    "published_at": "2026-07-21",
+    "publisher": "Becker's Payer Issues",
+    "qualifies_for_public_inclusion": true,
+    "record_status": "active",
+    "review_reason": "Approved: Network access was extended, preserving patient access to ECU Health hospitals.",
+    "review_status": "reviewed",
+    "reviewed_at": "",
+    "reviewer": "Codex",
+    "schema_version": "bluefern.care_line.reviewed_source.v1",
+    "service_line": "other",
+    "source_family": "publisher_article",
+    "source_public_story_eligible": true,
+    "source_record_id": "care-line-direct-discovery-4a1461b9eccb0219",
+    "source_role": "clinic_operations_signal",
+    "source_title": "UnitedHealthcare, ECU Health extend agreement until August",
+    "source_type": "publisher_article",
+    "source_url": "https://beckerspayer.com/contracting/north-carolina-system-to-start-going-out-of-network-with-unitedhealthcare-in-april",
+    "state": "NC",
+    "supersedes_record_id": "",
+    "supporting_passage": "Support: ECU Health hospitals will remain in network for some UnitedHealthcare plans through Aug. 6, rather than July 15, so hospital access continues for affected members.",
+    "title": "UnitedHealthcare, ECU Health extend agreement until August",
+    "universal_event_type": "service_restoration",
+    "url": "https://beckerspayer.com/contracting/north-carolina-system-to-start-going-out-of-network-with-unitedhealthcare-in-april",
+    "withdrawn": false
+  },
+  {
+    "address_line_1": "",
+    "address_line_2": "",
+    "announcement_date": "2026-07-22",
+    "authoritative_intake": {
+      "canonical_hostname": "beckershospitalreview.com",
+      "intake_record_id": "care-line-phase12-intake-60c470be31ba3be7",
+      "override_reason": "",
+      "schema_version": "bluefern.care_line.authoritative_source_intake.v1",
+      "source_fingerprint": "70f8af54657fe9b3449231dddb5ea815c1d769ff90bf97938918b9aa4255874e",
+      "validation_warnings": []
+    },
+    "canonical_url": "https://beckershospitalreview.com/finance/chs-q2-profit-down-75-as-hospital-footprint-falls-to-60-7-things-to-know",
+    "care_line_review_status": "reviewed",
+    "city": "Cahokia Heights",
+    "claim_supported": "Support: SIHF Healthcare received approval to build a $231 million hospital in Cahokia Heights that will replace Touchette Regional Hospital and nearly triple psychiatric beds from 38 to 96.",
+    "confidence": "reviewed",
+    "context_only": false,
+    "country_code": "US",
+    "county": "",
+    "date_precision": "day",
+    "discovery_provenance": {
+      "discovery_date": null,
+      "discovery_file": null,
+      "discovery_record_id": "care-line-direct-discovery-8accd0f62b550cc4",
+      "headline": null,
+      "proposal_fingerprint": "3d9356a80cce5f45f2f7b5dbc82ab4bc8253650b41b687ccaf71caeb456586f1",
+      "reported_publication_date": null,
+      "reported_publisher": null,
+      "snippet": null,
+      "source_payload_fingerprint": "b82c690af493adadee5368a6630fcdb3a41726d16a7cc2f10612a51276643806",
+      "wrapper_url": null
+    },
+    "duplicate_of_record_id": "",
+    "effective_date": "2027-03-01",
+    "event_type": "service_expansion",
+    "evidence_level": "publisher_source",
+    "evidence_strength": "reviewed",
+    "evidence_text": "Support: SIHF Healthcare received approval to build a $231 million hospital in Cahokia Heights that will replace Touchette Regional Hospital and nearly triple psychiatric beds from 38 to 96.",
+    "excluded": false,
+    "facility_name": "Touchette Regional Hospital replacement hospital",
+    "facility_type": "",
+    "field_provenance": {
+      "address_line_1": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "address_line_2": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "announcement_date": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "2026-07-22"
+      },
+      "canonical_source_url": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "https://www.beckershospitalreview.com/finance/chs-q2-profit-down-75-as-hospital-footprint-falls-to-60-7-things-to-know"
+      },
+      "care_line_public_eligible": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "True"
+      },
+      "city": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "Cahokia Heights"
+      },
+      "country_code": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "US"
+      },
+      "county": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "date_precision": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "day"
+      },
+      "discovery_date": {
+        "prior_value": "",
+        "provenance_type": "discovery_metadata",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "2026-07-22"
+      },
+      "discovery_record_id": {
+        "prior_value": "care-line-direct-discovery-8accd0f62b550cc4",
+        "provenance_type": "discovery_metadata",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "care-line-direct-discovery-8accd0f62b550cc4"
+      },
+      "duplicate_of_record_id": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "effective_date": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "2027-03-01"
+      },
+      "event_type": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "service_expansion"
+      },
+      "evidence_level": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "publisher_source"
+      },
+      "evidence_strength": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "reviewed"
+      },
+      "facility_name": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "Touchette Regional Hospital replacement hospital"
+      },
+      "facility_type": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "former_owner": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "intake_record_id": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "care-line-phase12-intake-60c470be31ba3be7"
+      },
+      "is_primary_source": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "False"
+      },
+      "new_owner": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "operator_name": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "parent_organization": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "SIHF Healthcare"
+      },
+      "permanence": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "permanent"
+      },
+      "postal_code": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "provider_name": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "SIHF Healthcare"
+      },
+      "publication_date": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "2026-07-22"
+      },
+      "publisher": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "Becker's Hospital Review"
+      },
+      "review_notes": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "Support: SIHF Healthcare received approval to build a $231 million hospital in Cahokia Heights that will replace Touchette Regional Hospital and nearly triple psychiatric beds from 38 to 96."
+      },
+      "review_reason": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "Approved: A replacement hospital with added psychiatric beds is directly approved."
+      },
+      "reviewed_at": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "reviewer": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "Codex"
+      },
+      "schema_version": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "bluefern.care_line.authoritative_source_intake.v1"
+      },
+      "service_line": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "psychiatric_care"
+      },
+      "source_role": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "clinic_operations_signal"
+      },
+      "source_title": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "CHS Q2 profit down 75% as hospital footprint falls to 60:  7 things to know"
+      },
+      "source_type": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "publisher_article"
+      },
+      "state": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "IL"
+      },
+      "supersedes_intake_record_id": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "supporting_passage": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "universal_event_eligible": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": "True"
+      },
+      "withdrawal_status": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+        "reviewer": "Codex",
+        "value": ""
+      }
+    },
+    "former_owner": "",
+    "included": true,
+    "intake_record_id": "care-line-phase12-intake-60c470be31ba3be7",
+    "is_primary_source": false,
+    "is_withdrawn": false,
+    "location_name": "Cahokia Heights, IL",
+    "new_owner": "",
+    "operator": "",
+    "operator_name": "",
+    "parent_organization": "SIHF Healthcare",
+    "permanence": "permanent",
+    "postal_code": "",
+    "pressure_signal": true,
+    "producer": "Care Line",
+    "producer_record_id": "care-line-direct-discovery-8accd0f62b550cc4",
+    "provider_name": "SIHF Healthcare",
+    "public_status": "public_approved",
+    "publication_date": "2026-07-22",
+    "published_at": "2026-07-22",
+    "publisher": "Becker's Hospital Review",
+    "qualifies_for_public_inclusion": true,
+    "record_status": "active",
+    "review_reason": "Approved: A replacement hospital with added psychiatric beds is directly approved.",
+    "review_status": "reviewed",
+    "reviewed_at": "",
+    "reviewer": "Codex",
+    "schema_version": "bluefern.care_line.reviewed_source.v1",
+    "service_line": "psychiatric_care",
+    "source_family": "publisher_article",
+    "source_public_story_eligible": true,
+    "source_record_id": "care-line-direct-discovery-8accd0f62b550cc4",
+    "source_role": "clinic_operations_signal",
+    "source_title": "CHS Q2 profit down 75% as hospital footprint falls to 60:  7 things to know",
+    "source_type": "publisher_article",
+    "source_url": "https://beckershospitalreview.com/finance/chs-q2-profit-down-75-as-hospital-footprint-falls-to-60-7-things-to-know",
+    "state": "IL",
+    "supersedes_record_id": "",
+    "supporting_passage": "Support: SIHF Healthcare received approval to build a $231 million hospital in Cahokia Heights that will replace Touchette Regional Hospital and nearly triple psychiatric beds from 38 to 96.",
+    "title": "CHS Q2 profit down 75% as hospital footprint falls to 60:  7 things to know",
+    "universal_event_type": "service_expansion",
+    "url": "https://beckershospitalreview.com/finance/chs-q2-profit-down-75-as-hospital-footprint-falls-to-60-7-things-to-know",
+    "withdrawn": false
+  },
+  {
+    "address_line_1": "",
+    "address_line_2": "",
+    "announcement_date": "2026-07-22",
+    "authoritative_intake": {
+      "canonical_hostname": "beckershospitalreview.com",
+      "intake_record_id": "care-line-phase12-intake-37ee75d5b371ae0c",
+      "override_reason": "",
+      "schema_version": "bluefern.care_line.authoritative_source_intake.v1",
+      "source_fingerprint": "a74e559fe9630e69f2c3ecd8f0d0aaf1edf926ef8d64583ef0b326aff6a18cc7",
+      "validation_warnings": []
+    },
+    "canonical_url": "https://beckershospitalreview.com/lab/cleveland-clinic-scales-lab-as-cyclospora-tests-jump-from-1-2-daily-to-400",
+    "care_line_review_status": "reviewed",
+    "city": "Cleveland",
+    "claim_supported": "Support: the source reports Cleveland Clinic scaling its lab as cyclospora tests jumped from 1-2 per day to 400.",
+    "confidence": "reviewed",
+    "context_only": false,
+    "country_code": "US",
+    "county": "Cuyahoga",
+    "date_precision": "day",
+    "discovery_provenance": {
+      "discovery_date": null,
+      "discovery_file": null,
+      "discovery_record_id": "care-line-direct-discovery-9543c43464dbd7d4",
+      "headline": null,
+      "proposal_fingerprint": "743fb84c301834476207b1c795446ff3c4cff9177bc7e0cd9077bcdef93d3017",
+      "reported_publication_date": null,
+      "reported_publisher": null,
+      "snippet": null,
+      "source_payload_fingerprint": "20d3f27320c22f570afd4366d4e90c60fcd48a47bde50f980ede297b51926a27",
+      "wrapper_url": null
+    },
+    "duplicate_of_record_id": "",
+    "effective_date": "",
+    "event_type": "service_expansion",
+    "evidence_level": "publisher_source",
+    "evidence_strength": "reviewed",
+    "evidence_text": "Support: the source reports Cleveland Clinic scaling its lab as cyclospora tests jumped from 1-2 per day to 400.",
+    "excluded": false,
+    "facility_name": "Cleveland Clinic",
+    "facility_type": "",
+    "field_provenance": {
+      "address_line_1": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "address_line_2": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "announcement_date": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "2026-07-22"
+      },
+      "canonical_source_url": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "https://www.beckershospitalreview.com/lab/cleveland-clinic-scales-lab-as-cyclospora-tests-jump-from-1-2-daily-to-400"
+      },
+      "care_line_public_eligible": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "True"
+      },
+      "city": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "Cleveland"
+      },
+      "country_code": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "US"
+      },
+      "county": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "Cuyahoga"
+      },
+      "date_precision": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "day"
+      },
+      "discovery_date": {
+        "prior_value": "",
+        "provenance_type": "discovery_metadata",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "2026-07-22"
+      },
+      "discovery_record_id": {
+        "prior_value": "care-line-direct-discovery-9543c43464dbd7d4",
+        "provenance_type": "discovery_metadata",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "care-line-direct-discovery-9543c43464dbd7d4"
+      },
+      "duplicate_of_record_id": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "effective_date": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "event_type": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "service_expansion"
+      },
+      "evidence_level": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "publisher_source"
+      },
+      "evidence_strength": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "reviewed"
+      },
+      "facility_name": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "Cleveland Clinic"
+      },
+      "facility_type": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "former_owner": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "intake_record_id": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "care-line-phase12-intake-37ee75d5b371ae0c"
+      },
+      "is_primary_source": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "False"
+      },
+      "new_owner": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "operator_name": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "parent_organization": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "permanence": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "temporary_or_unknown"
+      },
+      "postal_code": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "provider_name": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "Cleveland Clinic"
+      },
+      "publication_date": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "2026-07-22"
+      },
+      "publisher": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "Becker's Hospital Review"
+      },
+      "review_notes": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "Support: the source reports Cleveland Clinic scaling its lab as cyclospora tests jumped from 1-2 per day to 400."
+      },
+      "review_reason": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "Approved: Lab capacity scaled sharply in response to a real test surge."
+      },
+      "reviewed_at": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "reviewer": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "Codex"
+      },
+      "schema_version": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "bluefern.care_line.authoritative_source_intake.v1"
+      },
+      "service_line": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "specialty_care"
+      },
+      "source_role": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "clinic_operations_signal"
+      },
+      "source_title": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "Cleveland Clinic scales lab as cyclospora tests jump from 1-2 daily to 400"
+      },
+      "source_type": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "publisher_article"
+      },
+      "state": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "OH"
+      },
+      "supersedes_intake_record_id": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "supporting_passage": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "universal_event_eligible": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": "True"
+      },
+      "withdrawal_status": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+        "reviewer": "Codex",
+        "value": ""
+      }
+    },
+    "former_owner": "",
+    "included": true,
+    "intake_record_id": "care-line-phase12-intake-37ee75d5b371ae0c",
+    "is_primary_source": false,
+    "is_withdrawn": false,
+    "location_name": "Cleveland, OH",
+    "new_owner": "",
+    "operator": "",
+    "operator_name": "",
+    "parent_organization": "",
+    "permanence": "temporary_or_unknown",
+    "postal_code": "",
+    "pressure_signal": true,
+    "producer": "Care Line",
+    "producer_record_id": "care-line-direct-discovery-9543c43464dbd7d4",
+    "provider_name": "Cleveland Clinic",
+    "public_status": "public_approved",
+    "publication_date": "2026-07-22",
+    "published_at": "2026-07-22",
+    "publisher": "Becker's Hospital Review",
+    "qualifies_for_public_inclusion": true,
+    "record_status": "active",
+    "review_reason": "Approved: Lab capacity scaled sharply in response to a real test surge.",
+    "review_status": "reviewed",
+    "reviewed_at": "",
+    "reviewer": "Codex",
+    "schema_version": "bluefern.care_line.reviewed_source.v1",
+    "service_line": "specialty_care",
+    "source_family": "publisher_article",
+    "source_public_story_eligible": true,
+    "source_record_id": "care-line-direct-discovery-9543c43464dbd7d4",
+    "source_role": "clinic_operations_signal",
+    "source_title": "Cleveland Clinic scales lab as cyclospora tests jump from 1-2 daily to 400",
+    "source_type": "publisher_article",
+    "source_url": "https://beckershospitalreview.com/lab/cleveland-clinic-scales-lab-as-cyclospora-tests-jump-from-1-2-daily-to-400",
+    "state": "OH",
+    "supersedes_record_id": "",
+    "supporting_passage": "Support: the source reports Cleveland Clinic scaling its lab as cyclospora tests jumped from 1-2 per day to 400.",
+    "title": "Cleveland Clinic scales lab as cyclospora tests jump from 1-2 daily to 400",
+    "universal_event_type": "service_expansion",
+    "url": "https://beckershospitalreview.com/lab/cleveland-clinic-scales-lab-as-cyclospora-tests-jump-from-1-2-daily-to-400",
+    "withdrawn": false
+  },
+  {
+    "address_line_1": "",
+    "address_line_2": "",
+    "announcement_date": "2026-07-22",
+    "authoritative_intake": {
+      "canonical_hostname": "beckersspine.com",
+      "intake_record_id": "care-line-phase12-intake-ed35ab5f41cf3ccd",
+      "override_reason": "",
+      "schema_version": "bluefern.care_line.authoritative_source_intake.v1",
+      "source_fingerprint": "ba6a550a220f9214fc59900f85e9efe9e2766860a36ef8491c87705f26fa2412",
+      "validation_warnings": []
+    },
+    "canonical_url": "https://beckersspine.com/spine/ucsf-debuts-new-unit-for-neurosurgical-patients",
+    "care_line_review_status": "reviewed",
+    "city": "San Francisco",
+    "claim_supported": "Support: UCSF Benioff Children?s Hospital San Francisco opened an eight-bed Children?s Neuroscience Specialty Unit, expanding inpatient capacity for children with neurologic and neurosurgical conditions.",
+    "confidence": "reviewed",
+    "context_only": false,
+    "country_code": "US",
+    "county": "San Francisco",
+    "date_precision": "day",
+    "discovery_provenance": {
+      "discovery_date": null,
+      "discovery_file": null,
+      "discovery_record_id": "care-line-direct-discovery-fe1cba7829f11dc2",
+      "headline": null,
+      "proposal_fingerprint": "f230f3911c1308f479ed821bab6eb49fb0815216e42503f831019a4ec90bffb3",
+      "reported_publication_date": null,
+      "reported_publisher": null,
+      "snippet": null,
+      "source_payload_fingerprint": "3ff4ed4851b1e4e2d9d8f60ebe28122f46cbecd41406f47b8806af0d3ce3e5d4",
+      "wrapper_url": null
+    },
+    "duplicate_of_record_id": "",
+    "effective_date": "2026-07-22",
+    "event_type": "service_expansion",
+    "evidence_level": "publisher_source",
+    "evidence_strength": "reviewed",
+    "evidence_text": "Support: UCSF Benioff Children?s Hospital San Francisco opened an eight-bed Children?s Neuroscience Specialty Unit, expanding inpatient capacity for children with neurologic and neurosurgical conditions.",
+    "excluded": false,
+    "facility_name": "UCSF Benioff Children?s Hospital San Francisco",
+    "facility_type": "",
+    "field_provenance": {
+      "address_line_1": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "address_line_2": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "announcement_date": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "2026-07-22"
+      },
+      "canonical_source_url": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "https://www.beckersspine.com/spine/ucsf-debuts-new-unit-for-neurosurgical-patients"
+      },
+      "care_line_public_eligible": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "True"
+      },
+      "city": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "San Francisco"
+      },
+      "country_code": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "US"
+      },
+      "county": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "San Francisco"
+      },
+      "date_precision": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "day"
+      },
+      "discovery_date": {
+        "prior_value": "",
+        "provenance_type": "discovery_metadata",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "2026-07-22"
+      },
+      "discovery_record_id": {
+        "prior_value": "care-line-direct-discovery-fe1cba7829f11dc2",
+        "provenance_type": "discovery_metadata",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "care-line-direct-discovery-fe1cba7829f11dc2"
+      },
+      "duplicate_of_record_id": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "effective_date": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "2026-07-22"
+      },
+      "event_type": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "service_expansion"
+      },
+      "evidence_level": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "publisher_source"
+      },
+      "evidence_strength": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "reviewed"
+      },
+      "facility_name": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "UCSF Benioff Children?s Hospital San Francisco"
+      },
+      "facility_type": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "former_owner": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "intake_record_id": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "care-line-phase12-intake-ed35ab5f41cf3ccd"
+      },
+      "is_primary_source": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "False"
+      },
+      "new_owner": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "operator_name": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "parent_organization": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "permanence": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "permanent"
+      },
+      "postal_code": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "provider_name": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "UCSF Benioff Children?s Hospital San Francisco"
+      },
+      "publication_date": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "2026-07-22"
+      },
+      "publisher": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "Becker's Spine Review"
+      },
+      "review_notes": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "Support: UCSF Benioff Children?s Hospital San Francisco opened an eight-bed Children?s Neuroscience Specialty Unit, expanding inpatient capacity for children with neurologic and neurosurgical conditions."
+      },
+      "review_reason": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity."
+      },
+      "reviewed_at": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "reviewer": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "Codex"
+      },
+      "schema_version": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "bluefern.care_line.authoritative_source_intake.v1"
+      },
+      "service_line": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "pediatrics"
+      },
+      "source_role": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "clinic_operations_signal"
+      },
+      "source_title": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "UCSF debuts new unit for neurosurgical patients"
+      },
+      "source_type": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "publisher_article"
+      },
+      "state": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "CA"
+      },
+      "supersedes_intake_record_id": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "supporting_passage": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": ""
+      },
+      "universal_event_eligible": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": "True"
+      },
+      "withdrawal_status": {
+        "prior_value": "",
+        "provenance_type": "reviewer_supplied",
+        "reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+        "reviewer": "Codex",
+        "value": ""
+      }
+    },
+    "former_owner": "",
+    "included": true,
+    "intake_record_id": "care-line-phase12-intake-ed35ab5f41cf3ccd",
+    "is_primary_source": false,
+    "is_withdrawn": false,
+    "location_name": "San Francisco, CA",
+    "new_owner": "",
+    "operator": "",
+    "operator_name": "",
+    "parent_organization": "",
+    "permanence": "permanent",
+    "postal_code": "",
+    "pressure_signal": true,
+    "producer": "Care Line",
+    "producer_record_id": "care-line-direct-discovery-fe1cba7829f11dc2",
+    "provider_name": "UCSF Benioff Children?s Hospital San Francisco",
+    "public_status": "public_approved",
+    "publication_date": "2026-07-22",
+    "published_at": "2026-07-22",
+    "publisher": "Becker's Spine Review",
+    "qualifies_for_public_inclusion": true,
+    "record_status": "active",
+    "review_reason": "Approved: An inpatient neurosurgical unit opening expands pediatric specialty capacity.",
+    "review_status": "reviewed",
+    "reviewed_at": "",
+    "reviewer": "Codex",
+    "schema_version": "bluefern.care_line.reviewed_source.v1",
+    "service_line": "pediatrics",
+    "source_family": "publisher_article",
+    "source_public_story_eligible": true,
+    "source_record_id": "care-line-direct-discovery-fe1cba7829f11dc2",
+    "source_role": "clinic_operations_signal",
+    "source_title": "UCSF debuts new unit for neurosurgical patients",
+    "source_type": "publisher_article",
+    "source_url": "https://beckersspine.com/spine/ucsf-debuts-new-unit-for-neurosurgical-patients",
+    "state": "CA",
+    "supersedes_record_id": "",
+    "supporting_passage": "Support: UCSF Benioff Children?s Hospital San Francisco opened an eight-bed Children?s Neuroscience Specialty Unit, expanding inpatient capacity for children with neurologic and neurosurgical conditions.",
+    "title": "UCSF debuts new unit for neurosurgical patients",
+    "universal_event_type": "service_expansion",
+    "url": "https://beckersspine.com/spine/ucsf-debuts-new-unit-for-neurosurgical-patients",
+    "withdrawn": false
+  }
+]

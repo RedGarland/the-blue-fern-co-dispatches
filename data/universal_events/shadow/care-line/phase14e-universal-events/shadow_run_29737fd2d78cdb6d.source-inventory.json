@@ -1,0 +1,295 @@
+{
+  "schema_version": "bluefern.care_line.phase5.v1",
+  "sources": [
+    {
+      "exists": false,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/candidates",
+      "reason": "missing",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": false,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/claims",
+      "reason": "missing",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": false,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/manifests",
+      "reason": "missing",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": false,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/review",
+      "reason": "missing",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "authoritative_or_derived": "authoritative",
+      "contains_dates": true,
+      "contains_event_classification": true,
+      "contains_evidence_text": true,
+      "contains_geography": true,
+      "contains_provider_or_facility": false,
+      "exists": true,
+      "input_type": "manual-sources",
+      "may_contain_duplicate_or_rejected_records": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-05-23/manual_sources.json",
+      "preserves_original_source_provenance": true,
+      "producer_stage": "reviewed manual source pack",
+      "public_approved": true,
+      "reason": "admitted_input_contract",
+      "record_count": 5,
+      "reviewed": true,
+      "safe_for_shadow_ingestion": true
+    },
+    {
+      "authoritative_or_derived": "derived_or_diagnostic",
+      "contains_dates": true,
+      "contains_event_classification": true,
+      "contains_evidence_text": true,
+      "contains_geography": true,
+      "contains_provider_or_facility": false,
+      "exists": true,
+      "input_type": "discovered-sources",
+      "may_contain_duplicate_or_rejected_records": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-06-18/discovered_sources.json",
+      "preserves_original_source_provenance": true,
+      "producer_stage": "raw discovery output",
+      "public_approved": false,
+      "reason": "structured_but_not_authoritative_for_ingestion",
+      "record_count": 182,
+      "reviewed": false,
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-06-18/discovery_report.json",
+      "reason": "unsupported_shape: ValueError: unsupported or ambiguous Care Line input type for C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\care-line\\sources\\2026-06-18\\discovery_report.json",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "authoritative_or_derived": "derived_or_diagnostic",
+      "contains_dates": true,
+      "contains_event_classification": true,
+      "contains_evidence_text": true,
+      "contains_geography": true,
+      "contains_provider_or_facility": false,
+      "exists": true,
+      "input_type": "discovered-sources",
+      "may_contain_duplicate_or_rejected_records": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-06-19/discovered_sources.json",
+      "preserves_original_source_provenance": true,
+      "producer_stage": "raw discovery output",
+      "public_approved": false,
+      "reason": "structured_but_not_authoritative_for_ingestion",
+      "record_count": 177,
+      "reviewed": false,
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-06-19/discovery_report.json",
+      "reason": "unsupported_shape: ValueError: unsupported or ambiguous Care Line input type for C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\care-line\\sources\\2026-06-19\\discovery_report.json",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-07-22/direct_discovered_sources.json",
+      "reason": "unsupported_shape: ValueError: unsupported or ambiguous Care Line input type for C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\care-line\\sources\\2026-07-22\\direct_discovered_sources.json",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-07-22/direct_discovery_diagnostics.json",
+      "reason": "unsupported_shape: ValueError: unsupported or ambiguous Care Line input type for C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\care-line\\sources\\2026-07-22\\direct_discovery_diagnostics.json",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-07-22/direct_discovery_quality.json",
+      "reason": "unsupported_shape: ValueError: unsupported or ambiguous Care Line input type for C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\care-line\\sources\\2026-07-22\\direct_discovery_quality.json",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-07-22/direct_discovery_source_health.json",
+      "reason": "unsupported_shape: ValueError: unsupported or ambiguous Care Line input type for C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\care-line\\sources\\2026-07-22\\direct_discovery_source_health.json",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-07-22/discovered_sources_v2.json",
+      "reason": "unsupported_shape: ValueError: unsupported or ambiguous Care Line input type for C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\care-line\\sources\\2026-07-22\\discovered_sources_v2.json",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-07-22/discovery_diagnostics.json",
+      "reason": "unsupported_shape: ValueError: unsupported or ambiguous Care Line input type for C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\care-line\\sources\\2026-07-22\\discovery_diagnostics.json",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-07-22/discovery_quality.json",
+      "reason": "unsupported_shape: ValueError: unsupported or ambiguous Care Line input type for C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\care-line\\sources\\2026-07-22\\discovery_quality.json",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "authoritative_or_derived": "authoritative",
+      "contains_dates": true,
+      "contains_event_classification": true,
+      "contains_evidence_text": true,
+      "contains_geography": true,
+      "contains_provider_or_facility": true,
+      "exists": true,
+      "input_type": "manual-sources",
+      "may_contain_duplicate_or_rejected_records": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-07-22/manual_sources.json",
+      "preserves_original_source_provenance": true,
+      "producer_stage": "reviewed manual source pack",
+      "public_approved": true,
+      "reason": "admitted_input_contract",
+      "record_count": 6,
+      "reviewed": true,
+      "safe_for_shadow_ingestion": true
+    },
+    {
+      "exists": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-07-22/phase12_collection_summary.json",
+      "reason": "unsupported_shape: ValueError: unsupported or ambiguous Care Line input type for C:\\PythonProjects\\Dispatches From The Blue Fern Co\\data\\dispatches\\care-line\\sources\\2026-07-22\\phase12_collection_summary.json",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/output/dispatches/care-line/editions/2026-05-23/claim_ledger.html",
+      "reason": "rendered_html_excluded",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "authoritative_or_derived": "derived_or_diagnostic",
+      "contains_dates": false,
+      "contains_event_classification": false,
+      "contains_evidence_text": false,
+      "contains_geography": false,
+      "contains_provider_or_facility": false,
+      "exists": true,
+      "input_type": "curation-manifest",
+      "may_contain_duplicate_or_rejected_records": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/output/dispatches/care-line/editions/2026-05-23/curation_manifest.json",
+      "preserves_original_source_provenance": false,
+      "producer_stage": "generated curation manifest",
+      "public_approved": false,
+      "reason": "structured_but_not_authoritative_for_ingestion",
+      "record_count": 3,
+      "reviewed": false,
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/output/dispatches/care-line/editions/2026-05-23/edition_manifest.json",
+      "reason": "unsupported_shape: ValueError: unsupported or ambiguous Care Line input type for C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\care-line\\editions\\2026-05-23\\edition_manifest.json",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/output/dispatches/care-line/editions/2026-05-23/index.html",
+      "reason": "rendered_html_excluded",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/output/dispatches/care-line/editions/2026-05-23/source_table.html",
+      "reason": "rendered_html_excluded",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "authoritative_or_derived": "derived_or_diagnostic",
+      "contains_dates": true,
+      "contains_event_classification": false,
+      "contains_evidence_text": false,
+      "contains_geography": false,
+      "contains_provider_or_facility": false,
+      "exists": true,
+      "input_type": "source-manifest",
+      "may_contain_duplicate_or_rejected_records": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/output/dispatches/care-line/editions/2026-05-23/sources_manifest.json",
+      "preserves_original_source_provenance": true,
+      "producer_stage": "generated source manifest",
+      "public_approved": false,
+      "reason": "structured_but_not_authoritative_for_ingestion",
+      "record_count": 5,
+      "reviewed": false,
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/output/dispatches/care-line/editions/2026-06-19/claim_ledger.html",
+      "reason": "rendered_html_excluded",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "authoritative_or_derived": "derived_or_diagnostic",
+      "contains_dates": false,
+      "contains_event_classification": false,
+      "contains_evidence_text": false,
+      "contains_geography": false,
+      "contains_provider_or_facility": false,
+      "exists": true,
+      "input_type": "curation-manifest",
+      "may_contain_duplicate_or_rejected_records": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/output/dispatches/care-line/editions/2026-06-19/curation_manifest.json",
+      "preserves_original_source_provenance": false,
+      "producer_stage": "generated curation manifest",
+      "public_approved": false,
+      "reason": "structured_but_not_authoritative_for_ingestion",
+      "record_count": 0,
+      "reviewed": false,
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/output/dispatches/care-line/editions/2026-06-19/edition_manifest.json",
+      "reason": "unsupported_shape: ValueError: unsupported or ambiguous Care Line input type for C:\\PythonProjects\\Dispatches From The Blue Fern Co\\output\\dispatches\\care-line\\editions\\2026-06-19\\edition_manifest.json",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/output/dispatches/care-line/editions/2026-06-19/index.html",
+      "reason": "rendered_html_excluded",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/output/dispatches/care-line/editions/2026-06-19/source_table.html",
+      "reason": "rendered_html_excluded",
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "authoritative_or_derived": "derived_or_diagnostic",
+      "contains_dates": true,
+      "contains_event_classification": false,
+      "contains_evidence_text": false,
+      "contains_geography": false,
+      "contains_provider_or_facility": false,
+      "exists": true,
+      "input_type": "source-manifest",
+      "may_contain_duplicate_or_rejected_records": true,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/output/dispatches/care-line/editions/2026-06-19/sources_manifest.json",
+      "preserves_original_source_provenance": true,
+      "producer_stage": "generated source manifest",
+      "public_approved": false,
+      "reason": "structured_but_not_authoritative_for_ingestion",
+      "record_count": 177,
+      "reviewed": false,
+      "safe_for_shadow_ingestion": false
+    },
+    {
+      "exists": false,
+      "path_pattern": "C:/PythonProjects/Dispatches From The Blue Fern Co/output/dispatches/care-line/review",
+      "reason": "missing",
+      "safe_for_shadow_ingestion": false
+    }
+  ]
+}

@@ -622,6 +622,32 @@ def _render_page(
     )
 
 
+def _render_index_page(title: str, description: str, body: str, canonical: str) -> str:
+    return f'''<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{html.escape(title)}</title>
+  <meta name="description" content="{html.escape(description)}">
+  <link rel="canonical" href="{html.escape(canonical)}">
+  <link rel="icon" href="/assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/signals/">Care Line Signal Wire</a>
+    <nav><a href="/signals/">Signals</a><a href="/care-line/">Care Line</a><a href="/">Home</a></nav>
+  </header>
+{body}
+</body>
+</html>
+'''
+
+
 def _render_event_page(event: SignalWireEvent) -> str:
     source_link = f'<a href="{html.escape(event.source_url)}" rel="noopener noreferrer" target="_blank">{html.escape(event.publisher)}</a>'
     evidence_block = html.escape(event.evidence_text)
@@ -697,7 +723,7 @@ def _render_index(events: list[SignalWireEvent]) -> str:
       </ul>
     </section>
   </main>'''
-    return _render_page(
+    return _render_index_page(
         "Care Line Signal Wire",
         "Reverse-chronological verified Care Line universal events.",
         body,

@@ -1,0 +1,39 @@
+{
+  "evaluations": [
+    {
+      "ambiguity_margin": 0.08,
+      "ambiguous_count": 0,
+      "auto_match_threshold": 0.9,
+      "auto_matched_mention_count": 0,
+      "correct_auto_matches": 0,
+      "coverage": 0.0,
+      "incorrect_auto_matches": 0,
+      "precision": null,
+      "unresolved_count": 0
+    },
+    {
+      "ambiguity_margin": 0.08,
+      "ambiguous_count": 0,
+      "auto_match_threshold": 0.92,
+      "auto_matched_mention_count": 0,
+      "correct_auto_matches": 0,
+      "coverage": 0.0,
+      "incorrect_auto_matches": 0,
+      "precision": null,
+      "unresolved_count": 0
+    },
+    {
+      "ambiguity_margin": 0.1,
+      "ambiguous_count": 0,
+      "auto_match_threshold": 0.95,
+      "auto_matched_mention_count": 0,
+      "correct_auto_matches": 0,
+      "coverage": 0.0,
+      "incorrect_auto_matches": 0,
+      "precision": null,
+      "unresolved_count": 0
+    }
+  ],
+  "recommendation": "do_not_change_defaults",
+  "schema_version": "bluefern.care_line.phase5.v1"
+}

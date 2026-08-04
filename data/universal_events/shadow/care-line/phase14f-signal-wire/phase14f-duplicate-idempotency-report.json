@@ -1,0 +1,21 @@
+{
+  "candidate_ids": [
+    "candidate_2955a4afd73acd6f",
+    "candidate_8de3e338a07cd6d3"
+  ],
+  "dedupe_collapsed_record_pairs": [],
+  "event_ids": [
+    "event_3b4ad4e528e48744",
+    "event_a12dae614b86cfa9"
+  ],
+  "event_ids_unique": true,
+  "existing_universal_events_collided": [],
+  "payload_hash": "746c1fc6f3969173906b5f8fe9a7e93069502b8ed9fb9fde2b89833a99a4b0ea",
+  "payload_hash_repeated": "746c1fc6f3969173906b5f8fe9a7e93069502b8ed9fb9fde2b89833a99a4b0ea",
+  "record_ids": [
+    "care-line-direct-discovery-fe1cba7829f11dc2",
+    "care-line-direct-discovery-4a1461b9eccb0219"
+  ],
+  "rerun_idempotent": true,
+  "schema_version": "bluefern.care_line.phase14f.idempotency.v1"
+}

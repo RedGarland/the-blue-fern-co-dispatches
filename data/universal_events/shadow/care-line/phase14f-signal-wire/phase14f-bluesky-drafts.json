@@ -1,0 +1,23 @@
+{
+  "drafts": [
+    {
+      "candidate_id": "candidate_2955a4afd73acd6f",
+      "event_id": "event_3b4ad4e528e48744",
+      "event_url": "https://dispatches.thebluefernco.com/events/event_3b4ad4e528e48744/",
+      "platform": "bluesky",
+      "producer_record_id": "care-line-direct-discovery-fe1cba7829f11dc2",
+      "status": "draft",
+      "text": "Care Line Signal Wire: Service expansion at UCSF Benioff Children’s Hospital San Francisco in San Francisco, CA. Effective 2026-07-22. Source: Becker's Spine Review."
+    },
+    {
+      "candidate_id": "candidate_8de3e338a07cd6d3",
+      "event_id": "event_a12dae614b86cfa9",
+      "event_url": "https://dispatches.thebluefernco.com/events/event_a12dae614b86cfa9/",
+      "platform": "bluesky",
+      "producer_record_id": "care-line-direct-discovery-4a1461b9eccb0219",
+      "status": "draft",
+      "text": "Care Line Signal Wire: Temporary network-access extension at ECU Health hospitals in Greenville, NC. Effective 2026-08-06. Source: Becker's Payer Issues."
+    }
+  ],
+  "schema_version": "bluefern.care_line.phase14f.bluesky_drafts.v1"
+}

@@ -1,0 +1,54 @@
+{
+  "aggregates": {
+    "exclusions_by_event_classification": {},
+    "exclusions_by_input_type": {
+      "canonical-reviewed-records": 2
+    },
+    "exclusions_by_publisher": {
+      "Becker's Behavioral Health": 1,
+      "Becker's Hospital Review": 1
+    },
+    "exclusions_by_reason": {
+      "not_review_approved": 2
+    },
+    "exclusions_by_state": {},
+    "irrecoverable_exclusion_count": 2,
+    "potential_data_quality_defects": [],
+    "potential_taxonomy_gaps": [],
+    "recoverable_exclusion_count": 0,
+    "recoverable_from_another_structured_source": 0
+  },
+  "excluded_records": [
+    {
+      "adapter_enhancement_recommended": false,
+      "another_artifact_contains_missing_information": false,
+      "exclusion_classification": "review_status_mismatch",
+      "exclusion_reason": "not_review_approved",
+      "input_type": "canonical-reviewed-records",
+      "manual_review_could_resolve": false,
+      "missing_or_invalid_fields": [
+        "supporting_passage"
+      ],
+      "original_publisher": "Becker's Behavioral Health",
+      "producer_record_id": "care-line-direct-discovery-196621161639f9f2",
+      "source_file": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/universal_events/shadow/care-line/phase14e-universal-events/reviewed_records.json",
+      "source_url": "https://beckersbehavioralhealth.com/behavioral-health-news/yale-new-haven-childrens-hospital-launches-pediatric-crisis-center"
+    },
+    {
+      "adapter_enhancement_recommended": false,
+      "another_artifact_contains_missing_information": false,
+      "exclusion_classification": "review_status_mismatch",
+      "exclusion_reason": "not_review_approved",
+      "input_type": "canonical-reviewed-records",
+      "manual_review_could_resolve": false,
+      "missing_or_invalid_fields": [
+        "supporting_passage"
+      ],
+      "original_publisher": "Becker's Hospital Review",
+      "producer_record_id": "care-line-direct-discovery-9543c43464dbd7d4",
+      "source_file": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/universal_events/shadow/care-line/phase14e-universal-events/reviewed_records.json",
+      "source_url": "https://beckershospitalreview.com/lab/cleveland-clinic-scales-lab-as-cyclospora-tests-jump-from-1-2-daily-to-400"
+    }
+  ],
+  "schema_version": "bluefern.care_line.phase5.v1"
+}

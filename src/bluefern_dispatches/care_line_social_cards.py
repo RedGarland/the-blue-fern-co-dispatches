@@ -9,6 +9,7 @@ from typing import Any
 
 
 BASE_URL = "https://dispatches.thebluefernco.com"
+SOCIAL_CARD_TEMPLATE_PATH = Path(__file__).resolve().parents[2] / "assets" / "care-line-social-card-template.png"
 
 
 def _preview_lines(text: str, *, width: int, limit: int) -> list[str]:
@@ -38,138 +39,163 @@ def social_card_spec_for_event(
         location = "San Francisco, California"
         category = "Healthcare service expansion"
         date_line = "Opened July 22"
+        social_description = (
+            "UCSF opens an 8-bed pediatric neuroscience unit in San Francisco, expanding inpatient care for children."
+        )
+        headline_lines = ["UCSF opens 8-bed pediatric", "neuroscience unit"]
+        headline_font_size_override = 60
+        location_font_size_override = 26
     elif event_id == "event_a12dae614b86cfa9":
         headline = "ECU Health extends in-network access"
         location = "Greenville, North Carolina"
         category = "Temporary network-access extension"
         date_line = "Through August 6"
+        social_description = (
+            "ECU Health extends in-network access in Greenville through August 6 under a temporary agreement."
+        )
+        headline_lines = ["ECU Health extends in-", "network access"]
+        headline_font_size_override = 60
+        location_font_size_override = 26
     else:
         headline = title
         location = f"{facility_name}, {city}, {state}"
         category = public_label
         date_line = effective_date
-    headline_lines = _preview_lines(headline, width=36, limit=2) or [headline]
-    alt_text = f"The Blue Fern Co. Care Line social card for {headline}"
+        social_description = f"{headline} in {location}. {category}. {date_line}."
+        headline_lines = _preview_lines(headline, width=28, limit=3) or [headline]
+        headline_font_size_override = None
+        location_font_size_override = None
     return {
         "event_id": event_id,
+        "brand_name": "The Blue Fern Co.",
+        "section_label": "CARE LINE",
         "headline": headline,
         "headline_lines": headline_lines,
         "location": location,
-        "category": category,
-        "date_line": date_line,
-        "alt_text": alt_text,
-        "brand": "The Blue Fern Co.",
-        "domain": "dispatches.thebluefernco.com",
+        "event_type_label": category,
+        "date_label": date_line,
+        "headline_font_size_override": headline_font_size_override,
+        "location_font_size_override": location_font_size_override,
+        "canonical_url": f"{BASE_URL}/events/{event_id}/",
+        "social_description": social_description,
+        "alt_text": f"The Blue Fern Co. Care Line social card for {headline}",
+        "footer_text": "dispatches.thebluefernco.com",
+        "icon_type": "stethoscope",
         "image_url": f"{BASE_URL}/events/{event_id}/social-card.png",
     }
 
 
-_SOCIAL_CARD_RENDER_SCRIPT = "\n".join(
-    [
-        "param(",
-        "  [Parameter(Mandatory = $true)]",
-        "  [string]$SpecPath,",
-        "  [Parameter(Mandatory = $true)]",
-        "  [string]$OutputPath",
-        ")",
-        "",
-        "Add-Type -AssemblyName System.Drawing",
-        "",
-        "function New-RoundedRectPath {",
-        "  param(",
-        "    [int]$X,",
-        "    [int]$Y,",
-        "    [int]$Width,",
-        "    [int]$Height,",
-        "    [int]$Radius",
-        "  )",
-        "  $path = New-Object System.Drawing.Drawing2D.GraphicsPath",
-        "  $diameter = $Radius * 2",
-        "  $path.AddArc($X, $Y, $diameter, $diameter, 180, 90)",
-        "  $path.AddArc($X + $Width - $diameter, $Y, $diameter, $diameter, 270, 90)",
-        "  $path.AddArc($X + $Width - $diameter, $Y + $Height - $diameter, $diameter, $diameter, 0, 90)",
-        "  $path.AddArc($X, $Y + $Height - $diameter, $diameter, $diameter, 90, 90)",
-        "  $path.CloseFigure()",
-        "  return $path",
-        "}",
-        "",
-        "function Draw-Line {",
-        "  param(",
-        "    [System.Drawing.Graphics]$Graphics,",
-        "    [string]$Text,",
-        "    [System.Drawing.Font]$Font,",
-        "    [System.Drawing.Brush]$Brush,",
-        "    [int]$X,",
-        "    [int]$Y",
-        "  )",
-        "  $Graphics.DrawString($Text, $Font, $Brush, [float]$X, [float]$Y)",
-        "}",
-        "",
-        "$spec = Get-Content -Raw -LiteralPath $SpecPath | ConvertFrom-Json",
-        "$bitmap = [System.Drawing.Bitmap]::new(1200, 630, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)",
-        "$graphics = [System.Drawing.Graphics]::FromImage($bitmap)",
-        "try {",
-        "  $graphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias",
-        "  $graphics.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic",
-        "  $graphics.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality",
-        "  $graphics.TextRenderingHint = [System.Drawing.Text.TextRenderingHint]::AntiAliasGridFit",
-        "  $graphics.Clear([System.Drawing.ColorTranslator]::FromHtml('#EFE7DA'))",
-        "",
-        "  $outerPath = New-RoundedRectPath -X 56 -Y 56 -Width 1088 -Height 518 -Radius 28",
-        "  $outerBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(194, 255, 253, 249))",
-        "  $borderPen = New-Object System.Drawing.Pen([System.Drawing.ColorTranslator]::FromHtml('#D5E1EA'), 2)",
-        "  $topBrush = New-Object System.Drawing.SolidBrush([System.Drawing.ColorTranslator]::FromHtml('#1E3F4F'))",
-        "  $accentBrush = New-Object System.Drawing.SolidBrush([System.Drawing.ColorTranslator]::FromHtml('#D9E6F0'))",
-        "  $deepBrush = New-Object System.Drawing.SolidBrush([System.Drawing.ColorTranslator]::FromHtml('#1E3F4F'))",
-        "  $labelBrush = New-Object System.Drawing.SolidBrush([System.Drawing.ColorTranslator]::FromHtml('#1E3F4F'))",
-        "  $headlineBrush = New-Object System.Drawing.SolidBrush([System.Drawing.ColorTranslator]::FromHtml('#1E3F4F'))",
-        "  $metaBrush = New-Object System.Drawing.SolidBrush([System.Drawing.ColorTranslator]::FromHtml('#4E6B79'))",
-        "  $brandBrush = New-Object System.Drawing.SolidBrush([System.Drawing.ColorTranslator]::FromHtml('#1E3F4F'))",
-        "",
-        "  $graphics.FillPath($outerBrush, $outerPath)",
-        "  $graphics.DrawPath($borderPen, $outerPath)",
-        "  $graphics.FillRectangle($topBrush, 56, 56, 1088, 12)",
-        "  $graphics.FillEllipse($accentBrush, 972, 88, 120, 120)",
-        "  $graphics.FillEllipse($deepBrush, 1008, 124, 48, 48)",
-        "  $graphics.DrawLine((New-Object System.Drawing.Pen([System.Drawing.Color]::White, 8)), 1032, 124, 1032, 172)",
-        "  $graphics.DrawLine((New-Object System.Drawing.Pen([System.Drawing.Color]::White, 8)), 1008, 148, 1056, 148)",
-        "",
-        "  $brandFont = New-Object System.Drawing.Font([System.Drawing.FontFamily]::GenericSansSerif, 22, [System.Drawing.FontStyle]::Bold)",
-        "  $labelFont = New-Object System.Drawing.Font([System.Drawing.FontFamily]::GenericSansSerif, 24, [System.Drawing.FontStyle]::Bold)",
-        "  $headlineFont = New-Object System.Drawing.Font([System.Drawing.FontFamily]::GenericSerif, 46, [System.Drawing.FontStyle]::Bold)",
-        "  $metaFont = New-Object System.Drawing.Font([System.Drawing.FontFamily]::GenericSansSerif, 28, [System.Drawing.FontStyle]::Regular)",
-        "  $metaBoldFont = New-Object System.Drawing.Font([System.Drawing.FontFamily]::GenericSansSerif, 28, [System.Drawing.FontStyle]::Bold)",
-        "  $dateFont = New-Object System.Drawing.Font([System.Drawing.FontFamily]::GenericSansSerif, 24, [System.Drawing.FontStyle]::Regular)",
-        "  $footerFont = New-Object System.Drawing.Font([System.Drawing.FontFamily]::GenericSansSerif, 20, [System.Drawing.FontStyle]::Regular)",
-        "",
-        "  Draw-Line -Graphics $graphics -Text $spec.brand -Font $brandFont -Brush $brandBrush -X 96 -Y 122",
-        "  Draw-Line -Graphics $graphics -Text 'CARE LINE' -Font $labelFont -Brush $labelBrush -X 96 -Y 186",
-        "",
-        "  $y = 242",
-        "  foreach ($line in $spec.headline_lines) {",
-        "    Draw-Line -Graphics $graphics -Text $line -Font $headlineFont -Brush $headlineBrush -X 96 -Y $y",
-        "    $y += 50",
-        "  }",
-        "",
-        "  $y += 14",
-        "  Draw-Line -Graphics $graphics -Text $spec.location -Font $metaFont -Brush $metaBrush -X 96 -Y $y",
-        "  $y += 42",
-        "  Draw-Line -Graphics $graphics -Text $spec.category -Font $metaBoldFont -Brush $headlineBrush -X 96 -Y $y",
-        "  $y += 42",
-        "  Draw-Line -Graphics $graphics -Text $spec.date_line -Font $dateFont -Brush $metaBrush -X 96 -Y $y",
-        "",
-        "  Draw-Line -Graphics $graphics -Text 'dispatches.thebluefernco.com' -Font $footerFont -Brush $metaBrush -X 96 -Y 540",
-        "  Draw-Line -Graphics $graphics -Text 'Reviewed source record' -Font $footerFont -Brush $metaBrush -X 96 -Y 570",
-        "  Draw-Line -Graphics $graphics -Text 'The Blue Fern Co.' -Font $footerFont -Brush $metaBrush -X 260 -Y 570",
-        "",
-        "  $bitmap.Save($OutputPath, [System.Drawing.Imaging.ImageFormat]::Png)",
-        "}",
-        "finally {",
-        "  $graphics.Dispose()",
-        "  $bitmap.Dispose()",
-        "}",
-    ]
+_SOCIAL_CARD_RENDER_SCRIPT = r'''
+param(
+  [Parameter(Mandatory = $true)]
+  [string]$SpecPath,
+  [Parameter(Mandatory = $true)]
+  [string]$OutputPath,
+  [Parameter(Mandatory = $true)]
+  [string]$TemplatePath
 )
+
+Add-Type -AssemblyName System.Drawing
+
+function Get-ImageMetrics {
+  param([System.Drawing.Bitmap]$Bitmap)
+  $metrics = [ordered]@{}
+  $metrics.Width = $Bitmap.Width
+  $metrics.Height = $Bitmap.Height
+  return $metrics
+}
+
+function Get-TextFont {
+  param(
+    [string]$FamilyName,
+    [float]$Size,
+    [System.Drawing.FontStyle]$Style
+  )
+  try {
+    return New-Object System.Drawing.Font($FamilyName, $Size, $Style, [System.Drawing.GraphicsUnit]::Pixel)
+  } catch {
+    $fallbackFamily = switch ($FamilyName) {
+      'Georgia' { 'Times New Roman' }
+      'Segoe UI' { 'Arial' }
+      default { [System.Drawing.FontFamily]::GenericSerif.Name }
+    }
+    return New-Object System.Drawing.Font($fallbackFamily, $Size, $Style, [System.Drawing.GraphicsUnit]::Pixel)
+  }
+}
+
+function Draw-TextLine {
+  param(
+    [System.Drawing.Graphics]$Graphics,
+    [string]$Text,
+    [System.Drawing.Font]$Font,
+    [System.Drawing.Brush]$Brush,
+    [float]$X,
+    [float]$Y
+  )
+  $Graphics.DrawString($Text, $Font, $Brush, $X, $Y)
+}
+
+$spec = Get-Content -Raw -LiteralPath $SpecPath | ConvertFrom-Json
+
+$template = [System.Drawing.Bitmap]::FromFile($TemplatePath)
+$bitmap = [System.Drawing.Bitmap]::new($template)
+$template.Dispose()
+$graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+
+try {
+  $graphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+  $graphics.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+  $graphics.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality
+  $graphics.TextRenderingHint = [System.Drawing.Text.TextRenderingHint]::AntiAliasGridFit
+
+  $tan = [System.Drawing.ColorTranslator]::FromHtml('#EFE7DA')
+  $row = [System.Drawing.Color]::FromArgb(235, 218, 227, 233)
+  $footer = [System.Drawing.Color]::FromArgb(214, 205, 218, 224)
+
+  $headlineSize = if ($null -ne $spec.headline_font_size_override) { [float]$spec.headline_font_size_override } else { 60.0 }
+  $headlineFont = Get-TextFont -FamilyName 'Georgia' -Size $headlineSize -Style ([System.Drawing.FontStyle]::Bold)
+  $rowSize = if ($null -ne $spec.location_font_size_override) { [float]$spec.location_font_size_override } else { 26.0 }
+  $rowFont = Get-TextFont -FamilyName 'Segoe UI' -Size $rowSize -Style ([System.Drawing.FontStyle]::Regular)
+
+  $headlineBrush = New-Object System.Drawing.SolidBrush($tan)
+  $rowBrush = New-Object System.Drawing.SolidBrush($row)
+  $footerFont = Get-TextFont -FamilyName 'Segoe UI' -Size 18 -Style ([System.Drawing.FontStyle]::Regular)
+  $footerBrush = New-Object System.Drawing.SolidBrush($footer)
+  $footerBgBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, $bitmap.GetPixel(600, 340)))
+
+  $headlineY = 250
+  foreach ($line in $spec.headline_lines) {
+    Draw-TextLine -Graphics $graphics -Text $line -Font $headlineFont -Brush $headlineBrush -X 92 -Y $headlineY
+    $headlineY += 62
+  }
+
+  Draw-TextLine -Graphics $graphics -Text $spec.location -Font $rowFont -Brush $rowBrush -X 152 -Y 384
+  Draw-TextLine -Graphics $graphics -Text $spec.event_type_label -Font $rowFont -Brush $rowBrush -X 152 -Y 442
+  Draw-TextLine -Graphics $graphics -Text $spec.date_label -Font $rowFont -Brush $rowBrush -X 152 -Y 500
+
+  $graphics.FillRectangle($footerBgBrush, 300, 540, 620, 34)
+  $footerRect = [System.Drawing.RectangleF]::new(60.0, 546.0, 1080.0, 32.0)
+  $footerFormat = New-Object System.Drawing.StringFormat
+  $footerFormat.Alignment = [System.Drawing.StringAlignment]::Center
+  $footerFormat.LineAlignment = [System.Drawing.StringAlignment]::Near
+  $graphics.DrawString($spec.footer_text, $footerFont, $footerBrush, $footerRect, $footerFormat)
+
+  $headlineFont.Dispose()
+  $rowFont.Dispose()
+  $headlineBrush.Dispose()
+  $rowBrush.Dispose()
+  $footerFont.Dispose()
+  $footerBrush.Dispose()
+  $footerBgBrush.Dispose()
+  $footerFormat.Dispose()
+
+  $bitmap.Save($OutputPath, [System.Drawing.Imaging.ImageFormat]::Png)
+}
+finally {
+  $graphics.Dispose()
+  $bitmap.Dispose()
+}
+'''
 
 
 def render_social_card_png_bytes(spec: dict[str, Any]) -> bytes:
@@ -191,6 +217,8 @@ def render_social_card_png_bytes(spec: dict[str, Any]) -> bytes:
                 str(script_path),
                 "-SpecPath",
                 str(spec_path),
+                "-TemplatePath",
+                str(SOCIAL_CARD_TEMPLATE_PATH),
                 "-OutputPath",
                 str(output_path),
             ],

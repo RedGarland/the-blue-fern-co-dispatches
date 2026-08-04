@@ -1,0 +1,211 @@
+{
+  "schema_version": "bluefern.care_line.phase14b_evidence_review.v1",
+  "review_date": "2026-07-23",
+  "source_records_examined": 6,
+  "valid_source_explicit_decisions": 0,
+  "valid_reviewer_transcribed_decisions": 0,
+  "human_evidence_review_required_count": 6,
+  "records": [
+    {
+      "producer_record_id": "care-line-direct-discovery-196621161639f9f2",
+      "record_fingerprint": "057993f2e026fb4e6cd5f2adc58b9f38916c6a2bed0366621f3429802bffb704",
+      "canonical_source_url": "https://www.beckersbehavioralhealth.com/behavioral-health-news/yale-new-haven-childrens-hospital-launches-pediatric-crisis-center",
+      "publisher": "Becker's Behavioral Health",
+      "source_title": "Yale New Haven Children’s Hospital launches pediatric crisis center",
+      "discovery_title": "Yale New Haven Children’s Hospital launches pediatric crisis center",
+      "review_notes": "Support: Yale New Haven Children?s Hospital launches a pediatric crisis center for children and adolescents.",
+      "provider_name": "Yale New Haven Children’s Hospital",
+      "city": "New Haven",
+      "state": "CT",
+      "source_artifact_paths": [
+        "data/dispatches/care-line/sources/2026-07-22/direct_discovered_sources.json",
+        "data/dispatches/care-line/reviewed/2026-07-22/reviewed_records.json"
+      ],
+      "event_type": "service_expansion",
+      "facility_or_provider": "Yale New Haven Children’s Hospital",
+      "location": "New Haven, CT",
+      "existing_evidence": "",
+      "existing_evidence_provenance": "missing",
+      "candidate_source_text": "Yale New Haven (Conn.) Children’s Hospital launched a Crisis Intervention Center, a dedicated behavioral health treatment area within its emergency department. The center will begin caring for patients in August. The center will provide 24/7 care for children up to age 15 experiencing behavioral health emergencies, including suicidal thoughts or self-harm, depression, anxiety, substance misuse […] The post Yale New Haven Children’s Hospital launches pediatric crisis center appeared first on Becker’s Behavioral Health.",
+      "candidate_source_text_origin": "raw_feed_description",
+      "candidate_source_artifact": "data/dispatches/care-line/sources/2026-07-22/direct_discovered_sources.json",
+      "candidate_source_field": "article_description",
+      "candidate_evidence_fingerprint": "",
+      "evidence_gaps": [
+        "feed description is truncated",
+        "no stored article excerpt",
+        "postfix identifies wrapper/feed text",
+        "no faithful transcription"
+      ],
+      "recommended_action": "needs_human_transcription"
+    },
+    {
+      "producer_record_id": "care-line-direct-discovery-1ca33817c06119bc",
+      "record_fingerprint": "8bd0fdc0d45b4fbc2a9fac7b313ca43a044be02470c9b11cdca97d4b349a3f68",
+      "canonical_source_url": "https://www.beckershospitalreview.com/finance/illinois-hospital-gets-6-more-months-to-reopen",
+      "publisher": "Becker's Hospital Review",
+      "source_title": "Illinois hospital gets 6 more months to reopen",
+      "discovery_title": "Illinois hospital gets 6 more months to reopen",
+      "review_notes": "Support: the hospital resumed hospital-based clinic and outpatient testing services on April 15, the general surgery clinic was reopening that week, and full operations were targeted for early July.",
+      "provider_name": "West Suburban Medical Center",
+      "city": "Oak Park",
+      "state": "IL",
+      "source_artifact_paths": [
+        "data/dispatches/care-line/sources/2026-07-22/direct_discovered_sources.json",
+        "data/dispatches/care-line/reviewed/2026-07-22/reviewed_records.json"
+      ],
+      "event_type": "facility_reopening",
+      "facility_or_provider": "West Suburban Medical Center",
+      "location": "Oak Park, IL",
+      "existing_evidence": "",
+      "existing_evidence_provenance": "missing",
+      "candidate_source_text": "Chicago-based Weiss Memorial Hospital has received a six-month extension from the Illinois Health Facilities and Services Review Board to suspend its services after the hospital closed Aug. 8, 2025, ABC affiliate WLS reported July 21. The board voted July 21 to allow the hospital, part of Resilience Healthcare, to extend its temporary suspension through Feb. […] The post Illinois hospital gets 6 more months to reopen appeared first on Becker’s Hospital Review | Healthcare News & Analysis.",
+      "candidate_source_text_origin": "raw_feed_description",
+      "candidate_source_artifact": "data/dispatches/care-line/sources/2026-07-22/direct_discovered_sources.json",
+      "candidate_source_field": "article_description",
+      "candidate_evidence_fingerprint": "",
+      "evidence_gaps": [
+        "feed description concerns Weiss Memorial Hospital while reviewed subject is West Suburban Medical Center",
+        "truncated text",
+        "no stored article excerpt",
+        "event subject mismatch"
+      ],
+      "recommended_action": "needs_human_transcription"
+    },
+    {
+      "producer_record_id": "care-line-direct-discovery-4a1461b9eccb0219",
+      "record_fingerprint": "4a1de698c0be2cd6ef27603f43912aa14eb9cd9e0ea6ed9697e773289de49ee5",
+      "canonical_source_url": "https://www.beckerspayer.com/contracting/north-carolina-system-to-start-going-out-of-network-with-unitedhealthcare-in-april",
+      "publisher": "Becker's Payer Issues",
+      "source_title": "UnitedHealthcare, ECU Health extend agreement until August",
+      "discovery_title": "UnitedHealthcare, ECU Health extend agreement until August",
+      "review_notes": "Support: ECU Health hospitals will remain in network for some UnitedHealthcare plans through Aug. 6.",
+      "provider_name": "ECU Health hospitals",
+      "city": "Greenville",
+      "state": "NC",
+      "source_artifact_paths": [
+        "data/dispatches/care-line/sources/2026-07-22/direct_discovered_sources.json",
+        "data/dispatches/care-line/reviewed/2026-07-22/reviewed_records.json",
+        "canonical_publisher_page"
+      ],
+      "event_type": "service_restoration",
+      "facility_or_provider": "ECU Health hospitals",
+      "location": "Greenville, NC",
+      "existing_evidence": "",
+      "existing_evidence_provenance": "missing",
+      "candidate_source_text": "Hospitals under Greenville, N.C.-based ECU Health — a collaboration between East Carolina University and Vidant Health — will remain in network for some UnitedHealthcare plans through Aug. 6, the insurer and health system said. Hospital access will continue for employer-sponsored commercial, Medicare Advantage and individual family plans until early August, rather than July 15. “We […] The post UnitedHealthcare, ECU Health extend agreement until August appeared first on Becker’s Payer Issues | Payer News.",
+      "candidate_source_text_origin": "raw_feed_description",
+      "candidate_source_artifact": "data/dispatches/care-line/sources/2026-07-22/direct_discovered_sources.json",
+      "candidate_source_field": "article_description",
+      "candidate_evidence_fingerprint": "",
+      "evidence_gaps": [
+        "feed description is truncated",
+        "no stored article excerpt",
+        "postfix identifies wrapper/feed text",
+        "service-restoration classification requires source verification"
+      ],
+      "recommended_action": "needs_human_transcription"
+    },
+    {
+      "producer_record_id": "care-line-direct-discovery-8accd0f62b550cc4",
+      "record_fingerprint": "b82c690af493adadee5368a6630fcdb3a41726d16a7cc2f10612a51276643806",
+      "canonical_source_url": "https://www.beckershospitalreview.com/finance/chs-q2-profit-down-75-as-hospital-footprint-falls-to-60-7-things-to-know",
+      "publisher": "Becker's Hospital Review",
+      "source_title": "CHS Q2 profit down 75% as hospital footprint falls to 60: 7 things to know",
+      "discovery_title": "CHS Q2 profit down 75% as hospital footprint falls to 60: 7 things to know",
+      "review_notes": "Support: Community Health Systems reported a decline in operating income and hospital footprint.",
+      "provider_name": "Community Health Systems",
+      "city": "Franklin",
+      "state": "TN",
+      "source_artifact_paths": [
+        "data/dispatches/care-line/sources/2026-07-22/direct_discovered_sources.json",
+        "data/dispatches/care-line/reviewed/2026-07-22/reviewed_records.json",
+        "canonical_publisher_page"
+      ],
+      "event_type": "facility_closure",
+      "facility_or_provider": "Community Health Systems",
+      "location": "Franklin, TN",
+      "existing_evidence": "",
+      "existing_evidence_provenance": "missing",
+      "candidate_source_text": "Franklin, Tenn.-based Community Health Systems reported an operating income of $389 million (13.8% margin) in the second quarter of 2026, down from $512 million operating gain (16.3% margin) in the second quarter of 2025. After accounting for interest and income tax expenses, CHS reported a net income of $70 million (2.5% margin) in the second […] The post CHS Q2 profit down 75% as hospital footprint falls to 60: 7 things to know appeared first on Becker’s Hospital Review | Healthcare News & Analysis.",
+      "candidate_source_text_origin": "raw_feed_description",
+      "candidate_source_artifact": "data/dispatches/care-line/sources/2026-07-22/direct_discovered_sources.json",
+      "candidate_source_field": "article_description",
+      "candidate_evidence_fingerprint": "",
+      "evidence_gaps": [
+        "feed description is truncated",
+        "no stored article excerpt",
+        "financial summary does not directly establish the reviewed facility event",
+        "postfix identifies wrapper/feed text"
+      ],
+      "recommended_action": "insufficient_source_text"
+    },
+    {
+      "producer_record_id": "care-line-direct-discovery-9543c43464dbd7d4",
+      "record_fingerprint": "20d3f27320c22f570afd4366d4e90c60fcd48a47bde50f980ede297b51926a27",
+      "canonical_source_url": "https://www.beckershospitalreview.com/lab/cleveland-clinic-scales-lab-as-cyclospora-tests-jump-from-1-2-daily-to-400",
+      "publisher": "Becker's Hospital Review",
+      "source_title": "Cleveland Clinic scales lab as cyclospora tests jump from 1-2 daily to 400",
+      "discovery_title": "Cleveland Clinic scales lab as cyclospora tests jump from 1-2 daily to 400",
+      "review_notes": "Support: the source reports Cleveland Clinic scaling its lab as cyclospora tests jumped from 1-2 per day to 400.",
+      "provider_name": "Cleveland Clinic",
+      "city": "Cleveland",
+      "state": "OH",
+      "source_artifact_paths": [
+        "data/dispatches/care-line/sources/2026-07-22/direct_discovered_sources.json",
+        "data/dispatches/care-line/reviewed/2026-07-22/reviewed_records.json"
+      ],
+      "event_type": "service_expansion",
+      "facility_or_provider": "Cleveland Clinic",
+      "location": "Cleveland, OH",
+      "existing_evidence": "",
+      "existing_evidence_provenance": "missing",
+      "candidate_source_text": "In late June, Cleveland Clinic’s parasitology lab was screening one or two specimens a day for cyclospora. On July 15, it processed a peak of roughly 400 in a single day. The surge — which has since averaged to 250 to 300 tests daily — has forced the health system to rebuild how its parasitology […] The post Cleveland Clinic scales lab as cyclospora tests jump from 1-2 daily to 400 appeared first on Becker’s Hospital Review | Healthcare News & Analysis.",
+      "candidate_source_text_origin": "raw_feed_description",
+      "candidate_source_artifact": "data/dispatches/care-line/sources/2026-07-22/direct_discovered_sources.json",
+      "candidate_source_field": "article_description",
+      "candidate_evidence_fingerprint": "",
+      "evidence_gaps": [
+        "feed description is truncated",
+        "no stored article excerpt",
+        "postfix identifies wrapper/feed text",
+        "service-line/event support requires source verification"
+      ],
+      "recommended_action": "needs_human_transcription"
+    },
+    {
+      "producer_record_id": "care-line-direct-discovery-fe1cba7829f11dc2",
+      "record_fingerprint": "3ff4ed4851b1e4e2d9d8f60ebe28122f46cbecd41406f47b8806af0d3ce3e5d4",
+      "canonical_source_url": "https://www.beckersspine.com/spine/ucsf-debuts-new-unit-for-neurosurgical-patients",
+      "publisher": "Becker's Spine Review",
+      "source_title": "UCSF debuts new unit for neurosurgical patients",
+      "discovery_title": "UCSF debuts new unit for neurosurgical patients",
+      "review_notes": "Support: UCSF Benioff Children?s Hospital San Francisco opened an eight-bed Children?s Neuroscience Specialty Unit.",
+      "provider_name": "UCSF Benioff Children’s Hospital San Francisco",
+      "city": "San Francisco",
+      "state": "CA",
+      "source_artifact_paths": [
+        "data/dispatches/care-line/sources/2026-07-22/direct_discovered_sources.json",
+        "data/dispatches/care-line/reviewed/2026-07-22/reviewed_records.json",
+        "canonical_publisher_page"
+      ],
+      "event_type": "service_expansion",
+      "facility_or_provider": "UCSF Benioff Children’s Hospital San Francisco",
+      "location": "San Francisco, CA",
+      "existing_evidence": "",
+      "existing_evidence_provenance": "missing",
+      "candidate_source_text": "UCSF Benioff Children’s Hospital San Francisco has opened an eight-bed Children’s Neuroscience Specialty Unit, expanding its inpatient capacity for children with neurologic and neurosurgical conditions. The unit is the hospital’s first inpatient expansion since it opened in 2015. It provides year-round care for children with conditions including epilepsy, stroke, headaches and neuroinflammatory diseases. About one […] The post UCSF debuts new unit for neurosurgical patients appeared first on Becker’s Spine Review.",
+      "candidate_source_text_origin": "raw_feed_description",
+      "candidate_source_artifact": "data/dispatches/care-line/sources/2026-07-22/direct_discovered_sources.json",
+      "candidate_source_field": "article_description",
+      "candidate_evidence_fingerprint": "",
+      "evidence_gaps": [
+        "feed description is truncated",
+        "no stored article excerpt",
+        "postfix identifies wrapper/feed text",
+        "no faithful transcription"
+      ],
+      "recommended_action": "needs_human_transcription"
+    }
+  ]
+}

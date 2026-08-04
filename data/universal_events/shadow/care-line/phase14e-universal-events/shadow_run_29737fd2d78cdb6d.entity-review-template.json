@@ -1,0 +1,356 @@
+{
+  "bootstrap_items": [
+    {
+      "address": {
+        "country_code": "US",
+        "locality": "Greenville",
+        "postal_code": "",
+        "raw_address": "",
+        "region": "NC"
+      },
+      "decision_reason": "",
+      "duplicate_candidates": [],
+      "entity_kind": "location",
+      "external_identifiers": {},
+      "mention_id": "mention_15e3336a84b3dffd",
+      "organization_or_location_type": "service_area",
+      "proposed_aliases": [
+        "Pitt"
+      ],
+      "proposed_canonical_name": "Pitt",
+      "raw_mention": "Pitt",
+      "reviewer_decision": "",
+      "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+      "supporting_care_line_records": [
+        "candidate_8de3e338a07cd6d3"
+      ]
+    },
+    {
+      "address": {
+        "country_code": "US",
+        "locality": "San Francisco",
+        "postal_code": "",
+        "raw_address": "",
+        "region": "CA"
+      },
+      "decision_reason": "",
+      "duplicate_candidates": [],
+      "entity_kind": "organization",
+      "external_identifiers": {},
+      "mention_id": "mention_17496b5db626c282",
+      "organization_or_location_type": "healthcare_facility",
+      "proposed_aliases": [
+        "UCSF Benioff Children?s Hospital San Francisco"
+      ],
+      "proposed_canonical_name": "UCSF Benioff Children?s Hospital San Francisco",
+      "raw_mention": "UCSF Benioff Children?s Hospital San Francisco",
+      "reviewer_decision": "",
+      "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+      "supporting_care_line_records": [
+        "candidate_2955a4afd73acd6f"
+      ]
+    },
+    {
+      "address": {
+        "country_code": "US",
+        "locality": "Greenville",
+        "postal_code": "",
+        "raw_address": "",
+        "region": "NC"
+      },
+      "decision_reason": "",
+      "duplicate_candidates": [],
+      "entity_kind": "organization",
+      "external_identifiers": {},
+      "mention_id": "mention_1f83e83fd6a4cddd",
+      "organization_or_location_type": "healthcare_facility",
+      "proposed_aliases": [
+        "ECU Health hospitals"
+      ],
+      "proposed_canonical_name": "ECU Health hospitals",
+      "raw_mention": "ECU Health hospitals",
+      "reviewer_decision": "",
+      "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+      "supporting_care_line_records": [
+        "candidate_8de3e338a07cd6d3"
+      ]
+    },
+    {
+      "address": {
+        "country_code": "US",
+        "locality": "Greenville",
+        "postal_code": "",
+        "raw_address": "",
+        "region": "NC"
+      },
+      "decision_reason": "",
+      "duplicate_candidates": [],
+      "entity_kind": "location",
+      "external_identifiers": {},
+      "mention_id": "mention_4c6246689bf4433b",
+      "organization_or_location_type": "service_area",
+      "proposed_aliases": [
+        "Greenville, NC"
+      ],
+      "proposed_canonical_name": "Greenville, NC",
+      "raw_mention": "Greenville, NC",
+      "reviewer_decision": "",
+      "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+      "supporting_care_line_records": [
+        "candidate_8de3e338a07cd6d3"
+      ]
+    },
+    {
+      "address": {
+        "country_code": "US",
+        "locality": "San Francisco",
+        "postal_code": "",
+        "raw_address": "",
+        "region": "CA"
+      },
+      "decision_reason": "",
+      "duplicate_candidates": [],
+      "entity_kind": "location",
+      "external_identifiers": {},
+      "mention_id": "mention_54eb9a4827ac9a24",
+      "organization_or_location_type": "service_area",
+      "proposed_aliases": [
+        "San Francisco"
+      ],
+      "proposed_canonical_name": "San Francisco",
+      "raw_mention": "San Francisco",
+      "reviewer_decision": "",
+      "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+      "supporting_care_line_records": [
+        "candidate_2955a4afd73acd6f"
+      ]
+    },
+    {
+      "address": {
+        "country_code": "US",
+        "locality": "San Francisco",
+        "postal_code": "",
+        "raw_address": "",
+        "region": "CA"
+      },
+      "decision_reason": "",
+      "duplicate_candidates": [],
+      "entity_kind": "location",
+      "external_identifiers": {},
+      "mention_id": "mention_55848faac61a3613",
+      "organization_or_location_type": "service_area",
+      "proposed_aliases": [
+        "San Francisco"
+      ],
+      "proposed_canonical_name": "San Francisco",
+      "raw_mention": "San Francisco",
+      "reviewer_decision": "",
+      "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+      "supporting_care_line_records": [
+        "candidate_2955a4afd73acd6f"
+      ]
+    },
+    {
+      "address": {
+        "country_code": "US",
+        "locality": "San Francisco",
+        "postal_code": "",
+        "raw_address": "",
+        "region": "CA"
+      },
+      "decision_reason": "",
+      "duplicate_candidates": [],
+      "entity_kind": "location",
+      "external_identifiers": {},
+      "mention_id": "mention_57ad7abad81bf76a",
+      "organization_or_location_type": "service_area",
+      "proposed_aliases": [
+        "San Francisco, CA"
+      ],
+      "proposed_canonical_name": "San Francisco, CA",
+      "raw_mention": "San Francisco, CA",
+      "reviewer_decision": "",
+      "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+      "supporting_care_line_records": [
+        "candidate_2955a4afd73acd6f"
+      ]
+    },
+    {
+      "address": {
+        "country_code": "US",
+        "locality": "San Francisco",
+        "postal_code": "",
+        "raw_address": "",
+        "region": "CA"
+      },
+      "decision_reason": "",
+      "duplicate_candidates": [],
+      "entity_kind": "location",
+      "external_identifiers": {},
+      "mention_id": "mention_591f9afb1c02b21f",
+      "organization_or_location_type": "service_area",
+      "proposed_aliases": [
+        "CA"
+      ],
+      "proposed_canonical_name": "CA",
+      "raw_mention": "CA",
+      "reviewer_decision": "",
+      "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+      "supporting_care_line_records": [
+        "candidate_2955a4afd73acd6f"
+      ]
+    },
+    {
+      "address": {
+        "country_code": "US",
+        "locality": "Greenville",
+        "postal_code": "",
+        "raw_address": "",
+        "region": "NC"
+      },
+      "decision_reason": "",
+      "duplicate_candidates": [],
+      "entity_kind": "organization",
+      "external_identifiers": {},
+      "mention_id": "mention_6eea9f7288b3846f",
+      "organization_or_location_type": "healthcare_facility",
+      "proposed_aliases": [
+        "ECU Health hospitals"
+      ],
+      "proposed_canonical_name": "ECU Health hospitals",
+      "raw_mention": "ECU Health hospitals",
+      "reviewer_decision": "",
+      "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+      "supporting_care_line_records": [
+        "candidate_8de3e338a07cd6d3"
+      ]
+    },
+    {
+      "address": {
+        "country_code": "US",
+        "locality": "San Francisco",
+        "postal_code": "",
+        "raw_address": "",
+        "region": "CA"
+      },
+      "decision_reason": "",
+      "duplicate_candidates": [],
+      "entity_kind": "location",
+      "external_identifiers": {},
+      "mention_id": "mention_77495353694a9720",
+      "organization_or_location_type": "service_area",
+      "proposed_aliases": [
+        "UCSF Benioff Children?s Hospital San Francisco"
+      ],
+      "proposed_canonical_name": "UCSF Benioff Children?s Hospital San Francisco",
+      "raw_mention": "UCSF Benioff Children?s Hospital San Francisco",
+      "reviewer_decision": "",
+      "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+      "supporting_care_line_records": [
+        "candidate_2955a4afd73acd6f"
+      ]
+    },
+    {
+      "address": {
+        "country_code": "US",
+        "locality": "Greenville",
+        "postal_code": "",
+        "raw_address": "",
+        "region": "NC"
+      },
+      "decision_reason": "",
+      "duplicate_candidates": [],
+      "entity_kind": "location",
+      "external_identifiers": {},
+      "mention_id": "mention_9aea144b296d4fa5",
+      "organization_or_location_type": "service_area",
+      "proposed_aliases": [
+        "ECU Health hospitals"
+      ],
+      "proposed_canonical_name": "ECU Health hospitals",
+      "raw_mention": "ECU Health hospitals",
+      "reviewer_decision": "",
+      "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+      "supporting_care_line_records": [
+        "candidate_8de3e338a07cd6d3"
+      ]
+    },
+    {
+      "address": {
+        "country_code": "US",
+        "locality": "Greenville",
+        "postal_code": "",
+        "raw_address": "",
+        "region": "NC"
+      },
+      "decision_reason": "",
+      "duplicate_candidates": [],
+      "entity_kind": "location",
+      "external_identifiers": {},
+      "mention_id": "mention_a96a4613a45dd4cc",
+      "organization_or_location_type": "service_area",
+      "proposed_aliases": [
+        "NC"
+      ],
+      "proposed_canonical_name": "NC",
+      "raw_mention": "NC",
+      "reviewer_decision": "",
+      "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+      "supporting_care_line_records": [
+        "candidate_8de3e338a07cd6d3"
+      ]
+    },
+    {
+      "address": {
+        "country_code": "US",
+        "locality": "Greenville",
+        "postal_code": "",
+        "raw_address": "",
+        "region": "NC"
+      },
+      "decision_reason": "",
+      "duplicate_candidates": [],
+      "entity_kind": "location",
+      "external_identifiers": {},
+      "mention_id": "mention_ccfbc0c26366f4b1",
+      "organization_or_location_type": "service_area",
+      "proposed_aliases": [
+        "Greenville"
+      ],
+      "proposed_canonical_name": "Greenville",
+      "raw_mention": "Greenville",
+      "reviewer_decision": "",
+      "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+      "supporting_care_line_records": [
+        "candidate_8de3e338a07cd6d3"
+      ]
+    },
+    {
+      "address": {
+        "country_code": "US",
+        "locality": "San Francisco",
+        "postal_code": "",
+        "raw_address": "",
+        "region": "CA"
+      },
+      "decision_reason": "",
+      "duplicate_candidates": [],
+      "entity_kind": "organization",
+      "external_identifiers": {},
+      "mention_id": "mention_d5d9f83fc4d1ba72",
+      "organization_or_location_type": "healthcare_facility",
+      "proposed_aliases": [
+        "UCSF Benioff Children?s Hospital San Francisco"
+      ],
+      "proposed_canonical_name": "UCSF Benioff Children?s Hospital San Francisco",
+      "raw_mention": "UCSF Benioff Children?s Hospital San Francisco",
+      "reviewer_decision": "",
+      "shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+      "supporting_care_line_records": [
+        "candidate_2955a4afd73acd6f"
+      ]
+    }
+  ],
+  "schema_version": "bluefern.care_line.phase5.v1",
+  "shadow_run_id": "shadow_run_29737fd2d78cdb6d"
+}

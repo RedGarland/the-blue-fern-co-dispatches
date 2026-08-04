@@ -1,0 +1,126 @@
+{
+  "calibration_generated": true,
+  "eligibility": {
+    "eligible_candidates": 2,
+    "exclusion_analysis": {
+      "exclusions_by_event_classification": {},
+      "exclusions_by_input_type": {
+        "canonical-reviewed-records": 2
+      },
+      "exclusions_by_publisher": {
+        "Becker's Behavioral Health": 1,
+        "Becker's Hospital Review": 1
+      },
+      "exclusions_by_reason": {
+        "not_review_approved": 2
+      },
+      "exclusions_by_state": {},
+      "irrecoverable_exclusion_count": 2,
+      "potential_data_quality_defects": [],
+      "potential_taxonomy_gaps": [],
+      "recoverable_exclusion_count": 0,
+      "recoverable_from_another_structured_source": 0
+    },
+    "exclusions": 2
+  },
+  "eligible_candidates": 2,
+  "entity_resolution": {
+    "calibration": {
+      "administrative_region_conflict_count": 0,
+      "alias_collision_count": 0,
+      "ambiguity_rate": 0.0,
+      "automatic_match_coverage": 0.0,
+      "automatic_match_false_positive_count": 0,
+      "automatic_match_precision": null,
+      "created_new_rate": 0.0,
+      "health_system_facility_confusion_count": 0,
+      "identifier_conflict_count": 0,
+      "rejected_candidate_rate": 0.0,
+      "reviewed_mention_count": 0,
+      "sample_label": "insufficient_sample",
+      "schema_version": "bluefern.care_line.phase5.v1",
+      "top_1_candidate_accuracy": null,
+      "top_3_candidate_recall": null,
+      "unresolved_rate": 0.0
+    },
+    "candidate_matches": 0,
+    "mentions": 14,
+    "reviewed_decisions": 0
+  },
+  "input_coverage": {
+    "dates_examined": [
+      "2026-05-23",
+      "2026-06-18",
+      "2026-06-19",
+      "2026-07-22"
+    ],
+    "malformed_files": [],
+    "missing_dates": [],
+    "records_by_input_type": {
+      "canonical-reviewed-records": 4
+    },
+    "structured_files_discovered": 31
+  },
+  "mention_count": 14,
+  "promotion_preview_deterministic": true,
+  "promotion_readiness": {
+    "candidates_reviewed": 0,
+    "promotion_blocked": 2,
+    "promotion_eligible": 0,
+    "promotion_previews_generated": 2
+  },
+  "readiness": {
+    "blocking_conditions": [
+      "fewer_than_25_real_eligible_candidates",
+      "fewer_than_50_real_entity_mentions",
+      "required_human_review_sample_not_completed"
+    ],
+    "decision": "NOT READY FOR REVIEWED CARE LINE CANDIDATE PROMOTION"
+  },
+  "reviewed_mention_count": 0,
+  "sample_selection": {
+    "bounded": true,
+    "maximums": {
+      "dates": 365,
+      "records": 500
+    },
+    "schema_version": "bluefern.care_line.phase5.v1",
+    "selected_dates": [
+      "2026-05-23",
+      "2026-06-18",
+      "2026-06-19",
+      "2026-07-22"
+    ],
+    "selected_files": [
+      {
+        "date": "2026-05-23",
+        "input_type": "manual-sources",
+        "path": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-05-23/manual_sources.json",
+        "record_count": 5
+      },
+      {
+        "date": "2026-06-18",
+        "input_type": "discovered-sources",
+        "path": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-06-18/discovered_sources.json",
+        "record_count": 182
+      },
+      {
+        "date": "2026-06-19",
+        "input_type": "discovered-sources",
+        "path": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-06-19/discovered_sources.json",
+        "record_count": 177
+      },
+      {
+        "date": "2026-07-22",
+        "input_type": "manual-sources",
+        "path": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/sources/2026-07-22/manual_sources.json",
+        "record_count": 6
+      }
+    ],
+    "selected_record_count": 370,
+    "selection_rationale": "All available structured Care Line source files were selected because repository data is below Phase 5 maximums.",
+    "target": "at least 90 dates or 100 reviewed records"
+  },
+  "schema_version": "bluefern.care_line.phase5.quality.v1",
+  "shadow_run_id": "shadow_run_29737fd2d78cdb6d"
+}

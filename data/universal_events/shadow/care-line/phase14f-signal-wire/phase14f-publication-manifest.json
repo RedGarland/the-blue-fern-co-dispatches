@@ -1,0 +1,60 @@
+{
+  "candidate_ids": [
+    "candidate_2955a4afd73acd6f",
+    "candidate_8de3e338a07cd6d3"
+  ],
+  "closed_record_ids": [
+    "care-line-direct-discovery-1ca33817c06119bc",
+    "care-line-direct-discovery-8accd0f62b550cc4"
+  ],
+  "deferred_record_ids": [
+    "care-line-direct-discovery-196621161639f9f2",
+    "care-line-direct-discovery-9543c43464dbd7d4"
+  ],
+  "event_count": 2,
+  "event_ids": [
+    "event_3b4ad4e528e48744",
+    "event_a12dae614b86cfa9"
+  ],
+  "generated_at": "2026-07-24T05:14:30.376748+00:00",
+  "phase14e_dir": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/universal_events/shadow/care-line/phase14e-universal-events",
+  "proposed_event_schema_version": "bluefern.care_line.phase5.v1",
+  "proposed_shadow_run_id": "shadow_run_29737fd2d78cdb6d",
+  "public_published_at": "2026-07-24T05:14:30.376748+00:00",
+  "public_urls": [
+    "https://dispatches.thebluefernco.com/events/event_3b4ad4e528e48744/",
+    "https://dispatches.thebluefernco.com/events/event_a12dae614b86cfa9/",
+    "https://dispatches.thebluefernco.com/events/event_3b4ad4e528e48744/social-card.png",
+    "https://dispatches.thebluefernco.com/events/event_a12dae614b86cfa9/social-card.png"
+  ],
+  "reviewed_records_path": "C:/PythonProjects/Dispatches From The Blue Fern Co/data/dispatches/care-line/reviewed/2026-07-22/reviewed_records.json",
+  "schema_version": "bluefern.care_line.phase14f.publication.v1",
+  "selected_record_ids": [
+    "care-line-direct-discovery-4a1461b9eccb0219",
+    "care-line-direct-discovery-fe1cba7829f11dc2"
+  ],
+  "shadow_artifact_version": "bluefern.care_line.phase14f.shadow.v1",
+  "signals_feed_urls": [
+    "https://dispatches.thebluefernco.com/signals/feed.xml",
+    "https://dispatches.thebluefernco.com/care-line/signals/feed.xml"
+  ],
+  "signals_index_url": "https://dispatches.thebluefernco.com/signals/",
+  "source_item_ids": [
+    "source_item_a9b44fdffc490425",
+    "source_item_2674b521fbbc2e2f"
+  ],
+  "source_reviewed_at": "2026-07-23T22:09:20.0612694Z",
+  "source_urls": [
+    "https://beckersspine.com/spine/ucsf-debuts-new-unit-for-neurosurgical-patients",
+    "https://beckerspayer.com/contracting/north-carolina-system-to-start-going-out-of-network-with-unitedhealthcare-in-april"
+  ],
+  "system_discovered_at": "2026-07-24T03:03:15.508376Z",
+  "taxonomy_gap_notes": [
+    {
+      "event_id": "event_a12dae614b86cfa9",
+      "event_type": "service_restoration",
+      "note": "Underlying schema value preserved as service_restoration; public label and summary were corrected because the evidence supports a temporary in-network extension through a deadline, not a permanent restoration.",
+      "public_label": "Temporary network-access extension"
+    }
+  ]
+}

@@ -1,0 +1,717 @@
+{
+  "sources": [
+    {
+      "source_id": "seed-source-food-security",
+      "name": "Regional food pantry report",
+      "publisher": "Blue Fern Sample Wire",
+      "canonical_url": "https://example.org/seed/food-security",
+      "source_type": "report",
+      "content_hash": "seed-food-security-source",
+      "discovered_at": "2026-07-01T12:00:00Z",
+      "published_at": "2026-07-01T10:00:00Z",
+      "retrieved_at": "2026-07-01T12:05:00Z",
+      "metadata": {
+        "domain": "food_security"
+      }
+    },
+    {
+      "source_id": "seed-source-healthcare-access",
+      "name": "Community clinic notice",
+      "publisher": "Blue Fern Sample Wire",
+      "canonical_url": "https://example.org/seed/healthcare-access",
+      "source_type": "notice",
+      "content_hash": "seed-healthcare-access-source",
+      "discovered_at": "2026-07-01T12:00:00Z",
+      "published_at": "2026-07-01T09:00:00Z",
+      "retrieved_at": "2026-07-01T12:05:00Z",
+      "metadata": {
+        "domain": "healthcare_access"
+      }
+    },
+    {
+      "source_id": "seed-source-workforce",
+      "name": "Workforce layoff bulletin",
+      "publisher": "Blue Fern Sample Wire",
+      "canonical_url": "https://example.org/seed/workforce",
+      "source_type": "bulletin",
+      "content_hash": "seed-workforce-source",
+      "discovered_at": "2026-07-01T12:00:00Z",
+      "published_at": "2026-07-01T08:00:00Z",
+      "retrieved_at": "2026-07-01T12:05:00Z",
+      "metadata": {
+        "domain": "workforce"
+      }
+    },
+    {
+      "source_id": "seed-source-immigration-enforcement",
+      "name": "Immigration enforcement update",
+      "publisher": "Blue Fern Sample Wire",
+      "canonical_url": "https://example.org/seed/immigration-enforcement",
+      "source_type": "update",
+      "content_hash": "seed-immigration-enforcement-source",
+      "discovered_at": "2026-07-01T12:00:00Z",
+      "published_at": "2026-07-01T07:30:00Z",
+      "retrieved_at": "2026-07-01T12:05:00Z",
+      "metadata": {
+        "domain": "immigration_enforcement"
+      }
+    },
+    {
+      "source_id": "seed-source-conflict-humanitarian",
+      "name": "Humanitarian access briefing",
+      "publisher": "Blue Fern Sample Wire",
+      "canonical_url": "https://example.org/seed/conflict-humanitarian",
+      "source_type": "briefing",
+      "content_hash": "seed-conflict-humanitarian-source",
+      "discovered_at": "2026-07-01T12:00:00Z",
+      "published_at": "2026-07-01T06:30:00Z",
+      "retrieved_at": "2026-07-01T12:05:00Z",
+      "metadata": {
+        "domain": "conflict_humanitarian"
+      }
+    }
+  ],
+  "source_items": [
+    {
+      "source_item_id": "seed-item-food-security",
+      "source_id": "seed-source-food-security",
+      "canonical_url": "https://example.org/seed/food-security/story",
+      "content_hash": "seed-item-food-security-hash",
+      "title": "Pantry demand rises as grocery budgets tighten",
+      "supporting_passage": "Food bank intake lines lengthen as households stretch budgets.",
+      "discovered_at": "2026-07-01T12:10:00Z",
+      "published_at": "2026-07-01T10:15:00Z",
+      "retrieved_at": "2026-07-01T12:15:00Z",
+      "metadata": {}
+    },
+    {
+      "source_item_id": "seed-item-healthcare-access",
+      "source_id": "seed-source-healthcare-access",
+      "canonical_url": "https://example.org/seed/healthcare-access/story",
+      "content_hash": "seed-item-healthcare-access-hash",
+      "title": "Clinic closures lengthen waits for routine care",
+      "supporting_passage": "Patients report delayed appointments and longer travel times.",
+      "discovered_at": "2026-07-01T12:10:00Z",
+      "published_at": "2026-07-01T09:15:00Z",
+      "retrieved_at": "2026-07-01T12:15:00Z",
+      "metadata": {}
+    },
+    {
+      "source_item_id": "seed-item-workforce",
+      "source_id": "seed-source-workforce",
+      "canonical_url": "https://example.org/seed/workforce/story",
+      "content_hash": "seed-item-workforce-hash",
+      "title": "Manufacturing layoffs ripple through a regional labor market",
+      "supporting_passage": "Workers face payroll cuts and reduced hours after a plant announcement.",
+      "discovered_at": "2026-07-01T12:10:00Z",
+      "published_at": "2026-07-01T08:15:00Z",
+      "retrieved_at": "2026-07-01T12:15:00Z",
+      "metadata": {}
+    },
+    {
+      "source_item_id": "seed-item-immigration-enforcement",
+      "source_id": "seed-source-immigration-enforcement",
+      "canonical_url": "https://example.org/seed/immigration-enforcement/story",
+      "content_hash": "seed-item-immigration-enforcement-hash",
+      "title": "Immigration enforcement operations expand in the region",
+      "supporting_passage": "Families report schedule disruptions and fear around workplace checks.",
+      "discovered_at": "2026-07-01T12:10:00Z",
+      "published_at": "2026-07-01T07:45:00Z",
+      "retrieved_at": "2026-07-01T12:15:00Z",
+      "metadata": {}
+    },
+    {
+      "source_item_id": "seed-item-conflict-humanitarian",
+      "source_id": "seed-source-conflict-humanitarian",
+      "canonical_url": "https://example.org/seed/conflict-humanitarian/story",
+      "content_hash": "seed-item-conflict-humanitarian-hash",
+      "title": "Aid access bottlenecks worsen displacement pressure",
+      "supporting_passage": "Relief workers warn that blocked routes delay food and medical deliveries.",
+      "discovered_at": "2026-07-01T12:10:00Z",
+      "published_at": "2026-07-01T06:45:00Z",
+      "retrieved_at": "2026-07-01T12:15:00Z",
+      "metadata": {}
+    }
+  ],
+  "locations": [
+    {
+      "location_id": "seed-location-general",
+      "canonical_name": "Sample Region",
+      "display_name": "Sample Region",
+      "location_type": "region",
+      "country": "United States",
+      "metadata": {}
+    },
+    {
+      "location_id": "seed-location-community-care",
+      "canonical_name": "Community Care Clinic Campus",
+      "display_name": "Community Care Clinic Campus",
+      "address_line_1": "100 Cedar Street",
+      "city": "Sample City",
+      "state": "WA",
+      "postal_code": "98000",
+      "country_code": "US",
+      "location_type": "facility",
+      "country": "United States",
+      "metadata": {}
+    },
+    {
+      "location_id": "seed-location-river-north",
+      "canonical_name": "River Care North Service Area",
+      "display_name": "River Care North Service Area",
+      "city": "North Sample",
+      "state": "WA",
+      "country_code": "US",
+      "location_type": "service_area",
+      "country": "United States",
+      "metadata": {}
+    },
+    {
+      "location_id": "seed-location-river-south",
+      "canonical_name": "River Care South Service Area",
+      "display_name": "River Care South Service Area",
+      "city": "South Sample",
+      "state": "WA",
+      "country_code": "US",
+      "location_type": "service_area",
+      "country": "United States",
+      "metadata": {}
+    }
+  ],
+  "organizations": [
+    {
+      "organization_id": "seed-organization-general",
+      "canonical_name": "Blue Fern Sample Org",
+      "display_name": "Blue Fern Sample Org",
+      "organization_type": "publisher",
+      "metadata": {}
+    },
+    {
+      "organization_id": "seed-organization-health-system",
+      "canonical_name": "Seed Health System",
+      "display_name": "Seed Health System",
+      "organization_type": "health_system",
+      "canonical_domain": "seedhealth.example.org",
+      "metadata": {}
+    },
+    {
+      "organization_id": "seed-organization-community-care",
+      "canonical_name": "Community Care Clinic",
+      "display_name": "Community Care Clinic",
+      "organization_type": "clinic",
+      "parent_organization_id": "seed-organization-health-system",
+      "primary_location_id": "seed-location-community-care",
+      "canonical_domain": "communitycare.example.org",
+      "metadata": {}
+    },
+    {
+      "organization_id": "seed-organization-river-north",
+      "canonical_name": "River Care North",
+      "display_name": "River Care North",
+      "organization_type": "clinic",
+      "primary_location_id": "seed-location-river-north",
+      "metadata": {}
+    },
+    {
+      "organization_id": "seed-organization-river-south",
+      "canonical_name": "River Care South",
+      "display_name": "River Care South",
+      "organization_type": "clinic",
+      "primary_location_id": "seed-location-river-south",
+      "metadata": {}
+    }
+  ],
+  "organization_aliases": [
+    {
+      "organization_id": "seed-organization-community-care",
+      "alias_name": "Community Care Clinic",
+      "alias_type": "legal_name",
+      "is_primary": true,
+      "source_item_id": "seed-item-healthcare-access"
+    },
+    {
+      "organization_id": "seed-organization-community-care",
+      "alias_name": "CCC",
+      "alias_type": "abbreviation",
+      "source_item_id": "seed-item-healthcare-access"
+    },
+    {
+      "organization_id": "seed-organization-river-north",
+      "alias_name": "River Care",
+      "alias_type": "public_name"
+    },
+    {
+      "organization_id": "seed-organization-river-south",
+      "alias_name": "River Care",
+      "alias_type": "public_name"
+    }
+  ],
+  "organization_identifiers": [
+    {
+      "organization_id": "seed-organization-community-care",
+      "identifier_scheme": "npi",
+      "identifier_value": "1234567890",
+      "is_authoritative": true,
+      "source_item_id": "seed-item-healthcare-access"
+    }
+  ],
+  "location_aliases": [
+    {
+      "location_id": "seed-location-community-care",
+      "alias_name": "CCC Main Clinic",
+      "alias_type": "public_name",
+      "source_item_id": "seed-item-healthcare-access"
+    }
+  ],
+  "location_identifiers": [
+    {
+      "location_id": "seed-location-community-care",
+      "identifier_scheme": "internal_source_id",
+      "identifier_value": "ccc-main",
+      "is_authoritative": true,
+      "source_item_id": "seed-item-healthcare-access"
+    }
+  ],
+  "candidates": [
+    {
+      "candidate_id": "seed-candidate-food-security",
+      "source_item_id": "seed-item-food-security",
+      "domain": "food_security",
+      "title": "Pantry demand rises as grocery budgets tighten",
+      "summary": "Food insecurity pressure is rising as pantry demand grows.",
+      "candidate_status": "needs_review",
+      "verification_status": "unverified",
+      "event_status": "ongoing",
+      "source_item_ids": ["seed-item-food-security"],
+      "location_id": "seed-location-general",
+      "organization_id": "seed-organization-general",
+      "discovered_at": "2026-07-01T12:20:00Z",
+      "published_at": "2026-07-01T10:15:00Z",
+      "metadata": {}
+    },
+    {
+      "candidate_id": "seed-candidate-healthcare-access",
+      "source_item_id": "seed-item-healthcare-access",
+      "domain": "healthcare_access",
+      "title": "Clinic closures lengthen waits for routine care",
+      "summary": "Access pressure increases as routine appointments are delayed.",
+      "candidate_status": "needs_review",
+      "verification_status": "unverified",
+      "event_status": "delayed",
+      "source_item_ids": ["seed-item-healthcare-access"],
+      "location_id": "seed-location-general",
+      "organization_id": "seed-organization-general",
+      "discovered_at": "2026-07-01T12:20:00Z",
+      "published_at": "2026-07-01T09:15:00Z",
+      "metadata": {}
+    },
+    {
+      "candidate_id": "seed-candidate-workforce",
+      "source_item_id": "seed-item-workforce",
+      "domain": "workforce",
+      "title": "Manufacturing layoffs ripple through a regional labor market",
+      "summary": "Workforce pressure grows after a plant announces layoffs.",
+      "candidate_status": "needs_review",
+      "verification_status": "unverified",
+      "event_status": "announced",
+      "source_item_ids": ["seed-item-workforce"],
+      "location_id": "seed-location-general",
+      "organization_id": "seed-organization-general",
+      "discovered_at": "2026-07-01T12:20:00Z",
+      "published_at": "2026-07-01T08:15:00Z",
+      "metadata": {}
+    },
+    {
+      "candidate_id": "seed-candidate-immigration-enforcement",
+      "source_item_id": "seed-item-immigration-enforcement",
+      "domain": "immigration_enforcement",
+      "title": "Immigration enforcement operations expand in the region",
+      "summary": "Enforcement activity broadens and affects local schedules.",
+      "candidate_status": "needs_review",
+      "verification_status": "unverified",
+      "event_status": "active",
+      "source_item_ids": ["seed-item-immigration-enforcement"],
+      "location_id": "seed-location-general",
+      "organization_id": "seed-organization-general",
+      "discovered_at": "2026-07-01T12:20:00Z",
+      "published_at": "2026-07-01T07:45:00Z",
+      "metadata": {}
+    },
+    {
+      "candidate_id": "seed-candidate-conflict-humanitarian",
+      "source_item_id": "seed-item-conflict-humanitarian",
+      "domain": "conflict_humanitarian",
+      "title": "Aid access bottlenecks worsen displacement pressure",
+      "summary": "Humanitarian access constraints slow food and medicine delivery.",
+      "candidate_status": "needs_review",
+      "verification_status": "unverified",
+      "event_status": "ongoing",
+      "source_item_ids": ["seed-item-conflict-humanitarian"],
+      "location_id": "seed-location-general",
+      "organization_id": "seed-organization-general",
+      "discovered_at": "2026-07-01T12:20:00Z",
+      "published_at": "2026-07-01T06:45:00Z",
+      "metadata": {}
+    }
+  ],
+  "entity_mentions": [
+    {
+      "mention_id": "seed-mention-health-org",
+      "candidate_id": "seed-candidate-healthcare-access",
+      "source_item_id": "seed-item-healthcare-access",
+      "entity_kind": "organization",
+      "mention_role": "affected_provider",
+      "raw_name": "Community Care Clinic",
+      "external_identifiers": {
+        "npi": "1234567890"
+      }
+    },
+    {
+      "mention_id": "seed-mention-health-location",
+      "candidate_id": "seed-candidate-healthcare-access",
+      "source_item_id": "seed-item-healthcare-access",
+      "entity_kind": "location",
+      "mention_role": "event_location",
+      "raw_name": "CCC Main Clinic",
+      "address_line_1": "100 Cedar Street",
+      "locality": "Sample City",
+      "region": "WA",
+      "postal_code": "98000",
+      "country_code": "US"
+    },
+    {
+      "mention_id": "seed-mention-ambiguous-river",
+      "candidate_id": "seed-candidate-healthcare-access",
+      "source_item_id": "seed-item-healthcare-access",
+      "entity_kind": "organization",
+      "mention_role": "replacement_provider",
+      "raw_name": "River Care"
+    }
+  ],
+  "match_candidate_generation": [
+    {
+      "mention_id": "seed-mention-health-org"
+    },
+    {
+      "mention_id": "seed-mention-health-location"
+    },
+    {
+      "mention_id": "seed-mention-ambiguous-river"
+    }
+  ],
+  "resolution_decisions": [
+    {
+      "resolution_decision_id": "seed-resolution-health-org-wrong",
+      "mention_id": "seed-mention-health-org",
+      "decision_type": "matched",
+      "organization_id": "seed-organization-river-north",
+      "confidence": 0.6,
+      "decision_reason": "Initial seed example later corrected.",
+      "reviewer": "seed-reviewer",
+      "resolver_version": "entity-resolver-v1",
+      "created_at": "2026-07-01T12:24:00Z"
+    },
+    {
+      "resolution_decision_id": "seed-resolution-health-org",
+      "mention_id": "seed-mention-health-org",
+      "decision_type": "corrected",
+      "organization_id": "seed-organization-community-care",
+      "confidence": 1.0,
+      "decision_reason": "Authoritative NPI resolved to Community Care Clinic.",
+      "reviewer": "seed-reviewer",
+      "resolver_version": "entity-resolver-v1",
+      "created_at": "2026-07-01T12:25:00Z",
+      "supersedes_decision_id": "seed-resolution-health-org-wrong"
+    },
+    {
+      "resolution_decision_id": "seed-resolution-health-location",
+      "mention_id": "seed-mention-health-location",
+      "decision_type": "matched",
+      "location_id": "seed-location-community-care",
+      "confidence": 1.0,
+      "decision_reason": "Exact address match.",
+      "reviewer": "seed-reviewer",
+      "resolver_version": "entity-resolver-v1",
+      "created_at": "2026-07-01T12:26:00Z"
+    },
+    {
+      "resolution_decision_id": "seed-resolution-ambiguous-river",
+      "mention_id": "seed-mention-ambiguous-river",
+      "decision_type": "deferred",
+      "confidence": 0.0,
+      "decision_reason": "River Care is ambiguous between north and south clinics.",
+      "reviewer": "seed-reviewer",
+      "resolver_version": "entity-resolver-v1",
+      "created_at": "2026-07-01T12:27:00Z"
+    }
+  ],
+  "reviews": [
+    {
+      "candidate_id": "seed-candidate-food-security",
+      "reviewer": "seed-reviewer",
+      "decision": "approved",
+      "notes": "Seed approval for Phase 1 example data.",
+      "reviewed_at": "2026-07-01T12:30:00Z",
+      "retained_candidate_id": null,
+      "retained_event_id": null
+    },
+    {
+      "candidate_id": "seed-candidate-healthcare-access",
+      "reviewer": "seed-reviewer",
+      "decision": "approved",
+      "notes": "Seed approval for Phase 1 example data.",
+      "reviewed_at": "2026-07-01T12:30:00Z",
+      "retained_candidate_id": null,
+      "retained_event_id": null
+    },
+    {
+      "candidate_id": "seed-candidate-workforce",
+      "reviewer": "seed-reviewer",
+      "decision": "approved",
+      "notes": "Seed approval for Phase 1 example data.",
+      "reviewed_at": "2026-07-01T12:30:00Z",
+      "retained_candidate_id": null,
+      "retained_event_id": null
+    },
+    {
+      "candidate_id": "seed-candidate-immigration-enforcement",
+      "reviewer": "seed-reviewer",
+      "decision": "approved",
+      "notes": "Seed approval for Phase 1 example data.",
+      "reviewed_at": "2026-07-01T12:30:00Z",
+      "retained_candidate_id": null,
+      "retained_event_id": null
+    },
+    {
+      "candidate_id": "seed-candidate-conflict-humanitarian",
+      "reviewer": "seed-reviewer",
+      "decision": "approved",
+      "notes": "Seed approval for Phase 1 example data.",
+      "reviewed_at": "2026-07-01T12:30:00Z",
+      "retained_candidate_id": null,
+      "retained_event_id": null
+    }
+  ],
+  "events": [
+    {
+      "event_id": "seed-event-food-security",
+      "candidate_id": "seed-candidate-food-security",
+      "domain": "food_security",
+      "title": "Pantry demand rises as grocery budgets tighten",
+      "summary": "Food insecurity pressure is rising as pantry demand grows.",
+      "status": "ongoing",
+      "verification_status": "verified",
+      "published_at": "2026-07-01T10:15:00Z",
+      "location_id": "seed-location-general",
+      "organization_id": "seed-organization-general",
+      "correction_history": [],
+      "metadata": {},
+      "evidence": [
+        {
+          "source_item_id": "seed-item-food-security",
+          "role": "primary",
+          "supporting_passage": "Food bank intake lines lengthen as households stretch budgets.",
+          "created_at": "2026-07-01T12:35:00Z"
+        }
+      ]
+    },
+    {
+      "event_id": "seed-event-healthcare-access",
+      "candidate_id": "seed-candidate-healthcare-access",
+      "domain": "healthcare_access",
+      "title": "Clinic closures lengthen waits for routine care",
+      "summary": "Access pressure increases as routine appointments are delayed.",
+      "status": "delayed",
+      "verification_status": "verified",
+      "published_at": "2026-07-01T09:15:00Z",
+      "location_id": "seed-location-general",
+      "organization_id": "seed-organization-general",
+      "correction_history": [],
+      "metadata": {},
+      "entity_links": [
+        {
+          "event_id": "seed-event-healthcare-access",
+          "candidate_id": "seed-candidate-healthcare-access",
+          "mention_id": "seed-mention-health-org",
+          "resolution_decision_id": "seed-resolution-health-org",
+          "entity_kind": "organization",
+          "entity_role": "affected_provider",
+          "organization_id": "seed-organization-community-care"
+        },
+        {
+          "event_id": "seed-event-healthcare-access",
+          "candidate_id": "seed-candidate-healthcare-access",
+          "mention_id": "seed-mention-health-location",
+          "resolution_decision_id": "seed-resolution-health-location",
+          "entity_kind": "location",
+          "entity_role": "event_location",
+          "location_id": "seed-location-community-care"
+        }
+      ],
+      "evidence": [
+        {
+          "source_item_id": "seed-item-healthcare-access",
+          "role": "primary",
+          "supporting_passage": "Patients report delayed appointments and longer travel times.",
+          "created_at": "2026-07-01T12:35:00Z"
+        }
+      ]
+    },
+    {
+      "event_id": "seed-event-workforce",
+      "candidate_id": "seed-candidate-workforce",
+      "domain": "workforce",
+      "title": "Manufacturing layoffs ripple through a regional labor market",
+      "summary": "Workforce pressure grows after a plant announces layoffs.",
+      "status": "announced",
+      "verification_status": "verified",
+      "published_at": "2026-07-01T08:15:00Z",
+      "location_id": "seed-location-general",
+      "organization_id": "seed-organization-general",
+      "correction_history": [],
+      "metadata": {},
+      "evidence": [
+        {
+          "source_item_id": "seed-item-workforce",
+          "role": "primary",
+          "supporting_passage": "Workers face payroll cuts and reduced hours after a plant announcement.",
+          "created_at": "2026-07-01T12:35:00Z"
+        }
+      ]
+    },
+    {
+      "event_id": "seed-event-immigration-enforcement",
+      "candidate_id": "seed-candidate-immigration-enforcement",
+      "domain": "immigration_enforcement",
+      "title": "Immigration enforcement operations expand in the region",
+      "summary": "Enforcement activity broadens and affects local schedules.",
+      "status": "active",
+      "verification_status": "verified",
+      "published_at": "2026-07-01T07:45:00Z",
+      "location_id": "seed-location-general",
+      "organization_id": "seed-organization-general",
+      "correction_history": [],
+      "metadata": {},
+      "evidence": [
+        {
+          "source_item_id": "seed-item-immigration-enforcement",
+          "role": "primary",
+          "supporting_passage": "Families report schedule disruptions and fear around workplace checks.",
+          "created_at": "2026-07-01T12:35:00Z"
+        }
+      ]
+    },
+    {
+      "event_id": "seed-event-conflict-humanitarian",
+      "candidate_id": "seed-candidate-conflict-humanitarian",
+      "domain": "conflict_humanitarian",
+      "title": "Aid access bottlenecks worsen displacement pressure",
+      "summary": "Humanitarian access constraints slow food and medicine delivery.",
+      "status": "ongoing",
+      "verification_status": "verified",
+      "published_at": "2026-07-01T06:45:00Z",
+      "location_id": "seed-location-general",
+      "organization_id": "seed-organization-general",
+      "correction_history": [],
+      "metadata": {},
+      "evidence": [
+        {
+          "source_item_id": "seed-item-conflict-humanitarian",
+          "role": "primary",
+          "supporting_passage": "Relief workers warn that blocked routes delay food and medical deliveries.",
+          "created_at": "2026-07-01T12:35:00Z"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "from_event_id": "seed-event-workforce",
+      "to_event_id": "seed-event-healthcare-access",
+      "relationship_type": "related_to",
+      "created_at": "2026-07-01T12:40:00Z",
+      "metadata": {
+        "note": "Workforce cuts can affect access to care."
+      }
+    }
+  ],
+  "organization_relationships": [
+    {
+      "from_organization_id": "seed-organization-health-system",
+      "to_organization_id": "seed-organization-community-care",
+      "relationship_type": "parent_of",
+      "source_item_id": "seed-item-healthcare-access",
+      "metadata": {
+        "note": "Seed ownership relationship."
+      }
+    }
+  ],
+  "organization_location_relationships": [
+    {
+      "organization_id": "seed-organization-community-care",
+      "location_id": "seed-location-community-care",
+      "relationship_type": "facility",
+      "source_item_id": "seed-item-healthcare-access",
+      "metadata": {
+        "note": "Seed facility relationship."
+      }
+    }
+  ],
+  "attributes": [
+    {
+      "event_id": "seed-event-food-security",
+      "domain": "food_security",
+      "attribute_key": "pressure_signal",
+      "value": {
+        "direction": "rising",
+        "theme": "food pantry demand"
+      },
+      "created_at": "2026-07-01T12:40:00Z",
+      "metadata": {}
+    },
+    {
+      "event_id": "seed-event-healthcare-access",
+      "domain": "healthcare_access",
+      "attribute_key": "pressure_signal",
+      "value": {
+        "direction": "rising",
+        "theme": "appointment delays"
+      },
+      "created_at": "2026-07-01T12:40:00Z",
+      "metadata": {}
+    },
+    {
+      "event_id": "seed-event-workforce",
+      "domain": "workforce",
+      "attribute_key": "pressure_signal",
+      "value": {
+        "direction": "rising",
+        "theme": "layoffs"
+      },
+      "created_at": "2026-07-01T12:40:00Z",
+      "metadata": {}
+    },
+    {
+      "event_id": "seed-event-immigration-enforcement",
+      "domain": "immigration_enforcement",
+      "attribute_key": "pressure_signal",
+      "value": {
+        "direction": "rising",
+        "theme": "workplace enforcement"
+      },
+      "created_at": "2026-07-01T12:40:00Z",
+      "metadata": {}
+    },
+    {
+      "event_id": "seed-event-conflict-humanitarian",
+      "domain": "conflict_humanitarian",
+      "attribute_key": "pressure_signal",
+      "value": {
+        "direction": "rising",
+        "theme": "aid access"
+      },
+      "created_at": "2026-07-01T12:40:00Z",
+      "metadata": {}
+    }
+  ]
+}

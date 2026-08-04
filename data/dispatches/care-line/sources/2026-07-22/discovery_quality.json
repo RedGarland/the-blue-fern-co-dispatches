@@ -1,0 +1,35 @@
+{
+  "article_url_count": 0,
+  "article_url_present_rate": 0.0,
+  "description_count": 200,
+  "description_present_rate": 1.0,
+  "distinct_publisher_or_hostname_count": 154,
+  "duplicate_count": 0,
+  "likely_operational_event_count": 158,
+  "malformed_count": 0,
+  "meaningful_title_count": 200,
+  "meaningful_title_rate": 1.0,
+  "out_of_scope_count": 0,
+  "publication_date_present_rate": 1.0,
+  "publisher_present_rate": 1.0,
+  "quality_gate_passed": false,
+  "records_collected": 200,
+  "resolution_pending_count": 200,
+  "reviewer_usable_count": 0,
+  "schema_version": "bluefern.care_line.discovery_quality.v2",
+  "stale_count": 0,
+  "status_counts": {
+    "resolution_pending": 200
+  },
+  "thresholds": {
+    "article_url_present_rate": 0.8,
+    "meaningful_title_rate": 0.9,
+    "publisher_present_rate": 0.9,
+    "reviewer_usable_count": 1,
+    "usable_rate": 0.7,
+    "wrapper_only_rate_max": 0.2
+  },
+  "usable_rate": 0.0,
+  "wrapper_only_count": 0,
+  "wrapper_only_rate": 0.0
+}

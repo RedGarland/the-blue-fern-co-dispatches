@@ -53,8 +53,8 @@ def recoverable_row(record_id: str = "lead-001") -> dict:
         "canonical_evidence_text": "The article reports the county clinic will close and patients will be redirected.",
         "pressure_type": "clinic_access_strain",
         "facility_name": "County Clinic",
-        "location_name": "Example City, ST",
-        "state": "ST",
+        "location_name": "Example City, KS",
+        "state": "KS",
     }
 
 
@@ -82,8 +82,8 @@ def reviewed_decisions(inventory: dict, decision: str = "approve_source") -> dic
                 "event_type": "facility_closure",
                 "facility_name": "County Clinic",
                 "provider_name": "County Clinic",
-                "location_name": "Example City, ST",
-                "state": "ST",
+                "location_name": "Example City, KS",
+                "state": "KS",
                 "source_pack_date": "2026-06-20",
             }
         )

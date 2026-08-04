@@ -15,6 +15,11 @@ for registration or update. It looks up, updates, and verifies the task with
 `-TaskPath "\" -TaskName "Blue Fern Care Line Reviewed Event Queue"` and refuses
 to create a same-name task in another folder.
 
+The queue reads the canonical reviewed-record contract described in
+`docs/care-line-national-data-model-phase-b.md`. Queue release eligibility is
+separate from evidence verification and now depends on normalized workflow and
+verification states in the reviewed record.
+
 ```powershell
 $RepositoryRoot = 'C:\PythonProjects\Dispatches From The Blue Fern Co'
 $Action = New-ScheduledTaskAction -Execute 'PowerShell.exe' -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$RepositoryRoot\scripts\run_care_line_reviewed_event_queue.ps1`" -RepositoryRoot `"$RepositoryRoot`""

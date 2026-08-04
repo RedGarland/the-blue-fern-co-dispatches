@@ -120,8 +120,14 @@ def _eligibility(root: Path, record_id: str, row: dict[str, Any], proposed: dict
         return False, "event is already published", {}
     status = _text(row, "review_status")
     event_status = _text(row, "universal_event_status", "evidence_review_current_status", "record_status")
+    workflow_state = _text(row, "workflow_state")
+    verification_state = _text(row, "verification_state")
     if status not in REVIEW_READY_STATUSES or event_status != "universal_event_ready":
         return False, "record is not review-approved/event-ready", {}
+    if workflow_state and workflow_state != "APPROVED":
+        return False, "workflow state is not approved", {}
+    if verification_state in {"DISPUTED", "INSUFFICIENT_EVIDENCE"}:
+        return False, "verification state is not publishable", {}
     if not bool(row.get("evidence_valid_for_universal_event")):
         return False, "required evidence is not valid for a universal event", {}
     fingerprint_ok, fingerprint_reason, fingerprint = _review_fingerprint_status(row)

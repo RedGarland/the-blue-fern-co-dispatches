@@ -13,6 +13,14 @@ from typing import Any, Iterable, Mapping
 from sqlalchemy import select
 
 from bluefern_dispatches.care_line_sources import record_is_public
+from bluefern_dispatches.care_line_record import (
+    CARE_LINE_EVENT_TYPES,
+    CANONICAL_TO_LEGACY_EVENT_TYPE,
+    normalize_event_type,
+    normalize_geographic_scope,
+    normalize_jurisdiction,
+    normalize_service_line,
+)
 from bluefern_dispatches.story_dedupe import normalize_url
 from bluefern_dispatches.universal_events import CandidateStatus, EventDomain, EventStatus, SQLiteUniversalEventRepository, UniversalEventService
 from bluefern_dispatches.universal_events.normalization import normalize_name
@@ -31,24 +39,7 @@ ADAPTER_VERSION = "care-line-shadow-v1"
 PRODUCER = "Care Line"
 PRODUCER_SLUG = "care-line"
 
-SUPPORTED_EVENT_TYPES = {
-    "facility_closure",
-    "planned_facility_closure",
-    "temporary_facility_suspension",
-    "facility_reopening",
-    "service_closure",
-    "service_suspension",
-    "service_reduction",
-    "hours_reduction",
-    "capacity_reduction",
-    "ownership_change",
-    "operator_change",
-    "facility_relocation",
-    "facility_conversion",
-    "service_expansion",
-    "service_restoration",
-    "bankruptcy_service_impact",
-}
+SUPPORTED_EVENT_TYPES = CARE_LINE_EVENT_TYPES
 
 CARE_LINE_PRESSURE_TYPE_MAP = {
     "hospital_closure": "planned_facility_closure",
@@ -62,28 +53,6 @@ CARE_LINE_PRESSURE_TYPE_MAP = {
     "ambulance_or_ems_strain": "service_reduction",
     "specialty_care_delay": "service_reduction",
     "staffing_shortage_access": "service_reduction",
-}
-
-SERVICE_LINE_MAP = {
-    "labor and delivery": "labor_and_delivery",
-    "maternity": "maternity",
-    "emergency": "emergency_care",
-    "emergency department": "emergency_care",
-    "ed": "emergency_care",
-    "behavioral health": "behavioral_health",
-    "psychiatric": "psychiatric_care",
-    "pediatrics": "pediatrics",
-    "dialysis": "dialysis",
-    "oncology": "oncology",
-    "primary care": "primary_care",
-    "urgent care": "urgent_care",
-    "surgery": "surgery",
-    "rehabilitation": "rehabilitation",
-    "skilled nursing": "skilled_nursing",
-    "pharmacy": "pharmacy",
-    "ambulance": "ambulance_or_ems",
-    "ems": "ambulance_or_ems",
-    "specialty": "specialty_care",
 }
 
 EXCLUSION_REASONS = {
@@ -204,9 +173,11 @@ def _is_review_approved(record: Mapping[str, Any]) -> bool:
 def _event_type(record: Mapping[str, Any]) -> tuple[str, str]:
     explicit = _text(record, "universal_event_type", "healthcare_event_type", "event_type").lower()
     if explicit:
-        if explicit in SUPPORTED_EVENT_TYPES:
-            return explicit, ""
-        return "", "unsupported_event_type"
+        try:
+            normalized, _canonical = normalize_event_type(explicit)
+            return normalized, ""
+        except ValueError:
+            return "", "unsupported_event_type"
     pressure_type = _text(record, "pressure_type").lower()
     mapped = CARE_LINE_PRESSURE_TYPE_MAP.get(pressure_type, "")
     if not mapped:
@@ -218,23 +189,25 @@ def _event_type(record: Mapping[str, Any]) -> tuple[str, str]:
         mapped = "facility_reopening"
     if pressure_type == "hospital_closure" and any(term in title_blob for term in ("closed", "closes", "closing", "shut down", "shutting down")):
         mapped = "facility_closure"
-    return mapped, ""
+    try:
+        normalized, _canonical = normalize_event_type(mapped)
+    except ValueError:
+        return "", "unsupported_event_type"
+    return normalized, ""
 
 
 def _service_line(record: Mapping[str, Any]) -> tuple[str, str]:
     raw = _text(record, "service_line", "affected_service_line")
-    raw_lower = raw.lower()
-    if raw_lower in set(SERVICE_LINE_MAP.values()):
-        return raw, raw_lower
-    for term, normalized in SERVICE_LINE_MAP.items():
-        if raw_lower and term in raw_lower:
-            return raw or term, normalized
+    try:
+        normalized, canonical = normalize_service_line(raw)
+        return raw or normalized, normalized
+    except ValueError:
+        pass
     blob = " ".join([_text(record, "title"), _text(record, "summary_or_snippet"), _text(record, "pressure_type")]).lower()
-    for term, normalized in SERVICE_LINE_MAP.items():
-        if term == "ed":
-            continue
-        if term in blob:
-            return raw or term, normalized
+    for probe in ("labor and delivery", "maternity", "emergency department", "behavioral health", "psychiatric", "pediatrics", "dialysis", "oncology", "primary care", "urgent care", "surgery", "rehabilitation", "skilled nursing", "pharmacy", "ambulance", "ems", "specialty"):
+        if probe in blob:
+            normalized, _canonical = normalize_service_line(probe)
+            return raw or probe, normalized
     return raw, ""
 
 
@@ -312,12 +285,19 @@ def _exclusion_reason(record: Mapping[str, Any], seen_ids: set[str]) -> str:
 
 
 def _state_from_location(record: Mapping[str, Any]) -> str:
-    state = _text(record, "state")
+    state = _text(record, "state", "jurisdiction_display", "jurisdiction_name")
     if state:
-        return state
+        try:
+            return normalize_jurisdiction(state, allow_national=_text(record, "location_scope", "geographic_scope") == "national")["code"]
+        except ValueError:
+            return state
     location = _text(record, "location_name")
     if "," in location:
-        return location.rsplit(",", 1)[-1].strip()
+        tail = location.rsplit(",", 1)[-1].strip()
+        try:
+            return normalize_jurisdiction(tail, allow_national=_text(record, "location_scope", "geographic_scope") == "national")["code"]
+        except ValueError:
+            return tail
     return ""
 
 

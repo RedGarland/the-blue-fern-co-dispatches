@@ -1,0 +1,343 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-04",
+  "candidates_seen": 7,
+  "included_stories": [
+    {
+      "story_id": "gaza-story-2026-08-04-010",
+      "title": "Palestine weekly: Israel kills dozens in Gaza after Hamas disarmament deal",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-04-004",
+      "title": "Middle East crisis live: Qatar says diplomatic efforts 'ongoing' as Iran insists it does not seek to expand war",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-04-006",
+      "title": "Who is behind settler violence in the occupied West Bank?",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-04-009",
+      "title": "Cars burn in reported settler attack in occupied West Bank",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "update_term_in_title_or_snippet"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-04-003",
+      "title": "'Digital lifeline' - Gaza tech workers give glimpse of possible future - BBC",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-04-008",
+      "title": "Palestinian patients return to Gaza as thousands still await evacuation",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "duplicate_skipped": [
+    {
+      "story_id": "gaza-story-2026-08-04-001",
+      "title": "'Digital lifeline' - Gaza tech workers give glimpse of possible future",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "within_edition_normalized_title"
+      ],
+      "prior_story_matched": "gaza-story-2026-08-04-003",
+      "prior_edition_date": "2026-08-04",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    }
+  ],
+  "continuing_developments": [
+    {
+      "story_id": "gaza-story-2026-08-04-009",
+      "title": "Cars burn in reported settler attack in occupied West Bank",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "update_term_in_title_or_snippet"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-07-30-004",
+      "prior_edition_date": "2026-07-30",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "major_updates": [
+    {
+      "story_id": "gaza-story-2026-08-04-010",
+      "title": "Palestine weekly: Israel kills dozens in Gaza after Hamas disarmament deal",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-07-31-005",
+      "prior_edition_date": "2026-07-31",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-04-006",
+      "title": "Who is behind settler violence in the occupied West Bank?",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-07-30-004",
+      "prior_edition_date": "2026-07-30",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-04-003",
+      "title": "'Digital lifeline' - Gaza tech workers give glimpse of possible future - BBC",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-07-10-003",
+      "prior_edition_date": "2026-07-10",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "merged_sources": 1,
+  "duplicate_groups": [
+    {
+      "kept_story_id": "gaza-story-2026-08-04-003",
+      "merged_story_ids": [
+        "gaza-story-2026-08-04-001"
+      ],
+      "merged_source_ids": [
+        "gaza-2026-08-04-bbc-middle-east-ef514b9997bd"
+      ],
+      "duplicate_reason": "within_edition_duplicate",
+      "normalized_event_key": "",
+      "reasons": [
+        "within_edition_normalized_title"
+      ]
+    }
+  ],
+  "reasons": [
+    {
+      "story_id": "gaza-story-2026-08-04-001",
+      "title": "'Digital lifeline' - Gaza tech workers give glimpse of possible future",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "within_edition_normalized_title"
+      ],
+      "prior_story_matched": "gaza-story-2026-08-04-003",
+      "prior_edition_date": "2026-08-04",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-08-04-010",
+      "title": "Palestine weekly: Israel kills dozens in Gaza after Hamas disarmament deal",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-07-31-005",
+      "prior_edition_date": "2026-07-31",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-04-004",
+      "title": "Middle East crisis live: Qatar says diplomatic efforts 'ongoing' as Iran insists it does not seek to expand war",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-04-006",
+      "title": "Who is behind settler violence in the occupied West Bank?",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-07-30-004",
+      "prior_edition_date": "2026-07-30",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-04-009",
+      "title": "Cars burn in reported settler attack in occupied West Bank",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "update_term_in_title_or_snippet"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-07-30-004",
+      "prior_edition_date": "2026-07-30",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-04-003",
+      "title": "'Digital lifeline' - Gaza tech workers give glimpse of possible future - BBC",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-07-10-003",
+      "prior_edition_date": "2026-07-10",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-04-008",
+      "title": "Palestinian patients return to Gaza as thousands still await evacuation",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "prior_editions_checked": [
+    "2026-08-03",
+    "2026-08-01",
+    "2026-07-31",
+    "2026-07-30",
+    "2026-07-29",
+    "2026-07-28",
+    "2026-07-27",
+    "2026-07-26",
+    "2026-07-25",
+    "2026-07-24",
+    "2026-07-23",
+    "2026-07-21",
+    "2026-07-20",
+    "2026-07-19",
+    "2026-07-18",
+    "2026-07-17",
+    "2026-07-16",
+    "2026-07-15",
+    "2026-07-13",
+    "2026-07-11",
+    "2026-07-10",
+    "2026-07-08",
+    "2026-07-06",
+    "2026-07-05",
+    "2026-07-04",
+    "2026-07-03",
+    "2026-07-02",
+    "2026-07-01",
+    "2026-06-30",
+    "2026-06-29",
+    "2026-06-28",
+    "2026-06-27",
+    "2026-06-26",
+    "2026-06-25",
+    "2026-06-24",
+    "2026-06-22",
+    "2026-06-21",
+    "2026-06-20",
+    "2026-06-19",
+    "2026-06-18",
+    "2026-06-17",
+    "2026-06-16",
+    "2026-06-15",
+    "2026-06-14",
+    "2026-06-13",
+    "2026-06-12",
+    "2026-06-11",
+    "2026-06-10",
+    "2026-06-09",
+    "2026-06-08",
+    "2026-06-07",
+    "2026-06-06",
+    "2026-06-05",
+    "2026-06-04",
+    "2026-06-03",
+    "2026-06-02",
+    "2026-06-01",
+    "2026-05-31",
+    "2026-05-30",
+    "2026-05-29",
+    "2026-05-28",
+    "2026-05-27",
+    "2026-05-26",
+    "2026-05-25",
+    "2026-05-24",
+    "2026-05-23",
+    "2026-05-22",
+    "2026-05-21",
+    "2026-05-20",
+    "2026-05-19",
+    "2026-05-18",
+    "2026-05-17",
+    "2026-05-16",
+    "2026-05-15",
+    "2026-05-14",
+    "2026-05-13",
+    "2026-05-12",
+    "2026-05-11",
+    "2026-05-10",
+    "2026-05-09",
+    "2026-05-08",
+    "2026-05-07",
+    "2026-05-06",
+    "2026-05-05",
+    "2026-05-04",
+    "2026-05-03",
+    "2026-04-30"
+  ]
+}

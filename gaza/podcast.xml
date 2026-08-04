@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Mon, 03 Aug 2026 13:01:13 +0000</lastBuildDate>
+  <lastBuildDate>Tue, 04 Aug 2026 13:01:00 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for August 4, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-08-04-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-08-04-transcript.html</guid>
+    <pubDate>Tue, 04 Aug 2026 00:00:00 +0000</pubDate>
+    <description>Palestine weekly: Israel kills dozens in Gaza after Hamas disarmament deal. Israeli strikes on Gaza only intensified in the days following a US-brokered agreement billed as a 'breakthrough'. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-08-04.mp3" length="1647360" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for August 3, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-08-03-transcript.html</link>

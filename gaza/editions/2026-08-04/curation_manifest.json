@@ -1,0 +1,469 @@
+[
+  {
+    "story_id": "gaza-story-2026-08-04-010",
+    "title": "Palestine weekly: Israel kills dozens in Gaza after Hamas disarmament deal",
+    "summary": "Israeli strikes on Gaza only intensified in the days following a US-brokered agreement billed as a 'breakthrough'.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 67,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-04-aljazeera-middle-east-a96a2c983c42"
+    ],
+    "source_ids": [
+      "gaza-2026-08-04-aljazeera-middle-east-a96a2c983c42"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/8/4/palestine-weekly-israel-kills-dozens-in-gaza-after-hamas-disarmament-deal?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-04-aljazeera-middle-east-a96a2c983c42",
+        "title": "Palestine weekly: Israel kills dozens in Gaza after Hamas disarmament deal",
+        "url": "https://www.aljazeera.com/news/2026/8/4/palestine-weekly-israel-kills-dozens-in-gaza-after-hamas-disarmament-deal?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israeli strikes on Gaza only intensified in the days following a US-brokered agreement billed as a 'breakthrough'."
+      }
+    ],
+    "generated_at": "2026-08-04T13:00:42.936195+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 67,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-31-005",
+    "prior_edition_date": "2026-07-31",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-04-004",
+    "title": "Middle East crisis live: Qatar says diplomatic efforts 'ongoing' as Iran insists it does not seek to expand war",
+    "summary": "Foreign ministry says efforts to reach resolution between the US and Iran were continuing despite conflicting statements from Trump and Tehran. The US treasury secretary, Scott Bessent, said Washington could reach a deal with Iran by tomorrow to reopen the strait of Hormuz. \"We are in talks with the Iranians, and I think there is a chance we may have a deal today or tomorrow to open the strait and move towards a more normalised position in this conflict,\" Bessent said in an interview with CNBC .",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 61,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-04-guardian-world-cc7e8388ecff"
+    ],
+    "source_ids": [
+      "gaza-2026-08-04-guardian-world-cc7e8388ecff"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/live/2026/aug/04/middle-east-crisis-qatar-iran-us-israel-war-donald-trump-strait-hormuz-gaza-latest-news-updates"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-04-guardian-world-cc7e8388ecff",
+        "title": "Middle East crisis live: Qatar says diplomatic efforts 'ongoing' as Iran insists it does not seek to expand war",
+        "url": "https://www.theguardian.com/world/live/2026/aug/04/middle-east-crisis-qatar-iran-us-israel-war-donald-trump-strait-hormuz-gaza-latest-news-updates",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Foreign ministry says efforts to reach resolution between the US and Iran were continuing despite conflicting statements from Trump and Tehran The US treasury secretary, Scott Bessent, said Washington could reach a deal with Iran by tomorrow to reopen the strait of Hormuz. \"We are in talks with the Iranians, and I think there is a chance we may have a deal today or tomorrow to open the strait and move towards a more normalised position in this conflict,\" Bessent said in an interview with CNBC ."
+      }
+    ],
+    "generated_at": "2026-08-04T13:00:42.936195+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 61,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-04-006",
+    "title": "Who is behind settler violence in the occupied West Bank?",
+    "summary": "A look at the main settler groups driving the escalation against Palestinians in the West Bank.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 62,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-04-aljazeera-middle-east-5f5f6c053e8d"
+    ],
+    "source_ids": [
+      "gaza-2026-08-04-aljazeera-middle-east-5f5f6c053e8d"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/8/4/who-is-behind-settler-violence-in-the-occupied-west-bank?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-04-aljazeera-middle-east-5f5f6c053e8d",
+        "title": "Who is behind settler violence in the occupied West Bank?",
+        "url": "https://www.aljazeera.com/news/2026/8/4/who-is-behind-settler-violence-in-the-occupied-west-bank?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "A look at the main settler groups driving the escalation against Palestinians in the West Bank."
+      }
+    ],
+    "generated_at": "2026-08-04T13:00:42.936195+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 62,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-30-004",
+    "prior_edition_date": "2026-07-30",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-04-009",
+    "title": "Cars burn in reported settler attack in occupied West Bank",
+    "summary": "",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 56,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-04-aljazeera-middle-east-32100e478f8f"
+    ],
+    "source_ids": [
+      "gaza-2026-08-04-aljazeera-middle-east-32100e478f8f"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/8/4/cars-burn-in-reported-settler-attack-in-occupied-west-bank?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-04-aljazeera-middle-east-32100e478f8f",
+        "title": "Cars burn in reported settler attack in occupied West Bank",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/8/4/cars-burn-in-reported-settler-attack-in-occupied-west-bank?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Cars burn in reported settler attack in occupied West Bank"
+      }
+    ],
+    "generated_at": "2026-08-04T13:00:42.936195+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-30-004",
+    "prior_edition_date": "2026-07-30",
+    "dedupe_classification": "continuing_development",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-04-003",
+    "title": "'Digital lifeline' - Gaza tech workers give glimpse of possible future - BBC",
+    "summary": "Thousands of young people in Gaza are pursuing roles in the digital economy as the territory's wider recovery stalls.",
+    "category": "medical_evacuation_health_system",
+    "story_scope": "core_gaza",
+    "score": 41,
+    "scoring_reasons": [
+      "displacement",
+      "source_reliability",
+      "date_confidence",
+      "merged_duplicate_story=gaza-story-2026-08-04-001"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-04-bbc-gaza-health-query-427e6e4dfac7",
+      "gaza-2026-08-04-bbc-middle-east-ef514b9997bd"
+    ],
+    "source_ids": [
+      "gaza-2026-08-04-bbc-gaza-health-query-427e6e4dfac7",
+      "gaza-2026-08-04-bbc-middle-east-ef514b9997bd"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMiWkFVX3lxTFA3Rmt2RUxTYUhodzBxbzRaYjY0QWtCbUhheFNzN2RJdjF5bTZ1SkxpdXlXaHJKWWE4OXpqWXQzaktFLWtkV3c0UkRtSHZSb3lsZjlrYWlxRlIydw?oc=5",
+      "https://www.bbc.co.uk/news/articles/c1m1xm8ykk2o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-04-bbc-gaza-health-query-427e6e4dfac7",
+        "title": "'Digital lifeline' - Gaza tech workers give glimpse of possible future - BBC",
+        "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFA3Rmt2RUxTYUhodzBxbzRaYjY0QWtCbUhheFNzN2RJdjF5bTZ1SkxpdXlXaHJKWWE4OXpqWXQzaktFLWtkV3c0UkRtSHZSb3lsZjlrYWlxRlIydw?oc=5",
+        "publisher": "BBC News",
+        "summary_or_snippet": "'Digital lifeline' - Gaza tech workers give glimpse of possible future BBC"
+      },
+      {
+        "source_record_id": "gaza-2026-08-04-bbc-middle-east-ef514b9997bd",
+        "title": "'Digital lifeline' - Gaza tech workers give glimpse of possible future",
+        "url": "https://www.bbc.co.uk/news/articles/c1m1xm8ykk2o?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Thousands of young people in Gaza are pursuing roles in the digital economy as the territory's wider recovery stalls."
+      }
+    ],
+    "generated_at": "2026-08-04T13:00:42.936195+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 41,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-10-003",
+    "prior_edition_date": "2026-07-10",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-04-008",
+    "title": "Palestinian patients return to Gaza as thousands still await evacuation",
+    "summary": "Palestinian patients returned to Gaza after receiving medical treatment abroad, reuniting after years of separation.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 45,
+    "scoring_reasons": [
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-04-aljazeera-middle-east-031ce9f211f2"
+    ],
+    "source_ids": [
+      "gaza-2026-08-04-aljazeera-middle-east-031ce9f211f2"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/8/4/palestinian-patients-return-to-gaza-as-thousands-still-await-evacuation?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-04-aljazeera-middle-east-031ce9f211f2",
+        "title": "Palestinian patients return to Gaza as thousands still await evacuation",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/8/4/palestinian-patients-return-to-gaza-as-thousands-still-await-evacuation?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Palestinian patients returned to Gaza after receiving medical treatment abroad, reuniting after years of separation."
+      }
+    ],
+    "generated_at": "2026-08-04T13:00:42.936195+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 45,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-04-001",
+    "title": "'Digital lifeline' - Gaza tech workers give glimpse of possible future",
+    "summary": "Thousands of young people in Gaza are pursuing roles in the digital economy as the territory's wider recovery stalls.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 30,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-04-bbc-middle-east-ef514b9997bd"
+    ],
+    "source_ids": [
+      "gaza-2026-08-04-bbc-middle-east-ef514b9997bd"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/c1m1xm8ykk2o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-04-bbc-middle-east-ef514b9997bd",
+        "title": "'Digital lifeline' - Gaza tech workers give glimpse of possible future",
+        "url": "https://www.bbc.co.uk/news/articles/c1m1xm8ykk2o?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Thousands of young people in Gaza are pursuing roles in the digital economy as the territory's wider recovery stalls."
+      }
+    ],
+    "generated_at": "2026-08-04T13:00:42.936195+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 30,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-08-04-003",
+    "prior_edition_date": "2026-08-04",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "within_edition_normalized_title"
+    ]
+  }
+]

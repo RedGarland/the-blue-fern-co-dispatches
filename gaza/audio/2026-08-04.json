@@ -1,0 +1,86 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-04",
+  "generated_at": "2026-08-04T13:01:00.614856Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-08-04.mp3",
+  "audio_url": "/gaza/audio/2026-08-04.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1505,
+  "tts_input_word_count": 237,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1647360,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-08-04T13:01:00.614832Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-08-04-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-04/",
+  "script_text": "This is the Gaza Dispatch audio briefing for August 4, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Palestine weekly: Israel kills dozens in Gaza after Hamas disarmament deal. Israeli strikes on Gaza only intensified in the days following a US-brokered agreement billed as a 'breakthrough'. This was reported by Al Jazeera.\n\n2. Middle East crisis live: Qatar says diplomatic efforts 'ongoing' as Iran insists it does not seek to expand war. Foreign ministry says efforts to reach resolution between the US and Iran were continuing despite conflicting statements from Trump and Tehran. This was reported by The Guardian.\n\n3. Who is behind settler violence in the occupied West Bank? A look at the main settler groups driving the escalation against Palestinians in the West Bank. This was reported by Al Jazeera.\n\n4. Cars burn in reported settler attack in occupied West Bank. This was reported by Al Jazeera.\n\n5. 'Digital lifeline' - Gaza tech workers give glimpse of possible future - BBC. Thousands of young people in Gaza are pursuing roles in the digital economy as the territory's wider recovery stalls. This was reported by BBC News.\n\n6. Palestinian patients return to Gaza as thousands still await evacuation. Palestinian patients returned to Gaza after receiving medical treatment abroad, reuniting after years of separation. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the August 4, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 7,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-08-04-aljazeera-middle-east-a96a2c983c42",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/8/4/palestine-weekly-israel-kills-dozens-in-gaza-after-hamas-disarmament-deal?traffic_source=rss",
+      "title": "Palestine weekly: Israel kills dozens in Gaza after Hamas disarmament deal"
+    },
+    {
+      "source_record_id": "gaza-2026-08-04-guardian-world-cc7e8388ecff",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/live/2026/aug/04/middle-east-crisis-qatar-iran-us-israel-war-donald-trump-strait-hormuz-gaza-latest-news-updates",
+      "title": "Middle East crisis live: Qatar says diplomatic efforts 'ongoing' as Iran insists it does not seek to expand war"
+    },
+    {
+      "source_record_id": "gaza-2026-08-04-aljazeera-middle-east-5f5f6c053e8d",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/8/4/who-is-behind-settler-violence-in-the-occupied-west-bank?traffic_source=rss",
+      "title": "Who is behind settler violence in the occupied West Bank?"
+    },
+    {
+      "source_record_id": "gaza-2026-08-04-aljazeera-middle-east-32100e478f8f",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/4/cars-burn-in-reported-settler-attack-in-occupied-west-bank?traffic_source=rss",
+      "title": "Cars burn in reported settler attack in occupied West Bank"
+    },
+    {
+      "source_record_id": "gaza-2026-08-04-bbc-gaza-health-query-427e6e4dfac7",
+      "publisher": "BBC News",
+      "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFA3Rmt2RUxTYUhodzBxbzRaYjY0QWtCbUhheFNzN2RJdjF5bTZ1SkxpdXlXaHJKWWE4OXpqWXQzaktFLWtkV3c0UkRtSHZSb3lsZjlrYWlxRlIydw?oc=5",
+      "title": "'Digital lifeline' - Gaza tech workers give glimpse of possible future - BBC"
+    },
+    {
+      "source_record_id": "gaza-2026-08-04-bbc-middle-east-ef514b9997bd",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/c1m1xm8ykk2o?at_medium=RSS&at_campaign=rss",
+      "title": "'Digital lifeline' - Gaza tech workers give glimpse of possible future"
+    },
+    {
+      "source_record_id": "gaza-2026-08-04-aljazeera-middle-east-031ce9f211f2",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/4/palestinian-patients-return-to-gaza-as-thousands-still-await-evacuation?traffic_source=rss",
+      "title": "Palestinian patients return to Gaza as thousands still await evacuation"
+    }
+  ]
+}

@@ -21,6 +21,8 @@ PENDING_PUBLIC_RELEASE_STATUS = "not_published"
 PUBLISHED_PUBLIC_RELEASE_STATUS = "published"
 PENDING_PAGES_RELEASE_STATUS = "not_synced"
 SYNCED_PAGES_RELEASE_STATUS = "synced"
+LEGACY_CURRENT_REVIEW_PATH = "data/dispatches/food-line/review/current-signal-review.json"
+REVIEW_SNAPSHOT_PREFIX = "data/dispatches/food-line/review/signal-reviews/"
 
 
 @dataclass(frozen=True)
@@ -29,6 +31,7 @@ class ApprovedProposalBundle:
     proposal_sha256: str
     queue_path: Path
     queue_sha256: str
+    legacy_current_review_fallback_used: bool
     proposal: dict[str, Any]
     queue: dict[str, Any]
     matched_items: tuple[tuple[dict[str, Any], dict[str, Any]], ...]
@@ -37,6 +40,13 @@ class ApprovedProposalBundle:
 
 def sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _sha256_file_or_error(path: Path, label: str) -> str:
+    try:
+        return sha256_file(path)
+    except OSError as exc:
+        raise ValueError(f"unable to read {label}: {path}: {exc}") from exc
 
 
 def _read_object(path: Path, label: str) -> dict[str, Any]:
@@ -155,6 +165,45 @@ def _validate_item(proposal_item: dict[str, Any], queue_item: dict[str, Any]) ->
             raise ValueError(f"approved proposal {proposal_key} does not match its review-queue record")
 
 
+def _load_review_queue(
+    root: Path,
+    proposal: dict[str, Any],
+    edition_date: str,
+) -> tuple[Path, str, dict[str, Any], bool]:
+    review_snapshot_path = str(proposal.get("review_snapshot_path") or "").strip()
+    review_snapshot_sha256 = str(proposal.get("review_snapshot_sha256") or "").strip().lower()
+    if review_snapshot_path:
+        queue_path, _ = _relative_private_path(
+            root,
+            review_snapshot_path,
+            expected_prefix=REVIEW_SNAPSHOT_PREFIX,
+            label="review snapshot",
+        )
+        if queue_path.name != f"{edition_date}.json":
+            raise ValueError("approved proposal review snapshot path must match the proposal edition date")
+        queue_sha = _sha256_file_or_error(queue_path, "review snapshot")
+        if not review_snapshot_sha256:
+            raise ValueError("approved proposal review snapshot SHA-256 is required")
+        if review_snapshot_sha256 != queue_sha:
+            raise ValueError("approved proposal review snapshot SHA-256 is stale")
+        queue = _read_object(queue_path, "review snapshot")
+        return queue_path, queue_sha, queue, False
+
+    queue_path, queue_rel = _relative_private_path(
+        root,
+        str(proposal.get("source_queue_path") or ""),
+        expected_prefix="data/dispatches/food-line/review/",
+        label="review queue",
+    )
+    if queue_rel != LEGACY_CURRENT_REVIEW_PATH:
+        raise ValueError("legacy approved proposal fallback must reference the current Food Line review queue")
+    queue_sha = _sha256_file_or_error(queue_path, "review queue")
+    if str(proposal.get("source_queue_sha256") or "").lower() != queue_sha:
+        raise ValueError("approved proposal review-queue SHA-256 is stale")
+    queue = _read_object(queue_path, "review queue")
+    return queue_path, queue_sha, queue, True
+
+
 def _source_row(proposal_item: dict[str, Any], queue_item: dict[str, Any]) -> dict[str, Any]:
     source_url = _require_https(queue_item.get("source_url"), "selected item source_url")
     canonical_source_url = _require_https(queue_item.get("canonical_source_url"), "selected item canonical_source_url")
@@ -255,18 +304,7 @@ def load_approved_proposal(root: Path, proposal_path: Path | str, edition_date: 
     _require_count(proposal, "pending_item_count", 0)
     _require_count(proposal, "rejected_item_count", 0)
 
-    queue_path, _ = _relative_private_path(
-        root,
-        str(proposal.get("source_queue_path") or ""),
-        expected_prefix="data/dispatches/food-line/review/",
-        label="review queue",
-    )
-    if queue_path.name != "current-signal-review.json":
-        raise ValueError("approved proposal must reference the current Food Line review queue")
-    queue_sha = sha256_file(queue_path)
-    if str(proposal.get("source_queue_sha256") or "").lower() != queue_sha:
-        raise ValueError("approved proposal review-queue SHA-256 is stale")
-    queue = _read_object(queue_path, "review queue")
+    queue_path, queue_sha, queue, legacy_fallback_used = _load_review_queue(root, proposal, edition_date)
     if queue.get("schema_version") != QUEUE_SCHEMA or queue.get("edition_date") != edition_date:
         raise ValueError("review queue schema or edition date does not match the approved proposal")
     if queue.get("production_scope") != "current_nonhistorical_only":
@@ -296,6 +334,7 @@ def load_approved_proposal(root: Path, proposal_path: Path | str, edition_date: 
         proposal_sha256=sha256_file(resolved_proposal),
         queue_path=queue_path,
         queue_sha256=queue_sha,
+        legacy_current_review_fallback_used=legacy_fallback_used,
         proposal=proposal,
         queue=queue,
         matched_items=tuple(matched),
@@ -310,6 +349,10 @@ def build_release_manifest(
     edition_date: str,
     source_commit: str,
     source_paths: Sequence[Path],
+    approved_proposal_path: str | None = None,
+    approved_proposal_sha256: str | None = None,
+    review_snapshot_path: str | None = None,
+    review_snapshot_sha256: str | None = None,
 ) -> dict[str, Any]:
     root = root.resolve()
     pages_root = pages_root.resolve()
@@ -336,7 +379,7 @@ def build_release_manifest(
                 "pages_sha256_before": target_sha,
             }
         )
-    return {
+    manifest = {
         "schema_version": RELEASE_SCHEMA,
         "dispatch": "food-line",
         "edition_date": edition_date,
@@ -345,6 +388,15 @@ def build_release_manifest(
         "deletions": [],
         "shared_files": [],
     }
+    if approved_proposal_path:
+        manifest["approved_proposal_path"] = str(approved_proposal_path)
+    if approved_proposal_sha256:
+        manifest["approved_proposal_sha256"] = str(approved_proposal_sha256)
+    if review_snapshot_path:
+        manifest["review_snapshot_path"] = str(review_snapshot_path)
+    if review_snapshot_sha256:
+        manifest["review_snapshot_sha256"] = str(review_snapshot_sha256)
+    return manifest
 
 
 def write_json_deterministic(path: Path, payload: Any) -> None:

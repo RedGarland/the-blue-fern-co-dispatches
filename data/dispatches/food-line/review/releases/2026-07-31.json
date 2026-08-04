@@ -29,7 +29,7 @@
       "pages_path": "food-line/editions/2026-07-31/edition_manifest.json",
       "pages_sha256_before": "8021b0c2d11bdd32384323ccb3cadb11190ef6abaeb70c4829688d1acecee081",
       "source_path": "output/site/food-line/editions/2026-07-31/edition_manifest.json",
-      "source_sha256": "c34cf49750da516ea4d8c7d7a484d27f37d31b63382130993353583ab7a26235"
+      "source_sha256": "9b591678c09844d8d2bdff875ada1e41d27cafa41c2134bd30ea6e3b2c4b7487"
     },
     {
       "action": "unchanged",
@@ -60,6 +60,10 @@
       "source_sha256": "00adfc52425ea68ae285ccc158865443d9523418f678b114c133d518ea558261"
     }
   ],
+  "approved_proposal_path": "data/dispatches/food-line/review/proposed-editions/2026-07-31.json",
+  "approved_proposal_sha256": "83bd9af9824e288935e9e11868568f04e247beb462781b3b64a6a7730e50d9d2",
+  "review_snapshot_path": "data/dispatches/food-line/review/signal-reviews/2026-07-31.json",
+  "review_snapshot_sha256": "67372beb029c0ca7b5e993b19c58e0410630d107dec70897e7965329c96d0c4e",
   "schema_version": "food_line_release_manifest_v1",
   "shared_files": [],
   "source_commit": "af91544bd437970e7d7ab766a8b89038b2bf0274"

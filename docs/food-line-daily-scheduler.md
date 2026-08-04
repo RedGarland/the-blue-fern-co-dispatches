@@ -142,4 +142,6 @@ Get-Content -Raw "$Root\data\dispatches\food-line\review\current-signal-review.j
 Get-Content -Raw "$Root\data\dispatches\food-line\review\proposed-editions\$PacificDate.md"
 ```
 
+`current-signal-review.json` is the active working queue, not the historical authority for already approved editions. Historical approved-review provenance lives in `data\dispatches\food-line\review\signal-reviews\YYYY-MM-DD.json`.
+
 These commands do not approve or publish anything.

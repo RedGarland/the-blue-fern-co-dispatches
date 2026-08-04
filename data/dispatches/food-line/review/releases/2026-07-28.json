@@ -60,6 +60,10 @@
       "source_sha256": "00adfc52425ea68ae285ccc158865443d9523418f678b114c133d518ea558261"
     }
   ],
+  "approved_proposal_path": "data/dispatches/food-line/review/proposed-editions/2026-07-28.json",
+  "approved_proposal_sha256": "7a83f8f114e04ff30f98b9328535331db625d932cff895da91e9793756b3543d",
+  "review_snapshot_path": "data/dispatches/food-line/review/signal-reviews/2026-07-28.json",
+  "review_snapshot_sha256": "112cc2b51d4753a9ba3657cddcd95609f6193fdf5f32d8e65180026311bea01b",
   "schema_version": "food_line_release_manifest_v1",
   "shared_files": [],
   "source_commit": "29a3dab28b8f079206d8a875e86c2bcaeac66532"

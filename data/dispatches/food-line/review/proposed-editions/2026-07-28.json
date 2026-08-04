@@ -11,6 +11,8 @@
   "approved_item_count": 3,
   "pending_item_count": 0,
   "rejected_item_count": 0,
+  "review_snapshot_path": "data/dispatches/food-line/review/signal-reviews/2026-07-28.json",
+  "review_snapshot_sha256": "112cc2b51d4753a9ba3657cddcd95609f6193fdf5f32d8e65180026311bea01b",
   "source_queue_path": "data/dispatches/food-line/review/current-signal-review.json",
   "source_queue_sha256": "112cc2b51d4753a9ba3657cddcd95609f6193fdf5f32d8e65180026311bea01b",
   "items": [

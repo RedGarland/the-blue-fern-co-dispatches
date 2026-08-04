@@ -72,7 +72,9 @@ def _fixture(root: Path) -> tuple[Path, dict, dict]:
         "items": [item],
     }
     queue_path = root / "data/dispatches/food-line/review/current-signal-review.json"
+    snapshot_path = root / "data/dispatches/food-line/review/signal-reviews/2026-07-31.json"
     _write_json(queue_path, queue)
+    _write_json(snapshot_path, queue)
     public_item = {
         "rank": 1,
         "headline": item["proposed_public_headline"],
@@ -102,6 +104,8 @@ def _fixture(root: Path) -> tuple[Path, dict, dict]:
         "approved_item_count": 1,
         "pending_item_count": 0,
         "rejected_item_count": 0,
+        "review_snapshot_path": "data/dispatches/food-line/review/signal-reviews/2026-07-31.json",
+        "review_snapshot_sha256": hashlib.sha256(snapshot_path.read_bytes()).hexdigest(),
         "source_queue_path": "data/dispatches/food-line/review/current-signal-review.json",
         "source_queue_sha256": hashlib.sha256(queue_path.read_bytes()).hexdigest(),
         "items": [public_item],
@@ -113,7 +117,10 @@ def _fixture(root: Path) -> tuple[Path, dict, dict]:
 
 def _rewrite(root: Path, proposal_path: Path, proposal: dict, queue: dict) -> None:
     queue_path = root / "data/dispatches/food-line/review/current-signal-review.json"
+    snapshot_path = root / "data/dispatches/food-line/review/signal-reviews/2026-07-31.json"
     _write_json(queue_path, queue)
+    _write_json(snapshot_path, queue)
+    proposal["review_snapshot_sha256"] = hashlib.sha256(snapshot_path.read_bytes()).hexdigest()
     proposal["source_queue_sha256"] = hashlib.sha256(queue_path.read_bytes()).hexdigest()
     _write_json(proposal_path, proposal)
 
@@ -121,6 +128,8 @@ def _rewrite(root: Path, proposal_path: Path, proposal: dict, queue: dict) -> No
 def test_approved_proposal_loads_one_source_backed_current_signal(tmp_path: Path) -> None:
     proposal_path, _, _ = _fixture(tmp_path)
     bundle = load_approved_proposal(tmp_path, proposal_path, DATE)
+    assert bundle.queue_path == tmp_path / "data/dispatches/food-line/review/signal-reviews/2026-07-31.json"
+    assert bundle.legacy_current_review_fallback_used is False
     assert len(bundle.source_rows) == 1
     row = bundle.source_rows[0]
     assert row["url"] == SOURCE_URL
@@ -183,6 +192,50 @@ def test_historical_input_and_missing_decision_audit_fail(tmp_path: Path) -> Non
         load_approved_proposal(tmp_path, proposal_path, DATE)
 
 
+def test_legacy_proposal_without_snapshot_uses_current_queue_fallback(tmp_path: Path) -> None:
+    proposal_path, proposal, queue = _fixture(tmp_path)
+    proposal.pop("review_snapshot_path")
+    proposal.pop("review_snapshot_sha256")
+    _write_json(proposal_path, proposal)
+
+    bundle = load_approved_proposal(tmp_path, proposal_path, DATE)
+
+    assert bundle.queue_path == tmp_path / "data/dispatches/food-line/review/current-signal-review.json"
+    assert bundle.legacy_current_review_fallback_used is True
+    assert bundle.queue == queue
+
+
+def test_declared_snapshot_sha_mismatch_and_missing_snapshot_fail_closed(tmp_path: Path) -> None:
+    proposal_path, proposal, _ = _fixture(tmp_path)
+    proposal["review_snapshot_sha256"] = "0" * 64
+    _write_json(proposal_path, proposal)
+    with pytest.raises(ValueError, match="review snapshot SHA-256"):
+        load_approved_proposal(tmp_path, proposal_path, DATE)
+
+    proposal["review_snapshot_sha256"] = hashlib.sha256(
+        (tmp_path / "data/dispatches/food-line/review/signal-reviews/2026-07-31.json").read_bytes()
+    ).hexdigest()
+    snapshot_path = tmp_path / "data/dispatches/food-line/review/signal-reviews/2026-07-31.json"
+    snapshot_path.unlink()
+    _write_json(proposal_path, proposal)
+    with pytest.raises(ValueError, match="unable to read review snapshot"):
+        load_approved_proposal(tmp_path, proposal_path, DATE)
+
+
+def test_dated_snapshot_validation_is_stable_when_current_queue_changes(tmp_path: Path) -> None:
+    proposal_path, proposal, queue = _fixture(tmp_path)
+    queue["items"][0]["proposed_rank"] = 2
+    queue_path = tmp_path / "data/dispatches/food-line/review/current-signal-review.json"
+    _write_json(queue_path, queue)
+    proposal["source_queue_sha256"] = hashlib.sha256(queue_path.read_bytes()).hexdigest()
+    _write_json(proposal_path, proposal)
+
+    bundle = load_approved_proposal(tmp_path, proposal_path, DATE)
+
+    assert bundle.queue_path == tmp_path / "data/dispatches/food-line/review/signal-reviews/2026-07-31.json"
+    assert bundle.queue["items"][0]["proposed_rank"] == 1
+
+
 def test_canonical_generation_records_hashes_and_keeps_private_ids_out_of_html(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -200,6 +253,9 @@ def test_canonical_generation_records_hashes_and_keeps_private_ids_out_of_html(
     edition = tmp_path / "output/site/food-line/editions" / DATE
     manifest = json.loads((edition / "edition_manifest.json").read_text(encoding="utf-8"))
     assert manifest["approved_proposal_sha256"] == hashlib.sha256(proposal_path.read_bytes()).hexdigest()
+    assert manifest["review_snapshot_sha256"] == hashlib.sha256(
+        (tmp_path / "data/dispatches/food-line/review/signal-reviews/2026-07-31.json").read_bytes()
+    ).hexdigest()
     assert manifest["publication_status"] == "unpublished"
     assert manifest["pages_status"] == "not_synced"
     assert manifest["public_release_status"] == "not_published"
@@ -207,6 +263,8 @@ def test_canonical_generation_records_hashes_and_keeps_private_ids_out_of_html(
     assert manifest["audio_status"] == "not_generated"
     assert manifest["source_freshness_status"] == "passed"
     assert manifest["freshness_window_days"] == 3
+    assert "approved_proposal_path" not in manifest
+    assert "review_queue_path" not in manifest
     assert f"editions/{DATE}/" in (tmp_path / "output/site/food-line/index.html").read_text(encoding="utf-8")
     assert f"editions/{DATE}/" in (tmp_path / "output/site/food-line/archive.html").read_text(encoding="utf-8")
     html_text = "\n".join(path.read_text(encoding="utf-8") for path in edition.glob("*.html"))

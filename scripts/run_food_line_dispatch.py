@@ -7096,9 +7096,8 @@ def _run_food_line_approved_proposal(root: Path, date: str, approved_proposal_pa
         "source_table_path": f"/food-line/editions/{date}/source_table.html",
         "edition_mode": "current_update",
         "validation_status": "ok",
-        "approved_proposal_path": bundle.proposal_path.relative_to(root).as_posix(),
         "approved_proposal_sha256": bundle.proposal_sha256,
-        "review_queue_path": bundle.queue_path.relative_to(root).as_posix(),
+        "review_snapshot_sha256": bundle.queue_sha256,
         "review_queue_sha256": bundle.queue_sha256,
         "approved_item_provenance": item_provenance,
         "publication_status": "unpublished",
@@ -7147,6 +7146,10 @@ def _run_food_line_approved_proposal(root: Path, date: str, approved_proposal_pa
         edition_date=date,
         source_commit=source_commit,
         source_paths=release_sources,
+        approved_proposal_path=bundle.proposal_path.relative_to(root).as_posix(),
+        approved_proposal_sha256=bundle.proposal_sha256,
+        review_snapshot_path=bundle.queue_path.relative_to(root).as_posix(),
+        review_snapshot_sha256=bundle.queue_sha256,
     )
     release_manifest_path = root / "data" / "dispatches" / DISPATCH_SLUG / "review" / "releases" / f"{date}.json"
     write_json_deterministic(release_manifest_path, release_manifest)
@@ -7165,8 +7168,10 @@ def _run_food_line_approved_proposal(root: Path, date: str, approved_proposal_pa
         "map_status": "not_published",
         "approved_proposal_path": str(bundle.proposal_path),
         "approved_proposal_sha256": bundle.proposal_sha256,
-        "review_queue_path": str(bundle.queue_path),
+        "review_snapshot_path": str(bundle.queue_path),
+        "review_snapshot_sha256": bundle.queue_sha256,
         "review_queue_sha256": bundle.queue_sha256,
+        "legacy_current_review_fallback_used": bundle.legacy_current_review_fallback_used,
         "edition_output_paths": [str(path) for path in edition_dirs],
         "release_manifest_path": str(release_manifest_path),
         "release_manifest_sha256": sha256_file(release_manifest_path),

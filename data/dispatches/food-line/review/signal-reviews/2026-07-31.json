@@ -1,0 +1,197 @@
+{
+  "allowed_decisions": [
+    "approve",
+    "approve_with_edit",
+    "hold",
+    "reject"
+  ],
+  "edition_date": "2026-07-31",
+  "historical_roots_excluded": [
+    "data/agent-history",
+    "data/agent-history-staging"
+  ],
+  "inventory_counts": {
+    "duplicate_published": 0,
+    "eligible_for_review": 1,
+    "historical_only": 2,
+    "hold_for_correction": 1,
+    "insufficient_evidence": 3,
+    "missing_from_repository": 7,
+    "stale_for_daily_edition": 1
+  },
+  "items": [
+    {
+      "affected_groups": [
+        "Douglas County residents using Faith Food Pantry",
+        "households relying on emergency food assistance",
+        "approximately 960 recent monthly pantry users"
+      ],
+      "canonical_source_url": "https://www.northernnewsnow.com/2026/07/28/superior-food-pantry-closing-after-more-than-30-years",
+      "confidence": "high",
+      "decision_audit": {
+        "decided_at": "2026-08-01T05:57:31.156360+00:00",
+        "decided_by": "William Patton",
+        "decision": "approve"
+      },
+      "duplicate_check": {
+        "checked_paths": [
+          "data/dispatches/food-line/agent-intake/",
+          "output/site/food-line/editions/"
+        ],
+        "matched_records": [],
+        "status": "not_published"
+      },
+      "editorial_note": "Approved for the July 31 Food Line draft. The closure and recent service volume are directly documented. Preserve uncertainty about the capacity and equivalent accessibility of the Duluth referral site.",
+      "editorial_status": "approve",
+      "evidence_level": "documented_service_closure_with_reported_service_volume",
+      "exact_supporting_passage": "The pantry opened in 1994 and served residents across Douglas County. It recently provided food to an average of 960 people and distributed approximately 34,000 pounds of food each month. Leaders said the church building’s aging condition and the cost of necessary repairs made it impossible to continue operating the pantry safely and sustainably.",
+      "freshness_check": {
+        "age_days": 3,
+        "edition_date": "2026-07-31",
+        "status": "current"
+      },
+      "location_name": "Superior",
+      "location_scope": "Superior and Douglas County, Wisconsin",
+      "pressure_type": "food_pantry_closure",
+      "proposed_public_headline": "Superior food pantry closes after more than 30 years",
+      "proposed_public_summary": "Faith Food Pantry in Superior closed after its final distribution on July 28. The pantry had recently served about 960 people and distributed approximately 34,000 pounds of food per month across Douglas County. People seeking assistance were directed to Second Harvest Northland in Duluth, but available reporting does not establish whether that alternative has sufficient capacity or equivalent accessibility.",
+      "proposed_rank": 1,
+      "proposed_section": "Core Food Pressure Signals",
+      "publication_eligible": false,
+      "publisher": "Northern News Now",
+      "review_item_id": "food-line-current-152a4cc873903b41",
+      "source_artifact_path": "data/dispatches/food-line/agent-intake/2026-07-31/food-line-source-watch-20260731T034101Z-superior-faith-pantry-closure.json",
+      "source_finding_or_intake_id": "finding_48b492255edda92746442df1",
+      "source_published_at": "2026-07-28T16:26:00-05:00",
+      "source_url": "https://www.northernnewsnow.com/2026/07/28/superior-food-pantry-closing-after-more-than-30-years/",
+      "state": "Wisconsin",
+      "title": "Superior food pantry closing after more than 30 years",
+      "uncertainty_note": "Available reporting does not establish whether Second Harvest Northland has sufficient capacity or equivalent accessibility for displaced Faith Food Pantry users.",
+      "why_it_matters": "The closure removes a substantial local food-distribution site and may shift demand and transportation burdens to other providers."
+    }
+  ],
+  "prepared_at": "2026-07-31T03:44:00Z",
+  "production_scope": "current_nonhistorical_only",
+  "publication_eligible_count": 0,
+  "queue_id": "food-line-current-review-2026-07-31",
+  "schema_version": "food_line_current_signal_review_v1",
+  "selection_status": "pending_editorial_review",
+  "signal_inventory": [
+    {
+      "classification": "eligible_for_review",
+      "repository_evidence_paths": [
+        "data/dispatches/food-line/agent-inbox/food-line-source-watch-20260731T034101Z-superior-faith-pantry-closure.json",
+        "data/dispatches/food-line/agent-intake/2026-07-31/food-line-source-watch-20260731T034101Z-superior-faith-pantry-closure.json"
+      ],
+      "signal_name": "Faith Food Pantry closure in Superior, Wisconsin",
+      "why": "The current nonhistorical intake record is source-backed, within the three-day review window, and has no published duplicate; it awaits one operator editorial decision."
+    },
+    {
+      "classification": "missing_from_repository",
+      "repository_evidence_paths": [],
+      "signal_name": "Illinois SNAP benefit losses",
+      "why": "Current production contains no complete source-backed record for this claimed benefit loss."
+    },
+    {
+      "classification": "missing_from_repository",
+      "repository_evidence_paths": [],
+      "signal_name": "Oregon wildfire-related SNAP food loss",
+      "why": "Current production contains no complete source-backed wildfire food-loss record."
+    },
+    {
+      "classification": "missing_from_repository",
+      "repository_evidence_paths": [],
+      "signal_name": "Connecticut refugee and asylum-seeker SNAP losses",
+      "why": "Current production contains no complete source-backed record with exact evidence."
+    },
+    {
+      "classification": "missing_from_repository",
+      "repository_evidence_paths": [],
+      "signal_name": "Mississippi SNAP participation decline and benefit interruptions",
+      "why": "Registry and older collection references are not a current article-level record proving this development."
+    },
+    {
+      "classification": "insufficient_evidence",
+      "repository_evidence_paths": [
+        "data/agent-history-staging/food-line/2026-07-29-northwest-montana-food-line-source-watch.txt"
+      ],
+      "signal_name": "Northwest Montana SNAP decline and food-bank demand",
+      "why": "The only repository alert is protected historical material and its normalized finding was archived invalid for insufficient specific pressure evidence."
+    },
+    {
+      "classification": "missing_from_repository",
+      "repository_evidence_paths": [],
+      "signal_name": "Truckee–North Lake Tahoe pantry purchasing-capacity loss",
+      "why": "No current nonhistorical alert, canonical source, or exact supporting passage was found."
+    },
+    {
+      "classification": "missing_from_repository",
+      "repository_evidence_paths": [],
+      "signal_name": "North Carolina drought-related produce and pantry pressure",
+      "why": "No current nonhistorical source record documents the claimed food-access consequence."
+    },
+    {
+      "classification": "missing_from_repository",
+      "repository_evidence_paths": [],
+      "signal_name": "Houston SNAP decline and food-bank demand",
+      "why": "No current nonhistorical article-level record with exact evidence was found."
+    },
+    {
+      "classification": "stale_for_daily_edition",
+      "repository_evidence_paths": [
+        "data/dispatches/food-line/sources/"
+      ],
+      "signal_name": "Existing nonhistorical Food Line source collection",
+      "why": "The newest current source directory is 2026-07-09, outside the three-day Food Line daily freshness window for 2026-07-31."
+    },
+    {
+      "classification": "hold_for_correction",
+      "repository_evidence_paths": [
+        "data/agent-history-staging/food-line/2026-07-28-north-texas-food-line-source-watch.txt",
+        "data/agent-history/food-line/reviews/corrections/b4b7227b29696f9454b4b68123c8a329bc5bd9ea73995e2e4056210e320cd1b4-normalization-correction-proposal.json"
+      ],
+      "signal_name": "North Texas food-bank demand and purchasing pressure",
+      "why": "The candidate is historical, pending review, and needs normalization correction; it is publication-ineligible and excluded."
+    },
+    {
+      "classification": "insufficient_evidence",
+      "repository_evidence_paths": [
+        "data/agent-history-staging/food-line/2026-07-28-durham-nc-food-line-source-watch.txt"
+      ],
+      "signal_name": "Durham, North Carolina historical candidate",
+      "why": "The candidate remains private and pending historical review."
+    },
+    {
+      "classification": "historical_only",
+      "repository_evidence_paths": [
+        "data/agent-history-staging/food-line/2026-07-28-food-line-source-watch.txt"
+      ],
+      "signal_name": "Los Angeles County historical candidate",
+      "why": "The candidate is substantively reviewed only within the private historical workflow and has no current-production authority."
+    },
+    {
+      "classification": "historical_only",
+      "repository_evidence_paths": [
+        "data/agent-history-staging/food-line/2026-07-29-massachusetts-snap-access-food-line-source-watch.txt"
+      ],
+      "signal_name": "Massachusetts SNAP-access historical alert",
+      "why": "The protected historical alert was archived invalid for insufficient specific pressure evidence."
+    },
+    {
+      "classification": "insufficient_evidence",
+      "repository_evidence_paths": [
+        "data/agent-history-staging/food-line/2026-07-28-greater-lansing-food-line-source-watch.txt"
+      ],
+      "signal_name": "Greater Lansing food-system disruption historical alert",
+      "why": "The protected historical alert was archived invalid for insufficient specific pressure evidence."
+    }
+  ],
+  "sources_checked": [
+    "data/dispatches/food-line/agent-inbox/",
+    "data/dispatches/food-line/agent-intake/",
+    "data/dispatches/food-line/discovery/",
+    "data/dispatches/food-line/sources/",
+    "output/review/food-line/",
+    "output/site/food-line/editions/*/sources_manifest.json"
+  ]
+}

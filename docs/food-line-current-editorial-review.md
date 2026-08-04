@@ -5,8 +5,11 @@ The current-signal review queue is a private editorial boundary between current 
 Private paths:
 
 - Queue: `data/dispatches/food-line/review/current-signal-review.json`
+- Dated review snapshots: `data/dispatches/food-line/review/signal-reviews/YYYY-MM-DD.json`
 - Proposed edition JSON: `data/dispatches/food-line/review/proposed-editions/YYYY-MM-DD.json`
 - Operator preview: `data/dispatches/food-line/review/proposed-editions/YYYY-MM-DD.md`
+
+`current-signal-review.json` remains the operator working queue and convenience copy. Once a proposal is approved and a dated snapshot exists, the dated snapshot becomes the authoritative historical review provenance for that edition.
 
 Only current production inputs may support queue items:
 
@@ -52,6 +55,6 @@ After every selected item has an `approve` or `approve_with_edit` decision, cano
 python scripts/run_food_line_dispatch.py --date YYYY-MM-DD --approved-proposal "data/dispatches/food-line/review/proposed-editions/YYYY-MM-DD.json" --skip-bluesky --no-generate-audio
 ```
 
-This command verifies the proposal and current-review queue hashes, dates, identities, decisions, operator audit fields, source evidence, HTTPS URLs, freshness, duplicate state, and nonhistorical intake boundary. It generates unpublished source output and a private release manifest. It does not grant publication approval, sync Pages, post to Bluesky, generate audio or maps, or change a schedule.
+This command verifies the proposal and dated review snapshot hashes, dates, identities, decisions, operator audit fields, source evidence, HTTPS URLs, freshness, duplicate state, and nonhistorical intake boundary. Legacy proposals that predate dated snapshots may fall back to `current-signal-review.json` only when they do not declare `review_snapshot_path`. The command generates unpublished source output and a private release manifest. It does not grant publication approval, sync Pages, post to Bluesky, generate audio or maps, or change a schedule.
 
 For approved-proposal editions, `publication_status` and `pages_status` remain generation-state fields in source output. A successful Pages release adds separate live-release fields on the public Pages copy: `public_release_status` and `pages_release_status`.

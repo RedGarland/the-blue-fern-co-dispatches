@@ -26,6 +26,7 @@ CURRENT_SOURCE_PREFIXES = (
 )
 PRIVATE_QUEUE_PATH = Path("data/dispatches/food-line/review/current-signal-review.json")
 PRIVATE_PROPOSED_EDITION_ROOT = Path("data/dispatches/food-line/review/proposed-editions")
+PRIVATE_SIGNAL_REVIEW_ROOT = Path("data/dispatches/food-line/review/signal-reviews")
 
 REQUIRED_ITEM_FIELDS = (
     "review_item_id",
@@ -93,6 +94,10 @@ def write_json_atomic(path: Path, payload: Any) -> Path:
         if temporary_path.exists():
             temporary_path.unlink()
     return path
+
+
+def signal_review_snapshot_path(edition_date: str) -> Path:
+    return PRIVATE_SIGNAL_REVIEW_ROOT / f"{edition_date}.json"
 
 
 def _require_date(value: Any, field: str) -> str:
@@ -328,6 +333,8 @@ def apply_editorial_decision(
 
 def build_proposed_edition(queue: dict[str, Any]) -> dict[str, Any]:
     validated = validate_queue(queue)
+    review_snapshot = signal_review_snapshot_path(validated["edition_date"])
+    review_snapshot_sha256 = payload_sha256(validated)
     proposed_items = sorted(
         (
             item
@@ -381,8 +388,10 @@ def build_proposed_edition(queue: dict[str, Any]) -> dict[str, Any]:
         "published": False,
         "publication_eligible": False,
         "publication_approval": False,
+        "review_snapshot_path": review_snapshot.as_posix(),
+        "review_snapshot_sha256": review_snapshot_sha256,
         "source_queue_path": PRIVATE_QUEUE_PATH.as_posix(),
-        "source_queue_sha256": payload_sha256(validated),
+        "source_queue_sha256": review_snapshot_sha256,
         "selected_item_count": len(public_items),
         "approved_item_count": approved_item_count,
         "pending_item_count": pending_item_count,
@@ -527,6 +536,9 @@ def render_operator_markdown(queue: dict[str, Any], proposed: dict[str, Any]) ->
 
 
 def write_proposed_edition(root: Path, queue: dict[str, Any]) -> tuple[Path, Path, dict[str, Any]]:
+    validated_queue = validate_queue(queue)
+    snapshot_path = root / signal_review_snapshot_path(validated_queue["edition_date"])
+    write_json_atomic(snapshot_path, validated_queue)
     proposed = build_proposed_edition(queue)
     edition_date = proposed["edition_date"]
     json_path = root / PRIVATE_PROPOSED_EDITION_ROOT / f"{edition_date}.json"

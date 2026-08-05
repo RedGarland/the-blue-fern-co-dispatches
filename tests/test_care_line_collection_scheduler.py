@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 import scripts.care_line_collection_scheduler as scheduler
+import scripts.run_care_line_national_pipeline as pipeline_entry
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -56,6 +57,30 @@ def test_pipeline_script_requires_collection_only_flag() -> None:
     assert 'requires --collection-only' in text
     assert 'parser.add_argument("--smoke-test", action="store_true")' in text
     assert 'smoke-test mode requires --max-sources and --max-items-per-source' in text
+
+
+def test_pipeline_entry_routes_smoke_mode_to_smoke_paths(monkeypatch: pytest.MonkeyPatch) -> None:
+    captured: dict[str, object] = {}
+
+    def fake_run_national_pipeline(*args, **kwargs):
+        captured.update(kwargs)
+        return {"run_manifest": {"status": "success"}}
+
+    monkeypatch.setattr(pipeline_entry, "run_national_pipeline", fake_run_national_pipeline)
+    exit_code = pipeline_entry.main(
+        [
+            "--repo-root", str(ROOT),
+            "--run-date", "2026-08-05",
+            "--collection-only",
+            "--smoke-test",
+            "--max-sources", "3",
+            "--max-items-per-source", "3",
+        ]
+    )
+    assert exit_code == 0
+    assert captured["smoke_test"] is True
+    assert captured["collection_runs_root"] == pipeline_entry.SMOKE_COLLECTION_RUNS_ROOT
+    assert captured["review_root"] == pipeline_entry.SMOKE_REVIEW_ROOT
 
 
 def test_scheduler_rejects_smoke_limits_without_explicit_smoke_mode(tmp_path: Path) -> None:

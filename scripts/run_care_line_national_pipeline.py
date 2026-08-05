@@ -10,7 +10,11 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from bluefern_dispatches.care_line_national_pipeline import run_national_pipeline  # noqa: E402
+from bluefern_dispatches.care_line_national_pipeline import (  # noqa: E402
+    SMOKE_COLLECTION_RUNS_ROOT,
+    SMOKE_REVIEW_ROOT,
+    run_national_pipeline,
+)
 
 SMOKE_SOURCE_LIMIT_CEILING = 3
 SMOKE_ITEMS_PER_SOURCE_CEILING = 3
@@ -58,6 +62,8 @@ def main(argv: list[str] | None = None) -> int:
         active_queue_limit=args.active_queue_limit,
         low_priority_cap=args.low_priority_cap,
         smoke_test=args.smoke_test,
+        collection_runs_root=SMOKE_COLLECTION_RUNS_ROOT if args.smoke_test else Path("data/dispatches/care-line/collection-runs"),
+        review_root=SMOKE_REVIEW_ROOT if args.smoke_test else Path("data/dispatches/care-line/review"),
     )
     print(json.dumps(result, indent=2, sort_keys=True, ensure_ascii=False))
     status = str((result.get("run_manifest") or {}).get("status") or "")

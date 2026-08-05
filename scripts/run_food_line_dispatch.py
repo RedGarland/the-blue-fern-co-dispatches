@@ -26,7 +26,15 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from bluefern_dispatches.bluesky_post import maybe_post_food_line_dispatch_to_bluesky
-from bluefern_dispatches.generator import BASE_URL, discover_public_edition_dates, footer, header as site_header, page
+from bluefern_dispatches.generator import (
+    BASE_URL,
+    DispatchConfig,
+    discover_public_edition_dates,
+    footer,
+    header as site_header,
+    page,
+    render_rss_for_dates,
+)
 from bluefern_dispatches.food_line_sources import (
     FOOD_LINE_PUBLIC_EVIDENCE_FALLBACK,
     clean_food_line_public_evidence_excerpt,
@@ -7126,9 +7134,23 @@ def _run_food_line_approved_proposal(root: Path, date: str, approved_proposal_pa
         _write_json(edition_dir / "curation_manifest.json", {"stories": sources})
         _write_json(edition_dir / "edition_manifest.json", manifest)
     _update_index_archive(root, date, mission)
+    rss_dispatch = DispatchConfig(
+        slug=DISPATCH_SLUG,
+        name=DISPATCH_NAME,
+        edition_date=date,
+        tagline=FOOD_LINE_PAGE_DESCRIPTION,
+        logo=FOOD_LINE_LOGO_ASSET,
+        sources=[],
+        stories=[],
+    )
+    site_output_root = root / "output" / "site"
+    rss_dates = discover_public_edition_dates(site_output_root, DISPATCH_SLUG)
+    rss_xml = render_rss_for_dates(rss_dispatch, rss_dates, site_output_root)
+    _write_text(root / "output" / "site" / DISPATCH_SLUG / "rss.xml", rss_xml)
+    _write_text(root / "output" / "dispatches" / DISPATCH_SLUG / "rss.xml", rss_xml)
 
     site_root = root / "output" / "site" / DISPATCH_SLUG
-    release_sources = [site_root / "index.html", site_root / "archive.html"]
+    release_sources = [site_root / "index.html", site_root / "archive.html", site_root / "rss.xml"]
     release_sources.extend(
         edition_dirs[0] / filename
         for filename in (

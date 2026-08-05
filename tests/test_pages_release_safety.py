@@ -40,6 +40,7 @@ def _write_food_line_site(source_root: Path, dates: list[str], *, approved_dates
     site_root.mkdir(parents=True, exist_ok=True)
     (site_root / "index.html").write_text("<html>Food Line index</html>", encoding="utf-8")
     (site_root / "archive.html").write_text("<html>Archive</html>", encoding="utf-8")
+    (site_root / "rss.xml").write_text("<rss></rss>", encoding="utf-8")
     for date_text in dates:
         edition = site_root / "editions" / date_text
         edition.mkdir(parents=True, exist_ok=True)
@@ -104,7 +105,7 @@ def _commit_repo(repo: Path, message: str = "update") -> None:
 def _release_manifest(source: Path, pages: Path, date_text: str) -> Path:
     site = source / "output/site/food-line"
     edition = site / "editions" / date_text
-    source_paths = [site / "index.html", site / "archive.html", *sorted(path for path in edition.iterdir() if path.is_file())]
+    source_paths = [site / "index.html", site / "archive.html", site / "rss.xml", *sorted(path for path in edition.iterdir() if path.is_file())]
     payload = build_release_manifest(
         root=source,
         pages_root=pages,
@@ -144,6 +145,7 @@ def test_dry_run_reports_planned_paths_for_food_line_dates(release_repos: tuple[
     assert report["copied_paths"] == [
         "food-line/index.html",
         "food-line/archive.html",
+        "food-line/rss.xml",
         "food-line/editions/2026-06-19/claim_ledger.html",
         "food-line/editions/2026-06-19/curation_manifest.json",
         "food-line/editions/2026-06-19/edition_manifest.json",
@@ -378,7 +380,7 @@ def test_release_manifest_dry_run_ignores_unrelated_source_dirt_and_writes_nothi
     )
 
     assert report["ok"] is True
-    assert len(report["additions"]) == 8
+    assert len(report["additions"]) == 9
     assert report["modifications"] == []
     assert report["deletions"] == []
     assert _git_output(pages, "status", "--porcelain=v1", "--untracked-files=all") == before_status

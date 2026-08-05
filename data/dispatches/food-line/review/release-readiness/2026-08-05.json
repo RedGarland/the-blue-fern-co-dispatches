@@ -1,0 +1,15 @@
+{
+  "approved_proposal_path": "data/dispatches/food-line/review/proposed-editions/2026-08-05.json",
+  "approved_signal_count": 1,
+  "draft_only": false,
+  "edition_date": "2026-08-05",
+  "notes": [
+    "Human editorial approval applied to the North Carolina candidate with bounded corrected wording.",
+    "Source-side generation remains unpublished until Pages synchronization is separately completed."
+  ],
+  "public_source_count": 1,
+  "publication_authorized": false,
+  "review_snapshot_path": "data/dispatches/food-line/review/signal-reviews/2026-08-05.json",
+  "schema_version": "food_line_release_readiness_v1",
+  "status": "approved_current_review_ready_for_source_generation"
+}

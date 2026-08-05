@@ -1,0 +1,19 @@
+{
+  "agent_run_id": "food-line-permanent-20260805-r1",
+  "counts": {
+    "eligible_for_review": 1,
+    "excluded": 1
+  },
+  "dry_run": false,
+  "duplicate_keys": [
+    "15986544441966e98de836e8aa05657f24025d662b8fb8f2cc745558cbcf734a",
+    "55c49ce7b4c26f1e656fc015f6baaf9e2c5d708178ddc97dde2e03e360b558d9"
+  ],
+  "edition_date": "2026-08-05",
+  "finding_ids": [
+    "finding_cfc3d3c5b229fbb450f3c611",
+    "finding_a2338ec68902f2750ebb75b5"
+  ],
+  "input_sha256": "b8b6d3edcc6e4ad863e20baf2ebd810896df01f826075cea0a046c37c2d4bf91",
+  "schema_version": "food_line_agent_intake_report_v1"
+}

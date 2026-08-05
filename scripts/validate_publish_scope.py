@@ -385,8 +385,8 @@ def _release_manifest_delta(
             f"output/site/{dispatch}/index.html",
             f"output/site/{dispatch}/archive.html",
         }
-        if dispatch == "care-line":
-            expected_paths.add("output/site/care-line/rss.xml")
+        if dispatch in {"food-line", "care-line"}:
+            expected_paths.add(f"output/site/{dispatch}/rss.xml")
         if edition_dir.is_dir():
             expected_paths.update(path.relative_to(source_root).as_posix() for path in edition_dir.rglob("*") if path.is_file())
         missing = sorted(expected_paths - set(source_paths))

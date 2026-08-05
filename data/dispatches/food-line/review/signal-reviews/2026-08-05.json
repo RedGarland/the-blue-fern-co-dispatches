@@ -1,0 +1,71 @@
+{
+  "allowed_decisions": [
+    "approve",
+    "approve_with_edit",
+    "hold",
+    "reject"
+  ],
+  "context_records": [],
+  "duplicate_clusters": [],
+  "edition_date": "2026-08-05",
+  "excluded_items": [],
+  "held_items": [],
+  "historical_roots_excluded": [
+    "data/agent-history",
+    "data/agent-history-staging"
+  ],
+  "items": [
+    {
+      "additional_supporting_passages": [
+        "Federal SNAP cuts and new work requirements are pushing more people toward food pantries, with North Carolina SNAP participant rolls shrinking by more than 110,000 since September 2025.",
+        "“The food pantries are being used as a backstop rather than an emergency,” Loyd continued. “We’re seeing a lot more people, and it’s getting increasingly more difficult to meet the need.”"
+      ],
+      "affected_groups": [
+        "SNAP participants",
+        "food pantry users"
+      ],
+      "candidate_id": "food-line-discovery-009586c8408f66fc",
+      "canonical_source_url": "https://www.northcarolinahealthnews.org/2026/08/04/snap-food-insecurity-pantries-guilford",
+      "confidence": "high",
+      "decision_audit": {
+        "decided_at": "2026-08-05T21:41:24.764335Z",
+        "decided_by": "Human editorial approval",
+        "decision": "approve_with_edit"
+      },
+      "duplicate_check": {
+        "matched_records": [],
+        "status": "not_published"
+      },
+      "editorial_note": "Human editorial approval accepted with correction: use direct publisher passages, bounded statewide framing, and the approved headline/summary.",
+      "editorial_status": "approve_with_edit",
+      "evidence_level": "direct_reporting",
+      "exact_supporting_passage": "Federal SNAP cuts and new work requirements are pushing more people toward food pantries, with North Carolina SNAP participant rolls shrinking by more than 110,000 since September 2025.\n\n“The food pantries are being used as a backstop rather than an emergency,” Loyd continued. “We’re seeing a lot more people, and it’s getting increasingly more difficult to meet the need.”",
+      "freshness_check": {
+        "age_days": 1,
+        "edition_date": "2026-08-05",
+        "status": "current"
+      },
+      "location_name": "North Carolina",
+      "location_scope": "state_local",
+      "pressure_type": "demand strain",
+      "proposed_public_headline": "North Carolina food pantries report rising demand amid SNAP cuts",
+      "proposed_public_summary": "North Carolina Health News reported that federal SNAP cuts and new work requirements are pushing more people toward food pantries, while pantry leaders said rising demand is becoming increasingly difficult to meet.",
+      "proposed_rank": 1,
+      "proposed_section": "Core Food Pressure Signals",
+      "publication_eligible": false,
+      "publisher": "North Carolina Health News",
+      "review_item_id": "food-line-current-375d9edb4f29b8379bdabbfc",
+      "source_artifact_path": "data/dispatches/food-line/agent-intake/2026-08-05/food-line-permanent-20260805-r1.json",
+      "source_finding_or_intake_id": "finding_cfc3d3c5b229fbb450f3c611",
+      "source_published_at": "2026-08-04",
+      "source_url": "https://www.northcarolinahealthnews.org/2026/08/04/snap-food-insecurity-pantries-guilford",
+      "state": "NC",
+      "title": "SNAP changes push more North Carolina families to food pantries, food banks",
+      "uncertainty_note": "County-specific examples in the article should remain attributed as local context rather than generalized statewide evidence.",
+      "why_it_matters": "The source reports more people turning to food pantries in North Carolina and providers saying the rising demand is becoming harder to meet."
+    }
+  ],
+  "production_scope": "current_nonhistorical_only",
+  "queue_id": "food-line-current-review-2026-08-05-authoritative",
+  "schema_version": "food_line_current_signal_review_v1"
+}

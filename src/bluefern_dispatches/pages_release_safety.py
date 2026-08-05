@@ -25,7 +25,7 @@ DEFAULT_SOURCE_BRANCH = "add/pages-repo-default"
 DEFAULT_PAGES_REPO_NAME = "bluefern-dispatches-pages"
 SUPPORTED_DISPATCHES = ("food-line", "care-line")
 REQUIRED_ROOT_FILES_BY_DISPATCH = {
-    "food-line": ("index.html", "archive.html"),
+    "food-line": ("index.html", "archive.html", "rss.xml"),
     "care-line": ("index.html", "archive.html", "rss.xml"),
 }
 FALLBACK_TIME_OUT_SECS = 20
@@ -165,6 +165,8 @@ def _parse_dates(values: Sequence[str]) -> tuple[str, ...]:
 
 def _allowed_pages_prefixes(dispatch: str, dates: Sequence[str]) -> list[str]:
     prefixes = [f"{dispatch}/index.html", f"{dispatch}/archive.html"]
+    if dispatch in {"food-line", "care-line"}:
+        prefixes.append(f"{dispatch}/rss.xml")
     if dispatch == "care-line":
         prefixes.append("care-line/rss.xml")
     for date_text in dates:
@@ -174,6 +176,8 @@ def _allowed_pages_prefixes(dispatch: str, dates: Sequence[str]) -> list[str]:
 
 def _allowed_source_prefixes(dispatch: str, dates: Sequence[str]) -> list[str]:
     prefixes = [f"output/site/{dispatch}/index.html", f"output/site/{dispatch}/archive.html"]
+    if dispatch in {"food-line", "care-line"}:
+        prefixes.append(f"output/site/{dispatch}/rss.xml")
     if dispatch == "care-line":
         prefixes.append("output/site/care-line/rss.xml")
     for date_text in dates:
@@ -700,8 +704,8 @@ def sync_pages_from_source(
 
     commit_message = _deterministic_commit_message_for_dispatch(dispatch, selected_dates)
     stage_paths = [f"{dispatch}/index.html", f"{dispatch}/archive.html"] + [f"{dispatch}/editions/{date_text}" for date_text in selected_dates]
-    if dispatch == "care-line":
-        stage_paths.insert(2, "care-line/rss.xml")
+    if dispatch in {"food-line", "care-line"}:
+        stage_paths.insert(2, f"{dispatch}/rss.xml")
     add_result = _run_git(pages_root, "add", "-A", "--", *stage_paths)
     if add_result.returncode != 0:
         return {

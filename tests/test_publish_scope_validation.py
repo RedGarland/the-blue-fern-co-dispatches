@@ -170,6 +170,7 @@ def _release_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
     site = source / "output/site/food-line"
     (site / "index.html").write_text("index", encoding="utf-8")
     (site / "archive.html").write_text("archive", encoding="utf-8")
+    (site / "rss.xml").write_text("<rss />", encoding="utf-8")
     for filename in ("index.html", "source_table.html", "claim_ledger.html", "sources_manifest.json", "curation_manifest.json", "edition_manifest.json"):
         (edition / filename).write_text(filename, encoding="utf-8")
     _run_git(source, "add", "output")
@@ -179,7 +180,7 @@ def _release_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         pages_root=pages,
         edition_date="2026-06-19",
         source_commit=_git_output(source, "rev-parse", "HEAD"),
-        source_paths=[site / "index.html", site / "archive.html", *sorted(edition.iterdir())],
+        source_paths=[site / "index.html", site / "archive.html", site / "rss.xml", *sorted(edition.iterdir())],
     )
     manifest = source / "release.json"
     write_json_deterministic(manifest, payload)

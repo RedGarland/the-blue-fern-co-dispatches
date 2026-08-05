@@ -1,0 +1,98 @@
+{
+  "approved_item_count": 1,
+  "draft": true,
+  "draft_status": "draft_approved_pending_publication",
+  "edition_date": "2026-08-05",
+  "edition_headline": "North Carolina food pantries report rising demand amid SNAP cuts",
+  "edition_mode": "current_update",
+  "edition_summary": "North Carolina Health News reported that federal SNAP cuts and new work requirements are pushing more people toward food pantries in the state. Pantry leaders told the outlet that demand is increasing and becoming harder to meet.",
+  "items": [
+    {
+      "headline": "North Carolina food pantries report rising demand amid SNAP cuts",
+      "location_name": "North Carolina",
+      "rank": 1,
+      "section": "Core Food Pressure Signals",
+      "source": "North Carolina Health News",
+      "source_published_at": "2026-08-04",
+      "source_url": "https://www.northcarolinahealthnews.org/2026/08/04/snap-food-insecurity-pantries-guilford",
+      "state": "NC",
+      "summary": "North Carolina Health News reported that federal SNAP cuts and new work requirements are pushing more people toward food pantries, while pantry leaders said rising demand is becoming increasingly difficult to meet.",
+      "uncertainty_note": "County-specific examples in the article should remain attributed as local context rather than generalized statewide evidence.",
+      "why_it_matters": "The source reports more people turning to food pantries in North Carolina and providers saying the rising demand is becoming harder to meet."
+    }
+  ],
+  "layout": {
+    "at_a_glance": [
+      {
+        "headline": "North Carolina food pantries report rising demand amid SNAP cuts",
+        "location_name": "North Carolina",
+        "rank": 1,
+        "section": "Core Food Pressure Signals",
+        "source": "North Carolina Health News",
+        "source_published_at": "2026-08-04",
+        "source_url": "https://www.northcarolinahealthnews.org/2026/08/04/snap-food-insecurity-pantries-guilford",
+        "state": "NC",
+        "summary": "North Carolina Health News reported that federal SNAP cuts and new work requirements are pushing more people toward food pantries, while pantry leaders said rising demand is becoming increasingly difficult to meet.",
+        "uncertainty_note": "County-specific examples in the article should remain attributed as local context rather than generalized statewide evidence.",
+        "why_it_matters": "The source reports more people turning to food pantries in North Carolina and providers saying the rising demand is becoming harder to meet."
+      }
+    ],
+    "core_food_pressure_signals": [
+      {
+        "headline": "North Carolina food pantries report rising demand amid SNAP cuts",
+        "location_name": "North Carolina",
+        "rank": 1,
+        "section": "Core Food Pressure Signals",
+        "source": "North Carolina Health News",
+        "source_published_at": "2026-08-04",
+        "source_url": "https://www.northcarolinahealthnews.org/2026/08/04/snap-food-insecurity-pantries-guilford",
+        "state": "NC",
+        "summary": "North Carolina Health News reported that federal SNAP cuts and new work requirements are pushing more people toward food pantries, while pantry leaders said rising demand is becoming increasingly difficult to meet.",
+        "uncertainty_note": "County-specific examples in the article should remain attributed as local context rather than generalized statewide evidence.",
+        "why_it_matters": "The source reports more people turning to food pantries in North Carolina and providers saying the rising demand is becoming harder to meet."
+      }
+    ],
+    "edition_summary": "North Carolina Health News reported that federal SNAP cuts and new work requirements are pushing more people toward food pantries in the state. Pantry leaders told the outlet that demand is increasing and becoming harder to meet.",
+    "eyebrow_status": "FOOD LINE — PRIVATE DRAFT / UNPUBLISHED",
+    "generation_note": "Private editorial preview assembled from approved current-review items; final publication approval is still required and no public output was generated.",
+    "h1": "Food Line Dispatch — 2026-08-05",
+    "other_food_line_signals": [],
+    "source_mix": {
+      "publishers": {
+        "North Carolina Health News": 1
+      },
+      "states": {
+        "NC": 1
+      }
+    },
+    "source_note": "Every item retains its canonical source URL and source publication date.",
+    "todays_read": [
+      {
+        "headline": "North Carolina food pantries report rising demand amid SNAP cuts",
+        "location_name": "North Carolina",
+        "rank": 1,
+        "section": "Core Food Pressure Signals",
+        "source": "North Carolina Health News",
+        "source_published_at": "2026-08-04",
+        "source_url": "https://www.northcarolinahealthnews.org/2026/08/04/snap-food-insecurity-pantries-guilford",
+        "state": "NC",
+        "summary": "North Carolina Health News reported that federal SNAP cuts and new work requirements are pushing more people toward food pantries, while pantry leaders said rising demand is becoming increasingly difficult to meet.",
+        "uncertainty_note": "County-specific examples in the article should remain attributed as local context rather than generalized statewide evidence.",
+        "why_it_matters": "The source reports more people turning to food pantries in North Carolina and providers saying the rising demand is becoming harder to meet."
+      }
+    ]
+  },
+  "pending_item_count": 0,
+  "public_source_count": 1,
+  "publication_approval": false,
+  "publication_datetime": null,
+  "publication_eligible": false,
+  "published": false,
+  "rejected_item_count": 0,
+  "review_snapshot_path": "data/dispatches/food-line/review/signal-reviews/2026-08-05.json",
+  "review_snapshot_sha256": "dec2b94894154407a18472abc4390c94dba227b45a17e6fe81b2ffa98e1b63b8",
+  "schema_version": "food_line_proposed_edition_v1",
+  "selected_item_count": 1,
+  "source_queue_path": "status/food-line/runtime/current-signal-review.json",
+  "source_queue_sha256": "dec2b94894154407a18472abc4390c94dba227b45a17e6fe81b2ffa98e1b63b8"
+}

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -17,6 +18,15 @@ def _load_validator_module():
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
+
+
+def _run_git(repo: Path, *args: str) -> None:
+    subprocess.run(["git", *args], cwd=repo, capture_output=True, text=True, check=True, encoding="utf-8")
+
+
+def _git_output(repo: Path, *args: str) -> str:
+    result = subprocess.run(["git", *args], cwd=repo, capture_output=True, text=True, check=True, encoding="utf-8")
+    return result.stdout.strip()
 
 
 def test_food_line_source_and_review_paths_pass_for_declared_date() -> None:
@@ -149,6 +159,11 @@ def test_invalid_date_argument_fails(capsys) -> None:
 def _release_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
     source = tmp_path / "source"
     pages = tmp_path / "pages"
+    source.mkdir()
+    _run_git(source, "init")
+    _run_git(source, "config", "user.email", "tests@example.test")
+    _run_git(source, "config", "user.name", "Tests")
+    _run_git(source, "checkout", "-b", "main")
     edition = source / "output/site/food-line/editions/2026-06-19"
     edition.mkdir(parents=True)
     pages.mkdir()
@@ -157,11 +172,13 @@ def _release_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
     (site / "archive.html").write_text("archive", encoding="utf-8")
     for filename in ("index.html", "source_table.html", "claim_ledger.html", "sources_manifest.json", "curation_manifest.json", "edition_manifest.json"):
         (edition / filename).write_text(filename, encoding="utf-8")
+    _run_git(source, "add", "output")
+    _run_git(source, "commit", "-m", "release source")
     payload = build_release_manifest(
         root=source,
         pages_root=pages,
         edition_date="2026-06-19",
-        source_commit="test",
+        source_commit=_git_output(source, "rev-parse", "HEAD"),
         source_paths=[site / "index.html", site / "archive.html", *sorted(edition.iterdir())],
     )
     manifest = source / "release.json"
@@ -182,6 +199,8 @@ def test_strict_release_manifest_validates_exact_delta_and_ignores_unrelated_dir
         allow_pages=True,
         strict=True,
         release_manifest_path=manifest,
+        required_source_ref="main",
+        release_manifest_commit="HEAD",
     )
     assert errors == []
 
@@ -212,9 +231,11 @@ def test_strict_release_manifest_rejects_unexpected_cross_domain_path(tmp_path: 
         allow_pages=True,
         strict=True,
         release_manifest_path=manifest,
+        required_source_ref="main",
+        release_manifest_commit="HEAD",
     )
     assert any("outside the declared food-line publish scope" in error for error in errors)
-    assert any("unexpected Food Line publication files" in error for error in errors)
+    assert any("unexpected food-line publication files" in error for error in errors)
 
 
 def test_strict_release_manifest_rejects_omitted_generated_file(tmp_path: Path, monkeypatch) -> None:
@@ -232,5 +253,105 @@ def test_strict_release_manifest_rejects_omitted_generated_file(tmp_path: Path, 
         allow_pages=True,
         strict=True,
         release_manifest_path=manifest,
+        required_source_ref="main",
+        release_manifest_commit="HEAD",
     )
-    assert any("omits generated Food Line publication files" in error for error in errors)
+    assert any("omits generated food-line publication files" in error for error in errors)
+
+
+def test_strict_release_manifest_rejects_nonexistent_source_commit(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest = _release_fixture(tmp_path)
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload["source_commit"] = "deadbeefdeadbeefdeadbeefdeadbeefdeadbeef"
+    write_json_deterministic(manifest, payload)
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+        required_source_ref="main",
+        release_manifest_commit="HEAD",
+    )
+    assert any("does not resolve to a git commit" in error for error in errors)
+
+
+def test_strict_release_manifest_rejects_unreachable_source_commit(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest = _release_fixture(tmp_path)
+    tree = _git_output(source, "write-tree")
+    unreachable_commit = _git_output(
+        source,
+        "commit-tree",
+        tree,
+        "-m",
+        "detached release tree",
+    )
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload["source_commit"] = unreachable_commit
+    write_json_deterministic(manifest, payload)
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+        required_source_ref="main",
+        release_manifest_commit="HEAD",
+    )
+    assert any("is not reachable from expected source ref main" in error for error in errors)
+
+
+def test_strict_release_manifest_rejects_wrong_manifest_ancestor(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest = _release_fixture(tmp_path)
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    source_commit = payload["source_commit"]
+    unrelated_commit = _git_output(
+        source,
+        "commit-tree",
+        _git_output(source, "write-tree"),
+        "-m",
+        "unrelated manifest commit",
+    )
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+        required_source_ref="main",
+        release_manifest_commit=unrelated_commit,
+    )
+    assert any("is not a descendant of source_commit" in error for error in errors)
+
+
+def test_strict_release_manifest_rejects_source_hash_mismatch_against_commit(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest = _release_fixture(tmp_path)
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload["entries"][0]["source_sha256"] = "0" * 64
+    write_json_deterministic(manifest, payload)
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+        required_source_ref="main",
+        release_manifest_commit="HEAD",
+    )
+    assert any("does not match" in error for error in errors)

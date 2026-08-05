@@ -240,7 +240,13 @@ def _build_copy_plan(source_root: Path, pages_repo: Path, dispatch: str, dates: 
     )
 
 
-def _validate_declared_scope(plan: CopyPlan, pages_branch: str, release_manifest: Path | None = None) -> list[str]:
+def _validate_declared_scope(
+    plan: CopyPlan,
+    pages_branch: str,
+    release_manifest: Path | None = None,
+    required_source_ref: str | None = None,
+    release_manifest_commit: str | None = None,
+) -> list[str]:
     errors: list[str] = []
     for date_text in plan.dates:
         source_paths = [str(path.relative_to(plan.source_root)) for path in plan.source_paths if f"/editions/{date_text}/" in _normalize_relpath(path)]
@@ -265,6 +271,8 @@ def _validate_declared_scope(plan: CopyPlan, pages_branch: str, release_manifest
                 source_changed_paths=source_paths,
                 pages_changed_paths=pages_paths,
                 release_manifest_path=release_manifest,
+                required_source_ref=required_source_ref,
+                release_manifest_commit=release_manifest_commit,
             )
         )
     return errors
@@ -547,7 +555,14 @@ def sync_pages_from_source(
             "source_status": _source_status_text(source_root),
             "pages_status": _pages_status_text(pages_root),
         }
-    scope_errors = _validate_declared_scope(plan, pages_branch, release_manifest=release_manifest)
+    required_source_ref = source_branch or (f"origin/{require_source_branch}" if allow_detached_source_at_required_branch_head else require_source_branch)
+    scope_errors = _validate_declared_scope(
+        plan,
+        pages_branch,
+        release_manifest=release_manifest,
+        required_source_ref=required_source_ref,
+        release_manifest_commit="HEAD",
+    )
     pre_copy_errors = []
     pre_copy_errors.extend(public_site_contains_detail_artifacts(source_root / "output" / "site"))
     pre_copy_errors.extend(public_site_contains_blocked_public_text(source_root / "output" / "site"))

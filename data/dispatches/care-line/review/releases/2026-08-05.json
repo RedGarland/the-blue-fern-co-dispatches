@@ -1,6 +1,6 @@
 {
   "approved_proposal_path": "data/dispatches/care-line/review/proposed-editions/2026-08-05.json",
-  "approved_proposal_sha256": "0ed864bab38e06a179c1b90e44f797f57aef1cb278637d67692d7c7fc2f7a346",
+  "approved_proposal_sha256": "1ad10c89d0d19ab86c57278c294fc2f617abb1e6cdc834a716d73b36bc258fcc",
   "deletions": [],
   "dispatch": "care-line",
   "edition_date": "2026-08-05",
@@ -38,7 +38,7 @@
       "pages_path": "care-line/editions/2026-08-05/index.html",
       "pages_sha256_before": null,
       "source_path": "output/site/care-line/editions/2026-08-05/index.html",
-      "source_sha256": "61573a1eff8cc6c6763284f1fde3a29bbfb00421a51971b60e5977493813c7f3"
+      "source_sha256": "fc91119d61a5b10cd7054d598cbae998334affd10135b6a318dcd4391153d15e"
     },
     {
       "action": "add",
@@ -70,8 +70,8 @@
     }
   ],
   "review_snapshot_path": "data/dispatches/care-line/review/signal-reviews/2026-08-05.json",
-  "review_snapshot_sha256": "492ac4c8f33c7c5ce41b9f24e343b6d15fd5213ef9e09c1eab6427062a6b47c6",
+  "review_snapshot_sha256": "a275a5edfceb824c6a411aba76524fe44bce702e689006e670ffa341ef6fd2f9",
   "schema_version": "care_line_release_manifest_v1",
   "shared_files": [],
-  "source_commit": "0068ebe0d2741f22954f97890940d5d7e42fd6e8"
+  "source_commit": "0068ebeaaf4daecd06df69a00e248da28255846f"
 }

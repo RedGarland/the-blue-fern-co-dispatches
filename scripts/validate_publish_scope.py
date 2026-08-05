@@ -192,6 +192,42 @@ def _sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _git_run(repo_root: Path, *args: str, text: bool = True) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        ["git", "-C", str(repo_root), *args],
+        capture_output=True,
+        text=text,
+        check=False,
+    )
+
+
+def _git_stdout(repo_root: Path, *args: str) -> str | None:
+    result = _git_run(repo_root, *args)
+    if result.returncode != 0:
+        return None
+    return str(result.stdout).strip()
+
+
+def _git_commit_exists(repo_root: Path, commit: str) -> bool:
+    if not commit:
+        return False
+    result = _git_run(repo_root, "rev-parse", "--verify", f"{commit}^{{commit}}")
+    return result.returncode == 0
+
+
+def _git_is_ancestor(repo_root: Path, ancestor: str, descendant: str) -> bool:
+    result = _git_run(repo_root, "merge-base", "--is-ancestor", ancestor, descendant)
+    return result.returncode == 0
+
+
+def _git_file_bytes(repo_root: Path, commit: str, relpath: str) -> bytes | None:
+    spec = f"{commit}:{relpath}"
+    result = _git_run(repo_root, "cat-file", "--filters", spec, text=False)
+    if result.returncode != 0:
+        return None
+    return bytes(result.stdout)
+
+
 def _release_manifest_delta(
     *,
     manifest_path: Path,
@@ -199,10 +235,14 @@ def _release_manifest_delta(
     declared_date: dt.date | None,
     source_repo_root: Path,
     pages_repo_root: Path | None,
+    required_source_ref: str | None = None,
+    release_manifest_commit: str | None = None,
 ) -> tuple[list[str], list[str], list[str]]:
     errors: list[str] = []
     source_paths: list[str] = []
     pages_paths: list[str] = []
+    source_root = source_repo_root.resolve()
+    pages_root = pages_repo_root.resolve() if pages_repo_root is not None else None
     try:
         payload = json.loads(manifest_path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
@@ -225,14 +265,65 @@ def _release_manifest_delta(
         errors.append(f"release manifest deletions are not authorized for this {dispatch} release")
     if payload.get("shared_files") not in ([], None):
         errors.append("release manifest shared files require a separate explicit authorization")
+    source_commit = str(payload.get("source_commit") or "").strip()
+    if not source_commit:
+        errors.append("release manifest source_commit is required")
+    elif not _git_commit_exists(source_root, source_commit):
+        errors.append(f"release manifest source_commit does not resolve to a git commit: {source_commit}")
+    else:
+        expected_ref = required_source_ref or "HEAD"
+        resolved_expected_ref = _git_stdout(source_root, "rev-parse", expected_ref)
+        if not resolved_expected_ref:
+            errors.append(f"unable to resolve expected source ref for release manifest validation: {expected_ref}")
+        elif not _git_is_ancestor(source_root, source_commit, expected_ref):
+            errors.append(
+                f"release manifest source_commit is not reachable from expected source ref {expected_ref}: {source_commit}"
+            )
+        manifest_ref = release_manifest_commit or "HEAD"
+        resolved_manifest_ref = _git_stdout(source_root, "rev-parse", manifest_ref)
+        if not resolved_manifest_ref:
+            errors.append(f"unable to resolve release-manifest commit for validation: {manifest_ref}")
+        elif not _git_is_ancestor(source_root, source_commit, manifest_ref):
+            errors.append(
+                f"release-manifest commit {manifest_ref} is not a descendant of source_commit {source_commit}"
+            )
+    provenance_pairs = (
+        ("approved_proposal_path", "approved_proposal_sha256"),
+        ("review_snapshot_path", "review_snapshot_sha256"),
+    )
+    for path_key, sha_key in provenance_pairs:
+        relpath = _normalize_path(str(payload.get(path_key) or ""))
+        recorded_sha = str(payload.get(sha_key) or "").strip().lower()
+        if not relpath and not recorded_sha:
+            continue
+        if not relpath or not recorded_sha:
+            errors.append(f"release manifest requires both {path_key} and {sha_key}")
+            continue
+        if source_commit and _git_commit_exists(source_root, source_commit):
+            file_bytes = _git_file_bytes(source_root, source_commit, relpath)
+            if file_bytes is None:
+                errors.append(f"release manifest referenced file is missing at source_commit: {relpath}")
+            else:
+                commit_sha = hashlib.sha256(file_bytes).hexdigest()
+                if commit_sha != recorded_sha:
+                    errors.append(f"release manifest recorded SHA-256 does not match {source_commit}: {relpath}")
+        file_path = (source_root / relpath).resolve()
+        try:
+            file_path.relative_to(source_root)
+        except ValueError:
+            errors.append(f"release manifest referenced path resolves outside the source repo: {relpath}")
+            continue
+        if not file_path.is_file():
+            errors.append(f"release manifest referenced file is missing in the working tree: {relpath}")
+            continue
+        if _sha256_file(file_path) != recorded_sha:
+            errors.append(f"release manifest referenced SHA-256 is stale in the working tree: {relpath}")
     entries = payload.get("entries")
     if not isinstance(entries, list) or not entries:
         errors.append("release manifest must contain a non-empty entries list")
         return source_paths, pages_paths, errors
     seen_source: set[str] = set()
     seen_pages: set[str] = set()
-    source_root = source_repo_root.resolve()
-    pages_root = pages_repo_root.resolve() if pages_repo_root is not None else None
     for index, entry in enumerate(entries):
         if not isinstance(entry, dict):
             errors.append(f"release manifest entry {index} must be an object")
@@ -264,6 +355,14 @@ def _release_manifest_delta(
         actual_source_sha = _sha256_file(source_file)
         if str(entry.get("source_sha256") or "").lower() != actual_source_sha:
             errors.append(f"release manifest source SHA-256 mismatch: {source_rel}")
+        if source_commit and _git_commit_exists(source_root, source_commit):
+            source_bytes_at_commit = _git_file_bytes(source_root, source_commit, source_rel)
+            if source_bytes_at_commit is None:
+                errors.append(f"release manifest source file is missing at source_commit: {source_rel}")
+            else:
+                commit_source_sha = hashlib.sha256(source_bytes_at_commit).hexdigest()
+                if str(entry.get("source_sha256") or "").lower() != commit_source_sha:
+                    errors.append(f"release manifest source SHA-256 does not match {source_commit}: {source_rel}")
         target = pages_root / pages_rel if pages_root is not None else None
         if target is None or not target.exists():
             expected_action = "add"
@@ -378,6 +477,8 @@ def validate_publish_scope(
     source_changed_paths: Sequence[str] | None = None,
     pages_changed_paths: Sequence[str] | None = None,
     release_manifest_path: Path | str | None = None,
+    required_source_ref: str | None = None,
+    release_manifest_commit: str | None = None,
 ) -> list[str]:
     errors: list[str] = []
 
@@ -410,6 +511,8 @@ def validate_publish_scope(
                 declared_date=declared_date,
                 source_repo_root=Path(source_repo_root),
                 pages_repo_root=Path(pages_repo_root),
+                required_source_ref=required_source_ref,
+                release_manifest_commit=release_manifest_commit,
             )
             errors.extend(manifest_errors)
             try:
@@ -477,6 +580,8 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--allow-bluesky", action="store_true", help="Explicitly allow Bluesky state/post artifacts.")
     parser.add_argument("--strict", action="store_true", help="Fail closed on publish-sensitive files outside the declared scope.")
     parser.add_argument("--release-manifest", help="Validate the exact source-to-Pages delta declared by a deterministic release manifest.")
+    parser.add_argument("--required-source-ref", help="Expected source branch or commit ref for release-manifest provenance checks.")
+    parser.add_argument("--release-manifest-commit", help="Commit ref that should contain the release manifest. Defaults to HEAD.")
     return parser
 
 
@@ -502,6 +607,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         allow_bluesky=args.allow_bluesky,
         strict=args.strict,
         release_manifest_path=args.release_manifest,
+        required_source_ref=args.required_source_ref,
+        release_manifest_commit=args.release_manifest_commit,
     )
 
     if errors:

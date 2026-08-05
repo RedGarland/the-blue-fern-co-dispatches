@@ -25,6 +25,16 @@ Safety defaults:
 - backups are outside the repository by default
 - no destructive git or DNS behavior is implemented
 
+## Public discovery lifecycle
+
+Homepage and active-directory eligibility must use explicit product lifecycle state, not the age of the last release.
+
+- Supported lifecycle states: `active`, `future`, `paused`, `archived`, `deprecated`
+- Current active public products: `gaza`, `food-line`, `care-line`
+- Current future products: `cascadia`, `american-pressure`
+- Only `active` products may appear in active homepage cards, reserved homepage slots, active-product completeness checks, or active public directory/navigation sections
+- Future, paused, archived, deprecated, and private products may remain directly reachable at preserved URLs, but they are excluded from normal active public discovery unless deliberately promoted again by lifecycle state
+
 Pages repo dry-run:
 
 ```powershell

@@ -329,16 +329,16 @@ def test_homepage_lists_public_dispatch_cards(built_site):
 
     assert nav.count("<a ") == 3
     assert 'href="/gaza/">Gaza</a>' in nav
-    assert 'href="/american-pressure/">American Pressure</a>' in nav
     assert 'href="/food-line/">Food Line Dispatch</a>' in nav
-    assert 'href="/care-line/"' not in nav
+    assert 'href="/care-line/">The Care Line Dispatch</a>' in nav
     assert 'href="/cascadia/"' not in nav
     assert cards == [
         ("/gaza/", "Dispatches From Gaza"),
-        ("/american-pressure/", "The American Pressure Dispatch"),
         ("/food-line/", "Food Line Dispatch"),
+        ("/care-line/", "The Care Line Dispatch"),
     ]
-    assert 'href="/care-line/"' not in card_grid
+    assert 'href="/care-line/"' in card_grid
+    assert 'href="/american-pressure/"' not in card_grid
     assert 'href="/cascadia/"' not in card_grid
 
 
@@ -2374,7 +2374,8 @@ def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch):
     root_index = (work / "output" / "site" / "index.html").read_text(encoding="utf-8")
     assert "Dispatches From Gaza" in root_index
     assert "Food Line Dispatch" in root_index
-    assert "The American Pressure Dispatch" in root_index
+    assert "The Care Line Dispatch" in root_index
+    assert "The American Pressure Dispatch" not in root_index
 
 
 def test_targeted_ap_publish_refreshes_map_date_label_and_payload(built_site):

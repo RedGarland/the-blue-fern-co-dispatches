@@ -38,6 +38,13 @@ from bluefern_dispatches.care_line_release import (
     initialize_public_release_status as initialize_care_line_public_release_status,
     sha256_file as care_line_sha256_file,
 )
+from bluefern_dispatches.dispatch_catalog import (
+    DISPATCH_CATALOG,
+    DISPATCH_LABELS,
+    active_dispatch_slugs,
+    dispatch_lifecycle_state,
+    dispatch_public_visible,
+)
 from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
 from bluefern_dispatches.public_prose import html_contains_public_prose_violations
 from bluefern_dispatches.universal_events.care_line_signal_wire import build_care_line_signal_wire_publication
@@ -91,20 +98,7 @@ GAZA_AUDIO_PODCAST_DATE_RE = re.compile(r"/gaza/audio/(\d{4}-\d{2}-\d{2})-transc
 GAZA_HOME_EDITION_LIST_RE = re.compile(r'<ul class="edition-list">(.*?)</ul>', re.DOTALL)
 EXPECT_DISPATCH_CHOICES = ("gaza", "cascadia", "american-pressure", "food-line", "care-line", "all")
 ALL_EXPECT_DISPATCHES = ("gaza", "cascadia", "american-pressure", "food-line", "care-line")
-DISPATCH_CATALOG: dict[str, dict[str, Any]] = {
-    "gaza": {"label": "Gaza", "public_visible": True},
-    "cascadia": {"label": "Cascadia", "public_visible": True},
-    "american-pressure": {"label": "American Pressure", "public_visible": True},
-    "food-line": {"label": "Food Line Dispatch", "public_visible": True},
-    "care-line": {"label": "The Care Line Dispatch", "public_visible": True},
-}
-DISPATCH_LABELS = {slug: str(meta.get("label") or slug) for slug, meta in DISPATCH_CATALOG.items()}
 ONLY_DISPATCH_CHOICES = ("gaza", "cascadia", "american-pressure", "food-line", "care-line")
-
-
-def dispatch_public_visible(slug: str) -> bool:
-    meta = DISPATCH_CATALOG.get(slug, {})
-    return bool(meta.get("public_visible", True))
 
 
 @dataclass(frozen=True)
@@ -872,11 +866,27 @@ def render_root(dispatches: list[DispatchConfig]) -> str:
     card_rows: list[str] = []
     summaries = {
         "gaza": "Daily source-backed briefings from Gaza.",
-        "american-pressure": AMERICAN_PRESSURE_PUBLIC_DESCRIPTION,
         "food-line": "Daily source-backed food insecurity pressure signals across the United States — where demand, benefit disruption, pantry strain, or access pressure is visible in verified sources.",
+        "care-line": "Source-backed reporting on healthcare-access pressure and service strain.",
     }
-    for dispatch in dispatches:
-        if dispatch.slug not in {"gaza", "american-pressure"}:
+    active_slugs = active_dispatch_slugs()
+    dispatch_by_slug = {dispatch.slug: dispatch for dispatch in dispatches}
+    for slug in active_slugs:
+        if slug == "food-line":
+            card_rows.append(
+                f"""      <li class="dispatch-card" style="--dispatch-card-watermark: url('/food-line/assets/food-line-logo.png');">
+        <a href="/food-line/">
+          <span class="dispatch-card-watermark" aria-hidden="true"></span>
+          <span class="dispatch-card-content">
+            <span class="edition-date">{html.escape(summaries["food-line"])}</span>
+            <strong>Food Line Dispatch</strong>
+          </span>
+        </a>
+      </li>"""
+            )
+            continue
+        dispatch = dispatch_by_slug.get(slug)
+        if dispatch is None or slug not in summaries:
             continue
         card_style = f' style="--dispatch-card-watermark: url(\'/{dispatch.slug}/assets/{dispatch.logo}\');"'
         card_rows.append(
@@ -890,18 +900,8 @@ def render_root(dispatches: list[DispatchConfig]) -> str:
         </a>
       </li>"""
         )
-    food_line_card = f"""      <li class="dispatch-card" style="--dispatch-card-watermark: url('/food-line/assets/food-line-logo.png');">
-        <a href="/food-line/">
-          <span class="dispatch-card-watermark" aria-hidden="true"></span>
-          <span class="dispatch-card-content">
-            <span class="edition-date">{html.escape(summaries["food-line"])}</span>
-            <strong>Food Line Dispatch</strong>
-          </span>
-        </a>
-      </li>"""
-    card_rows.append(food_line_card)
     cards = "\n".join(card_rows)
-    body = f"""{header("Dispatches From The Blue Fern Co.", "", nav_slugs=("gaza", "american-pressure", "food-line"))}
+    body = f"""{header("Dispatches From The Blue Fern Co.", "", nav_slugs=active_slugs)}
   <main class="home">
     <section class="hero root-hero">
       <img class="root-masthead" src="assets/{ROOT_MASTHEAD_ASSET}" alt="Dispatches From The Blue Fern Co.">
@@ -2205,6 +2205,7 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
         "dispatch_name": dispatch.name,
         "dispatch_slug": dispatch.slug,
         "public_visible": dispatch_public_visible(dispatch.slug),
+        "lifecycle_state": dispatch_lifecycle_state(dispatch.slug),
         "edition_date": dispatch.edition_date,
         "generated_at": generated_at,
         "public_url": f"{BASE_URL}/{dispatch.slug}/editions/{dispatch.edition_date}/",

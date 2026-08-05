@@ -8,9 +8,11 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
+from bluefern_dispatches.dispatch_catalog import active_dispatch_slugs, dispatch_is_active
+
 BASE_URL = "https://dispatches.thebluefernco.com"
 LATEST_DEVELOPMENTS_HEADING = "Latest published developments"
-ACTIVE_PRODUCTS = ("gaza", "food-line", "care-line", "cascadia", "american-pressure")
+ACTIVE_PRODUCTS = active_dispatch_slugs()
 CARD_LIMIT = 7
 SECTION_RE = re.compile(
     r'<section class="section-block"><div class="section-heading"><p class="eyebrow">The current edition desk</p><h2>Latest published developments</h2></div><div class="edition-grid">.*?</div></section>',
@@ -250,6 +252,8 @@ def discover_public_releases(
     represented = _current_homepage_links(homepage_html or "")
     releases: list[PublicRelease] = []
     for slug in ACTIVE_PRODUCTS:
+        if not dispatch_is_active(slug):
+            continue
         editions_root = public_root / slug / "editions"
         if not editions_root.exists():
             continue

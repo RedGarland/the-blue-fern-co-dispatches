@@ -1,0 +1,68 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-05",
+  "generated_at": "2026-08-05T13:00:57.707822Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-08-05.mp3",
+  "audio_url": "/gaza/audio/2026-08-05.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1271,
+  "tts_input_word_count": 208,
+  "tts_story_count": 4,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1450368,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-08-05T13:00:57.707803Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-08-05-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-05/",
+  "script_text": "This is the Gaza Dispatch audio briefing for August 5, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Mass funeral held in Gaza for victims of 2023. Remains of 112 victims, including 40 children, recovered from rubble more than two years after residential block was destroyed Mourners gathered in central Gaza on Tuesday for a mass funeral for 112 people, including 40 children, who were killed in 2023 in one of the deadliest Israeli strikes of the Gaza war. This was reported by The Guardian.\n\n2. Mass funeral in Gaza for 112 Palestinians killed in 2023. The bodies - belonging to members of two extended families - have only recently been recovered from under rubble in Gaza City. This was reported by BBC News.\n\n3. Protesters stage sit-in against settler violence-linked Smotrich funds. Palestinian and Israeli protesters staged a sit-in at the Religious Zionist Party's headquarters in Shoham on Wednesday. This was reported by Al Jazeera.\n\n4. Rubio hopes US can reach Hormuz deal with Iran 'very shortly' as officials say progress has been made - as it happened. This live blog is now closed. This was reported by The Guardian.\n\nFor the full source-backed dispatch, read the August 5, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 4,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-08-05-guardian-world-e48c01827bde",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/aug/04/mass-funeral-gaza-victims-2023-israeli-strike",
+      "title": "Mass funeral held in Gaza for victims of 2023 Israeli strike"
+    },
+    {
+      "source_record_id": "gaza-2026-08-05-bbc-middle-east-48f9e23cf11c",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/cn0n99npjejo?at_medium=RSS&at_campaign=rss",
+      "title": "Mass funeral in Gaza for 112 Palestinians killed in 2023 Israeli strike"
+    },
+    {
+      "source_record_id": "gaza-2026-08-05-aljazeera-middle-east-86de84ac4946",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/5/protesters-stage-sit-in-against-settler-violence-linked-smotrich-funds?traffic_source=rss",
+      "title": "Protesters stage sit-in against settler violence-linked Smotrich funds"
+    },
+    {
+      "source_record_id": "gaza-2026-08-05-guardian-world-d13748705199",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/live/2026/aug/04/middle-east-crisis-qatar-iran-us-israel-war-donald-trump-strait-hormuz-gaza-latest-news-updates",
+      "title": "Rubio hopes US can reach Hormuz deal with Iran 'very shortly' as officials say progress has been made - as it happened"
+    }
+  ]
+}

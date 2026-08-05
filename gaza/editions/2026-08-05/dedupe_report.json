@@ -1,0 +1,289 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-05",
+  "candidates_seen": 5,
+  "included_stories": [
+    {
+      "story_id": "gaza-story-2026-08-05-005",
+      "title": "Mass funeral held in Gaza for victims of 2023 Israeli strike",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-05-001",
+      "title": "Mass funeral in Gaza for 112 Palestinians killed in 2023 Israeli strike",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-05-006",
+      "title": "Protesters stage sit-in against settler violence-linked Smotrich funds",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-05-004",
+      "title": "Rubio hopes US can reach Hormuz deal with Iran 'very shortly' as officials say progress has been made - as it happened",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "update_term_in_title_or_snippet"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "duplicate_skipped": [
+    {
+      "story_id": "gaza-story-2026-08-05-007",
+      "title": "Israeli raid deepens fears across West Bank refugee camps",
+      "classification": "duplicate_skip",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "same_topic",
+        "new_source_or_summary_detail",
+        "non_material_continuation"
+      ],
+      "prior_story_matched": "gaza-story-2026-07-30-004",
+      "prior_edition_date": "2026-07-30",
+      "include_decision": "skip",
+      "public_rendered": false
+    }
+  ],
+  "continuing_developments": [
+    {
+      "story_id": "gaza-story-2026-08-05-004",
+      "title": "Rubio hopes US can reach Hormuz deal with Iran 'very shortly' as officials say progress has been made - as it happened",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "update_term_in_title_or_snippet"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-08-04-004",
+      "prior_edition_date": "2026-08-04",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "major_updates": [
+    {
+      "story_id": "gaza-story-2026-08-05-005",
+      "title": "Mass funeral held in Gaza for victims of 2023 Israeli strike",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-07-23-003",
+      "prior_edition_date": "2026-07-23",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-05-001",
+      "title": "Mass funeral in Gaza for 112 Palestinians killed in 2023 Israeli strike",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-06-30-001",
+      "prior_edition_date": "2026-06-30",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-05-006",
+      "title": "Protesters stage sit-in against settler violence-linked Smotrich funds",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-07-26-003",
+      "prior_edition_date": "2026-07-26",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "merged_sources": 0,
+  "duplicate_groups": [],
+  "reasons": [
+    {
+      "story_id": "gaza-story-2026-08-05-005",
+      "title": "Mass funeral held in Gaza for victims of 2023 Israeli strike",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-07-23-003",
+      "prior_edition_date": "2026-07-23",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-05-007",
+      "title": "Israeli raid deepens fears across West Bank refugee camps",
+      "classification": "duplicate_skip",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "same_topic",
+        "new_source_or_summary_detail",
+        "non_material_continuation"
+      ],
+      "prior_story_matched": "gaza-story-2026-07-30-004",
+      "prior_edition_date": "2026-07-30",
+      "include_decision": "skip",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-08-05-001",
+      "title": "Mass funeral in Gaza for 112 Palestinians killed in 2023 Israeli strike",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-06-30-001",
+      "prior_edition_date": "2026-06-30",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-05-006",
+      "title": "Protesters stage sit-in against settler violence-linked Smotrich funds",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-07-26-003",
+      "prior_edition_date": "2026-07-26",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-05-004",
+      "title": "Rubio hopes US can reach Hormuz deal with Iran 'very shortly' as officials say progress has been made - as it happened",
+      "classification": "continuing_development",
+      "material_update": true,
+      "material_update_reasons": [
+        "update_term_in_title_or_snippet"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-08-04-004",
+      "prior_edition_date": "2026-08-04",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "prior_editions_checked": [
+    "2026-08-04",
+    "2026-08-03",
+    "2026-08-01",
+    "2026-07-31",
+    "2026-07-30",
+    "2026-07-29",
+    "2026-07-28",
+    "2026-07-27",
+    "2026-07-26",
+    "2026-07-25",
+    "2026-07-24",
+    "2026-07-23",
+    "2026-07-21",
+    "2026-07-20",
+    "2026-07-19",
+    "2026-07-18",
+    "2026-07-17",
+    "2026-07-16",
+    "2026-07-15",
+    "2026-07-13",
+    "2026-07-11",
+    "2026-07-10",
+    "2026-07-08",
+    "2026-07-06",
+    "2026-07-05",
+    "2026-07-04",
+    "2026-07-03",
+    "2026-07-02",
+    "2026-07-01",
+    "2026-06-30",
+    "2026-06-29",
+    "2026-06-28",
+    "2026-06-27",
+    "2026-06-26",
+    "2026-06-25",
+    "2026-06-24",
+    "2026-06-22",
+    "2026-06-21",
+    "2026-06-20",
+    "2026-06-19",
+    "2026-06-18",
+    "2026-06-17",
+    "2026-06-16",
+    "2026-06-15",
+    "2026-06-14",
+    "2026-06-13",
+    "2026-06-12",
+    "2026-06-11",
+    "2026-06-10",
+    "2026-06-09",
+    "2026-06-08",
+    "2026-06-07",
+    "2026-06-06",
+    "2026-06-05",
+    "2026-06-04",
+    "2026-06-03",
+    "2026-06-02",
+    "2026-06-01",
+    "2026-05-31",
+    "2026-05-30",
+    "2026-05-29",
+    "2026-05-28",
+    "2026-05-27",
+    "2026-05-26",
+    "2026-05-25",
+    "2026-05-24",
+    "2026-05-23",
+    "2026-05-22",
+    "2026-05-21",
+    "2026-05-20",
+    "2026-05-19",
+    "2026-05-18",
+    "2026-05-17",
+    "2026-05-16",
+    "2026-05-15",
+    "2026-05-14",
+    "2026-05-13",
+    "2026-05-12",
+    "2026-05-11",
+    "2026-05-10",
+    "2026-05-09",
+    "2026-05-08",
+    "2026-05-07",
+    "2026-05-06",
+    "2026-05-05",
+    "2026-05-04",
+    "2026-05-03",
+    "2026-04-30"
+  ]
+}

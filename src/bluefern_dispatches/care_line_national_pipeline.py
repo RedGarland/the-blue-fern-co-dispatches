@@ -9,7 +9,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from collections import Counter
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 from hashlib import sha256
 from html import unescape
@@ -111,6 +111,26 @@ EDITORIAL_QUALIFICATION_OUTCOMES = {
     "NEEDS_SERVICE_CLASSIFICATION",
     "NEEDS_HUMAN_REVIEW",
 }
+CURRENTNESS_CLASSES = {
+    "CURRENT_EVENT",
+    "CURRENT_ANNOUNCEMENT_FUTURE_EFFECTIVE",
+    "CURRENT_UPDATE_TO_PRIOR_EVENT",
+    "CURRENT_RESTORATION",
+    "RECENT_BACKGROUND",
+    "HISTORICAL_BACKGROUND",
+    "RETROSPECTIVE_ANALYSIS",
+    "DATE_UNRESOLVED",
+}
+FRESHNESS_ROLES = {
+    "BREAKING",
+    "CURRENT",
+    "RECENT_CONTEXT",
+    "HISTORICAL_CONTEXT",
+    "FUTURE_EFFECTIVE",
+    "ONGOING_EVENT_UPDATE",
+    "RESTORATION_UPDATE",
+    "UNKNOWN",
+}
 
 DEFAULT_ARTICLE_SELECTORS = (
     "article",
@@ -154,11 +174,11 @@ MAX_EXTRACTED_TEXT_CHARS = 24000
 SOURCE_FAILURE_CLASSES = {"HTTPError", "ValueError", "ParseError", "TimeoutError", "URLError"}
 
 POSITIVE_EVENT_PATTERNS: list[tuple[str, str, re.Pattern[str]]] = [
-    ("facility_closure", "closure", re.compile(r"\b(close|closing|closure|shut(?:ting)? down|cease(?:s|d)? operations?)\b", re.I)),
+    ("facility_closure", "closure", re.compile(r"\b(close|closed|closing|closure|remain(?:s)? closed|still closed|shut(?:ting)? down|cease(?:s|d)? operations?)\b", re.I)),
     ("planned_facility_closure", "closure", re.compile(r"\b(will close|plans? to close|set to close|scheduled to close)\b", re.I)),
     ("temporary_facility_suspension", "suspension", re.compile(r"\b(temp(?:orary|orarily)? (?:close|closure|shut(?:down)?|suspend)|temporarily halt)\b", re.I)),
     ("service_closure", "service", re.compile(r"\b(end(?:ing)?|stop(?:ping)?|discontinu(?:e|ing)|eliminat(?:e|ing))\b", re.I)),
-    ("service_suspension", "service", re.compile(r"\b(suspend(?:ed|ing|s)?|halt(?:ed|ing|s)?|pause(?:d|s|ing)? services?|stop admissions|divert(?:ed|ing|s)?)\b", re.I)),
+    ("service_suspension", "service", re.compile(r"\b(suspend(?:ed|ing|s)?|remain(?:s)? suspended|still suspended|halt(?:ed|ing|s)?|pause(?:d|s|ing)? services?|stop admissions|divert(?:ed|ing|s)?)\b", re.I)),
     ("hours_reduction", "hours", re.compile(r"\b(reduc(?:e|es|ed|ing) hours?|cut(?:s|ting)? hours?|shorter hours?)\b", re.I)),
     ("capacity_reduction", "capacity", re.compile(r"\b(reduc(?:e|es|ed|ing) beds?|cut(?:s|ting)? beds?|capacity reduction|fewer beds?|reduce capacity)\b", re.I)),
     ("service_reduction", "restriction", re.compile(r"\b(limit(?:ed|ing|s)? services?|staffing restriction|service unavailable|restricted access)\b", re.I)),
@@ -251,6 +271,79 @@ NAVIGATION_URL_PATTERNS = (
     "/feed",
     "/wp-json/",
 )
+MONTH_NAME_PATTERN = (
+    r"Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|"
+    r"Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?"
+)
+HISTORICAL_MARKERS = (
+    "last year",
+    "years after",
+    "since the closure",
+    "since the hospital closed",
+    "previously closed",
+    "a decade ago",
+    "one of the first to",
+    "earlier lifeline",
+    "earlier closure",
+    "at the time",
+    "back in ",
+)
+RECENT_BACKGROUND_MARKERS = (
+    "last month",
+    "earlier this year",
+    "earlier this spring",
+    "earlier this summer",
+    "earlier this winter",
+    "earlier this fall",
+)
+CURRENT_ANNOUNCEMENT_MARKERS = (
+    "will close",
+    "plans to close",
+    "planned closure",
+    "set to close",
+    "scheduled to close",
+    "announced it will",
+    "announced plans to",
+    "effective ",
+    "beginning ",
+    "starting ",
+)
+ONGOING_UPDATE_MARKERS = (
+    "remains closed",
+    "remain closed",
+    "still closed",
+    "continues to be closed",
+    "continues to suspend",
+    "still suspended",
+    "fight to save",
+    "working to reopen",
+)
+RETROSPECTIVE_MARKERS = (
+    "trend",
+    "over the years",
+    "history of",
+    "has become a case study",
+    "under the law",
+    "faces test under",
+    "examples include",
+    "explainer",
+)
+ACTIONABLE_EVENT_PATTERN = re.compile(
+    r"\b("
+    r"will close|plans? to close|set to close|scheduled to close|proposed closure|proposed closing|closed|closing|"
+    r"remain(?:s)? closed|still closed|reopen(?:ed|ing|s)?|restore(?:d|s|ing)?|resume(?:d|s|ing)?|"
+    r"suspend(?:ed|ing|s)?|remain(?:s)? suspended|still suspended|halt(?:ed|ing|s)?|"
+    r"reduce(?:d|s|ing)? hours?|cut(?:s|ting)? beds?|shut(?:ting)? down|stop admissions|divert(?:ed|ing|s)?"
+    r")\b",
+    re.I,
+)
+ALIGNMENT_STOPWORDS = {
+    "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "in", "is", "it", "its", "of", "on", "or",
+    "that", "the", "their", "this", "to", "was", "were", "will", "with", "under", "after", "about", "into",
+    "hospital", "hospitals", "clinic", "clinics", "health", "healthcare", "care", "center", "centers", "system",
+    "services", "service", "closure", "closures", "close", "closed", "closing", "reopen", "reopened", "reopening",
+    "program", "model", "rural", "officials", "residents", "patients", "facility", "facilities",
+}
 
 
 def utc_now() -> str:
@@ -1087,6 +1180,144 @@ def _normalize_text(value: str) -> str:
     return re.sub(r"\s+", " ", unescape(str(value or ""))).strip()
 
 
+def _parse_iso_date(value: str) -> date | None:
+    text = str(value or "").strip()
+    if not text:
+        return None
+    try:
+        return date.fromisoformat(text)
+    except ValueError:
+        return None
+
+
+def _month_number(name: str) -> int:
+    months = {
+        "jan": 1, "january": 1,
+        "feb": 2, "february": 2,
+        "mar": 3, "march": 3,
+        "apr": 4, "april": 4,
+        "may": 5,
+        "jun": 6, "june": 6,
+        "jul": 7, "july": 7,
+        "aug": 8, "august": 8,
+        "sep": 9, "september": 9,
+        "oct": 10, "october": 10,
+        "nov": 11, "november": 11,
+        "dec": 12, "december": 12,
+    }
+    return months.get(name.strip().casefold().rstrip("."), 0)
+
+
+def _explicit_dates_from_text(text: str, *, source_date: date | None) -> list[dict[str, Any]]:
+    refs: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for match in re.finditer(r"\b(20\d{2})\b", text):
+        year = int(match.group(1))
+        key = f"year:{year}"
+        if key in seen:
+            continue
+        seen.add(key)
+        refs.append(
+            {
+                "label": match.group(0),
+                "date": f"{year:04d}-01-01",
+                "kind": "year_reference",
+                "relation": "historical" if source_date and year < source_date.year else "current_or_future",
+            }
+        )
+    month_day_pattern = re.compile(rf"\b({MONTH_NAME_PATTERN})\.?\s+(\d{{1,2}})(?:,\s*(20\d{{2}}))?\b", re.I)
+    for match in month_day_pattern.finditer(text):
+        month = _month_number(match.group(1))
+        day = int(match.group(2))
+        year = int(match.group(3)) if match.group(3) else (source_date.year if source_date else datetime.now(timezone.utc).year)
+        try:
+            resolved = date(year, month, day)
+        except ValueError:
+            continue
+        key = f"date:{resolved.isoformat()}"
+        if key in seen:
+            continue
+        seen.add(key)
+        relation = "current_or_future"
+        if source_date and resolved < source_date - timedelta(days=120):
+            relation = "historical"
+        elif source_date and resolved < source_date:
+            relation = "recent_past"
+        elif source_date and resolved > source_date:
+            relation = "future"
+        elif source_date and resolved == source_date:
+            relation = "current"
+        refs.append(
+            {
+                "label": match.group(0),
+                "date": resolved.isoformat(),
+                "kind": "calendar_date",
+                "relation": relation,
+            }
+        )
+    return refs
+
+
+def _relative_date_references(text: str, *, source_date: date | None) -> list[dict[str, Any]]:
+    lowered = text.casefold()
+    refs: list[dict[str, Any]] = []
+    if not source_date:
+        return refs
+    if "last year" in lowered:
+        refs.append({"label": "last year", "date": f"{source_date.year - 1}-01-01", "kind": "relative_year", "relation": "historical"})
+    if re.search(r"\byears? after\b", lowered):
+        refs.append({"label": "years after", "date": "", "kind": "relative_year", "relation": "historical"})
+    if "a decade ago" in lowered:
+        refs.append({"label": "a decade ago", "date": f"{source_date.year - 10}-01-01", "kind": "relative_year", "relation": "historical"})
+    if "last month" in lowered:
+        recent = (source_date.replace(day=1) - timedelta(days=1)).replace(day=1)
+        refs.append({"label": "last month", "date": recent.isoformat(), "kind": "relative_month", "relation": "recent_past"})
+    if "next month" in lowered:
+        future_anchor = (source_date.replace(day=28) + timedelta(days=10)).replace(day=1)
+        refs.append({"label": "next month", "date": future_anchor.isoformat(), "kind": "relative_month", "relation": "future"})
+    if "earlier this year" in lowered:
+        refs.append({"label": "earlier this year", "date": f"{source_date.year}-01-01", "kind": "relative_year", "relation": "recent_past"})
+    if "today" in lowered or "this week" in lowered:
+        refs.append({"label": "current_period", "date": source_date.isoformat(), "kind": "relative_current", "relation": "current"})
+    return refs
+
+
+def _all_date_references(text: str, *, source_date: date | None) -> list[dict[str, Any]]:
+    return _explicit_dates_from_text(text, source_date=source_date) + _relative_date_references(text, source_date=source_date)
+
+
+def _sentence_date_references(text: str, *, source_date: date | None) -> list[str]:
+    return [ref["date"] for ref in _all_date_references(text, source_date=source_date) if ref.get("date")]
+
+
+def _title_body_event_agreement(title: str, text: str, service_line: str) -> bool:
+    title_event = _event_type_from_text(title, service_line=service_line)
+    body_event = _event_type_from_text(text, service_line=service_line)
+    if not title_event or not body_event:
+        return True
+    if title_event == body_event:
+        return True
+    closureish = {"facility_closure", "planned_facility_closure", "service_closure", "service_suspension", "temporary_facility_suspension"}
+    restorationish = {"facility_reopening", "service_restoration"}
+    if title_event in closureish and body_event in closureish:
+        return True
+    if title_event in restorationish and body_event in restorationish:
+        return True
+    return False
+
+
+def _meaningful_tokens(text: str) -> set[str]:
+    return {
+        token
+        for token in re.findall(r"[A-Za-z][A-Za-z'-]{2,}", text.casefold())
+        if token not in ALIGNMENT_STOPWORDS
+    }
+
+
+def _alignment_score(reference_text: str, sentence: str) -> int:
+    return len(_meaningful_tokens(reference_text) & _meaningful_tokens(sentence))
+
+
 def _keyword_hits(text: str, patterns: Iterable[tuple[str, re.Pattern[str]]]) -> list[str]:
     hits = []
     for label, pattern in patterns:
@@ -1097,6 +1328,7 @@ def _keyword_hits(text: str, patterns: Iterable[tuple[str, re.Pattern[str]]]) ->
 
 def _sentence_candidates(text: str) -> list[str]:
     prepared = re.sub(r"[\r\n]+", " ", text)
+    prepared = re.sub(r"\b(Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)\.\s+(\d)", r"\1 \2", prepared)
     sentences = re.split(r"(?<=[.!?])\s+", prepared)
     return [sentence.strip() for sentence in sentences if sentence.strip()]
 
@@ -1133,7 +1365,7 @@ def _event_type_from_text(text: str, *, service_line: str) -> str:
 def _is_restoration_without_prior_loss_context(text: str, event_type: str) -> bool:
     if event_type not in {"facility_reopening", "service_restoration"}:
         return False
-    return not re.search(r"\b(after|following|resume|restore|reopen)\b", text, re.I) or not re.search(r"\b(close|closure|shut|halt|suspend|loss)\b", text, re.I)
+    return not re.search(r"\b(after|following|resume|restore|reopen|reopened|reopening)\b", text, re.I) or not re.search(r"\b(close|closed|closure|shut|shutdown|halt|halted|suspend|suspended|loss)\b", text, re.I)
 
 
 def _is_service_expansion_only(text: str) -> bool:
@@ -1281,6 +1513,202 @@ def _supporting_passage(text: str, event_type: str, service_line: str) -> str:
     if best_score <= 0:
         return ""
     return best[:500].strip()
+
+
+def _sentence_currentness(
+    sentence: str,
+    *,
+    source_date: date | None,
+    event_type: str,
+    service_line: str,
+) -> dict[str, Any]:
+    lowered = sentence.casefold()
+    positive_hits = _keyword_hits(sentence, [(label, pattern) for label, _, pattern in POSITIVE_EVENT_PATTERNS])
+    access_hits = _keyword_hits(sentence, ACCESS_CONSEQUENCE_PATTERNS)
+    context_hits = _keyword_hits(sentence, HEALTHCARE_CONTEXT_PATTERNS)
+    date_refs = _all_date_references(sentence, source_date=source_date)
+    has_historical_marker = any(marker in lowered for marker in HISTORICAL_MARKERS) or bool(re.search(r"\bthe hospital closed in\b|\bclosed in 20\d{2}\b|\bpreviously\b", lowered))
+    has_recent_background_marker = any(marker in lowered for marker in RECENT_BACKGROUND_MARKERS)
+    has_current_announcement = any(marker in lowered for marker in CURRENT_ANNOUNCEMENT_MARKERS) or bool(re.search(r"\bannounced\b|\bsaid\b|\bwill\b|\bplans?\b", lowered))
+    has_ongoing_update = any(marker in lowered for marker in ONGOING_UPDATE_MARKERS)
+    has_retro_marker = any(marker in lowered for marker in RETROSPECTIVE_MARKERS)
+    actionable_event = bool(ACTIONABLE_EVENT_PATTERN.search(sentence))
+    explicit_historical = any(ref.get("relation") == "historical" for ref in date_refs)
+    explicit_future = any(ref.get("relation") == "future" for ref in date_refs)
+    recent_past = any(ref.get("relation") == "recent_past" for ref in date_refs)
+    score = 0
+    score += len(positive_hits) * 3
+    score += len(access_hits) * 2
+    score += len(context_hits)
+    if service_line and _service_line_from_text(sentence) == service_line:
+        score += 1
+    if has_current_announcement:
+        score += 3
+    if has_ongoing_update:
+        score += 3
+    if explicit_future:
+        score += 4
+    if event_type in {"facility_reopening", "service_restoration"}:
+        score += 2
+    if has_historical_marker:
+        score -= 5
+    if explicit_historical:
+        score -= 6
+    if has_retro_marker:
+        score -= 4
+    if has_recent_background_marker:
+        score -= 2
+    currentness_class = "DATE_UNRESOLVED"
+    freshness_role = "UNKNOWN"
+    operative_date = ""
+    prior_event_date = ""
+    reasoning_parts: list[str] = []
+    if date_refs:
+        operative_date = next((ref["date"] for ref in date_refs if ref.get("relation") in {"future", "current", "recent_past", "current_or_future"} and ref.get("date")), "")
+        prior_event_date = next((ref["date"] for ref in date_refs if ref.get("relation") == "historical" and ref.get("date")), "")
+    if event_type in {"facility_reopening", "service_restoration"} and (has_current_announcement or explicit_future or recent_past):
+        currentness_class = "CURRENT_RESTORATION"
+        freshness_role = "RESTORATION_UPDATE"
+        reasoning_parts.append("restoration language with current update")
+    elif explicit_future and explicit_historical:
+        currentness_class = "DATE_UNRESOLVED"
+        freshness_role = "UNKNOWN"
+        reasoning_parts.append("conflicting future and historical date signals")
+    elif actionable_event and (explicit_future or bool(re.search(rf"\b(?:on|effective|beginning|starting)\s+(?:{MONTH_NAME_PATTERN})\b", sentence, re.I))):
+        currentness_class = "CURRENT_ANNOUNCEMENT_FUTURE_EFFECTIVE"
+        freshness_role = "FUTURE_EFFECTIVE"
+        reasoning_parts.append("future effective date in operative sentence")
+    elif has_ongoing_update:
+        currentness_class = "CURRENT_UPDATE_TO_PRIOR_EVENT"
+        freshness_role = "ONGOING_EVENT_UPDATE"
+        reasoning_parts.append("current article confirms continuing interruption")
+    elif has_historical_marker or explicit_historical:
+        currentness_class = "HISTORICAL_BACKGROUND"
+        freshness_role = "HISTORICAL_CONTEXT"
+        reasoning_parts.append("historical closure/reference markers")
+    elif has_recent_background_marker or recent_past:
+        currentness_class = "RECENT_BACKGROUND"
+        freshness_role = "RECENT_CONTEXT"
+        reasoning_parts.append("recent prior event used as context")
+    elif has_retro_marker and not has_current_announcement:
+        currentness_class = "RETROSPECTIVE_ANALYSIS"
+        freshness_role = "HISTORICAL_CONTEXT"
+        reasoning_parts.append("retrospective or policy analysis framing")
+    elif actionable_event and positive_hits and context_hits and (has_current_announcement or source_date is not None):
+        currentness_class = "CURRENT_EVENT"
+        freshness_role = "BREAKING" if source_date and any(token in lowered for token in ("today", "tonight", "this week")) else "CURRENT"
+        operative_date = operative_date or (source_date.isoformat() if source_date else "")
+        reasoning_parts.append("current announcement or current operational event")
+    elif positive_hits and not actionable_event:
+        currentness_class = "RETROSPECTIVE_ANALYSIS" if has_retro_marker or has_historical_marker else "DATE_UNRESOLVED"
+        freshness_role = "HISTORICAL_CONTEXT" if currentness_class == "RETROSPECTIVE_ANALYSIS" else "UNKNOWN"
+        reasoning_parts.append("event noun appears without operative event action")
+    confidence = 0.35 + min(0.55, max(score, 0) * 0.05)
+    if currentness_class == "DATE_UNRESOLVED":
+        confidence = 0.4 if positive_hits else 0.2
+        reasoning_parts.append("date relationship unresolved")
+    return {
+        "sentence": sentence,
+        "score": score,
+        "currentness_class": currentness_class,
+        "freshness_role": freshness_role,
+        "operative_event_date": operative_date,
+        "prior_event_date": prior_event_date,
+        "date_references": date_refs,
+        "reasoning": "; ".join(reasoning_parts),
+        "confidence": round(min(confidence, 0.95), 3),
+        "positive_hits": positive_hits,
+        "access_hits": access_hits,
+    }
+
+
+def _currentness_analysis(
+    *,
+    title: str,
+    lead_text: str,
+    text: str,
+    source_publication_date: str,
+    event_type: str,
+    service_line: str,
+) -> dict[str, Any]:
+    source_date = _parse_iso_date(source_publication_date)
+    sentences = _sentence_candidates(text)
+    sentence_rows = [
+        _sentence_currentness(sentence, source_date=source_date, event_type=event_type, service_line=service_line)
+        for sentence in sentences
+        if _keyword_hits(sentence, [(label, pattern) for label, _, pattern in POSITIVE_EVENT_PATTERNS])
+        or _keyword_hits(sentence, ACCESS_CONSEQUENCE_PATTERNS)
+    ]
+    title_agrees = _title_body_event_agreement(title, text, service_line=service_line)
+    reference_text = _normalize_text(f"{title} {lead_text}")
+    class_rank = {
+        "CURRENT_ANNOUNCEMENT_FUTURE_EFFECTIVE": 4,
+        "CURRENT_RESTORATION": 4,
+        "CURRENT_UPDATE_TO_PRIOR_EVENT": 3,
+        "CURRENT_EVENT": 3,
+        "DATE_UNRESOLVED": 2,
+        "RECENT_BACKGROUND": 1,
+        "HISTORICAL_BACKGROUND": 0,
+        "RETROSPECTIVE_ANALYSIS": 0,
+    }
+    operative = max(sentence_rows, key=lambda row: (class_rank.get(row["currentness_class"], -1), row["score"], len(row["sentence"]))) if sentence_rows else None
+    background_rows = [
+        row for row in sentence_rows
+        if row is not operative and row["currentness_class"] in {"RECENT_BACKGROUND", "HISTORICAL_BACKGROUND", "RETROSPECTIVE_ANALYSIS"}
+    ]
+    title_lowered = title.casefold()
+    body_lowered = text.casefold()
+    article_retro = any(marker in title_lowered or marker in body_lowered for marker in RETROSPECTIVE_MARKERS)
+    failed_gates: list[str] = []
+    currentness_class = operative["currentness_class"] if operative else "DATE_UNRESOLVED"
+    freshness_role = operative["freshness_role"] if operative else "UNKNOWN"
+    if operative and currentness_class in {"HISTORICAL_BACKGROUND", "RECENT_BACKGROUND"} and article_retro:
+        currentness_class = "RETROSPECTIVE_ANALYSIS"
+        freshness_role = "HISTORICAL_CONTEXT"
+    if operative and currentness_class == "CURRENT_EVENT" and not title_agrees and operative["currentness_class"] not in {"CURRENT_RESTORATION", "CURRENT_ANNOUNCEMENT_FUTURE_EFFECTIVE"}:
+        currentness_class = "DATE_UNRESOLVED"
+        freshness_role = "UNKNOWN"
+        failed_gates.append("title_body_conflict")
+    if operative and currentness_class in {"CURRENT_EVENT", "CURRENT_ANNOUNCEMENT_FUTURE_EFFECTIVE", "CURRENT_UPDATE_TO_PRIOR_EVENT", "CURRENT_RESTORATION"}:
+        if _alignment_score(reference_text, operative["sentence"]) == 0 and len(background_rows) >= 2:
+            currentness_class = "RETROSPECTIVE_ANALYSIS"
+            freshness_role = "HISTORICAL_CONTEXT"
+            failed_gates.append("lead_alignment_missing")
+    elif operative and currentness_class in {"RECENT_BACKGROUND", "HISTORICAL_BACKGROUND", "RETROSPECTIVE_ANALYSIS"}:
+        failed_gates.append("historical_context_only")
+    else:
+        failed_gates.append("currentness_unresolved")
+    if operative and currentness_class == "CURRENT_EVENT":
+        past_refs = [ref for ref in operative["date_references"] if ref.get("relation") == "historical"]
+        current_refs = [ref for ref in operative["date_references"] if ref.get("relation") in {"future", "current", "recent_past", "current_or_future"}]
+        if past_refs and not current_refs and "announced" not in operative["sentence"].casefold():
+            currentness_class = "HISTORICAL_BACKGROUND"
+            freshness_role = "HISTORICAL_CONTEXT"
+            failed_gates.append("historical_date_only")
+    background_dates = []
+    for row in background_rows:
+        for ref in row["date_references"]:
+            if ref.get("date") or ref.get("label"):
+                background_dates.append(ref.get("date") or ref.get("label"))
+    return {
+        "source_publication_date": source_publication_date,
+        "event_announcement_date": source_publication_date if currentness_class in {"CURRENT_EVENT", "CURRENT_ANNOUNCEMENT_FUTURE_EFFECTIVE", "CURRENT_RESTORATION"} else "",
+        "event_effective_date": operative["operative_event_date"] if operative and currentness_class == "CURRENT_ANNOUNCEMENT_FUTURE_EFFECTIVE" else "",
+        "observed_date": source_publication_date if currentness_class == "CURRENT_UPDATE_TO_PRIOR_EVENT" else "",
+        "retrieval_date": utc_now().split("T", 1)[0],
+        "prior_event_date": operative["prior_event_date"] if operative else "",
+        "currentness_class": currentness_class,
+        "freshness_role": freshness_role,
+        "operative_event_passage": operative["sentence"] if operative else "",
+        "operative_event_date": operative["operative_event_date"] if operative else "",
+        "background_event_passages": [row["sentence"] for row in background_rows],
+        "background_date_references": background_dates,
+        "title_body_agree": title_agrees,
+        "currentness_confidence": operative["confidence"] if operative else 0.0,
+        "currentness_reasoning": operative["reasoning"] if operative else "no operative healthcare-access event sentence resolved",
+        "currentness_failed_gates": failed_gates,
+        "sentence_analyses": sentence_rows,
+    }
 
 
 def _can_fetch_item_url(source: CareLineSource, url: str) -> bool:
@@ -1613,6 +2041,7 @@ def normalize_candidate_record(
     exclusion_reason: str,
     extraction_confidence: float,
     full_article_required: bool,
+    currentness: Mapping[str, Any],
 ) -> dict[str, Any]:
     facility_name, provider_name = _subject_or_provider(subject or provider, supporting_passage)
     evidence_blob = _evidence_blob(raw_item, article_content)
@@ -1684,6 +2113,7 @@ def normalize_candidate_record(
                 "full_article_required": full_article_required,
                 "extraction_confidence": extraction_confidence,
                 "source_record_id": _text(raw_item, "raw_item_id"),
+                "currentness": dict(currentness),
             },
         }
     )
@@ -1699,6 +2129,16 @@ def normalize_candidate_record(
         "public_eligibility_precheck": qualification_status == "qualified" and not reviewed.validation_issues(),
         "review_priority_recommendation": priority,
         "priority_reason": priority_reason,
+        "currentness_class": _text(currentness, "currentness_class"),
+        "freshness_role": _text(currentness, "freshness_role"),
+        "operative_event_date": _text(currentness, "operative_event_date"),
+        "background_date_references": list(currentness.get("background_date_references", [])) if isinstance(currentness.get("background_date_references"), list) else [],
+        "currentness_confidence": currentness.get("currentness_confidence", 0.0),
+        "currentness_reasoning": _text(currentness, "currentness_reasoning"),
+        "currentness_failed_gates": list(currentness.get("currentness_failed_gates", [])) if isinstance(currentness.get("currentness_failed_gates"), list) else [],
+        "operative_event_passage": _text(currentness, "operative_event_passage"),
+        "background_event_passages": list(currentness.get("background_event_passages", [])) if isinstance(currentness.get("background_event_passages"), list) else [],
+        "title_body_agree": bool(currentness.get("title_body_agree")),
     }
     return {
         "schema_version": PIPELINE_SCHEMA_VERSION,
@@ -1813,6 +2253,14 @@ def qualify_event_lead(
     event_type = _text(lead, "event_type_hint") or _event_type_from_text(_text(article_content or {}, "text") or evidence_blob, service_line=service_line)
     if _text(lead, "event_type_hint") in {"facility_closure", "planned_facility_closure", "service_closure", "service_suspension"} and event_type in {"facility_reopening", "service_restoration"}:
         event_type = _text(lead, "event_type_hint")
+    currentness = _currentness_analysis(
+        title=_text(raw_item, "title"),
+        lead_text=_text(raw_item, "description"),
+        text=_text(article_content or {}, "text") or evidence_blob,
+        source_publication_date=_text(raw_item, "source_publication_date"),
+        event_type=event_type,
+        service_line=service_line,
+    )
     if _is_service_expansion_only(evidence_blob) and event_type not in {"facility_reopening", "service_restoration"}:
         return "excluded", {
             "schema_version": EXCLUSION_SCHEMA_VERSION,
@@ -1831,6 +2279,13 @@ def qualify_event_lead(
             "extraction_method": extraction_method,
             "failed_gates": [],
             "supporting_text": _supporting_passage(evidence_blob, event_type, service_line),
+            "currentness_class": _text(currentness, "currentness_class"),
+            "freshness_role": _text(currentness, "freshness_role"),
+            "operative_event_date": _text(currentness, "operative_event_date"),
+            "background_date_references": list(currentness.get("background_date_references", [])),
+            "currentness_confidence": currentness.get("currentness_confidence", 0.0),
+            "currentness_reasoning": _text(currentness, "currentness_reasoning"),
+            "currentness_failed_gates": list(currentness.get("currentness_failed_gates", [])),
             "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
         }
 
@@ -1852,6 +2307,13 @@ def qualify_event_lead(
             "extraction_method": extraction_method,
             "failed_gates": ["missing_source_date"],
             "supporting_text": _text(raw_item, "description"),
+            "currentness_class": _text(currentness, "currentness_class"),
+            "freshness_role": _text(currentness, "freshness_role"),
+            "operative_event_date": _text(currentness, "operative_event_date"),
+            "background_date_references": list(currentness.get("background_date_references", [])),
+            "currentness_confidence": currentness.get("currentness_confidence", 0.0),
+            "currentness_reasoning": _text(currentness, "currentness_reasoning"),
+            "currentness_failed_gates": list(currentness.get("currentness_failed_gates", [])),
             "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
         }
 
@@ -1873,6 +2335,13 @@ def qualify_event_lead(
             "extraction_method": extraction_method,
             "failed_gates": ["insufficient_bounded_evidence"],
             "supporting_text": _text(raw_item, "description"),
+            "currentness_class": _text(currentness, "currentness_class"),
+            "freshness_role": _text(currentness, "freshness_role"),
+            "operative_event_date": _text(currentness, "operative_event_date"),
+            "background_date_references": list(currentness.get("background_date_references", [])),
+            "currentness_confidence": currentness.get("currentness_confidence", 0.0),
+            "currentness_reasoning": _text(currentness, "currentness_reasoning"),
+            "currentness_failed_gates": list(currentness.get("currentness_failed_gates", [])),
             "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
         }
 
@@ -1895,6 +2364,13 @@ def qualify_event_lead(
             "extraction_method": extraction_method,
             "failed_gates": ["insufficient_bounded_evidence"],
             "supporting_text": _text(raw_item, "description"),
+            "currentness_class": _text(currentness, "currentness_class"),
+            "freshness_role": _text(currentness, "freshness_role"),
+            "operative_event_date": _text(currentness, "operative_event_date"),
+            "background_date_references": list(currentness.get("background_date_references", [])),
+            "currentness_confidence": currentness.get("currentness_confidence", 0.0),
+            "currentness_reasoning": _text(currentness, "currentness_reasoning"),
+            "currentness_failed_gates": list(currentness.get("currentness_failed_gates", [])),
             "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
         }
     if not supporting_passage:
@@ -1916,6 +2392,13 @@ def qualify_event_lead(
             "extraction_method": extraction_method,
             "failed_gates": ["insufficient_bounded_evidence"],
             "supporting_text": _text(article_content or {}, "description") or _text(raw_item, "description"),
+            "currentness_class": _text(currentness, "currentness_class"),
+            "freshness_role": _text(currentness, "freshness_role"),
+            "operative_event_date": _text(currentness, "operative_event_date"),
+            "background_date_references": list(currentness.get("background_date_references", [])),
+            "currentness_confidence": currentness.get("currentness_confidence", 0.0),
+            "currentness_reasoning": _text(currentness, "currentness_reasoning"),
+            "currentness_failed_gates": list(currentness.get("currentness_failed_gates", [])),
             "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
         }
 
@@ -1938,6 +2421,66 @@ def qualify_event_lead(
     )
     extraction_confidence = min(1.0, 0.55 + 0.07 * len(_keyword_hits(supporting_passage, [(label, pattern) for label, _, pattern in POSITIVE_EVENT_PATTERNS])) + (0.1 if article_content else 0.0))
     full_article_required = bool(_text(lead, "full_article_required")) and not article_content
+    currentness_passage = _text(currentness, "operative_event_passage")
+    if currentness_passage:
+        supporting_passage = currentness_passage
+    freshness_role = _text(currentness, "freshness_role")
+    currentness_class = _text(currentness, "currentness_class")
+    currentness_failed_gates = list(currentness.get("currentness_failed_gates", [])) if isinstance(currentness.get("currentness_failed_gates"), list) else []
+    if currentness_class in {"RECENT_BACKGROUND", "HISTORICAL_BACKGROUND", "RETROSPECTIVE_ANALYSIS"}:
+        return "excluded", {
+            "schema_version": EXCLUSION_SCHEMA_VERSION,
+            "exclusion_id": _stable_id("care-line-exclusion", raw_item.get("raw_item_id", ""), "historical_context_only"),
+            "raw_item_id": raw_item.get("raw_item_id", ""),
+            "lead_id": lead.get("lead_id", ""),
+            "source_id": raw_item.get("source_id", ""),
+            "source_name": raw_item.get("source_name", ""),
+            "item_url": raw_item.get("item_url", ""),
+            "title": raw_item.get("title", ""),
+            "source_publication_date": raw_item.get("source_publication_date", ""),
+            "classification": currentness_class,
+            "exclusion_reason": "background_only",
+            "editorial_outcome": "EXCLUDED",
+            "extraction_outcome": extraction_outcome,
+            "extraction_method": extraction_method,
+            "failed_gates": currentness_failed_gates or ["historical_context_only"],
+            "supporting_text": supporting_passage,
+            "currentness_class": currentness_class,
+            "freshness_role": freshness_role,
+            "operative_event_date": _text(currentness, "operative_event_date"),
+            "background_date_references": list(currentness.get("background_date_references", [])),
+            "currentness_confidence": currentness.get("currentness_confidence", 0.0),
+            "currentness_reasoning": _text(currentness, "currentness_reasoning"),
+            "currentness_failed_gates": currentness_failed_gates or ["historical_context_only"],
+            "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
+        }
+    if currentness_class == "DATE_UNRESOLVED":
+        return "failed_extraction", {
+            "schema_version": EXCLUSION_SCHEMA_VERSION,
+            "exclusion_id": _stable_id("care-line-failed-extraction", raw_item.get("raw_item_id", ""), "currentness_unresolved"),
+            "raw_item_id": raw_item.get("raw_item_id", ""),
+            "lead_id": lead.get("lead_id", ""),
+            "source_id": raw_item.get("source_id", ""),
+            "source_name": raw_item.get("source_name", ""),
+            "item_url": raw_item.get("item_url", ""),
+            "title": raw_item.get("title", ""),
+            "source_publication_date": raw_item.get("source_publication_date", ""),
+            "classification": "NEEDS_HUMAN_REVIEW",
+            "exclusion_reason": "needs_date",
+            "editorial_outcome": "NEEDS_HUMAN_REVIEW",
+            "extraction_outcome": extraction_outcome,
+            "extraction_method": extraction_method,
+            "failed_gates": currentness_failed_gates or ["currentness_unresolved"],
+            "supporting_text": supporting_passage,
+            "currentness_class": currentness_class,
+            "freshness_role": freshness_role,
+            "operative_event_date": _text(currentness, "operative_event_date"),
+            "background_date_references": list(currentness.get("background_date_references", [])),
+            "currentness_confidence": currentness.get("currentness_confidence", 0.0),
+            "currentness_reasoning": _text(currentness, "currentness_reasoning"),
+            "currentness_failed_gates": currentness_failed_gates or ["currentness_unresolved"],
+            "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
+        }
 
     if failed_gates:
         primary = failed_gates[0]
@@ -1970,6 +2513,13 @@ def qualify_event_lead(
             "extraction_method": extraction_method,
             "failed_gates": failed_gates,
             "supporting_text": supporting_passage,
+            "currentness_class": currentness_class,
+            "freshness_role": freshness_role,
+            "operative_event_date": _text(currentness, "operative_event_date"),
+            "background_date_references": list(currentness.get("background_date_references", [])),
+            "currentness_confidence": currentness.get("currentness_confidence", 0.0),
+            "currentness_reasoning": _text(currentness, "currentness_reasoning"),
+            "currentness_failed_gates": currentness_failed_gates,
             "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
         }
 
@@ -1991,6 +2541,7 @@ def qualify_event_lead(
         exclusion_reason="",
         extraction_confidence=round(extraction_confidence, 3),
         full_article_required=full_article_required,
+        currentness=currentness,
     )
     candidate["qualification_result"]["editorial_outcome"] = "QUALIFIED"
     candidate["qualification_result"]["extraction_outcome"] = extraction_outcome
@@ -2084,6 +2635,13 @@ def _queue_row_from_candidate(item: Mapping[str, Any], *, cluster_id: str, dupli
         "duplicate_status": duplicate_status,
         "review_priority": priority,
         "priority_reason": priority_reason,
+        "currentness_class": str(qualification.get("currentness_class") or ""),
+        "freshness_role": str(qualification.get("freshness_role") or "UNKNOWN"),
+        "operative_event_date": str(qualification.get("operative_event_date") or ""),
+        "background_date_references": qualification.get("background_date_references") or [],
+        "currentness_confidence": qualification.get("currentness_confidence", 0.0),
+        "currentness_reasoning": str(qualification.get("currentness_reasoning") or ""),
+        "currentness_failed_gates": qualification.get("currentness_failed_gates") or [],
         "review_reason": "corroborating_evidence" if duplicate_status == "duplicate" else "needs_editorial_review",
         "originating_run_id": item.get("collection_run_id", ""),
         "source_artifact_path": item.get("source_artifact_path", ""),
@@ -2112,6 +2670,7 @@ def build_review_queue(
     active_queue_limit: int = 150,
     low_priority_cap: int = 25,
 ) -> dict[str, Any]:
+    active_freshness_roles = {"BREAKING", "CURRENT", "FUTURE_EFFECTIVE", "ONGOING_EVENT_UPDATE", "RESTORATION_UPDATE"}
     all_candidates = [
         dict(candidate)
         for candidate in candidates
@@ -2132,14 +2691,16 @@ def build_review_queue(
             canonical_rows.append(row)
     canonical_rows.sort(key=_queue_sort_key)
     duplicate_rows.sort(key=_queue_sort_key)
-    critical_high = [row for row in canonical_rows if row["review_priority"] in {"CRITICAL", "HIGH"}]
-    standard = [row for row in canonical_rows if row["review_priority"] == "STANDARD"]
-    low = [row for row in canonical_rows if row["review_priority"] == "LOW"]
+    queueable = [row for row in canonical_rows if row["freshness_role"] in active_freshness_roles]
+    contextual = [row for row in canonical_rows if row["freshness_role"] not in active_freshness_roles]
+    critical_high = [row for row in queueable if row["review_priority"] in {"CRITICAL", "HIGH"}]
+    standard = [row for row in queueable if row["review_priority"] == "STANDARD"]
+    low = [row for row in queueable if row["review_priority"] == "LOW"]
     standard_cap = max(active_queue_limit - len(critical_high), 0)
     active_standard = standard[:standard_cap]
     remaining_after_standard = max(active_queue_limit - len(critical_high) - len(active_standard), 0)
     active_low = low[: min(low_priority_cap, remaining_after_standard)]
-    backlog = standard[standard_cap:] + low[min(low_priority_cap, remaining_after_standard) :]
+    backlog = contextual + standard[standard_cap:] + low[min(low_priority_cap, remaining_after_standard) :]
     active_rows = critical_high + active_standard + active_low
     return {
         "schema_version": REVIEW_QUEUE_SCHEMA_VERSION,

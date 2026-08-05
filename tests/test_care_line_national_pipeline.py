@@ -302,13 +302,18 @@ def test_cluster_candidates_reduce_duplicate_rows() -> None:
     for idx in ("a", "b"):
         reviewed = CareLineReviewedRecord.model_validate(reviewed_payload | {"producer_record_id": f"rec-{idx}", "source_url": f"https://example.org/story-{idx}"})
         rows.append(
-            {
-                "candidate_id": f"cand-{idx}",
-                "duplicate_cluster_hints": {"cluster_id": "cluster-1"},
-                "normalized_record": reviewed.model_dump(mode="json"),
-                "qualification_result": {"review_priority_recommendation": "CRITICAL", "priority_reason": "major current service loss"},
-            }
-        )
+                {
+                    "candidate_id": f"cand-{idx}",
+                    "duplicate_cluster_hints": {"cluster_id": "cluster-1"},
+                    "normalized_record": reviewed.model_dump(mode="json"),
+                    "qualification_result": {
+                        "review_priority_recommendation": "CRITICAL",
+                        "priority_reason": "major current service loss",
+                        "currentness_class": "CURRENT_EVENT",
+                        "freshness_role": "CURRENT",
+                    },
+                }
+            )
     clusters = cluster_candidates(rows)
     queue = build_review_queue(rows, edition_date="2026-08-04", active_queue_limit=10, low_priority_cap=1)
     assert clusters["cluster_count"] == 1
@@ -409,7 +414,7 @@ def test_partial_extraction_routes_strong_lead_to_manual_review(repo_copy: Path,
     assert payload["extraction_outcome"] == "PAYWALLED"
 
 
-def test_kff_style_lead_extracts_provider_and_inherent_capacity_loss(repo_copy: Path) -> None:
+def test_kff_style_historical_background_is_excluded(repo_copy: Path) -> None:
     source = _source(repo_copy).model_copy(update={"source_id": "kff-health-news", "allowed_hosts": ["example.org"]})
     raw_item = _raw_item(
         source_id="kff-health-news",
@@ -436,10 +441,155 @@ def test_kff_style_lead_extracts_provider_and_inherent_capacity_loss(repo_copy: 
             fetch_timeout=5,
             allow_insecure_tls=False,
         )
+    assert status == "excluded"
+    assert payload["exclusion_reason"] == "background_only"
+    assert payload["currentness_class"] in {"HISTORICAL_BACKGROUND", "RETROSPECTIVE_ANALYSIS"}
+
+
+def test_future_effective_current_announcement_qualifies(repo_copy: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    source = _source(repo_copy).model_copy(update={"allowed_hosts": ["example.org"]})
+    raw_item = _raw_item(
+        title="County Hospital will close its emergency department",
+        description="County Hospital announced it will close its emergency department on Aug. 15.",
+        requires_html_followup=True,
+    )
+    lead = event_lead_from_raw_item(raw_item)
+    monkeypatch.setattr(
+        "bluefern_dispatches.care_line_national_pipeline.fetch_url",
+        lambda url, timeout=20, allow_insecure_tls=False, user_agent="": (
+            b"<html><body><article><p>County Hospital announced Tuesday that it will close its emergency department on Aug. 15 because it cannot staff overnight coverage.</p><p>Patients will be transferred to a nearby hospital after that date.</p></article></body></html>",
+            {"http_status": 200, "content_type": "text/html", "final_url": url},
+        ),
+    )
+    status, payload = qualify_event_lead(source, raw_item, lead, artifact_path="artifact.json", run_id="run-1", fetch_timeout=5, allow_insecure_tls=False)
     assert status == "qualified"
-    reviewed = CareLineReviewedRecord.model_validate(payload["normalized_record"])
-    assert reviewed.provider_name == "Alliance HealthCare System"
-    assert "REDUCED_BED_OR_APPOINTMENT_CAPACITY" in reviewed.access_consequences
+    assert payload["qualification_result"]["currentness_class"] == "CURRENT_ANNOUNCEMENT_FUTURE_EFFECTIVE"
+    assert payload["qualification_result"]["freshness_role"] == "FUTURE_EFFECTIVE"
+
+
+def test_current_article_about_historical_closure_is_excluded(repo_copy: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    source = _source(repo_copy).model_copy(update={"allowed_hosts": ["example.org"]})
+    raw_item = _raw_item(
+        title="County Hospital closure cited in current financing debate",
+        description="County Hospital's closure is being cited in a current policy debate.",
+        requires_html_followup=True,
+    )
+    lead = event_lead_from_raw_item(raw_item)
+    monkeypatch.setattr(
+        "bluefern_dispatches.care_line_national_pipeline.fetch_url",
+        lambda url, timeout=20, allow_insecure_tls=False, user_agent="": (
+            b"<html><body><article><p>The hospital closed in 2024, forcing patients to drive farther for care.</p><p>Lawmakers this week debated whether to expand the emergency hospital model.</p></article></body></html>",
+            {"http_status": 200, "content_type": "text/html", "final_url": url},
+        ),
+    )
+    status, payload = qualify_event_lead(source, raw_item, lead, artifact_path="artifact.json", run_id="run-1", fetch_timeout=5, allow_insecure_tls=False)
+    assert status == "excluded"
+    if "currentness_class" in payload:
+        assert payload["currentness_class"] in {"HISTORICAL_BACKGROUND", "RETROSPECTIVE_ANALYSIS"}
+
+
+def test_retrospective_trend_story_is_excluded(repo_copy: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    source = _source(repo_copy).model_copy(update={"allowed_hosts": ["example.org"]})
+    raw_item = _raw_item(
+        title="Trend story reviews rural hospital closures",
+        description="The article reviews multiple prior closures.",
+        requires_html_followup=True,
+    )
+    lead = event_lead_from_raw_item(raw_item)
+    monkeypatch.setattr(
+        "bluefern_dispatches.care_line_national_pipeline.fetch_url",
+        lambda url, timeout=20, allow_insecure_tls=False, user_agent="": (
+            b"<html><body><article><p>Over the years, rural hospitals in three states closed labor and delivery units.</p><p>One hospital closed in 2023 and another closed in 2024.</p></article></body></html>",
+            {"http_status": 200, "content_type": "text/html", "final_url": url},
+        ),
+    )
+    status, payload = qualify_event_lead(source, raw_item, lead, artifact_path="artifact.json", run_id="run-1", fetch_timeout=5, allow_insecure_tls=False)
+    assert status == "excluded"
+    if "currentness_class" in payload:
+        assert payload["currentness_class"] in {"HISTORICAL_BACKGROUND", "RETROSPECTIVE_ANALYSIS"}
+
+
+def test_mixed_historical_and_current_article_selects_current_operative_event(repo_copy: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    source = _source(repo_copy).model_copy(update={"allowed_hosts": ["example.org"]})
+    raw_item = _raw_item(
+        title="Mercy Hospital to reopen labor and delivery next week",
+        description="The hospital previously closed the unit but now plans to reopen it.",
+        requires_html_followup=True,
+    )
+    lead = event_lead_from_raw_item(raw_item)
+    monkeypatch.setattr(
+        "bluefern_dispatches.care_line_national_pipeline.fetch_url",
+        lambda url, timeout=20, allow_insecure_tls=False, user_agent="": (
+            b"<html><body><article><p>Mercy Hospital closed its labor and delivery unit in 2024.</p><p>Mercy Hospital announced it will reopen labor and delivery on Aug. 12.</p></article></body></html>",
+            {"http_status": 200, "content_type": "text/html", "final_url": url},
+        ),
+    )
+    status, payload = qualify_event_lead(source, raw_item, lead, artifact_path="artifact.json", run_id="run-1", fetch_timeout=5, allow_insecure_tls=False)
+    assert status == "qualified"
+    assert payload["qualification_result"]["operative_event_passage"].startswith("Mercy Hospital announced it will reopen")
+    assert payload["qualification_result"]["currentness_class"] in {"CURRENT_ANNOUNCEMENT_FUTURE_EFFECTIVE", "CURRENT_RESTORATION"}
+
+
+def test_ongoing_current_interruption_qualifies(repo_copy: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    source = _source(repo_copy).model_copy(update={"allowed_hosts": ["example.org"]})
+    raw_item = _raw_item(
+        title="County Hospital remains closed after flood",
+        description="County Hospital remains closed and patients are still being transferred.",
+        requires_html_followup=True,
+    )
+    lead = event_lead_from_raw_item(raw_item)
+    monkeypatch.setattr(
+        "bluefern_dispatches.care_line_national_pipeline.fetch_url",
+        lambda url, timeout=20, allow_insecure_tls=False, user_agent="": (
+            b"<html><body><article><p>County Hospital remains closed this week after flood damage, and patients are still being transferred to nearby hospitals.</p></article></body></html>",
+            {"http_status": 200, "content_type": "text/html", "final_url": url},
+        ),
+    )
+    status, payload = qualify_event_lead(source, raw_item, lead, artifact_path="artifact.json", run_id="run-1", fetch_timeout=5, allow_insecure_tls=False)
+    assert status == "qualified"
+    assert payload["qualification_result"]["currentness_class"] == "CURRENT_UPDATE_TO_PRIOR_EVENT"
+    assert payload["qualification_result"]["freshness_role"] == "ONGOING_EVENT_UPDATE"
+
+
+def test_unresolved_conflicting_dates_route_to_manual_review(repo_copy: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    source = _source(repo_copy).model_copy(update={"allowed_hosts": ["example.org"]})
+    raw_item = _raw_item(
+        title="County clinic closure timeline remains disputed",
+        description="The clinic closure timeline is unclear.",
+        requires_html_followup=True,
+    )
+    lead = event_lead_from_raw_item(raw_item)
+    monkeypatch.setattr(
+        "bluefern_dispatches.care_line_national_pipeline.fetch_url",
+        lambda url, timeout=20, allow_insecure_tls=False, user_agent="": (
+            b"<html><body><article><p>County clinic announced it would close on Aug. 15, but another sentence says the clinic closed in 2024.</p></article></body></html>",
+            {"http_status": 200, "content_type": "text/html", "final_url": url},
+        ),
+    )
+    status, payload = qualify_event_lead(source, raw_item, lead, artifact_path="artifact.json", run_id="run-1", fetch_timeout=5, allow_insecure_tls=False)
+    assert status == "failed_extraction"
+    assert payload["classification"] == "NEEDS_HUMAN_REVIEW"
+    assert payload["currentness_class"] == "DATE_UNRESOLVED"
+
+
+def test_source_publication_date_does_not_override_old_event_date(repo_copy: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    source = _source(repo_copy).model_copy(update={"allowed_hosts": ["example.org"]})
+    raw_item = _raw_item(
+        title="County Hospital closure cited in policy debate",
+        description="The article cites a previous shutdown.",
+        requires_html_followup=True,
+    )
+    lead = event_lead_from_raw_item(raw_item)
+    monkeypatch.setattr(
+        "bluefern_dispatches.care_line_national_pipeline.fetch_url",
+        lambda url, timeout=20, allow_insecure_tls=False, user_agent="": (
+            b"<html><body><article><p>The hospital closed in 2024 after losing its obstetrics staff.</p><p>Officials cited that shutdown while debating new policy changes today.</p></article></body></html>",
+            {"http_status": 200, "content_type": "text/html", "final_url": url},
+        ),
+    )
+    status, payload = qualify_event_lead(source, raw_item, lead, artifact_path="artifact.json", run_id="run-1", fetch_timeout=5, allow_insecure_tls=False)
+    assert status == "excluded"
+    assert payload["currentness_class"] in {"HISTORICAL_BACKGROUND", "RETROSPECTIVE_ANALYSIS"}
 
 
 def test_npr_closure_hint_is_not_downgraded_to_restoration(repo_copy: Path, monkeypatch: pytest.MonkeyPatch) -> None:

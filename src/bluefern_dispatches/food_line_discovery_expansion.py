@@ -906,6 +906,31 @@ def _candidate_location_name(row: dict[str, Any]) -> str:
     return "United States"
 
 
+def _infer_supported_state_or_territory(row: dict[str, Any]) -> tuple[str, str]:
+    existing_name = _nonempty(row.get("state_or_territory"))
+    existing_abbrev = _nonempty(row.get("state_abbrev") or row.get("state_hint"))
+    if existing_name or existing_abbrev:
+        return existing_name, existing_abbrev
+    texts = [
+        _nonempty(row.get("selected_title")),
+        _nonempty(row.get("discovered_title")),
+        _nonempty(row.get("summary_or_snippet")),
+        _nonempty(row.get("evidence_text")),
+    ]
+    combined = " ".join(part for part in texts if part)
+    if not combined:
+        return "", ""
+    matches: list[tuple[str, str]] = []
+    lowered = combined.lower()
+    for state_name, abbrev in STATE_TERRITORIES:
+        if re.search(rf"\b{re.escape(state_name.lower())}\b", lowered):
+            matches.append((state_name, abbrev))
+    unique_matches = list(dict.fromkeys(matches))
+    if len(unique_matches) == 1:
+        return unique_matches[0]
+    return "", ""
+
+
 def _candidate_public_evidence_text(row: dict[str, Any]) -> str:
     for key in ("evidence_text", "pressure_evidence_summary", "manually_reviewed_summary", "summary_or_snippet"):
         value = _cap_text(_nonempty(row.get(key)), limit=1200)
@@ -3303,6 +3328,18 @@ def _normalize_candidate_row(row: dict[str, Any]) -> dict[str, Any]:
     candidate["source_role_derivation_source_fields"] = [
         item for item in list(candidate.get("source_role_derivation_source_fields") or []) if _nonempty(item)
     ]
+    if not _nonempty(candidate.get("state_or_territory")) and not _nonempty(candidate.get("state_abbrev")):
+        inferred_state, inferred_abbrev = _infer_supported_state_or_territory(candidate)
+        if inferred_state:
+            candidate["state_or_territory"] = inferred_state
+        if inferred_abbrev:
+            candidate["state_abbrev"] = inferred_abbrev
+        if inferred_state and inferred_state not in candidate["location_terms_detected"]:
+            candidate["location_terms_detected"].append(inferred_state)
+    else:
+        candidate["state_or_territory"] = _nonempty(candidate.get("state_or_territory"))
+        candidate["state_abbrev"] = _nonempty(candidate.get("state_abbrev"))
+    candidate["state_hint"] = _nonempty(candidate.get("state_hint") or candidate.get("state_abbrev") or candidate.get("state_or_territory"))
     return candidate
 
 
@@ -4762,10 +4799,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--edition-mode", default="current_update", choices=("current_update", "no_current_update"))
     parser.add_argument("--max-results-per-query", type=int, default=None)
     parser.add_argument("--max-queries", type=int, default=None)
-    parser.add_argument("--query-lookback-days", type=int, default=1)
-    parser.add_argument("--query-lookahead-days", type=int, default=1)
-    parser.add_argument("--public-claim-lookback-days", type=int, default=0)
-    parser.add_argument("--public-claim-lookahead-days", type=int, default=0)
+    parser.add_argument("--query-lookback-days", type=int, default=None)
+    parser.add_argument("--query-lookahead-days", type=int, default=None)
+    parser.add_argument("--public-claim-lookback-days", type=int, default=None)
+    parser.add_argument("--public-claim-lookahead-days", type=int, default=None)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--export-agent-inbox", action="store_true", help="Write one private food_line_agent_run_v1 envelope after discovery.")
     parser.add_argument("--agent-inbox-dir", default="data/dispatches/food-line/agent-inbox", help="Private agent inbox destination.")
@@ -4844,10 +4881,10 @@ def main(argv: list[str] | None = None) -> int:
         edition_mode=args.edition_mode,
         max_results_per_query=args.max_results_per_query or 10,
         max_queries=args.max_queries,
-        query_lookback_days=args.query_lookback_days,
-        query_lookahead_days=args.query_lookahead_days,
-        public_claim_lookback_days=args.public_claim_lookback_days,
-        public_claim_lookahead_days=args.public_claim_lookahead_days,
+        query_lookback_days=args.query_lookback_days if args.query_lookback_days is not None else 1,
+        query_lookahead_days=args.query_lookahead_days if args.query_lookahead_days is not None else 1,
+        public_claim_lookback_days=args.public_claim_lookback_days if args.public_claim_lookback_days is not None else 0,
+        public_claim_lookahead_days=args.public_claim_lookahead_days if args.public_claim_lookahead_days is not None else 0,
         dry_run=bool(args.dry_run),
         export_agent_inbox=bool(args.export_agent_inbox),
         agent_inbox_dir=(root / args.agent_inbox_dir).resolve() if not Path(args.agent_inbox_dir).is_absolute() else Path(args.agent_inbox_dir).resolve(),

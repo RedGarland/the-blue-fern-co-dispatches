@@ -83,13 +83,13 @@ def test_invalid_envelope_and_dry_run_do_not_archive(tmp_path: Path):
     assert not (inbox / "processed").exists()
 
 
-def test_import_records_hash_and_preserves_inbox_file(tmp_path: Path):
+def test_import_records_hash_and_archives_inbox_file(tmp_path: Path):
     inbox = tmp_path / "data/dispatches/food-line/agent-inbox"; inbox.mkdir(parents=True)
     source = inbox / "run.json"; source.write_text(json.dumps(_envelope(_row())), encoding="utf-8")
     result = process(tmp_path, source, edition_date="2026-07-28", agent_name="fixture", agent_run_id="run-envelope", dry_run=False)
     artifact = json.loads((tmp_path / "data/dispatches/food-line/agent-intake/2026-07-28/run-envelope.json").read_text(encoding="utf-8"))
     assert artifact["input_sha256"] == result["input_sha256"]
-    assert source.exists()
+    assert not source.exists()
     assert (inbox / "processed/2026-07-28/run.json").exists()
 
 

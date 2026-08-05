@@ -24,6 +24,9 @@ RUN_RECORD_SCHEMA = "food_line_scheduled_run_record_v1"
 SOURCE_RECEIPT_SCHEMA = "food_line_source_watch_receipt_v1"
 INTAKE_RECEIPT_SCHEMA = "food_line_current_intake_receipt_v1"
 ATTENTION_SCHEMA = "food_line_operator_attention_v1"
+ALLOWED_OPERATIONAL_DIRTY_PATHS = {
+    "data/dispatches/food-line/review/current-signal-review.json",
+}
 
 
 class SchedulerError(RuntimeError):
@@ -141,6 +144,29 @@ def _command_error(label: str, result: subprocess.CompletedProcess[str]) -> Sche
     return SchedulerError(f"{label} failed with exit code {result.returncode}: {tail}")
 
 
+def _parse_porcelain_paths(output: str) -> list[str]:
+    paths: list[str] = []
+    for raw_line in output.splitlines():
+        line = raw_line.rstrip()
+        if not line:
+            continue
+        if len(line) < 4:
+            raise SchedulerError(f"unexpected git status porcelain line: {raw_line!r}")
+        payload = line[3:]
+        if " -> " in payload:
+            raise SchedulerError("runner checkout contains rename or copy status outside the allowed operational scope")
+        normalized = payload.replace("\\", "/").strip()
+        if not normalized:
+            raise SchedulerError(f"unexpected git status porcelain path: {raw_line!r}")
+        paths.append(normalized)
+    return paths
+
+
+def _unexpected_dirty_paths(status_output: str) -> list[str]:
+    dirty_paths = _parse_porcelain_paths(status_output)
+    return sorted(path for path in dirty_paths if path not in ALLOWED_OPERATIONAL_DIRTY_PATHS)
+
+
 def verify_checkout(root: Path, branch: str, *, update: bool, test_mode: bool = False) -> str:
     root = root.resolve()
     if not (root / ".git").exists():
@@ -152,7 +178,9 @@ def verify_checkout(root: Path, branch: str, *, update: bool, test_mode: bool = 
     if status.returncode != 0:
         raise _command_error("git status", status)
     if status.stdout.strip():
-        raise SchedulerError("runner checkout is dirty; scheduled operation failed closed")
+        unexpected = _unexpected_dirty_paths(status.stdout)
+        if unexpected:
+            raise SchedulerError("runner checkout is dirty; scheduled operation failed closed")
 
     current = _run(["git", "branch", "--show-current"], cwd=root)
     if current.returncode != 0:
@@ -172,8 +200,12 @@ def verify_checkout(root: Path, branch: str, *, update: bool, test_mode: bool = 
             raise _command_error("git fast-forward", merged)
 
     final_status = _run(["git", "status", "--porcelain=v1", "--untracked-files=all"], cwd=root)
-    if final_status.returncode != 0 or final_status.stdout.strip():
+    if final_status.returncode != 0:
         raise SchedulerError("runner checkout is dirty after synchronization")
+    if final_status.stdout.strip():
+        unexpected = _unexpected_dirty_paths(final_status.stdout)
+        if unexpected:
+            raise SchedulerError("runner checkout is dirty after synchronization")
     head = _run(["git", "rev-parse", "HEAD"], cwd=root)
     if head.returncode != 0:
         raise _command_error("git rev-parse", head)

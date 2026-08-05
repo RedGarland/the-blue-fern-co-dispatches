@@ -16,6 +16,7 @@ from bluefern_dispatches.food_line_bounded_discovery import (
     atomic_write_json,
     build_bounded_query_plan,
     inspect_bounded_run,
+    profile_options,
     run_bounded_food_line_discovery,
 )
 from bluefern_dispatches.food_line_bounded_worker import RetryingNetworkFetcher
@@ -87,6 +88,14 @@ def _candidate(candidate_id: str = "candidate-1") -> dict[str, Any]:
         "source_role": "local_reporting",
         "evidence_level": "direct",
     }
+
+
+def test_daily_current_profile_uses_review_window_for_public_claims() -> None:
+    options = profile_options("daily-current")
+    assert options["query_lookback_days"] == 1
+    assert options["query_lookahead_days"] == 1
+    assert options["public_claim_lookback_days"] == 3
+    assert options["public_claim_lookahead_days"] == 0
 
 
 class FakeExecutor:

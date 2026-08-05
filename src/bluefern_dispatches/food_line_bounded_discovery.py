@@ -49,6 +49,10 @@ PROFILES: dict[str, dict[str, Any]] = {
         "required_coverage_threshold": 0.90,
         "direct_source_coverage_threshold": 0.75,
         "max_results_per_query": 3,
+        "query_lookback_days": 1,
+        "query_lookahead_days": 1,
+        "public_claim_lookback_days": 3,
+        "public_claim_lookahead_days": 0,
     },
     "supplemental": {
         "max_run_minutes": 30.0,
@@ -64,6 +68,10 @@ PROFILES: dict[str, dict[str, Any]] = {
         "required_coverage_threshold": 0.90,
         "direct_source_coverage_threshold": 0.75,
         "max_results_per_query": 3,
+        "query_lookback_days": 1,
+        "query_lookahead_days": 1,
+        "public_claim_lookback_days": 3,
+        "public_claim_lookahead_days": 0,
     },
     "smoke": {
         "max_run_minutes": 5.0,
@@ -79,6 +87,10 @@ PROFILES: dict[str, dict[str, Any]] = {
         "required_coverage_threshold": 0.90,
         "direct_source_coverage_threshold": 0.50,
         "max_results_per_query": 2,
+        "query_lookback_days": 1,
+        "query_lookahead_days": 1,
+        "public_claim_lookback_days": 3,
+        "public_claim_lookahead_days": 0,
     },
 }
 

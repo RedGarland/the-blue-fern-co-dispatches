@@ -10,6 +10,7 @@ import scripts.run_food_line_dispatch as food_line_dispatch
 from bluefern_dispatches import food_line_discovery_expansion as expansion_module
 from bluefern_dispatches.food_line_discovery_expansion import (
     _apply_public_readiness_gate,
+    build_parser,
     _normalize_candidate_row,
     build_food_line_discovery_query_plan,
     read_food_line_discovery_expansion_audit,
@@ -168,6 +169,37 @@ def test_food_line_discovery_expansion_blocks_homepage_only_trace_urls(tmp_path:
     assert "homepage_or_landing_url" in candidate["public_claim_blockers"]
     assert "publisher_homepage_trace_only" in candidate["public_claim_blockers"]
     assert candidate["google_news_url"] == "https://news.google.com/rss/articles/CBMiHOME?oc=5"
+
+
+def test_food_line_discovery_parser_leaves_bounded_window_flags_unset_by_default() -> None:
+    parser = build_parser()
+    args = parser.parse_args(["--date", "2026-08-05"])
+    assert args.query_lookback_days is None
+    assert args.query_lookahead_days is None
+    assert args.public_claim_lookback_days is None
+    assert args.public_claim_lookahead_days is None
+
+
+def test_normalize_candidate_row_infers_explicit_state_from_supported_text() -> None:
+    candidate = _normalize_candidate_row(
+        {
+            "candidate_id": "food-line-discovery-test",
+            "source_url": "https://example.com/nc-snap",
+            "canonical_url": "https://example.com/nc-snap",
+            "final_trace_url": "https://example.com/nc-snap",
+            "discovered_title": "SNAP changes push more North Carolina families to food pantries, food banks",
+            "selected_title": "SNAP changes push more North Carolina families to food pantries, food banks",
+            "evidence_text": "North Carolina families are turning to food pantries after SNAP changes.",
+            "summary_or_snippet": "",
+            "location_terms_detected": [],
+            "state_or_territory": "",
+            "state_abbrev": "",
+            "state_hint": "",
+        }
+    )
+    assert candidate["state_or_territory"] == "North Carolina"
+    assert candidate["state_abbrev"] == "NC"
+    assert "North Carolina" in candidate["location_terms_detected"]
 
 
 def test_food_line_discovery_expansion_blocks_landing_trace_urls(tmp_path: Path):

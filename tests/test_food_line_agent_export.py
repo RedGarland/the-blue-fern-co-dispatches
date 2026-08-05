@@ -132,7 +132,7 @@ def test_end_to_end_private_smoke_and_rerun(tmp_path: Path):
     second = process_batch(tmp_path, edition_date=DATE, inbox=exported.parent, build_review_queue=True, build_proposed=True)
     queue = json.loads((tmp_path / "data/dispatches/food-line/review/current-signal-review.json").read_text(encoding="utf-8"))
     proposal = json.loads((tmp_path / "data/dispatches/food-line/review/proposed-editions/2026-08-01.json").read_text(encoding="utf-8"))
-    assert first["import_count"] == 1 and second["idempotent_noop_count"] == 1
+    assert first["import_count"] == 1 and second["import_count"] == 0 and second["discovered_file_count"] == 0
     assert len(queue["items"]) == 1 and proposal["draft_status"] == "draft_pending_editorial_review"
     assert not (tmp_path / "output/site").exists()
     assert not any((tmp_path / name).exists() for name in ("bluefern-dispatches-pages", "audio", "maps", "podcast.xml"))

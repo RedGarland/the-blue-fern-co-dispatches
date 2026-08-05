@@ -24,6 +24,16 @@ def _sha256(path: Path) -> str:
         for block in iter(lambda: handle.read(1024 * 1024), b""): digest.update(block)
     return digest.hexdigest()
 
+
+def _archive_input_file(input_path: Path, archive: Path, *, input_hash: str) -> None:
+    if archive.exists() and _sha256(archive) != input_hash:
+        archive = archive.with_name(f"{archive.stem}-{input_hash[:12]}{archive.suffix}")
+    archive.parent.mkdir(parents=True, exist_ok=True)
+    if archive.exists():
+        input_path.unlink()
+        return
+    shutil.move(str(input_path), str(archive))
+
 def validate_input(input_path: Path) -> dict[str, Any]:
     result: dict[str, Any] = {"valid": False, "input_sha256": _sha256(input_path), "finding_count": 0, "invalid_urls": [], "missing_evidence": [], "missing_publication_dates": [], "duplicate_findings": [], "fields_requiring_human_review": []}
     try: payload = json.loads(input_path.read_text(encoding="utf-8"))
@@ -78,9 +88,7 @@ def process(root: Path, input_path: Path, *, edition_date: str, agent_name: str,
             pass
         else:
             archive = inbox / "processed" / edition_date / input_path.name
-            if archive.exists() and _sha256(archive) != input_hash: archive = archive.with_name(f"{archive.stem}-{input_hash[:12]}{archive.suffix}")
-            if not archive.exists():
-                archive.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(input_path, archive)
+            _archive_input_file(input_path, archive, input_hash=input_hash)
     return report | {"artifact": artifact, "would_write": not dry_run}
 
 def main(argv: list[str] | None = None) -> int:

@@ -38,6 +38,8 @@ from bluefern_dispatches.care_line_sources import load_pressure_source_registry
 
 COLLECTION_RUNS_ROOT = Path("data/dispatches/care-line/collection-runs")
 REVIEW_ROOT = Path("data/dispatches/care-line/review")
+SMOKE_COLLECTION_RUNS_ROOT = COLLECTION_RUNS_ROOT / "smoke"
+SMOKE_REVIEW_ROOT = REVIEW_ROOT / "smoke"
 WORKING_REVIEW_QUEUE_PATH = REVIEW_ROOT / "current-review-queue.json"
 WORKING_BACKLOG_PATH = REVIEW_ROOT / "current-review-backlog.json"
 WORKING_EXCLUSIONS_PATH = REVIEW_ROOT / "current-exclusions.json"
@@ -48,6 +50,8 @@ REVIEW_SNAPSHOT_ROOT = REVIEW_ROOT / "signal-reviews"
 LEGACY_PRESSURE_REGISTRY_PATH = Path("data/dispatches/care-line/pressure_source_registry.json")
 CANONICAL_REGISTRY_PATH = Path("data/dispatches/care-line/source_registry.json")
 CANDIDATE_REGISTRY_PATH = REVIEW_ROOT / "candidate-registry.json"
+SMOKE_SOURCE_LIMIT_CEILING = 3
+SMOKE_ITEMS_PER_SOURCE_CEILING = 3
 
 PIPELINE_SCHEMA_VERSION = "bluefern.care_line.national_pipeline.v2"
 RAW_ITEM_SCHEMA_VERSION = "bluefern.care_line.raw_item.v1"
@@ -398,6 +402,36 @@ def _stable_id(prefix: str, *parts: Any) -> str:
 
 def _registry_path(root: Path, registry_path: Path | None = None) -> Path:
     return root / (registry_path or CANONICAL_REGISTRY_PATH)
+
+
+def _review_state_paths(review_root: Path) -> dict[str, Path]:
+    return {
+        "review_queue": review_root / "current-review-queue.json",
+        "backlog": review_root / "current-review-backlog.json",
+        "exclusions": review_root / "current-exclusions.json",
+        "duplicates": review_root / "current-duplicates.json",
+        "failed_extractions": review_root / "current-failed-extractions.json",
+        "manual_review": review_root / "current-manual-review.json",
+        "snapshot_root": review_root / "signal-reviews",
+        "candidate_registry": review_root / "candidate-registry.json",
+    }
+
+
+def _review_state_mode(*, smoke_test: bool, review_root: Path) -> str:
+    return "isolated_smoke" if smoke_test and review_root == SMOKE_REVIEW_ROOT else "custom" if review_root != REVIEW_ROOT else "production"
+
+
+def _sorted_smoke_source_rows(source_rows: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    readiness_rank = {"AUTOMATED_READY": 0, "AUTOMATED_PARTIAL": 1, "MANUAL_REVIEW_ONLY": 2}
+    normalized = [dict(row) for row in source_rows]
+    normalized.sort(
+        key=lambda row: (
+            readiness_rank.get(str(row.get("readiness") or ""), 9),
+            str(row.get("source_id") or ""),
+            getattr(row.get("source"), "feed_url", ""),
+        )
+    )
+    return normalized
 
 
 def load_canonical_registry(root: Path, *, include_disabled: bool = True, registry_path: Path | None = None) -> CareLineSourceRegistry:
@@ -1151,18 +1185,25 @@ def build_run_key(*, run_date: str, source_ids: Iterable[str]) -> str:
     return stable_json_hash({"run_date": run_date, "source_ids": normalized})[:12]
 
 
-def build_run_id(root: Path, *, run_date: str, source_ids: Iterable[str]) -> str:
+def build_run_id(root: Path, *, run_date: str, source_ids: Iterable[str], collection_runs_root: Path = COLLECTION_RUNS_ROOT) -> str:
     run_key = build_run_key(run_date=run_date, source_ids=source_ids)
-    run_root = root / COLLECTION_RUNS_ROOT / run_date
+    run_root = root / collection_runs_root / run_date
     existing = sorted(path.name for path in run_root.glob(f"{run_date.replace('-', '')}-{run_key}-*") if path.is_dir())
     suffix = len(existing) + 1
     return f"{run_date.replace('-', '')}-{run_key}-{suffix:02d}"
 
 
-def begin_collection_run(root: Path, *, run_date: str, source_rows: Iterable[dict[str, Any]], settings: Mapping[str, Any]) -> dict[str, Any]:
+def begin_collection_run(
+    root: Path,
+    *,
+    run_date: str,
+    source_rows: Iterable[dict[str, Any]],
+    settings: Mapping[str, Any],
+    collection_runs_root: Path = COLLECTION_RUNS_ROOT,
+) -> dict[str, Any]:
     source_ids = [_text(row, "source_id") for row in source_rows]
-    run_id = build_run_id(root, run_date=run_date, source_ids=source_ids)
-    run_dir = root / COLLECTION_RUNS_ROOT / run_date / run_id
+    run_id = build_run_id(root, run_date=run_date, source_ids=source_ids, collection_runs_root=collection_runs_root)
+    run_dir = root / collection_runs_root / run_date / run_id
     manifest = {
         "schema_version": PIPELINE_SCHEMA_VERSION,
         "run_id": run_id,
@@ -2720,6 +2761,10 @@ def build_review_queue(
 
 def update_candidate_registry(root: Path, *, edition_date: str, candidates: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
     path = root / CANDIDATE_REGISTRY_PATH
+    return update_candidate_registry_at_path(path, edition_date=edition_date, candidates=candidates)
+
+
+def update_candidate_registry_at_path(path: Path, *, edition_date: str, candidates: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
     existing = _load_json(path, {"schema_version": CANDIDATE_REGISTRY_SCHEMA_VERSION, "candidates": []})
     existing_by_id = {
         str(row.get("candidate_id") or ""): dict(row)
@@ -2781,8 +2826,9 @@ def write_review_snapshot(
     edition_date: str,
     queue_payload: Mapping[str, Any],
     legacy_fallback_path: str = "",
+    review_snapshot_root: Path = REVIEW_SNAPSHOT_ROOT,
 ) -> dict[str, Any]:
-    snapshot_path = root / REVIEW_SNAPSHOT_ROOT / f"{edition_date}.json"
+    snapshot_path = root / review_snapshot_root / f"{edition_date}.json"
     payload = {
         "schema_version": SNAPSHOT_SCHEMA_VERSION,
         "edition_date": edition_date,
@@ -2804,6 +2850,7 @@ def validate_review_snapshot(
     snapshot_sha256: str,
     allow_legacy_fallback: bool = False,
     fallback_queue_path: str = "",
+    review_snapshot_root: Path = REVIEW_SNAPSHOT_ROOT,
 ) -> dict[str, Any]:
     path = root / snapshot_path
     if path.exists():
@@ -2872,8 +2919,9 @@ def run_collection_attempt(
     allow_insecure_tls: bool = False,
     fetch_timeout: int = 20,
     max_items_per_source: int = 25,
+    collection_runs_root: Path = COLLECTION_RUNS_ROOT,
 ) -> dict[str, Any]:
-    run_dir = root / COLLECTION_RUNS_ROOT / run_date / run_id
+    run_dir = root / collection_runs_root / run_date / run_id
     source = source_row["source"]
     started_at = utc_now()
     if not isinstance(source, CareLineSource):
@@ -3053,10 +3101,12 @@ def _write_review_private_outputs(
     exclusions: list[Mapping[str, Any]],
     failed_extractions: list[Mapping[str, Any]],
     manual_review: list[Mapping[str, Any]],
+    review_root: Path = REVIEW_ROOT,
 ) -> None:
-    _atomic_write(root / WORKING_REVIEW_QUEUE_PATH, queue_payload)
+    review_paths = _review_state_paths(review_root)
+    _atomic_write(root / review_paths["review_queue"], queue_payload)
     _atomic_write(
-        root / WORKING_BACKLOG_PATH,
+        root / review_paths["backlog"],
         {
             "schema_version": REVIEW_QUEUE_SCHEMA_VERSION,
             "edition_date": queue_payload.get("edition_date", ""),
@@ -3065,7 +3115,7 @@ def _write_review_private_outputs(
         },
     )
     _atomic_write(
-        root / WORKING_DUPLICATES_PATH,
+        root / review_paths["duplicates"],
         {
             "schema_version": REVIEW_QUEUE_SCHEMA_VERSION,
             "edition_date": queue_payload.get("edition_date", ""),
@@ -3074,7 +3124,7 @@ def _write_review_private_outputs(
         },
     )
     _atomic_write(
-        root / WORKING_EXCLUSIONS_PATH,
+        root / review_paths["exclusions"],
         {
             "schema_version": EXCLUSION_SCHEMA_VERSION,
             "excluded_item_count": len(exclusions),
@@ -3082,7 +3132,7 @@ def _write_review_private_outputs(
         },
     )
     _atomic_write(
-        root / WORKING_FAILED_EXTRACTIONS_PATH,
+        root / review_paths["failed_extractions"],
         {
             "schema_version": EXCLUSION_SCHEMA_VERSION,
             "failed_extraction_count": len(failed_extractions),
@@ -3090,7 +3140,7 @@ def _write_review_private_outputs(
         },
     )
     _atomic_write(
-        root / WORKING_MANUAL_REVIEW_PATH,
+        root / review_paths["manual_review"],
         {
             "schema_version": EXCLUSION_SCHEMA_VERSION,
             "manual_review_count": len(manual_review),
@@ -3130,11 +3180,17 @@ def run_national_pipeline(
     max_items_per_source: int = 25,
     active_queue_limit: int = 150,
     low_priority_cap: int = 25,
+    smoke_test: bool = False,
+    collection_runs_root: Path = COLLECTION_RUNS_ROOT,
+    review_root: Path = REVIEW_ROOT,
 ) -> dict[str, Any]:
     registry = load_canonical_registry(root, include_disabled=True)
     source_rows = collectable_sources(registry, include_partial=include_partial, include_manual_review=include_manual_review)
+    if smoke_test:
+        source_rows = _sorted_smoke_source_rows(source_rows)
     if source_limit is not None:
         source_rows = source_rows[:source_limit]
+    review_paths = _review_state_paths(review_root)
     settings = {
         "include_partial": include_partial,
         "include_manual_review": include_manual_review,
@@ -3144,8 +3200,17 @@ def run_national_pipeline(
         "max_items_per_source": max_items_per_source,
         "active_queue_limit": active_queue_limit,
         "low_priority_cap": low_priority_cap,
+        "smoke_test": smoke_test,
+        "collection_runs_root": collection_runs_root.as_posix(),
+        "review_root": review_root.as_posix(),
     }
-    manifest = begin_collection_run(root, run_date=run_date, source_rows=source_rows, settings=settings)
+    manifest = begin_collection_run(
+        root,
+        run_date=run_date,
+        source_rows=source_rows,
+        settings=settings,
+        collection_runs_root=collection_runs_root,
+    )
     run_id = manifest["run_id"]
     attempts = []
     raw_items: list[dict[str, Any]] = []
@@ -3163,6 +3228,7 @@ def run_national_pipeline(
             allow_insecure_tls=allow_insecure_tls,
             fetch_timeout=fetch_timeout,
             max_items_per_source=max_items_per_source,
+            collection_runs_root=collection_runs_root,
         )
         attempts.append(result["attempt"])
         raw_items.extend(result["raw_items"])
@@ -3171,9 +3237,16 @@ def run_national_pipeline(
         exclusions.extend(result["exclusions"])
         failed_extractions.extend(result["failed_extractions"])
         manual_review.extend(result.get("manual_review", []))
-    candidate_registry = update_candidate_registry(root, edition_date=run_date, candidates=candidates)
+    candidate_registry = update_candidate_registry_at_path(root / review_paths["candidate_registry"], edition_date=run_date, candidates=candidates)
     queue_payload = build_review_queue(candidate_registry["candidates"], edition_date=run_date, active_queue_limit=active_queue_limit, low_priority_cap=low_priority_cap)
-    _write_review_private_outputs(root, queue_payload=queue_payload, exclusions=exclusions, failed_extractions=failed_extractions, manual_review=manual_review)
+    _write_review_private_outputs(
+        root,
+        queue_payload=queue_payload,
+        exclusions=exclusions,
+        failed_extractions=failed_extractions,
+        manual_review=manual_review,
+        review_root=review_root,
+    )
     collection_status_counts = Counter(str(attempt.get("collection_status") or "unknown") for attempt in attempts)
     successful_attempt_count = sum(collection_status_counts.get(key, 0) for key in ("ok", "partial"))
     failed_source_count = collection_status_counts.get("failed", 0)
@@ -3199,6 +3272,14 @@ def run_national_pipeline(
         "failed_source_count": failed_source_count,
         "skipped_source_count": skipped_source_count,
         "collection_status_counts": dict(sorted(collection_status_counts.items())),
+        "smoke_test": smoke_test,
+        "selected_source_ids": list(manifest["source_ids"]),
+        "production_review_queue_mutation_disabled": smoke_test,
+        "review_state_mode": _review_state_mode(smoke_test=smoke_test, review_root=review_root),
+        "collection_runs_root": collection_runs_root.as_posix(),
+        "review_root": review_root.as_posix(),
+        "review_queue_path": (review_paths["review_queue"]).as_posix(),
+        "candidate_registry_path": (review_paths["candidate_registry"]).as_posix(),
         "raw_items_retrieved_this_run": len(raw_items),
         "event_leads_created_this_run": sum(1 for lead in event_leads if _text(lead, "qualification_status") == "event_lead"),
         "qualified_candidates_created_this_run": candidate_registry["created_this_run"],
@@ -3215,7 +3296,8 @@ def run_national_pipeline(
         "stale_candidate_count": candidate_registry["stale_candidate_count"],
         "superseded_candidate_count": candidate_registry["superseded_candidate_count"],
     }
-    _atomic_write(root / COLLECTION_RUNS_ROOT / run_date / run_id / "run-manifest.json", final_manifest)
+    final_manifest["run_manifest_path"] = (collection_runs_root / run_date / run_id / "run-manifest.json").as_posix()
+    _atomic_write(root / collection_runs_root / run_date / run_id / "run-manifest.json", final_manifest)
     return {
         "schema_version": PIPELINE_SCHEMA_VERSION,
         "run_manifest": final_manifest,

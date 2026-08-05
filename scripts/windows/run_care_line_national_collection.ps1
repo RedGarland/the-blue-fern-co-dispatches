@@ -4,11 +4,13 @@ param(
     [string]$PythonExecutable = "",
     [string]$SourceBranch = "agent/refine-care-line-signal-wire-public-rendering",
     [string]$RunDate = "",
+    [switch]$SmokeTest,
+    [int]$MaxSources = 0,
     [switch]$IncludeManualReview,
     [switch]$ExcludePartial,
     [switch]$AllowInsecureTls,
     [int]$FetchTimeout = 20,
-    [int]$MaxItemsPerSource = 25,
+    [int]$MaxItemsPerSource = 0,
     [int]$ActiveQueueLimit = 150,
     [int]$LowPriorityCap = 25
 )
@@ -31,10 +33,21 @@ $arguments = @(
     "--run-date", $RunDate,
     "--branch", $SourceBranch,
     "--fetch-timeout", $FetchTimeout,
-    "--max-items-per-source", $MaxItemsPerSource,
     "--active-queue-limit", $ActiveQueueLimit,
     "--low-priority-cap", $LowPriorityCap
 )
+if ($SmokeTest) {
+    $arguments += "--smoke-test"
+    if (-not $PSBoundParameters.ContainsKey("MaxSources") -or $MaxSources -le 0) {
+        throw "Smoke-test mode requires a positive -MaxSources value."
+    }
+    if (-not $PSBoundParameters.ContainsKey("MaxItemsPerSource") -or $MaxItemsPerSource -le 0) {
+        throw "Smoke-test mode requires a positive -MaxItemsPerSource value."
+    }
+    $arguments += @("--max-sources", $MaxSources, "--max-items-per-source", $MaxItemsPerSource)
+} elseif ($PSBoundParameters.ContainsKey("MaxSources") -or $PSBoundParameters.ContainsKey("MaxItemsPerSource")) {
+    throw "MaxSources and MaxItemsPerSource are smoke-test-only parameters."
+}
 if ($IncludeManualReview) { $arguments += "--include-manual-review" }
 if ($ExcludePartial) { $arguments += "--exclude-partial" }
 if ($AllowInsecureTls) { $arguments += "--allow-insecure-tls" }

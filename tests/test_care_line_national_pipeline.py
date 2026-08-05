@@ -7,6 +7,8 @@ from pathlib import Path
 import pytest
 
 from bluefern_dispatches.care_line_national_pipeline import (
+    SMOKE_COLLECTION_RUNS_ROOT,
+    SMOKE_REVIEW_ROOT,
     WORKING_BACKLOG_PATH,
     WORKING_DUPLICATES_PATH,
     WORKING_EXCLUSIONS_PATH,
@@ -679,6 +681,41 @@ def test_national_pipeline_reports_explicit_counts_and_queue_files(repo_copy: Pa
     assert (repo_copy / WORKING_DUPLICATES_PATH).exists()
     assert (repo_copy / WORKING_FAILED_EXTRACTIONS_PATH).exists()
     assert (repo_copy / WORKING_MANUAL_REVIEW_PATH).exists()
+
+
+def test_national_pipeline_smoke_mode_isolates_review_state_and_selects_sources_deterministically(repo_copy: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    registry = load_canonical_registry(repo_copy, include_disabled=True)
+    selected = [row for row in collectable_sources(registry, include_partial=True) if row["source"].source_id in {"cdc-newsroom", "acp-news", "beckers-hospital-review"}]
+    monkeypatch.setattr(
+        "bluefern_dispatches.care_line_national_pipeline.collectable_sources",
+        lambda registry, include_partial=True, include_manual_review=False: list(reversed(selected)),
+    )
+    monkeypatch.setattr(
+        "bluefern_dispatches.care_line_national_pipeline.fetch_source",
+        lambda source, timeout=20, allow_insecure_tls=False: (
+            f"<rss><channel><item><title>{source.source_id} closes clinic</title><link>https://example.org/{source.source_id}</link><pubDate>Tue, 04 Aug 2026 12:00:00 GMT</pubDate><description>{source.source_id} will close the clinic and redirect patients.</description></item></channel></rss>".encode("utf-8"),
+            {"http_status": 200, "final_url": source.feed_url},
+        ),
+    )
+    result = run_national_pipeline(
+        repo_copy,
+        run_date="2026-08-04",
+        include_partial=True,
+        source_limit=2,
+        max_items_per_source=1,
+        smoke_test=True,
+        collection_runs_root=SMOKE_COLLECTION_RUNS_ROOT,
+        review_root=SMOKE_REVIEW_ROOT,
+    )
+    manifest = result["run_manifest"]
+    assert manifest["smoke_test"] is True
+    assert manifest["selected_source_ids"] == ["acp-news", "beckers-hospital-review"]
+    assert manifest["production_review_queue_mutation_disabled"] is True
+    assert manifest["review_state_mode"] == "isolated_smoke"
+    assert (repo_copy / SMOKE_REVIEW_ROOT / "current-review-queue.json").exists()
+    assert (repo_copy / SMOKE_REVIEW_ROOT / "candidate-registry.json").exists()
+    assert (repo_copy / SMOKE_COLLECTION_RUNS_ROOT / "2026-08-04" / manifest["run_id"] / "run-manifest.json").exists()
+    assert not (repo_copy / WORKING_REVIEW_QUEUE_PATH).exists()
 
 
 def test_pipeline_rerun_preserves_first_seen_and_reports_prior_candidates(repo_copy: Path, monkeypatch: pytest.MonkeyPatch) -> None:

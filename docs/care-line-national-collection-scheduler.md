@@ -3,11 +3,11 @@
 The Care Line national scheduler is collection-only. It never approves,
 generates, syncs Pages, publishes, or pushes.
 
-Use a dedicated clean runner checkout. For Phase G implementation on this
-machine, the validated runner path is:
+Use a dedicated clean runner checkout. The permanent operational path on this
+machine is:
 
 ```text
-C:\tmp\care-line-phase-g-source
+C:\BlueFernRunner\CareLineNational
 ```
 
 The scheduler invokes the canonical intake entrypoint through a narrow wrapper:
@@ -57,6 +57,46 @@ If a prior run is still active, the next trigger exits cleanly as
 - updates the mutable review queue and companion review files
 - writes a scheduler receipt and log
 
+## Bounded smoke-test mode
+
+Smoke mode is explicit only. It is never part of the installed production task
+action.
+
+Wrapper flags:
+
+- `-SmokeTest`
+- `-MaxSources`
+- `-MaxItemsPerSource`
+
+Helper flags:
+
+- `--smoke-test`
+- `--max-sources`
+- `--max-items-per-source`
+
+Hard ceilings:
+
+- maximum sources: `3`
+- maximum items per source: `3`
+
+Smoke mode rejects:
+
+- insecure TLS
+- zero or negative limits
+- limits above the hard ceilings
+- smoke limits when smoke mode is not explicitly enabled
+
+Smoke artifacts are isolated from production scheduler and review-state files:
+
+- `logs/care-line/collection-scheduler/smoke/`
+- `status/care-line/scheduler-runs/smoke/`
+- `status/care-line/locks/smoke/`
+- `data/dispatches/care-line/collection-runs/smoke/`
+- `data/dispatches/care-line/review/smoke/`
+
+Smoke mode records deterministic selected source IDs and keeps production review
+queue mutation disabled.
+
 ## What the task does not do
 
 - approve review items
@@ -88,8 +128,8 @@ Dry-run setup check:
 ```powershell
 powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass `
   -File "C:\tmp\care-line-phase-g-source\scripts\windows\setup_care_line_collection_tasks.ps1" `
-  -RepositoryRoot "C:\tmp\care-line-phase-g-source" `
-  -PythonExecutable "C:\tmp\care-line-phase-g-source\.venv\Scripts\python.exe" `
+  -RepositoryRoot "C:\BlueFernRunner\CareLineNational" `
+  -PythonExecutable "C:\BlueFernRunner\CareLineNational\.venv\Scripts\python.exe" `
   -CheckOnly
 ```
 
@@ -98,16 +138,29 @@ Manual one-shot collection run:
 ```powershell
 powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass `
   -File "C:\tmp\care-line-phase-g-source\scripts\windows\run_care_line_national_collection.ps1" `
-  -RepositoryRoot "C:\tmp\care-line-phase-g-source" `
-  -PythonExecutable "C:\tmp\care-line-phase-g-source\.venv\Scripts\python.exe" `
+  -RepositoryRoot "C:\BlueFernRunner\CareLineNational" `
+  -PythonExecutable "C:\BlueFernRunner\CareLineNational\.venv\Scripts\python.exe" `
   -RunDate "2026-08-05"
+```
+
+Manual bounded smoke test:
+
+```powershell
+powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass `
+  -File "C:\BlueFernRunner\CareLineNational\scripts\windows\run_care_line_national_collection.ps1" `
+  -RepositoryRoot "C:\BlueFernRunner\CareLineNational" `
+  -PythonExecutable "C:\BlueFernRunner\CareLineNational\.venv\Scripts\python.exe" `
+  -RunDate "2026-08-05" `
+  -SmokeTest `
+  -MaxSources 3 `
+  -MaxItemsPerSource 3
 ```
 
 Registration after validation:
 
 ```powershell
 powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass `
-  -File "C:\tmp\care-line-phase-g-source\scripts\windows\setup_care_line_collection_tasks.ps1" `
-  -RepositoryRoot "C:\tmp\care-line-phase-g-source" `
-  -PythonExecutable "C:\tmp\care-line-phase-g-source\.venv\Scripts\python.exe"
+  -File "C:\BlueFernRunner\CareLineNational\scripts\windows\setup_care_line_collection_tasks.ps1" `
+  -RepositoryRoot "C:\BlueFernRunner\CareLineNational" `
+  -PythonExecutable "C:\BlueFernRunner\CareLineNational\.venv\Scripts\python.exe"
 ```

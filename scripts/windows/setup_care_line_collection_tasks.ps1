@@ -1,7 +1,7 @@
 [CmdletBinding(SupportsShouldProcess)]
 param(
-    [string]$RepositoryRoot = "C:\tmp\care-line-phase-g-source",
-    [string]$PythonExecutable = "C:\tmp\care-line-phase-g-source\.venv\Scripts\python.exe",
+    [string]$RepositoryRoot = "C:\BlueFernRunner\CareLineNational",
+    [string]$PythonExecutable = "C:\BlueFernRunner\CareLineNational\.venv\Scripts\python.exe",
     [string]$SourceBranch = "agent/refine-care-line-signal-wire-public-rendering",
     [string]$UserId = "",
     [string]$TaskPath = "\Blue Fern Co.\",
@@ -49,6 +49,7 @@ function Add-LocalOperationalExcludes {
         "logs/care-line/",
         "status/care-line/",
         "data/dispatches/care-line/collection-runs/",
+        "data/dispatches/care-line/review/smoke/",
         "data/dispatches/care-line/review/candidate-registry.json",
         "data/dispatches/care-line/review/current-review-queue.json",
         "data/dispatches/care-line/review/current-review-backlog.json",
@@ -103,11 +104,6 @@ $effectiveUser = if ($UserId) { $UserId } elseif ($existing) { $existing.Princip
 $principalLogon = if ($existing) { [string]$existing.Principal.LogonType } else { "S4U" }
 
 $arguments = "-NoProfile -NonInteractive -ExecutionPolicy Bypass -File `"$runner`" -RepositoryRoot `"$RepositoryRoot`" -PythonExecutable `"$PythonExecutable`" -SourceBranch `"$SourceBranch`""
-$triggers = @(
-    (New-ScheduledTaskTrigger -Daily -At ([datetime]::Today.AddHours(6))),
-    (New-ScheduledTaskTrigger -Daily -At ([datetime]::Today.AddHours(12))),
-    (New-ScheduledTaskTrigger -Daily -At ([datetime]::Today.AddHours(18)))
-)
 $planned = [pscustomobject]@{
     task_path = $TaskPath
     task_name = $TaskName
@@ -141,6 +137,11 @@ $checkResult | ConvertTo-Json -Depth 8
 if ($CheckOnly) { return }
 
 Add-LocalOperationalExcludes -Root $RepositoryRoot
+$triggers = @(
+    (New-ScheduledTaskTrigger -Daily -At ([datetime]::Today.AddHours(6))),
+    (New-ScheduledTaskTrigger -Daily -At ([datetime]::Today.AddHours(12))),
+    (New-ScheduledTaskTrigger -Daily -At ([datetime]::Today.AddHours(18)))
+)
 $action = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument $arguments -WorkingDirectory $RepositoryRoot
 $principal = if ($existing) {
     New-ScheduledTaskPrincipal -UserId $existing.Principal.UserId -LogonType $existing.Principal.LogonType -RunLevel $existing.Principal.RunLevel

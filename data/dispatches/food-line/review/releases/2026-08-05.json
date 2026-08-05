@@ -31,7 +31,7 @@
       "pages_path": "food-line/editions/2026-08-05/edition_manifest.json",
       "pages_sha256_before": null,
       "source_path": "output/site/food-line/editions/2026-08-05/edition_manifest.json",
-      "source_sha256": "307c416a840043db8c4dd71cfcedec64619ce3d392b494401872bda2dfb53086"
+      "source_sha256": "b267d9bf1f92a7984367c4ee393b6abefe190d141acfb4d1ec758ec2b62b1f17"
     },
     {
       "action": "add",
@@ -73,5 +73,5 @@
   "review_snapshot_sha256": "dec2b94894154407a18472abc4390c94dba227b45a17e6fe81b2ffa98e1b63b8",
   "schema_version": "food_line_release_manifest_v1",
   "shared_files": [],
-  "source_commit": "a0ed0ca4a7f5770b5d3b9dc8dcd0c4866215b9be"
+  "source_commit": "e6fe82e436f10429ebcb14158af7255f267e6c7a"
 }

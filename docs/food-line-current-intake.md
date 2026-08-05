@@ -17,7 +17,7 @@ python scripts/run_food_line_discovery_expansion.py `
   --profile daily-current `
   --max-run-minutes 30 `
   --export-agent-inbox `
-  --agent-inbox-dir data/dispatches/food-line/agent-inbox
+  --agent-inbox-dir status/food-line/runtime/agent-inbox
 ```
 
 The export flag is opt-in. Source watch writes its normal discovery candidates
@@ -44,7 +44,7 @@ Run it explicitly from the source repository:
 ```powershell
 python scripts/process_food_line_current_intake.py `
   --edition-date YYYY-MM-DD `
-  --inbox data/dispatches/food-line/agent-inbox `
+  --inbox status/food-line/runtime/agent-inbox `
   --build-review-queue `
   --build-proposed-edition
 ```

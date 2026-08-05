@@ -7,6 +7,7 @@ import pytest
 
 from bluefern_dispatches.food_line_agent_export import export_food_line_agent_run
 from bluefern_dispatches.food_line_current_intake import process_batch
+from bluefern_dispatches.food_line_current_review import PRIVATE_AGENT_INBOX_ROOT, PRIVATE_QUEUE_PATH
 from bluefern_dispatches.food_line_discovery_expansion import build_parser, run_food_line_discovery_expansion
 from scripts.import_food_line_agent_findings import validate_input
 
@@ -52,7 +53,7 @@ def _candidate(**overrides):
 
 def _export(tmp_path: Path, rows, **kwargs):
     return export_food_line_agent_run(
-        list(rows), edition_date=DATE, destination=tmp_path / "data/dispatches/food-line/agent-inbox",
+        list(rows), edition_date=DATE, destination=tmp_path / PRIVATE_AGENT_INBOX_ROOT,
         started_at=STAMP, completed_at="2026-08-01T08:01:00Z", agent_run_id=RUN_ID,
         **kwargs,
     )
@@ -113,7 +114,7 @@ def test_atomic_failure_leaves_no_partial_file(tmp_path: Path, monkeypatch):
     monkeypatch.setattr(module.os, "replace", lambda *_args: (_ for _ in ()).throw(OSError("synthetic rename failure")))
     with pytest.raises(OSError, match="synthetic rename failure"):
         _export(tmp_path, [_candidate()])
-    inbox = tmp_path / "data/dispatches/food-line/agent-inbox"
+    inbox = tmp_path / PRIVATE_AGENT_INBOX_ROOT
     assert not list(inbox.glob("*.json")) and not list(inbox.glob("*.tmp"))
 
 
@@ -130,7 +131,7 @@ def test_end_to_end_private_smoke_and_rerun(tmp_path: Path):
     assert dry["dry_run_count"] == 1 and not (tmp_path / "data/dispatches/food-line/agent-intake").exists()
     first = process_batch(tmp_path, edition_date=DATE, inbox=exported.parent, build_review_queue=True, build_proposed=True)
     second = process_batch(tmp_path, edition_date=DATE, inbox=exported.parent, build_review_queue=True, build_proposed=True)
-    queue = json.loads((tmp_path / "data/dispatches/food-line/review/current-signal-review.json").read_text(encoding="utf-8"))
+    queue = json.loads((tmp_path / PRIVATE_QUEUE_PATH).read_text(encoding="utf-8"))
     proposal = json.loads((tmp_path / "data/dispatches/food-line/review/proposed-editions/2026-08-01.json").read_text(encoding="utf-8"))
     assert first["import_count"] == 1 and second["import_count"] == 0 and second["discovered_file_count"] == 0
     assert len(queue["items"]) == 1 and proposal["draft_status"] == "draft_pending_editorial_review"
@@ -150,4 +151,4 @@ def test_source_watch_zero_run_records_export_result_without_empty_inbox_file(tm
     audit = json.loads((tmp_path / "output/review/food-line/2026-08-01/discovery_audit.json").read_text(encoding="utf-8"))
     assert result["agent_inbox_export"]["status"] == "no_exportable_findings"
     assert audit["agent_inbox_export"]["mutation"] == "none"
-    assert not list((tmp_path / "data/dispatches/food-line/agent-inbox").glob("*.json"))
+    assert not list((tmp_path / PRIVATE_AGENT_INBOX_ROOT).glob("*.json"))

@@ -8,12 +8,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from bluefern_dispatches.food_line_current_intake import process_batch
+from bluefern_dispatches.food_line_current_review import PRIVATE_AGENT_INBOX_ROOT
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Process the private Food Line current-signal inbox through editorial review.")
     parser.add_argument("--edition-date", required=True)
-    parser.add_argument("--inbox", type=Path, default=Path("data/dispatches/food-line/agent-inbox"))
+    parser.add_argument("--inbox", type=Path, default=Path(PRIVATE_AGENT_INBOX_ROOT))
     parser.add_argument("--build-review-queue", action="store_true")
     parser.add_argument("--build-proposed-edition", action="store_true")
     parser.add_argument("--dry-run", action="store_true")

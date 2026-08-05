@@ -349,7 +349,7 @@ def test_dirty_checkout_fails_closed(tmp_path: Path) -> None:
         scheduler.verify_checkout(root, scheduler.PRODUCTION_BRANCH, update=False)
 
 
-def test_operational_current_queue_dirty_path_is_allowed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_runtime_queue_dirty_path_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     root = _root(tmp_path)
 
     def fake_run(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
@@ -358,7 +358,7 @@ def test_operational_current_queue_dirty_path_is_allowed(tmp_path: Path, monkeyp
             return subprocess.CompletedProcess(
                 command,
                 0,
-                " M data/dispatches/food-line/review/current-signal-review.json\n",
+                " M status/food-line/runtime/current-signal-review.json\n",
                 "",
             )
         if "branch --show-current" in joined:
@@ -368,7 +368,8 @@ def test_operational_current_queue_dirty_path_is_allowed(tmp_path: Path, monkeyp
         return subprocess.CompletedProcess(command, 0, "", "")
 
     monkeypatch.setattr(scheduler, "_run", fake_run)
-    assert scheduler.verify_checkout(root, scheduler.PRODUCTION_BRANCH, update=False) == "abc123"
+    with pytest.raises(scheduler.SchedulerError, match="dirty"):
+        scheduler.verify_checkout(root, scheduler.PRODUCTION_BRANCH, update=False)
 
 
 def test_non_fast_forward_checkout_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

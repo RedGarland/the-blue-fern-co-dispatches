@@ -18,13 +18,17 @@ ALLOWED_DECISIONS = ("approve", "approve_with_edit", "hold", "reject")
 ALLOWED_EDITORIAL_STATUSES = ("pending_editorial_review", *ALLOWED_DECISIONS)
 HISTORICAL_ROOTS = ("data/agent-history", "data/agent-history-staging")
 CURRENT_SOURCE_PREFIXES = (
-    "data/dispatches/food-line/agent-inbox/",
+    "status/food-line/runtime/agent-inbox/",
     "data/dispatches/food-line/agent-intake/",
     "data/dispatches/food-line/discovery/",
     "data/dispatches/food-line/sources/",
     "output/review/food-line/",
 )
-PRIVATE_QUEUE_PATH = Path("data/dispatches/food-line/review/current-signal-review.json")
+LEGACY_PRIVATE_QUEUE_PATH = Path("data/dispatches/food-line/review/current-signal-review.json")
+PRIVATE_RUNTIME_ROOT = Path("status/food-line/runtime")
+PRIVATE_AGENT_INBOX_ROOT = PRIVATE_RUNTIME_ROOT / "agent-inbox"
+PRIVATE_PROCESSED_INBOX_ROOT = PRIVATE_AGENT_INBOX_ROOT / "processed"
+PRIVATE_QUEUE_PATH = PRIVATE_RUNTIME_ROOT / "current-signal-review.json"
 PRIVATE_PROPOSED_EDITION_ROOT = Path("data/dispatches/food-line/review/proposed-editions")
 PRIVATE_SIGNAL_REVIEW_ROOT = Path("data/dispatches/food-line/review/signal-reviews")
 
@@ -252,6 +256,12 @@ def load_queue(path: Path) -> dict[str, Any]:
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
+        legacy: Path | None = None
+        if path.is_absolute() and path.as_posix().endswith(PRIVATE_QUEUE_PATH.as_posix()):
+            legacy = path.parents[3] / LEGACY_PRIVATE_QUEUE_PATH
+        if legacy is not None and legacy.exists():
+            payload = json.loads(legacy.read_text(encoding="utf-8"))
+            return validate_queue(payload)
         raise ValueError(f"current review queue not found: {path}") from exc
     except json.JSONDecodeError as exc:
         raise ValueError(f"current review queue is invalid JSON: {path}") from exc

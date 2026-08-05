@@ -17,6 +17,7 @@ from .food_line_current_review import (
     ALLOWED_DECISIONS,
     CURRENT_PRODUCTION_SCOPE,
     HISTORICAL_ROOTS,
+    PRIVATE_AGENT_INBOX_ROOT,
     PRIVATE_PROPOSED_EDITION_ROOT,
     PRIVATE_QUEUE_PATH,
     QUEUE_SCHEMA_VERSION,
@@ -114,7 +115,7 @@ def process_batch(root: Path, *, edition_date: str, inbox: Path | None = None, b
                   build_proposed: bool = True, dry_run: bool = False) -> dict[str, Any]:
     """Validate, dry-run, and optionally import every JSON envelope in *inbox*."""
     root = root.resolve()
-    inbox = (root / "data/dispatches/food-line/agent-inbox") if inbox is None else inbox.resolve()
+    inbox = (root / PRIVATE_AGENT_INBOX_ROOT) if inbox is None else inbox.resolve()
     files = _discover(inbox) if inbox.exists() else []
     checks: list[tuple[Path, dict[str, Any], dict[str, Any] | None]] = []
     run_ids: dict[str, Path] = {}

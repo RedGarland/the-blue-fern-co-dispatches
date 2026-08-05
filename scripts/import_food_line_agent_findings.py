@@ -6,6 +6,7 @@ from typing import Any
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from bluefern_dispatches.adapters.food_line_agent import adapt_food_line_agent_output, map_finding_to_food_line_candidate
+from bluefern_dispatches.food_line_current_review import PRIVATE_AGENT_INBOX_ROOT, PRIVATE_PROCESSED_INBOX_ROOT
 
 def _atomic_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -81,13 +82,13 @@ def process(root: Path, input_path: Path, *, edition_date: str, agent_name: str,
     if not dry_run:
         _atomic_json(artifact_path, artifact)
         _atomic_json(root / "data/dispatches/food-line/agent-intake/reports" / edition_date / f"{effective_run}.json", report)
-        inbox = root / "data/dispatches/food-line/agent-inbox"
+        inbox = root / PRIVATE_AGENT_INBOX_ROOT
         try:
             input_path.resolve().relative_to(inbox.resolve())
         except ValueError:
             pass
         else:
-            archive = inbox / "processed" / edition_date / input_path.name
+            archive = root / PRIVATE_PROCESSED_INBOX_ROOT / edition_date / input_path.name
             _archive_input_file(input_path, archive, input_hash=input_hash)
     return report | {"artifact": artifact, "would_write": not dry_run}
 

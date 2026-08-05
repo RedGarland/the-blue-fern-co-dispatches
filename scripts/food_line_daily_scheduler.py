@@ -14,6 +14,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Iterable
 
+from bluefern_dispatches.food_line_current_review import PRIVATE_AGENT_INBOX_ROOT
 
 PRODUCTION_BRANCH = "agent/refine-care-line-signal-wire-public-rendering"
 QUALIFYING_COLLECTION_STATUSES = {"completed", "completed_with_exclusions"}
@@ -24,11 +25,6 @@ RUN_RECORD_SCHEMA = "food_line_scheduled_run_record_v1"
 SOURCE_RECEIPT_SCHEMA = "food_line_source_watch_receipt_v1"
 INTAKE_RECEIPT_SCHEMA = "food_line_current_intake_receipt_v1"
 ATTENTION_SCHEMA = "food_line_operator_attention_v1"
-ALLOWED_OPERATIONAL_DIRTY_PATHS = {
-    "data/dispatches/food-line/review/current-signal-review.json",
-}
-
-
 class SchedulerError(RuntimeError):
     """A fail-closed operational error."""
 
@@ -164,7 +160,7 @@ def _parse_porcelain_paths(output: str) -> list[str]:
 
 def _unexpected_dirty_paths(status_output: str) -> list[str]:
     dirty_paths = _parse_porcelain_paths(status_output)
-    return sorted(path for path in dirty_paths if path not in ALLOWED_OPERATIONAL_DIRTY_PATHS)
+    return sorted(dirty_paths)
 
 
 def verify_checkout(root: Path, branch: str, *, update: bool, test_mode: bool = False) -> str:
@@ -381,7 +377,7 @@ def run_source_watch(args: argparse.Namespace) -> int:
                     "--run-id", run_id,
                     "--max-run-minutes", "30",
                     "--export-agent-inbox",
-                    "--agent-inbox-dir", "data/dispatches/food-line/agent-inbox",
+                    "--agent-inbox-dir", str(PRIVATE_AGENT_INBOX_ROOT),
                 ],
             )
             command_exit = int(result.returncode)
@@ -482,7 +478,7 @@ def run_resume(args: argparse.Namespace) -> int:
                         "--date", edition_date,
                         "--resume-run", run_id,
                         "--export-agent-inbox",
-                        "--agent-inbox-dir", "data/dispatches/food-line/agent-inbox",
+                        "--agent-inbox-dir", str(PRIVATE_AGENT_INBOX_ROOT),
                     ],
                 )
                 command_exit = int(resumed.returncode)
@@ -554,7 +550,7 @@ def run_intake(args: argparse.Namespace) -> int:
             [
                 "scripts/process_food_line_current_intake.py",
                 "--edition-date", edition_date,
-                "--inbox", "data/dispatches/food-line/agent-inbox",
+                "--inbox", str(PRIVATE_AGENT_INBOX_ROOT),
                 "--build-review-queue",
                 "--build-proposed-edition",
             ],

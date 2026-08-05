@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 
 from bluefern_dispatches.food_line_current_intake import process_batch
+from bluefern_dispatches.food_line_current_review import PRIVATE_AGENT_INBOX_ROOT, PRIVATE_QUEUE_PATH
 
 
 def _row(**overrides):
@@ -67,7 +69,7 @@ def test_material_change_returns_decided_item_to_rereview(tmp_path: Path):
     source = inbox / "run.json"
     source.write_text(json.dumps(_envelope("run-one", _row())), encoding="utf-8")
     process_batch(tmp_path, edition_date="2026-08-01", inbox=inbox, build_review_queue=True)
-    queue_path = tmp_path / "data/dispatches/food-line/review/current-signal-review.json"
+    queue_path = tmp_path / PRIVATE_QUEUE_PATH
     queue = json.loads(queue_path.read_text(encoding="utf-8"))
     queue["items"][0]["editorial_status"] = "approve"
     queue["items"][0]["editorial_note"] = "Approved before source revision."
@@ -96,7 +98,7 @@ def test_repeat_batch_is_idempotent_and_preserves_operator_decision(tmp_path: Pa
     inbox = tmp_path / "inbox"; inbox.mkdir()
     source = inbox / "run.json"; source.write_text(json.dumps(_envelope("run-one", _row())), encoding="utf-8")
     first = process_batch(tmp_path, edition_date="2026-08-01", inbox=inbox, build_review_queue=True, build_proposed=True)
-    queue_path = tmp_path / "data/dispatches/food-line/review/current-signal-review.json"
+    queue_path = tmp_path / PRIVATE_QUEUE_PATH
     queue = json.loads(queue_path.read_text(encoding="utf-8"))
     queue["items"][0]["editorial_status"] = "approve"
     queue["items"][0]["editorial_note"] = "Operator approved draft assembly."
@@ -111,3 +113,34 @@ def test_repeat_batch_is_idempotent_and_preserves_operator_decision(tmp_path: Pa
     assert final["items"][0]["editorial_status"] == "approve"
     assert final["items"][0]["decision_audit"]["decided_at"] == "2026-08-01T02:00:00Z"
     assert second["proposal"]["draft_status"] == "draft_approved_pending_publication"
+
+
+def test_runtime_queue_updates_keep_tracked_checkout_clean(tmp_path: Path):
+    repo = tmp_path / "repo"
+    subprocess.run(["git", "init", "-b", "main", str(repo)], check=True, capture_output=True)
+    subprocess.run(["git", "-C", str(repo), "config", "user.name", "Test User"], check=True, capture_output=True)
+    subprocess.run(["git", "-C", str(repo), "config", "user.email", "test@example.com"], check=True, capture_output=True)
+    (repo / ".gitignore").write_text("status/\n", encoding="utf-8")
+    exclude = repo / ".git" / "info" / "exclude"
+    exclude.write_text("data/dispatches/food-line/agent-intake/\ndata/dispatches/food-line/review/\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(repo), "add", ".gitignore"], check=True, capture_output=True)
+    subprocess.run(["git", "-C", str(repo), "commit", "-m", "init"], check=True, capture_output=True)
+
+    inbox = repo / PRIVATE_AGENT_INBOX_ROOT
+    inbox.mkdir(parents=True)
+    (inbox / "run.json").write_text(json.dumps(_envelope("run-one", _row())), encoding="utf-8")
+
+    process_batch(repo, edition_date="2026-08-01", inbox=inbox, build_review_queue=True, build_proposed=True)
+
+    queue = json.loads((repo / PRIVATE_QUEUE_PATH).read_text(encoding="utf-8"))
+    queue["items"][0]["editorial_status"] = "approve"
+    from bluefern_dispatches.food_line_current_review import write_json_atomic
+    write_json_atomic(repo / PRIVATE_QUEUE_PATH, queue)
+
+    status = subprocess.run(
+        ["git", "-C", str(repo), "status", "--porcelain=v1", "--untracked-files=all"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    assert status.stdout.strip() == ""

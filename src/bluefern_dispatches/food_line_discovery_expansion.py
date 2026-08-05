@@ -4756,7 +4756,7 @@ def run_food_line_discovery_expansion(
             agent_export_result = export_food_line_agent_run(
                 candidates,
                 edition_date=date_text,
-                destination=agent_inbox_dir or root / "data" / "dispatches" / DISPATCH_SLUG / "agent-inbox",
+                destination=agent_inbox_dir or root / "status" / "food-line" / "runtime" / "agent-inbox",
                 started_at=discovered_at,
                 completed_at=_utc_now(),
                 coverage_notes=(
@@ -4805,7 +4805,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--public-claim-lookahead-days", type=int, default=None)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--export-agent-inbox", action="store_true", help="Write one private food_line_agent_run_v1 envelope after discovery.")
-    parser.add_argument("--agent-inbox-dir", default="data/dispatches/food-line/agent-inbox", help="Private agent inbox destination.")
+    parser.add_argument("--agent-inbox-dir", default="status/food-line/runtime/agent-inbox", help="Private agent inbox destination.")
     parser.add_argument("--profile", choices=("daily-current", "supplemental", "smoke"), help="Use durable bounded execution.")
     parser.add_argument("--run-id", help="Explicit ID for a new bounded run.")
     parser.add_argument("--resume-run", help="Resume an existing bounded run ID.")

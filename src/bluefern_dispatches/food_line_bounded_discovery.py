@@ -1083,7 +1083,7 @@ def run_bounded_food_line_discovery(
             state["agent_export"] = export_food_line_agent_run(
                 candidates,
                 edition_date=state["edition_date"],
-                destination=agent_inbox_dir or root / "data/dispatches/food-line/agent-inbox",
+                destination=agent_inbox_dir or root / "status/food-line/runtime/agent-inbox",
                 started_at=state["started_at"],
                 completed_at=_utc_now(),
                 agent_run_id=state["run_id"],

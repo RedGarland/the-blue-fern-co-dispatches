@@ -1,9 +1,11 @@
 import json
+import subprocess
 from pathlib import Path
 import pytest
 
 from bluefern_dispatches.adapters.food_line_agent import adapt_food_line_agent_output, map_finding_to_food_line_candidate
 from bluefern_dispatches.agent_findings import duplicate_key_for, normalize_source_url
+from bluefern_dispatches.food_line_current_review import PRIVATE_AGENT_INBOX_ROOT
 from scripts.import_food_line_agent_findings import process, validate_input
 
 
@@ -74,23 +76,50 @@ def test_invalid_envelope_and_dry_run_do_not_archive(tmp_path: Path):
     path = tmp_path / "bad.json"
     path.write_text(json.dumps({"findings": []}), encoding="utf-8")
     assert validate_input(path)["valid"] is False
-    inbox = tmp_path / "data/dispatches/food-line/agent-inbox"
+    inbox = tmp_path / PRIVATE_AGENT_INBOX_ROOT
     inbox.mkdir(parents=True)
     source = inbox / "run.json"
     source.write_text(json.dumps(_envelope(_row())), encoding="utf-8")
     result = process(tmp_path, source, edition_date="2026-07-28", agent_name="fixture", agent_run_id="run-envelope", dry_run=True)
     assert result["would_write"] is False
-    assert not (inbox / "processed").exists()
+    assert not (tmp_path / "status/food-line/runtime/agent-inbox/processed").exists()
 
 
 def test_import_records_hash_and_archives_inbox_file(tmp_path: Path):
-    inbox = tmp_path / "data/dispatches/food-line/agent-inbox"; inbox.mkdir(parents=True)
+    inbox = tmp_path / PRIVATE_AGENT_INBOX_ROOT; inbox.mkdir(parents=True)
     source = inbox / "run.json"; source.write_text(json.dumps(_envelope(_row())), encoding="utf-8")
     result = process(tmp_path, source, edition_date="2026-07-28", agent_name="fixture", agent_run_id="run-envelope", dry_run=False)
     artifact = json.loads((tmp_path / "data/dispatches/food-line/agent-intake/2026-07-28/run-envelope.json").read_text(encoding="utf-8"))
     assert artifact["input_sha256"] == result["input_sha256"]
     assert not source.exists()
-    assert (inbox / "processed/2026-07-28/run.json").exists()
+    assert (tmp_path / "status/food-line/runtime/agent-inbox/processed/2026-07-28/run.json").exists()
+
+
+def test_runtime_inbox_processing_keeps_tracked_checkout_clean(tmp_path: Path):
+    repo = tmp_path / "repo"
+    subprocess.run(["git", "init", "-b", "main", str(repo)], check=True, capture_output=True)
+    subprocess.run(["git", "-C", str(repo), "config", "user.name", "Test User"], check=True, capture_output=True)
+    subprocess.run(["git", "-C", str(repo), "config", "user.email", "test@example.com"], check=True, capture_output=True)
+    (repo / ".gitignore").write_text("status/\n", encoding="utf-8")
+    exclude = repo / ".git" / "info" / "exclude"
+    exclude.write_text("data/dispatches/food-line/agent-intake/\ndata/dispatches/food-line/review/\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(repo), "add", ".gitignore"], check=True, capture_output=True)
+    subprocess.run(["git", "-C", str(repo), "commit", "-m", "init"], check=True, capture_output=True)
+
+    inbox = repo / PRIVATE_AGENT_INBOX_ROOT
+    inbox.mkdir(parents=True)
+    source = inbox / "run.json"
+    source.write_text(json.dumps(_envelope(_row())), encoding="utf-8")
+
+    process(repo, source, edition_date="2026-07-28", agent_name="fixture", agent_run_id="run-envelope", dry_run=False)
+
+    status = subprocess.run(
+        ["git", "-C", str(repo), "status", "--porcelain=v1", "--untracked-files=all"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    assert status.stdout.strip() == ""
 
 
 @pytest.mark.parametrize(

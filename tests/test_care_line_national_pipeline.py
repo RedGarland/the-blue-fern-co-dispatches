@@ -11,6 +11,7 @@ from bluefern_dispatches.care_line_national_pipeline import (
     WORKING_DUPLICATES_PATH,
     WORKING_EXCLUSIONS_PATH,
     WORKING_FAILED_EXTRACTIONS_PATH,
+    WORKING_MANUAL_REVIEW_PATH,
     WORKING_REVIEW_QUEUE_PATH,
     build_review_queue,
     cluster_candidates,
@@ -24,6 +25,7 @@ from bluefern_dispatches.care_line_national_pipeline import (
     run_national_pipeline,
     validate_review_snapshot,
     write_review_snapshot,
+    _extract_article_content,
 )
 from bluefern_dispatches.care_line_record import CareLineReviewedRecord
 
@@ -355,6 +357,122 @@ def test_parser_limits_bound_items(repo_copy: Path) -> None:
     assert len(items) == 2
 
 
+def test_extract_article_content_prefers_json_ld_and_filters_boilerplate(repo_copy: Path) -> None:
+    source = _source(repo_copy)
+    html = b"""
+    <html>
+      <head>
+        <title>Ignored title</title>
+        <meta property="og:description" content="Short fallback" />
+        <script type="application/ld+json">
+          {"@type":"NewsArticle","headline":"County Hospital closes clinic","description":"Clinic closure notice","articleBody":"County Hospital will close its primary care clinic on Aug. 10. Patients will be redirected to another location."}
+        </script>
+      </head>
+      <body>
+        <div>Skip to main content</div>
+      </body>
+    </html>
+    """
+    extracted = _extract_article_content(source, html, source_url="https://example.org/story", response_meta={"content_type": "text/html"})
+    assert extracted["extraction_outcome"] == "BODY_EXTRACTED"
+    assert extracted["extraction_method"] == "json_ld"
+    assert "Skip to main content" not in extracted["text"]
+    assert "County Hospital will close" in extracted["text"]
+
+
+def test_partial_extraction_routes_strong_lead_to_manual_review(repo_copy: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    source = _source(repo_copy).model_copy(update={"allowed_hosts": ["example.org"]})
+    raw_item = _raw_item(
+        title="County Hospital closes clinic",
+        description="County Hospital will close the clinic.",
+        requires_html_followup=True,
+    )
+    lead = event_lead_from_raw_item(raw_item)
+    monkeypatch.setattr(
+        "bluefern_dispatches.care_line_national_pipeline.fetch_url",
+        lambda url, timeout=20, allow_insecure_tls=False, user_agent="": (
+            b"<html><head><meta property='og:description' content='County Hospital will close the clinic.'/></head><body><div>Subscribe to continue reading</div></body></html>",
+            {"http_status": 200, "content_type": "text/html", "final_url": url},
+        ),
+    )
+    status, payload = qualify_event_lead(
+        source,
+        raw_item,
+        lead,
+        artifact_path="artifact.json",
+        run_id="run-1",
+        fetch_timeout=5,
+        allow_insecure_tls=False,
+    )
+    assert status == "failed_extraction"
+    assert payload["classification"] == "NEEDS_HUMAN_REVIEW"
+    assert payload["extraction_outcome"] == "PAYWALLED"
+
+
+def test_kff_style_lead_extracts_provider_and_inherent_capacity_loss(repo_copy: Path) -> None:
+    source = _source(repo_copy).model_copy(update={"source_id": "kff-health-news", "allowed_hosts": ["example.org"]})
+    raw_item = _raw_item(
+        source_id="kff-health-news",
+        state="",
+        title="Earlier Lifeline for Rural Hospitals Faces Test Under Big Beautiful Law",
+        description="A century-old rural Michigan hospital converted to a stripped-down model Congress created to help keep small facilities afloat, then it closed.",
+        url="https://example.org/kff-story",
+    )
+    lead = event_lead_from_raw_item(raw_item)
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setattr(
+            "bluefern_dispatches.care_line_national_pipeline.fetch_url",
+            lambda url, timeout=20, allow_insecure_tls=False, user_agent="": (
+                b"<html><body><article><p>In Holly Springs, Mississippi, Alliance HealthCare System was one of the first to convert to the emergency hospital designation, laying off staff and shutting down inpatient beds.</p></article></body></html>",
+                {"http_status": 200, "content_type": "text/html", "final_url": url},
+            ),
+        )
+        status, payload = qualify_event_lead(
+            source,
+            raw_item,
+            lead,
+            artifact_path="artifact.json",
+            run_id="run-1",
+            fetch_timeout=5,
+            allow_insecure_tls=False,
+        )
+    assert status == "qualified"
+    reviewed = CareLineReviewedRecord.model_validate(payload["normalized_record"])
+    assert reviewed.provider_name == "Alliance HealthCare System"
+    assert "REDUCED_BED_OR_APPOINTMENT_CAPACITY" in reviewed.access_consequences
+
+
+def test_npr_closure_hint_is_not_downgraded_to_restoration(repo_copy: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    source = _source(repo_copy).model_copy(update={"source_id": "npr-health", "allowed_hosts": ["example.org"]})
+    raw_item = _raw_item(
+        source_id="npr-health",
+        state="",
+        title="One Maine community's fight to save a birthing center",
+        description="In mid-coast Maine a grassroots coalition is fighting to prevent the proposed closure of Miles Hospital's labor and delivery center.",
+        url="https://example.org/npr-story",
+    )
+    lead = event_lead_from_raw_item(raw_item)
+    monkeypatch.setattr(
+        "bluefern_dispatches.care_line_national_pipeline.fetch_url",
+        lambda url, timeout=20, allow_insecure_tls=False, user_agent="": (
+            b"<html><body><article><p>Residents in Maine are fighting to prevent the proposed closure of Miles Hospital's labor and delivery center.</p><p>The center reopened years ago after an earlier review.</p></article></body></html>",
+            {"http_status": 200, "content_type": "text/html", "final_url": url},
+        ),
+    )
+    status, payload = qualify_event_lead(
+        source,
+        raw_item,
+        lead,
+        artifact_path="artifact.json",
+        run_id="run-1",
+        fetch_timeout=5,
+        allow_insecure_tls=False,
+    )
+    assert status == "qualified"
+    reviewed = CareLineReviewedRecord.model_validate(payload["normalized_record"])
+    assert reviewed.event_type in {"facility_closure", "planned_facility_closure"}
+
+
 def test_run_collection_attempt_preserves_exclusions_and_failed_extractions(repo_copy: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     registry = load_canonical_registry(repo_copy, include_disabled=True)
     source_row = next(row for row in collectable_sources(registry, include_partial=False) if row["source"].state)
@@ -410,6 +528,7 @@ def test_national_pipeline_reports_explicit_counts_and_queue_files(repo_copy: Pa
     assert (repo_copy / WORKING_EXCLUSIONS_PATH).exists()
     assert (repo_copy / WORKING_DUPLICATES_PATH).exists()
     assert (repo_copy / WORKING_FAILED_EXTRACTIONS_PATH).exists()
+    assert (repo_copy / WORKING_MANUAL_REVIEW_PATH).exists()
 
 
 def test_pipeline_rerun_preserves_first_seen_and_reports_prior_candidates(repo_copy: Path, monkeypatch: pytest.MonkeyPatch) -> None:

@@ -43,6 +43,7 @@ WORKING_BACKLOG_PATH = REVIEW_ROOT / "current-review-backlog.json"
 WORKING_EXCLUSIONS_PATH = REVIEW_ROOT / "current-exclusions.json"
 WORKING_DUPLICATES_PATH = REVIEW_ROOT / "current-duplicates.json"
 WORKING_FAILED_EXTRACTIONS_PATH = REVIEW_ROOT / "current-failed-extractions.json"
+WORKING_MANUAL_REVIEW_PATH = REVIEW_ROOT / "current-manual-review.json"
 REVIEW_SNAPSHOT_ROOT = REVIEW_ROOT / "signal-reviews"
 LEGACY_PRESSURE_REGISTRY_PATH = Path("data/dispatches/care-line/pressure_source_registry.json")
 CANONICAL_REGISTRY_PATH = Path("data/dispatches/care-line/source_registry.json")
@@ -88,6 +89,67 @@ FAILED_EXTRACTION_REASONS = {
     "insufficient_bounded_evidence",
     "private_or_inaccessible_evidence",
 }
+EXTRACTION_OUTCOMES = {
+    "BODY_EXTRACTED",
+    "PARTIAL_BODY",
+    "INDEX_ONLY",
+    "HEADLINE_ONLY",
+    "PAYWALLED",
+    "SCRIPT_RENDERED",
+    "PDF_REQUIRED",
+    "ACCESS_BLOCKED",
+    "PARSE_FAILED",
+    "EMPTY_RESPONSE",
+}
+EDITORIAL_QUALIFICATION_OUTCOMES = {
+    "QUALIFIED",
+    "EXCLUDED",
+    "NEEDS_FULL_ARTICLE",
+    "NEEDS_DATE",
+    "NEEDS_GEOGRAPHY",
+    "NEEDS_ACCESS_CONSEQUENCE",
+    "NEEDS_SERVICE_CLASSIFICATION",
+    "NEEDS_HUMAN_REVIEW",
+}
+
+DEFAULT_ARTICLE_SELECTORS = (
+    "article",
+    "entry-content",
+    "article-content",
+    "story-content",
+    "storytext",
+    "main-content",
+)
+SOURCE_ARTICLE_SELECTOR_HINTS: dict[str, tuple[str, ...]] = {
+    "kff-health-news": ("article", "entry-content", "story-content"),
+    "npr-health": ("storytext", "article", "story-content"),
+    "texas-tribune-health": ("article-content", "story-content", "article"),
+}
+SOURCE_FORMAT_FAMILIES: dict[str, str] = {
+    "rss": "RSS_OR_ATOM_SUMMARY",
+    "atom": "RSS_OR_ATOM_SUMMARY",
+    "json_feed": "JSON_LISTING",
+    "sitemap": "SITEMAP",
+    "structured_index": "STRUCTURED_HTML_INDEX",
+}
+PAYWALL_HINTS = (
+    "subscribe to continue",
+    "subscription required",
+    "already a subscriber",
+    "sign in to continue",
+    "this content is for subscribers",
+)
+BOILERPLATE_HINTS = (
+    "skip to main content",
+    "republish this article",
+    "share this:",
+    "read more",
+    "article first appeared on",
+    "become a member",
+    "donate",
+    "all rights reserved",
+)
+MAX_EXTRACTED_TEXT_CHARS = 24000
 
 SOURCE_FAILURE_CLASSES = {"HTTPError", "ValueError", "ParseError", "TimeoutError", "URLError"}
 
@@ -539,6 +601,118 @@ class _TextExtractor(HTMLParser):
         return combined.strip()
 
 
+class _ScopedArticleExtractor(HTMLParser):
+    def __init__(self, selectors: Iterable[str]) -> None:
+        super().__init__(convert_charrefs=True)
+        self._skip_depth = 0
+        self._capture_depth = 0
+        self._capture_key = ""
+        self._capture_parts: list[str] = []
+        self._article_depth = 0
+        self._article_parts: list[str] = []
+        self._full_parts: list[str] = []
+        self._json_ld_parts: list[str] = []
+        self._in_title = False
+        self._in_json_ld = False
+        self.title = ""
+        self.meta_description = ""
+        self.meta_title = ""
+        self.og_description = ""
+        self.og_title = ""
+        self.selector_hits: Counter[str] = Counter()
+        self._selectors = tuple(selector.casefold() for selector in selectors if selector)
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        lowered = tag.lower()
+        attrs_map = {key.lower(): value or "" for key, value in attrs}
+        if lowered in {"script", "style", "noscript"}:
+            self._skip_depth += 1
+            script_type = attrs_map.get("type", "").casefold()
+            if script_type == "application/ld+json":
+                self._in_json_ld = True
+            return
+        if self._skip_depth:
+            return
+        attr_text = " ".join(value for key, value in attrs_map.items() if key in {"id", "class", "role", "data-testid"}).casefold()
+        if lowered in {"article", "main"}:
+            self._article_depth += 1
+        for selector in self._selectors:
+            if selector and selector in attr_text:
+                self._capture_depth += 1
+                if not self._capture_key:
+                    self._capture_key = selector
+                self.selector_hits[selector] += 1
+                break
+        if lowered == "meta":
+            name = attrs_map.get("name", "").casefold()
+            prop = attrs_map.get("property", "").casefold()
+            content = attrs_map.get("content", "")
+            if name == "description":
+                self.meta_description = content
+            if name == "title":
+                self.meta_title = content
+            if prop == "og:description":
+                self.og_description = content
+            if prop == "og:title":
+                self.og_title = content
+        elif lowered == "title":
+            self._in_title = True
+
+    def handle_endtag(self, tag: str) -> None:
+        lowered = tag.lower()
+        if lowered in {"script", "style", "noscript"}:
+            if self._in_json_ld and lowered == "script":
+                self._in_json_ld = False
+            if self._skip_depth:
+                self._skip_depth -= 1
+            return
+        if self._skip_depth:
+            return
+        if lowered == "title":
+            self._in_title = False
+        if lowered in {"article", "main"} and self._article_depth:
+            self._article_depth -= 1
+        if self._capture_depth and lowered in {"div", "section", "article", "main"}:
+            self._capture_depth -= 1
+            if self._capture_depth == 0:
+                self._capture_key = ""
+        if lowered in {"p", "div", "li", "section", "article", "br", "h1", "h2", "h3"}:
+            self._full_parts.append("\n")
+            if self._article_depth:
+                self._article_parts.append("\n")
+            if self._capture_depth:
+                self._capture_parts.append("\n")
+
+    def handle_data(self, data: str) -> None:
+        if self._skip_depth and not self._in_json_ld:
+            return
+        if self._in_json_ld:
+            self._json_ld_parts.append(data)
+            return
+        text = " ".join(data.split())
+        if not text:
+            return
+        if self._in_title:
+            self.title = f"{self.title} {text}".strip()
+        self._full_parts.append(text)
+        if self._article_depth:
+            self._article_parts.append(text)
+        if self._capture_depth:
+            self._capture_parts.append(text)
+
+    def scoped_text(self) -> str:
+        return _normalize_text(" ".join(self._capture_parts))
+
+    def article_text(self) -> str:
+        return _normalize_text(" ".join(self._article_parts))
+
+    def full_text(self) -> str:
+        return _normalize_text(" ".join(self._full_parts))
+
+    def json_ld_text(self) -> str:
+        return "\n".join(part for part in self._json_ld_parts if part.strip())
+
+
 def _is_probable_article_url(url: str, *, source_host: str = "") -> bool:
     if not url or not url.startswith(("http://", "https://")):
         return False
@@ -551,6 +725,102 @@ def _is_probable_article_url(url: str, *, source_host: str = "") -> bool:
     if lowered.endswith((".jpg", ".jpeg", ".png", ".gif", ".svg", ".pdf", ".xml", ".rss")):
         return False
     return True
+
+
+def _bounded_text(value: str, *, max_chars: int = MAX_EXTRACTED_TEXT_CHARS) -> str:
+    normalized = _normalize_text(value)
+    if len(normalized) <= max_chars:
+        return normalized
+    return normalized[:max_chars].rsplit(" ", 1)[0].strip()
+
+
+def _clean_extracted_text(value: str) -> str:
+    if not value:
+        return ""
+    lines = []
+    for raw_line in re.split(r"(?:\n|\r)+", value):
+        line = _normalize_text(raw_line)
+        if not line:
+            continue
+        lowered = line.casefold()
+        if any(hint in lowered for hint in BOILERPLATE_HINTS):
+            continue
+        if len(line) < 4:
+            continue
+        lines.append(line)
+    cleaned = "\n".join(lines)
+    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+    return _bounded_text(cleaned)
+
+
+def _first_nonempty(*values: str) -> str:
+    for value in values:
+        if _normalize_text(value):
+            return _normalize_text(value)
+    return ""
+
+
+def _parse_json_ld_payload(raw_text: str) -> list[dict[str, Any]]:
+    payloads: list[dict[str, Any]] = []
+    try:
+        top_level = json.loads(raw_text)
+    except json.JSONDecodeError:
+        top_level = None
+    if isinstance(top_level, dict):
+        payloads.append(top_level)
+        return payloads
+    if isinstance(top_level, list):
+        payloads.extend(item for item in top_level if isinstance(item, dict))
+        return payloads
+    for chunk in re.split(r"\n+", raw_text):
+        chunk = chunk.strip()
+        if not chunk:
+            continue
+        try:
+            data = json.loads(chunk)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(data, dict):
+            payloads.append(data)
+        elif isinstance(data, list):
+            payloads.extend(item for item in data if isinstance(item, dict))
+    return payloads
+
+
+def _json_ld_article_fields(raw_text: str) -> dict[str, str]:
+    title = ""
+    description = ""
+    body = ""
+    for payload in _parse_json_ld_payload(raw_text):
+        type_value = str(payload.get("@type") or payload.get("type") or "")
+        if type_value and not re.search(r"article|newsarticle|report", type_value, re.I):
+            continue
+        body = _first_nonempty(body, _text(payload, "articleBody", "text"))
+        description = _first_nonempty(description, _text(payload, "description"))
+        title = _first_nonempty(title, _text(payload, "headline", "name"))
+    return {
+        "title": _bounded_text(title, max_chars=500),
+        "description": _bounded_text(description, max_chars=1200),
+        "text": _clean_extracted_text(body),
+    }
+
+
+def _source_selector_hints(source: CareLineSource) -> tuple[str, ...]:
+    extra = getattr(source, "model_extra", None) or {}
+    configured = extra.get("article_selector_hints")
+    selectors: list[str] = []
+    if isinstance(configured, list):
+        selectors.extend(str(item) for item in configured if item)
+    selectors.extend(SOURCE_ARTICLE_SELECTOR_HINTS.get(source.source_id, ()))
+    selectors.extend(DEFAULT_ARTICLE_SELECTORS)
+    deduped: list[str] = []
+    seen: set[str] = set()
+    for selector in selectors:
+        lowered = selector.casefold()
+        if lowered not in seen:
+            seen.add(lowered)
+            deduped.append(selector)
+    return tuple(deduped)
 
 
 def _parse_structured_listing_json(data: Any, *, source_host: str) -> list[dict[str, Any]]:
@@ -880,10 +1150,21 @@ def _extract_subject(title: str, passage: str, *, service_line: str) -> tuple[st
         if match:
             subject = match.group("subject").strip(" -:")
             return subject, subject
-    facility_match = re.search(r"\b([A-Z][A-Za-z0-9&'.-]+(?:\s+[A-Z][A-Za-z0-9&'.-]+){0,5}\s+(?:Hospital|Clinic|Medical Center|Health Center|Health System|Center))\b", title + " " + passage)
+    facility_match = re.search(
+        r"\b([A-Z][A-Za-z0-9&'.-]+(?:\s+[A-Z][A-Za-z0-9&'.-]+){0,6}\s+"
+        r"(?:Hospital|Clinic|Medical Center|Health Center|Health System|Healthcare System|Children's Hospital|Center))\b",
+        title + " " + passage,
+    )
     if facility_match:
         subject = facility_match.group(1).strip()
         return subject, subject
+    provider_match = re.search(
+        r"\b([A-Z][A-Za-z0-9&'.-]+(?:\s+[A-Z][A-Za-z0-9&'.-]+){0,6}\s+(?:System|Network|Services))\b",
+        title + " " + passage,
+    )
+    if provider_match:
+        provider = provider_match.group(1).strip()
+        return "", provider
     if service_line:
         return "", ""
     return "", ""
@@ -952,6 +1233,10 @@ def _access_consequences_from_text(text: str, event_type: str) -> tuple[list[str
         return ["REDUCED_OPERATING_HOURS"], "direct_service_loss_event"
     if event_type in {"capacity_reduction", "service_reduction", "bankruptcy_service_impact"}:
         return ["REDUCED_SERVICE_AVAILABILITY"], "direct_service_loss_event"
+    if re.search(r"\b(shutting down inpatient beds|closed inpatient beds|ending inpatient beds)\b", text, re.I):
+        return ["REDUCED_BED_OR_APPOINTMENT_CAPACITY"], "inherent_capacity_loss"
+    if re.search(r"\b(stop admissions|stopped admissions)\b", text, re.I):
+        return ["REDUCED_SERVICE_AVAILABILITY"], "inherent_service_loss"
     if event_type in {"facility_reopening", "service_restoration"}:
         return ["SUBSTITUTE_SERVICE_OFFERED"], "restoration_event"
     return [], ""
@@ -977,11 +1262,15 @@ def _supporting_passage(text: str, event_type: str, service_line: str) -> str:
                 score += 2
         for _, pattern in ACCESS_CONSEQUENCE_PATTERNS:
             if pattern.search(sentence):
-                score += 2
+                score += 3
+        if re.search(r"\b(because|due to|after|until|patients|staff|beds|appointments?)\b", sentence, re.I):
+            score += 2
         if event_type and event_type.replace("_", " ")[:6].lower() in sentence.lower():
             score += 1
         if service_line and service_line.replace("_", " ")[:5].lower() in sentence.lower():
             score += 1
+        if len(sentence.split()) <= 8:
+            score -= 1
         if score > best_score or (score == best_score and len(sentence) > len(best)):
             best = sentence
             best_score = score
@@ -1010,15 +1299,83 @@ def _can_fetch_item_url(source: CareLineSource, url: str) -> bool:
     return True
 
 
-def _extract_article_content(html_payload: bytes) -> dict[str, str]:
+def _extract_article_content(
+    source: CareLineSource,
+    html_payload: bytes,
+    *,
+    source_url: str,
+    response_meta: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    content_type = _text(response_meta or {}, "content_type").casefold()
+    if "pdf" in content_type or source_url.lower().endswith(".pdf"):
+        return {
+            "title": "",
+            "description": "",
+            "text": "",
+            "extraction_method": "pdf_required",
+            "extraction_outcome": "PDF_REQUIRED",
+            "content_hash": stable_json_hash([source_url, "pdf_required"]),
+            "source_format_family": SOURCE_FORMAT_FAMILIES.get(source.adapter_type, source.adapter_type.upper()),
+        }
+
     decoded = html_payload.decode("utf-8", errors="ignore")
-    extractor = _TextExtractor()
+    if not decoded.strip():
+        return {
+            "title": "",
+            "description": "",
+            "text": "",
+            "extraction_method": "empty_response",
+            "extraction_outcome": "EMPTY_RESPONSE",
+            "content_hash": stable_json_hash([source_url, "empty_response"]),
+            "source_format_family": SOURCE_FORMAT_FAMILIES.get(source.adapter_type, source.adapter_type.upper()),
+        }
+
+    extractor = _ScopedArticleExtractor(_source_selector_hints(source))
     extractor.feed(decoded)
-    text = extractor.text()
+    json_ld = _json_ld_article_fields(extractor.json_ld_text())
+    selector_text = _clean_extracted_text(extractor.scoped_text())
+    article_text = _clean_extracted_text(extractor.article_text())
+    full_text = _clean_extracted_text(extractor.full_text())
+    body_text = _first_nonempty(json_ld["text"], selector_text, article_text, full_text)
+    description = _first_nonempty(json_ld["description"], extractor.og_description, extractor.meta_description)
+    title = _first_nonempty(json_ld["title"], extractor.og_title, extractor.meta_title, extractor.title)
+    lowered_full = full_text.casefold()
+    if any(hint in lowered_full for hint in PAYWALL_HINTS):
+        outcome = "PAYWALLED"
+        method = "paywall_detection"
+        text = ""
+    elif body_text and len(body_text) >= 80:
+        outcome = "BODY_EXTRACTED"
+        method = "json_ld" if json_ld["text"] else "selector" if selector_text else "semantic_html"
+        text = body_text
+    elif article_text and len(article_text) >= 80:
+        outcome = "PARTIAL_BODY"
+        method = "semantic_html_partial"
+        text = article_text
+    elif description:
+        outcome = "PARTIAL_BODY"
+        method = "metadata_summary"
+        text = _bounded_text(description, max_chars=1200)
+    elif title:
+        outcome = "HEADLINE_ONLY"
+        method = "headline_only"
+        text = ""
+    else:
+        outcome = "PARSE_FAILED" if full_text else "EMPTY_RESPONSE"
+        method = "generic_parse_failure" if full_text else "empty_response"
+        text = ""
     return {
-        "title": _normalize_text(extractor.title),
-        "description": _normalize_text(extractor.meta_description),
-        "text": _normalize_text(text),
+        "title": _bounded_text(title, max_chars=500),
+        "description": _bounded_text(description, max_chars=1200),
+        "text": text,
+        "full_text": _bounded_text(full_text),
+        "selector_text": _bounded_text(selector_text),
+        "article_text": _bounded_text(article_text),
+        "json_ld_text": _bounded_text(json_ld["text"]),
+        "extraction_method": method,
+        "extraction_outcome": outcome,
+        "content_hash": sha256(decoded.encode("utf-8", errors="ignore")).hexdigest(),
+        "source_format_family": SOURCE_FORMAT_FAMILIES.get(source.adapter_type, source.adapter_type.upper()),
     }
 
 
@@ -1028,6 +1385,8 @@ def _evidence_blob(raw_item: Mapping[str, Any], article_content: Mapping[str, An
         _text(raw_item, "description"),
         _text(article_content or {}, "description"),
         _text(article_content or {}, "text"),
+        _text(article_content or {}, "article_text"),
+        _text(article_content or {}, "selector_text"),
     ]
     return "\n".join(part for part in parts if part)
 
@@ -1421,23 +1780,39 @@ def qualify_event_lead(
             "source_publication_date": raw_item.get("source_publication_date", ""),
             "classification": exclusion_reason.upper(),
             "exclusion_reason": exclusion_reason,
+            "editorial_outcome": "EXCLUDED",
+            "extraction_outcome": "INDEX_ONLY",
+            "extraction_method": "feed_only_exclusion",
             "failed_gates": [],
             "supporting_text": _text(raw_item, "description"),
             "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
         }
 
     article_content: dict[str, Any] | None = None
+    extraction_outcome = "INDEX_ONLY"
+    extraction_method = "feed_summary"
+    extraction_hash = stable_json_hash([raw_item.get("raw_item_id", ""), "feed_summary"])
     if _can_fetch_item_url(source, _text(raw_item, "item_url")):
         try:
-            article_payload, _ = fetch_url(_text(raw_item, "item_url"), timeout=fetch_timeout, allow_insecure_tls=allow_insecure_tls)
-            article_content = _extract_article_content(article_payload)
+            article_payload, response_meta = fetch_url(_text(raw_item, "item_url"), timeout=fetch_timeout, allow_insecure_tls=allow_insecure_tls)
+            article_content = _extract_article_content(source, article_payload, source_url=_text(raw_item, "item_url"), response_meta=response_meta)
+            extraction_outcome = _text(article_content, "extraction_outcome") or extraction_outcome
+            extraction_method = _text(article_content, "extraction_method") or extraction_method
+            extraction_hash = _text(article_content, "content_hash") or extraction_hash
         except Exception:  # noqa: BLE001
             article_content = None
+            extraction_outcome = "ACCESS_BLOCKED"
+            extraction_method = "fetch_failure"
 
     evidence_blob = _evidence_blob(raw_item, article_content)
-    passage_source = _text(article_content or {}, "text") or evidence_blob
-    service_line = _text(lead, "service_line_hint") or _service_line_from_text(evidence_blob)
-    event_type = _text(lead, "event_type_hint") or _event_type_from_text(evidence_blob, service_line=service_line)
+    if extraction_outcome in {"PAYWALLED", "PDF_REQUIRED", "SCRIPT_RENDERED", "ACCESS_BLOCKED"}:
+        passage_source = _text(article_content or {}, "text", "description")
+    else:
+        passage_source = _text(article_content or {}, "text") or evidence_blob
+    service_line = _text(lead, "service_line_hint") or _service_line_from_text(_text(article_content or {}, "text")) or _service_line_from_text(_text(raw_item, "description")) or _service_line_from_text(evidence_blob)
+    event_type = _text(lead, "event_type_hint") or _event_type_from_text(_text(article_content or {}, "text") or evidence_blob, service_line=service_line)
+    if _text(lead, "event_type_hint") in {"facility_closure", "planned_facility_closure", "service_closure", "service_suspension"} and event_type in {"facility_reopening", "service_restoration"}:
+        event_type = _text(lead, "event_type_hint")
     if _is_service_expansion_only(evidence_blob) and event_type not in {"facility_reopening", "service_restoration"}:
         return "excluded", {
             "schema_version": EXCLUSION_SCHEMA_VERSION,
@@ -1451,6 +1826,9 @@ def qualify_event_lead(
             "source_publication_date": raw_item.get("source_publication_date", ""),
             "classification": "RESOURCE_LISTING",
             "exclusion_reason": "service_expansion_without_prior_loss_context",
+            "editorial_outcome": "EXCLUDED",
+            "extraction_outcome": extraction_outcome,
+            "extraction_method": extraction_method,
             "failed_gates": [],
             "supporting_text": _supporting_passage(evidence_blob, event_type, service_line),
             "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
@@ -1469,7 +1847,31 @@ def qualify_event_lead(
             "source_publication_date": raw_item.get("source_publication_date", ""),
             "classification": "NEEDS_DATE",
             "exclusion_reason": "needs_date",
+            "editorial_outcome": "NEEDS_DATE",
+            "extraction_outcome": extraction_outcome,
+            "extraction_method": extraction_method,
             "failed_gates": ["missing_source_date"],
+            "supporting_text": _text(raw_item, "description"),
+            "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
+        }
+
+    if extraction_outcome in {"PAYWALLED", "PDF_REQUIRED", "SCRIPT_RENDERED", "ACCESS_BLOCKED"}:
+        return "failed_extraction", {
+            "schema_version": EXCLUSION_SCHEMA_VERSION,
+            "exclusion_id": _stable_id("care-line-failed-extraction", raw_item.get("raw_item_id", ""), extraction_outcome.casefold()),
+            "raw_item_id": raw_item.get("raw_item_id", ""),
+            "lead_id": lead.get("lead_id", ""),
+            "source_id": raw_item.get("source_id", ""),
+            "source_name": raw_item.get("source_name", ""),
+            "item_url": raw_item.get("item_url", ""),
+            "title": raw_item.get("title", ""),
+            "source_publication_date": raw_item.get("source_publication_date", ""),
+            "classification": "NEEDS_HUMAN_REVIEW",
+            "exclusion_reason": "needs_full_article",
+            "editorial_outcome": "NEEDS_HUMAN_REVIEW",
+            "extraction_outcome": extraction_outcome,
+            "extraction_method": extraction_method,
+            "failed_gates": ["insufficient_bounded_evidence"],
             "supporting_text": _text(raw_item, "description"),
             "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
         }
@@ -1488,11 +1890,15 @@ def qualify_event_lead(
             "source_publication_date": raw_item.get("source_publication_date", ""),
             "classification": "NEEDS_FULL_ARTICLE",
             "exclusion_reason": "needs_full_article",
+            "editorial_outcome": "NEEDS_FULL_ARTICLE",
+            "extraction_outcome": extraction_outcome,
+            "extraction_method": extraction_method,
             "failed_gates": ["insufficient_bounded_evidence"],
             "supporting_text": _text(raw_item, "description"),
             "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
         }
     if not supporting_passage:
+        editorial_outcome = "NEEDS_HUMAN_REVIEW" if extraction_outcome in {"PARTIAL_BODY", "PAYWALLED", "SCRIPT_RENDERED", "PDF_REQUIRED"} else "NEEDS_FULL_ARTICLE"
         return "failed_extraction", {
             "schema_version": EXCLUSION_SCHEMA_VERSION,
             "exclusion_id": _stable_id("care-line-failed-extraction", raw_item.get("raw_item_id", ""), "insufficient_bounded_evidence"),
@@ -1503,14 +1909,22 @@ def qualify_event_lead(
             "item_url": raw_item.get("item_url", ""),
             "title": raw_item.get("title", ""),
             "source_publication_date": raw_item.get("source_publication_date", ""),
-            "classification": "NEEDS_FULL_ARTICLE",
+            "classification": editorial_outcome,
             "exclusion_reason": "insufficient_bounded_evidence",
+            "editorial_outcome": editorial_outcome,
+            "extraction_outcome": extraction_outcome,
+            "extraction_method": extraction_method,
             "failed_gates": ["insufficient_bounded_evidence"],
             "supporting_text": _text(article_content or {}, "description") or _text(raw_item, "description"),
             "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
         }
 
-    geography = _extract_geography(raw_item, evidence_blob)
+    supporting_service_line = _service_line_from_text(supporting_passage)
+    if supporting_service_line:
+        service_line = supporting_service_line
+    elif event_type in {"facility_closure", "planned_facility_closure", "temporary_facility_suspension", "facility_conversion", "facility_relocation", "facility_reopening"}:
+        service_line = ""
+    geography = _extract_geography(raw_item, supporting_passage or evidence_blob)
     subject, provider = _extract_subject(_text(raw_item, "title"), supporting_passage, service_line=service_line)
     access_consequences, access_exception = _access_consequences_from_text(supporting_passage, event_type)
     failed_gates = _qualified_gate_failures(
@@ -1538,7 +1952,7 @@ def qualify_event_lead(
             "missing_source_date": "needs_date",
         }
         reason = reason_map.get(primary, "needs_full_article")
-        classification = reason.upper()
+        classification = "NEEDS_HUMAN_REVIEW" if extraction_outcome in {"PARTIAL_BODY", "PAYWALLED", "SCRIPT_RENDERED", "PDF_REQUIRED"} and reason in {"needs_full_article", "missing_subject", "insufficient_bounded_evidence"} else reason.upper()
         return "failed_extraction", {
             "schema_version": EXCLUSION_SCHEMA_VERSION,
             "exclusion_id": _stable_id("care-line-failed-extraction", raw_item.get("raw_item_id", ""), reason),
@@ -1551,6 +1965,9 @@ def qualify_event_lead(
             "source_publication_date": raw_item.get("source_publication_date", ""),
             "classification": classification,
             "exclusion_reason": reason,
+            "editorial_outcome": classification,
+            "extraction_outcome": extraction_outcome,
+            "extraction_method": extraction_method,
             "failed_gates": failed_gates,
             "supporting_text": supporting_passage,
             "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
@@ -1575,6 +1992,10 @@ def qualify_event_lead(
         extraction_confidence=round(extraction_confidence, 3),
         full_article_required=full_article_required,
     )
+    candidate["qualification_result"]["editorial_outcome"] = "QUALIFIED"
+    candidate["qualification_result"]["extraction_outcome"] = extraction_outcome
+    candidate["qualification_result"]["extraction_method"] = extraction_method
+    candidate["qualification_result"]["content_hash"] = extraction_hash
     return "qualified", candidate
 
 
@@ -1691,7 +2112,11 @@ def build_review_queue(
     active_queue_limit: int = 150,
     low_priority_cap: int = 25,
 ) -> dict[str, Any]:
-    all_candidates = list(candidates)
+    all_candidates = [
+        dict(candidate)
+        for candidate in candidates
+        if str(candidate.get("candidate_status") or "active") == "active"
+    ]
     clusters = cluster_candidates(all_candidates)
     canonical_by_cluster = {row["cluster_id"]: row["canonical_candidate_id"] for row in clusters["clusters"]}
     canonical_rows: list[dict[str, Any]] = []
@@ -1908,7 +2333,7 @@ def run_collection_attempt(
             failure_reason="disabled_source",
         )
         _atomic_write(run_dir / _source_attempt_filename(source.source_id), attempt.to_payload())
-        return {"attempt": attempt.to_payload(), "raw_items": [], "event_leads": [], "candidates": [], "exclusions": [], "failed_extractions": [], "failure": attempt.failure_reason}
+        return {"attempt": attempt.to_payload(), "raw_items": [], "event_leads": [], "candidates": [], "exclusions": [], "failed_extractions": [], "manual_review": [], "failure": attempt.failure_reason}
     if source_readiness_status(source) == "MANUAL_REVIEW_ONLY":
         attempt = CollectionAttempt(
             source_id=source.source_id,
@@ -1928,7 +2353,7 @@ def run_collection_attempt(
             failure_reason="manual_source_not_automated",
         )
         _atomic_write(run_dir / _source_attempt_filename(source.source_id), attempt.to_payload())
-        return {"attempt": attempt.to_payload(), "raw_items": [], "event_leads": [], "candidates": [], "exclusions": [], "failed_extractions": [], "failure": attempt.failure_reason}
+        return {"attempt": attempt.to_payload(), "raw_items": [], "event_leads": [], "candidates": [], "exclusions": [], "failed_extractions": [], "manual_review": [], "failure": attempt.failure_reason}
     try:
         payload, fetch_meta = fetch_source(source, timeout=fetch_timeout, allow_insecure_tls=allow_insecure_tls)
         items = parse_source_items(
@@ -1960,7 +2385,7 @@ def run_collection_attempt(
         )
         _atomic_write(run_dir / _source_attempt_filename(source.source_id), attempt.to_payload())
         _atomic_write(run_dir / _source_failure_filename(source.source_id), {"source_id": source.source_id, "failure_reason": failure})
-        return {"attempt": attempt.to_payload(), "raw_items": [], "event_leads": [], "candidates": [], "exclusions": [], "failed_extractions": [], "failure": failure}
+        return {"attempt": attempt.to_payload(), "raw_items": [], "event_leads": [], "candidates": [], "exclusions": [], "failed_extractions": [], "manual_review": [], "failure": failure}
     except Exception as exc:  # noqa: BLE001
         failure = f"{type(exc).__name__}: {exc}"
         attempt = CollectionAttempt(
@@ -1982,7 +2407,7 @@ def run_collection_attempt(
         )
         _atomic_write(run_dir / _source_attempt_filename(source.source_id), attempt.to_payload())
         _atomic_write(run_dir / _source_failure_filename(source.source_id), {"source_id": source.source_id, "failure_reason": failure})
-        return {"attempt": attempt.to_payload(), "raw_items": [], "event_leads": [], "candidates": [], "exclusions": [], "failed_extractions": [], "failure": failure}
+        return {"attempt": attempt.to_payload(), "raw_items": [], "event_leads": [], "candidates": [], "exclusions": [], "failed_extractions": [], "manual_review": [], "failure": failure}
     raw_artifact_path = run_dir / _source_raw_items_filename(source.source_id)
     raw_items = [
         discovery_record_from_direct_item(
@@ -1997,9 +2422,11 @@ def run_collection_attempt(
         for index, item in enumerate(items, start=1)
     ]
     event_leads = [event_lead_from_raw_item(item) for item in raw_items]
+    leads_by_id = {str(lead.get("lead_id") or ""): lead for lead in event_leads}
     qualified_candidates: list[dict[str, Any]] = []
     exclusions: list[dict[str, Any]] = []
     failed_extractions: list[dict[str, Any]] = []
+    manual_review: list[dict[str, Any]] = []
     for raw_item, lead in zip(raw_items, event_leads, strict=False):
         status, payload_row = qualify_event_lead(
             source,
@@ -2016,6 +2443,8 @@ def run_collection_attempt(
             exclusions.append(payload_row)
         else:
             failed_extractions.append(payload_row)
+            if _text(payload_row, "classification") == "NEEDS_HUMAN_REVIEW":
+                manual_review.append(_manual_review_row(payload_row, lead=lead))
     content_hash = sha256(payload).hexdigest() if payload else ""
     attempt = CollectionAttempt(
         source_id=source.source_id,
@@ -2048,6 +2477,7 @@ def run_collection_attempt(
         "candidates": qualified_candidates,
         "exclusions": exclusions,
         "failed_extractions": failed_extractions,
+        "manual_review": manual_review,
         "failure": "",
     }
 
@@ -2058,6 +2488,7 @@ def _write_review_private_outputs(
     queue_payload: Mapping[str, Any],
     exclusions: list[Mapping[str, Any]],
     failed_extractions: list[Mapping[str, Any]],
+    manual_review: list[Mapping[str, Any]],
 ) -> None:
     _atomic_write(root / WORKING_REVIEW_QUEUE_PATH, queue_payload)
     _atomic_write(
@@ -2094,6 +2525,33 @@ def _write_review_private_outputs(
             "items": failed_extractions,
         },
     )
+    _atomic_write(
+        root / WORKING_MANUAL_REVIEW_PATH,
+        {
+            "schema_version": EXCLUSION_SCHEMA_VERSION,
+            "manual_review_count": len(manual_review),
+            "items": manual_review,
+        },
+    )
+
+
+def _manual_review_row(row: Mapping[str, Any], *, lead: Mapping[str, Any] | None = None) -> dict[str, Any]:
+    missing_fields = list(row.get("failed_gates", [])) if isinstance(row.get("failed_gates"), list) else []
+    return {
+        "source_url": _text(row, "item_url"),
+        "source": _text(row, "source_name"),
+        "lead_reason": ", ".join(lead.get("positive_hits", [])) if isinstance(lead, Mapping) else "",
+        "extraction_outcome": _text(row, "extraction_outcome"),
+        "missing_fields": missing_fields,
+        "suggested_reviewer_action": "Retrieve full article or confirm exclusion from bounded source text.",
+        "priority_estimate": "HIGH" if isinstance(lead, Mapping) and int(lead.get("lead_score", 0) or 0) >= 6 else "STANDARD",
+        "originating_run_id": _text(row.get("lineage", {}) if isinstance(row.get("lineage"), Mapping) else {}, "collection_run_id"),
+        "raw_item_id": _text(row, "raw_item_id"),
+        "lead_id": _text(row, "lead_id"),
+        "title": _text(row, "title"),
+        "classification": _text(row, "classification"),
+        "supporting_text": _text(row, "supporting_text"),
+    }
 
 
 def run_national_pipeline(
@@ -2131,6 +2589,7 @@ def run_national_pipeline(
     candidates: list[dict[str, Any]] = []
     exclusions: list[dict[str, Any]] = []
     failed_extractions: list[dict[str, Any]] = []
+    manual_review: list[dict[str, Any]] = []
     for source_row in source_rows:
         result = run_collection_attempt(
             root,
@@ -2147,9 +2606,10 @@ def run_national_pipeline(
         candidates.extend(result["candidates"])
         exclusions.extend(result["exclusions"])
         failed_extractions.extend(result["failed_extractions"])
+        manual_review.extend(result.get("manual_review", []))
     candidate_registry = update_candidate_registry(root, edition_date=run_date, candidates=candidates)
     queue_payload = build_review_queue(candidate_registry["candidates"], edition_date=run_date, active_queue_limit=active_queue_limit, low_priority_cap=low_priority_cap)
-    _write_review_private_outputs(root, queue_payload=queue_payload, exclusions=exclusions, failed_extractions=failed_extractions)
+    _write_review_private_outputs(root, queue_payload=queue_payload, exclusions=exclusions, failed_extractions=failed_extractions, manual_review=manual_review)
     qualified_priorities = Counter(
         str((row.get("qualification_result") or {}).get("review_priority_recommendation") or "LOW")
         for row in candidates
@@ -2166,6 +2626,7 @@ def run_national_pipeline(
         "persistent_candidates_from_prior_runs": candidate_registry["persistent_candidates_from_prior_runs"],
         "excluded_item_count": len(exclusions),
         "failed_extraction_count": len(failed_extractions),
+        "manual_review_count": len(manual_review),
         "active_review_queue_count": queue_payload["queue_item_count"],
         "backlog_item_count": queue_payload["backlog_item_count"],
         "duplicate_item_count": queue_payload["duplicate_item_count"],
@@ -2183,4 +2644,5 @@ def run_national_pipeline(
         "compatibility_pressure_registry": adapt_pressure_registry(root),
         "exclusions": {"excluded_item_count": len(exclusions), "items": exclusions},
         "failed_extractions": {"failed_extraction_count": len(failed_extractions), "items": failed_extractions},
+        "manual_review": {"manual_review_count": len(manual_review), "items": manual_review},
     }

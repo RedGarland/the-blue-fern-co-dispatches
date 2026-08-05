@@ -1,0 +1,45 @@
+{
+  "approved_signal_ids": [
+    "care_line_candidate_c97029b55e49451e"
+  ],
+  "claim_ledger_reference": "claim_ledger.html",
+  "edition_date": "2026-08-05",
+  "edition_mode": "current_update",
+  "edition_summary": "This private draft uses 1 human-approved, source-traceable healthcare-access signal.",
+  "excluded_count": 1,
+  "final_state": "READY_FOR_HUMAN_APPROVAL_AS_PRIVATE_DRAFT",
+  "generation_status": "private_draft_ready",
+  "geographic_coverage": [
+    "mid-coast Maine"
+  ],
+  "headline": "mid-coast Maine healthcare-access update: Miles Hospital's labor and delivery center faces a proposed closure",
+  "held_count": 1,
+  "live_release_status": "not_published",
+  "pages_sync_status": "not_synced",
+  "proposal_created_at": "2026-08-05T19:20:00Z",
+  "publication_authorization_status": false,
+  "publication_datetime": null,
+  "readiness_verdict": "READY_FOR_PRIVATE_DRAFT",
+  "review_decision_counts": {
+    "APPROVE": 0,
+    "APPROVE_WITH_CORRECTION": 1,
+    "CONTEXT_ONLY": 1,
+    "DUPLICATE": 0,
+    "EXCLUDE": 0,
+    "HOLD_FOR_VERIFICATION": 1,
+    "SUPERSEDED": 0
+  },
+  "review_snapshot_path": "data/dispatches/care-line/review/signal-reviews/2026-08-05.json",
+  "review_snapshot_sha256": "492ac4c8f33c7c5ce41b9f24e343b6d15fd5213ef9e09c1eab6427062a6b47c6",
+  "schema_version": "bluefern.care_line.proposed_edition.v1",
+  "signal_count": 1,
+  "source_count": 1,
+  "source_mix": "NPR (1)",
+  "source_names": [
+    "NPR"
+  ],
+  "source_table_reference": "source_table.html",
+  "source_urls": [
+    "https://www.npr.org/2026/08/04/nx-s1-5910852/maine-birthing-center-fight"
+  ]
+}

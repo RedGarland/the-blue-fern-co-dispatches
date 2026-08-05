@@ -65,6 +65,37 @@ def _write_food_line_site(source_root: Path, dates: list[str], *, approved_dates
         (edition / "claim_ledger.html").write_text("<html>Claims</html>", encoding="utf-8")
 
 
+def _write_care_line_site(source_root: Path, dates: list[str], *, approved_dates: set[str] | None = None) -> None:
+    approved_dates = approved_dates or set()
+    site_root = source_root / "output" / "site" / "care-line"
+    site_root.mkdir(parents=True, exist_ok=True)
+    (site_root / "index.html").write_text("<html>Care Line index</html>", encoding="utf-8")
+    (site_root / "archive.html").write_text("<html>Archive</html>", encoding="utf-8")
+    (site_root / "rss.xml").write_text("<rss></rss>", encoding="utf-8")
+    for date_text in dates:
+        edition = site_root / "editions" / date_text
+        edition.mkdir(parents=True, exist_ok=True)
+        (edition / "index.html").write_text(f"<html>{date_text}</html>", encoding="utf-8")
+        manifest = {"edition_date": date_text}
+        if date_text in approved_dates:
+            manifest.update(
+                {
+                    "dispatch_slug": "care-line",
+                    "generation_mode": "approved_current_review_proposal",
+                    "publication_status": "unpublished",
+                    "pages_status": "not_synced",
+                    "public_release_status": "not_published",
+                    "pages_release_status": "not_synced",
+                    "public_url": f"https://dispatches.thebluefernco.com/care-line/editions/{date_text}/",
+                }
+            )
+        (edition / "edition_manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+        (edition / "sources_manifest.json").write_text(json.dumps([{"source_record_id": "src-1"}]), encoding="utf-8")
+        (edition / "curation_manifest.json").write_text(json.dumps([{"story_id": "story-1"}]), encoding="utf-8")
+        (edition / "source_table.html").write_text("<table><tr><td>1</td></tr></table>", encoding="utf-8")
+        (edition / "claim_ledger.html").write_text("<html>Claims</html>", encoding="utf-8")
+
+
 def _commit_repo(repo: Path, message: str = "update") -> None:
     _run_git(repo, "add", "-A")
     _run_git(repo, "commit", "-m", message)
@@ -146,7 +177,7 @@ def test_allowed_path_validation_rejects_unexpected_pages_diff(release_repos: tu
     )
 
     assert report["ok"] is False
-    assert any("unexpected Pages repo changes outside the allowed Food Line scope" in error for error in report["errors"])
+    assert any("unexpected Pages repo changes outside the allowed food-line scope" in error for error in report["errors"])
     assert "notes.txt" in report["errors"][0]
 
 
@@ -453,6 +484,34 @@ def test_sync_marks_july_28_and_july_31_pages_manifests_live(
         assert manifest["pages_status"] == "not_synced"
         assert manifest["public_release_status"] == "published"
         assert manifest["pages_release_status"] == "synced"
+
+
+def test_sync_marks_care_line_pages_manifest_live_and_keeps_source_pre_release(
+    release_repos: tuple[Path, Path]
+) -> None:
+    source, pages = release_repos
+    _write_care_line_site(source, ["2026-08-05"], approved_dates={"2026-08-05"})
+    _commit_repo(source, "care line approved release")
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="care-line",
+        dates=["2026-08-05"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+    )
+
+    assert report["ok"] is True
+    source_manifest = json.loads((source / "output" / "site" / "care-line" / "editions" / "2026-08-05" / "edition_manifest.json").read_text(encoding="utf-8"))
+    pages_manifest = json.loads((pages / "care-line" / "editions" / "2026-08-05" / "edition_manifest.json").read_text(encoding="utf-8"))
+    assert source_manifest["publication_status"] == "unpublished"
+    assert source_manifest["pages_status"] == "not_synced"
+    assert source_manifest["public_release_status"] == "not_published"
+    assert source_manifest["pages_release_status"] == "not_synced"
+    assert pages_manifest["publication_status"] == "unpublished"
+    assert pages_manifest["pages_status"] == "not_synced"
+    assert pages_manifest["public_release_status"] == "published"
+    assert pages_manifest["pages_release_status"] == "synced"
 
 
 def test_git_native_repository_validation_accepts_linked_worktree_and_rejects_invalid_shapes(

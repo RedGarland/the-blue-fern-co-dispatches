@@ -13,7 +13,8 @@ from datetime import date as dt_date
 from pathlib import Path
 from typing import Any, Callable, Sequence
 
-from bluefern_dispatches.food_line_approved_proposal import finalize_public_release_status
+from bluefern_dispatches.care_line_release import finalize_public_release_status as finalize_care_line_public_release_status
+from bluefern_dispatches.food_line_approved_proposal import finalize_public_release_status as finalize_food_line_public_release_status
 from bluefern_dispatches.generator import public_site_contains_blocked_public_text, public_site_contains_detail_artifacts
 from scripts.validate_publish_scope import validate_publish_scope
 
@@ -22,8 +23,11 @@ BASE_URL = "https://dispatches.thebluefernco.com"
 DEFAULT_PAGES_BRANCH = "gh-pages"
 DEFAULT_SOURCE_BRANCH = "add/pages-repo-default"
 DEFAULT_PAGES_REPO_NAME = "bluefern-dispatches-pages"
-SUPPORTED_DISPATCHES = ("food-line",)
-REQUIRED_FOOD_LINE_ROOT_FILES = ("index.html", "archive.html")
+SUPPORTED_DISPATCHES = ("food-line", "care-line")
+REQUIRED_ROOT_FILES_BY_DISPATCH = {
+    "food-line": ("index.html", "archive.html"),
+    "care-line": ("index.html", "archive.html", "rss.xml"),
+}
 FALLBACK_TIME_OUT_SECS = 20
 
 
@@ -161,6 +165,8 @@ def _parse_dates(values: Sequence[str]) -> tuple[str, ...]:
 
 def _allowed_pages_prefixes(dispatch: str, dates: Sequence[str]) -> list[str]:
     prefixes = [f"{dispatch}/index.html", f"{dispatch}/archive.html"]
+    if dispatch == "care-line":
+        prefixes.append("care-line/rss.xml")
     for date_text in dates:
         prefixes.append(f"{dispatch}/editions/{date_text}/")
     return prefixes
@@ -168,6 +174,8 @@ def _allowed_pages_prefixes(dispatch: str, dates: Sequence[str]) -> list[str]:
 
 def _allowed_source_prefixes(dispatch: str, dates: Sequence[str]) -> list[str]:
     prefixes = [f"output/site/{dispatch}/index.html", f"output/site/{dispatch}/archive.html"]
+    if dispatch == "care-line":
+        prefixes.append("output/site/care-line/rss.xml")
     for date_text in dates:
         prefixes.append(f"output/site/{dispatch}/editions/{date_text}/")
     return prefixes
@@ -193,7 +201,7 @@ def _edition_files(source_root: Path, dispatch: str, date_text: str) -> list[Pat
 
 
 def _build_copy_plan(source_root: Path, pages_repo: Path, dispatch: str, dates: Sequence[str]) -> CopyPlan:
-    if dispatch != "food-line":
+    if dispatch not in SUPPORTED_DISPATCHES:
         raise ValueError(f"Unsupported dispatch '{dispatch}'. Supported dispatches: {', '.join(SUPPORTED_DISPATCHES)}.")
 
     source_root = source_root.resolve()
@@ -203,7 +211,7 @@ def _build_copy_plan(source_root: Path, pages_repo: Path, dispatch: str, dates: 
     edition_dirs: list[tuple[Path, Path]] = []
     root_files: list[tuple[Path, Path]] = []
 
-    for filename in REQUIRED_FOOD_LINE_ROOT_FILES:
+    for filename in REQUIRED_ROOT_FILES_BY_DISPATCH[dispatch]:
         source_file = source_root / "output" / "site" / dispatch / filename
         if not source_file.exists():
             raise FileNotFoundError(f"missing required source artifact: {source_file}")
@@ -278,12 +286,12 @@ def _copy_edition_dir(source_dir: Path, target_dir: Path, dispatch: str) -> None
 
 def _target_file_bytes(source: Path, target: Path, dispatch: str) -> bytes:
     raw = source.read_bytes()
-    if dispatch != "food-line":
+    if dispatch not in {"food-line", "care-line"}:
         return raw
     if source.name != "edition_manifest.json":
         return raw
     target_parts = {part.lower() for part in target.parts}
-    if "food-line" not in target_parts or "editions" not in target_parts:
+    if dispatch not in target_parts or "editions" not in target_parts:
         return raw
     try:
         payload = json.loads(raw.decode("utf-8"))
@@ -291,7 +299,12 @@ def _target_file_bytes(source: Path, target: Path, dispatch: str) -> bytes:
         return raw
     if not isinstance(payload, dict):
         return raw
-    if not finalize_public_release_status(payload):
+    finalized = (
+        finalize_food_line_public_release_status(payload)
+        if dispatch == "food-line"
+        else finalize_care_line_public_release_status(payload)
+    )
+    if not finalized:
         return raw
     return json.dumps(payload, indent=2).encode("utf-8")
 
@@ -313,10 +326,14 @@ def _changed_paths_within_release_scope(dispatch: str, dates: Sequence[str], cha
 
 
 def _expected_urls(dates: Sequence[str], cache_bust: str | None = None) -> list[str]:
+    return _expected_urls_for_dispatch("food-line", dates, cache_bust=cache_bust)
+
+
+def _expected_urls_for_dispatch(dispatch: str, dates: Sequence[str], cache_bust: str | None = None) -> list[str]:
     urls: list[str] = []
     suffix = f"?cache_bust={urllib.parse.quote_plus(cache_bust)}" if cache_bust else ""
     for date_text in dates:
-        base = f"{BASE_URL}/food-line/editions/{date_text}"
+        base = f"{BASE_URL}/{dispatch}/editions/{date_text}"
         urls.extend(
             [
                 f"{base}/{suffix}" if suffix else f"{base}/",
@@ -337,10 +354,20 @@ def _http_status(url: str, timeout: int = FALLBACK_TIME_OUT_SECS) -> int:
 
 
 def _live_check(dates: Sequence[str], cache_bust: str | None = None, timeout: int = FALLBACK_TIME_OUT_SECS, fetch_status: Callable[[str, int], int] | None = None) -> dict[str, Any]:
+    return _live_check_for_dispatch("food-line", dates, cache_bust=cache_bust, timeout=timeout, fetch_status=fetch_status)
+
+
+def _live_check_for_dispatch(
+    dispatch: str,
+    dates: Sequence[str],
+    cache_bust: str | None = None,
+    timeout: int = FALLBACK_TIME_OUT_SECS,
+    fetch_status: Callable[[str, int], int] | None = None,
+) -> dict[str, Any]:
     status_fn = fetch_status or _http_status
     results: list[dict[str, Any]] = []
     failures: list[str] = []
-    for url in _expected_urls(dates, cache_bust=cache_bust):
+    for url in _expected_urls_for_dispatch(dispatch, dates, cache_bust=cache_bust):
         try:
             status = status_fn(url, timeout)
         except Exception as exc:  # noqa: BLE001 - surfaced as release status
@@ -360,11 +387,16 @@ def _live_check(dates: Sequence[str], cache_bust: str | None = None, timeout: in
 
 
 def _deterministic_commit_message(dates: Sequence[str]) -> str:
+    return _deterministic_commit_message_for_dispatch("food-line", dates)
+
+
+def _deterministic_commit_message_for_dispatch(dispatch: str, dates: Sequence[str]) -> str:
+    label = "Food Line" if dispatch == "food-line" else "Care Line"
     if len(dates) == 1:
-        return f"Publish Food Line {dates[0]}"
+        return f"Publish {label} {dates[0]}"
     if len(dates) == 2:
-        return f"Publish Food Line {dates[0]} through {dates[-1]}"
-    return "Publish Food Line selected editions"
+        return f"Publish {label} {dates[0]} through {dates[-1]}"
+    return f"Publish {label} selected editions"
 
 
 def _source_status_text(repo: Path) -> str:
@@ -570,7 +602,11 @@ def sync_pages_from_source(
         )
 
     if dry_run or live_check_only:
-        live_check_result = _live_check(selected_dates, cache_bust=cache_bust, fetch_status=fetch_status) if live_check or live_check_only else None
+        live_check_result = (
+            _live_check_for_dispatch(dispatch, selected_dates, cache_bust=cache_bust, fetch_status=fetch_status)
+            if live_check or live_check_only
+            else None
+        )
         report = {
             "ok": not (live_check_result and not live_check_result["ok"]),
             "dispatch": dispatch,
@@ -613,7 +649,7 @@ def sync_pages_from_source(
     errors.extend(public_site_contains_blocked_public_text(source_root / "output" / "site"))
     if unexpected_changes:
         errors.append(
-            "unexpected Pages repo changes outside the allowed Food Line scope: " + ", ".join(sorted(unexpected_changes))
+            f"unexpected Pages repo changes outside the allowed {dispatch} scope: " + ", ".join(sorted(unexpected_changes))
         )
 
     if errors:
@@ -647,8 +683,10 @@ def sync_pages_from_source(
             report_file.write_text(json.dumps(report, indent=2), encoding="utf-8")
         return report
 
-    commit_message = _deterministic_commit_message(selected_dates)
+    commit_message = _deterministic_commit_message_for_dispatch(dispatch, selected_dates)
     stage_paths = [f"{dispatch}/index.html", f"{dispatch}/archive.html"] + [f"{dispatch}/editions/{date_text}" for date_text in selected_dates]
+    if dispatch == "care-line":
+        stage_paths.insert(2, "care-line/rss.xml")
     add_result = _run_git(pages_root, "add", "-A", "--", *stage_paths)
     if add_result.returncode != 0:
         return {
@@ -679,7 +717,11 @@ def sync_pages_from_source(
 
     staged_check = _run_git(pages_root, "diff", "--cached", "--quiet")
     if staged_check.returncode == 0:
-        live_check_result = _live_check(selected_dates, cache_bust=cache_bust, fetch_status=fetch_status) if live_check else None
+        live_check_result = (
+            _live_check_for_dispatch(dispatch, selected_dates, cache_bust=cache_bust, fetch_status=fetch_status)
+            if live_check
+            else None
+        )
         report = {
             "ok": not (live_check_result and not live_check_result["ok"]),
             "dispatch": dispatch,
@@ -777,7 +819,11 @@ def sync_pages_from_source(
                 pushed = True
                 push_status = "pushed"
 
-    live_check_result = _live_check(selected_dates, cache_bust=cache_bust, fetch_status=fetch_status) if live_check else None
+    live_check_result = (
+        _live_check_for_dispatch(dispatch, selected_dates, cache_bust=cache_bust, fetch_status=fetch_status)
+        if live_check
+        else None
+    )
     errors.extend(push_error)
     if live_check_result and not live_check_result["ok"]:
         errors.extend(list(live_check_result["failures"]))

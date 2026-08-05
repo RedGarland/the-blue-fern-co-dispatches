@@ -1,0 +1,91 @@
+{
+  "dispatch_name": "The Care Line Dispatch",
+  "dispatch_slug": "care-line",
+  "public_visible": true,
+  "edition_date": "2026-08-05",
+  "generated_at": "2026-08-05T05:05:26.586224+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/care-line/editions/2026-08-05/",
+  "local_output_path": "C:\\tmp\\care-line-phase-f-source-20260805\\output\\site\\care-line\\editions\\2026-08-05",
+  "local_backup_path": "C:\\tmp\\care-line-phase-f-backup\\care-line\\2026-08-05",
+  "template_version": "dispatches-static-v1",
+  "source_count": 1,
+  "story_count": 1,
+  "source_manifest_path": "C:\\tmp\\care-line-phase-f-source-20260805\\output\\site\\care-line\\editions\\2026-08-05\\sources_manifest.json",
+  "curation_manifest_path": "C:\\tmp\\care-line-phase-f-source-20260805\\output\\site\\care-line\\editions\\2026-08-05\\curation_manifest.json",
+  "free_public_artifacts": [
+    "C:\\tmp\\care-line-phase-f-source-20260805\\output\\site\\care-line\\editions\\2026-08-05\\index.html",
+    "C:\\tmp\\care-line-phase-f-source-20260805\\output\\site\\care-line\\editions\\2026-08-05\\sources_manifest.json",
+    "C:\\tmp\\care-line-phase-f-source-20260805\\output\\site\\care-line\\editions\\2026-08-05\\curation_manifest.json",
+    "C:\\tmp\\care-line-phase-f-source-20260805\\output\\site\\care-line\\editions\\2026-08-05\\source_table.html",
+    "C:\\tmp\\care-line-phase-f-source-20260805\\output\\site\\care-line\\editions\\2026-08-05\\claim_ledger.html"
+  ],
+  "paid_or_detail_artifacts": [],
+  "claim_count": 1,
+  "qualified_public_claim_count": 1,
+  "lead_signal_count": 1,
+  "public_signal_count": 1,
+  "public_rendered": true,
+  "stale_current_signal_count": 0,
+  "resource_only_count": 0,
+  "wrapper_candidate_count": 0,
+  "secondary_query_count": 0,
+  "qualified_but_not_public_count": 0,
+  "source_families": [
+    "public_radio"
+  ],
+  "pressure_source_count_by_family": {
+    "public_radio": 1
+  },
+  "pressure_source_count_by_state": {
+    "ME": 1
+  },
+  "exclusion_reason_counts": {},
+  "exclusion_reason_summary": "",
+  "discovery_gap_check": {
+    "source_count": 1,
+    "public_signal_count": 1,
+    "claim_count": 1,
+    "excluded_source_count": 0,
+    "excluded_count": 0,
+    "wrapper_candidate_count": 0,
+    "secondary_query_count": 0,
+    "qualified_but_not_public_count": 0,
+    "stale_count": 0,
+    "weak_count": 0,
+    "not_traceable_count": 0,
+    "source_families": [
+      "public_radio"
+    ],
+    "pressure_source_count_by_family": {
+      "public_radio": 1
+    },
+    "pressure_source_count_by_state": {
+      "ME": 1
+    },
+    "exclusion_reason_counts": {},
+    "exclusion_reason_summary": ""
+  },
+  "public_summary": "NPR reports that a coalition in mid-coast Maine is fighting a proposed closure of Miles Hospital's labor and delivery center. The source does not establish that labor and delivery services have already ended.",
+  "public_archive_title": "Miles Hospital proposes closing its labor and delivery center",
+  "public_archive_subtitle": "NPR reports that a coalition in mid-coast Maine is fighting a proposed closure of Miles Hospital's labor and delivery center. The source does not establish that labor and delivery services have already ended.",
+  "edition_mode": "current_update",
+  "reviewed_source_count": 1,
+  "excluded_source_count": 0,
+  "source_table_path": "/care-line/editions/2026-08-05/source_table.html",
+  "claim_ledger_path": "/care-line/editions/2026-08-05/claim_ledger.html",
+  "future_paid_fields_todo": [],
+  "detail_artifacts_publicly_exposed": false,
+  "warnings": [
+    "detention watch generation skipped: detention watch input not found: C:\\tmp\\care-line-phase-f-source-20260805\\data\\dispatches\\cascadia\\detention_watch\\baseline_2026-05-03.json"
+  ],
+  "errors": [],
+  "generation_mode": "approved_current_review_proposal",
+  "publication_status": "unpublished",
+  "pages_status": "not_synced",
+  "approved_proposal_path": "data/dispatches/care-line/review/proposed-editions/2026-08-05.json",
+  "approved_proposal_sha256": "0ed864bab38e06a179c1b90e44f797f57aef1cb278637d67692d7c7fc2f7a346",
+  "review_snapshot_path": "data/dispatches/care-line/review/signal-reviews/2026-08-05.json",
+  "review_snapshot_sha256": "492ac4c8f33c7c5ce41b9f24e343b6d15fd5213ef9e09c1eab6427062a6b47c6",
+  "public_release_status": "not_published",
+  "pages_release_status": "not_synced"
+}

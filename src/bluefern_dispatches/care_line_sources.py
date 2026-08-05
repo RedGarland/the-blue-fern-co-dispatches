@@ -237,6 +237,14 @@ def _record_value(record: Any, key: str, default: Any = None) -> Any:
     return getattr(record, key, default)
 
 
+def _preferred_public_summary(record: dict[str, Any]) -> str:
+    for key in ("public_summary_override", "approved_public_summary", "bounded_public_summary"):
+        value = str(_record_value(record, key) or "").strip()
+        if value:
+            return value
+    return ""
+
+
 def load_pressure_source_registry(root: Path, path: Path | None = None) -> list[dict[str, Any]]:
     registry_path = root / (path or REGISTRY_PATH)
     if not registry_path.exists():
@@ -596,6 +604,8 @@ def _care_line_who_may_be_affected(record: dict[str, Any]) -> str:
     groups = [str(item).strip() for item in _record_value(record, "affected_groups") or [] if str(item).strip()]
     groups_text = _care_line_join_list(groups)
     if groups_text and location:
+        if location.lower() in groups_text.lower():
+            return f"{groups_text[0].upper() + groups_text[1:]}."
         return f"{groups_text[0].upper() + groups_text[1:]} in {location}."
     if groups_text:
         return f"{groups_text[0].upper() + groups_text[1:]}."
@@ -700,6 +710,9 @@ def public_archive_title_for_records(records: list[dict[str, Any]]) -> str:
     lead = _lead_public_record(records)
     if lead is None:
         return DISPATCH_TAGLINE
+    title_override = str(_record_value(lead, "public_archive_title_override") or _record_value(lead, "public_headline") or "").strip()
+    if title_override:
+        return title_override
     claim = _care_line_title_topic(str(_record_value(lead, "claim_supported") or _record_value(lead, "pressure_summary") or _record_value(lead, "summary_or_snippet") or ""))
     pressure_label = _care_line_pressure_label(lead)
     if claim:
@@ -713,12 +726,16 @@ def public_archive_title_for_records(records: list[dict[str, Any]]) -> str:
 
 
 def summary_for_records(records: list[dict[str, Any]]) -> str:
-    public_rows = public_claim_rows(records)
-    if not public_rows:
+    public_records = [record for record in records if record_is_public(record)]
+    if not public_records:
         return DISPATCH_TAGLINE
+    preferred_summary = _preferred_public_summary(public_records[0])
+    if preferred_summary:
+        return preferred_summary
+    public_rows = public_claim_rows(records)
     lead = public_rows[0]["claim"] or public_rows[0]["supporting_source"]
     if str(lead).strip().lower().startswith("google news"):
-        pressure_label = _care_line_pressure_label(public_rows[0] if public_rows else {})
+        pressure_label = _care_line_pressure_label(public_records[0] if public_records else {})
         if pressure_label:
             return f"{pressure_label[:1].upper() + pressure_label[1:]} This edition uses real, traceable source records."
         return DISPATCH_TAGLINE

@@ -1,0 +1,40 @@
+{
+  "blocking_issues": [
+    "Human editorial approval is still required before any public release or Pages synchronization."
+  ],
+  "edition_date": "2026-08-05",
+  "pages_synchronization_status": "not_synced",
+  "private_draft_artifact_hashes": {
+    "claim_ledger.html": "376520f54eda4534a3f51e4a62d780dc039d64e73235225a5863055b0e516a1f",
+    "curation_manifest.json": "9a37018909d3f16810e547fab6fc527e55e0903612c7c826b37c6fc88cab549f",
+    "draft-manifest.json": "2422b3c0872b38349fbd054a52c7bb68ac6c5879421f0075560fe06b3e6a3664",
+    "edition_manifest.json": "6113ca0f4916d8c6e87de787f168bdfbe1d4722beb9f50783efca41f58d2eef7",
+    "editorial-checklist.md": "692ae31dcd714f6afe60f92ad8c1e95fa39c3223753ea23e56ec2eeb1af4ed76",
+    "index.html": "04c7483e1c1fae3aea0d0ad6808ade79a8b3309e8fc19cbac4f20244cd371bfa",
+    "proposed-edition.json": "0ed864bab38e06a179c1b90e44f797f57aef1cb278637d67692d7c7fc2f7a346",
+    "proposed-edition.md": "58e113ca4e191fa5a5d8ee487054cc9aedd4b8885de7f968b2673690cb06ca14",
+    "source_table.html": "528c21ac4ab8b524700ce8344d1e5c303ae0608f5d269b48d18403e5a4a9d6c1",
+    "sources_manifest.json": "90be31c3ff2534feb5d6013c627a971c30daf4a2715972cebbba08f56c9db432"
+  },
+  "proposal_path": "data/dispatches/care-line/review/proposed-editions/2026-08-05.json",
+  "proposal_sha256": "0ed864bab38e06a179c1b90e44f797f57aef1cb278637d67692d7c7fc2f7a346",
+  "public_path_plan": {
+    "output_site_target": "output/site/care-line/editions/2026-08-05/",
+    "pages_sync_status": "not_synced"
+  },
+  "publication_authorization": false,
+  "required_human_approval": true,
+  "review_snapshot_path": "data/dispatches/care-line/review/signal-reviews/2026-08-05.json",
+  "review_snapshot_sha256": "492ac4c8f33c7c5ce41b9f24e343b6d15fd5213ef9e09c1eab6427062a6b47c6",
+  "schema_version": "bluefern.care_line.release_readiness.v1",
+  "validation_results": {
+    "all_claims_have_exact_passages": true,
+    "all_claims_have_https_sources": true,
+    "approved_signal_count": 1,
+    "claim_count": 1,
+    "output_site_written": false,
+    "pages_written": false,
+    "private_paths_excluded_from_html": true,
+    "source_count": 1
+  }
+}

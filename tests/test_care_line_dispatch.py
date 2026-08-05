@@ -222,3 +222,51 @@ def test_care_line_build_renders_no_current_update_edition_and_lists_it(monkeypa
     assert report["listable"] is True
     assert report["edition_mode"] == "no_current_update"
     assert report["qualified_public_claim_count"] == 0
+
+
+def test_care_line_august5_release_candidate_uses_approved_miles_wording(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = _work_root()
+    backup_root = work / "backup"
+    monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-08-05")
+
+    result = build_site(
+        work,
+        dry_run=False,
+        backup_root=backup_root,
+        dispatch_seed_dates={"care-line": "2026-08-05"},
+    )
+
+    assert result["ok"] is True
+    site_root = work / "output" / "site" / "care-line"
+    edition_dir = site_root / "editions" / "2026-08-05"
+    manifest = json.loads((edition_dir / "edition_manifest.json").read_text(encoding="utf-8"))
+    edition_html = (edition_dir / "index.html").read_text(encoding="utf-8")
+    archive_html = (site_root / "archive.html").read_text(encoding="utf-8")
+    index_html = (site_root / "index.html").read_text(encoding="utf-8")
+
+    assert manifest["dispatch_slug"] == "care-line"
+    assert manifest["edition_mode"] == "current_update"
+    assert manifest["source_count"] == 1
+    assert manifest["story_count"] == 1
+    assert manifest["claim_count"] == 1
+    assert manifest["qualified_public_claim_count"] == 1
+    assert manifest["public_archive_title"] == "Miles Hospital proposes closing its labor and delivery center"
+    assert manifest["public_summary"] == "NPR reports that a coalition in mid-coast Maine is fighting a proposed closure of Miles Hospital's labor and delivery center. The source does not establish that labor and delivery services have already ended."
+    assert manifest["generation_mode"] == "approved_current_review_proposal"
+    assert manifest["publication_status"] == "unpublished"
+    assert manifest["pages_status"] == "not_synced"
+    assert manifest["public_release_status"] == "not_published"
+    assert manifest["pages_release_status"] == "not_synced"
+    assert manifest["approved_proposal_path"] == "data/dispatches/care-line/review/proposed-editions/2026-08-05.json"
+    assert manifest["review_snapshot_path"] == "data/dispatches/care-line/review/signal-reviews/2026-08-05.json"
+
+    assert "Miles Hospital proposes closing its labor and delivery center" in edition_html
+    assert "proposed closure of Miles Hospital&#x27;s labor and delivery center" in edition_html
+    assert "Who may be affected:</strong> Pregnant patients and families needing labor and delivery care in mid-coast Maine." in edition_html
+    assert "does not establish that labor and delivery services have already ended" in edition_html
+    assert "Texas Tribune" not in edition_html
+    assert "Virginia Mercury" not in edition_html
+    assert "2026-08-05" in archive_html
+    assert "Miles Hospital proposes closing its labor and delivery center" in archive_html
+    assert "Miles Hospital proposes closing its labor and delivery center" in index_html

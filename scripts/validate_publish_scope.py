@@ -209,14 +209,20 @@ def _release_manifest_delta(
         return [], [], [f"Unable to read release manifest {manifest_path}: {exc}"]
     if not isinstance(payload, dict):
         return [], [], ["release manifest must be a JSON object"]
-    if payload.get("schema_version") != "food_line_release_manifest_v1":
-        errors.append("release manifest schema_version must be food_line_release_manifest_v1")
+    expected_schema = {
+        "food-line": "food_line_release_manifest_v1",
+        "care-line": "care_line_release_manifest_v1",
+    }.get(dispatch)
+    if expected_schema is None:
+        errors.append("release manifest is only supported for Food Line and Care Line")
+    elif payload.get("schema_version") != expected_schema:
+        errors.append(f"release manifest schema_version must be {expected_schema}")
     if payload.get("dispatch") != dispatch:
         errors.append("release manifest dispatch does not match --dispatch")
     if declared_date is not None and payload.get("edition_date") != declared_date.isoformat():
         errors.append("release manifest edition_date does not match --date")
     if payload.get("deletions") not in ([], None):
-        errors.append("release manifest deletions are not authorized for this Food Line release")
+        errors.append(f"release manifest deletions are not authorized for this {dispatch} release")
     if payload.get("shared_files") not in ([], None):
         errors.append("release manifest shared files require a separate explicit authorization")
     entries = payload.get("entries")
@@ -274,20 +280,22 @@ def _release_manifest_delta(
         if recorded_target_sha != target_sha:
             errors.append(f"release manifest pre-sync Pages SHA-256 is stale: {pages_rel}")
 
-    if dispatch == "food-line" and declared_date is not None:
-        edition_dir = source_root / "output" / "site" / "food-line" / "editions" / declared_date.isoformat()
+    if dispatch in {"food-line", "care-line"} and declared_date is not None:
+        edition_dir = source_root / "output" / "site" / dispatch / "editions" / declared_date.isoformat()
         expected_paths = {
-            "output/site/food-line/index.html",
-            "output/site/food-line/archive.html",
+            f"output/site/{dispatch}/index.html",
+            f"output/site/{dispatch}/archive.html",
         }
+        if dispatch == "care-line":
+            expected_paths.add("output/site/care-line/rss.xml")
         if edition_dir.is_dir():
             expected_paths.update(path.relative_to(source_root).as_posix() for path in edition_dir.rglob("*") if path.is_file())
         missing = sorted(expected_paths - set(source_paths))
         extra = sorted(set(source_paths) - expected_paths)
         if missing:
-            errors.append("release manifest omits generated Food Line publication files: " + ", ".join(missing))
+            errors.append(f"release manifest omits generated {dispatch} publication files: " + ", ".join(missing))
         if extra:
-            errors.append("release manifest contains unexpected Food Line publication files: " + ", ".join(extra))
+            errors.append(f"release manifest contains unexpected {dispatch} publication files: " + ", ".join(extra))
     return source_paths, pages_paths, errors
 
 

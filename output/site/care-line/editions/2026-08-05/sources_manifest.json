@@ -1,0 +1,19 @@
+[
+  {
+    "source_id": "care-line-2026-08-05-npr-miles-labor-delivery-proposal",
+    "title": "Miles Hospital proposes closing its labor and delivery center",
+    "url": "https://www.npr.org/2026/08/04/nx-s1-5910852/maine-birthing-center-fight",
+    "publisher": "NPR",
+    "published_at": "2026-08-04",
+    "retrieved_at": "2026-08-05",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "care-line-story-001"
+    ],
+    "claim_ids": [
+      "care-line-claim-001"
+    ],
+    "dispatch_slug": "care-line",
+    "edition_date": "2026-08-05"
+  }
+]

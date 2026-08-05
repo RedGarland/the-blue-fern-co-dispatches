@@ -34,6 +34,10 @@ from bluefern_dispatches.care_line_sources import (
     validate_manual_source_records as validate_care_line_manual_sources,
     validate_pressure_source_registry as validate_care_line_pressure_registry,
 )
+from bluefern_dispatches.care_line_release import (
+    initialize_public_release_status as initialize_care_line_public_release_status,
+    sha256_file as care_line_sha256_file,
+)
 from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
 from bluefern_dispatches.public_prose import html_contains_public_prose_violations
 from bluefern_dispatches.universal_events.care_line_signal_wire import build_care_line_signal_wire_publication
@@ -2281,6 +2285,18 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
         "warnings": warnings,
         "errors": errors,
     }
+    if dispatch.slug == CARE_LINE_DISPATCH_SLUG and care_line_public_records:
+        proposal_path = Path("data/dispatches/care-line/review/proposed-editions") / f"{dispatch.edition_date}.json"
+        snapshot_path = Path("data/dispatches/care-line/review/signal-reviews") / f"{dispatch.edition_date}.json"
+        if proposal_path.exists() and snapshot_path.exists():
+            edition_manifest["generation_mode"] = "approved_current_review_proposal"
+            edition_manifest["publication_status"] = "unpublished"
+            edition_manifest["pages_status"] = "not_synced"
+            edition_manifest["approved_proposal_path"] = proposal_path.as_posix()
+            edition_manifest["approved_proposal_sha256"] = care_line_sha256_file(proposal_path)
+            edition_manifest["review_snapshot_path"] = snapshot_path.as_posix()
+            edition_manifest["review_snapshot_sha256"] = care_line_sha256_file(snapshot_path)
+            initialize_care_line_public_release_status(edition_manifest)
     return edition_manifest, asdicts(dispatch.sources), asdicts(dispatch.stories)
 
 

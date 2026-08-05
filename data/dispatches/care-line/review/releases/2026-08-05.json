@@ -1,0 +1,77 @@
+{
+  "approved_proposal_path": "data/dispatches/care-line/review/proposed-editions/2026-08-05.json",
+  "approved_proposal_sha256": "0ed864bab38e06a179c1b90e44f797f57aef1cb278637d67692d7c7fc2f7a346",
+  "deletions": [],
+  "dispatch": "care-line",
+  "edition_date": "2026-08-05",
+  "entries": [
+    {
+      "action": "modify",
+      "pages_path": "care-line/archive.html",
+      "pages_sha256_before": "28ed60ab2ea4fbbac1d5edafe1b47a65842fc9e851c10e1592bfab9e41f7e662",
+      "source_path": "output/site/care-line/archive.html",
+      "source_sha256": "73bc617b88a4ddcb8311c52e2e7f3aac766a35ce0b0e49564f09ac2a82c7c09a"
+    },
+    {
+      "action": "add",
+      "pages_path": "care-line/editions/2026-08-05/claim_ledger.html",
+      "pages_sha256_before": null,
+      "source_path": "output/site/care-line/editions/2026-08-05/claim_ledger.html",
+      "source_sha256": "a8a2e2d80e1834de5fce05f07475991e238a77a24398bf44f518750d8bc7a11a"
+    },
+    {
+      "action": "add",
+      "pages_path": "care-line/editions/2026-08-05/curation_manifest.json",
+      "pages_sha256_before": null,
+      "source_path": "output/site/care-line/editions/2026-08-05/curation_manifest.json",
+      "source_sha256": "aaf192a82f0b4420e43d372e8f4c6e46227c9547e1d0864bd8710351d721aab1"
+    },
+    {
+      "action": "add",
+      "pages_path": "care-line/editions/2026-08-05/edition_manifest.json",
+      "pages_sha256_before": null,
+      "source_path": "output/site/care-line/editions/2026-08-05/edition_manifest.json",
+      "source_sha256": "a15bd9662232cb89764a94973b402cf46fd1cc26f10b2a768940a4f55f0554ae"
+    },
+    {
+      "action": "add",
+      "pages_path": "care-line/editions/2026-08-05/index.html",
+      "pages_sha256_before": null,
+      "source_path": "output/site/care-line/editions/2026-08-05/index.html",
+      "source_sha256": "61573a1eff8cc6c6763284f1fde3a29bbfb00421a51971b60e5977493813c7f3"
+    },
+    {
+      "action": "add",
+      "pages_path": "care-line/editions/2026-08-05/source_table.html",
+      "pages_sha256_before": null,
+      "source_path": "output/site/care-line/editions/2026-08-05/source_table.html",
+      "source_sha256": "cfe11c059683229c2060eb91513d6fa1449b3fe7aa7376ac014bceb27c92bc93"
+    },
+    {
+      "action": "add",
+      "pages_path": "care-line/editions/2026-08-05/sources_manifest.json",
+      "pages_sha256_before": null,
+      "source_path": "output/site/care-line/editions/2026-08-05/sources_manifest.json",
+      "source_sha256": "7c8f0cee1ceaf421b8d0fbe70d220aa554cb582554b74f19e0cf86ddc52f70a0"
+    },
+    {
+      "action": "modify",
+      "pages_path": "care-line/index.html",
+      "pages_sha256_before": "cc1c1bf8203b03b159393e49b22712dc1997cda98be812a4d19ec501ed7a7f5f",
+      "source_path": "output/site/care-line/index.html",
+      "source_sha256": "9030af9e72c2ec205f15c3ff1cb35ab2d55c2b684ab9b836d90259fab033241f"
+    },
+    {
+      "action": "modify",
+      "pages_path": "care-line/rss.xml",
+      "pages_sha256_before": "17c57c67f3e354dcd990059d74c975ffef64a35b4c8a7916e7a9c054b542671e",
+      "source_path": "output/site/care-line/rss.xml",
+      "source_sha256": "3d193ca8254adeee6adaf3fdfbb5bd2beb67c09665008bb0238f15b63c8c49b7"
+    }
+  ],
+  "review_snapshot_path": "data/dispatches/care-line/review/signal-reviews/2026-08-05.json",
+  "review_snapshot_sha256": "492ac4c8f33c7c5ce41b9f24e343b6d15fd5213ef9e09c1eab6427062a6b47c6",
+  "schema_version": "care_line_release_manifest_v1",
+  "shared_files": [],
+  "source_commit": "0068ebe0d2741f22954f97890940d5d7e42fd6e8"
+}

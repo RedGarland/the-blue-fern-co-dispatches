@@ -3749,6 +3749,14 @@ def _food_line_join_archive_phrases(phrases: list[str]) -> str:
 
 def _food_line_public_edition_title(root: Path, date: str) -> str:
     manifest = _food_line_public_edition_manifest(root, date) or {}
+    explicit_title = str(
+        manifest.get("public_archive_title")
+        or manifest.get("headline")
+        or manifest.get("lead_headline")
+        or ""
+    ).strip()
+    if explicit_title:
+        return f"{date} — {explicit_title}"
     try:
         public_signal_count = int(manifest.get("public_signal_count") or 0)
     except (TypeError, ValueError):
@@ -7103,6 +7111,21 @@ def _run_food_line_approved_proposal(root: Path, date: str, approved_proposal_pa
         "claim_ledger_path": f"/food-line/editions/{date}/claim_ledger.html",
         "source_table_path": f"/food-line/editions/{date}/source_table.html",
         "edition_mode": "current_update",
+        "headline": str(bundle.proposal.get("edition_headline") or lead_row.get("title") or "").strip(),
+        "lead_headline": str(lead_row.get("title") or bundle.proposal.get("edition_headline") or "").strip(),
+        "public_archive_title": str(bundle.proposal.get("edition_headline") or lead_row.get("title") or "").strip(),
+        "public_archive_subtitle": str(
+            bundle.proposal.get("edition_summary")
+            or lead_row.get("approved_public_summary")
+            or lead_row.get("summary_or_snippet")
+            or ""
+        ).strip(),
+        "public_summary": str(
+            bundle.proposal.get("edition_summary")
+            or lead_row.get("approved_public_summary")
+            or lead_row.get("summary_or_snippet")
+            or ""
+        ).strip(),
         "validation_status": "ok",
         "approved_proposal_sha256": bundle.proposal_sha256,
         "review_snapshot_sha256": bundle.queue_sha256,

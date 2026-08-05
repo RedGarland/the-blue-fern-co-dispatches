@@ -10,7 +10,7 @@
       "pages_path": "food-line/archive.html",
       "pages_sha256_before": null,
       "source_path": "output/site/food-line/archive.html",
-      "source_sha256": "847f963fb01882628c74992093f7d873ae0891c11293cae2a5852b34a3044164"
+      "source_sha256": "306d3262e28208a309e2ff8a0be0a175e6e9289d23cbf0a7d70a52e28462cc53"
     },
     {
       "action": "add",
@@ -31,7 +31,7 @@
       "pages_path": "food-line/editions/2026-08-05/edition_manifest.json",
       "pages_sha256_before": null,
       "source_path": "output/site/food-line/editions/2026-08-05/edition_manifest.json",
-      "source_sha256": "9e9973812e96d336d3b482a52c628145bfb7389744f047f0b30c8073d6d782a3"
+      "source_sha256": "307c416a840043db8c4dd71cfcedec64619ce3d392b494401872bda2dfb53086"
     },
     {
       "action": "add",
@@ -59,7 +59,7 @@
       "pages_path": "food-line/index.html",
       "pages_sha256_before": null,
       "source_path": "output/site/food-line/index.html",
-      "source_sha256": "cc4a8ff4ff1d1d35296c7ef883c58abd5cbc4875ba687b10443c7835a1565d26"
+      "source_sha256": "e9ba715fbb794129ce6aedf100281e169f5548ada5ea73a621d06733ec0cf4ad"
     },
     {
       "action": "add",
@@ -73,5 +73,5 @@
   "review_snapshot_sha256": "dec2b94894154407a18472abc4390c94dba227b45a17e6fe81b2ffa98e1b63b8",
   "schema_version": "food_line_release_manifest_v1",
   "shared_files": [],
-  "source_commit": "ac8c6b319e8d871ad3ba8ceaa6952102f37dc4ec"
+  "source_commit": "a0ed0ca4a7f5770b5d3b9dc8dcd0c4866215b9be"
 }

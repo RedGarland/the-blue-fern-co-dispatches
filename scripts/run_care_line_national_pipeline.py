@@ -17,6 +17,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run the canonical non-publishing Care Line national intake pipeline.")
     parser.add_argument("--repo-root", default=str(ROOT))
     parser.add_argument("--run-date", required=True)
+    parser.add_argument("--collection-only", action="store_true")
     parser.add_argument("--source-limit", type=int, default=None)
     parser.add_argument("--fetch-timeout", type=int, default=20)
     parser.add_argument("--max-items-per-source", type=int, default=25)
@@ -26,6 +27,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--exclude-partial", action="store_true")
     parser.add_argument("--allow-insecure-tls", action="store_true")
     args = parser.parse_args(argv)
+    if not args.collection_only:
+        parser.error("Care Line national pipeline requires --collection-only for scheduled or wrapper execution.")
     result = run_national_pipeline(
         Path(args.repo_root).resolve(),
         run_date=args.run_date,
@@ -39,7 +42,8 @@ def main(argv: list[str] | None = None) -> int:
         low_priority_cap=args.low_priority_cap,
     )
     print(json.dumps(result, indent=2, sort_keys=True, ensure_ascii=False))
-    return 0
+    status = str((result.get("run_manifest") or {}).get("status") or "")
+    return 0 if status in {"success", "partial_success"} else 1
 
 
 if __name__ == "__main__":

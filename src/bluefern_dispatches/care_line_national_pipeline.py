@@ -59,6 +59,9 @@ SNAPSHOT_SCHEMA_VERSION = "bluefern.care_line.review_snapshot.v1"
 CANDIDATE_REGISTRY_SCHEMA_VERSION = "bluefern.care_line.candidate_registry.v2"
 CLUSTERING_SCHEMA_VERSION = "bluefern.care_line.cluster_summary.v2"
 PARSER_VERSION = "care-line-national-pipeline-v2"
+RUN_STATUS_SUCCESS = "success"
+RUN_STATUS_PARTIAL_SUCCESS = "partial_success"
+RUN_STATUS_FAILURE = "failure"
 
 PRIORITY_ORDER = {"CRITICAL": 0, "HIGH": 1, "STANDARD": 2, "LOW": 3}
 QUEUE_PRIORITY_VALUES = set(PRIORITY_ORDER)
@@ -3171,6 +3174,16 @@ def run_national_pipeline(
     candidate_registry = update_candidate_registry(root, edition_date=run_date, candidates=candidates)
     queue_payload = build_review_queue(candidate_registry["candidates"], edition_date=run_date, active_queue_limit=active_queue_limit, low_priority_cap=low_priority_cap)
     _write_review_private_outputs(root, queue_payload=queue_payload, exclusions=exclusions, failed_extractions=failed_extractions, manual_review=manual_review)
+    collection_status_counts = Counter(str(attempt.get("collection_status") or "unknown") for attempt in attempts)
+    successful_attempt_count = sum(collection_status_counts.get(key, 0) for key in ("ok", "partial"))
+    failed_source_count = collection_status_counts.get("failed", 0)
+    skipped_source_count = collection_status_counts.get("skipped", 0)
+    if attempts and successful_attempt_count == 0 and failed_source_count > 0:
+        run_status = RUN_STATUS_FAILURE
+    elif failed_source_count > 0:
+        run_status = RUN_STATUS_PARTIAL_SUCCESS
+    else:
+        run_status = RUN_STATUS_SUCCESS
     qualified_priorities = Counter(
         str((row.get("qualification_result") or {}).get("review_priority_recommendation") or "LOW")
         for row in candidates
@@ -3178,8 +3191,14 @@ def run_national_pipeline(
     final_manifest = {
         **manifest,
         "completed_at": utc_now(),
-        "status": "complete",
+        "status": run_status,
+        "collection_only": True,
         "attempts": attempts,
+        "source_attempt_count": len(attempts),
+        "successful_attempt_count": successful_attempt_count,
+        "failed_source_count": failed_source_count,
+        "skipped_source_count": skipped_source_count,
+        "collection_status_counts": dict(sorted(collection_status_counts.items())),
         "raw_items_retrieved_this_run": len(raw_items),
         "event_leads_created_this_run": sum(1 for lead in event_leads if _text(lead, "qualification_status") == "event_lead"),
         "qualified_candidates_created_this_run": candidate_registry["created_this_run"],

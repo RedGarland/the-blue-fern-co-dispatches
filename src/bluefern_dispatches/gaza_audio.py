@@ -310,7 +310,9 @@ def _format_date_human(edition_date: str) -> str:
     return f"{dt.strftime('%B')} {dt.day}, {dt.year}"
 
 
-_AUDIO_SENTENCE_BOUNDARY_AFTER_YEAR_RE = re.compile(r"(?<=\b(?:19|20)\d{2})\s+(?=[A-Z])")
+_AUDIO_ADJACENT_PAST_TENSE_CLAUSES_RE = re.compile(
+    r"\b(?P<ending>[a-z]+ed)\s+(?P<subject>[A-Z][a-z]+s)\s+(?P<verb>[a-z]+ed)\b"
+)
 _AUDIO_WHITESPACE_RE = re.compile(r"\s+")
 _AUDIO_FRAGMENT_SENTENCE_RE = re.compile(
     r"^[A-Z][A-Za-z0-9'’.-]*(?:\s+[A-Z][A-Za-z0-9'’.-]*){0,4}\s+among at least \d+ journalists killed since\.?$"
@@ -340,7 +342,17 @@ def _normalize_audio_sentence_text(text: str) -> str:
         cleaned,
         flags=re.IGNORECASE,
     )
-    cleaned = _AUDIO_SENTENCE_BOUNDARY_AFTER_YEAR_RE.sub(". ", cleaned)
+    # A capitalized word after a year can continue the same phrase (for
+    # example, "2023 Israeli strike"), so a year is not a safe sentence
+    # boundary. Repair the narrower malformed-input shape where one completed
+    # past-tense clause runs directly into another instead.
+    cleaned = _AUDIO_ADJACENT_PAST_TENSE_CLAUSES_RE.sub(
+        lambda match: (
+            f"{match.group('ending')}. "
+            f"{match.group('subject')} {match.group('verb')}"
+        ),
+        cleaned,
+    )
     cleaned = _AUDIO_WHITESPACE_RE.sub(" ", cleaned).strip()
     return cleaned
 

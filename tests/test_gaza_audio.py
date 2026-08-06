@@ -128,6 +128,117 @@ def test_audio_script_smooths_repeated_sentences_and_sentence_boundaries():
     assert len(used) == 3
 
 
+def test_audio_script_preserves_year_phrases_and_repairs_adjacent_complete_clauses():
+    sources_by_id = {
+        "guardian": {
+            "source_record_id": "guardian",
+            "publisher": "The Guardian",
+            "url": "https://example.com/guardian",
+            "title": "Guardian report",
+        },
+        "bbc": {
+            "source_record_id": "bbc",
+            "publisher": "BBC News",
+            "url": "https://example.com/bbc",
+            "title": "BBC report",
+        },
+    }
+    for title in (
+        "Mass funeral held in Gaza for victims of 2023 Israeli strike",
+        "Gaza families assess the 2024 Ceasefire agreement",
+        "Gaza groups challenge the 2025 Aid restrictions",
+    ):
+        script, used = build_gaza_audio_script(
+            edition_date="2026-08-05",
+            curation_rows=[
+                {
+                    "title": title,
+                    "summary": (
+                        "Remains were recovered more than two years after the residential block was "
+                        "destroyed Mourners gathered in Gaza for a mass funeral."
+                    ),
+                    "source_record_ids": ["guardian", "bbc"],
+                    "publisher_names": ["The Guardian", "BBC News"],
+                    "included_in_public_summary": True,
+                }
+            ],
+            sources_by_id=sources_by_id,
+        )
+
+        assert f"{title}." in script
+        assert "destroyed Mourners" not in script
+        assert "destroyed." in script
+        assert "reported by The Guardian and BBC News" in script
+        assert len(used) == 2
+
+
+def test_august_five_transcript_only_surfaces_use_complete_clean_script(tmp_path: Path):
+    edition_date = "2026-08-05"
+    full_title = "Mass funeral held in Gaza for victims of 2023 Israeli strike"
+    malformed_title = "Mass funeral held in Gaza for victims of 2023."
+    _write_edition(
+        tmp_path,
+        edition_date,
+        curation=[
+            {
+                "title": full_title,
+                "summary": (
+                    "Remains of 112 victims, including 40 children, recovered from rubble more than two years "
+                    "after residential block was destroyed Mourners gathered in central Gaza on Tuesday for a "
+                    "mass funeral for 112 people, including 40 children, who were killed in 2023 in one of the "
+                    "deadliest Israeli strikes of the Gaza war."
+                ),
+                "source_record_ids": ["guardian", "bbc"],
+                "publisher_names": ["The Guardian", "BBC News"],
+                "included_in_public_summary": True,
+            }
+        ],
+        sources=[
+            {
+                "source_record_id": "guardian",
+                "publisher": "The Guardian",
+                "url": "https://example.com/guardian",
+                "title": full_title,
+            },
+            {
+                "source_record_id": "bbc",
+                "publisher": "BBC News",
+                "url": "https://example.com/bbc",
+                "title": "Mass funeral in Gaza for 112 Palestinians killed in 2023 Israeli strike",
+            },
+        ],
+    )
+
+    result = write_gaza_audio_outputs(tmp_path, edition_date, dry_run=False, tts_provider="none")
+    metadata = json.loads(result.metadata_path.read_text(encoding="utf-8"))
+    flash = json.loads(result.flash_briefing_path.read_text(encoding="utf-8"))[0]
+    surfaces = {
+        "transcript": result.transcript_path.read_text(encoding="utf-8"),
+        "script_text": metadata["script_text"],
+        "audio_podcast": (tmp_path / "output/site/gaza/audio/podcast.xml").read_text(encoding="utf-8"),
+        "general_podcast": (tmp_path / "output/site/gaza/podcast.xml").read_text(encoding="utf-8"),
+        "flash": flash["mainText"],
+    }
+
+    for value in surfaces.values():
+        assert full_title in value
+        assert malformed_title not in value
+        assert "destroyed Mourners" not in value
+        assert "Hormuz" not in value
+        assert "Smotrich" not in value
+        assert "2026-08-06" not in value
+        assert "C:\\" not in value
+    assert "The Guardian and BBC News" in metadata["script_text"]
+    assert "The Guardian" in surfaces["transcript"]
+    assert "BBC News" in surfaces["transcript"]
+    assert metadata["audio_file"] is None
+    assert metadata["audio_url"] is None
+    assert result.audio_file is None
+    assert not (tmp_path / f"output/site/gaza/audio/{edition_date}.mp3").exists()
+    assert "<enclosure " not in surfaces["audio_podcast"]
+    assert "<enclosure " not in surfaces["general_podcast"]
+
+
 def test_audio_script_uses_concise_story_level_summary_for_related_mourning_story():
     curation = [
         {

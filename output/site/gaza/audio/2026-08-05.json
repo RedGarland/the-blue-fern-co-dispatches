@@ -1,7 +1,7 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-08-05",
-  "generated_at": "2026-08-06T19:52:29.103847Z",
+  "generated_at": "2026-08-06T20:23:53.711882Z",
   "audio_status": "script_ready_no_audio_file",
   "audio_file": null,
   "audio_url": null,
@@ -23,13 +23,13 @@
   "estimated_cost_note": "pricing input not configured",
   "tts_pricing_basis": null,
   "tts_pricing_model": null,
-  "cost_logged_at": "2026-08-06T19:52:29.103825Z",
+  "cost_logged_at": "2026-08-06T20:23:53.711863Z",
   "segue_chime": "none",
   "segue_chime_count": 0,
   "segue_chime_asset": null,
   "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-08-05-transcript.html",
   "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-05/",
-  "script_text": "This is the Gaza Dispatch audio briefing for August 5, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Mass funeral held in Gaza for victims of 2023. Remains of 112 victims, including 40 children, recovered from rubble more than two years after residential block was destroyed Mourners gathered in central Gaza on Tuesday for a mass funeral for 112 people, including 40 children, who were killed in 2023 in one of the deadliest Israeli strikes of the Gaza war. This was reported by The Guardian and BBC News.\n\nFor the full source-backed dispatch, read the August 5, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "script_text": "This is the Gaza Dispatch audio briefing for August 5, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Mass funeral held in Gaza for victims of 2023 Israeli strike. Remains of 112 victims, including 40 children, recovered from rubble more than two years after residential block was destroyed. This was reported by The Guardian and BBC News.\n\nFor the full source-backed dispatch, read the August 5, 2026 Gaza edition at dispatches.thebluefernco.com.",
   "source_count": 2,
   "sources": [
     {

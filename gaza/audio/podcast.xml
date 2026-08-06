@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Wed, 05 Aug 2026 13:00:57 +0000</lastBuildDate>
+  <lastBuildDate>Thu, 06 Aug 2026 13:00:50 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for August 6, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-08-06-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-08-06-transcript.html</guid>
+    <pubDate>Thu, 06 Aug 2026 00:00:00 +0000</pubDate>
+    <description>Top Democrats accuse Trump officials over Israeli settlers' 'unbridled violence'. Letter says lifting of sanctions sent 'clear message' settlers can use deadly force in West Bank without consequences Senior Democrats have accused Donald Trump's administration of giving a green light to violent Israeli settlers in the occupied West Bank, warning that its policies created "a climate of impunity and unbridled violence" that endangers both Palestinians and US citizens. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-08-06.mp3" length="770688" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for August 5, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-08-05-transcript.html</link>

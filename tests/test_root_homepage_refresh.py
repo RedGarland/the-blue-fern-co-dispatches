@@ -59,9 +59,14 @@ def _write_release(
     dispatch_root = root / slug
     dispatch_root.mkdir(parents=True, exist_ok=True)
     linked = f'<li><a href="editions/{edition_date}/">{title}</a></li>' if archive_linked else ""
-    (dispatch_root / "archive.html").write_text(f"<html><body>{linked}</body></html>", encoding="utf-8")
-    (dispatch_root / "index.html").write_text(f"<html><body>{linked}</body></html>", encoding="utf-8")
-    (dispatch_root / "rss.xml").write_text(f"<rss>{linked}</rss>", encoding="utf-8")
+    for filename, prefix, suffix in (
+        ("archive.html", "<html><body>", "</body></html>"),
+        ("index.html", "<html><body>", "</body></html>"),
+        ("rss.xml", "<rss>", "</rss>"),
+    ):
+        path = dispatch_root / filename
+        existing = path.read_text(encoding="utf-8") if path.exists() else prefix + suffix
+        path.write_text(existing.replace(suffix, linked + suffix), encoding="utf-8")
 
 
 def test_homepage_refresh_discovers_all_active_products_and_fills_extra_slots(tmp_path):

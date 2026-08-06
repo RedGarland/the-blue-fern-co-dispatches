@@ -19,6 +19,23 @@ SECTION_RE = re.compile(
     re.DOTALL,
 )
 DATE_DIR_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+INVALID_RELEASE_MARKERS = {
+    "failed",
+    "not_published",
+    "not_synced",
+    "rejected",
+    "suppressed",
+    "unpublished",
+    "withheld",
+    "withdrawn",
+}
+INVALID_RELEASE_BOOLEAN_FIELDS = (
+    "failed",
+    "suppressed",
+    "unpublished",
+    "withheld",
+    "withdrawn",
+)
 
 PRODUCT_META: dict[str, dict[str, str]] = {
     "gaza": {
@@ -134,6 +151,11 @@ def _dispatch_listing_mentions(public_root: Path, slug: str, edition_date: str) 
     return False
 
 
+def _public_archive_mentions(public_root: Path, slug: str, edition_date: str) -> bool:
+    archive = public_root / slug / "archive.html"
+    return archive.exists() and f"editions/{edition_date}/" in archive.read_text(encoding="utf-8", errors="replace")
+
+
 def _published_status(manifest: dict[str, Any]) -> tuple[str, str]:
     release_status = str(
         manifest.get("public_release_status")
@@ -150,7 +172,10 @@ def _published_status(manifest: dict[str, Any]) -> tuple[str, str]:
 
 
 def _authorized_publication_time(manifest: dict[str, Any]) -> str | None:
-    for key in ("public_published_at", "actual_run_local_time", "scheduled_run_local_time"):
+    # A correction or deterministic rebuild can run after the public edition date.
+    # Prefer the public/scheduled release time so root metadata cannot inherit the
+    # correction job's wall-clock time.
+    for key in ("public_published_at", "scheduled_run_local_time", "actual_run_local_time"):
         parsed = _parse_datetime(str(manifest.get(key) or ""))
         if parsed is not None:
             hour = parsed.strftime("%I").lstrip("0") or "0"
@@ -193,10 +218,42 @@ def _resolve_title(slug: str, edition_dir: Path, manifest: dict[str, Any]) -> st
     return ""
 
 
-def _resolve_source_count(edition_dir: Path, manifest: dict[str, Any]) -> int:
+def _positive_int(value: Any) -> int:
+    return value if isinstance(value, int) and not isinstance(value, bool) and value > 0 else 0
+
+
+def _selected_supporting_source_count(edition_dir: Path) -> int:
+    curation_manifest = edition_dir / "curation_manifest.json"
+    if not curation_manifest.exists():
+        return 0
+    try:
+        rows = json.loads(curation_manifest.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return 0
+    if not isinstance(rows, list):
+        return 0
+    source_ids: set[str] = set()
+    for row in rows:
+        if not isinstance(row, dict) or row.get("public_rendered") is not True:
+            continue
+        for source_id in row.get("source_record_ids") or []:
+            normalized = str(source_id or "").strip()
+            if normalized:
+                source_ids.add(normalized)
+    return len(source_ids)
+
+
+def _resolve_source_count(slug: str, edition_dir: Path, manifest: dict[str, Any]) -> int:
+    if slug == "gaza":
+        selected = _positive_int(manifest.get("selected_supporting_source_count"))
+        if selected:
+            return selected
+        selected = _selected_supporting_source_count(edition_dir)
+        if selected:
+            return selected
     raw = manifest.get("source_count")
-    if isinstance(raw, int) and raw > 0:
-        return raw
+    if _positive_int(raw):
+        return int(raw)
     source_manifest = edition_dir / "sources_manifest.json"
     if source_manifest.exists():
         try:
@@ -228,13 +285,32 @@ def _release_is_eligible(
     manifest: dict[str, Any],
 ) -> tuple[bool, str, str, bool]:
     release_status, pages_status = _published_status(manifest)
+    status_values = [
+        release_status,
+        pages_status,
+        str(manifest.get("release_status") or ""),
+        str(manifest.get("status") or ""),
+        str(manifest.get("disposition") or ""),
+    ]
+    normalized_statuses = {
+        re.sub(r"[^a-z0-9]+", "_", value.strip().lower()).strip("_")
+        for value in status_values
+        if value.strip()
+    }
+    has_negative_status = any(
+        marker == status or marker in status.split("_") or marker in status
+        for status in normalized_statuses
+        for marker in INVALID_RELEASE_MARKERS
+    ) or any(manifest.get(field) is True for field in INVALID_RELEASE_BOOLEAN_FIELDS)
     has_positive_status = release_status == "published" or pages_status == "synced"
-    has_negative_status = release_status in {"not_published", "unpublished"} or pages_status in {"not_synced", "unpublished"}
     live_verified = False
     if verify_root is not None:
         live_verified = (verify_root / slug / "editions" / edition_date / "index.html").exists()
+    archive_listed = _public_archive_mentions(public_root, slug, edition_date)
     legacy_ok = not release_status and not pages_status and _dispatch_listing_mentions(public_root, slug, edition_date)
-    if has_negative_status and not live_verified:
+    if has_negative_status:
+        return False, release_status, pages_status, live_verified
+    if not archive_listed:
         return False, release_status, pages_status, live_verified
     if not (has_positive_status or live_verified or legacy_ok):
         return False, release_status, pages_status, live_verified
@@ -275,7 +351,7 @@ def discover_public_releases(
             if not eligible:
                 continue
             title = _resolve_title(slug, edition_dir, manifest)
-            source_count = _resolve_source_count(edition_dir, manifest)
+            source_count = _resolve_source_count(slug, edition_dir, manifest)
             if not title or source_count <= 0:
                 continue
             metadata = PRODUCT_META[slug]
@@ -326,6 +402,13 @@ def select_homepage_cards(releases: list[PublicRelease], *, limit: int = CARD_LI
     return sorted(selected, key=lambda item: item.sort_key, reverse=True)
 
 
+def select_effective_latest(releases: list[PublicRelease]) -> dict[str, PublicRelease]:
+    latest: dict[str, PublicRelease] = {}
+    for release in sorted(releases, key=lambda item: item.sort_key, reverse=True):
+        latest.setdefault(release.slug, release)
+    return latest
+
+
 def render_latest_developments_section(cards: list[PublicRelease]) -> str:
     card_html = "".join(
         f'<article class="edition-card edition-card--{html.escape(card.badge_class)}">'
@@ -349,3 +432,113 @@ def render_homepage_from_template(template_html: str, cards: list[PublicRelease]
     if not SECTION_RE.search(template_html):
         raise ValueError("Latest published developments section not found in template")
     return SECTION_RE.sub(replacement, template_html, count=1)
+
+
+def _release_date_line(release: PublicRelease) -> str:
+    suffix = f" &middot; {html.escape(release.publication_time_text)}" if release.publication_time_text else ""
+    return f"{html.escape(release.publication_name)} &middot; {html.escape(_format_long_date(release.edition_date))}{suffix}"
+
+
+def _replace_release_fields(card_html: str, release: PublicRelease, *, include_source_count: bool) -> str:
+    headline = (
+        f'<h3 class="latest-headline"><a href="{html.escape(release.relative_url)}">'
+        f"{html.escape(release.title)}</a></h3>"
+    )
+    updated, headline_count = re.subn(
+        r'<h3 class="latest-headline"><a href="[^"]+">.*?</a></h3>',
+        headline,
+        card_html,
+        count=1,
+        flags=re.DOTALL,
+    )
+    if headline_count != 1:
+        raise ValueError(f"Latest headline field not found for {release.slug}")
+    updated, date_count = re.subn(
+        r'<p class="date-line">.*?</p>',
+        f'<p class="date-line">{_release_date_line(release)}</p>',
+        updated,
+        count=1,
+        flags=re.DOTALL,
+    )
+    if date_count != 1:
+        raise ValueError(f"Latest date field not found for {release.slug}")
+    updated, button_count = re.subn(
+        r'(<a class="button" href=")[^"]+(">Read latest</a>)',
+        rf'\g<1>{html.escape(release.relative_url)}\g<2>',
+        updated,
+        count=1,
+    )
+    if button_count != 1:
+        raise ValueError(f"Read latest link not found for {release.slug}")
+    if include_source_count:
+        updated, source_count = re.subn(
+            r'<p class="edition-meta">.*?</p>',
+            f'<p class="edition-meta">{html.escape(_format_source_count(release.source_count))}</p>',
+            updated,
+            count=1,
+            flags=re.DOTALL,
+        )
+        if source_count != 1:
+            raise ValueError(f"Source-count field not found for {release.slug}")
+    return updated
+
+
+def _replace_latest_edition_card(template_html: str, release: PublicRelease) -> str:
+    pattern = re.compile(
+        rf'<article class="edition-card edition-card--{re.escape(release.badge_class)}">.*?</article>',
+        re.DOTALL,
+    )
+    match = pattern.search(template_html)
+    if match is None:
+        raise ValueError(f"Latest edition card not found for {release.slug}")
+    card = match.group(0)
+    headline = (
+        f'<h3><a href="{html.escape(release.relative_url)}">'
+        f"{html.escape(release.title)}</a></h3>"
+    )
+    updated, headline_count = re.subn(r'<h3><a href="[^"]+">.*?</a></h3>', headline, card, count=1, flags=re.DOTALL)
+    if headline_count != 1:
+        raise ValueError(f"Edition-grid headline field not found for {release.slug}")
+    updated, date_count = re.subn(
+        r'<p class="edition-source">.*?</p>',
+        f'<p class="edition-source">{_release_date_line(release)}</p>',
+        updated,
+        count=1,
+        flags=re.DOTALL,
+    )
+    if date_count != 1:
+        raise ValueError(f"Edition-grid date field not found for {release.slug}")
+    updated, source_count = re.subn(
+        r'<p class="edition-meta">.*?</p>',
+        f'<p class="edition-meta">{html.escape(_format_source_count(release.source_count))}</p>',
+        updated,
+        count=1,
+        flags=re.DOTALL,
+    )
+    if source_count != 1:
+        raise ValueError(f"Edition-grid source-count field not found for {release.slug}")
+    return template_html[: match.start()] + updated + template_html[match.end() :]
+
+
+def _replace_active_dispatch_card(template_html: str, release: PublicRelease) -> str:
+    product_name = PRODUCT_META[release.slug]["publication_name"]
+    if release.slug == "care-line":
+        product_name = "The Care Line Dispatch"
+    pattern = re.compile(
+        rf'<article class="dispatch-card dispatch-card--featured">(?:(?!</article>).)*?'
+        rf'<h2>{re.escape(product_name)}</h2>(?:(?!</article>).)*?</article>',
+        re.DOTALL,
+    )
+    match = pattern.search(template_html)
+    if match is None:
+        raise ValueError(f"Active dispatch card not found for {release.slug}")
+    updated = _replace_release_fields(match.group(0), release, include_source_count=False)
+    return template_html[: match.start()] + updated + template_html[match.end() :]
+
+
+def render_sitewide_homepage_from_template(template_html: str, release: PublicRelease) -> str:
+    return _replace_active_dispatch_card(_replace_latest_edition_card(template_html, release), release)
+
+
+def render_dispatch_directory_from_template(template_html: str, release: PublicRelease) -> str:
+    return _replace_active_dispatch_card(template_html, release)

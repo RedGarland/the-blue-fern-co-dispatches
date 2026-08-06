@@ -18,6 +18,6 @@
 - <none>
 
 ## Warnings
-- This is a limited-source update generated from 2 saved source records from 2 publishers. It should be read as a partial update, not a full daily briefing.
+- This limited-source update reviewed 4 candidate records. 2 supporting sources from 2 publishers describe 1 distinct development. It should be read as a partial update, not a full daily briefing.
 - publisher diversity below warning threshold
 - source count below warning threshold

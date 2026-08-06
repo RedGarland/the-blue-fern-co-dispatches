@@ -1,0 +1,48 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-06",
+  "correction_recorded_at": "2026-08-06T19:36:23.708899Z",
+  "disposition": "AUG6_WITHHELD_AND_UNLISTED",
+  "prior_publication_correction_status": "withdrawal_planned_not_published",
+  "prior_publication": {
+    "pages_baseline_commit": "b8724279fbaef7320a2c2492c8cd3254b641dd79",
+    "edition_path": "gaza/editions/2026-08-06",
+    "edition_manifest_sha256": "ebcf4f1422e47f80e581ab8bd2af551ea0d4abcfb40dd7e132541915e753b69c",
+    "sources_manifest_sha256": "2870f1b8efb1c2a733064e5e1cb8834030768bc516c75f492ece347b53d76b39",
+    "curation_manifest_sha256": "bdabdda866aa44787112ccfb9891c5300d3861c611eb3c344079ddeee48153be",
+    "index_sha256": "56f32f221001163ba8dcc018fa8f4af9b75fd1380db0a4a53db12415e7002aa9",
+    "publication_status": "published_with_invalid_west_bank_only_story"
+  },
+  "saved_record_provenance": {
+    "authoritative_source": "gh-pages:gaza/editions/2026-08-06/sources_manifest.json",
+    "authoritative_commit": "b8724279fbaef7320a2c2492c8cd3254b641dd79",
+    "preserved_manual_source_path": "data/dispatches/gaza/sources/2026-08-06/manual_sources.json",
+    "live_recollection_used": false,
+    "source_record_ids": [
+      "gaza-2026-08-06-bbc-middle-east-48f9e23cf11c",
+      "gaza-2026-08-06-guardian-world-d866873943a9",
+      "gaza-2026-08-06-guardian-world-6b5d21b47fa5",
+      "gaza-2026-08-06-guardian-world-dadafdf4fe22"
+    ]
+  },
+  "corrected_pipeline_outcome": {
+    "raw_candidate_count": 4,
+    "normalized_candidate_count": 3,
+    "selected_supporting_source_count": 0,
+    "rendered_development_count": 0,
+    "public_exposed": false,
+    "failed_edition_manifest": "output/dispatches/gaza/editions/2026-08-06/edition_manifest.json",
+    "source_evaluation_record": "data/dispatches/gaza/editions/2026-08-06/collection_report.json",
+    "west_bank_source_record_id": "gaza-2026-08-06-guardian-world-dadafdf4fe22",
+    "west_bank_exclusion_reason": "west_bank_without_gaza_impact",
+    "west_bank_review_status": "manual_review_required",
+    "west_bank_selected_public_story_id": null
+  },
+  "required_public_correction": {
+    "edition_action": "withdraw_direct_edition_and_remove_from_gaza_landing_archive_and_rss",
+    "audio_action": "withdraw_august_6_mp3_transcript_and_metadata_and_remove_episode_from_audio_index_podcast_feeds_and_flash_briefing",
+    "pages_modified_by_this_task": false,
+    "pages_commit_created_by_this_task": false,
+    "pages_pushed_by_this_task": false
+  }
+}

@@ -22,14 +22,16 @@
   "stale_feeds": [],
   "duplicate_count": 0,
   "accepted_count": 2,
-  "rejected_count": 0,
+  "rejected_count": 2,
   "rejection_counts_by_reason": {
+    "live_blog_incidental_gaza_reference": 1,
+    "west_bank_without_gaza_impact": 1,
     "normalization_errors": 0,
     "cross_edition_duplicates": 0
   },
   "adequacy_status": "limited_source_update",
   "warnings": [
-    "This is a limited-source update generated from 2 saved source records from 2 publishers. It should be read as a partial update, not a full daily briefing.",
+    "This limited-source update reviewed 4 candidate records. 2 supporting sources from 2 publishers describe 1 distinct development. It should be read as a partial update, not a full daily briefing.",
     "publisher diversity below warning threshold",
     "source count below warning threshold"
   ],

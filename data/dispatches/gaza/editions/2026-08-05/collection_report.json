@@ -13,20 +13,220 @@
   "provider_failures": [],
   "raw_candidate_count": 4,
   "normalized_candidate_count": 2,
+  "relevance_qualified_source_count": 2,
+  "excluded_source_count": 2,
   "accepted_candidate_count_before_dedupe": 2,
   "kept_after_dedupe": 2,
   "suppressed_after_dedupe": 0,
   "rejection_counts_by_reason": {
+    "live_blog_incidental_gaza_reference": 1,
+    "west_bank_without_gaza_impact": 1,
     "normalization_errors": 0,
     "cross_edition_duplicates": 0
   },
-  "top_rejected_examples": [],
-  "review_candidates": [],
+  "top_rejected_examples": [
+    {
+      "source_record_id": "gaza-2026-08-05-guardian-world-d13748705199",
+      "title": "Rubio hopes US can reach Hormuz deal with Iran 'very shortly' as officials say progress has been made - as it happened",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/live/2026/aug/04/middle-east-crisis-qatar-iran-us-israel-war-donald-trump-strait-hormuz-gaza-latest-news-updates",
+      "canonical_url": "https://www.theguardian.com/world/live/2026/aug/04/middle-east-crisis-qatar-iran-us-israel-war-donald-trump-strait-hormuz-gaza-latest-news-updates",
+      "scope_provenance": "inherited_collection_scope",
+      "relevance_decision": "excluded",
+      "exclusion_reason": "live_blog_incidental_gaza_reference",
+      "exclusion_reason_details": [
+        "no_demonstrated_gaza_nexus",
+        "incidental_live_blog_or_inherited_scope_reference",
+        "not_direct_gaza_coverage"
+      ],
+      "review_status": "rejected",
+      "selected_public_story_id": null,
+      "selected_public_story_ids": []
+    },
+    {
+      "source_record_id": "gaza-2026-08-05-aljazeera-middle-east-86de84ac4946",
+      "title": "Protesters stage sit-in against settler violence-linked Smotrich funds",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/5/protesters-stage-sit-in-against-settler-violence-linked-smotrich-funds?traffic_source=rss",
+      "canonical_url": "https://www.aljazeera.com/video/newsfeed/2026/8/5/protesters-stage-sit-in-against-settler-violence-linked-smotrich-funds?traffic_source=rss",
+      "scope_provenance": "inherited_collection_scope",
+      "relevance_decision": "excluded",
+      "exclusion_reason": "west_bank_without_gaza_impact",
+      "exclusion_reason_details": [
+        "west_bank_or_domestic_political_context",
+        "no_demonstrated_material_gaza_consequence",
+        "not_core_gaza"
+      ],
+      "review_status": "manual_review_required",
+      "selected_public_story_id": null,
+      "selected_public_story_ids": []
+    }
+  ],
+  "review_candidates": [
+    {
+      "source_record_id": "gaza-2026-08-05-aljazeera-middle-east-86de84ac4946",
+      "title": "Protesters stage sit-in against settler violence-linked Smotrich funds",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/5/protesters-stage-sit-in-against-settler-violence-linked-smotrich-funds?traffic_source=rss",
+      "canonical_url": "https://www.aljazeera.com/video/newsfeed/2026/8/5/protesters-stage-sit-in-against-settler-violence-linked-smotrich-funds?traffic_source=rss",
+      "scope_provenance": "inherited_collection_scope",
+      "relevance_decision": "excluded",
+      "exclusion_reason": "west_bank_without_gaza_impact",
+      "exclusion_reason_details": [
+        "west_bank_or_domestic_political_context",
+        "no_demonstrated_material_gaza_consequence",
+        "not_core_gaza"
+      ],
+      "review_status": "manual_review_required",
+      "selected_public_story_id": null,
+      "selected_public_story_ids": []
+    }
+  ],
+  "source_evaluations": [
+    {
+      "source_record_id": "gaza-2026-08-05-bbc-middle-east-48f9e23cf11c",
+      "title": "Mass funeral in Gaza for 112 Palestinians killed in 2023 Israeli strike",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/cn0n99npjejo?at_medium=RSS&at_campaign=rss",
+      "canonical_url": "https://www.bbc.co.uk/news/articles/cn0n99npjejo?at_medium=RSS&at_campaign=rss",
+      "scope_provenance": "article_evidence",
+      "relevance_decision": "qualified",
+      "exclusion_reason": null,
+      "exclusion_reason_details": [],
+      "review_status": "selected_supporting_source",
+      "selected_public_story_id": "gaza-story-2026-08-05-002",
+      "selected_public_story_ids": [
+        "gaza-story-2026-08-05-002"
+      ]
+    },
+    {
+      "source_record_id": "gaza-2026-08-05-guardian-world-d13748705199",
+      "title": "Rubio hopes US can reach Hormuz deal with Iran 'very shortly' as officials say progress has been made - as it happened",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/live/2026/aug/04/middle-east-crisis-qatar-iran-us-israel-war-donald-trump-strait-hormuz-gaza-latest-news-updates",
+      "canonical_url": "https://www.theguardian.com/world/live/2026/aug/04/middle-east-crisis-qatar-iran-us-israel-war-donald-trump-strait-hormuz-gaza-latest-news-updates",
+      "scope_provenance": "inherited_collection_scope",
+      "relevance_decision": "excluded",
+      "exclusion_reason": "live_blog_incidental_gaza_reference",
+      "exclusion_reason_details": [
+        "no_demonstrated_gaza_nexus",
+        "incidental_live_blog_or_inherited_scope_reference",
+        "not_direct_gaza_coverage"
+      ],
+      "review_status": "rejected",
+      "selected_public_story_id": null,
+      "selected_public_story_ids": []
+    },
+    {
+      "source_record_id": "gaza-2026-08-05-guardian-world-e48c01827bde",
+      "title": "Mass funeral held in Gaza for victims of 2023 Israeli strike",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/aug/04/mass-funeral-gaza-victims-2023-israeli-strike",
+      "canonical_url": "https://www.theguardian.com/world/2026/aug/04/mass-funeral-gaza-victims-2023-israeli-strike",
+      "scope_provenance": "article_evidence",
+      "relevance_decision": "qualified",
+      "exclusion_reason": null,
+      "exclusion_reason_details": [],
+      "review_status": "selected_supporting_source",
+      "selected_public_story_id": "gaza-story-2026-08-05-002",
+      "selected_public_story_ids": [
+        "gaza-story-2026-08-05-002"
+      ]
+    },
+    {
+      "source_record_id": "gaza-2026-08-05-aljazeera-middle-east-86de84ac4946",
+      "title": "Protesters stage sit-in against settler violence-linked Smotrich funds",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/5/protesters-stage-sit-in-against-settler-violence-linked-smotrich-funds?traffic_source=rss",
+      "canonical_url": "https://www.aljazeera.com/video/newsfeed/2026/8/5/protesters-stage-sit-in-against-settler-violence-linked-smotrich-funds?traffic_source=rss",
+      "scope_provenance": "inherited_collection_scope",
+      "relevance_decision": "excluded",
+      "exclusion_reason": "west_bank_without_gaza_impact",
+      "exclusion_reason_details": [
+        "west_bank_or_domestic_political_context",
+        "no_demonstrated_material_gaza_consequence",
+        "not_core_gaza"
+      ],
+      "review_status": "manual_review_required",
+      "selected_public_story_id": null,
+      "selected_public_story_ids": []
+    }
+  ],
+  "candidate_evaluations": [
+    {
+      "source_record_id": "gaza-2026-08-05-bbc-middle-east-48f9e23cf11c",
+      "title": "Mass funeral in Gaza for 112 Palestinians killed in 2023 Israeli strike",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/cn0n99npjejo?at_medium=RSS&at_campaign=rss",
+      "canonical_url": "https://www.bbc.co.uk/news/articles/cn0n99npjejo?at_medium=RSS&at_campaign=rss",
+      "scope_provenance": "article_evidence",
+      "relevance_decision": "qualified",
+      "exclusion_reason": null,
+      "exclusion_reason_details": [],
+      "review_status": "selected_supporting_source",
+      "selected_public_story_id": "gaza-story-2026-08-05-002",
+      "selected_public_story_ids": [
+        "gaza-story-2026-08-05-002"
+      ]
+    },
+    {
+      "source_record_id": "gaza-2026-08-05-guardian-world-d13748705199",
+      "title": "Rubio hopes US can reach Hormuz deal with Iran 'very shortly' as officials say progress has been made - as it happened",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/live/2026/aug/04/middle-east-crisis-qatar-iran-us-israel-war-donald-trump-strait-hormuz-gaza-latest-news-updates",
+      "canonical_url": "https://www.theguardian.com/world/live/2026/aug/04/middle-east-crisis-qatar-iran-us-israel-war-donald-trump-strait-hormuz-gaza-latest-news-updates",
+      "scope_provenance": "inherited_collection_scope",
+      "relevance_decision": "excluded",
+      "exclusion_reason": "live_blog_incidental_gaza_reference",
+      "exclusion_reason_details": [
+        "no_demonstrated_gaza_nexus",
+        "incidental_live_blog_or_inherited_scope_reference",
+        "not_direct_gaza_coverage"
+      ],
+      "review_status": "rejected",
+      "selected_public_story_id": null,
+      "selected_public_story_ids": []
+    },
+    {
+      "source_record_id": "gaza-2026-08-05-guardian-world-e48c01827bde",
+      "title": "Mass funeral held in Gaza for victims of 2023 Israeli strike",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/aug/04/mass-funeral-gaza-victims-2023-israeli-strike",
+      "canonical_url": "https://www.theguardian.com/world/2026/aug/04/mass-funeral-gaza-victims-2023-israeli-strike",
+      "scope_provenance": "article_evidence",
+      "relevance_decision": "qualified",
+      "exclusion_reason": null,
+      "exclusion_reason_details": [],
+      "review_status": "selected_supporting_source",
+      "selected_public_story_id": "gaza-story-2026-08-05-002",
+      "selected_public_story_ids": [
+        "gaza-story-2026-08-05-002"
+      ]
+    },
+    {
+      "source_record_id": "gaza-2026-08-05-aljazeera-middle-east-86de84ac4946",
+      "title": "Protesters stage sit-in against settler violence-linked Smotrich funds",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/5/protesters-stage-sit-in-against-settler-violence-linked-smotrich-funds?traffic_source=rss",
+      "canonical_url": "https://www.aljazeera.com/video/newsfeed/2026/8/5/protesters-stage-sit-in-against-settler-violence-linked-smotrich-funds?traffic_source=rss",
+      "scope_provenance": "inherited_collection_scope",
+      "relevance_decision": "excluded",
+      "exclusion_reason": "west_bank_without_gaza_impact",
+      "exclusion_reason_details": [
+        "west_bank_or_domestic_political_context",
+        "no_demonstrated_material_gaza_consequence",
+        "not_core_gaza"
+      ],
+      "review_status": "manual_review_required",
+      "selected_public_story_id": null,
+      "selected_public_story_ids": []
+    }
+  ],
   "rejected_off_topic": 0,
   "rejected_weak_date": 0,
   "rejected_missing_url_or_title": 0,
   "suppressed_duplicate": 0,
-  "final_story_count": 2,
+  "final_story_count": 1,
   "story_selection_excluded_count": 0,
   "story_selection_excluded_reason_counts": {},
   "low_relevance_survivors": 0,
@@ -46,12 +246,16 @@
       "kept_after_dedupe": 2,
       "provider_checked": true,
       "candidates_seen": 4,
-      "candidates_rejected": 0,
+      "candidates_rejected": 2,
       "rejection_reason": "manual records loaded",
       "likely_discovery_gap": false,
       "manual_backfill_source": [],
       "tls_error": false,
-      "backend_used": "python"
+      "backend_used": "python",
+      "rejected_counts": {
+        "live_blog_incidental_gaza_reference": 1,
+        "west_bank_without_gaza_impact": 1
+      }
     }
   ],
   "source_providers_attempted": [
@@ -66,12 +270,16 @@
       "kept_after_dedupe": 2,
       "provider_checked": true,
       "candidates_seen": 4,
-      "candidates_rejected": 0,
+      "candidates_rejected": 2,
       "rejection_reason": "manual records loaded",
       "likely_discovery_gap": false,
       "manual_backfill_source": [],
       "tls_error": false,
-      "backend_used": "python"
+      "backend_used": "python",
+      "rejected_counts": {
+        "live_blog_incidental_gaza_reference": 1,
+        "west_bank_without_gaza_impact": 1
+      }
     }
   ],
   "source_family_counts": {
@@ -89,11 +297,11 @@
   },
   "google_wrapper_count": 0,
   "canonical_publisher_url_count": 2,
-  "allow_post_edition_date_sources": true,
+  "allow_post_edition_date_sources": false,
   "post_edition_date_sources_included": false,
   "post_edition_date_source_count": 0,
   "scheduled_run_local_time": "2026-08-05T06:00:00-07:00",
-  "actual_run_local_time": "2026-08-06T00:17:21-07:00",
+  "actual_run_local_time": "2026-08-06T12:39:39-07:00",
   "source_window_start_utc": "2026-08-04T15:07:52Z",
   "source_window_end_utc": "2026-08-04T17:24:41Z",
   "first_source_retrieved_at": "2026-08-05T13:00:40.267042Z",
@@ -124,6 +332,12 @@
     "status": "limited_source_update",
     "label": "Limited-source update",
     "source_count": 2,
+    "normalized_source_count": 2,
+    "raw_candidate_count": 4,
+    "excluded_source_count": 2,
+    "selected_supporting_source_count": 2,
+    "rendered_development_count": 1,
+    "rendered_publisher_count": 2,
     "publisher_count": 2,
     "publishers": [
       "BBC News",
@@ -147,13 +361,13 @@
       "limited_min_sources": 3
     },
     "warnings": [
-      "This is a limited-source update generated from 2 saved source records from 2 publishers. It should be read as a partial update, not a full daily briefing."
+      "This limited-source update reviewed 4 candidate records. 2 supporting sources from 2 publishers describe 1 distinct development. It should be read as a partial update, not a full daily briefing."
     ]
   },
-  "core_gaza_count": 2,
+  "core_gaza_count": 1,
   "palestinian_development_count": 0,
   "written_public_exclusions": [],
-  "rejected_count": 0,
+  "rejected_count": 2,
   "story_relevance_diagnostics": [],
   "top_story_candidates": [
     {
@@ -181,24 +395,63 @@
   "thin_edition_override_used": true,
   "blocked_for_thin_or_off_topic": false,
   "thin_edition_reason": null,
+  "count_semantics": {
+    "field_definitions": {
+      "raw_candidate_count": "All candidate source records reviewed before validation or relevance filtering.",
+      "normalized_candidate_count": "Valid, relevance-qualified source records in the normalized audit set after recent-source annotation; story-selection exclusions can remain for traceability.",
+      "relevance_qualified_source_count": "Source records that passed the Gaza-nexus relevance gate before story curation.",
+      "excluded_source_count": "Raw candidate records excluded before supporting the rendered edition.",
+      "selected_supporting_source_count": "Distinct source records attached to rendered event clusters.",
+      "pre_dedupe_story_candidate_count": "Story candidates created from qualified source records before same-event clustering.",
+      "post_dedupe_event_cluster_count": "Distinct event clusters remaining after same-event deduplication.",
+      "rendered_development_count": "Distinct public developments rendered in the edition HTML.",
+      "rendered_publisher_count": "Distinct publishers across every supporting source attached to rendered developments.",
+      "raw_publisher_count": "Distinct publishers represented in the raw candidate set.",
+      "contextual_item_count": "Rendered context-only items that are not core Gaza developments."
+    },
+    "raw_candidate_count": 4,
+    "normalized_candidate_count": 2,
+    "relevance_qualified_source_count": 2,
+    "excluded_source_count": 2,
+    "selected_supporting_source_count": 2,
+    "pre_dedupe_story_candidate_count": 2,
+    "post_dedupe_event_cluster_count": 1,
+    "rendered_development_count": 1,
+    "rendered_publisher_count": 2,
+    "raw_publisher_count": 3,
+    "contextual_item_count": 0,
+    "legacy_field_semantics": {
+      "final_story_count": "Final distinct event clusters rendered; pre-dedupe candidates are reported separately.",
+      "core_gaza_count": "Distinct rendered core-Gaza event clusters.",
+      "story_count": "Distinct rendered public developments in the edition manifest.",
+      "source_count": "Normalized traceability records retained in the public sources manifest; use selected_supporting_source_count for sources supporting rendered developments."
+    }
+  },
+  "selected_supporting_source_count": 2,
+  "pre_dedupe_story_candidate_count": 2,
+  "post_dedupe_event_cluster_count": 1,
+  "rendered_development_count": 1,
+  "rendered_publisher_count": 2,
+  "raw_publisher_count": 3,
+  "contextual_item_count": 0,
   "source_diversity": {
     "source_diversity_warning": false,
-    "publisher_dominance_warning": true,
+    "publisher_dominance_warning": false,
     "warning_severity": "info",
-    "warning_reason": [
-      "single_publisher_supplies_more_than_60_percent_of_rendered_stories"
-    ],
+    "warning_reason": [],
     "low_diversity_warning_reason": [],
-    "publisher_dominance_warning_reason": [
-      "single_publisher_supplies_more_than_60_percent_of_rendered_stories"
-    ],
-    "unique_rendered_publishers": 1,
-    "unique_raw_publishers": 3
+    "publisher_dominance_warning_reason": [],
+    "unique_rendered_publishers": 2,
+    "unique_raw_publishers": 3,
+    "rendered_publishers": [
+      "BBC News",
+      "The Guardian"
+    ]
   },
   "source_quality_status": "limited_source_update",
   "source_quality_recommendation": "publish limited-source update",
   "source_quality_warnings": [
-    "This is a limited-source update generated from 2 saved source records from 2 publishers. It should be read as a partial update, not a full daily briefing.",
+    "This limited-source update reviewed 4 candidate records. 2 supporting sources from 2 publishers describe 1 distinct development. It should be read as a partial update, not a full daily briefing.",
     "publisher diversity below warning threshold",
     "source count below warning threshold"
   ]

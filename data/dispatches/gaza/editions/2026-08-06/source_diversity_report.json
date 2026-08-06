@@ -1,19 +1,16 @@
 {
-  "date": "2026-08-05",
+  "date": "2026-08-06",
   "raw_source_count": 4,
-  "normalized_source_count": 2,
-  "curated_story_count": 2,
-  "rendered_story_count": 1,
-  "unique_raw_publishers": 3,
+  "normalized_source_count": 3,
+  "curated_story_count": 0,
+  "rendered_story_count": 0,
+  "unique_raw_publishers": 2,
   "unique_normalized_publishers": 2,
-  "unique_curated_publishers": 2,
-  "unique_rendered_publishers": 2,
-  "raw_publisher_count": 3,
-  "rendered_publisher_count": 2,
-  "rendered_publishers": [
-    "BBC News",
-    "The Guardian"
-  ],
+  "unique_curated_publishers": 0,
+  "unique_rendered_publishers": 0,
+  "raw_publisher_count": 2,
+  "rendered_publisher_count": 0,
+  "rendered_publishers": [],
   "count_semantics": {
     "field_definitions": {
       "raw_candidate_count": "All candidate source records reviewed before validation or relevance filtering.",
@@ -29,15 +26,15 @@
       "contextual_item_count": "Rendered context-only items that are not core Gaza developments."
     },
     "raw_candidate_count": 4,
-    "normalized_candidate_count": 2,
-    "relevance_qualified_source_count": 2,
-    "excluded_source_count": 2,
-    "selected_supporting_source_count": 2,
-    "pre_dedupe_story_candidate_count": 2,
-    "post_dedupe_event_cluster_count": 1,
-    "rendered_development_count": 1,
-    "rendered_publisher_count": 2,
-    "raw_publisher_count": 3,
+    "normalized_candidate_count": 3,
+    "relevance_qualified_source_count": 3,
+    "excluded_source_count": 4,
+    "selected_supporting_source_count": 0,
+    "pre_dedupe_story_candidate_count": 0,
+    "post_dedupe_event_cluster_count": 0,
+    "rendered_development_count": 0,
+    "rendered_publisher_count": 0,
+    "raw_publisher_count": 2,
     "contextual_item_count": 0,
     "legacy_field_semantics": {
       "final_story_count": "Final distinct event clusters rendered; pre-dedupe candidates are reported separately.",
@@ -48,22 +45,15 @@
   },
   "publisher_breakdown_by_stage": {
     "raw": {
-      "The Guardian": 2,
-      "Al Jazeera": 1,
+      "The Guardian": 3,
       "BBC News": 1
     },
     "normalized": {
-      "BBC News": 1,
-      "The Guardian": 1
+      "The Guardian": 2,
+      "BBC News": 1
     },
-    "curated": {
-      "BBC News": 1,
-      "The Guardian": 1
-    },
-    "rendered": {
-      "BBC News": 1,
-      "The Guardian": 1
-    }
+    "curated": {},
+    "rendered": {}
   },
   "source_diversity_warning": false,
   "publisher_dominance_warning": false,
@@ -79,9 +69,8 @@
       "source_state": "",
       "reason": "manual records loaded",
       "raw_items": 4,
-      "accepted_before_dedupe": 2,
+      "accepted_before_dedupe": 3,
       "rejected_counts": {
-        "live_blog_incidental_gaza_reference": 1,
         "west_bank_without_gaza_impact": 1
       },
       "stage_explanation": "accepted_records_present",
@@ -93,31 +82,13 @@
   "stage_drop_diagnostics": {
     "normalization_drops": [
       {
-        "source_record_id": "gaza-2026-08-05-guardian-world-d13748705199",
+        "source_record_id": "gaza-2026-08-06-guardian-world-dadafdf4fe22",
         "publisher": "The Guardian",
-        "source_id": "gaza-2026-08-05-guardian-world-d13748705199",
-        "title": "Rubio hopes US can reach Hormuz deal with Iran 'very shortly' as officials say progress has been made - as it happened",
-        "reason": "live_blog_incidental_gaza_reference",
-        "url": "https://www.theguardian.com/world/live/2026/aug/04/middle-east-crisis-qatar-iran-us-israel-war-donald-trump-strait-hormuz-gaza-latest-news-updates",
-        "canonical_url": "https://www.theguardian.com/world/live/2026/aug/04/middle-east-crisis-qatar-iran-us-israel-war-donald-trump-strait-hormuz-gaza-latest-news-updates",
-        "scope_provenance": "inherited_collection_scope",
-        "relevance_decision": "excluded",
-        "exclusion_reason_details": [
-          "no_demonstrated_gaza_nexus",
-          "incidental_live_blog_or_inherited_scope_reference",
-          "not_direct_gaza_coverage"
-        ],
-        "review_status": "rejected",
-        "selected_public_story_id": null
-      },
-      {
-        "source_record_id": "gaza-2026-08-05-aljazeera-middle-east-86de84ac4946",
-        "publisher": "Al Jazeera",
-        "source_id": "gaza-2026-08-05-aljazeera-middle-east-86de84ac4946",
-        "title": "Protesters stage sit-in against settler violence-linked Smotrich funds",
+        "source_id": "gaza-2026-08-06-guardian-world-dadafdf4fe22",
+        "title": "Top Democrats accuse Trump officials over Israeli settlers' 'unbridled violence'",
         "reason": "west_bank_without_gaza_impact",
-        "url": "https://www.aljazeera.com/video/newsfeed/2026/8/5/protesters-stage-sit-in-against-settler-violence-linked-smotrich-funds?traffic_source=rss",
-        "canonical_url": "https://www.aljazeera.com/video/newsfeed/2026/8/5/protesters-stage-sit-in-against-settler-violence-linked-smotrich-funds?traffic_source=rss",
+        "url": "https://www.theguardian.com/us-news/2026/aug/06/democrats-trump-west-bank-israeli-settlers",
+        "canonical_url": "https://www.theguardian.com/us-news/2026/aug/06/democrats-trump-west-bank-israeli-settlers",
         "scope_provenance": "inherited_collection_scope",
         "relevance_decision": "excluded",
         "exclusion_reason_details": [
@@ -127,21 +98,60 @@
         ],
         "review_status": "manual_review_required",
         "selected_public_story_id": null
+      },
+      {
+        "source_record_id": "gaza-2026-08-06-bbc-middle-east-48f9e23cf11c",
+        "publisher": "BBC News",
+        "source_id": "gaza-2026-08-06-bbc-middle-east-48f9e23cf11c",
+        "title": "Mass funeral in Gaza for 112 Palestinians killed in 2023 Israeli strike",
+        "reason": "cross_edition_duplicate"
       }
     ],
-    "curation_exclusions": []
+    "curation_exclusions": [
+      {
+        "source_record_id": "gaza-2026-08-06-bbc-middle-east-48f9e23cf11c",
+        "publisher": "BBC News",
+        "source_id": "gaza-2026-08-06-bbc-middle-east-48f9e23cf11c",
+        "title": "Mass funeral in Gaza for 112 Palestinians killed in 2023 Israeli strike",
+        "reason": "duplicate_recent_story",
+        "score_before": 36,
+        "score_after": 36,
+        "action": "rejected"
+      },
+      {
+        "source_record_id": "gaza-2026-08-06-guardian-world-d866873943a9",
+        "publisher": "The Guardian",
+        "source_id": "gaza-2026-08-06-guardian-world-d866873943a9",
+        "title": "Iran says a deal with Oman to reopen the strait of Hormuz is close to being finalised - Middle East crisis live",
+        "reason": "incidental_liveblog_or_domestic_politics_without_ground_development",
+        "score_before": 40,
+        "score_after": 1,
+        "action": "rejected"
+      },
+      {
+        "source_record_id": "gaza-2026-08-06-guardian-world-6b5d21b47fa5",
+        "publisher": "The Guardian",
+        "source_id": "gaza-2026-08-06-guardian-world-6b5d21b47fa5",
+        "title": "Trump's Gaza Board of Peace issues first building contract - for a military base",
+        "reason": "incidental_liveblog_or_domestic_politics_without_ground_development",
+        "score_before": 32,
+        "score_after": 1,
+        "action": "rejected"
+      }
+    ]
   },
   "known_drop_reasons": {
     "collection_rejection_counts_by_reason": {
-      "live_blog_incidental_gaza_reference": 1,
+      "duplicate_recent_story": 1,
+      "incidental_liveblog_or_domestic_politics_without_ground_development": 2,
       "west_bank_without_gaza_impact": 1,
       "normalization_errors": 0,
-      "cross_edition_duplicates": 0
+      "cross_edition_duplicates": 1
     },
-    "suppressed_after_dedupe": 0,
+    "suppressed_after_dedupe": 1,
     "provider_failures": [],
     "low_relevance_survivors": 0
   },
-  "rendered_development_count": 1,
-  "selected_supporting_source_count": 2
+  "rendered_development_count": 0,
+  "selected_supporting_source_count": 0
 }

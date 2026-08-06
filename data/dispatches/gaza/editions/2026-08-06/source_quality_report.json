@@ -1,0 +1,44 @@
+{
+  "date": "2026-08-06",
+  "source_quality_status": "no_publishable_source_backed_update",
+  "source_count": 0,
+  "publisher_count": 0,
+  "publishers": [],
+  "category_count": 0,
+  "all_stories_one_publisher": false,
+  "core_ground_source_count": 0,
+  "context_only_source_count": 0,
+  "claim_attributed_source_count": 0,
+  "source_family_counts": {
+    "wire_international": 1,
+    "news_media": 2
+  },
+  "has_humanitarian_or_institutional_sources": false,
+  "has_wire_or_international_sources": false,
+  "fetch_failures": [],
+  "stale_feeds": [],
+  "duplicate_count": 1,
+  "accepted_count": 2,
+  "rejected_count": 4,
+  "rejection_counts_by_reason": {
+    "duplicate_recent_story": 1,
+    "incidental_liveblog_or_domestic_politics_without_ground_development": 2,
+    "west_bank_without_gaza_impact": 1,
+    "normalization_errors": 0,
+    "cross_edition_duplicates": 1
+  },
+  "adequacy_status": "no_publishable_source_backed_update",
+  "warnings": [
+    "This limited-source update reviewed 4 candidate records. 0 supporting sources from 0 publishers describe 0 distinct developments. It should be read as a partial update, not a full daily briefing.",
+    "publisher diversity below warning threshold",
+    "source count below warning threshold"
+  ],
+  "recommendation": "hold for manual supplement",
+  "thresholds": {
+    "target_min_usable_sources": 8,
+    "target_min_publishers": 4,
+    "warning_min_sources": 6,
+    "warning_min_publishers": 3,
+    "limited_min_sources": 3
+  }
+}

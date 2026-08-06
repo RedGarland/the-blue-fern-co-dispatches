@@ -1,0 +1,19 @@
+[
+  {
+    "source_record_id": "gaza-2026-08-06-manual-001",
+    "title": "Replace with source headline",
+    "url": "https://example.com/replace-with-source-url",
+    "publisher": "Replace with publisher name",
+    "published_at": "2026-08-06T00:00:00Z",
+    "retrieved_at": "2026-08-06T19:36:23.768164+00:00",
+    "summary_or_snippet": "Replace with a direct source-backed summary/snippet; do not invent claims.",
+    "source_type": "manual",
+    "provider_id": "manual-supplement",
+    "region_scope": "Gaza",
+    "category_hint": "humanitarian",
+    "reliability_tier": "editorial-record",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "Add a concise note about how the source supports a traceable public claim."
+  }
+]

@@ -60,7 +60,7 @@
         "summary_or_snippet": "The bodies - belonging to members of two extended families - have only recently been recovered from under rubble in Gaza City."
       }
     ],
-    "generated_at": "2026-08-06T07:17:21.657768+00:00",
+    "generated_at": "2026-08-06T19:39:39.680344+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -73,9 +73,9 @@
     "core_ground_development": true,
     "include_decision": "include",
     "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-06-20-001",
-    "prior_edition_date": "2026-06-20",
-    "dedupe_classification": "major_update",
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new_development",
     "dedupe_reasons": []
   },
   {
@@ -125,7 +125,7 @@
         "summary_or_snippet": "The bodies - belonging to members of two extended families - have only recently been recovered from under rubble in Gaza City."
       }
     ],
-    "generated_at": "2026-08-06T07:17:21.657768+00:00",
+    "generated_at": "2026-08-06T19:39:39.680344+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"

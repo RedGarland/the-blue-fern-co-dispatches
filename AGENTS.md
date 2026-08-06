@@ -1,6 +1,24 @@
 # AGENTS.md
 
-## Required Docs
+## Scope and Precedence
+
+This root `AGENTS.md` provides the default instructions for the entire repository.
+
+More specific instructions from the current user request take precedence over this file.
+
+A nested `AGENTS.md` file governs its own directory subtree and overrides this root file within that subtree.
+
+Authorization from an earlier request, conversation, review, test run, approval, or dry run does not automatically carry forward.
+
+Live actions require explicit authorization in the current request.
+
+## Repository Overview
+
+Dispatches From The Blue Fern Co. is a source-based public dispatch system with traceable reporting and reproducible static output.
+
+All dispatch outputs must be source-traceable, date-safe, and publication-safe.
+
+## Documentation to Inspect First
 
 Read these before making project changes:
 
@@ -10,51 +28,121 @@ Read these before making project changes:
 - `docs/project-contract.md`
 - `docs/pages-publish-safety.md`
 
-## Project Purpose
+Identify the exact dispatch, edition date, workflow, repository, and requested operation before editing.
 
-Dispatches From The Blue Fern Co. is a source-based public dispatch system with traceable reporting and reproducible static output.
+Determine whether the request concerns source implementation, generation, review, provenance, Pages synchronization, publication, external posting, or scheduling.
 
-## Prime Directive
+Before editing, inspect the current worktree with `git status --short --branch`.
 
-All dispatch outputs must be source-traceable, date-safe, and publication-safe.
+If a sibling or nested Pages repo exists, inspect its `git status --short --branch` too.
 
-## Required Behavior Before Editing
+Run `scripts/preflight_repo_state.py` before making changes when Git state clarity matters.
 
-- Inspect the current worktree with `git status --short`.
-- Identify the exact dispatch, edition date, or workflow scope requested by the user.
-- Read only the files needed for that scope.
-- Do not assume dry-run output is publishable without checking review output and logs.
-- Do not touch unrelated dirty files.
-- Do not modify generated/public artifacts unless the task explicitly requires it.
-- Do not edit Pages repo output from a source-repo task unless explicitly requested.
+Read only the files needed for the requested scope.
 
-## Required Behavior After Editing
+Do not modify generated or public artifacts unless the current task explicitly requires generation or artifact changes.
 
-- Run the narrowest useful validation first.
-- Verify any staged files before committing.
-- Separate source changes from generated Pages-repo changes.
-- Run `scripts/validate_publish_scope.py` before any publish, release, or Pages-sync task.
-- Treat dry-run success as a check, not permission to publish.
-- Require explicit allow flags for Pages sync, audio, map, and Bluesky artifacts.
-- If acting as an implementation agent, do not self-approve your own work.
-- If acting as a reviewer, do not make unrelated edits.
-- If asked to review, focus on source traceability, stale-source leakage, future-edition leakage, generated artifact drift, Pages sync safety, audio/transcript/podcast consistency, map and Bluesky gating, and unrelated dirty files.
-- Always distinguish implementation findings from release/publish readiness.
-- Never infer publish permission from PR approval, test success, or dry-run success.
-- If public output changed, verify the rendered paths and confirm `output/detail` and `output/paid` are not exposed under `output/site`.
-- Report clearly whether the task is complete, blocked, or needs follow-up.
+Do not assume dry-run output is publishable without checking review output and logs.
 
-## Mandatory Git Preflight
+## Source and Pages Boundaries
 
-- Before coding, run `git status --short --branch` in the source repo.
-- If a sibling or nested Pages repo exists, inspect its `git status --short --branch` too.
-- Run `scripts/preflight_repo_state.py` before making changes when Git state clarity matters.
-- Treat any source, test, doc, public output, or unknown dirty path as risky until explicitly reviewed.
-- Treat review output, logs, cache, and virtualenv paths as local friction signals, not as proof that the worktree is safe.
-- Do not assume ignored files are harmless if they sit beside tracked source or public output.
-- Report the current dirty-state split between risky files and allowed local/generated files before editing when the task begins with repo hygiene or drift reduction.
+Treat source and Pages repositories as separate operational and publication boundaries.
 
-## Dispatch-Specific Rules
+Do not edit Pages repo output from a source-repo task unless explicitly requested.
+
+Keep source-repo generation separate from Pages-repo publishing.
+
+Never push Pages content from the source repo.
+
+## Working-Tree Safety
+
+Do not touch unrelated dirty files.
+
+Do not revert or delete unrelated user changes.
+
+Never run `git add .`.
+
+Never run broad destructive cleanup commands.
+
+Never reset, clean, stash, restore, discard, overwrite, delete, or incorporate unrelated changes.
+
+Do not assume ignored or generated files are harmless without inspection.
+
+Stop when unexpected tracked, staged, renamed, or deleted files appear unless the current request explicitly authorizes handling them.
+
+Use a clean isolated clone or worktree for release, provenance, publication, Pages, and other high-risk operational work.
+
+## Authorization Boundaries
+
+Treat these as separate actions that each require explicit authorization in the current request:
+
+- editing source
+- committing source
+- pushing source
+- generating public artifacts
+- copying artifacts to a Pages repository
+- committing Pages
+- pushing Pages
+- publishing a live site
+- posting to Bluesky or any external service
+- modifying scheduled tasks or runner configuration
+
+Never commit, push, publish, post externally, modify schedules, or alter `gh-pages` unless the current request authorizes that exact action.
+
+Test success, review approval, PR approval, or dry-run success is not authorization for a live action.
+
+Never force-push unless explicitly authorized in the current request and required by the documented workflow.
+
+An implementation agent must not self-approve its own editorial, release, or publication work.
+
+A reviewer must not make unrelated implementation changes unless explicitly asked.
+
+Always distinguish implementation completion, test and validation success, release readiness, publication authorization, and confirmed live publication.
+
+## Non-Live First
+
+Use the narrowest available safe mode before any live operation, as applicable:
+
+- dry-run
+- check-only
+- review-only
+- audit
+- smoke-test
+- validation-only
+- no-push
+- no-publish
+
+Use the repository's explicit allow flags for Pages synchronization, audio, maps, Bluesky, publication, or other live-capable outputs when a script provides them; an allow flag is not authorization by itself.
+
+Inspect the resulting artifacts, logs, manifests, and Git status rather than relying only on exit codes.
+
+Do not assume a clean `git status` means the live site changed.
+
+## Traceability and Evidence Requirements
+
+Preserve full source traceability.
+
+Validate source attribution, URLs, dates, claims, manifests, and publication-status fields when working on dispatch output.
+
+When applicable, verify:
+
+- original publisher URL
+- source identity
+- publication and retrieval dates
+- exact supporting passages
+- claim-to-source mapping
+- source and Pages manifests
+- edition date
+- public release status
+- Pages synchronization status
+
+Do not expose private review queues, intake artifacts, held or rejected candidates, internal notes, local filesystem paths, unpublished detail packages, paid-only artifacts, or unsupported or untraceable claims in public output.
+
+Do not bypass, weaken, patch around, or manually override safety validators merely to make a release pass.
+
+A validator failure must be corrected at its actual provenance, artifact, source, or baseline cause.
+
+## Dispatch Editing and Generation
 
 ### Gaza
 
@@ -92,57 +180,111 @@ All dispatch outputs must be source-traceable, date-safe, and publication-safe.
 - Do not merge unapproved candidates into public weekly output.
 - Treat source selection, story selection, and publishing as separate steps.
 
+## Testing and Validation
+
+Prefer targeted tests first, then broader tests only if the change is cross-cutting.
+
+Use isolated pytest basetemp directories.
+
+On Windows, use a unique basetemp per run; do not reuse `$env:TEMP\bluefern-pytest`.
+
+Run the narrowest applicable tests first.
+
+After dry-run validation, only task-created validation changes may be reverted or removed, and only in the isolated checkout used for the task.
+
+Use explicit file paths for any cleanup.
+
+Never restore, delete, clean, or overwrite pre-existing or unrelated working-tree changes.
+
+If the origin of a changed file is uncertain, stop and report it rather than modifying it.
+
+Inspect generated artifacts directly rather than relying only on process exit codes.
+
+Run lightweight parse checks for YAML, Markdown, and templates when creating governance or workflow files.
+
+Do not skip or weaken tests to make failures pass.
+
+Do not run expensive dispatch generation unless the task requires it.
+
+Before any publish, release, or Pages-sync task, run `scripts/validate_publish_scope.py`.
+
+## Generated-Artifact Inspection
+
+When public output changes, verify source output, Pages repo output, and live URL as applicable.
+
+If public output changed, verify the rendered paths and confirm `output/detail` and `output/paid` are not exposed under `output/site`.
+
+Inspect generated artifacts directly rather than relying only on process exit codes.
+
+## Publication and External-Posting Safety
+
+Do not publish or push unless explicitly requested.
+
+Do not treat implementation validation as release authorization.
+
+Use cache-busting and direct artifact checks when validating live public output.
+
 ### Sitewide and Generated Artifacts
 
 - Keep generated output reproducible and traceable.
 - Do not add `output/detail` or `output/paid` content to public site output.
 - Do not publish or push unless explicitly requested.
-- Do not assume a clean `git status` means the live site changed.
 - When public output changes, verify source output, Pages repo output, and live URL as applicable.
 
-## Dirty Worktree Rules
+## Git and Branch Practices
 
-- Never run `git add .`.
-- Never run broad destructive cleanup commands.
-- Do not revert or delete unrelated user changes.
-- If unrelated dirty files exist, leave them untouched and clearly identify them in the final report.
-- Keep task-created files isolated from pre-existing dirty files.
+Do not modify `gh-pages` unless the current request explicitly authorizes it.
 
-## Testing And Validation
+Never push Pages content from the source repo.
 
-- Prefer targeted tests first, then broader tests only if the change is cross-cutting.
-- Use isolated pytest basetemp directories.
-- On Windows, use a unique basetemp per run; do not reuse `$env:TEMP\bluefern-pytest`.
-- After dry-run validation, restore tracked `output/site` changes and remove untracked validation artifacts unless they are explicitly part of the task.
-- Before commit, final status should show only intended source/test/doc/helper files.
-- Run lightweight parse checks for YAML/markdown/templates when creating governance or workflow files.
-- Do not skip or weaken tests to make failures pass.
-- Do not run expensive dispatch generation unless the task requires it.
+Keep source-repo commits separate from Pages-repo publish commits.
 
-## Commits
+Commit only when the user asked for a commit or the task explicitly requires it.
 
-- Commit only when the user asked for a commit or the task explicitly requires it.
-- Stage only the files that belong to the task.
-- Verify the staged file list before committing.
-- Keep source-repo commits separate from Pages-repo publish commits.
+Stage only the files that belong to the task.
 
-## Publishing And Pushing
+Verify the staged file list before committing.
 
-- Do not publish or push unless the user explicitly asks.
-- Do not treat implementation validation as release authorization.
-- Keep source-repo generation separate from Pages-repo publishing.
-- Never push Pages content from the source repo.
-- Use cache-busting and direct artifact checks when validating live public output.
+Do not assume ignored files are harmless if they sit beside tracked source or public output.
 
-## Response Format
+Before committing, the final working-tree and staged-file lists must contain only files intended for the current task.
+
+Stop if unexpected files appear.
+
+Review the staged diff and staged file list before committing.
+
+If a fresh clone or worktree is required for release work, create one and keep it isolated from the dirty checkout.
+
+## Required Completion Report
 
 Always return:
 
 1. Files changed
 2. What changed
 3. Commands run
-4. Test results
-5. Generated/public files checked
-6. Publish/push status
-7. Risks or follow-up needed
-8. Intentionally not touched
+4. Result of each command, including failures
+5. Tests run and results
+6. Validation run and results
+7. Generated artifact paths
+8. Generated/public artifacts directly inspected
+9. Source repository:
+   - path
+   - branch
+   - HEAD
+   - upstream
+   - final Git status
+10. Pages repository, when applicable:
+   - path
+   - branch
+   - HEAD
+   - upstream
+   - final Git status
+11. Commits created, including SHA and files included
+12. Pushes performed and their result
+13. Publication or external posting performed and its verified result
+14. Schedule or runner changes performed
+15. Work skipped and the reason
+16. Unresolved risks or required follow-up
+17. Items intentionally not touched
+
+Never claim that a commit, push, publication, external post, scheduled change, or live verification occurred unless it was actually performed and its result was checked.

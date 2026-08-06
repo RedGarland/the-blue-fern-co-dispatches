@@ -313,6 +313,13 @@ def _format_date_human(edition_date: str) -> str:
 _AUDIO_ADJACENT_PAST_TENSE_CLAUSES_RE = re.compile(
     r"\b(?P<ending>[a-z]+ed)\s+(?P<subject>[A-Z][a-z]+s)\s+(?P<verb>[a-z]+ed)\b"
 )
+_AUDIO_MISSING_TEMPORAL_DETERMINER_RE = re.compile(
+    r"\b(?P<connector>after|before)\s+"
+    r"(?!(?:a|an|the|this|that|these|those|he|she|it|they|we|you)\b)"
+    r"(?P<noun_phrase>[a-z][a-z-]*\s+[a-z][a-z-]*)\s+"
+    r"(?P<auxiliary>was|is)\b",
+    re.IGNORECASE,
+)
 _AUDIO_WHITESPACE_RE = re.compile(r"\s+")
 _AUDIO_FRAGMENT_SENTENCE_RE = re.compile(
     r"^[A-Z][A-Za-z0-9'’.-]*(?:\s+[A-Z][A-Za-z0-9'’.-]*){0,4}\s+among at least \d+ journalists killed since\.?$"
@@ -346,6 +353,13 @@ def _normalize_audio_sentence_text(text: str) -> str:
     # example, "2023 Israeli strike"), so a year is not a safe sentence
     # boundary. Repair the narrower malformed-input shape where one completed
     # past-tense clause runs directly into another instead.
+    cleaned = _AUDIO_MISSING_TEMPORAL_DETERMINER_RE.sub(
+        lambda match: (
+            f"{match.group('connector')} the {match.group('noun_phrase')} "
+            f"{match.group('auxiliary')}"
+        ),
+        cleaned,
+    )
     cleaned = _AUDIO_ADJACENT_PAST_TENSE_CLAUSES_RE.sub(
         lambda match: (
             f"{match.group('ending')}. "

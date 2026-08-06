@@ -167,7 +167,7 @@ def test_audio_script_preserves_year_phrases_and_repairs_adjacent_complete_claus
 
         assert f"{title}." in script
         assert "destroyed Mourners" not in script
-        assert "destroyed." in script
+        assert "after the residential block was destroyed." in script
         assert "reported by The Guardian and BBC News" in script
         assert len(used) == 2
 
@@ -229,6 +229,7 @@ def test_august_five_transcript_only_surfaces_use_complete_clean_script(tmp_path
         assert "2026-08-06" not in value
         assert "C:\\" not in value
     assert "The Guardian and BBC News" in metadata["script_text"]
+    assert "after the residential block was destroyed." in metadata["script_text"]
     assert "The Guardian" in surfaces["transcript"]
     assert "BBC News" in surfaces["transcript"]
     assert metadata["audio_file"] is None

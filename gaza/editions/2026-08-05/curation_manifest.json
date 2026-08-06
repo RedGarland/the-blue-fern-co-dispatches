@@ -1,17 +1,19 @@
 [
   {
-    "story_id": "gaza-story-2026-08-05-005",
+    "story_id": "gaza-story-2026-08-05-002",
     "title": "Mass funeral held in Gaza for victims of 2023 Israeli strike",
     "summary": "Remains of 112 victims, including 40 children, recovered from rubble more than two years after residential block was destroyed Mourners gathered in central Gaza on Tuesday for a mass funeral for 112 people, including 40 children, who were killed in 2023 in one of the deadliest Israeli strikes of the Gaza war. Their bodies could not be recovered until now because of Israel's continuing strikes, which have slowed, though not halted, since the ceasefire in October.",
     "category": "conflict",
     "story_scope": "core_gaza",
+    "scope_provenance": "article_evidence",
     "score": 71,
     "scoring_reasons": [
       "humanitarian_impact",
       "ceasefire_diplomacy",
       "civilian_harm",
       "source_reliability",
-      "date_confidence"
+      "date_confidence",
+      "merged_duplicate_story=gaza-story-2026-08-05-001"
     ],
     "candidate_score_breakdown": {
       "humanitarian_impact": 12,
@@ -27,16 +29,20 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-08-05-guardian-world-e48c01827bde"
+      "gaza-2026-08-05-guardian-world-e48c01827bde",
+      "gaza-2026-08-05-bbc-middle-east-48f9e23cf11c"
     ],
     "source_ids": [
-      "gaza-2026-08-05-guardian-world-e48c01827bde"
+      "gaza-2026-08-05-guardian-world-e48c01827bde",
+      "gaza-2026-08-05-bbc-middle-east-48f9e23cf11c"
     ],
     "source_urls": [
-      "https://www.theguardian.com/world/2026/aug/04/mass-funeral-gaza-victims-2023-israeli-strike"
+      "https://www.theguardian.com/world/2026/aug/04/mass-funeral-gaza-victims-2023-israeli-strike",
+      "https://www.bbc.co.uk/news/articles/cn0n99npjejo?at_medium=RSS&at_campaign=rss"
     ],
     "publisher_names": [
-      "The Guardian"
+      "The Guardian",
+      "BBC News"
     ],
     "source_records": [
       {
@@ -45,95 +51,32 @@
         "url": "https://www.theguardian.com/world/2026/aug/04/mass-funeral-gaza-victims-2023-israeli-strike",
         "publisher": "The Guardian",
         "summary_or_snippet": "Remains of 112 victims, including 40 children, recovered from rubble more than two years after residential block was destroyed Mourners gathered in central Gaza on Tuesday for a mass funeral for 112 people, including 40 children, who were killed in 2023 in one of the deadliest Israeli strikes of the Gaza war. Their bodies could not be recovered until now because of Israel's continuing strikes, which have slowed, though not halted, since the ceasefire in October."
+      },
+      {
+        "source_record_id": "gaza-2026-08-05-bbc-middle-east-48f9e23cf11c",
+        "title": "Mass funeral in Gaza for 112 Palestinians killed in 2023 Israeli strike",
+        "url": "https://www.bbc.co.uk/news/articles/cn0n99npjejo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "The bodies - belonging to members of two extended families - have only recently been recovered from under rubble in Gaza City."
       }
     ],
-    "generated_at": "2026-08-05T13:00:42.871754+00:00",
+    "generated_at": "2026-08-06T19:39:39.680344+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
     "top_story_relevance_score": 71,
     "substantive_ground": true,
     "flotilla_only": false,
-    "attribution_mode": "reported_public_source",
-    "claim_status": "reported_public_source",
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
     "context_only": false,
     "core_ground_development": true,
     "include_decision": "include",
     "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-07-23-003",
-    "prior_edition_date": "2026-07-23",
-    "dedupe_classification": "major_update",
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new_development",
     "dedupe_reasons": []
-  },
-  {
-    "story_id": "gaza-story-2026-08-05-007",
-    "title": "Israeli raid deepens fears across West Bank refugee camps",
-    "summary": "",
-    "category": "palestinian_development",
-    "story_scope": "palestinian_development",
-    "score": 67,
-    "scoring_reasons": [
-      "humanitarian_impact",
-      "displacement",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 12,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 8,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-08-05-aljazeera-middle-east-af69e6cd3ec5"
-    ],
-    "source_ids": [
-      "gaza-2026-08-05-aljazeera-middle-east-af69e6cd3ec5"
-    ],
-    "source_urls": [
-      "https://www.aljazeera.com/video/newsfeed/2026/8/5/israeli-raid-deepens-fears-across-west-bank-refugee-camps?traffic_source=rss"
-    ],
-    "publisher_names": [
-      "Al Jazeera"
-    ],
-    "source_records": [
-      {
-        "source_record_id": "gaza-2026-08-05-aljazeera-middle-east-af69e6cd3ec5",
-        "title": "Israeli raid deepens fears across West Bank refugee camps",
-        "url": "https://www.aljazeera.com/video/newsfeed/2026/8/5/israeli-raid-deepens-fears-across-west-bank-refugee-camps?traffic_source=rss",
-        "publisher": "Al Jazeera",
-        "summary_or_snippet": "Israeli raid deepens fears across West Bank refugee camps"
-      }
-    ],
-    "generated_at": "2026-08-05T13:00:42.871754+00:00",
-    "relevance_terms_matched": [
-      "gaza",
-      "west bank"
-    ],
-    "top_story_relevance_score": 67,
-    "substantive_ground": true,
-    "flotilla_only": false,
-    "attribution_mode": "reported_public_source",
-    "claim_status": "reported_public_source",
-    "context_only": false,
-    "core_ground_development": true,
-    "include_decision": "skip",
-    "public_rendered": false,
-    "prior_story_matched": "gaza-story-2026-07-30-004",
-    "prior_edition_date": "2026-07-30",
-    "dedupe_classification": "duplicate_skip",
-    "dedupe_reasons": [
-      "same_topic",
-      "new_source_or_summary_detail",
-      "non_material_continuation"
-    ]
   },
   {
     "story_id": "gaza-story-2026-08-05-001",
@@ -141,6 +84,7 @@
     "summary": "The bodies - belonging to members of two extended families - have only recently been recovered from under rubble in Gaza City.",
     "category": "conflict",
     "story_scope": "core_gaza",
+    "scope_provenance": "article_evidence",
     "score": 54,
     "scoring_reasons": [
       "civilian_harm",
@@ -181,7 +125,7 @@
         "summary_or_snippet": "The bodies - belonging to members of two extended families - have only recently been recovered from under rubble in Gaza City."
       }
     ],
-    "generated_at": "2026-08-05T13:00:42.871754+00:00",
+    "generated_at": "2026-08-06T19:39:39.680344+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -189,144 +133,17 @@
     "top_story_relevance_score": 54,
     "substantive_ground": true,
     "flotilla_only": false,
-    "attribution_mode": "reported_public_source",
-    "claim_status": "reported_public_source",
+    "attribution_mode": "independently_reported",
+    "claim_status": "independently_reported",
     "context_only": false,
     "core_ground_development": true,
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-06-30-001",
-    "prior_edition_date": "2026-06-30",
-    "dedupe_classification": "major_update",
-    "dedupe_reasons": []
-  },
-  {
-    "story_id": "gaza-story-2026-08-05-006",
-    "title": "Protesters stage sit-in against settler violence-linked Smotrich funds",
-    "summary": "Palestinian and Israeli protesters staged a sit-in at the Religious Zionist Party's headquarters in Shoham on Wednesday.",
-    "category": "palestinian_development",
-    "story_scope": "palestinian_development",
-    "score": 44,
-    "scoring_reasons": [
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-08-05-aljazeera-middle-east-86de84ac4946"
-    ],
-    "source_ids": [
-      "gaza-2026-08-05-aljazeera-middle-east-86de84ac4946"
-    ],
-    "source_urls": [
-      "https://www.aljazeera.com/video/newsfeed/2026/8/5/protesters-stage-sit-in-against-settler-violence-linked-smotrich-funds?traffic_source=rss"
-    ],
-    "publisher_names": [
-      "Al Jazeera"
-    ],
-    "source_records": [
-      {
-        "source_record_id": "gaza-2026-08-05-aljazeera-middle-east-86de84ac4946",
-        "title": "Protesters stage sit-in against settler violence-linked Smotrich funds",
-        "url": "https://www.aljazeera.com/video/newsfeed/2026/8/5/protesters-stage-sit-in-against-settler-violence-linked-smotrich-funds?traffic_source=rss",
-        "publisher": "Al Jazeera",
-        "summary_or_snippet": "Palestinian and Israeli protesters staged a sit-in at the Religious Zionist Party's headquarters in Shoham on Wednesday."
-      }
-    ],
-    "generated_at": "2026-08-05T13:00:42.871754+00:00",
-    "relevance_terms_matched": [
-      "gaza",
-      "palestin"
-    ],
-    "top_story_relevance_score": 44,
-    "substantive_ground": false,
-    "flotilla_only": false,
-    "attribution_mode": "reported_public_source",
-    "claim_status": "reported_public_source",
-    "context_only": false,
-    "core_ground_development": false,
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-07-26-003",
-    "prior_edition_date": "2026-07-26",
-    "dedupe_classification": "major_update",
-    "dedupe_reasons": []
-  },
-  {
-    "story_id": "gaza-story-2026-08-05-004",
-    "title": "Rubio hopes US can reach Hormuz deal with Iran 'very shortly' as officials say progress has been made - as it happened",
-    "summary": "This live blog is now closed. US and Qatar report progress on Iran ceasefire and reopening Hormuz strait Iran and Oman have made progress toward a deal to reopen the strait of Hormuz, a potential breakthrough that could help end the war in the Middle East, regional officials have said. Under the emerging agreement, ships would enter the Persian Gulf through an Iranian-controlled route and exit through a route controlled by Oman, with service fees charged for providing security and preserving the maritime environment, two regional officials told the Associated Press.",
-    "category": "conflict",
-    "story_scope": "core_gaza",
-    "score": 36,
-    "scoring_reasons": [
-      "humanitarian_impact",
-      "ceasefire_diplomacy",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 12,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 8,
-      "civilian_harm": 0,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 10
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-08-05-guardian-world-d13748705199"
-    ],
-    "source_ids": [
-      "gaza-2026-08-05-guardian-world-d13748705199"
-    ],
-    "source_urls": [
-      "https://www.theguardian.com/world/live/2026/aug/04/middle-east-crisis-qatar-iran-us-israel-war-donald-trump-strait-hormuz-gaza-latest-news-updates"
-    ],
-    "publisher_names": [
-      "The Guardian"
-    ],
-    "source_records": [
-      {
-        "source_record_id": "gaza-2026-08-05-guardian-world-d13748705199",
-        "title": "Rubio hopes US can reach Hormuz deal with Iran 'very shortly' as officials say progress has been made - as it happened",
-        "url": "https://www.theguardian.com/world/live/2026/aug/04/middle-east-crisis-qatar-iran-us-israel-war-donald-trump-strait-hormuz-gaza-latest-news-updates",
-        "publisher": "The Guardian",
-        "summary_or_snippet": "This live blog is now closed. US and Qatar report progress on Iran ceasefire and reopening Hormuz strait Iran and Oman have made progress toward a deal to reopen the strait of Hormuz, a potential breakthrough that could help end the war in the Middle East, regional officials have said. Under the emerging agreement, ships would enter the Persian Gulf through an Iranian-controlled route and exit through a route controlled by Oman, with service fees charged for providing security and preserving the maritime environment, two regional officials told the Associated Press."
-      }
-    ],
-    "generated_at": "2026-08-05T13:00:42.871754+00:00",
-    "relevance_terms_matched": [
-      "gaza"
-    ],
-    "top_story_relevance_score": 36,
-    "substantive_ground": true,
-    "flotilla_only": false,
-    "attribution_mode": "reported_public_source",
-    "claim_status": "reported_public_source",
-    "context_only": false,
-    "core_ground_development": true,
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-08-04-004",
-    "prior_edition_date": "2026-08-04",
-    "dedupe_classification": "continuing_development",
-    "dedupe_reasons": []
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-08-05-002",
+    "prior_edition_date": "2026-08-05",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "same_event_funeral_recovery"
+    ]
   }
 ]

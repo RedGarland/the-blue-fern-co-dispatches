@@ -144,6 +144,23 @@ WRITTEN_PALESTINIAN_CONTEXT_RE = re.compile(
     re.IGNORECASE,
 )
 
+GAZA_COUNT_FIELD_DEFINITIONS = {
+    "raw_candidate_count": "All candidate source records reviewed before validation or relevance filtering.",
+    "normalized_candidate_count": (
+        "Valid, relevance-qualified source records in the normalized audit set after recent-source annotation; "
+        "story-selection exclusions can remain for traceability."
+    ),
+    "relevance_qualified_source_count": "Source records that passed the Gaza-nexus relevance gate before story curation.",
+    "excluded_source_count": "Raw candidate records excluded before supporting the rendered edition.",
+    "selected_supporting_source_count": "Distinct source records attached to rendered event clusters.",
+    "pre_dedupe_story_candidate_count": "Story candidates created from qualified source records before same-event clustering.",
+    "post_dedupe_event_cluster_count": "Distinct event clusters remaining after same-event deduplication.",
+    "rendered_development_count": "Distinct public developments rendered in the edition HTML.",
+    "rendered_publisher_count": "Distinct publishers across every supporting source attached to rendered developments.",
+    "raw_publisher_count": "Distinct publishers represented in the raw candidate set.",
+    "contextual_item_count": "Rendered context-only items that are not core Gaza developments.",
+}
+
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
@@ -299,11 +316,59 @@ def _is_core_ground_source(source: dict[str, Any]) -> bool:
     return any(term in text for term in core_terms)
 
 
+def _exclusion_reason_details(reason: str) -> list[str]:
+    normalized = str(reason or "").strip()
+    if normalized == "live_blog_incidental_gaza_reference":
+        return [
+            "no_demonstrated_gaza_nexus",
+            "incidental_live_blog_or_inherited_scope_reference",
+            "not_direct_gaza_coverage",
+        ]
+    if normalized in {"west_bank_without_gaza_impact", "inherited_scope_only", "no_demonstrated_gaza_nexus"}:
+        return [
+            "west_bank_or_domestic_political_context",
+            "no_demonstrated_material_gaza_consequence",
+            "not_core_gaza",
+        ]
+    return [normalized] if normalized else []
+
+
+def _candidate_evaluation(
+    record: dict[str, Any],
+    source_id: str,
+    *,
+    relevance_decision: str,
+    exclusion_reason: str | None,
+    scope_provenance: str,
+    review_status: str,
+) -> dict[str, Any]:
+    url = str(record.get("url") or "").strip()
+    canonical_url = str(record.get("canonical_url") or "").strip()
+    if not canonical_url and url.startswith(("http://", "https://")):
+        extracted, _status = extract_canonical_from_google_wrapper(url)
+        canonical_url = extracted or canonicalize_url(url)
+    return {
+        "source_record_id": source_id,
+        "title": str(record.get("title") or "").strip(),
+        "publisher": str(record.get("publisher") or "").strip(),
+        "url": url or None,
+        "canonical_url": canonical_url or None,
+        "scope_provenance": scope_provenance or "uncertain",
+        "relevance_decision": relevance_decision,
+        "exclusion_reason": exclusion_reason,
+        "exclusion_reason_details": _exclusion_reason_details(str(exclusion_reason or "")),
+        "review_status": review_status,
+        "selected_public_story_id": None,
+        "selected_public_story_ids": [],
+    }
+
+
 def normalize_sources(
     records: list[dict[str, Any]],
     edition_date: str,
     now: str,
     allow_post_edition_date_sources: bool = False,
+    evaluation_records: list[dict[str, Any]] | None = None,
 ) -> tuple[list[dict[str, Any]], list[str], list[str]]:
     normalized: list[dict[str, Any]] = []
     errors: list[str] = []
@@ -313,15 +378,37 @@ def normalize_sources(
         if not isinstance(record, dict):
             errors.append(f"source record {index} is not an object")
             continue
+        source_id = str(record.get("source_record_id") or f"source-record-{index}").strip()
         missing = sorted(field for field in REQUIRED_SOURCE_FIELDS if not str(record.get(field) or "").strip())
         if missing:
             errors.append(f"source record {index} missing required fields: {', '.join(missing)}")
+            if evaluation_records is not None:
+                evaluation_records.append(
+                    _candidate_evaluation(
+                        record,
+                        source_id,
+                        relevance_decision="excluded",
+                        exclusion_reason="invalid_source_record_missing_required_fields",
+                        scope_provenance="uncertain",
+                        review_status="rejected",
+                    )
+                )
             continue
         url = str(record["url"]).strip()
         if not url.startswith(("http://", "https://")):
             errors.append(f"source record {index} has invalid URL: {url}")
+            if evaluation_records is not None:
+                evaluation_records.append(
+                    _candidate_evaluation(
+                        record,
+                        source_id,
+                        relevance_decision="excluded",
+                        exclusion_reason="invalid_source_url",
+                        scope_provenance="uncertain",
+                        review_status="rejected",
+                    )
+                )
             continue
-        source_id = str(record["source_record_id"]).strip()
         clean_title = clean_feed_text(str(record["title"]).strip())
         clean_summary = clean_feed_text(str(record["summary_or_snippet"]).strip())
         retrieved_at = str(record.get("retrieved_at") or now).strip()
@@ -329,7 +416,14 @@ def normalize_sources(
         retrieved_local_date = retrieved_dt.astimezone(LOS_ANGELES_TZ).date().isoformat() if retrieved_dt is not None else None
         post_edition_date_source = bool(retrieved_local_date and retrieved_local_date > edition_date)
         relevance_profile = gaza_relevance_profile(
-            {"title": clean_title, "summary_or_snippet": clean_summary, "url": url},
+            {
+                "title": clean_title,
+                "summary_or_snippet": clean_summary,
+                "url": url,
+                "region_scope": record.get("region_scope"),
+                "attribution_mode": record.get("attribution_mode"),
+                "claim_status": record.get("claim_status"),
+            },
             None,
         )
         is_relevant = bool(relevance_profile.get("accepted"))
@@ -338,10 +432,36 @@ def normalize_sources(
             if relevance_reason == "no_demonstrated_gaza_nexus" and "gaza" in str(record.get("region_scope") or "").lower():
                 relevance_reason = "inherited_scope_only"
             warnings.append(f"rejected non-gaza source record {source_id}: {relevance_reason}")
+            if evaluation_records is not None:
+                evaluation_records.append(
+                    _candidate_evaluation(
+                        record,
+                        source_id,
+                        relevance_decision="excluded",
+                        exclusion_reason=relevance_reason,
+                        scope_provenance=str(relevance_profile.get("scope_provenance") or "uncertain"),
+                        review_status=(
+                            "manual_review_required"
+                            if relevance_reason in {"west_bank_without_gaza_impact", "inherited_scope_only", "no_demonstrated_gaza_nexus"}
+                            else "rejected"
+                        ),
+                    )
+                )
             continue
         key = (url.lower(), str(record["title"]).strip().lower())
         if key in seen:
             warnings.append(f"deduped duplicate source record: {source_id}")
+            if evaluation_records is not None:
+                evaluation_records.append(
+                    _candidate_evaluation(
+                        record,
+                        source_id,
+                        relevance_decision="excluded",
+                        exclusion_reason="duplicate_source_record",
+                        scope_provenance=str(relevance_profile.get("scope_provenance") or "uncertain"),
+                        review_status="rejected",
+                    )
+                )
             continue
         seen.add(key)
         boundary_exclusion_reason = None
@@ -391,6 +511,9 @@ def normalize_sources(
                 "attribution_mode": _infer_attribution_mode(record),
                 "claim_status": str(record.get("claim_status") or _infer_attribution_mode(record)).strip(),
                 "scope_provenance": str(relevance_profile.get("scope_provenance") or "uncertain"),
+                "relevance_decision": "qualified",
+                "relevance_reason": str(relevance_profile.get("reason") or "direct_gaza_development"),
+                "nexus_type": str(relevance_profile.get("nexus_type") or "gaza_evidence"),
                 "traceability_note": str(record.get("traceability_note") or "").strip(),
                 "dispatch_slug": DISPATCH_SLUG,
                 "edition_date": edition_date,
@@ -399,6 +522,17 @@ def normalize_sources(
                 "story_selection_excluded_reason": selection_exclusion_reason,
             }
         )
+        if evaluation_records is not None:
+            evaluation_records.append(
+                _candidate_evaluation(
+                    record,
+                    source_id,
+                    relevance_decision="qualified",
+                    exclusion_reason=selection_exclusion_reason,
+                    scope_provenance=str(relevance_profile.get("scope_provenance") or "uncertain"),
+                    review_status="rejected_from_story_selection" if selection_exclusion_reason else "qualified_for_curation",
+                )
+            )
     ranked = rank_gaza_candidates(normalized, edition_date)
     return ranked, warnings, errors
 
@@ -684,12 +818,16 @@ def _publisher_breakdown(rows: list[dict[str, Any]], key: str = "publisher") -> 
     counts: dict[str, int] = {}
     for row in rows:
         if key == "publisher_names":
-            publisher = str((row.get("publisher_names") or [""])[0]).strip()
+            publishers = [str(value or "").strip() for value in list(row.get("publisher_names") or [])]
         else:
-            publisher = str(row.get(key) or "").strip()
-        if not publisher:
-            continue
-        counts[publisher] = counts.get(publisher, 0) + 1
+            publishers = [str(row.get(key) or "").strip()]
+        seen: set[str] = set()
+        for publisher in publishers:
+            normalized = publisher.lower()
+            if not publisher or normalized in seen:
+                continue
+            seen.add(normalized)
+            counts[publisher] = counts.get(publisher, 0) + 1
     return dict(sorted(counts.items(), key=lambda item: (-item[1], item[0].lower())))
 
 
@@ -704,6 +842,7 @@ def _build_stage_drop_diagnostics(
     rendered_stories: list[dict[str, Any]],
     cross_edition_report: dict[str, Any],
     curation_relevance_diagnostics: list[dict[str, Any]],
+    candidate_evaluations: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     raw_by_id: dict[str, dict[str, Any]] = {}
     raw_key_to_id: dict[tuple[str, str], str] = {}
@@ -728,6 +867,11 @@ def _build_stage_drop_diagnostics(
         if str(source_id).strip()
     }
     dedupe_suppressed_ids: set[str] = set()
+    evaluation_by_source_id = {
+        str(item.get("source_record_id") or "").strip(): item
+        for item in list(candidate_evaluations or [])
+        if isinstance(item, dict) and str(item.get("source_record_id") or "").strip()
+    }
     for suppressed in list(cross_edition_report.get("suppressed_candidates") or []):
         if not isinstance(suppressed, dict):
             continue
@@ -738,18 +882,29 @@ def _build_stage_drop_diagnostics(
     for source_record_id, row in raw_by_id.items():
         if source_record_id in normalized_ids:
             continue
-        reason = "normalization_or_validation_drop"
+        evaluation = evaluation_by_source_id.get(source_record_id) or {}
+        reason = str(evaluation.get("exclusion_reason") or "normalization_or_validation_drop")
         if source_record_id in dedupe_suppressed_ids:
             reason = "cross_edition_duplicate"
-        normalization_drops.append(
-            {
-                "source_record_id": source_record_id,
-                "publisher": str(row.get("publisher") or ""),
-                "source_id": str(row.get("source_id") or source_record_id),
-                "title": str(row.get("title") or ""),
-                "reason": reason,
-            }
-        )
+        drop = {
+            "source_record_id": source_record_id,
+            "publisher": str(row.get("publisher") or ""),
+            "source_id": str(row.get("source_id") or source_record_id),
+            "title": str(row.get("title") or ""),
+            "reason": reason,
+        }
+        for key in (
+            "url",
+            "canonical_url",
+            "scope_provenance",
+            "relevance_decision",
+            "exclusion_reason_details",
+            "review_status",
+            "selected_public_story_id",
+        ):
+            if key in evaluation:
+                drop[key] = evaluation.get(key)
+        normalization_drops.append(drop)
     normalization_drop_ids = {str(row.get("source_record_id") or "").strip() for row in normalization_drops}
     for suppressed in list(cross_edition_report.get("suppressed_candidates") or []):
         if not isinstance(suppressed, dict):
@@ -825,7 +980,8 @@ def build_source_diversity_report(
     dominance_warnings: list[str] = []
     if rendered_story_count > 0 and rendered_counts:
         dominant = max(rendered_counts.values())
-        if (dominant / rendered_story_count) > 0.6:
+        rendered_publisher_links = sum(rendered_counts.values())
+        if rendered_publisher_links > 0 and (dominant / rendered_publisher_links) > 0.6:
             dominance_warnings.append("single_publisher_supplies_more_than_60_percent_of_rendered_stories")
     source_diversity_warning = bool(low_diversity_warnings)
     publisher_dominance_warning = bool(dominance_warnings)
@@ -895,6 +1051,15 @@ def build_source_diversity_report(
         "unique_normalized_publishers": len(normalized_counts),
         "unique_curated_publishers": len(curated_counts),
         "unique_rendered_publishers": unique_rendered_publishers,
+        "raw_publisher_count": len(raw_counts),
+        "rendered_publisher_count": unique_rendered_publishers,
+        "rendered_publishers": sorted(rendered_counts),
+        "count_semantics": {
+            "field_definitions": dict(GAZA_COUNT_FIELD_DEFINITIONS),
+            "raw_publisher_count": len(raw_counts),
+            "rendered_publisher_count": unique_rendered_publishers,
+            "rendered_development_count": rendered_story_count,
+        },
         "publisher_breakdown_by_stage": {
             "raw": raw_counts,
             "normalized": normalized_counts,
@@ -1313,50 +1478,67 @@ def _find_adjacent_public_editions(root: Path, edition_date: str) -> tuple[str |
     return prev_date, next_date
 
 
-def compute_gaza_source_adequacy(sources: list[dict[str, Any]], stories: list[dict[str, Any]]) -> dict[str, Any]:
-    publishers = sorted(
+def compute_gaza_source_adequacy(
+    sources: list[dict[str, Any]],
+    stories: list[dict[str, Any]],
+    *,
+    raw_candidate_count: int | None = None,
+    excluded_source_count: int | None = None,
+) -> dict[str, Any]:
+    normalized_source_count = len(sources)
+    rendered_publishers: list[str] = []
+    selected_supporting_source_ids: set[str] = set()
+    source_by_id = {str(source.get("source_record_id") or ""): source for source in sources}
+    for story in stories:
+        for value in list(story.get("source_record_ids") or []):
+            source_id = str(value or "").strip()
+            if not source_id:
+                continue
+            selected_supporting_source_ids.add(source_id)
+            source = source_by_id.get(source_id) or {}
+            publisher = str(source.get("publisher") or "").strip()
+            if publisher:
+                rendered_publishers.append(publisher)
+    selected_sources = [source_by_id[source_id] for source_id in sorted(selected_supporting_source_ids) if source_id in source_by_id]
+    source_count = len(selected_sources)
+    source_publishers = sorted(
         {
             str(source.get("publisher") or "").strip()
-            for source in sources
+            for source in selected_sources
             if str(source.get("publisher") or "").strip()
         }
     )
-    source_count = len(sources)
-    publisher_count = len(publishers)
     categories = sorted(
         {
             str(source.get("category_hint") or "").strip()
-            for source in sources
+            for source in selected_sources
             if str(source.get("category_hint") or "").strip()
         }
     )
-    rendered_publishers = []
-    source_by_id = {str(source.get("source_record_id") or ""): source for source in sources}
-    for story in stories:
-        source_id = str((story.get("source_record_ids") or [""])[0]).strip()
-        source = source_by_id.get(source_id) or {}
-        publisher = str(source.get("publisher") or "").strip()
-        if publisher:
-            rendered_publishers.append(publisher)
     rendered_unique_publishers = sorted(set(rendered_publishers))
+    publishers = rendered_unique_publishers or source_publishers
+    publisher_count = len(publishers)
     one_publisher_only = len(rendered_unique_publishers) == 1 if rendered_publishers else publisher_count == 1
     all_text = " ".join(
         [
-            " ".join(str(source.get("publisher") or "") for source in sources),
-            " ".join(str(source.get("title") or "") for source in sources),
-            " ".join(str(source.get("summary_or_snippet") or "") for source in sources),
-            " ".join(str(source.get("source_type") or "") for source in sources),
-            " ".join(str(source.get("reliability_tier") or "") for source in sources),
+            " ".join(str(source.get("publisher") or "") for source in selected_sources),
+            " ".join(str(source.get("title") or "") for source in selected_sources),
+            " ".join(str(source.get("summary_or_snippet") or "") for source in selected_sources),
+            " ".join(str(source.get("source_type") or "") for source in selected_sources),
+            " ".join(str(source.get("reliability_tier") or "") for source in selected_sources),
         ]
     ).lower()
     has_humanitarian_institutional = any(hint in all_text for hint in HUMANITARIAN_INSTITUTIONAL_HINTS)
     has_wire_international = any(hint in all_text for hint in WIRE_INTERNATIONAL_HINTS)
     story_count = len(stories)
-    core_ground_source_count = sum(1 for source in sources if _is_core_ground_source(source))
-    context_only_source_count = sum(1 for source in sources if _is_context_only_source(source))
+    reviewed_candidate_count = source_count if raw_candidate_count is None else int(raw_candidate_count)
+    excluded_count = max(0, reviewed_candidate_count - len(selected_supporting_source_ids)) if excluded_source_count is None else int(excluded_source_count)
+    selected_supporting_source_count = len(selected_supporting_source_ids)
+    core_ground_source_count = sum(1 for source in selected_sources if _is_core_ground_source(source))
+    context_only_source_count = sum(1 for source in selected_sources if _is_context_only_source(source))
     claim_attributed_source_count = sum(
         1
-        for source in sources
+        for source in selected_sources
         if str(source.get("attribution_mode") or "") in {
             "military_claim_reported",
             "government_claim_reported",
@@ -1377,16 +1559,28 @@ def compute_gaza_source_adequacy(sources: list[dict[str, Any]], stories: list[di
     warnings: list[str] = []
     if status == "limited_source_update" or source_count < GAZA_WARNING_MIN_SOURCES or publisher_count < GAZA_WARNING_MIN_PUBLISHERS:
         warnings.append(
-            f"This is a limited-source update generated from {source_count} saved {_pluralize(source_count, 'source record')} from {publisher_count} {_pluralize(publisher_count, 'publisher')}. It should be read as a partial update, not a full daily briefing."
+            "This limited-source update reviewed "
+            f"{reviewed_candidate_count} candidate {_pluralize(reviewed_candidate_count, 'record')}. "
+            f"{selected_supporting_source_count} supporting {_pluralize(selected_supporting_source_count, 'source')} "
+            f"from {publisher_count} {_pluralize(publisher_count, 'publisher')} "
+            f"{_pluralize(selected_supporting_source_count, 'describes', 'describe')} "
+            f"{story_count} distinct {_pluralize(story_count, 'development')}. "
+            "It should be read as a partial update, not a full daily briefing."
         )
     if one_publisher_only and rendered_unique_publishers:
-        warnings.append(f"All saved source records for this edition came from {rendered_unique_publishers[0]}.")
+        warnings.append(f"All selected supporting sources for this edition came from {rendered_unique_publishers[0]}.")
     if core_ground_source_count == 0 and source_count > 0:
         warnings.append("No core in-Gaza ground-development source was identified; context-only coverage cannot carry the edition.")
     return {
         "status": status,
         "label": label,
         "source_count": source_count,
+        "normalized_source_count": normalized_source_count,
+        "raw_candidate_count": reviewed_candidate_count,
+        "excluded_source_count": excluded_count,
+        "selected_supporting_source_count": selected_supporting_source_count,
+        "rendered_development_count": story_count,
+        "rendered_publisher_count": len(rendered_unique_publishers),
         "publisher_count": publisher_count,
         "publishers": publishers,
         "category_count": len(categories),
@@ -1558,6 +1752,12 @@ def render_gaza_edition(
     source_by_id = {source["source_record_id"]: source for source in sources}
     today_read_lines = _build_today_read(stories, source_by_id)
     rendered_story_count = len(stories)
+    selected_supporting_source_ids = {
+        str(source_id or "").strip()
+        for story in stories
+        for source_id in list(story.get("source_record_ids") or [])
+        if str(source_id or "").strip()
+    }
     unique_publishers = sorted(
         {
             str(source_by_id.get(source_id, {}).get("publisher") or "").strip()
@@ -1607,7 +1807,7 @@ def render_gaza_edition(
         )
         if bool(adequacy.get("all_stories_one_publisher")) and (adequacy.get("publishers") or []):
             chunks.append(
-                f"<p><strong>All saved source records for this edition came from {html.escape(str((adequacy.get('publishers') or [''])[0]))}.</strong></p>"
+                f"<p><strong>All selected supporting sources for this edition came from {html.escape(str((adequacy.get('publishers') or [''])[0]))}.</strong></p>"
             )
     if stories:
         if today_read_lines:
@@ -1640,7 +1840,13 @@ def render_gaza_edition(
         chunks.append("<p>No source-backed Gaza stories were generated for this date. Add project-local source records before publishing factual coverage.</p>")
         chunks.append("<h2>Sources</h2><p>No source records were available.</p>")
     chunks.append("<h2>Source Mix</h2>")
-    chunks.append(f"<p>Source mix: {rendered_story_count} stories from {len(unique_publishers)} publishers. Source coverage may be uneven.</p>")
+    chunks.append(
+        "<p>Source mix: "
+        f"{rendered_story_count} reported {_pluralize(rendered_story_count, 'development')} "
+        f"supported by {len(selected_supporting_source_ids)} {_pluralize(len(selected_supporting_source_ids), 'source')} "
+        f"from {len(unique_publishers)} {_pluralize(len(unique_publishers), 'publisher')}. "
+        "Source coverage may be uneven.</p>"
+    )
     if unique_publishers and len(unique_publishers) <= 8:
         chunks.append(f"<p>Publishers: {html.escape(', '.join(unique_publishers))}.</p>")
     chunks.append("<h2>Source Note</h2>")
@@ -1701,6 +1907,7 @@ def build_manifests(
     adequacy: dict[str, Any],
     allow_post_edition_date_sources: bool = False,
     post_edition_date_source_count: int = 0,
+    count_semantics: dict[str, Any] | None = None,
 ) -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     site_dir = root / "output" / "site" / DISPATCH_SLUG / "editions" / edition_date
     dispatch_dir = root / "output" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date
@@ -1744,6 +1951,20 @@ def build_manifests(
         "warnings": warnings,
         "errors": errors,
     }
+    if count_semantics:
+        edition_manifest["count_semantics"] = count_semantics
+        for key in (
+            "raw_candidate_count",
+            "excluded_source_count",
+            "selected_supporting_source_count",
+            "pre_dedupe_story_candidate_count",
+            "post_dedupe_event_cluster_count",
+            "rendered_development_count",
+            "rendered_publisher_count",
+            "raw_publisher_count",
+            "contextual_item_count",
+        ):
+            edition_manifest[key] = int(count_semantics.get(key) or 0)
     run_manifest = {
         "dispatch_slug": DISPATCH_SLUG,
         "edition_date": edition_date,
@@ -1762,6 +1983,8 @@ def build_manifests(
         "warnings": warnings,
         "errors": errors,
     }
+    if count_semantics:
+        run_manifest["count_semantics"] = count_semantics
     return edition_manifest, sources, stories, run_manifest
 
 
@@ -1931,15 +2154,30 @@ def run_gaza_dispatch(
     normalized_dir = root / "data" / "dispatches" / DISPATCH_SLUG / "normalized" / edition_date
     curated_dir = root / "data" / "dispatches" / DISPATCH_SLUG / "curated" / edition_date
     write_json(raw_dir / "raw_sources.json", manual_records, dry_run, wrote)
+    candidate_evaluations: list[dict[str, Any]] = []
     normalized, norm_warnings, norm_errors = normalize_sources(
         manual_records,
         edition_date,
         generated_at,
         allow_post_edition_date_sources=allow_post_edition_date_sources,
+        evaluation_records=candidate_evaluations,
     )
+    relevance_qualified_source_count = len(normalized)
     warnings.extend(norm_warnings)
     errors.extend(norm_errors)
     normalized, cross_edition_report = filter_recent_duplicate_sources(root, edition_date, normalized, lookback_days=7)
+    kept_normalized_ids = {str(row.get("source_record_id") or "").strip() for row in normalized}
+    for evaluation in candidate_evaluations:
+        source_id = str(evaluation.get("source_record_id") or "").strip()
+        if (
+            evaluation.get("relevance_decision") == "qualified"
+            and not evaluation.get("exclusion_reason")
+            and source_id not in kept_normalized_ids
+        ):
+            evaluation["relevance_decision"] = "excluded"
+            evaluation["exclusion_reason"] = "cross_edition_duplicate"
+            evaluation["exclusion_reason_details"] = ["cross_edition_duplicate"]
+            evaluation["review_status"] = "rejected"
     write_json(normalized_dir / "normalized_sources.json", normalized, dry_run, wrote)
     write_json(root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "dedupe_report.json", cross_edition_report, dry_run, wrote)
     active_normalized = [
@@ -2019,11 +2257,22 @@ def run_gaza_dispatch(
         diag["tls_error"] = bool(diag.get("tls_error"))
         diag["backend_used"] = str(diag.get("backend_used") or "python")
     rejected_by_reason = dict(context.get("rejected_by_reason") or {})
-    rejected_no_anchor_count = sum(1 for warning in norm_warnings if "rejected_no_palestinian_anchor" in str(warning))
-    if rejected_no_anchor_count > 0:
-        rejected_by_reason["rejected_no_palestinian_anchor"] = int(rejected_by_reason.get("rejected_no_palestinian_anchor") or 0) + rejected_no_anchor_count
+    for evaluation in candidate_evaluations:
+        reason = str(evaluation.get("exclusion_reason") or "").strip()
+        if reason:
+            rejected_by_reason[reason] = int(rejected_by_reason.get(reason) or 0) + 1
     rejected_by_reason["normalization_errors"] = int(rejected_by_reason.get("normalization_errors") or 0) + len(norm_errors)
     rejected_by_reason["cross_edition_duplicates"] = int(cross_edition_report.get("suppressed_candidate_count", 0))
+    manual_excluded_count = sum(1 for row in candidate_evaluations if str(row.get("exclusion_reason") or "").strip())
+    manual_review_candidates = [row for row in candidate_evaluations if row.get("review_status") == "manual_review_required"]
+    manual_rejected_examples = [row for row in candidate_evaluations if str(row.get("exclusion_reason") or "").strip()]
+    if provider_diagnostics and not context.get("provider_diagnostics"):
+        provider_diagnostics[0]["candidates_rejected"] = manual_excluded_count
+        provider_diagnostics[0]["rejected_counts"] = {
+            reason: count
+            for reason, count in rejected_by_reason.items()
+            if reason not in {"normalization_errors", "cross_edition_duplicates"} and int(count or 0) > 0
+        }
     stage_counts = {
         "registry_sources": int(context_stage.get("registry_sources") or 1),
         "enabled_providers_configured": int(context_stage.get("enabled_providers_configured") or 1),
@@ -2054,12 +2303,16 @@ def run_gaza_dispatch(
         "provider_failures": provider_failures,
         "raw_candidate_count": int(context.get("raw_candidate_count") or len(manual_records)),
         "normalized_candidate_count": len(normalized),
+        "relevance_qualified_source_count": relevance_qualified_source_count,
+        "excluded_source_count": manual_excluded_count,
         "accepted_candidate_count_before_dedupe": int(cross_edition_report.get("input_candidate_count", 0)),
         "kept_after_dedupe": int(cross_edition_report.get("kept_candidate_count", 0)),
         "suppressed_after_dedupe": int(cross_edition_report.get("suppressed_candidate_count", 0)),
         "rejection_counts_by_reason": rejected_by_reason,
-        "top_rejected_examples": list(context.get("top_rejected_examples") or [])[:25],
-        "review_candidates": list(context.get("review_candidates") or [])[:25],
+        "top_rejected_examples": (list(context.get("top_rejected_examples") or []) or manual_rejected_examples)[:25],
+        "review_candidates": (list(context.get("review_candidates") or []) or manual_review_candidates)[:25],
+        "source_evaluations": candidate_evaluations,
+        "candidate_evaluations": candidate_evaluations,
         "rejected_off_topic": int(rejected_by_reason.get("rejected_off_topic", 0)),
         "rejected_weak_date": int(rejected_by_reason.get("rejected_weak_date_basis", 0)) + int(rejected_by_reason.get("rejected_missing_published_at", 0)),
         "rejected_missing_url_or_title": int(rejected_by_reason.get("rejected_missing_url", 0)) + int(rejected_by_reason.get("rejected_missing_title", 0)),
@@ -2097,10 +2350,14 @@ def run_gaza_dispatch(
             }
         )
     stories = public_stories
-    adequacy = compute_gaza_source_adequacy(normalized, stories)
+    pre_dedupe_story_candidate_count = len(stories)
+    adequacy = compute_gaza_source_adequacy(
+        normalized,
+        stories,
+        raw_candidate_count=len(manual_records),
+        excluded_source_count=manual_excluded_count,
+    )
     collection_report["source_adequacy"] = adequacy
-    if adequacy.get("warnings"):
-        warnings.extend(str(item) for item in adequacy.get("warnings") or [])
     collection_report["final_story_count"] = len(stories)
     collection_report["core_gaza_count"] = sum(1 for story in stories if str(story.get("story_scope") or "") == "core_gaza")
     collection_report["palestinian_development_count"] = sum(
@@ -2186,6 +2443,104 @@ def run_gaza_dispatch(
             if merged_story.get("scoring_reasons"):
                 row["scoring_reasons"] = list(merged_story.get("scoring_reasons") or [])
         curation_manifest_full.append(row)
+    relevance_decision_by_source_id = {
+        str(item.get("source_record_id") or "").strip(): item
+        for item in relevance_decisions
+        if isinstance(item, dict) and str(item.get("source_record_id") or "").strip()
+    }
+    for evaluation in candidate_evaluations:
+        source_id = str(evaluation.get("source_record_id") or "").strip()
+        selected_story_ids = sorted(dict.fromkeys(story_usage.get(source_id) or []))
+        evaluation["selected_public_story_ids"] = selected_story_ids
+        evaluation["selected_public_story_id"] = selected_story_ids[0] if selected_story_ids else None
+        if selected_story_ids:
+            evaluation["review_status"] = "selected_supporting_source"
+            evaluation["relevance_decision"] = "qualified"
+            evaluation["exclusion_reason"] = None
+            evaluation["exclusion_reason_details"] = []
+            continue
+        if evaluation.get("relevance_decision") == "qualified":
+            diagnostic = relevance_decision_by_source_id.get(source_id) or {}
+            reason = str(evaluation.get("exclusion_reason") or diagnostic.get("reason") or "excluded_in_curation")
+            evaluation["relevance_decision"] = "excluded"
+            evaluation["exclusion_reason"] = reason
+            evaluation["exclusion_reason_details"] = _exclusion_reason_details(reason)
+            if evaluation.get("review_status") == "qualified_for_curation":
+                evaluation["review_status"] = "rejected"
+
+    final_rejection_counts = dict(context.get("rejected_by_reason") or {})
+    for evaluation in candidate_evaluations:
+        reason = str(evaluation.get("exclusion_reason") or "").strip()
+        if reason:
+            final_rejection_counts[reason] = int(final_rejection_counts.get(reason) or 0) + 1
+    final_rejection_counts["normalization_errors"] = len(norm_errors)
+    final_rejection_counts["cross_edition_duplicates"] = int(cross_edition_report.get("suppressed_candidate_count", 0))
+    collection_report["rejection_counts_by_reason"] = final_rejection_counts
+    collection_report["top_rejected_examples"] = [
+        *list(context.get("top_rejected_examples") or []),
+        *(evaluation for evaluation in candidate_evaluations if str(evaluation.get("exclusion_reason") or "").strip()),
+    ][:25]
+    collection_report["review_candidates"] = [
+        *list(context.get("review_candidates") or []),
+        *(evaluation for evaluation in candidate_evaluations if evaluation.get("review_status") == "manual_review_required"),
+    ][:25]
+
+    selected_supporting_source_ids = sorted(story_usage)
+    raw_publishers = {
+        str(row.get("publisher") or "").strip()
+        for row in manual_records
+        if isinstance(row, dict) and str(row.get("publisher") or "").strip()
+    }
+    rendered_publishers = {
+        str(source.get("publisher") or "").strip()
+        for source in normalized
+        if str(source.get("source_record_id") or "").strip() in selected_supporting_source_ids
+        and str(source.get("publisher") or "").strip()
+    }
+    excluded_source_count = sum(1 for item in candidate_evaluations if not list(item.get("selected_public_story_ids") or []))
+    contextual_item_count = sum(1 for story in stories if bool(story.get("context_only")))
+    count_semantics = {
+        "field_definitions": dict(GAZA_COUNT_FIELD_DEFINITIONS),
+        "raw_candidate_count": len(manual_records),
+        "normalized_candidate_count": len(normalized),
+        "relevance_qualified_source_count": relevance_qualified_source_count,
+        "excluded_source_count": excluded_source_count,
+        "selected_supporting_source_count": len(selected_supporting_source_ids),
+        "pre_dedupe_story_candidate_count": pre_dedupe_story_candidate_count,
+        "post_dedupe_event_cluster_count": len(stories),
+        "rendered_development_count": len(stories),
+        "rendered_publisher_count": len(rendered_publishers),
+        "raw_publisher_count": len(raw_publishers),
+        "contextual_item_count": contextual_item_count,
+        "legacy_field_semantics": {
+            "final_story_count": "Final distinct event clusters rendered; pre-dedupe candidates are reported separately.",
+            "core_gaza_count": "Distinct rendered core-Gaza event clusters.",
+            "story_count": "Distinct rendered public developments in the edition manifest.",
+            "source_count": (
+                "Normalized traceability records retained in the public sources manifest; use "
+                "selected_supporting_source_count for sources supporting rendered developments."
+            ),
+        },
+    }
+    adequacy = compute_gaza_source_adequacy(
+        normalized,
+        stories,
+        raw_candidate_count=len(manual_records),
+        excluded_source_count=excluded_source_count,
+    )
+    if adequacy.get("warnings"):
+        warnings.extend(str(item) for item in adequacy.get("warnings") or [])
+    collection_report["source_adequacy"] = adequacy
+    collection_report["source_evaluations"] = candidate_evaluations
+    collection_report["candidate_evaluations"] = candidate_evaluations
+    collection_report["count_semantics"] = count_semantics
+    collection_report.update({key: value for key, value in count_semantics.items() if key != "field_definitions" and key != "legacy_field_semantics"})
+    collection_report["final_story_count"] = len(stories)
+    collection_report["core_gaza_count"] = sum(1 for story in stories if str(story.get("story_scope") or "") == "core_gaza")
+    collection_report["palestinian_development_count"] = sum(
+        1 for story in stories if str(story.get("story_scope") or "") == "palestinian_development"
+    )
+    collection_report["rejected_count"] = excluded_source_count
     stage_drop_diagnostics = _build_stage_drop_diagnostics(
         raw_sources=manual_records,
         normalized_sources=normalized,
@@ -2193,6 +2548,7 @@ def run_gaza_dispatch(
         rendered_stories=stories,
         cross_edition_report=cross_edition_report,
         curation_relevance_diagnostics=relevance_decisions,
+        candidate_evaluations=candidate_evaluations,
     )
     diversity_report = build_source_diversity_report(
         edition_date,
@@ -2204,6 +2560,14 @@ def run_gaza_dispatch(
         cross_edition_report=cross_edition_report,
         stage_drop_diagnostics=stage_drop_diagnostics,
     )
+    diversity_report["count_semantics"] = count_semantics
+    for key in (
+        "raw_publisher_count",
+        "rendered_publisher_count",
+        "rendered_development_count",
+        "selected_supporting_source_count",
+    ):
+        diversity_report[key] = int(count_semantics.get(key) or 0)
     write_json(root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "source_diversity_report.json", diversity_report, dry_run, wrote)
     source_quality_report = _build_source_quality_report(
         edition_date,
@@ -2237,6 +2601,7 @@ def run_gaza_dispatch(
         "publisher_dominance_warning_reason": list(diversity_report.get("publisher_dominance_warning_reason") or []),
         "unique_rendered_publishers": int(diversity_report.get("unique_rendered_publishers") or 0),
         "unique_raw_publishers": int(diversity_report.get("unique_raw_publishers") or 0),
+        "rendered_publishers": list(diversity_report.get("rendered_publishers") or []),
     }
     collection_report["source_quality_status"] = str(source_quality_report.get("source_quality_status") or "")
     collection_report["source_quality_recommendation"] = str(source_quality_report.get("recommendation") or "")
@@ -2267,6 +2632,7 @@ def run_gaza_dispatch(
             adequacy,
             allow_post_edition_date_sources=allow_post_edition_date_sources,
             post_edition_date_source_count=post_edition_date_source_count,
+            count_semantics=count_semantics,
         )
         edition_manifest.update(timing_metadata)
         run_manifest.update(timing_metadata)
@@ -2289,6 +2655,7 @@ def run_gaza_dispatch(
             adequacy,
             allow_post_edition_date_sources=allow_post_edition_date_sources,
             post_edition_date_source_count=post_edition_date_source_count,
+            count_semantics=count_semantics,
         )
         edition_manifest.update(timing_metadata)
         run_manifest.update(timing_metadata)

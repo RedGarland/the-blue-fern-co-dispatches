@@ -394,12 +394,12 @@ def test_gaza_layout_does_not_repeat_top_story_in_other_developments(monkeypatch
             [
                 {
                     "source_record_id": "src-1",
-                    "title": "Hospital fuel warning issued",
+                    "title": "Gaza hospital fuel warning issued",
                     "url": "https://example.com/a",
                     "publisher": "Publisher A",
                     "published_at": "2026-05-08T00:00:00Z",
                     "retrieved_at": "2026-05-08T01:00:00Z",
-                    "summary_or_snippet": "A source-backed hospital fuel warning.",
+                    "summary_or_snippet": "A source-backed Gaza hospital fuel warning.",
                     "source_type": "news",
                     "region_scope": "Gaza",
                     "category_hint": "humanitarian",
@@ -407,12 +407,12 @@ def test_gaza_layout_does_not_repeat_top_story_in_other_developments(monkeypatch
                 },
                 {
                     "source_record_id": "src-2",
-                    "title": "Hospital fuel warning issued",
+                    "title": "Gaza hospital fuel warning issued",
                     "url": "https://example.org/b",
                     "publisher": "Publisher B",
                     "published_at": "2026-05-08T02:00:00Z",
                     "retrieved_at": "2026-05-08T03:00:00Z",
-                    "summary_or_snippet": "A second source-backed hospital fuel warning.",
+                    "summary_or_snippet": "A second source-backed Gaza hospital fuel warning.",
                     "source_type": "news",
                     "region_scope": "Gaza",
                     "category_hint": "humanitarian",
@@ -420,12 +420,12 @@ def test_gaza_layout_does_not_repeat_top_story_in_other_developments(monkeypatch
                 },
                 {
                     "source_record_id": "src-3",
-                    "title": "Aid crossing schedule changes",
+                    "title": "Gaza aid crossing schedule changes",
                     "url": "https://example.net/c",
                     "publisher": "Publisher C",
                     "published_at": "2026-05-08T04:00:00Z",
                     "retrieved_at": "2026-05-08T05:00:00Z",
-                    "summary_or_snippet": "A source-backed aid crossing schedule change.",
+                    "summary_or_snippet": "A source-backed Gaza aid crossing schedule change.",
                     "source_type": "news",
                     "region_scope": "Gaza",
                     "category_hint": "humanitarian",
@@ -442,8 +442,8 @@ def test_gaza_layout_does_not_repeat_top_story_in_other_developments(monkeypatch
     html = (root / "output" / "site" / "gaza" / "editions" / "2026-05-08" / "index.html").read_text(encoding="utf-8")
     glance = html.split("<h2>At A Glance</h2>", 1)[1].split("</ul>", 1)[0]
     assert result["ok"] is True
-    assert glance.count("Hospital fuel warning issued") == 1
-    assert html.count("Hospital fuel warning issued") >= 1
+    assert glance.count("Gaza hospital fuel warning issued") == 1
+    assert html.count("Gaza hospital fuel warning issued") >= 1
     assert "https://example.com/a" in html
     assert "https://example.org/b" in html
     assert (root / "output" / "dispatches" / "gaza" / "editions" / "2026-05-08" / "dedupe_report.json").exists()

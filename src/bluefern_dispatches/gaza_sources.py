@@ -250,35 +250,27 @@ def is_palestinian_development_text(text: str) -> bool:
 def _gaza_relevance_profile(item: dict[str, str], source: SourceDefinition | None = None) -> dict[str, Any]:
     title = clean_feed_text(item.get("title", ""))
     summary = clean_feed_text(item.get("summary_or_snippet", ""))
-    url = str(item.get("url") or "")
-    source_name = f"{source.name} {source.publisher} {source.category_hint}" if source is not None else ""
     text = " ".join([title, summary]).strip()
     lowered = text.lower()
-    url_lower = url.lower()
     gaza_anchor = bool(GAZA_TERMS.search(text))
     palestinian_anchor = bool(PALESTINE_TERMS.search(text) or has_palestinian_anchor_text(text))
-    west_bank_anchor = bool(re.search(r"\b(west bank|east jerusalem)\b", text, re.I))
+    west_bank_anchor = bool(re.search(r"\b(west bank|east jerusalem|settler(?:s| violence)?|settlement(?:s)?)\b", text, re.I))
     regional_anchor = bool(re.search(r"\b(" + "|".join(GAZA_REGION_CONTEXT_TERMS) + r")\b", text, re.I))
     live_blog = any(marker in lowered for marker in GAZA_LIVE_BLOG_MARKERS) or "as it happened" in lowered
     impact_anchor = any(term in lowered for term in GAZA_IMPACT_TERMS)
     incidental_anchor = any(marker in lowered for marker in WEAK_ONLY_GAZA_PATTERNS if marker in lowered)
     explicit_gaza_consequence = gaza_anchor and (impact_anchor or palestinian_anchor)
-    if is_opinion_editorial_commentary_url(item) and not is_labeled_context_source(item, source):
-        return {
-            "accepted": False,
-            "reason": "opinion_editorial_commentary_url",
-            "scope_provenance": "uncertain",
-            "nexus_type": "excluded_opinion",
-        }
+    inherited_scope = bool(str(item.get("region_scope") or "").strip()) or (
+        source is not None and bool(str(source.region_scope or "").strip())
+    )
     if live_blog and (incidental_anchor or not explicit_gaza_consequence):
         return {
             "accepted": False,
             "reason": "live_blog_incidental_gaza_reference",
-            "scope_provenance": "inherited_collection_scope" if source is not None and str(source.region_scope or "").strip() else "uncertain",
+            "scope_provenance": "inherited_collection_scope" if inherited_scope else "uncertain",
             "nexus_type": "live_blog_incidental",
         }
     if not gaza_anchor:
-        inherited_scope = source is not None and bool(str(source.region_scope or "").strip())
         if west_bank_anchor:
             reason = "west_bank_without_gaza_impact"
         elif inherited_scope:
@@ -1253,6 +1245,8 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
         {"title": title, "summary_or_snippet": clean_feed_text(item.get("summary_or_snippet", "")), "url": url},
         source,
     )
+    if not bool(relevance_profile.get("accepted")):
+        return None
     canonical_url, canonical_status = extract_canonical_from_google_wrapper(url)
     wrapper_url = url if _looks_like_google_news_wrapper(url) else ""
     if not canonical_url:
@@ -1299,6 +1293,19 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
         "attribution_mode": attribution_mode,
         "claim_status": attribution_mode,
         "scope_provenance": str(relevance_profile.get("scope_provenance") or "uncertain"),
+        "relevance_decision": "qualified",
+        "relevance_reason": str(relevance_profile.get("reason") or "direct_gaza_development"),
+        "nexus_type": str(relevance_profile.get("nexus_type") or "gaza_evidence"),
+        "story_selection_excluded_reason": gaza_story_selection_exclusion_reason(
+            {
+                "title": title,
+                "summary_or_snippet": summary,
+                "url": url,
+                "attribution_mode": attribution_mode,
+                "claim_status": attribution_mode,
+            },
+            source,
+        ),
     }
 
 

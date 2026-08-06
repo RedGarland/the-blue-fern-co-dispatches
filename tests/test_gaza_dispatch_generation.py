@@ -45,6 +45,31 @@ def read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
+def august_six_west_bank_record() -> dict:
+    return {
+        "source_record_id": "gaza-2026-08-06-guardian-world-dadafdf4fe22",
+        "title": "Top Democrats accuse Trump officials over Israeli settlers' 'unbridled violence'",
+        "url": "https://www.theguardian.com/us-news/2026/aug/06/democrats-trump-west-bank-israeli-settlers",
+        "publisher": "The Guardian",
+        "published_at": "2026-08-06T10:00:45+00:00",
+        "retrieved_at": "2026-08-06T13:00:39.420868+00:00",
+        "summary_or_snippet": (
+            "Letter says lifting of sanctions sent 'clear message' settlers can use deadly force in West Bank "
+            "without consequences Senior Democrats have accused Donald Trump's administration of giving a green "
+            "light to violent Israeli settlers in the occupied West Bank, warning that its policies created a "
+            '"climate of impunity and unbridled violence" that endangers both Palestinians and US citizens. '
+            "In a letter seen by the Guardian, a group of 19 Democratic senators and representatives call for the "
+            "restoration of sanctions against extremist settlers and demand independent US investigations into "
+            "the deaths of nine US citizens killed in the West Bank since 2022."
+        ),
+        "source_type": "rss",
+        "region_scope": "Gaza",
+        "category_hint": "conflict",
+        "reliability_tier": "reported-public-source",
+        "provider_id": "guardian-world",
+    }
+
+
 def test_manual_source_generation_writes_public_edition_and_manifests(monkeypatch):
     repo = Path(__file__).resolve().parents[1]
     work = make_work_root(repo)
@@ -97,9 +122,12 @@ def test_four_sources_one_publisher_renders_limited_source_update_with_top_note(
     assert result["ok"] is True
     assert result["source_adequacy_status"] == "limited_source_update"
     assert "Limited-source update / May 26, 2026" in html
-    assert "This is a limited-source update generated from 4 saved source records from 1 publisher." in html
-    assert "All saved source records for this edition came from Al Jazeera." in html
-    assert html.index("This is a limited-source update") < html.index("<h2>At A Glance</h2>")
+    assert (
+        "This limited-source update reviewed 4 candidate records. "
+        "4 supporting sources from 1 publisher describe 1 distinct development."
+    ) in html
+    assert "All selected supporting sources for this edition came from Al Jazeera." in html
+    assert html.index("This limited-source update reviewed") < html.index("<h2>At A Glance</h2>")
     assert '<strong>Sources</strong>' in html
     assert 'href="https://example.com/gaza-aid-1"' in html
     assert "Lead Development" not in html
@@ -130,8 +158,11 @@ def test_limited_source_warning_uses_plural_publishers_for_two_publishers(monkey
     result = run_gaza_dispatch(work, "2026-05-29", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
     html = read(work / "output" / "site" / "gaza" / "editions" / "2026-05-29" / "index.html")
     assert result["ok"] is True
-    assert "This is a limited-source update generated from 4 saved source records from 2 publishers." in html
-    assert "This is a limited-source update generated from 4 saved source records from 2 publisher." not in html
+    assert (
+        "This limited-source update reviewed 4 candidate records. "
+        "4 supporting sources from 2 publishers describe 1 distinct development."
+    ) in html
+    assert "4 supporting sources from 2 publisher describe" not in html
 
 
 def test_aljazeera_sources_produce_non_empty_source_family_classification(monkeypatch):
@@ -1162,12 +1193,12 @@ def test_zero_story_run_refuses_public_generation(monkeypatch):
     repeated = [
         {
             "source_record_id": "gaza-src-001",
-            "title": "Repeat source title",
+            "title": "Repeat Gaza hospital fuel warning",
             "url": "https://example.com/repeat",
             "publisher": "Example Desk",
             "published_at": "2026-05-10T08:00:00+00:00",
             "retrieved_at": "2026-05-10T08:00:00+00:00",
-            "summary_or_snippet": "repeat",
+            "summary_or_snippet": "Hospitals in Gaza repeated a warning about emergency fuel access.",
             "source_type": "rss",
             "region_scope": "Gaza",
             "category_hint": "humanitarian",
@@ -1394,12 +1425,12 @@ def test_suppressed_gaza_editions_are_not_listed_in_archive_index_or_rss(monkeyp
     repeated = [
         {
             "source_record_id": "gaza-src-001",
-            "title": "Repeat source title",
+            "title": "Repeat Gaza hospital fuel warning",
             "url": "https://example.com/repeat",
             "publisher": "Example Desk",
             "published_at": "2026-05-10T08:00:00+00:00",
             "retrieved_at": "2026-05-10T08:00:00+00:00",
-            "summary_or_snippet": "repeat",
+            "summary_or_snippet": "Hospitals in Gaza repeated a warning about emergency fuel access.",
             "source_type": "rss",
             "region_scope": "Gaza",
             "category_hint": "humanitarian",
@@ -1659,7 +1690,7 @@ def test_palestinian_developments_section_and_gaza_top_story(monkeypatch):
     assert "<h2>International Law and Diplomacy</h2>" in html
     assert "<h2>Source Mix</h2>" in html
     assert "<h2>Source Note</h2>" in html
-    assert "Source mix: 5 stories from 5 publishers. Source coverage may be uneven." in html
+    assert "Source mix: 5 reported developments supported by 5 sources from 5 publishers. Source coverage may be uneven." in html
     assert '<a href="/gaza/archive.html">Gaza archive</a> | <a href="/">Dispatches home</a>' in html
     assert "Gaza hospitals face acute aid shortages after airstrikes" in html
     assert "Settler violence rises in West Bank communities" in html
@@ -1683,12 +1714,12 @@ def test_todays_read_conservative_with_single_story_and_metadata_omits_missing_f
         [
             {
                 "source_record_id": "gaza-src-2026-05-22-001",
-                "title": "Single update on aid access corridor timing",
+                "title": "Single update on Gaza aid access corridor timing",
                 "url": "https://example.com/gaza-aid-corridor",
                 "publisher": "Example News",
                 "published_at": "2026-05-22T10:00:00Z",
                 "retrieved_at": "2026-05-22T11:00:00Z",
-                "summary_or_snippet": "Aid access timing changed after checkpoint delays.",
+                "summary_or_snippet": "Gaza aid access timing changed after checkpoint delays.",
                 "source_type": "news",
                 "region_scope": "Gaza",
                 "category_hint": "humanitarian",
@@ -1701,7 +1732,7 @@ def test_todays_read_conservative_with_single_story_and_metadata_omits_missing_f
     html = read(work / "output" / "site" / "gaza" / "editions" / "2026-05-22" / "index.html")
     assert "<h2>Today" in html and "Read</h2>" in html
     assert "Today’s saved source records point to 1 reported development." in html
-    assert "Aid access timing changed after checkpoint delays." in html
+    assert "Gaza aid access timing changed after checkpoint delays." in html
     assert "Example News" in html
     assert "humanitarian" in html
     assert "Gaza" in html
@@ -1714,12 +1745,12 @@ def test_todays_read_conservative_with_single_story_and_metadata_omits_missing_f
         [
             {
                 "source_record_id": "gaza-src-2026-05-23-001",
-                "title": "Malformed date source metadata row",
+                "title": "Malformed date Gaza source metadata row",
                 "url": "https://example.com/sparse-meta",
                 "publisher": "Example News",
                 "published_at": "unknown",
                 "retrieved_at": "2026-05-23T11:00:00Z",
-                "summary_or_snippet": "A minimal source-backed summary with malformed source date text.",
+                "summary_or_snippet": "A minimal Gaza source-backed summary with malformed source date text.",
                 "source_type": "news",
                 "region_scope": "Gaza",
                 "category_hint": "humanitarian",
@@ -2037,6 +2068,39 @@ def test_serious_warning_for_five_stories_one_publisher(monkeypatch):
     assert report["warning_severity"] == "serious"
 
 
+def test_diversity_counts_every_publisher_supporting_a_merged_event():
+    merged_story = {
+        "source_record_ids": ["bbc-1", "guardian-1"],
+        "publisher_names": ["BBC News", "The Guardian"],
+    }
+    merged = build_source_diversity_report(
+        "2026-08-05",
+        raw_sources=[{"publisher": "BBC News"}, {"publisher": "The Guardian"}],
+        normalized_sources=[{"publisher": "BBC News"}, {"publisher": "The Guardian"}],
+        curated_stories=[merged_story],
+        rendered_stories=[merged_story],
+        collection_report={},
+        cross_edition_report={},
+        stage_drop_diagnostics={},
+    )
+    single = build_source_diversity_report(
+        "2026-08-05",
+        raw_sources=[{"publisher": "BBC News"}],
+        normalized_sources=[{"publisher": "BBC News"}],
+        curated_stories=[{"publisher_names": ["BBC News"]}],
+        rendered_stories=[{"publisher_names": ["BBC News"]}],
+        collection_report={},
+        cross_edition_report={},
+        stage_drop_diagnostics={},
+    )
+
+    assert merged["unique_rendered_publishers"] == 2
+    assert merged["publisher_breakdown_by_stage"]["rendered"] == {"BBC News": 1, "The Guardian": 1}
+    assert merged["publisher_dominance_warning"] is False
+    assert single["unique_rendered_publishers"] == 1
+    assert single["publisher_dominance_warning"] is True
+
+
 def test_curation_prefers_similarly_strong_story_from_new_publisher():
     now = "2026-05-25T12:00:00Z"
     sources = [
@@ -2293,7 +2357,13 @@ def test_source_diversity_report_includes_stage_drop_reasons(monkeypatch):
     assert "accepted_records_present" in (stage["manual_sources_json"].get("stage_explanation") or "")
     drops = report["stage_drop_diagnostics"]
     assert any(row["source_record_id"] == "shared-001" and row["reason"] == "cross_edition_duplicate" for row in drops["normalization_drops"])
-    assert any(row["source_record_id"] == "guardian-live-001" and "incidental_liveblog_or_domestic_politics_without_ground_development" in str(row["reason"]) for row in drops["curation_exclusions"])
+    assert any(
+        row["source_record_id"] == "guardian-live-001"
+        and row["reason"] == "live_blog_incidental_gaza_reference"
+        and row["scope_provenance"] == "inherited_collection_scope"
+        and row["review_status"] == "rejected"
+        for row in drops["normalization_drops"]
+    )
 
 
 def test_source_diversity_report_includes_skipped_source_explanations(monkeypatch):
@@ -2341,7 +2411,7 @@ def test_story_cleanup_repairs_missing_sentence_boundaries_and_today_read_uses_c
         },
         {
             "source_record_id": "gaza-src-clean-002",
-            "title": "Minister statement drew international criticism",
+            "title": "Minister statement on Gaza drew international criticism",
             "summary_or_snippet": "ethnic cleansing Israel's defence minister said operations would continue.",
             "url": "https://example.com/clean-2",
             "publisher": "Publisher B",
@@ -2484,7 +2554,7 @@ def test_gaza_run_merges_named_casualty_same_event_and_keeps_distinct_story(monk
     assert "https://www.theguardian.com/world/2026/jun/20/al-jazeera-cameraman-ahmed-wishah-killed-in-israeli-strike-on-gaza" in html
     assert "https://www.aljazeera.com/news/2026/6/20/al-jazeera-cameraman-ahmad-wishah-killed-in-israeli-attack-in-gaza?traffic_source=rss" in html
     assert "https://www.bbc.com/news/articles/c4gy26p6pwzo" in html
-    assert "Source mix: 2 stories from 3 publishers." in html
+    assert "Source mix: 2 reported developments supported by 4 sources from 3 publishers." in html
     assert "Publishers: Al Jazeera, BBC News, The Guardian." in html
     assert audio_json["source_count"] == 4
     assert audio_json["tts_story_count"] == 2
@@ -2574,6 +2644,7 @@ def test_august_five_funerals_merge_and_false_positives_stay_out(monkeypatch):
     html = (work / "output" / "site" / "gaza" / "editions" / "2026-08-05" / "index.html").read_text(encoding="utf-8")
     curation = json.loads((work / "output" / "dispatches" / "gaza" / "editions" / "2026-08-05" / "curation_manifest.json").read_text(encoding="utf-8"))
     report = json.loads((work / "data" / "dispatches" / "gaza" / "editions" / "2026-08-05" / "collection_report.json").read_text(encoding="utf-8"))
+    diversity = json.loads((work / "data" / "dispatches" / "gaza" / "editions" / "2026-08-05" / "source_diversity_report.json").read_text(encoding="utf-8"))
 
     assert result["ok"] is True
     assert "reported development" in html
@@ -2585,6 +2656,119 @@ def test_august_five_funerals_merge_and_false_positives_stay_out(monkeypatch):
         for story in curation
         if story.get("public_rendered")
     )
+    rendered = next(story for story in curation if story.get("public_rendered"))
+    assert set(rendered["source_record_ids"]) == {
+        "gaza-2026-08-05-bbc-middle-east-48f9e23cf11c",
+        "gaza-2026-08-05-guardian-world-e48c01827bde",
+    }
+    assert set(rendered["source_urls"]) == {
+        "https://www.bbc.co.uk/news/articles/cn0n99npjejo?at_medium=RSS&at_campaign=rss",
+        "https://www.theguardian.com/world/2026/aug/04/mass-funeral-gaza-victims-2023-israeli-strike",
+    }
+    evaluations = {row["source_record_id"]: row for row in report["source_evaluations"]}
+    hormuz = evaluations["gaza-2026-08-05-guardian-world-d13748705199"]
+    smotrich = evaluations["gaza-2026-08-05-aljazeera-middle-east-86de84ac4946"]
+    assert hormuz["exclusion_reason"] == "live_blog_incidental_gaza_reference"
+    assert "no_demonstrated_gaza_nexus" in hormuz["exclusion_reason_details"]
+    assert hormuz["selected_public_story_id"] is None
+    assert smotrich["exclusion_reason"] == "west_bank_without_gaza_impact"
+    assert "no_demonstrated_material_gaza_consequence" in smotrich["exclusion_reason_details"]
+    assert smotrich["review_status"] == "manual_review_required"
+    assert smotrich["selected_public_story_id"] is None
+    expected_counts = {
+        "raw_candidate_count": 4,
+        "normalized_candidate_count": 2,
+        "relevance_qualified_source_count": 2,
+        "excluded_source_count": 2,
+        "selected_supporting_source_count": 2,
+        "pre_dedupe_story_candidate_count": 2,
+        "post_dedupe_event_cluster_count": 1,
+        "rendered_development_count": 1,
+        "rendered_publisher_count": 2,
+        "raw_publisher_count": 3,
+        "contextual_item_count": 0,
+    }
+    for field, value in expected_counts.items():
+        assert report["count_semantics"][field] == value
+    assert report["final_story_count"] == 1
+    assert report["core_gaza_count"] == 1
+    assert diversity["unique_rendered_publishers"] == 2
+    assert diversity["rendered_publishers"] == ["BBC News", "The Guardian"]
+    assert "reviewed 4 candidate records" in html
+    assert "2 supporting sources from 2 publishers describe 1 distinct development" in html
+    assert "Source mix: 1 reported development supported by 2 sources from 2 publishers." in html
+    assert "generated from 2 saved source records" not in html
+    assert "source_evaluations" not in html
+
+
+def test_august_six_west_bank_record_is_rejected_in_manual_operator_and_render_paths(monkeypatch):
+    from scripts.run_gaza_daily_operator import normalize_manual_source_records
+
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    prepared, _changes = normalize_manual_source_records([august_six_west_bank_record()], "2026-08-06")
+    evaluations: list[dict] = []
+    normalized, warnings, errors = normalize_sources(
+        prepared,
+        "2026-08-06",
+        "2026-08-06T13:05:00+00:00",
+        evaluation_records=evaluations,
+    )
+    assert normalized == []
+    assert errors == []
+    assert any("west_bank_without_gaza_impact" in warning for warning in warnings)
+    assert evaluations[0]["scope_provenance"] == "inherited_collection_scope"
+    assert evaluations[0]["exclusion_reason"] == "west_bank_without_gaza_impact"
+    assert evaluations[0]["selected_public_story_id"] is None
+
+    pre_normalized = august_six_west_bank_record() | {
+        "candidate_score": 52,
+        "ranking_reasons": ["civilian_harm", "accountability_legal"],
+        "candidate_score_breakdown": {},
+        "scope_provenance": "inherited_collection_scope",
+    }
+    stories, decisions, _top = curate_stories([pre_normalized], "2026-08-06", "2026-08-06T13:05:00+00:00")
+    assert stories == []
+    assert decisions[0]["reason"] == "inherited_scope_only"
+
+    write_manual_sources(work, "2026-08-06", prepared)
+    result = run_gaza_dispatch(work, "2026-08-06", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    assert result["ok"] is False
+    assert not (work / "output" / "site" / "gaza" / "editions" / "2026-08-06" / "index.html").exists()
+    collection = json.loads(read(work / "data" / "dispatches" / "gaza" / "editions" / "2026-08-06" / "collection_report.json"))
+    assert collection["final_story_count"] == 0
+    assert collection["source_evaluations"][0]["exclusion_reason"] == "west_bank_without_gaza_impact"
+    assert collection["source_evaluations"][0]["selected_public_story_id"] is None
+
+
+def test_nexus_gate_keeps_direct_gaza_and_explicit_regional_gaza_consequence():
+    direct = august_six_west_bank_record() | {
+        "source_record_id": "direct-gaza",
+        "title": "Gaza hospitals report new fuel shortages",
+        "url": "https://example.com/direct-gaza",
+        "summary_or_snippet": "Hospitals in Gaza reduced services after fuel deliveries were delayed.",
+    }
+    regional = august_six_west_bank_record() | {
+        "source_record_id": "regional-gaza-impact",
+        "title": "West Bank closures delay medical referrals into Gaza hospitals",
+        "url": "https://example.com/regional-gaza-impact",
+        "summary_or_snippet": "The regional restrictions delayed patient transfers and medicine deliveries into Gaza.",
+        "region_scope": "Palestine",
+    }
+    evaluations: list[dict] = []
+    normalized, warnings, errors = normalize_sources(
+        [direct, regional],
+        "2026-08-06",
+        "2026-08-06T13:05:00+00:00",
+        evaluation_records=evaluations,
+    )
+
+    assert errors == []
+    assert warnings == []
+    assert {row["source_record_id"] for row in normalized} == {"direct-gaza", "regional-gaza-impact"}
+    assert all(row["scope_provenance"] == "article_evidence" for row in normalized)
+    assert all(row["relevance_decision"] == "qualified" for row in evaluations)
 
 
 def test_gaza_public_summary_sanitizer_repairs_entity_period_joins_and_drops_trailing_fragments(monkeypatch):
@@ -2597,7 +2781,7 @@ def test_gaza_public_summary_sanitizer_repairs_entity_period_joins_and_drops_tra
         [
             {
                 "source_record_id": "gaza-src-2026-05-29-001",
-                "title": "Ceasefire terms and control boundaries update",
+                "title": "Gaza ceasefire terms and control boundaries update",
                 "url": "https://example.com/gaza-join-1",
                 "publisher": "Reuters",
                 "published_at": "2026-05-29T09:00:00Z",
@@ -2662,7 +2846,7 @@ def test_gaza_public_summary_sanitizer_repairs_entity_period_joins_and_drops_tra
             },
             {
                 "source_record_id": "gaza-src-2026-05-29-006",
-                "title": "NPR detention law context summary",
+                "title": "NPR detention law context summary for people detained from Gaza",
                 "url": "https://example.com/gaza-join-6",
                 "publisher": "NPR",
                 "published_at": "2026-05-29T09:50:00Z",
@@ -2701,7 +2885,7 @@ def test_npr_detention_summary_repairs_allows_period_in_public_html(monkeypatch)
         [
             {
                 "source_record_id": "gaza-src-2026-05-31-001",
-                "title": "NPR detention law context summary",
+                "title": "NPR detention law context summary for people detained from Gaza",
                 "url": "https://example.com/gaza-npr-detention",
                 "publisher": "NPR",
                 "published_at": "2026-05-31T07:00:00Z",
@@ -2951,12 +3135,12 @@ def test_written_gaza_edition_excludes_newsletter_sidebar_and_lebanon_only_rows(
             },
             {
                 "source_record_id": "gaza-2026-06-05-detainees",
-                "title": "Israel Supreme Court strikes down ban on Red Cross prison visits",
+                "title": "Israel Supreme Court strikes down ban on Red Cross visits to detainees from Gaza",
                 "url": "https://example.com/detainees",
                 "publisher": "The New Arab",
                 "published_at": "2026-06-05T09:20:00Z",
                 "retrieved_at": "2026-06-05T09:25:00Z",
-                "summary_or_snippet": "The ICRC said it was ready to resume visits to Palestinian detainees held in Israeli detention.",
+                "summary_or_snippet": "The ICRC said it was ready to resume visits to Palestinian detainees from Gaza held in Israeli detention.",
                 "source_type": "news",
                 "region_scope": "Palestinian detainees / Gaza context",
                 "category_hint": "palestinian_development",
@@ -3005,22 +3189,23 @@ def test_written_gaza_edition_excludes_newsletter_sidebar_and_lebanon_only_rows(
         "planning laws",
     ):
         assert blocked not in html
-    assert "Israel Supreme Court strikes down ban on Red Cross prison visits" in html
+    assert "Israel Supreme Court strikes down ban on Red Cross visits to detainees from Gaza" in html
     assert "Israeli strikes kill 11 people in Gaza City, medics say" in html
-    assert "Newly disclosed Israeli testimonies detail expulsions, killings during 1967 war: Report" in html
+    assert "Newly disclosed Israeli testimonies detail expulsions, killings during 1967 war: Report" not in html
     assert 'href="https://example.com/detainees"' in html
     assert 'href="https://example.com/strikes"' in html
 
     curation = json.loads(read(work / "output" / "site" / "gaza" / "editions" / edition_date / "curation_manifest.json"))
     excluded = {row["title"]: row for row in curation if row.get("public_rendered") is False}
     assert excluded["Friday briefing: How Gaza, Lebanon and Iran have found themselves caught in an escalation without end"]["excluded_reason"] == "excluded marker 'UK politics |'"
-    assert excluded["UN agency says displacement in Lebanon rises despite ceasefire"]["excluded_reason"] == "excluded marker 'Lebanon rises despite ceasefire'"
 
     collection_report = json.loads(read(work / "data" / "dispatches" / "gaza" / "editions" / edition_date / "collection_report.json"))
     reasons = {row["title"]: row["reason"] for row in collection_report.get("written_public_exclusions") or []}
     assert reasons["Friday briefing: How Gaza, Lebanon and Iran have found themselves caught in an escalation without end"] == "excluded marker 'UK politics |'"
-    assert reasons["UN agency says displacement in Lebanon rises despite ceasefire"] == "excluded marker 'Lebanon rises despite ceasefire'"
-    assert collection_report["final_story_count"] == 3
+    source_evaluations = {row["title"]: row for row in collection_report["source_evaluations"]}
+    assert source_evaluations["UN agency says displacement in Lebanon rises despite ceasefire"]["exclusion_reason"] == "inherited_scope_only"
+    assert source_evaluations["Newly disclosed Israeli testimonies detail expulsions, killings during 1967 war: Report"]["exclusion_reason"] == "inherited_scope_only"
+    assert collection_report["final_story_count"] == 2
 
 
 def test_render_gaza_edition_shows_audio_player_only_when_mp3_exists(tmp_path):
@@ -3043,6 +3228,43 @@ def test_render_gaza_edition_shows_audio_player_only_when_mp3_exists(tmp_path):
     html = render_gaza_edition(edition_date, stories, sources, adequacy, root=tmp_path)
     assert "<audio controls" in html
     assert f"/gaza/audio/{edition_date}.mp3" in html
+
+
+@pytest.mark.parametrize(
+    ("story_count", "expected"),
+    [
+        (0, "Source mix: 0 reported developments supported by 0 sources from 0 publishers."),
+        (1, "Source mix: 1 reported development supported by 1 source from 1 publisher."),
+        (2, "Source mix: 2 reported developments supported by 2 sources from 2 publishers."),
+    ],
+)
+def test_render_gaza_edition_source_mix_uses_zero_one_and_multiple_grammar(tmp_path, story_count, expected):
+    stories = [
+        {
+            "story_id": f"story-{index}",
+            "title": f"Gaza source-backed development {index}",
+            "summary": f"A source-backed Gaza development {index}.",
+            "source_record_ids": [f"source-{index}"],
+            "publisher_names": [f"Publisher {index}"],
+            "story_scope": "core_gaza",
+            "category": "humanitarian",
+        }
+        for index in range(1, story_count + 1)
+    ]
+    sources = [
+        {
+            "source_record_id": f"source-{index}",
+            "title": f"Source {index}",
+            "url": f"https://example.com/source-{index}",
+            "publisher": f"Publisher {index}",
+        }
+        for index in range(1, story_count + 1)
+    ]
+    adequacy = {"label": "Limited-source update", "status": "limited_source_update", "warnings": []}
+
+    html = render_gaza_edition("2026-08-06", stories, sources, adequacy, root=tmp_path)
+
+    assert expected in html
 
 
 def test_render_gaza_edition_omits_audio_callout_when_no_audio_artifacts(tmp_path):

@@ -25,6 +25,23 @@ def _rss_payload(items: list[dict[str, str]]) -> bytes:
     return ("<?xml version='1.0'?><rss><channel>" + "".join(entries) + "</channel></rss>").encode("utf-8")
 
 
+def _august_six_west_bank_item() -> dict[str, str]:
+    return {
+        "title": "Top Democrats accuse Trump officials over Israeli settlers' 'unbridled violence'",
+        "url": "https://www.theguardian.com/us-news/2026/aug/06/democrats-trump-west-bank-israeli-settlers",
+        "published_at": "2026-08-06T10:00:45+00:00",
+        "summary_or_snippet": (
+            "Letter says lifting of sanctions sent 'clear message' settlers can use deadly force in West Bank "
+            "without consequences Senior Democrats have accused Donald Trump's administration of giving a green "
+            "light to violent Israeli settlers in the occupied West Bank, warning that its policies created a "
+            '"climate of impunity and unbridled violence" that endangers both Palestinians and US citizens. '
+            "In a letter seen by the Guardian, a group of 19 Democratic senators and representatives call for the "
+            "restoration of sanctions against extremist settlers and demand independent US investigations into "
+            "the deaths of nine US citizens killed in the West Bank since 2022."
+        ),
+    }
+
+
 def write_config(root: Path) -> Path:
     path = root / "data" / "dispatches" / "gaza" / "sources.yml"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -199,6 +216,59 @@ def test_gaza_relevance_and_date_filtering(work_root, monkeypatch):
 
     assert result["ok"] is True
     assert [record["url"] for record in result["sources"]] == ["https://valid.test/old-gaza", "https://valid.test/gaza"]
+
+
+def test_august_six_west_bank_record_is_rejected_by_feed_profile_and_normalizer():
+    source = gaza_sources.SourceDefinition(
+        source_id="guardian-world",
+        name="Guardian World",
+        url="https://www.theguardian.com/world/rss",
+        type="rss",
+        enabled=True,
+        publisher="The Guardian",
+        reliability_tier="reported-public-source",
+        category_hint="conflict",
+        region_scope="Gaza",
+    )
+    item = _august_six_west_bank_item()
+
+    profile = gaza_sources.gaza_relevance_profile(item, source)
+    assert profile == {
+        "accepted": False,
+        "reason": "west_bank_without_gaza_impact",
+        "scope_provenance": "inherited_collection_scope",
+        "nexus_type": "no_gaza_anchor",
+    }
+    assert gaza_sources.normalize_rss_item(item, source, "2026-08-06", "2026-08-06T13:00:39.420868+00:00") is None
+
+
+def test_august_six_west_bank_record_is_rejected_by_normal_feed_collection(work_root, monkeypatch):
+    write_config(work_root)
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_feed_payload",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "source_id": "test-rss",
+            "url": "https://example.com/rss.xml",
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload([_august_six_west_bank_item()]),
+            "content_text": None,
+        },
+    )
+
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-08-06", max_sources=12, min_sources=0)
+
+    assert result["ok"] is True
+    assert result["sources"] == []
+    assert result["rejected_by_reason"]["west_bank_without_gaza_impact"] == 1
+    assert result["top_rejected_examples"][0]["url"] == _august_six_west_bank_item()["url"]
 
 
 def test_missing_published_at_is_not_accepted_as_fresh_in_collection(work_root, monkeypatch):
@@ -858,7 +928,7 @@ def test_relevance_rejects_inherited_gaza_scope_without_article_evidence():
     }
     accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
     assert accepted is False
-    assert reason == "inherited_scope_only"
+    assert reason == "west_bank_without_gaza_impact"
 
 
 def test_relevance_keeps_guardian_unrwa_archive_story():

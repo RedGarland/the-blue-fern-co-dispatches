@@ -3,7 +3,7 @@ import shutil
 import uuid
 from pathlib import Path
 
-from scripts.run_gaza_dispatch import normalize_sources, curate_stories, render_gaza_edition
+from scripts.run_gaza_dispatch import compute_gaza_source_adequacy, curate_stories, normalize_sources, render_gaza_edition
 
 
 def test_gaza_pipeline_smoke_normalize_rank_compose_render_validate_links():
@@ -35,7 +35,8 @@ def test_gaza_pipeline_smoke_normalize_rank_compose_render_validate_links():
     assert relevance_decisions == []
     assert stories[0]["score"] >= normalized[0]["candidate_score"]
 
-    html = render_gaza_edition(edition_date, stories, normalized)
+    adequacy = compute_gaza_source_adequacy(normalized, stories, raw_candidate_count=len(records))
+    html = render_gaza_edition(edition_date, stories, normalized, adequacy)
     assert "Dispatches From Gaza" in html
     assert "Sources" in html
     assert 'href="https://www.unrwa.org/newsroom/example"' in html

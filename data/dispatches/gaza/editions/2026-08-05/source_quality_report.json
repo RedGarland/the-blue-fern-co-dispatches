@@ -1,0 +1,44 @@
+{
+  "date": "2026-08-05",
+  "source_quality_status": "limited_source_update",
+  "source_count": 2,
+  "publisher_count": 2,
+  "publishers": [
+    "BBC News",
+    "The Guardian"
+  ],
+  "category_count": 1,
+  "all_stories_one_publisher": false,
+  "core_ground_source_count": 2,
+  "context_only_source_count": 0,
+  "claim_attributed_source_count": 0,
+  "source_family_counts": {
+    "wire_international": 1,
+    "news_media": 1
+  },
+  "has_humanitarian_or_institutional_sources": true,
+  "has_wire_or_international_sources": true,
+  "fetch_failures": [],
+  "stale_feeds": [],
+  "duplicate_count": 0,
+  "accepted_count": 2,
+  "rejected_count": 0,
+  "rejection_counts_by_reason": {
+    "normalization_errors": 0,
+    "cross_edition_duplicates": 0
+  },
+  "adequacy_status": "limited_source_update",
+  "warnings": [
+    "This is a limited-source update generated from 2 saved source records from 2 publishers. It should be read as a partial update, not a full daily briefing.",
+    "publisher diversity below warning threshold",
+    "source count below warning threshold"
+  ],
+  "recommendation": "publish limited-source update",
+  "thresholds": {
+    "target_min_usable_sources": 8,
+    "target_min_publishers": 4,
+    "warning_min_sources": 6,
+    "warning_min_publishers": 3,
+    "limited_min_sources": 3
+  }
+}

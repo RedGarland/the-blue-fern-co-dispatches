@@ -1,0 +1,108 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-05",
+  "candidates_seen": 2,
+  "included_stories": [
+    {
+      "story_id": "gaza-story-2026-08-05-002",
+      "title": "Mass funeral held in Gaza for victims of 2023 Israeli strike",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "duplicate_skipped": [
+    {
+      "story_id": "gaza-story-2026-08-05-001",
+      "title": "Mass funeral in Gaza for 112 Palestinians killed in 2023 Israeli strike",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "same_event_funeral_recovery"
+      ],
+      "prior_story_matched": "gaza-story-2026-08-05-002",
+      "prior_edition_date": "2026-08-05",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    }
+  ],
+  "continuing_developments": [],
+  "major_updates": [
+    {
+      "story_id": "gaza-story-2026-08-05-002",
+      "title": "Mass funeral held in Gaza for victims of 2023 Israeli strike",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-06-20-001",
+      "prior_edition_date": "2026-06-20",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "merged_sources": 1,
+  "duplicate_groups": [
+    {
+      "kept_story_id": "gaza-story-2026-08-05-002",
+      "merged_story_ids": [
+        "gaza-story-2026-08-05-001"
+      ],
+      "merged_source_ids": [
+        "gaza-2026-08-05-bbc-middle-east-48f9e23cf11c"
+      ],
+      "duplicate_reason": "same_event_funeral_recovery",
+      "normalized_event_key": "gaza_funeral_recovery_gaza_count_112_year_2023",
+      "reasons": [
+        "same_event_funeral_recovery"
+      ]
+    }
+  ],
+  "reasons": [
+    {
+      "story_id": "gaza-story-2026-08-05-001",
+      "title": "Mass funeral in Gaza for 112 Palestinians killed in 2023 Israeli strike",
+      "classification": "duplicate_merged",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [
+        "same_event_funeral_recovery"
+      ],
+      "prior_story_matched": "gaza-story-2026-08-05-002",
+      "prior_edition_date": "2026-08-05",
+      "include_decision": "merge_into_existing",
+      "public_rendered": false
+    },
+    {
+      "story_id": "gaza-story-2026-08-05-002",
+      "title": "Mass funeral held in Gaza for victims of 2023 Israeli strike",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "prior_story_matched": "gaza-story-2026-06-20-001",
+      "prior_edition_date": "2026-06-20",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "prior_editions_checked": [
+    "2026-07-01",
+    "2026-06-20",
+    "2026-06-18",
+    "2026-06-16",
+    "2026-05-07",
+    "2026-05-05",
+    "2026-05-04",
+    "2026-05-03"
+  ]
+}

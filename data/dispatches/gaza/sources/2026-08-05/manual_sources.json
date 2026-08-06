@@ -1,0 +1,54 @@
+[
+  {
+    "source_record_id": "gaza-2026-08-05-bbc-middle-east-48f9e23cf11c",
+    "title": "Mass funeral in Gaza for 112 Palestinians killed in 2023 Israeli strike",
+    "url": "https://www.bbc.co.uk/news/articles/cn0n99npjejo?at_medium=RSS&at_campaign=rss",
+    "publisher": "BBC News",
+    "published_at": "2026-08-04T15:07:52+00:00",
+    "retrieved_at": "2026-08-05T13:00:40.267042+00:00",
+    "summary_or_snippet": "The bodies - belonging to members of two extended families - have only recently been recovered from under rubble in Gaza City.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source"
+  },
+  {
+    "source_record_id": "gaza-2026-08-05-guardian-world-d13748705199",
+    "title": "Rubio hopes US can reach Hormuz deal with Iran 'very shortly' as officials say progress has been made - as it happened",
+    "url": "https://www.theguardian.com/world/live/2026/aug/04/middle-east-crisis-qatar-iran-us-israel-war-donald-trump-strait-hormuz-gaza-latest-news-updates",
+    "publisher": "The Guardian",
+    "published_at": "2026-08-04T22:13:58+00:00",
+    "retrieved_at": "2026-08-05T13:00:40.267042+00:00",
+    "summary_or_snippet": "This live blog is now closed. US and Qatar report progress on Iran ceasefire and reopening Hormuz strait Iran and Oman have made progress toward a deal to reopen the strait of Hormuz, a potential breakthrough that could help end the war in the Middle East, regional officials have said. Under the emerging agreement, ships would enter the Persian Gulf through an Iranian-controlled route and exit through a route controlled by Oman, with service fees charged for providing security and preserving the maritime environment, two regional officials told the Associated Press.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source"
+  },
+  {
+    "source_record_id": "gaza-2026-08-05-guardian-world-e48c01827bde",
+    "title": "Mass funeral held in Gaza for victims of 2023 Israeli strike",
+    "url": "https://www.theguardian.com/world/2026/aug/04/mass-funeral-gaza-victims-2023-israeli-strike",
+    "publisher": "The Guardian",
+    "published_at": "2026-08-04T17:24:41+00:00",
+    "retrieved_at": "2026-08-05T13:00:40.267042+00:00",
+    "summary_or_snippet": "Remains of 112 victims, including 40 children, recovered from rubble more than two years after residential block was destroyed Mourners gathered in central Gaza on Tuesday for a mass funeral for 112 people, including 40 children, who were killed in 2023 in one of the deadliest Israeli strikes of the Gaza war. Their bodies could not be recovered until now because of Israel's continuing strikes, which have slowed, though not halted, since the ceasefire in October.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source"
+  },
+  {
+    "source_record_id": "gaza-2026-08-05-aljazeera-middle-east-86de84ac4946",
+    "title": "Protesters stage sit-in against settler violence-linked Smotrich funds",
+    "url": "https://www.aljazeera.com/video/newsfeed/2026/8/5/protesters-stage-sit-in-against-settler-violence-linked-smotrich-funds?traffic_source=rss",
+    "publisher": "Al Jazeera",
+    "published_at": "2026-08-05T12:03:34+00:00",
+    "retrieved_at": "2026-08-05T13:00:40.267042+00:00",
+    "summary_or_snippet": "Palestinian and Israeli protesters staged a sit-in at the Religious Zionist Party's headquarters in Shoham on Wednesday.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source"
+  }
+]

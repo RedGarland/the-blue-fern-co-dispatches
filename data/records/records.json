@@ -151,6 +151,26 @@
     "public_exposed": true
   },
   {
+    "record_id": "gaza-story-2026-08-05-002",
+    "dispatch_id": "dispatch-gaza",
+    "dispatch_slug": "gaza",
+    "edition_id": "gaza-2026-08-05",
+    "category": "conflict",
+    "title": "Mass funeral held in Gaza for victims of 2023 Israeli strike",
+    "public_summary": "Remains of 112 victims, including 40 children, recovered from rubble more than two years after residential block was destroyed Mourners gathered in central Gaza on Tuesday for a mass funeral for 112 people, including 40 children, who were killed in 2023 in one of the deadliest Israeli strikes of the Gaza war. Their bodies could not be recovered until now because of Israel's continuing strikes, which have slowed, though not halted, since the ceasefire in October.",
+    "detail_summary": null,
+    "score": 71,
+    "included_public": true,
+    "included_detail": false,
+    "source_ids": [
+      "gaza-2026-08-05-guardian-world-e48c01827bde",
+      "gaza-2026-08-05-bbc-middle-east-48f9e23cf11c"
+    ],
+    "generated_at": "2026-08-06T07:17:21.657768+00:00",
+    "is_free_public": true,
+    "public_exposed": true
+  },
+  {
     "record_id": "story-b5a2f0ce428f",
     "dispatch_id": "dispatch-cascadia",
     "edition_id": "cascadia-2026-05-06",

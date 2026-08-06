@@ -1,0 +1,13 @@
+{
+  "edition_date": "2026-08-05",
+  "lookback_days": 7,
+  "prior_editions_checked": [],
+  "input_candidate_count": 2,
+  "kept_candidate_count": 2,
+  "suppressed_candidate_count": 0,
+  "suppressed_candidates": [],
+  "stale_risk_candidates": [],
+  "warnings": [],
+  "google_wrapper_count": 0,
+  "canonical_publisher_url_count": 2
+}

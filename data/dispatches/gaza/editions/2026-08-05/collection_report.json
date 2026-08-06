@@ -1,0 +1,205 @@
+{
+  "edition_date": "2026-08-05",
+  "lookback_window_days": 7,
+  "providers_configured": [
+    "manual_sources_json"
+  ],
+  "providers_attempted": [
+    "manual_sources_json"
+  ],
+  "providers_successful": [
+    "manual_sources_json"
+  ],
+  "provider_failures": [],
+  "raw_candidate_count": 4,
+  "normalized_candidate_count": 2,
+  "accepted_candidate_count_before_dedupe": 2,
+  "kept_after_dedupe": 2,
+  "suppressed_after_dedupe": 0,
+  "rejection_counts_by_reason": {
+    "normalization_errors": 0,
+    "cross_edition_duplicates": 0
+  },
+  "top_rejected_examples": [],
+  "review_candidates": [],
+  "rejected_off_topic": 0,
+  "rejected_weak_date": 0,
+  "rejected_missing_url_or_title": 0,
+  "suppressed_duplicate": 0,
+  "final_story_count": 2,
+  "story_selection_excluded_count": 0,
+  "story_selection_excluded_reason_counts": {},
+  "low_relevance_survivors": 0,
+  "no_story_explanation": "stories_available",
+  "no_story_credibility_decision": "stories_available",
+  "providers_attempted_count": 1,
+  "providers_successful_count": 1,
+  "provider_diagnostics": [
+    {
+      "source_id": "manual_sources_json",
+      "source_tier": "manual_supplements",
+      "status": "ok",
+      "reason": "manual records loaded",
+      "raw_candidates": 4,
+      "accepted_before_dedupe": 2,
+      "suppressed_duplicate": 0,
+      "kept_after_dedupe": 2,
+      "provider_checked": true,
+      "candidates_seen": 4,
+      "candidates_rejected": 0,
+      "rejection_reason": "manual records loaded",
+      "likely_discovery_gap": false,
+      "manual_backfill_source": [],
+      "tls_error": false,
+      "backend_used": "python"
+    }
+  ],
+  "source_providers_attempted": [
+    {
+      "source_id": "manual_sources_json",
+      "source_tier": "manual_supplements",
+      "status": "ok",
+      "reason": "manual records loaded",
+      "raw_candidates": 4,
+      "accepted_before_dedupe": 2,
+      "suppressed_duplicate": 0,
+      "kept_after_dedupe": 2,
+      "provider_checked": true,
+      "candidates_seen": 4,
+      "candidates_rejected": 0,
+      "rejection_reason": "manual records loaded",
+      "likely_discovery_gap": false,
+      "manual_backfill_source": [],
+      "tls_error": false,
+      "backend_used": "python"
+    }
+  ],
+  "source_family_counts": {
+    "wire_international": 1,
+    "news_media": 1
+  },
+  "stage_counts": {
+    "registry_sources": 1,
+    "enabled_providers_configured": 1,
+    "providers_attempted": 1,
+    "providers_successful": 1,
+    "raw_candidates": 4,
+    "normalized_candidates": 2,
+    "accepted_before_dedupe": 2
+  },
+  "google_wrapper_count": 0,
+  "canonical_publisher_url_count": 2,
+  "allow_post_edition_date_sources": true,
+  "post_edition_date_sources_included": false,
+  "post_edition_date_source_count": 0,
+  "scheduled_run_local_time": "2026-08-05T06:00:00-07:00",
+  "actual_run_local_time": "2026-08-06T00:17:21-07:00",
+  "source_window_start_utc": "2026-08-04T15:07:52Z",
+  "source_window_end_utc": "2026-08-04T17:24:41Z",
+  "first_source_retrieved_at": "2026-08-05T13:00:40.267042Z",
+  "last_source_retrieved_at": "2026-08-05T13:00:40.267042Z",
+  "contains_later_same_day_update": false,
+  "later_same_day_update_count": 0,
+  "later_same_day_update_batch_count": 0,
+  "later_same_day_update_source_count": 0,
+  "contains_post_edition_date_update": false,
+  "post_edition_date_update_count": 0,
+  "post_edition_date_update_batch_count": 0,
+  "post_edition_date_update_source_count": 0,
+  "post_edition_date_retrieval_batches": [],
+  "retrieval_batches": [
+    {
+      "retrieved_at": "2026-08-05T13:00:40.267042Z",
+      "retrieved_at_local": "2026-08-05T06:00:40-07:00",
+      "retrieved_local_date": "2026-08-05",
+      "batch_classification": "scheduled_or_pre_scheduled_batch",
+      "source_record_ids": [
+        "gaza-2026-08-05-bbc-middle-east-48f9e23cf11c",
+        "gaza-2026-08-05-guardian-world-e48c01827bde"
+      ],
+      "source_count": 2
+    }
+  ],
+  "source_adequacy": {
+    "status": "limited_source_update",
+    "label": "Limited-source update",
+    "source_count": 2,
+    "publisher_count": 2,
+    "publishers": [
+      "BBC News",
+      "The Guardian"
+    ],
+    "category_count": 1,
+    "categories": [
+      "conflict"
+    ],
+    "all_stories_one_publisher": false,
+    "has_humanitarian_or_institutional_sources": true,
+    "has_wire_or_international_sources": true,
+    "core_ground_source_count": 2,
+    "context_only_source_count": 0,
+    "claim_attributed_source_count": 0,
+    "thresholds": {
+      "target_min_usable_sources": 8,
+      "target_min_publishers": 4,
+      "warning_min_sources": 6,
+      "warning_min_publishers": 3,
+      "limited_min_sources": 3
+    },
+    "warnings": [
+      "This is a limited-source update generated from 2 saved source records from 2 publishers. It should be read as a partial update, not a full daily briefing."
+    ]
+  },
+  "core_gaza_count": 2,
+  "palestinian_development_count": 0,
+  "written_public_exclusions": [],
+  "rejected_count": 0,
+  "story_relevance_diagnostics": [],
+  "top_story_candidates": [
+    {
+      "story_id": "gaza-story-2026-08-05-002",
+      "title": "Mass funeral held in Gaza for victims of 2023 Israeli strike",
+      "top_story_relevance_score": 71,
+      "relevance_terms_matched": [
+        "gaza"
+      ]
+    },
+    {
+      "story_id": "gaza-story-2026-08-05-001",
+      "title": "Mass funeral in Gaza for 112 Palestinians killed in 2023 Israeli strike",
+      "top_story_relevance_score": 54,
+      "relevance_terms_matched": [
+        "gaza",
+        "palestin"
+      ]
+    }
+  ],
+  "top_story_relevance_score": 71,
+  "top_story_relevance_terms_matched": [
+    "gaza"
+  ],
+  "thin_edition_override_used": true,
+  "blocked_for_thin_or_off_topic": false,
+  "thin_edition_reason": null,
+  "source_diversity": {
+    "source_diversity_warning": false,
+    "publisher_dominance_warning": true,
+    "warning_severity": "info",
+    "warning_reason": [
+      "single_publisher_supplies_more_than_60_percent_of_rendered_stories"
+    ],
+    "low_diversity_warning_reason": [],
+    "publisher_dominance_warning_reason": [
+      "single_publisher_supplies_more_than_60_percent_of_rendered_stories"
+    ],
+    "unique_rendered_publishers": 1,
+    "unique_raw_publishers": 3
+  },
+  "source_quality_status": "limited_source_update",
+  "source_quality_recommendation": "publish limited-source update",
+  "source_quality_warnings": [
+    "This is a limited-source update generated from 2 saved source records from 2 publishers. It should be read as a partial update, not a full daily briefing.",
+    "publisher diversity below warning threshold",
+    "source count below warning threshold"
+  ]
+}

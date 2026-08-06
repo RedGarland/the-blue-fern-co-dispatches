@@ -534,6 +534,45 @@ def test_gaza_run_merges_flotilla_same_event_and_keeps_unrelated_story(monkeypat
     assert all(row.get("public_rendered") is False for row in merged_rows)
 
 
+def test_gaza_funeral_same_event_titles_merge_into_one_group():
+    root = make_root()
+    stories = [
+        story(
+            "guardian-funeral",
+            "Mass funeral held in Gaza for victims of 2023 Israeli strike",
+            "https://www.theguardian.com/world/2026/aug/04/mass-funeral-gaza-victims-2023-israeli-strike",
+            summary="Remains of 112 victims, including 40 children, recovered from rubble more than two years after residential block was destroyed in central Gaza.",
+            category="conflict",
+            publisher="The Guardian",
+            region_scope="Gaza",
+            published_at="2026-08-04T17:24:41+00:00",
+        ),
+        story(
+            "bbc-funeral",
+            "Mass funeral in Gaza for 112 Palestinians killed in 2023 Israeli strike",
+            "https://www.bbc.co.uk/news/articles/cn0n99npjejo?at_medium=RSS&at_campaign=rss",
+            summary="The bodies of two extended families were recently recovered from rubble in Gaza City after the 2023 strike.",
+            category="conflict",
+            publisher="BBC News",
+            region_scope="Gaza",
+            published_at="2026-08-04T15:07:52+00:00",
+        ),
+    ]
+
+    result = dedupe_public_stories(root, "gaza", "2026-08-05", stories)
+
+    assert len(result.stories) == 1
+    merged = result.stories[0]
+    assert merged["source_record_ids"] == ["src-guardian-funeral", "src-bbc-funeral"]
+    assert merged["source_urls"] == [
+        "https://www.theguardian.com/world/2026/aug/04/mass-funeral-gaza-victims-2023-israeli-strike",
+        "https://www.bbc.co.uk/news/articles/cn0n99npjejo?at_medium=RSS&at_campaign=rss",
+    ]
+    assert merged["publisher_names"] == ["The Guardian", "BBC News"]
+    assert any(group["duplicate_reason"] == "same_event_funeral_recovery" for group in result.report["duplicate_groups"])
+    assert result.report["duplicate_groups"][0]["normalized_event_key"].startswith("gaza_funeral_recovery_")
+
+
 def test_cascadia_render_writes_dedupe_report_and_keeps_weekly_archive_only(cascadia_work_root):
     curated_dir = cascadia_work_root / "data" / "dispatches" / "cascadia" / "curated" / "2026-05-10"
     curated_dir.mkdir(parents=True)

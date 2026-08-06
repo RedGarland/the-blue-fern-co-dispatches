@@ -171,8 +171,10 @@ GAZA_EVENT_ROLE_PREFIXES = (
     "teacher",
     "worker",
 )
-GAZA_EVENT_LOCATION_TERMS = ("gaza", "gaza strip", "central gaza", "southern gaza", "northern gaza")
+GAZA_EVENT_LOCATION_TERMS = ("gaza", "gaza city", "gaza strip", "central gaza", "southern gaza", "northern gaza")
 GAZA_EVENT_CASUALTY_TERMS = ("killed", "kill", "dead", "death", "injured", "injure", "wounded", "wound")
+GAZA_EVENT_FUNERAL_TERMS = ("funeral", "burial", "buried", "reburial", "memorial service")
+GAZA_EVENT_RECOVERY_TERMS = ("recovered", "recovery", "remains", "bodies", "rubble", "exhumed")
 GAZA_EVENT_ORG_TERMS = ("al jazeera", "guardian", "reuters", "ap ", "bbc", "afp", "washington post", "new york times")
 GAZA_EVENT_PERSON_PATTERN = re.compile(r"\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b")
 
@@ -493,6 +495,36 @@ def _gaza_named_casualty_event_key(story: dict[str, Any]) -> str:
     return "_".join(parts)
 
 
+def _gaza_funeral_recovery_event_key(story: dict[str, Any]) -> str:
+    text = _gaza_story_text(story)
+    lowered = normalize_text(text)
+    if "gaza" not in lowered:
+        return ""
+    if not any(term in lowered for term in GAZA_EVENT_FUNERAL_TERMS):
+        return ""
+    if not any(term in lowered for term in GAZA_EVENT_RECOVERY_TERMS):
+        return ""
+    if not any(term in lowered for term in GAZA_EVENT_CASUALTY_TERMS) and not re.search(r"\b\d{2,4}\b", lowered):
+        return ""
+    if not re.search(r"\b(19|20)\d{2}\b", lowered):
+        return ""
+    location = ""
+    for term in GAZA_EVENT_LOCATION_TERMS:
+        if term in lowered:
+            location = normalize_text(term)
+            break
+    if not location:
+        return ""
+    count = next((match for match in re.findall(r"\b(\d{2,4})\b", lowered) if len(match) <= 3), "")
+    parts = ["gaza_funeral_recovery", location.replace(" ", "_")]
+    if count:
+        parts.append(f"count_{count}")
+    year_match = re.search(r"\b(19|20)\d{2}\b", lowered)
+    if year_match:
+        parts.append(f"year_{year_match.group(0)}")
+    return "_".join(parts)
+
+
 def merge_story(base: dict[str, Any], incoming: dict[str, Any]) -> dict[str, Any]:
     merged = dict(base)
     for key in ("source_record_ids", "source_ids", "source_urls", "publisher_names", "canonical_urls"):
@@ -551,6 +583,9 @@ def _gaza_event_key(story: dict[str, Any]) -> str:
     location = bool(re.search(r"\b(near cyprus|off cyprus|cyprus|international waters|maritime blockade)\b", text))
     if actor and action and obj and location:
         return "gaza_flotilla_interception_israeli_forces_cyprus"
+    funeral_recovery = _gaza_funeral_recovery_event_key(story)
+    if funeral_recovery:
+        return funeral_recovery
     named_casualty = _gaza_named_casualty_event_key(story)
     if named_casualty:
         return named_casualty
@@ -568,6 +603,8 @@ def _same_event_cluster_key(story: dict[str, Any]) -> str:
 def _same_event_duplicate_reason(event_key: str) -> str:
     if event_key == "gaza_flotilla_interception_israeli_forces_cyprus":
         return "same_event_flotilla_interception"
+    if event_key.startswith("gaza_funeral_recovery_"):
+        return "same_event_funeral_recovery"
     if event_key.startswith("gaza_named_casualty_"):
         return "same_event_named_casualty"
     return event_key or "within_edition_duplicate"

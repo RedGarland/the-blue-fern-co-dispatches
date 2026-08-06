@@ -64,6 +64,41 @@ WEAK_ONLY_GAZA_PATTERNS = (
     "budget",
     "domestic politics",
 )
+GAZA_LIVE_BLOG_MARKERS = ("live blog", "live updates", "as it happened")
+GAZA_REGION_CONTEXT_TERMS = ("iran", "hormuz", "oman", "qatar", "lebanon", "syria", "yemen")
+GAZA_IMPACT_TERMS = (
+    "aid",
+    "access",
+    "food",
+    "water",
+    "fuel",
+    "hospital",
+    "clinic",
+    "health",
+    "crossing",
+    "border",
+    "displacement",
+    "displaced",
+    "reconstruction",
+    "ceasefire",
+    "truce",
+    "hostage",
+    "detainee",
+    "prisoner",
+    "evacuation",
+    "shelter",
+    "civilian",
+    "funeral",
+    "burial",
+    "recovered",
+    "remains",
+    "bodies",
+    "strike",
+    "airstrike",
+    "killed",
+    "injured",
+    "attack",
+)
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 PLACEHOLDER_RE = re.compile(r"^(replace with|actual source|actual publisher|actual-source-url)", re.I)
 WHITESPACE_RE = re.compile(r"\s+")
@@ -210,6 +245,83 @@ def is_palestinian_development_text(text: str) -> bool:
     if PALESTINIAN_POLICY_IMPACT_TERMS.search(haystack):
         return True
     return bool(re.search(r"\b(west bank|east jerusalem|unrwa|nakba|right of return)\b", haystack, re.I))
+
+
+def _gaza_relevance_profile(item: dict[str, str], source: SourceDefinition | None = None) -> dict[str, Any]:
+    title = clean_feed_text(item.get("title", ""))
+    summary = clean_feed_text(item.get("summary_or_snippet", ""))
+    url = str(item.get("url") or "")
+    source_name = f"{source.name} {source.publisher} {source.category_hint}" if source is not None else ""
+    text = " ".join([title, summary]).strip()
+    lowered = text.lower()
+    url_lower = url.lower()
+    gaza_anchor = bool(GAZA_TERMS.search(text))
+    palestinian_anchor = bool(PALESTINE_TERMS.search(text) or has_palestinian_anchor_text(text))
+    west_bank_anchor = bool(re.search(r"\b(west bank|east jerusalem)\b", text, re.I))
+    regional_anchor = bool(re.search(r"\b(" + "|".join(GAZA_REGION_CONTEXT_TERMS) + r")\b", text, re.I))
+    live_blog = any(marker in lowered for marker in GAZA_LIVE_BLOG_MARKERS) or "as it happened" in lowered
+    impact_anchor = any(term in lowered for term in GAZA_IMPACT_TERMS)
+    incidental_anchor = any(marker in lowered for marker in WEAK_ONLY_GAZA_PATTERNS if marker in lowered)
+    explicit_gaza_consequence = gaza_anchor and (impact_anchor or palestinian_anchor)
+    if is_opinion_editorial_commentary_url(item) and not is_labeled_context_source(item, source):
+        return {
+            "accepted": False,
+            "reason": "opinion_editorial_commentary_url",
+            "scope_provenance": "uncertain",
+            "nexus_type": "excluded_opinion",
+        }
+    if live_blog and (incidental_anchor or not explicit_gaza_consequence):
+        return {
+            "accepted": False,
+            "reason": "live_blog_incidental_gaza_reference",
+            "scope_provenance": "inherited_collection_scope" if source is not None and str(source.region_scope or "").strip() else "uncertain",
+            "nexus_type": "live_blog_incidental",
+        }
+    if not gaza_anchor:
+        inherited_scope = source is not None and bool(str(source.region_scope or "").strip())
+        if west_bank_anchor:
+            reason = "west_bank_without_gaza_impact"
+        elif inherited_scope:
+            reason = "inherited_scope_only"
+        elif regional_anchor:
+            reason = "regional_context_only"
+        elif palestinian_anchor:
+            reason = "no_demonstrated_gaza_nexus"
+        elif incidental_anchor:
+            reason = "no_demonstrated_gaza_nexus"
+        else:
+            reason = "no_demonstrated_gaza_nexus"
+        return {
+            "accepted": False,
+            "reason": reason,
+            "scope_provenance": "inherited_collection_scope" if inherited_scope else "uncertain",
+            "nexus_type": "no_gaza_anchor",
+        }
+    if not explicit_gaza_consequence and live_blog:
+        return {
+            "accepted": False,
+            "reason": "live_blog_incidental_gaza_reference",
+            "scope_provenance": "article_evidence",
+            "nexus_type": "live_blog_incidental",
+        }
+    if palestinian_anchor and not impact_anchor and not regional_anchor:
+        reason = "palestinian_development_material"
+        provenance = "article_evidence"
+    elif regional_anchor and impact_anchor:
+        reason = "regional_gaza_consequence"
+        provenance = "article_evidence"
+    elif impact_anchor:
+        reason = "explicit_gaza_impact"
+        provenance = "article_evidence"
+    else:
+        reason = "direct_gaza_development"
+        provenance = "article_evidence"
+    return {
+        "accepted": True,
+        "reason": reason,
+        "scope_provenance": provenance,
+        "nexus_type": "gaza_evidence",
+    }
 
 
 def _looks_like_google_news_wrapper(url: str) -> bool:
@@ -893,33 +1005,12 @@ def fetch_rss_items(url: str, timeout: int = 20) -> list[dict[str, str]]:
 
 
 def gaza_relevance_decision(item: dict[str, str], source: SourceDefinition | None = None) -> tuple[bool, str]:
-    title = clean_feed_text(item.get("title", ""))
-    summary = clean_feed_text(item.get("summary_or_snippet", ""))
-    url = str(item.get("url") or "")
-    source_name = f"{source.name} {source.publisher} {source.category_hint}" if source is not None else ""
-    if is_opinion_editorial_commentary_url(item) and not is_labeled_context_source(item, source):
-        return False, "opinion_editorial_commentary_url"
-    strong_title = bool(STRONG_GAZA_TERMS.search(title))
-    strong_summary = bool(STRONG_GAZA_TERMS.search(summary))
-    strong_url = bool(STRONG_GAZA_TERMS.search(url))
-    strong_source = bool(STRONG_GAZA_TERMS.search(source_name))
-    weak_markers = " ".join([title.lower(), summary.lower(), url.lower()])
-    if any(marker in weak_markers for marker in WEAK_ONLY_GAZA_PATTERNS) and not (strong_title or strong_url):
-        return False, "weak_liveblog_unrelated_topic"
-    if strong_title or strong_url:
-        return True, "strong_title_or_url"
-    haystack = " ".join([title, summary, url])
-    if is_palestinian_development_text(haystack):
-        return True, "palestinian_development_material"
-    if (PALESTINIAN_DEVELOPMENT_TERMS.search(haystack) or PALESTINIAN_POLICY_IMPACT_TERMS.search(haystack)) and not has_palestinian_anchor_text(haystack):
-        return False, "rejected_no_palestinian_anchor"
-    if PALESTINE_TERMS.search(haystack) and GAZA_CONTEXT_TERMS.search(haystack):
-        return True, "palestine_with_gaza_context"
-    if strong_summary and (strong_source or len(summary) < 240):
-        return True, "strong_summary"
-    if GAZA_TERMS.search(haystack):
-        return False, "gaza_mention_only_without_strong_topic_signal"
-    return False, "not_gaza_relevant"
+    profile = _gaza_relevance_profile(item, source)
+    return bool(profile["accepted"]), str(profile["reason"])
+
+
+def gaza_relevance_profile(item: dict[str, str], source: SourceDefinition | None = None) -> dict[str, Any]:
+    return _gaza_relevance_profile(item, source)
 
 
 def _parse_metadata_dt(value: str) -> datetime | None:
@@ -1158,6 +1249,10 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
     if not title or not url or not url.startswith(("http://", "https://")):
         return None
     published_at = (item.get("published_at") or "").strip()
+    relevance_profile = _gaza_relevance_profile(
+        {"title": title, "summary_or_snippet": clean_feed_text(item.get("summary_or_snippet", "")), "url": url},
+        source,
+    )
     canonical_url, canonical_status = extract_canonical_from_google_wrapper(url)
     wrapper_url = url if _looks_like_google_news_wrapper(url) else ""
     if not canonical_url:
@@ -1203,6 +1298,7 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
         "traceability_note": traceability_note,
         "attribution_mode": attribution_mode,
         "claim_status": attribution_mode,
+        "scope_provenance": str(relevance_profile.get("scope_provenance") or "uncertain"),
     }
 
 
@@ -1379,7 +1475,18 @@ def collect_gaza_sources(
         has_terms = bool(GAZA_TERMS.search(text) or PALESTINE_TERMS.search(text))
         if not has_terms:
             return
-        if reason not in {"rejected_low_relevance", "rejected_off_topic", "rejected_missing_published_at", "rejected_weak_date_basis"}:
+        if reason not in {
+            "rejected_low_relevance",
+            "rejected_off_topic",
+            "rejected_missing_published_at",
+            "rejected_weak_date_basis",
+            "no_demonstrated_gaza_nexus",
+            "inherited_scope_only",
+            "regional_context_only",
+            "west_bank_without_gaza_impact",
+            "live_blog_incidental_gaza_reference",
+            "manual_scope_review_required",
+        }:
             return
         if len(review_candidates) >= 40:
             return
@@ -1579,10 +1686,17 @@ def collect_gaza_sources(
             relevant, relevance_reason = gaza_relevance_decision(item, source)
             if not relevant:
                 low_relevance = "low" if any(token in item_text.lower() for token in LOW_RELEVANCE_KEYWORDS) else "peripheral"
-                if relevance_reason in {"weak_liveblog_unrelated_topic", "gaza_mention_only_without_strong_topic_signal"}:
-                    _provider_reject(diag, "rejected_low_relevance", item, relevance_band=low_relevance)
-                elif relevance_reason == "rejected_no_palestinian_anchor":
-                    _provider_reject(diag, "rejected_no_palestinian_anchor", item, relevance_band="off_topic")
+                reason = relevance_reason or "no_demonstrated_gaza_nexus"
+                if reason in {"live_blog_incidental_gaza_reference", "weak_liveblog_unrelated_topic"}:
+                    _provider_reject(diag, reason, item, relevance_band=low_relevance)
+                elif reason in {
+                    "no_demonstrated_gaza_nexus",
+                    "regional_context_only",
+                    "west_bank_without_gaza_impact",
+                    "inherited_scope_only",
+                    "manual_scope_review_required",
+                }:
+                    _provider_reject(diag, reason, item, relevance_band="off_topic")
                 else:
                     _provider_reject(diag, "rejected_off_topic", item, relevance_band="off_topic")
                 continue

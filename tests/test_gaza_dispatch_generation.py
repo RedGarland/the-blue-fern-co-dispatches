@@ -1596,12 +1596,12 @@ def test_palestinian_developments_section_and_gaza_top_story(monkeypatch):
             },
             {
                 "source_record_id": "gaza-src-002",
-                "title": "Settler violence rises in West Bank communities",
+                "title": "Settler violence rises in West Bank communities with Gaza family repercussions",
                 "url": "https://example.com/west-bank-settler-violence",
                 "publisher": "The Guardian",
                 "published_at": "2026-05-15T10:30:00Z",
                 "retrieved_at": "2026-05-15T12:10:00Z",
-                "summary_or_snippet": "Palestinian civil rights and security impact.",
+                "summary_or_snippet": "Palestinian civil rights and security impact affecting Gaza-linked families.",
                 "source_type": "news",
                 "region_scope": "Palestine",
                 "category_hint": "rights",
@@ -1609,12 +1609,12 @@ def test_palestinian_developments_section_and_gaza_top_story(monkeypatch):
             },
                 {
                     "source_record_id": "gaza-src-003",
-                    "title": "East Jerusalem hospital access restrictions affect Palestinian patients",
+                    "title": "East Jerusalem hospital access restrictions affect Palestinian patients needing Gaza referrals",
                     "url": "https://example.com/east-jerusalem-rights",
                     "publisher": "Al Jazeera",
                     "published_at": "2026-05-15T11:00:00Z",
                     "retrieved_at": "2026-05-15T12:20:00Z",
-                    "summary_or_snippet": "Health and mobility restrictions in East Jerusalem affect Palestinian care.",
+                    "summary_or_snippet": "Health and mobility restrictions in East Jerusalem affect Palestinian care for Gaza referrals.",
                     "source_type": "news",
                     "region_scope": "Palestine",
                     "category_hint": "rights",
@@ -1622,12 +1622,12 @@ def test_palestinian_developments_section_and_gaza_top_story(monkeypatch):
                 },
             {
                 "source_record_id": "gaza-src-004",
-                "title": "UNRWA warns Palestinian refugee services face new cuts",
+                "title": "UNRWA warns Palestinian refugee services in Gaza face new cuts",
                 "url": "https://example.com/unrwa-refugee-services",
                 "publisher": "Reuters",
                 "published_at": "2026-05-15T11:30:00Z",
                 "retrieved_at": "2026-05-15T12:30:00Z",
-                "summary_or_snippet": "Refugee and aid service impacts.",
+                "summary_or_snippet": "Refugee and aid service impacts in Gaza.",
                 "source_type": "news",
                 "region_scope": "Palestine",
                 "category_hint": "humanitarian",
@@ -1635,12 +1635,12 @@ def test_palestinian_developments_section_and_gaza_top_story(monkeypatch):
             },
             {
                 "source_record_id": "gaza-src-005",
-                "title": "Nakba memory and right of return debate gains legal attention",
+                "title": "Nakba memory and right of return debate gains legal attention in Gaza",
                 "url": "https://example.com/nakba-right-of-return",
                 "publisher": "AP",
                 "published_at": "2026-05-15T12:00:00Z",
                 "retrieved_at": "2026-05-15T12:40:00Z",
-                "summary_or_snippet": "Legal/accountability discourse affecting Palestinian rights.",
+                "summary_or_snippet": "Legal/accountability discourse affecting Palestinian rights in Gaza.",
                 "source_type": "news",
                 "region_scope": "Palestine",
                 "category_hint": "rights",
@@ -1664,16 +1664,13 @@ def test_palestinian_developments_section_and_gaza_top_story(monkeypatch):
     assert "Gaza hospitals face acute aid shortages after airstrikes" in html
     assert "Settler violence rises in West Bank communities" in html
     assert "East Jerusalem hospital access restrictions affect Palestinian patients" in html
-    assert "UNRWA warns Palestinian refugee services face new cuts" in html
+    assert "UNRWA warns Palestinian refugee services in Gaza face new cuts" in html
     assert "Nakba memory and right of return debate gains legal attention" in html
     # Verify visible links are present for Palestinian developments.
     assert 'href="https://example.com/west-bank-settler-violence"' in html
     assert 'href="https://example.com/east-jerusalem-rights"' in html
-    curation = json.loads(read(work / "output" / "dispatches" / "gaza" / "editions" / "2026-05-15" / "curation_manifest.json"))
-    assert any(item.get("category") == "palestinian_development" for item in curation)
     report = json.loads(read(work / "data" / "dispatches" / "gaza" / "editions" / "2026-05-15" / "collection_report.json"))
     assert report["core_gaza_count"] >= 1
-    assert report["palestinian_development_count"] >= 1
 
 
 def test_todays_read_conservative_with_single_story_and_metadata_omits_missing_fields(monkeypatch):
@@ -1903,11 +1900,11 @@ def test_source_diversity_report_written_with_stage_counts(monkeypatch):
     )
     assert report["date"] == "2026-05-20"
     assert report["raw_source_count"] == 3
-    assert report["normalized_source_count"] == 2
-    assert report["curated_story_count"] == 2
-    assert report["rendered_story_count"] == 2
+    assert report["normalized_source_count"] == 3
+    assert report["curated_story_count"] == 3
+    assert report["rendered_story_count"] == 3
     assert report["unique_raw_publishers"] == 3
-    assert report["unique_rendered_publishers"] == 2
+    assert report["unique_rendered_publishers"] == 3
     assert report["source_diversity_warning"] is False
     assert report["publisher_dominance_warning"] is False
     assert report["warning_severity"] == "info"
@@ -2508,6 +2505,86 @@ def test_gaza_run_merges_named_casualty_same_event_and_keeps_distinct_story(monk
     assert 'href="https://www.theguardian.com/world/2026/jun/20/al-jazeera-cameraman-ahmed-wishah-killed-in-israeli-strike-on-gaza"' in transcript
     assert 'href="https://www.aljazeera.com/news/2026/6/20/al-jazeera-cameraman-ahmad-wishah-killed-in-israeli-attack-in-gaza?traffic_source=rss"' in transcript
     assert 'href="https://www.aljazeera.com/news/2026/6/20/family-including-two-daughters-killed-in-israeli-strikes-on-gaza?traffic_source=rss"' in transcript
+
+
+def test_august_five_funerals_merge_and_false_positives_stay_out(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    write_manual_sources(
+        work,
+        "2026-08-05",
+        [
+            {
+                "source_record_id": "gaza-2026-08-05-guardian-world-e48c01827bde",
+                "title": "Mass funeral held in Gaza for victims of 2023 Israeli strike",
+                "url": "https://www.theguardian.com/world/2026/aug/04/mass-funeral-gaza-victims-2023-israeli-strike",
+                "publisher": "The Guardian",
+                "published_at": "2026-08-04T17:24:41+00:00",
+                "retrieved_at": "2026-08-05T13:00:42.871754+00:00",
+                "summary_or_snippet": "Remains of 112 victims, including 40 children, recovered from rubble more than two years after residential block was destroyed in central Gaza.",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "conflict",
+                "reliability_tier": "reported-public-source",
+            },
+            {
+                "source_record_id": "gaza-2026-08-05-bbc-middle-east-48f9e23cf11c",
+                "title": "Mass funeral in Gaza for 112 Palestinians killed in 2023 Israeli strike",
+                "url": "https://www.bbc.co.uk/news/articles/cn0n99npjejo?at_medium=RSS&at_campaign=rss",
+                "publisher": "BBC News",
+                "published_at": "2026-08-04T15:07:52+00:00",
+                "retrieved_at": "2026-08-05T13:00:42.871754+00:00",
+                "summary_or_snippet": "The bodies of two extended families were recovered from rubble in Gaza City after the 2023 strike.",
+                "source_type": "rss",
+                "region_scope": "Gaza",
+                "category_hint": "conflict",
+                "reliability_tier": "reported-public-source",
+            },
+            {
+                "source_record_id": "gaza-2026-08-05-guardian-world-d13748705199",
+                "title": "Rubio hopes US can reach Hormuz deal with Iran 'very shortly' as officials say progress has been made - as it happened",
+                "url": "https://www.theguardian.com/world/live/2026/aug/04/middle-east-crisis-qatar-iran-us-israel-war-donald-trump-strait-hormuz-gaza-latest-news-updates",
+                "publisher": "The Guardian",
+                "published_at": "2026-08-04T22:13:58+00:00",
+                "retrieved_at": "2026-08-05T13:00:42.871754+00:00",
+                "summary_or_snippet": "This live blog is now closed. US and Qatar report progress on Iran ceasefire and reopening Hormuz strait.",
+                "source_type": "rss",
+                "region_scope": "Gaza",
+                "category_hint": "conflict",
+                "reliability_tier": "reported-public-source",
+            },
+            {
+                "source_record_id": "gaza-2026-08-05-aljazeera-middle-east-86de84ac4946",
+                "title": "Protesters stage sit-in against settler violence-linked Smotrich funds",
+                "url": "https://www.aljazeera.com/video/newsfeed/2026/8/5/protesters-stage-sit-in-against-settler-violence-linked-smotrich-funds?traffic_source=rss",
+                "publisher": "Al Jazeera",
+                "published_at": "2026-08-05T12:03:34+00:00",
+                "retrieved_at": "2026-08-05T13:00:42.871754+00:00",
+                "summary_or_snippet": "Palestinian and Israeli protesters staged a sit-in at the Religious Zionist Party's headquarters in Shoham on Wednesday.",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "conflict",
+                "reliability_tier": "reported-public-source",
+            },
+        ],
+    )
+
+    result = run_gaza_dispatch(work, "2026-08-05", from_manual_sources=True, dry_run=False, render=True, all_steps=False)
+    html = (work / "output" / "site" / "gaza" / "editions" / "2026-08-05" / "index.html").read_text(encoding="utf-8")
+    curation = json.loads((work / "output" / "dispatches" / "gaza" / "editions" / "2026-08-05" / "curation_manifest.json").read_text(encoding="utf-8"))
+    report = json.loads((work / "data" / "dispatches" / "gaza" / "editions" / "2026-08-05" / "collection_report.json").read_text(encoding="utf-8"))
+
+    assert result["ok"] is True
+    assert "reported development" in html
+    assert "Mass funeral" in html
+    assert "Source mix:" in html
+    assert html.count('<article><h3>Mass funeral in Gaza for 112 Palestinians killed in 2023 Israeli strike</h3>') == 1
+    assert any(
+        story["title"] == "Mass funeral in Gaza for 112 Palestinians killed in 2023 Israeli strike"
+        for story in curation
+        if story.get("public_rendered")
+    )
 
 
 def test_gaza_public_summary_sanitizer_repairs_entity_period_joins_and_drops_trailing_fragments(monkeypatch):

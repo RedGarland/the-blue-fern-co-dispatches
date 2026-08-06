@@ -34,10 +34,10 @@ from bluefern_dispatches.generator import (
 from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
 from bluefern_dispatches.gaza_sources import canonicalize_url, extract_canonical_from_google_wrapper
 from bluefern_dispatches.gaza_sources import build_gaza_collection_timing_metadata
+from bluefern_dispatches.gaza_sources import gaza_relevance_profile
 from bluefern_dispatches.gaza_sources import gaza_story_selection_exclusion_reason
 from bluefern_dispatches.gaza_sources import rank_gaza_candidates
 from bluefern_dispatches.gaza_sources import clean_feed_text
-from bluefern_dispatches.gaza_sources import gaza_relevance_decision
 from bluefern_dispatches.gaza_sources import is_palestinian_development_text
 from bluefern_dispatches.gaza_audio import _audio_story_eligibility
 from bluefern_dispatches.public_prose import sanitize_public_prose
@@ -264,8 +264,6 @@ def _is_context_only_source(source: dict[str, Any]) -> bool:
         [
             str(source.get("title") or ""),
             str(source.get("summary_or_snippet") or ""),
-            str(source.get("region_scope") or ""),
-            str(source.get("category_hint") or ""),
         ]
     ).lower()
     return "gaza-bound" in text or "outside gaza" in text or "libya" in text
@@ -278,9 +276,6 @@ def _is_core_ground_source(source: dict[str, Any]) -> bool:
         [
             str(source.get("title") or ""),
             str(source.get("summary_or_snippet") or ""),
-            str(source.get("region_scope") or ""),
-            str(source.get("category_hint") or ""),
-            str(source.get("attribution_mode") or ""),
         ]
     ).lower()
     if "gaza" not in text and not any(tok in text for tok in ("rafah", "khan younis", "jabalia", "deir al-balah")):
@@ -333,12 +328,16 @@ def normalize_sources(
         retrieved_dt = _parse_metadata_dt(retrieved_at)
         retrieved_local_date = retrieved_dt.astimezone(LOS_ANGELES_TZ).date().isoformat() if retrieved_dt is not None else None
         post_edition_date_source = bool(retrieved_local_date and retrieved_local_date > edition_date)
-        is_relevant, relevance_reason = gaza_relevance_decision(
+        relevance_profile = gaza_relevance_profile(
             {"title": clean_title, "summary_or_snippet": clean_summary, "url": url},
             None,
         )
-        if (not is_relevant) and relevance_reason in {"weak_liveblog_unrelated_topic", "rejected_no_palestinian_anchor"}:
-            warnings.append(f"rejected non-gaza/palestinian source record {source_id}: {relevance_reason}")
+        is_relevant = bool(relevance_profile.get("accepted"))
+        relevance_reason = str(relevance_profile.get("reason") or "no_demonstrated_gaza_nexus")
+        if not is_relevant:
+            if relevance_reason == "no_demonstrated_gaza_nexus" and "gaza" in str(record.get("region_scope") or "").lower():
+                relevance_reason = "inherited_scope_only"
+            warnings.append(f"rejected non-gaza source record {source_id}: {relevance_reason}")
             continue
         key = (url.lower(), str(record["title"]).strip().lower())
         if key in seen:
@@ -391,6 +390,7 @@ def normalize_sources(
                 "provider_id": str(record.get("provider_id") or record.get("source_id") or record.get("source_type") or "manual_sources_json").strip(),
                 "attribution_mode": _infer_attribution_mode(record),
                 "claim_status": str(record.get("claim_status") or _infer_attribution_mode(record)).strip(),
+                "scope_provenance": str(relevance_profile.get("scope_provenance") or "uncertain"),
                 "traceability_note": str(record.get("traceability_note") or "").strip(),
                 "dispatch_slug": DISPATCH_SLUG,
                 "edition_date": edition_date,
@@ -406,14 +406,10 @@ def normalize_sources(
 def _story_relevance_profile(source: dict[str, Any]) -> dict[str, Any]:
     title = str(source.get("title") or "")
     summary = str(source.get("summary_or_snippet") or "")
-    category = str(source.get("category_hint") or "")
-    region_scope = str(source.get("region_scope") or "")
-    publisher = str(source.get("publisher") or "")
-    text = " ".join([title, summary, str(source.get("url") or ""), category, region_scope, publisher]).lower()
-    title_summary = f"{title} {summary}".lower()
+    text = f"{title} {summary}".lower()
     matched_terms = sorted({term for term in ("gaza", "palestin", "west bank", "east jerusalem", "unrwa", "rafah", "khan younis", "jabalia", "deir al-balah") if term in text})
     explicit = len(matched_terms) > 0
-    incidental_hits = [term for term in INCIDENTAL_OFF_TOPIC_TERMS if term in title_summary]
+    incidental_hits = [term for term in INCIDENTAL_OFF_TOPIC_TERMS if term in text]
     ground_hits = [term for term in GROUND_DEVELOPMENT_TERMS if term in text]
     flotilla_hits = [term for term in FLOTILLA_TERMS if term in text]
     substantive_ground = len(ground_hits) > 0 or _is_core_ground_source(source)
@@ -459,11 +455,12 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
             [
                 str(source.get("title") or ""),
                 str(source.get("summary_or_snippet") or ""),
-                str(source.get("url") or ""),
             ]
         ).lower()
-        if "gaza" in text or any(tok in text for tok in ("rafah", "khan younis", "jabalia", "deir al-balah")):
-            return "core_gaza"
+        scope_provenance = str(source.get("scope_provenance") or "").strip()
+        gaza_anchor = "gaza" in text or any(tok in text for tok in ("rafah", "khan younis", "jabalia", "deir al-balah"))
+        if not gaza_anchor:
+            return "review_required" if scope_provenance == "inherited_collection_scope" else "excluded"
         if is_palestinian_development_text(text):
             return "palestinian_development"
         return "core_gaza"
@@ -505,6 +502,20 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
                 }
             )
             continue
+        scope = _story_scope(source)
+        if scope in {"excluded", "review_required"}:
+            rejected_or_downranked.append(
+                {
+                    "source_record_id": source.get("source_record_id"),
+                    "title": source.get("title"),
+                    "score_before": source_score,
+                    "score_after": score,
+                    "action": "review",
+                    "reason": "inherited_scope_only" if scope == "review_required" else "no_demonstrated_gaza_nexus",
+                    "relevance_terms_matched": relevance.get("matched_terms") or [],
+                }
+            )
+            continue
         stories.append(
             {
                 "story_id": f"gaza-story-{edition_date}-{index:03d}",
@@ -512,6 +523,7 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
                 "summary": _sanitize_story_summary(str(source.get("title") or ""), str(source.get("summary_or_snippet") or "")),
                 "category": scope if scope == "palestinian_development" else source["category_hint"],
                 "story_scope": scope,
+                "scope_provenance": str(source.get("scope_provenance") or "uncertain"),
                 "score": score,
                 "scoring_reasons": ranking_reasons or ["Included because a complete project-local source record was provided."],
                 "candidate_score_breakdown": breakdown,
@@ -1547,7 +1559,12 @@ def render_gaza_edition(
     today_read_lines = _build_today_read(stories, source_by_id)
     rendered_story_count = len(stories)
     unique_publishers = sorted(
-        {str(source.get("publisher") or "").strip() for source in sources if str(source.get("publisher") or "").strip()}
+        {
+            str(source_by_id.get(source_id, {}).get("publisher") or "").strip()
+            for story in stories
+            for source_id in (story.get("source_record_ids") or [])
+            if str(source_by_id.get(source_id, {}).get("publisher") or "").strip()
+        }
     )
     prev_edition, next_edition = _find_adjacent_public_editions(ROOT, edition_date)
     friendly_edition_date = _format_public_date(edition_date) or edition_date

@@ -814,7 +814,51 @@ def test_relevance_rejects_guardian_australia_coal_live_blog():
     }
     accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
     assert accepted is False
-    assert reason in {"weak_liveblog_unrelated_topic", "gaza_mention_only_without_strong_topic_signal"}
+    assert reason == "live_blog_incidental_gaza_reference"
+
+
+def test_relevance_rejects_guardian_hormuz_live_blog_when_only_url_mentions_gaza():
+    source = gaza_sources.SourceDefinition(
+        source_id="guardian-world",
+        name="Guardian World",
+        url="https://www.theguardian.com/world/rss",
+        type="rss",
+        enabled=True,
+        publisher="The Guardian",
+        reliability_tier="reported-public-source",
+        category_hint="conflict",
+        region_scope="Gaza",
+    )
+    item = {
+        "title": "Rubio hopes US can reach Hormuz deal with Iran 'very shortly' as officials say progress has been made - as it happened",
+        "url": "https://www.theguardian.com/world/live/2026/aug/04/middle-east-crisis-qatar-iran-us-israel-war-donald-trump-strait-hormuz-gaza-latest-news-updates",
+        "summary_or_snippet": "This live blog is now closed. US and Qatar report progress on Iran ceasefire and reopening Hormuz strait.",
+    }
+    accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
+    assert accepted is False
+    assert reason == "live_blog_incidental_gaza_reference"
+
+
+def test_relevance_rejects_inherited_gaza_scope_without_article_evidence():
+    source = gaza_sources.SourceDefinition(
+        source_id="aljazeera-middle-east",
+        name="Al Jazeera Middle East",
+        url="https://www.aljazeera.com/rss",
+        type="rss",
+        enabled=True,
+        publisher="Al Jazeera",
+        reliability_tier="reported-public-source",
+        category_hint="conflict",
+        region_scope="Gaza",
+    )
+    item = {
+        "title": "Protesters stage sit-in against settler violence-linked Smotrich funds",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/8/5/protesters-stage-sit-in-against-settler-violence-linked-smotrich-funds?traffic_source=rss",
+        "summary_or_snippet": "Palestinian and Israeli protesters staged a sit-in at the Religious Zionist Party's headquarters in Shoham on Wednesday.",
+    }
+    accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
+    assert accepted is False
+    assert reason == "inherited_scope_only"
 
 
 def test_relevance_keeps_guardian_unrwa_archive_story():
@@ -878,7 +922,7 @@ def test_relevance_rejects_equatorial_guinea_asylum_without_palestinian_anchor()
     }
     accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
     assert accepted is False
-    assert reason == "rejected_no_palestinian_anchor"
+    assert reason == "inherited_scope_only"
 
 
 def test_relevance_rejects_generic_un_human_rights_without_palestinian_anchor():
@@ -900,7 +944,7 @@ def test_relevance_rejects_generic_un_human_rights_without_palestinian_anchor():
     }
     accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
     assert accepted is False
-    assert reason == "rejected_no_palestinian_anchor"
+    assert reason == "inherited_scope_only"
 
 
 def test_relevance_keeps_foreign_protest_when_directly_tied_to_palestinian_accountability():
@@ -916,13 +960,13 @@ def test_relevance_keeps_foreign_protest_when_directly_tied_to_palestinian_accou
         region_scope="Global",
     )
     item = {
-        "title": "Foreign protest targets legal accountability for Palestinian detainees",
+        "title": "Foreign protest targets legal accountability for Palestinian detainees in Gaza",
         "url": "https://example.com/protest-palestinian-detainees",
-        "summary_or_snippet": "Protesters demand accountability tied to Israeli detention policy affecting Palestinians.",
+        "summary_or_snippet": "Protesters demand accountability tied to Gaza detention policy affecting Palestinians.",
     }
     accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
     assert accepted is True
-    assert reason == "palestinian_development_material"
+    assert reason == "explicit_gaza_impact"
 
 
 def test_feed_html_summary_is_cleaned_to_plain_text():
@@ -1328,7 +1372,7 @@ def test_unrelated_live_blog_with_incidental_gaza_rejected(work_root, monkeypatc
     result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", min_sources=0, prefer_manual=False)
     assert result["source_count"] == 0
     diag = next(d for d in result["provider_diagnostics"] if d.get("source_id") == "test-rss")
-    assert diag["rejected_counts"]["rejected_low_relevance"] >= 1
+    assert diag["rejected_counts"]["live_blog_incidental_gaza_reference"] >= 1
 
 
 def test_provider_rejection_diagnostics_and_examples_present(work_root, monkeypatch):
@@ -1390,7 +1434,11 @@ def test_low_relevance_gaza_term_enters_review_queue_not_accepted(work_root, mon
     result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", min_sources=0, prefer_manual=False)
     assert result["source_count"] == 0
     assert len(result["review_candidates"]) >= 1
-    assert result["review_candidates"][0]["rejection_reason"] in {"rejected_low_relevance", "rejected_off_topic"}
+    assert result["review_candidates"][0]["rejection_reason"] in {
+        "rejected_low_relevance",
+        "rejected_off_topic",
+        "live_blog_incidental_gaza_reference",
+    }
 
 
 def test_no_palestinian_anchor_rejection_counted_and_not_in_review_queue(work_root, monkeypatch):
@@ -1424,7 +1472,7 @@ def test_no_palestinian_anchor_rejection_counted_and_not_in_review_queue(work_ro
     )
     result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", min_sources=0, prefer_manual=False)
     assert result["source_count"] == 0
-    assert result["rejected_by_reason"]["rejected_no_palestinian_anchor"] == 1
+    assert result["rejected_by_reason"]["inherited_scope_only"] == 1
     assert result["review_candidates"] == []
 
 def test_off_topic_without_gaza_palestine_not_in_review_queue(work_root, monkeypatch):

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 
 from bluefern_dispatches.food_line_approved_proposal import load_approved_proposal, sha256_file
@@ -11,6 +12,8 @@ DATE = "2026-08-05"
 APPROVED_HEADLINE = "North Carolina food pantries report rising demand amid SNAP cuts"
 SOURCE_URL = "https://www.northcarolinahealthnews.org/2026/08/04/snap-food-insecurity-pantries-guilford"
 GOOGLE_NEWS_WRAPPER = "https://news.google.com/rss/articles/"
+GENERATION_COMMIT = "e6fe82e436f10429ebcb14158af7255f267e6c7a"
+ARTIFACT_COMMIT = "8bd6c726273982fdf1ba9e348b8db2b4fd0c7407"
 
 
 def _json(path: str) -> dict:
@@ -65,7 +68,23 @@ def test_aug05_snapshot_proposal_and_public_artifacts_are_consistent() -> None:
     assert manifest["approved_proposal_sha256"] == sha256_file(proposal_path)
     assert manifest["review_snapshot_sha256"] == sha256_file(snapshot_path)
 
-    assert release["source_commit"] == manifest["generator_source_commit"]
+    assert release["source_commit"] == ARTIFACT_COMMIT
+    assert manifest["generator_source_commit"] == GENERATION_COMMIT
+    assert release["source_commit"] != manifest["generator_source_commit"]
+    subprocess.run(
+        [
+            "git",
+            "-c",
+            f"safe.directory={ROOT.as_posix()}",
+            "-C",
+            str(ROOT),
+            "merge-base",
+            "--is-ancestor",
+            GENERATION_COMMIT,
+            ARTIFACT_COMMIT,
+        ],
+        check=True,
+    )
     assert release["approved_proposal_sha256"] == sha256_file(proposal_path)
     assert release["review_snapshot_sha256"] == sha256_file(snapshot_path)
     assert any(entry["pages_path"] == "food-line/rss.xml" for entry in release["entries"])

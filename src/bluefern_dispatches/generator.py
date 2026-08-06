@@ -2707,12 +2707,14 @@ def collect_public_site_files(
     files = []
     food_line_reported: set[str] = set()
     gaza_only_publish = tuple(only_dispatches) == ("gaza",)
+    gaza_sitewide_metadata_paths = {"index.html", "dispatches/index.html"}
     for path in site_root.rglob("*"):
         if not path.is_file():
             continue
         relative_parts = path.relative_to(site_root).parts
         if gaza_only_publish:
-            if not relative_parts or relative_parts[0] != "gaza":
+            relative_text = path.relative_to(site_root).as_posix()
+            if (not relative_parts or relative_parts[0] != "gaza") and relative_text not in gaza_sitewide_metadata_paths:
                 continue
         elif only_dispatches and relative_parts and relative_parts[0] in DISPATCH_LABELS and relative_parts[0] not in only_dispatches:
             continue
@@ -3343,6 +3345,7 @@ def validate_pages_repo_copy_scope(
     pages_repo = pages_repo.resolve()
     allowed_dispatches = set(only_dispatches) if only_dispatches else set(ONLY_DISPATCH_CHOICES)
     gaza_only_publish = tuple(only_dispatches) == ("gaza",)
+    gaza_sitewide_metadata_paths = {"index.html", "dispatches/index.html"}
     if changed_paths is None:
         try:
             changed_paths = _git_status_changed_paths(pages_repo)
@@ -3359,7 +3362,7 @@ def validate_pages_repo_copy_scope(
         top_level = rel_path.parts[0] if rel_path.parts else ""
         rel_text = rel_path.as_posix()
         if gaza_only_publish:
-            if top_level == "gaza":
+            if top_level == "gaza" or rel_text in gaza_sitewide_metadata_paths:
                 continue
             errors.append(f"gaza_publish_scope_violation: unexpected publish changes in {rel_text}")
             continue

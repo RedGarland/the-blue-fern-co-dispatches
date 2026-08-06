@@ -822,9 +822,12 @@ def test_gaza_only_dry_run_ignores_preexisting_pages_repo_dirtiness_when_copy_pl
     assert not any(path.endswith("/CNAME") or path.endswith("\\CNAME") for path in copied)
 
 
-def test_gaza_only_dry_run_copy_scope_excludes_root_and_other_dispatch_files(built_site):
+def test_gaza_only_dry_run_copy_scope_includes_only_reconciled_root_metadata_and_gaza(built_site):
     work, backup_root, _ = built_site
     pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    directory = work / "output" / "site" / "dispatches" / "index.html"
+    directory.parent.mkdir(parents=True, exist_ok=True)
+    directory.write_text("<html><body>Current dispatch directory</body></html>", encoding="utf-8")
     result = publish_pages(
         work,
         pages_repo,
@@ -849,9 +852,30 @@ def test_gaza_only_dry_run_copy_scope_excludes_root_and_other_dispatch_files(bui
     assert not any("/care-line/" in path.replace("\\", "/") for path in copied)
     assert not any("/cascadia/" in path.replace("\\", "/") for path in copied)
     assert not any("/food-line/" in path.replace("\\", "/") for path in copied)
-    assert not any(path.endswith("/index.html") and "/gaza/" not in path.replace("\\", "/") for path in copied)
+    normalized = {path.replace("\\", "/").split("/bluefern-dispatches-pages/", 1)[-1] for path in copied}
+    assert "index.html" in normalized
+    assert "dispatches/index.html" in normalized
+    assert all(path.startswith("gaza/") or path in {"index.html", "dispatches/index.html"} for path in normalized)
     assert not any(path.endswith("/CNAME") or path.endswith("\\CNAME") for path in copied)
     assert not any("/assets/" in path.replace("\\", "/") and "/gaza/" not in path.replace("\\", "/") for path in copied)
+
+
+def test_gaza_only_copy_scope_allows_only_exact_sitewide_metadata_paths(tmp_path):
+    pages = tmp_path / "pages"
+    pages.mkdir()
+
+    assert validate_pages_repo_copy_scope(
+        pages,
+        ("gaza",),
+        changed_paths=["gaza/index.html", "index.html", "dispatches/index.html"],
+    ) == []
+    errors = validate_pages_repo_copy_scope(
+        pages,
+        ("gaza",),
+        changed_paths=["assets/site.css", "dispatches/archive.html", "food-line/index.html"],
+    )
+    assert len(errors) == 3
+    assert all("gaza_publish_scope_violation" in error for error in errors)
 
 
 def test_validate_pages_copy_parity_detects_public_copy_drift(tmp_path):

@@ -3,7 +3,7 @@
   "dispatch_name": "Food Line Dispatch",
   "edition_date": "2026-08-05",
   "generated_at": "2026-08-05T22:00:17.132696+00:00",
-  "generator_source_commit": "e6fe82e436f10429ebcb14158af7255f267e6c7a",
+  "generator_source_commit": "fe5666c1f62a83c35feffe9315801c2e14edf1c5",
   "generation_mode": "approved_current_review_proposal",
   "source_count": 1,
   "story_count": 1,
@@ -40,8 +40,8 @@
   "public_archive_subtitle": "North Carolina Health News reported that federal SNAP cuts and new work requirements are pushing more people toward food pantries in the state. Pantry leaders told the outlet that demand is increasing and becoming harder to meet.",
   "public_summary": "North Carolina Health News reported that federal SNAP cuts and new work requirements are pushing more people toward food pantries in the state. Pantry leaders told the outlet that demand is increasing and becoming harder to meet.",
   "validation_status": "ok",
-  "approved_proposal_sha256": "b36a17ed6d20bdb22549cc31d9e6f3e5978ffe9cd496910f8a3127720579de90",
-  "review_snapshot_sha256": "dec2b94894154407a18472abc4390c94dba227b45a17e6fe81b2ffa98e1b63b8",
+  "approved_proposal_sha256": "b0ff850dd0d96ca86d2023d45f76fe48164e8fd785b4962c82b7cb4ae97131dd",
+  "review_snapshot_sha256": "3e5950a31e854619a8d31c28033acbb8846d0c85a3fd557495747ef69c0be74b",
   "review_queue_sha256": "dec2b94894154407a18472abc4390c94dba227b45a17e6fe81b2ffa98e1b63b8",
   "approved_item_provenance": [
     {

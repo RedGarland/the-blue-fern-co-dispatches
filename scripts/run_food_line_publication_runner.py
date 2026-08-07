@@ -253,6 +253,8 @@ def run_publication(
             pages_repo_root=pages_repo,
             allow_pages=True,
             strict=True,
+            source_changed_paths=[],
+            pages_changed_paths=[],
         )
         if scope_errors:
             base_result["ok"] = False

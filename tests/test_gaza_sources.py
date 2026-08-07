@@ -3,6 +3,7 @@ import shutil
 import uuid
 import gzip
 import urllib.error
+import sys
 from pathlib import Path
 
 import pytest
@@ -379,7 +380,7 @@ def test_non_xml_response_is_reported_before_xml_parse(monkeypatch):
         def read(self):
             return b"not xml"
 
-    monkeypatch.setattr(gaza_sources.urllib.request, "urlopen", lambda request, timeout: FakeResponse())
+    monkeypatch.setattr(gaza_sources.urllib.request, "urlopen", lambda request, timeout, context=None: FakeResponse())
 
     with pytest.raises(ValueError, match="non-XML feed response"):
         gaza_sources.fetch_rss_items("https://example.com/feed")
@@ -409,7 +410,7 @@ def test_gzip_feed_response_is_decompressed(monkeypatch):
         def read(self):
             return gzip.compress(rss)
 
-    monkeypatch.setattr(gaza_sources.urllib.request, "urlopen", lambda request, timeout: FakeResponse())
+    monkeypatch.setattr(gaza_sources.urllib.request, "urlopen", lambda request, timeout, context=None: FakeResponse())
 
     items = gaza_sources.fetch_rss_items("https://example.com/feed")
 
@@ -1239,7 +1240,7 @@ def test_fetch_payload_tls_failure_classified(monkeypatch):
     monkeypatch.setattr(
         gaza_sources.urllib.request,
         "urlopen",
-        lambda request, timeout: (_ for _ in ()).throw(urllib.error.URLError("[SSL: CERTIFICATE_VERIFY_FAILED] boom")),
+        lambda request, timeout, context=None: (_ for _ in ()).throw(urllib.error.URLError("[SSL: CERTIFICATE_VERIFY_FAILED] boom")),
     )
     payload = gaza_sources.fetch_feed_payload("x", "https://example.com/rss.xml")
     assert payload["ok"] is False
@@ -1247,24 +1248,39 @@ def test_fetch_payload_tls_failure_classified(monkeypatch):
     assert payload["failure_reason"] == gaza_sources.TLS_FAILURE_REASON
 
 
-def test_fetch_payload_auto_uses_curl_after_python_tls_failure(monkeypatch):
+def test_fetch_payload_auto_uses_certifi_after_python_tls_failure(monkeypatch):
     monkeypatch.setenv("GAZA_FETCH_BACKEND", "auto")
-    monkeypatch.setenv("GAZA_ALLOW_CURL_NO_REVOKE", "1")
+    calls = {"python": 0}
+
     monkeypatch.setattr(
         gaza_sources.urllib.request,
         "urlopen",
-        lambda request, timeout: (_ for _ in ()).throw(urllib.error.URLError("[SSL: CERTIFICATE_VERIFY_FAILED] boom")),
+        lambda request, timeout, context=None: (
+            calls.__setitem__("python", calls["python"] + 1)
+            or (_ for _ in ()).throw(urllib.error.URLError("[SSL: CERTIFICATE_VERIFY_FAILED] boom"))
+            if context is None
+            else FakeResponse()
+        ),
     )
 
-    class Proc:
-        returncode = 0
-        stdout = _rss_payload([{"title": "Gaza aid", "url": "https://ok.example/a", "published_at": "2026-05-07T00:00:00Z", "summary_or_snippet": "aid"}])
-        stderr = b""
+    class FakeResponse:
+        status = 200
+        headers = {"Content-Type": "application/rss+xml"}
 
-    monkeypatch.setattr(gaza_sources.subprocess, "run", lambda *args, **kwargs: Proc())
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self):
+            return _rss_payload([{"title": "Gaza aid", "url": "https://ok.example/a", "published_at": "2026-05-07T00:00:00Z", "summary_or_snippet": "aid"}])
+
+    monkeypatch.setattr(gaza_sources, "_certifi_cafile", lambda: "certifi.pem")
     payload = gaza_sources.fetch_feed_payload("x", "https://example.com/rss.xml")
     assert payload["ok"] is True
-    assert payload["backend_used"] == "curl"
+    assert payload["backend_used"] in {"python_windows_truststore", "python_certifi"}
+    assert calls["python"] == 1
 
 
 def test_fetch_payload_no_curl_fallback_when_python_backend_forced(monkeypatch):
@@ -1272,11 +1288,128 @@ def test_fetch_payload_no_curl_fallback_when_python_backend_forced(monkeypatch):
     monkeypatch.setattr(
         gaza_sources.urllib.request,
         "urlopen",
-        lambda request, timeout: (_ for _ in ()).throw(urllib.error.URLError("[SSL: CERTIFICATE_VERIFY_FAILED] boom")),
+        lambda request, timeout, context=None: (_ for _ in ()).throw(urllib.error.URLError("[SSL: CERTIFICATE_VERIFY_FAILED] boom")),
     )
     payload = gaza_sources.fetch_feed_payload("x", "https://example.com/rss.xml")
     assert payload["ok"] is False
     assert payload["backend_used"] == "python"
+
+
+def test_fetch_payload_falls_back_to_curl_when_certifi_retries_fail(monkeypatch):
+    monkeypatch.setenv("GAZA_FETCH_BACKEND", "auto")
+    monkeypatch.setattr(
+        gaza_sources.urllib.request,
+        "urlopen",
+        lambda request, timeout, context=None: (_ for _ in ()).throw(urllib.error.URLError("[SSL: CERTIFICATE_VERIFY_FAILED] boom")),
+    )
+
+    class Proc:
+        returncode = 0
+        stdout = _rss_payload([{"title": "Gaza aid", "url": "https://ok.example/a", "published_at": "2026-05-07T00:00:00Z", "summary_or_snippet": "aid"}])
+        stderr = b""
+
+    monkeypatch.setattr(gaza_sources, "_certifi_cafile", lambda: "")
+    monkeypatch.setattr(gaza_sources.subprocess, "run", lambda *args, **kwargs: Proc())
+    payload = gaza_sources.fetch_feed_payload("x", "https://example.com/rss.xml")
+    assert payload["ok"] is True
+    assert payload["backend_used"] == "curl"
+
+
+def test_fetch_payload_non_tls_network_failure_does_not_try_certifi(monkeypatch):
+    monkeypatch.setenv("GAZA_FETCH_BACKEND", "auto")
+    attempts = {"count": 0}
+
+    def fake_urlopen(request, timeout, context=None):
+        attempts["count"] += 1
+        raise urllib.error.URLError("temporary network outage")
+
+    monkeypatch.setattr(gaza_sources, "_certifi_cafile", lambda: "certifi.pem")
+    monkeypatch.setattr(gaza_sources.urllib.request, "urlopen", fake_urlopen)
+    payload = gaza_sources.fetch_feed_payload("x", "https://example.com/rss.xml")
+    assert payload["ok"] is False
+    assert payload["tls_error"] is False
+    assert attempts["count"] == 1
+
+
+def test_fetch_payload_invalid_certifi_path_falls_back_to_verified_request(monkeypatch):
+    monkeypatch.setenv("GAZA_FETCH_BACKEND", "auto")
+    calls = {"count": 0}
+
+    class FakeResponse:
+        status = 200
+        headers = {"Content-Type": "application/rss+xml"}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self):
+            return _rss_payload([{"title": "Gaza aid", "url": "https://ok.example/a", "published_at": "2026-05-07T00:00:00Z", "summary_or_snippet": "aid"}])
+
+    def fake_urlopen(request, timeout, context=None):
+        calls["count"] += 1
+        if calls["count"] == 1:
+            raise urllib.error.URLError("[SSL: CERTIFICATE_VERIFY_FAILED] boom")
+        return FakeResponse()
+
+    monkeypatch.setattr(gaza_sources, "_certifi_cafile", lambda: "C:\\invalid\\certifi.pem")
+    monkeypatch.setattr(gaza_sources.urllib.request, "urlopen", fake_urlopen)
+    payload = gaza_sources.fetch_feed_payload("x", "https://example.com/rss.xml")
+    assert payload["ok"] is True
+    assert payload["backend_used"] in {"python_windows_truststore", "python_certifi"}
+    assert calls["count"] == 2
+
+
+def test_fetch_payload_uses_truststore_retry_when_available(monkeypatch):
+    monkeypatch.setenv("GAZA_FETCH_BACKEND", "auto")
+    calls = {"count": 0}
+
+    class FakeResponse:
+        status = 200
+        headers = {"Content-Type": "application/rss+xml"}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self):
+            return _rss_payload([{"title": "Gaza aid", "url": "https://ok.example/a", "published_at": "2026-05-07T00:00:00Z", "summary_or_snippet": "aid"}])
+
+    def fake_urlopen(request, timeout, context=None):
+        calls["count"] += 1
+        if context is None:
+            raise urllib.error.URLError("[SSL: CERTIFICATE_VERIFY_FAILED] boom")
+        return FakeResponse()
+
+    class FakeTruststore:
+        class SSLContext:
+            def __init__(self, protocol):
+                self.protocol = protocol
+
+    monkeypatch.setitem(sys.modules, "truststore", FakeTruststore)
+    monkeypatch.setattr(gaza_sources.urllib.request, "urlopen", fake_urlopen)
+    payload = gaza_sources.fetch_feed_payload("x", "https://example.com/rss.xml")
+    assert payload["ok"] is True
+    assert payload["backend_used"] == "python_windows_truststore"
+    assert calls["count"] == 2
+
+
+def test_fetch_payload_preserves_tls_failure_when_verified_paths_fail(monkeypatch):
+    monkeypatch.setenv("GAZA_FETCH_BACKEND", "auto")
+
+    def fake_urlopen(request, timeout, context=None):
+        raise urllib.error.URLError("[SSL: CERTIFICATE_VERIFY_FAILED] boom")
+
+    monkeypatch.setattr(gaza_sources, "_certifi_cafile", lambda: "")
+    monkeypatch.setattr(gaza_sources.urllib.request, "urlopen", fake_urlopen)
+    payload = gaza_sources.fetch_feed_payload("x", "https://example.com/rss.xml")
+    assert payload["ok"] is False
+    assert payload["tls_error"] is True
+    assert payload["failure_reason"] == gaza_sources.TLS_FAILURE_REASON
 
 
 def test_checker_and_collection_use_shared_fetch_helper(work_root, monkeypatch):

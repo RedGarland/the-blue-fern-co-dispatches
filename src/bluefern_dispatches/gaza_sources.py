@@ -14,9 +14,11 @@ import unicodedata
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
+import ssl
 from dataclasses import dataclass
 from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
+import sys
 from typing import Any
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit, unquote, quote_plus
 from zoneinfo import ZoneInfo
@@ -821,6 +823,7 @@ def _is_tls_error(exc_text: str) -> bool:
     lowered = str(exc_text or "").lower()
     return (
         "certificate_verify_failed" in lowered
+        or "certificate verify failed" in lowered
         or "ssl" in lowered
         or "tls" in lowered
         or "certificate verification" in lowered
@@ -828,6 +831,17 @@ def _is_tls_error(exc_text: str) -> bool:
         or "sec_e_" in lowered
         or "acquirecredentialshandle failed" in lowered
     )
+
+
+def _certifi_cafile() -> str:
+    try:
+        import certifi  # type: ignore
+    except Exception:  # noqa: BLE001
+        return ""
+    try:
+        return str(certifi.where() or "")
+    except Exception:  # noqa: BLE001
+        return ""
 
 
 def _curl_fetch(url: str, timeout: int, allow_no_revoke: bool) -> tuple[bytes, str]:
@@ -841,14 +855,39 @@ def _curl_fetch(url: str, timeout: int, allow_no_revoke: bool) -> tuple[bytes, s
     return proc.stdout or b"", "curl"
 
 
+def _curl_supports_revoke_best_effort() -> bool:
+    try:
+        proc = subprocess.run(["curl.exe", "--help", "all"], capture_output=True, text=True, check=False)
+    except Exception:  # noqa: BLE001
+        return False
+    output = (proc.stdout or "") + "\n" + (proc.stderr or "")
+    return "--ssl-revoke-best-effort" in output
+
+
+def _curl_failure_is_revocation_unavailable(message: str) -> bool:
+    lowered = str(message or "").lower()
+    return "crypt_e_no_revocation_check" in lowered or "revocation function was unable to check revocation" in lowered
+
+
 def fetch_feed_payload(source_id: str, url: str, timeout: int = 20) -> dict[str, Any]:
     backend_pref = str(os.getenv("GAZA_FETCH_BACKEND", "auto") or "auto").strip().lower()
     allow_no_revoke = str(os.getenv("GAZA_ALLOW_CURL_NO_REVOKE", "")).strip() == "1"
+    allow_revoke_best_effort = str(os.getenv("GAZA_ALLOW_CURL_REVOKE_BEST_EFFORT", "")).strip() == "1"
 
-    def _python_fetch() -> dict[str, Any]:
+    def _python_fetch(
+        *,
+        cafile: str | None = None,
+        context: ssl.SSLContext | None = None,
+        backend_used: str = "python",
+    ) -> dict[str, Any]:
         request = urllib.request.Request(url, headers={"User-Agent": "BlueFernDispatches/1.0"})
         try:
-            with urllib.request.urlopen(request, timeout=timeout) as response:
+            if cafile and context is None:
+                try:
+                    context = ssl.create_default_context(cafile=cafile)
+                except Exception:  # noqa: BLE001
+                    context = ssl.create_default_context()
+            with urllib.request.urlopen(request, timeout=timeout, context=context) as response:
                 return {
                     "ok": True,
                     "source_id": source_id,
@@ -857,7 +896,7 @@ def fetch_feed_payload(source_id: str, url: str, timeout: int = 20) -> dict[str,
                     "failure_reason": None,
                     "exception_type": None,
                     "tls_error": False,
-                    "backend_used": "python",
+                    "backend_used": backend_used,
                     "content_type": str(response.headers.get("Content-Type") or ""),
                     "content_encoding": str(response.headers.get("Content-Encoding") or ""),
                     "content_bytes": response.read(),
@@ -886,7 +925,7 @@ def fetch_feed_payload(source_id: str, url: str, timeout: int = 20) -> dict[str,
                 "failure_reason": TLS_FAILURE_REASON if tls_error else f"{type(exc).__name__}: {exc}",
                 "exception_type": type(exc).__name__,
                 "tls_error": tls_error,
-                "backend_used": "python",
+                "backend_used": backend_used,
                 "content_bytes": None,
                 "content_text": None,
             }
@@ -897,10 +936,51 @@ def fetch_feed_payload(source_id: str, url: str, timeout: int = 20) -> dict[str,
     result = _python_fetch() if backend_pref in {"auto", "python"} else None
     if result is not None and result["ok"]:
         return result
+    if result is not None and result.get("tls_error") and sys.platform.startswith("win"):
+        try:
+            import truststore  # type: ignore
+
+            trust_context = truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+            trust_result = _python_fetch(context=trust_context, backend_used="python_windows_truststore")
+            if trust_result["ok"]:
+                return trust_result
+        except Exception:  # noqa: BLE001
+            pass
+        certifi_path = _certifi_cafile()
+        if certifi_path:
+            verified = _python_fetch(cafile=certifi_path, backend_used="python_certifi")
+            if verified["ok"]:
+                return verified
     if backend_pref == "python":
         return result or {}
 
     if backend_pref == "curl" or (backend_pref == "auto" and bool(result and result.get("tls_error"))):
+        if (
+            allow_revoke_best_effort
+            and sys.platform.startswith("win")
+            and result
+            and result.get("tls_error")
+            and _curl_supports_revoke_best_effort()
+            and _curl_failure_is_revocation_unavailable(str(result.get("failure_reason") or ""))
+        ):
+            try:
+                body, backend = _curl_fetch(url, timeout=timeout, allow_no_revoke=False)
+                return {
+                    "ok": True,
+                    "source_id": source_id,
+                    "url": url,
+                    "status_code": 200,
+                    "failure_reason": None,
+                    "exception_type": None,
+                    "tls_error": False,
+                    "backend_used": f"{backend}_revoke_best_effort",
+                    "content_type": "",
+                    "content_encoding": "",
+                    "content_bytes": body,
+                    "content_text": None,
+                }
+            except Exception:
+                pass
         try:
             body, backend = _curl_fetch(url, timeout=timeout, allow_no_revoke=allow_no_revoke)
             return {

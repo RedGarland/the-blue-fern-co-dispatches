@@ -565,6 +565,12 @@ try {
     }
     $PagesRepo = (Resolve-Path -LiteralPath $PagesRepo).Path
 
+    $env:GIT_CONFIG_COUNT = "2"
+    $env:GIT_CONFIG_KEY_0 = "safe.directory"
+    $env:GIT_CONFIG_VALUE_0 = ($RepoRoot -replace "\\", "/")
+    $env:GIT_CONFIG_KEY_1 = "safe.directory"
+    $env:GIT_CONFIG_VALUE_1 = ($PagesRepo -replace "\\", "/")
+
     $python = Join-Path $RepoRoot ".venv\Scripts\python.exe"
     if (-not (Test-Path -LiteralPath $python -PathType Leaf)) {
         throw "Repository virtualenv Python not found: $python"

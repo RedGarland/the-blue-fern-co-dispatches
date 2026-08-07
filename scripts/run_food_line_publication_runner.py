@@ -47,6 +47,14 @@ def _utc_date_text() -> str:
     return datetime.now().astimezone().date().isoformat()
 
 
+def _configure_git_safe_directories(*repo_roots: Path) -> None:
+    safe_directories = [str(repo_root.resolve()).replace("\\", "/") for repo_root in repo_roots]
+    os.environ["GIT_CONFIG_COUNT"] = str(len(safe_directories))
+    for index, repo_root in enumerate(safe_directories):
+        os.environ[f"GIT_CONFIG_KEY_{index}"] = "safe.directory"
+        os.environ[f"GIT_CONFIG_VALUE_{index}"] = repo_root
+
+
 def _json_write(payload: dict[str, Any]) -> None:
     text = json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
     buffer = getattr(sys.stdout, "buffer", None)
@@ -237,6 +245,7 @@ def run_publication(
     edition_date = date or _utc_date_text()
     repo_root = repo_root.resolve()
     pages_repo = pages_repo.resolve()
+    _configure_git_safe_directories(repo_root, pages_repo)
     approved_proposal_path = _approved_proposal_path(repo_root, edition_date)
     readiness = _load_release_readiness(repo_root, edition_date, approved_proposal_path)
 

@@ -90,7 +90,7 @@
   "published": false,
   "rejected_item_count": 0,
   "review_snapshot_path": "data/dispatches/food-line/review/signal-reviews/2026-08-05.json",
-  "review_snapshot_sha256": "dec2b94894154407a18472abc4390c94dba227b45a17e6fe81b2ffa98e1b63b8",
+  "review_snapshot_sha256": "3e5950a31e854619a8d31c28033acbb8846d0c85a3fd557495747ef69c0be74b",
   "schema_version": "food_line_proposed_edition_v1",
   "selected_item_count": 1,
   "source_queue_path": "status/food-line/runtime/current-signal-review.json",

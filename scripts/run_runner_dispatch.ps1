@@ -565,11 +565,15 @@ try {
     }
     $PagesRepo = (Resolve-Path -LiteralPath $PagesRepo).Path
 
-    $env:GIT_CONFIG_COUNT = "2"
+    $env:GIT_CONFIG_COUNT = "4"
     $env:GIT_CONFIG_KEY_0 = "safe.directory"
     $env:GIT_CONFIG_VALUE_0 = ($RepoRoot -replace "\\", "/")
     $env:GIT_CONFIG_KEY_1 = "safe.directory"
-    $env:GIT_CONFIG_VALUE_1 = ($PagesRepo -replace "\\", "/")
+    $env:GIT_CONFIG_VALUE_1 = ((Join-Path $RepoRoot ".git") -replace "\\", "/")
+    $env:GIT_CONFIG_KEY_2 = "safe.directory"
+    $env:GIT_CONFIG_VALUE_2 = ($PagesRepo -replace "\\", "/")
+    $env:GIT_CONFIG_KEY_3 = "safe.directory"
+    $env:GIT_CONFIG_VALUE_3 = ((Join-Path $PagesRepo ".git") -replace "\\", "/")
 
     $python = Join-Path $RepoRoot ".venv\Scripts\python.exe"
     if (-not (Test-Path -LiteralPath $python -PathType Leaf)) {

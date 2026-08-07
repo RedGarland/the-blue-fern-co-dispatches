@@ -48,7 +48,13 @@ def _utc_date_text() -> str:
 
 
 def _configure_git_safe_directories(*repo_roots: Path) -> None:
-    safe_directories = [str(repo_root.resolve()).replace("\\", "/") for repo_root in repo_roots]
+    safe_directories: list[str] = []
+    for repo_root in repo_roots:
+        resolved_root = repo_root.resolve()
+        for candidate in (resolved_root, resolved_root / ".git"):
+            safe_value = str(candidate).replace("\\", "/")
+            if safe_value not in safe_directories:
+                safe_directories.append(safe_value)
     os.environ["GIT_CONFIG_COUNT"] = str(len(safe_directories))
     for index, repo_root in enumerate(safe_directories):
         os.environ[f"GIT_CONFIG_KEY_{index}"] = "safe.directory"

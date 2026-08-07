@@ -22,6 +22,11 @@ param(
 
 $ErrorActionPreference = "Stop"
 $script:LogFile = $null
+$script:IntendedLogPath = $null
+$script:FileLoggingAvailable = $false
+$script:DurableLogWritten = $false
+$script:StdoutFallbackUsed = $false
+$script:FallbackLogMessages = New-Object System.Collections.Generic.List[string]
 
 function Append-LogLine {
     param(
@@ -40,7 +45,7 @@ function Append-LogLine {
                 try {
                     $writer.WriteLine($Line)
                     $writer.Flush()
-                    return
+                    return $true
                 } finally {
                     $writer.Dispose()
                 }
@@ -58,13 +63,94 @@ function Write-Log {
     param([string]$Message)
     $line = "[{0}] {1}" -f (Get-Date -Format "s"), $Message
     if ($script:LogFile) {
-        if (-not (Append-LogLine -Path $script:LogFile -Line $line)) {
-            $script:LogFile = $null
-            Write-Host $line
+        if (Append-LogLine -Path $script:LogFile -Line $line) {
+            $script:FileLoggingAvailable = $true
+            $script:DurableLogWritten = $true
+            return
         }
-    } else {
+        $script:LogFile = $null
+        $script:FileLoggingAvailable = $false
+    }
+
+    $script:StdoutFallbackUsed = $true
+    [void]$script:FallbackLogMessages.Add($line)
+    if ($Dispatch -ne "food-line") {
         Write-Host $line
     }
+}
+
+function Save-CommandOutputLine {
+    param([string]$Line)
+
+    if ($script:LogFile) {
+        if (Append-LogLine -Path $script:LogFile -Line $Line) {
+            $script:FileLoggingAvailable = $true
+            $script:DurableLogWritten = $true
+            return
+        }
+        $script:LogFile = $null
+        $script:FileLoggingAvailable = $false
+    }
+    $script:StdoutFallbackUsed = $true
+    [void]$script:FallbackLogMessages.Add($Line)
+    if ($Dispatch -ne "food-line") {
+        Write-Host $Line
+    }
+}
+
+function Write-FoodLineMachineResult {
+    param(
+        $Result,
+        [string[]]$Errors = @()
+    )
+
+    $payload = [ordered]@{}
+    if ($null -ne $Result) {
+        if ($Result -is [System.Collections.IDictionary]) {
+            foreach ($key in $Result.Keys) {
+                $payload[[string]$key] = $Result[$key]
+            }
+        } else {
+            foreach ($property in $Result.PSObject.Properties) {
+                $payload[$property.Name] = $property.Value
+            }
+        }
+    }
+    if (-not $payload.Contains("ok")) {
+        $payload["ok"] = $false
+    }
+    if (-not $payload.Contains("status")) {
+        $payload["status"] = "wrapper_failed"
+    }
+    if (-not $payload.Contains("dispatch")) {
+        $payload["dispatch"] = "food-line"
+    }
+    if ($Errors.Count -gt 0) {
+        $payload["errors"] = @($Errors)
+    }
+    $payload["logging"] = [ordered]@{
+        file_logging_available = [bool]$script:FileLoggingAvailable
+        intended_log_path = [string]$script:IntendedLogPath
+        stdout_fallback_used = [bool]$script:StdoutFallbackUsed
+        durable_log_written = [bool]$script:DurableLogWritten
+        fallback_messages = @($script:FallbackLogMessages)
+    }
+    [Console]::Out.WriteLine(($payload | ConvertTo-Json -Depth 100))
+}
+
+function Remove-OldRunnerLogs {
+    param(
+        [string]$LogDirectory,
+        [int]$Keep
+    )
+
+    if (-not (Test-Path -LiteralPath $LogDirectory -PathType Container)) {
+        return
+    }
+    Get-ChildItem -Path $LogDirectory -Filter "runner-*.log" |
+        Sort-Object LastWriteTime -Descending |
+        Select-Object -Skip $Keep |
+        Remove-Item -Force
 }
 
 function Load-SmtpCredential {
@@ -204,30 +290,18 @@ function Invoke-LoggedCommand {
     $previousErrorActionPreference = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
     try {
-        if ($LogFile) {
-            $combinedOutput = @(
-                & $Python @Arguments 2>&1 |
-                ForEach-Object {
-                    if ($_ -is [System.Management.Automation.ErrorRecord]) {
-                        $_.Exception.Message
-                    } else {
-                        $_
-                    }
-                } |
-                Tee-Object -FilePath $LogFile -Append
-            )
-        } else {
-            $combinedOutput = @(
-                & $Python @Arguments 2>&1 |
-                ForEach-Object {
-                    if ($_ -is [System.Management.Automation.ErrorRecord]) {
-                        $_.Exception.Message
-                    } else {
-                        $_
-                    }
+        $combinedOutput = @(
+            & $Python @Arguments 2>&1 |
+            ForEach-Object {
+                $outputLine = if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                    $_.Exception.Message
+                } else {
+                    [string]$_
                 }
-            )
-        }
+                Save-CommandOutputLine -Line $outputLine
+                $outputLine
+            }
+        )
         $exitCode = $LASTEXITCODE
         $outputText = (($combinedOutput | ForEach-Object { [string]$_ }) -join [Environment]::NewLine)
         $json = $null
@@ -261,30 +335,18 @@ function Invoke-LoggedGitCommand {
     $previousErrorActionPreference = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
     try {
-        if ($LogFile) {
-            $combinedOutput = @(
-                & git @commandArgs 2>&1 |
-                ForEach-Object {
-                    if ($_ -is [System.Management.Automation.ErrorRecord]) {
-                        $_.Exception.Message
-                    } else {
-                        $_
-                    }
-                } |
-                Tee-Object -FilePath $LogFile -Append
-            )
-        } else {
-            $combinedOutput = @(
-                & git @commandArgs 2>&1 |
-                ForEach-Object {
-                    if ($_ -is [System.Management.Automation.ErrorRecord]) {
-                        $_.Exception.Message
-                    } else {
-                        $_
-                    }
+        $combinedOutput = @(
+            & git @commandArgs 2>&1 |
+            ForEach-Object {
+                $outputLine = if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                    $_.Exception.Message
+                } else {
+                    [string]$_
                 }
-            )
-        }
+                Save-CommandOutputLine -Line $outputLine
+                $outputLine
+            }
+        )
         $exitCode = $LASTEXITCODE
         $outputText = (($combinedOutput | ForEach-Object { [string]$_ }) -join [Environment]::NewLine)
         return [pscustomobject]@{
@@ -552,10 +614,18 @@ try {
     }
     $RepoRoot = (Resolve-Path -LiteralPath $RepoRoot).Path
 
-    $LogDir = Join-Path $RepoRoot "logs"
-    New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
     $Stamp = Get-Date -Format "yyyyMMdd-HHmmss"
-    $script:LogFile = Join-Path $LogDir "runner-$Dispatch-$Stamp-$PID.log"
+    $LogDir = Join-Path $RepoRoot "logs"
+    $script:IntendedLogPath = Join-Path $LogDir "runner-$Dispatch-$Stamp-$PID.log"
+    try {
+        New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
+        $script:LogFile = $script:IntendedLogPath
+    } catch {
+        $script:LogFile = $null
+        $script:FileLoggingAvailable = $false
+        $script:StdoutFallbackUsed = $true
+        [void]$script:FallbackLogMessages.Add(("[{0}] File logging unavailable for {1}: {2}" -f (Get-Date -Format "s"), $script:IntendedLogPath, $_.Exception.Message))
+    }
 
     if (-not $PagesRepo) {
         $PagesRepo = Join-Path $RepoRoot "bluefern-dispatches-pages"
@@ -747,10 +817,8 @@ try {
             Write-Log "Food Line publication finished with exit code $($foodLineResult.ExitCode)."
         }
 
-        Get-ChildItem -Path $LogDir -Filter "runner-*.log" |
-            Sort-Object LastWriteTime -Descending |
-            Select-Object -Skip $KeepLogs |
-            Remove-Item -Force
+        Write-FoodLineMachineResult -Result $jsonObject
+        Remove-OldRunnerLogs -LogDirectory $LogDir -Keep $KeepLogs
         exit $foodLineResult.ExitCode
     }
 
@@ -799,10 +867,7 @@ try {
         } else {
             Write-Log "Runner dispatch finished with exit code $exitCode."
         }
-        Get-ChildItem -Path $LogDir -Filter "runner-*.log" |
-            Sort-Object LastWriteTime -Descending |
-            Select-Object -Skip $KeepLogs |
-            Remove-Item -Force
+        Remove-OldRunnerLogs -LogDirectory $LogDir -Keep $KeepLogs
         exit $exitCode
     }
 
@@ -967,13 +1032,18 @@ try {
         Write-Log "Runner dispatch finished with exit code $exitCode."
     }
 
-    Get-ChildItem -Path $LogDir -Filter "runner-*.log" |
-        Sort-Object LastWriteTime -Descending |
-        Select-Object -Skip $KeepLogs |
-        Remove-Item -Force
+    Remove-OldRunnerLogs -LogDirectory $LogDir -Keep $KeepLogs
 
     exit $exitCode
 } catch {
     Write-Log ("Runner wrapper failed: {0}: {1}" -f $_.Exception.GetType().Name, $_.Exception.Message)
+    if ($Dispatch -eq "food-line") {
+        Write-FoodLineMachineResult -Result ([ordered]@{
+            ok = $false
+            status = "wrapper_failed"
+            mode = if ($CheckOnly) { "check_only" } elseif ($DryRunFull) { "dry_run_full" } else { "publication" }
+            dispatch = "food-line"
+        }) -Errors @($_.Exception.Message)
+    }
     exit 10
 }

@@ -236,6 +236,9 @@ raise SystemExit(0)
     (pages_repo / "index.html").write_text("pages", encoding="utf-8")
     _commit_all(pages_repo, "initial pages commit")
     shutil.copy2(Path(sys.executable), venv_scripts_dir / "python.exe")
+    pyvenv_config = Path(sys.executable).parents[1] / "pyvenv.cfg"
+    if pyvenv_config.is_file():
+        shutil.copy2(pyvenv_config, venv_scripts_dir.parent / "pyvenv.cfg")
     return repo
 
 
@@ -401,6 +404,104 @@ def test_wrapper_food_line_check_only_does_not_request_collection_flags(tmp_path
     assert "--collect" not in log_text
     assert "--audit-source-collection" not in log_text
     assert "Food Line check-only validation finished with exit code 0." in log_text
+
+
+def test_wrapper_food_line_does_not_persist_global_system_or_local_git_config(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(tmp_path, sync_ok=True)
+    pages_repo = repo / "bluefern-dispatches-pages"
+    global_config = tmp_path / "global.gitconfig"
+    system_config = tmp_path / "system.gitconfig"
+    global_config.write_text("[test]\n\tmarker = global\n", encoding="utf-8")
+    system_config.write_text("[test]\n\tmarker = system\n", encoding="utf-8")
+    config_paths = [
+        global_config,
+        system_config,
+        repo / ".git" / "config",
+        pages_repo / ".git" / "config",
+    ]
+    before = {path: path.read_bytes() for path in config_paths}
+
+    result = _run_wrapper_with_args(
+        repo,
+        [
+            "-Dispatch", "food-line",
+            "-RepoRoot", str(repo),
+            "-PagesRepo", str(pages_repo),
+            "-SourceBranch", "add/pages-repo-default",
+            "-PagesBranch", "gh-pages",
+            "-Date", "2026-07-02",
+            "-CheckOnly",
+        ],
+        env_overrides={
+            "GIT_CONFIG_GLOBAL": str(global_config),
+            "GIT_CONFIG_SYSTEM": str(system_config),
+        },
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert {path: path.read_bytes() for path in config_paths} == before
+
+
+def test_wrapper_food_line_stdout_fallback_is_machine_readable(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(tmp_path, sync_ok=True)
+    pages_repo = repo / "bluefern-dispatches-pages"
+    shutil.rmtree(repo / "logs")
+    (repo / "logs").write_text("not a directory\n", encoding="utf-8")
+
+    result = _run_wrapper_with_args(
+        repo,
+        [
+            "-Dispatch", "food-line",
+            "-RepoRoot", str(repo),
+            "-PagesRepo", str(pages_repo),
+            "-SourceBranch", "add/pages-repo-default",
+            "-PagesBranch", "gh-pages",
+            "-Date", "2026-07-02",
+            "-CheckOnly",
+        ],
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    payload = json.loads(result.stdout)
+    assert payload["ok"] is True
+    assert payload["status"] == "check_only_success"
+    assert payload["logging"]["file_logging_available"] is False
+    assert payload["logging"]["durable_log_written"] is False
+    assert payload["logging"]["stdout_fallback_used"] is True
+    assert str(repo / "logs" / "runner-food-line-") in payload["logging"]["intended_log_path"]
+    assert payload["logging"]["fallback_messages"]
+
+
+def test_wrapper_food_line_stdout_fallback_preserves_validation_failure(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(tmp_path, sync_ok=True)
+    pages_repo = repo / "bluefern-dispatches-pages"
+    shutil.rmtree(repo / "logs")
+    (repo / "logs").write_text("not a directory\n", encoding="utf-8")
+    _write_runner_script(
+        repo / "scripts" / "run_food_line_publication_runner.py",
+        "import json\nprint(json.dumps({'ok': False, 'status': 'dry_run_full_failed', 'errors': ['validation failed']}))\nraise SystemExit(1)\n",
+    )
+
+    result = _run_wrapper_with_args(
+        repo,
+        [
+            "-Dispatch", "food-line",
+            "-RepoRoot", str(repo),
+            "-PagesRepo", str(pages_repo),
+            "-SourceBranch", "add/pages-repo-default",
+            "-PagesBranch", "gh-pages",
+            "-Date", "2026-07-02",
+            "-DryRunFull",
+        ],
+    )
+
+    assert result.returncode == 10
+    payload = json.loads(result.stdout)
+    assert payload["ok"] is False
+    assert payload["status"] == "wrapper_failed"
+    assert payload["logging"]["stdout_fallback_used"] is True
+    assert payload["logging"]["durable_log_written"] is False
+    assert any("failed with exit code 1" in error for error in payload["errors"])
 
 
 @pytest.mark.parametrize("flag", ["-PostBluesky", "-GenerateAudio"])

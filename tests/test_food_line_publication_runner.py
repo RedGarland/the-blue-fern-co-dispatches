@@ -1,8 +1,32 @@
 from __future__ import annotations
 
+import subprocess
 from pathlib import Path
 
 import scripts.run_food_line_publication_runner as runner
+
+
+def _git(repo: Path, *args: str) -> None:
+    subprocess.run(
+        ["git", *args],
+        cwd=str(repo),
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+
+
+def _init_repo(repo: Path, branch: str) -> None:
+    repo.mkdir(parents=True)
+    _git(repo, "init")
+    _git(repo, "config", "user.email", "codex@example.com")
+    _git(repo, "config", "user.name", "Codex")
+    _git(repo, "config", "core.autocrlf", "false")
+    _git(repo, "checkout", "-b", branch)
+    (repo / "tracked.txt").write_bytes(b"tracked\n")
+    _git(repo, "add", "tracked.txt")
+    _git(repo, "commit", "-m", "initial", "--no-gpg-sign")
 
 
 def _state(head: str, branch: str) -> dict[str, object]:
@@ -12,6 +36,51 @@ def _state(head: str, branch: str) -> dict[str, object]:
         "head": head,
         "clean": True,
     }
+
+
+def test_safe_directory_configuration_is_process_local_and_does_not_persist(monkeypatch, tmp_path: Path) -> None:
+    source_repo = tmp_path / "source"
+    pages_repo = tmp_path / "pages"
+    _init_repo(source_repo, "source-branch")
+    _init_repo(pages_repo, "gh-pages")
+
+    global_config = tmp_path / "global.gitconfig"
+    system_config = tmp_path / "system.gitconfig"
+    global_config.write_text("[test]\n\tmarker = global\n", encoding="utf-8")
+    system_config.write_text("[test]\n\tmarker = system\n", encoding="utf-8")
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(global_config))
+    monkeypatch.setenv("GIT_CONFIG_SYSTEM", str(system_config))
+
+    config_paths = [
+        global_config,
+        system_config,
+        source_repo / ".git" / "config",
+        pages_repo / ".git" / "config",
+    ]
+    before = {path: path.read_bytes() for path in config_paths}
+
+    monkeypatch.setattr(
+        runner,
+        "_load_release_readiness",
+        lambda root, edition_date, approved_proposal_path: {
+            "path": root / "data/dispatches/food-line/review/release-readiness" / f"{edition_date}.json",
+            "payload": {"status": runner.APPROVED_STATUS},
+        },
+    )
+    monkeypatch.setattr(runner, "load_approved_proposal", lambda *args: type("Bundle", (), {"proposal_sha256": "sha256"})())
+    monkeypatch.setattr(runner, "validate_publish_scope", lambda **kwargs: [])
+
+    result = runner.run_publication(
+        repo_root=source_repo,
+        pages_repo=pages_repo,
+        source_branch="source-branch",
+        pages_branch="gh-pages",
+        date="2026-08-05",
+        check_only=True,
+    )
+
+    assert result["ok"] is True
+    assert {path: path.read_bytes() for path in config_paths} == before
 
 
 def test_check_only_validates_without_generation_or_sync(monkeypatch) -> None:

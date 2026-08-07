@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import argparse
+import os
 import json
+import stat
 import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Sequence
@@ -184,11 +187,33 @@ def _validate_scope(
 
 
 def _clean_temp_workspace(temp_root: Path) -> bool:
-    try:
-        shutil.rmtree(temp_root)
-        return True
-    except FileNotFoundError:
-        return True
+    def _retry_remove_readonly(func: Any, path: str, exc_info: Any) -> None:
+        exception = exc_info[1]
+        if isinstance(exception, PermissionError):
+            try:
+                os.chmod(path, stat.S_IWRITE)
+            except OSError:
+                pass
+            try:
+                func(path)
+                return
+            except OSError:
+                pass
+        raise exception
+
+    last_error: Exception | None = None
+    for attempt in range(5):
+        try:
+            shutil.rmtree(temp_root, onerror=_retry_remove_readonly)
+            return True
+        except FileNotFoundError:
+            return True
+        except PermissionError as exc:
+            last_error = exc
+            time.sleep(0.5 * (attempt + 1))
+    if last_error is not None:
+        raise last_error
+    return False
 
 
 def run_publication(

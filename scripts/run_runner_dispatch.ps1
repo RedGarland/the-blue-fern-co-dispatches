@@ -23,11 +23,45 @@ param(
 $ErrorActionPreference = "Stop"
 $script:LogFile = $null
 
+function Append-LogLine {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path,
+        [Parameter(Mandatory = $true)]
+        [string]$Line
+    )
+
+    $encoding = [System.Text.UTF8Encoding]::new($false)
+    for ($attempt = 0; $attempt -lt 5; $attempt++) {
+        try {
+            $stream = [System.IO.File]::Open($Path, [System.IO.FileMode]::Append, [System.IO.FileAccess]::Write, [System.IO.FileShare]::ReadWrite)
+            try {
+                $writer = [System.IO.StreamWriter]::new($stream, $encoding)
+                try {
+                    $writer.WriteLine($Line)
+                    $writer.Flush()
+                    return
+                } finally {
+                    $writer.Dispose()
+                }
+            } finally {
+                $stream.Dispose()
+            }
+        } catch [System.UnauthorizedAccessException], [System.IO.IOException] {
+            Start-Sleep -Milliseconds (200 * ($attempt + 1))
+        }
+    }
+    return $false
+}
+
 function Write-Log {
     param([string]$Message)
     $line = "[{0}] {1}" -f (Get-Date -Format "s"), $Message
     if ($script:LogFile) {
-        $line | Tee-Object -FilePath $script:LogFile -Append
+        if (-not (Append-LogLine -Path $script:LogFile -Line $line)) {
+            $script:LogFile = $null
+            Write-Host $line
+        }
     } else {
         Write-Host $line
     }
@@ -170,17 +204,30 @@ function Invoke-LoggedCommand {
     $previousErrorActionPreference = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
     try {
-        $combinedOutput = @(
-            & $Python @Arguments 2>&1 |
-            ForEach-Object {
-                if ($_ -is [System.Management.Automation.ErrorRecord]) {
-                    $_.Exception.Message
-                } else {
-                    $_
+        if ($LogFile) {
+            $combinedOutput = @(
+                & $Python @Arguments 2>&1 |
+                ForEach-Object {
+                    if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                        $_.Exception.Message
+                    } else {
+                        $_
+                    }
+                } |
+                Tee-Object -FilePath $LogFile -Append
+            )
+        } else {
+            $combinedOutput = @(
+                & $Python @Arguments 2>&1 |
+                ForEach-Object {
+                    if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                        $_.Exception.Message
+                    } else {
+                        $_
+                    }
                 }
-            } |
-            Tee-Object -FilePath $LogFile -Append
-        )
+            )
+        }
         $exitCode = $LASTEXITCODE
         $outputText = (($combinedOutput | ForEach-Object { [string]$_ }) -join [Environment]::NewLine)
         $json = $null
@@ -214,17 +261,30 @@ function Invoke-LoggedGitCommand {
     $previousErrorActionPreference = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
     try {
-        $combinedOutput = @(
-            & git @commandArgs 2>&1 |
-            ForEach-Object {
-                if ($_ -is [System.Management.Automation.ErrorRecord]) {
-                    $_.Exception.Message
-                } else {
-                    $_
+        if ($LogFile) {
+            $combinedOutput = @(
+                & git @commandArgs 2>&1 |
+                ForEach-Object {
+                    if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                        $_.Exception.Message
+                    } else {
+                        $_
+                    }
+                } |
+                Tee-Object -FilePath $LogFile -Append
+            )
+        } else {
+            $combinedOutput = @(
+                & git @commandArgs 2>&1 |
+                ForEach-Object {
+                    if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                        $_.Exception.Message
+                    } else {
+                        $_
+                    }
                 }
-            } |
-            Tee-Object -FilePath $LogFile -Append
-        )
+            )
+        }
         $exitCode = $LASTEXITCODE
         $outputText = (($combinedOutput | ForEach-Object { [string]$_ }) -join [Environment]::NewLine)
         return [pscustomobject]@{
@@ -495,7 +555,7 @@ try {
     $LogDir = Join-Path $RepoRoot "logs"
     New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
     $Stamp = Get-Date -Format "yyyyMMdd-HHmmss"
-    $script:LogFile = Join-Path $LogDir "runner-$Dispatch-$Stamp.log"
+    $script:LogFile = Join-Path $LogDir "runner-$Dispatch-$Stamp-$PID.log"
 
     if (-not $PagesRepo) {
         $PagesRepo = Join-Path $RepoRoot "bluefern-dispatches-pages"

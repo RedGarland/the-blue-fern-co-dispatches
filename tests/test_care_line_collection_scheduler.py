@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import io
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -235,3 +237,28 @@ def test_scheduler_returns_failure_for_pipeline_failure(monkeypatch: pytest.Monk
     assert exit_code == 1
     assert receipt["ok"] is False
     assert receipt["pipeline_status"] == "failure"
+
+
+def test_scheduler_main_writes_utf8_json_under_cp1252_stdout(monkeypatch: pytest.MonkeyPatch) -> None:
+    receipt = {
+        "schema_version": scheduler.SCHEDULER_SCHEMA,
+        "run_id": "run-utf8",
+        "edition_date": "2026-08-05",
+        "status": "success",
+        "ok": True,
+        "message": "Café — résumé “quoted”",
+    }
+
+    monkeypatch.setattr(scheduler, "run_collection_once", lambda *args, **kwargs: (0, receipt))
+    raw_stdout = io.BytesIO()
+    text_stdout = io.TextIOWrapper(raw_stdout, encoding="cp1252")
+    monkeypatch.setattr(sys, "stdout", text_stdout)
+
+    exit_code = scheduler.main(["--repo-root", "C:\\tmp\\repo", "--run-date", "2026-08-05"])
+
+    text_stdout.flush()
+    payload_bytes = raw_stdout.getvalue()
+    payload = payload_bytes.decode("utf-8")
+    assert exit_code == 0
+    assert "Café — résumé “quoted”" in payload
+    assert "Café — résumé “quoted”".encode("utf-8") in payload_bytes

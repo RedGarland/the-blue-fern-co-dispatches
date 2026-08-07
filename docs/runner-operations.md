@@ -87,9 +87,16 @@ Explicit live Gaza command:
 
 Add `-GenerateAudio` only when the scheduled Gaza run should also create dated audio artifacts.
 
-The old Food Line action using `run_runner_dispatch.ps1 -Dispatch food-line`
-must remain disabled: that compatibility path invokes publication, Pages push,
-Bluesky, audio, and map-capable dispatch generation.
+Food Line publication now uses the dedicated fail-closed runner in the same
+clean checkout:
+
+```text
+powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\BlueFernRunner\FoodLineDispatches\scripts\run_runner_dispatch.ps1" -Dispatch food-line -RepoRoot "C:\BlueFernRunner\FoodLineDispatches" -PagesRepo "C:\BlueFernRunner\FoodLineDispatches\bluefern-dispatches-pages" -SourceBranch add/pages-repo-default -PagesBranch gh-pages -CheckOnly
+```
+
+Omit `-CheckOnly` for the guarded live publication path. Add `-DryRunFull` for
+an isolated temp-workspace run. Add `-Push` only when the local Pages commit
+should also be pushed. Food Line does not use the Gaza social/audio switches.
 
 The production private-only Food Line schedule now uses a separate clean runner
 checkout and three guarded tasks. See

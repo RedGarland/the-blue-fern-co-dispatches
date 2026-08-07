@@ -203,6 +203,33 @@ raise SystemExit(0)
 """.strip()
         + "\n",
     )
+    _write_runner_script(
+        scripts_dir / "run_food_line_publication_runner.py",
+        """
+import json
+import sys
+
+args = sys.argv[1:]
+status = "publication_success"
+if "--check-only" in args:
+    status = "check_only_success"
+elif "--dry-run-full" in args:
+    status = "dry_run_full_success"
+result = {
+    "ok": True,
+    "status": status,
+    "mode": "check_only" if status == "check_only_success" else ("dry_run_full" if status == "dry_run_full_success" else "publication"),
+    "proposed_modified_paths": [],
+    "proposed_deleted_paths": [],
+    "push_performed": "--push" in args,
+    "argv": args,
+}
+print("food line publication runner invoked")
+print(json.dumps(result, indent=2))
+raise SystemExit(0)
+""".strip()
+        + "\n",
+    )
     _init_git_repo(repo, "add/pages-repo-default")
     _commit_all(repo, "initial source commit")
     _init_git_repo(pages_repo, "gh-pages")
@@ -302,12 +329,37 @@ def test_wrapper_food_line_non_check_only_includes_collection_flags(tmp_path: Pa
         },
     )
 
-    result = _run_wrapper_with_args(repo, ["-Dispatch", "food-line", "-Date", "2026-07-02"])
+    result = _run_wrapper_with_args(
+        repo,
+        [
+            "-Dispatch",
+            "food-line",
+            "-RepoRoot",
+            str(repo),
+            "-PagesRepo",
+            str(repo / "bluefern-dispatches-pages"),
+            "-SourceBranch",
+            "add/pages-repo-default",
+            "-PagesBranch",
+            "gh-pages",
+            "-Date",
+            "2026-07-02",
+        ],
+    )
 
     assert result.returncode == 0, result.stdout + result.stderr
     log_text = _latest_log(repo, "food-line")
-    assert "scripts\\run_food_line_dispatch.py --date 2026-07-02 --collect --audit-source-collection --publish --push --post-bluesky --generate-audio" in log_text
-    assert "Runner dispatch finished with exit code 0." in log_text
+    assert "scripts\\run_food_line_publication_runner.py --repo-root" in log_text
+    assert "--pages-repo" in log_text
+    assert "--source-branch add/pages-repo-default" in log_text
+    assert "--pages-branch gh-pages" in log_text
+    assert "--date 2026-07-02" in log_text
+    assert "--check-only" not in log_text
+    assert "--dry-run-full" not in log_text
+    assert "--collect" not in log_text
+    assert "--post-bluesky" not in log_text
+    assert "--generate-audio" not in log_text
+    assert "Food Line publication finished with exit code 0." in log_text
 
 
 def test_wrapper_food_line_check_only_does_not_request_collection_flags(tmp_path: Path) -> None:
@@ -322,14 +374,60 @@ def test_wrapper_food_line_check_only_does_not_request_collection_flags(tmp_path
         },
     )
 
-    result = _run_wrapper_with_args(repo, ["-Dispatch", "food-line", "-Date", "2026-07-02", "-CheckOnly"])
+    result = _run_wrapper_with_args(
+        repo,
+        [
+            "-Dispatch",
+            "food-line",
+            "-RepoRoot",
+            str(repo),
+            "-PagesRepo",
+            str(repo / "bluefern-dispatches-pages"),
+            "-SourceBranch",
+            "add/pages-repo-default",
+            "-PagesBranch",
+            "gh-pages",
+            "-Date",
+            "2026-07-02",
+            "-CheckOnly",
+        ],
+    )
 
     assert result.returncode == 0, result.stdout + result.stderr
     log_text = _latest_log(repo, "food-line")
-    assert "scripts\\runner_repo_maintenance.py postflight" in log_text
-    assert "Runner check-only validation finished with exit code 0." in log_text
+    assert "scripts\\run_food_line_publication_runner.py --repo-root" in log_text
+    assert "--check-only" in log_text
+    assert "--dry-run-full" not in log_text
     assert "--collect" not in log_text
     assert "--audit-source-collection" not in log_text
+    assert "Food Line check-only validation finished with exit code 0." in log_text
+
+
+@pytest.mark.parametrize("flag", ["-PostBluesky", "-GenerateAudio"])
+def test_wrapper_food_line_rejects_gaza_only_flags(tmp_path: Path, flag: str) -> None:
+    repo = _make_fake_runner_repo(tmp_path, sync_ok=True)
+
+    result = _run_wrapper_with_args(
+        repo,
+        [
+            "-Dispatch",
+            "food-line",
+            "-RepoRoot",
+            str(repo),
+            "-PagesRepo",
+            str(repo / "bluefern-dispatches-pages"),
+            "-SourceBranch",
+            "add/pages-repo-default",
+            "-PagesBranch",
+            "gh-pages",
+            "-Date",
+            "2026-07-02",
+            flag,
+        ],
+    )
+
+    assert result.returncode == 10, result.stdout + result.stderr
+    assert f"Food Line dispatch does not support {flag}." in _latest_log(repo, "food-line")
 
 
 def test_wrapper_check_only_succeeds_with_single_element_array_json(tmp_path: Path) -> None:

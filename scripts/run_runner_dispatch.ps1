@@ -517,7 +517,7 @@ try {
 
     $gazaOperatorScript = Join-Path $RepoRoot "scripts\run_gaza_daily_operator.py"
     $gazaSmokeScript = Join-Path $RepoRoot "scripts\smoke_gaza_operator.py"
-    $foodLineScript = Join-Path $RepoRoot "scripts\run_food_line_dispatch.py"
+    $foodLinePublicationRunnerScript = Join-Path $RepoRoot "scripts\run_food_line_publication_runner.py"
     if ($Dispatch -eq "gaza") {
         if (-not (Test-Path -LiteralPath $gazaOperatorScript -PathType Leaf)) {
             throw "Gaza operator script not found: $gazaOperatorScript"
@@ -525,14 +525,18 @@ try {
         if ($CheckOnly -and -not (Test-Path -LiteralPath $gazaSmokeScript -PathType Leaf)) {
             throw "Gaza smoke script not found: $gazaSmokeScript"
         }
-    } elseif (-not (Test-Path -LiteralPath $foodLineScript -PathType Leaf)) {
-        throw "Food Line dispatch script not found: $foodLineScript"
+    } elseif (-not (Test-Path -LiteralPath $foodLinePublicationRunnerScript -PathType Leaf)) {
+        throw "Food Line publication runner not found: $foodLinePublicationRunnerScript"
     }
 
     Set-Location $RepoRoot
 
     if (-not $Date) {
-        $Date = Get-Date -Format "yyyy-MM-dd"
+        if ($Dispatch -eq "food-line") {
+            $Date = [System.TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTimeOffset]::UtcNow, "Pacific Standard Time").ToString("yyyy-MM-dd")
+        } else {
+            $Date = Get-Date -Format "yyyy-MM-dd"
+        }
     }
 
     $checkOnlyRequested = $PSBoundParameters.ContainsKey("CheckOnly")
@@ -567,10 +571,10 @@ try {
                 }
             }
         }
-    } elseif (-not $checkOnlyRequested) {
-        $pushEnabled = $true
-        $blueskyEnabled = $true
-        $audioEnabled = $true
+    } elseif ($Dispatch -eq "food-line") {
+        $pushEnabled = $pushRequested
+        $blueskyEnabled = $false
+        $audioEnabled = $false
     }
 
     Write-Log ("Resolved repo root from {0}: {1}" -f $repoRootSource, $RepoRoot)
@@ -583,6 +587,102 @@ try {
     Write-Log "Bluesky enabled: $blueskyEnabled"
     Write-Log "Audio enabled: $audioEnabled"
     Write-Log "Check-only: $checkOnlyRequested"
+
+    if ($Dispatch -eq "food-line") {
+        foreach ($requiredParam in @("RepoRoot", "PagesRepo", "SourceBranch", "PagesBranch")) {
+            if (-not $PSBoundParameters.ContainsKey($requiredParam) -or [string]::IsNullOrWhiteSpace((Get-Variable -Name $requiredParam -Scope 0).Value)) {
+                throw "Food Line dispatch requires explicit -$requiredParam."
+            }
+        }
+        foreach ($unsupportedParam in @("PostBluesky", "GenerateAudio", "SmtpDebug", "TtsProvider")) {
+            if ($PSBoundParameters.ContainsKey($unsupportedParam)) {
+                throw "Food Line dispatch does not support -$unsupportedParam."
+            }
+        }
+
+        $foodLinePublicationRunnerScript = Join-Path $RepoRoot "scripts\run_food_line_publication_runner.py"
+        if (-not (Test-Path -LiteralPath $foodLinePublicationRunnerScript -PathType Leaf)) {
+            throw "Food Line publication runner not found: $foodLinePublicationRunnerScript"
+        }
+
+        $foodLineArgs = @(
+            $foodLinePublicationRunnerScript,
+            "--repo-root", $RepoRoot,
+            "--pages-repo", $PagesRepo,
+            "--source-branch", $SourceBranch,
+            "--pages-branch", $PagesBranch,
+            "--date", $Date
+        )
+        if ($CheckOnly) {
+            $foodLineArgs += "--check-only"
+        } elseif ($DryRunFull) {
+            $foodLineArgs += "--dry-run-full"
+        }
+        if ($Push) {
+            $foodLineArgs += "--push"
+        }
+
+        $foodLineResult = Invoke-LoggedCommand -Python $python -Arguments $foodLineArgs -ParseJsonTail
+        if ($foodLineResult.ExitCode -ne 0) {
+            throw "Food Line publication runner failed with exit code $($foodLineResult.ExitCode)."
+        }
+        if (-not $foodLineResult.Json) {
+            throw "Food Line publication runner did not return parseable JSON."
+        }
+
+        $jsonObject = $foodLineResult.Json
+        if (($jsonObject -is [System.Array] -and $jsonObject.Length -eq 1) -or ($jsonObject -is [System.Collections.IList] -and -not ($jsonObject -is [string]) -and $jsonObject.Count -eq 1)) {
+            $jsonObject = $jsonObject[0]
+        }
+
+        $jsonType = if ($null -eq $jsonObject) { "<null>" } else { $jsonObject.GetType().FullName }
+        $rootOk = Get-JsonField -Object $jsonObject -FieldName "ok"
+        $status = Get-JsonField -Object $jsonObject -FieldName "status"
+        $modifiedPaths = Get-JsonField -Object $jsonObject -FieldName "proposed_modified_paths"
+        $deletedPaths = Get-JsonField -Object $jsonObject -FieldName "proposed_deleted_paths"
+        $pushPerformed = Get-JsonField -Object $jsonObject -FieldName "push_performed"
+
+        Write-Log ("Food Line JSON diagnostics: type={0}; root_ok_present={1}; status_present={2}; proposed_modified_paths_present={3}; proposed_deleted_paths_present={4}; push_performed_present={5}" -f `
+            $jsonType, `
+            ($null -ne $rootOk), `
+            ($null -ne $status), `
+            ($null -ne $modifiedPaths), `
+            ($null -ne $deletedPaths), `
+            ($null -ne $pushPerformed))
+
+        if ($null -eq $rootOk) {
+            throw "Food Line run failed: parsed JSON missing root ok field."
+        }
+        if (-not [bool]$rootOk) {
+            throw "Food Line run failed: ok=false"
+        }
+        if ([string]::IsNullOrWhiteSpace([string]$status)) {
+            throw "Food Line run failed: parsed JSON missing status."
+        }
+        if ($CheckOnly -and [string]$status -ne "check_only_success") {
+            throw "Food Line check-only run failed: status=$status"
+        }
+        if ($DryRunFull -and [string]$status -ne "dry_run_full_success") {
+            throw "Food Line dry-run run failed: status=$status"
+        }
+        if (-not $CheckOnly -and -not $DryRunFull -and [string]$status -ne "publication_success") {
+            throw "Food Line publication run failed: status=$status"
+        }
+
+        if ($CheckOnly) {
+            Write-Log "Food Line check-only validation finished with exit code $($foodLineResult.ExitCode)."
+        } elseif ($DryRunFull) {
+            Write-Log "Food Line isolated dry-run finished with exit code $($foodLineResult.ExitCode)."
+        } else {
+            Write-Log "Food Line publication finished with exit code $($foodLineResult.ExitCode)."
+        }
+
+        Get-ChildItem -Path $LogDir -Filter "runner-*.log" |
+            Sort-Object LastWriteTime -Descending |
+            Select-Object -Skip $KeepLogs |
+            Remove-Item -Force
+        exit $foodLineResult.ExitCode
+    }
 
     if ($dryRunFullRequested -and $Dispatch -ne "gaza") {
         throw "-DryRunFull is only supported for Gaza."

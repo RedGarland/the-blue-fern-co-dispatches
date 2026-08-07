@@ -47,6 +47,16 @@ def atomic_write_json(path: Path, value: dict[str, Any]) -> None:
     os.replace(temporary, path)
 
 
+def write_json_stdout(payload: dict[str, Any]) -> None:
+    text = json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+    buffer = getattr(sys.stdout, "buffer", None)
+    if buffer is not None:
+        buffer.write(text.encode("utf-8"))
+        buffer.flush()
+        return
+    sys.stdout.write(text)
+
+
 def _run(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
     return subprocess.run(command, cwd=cwd, text=True, capture_output=True, check=False)
 
@@ -363,7 +373,7 @@ def main(argv: list[str] | None = None) -> int:
         active_queue_limit=args.active_queue_limit,
         low_priority_cap=args.low_priority_cap,
     )
-    print(json.dumps(receipt, indent=2, sort_keys=True, ensure_ascii=False))
+    write_json_stdout(receipt)
     return exit_code
 
 

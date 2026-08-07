@@ -28,6 +28,12 @@ DISPATCH = "food-line"
 RELEASE_READINESS_DIR = "data/dispatches/food-line/review/release-readiness"
 PROPOSED_EDITION_DIR = "data/dispatches/food-line/review/proposed-editions"
 APPROVED_STATUS = "approved_current_review_ready_for_source_generation"
+ALLOWED_LOCAL_DIR_PREFIXES = (
+    "logs/",
+    ".venv/",
+    ".pytest_cache/",
+    "bluefern-dispatches-pages/",
+)
 
 
 class PublicationRunnerError(RuntimeError):
@@ -65,7 +71,19 @@ def _repo_state(repo_root: Path, *, required_branch: str, label: str) -> dict[st
     status = _run_git(repo_root, "status", "--porcelain=v1", "--untracked-files=all")
     if status.returncode != 0:
         raise PublicationRunnerError(f"unable to inspect {label} state: {status.stderr or status.stdout or 'git status failed'}")
-    clean = not status.stdout.strip()
+    dirty_paths: list[str] = []
+    for raw_line in status.stdout.splitlines():
+        line = raw_line.rstrip()
+        if not line:
+            continue
+        path = line[3:] if len(line) > 3 else line
+        if " -> " in path:
+            path = path.split(" -> ", 1)[1]
+        normalized = path.replace("\\", "/").lstrip("./")
+        if normalized.startswith(ALLOWED_LOCAL_DIR_PREFIXES):
+            continue
+        dirty_paths.append(normalized)
+    clean = not dirty_paths
     branch = _run_git(repo_root, "branch", "--show-current")
     if branch.returncode != 0:
         raise PublicationRunnerError(f"unable to inspect {label} branch: {branch.stderr or branch.stdout or 'git branch failed'}")
@@ -82,6 +100,7 @@ def _repo_state(repo_root: Path, *, required_branch: str, label: str) -> dict[st
         "branch": branch_name,
         "head": head.stdout.strip(),
         "clean": clean,
+        "dirty_paths": dirty_paths,
     }
 
 

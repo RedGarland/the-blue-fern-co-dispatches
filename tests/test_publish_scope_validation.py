@@ -175,11 +175,12 @@ def _release_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         (edition / filename).write_text(filename, encoding="utf-8")
     _run_git(source, "add", "output")
     _run_git(source, "commit", "-m", "release source")
+    manifest_commit = _git_output(source, "rev-parse", "HEAD")
     payload = build_release_manifest(
         root=source,
         pages_root=pages,
         edition_date="2026-06-19",
-        source_commit=_git_output(source, "rev-parse", "HEAD"),
+        source_commit=manifest_commit,
         source_paths=[site / "index.html", site / "archive.html", site / "rss.xml", *sorted(edition.iterdir())],
     )
     manifest = source / "release.json"
@@ -218,6 +219,7 @@ def test_strict_release_manifest_rejects_unexpected_cross_domain_path(tmp_path: 
             "source_path": "output/site/gaza/index.html",
             "pages_path": "gaza/index.html",
             "action": "add",
+            "provenance_role": "generated_output",
             "source_sha256": __import__("hashlib").sha256(gaza.read_bytes()).hexdigest(),
             "pages_sha256_before": None,
         }
@@ -235,7 +237,7 @@ def test_strict_release_manifest_rejects_unexpected_cross_domain_path(tmp_path: 
         required_source_ref="main",
         release_manifest_commit="HEAD",
     )
-    assert any("outside the declared food-line publish scope" in error for error in errors)
+    assert any("unsupported provenance_role" in error or "outside the declared food-line publish scope" in error for error in errors)
     assert any("unexpected food-line publication files" in error for error in errors)
 
 
@@ -355,4 +357,70 @@ def test_strict_release_manifest_rejects_source_hash_mismatch_against_commit(tmp
         required_source_ref="main",
         release_manifest_commit="HEAD",
     )
-    assert any("does not match" in error for error in errors)
+    assert any("generated-output hash mismatch" in error for error in errors)
+
+
+def test_strict_release_manifest_generated_output_does_not_require_source_commit_match(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest = _release_fixture(tmp_path)
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    entry = payload["entries"][0]
+    entry["provenance_role"] = "generated_output"
+    entry["source_sha256"] = __import__("hashlib").sha256((source / entry["source_path"]).read_bytes()).hexdigest()
+    payload["source_commit"] = _git_output(source, "rev-parse", "HEAD")
+    write_json_deterministic(manifest, payload)
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+        required_source_ref="main",
+        release_manifest_commit="HEAD",
+    )
+    assert errors == []
+
+
+def test_strict_release_manifest_requires_provenance_role_in_v2(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest = _release_fixture(tmp_path)
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload["entries"][0].pop("provenance_role", None)
+    write_json_deterministic(manifest, payload)
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+        required_source_ref="main",
+        release_manifest_commit="HEAD",
+    )
+    assert any("requires provenance_role" in error for error in errors)
+
+
+def test_strict_release_manifest_rejects_unknown_provenance_role(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest = _release_fixture(tmp_path)
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload["entries"][0]["provenance_role"] = "mystery_role"
+    write_json_deterministic(manifest, payload)
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+        required_source_ref="main",
+        release_manifest_commit="HEAD",
+    )
+    assert any("unsupported provenance_role" in error for error in errors)

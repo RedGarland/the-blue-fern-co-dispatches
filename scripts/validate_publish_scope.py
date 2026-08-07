@@ -192,6 +192,10 @@ def _sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _sha256_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
 def _git_run(repo_root: Path, *args: str, text: bool = True) -> subprocess.CompletedProcess:
     return subprocess.run(
         ["git", "-C", str(repo_root), *args],
@@ -250,7 +254,7 @@ def _release_manifest_delta(
     if not isinstance(payload, dict):
         return [], [], ["release manifest must be a JSON object"]
     expected_schema = {
-        "food-line": "food_line_release_manifest_v1",
+        "food-line": "food_line_release_manifest_v2",
         "care-line": "care_line_release_manifest_v1",
     }.get(dispatch)
     if expected_schema is None:
@@ -302,11 +306,17 @@ def _release_manifest_delta(
         if source_commit and _git_commit_exists(source_root, source_commit):
             file_bytes = _git_file_bytes(source_root, source_commit, relpath)
             if file_bytes is None:
-                errors.append(f"release manifest referenced file is missing at source_commit: {relpath}")
+                errors.append(
+                    f"release manifest source-input file is missing at source_commit: {relpath} "
+                    f"(role=source_input, source_commit={source_commit})"
+                )
             else:
-                commit_sha = hashlib.sha256(file_bytes).hexdigest()
+                commit_sha = _sha256_bytes(file_bytes)
                 if commit_sha != recorded_sha:
-                    errors.append(f"release manifest recorded SHA-256 does not match {source_commit}: {relpath}")
+                    errors.append(
+                        f"release manifest source-input hash mismatch for {relpath} "
+                        f"(role=source_input, expected={recorded_sha}, actual={commit_sha}, source_commit={source_commit})"
+                    )
         file_path = (source_root / relpath).resolve()
         try:
             file_path.relative_to(source_root)
@@ -316,8 +326,12 @@ def _release_manifest_delta(
         if not file_path.is_file():
             errors.append(f"release manifest referenced file is missing in the working tree: {relpath}")
             continue
-        if _sha256_file(file_path) != recorded_sha:
-            errors.append(f"release manifest referenced SHA-256 is stale in the working tree: {relpath}")
+        actual_sha = _sha256_file(file_path)
+        if actual_sha != recorded_sha:
+            errors.append(
+                f"release manifest source-input hash mismatch for {relpath} "
+                f"(role=source_input, expected={recorded_sha}, actual={actual_sha}, source_commit={source_commit})"
+            )
     entries = payload.get("entries")
     if not isinstance(entries, list) or not entries:
         errors.append("release manifest must contain a non-empty entries list")
@@ -330,9 +344,19 @@ def _release_manifest_delta(
             continue
         source_rel = _normalize_path(str(entry.get("source_path") or ""))
         pages_rel = _normalize_path(str(entry.get("pages_path") or ""))
+        provenance_role = str(entry.get("provenance_role") or "").strip()
         if not source_rel or not pages_rel:
             errors.append(f"release manifest entry {index} requires source_path and pages_path")
             continue
+        if expected_schema == "food_line_release_manifest_v2":
+            if not provenance_role:
+                errors.append(f"release manifest entry {source_rel} requires provenance_role")
+                continue
+            if provenance_role not in {"generated_output", "source_input"}:
+                errors.append(f"release manifest entry {source_rel} has unsupported provenance_role: {provenance_role}")
+                continue
+        else:
+            provenance_role = provenance_role or "generated_output"
         if source_rel in seen_source or pages_rel in seen_pages:
             errors.append(f"release manifest contains a duplicate source or Pages path: {source_rel} -> {pages_rel}")
             continue
@@ -353,16 +377,34 @@ def _release_manifest_delta(
             errors.append(f"release manifest source file is missing: {source_rel}")
             continue
         actual_source_sha = _sha256_file(source_file)
-        if str(entry.get("source_sha256") or "").lower() != actual_source_sha:
-            errors.append(f"release manifest source SHA-256 mismatch: {source_rel}")
-        if source_commit and _git_commit_exists(source_root, source_commit):
-            source_bytes_at_commit = _git_file_bytes(source_root, source_commit, source_rel)
-            if source_bytes_at_commit is None:
-                errors.append(f"release manifest source file is missing at source_commit: {source_rel}")
-            else:
-                commit_source_sha = hashlib.sha256(source_bytes_at_commit).hexdigest()
-                if str(entry.get("source_sha256") or "").lower() != commit_source_sha:
-                    errors.append(f"release manifest source SHA-256 does not match {source_commit}: {source_rel}")
+        recorded_sha = str(entry.get("source_sha256") or "").lower()
+        if recorded_sha != actual_source_sha:
+            errors.append(
+                f"release manifest generated-output hash mismatch for {source_rel} "
+                f"(role={provenance_role or 'unknown'}, expected={recorded_sha}, actual={actual_source_sha})"
+            )
+        if provenance_role == "source_input":
+            if not source_commit:
+                errors.append(
+                    f"release manifest entry {source_rel} requires source_commit for source-input validation "
+                    f"(role=source_input)"
+                )
+            elif _git_commit_exists(source_root, source_commit):
+                source_bytes_at_commit = _git_file_bytes(source_root, source_commit, source_rel)
+                if source_bytes_at_commit is None:
+                    errors.append(
+                        f"release manifest source-input file is missing at source_commit for {source_rel} "
+                        f"(role=source_input, source_commit={source_commit})"
+                    )
+                else:
+                    commit_source_sha = _sha256_bytes(source_bytes_at_commit)
+                    if recorded_sha != commit_source_sha:
+                        errors.append(
+                            f"release manifest source-input hash mismatch for {source_rel} "
+                            f"(role=source_input, expected={recorded_sha}, actual={commit_source_sha}, source_commit={source_commit})"
+                        )
+        elif provenance_role != "generated_output":
+            errors.append(f"release manifest entry {source_rel} has unknown provenance_role: {provenance_role or '<missing>'}")
         target = pages_root / pages_rel if pages_root is not None else None
         if target is None or not target.exists():
             expected_action = "add"

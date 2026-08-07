@@ -14,7 +14,7 @@ APPROVED_DECISIONS = {"approve", "approve_with_edit"}
 ACCEPTED_FRESHNESS_STATUSES = {"current", "accepted", "within_window"}
 PROPOSAL_SCHEMA = "food_line_proposed_edition_v1"
 QUEUE_SCHEMA = "food_line_current_signal_review_v1"
-RELEASE_SCHEMA = "food_line_release_manifest_v1"
+RELEASE_SCHEMA = "food_line_release_manifest_v2"
 PUBLIC_RELEASE_STATUS_FIELD = "public_release_status"
 PAGES_RELEASE_STATUS_FIELD = "pages_release_status"
 PENDING_PUBLIC_RELEASE_STATUS = "not_published"
@@ -375,6 +375,7 @@ def build_release_manifest(
                 "source_path": source_rel,
                 "pages_path": pages_rel,
                 "action": action,
+                "provenance_role": "generated_output",
                 "source_sha256": source_sha,
                 "pages_sha256_before": target_sha,
             }

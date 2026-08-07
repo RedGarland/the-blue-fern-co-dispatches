@@ -171,21 +171,20 @@ def test_landing_page_links_and_blue_fern_scheme(built_site):
     nav = html.split("<nav>", 1)[1].split("</nav>", 1)[0]
     assert nav == (
         '<a href="/gaza/">Gaza</a>'
-        '<a href="/american-pressure/">American Pressure</a>'
         '<a href="/food-line/">Food Line Dispatch</a>'
+        '<a href="/care-line/">The Care Line Dispatch</a>'
     )
     assert 'href="/gaza/"' in nav
-    assert 'href="/american-pressure/"' in nav
     assert 'href="/food-line/"' in nav
+    assert 'href="/care-line/"' in nav
     assert 'href="/cascadia/"' not in nav
-    assert 'href="/care-line/"' not in nav
     assert html.count('class="dispatch-card"') == 3
-    assert 'href="/american-pressure/"' in html
+    assert 'href="/american-pressure/"' not in html
     assert "Dispatches From Gaza" in html
-    assert "The American Pressure Dispatch" in html
+    assert "The Care Line Dispatch" in html
     assert "Food Line Dispatch" in html
     card_grid = html.split('<ul class="dispatch-grid">', 1)[1].split("</ul>", 1)[0]
-    assert "The Care Line Dispatch" not in card_grid
+    assert "The Care Line Dispatch" in card_grid
     assert "The Cascadia Briefing" not in card_grid
     assert "Daily source-backed food insecurity pressure signals across the United States" in html
     assert '<img class="dispatch-card-logo" src="/food-line/assets/food-line-logo.png"' not in html
@@ -1561,7 +1560,7 @@ def test_pages_publish_copies_gaza_audio_and_feed_artifacts(built_site):
     assert (pages_repo / "gaza" / "audio" / "2026-05-31-transcript.html").exists()
     assert (pages_repo / "gaza" / "podcast.xml").exists()
     assert (pages_repo / "gaza" / "flash-briefing.json").exists()
-    assert (pages_repo / "index.html").read_text(encoding="utf-8") == "<html>Root home</html>"
+    assert (pages_repo / "index.html").read_text(encoding="utf-8") == (site_root / "index.html").read_text(encoding="utf-8")
     assert (pages_repo / "CNAME").read_text(encoding="utf-8").strip() == CNAME_VALUE
     assert not (pages_repo / "detail").exists()
     assert not (pages_repo / "paid").exists()

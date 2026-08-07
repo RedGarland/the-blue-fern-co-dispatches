@@ -1574,6 +1574,87 @@ def test_generate_audio_none_fails_before_generation(isolated, monkeypatch, caps
     assert any("real TTS provider" in error for error in summary["errors"])
 
 
+def test_dry_run_generate_audio_none_is_allowed_and_uses_audio_preview(isolated, monkeypatch, capsys):
+    root = isolated
+    write_manual_sources(root, "2026-05-07")
+    audio_calls: list[dict[str, object]] = []
+
+    class DummyAudio:
+        edition_date = "2026-05-07"
+        transcript_path = root / "output" / "site" / "gaza" / "audio" / "2026-05-07-transcript.html"
+        metadata_path = root / "output" / "site" / "gaza" / "audio" / "2026-05-07.json"
+        podcast_path = root / "output" / "site" / "gaza" / "audio" / "podcast.xml"
+        flash_briefing_path = root / "output" / "site" / "gaza" / "flash-briefing.json"
+        audio_status = "script_ready_no_audio_file"
+        audio_file = None
+        audio_url = None
+        tts_provider = "none"
+        tts_model = None
+        tts_voice = None
+        tts_error = None
+        story_count = 3
+
+    def fake_audio(*args, **kwargs):
+        _ = args
+        audio_calls.append(dict(kwargs))
+        return DummyAudio()
+
+    def fake_run(args, cwd=daily.ROOT):
+        command = " ".join(args)
+        if "run_gaza_dispatch.py" in command:
+            write_generated_output(root, "2026-05-07")
+            return completed(args, payload={"ok": True})
+        if "publish_github_pages.py" in command and "--dry-run" in args:
+            return completed(
+                args,
+                payload={
+                    "ok": True,
+                    "errors": [],
+                    "paid_detail_excluded_from_public": True,
+                    "target_pages_branch": "gh-pages",
+                },
+            )
+        if args[:3] == ["git", "status", "--porcelain=v1"]:
+            return completed(args, stdout="")
+        if args[:3] == ["git", "fetch", "origin"]:
+            return completed(args, stdout="fetched")
+        if args[:2] == ["git", "status"]:
+            return completed(args, stdout="On branch gh-pages")
+        if args[:2] == ["git", "rev-parse"] and args[-1] == "origin/gh-pages":
+            return completed(args, stdout="remote-sha")
+        if args[:2] == ["git", "ls-tree"]:
+            return completed(args, stdout=args[-1])
+        return completed(args, stdout="ok")
+
+    monkeypatch.setattr("bluefern_dispatches.gaza_audio.write_gaza_audio_outputs", fake_audio)
+    monkeypatch.setattr(daily, "run_command", fake_run)
+
+    code = daily.main(
+        [
+            "--date",
+            "2026-05-07",
+            "--dry-run",
+            "--skip-tests",
+            "--generate-audio",
+            "--tts-provider",
+            "none",
+            "--pages-repo",
+            str(root / "bluefern-dispatches-pages"),
+        ]
+    )
+
+    summary = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert audio_calls and audio_calls[0]["dry_run"] is True
+    assert audio_calls[0]["tts_provider"] == "none"
+    assert summary["ok"] is True
+    assert summary["pages_dry_run_ok"] is True
+    assert summary["publish_ok"] is True
+    assert summary["pages_repo_updated"] is False
+    assert not DummyAudio.transcript_path.exists()
+    assert not DummyAudio.metadata_path.exists()
+
+
 def test_dry_run_without_audio_refreshes_public_audio_surfaces(isolated, monkeypatch, capsys):
     root = isolated
     write_manual_sources(root, "2026-05-07")
@@ -1725,7 +1806,7 @@ def test_gaza_daily_operator_defaults_to_audio_generation_on_publish(isolated, m
     monkeypatch.setattr(operator, "_git_branch", lambda repo: "add/pages-repo-default" if repo == isolated else "gh-pages")
     monkeypatch.setattr(operator, "_validate_pages_repo", lambda pages_repo, pages_branch: (True, None))
     monkeypatch.setattr(operator, "_sync_pages_repo", lambda pages_repo, pages_branch: {"ok": True, "commands": []})
-    monkeypatch.setattr(operator, "validate_or_repair_manual_sources", lambda edition_date: {"ok": True, "status": "valid", "errors": []})
+    monkeypatch.setattr(operator, "validate_or_repair_manual_sources", lambda edition_date, repair=True: {"ok": True, "status": "valid", "errors": [], "write_performed": False, "repair": repair})
 
     def fake_daily(run_args: list[str]):
         captured["daily_args"] = run_args

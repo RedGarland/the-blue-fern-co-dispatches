@@ -1045,8 +1045,8 @@ def main(argv: list[str] | None = None) -> int:
         return pipeline_code
 
     tts_provider = str(args.tts_provider or "none").strip().lower()
-    if args.generate_audio and tts_provider == "none":
-        message = "audio generation requested but no real TTS provider is configured; set --tts-provider openai and OPENAI_API_KEY before rerunning."
+    if args.generate_audio and tts_provider == "none" and not args.dry_run:
+        message = "audio generation requested but no real TTS provider is configured for a live run; set --tts-provider openai and OPENAI_API_KEY before rerunning."
         summary["errors"].append(f"audio generation failed: {message}")
         summary["publish_blocked"] = True
         summary["publish_blocked_reason"] = "audio-generation-failed"

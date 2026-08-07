@@ -384,10 +384,10 @@ def validate_manual_source_records(records: list[dict[str, Any]]) -> list[str]:
     return errors
 
 
-def validate_or_repair_manual_sources(edition_date: str) -> dict[str, Any]:
+def validate_or_repair_manual_sources(edition_date: str, *, repair: bool = True) -> dict[str, Any]:
     path = manual_source_path(edition_date)
     if not path.exists():
-        return {"ok": True, "status": "not_present", "path": str(path), "changes": [], "errors": []}
+        return {"ok": True, "status": "not_present", "path": str(path), "changes": [], "errors": [], "write_performed": False}
     records = _load_manual_records(path)
     normalized, changes = normalize_manual_source_records(records, edition_date)
     errors = validate_manual_source_records(normalized)
@@ -404,15 +404,19 @@ def validate_or_repair_manual_sources(edition_date: str) -> dict[str, Any]:
                 break
         if missing_only:
             errors = validate_manual_source_records(normalized)
-    if changes and not errors:
+    write_performed = bool(changes and not errors and repair)
+    if write_performed:
         _write_manual_records(path, normalized)
+    status = "normalized" if write_performed else ("preview" if changes and not errors else ("valid" if not errors else "invalid"))
     return {
         "ok": not errors,
-        "status": "normalized" if changes and not errors else ("valid" if not errors else "invalid"),
+        "status": status,
         "path": str(path),
         "changes": changes,
         "errors": errors,
         "record_count": len(normalized),
+        "write_performed": write_performed,
+        "repair": repair,
     }
 
 
@@ -720,7 +724,7 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
         result["pages_repo_status_after"] = _git_status_branch(pages_repo) if pages_repo.exists() else None
         return result
 
-    manual_validation = validate_or_repair_manual_sources(args.date)
+    manual_validation = validate_or_repair_manual_sources(args.date, repair=not args.manual_source_check_only)
     result["manual_source_validation"] = manual_validation
     if not manual_validation["ok"]:
         result["operator_status"] = "MANUAL_SOURCE_INVALID"

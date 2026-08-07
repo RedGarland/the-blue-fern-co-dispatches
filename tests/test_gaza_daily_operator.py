@@ -48,7 +48,7 @@ def _stub_operator_success(monkeypatch: pytest.MonkeyPatch, *, pages_repo: Path)
     monkeypatch.setattr(operator, "_git_branch", lambda repo: "add/pages-repo-default" if repo == operator.ROOT else "gh-pages")
     monkeypatch.setattr(operator, "_validate_pages_repo", lambda pages_repo_arg, pages_branch: (True, None))
     monkeypatch.setattr(operator, "_sync_pages_repo", lambda pages_repo_arg, pages_branch: {"ok": True, "commands": []})
-    monkeypatch.setattr(operator, "validate_or_repair_manual_sources", lambda edition_date: {"ok": True, "status": "not_present", "errors": []})
+    monkeypatch.setattr(operator, "validate_or_repair_manual_sources", lambda edition_date, repair=True: {"ok": True, "status": "not_present", "errors": [], "write_performed": False, "repair": repair})
     monkeypatch.setattr(operator, "_clean_source_generated_artifacts", lambda: {"ok": True, "status": "cleaned", "commands": []})
     monkeypatch.setattr(operator, "_git_status_branch", lambda repo: "## clean")
     monkeypatch.setattr(
@@ -160,6 +160,76 @@ def test_manual_source_validation_accepts_bom_prefixed_json(isolated: Path) -> N
     assert result["status"] == "valid"
 
 
+def test_manual_source_check_only_is_read_only_and_reports_preview(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    manual_path = write_manual_sources(
+        isolated,
+        "2026-06-26",
+        [
+            {
+                "title": "Aid access update",
+                "url": "https://valid.test/gaza-aid",
+                "publisher": "Reuters",
+                "published_at": "2026-06-26T08:00:00Z",
+                "summary_or_snippet": "Source-backed update.",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "humanitarian",
+                "reliability_tier": "reported-public-source",
+            }
+        ],
+    )
+    original_text = manual_path.read_text(encoding="utf-8")
+    args = operator.parse_args(["--date", "2026-06-26", "--manual-source-check-only", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
+    monkeypatch.setattr(operator, "_git_status_lines", lambda repo: [])
+    monkeypatch.setattr(operator, "_git_branch", lambda repo: "add/pages-repo-default" if repo == operator.ROOT else "gh-pages")
+    monkeypatch.setattr(operator, "_validate_pages_repo", lambda pages_repo_arg, pages_branch: (True, None))
+    monkeypatch.setattr(operator, "_sync_pages_repo", lambda pages_repo_arg, pages_branch: {"ok": True, "commands": []})
+    monkeypatch.setattr(operator, "_git_status_branch", lambda repo: "## clean")
+
+    result = operator.run_operator(args)
+
+    assert result["ok"] is True
+    assert result["operator_status"] == "MANUAL_SOURCE_VALID"
+    validation = result["manual_source_validation"]
+    assert validation["ok"] is True
+    assert validation["status"] == "preview"
+    assert validation["write_performed"] is False
+    assert "source record 1: added source_record_id" in validation["changes"]
+    assert "source record 1: added retrieved_at" in validation["changes"]
+    assert manual_path.read_text(encoding="utf-8") == original_text
+
+
+def test_manual_source_repair_mode_still_writes_normalized_fields(isolated: Path) -> None:
+    manual_path = write_manual_sources(
+        isolated,
+        "2026-06-26",
+        [
+            {
+                "title": "Aid access update",
+                "url": "https://valid.test/gaza-aid",
+                "publisher": "Reuters",
+                "published_at": "2026-06-26T08:00:00Z",
+                "summary_or_snippet": "Source-backed update.",
+                "source_type": "news",
+                "region_scope": "Gaza",
+                "category_hint": "humanitarian",
+                "reliability_tier": "reported-public-source",
+            }
+        ],
+    )
+    original_text = manual_path.read_text(encoding="utf-8")
+
+    result = operator.validate_or_repair_manual_sources("2026-06-26", repair=True)
+
+    assert result["ok"] is True
+    assert result["status"] == "normalized"
+    assert result["write_performed"] is True
+    assert manual_path.read_text(encoding="utf-8") != original_text
+    written = json.loads(manual_path.read_text(encoding="utf-8"))
+    assert written[0]["source_record_id"] == "gaza-src-2026-06-26-001"
+    assert written[0]["retrieved_at"] == "2026-06-26T08:00:00Z"
+
+
 def test_no_publishable_source_run_is_operator_success(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     args = operator.parse_args(["--date", "2026-06-26", "--skip-audio", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
     _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
@@ -226,7 +296,7 @@ def test_run_operator_blocks_when_pages_repo_is_already_ahead(isolated: Path, mo
         },
     )
     monkeypatch.setattr(operator, "_sync_pages_repo", lambda pages_repo, pages_branch: (_ for _ in ()).throw(AssertionError("sync should not run")))
-    monkeypatch.setattr(operator, "validate_or_repair_manual_sources", lambda edition_date: (_ for _ in ()).throw(AssertionError("manual validation should not run")))
+    monkeypatch.setattr(operator, "validate_or_repair_manual_sources", lambda edition_date, repair=True: (_ for _ in ()).throw(AssertionError("manual validation should not run")))
     monkeypatch.setattr(operator, "_capture_daily_run", lambda run_args: (_ for _ in ()).throw(AssertionError("daily generation should not run")))
 
     result = operator.run_operator(args)

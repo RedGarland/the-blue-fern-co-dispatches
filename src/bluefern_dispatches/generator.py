@@ -1262,7 +1262,10 @@ def public_edition_manifest(site_root: Path, slug: str, edition_date: str) -> di
     return payload if isinstance(payload, dict) else {}
 
 
-def _pages_repo_root_for_site_root(site_root: Path) -> Path | None:
+def _pages_repo_root_for_site_root(site_root: Path, pages_repo: Path | None = None) -> Path | None:
+    if pages_repo is not None:
+        resolved_pages_repo = pages_repo.resolve()
+        return resolved_pages_repo if resolved_pages_repo.exists() else None
     try:
         repo_root = site_root.parents[1]
     except IndexError:
@@ -1271,10 +1274,10 @@ def _pages_repo_root_for_site_root(site_root: Path) -> Path | None:
     return pages_repo if pages_repo.exists() else None
 
 
-def _gaza_public_edition_dirs(site_root: Path) -> list[Path]:
+def _gaza_public_edition_dirs(site_root: Path, pages_repo: Path | None = None) -> list[Path]:
     editions_root = site_root / "gaza" / "editions"
     roots = [editions_root]
-    pages_repo = _pages_repo_root_for_site_root(site_root)
+    pages_repo = _pages_repo_root_for_site_root(site_root, pages_repo)
     if pages_repo is not None:
         pages_editions_root = pages_repo / "gaza" / "editions"
         if pages_editions_root.resolve(strict=False) not in {root.resolve(strict=False) for root in roots}:
@@ -1282,9 +1285,9 @@ def _gaza_public_edition_dirs(site_root: Path) -> list[Path]:
     return [root for root in roots if root.exists()]
 
 
-def _gaza_public_edition_is_listable(site_root: Path, edition_date: str) -> bool:
+def _gaza_public_edition_is_listable(site_root: Path, edition_date: str, pages_repo: Path | None = None) -> bool:
     repo_root = site_root.parents[1]
-    pages_repo = _pages_repo_root_for_site_root(site_root)
+    pages_repo = _pages_repo_root_for_site_root(site_root, pages_repo)
     candidate_dirs = [site_root / "gaza" / "editions" / edition_date]
     if pages_repo is not None:
         candidate_dirs.append(pages_repo / "gaza" / "editions" / edition_date)
@@ -1360,14 +1363,15 @@ def _extract_gaza_audio_feed_dates(text: str) -> set[str]:
     return set(GAZA_AUDIO_PODCAST_DATE_RE.findall(text))
 
 
-def _gaza_public_surface_date_sets(public_root: Path) -> dict[str, set[str]]:
+def _gaza_public_surface_date_sets(public_root: Path, *, audio_root: Path | None = None) -> dict[str, set[str]]:
     gaza_root = public_root / "gaza"
+    audio_source_root = audio_root if audio_root is not None else gaza_root
     surface_paths: dict[str, tuple[Path, Any]] = {
         "gaza/archive.html": (gaza_root / "archive.html", _extract_gaza_public_history_dates),
         "gaza/rss.xml": (gaza_root / "rss.xml", _extract_gaza_public_history_dates),
-        "gaza/audio/index.html": (gaza_root / "audio" / "index.html", _extract_gaza_audio_index_dates),
-        "gaza/audio/podcast.xml": (gaza_root / "audio" / "podcast.xml", _extract_gaza_audio_feed_dates),
-        "gaza/podcast.xml": (gaza_root / "podcast.xml", _extract_gaza_audio_feed_dates),
+        "gaza/audio/index.html": (audio_source_root / "audio" / "index.html", _extract_gaza_audio_index_dates),
+        "gaza/audio/podcast.xml": (audio_source_root / "audio" / "podcast.xml", _extract_gaza_audio_feed_dates),
+        "gaza/podcast.xml": (audio_source_root / "podcast.xml", _extract_gaza_audio_feed_dates),
     }
     result: dict[str, set[str]] = {}
     for surface, (path, extractor) in surface_paths.items():
@@ -1375,10 +1379,15 @@ def _gaza_public_surface_date_sets(public_root: Path) -> dict[str, set[str]]:
     return result
 
 
-def _gaza_public_surface_history_diagnostics(previous_root: Path, current_root: Path) -> list[dict[str, Any]]:
+def _gaza_public_surface_history_diagnostics(
+    previous_root: Path,
+    current_root: Path,
+    *,
+    current_audio_root: Path | None = None,
+) -> list[dict[str, Any]]:
     diagnostics: list[dict[str, Any]] = []
     previous = _gaza_public_surface_date_sets(previous_root)
-    current = _gaza_public_surface_date_sets(current_root)
+    current = _gaza_public_surface_date_sets(current_root, audio_root=current_audio_root)
     for surface in sorted(previous.keys() | current.keys()):
         before_dates = previous.get(surface, set())
         after_dates = current.get(surface, set())
@@ -1529,7 +1538,12 @@ def render_edition_list_item(site_root: Path, dispatch: DispatchConfig, date: st
     )
 
 
-def discover_public_edition_dates(site_root: Path, slug: str, max_edition_date: str | None = None) -> list[str]:
+def discover_public_edition_dates(
+    site_root: Path,
+    slug: str,
+    max_edition_date: str | None = None,
+    pages_repo: Path | None = None,
+) -> list[str]:
     editions_root = site_root / slug / "editions"
     if not editions_root.exists():
         return []
@@ -1550,7 +1564,7 @@ def discover_public_edition_dates(site_root: Path, slug: str, max_edition_date: 
         return [edition_date for edition_date, _ in sorted(dated, key=lambda row: (row[1], row[0]), reverse=True)]
     if slug == "gaza":
         dated: set[str] = set()
-        for candidate_root in _gaza_public_edition_dirs(site_root):
+        for candidate_root in _gaza_public_edition_dirs(site_root, pages_repo):
             for path in candidate_root.iterdir():
                 if path.is_dir() and len(path.name) == 10:
                     dated.add(path.name)
@@ -1559,7 +1573,7 @@ def discover_public_edition_dates(site_root: Path, slug: str, max_edition_date: 
                 edition_date
                 for edition_date in dated
                 if (not max_edition_date or edition_date <= max_edition_date)
-                and _gaza_public_edition_is_listable(site_root, edition_date)
+                and _gaza_public_edition_is_listable(site_root, edition_date, pages_repo)
             ),
             reverse=True,
         )
@@ -1749,7 +1763,7 @@ def reconcile_gaza_public_editions(
 
     archive_entries = [
         {"edition_date": date}
-        for date in discover_public_edition_dates(site_root, "gaza")
+        for date in discover_public_edition_dates(site_root, "gaza", pages_repo=pages_repo)
     ]
     return {
         "discovered": discovered,
@@ -2400,8 +2414,8 @@ def build_site(
         pages_repo=pages_repo.resolve() if pages_repo is not None else None,
     )
 
-    # Keep root landing cards stable across scoped publishes.
-    write_text(site_root / "index.html", render_root(all_dispatches), dry_run, wrote)
+    if not only_dispatches:
+        write_text(site_root / "index.html", render_root(all_dispatches), dry_run, wrote)
     public_max_dates = public_max_dates or {}
     for dispatch in dispatches:
         max_public_date = public_max_dates.get(dispatch.slug)
@@ -3584,16 +3598,21 @@ def publish_pages(
     gaza_surface_error_messages: list[str] = []
     gaza_scope_selected = (not only_dispatches) or ("gaza" in only_dispatches)
     if gaza_scope_selected:
+        gaza_audio_root = None
+        site_gaza_audio_root = site_root / "gaza" / "audio"
+        pages_gaza_audio_root = pages_repo / "gaza" / "audio"
+        if not site_gaza_audio_root.exists() and pages_gaza_audio_root.exists():
+            gaza_audio_root = pages_repo / "gaza"
         gaza_homepage_guard = _gaza_homepage_recent_edition_guard(
             _read_text_if_exists(pages_repo / "gaza" / "index.html"),
             _read_text_if_exists(site_root / "gaza" / "index.html"),
-            discover_public_edition_dates(site_root, "gaza"),
+            discover_public_edition_dates(site_root, "gaza", pages_repo=pages_repo),
             allow_listing_shrink=allow_listing_shrink,
         )
         if not gaza_homepage_guard["ok"]:
             guard_reasons = "; ".join(str(item) for item in gaza_homepage_guard.get("reasons") or []) or "no specific reason recorded"
             errors.append(f"gaza homepage recent-editions guard blocked publish: {guard_reasons}")
-        gaza_history_diagnostics = _gaza_public_surface_history_diagnostics(pages_repo, site_root)
+        gaza_history_diagnostics = _gaza_public_surface_history_diagnostics(pages_repo, site_root, current_audio_root=gaza_audio_root)
         for report in gaza_history_diagnostics:
             if report["dropped_dates"] and not allow_listing_shrink:
                 surface = str(report.get("surface") or "gaza surface")

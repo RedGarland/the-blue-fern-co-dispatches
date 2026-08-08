@@ -104,6 +104,11 @@ def copy_care_line_data(repo: Path, work: Path) -> None:
     shutil.copytree(source_root, target_root)
 
 
+def copy_tree_if_exists(src: Path, dst: Path) -> None:
+    if src.exists():
+        shutil.copytree(src, dst, dirs_exist_ok=True)
+
+
 @pytest.fixture(scope="session")
 def built_site_template(tmp_path_factory):
     import os
@@ -434,7 +439,7 @@ def test_build_does_not_publish_synthetic_current_cascadia_edition(monkeypatch):
     )
     add_cascadia_site_edition(work / "output" / "site", "2026-05-03")
     add_cascadia_dispatch_edition(work, "2026-05-03")
-    monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-05-11")
+    monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-05-12")
 
     result = build_site(work, dry_run=False, backup_root=work / "backup")
 
@@ -643,6 +648,107 @@ def write_min_food_line_public_edition(
         json.dumps([{"story_id": f"food-story-{edition_date}", "source_ids": [f"food-src-{edition_date}"]}], indent=2),
         encoding="utf-8",
     )
+    return edition_dir
+
+
+def write_min_food_line_dispatch_edition(
+    root: Path,
+    edition_date: str,
+) -> Path:
+    edition_dir = root / "output" / "dispatches" / "food-line" / "editions" / edition_date
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    (edition_dir / "index.html").write_text("<html><body>Food Line dispatch edition</body></html>", encoding="utf-8")
+    (edition_dir / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "food-line",
+                "edition_date": edition_date,
+                "public_rendered": True,
+                "edition_mode": "current_update",
+                "source_freshness_status": "passed",
+                "freshness_window_days": 3,
+                "stale_public_story_count": 0,
+                "excluded_stale_source_count": 0,
+                "stale_source_ids": [],
+                "qualified_primary_count": 1,
+                "skip_reason": "",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (edition_dir / "sources_manifest.json").write_text(
+        json.dumps([{"source_record_id": "food-src-2026-06-01", "title": "Source", "url": "https://example.com"}], indent=2),
+        encoding="utf-8",
+    )
+    (edition_dir / "curation_manifest.json").write_text(
+        json.dumps([{"story_id": "food-story-2026-06-01", "source_ids": ["food-src-2026-06-01"]}], indent=2),
+        encoding="utf-8",
+    )
+    return edition_dir
+
+
+def write_min_care_line_public_edition(
+    root: Path,
+    edition_date: str,
+    *,
+    body_html: str = "<html><body>Care Line edition</body></html>",
+) -> Path:
+    edition_dir = root / "care-line" / "editions" / edition_date
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    (edition_dir / "index.html").write_text(body_html, encoding="utf-8")
+    (edition_dir / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "care-line",
+                "edition_date": edition_date,
+                "public_rendered": True,
+                "edition_mode": "current_update",
+                "source_freshness_status": "passed",
+                "freshness_window_days": 14,
+                "stale_public_story_count": 0,
+                "excluded_stale_source_count": 0,
+                "stale_source_ids": [],
+                "qualified_primary_count": 1,
+                "skip_reason": "",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (edition_dir / "source_table.html").write_text("<html><body>source table</body></html>", encoding="utf-8")
+    (edition_dir / "claim_ledger.html").write_text("<html><body>claim ledger</body></html>", encoding="utf-8")
+    return edition_dir
+
+
+def write_min_care_line_dispatch_edition(
+    root: Path,
+    edition_date: str,
+) -> Path:
+    edition_dir = root / "output" / "dispatches" / "care-line" / "editions" / edition_date
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    (edition_dir / "index.html").write_text("<html><body>Care Line dispatch edition</body></html>", encoding="utf-8")
+    (edition_dir / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "care-line",
+                "edition_date": edition_date,
+                "public_rendered": True,
+                "edition_mode": "current_update",
+                "source_freshness_status": "passed",
+                "freshness_window_days": 14,
+                "stale_public_story_count": 0,
+                "excluded_stale_source_count": 0,
+                "stale_source_ids": [],
+                "qualified_primary_count": 1,
+                "skip_reason": "",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (edition_dir / "source_table.html").write_text("<html><body>source table</body></html>", encoding="utf-8")
+    (edition_dir / "claim_ledger.html").write_text("<html><body>claim ledger</body></html>", encoding="utf-8")
     return edition_dir
 
 
@@ -1591,6 +1697,97 @@ def test_pages_publish_rejects_gaza_history_shrink_on_archive_and_audio_surfaces
     assert any(item["surface"] == "gaza/audio/index.html" and item["dropped_dates"] == ["2026-07-03"] for item in result["gaza_public_surface_history"])
 
 
+def test_pages_publish_preserves_gaza_audio_history_from_explicit_pages_repo_when_source_has_no_audio(
+    tmp_path,
+    monkeypatch,
+):
+    work = tmp_path / "repo"
+    work.mkdir()
+    copy_repo_assets(Path(__file__).parent.parent, work)
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    (pages_repo / "CNAME").write_text("dispatches.thebluefernco.com\n", encoding="utf-8")
+    (pages_repo / "index.html").write_text("<html>Root</html>", encoding="utf-8")
+    site_root = work / "output" / "site"
+    site_root.mkdir(parents=True, exist_ok=True)
+    (site_root / "index.html").write_text("<html>Home</html>", encoding="utf-8")
+    site_dates = [
+        "2026-08-07",
+        "2026-08-05",
+        "2026-08-04",
+        "2026-08-03",
+        "2026-08-01",
+        "2026-07-31",
+        "2026-07-30",
+        "2026-07-29",
+        "2026-07-28",
+        "2026-07-27",
+    ]
+    homepage_items = "".join(
+        f'<li class="edition-item"><span class="edition-date">{date_text}</span><a href="editions/{date_text}/">Edition</a></li>'
+        for date_text in site_dates
+    )
+    gaza_root = site_root / "gaza"
+    gaza_root.mkdir(parents=True, exist_ok=True)
+    (gaza_root / "index.html").write_text(f'<html><body><ul class="edition-list">{homepage_items}</ul></body></html>', encoding="utf-8")
+    archive_links = "".join(f'<a href="editions/{date_text}/">{date_text}</a>' for date_text in site_dates)
+    (gaza_root / "archive.html").write_text(f"<html><body>{archive_links}</body></html>", encoding="utf-8")
+    rss_items = "".join(f"<item><link>https://dispatches.thebluefernco.com/gaza/editions/{date_text}/</link></item>" for date_text in site_dates)
+    (gaza_root / "rss.xml").write_text(f"<rss><channel>{rss_items}</channel></rss>", encoding="utf-8")
+    add_gaza_site_edition(site_root, "2026-08-07")
+    add_gaza_public_history_surface(
+        pages_repo,
+        [
+            "2026-08-05",
+            "2026-08-04",
+            "2026-08-03",
+            "2026-08-01",
+            "2026-07-31",
+            "2026-07-30",
+            "2026-07-29",
+            "2026-07-28",
+            "2026-07-27",
+            "2026-07-26",
+        ],
+        archive_dates=["2026-08-07"],
+        audio_dates=["2026-08-05", "2026-08-04", "2026-08-03", "2026-08-01", "2026-07-31", "2026-07-30", "2026-07-29", "2026-07-28", "2026-07-27", "2026-07-26"],
+    )
+    add_gaza_site_edition(pages_repo, "2026-08-07")
+    audio_root = pages_repo / "gaza" / "audio"
+    audio_root.mkdir(parents=True, exist_ok=True)
+    backup_root = work / "backups"
+
+    def fake_build_site(*args, **kwargs):
+        return {
+            "ok": True,
+            "warnings": [],
+            "errors": [],
+            "backfilled_public_editions": [],
+            "gaza_editions_discovered": [],
+            "gaza_editions_backfilled": [],
+            "gaza_editions_skipped": [],
+            "gaza_archive_entries_written": [{"edition_date": "2026-08-07"}],
+        }
+
+    monkeypatch.setattr(generator, "build_site", fake_build_site)
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        only_dispatches=("gaza",),
+    )
+
+    assert result["ok"] is True
+    assert result["gaza_homepage_recent_edition_guard"]["decision"] == "allowed"
+    assert result["gaza_homepage_recent_edition_guard"]["added_dates"] == ["2026-08-07"]
+    assert result["gaza_homepage_recent_edition_guard"]["removed_dates"] == ["2026-07-26"]
+    assert any(item["surface"] == "gaza/audio/index.html" and not item["dropped_dates"] for item in result["gaza_public_surface_history"])
+
+
 def test_pages_publish_allows_normal_gaza_homepage_rotation(tmp_path, monkeypatch):
     work = tmp_path / "repo"
     work.mkdir()
@@ -1757,6 +1954,67 @@ def test_pages_publish_rejects_gaza_homepage_missing_latest_expected_date(tmp_pa
     assert result["ok"] is False
     assert result["gaza_homepage_recent_edition_guard"]["decision"] == "blocked"
     assert any("latest expected edition date" in reason for reason in result["gaza_homepage_recent_edition_guard"]["reasons"])
+
+
+def test_pages_publish_uses_explicit_pages_repo_for_gaza_homepage_history(tmp_path, monkeypatch):
+    work = tmp_path / "repo"
+    work.mkdir()
+    copy_repo_assets(Path(__file__).parent.parent, work)
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    (pages_repo / "CNAME").write_text("dispatches.thebluefernco.com\n", encoding="utf-8")
+    (pages_repo / "index.html").write_text("<html>Root</html>", encoding="utf-8")
+    site_root = work / "output" / "site"
+    site_root.mkdir(parents=True, exist_ok=True)
+    (site_root / "index.html").write_text("<html>Home</html>", encoding="utf-8")
+    prior_dates = [
+        "2026-08-05",
+        "2026-08-04",
+        "2026-08-03",
+        "2026-08-01",
+        "2026-07-31",
+        "2026-07-30",
+        "2026-07-29",
+        "2026-07-28",
+        "2026-07-27",
+        "2026-07-26",
+    ]
+    add_gaza_public_history_surface(site_root, [
+        "2026-08-07",
+        "2026-08-05",
+        "2026-08-04",
+        "2026-08-03",
+        "2026-08-01",
+        "2026-07-31",
+        "2026-07-30",
+        "2026-07-29",
+        "2026-07-28",
+        "2026-07-27",
+    ], archive_dates=prior_dates, audio_dates=prior_dates)
+    add_gaza_site_edition(site_root, "2026-08-07")
+    add_gaza_public_history_surface(pages_repo, prior_dates, archive_dates=prior_dates, audio_dates=prior_dates)
+    add_gaza_site_edition(pages_repo, "2026-08-05")
+
+    monkeypatch.setattr(
+        generator,
+        "build_site",
+        lambda *args, **kwargs: {
+            "ok": True,
+            "warnings": [],
+            "errors": [],
+            "backfilled_public_editions": [],
+            "gaza_editions_discovered": [],
+            "gaza_editions_backfilled": [],
+            "gaza_editions_skipped": [],
+            "gaza_archive_entries_written": [{"edition_date": "2026-08-07"}],
+        },
+    )
+
+    result = publish_pages(work, pages_repo, None, dry_run=False, commit=False, no_push=True, backup_root=work / "backups", only_dispatches=("gaza",))
+
+    assert result["ok"] is True
+    assert result["gaza_homepage_recent_edition_guard"]["decision"] == "allowed"
+    assert result["gaza_homepage_recent_edition_guard"]["new_dates"][0] == "2026-08-07"
+    assert result["gaza_homepage_recent_edition_guard"]["removed_dates"] == ["2026-07-26"]
 
 
 def test_pages_publish_allows_gaza_homepage_shrink_with_explicit_override(tmp_path, monkeypatch):
@@ -2375,6 +2633,61 @@ def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch):
     assert "Dispatches From Gaza" in root_index
     assert "Food Line Dispatch" in root_index
     assert "The American Pressure Dispatch" in root_index
+
+
+@pytest.mark.parametrize(
+    ("dispatch_slug", "stale_html"),
+    [
+        (
+            "gaza",
+            "<html><body>stale gaza homepage</body></html>",
+        ),
+        (
+            "food-line",
+            "<html><body>stale food-line homepage</body></html>",
+        ),
+        (
+            "care-line",
+            "<html><body>stale care-line homepage</body></html>",
+        ),
+    ],
+)
+def test_scoped_build_preserves_modern_root_homepage(dispatch_slug, stale_html, built_site):
+    work, _, _ = built_site
+    repo = Path(__file__).parent.parent
+    site_root = work / "output" / "site"
+    root_index = site_root / "index.html"
+    original_root = '<!doctype html>\n<html><body><main>Latest published developments</main></body></html>\n'
+    root_index.write_text(original_root, encoding="utf-8")
+    scoped_index = site_root / dispatch_slug / "index.html"
+    scoped_index.parent.mkdir(parents=True, exist_ok=True)
+    scoped_index.write_text(stale_html, encoding="utf-8")
+    if dispatch_slug == "food-line":
+        copy_tree_if_exists(repo / "output" / "site" / "food-line", work / "output" / "site" / "food-line")
+        copy_tree_if_exists(repo / "output" / "dispatches" / "food-line", work / "output" / "dispatches" / "food-line")
+        write_min_food_line_public_edition(site_root, "2026-06-01")
+        write_min_food_line_dispatch_edition(work, "2026-06-01")
+    if dispatch_slug == "care-line":
+        copy_tree_if_exists(repo / "output" / "site" / "care-line", work / "output" / "site" / "care-line")
+        copy_tree_if_exists(repo / "output" / "dispatches" / "care-line", work / "output" / "dispatches" / "care-line")
+        write_min_care_line_public_edition(site_root, "2026-05-23")
+        write_min_care_line_dispatch_edition(work, "2026-05-23")
+    if dispatch_slug == "gaza":
+        add_gaza_site_edition(site_root, "2026-08-07")
+
+    result = build_site(work, dry_run=False, backup_root=work / "backup", only_dispatches=(dispatch_slug,))
+
+    assert root_index.read_text(encoding="utf-8") == original_root
+    assert scoped_index.read_text(encoding="utf-8") != stale_html
+    if dispatch_slug == "gaza":
+        assert "Dispatches From Gaza" in scoped_index.read_text(encoding="utf-8")
+    elif dispatch_slug == "food-line":
+        assert "Food Line Dispatch" in scoped_index.read_text(encoding="utf-8")
+        assert (work / "output" / "dispatches" / "food-line" / "editions" / "2026-06-01" / "index.html").exists()
+    else:
+        assert "The Care Line Dispatch" in scoped_index.read_text(encoding="utf-8")
+        assert (work / "output" / "dispatches" / "care-line" / "editions" / "2026-05-23" / "index.html").exists()
+    assert "Latest published developments" in root_index.read_text(encoding="utf-8")
 
 
 def test_targeted_ap_publish_refreshes_map_date_label_and_payload(built_site):

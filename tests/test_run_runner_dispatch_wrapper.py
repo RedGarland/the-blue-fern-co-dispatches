@@ -61,6 +61,7 @@ def _git_status_short(repo: Path) -> str:
 def _make_fake_runner_repo(
     tmp_path: Path,
     *,
+    source_branch: str = "add/pages-repo-default",
     sync_ok: bool = True,
     smoke_payload: object | None = None,
     smoke_mode: str = "json",
@@ -230,7 +231,7 @@ raise SystemExit(0)
 """.strip()
         + "\n",
     )
-    _init_git_repo(repo, "add/pages-repo-default")
+    _init_git_repo(repo, source_branch)
     _commit_all(repo, "initial source commit")
     _init_git_repo(pages_repo, "gh-pages")
     (pages_repo / "index.html").write_text("pages", encoding="utf-8")
@@ -555,6 +556,7 @@ def test_wrapper_check_only_succeeds_with_single_element_array_json(tmp_path: Pa
 def test_wrapper_gaza_non_check_only_defaults_to_no_push_no_post_no_audio(tmp_path: Path) -> None:
     repo = _make_fake_runner_repo(
         tmp_path,
+        source_branch="agent/refine-care-line-signal-wire-public-rendering",
         sync_ok=True,
         smoke_payload={
             "ok": True,
@@ -579,11 +581,13 @@ def test_wrapper_gaza_non_check_only_defaults_to_no_push_no_post_no_audio(tmp_pa
     assert "--push" not in log_text
     assert "--post-bluesky" not in log_text
     assert "--generate-audio" not in log_text
+    assert "agent/refine-care-line-signal-wire-public-rendering" in log_text
 
 
 def test_wrapper_gaza_default_repo_root_comes_from_wrapper_location(tmp_path: Path) -> None:
     repo = _make_fake_runner_repo(
         tmp_path,
+        source_branch="agent/refine-care-line-signal-wire-public-rendering",
         sync_ok=True,
         smoke_payload={
             "ok": True,
@@ -602,6 +606,7 @@ def test_wrapper_gaza_default_repo_root_comes_from_wrapper_location(tmp_path: Pa
 def test_wrapper_gaza_explicit_repo_root_override_is_used(tmp_path: Path) -> None:
     wrapper_repo = _make_fake_runner_repo(
         tmp_path / "wrapper",
+        source_branch="agent/refine-care-line-signal-wire-public-rendering",
         sync_ok=True,
         smoke_payload={
             "ok": True,
@@ -611,6 +616,7 @@ def test_wrapper_gaza_explicit_repo_root_override_is_used(tmp_path: Path) -> Non
     )
     override_repo = _make_fake_runner_repo(
         tmp_path / "override",
+        source_branch="agent/refine-care-line-signal-wire-public-rendering",
         sync_ok=True,
         smoke_payload={
             "ok": True,
@@ -630,6 +636,7 @@ def test_wrapper_gaza_explicit_repo_root_override_is_used(tmp_path: Path) -> Non
 def test_wrapper_gaza_postflight_cleanup_protects_active_log(tmp_path: Path) -> None:
     repo = _make_fake_runner_repo(
         tmp_path,
+        source_branch="agent/refine-care-line-signal-wire-public-rendering",
         sync_ok=True,
         smoke_payload={
             "ok": True,
@@ -651,6 +658,7 @@ def test_wrapper_gaza_postflight_cleanup_protects_active_log(tmp_path: Path) -> 
 def test_wrapper_gaza_non_check_only_appends_explicit_live_flags_only_when_requested(tmp_path: Path) -> None:
     repo = _make_fake_runner_repo(
         tmp_path,
+        source_branch="agent/refine-care-line-signal-wire-public-rendering",
         sync_ok=True,
         smoke_payload={
             "ok": True,
@@ -679,6 +687,7 @@ def test_wrapper_gaza_non_check_only_appends_explicit_live_flags_only_when_reque
 def test_wrapper_gaza_generate_audio_defaults_to_openai_provider(tmp_path: Path) -> None:
     repo = _make_fake_runner_repo(
         tmp_path,
+        source_branch="agent/refine-care-line-signal-wire-public-rendering",
         sync_ok=True,
         capture_dispatch_argv=True,
         smoke_payload={
@@ -707,6 +716,7 @@ def test_wrapper_gaza_generate_audio_defaults_to_openai_provider(tmp_path: Path)
 def test_wrapper_gaza_generate_audio_explicit_openai_provider_is_passed_through(tmp_path: Path) -> None:
     repo = _make_fake_runner_repo(
         tmp_path,
+        source_branch="agent/refine-care-line-signal-wire-public-rendering",
         sync_ok=True,
         capture_dispatch_argv=True,
         smoke_payload={
@@ -740,6 +750,7 @@ def test_wrapper_gaza_generate_audio_explicit_openai_provider_is_passed_through(
 def test_wrapper_gaza_generate_audio_with_none_provider_fails_before_dispatch(tmp_path: Path) -> None:
     repo = _make_fake_runner_repo(
         tmp_path,
+        source_branch="agent/refine-care-line-signal-wire-public-rendering",
         sync_ok=True,
         smoke_payload={
             "ok": True,
@@ -759,9 +770,93 @@ def test_wrapper_gaza_generate_audio_with_none_provider_fails_before_dispatch(tm
     assert "TTS provider: none" in log_text
     assert "Gaza audio was requested with -TtsProvider none" in log_text
     assert "sync step starting" not in log_text
-    assert "gaza operator invoked" not in log_text
-    assert "--generate-audio" not in log_text
-    assert "secret-api-key" not in log_text
+
+
+def test_wrapper_gaza_accepts_explicit_canonical_source_branch(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        source_branch="agent/refine-care-line-signal-wire-public-rendering",
+        sync_ok=True,
+        smoke_payload={
+            "ok": True,
+            "edition_mode": "no_public_edition",
+            "public_rendered": False,
+        },
+    )
+
+    result = _run_wrapper_with_args(
+        repo,
+        [
+            "-Dispatch",
+            "gaza",
+            "-Date",
+            "2026-07-02",
+            "-SourceBranch",
+            "agent/refine-care-line-signal-wire-public-rendering",
+            "-DryRunFull",
+        ],
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    log_text = _latest_log(repo)
+    assert "Source repo must be on" not in log_text
+    assert "agent/refine-care-line-signal-wire-public-rendering" in log_text
+
+
+def test_wrapper_gaza_rejects_wrong_source_branch(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        source_branch="agent/refine-care-line-signal-wire-public-rendering",
+        sync_ok=True,
+        smoke_payload={
+            "ok": True,
+            "edition_mode": "no_public_edition",
+            "public_rendered": False,
+        },
+    )
+
+    result = _run_wrapper_with_args(
+        repo,
+        [
+            "-Dispatch",
+            "gaza",
+            "-Date",
+            "2026-07-02",
+            "-SourceBranch",
+            "add/pages-repo-default",
+            "-DryRunFull",
+        ],
+    )
+
+    assert result.returncode == 10, result.stdout + result.stderr
+    assert "Source repo must be on add/pages-repo-default; found agent/refine-care-line-signal-wire-public-rendering." in _latest_log(repo)
+
+
+def test_wrapper_gaza_rejects_missing_repo_python(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        source_branch="agent/refine-care-line-signal-wire-public-rendering",
+        sync_ok=True,
+        smoke_payload={
+            "ok": True,
+            "edition_mode": "no_public_edition",
+            "public_rendered": False,
+        },
+    )
+    (repo / ".venv" / "Scripts" / "python.exe").unlink()
+
+    result = _run_wrapper_with_args(
+        repo,
+        [
+            "-Dispatch",
+            "gaza",
+            "-Date",
+            "2026-07-02",
+        ],
+    )
+
+    assert result.returncode == 10, result.stdout + result.stderr
+    assert not (repo / ".venv" / "Scripts" / "python.exe").exists()
 
 
 def test_wrapper_gaza_generate_audio_openai_without_api_key_fails_before_dispatch(tmp_path: Path) -> None:

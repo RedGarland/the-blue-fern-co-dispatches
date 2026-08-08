@@ -5,7 +5,7 @@ param(
     [string]$Date = "",
     [string]$RepoRoot = "",
     [string]$PagesRepo = "",
-    [string]$SourceBranch = "add/pages-repo-default",
+    [string]$SourceBranch = "",
     [string]$PagesBranch = "gh-pages",
     [string]$CredentialTarget = "bluefern-smtp",
     [switch]$CheckOnly,
@@ -670,6 +670,17 @@ try {
     }
 
     Set-Location $RepoRoot
+
+    if ($Dispatch -eq "gaza" -and [string]::IsNullOrWhiteSpace($SourceBranch)) {
+        $sourceBranchNow = Invoke-LoggedGitCommand -Arguments @("-C", $RepoRoot, "branch", "--show-current") -SafeDirectory $RepoRoot
+        if ($sourceBranchNow.ExitCode -ne 0) {
+            throw "Could not determine source branch: $($sourceBranchNow.OutputText)"
+        }
+        $SourceBranch = $sourceBranchNow.OutputText.Trim()
+        if ([string]::IsNullOrWhiteSpace($SourceBranch)) {
+            throw "Source repo is detached; pass -SourceBranch explicitly only if detached source execution is supported."
+        }
+    }
 
     if (-not $Date) {
         if ($Dispatch -eq "food-line") {

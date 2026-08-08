@@ -1275,10 +1275,11 @@ def _pages_repo_root_for_site_root(site_root: Path) -> Path | None:
     return pages_repo if pages_repo.exists() else None
 
 
-def _gaza_public_edition_dirs(site_root: Path) -> list[Path]:
+def _gaza_public_edition_dirs(site_root: Path, pages_repo: Path | None = None) -> list[Path]:
     editions_root = site_root / "gaza" / "editions"
     roots = [editions_root]
-    pages_repo = _pages_repo_root_for_site_root(site_root)
+    if pages_repo is None:
+        pages_repo = _pages_repo_root_for_site_root(site_root)
     if pages_repo is not None:
         pages_editions_root = pages_repo / "gaza" / "editions"
         if pages_editions_root.resolve(strict=False) not in {root.resolve(strict=False) for root in roots}:
@@ -1286,9 +1287,10 @@ def _gaza_public_edition_dirs(site_root: Path) -> list[Path]:
     return [root for root in roots if root.exists()]
 
 
-def _gaza_public_edition_is_listable(site_root: Path, edition_date: str) -> bool:
+def _gaza_public_edition_is_listable(site_root: Path, edition_date: str, pages_repo: Path | None = None) -> bool:
     repo_root = site_root.parents[1]
-    pages_repo = _pages_repo_root_for_site_root(site_root)
+    if pages_repo is None:
+        pages_repo = _pages_repo_root_for_site_root(site_root)
     candidate_dirs = [site_root / "gaza" / "editions" / edition_date]
     if pages_repo is not None:
         candidate_dirs.append(pages_repo / "gaza" / "editions" / edition_date)
@@ -1533,7 +1535,12 @@ def render_edition_list_item(site_root: Path, dispatch: DispatchConfig, date: st
     )
 
 
-def discover_public_edition_dates(site_root: Path, slug: str, max_edition_date: str | None = None) -> list[str]:
+def discover_public_edition_dates(
+    site_root: Path,
+    slug: str,
+    max_edition_date: str | None = None,
+    pages_repo: Path | None = None,
+) -> list[str]:
     editions_root = site_root / slug / "editions"
     if not editions_root.exists():
         return []
@@ -1554,7 +1561,7 @@ def discover_public_edition_dates(site_root: Path, slug: str, max_edition_date: 
         return [edition_date for edition_date, _ in sorted(dated, key=lambda row: (row[1], row[0]), reverse=True)]
     if slug == "gaza":
         dated: set[str] = set()
-        for candidate_root in _gaza_public_edition_dirs(site_root):
+        for candidate_root in _gaza_public_edition_dirs(site_root, pages_repo=pages_repo):
             for path in candidate_root.iterdir():
                 if path.is_dir() and len(path.name) == 10:
                     dated.add(path.name)
@@ -1563,7 +1570,7 @@ def discover_public_edition_dates(site_root: Path, slug: str, max_edition_date: 
                 edition_date
                 for edition_date in dated
                 if (not max_edition_date or edition_date <= max_edition_date)
-                and _gaza_public_edition_is_listable(site_root, edition_date)
+                and _gaza_public_edition_is_listable(site_root, edition_date, pages_repo=pages_repo)
             ),
             reverse=True,
         )
@@ -2542,7 +2549,12 @@ def build_site(
                         f"care-line edition {dispatch.edition_date} did not meet listability checks: "
                         f"{'; '.join(str(item) for item in report.get('reasons') or []) or 'no specific reason recorded'}"
                     )
-            edition_dates = discover_public_edition_dates(site_root, dispatch.slug, max_edition_date=max_public_date)
+            edition_dates = discover_public_edition_dates(
+                site_root,
+                dispatch.slug,
+                max_edition_date=max_public_date,
+                pages_repo=pages_repo,
+            )
             if dispatch.edition_date not in edition_dates and public_edition_is_listable(site_root, dispatch.slug, dispatch.edition_date):
                 if not max_public_date or dispatch.edition_date <= max_public_date:
                     edition_dates = sorted([*edition_dates, dispatch.edition_date], reverse=True)
@@ -3607,7 +3619,7 @@ def publish_pages(
         gaza_homepage_guard = _gaza_homepage_recent_edition_guard(
             _read_text_if_exists(pages_repo / "gaza" / "index.html"),
             _read_text_if_exists(site_root / "gaza" / "index.html"),
-            discover_public_edition_dates(site_root, "gaza"),
+            discover_public_edition_dates(site_root, "gaza", pages_repo=pages_repo),
             allow_listing_shrink=allow_listing_shrink,
         )
         if not gaza_homepage_guard["ok"]:

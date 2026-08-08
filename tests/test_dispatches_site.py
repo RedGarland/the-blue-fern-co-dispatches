@@ -2375,6 +2375,50 @@ def test_gaza_public_lists_merge_pages_repo_history_when_local_site_is_sparser(t
         assert "2026-07-03" in body
 
 
+def test_gaza_public_edition_discovery_uses_explicit_pages_repo_for_sibling_clones(tmp_path: Path):
+    site_root = tmp_path / "source" / "output" / "site"
+    site_root.mkdir(parents=True, exist_ok=True)
+    local_dates = [
+        "2026-08-05",
+        "2026-06-20",
+        "2026-06-18",
+        "2026-06-16",
+        "2026-05-04",
+        "2026-05-03",
+    ]
+    add_gaza_public_history_surface(site_root, local_dates)
+    for edition_date in local_dates:
+        add_gaza_site_edition(site_root, edition_date)
+
+    pages_repo = tmp_path / "pages"
+    pages_dates = [
+        "2026-08-04",
+        "2026-08-03",
+        "2026-08-01",
+        "2026-07-31",
+    ]
+    add_gaza_public_history_surface(pages_repo, pages_dates)
+    for edition_date in pages_dates:
+        add_gaza_site_edition(pages_repo, edition_date)
+
+    inferred_dates = generator.discover_public_edition_dates(site_root, "gaza")
+    explicit_dates = generator.discover_public_edition_dates(site_root, "gaza", pages_repo=pages_repo)
+
+    assert inferred_dates == local_dates
+    assert explicit_dates == [
+        "2026-08-05",
+        "2026-08-04",
+        "2026-08-03",
+        "2026-08-01",
+        "2026-07-31",
+        "2026-06-20",
+        "2026-06-18",
+        "2026-06-16",
+        "2026-05-04",
+        "2026-05-03",
+    ]
+
+
 def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch):
     repo = Path(__file__).parent.parent
     work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"

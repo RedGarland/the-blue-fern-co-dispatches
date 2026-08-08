@@ -592,7 +592,7 @@ def seed_dispatches(
         DispatchConfig(
             slug="gaza",
             name="Dispatches From Gaza",
-            edition_date=date,
+            edition_date=gaza_seed_date,
             tagline="Daily briefing",
             logo="gaza-logo.png",
             sources=gaza_sources,
@@ -2569,7 +2569,11 @@ def build_site(
                 max_edition_date=max_public_date,
                 pages_repo=gaza_public_history_pages_repo,
             )
-            if dispatch.edition_date not in edition_dates and public_edition_is_listable(gaza_public_history_root, dispatch.slug, dispatch.edition_date):
+            if dispatch.edition_date not in edition_dates and _gaza_public_edition_is_listable(
+                site_root,
+                dispatch.edition_date,
+                pages_repo=pages_repo,
+            ):
                 if not max_public_date or dispatch.edition_date <= max_public_date:
                     edition_dates = sorted([*edition_dates, dispatch.edition_date], reverse=True)
             if dispatch.slug == "american-pressure" and edition_dates:

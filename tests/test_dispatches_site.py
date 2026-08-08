@@ -27,6 +27,7 @@ from bluefern_dispatches.generator import (
     normalize_expect_dispatches,
     normalize_only_dispatches,
     public_edition_subtitle,
+    seed_dispatches,
     validate_pages_repo_copy_scope,
     validate_pages_publish,
     validate_pages_repo_after_copy,
@@ -424,6 +425,12 @@ def test_build_does_not_publish_synthetic_current_cascadia_edition(monkeypatch):
     repo = Path(__file__).parent.parent
     work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
     copy_repo_assets(repo, work)
+    synthetic_current = work / "output" / "site" / "cascadia" / "editions" / "2026-05-11"
+    if synthetic_current.exists():
+        shutil.rmtree(synthetic_current)
+    synthetic_current_dispatch = work / "output" / "dispatches" / "cascadia" / "editions" / "2026-05-11"
+    if synthetic_current_dispatch.exists():
+        shutil.rmtree(synthetic_current_dispatch)
     stale_daily = work / "output" / "site" / "cascadia" / "editions" / "2026-05-04"
     stale_daily.mkdir(parents=True)
     (stale_daily / "index.html").write_text("<html>daily</html>", encoding="utf-8")
@@ -1144,7 +1151,7 @@ def test_gaza_expect_date_does_not_require_same_date_cascadia(built_site):
     work, backup_root, _ = built_site
     site_root = work / "output" / "site"
     pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
-    add_gaza_site_edition(site_root, "2026-05-09")
+    add_gaza_site_edition(site_root, "2026-05-12")
 
     result = publish_pages(
         work,
@@ -1154,13 +1161,13 @@ def test_gaza_expect_date_does_not_require_same_date_cascadia(built_site):
         commit=False,
         no_push=True,
         backup_root=backup_root,
-        expect_date="2026-05-09",
+        expect_date="2026-05-12",
         expect_dispatches=("gaza",),
     )
 
     assert result["ok"] is True
-    assert (pages_repo / "gaza" / "editions" / "2026-05-09" / "index.html").exists()
-    assert not (pages_repo / "cascadia" / "editions" / "2026-05-09" / "index.html").exists()
+    assert (pages_repo / "gaza" / "editions" / "2026-05-12" / "index.html").exists()
+    assert not (pages_repo / "cascadia" / "editions" / "2026-05-12" / "index.html").exists()
     assert not any("expected Cascadia" in error for error in result["errors"])
 
 
@@ -2653,6 +2660,81 @@ def test_gaza_public_seeding_prefers_explicit_pages_repo_history_over_stale_sour
     assert "2026-08-07" in html
     assert "2026-08-08" not in html
     assert generator.discover_public_edition_dates(pages_repo, "gaza") == ["2026-08-07"]
+
+
+def test_gaza_current_generated_edition_merges_explicit_pages_history_without_stale_future_date(built_site):
+    work, backup_root, _ = built_site
+    site_root = work / "output" / "site"
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    (pages_repo / "CNAME").write_text("dispatches.thebluefernco.com\n", encoding="utf-8")
+    add_gaza_public_history_surface(
+        pages_repo,
+        ["2026-08-05", "2026-08-04", "2026-08-03", "2026-08-01", "2026-07-31", "2026-07-30", "2026-07-29", "2026-07-28", "2026-07-27", "2026-07-26"],
+        archive_dates=["2026-08-05", "2026-08-04", "2026-08-03", "2026-08-01", "2026-07-31", "2026-07-30", "2026-07-29", "2026-07-28", "2026-07-27", "2026-07-26"],
+        audio_dates=["2026-08-05", "2026-08-04", "2026-08-03", "2026-08-01", "2026-07-31", "2026-07-30", "2026-07-29", "2026-07-28", "2026-07-27", "2026-07-26"],
+    )
+    for edition_date in [
+        "2026-08-05",
+        "2026-08-04",
+        "2026-08-03",
+        "2026-08-01",
+        "2026-07-31",
+        "2026-07-30",
+        "2026-07-29",
+        "2026-07-28",
+        "2026-07-27",
+        "2026-07-26",
+    ]:
+        add_gaza_site_edition(pages_repo, edition_date)
+    add_gaza_site_edition(site_root, "2026-08-07")
+    add_gaza_site_edition(site_root, "2026-08-08")
+    stale_future_manifest = site_root / "gaza" / "editions" / "2026-08-08" / "edition_manifest.json"
+    stale_future_payload = json.loads(stale_future_manifest.read_text(encoding="utf-8"))
+    stale_future_payload["errors"] = [
+        "No new source-backed Gaza developments after cross-edition dedupe; refusing to publish repeated edition."
+    ]
+    stale_future_manifest.write_text(json.dumps(stale_future_payload, indent=2), encoding="utf-8")
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        expect_date="2026-08-07",
+        expect_dispatches=("gaza",),
+        only_dispatches=("gaza",),
+    )
+
+    html = (site_root / "gaza" / "index.html").read_text(encoding="utf-8")
+    guard = result["gaza_homepage_recent_edition_guard"]
+    assert result["ok"] is True
+    assert guard["added_dates"] == ["2026-08-07"]
+    assert guard["removed_dates"] == ["2026-07-26"]
+    assert guard["latest_expected_date"] == "2026-08-07"
+    assert "2026-08-07" in html
+    assert "2026-08-08" not in html
+
+
+def test_seed_dispatches_uses_gaza_historical_seed_without_changing_other_dispatches(tmp_path: Path, monkeypatch):
+    work = tmp_path / "repo"
+    work.mkdir()
+    copy_repo_assets(Path(__file__).parent.parent, work)
+    monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-08-08")
+
+    dispatches = seed_dispatches(
+        work,
+        "2026-08-08T12:00:00Z",
+        [],
+        [],
+        dispatch_seed_dates={"gaza": "2026-08-07"},
+    )
+
+    by_slug = {dispatch.slug: dispatch for dispatch in dispatches}
+    assert by_slug["gaza"].edition_date == "2026-08-07"
+    assert by_slug["american-pressure"].edition_date == "2026-08-08"
 
 
 def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch):

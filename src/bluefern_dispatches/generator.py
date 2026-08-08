@@ -1267,7 +1267,10 @@ def public_edition_manifest(site_root: Path, slug: str, edition_date: str) -> di
     return payload if isinstance(payload, dict) else {}
 
 
-def _pages_repo_root_for_site_root(site_root: Path) -> Path | None:
+def _pages_repo_root_for_site_root(site_root: Path, pages_repo: Path | None = None) -> Path | None:
+    if pages_repo is not None:
+        resolved_pages_repo = pages_repo.resolve()
+        return resolved_pages_repo if resolved_pages_repo.exists() else None
     try:
         repo_root = site_root.parents[1]
     except IndexError:
@@ -1279,8 +1282,7 @@ def _pages_repo_root_for_site_root(site_root: Path) -> Path | None:
 def _gaza_public_edition_dirs(site_root: Path, pages_repo: Path | None = None) -> list[Path]:
     editions_root = site_root / "gaza" / "editions"
     roots = [editions_root]
-    if pages_repo is None:
-        pages_repo = _pages_repo_root_for_site_root(site_root)
+    pages_repo = _pages_repo_root_for_site_root(site_root, pages_repo)
     if pages_repo is not None:
         pages_editions_root = pages_repo / "gaza" / "editions"
         if pages_editions_root.resolve(strict=False) not in {root.resolve(strict=False) for root in roots}:
@@ -1290,8 +1292,7 @@ def _gaza_public_edition_dirs(site_root: Path, pages_repo: Path | None = None) -
 
 def _gaza_public_edition_is_listable(site_root: Path, edition_date: str, pages_repo: Path | None = None) -> bool:
     repo_root = site_root.parents[1]
-    if pages_repo is None:
-        pages_repo = _pages_repo_root_for_site_root(site_root)
+    pages_repo = _pages_repo_root_for_site_root(site_root, pages_repo)
     candidate_dirs = [site_root / "gaza" / "editions" / edition_date]
     if pages_repo is not None:
         candidate_dirs.append(pages_repo / "gaza" / "editions" / edition_date)
@@ -1568,7 +1569,7 @@ def discover_public_edition_dates(
         return [edition_date for edition_date, _ in sorted(dated, key=lambda row: (row[1], row[0]), reverse=True)]
     if slug == "gaza":
         dated: set[str] = set()
-        for candidate_root in _gaza_public_edition_dirs(site_root, pages_repo=pages_repo):
+        for candidate_root in _gaza_public_edition_dirs(site_root, pages_repo):
             for path in candidate_root.iterdir():
                 if path.is_dir() and len(path.name) == 10:
                     dated.add(path.name)
@@ -1577,7 +1578,7 @@ def discover_public_edition_dates(
                 edition_date
                 for edition_date in dated
                 if (not max_edition_date or edition_date <= max_edition_date)
-                and _gaza_public_edition_is_listable(site_root, edition_date, pages_repo=pages_repo)
+                and _gaza_public_edition_is_listable(site_root, edition_date, pages_repo)
             ),
             reverse=True,
         )
@@ -2431,8 +2432,8 @@ def build_site(
         pages_repo=pages_repo.resolve() if pages_repo is not None else None,
     )
 
-    # Keep root landing cards stable across scoped publishes.
-    write_text(site_root / "index.html", render_root(all_dispatches), dry_run, wrote)
+    if not only_dispatches:
+        write_text(site_root / "index.html", render_root(all_dispatches), dry_run, wrote)
     public_max_dates = public_max_dates or {}
     for dispatch in dispatches:
         max_public_date = public_max_dates.get(dispatch.slug)

@@ -6,7 +6,13 @@ from pathlib import Path
 
 import pytest
 
-from bluefern_dispatches.gaza_audio import build_gaza_audio_script, select_gaza_audio_stories, write_audio_index, write_gaza_audio_outputs
+from bluefern_dispatches.gaza_audio import (
+    build_gaza_audio_script,
+    refresh_gaza_audio_public_surfaces,
+    select_gaza_audio_stories,
+    write_audio_index,
+    write_gaza_audio_outputs,
+)
 
 
 def _write_edition(tmp_path: Path, edition_date: str, *, curation: list[dict], sources: list[dict]) -> None:
@@ -50,6 +56,25 @@ def _write_pages_audio_metadata(tmp_path: Path, edition_date: str, payload: dict
         "audio_mime_type": "audio/mpeg",
     }
     data.update(payload)
+    path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    return path
+
+
+def _write_source_audio_metadata(tmp_path: Path, edition_date: str, payload: dict | None = None) -> Path:
+    root = tmp_path / "output" / "site" / "gaza" / "audio"
+    root.mkdir(parents=True, exist_ok=True)
+    path = root / f"{edition_date}.json"
+    (root / f"{edition_date}-transcript.html").write_text("<html>Current transcript</html>", encoding="utf-8")
+    data = {
+        "edition_date": edition_date,
+        "transcript_url": f"https://dispatches.thebluefernco.com/gaza/audio/{edition_date}-transcript.html",
+        "script_text": f"Current Gaza audio summary for {edition_date}.",
+        "audio_file": f"{edition_date}.mp3",
+        "audio_url": f"/gaza/audio/{edition_date}.mp3",
+        "audio_mime_type": "audio/mpeg",
+    }
+    if payload:
+        data.update(payload)
     path.write_text(json.dumps(data, indent=2), encoding="utf-8")
     return path
 
@@ -453,6 +478,39 @@ def test_output_paths_stay_under_public_audio_root(tmp_path: Path):
     assert (tmp_path / "output" / "site" / "gaza" / "podcast.xml").exists()
     assert (tmp_path / "output" / "site" / "gaza" / "audio" / "podcast.xml").exists()
     assert (tmp_path / "output" / "site" / "gaza" / "audio" / "podcast-artwork.png").exists()
+
+
+def test_refresh_public_audio_surfaces_uses_explicit_pages_repo_history(tmp_path: Path):
+    _write_source_audio_metadata(tmp_path, "2026-08-07", payload={"audio_file": None, "audio_url": None, "audio_mime_type": None})
+    _write_pages_audio_metadata(
+        tmp_path,
+        "2026-08-05",
+        {"audio_file": None, "audio_url": None, "audio_mime_type": None},
+    )
+    _write_pages_audio_metadata(
+        tmp_path,
+        "2026-08-04",
+        {"audio_file": None, "audio_url": None, "audio_mime_type": None},
+    )
+    assets = tmp_path / "assets"
+    assets.mkdir(parents=True, exist_ok=True)
+    (assets / "gaza-logo.png").write_bytes(b"png")
+
+    index_path, podcast_path = refresh_gaza_audio_public_surfaces(
+        tmp_path,
+        pages_repo=tmp_path / "bluefern-dispatches-pages",
+    )
+
+    index_text = index_path.read_text(encoding="utf-8")
+    podcast_text = podcast_path.read_text(encoding="utf-8")
+    assert "2026-08-07" in index_text
+    assert "2026-08-05" in index_text
+    assert "2026-08-04" in index_text
+    assert "2026-08-07" in podcast_text
+    assert "2026-08-05" in podcast_text
+    assert "2026-08-04" in podcast_text
+    assert "2026-08-03" not in index_text
+    assert "2026-08-03" not in podcast_text
 
 
 def test_provider_none_keeps_script_only_behavior(tmp_path: Path):

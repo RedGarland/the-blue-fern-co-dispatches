@@ -1199,7 +1199,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         from bluefern_dispatches.gaza_audio import refresh_gaza_audio_public_surfaces
 
-        refresh_gaza_audio_public_surfaces(ROOT)
+        refresh_gaza_audio_public_surfaces(ROOT, pages_repo=pages_repo)
 
     if not args.skip_tests:
         summary["tests_run"] = True

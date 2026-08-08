@@ -252,10 +252,15 @@ def _metadata_files(project_root: Path) -> list[Path]:
     return sorted(rows, key=lambda p: p.name, reverse=True)
 
 
-def _candidate_gaza_audio_roots(project_root: Path) -> list[Path]:
+def _candidate_gaza_audio_roots(project_root: Path, pages_repo: Path | None = None) -> list[Path]:
     roots: list[Path] = []
     seen: set[Path] = set()
-    for candidate in (_audio_root(project_root), _pages_gaza_audio_root(project_root)):
+    candidates = [_audio_root(project_root)]
+    if pages_repo is not None:
+        candidates.append(Path(pages_repo) / "gaza" / "audio")
+    else:
+        candidates.append(_pages_gaza_audio_root(project_root))
+    for candidate in candidates:
         normalized = candidate.resolve(strict=False)
         if normalized in seen:
             continue
@@ -287,9 +292,9 @@ def _discover_existing_audio_path(project_root: Path, audio_root: Path, edition_
     return None
 
 
-def discover_gaza_audio_episode_rows(project_root: Path) -> list[dict[str, Any]]:
+def discover_gaza_audio_episode_rows(project_root: Path, pages_repo: Path | None = None) -> list[dict[str, Any]]:
     episodes: dict[str, dict[str, Any]] = {}
-    for audio_root in _candidate_gaza_audio_roots(project_root):
+    for audio_root in _candidate_gaza_audio_roots(project_root, pages_repo=pages_repo):
         if not audio_root.exists():
             continue
         for path in sorted(audio_root.glob("*.json"), key=lambda item: item.name, reverse=True):
@@ -346,8 +351,8 @@ def discover_gaza_audio_episode_rows(project_root: Path) -> list[dict[str, Any]]
     return [episodes[key] for key in sorted(episodes.keys(), reverse=True)]
 
 
-def _load_items(project_root: Path) -> list[dict[str, Any]]:
-    return discover_gaza_audio_episode_rows(project_root)
+def _load_items(project_root: Path, pages_repo: Path | None = None) -> list[dict[str, Any]]:
+    return discover_gaza_audio_episode_rows(project_root, pages_repo=pages_repo)
 
 
 def _enclosure_tag(project_root: Path, row: dict[str, Any]) -> str:
@@ -393,8 +398,8 @@ def _enclosure_tag_for_slug(project_root: Path, row: dict[str, Any], slug: str) 
     return f'<enclosure url="{escape(public_url)}" length="{length}" type="{escape(mime)}" />'
 
 
-def build_gaza_podcast_xml(project_root: Path) -> str:
-    rows = _load_items(project_root)
+def build_gaza_podcast_xml(project_root: Path, pages_repo: Path | None = None) -> str:
+    rows = _load_items(project_root, pages_repo=pages_repo)
     pub_date = format_datetime(datetime.now(timezone.utc))
     channel_items: list[str] = []
     for row in rows:
@@ -447,13 +452,13 @@ def build_gaza_podcast_xml(project_root: Path) -> str:
     )
 
 
-def write_gaza_podcast_feed(*, project_root: Path, dry_run: bool = False) -> Path:
+def write_gaza_podcast_feed(*, project_root: Path, dry_run: bool = False, pages_repo: Path | None = None) -> Path:
     gaza_root = _gaza_root(project_root)
     audio_root = _audio_root(project_root)
     path = gaza_root / "podcast.xml"
     mirrored_path = audio_root / "podcast.xml"
     _ = _write_podcast_artwork(project_root, dry_run=dry_run)
-    xml = build_gaza_podcast_xml(project_root)
+    xml = build_gaza_podcast_xml(project_root, pages_repo=pages_repo)
     if not dry_run:
         gaza_root.mkdir(parents=True, exist_ok=True)
         audio_root.mkdir(parents=True, exist_ok=True)

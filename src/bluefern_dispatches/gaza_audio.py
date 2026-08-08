@@ -87,11 +87,11 @@ def _gaza_public_root(project_root: Path) -> Path:
 
 
 
-def _discover_audio_entries(project_root: Path) -> list[dict[str, str]]:
+def _discover_audio_entries(project_root: Path, pages_repo: Path | None = None) -> list[dict[str, str]]:
     from bluefern_dispatches.podcast_feed import discover_gaza_audio_episode_rows
 
     rows: list[dict[str, str]] = []
-    for payload in discover_gaza_audio_episode_rows(project_root):
+    for payload in discover_gaza_audio_episode_rows(project_root, pages_repo=pages_repo):
         date_text = str(payload.get("edition_date") or "").strip()
         if not DATE_RE.match(date_text):
             continue
@@ -109,8 +109,8 @@ def _discover_audio_entries(project_root: Path) -> list[dict[str, str]]:
     return rows
 
 
-def write_audio_index(project_root: Path, *, dry_run: bool = False) -> Path:
-    entries = _discover_audio_entries(project_root)
+def write_audio_index(project_root: Path, *, dry_run: bool = False, pages_repo: Path | None = None) -> Path:
+    entries = _discover_audio_entries(project_root, pages_repo=pages_repo)
     audio_root = _audio_root(project_root)
     index_path = audio_root / "index.html"
     items: list[str] = []
@@ -160,13 +160,13 @@ def write_audio_index(project_root: Path, *, dry_run: bool = False) -> Path:
     return index_path
 
 
-def refresh_gaza_audio_public_surfaces(project_root: Path) -> tuple[Path, Path]:
+def refresh_gaza_audio_public_surfaces(project_root: Path, pages_repo: Path | None = None) -> tuple[Path, Path]:
     # Preview and no-audio runs still need to keep the public history surfaces in sync.
-    index_path = write_audio_index(project_root, dry_run=False)
+    index_path = write_audio_index(project_root, dry_run=False, pages_repo=pages_repo)
 
     from bluefern_dispatches.podcast_feed import write_gaza_podcast_feed
 
-    podcast_path = write_gaza_podcast_feed(project_root=project_root, dry_run=False)
+    podcast_path = write_gaza_podcast_feed(project_root=project_root, dry_run=False, pages_repo=pages_repo)
     return index_path, podcast_path
 
 

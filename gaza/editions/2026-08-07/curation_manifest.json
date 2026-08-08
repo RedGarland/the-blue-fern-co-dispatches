@@ -1,0 +1,68 @@
+[
+  {
+    "story_id": "gaza-story-2026-08-07-002",
+    "title": "Contaminated water putting Gaza families at risk",
+    "summary": "Gaza's damaged water infrastructure is leaving families struggling to access safe drinking water.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "scope_provenance": "article_evidence",
+    "score": 61,
+    "scoring_reasons": [
+      "aid_access",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-07-aljazeera-middle-east-658b0893c813"
+    ],
+    "source_ids": [
+      "gaza-2026-08-07-aljazeera-middle-east-658b0893c813"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/8/7/contaminated-water-putting-gaza-families-at-risk?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-07-aljazeera-middle-east-658b0893c813",
+        "title": "Contaminated water putting Gaza families at risk",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/8/7/contaminated-water-putting-gaza-families-at-risk?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Gaza's damaged water infrastructure is leaving families struggling to access safe drinking water."
+      }
+    ],
+    "generated_at": "2026-08-08T20:52:16.320704+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 61,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

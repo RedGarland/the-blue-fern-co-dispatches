@@ -577,12 +577,13 @@ def seed_dispatches(
         # 'now' is an ISO timestamp from build_site; extract YYYY-MM-DD
         date = (now or "").split("T")[0] or "2026-05-03"
     dispatch_seed_dates = dispatch_seed_dates or {}
+    gaza_seed_date = dispatch_seed_dates.get("gaza", date)
     ap_date = dispatch_seed_dates.get("american-pressure", date)
     care_line_date = dispatch_seed_dates.get("care-line") or _latest_care_line_fixture_date(root) or date
     gaza_sources = [
-        SourceRecord("gaza-src-001", "How Israel Is Using the Same Tactics in Lebanon That It Did in Gaza", "https://news.google.com/rss/articles/CBMirwFBVV95cUxNZlljbzhabF9fQVBUakFVMl9yQ2RfSWdEM3l5bzJpZThveWtVX3lfaWhHQkRqaklxSWtBZE5CYlZSdC16SDhUbW5NTWs2bFo5aW45dlB2UDEwU2dOc1VBWmlRcmVfbzlvbjdUZG9BejJSeTZFdW9qUUd3WDdkMm1mNkpVUmpSZXFDQnllUHZ1SzBFbUpyNlBXRHdwMVZMeXVDcWV6UG1hT1Z2QmdzWkRF", "The New York Times", None, now, None, ["gaza-story-001"], ["gaza-claim-001"], "gaza", date),
-        SourceRecord("gaza-src-002", "U.S. to close Israel command center overseeing Gaza truce as Trump plan stalls", "https://news.google.com/rss/articles/CBMi8wFBVV95cUxOM2t6STREVWZmdHkydFBaX21aLUw3RDdSRHBKcWdrTmw5WHV6RFlOcjhJMmxTOWxKbDNlclEwelE1U2toVGFtNjMzSnBmVXAzc05hVF85eHl3OHZiZUxoMWtXc01LR3NaNUJ5cEh4NF9UMENTNVJrd2F2bm4zLWY4U2taekRkVXdtRWFNZV9zalFkMkV2bHF6MGgwYlU4RTM0UEpOTEZONFNiaHo3cVFyT0pwcFFocGl6S01seG1Fb08zY3N4aTFFUGtZZXVzR2FIX0lEbmlqUG1XXzBjVVNvRGtZSmdwSjlUdzNDbFJmMm1mSUE", "Haaretz", None, now, None, ["gaza-story-001"], ["gaza-claim-002"], "gaza", date),
-        SourceRecord("gaza-src-003", "Court extends detention of 2 Gaza flotilla activists accused of Hamas links", "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNeE1nbHF0MXR5cUNKMTBrcmhINFc3Q3lEV053ZTVDVXVVaW9KVndOT0YwWC15UlZnYTBRd0ZTTXI2Slc1bEtEYmpVOTFiZ0JQR3B3U0JSdkJUV2NKZU9iNUU1WTlTMzhyRENiN1J1NkVDcEQ0Q0ZHRnhBRjF3SUF5b2VhcGotWWswcTlzaHlsSFBtZ3BvZERyZFMtUmwtWTBseWRJd1prV2tLd9IBrwFBVV95cUxNZm5UX0N1NFc3TnZsN3J1d0ZHLUFaYmp0RDhLZFYzb2NoZ245dHJINUZ2WFVUT1BvLWV6VzUyTGV2SUhCVHl4cFR2Vk1KQUl4dmZ3MkM0WDdadXh6Z0FwV0tYTE9DOUFQMXk3c2JPMU94cEU4aWhScHlyWDFMLUlaM1c1Z3NHeHpoaWRLb0ZDdXdpRHJFcllhaUdxNkdkblpGWngxdkFhUmZpT184V2pR", "The Times of Israel", None, now, None, ["gaza-story-001"], ["gaza-claim-003"], "gaza", date),
+        SourceRecord("gaza-src-001", "How Israel Is Using the Same Tactics in Lebanon That It Did in Gaza", "https://news.google.com/rss/articles/CBMirwFBVV95cUxNZlljbzhabF9fQVBUakFVMl9yQ2RfSWdEM3l5bzJpZThveWtVX3lfaWhHQkRqaklxSWtBZE5CYlZSdC16SDhUbW5NTWs2bFo5aW45dlB2UDEwU2dOc1VBWmlRcmVfbzlvbjdUZG9BejJSeTZFdW9qUUd3WDdkMm1mNkpVUmpSZXFDQnllUHZ1SzBFbUpyNlBXRHdwMVZMeXVDcWV6UG1hT1Z2QmdzWkRF", "The New York Times", None, now, None, ["gaza-story-001"], ["gaza-claim-001"], "gaza", gaza_seed_date),
+        SourceRecord("gaza-src-002", "U.S. to close Israel command center overseeing Gaza truce as Trump plan stalls", "https://news.google.com/rss/articles/CBMi8wFBVV95cUxOM2t6STREVWZmdHkydFBaX21aLUw3RDdSRHBKcWdrTmw5WHV6RFlOcjhJMmxTOWxKbDNlclEwelE1U2toVGFtNjMzSnBmVXAzc05hVF85eHl3OHZiZUxoMWtXc01LR3NaNUJ5cEh4NF9UMENTNVJrd2F2bm4zLWY4U2taekRkVXdtRWFNZV9zalFkMkV2bHF6MGgwYlU4RTM0UEpOTEZONFNiaHo3cVFyT0pwcFFocGl6S01seG1Fb08zY3N4aTFFUGtZZXVzR2FIX0lEbmlqUG1XXzBjVVNvRGtZSmdwSjlUdzNDbFJmMm1mSUE", "Haaretz", None, now, None, ["gaza-story-001"], ["gaza-claim-002"], "gaza", gaza_seed_date),
+        SourceRecord("gaza-src-003", "Court extends detention of 2 Gaza flotilla activists accused of Hamas links", "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNeE1nbHF0MXR5cUNKMTBrcmhINFc3Q3lEV053ZTVDVXVVaW9KVndOT0YwWC15UlZnYTBRd0ZTTXI2Slc1bEtEYmpVOTFiZ0JQR3B3U0JSdkJUV2NKZU9iNUU1WTlTMzhyRENiN1J1NkVDcEQ0Q0ZHRnhBRjF3SUF5b2VhcGotWWswcTlzaHlsSFBtZ3BvZERyZFMtUmwtWTBseWRJd1prV2tLd9IBrwFBVV95cUxNZm5UX0N1NFc3TnZsN3J1d0ZHLUFaYmp0RDhLZFYzb2NoZ245dHJINUZ2WFVUT1BvLWV6VzUyTGV2SUhCVHl4cFR2Vk1KQUl4dmZ3MkM0WDdadXh6Z0FwV0tYTE9DOUFQMXk3c2JPMU94cEU4aWhScHlyWDFMLUlaM1c1Z3NHeHpoaWRLb0ZDdXdpRHJFcllhaUdxNkdkblpGWngxdkFhUmZpT184V2pR", "The Times of Israel", None, now, None, ["gaza-story-001"], ["gaza-claim-003"], "gaza", gaza_seed_date),
     ]
     cascadia_sources = [
         SourceRecord("cascadia-src-001", "Placeholder source record for Cascadia launch edition", f"{BASE_URL}/cascadia/editions/{date}/sources_manifest.json", "Blue Fern Dispatch Records", f"{date}T00:00:00Z", now, None, ["cascadia-story-001"], ["cascadia-admin-001"], "cascadia", date)
@@ -2549,13 +2550,20 @@ def build_site(
                         f"care-line edition {dispatch.edition_date} did not meet listability checks: "
                         f"{'; '.join(str(item) for item in report.get('reasons') or []) or 'no specific reason recorded'}"
                     )
+            explicit_gaza_history = (
+                dispatch.slug == "gaza"
+                and pages_repo is not None
+                and (pages_repo / "gaza" / "editions").exists()
+            )
+            gaza_public_history_root = pages_repo if explicit_gaza_history else site_root
+            gaza_public_history_pages_repo = None if explicit_gaza_history else pages_repo
             edition_dates = discover_public_edition_dates(
-                site_root,
+                gaza_public_history_root,
                 dispatch.slug,
                 max_edition_date=max_public_date,
-                pages_repo=pages_repo,
+                pages_repo=gaza_public_history_pages_repo,
             )
-            if dispatch.edition_date not in edition_dates and public_edition_is_listable(site_root, dispatch.slug, dispatch.edition_date):
+            if dispatch.edition_date not in edition_dates and public_edition_is_listable(gaza_public_history_root, dispatch.slug, dispatch.edition_date):
                 if not max_public_date or dispatch.edition_date <= max_public_date:
                     edition_dates = sorted([*edition_dates, dispatch.edition_date], reverse=True)
             if dispatch.slug == "american-pressure" and edition_dates:
@@ -3565,6 +3573,10 @@ def publish_pages(
         existing_care_line_dates = discover_public_edition_dates(root / "output" / "site", CARE_LINE_DISPATCH_SLUG)
         if existing_care_line_dates:
             dispatch_seed_dates["care-line"] = max(existing_care_line_dates)
+    if "gaza" not in dispatch_seed_dates and pages_repo is not None:
+        explicit_gaza_dates = discover_public_edition_dates(pages_repo, "gaza")
+        if explicit_gaza_dates:
+            dispatch_seed_dates["gaza"] = explicit_gaza_dates[0]
     removed_nested_duplicate_paths = remove_nested_duplicate_dispatch_paths(root / "output" / "site", dry_run)
     build = build_site(
         root,

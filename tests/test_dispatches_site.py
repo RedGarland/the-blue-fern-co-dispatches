@@ -2419,6 +2419,44 @@ def test_gaza_public_edition_discovery_uses_explicit_pages_repo_for_sibling_clon
     ]
 
 
+def test_gaza_public_seeding_prefers_explicit_pages_repo_history_over_stale_source_site(tmp_path: Path):
+    repo = Path(__file__).parent.parent
+    work = tmp_path / "repo"
+    copy_repo_assets(repo, work)
+    stale_source_site = work / "output" / "site"
+    add_gaza_public_history_surface(
+        stale_source_site,
+        ["2026-08-08", "2026-08-07", "2026-08-05", "2026-08-04", "2026-08-03", "2026-08-01", "2026-07-31", "2026-07-30", "2026-07-29", "2026-07-28", "2026-07-27", "2026-07-26"],
+        archive_dates=["2026-08-08", "2026-08-07", "2026-08-05", "2026-08-04", "2026-08-03", "2026-08-01", "2026-07-31", "2026-07-30", "2026-07-29", "2026-07-28", "2026-07-27", "2026-07-26"],
+        audio_dates=["2026-08-08", "2026-08-07", "2026-08-05", "2026-08-04", "2026-08-03", "2026-08-01", "2026-07-31", "2026-07-30", "2026-07-29", "2026-07-28", "2026-07-27", "2026-07-26"],
+    )
+    add_gaza_site_edition(stale_source_site, "2026-08-08")
+    add_gaza_site_edition(stale_source_site, "2026-08-07")
+
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    add_gaza_public_history_surface(
+        pages_repo,
+        ["2026-08-07", "2026-08-05", "2026-08-04", "2026-08-03", "2026-08-01", "2026-07-31", "2026-07-30", "2026-07-29", "2026-07-28", "2026-07-27"],
+        archive_dates=["2026-08-07", "2026-08-05", "2026-08-04", "2026-08-03", "2026-08-01", "2026-07-31", "2026-07-30", "2026-07-29", "2026-07-28", "2026-07-27"],
+        audio_dates=["2026-08-07", "2026-08-05", "2026-08-04", "2026-08-03", "2026-08-01", "2026-07-31", "2026-07-30", "2026-07-29", "2026-07-28", "2026-07-27"],
+    )
+    add_gaza_site_edition(pages_repo, "2026-08-07")
+
+    result = build_site(
+        work,
+        dry_run=False,
+        backup_root=work / "backups",
+        only_dispatches=("gaza",),
+        pages_repo=pages_repo,
+    )
+
+    html = (work / "output" / "site" / "gaza" / "index.html").read_text(encoding="utf-8")
+    assert result["ok"] is True
+    assert "2026-08-07" in html
+    assert "2026-08-08" not in html
+    assert generator.discover_public_edition_dates(pages_repo, "gaza") == ["2026-08-07"]
+
+
 def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch):
     repo = Path(__file__).parent.parent
     work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"

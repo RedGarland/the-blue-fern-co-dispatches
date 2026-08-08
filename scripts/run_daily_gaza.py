@@ -528,6 +528,7 @@ def generation_command(
     edition_date: str,
     allow_thin_edition: bool = False,
     allow_post_edition_date_sources: bool = False,
+    pages_repo: Path | None = None,
 ) -> list[str]:
     cmd = [
         sys.executable,
@@ -542,6 +543,8 @@ def generation_command(
         cmd.append("--allow-thin-edition")
     if allow_post_edition_date_sources:
         cmd.append("--allow-post-edition-date-sources")
+    if pages_repo is not None:
+        cmd.extend(["--pages-repo", str(pages_repo)])
     return cmd
 
 
@@ -1075,6 +1078,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.date,
                 allow_thin_edition=bool(args.allow_thin_edition),
                 allow_post_edition_date_sources=bool(args.allow_post_edition_date_sources),
+                pages_repo=pages_repo,
             )
         ),
         command_text(
@@ -1116,6 +1120,7 @@ def main(argv: list[str] | None = None) -> int:
             args.date,
             allow_thin_edition=bool(args.allow_thin_edition),
             allow_post_edition_date_sources=bool(args.allow_post_edition_date_sources),
+            pages_repo=pages_repo,
         )
     )
     log_line(log_path, f"Generation return code: {generation.returncode}")

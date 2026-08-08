@@ -1871,11 +1871,18 @@ def render_gaza_edition(
     return page(f"{DISPATCH_NAME} - {edition_date}", f"{BASE_URL}/gaza/editions/{edition_date}/", "../../assets/site.css", body, DISPATCH_NAME)
 
 
-def discover_edition_dates(site_root: Path) -> list[str]:
-    return discover_public_edition_dates(site_root, DISPATCH_SLUG)
+def discover_edition_dates(site_root: Path, pages_repo: Path | None = None) -> list[str]:
+    return discover_public_edition_dates(site_root, DISPATCH_SLUG, pages_repo=pages_repo)
 
 
-def render_archive_index_rss(root: Path, edition_date: str, dry_run: bool, wrote: list[str], include_current: bool = True) -> None:
+def render_archive_index_rss(
+    root: Path,
+    edition_date: str,
+    dry_run: bool,
+    wrote: list[str],
+    include_current: bool = True,
+    pages_repo: Path | None = None,
+) -> None:
     site_root = root / "output" / "site"
     dispatch = DispatchConfig(
         slug=DISPATCH_SLUG,
@@ -1887,7 +1894,7 @@ def render_archive_index_rss(root: Path, edition_date: str, dry_run: bool, wrote
         stories=[],
         detail_artifacts=[],
     )
-    dates = discover_edition_dates(site_root)
+    dates = discover_edition_dates(site_root, pages_repo=pages_repo)
     if include_current and edition_date not in dates:
         dates = sorted([*dates, edition_date], reverse=True)
     gaza_root = site_root / DISPATCH_SLUG
@@ -2140,6 +2147,7 @@ def run_gaza_dispatch(
     all_steps: bool,
     allow_thin_edition: bool = False,
     allow_post_edition_date_sources: bool = False,
+    pages_repo: Path | None = None,
 ) -> dict[str, Any]:
     edition_date = validate_date(edition_date)
     generated_at = utc_now()
@@ -2669,7 +2677,7 @@ def run_gaza_dispatch(
             write_json(base / "curation_manifest.json", curation_manifest, dry_run, wrote)
         for asset in ("site.css", "gaza-logo.png", "bluefern.png"):
             copy_file(root / "assets" / asset, root / "output" / "site" / DISPATCH_SLUG / "assets" / asset, dry_run, wrote, warnings)
-        render_archive_index_rss(root, edition_date, dry_run, wrote, include_current=True)
+        render_archive_index_rss(root, edition_date, dry_run, wrote, include_current=True, pages_repo=pages_repo)
         backup_dir = BACKUP_ROOT / edition_date
         write_text(backup_dir / "index.html", html_content, dry_run, wrote)
         write_json(backup_dir / "edition_manifest.json", edition_manifest, dry_run, wrote)
@@ -2717,7 +2725,7 @@ def run_gaza_dispatch(
             wrote.append(str(site_dir))
             if not dry_run:
                 shutil.rmtree(site_dir)
-        render_archive_index_rss(root, edition_date, dry_run, wrote, include_current=False)
+        render_archive_index_rss(root, edition_date, dry_run, wrote, include_current=False, pages_repo=pages_repo)
     return {
         "ok": not errors,
         "dispatch_slug": DISPATCH_SLUG,
@@ -2758,6 +2766,7 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Allow sources retrieved after the edition date to be used in this Gaza rerun/backfill.",
     )
+    parser.add_argument("--pages-repo", help="Explicit Pages checkout root used for Gaza history discovery.")
     return parser.parse_args()
 
 
@@ -2773,6 +2782,7 @@ def main() -> int:
             all_steps=args.all,
             allow_thin_edition=args.allow_thin_edition,
             allow_post_edition_date_sources=args.allow_post_edition_date_sources,
+            pages_repo=Path(args.pages_repo).resolve() if args.pages_repo else None,
         )
     except Exception as exc:
         result = {"ok": False, "errors": [str(exc)]}

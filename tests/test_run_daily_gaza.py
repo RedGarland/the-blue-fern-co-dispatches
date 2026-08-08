@@ -3,12 +3,14 @@ import json
 import ssl
 import shutil
 import subprocess
+import sys
 import uuid
 from pathlib import Path
 
 import pytest
 
 import scripts.publish_gaza_historical as historical
+import scripts.run_gaza_dispatch as gaza_dispatch
 import scripts.run_gaza_daily_operator as operator
 import scripts.run_daily_gaza as daily
 
@@ -188,6 +190,10 @@ def test_date_only_command_works_with_fixture_sources(isolated, monkeypatch, cap
     assert all("--expect-date" in call and "2026-05-07" in call for call in publish_calls)
     assert all("--expect-dispatch" in call and "gaza" in call for call in publish_calls)
     assert all("--only-dispatch" in call and "gaza" in call for call in publish_calls)
+    run_calls = [call for call in calls if "run_gaza_dispatch.py" in " ".join(call)]
+    assert run_calls
+    assert all("--pages-repo" in call for call in run_calls)
+    assert all(str(root / "bluefern-dispatches-pages") in call for call in run_calls)
 
 
 def test_date_only_command_forwards_post_edition_date_override(isolated, monkeypatch, capsys):
@@ -233,6 +239,109 @@ def test_date_only_command_forwards_post_edition_date_override(isolated, monkeyp
     summary = json.loads(capsys.readouterr().out)
     assert code == 0
     assert summary["ok"] is True
+
+
+def test_run_gaza_dispatch_uses_explicit_pages_repo_for_homepage_history(tmp_path: Path, monkeypatch):
+    root = tmp_path / "repo"
+    pages_repo = root / "pages"
+    source_root = root / "source"
+    assets = source_root / "assets"
+    assets.mkdir(parents=True, exist_ok=True)
+    (assets / "site.css").write_text("body{}", encoding="utf-8")
+    (assets / "gaza-logo.png").write_bytes(b"png")
+    (assets / "bluefern.png").write_bytes(b"png")
+    monkeypatch.setattr(gaza_dispatch, "ROOT", source_root)
+    monkeypatch.setattr(
+        gaza_dispatch,
+        "filter_recent_duplicate_sources",
+        lambda root, edition_date, sources, lookback_days=7: (
+            sources,
+            {
+                "input_candidate_count": len(sources),
+                "kept_candidate_count": len(sources),
+                "suppressed_candidate_count": 0,
+                "suppressed_candidates": [],
+            },
+        ),
+    )
+    write_manual_sources(source_root, "2026-08-07")
+    for edition_date in ["2026-08-05", "2026-06-20", "2026-06-18", "2026-06-16", "2026-05-04", "2026-05-03"]:
+        write_generated_output(source_root, edition_date)
+    source_gaza = source_root / "output" / "site" / "gaza"
+    source_gaza.mkdir(parents=True, exist_ok=True)
+    source_dates = ["2026-08-05", "2026-06-20", "2026-06-18", "2026-06-16", "2026-05-04", "2026-05-03"]
+    source_items = "".join(
+        f'<li class="edition-item"><span class="edition-date">{edition_date}</span><a href="editions/{edition_date}/">Edition</a></li>'
+        for edition_date in source_dates
+    )
+    (source_gaza / "index.html").write_text(f'<html><body><ul class="edition-list">{source_items}</ul></body></html>', encoding="utf-8")
+    (source_gaza / "archive.html").write_text(
+        "<html><body>" + "".join(f'<a href="editions/{edition_date}/">{edition_date}</a>' for edition_date in source_dates) + "</body></html>",
+        encoding="utf-8",
+    )
+    (source_gaza / "rss.xml").write_text(
+        "<rss><channel>"
+        + "".join(f"<item><link>https://dispatches.thebluefernco.com/gaza/editions/{edition_date}/</link></item>" for edition_date in source_dates)
+        + "</channel></rss>",
+        encoding="utf-8",
+    )
+    for edition_date in [
+        "2026-08-05",
+        "2026-08-04",
+        "2026-08-03",
+        "2026-08-01",
+        "2026-07-31",
+        "2026-07-30",
+        "2026-07-29",
+        "2026-07-28",
+        "2026-07-27",
+        "2026-07-26",
+    ]:
+        pages_edition = pages_repo / "gaza" / "editions" / edition_date
+        pages_edition.mkdir(parents=True, exist_ok=True)
+        (pages_edition / "edition_manifest.json").write_text(
+            json.dumps({"dispatch_slug": "gaza", "edition_date": edition_date, "source_count": 1, "story_count": 1}),
+            encoding="utf-8",
+        )
+        (pages_edition / "sources_manifest.json").write_text(
+            json.dumps([{"source_record_id": f"gaza-src-{edition_date}"}]),
+            encoding="utf-8",
+        )
+        (pages_edition / "curation_manifest.json").write_text(
+            json.dumps([{"story_id": f"gaza-story-{edition_date}", "source_ids": [f"gaza-src-{edition_date}"]}]),
+            encoding="utf-8",
+        )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "scripts/run_gaza_dispatch.py",
+            "--date",
+            "2026-08-07",
+            "--historical",
+            "--from-manual-sources",
+            "--all",
+            "--pages-repo",
+            str(pages_repo),
+        ],
+    )
+    code = gaza_dispatch.main()
+    assert code == 0
+    html = (source_root / "output" / "site" / "gaza" / "index.html").read_text(encoding="utf-8")
+    for expected in [
+        "2026-08-07",
+        "2026-08-05",
+        "2026-08-04",
+        "2026-08-03",
+        "2026-08-01",
+        "2026-07-31",
+        "2026-07-30",
+        "2026-07-29",
+        "2026-07-28",
+        "2026-07-27",
+    ]:
+        assert expected in html
+    assert "2026-07-26" not in html
 
 
 def test_daily_summary_includes_source_window_and_later_same_day_update_metadata(isolated, monkeypatch, capsys):

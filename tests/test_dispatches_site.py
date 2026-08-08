@@ -1705,6 +1705,113 @@ def test_pages_publish_preserves_gaza_audio_history_from_explicit_pages_repo_whe
     assert any(item["surface"] == "gaza/audio/index.html" and not item["dropped_dates"] for item in result["gaza_public_surface_history"])
 
 
+def test_pages_publish_prefers_expect_date_for_gaza_seed_over_pages_history(tmp_path, monkeypatch):
+    work = tmp_path / "repo"
+    work.mkdir()
+    copy_repo_assets(Path(__file__).parent.parent, work)
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    (pages_repo / "CNAME").write_text("dispatches.thebluefernco.com\n", encoding="utf-8")
+    (pages_repo / "index.html").write_text("<html>Root</html>", encoding="utf-8")
+    site_root = work / "output" / "site"
+    site_root.mkdir(parents=True, exist_ok=True)
+    (site_root / "index.html").write_text("<html>Home</html>", encoding="utf-8")
+    site_dates = [
+        "2026-08-07",
+        "2026-08-05",
+        "2026-08-04",
+        "2026-08-03",
+        "2026-08-01",
+        "2026-07-31",
+        "2026-07-30",
+        "2026-07-29",
+        "2026-07-28",
+        "2026-07-27",
+    ]
+    homepage_items = "".join(
+        f'<li class="edition-item"><span class="edition-date">{date_text}</span><a href="editions/{date_text}/">Edition</a></li>'
+        for date_text in site_dates
+    )
+    gaza_root = site_root / "gaza"
+    gaza_root.mkdir(parents=True, exist_ok=True)
+    (gaza_root / "index.html").write_text(f'<html><body><ul class="edition-list">{homepage_items}</ul></body></html>', encoding="utf-8")
+    archive_links = "".join(f'<a href="editions/{date_text}/">{date_text}</a>' for date_text in site_dates)
+    (gaza_root / "archive.html").write_text(f"<html><body>{archive_links}</body></html>", encoding="utf-8")
+    rss_items = "".join(f"<item><link>https://dispatches.thebluefernco.com/gaza/editions/{date_text}/</link></item>" for date_text in site_dates)
+    (gaza_root / "rss.xml").write_text(f"<rss><channel>{rss_items}</channel></rss>", encoding="utf-8")
+    add_gaza_site_edition(site_root, "2026-08-07")
+    add_gaza_public_history_surface(
+        pages_repo,
+        [
+            "2026-08-05",
+            "2026-08-04",
+            "2026-08-03",
+            "2026-08-01",
+            "2026-07-31",
+            "2026-07-30",
+            "2026-07-29",
+            "2026-07-28",
+            "2026-07-27",
+            "2026-07-26",
+        ],
+        archive_dates=["2026-08-05"],
+        audio_dates=["2026-08-05"],
+    )
+    add_gaza_site_edition(pages_repo, "2026-08-07")
+    audio_root = pages_repo / "gaza" / "audio"
+    audio_root.mkdir(parents=True, exist_ok=True)
+    captured_seed_dates: list[dict[str, str]] = []
+
+    def fake_build_site(*args, **kwargs):
+        captured_seed_dates.append(dict(kwargs.get("dispatch_seed_dates") or {}))
+        return {
+            "ok": True,
+            "warnings": [],
+            "errors": [],
+            "backfilled_public_editions": [],
+            "gaza_editions_discovered": [],
+            "gaza_editions_backfilled": [],
+            "gaza_editions_skipped": [],
+            "gaza_archive_entries_written": [{"edition_date": "2026-08-07"}],
+        }
+
+    monkeypatch.setattr(generator, "build_site", fake_build_site)
+
+    dry_run_result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=True,
+        commit=False,
+        no_push=True,
+        backup_root=work / "backups",
+        expect_date="2026-08-07",
+        expect_dispatches=("gaza",),
+        only_dispatches=("gaza",),
+    )
+    real_result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=work / "backups",
+        expect_date="2026-08-07",
+        expect_dispatches=("gaza",),
+        only_dispatches=("gaza",),
+    )
+
+    assert captured_seed_dates == [{"gaza": "2026-08-07"}, {"gaza": "2026-08-07"}]
+    assert dry_run_result["ok"] is True
+    assert real_result["ok"] is True
+    assert dry_run_result["gaza_homepage_recent_edition_guard"]["latest_expected_date"] == "2026-08-07"
+    assert real_result["gaza_homepage_recent_edition_guard"]["latest_expected_date"] == "2026-08-07"
+    assert dry_run_result["gaza_homepage_recent_edition_guard"]["added_dates"] == ["2026-08-07"]
+    assert dry_run_result["gaza_homepage_recent_edition_guard"]["removed_dates"] == ["2026-07-26"]
+    assert real_result["gaza_homepage_recent_edition_guard"]["added_dates"] == ["2026-08-07"]
+    assert real_result["gaza_homepage_recent_edition_guard"]["removed_dates"] == ["2026-07-26"]
+
+
 def test_pages_publish_allows_normal_gaza_homepage_rotation(tmp_path, monkeypatch):
     work = tmp_path / "repo"
     work.mkdir()

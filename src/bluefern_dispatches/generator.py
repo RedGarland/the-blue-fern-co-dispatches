@@ -1767,7 +1767,7 @@ def reconcile_gaza_public_editions(
 
     archive_entries = [
         {"edition_date": date}
-        for date in discover_public_edition_dates(site_root, "gaza")
+        for date in discover_public_edition_dates(site_root, "gaza", pages_repo=pages_repo)
     ]
     return {
         "discovered": discovered,
@@ -3579,10 +3579,12 @@ def publish_pages(
         existing_care_line_dates = discover_public_edition_dates(root / "output" / "site", CARE_LINE_DISPATCH_SLUG)
         if existing_care_line_dates:
             dispatch_seed_dates["care-line"] = max(existing_care_line_dates)
-    if "gaza" not in dispatch_seed_dates and pages_repo is not None:
-        explicit_gaza_dates = discover_public_edition_dates(pages_repo, "gaza")
-        if explicit_gaza_dates:
-            dispatch_seed_dates["gaza"] = explicit_gaza_dates[0]
+    gaza_targeted = (not only_dispatches) or ("gaza" in only_dispatches) or ("gaza" in expect_dispatches)
+    explicit_gaza_dates = discover_public_edition_dates(pages_repo, "gaza") if pages_repo is not None else []
+    if gaza_targeted and expect_date:
+        dispatch_seed_dates["gaza"] = expect_date
+    elif "gaza" not in dispatch_seed_dates and explicit_gaza_dates:
+        dispatch_seed_dates["gaza"] = explicit_gaza_dates[0]
     removed_nested_duplicate_paths = remove_nested_duplicate_dispatch_paths(root / "output" / "site", dry_run)
     build = build_site(
         root,

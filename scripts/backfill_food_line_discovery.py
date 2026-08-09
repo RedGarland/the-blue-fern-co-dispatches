@@ -355,12 +355,70 @@ def _review_html(payload: dict[str, Any]) -> str:
     )
 
 
+def _backfill_candidate_identity(row: dict[str, Any]) -> str:
+    for key in ("canonical_url", "source_url", "final_trace_url", "url", "discovered_url"):
+        value = str(row.get(key) or "").strip()
+        if value:
+            return value.rstrip("/")
+    title = str(row.get("selected_title") or row.get("discovered_title") or row.get("title") or "").strip().lower()
+    publisher = str(row.get("discovered_publisher") or row.get("publisher") or "").strip().lower()
+    if title or publisher:
+        return f"{title}|{publisher}"
+    candidate_id = str(row.get("candidate_id") or "").strip()
+    return candidate_id or ""
+
+
+def _backfill_candidate_is_historical_recovery(row: dict[str, Any]) -> bool:
+    classification_status = str(row.get("classification_status") or "").strip()
+    traceability_status = str(row.get("traceability_status") or "").strip()
+    return bool(row.get("pressure_signal")) and traceability_status == "traceable" and classification_status in {
+        "qualified_pressure_signal",
+        "manual_fallback",
+    }
+
+
+def _label_backfill_candidate(
+    row: dict[str, Any],
+    *,
+    edition_date: str,
+    canonical_date: str | None = None,
+    canonical_candidate_id: str | None = None,
+) -> dict[str, Any]:
+    labeled = dict(row)
+    blockers = [str(item).strip() for item in list(labeled.get("public_claim_blockers") or []) if str(item).strip()]
+    source_published_at = str(labeled.get("source_published_date") or labeled.get("published_at") or "").strip()
+    historical_recovery = _backfill_candidate_is_historical_recovery(labeled)
+    source_published_day = source_published_at[:10]
+    is_historical_backfill = bool(source_published_day) and source_published_day < edition_date
+    if canonical_date is None and "outside_backfill_date_window" in blockers and historical_recovery and is_historical_backfill:
+        blockers = [item for item in blockers if item != "outside_backfill_date_window"]
+        labeled["historical_backfill_status"] = "historical_recovered"
+        labeled["historical_backfill_target_date"] = edition_date
+        if source_published_at:
+            labeled["historical_backfill_source_published_at"] = source_published_at
+        labeled["historical_backfill_canonical_date"] = edition_date
+    elif canonical_date is not None:
+        labeled["historical_backfill_status"] = "historical_duplicate"
+        labeled["historical_backfill_target_date"] = edition_date
+        if source_published_at:
+            labeled["historical_backfill_source_published_at"] = source_published_at
+        labeled["historical_backfill_canonical_date"] = canonical_date
+        if canonical_candidate_id:
+            labeled["duplicate_of"] = canonical_candidate_id
+    if blockers:
+        labeled["public_claim_blockers"] = blockers
+    elif "public_claim_blockers" in labeled:
+        labeled["public_claim_blockers"] = []
+    return labeled
+
+
 def _copy_candidate_artifacts(
     root: Path,
     edition_date: str,
     *,
     intake: dict[str, Any] | None = None,
     dry_run: bool,
+    canonical_backfill_identity_dates: dict[str, dict[str, str]] | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     discovery_candidate_path = root / "data" / "dispatches" / DISPATCH_SLUG / "discovery" / edition_date / "discovery_candidates.json"
     candidates_payload = _read_json(discovery_candidate_path) if discovery_candidate_path.exists() else []
@@ -376,11 +434,31 @@ def _copy_candidate_artifacts(
     audit = _read_json(audit_path) if audit_path.exists() else {}
     if not isinstance(audit, dict):
         audit = {}
+    canonical_backfill_identity_dates = dict(canonical_backfill_identity_dates or {})
+    labeled_candidates: list[dict[str, Any]] = []
+    for row in candidates:
+        labeled_row = _label_backfill_candidate(row, edition_date=edition_date)
+        identity = _backfill_candidate_identity(labeled_row)
+        if identity:
+            canonical_entry = canonical_backfill_identity_dates.get(identity)
+            if canonical_entry is None:
+                canonical_backfill_identity_dates[identity] = {
+                    "date": edition_date,
+                    "candidate_id": str(labeled_row.get("candidate_id") or ""),
+                }
+            else:
+                labeled_row = _label_backfill_candidate(
+                    labeled_row,
+                    edition_date=edition_date,
+                    canonical_date=str(canonical_entry.get("date") or edition_date),
+                    canonical_candidate_id=str(canonical_entry.get("candidate_id") or ""),
+                )
+        labeled_candidates.append(labeled_row)
     if not dry_run:
-        _write_json(_candidate_copy_path(root, edition_date), candidates)
+        _write_json(_candidate_copy_path(root, edition_date), labeled_candidates)
         payload = _review_payload(
             edition_date,
-            candidates,
+            labeled_candidates,
             intake,
             audit=audit,
             google_news_debug_by_candidate=dict(audit.get("google_news_resolution_debug_by_candidate") or {}),
@@ -392,7 +470,7 @@ def _copy_candidate_artifacts(
         payload["candidate_review_json_shape"] = "object.candidates"
         _write_json(_review_json_path(root, edition_date), payload)
         _write_text(_review_html_path(root, edition_date), _review_html(payload))
-    return candidates, intake
+    return labeled_candidates, intake
 
 
 def run_food_line_discovery_backfill(
@@ -417,6 +495,7 @@ def run_food_line_discovery_backfill(
     dates_with_no_reviewable: list[str] = []
     dates_with_no_public_eligible: list[str] = []
     failed_dates: list[str] = []
+    canonical_backfill_identity_dates: dict[str, dict[str, str]] = {}
 
     def build_summary() -> dict[str, Any]:
         summary = {
@@ -517,6 +596,7 @@ def run_food_line_discovery_backfill(
             "dates_with_no_reviewable_candidates": dates_with_no_reviewable,
             "dates_with_no_public_eligible_candidates": dates_with_no_public_eligible,
             "dates_with_only_out_of_window_candidates": sorted({row["date"] for row in per_date if bool(row.get("only_out_of_window_candidates"))}),
+            "dates_with_only_historical_recovered_candidates": sorted({row["date"] for row in per_date if bool(row.get("only_historical_recovered_candidates"))}),
             "dates_with_only_context_candidates": sorted({row["date"] for row in per_date if bool(row.get("only_context_candidates"))}),
             "configured_lanes": sorted({lane for row in per_date for lane in row.get("configured_lanes", []) if str(lane).strip()}),
             "executed_lanes": sorted({lane for row in per_date for lane in row.get("executed_lanes", []) if str(lane).strip()}),
@@ -1001,7 +1081,13 @@ def run_food_line_discovery_backfill(
                     dry_run=dry_run,
                 )
                 intake = run_food_line_discovery_intake_bridge(root, edition_date, dry_run=dry_run)
-                candidates, intake_payload = _copy_candidate_artifacts(root, edition_date, intake=intake, dry_run=dry_run)
+                candidates, intake_payload = _copy_candidate_artifacts(
+                    root,
+                    edition_date,
+                    intake=intake,
+                    dry_run=dry_run,
+                    canonical_backfill_identity_dates=canonical_backfill_identity_dates,
+                )
                 status = "completed"
         except Exception as exc:  # noqa: BLE001
             failed_dates.append(edition_date)
@@ -1257,6 +1343,9 @@ def run_food_line_discovery_backfill(
         only_out_of_window_candidates = bool(typed_candidates) and all(
             "outside_backfill_date_window" in list(row.get("public_claim_blockers") or []) for row in typed_candidates
         )
+        only_historical_recovered_candidates = bool(typed_candidates) and all(
+            str(row.get("historical_backfill_status") or "").strip() == "historical_recovered" for row in typed_candidates
+        )
         only_context_candidates = bool(typed_candidates) and all(
             str(row.get("classification_status") or "").strip() == "context_only" for row in typed_candidates
         )
@@ -1439,6 +1528,7 @@ def run_food_line_discovery_backfill(
                 "candidates_by_direct_source": candidates_by_direct_source,
                 "candidates_by_direct_source_lane": candidates_by_direct_source_lane,
                 "only_out_of_window_candidates": only_out_of_window_candidates,
+                "only_historical_recovered_candidates": only_historical_recovered_candidates,
                 "only_context_candidates": only_context_candidates,
                 "top_blocker_reasons": dict(sorted(Counter(blocker for row in typed_candidates for blocker in (row.get("public_claim_blockers") or [])).items(), key=lambda item: (-item[1], item[0]))[:10]),
                 "errors": [],

@@ -315,6 +315,11 @@ def _review_payload(
                 "google_news_resolution": dict((google_news_debug_by_candidate or {}).get(str(row.get("candidate_id") or ""), {})),
                 "classification_status": str(row.get("classification_status") or ""),
                 "exclusion_reason": str(row.get("exclusion_reason") or ""),
+                "historical_backfill_status": str(row.get("historical_backfill_status") or ""),
+                "historical_backfill_target_date": str(row.get("historical_backfill_target_date") or ""),
+                "historical_backfill_source_published_at": str(row.get("historical_backfill_source_published_at") or ""),
+                "historical_backfill_canonical_date": str(row.get("historical_backfill_canonical_date") or ""),
+                "duplicate_of": str(row.get("duplicate_of") or ""),
             }
             for row in candidates
         ],
@@ -434,7 +439,8 @@ def _copy_candidate_artifacts(
     audit = _read_json(audit_path) if audit_path.exists() else {}
     if not isinstance(audit, dict):
         audit = {}
-    canonical_backfill_identity_dates = dict(canonical_backfill_identity_dates or {})
+    if canonical_backfill_identity_dates is None:
+        canonical_backfill_identity_dates = {}
     labeled_candidates: list[dict[str, Any]] = []
     for row in candidates:
         labeled_row = _label_backfill_candidate(row, edition_date=edition_date)

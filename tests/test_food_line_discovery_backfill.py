@@ -1470,39 +1470,109 @@ def test_current_day_freshness_behavior_remains_unchanged():
     assert freshness_reason == ""
 
 
-def test_backfill_dedupes_same_historical_candidate_across_dates():
-    first = {
-        "candidate_id": "frac-2026-08-06",
-        "discovered_title": "Senate Agriculture Committee Chair Releases Updated Farm Bill Proposal, but Key SNAP Harms Remain",
-        "discovered_publisher": "FRAC News",
-        "canonical_url": "https://frac.org/blog/senate-agriculture-committee-chair-releases-updated-farm-bill-proposal-but-key-snap-harms-remain",
-        "source_published_date": "2026-08-03",
-        "published_at": "2026-08-03",
-        "pressure_signal": True,
-        "pressure_type": "SNAP policy pressure",
-        "pressure_summary": "FRAC warned that a SNAP eligibility proposal would tighten access to benefits for some households.",
-        "traceability_status": "traceable",
-        "classification_status": "qualified_pressure_signal",
-        "public_claim_eligible": False,
-        "public_claim_blockers": ["outside_backfill_date_window"],
-    }
-    second = dict(first, candidate_id="frac-2026-08-07")
-
-    identity_dates: dict[str, dict[str, str]] = {}
-    first_labeled = backfill._label_backfill_candidate(first, edition_date="2026-08-06")
-    first_identity = backfill._backfill_candidate_identity(first_labeled)
-    identity_dates[first_identity] = {"date": "2026-08-06", "candidate_id": first_labeled["candidate_id"]}
-    second_labeled = backfill._label_backfill_candidate(second, edition_date="2026-08-07")
-    second_identity = backfill._backfill_candidate_identity(second_labeled)
-    second_labeled = backfill._label_backfill_candidate(
-        second_labeled,
-        edition_date="2026-08-07",
-        canonical_date=identity_dates[second_identity]["date"],
-        canonical_candidate_id=identity_dates[second_identity]["candidate_id"],
+def test_backfill_dedupes_same_historical_candidate_across_dates(tmp_path: Path):
+    feed_url = "https://example.org/frac-feed.xml"
+    article_url = "https://frac.org/blog/senate-agriculture-committee-chair-releases-updated-farm-bill-proposal-but-key-snap-harms-remain"
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "FRAC News",
+                "source_family": "nonprofit_report",
+                "discovery_lane": "nonprofit_report",
+                "discovery_channel": "direct_rss",
+                "feed_url": feed_url,
+                "allowed_domains": ["frac.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "max_age_days": 14,
+                "pressure_terms": ["SNAP", "benefits", "proposal"],
+                "exclusion_terms": [],
+            }
+        ],
     )
 
-    assert first_labeled["historical_backfill_status"] == "historical_recovered"
-    assert first_labeled["historical_backfill_target_date"] == "2026-08-06"
-    assert second_labeled["historical_backfill_status"] == "historical_duplicate"
-    assert second_labeled["historical_backfill_target_date"] == "2026-08-07"
-    assert second_labeled["duplicate_of"] == "frac-2026-08-06"
+    def fetcher(url: str, timeout: int = 15):
+        if url == feed_url:
+            return _rss_payload(
+                [
+                    {
+                        "title": "Senate Agriculture Committee Chair Releases Updated Farm Bill Proposal, but Key SNAP Harms Remain",
+                        "link": article_url,
+                        "source_url": article_url,
+                        "publisher": "FRAC News",
+                        "description": "FRAC warned that a SNAP eligibility proposal would tighten access to benefits for some households.",
+                        "pubDate": "Tue, 03 Aug 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == article_url:
+            return (
+                "<html><head><title>Senate Agriculture Committee Chair Releases Updated Farm Bill Proposal, but Key SNAP Harms Remain</title>"
+                f"<link rel=\"canonical\" href=\"{article_url}\">"
+                "<meta property=\"article:published_time\" content=\"2026-08-03T12:00:00Z\"></head>"
+                "<body><article><p>FRAC warned that a SNAP eligibility proposal would tighten access to benefits for some households.</p></article></body></html>"
+            ).encode("utf-8")
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload([])
+        raise AssertionError(url)
+
+    original = backfill.run_food_line_discovery_expansion
+    try:
+        from bluefern_dispatches import food_line_discovery_expansion as expansion_module
+
+        def patched_run(root, edition_date, **kwargs):
+            return expansion_module.run_food_line_discovery_expansion(root, edition_date, fetcher=fetcher, **kwargs)
+
+        backfill.run_food_line_discovery_expansion = patched_run
+        result = backfill.run_food_line_discovery_backfill(
+            tmp_path,
+            "2026-08-06",
+            "2026-08-08",
+            max_queries=1,
+            max_results_per_query=5,
+            query_lookback_days=0,
+            query_lookahead_days=0,
+            public_claim_lookback_days=0,
+            public_claim_lookahead_days=0,
+            dry_run=False,
+        )
+    finally:
+        backfill.run_food_line_discovery_expansion = original
+
+    summary = json.loads(
+        (tmp_path / "output" / "review" / "food-line" / "backfill" / "2026-08-06_to_2026-08-08" / "backfill_summary.json").read_text(encoding="utf-8")
+    )
+    day1 = json.loads((tmp_path / "output" / "review" / "food-line" / "2026-08-06" / "candidate_review.json").read_text(encoding="utf-8"))
+    day2 = json.loads((tmp_path / "output" / "review" / "food-line" / "2026-08-07" / "candidate_review.json").read_text(encoding="utf-8"))
+    day3 = json.loads((tmp_path / "output" / "review" / "food-line" / "2026-08-08" / "candidate_review.json").read_text(encoding="utf-8"))
+
+    def frac_row(payload: dict[str, object]) -> dict[str, object]:
+        for candidate in payload["candidates"]:
+            if "FRAC News" in candidate["publisher"]:
+                return candidate
+        raise AssertionError("FRAC candidate missing")
+
+    row1 = frac_row(day1)
+    row2 = frac_row(day2)
+    row3 = frac_row(day3)
+
+    assert result["ok"] is True
+    assert summary["total_candidates"] == 3
+    assert summary["dates_with_no_reviewable_candidates"] == []
+    assert summary["dates_with_no_public_eligible_candidates"] == ["2026-08-06", "2026-08-07", "2026-08-08"]
+    assert row1["historical_backfill_status"] == "historical_recovered"
+    assert row1["historical_backfill_target_date"] == "2026-08-06"
+    assert row1["historical_backfill_source_published_at"] == "2026-08-03"
+    assert row1["historical_backfill_canonical_date"] == "2026-08-06"
+    assert row1["duplicate_of"] == ""
+    assert row2["historical_backfill_status"] == "historical_duplicate"
+    assert row2["historical_backfill_target_date"] == "2026-08-07"
+    assert row2["historical_backfill_source_published_at"] == "2026-08-03"
+    assert row2["historical_backfill_canonical_date"] == "2026-08-06"
+    assert row2["duplicate_of"] == "food-line-discovery-5fa79f1f6c98bdf9"
+    assert row3["historical_backfill_status"] == "historical_duplicate"
+    assert row3["historical_backfill_target_date"] == "2026-08-08"
+    assert row3["historical_backfill_source_published_at"] == "2026-08-03"
+    assert row3["historical_backfill_canonical_date"] == "2026-08-06"
+    assert row3["duplicate_of"] == "food-line-discovery-5fa79f1f6c98bdf9"

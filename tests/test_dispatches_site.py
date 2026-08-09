@@ -1824,59 +1824,56 @@ def test_scoped_build_preserves_modern_root_homepage_for_gaza(tmp_path, monkeypa
     copy_repo_assets(Path(__file__).parent.parent, work)
     pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
     (pages_repo / "CNAME").write_text("dispatches.thebluefernco.com\n", encoding="utf-8")
-    (pages_repo / "index.html").write_text("<html>Root</html>", encoding="utf-8")
+    pages_root = pages_repo / "index.html"
+    pages_root_original = b"<!doctype html><html><body><main>Latest published developments</main></body></html>\n"
+    pages_root.write_bytes(pages_root_original)
     site_root = work / "output" / "site"
     site_root.mkdir(parents=True, exist_ok=True)
     root_index = site_root / "index.html"
-    original_root = b'<!doctype html>\n<html><body><main>Latest published developments</main></body></html>\n'
-    root_index.write_bytes(original_root)
+    stale_root = b"<!doctype html><html><body><main>obsolete root homepage</main></body></html>\n"
+    root_index.write_bytes(stale_root)
     gaza_root = site_root / "gaza"
     gaza_root.mkdir(parents=True, exist_ok=True)
     gaza_root.joinpath("index.html").write_text("<html><body>stale gaza homepage</body></html>", encoding="utf-8")
-    add_gaza_public_history_surface(
-        site_root,
-        [
-            "2026-07-04",
-            "2026-07-03",
-            "2026-07-02",
-            "2026-07-01",
-            "2026-06-30",
-            "2026-06-29",
-            "2026-06-28",
-            "2026-06-27",
-            "2026-06-26",
-            "2026-06-25",
-        ],
-        archive_dates=["2026-07-04"],
-        audio_dates=["2026-07-04"],
-    )
+    history_dates = [
+        "2026-07-04",
+        "2026-07-03",
+        "2026-07-02",
+        "2026-07-01",
+        "2026-06-30",
+        "2026-06-29",
+        "2026-06-28",
+        "2026-06-27",
+        "2026-06-26",
+        "2026-06-25",
+    ]
+    add_gaza_public_history_surface(site_root, history_dates, archive_dates=["2026-07-04"], audio_dates=["2026-07-04"])
     add_gaza_site_edition(site_root, "2026-07-04")
-    add_gaza_public_history_surface(
-        pages_repo,
-        [
-            "2026-07-03",
-            "2026-07-02",
-            "2026-07-01",
-            "2026-06-30",
-            "2026-06-29",
-            "2026-06-28",
-            "2026-06-27",
-            "2026-06-26",
-            "2026-06-25",
-            "2026-06-24",
-        ],
-        archive_dates=["2026-07-04"],
-        audio_dates=["2026-07-04"],
-    )
+    add_gaza_public_history_surface(pages_repo, history_dates, archive_dates=["2026-07-04"], audio_dates=["2026-07-04"])
     add_gaza_site_edition(pages_repo, "2026-07-04")
 
-    result = build_site(work, dry_run=False, backup_root=work / "backup", only_dispatches=("gaza",))
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=work / "backup",
+        only_dispatches=("gaza",),
+        allow_listing_shrink=True,
+    )
 
     assert result["ok"] is True
-    assert root_index.read_bytes() == original_root
+    assert root_index.read_bytes() == stale_root
+    assert pages_root.read_bytes() == pages_root_original
     assert "stale gaza homepage" not in gaza_root.joinpath("index.html").read_text(encoding="utf-8")
     assert "Dispatches From Gaza" in gaza_root.joinpath("index.html").read_text(encoding="utf-8")
     assert (site_root / "gaza" / "editions" / "2026-07-04" / "index.html").exists()
+    assert (pages_repo / "gaza" / "editions" / "2026-07-04" / "index.html").exists()
+    assert result["files_copied"]
+    assert str(pages_repo / "index.html") not in result["files_copied"]
+    assert str(pages_repo / "gaza" / "index.html") in result["files_copied"]
 
 
 def test_pages_publish_allows_normal_gaza_homepage_rotation(tmp_path, monkeypatch):

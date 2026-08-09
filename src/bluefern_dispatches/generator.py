@@ -2862,6 +2862,9 @@ def copy_public_site_to_pages(
     ):
         target = pages_repo / source.relative_to(site_root)
         relative = source.relative_to(site_root).as_posix()
+        if only_dispatches and relative == "index.html":
+            skipped.append(f"preserved Pages root homepage during scoped publish: {target}")
+            continue
         if tuple(only_dispatches) == (CARE_LINE_DISPATCH_SLUG,):
             in_signal_scope = relative in {"signals/feed.xml", "care-line/signals/feed.xml"} or relative.startswith("events/")
             if not in_signal_scope:

@@ -1,0 +1,198 @@
+[
+  {
+    "story_id": "gaza-story-2026-08-08-003",
+    "title": "UNRWA has been with me since birth, I cannot imagine a future without it",
+    "summary": "The UN body has been part of the lives of millions of Palestinian refugees. Post-genocide Gaza cannot cope without it.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "scope_provenance": "article_evidence",
+    "score": 73,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-08-aljazeera-middle-east-964a10383d06"
+    ],
+    "source_ids": [
+      "gaza-2026-08-08-aljazeera-middle-east-964a10383d06"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/features/2026/8/8/unrwa-has-been-with-me-since-birth-i-cannot-imagine-a-future-without-it?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-08-aljazeera-middle-east-964a10383d06",
+        "title": "UNRWA has been with me since birth, I cannot imagine a future without it",
+        "url": "https://www.aljazeera.com/features/2026/8/8/unrwa-has-been-with-me-since-birth-i-cannot-imagine-a-future-without-it?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "The UN body has been part of the lives of millions of Palestinian refugees. Post-genocide Gaza cannot cope without it"
+      }
+    ],
+    "generated_at": "2026-08-09T01:27:10.488789+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "unrwa"
+    ],
+    "top_story_relevance_score": 73,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-08-002",
+    "title": "Gaza health chief urges action to 'save' Dr Abu Safia before it's too late",
+    "summary": "Fears increase for life of Hussam Abu Safia detained by Israel amid reports of torture and lack of medical care.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "scope_provenance": "article_evidence",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-08-aljazeera-middle-east-c043c4760504"
+    ],
+    "source_ids": [
+      "gaza-2026-08-08-aljazeera-middle-east-c043c4760504"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/8/8/gaza-health-chief-urges-action-to-save-dr-abu-safia-before-its-too-late?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-08-aljazeera-middle-east-c043c4760504",
+        "title": "Gaza health chief urges action to 'save' Dr Abu Safia before it's too late",
+        "url": "https://www.aljazeera.com/news/2026/8/8/gaza-health-chief-urges-action-to-save-dr-abu-safia-before-its-too-late?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Fears increase for life of Hussam Abu Safia detained by Israel amid reports of torture and lack of medical care."
+      }
+    ],
+    "generated_at": "2026-08-09T01:27:10.488789+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-08-001",
+    "title": "Crews recover 19 bodies from rubble of destroyed Gaza building",
+    "summary": "More than 8,000 people remain missing amid rubble in Gaza, with recovery efforts hindered by lack of heavy machinery.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "scope_provenance": "article_evidence",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-08-aljazeera-middle-east-a9390ff2a470"
+    ],
+    "source_ids": [
+      "gaza-2026-08-08-aljazeera-middle-east-a9390ff2a470"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/8/8/crews-recover-19-bodies-from-rubble-of-destroyed-gaza-building?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-08-aljazeera-middle-east-a9390ff2a470",
+        "title": "Crews recover 19 bodies from rubble of destroyed Gaza building",
+        "url": "https://www.aljazeera.com/news/2026/8/8/crews-recover-19-bodies-from-rubble-of-destroyed-gaza-building?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "More than 8,000 people remain missing amid rubble in Gaza, with recovery efforts hindered by lack of heavy machinery."
+      }
+    ],
+    "generated_at": "2026-08-09T01:27:10.488789+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

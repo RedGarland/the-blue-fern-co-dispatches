@@ -427,3 +427,56 @@ def test_food_line_google_news_wrappers_stay_out_of_public_trace_urls(tmp_path: 
     assert bridge_row["url"] == publisher_url
     assert bridge_row["google_news_url"].lower() == google_news_url.lower()
     assert bridge_row["final_trace_url"] == publisher_url
+
+
+def test_food_line_same_date_bridge_merges_prior_pending_findings_without_loss(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    edition_date = "2026-08-08"
+    candidate_path = tmp_path / "data" / "dispatches" / "food-line" / "discovery" / edition_date / "discovery_candidates.json"
+
+    first_candidate = _candidate_row(
+        candidate_id="food-line-source-watch-first",
+        title="Coastal Georgia inventory decline",
+        publisher="GPB News",
+        google_news_url="https://news.google.com/rss/articles/first?oc=5",
+        final_trace_url="https://thecurrentga.org/2026/08/04/good-spread-peanut-butter-a-win-win-for-communities-in-u-s-abroad/",
+        fetch_status="ok",
+        fetch_error="",
+        classification_status="qualified_pressure_signal",
+        exclusion_reason="",
+        manual_review_required=True,
+        pressure_terms_detected=["inventory decline", "warehouse shelving"],
+    )
+    second_candidate = _candidate_row(
+        candidate_id="food-line-source-watch-second",
+        title="Maine credit unions raise $100K to help fight hunger",
+        publisher="Mainebiz",
+        google_news_url="https://news.google.com/rss/articles/second?oc=5",
+        final_trace_url="https://mainebiz.biz/article/maine-credit-unions-raise-100k-to-help-fight-hunger",
+        publication_date="2026-08-07T12:00:00Z",
+        state_or_territory="ME",
+        metro="Portland",
+        fetch_status="ok",
+        fetch_error="",
+        classification_status="qualified_pressure_signal",
+        exclusion_reason="",
+        manual_review_required=True,
+        pressure_terms_detected=["hunger", "food assistance"],
+    )
+
+    _write_json(candidate_path, [first_candidate])
+    first_bridge = run_food_line_discovery_intake_bridge(tmp_path, edition_date)
+    first_rows = json.loads(Path(first_bridge["discovery_source_input_path"]).read_text(encoding="utf-8"))
+    assert [row["candidate_id"] for row in first_rows] == ["food-line-source-watch-first"]
+
+    _write_json(candidate_path, [second_candidate])
+    second_bridge = run_food_line_discovery_intake_bridge(tmp_path, edition_date)
+    merged_rows = json.loads(Path(second_bridge["discovery_source_input_path"]).read_text(encoding="utf-8"))
+
+    assert {row["candidate_id"] for row in merged_rows} == {
+        "food-line-source-watch-first",
+        "food-line-source-watch-second",
+    }
+    assert second_bridge["discovery_source_watch_disposition_counts"]["pending"] == 1
+    assert second_bridge["discovery_candidates_intaked"] == 1
+    assert second_bridge["discovery_candidates_excluded"] == 0

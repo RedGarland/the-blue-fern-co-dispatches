@@ -231,6 +231,39 @@ def test_full_article_requirement_is_preserved_when_summary_is_insufficient(repo
     assert payload["classification"] in {"NEEDS_FULL_ARTICLE", "INSUFFICIENT_BOUNDED_EVIDENCE"}
 
 
+def test_explicit_lincoln_closure_excerpt_can_reach_review_without_full_article(repo_copy: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    source = _source(repo_copy).model_copy(update={"allowed_hosts": ["beckershospitalreview.com"]})
+    raw_item = _raw_item(
+        title="MaineHealth to end labor and delivery at Lincoln Hospital",
+        description="Portland-based MaineHealth will end inpatient labor and delivery services at MaineHealth Lincoln Hospital in Damariscotta, Maine, effective Dec. 18, according to an Aug. 6 health system news release shared with Becker's.",
+        source_date="2026-08-06",
+        url="https://www.beckershospitalreview.com/finance/mainehealth-to-end-labor-and-delivery-at-lincoln-hospital/",
+        requires_html_followup=True,
+    )
+    lead = event_lead_from_raw_item(raw_item)
+    monkeypatch.setattr(
+        "bluefern_dispatches.care_line_national_pipeline.fetch_url",
+        lambda url, timeout=20, allow_insecure_tls=False, user_agent="": (
+            b"<html><body><p>Subscribe to continue reading</p></body></html>",
+            {"http_status": 200, "content_type": "text/html", "final_url": url},
+        ),
+    )
+    status, payload = qualify_event_lead(
+        source,
+        raw_item,
+        lead,
+        artifact_path="artifact.json",
+        run_id="run-1",
+        fetch_timeout=5,
+        allow_insecure_tls=False,
+    )
+    assert status == "qualified"
+    reviewed = CareLineReviewedRecord.model_validate(payload["normalized_record"])
+    assert reviewed.event_type in {"service_closure", "facility_closure"}
+    assert reviewed.validation_issues() == []
+    assert "full_article_recommended" in payload["qualification_result"]["review_warnings"]
+
+
 def test_missing_source_date_is_failed_extraction(repo_copy: Path) -> None:
     source = _source(repo_copy)
     raw_item = _raw_item(
@@ -284,6 +317,37 @@ def test_missing_source_date_can_still_reach_review_when_currentness_is_resolved
     assert reviewed.announcement_date == "2026-08-06"
     assert reviewed.validation_issues() == []
     assert "missing_source_publication_date" in payload["qualification_result"]["review_warnings"]
+
+
+def test_bangor_maternity_ward_vote_story_resolves_subject_and_reaches_review(repo_copy: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    source = _source(repo_copy).model_copy(update={"allowed_hosts": ["bdn-data.s3.amazonaws.com", "bangordailynews.com"]})
+    raw_item = _raw_item(
+        title="Judge denies request to stop vote on closing midcoast maternity ward",
+        description="Justice Daniel Billings said the plaintiff, a pregnant Lincoln County woman, failed to demonstrate how she would be irreparably injured simply by a vote to close the center.",
+        source_date="2026-08-06",
+        url="https://www.bangordailynews.com/2026/08/06/midcoast/midcoast-police-courts/judge-denies-request-to-stop-vote-closing-lincoln-hospital-maternity-ward/",
+    )
+    lead = event_lead_from_raw_item(raw_item)
+    monkeypatch.setattr(
+        "bluefern_dispatches.care_line_national_pipeline.fetch_url",
+        lambda url, timeout=20, allow_insecure_tls=False, user_agent="": (
+            b"<html><body><article><p>Justice Daniel Billings said the plaintiff, a pregnant Lincoln County woman, failed to demonstrate how she would be irreparably injured simply by a vote to close the center.</p></article></body></html>",
+            {"http_status": 200, "content_type": "text/html", "final_url": url},
+        ),
+    )
+    status, payload = qualify_event_lead(
+        source,
+        raw_item,
+        lead,
+        artifact_path="artifact.json",
+        run_id="run-1",
+        fetch_timeout=5,
+        allow_insecure_tls=False,
+    )
+    assert status == "qualified"
+    reviewed = CareLineReviewedRecord.model_validate(payload["normalized_record"])
+    assert reviewed.service_line in {"maternity", "labor_and_delivery"}
+    assert reviewed.validation_issues() == []
 
 
 def test_no_inferred_vulnerability_priority_bump(repo_copy: Path) -> None:

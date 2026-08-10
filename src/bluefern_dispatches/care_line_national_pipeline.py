@@ -337,7 +337,7 @@ RETROSPECTIVE_MARKERS = (
 )
 ACTIONABLE_EVENT_PATTERN = re.compile(
     r"\b("
-    r"will close|plans? to close|set to close|scheduled to close|proposed closure|proposed closing|closed|closing|"
+    r"will close|will end|will suspend|will reduce|will reopen|will restore|plans? to close|set to close|scheduled to close|proposed closure|proposed closing|moving forward|vote to close|vote on closing|stop vote|closed|closing|"
     r"remain(?:s)? closed|still closed|reopen(?:ed|ing|s)?|restore(?:d|s|ing)?|resume(?:d|s|ing)?|"
     r"suspend(?:ed|ing|s)?|remain(?:s)? suspended|still suspended|halt(?:ed|ing|s)?|"
     r"reduce(?:d|s|ing)? hours?|cut(?:s|ting)? beds?|shut(?:ting)? down|stop admissions|divert(?:ed|ing|s)?"
@@ -1425,11 +1425,14 @@ def _extract_subject(title: str, passage: str, *, service_line: str) -> tuple[st
         match = pattern.search(title.strip())
         if match:
             subject = match.group("subject").strip(" -:")
+            if re.search(r"\b(judge|court|request|vote|lawsuit|appeal)\b", subject, re.I):
+                continue
             return subject, subject
     facility_match = re.search(
         r"\b([A-Z][A-Za-z0-9&'.-]+(?:\s+[A-Z][A-Za-z0-9&'.-]+){0,6}\s+"
         r"(?:Hospital|Clinic|Medical Center|Health Center|Health System|Healthcare System|Children's Hospital|Center))\b",
         title + " " + passage,
+        re.I,
     )
     if facility_match:
         subject = facility_match.group(1).strip()
@@ -1437,10 +1440,19 @@ def _extract_subject(title: str, passage: str, *, service_line: str) -> tuple[st
     provider_match = re.search(
         r"\b([A-Z][A-Za-z0-9&'.-]+(?:\s+[A-Z][A-Za-z0-9&'.-]+){0,6}\s+(?:System|Network|Services))\b",
         title + " " + passage,
+        re.I,
     )
     if provider_match:
         provider = provider_match.group(1).strip()
         return "", provider
+    service_subject_match = re.search(
+        r"\b((?:[A-Z][A-Za-z0-9&'.-]+\s+){0,4}(?:labor and delivery|labor & delivery|maternity ward|maternity unit|birthing center|birth center|maternity|labor and delivery unit|labor and delivery services))\b",
+        title + " " + passage,
+        re.I,
+    )
+    if service_subject_match:
+        subject = service_subject_match.group(1).strip(" -:")
+        return subject, subject
     if service_line:
         return "", ""
     return "", ""
@@ -1557,6 +1569,30 @@ def _supporting_passage(text: str, event_type: str, service_line: str) -> str:
     if best_score <= 0:
         return ""
     return best[:500].strip()
+
+
+def _supports_review_without_full_article(
+    *,
+    supporting_passage: str,
+    event_type: str,
+    service_line: str,
+    subject: str,
+    provider: str,
+    access_consequences: list[str],
+) -> bool:
+    if not supporting_passage.strip():
+        return False
+    if event_type not in {"facility_closure", "planned_facility_closure", "service_closure", "service_suspension", "hours_reduction", "capacity_reduction", "service_reduction", "facility_reopening", "service_restoration"}:
+        return False
+    if not (subject or provider or service_line):
+        return False
+    if not access_consequences:
+        return False
+    lowered = supporting_passage.casefold()
+    return bool(
+        re.search(r"\b(close|closing|closed|end|ending|suspend|suspended|halt|halted|cut|reducing|reduce|reopen|reopened|restore|restored|transfer|move)\b", lowered)
+        and (re.search(r"\b(hospital|clinic|center|ward|unit|department|service|services)\b", lowered) or service_line)
+    )
 
 
 def _sentence_currentness(
@@ -2378,7 +2414,13 @@ def qualify_event_lead(
             "currentness_failed_gates": list(currentness.get("currentness_failed_gates", [])),
             "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
         }
-    if extraction_outcome in {"PAYWALLED", "PDF_REQUIRED", "SCRIPT_RENDERED", "ACCESS_BLOCKED"}:
+    summary_text = f"{_text(raw_item, 'title')} {_text(raw_item, 'description')}"
+    summary_explicit_event = bool(
+        re.search(r"\b(close|closing|closed|end|ending|suspend|suspended|halt|halted|cut|reducing|reduce|reopen|reopened|restore|restored|transfer|move)\b", summary_text, re.I)
+        and re.search(r"\b(hospital|clinic|center|ward|unit|department|labor and delivery|maternity|service|services)\b", summary_text, re.I)
+        and re.search(r"\b(effective|according to|announced|news release|transfer|move|patients|board)\b", summary_text, re.I)
+    )
+    if extraction_outcome in {"PAYWALLED", "PDF_REQUIRED", "SCRIPT_RENDERED", "ACCESS_BLOCKED"} and not summary_explicit_event:
         return "failed_extraction", {
             "schema_version": EXCLUSION_SCHEMA_VERSION,
             "exclusion_id": _stable_id("care-line-failed-extraction", raw_item.get("raw_item_id", ""), extraction_outcome.casefold()),
@@ -2610,6 +2652,8 @@ def qualify_event_lead(
     candidate["qualification_result"]["extraction_outcome"] = extraction_outcome
     candidate["qualification_result"]["extraction_method"] = extraction_method
     candidate["qualification_result"]["content_hash"] = extraction_hash
+    if full_article_required:
+        candidate["qualification_result"]["review_warnings"] = list(dict.fromkeys(candidate["qualification_result"].get("review_warnings", []) + ["full_article_recommended"]))
     return "qualified", candidate
 
 

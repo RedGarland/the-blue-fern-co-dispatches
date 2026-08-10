@@ -918,7 +918,7 @@ def normalize_records(root: Path, domain: str, payload: Any, *, raw_sha256: str,
                     historical_outcome, queue_action, match_basis = "archived_invalid", "none", "missing_exact_evidence"
                     record.update({"review_status": "excluded", "candidate_created": False, "publication_eligible": False, "archive_status": "archived", "normalization_status": "completed_with_invalid_findings", "exclusion_reason": "missing exact supporting evidence"})
                 else:
-                    historical_outcome, queue_action, match_basis = "new_historical_candidate", "historical_review_candidate", "unmatched_valid_finding"
+                    historical_outcome, queue_action, match_basis = "new_historical_candidate", "review_pending", "unmatched_valid_finding"
                     record.update({"review_status": "pending_review", "candidate_created": True, "publication_eligible": False})
                 record.update({
                     "historical_outcome": historical_outcome,
@@ -977,7 +977,6 @@ def build_inventory(root: Path) -> dict[str, Any]:
                     "",
                     "none",
                     "provenance_only",
-                    "historical_review_candidate",
                 }
             ),
             "substantively_reviewed": sum(

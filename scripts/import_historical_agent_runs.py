@@ -540,12 +540,12 @@ def _review_historical_candidate(args: argparse.Namespace) -> int:
             "new_status": "substantively_reviewed",
             "queue_action": "none",
         },
-        ("care-line", "substantively-valid"): {
-            "audit_decision": "accept_substantively_valid_historical_candidate",
-            "recommended_disposition": "substantively_valid_historical_candidate",
-            "new_status": "substantively_reviewed",
-            "queue_action": "historical_review_candidate",
-        },
+            ("care-line", "substantively-valid"): {
+                "audit_decision": "accept_substantively_valid_historical_candidate",
+                "recommended_disposition": "substantively_valid_historical_candidate",
+                "new_status": "substantively_reviewed",
+                "queue_action": "review_pending",
+            },
         ("gaza", "substantively-valid"): {
             "audit_decision": "accept_substantively_valid_historical_candidate",
             "recommended_disposition": "substantively_valid_historical_candidate",

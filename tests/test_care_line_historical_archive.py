@@ -84,7 +84,7 @@ def care_substantive_review_fixture(root: Path) -> tuple[list[str], dict[str, Pa
                     "access_direction": "access_loss",
                     "announcement_date": "2026-07-29",
                     "effective_date": "2026-08-21",
-                    "queue_action": "historical_review_candidate",
+                    "queue_action": "review_pending",
                     "publication_eligible": False,
                     "publication_approval": False,
                     "source_published_at": "2026-07-29",
@@ -132,7 +132,7 @@ def care_substantive_review_fixture(root: Path) -> tuple[list[str], dict[str, Pa
             "queue_authorized": False,
             "publication_authorized": False,
             "current_review_status": "pending_review",
-            "current_queue_action": "historical_review_candidate",
+            "current_queue_action": "review_pending",
             "current_publication_eligible": False,
             "current_publication_approval": False,
             "materiality_assessment": {"assessment": "moderate_access_impact"},
@@ -218,7 +218,7 @@ def test_unmatched_and_invalid_care_findings_stay_private(tmp_path: Path):
     invalid, invalid_outcomes = normalize(tmp_path, finding(source_url="https://example.org/no-evidence", exact_supporting_passage=""))
     manual, manual_outcomes = normalize(tmp_path, finding(source_url="", event_id=""))
     assert candidate_outcomes == {"new_historical_candidate": 1}
-    assert candidate["queue_action"] == "historical_review_candidate"
+    assert candidate["queue_action"] == "review_pending"
     assert candidate["review_status"] == "pending_review"
     assert candidate["publication_eligible"] is False
     assert invalid_outcomes == {"archived_invalid": 1}
@@ -253,7 +253,7 @@ def test_dry_run_report_contains_care_line_operational_fields(tmp_path: Path, ca
     item = report["care_line_findings"][0]
     for field in ("raw_sha256", "agent_run_id", "source_url", "source_published_at", "event_date", "facility_name", "location_name", "service_line", "event_type", "queue_action", "candidate_created", "review_status", "publication_eligible", "provenance_links"):
         assert field in item
-    assert item["queue_action"] == "historical_review_candidate"
+    assert item["queue_action"] == "review_pending"
     assert item["publication_eligible"] is False
 
 
@@ -344,7 +344,7 @@ def test_care_substantive_review_changes_only_status_and_is_idempotent(
     assert accepted["inventory_before"]["substantively_reviewed"] == 0
     assert accepted["inventory_after"]["pending_substantive_review"] == 0
     assert accepted["inventory_after"]["substantively_reviewed"] == 1
-    assert accepted["inventory_after"]["queue_entries"] == 0
+    assert accepted["inventory_after"]["queue_entries"] == 1
     assert accepted["inventory_after"]["publication_ready_count"] == 0
 
     after_normalized = json.loads(paths["normalized"].read_text(encoding="utf-8"))
@@ -375,7 +375,7 @@ def test_care_substantive_review_changes_only_status_and_is_idempotent(
     assert audit["event_status"] == "scheduled"
     assert audit["effective_date"] == "2026-08-21"
     assert audit["materiality_assessment"] == "moderate_access_impact"
-    assert audit["queue_action"] == "historical_review_candidate"
+    assert audit["queue_action"] == "review_pending"
     assert audit["publication_eligible"] is False
     assert audit["publication_approval"] is False
     assert audit["archive_content_change_authorized"] is False
@@ -404,7 +404,7 @@ def test_care_substantive_review_changes_only_status_and_is_idempotent(
     assert repeated["status"] == "idempotent_noop"
     assert repeated["inventory"]["pending_substantive_review"] == 0
     assert repeated["inventory"]["substantively_reviewed"] == 1
-    assert repeated["inventory"]["queue_entries"] == 0
+    assert repeated["inventory"]["queue_entries"] == 1
     assert repeated["inventory"]["publication_ready_count"] == 0
     assert (
         hashlib.sha256(paths["normalized"].read_bytes()).hexdigest()

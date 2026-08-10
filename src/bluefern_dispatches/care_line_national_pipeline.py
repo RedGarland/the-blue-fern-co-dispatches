@@ -2092,6 +2092,9 @@ def normalize_candidate_record(
     source_title = _text(article_content or {}, "title") or _text(raw_item, "title")
     source_url = _text(raw_item, "item_url")
     source_date = _text(raw_item, "source_publication_date")
+    currentness_date = _text(currentness, "operative_event_date") or _text(currentness, "event_announcement_date") or _text(currentness, "event_effective_date") or _text(currentness, "observed_date")
+    announcement_date = source_date or currentness_date
+    effective_date = _text(currentness, "event_effective_date") or (_text(currentness, "operative_event_date") if _text(currentness, "currentness_class") == "CURRENT_ANNOUNCEMENT_FUTURE_EFFECTIVE" else "")
     text_for_summary = supporting_passage or _text(raw_item, "description") or source_title
     authority_level = _normalize_authority_level(_text(raw_item, "authority_level"))
     reviewed = CareLineReviewedRecord.model_validate(
@@ -2114,8 +2117,8 @@ def normalize_candidate_record(
             ),
             "event_type": event_type,
             "event_type_raw": event_type,
-            "announcement_date": source_date,
-            "effective_date": "",
+            "announcement_date": announcement_date,
+            "effective_date": effective_date,
             "service_line": service_line,
             "service_line_raw": service_line,
             "facility_name": facility_name,
@@ -2173,6 +2176,14 @@ def normalize_candidate_record(
         "public_eligibility_precheck": qualification_status == "qualified" and not reviewed.validation_issues(),
         "review_priority_recommendation": priority,
         "priority_reason": priority_reason,
+        "review_warnings": [
+            warning
+            for warning in (
+                "derived_review_date_from_currentness" if not source_date and announcement_date else "",
+                "missing_source_publication_date" if not source_date else "",
+            )
+            if warning
+        ],
         "currentness_class": _text(currentness, "currentness_class"),
         "freshness_role": _text(currentness, "freshness_role"),
         "operative_event_date": _text(currentness, "operative_event_date"),
@@ -2333,7 +2344,14 @@ def qualify_event_lead(
             "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
         }
 
-    if _text(raw_item, "source_date_state") != "source_dated":
+    source_date_state = _text(raw_item, "source_date_state")
+    has_reviewable_currentness_date = bool(
+        _text(currentness, "operative_event_date")
+        or _text(currentness, "event_announcement_date")
+        or _text(currentness, "event_effective_date")
+        or _text(currentness, "observed_date")
+    )
+    if source_date_state != "source_dated" and not has_reviewable_currentness_date:
         return "failed_extraction", {
             "schema_version": EXCLUSION_SCHEMA_VERSION,
             "exclusion_id": _stable_id("care-line-failed-extraction", raw_item.get("raw_item_id", ""), "needs_date"),
@@ -2360,7 +2378,6 @@ def qualify_event_lead(
             "currentness_failed_gates": list(currentness.get("currentness_failed_gates", [])),
             "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
         }
-
     if extraction_outcome in {"PAYWALLED", "PDF_REQUIRED", "SCRIPT_RENDERED", "ACCESS_BLOCKED"}:
         return "failed_extraction", {
             "schema_version": EXCLUSION_SCHEMA_VERSION,
@@ -2463,6 +2480,8 @@ def qualify_event_lead(
         supporting_passage=supporting_passage,
         access_consequences=access_consequences,
     )
+    if source_date_state != "source_dated" and has_reviewable_currentness_date:
+        failed_gates = [gate for gate in failed_gates if gate != "missing_source_date"]
     extraction_confidence = min(1.0, 0.55 + 0.07 * len(_keyword_hits(supporting_passage, [(label, pattern) for label, _, pattern in POSITIVE_EVENT_PATTERNS])) + (0.1 if article_content else 0.0))
     full_article_required = bool(_text(lead, "full_article_required")) and not article_content
     currentness_passage = _text(currentness, "operative_event_passage")

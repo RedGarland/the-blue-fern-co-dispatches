@@ -253,6 +253,39 @@ def test_missing_source_date_is_failed_extraction(repo_copy: Path) -> None:
     assert payload["classification"] == "NEEDS_DATE"
 
 
+def test_missing_source_date_can_still_reach_review_when_currentness_is_resolved(repo_copy: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    source = _source(repo_copy).model_copy(update={"allowed_hosts": ["example.org"]})
+    raw_item = _raw_item(
+        title="MaineHealth hospital announces closure of Damariscotta Birthing Center",
+        description="MaineHealth said the Damariscotta Birthing Center at the hospital will close on Aug. 6 and patients will be transferred to other hospitals.",
+        source_date="",
+        url="https://example.org/damariscotta",
+    )
+    raw_item["source_date_state"] = "missing"
+    lead = event_lead_from_raw_item(raw_item)
+    monkeypatch.setattr(
+        "bluefern_dispatches.care_line_national_pipeline.fetch_url",
+        lambda url, timeout=20, allow_insecure_tls=False, user_agent="": (
+            b"<html><body><article><p>MaineHealth said the Damariscotta Birthing Center at the hospital will close on Aug. 6 because of staffing changes, and patients will be transferred to other hospitals.</p></article></body></html>",
+            {"http_status": 200, "content_type": "text/html", "final_url": url},
+        ),
+    )
+    status, payload = qualify_event_lead(
+        source,
+        raw_item,
+        lead,
+        artifact_path="artifact.json",
+        run_id="run-1",
+        fetch_timeout=5,
+        allow_insecure_tls=False,
+    )
+    assert status == "qualified"
+    reviewed = CareLineReviewedRecord.model_validate(payload["normalized_record"])
+    assert reviewed.announcement_date == "2026-08-06"
+    assert reviewed.validation_issues() == []
+    assert "missing_source_publication_date" in payload["qualification_result"]["review_warnings"]
+
+
 def test_no_inferred_vulnerability_priority_bump(repo_copy: Path) -> None:
     source = _source(repo_copy)
     raw_item = _raw_item(

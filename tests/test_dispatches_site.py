@@ -110,6 +110,52 @@ def copy_tree_if_exists(src: Path, dst: Path) -> None:
         shutil.copytree(src, dst, dirs_exist_ok=True)
 
 
+def write_care_line_approved_release_fixture(work: Path, edition_date: str) -> None:
+    review_root = work / "data" / "dispatches" / "care-line" / "review"
+    sources_root = work / "data" / "dispatches" / "care-line" / "sources" / edition_date
+    sources_root.mkdir(parents=True, exist_ok=True)
+    (sources_root / "manual_sources.json").write_text("[]", encoding="utf-8")
+    approved_id = "care-line-candidate-20260809-test"
+    proposal = {
+        "schema_version": "bluefern.care_line.proposed_edition.v1",
+        "edition_date": edition_date,
+        "headline": "Food assistance demand rises across Central New York as SNAP changes loom",
+        "approved_signal_ids": [approved_id],
+        "source_adequacy_status": "LIMITED_SOURCE_UPDATE",
+        "source_adequacy_label": "Limited-source update",
+        "edition_summary": "A food bank serving Central New York reports continued growth in food-assistance demand and is preparing for additional pressure as SNAP changes approach.",
+    }
+    review_snapshot = {
+        "schema_version": "bluefern.care_line.review_snapshot.v2",
+        "edition_date": edition_date,
+        "reviewed_at": f"{edition_date}T00:00:00Z",
+        "review_payload": {
+            "items": [
+                {
+                    "candidate_id": approved_id,
+                    "source_name": "AOL.com",
+                    "source_title": "Food assistance need grows across Central New York as SNAP changes loom",
+                    "source_url": "https://www.localsyr.com/news/local-news/food-assistance-need-grows-across-central-new-york-as-snap-changes-loom",
+                    "source_date": edition_date,
+                    "approved_geography": "Central New York",
+                    "approved_public_claim": "A food bank serving Central New York reports continued growth in food-assistance demand and is preparing for additional pressure as SNAP changes approach.",
+                    "bounded_public_summary": "A food bank serving Central New York reports continued growth in food-assistance demand and is preparing for additional pressure as SNAP changes approach.",
+                    "approved_service_line": "food_assistance",
+                    "approved_event_type": "service_pressure",
+                    "approved_access_consequence": "increased demand",
+                    "evidence_level": "article_excerpt",
+                    "exact_supporting_passage": "Food assistance demand is rising across Central New York, and the Food Bank of Central New York is preparing for additional pressure as SNAP changes loom.",
+                    "notes": "Test fixture for care-line scoped publish regression.",
+                }
+            ]
+        },
+    }
+    (review_root / "proposed-editions").mkdir(parents=True, exist_ok=True)
+    (review_root / "signal-reviews").mkdir(parents=True, exist_ok=True)
+    (review_root / "proposed-editions" / f"{edition_date}.json").write_text(json.dumps(proposal, indent=2), encoding="utf-8")
+    (review_root / "signal-reviews" / f"{edition_date}.json").write_text(json.dumps(review_snapshot, indent=2), encoding="utf-8")
+
+
 @pytest.fixture(scope="session")
 def built_site_template(tmp_path_factory):
     import os
@@ -1874,6 +1920,53 @@ def test_scoped_build_preserves_modern_root_homepage_for_gaza(tmp_path, monkeypa
     assert result["files_copied"]
     assert str(pages_repo / "index.html") not in result["files_copied"]
     assert str(pages_repo / "gaza" / "index.html") in result["files_copied"]
+
+
+def test_care_line_scoped_publish_does_not_scan_gaza_history(monkeypatch, tmp_path):
+    work = tmp_path / "repo"
+    work.mkdir()
+    copy_repo_assets(Path(__file__).parent.parent, work)
+    copy_care_line_data(Path(__file__).parent.parent, work)
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    pages_root = pages_repo / "index.html"
+    pages_root.write_text(
+        "<!doctype html><html><body><main>Latest published developments</main></body></html>",
+        encoding="utf-8",
+    )
+    site_root = work / "output" / "site"
+    site_root.mkdir(parents=True, exist_ok=True)
+    site_root.joinpath("index.html").write_text(
+        "<!doctype html><html><body><main>Latest published developments</main></body></html>",
+        encoding="utf-8",
+    )
+    write_care_line_approved_release_fixture(work, "2026-08-09")
+
+    def fail_if_called(*args, **kwargs):
+        raise AssertionError("reconcile_gaza_public_editions should not run for care-line-only publishes")
+
+    monkeypatch.setattr(generator, "reconcile_gaza_public_editions", fail_if_called)
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=True,
+        commit=False,
+        no_push=True,
+        backup_root=work / "backup",
+        expect_date="2026-08-09",
+        expect_dispatches=("care-line",),
+        only_dispatches=("care-line",),
+        allow_listing_shrink=False,
+    )
+
+    assert result["ok"] is True
+    assert result["build"]["gaza_editions_discovered"] == []
+    assert result["build"]["gaza_editions_backfilled"] == []
+    assert result["build"]["gaza_archive_entries_written"] == []
+    copied = [path.replace("\\", "/") for path in result["files_that_would_be_copied"]]
+    assert not any("/gaza/" in path for path in copied)
+    assert not any("/food-line/" in path for path in copied)
 
 
 def test_pages_publish_allows_normal_gaza_homepage_rotation(tmp_path, monkeypatch):

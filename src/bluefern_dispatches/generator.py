@@ -2509,13 +2509,14 @@ def build_site(
         wrote=wrote,
         only_dispatches=only_dispatches,
     )
-    gaza_reconcile = reconcile_gaza_public_editions(
-        root,
-        site_root,
-        dry_run=dry_run,
-        wrote=wrote,
-        pages_repo=pages_repo.resolve() if pages_repo is not None else None,
-    )
+    if not only_dispatches or "gaza" in only_dispatches:
+        gaza_reconcile = reconcile_gaza_public_editions(
+            root,
+            site_root,
+            dry_run=dry_run,
+            wrote=wrote,
+            pages_repo=pages_repo.resolve() if pages_repo is not None else None,
+        )
 
     if not only_dispatches:
         write_text(site_root / "index.html", render_root(all_dispatches), dry_run, wrote)

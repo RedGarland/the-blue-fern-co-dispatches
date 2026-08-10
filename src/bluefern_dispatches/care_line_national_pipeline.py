@@ -1204,6 +1204,7 @@ def begin_collection_run(
     source_ids = [_text(row, "source_id") for row in source_rows]
     run_id = build_run_id(root, run_date=run_date, source_ids=source_ids, collection_runs_root=collection_runs_root)
     run_dir = root / collection_runs_root / run_date / run_id
+    run_dir.mkdir(parents=True, exist_ok=True)
     manifest = {
         "schema_version": PIPELINE_SCHEMA_VERSION,
         "run_id": run_id,

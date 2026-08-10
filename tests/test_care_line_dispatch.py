@@ -224,6 +224,127 @@ def test_care_line_build_renders_no_current_update_edition_and_lists_it(monkeypa
     assert report["qualified_public_claim_count"] == 0
 
 
+def test_care_line_approved_release_renders_limited_source_public_edition(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = _work_root()
+    backup_root = work / "backup"
+    monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-08-09")
+
+    root_index = work / "output" / "site" / "index.html"
+    root_index.parent.mkdir(parents=True, exist_ok=True)
+    original_root = "<!doctype html>\n<html><body><main>Latest published developments</main></body></html>\n"
+    root_index.write_text(original_root, encoding="utf-8")
+
+    proposal_dir = work / "data" / "dispatches" / "care-line" / "review" / "proposed-editions"
+    snapshot_dir = work / "data" / "dispatches" / "care-line" / "review" / "signal-reviews"
+    proposal_dir.mkdir(parents=True, exist_ok=True)
+    snapshot_dir.mkdir(parents=True, exist_ok=True)
+    proposal = {
+        "schema_version": "bluefern.care_line.proposed_edition.v1",
+        "edition_date": "2026-08-09",
+        "edition_mode": "current_update",
+        "headline": "Care Line limited-source update",
+        "edition_summary": "This limited-source update reflects the approved Care Line access developments available in the replay evidence.",
+        "source_adequacy_status": "LIMITED_SOURCE_UPDATE",
+        "source_adequacy_label": "Limited-source update",
+        "source_count": 2,
+        "public_developments": 2,
+        "publisher_count": 2,
+        "approved_signal_ids": [
+            "care_line_candidate_20260809_damariscotta",
+            "care_line_candidate_20260809_massachusetts_behavioral",
+        ],
+    }
+    snapshot = {
+        "schema_version": "bluefern.care_line.review_snapshot.v2",
+        "edition_date": "2026-08-09",
+        "reviewed_at": "2026-08-10T00:15:00Z",
+        "review_payload": {
+            "edition_date": "2026-08-09",
+            "items": [
+                {
+                    "candidate_id": "care_line_candidate_20260809_damariscotta",
+                    "source_name": "Nonprofit Policy Reporting (Maine)",
+                    "source_title": "Despite community pushback, MaineHealth announces closure of Damariscotta birthing center",
+                    "source_url": "https://mainemorningstar.com/2026/08/06/despite-community-pushback-mainehealth-announces-closure-of-damariscotta-birthing-center/",
+                    "source_date": "2026-08-06",
+                    "approved_public_claim": "MaineHealth is closing inpatient labor and delivery services at Lincoln Hospital in Damariscotta.",
+                    "bounded_public_summary": "MaineHealth announced it will close the labor and delivery service at Lincoln Hospital in Damariscotta, adding pressure to rural maternity access in mid-coast Maine.",
+                    "approved_service_line": "labor_and_delivery",
+                    "approved_event_type": "service_line_closure",
+                    "approved_access_consequence": "reduced_rural_maternity_access",
+                    "approved_geography": "Damariscotta, Maine",
+                    "exact_supporting_passage": "The closure of a birthing center at a Damariscotta hospital is moving forward, the MaineHealth Board of Trustees announced Thursday, despite months of community opposition and concern about worsening health access for rural Mainers.",
+                    "review_decision": "APPROVE_WITH_CORRECTION",
+                    "reviewer_identity": "codex_editorial_review",
+                    "reviewer_rationale": "Bounded current access-pressure claim.",
+                    "role_in_edition": "core_access_signal",
+                    "notes": "Use bounded closure language only.",
+                    "evidence_level": "article_excerpt",
+                },
+                {
+                    "candidate_id": "care_line_candidate_20260809_massachusetts_behavioral",
+                    "source_name": "Becker's Behavioral Health",
+                    "source_title": "Massachusetts behavioral health provider to close after 40+ years",
+                    "source_url": "https://www.beckersbehavioralhealth.com/behavioral-health-news/massachusetts-behavioral-health-provider-to-close-after-40-years/",
+                    "source_date": "2026-08-07",
+                    "approved_public_claim": "Community Healthlink will cease operations after more than 40 years of service.",
+                    "bounded_public_summary": "A Massachusetts behavioral health provider says it will cease operations after more than 40 years, raising access concerns for affected patients and programs.",
+                    "approved_service_line": "behavioral_health",
+                    "approved_event_type": "service_line_closure",
+                    "approved_access_consequence": "reduced_behavioral_health_access",
+                    "approved_geography": "Worcester, Massachusetts",
+                    "exact_supporting_passage": "Worcester, Mass.-based Community Healthlink (CHL) will cease operations after more than 40 years of service once its programs are transitioned to several community organizations.",
+                    "review_decision": "APPROVE_WITH_CORRECTION",
+                    "reviewer_identity": "codex_editorial_review",
+                    "reviewer_rationale": "Bounded closure claim.",
+                    "role_in_edition": "core_access_signal",
+                    "notes": "Bounded claim remains limited-source.",
+                    "evidence_level": "article_excerpt",
+                },
+            ],
+        },
+    }
+    (proposal_dir / "2026-08-09.json").write_text(json.dumps(proposal, indent=2), encoding="utf-8")
+    (snapshot_dir / "2026-08-09.json").write_text(json.dumps(snapshot, indent=2), encoding="utf-8")
+
+    result = build_site(
+        work,
+        dry_run=False,
+        backup_root=backup_root,
+        only_dispatches=("care-line",),
+        dispatch_seed_dates={"care-line": "2026-08-09"},
+    )
+
+    assert result["ok"] is True
+    assert root_index.read_text(encoding="utf-8") == original_root
+
+    site_root = work / "output" / "site" / "care-line"
+    edition_dir = site_root / "editions" / "2026-08-09"
+    manifest = json.loads((edition_dir / "edition_manifest.json").read_text(encoding="utf-8"))
+    index_html = (site_root / "index.html").read_text(encoding="utf-8")
+    edition_html = (edition_dir / "index.html").read_text(encoding="utf-8")
+    archive_html = (site_root / "archive.html").read_text(encoding="utf-8")
+
+    assert manifest["source_adequacy_status"] == "LIMITED_SOURCE_UPDATE"
+    assert manifest["source_adequacy_label"] == "Limited-source update"
+    assert manifest["public_archive_title"] == "Limited-source update"
+    assert manifest["public_archive_subtitle"].startswith("This limited-source update reflects the approved Care Line access developments")
+    assert manifest["source_count"] == 2
+    assert manifest["story_count"] == 2
+    assert manifest["claim_count"] == 2
+    assert manifest["qualified_public_claim_count"] == 2
+    assert "Limited-source update" in index_html
+    assert "August 9, 2026" in index_html or "2026-08-09" in index_html
+    assert "Full-source update" not in index_html
+    assert "Limited-source update / August 9, 2026" in archive_html or "Limited-source update" in archive_html
+    assert "Full-source update" not in archive_html
+    assert "MaineHealth is closing inpatient labor and delivery services at Lincoln Hospital in Damariscotta." in edition_html
+    assert "Community Healthlink will cease operations after more than 40 years of service." in edition_html
+    assert "AnMed" not in edition_html
+    assert "Sentara" not in edition_html
+
+
 def test_care_line_august5_release_candidate_uses_approved_miles_wording(monkeypatch):
     repo = Path(__file__).resolve().parents[1]
     work = _work_root()

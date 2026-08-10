@@ -2957,7 +2957,11 @@ def copy_public_site_to_pages(
             skipped.append(f"preserved Pages root homepage during scoped publish: {target}")
             continue
         if tuple(only_dispatches) == (CARE_LINE_DISPATCH_SLUG,):
-            in_signal_scope = relative in {"signals/feed.xml", "care-line/signals/feed.xml"} or relative.startswith("events/")
+            in_signal_scope = (
+                relative.startswith("care-line/")
+                or relative in {"signals/feed.xml", "care-line/signals/feed.xml"}
+                or relative.startswith("events/")
+            )
             if not in_signal_scope:
                 skipped.append(f"out-of-scope Care Line artifact: {target}")
                 continue

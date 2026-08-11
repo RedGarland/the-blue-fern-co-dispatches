@@ -199,7 +199,22 @@ import json
 import sys
 
 print("food line dispatch invoked")
-print(json.dumps({"argv": sys.argv[1:]}, indent=2))
+args = sys.argv[1:]
+payload = {
+    "ok": True,
+    "date": "2026-07-02",
+    "check_only": "--check-only" in args,
+    "release_candidate": False,
+    "publication_attempted": False,
+    "pages_attempted": False,
+    "approved_proposal_path": None,
+    "release_readiness_path": None,
+    "review_snapshot_path": None,
+    "errors": [],
+    "status": "check_only_no_release_candidate" if "--check-only" in args else "publication_success",
+    "dispatch": "food-line",
+}
+print(json.dumps(payload, indent=2))
 raise SystemExit(0)
 """.strip()
         + "\n",
@@ -399,12 +414,12 @@ def test_wrapper_food_line_check_only_does_not_request_collection_flags(tmp_path
 
     assert result.returncode == 0, result.stdout + result.stderr
     log_text = _latest_log(repo, "food-line")
-    assert "scripts\\run_food_line_publication_runner.py --repo-root" in log_text
+    assert "scripts\\run_food_line_dispatch.py --date 2026-07-02 --check-only" in log_text
     assert "--check-only" in log_text
     assert "--dry-run-full" not in log_text
     assert "--collect" not in log_text
     assert "--audit-source-collection" not in log_text
-    assert "Food Line check-only validation finished with exit code 0." in log_text
+    assert "Food Line check-only gate finished with no release candidate." in log_text
 
 
 def test_wrapper_food_line_does_not_persist_global_system_or_local_git_config(tmp_path: Path) -> None:
@@ -465,7 +480,7 @@ def test_wrapper_food_line_stdout_fallback_is_machine_readable(tmp_path: Path) -
     assert result.returncode == 0, result.stdout + result.stderr
     payload = json.loads(result.stdout)
     assert payload["ok"] is True
-    assert payload["status"] == "check_only_success"
+    assert payload["status"] == "check_only_no_release_candidate"
     assert payload["logging"]["file_logging_available"] is False
     assert payload["logging"]["durable_log_written"] is False
     assert payload["logging"]["stdout_fallback_used"] is True

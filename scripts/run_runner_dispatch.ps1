@@ -751,23 +751,91 @@ try {
             }
         }
 
+        $foodLineCheckOnlyScript = Join-Path $RepoRoot "scripts\run_food_line_dispatch.py"
+        if (-not (Test-Path -LiteralPath $foodLineCheckOnlyScript -PathType Leaf)) {
+            throw "Food Line check-only script not found: $foodLineCheckOnlyScript"
+        }
         $foodLinePublicationRunnerScript = Join-Path $RepoRoot "scripts\run_food_line_publication_runner.py"
         if (-not (Test-Path -LiteralPath $foodLinePublicationRunnerScript -PathType Leaf)) {
             throw "Food Line publication runner not found: $foodLinePublicationRunnerScript"
         }
 
-        $foodLineArgs = @(
-            $foodLinePublicationRunnerScript,
-            "--repo-root", $RepoRoot,
-            "--pages-repo", $PagesRepo,
-            "--source-branch", $SourceBranch,
-            "--pages-branch", $PagesBranch,
-            "--date", $Date
-        )
         if ($CheckOnly) {
-            $foodLineArgs += "--check-only"
+            $checkOnlyArgs = @(
+                $foodLineCheckOnlyScript,
+                "--date", $Date,
+                "--check-only"
+            )
+            $checkOnlyResult = Invoke-LoggedCommand -Python $python -Arguments $checkOnlyArgs -ParseJsonTail
+            if ($checkOnlyResult.ExitCode -ne 0) {
+                throw "Food Line check-only gate failed with exit code $($checkOnlyResult.ExitCode)."
+            }
+            if (-not $checkOnlyResult.Json) {
+                throw "Food Line check-only gate did not return parseable JSON."
+            }
+
+            $jsonObject = $checkOnlyResult.Json
+            if (($jsonObject -is [System.Array] -and $jsonObject.Length -eq 1) -or ($jsonObject -is [System.Collections.IList] -and -not ($jsonObject -is [string]) -and $jsonObject.Count -eq 1)) {
+                $jsonObject = $jsonObject[0]
+            }
+
+            $jsonType = if ($null -eq $jsonObject) { "<null>" } else { $jsonObject.GetType().FullName }
+            $rootOk = Get-JsonField -Object $jsonObject -FieldName "ok"
+            $releaseCandidate = Get-JsonField -Object $jsonObject -FieldName "release_candidate"
+            $publicationAttempted = Get-JsonField -Object $jsonObject -FieldName "publication_attempted"
+            $pagesAttempted = Get-JsonField -Object $jsonObject -FieldName "pages_attempted"
+
+            Write-Log ("Food Line check-only gate JSON diagnostics: type={0}; root_ok_present={1}; release_candidate_present={2}; publication_attempted_present={3}; pages_attempted_present={4}" -f `
+                $jsonType, `
+                ($null -ne $rootOk), `
+                ($null -ne $releaseCandidate), `
+                ($null -ne $publicationAttempted), `
+                ($null -ne $pagesAttempted))
+
+            if ($null -eq $rootOk) {
+                throw "Food Line check-only gate failed: parsed JSON missing root ok field."
+            }
+            if (-not [bool]$rootOk) {
+                throw "Food Line check-only gate failed: ok=false"
+            }
+            if ($null -eq $releaseCandidate) {
+                throw "Food Line check-only gate failed: parsed JSON missing release_candidate."
+            }
+            if (-not [bool]$releaseCandidate) {
+                Write-Log "Food Line check-only gate finished with no release candidate."
+                Write-FoodLineMachineResult -Result $jsonObject
+                Remove-OldRunnerLogs -LogDirectory $LogDir -Keep $KeepLogs
+                exit 0
+            }
+
+            $foodLineArgs = @(
+                $foodLinePublicationRunnerScript,
+                "--repo-root", $RepoRoot,
+                "--pages-repo", $PagesRepo,
+                "--source-branch", $SourceBranch,
+                "--pages-branch", $PagesBranch,
+                "--date", $Date,
+                "--check-only"
+            )
         } elseif ($DryRunFull) {
-            $foodLineArgs += "--dry-run-full"
+            $foodLineArgs = @(
+                $foodLinePublicationRunnerScript,
+                "--repo-root", $RepoRoot,
+                "--pages-repo", $PagesRepo,
+                "--source-branch", $SourceBranch,
+                "--pages-branch", $PagesBranch,
+                "--date", $Date,
+                "--dry-run-full"
+            )
+        } else {
+            $foodLineArgs = @(
+                $foodLinePublicationRunnerScript,
+                "--repo-root", $RepoRoot,
+                "--pages-repo", $PagesRepo,
+                "--source-branch", $SourceBranch,
+                "--pages-branch", $PagesBranch,
+                "--date", $Date
+            )
         }
         if ($Push) {
             $foodLineArgs += "--push"

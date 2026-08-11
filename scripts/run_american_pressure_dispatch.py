@@ -3010,7 +3010,6 @@ def render_edition_markdown(edition_date: str, stories: list[dict[str, Any]], so
 def _public_prose_guardrail(stories: list[dict[str, Any]]) -> list[str]:
     errors: list[str] = []
     fields = (
-        "title",
         "summary",
         "reader_headline",
         "human_story_summary",

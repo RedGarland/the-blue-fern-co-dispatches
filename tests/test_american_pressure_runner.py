@@ -750,6 +750,29 @@ def test_public_prose_sanitizes_internal_rationale_and_incomplete_modal_clause(w
     assert "In three states, Democratic lawmakers introduced bills this session that would allow." not in html
 
 
+def test_public_prose_guardrail_does_not_reject_headline_titles_without_terminal_punctuation(work_root):
+    story = _record(
+        "food-story",
+        "food_pressure",
+        "Food support networks in Portland report rising demand",
+        "Food support demand is rising in the Portland area.",
+        "https://example.com/story",
+        source_type="news_report",
+        source_role="human_story",
+    )
+    _write_manual_sources(work_root, "2026-05-12", [story])
+    result = ap_runner.run_american_pressure_dispatch(
+        work_root,
+        "2026-05-12",
+        publish=False,
+        dry_run=False,
+        from_manual_sources=False,
+        source_mode="manual",
+    )
+    assert result["ok"] is True
+    assert not any("requires source-backed completion or removal" in error for error in result["errors"])
+
+
 def test_reader_headline_fallback_not_raw_rss_title(work_root):
     story = _record(
         "food-story",

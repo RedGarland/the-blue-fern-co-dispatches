@@ -13,6 +13,7 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 WRAPPER_PATH = REPO_ROOT / "scripts" / "run_runner_dispatch.ps1"
+DISPATCH_WRAPPER_PATH = REPO_ROOT / "scripts" / "run_dispatches.ps1"
 
 
 def _write_runner_script(path: Path, body: str) -> None:
@@ -304,6 +305,14 @@ def _run_wrapper_with_args(
 
 def _latest_log(repo: Path, dispatch: str = "gaza") -> str:
     return _read_log(max((repo / "logs").glob(f"runner-{dispatch}-*.log"), key=lambda p: p.stat().st_mtime))
+
+
+@pytest.mark.parametrize("wrapper_path", [WRAPPER_PATH, DISPATCH_WRAPPER_PATH])
+def test_wrapper_leaves_smtp_password_unset_when_credential_blob_is_empty(wrapper_path: Path) -> None:
+    text = wrapper_path.read_text(encoding="utf-8")
+    assert "had no password blob; leaving SMTP_PASSWORD unset so environment or .env fallback can load it." in text
+    assert "if (-not [string]::IsNullOrEmpty($password))" in text
+    assert "$env:SMTP_PASSWORD = $password" in text
 
 
 def test_wrapper_check_only_succeeds_with_nested_operator_result_json(tmp_path: Path) -> None:

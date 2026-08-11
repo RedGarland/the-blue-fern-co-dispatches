@@ -161,9 +161,15 @@ function Load-SmtpCredential {
             $credential = Get-StoredCredential -Target $Target -ErrorAction SilentlyContinue
             if ($credential) {
                 $env:SMTP_USER = $credential.UserName
-                $env:SMTP_PASSWORD = $credential.GetNetworkCredential().Password
-                Write-Log "Loaded SMTP credential from Windows Credential Manager target '$Target'."
-                $loaded = $true
+                $password = $credential.GetNetworkCredential().Password
+                if (-not [string]::IsNullOrEmpty($password)) {
+                    $env:SMTP_PASSWORD = $password
+                    Write-Log "Loaded SMTP credential from Windows Credential Manager target '$Target'."
+                    $loaded = $true
+                } else {
+                    Remove-Item Env:SMTP_PASSWORD -ErrorAction SilentlyContinue
+                    Write-Log "Credential Manager target '$Target' had no password blob; leaving SMTP_PASSWORD unset so environment or .env fallback can load it."
+                }
             }
         } catch {
             Write-Log "Credential Manager read failed: $($_.Exception.Message)"

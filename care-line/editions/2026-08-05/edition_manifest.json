@@ -86,6 +86,6 @@
   "approved_proposal_sha256": "0ed864bab38e06a179c1b90e44f797f57aef1cb278637d67692d7c7fc2f7a346",
   "review_snapshot_path": "data/dispatches/care-line/review/signal-reviews/2026-08-05.json",
   "review_snapshot_sha256": "492ac4c8f33c7c5ce41b9f24e343b6d15fd5213ef9e09c1eab6427062a6b47c6",
-  "public_release_status": "published",
-  "pages_release_status": "synced"
+  "public_release_status": "not_published",
+  "pages_release_status": "not_synced"
 }

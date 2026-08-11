@@ -350,6 +350,23 @@ def test_send_test_email_missing_smtp_env_returns_clear_failure(monkeypatch, cap
     assert "Missing required env vars: SMTP_HOST, EMAIL_TO" in captured.err
 
 
+def test_send_email_accepts_smtp_to_when_email_to_missing(monkeypatch):
+    FakeSMTP.instances = []
+    monkeypatch.setenv("SMTP_HOST", "smtp.example.test")
+    monkeypatch.setenv("SMTP_PORT", "587")
+    monkeypatch.setenv("SMTP_USER", "alerts@example.test")
+    monkeypatch.setenv("SMTP_PASSWORD", "secret-app-password")
+    monkeypatch.setenv("SMTP_TO", "ops@example.test")
+    monkeypatch.delenv("EMAIL_TO", raising=False)
+    monkeypatch.setenv("SMTP_RETRY_DELAY", "0")
+    monkeypatch.setattr(run_and_notify.smtplib, "SMTP", FakeSMTP)
+
+    run_and_notify.send_email("subject", "body", "2026-05-04")
+
+    smtp = FakeSMTP.instances[0]
+    assert smtp.sent_messages[0]["To"] == "ops@example.test"
+
+
 def test_send_test_email_debug_redacts_smtp_password(monkeypatch, capsys, tmp_path):
     FakeSMTP.instances = []
     _set_email_env(monkeypatch)

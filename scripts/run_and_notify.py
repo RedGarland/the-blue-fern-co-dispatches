@@ -375,7 +375,7 @@ def send_email(subject: str, body: str, date_str: str, smtp_debug: bool = False)
     smtp_retry_delay = _env_float("SMTP_RETRY_DELAY", 1.0)
     smtp_user = _env_first("SMTP_USER", "SMTP_USERNAME")
     smtp_password = os.getenv("SMTP_PASSWORD")
-    email_to = os.getenv("EMAIL_TO", "")
+    email_to = _env_first("EMAIL_TO", "SMTP_TO") or ""
     email_from = _env_first("EMAIL_FROM", "SMTP_FROM") or smtp_user or f"noreply@{socket.gethostname()}"
 
     missing: list[str] = []
@@ -558,7 +558,7 @@ def print_smtp_config_debug() -> None:
         f"- SMTP port: {smtp_port}",
         f"- SMTP username: {_mask_email(smtp_user)}",
         f"- Email from: {_mask_email(email_from)}",
-        f"- Email to: {_mask_recipients(os.getenv('EMAIL_TO'))}",
+        f"- Email to: {_mask_recipients(_env_first('EMAIL_TO', 'SMTP_TO'))}",
         f"- TLS mode: {mode}",
         f"- TLS verification: {str(bool(tls_meta['tls_verify_enabled'])).lower()}",
         f"- TLS relaxed (diagnostic): {str(bool(tls_meta['tls_relaxed'])).lower()}",

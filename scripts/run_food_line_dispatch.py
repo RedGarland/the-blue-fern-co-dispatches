@@ -7225,6 +7225,102 @@ def _run_food_line_approved_proposal(root: Path, date: str, approved_proposal_pa
     }
 
 
+def _food_line_release_candidate_paths(root: Path, date: str) -> dict[str, Path]:
+    review_root = root / "data" / "dispatches" / "food-line" / "review"
+    return {
+        "proposal": review_root / "proposed-editions" / f"{date}.json",
+        "readiness": review_root / "release-readiness" / f"{date}.json",
+        "review_snapshot": review_root / "signal-reviews" / f"{date}.json",
+    }
+
+
+def _food_line_release_candidate_state(root: Path, date: str) -> dict[str, Any]:
+    paths = _food_line_release_candidate_paths(root, date)
+    proposal_exists = paths["proposal"].is_file()
+    readiness_exists = paths["readiness"].is_file()
+    return {
+        "release_candidate": proposal_exists or readiness_exists,
+        "proposal_exists": proposal_exists,
+        "readiness_exists": readiness_exists,
+        "proposal_path": str(paths["proposal"]),
+        "readiness_path": str(paths["readiness"]),
+        "review_snapshot_path": str(paths["review_snapshot"]),
+    }
+
+
+def _food_line_readiness_payload(root: Path, date: str) -> dict[str, Any]:
+    readiness_path = _food_line_release_candidate_paths(root, date)["readiness"]
+    payload = json.loads(readiness_path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"release readiness must be a JSON object: {readiness_path}")
+    return payload
+
+
+def _food_line_check_only_result(root: Path, date: str) -> dict[str, Any]:
+    candidate_state = _food_line_release_candidate_state(root, date)
+    result: dict[str, Any] = {
+        "ok": False,
+        "date": date,
+        "check_only": True,
+        "release_candidate": bool(candidate_state["release_candidate"]),
+        "publication_attempted": False,
+        "pages_attempted": False,
+        "approved_proposal_path": None,
+        "release_readiness_path": None,
+        "review_snapshot_path": None,
+        "errors": [],
+    }
+    if not candidate_state["release_candidate"]:
+        result.update(
+            {
+                "ok": True,
+                "status": "check_only_no_release_candidate",
+                "publication_attempted": False,
+                "pages_attempted": False,
+            }
+        )
+        return result
+
+    proposal_path = Path(candidate_state["proposal_path"])
+    readiness_path = Path(candidate_state["readiness_path"])
+    snapshot_path = Path(candidate_state["review_snapshot_path"])
+    if not proposal_path.is_file():
+        result["errors"].append(f"approved proposal is missing for release candidate date {date}: {proposal_path}")
+        result["status"] = "check_only_failed"
+        return result
+    if not readiness_path.is_file():
+        result["errors"].append(f"release readiness is missing for approved proposal date {date}: {readiness_path}")
+        result["status"] = "check_only_failed"
+        return result
+    proposal_bundle = load_approved_proposal(root, proposal_path, date)
+    readiness = _food_line_readiness_payload(root, date)
+    if readiness.get("schema_version") != "food_line_release_readiness_v1":
+        result["errors"].append("release readiness schema_version must be food_line_release_readiness_v1")
+    if str(readiness.get("approved_proposal_path") or "").replace("\\", "/") != proposal_bundle.proposal_path.relative_to(root).as_posix():
+        result["errors"].append("release readiness approved proposal path does not match the approved proposal")
+    if str(readiness.get("approved_proposal_sha256") or "").lower() != proposal_bundle.proposal_sha256:
+        result["errors"].append("release readiness approved proposal SHA-256 does not match the approved proposal")
+    if str(readiness.get("edition_date") or "") != date:
+        result["errors"].append("release readiness edition date does not match the requested edition date")
+    if not str(readiness.get("status") or "").strip():
+        result["errors"].append("release readiness status is missing")
+    if not result["errors"]:
+        result.update(
+            {
+                "ok": True,
+                "status": "check_only_ready",
+                "approved_proposal_path": str(proposal_bundle.proposal_path),
+                "release_readiness_path": str(readiness_path),
+                "review_snapshot_path": str(snapshot_path) if snapshot_path.is_file() else None,
+                "publication_attempted": False,
+                "pages_attempted": False,
+            }
+        )
+        return result
+    result["status"] = "check_only_failed"
+    return result
+
+
 def run_food_line_dispatch(
     root: Path,
     date: str,
@@ -8336,6 +8432,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--end-date")
     p.add_argument("--publish", action="store_true", help="Copy Food Line output into local Pages repo and commit locally.")
     p.add_argument("--push", action="store_true", help="Push local Pages repo gh-pages after --publish succeeds.")
+    p.add_argument("--check-only", action="store_true", help="Validate release-candidate state without generating, publishing, or pushing.")
     p.add_argument("--collect", action="store_true", help="Collect auto sources into auto_sources.json before generation.")
     p.add_argument("--use-discovery-candidates", action="store_true", help="Bridge discovery_candidates.json into the daily Food Line intake path before generation.")
     p.add_argument(
@@ -8463,27 +8560,38 @@ def main(argv: list[str] | None = None) -> int:
         else:
             if not args.date:
                 raise ValueError("--date is required")
-            result = run_food_line_dispatch(
-                Path.cwd(),
-                args.date,
-                collect=bool(args.collect),
-                use_discovery_candidates=bool(args.use_discovery_candidates),
-                include_discovery_gap_summary=bool(args.include_discovery_gap_summary),
-                generate_audio=bool(args.generate_audio),
-                require_audio=bool(args.require_audio),
-                force_audio_regenerate=bool(args.force_audio_regenerate),
-                tts_provider=str(args.tts_provider or "none"),
-                audio_model=str(args.audio_model or "gpt-4o-mini-tts"),
-                audio_voice=str(args.audio_voice or "alloy"),
-                audio_format=str(args.audio_format or "mp3"),
-                audio_timeout_seconds=float(args.audio_timeout_seconds or 90.0),
-                allow_future_date=bool(args.allow_future_date),
-                audit_source_collection=bool(args.audit_source_collection),
-                gold_set_path=gold_set_path,
-                dry_run_requested=bool(args.dry_run),
-                audit_allow_live_discovery=bool(args.audit_live_discovery),
-                approved_proposal_path=args.approved_proposal,
-            )
+            if args.check_only and not args.approved_proposal:
+                result = _food_line_check_only_result(Path.cwd(), args.date)
+            else:
+                result = run_food_line_dispatch(
+                    Path.cwd(),
+                    args.date,
+                    collect=bool(args.collect),
+                    use_discovery_candidates=bool(args.use_discovery_candidates),
+                    include_discovery_gap_summary=bool(args.include_discovery_gap_summary),
+                    generate_audio=bool(args.generate_audio),
+                    require_audio=bool(args.require_audio),
+                    force_audio_regenerate=bool(args.force_audio_regenerate),
+                    tts_provider=str(args.tts_provider or "none"),
+                    audio_model=str(args.audio_model or "gpt-4o-mini-tts"),
+                    audio_voice=str(args.audio_voice or "alloy"),
+                    audio_format=str(args.audio_format or "mp3"),
+                    audio_timeout_seconds=float(args.audio_timeout_seconds or 90.0),
+                    allow_future_date=bool(args.allow_future_date),
+                    audit_source_collection=bool(args.audit_source_collection),
+                    gold_set_path=gold_set_path,
+                    dry_run_requested=bool(args.dry_run),
+                    audit_allow_live_discovery=bool(args.audit_live_discovery),
+                    approved_proposal_path=args.approved_proposal,
+                )
+            if args.check_only:
+                result.setdefault("check_only", True)
+                result.setdefault("release_candidate", False)
+                result.setdefault("publication_attempted", False)
+                result.setdefault("pages_attempted", False)
+                result.setdefault("errors", [])
+                print(json.dumps(result, indent=2))
+                return 0 if result.get("ok") else 1
             result["pages_publish_path"] = str(PAGES_REPO)
             result["pages_publish_copied"] = False
             result["pushed"] = False

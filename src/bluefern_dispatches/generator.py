@@ -2828,18 +2828,16 @@ def collect_public_site_files(
         return []
     files = []
     food_line_reported: set[str] = set()
-    gaza_only_publish = tuple(only_dispatches) == ("gaza",)
-    gaza_sitewide_metadata_paths = {"index.html", "dispatches/index.html"}
     for path in site_root.rglob("*"):
         if not path.is_file():
             continue
         relative_parts = path.relative_to(site_root).parts
-        if gaza_only_publish:
-            relative_text = path.relative_to(site_root).as_posix()
-            if (not relative_parts or relative_parts[0] != "gaza") and relative_text not in gaza_sitewide_metadata_paths:
-                continue
-        elif only_dispatches and relative_parts and relative_parts[0] in DISPATCH_LABELS and relative_parts[0] not in only_dispatches:
+        if only_dispatches and relative_parts and relative_parts[0] in DISPATCH_LABELS and relative_parts[0] not in only_dispatches:
             continue
+        if tuple(only_dispatches) == ("gaza",):
+            rel_text = Path(*relative_parts).as_posix()
+            if rel_text not in {"index.html", "dispatches/index.html"} and not rel_text.startswith("gaza/"):
+                continue
         if len(relative_parts) >= 4 and relative_parts[0] in {"gaza", "cascadia", "american-pressure", "food-line", CARE_LINE_DISPATCH_SLUG} and relative_parts[1] == "editions":
             slug = relative_parts[0]
             edition_date = relative_parts[2]
@@ -2944,7 +2942,6 @@ def copy_public_site_to_pages(
         ".pytest_cache/",
         f"{pages_repo / '.git'}",
     ]
-    gaza_only_publish = tuple(only_dispatches) == ("gaza",)
     for source in collect_public_site_files(
         site_root,
         only_dispatches=only_dispatches,
@@ -2953,8 +2950,8 @@ def copy_public_site_to_pages(
     ):
         target = pages_repo / source.relative_to(site_root)
         relative = source.relative_to(site_root).as_posix()
-        if only_dispatches and relative == "index.html":
-            skipped.append(f"preserved Pages root homepage during scoped publish: {target}")
+        if tuple(only_dispatches) == ("gaza",) and relative == "CNAME":
+            skipped.append(f"out-of-scope Gaza-only metadata artifact: {target}")
             continue
         if tuple(only_dispatches) == (CARE_LINE_DISPATCH_SLUG,):
             in_signal_scope = (
@@ -2983,12 +2980,17 @@ def copy_public_site_to_pages(
         ):
             skipped.append(f"unchanged Care Line binary artifact: {target}")
             continue
+        if tuple(only_dispatches) == ("gaza",) and relative == "index.html" and target.exists():
+            source_text = source.read_text(encoding="utf-8", errors="replace")
+            if "dispatch-card" not in source_text and "Dispatches From Gaza" not in source_text:
+                skipped.append(f"preserved existing Gaza Pages homepage: {target}")
+                continue
         copied.append(str(target))
         if dry_run:
             continue
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, target)
-    if not gaza_only_publish and tuple(only_dispatches) != (CARE_LINE_DISPATCH_SLUG,):
+    if tuple(only_dispatches) not in {("gaza",), (CARE_LINE_DISPATCH_SLUG,)}:
         cname = pages_repo / "CNAME"
         copied.append(str(cname))
         if not dry_run:
@@ -3473,8 +3475,9 @@ def validate_pages_repo_copy_scope(
     errors: list[str] = []
     pages_repo = pages_repo.resolve()
     allowed_dispatches = set(only_dispatches) if only_dispatches else set(ONLY_DISPATCH_CHOICES)
-    gaza_only_publish = tuple(only_dispatches) == ("gaza",)
-    gaza_sitewide_metadata_paths = {"index.html", "dispatches/index.html"}
+    allowed_root_metadata_paths = {"index.html", "dispatches/index.html"}
+    if not only_dispatches:
+        allowed_root_metadata_paths.add("CNAME")
     if changed_paths is None:
         try:
             changed_paths = _git_status_changed_paths(pages_repo)
@@ -3490,9 +3493,11 @@ def validate_pages_repo_copy_scope(
         rel_path = Path(str(candidate).replace("\\", "/"))
         top_level = rel_path.parts[0] if rel_path.parts else ""
         rel_text = rel_path.as_posix()
-        if gaza_only_publish:
-            if top_level == "gaza" or rel_text in gaza_sitewide_metadata_paths:
-                continue
+        if rel_text in allowed_root_metadata_paths:
+            continue
+        if tuple(only_dispatches) == ("gaza",) and top_level == "gaza":
+            continue
+        if tuple(only_dispatches) == ("gaza",):
             errors.append(f"gaza_publish_scope_violation: unexpected publish changes in {rel_text}")
             continue
         if len(rel_path.parts) >= 2 and rel_path.parts[0] in DISPATCH_LABELS and rel_path.parts[1] == rel_path.parts[0]:

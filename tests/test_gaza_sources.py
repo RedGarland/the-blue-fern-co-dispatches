@@ -1399,7 +1399,7 @@ def test_fetch_payload_uses_truststore_retry_when_available(monkeypatch):
 
 
 def test_fetch_payload_preserves_tls_failure_when_verified_paths_fail(monkeypatch):
-    monkeypatch.setenv("GAZA_FETCH_BACKEND", "auto")
+    monkeypatch.setenv("GAZA_FETCH_BACKEND", "python")
 
     def fake_urlopen(request, timeout, context=None):
         raise urllib.error.URLError("[SSL: CERTIFICATE_VERIFY_FAILED] boom")

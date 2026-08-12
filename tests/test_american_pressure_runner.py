@@ -10,19 +10,16 @@ import scripts.run_american_pressure_dispatch as ap_runner
 
 
 @pytest.fixture()
-def work_root():
+def work_root(tmp_path_factory: pytest.TempPathFactory):
     repo = Path(__file__).resolve().parents[1]
-    root = repo / "output" / "test-runs" / uuid.uuid4().hex / "american-pressure-runner"
+    root = tmp_path_factory.mktemp("american-pressure-runner")
     shutil.copytree(repo / "assets", root / "assets")
     shutil.copytree(repo / "data" / "dispatches" / "american-pressure", root / "data" / "dispatches" / "american-pressure")
     candidates_root = root / "data" / "dispatches" / "american-pressure" / "candidates"
     if candidates_root.exists():
         shutil.rmtree(candidates_root)
         candidates_root.mkdir(parents=True, exist_ok=True)
-    try:
-        yield root
-    finally:
-        shutil.rmtree(root.parent, ignore_errors=True)
+    yield root
 
 
 def _write_manual_sources(root: Path, edition_date: str, records: list[dict]) -> Path:

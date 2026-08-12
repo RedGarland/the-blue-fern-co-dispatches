@@ -105,8 +105,8 @@ def test_american_pressure_topic_builds_and_links(monkeypatch):
     root_index = (work / "output" / "site" / "index.html").read_text(encoding="utf-8")
     topic_index = (work / "output" / "site" / "american-pressure" / "index.html").read_text(encoding="utf-8")
     edition = (work / "output" / "site" / "american-pressure" / "editions" / "2026-05-03" / "index.html").read_text(encoding="utf-8")
-    assert "The American Pressure Dispatch" in root_index
-    assert 'href="/american-pressure/"' in root_index
+    assert "The American Pressure Dispatch" not in root_index
+    assert 'href="/american-pressure/"' not in root_index
     assert 'href="/">Dispatches Home</a>' in topic_index
     assert 'href="/">Dispatches Home</a>' in edition
     assert "The American Pressure Dispatch" in topic_index

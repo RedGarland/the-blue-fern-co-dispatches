@@ -280,10 +280,10 @@ def test_send_email_retries_after_send_failure(monkeypatch):
     assert FakeSMTP.instances[1].sent_messages
 
 
-def test_smtp_debug_file_tees_debug_output(monkeypatch, capsys):
+def test_smtp_debug_file_tees_debug_output(monkeypatch, capsys, tmp_path):
     FakeSMTP.instances = []
     _set_email_env(monkeypatch)
-    debug_file = Path("output") / "smtp-debug-test.log"
+    debug_file = tmp_path / "smtp-debug-test.log"
     debug_file.unlink(missing_ok=True)
     monkeypatch.setenv("SMTP_DEBUG_FILE", str(debug_file))
     monkeypatch.setattr(run_and_notify.smtplib, "SMTP", FakeSMTP)

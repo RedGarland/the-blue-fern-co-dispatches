@@ -18,9 +18,10 @@ $Stamp = Get-Date -Format "yyyyMMdd-HHmmss"
 $LogFile = Join-Path $LogDir "dispatches-$Stamp.log"
 
 function Write-Log {
-    param([string]$Message)
+    param([AllowEmptyString()][string]$Message)
     $line = "[{0}] {1}" -f (Get-Date -Format "s"), $Message
-    $line | Tee-Object -FilePath $LogFile -Append
+    Add-Content -Path $LogFile -Value $line
+    Write-Host $line
 }
 
 function Load-SmtpCredential {
@@ -96,9 +97,6 @@ try {
     }
 
     Write-Log "Starting dispatch run."
-    # Pipe combined stdout+stderr through Tee-Object so smtplib debug output
-    # is both written to the logfile and streamed to the console. This avoids
-    # losing or mangling SMTP debug traces that can occur with shell redirection.
     $previousErrorActionPreference = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
     try {
@@ -110,7 +108,10 @@ try {
                     $_
                 }
             } |
-            Tee-Object -FilePath $LogFile -Append
+            ForEach-Object {
+                Add-Content -Path $LogFile -Value $_
+                Write-Host $_
+            }
         $exitCode = $LASTEXITCODE
     } finally {
         $ErrorActionPreference = $previousErrorActionPreference

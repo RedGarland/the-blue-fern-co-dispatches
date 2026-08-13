@@ -290,9 +290,9 @@ def test_favicon_assets_are_copied_and_linked_from_public_html(built_site):
         assert_favicon_links(read(page))
 
 
-def test_build_adds_favicons_to_existing_public_edition_html(monkeypatch):
+def test_build_adds_favicons_to_existing_public_edition_html(monkeypatch, tmp_path_factory):
     repo = Path(__file__).parent.parent
-    work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
+    work = tmp_path_factory.mktemp("dispatches-site-favicons") / "repo"
     copy_repo_assets(repo, work)
     old_edition = work / "output" / "site" / "cascadia" / "editions" / "2026-04-26"
     old_edition.mkdir(parents=True)
@@ -472,9 +472,9 @@ def test_detention_watch_links_have_no_malformed_paths(built_site):
         assert "/cascadia/cascadia/detention-watch" not in html
 
 
-def test_build_does_not_publish_synthetic_current_cascadia_edition(monkeypatch):
+def test_build_does_not_publish_synthetic_current_cascadia_edition(monkeypatch, tmp_path_factory):
     repo = Path(__file__).parent.parent
-    work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
+    work = tmp_path_factory.mktemp("dispatches-site-cascadia") / "repo"
     copy_repo_assets(repo, work)
     synthetic_current = work / "output" / "site" / "cascadia" / "editions" / "2026-05-11"
     if synthetic_current.exists():
@@ -2948,9 +2948,9 @@ def test_seed_dispatches_uses_gaza_historical_seed_without_changing_other_dispat
     assert by_slug["american-pressure"].edition_date == "2026-08-08"
 
 
-def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch):
+def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch, tmp_path_factory):
     repo = Path(__file__).parent.parent
-    work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
+    work = tmp_path_factory.mktemp("dispatches-site-only-cascadia") / "repo"
     copy_repo_assets(repo, work)
     add_cascadia_dispatch_edition(work, "2026-05-10")
     monkeypatch.setenv("BLUEFERN_SEED_EDITION_DATE", "2026-05-10")

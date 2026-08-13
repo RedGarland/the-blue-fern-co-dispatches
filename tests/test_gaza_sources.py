@@ -1,6 +1,5 @@
 import json
 import shutil
-import uuid
 import gzip
 import urllib.error
 import sys
@@ -102,14 +101,12 @@ def write_two_feed_config(root: Path) -> Path:
 
 
 @pytest.fixture()
-def work_root():
-    repo = Path(__file__).resolve().parents[1]
-    root = repo / "output" / "test-runs" / uuid.uuid4().hex / "sources"
-    root.mkdir(parents=True)
+def work_root(tmp_path_factory):
+    root = tmp_path_factory.mktemp("gaza-sources")
     try:
         yield root
     finally:
-        shutil.rmtree(root.parent, ignore_errors=True)
+        shutil.rmtree(root, ignore_errors=True)
 
 
 def test_sources_yml_loads(work_root):

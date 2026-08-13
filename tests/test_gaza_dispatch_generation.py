@@ -1,6 +1,5 @@
 ﻿import json
 import shutil
-import uuid
 from pathlib import Path
 
 import pytest
@@ -9,9 +8,23 @@ from bluefern_dispatches.generator import build_site
 from bluefern_dispatches.gaza_audio import write_gaza_audio_outputs
 from scripts.run_gaza_dispatch import build_source_diversity_report, curate_stories, normalize_sources, render_gaza_edition, run_gaza_dispatch
 
+WORK_ROOT_BASE: Path | None = None
+
+@pytest.fixture(autouse=True)
+def _work_root_base(tmp_path_factory):
+    global WORK_ROOT_BASE
+    previous = WORK_ROOT_BASE
+    WORK_ROOT_BASE = tmp_path_factory.mktemp("gaza-dispatch-generation")
+    try:
+        yield
+    finally:
+        WORK_ROOT_BASE = previous
+
 
 def make_work_root(repo: Path) -> Path:
-    work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"
+    assert WORK_ROOT_BASE is not None
+    base = WORK_ROOT_BASE
+    work = base / "repo"
     shutil.copytree(repo / "assets", work / "assets")
     (work / "data" / "records").mkdir(parents=True)
     for name in ("dispatches", "editions", "sources", "records", "curation_decisions", "detail_packages"):

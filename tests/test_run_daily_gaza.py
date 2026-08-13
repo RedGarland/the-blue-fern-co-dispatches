@@ -4,7 +4,6 @@ import ssl
 import shutil
 import subprocess
 import sys
-import uuid
 from pathlib import Path
 
 import pytest
@@ -15,8 +14,8 @@ import scripts.run_gaza_daily_operator as operator
 import scripts.run_daily_gaza as daily
 
 
-def make_root(repo: Path) -> Path:
-    root = repo / "output" / "test-runs" / uuid.uuid4().hex / "daily"
+def make_root(base: Path) -> Path:
+    root = base / "daily"
     root.mkdir(parents=True)
     (root / "logs").mkdir()
     pages = root / "bluefern-dispatches-pages"
@@ -121,11 +120,11 @@ def live_response(body: str, status: int = 200):
 
 
 @pytest.fixture()
-def isolated(monkeypatch):
-    repo = Path(__file__).resolve().parents[1]
-    root = make_root(repo)
+def isolated(tmp_path_factory, monkeypatch):
+    root = make_root(tmp_path_factory.mktemp("gaza-daily"))
     monkeypatch.setattr(daily, "ROOT", root)
     monkeypatch.setattr(daily, "DEFAULT_PAGES_REPO", root / "bluefern-dispatches-pages")
+    monkeypatch.setattr(gaza_dispatch, "BACKUP_ROOT", root / "output" / "test-backups" / "gaza")
     monkeypatch.setattr(historical, "ROOT", root)
     try:
         yield root
@@ -251,6 +250,7 @@ def test_run_gaza_dispatch_uses_explicit_pages_repo_for_homepage_history(tmp_pat
     (assets / "gaza-logo.png").write_bytes(b"png")
     (assets / "bluefern.png").write_bytes(b"png")
     monkeypatch.setattr(gaza_dispatch, "ROOT", source_root)
+    monkeypatch.setattr(gaza_dispatch, "BACKUP_ROOT", source_root / "output" / "test-backups" / "gaza")
     monkeypatch.setattr(
         gaza_dispatch,
         "filter_recent_duplicate_sources",

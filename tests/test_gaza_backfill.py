@@ -2,15 +2,31 @@ from __future__ import annotations
 
 import json
 import shutil
-import uuid
 from pathlib import Path
+
+import pytest
 
 from scripts import backfill_gaza_dispatch, dispatches_status
 
+ROOT_BASE: Path | None = None
+
+
+@pytest.fixture(autouse=True)
+def _root_base(tmp_path_factory, monkeypatch):
+    global ROOT_BASE
+    previous = ROOT_BASE
+    ROOT_BASE = tmp_path_factory.mktemp("gaza-backfill")
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", ROOT_BASE / "backup")
+    try:
+        yield
+    finally:
+        ROOT_BASE = previous
+
 
 def _make_root() -> Path:
+    assert ROOT_BASE is not None
     repo = Path(__file__).resolve().parents[1]
-    root = repo / "output" / "test-runs" / uuid.uuid4().hex / "gaza-backfill"
+    root = ROOT_BASE / "repo"
     shutil.copytree(repo / "assets", root / "assets")
     (root / "data" / "records").mkdir(parents=True, exist_ok=True)
     for name in ("dispatches", "editions", "sources", "records", "curation_decisions", "detail_packages", "story_memory"):
@@ -69,22 +85,19 @@ def _stub_git(monkeypatch, *, root: Path, pages: Path, pages_branch: str = "gh-p
 
 def test_backfill_one_date_with_fresh_fixture_candidates_succeeds():
     root = _make_root()
-    try:
-        _write_manual(root, "2026-05-10", [_record("2026-05-10", "a")])
-        report = backfill_gaza_dispatch.run_backfill(
-            root,
-            ["2026-05-10"],
-            source_mode="manual",
-            from_manual_sources=True,
-            publish_local=True,
-            allow_partial=False,
-            max_sources=12,
-        )
-        assert report["ok"] is True
-        assert report["completed_dates"] == ["2026-05-10"]
-        assert report["failed_dates"] == []
-    finally:
-        shutil.rmtree(root.parent, ignore_errors=True)
+    _write_manual(root, "2026-05-10", [_record("2026-05-10", "a")])
+    report = backfill_gaza_dispatch.run_backfill(
+        root,
+        ["2026-05-10"],
+        source_mode="manual",
+        from_manual_sources=True,
+        publish_local=True,
+        allow_partial=False,
+        max_sources=12,
+    )
+    assert report["ok"] is True
+    assert report["completed_dates"] == ["2026-05-10"]
+    assert report["failed_dates"] == []
 
 
 def test_backfill_zero_candidates_fails_safely_and_unlinked():

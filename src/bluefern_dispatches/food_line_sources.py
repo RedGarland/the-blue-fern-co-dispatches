@@ -1773,6 +1773,12 @@ def _build_pressure_summary(
             return sentence
         return f"{sentence}, including strain affecting {cleaned_groups}"
 
+    def _has_concrete_access_event(text_value: str, *, tokens: tuple[str, ...], required_any: tuple[str, ...] = ()) -> bool:
+        lowered_text = text_value.lower()
+        if required_any and not any(term in lowered_text for term in required_any):
+            return False
+        return any(term in lowered_text for term in tokens)
+
     lowered = text.lower()
     place = str(location_name or "").strip()
     subject = str(publisher or source_name or "").strip() or "The source"
@@ -1840,7 +1846,28 @@ def _build_pressure_summary(
                 pressure_type=pressure_type,
             )
     elif pressure_type == "benefit disruption":
-        if any(term in lowered for term in ("snap", "benefit", "ebt", "wic", "delay", "outage", "backlog")):
+        if _has_concrete_access_event(
+            lowered,
+            tokens=(
+                "snap benefit delay",
+                "snap benefits delayed",
+                "ebt delay",
+                "ebt outage",
+                "wic delay",
+                "wic disruption",
+                "benefit delay",
+                "benefits delayed",
+                "benefits cut",
+                "snap cut",
+                "snap cuts",
+                "recertification backlog",
+                "application backlog",
+                "waiver expiration",
+                "call center overwhelmed",
+                "dropped calls",
+            ),
+            required_any=("snap", "benefit", "ebt", "wic"),
+        ):
             sentence = _append_place(f"{subject} reported a SNAP benefit delay", place)
             sentence = _append_groups(sentence, groups_text)
             return _smooth_public_pressure_summary(
@@ -1905,7 +1932,22 @@ def _build_pressure_summary(
                 pressure_type=pressure_type,
             )
     elif pressure_type == "disaster disruption":
-        if any(term in lowered for term in ("emergency food", "disaster", "d-snap", "storm", "flood", "wildfire")):
+        if _has_concrete_access_event(
+            lowered,
+            tokens=(
+                "emergency food",
+                "disaster food assistance",
+                "d-snap",
+                "meal site closure",
+                "distribution",
+                "evacuation",
+                "shelter",
+                "pantry",
+                "food bank",
+                "closure",
+            ),
+            required_any=("disaster", "storm", "flood", "wildfire", "hurricane", "emergency"),
+        ):
             sentence = _append_place(f"{subject} reported disaster-related food disruption", place)
             sentence = _append_groups(sentence, groups_text)
             return _smooth_public_pressure_summary(

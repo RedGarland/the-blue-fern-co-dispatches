@@ -31,6 +31,7 @@ from scripts.discover_food_line_sources import discover_food_line_sources, load_
 from scripts.run_food_line_dispatch import run_food_line_dispatch
 from scripts.test_food_line_candidate_sources import cleanup_food_line_candidates, import_food_line_candidate_intake, test_food_line_candidate_sources as run_food_line_candidate_sources
 from bluefern_dispatches.food_line_sources import GENERIC_PRESSURE_SUMMARIES, load_food_line_candidate_registry, load_food_line_registry, validate_food_line_source_freshness
+import bluefern_dispatches.food_line_sources as food_line_sources
 from bluefern_dispatches.tts_provider import TTSResult, TTSDiagnostics
 
 
@@ -5822,6 +5823,31 @@ def test_food_line_pressure_summary_includes_specific_evidence_for_core_cases(tm
     assert "rising food-assistance demand" in by_title["Food bank sees rising demand from families"]["pressure_summary"].lower()
     assert "reduced distribution hours" in by_title["Pantry cuts hours due to low inventory"]["pressure_summary"].lower()
     assert "snap benefit delay" in by_title["SNAP benefits delayed"]["pressure_summary"].lower()
+
+
+def test_food_line_pressure_summary_rejects_policy_discussion_without_concrete_access_event(tmp_path: Path):
+    row = _pressure_row(
+        1,
+        "Colorado Newsline on SNAP work requirements",
+        (
+            "Colorado Newsline reported on a proposal about SNAP work requirements and funding, "
+            "along with broader policy debate about eligibility and administration."
+        ),
+        family="state_policy_news",
+        state="CO",
+    )
+    row["pressure_type"] = "benefit disruption"
+    row["source_purpose"] = "current_news"
+    row["source_family"] = "state_policy_news"
+    row["evidence_text"] = ""
+    row["evidence_text_basis"] = "manual_review"
+
+    evaluated = food_line_sources.evaluate_food_line_pressure(row, edition_date="2026-06-04", pressure_required=True)
+
+    assert evaluated["pressure_type"] == "benefit disruption"
+    assert evaluated["pressure_signal"] is False
+    assert evaluated["pressure_summary"] == ""
+    assert evaluated["pressure_reason"] == "insufficient specific pressure evidence"
 
 
 def test_food_line_source_table_includes_pressure_summary(tmp_path: Path):

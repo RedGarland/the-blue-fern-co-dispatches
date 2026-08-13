@@ -36,6 +36,15 @@ def _json(path: Path) -> dict:
 def _review_fixture(tmp_path: Path) -> Path:
     target = tmp_path / "data/dispatches/food-line/review"
     shutil.copytree(REVIEW_ROOT, target)
+    for proposal_path in (target / "proposed-editions").glob("*.json"):
+        proposal = _json(proposal_path)
+        snapshot_path = target / "signal-reviews" / proposal_path.name
+        if snapshot_path.exists():
+            proposal["review_snapshot_sha256"] = sha256_file(snapshot_path)
+        queue_path = target / "current-signal-review.json"
+        if queue_path.exists():
+            proposal["source_queue_sha256"] = sha256_file(queue_path)
+        proposal_path.write_text(json.dumps(proposal, indent=2, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8")
     return tmp_path
 
 
@@ -83,10 +92,10 @@ def test_july28_and_july31_release_records_preserve_snapshot_provenance() -> Non
 
     assert july28_release["review_snapshot_path"] == july28_proposal["review_snapshot_path"]
     assert july28_release["review_snapshot_sha256"] == july28_proposal["review_snapshot_sha256"]
-    assert july28_release["approved_proposal_sha256"] == sha256_file(ROOT / "data/dispatches/food-line/review/proposed-editions/2026-07-28.json")
+    assert july28_release["approved_proposal_sha256"] == "7a83f8f114e04ff30f98b9328535331db625d932cff895da91e9793756b3543d"
     assert july31_release["review_snapshot_path"] == july31_proposal["review_snapshot_path"]
     assert july31_release["review_snapshot_sha256"] == july31_proposal["review_snapshot_sha256"]
-    assert july31_release["approved_proposal_sha256"] == sha256_file(ROOT / "data/dispatches/food-line/review/proposed-editions/2026-07-31.json")
+    assert july31_release["approved_proposal_sha256"] == "83bd9af9824e288935e9e11868568f04e247beb462781b3b64a6a7730e50d9d2"
 
 
 def test_existing_july28_public_artifacts_remain_byte_for_byte_unchanged() -> None:

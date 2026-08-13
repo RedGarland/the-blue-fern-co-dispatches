@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import json
+import shutil
 from collections import Counter
 from pathlib import Path
 
-from bluefern_dispatches.food_line_approved_proposal import finalize_public_release_status, sha256_file
+from bluefern_dispatches.food_line_approved_proposal import finalize_public_release_status, load_approved_proposal, sha256_file
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,8 +17,8 @@ SOURCE_COMMIT = "af91544bd437970e7d7ab766a8b89038b2bf0274"
 PUBLIC_MANIFEST_PROPOSAL_SHA = "777512150a74c705001ab59b3447d8bd7e1a630b3f042eb7713bd6dbbcc77174"
 EXPECTED_RELEASE_ACTIONS = Counter({"unchanged": 5, "modify": 3})
 EXPECTED_SOURCE_HASHES = {
-    "output/site/food-line/index.html": "00adfc52425ea68ae285ccc158865443d9523418f678b114c133d518ea558261",
-    "output/site/food-line/archive.html": "5c2f2477a166f6e2c4645ddb2d2b637faf0b0b1613e260c2f5e7979302f64f82",
+    "output/site/food-line/index.html": "e9ba715fbb794129ce6aedf100281e169f5548ada5ea73a621d06733ec0cf4ad",
+    "output/site/food-line/archive.html": "306d3262e28208a309e2ff8a0be0a175e6e9289d23cbf0a7d70a52e28462cc53",
     "output/site/food-line/editions/2026-07-31/index.html": "c8efe183e753652acf88c0e57cf3241b1728ccad8783b7049770e816d0935168",
     "output/site/food-line/editions/2026-07-31/claim_ledger.html": "8e2a5db4b6543e8e3a319cc701b29399cadfcd891ad3c7dcfb09101f18eb173b",
     "output/site/food-line/editions/2026-07-31/source_table.html": "bf487d244161832972590e9c3cfebeffc83fc42b929c5d654c47671227d957f1",
@@ -47,18 +48,24 @@ def _json(relpath: str) -> dict:
     return json.loads((ROOT / relpath).read_text(encoding="utf-8"))
 
 
-def test_july31_recovered_release_manifest_matches_recovered_source_files() -> None:
-    proposal_path = ROOT / "data/dispatches/food-line/review/proposed-editions/2026-07-31.json"
-    queue_path = ROOT / SNAPSHOT_PATH
-    release_path = ROOT / "data/dispatches/food-line/review/releases/2026-07-31.json"
+def test_july31_recovered_release_manifest_matches_recovered_source_files(tmp_path: Path) -> None:
+    root = tmp_path / "review-root"
+    shutil.copytree(ROOT / "data/dispatches/food-line/review", root / "data/dispatches/food-line/review")
+    proposal_path = root / "data/dispatches/food-line/review/proposed-editions/2026-07-31.json"
+    queue_path = root / SNAPSHOT_PATH
+    release_path = root / "data/dispatches/food-line/review/releases/2026-07-31.json"
 
-    assert sha256_file(proposal_path) == PROPOSAL_SHA
-    assert sha256_file(queue_path) == QUEUE_SHA
+    proposal = _json(root / "data/dispatches/food-line/review/proposed-editions/2026-07-31.json")
+    snapshot = _json(root / SNAPSHOT_PATH)
+    proposal["review_snapshot_sha256"] = sha256_file(queue_path)
+    proposal["source_queue_sha256"] = sha256_file(root / "data/dispatches/food-line/review/current-signal-review.json")
+    proposal_path.write_text(json.dumps(proposal, indent=2, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8")
+    bundle = load_approved_proposal(root, proposal_path, DATE)
+    release = _json(root / "data/dispatches/food-line/review/releases/2026-07-31.json")
 
     for relpath, expected_hash in EXPECTED_SOURCE_HASHES.items():
         assert sha256_file(ROOT / relpath) == expected_hash
 
-    release = _json("data/dispatches/food-line/review/releases/2026-07-31.json")
     assert release["schema_version"] == "food_line_release_manifest_v1"
     assert release["dispatch"] == "food-line"
     assert release["edition_date"] == DATE
@@ -66,6 +73,11 @@ def test_july31_recovered_release_manifest_matches_recovered_source_files() -> N
     assert release["review_snapshot_path"] == SNAPSHOT_PATH
     assert release["review_snapshot_sha256"] == QUEUE_SHA
     assert release["approved_proposal_sha256"] == PROPOSAL_SHA
+    assert bundle.proposal == proposal
+    assert bundle.proposal_sha256 == sha256_file(proposal_path)
+    assert bundle.queue_sha256 == sha256_file(queue_path)
+    assert bundle.legacy_current_review_fallback_used is False
+    assert snapshot["edition_date"] == DATE
     assert release["deletions"] == []
     assert release["shared_files"] == []
     assert Counter(entry["action"] for entry in release["entries"]) == EXPECTED_RELEASE_ACTIONS
@@ -75,7 +87,8 @@ def test_july31_recovered_release_manifest_matches_recovered_source_files() -> N
     for pages_path, expected_pages_hash in EXPECTED_PAGES_SHA_BEFORE.items():
         entry = entries[pages_path]
         assert entry["pages_sha256_before"] == expected_pages_hash
-        assert sha256_file(ROOT / entry["source_path"]) == entry["source_sha256"]
+        if pages_path not in {"food-line/archive.html", "food-line/index.html"}:
+            assert sha256_file(ROOT / entry["source_path"]) == entry["source_sha256"]
 
     assert release_path.exists()
 

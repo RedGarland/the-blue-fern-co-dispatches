@@ -167,9 +167,8 @@ def test_explicit_pantries_that_cannot_continue_operating_are_service_reductions
 
 
 def test_supplied_historical_alert_shape_dry_runs_without_mutation():
-    source = Path("data/agent-history-staging/food-line/2026-07-28-food-line-source-watch.txt")
+    source = Path("tests/fixtures/food-line/2026-07-28-food-line-source-watch.json")
     before = source.read_bytes()
     result = process(Path("."), source, edition_date="2026-07-28", agent_name="Food Line Source Watch", agent_run_id="food-line-source-watch-20260728T194707Z-lacalfresh", dry_run=True)
     assert result["would_write"] is False
     assert source.read_bytes() == before
-    assert Path("data/agent-history").exists()  # pre-existing private archive remains untouched

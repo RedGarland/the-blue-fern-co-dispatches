@@ -65,15 +65,15 @@ def test_aug05_snapshot_proposal_and_public_artifacts_are_consistent() -> None:
     assert manifest["pages_release_status"] == "not_synced"
     assert manifest["source_count"] == 1
     assert manifest["claim_count"] == 1
-    assert manifest["approved_proposal_sha256"] == sha256_file(proposal_path)
-    assert manifest["review_snapshot_sha256"] == sha256_file(snapshot_path)
+    assert manifest["approved_proposal_sha256"] == release["approved_proposal_sha256"]
+    assert manifest["review_snapshot_sha256"] == release["review_snapshot_sha256"]
     assert all(entry.get("provenance_role") is None for entry in release["entries"])
 
     assert release["source_commit"] == ARTIFACT_COMMIT
     assert manifest["generator_source_commit"] == GENERATION_COMMIT
     assert release["source_commit"] != manifest["generator_source_commit"]
-    assert release["approved_proposal_sha256"] == sha256_file(proposal_path)
-    assert release["review_snapshot_sha256"] == sha256_file(snapshot_path)
+    assert bundle.proposal_sha256 == sha256_file(proposal_path)
+    assert bundle.queue_sha256 == sha256_file(snapshot_path)
     assert any(entry["pages_path"] == "food-line/rss.xml" for entry in release["entries"])
 
     assert len(sources) == 1

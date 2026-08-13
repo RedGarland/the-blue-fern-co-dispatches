@@ -1,0 +1,47 @@
+{
+  "agent_name": "Food Line Source Watch",
+  "agent_run_id": "food-line-source-watch-20260728T194707Z-lacalfresh",
+  "completed_at": "2026-07-28T19:47:07Z",
+  "coverage_notes": "Historical staging fixture for dry-run mutation safety.",
+  "findings": [
+    {
+      "agent_query_context": {
+        "query": "food access"
+      },
+      "canonical_source_url": "https://www.northernnewsnow.com/2026/07/28/superior-food-pantry-closing-after-more-than-30-years/",
+      "classification_status": "qualified_pressure_signal",
+      "confidence": "high",
+      "discovered_publisher": "Northern News Now",
+      "discovered_title": "Superior food pantry closes after more than 30 years",
+      "discovery_candidate_id": "food-line-source-watch-fixture-1",
+      "discovery_channel": "historical_staging",
+      "discovery_date": "2026-07-28",
+      "evidence_level": "direct reporting",
+      "evidence_text": "The pantry served 960 people and distributed approximately 34,000 pounds each month before closing.",
+      "evidence_text_basis": "operator_reviewed_exact_passage",
+      "location_name": "Superior",
+      "pressure_signal": true,
+      "pressure_type": "food_pantry_closure",
+      "public_claim_blockers": [
+        "historical archival fixture"
+      ],
+      "public_claim_eligible": false,
+      "query_family": "food_line_source_watch",
+      "selected_title": "Superior food pantry closes after more than 30 years",
+      "source_published_at": "2026-07-28T16:26:00-05:00",
+      "source_role": "local_signal",
+      "source_url": "https://www.northernnewsnow.com/2026/07/28/superior-food-pantry-closing-after-more-than-30-years/",
+      "state_abbrev": "WI",
+      "summary": "A local pantry closed after its final distribution.",
+      "summary_or_snippet": "A local pantry closed after its final distribution.",
+      "traceability_status": "traceable"
+    }
+  ],
+  "schema_version": "food_line_agent_run_v1",
+  "search_window": {
+    "date_from": "2026-07-28",
+    "date_to": "2026-07-28",
+    "edition_date": "2026-07-28"
+  },
+  "started_at": "2026-07-28T19:46:07Z"
+}

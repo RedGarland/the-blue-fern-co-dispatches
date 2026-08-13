@@ -1,0 +1,331 @@
+[
+  {
+    "story_id": "gaza-story-2026-08-12-002",
+    "title": "As conflict in the Middle East intensifies, India's relationship with Israel deepens",
+    "summary": "An Amnesty International report reveals that the country is now a key part of Israel's weapons supply chain. Plus, Assam floods, student anger spreads and a song to put in rotation \u2022 Don't get. This is India delivered to your inbox? Sign up here Hello, and welcome back to This Is India. For this week's newsletter, I'm looking at India's evolving relationship with Israel, and how it has deepened as conflict swept across the Middle East. Why is it that India has formed an even closer bond with a country that has faced mounting international isolation and backlash over a military campaign in Gaza that has left the territory in ruins and killed more than 70,000 Palestinians , - many of whom were children?",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "scope_provenance": "article_evidence",
+    "score": 61,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-12-guardian-world-ca3853840bde"
+    ],
+    "source_ids": [
+      "gaza-2026-08-12-guardian-world-ca3853840bde"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/aug/10/this-is-india-relationship-with-israel-modi-netanyahu"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-12-guardian-world-ca3853840bde",
+        "title": "As conflict in the Middle East intensifies, India's relationship with Israel deepens",
+        "url": "https://www.theguardian.com/world/2026/aug/10/this-is-india-relationship-with-israel-modi-netanyahu",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "An Amnesty International report reveals that the country is now a key part of Israel's weapons supply chain. Plus, Assam floods, student anger spreads and a song to put in rotation \u2022 Don't get This is India delivered to your inbox? Sign up here Hello, and welcome back to This Is India. For this week's newsletter, I'm looking at India's evolving relationship with Israel, and how it has deepened as conflict swept across the Middle East. Why is it that India has formed an even closer bond with a country that has faced mounting international isolation and backlash over a military campaign in Gaza that has left the territory in ruins and killed more than 70,000 Palestinians , - many of whom were children?"
+      }
+    ],
+    "generated_at": "2026-08-13T03:04:51.620548+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 61,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-12-005",
+    "title": "Israel vows to keep troops in Lebanon, Gaza and Syria",
+    "summary": "Israeli defence minister. Israel \"will under no circumstances\" withdraw its troops.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "scope_provenance": "article_evidence",
+    "score": 53,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-12-aljazeera-middle-east-ad0271529a66"
+    ],
+    "source_ids": [
+      "gaza-2026-08-12-aljazeera-middle-east-ad0271529a66"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/8/12/israel-vows-to-keep-troops-in-lebanon-gaza-and-syria?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-12-aljazeera-middle-east-ad0271529a66",
+        "title": "Israel vows to keep troops in Lebanon, Gaza and Syria",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/8/12/israel-vows-to-keep-troops-in-lebanon-gaza-and-syria?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israeli defence minister Israel Katz has said that Israel \"will under no circumstances\" withdraw its troops."
+      }
+    ],
+    "generated_at": "2026-08-13T03:04:51.620548+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 53,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-12-001",
+    "title": "Netanyahu's rejection of Trump's 15-point Gaza plan unlikely to be final word",
+    "summary": "The Trump administration is said to be unbothered by the Israeli prime minister's rejection of the deal, viewing it as campaign rhetoric ahead of a general election.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "scope_provenance": "article_evidence",
+    "score": 53,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-12-bbc-middle-east-f3508e240344"
+    ],
+    "source_ids": [
+      "gaza-2026-08-12-bbc-middle-east-f3508e240344"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/ce3q5282ep3o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-12-bbc-middle-east-f3508e240344",
+        "title": "Netanyahu's rejection of Trump's 15-point Gaza plan unlikely to be final word",
+        "url": "https://www.bbc.co.uk/news/articles/ce3q5282ep3o?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "The Trump administration is said to be unbothered by the Israeli prime minister's rejection of the deal, viewing it as campaign rhetoric ahead of a general election."
+      }
+    ],
+    "generated_at": "2026-08-13T03:04:51.620548+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 53,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-12-004",
+    "title": "Israeli air strike kills one in northern Gaza",
+    "summary": "Strike on a tuk-tuk in Beit Lahiya kills one, wounds five in first Israeli aerial bombardment in a week.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "scope_provenance": "article_evidence",
+    "score": 53,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-12-aljazeera-middle-east-7e284090d541"
+    ],
+    "source_ids": [
+      "gaza-2026-08-12-aljazeera-middle-east-7e284090d541"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/8/12/israeli-air-strike-kills-one-in-northern-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-12-aljazeera-middle-east-7e284090d541",
+        "title": "Israeli air strike kills one in northern Gaza",
+        "url": "https://www.aljazeera.com/news/2026/8/12/israeli-air-strike-kills-one-in-northern-gaza?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Strike on a tuk-tuk in Beit Lahiya kills one, wounds five in first Israeli aerial bombardment in a week"
+      }
+    ],
+    "generated_at": "2026-08-13T03:04:51.620548+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 53,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-30-001",
+    "prior_edition_date": "2026-06-30",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-12-003",
+    "title": "11-year-old boy shot by Israeli forces in Gaza",
+    "summary": "The father of an 11-year-old boy says Israeli forces shot his son in the head and leg in Khan Younis.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "scope_provenance": "article_evidence",
+    "score": 47,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-12-aljazeera-middle-east-8124bda7ac46"
+    ],
+    "source_ids": [
+      "gaza-2026-08-12-aljazeera-middle-east-8124bda7ac46"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/8/12/11-year-old-boy-shot-by-israeli-forces-in-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-12-aljazeera-middle-east-8124bda7ac46",
+        "title": "11-year-old boy shot by Israeli forces in Gaza",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/8/12/11-year-old-boy-shot-by-israeli-forces-in-gaza?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "The father of an 11-year-old boy says Israeli forces shot his son in the head and leg in Khan Younis."
+      }
+    ],
+    "generated_at": "2026-08-13T03:04:51.620548+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "khan younis"
+    ],
+    "top_story_relevance_score": 47,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-28-008",
+    "prior_edition_date": "2026-06-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  }
+]

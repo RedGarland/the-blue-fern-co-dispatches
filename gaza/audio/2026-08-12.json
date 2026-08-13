@@ -1,0 +1,74 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-12",
+  "generated_at": "2026-08-13T03:05:06.193505Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-08-12.mp3",
+  "audio_url": "/gaza/audio/2026-08-12.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1245,
+  "tts_input_word_count": 206,
+  "tts_story_count": 5,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1279488,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-08-13T03:05:06.193481Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-08-12-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-12/",
+  "script_text": "This is the Gaza Dispatch audio briefing for August 12, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. As conflict in the Middle East intensifies, India's relationship with Israel deepens. An Amnesty International report reveals that the country is now a key part of Israel's weapons supply chain. This was reported by The Guardian.\n\n2. Israel vows to keep troops in Lebanon, Gaza and Syria. Israeli defence minister. This was reported by Al Jazeera.\n\n3. Netanyahu's rejection of Trump's 15-point Gaza plan unlikely to be final word. The Trump administration is said to be unbothered by the Israeli prime minister's rejection of the deal, viewing it as campaign rhetoric ahead of a general election. This was reported by BBC News.\n\n4. Israeli air strike kills one in northern Gaza. Strike on a tuk-tuk in Beit Lahiya kills one, wounds five in first Israeli aerial bombardment in a week. This was reported by Al Jazeera.\n\n5. 11-year-old boy shot by Israeli forces in Gaza. The father of an 11-year-old boy says Israeli forces shot his son in the head and leg in Khan Younis. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the August 12, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 5,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-08-12-guardian-world-ca3853840bde",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/aug/10/this-is-india-relationship-with-israel-modi-netanyahu",
+      "title": "As conflict in the Middle East intensifies, India's relationship with Israel deepens"
+    },
+    {
+      "source_record_id": "gaza-2026-08-12-aljazeera-middle-east-ad0271529a66",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/12/israel-vows-to-keep-troops-in-lebanon-gaza-and-syria?traffic_source=rss",
+      "title": "Israel vows to keep troops in Lebanon, Gaza and Syria"
+    },
+    {
+      "source_record_id": "gaza-2026-08-12-bbc-middle-east-f3508e240344",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/ce3q5282ep3o?at_medium=RSS&at_campaign=rss",
+      "title": "Netanyahu's rejection of Trump's 15-point Gaza plan unlikely to be final word"
+    },
+    {
+      "source_record_id": "gaza-2026-08-12-aljazeera-middle-east-7e284090d541",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/8/12/israeli-air-strike-kills-one-in-northern-gaza?traffic_source=rss",
+      "title": "Israeli air strike kills one in northern Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-08-12-aljazeera-middle-east-8124bda7ac46",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/12/11-year-old-boy-shot-by-israeli-forces-in-gaza?traffic_source=rss",
+      "title": "11-year-old boy shot by Israeli forces in Gaza"
+    }
+  ]
+}

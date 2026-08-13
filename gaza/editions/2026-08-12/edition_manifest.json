@@ -1,0 +1,117 @@
+{
+  "dispatch_name": "Dispatches From Gaza",
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-12",
+  "generated_at": "2026-08-13T03:04:51.620548+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-12/",
+  "local_output_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent5\\output\\site\\gaza\\editions\\2026-08-12",
+  "local_dispatch_output_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent5\\output\\dispatches\\gaza\\editions\\2026-08-12",
+  "local_backup_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent5\\output\\tmp-backups-pages\\gaza\\2026-08-12",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 5,
+  "story_count": 5,
+  "source_adequacy_status": "limited_source_update",
+  "source_adequacy_label": "Limited-source update",
+  "publisher_count": 3,
+  "publishers": [
+    "Al Jazeera",
+    "BBC News",
+    "The Guardian"
+  ],
+  "source_adequacy_warnings": [
+    "This limited-source update reviewed 5 candidate records. 5 supporting sources from 3 publishers describe 5 distinct developments. It should be read as a partial update, not a full daily briefing."
+  ],
+  "allow_post_edition_date_sources": false,
+  "post_edition_date_sources_included": false,
+  "post_edition_date_source_count": 0,
+  "source_manifest_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent5\\output\\site\\gaza\\editions\\2026-08-12\\sources_manifest.json",
+  "curation_manifest_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent5\\output\\site\\gaza\\editions\\2026-08-12\\curation_manifest.json",
+  "free_public_artifacts": [
+    "C:\\BlueFernRunner\\GazaDispatchesCurrent5\\output\\site\\gaza\\editions\\2026-08-12\\index.html",
+    "C:\\BlueFernRunner\\GazaDispatchesCurrent5\\output\\site\\gaza\\editions\\2026-08-12\\edition_manifest.json",
+    "C:\\BlueFernRunner\\GazaDispatchesCurrent5\\output\\site\\gaza\\editions\\2026-08-12\\sources_manifest.json",
+    "C:\\BlueFernRunner\\GazaDispatchesCurrent5\\output\\site\\gaza\\editions\\2026-08-12\\curation_manifest.json"
+  ],
+  "paid_or_detail_artifacts": [],
+  "detail_artifacts_publicly_exposed": false,
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "public_exposed": true,
+  "warnings": [
+    "This limited-source update reviewed 5 candidate records. 5 supporting sources from 3 publishers describe 5 distinct developments. It should be read as a partial update, not a full daily briefing.",
+    "manual supplement recommended: add source-backed records at C:\\BlueFernRunner\\GazaDispatchesCurrent5\\data\\dispatches\\gaza\\sources\\2026-08-12\\manual_sources.template.json"
+  ],
+  "errors": [],
+  "count_semantics": {
+    "field_definitions": {
+      "raw_candidate_count": "All candidate source records reviewed before validation or relevance filtering.",
+      "normalized_candidate_count": "Valid, relevance-qualified source records in the normalized audit set after recent-source annotation; story-selection exclusions can remain for traceability.",
+      "relevance_qualified_source_count": "Source records that passed the Gaza-nexus relevance gate before story curation.",
+      "excluded_source_count": "Raw candidate records excluded before supporting the rendered edition.",
+      "selected_supporting_source_count": "Distinct source records attached to rendered event clusters.",
+      "pre_dedupe_story_candidate_count": "Story candidates created from qualified source records before same-event clustering.",
+      "post_dedupe_event_cluster_count": "Distinct event clusters remaining after same-event deduplication.",
+      "rendered_development_count": "Distinct public developments rendered in the edition HTML.",
+      "rendered_publisher_count": "Distinct publishers across every supporting source attached to rendered developments.",
+      "raw_publisher_count": "Distinct publishers represented in the raw candidate set.",
+      "contextual_item_count": "Rendered context-only items that are not core Gaza developments."
+    },
+    "raw_candidate_count": 5,
+    "normalized_candidate_count": 5,
+    "relevance_qualified_source_count": 5,
+    "excluded_source_count": 0,
+    "selected_supporting_source_count": 5,
+    "pre_dedupe_story_candidate_count": 5,
+    "post_dedupe_event_cluster_count": 5,
+    "rendered_development_count": 5,
+    "rendered_publisher_count": 3,
+    "raw_publisher_count": 3,
+    "contextual_item_count": 0,
+    "legacy_field_semantics": {
+      "final_story_count": "Final distinct event clusters rendered; pre-dedupe candidates are reported separately.",
+      "core_gaza_count": "Distinct rendered core-Gaza event clusters.",
+      "story_count": "Distinct rendered public developments in the edition manifest.",
+      "source_count": "Normalized traceability records retained in the public sources manifest; use selected_supporting_source_count for sources supporting rendered developments."
+    }
+  },
+  "raw_candidate_count": 5,
+  "excluded_source_count": 0,
+  "selected_supporting_source_count": 5,
+  "pre_dedupe_story_candidate_count": 5,
+  "post_dedupe_event_cluster_count": 5,
+  "rendered_development_count": 5,
+  "rendered_publisher_count": 3,
+  "raw_publisher_count": 3,
+  "contextual_item_count": 0,
+  "scheduled_run_local_time": "2026-08-12T06:00:00-07:00",
+  "actual_run_local_time": "2026-08-12T20:04:51-07:00",
+  "source_window_start_utc": "2026-08-10T14:43:08Z",
+  "source_window_end_utc": "2026-08-12T21:06:12Z",
+  "first_source_retrieved_at": "2026-08-13T03:04:49.126396Z",
+  "last_source_retrieved_at": "2026-08-13T03:04:49.126396Z",
+  "contains_later_same_day_update": false,
+  "later_same_day_update_count": 0,
+  "later_same_day_update_batch_count": 0,
+  "later_same_day_update_source_count": 0,
+  "contains_post_edition_date_update": false,
+  "post_edition_date_update_count": 0,
+  "post_edition_date_update_batch_count": 0,
+  "post_edition_date_update_source_count": 0,
+  "post_edition_date_retrieval_batches": [],
+  "retrieval_batches": [
+    {
+      "retrieved_at": "2026-08-13T03:04:49.126396Z",
+      "retrieved_at_local": "2026-08-12T20:04:49-07:00",
+      "retrieved_local_date": "2026-08-12",
+      "batch_classification": "scheduled_or_pre_scheduled_batch",
+      "source_record_ids": [
+        "gaza-2026-08-12-bbc-middle-east-f3508e240344",
+        "gaza-2026-08-12-guardian-world-ca3853840bde",
+        "gaza-2026-08-12-aljazeera-middle-east-8124bda7ac46",
+        "gaza-2026-08-12-aljazeera-middle-east-7e284090d541",
+        "gaza-2026-08-12-aljazeera-middle-east-ad0271529a66"
+      ],
+      "source_count": 5
+    }
+  ]
+}

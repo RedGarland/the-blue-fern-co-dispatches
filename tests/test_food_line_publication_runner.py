@@ -149,6 +149,7 @@ def test_dry_run_full_reports_temp_cleanup_and_proposed_paths(monkeypatch, tmp_p
     monkeypatch.setattr(runner, "_validate_scope", lambda **kwargs: scope_calls.append(kwargs) or [])
 
     def fake_generation(root: Path, date: str, **kwargs):
+        assert kwargs["generate_audio"] is False
         release_manifest = root / "data/dispatches/food-line/review/releases" / f"{date}.json"
         release_manifest.parent.mkdir(parents=True, exist_ok=True)
         release_manifest.write_text("{}", encoding="utf-8")
@@ -220,6 +221,7 @@ def test_publication_with_push_forwards_commit_and_push(monkeypatch, tmp_path: P
     monkeypatch.setattr(runner, "_validate_scope", lambda **kwargs: scope_calls.append(kwargs) or [])
 
     def fake_generation(root: Path, date: str, **kwargs):
+        assert kwargs["generate_audio"] is False
         release_manifest = root / "data/dispatches/food-line/review/releases" / f"{date}.json"
         release_manifest.parent.mkdir(parents=True, exist_ok=True)
         release_manifest.write_text("{}", encoding="utf-8")

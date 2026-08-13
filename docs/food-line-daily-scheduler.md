@@ -4,6 +4,11 @@ The production Food Line schedule stops at a private proposed edition. It does
 not make editorial decisions, render public HTML, modify Pages, publish, push,
 post to Bluesky, generate audio or maps, or update podcast feeds.
 
+The supported Food Line production path is text-only. The current
+source-watch/current-intake/publication chain never requests TTS or generates
+new audio. Historical audio and podcast artifacts remain on disk for legacy and
+backfill use, but they are not required for a successful production run.
+
 ## Production runner
 
 Use the dedicated clean checkout:

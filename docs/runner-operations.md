@@ -97,6 +97,10 @@ powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\Blue
 Omit `-CheckOnly` for the guarded live publication path. Add `-DryRunFull` for
 an isolated temp-workspace run. Add `-Push` only when the local Pages commit
 should also be pushed. Food Line does not use the Gaza social/audio switches.
+The supported Food Line runner remains text-only: it does not request TTS,
+generate podcast/audio artifacts, or require any standalone audio/feed step for
+success. Legacy Food Line audio/podcast generation stays available only through
+`scripts\run_food_line_dispatch.py` for historical, backfill, and test paths.
 
 The production private-only Food Line schedule now uses a separate clean runner
 checkout and three guarded tasks. See

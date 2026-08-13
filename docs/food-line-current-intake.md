@@ -6,6 +6,11 @@ manual sequence of finding inbox files, checking envelope/source evidence,
 importing each run, refreshing the review queue, assembling a markdown preview,
 and writing a status report.
 
+The supported Food Line production path is text-only. It stops at the private
+current review queue, proposed edition, and publication-ready source artifacts.
+It does not request TTS, generate podcast/audio artifacts, or require any
+standalone audio/feed step for success.
+
 ## Routine unscheduled flow
 
 Step 1 runs the existing discovery expansion source watch and explicitly exports
@@ -53,6 +58,11 @@ The safe wrapper is `scripts/run_food_line_current_intake.py`; it has no
 scheduler activation and no publication behavior. A scheduler may invoke that
 wrapper after operator review of this workflow, but scheduling is a separate
 change and is not enabled here.
+
+Legacy Food Line audio and podcast generation remain available only through
+`scripts/run_food_line_dispatch.py` for historical, backfill, and test paths.
+That legacy path is not part of the supported current-intake/current-review/
+publication production contract.
 
 The batch discovers JSON envelopes outside `processed/`, rejects malformed
 envelopes, invalid HTTPS/evidence/date records, duplicate run IDs, and duplicate

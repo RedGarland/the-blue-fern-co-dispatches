@@ -552,37 +552,24 @@ def test_food_line_discovery_gap_prioritizes_high_confidence_candidates_and_repo
         json.dumps({"queries": ["food bank demand"], "exclude_domains": []}, indent=2),
         encoding="utf-8",
     )
-    case_report = json.loads(
-        Path("data/dispatches/food-line/discovery_gap/2026-07-09/discovery_gap_report.json").read_text(encoding="utf-8")
-    )
-    high_confidence_wrapper = next(
-        row
-        for row in case_report["candidates"]
-        if row["title"].startswith("Food bank demand surges in Santa Cruz County as costs strain families")
-    )
-    lower_value_wrapper = next(
-        row
-        for row in case_report["candidates"]
-        if row["title"].startswith("Food bank officials respond to rising needs following SNAP cuts")
-    )
     calls: list[str] = []
 
     def fetcher(url: str, timeout: int = 15):
         if url.startswith("https://news.google.com/rss/search?q="):
             items = [
                 _gap_item(
-                    title=lower_value_wrapper["title"],
-                    publisher=lower_value_wrapper["publisher"],
-                    source_url="https://" + lower_value_wrapper["publisher_domain"],
-                    link=lower_value_wrapper["google_news_url"],
-                    description=lower_value_wrapper["summary_or_snippet"],
+                    title="Food bank officials respond to rising needs following SNAP cuts - NEWS10 ABC",
+                    publisher="NEWS10 ABC",
+                    source_url="https://www.news10.com",
+                    link="https://news.google.com/rss/articles/CBMiOFFICIAL?oc=5",
+                    description="Food bank officials respond to rising needs following SNAP cuts and report clear pressure on families.",
                 ),
                 _gap_item(
-                    title=high_confidence_wrapper["title"],
-                    publisher=high_confidence_wrapper["publisher"],
-                    source_url="https://" + high_confidence_wrapper["publisher_domain"],
-                    link=high_confidence_wrapper["google_news_url"],
-                    description=high_confidence_wrapper["summary_or_snippet"],
+                    title="Food bank demand surges in Santa Cruz County as costs strain families - KSBW",
+                    publisher="KSBW",
+                    source_url="https://www.ksbw.com",
+                    link="https://news.google.com/rss/articles/CBMiKSBW?oc=5",
+                    description="Food bank demand surges in Santa Cruz County as costs strain families, and families are under cost pressure.",
                 ),
             ]
             return _rss_payload(items)
@@ -625,6 +612,16 @@ def test_food_line_discovery_gap_prioritizes_high_confidence_candidates_and_repo
     )
     report = json.loads(Path(result["report_path"]).read_text(encoding="utf-8"))
     rows = {row["title"]: row for row in report["candidates"]}
+    high_confidence_wrapper = next(
+        row
+        for row in report["candidates"]
+        if row["title"].startswith("Food bank demand surges in Santa Cruz County as costs strain families")
+    )
+    lower_value_wrapper = next(
+        row
+        for row in report["candidates"]
+        if row["title"].startswith("Food bank officials respond to rising needs following SNAP cuts")
+    )
 
     assert calls[0] == high_confidence_wrapper["google_news_url"]
     assert report["resolved_url_count"] == 1

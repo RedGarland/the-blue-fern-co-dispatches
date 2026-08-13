@@ -627,6 +627,62 @@ def test_wrapper_gaza_default_repo_root_comes_from_wrapper_location(tmp_path: Pa
     assert f"Resolved repo root from wrapper location: {repo}" in log_text
 
 
+def test_wrapper_gaza_blank_child_output_preserves_empty_line(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        source_branch="agent/refine-care-line-signal-wire-public-rendering",
+        sync_ok=True,
+        smoke_payload={
+            "ok": True,
+            "edition_mode": "no_public_edition",
+            "public_rendered": False,
+        },
+    )
+    _write_runner_script(
+        repo / "scripts" / "run_gaza_daily_operator.py",
+        """
+from __future__ import annotations
+
+import json
+from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+
+print("alpha")
+print()
+print("omega")
+print(json.dumps({
+    "ok": True,
+    "operator_status": "DRY_RUN_READY",
+    "email_status": "not_requested",
+    "bluesky_status": "skipped",
+    "pages_push_ok": None,
+    "pages_repo_updated": False,
+    "publish_ok": False,
+    "generation_ok": True,
+    "validation_ok": True,
+    "manual_source_present": False,
+    "cwd": str(Path.cwd()),
+    "root": str(ROOT),
+    "output_root": str(ROOT / "output"),
+    "argv": sys.argv[1:],
+}, indent=2))
+raise SystemExit(0)
+""".strip()
+        + "\n",
+    )
+
+    result = _run_wrapper_with_args(repo, ["-Dispatch", "gaza", "-Date", "2026-07-02"])
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    log_text = _latest_log(repo)
+    assert "alpha" in log_text
+    assert "omega" in log_text
+    assert "ParameterBindingValidationException" not in log_text
+    assert "\n\nomega" in log_text or "alpha\n\n" in log_text
+
+
 def test_wrapper_gaza_explicit_repo_root_override_is_used(tmp_path: Path) -> None:
     wrapper_repo = _make_fake_runner_repo(
         tmp_path / "wrapper",

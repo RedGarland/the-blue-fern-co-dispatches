@@ -32,6 +32,7 @@ function Append-LogLine {
     param(
         [Parameter(Mandatory = $true)]
         [string]$Path,
+        [AllowEmptyString()]
         [Parameter(Mandatory = $true)]
         [string]$Line
     )
@@ -80,7 +81,7 @@ function Write-Log {
 }
 
 function Save-CommandOutputLine {
-    param([string]$Line)
+    param([AllowEmptyString()][string]$Line)
 
     if ($script:LogFile) {
         if (Append-LogLine -Path $script:LogFile -Line $Line) {

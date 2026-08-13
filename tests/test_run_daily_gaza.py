@@ -1290,7 +1290,11 @@ def test_email_report_sends_on_failure_with_warnings_and_errors(isolated, monkey
 def test_email_report_missing_smtp_config_returns_2(isolated, monkeypatch, capsys):
     root = isolated
     monkeypatch.delenv("SMTP_HOST", raising=False)
+    monkeypatch.delenv("SMTP_PORT", raising=False)
+    monkeypatch.delenv("SMTP_USE_SSL", raising=False)
+    monkeypatch.delenv("SMTP_USERNAME", raising=False)
     monkeypatch.delenv("EMAIL_TO", raising=False)
+    monkeypatch.delenv("SMTP_TO", raising=False)
     monkeypatch.delenv("SMTP_USER", raising=False)
     monkeypatch.delenv("SMTP_PASSWORD", raising=False)
     monkeypatch.setattr(

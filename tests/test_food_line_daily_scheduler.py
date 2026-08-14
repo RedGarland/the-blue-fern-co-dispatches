@@ -204,6 +204,27 @@ def test_source_watch_fails_closed_on_surviving_worker(tmp_path: Path, monkeypat
     assert "surviving worker" in scheduler.read_json(reports[0])["message"]
 
 
+def test_surviving_worker_pids_ignores_reused_pid_after_run_state_finalized(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    root = _root(tmp_path)
+    layout = scheduler.Layout(root)
+    run_dir = layout.run_dir(DATE, RUN_ID)
+    scheduler.atomic_write_json(run_dir / "run-state.json", _state())
+    scheduler.atomic_write_json(
+        run_dir / "partitions" / "p-1.json",
+        {
+            "schema_version": "food_line_bounded_partition_v1",
+            "query_result_metadata": [{"worker_pid": 4242}],
+        },
+    )
+    monkeypatch.setattr(scheduler, "process_is_running", lambda pid: True)
+    monkeypatch.setattr(
+        scheduler,
+        "_process_creation_time",
+        lambda pid: (run_dir / "run-state.json").stat().st_mtime + 10,
+    )
+    assert scheduler.surviving_worker_pids(run_dir) == []
+
+
 @pytest.mark.parametrize("status", ["planned", "running", "partial", "timed_out", "cancelled", "failed"])
 def test_nonterminal_or_failed_collection_does_not_qualify(status: str) -> None:
     assert not scheduler.collection_qualifies(_state(status, export_status="blocked_incomplete_collection"))

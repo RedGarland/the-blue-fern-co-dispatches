@@ -41,6 +41,10 @@ class SchedulerError(RuntimeError):
     """A fail-closed operational error."""
 
 
+class _FILETIME(ctypes.Structure):
+    _fields_ = [("dwLowDateTime", ctypes.c_ulong), ("dwHighDateTime", ctypes.c_ulong)]
+
+
 @dataclass(frozen=True)
 class Layout:
     root: Path
@@ -129,6 +133,47 @@ def process_is_running(pid: int) -> bool:
         ctypes.windll.kernel32.CloseHandle(handle)
 
 
+def _process_creation_time(pid: int) -> float | None:
+    if pid <= 0:
+        return None
+    if os.name != "nt":
+        return None
+    process_query_limited_information = 0x1000
+    handle = ctypes.windll.kernel32.OpenProcess(process_query_limited_information, False, pid)
+    if not handle:
+        return None
+    try:
+        creation_time = _FILETIME()
+        exit_time = _FILETIME()
+        kernel_time = _FILETIME()
+        user_time = _FILETIME()
+        if not ctypes.windll.kernel32.GetProcessTimes(
+            handle,
+            ctypes.byref(creation_time),
+            ctypes.byref(exit_time),
+            ctypes.byref(kernel_time),
+            ctypes.byref(user_time),
+        ):
+            return None
+        creation_value = (creation_time.dwHighDateTime << 32) | creation_time.dwLowDateTime
+        return creation_value / 10_000_000 - 11_644_473_600
+    finally:
+        ctypes.windll.kernel32.CloseHandle(handle)
+
+
+def _process_started_before(path: Path, pid: int) -> bool:
+    if not process_is_running(pid):
+        return False
+    creation_time = _process_creation_time(pid)
+    if creation_time is None:
+        return True
+    try:
+        cutoff = path.stat().st_mtime
+    except OSError:
+        return False
+    return creation_time <= cutoff
+
+
 def surviving_worker_pids(run_dir: Path) -> list[int]:
     pids: set[int] = set()
     for path in sorted((run_dir / "partitions").glob("*.json")) if (run_dir / "partitions").exists() else []:
@@ -139,7 +184,8 @@ def surviving_worker_pids(run_dir: Path) -> list[int]:
         for metadata in artifact.get("query_result_metadata") or []:
             if isinstance(metadata, dict) and metadata.get("worker_pid"):
                 pids.add(int(metadata["worker_pid"]))
-    return sorted(pid for pid in pids if process_is_running(pid))
+    state_path = run_dir / "run-state.json"
+    return sorted(pid for pid in pids if _process_started_before(state_path, pid))
 
 
 def _run(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:

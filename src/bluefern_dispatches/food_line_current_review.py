@@ -13,6 +13,7 @@ from urllib.parse import urlsplit
 
 QUEUE_SCHEMA_VERSION = "food_line_current_signal_review_v1"
 PROPOSED_EDITION_SCHEMA_VERSION = "food_line_proposed_edition_v1"
+RELEASE_READINESS_SCHEMA_VERSION = "food_line_release_readiness_v1"
 CURRENT_PRODUCTION_SCOPE = "current_nonhistorical_only"
 ALLOWED_DECISIONS = ("approve", "approve_with_edit", "hold", "reject")
 ALLOWED_EDITORIAL_STATUSES = ("pending_editorial_review", *ALLOWED_DECISIONS)
@@ -31,6 +32,7 @@ PRIVATE_PROCESSED_INBOX_ROOT = PRIVATE_AGENT_INBOX_ROOT / "processed"
 PRIVATE_QUEUE_PATH = PRIVATE_RUNTIME_ROOT / "current-signal-review.json"
 PRIVATE_PROPOSED_EDITION_ROOT = Path("data/dispatches/food-line/review/proposed-editions")
 PRIVATE_SIGNAL_REVIEW_ROOT = Path("data/dispatches/food-line/review/signal-reviews")
+PRIVATE_RELEASE_READINESS_ROOT = Path("data/dispatches/food-line/review/release-readiness")
 
 REQUIRED_ITEM_FIELDS = (
     "review_item_id",
@@ -376,6 +378,11 @@ def build_proposed_edition(queue: dict[str, Any]) -> dict[str, Any]:
     approved_item_count = status_counts["approve"] + status_counts["approve_with_edit"]
     pending_item_count = status_counts["pending_editorial_review"]
     rejected_item_count = status_counts["reject"]
+    approved_signal_ids = [
+        str(item["review_item_id"])
+        for item in validated["items"]
+        if item["editorial_status"] in {"approve", "approve_with_edit"}
+    ]
     status = (
         "blocked_no_reviewable_current_signals"
         if blocked
@@ -407,6 +414,7 @@ def build_proposed_edition(queue: dict[str, Any]) -> dict[str, Any]:
         "pending_item_count": pending_item_count,
         "rejected_item_count": rejected_item_count,
         "items": public_items,
+        "approved_signal_ids": approved_signal_ids,
         "layout": {
             "eyebrow_status": "FOOD LINE — PRIVATE DRAFT / UNPUBLISHED",
             "generation_note": generation_note,
@@ -557,3 +565,84 @@ def write_proposed_edition(root: Path, queue: dict[str, Any]) -> tuple[Path, Pat
     markdown_path.parent.mkdir(parents=True, exist_ok=True)
     markdown_path.write_text(render_operator_markdown(queue, proposed), encoding="utf-8", newline="\n")
     return json_path, markdown_path, proposed
+
+
+def build_release_readiness_record(
+    *,
+    proposal: Mapping[str, Any],
+    queue: Mapping[str, Any],
+    proposal_path: Path,
+    proposal_sha256: str,
+    snapshot_path: Path,
+    snapshot_sha256: str,
+) -> dict[str, Any]:
+    validate_queue(queue)
+    expected_proposal = build_proposed_edition(queue)
+    if proposal.get("schema_version") != PROPOSED_EDITION_SCHEMA_VERSION:
+        raise ValueError("proposal schema_version must match the Food Line proposed-edition contract")
+    if proposal != expected_proposal:
+        raise ValueError("proposal does not match the current approved review queue")
+    if proposal.get("draft_status") != "draft_approved_pending_publication":
+        raise ValueError("proposal must be draft_approved_pending_publication")
+    if proposal.get("publication_approval") is not False or proposal.get("published") is not False:
+        raise ValueError("proposal must remain unpublished and lack final publication approval")
+    if proposal.get("publication_eligible") is not False:
+        raise ValueError("proposal publication_eligible must remain false")
+    if int(proposal.get("selected_item_count") or 0) != len(proposal.get("items") or []):
+        raise ValueError("proposal selected_item_count must match selected items")
+    if int(proposal.get("approved_item_count") or 0) != len(proposal.get("items") or []):
+        raise ValueError("proposal approved_item_count must match selected items")
+    if int(proposal.get("pending_item_count") or 0) != 0:
+        raise ValueError("proposal pending_item_count must be zero")
+    if int(proposal.get("rejected_item_count") or 0) != 0:
+        raise ValueError("proposal rejected_item_count must be zero")
+
+    queue_approved_ids = [
+        str(item["review_item_id"])
+        for item in queue["items"]
+        if str(item.get("editorial_status") or "").strip() in {"approve", "approve_with_edit"}
+    ]
+    approved_ids = [str(item) for item in proposal.get("approved_signal_ids") or [] if str(item).strip()]
+    if approved_ids != queue_approved_ids:
+        raise ValueError("proposal approved_signal_ids must match the approved review queue items")
+
+    return {
+        "schema_version": RELEASE_READINESS_SCHEMA_VERSION,
+        "edition_date": proposal["edition_date"],
+        "status": "approved_current_review_ready_for_source_generation",
+        "approved_proposal_path": proposal_path.as_posix(),
+        "approved_proposal_sha256": proposal_sha256,
+        "review_snapshot_path": snapshot_path.as_posix(),
+        "review_snapshot_sha256": snapshot_sha256,
+        "approved_signal_ids": approved_ids,
+        "selected_item_count": len(approved_ids),
+        "publication_approval": True,
+        "required_human_approval": True,
+    }
+
+
+def write_release_readiness(
+    root: Path,
+    queue: dict[str, Any],
+    proposal_path: Path,
+    proposal: dict[str, Any],
+) -> tuple[Path, dict[str, Any]]:
+    snapshot_path = root / signal_review_snapshot_path(str(proposal["edition_date"]))
+    if not snapshot_path.exists():
+        raise ValueError(f"review snapshot not found: {snapshot_path}")
+    snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
+    if not isinstance(snapshot, dict):
+        raise ValueError("review snapshot must be a JSON object")
+    snapshot = validate_queue(snapshot)
+    snapshot_sha256 = payload_sha256(snapshot)
+    readiness = build_release_readiness_record(
+        proposal=proposal,
+        queue=queue,
+        proposal_path=proposal_path.relative_to(root),
+        proposal_sha256=payload_sha256(proposal),
+        snapshot_path=snapshot_path.relative_to(root),
+        snapshot_sha256=snapshot_sha256,
+    )
+    path = root / PRIVATE_RELEASE_READINESS_ROOT / f"{proposal['edition_date']}.json"
+    write_json_atomic(path, readiness)
+    return path, readiness

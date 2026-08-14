@@ -13,10 +13,12 @@ from bluefern_dispatches.food_line_current_review import (
     ALLOWED_DECISIONS,
     PRIVATE_QUEUE_PATH,
     apply_editorial_decision,
+    build_release_readiness_record,
     load_queue,
     payload_sha256,
     queue_summary,
     write_json_atomic,
+    write_release_readiness,
     write_proposed_edition,
 )
 
@@ -42,6 +44,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
     proposal = subparsers.add_parser("propose", help="Write a private proposed-edition JSON and Markdown preview")
     proposal.add_argument("--dry-run", action="store_true", help="Build and report the proposal without writing")
+
+    readiness = subparsers.add_parser("release-ready", help="Write the private release-readiness JSON")
+    readiness.add_argument("--dry-run", action="store_true", help="Validate readiness without writing")
     return parser.parse_args(argv)
 
 
@@ -82,7 +87,7 @@ def main(argv: list[str] | None = None) -> int:
                     "status": "idempotent_noop" if mutation == "none" else "decision_recorded",
                 }
             )
-        else:
+        elif args.command == "propose":
             from bluefern_dispatches.food_line_current_review import build_proposed_edition
 
             proposed = build_proposed_edition(queue)
@@ -105,6 +110,35 @@ def main(argv: list[str] | None = None) -> int:
                     "json_path": str(json_path),
                     "markdown_path": str(markdown_path),
                     "publication_eligible": False,
+                }
+        else:
+            proposal_path = root / "data" / "dispatches" / "food-line" / "review" / "proposed-editions" / f"{queue['edition_date']}.json"
+            snapshot_path = root / "data" / "dispatches" / "food-line" / "review" / "signal-reviews" / f"{queue['edition_date']}.json"
+            proposal = json.loads(proposal_path.read_text(encoding="utf-8"))
+            readiness_payload = build_release_readiness_record(
+                proposal=proposal,
+                queue=queue,
+                proposal_path=proposal_path.relative_to(root),
+                proposal_sha256=payload_sha256(proposal),
+                snapshot_path=snapshot_path.relative_to(root),
+                snapshot_sha256=payload_sha256(queue),
+            )
+            if args.dry_run:
+                result = {
+                    "ok": True,
+                    "dry_run": True,
+                    "mutation": "none",
+                    "readiness": readiness_payload,
+                    "readiness_path": str(root / "data" / "dispatches" / "food-line" / "review" / "release-readiness" / f"{queue['edition_date']}.json"),
+                }
+            else:
+                readiness_path, readiness_payload = write_release_readiness(root, queue, proposal_path, proposal)
+                result = {
+                    "ok": True,
+                    "dry_run": False,
+                    "mutation": "written",
+                    "readiness": readiness_payload,
+                    "readiness_path": str(readiness_path),
                 }
         print(json.dumps(result, indent=2, sort_keys=True, ensure_ascii=False))
         return 0

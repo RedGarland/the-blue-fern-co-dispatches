@@ -19,6 +19,13 @@ def test_classify_path_covers_expected_categories():
     assert preflight_repo_state.classify_path("data/dispatches/food-line/agent-intake/2026-08-13/run.json") == "local_run_state"
     assert preflight_repo_state.classify_path("data/dispatches/food-line/agent-intake/reports/2026-08-13/run.json") == "local_run_state"
     assert preflight_repo_state.classify_path("data/dispatches/food-line/agent-intake/processed/run.json") == "local_run_state"
+    assert preflight_repo_state.classify_path("data/dispatches/food-line/review/proposed-editions/run.json") == "review_output"
+    assert preflight_repo_state.classify_path("data/dispatches/food-line/review/reports/run.json") == "review_output"
+    assert preflight_repo_state.classify_path("data/dispatches/food-line/review/signal-reviews/run.json") == "review_output"
+    assert preflight_repo_state.classify_path("logs/food-line/run.json") == "logs"
+    assert preflight_repo_state.classify_path("status/food-line/run.json") == "local_run_state"
+    assert preflight_repo_state.classify_path("data/dispatches/food-line/discovery-runs/2026-08-13/run.json") == "local_run_state"
+    assert preflight_repo_state.classify_path("data/agent-history-staging/food-line/run.txt") == "local_run_state"
     assert preflight_repo_state.classify_path("some/unknown/path.txt") == "unknown"
 
 
@@ -39,11 +46,10 @@ def test_food_line_source_performance_history_is_allowed_but_other_data_paths_ar
     report = preflight_repo_state.build_preflight_report(source_repo)
 
     assert report["ok"] is False
-    assert {entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]} == {
-        "data/dispatches/food-line/source_performance_history.json"
-    }
+    assert {entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]} == set()
     assert {entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]} == {
-        "data/dispatches/food-line/source_registry.json"
+        "data/dispatches/food-line/source_performance_history.json",
+        "data/dispatches/food-line/source_registry.json",
     }
 
 
@@ -88,6 +94,13 @@ def test_food_line_agent_intake_paths_are_allowed_but_nearby_paths_stay_risky(mo
             "?? data/dispatches/food-line/agent-intake/processed/2026-08-13/run.json",
             "?? data/dispatches/food-line/agent-intake-notes/run.json",
             "?? data/dispatches/food-line/agent-inbox/run.json",
+            "?? data/dispatches/food-line/review/proposed-editions/run.json",
+            "?? data/dispatches/food-line/review/reports/run.json",
+            "?? data/dispatches/food-line/review/signal-reviews/run.json",
+            "?? logs/food-line/run.json",
+            "?? status/food-line/run.json",
+            "?? data/dispatches/food-line/discovery-runs/2026-08-13/run.json",
+            "?? data/agent-history-staging/food-line/run.txt",
         ]
 
     monkeypatch.setattr(preflight_repo_state, "_run_git_status", fake_run_git_status)
@@ -99,6 +112,13 @@ def test_food_line_agent_intake_paths_are_allowed_but_nearby_paths_stay_risky(mo
         "data/dispatches/food-line/agent-intake/reports/2026-08-13/run.json",
         "data/dispatches/food-line/agent-intake/processed/2026-08-13/run.json",
         "data/dispatches/food-line/agent-inbox/run.json",
+        "data/dispatches/food-line/review/proposed-editions/run.json",
+        "data/dispatches/food-line/review/reports/run.json",
+        "data/dispatches/food-line/review/signal-reviews/run.json",
+        "logs/food-line/run.json",
+        "status/food-line/run.json",
+        "data/dispatches/food-line/discovery-runs/2026-08-13/run.json",
+        "data/agent-history-staging/food-line/run.txt",
     }
     assert {entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]} == {
         "data/dispatches/food-line/agent-intake-notes/run.json",

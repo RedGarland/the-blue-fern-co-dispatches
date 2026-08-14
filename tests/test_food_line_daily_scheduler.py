@@ -430,8 +430,37 @@ def test_runtime_queue_dirty_path_fails_closed(tmp_path: Path, monkeypatch: pyte
         return subprocess.CompletedProcess(command, 0, "", "")
 
     monkeypatch.setattr(scheduler, "_run", fake_run)
-    with pytest.raises(scheduler.SchedulerError, match="dirty"):
-        scheduler.verify_checkout(root, scheduler.PRODUCTION_BRANCH, update=False)
+    assert scheduler.verify_checkout(root, scheduler.PRODUCTION_BRANCH, update=False) == "abc123"
+
+
+def test_shared_food_runtime_roots_are_allowed_by_scheduler_dirty_classification() -> None:
+    assert scheduler._unexpected_dirty_paths("?? data/dispatches/food-line/agent-inbox/file.json\n") == []
+    assert scheduler._unexpected_dirty_paths("?? data/dispatches/food-line/agent-intake/2026-08-13/file.json\n") == []
+    assert scheduler._unexpected_dirty_paths("?? data/dispatches/food-line/agent-intake/reports/2026-08-13/file.json\n") == []
+    assert scheduler._unexpected_dirty_paths("?? data/dispatches/food-line/review/proposed-editions/file.json\n") == []
+    assert scheduler._unexpected_dirty_paths("?? data/dispatches/food-line/review/reports/file.json\n") == []
+    assert scheduler._unexpected_dirty_paths("?? data/dispatches/food-line/review/signal-reviews/file.json\n") == []
+    assert scheduler._unexpected_dirty_paths("?? logs/food-line/file.json\n") == []
+    assert scheduler._unexpected_dirty_paths("?? status/food-line/file.json\n") == []
+    assert scheduler._unexpected_dirty_paths("?? data/dispatches/food-line/discovery-runs/2026-08-13/file.json\n") == []
+    assert scheduler._unexpected_dirty_paths("?? data/agent-history-staging/food-line/file.txt\n") == []
+
+
+def test_tracked_and_near_miss_runtime_paths_fail_closed_in_scheduler() -> None:
+    unexpected = scheduler._unexpected_dirty_paths(
+        "\n".join(
+            [
+                " M data/dispatches/food-line/agent-intake/2026-08-13/file.json",
+                "?? data/dispatches/food-line/agent-intake-notes/file.json",
+                "?? data/dispatches/food-line/random/file.json",
+            ]
+        )
+    )
+    assert unexpected == [
+        "data/dispatches/food-line/agent-intake-notes/file.json",
+        "data/dispatches/food-line/agent-intake/2026-08-13/file.json",
+        "data/dispatches/food-line/random/file.json",
+    ]
 
 
 def test_non_fast_forward_checkout_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

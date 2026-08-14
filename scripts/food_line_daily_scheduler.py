@@ -8,7 +8,6 @@ import os
 import subprocess
 import sys
 import time
-import re
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -22,13 +21,11 @@ if str(ROOT) not in sys.path:
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+from scripts.food_line_runtime_paths import classify_food_line_runtime_path
+
 PRODUCTION_BRANCH = "agent/refine-care-line-signal-wire-public-rendering"
 PRIVATE_AGENT_INBOX_ROOT = ROOT / "data" / "dispatches" / "food-line" / "agent-inbox"
 ALLOWED_DIRTY_CATEGORIES = {"review_output", "logs", "cache", "virtualenv", "local_run_state"}
-FOOD_LINE_DISCOVERY_CANDIDATES_RE = re.compile(
-    r"^data/dispatches/food-line/discovery/\d{4}-\d{2}-\d{2}/discovery_candidates\.json$"
-)
-FOOD_LINE_AGENT_INBOX_RE = re.compile(r"^data/dispatches/food-line/agent-inbox(?:/.*)?$")
 QUALIFYING_COLLECTION_STATUSES = {"completed", "completed_with_exclusions"}
 QUALIFYING_EXPORT_STATUSES = {"success", "success_with_exclusions", "no_exportable_findings"}
 RESUMABLE_COLLECTION_STATUSES = {"partial", "timed_out", "cancelled", "failed"}
@@ -217,8 +214,19 @@ def _parse_porcelain_paths(output: str) -> list[str]:
 
 
 def _unexpected_dirty_paths(status_output: str) -> list[str]:
-    dirty_paths = _parse_porcelain_paths(status_output)
-    return sorted(dirty_paths)
+    unexpected: list[str] = []
+    for raw_line in status_output.splitlines():
+        line = raw_line.rstrip()
+        if not line or line.startswith("## "):
+            continue
+        if len(line) < 4:
+            raise SchedulerError(f"unexpected git status porcelain line: {raw_line!r}")
+        status = line[:2]
+        path = _parse_porcelain_paths(raw_line)[0]
+        category = classify_food_line_runtime_path(path)
+        if status != "??" or category not in ALLOWED_DIRTY_CATEGORIES:
+            unexpected.append(path)
+    return sorted(unexpected)
 
 
 def _classify_dirty_path(path_text: str) -> str:
@@ -239,12 +247,9 @@ def _classify_dirty_path(path_text: str) -> str:
         return "docs"
     if lower.startswith("src/") or lower.startswith("scripts/") or root_name in {"pyproject.toml", "requirements.txt", ".gitignore"}:
         return "source"
-    if lower == "data/dispatches/food-line/source_performance_history.json":
-        return "local_run_state"
-    if FOOD_LINE_DISCOVERY_CANDIDATES_RE.match(lower):
-        return "local_run_state"
-    if FOOD_LINE_AGENT_INBOX_RE.match(lower):
-        return "local_run_state"
+    food_line_category = classify_food_line_runtime_path(path)
+    if food_line_category:
+        return food_line_category
     if lower.startswith("output/review/") or "/review/" in lower or lower.startswith("output/dispatches/") and "/review/" in lower:
         return "review_output"
     if lower.startswith("output/site/") or lower.startswith("bluefern-dispatches-pages/"):

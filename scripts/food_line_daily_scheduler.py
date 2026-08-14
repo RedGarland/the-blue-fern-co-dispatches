@@ -8,6 +8,7 @@ import os
 import subprocess
 import sys
 import time
+import re
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -23,6 +24,11 @@ if str(SRC) not in sys.path:
 
 PRODUCTION_BRANCH = "agent/refine-care-line-signal-wire-public-rendering"
 PRIVATE_AGENT_INBOX_ROOT = ROOT / "data" / "dispatches" / "food-line" / "agent-inbox"
+ALLOWED_DIRTY_CATEGORIES = {"review_output", "logs", "cache", "virtualenv", "local_run_state"}
+FOOD_LINE_DISCOVERY_CANDIDATES_RE = re.compile(
+    r"^data/dispatches/food-line/discovery/\d{4}-\d{2}-\d{2}/discovery_candidates\.json$"
+)
+FOOD_LINE_AGENT_INBOX_RE = re.compile(r"^data/dispatches/food-line/agent-inbox(?:/.*)?$")
 QUALIFYING_COLLECTION_STATUSES = {"completed", "completed_with_exclusions"}
 QUALIFYING_EXPORT_STATUSES = {"success", "success_with_exclusions", "no_exportable_findings"}
 RESUMABLE_COLLECTION_STATUSES = {"partial", "timed_out", "cancelled", "failed"}
@@ -169,6 +175,39 @@ def _unexpected_dirty_paths(status_output: str) -> list[str]:
     return sorted(dirty_paths)
 
 
+def _classify_dirty_path(path_text: str) -> str:
+    path = path_text.strip().replace("\\", "/")
+    lower = path.lower()
+    root_name = lower.split("/", 1)[0] if lower else lower
+    if not path:
+        return "unknown"
+    if lower.startswith(".venv/") or root_name in {"venv", "env", ".venv"}:
+        return "virtualenv"
+    if lower.startswith("logs/") or lower.endswith(".log") or "/logs/" in lower:
+        return "logs"
+    if lower.startswith(".pytest_cache/") or lower.startswith(".pytest-temp") or lower.startswith(".pytest_tmp") or "/cache/" in lower or lower.startswith("cache/") or lower.startswith("tmp/") or lower.startswith(".tmp"):
+        return "cache"
+    if lower.startswith("tests/") or "/tests/" in lower:
+        return "tests"
+    if lower.startswith("docs/") or root_name in {"readme.md", "project_summary.md", "agents.md"} or lower.startswith(".github/"):
+        return "docs"
+    if lower.startswith("src/") or lower.startswith("scripts/") or root_name in {"pyproject.toml", "requirements.txt", ".gitignore"}:
+        return "source"
+    if lower == "data/dispatches/food-line/source_performance_history.json":
+        return "local_run_state"
+    if FOOD_LINE_DISCOVERY_CANDIDATES_RE.match(lower):
+        return "local_run_state"
+    if FOOD_LINE_AGENT_INBOX_RE.match(lower):
+        return "local_run_state"
+    if lower.startswith("output/review/") or "/review/" in lower or lower.startswith("output/dispatches/") and "/review/" in lower:
+        return "review_output"
+    if lower.startswith("output/site/") or lower.startswith("bluefern-dispatches-pages/"):
+        return "generated_public_output"
+    if lower.startswith("data/dispatches/") and ("/raw/" in lower or "/normalized/" in lower or "/curated/" in lower or "/editions/" in lower):
+        return "generated_public_output"
+    return "unknown"
+
+
 def verify_checkout(root: Path, branch: str, *, update: bool, test_mode: bool = False) -> str:
     root = root.resolve()
     if not (root / ".git").exists():
@@ -180,7 +219,7 @@ def verify_checkout(root: Path, branch: str, *, update: bool, test_mode: bool = 
     if status.returncode != 0:
         raise _command_error("git status", status)
     if status.stdout.strip():
-        unexpected = _unexpected_dirty_paths(status.stdout)
+        unexpected = [path for path in _unexpected_dirty_paths(status.stdout) if _classify_dirty_path(path) not in ALLOWED_DIRTY_CATEGORIES]
         if unexpected:
             raise SchedulerError("runner checkout is dirty; scheduled operation failed closed")
 
@@ -205,7 +244,7 @@ def verify_checkout(root: Path, branch: str, *, update: bool, test_mode: bool = 
     if final_status.returncode != 0:
         raise SchedulerError("runner checkout is dirty after synchronization")
     if final_status.stdout.strip():
-        unexpected = _unexpected_dirty_paths(final_status.stdout)
+        unexpected = [path for path in _unexpected_dirty_paths(final_status.stdout) if _classify_dirty_path(path) not in ALLOWED_DIRTY_CATEGORIES]
         if unexpected:
             raise SchedulerError("runner checkout is dirty after synchronization")
     head = _run(["git", "rev-parse", "HEAD"], cwd=root)

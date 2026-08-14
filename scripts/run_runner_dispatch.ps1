@@ -1027,9 +1027,11 @@ try {
             "--audit-source-collection",
             "--publish",
             "--push",
-            "--post-bluesky",
             "--generate-audio"
         )
+        if ($PostBluesky) {
+            $dispatchArgs += "--post-bluesky"
+        }
     }
 
     $dispatchResult = Invoke-LoggedCommand -Python $python -Arguments $dispatchArgs -ParseJsonTail:$checkOnlyRequested

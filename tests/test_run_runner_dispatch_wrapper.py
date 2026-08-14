@@ -290,7 +290,7 @@ def test_wrapper_check_only_succeeds_with_nested_operator_result_json(tmp_path: 
     assert "nested_operator_status_present=True" in log_text
 
 
-def test_wrapper_food_line_non_check_only_includes_collection_flags(tmp_path: Path) -> None:
+def test_wrapper_food_line_non_check_only_omits_bluesky_without_switch(tmp_path: Path) -> None:
     repo = _make_fake_runner_repo(
         tmp_path,
         sync_ok=True,
@@ -306,7 +306,28 @@ def test_wrapper_food_line_non_check_only_includes_collection_flags(tmp_path: Pa
 
     assert result.returncode == 0, result.stdout + result.stderr
     log_text = _latest_log(repo, "food-line")
-    assert "scripts\\run_food_line_dispatch.py --date 2026-07-02 --collect --audit-source-collection --publish --push --post-bluesky --generate-audio" in log_text
+    assert "scripts\\run_food_line_dispatch.py --date 2026-07-02 --collect --audit-source-collection --publish --push --generate-audio" in log_text
+    assert "--post-bluesky" not in log_text
+    assert "Runner dispatch finished with exit code 0." in log_text
+
+
+def test_wrapper_food_line_non_check_only_includes_bluesky_only_when_requested(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        sync_ok=True,
+        capture_dispatch_argv=True,
+        smoke_payload={
+            "ok": True,
+            "edition_mode": "no_public_edition",
+            "public_rendered": False,
+        },
+    )
+
+    result = _run_wrapper_with_args(repo, ["-Dispatch", "food-line", "-Date", "2026-07-02", "-PostBluesky"])
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    log_text = _latest_log(repo, "food-line")
+    assert "--post-bluesky" in log_text
     assert "Runner dispatch finished with exit code 0." in log_text
 
 

@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import os
+import subprocess
+import sys
 from pathlib import Path
 
 from scripts import preflight_repo_state
@@ -200,3 +203,21 @@ def test_main_returns_nonzero_when_risky(monkeypatch, tmp_path):
     rc = preflight_repo_state.main(["--source-repo", str(source_repo)])
 
     assert rc == 1
+
+
+def test_preflight_help_runs_directly_without_pythonpath(tmp_path):
+    script = Path(__file__).resolve().parents[1] / "scripts" / "preflight_repo_state.py"
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
+
+    result = subprocess.run(
+        [sys.executable, str(script), "--help"],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0
+    assert "Preflight git state" in result.stdout

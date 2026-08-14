@@ -5,12 +5,19 @@ import subprocess
 from collections import Counter, defaultdict
 from pathlib import Path
 import re
+import sys
 from typing import Any
-
-from scripts.food_line_runtime_paths import classify_food_line_runtime_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+SRC = ROOT / "src"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
+
+from scripts.food_line_runtime_paths import classify_food_line_runtime_path
+
 ALLOWED_DIRTY_CATEGORIES = {"review_output", "logs", "cache", "virtualenv", "local_run_state"}
 FOOD_LINE_AGENT_INBOX_RE = re.compile(
     r"^data/dispatches/food-line/agent-inbox(?:/.*)?$"

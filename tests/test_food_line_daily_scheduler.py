@@ -321,6 +321,47 @@ def test_completed_run_proceeds_to_private_intake(tmp_path: Path, monkeypatch: p
     assert scheduler.read_json(receipt)["proposal_status"] == "draft_pending_editorial_review"
 
 
+def test_duplicate_source_exclusions_do_not_fail_intake_wrapper(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    root = _root(tmp_path)
+    _write_run(root, _state())
+
+    def fake_invoke(python: Path, cwd: Path, arguments: list[str]) -> subprocess.CompletedProcess[str]:
+        report = {
+            "schema_version": "food_line_current_intake_report_v1",
+            "status": "success_with_exclusions",
+            "edition_date": DATE,
+            "inbox": str(root / "data" / "dispatches" / "food-line" / "agent-inbox"),
+            "discovered_file_count": 2,
+            "accepted_file_count": 1,
+            "dry_run_count": 1,
+            "import_count": 1,
+            "import_attempt_count": 1,
+            "idempotent_noop_count": 0,
+            "errors": [
+                {
+                    "file": str(root / "data" / "dispatches" / "food-line" / "agent-inbox" / "food-line-source-watch-20260814T015458Z-food-line-scheduled-2026.json"),
+                    "status": "rejected",
+                    "error": "duplicate source URL also present in food-line-source-watch-20260814T010922Z-food-line-scheduled-2026.json: https://www.summitdaily.com/news/food-insecurity-colorado-western-slope",
+                }
+            ],
+            "queue": {"status": "written", "item_count": 1},
+            "proposal": {
+                "status": "written",
+                "draft_status": "draft_pending_editorial_review",
+                "markdown_path": str(root / "data/dispatches/food-line/review/proposed-editions" / f"{DATE}.md"),
+            },
+            "publication_side_effects": {"public_output": False, "pages": False, "bluesky": False, "audio": False, "maps": False, "schedule": False},
+        }
+        report_path = root / "data" / "dispatches" / "food-line" / "review" / "reports" / DATE / "current-intake.json"
+        scheduler.atomic_write_json(report_path, report)
+        return subprocess.CompletedProcess(arguments, 0, "{}", "")
+
+    monkeypatch.setattr(scheduler, "_invoke_python", fake_invoke)
+    assert scheduler.run_intake(_intake_args(root)) == 0
+    receipt = next(scheduler.Layout(root).intake_log_dir(DATE).glob("*.json"))
+    assert scheduler.read_json(receipt)["command_exit_code"] == 0
+
+
 def test_qualifying_empty_run_produces_controlled_blocked_proposal(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     root = _root(tmp_path)
     _write_run(root, _state(export_status="no_exportable_findings"))

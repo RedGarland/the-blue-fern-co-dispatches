@@ -652,7 +652,8 @@ def run_intake(args: argparse.Namespace) -> int:
         if report.get("schema_version") != "food_line_current_intake_report_v1":
             raise SchedulerError("unexpected current-intake report schema")
         errors = report.get("errors") if isinstance(report.get("errors"), list) else ["invalid errors field"]
-        if command_exit != 0 or report.get("status") not in {"success", "success_with_exclusions"} or errors:
+        exclusion_only = all(isinstance(row, dict) and row.get("status") == "rejected" for row in errors)
+        if command_exit != 0 or report.get("status") not in {"success", "success_with_exclusions"} or (errors and not exclusion_only):
             raise SchedulerError("current-intake validation or processing failed")
         side_effects = report.get("publication_side_effects") if isinstance(report.get("publication_side_effects"), dict) else {}
         if any(bool(value) for value in side_effects.values()):

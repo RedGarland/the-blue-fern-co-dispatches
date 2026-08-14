@@ -14,9 +14,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Iterable
 
-from bluefern_dispatches.food_line_current_review import PRIVATE_AGENT_INBOX_ROOT
+ROOT = Path(__file__).resolve().parents[1]
+SRC = ROOT / "src"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
 
 PRODUCTION_BRANCH = "agent/refine-care-line-signal-wire-public-rendering"
+PRIVATE_AGENT_INBOX_ROOT = ROOT / "data" / "dispatches" / "food-line" / "agent-inbox"
 QUALIFYING_COLLECTION_STATUSES = {"completed", "completed_with_exclusions"}
 QUALIFYING_EXPORT_STATUSES = {"success", "success_with_exclusions", "no_exportable_findings"}
 RESUMABLE_COLLECTION_STATUSES = {"partial", "timed_out", "cancelled", "failed"}

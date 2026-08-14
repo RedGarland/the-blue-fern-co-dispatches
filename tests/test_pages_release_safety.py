@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 from pathlib import Path
@@ -116,6 +117,19 @@ def _release_manifest(source: Path, pages: Path, date_text: str) -> Path:
     path = source / "data/dispatches/food-line/review/releases" / f"{date_text}.json"
     write_json_deterministic(path, payload)
     return path
+
+
+def _release_manifest_with_runtime_inputs(source: Path, pages: Path, date_text: str) -> Path:
+    manifest_path = _release_manifest(source, pages, date_text)
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    proposal = source / "data/dispatches/food-line/review/proposed-editions" / f"{date_text}.json"
+    snapshot = source / "data/dispatches/food-line/review/signal-reviews" / f"{date_text}.json"
+    payload["approved_proposal_path"] = proposal.relative_to(source).as_posix()
+    payload["approved_proposal_sha256"] = hashlib.sha256(proposal.read_bytes()).hexdigest()
+    payload["review_snapshot_path"] = snapshot.relative_to(source).as_posix()
+    payload["review_snapshot_sha256"] = hashlib.sha256(snapshot.read_bytes()).hexdigest()
+    write_json_deterministic(manifest_path, payload)
+    return manifest_path
 
 
 @pytest.fixture()
@@ -257,6 +271,46 @@ def test_pages_dirty_state_rejection(release_repos: tuple[Path, Path]) -> None:
 
     assert report["ok"] is False
     assert any("pages repo must be clean before sync" in error for error in report["errors"])
+
+
+def test_food_line_source_repo_clean_accepts_allowed_untracked_runtime_paths(
+    release_repos: tuple[Path, Path], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source, _pages = release_repos
+    monkeypatch.setattr(
+        pages_release_safety,
+        "_git_status_entries",
+        lambda _repo: [
+            ("??", "data/dispatches/food-line/agent-inbox/file.json"),
+            ("??", "data/dispatches/food-line/agent-intake/2026-08-14/file.json"),
+            ("??", "data/dispatches/food-line/agent-intake/reports/2026-08-14/file.json"),
+            ("??", "data/dispatches/food-line/review/proposed-editions/file.json"),
+            ("??", "data/dispatches/food-line/review/signal-reviews/file.json"),
+            ("??", "data/dispatches/food-line/discovery-runs/2026-08-14/file.json"),
+            ("??", "data/agent-history-staging/food-line/file.txt"),
+            ("??", "logs/food-line/file.log"),
+            ("??", "status/food-line/file.json"),
+        ],
+    )
+
+    assert pages_release_safety._food_line_source_repo_clean(source) is True
+
+
+def test_food_line_source_repo_clean_rejects_tracked_and_unrelated_untracked_paths(
+    release_repos: tuple[Path, Path], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source, _pages = release_repos
+    monkeypatch.setattr(
+        pages_release_safety,
+        "_git_status_entries",
+        lambda _repo: [
+            (" M", "data/dispatches/food-line/agent-intake/2026-08-14/file.json"),
+            ("??", "data/dispatches/food-line/random/file.json"),
+            ("??", "data/dispatches/food-line/agent-intake-notes/file.json"),
+        ],
+    )
+
+    assert pages_release_safety._food_line_source_repo_clean(source) is False
 
 
 def test_commit_requires_clean_allowed_scope_and_cleans_repo(release_repos: tuple[Path, Path]) -> None:
@@ -406,6 +460,86 @@ def test_release_manifest_requires_clean_pages_even_for_dry_run(release_repos: t
 
     assert report["ok"] is False
     assert any("pages repo must be clean before sync" in error for error in report["errors"])
+
+
+def test_runtime_editorial_inputs_are_verified_in_working_tree_not_git_history(
+    release_repos: tuple[Path, Path],
+) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-08-09"])
+    _commit_repo(source, "food line site")
+    proposal = source / "data/dispatches/food-line/review/proposed-editions" / "2026-08-09.json"
+    snapshot = source / "data/dispatches/food-line/review/signal-reviews" / "2026-08-09.json"
+    proposal.parent.mkdir(parents=True, exist_ok=True)
+    snapshot.parent.mkdir(parents=True, exist_ok=True)
+    proposal.write_text(json.dumps({"approved": True}), encoding="utf-8")
+    snapshot.write_text(json.dumps({"review": True}), encoding="utf-8")
+    manifest = _release_manifest_with_runtime_inputs(source, pages, "2026-08-09")
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-08-09"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        dry_run=True,
+        release_manifest=manifest,
+    )
+
+    assert report["ok"] is True
+    assert "source-input file is missing at source_commit" not in "\n".join(report["errors"])
+
+
+def test_runtime_editorial_input_tamper_fails_closed(release_repos: tuple[Path, Path]) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-08-09"])
+    _commit_repo(source, "food line site")
+    proposal = source / "data/dispatches/food-line/review/proposed-editions" / "2026-08-09.json"
+    snapshot = source / "data/dispatches/food-line/review/signal-reviews" / "2026-08-09.json"
+    proposal.parent.mkdir(parents=True, exist_ok=True)
+    snapshot.parent.mkdir(parents=True, exist_ok=True)
+    proposal.write_text(json.dumps({"approved": True}), encoding="utf-8")
+    snapshot.write_text(json.dumps({"review": True}), encoding="utf-8")
+    manifest = _release_manifest_with_runtime_inputs(source, pages, "2026-08-09")
+    proposal.write_text(json.dumps({"approved": False}), encoding="utf-8")
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-08-09"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        dry_run=True,
+        release_manifest=manifest,
+    )
+
+    assert report["ok"] is False
+    assert any("runtime editorial hash mismatch" in error for error in report["errors"])
+
+
+def test_git_tracked_source_input_missing_at_source_commit_still_fails(release_repos: tuple[Path, Path]) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-08-09"])
+    _commit_repo(source, "food line site")
+    manifest = _release_manifest(source, pages, "2026-08-09")
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload["entries"][0]["source_path"] = "scripts/missing-git-tracked-input.py"
+    payload["entries"][0]["source_sha256"] = "0" * 64
+    payload["entries"][0]["provenance_role"] = "generated_output"
+    write_json_deterministic(manifest, payload)
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-08-09"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        dry_run=True,
+        release_manifest=manifest,
+    )
+
+    assert report["ok"] is False
+    assert any("source file is missing" in error or "source SHA-256 mismatch" in error for error in report["errors"])
 
 
 def test_sync_marks_approved_proposal_pages_manifest_as_live_and_keeps_source_pre_release(

@@ -16,6 +16,7 @@ from typing import Any, Callable, Sequence
 from bluefern_dispatches.care_line_release import finalize_public_release_status as finalize_care_line_public_release_status
 from bluefern_dispatches.food_line_approved_proposal import finalize_public_release_status as finalize_food_line_public_release_status
 from bluefern_dispatches.generator import public_site_contains_blocked_public_text, public_site_contains_detail_artifacts
+from scripts.food_line_runtime_paths import FOOD_LINE_ALLOWED_DIRTY_CATEGORIES, classify_food_line_runtime_path
 from scripts.validate_publish_scope import validate_publish_scope
 
 
@@ -82,8 +83,35 @@ def _git_status_paths(repo: Path) -> list[str]:
     return paths
 
 
+def _git_status_entries(repo: Path) -> list[tuple[str, str]]:
+    result = _run_git(repo, "status", "--porcelain=v1", "--untracked-files=all")
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr.strip() or result.stdout.strip() or f"git status failed in {repo}")
+    entries: list[tuple[str, str]] = []
+    for raw_line in result.stdout.splitlines():
+        line = raw_line.rstrip()
+        if not line:
+            continue
+        status = line[:2]
+        path = line[3:] if len(line) > 3 else line
+        if " -> " in path:
+            path = path.split(" -> ", 1)[1]
+        entries.append((status, _normalize_relpath(path)))
+    return entries
+
+
 def _repo_clean(repo: Path) -> bool:
     return not _git_status_paths(repo)
+
+
+def _food_line_source_repo_clean(repo: Path) -> bool:
+    for status, path in _git_status_entries(repo):
+        if status != "??":
+            return False
+        category = classify_food_line_runtime_path(path)
+        if category not in FOOD_LINE_ALLOWED_DIRTY_CATEGORIES:
+            return False
+    return True
 
 
 def _repo_branch(repo: Path) -> str:
@@ -505,7 +533,7 @@ def sync_pages_from_source(
             errors.append(verification_error)
     else:
         errors.append(f"source branch mismatch: expected {require_source_branch}, found {source_branch or '<detached>'}")
-    if not dry_run and release_manifest is None and not _repo_clean(source_root):
+    if not dry_run and release_manifest is None and not _food_line_source_repo_clean(source_root):
         errors.append(f"source repo must be clean before sync: {source_root}")
     if (not dry_run or release_manifest is not None) and not _repo_clean(pages_root):
         errors.append(f"pages repo must be clean before sync: {pages_root}")

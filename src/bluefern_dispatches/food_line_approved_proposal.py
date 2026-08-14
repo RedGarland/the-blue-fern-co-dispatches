@@ -15,6 +15,7 @@ ACCEPTED_FRESHNESS_STATUSES = {"current", "accepted", "within_window"}
 PROPOSAL_SCHEMA = "food_line_proposed_edition_v1"
 QUEUE_SCHEMA = "food_line_current_signal_review_v1"
 RELEASE_SCHEMA = "food_line_release_manifest_v2"
+RELEASE_READINESS_SCHEMA = "food_line_release_readiness_v1"
 PUBLIC_RELEASE_STATUS_FIELD = "public_release_status"
 PAGES_RELEASE_STATUS_FIELD = "pages_release_status"
 PENDING_PUBLIC_RELEASE_STATUS = "not_published"
@@ -356,6 +357,10 @@ def build_release_manifest(
 ) -> dict[str, Any]:
     root = root.resolve()
     pages_root = pages_root.resolve()
+    source_paths = list(source_paths)
+    rss_path = root / "output" / "site" / "food-line" / "rss.xml"
+    if rss_path.exists() and rss_path not in source_paths:
+        source_paths.append(rss_path)
     entries: list[dict[str, Any]] = []
     for source_path in sorted({path.resolve() for path in source_paths}, key=lambda path: path.as_posix()):
         source_rel = source_path.relative_to(root).as_posix()

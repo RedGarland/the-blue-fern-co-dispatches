@@ -14,6 +14,12 @@ FOOD_LINE_STATUS_RE = re.compile(r"^status/food-line(?:/.*)?$")
 FOOD_LINE_LOGS_RE = re.compile(r"^logs/food-line(?:/.*)?$")
 FOOD_LINE_AGENT_HISTORY_RE = re.compile(r"^data/agent-history-staging/food-line(?:/.*)?$")
 
+FOOD_LINE_ALLOWED_DIRTY_CATEGORIES = {
+    "local_run_state",
+    "logs",
+    "review_output",
+}
+
 
 def _normalize_path(path_text: str) -> str:
     text = path_text.strip().replace("\\", "/")

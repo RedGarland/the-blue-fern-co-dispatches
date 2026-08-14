@@ -377,9 +377,9 @@ def test_wrapper_food_line_non_check_only_omits_bluesky_without_switch(tmp_path:
 
     assert result.returncode == 0, result.stdout + result.stderr
     log_text = _latest_log(repo, "food-line")
-    assert "scripts\run_food_line_dispatch.py --date 2026-07-02 --collect --audit-source-collection --publish --push --generate-audio" in log_text
+    assert "Bluesky enabled: False" in log_text
+    assert "Food Line publication finished with exit code 0." in log_text
     assert "--post-bluesky" not in log_text
-    assert "Runner dispatch finished with exit code 0." in log_text
 
 
 def test_wrapper_food_line_non_check_only_includes_bluesky_only_when_requested(tmp_path: Path) -> None:
@@ -394,12 +394,30 @@ def test_wrapper_food_line_non_check_only_includes_bluesky_only_when_requested(t
         },
     )
 
-    result = _run_wrapper_with_args(repo, ["-Dispatch", "food-line", "-Date", "2026-07-02", "-PostBluesky"])
+    result = _run_wrapper_with_args(
+        repo,
+        [
+            "-Dispatch",
+            "food-line",
+            "-RepoRoot",
+            str(repo),
+            "-PagesRepo",
+            str(repo / "bluefern-dispatches-pages"),
+            "-SourceBranch",
+            "add/pages-repo-default",
+            "-PagesBranch",
+            "gh-pages",
+            "-Date",
+            "2026-07-02",
+            "-PostBluesky",
+        ],
+    )
 
-    assert result.returncode == 0, result.stdout + result.stderr
+    assert result.returncode != 0, result.stdout + result.stderr
     log_text = _latest_log(repo, "food-line")
-    assert "--post-bluesky" in log_text
-    assert "Runner dispatch finished with exit code 0." in log_text
+    assert "Food Line dispatch does not support -PostBluesky." in log_text
+    assert "--post-bluesky" not in log_text
+    assert "Runner dispatch finished with exit code" not in log_text
 
 def test_wrapper_food_line_check_only_does_not_request_collection_flags(tmp_path: Path) -> None:
     repo = _make_fake_runner_repo(

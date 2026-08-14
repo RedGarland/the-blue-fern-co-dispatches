@@ -16,6 +16,9 @@ def test_classify_path_covers_expected_categories():
     assert preflight_repo_state.classify_path(".venv/Scripts/python.exe") == "virtualenv"
     assert preflight_repo_state.classify_path("data/dispatches/food-line/source_performance_history.json") == "local_run_state"
     assert preflight_repo_state.classify_path("data/dispatches/food-line/discovery/2026-06-25/discovery_candidates.json") == "local_run_state"
+    assert preflight_repo_state.classify_path("data/dispatches/food-line/agent-intake/2026-08-13/run.json") == "local_run_state"
+    assert preflight_repo_state.classify_path("data/dispatches/food-line/agent-intake/reports/2026-08-13/run.json") == "local_run_state"
+    assert preflight_repo_state.classify_path("data/dispatches/food-line/agent-intake/processed/run.json") == "local_run_state"
     assert preflight_repo_state.classify_path("some/unknown/path.txt") == "unknown"
 
 
@@ -69,6 +72,36 @@ def test_food_line_discovery_candidates_path_is_allowed_but_nearby_paths_stay_ri
         "data/dispatches/food-line/discovery/2026-06-25/unexpected.json",
         "data/dispatches/food-line/discovery/foo/discovery_candidates.json",
         "data/dispatches/gaza/discovery/2026-06-25/discovery_candidates.json",
+    }
+
+
+def test_food_line_agent_intake_paths_are_allowed_but_nearby_paths_stay_risky(monkeypatch, tmp_path):
+    source_repo = tmp_path / "repo"
+    source_repo.mkdir()
+    monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: None)
+
+    def fake_run_git_status(_repo: Path):
+        return 0, [
+            "## add/food-line-intake-state",
+            "?? data/dispatches/food-line/agent-intake/2026-08-13/run.json",
+            "?? data/dispatches/food-line/agent-intake/reports/2026-08-13/run.json",
+            "?? data/dispatches/food-line/agent-intake/processed/2026-08-13/run.json",
+            "?? data/dispatches/food-line/agent-intake-notes/run.json",
+            "?? data/dispatches/food-line/agent-inbox/run.json",
+        ]
+
+    monkeypatch.setattr(preflight_repo_state, "_run_git_status", fake_run_git_status)
+
+    report = preflight_repo_state.build_preflight_report(source_repo)
+
+    assert {entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]} == {
+        "data/dispatches/food-line/agent-intake/2026-08-13/run.json",
+        "data/dispatches/food-line/agent-intake/reports/2026-08-13/run.json",
+        "data/dispatches/food-line/agent-intake/processed/2026-08-13/run.json",
+        "data/dispatches/food-line/agent-inbox/run.json",
+    }
+    assert {entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]} == {
+        "data/dispatches/food-line/agent-intake-notes/run.json",
     }
 
 

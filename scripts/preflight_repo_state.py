@@ -16,6 +16,9 @@ FOOD_LINE_DISCOVERY_CANDIDATES_RE = re.compile(
 FOOD_LINE_AGENT_INBOX_RE = re.compile(
     r"^data/dispatches/food-line/agent-inbox(?:/.*)?$"
 )
+FOOD_LINE_AGENT_INTAKE_RE = re.compile(
+    r"^data/dispatches/food-line/agent-intake(?:/.*)?$"
+)
 
 
 def _run_git_status(repo: Path) -> tuple[int, list[str]]:
@@ -65,6 +68,8 @@ def classify_path(path_text: str) -> str:
     if FOOD_LINE_DISCOVERY_CANDIDATES_RE.match(lower):
         return "local_run_state"
     if FOOD_LINE_AGENT_INBOX_RE.match(lower):
+        return "local_run_state"
+    if FOOD_LINE_AGENT_INTAKE_RE.match(lower):
         return "local_run_state"
     if lower.startswith("output/review/") or "/review/" in lower or lower.startswith("output/dispatches/") and "/review/" in lower:
         return "review_output"

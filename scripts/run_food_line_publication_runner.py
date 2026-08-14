@@ -13,6 +13,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Sequence
 
+from scripts.food_line_runtime_paths import FOOD_LINE_ALLOWED_DIRTY_CATEGORIES, classify_food_line_runtime_path
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
@@ -81,6 +83,16 @@ def _run_git(repo_root: Path, *args: str) -> subprocess.CompletedProcess[str]:
     )
 
 
+def _source_repo_dirty_path_is_allowed(status: str, path: str) -> bool:
+    if status != "??":
+        return False
+    normalized = path.replace("\\", "/").lstrip("./")
+    if normalized.startswith(ALLOWED_LOCAL_DIR_PREFIXES):
+        return True
+    category = classify_food_line_runtime_path(normalized)
+    return category in FOOD_LINE_ALLOWED_DIRTY_CATEGORIES
+
+
 def _repo_state(repo_root: Path, *, required_branch: str, label: str) -> dict[str, Any]:
     repo_root = repo_root.resolve()
     if not repo_root.exists() or not repo_root.is_dir():
@@ -93,13 +105,13 @@ def _repo_state(repo_root: Path, *, required_branch: str, label: str) -> dict[st
         line = raw_line.rstrip()
         if not line:
             continue
+        status_code = line[:2]
         path = line[3:] if len(line) > 3 else line
         if " -> " in path:
             path = path.split(" -> ", 1)[1]
-        normalized = path.replace("\\", "/").lstrip("./")
-        if normalized.startswith(ALLOWED_LOCAL_DIR_PREFIXES):
+        if label == "source repo" and _source_repo_dirty_path_is_allowed(status_code, path):
             continue
-        dirty_paths.append(normalized)
+        dirty_paths.append(path.replace("\\", "/").lstrip("./"))
     clean = not dirty_paths
     branch = _run_git(repo_root, "branch", "--show-current")
     if branch.returncode != 0:

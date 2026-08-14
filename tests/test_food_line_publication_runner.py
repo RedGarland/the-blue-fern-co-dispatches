@@ -3,6 +3,8 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
+import pytest
+
 import scripts.run_food_line_publication_runner as runner
 
 
@@ -36,6 +38,109 @@ def _state(head: str, branch: str) -> dict[str, object]:
         "head": head,
         "clean": True,
     }
+
+
+def test_source_repo_dirty_helper_allows_only_untracked_food_runtime_paths() -> None:
+    allowed_paths = [
+        "data/dispatches/food-line/agent-intake/2026-08-14/item.json",
+        "data/dispatches/food-line/review/proposed-editions/2026-08-14.json",
+        "data/dispatches/food-line/review/signal-reviews/2026-08-14.json",
+        "data/dispatches/food-line/review/release-readiness/2026-08-14.json",
+        "status/food-line/runtime/current-signal-review.json",
+        "logs/food-line/file.log",
+    ]
+    for path in allowed_paths:
+        assert runner._source_repo_dirty_path_is_allowed("??", path) is True
+
+
+def test_source_repo_dirty_helper_rejects_tracked_runtime_and_unrelated_untracked_paths() -> None:
+    assert runner._source_repo_dirty_path_is_allowed(" M", "data/dispatches/food-line/review/proposed-editions/2026-08-14.json") is False
+    assert runner._source_repo_dirty_path_is_allowed(" M", "output/site/food-line/index.html") is False
+    assert runner._source_repo_dirty_path_is_allowed("??", "data/dispatches/food-line/random/file.json") is False
+
+
+def test_repo_state_allows_clean_source_repo_with_allowed_untracked_runtime_paths(monkeypatch, tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    monkeypatch.setattr(
+        runner,
+        "_run_git",
+        lambda repo_root, *args: type(
+            "Result",
+            (),
+            {
+                "returncode": 0,
+                "stdout": (
+                    "?? data/dispatches/food-line/agent-intake/2026-08-14/item.json\n"
+                    "?? data/dispatches/food-line/review/proposed-editions/2026-08-14.json\n"
+                    "?? data/dispatches/food-line/review/signal-reviews/2026-08-14.json\n"
+                    "?? data/dispatches/food-line/review/release-readiness/2026-08-14.json\n"
+                    "?? status/food-line/runtime/current-signal-review.json\n"
+                    "?? logs/food-line/file.log\n"
+                )
+                if args[:2] == ("status", "--porcelain=v1")
+                else ("main\n" if args[:2] == ("branch", "--show-current") else "abc123\n"),
+                "stderr": "",
+            },
+        )(),
+    )
+
+    result = runner._repo_state(repo, required_branch="main", label="source repo")
+    assert result["clean"] is True
+    assert result["dirty_paths"] == []
+
+
+def test_repo_state_rejects_tracked_runtime_and_unrelated_untracked_paths(monkeypatch, tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    monkeypatch.setattr(
+        runner,
+        "_run_git",
+        lambda repo_root, *args: type(
+            "Result",
+            (),
+            {
+                "returncode": 0,
+                "stdout": (
+                    " M data/dispatches/food-line/review/proposed-editions/2026-08-14.json\n"
+                    " M output/site/food-line/index.html\n"
+                    "?? data/dispatches/food-line/random/file.json\n"
+                )
+                if args[:2] == ("status", "--porcelain=v1")
+                else ("main\n" if args[:2] == ("branch", "--show-current") else "abc123\n"),
+                "stderr": "",
+            },
+        )(),
+    )
+
+    with pytest.raises(runner.PublicationRunnerError, match="source repo must be clean before publication"):
+        runner._repo_state(repo, required_branch="main", label="source repo")
+
+
+def test_repo_state_keeps_pages_repo_strict(monkeypatch, tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    monkeypatch.setattr(
+        runner,
+        "_run_git",
+        lambda repo_root, *args: type(
+            "Result",
+            (),
+            {
+                "returncode": 0,
+                "stdout": (
+                    "?? data/dispatches/food-line/agent-intake/2026-08-14/item.json\n"
+                    "?? logs/food-line/file.log\n"
+                )
+                if args[:2] == ("status", "--porcelain=v1")
+                else ("gh-pages\n" if args[:2] == ("branch", "--show-current") else "abc123\n"),
+                "stderr": "",
+            },
+        )(),
+    )
+
+    with pytest.raises(runner.PublicationRunnerError, match="Pages repo must be clean before publication"):
+        runner._repo_state(repo, required_branch="gh-pages", label="Pages repo")
 
 
 def test_safe_directory_configuration_is_process_local_and_does_not_persist(monkeypatch, tmp_path: Path) -> None:

@@ -138,6 +138,10 @@ DATE_DIR_RE = r"(?:editions|review|sources)/(?P<date>\d{4}-\d{2}-\d{2})(?:/|$)"
 AUDIO_DATE_RE = r"audio/(?P<date>\d{4}-\d{2}-\d{2})(?:-v\d+)?(?:-transcript)?\.(?:html|json|mp3)$"
 
 
+def _sha256_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
 def _normalize_path(path: str | Path) -> str:
     return str(path).replace("\\", "/").lstrip("./")
 
@@ -192,6 +196,30 @@ def _sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _git_run(repo_root: Path, *args: str, text: bool = True) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        ["git", "-C", str(repo_root), *args],
+        capture_output=True,
+        text=text,
+        check=False,
+    )
+
+
+def _git_commit_exists(repo_root: Path, commit: str) -> bool:
+    if not commit:
+        return False
+    result = _git_run(repo_root, "rev-parse", "--verify", f"{commit}^{{commit}}")
+    return result.returncode == 0
+
+
+def _git_file_bytes(repo_root: Path, commit: str, relpath: str) -> bytes | None:
+    spec = f"{commit}:{relpath}"
+    result = _git_run(repo_root, "cat-file", "--filters", spec, text=False)
+    if result.returncode != 0:
+        return None
+    return bytes(result.stdout)
+
+
 def _release_manifest_delta(
     *,
     manifest_path: Path,
@@ -209,8 +237,14 @@ def _release_manifest_delta(
         return [], [], [f"Unable to read release manifest {manifest_path}: {exc}"]
     if not isinstance(payload, dict):
         return [], [], ["release manifest must be a JSON object"]
-    if payload.get("schema_version") != "food_line_release_manifest_v1":
-        errors.append("release manifest schema_version must be food_line_release_manifest_v1")
+    expected_schema = {
+        "food-line": "food_line_release_manifest_v2",
+        "care-line": "care_line_release_manifest_v1",
+    }.get(dispatch)
+    if expected_schema is None:
+        errors.append("release manifest is only supported for Food Line and Care Line")
+    elif payload.get("schema_version") != expected_schema:
+        errors.append(f"release manifest schema_version must be {expected_schema}")
     if payload.get("dispatch") != dispatch:
         errors.append("release manifest dispatch does not match --dispatch")
     if declared_date is not None and payload.get("edition_date") != declared_date.isoformat():
@@ -219,6 +253,9 @@ def _release_manifest_delta(
         errors.append("release manifest deletions are not authorized for this Food Line release")
     if payload.get("shared_files") not in ([], None):
         errors.append("release manifest shared files require a separate explicit authorization")
+    source_commit = str(payload.get("source_commit") or "").strip()
+    if not source_commit:
+        errors.append("release manifest source_commit is required")
     entries = payload.get("entries")
     if not isinstance(entries, list) or not entries:
         errors.append("release manifest must contain a non-empty entries list")
@@ -227,12 +264,47 @@ def _release_manifest_delta(
     seen_pages: set[str] = set()
     source_root = source_repo_root.resolve()
     pages_root = pages_repo_root.resolve() if pages_repo_root is not None else None
+    runtime_editorial_prefixes = (
+        "data/dispatches/food-line/review/proposed-editions/",
+        "data/dispatches/food-line/review/signal-reviews/",
+    )
+    runtime_editorial_inputs = (
+        (
+            _normalize_path(str(payload.get("approved_proposal_path") or "")),
+            str(payload.get("approved_proposal_sha256") or "").lower(),
+        ),
+        (
+            _normalize_path(str(payload.get("review_snapshot_path") or "")),
+            str(payload.get("review_snapshot_sha256") or "").lower(),
+        ),
+    )
+    for source_rel, expected_sha in runtime_editorial_inputs:
+        if not source_rel:
+            continue
+        source_file = (source_root / source_rel).resolve()
+        try:
+            source_file.relative_to(source_root)
+        except ValueError:
+            errors.append(f"release manifest runtime editorial input resolves outside the source repo: {source_rel}")
+            continue
+        if not source_file.is_file():
+            errors.append(f"release manifest runtime editorial input is missing in the working tree: {source_rel}")
+            continue
+        actual_sha = _sha256_file(source_file)
+        if not expected_sha:
+            errors.append(f"release manifest is missing a recorded runtime editorial hash for {source_rel}")
+        elif expected_sha != actual_sha:
+            errors.append(
+                f"release manifest runtime editorial hash mismatch for {source_rel} "
+                f"(expected={expected_sha}, actual={actual_sha})"
+            )
     for index, entry in enumerate(entries):
         if not isinstance(entry, dict):
             errors.append(f"release manifest entry {index} must be an object")
             continue
         source_rel = _normalize_path(str(entry.get("source_path") or ""))
         pages_rel = _normalize_path(str(entry.get("pages_path") or ""))
+        provenance_role = str(entry.get("provenance_role") or "").strip()
         if not source_rel or not pages_rel:
             errors.append(f"release manifest entry {index} requires source_path and pages_path")
             continue
@@ -258,6 +330,31 @@ def _release_manifest_delta(
         actual_source_sha = _sha256_file(source_file)
         if str(entry.get("source_sha256") or "").lower() != actual_source_sha:
             errors.append(f"release manifest source SHA-256 mismatch: {source_rel}")
+        is_runtime_editorial = dispatch == "food-line" and any(source_rel.startswith(prefix) for prefix in runtime_editorial_prefixes)
+        if is_runtime_editorial:
+            if provenance_role != "runtime_editorial":
+                errors.append(
+                    f"release manifest runtime editorial input must declare provenance_role=runtime_editorial: {source_rel}"
+                )
+            if not source_file.exists():
+                errors.append(f"release manifest runtime editorial input is missing in the working tree: {source_rel}")
+        else:
+            if provenance_role != "generated_output":
+                errors.append(f"release manifest entry {source_rel} has unknown provenance_role: {provenance_role or '<missing>'}")
+            if source_commit and _git_commit_exists(source_root, source_commit):
+                file_bytes = _git_file_bytes(source_root, source_commit, source_rel)
+                if file_bytes is None:
+                    errors.append(
+                        f"release manifest source-input file is missing at source_commit: {source_rel} "
+                        f"(role=source_input, source_commit={source_commit})"
+                    )
+                else:
+                    commit_sha = _sha256_bytes(file_bytes)
+                    if commit_sha != actual_source_sha:
+                        errors.append(
+                            f"release manifest source-input hash mismatch for {source_rel} "
+                            f"(role=source_input, expected={actual_source_sha}, actual={commit_sha}, source_commit={source_commit})"
+                        )
         target = pages_root / pages_rel if pages_root is not None else None
         if target is None or not target.exists():
             expected_action = "add"
@@ -279,6 +376,7 @@ def _release_manifest_delta(
         expected_paths = {
             "output/site/food-line/index.html",
             "output/site/food-line/archive.html",
+            "output/site/food-line/rss.xml",
         }
         if edition_dir.is_dir():
             expected_paths.update(path.relative_to(source_root).as_posix() for path in edition_dir.rglob("*") if path.is_file())

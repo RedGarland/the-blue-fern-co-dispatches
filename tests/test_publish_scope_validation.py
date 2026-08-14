@@ -155,6 +155,7 @@ def _release_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
     site = source / "output/site/food-line"
     (site / "index.html").write_text("index", encoding="utf-8")
     (site / "archive.html").write_text("archive", encoding="utf-8")
+    (site / "rss.xml").write_text("<?xml version=\"1.0\" encoding=\"utf-8\"?><rss><channel></channel></rss>", encoding="utf-8")
     for filename in ("index.html", "source_table.html", "claim_ledger.html", "sources_manifest.json", "curation_manifest.json", "edition_manifest.json"):
         (edition / filename).write_text(filename, encoding="utf-8")
     payload = build_release_manifest(

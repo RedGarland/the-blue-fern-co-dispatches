@@ -21,6 +21,14 @@ FOOD_LINE_RUNTIME_CATEGORIES = {
     "review_output",
 }
 
+FOOD_LINE_ALLOWED_DIRTY_CATEGORIES = {
+    "cache",
+    "local_run_state",
+    "logs",
+    "review_output",
+    "virtualenv",
+}
+
 
 def _normalize_path(path_text: str) -> str:
     text = path_text.strip().replace("\\", "/")

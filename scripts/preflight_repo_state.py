@@ -6,11 +6,10 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
-from scripts.food_line_runtime_paths import classify_food_line_runtime_path
+from scripts.food_line_runtime_paths import FOOD_LINE_ALLOWED_DIRTY_CATEGORIES, classify_food_line_runtime_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ALLOWED_DIRTY_CATEGORIES = {"review_output", "logs", "cache", "virtualenv", "local_run_state"}
 
 
 def _run_git_status(repo: Path) -> tuple[int, list[str]]:
@@ -87,7 +86,7 @@ def classify_status_line(line: str) -> dict[str, Any] | None:
         "path": path,
         "category": category,
         "is_untracked": status == "??",
-        "is_risky": status != "??" or category not in ALLOWED_DIRTY_CATEGORIES,
+        "is_risky": status != "??" or category not in FOOD_LINE_ALLOWED_DIRTY_CATEGORIES,
     }
 
 
@@ -165,7 +164,7 @@ def build_preflight_report(source_repo: Path | None = None, pages_repo: Path | N
         "source_repo": source_report,
         "pages_repo": pages_report,
         "pages_repo_status": pages_status,
-        "allowlisted_categories": sorted(ALLOWED_DIRTY_CATEGORIES),
+        "allowlisted_categories": sorted(FOOD_LINE_ALLOWED_DIRTY_CATEGORIES),
     }
 
 

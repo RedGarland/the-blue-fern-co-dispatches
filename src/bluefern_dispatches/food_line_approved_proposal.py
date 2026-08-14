@@ -14,7 +14,8 @@ APPROVED_DECISIONS = {"approve", "approve_with_edit"}
 ACCEPTED_FRESHNESS_STATUSES = {"current", "accepted", "within_window"}
 PROPOSAL_SCHEMA = "food_line_proposed_edition_v1"
 QUEUE_SCHEMA = "food_line_current_signal_review_v1"
-RELEASE_SCHEMA = "food_line_release_manifest_v1"
+RELEASE_SCHEMA = "food_line_release_manifest_v2"
+RELEASE_READINESS_SCHEMA = "food_line_release_readiness_v1"
 
 
 @dataclass(frozen=True)
@@ -297,9 +298,17 @@ def build_release_manifest(
     edition_date: str,
     source_commit: str,
     source_paths: Sequence[Path],
+    approved_proposal_path: str | None = None,
+    approved_proposal_sha256: str | None = None,
+    review_snapshot_path: str | None = None,
+    review_snapshot_sha256: str | None = None,
 ) -> dict[str, Any]:
     root = root.resolve()
     pages_root = pages_root.resolve()
+    source_paths = list(source_paths)
+    rss_path = root / "output" / "site" / "food-line" / "rss.xml"
+    if rss_path.exists() and rss_path not in source_paths:
+        source_paths.append(rss_path)
     entries: list[dict[str, Any]] = []
     for source_path in sorted({path.resolve() for path in source_paths}, key=lambda path: path.as_posix()):
         source_rel = source_path.relative_to(root).as_posix()
@@ -314,17 +323,19 @@ def build_release_manifest(
         else:
             target_sha = sha256_file(target)
             action = "unchanged" if target_sha == source_sha else "modify"
+        provenance_role = "generated_output"
         entries.append(
             {
                 "source_path": source_rel,
                 "pages_path": pages_rel,
                 "action": action,
+                "provenance_role": provenance_role,
                 "source_sha256": source_sha,
                 "pages_sha256_before": target_sha,
             }
         )
-    return {
-        "schema_version": RELEASE_SCHEMA,
+    manifest = {
+        "schema_version": "food_line_release_manifest_v2",
         "dispatch": "food-line",
         "edition_date": edition_date,
         "source_commit": source_commit,
@@ -332,6 +343,15 @@ def build_release_manifest(
         "deletions": [],
         "shared_files": [],
     }
+    if approved_proposal_path:
+        manifest["approved_proposal_path"] = str(approved_proposal_path)
+    if approved_proposal_sha256:
+        manifest["approved_proposal_sha256"] = str(approved_proposal_sha256)
+    if review_snapshot_path:
+        manifest["review_snapshot_path"] = str(review_snapshot_path)
+    if review_snapshot_sha256:
+        manifest["review_snapshot_sha256"] = str(review_snapshot_sha256)
+    return manifest
 
 
 def write_json_deterministic(path: Path, payload: Any) -> None:

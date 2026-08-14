@@ -36,11 +36,10 @@ def test_food_line_source_performance_history_is_allowed_but_other_data_paths_ar
     report = preflight_repo_state.build_preflight_report(source_repo)
 
     assert report["ok"] is False
-    assert {entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]} == {
-        "data/dispatches/food-line/source_performance_history.json"
-    }
+    assert {entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]} == set()
     assert {entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]} == {
-        "data/dispatches/food-line/source_registry.json"
+        "data/dispatches/food-line/source_performance_history.json",
+        "data/dispatches/food-line/source_registry.json",
     }
 
 

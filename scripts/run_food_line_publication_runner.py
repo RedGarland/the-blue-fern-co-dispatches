@@ -13,8 +13,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Sequence
 
-from scripts.food_line_runtime_paths import FOOD_LINE_ALLOWED_DIRTY_CATEGORIES, classify_food_line_runtime_path
-
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
@@ -23,6 +21,7 @@ if str(ROOT) not in sys.path:
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+from scripts.food_line_runtime_paths import FOOD_LINE_ALLOWED_DIRTY_CATEGORIES, classify_food_line_runtime_path
 from bluefern_dispatches.food_line_approved_proposal import load_approved_proposal
 from bluefern_dispatches.pages_release_safety import sync_pages_from_source
 from scripts.run_food_line_dispatch import run_food_line_dispatch

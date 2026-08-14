@@ -12,6 +12,16 @@ from pathlib import Path
 from typing import Sequence
 
 
+ROOT = Path(__file__).resolve().parents[1]
+SRC = ROOT / "src"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
+
+from scripts.food_line_runtime_paths import FOOD_LINE_ALLOWED_DIRTY_CATEGORIES, classify_food_line_runtime_path
+
+
 DISPATCH_CHOICES = (
     "gaza",
     "food-line",
@@ -219,6 +229,11 @@ def _git_commit_exists(repo_root: Path, commit: str) -> bool:
     return result.returncode == 0
 
 
+def _git_path_is_tracked(repo_root: Path, relpath: str) -> bool:
+    result = _git_run(repo_root, "ls-files", "--error-unmatch", "--", relpath)
+    return result.returncode == 0
+
+
 def _git_is_ancestor(repo_root: Path, ancestor: str, descendant: str) -> bool:
     result = _git_run(repo_root, "merge-base", "--is-ancestor", ancestor, descendant)
     return result.returncode == 0
@@ -230,6 +245,17 @@ def _git_file_bytes(repo_root: Path, commit: str, relpath: str) -> bytes | None:
     if result.returncode != 0:
         return None
     return bytes(result.stdout)
+
+
+def _food_line_runtime_editorial_provenance_is_allowed(relpath: str) -> bool:
+    normalized = _normalize_path(relpath)
+    if classify_food_line_runtime_path(normalized) not in FOOD_LINE_ALLOWED_DIRTY_CATEGORIES:
+        return False
+    if normalized.startswith("data/dispatches/food-line/review/proposed-editions/") and normalized.endswith(".json"):
+        return True
+    if normalized.startswith("data/dispatches/food-line/review/signal-reviews/") and normalized.endswith(".json"):
+        return True
+    return False
 
 
 def _release_manifest_delta(
@@ -303,20 +329,22 @@ def _release_manifest_delta(
         if not relpath or not recorded_sha:
             errors.append(f"release manifest requires both {path_key} and {sha_key}")
             continue
-        if source_commit and _git_commit_exists(source_root, source_commit):
-            file_bytes = _git_file_bytes(source_root, source_commit, relpath)
-            if file_bytes is None:
-                errors.append(
-                    f"release manifest source-input file is missing at source_commit: {relpath} "
-                    f"(role=source_input, source_commit={source_commit})"
-                )
-            else:
-                commit_sha = _sha256_bytes(file_bytes)
-                if commit_sha != recorded_sha:
+        tracked = _git_path_is_tracked(source_root, relpath)
+        if tracked:
+            if source_commit and _git_commit_exists(source_root, source_commit):
+                file_bytes = _git_file_bytes(source_root, source_commit, relpath)
+                if file_bytes is None:
                     errors.append(
-                        f"release manifest source-input hash mismatch for {relpath} "
-                        f"(role=source_input, expected={recorded_sha}, actual={commit_sha}, source_commit={source_commit})"
+                        f"release manifest source-input file is missing at source_commit: {relpath} "
+                        f"(role=source_input, source_commit={source_commit})"
                     )
+                else:
+                    commit_sha = _sha256_bytes(file_bytes)
+                    if commit_sha != recorded_sha:
+                        errors.append(
+                            f"release manifest source-input hash mismatch for {relpath} "
+                            f"(role=source_input, expected={recorded_sha}, actual={commit_sha}, source_commit={source_commit})"
+                        )
         file_path = (source_root / relpath).resolve()
         try:
             file_path.relative_to(source_root)
@@ -331,6 +359,10 @@ def _release_manifest_delta(
             errors.append(
                 f"release manifest source-input hash mismatch for {relpath} "
                 f"(role=source_input, expected={recorded_sha}, actual={actual_sha}, source_commit={source_commit})"
+            )
+        if not tracked and dispatch == "food-line" and not _food_line_runtime_editorial_provenance_is_allowed(relpath):
+            errors.append(
+                f"release manifest untracked source-input path is not an approved Food Line runtime editorial input: {relpath}"
             )
     entries = payload.get("entries")
     if not isinstance(entries, list) or not entries:

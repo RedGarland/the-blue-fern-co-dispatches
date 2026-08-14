@@ -474,7 +474,6 @@ def test_runtime_editorial_inputs_are_verified_in_working_tree_not_git_history(
     snapshot.parent.mkdir(parents=True, exist_ok=True)
     proposal.write_text(json.dumps({"approved": True}), encoding="utf-8")
     snapshot.write_text(json.dumps({"review": True}), encoding="utf-8")
-    _commit_repo(source, "food line runtime editorial inputs")
     manifest = _release_manifest_with_runtime_inputs(source, pages, "2026-08-09")
 
     report = pages_release_safety.sync_pages_from_source(
@@ -501,7 +500,6 @@ def test_runtime_editorial_input_tamper_fails_closed(release_repos: tuple[Path, 
     snapshot.parent.mkdir(parents=True, exist_ok=True)
     proposal.write_text(json.dumps({"approved": True}), encoding="utf-8")
     snapshot.write_text(json.dumps({"review": True}), encoding="utf-8")
-    _commit_repo(source, "food line runtime editorial inputs")
     manifest = _release_manifest_with_runtime_inputs(source, pages, "2026-08-09")
     proposal.write_text(json.dumps({"approved": False}), encoding="utf-8")
 

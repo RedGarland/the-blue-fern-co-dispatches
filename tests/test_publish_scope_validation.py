@@ -188,6 +188,23 @@ def _release_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
     return source, pages, manifest
 
 
+def _runtime_provenance_fixture(tmp_path: Path) -> tuple[Path, Path, Path, Path, Path]:
+    source, pages, manifest = _release_fixture(tmp_path)
+    proposal = source / "data/dispatches/food-line/review/proposed-editions" / "2026-06-19.json"
+    snapshot = source / "data/dispatches/food-line/review/signal-reviews" / "2026-06-19.json"
+    proposal.parent.mkdir(parents=True, exist_ok=True)
+    snapshot.parent.mkdir(parents=True, exist_ok=True)
+    proposal.write_text(json.dumps({"approved": True}), encoding="utf-8")
+    snapshot.write_text(json.dumps({"review": True}), encoding="utf-8")
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload["approved_proposal_path"] = proposal.relative_to(source).as_posix()
+    payload["approved_proposal_sha256"] = __import__("hashlib").sha256(proposal.read_bytes()).hexdigest()
+    payload["review_snapshot_path"] = snapshot.relative_to(source).as_posix()
+    payload["review_snapshot_sha256"] = __import__("hashlib").sha256(snapshot.read_bytes()).hexdigest()
+    write_json_deterministic(manifest, payload)
+    return source, pages, manifest, proposal, snapshot
+
+
 def test_strict_release_manifest_validates_exact_delta_and_ignores_unrelated_dirt(tmp_path: Path, monkeypatch) -> None:
     module = _load_validator_module()
     source, pages, manifest = _release_fixture(tmp_path)
@@ -382,6 +399,130 @@ def test_strict_release_manifest_generated_output_does_not_require_source_commit
         release_manifest_commit="HEAD",
     )
     assert errors == []
+
+
+def test_untracked_runtime_editorial_provenance_succeeds(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest, proposal, snapshot = _runtime_provenance_fixture(tmp_path)
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+        required_source_ref="main",
+        release_manifest_commit="HEAD",
+    )
+    assert errors == []
+    assert proposal.exists()
+    assert snapshot.exists()
+
+
+def test_untracked_approved_proposal_tamper_fails(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest, proposal, _snapshot = _runtime_provenance_fixture(tmp_path)
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    proposal.write_text(json.dumps({"approved": False}), encoding="utf-8")
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+        required_source_ref="main",
+        release_manifest_commit="HEAD",
+    )
+    assert any("source-input hash mismatch" in error for error in errors)
+
+
+def test_untracked_review_snapshot_tamper_fails(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest, _proposal, snapshot = _runtime_provenance_fixture(tmp_path)
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    snapshot.write_text(json.dumps({"review": False}), encoding="utf-8")
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+        required_source_ref="main",
+        release_manifest_commit="HEAD",
+    )
+    assert any("source-input hash mismatch" in error for error in errors)
+
+
+def test_untracked_arbitrary_path_cannot_use_editorial_exception(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest, _proposal, _snapshot = _runtime_provenance_fixture(tmp_path)
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    rogue = source / "data/dispatches/food-line/random/not-approved-provenance.json"
+    rogue.parent.mkdir(parents=True, exist_ok=True)
+    rogue.write_text(json.dumps({"rogue": True}), encoding="utf-8")
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload["approved_proposal_path"] = rogue.relative_to(source).as_posix()
+    payload["approved_proposal_sha256"] = __import__("hashlib").sha256(rogue.read_bytes()).hexdigest()
+    write_json_deterministic(manifest, payload)
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+        required_source_ref="main",
+        release_manifest_commit="HEAD",
+    )
+    assert any("approved Food Line runtime editorial input" in error for error in errors)
+
+
+def test_tracked_provenance_still_validates_against_git(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest = _release_fixture(tmp_path)
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+        required_source_ref="main",
+        release_manifest_commit="HEAD",
+    )
+    assert errors == []
+
+
+def test_missing_tracked_source_input_still_fails(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest = _release_fixture(tmp_path)
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload["entries"][0]["source_path"] = "scripts/missing-git-tracked-input.py"
+    payload["entries"][0]["source_sha256"] = "0" * 64
+    payload["entries"][0]["provenance_role"] = "generated_output"
+    write_json_deterministic(manifest, payload)
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+        required_source_ref="main",
+        release_manifest_commit="HEAD",
+    )
+    assert any("source file is missing" in error or "source SHA-256 mismatch" in error for error in errors)
 
 
 def test_strict_release_manifest_requires_provenance_role_in_v2(tmp_path: Path, monkeypatch) -> None:

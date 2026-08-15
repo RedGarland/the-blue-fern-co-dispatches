@@ -43,6 +43,11 @@ from bluefern_dispatches.care_line_release import (
     initialize_public_release_status as initialize_care_line_public_release_status,
     sha256_file as care_line_sha256_file,
 )
+from bluefern_dispatches.root_homepage import (
+    discover_public_releases,
+    render_sitewide_homepage_from_template,
+    select_effective_latest,
+)
 from bluefern_dispatches.dispatch_catalog import (
     DISPATCH_CATALOG,
     DISPATCH_LABELS,
@@ -2998,6 +3003,53 @@ def copy_public_site_to_pages(
     return copied, skipped
 
 
+def refresh_shared_homepage_from_pages_inventory(
+    pages_repo: Path,
+    *,
+    dry_run: bool,
+    target_dispatch: str = "gaza",
+) -> dict[str, Any]:
+    homepage_path = pages_repo / "index.html"
+    if not homepage_path.exists():
+        return {
+            "ok": True,
+            "refreshed": False,
+            "target_dispatch": target_dispatch,
+            "message": f"shared homepage refresh skipped; missing homepage template: {homepage_path}",
+        }
+    template_html = homepage_path.read_text(encoding="utf-8")
+    if 'edition-card--gaza' not in template_html or "Dispatches From Gaza" not in template_html:
+        return {
+            "ok": True,
+            "refreshed": False,
+            "target_dispatch": target_dispatch,
+            "message": "shared homepage refresh skipped; template has no refreshable Gaza card",
+        }
+    releases = discover_public_releases(pages_repo, verify_root=pages_repo, homepage_html=template_html)
+    latest = select_effective_latest(releases)
+    release = latest.get(target_dispatch)
+    if release is None:
+        return {
+            "ok": False,
+            "refreshed": False,
+            "target_dispatch": target_dispatch,
+            "message": f"no eligible public release found for {target_dispatch} in Pages inventory",
+        }
+    refreshed_html = render_sitewide_homepage_from_template(template_html, release)
+    if not dry_run:
+        homepage_path.write_text(refreshed_html, encoding="utf-8")
+    return {
+        "ok": True,
+        "refreshed": True,
+        "target_dispatch": target_dispatch,
+        "public_url": release.public_url,
+        "edition_date": release.edition_date,
+        "title": release.title,
+        "source_count": release.source_count,
+        "message": "shared homepage refreshed from Pages inventory",
+    }
+
+
 def remove_non_publishable_pages_editions(site_root: Path, pages_repo: Path, dry_run: bool) -> list[dict[str, str]]:
     tracked_slugs = ("cascadia", "food-line", CARE_LINE_DISPATCH_SLUG)
     if not any((pages_repo / slug / "editions").exists() for slug in tracked_slugs):
@@ -3819,6 +3871,15 @@ def publish_pages(
         )
         warnings.extend(_food_line_public_edition_skip_warning(report) for report in skip_diagnostics)
         errors.extend(validate_pages_repo_copy_scope(pages_repo, only_dispatches, changed_paths=copied))
+        if not errors and (not only_dispatches or "gaza" in only_dispatches):
+            homepage_refresh = refresh_shared_homepage_from_pages_inventory(
+                pages_repo,
+                dry_run=dry_run,
+                target_dispatch="gaza",
+            )
+            build["shared_homepage_refresh"] = homepage_refresh
+            if not homepage_refresh["ok"]:
+                errors.append(str(homepage_refresh["message"]))
         if not dry_run:
             errors.extend(validate_pages_copy_parity(root, pages_repo, expect_date, only_dispatches=only_dispatches))
             if expect_date and ((not only_dispatches) or ("cascadia" in only_dispatches)):

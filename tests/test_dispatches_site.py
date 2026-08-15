@@ -110,6 +110,46 @@ def copy_tree_if_exists(src: Path, dst: Path) -> None:
         shutil.copytree(src, dst, dirs_exist_ok=True)
 
 
+def write_gaza_release_fixture(site_root: Path, edition_date: str, title: str) -> None:
+    gaza_root = site_root / "gaza"
+    edition = gaza_root / "editions" / edition_date
+    edition.mkdir(parents=True, exist_ok=True)
+    (edition / "index.html").write_text(
+        f"<html><body><article><h3>{title}</h3></article></body></html>",
+        encoding="utf-8",
+    )
+    (edition / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "gaza",
+                "edition_date": edition_date,
+                "source_count": 1,
+                "story_count": 1,
+                "public_release_status": "published",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (edition / "sources_manifest.json").write_text(
+        json.dumps([{"source_id": "gaza-src-001", "url": "https://example.com/gaza"}], indent=2),
+        encoding="utf-8",
+    )
+    (edition / "curation_manifest.json").write_text(
+        json.dumps([{"story_id": "gaza-story-001", "source_ids": ["gaza-src-001"]}], indent=2),
+        encoding="utf-8",
+    )
+    gaza_root.mkdir(parents=True, exist_ok=True)
+    (gaza_root / "archive.html").write_text(
+        f'<html><body><a href="editions/{edition_date}/">{edition_date}</a></body></html>',
+        encoding="utf-8",
+    )
+    (gaza_root / "rss.xml").write_text(
+        f'<rss><channel><item><link>https://dispatches.thebluefernco.com/gaza/editions/{edition_date}/</link></item></channel></rss>',
+        encoding="utf-8",
+    )
+
+
 def write_care_line_approved_release_fixture(work: Path, edition_date: str) -> None:
     review_root = work / "data" / "dispatches" / "care-line" / "review"
     sources_root = work / "data" / "dispatches" / "care-line" / "sources" / edition_date
@@ -1920,6 +1960,125 @@ def test_scoped_build_preserves_modern_root_homepage_for_gaza(tmp_path, monkeypa
     assert result["files_copied"]
     assert str(pages_repo / "index.html") not in result["files_copied"]
     assert str(pages_repo / "gaza" / "index.html") in result["files_copied"]
+
+
+def test_pages_publish_refreshes_shared_homepage_before_commit(tmp_path, monkeypatch):
+    work = tmp_path / "repo"
+    work.mkdir()
+    copy_repo_assets(Path(__file__).parent.parent, work)
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    (pages_repo / "CNAME").write_text("dispatches.thebluefernco.com\n", encoding="utf-8")
+    stale_home = (
+        "<!doctype html><html><body><section class=\"section-block\"><div class=\"section-heading\">"
+        "<p class=\"eyebrow\">The current edition desk</p><h2>Latest published developments</h2></div>"
+        "<div class=\"edition-grid\"><article class=\"edition-card edition-card--gaza\"><p class=\"topic-badge topic-badge--gaza\">GAZA</p>"
+        "<h3><a href=\"/gaza/editions/2026-08-05/\">Stale Gaza headline</a></h3><p class=\"edition-source\">Dispatches From Gaza &middot; August 5, 2026</p>"
+        "<p class=\"edition-provenance\">Based on public source reporting</p><p class=\"edition-meta\">1 public source</p></article>"
+        "<article class=\"edition-card edition-card--food-line\"><p class=\"topic-badge topic-badge--food-line\">FOOD LINE</p>"
+        "<h3><a href=\"/food-line/editions/2026-08-05/\">Superior food pantry closes after more than 30 years</a></h3><p class=\"edition-source\">Food Line Dispatch &middot; August 5, 2026</p>"
+        "<p class=\"edition-provenance\">Based on public source reporting</p><p class=\"edition-meta\">1 public source</p></article>"
+        "<article class=\"edition-card edition-card--care-line\"><p class=\"topic-badge topic-badge--care-line\">CARE LINE</p>"
+        "<h3><a href=\"/care-line/editions/2026-08-05/\">Miles Hospital proposes closing its labor and delivery center</a></h3><p class=\"edition-source\">Care Line &middot; August 5, 2026</p>"
+        "<p class=\"edition-provenance\">Based on public source reporting</p><p class=\"edition-meta\">1 public source</p></article></div></section>"
+        "<section class=\"section-block\"><div class=\"section-heading\"><p class=\"eyebrow\">Reporting now</p><h2>Active dispatches</h2>"
+        "<p>Three active public products are publishing source-backed briefings for public reading.</p></div><div class=\"active-grid\">"
+        "<article class=\"dispatch-card dispatch-card--featured\"><p class=\"status\">Active</p><p class=\"latest-label\">Latest public development</p>"
+        "<h3 class=\"latest-headline\"><a href=\"/gaza/editions/2026-08-05/\">Stale Gaza headline</a></h3><p class=\"date-line\">Dispatches From Gaza &middot; August 5, 2026 &middot; 6:00 AM PT</p>"
+        "<p class=\"edition-provenance\">Based on public source reporting</p><h2>Dispatches From Gaza</h2><p class=\"card-description\">Daily source-backed reporting from Gaza.</p>"
+        "<p class=\"cadence\">Daily</p><div class=\"card-actions\"><a class=\"button\" href=\"/gaza/editions/2026-08-05/\">Read latest</a>"
+        "<a class=\"text-link\" href=\"/gaza/archive.html\">Archive</a><a class=\"support-link\" href=\"/gaza/audio/index.html\">Audio</a>"
+        "<a class=\"support-link\" href=\"/gaza/rss.xml\">Feed</a><a class=\"support-link\" href=\"/gaza/podcast.xml\">Podcast</a></div></article>"
+        "<article class=\"dispatch-card dispatch-card--featured\"><p class=\"status\">Active</p><p class=\"latest-label\">Latest public development</p>"
+        "<h3 class=\"latest-headline\"><a href=\"/food-line/editions/2026-08-05/\">Superior food pantry closes after more than 30 years</a></h3><p class=\"date-line\">Food Line Dispatch &middot; August 5, 2026</p>"
+        "<p class=\"edition-provenance\">Based on public source reporting</p><h2>Food Line Dispatch</h2><p class=\"card-description\">Source-backed reporting on food-access pressure and household strain.</p>"
+        "<p class=\"cadence\">Daily</p><div class=\"card-actions\"><a class=\"button\" href=\"/food-line/editions/2026-08-05/\">Read latest</a>"
+        "<a class=\"text-link\" href=\"/food-line/archive.html\">Archive</a><a class=\"support-link\" href=\"/food-line/audio/index.html\">Audio</a>"
+        "<a class=\"support-link\" href=\"/food-line/podcast.xml\">Podcast</a><a class=\"support-link\" href=\"/food-line/map/index.html\">Map</a></div></article>"
+        "<article class=\"dispatch-card dispatch-card--featured\"><p class=\"status\">Active</p><p class=\"latest-label\">Latest public development</p>"
+        "<h3 class=\"latest-headline\"><a href=\"/care-line/editions/2026-08-05/\">Miles Hospital proposes closing its labor and delivery center</a></h3><p class=\"date-line\">Care Line &middot; August 5, 2026</p>"
+        "<p class=\"edition-provenance\">Based on public source reporting</p><h2>The Care Line Dispatch</h2><p class=\"card-description\">Source-backed reporting on healthcare-access pressure and service strain.</p>"
+        "<p class=\"cadence\">Current public updates</p><div class=\"card-actions\"><a class=\"button\" href=\"/care-line/editions/2026-08-05/\">Read latest</a>"
+        "<a class=\"text-link\" href=\"/care-line/archive.html\">Archive</a><a class=\"support-link\" href=\"/care-line/rss.xml\">Feed</a></div></article></div></section></body></html>"
+    )
+    (pages_repo / "index.html").write_text(stale_home, encoding="utf-8")
+    site_root = work / "output" / "site"
+    site_root.mkdir(parents=True, exist_ok=True)
+    (site_root / "index.html").write_text(stale_home, encoding="utf-8")
+    write_gaza_release_fixture(site_root, "2026-08-15", "Small-scale projects offer hope for Gaza farmers rebuilding lives")
+    monkeypatch.setattr(
+        generator,
+        "build_site",
+        lambda *args, **kwargs: {
+            "ok": True,
+            "warnings": [],
+            "errors": [],
+            "backfilled_public_editions": [],
+            "gaza_editions_discovered": [],
+            "gaza_editions_backfilled": [],
+            "gaza_editions_skipped": [],
+            "gaza_archive_entries_written": [{"edition_date": "2026-08-15"}],
+        },
+    )
+    monkeypatch.setattr(generator, "validate_pages_publish", lambda *args, **kwargs: ([], []))
+    monkeypatch.setattr(generator, "validate_pages_repo_copy_scope", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "validate_pages_copy_parity", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "validate_cascadia_pages_copy_consistency", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "validate_pages_repo_after_copy", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "maybe_commit_pages_repo", lambda *args, **kwargs: {"would_commit": False, "committed": False, "commit_sha": None, "committed_branch": None, "message": "commit flag not set"})
+    monkeypatch.setattr(generator, "_gaza_homepage_recent_edition_guard", lambda *args, **kwargs: {"ok": True, "decision": "allowed", "reasons": [], "old_dates": [], "new_dates": ["2026-08-15"], "added_dates": ["2026-08-15"], "removed_dates": []})
+    monkeypatch.setattr(generator, "_gaza_public_surface_history_diagnostics", lambda *args, **kwargs: [])
+
+    result = publish_pages(work, pages_repo, None, dry_run=False, commit=False, no_push=True, backup_root=work / "backups", only_dispatches=("gaza",))
+
+    refreshed_home = (pages_repo / "index.html").read_text(encoding="utf-8")
+    assert result["ok"] is True
+    assert result["build"]["shared_homepage_refresh"]["ok"] is True
+    assert "/gaza/editions/2026-08-15/" in refreshed_home
+    assert "Small-scale projects offer hope for Gaza farmers rebuilding lives" in refreshed_home
+    assert "Superior food pantry closes after more than 30 years" in refreshed_home
+    assert "Miles Hospital proposes closing its labor and delivery center" in refreshed_home
+    assert "/gaza/editions/2026-08-05/" not in refreshed_home
+
+
+def test_pages_publish_blocks_when_shared_homepage_cannot_discover_new_gaza_release(tmp_path, monkeypatch):
+    work = tmp_path / "repo"
+    work.mkdir()
+    copy_repo_assets(Path(__file__).parent.parent, work)
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    (pages_repo / "CNAME").write_text("dispatches.thebluefernco.com\n", encoding="utf-8")
+    site_root = work / "output" / "site"
+    site_root.mkdir(parents=True, exist_ok=True)
+    (site_root / "index.html").write_text("<html><body>Root</body></html>", encoding="utf-8")
+    write_gaza_release_fixture(site_root, "2026-08-15", "Small-scale projects offer hope for Gaza farmers rebuilding lives")
+    (pages_repo / "index.html").write_text("<html><body><section class=\"section-block\"><div class=\"section-heading\"><p class=\"eyebrow\">The current edition desk</p><h2>Latest published developments</h2></div><div class=\"edition-grid\"><article class=\"edition-card edition-card--gaza\"><p class=\"topic-badge topic-badge--gaza\">GAZA</p><h3><a href=\"/gaza/editions/2026-08-05/\">Stale Gaza headline</a></h3><p class=\"edition-source\">Dispatches From Gaza &middot; August 5, 2026</p><p class=\"edition-provenance\">Based on public source reporting</p><p class=\"edition-meta\">1 public source</p></article></div></section></body></html>", encoding="utf-8")
+    monkeypatch.setattr(
+        generator,
+        "build_site",
+        lambda *args, **kwargs: {
+            "ok": True,
+            "warnings": [],
+            "errors": [],
+            "backfilled_public_editions": [],
+            "gaza_editions_discovered": [],
+            "gaza_editions_backfilled": [],
+            "gaza_editions_skipped": [],
+            "gaza_archive_entries_written": [{"edition_date": "2026-08-15"}],
+        },
+    )
+    monkeypatch.setattr(generator, "validate_pages_publish", lambda *args, **kwargs: ([], []))
+    monkeypatch.setattr(generator, "validate_pages_repo_copy_scope", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "validate_pages_copy_parity", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "validate_cascadia_pages_copy_consistency", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "validate_pages_repo_after_copy", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "maybe_commit_pages_repo", lambda *args, **kwargs: {"would_commit": False, "committed": False, "commit_sha": None, "committed_branch": None, "message": "commit flag not set"})
+    monkeypatch.setattr(generator, "discover_public_releases", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "_gaza_homepage_recent_edition_guard", lambda *args, **kwargs: {"ok": True, "decision": "allowed", "reasons": [], "old_dates": [], "new_dates": ["2026-08-15"], "added_dates": ["2026-08-15"], "removed_dates": []})
+    monkeypatch.setattr(generator, "_gaza_public_surface_history_diagnostics", lambda *args, **kwargs: [])
+
+    result = publish_pages(work, pages_repo, None, dry_run=False, commit=False, no_push=True, backup_root=work / "backups", only_dispatches=("gaza",))
+
+    assert result["ok"] is False
+    assert any("no eligible public release found for gaza in Pages inventory" in error for error in result["errors"])
 
 
 def test_care_line_scoped_publish_does_not_scan_gaza_history(monkeypatch, tmp_path):

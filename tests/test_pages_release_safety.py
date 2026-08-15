@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+import bluefern_dispatches.generator as generator
 import bluefern_dispatches.pages_release_safety as pages_release_safety
 from bluefern_dispatches.food_line_approved_proposal import build_release_manifest, write_json_deterministic
 
@@ -148,6 +149,19 @@ def test_allowed_path_validation_rejects_unexpected_pages_diff(release_repos: tu
     assert report["ok"] is False
     assert any("unexpected Pages repo changes outside the allowed Food Line scope" in error for error in report["errors"])
     assert "notes.txt" in report["errors"][0]
+
+
+def test_allowed_path_validation_can_permit_root_index_refresh_for_shared_homepage(release_repos: tuple[Path, Path]) -> None:
+    _source, pages = release_repos
+
+    errors = generator.validate_pages_repo_copy_scope(
+        pages,
+        ("food-line",),
+        changed_paths=["food-line/index.html", "index.html"],
+        allow_root_index_change=True,
+    )
+
+    assert errors == []
 
 
 def test_missing_source_artifact_rejection(release_repos: tuple[Path, Path]) -> None:

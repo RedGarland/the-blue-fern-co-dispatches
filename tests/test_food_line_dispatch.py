@@ -4400,6 +4400,24 @@ def test_food_line_publish_food_line_pages_fails_when_expected_edition_missing(m
     assert payload == {}
 
 
+def test_food_line_publish_food_line_pages_requests_shared_homepage_refresh(monkeypatch: pytest.MonkeyPatch):
+    captured: dict[str, list[str]] = {}
+
+    def fake_run_cmd(args, cwd):
+        captured["args"] = list(args)
+        return types.SimpleNamespace(returncode=0, stdout=json.dumps({"ok": True, "errors": [], "copied": True, "commit_sha": "abc1234", "target_pages_branch": "gh-pages", "committed_branch": "gh-pages"}), stderr="")
+
+    monkeypatch.setattr(food_line, "_run_cmd", fake_run_cmd)
+
+    ok, errors, payload = food_line.publish_food_line_pages(Path.cwd(), "2026-06-19")
+
+    assert ok is True
+    assert errors == []
+    assert payload["ok"] is True
+    assert "--shared-homepage-dispatch" in captured["args"]
+    assert "food-line" in captured["args"]
+
+
 def test_food_line_regression_sources_promote_with_verified_date_and_specific_pressure_evidence(tmp_path: Path):
     _ensure_assets(tmp_path)
     date = "2026-06-08"

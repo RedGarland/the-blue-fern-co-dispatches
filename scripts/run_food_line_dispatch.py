@@ -8276,6 +8276,8 @@ def publish_food_line_pages(root: Path, date: str) -> tuple[bool, list[str], dic
         "food-line",
         "--only-dispatch",
         "food-line",
+        "--shared-homepage-dispatch",
+        "food-line",
         "--commit",
         "--no-push",
     ]

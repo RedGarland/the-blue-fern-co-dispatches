@@ -2862,6 +2862,46 @@ def copy_public_site_to_pages(
     return copied, skipped
 
 
+def refresh_shared_homepage_from_pages_inventory(
+    pages_repo: Path,
+    *,
+    dry_run: bool,
+    target_dispatch: str = "gaza",
+) -> dict[str, Any]:
+    homepage_path = pages_repo / "index.html"
+    if not homepage_path.exists():
+        return {
+            "ok": False,
+            "refreshed": False,
+            "target_dispatch": target_dispatch,
+            "message": f"missing homepage template: {homepage_path}",
+        }
+    template_html = homepage_path.read_text(encoding="utf-8")
+    releases = discover_public_releases(pages_repo, verify_root=pages_repo, homepage_html=template_html)
+    latest = select_effective_latest(releases)
+    release = latest.get(target_dispatch)
+    if release is None:
+        return {
+            "ok": False,
+            "refreshed": False,
+            "target_dispatch": target_dispatch,
+            "message": f"no eligible public release found for {target_dispatch} in Pages inventory",
+        }
+    refreshed_html = render_sitewide_homepage_from_template(template_html, release)
+    if not dry_run:
+        homepage_path.write_text(refreshed_html, encoding="utf-8")
+    return {
+        "ok": True,
+        "refreshed": True,
+        "target_dispatch": target_dispatch,
+        "public_url": release.public_url,
+        "edition_date": release.edition_date,
+        "title": release.title,
+        "source_count": release.source_count,
+        "message": "shared homepage refreshed from Pages inventory",
+    }
+
+
 def remove_non_publishable_pages_editions(site_root: Path, pages_repo: Path, dry_run: bool) -> list[dict[str, str]]:
     tracked_slugs = ("cascadia", "food-line", CARE_LINE_DISPATCH_SLUG)
     if not any((pages_repo / slug / "editions").exists() for slug in tracked_slugs):
@@ -3335,6 +3375,8 @@ def validate_pages_repo_copy_scope(
     pages_repo: Path,
     only_dispatches: tuple[str, ...],
     changed_paths: Sequence[str | Path] | None = None,
+    *,
+    allow_root_index_change: bool = False,
 ) -> list[str]:
     errors: list[str] = []
     pages_repo = pages_repo.resolve()
@@ -3355,6 +3397,8 @@ def validate_pages_repo_copy_scope(
         rel_path = Path(str(candidate).replace("\\", "/"))
         top_level = rel_path.parts[0] if rel_path.parts else ""
         rel_text = rel_path.as_posix()
+        if allow_root_index_change and rel_text == "index.html":
+            continue
         if gaza_only_publish:
             if top_level == "gaza":
                 continue
@@ -3527,6 +3571,7 @@ def publish_pages(
     expect_dispatches: tuple[str, ...] = (),
     only_dispatches: tuple[str, ...] = (),
     allow_listing_shrink: bool = False,
+    shared_homepage_dispatch: str | None = None,
 ) -> dict[str, Any]:
     pages_repo = pages_repo.resolve()
     lightweight_git = _pages_repo_is_fake_worktree(pages_repo)
@@ -3672,7 +3717,24 @@ def publish_pages(
             skip_diagnostics=skip_diagnostics,
         )
         warnings.extend(_food_line_public_edition_skip_warning(report) for report in skip_diagnostics)
-        errors.extend(validate_pages_repo_copy_scope(pages_repo, only_dispatches, changed_paths=copied))
+        if not errors and shared_homepage_dispatch:
+            homepage_refresh = refresh_shared_homepage_from_pages_inventory(
+                pages_repo,
+                dry_run=dry_run,
+                target_dispatch=shared_homepage_dispatch,
+            )
+            build["shared_homepage_refresh"] = homepage_refresh
+            if not homepage_refresh["ok"]:
+                errors.append(str(homepage_refresh["message"]))
+        changed_paths_for_scope = _git_porcelain_paths(pages_repo) if not dry_run else copied
+        errors.extend(
+            validate_pages_repo_copy_scope(
+                pages_repo,
+                only_dispatches,
+                changed_paths=changed_paths_for_scope,
+                allow_root_index_change=bool(shared_homepage_dispatch and not errors),
+            )
+        )
         if not dry_run:
             errors.extend(validate_pages_copy_parity(root, pages_repo, expect_date, only_dispatches=only_dispatches))
             if expect_date and ((not only_dispatches) or ("cascadia" in only_dispatches)):
@@ -3819,6 +3881,11 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Allow Gaza public history surfaces to lose dates when intentionally pruning historical public listings.",
     )
+    parser.add_argument(
+        "--shared-homepage-dispatch",
+        choices=ONLY_DISPATCH_CHOICES,
+        help="Refresh the shared root homepage from the Pages inventory for this explicit dispatch.",
+    )
     args = parser.parse_args(argv)
     try:
         expect_dispatches = normalize_expect_dispatches(tuple(args.expect_dispatch))
@@ -3834,6 +3901,7 @@ def main(argv: list[str] | None = None) -> int:
             commit=args.commit,
             no_push=args.no_push,
             allow_listing_shrink=args.allow_listing_shrink,
+            shared_homepage_dispatch=args.shared_homepage_dispatch,
             backup_root=Path(args.backup_root),
             pages_branch=args.pages_branch,
             expect_date=args.expect_date,

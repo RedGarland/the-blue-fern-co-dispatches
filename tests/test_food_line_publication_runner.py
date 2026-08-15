@@ -369,3 +369,197 @@ def test_publication_with_push_forwards_commit_and_push(monkeypatch, tmp_path: P
     assert scope_calls and scope_calls[0]["release_manifest"].name == "2026-08-05.json"
     assert sync_calls and sync_calls[0]["commit"] is True
     assert sync_calls[0]["push"] is True
+
+
+def test_publication_with_post_bluesky_runs_after_successful_publication(monkeypatch, tmp_path: Path) -> None:
+    call_order: list[str] = []
+
+    monkeypatch.setattr(runner, "_repo_state", lambda repo_root, *, required_branch, label: _state("abc123", required_branch))
+    monkeypatch.setattr(
+        runner,
+        "_load_release_readiness",
+        lambda root, edition_date, approved_proposal_path: {
+            "path": root / "data/dispatches/food-line/review/release-readiness" / f"{edition_date}.json",
+            "payload": {
+                "schema_version": "food_line_release_readiness_v1",
+                "status": runner.APPROVED_STATUS,
+                "approved_proposal_path": approved_proposal_path.relative_to(root).as_posix(),
+                "edition_date": edition_date,
+            },
+        },
+    )
+    monkeypatch.setattr(runner, "load_approved_proposal", lambda root, proposal_path, edition_date: type("Bundle", (), {"proposal_sha256": "sha256"})())
+    monkeypatch.setattr(runner, "_validate_scope", lambda **kwargs: [])
+
+    def fake_generation(root: Path, date: str, **kwargs):
+        release_manifest = root / "data/dispatches/food-line/review/releases" / f"{date}.json"
+        release_manifest.parent.mkdir(parents=True, exist_ok=True)
+        release_manifest.write_text("{}", encoding="utf-8")
+        return {
+            "ok": True,
+            "generator_source_commit": "abc123",
+            "release_manifest_path": str(release_manifest),
+            "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-08-05/",
+            "public_rendered": True,
+            "public_signal_count": 3,
+            "errors": [],
+        }
+
+    def fake_sync(**kwargs):
+        call_order.append("sync")
+        return {
+            "ok": True,
+            "commit_status": "committed",
+            "push_status": "pushed",
+            "pushed": True,
+            "additions": [],
+            "modifications": ["food-line/index.html"],
+            "deletions": [],
+            "errors": [],
+        }
+
+    def fake_bluesky(**kwargs):
+        call_order.append("bluesky")
+        assert kwargs["post_requested"] is True
+        assert kwargs["public_url"] == "https://dispatches.thebluefernco.com/food-line/editions/2026-08-05/"
+        return {
+            "status": "success",
+            "reason": None,
+            "post_uri": "at://example/post",
+            "post_cid": "bafyreix",
+        }
+
+    monkeypatch.setattr(runner, "run_food_line_dispatch", fake_generation)
+    monkeypatch.setattr(runner, "sync_pages_from_source", fake_sync)
+    monkeypatch.setattr(runner, "maybe_post_food_line_dispatch_to_bluesky", fake_bluesky)
+
+    result = runner.run_publication(
+        repo_root=tmp_path / "repo",
+        pages_repo=tmp_path / "pages",
+        source_branch="add/pages-repo-default",
+        pages_branch="gh-pages",
+        date="2026-08-05",
+        push=True,
+        post_bluesky=True,
+    )
+
+    assert result["ok"] is True
+    assert result["status"] == "publication_success"
+    assert result["bluesky_result"]["status"] == "success"
+    assert result["bluesky_result"]["post_uri"] == "at://example/post"
+    assert call_order == ["sync", "bluesky"]
+
+
+def test_publication_without_post_bluesky_skips_bluesky(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setattr(runner, "_repo_state", lambda repo_root, *, required_branch, label: _state("abc123", required_branch))
+    monkeypatch.setattr(
+        runner,
+        "_load_release_readiness",
+        lambda root, edition_date, approved_proposal_path: {
+            "path": root / "data/dispatches/food-line/review/release-readiness" / f"{edition_date}.json",
+            "payload": {
+                "schema_version": "food_line_release_readiness_v1",
+                "status": runner.APPROVED_STATUS,
+                "approved_proposal_path": approved_proposal_path.relative_to(root).as_posix(),
+                "edition_date": edition_date,
+            },
+        },
+    )
+    monkeypatch.setattr(runner, "load_approved_proposal", lambda root, proposal_path, edition_date: type("Bundle", (), {"proposal_sha256": "sha256"})())
+    monkeypatch.setattr(runner, "_validate_scope", lambda **kwargs: [])
+    monkeypatch.setattr(runner, "run_food_line_dispatch", lambda root, date, **kwargs: {
+        "ok": True,
+        "generator_source_commit": "abc123",
+        "release_manifest_path": str(root / "data/dispatches/food-line/review/releases" / f"{date}.json"),
+        "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-08-05/",
+        "public_rendered": True,
+        "public_signal_count": 3,
+        "errors": [],
+    })
+    monkeypatch.setattr(
+        runner,
+        "sync_pages_from_source",
+        lambda **kwargs: {
+            "ok": True,
+            "commit_status": "committed",
+            "push_status": "skipped",
+            "pushed": False,
+            "additions": [],
+            "modifications": ["food-line/index.html"],
+            "deletions": [],
+            "errors": [],
+        },
+    )
+    monkeypatch.setattr(runner, "maybe_post_food_line_dispatch_to_bluesky", lambda **kwargs: (_ for _ in ()).throw(AssertionError("bluesky must not run")))
+
+    result = runner.run_publication(
+        repo_root=tmp_path / "repo",
+        pages_repo=tmp_path / "pages",
+        source_branch="add/pages-repo-default",
+        pages_branch="gh-pages",
+        date="2026-08-05",
+        push=True,
+        post_bluesky=False,
+    )
+
+    assert result["ok"] is True
+    assert result["bluesky_result"]["status"] == "skipped"
+    assert result["bluesky_result"]["reason"] == "not_requested"
+
+
+def test_publication_failure_blocks_bluesky(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setattr(runner, "_repo_state", lambda repo_root, *, required_branch, label: _state("abc123", required_branch))
+    monkeypatch.setattr(
+        runner,
+        "_load_release_readiness",
+        lambda root, edition_date, approved_proposal_path: {
+            "path": root / "data/dispatches/food-line/review/release-readiness" / f"{edition_date}.json",
+            "payload": {
+                "schema_version": "food_line_release_readiness_v1",
+                "status": runner.APPROVED_STATUS,
+                "approved_proposal_path": approved_proposal_path.relative_to(root).as_posix(),
+                "edition_date": edition_date,
+            },
+        },
+    )
+    monkeypatch.setattr(runner, "load_approved_proposal", lambda root, proposal_path, edition_date: type("Bundle", (), {"proposal_sha256": "sha256"})())
+    monkeypatch.setattr(runner, "_validate_scope", lambda **kwargs: [])
+    monkeypatch.setattr(runner, "run_food_line_dispatch", lambda *args, **kwargs: {
+        "ok": True,
+        "generator_source_commit": "abc123",
+        "release_manifest_path": str(tmp_path / "repo" / "data/dispatches/food-line/review/releases/2026-08-05.json"),
+        "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-08-05/",
+        "public_rendered": True,
+        "public_signal_count": 3,
+        "errors": [],
+    })
+    monkeypatch.setattr(
+        runner,
+        "sync_pages_from_source",
+        lambda **kwargs: {
+            "ok": False,
+            "commit_status": "blocked",
+            "push_status": "blocked",
+            "pushed": False,
+            "additions": [],
+            "modifications": [],
+            "deletions": [],
+            "errors": ["pages sync failed"],
+        },
+    )
+    monkeypatch.setattr(runner, "maybe_post_food_line_dispatch_to_bluesky", lambda **kwargs: (_ for _ in ()).throw(AssertionError("bluesky must not run on publication failure")))
+
+    result = runner.run_publication(
+        repo_root=tmp_path / "repo",
+        pages_repo=tmp_path / "pages",
+        source_branch="add/pages-repo-default",
+        pages_branch="gh-pages",
+        date="2026-08-05",
+        push=True,
+        post_bluesky=True,
+    )
+
+    assert result["ok"] is False
+    assert result["status"] == "publication_failed"
+    assert result["bluesky_result"]["status"] == "blocked"
+    assert result["bluesky_result"]["reason"] == "publication_failed"

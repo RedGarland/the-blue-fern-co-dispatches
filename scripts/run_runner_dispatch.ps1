@@ -752,7 +752,7 @@ try {
                 throw "Food Line dispatch requires explicit -$requiredParam."
             }
         }
-        foreach ($unsupportedParam in @("PostBluesky", "GenerateAudio", "SmtpDebug", "TtsProvider")) {
+        foreach ($unsupportedParam in @("GenerateAudio", "SmtpDebug", "TtsProvider")) {
             if ($PSBoundParameters.ContainsKey($unsupportedParam)) {
                 throw "Food Line dispatch does not support -$unsupportedParam."
             }
@@ -765,6 +765,10 @@ try {
         $foodLinePublicationRunnerScript = Join-Path $RepoRoot "scripts\run_food_line_publication_runner.py"
         if (-not (Test-Path -LiteralPath $foodLinePublicationRunnerScript -PathType Leaf)) {
             throw "Food Line publication runner not found: $foodLinePublicationRunnerScript"
+        }
+
+        if ($CheckOnly -and $PostBluesky) {
+            throw "Food Line check-only validation does not support -PostBluesky."
         }
 
         if ($CheckOnly) {
@@ -846,6 +850,9 @@ try {
         }
         if ($Push) {
             $foodLineArgs += "--push"
+        }
+        if ($PostBluesky) {
+            $foodLineArgs += "--post-bluesky"
         }
 
         $foodLineResult = Invoke-LoggedCommand -Python $python -Arguments $foodLineArgs -ParseJsonTail

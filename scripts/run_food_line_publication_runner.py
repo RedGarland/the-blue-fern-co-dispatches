@@ -23,6 +23,7 @@ if str(SRC) not in sys.path:
 
 from scripts.food_line_runtime_paths import FOOD_LINE_ALLOWED_DIRTY_CATEGORIES, classify_food_line_runtime_path
 from bluefern_dispatches.food_line_approved_proposal import load_approved_proposal
+from bluefern_dispatches.bluesky_post import maybe_post_food_line_dispatch_to_bluesky
 from bluefern_dispatches.pages_release_safety import sync_pages_from_source
 from scripts.run_food_line_dispatch import run_food_line_dispatch
 from scripts.validate_publish_scope import validate_publish_scope
@@ -251,11 +252,14 @@ def run_publication(
     check_only: bool = False,
     dry_run_full: bool = False,
     push: bool = False,
+    post_bluesky: bool = False,
 ) -> dict[str, Any]:
     if check_only and dry_run_full:
         raise PublicationRunnerError("-CheckOnly and -DryRunFull cannot be combined.")
     if check_only and push:
         raise PublicationRunnerError("-Push cannot be combined with -CheckOnly.")
+    if check_only and post_bluesky:
+        raise PublicationRunnerError("-PostBluesky cannot be combined with -CheckOnly.")
     if dry_run_full and push:
         raise PublicationRunnerError("-Push cannot be combined with -DryRunFull.")
 
@@ -292,6 +296,13 @@ def run_publication(
         "temp_workspace_removed": False,
         "push_performed": False,
         "publication_report": None,
+        "bluesky_result": {
+            "requested": bool(post_bluesky),
+            "status": "skipped" if not post_bluesky else "blocked",
+            "reason": "not_requested" if not post_bluesky else "publication_not_run",
+            "post_uri": None,
+            "post_cid": None,
+        },
         "scope_validation_errors": [],
         "errors": [],
     }
@@ -352,6 +363,13 @@ def run_publication(
                         "temp_workspace": str(temp_root),
                         "temp_workspace_removed": False,
                         "push_performed": False,
+                        "bluesky_result": {
+                            "requested": bool(post_bluesky),
+                            "status": "blocked",
+                            "reason": "publication_failed",
+                            "post_uri": None,
+                            "post_cid": None,
+                        },
                     }
                 )
                 return base_result
@@ -381,6 +399,13 @@ def run_publication(
                     "temp_workspace": str(temp_root),
                     "temp_workspace_removed": False,
                     "push_performed": False,
+                    "bluesky_result": {
+                        "requested": bool(post_bluesky),
+                        "status": "blocked",
+                        "reason": "dry_run_full",
+                        "post_uri": None,
+                        "post_cid": None,
+                    }
                 }
             )
             return base_result
@@ -409,6 +434,13 @@ def run_publication(
                 "source_commit": generated.get("generator_source_commit") or source_state["head"],
                 "scope_validation_errors": list(scope_errors),
                 "errors": list(generated.get("errors") or []) + list(scope_errors),
+                "bluesky_result": {
+                    "requested": bool(post_bluesky),
+                    "status": "blocked",
+                    "reason": "publication_failed",
+                    "post_uri": None,
+                    "post_cid": None,
+                },
             }
         )
         return base_result
@@ -438,6 +470,34 @@ def run_publication(
             "push_performed": bool(publication_report.get("pushed")),
         }
     )
+    bluesky_result: dict[str, Any] = {
+        "requested": bool(post_bluesky),
+        "status": "skipped" if not post_bluesky else "blocked",
+        "reason": "not_requested" if not post_bluesky else "publication_not_successful",
+        "post_uri": None,
+        "post_cid": None,
+    }
+    if post_bluesky:
+        if ok and bool(publication_report.get("ok")):
+            bluesky_result = maybe_post_food_line_dispatch_to_bluesky(
+                edition_date=edition_date,
+                public_url=str(generated.get("public_url") or ""),
+                post_text=None,
+                run_succeeded=True,
+                public_rendered=bool(generated.get("public_rendered", True)),
+                public_signal_count=int(generated.get("public_signal_count") or 0),
+                post_requested=True,
+                project_root=repo_root,
+                allow_publish=True,
+                dry_run=False,
+            )
+        else:
+            bluesky_result = {
+                **bluesky_result,
+                "status": "blocked",
+                "reason": "publication_failed",
+            }
+    base_result["bluesky_result"] = bluesky_result
     return base_result
 
 
@@ -451,6 +511,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--check-only", action="store_true", help="Validate readiness without generating or publishing.")
     parser.add_argument("--dry-run-full", action="store_true", help="Run the full publication flow in an isolated temp workspace.")
     parser.add_argument("--push", action="store_true", help="Push the local Pages commit after a successful publication run.")
+    parser.add_argument("--post-bluesky", action="store_true", help="Post the Food Line edition to Bluesky after a successful publication run.")
     return parser
 
 
@@ -467,6 +528,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             check_only=bool(args.check_only),
             dry_run_full=bool(args.dry_run_full),
             push=bool(args.push),
+            post_bluesky=bool(args.post_bluesky),
         )
     except Exception as exc:  # noqa: BLE001
         result = {

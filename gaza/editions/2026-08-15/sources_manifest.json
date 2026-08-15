@@ -1,0 +1,57 @@
+[
+  {
+    "source_record_id": "gaza-2026-08-15-aljazeera-middle-east-d7b4b408adaa",
+    "source_id": "gaza-2026-08-15-aljazeera-middle-east-d7b4b408adaa",
+    "title": "Small-scale projects offer hope for Gaza farmers rebuilding lives",
+    "url": "https://www.aljazeera.com/economy/2026/8/15/small-scale-projects-offer-hope-for-gaza-farmers-rebuilding-lives?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/economy/2026/8/15/small-scale-projects-offer-hope-for-gaza-farmers-rebuilding-lives?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-08-15T06:10:07+00:00",
+    "retrieved_at": "2026-08-15T13:00:40.561209+00:00",
+    "retrieved_local_date": "2026-08-15",
+    "post_edition_date_source": false,
+    "summary_or_snippet": "Greenhouses and rented plots are lifelines for Gaza's farmers, helping them grow crops despite the extensive destruction",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "aljazeera-middle-east",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "scope_provenance": "article_evidence",
+    "relevance_decision": "qualified",
+    "relevance_reason": "palestinian_development_material",
+    "nexus_type": "gaza_evidence",
+    "traceability_note": "Traceable to Al Jazeera via a direct publisher URL dated 2026-08-15T06:10:07+00:00; title, publisher, URL, and published_at are preserved in the record.",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-08-15",
+    "used_in_story_ids": [
+      "gaza-story-2026-08-15-001"
+    ],
+    "claim_ids": [],
+    "story_selection_excluded_reason": null,
+    "candidate_score": 32,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "core",
+    "dedupe_key": "gaza|al jazeera|small scale projects offer hope for gaza farmers rebuilding lives|conflict|2026-08-15",
+    "title_fingerprint": "small scale projects offer hope for gaza farmers rebuilding lives",
+    "claim_fingerprint": "gaza|al jazeera|small scale projects offer hope for gaza farmers rebuilding lives|conflict|2026-08-15"
+  }
+]

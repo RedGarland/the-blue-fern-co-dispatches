@@ -1,0 +1,66 @@
+[
+  {
+    "story_id": "gaza-story-2026-08-15-001",
+    "title": "Small-scale projects offer hope for Gaza farmers rebuilding lives",
+    "summary": "Greenhouses and rented plots are lifelines for Gaza's farmers, helping them grow crops despite the extensive destruction.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "scope_provenance": "article_evidence",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-15-aljazeera-middle-east-d7b4b408adaa"
+    ],
+    "source_ids": [
+      "gaza-2026-08-15-aljazeera-middle-east-d7b4b408adaa"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/economy/2026/8/15/small-scale-projects-offer-hope-for-gaza-farmers-rebuilding-lives?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-15-aljazeera-middle-east-d7b4b408adaa",
+        "title": "Small-scale projects offer hope for Gaza farmers rebuilding lives",
+        "url": "https://www.aljazeera.com/economy/2026/8/15/small-scale-projects-offer-hope-for-gaza-farmers-rebuilding-lives?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Greenhouses and rented plots are lifelines for Gaza's farmers, helping them grow crops despite the extensive destruction"
+      }
+    ],
+    "generated_at": "2026-08-15T13:00:43.153583+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

@@ -4601,6 +4601,7 @@ def run_food_line_discovery_expansion(
         "candidates_by_state_or_territory": dict(sorted(state_counts.items())),
         "candidates_by_metro": dict(sorted(metro_counts.items())),
         "query_rows": query_rows,
+        "candidates": candidates,
         "direct_source_diagnostics": direct_source_diagnostics,
         "google_news_resolution_debug_by_candidate": resolution_debug_by_candidate,
         "query_lookback_days": int(query_lookback_days),

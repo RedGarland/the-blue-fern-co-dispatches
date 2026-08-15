@@ -1,20 +1,19 @@
 from __future__ import annotations
 
+import ctypes
 import hashlib
 import json
 import math
+import struct
+import zlib
+from ctypes import wintypes
 from datetime import datetime
 from html import escape
 from pathlib import Path
 from typing import Any
-import ctypes
-from ctypes import wintypes
-import struct
-import zlib
 
 from bluefern_dispatches.bluesky_post import BLUESKY_MAX_POST_LENGTH
 from bluefern_dispatches.food_line_bluesky_preview import deterministic_json
-
 
 BASE_URL = "https://dispatches.thebluefernco.com"
 PUBLIC_PATH_PREFIX = "/food-line/wire/"
@@ -24,7 +23,6 @@ PREVIEW_HTML_NAME = "index.html"
 CARD_DIR_NAME = "cards"
 CARD_SIZE = (1200, 630)
 CURRENT_AS_OF = "2026-08-15"
-
 
 user32 = ctypes.windll.user32
 gdi32 = ctypes.windll.gdi32
@@ -246,7 +244,6 @@ def _measure_lines(text: str, max_chars: int) -> list[str]:
 def _render_card(event: dict[str, Any], path: Path) -> None:
     width, height = CARD_SIZE
     pixels = _new_canvas(width, height)
-    # Subtle fern-like backdrop and frame accents.
     _draw_soft_ellipse(pixels, width, height, 166, 160, 124, 82, (34, 54, 45, 120))
     _draw_soft_ellipse(pixels, width, height, 965, 186, 162, 98, (20, 38, 34, 92))
     _draw_soft_ellipse(pixels, width, height, 892, 122, 58, 26, (94, 126, 104, 88))
@@ -344,7 +341,6 @@ def _render_card(event: dict[str, Any], path: Path) -> None:
         gdi32.DeleteObject(hbitmap)
         gdi32.DeleteDC(hdc)
     except Exception:
-        # Fall back to the internal raster composition if GDI is unavailable.
         pass
 
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -371,22 +367,9 @@ def _event_from_record(
     source_url = str(base.get("canonical_url") or base.get("canonical_source_url") or base.get("source_url") or base.get("url") or "").strip()
     publisher = str(base.get("publisher") or base.get("source") or base.get("source_name") or "").strip()
     source_title = str(base.get("title") or base.get("headline") or "").strip()
-    source_published_at = str(
-        source_published_at_override
-        or base.get("source_published_at")
-        or base.get("published_at")
-        or base.get("source_published_date")
-        or ""
-    ).strip()
+    source_published_at = str(source_published_at_override or base.get("source_published_at") or base.get("published_at") or base.get("source_published_date") or "").strip()
     event_date = source_published_at[:10] if source_published_at else as_of
-    geography_scope = str(
-        geography_override
-        or base.get("geography_scope")
-        or base.get("location_scope")
-        or base.get("location_name")
-        or base.get("state")
-        or ""
-    ).strip()
+    geography_scope = str(geography_override or base.get("geography_scope") or base.get("location_scope") or base.get("location_name") or base.get("state") or "").strip()
     state = str(state_override or base.get("state") or "").strip() or "US"
     locality = str(base.get("location_name") or "").strip()
     evidence_text = str(base.get("exact_supporting_passage") or base.get("evidence_text") or "").strip()
@@ -397,21 +380,11 @@ def _event_from_record(
     qualifying = bool(source_url and publisher and evidence_text and public_summary)
     if as_of and source_published_at and source_published_at[:10] < as_of:
         qualifying = False
-    if not (
-        state.upper() in {"US", "UNITED STATES", "CA"}
-        or "United States" in geography_scope
-        or geography_scope.endswith(", USA")
-        or geography_scope.endswith(", U.S.")
-    ):
+    if not (state.upper() in {"US", "UNITED STATES", "CA"} or "United States" in geography_scope or geography_scope.endswith(", USA") or geography_scope.endswith(", U.S.")):
         qualifying = False
     if kind != "current_fixture":
         qualifying = False
-    signal_id = _hash_signal_id(
-        source_url=source_url,
-        event_date=event_date,
-        geography_scope=geography_scope,
-        pressure_category=pressure_category,
-    )
+    signal_id = _hash_signal_id(source_url=source_url, event_date=event_date, geography_scope=geography_scope, pressure_category=pressure_category)
     bluesky_post_text = _compose_post(geography=state, summary=public_summary, source=publisher, caveat=caveat)
     eligible = qualifying and len(bluesky_post_text) <= BLUESKY_MAX_POST_LENGTH
     if kind == "current_fixture" and not eligible and len(bluesky_post_text) > BLUESKY_MAX_POST_LENGTH:
@@ -445,16 +418,7 @@ def _event_from_record(
         "qualification_reason": "direct source-backed pressure signal" if qualifying else "missing exact evidence",
         "review_status": str(base.get("review_status") or base.get("editorial_status") or "").strip() or None,
         "review_decision_id": str(base.get("review_item_id") or "").strip() or None,
-        "record_fingerprint": _hash_text(
-            {
-                "signal_id": signal_id,
-                "canonical_source_url": source_url,
-                "event_date": event_date,
-                "public_summary": public_summary,
-                "why_it_matters": why_it_matters,
-                "evidence_text": evidence_text,
-            }
-        ),
+        "record_fingerprint": _hash_text({"signal_id": signal_id, "canonical_source_url": source_url, "event_date": event_date, "public_summary": public_summary, "why_it_matters": why_it_matters, "evidence_text": evidence_text}),
         "content_sha256": "",
         "supersedes_signal_id": None,
         "public_permalink": f"{BASE_URL}{PUBLIC_PATH_PREFIX}{signal_id}/",
@@ -480,45 +444,51 @@ def _event_from_record(
     return event
 
 
+def build_signal_wire_event_from_candidate(candidate: dict[str, Any], *, as_of: str | None = None) -> dict[str, Any]:
+    as_of_value = str(as_of or CURRENT_AS_OF)
+    pressure_category = str(candidate.get("pressure_category") or candidate.get("map_category") or candidate.get("pressure_type") or "food-access pressure").strip()
+    summary = str(candidate.get("proposed_public_summary") or candidate.get("pressure_summary") or candidate.get("summary_or_snippet") or candidate.get("claim_supported") or candidate.get("summary") or "").strip()
+    headline = str(candidate.get("headline") or candidate.get("proposed_public_headline") or candidate.get("title") or candidate.get("discovered_title") or summary).strip()
+    evidence = str(candidate.get("evidence_text") or candidate.get("exact_supporting_passage") or "").strip()
+    return _event_from_record(
+        {
+            "canonical_source_url": candidate.get("canonical_source_url") or candidate.get("canonical_url") or candidate.get("source_url") or candidate.get("url"),
+            "source_url": candidate.get("source_url") or candidate.get("canonical_source_url") or candidate.get("canonical_url") or candidate.get("url"),
+            "publisher": candidate.get("publisher") or candidate.get("source_name") or candidate.get("discovered_publisher"),
+            "title": headline,
+            "source_published_at": candidate.get("source_published_at") or candidate.get("published_at") or candidate.get("source_published_date") or candidate.get("publication_date") or as_of_value,
+            "location_name": candidate.get("location_name") or candidate.get("location") or candidate.get("metro") or "United States",
+            "state": candidate.get("state") or candidate.get("state_abbrev") or candidate.get("state_or_territory") or "US",
+            "location_scope": candidate.get("location_scope") or candidate.get("geographic_scope") or candidate.get("location_name") or "United States",
+            "summary": summary,
+            "exact_supporting_passage": evidence or summary or headline,
+            "uncertainty_note": candidate.get("uncertainty_note") or candidate.get("limitations") or "",
+            "why_it_matters": candidate.get("why_it_matters") or candidate.get("pressure_evidence_summary") or summary,
+            "evidence_text_basis": candidate.get("evidence_text_basis") or candidate.get("pressure_verification_status") or "source_text_verified",
+            "source_artifact_path": candidate.get("source_artifact_path") or candidate.get("artifact_path") or "",
+            "review_status": candidate.get("review_status") or candidate.get("candidate_review_status"),
+            "review_item_id": candidate.get("review_item_id") or candidate.get("candidate_id"),
+        },
+        pressure_category=pressure_category,
+        kind="current_fixture",
+        state_override=str(candidate.get("state") or candidate.get("state_abbrev") or candidate.get("state_or_territory") or "US").strip(),
+        geography_override=str(candidate.get("geography_scope") or candidate.get("location_scope") or candidate.get("location_name") or candidate.get("state") or "United States").strip(),
+        summary_override=summary,
+        caveat_override=str(candidate.get("uncertainty_note") or candidate.get("limitations") or "").strip() or None,
+        as_of=as_of_value,
+        source_published_at_override=str(candidate.get("source_published_at") or candidate.get("published_at") or candidate.get("source_published_date") or candidate.get("publication_date") or as_of_value),
+    )
+
+
 def _load_examples(project_root: Path) -> list[dict[str, Any]]:
     review = _load_json(project_root / "data" / "dispatches" / "food-line" / "review" / "current-signal-review.json")
     current_item = (review.get("items") or [{}])[0] if review else {}
     history_root = project_root / "data" / "agent-history" / "food-line" / "normalized"
     examples = [
-        _event_from_record(
-            current_item,
-            pressure_category="food-bank / pantry capacity",
-            kind="historical_reference",
-            summary_override="Faith Food Pantry in Superior closed after its final July 28 distribution. It had recently served about 960 people.",
-            caveat_override="Clients were directed to Second Harvest Northland, but equivalent capacity was not established.",
-        ),
-        _event_from_record(
-            _load_json(history_root / "9fbdabc810f6ab9ee36d655ae975bbb96ee038d5c808bf3b475c98c001b7ca8c.json"),
-            pressure_category="benefit access / policy",
-            kind="historical_reference",
-            state_override="MA",
-            geography_override="Massachusetts",
-            summary_override="In March, the Massachusetts DTA answered only 19% of calls, and reporting tied access barriers to some SNAP losses.",
-            caveat_override="The article did not quantify exactly how many losses were caused by failed contact.",
-        ),
-        _event_from_record(
-            _load_json(history_root / "b4b7227b29696f9454b4b68123c8a329bc5bd9ea73995e2e4056210e320cd1b4.json"),
-            pressure_category="food-price / affordability",
-            kind="historical_reference",
-            state_override="TX",
-            geography_override="North Texas",
-            summary_override="North Texas food banks reported rising demand as SNAP participation fell and donations dropped.",
-            caveat_override="Both food banks also said they had to buy substantially more food to keep serving clients.",
-        ),
-        _event_from_record(
-            _load_json(history_root / "bb9971662b7c50cd36f26dc09421b778c4132d8a062ad001aa745e718c04ee20.json"),
-            pressure_category="local food access / supply",
-            kind="historical_reference",
-            state_override="MI",
-            geography_override="Greater Lansing area",
-            summary_override="Greater Lansing Food Bank stopped distributing implicated lettuce and is discarding 800 to 1,200 pounds a week.",
-            caveat_override="The loss is tied to an unresolved cyclospora outbreak.",
-        ),
+        _event_from_record(current_item, pressure_category="food-bank / pantry capacity", kind="historical_reference", summary_override="Faith Food Pantry in Superior closed after its final July 28 distribution. It had recently served about 960 people.", caveat_override="Clients were directed to Second Harvest Northland, but equivalent capacity was not established."),
+        _event_from_record(_load_json(history_root / "9fbdabc810f6ab9ee36d655ae975bbb96ee038d5c808bf3b475c98c001b7ca8c.json"), pressure_category="benefit access / policy", kind="historical_reference", state_override="MA", geography_override="Massachusetts", summary_override="In March, the Massachusetts DTA answered only 19% of calls, and reporting tied access barriers to some SNAP losses.", caveat_override="The article did not quantify exactly how many losses were caused by failed contact."),
+        _event_from_record(_load_json(history_root / "b4b7227b29696f9454b4b68123c8a329bc5bd9ea73995e2e4056210e320cd1b4.json"), pressure_category="food-price / affordability", kind="historical_reference", state_override="TX", geography_override="North Texas", summary_override="North Texas food banks reported rising demand as SNAP participation fell and donations dropped.", caveat_override="Both food banks also said they had to buy substantially more food to keep serving clients."),
+        _event_from_record(_load_json(history_root / "bb9971662b7c50cd36f26dc09421b778c4132d8a062ad001aa745e718c04ee20.json"), pressure_category="local food access / supply", kind="historical_reference", state_override="MI", geography_override="Greater Lansing area", summary_override="Greater Lansing Food Bank stopped distributing implicated lettuce and is discarding 800 to 1,200 pounds a week.", caveat_override="The loss is tied to an unresolved cyclospora outbreak."),
     ]
     return examples
 

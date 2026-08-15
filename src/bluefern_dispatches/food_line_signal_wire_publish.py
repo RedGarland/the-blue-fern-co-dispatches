@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 from html import escape
 from pathlib import Path
 from typing import Any, Sequence
+from zoneinfo import ZoneInfo
 
 from bluefern_dispatches.bluesky_post import post_bluesky_external_card
 from bluefern_dispatches.food_line_signal_wire import (
@@ -19,6 +20,7 @@ from bluefern_dispatches.food_line_signal_wire import (
     PUBLIC_PATH_PREFIX,
     _render_card,
 )
+from bluefern_dispatches.food_line_signal_wire_runner import SignalWirePaths, _signal_wire_lock
 
 DISPATCH_SLUG = "food-line"
 SIGNAL_WIRE_STATE_RELATIVE_PATH = Path("data/dispatches/food-line/signal-wire/publication-state.json")
@@ -30,6 +32,10 @@ PUBLIC_STATE_SCHEMA_VERSION = "food_line_signal_wire_publication_state_v1"
 
 def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def _pacific_date() -> str:
+    return datetime.now(timezone.utc).astimezone(ZoneInfo("America/Los_Angeles")).date().isoformat()
 
 
 def _run_git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
@@ -362,6 +368,7 @@ def publish_signal_wire_event(
             "public_permalink": public_permalink,
         }
 
+    trace.append("event_validated")
     trace.append("render")
     artifacts = None
     if page_publish_needed:
@@ -412,12 +419,16 @@ def publish_signal_wire_event(
         pages_result["status"] = "skipped"
         pages_result["commit_hash"] = str(existing.get("pages_commit") or "") if existing else None
 
-    record["publication_status"] = "published"
-    record["pages_commit"] = pages_result.get("commit_hash")
-    record["published_at"] = published_at
-    record["last_seen_at"] = _utc_now()
-    _write_state_record(root, record)
-    trace.append("state_page_published")
+    pages_committed = pages_result.get("status") in {"committed", "skipped-no-changes", "skipped"}
+    if pages_result.get("push_performed") or not push:
+        record["publication_status"] = "published"
+        record["pages_commit"] = pages_result.get("commit_hash")
+        record["published_at"] = published_at
+        record["last_seen_at"] = _utc_now()
+        _write_state_record(root, record)
+        trace.append("state_page_published")
+    elif push and pages_committed:
+        raise RuntimeError("pages push required before publication state can be recorded")
 
     bluesky_result = {
         "requested": bool(post_bluesky),
@@ -454,9 +465,16 @@ def publish_signal_wire_event(
         record["last_seen_at"] = _utc_now()
         _write_state_record(root, record)
 
+    if pages_result.get("push_performed") or not push:
+        if post_bluesky and bluesky_result.get("status") != "success":
+            status = "published_bluesky_failed"
+        else:
+            status = "published"
+    else:
+        status = "failed"
     return {
-        "ok": pages_result.get("status") in {"committed", "skipped-no-changes", "skipped"} and (not post_bluesky or bluesky_result.get("status") == "success"),
-        "status": "success" if pages_result.get("status") in {"committed", "skipped-no-changes", "skipped"} else "failed",
+        "ok": status in {"published", "published_bluesky_failed"} or status == "skipped",
+        "status": status,
         "reason": None,
         "signal_id": signal_id,
         "state_path": str(_signal_wire_state_path(root)),
@@ -487,49 +505,53 @@ def run_signal_wire_live_publication(
         raise RuntimeError(f"source repo branch mismatch: expected {source_branch}, found {_repo_branch(root) or '<detached>'}")
     if not _repo_clean(root):
         raise RuntimeError("source repo must be clean before signal wire publication")
-    discovery = run_food_line_discovery_expansion(
-        root,
-        CURRENT_AS_OF,
-        edition_mode="current_update",
-        max_results_per_query=5,
-        max_queries=4,
-        query_lookback_days=1,
-        query_lookahead_days=0,
-        public_claim_lookback_days=0,
-        public_claim_lookahead_days=0,
-        dry_run=True,
-    )
-    candidates = [
-        row
-        for row in (discovery.get("candidates") or discovery.get("_candidate_records") or [])
-        if isinstance(row, dict) and bool(row.get("public_claim_eligible"))
-    ]
-    events = [build_signal_wire_event_from_candidate(candidate, as_of=CURRENT_AS_OF) for candidate in candidates]
-    events = sorted(events, key=lambda item: str(item.get("signal_id") or ""))
-    results: list[dict[str, Any]] = []
-    for event in events:
-        result = publish_signal_wire_event(
+    paths = SignalWirePaths(root)
+    day = _pacific_date()
+    with _signal_wire_lock(paths):
+        discovery = run_food_line_discovery_expansion(
             root,
-            event,
-            pages_repo=pages_repo,
-            source_branch=source_branch,
-            pages_branch=pages_branch,
-            push=False,
-            post_bluesky=post_bluesky,
-            dry_run=dry_run,
+            day,
+            edition_mode="current_update",
+            max_results_per_query=5,
+            max_queries=4,
+            query_lookback_days=1,
+            query_lookahead_days=0,
+            public_claim_lookback_days=0,
+            public_claim_lookahead_days=0,
+            dry_run=True,
         )
-        results.append(result)
-    eligible_count = sum(1 for event in events if bool(event.get("wire_auto_publish_eligible")))
-    return {
-        "ok": all(bool(result.get("ok")) for result in results) if results else True,
-        "status": "success",
-        "source_count": int(discovery.get("source_count") or len(discovery.get("query_rows") or [])),
-        "candidate_count": len(candidates),
-        "eligible_count": eligible_count,
-        "results": results,
-        "discovery": discovery,
-        "trace": [step for result in results for step in list(result.get("trace") or [])],
-        "pages_repo": str(pages_repo),
-        "source_branch": source_branch,
-        "pages_branch": pages_branch,
-    }
+        candidates = [
+            row
+            for row in (discovery.get("candidates") or discovery.get("_candidate_records") or [])
+            if isinstance(row, dict) and bool(row.get("public_claim_eligible"))
+        ]
+        events = [build_signal_wire_event_from_candidate(candidate, as_of=day) for candidate in candidates]
+        events = sorted(events, key=lambda item: str(item.get("signal_id") or ""))
+        results: list[dict[str, Any]] = []
+        for event in events:
+            result = publish_signal_wire_event(
+                root,
+                event,
+                pages_repo=pages_repo,
+                source_branch=source_branch,
+                pages_branch=pages_branch,
+                push=True,
+                post_bluesky=post_bluesky,
+                dry_run=dry_run,
+            )
+            results.append(result)
+        eligible_count = sum(1 for event in events if bool(event.get("wire_auto_publish_eligible")))
+        return {
+            "ok": all(bool(result.get("ok")) for result in results) if results else True,
+            "status": "success",
+            "as_of": day,
+            "source_count": int(discovery.get("source_count") or len(discovery.get("query_rows") or [])),
+            "candidate_count": len(candidates),
+            "eligible_count": eligible_count,
+            "results": results,
+            "discovery": discovery,
+            "trace": [step for result in results for step in list(result.get("trace") or [])],
+            "pages_repo": str(pages_repo),
+            "source_branch": source_branch,
+            "pages_branch": pages_branch,
+        }

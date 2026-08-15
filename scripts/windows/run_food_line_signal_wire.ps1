@@ -3,6 +3,7 @@ param(
     [switch]$DryRun,
     [switch]$PublishLive,
     [switch]$PostBluesky,
+    [string]$PythonExecutable = "",
     [string]$RepoRoot = (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)),
     [string]$PagesRepo = (Join-Path (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) "bluefern-dispatches-pages"),
     [string]$SourceBranch = "agent/refine-care-line-signal-wire-public-rendering",
@@ -10,7 +11,15 @@ param(
     [string]$RunId
 )
 
-$python = Join-Path $RepoRoot ".venv\Scripts\python.exe"
+$python = if ([string]::IsNullOrWhiteSpace($PythonExecutable)) {
+    Join-Path $RepoRoot ".venv\Scripts\python.exe"
+} else {
+    $PythonExecutable
+}
+$python = [System.IO.Path]::GetFullPath($python)
+if (-not (Test-Path -LiteralPath $python -PathType Leaf)) {
+    throw "Python executable does not exist: $python"
+}
 $script = Join-Path $RepoRoot "scripts\run_food_line_signal_wire.py"
 $args = @("--repo-root", $RepoRoot)
 $args += @("--pages-repo", $PagesRepo, "--source-branch", $SourceBranch, "--pages-branch", $PagesBranch)

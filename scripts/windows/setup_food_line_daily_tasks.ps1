@@ -12,6 +12,7 @@ $ErrorActionPreference = "Stop"
 $SourceTaskName = "Blue Fern Food Line Daily Source Watch"
 $ResumeTaskName = "Blue Fern Food Line Source Watch Resume"
 $IntakeTaskName = "Blue Fern Food Line Current Intake"
+$PublishTaskName = "Blue Fern Food Line Daily Publish"
 $LegacyTaskName = "Blue Fern Food Line Daily Dispatch"
 
 function Test-PowerShellSyntax {
@@ -67,7 +68,8 @@ $helper = Join-Path $RepositoryRoot "scripts\food_line_daily_scheduler.py"
 $definitions = @(
     [pscustomobject]@{ Name = $SourceTaskName; Script = (Join-Path $RepositoryRoot "scripts\windows\run_food_line_daily_current.ps1"); Hour = 5; Minute = 30; LimitMinutes = 40 },
     [pscustomobject]@{ Name = $ResumeTaskName; Script = (Join-Path $RepositoryRoot "scripts\windows\resume_food_line_daily_current.ps1"); Hour = 6; Minute = 0; LimitMinutes = 35 },
-    [pscustomobject]@{ Name = $IntakeTaskName; Script = (Join-Path $RepositoryRoot "scripts\windows\run_food_line_current_intake.ps1"); Hour = 6; Minute = 10; LimitMinutes = 20 }
+    [pscustomobject]@{ Name = $IntakeTaskName; Script = (Join-Path $RepositoryRoot "scripts\windows\run_food_line_current_intake.ps1"); Hour = 6; Minute = 10; LimitMinutes = 20 },
+    [pscustomobject]@{ Name = $PublishTaskName; Script = (Join-Path $RepositoryRoot "scripts\windows\run_food_line_daily_publish.ps1"); Hour = 8; Minute = 30; LimitMinutes = 40 }
 )
 foreach ($path in @($helper) + @($definitions.Script)) {
     if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Required scheduler file not found: $path" }
@@ -103,7 +105,8 @@ foreach ($definition in $definitions) {
         logon_type = if ($existing) { [string]$existing.Principal.LogonType } else { "S4U" }
         multiple_instances = "IgnoreNew"
         execution_time_limit_minutes = $definition.LimitMinutes
-        publication_capability = $false
+        publication_capability = $definition.Name -eq $PublishTaskName
+        post_bluesky_enabled = $definition.Name -eq $PublishTaskName
     }
 }
 $checkResult = [pscustomobject]@{

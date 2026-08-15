@@ -503,3 +503,20 @@ def test_setup_is_idempotent_and_disables_legacy_task() -> None:
     assert "Register-ScheduledTask -TaskPath $TaskPath" in text
     assert "Disable-ScheduledTask -TaskPath $TaskPath -TaskName $LegacyTaskName" in text
     assert "[switch]$CheckOnly" in text
+
+
+def test_setup_includes_guarded_publication_task() -> None:
+    root = Path(__file__).resolve().parents[1]
+    text = (root / "scripts" / "windows" / "setup_food_line_daily_tasks.ps1").read_text(encoding="utf-8")
+    assert "Blue Fern Food Line Daily Publish" in text
+    assert "run_food_line_daily_publish.ps1" in text
+    assert '"$definition.Name -eq $PublishTaskName"' in text or "$definition.Name -eq $PublishTaskName" in text
+
+
+def test_guarded_publish_wrapper_exists_and_is_publication_only() -> None:
+    root = Path(__file__).resolve().parents[1]
+    text = (root / "scripts" / "windows" / "run_food_line_daily_publish.ps1").read_text(encoding="utf-8")
+    assert "skipped_not_release_ready" in text
+    assert "-Push" in text
+    assert "-PostBluesky" in text
+    assert "run_runner_dispatch.ps1" in text

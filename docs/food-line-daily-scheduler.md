@@ -2,7 +2,8 @@
 
 The production Food Line schedule stops at a private proposed edition. It does
 not make editorial decisions, render public HTML, modify Pages, publish, push,
-post to Bluesky, generate audio or maps, or update podcast feeds.
+post to Bluesky, generate audio or maps, or update podcast feeds. A separate
+guarded publication task exists for release-ready daily editions.
 
 The supported Food Line production path is text-only. The current
 source-watch/current-intake/publication chain never requests TTS or generates
@@ -41,16 +42,22 @@ Time`.
    queue and proposed edition.
 4. An operator reviews every pending item and chooses `approve`,
    `approve_with_edit`, `hold`, or `reject`.
-5. Publication remains a separate guarded workflow requiring explicit
-   authorization.
+5. 08:30 â€” `Blue Fern Food Line Daily Publish` runs only when the current
+   edition is explicitly release-ready. It never makes editorial decisions.
+   It verifies the release-ready artifacts, uses the guarded publication
+   runner, pushes Pages, and then attempts the approved Food Line Bluesky
+   post.
+6. Publication remains guarded and idempotent. Missing approval means the task
+   skips cleanly. Bluesky failure is downstream-only and does not undo a
+   successful Pages publication.
 
 A qualifying completed run with `no_exportable_findings` is successful. Intake
 then writes `blocked_no_reviewable_current_signals` and exits successfully.
 Partial, timed-out, cancelled, failed, missing, corrupt, or structurally invalid
 collection state blocks intake.
 
-The three tasks use Task Scheduler `IgnoreNew`. Source watch and resume also
-share the atomic directory lock:
+The three private tasks use Task Scheduler `IgnoreNew`. Source watch and
+resume also share the atomic directory lock:
 
 ```text
 status\food-line\locks\source-watch.lock
@@ -147,6 +154,13 @@ Get-Content -Raw "$Root\data\dispatches\food-line\review\current-signal-review.j
 Get-Content -Raw "$Root\data\dispatches\food-line\review\proposed-editions\$PacificDate.md"
 ```
 
-`current-signal-review.json` is the active working queue, not the historical authority for already approved editions. Historical approved-review provenance lives in `data\dispatches\food-line\review\signal-reviews\YYYY-MM-DD.json`.
+`current-signal-review.json` is the active working queue, not the historical
+authority for already approved editions. Historical approved-review provenance
+lives in `data\dispatches\food-line\review\signal-reviews\YYYY-MM-DD.json`.
+
+The guarded publish task reads the current-date `proposed-editions`,
+`signal-reviews`, and `release-readiness` artifacts. If release readiness is
+missing or does not match today’s edition, it exits as
+`skipped_not_release_ready` and does not post to Bluesky.
 
 These commands do not approve or publish anything.

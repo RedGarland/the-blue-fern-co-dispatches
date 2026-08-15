@@ -8,7 +8,7 @@ from io import BytesIO
 from html import unescape
 from pathlib import Path
 from datetime import datetime, timezone
-from typing import Any
+from typing import Any, Sequence
 from urllib import error, request
 from bluefern_dispatches.generator import BASE_URL
 from bluefern_dispatches.food_line_bluesky_approval import verify_approval
@@ -1324,6 +1324,193 @@ def _write_food_line_post_state(
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     return path
+
+
+def post_bluesky_external_card(
+    *,
+    project_root: Path,
+    public_url: str,
+    post_text: str,
+    card_title: str,
+    card_description: str,
+    image_candidates: Sequence[Path],
+    image_alt: str,
+    receipt_path: Path | None = None,
+    allow_publish: bool = True,
+    dry_run: bool = False,
+    force_post: bool = False,
+) -> dict[str, Any]:
+    result: dict[str, Any] = {
+        "status": "skipped",
+        "post_uri": None,
+        "post_cid": None,
+        "reason": None,
+        "embed_type": None,
+        "card_title": card_title,
+        "card_description": card_description,
+        "post_text": post_text,
+        "image_path": None,
+        "image_alt": image_alt,
+        "thumb_status": "not_attempted",
+        "compressed_thumb": False,
+        "original_thumb_bytes": None,
+        "uploaded_thumb_bytes": None,
+        "error_type": None,
+        "error_message": None,
+    }
+
+    root = project_root or Path.cwd()
+    if receipt_path is not None and not force_post:
+        if receipt_path.exists():
+            try:
+                receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+            except Exception:  # noqa: BLE001
+                receipt = None
+            if isinstance(receipt, dict):
+                if str(receipt.get("status") or "") == "success" and str(receipt.get("post_uri") or "").strip() and str(receipt.get("public_url") or "").strip() == str(public_url).strip():
+                    return {
+                        **result,
+                        "status": "skipped",
+                        "reason": "skipped_existing_receipt",
+                        "post_uri": receipt.get("post_uri"),
+                        "post_cid": receipt.get("post_cid"),
+                        "embed_type": receipt.get("embed_type"),
+                        "card_title": receipt.get("card_title") or card_title,
+                        "card_description": receipt.get("card_description") or card_description,
+                        "post_text": str(receipt.get("post_text") or post_text),
+                        "image_path": receipt.get("image_path"),
+                        "image_alt": receipt.get("image_alt") or image_alt,
+                        "thumb_status": receipt.get("thumb_status") or "not_attempted",
+                        "compressed_thumb": bool(receipt.get("compressed_thumb")),
+                        "original_thumb_bytes": receipt.get("original_thumb_bytes"),
+                        "uploaded_thumb_bytes": receipt.get("uploaded_thumb_bytes"),
+                    }
+
+    if not public_url or not str(public_url).strip():
+        result["reason"] = "missing_public_url"
+        return result
+    if not post_text or not str(post_text).strip():
+        result["reason"] = "post_text_unavailable"
+        return result
+    if not allow_publish or dry_run:
+        result["reason"] = "dry_run"
+        return result
+
+    handle = str(os.getenv("BLUESKY_HANDLE", "")).strip()
+    app_password = os.getenv("BLUESKY_APP_PASSWORD")
+    if not handle:
+        result["reason"] = "missing_handle"
+        return result
+    if not app_password:
+        result["reason"] = "missing_app_password"
+        return result
+
+    try:
+        session = _post_json(
+            f"{BLUESKY_API_BASE}/com.atproto.server.createSession",
+            {"identifier": handle, "password": app_password},
+        )
+        access_jwt = str(session.get("accessJwt") or "")
+        did = str(session.get("did") or "")
+        if not access_jwt or not did:
+            result["status"] = "failure"
+            result["reason"] = "invalid_session_response"
+            return result
+        thumb_blob = None
+        thumb_status = "no_thumbnail"
+        compressed_thumb = False
+        original_thumb_bytes = None
+        uploaded_thumb_bytes = None
+        image_path = None
+        for candidate in image_candidates:
+            if not candidate.exists():
+                continue
+            mime = _guess_image_mime(candidate)
+            if not mime:
+                continue
+            try:
+                data = candidate.read_bytes()
+                original_thumb_bytes = len(data)
+                image_path = candidate
+                if original_thumb_bytes <= BLUESKY_COMPRESS_TARGET_BYTES:
+                    thumb_blob = _upload_blob(access_jwt, data, mime)
+                    if thumb_blob:
+                        thumb_status = "uploaded"
+                        uploaded_thumb_bytes = original_thumb_bytes
+                        break
+                    thumb_status = "upload_failed"
+                    break
+                compressed = _compress_thumb_to_jpeg(data)
+                if not compressed:
+                    thumb_status = "skipped_too_large"
+                    break
+                if len(compressed) >= BLUESKY_BLOB_MAX_BYTES:
+                    thumb_status = "skipped_too_large"
+                    break
+                thumb_blob = _upload_blob(access_jwt, compressed, "image/jpeg")
+                if thumb_blob:
+                    thumb_status = "uploaded_compressed"
+                    compressed_thumb = True
+                    uploaded_thumb_bytes = len(compressed)
+                    break
+                thumb_status = "upload_failed"
+                compressed_thumb = True
+                uploaded_thumb_bytes = len(compressed)
+                break
+            except Exception:  # noqa: BLE001
+                thumb_status = "upload_failed"
+                thumb_blob = None
+                break
+        external: dict[str, Any] = {
+            "$type": "app.bsky.embed.external",
+            "external": {"uri": str(public_url), "title": card_title, "description": card_description},
+        }
+        if thumb_blob:
+            external["external"]["thumb"] = thumb_blob
+        record_payload = {
+            "repo": did,
+            "collection": "app.bsky.feed.post",
+            "record": {
+                "$type": "app.bsky.feed.post",
+                "text": post_text,
+                "createdAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+                "embed": external,
+            },
+        }
+        req = _build_auth_request(f"{BLUESKY_API_BASE}/com.atproto.repo.createRecord", record_payload, access_jwt)
+        with request.urlopen(req, timeout=20.0) as resp:
+            body = resp.read().decode("utf-8")
+        payload = json.loads(body) if body else {}
+        post_uri = str(payload.get("uri") or "").strip() if isinstance(payload, dict) else ""
+        post_cid = str(payload.get("cid") or "").strip() if isinstance(payload, dict) else ""
+        if not post_uri:
+            result["status"] = "failure"
+            result["reason"] = "missing_post_uri"
+            return result
+        result.update(
+            {
+                "status": "success",
+                "reason": None,
+                "post_uri": post_uri,
+                "post_cid": post_cid or None,
+                "embed_type": "app.bsky.embed.external",
+                "thumb_status": thumb_status,
+                "compressed_thumb": compressed_thumb,
+                "original_thumb_bytes": original_thumb_bytes,
+                "uploaded_thumb_bytes": uploaded_thumb_bytes,
+                "image_path": str(image_path) if image_path else None,
+                "image_alt": image_alt,
+            }
+        )
+        return result
+    except error.HTTPError as exc:
+        result["status"] = "failure"
+        result["reason"], result["error_type"], result["error_message"] = _safe_http_error(exc, app_password)
+        return result
+    except Exception as exc:  # noqa: BLE001
+        result["status"] = "failure"
+        result["reason"] = _safe_error(str(exc), app_password)
+        return result
 
 
 def _post_json(url: str, payload: dict[str, Any], timeout: float = 20.0) -> dict[str, Any]:

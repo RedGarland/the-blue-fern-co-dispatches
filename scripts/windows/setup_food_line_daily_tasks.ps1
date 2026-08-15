@@ -1,6 +1,7 @@
 [CmdletBinding(SupportsShouldProcess)]
 param(
     [string]$RepositoryRoot = "C:\BlueFernRunner\FoodLineDailyCurrent",
+    [string]$PagesRepo = "C:\BlueFernRunner\FoodLineRelease20260814-2\bluefern-dispatches-pages",
     [string]$PythonExecutable = "C:\BlueFernRunner\Dispatches From The Blue Fern Co\.venv\Scripts\python.exe",
     [string]$SourceBranch = "agent/refine-care-line-signal-wire-public-rendering",
     [string]$UserId = "",
@@ -51,6 +52,9 @@ if (-not (Test-Path -LiteralPath (Join-Path $RepositoryRoot ".git"))) {
 if (-not (Test-Path -LiteralPath $PythonExecutable -PathType Leaf)) {
     throw "Python executable not found: $PythonExecutable"
 }
+if (-not (Test-Path -LiteralPath $PagesRepo -PathType Container)) {
+    throw "Pages repository not found: $PagesRepo"
+}
 if ((Get-TimeZone).Id -ne "Pacific Standard Time") {
     throw "Task Scheduler host must use Pacific Standard Time; found $((Get-TimeZone).Id)"
 }
@@ -90,7 +94,11 @@ foreach ($definition in $definitions) {
     $existing = Get-ScheduledTask -TaskPath $TaskPath -TaskName $definition.Name -ErrorAction SilentlyContinue
     $start = (Get-Date).Date.AddHours($definition.Hour).AddMinutes($definition.Minute)
     if ($start -le (Get-Date)) { $start = $start.AddDays(1) }
-    $arguments = "-NoProfile -NonInteractive -ExecutionPolicy Bypass -File `"$($definition.Script)`" -RepositoryRoot `"$RepositoryRoot`" -PythonExecutable `"$PythonExecutable`" -SourceBranch `"$SourceBranch`""
+    $arguments = if ($definition.Name -eq $PublishTaskName) {
+        "-NoProfile -NonInteractive -ExecutionPolicy Bypass -File `"$($definition.Script)`" -PublicationRoot `"$RepositoryRoot`" -PagesRepo `"$PagesRepo`" -SourceBranch `"$SourceBranch`" -PagesBranch `"gh-pages`" -PythonExecutable `"$PythonExecutable`""
+    } else {
+        "-NoProfile -NonInteractive -ExecutionPolicy Bypass -File `"$($definition.Script)`" -RepositoryRoot `"$RepositoryRoot`" -PythonExecutable `"$PythonExecutable`" -SourceBranch `"$SourceBranch`""
+    }
     $planned += [pscustomobject]@{
         task_path = $TaskPath
         task_name = $definition.Name
@@ -100,13 +108,18 @@ foreach ($definition in $definitions) {
         schedule = "daily"
         execute = "PowerShell.exe"
         arguments = $arguments
-        working_directory = $RepositoryRoot
+        working_directory = if ($definition.Name -eq $PublishTaskName) { $RepositoryRoot } else { $RepositoryRoot }
         principal = if ($existing) { $existing.Principal.UserId } else { $effectiveUser }
         logon_type = if ($existing) { [string]$existing.Principal.LogonType } else { "S4U" }
         multiple_instances = "IgnoreNew"
         execution_time_limit_minutes = $definition.LimitMinutes
         publication_capability = $definition.Name -eq $PublishTaskName
         post_bluesky_enabled = $definition.Name -eq $PublishTaskName
+        description = if ($definition.Name -eq $PublishTaskName) {
+            "Publishes the current release-ready Food Line edition, pushes GitHub Pages, then attempts the downstream Bluesky daily post. Makes no editorial decisions."
+        } else {
+            "Runs the private Food Line source-watch/intake flow. Never publishes, pushes Pages, posts social content, generates audio/maps, or makes editorial decisions."
+        }
     }
 }
 $checkResult = [pscustomobject]@{
@@ -118,9 +131,10 @@ $checkResult = [pscustomobject]@{
     timezone = (Get-TimeZone).Id
     operational_logs = (Join-Path $RepositoryRoot "logs\food-line")
     operational_state = (Join-Path $RepositoryRoot "status\food-line")
+    pages_repo = $PagesRepo
     tasks = $planned
     legacy_task = if ($legacy) { [pscustomobject]@{ full_name = "$TaskPath$LegacyTaskName"; current_state = [string]$legacy.State; planned_action = "disable" } } else { $null }
-    automatic_publication_task_created = $false
+    automatic_publication_task_created = $true
 }
 $checkResult | ConvertTo-Json -Depth 8
 if ($CheckOnly) { return }
@@ -131,7 +145,11 @@ foreach ($definition in $definitions) {
     $existing = Get-ScheduledTask -TaskPath $TaskPath -TaskName $definition.Name -ErrorAction SilentlyContinue
     $start = (Get-Date).Date.AddHours($definition.Hour).AddMinutes($definition.Minute)
     if ($start -le (Get-Date)) { $start = $start.AddDays(1) }
-    $arguments = "-NoProfile -NonInteractive -ExecutionPolicy Bypass -File `"$($definition.Script)`" -RepositoryRoot `"$RepositoryRoot`" -PythonExecutable `"$PythonExecutable`" -SourceBranch `"$SourceBranch`""
+    $arguments = if ($definition.Name -eq $PublishTaskName) {
+        "-NoProfile -NonInteractive -ExecutionPolicy Bypass -File `"$($definition.Script)`" -PublicationRoot `"$RepositoryRoot`" -PagesRepo `"$PagesRepo`" -SourceBranch `"$SourceBranch`" -PagesBranch `"gh-pages`" -PythonExecutable `"$PythonExecutable`""
+    } else {
+        "-NoProfile -NonInteractive -ExecutionPolicy Bypass -File `"$($definition.Script)`" -RepositoryRoot `"$RepositoryRoot`" -PythonExecutable `"$PythonExecutable`" -SourceBranch `"$SourceBranch`""
+    }
     $action = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument $arguments -WorkingDirectory $RepositoryRoot
     $trigger = New-ScheduledTaskTrigger -Daily -At $start
     $principal = if ($existing) {
@@ -147,7 +165,12 @@ foreach ($definition in $definitions) {
         $operation = "updated"
     } else {
         if ($PSCmdlet.ShouldProcess("$TaskPath$($definition.Name)", "Create private Food Line task")) {
-            Register-ScheduledTask -TaskPath $TaskPath -TaskName $definition.Name -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Description "Runs the private Food Line source-watch/intake flow. Never publishes, pushes Pages, posts social content, generates audio/maps, or makes editorial decisions." | Out-Null
+            $description = if ($definition.Name -eq $PublishTaskName) {
+                "Publishes the current release-ready Food Line edition, pushes GitHub Pages, then attempts the downstream Bluesky daily post. Makes no editorial decisions."
+            } else {
+                "Runs the private Food Line source-watch/intake flow. Never publishes, pushes Pages, posts social content, generates audio/maps, or makes editorial decisions."
+            }
+            Register-ScheduledTask -TaskPath $TaskPath -TaskName $definition.Name -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Description $description | Out-Null
         }
         $operation = "created"
     }
@@ -165,5 +188,5 @@ if ($legacy) {
     check_only = $false
     tasks = $results
     legacy_task_action = $legacyAction
-    automatic_publication_task_created = $false
+    automatic_publication_task_created = $true
 } | ConvertTo-Json -Depth 6

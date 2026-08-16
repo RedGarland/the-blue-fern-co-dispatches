@@ -74,6 +74,41 @@ def _manual_path(root: Path, date: str) -> Path:
     return root / "data" / "dispatches" / "food-line" / "sources" / date / "manual_sources.json"
 
 
+def _write_food_line_bluesky_preview_fixture(root: Path, edition_date: str, *, public_url: str, public_summary: str) -> None:
+    manifest_path = root / "output" / "site" / "food-line" / "editions" / edition_date / "edition_manifest.json"
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "edition_date": edition_date,
+                "public_url": public_url,
+                "public_rendered": True,
+                "public_signal_count": 2,
+                "edition_mode": "current_update",
+                "validation_status": "ok",
+                "public_summary": public_summary,
+                "bluesky_post_ready": False,
+                "bluesky_post_text": None,
+            }
+        ),
+        encoding="utf-8",
+    )
+    review_path = root / "data" / "dispatches" / "food-line" / "review" / "proposed-editions" / f"{edition_date}.json"
+    review_path.parent.mkdir(parents=True, exist_ok=True)
+    review_path.write_text(
+        json.dumps(
+            {
+                "layout": {
+                    "todays_read": [{"summary": public_summary}],
+                    "core_food_pressure_signals": [{"summary": public_summary}],
+                },
+                "items": [{"review_item_id": f"{edition_date}-001"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+
 def _food_line_regression_fixture_path() -> Path:
     return Path(__file__).resolve().parent / "fixtures" / "food_line" / "regression_2026-06-08_sources.json"
 
@@ -4547,6 +4582,12 @@ def test_food_line_bluesky_dry_run_records_social_image_without_network(tmp_path
     edition_date = "2026-06-11"
     public_url = "https://dispatches.thebluefernco.com/food-line/editions/2026-06-11/"
     post_text = "Food Line Dispatch, June 11, 2026: test post text."
+    _write_food_line_bluesky_preview_fixture(
+        tmp_path,
+        edition_date,
+        public_url=public_url,
+        public_summary="Test summary for dry-run preview fixture.",
+    )
 
     def fail_if_called(*_args, **_kwargs):
         raise AssertionError("network call should not happen during Bluesky dry-run")
@@ -4578,6 +4619,13 @@ def test_food_line_bluesky_dry_run_state_and_duplicate_guard(tmp_path: Path, mon
     public_url = "https://dispatches.thebluefernco.com/food-line/"
     post_text = "Food Line Dispatch, June 11, 2026: WSLS reported that Roanoke's St. Francis House faced empty shelves. Source-backed public briefing:"
     state_path = tmp_path / "data" / "dispatches" / "food-line" / "editions" / edition_date / "bluesky_post.json"
+    preview_summary = "WSLS reported that Roanoke's St. Francis House faced empty shelves."
+    _write_food_line_bluesky_preview_fixture(
+        tmp_path,
+        edition_date,
+        public_url=public_url,
+        public_summary=preview_summary,
+    )
 
     def fail_if_called(*_args, **_kwargs):
         raise AssertionError("network call should not happen during Bluesky dry-run or duplicate guard")
@@ -4599,23 +4647,6 @@ def test_food_line_bluesky_dry_run_state_and_duplicate_guard(tmp_path: Path, mon
     assert dry_run_result["reason"] == "dry_run"
     assert not state_path.exists()
 
-    manifest_path = tmp_path / "output" / "site" / "food-line" / "editions" / edition_date / "edition_manifest.json"
-    manifest_path.parent.mkdir(parents=True, exist_ok=True)
-    manifest_path.write_text(
-        json.dumps(
-            {
-                "edition_date": edition_date,
-                "public_url": public_url,
-                "public_rendered": True,
-                "public_signal_count": 2,
-                "edition_mode": "current_update",
-                "validation_status": "ok",
-                "bluesky_post_ready": True,
-                "bluesky_post_text": post_text,
-            }
-        ),
-        encoding="utf-8",
-    )
     approval_payload = food_line_bluesky_approval.build_pending_approval(tmp_path, edition_date)
     approval_payload.update({"approved": True, "approved_at": "2026-06-11T00:00:00Z", "approved_by": "test"})
     food_line_bluesky_approval.write_approval(tmp_path, approval_payload)

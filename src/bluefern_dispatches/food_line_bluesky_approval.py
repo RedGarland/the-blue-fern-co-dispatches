@@ -122,12 +122,14 @@ def _current_draft(project_root: Path, edition_date: str) -> dict[str, Any]:
     if manifest_date != str(edition_date or "").strip():
         return {"ok": False, "reason": "edition_date_invalid", "manifest": manifest}
     public_url = str(manifest.get("public_url") or public_url_for_edition(edition_date)).strip()
-    draft_text = str(manifest.get("bluesky_post_text") or "").strip()
     public_signal_count = int(manifest.get("public_signal_count") or 0)
     if public_signal_count <= 0 or not bool(manifest.get("public_rendered")) or str(manifest.get("edition_mode") or "") == "no_current_update":
-        return {"ok": False, "reason": "no_public_signals", "manifest": manifest, "public_url": public_url, "draft_text": draft_text}
-    if str(manifest.get("validation_status") or "") != "ok" or not bool(manifest.get("bluesky_post_ready")):
-        return {"ok": False, "reason": "edition_not_bluesky_ready", "manifest": manifest, "public_url": public_url, "draft_text": draft_text}
+        return {"ok": False, "reason": "no_public_signals", "manifest": manifest, "public_url": public_url, "draft_text": ""}
+    if str(manifest.get("validation_status") or "") != "ok":
+        return {"ok": False, "reason": "edition_not_bluesky_ready", "manifest": manifest, "public_url": public_url, "draft_text": ""}
+    from bluefern_dispatches.food_line_bluesky_preview import build_food_line_bluesky_preview
+
+    draft_text = str(build_food_line_bluesky_preview(project_root, edition_date).get("post_text") or "").strip()
     if not draft_text:
         return {"ok": False, "reason": "edition_not_bluesky_ready", "manifest": manifest, "public_url": public_url, "draft_text": draft_text}
     return {"ok": True, "reason": None, "manifest": manifest, "public_url": public_url, "draft_text": draft_text}

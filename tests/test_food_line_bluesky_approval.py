@@ -6,6 +6,7 @@ import pytest
 
 from bluefern_dispatches import bluesky_post
 from bluefern_dispatches import food_line_bluesky_approval as approval
+from bluefern_dispatches.food_line_bluesky_preview import build_food_line_bluesky_preview
 
 
 @pytest.fixture(autouse=True)
@@ -15,7 +16,7 @@ def _freeze_food_line_today(monkeypatch: pytest.MonkeyPatch) -> None:
 
 def _fixture(tmp_path: Path, *, date: str = "2026-06-17", signals: int = 1) -> tuple[str, str]:
     public_url = approval.public_url_for_edition(date)
-    draft = f"Food Line Dispatch, June 17, 2026: A source reports current food-pressure conditions. {public_url}"
+    summary = "Central Illinois Food Bank says SNAP cuts are straining its ability to meet demand."
     (tmp_path / "assets").mkdir(parents=True, exist_ok=True)
     (tmp_path / "assets" / "food-line-dispatch-social.png").write_bytes(b"stable-social-card")
     manifest_path = tmp_path / "output" / "site" / "food-line" / "editions" / date / "edition_manifest.json"
@@ -29,12 +30,28 @@ def _fixture(tmp_path: Path, *, date: str = "2026-06-17", signals: int = 1) -> t
                 "public_signal_count": signals,
                 "edition_mode": "current_update",
                 "validation_status": "ok",
-                "bluesky_post_ready": signals > 0,
-                "bluesky_post_text": draft,
+                "public_summary": summary,
+                "bluesky_post_ready": False,
+                "bluesky_post_text": None,
             }
         ),
         encoding="utf-8",
     )
+    review_path = tmp_path / "data" / "dispatches" / "food-line" / "review" / "proposed-editions" / f"{date}.json"
+    review_path.parent.mkdir(parents=True, exist_ok=True)
+    review_path.write_text(
+        json.dumps(
+            {
+                "layout": {
+                    "todays_read": [{"summary": summary}],
+                    "core_food_pressure_signals": [{"summary": summary}],
+                },
+                "items": [{"review_item_id": f"{date}-001"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    draft = build_food_line_bluesky_preview(tmp_path, date)["post_text"]
     return public_url, draft
 
 
@@ -69,9 +86,12 @@ def test_approval_permits_prepare_only_and_sends_nothing(tmp_path: Path) -> None
 def test_changed_draft_invalidates_approval(tmp_path: Path) -> None:
     _fixture(tmp_path)
     _approved(tmp_path)
+    before = build_food_line_bluesky_preview(tmp_path, "2026-06-17")["post_text"]
     manifest = json.loads((tmp_path / "output" / "site" / "food-line" / "editions" / "2026-06-17" / "edition_manifest.json").read_text())
-    manifest["bluesky_post_text"] += " Changed."
+    manifest["public_summary"] = "A materially different summary changes the canonical preview payload."
     (tmp_path / "output" / "site" / "food-line" / "editions" / "2026-06-17" / "edition_manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+    after = build_food_line_bluesky_preview(tmp_path, "2026-06-17")["post_text"]
+    assert before != after
     assert approval.verify_approval(tmp_path, "2026-06-17")["reason"] == "draft_hash_mismatch"
 
 
@@ -119,6 +139,20 @@ def test_no_public_signal_edition_cannot_be_approved(tmp_path: Path) -> None:
     _fixture(tmp_path, signals=0)
     result = approval.approve_draft(tmp_path, "2026-06-17", "operator")
     assert result["reason"] == "no_public_signals"
+
+
+def test_current_update_manifest_without_legacy_bluesky_fields_still_builds_pending_approval(tmp_path: Path) -> None:
+    public_url, draft = _fixture(tmp_path)
+    payload = approval.build_pending_approval(tmp_path, "2026-06-17")
+    assert payload["public_url"] == public_url
+    assert payload["draft_text"] == draft
+    assert payload["approved"] is False
+    manifest = json.loads((tmp_path / "output" / "site" / "food-line" / "editions" / "2026-06-17" / "edition_manifest.json").read_text())
+    assert manifest["public_rendered"] is True
+    assert manifest["public_signal_count"] == 1
+    assert manifest["validation_status"] == "ok"
+    assert manifest["bluesky_post_text"] is None
+    assert manifest["bluesky_post_ready"] is False
 
 
 def test_dry_run_writes_no_posting_or_approval_artifact(tmp_path: Path, monkeypatch) -> None:

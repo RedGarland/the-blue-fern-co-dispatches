@@ -336,6 +336,113 @@ def test_commit_requires_clean_allowed_scope_and_cleans_repo(release_repos: tupl
     assert _git_output(pages, "branch", "--show-current") == "gh-pages"
 
 
+def test_food_line_shared_homepage_refresh_updates_root_index_when_explicitly_enabled(
+    release_repos: tuple[Path, Path],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-06-19"], approved_dates={"2026-06-19"})
+    edition_index = source / "output" / "site" / "food-line" / "editions" / "2026-06-19" / "index.html"
+    edition_index.write_text("<html><body><article><h3>Food Line update headline</h3></article></body></html>", encoding="utf-8")
+    (source / "output" / "site" / "food-line" / "archive.html").write_text(
+        '<html><body><li><a href="editions/2026-06-19/">Food Line update headline</a></li></body></html>',
+        encoding="utf-8",
+    )
+    (source / "output" / "site" / "food-line" / "index.html").write_text(
+        '<html><body><li><a href="editions/2026-06-19/">Food Line update headline</a></li></body></html>',
+        encoding="utf-8",
+    )
+    (pages / "index.html").write_text(
+        (
+            "<!doctype html><html><body>"
+            '<section class="section-block"><div class="section-heading"><p class="eyebrow">The current edition desk</p>'
+            "<h2>Latest published developments</h2></div><div class=\"edition-grid\">"
+            '<article class="edition-card edition-card--food-line"><p class="topic-badge topic-badge--food-line">FOOD LINE</p>'
+            '<h3><a href="/food-line/editions/2026-06-18/">Old headline</a></h3><p class="edition-source">Food Line Dispatch &middot; June 18, 2026</p>'
+            '<p class="edition-provenance">Based on public source reporting</p><p class="edition-meta">1 public source</p></article>'
+            "</div></section>"
+            '<section class="section-block section-block--featured"><article class="dispatch-card dispatch-card--featured">'
+            "<h2>Food Line Dispatch</h2><h3 class=\"latest-headline\"><a href=\"/food-line/editions/2026-06-18/\">Old headline</a></h3>"
+            "<p class=\"date-line\">Food Line Dispatch &middot; June 18, 2026</p>"
+            '<a class="button" href="/food-line/editions/2026-06-18/">Read latest</a></article></section>'
+            "</body></html>"
+        ),
+        encoding="utf-8",
+    )
+    _commit_repo(pages, "seed pages homepage template")
+    _commit_repo(source, "food line site")
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-06-19"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        shared_homepage_refresh=True,
+    )
+
+    assert report["ok"] is True
+    assert report["shared_homepage_refresh"]["ok"] is True
+    refreshed = (pages / "index.html").read_text(encoding="utf-8")
+    assert "Food Line update headline" in refreshed
+    assert "/food-line/editions/2026-06-19/" in refreshed
+    assert "Old headline" not in refreshed
+
+
+def test_food_line_shared_homepage_refresh_blocks_when_latest_release_cannot_be_discovered(
+    release_repos: tuple[Path, Path],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-06-19"], approved_dates={"2026-06-19"})
+    (source / "output" / "site" / "food-line" / "archive.html").write_text(
+        '<html><body><li><a href="editions/2026-06-19/">Food Line update headline</a></li></body></html>',
+        encoding="utf-8",
+    )
+    (source / "output" / "site" / "food-line" / "index.html").write_text(
+        '<html><body><li><a href="editions/2026-06-19/">Food Line update headline</a></li></body></html>',
+        encoding="utf-8",
+    )
+    _commit_repo(source, "food line site")
+    (pages / "index.html").write_text(
+        (
+            "<!doctype html><html><body>"
+            '<section class="section-block"><div class="section-heading"><p class="eyebrow">The current edition desk</p>'
+            "<h2>Latest published developments</h2></div><div class=\"edition-grid\">"
+            '<article class="edition-card edition-card--food-line"><p class="topic-badge topic-badge--food-line">FOOD LINE</p>'
+            '<h3><a href="/food-line/editions/2026-06-18/">Old headline</a></h3><p class="edition-source">Food Line Dispatch &middot; June 18, 2026</p>'
+            '<p class="edition-provenance">Based on public source reporting</p><p class="edition-meta">1 public source</p></article>'
+            "</div></section>"
+            '<section class="section-block section-block--featured"><article class="dispatch-card dispatch-card--featured">'
+            "<h2>Food Line Dispatch</h2><h3 class=\"latest-headline\"><a href=\"/food-line/editions/2026-06-18/\">Old headline</a></h3>"
+            "<p class=\"date-line\">Food Line Dispatch &middot; June 18, 2026</p>"
+            '<a class="button" href="/food-line/editions/2026-06-18/">Read latest</a></article></section>'
+            "</body></html>"
+        ),
+        encoding="utf-8",
+    )
+    _commit_repo(pages, "seed pages homepage template")
+
+    monkeypatch.setattr(
+        pages_release_safety,
+        "discover_public_releases",
+        lambda *args, **kwargs: [],
+    )
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-06-19"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        shared_homepage_refresh=True,
+    )
+
+    assert report["ok"] is False
+    assert report["shared_homepage_refresh"]["ok"] is False
+    assert "unable to discover the latest Food Line release" in report["errors"][0]
+
+
 def test_push_requires_commit(release_repos: tuple[Path, Path]) -> None:
     source, pages = release_repos
     _write_food_line_site(source, ["2026-06-19"])

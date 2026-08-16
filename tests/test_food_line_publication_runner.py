@@ -267,6 +267,7 @@ def test_dry_run_full_reports_temp_cleanup_and_proposed_paths(monkeypatch, tmp_p
 
     def fake_sync(**kwargs):
         sync_calls.append(kwargs)
+        assert kwargs["shared_homepage_refresh"] is True
         return {
             "ok": True,
             "commit_status": "dry-run",
@@ -339,6 +340,7 @@ def test_publication_with_push_forwards_commit_and_push(monkeypatch, tmp_path: P
 
     def fake_sync(**kwargs):
         sync_calls.append(kwargs)
+        assert kwargs["shared_homepage_refresh"] is True
         return {
             "ok": True,
             "commit_status": "committed",
@@ -407,6 +409,7 @@ def test_publication_with_post_bluesky_runs_after_successful_publication(monkeyp
 
     def fake_sync(**kwargs):
         call_order.append("sync")
+        assert kwargs["shared_homepage_refresh"] is True
         return {
             "ok": True,
             "commit_status": "committed",
@@ -476,10 +479,9 @@ def test_publication_without_post_bluesky_skips_bluesky(monkeypatch, tmp_path: P
         "public_signal_count": 3,
         "errors": [],
     })
-    monkeypatch.setattr(
-        runner,
-        "sync_pages_from_source",
-        lambda **kwargs: {
+    def fake_sync(**kwargs):
+        assert kwargs["shared_homepage_refresh"] is True
+        return {
             "ok": True,
             "commit_status": "committed",
             "push_status": "skipped",
@@ -488,8 +490,9 @@ def test_publication_without_post_bluesky_skips_bluesky(monkeypatch, tmp_path: P
             "modifications": ["food-line/index.html"],
             "deletions": [],
             "errors": [],
-        },
-    )
+        }
+
+    monkeypatch.setattr(runner, "sync_pages_from_source", fake_sync)
     monkeypatch.setattr(runner, "maybe_post_food_line_dispatch_to_bluesky", lambda **kwargs: (_ for _ in ()).throw(AssertionError("bluesky must not run")))
 
     result = runner.run_publication(
@@ -533,10 +536,9 @@ def test_publication_failure_blocks_bluesky(monkeypatch, tmp_path: Path) -> None
         "public_signal_count": 3,
         "errors": [],
     })
-    monkeypatch.setattr(
-        runner,
-        "sync_pages_from_source",
-        lambda **kwargs: {
+    def fake_sync(**kwargs):
+        assert kwargs["shared_homepage_refresh"] is True
+        return {
             "ok": False,
             "commit_status": "blocked",
             "push_status": "blocked",
@@ -545,8 +547,9 @@ def test_publication_failure_blocks_bluesky(monkeypatch, tmp_path: Path) -> None
             "modifications": [],
             "deletions": [],
             "errors": ["pages sync failed"],
-        },
-    )
+        }
+
+    monkeypatch.setattr(runner, "sync_pages_from_source", fake_sync)
     monkeypatch.setattr(runner, "maybe_post_food_line_dispatch_to_bluesky", lambda **kwargs: (_ for _ in ()).throw(AssertionError("bluesky must not run on publication failure")))
 
     result = runner.run_publication(

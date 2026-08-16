@@ -16,6 +16,7 @@ from typing import Any, Callable, Sequence
 from bluefern_dispatches.care_line_release import finalize_public_release_status as finalize_care_line_public_release_status
 from bluefern_dispatches.food_line_approved_proposal import finalize_public_release_status as finalize_food_line_public_release_status
 from bluefern_dispatches.generator import public_site_contains_blocked_public_text, public_site_contains_detail_artifacts
+from bluefern_dispatches.root_homepage import discover_public_releases, render_sitewide_homepage_from_template, select_effective_latest
 from scripts.food_line_runtime_paths import FOOD_LINE_ALLOWED_DIRTY_CATEGORIES, classify_food_line_runtime_path
 from scripts.validate_publish_scope import validate_publish_scope
 
@@ -202,6 +203,13 @@ def _allowed_pages_prefixes(dispatch: str, dates: Sequence[str]) -> list[str]:
     return prefixes
 
 
+def _allowed_pages_prefixes_for_shared_homepage_refresh(dispatch: str, dates: Sequence[str]) -> list[str]:
+    prefixes = _allowed_pages_prefixes(dispatch, dates)
+    if dispatch == "food-line":
+        prefixes.append("index.html")
+    return prefixes
+
+
 def _allowed_source_prefixes(dispatch: str, dates: Sequence[str]) -> list[str]:
     prefixes = [f"output/site/{dispatch}/index.html", f"output/site/{dispatch}/archive.html"]
     if dispatch in {"food-line", "care-line"}:
@@ -360,9 +368,56 @@ def _pages_changed_paths(pages_repo: Path) -> list[str]:
     return _git_status_paths(pages_repo)
 
 
-def _changed_paths_within_release_scope(dispatch: str, dates: Sequence[str], changed_paths: Sequence[str]) -> list[str]:
-    allowed_prefixes = _allowed_pages_prefixes(dispatch, dates)
+def _changed_paths_within_release_scope(
+    dispatch: str,
+    dates: Sequence[str],
+    changed_paths: Sequence[str],
+    *,
+    shared_homepage_refresh: bool = False,
+) -> list[str]:
+    allowed_prefixes = (
+        _allowed_pages_prefixes_for_shared_homepage_refresh(dispatch, dates)
+        if shared_homepage_refresh
+        else _allowed_pages_prefixes(dispatch, dates)
+    )
     return _paths_within_prefixes(changed_paths, allowed_prefixes)
+
+
+def _refresh_shared_homepage_for_food_line(*, pages_root: Path, selected_dates: Sequence[str]) -> dict[str, Any]:
+    homepage_path = pages_root / "index.html"
+    if not homepage_path.exists():
+        return {
+            "ok": False,
+            "message": f"shared homepage refresh skipped; missing homepage template: {homepage_path}",
+        }
+    template_html = homepage_path.read_text(encoding="utf-8")
+    releases = discover_public_releases(pages_root, verify_root=pages_root, homepage_html=template_html)
+    latest = select_effective_latest(releases)
+    if "food-line" not in latest:
+        return {
+            "ok": False,
+            "message": "shared homepage refresh skipped; unable to discover the latest Food Line release",
+        }
+    release = latest["food-line"]
+    expected_date = sorted(set(selected_dates))[-1] if selected_dates else release.edition_date
+    if release.edition_date != expected_date:
+        return {
+            "ok": False,
+            "message": (
+                "shared homepage refresh skipped; latest Food Line release does not match the requested edition "
+                f"({release.edition_date} != {expected_date})"
+            ),
+        }
+    refreshed_html = render_sitewide_homepage_from_template(template_html, release)
+    if refreshed_html != template_html:
+        homepage_path.write_text(refreshed_html, encoding="utf-8")
+    return {
+        "ok": True,
+        "message": "shared homepage refreshed from Pages inventory",
+        "homepage_path": str(homepage_path),
+        "release_date": release.edition_date,
+        "release_url": release.public_url,
+    }
 
 
 def _expected_urls(dates: Sequence[str], cache_bust: str | None = None) -> list[str]:
@@ -471,6 +526,7 @@ def sync_pages_from_source(
     fetch_status: Callable[[str, int], int] | None = None,
     release_manifest: Path | None = None,
     allow_detached_source_at_required_branch_head: bool = False,
+    shared_homepage_refresh: bool = False,
 ) -> dict[str, Any]:
     if live_check_only and (commit or push):
         return {
@@ -690,8 +746,24 @@ def sync_pages_from_source(
         return report
 
     _copy_selection(plan)
+    shared_homepage_refresh_result: dict[str, Any] | None = None
+    if shared_homepage_refresh:
+        if dispatch != "food-line":
+            errors.append("shared homepage refresh is only supported for food-line")
+        else:
+            shared_homepage_refresh_result = _refresh_shared_homepage_for_food_line(
+                pages_root=pages_root,
+                selected_dates=selected_dates,
+            )
+            if not shared_homepage_refresh_result["ok"]:
+                errors.append(str(shared_homepage_refresh_result["message"]))
     changed_pages_paths = _pages_changed_paths(pages_root)
-    unexpected_changes = _changed_paths_within_release_scope(dispatch, selected_dates, changed_pages_paths)
+    unexpected_changes = _changed_paths_within_release_scope(
+        dispatch,
+        selected_dates,
+        changed_pages_paths,
+        shared_homepage_refresh=shared_homepage_refresh and dispatch == "food-line",
+    )
     errors.extend(public_site_contains_detail_artifacts(source_root / "output" / "site"))
     errors.extend(public_site_contains_blocked_public_text(source_root / "output" / "site"))
     if unexpected_changes:
@@ -718,6 +790,7 @@ def sync_pages_from_source(
             "live_check": None,
             "source_status": _source_status_text(source_root),
             "pages_status": _pages_status_text(pages_root),
+            "shared_homepage_refresh": shared_homepage_refresh_result,
             "planned_source_paths": planned_source_paths,
             "planned_pages_paths": planned_pages_paths,
             "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates),
@@ -734,6 +807,8 @@ def sync_pages_from_source(
     stage_paths = [f"{dispatch}/index.html", f"{dispatch}/archive.html"] + [f"{dispatch}/editions/{date_text}" for date_text in selected_dates]
     if dispatch in {"food-line", "care-line"}:
         stage_paths.insert(2, f"{dispatch}/rss.xml")
+    if shared_homepage_refresh and dispatch == "food-line":
+        stage_paths.append("index.html")
     add_result = _run_git(pages_root, "add", "-A", "--", *stage_paths)
     if add_result.returncode != 0:
         return {
@@ -754,6 +829,7 @@ def sync_pages_from_source(
             "live_check": None,
             "source_status": _source_status_text(source_root),
             "pages_status": _pages_status_text(pages_root),
+            "shared_homepage_refresh": shared_homepage_refresh_result,
             "planned_source_paths": planned_source_paths,
             "planned_pages_paths": planned_pages_paths,
             "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates),
@@ -786,6 +862,7 @@ def sync_pages_from_source(
             "live_check": live_check_result,
             "source_status": _source_status_text(source_root),
             "pages_status": _pages_status_text(pages_root),
+            "shared_homepage_refresh": shared_homepage_refresh_result,
             "planned_source_paths": planned_source_paths,
             "planned_pages_paths": planned_pages_paths,
             "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates),
@@ -816,7 +893,8 @@ def sync_pages_from_source(
             "push_status": "blocked",
             "live_check": None,
             "source_status": _source_status_text(source_root),
-            "pages_status": _source_status_text(pages_root),
+            "pages_status": _pages_status_text(pages_root),
+            "shared_homepage_refresh": shared_homepage_refresh_result,
             "planned_source_paths": planned_source_paths,
             "planned_pages_paths": planned_pages_paths,
             "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates),
@@ -844,6 +922,7 @@ def sync_pages_from_source(
             "live_check": None,
             "source_status": _source_status_text(source_root),
             "pages_status": _pages_status_text(pages_root),
+            "shared_homepage_refresh": shared_homepage_refresh_result,
             "planned_source_paths": planned_source_paths,
             "planned_pages_paths": planned_pages_paths,
             "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates),
@@ -894,6 +973,7 @@ def sync_pages_from_source(
         "live_check": live_check_result,
         "source_status": _source_status_text(source_root),
         "pages_status": _pages_status_text(pages_root),
+        "shared_homepage_refresh": shared_homepage_refresh_result,
         "planned_source_paths": planned_source_paths,
         "planned_pages_paths": planned_pages_paths,
         "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates),

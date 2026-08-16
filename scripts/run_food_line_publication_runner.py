@@ -383,6 +383,7 @@ def run_publication(
                 pages_repo=working_pages,
                 dry_run=True,
                 release_manifest=release_manifest,
+                shared_homepage_refresh=True,
             )
             dry_run_ok = bool(publication_report.get("ok"))
             base_result.update(
@@ -454,6 +455,7 @@ def run_publication(
         commit=True,
         push=push,
         release_manifest=release_manifest,
+        shared_homepage_refresh=True,
     )
     ok = bool(generated.get("ok")) and not scope_errors and bool(publication_report.get("ok"))
     base_result.update(

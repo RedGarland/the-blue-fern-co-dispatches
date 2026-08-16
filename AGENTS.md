@@ -27,6 +27,11 @@ All dispatch outputs must be source-traceable, date-safe, and publication-safe.
 - Do not touch unrelated dirty files.
 - Do not modify generated/public artifacts unless the task explicitly requires it.
 - Do not edit Pages repo output from a source-repo task unless explicitly requested.
+- When a bounded repair is explicitly authorized, complete the mechanical path end-to-end without repeatedly stopping for obvious local dependencies, then report only after diagnosis, fix, validation, and rerun are complete.
+- Stop early only for behavior-changing, destructive, out-of-scope, credential, or consequential external-egress decisions that are not already established by the current contract.
+- A production failure alone does not authorize redesign; restore the intended state before improving anything.
+- Keep production runners clean and pinned to verified commits and verified environment setup.
+- Do not make the user relay routine intermediate debugging when the next step is mechanically clear.
 
 ## Required Behavior After Editing
 
@@ -43,6 +48,8 @@ All dispatch outputs must be source-traceable, date-safe, and publication-safe.
 - Never infer publish permission from PR approval, test success, or dry-run success.
 - If public output changed, verify the rendered paths and confirm `output/detail` and `output/paid` are not exposed under `output/site`.
 - Report clearly whether the task is complete, blocked, or needs follow-up.
+- If a clean production runner is being provisioned, prefer a reusable environment-only mechanism that works for future clean runners instead of hard-coding a one-off path.
+- Preserve the dirty development worktree unless the user explicitly authorizes edits there for the current task.
 
 ## Mandatory Git Preflight
 

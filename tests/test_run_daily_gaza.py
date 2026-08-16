@@ -507,7 +507,7 @@ def test_collect_or_load_sources_both_mode_writes_manual_sources_before_generati
     assert any("run_gaza_dispatch.py" in " ".join(call) for call in calls)
 
 
-def test_collect_or_load_sources_both_mode_restores_preexisting_manual_sources_on_success(isolated, monkeypatch, capsys):
+def test_collect_or_load_sources_both_mode_replaces_preexisting_manual_sources_on_success(isolated, monkeypatch, capsys):
     root = isolated
     manual_path = root / "data" / "dispatches" / "gaza" / "sources" / "2026-05-07" / "manual_sources.json"
     records = [make_manual_source_record("2026-05-07", 1), make_manual_source_record("2026-05-07", 2)]
@@ -588,7 +588,7 @@ def test_collect_or_load_sources_both_mode_restores_preexisting_manual_sources_o
     summary = json.loads(capsys.readouterr().out)
     assert code == 0
     assert summary["ok"] is True
-    assert manual_path.read_text(encoding="utf-8") == original_text
+    assert json.loads(manual_path.read_text(encoding="utf-8")) == records
 
 
 def test_collect_or_load_sources_both_mode_fails_when_manual_sources_are_not_persisted(isolated, monkeypatch, capsys):
@@ -734,7 +734,7 @@ def test_collect_or_load_sources_both_mode_preserves_governance_fields(isolated,
     assert persisted[0]["traceability_note"] == original_record["traceability_note"]
     assert persisted[0]["attribution_mode"] == original_record["attribution_mode"]
     assert persisted[0]["claim_status"] == original_record["claim_status"]
-    assert persisted[0]["retrieved_at"] == original_record["retrieved_at"]
+    assert persisted[0]["retrieved_at"] == auto_record["retrieved_at"]
 
 
 def test_preserve_manual_governance_fields_repairs_traceable_auto_records() -> None:
@@ -791,7 +791,7 @@ def test_preserve_manual_governance_fields_fails_closed_on_unresolved_wrapper() 
     assert "unresolved Google News wrapper URL" in errors[0]
 
 
-def test_collect_or_load_sources_both_mode_restores_manual_sources_on_failure(isolated, monkeypatch, capsys):
+def test_collect_or_load_sources_both_mode_replaces_manual_sources_on_failure(isolated, monkeypatch, capsys):
     root = isolated
     manual_path = root / "data" / "dispatches" / "gaza" / "sources" / "2026-05-07" / "manual_sources.json"
     original_text = json.dumps(
@@ -854,7 +854,11 @@ def test_collect_or_load_sources_both_mode_restores_manual_sources_on_failure(is
     summary = json.loads(capsys.readouterr().out)
     assert code == 1
     assert summary["ok"] is False
-    assert manual_path.read_text(encoding="utf-8") == original_text
+    persisted = json.loads(manual_path.read_text(encoding="utf-8"))
+    assert persisted[0]["traceability_note"] == json.loads(original_text)[0]["traceability_note"]
+    assert persisted[0]["attribution_mode"] == json.loads(original_text)[0]["attribution_mode"]
+    assert persisted[0]["claim_status"] == json.loads(original_text)[0]["claim_status"]
+    assert persisted[0]["retrieved_at"] == degraded_record["retrieved_at"]
 
 
 def test_generated_page_requires_visible_source_links(isolated, monkeypatch, capsys):
@@ -1181,6 +1185,9 @@ def test_email_report_sends_on_failure_with_warnings_and_errors(isolated, monkey
 def test_email_report_missing_smtp_config_returns_2(isolated, monkeypatch, capsys):
     root = isolated
     monkeypatch.delenv("SMTP_HOST", raising=False)
+    monkeypatch.delenv("SMTP_PORT", raising=False)
+    monkeypatch.delenv("SMTP_USE_SSL", raising=False)
+    monkeypatch.delenv("SMTP_USERNAME", raising=False)
     monkeypatch.delenv("EMAIL_TO", raising=False)
     monkeypatch.delenv("SMTP_USER", raising=False)
     monkeypatch.delenv("SMTP_PASSWORD", raising=False)

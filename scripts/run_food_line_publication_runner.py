@@ -191,6 +191,31 @@ def _load_release_readiness(root: Path, edition_date: str, approved_proposal_pat
     }
 
 
+def _copy_validated_private_release_inputs_for_dry_run(
+    *,
+    repo_root: Path,
+    working_source: Path,
+    bundle: Any,
+    readiness_path: Path,
+) -> list[str]:
+    copied_paths: list[str] = []
+    for source_path in (bundle.proposal_path, bundle.queue_path, readiness_path):
+        resolved_source = Path(source_path).resolve()
+        try:
+            relative_source = resolved_source.relative_to(repo_root.resolve())
+        except ValueError as exc:
+            raise PublicationRunnerError(
+                f"validated private release input is outside the source repository: {resolved_source}"
+            ) from exc
+        if not resolved_source.exists():
+            raise PublicationRunnerError(f"validated private release input is missing: {resolved_source}")
+        destination = working_source / relative_source
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(resolved_source, destination)
+        copied_paths.append(destination.relative_to(working_source).as_posix())
+    return copied_paths
+
+
 def _validate_scope(
     *,
     root: Path,
@@ -305,6 +330,7 @@ def run_publication(
         },
         "scope_validation_errors": [],
         "errors": [],
+        "copied_private_inputs": [],
     }
 
     if check_only:
@@ -336,13 +362,36 @@ def run_publication(
         try:
             _clone_repo(repo_root, working_source, branch=source_branch)
             _clone_repo(pages_repo, working_pages, branch=pages_branch)
-            dry_run_ok = False
-            publication_report: dict[str, Any] = {}
+            try:
+                copied_private_inputs = _copy_validated_private_release_inputs_for_dry_run(
+                    repo_root=repo_root,
+                    working_source=working_source,
+                    bundle=bundle,
+                    readiness_path=readiness["path"],
+                )
+            except Exception as exc:  # noqa: BLE001
+                base_result.update(
+                    {
+                        "ok": False,
+                        "status": "dry_run_full_failed",
+                        "errors": [str(exc)],
+                        "temp_workspace": str(temp_root),
+                        "temp_workspace_removed": False,
+                        "bluesky_result": {
+                            "requested": bool(post_bluesky),
+                            "status": "blocked",
+                            "reason": "publication_failed",
+                            "post_uri": None,
+                            "post_cid": None,
+                        },
+                    }
+                )
+                return base_result
             generated = run_food_line_dispatch(
                 working_source,
                 edition_date,
                 generate_audio=False,
-                approved_proposal_path=approved_proposal_path.relative_to(repo_root).as_posix(),
+                approved_proposal_path=bundle.proposal_path.relative_to(repo_root).as_posix(),
             )
             release_manifest = Path(generated["release_manifest_path"]).resolve()
             scope_errors = _validate_scope(
@@ -406,7 +455,8 @@ def run_publication(
                         "reason": "dry_run_full",
                         "post_uri": None,
                         "post_cid": None,
-                    }
+                    },
+                    "copied_private_inputs": copied_private_inputs,
                 }
             )
             return base_result

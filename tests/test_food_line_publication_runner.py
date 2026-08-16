@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import hashlib
+import json
 import subprocess
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -38,6 +41,143 @@ def _state(head: str, branch: str) -> dict[str, object]:
         "head": head,
         "clean": True,
     }
+
+
+def _write_json(path: Path, payload: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def _init_repo(repo: Path, branch: str, *, empty_commit: bool = False) -> Path:
+    repo.mkdir(parents=True, exist_ok=True)
+    _git(repo, "init")
+    _git(repo, "config", "user.email", "codex@example.com")
+    _git(repo, "config", "user.name", "Codex")
+    _git(repo, "config", "core.autocrlf", "false")
+    if empty_commit:
+        _git(repo, "commit", "--allow-empty", "-m", "initial", "--no-gpg-sign")
+    else:
+        (repo / "tracked.txt").write_bytes(b"tracked\n")
+        _git(repo, "add", "tracked.txt")
+        _git(repo, "commit", "-m", "initial", "--no-gpg-sign")
+    _git(repo, "checkout", "-b", branch)
+    return repo
+
+
+def _write_release_inputs(repo: Path) -> tuple[Path, Path, Path]:
+    review_root = repo / "data" / "dispatches" / "food-line" / "review"
+    queue_path = review_root / "current-signal-review.json"
+    snapshot_path = review_root / "signal-reviews" / "2026-08-15.json"
+    proposal_path = review_root / "proposed-editions" / "2026-08-15.json"
+    readiness_path = review_root / "release-readiness" / "2026-08-15.json"
+    queue = {
+        "schema_version": "food_line_current_signal_review_v1",
+        "edition_date": "2026-08-15",
+        "production_scope": "current_nonhistorical_only",
+        "items": [
+            {
+                "proposed_rank": 1,
+                "proposed_public_headline": "Central Illinois Food Bank says SNAP cuts are straining its ability to meet demand",
+                "proposed_public_summary": "Common Dreams reports that the Central Illinois Food Bank says it cannot absorb the effects of federal SNAP cuts as food banks nationwide face rising demand.",
+                "why_it_matters": "Common Dreams reported a SNAP benefit delay in Illinois, affecting SNAP households.",
+                "uncertainty_note": "The available source record may not establish the full duration or scale of the pressure.",
+                "source_url": "https://www.commondreams.org/news/food-banks-snap-cuts",
+                "canonical_source_url": "https://www.commondreams.org/news/food-banks-snap-cuts",
+                "editorial_status": "approve",
+                "decision_audit": {
+                    "decided_at": "2026-08-15T18:41:46.320762+00:00",
+                    "decided_by": "willb",
+                    "decision": "approve",
+                },
+                "review_item_id": "food-line-current-43c4d164b1aca2ffae3b785d",
+                "source_finding_or_intake_id": "finding_dc027726f8e7a4770c3c651c",
+                "source_artifact_path": "data/dispatches/food-line/agent-intake/2026-08-15/item.json",
+                "source_published_at": "2026-08-14",
+                "publisher": "Common Dreams",
+                "confidence": "medium",
+                "evidence_level": "news report",
+                "duplicate_check": {"status": "not_published", "matched_records": []},
+                "freshness_check": {"status": "current", "edition_date": "2026-08-15", "age_days": 1},
+                "publication_eligible": False,
+                "state": "IL",
+                "location_scope": "state_local",
+                "location_name": "Illinois",
+                "pressure_type": "benefit disruption",
+                "affected_groups": ["SNAP households"],
+                "exact_supporting_passage": "Central Illinois Food Bank says SNAP cuts are straining its ability to meet demand.",
+            }
+        ],
+    }
+    _write_json(queue_path, queue)
+    _write_json(snapshot_path, queue)
+    proposal = {
+        "schema_version": "food_line_proposed_edition_v1",
+        "edition_date": "2026-08-15",
+        "draft": True,
+        "draft_status": "draft_approved_pending_publication",
+        "published": False,
+        "publication_eligible": False,
+        "publication_approval": False,
+        "selected_item_count": 1,
+        "approved_item_count": 1,
+        "pending_item_count": 0,
+        "rejected_item_count": 0,
+        "review_snapshot_path": "data/dispatches/food-line/review/signal-reviews/2026-08-15.json",
+        "review_snapshot_sha256": hashlib.sha256(snapshot_path.read_bytes()).hexdigest(),
+        "items": [
+            {
+                "rank": 1,
+                "headline": queue["items"][0]["proposed_public_headline"],
+                "summary": queue["items"][0]["proposed_public_summary"],
+                "why_it_matters": queue["items"][0]["why_it_matters"],
+                "uncertainty_note": queue["items"][0]["uncertainty_note"],
+                "source": "Common Dreams",
+                "source_url": "https://www.commondreams.org/news/food-banks-snap-cuts",
+                "source_published_at": "2026-08-14",
+                "location_name": "Illinois",
+                "state": "IL",
+                "section": "Core Food Pressure Signals",
+            }
+        ],
+    }
+    _write_json(proposal_path, proposal)
+    readiness = {
+        "schema_version": "food_line_release_readiness_v1",
+        "edition_date": "2026-08-15",
+        "status": "approved_current_review_ready_for_source_generation",
+        "approved_proposal_path": "data/dispatches/food-line/review/proposed-editions/2026-08-15.json",
+        "approved_proposal_sha256": hashlib.sha256(proposal_path.read_bytes()).hexdigest(),
+        "review_snapshot_path": "data/dispatches/food-line/review/signal-reviews/2026-08-15.json",
+        "review_snapshot_sha256": hashlib.sha256(snapshot_path.read_bytes()).hexdigest(),
+    }
+    _write_json(readiness_path, readiness)
+    return proposal_path, queue_path, readiness_path
+
+
+def _write_site(repo: Path) -> None:
+    site = repo / "output" / "site" / "food-line"
+    (site / "editions" / "2026-08-15").mkdir(parents=True, exist_ok=True)
+    (site / "index.html").write_text("<html>food-line index</html>", encoding="utf-8")
+    (site / "archive.html").write_text("<html>food-line archive</html>", encoding="utf-8")
+    (site / "rss.xml").write_text("<rss />", encoding="utf-8")
+    (site / "editions" / "2026-08-15" / "index.html").write_text("<html>edition</html>", encoding="utf-8")
+    (site / "editions" / "2026-08-15" / "edition_manifest.json").write_text("{}", encoding="utf-8")
+    (site / "editions" / "2026-08-15" / "sources_manifest.json").write_text("[]", encoding="utf-8")
+    (site / "editions" / "2026-08-15" / "curation_manifest.json").write_text("[]", encoding="utf-8")
+    (site / "editions" / "2026-08-15" / "source_table.html").write_text("<table></table>", encoding="utf-8")
+    (site / "editions" / "2026-08-15" / "claim_ledger.html").write_text("<html></html>", encoding="utf-8")
+    (repo / "output" / "site" / "index.html").write_text("<html>root homepage</html>", encoding="utf-8")
+
+
+@pytest.fixture()
+def release_repos(tmp_path: Path) -> tuple[Path, Path]:
+    source = _init_repo(tmp_path / "source", "agent/refine-care-line-signal-wire-public-rendering")
+    pages = _init_repo(tmp_path / "pages", "gh-pages", empty_commit=True)
+    _write_site(source)
+    _write_release_inputs(source)
+    _git(source, "add", "output/site/food-line/index.html", "output/site/food-line/archive.html", "output/site/food-line/rss.xml", "output/site/food-line/editions", "output/site/index.html")
+    _git(source, "commit", "-m", "tracked food line output", "--no-gpg-sign")
+    return source, pages
 
 
 def test_source_repo_dirty_helper_allows_only_untracked_food_runtime_paths() -> None:
@@ -234,6 +374,11 @@ def test_dry_run_full_reports_temp_cleanup_and_proposed_paths(monkeypatch, tmp_p
     clone_calls: list[Path] = []
     scope_calls: list[dict[str, object]] = []
     sync_calls: list[dict[str, object]] = []
+    repo_root = tmp_path / "repo"
+    pages_root = tmp_path / "pages"
+    repo_root.mkdir()
+    pages_root.mkdir()
+    _write_release_inputs(repo_root)
 
     monkeypatch.setattr(runner, "_repo_state", lambda repo_root, *, required_branch, label: _state("abc123", required_branch))
     monkeypatch.setattr(
@@ -249,7 +394,27 @@ def test_dry_run_full_reports_temp_cleanup_and_proposed_paths(monkeypatch, tmp_p
             },
         },
     )
-    monkeypatch.setattr(runner, "load_approved_proposal", lambda root, proposal_path, edition_date: type("Bundle", (), {"proposal_sha256": "sha256"})())
+    monkeypatch.setattr(
+        runner,
+        "load_approved_proposal",
+        lambda root, proposal_path, edition_date: SimpleNamespace(
+            proposal_sha256="sha256",
+            proposal_path=Path(proposal_path),
+            queue_path=Path(root) / "data/dispatches/food-line/review/signal-reviews/2026-08-05.json",
+        ),
+    )
+
+
+def _git_output(repo: Path, *args: str) -> str:
+    result = subprocess.run(
+        ["git", *args],
+        cwd=str(repo),
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    return result.stdout.strip()
     monkeypatch.setattr(runner, "_clone_repo", lambda source_repo, clone_repo, *, branch: (clone_repo.mkdir(parents=True, exist_ok=True), clone_calls.append(clone_repo)))
     monkeypatch.setattr(runner, "_validate_scope", lambda **kwargs: scope_calls.append(kwargs) or [])
 
@@ -283,8 +448,8 @@ def test_dry_run_full_reports_temp_cleanup_and_proposed_paths(monkeypatch, tmp_p
     monkeypatch.setattr(runner, "sync_pages_from_source", fake_sync)
 
     result = runner.run_publication(
-        repo_root=tmp_path / "repo",
-        pages_repo=tmp_path / "pages",
+        repo_root=repo_root,
+        pages_repo=pages_root,
         source_branch="add/pages-repo-default",
         pages_branch="gh-pages",
         date="2026-08-05",
@@ -305,6 +470,121 @@ def test_dry_run_full_reports_temp_cleanup_and_proposed_paths(monkeypatch, tmp_p
     assert sync_calls and sync_calls[0]["dry_run"] is True
 
 
+def test_dry_run_full_uses_bundle_queue_path_snapshot_in_isolated_clone(
+    release_repos: tuple[Path, Path], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source, pages = release_repos
+    source_head = _git_output(source, "rev-parse", "HEAD")
+    queue_snapshot = source / "data" / "dispatches" / "food-line" / "review" / "signal-reviews" / "2026-08-15.json"
+    # The fixture already includes the snapshot file; exercise the authoritative path directly.
+    bundle = SimpleNamespace(
+        proposal_sha256="sha256",
+        proposal_path=source / "data" / "dispatches" / "food-line" / "review" / "proposed-editions" / "2026-08-15.json",
+        queue_path=queue_snapshot,
+    )
+
+    monkeypatch.setattr(
+        runner,
+        "load_approved_proposal",
+        lambda root, proposal_path, edition_date: bundle,
+    )
+    monkeypatch.setattr(runner, "_validate_scope", lambda **kwargs: [])
+
+    def fake_generation(root: Path, date: str, **kwargs):
+        assert kwargs["approved_proposal_path"] == "data/dispatches/food-line/review/proposed-editions/2026-08-15.json"
+        assert (root / "data" / "dispatches" / "food-line" / "review" / "signal-reviews" / "2026-08-15.json").exists()
+        assert not (root / "data" / "dispatches" / "food-line" / "review" / "current-signal-review.json").exists()
+        release_manifest = root / "data" / "dispatches" / "food-line" / "release-manifest.json"
+        release_manifest.parent.mkdir(parents=True, exist_ok=True)
+        release_manifest.write_text("{}", encoding="utf-8")
+        return {"ok": True, "generator_source_commit": source_head, "release_manifest_path": str(release_manifest), "errors": []}
+
+    monkeypatch.setattr(runner, "run_food_line_dispatch", fake_generation)
+    monkeypatch.setattr(
+        runner,
+        "sync_pages_from_source",
+        lambda **kwargs: {"ok": True, "additions": [], "modifications": [], "deletions": [], "planned_pages_paths": []},
+    )
+
+    result = runner.run_publication(
+        repo_root=source,
+        pages_repo=pages,
+        source_branch="agent/refine-care-line-signal-wire-public-rendering",
+        pages_branch="gh-pages",
+        date="2026-08-15",
+        dry_run_full=True,
+    )
+
+    assert result["ok"] is True
+    assert result["copied_private_inputs"][1] == "data/dispatches/food-line/review/signal-reviews/2026-08-15.json"
+
+
+def test_dry_run_full_fails_closed_when_untracked_private_input_is_outside_repo(
+    release_repos: tuple[Path, Path], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source, pages = release_repos
+    bundle = SimpleNamespace(
+        proposal_sha256="sha256",
+        proposal_path=source / "data" / "dispatches" / "food-line" / "review" / "proposed-editions" / "2026-08-15.json",
+        queue_path=source / "data" / "dispatches" / "food-line" / "review" / "signal-reviews" / "2026-08-15.json",
+    )
+    monkeypatch.setattr(runner, "load_approved_proposal", lambda *args: bundle)
+    monkeypatch.setattr(runner, "_validate_scope", lambda **kwargs: [])
+    monkeypatch.setattr(
+        runner,
+        "_copy_validated_private_release_inputs_for_dry_run",
+        lambda **kwargs: (_ for _ in ()).throw(runner.PublicationRunnerError("validated private release input is outside the source repository: C:/tmp/input.json")),
+    )
+    monkeypatch.setattr(runner, "run_food_line_dispatch", lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("generation must not run")))
+    monkeypatch.setattr(runner, "sync_pages_from_source", lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("sync must not run")))
+
+    result = runner.run_publication(
+        repo_root=source,
+        pages_repo=pages,
+        source_branch="agent/refine-care-line-signal-wire-public-rendering",
+        pages_branch="gh-pages",
+        date="2026-08-15",
+        dry_run_full=True,
+    )
+
+    assert result["ok"] is False
+    assert "outside the source repository" in "\n".join(result["errors"])
+
+
+def test_dry_run_full_fails_closed_when_validated_private_input_disappears(
+    release_repos: tuple[Path, Path], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source, pages = release_repos
+    bundle = SimpleNamespace(
+        proposal_sha256="sha256",
+        proposal_path=source / "data" / "dispatches" / "food-line" / "review" / "proposed-editions" / "2026-08-15.json",
+        queue_path=source / "data" / "dispatches" / "food-line" / "review" / "signal-reviews" / "2026-08-15.json",
+    )
+
+    def fake_copy_validated_private_release_inputs_for_dry_run(**kwargs):
+        raise runner.PublicationRunnerError(
+            f"validated private release input is missing: {source / 'data' / 'dispatches' / 'food-line' / 'review' / 'release-readiness' / '2026-08-15.json'}"
+        )
+
+    monkeypatch.setattr(runner, "load_approved_proposal", lambda *args: bundle)
+    monkeypatch.setattr(runner, "_validate_scope", lambda **kwargs: [])
+    monkeypatch.setattr(runner, "_copy_validated_private_release_inputs_for_dry_run", fake_copy_validated_private_release_inputs_for_dry_run)
+    monkeypatch.setattr(runner, "run_food_line_dispatch", lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("generation must not run")))
+    monkeypatch.setattr(runner, "sync_pages_from_source", lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("sync must not run")))
+
+    result = runner.run_publication(
+        repo_root=source,
+        pages_repo=pages,
+        source_branch="agent/refine-care-line-signal-wire-public-rendering",
+        pages_branch="gh-pages",
+        date="2026-08-15",
+        dry_run_full=True,
+    )
+
+    assert result["ok"] is False
+    assert "validated private release input is missing" in "\n".join(result["errors"])
+
+
 def test_publication_with_push_forwards_commit_and_push(monkeypatch, tmp_path: Path) -> None:
     sync_calls: list[dict[str, object]] = []
     scope_calls: list[dict[str, object]] = []
@@ -323,7 +603,15 @@ def test_publication_with_push_forwards_commit_and_push(monkeypatch, tmp_path: P
             },
         },
     )
-    monkeypatch.setattr(runner, "load_approved_proposal", lambda root, proposal_path, edition_date: type("Bundle", (), {"proposal_sha256": "sha256"})())
+    monkeypatch.setattr(
+        runner,
+        "load_approved_proposal",
+        lambda root, proposal_path, edition_date: SimpleNamespace(
+            proposal_sha256="sha256",
+            proposal_path=Path(proposal_path),
+            queue_path=Path(root) / "data/dispatches/food-line/review/signal-reviews/2026-08-05.json",
+        ),
+    )
     monkeypatch.setattr(runner, "_validate_scope", lambda **kwargs: scope_calls.append(kwargs) or [])
 
     def fake_generation(root: Path, date: str, **kwargs):
@@ -390,7 +678,15 @@ def test_publication_with_post_bluesky_runs_after_successful_publication(monkeyp
             },
         },
     )
-    monkeypatch.setattr(runner, "load_approved_proposal", lambda root, proposal_path, edition_date: type("Bundle", (), {"proposal_sha256": "sha256"})())
+    monkeypatch.setattr(
+        runner,
+        "load_approved_proposal",
+        lambda root, proposal_path, edition_date: SimpleNamespace(
+            proposal_sha256="sha256",
+            proposal_path=Path(proposal_path),
+            queue_path=Path(root) / "data/dispatches/food-line/review/signal-reviews/2026-08-05.json",
+        ),
+    )
     monkeypatch.setattr(runner, "_validate_scope", lambda **kwargs: [])
 
     def fake_generation(root: Path, date: str, **kwargs):
@@ -468,7 +764,15 @@ def test_publication_without_post_bluesky_skips_bluesky(monkeypatch, tmp_path: P
             },
         },
     )
-    monkeypatch.setattr(runner, "load_approved_proposal", lambda root, proposal_path, edition_date: type("Bundle", (), {"proposal_sha256": "sha256"})())
+    monkeypatch.setattr(
+        runner,
+        "load_approved_proposal",
+        lambda root, proposal_path, edition_date: SimpleNamespace(
+            proposal_sha256="sha256",
+            proposal_path=Path(proposal_path),
+            queue_path=Path(root) / "data/dispatches/food-line/review/signal-reviews/2026-08-05.json",
+        ),
+    )
     monkeypatch.setattr(runner, "_validate_scope", lambda **kwargs: [])
     monkeypatch.setattr(runner, "run_food_line_dispatch", lambda root, date, **kwargs: {
         "ok": True,
@@ -525,7 +829,15 @@ def test_publication_failure_blocks_bluesky(monkeypatch, tmp_path: Path) -> None
             },
         },
     )
-    monkeypatch.setattr(runner, "load_approved_proposal", lambda root, proposal_path, edition_date: type("Bundle", (), {"proposal_sha256": "sha256"})())
+    monkeypatch.setattr(
+        runner,
+        "load_approved_proposal",
+        lambda root, proposal_path, edition_date: SimpleNamespace(
+            proposal_sha256="sha256",
+            proposal_path=Path(proposal_path),
+            queue_path=Path(root) / "data/dispatches/food-line/review/signal-reviews/2026-08-05.json",
+        ),
+    )
     monkeypatch.setattr(runner, "_validate_scope", lambda **kwargs: [])
     monkeypatch.setattr(runner, "run_food_line_dispatch", lambda *args, **kwargs: {
         "ok": True,

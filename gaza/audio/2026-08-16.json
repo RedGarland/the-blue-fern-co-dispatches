@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-16",
+  "generated_at": "2026-08-16T21:57:57.059523Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-08-16.mp3",
+  "audio_url": "/gaza/audio/2026-08-16.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1494,
+  "tts_input_word_count": 233,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1552896,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-08-16T21:57:57.059501Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-08-16-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-16/",
+  "script_text": "This is the Gaza Dispatch audio briefing for August 16, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Israeli army besieges Palestinian homes in occupied West Bank. Israeli troops have raided the village of Qusra, south of Nablus, in the occupied West Bank. This was reported by Al Jazeera.\n\n2. Erdogan says Hamas acted sincerely, criticises Israeli attacks. Erdogan said Hamas has shown all possible sincere solidarity, while Israel continues aggressive attacks on Gaza. This was reported by Al Jazeera.\n\n3. Israeli military plans to transfer law enforcement in occupied West Bank to police. Palestine's vice-president calls plan 'flagrant violation of international law' and a step towards full Israeli annexation. This was reported by The Guardian.\n\n4. Kushner meets Hamas leaders in Egypt to push Trump's Gaza plan. Trump envoy has pushed for disarmament to end any future Hamas role in running Gaza, diplomatic sources tell AFP. This was reported by Al Jazeera.\n\n5. Ben-Gvir calls for nightly killings of Palestinians in Gaza. Israel's far-right national security minister Itamar Ben-Gvir has called for nightly killings in Gaza. This was reported by Al Jazeera.\n\n6. Trump envoy Kushner meets Hamas leader to push Gaza peace plan. The rare meeting comes a week after Israel rejected Donald Trump's peace plan for Gaza. This was reported by BBC News.\n\nFor the full source-backed dispatch, read the August 16, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-08-16-aljazeera-middle-east-dae5b4339312",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/16/israeli-army-besieges-palestinian-homes-in-occupied-west-bank?traffic_source=rss",
+      "title": "Israeli army besieges Palestinian homes in occupied West Bank"
+    },
+    {
+      "source_record_id": "gaza-2026-08-16-aljazeera-middle-east-fd16bdfa29d6",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/16/16-08-clip-erdogan-gaza-tr?traffic_source=rss",
+      "title": "Erdogan says Hamas acted sincerely, criticises Israeli attacks"
+    },
+    {
+      "source_record_id": "gaza-2026-08-16-guardian-world-5d794668e92a",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/aug/14/israeli-military-plans-transfer-law-enforcement-in-occupied-west-bank-to-police",
+      "title": "Israeli military plans to transfer law enforcement in occupied West Bank to police"
+    },
+    {
+      "source_record_id": "gaza-2026-08-16-aljazeera-middle-east-f7096836eef0",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/8/16/kushner-meets-hamas-in-egypt-to-push-trumps-gaza-plan?traffic_source=rss",
+      "title": "Kushner meets Hamas leaders in Egypt to push Trump's Gaza plan"
+    },
+    {
+      "source_record_id": "gaza-2026-08-16-aljazeera-middle-east-7bf3e9eb52e6",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/16/ben-gvir-calls-for-nightly-killings-of-palestinians-in-gaza?traffic_source=rss",
+      "title": "Ben-Gvir calls for nightly killings of Palestinians in Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-08-16-bbc-middle-east-ff6418401f3e",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/c77gg5vn44yo?at_medium=RSS&at_campaign=rss",
+      "title": "Trump envoy Kushner meets Hamas leader to push Gaza peace plan"
+    }
+  ]
+}

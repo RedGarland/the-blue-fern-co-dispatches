@@ -22,6 +22,11 @@ param(
 
 $ErrorActionPreference = "Stop"
 $script:LogFile = $null
+$utf8 = [System.Text.UTF8Encoding]::new($false)
+[Console]::OutputEncoding = $utf8
+$OutputEncoding = $utf8
+$env:PYTHONUTF8 = '1'
+$env:PYTHONIOENCODING = 'utf-8'
 
 function Write-Log {
     param([string]$Message)

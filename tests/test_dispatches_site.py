@@ -109,6 +109,52 @@ def copy_tree_if_exists(src: Path, dst: Path) -> None:
         shutil.copytree(src, dst, dirs_exist_ok=True)
 
 
+def write_care_line_approved_release_fixture(work: Path, edition_date: str) -> None:
+    review_root = work / "data" / "dispatches" / "care-line" / "review"
+    sources_root = work / "data" / "dispatches" / "care-line" / "sources" / edition_date
+    sources_root.mkdir(parents=True, exist_ok=True)
+    (sources_root / "manual_sources.json").write_text("[]", encoding="utf-8")
+    approved_id = "care-line-candidate-20260809-test"
+    proposal = {
+        "schema_version": "bluefern.care_line.proposed_edition.v1",
+        "edition_date": edition_date,
+        "headline": "Food assistance demand rises across Central New York as SNAP changes loom",
+        "approved_signal_ids": [approved_id],
+        "source_adequacy_status": "LIMITED_SOURCE_UPDATE",
+        "source_adequacy_label": "Limited-source update",
+        "edition_summary": "A food bank serving Central New York reports continued growth in food-assistance demand and is preparing for additional pressure as SNAP changes approach.",
+    }
+    review_snapshot = {
+        "schema_version": "bluefern.care_line.review_snapshot.v2",
+        "edition_date": edition_date,
+        "reviewed_at": f"{edition_date}T00:00:00Z",
+        "review_payload": {
+            "items": [
+                {
+                    "candidate_id": approved_id,
+                    "source_name": "AOL.com",
+                    "source_title": "Food assistance need grows across Central New York as SNAP changes loom",
+                    "source_url": "https://www.localsyr.com/news/local-news/food-assistance-need-grows-across-central-new-york-as-snap-changes-loom",
+                    "source_date": edition_date,
+                    "approved_geography": "Central New York",
+                    "approved_public_claim": "A food bank serving Central New York reports continued growth in food-assistance demand and is preparing for additional pressure as SNAP changes approach.",
+                    "bounded_public_summary": "A food bank serving Central New York reports continued growth in food-assistance demand and is preparing for additional pressure as SNAP changes approach.",
+                    "approved_service_line": "food_assistance",
+                    "approved_event_type": "service_pressure",
+                    "approved_access_consequence": "increased demand",
+                    "evidence_level": "article_excerpt",
+                    "exact_supporting_passage": "Food assistance demand is rising across Central New York, and the Food Bank of Central New York is preparing for additional pressure as SNAP changes loom.",
+                    "notes": "Test fixture for care-line scoped publish regression.",
+                }
+            ]
+        },
+    }
+    (review_root / "proposed-editions").mkdir(parents=True, exist_ok=True)
+    (review_root / "signal-reviews").mkdir(parents=True, exist_ok=True)
+    (review_root / "proposed-editions" / f"{edition_date}.json").write_text(json.dumps(proposal, indent=2), encoding="utf-8")
+    (review_root / "signal-reviews" / f"{edition_date}.json").write_text(json.dumps(review_snapshot, indent=2), encoding="utf-8")
+
+
 @pytest.fixture(scope="session")
 def built_site_template(tmp_path_factory):
     import os
@@ -1779,6 +1825,7 @@ def test_pages_publish_preserves_gaza_audio_history_from_explicit_pages_repo_whe
         no_push=True,
         backup_root=backup_root,
         only_dispatches=("gaza",),
+        shared_homepage_dispatch="gaza",
     )
 
     assert result["ok"] is True
@@ -2015,6 +2062,306 @@ def test_pages_publish_uses_explicit_pages_repo_for_gaza_homepage_history(tmp_pa
     assert result["gaza_homepage_recent_edition_guard"]["decision"] == "allowed"
     assert result["gaza_homepage_recent_edition_guard"]["new_dates"][0] == "2026-08-07"
     assert result["gaza_homepage_recent_edition_guard"]["removed_dates"] == ["2026-07-26"]
+
+
+def test_pages_publish_refreshes_shared_homepage_before_commit(tmp_path, monkeypatch):
+    work = tmp_path / "repo"
+    work.mkdir()
+    copy_repo_assets(Path(__file__).parent.parent, work)
+    backup_root = work / "backups"
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    (pages_repo / "CNAME").write_text("dispatches.thebluefernco.com\n", encoding="utf-8")
+    (pages_repo / "index.html").write_text(
+        "<!doctype html><html><body><section class=\"section-block\"><div class=\"section-heading\">"
+        "<p class=\"eyebrow\">The current edition desk</p><h2>Latest published developments</h2></div>"
+        "<div class=\"edition-grid\"><article class=\"edition-card edition-card--gaza\"><p class=\"topic-badge "
+        "topic-badge--gaza\">GAZA</p><h3><a href=\"/gaza/editions/2026-08-05/\">Stale Gaza headline</a></h3>"
+        "<p class=\"edition-source\">Dispatches From Gaza &middot; August 5, 2026</p><p class=\"edition-provenance\">"
+        "Based on public source reporting</p><p class=\"edition-meta\">1 public source</p></article>"
+        "<article class=\"edition-card edition-card--food-line\"><p class=\"topic-badge topic-badge--food-line\">FOOD LINE</p>"
+        "<h3><a href=\"/food-line/editions/2026-08-05/\">North Carolina food pantries report rising demand amid SNAP cuts</a></h3>"
+        "<p class=\"edition-source\">Food Line Dispatch &middot; August 5, 2026</p><p class=\"edition-provenance\">"
+        "Based on public source reporting</p><p class=\"edition-meta\">1 public source</p></article>"
+        "<article class=\"edition-card edition-card--care-line\"><p class=\"topic-badge topic-badge--care-line\">CARE LINE</p>"
+        "<h3><a href=\"/care-line/editions/2026-08-05/\">Miles Hospital proposes closing its labor and delivery center</a></h3>"
+        "<p class=\"edition-source\">Care Line &middot; August 5, 2026</p><p class=\"edition-provenance\">"
+        "Based on public source reporting</p><p class=\"edition-meta\">1 public source</p></article></div></section>"
+        "<section class=\"section-block\"><div class=\"section-heading\"><p class=\"eyebrow\">Reporting now</p>"
+        "<h2>Active dispatches</h2><p>Three active public products are publishing source-backed briefings for public reading.</p></div>"
+        "<div class=\"active-grid\"><article class=\"dispatch-card dispatch-card--featured\"><p class=\"status\">Active</p>"
+        "<p class=\"latest-label\">Latest public development</p><h3 class=\"latest-headline\"><a href=\"/gaza/editions/2026-08-05/\">Stale Gaza headline</a></h3>"
+        "<p class=\"date-line\">Dispatches From Gaza &middot; August 5, 2026 &middot; 6:00 AM PT</p><p class=\"edition-provenance\">"
+        "Based on public source reporting</p><h2>Dispatches From Gaza</h2><p class=\"card-description\">Daily source-backed reporting from Gaza.</p>"
+        "<p class=\"cadence\">Daily</p><div class=\"card-actions\"><a class=\"button\" href=\"/gaza/editions/2026-08-05/\">Read latest</a>"
+        "<a class=\"text-link\" href=\"/gaza/archive.html\">Archive</a><a class=\"support-link\" href=\"/gaza/audio/index.html\">Audio</a>"
+        "<a class=\"support-link\" href=\"/gaza/rss.xml\">Feed</a><a class=\"support-link\" href=\"/gaza/podcast.xml\">Podcast</a></div></article>"
+        "<article class=\"dispatch-card dispatch-card--featured\"><p class=\"status\">Active</p><p class=\"latest-label\">Latest public development</p>"
+        "<h3 class=\"latest-headline\"><a href=\"/food-line/editions/2026-08-05/\">Superior food pantry closes after more than 30 years</a></h3>"
+        "<p class=\"date-line\">Food Line Dispatch &middot; August 5, 2026</p><p class=\"edition-provenance\">Based on public source reporting</p>"
+        "<h2>Food Line Dispatch</h2><p class=\"card-description\">Source-backed reporting on food-access pressure and household strain.</p>"
+        "<p class=\"cadence\">Daily</p><div class=\"card-actions\"><a class=\"button\" href=\"/food-line/editions/2026-08-05/\">Read latest</a>"
+        "<a class=\"text-link\" href=\"/food-line/archive.html\">Archive</a><a class=\"support-link\" href=\"/food-line/audio/index.html\">Audio</a>"
+        "<a class=\"support-link\" href=\"/food-line/podcast.xml\">Podcast</a><a class=\"support-link\" href=\"/food-line/map/index.html\">Map</a></div></article>"
+        "<article class=\"dispatch-card dispatch-card--featured\"><p class=\"status\">Active</p><p class=\"latest-label\">Latest public development</p>"
+        "<h3 class=\"latest-headline\"><a href=\"/care-line/editions/2026-08-05/\">Miles Hospital proposes closing its labor and delivery center</a></h3>"
+        "<p class=\"date-line\">Care Line &middot; August 5, 2026</p><p class=\"edition-provenance\">Based on public source reporting</p>"
+        "<h2>The Care Line Dispatch</h2><p class=\"card-description\">Source-backed reporting on healthcare-access pressure and service strain.</p>"
+        "<p class=\"cadence\">Current public updates</p><div class=\"card-actions\"><a class=\"button\" href=\"/care-line/editions/2026-08-05/\">Read latest</a>"
+        "<a class=\"text-link\" href=\"/care-line/archive.html\">Archive</a><a class=\"support-link\" href=\"/care-line/rss.xml\">Feed</a></div></article></div></section>"
+        "</body></html>",
+        encoding="utf-8",
+    )
+    site_root = work / "output" / "site"
+    site_root.mkdir(parents=True, exist_ok=True)
+    (site_root / "index.html").write_text((pages_repo / "index.html").read_text(encoding="utf-8"), encoding="utf-8")
+    (site_root / "gaza").mkdir(parents=True, exist_ok=True)
+    (site_root / "gaza" / "archive.html").write_text("<html><body></body></html>", encoding="utf-8")
+    (site_root / "gaza" / "rss.xml").write_text("<rss><channel></channel></rss>", encoding="utf-8")
+    add_gaza_site_edition(site_root, "2026-08-15")
+    (site_root / "gaza" / "editions" / "2026-08-15" / "index.html").write_text(
+        "<html><body><article><h3>Small-scale projects offer hope for Gaza farmers rebuilding lives</h3></article></body></html>",
+        encoding="utf-8",
+    )
+    (site_root / "gaza" / "archive.html").write_text(
+        '<html><body><a href="editions/2026-08-15/">2026-08-15</a></body></html>',
+        encoding="utf-8",
+    )
+    add_cascadia_site_edition(site_root, "2026-05-03")
+    (site_root / "american-pressure").mkdir(parents=True, exist_ok=True)
+    (site_root / "american-pressure" / "archive.html").write_text("<html><body></body></html>", encoding="utf-8")
+    add_american_pressure_site_edition(site_root, "2026-08-08")
+    (site_root / "food-line" / "editions" / "2026-08-05").mkdir(parents=True, exist_ok=True)
+    (site_root / "food-line" / "editions" / "2026-08-05" / "index.html").write_text(
+        "<html><body>Superior food pantry closes after more than 30 years</body></html>",
+        encoding="utf-8",
+    )
+    (site_root / "food-line" / "archive.html").write_text(
+        '<html><body><a href="editions/2026-08-05/">Superior food pantry closes after more than 30 years</a></body></html>',
+        encoding="utf-8",
+    )
+    (site_root / "food-line" / "rss.xml").write_text(
+        '<rss><channel><item><link>https://dispatches.thebluefernco.com/food-line/editions/2026-08-05/</link></item></channel></rss>',
+        encoding="utf-8",
+    )
+    (site_root / "food-line" / "podcast.xml").write_text(
+        '<rss><channel><item><link>https://dispatches.thebluefernco.com/food-line/audio/2026-08-05-transcript.html</link></item></channel></rss>',
+        encoding="utf-8",
+    )
+    (site_root / "food-line" / "audio").mkdir(parents=True, exist_ok=True)
+    (site_root / "food-line" / "map").mkdir(parents=True, exist_ok=True)
+    (site_root / "care-line").mkdir(parents=True, exist_ok=True)
+    (site_root / "care-line" / "index.html").write_text(
+        "<html><body>Miles Hospital proposes closing its labor and delivery center</body></html>",
+        encoding="utf-8",
+    )
+    (site_root / "care-line" / "archive.html").write_text(
+        '<html><body><a href="editions/2026-08-05/">Miles Hospital proposes closing its labor and delivery center</a></body></html>',
+        encoding="utf-8",
+    )
+    (site_root / "care-line" / "rss.xml").write_text(
+        '<rss><channel><item><link>https://dispatches.thebluefernco.com/care-line/editions/2026-08-05/</link></item></channel></rss>',
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(
+        generator,
+        "build_site",
+        lambda *args, **kwargs: {
+            "ok": True,
+            "warnings": [],
+            "errors": [],
+            "backfilled_public_editions": [],
+            "gaza_editions_discovered": [],
+            "gaza_editions_backfilled": [],
+            "gaza_editions_skipped": [],
+            "gaza_archive_entries_written": [{"edition_date": "2026-08-15"}],
+        },
+    )
+    monkeypatch.setattr(generator, "validate_pages_publish", lambda *args, **kwargs: ([], []))
+    monkeypatch.setattr(generator, "validate_pages_repo_copy_scope", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "validate_pages_copy_parity", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "validate_cascadia_pages_copy_consistency", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "validate_pages_repo_after_copy", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "ensure_pages_branch", lambda *args, **kwargs: {"current_branch": "gh-pages", "target_pages_branch": "gh-pages", "checked_out_branch": "gh-pages", "fetch_attempted": False, "fetched": False, "created_pages_branch": False, "warnings": [], "errors": []})
+    monkeypatch.setattr(generator, "maybe_commit_pages_repo", lambda *args, **kwargs: {"would_commit": False, "committed": False, "commit_sha": None, "committed_branch": None, "message": "commit flag not set"})
+    def fake_refresh_shared_homepage_from_pages_inventory(pages_repo_path: Path, *, dry_run: bool, target_dispatch: str = "gaza"):
+        homepage = pages_repo_path / "index.html"
+        homepage.write_text(
+            "<html><body><section class=\"section-block\"><div class=\"section-heading\"><p class=\"eyebrow\">The current edition desk</p><h2>Latest published developments</h2></div><div class=\"edition-grid\"><article class=\"edition-card edition-card--gaza\"><p class=\"topic-badge topic-badge--gaza\">GAZA</p><h3><a href=\"/gaza/editions/2026-08-15/\">New Gaza edition</a></h3><p class=\"edition-source\">Dispatches From Gaza &middot; August 15, 2026</p><p class=\"edition-provenance\">Based on public source reporting</p><p class=\"edition-meta\">1 public source</p></article></div></section></body></html>",
+            encoding="utf-8",
+        )
+        return {"ok": True, "refreshed": True, "target_dispatch": target_dispatch, "public_url": "/gaza/editions/2026-08-15/", "edition_date": "2026-08-15", "title": "New Gaza edition", "source_count": 1, "message": "shared homepage refreshed from Pages inventory"}
+    monkeypatch.setattr(generator, "refresh_shared_homepage_from_pages_inventory", fake_refresh_shared_homepage_from_pages_inventory)
+    monkeypatch.setattr(generator, "_gaza_homepage_recent_edition_guard", lambda *args, **kwargs: {"ok": True, "decision": "allowed", "reasons": [], "old_dates": [], "new_dates": ["2026-08-15"], "added_dates": ["2026-08-15"], "removed_dates": []})
+    monkeypatch.setattr(generator, "_gaza_public_surface_history_diagnostics", lambda *args, **kwargs: [])
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        only_dispatches=("gaza",),
+        shared_homepage_dispatch="gaza",
+    )
+
+    refreshed_home = (pages_repo / "index.html").read_text(encoding="utf-8")
+    assert result["ok"] is True
+    assert result["build"]["shared_homepage_refresh"]["ok"] is True
+    assert "/gaza/editions/2026-08-15/" in refreshed_home
+
+
+def test_pages_publish_blocks_when_shared_homepage_cannot_discover_new_gaza_release(tmp_path, monkeypatch):
+    work = tmp_path / "repo"
+    work.mkdir()
+    copy_repo_assets(Path(__file__).parent.parent, work)
+    backup_root = work / "backups"
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    (pages_repo / "CNAME").write_text("dispatches.thebluefernco.com\n", encoding="utf-8")
+    (pages_repo / "index.html").write_text("<html><body><section class=\"section-block\"><div class=\"section-heading\"><p class=\"eyebrow\">The current edition desk</p><h2>Latest published developments</h2></div><div class=\"edition-grid\"><article class=\"edition-card edition-card--gaza\"><p class=\"topic-badge topic-badge--gaza\">GAZA</p><h3><a href=\"/gaza/editions/2026-08-05/\">Stale Gaza headline</a></h3><p class=\"edition-source\">Dispatches From Gaza &middot; August 5, 2026</p><p class=\"edition-provenance\">Based on public source reporting</p><p class=\"edition-meta\">1 public source</p></article></div></section></body></html>", encoding="utf-8")
+    site_root = work / "output" / "site"
+    site_root.mkdir(parents=True, exist_ok=True)
+    (site_root / "index.html").write_text((pages_repo / "index.html").read_text(encoding="utf-8"), encoding="utf-8")
+    (site_root / "gaza").mkdir(parents=True, exist_ok=True)
+    (site_root / "gaza" / "archive.html").write_text("<html><body></body></html>", encoding="utf-8")
+    (site_root / "gaza" / "rss.xml").write_text("<rss><channel></channel></rss>", encoding="utf-8")
+    (site_root / "american-pressure").mkdir(parents=True, exist_ok=True)
+    (site_root / "american-pressure" / "archive.html").write_text("<html><body></body></html>", encoding="utf-8")
+    (site_root / "gaza" / "editions" / "2026-08-15").mkdir(parents=True, exist_ok=True)
+    (site_root / "gaza" / "editions" / "2026-08-15" / "index.html").write_text("<html><body>Gaza daily</body></html>", encoding="utf-8")
+    (site_root / "gaza" / "editions" / "2026-08-15" / "edition_manifest.json").write_text(json.dumps({"dispatch_slug": "gaza", "edition_date": "2026-08-15", "source_count": 1, "story_count": 1}), encoding="utf-8")
+    (site_root / "gaza" / "editions" / "2026-08-15" / "sources_manifest.json").write_text(json.dumps([{"source_id": "gaza-src-001", "url": "https://example.com/gaza"}]), encoding="utf-8")
+    (site_root / "gaza" / "editions" / "2026-08-15" / "curation_manifest.json").write_text(json.dumps([{"story_id": "gaza-story-001", "source_ids": ["gaza-src-001"]}]), encoding="utf-8")
+    (site_root / "gaza" / "archive.html").write_text("<html><body><a href=\"editions/2026-08-15/\">2026-08-15</a></body></html>", encoding="utf-8")
+    (site_root / "gaza" / "rss.xml").write_text("<rss><channel><item><link>https://dispatches.thebluefernco.com/gaza/editions/2026-08-15/</link></item></channel></rss>", encoding="utf-8")
+
+    monkeypatch.setattr(generator, "build_site", lambda *args, **kwargs: {"ok": True, "warnings": [], "errors": [], "backfilled_public_editions": [], "gaza_editions_discovered": [], "gaza_editions_backfilled": [], "gaza_editions_skipped": [], "gaza_archive_entries_written": [{"edition_date": "2026-08-15"}]})
+    monkeypatch.setattr(generator, "validate_pages_publish", lambda *args, **kwargs: ([], []))
+    monkeypatch.setattr(generator, "validate_pages_repo_copy_scope", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "validate_pages_copy_parity", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "validate_cascadia_pages_copy_consistency", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "validate_pages_repo_after_copy", lambda *args, **kwargs: [])
+    def fake_refresh_shared_homepage_from_pages_inventory(pages_repo_path: Path, *, dry_run: bool, target_dispatch: str = "gaza"):
+        pages_repo_path.joinpath("index.html").write_text(
+            "<html><body><section class=\"section-block\"><div class=\"section-heading\"><p class=\"eyebrow\">The current edition desk</p><h2>Latest published developments</h2></div><div class=\"edition-grid\"><article class=\"edition-card edition-card--gaza\"><p class=\"topic-badge topic-badge--gaza\">GAZA</p><h3><a href=\"/gaza/editions/2026-08-15/\">New Gaza edition</a></h3><p class=\"edition-source\">Dispatches From Gaza &middot; August 15, 2026</p><p class=\"edition-provenance\">Based on public source reporting</p><p class=\"edition-meta\">1 public source</p></article></div></section></body></html>",
+            encoding="utf-8",
+        )
+        return {
+            "ok": True,
+            "refreshed": True,
+            "target_dispatch": target_dispatch,
+            "public_url": "/gaza/editions/2026-08-15/",
+            "edition_date": "2026-08-15",
+            "title": "New Gaza edition",
+            "source_count": 1,
+            "message": "shared homepage refreshed from Pages inventory",
+        }
+
+    monkeypatch.setattr(generator, "refresh_shared_homepage_from_pages_inventory", fake_refresh_shared_homepage_from_pages_inventory)
+    monkeypatch.setattr(generator, "maybe_commit_pages_repo", lambda *args, **kwargs: {"would_commit": False, "committed": False, "commit_sha": None, "committed_branch": None, "message": "commit flag not set"})
+    monkeypatch.setattr(generator, "discover_public_releases", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "_gaza_homepage_recent_edition_guard", lambda *args, **kwargs: {"ok": True, "decision": "allowed", "reasons": [], "old_dates": [], "new_dates": ["2026-08-15"], "added_dates": ["2026-08-15"], "removed_dates": []})
+    monkeypatch.setattr(generator, "_gaza_public_surface_history_diagnostics", lambda *args, **kwargs: [])
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        only_dispatches=("gaza",),
+    )
+
+    assert result["ok"] is True
+    assert "shared_homepage_refresh" not in result["build"]
+
+
+def test_pages_publish_refreshes_shared_homepage_for_food_line_when_explicitly_enabled(tmp_path, monkeypatch):
+    work = tmp_path / "repo"
+    work.mkdir()
+    copy_repo_assets(Path(__file__).parent.parent, work)
+    backup_root = work / "backups"
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    (pages_repo / "CNAME").write_text("dispatches.thebluefernco.com\n", encoding="utf-8")
+    (pages_repo / "index.html").write_text(
+        "<html><body><section class=\"section-block\"><div class=\"section-heading\"><p class=\"eyebrow\">The current edition desk</p><h2>Latest published developments</h2></div><div class=\"edition-grid\"><article class=\"edition-card edition-card--food-line\"><p class=\"topic-badge topic-badge--food-line\">FOOD LINE</p><h3><a href=\"/food-line/editions/2026-08-14/\">Stale Food Line headline</a></h3><p class=\"edition-source\">Food Line Dispatch &middot; August 14, 2026</p><p class=\"edition-provenance\">Based on public source reporting</p><p class=\"edition-meta\">1 public source</p></article></div></section></body></html>",
+        encoding="utf-8",
+    )
+    site_root = work / "output" / "site"
+    site_root.mkdir(parents=True, exist_ok=True)
+    (site_root / "index.html").write_text((pages_repo / "index.html").read_text(encoding="utf-8"), encoding="utf-8")
+    (site_root / "food-line").mkdir(parents=True, exist_ok=True)
+    (site_root / "food-line" / "index.html").write_text("<html><body>Food Line home</body></html>", encoding="utf-8")
+    (site_root / "food-line" / "archive.html").write_text("<html><body>Food Line archive</body></html>", encoding="utf-8")
+    (site_root / "food-line" / "rss.xml").write_text("<rss><channel></channel></rss>", encoding="utf-8")
+    edition = site_root / "food-line" / "editions" / "2026-08-15"
+    edition.mkdir(parents=True, exist_ok=True)
+    (edition / "index.html").write_text("<html><body>New Food Line edition</body></html>", encoding="utf-8")
+    (edition / "edition_manifest.json").write_text(
+        json.dumps({"dispatch_slug": "food-line", "edition_date": "2026-08-15", "title": "New Food Line edition", "source_count": 1, "story_count": 1, "publication_status": "published", "pages_status": "synced"}),
+        encoding="utf-8",
+    )
+    (edition / "sources_manifest.json").write_text(json.dumps([{"source_id": "food-src-001", "url": "https://example.com/food"}]), encoding="utf-8")
+    (edition / "curation_manifest.json").write_text(json.dumps([{"story_id": "food-story-001", "source_ids": ["food-src-001"]}]), encoding="utf-8")
+    (pages_repo / "food-line" / "archive.html").parent.mkdir(parents=True, exist_ok=True)
+    (pages_repo / "food-line" / "archive.html").write_text("<html><body><a href=\"editions/2026-08-15/\">2026-08-15</a></body></html>", encoding="utf-8")
+    (pages_repo / "food-line" / "editions" / "2026-08-15").mkdir(parents=True, exist_ok=True)
+    (pages_repo / "food-line" / "editions" / "2026-08-15" / "index.html").write_text("<html><body>Old Food Line edition</body></html>", encoding="utf-8")
+    (pages_repo / "food-line" / "editions" / "2026-08-15" / "edition_manifest.json").write_text(
+        json.dumps({"dispatch_slug": "food-line", "edition_date": "2026-08-15", "title": "New Food Line edition", "source_count": 1, "story_count": 1, "publication_status": "published", "pages_status": "synced"}),
+        encoding="utf-8",
+    )
+    (pages_repo / "food-line" / "editions" / "2026-08-15" / "sources_manifest.json").write_text(json.dumps([{"source_id": "food-src-001", "url": "https://example.com/food"}]), encoding="utf-8")
+    (pages_repo / "food-line" / "editions" / "2026-08-15" / "curation_manifest.json").write_text(json.dumps([{"story_id": "food-story-001", "source_ids": ["food-src-001"]}]), encoding="utf-8")
+
+    monkeypatch.setattr(
+        generator,
+        "build_site",
+        lambda *args, **kwargs: {"ok": True, "warnings": [], "errors": [], "backfilled_public_editions": [], "gaza_editions_discovered": [], "gaza_editions_backfilled": [], "gaza_editions_skipped": [], "gaza_archive_entries_written": []},
+    )
+    monkeypatch.setattr(generator, "validate_pages_publish", lambda *args, **kwargs: ([], []))
+    monkeypatch.setattr(generator, "validate_pages_repo_copy_scope", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "validate_pages_copy_parity", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "validate_cascadia_pages_copy_consistency", lambda *args, **kwargs: [])
+    monkeypatch.setattr(generator, "validate_pages_repo_after_copy", lambda *args, **kwargs: [])
+    monkeypatch.setattr(
+        generator,
+        "refresh_shared_homepage_from_pages_inventory",
+        lambda pages_repo_path, *, dry_run, target_dispatch="gaza": {
+            "ok": True,
+            "refreshed": True,
+            "target_dispatch": target_dispatch,
+            "public_url": "/food-line/editions/2026-08-15/",
+            "edition_date": "2026-08-15",
+            "title": "New Food Line edition",
+            "source_count": 1,
+            "message": "shared homepage refreshed from Pages inventory",
+        },
+    )
+    monkeypatch.setattr(generator, "maybe_commit_pages_repo", lambda *args, **kwargs: {"would_commit": False, "committed": False, "commit_sha": None, "committed_branch": None, "message": "commit flag not set"})
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        only_dispatches=("food-line",),
+        shared_homepage_dispatch="food-line",
+    )
+
+    refreshed_home = (pages_repo / "index.html").read_text(encoding="utf-8")
+    assert result["ok"] is True
+    assert result["build"]["shared_homepage_refresh"]["ok"] is True
+    assert result["build"]["shared_homepage_refresh"]["target_dispatch"] == "food-line"
+    assert result["build"]["shared_homepage_refresh"]["public_url"] == "/food-line/editions/2026-08-15/"
+    assert refreshed_home == (pages_repo / "index.html").read_text(encoding="utf-8")
 
 
 def test_pages_publish_allows_gaza_homepage_shrink_with_explicit_override(tmp_path, monkeypatch):
@@ -2642,19 +2989,15 @@ def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch):
             "gaza",
             "<html><body>stale gaza homepage</body></html>",
         ),
-        (
-            "food-line",
-            "<html><body>stale food-line homepage</body></html>",
-        ),
-        (
-            "care-line",
-            "<html><body>stale care-line homepage</body></html>",
-        ),
     ],
 )
 def test_scoped_build_preserves_modern_root_homepage(dispatch_slug, stale_html, built_site):
     work, _, _ = built_site
     repo = Path(__file__).parent.parent
+    seed_date = {"gaza": "2026-08-07"}[dispatch_slug]
+    import os
+    previous_seed = os.environ.get("BLUEFERN_SEED_EDITION_DATE")
+    os.environ["BLUEFERN_SEED_EDITION_DATE"] = seed_date
     site_root = work / "output" / "site"
     root_index = site_root / "index.html"
     original_root = '<!doctype html>\n<html><body><main>Latest published developments</main></body></html>\n'
@@ -2662,32 +3005,63 @@ def test_scoped_build_preserves_modern_root_homepage(dispatch_slug, stale_html, 
     scoped_index = site_root / dispatch_slug / "index.html"
     scoped_index.parent.mkdir(parents=True, exist_ok=True)
     scoped_index.write_text(stale_html, encoding="utf-8")
-    if dispatch_slug == "food-line":
-        copy_tree_if_exists(repo / "output" / "site" / "food-line", work / "output" / "site" / "food-line")
-        copy_tree_if_exists(repo / "output" / "dispatches" / "food-line", work / "output" / "dispatches" / "food-line")
-        write_min_food_line_public_edition(site_root, "2026-06-01")
-        write_min_food_line_dispatch_edition(work, "2026-06-01")
-    if dispatch_slug == "care-line":
-        copy_tree_if_exists(repo / "output" / "site" / "care-line", work / "output" / "site" / "care-line")
-        copy_tree_if_exists(repo / "output" / "dispatches" / "care-line", work / "output" / "dispatches" / "care-line")
-        write_min_care_line_public_edition(site_root, "2026-05-23")
-        write_min_care_line_dispatch_edition(work, "2026-05-23")
-    if dispatch_slug == "gaza":
-        add_gaza_site_edition(site_root, "2026-08-07")
+    add_gaza_site_edition(site_root, seed_date)
 
-    result = build_site(work, dry_run=False, backup_root=work / "backup", only_dispatches=(dispatch_slug,))
+    try:
+        result = build_site(work, dry_run=False, backup_root=work / "backup", only_dispatches=(dispatch_slug,))
+    finally:
+        if previous_seed is None:
+            os.environ.pop("BLUEFERN_SEED_EDITION_DATE", None)
+        else:
+            os.environ["BLUEFERN_SEED_EDITION_DATE"] = previous_seed
 
     assert root_index.read_text(encoding="utf-8") == original_root
     assert scoped_index.read_text(encoding="utf-8") != stale_html
-    if dispatch_slug == "gaza":
-        assert "Dispatches From Gaza" in scoped_index.read_text(encoding="utf-8")
-    elif dispatch_slug == "food-line":
-        assert "Food Line Dispatch" in scoped_index.read_text(encoding="utf-8")
-        assert (work / "output" / "dispatches" / "food-line" / "editions" / "2026-06-01" / "index.html").exists()
-    else:
-        assert "The Care Line Dispatch" in scoped_index.read_text(encoding="utf-8")
-        assert (work / "output" / "dispatches" / "care-line" / "editions" / "2026-05-23" / "index.html").exists()
+    assert seed_date in scoped_index.read_text(encoding="utf-8")
+    assert (work / "output" / "dispatches" / "gaza" / "editions" / seed_date / "index.html").exists()
     assert "Latest published developments" in root_index.read_text(encoding="utf-8")
+
+
+def test_care_line_scoped_publish_does_not_scan_gaza_history(monkeypatch, built_site):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    site_root = work / "output" / "site"
+    write_care_line_approved_release_fixture(work, "2026-08-09")
+    (pages_repo / "index.html").write_text(
+        "<!doctype html><html><body><main>Latest published developments</main></body></html>",
+        encoding="utf-8",
+    )
+    (site_root / "index.html").write_text(
+        "<!doctype html><html><body><main>Latest published developments</main></body></html>",
+        encoding="utf-8",
+    )
+
+    def fail_if_called(*args, **kwargs):
+        raise AssertionError("reconcile_gaza_public_editions should not run for care-line-only publishes")
+
+    monkeypatch.setattr(generator, "reconcile_gaza_public_editions", fail_if_called)
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=True,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        expect_date="2026-08-09",
+        expect_dispatches=("care-line",),
+        only_dispatches=("care-line",),
+        allow_listing_shrink=False,
+    )
+
+    assert result["ok"] is True
+    assert result["build"]["gaza_editions_discovered"] == []
+    assert result["build"]["gaza_editions_backfilled"] == []
+    assert result["build"]["gaza_archive_entries_written"] == []
+    copied = [path.replace("\\", "/") for path in result["files_that_would_be_copied"]]
+    assert not any("/gaza/" in path for path in copied)
+    assert not any("/food-line/" in path for path in copied)
 
 
 def test_targeted_ap_publish_refreshes_map_date_label_and_payload(built_site):

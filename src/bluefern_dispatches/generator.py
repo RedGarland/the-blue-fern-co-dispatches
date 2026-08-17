@@ -19,6 +19,15 @@ from bluefern_dispatches.care_line_render import (
     render_care_line_edition_body,
     render_care_line_source_table_html,
 )
+from bluefern_dispatches.root_homepage import (
+    discover_public_releases,
+    render_sitewide_homepage_from_template,
+    select_effective_latest,
+)
+from bluefern_dispatches.care_line_release_render import (
+    build_public_rows as build_care_line_approved_public_rows,
+    load_approved_release as load_care_line_approved_release,
+)
 from bluefern_dispatches.care_line_sources import (
     DISPATCH_NAME as CARE_LINE_DISPATCH_NAME,
     DISPATCH_SLUG as CARE_LINE_DISPATCH_SLUG,
@@ -36,7 +45,6 @@ from bluefern_dispatches.care_line_sources import (
 )
 from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
 from bluefern_dispatches.public_prose import html_contains_public_prose_violations
-from bluefern_dispatches.universal_events.care_line_signal_wire import build_care_line_signal_wire_publication
 
 
 BASE_URL = "https://dispatches.thebluefernco.com"
@@ -315,6 +323,65 @@ def _build_care_line_dispatch(
     registry_file = data_root / "pressure_source_registry.json"
     direct_fixture = data_root / "sources" / edition_date / "manual_sources.json"
     any_fixture = data_root / "sources"
+    approved_release = load_care_line_approved_release(root, edition_date)
+    if approved_release is not None:
+        rows = build_care_line_approved_public_rows(approved_release)
+        if not registry_file.exists() and not direct_fixture.exists() and not any_fixture.exists():
+            warnings.append("care-line data tree is not present; using approved release snapshot")
+        try:
+            registry = load_care_line_pressure_registry(root)
+        except FileNotFoundError as exc:
+            warnings.append(str(exc))
+            registry = []
+        except Exception as exc:
+            warnings.append(f"care-line registry validation failed: {exc}")
+            registry = []
+        else:
+            errors.extend(validate_care_line_pressure_registry(registry))
+        public_rows = [row for row in rows if care_line_record_is_public(row)]
+        body_html = render_care_line_edition_body(public_rows, edition_date)
+        if not registry:
+            warnings.append("care-line pressure source registry is empty")
+        return DispatchConfig(
+            slug=CARE_LINE_DISPATCH_SLUG,
+            name=CARE_LINE_DISPATCH_NAME,
+            edition_date=edition_date,
+            tagline=CARE_LINE_DISPATCH_TAGLINE,
+            logo="care-line-logo.png",
+            sources=[
+                SourceRecord(
+                    source_id=str(row.get("source_record_id") or ""),
+                    title=str(row.get("title") or ""),
+                    url=str(row.get("url") or ""),
+                    publisher=str(row.get("publisher") or ""),
+                    published_at=str(row.get("published_at") or None) if row.get("published_at") is not None else None,
+                    retrieved_at=str(row.get("retrieved_at") or now),
+                    archive_path=None,
+                    used_in_story_ids=[f"care-line-story-{index:03d}"],
+                    claim_ids=[f"care-line-claim-{index:03d}"],
+                    dispatch_slug=CARE_LINE_DISPATCH_SLUG,
+                    edition_date=edition_date,
+                )
+                for index, row in enumerate(public_rows, start=1)
+            ],
+            stories=[
+                StoryRecord(
+                    story_id=f"care-line-story-{index:03d}",
+                    title=str(row.get("title") or ""),
+                    summary=str(row.get("claim_supported") or row.get("pressure_summary") or row.get("summary_or_snippet") or ""),
+                    category=str(row.get("public_inclusion_bucket") or "Other Care Line Signals"),
+                    score=100 if row.get("included_as_lead") is True else 90,
+                    scoring_reasons=[str(row.get("pressure_reason") or "source-backed approved release record")],
+                    included_in_public_summary=True,
+                    included_in_detail_dataset=False,
+                    source_ids=[str(row.get("source_record_id") or "")],
+                )
+                for index, row in enumerate(public_rows, start=1)
+            ],
+            body_html=body_html,
+            detail_artifacts=[],
+            raw_records=rows,
+        )
     if not registry_file.exists() and not direct_fixture.exists() and not any_fixture.exists():
         warnings.append("care-line data tree is not present; skipping care-line dispatch build")
         return DispatchConfig(
@@ -2195,6 +2262,7 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
         care_line_public_records = [row for row in care_line_records if care_line_record_is_public(row)]
         care_line_edition_mode = "current_update" if care_line_public_records else "no_current_update"
         care_line_diagnostics = care_line_review_diagnostics(care_line_records)
+        approved_release = load_care_line_approved_release(site_root.parents[1], dispatch.edition_date)
         extra_public_artifacts = [
             str(public_dir / "source_table.html"),
             str(public_dir / "claim_ledger.html"),
@@ -2211,6 +2279,26 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
     if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
         claim_count = len(care_line_public_records)
         qualified_public_claim_count = len(care_line_public_records)
+        if approved_release is not None:
+            source_adequacy_label = str(approved_release.proposal.get("source_adequacy_label") or "Limited-source update").strip()
+            source_adequacy_status = str(approved_release.proposal.get("source_adequacy_status") or "LIMITED_SOURCE_UPDATE").strip()
+            public_archive_title = source_adequacy_label or care_line_public_archive_title_for_records(care_line_records)
+            public_archive_subtitle = str(approved_release.proposal.get("edition_summary") or care_line_summary_for_records(care_line_records)).strip()
+            public_summary = public_archive_subtitle
+        else:
+            source_adequacy_label = ""
+            source_adequacy_status = ""
+            public_archive_title = (
+                care_line_public_archive_title_for_records(care_line_records)
+                if care_line_public_records
+                else f"{dispatch.edition_date} — No current update"
+            )
+            public_archive_subtitle = care_line_summary_for_records(care_line_records) if care_line_public_records else care_line_no_current_update_summary()
+            public_summary = (
+                care_line_summary_for_records(care_line_records)
+                if care_line_public_records
+                else care_line_no_current_update_summary()
+            )
     edition_manifest = {
         "dispatch_name": dispatch.name,
         "dispatch_slug": dispatch.slug,
@@ -2250,26 +2338,16 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
         "exclusion_reason_summary": care_line_diagnostics.get("exclusion_reason_summary") if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
         "discovery_gap_check": care_line_diagnostics if dispatch.slug == CARE_LINE_DISPATCH_SLUG else {},
         "public_summary": (
-            care_line_summary_for_records(care_line_records)
-            if dispatch.slug == CARE_LINE_DISPATCH_SLUG and care_line_public_records
-            else care_line_no_current_update_summary()
-            if dispatch.slug == CARE_LINE_DISPATCH_SLUG
-            else ""
+            public_summary if dispatch.slug == CARE_LINE_DISPATCH_SLUG else ""
         ),
         "public_archive_title": (
-            care_line_public_archive_title_for_records(care_line_records)
-            if dispatch.slug == CARE_LINE_DISPATCH_SLUG and care_line_public_records
-            else f"{dispatch.edition_date} — No current update"
-            if dispatch.slug == CARE_LINE_DISPATCH_SLUG
-            else ""
+            public_archive_title if dispatch.slug == CARE_LINE_DISPATCH_SLUG else ""
         ),
         "public_archive_subtitle": (
-            care_line_summary_for_records(care_line_records)
-            if dispatch.slug == CARE_LINE_DISPATCH_SLUG and care_line_public_records
-            else care_line_no_current_update_summary()
-            if dispatch.slug == CARE_LINE_DISPATCH_SLUG
-            else ""
+            public_archive_subtitle if dispatch.slug == CARE_LINE_DISPATCH_SLUG else ""
         ),
+        "source_adequacy_status": source_adequacy_status if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
+        "source_adequacy_label": source_adequacy_label if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
         "edition_mode": care_line_edition_mode if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
         "reviewed_source_count": len(care_line_records) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
         "excluded_source_count": len([row for row in care_line_records if not care_line_record_is_public(row)]) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
@@ -2324,9 +2402,20 @@ def build_site(
         "exclusion_reasons": {},
     }
     care_line_signal_wire: dict[str, Any] | None = None
+    dispatch_seed_dates = dispatch_seed_dates or {}
+    care_line_seed_date = dispatch_seed_dates.get("care-line") or _latest_care_line_fixture_date(root) or datetime.now(timezone.utc).date().isoformat()
+    approved_care_line_release = load_care_line_approved_release(root, care_line_seed_date)
+    if approved_care_line_release is not None:
+        care_line_signal_wire = {"ok": True, "skipped": True, "approved_release": True}
     if tuple(only_dispatches) == (CARE_LINE_DISPATCH_SLUG,):
         try:
-            care_line_signal_wire = build_care_line_signal_wire_publication(root, generated_at=generated_at)
+            if care_line_signal_wire is None:
+                try:
+                    from bluefern_dispatches.universal_events.care_line_signal_wire import build_care_line_signal_wire_publication
+                except ModuleNotFoundError as exc:
+                    care_line_signal_wire = {"ok": True, "skipped": True, "warnings": [f"care-line signal wire dependency unavailable: {exc}"]}
+                else:
+                    care_line_signal_wire = build_care_line_signal_wire_publication(root, generated_at=generated_at)
             if not care_line_signal_wire.get("skipped"):
                 manifest = care_line_signal_wire.get("publication_manifest") or {}
                 publication_scope["selected_event_ids"] = list(manifest.get("event_ids") or [])
@@ -2406,13 +2495,14 @@ def build_site(
         wrote=wrote,
         only_dispatches=only_dispatches,
     )
-    gaza_reconcile = reconcile_gaza_public_editions(
-        root,
-        site_root,
-        dry_run=dry_run,
-        wrote=wrote,
-        pages_repo=pages_repo.resolve() if pages_repo is not None else None,
-    )
+    if not only_dispatches or "gaza" in only_dispatches:
+        gaza_reconcile = reconcile_gaza_public_editions(
+            root,
+            site_root,
+            dry_run=dry_run,
+            wrote=wrote,
+            pages_repo=pages_repo.resolve() if pages_repo is not None else None,
+        )
 
     if not only_dispatches:
         write_text(site_root / "index.html", render_root(all_dispatches), dry_run, wrote)
@@ -2551,7 +2641,12 @@ def build_site(
     if not only_dispatches or CARE_LINE_DISPATCH_SLUG in only_dispatches:
         try:
             if care_line_signal_wire is None:
-                care_line_signal_wire = build_care_line_signal_wire_publication(root, generated_at=generated_at)
+                try:
+                    from bluefern_dispatches.universal_events.care_line_signal_wire import build_care_line_signal_wire_publication
+                except ModuleNotFoundError as exc:
+                    care_line_signal_wire = {"ok": True, "skipped": True, "warnings": [f"care-line signal wire dependency unavailable: {exc}"]}
+                else:
+                    care_line_signal_wire = build_care_line_signal_wire_publication(root, generated_at=generated_at)
             if care_line_signal_wire.get("ok") and not care_line_signal_wire.get("skipped"):
                 publication_scope["generated_output_paths"] = sorted(
                     str(artifact.get("path"))

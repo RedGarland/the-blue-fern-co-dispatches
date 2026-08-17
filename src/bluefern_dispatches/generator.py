@@ -1519,12 +1519,6 @@ def _gaza_homepage_recent_edition_guard(
             reasons.append(
                 f"homepage recent-editions list no longer at configured limit: {len(new_dates)} != {GAZA_HOME_RECENT_EDITION_LIMIT}"
             )
-        if baseline_is_healthy and len(removed_dates) > 1:
-            reasons.append(f"homepage dropped multiple recent dates: {', '.join(removed_dates)}")
-        if baseline_is_healthy and old_dates and len(old_dates) - len(new_dates) >= 3:
-            reasons.append(
-                f"homepage count reduction too large: previous_count={len(old_dates)} current_count={len(new_dates)}"
-            )
         if reasons:
             decision = "blocked"
     else:

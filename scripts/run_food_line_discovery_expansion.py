@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import argparse
+import ctypes
 import hashlib
 import json
+import os
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -43,6 +46,56 @@ def _legacy_args_supplied(args: argparse.Namespace) -> bool:
     )
 
 
+def _terminate_process_tree(pid: int) -> None:
+    if pid <= 0:
+        return
+    if os.name == "nt":
+        subprocess.run(
+            ["taskkill", "/PID", str(pid), "/T", "/F"],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        process_query_limited_information = 0x1000
+        process_terminate = 0x0001
+        handle = ctypes.windll.kernel32.OpenProcess(process_query_limited_information | process_terminate, False, pid)
+        if handle:
+            try:
+                if ctypes.windll.kernel32.TerminateProcess(handle, 1):
+                    return
+            finally:
+                ctypes.windll.kernel32.CloseHandle(handle)
+        return
+    try:
+        os.kill(pid, 15)
+    except OSError:
+        pass
+
+
+def _run_command_with_timeout(
+    command: list[str],
+    *,
+    cwd: Path,
+    timeout_seconds: float,
+) -> tuple[subprocess.CompletedProcess[str], bool]:
+    proc = subprocess.Popen(
+        command,
+        cwd=cwd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    try:
+        stdout, stderr = proc.communicate(timeout=max(0.1, float(timeout_seconds)))
+        return subprocess.CompletedProcess(command, proc.returncode or 0, stdout, stderr), False
+    except subprocess.TimeoutExpired:
+        _terminate_process_tree(proc.pid)
+        stdout, stderr = proc.communicate()
+        return subprocess.CompletedProcess(command, proc.returncode or 124, stdout, stderr), True
+
+
 def _query_plan_payload(root: Path, edition_date: str, run_id: str, query_plan: list[dict[str, object]]) -> dict[str, object]:
     config_path = root / "data" / "dispatches" / "food-line" / "discovery_expansion_config.json"
     config_sha256 = hashlib.sha256(config_path.read_bytes()).hexdigest() if config_path.exists() else ""
@@ -58,6 +111,22 @@ def _query_plan_payload(root: Path, edition_date: str, run_id: str, query_plan: 
         json.dumps(payload, sort_keys=True, ensure_ascii=False).encode("utf-8")
     ).hexdigest()
     return payload
+
+
+def _prepare_legacy_run_dir(
+    root: Path,
+    edition_date: str,
+    run_id: str,
+    query_plan: list[dict[str, object]],
+) -> tuple[Path, dict[str, object]]:
+    run_dir = root / "data" / "dispatches" / "food-line" / "discovery-runs" / edition_date / run_id
+    run_dir.mkdir(parents=True, exist_ok=True)
+    plan_payload = _query_plan_payload(root, edition_date, run_id, query_plan)
+    (run_dir / "query-plan.json").write_text(
+        json.dumps(plan_payload, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    return run_dir, plan_payload
 
 
 def _bounded_state_from_result(
@@ -144,6 +213,82 @@ def _write_state_files(root: Path, edition_date: str, run_id: str, result: dict[
     }
 
 
+def _write_timed_out_state_files(
+    root: Path,
+    edition_date: str,
+    run_id: str,
+    query_plan: list[dict[str, object]],
+    *,
+    timeout_seconds: float,
+    resume_count: int = 0,
+    result: dict[str, object] | None = None,
+) -> dict[str, object]:
+    plan_payload = _query_plan_payload(root, edition_date, run_id, query_plan)
+    state = {
+        "schema_version": RUN_STATE_SCHEMA,
+        "run_id": run_id,
+        "edition_date": edition_date,
+        "started_at": _utc_now(),
+        "completed_at": _utc_now(),
+        "status": "timed_out",
+        "resumable": True,
+        "resume_count": int(resume_count),
+        "partitions_total": 1,
+        "partitions_completed": 0,
+        "queries_total": len(query_plan),
+        "queries_completed": 0,
+        "queries_failed": 0,
+        "queries_timed_out": 1,
+        "candidates_discovered": 0,
+        "query_plan_sha256": plan_payload["query_plan_sha256"],
+        "final_error": f"Food Line discovery exceeded bounded runtime of {timeout_seconds:.0f} seconds",
+        "options": {
+            "required_coverage_threshold": 0.90,
+            "direct_source_coverage_threshold": 0.75,
+        },
+        "coverage": {
+            "required_success_ratio": 0.0,
+            "direct_success_ratio": 0.0,
+        },
+        "agent_export": {
+            "status": "blocked_incomplete_collection",
+            "path": str(root / "status" / "food-line" / "runtime" / "agent-inbox"),
+            "sha256": "",
+        },
+        "next_action": "No collection action required.",
+    }
+    run_dir = root / "data" / "dispatches" / "food-line" / "discovery-runs" / edition_date / run_id
+    run_dir.mkdir(parents=True, exist_ok=True)
+    (run_dir / "query-plan.json").write_text(
+        json.dumps(plan_payload, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    (run_dir / "run-state.json").write_text(
+        json.dumps(state, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    merged = {
+        "ok": False,
+        "status": state["status"],
+        "error": state["final_error"],
+        "run_state_path": str(run_dir / "run-state.json"),
+        "query_plan_path": str(run_dir / "query-plan.json"),
+        "query_plan_sha256": plan_payload["query_plan_sha256"],
+        "run_id": run_id,
+        "edition_date": edition_date,
+        "coverage": state["coverage"],
+        "agent_export": state["agent_export"],
+        "queries_total": state["queries_total"],
+        "queries_completed": state["queries_completed"],
+        "queries_failed": state["queries_failed"],
+        "queries_timed_out": state["queries_timed_out"],
+        "candidates_discovered": state["candidates_discovered"],
+    }
+    if result:
+        merged.update(result)
+    return merged
+
+
 def _find_run_dir(root: Path, run_id: str, edition_date: str | None = None) -> Path:
     if edition_date:
         candidate = root / "data" / "dispatches" / "food-line" / "discovery-runs" / edition_date / run_id
@@ -180,19 +325,106 @@ def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
     if not args.date:
         raise ValueError("--date is required for a bounded discovery run")
     edition_date = args.date
-    result = run_food_line_discovery_expansion(
+    resume_count = 1 if args.resume_run else 0
+    if args.max_run_minutes is None:
+        result = run_food_line_discovery_expansion(
+            root,
+            edition_date,
+            edition_mode=args.edition_mode,
+            max_results_per_query=args.max_results_per_query,
+            max_queries=args.max_queries,
+            query_lookback_days=args.query_lookback_days,
+            query_lookahead_days=args.query_lookahead_days,
+            public_claim_lookback_days=args.public_claim_lookback_days,
+            public_claim_lookahead_days=args.public_claim_lookahead_days,
+            dry_run=bool(args.dry_run),
+        )
+        wrapped = _write_state_files(root, edition_date, run_id, result, resume_count=resume_count)
+        wrapped["ok"] = bool(result.get("ok"))
+        if not wrapped["ok"]:
+            wrapped["status"] = "failed"
+        return wrapped
+
+    query_plan = build_food_line_discovery_query_plan(
         root,
         edition_date,
-        edition_mode=args.edition_mode,
-        max_results_per_query=args.max_results_per_query,
-        max_queries=args.max_queries,
-        query_lookback_days=args.query_lookback_days,
-        query_lookahead_days=args.query_lookahead_days,
-        public_claim_lookback_days=args.public_claim_lookback_days,
-        public_claim_lookahead_days=args.public_claim_lookahead_days,
-        dry_run=bool(args.dry_run),
+        lookback_days=args.query_lookback_days,
+        lookahead_days=args.query_lookahead_days,
     )
-    resume_count = 1 if args.resume_run else 0
+    _prepare_legacy_run_dir(root, edition_date, run_id, query_plan)
+    child_command = [
+        str(sys.executable),
+        str(Path(__file__).resolve()),
+        "--date",
+        edition_date,
+        "--edition-mode",
+        args.edition_mode,
+        "--max-results-per-query",
+        str(args.max_results_per_query),
+    ]
+    if args.max_queries is not None:
+        child_command.extend(["--max-queries", str(args.max_queries)])
+    child_command.extend(
+        [
+            "--query-lookback-days",
+            str(args.query_lookback_days),
+            "--query-lookahead-days",
+            str(args.query_lookahead_days),
+            "--public-claim-lookback-days",
+            str(args.public_claim_lookback_days),
+            "--public-claim-lookahead-days",
+            str(args.public_claim_lookahead_days),
+        ]
+    )
+    if args.dry_run:
+        child_command.append("--dry-run")
+    timeout_seconds = max(1.0, float(args.max_run_minutes) * 60.0)
+    completed, timed_out = _run_command_with_timeout(child_command, cwd=root, timeout_seconds=timeout_seconds)
+    if timed_out:
+        return _write_timed_out_state_files(
+            root,
+            edition_date,
+            run_id,
+            query_plan,
+            timeout_seconds=timeout_seconds,
+            resume_count=resume_count,
+            result={
+                "command_exit_code": int(completed.returncode),
+                "stderr": completed.stderr,
+                "stdout": completed.stdout,
+            },
+        )
+    stdout = (completed.stdout or "").strip()
+    if not stdout:
+        result = {
+            "ok": False,
+            "status": "failed",
+            "error": "legacy bounded discovery produced no JSON output",
+            "command_exit_code": int(completed.returncode),
+            "stdout": completed.stdout,
+            "stderr": completed.stderr,
+        }
+        wrapped = _write_state_files(root, edition_date, run_id, result, resume_count=resume_count)
+        wrapped["ok"] = False
+        wrapped["status"] = "failed"
+        return wrapped
+    try:
+        result = json.loads(stdout)
+    except json.JSONDecodeError as exc:
+        result = {
+            "ok": False,
+            "status": "failed",
+            "error": f"legacy bounded discovery returned invalid JSON: {exc}",
+            "command_exit_code": int(completed.returncode),
+            "stdout": completed.stdout,
+            "stderr": completed.stderr,
+        }
+        wrapped = _write_state_files(root, edition_date, run_id, result, resume_count=resume_count)
+        wrapped["ok"] = False
+        wrapped["status"] = "failed"
+        return wrapped
+    if not isinstance(result, dict):
+        raise ValueError("legacy bounded discovery must return a JSON object")
     wrapped = _write_state_files(root, edition_date, run_id, result, resume_count=resume_count)
     wrapped["ok"] = bool(result.get("ok"))
     if not wrapped["ok"]:

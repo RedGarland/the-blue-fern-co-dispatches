@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 import scripts.backfill_food_line_discovery as backfill
+from bluefern_dispatches.food_line_sources import _freshness_status_for_dates, evaluate_food_line_pressure
 
 
 def _write_direct_source_config(tmp_path: Path, direct_sources: list[dict[str, object]]) -> None:
@@ -1407,3 +1408,101 @@ def test_food_line_discovery_backfill_reports_missing_public_prose_diagnostics(t
     assert summary["pages_repo_mutated"] is False
     assert not (tmp_path / "output" / "site").exists()
     assert not (tmp_path / "bluefern-dispatches-pages").exists()
+
+
+def test_backfill_retains_qualifying_historical_candidate_without_auto_publishing():
+    row = {
+        "candidate_id": "frac-historical",
+        "discovered_title": "Senate Agriculture Committee Chair Releases Updated Farm Bill Proposal, but Key SNAP Harms Remain",
+        "discovered_publisher": "FRAC News",
+        "canonical_url": "https://frac.org/blog/senate-agriculture-committee-chair-releases-updated-farm-bill-proposal-but-key-snap-harms-remain",
+        "source_published_date": "2026-08-03",
+        "published_at": "2026-08-03",
+        "pressure_signal": True,
+        "pressure_type": "SNAP policy pressure",
+        "pressure_summary": "FRAC warned that a SNAP eligibility proposal would tighten access to benefits for some households.",
+        "traceability_status": "traceable",
+        "classification_status": "qualified_pressure_signal",
+        "public_claim_eligible": False,
+        "public_claim_blockers": ["outside_backfill_date_window"],
+    }
+
+    labeled = backfill._label_backfill_candidate(row, edition_date="2026-08-06")
+
+    assert labeled["public_claim_eligible"] is False
+    assert labeled["historical_backfill_status"] == "historical_recovered"
+    assert labeled["historical_backfill_target_date"] == "2026-08-06"
+    assert labeled["historical_backfill_source_published_at"] == "2026-08-03"
+    assert labeled["historical_backfill_canonical_date"] == "2026-08-06"
+    assert "outside_backfill_date_window" not in labeled["public_claim_blockers"]
+    assert "public_claim_blockers" in labeled
+    assert labeled["source_published_date"] == "2026-08-03"
+
+
+def test_backfill_context_only_candidate_stays_context_only():
+    row = {
+        "candidate_id": "second-harvest-context",
+        "discovered_title": "Second Harvest of Coastal Georgia says shelves are down roughly 30 percent",
+        "discovered_publisher": "Local News",
+        "canonical_url": "https://example.org/second-harvest-context",
+        "source_published_date": "2026-08-03",
+        "published_at": "2026-08-03",
+        "pressure_signal": False,
+        "pressure_type": "benefit access pressure",
+        "pressure_summary": "",
+        "traceability_status": "traceable",
+        "classification_status": "context_only",
+        "public_claim_eligible": False,
+        "public_claim_blockers": ["context_only", "outside_backfill_date_window"],
+    }
+
+    labeled = backfill._label_backfill_candidate(row, edition_date="2026-08-06")
+
+    assert labeled["public_claim_eligible"] is False
+    assert labeled["public_claim_blockers"] == ["context_only", "outside_backfill_date_window"]
+    assert "historical_backfill_status" not in labeled
+
+
+def test_current_day_freshness_behavior_remains_unchanged():
+    freshness_status, freshness_reason = _freshness_status_for_dates("2026-08-06", "2026-08-03", 14)
+
+    assert freshness_status == "fresh_recent_signal"
+    assert freshness_reason == ""
+
+
+def test_backfill_dedupes_same_historical_candidate_across_dates():
+    first = {
+        "candidate_id": "frac-2026-08-06",
+        "discovered_title": "Senate Agriculture Committee Chair Releases Updated Farm Bill Proposal, but Key SNAP Harms Remain",
+        "discovered_publisher": "FRAC News",
+        "canonical_url": "https://frac.org/blog/senate-agriculture-committee-chair-releases-updated-farm-bill-proposal-but-key-snap-harms-remain",
+        "source_published_date": "2026-08-03",
+        "published_at": "2026-08-03",
+        "pressure_signal": True,
+        "pressure_type": "SNAP policy pressure",
+        "pressure_summary": "FRAC warned that a SNAP eligibility proposal would tighten access to benefits for some households.",
+        "traceability_status": "traceable",
+        "classification_status": "qualified_pressure_signal",
+        "public_claim_eligible": False,
+        "public_claim_blockers": ["outside_backfill_date_window"],
+    }
+    second = dict(first, candidate_id="frac-2026-08-07")
+
+    identity_dates: dict[str, dict[str, str]] = {}
+    first_labeled = backfill._label_backfill_candidate(first, edition_date="2026-08-06")
+    first_identity = backfill._backfill_candidate_identity(first_labeled)
+    identity_dates[first_identity] = {"date": "2026-08-06", "candidate_id": first_labeled["candidate_id"]}
+    second_labeled = backfill._label_backfill_candidate(second, edition_date="2026-08-07")
+    second_identity = backfill._backfill_candidate_identity(second_labeled)
+    second_labeled = backfill._label_backfill_candidate(
+        second_labeled,
+        edition_date="2026-08-07",
+        canonical_date=identity_dates[second_identity]["date"],
+        canonical_candidate_id=identity_dates[second_identity]["candidate_id"],
+    )
+
+    assert first_labeled["historical_backfill_status"] == "historical_recovered"
+    assert first_labeled["historical_backfill_target_date"] == "2026-08-06"
+    assert second_labeled["historical_backfill_status"] == "historical_duplicate"
+    assert second_labeled["historical_backfill_target_date"] == "2026-08-07"
+    assert second_labeled["duplicate_of"] == "frac-2026-08-06"

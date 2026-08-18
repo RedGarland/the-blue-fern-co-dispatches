@@ -258,6 +258,7 @@ PRESSURE_TYPE_RULES: list[tuple[str, tuple[str, ...]]] = [
             "fewer distributions",
             "closed pantry",
             "pantry closure",
+            "impossible to continue operating the pantry",
             "reduced capacity",
             "smaller boxes",
             "supply shortage",
@@ -1820,6 +1821,15 @@ def _build_pressure_summary(
                 pressure_type=pressure_type,
             )
     elif pressure_type == "service reduction":
+        if any(term in lowered for term in ("closed pantry", "pantry closure", "impossible to continue operating the pantry")):
+            sentence = _append_place(f"{subject} reported a pantry closure", place)
+            sentence = _append_groups(sentence, groups_text)
+            return _smooth_public_pressure_summary(
+                sentence + ".",
+                subject=subject,
+                location_name=place,
+                pressure_type=pressure_type,
+            )
         if any(term in lowered for term in ("reduced hours", "cut hours", "limited distribution", "closed", "capacity", "inventory", "fewer distributions", "buying more food", "pantries buying more food", "food assistance cuts", "receiving less", "squeezing", "donations dropped", "supply dropped")):
             sentence = _append_place(f"{subject} reported reduced distribution hours", place)
             sentence = _append_groups(sentence, groups_text)

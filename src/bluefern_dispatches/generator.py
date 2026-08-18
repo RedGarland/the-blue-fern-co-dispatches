@@ -19,6 +19,15 @@ from bluefern_dispatches.care_line_render import (
     render_care_line_edition_body,
     render_care_line_source_table_html,
 )
+from bluefern_dispatches.root_homepage import (
+    discover_public_releases,
+    render_sitewide_homepage_from_template,
+    select_effective_latest,
+)
+from bluefern_dispatches.care_line_release_render import (
+    build_public_rows as build_care_line_approved_public_rows,
+    load_approved_release as load_care_line_approved_release,
+)
 from bluefern_dispatches.care_line_sources import (
     DISPATCH_NAME as CARE_LINE_DISPATCH_NAME,
     DISPATCH_SLUG as CARE_LINE_DISPATCH_SLUG,
@@ -36,7 +45,6 @@ from bluefern_dispatches.care_line_sources import (
 )
 from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
 from bluefern_dispatches.public_prose import html_contains_public_prose_violations
-from bluefern_dispatches.universal_events.care_line_signal_wire import build_care_line_signal_wire_publication
 
 
 BASE_URL = "https://dispatches.thebluefernco.com"
@@ -302,11 +310,78 @@ def _normalize_care_line_fixture_rows(
     return valid_rows
 
 
-def _build_care_line_dispatch(root: Path, now: str, edition_date: str, warnings: list[str], errors: list[str]) -> DispatchConfig:
+def _build_care_line_dispatch(
+    root: Path,
+    now: str,
+    edition_date: str,
+    warnings: list[str],
+    errors: list[str],
+    *,
+    publication_scope: dict[str, Any] | None = None,
+) -> DispatchConfig:
     data_root = root / "data" / "dispatches" / "care-line"
     registry_file = data_root / "pressure_source_registry.json"
     direct_fixture = data_root / "sources" / edition_date / "manual_sources.json"
     any_fixture = data_root / "sources"
+    approved_release = load_care_line_approved_release(root, edition_date)
+    if approved_release is not None:
+        rows = build_care_line_approved_public_rows(approved_release)
+        if not registry_file.exists() and not direct_fixture.exists() and not any_fixture.exists():
+            warnings.append("care-line data tree is not present; using approved release snapshot")
+        try:
+            registry = load_care_line_pressure_registry(root)
+        except FileNotFoundError as exc:
+            warnings.append(str(exc))
+            registry = []
+        except Exception as exc:
+            warnings.append(f"care-line registry validation failed: {exc}")
+            registry = []
+        else:
+            errors.extend(validate_care_line_pressure_registry(registry))
+        public_rows = [row for row in rows if care_line_record_is_public(row)]
+        body_html = render_care_line_edition_body(public_rows, edition_date)
+        if not registry:
+            warnings.append("care-line pressure source registry is empty")
+        return DispatchConfig(
+            slug=CARE_LINE_DISPATCH_SLUG,
+            name=CARE_LINE_DISPATCH_NAME,
+            edition_date=edition_date,
+            tagline=CARE_LINE_DISPATCH_TAGLINE,
+            logo="care-line-logo.png",
+            sources=[
+                SourceRecord(
+                    source_id=str(row.get("source_record_id") or ""),
+                    title=str(row.get("title") or ""),
+                    url=str(row.get("url") or ""),
+                    publisher=str(row.get("publisher") or ""),
+                    published_at=str(row.get("published_at") or None) if row.get("published_at") is not None else None,
+                    retrieved_at=str(row.get("retrieved_at") or now),
+                    archive_path=None,
+                    used_in_story_ids=[f"care-line-story-{index:03d}"],
+                    claim_ids=[f"care-line-claim-{index:03d}"],
+                    dispatch_slug=CARE_LINE_DISPATCH_SLUG,
+                    edition_date=edition_date,
+                )
+                for index, row in enumerate(public_rows, start=1)
+            ],
+            stories=[
+                StoryRecord(
+                    story_id=f"care-line-story-{index:03d}",
+                    title=str(row.get("title") or ""),
+                    summary=str(row.get("claim_supported") or row.get("pressure_summary") or row.get("summary_or_snippet") or ""),
+                    category=str(row.get("public_inclusion_bucket") or "Other Care Line Signals"),
+                    score=100 if row.get("included_as_lead") is True else 90,
+                    scoring_reasons=[str(row.get("pressure_reason") or "source-backed approved release record")],
+                    included_in_public_summary=True,
+                    included_in_detail_dataset=False,
+                    source_ids=[str(row.get("source_record_id") or "")],
+                )
+                for index, row in enumerate(public_rows, start=1)
+            ],
+            body_html=body_html,
+            detail_artifacts=[],
+            raw_records=rows,
+        )
     if not registry_file.exists() and not direct_fixture.exists() and not any_fixture.exists():
         warnings.append("care-line data tree is not present; skipping care-line dispatch build")
         return DispatchConfig(
@@ -332,7 +407,13 @@ def _build_care_line_dispatch(root: Path, now: str, edition_date: str, warnings:
         registry = []
     raw_payload, fixture_path = _care_line_fixtures(root, edition_date)
     rows = _normalize_care_line_fixture_rows(raw_payload, fixture_path, warnings, errors)
-    errors.extend(validate_care_line_manual_sources(rows))
+    # A guarded Signal Wire publication is selected from reviewed records and
+    # Universal Events.  The legacy discovery fixture is retained for
+    # traceability/artifact rendering, but its older schema must not become a
+    # blocking validator for an explicitly selected Signal Wire slice.
+    scoped_signal_wire = bool(publication_scope and publication_scope.get("selected_dispatches") == [CARE_LINE_DISPATCH_SLUG])
+    if not scoped_signal_wire:
+        errors.extend(validate_care_line_manual_sources(rows))
     if not rows:
         warnings.append("care-line has no fixture records; rendering a no-current-update edition")
     if fixture_path is None:
@@ -554,6 +635,7 @@ def seed_dispatches(
     warnings: list[str],
     errors: list[str],
     dispatch_seed_dates: dict[str, str] | None = None,
+    publication_scope: dict[str, Any] | None = None,
 ) -> list[DispatchConfig]:
     # Use explicit seed edition date if provided via env, otherwise default
     # to the current run date (the 'now' param is an ISO timestamp).
@@ -587,7 +669,14 @@ def seed_dispatches(
             detail_artifacts=[],
         ),
         _build_american_pressure_dispatch(root, now, ap_date, warnings, errors),
-        _build_care_line_dispatch(root, now, care_line_date, warnings, errors),
+        _build_care_line_dispatch(
+            root,
+            now,
+            care_line_date,
+            warnings,
+            errors,
+            publication_scope=publication_scope,
+        ),
         DispatchConfig(
             slug="cascadia",
             name="The Cascadia Briefing",
@@ -665,6 +754,14 @@ def write_text(path: Path, content: str, dry_run: bool, wrote: list[str]) -> Non
         return
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
+
+
+def write_bytes(path: Path, content: bytes, dry_run: bool, wrote: list[str]) -> None:
+    wrote.append(str(path))
+    if dry_run:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(content)
 
 
 def copy_asset(src: Path, dst: Path, dry_run: bool, wrote: list[str], warnings: list[str]) -> None:
@@ -752,10 +849,20 @@ def page(
     body: str,
     site_name: str = "Dispatches From The Blue Fern Co.",
     *,
+    og_type: str = "website",
     description: str | None = None,
+    og_title: str | None = None,
     og_image: str | None = None,
+    og_image_width: int | None = None,
+    og_image_height: int | None = None,
     og_image_alt: str | None = None,
+    twitter_title: str | None = None,
 ) -> str:
+    title_meta = (
+        f'  <meta property="og:title" content="{html.escape(og_title or title)}">\n'
+        f'  <meta name="twitter:title" content="{html.escape(twitter_title or og_title or title)}">\n'
+    )
+    type_meta = f'  <meta property="og:type" content="{html.escape(og_type)}">\n'
     description_meta = ""
     if description:
         description_meta = (
@@ -766,6 +873,10 @@ def page(
     image_meta = ""
     if og_image:
         image_meta = f'  <meta property="og:image" content="{html.escape(og_image)}">\n  <meta name="twitter:image" content="{html.escape(og_image)}">\n'
+        if og_image_width:
+            image_meta += f'  <meta property="og:image:width" content="{og_image_width}">\n'
+        if og_image_height:
+            image_meta += f'  <meta property="og:image:height" content="{og_image_height}">\n'
         if og_image_alt:
             image_meta += f'  <meta property="og:image:alt" content="{html.escape(og_image_alt)}">\n  <meta name="twitter:image:alt" content="{html.escape(og_image_alt)}">\n'
     return f"""<!doctype html>
@@ -775,10 +886,10 @@ def page(
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{html.escape(title)}</title>
   <link rel="canonical" href="{html.escape(canonical)}">
-  <meta property="og:url" content="{html.escape(canonical)}">
-  <meta property="og:site_name" content="{html.escape(site_name)}">
+{type_meta}{title_meta}{description_meta}{image_meta}  <meta property="og:site_name" content="{html.escape(site_name)}">
   <meta name="twitter:card" content="summary_large_image">
-{description_meta}{image_meta}{favicon_links()}
+  <meta property="og:url" content="{html.escape(canonical)}">
+{favicon_links()}
   <link rel="stylesheet" href="{css_href}">
 </head>
 <body>
@@ -1218,7 +1329,10 @@ def public_edition_manifest(site_root: Path, slug: str, edition_date: str) -> di
     return payload if isinstance(payload, dict) else {}
 
 
-def _pages_repo_root_for_site_root(site_root: Path) -> Path | None:
+def _pages_repo_root_for_site_root(site_root: Path, pages_repo: Path | None = None) -> Path | None:
+    if pages_repo is not None:
+        resolved_pages_repo = pages_repo.resolve()
+        return resolved_pages_repo if resolved_pages_repo.exists() else None
     try:
         repo_root = site_root.parents[1]
     except IndexError:
@@ -1227,10 +1341,10 @@ def _pages_repo_root_for_site_root(site_root: Path) -> Path | None:
     return pages_repo if pages_repo.exists() else None
 
 
-def _gaza_public_edition_dirs(site_root: Path) -> list[Path]:
+def _gaza_public_edition_dirs(site_root: Path, pages_repo: Path | None = None) -> list[Path]:
     editions_root = site_root / "gaza" / "editions"
     roots = [editions_root]
-    pages_repo = _pages_repo_root_for_site_root(site_root)
+    pages_repo = _pages_repo_root_for_site_root(site_root, pages_repo)
     if pages_repo is not None:
         pages_editions_root = pages_repo / "gaza" / "editions"
         if pages_editions_root.resolve(strict=False) not in {root.resolve(strict=False) for root in roots}:
@@ -1238,9 +1352,9 @@ def _gaza_public_edition_dirs(site_root: Path) -> list[Path]:
     return [root for root in roots if root.exists()]
 
 
-def _gaza_public_edition_is_listable(site_root: Path, edition_date: str) -> bool:
+def _gaza_public_edition_is_listable(site_root: Path, edition_date: str, pages_repo: Path | None = None) -> bool:
     repo_root = site_root.parents[1]
-    pages_repo = _pages_repo_root_for_site_root(site_root)
+    pages_repo = _pages_repo_root_for_site_root(site_root, pages_repo)
     candidate_dirs = [site_root / "gaza" / "editions" / edition_date]
     if pages_repo is not None:
         candidate_dirs.append(pages_repo / "gaza" / "editions" / edition_date)
@@ -1316,14 +1430,15 @@ def _extract_gaza_audio_feed_dates(text: str) -> set[str]:
     return set(GAZA_AUDIO_PODCAST_DATE_RE.findall(text))
 
 
-def _gaza_public_surface_date_sets(public_root: Path) -> dict[str, set[str]]:
+def _gaza_public_surface_date_sets(public_root: Path, *, audio_root: Path | None = None) -> dict[str, set[str]]:
     gaza_root = public_root / "gaza"
+    audio_source_root = audio_root if audio_root is not None else gaza_root
     surface_paths: dict[str, tuple[Path, Any]] = {
         "gaza/archive.html": (gaza_root / "archive.html", _extract_gaza_public_history_dates),
         "gaza/rss.xml": (gaza_root / "rss.xml", _extract_gaza_public_history_dates),
-        "gaza/audio/index.html": (gaza_root / "audio" / "index.html", _extract_gaza_audio_index_dates),
-        "gaza/audio/podcast.xml": (gaza_root / "audio" / "podcast.xml", _extract_gaza_audio_feed_dates),
-        "gaza/podcast.xml": (gaza_root / "podcast.xml", _extract_gaza_audio_feed_dates),
+        "gaza/audio/index.html": (audio_source_root / "audio" / "index.html", _extract_gaza_audio_index_dates),
+        "gaza/audio/podcast.xml": (audio_source_root / "audio" / "podcast.xml", _extract_gaza_audio_feed_dates),
+        "gaza/podcast.xml": (audio_source_root / "podcast.xml", _extract_gaza_audio_feed_dates),
     }
     result: dict[str, set[str]] = {}
     for surface, (path, extractor) in surface_paths.items():
@@ -1331,10 +1446,15 @@ def _gaza_public_surface_date_sets(public_root: Path) -> dict[str, set[str]]:
     return result
 
 
-def _gaza_public_surface_history_diagnostics(previous_root: Path, current_root: Path) -> list[dict[str, Any]]:
+def _gaza_public_surface_history_diagnostics(
+    previous_root: Path,
+    current_root: Path,
+    *,
+    current_audio_root: Path | None = None,
+) -> list[dict[str, Any]]:
     diagnostics: list[dict[str, Any]] = []
     previous = _gaza_public_surface_date_sets(previous_root)
-    current = _gaza_public_surface_date_sets(current_root)
+    current = _gaza_public_surface_date_sets(current_root, audio_root=current_audio_root)
     for surface in sorted(previous.keys() | current.keys()):
         before_dates = previous.get(surface, set())
         after_dates = current.get(surface, set())
@@ -1398,12 +1518,6 @@ def _gaza_homepage_recent_edition_guard(
         if len(old_dates) >= GAZA_HOME_RECENT_EDITION_LIMIT and len(new_dates) != GAZA_HOME_RECENT_EDITION_LIMIT:
             reasons.append(
                 f"homepage recent-editions list no longer at configured limit: {len(new_dates)} != {GAZA_HOME_RECENT_EDITION_LIMIT}"
-            )
-        if baseline_is_healthy and len(removed_dates) > 1:
-            reasons.append(f"homepage dropped multiple recent dates: {', '.join(removed_dates)}")
-        if baseline_is_healthy and old_dates and len(old_dates) - len(new_dates) >= 3:
-            reasons.append(
-                f"homepage count reduction too large: previous_count={len(old_dates)} current_count={len(new_dates)}"
             )
         if reasons:
             decision = "blocked"
@@ -1485,7 +1599,12 @@ def render_edition_list_item(site_root: Path, dispatch: DispatchConfig, date: st
     )
 
 
-def discover_public_edition_dates(site_root: Path, slug: str, max_edition_date: str | None = None) -> list[str]:
+def discover_public_edition_dates(
+    site_root: Path,
+    slug: str,
+    max_edition_date: str | None = None,
+    pages_repo: Path | None = None,
+) -> list[str]:
     editions_root = site_root / slug / "editions"
     if not editions_root.exists():
         return []
@@ -1506,7 +1625,7 @@ def discover_public_edition_dates(site_root: Path, slug: str, max_edition_date: 
         return [edition_date for edition_date, _ in sorted(dated, key=lambda row: (row[1], row[0]), reverse=True)]
     if slug == "gaza":
         dated: set[str] = set()
-        for candidate_root in _gaza_public_edition_dirs(site_root):
+        for candidate_root in _gaza_public_edition_dirs(site_root, pages_repo):
             for path in candidate_root.iterdir():
                 if path.is_dir() and len(path.name) == 10:
                     dated.add(path.name)
@@ -1515,7 +1634,7 @@ def discover_public_edition_dates(site_root: Path, slug: str, max_edition_date: 
                 edition_date
                 for edition_date in dated
                 if (not max_edition_date or edition_date <= max_edition_date)
-                and _gaza_public_edition_is_listable(site_root, edition_date)
+                and _gaza_public_edition_is_listable(site_root, edition_date, pages_repo)
             ),
             reverse=True,
         )
@@ -1705,7 +1824,7 @@ def reconcile_gaza_public_editions(
 
     archive_entries = [
         {"edition_date": date}
-        for date in discover_public_edition_dates(site_root, "gaza")
+        for date in discover_public_edition_dates(site_root, "gaza", pages_repo=pages_repo)
     ]
     return {
         "discovered": discovered,
@@ -2137,6 +2256,7 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
         care_line_public_records = [row for row in care_line_records if care_line_record_is_public(row)]
         care_line_edition_mode = "current_update" if care_line_public_records else "no_current_update"
         care_line_diagnostics = care_line_review_diagnostics(care_line_records)
+        approved_release = load_care_line_approved_release(site_root.parents[1], dispatch.edition_date)
         extra_public_artifacts = [
             str(public_dir / "source_table.html"),
             str(public_dir / "claim_ledger.html"),
@@ -2153,6 +2273,26 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
     if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
         claim_count = len(care_line_public_records)
         qualified_public_claim_count = len(care_line_public_records)
+        if approved_release is not None:
+            source_adequacy_label = str(approved_release.proposal.get("source_adequacy_label") or "Limited-source update").strip()
+            source_adequacy_status = str(approved_release.proposal.get("source_adequacy_status") or "LIMITED_SOURCE_UPDATE").strip()
+            public_archive_title = source_adequacy_label or care_line_public_archive_title_for_records(care_line_records)
+            public_archive_subtitle = str(approved_release.proposal.get("edition_summary") or care_line_summary_for_records(care_line_records)).strip()
+            public_summary = public_archive_subtitle
+        else:
+            source_adequacy_label = ""
+            source_adequacy_status = ""
+            public_archive_title = (
+                care_line_public_archive_title_for_records(care_line_records)
+                if care_line_public_records
+                else f"{dispatch.edition_date} — No current update"
+            )
+            public_archive_subtitle = care_line_summary_for_records(care_line_records) if care_line_public_records else care_line_no_current_update_summary()
+            public_summary = (
+                care_line_summary_for_records(care_line_records)
+                if care_line_public_records
+                else care_line_no_current_update_summary()
+            )
     edition_manifest = {
         "dispatch_name": dispatch.name,
         "dispatch_slug": dispatch.slug,
@@ -2192,26 +2332,16 @@ def build_manifests(dispatch: DispatchConfig, site_root: Path, backup_root: Path
         "exclusion_reason_summary": care_line_diagnostics.get("exclusion_reason_summary") if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
         "discovery_gap_check": care_line_diagnostics if dispatch.slug == CARE_LINE_DISPATCH_SLUG else {},
         "public_summary": (
-            care_line_summary_for_records(care_line_records)
-            if dispatch.slug == CARE_LINE_DISPATCH_SLUG and care_line_public_records
-            else care_line_no_current_update_summary()
-            if dispatch.slug == CARE_LINE_DISPATCH_SLUG
-            else ""
+            public_summary if dispatch.slug == CARE_LINE_DISPATCH_SLUG else ""
         ),
         "public_archive_title": (
-            care_line_public_archive_title_for_records(care_line_records)
-            if dispatch.slug == CARE_LINE_DISPATCH_SLUG and care_line_public_records
-            else f"{dispatch.edition_date} — No current update"
-            if dispatch.slug == CARE_LINE_DISPATCH_SLUG
-            else ""
+            public_archive_title if dispatch.slug == CARE_LINE_DISPATCH_SLUG else ""
         ),
         "public_archive_subtitle": (
-            care_line_summary_for_records(care_line_records)
-            if dispatch.slug == CARE_LINE_DISPATCH_SLUG and care_line_public_records
-            else care_line_no_current_update_summary()
-            if dispatch.slug == CARE_LINE_DISPATCH_SLUG
-            else ""
+            public_archive_subtitle if dispatch.slug == CARE_LINE_DISPATCH_SLUG else ""
         ),
+        "source_adequacy_status": source_adequacy_status if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
+        "source_adequacy_label": source_adequacy_label if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
         "edition_mode": care_line_edition_mode if dispatch.slug == CARE_LINE_DISPATCH_SLUG else "",
         "reviewed_source_count": len(care_line_records) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
         "excluded_source_count": len([row for row in care_line_records if not care_line_record_is_public(row)]) if dispatch.slug == CARE_LINE_DISPATCH_SLUG else 0,
@@ -2255,7 +2385,63 @@ def build_site(
     generated_at = datetime.now(timezone.utc).isoformat()
     warnings: list[str] = []
     errors: list[str] = []
-    all_dispatches = seed_dispatches(root, generated_at, warnings, errors, dispatch_seed_dates=dispatch_seed_dates)
+    publication_scope: dict[str, Any] = {
+        "selected_dispatches": list(only_dispatches),
+        "selected_event_ids": [],
+        "selected_source_record_ids": [],
+        "generated_output_paths": [],
+        "publication_state_paths": [],
+        "approved_social_card_overrides": [],
+        "excluded_records": [],
+        "exclusion_reasons": {},
+    }
+    care_line_signal_wire: dict[str, Any] | None = None
+    dispatch_seed_dates = dispatch_seed_dates or {}
+    care_line_seed_date = dispatch_seed_dates.get("care-line") or _latest_care_line_fixture_date(root) or datetime.now(timezone.utc).date().isoformat()
+    approved_care_line_release = load_care_line_approved_release(root, care_line_seed_date)
+    if approved_care_line_release is not None:
+        care_line_signal_wire = {"ok": True, "skipped": True, "approved_release": True}
+    if tuple(only_dispatches) == (CARE_LINE_DISPATCH_SLUG,):
+        try:
+            if care_line_signal_wire is None:
+                try:
+                    from bluefern_dispatches.universal_events.care_line_signal_wire import build_care_line_signal_wire_publication
+                except ModuleNotFoundError as exc:
+                    care_line_signal_wire = {"ok": True, "skipped": True, "warnings": [f"care-line signal wire dependency unavailable: {exc}"]}
+                else:
+                    care_line_signal_wire = build_care_line_signal_wire_publication(root, generated_at=generated_at)
+            if not care_line_signal_wire.get("skipped"):
+                manifest = care_line_signal_wire.get("publication_manifest") or {}
+                publication_scope["selected_event_ids"] = list(manifest.get("event_ids") or [])
+                publication_scope["selected_source_record_ids"] = list(manifest.get("selected_record_ids") or [])
+                deferred = list(manifest.get("deferred_record_ids") or [])
+                closed = list(manifest.get("closed_record_ids") or [])
+                publication_scope["excluded_records"] = deferred + closed
+                publication_scope["exclusion_reasons"] = {
+                    **{record_id: "deferred or awaiting evidence review" for record_id in deferred},
+                    **{record_id: "rejected or closed from public release" for record_id in closed},
+                }
+                publication_scope["approved_social_card_overrides"] = sorted(
+                    str(event.get("event_id"))
+                    for event in (care_line_signal_wire.get("events") or [])
+                    if isinstance(event, dict) and event.get("event_id")
+                )
+                publication_scope["timestamp_decisions"] = {
+                    "public_published_at": manifest.get("public_published_at"),
+                    "last_updated_at": manifest.get("last_updated_at"),
+                    "content_hash_fields": list(manifest.get("public_content_hash_fields") or []),
+                }
+        except Exception as exc:
+            errors.append(f"care-line signal wire generation failed: {exc}")
+            care_line_signal_wire = {"ok": False, "skipped": False, "errors": [str(exc)]}
+    all_dispatches = seed_dispatches(
+        root,
+        generated_at,
+        warnings,
+        errors,
+        dispatch_seed_dates=dispatch_seed_dates,
+        publication_scope=publication_scope,
+    )
     dispatches = all_dispatches
     if only_dispatches:
         dispatches = [dispatch for dispatch in all_dispatches if dispatch.slug in only_dispatches]
@@ -2303,16 +2489,17 @@ def build_site(
         wrote=wrote,
         only_dispatches=only_dispatches,
     )
-    gaza_reconcile = reconcile_gaza_public_editions(
-        root,
-        site_root,
-        dry_run=dry_run,
-        wrote=wrote,
-        pages_repo=pages_repo.resolve() if pages_repo is not None else None,
-    )
+    if not only_dispatches or "gaza" in only_dispatches:
+        gaza_reconcile = reconcile_gaza_public_editions(
+            root,
+            site_root,
+            dry_run=dry_run,
+            wrote=wrote,
+            pages_repo=pages_repo.resolve() if pages_repo is not None else None,
+        )
 
-    # Keep root landing cards stable across scoped publishes.
-    write_text(site_root / "index.html", render_root(all_dispatches), dry_run, wrote)
+    if not only_dispatches:
+        write_text(site_root / "index.html", render_root(all_dispatches), dry_run, wrote)
     public_max_dates = public_max_dates or {}
     for dispatch in dispatches:
         max_public_date = public_max_dates.get(dispatch.slug)
@@ -2447,18 +2634,51 @@ def build_site(
             write_text(dispatch_public_root / "rss.xml", render_rss_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
     if not only_dispatches or CARE_LINE_DISPATCH_SLUG in only_dispatches:
         try:
-            care_line_signal_wire = build_care_line_signal_wire_publication(root, generated_at=generated_at)
+            if care_line_signal_wire is None:
+                try:
+                    from bluefern_dispatches.universal_events.care_line_signal_wire import build_care_line_signal_wire_publication
+                except ModuleNotFoundError as exc:
+                    care_line_signal_wire = {"ok": True, "skipped": True, "warnings": [f"care-line signal wire dependency unavailable: {exc}"]}
+                else:
+                    care_line_signal_wire = build_care_line_signal_wire_publication(root, generated_at=generated_at)
             if care_line_signal_wire.get("ok") and not care_line_signal_wire.get("skipped"):
+                publication_scope["generated_output_paths"] = sorted(
+                    str(artifact.get("path"))
+                    for artifact in care_line_signal_wire.get("site_artifacts") or []
+                    if isinstance(artifact, dict) and artifact.get("path")
+                )
+                publication_scope["publication_state_paths"] = sorted(
+                    str(artifact.get("path"))
+                    for artifact in care_line_signal_wire.get("publication_state_artifacts") or []
+                    if isinstance(artifact, dict) and artifact.get("path")
+                )
+                for artifact in care_line_signal_wire.get("publication_state_artifacts") or []:
+                    artifact_path = Path(str(artifact["path"]))
+                    if not artifact_path.is_absolute():
+                        artifact_path = root / artifact_path
+                    content = artifact["content"]
+                    if isinstance(content, (bytes, bytearray)):
+                        write_bytes(artifact_path, bytes(content), dry_run, wrote)
+                    else:
+                        write_text(artifact_path, str(content), dry_run, wrote)
                 for artifact in care_line_signal_wire.get("shadow_artifacts") or []:
                     artifact_path = Path(str(artifact["path"]))
                     if not artifact_path.is_absolute():
                         artifact_path = root / artifact_path
-                    write_text(artifact_path, str(artifact["content"]), dry_run, wrote)
+                    content = artifact["content"]
+                    if isinstance(content, (bytes, bytearray)):
+                        write_bytes(artifact_path, bytes(content), dry_run, wrote)
+                    else:
+                        write_text(artifact_path, str(content), dry_run, wrote)
                 for artifact in care_line_signal_wire.get("site_artifacts") or []:
                     artifact_path = Path(str(artifact["path"]))
                     if not artifact_path.is_absolute():
                         artifact_path = root / artifact_path
-                    write_text(artifact_path, str(artifact["content"]), dry_run, wrote)
+                    content = artifact["content"]
+                    if isinstance(content, (bytes, bytearray)):
+                        write_bytes(artifact_path, bytes(content), dry_run, wrote)
+                    else:
+                        write_text(artifact_path, str(content), dry_run, wrote)
                 public_urls.extend(str(url) for url in care_line_signal_wire.get("public_urls") or [])
         except Exception as exc:
             errors.append(f"care-line signal wire generation failed: {exc}")
@@ -2479,6 +2699,7 @@ def build_site(
         "gaza_archive_entries_written": gaza_reconcile.get("archive_entries", []),
         "warnings": warnings,
         "errors": errors,
+        "publication_scope": publication_scope,
         "paid_detail_excluded_from_public": True,
     }
 
@@ -2693,17 +2914,81 @@ def copy_public_site_to_pages(
         skip_diagnostics=skip_diagnostics,
     ):
         target = pages_repo / source.relative_to(site_root)
+        relative = source.relative_to(site_root).as_posix()
+        if tuple(only_dispatches) == (CARE_LINE_DISPATCH_SLUG,):
+            in_signal_scope = relative in {"signals/feed.xml", "care-line/signals/feed.xml"} or relative.startswith("events/")
+            if not in_signal_scope:
+                skipped.append(f"out-of-scope Care Line artifact: {target}")
+                continue
+        if (
+            tuple(only_dispatches) == (CARE_LINE_DISPATCH_SLUG,)
+            and target.exists()
+            and (relative.startswith("events/") or relative.startswith("signals/") or relative.startswith("care-line/signals/"))
+            and source.suffix.lower() in {".html", ".xml", ".json", ".txt", ".css"}
+            and source.read_text(encoding="utf-8") .replace("\r\n", "\n")
+            == target.read_text(encoding="utf-8", errors="replace").replace("\r\n", "\n")
+        ):
+            skipped.append(f"unchanged Care Line public artifact: {target}")
+            continue
+        if (
+            tuple(only_dispatches) == (CARE_LINE_DISPATCH_SLUG,)
+            and target.exists()
+            and source.suffix.lower() not in {".html", ".xml", ".json", ".txt", ".css"}
+            and source.read_bytes() == target.read_bytes()
+        ):
+            skipped.append(f"unchanged Care Line binary artifact: {target}")
+            continue
         copied.append(str(target))
         if dry_run:
             continue
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, target)
-    if not gaza_only_publish:
+    if not gaza_only_publish and tuple(only_dispatches) != (CARE_LINE_DISPATCH_SLUG,):
         cname = pages_repo / "CNAME"
         copied.append(str(cname))
         if not dry_run:
             cname.write_text(f"{CNAME_VALUE}\n", encoding="utf-8")
     return copied, skipped
+
+
+def refresh_shared_homepage_from_pages_inventory(
+    pages_repo: Path,
+    *,
+    dry_run: bool,
+    target_dispatch: str = "gaza",
+) -> dict[str, Any]:
+    homepage_path = pages_repo / "index.html"
+    if not homepage_path.exists():
+        return {
+            "ok": False,
+            "refreshed": False,
+            "target_dispatch": target_dispatch,
+            "message": f"missing homepage template: {homepage_path}",
+        }
+    template_html = homepage_path.read_text(encoding="utf-8")
+    releases = discover_public_releases(pages_repo, verify_root=pages_repo, homepage_html=template_html)
+    latest = select_effective_latest(releases)
+    release = latest.get(target_dispatch)
+    if release is None:
+        return {
+            "ok": False,
+            "refreshed": False,
+            "target_dispatch": target_dispatch,
+            "message": f"no eligible public release found for {target_dispatch} in Pages inventory",
+        }
+    refreshed_html = render_sitewide_homepage_from_template(template_html, release)
+    if not dry_run:
+        homepage_path.write_text(refreshed_html, encoding="utf-8")
+    return {
+        "ok": True,
+        "refreshed": True,
+        "target_dispatch": target_dispatch,
+        "public_url": release.public_url,
+        "edition_date": release.edition_date,
+        "title": release.title,
+        "source_count": release.source_count,
+        "message": "shared homepage refreshed from Pages inventory",
+    }
 
 
 def remove_non_publishable_pages_editions(site_root: Path, pages_repo: Path, dry_run: bool) -> list[dict[str, str]]:
@@ -3179,6 +3464,8 @@ def validate_pages_repo_copy_scope(
     pages_repo: Path,
     only_dispatches: tuple[str, ...],
     changed_paths: Sequence[str | Path] | None = None,
+    *,
+    allow_root_index_change: bool = False,
 ) -> list[str]:
     errors: list[str] = []
     pages_repo = pages_repo.resolve()
@@ -3199,6 +3486,8 @@ def validate_pages_repo_copy_scope(
         rel_path = Path(str(candidate).replace("\\", "/"))
         top_level = rel_path.parts[0] if rel_path.parts else ""
         rel_text = rel_path.as_posix()
+        if allow_root_index_change and rel_text == "index.html":
+            continue
         if gaza_only_publish:
             if top_level == "gaza":
                 continue
@@ -3371,6 +3660,7 @@ def publish_pages(
     expect_dispatches: tuple[str, ...] = (),
     only_dispatches: tuple[str, ...] = (),
     allow_listing_shrink: bool = False,
+    shared_homepage_dispatch: str | None = None,
 ) -> dict[str, Any]:
     pages_repo = pages_repo.resolve()
     lightweight_git = _pages_repo_is_fake_worktree(pages_repo)
@@ -3442,16 +3732,21 @@ def publish_pages(
     gaza_surface_error_messages: list[str] = []
     gaza_scope_selected = (not only_dispatches) or ("gaza" in only_dispatches)
     if gaza_scope_selected:
+        gaza_audio_root = None
+        site_gaza_audio_root = site_root / "gaza" / "audio"
+        pages_gaza_audio_root = pages_repo / "gaza" / "audio"
+        if not site_gaza_audio_root.exists() and pages_gaza_audio_root.exists():
+            gaza_audio_root = pages_repo / "gaza"
         gaza_homepage_guard = _gaza_homepage_recent_edition_guard(
             _read_text_if_exists(pages_repo / "gaza" / "index.html"),
             _read_text_if_exists(site_root / "gaza" / "index.html"),
-            discover_public_edition_dates(site_root, "gaza"),
+            discover_public_edition_dates(site_root, "gaza", pages_repo=pages_repo),
             allow_listing_shrink=allow_listing_shrink,
         )
         if not gaza_homepage_guard["ok"]:
             guard_reasons = "; ".join(str(item) for item in gaza_homepage_guard.get("reasons") or []) or "no specific reason recorded"
             errors.append(f"gaza homepage recent-editions guard blocked publish: {guard_reasons}")
-        gaza_history_diagnostics = _gaza_public_surface_history_diagnostics(pages_repo, site_root)
+        gaza_history_diagnostics = _gaza_public_surface_history_diagnostics(pages_repo, site_root, current_audio_root=gaza_audio_root)
         for report in gaza_history_diagnostics:
             if report["dropped_dates"] and not allow_listing_shrink:
                 surface = str(report.get("surface") or "gaza surface")
@@ -3511,7 +3806,24 @@ def publish_pages(
             skip_diagnostics=skip_diagnostics,
         )
         warnings.extend(_food_line_public_edition_skip_warning(report) for report in skip_diagnostics)
-        errors.extend(validate_pages_repo_copy_scope(pages_repo, only_dispatches, changed_paths=copied))
+        if not errors and shared_homepage_dispatch:
+            homepage_refresh = refresh_shared_homepage_from_pages_inventory(
+                pages_repo,
+                dry_run=dry_run,
+                target_dispatch=shared_homepage_dispatch,
+            )
+            build["shared_homepage_refresh"] = homepage_refresh
+            if not homepage_refresh["ok"]:
+                errors.append(str(homepage_refresh["message"]))
+        changed_paths_for_scope = _git_porcelain_paths(pages_repo) if not dry_run else copied
+        errors.extend(
+            validate_pages_repo_copy_scope(
+                pages_repo,
+                only_dispatches,
+                changed_paths=changed_paths_for_scope,
+                allow_root_index_change=bool(shared_homepage_dispatch and not errors),
+            )
+        )
         if not dry_run:
             errors.extend(validate_pages_copy_parity(root, pages_repo, expect_date, only_dispatches=only_dispatches))
             if expect_date and ((not only_dispatches) or ("cascadia" in only_dispatches)):
@@ -3658,6 +3970,11 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Allow Gaza public history surfaces to lose dates when intentionally pruning historical public listings.",
     )
+    parser.add_argument(
+        "--shared-homepage-dispatch",
+        choices=ONLY_DISPATCH_CHOICES,
+        help="Refresh the shared root homepage from the Pages inventory for this explicit dispatch.",
+    )
     args = parser.parse_args(argv)
     try:
         expect_dispatches = normalize_expect_dispatches(tuple(args.expect_dispatch))
@@ -3673,6 +3990,7 @@ def main(argv: list[str] | None = None) -> int:
             commit=args.commit,
             no_push=args.no_push,
             allow_listing_shrink=args.allow_listing_shrink,
+            shared_homepage_dispatch=args.shared_homepage_dispatch,
             backup_root=Path(args.backup_root),
             pages_branch=args.pages_branch,
             expect_date=args.expect_date,

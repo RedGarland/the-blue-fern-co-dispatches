@@ -10,7 +10,9 @@ from bluefern_dispatches.care_line_discovery import (
     discover_care_line_sources,
     load_care_line_discovery_queries,
 )
-from bluefern_dispatches.care_line_sources import no_current_update_summary
+from bluefern_dispatches.care_line_sources import atom as care_line_atom
+from bluefern_dispatches.care_line_sources import rss as care_line_rss
+from bluefern_dispatches.care_line_sources import no_current_update_summary, record_is_public
 from bluefern_dispatches.generator import build_site
 
 
@@ -360,3 +362,61 @@ def test_care_line_no_current_update_summary_distinguishes_stale_and_weak_record
 
     assert "stale" in summary.lower()
     assert "weak, PR, marketing, or resource-only" in summary
+
+
+def test_care_line_record_is_public_accepts_review_approved_records_without_discovery_precheck():
+    record = {
+        "source_record_id": "care-line-approved-recovery",
+        "title": "MaineHealth to end labor and delivery at Lincoln Hospital",
+        "publisher": "Becker's Hospital Review",
+        "url": "https://example.com/mainehealth-labor-delivery",
+        "pressure_signal": True,
+        "qualifies_for_public_inclusion": False,
+        "source_public_story_eligible": False,
+        "care_line_review_status": "approved",
+        "review_status": "approved",
+        "included": False,
+        "excluded": False,
+        "exclusion_reason": "",
+        "pressure_type": "maternity_care_loss",
+    }
+
+    assert record_is_public(record) is True
+
+
+def test_care_line_record_is_public_still_rejects_unreviewed_source_precheck_failures():
+    record = {
+        "source_record_id": "care-line-unreviewed-discovery",
+        "title": "Health tips and symptoms for families",
+        "publisher": "Example News",
+        "url": "https://example.com/wellness",
+        "pressure_signal": True,
+        "qualifies_for_public_inclusion": False,
+        "source_public_story_eligible": False,
+        "care_line_review_status": "not_reviewed",
+        "review_status": "not_reviewed",
+        "included": False,
+        "excluded": False,
+        "exclusion_reason": "resource_only_baseline",
+        "pressure_type": "context_only",
+    }
+
+    assert record_is_public(record) is False
+
+
+def test_care_line_rss_and_atom_parsers_fall_back_to_html_anchor_pages():
+    html = b"""<!doctype html><html><body><a href="https://example.com/story">Example Story</a></body></html>"""
+
+    rss_items = care_line_rss.parse(html)
+    atom_items = care_line_atom.parse(html)
+
+    assert rss_items == [
+        {
+            "url": "https://example.com/story",
+            "title": "Example Story",
+            "description": "",
+            "source": "",
+            "id": "https://example.com/story",
+        }
+    ]
+    assert atom_items == rss_items

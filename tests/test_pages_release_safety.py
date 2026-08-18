@@ -1,12 +1,15 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 from pathlib import Path
 
 import pytest
 
+import bluefern_dispatches.generator as generator
 import bluefern_dispatches.pages_release_safety as pages_release_safety
+from bluefern_dispatches.food_line_approved_proposal import build_release_manifest, write_json_deterministic
 
 
 def _run_git(repo: Path, *args: str) -> None:
@@ -38,6 +41,7 @@ def _write_food_line_site(source_root: Path, dates: list[str]) -> None:
     site_root.mkdir(parents=True, exist_ok=True)
     (site_root / "index.html").write_text("<html>Food Line index</html>", encoding="utf-8")
     (site_root / "archive.html").write_text("<html>Archive</html>", encoding="utf-8")
+    (site_root / "rss.xml").write_text("<?xml version=\"1.0\" encoding=\"utf-8\"?><rss><channel></channel></rss>", encoding="utf-8")
     for date_text in dates:
         edition = site_root / "editions" / date_text
         edition.mkdir(parents=True, exist_ok=True)
@@ -52,6 +56,35 @@ def _write_food_line_site(source_root: Path, dates: list[str]) -> None:
 def _commit_repo(repo: Path, message: str = "update") -> None:
     _run_git(repo, "add", "-A")
     _run_git(repo, "commit", "-m", message)
+
+
+def _release_manifest(source: Path, pages: Path, date_text: str) -> Path:
+    site = source / "output/site/food-line"
+    edition = site / "editions" / date_text
+    source_paths = [site / "index.html", site / "archive.html", *sorted(path for path in edition.iterdir() if path.is_file())]
+    payload = build_release_manifest(
+        root=source,
+        pages_root=pages,
+        edition_date=date_text,
+        source_commit=_git_output(source, "rev-parse", "HEAD"),
+        source_paths=source_paths,
+    )
+    path = source / "data/dispatches/food-line/review/releases" / f"{date_text}.json"
+    write_json_deterministic(path, payload)
+    return path
+
+
+def _release_manifest_with_runtime_inputs(source: Path, pages: Path, date_text: str) -> Path:
+    manifest_path = _release_manifest(source, pages, date_text)
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    proposal = source / "data/dispatches/food-line/review/proposed-editions" / f"{date_text}.json"
+    snapshot = source / "data/dispatches/food-line/review/signal-reviews" / f"{date_text}.json"
+    payload["approved_proposal_path"] = proposal.relative_to(source).as_posix()
+    payload["approved_proposal_sha256"] = hashlib.sha256(proposal.read_bytes()).hexdigest()
+    payload["review_snapshot_path"] = snapshot.relative_to(source).as_posix()
+    payload["review_snapshot_sha256"] = hashlib.sha256(snapshot.read_bytes()).hexdigest()
+    write_json_deterministic(manifest_path, payload)
+    return manifest_path
 
 
 @pytest.fixture()
@@ -116,6 +149,19 @@ def test_allowed_path_validation_rejects_unexpected_pages_diff(release_repos: tu
     assert report["ok"] is False
     assert any("unexpected Pages repo changes outside the allowed Food Line scope" in error for error in report["errors"])
     assert "notes.txt" in report["errors"][0]
+
+
+def test_allowed_path_validation_can_permit_root_index_refresh_for_shared_homepage(release_repos: tuple[Path, Path]) -> None:
+    _source, pages = release_repos
+
+    errors = generator.validate_pages_repo_copy_scope(
+        pages,
+        ("food-line",),
+        changed_paths=["food-line/index.html", "index.html"],
+        allow_root_index_change=True,
+    )
+
+    assert errors == []
 
 
 def test_missing_source_artifact_rejection(release_repos: tuple[Path, Path]) -> None:
@@ -192,6 +238,42 @@ def test_pages_dirty_state_rejection(release_repos: tuple[Path, Path]) -> None:
 
     assert report["ok"] is False
     assert any("pages repo must be clean before sync" in error for error in report["errors"])
+
+
+def test_food_line_source_repo_clean_accepts_allowed_untracked_runtime_paths(release_repos: tuple[Path, Path], monkeypatch: pytest.MonkeyPatch) -> None:
+    source, _pages = release_repos
+    monkeypatch.setattr(
+        pages_release_safety,
+        "_git_status_entries",
+        lambda _repo: [
+            ("??", "data/dispatches/food-line/agent-inbox/file.json"),
+            ("??", "data/dispatches/food-line/agent-intake/2026-08-14/file.json"),
+            ("??", "data/dispatches/food-line/agent-intake/reports/2026-08-14/file.json"),
+            ("??", "data/dispatches/food-line/review/proposed-editions/file.json"),
+            ("??", "data/dispatches/food-line/review/signal-reviews/file.json"),
+            ("??", "data/dispatches/food-line/discovery-runs/2026-08-14/file.json"),
+            ("??", "data/agent-history-staging/food-line/file.txt"),
+            ("??", "logs/food-line/file.log"),
+            ("??", "status/food-line/file.json"),
+        ],
+    )
+
+    assert pages_release_safety._food_line_source_repo_clean(source) is True
+
+
+def test_food_line_source_repo_clean_rejects_tracked_and_unrelated_untracked_paths(release_repos: tuple[Path, Path], monkeypatch: pytest.MonkeyPatch) -> None:
+    source, _pages = release_repos
+    monkeypatch.setattr(
+        pages_release_safety,
+        "_git_status_entries",
+        lambda _repo: [
+            (" M", "data/dispatches/food-line/agent-intake/2026-08-14/file.json"),
+            ("??", "data/dispatches/food-line/random/file.json"),
+            ("??", "data/dispatches/food-line/agent-intake-notes/file.json"),
+        ],
+    )
+
+    assert pages_release_safety._food_line_source_repo_clean(source) is False
 
 
 def test_commit_requires_clean_allowed_scope_and_cleans_repo(release_repos: tuple[Path, Path]) -> None:
@@ -291,3 +373,133 @@ def test_script_does_not_require_audio_map_podcast_assets_support(release_repos:
     assert "output/site/food-line/map/index.html" not in planned
     assert "output/site/food-line/podcast.xml" not in planned
     assert all("output/site/assets" not in path for path in planned)
+
+
+def test_release_manifest_dry_run_ignores_unrelated_source_dirt_and_writes_nothing(
+    release_repos: tuple[Path, Path],
+) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-06-19"])
+    _commit_repo(source, "food line site")
+    manifest = _release_manifest(source, pages, "2026-06-19")
+    (source / "unrelated-dirty.txt").write_text("not in release", encoding="utf-8")
+    before_status = _git_output(pages, "status", "--porcelain=v1", "--untracked-files=all")
+    before_files = sorted(path.relative_to(pages).as_posix() for path in pages.rglob("*") if path.is_file() and ".git" not in path.parts)
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-06-19"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        dry_run=True,
+        release_manifest=manifest,
+    )
+
+    assert report["ok"] is True
+    assert len(report["additions"]) == 8
+    assert report["modifications"] == []
+    assert report["deletions"] == []
+    assert _git_output(pages, "status", "--porcelain=v1", "--untracked-files=all") == before_status
+    assert sorted(path.relative_to(pages).as_posix() for path in pages.rglob("*") if path.is_file() and ".git" not in path.parts) == before_files
+
+
+def test_release_manifest_requires_clean_pages_even_for_dry_run(release_repos: tuple[Path, Path]) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-06-19"])
+    _commit_repo(source, "food line site")
+    manifest = _release_manifest(source, pages, "2026-06-19")
+    (pages / "dirty.txt").write_text("dirty", encoding="utf-8")
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-06-19"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        dry_run=True,
+        release_manifest=manifest,
+    )
+
+    assert report["ok"] is False
+    assert any("pages repo must be clean before sync" in error for error in report["errors"])
+
+
+def test_runtime_editorial_inputs_are_verified_in_working_tree_not_git_history(
+    release_repos: tuple[Path, Path],
+) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-08-09"])
+    _commit_repo(source, "food line site")
+    proposal = source / "data/dispatches/food-line/review/proposed-editions" / "2026-08-09.json"
+    snapshot = source / "data/dispatches/food-line/review/signal-reviews" / "2026-08-09.json"
+    proposal.parent.mkdir(parents=True, exist_ok=True)
+    snapshot.parent.mkdir(parents=True, exist_ok=True)
+    proposal.write_text(json.dumps({"approved": True}), encoding="utf-8")
+    snapshot.write_text(json.dumps({"review": True}), encoding="utf-8")
+    manifest = _release_manifest_with_runtime_inputs(source, pages, "2026-08-09")
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-08-09"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        dry_run=True,
+        release_manifest=manifest,
+    )
+
+    assert report["ok"] is True
+    assert "source-input file is missing at source_commit" not in "\n".join(report["errors"])
+
+
+def test_runtime_editorial_input_tamper_fails_closed(release_repos: tuple[Path, Path]) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-08-09"])
+    _commit_repo(source, "food line site")
+    proposal = source / "data/dispatches/food-line/review/proposed-editions" / "2026-08-09.json"
+    snapshot = source / "data/dispatches/food-line/review/signal-reviews" / "2026-08-09.json"
+    proposal.parent.mkdir(parents=True, exist_ok=True)
+    snapshot.parent.mkdir(parents=True, exist_ok=True)
+    proposal.write_text(json.dumps({"approved": True}), encoding="utf-8")
+    snapshot.write_text(json.dumps({"review": True}), encoding="utf-8")
+    manifest = _release_manifest_with_runtime_inputs(source, pages, "2026-08-09")
+    proposal.write_text(json.dumps({"approved": False}), encoding="utf-8")
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-08-09"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        dry_run=True,
+        release_manifest=manifest,
+    )
+
+    assert report["ok"] is False
+    assert any("runtime editorial hash mismatch" in error for error in report["errors"])
+
+
+def test_git_tracked_source_input_missing_at_source_commit_still_fails(release_repos: tuple[Path, Path]) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-08-09"])
+    _commit_repo(source, "food line site")
+    manifest = _release_manifest(source, pages, "2026-08-09")
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload["entries"][0]["source_path"] = "scripts/missing-git-tracked-input.py"
+    payload["entries"][0]["source_sha256"] = "0" * 64
+    payload["entries"][0]["provenance_role"] = "generated_output"
+    write_json_deterministic(manifest, payload)
+
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-08-09"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        dry_run=True,
+        release_manifest=manifest,
+    )
+
+    assert report["ok"] is False
+    assert any("source file is missing" in error or "source SHA-256 mismatch" in error for error in report["errors"])

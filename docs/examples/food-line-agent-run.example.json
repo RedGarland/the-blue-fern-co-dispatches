@@ -1,0 +1,37 @@
+{
+  "schema_version": "food_line_agent_run_v1",
+  "agent_name": "scheduled-food-line-agent",
+  "agent_run_id": "example-synthetic-run-2026-07-28",
+  "started_at": "2026-07-28T14:00:00Z",
+  "completed_at": "2026-07-28T14:02:00Z",
+  "search_window": {"date_from": "2026-07-27", "date_to": "2026-07-28", "geography": "United States"},
+  "findings": [
+    {
+      "finding_id": null,
+      "agent_name": "scheduled-food-line-agent",
+      "agent_run_id": "example-synthetic-run-2026-07-28",
+      "discovered_at": "2026-07-28T14:01:00Z",
+      "source_url": "https://example.invalid/synthetic-food-pressure",
+      "canonical_source_url": "https://example.invalid/synthetic-food-pressure",
+      "publisher": "Synthetic Example Publisher",
+      "source_published_at": "2026-07-28T12:00:00Z",
+      "title": "Synthetic food pressure example",
+      "exact_supporting_passage": "Synthetic passage for contract validation only.",
+      "summary": "Synthetic summary; never production evidence.",
+      "location_name": "Example City",
+      "state": "NC",
+      "location_scope": "state_local",
+      "affected_groups": ["households"],
+      "pressure_type": null,
+      "confidence": "high",
+      "source_role": null,
+      "evidence_level": null,
+      "agent_query_context": {"query": "synthetic example"},
+      "duplicate_key": null,
+      "review_status": "pending_review",
+      "exclusion_reason": null,
+      "raw_agent_payload": {"synthetic": true}
+    }
+  ],
+  "coverage_notes": "Synthetic contract example only; not a real agent run."
+}

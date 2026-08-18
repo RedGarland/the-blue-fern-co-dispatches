@@ -4,15 +4,12 @@ import argparse
 import subprocess
 from collections import Counter, defaultdict
 from pathlib import Path
-import re
 from typing import Any
+
+from scripts.food_line_runtime_paths import FOOD_LINE_ALLOWED_DIRTY_CATEGORIES, classify_food_line_runtime_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ALLOWED_DIRTY_CATEGORIES = {"review_output", "logs", "cache", "virtualenv", "local_run_state"}
-FOOD_LINE_DISCOVERY_CANDIDATES_RE = re.compile(
-    r"^data/dispatches/food-line/discovery/\d{4}-\d{2}-\d{2}/discovery_candidates\.json$"
-)
 
 
 def _run_git_status(repo: Path) -> tuple[int, list[str]]:
@@ -57,10 +54,9 @@ def classify_path(path_text: str) -> str:
         return "docs"
     if lower.startswith("src/") or lower.startswith("scripts/") or root_name in {"pyproject.toml", "requirements.txt", ".gitignore"}:
         return "source"
-    if lower == "data/dispatches/food-line/source_performance_history.json":
-        return "local_run_state"
-    if FOOD_LINE_DISCOVERY_CANDIDATES_RE.match(lower):
-        return "local_run_state"
+    food_line_category = classify_food_line_runtime_path(path)
+    if food_line_category:
+        return food_line_category
     if lower.startswith("output/review/") or "/review/" in lower or lower.startswith("output/dispatches/") and "/review/" in lower:
         return "review_output"
     if lower.startswith("output/site/") or lower.startswith("bluefern-dispatches-pages/"):
@@ -90,7 +86,7 @@ def classify_status_line(line: str) -> dict[str, Any] | None:
         "path": path,
         "category": category,
         "is_untracked": status == "??",
-        "is_risky": category not in ALLOWED_DIRTY_CATEGORIES,
+        "is_risky": status != "??" or category not in FOOD_LINE_ALLOWED_DIRTY_CATEGORIES,
     }
 
 
@@ -168,7 +164,7 @@ def build_preflight_report(source_repo: Path | None = None, pages_repo: Path | N
         "source_repo": source_report,
         "pages_repo": pages_report,
         "pages_repo_status": pages_status,
-        "allowlisted_categories": sorted(ALLOWED_DIRTY_CATEGORIES),
+        "allowlisted_categories": sorted(FOOD_LINE_ALLOWED_DIRTY_CATEGORIES),
     }
 
 

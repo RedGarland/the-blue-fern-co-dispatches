@@ -51,6 +51,24 @@ def _stub_operator_success(monkeypatch: pytest.MonkeyPatch, *, pages_repo: Path)
     monkeypatch.setattr(operator, "validate_or_repair_manual_sources", lambda edition_date: {"ok": True, "status": "not_present", "errors": []})
     monkeypatch.setattr(operator, "_clean_source_generated_artifacts", lambda: {"ok": True, "status": "cleaned", "commands": []})
     monkeypatch.setattr(operator, "_git_status_branch", lambda repo: "## clean")
+    monkeypatch.setattr(
+        operator,
+        "_pages_repo_snapshot",
+        lambda repo: {
+            "exists": True,
+            "status_branch": "## gh-pages...origin/gh-pages",
+            "branch": "gh-pages",
+            "upstream": "origin/gh-pages",
+            "ahead": 0,
+            "behind": 0,
+            "diverged": False,
+            "working_tree_clean": True,
+            "index_clean": True,
+            "untracked_clean": True,
+            "head_sha": "pages000",
+            "head_subject": "Fixture Pages commit",
+        },
+    )
 
 
 def _write_audio_fixture(root: Path, edition_date: str, audio_format: str = "mp3") -> tuple[Path, Path]:

@@ -11,6 +11,8 @@ from datetime import datetime, timezone
 from typing import Any
 from urllib import error, request
 from bluefern_dispatches.generator import BASE_URL
+from bluefern_dispatches.food_line_bluesky_approval import verify_approval
+from bluefern_dispatches.food_line_bluesky_preview import build_food_line_bluesky_preview
 from bluefern_dispatches.gaza_audio import select_gaza_audio_stories
 from bluefern_dispatches.public_prose import sanitize_public_prose
 from bluefern_dispatches.story_dedupe import (
@@ -1295,11 +1297,8 @@ def _upload_food_line_card_thumb(
 
 
 def _food_line_card_title(edition_date: str) -> str:
-    try:
-        dt = datetime.strptime(edition_date, "%Y-%m-%d")
-    except ValueError:
-        return f"The Food Line Dispatch - {edition_date}"
-    return f"The Food Line Dispatch - {dt.strftime('%B')} {dt.day}, {dt.year}"
+    preview = build_food_line_bluesky_preview(Path.cwd(), edition_date)
+    return str(preview["card_title"])
 
 
 def _normalize_sentence(text: str) -> str:
@@ -1310,21 +1309,10 @@ def _normalize_sentence(text: str) -> str:
 
 
 def _food_line_card_description(post_text: str, *, max_length: int = BLUESKY_CARD_MAX_DESCRIPTION_LENGTH) -> str:
-    body = " ".join(str(post_text or "").split())
-    if not body:
-        return FOOD_LINE_BLUESKY_POST_FALLBACK
-    body = body.replace("Source-backed public briefing:", "").strip()
-    parts = [part.strip() for part in re.split(r"(?<=[.!?])\s+", body) if part.strip()]
-    parts = [part for part in parts if part and not part.startswith("https://dispatches.thebluefernco.com/food-line/")]
-    if not parts:
-        return FOOD_LINE_BLUESKY_POST_FALLBACK
-    description = " ".join(parts[:2]).strip()
+    description = str(post_text or "").strip()
     if len(description) <= max_length:
         return description
-    shortened = description[: max_length - 3].rstrip(" ,;:-.")
-    if " " in shortened:
-        shortened = shortened.rsplit(" ", 1)[0].rstrip(" ,;:-.")
-    return (shortened or description[:max_length]).rstrip() + "..." if shortened else FOOD_LINE_BLUESKY_POST_FALLBACK
+    return description[: max_length - 1].rstrip() + "..." if description else FOOD_LINE_BLUESKY_POST_FALLBACK
 
 
 def _write_food_line_post_state(
@@ -1691,6 +1679,7 @@ def maybe_post_food_line_dispatch_to_bluesky(
     allow_publish: bool = True,
     dry_run: bool = False,
     allow_text_only: bool = False,
+    allow_archival_bluesky_post: bool = False,
 ) -> dict[str, Any]:
     result: dict[str, Any] = {
         "status": "skipped",
@@ -1715,6 +1704,7 @@ def maybe_post_food_line_dispatch_to_bluesky(
         "public_signal_count": int(public_signal_count or 0),
         "dry_run": bool(dry_run),
         "forced_post": bool(force_post),
+        "archival_override": bool(allow_archival_bluesky_post),
     }
     root = project_root or Path.cwd()
     state_path = _dispatch_post_state_path(root, FOOD_LINE_DISPATCH_SLUG, edition_date)
@@ -1730,21 +1720,31 @@ def maybe_post_food_line_dispatch_to_bluesky(
     elif not public_url or not str(public_url).strip():
         result["reason"] = "missing_public_url"
     else:
-        cleaned_post_text = " ".join(str(post_text or "").split())
-        if not cleaned_post_text:
+        preview = build_food_line_bluesky_preview(root, edition_date)
+        preview_post_text = str(preview["post_text"]).strip()
+        if not preview_post_text:
             result["reason"] = "post_text_unavailable"
         else:
-            result["post_text"] = cleaned_post_text
-            result["card_title"] = _food_line_card_title(edition_date)
-            result["card_description"] = _food_line_card_description(cleaned_post_text)
+            result["post_text"] = preview_post_text
+            if allow_archival_bluesky_post:
+                result["post_text"] = f"[ARCHIVAL / RETROSPECTIVE] {preview_post_text}"
+            result["card_title"] = str(preview["card_title"])
+            result["card_description"] = str(preview["card_description"])
+            result["image_path"] = str(preview["card_image_path"])
             result["edition_date_verified"] = True
+            if allow_publish and not dry_run:
+                approval = verify_approval(root, edition_date, allow_archival=allow_archival_bluesky_post)
+                result["approval_status"] = approval
+                if not approval.get("ok"):
+                    result["reason"] = approval.get("reason")
+                    return result
             receipt = _load_post_state_for_same_public_url(root, FOOD_LINE_DISPATCH_SLUG, edition_date, str(public_url))
             if receipt and not force_post:
                 state_payload = {
                     "dispatch_slug": FOOD_LINE_DISPATCH_SLUG,
                     "edition_date": edition_date,
                     "public_url": str(public_url),
-                    "post_text": cleaned_post_text,
+                    "post_text": result["post_text"],
                     "card_title": result["card_title"],
                     "card_description": result["card_description"],
                     "image_path": receipt.get("image_path"),
@@ -1759,7 +1759,6 @@ def maybe_post_food_line_dispatch_to_bluesky(
                     "thumb_status": receipt.get("thumb_status"),
                     "posted_at": receipt.get("posted_at"),
                 }
-                _write_food_line_post_state(root, edition_date, state_payload)
                 return {
                     **result,
                     "status": "skipped",
@@ -1782,10 +1781,10 @@ def maybe_post_food_line_dispatch_to_bluesky(
                     "dispatch_slug": FOOD_LINE_DISPATCH_SLUG,
                     "edition_date": edition_date,
                     "public_url": str(public_url),
-                    "post_text": cleaned_post_text,
+                    "post_text": result["post_text"],
                     "card_title": result["card_title"],
                     "card_description": result["card_description"],
-                    "image_path": FOOD_LINE_SOCIAL_IMAGE_PATH,
+                    "image_path": result["image_path"],
                     "image_alt": FOOD_LINE_SOCIAL_IMAGE_ALT,
                     "status": "dry_run",
                     "skip_reason": "dry_run",
@@ -1797,12 +1796,11 @@ def maybe_post_food_line_dispatch_to_bluesky(
                     "thumb_status": "not_attempted",
                     "posted_at": None,
                 }
-                _write_food_line_post_state(root, edition_date, state_payload)
                 return {
                     **result,
                     "status": "skipped",
                     "reason": "dry_run",
-                    "image_path": FOOD_LINE_SOCIAL_IMAGE_PATH,
+                    "image_path": result["image_path"],
                     "thumb_status": "not_attempted",
                     "state_path": str(state_path),
                 }
@@ -1829,7 +1827,8 @@ def maybe_post_food_line_dispatch_to_bluesky(
             "thumb_status": "not_attempted",
             "posted_at": None,
         }
-        _write_food_line_post_state(root, edition_date, state_payload)
+        if allow_publish and not dry_run:
+            _write_food_line_post_state(root, edition_date, state_payload)
         return result
 
     handle = str(os.getenv("BLUESKY_HANDLE", "")).strip()
@@ -1980,5 +1979,6 @@ def maybe_post_food_line_dispatch_to_bluesky(
         "uploaded_thumb_bytes": result["uploaded_thumb_bytes"],
         "posted_at": None,
     }
-    _write_food_line_post_state(root, edition_date, state_payload)
+    if allow_publish and not dry_run:
+        _write_food_line_post_state(root, edition_date, state_payload)
     return result

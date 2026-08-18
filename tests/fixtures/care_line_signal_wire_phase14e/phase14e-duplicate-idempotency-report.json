@@ -1,0 +1,27 @@
+{
+  "candidate_ids_stable": true,
+  "event_ids_stable": true,
+  "first_run": {
+    "created_candidate_ids": [
+      "candidate_2955a4afd73acd6f",
+      "candidate_8de3e338a07cd6d3"
+    ],
+    "execution_id": "execution_d20678517fac8c0c",
+    "existing_candidate_ids": [],
+    "preview_hash": "de59c3d2d5901fc9c6aec40a20bfea5c12a46685d9c1986522fd9525cd4a5d49",
+    "summary_hash": "5ff5a720960a27fcfba9f4105167b4c17e7b613dbc71eedf34e279cbdfaa6189"
+  },
+  "idempotent": true,
+  "schema_version": "bluefern.care_line.phase14e.idempotency.v1",
+  "second_run": {
+    "created_candidate_ids": [],
+    "execution_id": "execution_11b8852f978414d6",
+    "existing_candidate_ids": [
+      "candidate_2955a4afd73acd6f",
+      "candidate_8de3e338a07cd6d3"
+    ],
+    "preview_hash": "de59c3d2d5901fc9c6aec40a20bfea5c12a46685d9c1986522fd9525cd4a5d49",
+    "summary_hash": "6a01b9677fe3a7d30ca22f311af040b0cf0f35b09c277052ec1ecf68add366f6"
+  },
+  "shadow_run_id": "shadow_run_29737fd2d78cdb6d"
+}

@@ -5,6 +5,13 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
+from .atom import parse as parse_atom
+from .base import hostname, normalize_article_url, normalize_publication_date, strip_html
+from .json_feed import parse as parse_json_feed
+from .rss import parse as parse_rss
+from .sitemap import parse as parse_sitemap
+from .structured_index import parse as parse_structured_index
+
 
 DISPATCH_SLUG = "care-line"
 DISPATCH_NAME = "The Care Line Dispatch"
@@ -21,8 +28,6 @@ MAP_NOTE = (
     "Map markers show where current source-backed signals were found. Areas without markers may still be experiencing "
     "healthcare access problems; they may lack recent public reporting, accessible records, or source coverage in this run."
 )
-REGISTRY_PATH = Path("data/dispatches/care-line/pressure_source_registry.json")
-MANUAL_SOURCES_PATH = Path("data/dispatches/care-line/sources")
 
 PRESSURE_TYPES = {
     "hospital_closure",
@@ -105,17 +110,6 @@ PRESSURE_TYPE_LABELS = {
     "ambulance_or_ems_strain": "Ambulance or EMS strain",
     "specialty_care_delay": "Specialty-care delay",
     "context_only": "Context only",
-}
-
-PUBLIC_BUCKET_LABELS = {
-    "Core Healthcare Access Signals": "core healthcare access",
-    "Hospital / Clinic Operations Signals": "hospital and clinic operations",
-    "Insurance / Affordability Signals": "insurance affordability",
-    "Rural Access Signals": "rural access",
-    "Maternity / Family Care Signals": "maternity and family care",
-    "Emergency / EMS Signals": "emergency and EMS",
-    "Public Health Capacity Signals": "public health capacity",
-    "Other Care Line Signals": "other Care Line signals",
 }
 
 SOURCE_ROLE_PUBLIC_LABELS = {
@@ -218,12 +212,20 @@ REQUIRED_MANUAL_FIELDS = {
     "included_as_hospital_operations_signal",
     "included_as_insurance_affordability_signal",
     "included_as_rural_access_signal",
-    "included_as_maternity_family_signal",
+    "included_as_maternity_signal",
     "included_as_emergency_ems_signal",
     "included_as_public_health_signal",
     "included_as_additional_signal",
     "context_only",
     "confidence",
+}
+
+ADAPTER_PARSERS = {
+    "rss": parse_rss,
+    "atom": parse_atom,
+    "json_feed": parse_json_feed,
+    "sitemap": parse_sitemap,
+    "structured_index": parse_structured_index,
 }
 
 
@@ -238,13 +240,15 @@ def _record_value(record: Any, key: str, default: Any = None) -> Any:
 
 
 def load_pressure_source_registry(root: Path, path: Path | None = None) -> list[dict[str, Any]]:
-    registry_path = root / (path or REGISTRY_PATH)
+    registry_path = root / (path or Path("data/dispatches/care-line/pressure_source_registry.json"))
     if not registry_path.exists():
         raise FileNotFoundError(f"Care Line pressure source registry does not exist: {registry_path}")
     payload = _load_json(registry_path)
-    if not isinstance(payload, list):
-        raise ValueError("Care Line pressure_source_registry.json must be a top-level list")
-    return [row for row in payload if isinstance(row, dict)]
+    if isinstance(payload, dict) and isinstance(payload.get("sources"), list):
+        return [row for row in payload["sources"] if isinstance(row, dict)]
+    if isinstance(payload, list):
+        return [row for row in payload if isinstance(row, dict)]
+    raise ValueError("Care Line pressure_source_registry.json must be a top-level list or object with sources")
 
 
 def validate_pressure_source_registry(registry: list[dict[str, Any]]) -> list[str]:
@@ -252,7 +256,7 @@ def validate_pressure_source_registry(registry: list[dict[str, Any]]) -> list[st
     if not (25 <= len(registry) <= 40):
         errors.append(f"registry must contain 25-40 sources; found {len(registry)}")
     seen_ids: set[str] = set()
-    seen_states: set[str] = set()
+    seen_pillars: set[str] = set()
     for index, source in enumerate(registry, start=1):
         prefix = f"registry source {index}"
         source_id = str(source.get("source_id") or "").strip()
@@ -266,11 +270,11 @@ def validate_pressure_source_registry(registry: list[dict[str, Any]]) -> list[st
         if missing:
             errors.append(f"{prefix} missing required fields: {', '.join(missing)}")
         if "pressure_pillars" in source and isinstance(source["pressure_pillars"], list):
-            seen_states.update(str(item) for item in source["pressure_pillars"] if str(item).strip())
+            seen_pillars.update(str(item).strip() for item in source["pressure_pillars"] if str(item).strip())
         homepage_url = str(source.get("homepage_url") or "").strip()
         if homepage_url and not homepage_url.startswith(("http://", "https://")):
             errors.append(f"{prefix} has non-http homepage_url: {homepage_url}")
-    if "health_care_access_pressure" not in seen_states:
+    if "health_care_access_pressure" not in seen_pillars:
         errors.append("registry must include the health_care_access_pressure pillar")
     return errors
 
@@ -286,11 +290,12 @@ def load_manual_source_records(root: Path, edition_date: str) -> list[dict[str, 
             rows = payload["sources"]
         else:
             raise ValueError(f"Care Line manual sources file has invalid shape: {path}")
-        return [row for row in rows if isinstance(row, dict)]
+        return [_normalize_manual_source_record(row) for row in rows if isinstance(row, dict)]
 
     rows: list[dict[str, Any]] = []
+    base = root / "data" / "dispatches" / "care-line" / "sources" / edition_date
     for filename in ("manual_sources.json", "discovered_sources.json"):
-        rows.extend(_load_path(root / MANUAL_SOURCES_PATH / edition_date / filename))
+        rows.extend(_load_path(base / filename))
     return _dedupe_source_records(rows)
 
 
@@ -307,10 +312,20 @@ def _dedupe_source_records(records: list[dict[str, Any]]) -> list[dict[str, Any]
     return deduped
 
 
+def _normalize_manual_source_record(record: dict[str, Any]) -> dict[str, Any]:
+    normalized = dict(record)
+    if "included_as_maternity_signal" not in normalized and "included_as_maternity_family_signal" in normalized:
+        normalized["included_as_maternity_signal"] = normalized["included_as_maternity_family_signal"]
+    if "included_as_maternity_family_signal" not in normalized and "included_as_maternity_signal" in normalized:
+        normalized["included_as_maternity_family_signal"] = normalized["included_as_maternity_signal"]
+    return normalized
+
+
 def validate_manual_source_records(records: list[dict[str, Any]]) -> list[str]:
     errors: list[str] = []
     seen_ids: set[str] = set()
     for index, record in enumerate(records, start=1):
+        record = _normalize_manual_source_record(record)
         prefix = f"manual source {index}"
         record_id = str(record.get("source_record_id") or "").strip()
         if not record_id:
@@ -320,6 +335,8 @@ def validate_manual_source_records(records: list[dict[str, Any]]) -> list[str]:
         else:
             seen_ids.add(record_id)
         missing = [field for field in sorted(REQUIRED_MANUAL_FIELDS) if field not in record]
+        if "included_as_maternity_signal" not in record and "included_as_maternity_family_signal" not in record:
+            missing.append("included_as_maternity_signal")
         if missing:
             errors.append(f"{prefix} missing required fields: {', '.join(missing)}")
         pressure_type = str(record.get("pressure_type") or "").strip()
@@ -337,6 +354,16 @@ def validate_manual_source_records(records: list[dict[str, Any]]) -> list[str]:
 def record_is_public(record: dict[str, Any]) -> bool:
     if _record_value(record, "excluded") is True:
         return False
+    review_status = ""
+    for key in ("care_line_review_status", "review_status", "editorial_review_status"):
+        review_status = str(_record_value(record, key) or "").strip().lower()
+        if review_status:
+            break
+    if review_status in {"approved", "reviewed", "corrected", "public_approved", "shadow_approved"}:
+        return _record_value(record, "pressure_signal") is True and str(_record_value(record, "exclusion_reason") or "").strip() not in {
+            "resource_only_baseline",
+            "stale_current_signal",
+        }
     if _record_value(record, "qualifies_for_public_inclusion") is not True:
         return False
     if _record_value(record, "source_public_story_eligible") is not True:
@@ -378,8 +405,7 @@ def care_line_review_diagnostics(records: list[dict[str, Any]]) -> dict[str, Any
     not_traceable_rows = [
         record
         for record in rows
-        if not str(_record_value(record, "source_traceability_role") or "").strip()
-        and not record_is_public(record)
+        if not str(_record_value(record, "source_traceability_role") or "").strip() and not record_is_public(record)
     ]
     source_family_counts = Counter(
         str(_record_value(record, "source_family") or "").strip()
@@ -391,10 +417,7 @@ def care_line_review_diagnostics(records: list[dict[str, Any]]) -> dict[str, Any
         for record in rows
         if str(_record_value(record, "state") or "").strip()
     )
-    exclusion_reason_counts = Counter(
-        str(_record_value(record, "exclusion_reason") or "excluded").strip()
-        for record in excluded_rows
-    )
+    exclusion_reason_counts = Counter(str(_record_value(record, "exclusion_reason") or "excluded").strip() for record in excluded_rows)
     secondary_query_count = sum(
         len([str(item).strip() for item in _record_value(record, "secondary_queries_generated") or [] if str(item).strip()])
         for record in wrapper_rows
@@ -432,9 +455,7 @@ def care_line_review_diagnostics(records: list[dict[str, Any]]) -> dict[str, Any
 def no_current_update_summary(records: list[dict[str, Any]] | None = None) -> str:
     rows = list(records or [])
     if not rows:
-        return (
-            "No current Care Line update was published because no source records were reviewed for this edition date."
-        )
+        return "No current Care Line update was published because no source records were reviewed for this edition date."
     diagnostics = care_line_review_diagnostics(rows)
     parts: list[str] = []
     if diagnostics["stale_count"]:
@@ -452,6 +473,20 @@ def no_current_update_summary(records: list[dict[str, Any]] | None = None) -> st
     else:
         reason = ", ".join(parts[:-1]) + f", and {parts[-1]}"
     return f"No current Care Line update was published because {reason}."
+
+
+def _public_status_label(value: str, mapping: dict[str, str]) -> str:
+    key = str(value or "").strip()
+    return mapping.get(key, key.replace("_", " ").strip().lower())
+
+
+def public_pressure_label(record: dict[str, Any]) -> str:
+    pressure_type = str(_record_value(record, "pressure_type") or "").strip()
+    if pressure_type in PRESSURE_TYPE_LABELS:
+        return PRESSURE_TYPE_LABELS[pressure_type]
+    if pressure_type:
+        return pressure_type.replace("_", " ").strip().title()
+    return "Signal"
 
 
 def source_table_rows(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -506,24 +541,6 @@ def public_claim_rows(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return rows
 
 
-def public_pressure_label(record: dict[str, Any]) -> str:
-    pressure_type = str(_record_value(record, "pressure_type") or "").strip()
-    if pressure_type in PRESSURE_TYPE_LABELS:
-        return PRESSURE_TYPE_LABELS[pressure_type]
-    if pressure_type:
-        return pressure_type.replace("_", " ").strip().title()
-    return "Signal"
-
-
-def public_bucket_label(bucket: str) -> str:
-    return PUBLIC_BUCKET_LABELS.get(bucket, bucket.replace("Signals", "").replace("/", "and").strip().lower())
-
-
-def _public_status_label(value: str, mapping: dict[str, str]) -> str:
-    key = str(value or "").strip()
-    return mapping.get(key, key.replace("_", " ").strip().lower())
-
-
 def public_bucket_note_labels(records: list[dict[str, Any]]) -> list[str]:
     public_buckets = {
         str(record.get("public_inclusion_bucket") or "")
@@ -531,132 +548,22 @@ def public_bucket_note_labels(records: list[dict[str, Any]]) -> list[str]:
         if record_is_public(record)
     }
     labels: list[str] = []
+    bucket_labels = {
+        "Insurance / Affordability Signals": "insurance affordability",
+        "Rural Access Signals": "rural access",
+        "Emergency / EMS Signals": "emergency and EMS",
+        "Public Health Capacity Signals": "public health capacity",
+        "Other Care Line Signals": "other Care Line signals",
+    }
     for bucket in PUBLIC_BUCKETS:
         if bucket == "Core Healthcare Access Signals":
             continue
         if bucket in public_buckets:
             continue
-        label = public_bucket_label(bucket)
+        label = bucket_labels.get(bucket, bucket.replace("Signals", "").replace("/", "and").strip().lower())
         if label:
             labels.append(label)
     return labels
-
-
-def _care_line_short_location(record: dict[str, Any]) -> str:
-    location = str(_record_value(record, "location_name") or _record_value(record, "state") or "").strip()
-    if not location:
-        return ""
-    if "," in location:
-        return location.split(",", 1)[0].strip()
-    return location
-
-
-def _care_line_join_list(items: list[str]) -> str:
-    values = [str(item).strip() for item in items if str(item).strip()]
-    if not values:
-        return ""
-    if len(values) == 1:
-        return values[0]
-    if len(values) == 2:
-        return f"{values[0]} and {values[1]}"
-    return f"{', '.join(values[:-1])}, and {values[-1]}"
-
-
-def _care_line_what_changed(record: dict[str, Any]) -> str:
-    pressure_type = str(_record_value(record, "pressure_type") or "").strip()
-    title = str(_record_value(record, "title") or "").strip().rstrip(".")
-    claim = str(_record_value(record, "claim_supported") or "").strip().rstrip(".")
-    summary = str(_record_value(record, "pressure_summary") or _record_value(record, "summary_or_snippet") or "").strip().rstrip(".")
-    if pressure_type == "hospital_closure":
-        return "A new report warned that Medicaid cuts could threaten hundreds of hospitals."
-    if pressure_type == "clinic_access_strain":
-        return "River Hills Community Health Center announced the closure of its Centerville clinic."
-    if pressure_type == "maternity_care_loss":
-        return "Los Alamos Medical Center halted labor and delivery services."
-    if claim:
-        return claim + "."
-    if summary:
-        return summary + "."
-    if title:
-        return title + "."
-    return "Source-backed pressure was identified in this record."
-
-
-def _care_line_who_may_be_affected(record: dict[str, Any]) -> str:
-    pressure_type = str(_record_value(record, "pressure_type") or "").strip()
-    location = _care_line_short_location(record)
-    if pressure_type == "clinic_access_strain":
-        return f"Clinic patients in and around {location}." if location else "Clinic patients in and around the affected area."
-    if pressure_type == "maternity_care_loss":
-        return f"Pregnant patients, families, and patients needing local maternity care near {location}." if location else "Pregnant patients, families, and patients needing local maternity care."
-    if pressure_type == "hospital_closure":
-        location_text = location or str(_record_value(record, "state") or "").strip() or "the affected area"
-        return f"Patients, rural communities, and hospital staff in {location_text}."
-
-    groups = [str(item).strip() for item in _record_value(record, "affected_groups") or [] if str(item).strip()]
-    groups_text = _care_line_join_list(groups)
-    if groups_text and location:
-        return f"{groups_text[0].upper() + groups_text[1:]} in {location}."
-    if groups_text:
-        return f"{groups_text[0].upper() + groups_text[1:]}."
-    if location:
-        return f"Patients and local communities in {location}."
-    return "Not clearly isolated by source."
-
-
-def _care_line_why_it_matters(record: dict[str, Any]) -> str:
-    pressure_type = str(_record_value(record, "pressure_type") or "").strip()
-    why = {
-        "hospital_closure": "Hospital financing pressure can reduce access even before a formal closure occurs.",
-        "clinic_access_strain": "A local clinic closure can mean longer travel, fewer appointment options, or delayed routine care.",
-        "maternity_care_loss": "Loss of local labor and delivery services can force patients to travel farther for time-sensitive care.",
-        "coverage_disruption": "Coverage disruption can delay care or create new out-of-pocket burdens.",
-        "medicaid_access_pressure": "Medicaid access pressure can make care harder to afford or keep.",
-        "medical_debt_or_affordability": "Medical debt or affordability pressure can cause people to skip care or delay treatment.",
-        "staffing_shortage_access": "Staffing shortages can limit appointment availability and slow access to care.",
-        "pharmacy_access_pressure": "Pharmacy access pressure can make it harder to fill prescriptions on time.",
-        "public_health_capacity_cut": "Public-health capacity cuts can weaken local prevention and response systems.",
-        "behavioral_health_access_strain": "Behavioral-health access strain can leave people waiting longer for needed support.",
-        "ambulance_or_ems_strain": "Ambulance or EMS strain can slow urgent response when minutes matter.",
-        "specialty_care_delay": "Specialty-care delay can push patients farther from timely treatment.",
-        "service_line_cut": "Service-line cuts can narrow the care a local facility can provide.",
-        "er_crowding_or_diversion": "ER crowding or diversion can delay urgent treatment and redirect patients elsewhere.",
-        "rural_access_strain": "Rural access strain can force people to travel farther for routine care.",
-        "context_only": "This record provides context, not a current public pressure signal.",
-    }
-    if pressure_type in why:
-        return why[pressure_type]
-    return "This source-backed signal suggests care access may be harder to maintain for the affected community."
-
-
-def care_line_public_card_copy(record: dict[str, Any]) -> dict[str, str]:
-    title = str(_record_value(record, "title") or "").strip()
-    claim = str(_record_value(record, "claim_supported") or "").strip()
-    limitation = str(_record_value(record, "limitations") or "").strip()
-    publisher = str(_record_value(record, "publisher") or "").strip()
-    pressure_label = public_pressure_label(record)
-    location = str(_record_value(record, "location_name") or _record_value(record, "state") or "").strip()
-    published_at = str(_record_value(record, "published_at") or "").strip()
-    source_meta = " | ".join(part for part in (publisher, pressure_label, location, published_at[:10]) if part)
-    return {
-        "pressure_label": pressure_label,
-        "source_meta": source_meta,
-        "source_title": title or "Source record",
-        "what_changed": _care_line_what_changed(record),
-        "who_may_be_affected": _care_line_who_may_be_affected(record),
-        "why_it_matters": _care_line_why_it_matters(record),
-        "limit": limitation or ("This record supports a source-backed pressure signal." if claim else "This record is included for traceability."),
-    }
-
-
-def _lead_public_record(records: list[dict[str, Any]]) -> dict[str, Any] | None:
-    public_records = [record for record in records if record_is_public(record)]
-    if not public_records:
-        return None
-    for record in public_records:
-        if _record_value(record, "included_as_lead") is True:
-            return record
-    return public_records[0]
 
 
 def _care_line_title_topic(claim: str) -> str:
@@ -672,6 +579,80 @@ def _care_line_title_topic(claim: str) -> str:
             text = text[:index].rstrip(" ,;:-")
             break
     return text
+
+
+def _care_line_what_changed(record: dict[str, Any]) -> str:
+    summary = str(_record_value(record, "summary_or_snippet") or "").strip()
+    if summary:
+        lowered = summary.lower()
+        for marker in ("warned that ", "said that ", "reported that ", "found that "):
+            marker_index = lowered.find(marker)
+            if marker_index >= 0:
+                clause = summary[marker_index + len(marker):]
+                for stop in (",", ".", ";", " - "):
+                    clause = clause.split(stop, 1)[0]
+                clause = clause.strip(" ,;:-")
+                if clause:
+                    return f"A new report warned that {clause}."
+    claim = str(_record_value(record, "claim_supported") or "").strip()
+    if claim:
+        return claim
+    pressure_summary = str(_record_value(record, "pressure_summary") or "").strip()
+    if pressure_summary:
+        return pressure_summary
+    title = str(_record_value(record, "title") or "").strip()
+    if title:
+        return title
+    return "Source-backed pressure was identified in this record."
+
+
+def _care_line_who_may_be_affected(record: dict[str, Any]) -> str:
+    pressure_type = str(_record_value(record, "pressure_type") or "").strip()
+    location = str(_record_value(record, "location_name") or _record_value(record, "state") or "").strip()
+    city = location.split(",", 1)[0].strip() if location else ""
+    if pressure_type == "clinic_access_strain" and city:
+        return f"Clinic patients in and around {city}."
+    if pressure_type == "maternity_care_loss" and city:
+        return f"Pregnant patients, families, and patients needing local maternity care near {city}."
+    if pressure_type == "hospital_closure" and city:
+        return f"Patients, rural communities, and hospital staff near {city}."
+    if pressure_type == "er_crowding_or_diversion" and city:
+        return f"Patients and emergency responders near {city}."
+    groups = ", ".join(str(item) for item in _record_value(record, "affected_groups") or [] if str(item).strip())
+    return groups or "Not clearly isolated by source."
+
+
+def _care_line_why_it_matters(record: dict[str, Any]) -> str:
+    pressure_type = str(_record_value(record, "pressure_type") or "").strip()
+    if pressure_type == "clinic_access_strain":
+        return "A local clinic closure can mean longer travel, fewer appointment options, or delayed routine care."
+    if pressure_type == "maternity_care_loss":
+        return "Loss of local labor and delivery services can force patients to travel farther for time-sensitive care."
+    if pressure_type == "hospital_closure":
+        return "Hospital financing pressure can reduce access even before a formal closure occurs."
+    if pressure_type == "er_crowding_or_diversion":
+        return "ER crowding or diversion can delay urgent treatment and redirect patients elsewhere."
+    if pressure_type == "coverage_disruption":
+        return "Coverage disruption can delay care or create new out-of-pocket burdens."
+    if pressure_type == "medicaid_access_pressure":
+        return "Medicaid access pressure can make care harder to afford or keep."
+    if pressure_type == "medical_debt_or_affordability":
+        return "Medical debt or affordability pressure can cause people to skip care or delay treatment."
+    if pressure_type == "staffing_shortage_access":
+        return "Staffing shortages can limit appointment availability and slow access to care."
+    if pressure_type == "pharmacy_access_pressure":
+        return "Pharmacy access pressure can make it harder to fill prescriptions on time."
+    if pressure_type == "public_health_capacity_cut":
+        return "Public-health capacity cuts can weaken local prevention and response systems."
+    if pressure_type == "ambulance_or_ems_strain":
+        return "Ambulance or EMS strain can slow urgent response when minutes matter."
+    pressure_reason = str(_record_value(record, "pressure_reason") or "").strip()
+    if pressure_reason:
+        return pressure_reason
+    limitation = str(_record_value(record, "limitations") or "").strip()
+    if limitation:
+        return limitation
+    return "This record supports a source-backed pressure signal."
 
 
 def _care_line_pressure_label(record: dict[str, Any]) -> str:
@@ -697,9 +678,9 @@ def _care_line_pressure_label(record: dict[str, Any]) -> str:
 
 
 def public_archive_title_for_records(records: list[dict[str, Any]]) -> str:
-    lead = _lead_public_record(records)
+    lead = next((record for record in records if record_is_public(record)), None)
     if lead is None:
-        return DISPATCH_TAGLINE
+        return DISPATCH_NAME
     claim = _care_line_title_topic(str(_record_value(lead, "claim_supported") or _record_value(lead, "pressure_summary") or _record_value(lead, "summary_or_snippet") or ""))
     pressure_label = _care_line_pressure_label(lead)
     if claim:
@@ -709,20 +690,59 @@ def public_archive_title_for_records(records: list[dict[str, Any]]) -> str:
     title = str(_record_value(lead, "title") or "").strip()
     if title and not title.lower().startswith("google news"):
         return title
-    return DISPATCH_TAGLINE
+    return DISPATCH_NAME
+
+
+def care_line_public_card_copy(record: dict[str, Any]) -> dict[str, str]:
+    title = str(_record_value(record, "title") or "").strip()
+    claim = str(_record_value(record, "claim_supported") or "").strip()
+    limitation = str(_record_value(record, "limitations") or "").strip()
+    publisher = str(_record_value(record, "publisher") or "").strip()
+    pressure_label = public_pressure_label(record)
+    location = str(_record_value(record, "location_name") or _record_value(record, "state") or "").strip()
+    published_at = str(_record_value(record, "published_at") or "").strip()
+    source_meta = " | ".join(part for part in (publisher, pressure_label, location, published_at[:10]) if part)
+    return {
+        "pressure_label": pressure_label,
+        "source_meta": source_meta,
+        "source_title": title or "Source record",
+        "what_changed": _care_line_what_changed(record),
+        "who_may_be_affected": _care_line_who_may_be_affected(record),
+        "why_it_matters": _care_line_why_it_matters(record),
+        "limit": limitation or "This record is included for traceability.",
+    }
 
 
 def summary_for_records(records: list[dict[str, Any]]) -> str:
     public_rows = public_claim_rows(records)
     if not public_rows:
-        return DISPATCH_TAGLINE
+        return DISPATCH_NAME
     lead = public_rows[0]["claim"] or public_rows[0]["supporting_source"]
     if str(lead).strip().lower().startswith("google news"):
         pressure_label = _care_line_pressure_label(public_rows[0] if public_rows else {})
         if pressure_label:
             return f"{pressure_label[:1].upper() + pressure_label[1:]} This edition uses real, traceable source records."
-        return DISPATCH_TAGLINE
+        return DISPATCH_NAME
     return f"{lead} This edition uses real, traceable source records."
+
+
+def source_health_markdown(health_rows: Iterable[Mapping[str, Any]], quality: Mapping[str, Any]) -> str:
+    lines = [
+        "# Care Line Source Health Phase 13",
+        "",
+        f"- Sources attempted: `{quality.get('sources_attempted')}`",
+        f"- Successes: `{quality.get('source_success_count')}`",
+        f"- Failures: `{quality.get('source_failure_count')}`",
+        "",
+        "| source_id | type | state | status | records | URLs | dates | descriptions | usable | error |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    for row in health_rows:
+        status = f"{row.get('fetch_status')}/{row.get('parse_status')}"
+        lines.append(
+            f"| {row.get('source_id')} | {row.get('source_type')} | {row.get('state')} | {status} | {row.get('records_returned')} | {row.get('records_with_urls')} | {row.get('records_with_dates')} | {row.get('records_with_descriptions')} | {row.get('reviewer_usable_count', 0)} | {row.get('last_error', '')} |"
+        )
+    return "\n".join(lines) + "\n"
 
 
 def build_public_edition_report(site_root: Path, edition_date: str) -> dict[str, Any]:

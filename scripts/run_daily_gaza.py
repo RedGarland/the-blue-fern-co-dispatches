@@ -352,6 +352,37 @@ def _write_collection_context(edition_date: str, payload: dict[str, Any]) -> Non
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
+def _existing_collection_context(edition_date: str) -> dict[str, Any] | None:
+    path = _context_path(edition_date)
+    if not path.exists():
+        return None
+    try:
+        payload = read_json(path)
+    except Exception:
+        return {"invalid": True}
+    return payload if isinstance(payload, dict) else {"invalid": True}
+
+
+def _is_manual_supplement_record(record: dict[str, Any]) -> bool:
+    source_id = str(record.get("source_id") or record.get("provider_id") or record.get("source_record_id") or "").strip().lower()
+    source_state = str(record.get("source_state") or "").strip().lower()
+    source_tier = str(record.get("source_tier") or "").strip().lower()
+    attribution_mode = str(record.get("attribution_mode") or "").strip().lower()
+    claim_status = str(record.get("claim_status") or "").strip().lower()
+    source_group = str(record.get("source_group") or "").strip().lower()
+    return any(
+        [
+            source_id in {"manual_sources_json", "manual_supplement"},
+            source_id.startswith("manual-"),
+            source_state == "manual_only",
+            source_tier == "manual_supplements",
+            attribution_mode == "manual_operator",
+            claim_status == "manual_operator",
+            source_group == "manual_supplements",
+        ]
+    )
+
+
 def collect_or_load_sources(
     args: argparse.Namespace,
     summary: dict[str, Any],
@@ -359,11 +390,12 @@ def collect_or_load_sources(
 ) -> tuple[Path | None, list[dict[str, Any]], tuple[Path, str] | None]:
     ensure_source_folder(args.date)
     manual_path = source_file_for(args.date)
+    existing_context = _existing_collection_context(args.date)
     tried_invalid_manual = False
     manual_records: list[dict[str, Any]] = []
     manual_valid = False
-    manual_restore: tuple[Path, str] | None = None
-    if args.source_mode in {"manual", "both"} and manual_path.exists():
+    should_load_manual = args.source_mode in {"manual", "both"}
+    if should_load_manual and manual_path.exists():
         log_line(log_path, f"Loading manual source file: {manual_path}")
         try:
             records, errors = validate_source_file(manual_path, args.min_sources)
@@ -388,7 +420,8 @@ def collect_or_load_sources(
             else:
                 manual_records = records[: args.max_sources]
                 manual_valid = True
-                manual_restore = (manual_path, manual_path.read_text(encoding="utf-8"))
+                if args.source_mode == "both" and existing_context is not None:
+                    manual_records = [record for record in manual_records if _is_manual_supplement_record(record)]
                 if args.source_mode == "manual":
                     summary["source_file"] = str(manual_path)
                     summary["source_count"] = len(manual_records)
@@ -521,7 +554,7 @@ def collect_or_load_sources(
     summary["source_file"] = str(source_path) if source_path else None
     summary["source_count"] = len(records)
     log_line(log_path, f"Source collection resolved {len(records)} records to {source_path}")
-    return source_path, records, manual_restore
+    return source_path, records, None
 
 
 def generation_command(

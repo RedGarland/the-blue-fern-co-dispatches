@@ -209,6 +209,55 @@ def _bridge_record_from_candidate(candidate: dict[str, Any], *, manual_fallback:
     return bridge_row
 
 
+def _bridge_row_identity(row: dict[str, Any]) -> str:
+    for key in ("candidate_id", "discovery_candidate_id", "source_record_id", "final_trace_url", "canonical_url", "discovered_url", "source_url"):
+        value = _normalize_url(_nonempty(row.get(key)))
+        if value:
+            return value
+    title = _nonempty(row.get("title") or row.get("discovered_title"))
+    publisher = _nonempty(row.get("publisher") or row.get("discovered_publisher"))
+    if title or publisher:
+        return f"text:{title.lower()}|{publisher.lower()}"
+    return ""
+
+
+def _merge_durable_source_rows(existing_rows: list[dict[str, Any]], new_rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], int]:
+    merged: list[dict[str, Any]] = []
+    positions: dict[str, int] = {}
+    for row in existing_rows:
+        if not isinstance(row, dict):
+            continue
+        identity = _bridge_row_identity(row)
+        if not identity:
+            continue
+        positions[identity] = len(merged)
+        merged.append(row)
+    appended = 0
+    for row in new_rows:
+        identity = _bridge_row_identity(row)
+        if not identity:
+            continue
+        if identity in positions:
+            merged[positions[identity]] = row
+        else:
+            positions[identity] = len(merged)
+            merged.append(row)
+            appended += 1
+    return merged, appended
+
+
+def _discovery_row_disposition(row: dict[str, Any]) -> str:
+    if _nonempty(row.get("duplicate_of")):
+        return "duplicate"
+    if _nonempty(row.get("exclusion_reason")):
+        return "excluded"
+    if _nonempty(row.get("review_status")) in {"pending_review", "manual_reviewed"}:
+        return "pending"
+    if bool(row.get("manual_review_required")):
+        return "pending"
+    return "included"
+
+
 def _load_manual_fallback_records(path: Path) -> list[dict[str, Any]]:
     if not path.exists():
         return []
@@ -365,7 +414,9 @@ def run_food_line_discovery_intake_bridge(
             "discovery_source_rows": [],
         }
         if not dry_run:
-            _write_json(source_input_path, [])
+            existing_rows = _read_json(source_input_path) if source_input_path.exists() else []
+            merged_rows, _ = _merge_durable_source_rows(existing_rows if isinstance(existing_rows, list) else [], [])
+            _write_json(source_input_path, merged_rows)
             _write_json(review_path, summary)
         return summary
     payload = _read_json(candidate_path)
@@ -389,8 +440,14 @@ def run_food_line_discovery_intake_bridge(
         if _nonempty(discovery_row.get("duplicate_of")):
             continue
         intaked_rows.append(discovery_row)
-    source_count = len(intaked_rows)
-    excluded_count = max(0, candidate_count - source_count)
+    disposition_counts = Counter(_discovery_row_disposition(row) for row in candidates)
+    existing_source_rows: list[dict[str, Any]] = []
+    if source_input_path.exists():
+        payload = _read_json(source_input_path)
+        if isinstance(payload, list):
+            existing_source_rows = [row for row in payload if isinstance(row, dict)]
+    merged_source_rows, merged_new_count = _merge_durable_source_rows(existing_source_rows, intaked_rows)
+    excluded_count = max(0, candidate_count - merged_new_count)
     no_current_update_state = _discovery_no_current_update_state(
         {
             "discovery_candidate_count": candidate_count,
@@ -414,7 +471,7 @@ def run_food_line_discovery_intake_bridge(
         "discovery_confidence_reason": _nonempty(audit.get("discovery_confidence_reason")) or "Discovery intake was read but no confidence summary was available.",
         "discovery_audit_path": _nonempty(audit.get("discovery_audit_json_path")) or str(root / "output" / "review" / DISPATCH_SLUG / date_text / "discovery_audit.json"),
         "discovery_candidates_path": str(candidate_path),
-        "discovery_candidates_intaked": source_count,
+        "discovery_candidates_intaked": merged_new_count,
         "discovery_candidates_excluded": excluded_count,
         "discovery_candidates_manual_review_required": manual_review_required_count,
         "discovery_no_current_update_state": no_current_update_state,
@@ -433,8 +490,33 @@ def run_food_line_discovery_intake_bridge(
         "discovery_source_rows": intaked_rows,
         "discovery_manual_fallback_merged_count": merged_count,
         "discovery_manual_fallback_appended_count": appended_count,
+        "discovery_source_watch_disposition_counts": dict(sorted(disposition_counts.items())),
     }
     if not dry_run:
-        _write_json(source_input_path, intaked_rows)
+        accounted = (
+            disposition_counts.get("pending", 0)
+            + disposition_counts.get("included", 0)
+            + disposition_counts.get("excluded", 0)
+            + disposition_counts.get("duplicate", 0)
+        )
+        if accounted != candidate_count:
+            missing_ids = [
+                _nonempty(row.get("candidate_id"))
+                for row in candidates
+                if _discovery_row_disposition(row) not in {"pending", "included", "excluded", "duplicate"}
+            ]
+            raise ValueError(
+                "discovery source-watch findings did not reconcile to a durable disposition: "
+                + ", ".join(filter(None, missing_ids)) or "unknown missing source-watch finding"
+            )
+        present_ids = {_bridge_row_identity(row2) for row2 in merged_source_rows}
+        missing_ids = [
+            _bridge_row_identity(row)
+            for row in intaked_rows
+            if _bridge_row_identity(row) and _bridge_row_identity(row) not in present_ids
+        ]
+        if missing_ids:
+            raise ValueError("discovery source-row reconciliation failed: " + ", ".join(filter(None, missing_ids)))
+        _write_json(source_input_path, merged_source_rows)
         _write_json(review_path, summary)
     return summary

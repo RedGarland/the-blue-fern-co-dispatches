@@ -22,6 +22,11 @@ param(
 
 $ErrorActionPreference = "Stop"
 $script:LogFile = $null
+$utf8 = [System.Text.UTF8Encoding]::new($false)
+[Console]::OutputEncoding = $utf8
+$OutputEncoding = $utf8
+$env:PYTHONUTF8 = '1'
+$env:PYTHONIOENCODING = 'utf-8'
 
 function Write-Log {
     param([string]$Message)
@@ -496,6 +501,7 @@ try {
     New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
     $Stamp = Get-Date -Format "yyyyMMdd-HHmmss"
     $script:LogFile = Join-Path $LogDir "runner-$Dispatch-$Stamp.log"
+    $env:PYTHONPYCACHEPREFIX = Join-Path ([System.IO.Path]::GetTempPath()) ("bluefern-pycache-{0}-{1}" -f $Dispatch, $Stamp)
 
     if (-not $PagesRepo) {
         $PagesRepo = Join-Path $RepoRoot "bluefern-dispatches-pages"
@@ -576,6 +582,7 @@ try {
     Write-Log ("Resolved repo root from {0}: {1}" -f $repoRootSource, $RepoRoot)
     Write-Log "Resolved Pages repo: $PagesRepo"
     Write-Log "Selected Python path: $python"
+    Write-Log "Bytecode cache prefix: $env:PYTHONPYCACHEPREFIX"
     Write-Log "Dispatch: $Dispatch"
     Write-Log "Date: $Date"
     Write-Log "Dry-run full: $dryRunFullRequested"
@@ -706,9 +713,11 @@ try {
             "--audit-source-collection",
             "--publish",
             "--push",
-            "--post-bluesky",
             "--generate-audio"
         )
+        if ($PostBluesky) {
+            $dispatchArgs += "--post-bluesky"
+        }
     }
 
     $dispatchResult = Invoke-LoggedCommand -Python $python -Arguments $dispatchArgs -ParseJsonTail:$checkOnlyRequested

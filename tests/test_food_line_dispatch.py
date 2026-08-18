@@ -23,6 +23,7 @@ import scripts.publish_food_line_review_only as food_line_review_publish
 import scripts.run_food_line_dispatch as food_line
 import scripts.update_food_line_archive_for_review_only as food_line_archive_update
 import bluefern_dispatches.bluesky_post as bluesky_post
+import bluefern_dispatches.food_line_bluesky_approval as food_line_bluesky_approval
 import scripts.test_food_line_tts as food_line_tts
 import bluefern_dispatches.tts_provider as tts_provider
 from bluefern_dispatches.generator import public_edition_is_listable
@@ -70,6 +71,41 @@ def _write_json(path: Path, payload: object) -> None:
 
 def _manual_path(root: Path, date: str) -> Path:
     return root / "data" / "dispatches" / "food-line" / "sources" / date / "manual_sources.json"
+
+
+def _write_food_line_bluesky_preview_fixture(root: Path, edition_date: str, *, public_url: str, public_summary: str) -> None:
+    manifest_path = root / "output" / "site" / "food-line" / "editions" / edition_date / "edition_manifest.json"
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "edition_date": edition_date,
+                "public_url": public_url,
+                "public_rendered": True,
+                "public_signal_count": 2,
+                "edition_mode": "current_update",
+                "validation_status": "ok",
+                "public_summary": public_summary,
+                "bluesky_post_ready": False,
+                "bluesky_post_text": None,
+            }
+        ),
+        encoding="utf-8",
+    )
+    review_path = root / "data" / "dispatches" / "food-line" / "review" / "proposed-editions" / f"{edition_date}.json"
+    review_path.parent.mkdir(parents=True, exist_ok=True)
+    review_path.write_text(
+        json.dumps(
+            {
+                "layout": {
+                    "todays_read": [{"summary": public_summary}],
+                    "core_food_pressure_signals": [{"summary": public_summary}],
+                },
+                "items": [{"review_item_id": f"{edition_date}-001"}],
+            }
+        ),
+        encoding="utf-8",
+    )
 
 
 def _food_line_regression_fixture_path() -> Path:
@@ -4399,6 +4435,24 @@ def test_food_line_publish_food_line_pages_fails_when_expected_edition_missing(m
     assert payload == {}
 
 
+def test_food_line_publish_food_line_pages_requests_shared_homepage_refresh(monkeypatch: pytest.MonkeyPatch):
+    captured: dict[str, list[str]] = {}
+
+    def fake_run_cmd(args, cwd):
+        captured["args"] = list(args)
+        return types.SimpleNamespace(returncode=0, stdout=json.dumps({"ok": True, "errors": [], "copied": True, "commit_sha": "abc1234", "target_pages_branch": "gh-pages", "committed_branch": "gh-pages"}), stderr="")
+
+    monkeypatch.setattr(food_line, "_run_cmd", fake_run_cmd)
+
+    ok, errors, payload = food_line.publish_food_line_pages(Path.cwd(), "2026-06-19")
+
+    assert ok is True
+    assert errors == []
+    assert payload["ok"] is True
+    assert "--shared-homepage-dispatch" in captured["args"]
+    assert "food-line" in captured["args"]
+
+
 def test_food_line_regression_sources_promote_with_verified_date_and_specific_pressure_evidence(tmp_path: Path):
     _ensure_assets(tmp_path)
     date = "2026-06-08"
@@ -4545,6 +4599,12 @@ def test_food_line_bluesky_dry_run_records_social_image_without_network(tmp_path
     edition_date = "2026-06-11"
     public_url = "https://dispatches.thebluefernco.com/food-line/editions/2026-06-11/"
     post_text = "Food Line Dispatch, June 11, 2026: test post text."
+    _write_food_line_bluesky_preview_fixture(
+        tmp_path,
+        edition_date,
+        public_url=public_url,
+        public_summary="Test summary for dry-run preview fixture.",
+    )
 
     def fail_if_called(*_args, **_kwargs):
         raise AssertionError("network call should not happen during Bluesky dry-run")
@@ -4565,13 +4625,9 @@ def test_food_line_bluesky_dry_run_records_social_image_without_network(tmp_path
     )
 
     state_path = tmp_path / "data" / "dispatches" / "food-line" / "editions" / edition_date / "bluesky_post.json"
-    payload = json.loads(state_path.read_text(encoding="utf-8"))
     assert result["status"] == "skipped"
     assert result["reason"] == "dry_run"
-    assert payload["image_path"] == "assets/food-line-dispatch-social.png"
-    assert payload["image_alt"] == bluesky_post.FOOD_LINE_SOCIAL_IMAGE_ALT
-    assert payload["post_text"] == post_text
-    assert payload["public_url"] == public_url
+    assert not state_path.exists()
 
 
 def test_food_line_bluesky_dry_run_state_and_duplicate_guard(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -4580,6 +4636,13 @@ def test_food_line_bluesky_dry_run_state_and_duplicate_guard(tmp_path: Path, mon
     public_url = "https://dispatches.thebluefernco.com/food-line/"
     post_text = "Food Line Dispatch, June 11, 2026: WSLS reported that Roanoke's St. Francis House faced empty shelves. Source-backed public briefing:"
     state_path = tmp_path / "data" / "dispatches" / "food-line" / "editions" / edition_date / "bluesky_post.json"
+    preview_summary = "WSLS reported that Roanoke's St. Francis House faced empty shelves."
+    _write_food_line_bluesky_preview_fixture(
+        tmp_path,
+        edition_date,
+        public_url=public_url,
+        public_summary=preview_summary,
+    )
 
     def fail_if_called(*_args, **_kwargs):
         raise AssertionError("network call should not happen during Bluesky dry-run or duplicate guard")
@@ -4598,11 +4661,12 @@ def test_food_line_bluesky_dry_run_state_and_duplicate_guard(tmp_path: Path, mon
         allow_publish=False,
         dry_run=True,
     )
-    dry_run_payload = json.loads(state_path.read_text(encoding="utf-8"))
     assert dry_run_result["reason"] == "dry_run"
-    assert dry_run_payload["status"] == "dry_run"
-    assert dry_run_payload["post_text"] == post_text
-    assert dry_run_payload["public_url"] == public_url
+    assert not state_path.exists()
+
+    approval_payload = food_line_bluesky_approval.build_pending_approval(tmp_path, edition_date)
+    approval_payload.update({"approved": True, "approved_at": "2026-06-11T00:00:00Z", "approved_by": "test"})
+    food_line_bluesky_approval.write_approval(tmp_path, approval_payload)
 
     state_path.write_text(
         json.dumps(
@@ -4641,6 +4705,7 @@ def test_food_line_bluesky_dry_run_state_and_duplicate_guard(tmp_path: Path, mon
         project_root=tmp_path,
         allow_publish=True,
         dry_run=False,
+        allow_archival_bluesky_post=True,
     )
     assert duplicate_result["reason"] == "skipped_existing_receipt"
     assert duplicate_result["post_uri"] == "at://did:plc:example/app.bsky.feed.post/abc"
@@ -4842,7 +4907,7 @@ def test_food_line_review_only_render_uses_only_candidate_review_records(tmp_pat
     assert result["source_count"] == 1
     assert result["public_eligible_candidate_count"] == 1
     assert "Today’s Food Line found 1 reported pressure signal." in edition_html
-    assert "Source mix: 1 signals from 1 publishers." in edition_html
+    assert "Source mix: 1 signal from 1 publisher." in edition_html
     assert "Nationally, FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children." in edition_html
     assert "In United States" not in edition_html
     assert "FRAC warned that a USDA proposal to end broad-based categorical eligibility for SNAP would increase hunger for families and children." in edition_html
@@ -4957,7 +5022,7 @@ def test_food_line_review_only_render_source_url_selector_renders_only_selected_
     assert result["source_count"] == 1
     assert result["selected_candidate_count"] == 1
     assert "Today’s Food Line found 1 reported pressure signal." in edition_html
-    assert "Source mix: 1 signals from 1 publishers." in edition_html
+    assert "Source mix: 1 signal from 1 publisher." in edition_html
     assert "Greater Boston Food Bank to spend record-breaking $65M on food in 2026 - Boston Herald" in edition_html
     assert "Boston Herald reported that Greater Boston Food Bank expects to spend a record $65M on food in 2026 as need grows." in edition_html
     assert "Summer meal programs expect increased demand this year" not in edition_html

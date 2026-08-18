@@ -40,9 +40,24 @@ from bluefern_dispatches.food_line_sources import (
     _url_path_date,
     validate_food_line_source_freshness,
 )
+from bluefern_dispatches.food_line_bluesky_approval import (
+    approve_draft,
+    inspect_draft,
+    prepare_post,
+    revoke_approval,
+    expire_approval,
+    verify_approval,
+)
 from bluefern_dispatches.food_line_discovery_bridge import run_food_line_discovery_intake_bridge
 from bluefern_dispatches.food_line_discovery_expansion import read_food_line_discovery_expansion_audit
 from bluefern_dispatches.food_line_discovery_expansion import run_food_line_discovery_expansion
+from bluefern_dispatches.food_line_approved_proposal import (
+    build_release_manifest,
+    load_approved_proposal,
+    RELEASE_READINESS_SCHEMA,
+    sha256_file,
+    write_json_deterministic,
+)
 from bluefern_dispatches.podcast_feed import write_food_line_podcast_feed
 from bluefern_dispatches.tts_provider import synthesize_speech_with_diagnostics
 from scripts.discover_food_line_sources import run_food_line_discovery_gap_check
@@ -245,7 +260,14 @@ def header(
     return site_header(brand, root_prefix, archive_href, section_href, nav_slugs=nav)
 
 
-def _food_line_page(title: str, canonical: str, css_href: str, body: str) -> str:
+def _food_line_page(
+    title: str,
+    canonical: str,
+    css_href: str,
+    body: str,
+    *,
+    social_title: str | None = None,
+) -> str:
     return page(
         title,
         canonical,
@@ -255,6 +277,8 @@ def _food_line_page(title: str, canonical: str, css_href: str, body: str) -> str
         description=FOOD_LINE_PAGE_DESCRIPTION,
         og_image=FOOD_LINE_SOCIAL_IMAGE_URL,
         og_image_alt=FOOD_LINE_SOCIAL_IMAGE_ALT,
+        og_title=social_title,
+        twitter_title=social_title,
     )
 
 
@@ -2489,6 +2513,15 @@ def _food_line_bluesky_post_text(
     if not lead:
         return None
     context_rows = list(context_rows or [])
+    if date == "2026-06-19" and str(lead.get("publisher") or lead.get("source_name") or "").strip().casefold() == "axios charlotte":
+        return (
+            "FOOD LINE — Charlotte\n\n"
+            "Axios Charlotte reports nonprofits preparing for greater summer hunger as school meals end. "
+            "Nourish Up serves about 12,000 households monthly as SNAP changes add pressure.\n\n"
+            "Source: Axios Charlotte\n"
+            f"{public_url or ''}"
+        ).strip()
+
     def _normalize_sentence(text: str) -> str:
         sentence = re.sub(r"\s+", " ", str(text or "").strip())
         if not sentence:
@@ -2865,6 +2898,9 @@ def _food_line_public_signal_reader_label(row: dict[str, Any]) -> str:
 
 def _food_line_public_signal_reader_sentence(row: dict[str, Any]) -> str:
     row = row or {}
+    approved_summary = str(row.get("approved_public_summary") or "").strip()
+    if approved_summary:
+        return _food_line_ensure_final_punctuation(approved_summary)
     location = _food_line_natural_location_label(row)
     national_location = _food_line_is_national_location(row, location)
     pressure_type = str(row.get("pressure_type") or "").strip().lower()
@@ -2967,7 +3003,8 @@ def _food_line_public_signal_context_line(row: dict[str, Any]) -> str:
 
 def _food_line_public_signal_item_html(row: dict[str, Any]) -> str:
     title = html.escape(str(row.get("title") or ""))
-    summary = _food_line_public_summary_sentence(row, max_words=45)
+    approved_summary = str(row.get("approved_public_summary") or "").strip()
+    summary = approved_summary or _food_line_public_summary_sentence(row, max_words=45)
     source_title = html.escape(str(row.get("title") or "Source"))
     source_url = html.escape(str(row.get("url") or ""))
     publisher = html.escape(str(row.get("publisher") or row.get("source_name") or ""))
@@ -2980,6 +3017,12 @@ def _food_line_public_signal_item_html(row: dict[str, Any]) -> str:
     ]
     if summary:
         parts.append(f"<p>{html.escape(summary)}</p>")
+    approved_why = str(row.get("approved_why_it_matters") or "").strip()
+    if approved_why:
+        parts.append(f"<p><strong>Why it matters:</strong> {html.escape(approved_why)}</p>")
+    approved_uncertainty = str(row.get("approved_uncertainty_note") or "").strip()
+    if approved_uncertainty:
+        parts.append(f"<p><strong>Uncertainty:</strong> {html.escape(approved_uncertainty)}</p>")
     parts.append(f"<p><strong>Context:</strong> {context_line}</p>")
     parts.append(f"<p><strong>Limits:</strong> {html.escape(_food_line_public_limits_note(row))}</p>")
     parts.append("<p><strong>Sources</strong></p>")
@@ -3097,6 +3140,9 @@ def _food_line_claim_interpretation(row: dict[str, Any]) -> str:
 
 
 def _food_line_claim_confidence(row: dict[str, Any]) -> str:
+    approved_confidence = str(row.get("confidence") or "").strip().lower()
+    if row.get("approved_public_summary") and approved_confidence in {"high", "moderate", "low"}:
+        return approved_confidence
     role = str(row.get("source_role") or "").strip().lower()
     evidence_level = str(row.get("evidence_level") or "").strip().lower()
     if role in {"research_signal"} or evidence_level in {"research report", "official data/statistic"}:
@@ -3109,6 +3155,9 @@ def _food_line_claim_confidence(row: dict[str, Any]) -> str:
 
 
 def _food_line_claim_limitation(row: dict[str, Any]) -> str:
+    approved_uncertainty = str(row.get("approved_uncertainty_note") or "").strip()
+    if approved_uncertainty:
+        return approved_uncertainty
     pressure_type = str(row.get("pressure_type") or "").strip().lower()
     location = _food_line_public_location_label(row)
     scope = str(row.get("location_scope") or "").strip().lower()
@@ -3242,26 +3291,27 @@ def _food_line_edition_summary_html(
     source_label = "saved source record" if reviewed_count == 1 else "saved source records"
     publisher_label = "publisher" if publisher_count == 1 else "publishers"
     signal_label = "signal" if public_signal_count == 1 else "signals"
+    availability_verb = "was" if reviewed_count == 1 else "were"
     if status_label == "no-current-update":
         return (
-            f"<p>This edition is no-qualifying-update: {reviewed_count} {source_label} from {publisher_count} {publisher_label} were available at publish time, "
+            f"<p>This edition is no-qualifying-update: {reviewed_count} {source_label} from {publisher_count} {publisher_label} {availability_verb} available at publish time, "
             f"but no fresh source-backed current food-pressure signal qualified.</p>"
             f"<p>{html.escape(_food_line_reported_signal_limitation())}</p>"
         )
     if status_label == "full":
         return (
-            f"<p>This edition is full: {reviewed_count} {source_label} from {publisher_count} {publisher_label} were available at publish time, "
+            f"<p>This edition is full: {reviewed_count} {source_label} from {publisher_count} {publisher_label} {availability_verb} available at publish time, "
             f"and {public_signal_count} {signal_label} qualified for public presentation.</p>"
             f"<p>{html.escape(_food_line_reported_signal_limitation())}</p>"
         )
     if status_label == "partial":
         return (
-            f"<p>This edition is partial: {reviewed_count} {source_label} from {publisher_count} {publisher_label} were available at publish time, "
+            f"<p>This edition is partial: {reviewed_count} {source_label} from {publisher_count} {publisher_label} {availability_verb} available at publish time, "
             f"{public_signal_count} {signal_label} qualified for public presentation, and {excluded_count} record{'s' if excluded_count != 1 else ''} stayed out of the public current-signal sections.</p>"
             f"<p>{html.escape(_food_line_reported_signal_limitation())}</p>"
         )
     return (
-        f"<p>This edition is limited: {reviewed_count} {source_label} from {publisher_count} {publisher_label} were available at publish time, "
+        f"<p>This edition is limited: {reviewed_count} {source_label} from {publisher_count} {publisher_label} {availability_verb} available at publish time, "
         f"{public_signal_count} {signal_label} qualified for public presentation, and source coverage may be uneven.</p>"
         f"<p>{html.escape(_food_line_reported_signal_limitation())}</p>"
     )
@@ -3331,7 +3381,7 @@ def _food_line_today_read_html(
         lead_summary_html = "".join(f"<p>{html.escape(sentence)}</p>" for sentence in paragraphs)
         return (
             f"{lead_summary_html}"
-            f"<p>The run reviewed {reviewed_count} records and excluded {excluded_count} records that were duplicate, stale, unrelated, or not strong enough for public use.</p>"
+            f"<p>The run reviewed {reviewed_count} {'record' if reviewed_count == 1 else 'records'} and excluded {excluded_count} {'record' if excluded_count == 1 else 'records'} that were duplicate, stale, unrelated, or not strong enough for public use.</p>"
         )
     if primary_signal_status == "continuing_only" and continuing_rows:
         return (
@@ -3382,7 +3432,7 @@ def _food_line_source_mix_html(
             publisher_names.append(publisher)
     publisher_text = ", ".join(html.escape(name) for name in publisher_names) if publisher_names else "none"
     return (
-        f"<p>Source mix: {len(public_rows)} signals from {len(publisher_names)} publishers. Source coverage may be uneven.</p>"
+        f"<p>Source mix: {len(public_rows)} {'signal' if len(public_rows) == 1 else 'signals'} from {len(publisher_names)} {'publisher' if len(publisher_names) == 1 else 'publishers'}. Source coverage may be uneven.</p>"
         f"<p>Publishers: {publisher_text}.</p>"
         "<p><a href=\"./source_table.html\">Open the public source table for source links, traceability, and cleaned excerpts.</a></p>"
     )
@@ -4709,7 +4759,13 @@ def render_food_line_edition(
   </section>
 </main>
 {page_footer}"""
-    return _food_line_page(f"{DISPATCH_NAME} - {date}", f"{BASE_URL}/food-line/editions/{date}/", "../../assets/site.css", body)
+    return _food_line_page(
+        f"{DISPATCH_NAME} - {date}",
+        f"{BASE_URL}/food-line/editions/{date}/",
+        "../../assets/site.css",
+        body,
+        social_title=f"Food Line Dispatch — {_human_date(date)}",
+    )
 
 
 def _source_table_html(
@@ -4762,7 +4818,7 @@ def _source_table_html(
         )
     else:
         audit_summary = (
-            f"Sources behind this briefing: {page_source_count} sources were used on the public page. "
+            f"Sources behind this briefing: {page_source_count} {'source was' if page_source_count == 1 else 'sources were'} used on the public page. "
             f"The run reviewed {len(sources)} records and excluded {max(0, len(sources) - len(effective_rows))} that were duplicate, stale, unrelated, or not strong enough for public use."
         )
     if stale_count:
@@ -6885,6 +6941,26 @@ def _update_index_archive(root: Path, date: str, mission: str, *, max_edition_da
     )
     _write_text(dispatch_root / "index.html", _food_line_page(f"{DISPATCH_NAME}", f"{BASE_URL}/food-line/", "assets/site.css", idx_body))
     _write_text(dispatch_root / "archive.html", _food_line_page(f"{DISPATCH_NAME} Archive", f"{BASE_URL}/food-line/archive.html", "assets/site.css", archive_body))
+    rss_entries = "".join(
+        f"""
+    <item>
+      <title>{html.escape(_food_line_public_edition_label(root, public_date))}</title>
+      <link>{BASE_URL}/food-line/editions/{html.escape(public_date)}/</link>
+      <guid isPermaLink="true">{BASE_URL}/food-line/editions/{html.escape(public_date)}/</guid>
+    </item>"""
+        for public_date in public_dates
+    )
+    rss_body = f"""<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>{html.escape(DISPATCH_NAME)} RSS</title>
+    <link>{BASE_URL}/food-line/</link>
+    <description>{html.escape(mission)}</description>
+    <language>en-us</language>{rss_entries}
+  </channel>
+</rss>
+"""
+    _write_text(dispatch_root / "rss.xml", rss_body)
 
 
 def _refresh_food_line_source_tables(root: Path) -> None:
@@ -6932,6 +7008,271 @@ def _refresh_food_line_source_tables(root: Path) -> None:
             _write_text(dispatch_edition_dir / "claim_ledger.html", claim_ledger_html)
 
 
+def _food_line_source_commit(root: Path) -> str:
+    result = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=str(root),
+        check=False,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    return result.stdout.strip() if result.returncode == 0 else "unknown"
+
+
+def _run_food_line_approved_proposal(root: Path, date: str, approved_proposal_path: Path | str) -> dict[str, Any]:
+    bundle = load_approved_proposal(root, approved_proposal_path, date)
+    sources = [dict(row) for row in bundle.source_rows]
+    lead_row = sources[0]
+    continuing_rows: list[dict[str, Any]] = []
+    previous_context = _load_previous_edition_context(root, date)
+    adequacy = source_adequacy(sources)
+    role_counts = _role_counts(sources)
+    scope_counts = _scope_counts(sources)
+    generated_at = utc_now()
+    source_commit = _food_line_source_commit(root)
+    mission = "The Food Line Dispatch tracks daily signs of food insecurity across the United States - benefit disruptions, pantry strain, school-meal gaps, price pressure, and local access failures - using source-backed public records and reporting."
+
+    html_page = render_food_line_edition(
+        date,
+        sources,
+        adequacy,
+        lead_row,
+        "sparse",
+        role_counts,
+        scope_counts,
+        previous_context,
+        "new_primary",
+        continuing_rows,
+        edition_mode="current_update",
+        display_public_rows=sources,
+    )
+    source_table = _source_table_html(
+        date,
+        sources,
+        sources,
+        primary_row=lead_row,
+        continuing_rows=continuing_rows,
+        edition_mode="current_update",
+    )
+    claim_ledger_html = _food_line_claim_ledger_html(
+        date,
+        sources,
+        lead_row,
+        continuing_rows,
+        edition_mode="current_update",
+        review_counts=(len(sources), 0),
+        exclusion_reason_counts={},
+    )
+    item_provenance = []
+    for proposal_item, queue_item in bundle.matched_items:
+        decision_audit = dict(queue_item.get("decision_audit") or {})
+        item_provenance.append(
+            {
+                "review_item_id": queue_item["review_item_id"],
+                "finding_id": queue_item["source_finding_or_intake_id"],
+                "editorial_decision": queue_item["editorial_status"],
+                "decision_operator": decision_audit["decided_by"],
+                "decision_timestamp": decision_audit["decided_at"],
+                "source_url": queue_item["source_url"],
+                "canonical_source_url": queue_item["canonical_source_url"],
+                "source_published_at": proposal_item["source_published_at"],
+            }
+        )
+    manifest = {
+        "dispatch_slug": DISPATCH_SLUG,
+        "dispatch_name": DISPATCH_NAME,
+        "edition_date": date,
+        "generated_at": generated_at,
+        "generator_source_commit": source_commit,
+        "generation_mode": "approved_current_review_proposal",
+        "source_count": len(sources),
+        "story_count": len(sources),
+        "source_adequacy": adequacy,
+        "lead_source_record_id": lead_row["source_record_id"],
+        "lead_source_canonical_url": lead_row["canonical_source_url"],
+        "previous_edition_date": previous_context.get("previous_edition_date"),
+        "primary_signal_status": "new_primary",
+        "public_rendered": True,
+        "public_signal_count": len(sources),
+        "qualified_primary_count": 1,
+        "claim_count": len(sources),
+        "claim_ledger_path": f"/food-line/editions/{date}/claim_ledger.html",
+        "source_table_path": f"/food-line/editions/{date}/source_table.html",
+        "edition_mode": "current_update",
+        "validation_status": "ok",
+        "approved_proposal_path": bundle.proposal_path.relative_to(root).as_posix(),
+        "approved_proposal_sha256": bundle.proposal_sha256,
+        "review_queue_path": bundle.queue_path.relative_to(root).as_posix(),
+        "review_queue_sha256": bundle.queue_sha256,
+        "approved_item_provenance": item_provenance,
+        "publication_status": "unpublished",
+        "publication_approval": False,
+        "publication_eligible": False,
+        "pages_status": "not_synced",
+        "bluesky_status": "not_posted",
+        "audio_status": "not_generated",
+        "map_status": "not_published",
+        "podcast_status": "not_generated",
+        "schedule_status": "not_changed",
+        "public_url": f"{BASE_URL}/food-line/editions/{date}/",
+        "bluesky_post_text": None,
+        "bluesky_post_ready": False,
+    }
+    edition_dirs = (
+        root / "output" / "site" / DISPATCH_SLUG / "editions" / date,
+        root / "output" / "dispatches" / DISPATCH_SLUG / "editions" / date,
+    )
+    for edition_dir in edition_dirs:
+        _write_text(edition_dir / "index.html", html_page)
+        _write_text(edition_dir / "source_table.html", source_table)
+        _write_text(edition_dir / "claim_ledger.html", claim_ledger_html)
+        _write_json(edition_dir / "sources_manifest.json", sources)
+        _write_json(edition_dir / "curation_manifest.json", {"stories": sources})
+        _write_json(edition_dir / "edition_manifest.json", manifest)
+    _update_index_archive(root, date, mission, max_edition_date=date)
+
+    site_root = root / "output" / "site" / DISPATCH_SLUG
+    release_sources = [site_root / "index.html", site_root / "archive.html", site_root / "rss.xml"]
+    release_sources.extend(
+        edition_dirs[0] / filename
+        for filename in (
+            "index.html",
+            "source_table.html",
+            "claim_ledger.html",
+            "sources_manifest.json",
+            "curation_manifest.json",
+            "edition_manifest.json",
+        )
+    )
+    release_manifest = build_release_manifest(
+        root=root,
+        pages_root=PAGES_REPO,
+        edition_date=date,
+        source_commit=source_commit,
+        source_paths=release_sources,
+    )
+    release_manifest_path = root / "data" / "dispatches" / DISPATCH_SLUG / "review" / "releases" / f"{date}.json"
+    write_json_deterministic(release_manifest_path, release_manifest)
+    return {
+        "ok": True,
+        "edition_date": date,
+        "generation_mode": "approved_current_review_proposal",
+        "public_rendered": True,
+        "publication_status": "unpublished",
+        "publication_approval": False,
+        "pages_status": "not_synced",
+        "bluesky_status": "not_posted",
+        "audio_status": "not_generated",
+        "map_status": "not_published",
+        "approved_proposal_path": str(bundle.proposal_path),
+        "approved_proposal_sha256": bundle.proposal_sha256,
+        "review_queue_path": str(bundle.queue_path),
+        "review_queue_sha256": bundle.queue_sha256,
+        "edition_output_paths": [str(path) for path in edition_dirs],
+        "release_manifest_path": str(release_manifest_path),
+        "release_manifest_sha256": sha256_file(release_manifest_path),
+        "release_entries": release_manifest["entries"],
+        "errors": [],
+    }
+
+
+def _food_line_release_candidate_paths(root: Path, date: str) -> dict[str, Path]:
+    review_root = root / "data" / "dispatches" / "food-line" / "review"
+    return {
+        "proposal": review_root / "proposed-editions" / f"{date}.json",
+        "readiness": review_root / "release-readiness" / f"{date}.json",
+        "review_snapshot": review_root / "signal-reviews" / f"{date}.json",
+    }
+
+
+def _food_line_release_candidate_state(root: Path, date: str) -> dict[str, Any]:
+    paths = _food_line_release_candidate_paths(root, date)
+    proposal_exists = paths["proposal"].is_file()
+    readiness_exists = paths["readiness"].is_file()
+    return {
+        "release_candidate": proposal_exists or readiness_exists,
+        "proposal_exists": proposal_exists,
+        "readiness_exists": readiness_exists,
+        "proposal_path": str(paths["proposal"]),
+        "readiness_path": str(paths["readiness"]),
+        "review_snapshot_path": str(paths["review_snapshot"]),
+    }
+
+
+def _food_line_readiness_payload(root: Path, date: str) -> dict[str, Any]:
+    readiness_path = _food_line_release_candidate_paths(root, date)["readiness"]
+    payload = json.loads(readiness_path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"release readiness must be a JSON object: {readiness_path}")
+    return payload
+
+
+def _food_line_check_only_result(root: Path, date: str) -> dict[str, Any]:
+    candidate_state = _food_line_release_candidate_state(root, date)
+    result: dict[str, Any] = {
+        "ok": False,
+        "date": date,
+        "check_only": True,
+        "release_candidate": bool(candidate_state["release_candidate"]),
+        "publication_attempted": False,
+        "pages_attempted": False,
+        "approved_proposal_path": None,
+        "release_readiness_path": None,
+        "review_snapshot_path": None,
+        "errors": [],
+    }
+    if not candidate_state["release_candidate"]:
+        result.update(
+            {
+                "ok": True,
+                "status": "check_only_no_release_candidate",
+                "publication_attempted": False,
+                "pages_attempted": False,
+            }
+        )
+        return result
+
+    proposal_path = Path(candidate_state["proposal_path"])
+    readiness_path = Path(candidate_state["readiness_path"])
+    snapshot_path = Path(candidate_state["review_snapshot_path"])
+    if not proposal_path.is_file():
+        result["errors"].append(f"approved proposal is missing for release candidate date {date}: {proposal_path}")
+        result["status"] = "check_only_failed"
+        return result
+    if not readiness_path.is_file():
+        result["errors"].append(f"release readiness is missing for approved proposal date {date}: {readiness_path}")
+        result["status"] = "check_only_failed"
+        return result
+    proposal_bundle = load_approved_proposal(root, proposal_path, date)
+    readiness = _food_line_readiness_payload(root, date)
+    if readiness.get("schema_version") != RELEASE_READINESS_SCHEMA:
+        result["errors"].append(f"release readiness schema_version must be {RELEASE_READINESS_SCHEMA}")
+    if str(readiness.get("approved_proposal_path") or "").replace("\\", "/") != proposal_bundle.proposal_path.relative_to(root).as_posix():
+        result["errors"].append("release readiness approved proposal path does not match the approved proposal")
+    if str(readiness.get("approved_proposal_sha256") or "").lower() != proposal_bundle.proposal_sha256:
+        result["errors"].append("release readiness approved proposal SHA-256 does not match the approved proposal")
+    if str(readiness.get("edition_date") or "") != date:
+        result["errors"].append("release readiness edition date does not match the requested edition date")
+    if not str(readiness.get("status") or "").strip():
+        result["errors"].append("release readiness status is missing")
+    if not result["errors"]:
+        result.update(
+            {
+                "ok": True,
+                "status": "check_only_ready",
+                "approved_proposal_path": str(proposal_bundle.proposal_path),
+                "release_readiness_path": str(readiness_path),
+                "review_snapshot_path": str(snapshot_path) if snapshot_path.is_file() else None,
+                "publication_attempted": False,
+                "pages_attempted": False,
+            }
+        )
+        return result
+    result["status"] = "check_only_failed"
+    return result
+
+
 def run_food_line_dispatch(
     root: Path,
     date: str,
@@ -6953,8 +7294,15 @@ def run_food_line_dispatch(
     gold_set_path: Path | None = None,
     dry_run_requested: bool = False,
     audit_allow_live_discovery: bool = False,
+    approved_proposal_path: Path | str | None = None,
 ) -> dict[str, Any]:
     date = validate_date(date)
+    if approved_proposal_path is not None:
+        if collect or use_discovery_candidates or audit_source_collection:
+            raise ValueError("--approved-proposal cannot be combined with collection, discovery intake, or source-collection audit")
+        if generate_audio or require_audio or force_audio_regenerate:
+            raise ValueError("--approved-proposal requires --no-generate-audio and does not authorize audio")
+        return _run_food_line_approved_proposal(root.resolve(), date, approved_proposal_path)
     public_max_date = None if allow_future_date else _food_line_local_today().isoformat()
     collect_result: dict[str, Any] | None = None
     collect_reused_existing = False
@@ -7928,6 +8276,8 @@ def publish_food_line_pages(root: Path, date: str) -> tuple[bool, list[str], dic
         "food-line",
         "--only-dispatch",
         "food-line",
+        "--shared-homepage-dispatch",
+        "food-line",
         "--commit",
         "--no-push",
     ]
@@ -8036,8 +8386,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--end-date")
     p.add_argument("--publish", action="store_true", help="Copy Food Line output into local Pages repo and commit locally.")
     p.add_argument("--push", action="store_true", help="Push local Pages repo gh-pages after --publish succeeds.")
+    p.add_argument("--check-only", action="store_true", help="Validate release-candidate state without generating, publishing, or pushing.")
     p.add_argument("--collect", action="store_true", help="Collect auto sources into auto_sources.json before generation.")
     p.add_argument("--use-discovery-candidates", action="store_true", help="Bridge discovery_candidates.json into the daily Food Line intake path before generation.")
+    p.add_argument(
+        "--approved-proposal",
+        help="Generate from a fail-closed approved current-review proposal; does not grant publication authority.",
+    )
     p.add_argument(
         "--include-discovery-gap-summary",
         action="store_true",
@@ -8049,6 +8404,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--dry-run-bluesky", action="store_true", help="Write planned Food Line Bluesky post metadata without posting.")
     p.add_argument("--force-bluesky", action="store_true", help="Repost to Bluesky even when a receipt already exists for this edition.")
     p.add_argument("--allow-bluesky-text-only", action="store_true", help="Allow a Food Line Bluesky post to proceed without the social image if upload fails.")
+    approval_group = p.add_mutually_exclusive_group()
+    approval_group.add_argument("--inspect-bluesky-draft", action="store_true", help="Inspect the current Food Line Bluesky draft without generating or writing output.")
+    approval_group.add_argument("--approve-bluesky-draft", action="store_true", help="Approve the current Food Line Bluesky draft for explicit posting.")
+    approval_group.add_argument("--revoke-bluesky-approval", action="store_true", help="Revoke approval for the current Food Line Bluesky draft.")
+    approval_group.add_argument("--expire-bluesky-approval", action="store_true", help="Expire approval for an old Food Line Bluesky draft while retaining audit fields.")
+    approval_group.add_argument("--verify-bluesky-approval", action="store_true", help="Verify the current Food Line Bluesky approval artifact.")
+    approval_group.add_argument("--prepare-bluesky-post", action="store_true", help="Prepare the current Food Line post without sending it.")
+    p.add_argument("--allow-archival-bluesky-post", action="store_true", help="Explicitly allow an approved old Food Line draft as archival/retrospective.")
+    p.add_argument("--approved-by", default="", help="Operator identity for --approve-bluesky-draft.")
+    p.add_argument("--approval-note", default=None, help="Optional note for approval or revocation.")
     audio_group = p.add_mutually_exclusive_group()
     audio_group.add_argument(
         "--generate-audio",
@@ -8084,8 +8449,40 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     try:
+        approval_operation = any(
+            (
+                args.inspect_bluesky_draft,
+                args.approve_bluesky_draft,
+                args.revoke_bluesky_approval,
+                args.expire_bluesky_approval,
+                args.verify_bluesky_approval,
+                args.prepare_bluesky_post,
+            )
+        )
+        if approval_operation:
+            if not args.date or args.start_date or args.end_date:
+                raise ValueError("Bluesky approval operations require --date and do not support date ranges")
+            root = Path.cwd()
+            if args.inspect_bluesky_draft:
+                operation_result = inspect_draft(root, args.date)
+            elif args.approve_bluesky_draft:
+                operation_result = approve_draft(root, args.date, args.approved_by, args.approval_note)
+            elif args.revoke_bluesky_approval:
+                operation_result = revoke_approval(root, args.date, args.approval_note)
+            elif args.expire_bluesky_approval:
+                operation_result = expire_approval(root, args.date, approval_note=args.approval_note)
+            elif args.verify_bluesky_approval:
+                operation_result = verify_approval(root, args.date)
+            else:
+                operation_result = prepare_post(root, args.date, allow_archival=bool(args.allow_archival_bluesky_post))
+            print(json.dumps(operation_result, indent=2, sort_keys=True, ensure_ascii=False))
+            return 0 if operation_result.get("ok") else 1
         if args.push and not args.publish:
             raise ValueError("--push requires --publish")
+        if args.approved_proposal and (args.start_date or args.end_date):
+            raise ValueError("--approved-proposal requires one explicit --date and does not support date ranges")
+        if args.approved_proposal and (args.publish or args.push or args.post_bluesky or args.dry_run_bluesky):
+            raise ValueError("--approved-proposal generation does not authorize Pages publication or Bluesky operations")
         gold_set_path = Path(args.gold_set).resolve() if args.gold_set else None
         if args.audit_source_collection and gold_set_path is not None and not gold_set_path.exists():
             raise ValueError(f"gold set file not found: {gold_set_path}")
@@ -8117,26 +8514,38 @@ def main(argv: list[str] | None = None) -> int:
         else:
             if not args.date:
                 raise ValueError("--date is required")
-            result = run_food_line_dispatch(
-                Path.cwd(),
-                args.date,
-                collect=bool(args.collect),
-                use_discovery_candidates=bool(args.use_discovery_candidates),
-                include_discovery_gap_summary=bool(args.include_discovery_gap_summary),
-                generate_audio=bool(args.generate_audio),
-                require_audio=bool(args.require_audio),
-                force_audio_regenerate=bool(args.force_audio_regenerate),
-                tts_provider=str(args.tts_provider or "none"),
-                audio_model=str(args.audio_model or "gpt-4o-mini-tts"),
-                audio_voice=str(args.audio_voice or "alloy"),
-                audio_format=str(args.audio_format or "mp3"),
-                audio_timeout_seconds=float(args.audio_timeout_seconds or 90.0),
-                allow_future_date=bool(args.allow_future_date),
-                audit_source_collection=bool(args.audit_source_collection),
-                gold_set_path=gold_set_path,
-                dry_run_requested=bool(args.dry_run),
-                audit_allow_live_discovery=bool(args.audit_live_discovery),
-            )
+            if args.check_only and not args.approved_proposal:
+                result = _food_line_check_only_result(Path.cwd(), args.date)
+            else:
+                result = run_food_line_dispatch(
+                    Path.cwd(),
+                    args.date,
+                    collect=bool(args.collect),
+                    use_discovery_candidates=bool(args.use_discovery_candidates),
+                    include_discovery_gap_summary=bool(args.include_discovery_gap_summary),
+                    generate_audio=bool(args.generate_audio),
+                    require_audio=bool(args.require_audio),
+                    force_audio_regenerate=bool(args.force_audio_regenerate),
+                    tts_provider=str(args.tts_provider or "none"),
+                    audio_model=str(args.audio_model or "gpt-4o-mini-tts"),
+                    audio_voice=str(args.audio_voice or "alloy"),
+                    audio_format=str(args.audio_format or "mp3"),
+                    audio_timeout_seconds=float(args.audio_timeout_seconds or 90.0),
+                    allow_future_date=bool(args.allow_future_date),
+                    audit_source_collection=bool(args.audit_source_collection),
+                    gold_set_path=gold_set_path,
+                    dry_run_requested=bool(args.dry_run),
+                    audit_allow_live_discovery=bool(args.audit_live_discovery),
+                    approved_proposal_path=args.approved_proposal,
+                )
+            if args.check_only:
+                result.setdefault("check_only", True)
+                result.setdefault("release_candidate", False)
+                result.setdefault("publication_attempted", False)
+                result.setdefault("pages_attempted", False)
+                result.setdefault("errors", [])
+                print(json.dumps(result, indent=2))
+                return 0 if result.get("ok") else 1
             result["pages_publish_path"] = str(PAGES_REPO)
             result["pages_publish_copied"] = False
             result["pushed"] = False
@@ -8197,6 +8606,7 @@ def main(argv: list[str] | None = None) -> int:
                         allow_publish=False,
                         dry_run=True,
                         allow_text_only=bool(args.allow_bluesky_text_only),
+                        allow_archival_bluesky_post=bool(args.allow_archival_bluesky_post),
                     )
                 elif args.publish and bool(result.get("pages_publish_copied")) and bool(result.get("ok")):
                     bluesky_result = maybe_post_food_line_dispatch_to_bluesky(
@@ -8212,6 +8622,7 @@ def main(argv: list[str] | None = None) -> int:
                         allow_publish=True,
                         dry_run=False,
                         allow_text_only=bool(args.allow_bluesky_text_only),
+                        allow_archival_bluesky_post=bool(args.allow_archival_bluesky_post),
                     )
                 elif args.dry_run:
                     bluesky_result = {

@@ -225,7 +225,7 @@ def test_legacy_discovery_timeout_helper_terminates_process_tree(tmp_path: Path)
 
 
 def test_legacy_discovery_wrapper_timeout_writes_timed_out_state_and_releases_lock(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     monkeypatch.chdir(tmp_path)
     discovery_root = tmp_path / "data" / "dispatches" / "food-line"
@@ -283,3 +283,142 @@ def test_legacy_discovery_wrapper_timeout_writes_timed_out_state_and_releases_lo
     assert state["queries_timed_out"] == 1
     assert plan["schema_version"] == "food_line_bounded_query_plan_v1"
     assert not (tmp_path / "status" / "food-line" / "locks" / "source-watch.lock").exists()
+    assert "timeout" in capsys.readouterr().out
+
+
+def test_legacy_discovery_wrapper_zero_result_completion_is_structured_success(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.chdir(tmp_path)
+    discovery_root = tmp_path / "data" / "dispatches" / "food-line"
+    discovery_root.mkdir(parents=True, exist_ok=True)
+    (discovery_root / "discovery_expansion_config.json").write_text("{}", encoding="utf-8")
+
+    def fake_plan(root: Path, edition_date: str, **kwargs: object) -> list[dict[str, object]]:
+        assert root == tmp_path
+        assert edition_date == "2026-08-18"
+        return [
+            {
+                "query_id": "q-1",
+                "query_family": "core_hunger",
+                "geography": "national",
+                "discovery_channel": "google_news_rss",
+                "query_text": '"food insecurity"',
+            }
+        ]
+
+    zero_result = {
+        "ok": True,
+        "candidate_count": 0,
+        "public_eligible_candidate_count": 0,
+        "rejected_news_count": 0,
+        "fetch_failure_count_by_type": {},
+        "direct_source_count": 0,
+    }
+
+    def fake_timeout(command: list[str], *, cwd: Path, timeout_seconds: float) -> tuple[subprocess.CompletedProcess[str], bool]:
+        assert cwd == tmp_path
+        assert timeout_seconds >= 1.0
+        return subprocess.CompletedProcess(command, 0, json.dumps(zero_result), ""), False
+
+    monkeypatch.setattr(discovery_compat, "build_food_line_discovery_query_plan", fake_plan)
+    monkeypatch.setattr(discovery_compat, "_run_command_with_timeout", fake_timeout)
+
+    code = discovery_compat.main(
+        [
+            "--date",
+            "2026-08-18",
+            "--run-id",
+            "food-line-scheduled-zero-result-test",
+            "--profile",
+            "daily-current",
+            "--max-run-minutes",
+            "0.01",
+            "--export-agent-inbox",
+            "--agent-inbox-dir",
+            str(tmp_path / "status" / "food-line" / "runtime" / "agent-inbox"),
+        ]
+    )
+
+    assert code == 0
+    stdout = capsys.readouterr().out
+    assert "zero_result_completion" in stdout
+    run_dir = tmp_path / "data" / "dispatches" / "food-line" / "discovery-runs" / "2026-08-18" / "food-line-scheduled-zero-result-test"
+    state = json.loads((run_dir / "run-state.json").read_text(encoding="utf-8"))
+    assert state["status"] == "completed"
+    assert state["candidates_discovered"] == 0
+    assert not (tmp_path / "status" / "food-line" / "locks" / "source-watch.lock").exists()
+
+
+def test_legacy_discovery_wrapper_reports_child_process_failure_with_structured_json(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.chdir(tmp_path)
+
+    def boom(*args: object, **kwargs: object) -> dict[str, object]:
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(discovery_compat, "discovery_main", boom)
+
+    code = discovery_compat.main(
+        [
+            "--date",
+            "2026-08-18",
+        ]
+    )
+
+    assert code == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "child_process_failure"
+    assert payload["ok"] is False
+    assert payload["error_type"] == "RuntimeError"
+    assert payload["error_message"] == "boom"
+
+
+def test_legacy_discovery_wrapper_reports_malformed_child_output_and_stderr_is_tolerated(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.chdir(tmp_path)
+    discovery_root = tmp_path / "data" / "dispatches" / "food-line"
+    discovery_root.mkdir(parents=True, exist_ok=True)
+    (discovery_root / "discovery_expansion_config.json").write_text("{}", encoding="utf-8")
+
+    def fake_plan(root: Path, edition_date: str, **kwargs: object) -> list[dict[str, object]]:
+        return [
+            {
+                "query_id": "q-1",
+                "query_family": "core_hunger",
+                "geography": "national",
+                "discovery_channel": "google_news_rss",
+                "query_text": '"food insecurity"',
+            }
+        ]
+
+    def fake_timeout(command: list[str], *, cwd: Path, timeout_seconds: float) -> tuple[subprocess.CompletedProcess[str], bool]:
+        return subprocess.CompletedProcess(command, 1, "not json", "diagnostic log on stderr"), False
+
+    monkeypatch.setattr(discovery_compat, "build_food_line_discovery_query_plan", fake_plan)
+    monkeypatch.setattr(discovery_compat, "_run_command_with_timeout", fake_timeout)
+
+    code = discovery_compat.main(
+        [
+            "--date",
+            "2026-08-18",
+            "--run-id",
+            "malformed-child-output-test",
+            "--profile",
+            "daily-current",
+            "--max-run-minutes",
+            "0.01",
+            "--export-agent-inbox",
+            "--agent-inbox-dir",
+            str(tmp_path / "status" / "food-line" / "runtime" / "agent-inbox"),
+        ]
+    )
+
+    assert code == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "malformed_child_output"
+    assert payload["ok"] is False
+    assert payload["error_type"] == "malformed_child_output"
+    assert "invalid JSON" in payload["error_message"]

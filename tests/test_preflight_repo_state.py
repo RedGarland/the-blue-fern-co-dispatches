@@ -1,8 +1,19 @@
 from __future__ import annotations
 
+import os
+import subprocess
+import sys
 from pathlib import Path
 
 from scripts import preflight_repo_state
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def _clean_env() -> dict[str, str]:
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
+    return env
 
 
 def test_classify_path_covers_expected_categories():
@@ -146,3 +157,17 @@ def test_main_returns_nonzero_when_risky(monkeypatch, tmp_path):
     rc = preflight_repo_state.main(["--source-repo", str(source_repo)])
 
     assert rc == 1
+
+
+def test_preflight_script_imports_without_pythonpath_injection(tmp_path: Path) -> None:
+    completed = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "preflight_repo_state.py"), "--source-repo", str(tmp_path)],
+        cwd=tmp_path,
+        env=_clean_env(),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert completed.returncode in {0, 1}, completed.stdout + completed.stderr
+    assert "ModuleNotFoundError" not in completed.stdout + completed.stderr

@@ -37,6 +37,10 @@ def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
+def _short_run_tag(value: str) -> str:
+    return hashlib.sha1(value.encode("utf-8")).hexdigest()[:10]
+
+
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Process the private Food Line current intake.")
     parser.add_argument("--edition-date", required=True)
@@ -63,7 +67,7 @@ def _queue_source_paths(root: Path, inbox: Path, edition_date: str) -> list[Path
 
 def _agent_intake_artifact_path(root: Path, edition_date: str, agent_run_id: str) -> Path:
     safe_run_id = str(agent_run_id or edition_date).strip() or edition_date
-    return root / "data" / "dispatches" / "food-line" / "agent-intake" / edition_date / f"{safe_run_id}.json"
+    return root / "data" / "dispatches" / "food-line" / "agent-intake" / edition_date / f"{_short_run_tag(safe_run_id)}.json"
 
 
 def _queue_item_from_candidate(

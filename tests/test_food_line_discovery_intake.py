@@ -134,6 +134,7 @@ def test_food_line_discovery_bridge_keeps_google_news_metadata_but_intakes_publi
         edition_mode="no_current_update",
         max_queries=1,
         max_results_per_query=10,
+        public_claim_lookback_days=1,
     )
     bridge = run_food_line_discovery_intake_bridge(tmp_path, edition_date)
     source_rows = json.loads(Path(bridge["discovery_source_input_path"]).read_text(encoding="utf-8"))

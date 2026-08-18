@@ -213,8 +213,6 @@ def test_legacy_current_intake_wrapper_writes_report_and_proposal(tmp_path: Path
     assert report["queue"]["item_count"] == 1
     assert report["proposal"]["draft_status"] == "draft_approved_pending_publication"
     assert Path(report["proposal"]["markdown_path"]).exists()
-
-
 def test_legacy_current_intake_wrapper_builds_queue_from_inbox_export(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.chdir(tmp_path)
     inbox = tmp_path / "data" / "dispatches" / "food-line" / "agent-inbox"
@@ -291,6 +289,7 @@ def test_legacy_current_intake_wrapper_builds_queue_from_inbox_export(tmp_path: 
     assert report["status"] == "success"
     assert report["queue"]["item_count"] == 1
     assert report["proposal"]["draft_status"] == "draft_pending_editorial_review"
+
 
 def test_legacy_discovery_timeout_helper_terminates_process_tree(tmp_path: Path) -> None:
     parent = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"], cwd=tmp_path)

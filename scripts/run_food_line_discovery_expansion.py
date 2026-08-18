@@ -32,6 +32,63 @@ def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
+def _terminal_status(result: dict[str, object]) -> str:
+    if bool(result.get("timed_out")) or str(result.get("status") or "") == "timed_out":
+        return "timeout"
+    if not bool(result.get("ok")):
+        status = str(result.get("status") or "").strip()
+        if status in {"child_process_failure", "malformed_child_output", "collection_failure"}:
+            return status
+        return "collection_failure"
+    candidate_count = int(result.get("candidate_count") or result.get("public_eligible_candidate_count") or 0)
+    return "zero_result_completion" if candidate_count <= 0 else "success"
+
+
+def _terminal_contract_result(
+    result: dict[str, object],
+    *,
+    edition_date: str,
+    run_id: str,
+    timed_out: bool | None = None,
+    error_type: str | None = None,
+    error_message: str | None = None,
+    warnings: list[str] | None = None,
+) -> dict[str, object]:
+    payload = dict(result)
+    candidate_count = int(payload.get("candidate_count") or payload.get("public_eligible_candidate_count") or 0)
+    source_count = int(
+        payload.get("source_count")
+        or payload.get("direct_source_count")
+        or payload.get("provider_pressure_count")
+        or payload.get("official_pressure_count")
+        or 0
+    )
+    if timed_out is None:
+        timed_out = bool(payload.get("timed_out")) or str(payload.get("status") or "") == "timed_out"
+    status = _terminal_status({**payload, "timed_out": timed_out})
+    if error_type is None:
+        error_type = str(payload.get("error_type") or "").strip() or None
+    if error_message is None:
+        error_message = str(payload.get("error_message") or payload.get("error") or "").strip() or None
+    if not bool(payload.get("ok")) and not error_type:
+        error_type = status
+    if not bool(payload.get("ok")) and not error_message:
+        error_message = status.replace("_", " ")
+    return {
+        **payload,
+        "ok": bool(payload.get("ok")),
+        "status": status,
+        "edition_date": edition_date,
+        "run_id": run_id,
+        "source_count": source_count,
+        "candidate_count": candidate_count,
+        "timed_out": bool(timed_out),
+        "error_type": error_type,
+        "error_message": error_message,
+        "warnings": list(warnings if warnings is not None else payload.get("warnings") or []),
+    }
+
+
 def _legacy_args_supplied(args: argparse.Namespace) -> bool:
     return any(
         (
@@ -343,7 +400,7 @@ def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
         wrapped["ok"] = bool(result.get("ok"))
         if not wrapped["ok"]:
             wrapped["status"] = "failed"
-        return wrapped
+        return _terminal_contract_result(wrapped, edition_date=edition_date, run_id=run_id)
 
     query_plan = build_food_line_discovery_query_plan(
         root,
@@ -357,6 +414,8 @@ def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
         str(Path(__file__).resolve()),
         "--date",
         edition_date,
+        "--run-id",
+        run_id,
         "--edition-mode",
         args.edition_mode,
         "--max-results-per-query",
@@ -381,7 +440,7 @@ def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
     timeout_seconds = max(1.0, float(args.max_run_minutes) * 60.0)
     completed, timed_out = _run_command_with_timeout(child_command, cwd=root, timeout_seconds=timeout_seconds)
     if timed_out:
-        return _write_timed_out_state_files(
+        timed_out_result = _write_timed_out_state_files(
             root,
             edition_date,
             run_id,
@@ -394,11 +453,21 @@ def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
                 "stdout": completed.stdout,
             },
         )
+        return _terminal_contract_result(
+            timed_out_result,
+            edition_date=edition_date,
+            run_id=run_id,
+            timed_out=True,
+            error_type="timeout",
+            error_message=timed_out_result.get("error"),
+        )
     stdout = (completed.stdout or "").strip()
     if not stdout:
         result = {
             "ok": False,
-            "status": "failed",
+            "status": "child_process_failure",
+            "error_type": "child_process_failure",
+            "error_message": "legacy bounded discovery produced no JSON output",
             "error": "legacy bounded discovery produced no JSON output",
             "command_exit_code": int(completed.returncode),
             "stdout": completed.stdout,
@@ -406,14 +475,22 @@ def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
         }
         wrapped = _write_state_files(root, edition_date, run_id, result, resume_count=resume_count)
         wrapped["ok"] = False
-        wrapped["status"] = "failed"
-        return wrapped
+        wrapped["status"] = "child_process_failure"
+        return _terminal_contract_result(
+            wrapped,
+            edition_date=edition_date,
+            run_id=run_id,
+            error_type="child_process_failure",
+            error_message="legacy bounded discovery produced no JSON output",
+        )
     try:
         result = json.loads(stdout)
     except json.JSONDecodeError as exc:
         result = {
             "ok": False,
-            "status": "failed",
+            "status": "malformed_child_output",
+            "error_type": "malformed_child_output",
+            "error_message": f"legacy bounded discovery returned invalid JSON: {exc}",
             "error": f"legacy bounded discovery returned invalid JSON: {exc}",
             "command_exit_code": int(completed.returncode),
             "stdout": completed.stdout,
@@ -421,20 +498,27 @@ def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
         }
         wrapped = _write_state_files(root, edition_date, run_id, result, resume_count=resume_count)
         wrapped["ok"] = False
-        wrapped["status"] = "failed"
-        return wrapped
+        wrapped["status"] = "malformed_child_output"
+        return _terminal_contract_result(
+            wrapped,
+            edition_date=edition_date,
+            run_id=run_id,
+            error_type="malformed_child_output",
+            error_message=f"legacy bounded discovery returned invalid JSON: {exc}",
+        )
     if not isinstance(result, dict):
         raise ValueError("legacy bounded discovery must return a JSON object")
     wrapped = _write_state_files(root, edition_date, run_id, result, resume_count=resume_count)
     wrapped["ok"] = bool(result.get("ok"))
     if not wrapped["ok"]:
-        wrapped["status"] = "failed"
-    return wrapped
+        wrapped["status"] = "collection_failure"
+    return _terminal_contract_result(wrapped, edition_date=edition_date, run_id=run_id)
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run the Food Line discovery expansion layer.")
     parser.add_argument("--date", help="Edition date in YYYY-MM-DD format.")
+    parser.add_argument("--run-id", default="", help="Optional run identifier used for structured result envelopes.")
     parser.add_argument("--manual-fallback-file", help="Optional JSON list of manual fallback records.")
     parser.add_argument("--edition-mode", default="current_update", choices=("current_update", "no_current_update"))
     parser.add_argument("--max-results-per-query", type=int, default=10)
@@ -445,7 +529,6 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--public-claim-lookahead-days", type=int, default=0)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--profile")
-    parser.add_argument("--run-id")
     parser.add_argument("--resume-run")
     parser.add_argument("--status-run")
     parser.add_argument("--max-run-minutes", type=float)
@@ -457,23 +540,40 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    if _legacy_args_supplied(args):
-        result = _run_legacy_bounded_contract(args)
-    else:
-        root = Path.cwd()
-        manual_path = Path(args.manual_fallback_file).resolve() if args.manual_fallback_file else None
-        result = discovery_main(
-            root,
-            args.date,
-            manual_fallback_path=manual_path,
-            edition_mode=args.edition_mode,
-            max_results_per_query=args.max_results_per_query,
-            max_queries=args.max_queries,
-            query_lookback_days=args.query_lookback_days,
-            query_lookahead_days=args.query_lookahead_days,
-            public_claim_lookback_days=args.public_claim_lookback_days,
-            public_claim_lookahead_days=args.public_claim_lookahead_days,
-            dry_run=bool(args.dry_run),
+    try:
+        if _legacy_args_supplied(args):
+            result = _run_legacy_bounded_contract(args)
+        else:
+            root = Path.cwd()
+            manual_path = Path(args.manual_fallback_file).resolve() if args.manual_fallback_file else None
+            result = discovery_main(
+                root,
+                args.date,
+                manual_fallback_path=manual_path,
+                edition_mode=args.edition_mode,
+                max_results_per_query=args.max_results_per_query,
+                max_queries=args.max_queries,
+                query_lookback_days=args.query_lookback_days,
+                query_lookahead_days=args.query_lookahead_days,
+                public_claim_lookback_days=args.public_claim_lookback_days,
+                public_claim_lookahead_days=args.public_claim_lookahead_days,
+                dry_run=bool(args.dry_run),
+            )
+        result = _terminal_contract_result(result, edition_date=args.date, run_id=str(args.run_id or ""))
+    except Exception as exc:  # noqa: BLE001
+        result = _terminal_contract_result(
+            {
+                "ok": False,
+                "status": "child_process_failure",
+                "error_type": type(exc).__name__,
+                "error_message": str(exc),
+                "error": str(exc),
+                "warnings": [],
+            },
+            edition_date=args.date,
+            run_id=str(args.run_id or ""),
+            error_type=type(exc).__name__,
+            error_message=str(exc),
         )
     print(json.dumps(result, indent=2, ensure_ascii=False))
     return 0 if result.get("ok") else 1

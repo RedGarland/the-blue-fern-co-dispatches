@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-17",
+  "generated_at": "2026-08-18T05:49:26.797185Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-08-17.mp3",
+  "audio_url": "/gaza/audio/2026-08-17.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1899,
+  "tts_input_word_count": 319,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1882368,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-08-18T05:49:26.797148Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-08-17-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-17/",
+  "script_text": "This is the Gaza Dispatch audio briefing for August 17, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Gaza flotilla sets sail from the UK in bid to break Israeli siege. A boat has left Bristol as part of a wider campaign to break. This was reported by Al Jazeera.\n\n2. Trump threatens to bomb Oman if it 'gets in the way' of Iran deal as Kushner meets Netanyahu - as it happened. US president makes threat in comments to Fox News, as his son-in-law meets the Israeli leader in Jerusalem in effort to push Gaza peace plan Trump threatens to bomb Oman if it 'gets in the way' of ending Iran war Netanyahu and Kushner talks make no breakthrough on stalled Gaza deal. This was reported by The Guardian.\n\n3. Netanyahu and Kushner talks make no breakthrough on stalled Gaza deal. Israeli PM again insists troops will not withdraw from strip until Hamas first disarms, but calls meeting constructive Benjamin Netanyahu has told Donald Trump's son-in-law and envoy Jared Kushner there can be no progress on the stalled Gaza ceasefire deal or an Israeli withdrawal from the coastal strip until Hamas first disarms. This was reported by The Guardian.\n\n4. 'We will not allow Gaza to be rebuilt' until Hamas disarms, Kushner says. Trump's son-in-law and envoy says US will not 'restrict. This was reported by Al Jazeera.\n\n5. Kushner hails 'very good' meeting with Netanyahu after Hamas talks on Gaza peace plan. Donald Trump's Middle East envoy and son-in-law, Jared Kushner, is seeking to gain Israeli backing for the US-backed Gaza peace plan. This was reported by BBC News.\n\n6. Palestinian American reunites with family under siege in West Bank. Videos show the first moments Palestinian-American Loui Ridi arrived at his home in Qusra. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the August 17, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-08-17-aljazeera-middle-east-d09684a764c8",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/17/gaza-flotilla-sets-sail-from-the-uk-in-bid-to-break-israeli-siege?traffic_source=rss",
+      "title": "Gaza flotilla sets sail from the UK in bid to break Israeli siege"
+    },
+    {
+      "source_record_id": "gaza-2026-08-17-guardian-world-32d5affba6fc",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/live/2026/aug/17/trump-kushner-netanyahu-hamas-gaza-israel-blair-us-iran-hormuz-oil-latest-news-updates",
+      "title": "Trump threatens to bomb Oman if it 'gets in the way' of Iran deal as Kushner meets Netanyahu - as it happened"
+    },
+    {
+      "source_record_id": "gaza-2026-08-17-guardian-world-a6a0ca21c761",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/aug/17/netanyahu-kushner-talks-gaza-israel-us-board-of-peace",
+      "title": "Netanyahu and Kushner talks make no breakthrough on stalled Gaza deal"
+    },
+    {
+      "source_record_id": "gaza-2026-08-17-aljazeera-middle-east-6570d8e9c2a2",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/8/17/we-will-not-allow-gaza-to-be-rebuilt-until-hamas-disarms-kushner-says?traffic_source=rss",
+      "title": "'We will not allow Gaza to be rebuilt' until Hamas disarms, Kushner says"
+    },
+    {
+      "source_record_id": "gaza-2026-08-17-bbc-middle-east-784f4986357b",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/c77gg5vn44yo?at_medium=RSS&at_campaign=rss",
+      "title": "Kushner hails 'very good' meeting with Netanyahu after Hamas talks on Gaza peace plan"
+    },
+    {
+      "source_record_id": "gaza-2026-08-17-aljazeera-middle-east-ad69d11accd8",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/17/palestinian-american-reunites-with-family-under-siege-in-west-bank?traffic_source=rss",
+      "title": "Palestinian American reunites with family under siege in West Bank"
+    }
+  ]
+}

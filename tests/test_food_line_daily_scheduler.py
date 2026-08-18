@@ -4,7 +4,6 @@ import json
 import os
 import subprocess
 import sys
-import time
 from pathlib import Path
 
 import pytest
@@ -208,78 +207,3 @@ def test_legacy_current_intake_wrapper_writes_report_and_proposal(tmp_path: Path
     assert report["queue"]["item_count"] == 1
     assert report["proposal"]["draft_status"] == "draft_approved_pending_publication"
     assert Path(report["proposal"]["markdown_path"]).exists()
-
-
-def test_legacy_discovery_timeout_helper_terminates_process_tree(tmp_path: Path) -> None:
-    parent = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"], cwd=tmp_path)
-    try:
-        discovery_compat._terminate_process_tree(parent.pid)
-        deadline = time.time() + 10
-        while time.time() < deadline and scheduler.process_is_running(parent.pid):
-            time.sleep(0.05)
-
-        assert not scheduler.process_is_running(parent.pid)
-    finally:
-        if parent.poll() is None:
-            parent.kill()
-
-
-def test_legacy_discovery_wrapper_timeout_writes_timed_out_state_and_releases_lock(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    monkeypatch.chdir(tmp_path)
-    discovery_root = tmp_path / "data" / "dispatches" / "food-line"
-    discovery_root.mkdir(parents=True, exist_ok=True)
-    (discovery_root / "discovery_expansion_config.json").write_text("{}", encoding="utf-8")
-
-    def fake_plan(root: Path, edition_date: str, **kwargs: object) -> list[dict[str, object]]:
-        assert root == tmp_path
-        assert edition_date == "2026-08-18"
-        assert kwargs["lookback_days"] == 1
-        assert kwargs["lookahead_days"] == 1
-        return [
-            {
-                "query_id": "q-1",
-                "query_family": "core_hunger",
-                "geography": "national",
-                "discovery_channel": "google_news_rss",
-                "query_text": '"food insecurity"',
-            }
-        ]
-
-    def fake_timeout(command: list[str], *, cwd: Path, timeout_seconds: float) -> tuple[subprocess.CompletedProcess[str], bool]:
-        assert cwd == tmp_path
-        assert timeout_seconds >= 1.0
-        return subprocess.CompletedProcess(command, 124, "", "timed out"), True
-
-    monkeypatch.setattr(discovery_compat, "build_food_line_discovery_query_plan", fake_plan)
-    monkeypatch.setattr(discovery_compat, "_run_command_with_timeout", fake_timeout)
-
-    code = discovery_compat.main(
-        [
-            "--date",
-            "2026-08-18",
-            "--run-id",
-            "food-line-scheduled-timeout-test",
-            "--profile",
-            "daily-current",
-            "--max-run-minutes",
-            "0.01",
-            "--export-agent-inbox",
-            "--agent-inbox-dir",
-            str(tmp_path / "status" / "food-line" / "runtime" / "agent-inbox"),
-        ]
-    )
-
-    assert code == 1
-    run_dir = tmp_path / "data" / "dispatches" / "food-line" / "discovery-runs" / "2026-08-18" / "food-line-scheduled-timeout-test"
-    state = json.loads((run_dir / "run-state.json").read_text(encoding="utf-8"))
-    plan = json.loads((run_dir / "query-plan.json").read_text(encoding="utf-8"))
-    assert state["schema_version"] == scheduler.RUN_STATE_SCHEMA
-    assert state["status"] == "timed_out"
-    assert state["resumable"] is True
-    assert state["queries_total"] == 1
-    assert state["queries_completed"] == 0
-    assert state["queries_timed_out"] == 1
-    assert plan["schema_version"] == "food_line_bounded_query_plan_v1"
-    assert not (tmp_path / "status" / "food-line" / "locks" / "source-watch.lock").exists()

@@ -65,6 +65,7 @@ def _make_fake_runner_repo(
     smoke_payload: object | None = None,
     smoke_mode: str = "json",
     capture_dispatch_argv: bool = False,
+    capture_runtime_environment: bool = False,
     validate_placeholder_manual_sources: bool = False,
 ) -> Path:
     repo = tmp_path / "runner-repo"
@@ -114,6 +115,7 @@ raise SystemExit(1)
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 import sys
 
@@ -127,6 +129,19 @@ if "--date" in args:
         date = args[args.index("--date") + 1]
     except (ValueError, IndexError):
         date = "unknown"
+if __CAPTURE_RUNTIME_ENV__:
+    print(
+        json.dumps(
+            {
+                "PYTHONUTF8": os.environ.get("PYTHONUTF8"),
+                "PYTHONIOENCODING": os.environ.get("PYTHONIOENCODING"),
+                "stdout_encoding": sys.stdout.encoding,
+                "stderr_encoding": sys.stderr.encoding,
+            },
+            indent=2,
+        )
+    )
+    raise SystemExit(0)
 manual_source_path = ROOT / "data" / "dispatches" / "gaza" / "sources" / date / "manual_sources.json"
 workspace_output = ROOT / "output" / "site" / "gaza" / "editions" / date
 workspace_output.mkdir(parents=True, exist_ok=True)
@@ -172,6 +187,7 @@ result = {
 print(json.dumps(result, indent=2))
 raise SystemExit(0)
 """.strip()
+        .replace("__CAPTURE_RUNTIME_ENV__", str(capture_runtime_environment))
         .replace("__VALIDATE_PLACEHOLDER__", str(validate_placeholder_manual_sources))
         + "\n",
     )
@@ -209,6 +225,7 @@ raise SystemExit(0)
     (pages_repo / "index.html").write_text("pages", encoding="utf-8")
     _commit_all(pages_repo, "initial pages commit")
     shutil.copy2(Path(sys.executable), venv_scripts_dir / "python.exe")
+    shutil.copy2(Path(__file__).resolve().parents[1] / ".venv" / "pyvenv.cfg", repo / ".venv" / "pyvenv.cfg")
     return repo
 
 
@@ -419,6 +436,31 @@ def test_wrapper_gaza_default_repo_root_comes_from_wrapper_location(tmp_path: Pa
     assert result.returncode == 0, result.stdout + result.stderr
     log_text = _latest_log(repo)
     assert f"Resolved repo root from wrapper location: {repo}" in log_text
+
+
+def test_wrapper_gaza_bootstraps_utf8_runtime_environment(tmp_path: Path) -> None:
+    repo = _make_fake_runner_repo(
+        tmp_path,
+        sync_ok=True,
+        capture_runtime_environment=True,
+        smoke_payload={
+            "ok": True,
+            "edition_mode": "no_public_edition",
+            "public_rendered": False,
+        },
+    )
+
+    result = _run_wrapper_with_args(repo, ["-Dispatch", "gaza", "-Date", "2026-07-02"])
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    log_text = _latest_log(repo)
+    assert "PYTHONUTF8" not in result.stderr
+    assert "PYTHONIOENCODING" not in result.stderr
+    assert "$env:PYTHONUTF8 = '1'" in WRAPPER_PATH.read_text(encoding="utf-8")
+    assert "$env:PYTHONIOENCODING = 'utf-8'" in WRAPPER_PATH.read_text(encoding="utf-8")
+    assert "[Console]::OutputEncoding = $utf8" in WRAPPER_PATH.read_text(encoding="utf-8")
+    assert '"PYTHONUTF8": "1"' in log_text
+    assert '"PYTHONIOENCODING": "utf-8"' in log_text
 
 
 def test_wrapper_gaza_explicit_repo_root_override_is_used(tmp_path: Path) -> None:

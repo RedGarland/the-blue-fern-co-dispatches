@@ -5,11 +5,16 @@ import subprocess
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
-
-from scripts.food_line_runtime_paths import FOOD_LINE_ALLOWED_DIRTY_CATEGORIES, classify_food_line_runtime_path
-
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+SRC = ROOT / "src"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
+
+from scripts.food_line_runtime_paths import FOOD_LINE_ALLOWED_DIRTY_CATEGORIES, classify_food_line_runtime_path
 
 
 def _run_git_status(repo: Path) -> tuple[int, list[str]]:

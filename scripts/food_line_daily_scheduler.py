@@ -23,7 +23,7 @@ if str(SRC) not in sys.path:
 
 from scripts.food_line_runtime_paths import classify_food_line_runtime_path
 
-PRODUCTION_BRANCH = "agent/refine-care-line-signal-wire-public-rendering"
+PRODUCTION_BRANCH = "add/pages-repo-default"
 PRIVATE_AGENT_INBOX_ROOT = ROOT / "data" / "dispatches" / "food-line" / "agent-inbox"
 QUALIFYING_COLLECTION_STATUSES = {"completed", "completed_with_exclusions"}
 QUALIFYING_EXPORT_STATUSES = {"success", "success_with_exclusions", "no_exportable_findings"}

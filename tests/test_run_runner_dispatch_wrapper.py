@@ -132,13 +132,14 @@ if "--date" in args:
 if __CAPTURE_RUNTIME_ENV__:
     print(
         json.dumps(
-            {
-                "PYTHONUTF8": os.environ.get("PYTHONUTF8"),
-                "PYTHONIOENCODING": os.environ.get("PYTHONIOENCODING"),
-                "stdout_encoding": sys.stdout.encoding,
-                "stderr_encoding": sys.stderr.encoding,
-            },
-            indent=2,
+                {
+                    "PYTHONUTF8": os.environ.get("PYTHONUTF8"),
+                    "PYTHONIOENCODING": os.environ.get("PYTHONIOENCODING"),
+                    "PYTHONPYCACHEPREFIX": os.environ.get("PYTHONPYCACHEPREFIX"),
+                    "stdout_encoding": sys.stdout.encoding,
+                    "stderr_encoding": sys.stderr.encoding,
+                },
+                indent=2,
         )
     )
     raise SystemExit(0)
@@ -458,9 +459,11 @@ def test_wrapper_gaza_bootstraps_utf8_runtime_environment(tmp_path: Path) -> Non
     assert "PYTHONIOENCODING" not in result.stderr
     assert "$env:PYTHONUTF8 = '1'" in WRAPPER_PATH.read_text(encoding="utf-8")
     assert "$env:PYTHONIOENCODING = 'utf-8'" in WRAPPER_PATH.read_text(encoding="utf-8")
+    assert "$env:PYTHONPYCACHEPREFIX = " in WRAPPER_PATH.read_text(encoding="utf-8")
     assert "[Console]::OutputEncoding = $utf8" in WRAPPER_PATH.read_text(encoding="utf-8")
     assert '"PYTHONUTF8": "1"' in log_text
     assert '"PYTHONIOENCODING": "utf-8"' in log_text
+    assert '"PYTHONPYCACHEPREFIX": ' in log_text
 
 
 def test_wrapper_gaza_explicit_repo_root_override_is_used(tmp_path: Path) -> None:

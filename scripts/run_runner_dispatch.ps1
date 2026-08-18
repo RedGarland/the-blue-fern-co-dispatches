@@ -501,6 +501,7 @@ try {
     New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
     $Stamp = Get-Date -Format "yyyyMMdd-HHmmss"
     $script:LogFile = Join-Path $LogDir "runner-$Dispatch-$Stamp.log"
+    $env:PYTHONPYCACHEPREFIX = Join-Path ([System.IO.Path]::GetTempPath()) ("bluefern-pycache-{0}-{1}" -f $Dispatch, $Stamp)
 
     if (-not $PagesRepo) {
         $PagesRepo = Join-Path $RepoRoot "bluefern-dispatches-pages"
@@ -581,6 +582,7 @@ try {
     Write-Log ("Resolved repo root from {0}: {1}" -f $repoRootSource, $RepoRoot)
     Write-Log "Resolved Pages repo: $PagesRepo"
     Write-Log "Selected Python path: $python"
+    Write-Log "Bytecode cache prefix: $env:PYTHONPYCACHEPREFIX"
     Write-Log "Dispatch: $Dispatch"
     Write-Log "Date: $Date"
     Write-Log "Dry-run full: $dryRunFullRequested"

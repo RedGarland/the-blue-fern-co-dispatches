@@ -2320,15 +2320,6 @@ def _fetch(url: str, timeout: int = 15) -> bytes:
         return _read(timeout)
     except urllib.error.URLError as exc:
         reason = getattr(exc, "reason", None)
-        if isinstance(reason, TimeoutError) or "timed out" in str(exc).lower():
-            longer_timeout = max(timeout * 3, timeout + 15)
-            try:
-                return _read(longer_timeout)
-            except urllib.error.URLError as retry_exc:
-                retry_reason = getattr(retry_exc, "reason", None)
-                if isinstance(retry_reason, ssl.SSLCertVerificationError) or "CERTIFICATE_VERIFY_FAILED" in str(retry_exc):
-                    return _read(longer_timeout, context=ssl._create_unverified_context())
-                raise
         if isinstance(reason, ssl.SSLCertVerificationError) or "CERTIFICATE_VERIFY_FAILED" in str(exc):
             return _read(timeout, context=ssl._create_unverified_context())
         raise

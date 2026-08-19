@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  statuses: write
 
 jobs:
   validate:
@@ -35,6 +36,22 @@ jobs:
 
       - name: Run focused validation tests
         run: python -m pytest -q -p no:cacheprovider --basetemp ./.pytest-temp-validation tests/test_repo_governance.py tests/test_publish_scope_validation.py tests/test_food_line_dispatch.py tests/test_dispatches_site.py
+      - name: Publish legacy validate commit status
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const state = '${{ job.status }}' === 'success' ? 'success' : 'failure';
+            const sha = context.payload.pull_request?.head?.sha ?? context.sha;
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha,
+              state,
+              context: 'validate',
+              description: state === 'success' ? 'Validation passed' : 'Validation failed',
+              target_url: `${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`
+            });
 
       # Broader Gaza/Cascadia/Care Line suites are deferred here to keep the
       # workflow conservative and avoid coupling Phase 2 to unrelated worktree noise.

@@ -8,6 +8,7 @@ import pytest
 
 import scripts.run_food_line_dispatch as food_line_dispatch
 from bluefern_dispatches import food_line_discovery_expansion as expansion_module
+from bluefern_dispatches import food_line_sources as food_sources
 from bluefern_dispatches.food_line_discovery_expansion import (
     _apply_public_readiness_gate,
     _normalize_candidate_row,
@@ -1036,6 +1037,50 @@ def test_resolve_google_news_wrapper_records_bounded_rejected_candidate_sample()
     serialized_sample = json.dumps(sample)
     assert "article body should not be preserved" not in serialized_sample
     assert "<html" not in serialized_sample.lower()
+
+
+def test_food_line_fetch_timeout_does_not_retry_with_longer_timeout(monkeypatch: pytest.MonkeyPatch):
+    calls: list[int | float | None] = []
+
+    class _TimeoutReason(TimeoutError):
+        pass
+
+    class _TimeoutError(urllib.error.URLError):
+        def __init__(self) -> None:
+            super().__init__(_TimeoutReason("timed out"))
+
+    def fake_urlopen(*args: object, **kwargs: object):
+        calls.append(kwargs.get("timeout"))
+        raise _TimeoutError()
+
+    monkeypatch.setattr(food_sources.urllib.request, "urlopen", fake_urlopen)
+
+    with pytest.raises(urllib.error.URLError):
+        food_sources._fetch("https://feeds.npr.org/1001/rss.xml", timeout=15)
+
+    assert calls == [15]
+
+
+def test_project_fetch_timeout_does_not_retry_with_longer_timeout(monkeypatch: pytest.MonkeyPatch):
+    calls: list[int | float | None] = []
+
+    class _TimeoutReason(TimeoutError):
+        pass
+
+    class _TimeoutError(urllib.error.URLError):
+        def __init__(self) -> None:
+            super().__init__(_TimeoutReason("timed out"))
+
+    def fake_urlopen(*args: object, **kwargs: object):
+        calls.append(kwargs.get("timeout"))
+        raise _TimeoutError()
+
+    monkeypatch.setattr(expansion_module.urllib.request, "urlopen", fake_urlopen)
+
+    with pytest.raises(urllib.error.URLError):
+        expansion_module._project_fetch_with_metadata("https://example.com/story", timeout=15)
+
+    assert calls == [15]
 
 
 def test_food_line_discovery_expansion_failed_google_news_resolution_stays_non_public(tmp_path: Path):

@@ -1,0 +1,68 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-19",
+  "generated_at": "2026-08-19T14:03:38.351916Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-08-19.mp3",
+  "audio_url": "/gaza/audio/2026-08-19.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1186,
+  "tts_input_word_count": 187,
+  "tts_story_count": 4,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1165056,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-08-19T14:03:38.351885Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-08-19-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-19/",
+  "script_text": "This is the Gaza Dispatch audio briefing for August 19, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Why aid entering Gaza may not reach those who need it. It is extremely difficult for trucks to get through the Israeli blockade, let alone for drivers to reach aid warehouses. This was reported by Al Jazeera.\n\n2. 'Lessons were drawn': IDF confirms soldiers numbered Palestinian suspects in West Bank operation - The Jerusalem Post. 'Lessons were drawn': IDF confirms soldiers numbered Palestinian suspects in West Bank operation. This was reported by The Jerusalem Post.\n\n3. Israel confirms it opened fire on vehicle carrying five-year-old Hind Rajab in Gaza. She initially survived the attack but her body was recovered days later in Gaza City in 2024. This was reported by BBC News.\n\n4. Transfer of West Bank authority to police a 'step toward Israeli annexation,' Ben-Gvir declares - The Jerusalem Post. Transfer of West Bank authority to police a 'step toward Israeli annexation,' Ben-Gvir declares. This was reported by The Jerusalem Post.\n\nFor the full source-backed dispatch, read the August 19, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 4,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-08-19-aljazeera-middle-east-36fae62c483b",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/8/19/why-aid-entering-gaza-may-not-reach-those-who-need-it?traffic_source=rss",
+      "title": "Why aid entering Gaza may not reach those who need it"
+    },
+    {
+      "source_record_id": "gaza-2026-08-19-jpost-gaza-accountability-query-1eb6484de92f",
+      "publisher": "The Jerusalem Post",
+      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE9Oa2JVSjJWa25mcERNeXhYNWFDRW9VV01XbVRUU1laQ1BpUmUyck45SlIzV2syU1d5bmJMa1BjeXFENGtaWHVfQTNqcjRzQlNVUy16d2Y4MG9ZZDU3?oc=5",
+      "title": "'Lessons were drawn': IDF confirms soldiers numbered Palestinian suspects in West Bank operation - The Jerusalem Post"
+    },
+    {
+      "source_record_id": "gaza-2026-08-19-bbc-middle-east-b2bc77947e63",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/crl7yjlpx2po?at_medium=RSS&at_campaign=rss",
+      "title": "Israel confirms it opened fire on vehicle carrying five-year-old Hind Rajab in Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-08-19-jpost-gaza-accountability-query-44045538f900",
+      "publisher": "The Jerusalem Post",
+      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1KQkprSjBIQjJWV0ZZMGd0clNqYmZPaWZ6N0o4UEZjQUxqOHN6Y0xSc09nREkzQTdsN3dPU29DZUZhVklVbkgxU1NkQk1FR01idUZJSjJLdHpXclRfSHFjOHV0cXpKZW02UFlpMWdR?oc=5",
+      "title": "Transfer of West Bank authority to police a 'step toward Israeli annexation,' Ben-Gvir declares - The Jerusalem Post"
+    }
+  ]
+}

@@ -1,0 +1,262 @@
+[
+  {
+    "story_id": "gaza-story-2026-08-19-005",
+    "title": "Why aid entering Gaza may not reach those who need it",
+    "summary": "It is extremely difficult for trucks to get through the Israeli blockade, let alone for drivers to reach aid warehouses.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 65,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-19-aljazeera-middle-east-36fae62c483b"
+    ],
+    "source_ids": [
+      "gaza-2026-08-19-aljazeera-middle-east-36fae62c483b"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/8/19/why-aid-entering-gaza-may-not-reach-those-who-need-it?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-19-aljazeera-middle-east-36fae62c483b",
+        "title": "Why aid entering Gaza may not reach those who need it",
+        "url": "https://www.aljazeera.com/news/2026/8/19/why-aid-entering-gaza-may-not-reach-those-who-need-it?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "It is extremely difficult for trucks to get through the Israeli blockade, let alone for drivers to reach aid warehouses."
+      }
+    ],
+    "generated_at": "2026-08-19T14:03:25.096606+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 65,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-19-006",
+    "title": "'Lessons were drawn': IDF confirms soldiers numbered Palestinian suspects in West Bank operation - The Jerusalem Post",
+    "summary": "'Lessons were drawn': IDF confirms soldiers numbered Palestinian suspects in West Bank operation. The Jerusalem Post.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 50,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-19-jpost-gaza-accountability-query-1eb6484de92f"
+    ],
+    "source_ids": [
+      "gaza-2026-08-19-jpost-gaza-accountability-query-1eb6484de92f"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMiXEFVX3lxTE9Oa2JVSjJWa25mcERNeXhYNWFDRW9VV01XbVRUU1laQ1BpUmUyck45SlIzV2syU1d5bmJMa1BjeXFENGtaWHVfQTNqcjRzQlNVUy16d2Y4MG9ZZDU3?oc=5"
+    ],
+    "publisher_names": [
+      "The Jerusalem Post"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-19-jpost-gaza-accountability-query-1eb6484de92f",
+        "title": "'Lessons were drawn': IDF confirms soldiers numbered Palestinian suspects in West Bank operation - The Jerusalem Post",
+        "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE9Oa2JVSjJWa25mcERNeXhYNWFDRW9VV01XbVRUU1laQ1BpUmUyck45SlIzV2syU1d5bmJMa1BjeXFENGtaWHVfQTNqcjRzQlNVUy16d2Y4MG9ZZDU3?oc=5",
+        "publisher": "The Jerusalem Post",
+        "summary_or_snippet": "'Lessons were drawn': IDF confirms soldiers numbered Palestinian suspects in West Bank operation The Jerusalem Post"
+      }
+    ],
+    "generated_at": "2026-08-19T14:03:25.096606+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "gaza_adjacent_context",
+    "claim_status": "gaza_adjacent_context",
+    "context_only": true,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-19-001",
+    "title": "Israel confirms it opened fire on vehicle carrying five-year-old Hind Rajab in Gaza",
+    "summary": "She initially survived the attack but her body was recovered days later in Gaza City in 2024.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 50,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-19-bbc-middle-east-b2bc77947e63"
+    ],
+    "source_ids": [
+      "gaza-2026-08-19-bbc-middle-east-b2bc77947e63"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/crl7yjlpx2po?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-19-bbc-middle-east-b2bc77947e63",
+        "title": "Israel confirms it opened fire on vehicle carrying five-year-old Hind Rajab in Gaza",
+        "url": "https://www.bbc.co.uk/news/articles/crl7yjlpx2po?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "She initially survived the attack but her body was recovered days later in Gaza City in 2024."
+      }
+    ],
+    "generated_at": "2026-08-19T14:03:25.096606+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-19-007",
+    "title": "Transfer of West Bank authority to police a 'step toward Israeli annexation,' Ben-Gvir declares - The Jerusalem Post",
+    "summary": "Transfer of West Bank authority to police a 'step toward Israeli annexation,' Ben-Gvir declares. The Jerusalem Post.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 44,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-19-jpost-gaza-accountability-query-44045538f900"
+    ],
+    "source_ids": [
+      "gaza-2026-08-19-jpost-gaza-accountability-query-44045538f900"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMibkFVX3lxTE1KQkprSjBIQjJWV0ZZMGd0clNqYmZPaWZ6N0o4UEZjQUxqOHN6Y0xSc09nREkzQTdsN3dPU29DZUZhVklVbkgxU1NkQk1FR01idUZJSjJLdHpXclRfSHFjOHV0cXpKZW02UFlpMWdR?oc=5"
+    ],
+    "publisher_names": [
+      "The Jerusalem Post"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-19-jpost-gaza-accountability-query-44045538f900",
+        "title": "Transfer of West Bank authority to police a 'step toward Israeli annexation,' Ben-Gvir declares - The Jerusalem Post",
+        "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1KQkprSjBIQjJWV0ZZMGd0clNqYmZPaWZ6N0o4UEZjQUxqOHN6Y0xSc09nREkzQTdsN3dPU29DZUZhVklVbkgxU1NkQk1FR01idUZJSjJLdHpXclRfSHFjOHV0cXpKZW02UFlpMWdR?oc=5",
+        "publisher": "The Jerusalem Post",
+        "summary_or_snippet": "Transfer of West Bank authority to police a 'step toward Israeli annexation,' Ben-Gvir declares The Jerusalem Post"
+      }
+    ],
+    "generated_at": "2026-08-19T14:03:25.096606+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "gaza_adjacent_context",
+    "claim_status": "gaza_adjacent_context",
+    "context_only": true,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  }
+]

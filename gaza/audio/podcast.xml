@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Tue, 18 Aug 2026 05:49:26 +0000</lastBuildDate>
+  <lastBuildDate>Wed, 19 Aug 2026 14:03:38 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for August 19, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-08-19-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-08-19-transcript.html</guid>
+    <pubDate>Wed, 19 Aug 2026 00:00:00 +0000</pubDate>
+    <description>Why aid entering Gaza may not reach those who need it. It is extremely difficult for trucks to get through the Israeli blockade, let alone for drivers to reach aid warehouses. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-08-19.mp3" length="1165056" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for August 17, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-08-17-transcript.html</link>

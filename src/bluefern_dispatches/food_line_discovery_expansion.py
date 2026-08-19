@@ -1763,15 +1763,6 @@ def _project_fetch_with_metadata(url: str, *, timeout: int = 15) -> tuple[bytes,
         return _read(timeout)
     except urllib.error.URLError as exc:
         reason = getattr(exc, "reason", None)
-        if isinstance(reason, TimeoutError) or "timed out" in str(exc).lower():
-            longer_timeout = max(timeout * 3, timeout + 15)
-            try:
-                return _read(longer_timeout)
-            except urllib.error.URLError as retry_exc:
-                retry_reason = getattr(retry_exc, "reason", None)
-                if isinstance(retry_reason, ssl.SSLCertVerificationError) or "CERTIFICATE_VERIFY_FAILED" in str(retry_exc):
-                    return _read(longer_timeout, context=ssl._create_unverified_context())
-                raise
         if isinstance(reason, ssl.SSLCertVerificationError) or "CERTIFICATE_VERIFY_FAILED" in str(exc):
             return _read(timeout, context=ssl._create_unverified_context())
         raise
@@ -4540,6 +4531,7 @@ def run_food_line_discovery_expansion(
         "candidates_by_state_or_territory": dict(sorted(state_counts.items())),
         "candidates_by_metro": dict(sorted(metro_counts.items())),
         "query_rows": query_rows,
+        "candidates": candidates,
         "direct_source_diagnostics": direct_source_diagnostics,
         "google_news_resolution_debug_by_candidate": resolution_debug_by_candidate,
         "query_lookback_days": int(query_lookback_days),

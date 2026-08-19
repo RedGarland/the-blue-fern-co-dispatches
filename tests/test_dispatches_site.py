@@ -2136,6 +2136,67 @@ def test_pages_publish_uses_explicit_pages_repo_for_gaza_homepage_history(tmp_pa
     assert result["gaza_homepage_recent_edition_guard"]["removed_dates"] == ["2026-07-26"]
 
 
+def test_pages_publish_allows_gaza_homepage_recent_editions_to_be_shorter_than_limit_when_history_is_valid(tmp_path, monkeypatch):
+    work = tmp_path / "repo"
+    work.mkdir()
+    copy_repo_assets(Path(__file__).parent.parent, work)
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    (pages_repo / "CNAME").write_text("dispatches.thebluefernco.com\n", encoding="utf-8")
+    (pages_repo / "index.html").write_text("<html>Root</html>", encoding="utf-8")
+    site_root = work / "output" / "site"
+    site_root.mkdir(parents=True, exist_ok=True)
+    (site_root / "index.html").write_text("<html>Home</html>", encoding="utf-8")
+
+    old_dates = [
+        "2026-08-18",
+        "2026-08-17",
+        "2026-08-16",
+        "2026-08-15",
+        "2026-08-14",
+        "2026-08-13",
+        "2026-08-12",
+        "2026-08-11",
+        "2026-08-10",
+        "2026-08-09",
+    ]
+    new_dates = [
+        "2026-08-19",
+        "2026-08-18",
+        "2026-08-17",
+        "2026-08-16",
+        "2026-08-15",
+        "2026-08-14",
+    ]
+    add_gaza_public_history_surface(site_root, new_dates, archive_dates=new_dates, audio_dates=new_dates)
+    add_gaza_site_edition(site_root, "2026-08-19")
+    add_gaza_public_history_surface(pages_repo, old_dates, archive_dates=old_dates, audio_dates=old_dates)
+    add_gaza_site_edition(pages_repo, "2026-08-18")
+
+    monkeypatch.setattr(
+        generator,
+        "build_site",
+        lambda *args, **kwargs: {
+            "ok": True,
+            "warnings": [],
+            "errors": [],
+            "backfilled_public_editions": [],
+            "gaza_editions_discovered": [],
+            "gaza_editions_backfilled": [],
+            "gaza_editions_skipped": [],
+            "gaza_archive_entries_written": [{"edition_date": "2026-08-19"}],
+        },
+    )
+    monkeypatch.setattr(generator, "_gaza_public_surface_history_diagnostics", lambda *args, **kwargs: [])
+
+    result = publish_pages(work, pages_repo, None, dry_run=False, commit=False, no_push=True, backup_root=work / "backups", only_dispatches=("gaza",))
+
+    assert result["ok"] is True
+    assert result["gaza_homepage_recent_edition_guard"]["decision"] == "allowed"
+    assert len(result["gaza_homepage_recent_edition_guard"]["new_dates"]) == 6
+    assert result["gaza_homepage_recent_edition_guard"]["latest_expected_date"] == "2026-08-19"
+    assert "homepage recent-editions list no longer at configured limit" not in " ".join(result["gaza_homepage_recent_edition_guard"]["reasons"])
+
+
 def test_pages_publish_refreshes_shared_homepage_before_commit(tmp_path, monkeypatch):
     work = tmp_path / "repo"
     work.mkdir()

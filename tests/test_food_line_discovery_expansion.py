@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import urllib.error
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
@@ -169,6 +170,91 @@ def test_food_line_discovery_expansion_blocks_homepage_only_trace_urls(tmp_path:
     assert "homepage_or_landing_url" in candidate["public_claim_blockers"]
     assert "publisher_homepage_trace_only" in candidate["public_claim_blockers"]
     assert candidate["google_news_url"] == "https://news.google.com/rss/articles/CBMiHOME?oc=5"
+
+
+def test_food_line_discovery_expansion_stops_at_deadline_after_first_query(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    edition_date = "2026-08-19"
+    (tmp_path / "data" / "dispatches" / "food-line").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "data" / "dispatches" / "food-line" / "discovery_expansion_config.json").write_text("{}", encoding="utf-8")
+
+    query_plan = [
+        {
+            "query_id": "q-1",
+            "query_family": "core_hunger",
+            "geographic_scope": "national",
+            "discovery_channel": "google_news_rss",
+            "query_text": '"food insecurity"',
+        },
+        {
+            "query_id": "q-2",
+            "query_family": "core_hunger",
+            "geographic_scope": "national",
+            "discovery_channel": "google_news_rss",
+            "query_text": '"food bank"',
+        },
+    ]
+
+    def fake_plan(root: Path, edition_date: str, **kwargs: object) -> list[dict[str, object]]:
+        assert root == tmp_path
+        assert edition_date == "2026-08-19"
+        return query_plan
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            return _rss_payload(
+                [
+                    {
+                        "title": "Food costs rise for families",
+                        "link": "https://example.com/food-costs-rise",
+                        "source_url": "https://example.com/food-costs-rise",
+                        "publisher": "Example News",
+                        "description": "Families are paying more for groceries.",
+                        "pubDate": "Tue, 19 Aug 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == "https://example.com/food-costs-rise":
+            return _html_article(
+                title="Food costs rise for families",
+                canonical=url,
+                body="Families are paying more for groceries.",
+            )
+        raise AssertionError(f"unexpected fetch url: {url}")
+
+    clock_calls = {"count": 0}
+    start = datetime(2026, 8, 19, 12, 0, 0, tzinfo=timezone.utc)
+    deadline = start + timedelta(seconds=1)
+
+    def runtime_clock() -> datetime:
+        clock_calls["count"] += 1
+        if clock_calls["count"] <= 2:
+            return start
+        return start + timedelta(seconds=2)
+
+    monkeypatch.setattr(expansion_module, "build_food_line_discovery_query_plan", fake_plan)
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        runtime_deadline=deadline,
+        runtime_clock=runtime_clock,
+        max_queries=2,
+        max_results_per_query=5,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+        public_claim_lookback_days=0,
+        public_claim_lookahead_days=0,
+    )
+
+    assert result["ok"] is False
+    assert result["status"] == "timed_out"
+    assert result["timed_out"] is True
+    assert result["queries_completed"] == 1
+    assert result["queries_timed_out"] == 1
+    assert result["candidate_count"] == 1
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
+    assert len(candidates) == 1
 
 
 def test_food_line_discovery_expansion_blocks_landing_trace_urls(tmp_path: Path):

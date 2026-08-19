@@ -1507,13 +1507,14 @@ def _gaza_homepage_recent_edition_guard(
     reasons: list[str] = []
     if not allow_listing_shrink:
         baseline_is_healthy = len(old_dates) >= GAZA_HOME_RECENT_EDITION_MIN
+        expected_recent_count = max(GAZA_HOME_RECENT_EDITION_MIN, len(recent_dates))
         if not new_dates:
             reasons.append("homepage recent-editions list is empty")
         if baseline_is_healthy and latest_expected_date and latest_expected_date not in new_dates:
             reasons.append(f"homepage lost latest expected edition date: {latest_expected_date}")
-        if baseline_is_healthy and len(new_dates) < GAZA_HOME_RECENT_EDITION_MIN:
+        if baseline_is_healthy and len(new_dates) < expected_recent_count:
             reasons.append(
-                f"homepage recent-editions list below minimum: {len(new_dates)} < {GAZA_HOME_RECENT_EDITION_MIN}"
+                f"homepage recent-editions list below current history floor: {len(new_dates)} < {expected_recent_count}"
             )
         if reasons:
             decision = "blocked"

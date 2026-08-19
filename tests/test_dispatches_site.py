@@ -2012,7 +2012,7 @@ def test_pages_publish_rejects_sparse_gaza_homepage_collapse(tmp_path, monkeypat
 
     assert result["ok"] is False
     assert result["gaza_homepage_recent_edition_guard"]["decision"] == "blocked"
-    assert any("recent-editions list below minimum" in reason for reason in result["gaza_homepage_recent_edition_guard"]["reasons"])
+    assert any("recent-editions list below current history floor" in reason for reason in result["gaza_homepage_recent_edition_guard"]["reasons"])
     assert any("gaza homepage recent-editions guard blocked publish" in error for error in result["errors"])
 
 
@@ -2195,6 +2195,53 @@ def test_pages_publish_allows_gaza_homepage_recent_editions_to_be_shorter_than_l
     assert len(result["gaza_homepage_recent_edition_guard"]["new_dates"]) == 6
     assert result["gaza_homepage_recent_edition_guard"]["latest_expected_date"] == "2026-08-19"
     assert "homepage recent-editions list no longer at configured limit" not in " ".join(result["gaza_homepage_recent_edition_guard"]["reasons"])
+
+
+def test_gaza_homepage_recent_edition_guard_allows_shorter_current_history_when_authoritative_window_is_shorter():
+    previous_homepage_html = (
+        '<html><body><ul class="edition-list">'
+        + "".join(
+            f'<li class="edition-item"><span class="edition-date">{date_text}</span><a href="editions/{date_text}/">Edition</a></li>'
+            for date_text in [
+                "2026-08-18",
+                "2026-08-17",
+                "2026-08-16",
+                "2026-08-15",
+                "2026-08-14",
+                "2026-08-13",
+                "2026-08-12",
+                "2026-08-11",
+                "2026-08-10",
+                "2026-08-09",
+            ]
+        )
+        + "</ul></body></html>"
+    )
+    current_homepage_html = (
+        '<html><body><ul class="edition-list">'
+        + "".join(
+            f'<li class="edition-item"><span class="edition-date">{date_text}</span><a href="editions/{date_text}/">Edition</a></li>'
+            for date_text in [
+                "2026-08-18",
+                "2026-08-17",
+                "2026-08-16",
+                "2026-08-15",
+                "2026-08-14",
+                "2026-08-13",
+            ]
+        )
+        + "</ul></body></html>"
+    )
+
+    guard = generator._gaza_homepage_recent_edition_guard(
+        previous_homepage_html,
+        current_homepage_html,
+        ["2026-08-18", "2026-08-17", "2026-08-16", "2026-08-15", "2026-08-14", "2026-08-13"],
+    )
+
+    assert guard["decision"] == "allowed"
+    assert guard["new_dates"] == ["2026-08-18", "2026-08-17", "2026-08-16", "2026-08-15", "2026-08-14", "2026-08-13"]
+    assert "homepage recent-editions list below minimum" not in " ".join(guard["reasons"])
 
 
 def test_pages_publish_refreshes_shared_homepage_before_commit(tmp_path, monkeypatch):

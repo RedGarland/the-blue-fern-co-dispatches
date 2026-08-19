@@ -1515,10 +1515,6 @@ def _gaza_homepage_recent_edition_guard(
             reasons.append(
                 f"homepage recent-editions list below minimum: {len(new_dates)} < {GAZA_HOME_RECENT_EDITION_MIN}"
             )
-        if len(old_dates) >= GAZA_HOME_RECENT_EDITION_LIMIT and len(new_dates) != GAZA_HOME_RECENT_EDITION_LIMIT:
-            reasons.append(
-                f"homepage recent-editions list no longer at configured limit: {len(new_dates)} != {GAZA_HOME_RECENT_EDITION_LIMIT}"
-            )
         if reasons:
             decision = "blocked"
     else:

@@ -8,6 +8,7 @@ import os
 import subprocess
 import sys
 from datetime import datetime, timezone
+from datetime import timedelta
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -197,10 +198,15 @@ def _bounded_state_from_result(
 ) -> tuple[dict[str, object], dict[str, object]]:
     plan_payload = _query_plan_payload(root, edition_date, run_id, query_plan)
     discovery_ok = bool(result.get("ok"))
+    timed_out = bool(result.get("timed_out")) or str(result.get("status") or "") == "timed_out"
     has_exclusions = bool(result.get("rejected_news_count")) or bool(result.get("fetch_failure_count_by_type"))
-    status = "completed_with_exclusions" if discovery_ok and has_exclusions else "completed" if discovery_ok else "failed"
+    status = str(result.get("status") or "").strip()
+    if not status:
+        status = "completed_with_exclusions" if discovery_ok and has_exclusions else "completed" if discovery_ok else "failed"
     candidate_count = int(result.get("candidate_count") or result.get("public_eligible_candidate_count") or 0)
     direct_source_count = int(result.get("direct_source_count") or result.get("source_count") or 0)
+    queries_completed = int(result.get("queries_completed") if result.get("queries_completed") is not None else (0 if timed_out else len(query_plan)))
+    queries_timed_out = int(result.get("queries_timed_out") if result.get("queries_timed_out") is not None else (1 if timed_out else 0))
     state = {
         "schema_version": RUN_STATE_SCHEMA,
         "run_id": run_id,
@@ -208,14 +214,14 @@ def _bounded_state_from_result(
         "started_at": _utc_now(),
         "completed_at": _utc_now(),
         "status": status,
-        "resumable": False,
+        "resumable": bool(result.get("resumable")) or timed_out,
         "resume_count": int(resume_count),
         "partitions_total": 1,
-        "partitions_completed": 1,
+        "partitions_completed": int(result.get("partitions_completed") if result.get("partitions_completed") is not None else (0 if timed_out else 1)),
         "queries_total": len(query_plan),
-        "queries_completed": len(query_plan),
-        "queries_failed": 0,
-        "queries_timed_out": 0,
+        "queries_completed": queries_completed,
+        "queries_failed": int(result.get("queries_failed") if result.get("queries_failed") is not None else 0),
+        "queries_timed_out": queries_timed_out,
         "candidates_discovered": candidate_count or direct_source_count,
         "query_plan_sha256": plan_payload["query_plan_sha256"],
         "final_error": "" if discovery_ok else str(result.get("errors") or result.get("error") or "discovery expansion failed"),
@@ -224,11 +230,15 @@ def _bounded_state_from_result(
             "direct_source_coverage_threshold": 0.75,
         },
         "coverage": {
-            "required_success_ratio": 1.0,
-            "direct_success_ratio": 1.0,
+            "required_success_ratio": 0.0 if timed_out else 1.0,
+            "direct_success_ratio": 0.0 if timed_out else 1.0,
         },
         "agent_export": {
-            "status": "success_with_exclusions" if status == "completed_with_exclusions" else "success" if discovery_ok else "blocked_incomplete_collection",
+            "status": "success_with_exclusions"
+            if status == "completed_with_exclusions"
+            else "success"
+            if discovery_ok and not timed_out
+            else "blocked_incomplete_collection",
             "path": str(Path(result.get("agent_export_path") or (root / "status" / "food-line" / "runtime" / "agent-inbox"))),
             "sha256": hashlib.sha256(json.dumps(result, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest(),
         },
@@ -252,7 +262,7 @@ def _write_state_files(root: Path, edition_date: str, run_id: str, result: dict[
     (run_dir / "query-plan.json").write_text(json.dumps(plan_payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     (run_dir / "run-state.json").write_text(json.dumps(state, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return {
-        "ok": True,
+        "ok": bool(result.get("ok")),
         **result,
         "run_state_path": str(run_dir / "run-state.json"),
         "query_plan_path": str(run_dir / "query-plan.json"),
@@ -397,122 +407,33 @@ def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
             dry_run=bool(args.dry_run),
         )
         wrapped = _write_state_files(root, edition_date, run_id, result, resume_count=resume_count)
-        wrapped["ok"] = bool(result.get("ok"))
-        if not wrapped["ok"]:
-            wrapped["status"] = "failed"
         return _terminal_contract_result(wrapped, edition_date=edition_date, run_id=run_id)
 
-    query_plan = build_food_line_discovery_query_plan(
+    runtime_deadline = datetime.now(timezone.utc) + timedelta(minutes=max(1.0, float(args.max_run_minutes)))
+    result = run_food_line_discovery_expansion(
         root,
         edition_date,
-        lookback_days=args.query_lookback_days,
-        lookahead_days=args.query_lookahead_days,
+        edition_mode=args.edition_mode,
+        max_results_per_query=args.max_results_per_query,
+        max_queries=args.max_queries,
+        query_lookback_days=args.query_lookback_days,
+        query_lookahead_days=args.query_lookahead_days,
+        public_claim_lookback_days=args.public_claim_lookback_days,
+        public_claim_lookahead_days=args.public_claim_lookahead_days,
+        dry_run=bool(args.dry_run),
+        runtime_deadline=runtime_deadline,
     )
-    _prepare_legacy_run_dir(root, edition_date, run_id, query_plan)
-    child_command = [
-        str(sys.executable),
-        str(Path(__file__).resolve()),
-        "--date",
-        edition_date,
-        "--run-id",
-        run_id,
-        "--edition-mode",
-        args.edition_mode,
-        "--max-results-per-query",
-        str(args.max_results_per_query),
-    ]
-    if args.max_queries is not None:
-        child_command.extend(["--max-queries", str(args.max_queries)])
-    child_command.extend(
-        [
-            "--query-lookback-days",
-            str(args.query_lookback_days),
-            "--query-lookahead-days",
-            str(args.query_lookahead_days),
-            "--public-claim-lookback-days",
-            str(args.public_claim_lookback_days),
-            "--public-claim-lookahead-days",
-            str(args.public_claim_lookahead_days),
-        ]
-    )
-    if args.dry_run:
-        child_command.append("--dry-run")
-    timeout_seconds = max(1.0, float(args.max_run_minutes) * 60.0)
-    completed, timed_out = _run_command_with_timeout(child_command, cwd=root, timeout_seconds=timeout_seconds)
-    if timed_out:
-        timed_out_result = _write_timed_out_state_files(
-            root,
-            edition_date,
-            run_id,
-            query_plan,
-            timeout_seconds=timeout_seconds,
-            resume_count=resume_count,
-            result={
-                "command_exit_code": int(completed.returncode),
-                "stderr": completed.stderr,
-                "stdout": completed.stdout,
-            },
-        )
-        return _terminal_contract_result(
-            timed_out_result,
-            edition_date=edition_date,
-            run_id=run_id,
-            timed_out=True,
-            error_type="timeout",
-            error_message=timed_out_result.get("error"),
-        )
-    stdout = (completed.stdout or "").strip()
-    if not stdout:
-        result = {
-            "ok": False,
-            "status": "child_process_failure",
-            "error_type": "child_process_failure",
-            "error_message": "legacy bounded discovery produced no JSON output",
-            "error": "legacy bounded discovery produced no JSON output",
-            "command_exit_code": int(completed.returncode),
-            "stdout": completed.stdout,
-            "stderr": completed.stderr,
-        }
-        wrapped = _write_state_files(root, edition_date, run_id, result, resume_count=resume_count)
-        wrapped["ok"] = False
-        wrapped["status"] = "child_process_failure"
-        return _terminal_contract_result(
-            wrapped,
-            edition_date=edition_date,
-            run_id=run_id,
-            error_type="child_process_failure",
-            error_message="legacy bounded discovery produced no JSON output",
-        )
-    try:
-        result = json.loads(stdout)
-    except json.JSONDecodeError as exc:
-        result = {
-            "ok": False,
-            "status": "malformed_child_output",
-            "error_type": "malformed_child_output",
-            "error_message": f"legacy bounded discovery returned invalid JSON: {exc}",
-            "error": f"legacy bounded discovery returned invalid JSON: {exc}",
-            "command_exit_code": int(completed.returncode),
-            "stdout": completed.stdout,
-            "stderr": completed.stderr,
-        }
-        wrapped = _write_state_files(root, edition_date, run_id, result, resume_count=resume_count)
-        wrapped["ok"] = False
-        wrapped["status"] = "malformed_child_output"
-        return _terminal_contract_result(
-            wrapped,
-            edition_date=edition_date,
-            run_id=run_id,
-            error_type="malformed_child_output",
-            error_message=f"legacy bounded discovery returned invalid JSON: {exc}",
-        )
-    if not isinstance(result, dict):
-        raise ValueError("legacy bounded discovery must return a JSON object")
     wrapped = _write_state_files(root, edition_date, run_id, result, resume_count=resume_count)
-    wrapped["ok"] = bool(result.get("ok"))
-    if not wrapped["ok"]:
+    if not wrapped["ok"] and not bool(result.get("timed_out")):
         wrapped["status"] = "collection_failure"
-    return _terminal_contract_result(wrapped, edition_date=edition_date, run_id=run_id)
+    return _terminal_contract_result(
+        wrapped,
+        edition_date=edition_date,
+        run_id=run_id,
+        timed_out=bool(result.get("timed_out")),
+        error_type=str(result.get("error_type") or "").strip() or ("timeout" if bool(result.get("timed_out")) else None),
+        error_message=str(result.get("error_message") or result.get("error") or "").strip() or None,
+    )
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -546,7 +467,7 @@ def main(argv: list[str] | None = None) -> int:
         else:
             root = Path.cwd()
             manual_path = Path(args.manual_fallback_file).resolve() if args.manual_fallback_file else None
-            result = discovery_main(
+            result = run_food_line_discovery_expansion(
                 root,
                 args.date,
                 manual_fallback_path=manual_path,

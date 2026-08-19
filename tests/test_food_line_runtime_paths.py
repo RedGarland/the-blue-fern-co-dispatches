@@ -22,7 +22,9 @@ def test_food_runtime_roots_are_shared_between_scheduler_and_preflight(monkeypat
         "?? data/dispatches/food-line/review/proposed-editions/file.json",
         "?? data/dispatches/food-line/review/reports/file.json",
         "?? data/dispatches/food-line/review/signal-reviews/file.json",
+        "?? data/dispatches/food-line/discovery/2026-08-19/discovery_candidates.json",
         "?? logs/food-line/file.json",
+        "?? output/review/food-line/2026-08-19/discovery_report.json",
         "?? status/food-line/file.json",
         "?? data/dispatches/food-line/discovery-runs/2026-08-13/file.json",
         "?? data/agent-history-staging/food-line/file.txt",
@@ -68,7 +70,9 @@ def test_expected_food_runtime_roots_have_shared_categories():
         "data/dispatches/food-line/review/proposed-editions/file.json": "review_output",
         "data/dispatches/food-line/review/reports/file.json": "review_output",
         "data/dispatches/food-line/review/signal-reviews/file.json": "review_output",
+        "data/dispatches/food-line/discovery/2026-08-19/discovery_candidates.json": "local_run_state",
         "logs/food-line/file.json": "logs",
+        "output/review/food-line/2026-08-19/discovery_report.json": "review_output",
         "status/food-line/file.json": "local_run_state",
         "data/dispatches/food-line/discovery-runs/2026-08-13/file.json": "local_run_state",
         "data/agent-history-staging/food-line/file.txt": "local_run_state",
@@ -77,4 +81,3 @@ def test_expected_food_runtime_roots_have_shared_categories():
     for path, expected in cases.items():
         assert preflight_repo_state.classify_path(path) == expected
         assert food_line_daily_scheduler.classify_food_line_runtime_path(path) == expected
-

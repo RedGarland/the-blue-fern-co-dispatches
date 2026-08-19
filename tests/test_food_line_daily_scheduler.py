@@ -446,6 +446,8 @@ def test_food_line_resume_passes_run_id_to_status_and_resume_commands(
             assert "--run-id" in arguments
             assert "--max-run-minutes" in arguments
             assert arguments[arguments.index("--max-run-minutes") + 1] == "30"
+            assert "--max-queries" in arguments
+            assert arguments[arguments.index("--max-queries") + 1] == "200"
         else:
             assert "--run-id" in arguments
             assert arguments[arguments.index("--run-id") + 1] == run_id
@@ -477,6 +479,8 @@ def test_food_line_resume_passes_run_id_to_status_and_resume_commands(
     assert "--run-id" in captured_commands[2]
     assert "--max-run-minutes" in captured_commands[1]
     assert captured_commands[1][captured_commands[1].index("--max-run-minutes") + 1] == "30"
+    assert "--max-queries" in captured_commands[1]
+    assert captured_commands[1][captured_commands[1].index("--max-queries") + 1] == "200"
 
 
 def test_legacy_discovery_wrapper_reports_child_process_failure_with_structured_json(

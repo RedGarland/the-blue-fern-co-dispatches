@@ -393,6 +393,10 @@ def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
         raise ValueError("--date is required for a bounded discovery run")
     edition_date = args.date
     resume_count = 1 if args.resume_run else 0
+    resume_from_query_index = 0
+    if args.resume_run:
+        run_state = _read_state(root, run_id, args.date)
+        resume_from_query_index = max(0, int(run_state.get("queries_completed") or 0))
     if args.max_run_minutes is None:
         result = run_food_line_discovery_expansion(
             root,
@@ -405,6 +409,7 @@ def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
             public_claim_lookback_days=args.public_claim_lookback_days,
             public_claim_lookahead_days=args.public_claim_lookahead_days,
             dry_run=bool(args.dry_run),
+            resume_from_query_index=resume_from_query_index,
         )
         wrapped = _write_state_files(root, edition_date, run_id, result, resume_count=resume_count)
         return _terminal_contract_result(wrapped, edition_date=edition_date, run_id=run_id)
@@ -421,6 +426,7 @@ def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
         public_claim_lookback_days=args.public_claim_lookback_days,
         public_claim_lookahead_days=args.public_claim_lookahead_days,
         dry_run=bool(args.dry_run),
+        resume_from_query_index=resume_from_query_index,
         runtime_deadline=runtime_deadline,
     )
     wrapped = _write_state_files(root, edition_date, run_id, result, resume_count=resume_count)

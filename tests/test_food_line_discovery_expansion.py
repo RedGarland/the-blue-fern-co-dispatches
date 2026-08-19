@@ -488,6 +488,92 @@ def test_food_line_discovery_query_plan_includes_targeted_recall_queries(tmp_pat
     assert any('"New York Fed"' in text or '"Federal Reserve Bank of New York"' in text for text in query_texts)
 
 
+def test_food_line_discovery_expansion_reports_bounded_plan_and_deferred_coverage(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    queries = [
+        {
+            "query_id": f"q-{index}",
+            "query_family": "core_hunger",
+            "geographic_scope": "national",
+            "discovery_channel": "google_news_rss",
+            "search_provider": "google_news_rss",
+            "query_text": f'"food insecurity" term {index}',
+        }
+        for index in range(5)
+    ]
+    calls: list[str] = []
+
+    def fake_plan(root: Path, edition_date: str, **kwargs: object) -> list[dict[str, object]]:
+        return list(queries)
+
+    def fake_fetcher(url: str, timeout: int = 15):
+        calls.append(url)
+        return _rss_payload([])
+
+    monkeypatch.setattr(expansion_module, "build_food_line_discovery_query_plan", fake_plan)
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        "2026-08-19",
+        fetcher=fake_fetcher,
+        max_queries=2,
+        max_results_per_query=1,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+
+    assert result["query_plan_available_count"] == 5
+    assert result["query_plan_bounded_count"] == 2
+    assert result["query_plan_truncated"] is True
+    assert result["queries_deferred"] == 3
+    assert result["queries_already_completed"] == 0
+    assert result["queries_processed_this_invocation"] == 2
+    assert result["queries_completed"] == 2
+    assert result["queries_remaining"] == 0
+    assert result["query_count"] == 2
+    assert len(calls) == 2
+
+
+def test_food_line_discovery_expansion_resume_skips_completed_prefix(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    queries = [
+        {
+            "query_id": f"q-{index}",
+            "query_family": "core_hunger",
+            "geographic_scope": "national",
+            "discovery_channel": "google_news_rss",
+            "search_provider": "google_news_rss",
+            "query_text": f'"food insecurity" term {index}',
+        }
+        for index in range(5)
+    ]
+    calls: list[str] = []
+
+    def fake_plan(root: Path, edition_date: str, **kwargs: object) -> list[dict[str, object]]:
+        return list(queries)
+
+    def fake_fetcher(url: str, timeout: int = 15):
+        calls.append(url)
+        return _rss_payload([])
+
+    monkeypatch.setattr(expansion_module, "build_food_line_discovery_query_plan", fake_plan)
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        "2026-08-19",
+        fetcher=fake_fetcher,
+        max_queries=5,
+        resume_from_query_index=3,
+        max_results_per_query=1,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+
+    assert result["query_plan_available_count"] == 5
+    assert result["query_plan_bounded_count"] == 5
+    assert result["queries_already_completed"] == 3
+    assert result["queries_processed_this_invocation"] == 2
+    assert result["queries_completed"] == 5
+    assert result["queries_remaining"] == 0
+    assert len(calls) == 2
+
+
 def test_food_line_discovery_expansion_wowt_record_demand_story_enters_review(tmp_path: Path):
     edition_date = "2026-06-18"
     article_url = "https://www.wowt.com/2026/06/18/omaha-food-programs-see-record-demand-summer-break-eliminates-school-meals/"
@@ -900,7 +986,9 @@ def test_food_line_discovery_expansion_caps_queries_across_multiple_lanes(tmp_pa
     assert "food_bank_provider" in result["executed_lanes"]
     assert "county_city_agenda" in result["executed_lanes"]
     assert "snap_state_notice" in result["executed_lanes"]
-    assert "social_watchlist" in result["skipped_lanes"] or "social_watchlist" in result["executed_lanes"]
+    assert result["query_plan_available_count"] >= result["query_plan_bounded_count"]
+    assert result["query_plan_truncated"] is True
+    assert result["queries_deferred"] > 0
 
 
 def test_food_line_discovery_expansion_reports_url_resolution_diagnostics(tmp_path: Path):

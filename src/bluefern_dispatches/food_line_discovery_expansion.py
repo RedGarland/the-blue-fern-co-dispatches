@@ -14,7 +14,7 @@ import urllib.parse
 from collections import Counter
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 import xml.etree.ElementTree as ET
 
 from bluefern_dispatches.food_line_sources import (
@@ -472,6 +472,10 @@ DEFAULT_METROS: list[dict[str, str]] = [
 
 def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def _utc_now_dt() -> datetime:
+    return datetime.now(timezone.utc)
 
 
 def _nonempty(value: Any) -> str:
@@ -3385,6 +3389,8 @@ def run_food_line_discovery_expansion(
     fetcher: Any | None = None,
     manual_fallback_records: list[dict[str, Any]] | None = None,
     manual_fallback_path: Path | None = None,
+    runtime_deadline: datetime | None = None,
+    runtime_clock: Callable[[], datetime] | None = None,
     edition_mode: str = "current_update",
     max_results_per_query: int = 10,
     max_queries: int | None = None,
@@ -3396,6 +3402,8 @@ def run_food_line_discovery_expansion(
 ) -> dict[str, Any]:
     date_text = validate_date(edition_date)
     fetch = resolve_food_line_fetcher(fetcher)
+    clock = runtime_clock or _utc_now_dt
+    timed_out = False
     config = load_food_line_discovery_expansion_config(root)
     configured_direct_sources = [row for row in config.get("direct_sources") or [] if isinstance(row, dict)]
     query_plan = build_food_line_discovery_query_plan(
@@ -3510,6 +3518,9 @@ def run_food_line_discovery_expansion(
         )
 
     for query_row in query_plan:
+        if runtime_deadline is not None and clock() >= runtime_deadline:
+            timed_out = True
+            break
         query_text = _nonempty(query_row.get("query_text"))
         result_row = dict(query_row)
         result_row["result_count"] = 0
@@ -4171,14 +4182,23 @@ def run_food_line_discovery_expansion(
             if discovery_channel != "google_news_rss":
                 accepted_direct_source_counts[direct_source_name] += 1
                 accepted_direct_source_lane_counts[direct_source_lane_key] += 1
+        if runtime_deadline is not None and clock() >= runtime_deadline:
+            timed_out = True
+            break
 
-    manual_fallback_count = _append_manual_fallbacks(candidates, manual_fallback_records, date_text)
-    if manual_fallback_path and manual_fallback_path.exists():
-        fallback_payload = _read_json(manual_fallback_path)
-        if isinstance(fallback_payload, list):
-            manual_fallback_count += _append_manual_fallbacks(candidates, [row for row in fallback_payload if isinstance(row, dict)], date_text)
-        else:
-            raise ValueError(f"{manual_fallback_path} must contain a JSON list")
+    manual_fallback_count = 0
+    if not timed_out:
+        manual_fallback_count = _append_manual_fallbacks(candidates, manual_fallback_records, date_text)
+        if manual_fallback_path and manual_fallback_path.exists():
+            fallback_payload = _read_json(manual_fallback_path)
+            if isinstance(fallback_payload, list):
+                manual_fallback_count += _append_manual_fallbacks(
+                    candidates,
+                    [row for row in fallback_payload if isinstance(row, dict)],
+                    date_text,
+                )
+            else:
+                raise ValueError(f"{manual_fallback_path} must contain a JSON list")
 
     duplicate_preferred_direct_count = _dedupe_candidates(candidates)
     for row in candidates:
@@ -4229,6 +4249,7 @@ def run_food_line_discovery_expansion(
         ):
             row.pop(key, None)
     candidate_count = len(candidates)
+    queries_completed = len(query_rows)
     query_family_counts = Counter(_nonempty(row.get("query_family")) for row in candidates if _nonempty(row.get("query_family")))
     lane_counts = Counter(_nonempty(row.get("discovery_lane")) for row in candidates if _nonempty(row.get("discovery_lane")))
     discovery_channel_counts = Counter(_nonempty(row.get("discovery_channel")) for row in candidates if _nonempty(row.get("discovery_channel")))
@@ -4372,6 +4393,8 @@ def run_food_line_discovery_expansion(
         )
     )
     public_eligible_candidate_count = sum(1 for row in candidates if bool(row.get("public_claim_eligible")))
+    discovery_ok = not timed_out
+    has_exclusions = bool(blocked_fetch_count or direct_source_fetch_failure_count or google_news_resolution_failure_count)
     dominant_source_warning = ""
     if candidate_count > 0 and direct_source_counts:
         top_source, top_count = max(direct_source_counts.items(), key=lambda item: item[1])
@@ -4415,13 +4438,25 @@ def run_food_line_discovery_expansion(
     audit_json_path = audit_dir / DISCOVERY_AUDIT_JSON_FILE
     audit_md_path = audit_dir / DISCOVERY_AUDIT_MD_FILE
     audit_summary = {
-        "ok": True,
+        "ok": not timed_out,
         "dispatch_slug": DISPATCH_SLUG,
         "edition_date": date_text,
         "generated_at": discovered_at,
         "edition_mode": edition_mode,
+        "status": "timed_out"
+        if timed_out
+        else "completed_with_exclusions"
+        if discovery_ok and has_exclusions
+        else "completed"
+        if discovery_ok
+        else "failed",
         "query_count": len(query_rows),
+        "queries_total": len(query_plan),
+        "queries_completed": queries_completed,
+        "queries_failed": 0,
+        "queries_timed_out": 1 if timed_out else 0,
         "candidate_count": candidate_count,
+        "timed_out": timed_out,
         "duplicate_count": duplicate_count,
         "fetchable_count": fetchable_count,
         "blocked_fetch_count": blocked_fetch_count,

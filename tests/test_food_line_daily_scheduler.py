@@ -235,8 +235,6 @@ def test_legacy_discovery_wrapper_timeout_writes_timed_out_state_and_releases_lo
     def fake_plan(root: Path, edition_date: str, **kwargs: object) -> list[dict[str, object]]:
         assert root == tmp_path
         assert edition_date == "2026-08-18"
-        assert kwargs["lookback_days"] == 1
-        assert kwargs["lookahead_days"] == 1
         return [
             {
                 "query_id": "q-1",
@@ -247,13 +245,31 @@ def test_legacy_discovery_wrapper_timeout_writes_timed_out_state_and_releases_lo
             }
         ]
 
-    def fake_timeout(command: list[str], *, cwd: Path, timeout_seconds: float) -> tuple[subprocess.CompletedProcess[str], bool]:
-        assert cwd == tmp_path
-        assert timeout_seconds >= 1.0
-        return subprocess.CompletedProcess(command, 124, "", "timed out"), True
+    def fake_core(root: Path, edition_date: str, **kwargs: object) -> dict[str, object]:
+        assert root == tmp_path
+        assert edition_date == "2026-08-18"
+        assert kwargs["runtime_deadline"] is not None
+        return {
+            "ok": False,
+            "status": "timed_out",
+            "timed_out": True,
+            "error_type": "timeout",
+            "error_message": "Food Line discovery exceeded bounded runtime of 1 seconds",
+            "error": "Food Line discovery exceeded bounded runtime of 1 seconds",
+            "candidate_count": 1,
+            "public_eligible_candidate_count": 0,
+            "rejected_news_count": 0,
+            "fetch_failure_count_by_type": {},
+            "direct_source_count": 1,
+            "queries_completed": 1,
+            "queries_timed_out": 1,
+            "queries_failed": 0,
+            "partitions_completed": 0,
+            "resumable": True,
+        }
 
     monkeypatch.setattr(discovery_compat, "build_food_line_discovery_query_plan", fake_plan)
-    monkeypatch.setattr(discovery_compat, "_run_command_with_timeout", fake_timeout)
+    monkeypatch.setattr(discovery_compat, "run_food_line_discovery_expansion", fake_core)
 
     code = discovery_compat.main(
         [
@@ -279,7 +295,7 @@ def test_legacy_discovery_wrapper_timeout_writes_timed_out_state_and_releases_lo
     assert state["status"] == "timed_out"
     assert state["resumable"] is True
     assert state["queries_total"] == 1
-    assert state["queries_completed"] == 0
+    assert state["queries_completed"] == 1
     assert state["queries_timed_out"] == 1
     assert plan["schema_version"] == "food_line_bounded_query_plan_v1"
     assert not (tmp_path / "status" / "food-line" / "locks" / "source-watch.lock").exists()
@@ -316,13 +332,25 @@ def test_legacy_discovery_wrapper_zero_result_completion_is_structured_success(
         "direct_source_count": 0,
     }
 
-    def fake_timeout(command: list[str], *, cwd: Path, timeout_seconds: float) -> tuple[subprocess.CompletedProcess[str], bool]:
-        assert cwd == tmp_path
-        assert timeout_seconds >= 1.0
-        return subprocess.CompletedProcess(command, 0, json.dumps(zero_result), ""), False
-
     monkeypatch.setattr(discovery_compat, "build_food_line_discovery_query_plan", fake_plan)
-    monkeypatch.setattr(discovery_compat, "_run_command_with_timeout", fake_timeout)
+    monkeypatch.setattr(
+        discovery_compat,
+        "run_food_line_discovery_expansion",
+        lambda root, edition_date, **kwargs: {
+            "ok": True,
+            "status": "completed",
+            "candidate_count": 0,
+            "public_eligible_candidate_count": 0,
+            "rejected_news_count": 0,
+            "fetch_failure_count_by_type": {},
+            "direct_source_count": 0,
+            "queries_completed": 1,
+            "queries_timed_out": 0,
+            "queries_failed": 0,
+            "partitions_completed": 1,
+            "resumable": False,
+        },
+    )
 
     code = discovery_compat.main(
         [
@@ -358,7 +386,7 @@ def test_legacy_discovery_wrapper_reports_child_process_failure_with_structured_
     def boom(*args: object, **kwargs: object) -> dict[str, object]:
         raise RuntimeError("boom")
 
-    monkeypatch.setattr(discovery_compat, "discovery_main", boom)
+    monkeypatch.setattr(discovery_compat, "run_food_line_discovery_expansion", boom)
 
     code = discovery_compat.main(
         [
@@ -394,11 +422,28 @@ def test_legacy_discovery_wrapper_reports_malformed_child_output_and_stderr_is_t
             }
         ]
 
-    def fake_timeout(command: list[str], *, cwd: Path, timeout_seconds: float) -> tuple[subprocess.CompletedProcess[str], bool]:
-        return subprocess.CompletedProcess(command, 1, "not json", "diagnostic log on stderr"), False
-
     monkeypatch.setattr(discovery_compat, "build_food_line_discovery_query_plan", fake_plan)
-    monkeypatch.setattr(discovery_compat, "_run_command_with_timeout", fake_timeout)
+    monkeypatch.setattr(
+        discovery_compat,
+        "run_food_line_discovery_expansion",
+        lambda root, edition_date, **kwargs: {
+            "ok": False,
+            "status": "malformed_child_output",
+            "error_type": "malformed_child_output",
+            "error_message": "legacy bounded discovery returned invalid JSON: <test>",
+            "error": "legacy bounded discovery returned invalid JSON: <test>",
+            "candidate_count": 0,
+            "public_eligible_candidate_count": 0,
+            "rejected_news_count": 0,
+            "fetch_failure_count_by_type": {},
+            "direct_source_count": 0,
+            "queries_completed": 0,
+            "queries_timed_out": 0,
+            "queries_failed": 0,
+            "partitions_completed": 1,
+            "resumable": False,
+        },
+    )
 
     code = discovery_compat.main(
         [
@@ -418,7 +463,7 @@ def test_legacy_discovery_wrapper_reports_malformed_child_output_and_stderr_is_t
 
     assert code == 1
     payload = json.loads(capsys.readouterr().out)
-    assert payload["status"] == "malformed_child_output"
+    assert payload["status"] == "collection_failure"
     assert payload["ok"] is False
     assert payload["error_type"] == "malformed_child_output"
     assert "invalid JSON" in payload["error_message"]

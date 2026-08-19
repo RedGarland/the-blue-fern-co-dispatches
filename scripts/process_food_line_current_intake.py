@@ -14,7 +14,18 @@ if str(ROOT) not in sys.path:
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from bluefern_dispatches.food_line_current_review import build_proposed_edition, load_queue, write_json_atomic, write_proposed_edition
+from bluefern_dispatches.adapters.food_line_agent import adapt_food_line_agent_output, map_finding_to_food_line_candidate
+from bluefern_dispatches.food_line_current_review import (
+    ALLOWED_DECISIONS,
+    CURRENT_PRODUCTION_SCOPE,
+    HISTORICAL_ROOTS,
+    PRIVATE_QUEUE_PATH,
+    QUEUE_SCHEMA_VERSION,
+    build_proposed_edition,
+    load_queue,
+    write_json_atomic,
+    write_proposed_edition,
+)
 
 
 REPORT_SCHEMA = "food_line_current_intake_report_v1"
@@ -32,6 +43,58 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--build-proposed-edition", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     return parser.parse_args(argv)
+
+
+def _queue_source_paths(root: Path, inbox: Path, edition_date: str) -> list[Path]:
+    discovery_candidates = root / "data" / "dispatches" / "food-line" / "discovery" / edition_date / "discovery_candidates.json"
+    paths: list[Path] = []
+    if inbox.exists():
+        paths.extend(
+            path
+            for path in sorted(inbox.rglob("*.json"))
+            if path.is_file() and "processed" not in path.parts
+        )
+    if not paths and discovery_candidates.exists():
+        paths.append(discovery_candidates)
+    return paths
+
+
+def _build_review_queue(root: Path, edition_date: str, inbox: Path) -> dict[str, Any]:
+    queue_path = root / PRIVATE_QUEUE_PATH
+    items: list[dict[str, Any]] = []
+    seen_duplicate_keys: set[str] = set()
+    for source_path in _queue_source_paths(root, inbox, edition_date):
+        payload = json.loads(source_path.read_text(encoding="utf-8"))
+        findings = adapt_food_line_agent_output(
+            payload,
+            agent_name=str(payload.get("agent_name") or "Food Line Source Watch") if isinstance(payload, dict) else "Food Line Source Watch",
+            agent_run_id=str(payload.get("agent_run_id") or edition_date) if isinstance(payload, dict) else edition_date,
+        )
+        for finding in findings:
+            row = map_finding_to_food_line_candidate(finding, edition_date=edition_date)
+            row["source_artifact_path"] = str(source_path.relative_to(root)).replace("\\", "/")
+            for private_key in ("raw_agent_payload", "private_text_provenance", "chain_of_custody", "hidden_instructions"):
+                row.pop(private_key, None)
+            duplicate_key = str(row.get("agent_duplicate_key") or row.get("candidate_id") or "")
+            if duplicate_key and duplicate_key in seen_duplicate_keys:
+                continue
+            if duplicate_key:
+                seen_duplicate_keys.add(duplicate_key)
+            items.append(row)
+    queue = {
+        "schema_version": QUEUE_SCHEMA_VERSION,
+        "queue_id": f"food-line-current-review-{edition_date}",
+        "edition_date": edition_date,
+        "production_scope": CURRENT_PRODUCTION_SCOPE,
+        "historical_roots_excluded": list(HISTORICAL_ROOTS),
+        "allowed_decisions": list(ALLOWED_DECISIONS),
+        "items": sorted(
+            items,
+            key=lambda item: (int(item.get("proposed_rank") or 0), str(item.get("review_item_id") or "")),
+        ),
+    }
+    write_json_atomic(queue_path, queue)
+    return queue
 
 
 def _current_intake_report(root: Path, edition_date: str, inbox: Path) -> dict[str, Any]:
@@ -90,6 +153,9 @@ def main(argv: list[str] | None = None) -> int:
     root = Path.cwd()
     inbox = Path(args.inbox)
     try:
+        queue_path = root / "data" / "dispatches" / "food-line" / "review" / "current-signal-review.json"
+        if args.build_review_queue or not queue_path.exists():
+            _build_review_queue(root, args.edition_date, inbox)
         report = _current_intake_report(root, args.edition_date, inbox)
         if not args.dry_run:
             report_path = root / "data" / "dispatches" / "food-line" / "review" / "reports" / args.edition_date / "current-intake.json"

@@ -131,6 +131,12 @@ def test_legacy_discovery_wrapper_writes_run_state_and_query_plan(tmp_path: Path
     assert state["queries_total"] == 1
     assert state["candidates_discovered"] == 5
     assert state["agent_export"]["status"] == "success"
+    exported = Path(state["agent_export"]["path"])
+    assert exported.exists()
+    exported_payload = json.loads(exported.read_text(encoding="utf-8"))
+    assert exported_payload["agent_name"] == "Food Line Source Watch"
+    assert exported_payload["agent_run_id"] == "food-line-scheduled-test"
+    assert exported_payload["findings"] == []
     assert plan["schema_version"] == "food_line_bounded_query_plan_v1"
     assert plan["query_count"] == 1
 
@@ -194,8 +200,6 @@ def test_legacy_current_intake_wrapper_writes_report_and_proposal(tmp_path: Path
             "2026-08-17",
             "--inbox",
             str(inbox),
-            "--build-review-queue",
-            "--build-proposed-edition",
         ]
     )
 
@@ -209,6 +213,66 @@ def test_legacy_current_intake_wrapper_writes_report_and_proposal(tmp_path: Path
     assert report["queue"]["item_count"] == 1
     assert report["proposal"]["draft_status"] == "draft_approved_pending_publication"
     assert Path(report["proposal"]["markdown_path"]).exists()
+
+
+def test_legacy_current_intake_wrapper_builds_queue_from_inbox_export(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    inbox = tmp_path / "data" / "dispatches" / "food-line" / "agent-inbox"
+    inbox.mkdir(parents=True, exist_ok=True)
+    export_path = inbox / "food-line-source-watch-2026-08-17-food-line-scheduled-test.json"
+    export_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "food_line_source_watch_agent_export_v1",
+                "agent_name": "Food Line Source Watch",
+                "agent_run_id": "food-line-scheduled-test",
+                "findings": [{"title": "placeholder finding"}],
+            },
+            indent=2,
+            sort_keys=True,
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    discovery_item = _valid_current_queue_item("2026-08-17")
+
+    monkeypatch.setattr(
+        current_intake_compat,
+        "adapt_food_line_agent_output",
+        lambda payload, *, agent_name, agent_run_id: [object()],
+    )
+    monkeypatch.setattr(
+        current_intake_compat,
+        "map_finding_to_food_line_candidate",
+        lambda finding, *, edition_date: dict(discovery_item),
+    )
+
+    code = current_intake_compat.main(
+        [
+            "--edition-date",
+            "2026-08-17",
+            "--inbox",
+            str(inbox),
+            "--build-review-queue",
+            "--build-proposed-edition",
+        ]
+    )
+
+    assert code == 0
+    queue_path = tmp_path / "data" / "dispatches" / "food-line" / "review" / "current-signal-review.json"
+    assert queue_path.exists()
+    queue = json.loads(queue_path.read_text(encoding="utf-8"))
+    assert queue["schema_version"] == "food_line_current_signal_review_v1"
+    assert len(queue["items"]) == 1
+    report = json.loads(
+        (tmp_path / "data" / "dispatches" / "food-line" / "review" / "reports" / "2026-08-17" / "current-intake.json").read_text(encoding="utf-8")
+    )
+    assert report["schema_version"] == "food_line_current_intake_report_v1"
+    assert report["status"] == "success"
+    assert report["queue"]["item_count"] == 1
+    assert report["proposal"]["draft_status"] == "draft_approved_pending_publication"
 
 
 def test_legacy_discovery_timeout_helper_terminates_process_tree(tmp_path: Path) -> None:

@@ -5,6 +5,7 @@ import os
 import subprocess
 import sys
 import time
+from contextlib import contextmanager
 from pathlib import Path
 
 import pytest
@@ -376,6 +377,102 @@ def test_legacy_discovery_wrapper_zero_result_completion_is_structured_success(
     assert state["status"] == "completed"
     assert state["candidates_discovered"] == 0
     assert not (tmp_path / "status" / "food-line" / "locks" / "source-watch.lock").exists()
+
+
+def test_food_line_resume_passes_run_id_to_status_and_resume_commands(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.chdir(tmp_path)
+    run_id = "food-line-scheduled-resume-test"
+    edition_date = "2026-08-19"
+    layout_root = tmp_path
+    run_dir = layout_root / "data" / "dispatches" / "food-line" / "discovery-runs" / edition_date / run_id
+    run_dir.mkdir(parents=True, exist_ok=True)
+    state_path = run_dir / "run-state.json"
+    state_path.write_text(
+        json.dumps(
+            {
+                "schema_version": scheduler.RUN_STATE_SCHEMA,
+                "run_id": run_id,
+                "edition_date": edition_date,
+                "status": "timed_out",
+                "resumable": True,
+                "resume_count": 0,
+                "partitions_total": 1,
+                "partitions_completed": 0,
+                "queries_total": 1,
+                "queries_completed": 0,
+                "queries_failed": 0,
+                "queries_timed_out": 1,
+                "candidates_discovered": 0,
+                "query_plan_sha256": "abc",
+                "final_error": "timed out",
+                "options": {"required_coverage_threshold": 0.9, "direct_source_coverage_threshold": 0.75},
+                "coverage": {"required_success_ratio": 0.0, "direct_success_ratio": 0.0},
+                "agent_export": {"status": "blocked_incomplete_collection", "path": str(tmp_path), "sha256": ""},
+                "next_action": "No collection action required.",
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    record = {
+        "schema_version": scheduler.RUN_RECORD_SCHEMA,
+        "edition_date": edition_date,
+        "run_id": run_id,
+        "source_commit": "deadbeef",
+        "source_branch": scheduler.PRODUCTION_BRANCH,
+        "run_state_path": str(state_path),
+        "scheduled_start_at": "2026-08-19T18:34:44.502059Z",
+        "resume_attempted": False,
+    }
+
+    captured_commands: list[list[str]] = []
+
+    @contextmanager
+    def fake_source_lock(*args: object, **kwargs: object):
+        yield
+
+    def fake_load_record_and_state(layout: scheduler.Layout, loaded_edition_date: str):
+        assert loaded_edition_date == edition_date
+        return record, json.loads(state_path.read_text(encoding="utf-8")), state_path
+
+    def fake_invoke_python(python: Path, root: Path, arguments: list[str]) -> subprocess.CompletedProcess[str]:
+        captured_commands.append([str(item) for item in arguments])
+        if arguments[1] != "--status-run":
+            assert "--run-id" in arguments
+        else:
+            assert "--run-id" in arguments
+            assert arguments[arguments.index("--run-id") + 1] == run_id
+        return subprocess.CompletedProcess([str(python), *arguments], 0, stdout="{}", stderr="")
+
+    monkeypatch.setattr(scheduler, "source_lock", fake_source_lock)
+    monkeypatch.setattr(scheduler, "_load_record_and_state", fake_load_record_and_state)
+    monkeypatch.setattr(scheduler, "_verify_same_source_commit", lambda *args, **kwargs: None)
+    monkeypatch.setattr(scheduler, "run_preflight", lambda *args, **kwargs: None)
+    monkeypatch.setattr(scheduler, "_invoke_python", fake_invoke_python)
+    monkeypatch.setattr(scheduler, "collection_qualifies", lambda state: False)
+    monkeypatch.setattr(scheduler, "surviving_worker_pids", lambda run_dir: [])
+
+    code = scheduler.run_resume(
+        scheduler.argparse.Namespace(
+            repo_root=str(tmp_path),
+            python=str(tmp_path / ".venv" / "Scripts" / "python.exe"),
+            edition_date=edition_date,
+            branch=scheduler.PRODUCTION_BRANCH,
+            test_mode=False,
+            stale_lock_minutes=45,
+        )
+    )
+
+    assert code == 2
+    assert captured_commands[0][:2] == ["scripts/run_food_line_discovery_expansion.py", "--status-run"]
+    assert "--run-id" in captured_commands[0]
+    assert "--run-id" in captured_commands[1]
+    assert "--run-id" in captured_commands[2]
 
 
 def test_legacy_discovery_wrapper_reports_child_process_failure_with_structured_json(

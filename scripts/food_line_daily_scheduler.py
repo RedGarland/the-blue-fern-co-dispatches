@@ -474,7 +474,9 @@ def run_resume(args: argparse.Namespace) -> int:
             run_preflight(root, python, test_mode=args.test_mode)
             run_id = str(record["run_id"])
             status_result = _invoke_python(
-                python, root, ["scripts/run_food_line_discovery_expansion.py", "--status-run", run_id]
+                python,
+                root,
+                ["scripts/run_food_line_discovery_expansion.py", "--status-run", run_id, "--run-id", run_id],
             )
             if status_result.returncode != 0:
                 raise _command_error("source-watch status inspection", status_result)
@@ -496,13 +498,16 @@ def run_resume(args: argparse.Namespace) -> int:
                         "scripts/run_food_line_discovery_expansion.py",
                         "--date", edition_date,
                         "--resume-run", run_id,
+                        "--run-id", run_id,
                         "--export-agent-inbox",
                         "--agent-inbox-dir", str(PRIVATE_AGENT_INBOX_ROOT),
                     ],
                 )
                 command_exit = int(resumed.returncode)
                 inspected = _invoke_python(
-                    python, root, ["scripts/run_food_line_discovery_expansion.py", "--status-run", run_id]
+                    python,
+                    root,
+                    ["scripts/run_food_line_discovery_expansion.py", "--status-run", run_id, "--run-id", run_id],
                 )
                 if inspected.returncode != 0:
                     raise _command_error("post-resume status inspection", inspected)

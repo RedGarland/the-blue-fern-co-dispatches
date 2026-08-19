@@ -26,6 +26,7 @@ from scripts.food_line_runtime_paths import classify_food_line_runtime_path
 PRODUCTION_BRANCH = "add/pages-repo-default"
 PRIVATE_AGENT_INBOX_ROOT = ROOT / "data" / "dispatches" / "food-line" / "agent-inbox"
 FOOD_LINE_DISCOVERY_MAX_RUN_MINUTES = 30.0
+FOOD_LINE_DISCOVERY_MAX_QUERIES = 200
 QUALIFYING_COLLECTION_STATUSES = {"completed", "completed_with_exclusions"}
 QUALIFYING_EXPORT_STATUSES = {"success", "success_with_exclusions", "no_exportable_findings"}
 RESUMABLE_COLLECTION_STATUSES = {"partial", "timed_out", "cancelled", "failed"}
@@ -396,6 +397,7 @@ def run_source_watch(args: argparse.Namespace) -> int:
                     "--profile", "daily-current",
                     "--run-id", run_id,
                     "--max-run-minutes", f"{FOOD_LINE_DISCOVERY_MAX_RUN_MINUTES:g}",
+                    "--max-queries", str(FOOD_LINE_DISCOVERY_MAX_QUERIES),
                     "--export-agent-inbox",
                     "--agent-inbox-dir", str(PRIVATE_AGENT_INBOX_ROOT),
                 ],
@@ -501,6 +503,7 @@ def run_resume(args: argparse.Namespace) -> int:
                         "--resume-run", run_id,
                         "--run-id", run_id,
                         "--max-run-minutes", f"{FOOD_LINE_DISCOVERY_MAX_RUN_MINUTES:g}",
+                        "--max-queries", str(FOOD_LINE_DISCOVERY_MAX_QUERIES),
                         "--export-agent-inbox",
                         "--agent-inbox-dir", str(PRIVATE_AGENT_INBOX_ROOT),
                     ],

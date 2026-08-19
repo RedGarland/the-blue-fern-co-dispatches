@@ -3391,6 +3391,7 @@ def run_food_line_discovery_expansion(
     manual_fallback_path: Path | None = None,
     runtime_deadline: datetime | None = None,
     runtime_clock: Callable[[], datetime] | None = None,
+    resume_from_query_index: int = 0,
     edition_mode: str = "current_update",
     max_results_per_query: int = 10,
     max_queries: int | None = None,
@@ -3406,14 +3407,20 @@ def run_food_line_discovery_expansion(
     timed_out = False
     config = load_food_line_discovery_expansion_config(root)
     configured_direct_sources = [row for row in config.get("direct_sources") or [] if isinstance(row, dict)]
-    query_plan = build_food_line_discovery_query_plan(
+    full_query_plan = build_food_line_discovery_query_plan(
         root,
         date_text,
         lookback_days=query_lookback_days,
         lookahead_days=query_lookahead_days,
     )
+    query_plan_available_count = len(full_query_plan)
+    query_plan = _sample_query_plan_across_families(full_query_plan, max_queries)
+    query_plan_bounded_count = len(query_plan)
+    resume_from_query_index = max(0, min(int(resume_from_query_index or 0), query_plan_bounded_count))
+    queries_deferred = max(0, query_plan_available_count - query_plan_bounded_count)
+    queries_already_completed = resume_from_query_index
+    query_plan = query_plan[resume_from_query_index:]
     configured_lanes = sorted({_query_family_to_lane(_nonempty(row.get("query_family"))) for row in query_plan if _nonempty(row.get("query_family"))})
-    query_plan = _sample_query_plan_across_families(query_plan, max_queries)
     candidates: list[dict[str, Any]] = []
     query_rows: list[dict[str, Any]] = []
     discovered_at = _utc_now()
@@ -4249,7 +4256,9 @@ def run_food_line_discovery_expansion(
         ):
             row.pop(key, None)
     candidate_count = len(candidates)
-    queries_completed = len(query_rows)
+    queries_processed_this_invocation = len(query_rows)
+    queries_completed = queries_already_completed + queries_processed_this_invocation
+    queries_remaining = max(0, query_plan_bounded_count - queries_completed)
     query_family_counts = Counter(_nonempty(row.get("query_family")) for row in candidates if _nonempty(row.get("query_family")))
     lane_counts = Counter(_nonempty(row.get("discovery_lane")) for row in candidates if _nonempty(row.get("discovery_lane")))
     discovery_channel_counts = Counter(_nonempty(row.get("discovery_channel")) for row in candidates if _nonempty(row.get("discovery_channel")))
@@ -4450,9 +4459,16 @@ def run_food_line_discovery_expansion(
         else "completed"
         if discovery_ok
         else "failed",
-        "query_count": len(query_rows),
-        "queries_total": len(query_plan),
+        "query_count": queries_processed_this_invocation,
+        "queries_total": query_plan_bounded_count,
+        "query_plan_available_count": query_plan_available_count,
+        "query_plan_bounded_count": query_plan_bounded_count,
+        "query_plan_truncated": query_plan_available_count > query_plan_bounded_count,
+        "queries_deferred": queries_deferred,
+        "queries_already_completed": queries_already_completed,
+        "queries_processed_this_invocation": queries_processed_this_invocation,
         "queries_completed": queries_completed,
+        "queries_remaining": queries_remaining,
         "queries_failed": 0,
         "queries_timed_out": 1 if timed_out else 0,
         "candidate_count": candidate_count,
@@ -4576,6 +4592,7 @@ def run_food_line_discovery_expansion(
         "query_lookahead_days": int(query_lookahead_days),
         "public_claim_lookback_days": int(public_claim_lookback_days),
         "public_claim_lookahead_days": int(public_claim_lookahead_days),
+        "resume_from_query_index": queries_already_completed,
         "discovery_candidates_path": str(candidate_path),
         "discovery_audit_json_path": str(audit_json_path),
         "discovery_audit_md_path": str(audit_md_path),

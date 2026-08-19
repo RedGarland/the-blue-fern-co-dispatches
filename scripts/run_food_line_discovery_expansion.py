@@ -90,6 +90,42 @@ def _terminal_contract_result(
     }
 
 
+def _atomic_write_json(path: Path, payload: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.parent / f".{path.name}.{os.getpid()}.tmp"
+    temporary.write_text(json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
+    os.replace(temporary, path)
+
+
+def _export_agent_inbox(
+    root: Path,
+    *,
+    edition_date: str,
+    run_id: str,
+    result: dict[str, object],
+    agent_inbox_dir: str | None,
+) -> dict[str, object]:
+    inbox_dir = Path(agent_inbox_dir).resolve() if agent_inbox_dir else root / "status" / "food-line" / "runtime" / "agent-inbox"
+    findings = list(result.get("candidates") or [])
+    export_payload = {
+        "schema_version": "food_line_source_watch_agent_export_v1",
+        "agent_name": "Food Line Source Watch",
+        "agent_run_id": run_id,
+        "edition_date": edition_date,
+        "started_at": result.get("task_started_at") or result.get("started_at") or "",
+        "completed_at": result.get("task_completed_at") or result.get("completed_at") or "",
+        "search_window": {"edition_date": edition_date},
+        "findings": findings,
+        "coverage_notes": "Exported source-watch findings for current Food Line intake.",
+    }
+    export_path = inbox_dir / f"food-line-source-watch-{edition_date}-{run_id}.json"
+    _atomic_write_json(export_path, export_payload)
+    export_sha256 = hashlib.sha256(
+        json.dumps(export_payload, indent=2, ensure_ascii=False, sort_keys=True).encode("utf-8")
+    ).hexdigest()
+    return {"status": "success", "path": str(export_path), "sha256": export_sha256}
+
+
 def _legacy_args_supplied(args: argparse.Namespace) -> bool:
     return any(
         (
@@ -240,7 +276,7 @@ def _bounded_state_from_result(
             if discovery_ok and not timed_out
             else "blocked_incomplete_collection",
             "path": str(Path(result.get("agent_export_path") or (root / "status" / "food-line" / "runtime" / "agent-inbox"))),
-            "sha256": hashlib.sha256(json.dumps(result, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest(),
+            "sha256": str(result.get("agent_export_sha256") or hashlib.sha256(json.dumps(result, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()),
         },
         "next_action": "No collection action required.",
     }
@@ -411,6 +447,18 @@ def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
             dry_run=bool(args.dry_run),
             resume_from_query_index=resume_from_query_index,
         )
+        if args.export_agent_inbox:
+            result = dict(result)
+            export = _export_agent_inbox(
+                root,
+                edition_date=edition_date,
+                run_id=run_id,
+                result=result,
+                agent_inbox_dir=args.agent_inbox_dir,
+            )
+            result["agent_export"] = export
+            result["agent_export_path"] = export["path"]
+            result["agent_export_sha256"] = export["sha256"]
         wrapped = _write_state_files(root, edition_date, run_id, result, resume_count=resume_count)
         return _terminal_contract_result(wrapped, edition_date=edition_date, run_id=run_id)
 
@@ -429,6 +477,18 @@ def _run_legacy_bounded_contract(args: argparse.Namespace) -> dict[str, object]:
         resume_from_query_index=resume_from_query_index,
         runtime_deadline=runtime_deadline,
     )
+    if args.export_agent_inbox:
+        result = dict(result)
+        export = _export_agent_inbox(
+            root,
+            edition_date=edition_date,
+            run_id=run_id,
+            result=result,
+            agent_inbox_dir=args.agent_inbox_dir,
+        )
+        result["agent_export"] = export
+        result["agent_export_path"] = export["path"]
+        result["agent_export_sha256"] = export["sha256"]
     wrapped = _write_state_files(root, edition_date, run_id, result, resume_count=resume_count)
     if not wrapped["ok"] and not bool(result.get("timed_out")):
         wrapped["status"] = "collection_failure"

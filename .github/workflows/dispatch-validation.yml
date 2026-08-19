@@ -42,10 +42,11 @@ jobs:
         with:
           script: |
             const state = '${{ job.status }}' === 'success' ? 'success' : 'failure';
+            const sha = context.payload.pull_request?.head?.sha ?? context.sha;
             await github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              sha: context.sha,
+              sha,
               state,
               context: 'validate',
               description: state === 'success' ? 'Validation passed' : 'Validation failed',

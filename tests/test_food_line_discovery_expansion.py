@@ -2322,6 +2322,61 @@ def test_direct_rss_item_with_article_url_becomes_traceable(tmp_path: Path):
     assert result["candidates_by_discovery_channel"]["direct_rss"] == 1
 
 
+def test_direct_rss_prefers_feed_url_when_both_feed_and_page_are_configured(tmp_path: Path):
+    article_url = "https://example.org/news/pantry-demand"
+    feed_url = "https://example.org/feed.xml"
+    page_url = "https://example.org/news"
+    calls: list[str] = []
+    _write_direct_source_config(
+        tmp_path,
+        [
+            {
+                "source_name": "Example Direct Feed",
+                "source_family": "local_news_direct_rss",
+                "discovery_lane": "news_article",
+                "discovery_channel": "direct_rss",
+                "feed_url": feed_url,
+                "source_url": page_url,
+                "allowed_domains": ["example.org"],
+                "geographic_scope": "national",
+                "enabled": True,
+                "max_age_days": 7,
+                "pressure_terms": ["food pantry", "demand"],
+                "exclusion_terms": ["recipe"],
+            }
+        ],
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        calls.append(url)
+        if url == feed_url:
+            return _rss_payload(
+                [
+                    {
+                        "title": "Pantry demand rising",
+                        "link": article_url,
+                        "source_url": article_url,
+                        "publisher": "Example Direct Feed",
+                        "description": "Food pantry demand is rising.",
+                        "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
+                    }
+                ]
+            )
+        if url == article_url:
+            return _html_article(title="Pantry demand rising", canonical=article_url, body="Food pantry demand is rising.")
+        raise AssertionError(url)
+
+    result = run_food_line_discovery_expansion(tmp_path, "2026-06-21", fetcher=fetcher, max_queries=1, max_results_per_query=5)
+    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+
+    assert calls == [feed_url, article_url]
+    assert candidate["discovery_channel"] == "direct_rss"
+    assert candidate["direct_source_name"] == "Example Direct Feed"
+    assert candidate["feed_url"] == feed_url
+    assert candidate["source_url"] == article_url
+    assert candidate["public_claim_eligible"] is True
+
+
 def test_direct_rss_item_with_feed_or_homepage_url_is_blocked(tmp_path: Path):
     feed_url = "https://example.org/feed.xml"
     homepage_url = "https://example.org"

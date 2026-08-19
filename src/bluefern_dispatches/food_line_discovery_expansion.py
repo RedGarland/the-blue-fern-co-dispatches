@@ -2264,8 +2264,11 @@ def _collect_direct_source_items(
     fetcher: Any,
     query_row: dict[str, Any],
 ) -> tuple[list[dict[str, str]], dict[str, Any]]:
-    source_url = _nonempty(query_row.get("direct_source_url") or query_row.get("direct_source_feed_url"))
     discovery_channel = _nonempty(query_row.get("discovery_channel") or "direct_page")
+    if discovery_channel == "direct_rss":
+        source_url = _nonempty(query_row.get("direct_source_feed_url") or query_row.get("direct_source_url"))
+    else:
+        source_url = _nonempty(query_row.get("direct_source_url") or query_row.get("direct_source_feed_url"))
     allowed_domains = [str(item).strip().lower() for item in query_row.get("allowed_domains") or [] if str(item).strip()]
     diagnostics = {
         "attempted": bool(source_url),

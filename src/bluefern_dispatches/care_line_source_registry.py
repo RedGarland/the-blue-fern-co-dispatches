@@ -381,7 +381,7 @@ def source_readiness_status(source: CareLineSource) -> str:
         return "BLOCKED"
     if source.collection_method == "manual_review":
         return "MANUAL_REVIEW_ONLY"
-    if source.requires_html_followup or source.adapter_type == "structured_index":
+    if source.requires_html_followup:
         return "AUTOMATED_PARTIAL"
     return "AUTOMATED_READY"
 

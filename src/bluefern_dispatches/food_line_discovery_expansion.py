@@ -906,6 +906,44 @@ def _candidate_public_evidence_text(row: dict[str, Any]) -> str:
     return ""
 
 
+def _discovery_early_exclusion_reason(row: dict[str, Any]) -> str:
+    if _nonempty(row.get("duplicate_of")):
+        return "duplicate"
+    blockers = list(row.get("public_claim_blockers") or [])
+    if "invalid_or_missing_https_url" in blockers:
+        return "invalid_or_missing_https_url"
+    if "outside_backfill_date_window" in blockers:
+        return "outside_backfill_date_window"
+    if "social_watchlist_only" in blockers:
+        return "social_watchlist_only"
+    if "generic_or_invalid_title" in blockers:
+        return "generic_or_invalid_title"
+    if _nonempty(row.get("classification_status")) == "context_only":
+        return "no current pressure evidence"
+    google_news_resolution_status = _nonempty(row.get("_google_news_resolution_status"))
+    traceability_status = _nonempty(row.get("traceability_status"))
+    discovery_channel = _nonempty(row.get("discovery_channel"))
+    if google_news_resolution_status in {"failed_no_resolved_url", "failed_listing_or_action_url", "failed_homepage_or_landing_url"}:
+        return "homepage_or_landing_url" if google_news_resolution_status != "failed_no_resolved_url" else "no_resolved_url"
+    if google_news_resolution_status == "failed_no_same_publisher_family":
+        return "no_same_publisher_family"
+    if google_news_resolution_status == "failed_static_or_google_noise_only" and not bool(row.get("_google_news_rpc_attempted")):
+        return "unresolved_google_news"
+    if (
+        discovery_channel == "direct_rss"
+        and traceability_status == "publisher_homepage_trace_only"
+        and "homepage_or_landing_url" in blockers
+    ):
+        return "homepage_or_landing_url"
+    if (
+        google_news_resolution_status == "failed_static_or_google_noise_only"
+        and traceability_status == "unresolved_google_news"
+        and not bool(row.get("_google_news_rpc_attempted"))
+    ):
+        return "unresolved_google_news"
+    return ""
+
+
 def _candidate_source_text_fields(row: dict[str, Any]) -> dict[str, str]:
     fields: dict[str, str] = {}
     for key in ("selected_title", "discovered_title", "summary_or_snippet", "pressure_evidence_summary", "manually_reviewed_summary", "evidence_text"):
@@ -2904,7 +2942,7 @@ def _resolve_google_news_wrapper(fetcher: Any, google_news_url: str, *, publishe
         debug["google_news_resolution_status"] = "failed_listing_or_action_url" if homepage_reason == "listing_or_action_url" else "failed_homepage_or_landing_url"
         return homepage, "", True, debug
     if not candidates:
-        debug["rejection_reason"] = "no candidate urls extracted"
+        debug["rejection_reason"] = "no_resolved_url"
         debug["google_news_resolution_status"] = "failed_no_resolved_url"
         return "", "unresolved google news wrapper", True, debug
     rejected_reasons = [_rejected_candidate_url_reason(candidate, publisher_url=publisher_url, publisher_name=publisher_name) for candidate in candidates]
@@ -2922,7 +2960,7 @@ def _resolve_google_news_wrapper(fetcher: Any, google_news_url: str, *, publishe
         debug["rejection_reason"] = "no same publisher family candidate url"
         debug["google_news_resolution_status"] = "failed_no_same_publisher_family"
     else:
-        debug["rejection_reason"] = "no resolved candidate url"
+        debug["rejection_reason"] = "no_resolved_url"
         debug["google_news_resolution_status"] = "failed_no_resolved_url"
     return "", "unresolved google news wrapper", True, debug
 
@@ -3424,6 +3462,8 @@ def run_food_line_discovery_expansion(
     candidates: list[dict[str, Any]] = []
     query_rows: list[dict[str, Any]] = []
     discovered_at = _utc_now()
+    raw_candidate_count = 0
+    raw_public_eligible_candidate_count = 0
     query_family_counts: Counter[str] = Counter()
     state_counts: Counter[str] = Counter()
     metro_counts: Counter[str] = Counter()
@@ -3462,6 +3502,7 @@ def run_food_line_discovery_expansion(
     accepted_direct_source_lane_counts: Counter[str] = Counter()
     direct_candidates_by_date_match_status: Counter[str] = Counter()
     direct_candidates_by_date_basis: Counter[str] = Counter()
+    early_exclusion_reasons: Counter[str] = Counter()
     direct_sources_with_in_window_items: set[str] = set()
     direct_sources_with_no_in_window_items: set[str] = set()
     historical_source_names: set[str] = set()
@@ -4050,6 +4091,7 @@ def run_food_line_discovery_expansion(
                 "google_news_resolution_attempted": google_news_resolution_attempted,
                 "google_news_resolution_error": google_news_resolution_error,
                 "google_news_resolved_url": resolved_wrapper_url,
+                "_google_news_rpc_attempted": bool(google_news_debug.get("google_news_rpc_attempted")),
                 "canonical_homepage_collapse_ignored": bool(
                     _is_homepage_only_url(canonical_from_page) and _is_article_specific_url(final_trace_url)
                 ) if fetch_status == "ok" else False,
@@ -4113,6 +4155,39 @@ def run_food_line_discovery_expansion(
                 "_google_news_resolved_url": resolved_wrapper_url,
                 "_google_news_resolution_status": google_news_resolution_status,
             }
+            raw_candidate_count += 1
+            if public_claim_eligible:
+                raw_public_eligible_candidate_count += 1
+            early_exclusion_reason = _discovery_early_exclusion_reason(row)
+            if early_exclusion_reason:
+                early_exclusion_reasons[early_exclusion_reason] += 1
+                if google_news_resolution_status:
+                    resolution_status_counts[google_news_resolution_status] += 1
+                    resolution_debug_by_candidate[row["candidate_id"]] = {
+                        "google_news_resolution_status": google_news_resolution_status,
+                        "response_status": google_news_debug.get("response_status"),
+                        "final_response_url": _nonempty(google_news_debug.get("final_response_url")),
+                        "content_type": _nonempty(google_news_debug.get("content_type")),
+                        "redirect_chain": list(google_news_debug.get("redirect_chain") or []),
+                        "candidate_url_count_extracted": int(google_news_debug.get("candidate_url_count_extracted") or 0),
+                        "accepted_candidate_url": _nonempty(google_news_debug.get("accepted_candidate_url")),
+                        "decoded_google_news_url": _nonempty(google_news_debug.get("decoded_google_news_url")),
+                        "google_news_rpc_url": _nonempty(google_news_debug.get("google_news_rpc_url")),
+                        "redirect_url_found": _nonempty(google_news_debug.get("redirect_url_found")),
+                        "canonical_url_found": _nonempty(google_news_debug.get("canonical_url_found")),
+                        "html_candidate_url_found": _nonempty(google_news_debug.get("html_candidate_url_found")),
+                        "google_news_article_id": _nonempty(google_news_debug.get("google_news_article_id")),
+                        "google_news_rpc_attempted": bool(google_news_debug.get("google_news_rpc_attempted")),
+                        "google_news_rpc_error": _nonempty(google_news_debug.get("google_news_rpc_error")),
+                        "static_or_google_noise_only": bool(google_news_debug.get("static_or_google_noise_only")),
+                        "fallback_to_publisher_homepage": bool(google_news_debug.get("fallback_to_publisher_homepage")),
+                        "homepage_reason": _nonempty(google_news_debug.get("homepage_reason")),
+                        "google_news_resolution_attempted": bool(google_news_debug.get("google_news_resolution_attempted")),
+                        "google_news_resolution_error": _nonempty(google_news_debug.get("google_news_resolution_error")),
+                        "google_news_resolution_status": google_news_resolution_status,
+                        "rejection_reason": _nonempty(google_news_debug.get("rejection_reason")),
+                    }
+                continue
             if archive_url_used and direct_source_name:
                 historical_archive_candidates_by_source[direct_source_name] = historical_archive_candidates_by_source.get(direct_source_name, 0) + 1
                 if date_match_status == "exact_date":
@@ -4402,6 +4477,19 @@ def run_food_line_discovery_expansion(
         )
     )
     public_eligible_candidate_count = sum(1 for row in candidates if bool(row.get("public_claim_eligible")))
+    early_exclusion_count = max(0, raw_candidate_count - candidate_count)
+    candidates_with_supporting_passage_count = sum(1 for row in candidates if _candidate_public_evidence_text(row))
+    candidates_without_supporting_passage_count = max(0, candidate_count - candidates_with_supporting_passage_count)
+    useful_candidate_rate = round(candidate_count / max(1, raw_candidate_count), 4)
+    average_candidates_per_query = round(candidate_count / max(1, queries_processed_this_invocation), 4)
+    query_families_producing_candidates = sorted({family for family in query_family_counts if query_family_counts[family] > 0})
+    query_families_producing_zero_usable_candidates = sorted(
+        {
+            _nonempty(row.get("query_family"))
+            for row in query_rows
+            if _nonempty(row.get("query_family")) and query_family_counts[_nonempty(row.get("query_family"))] <= 0
+        }
+    )
     discovery_ok = not timed_out
     has_exclusions = bool(blocked_fetch_count or direct_source_fetch_failure_count or google_news_resolution_failure_count)
     dominant_source_warning = ""
@@ -4461,6 +4549,9 @@ def run_food_line_discovery_expansion(
         else "failed",
         "query_count": queries_processed_this_invocation,
         "queries_total": query_plan_bounded_count,
+        "raw_candidate_count": raw_candidate_count,
+        "early_exclusion_count": early_exclusion_count,
+        "early_exclusion_reasons": dict(sorted(early_exclusion_reasons.items())),
         "query_plan_available_count": query_plan_available_count,
         "query_plan_bounded_count": query_plan_bounded_count,
         "query_plan_truncated": query_plan_available_count > query_plan_bounded_count,
@@ -4553,6 +4644,13 @@ def run_food_line_discovery_expansion(
         "historical_archive_duplicate_link_count_by_source": dict(sorted(historical_archive_duplicate_link_count_by_source.items())),
         "historical_archive_pagination_sources_without_hits": sorted(historical_archive_pagination_sources_without_hits),
         "public_eligible_candidate_count": public_eligible_candidate_count,
+        "raw_public_eligible_candidate_count": raw_public_eligible_candidate_count,
+        "candidates_with_supporting_passage_count": candidates_with_supporting_passage_count,
+        "candidates_without_supporting_passage_count": candidates_without_supporting_passage_count,
+        "average_candidates_per_query": average_candidates_per_query,
+        "useful_candidate_rate": useful_candidate_rate,
+        "query_families_producing_candidates": query_families_producing_candidates,
+        "query_families_producing_zero_usable_candidates": query_families_producing_zero_usable_candidates,
         "manually_reviewable_count": manual_reviewable_count,
         "qualified_pressure_signals": qualified_pressure_signals,
         "context_only_count": context_only_count,
@@ -4621,7 +4719,11 @@ def run_food_line_discovery_expansion(
             f"- Discovery confidence: `{discovery_confidence}`",
             f"- Discovery confidence reason: {discovery_confidence_reason}",
             f"- Total queries run: `{len(query_rows)}`",
+            f"- Raw findings retained before early rejection: `{raw_candidate_count}`",
             f"- Total candidates discovered: `{candidate_count}`",
+            f"- Early rejections: `{early_exclusion_count}`",
+            f"- Useful candidate rate: `{useful_candidate_rate}`",
+            f"- Average candidates/query: `{average_candidates_per_query}`",
             f"- Fetchable candidates: `{fetchable_count}`",
             f"- Blocked or failed fetches: `{blocked_fetch_count}`",
             f"- Generic or invalid titles: `{generic_or_invalid_title_count}`",

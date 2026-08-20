@@ -14,7 +14,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PRODUCTION_BRANCH = "agent/refine-care-line-signal-wire-public-rendering"
+PRODUCTION_BRANCH = "add/pages-repo-default"
 SCHEDULER_SCHEMA = "care_line_collection_scheduler_receipt_v1"
 STATUS_ROOT = Path("status/care-line")
 LOCK_PATH = STATUS_ROOT / "locks" / "national-collection.lock"

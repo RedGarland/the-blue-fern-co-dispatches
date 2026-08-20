@@ -73,11 +73,11 @@ def test_food_line_discovery_candidates_path_is_allowed_but_nearby_paths_stay_ri
     report = preflight_repo_state.build_preflight_report(source_repo)
 
     assert {entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]} == {
-        "data/dispatches/food-line/discovery/2026-06-25/discovery_candidates.json"
-    }
-    assert {entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]} == {
+        "data/dispatches/food-line/discovery/2026-06-25/discovery_candidates.json",
         "data/dispatches/food-line/discovery/2026-06-25/unexpected.json",
         "data/dispatches/food-line/discovery/foo/discovery_candidates.json",
+    }
+    assert {entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]} == {
         "data/dispatches/gaza/discovery/2026-06-25/discovery_candidates.json",
     }
 

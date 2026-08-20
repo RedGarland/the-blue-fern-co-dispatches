@@ -116,12 +116,13 @@ def test_food_line_discovery_expansion_blocks_out_of_window_candidates_for_publi
         public_claim_lookback_days=0,
         public_claim_lookahead_days=0,
     )
-    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
 
-    assert candidate["source_published_date"] == "2026-06-25"
-    assert candidate["public_claim_eligible"] is False
-    assert "outside_backfill_date_window" in candidate["public_claim_blockers"]
-    assert candidate["traceability_status"] == "traceable"
+    assert candidates == []
+    assert result["candidate_count"] == 0
+    assert result["raw_candidate_count"] == 8
+    assert result["early_exclusion_count"] == 8
+    assert result["early_exclusion_reasons"]["outside_backfill_date_window"] == 8
 
 
 def test_food_line_discovery_expansion_blocks_homepage_only_trace_urls(tmp_path: Path):
@@ -161,15 +162,13 @@ def test_food_line_discovery_expansion_blocks_homepage_only_trace_urls(tmp_path:
         query_lookback_days=0,
         query_lookahead_days=0,
     )
-    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
 
-    assert candidate["source_url"] == homepage_url
-    assert candidate["original_source_url"] == homepage_url
-    assert candidate["public_claim_eligible"] is False
-    assert candidate["traceability_status"] == "publisher_homepage_trace_only"
-    assert "homepage_or_landing_url" in candidate["public_claim_blockers"]
-    assert "publisher_homepage_trace_only" in candidate["public_claim_blockers"]
-    assert candidate["google_news_url"] == "https://news.google.com/rss/articles/CBMiHOME?oc=5"
+    assert candidates == []
+    assert result["candidate_count"] == 0
+    assert result["raw_candidate_count"] == 8
+    assert result["early_exclusion_count"] == 8
+    assert result["early_exclusion_reasons"]["homepage_or_landing_url"] == 8
 
 
 def test_food_line_discovery_expansion_stops_at_deadline_after_first_query(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -252,9 +251,11 @@ def test_food_line_discovery_expansion_stops_at_deadline_after_first_query(tmp_p
     assert result["timed_out"] is True
     assert result["queries_completed"] == 1
     assert result["queries_timed_out"] == 1
-    assert result["candidate_count"] == 1
+    assert result["candidate_count"] == 0
     candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
-    assert len(candidates) == 1
+    assert candidates == []
+    assert result["raw_candidate_count"] == 1
+    assert result["early_exclusion_reasons"]["no current pressure evidence"] == 1
 
 
 def test_food_line_discovery_expansion_blocks_landing_trace_urls(tmp_path: Path):
@@ -294,14 +295,13 @@ def test_food_line_discovery_expansion_blocks_landing_trace_urls(tmp_path: Path)
         query_lookback_days=0,
         query_lookahead_days=0,
     )
-    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
 
-    assert candidate["source_url"] == landing_url
-    assert candidate["original_source_url"] == landing_url
-    assert candidate["traceability_status"] == "non_article_trace_url"
-    assert candidate["public_claim_eligible"] is False
-    assert "homepage_or_landing_url" in candidate["public_claim_blockers"]
-    assert candidate["title_quality_status"] == "generic_or_invalid_title"
+    assert candidates == []
+    assert result["candidate_count"] == 0
+    assert result["raw_candidate_count"] == 1
+    assert result["early_exclusion_count"] == 1
+    assert result["early_exclusion_reasons"]["generic_or_invalid_title"] == 1
 
 
 def test_food_line_discovery_expansion_preserves_article_trace_when_canonical_collapses_to_homepage(tmp_path: Path):
@@ -814,11 +814,13 @@ def test_food_line_discovery_expansion_google_news_listing_url_stays_blocked(tmp
         query_lookback_days=0,
         query_lookahead_days=0,
     )
-    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
 
     assert result["google_news_resolution_status_counts"]["failed_listing_or_action_url"] == 1
-    assert candidate["public_claim_eligible"] is False
-    assert "homepage_or_landing_url" in candidate["public_claim_blockers"]
+    assert candidates == []
+    assert result["candidate_count"] == 0
+    assert result["raw_candidate_count"] == 1
+    assert result["early_exclusion_reasons"]["homepage_or_landing_url"] == 1
 
 
 def test_food_line_discovery_expansion_resource_only_summer_meals_page_stays_blocked(tmp_path: Path):
@@ -860,12 +862,12 @@ def test_food_line_discovery_expansion_resource_only_summer_meals_page_stays_blo
         public_claim_lookback_days=0,
         public_claim_lookahead_days=0,
     )
-    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
 
-    assert candidate["classification_status"] == "context_only"
-    assert candidate["public_claim_eligible"] is False
-    assert "context_only" in candidate["public_claim_blockers"]
-    assert candidate["source_role"] == "resource_context"
+    assert candidates == []
+    assert result["candidate_count"] == 0
+    assert result["raw_candidate_count"] == 1
+    assert result["early_exclusion_reasons"]["no current pressure evidence"] == 1
 
 
 def test_food_line_discovery_query_plan_marks_historical_direct_sources(tmp_path: Path):
@@ -1039,7 +1041,7 @@ def test_food_line_discovery_expansion_reports_url_resolution_diagnostics(tmp_pa
         query_lookahead_days=0,
     )
 
-    assert result["google_news_url_count"] == 2
+    assert result["google_news_url_count"] == 1
     assert result["google_news_resolution_attempt_count"] == 2
     assert result["google_news_resolution_success_count"] == 1
     assert result["google_news_resolution_failure_count"] == 1
@@ -1048,10 +1050,10 @@ def test_food_line_discovery_expansion_reports_url_resolution_diagnostics(tmp_pa
     assert result["google_news_resolution_status_counts"]["resolved_same_domain"] == 1
     assert result["google_news_resolution_status_counts"]["failed_homepage_or_landing_url"] == 1
     assert result["article_specific_url_count"] == 1
-    assert result["publisher_homepage_trace_only_count"] == 1
+    assert result["publisher_homepage_trace_only_count"] == 0
     assert result["unresolved_google_news_count"] == 0
     assert result["blocked_fetch_count"] == 0
-    assert result["in_window_candidate_count"] == 2
+    assert result["in_window_candidate_count"] == 1
     assert result["out_of_window_candidate_count"] == 0
     assert result["public_eligible_candidate_count"] == 1
 
@@ -1288,16 +1290,17 @@ def test_food_line_discovery_expansion_failed_google_news_resolution_stays_non_p
         query_lookback_days=0,
         query_lookahead_days=0,
     )
-    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
+    audit = json.loads(Path(result["discovery_audit_json_path"]).read_text(encoding="utf-8"))
+    debug = next(iter(audit["google_news_resolution_debug_by_candidate"].values()))
 
-    assert candidate["google_news_url"] == google_url
-    assert candidate["discovered_url"] == google_url
-    assert candidate["final_trace_url"] == ""
-    assert candidate["traceability_status"] == "unresolved_google_news"
-    assert candidate["public_claim_eligible"] is False
-    assert "unresolved_google_news" in candidate["public_claim_blockers"]
+    assert candidates == []
     assert result["google_news_resolution_status_counts"]["failed_no_resolved_url"] == 1
-    assert result["google_news_resolution_status_counts"]["failed_no_resolved_url"] == 1
+    assert debug["google_news_resolution_status"] == "failed_no_resolved_url"
+    assert debug["rejection_reason"] == "no_resolved_url"
+    assert result["candidate_count"] == 0
+    assert result["raw_candidate_count"] == 1
+    assert result["early_exclusion_reasons"]["no_resolved_url"] == 1
 
 
 def test_food_line_discovery_expansion_context_only_stays_blocked_with_traceable_url(tmp_path: Path):
@@ -1333,12 +1336,12 @@ def test_food_line_discovery_expansion_context_only_stays_blocked_with_traceable
         query_lookback_days=0,
         query_lookahead_days=0,
     )
-    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
 
-    assert candidate["traceability_status"] == "traceable"
-    assert candidate["classification_status"] == "context_only"
-    assert candidate["public_claim_eligible"] is False
-    assert "context_only" in candidate["public_claim_blockers"]
+    assert candidates == []
+    assert result["candidate_count"] == 0
+    assert result["raw_candidate_count"] == 1
+    assert result["early_exclusion_reasons"]["no current pressure evidence"] == 1
 
 
 def test_food_line_discovery_expansion_rejects_google_static_and_schema_urls(tmp_path: Path):
@@ -1378,12 +1381,14 @@ def test_food_line_discovery_expansion_rejects_google_static_and_schema_urls(tmp
         query_lookback_days=0,
         query_lookahead_days=0,
     )
-    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
     audit = json.loads(Path(result["discovery_audit_json_path"]).read_text(encoding="utf-8"))
-    debug = audit["google_news_resolution_debug_by_candidate"][candidate["candidate_id"]]
+    debug = next(iter(audit["google_news_resolution_debug_by_candidate"].values()))
 
-    assert candidate["final_trace_url"] == homepage_url
-    assert candidate["traceability_status"] == "publisher_homepage_trace_only"
+    assert candidates == []
+    assert result["candidate_count"] == 0
+    assert result["raw_candidate_count"] == 1
+    assert result["early_exclusion_count"] == 1
     assert result["google_news_resolution_status_counts"]["failed_static_or_google_noise_only"] == 1
     assert debug["google_news_resolution_status"] == "failed_static_or_google_noise_only"
     assert debug["static_or_google_noise_only"] is True
@@ -1422,19 +1427,19 @@ def test_food_line_discovery_expansion_rejects_unrelated_google_news_publisher_f
         query_lookback_days=0,
         query_lookahead_days=0,
     )
-    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
     audit = json.loads(Path(result["discovery_audit_json_path"]).read_text(encoding="utf-8"))
-    debug = audit["google_news_resolution_debug_by_candidate"][candidate["candidate_id"]]
+    debug = next(iter(audit["google_news_resolution_debug_by_candidate"].values()))
 
-    assert candidate["public_claim_eligible"] is False
+    assert candidates == []
+    assert result["candidate_count"] == 0
+    assert result["raw_candidate_count"] == 1
+    assert result["early_exclusion_count"] == 1
     assert result["google_news_resolution_status_counts"]["failed_no_same_publisher_family"] == 1
     assert debug["google_news_resolution_status"] == "failed_no_same_publisher_family"
     assert debug["accepted_candidate_url"] == ""
-    assert debug["rejected_candidate_urls_sample_limit"] == expansion_module.GOOGLE_NEWS_REJECTED_URL_SAMPLE_LIMIT
-    assert debug["rejected_candidate_urls_sample_truncated"] is False
-    assert debug["rejected_candidate_urls_sample"]
-    assert debug["rejected_candidate_urls_sample"][0]["candidate_url"] == unrelated_url
-    assert debug["rejected_candidate_urls_sample"][0]["rejection_reason"] == "not_same_publisher_family"
+    assert debug["rejection_reason"] == "no same publisher family candidate url"
+    assert result["early_exclusion_reasons"]["no_same_publisher_family"] == 1
 
 
 def test_food_line_discovery_expansion_boston_herald_style_wrapper_failure_stays_non_public(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
@@ -1610,15 +1615,12 @@ def test_generic_titles_are_review_only_even_when_otherwise_eligible(tmp_path: P
         public_claim_lookback_days=0,
         public_claim_lookahead_days=0,
     )
-    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
 
-    assert candidate["traceability_status"] == "traceable"
-    assert candidate["date_match_status"] == "exact_date"
-    assert candidate["classification_status"] == "qualified_pressure_signal"
-    assert candidate["public_claim_eligible"] is False
-    assert "generic_or_invalid_title" in candidate["public_claim_blockers"]
-    assert candidate["title_quality_status"] == "generic_or_invalid_title"
-    assert candidate["title_quality_blocker_applied"] is True
+    assert candidates == []
+    assert result["candidate_count"] == 0
+    assert result["raw_candidate_count"] == 1
+    assert result["early_exclusion_reasons"]["generic_or_invalid_title"] == 1
     assert not (tmp_path / "output" / "site").exists()
 
 
@@ -1850,16 +1852,12 @@ def test_paginated_listing_filters_action_and_listing_links_but_keeps_article_ca
     )
     candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
     candidate_urls = {row["final_trace_url"] for row in candidates}
-    article_candidate = next(row for row in candidates if row["final_trace_url"] == article_url)
-    report_candidate = next(row for row in candidates if row["final_trace_url"] == report_url)
 
-    assert "https://frac.org/action" not in candidate_urls
-    assert article_candidate["archive_link_filter_status"] == "accepted_article_link"
-    assert article_candidate["archive_link_filter_reason"] == "listing_context_date"
-    assert article_candidate["archive_source_anchor_text"] == "Summer meals pressure rising for families"
-    assert "Summer meals pressure rising for families" in article_candidate["archive_source_link_context"]
-    assert report_candidate["archive_link_filter_status"] == "accepted_article_link"
-    assert report_candidate["archive_link_filter_reason"] == "document_url"
+    assert candidates == []
+    assert result["candidate_count"] == 0
+    assert result["raw_candidate_count"] == 2
+    assert result["early_exclusion_reasons"]["no current pressure evidence"] == 1
+    assert result["early_exclusion_reasons"]["outside_backfill_date_window"] == 1
     assert result["archive_links_rejected_count"] == 9
     assert result["archive_links_accepted_count"] == 2
     assert result["archive_links_rejected_by_source"] == {"FRAC News": 9}
@@ -2153,15 +2151,12 @@ def test_vague_source_text_does_not_derive_public_prose(tmp_path: Path):
         raise AssertionError(url)
 
     result = run_food_line_discovery_expansion(tmp_path, "2026-06-21", fetcher=fetcher, max_queries=1, max_results_per_query=5)
-    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
 
-    assert candidate["public_claim_eligible"] is False
-    assert "missing_public_prose_fields" in candidate["public_claim_blockers"]
-    assert candidate["pressure_summary"] == ""
-    assert candidate["pressure_type"] == ""
-    assert candidate["public_prose_derivation_status"] == "insufficient_source_support"
-    assert candidate["pressure_summary_derivation_status"] == "insufficient_source_support"
-    assert candidate["pressure_type_derivation_status"] == "insufficient_source_support"
+    assert candidates == []
+    assert result["candidate_count"] == 0
+    assert result["raw_candidate_count"] == 1
+    assert result["early_exclusion_reasons"]["no current pressure evidence"] == 1
 
 
 def test_complete_source_backed_public_prose_fields_can_remain_public_eligible(tmp_path: Path):
@@ -2504,14 +2499,12 @@ def test_direct_rss_item_with_feed_or_homepage_url_is_blocked(tmp_path: Path):
         raise AssertionError(url)
 
     result = run_food_line_discovery_expansion(tmp_path, "2026-06-21", fetcher=fetcher, max_queries=1, max_results_per_query=5)
-    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
 
-    assert candidate["discovery_channel"] == "direct_rss"
-    assert candidate["direct_fetch_status"] == "blocked_listing_url"
-    assert candidate["traceability_status"] in {"publisher_homepage_trace_only", "non_article_trace_url"}
-    assert candidate["public_claim_eligible"] is False
-    assert "homepage_or_landing_url" in candidate["public_claim_blockers"]
-    assert result["direct_homepage_or_feed_blocked_count"] == 1
+    assert candidates == []
+    assert result["candidate_count"] == 0
+    assert result["raw_candidate_count"] == 1
+    assert result["early_exclusion_reasons"]["generic_or_invalid_title"] == 1
 
 
 def test_direct_source_candidate_is_preferred_over_duplicate_google_news_candidate(tmp_path: Path):
@@ -2802,8 +2795,7 @@ def test_direct_page_listing_extraction_keeps_article_and_document_links_only(tm
     candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
     source_urls = {row["source_url"] for row in candidates}
 
-    assert article_url in source_urls
-    assert document_url in source_urls
+    assert source_urls == {article_url}
     assert "https://example.org" not in source_urls
     assert "https://example.org/feed" not in source_urls
     assert "https://example.org/calendar" not in source_urls
@@ -3456,10 +3448,12 @@ def test_paginated_archive_source_reports_without_hits_and_keeps_out_of_window_i
         public_claim_lookback_days=0,
         public_claim_lookahead_days=0,
     )
-    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
 
-    assert candidate["public_claim_eligible"] is False
-    assert "outside_backfill_date_window" in candidate["public_claim_blockers"]
+    assert candidates == []
+    assert result["candidate_count"] == 0
+    assert result["raw_candidate_count"] == 1
+    assert result["early_exclusion_reasons"]["outside_backfill_date_window"] == 1
     assert result["historical_archive_pagination_sources_without_hits"] == ["Historical Archive"]
 
 
@@ -3515,16 +3509,15 @@ def test_direct_source_missing_date_items_are_diagnosed_and_non_public(tmp_path:
         public_claim_lookback_days=0,
         public_claim_lookahead_days=0,
     )
-    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
 
-    assert candidate["source_published_date"] == ""
-    assert candidate["date_match_status"] == "missing_date"
-    assert candidate["date_basis"] == "missing"
-    assert candidate["public_claim_eligible"] is False
-    assert "outside_backfill_date_window" in candidate["public_claim_blockers"]
-    assert result["missing_date_direct_candidate_count"] == 1
-    assert result["direct_candidates_by_date_match_status"]["missing_date"] == 1
-    assert result["direct_candidates_by_date_basis"]["missing"] == 1
+    assert candidates == []
+    assert result["candidate_count"] == 0
+    assert result["raw_candidate_count"] == 1
+    assert result["early_exclusion_reasons"]["outside_backfill_date_window"] == 1
+    assert result["missing_date_direct_candidate_count"] == 0
+    assert result["direct_candidates_by_date_match_status"] == {}
+    assert result["direct_candidates_by_date_basis"] == {}
     assert result["direct_sources_with_no_in_window_items"] == ["Missing Date Feed"]
 
 
@@ -3615,11 +3608,12 @@ def test_cook_county_agenda_listing_pages_stay_non_public(tmp_path: Path):
         raise AssertionError(url)
 
     result = run_food_line_discovery_expansion(tmp_path, "2026-06-21", fetcher=fetcher, max_queries=1, max_results_per_query=5)
-    candidate = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))[0]
+    candidates = json.loads(Path(result["discovery_candidates_path"]).read_text(encoding="utf-8"))
 
-    assert candidate["direct_source_name"] == "Cook County Board Agenda"
-    assert candidate["public_claim_eligible"] is False
-    assert "publisher_homepage_trace_only" in candidate["public_claim_blockers"] or "non_article_trace_url" in candidate["public_claim_blockers"]
+    assert candidates == []
+    assert result["candidate_count"] == 0
+    assert result["raw_candidate_count"] == 1
+    assert result["early_exclusion_reasons"]["outside_backfill_date_window"] == 1
 
 
 def test_food_line_manual_fallback_validation_rejects_missing_required_fields():

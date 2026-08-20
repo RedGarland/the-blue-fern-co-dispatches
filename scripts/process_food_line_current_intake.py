@@ -72,7 +72,11 @@ def _build_review_queue(root: Path, edition_date: str, inbox: Path) -> dict[str,
         )
         for finding in findings:
             row = map_finding_to_food_line_candidate(finding, edition_date=edition_date)
-            row["source_artifact_path"] = str(source_path.relative_to(root)).replace("\\", "/")
+            resolved_source_path = source_path if source_path.is_absolute() else (root / source_path)
+            try:
+                row["source_artifact_path"] = str(resolved_source_path.resolve().relative_to(root)).replace("\\", "/")
+            except ValueError:
+                row["source_artifact_path"] = str(resolved_source_path).replace("\\", "/")
             for private_key in ("raw_agent_payload", "private_text_provenance", "chain_of_custody", "hidden_instructions"):
                 row.pop(private_key, None)
             duplicate_key = str(row.get("agent_duplicate_key") or row.get("candidate_id") or "")

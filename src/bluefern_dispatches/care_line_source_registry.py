@@ -71,8 +71,8 @@ _CARE_LINE_SOURCE_URL_OVERRIDES: dict[str, dict[str, str]] = {
         "homepage_url": "https://newsroom.clevelandclinic.org/news-releases",
     },
     "aha-news": {
-        "feed_url": "https://www.aha.org/news?format=rss",
-        "homepage_url": "https://www.aha.org/news?format=rss",
+        "feed_url": "https://www.aha.org/news",
+        "homepage_url": "https://www.aha.org/news",
     },
     "gu-dphss": {
         "feed_url": "https://dphss.guam.gov/",

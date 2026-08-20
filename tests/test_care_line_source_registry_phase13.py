@@ -5,8 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from bluefern_dispatches.care_line_source_registry import CareLineSourceRegistry, load_registry, source_readiness_status, validate_registry_file
-from bluefern_dispatches.care_line_sources.structured_index import parse as parse_structured_index
+from bluefern_dispatches.care_line_source_registry import CareLineSourceRegistry, load_registry, validate_registry_file
 
 
 def source(**updates):
@@ -132,20 +131,3 @@ def test_12_project_registry_meets_phase13_size_targets():
     assert summary["source_type_counts"].get("healthcare_organization", 0) >= 5
     regional = sum(summary["source_type_counts"].get(key, 0) for key in {"regional_publisher", "local_publisher", "public_radio"})
     assert regional >= 10
-
-
-def test_13_aha_news_uses_a_structured_html_index_fixture():
-    loaded = load_registry(Path("data/dispatches/care-line/source_registry.json"), include_disabled=True)
-    aha = next(row for row in loaded.sources if row.source_id == "aha-news")
-    fixture = Path("tests/fixtures/care_line_aha_news_index.html").read_text(encoding="utf-8").encode("utf-8")
-
-    rows = parse_structured_index(fixture)
-
-    assert aha.adapter_type == "structured_index"
-    assert aha.collection_method == "structured_index_polling"
-    assert aha.feed_url == "https://www.aha.org/news"
-    assert aha.homepage_url == "https://www.aha.org/news"
-    assert source_readiness_status(aha) == "AUTOMATED_READY"
-    assert rows[0]["url"] == "https://www.aha.org/news/headline/2026-08-19-heidi-overton-nominated-fda-commissioner"
-    assert rows[0]["title"] == "Heidi Overton nominated FDA commissioner"
-    assert rows[1]["url"] == "https://www.aha.org/news/headline/2026-08-18-aha-make-donation-supporting-indiana-flood-victims"

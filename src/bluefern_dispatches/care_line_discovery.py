@@ -663,12 +663,14 @@ def discover_care_line_sources(
     max_results_per_query: int = 10,
     max_queries: int | None = None,
     max_candidates: int | None = None,
+    follow_up_queries: Iterable[Mapping[str, Any]] | None = None,
     write: bool = True,
     dry_run: bool = False,
 ) -> dict[str, Any]:
     edition_date = validate_date(date)
     config = load_care_line_discovery_queries(root)
-    queries = _search_queries(edition_date, config)
+    queries = [dict(row) for row in list(follow_up_queries or []) if str(row.get("query") or "").strip()]
+    queries.extend(_search_queries(edition_date, config))
     exclude_domains = {str(item).strip().lower() for item in config.get("exclude_domains") or [] if str(item).strip()}
     known = _known_source_sets(root, edition_date)
     fetch = fetcher or _fetch
@@ -800,6 +802,7 @@ def discover_care_line_sources(
                 "included_as_insurance_affordability_signal": classification["source_role"] == "insurance_affordability_signal",
                 "included_as_rural_access_signal": classification["source_role"] == "rural_access_signal",
                 "included_as_maternity_family_signal": classification["source_role"] == "maternity_family_signal",
+                "included_as_maternity_signal": classification["source_role"] == "maternity_family_signal",
                 "included_as_emergency_ems_signal": classification["source_role"] == "emergency_ems_signal",
                 "included_as_public_health_signal": classification["source_role"] == "public_health_signal",
                 "included_as_additional_signal": classification["source_role"] not in {"hospital_operations_signal", "insurance_affordability_signal", "rural_access_signal", "maternity_family_signal", "emergency_ems_signal", "public_health_signal"},
@@ -870,6 +873,7 @@ def run_care_line_discovery_gap_check(
     max_results_per_query: int = 10,
     max_queries: int | None = None,
     max_candidates: int | None = None,
+    follow_up_queries: Iterable[Mapping[str, Any]] | None = None,
     write: bool = True,
     dry_run: bool = False,
 ) -> dict[str, Any]:
@@ -880,6 +884,7 @@ def run_care_line_discovery_gap_check(
         max_results_per_query=max_results_per_query,
         max_queries=max_queries,
         max_candidates=max_candidates,
+        follow_up_queries=follow_up_queries,
         write=write,
         dry_run=dry_run,
     )

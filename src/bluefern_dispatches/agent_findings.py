@@ -94,7 +94,13 @@ def finding_from_payload(payload: dict[str, Any], *, agent_name: str, agent_run_
         finding_id=finding_id, agent_name=agent_name, agent_run_id=agent_run_id,
         discovered_at=discovered_at, source_url=_text(payload.get("source_url") or source),
         canonical_source_url=canonical, publisher=publisher,
-        source_published_at=_text(payload.get("source_published_at") or payload.get("published_at") or payload.get("publication_date")),
+        source_published_at=_text(
+            payload.get("source_published_at")
+            or payload.get("source_published_date")
+            or payload.get("published_at")
+            or payload.get("publication_date")
+            or payload.get("retrieved_at")
+        ),
         title=title, exact_supporting_passage=_text(payload.get("exact_supporting_passage") or payload.get("passage")),
         summary=_text(payload.get("summary") or payload.get("summary_or_snippet")),
         location_name=_text(payload.get("location_name") or payload.get("location")),

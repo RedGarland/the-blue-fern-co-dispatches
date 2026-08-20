@@ -26,6 +26,13 @@ from bluefern_dispatches.care_line_record import (
     CareLineReviewedRecord,
     stable_json_hash,
 )
+from bluefern_dispatches.care_line_discovery import discover_care_line_sources
+from bluefern_dispatches.care_line_effective_date_follow_up import (
+    build_follow_up_queries,
+    load_follow_up_state,
+    load_reviewed_records,
+    update_follow_up_state,
+)
 from bluefern_dispatches.care_line_source_registry import (
     CareLineSource,
     CareLineSourceRegistry,
@@ -412,6 +419,7 @@ def _review_state_paths(review_root: Path) -> dict[str, Path]:
         "duplicates": review_root / "current-duplicates.json",
         "failed_extractions": review_root / "current-failed-extractions.json",
         "manual_review": review_root / "current-manual-review.json",
+        "follow_up_state": review_root / "effective-date-follow-up-state.json",
         "snapshot_root": review_root / "signal-reviews",
         "candidate_registry": review_root / "candidate-registry.json",
     }
@@ -3165,6 +3173,7 @@ def _write_review_private_outputs(
     exclusions: list[Mapping[str, Any]],
     failed_extractions: list[Mapping[str, Any]],
     manual_review: list[Mapping[str, Any]],
+    follow_up_state: Mapping[str, Any] | None = None,
     review_root: Path = REVIEW_ROOT,
 ) -> None:
     review_paths = _review_state_paths(review_root)
@@ -3211,6 +3220,8 @@ def _write_review_private_outputs(
             "items": manual_review,
         },
     )
+    if follow_up_state is not None:
+        _atomic_write(root / review_paths["follow_up_state"], follow_up_state)
 
 
 def _manual_review_row(row: Mapping[str, Any], *, lead: Mapping[str, Any] | None = None) -> dict[str, Any]:
@@ -3311,6 +3322,31 @@ def run_national_pipeline(
         manual_review=manual_review,
         review_root=review_root,
     )
+    existing_follow_up_state = load_follow_up_state(root, state_root=review_root)
+    follow_up_records = load_reviewed_records(root)
+    follow_up_queries = build_follow_up_queries(
+        root,
+        run_date,
+        reviewed_records=follow_up_records,
+        state=existing_follow_up_state,
+    )
+    follow_up_discovery_report: dict[str, Any] = {"query_rows": []}
+    if follow_up_queries:
+        follow_up_discovery_report = discover_care_line_sources(
+            root,
+            run_date,
+            follow_up_queries=follow_up_queries,
+            max_queries=len(follow_up_queries),
+            write=False,
+            dry_run=True,
+        )
+    follow_up_state_result = update_follow_up_state(
+        root,
+        run_date=run_date,
+        follow_up_queries=follow_up_queries,
+        discovery_query_rows=follow_up_discovery_report.get("query_rows", []),
+        state_root=review_root,
+    )
     collection_status_counts = Counter(str(attempt.get("collection_status") or "unknown") for attempt in attempts)
     successful_attempt_count = sum(collection_status_counts.get(key, 0) for key in ("ok", "partial"))
     failed_source_count = collection_status_counts.get("failed", 0)
@@ -3346,6 +3382,10 @@ def run_national_pipeline(
         "candidate_registry_path": (review_paths["candidate_registry"]).as_posix(),
         "raw_items_retrieved_this_run": len(raw_items),
         "event_leads_created_this_run": sum(1 for lead in event_leads if _text(lead, "qualification_status") == "event_lead"),
+        "follow_up_query_count": len(follow_up_queries),
+        "follow_up_query_row_count": len(follow_up_discovery_report.get("query_rows", [])),
+        "follow_up_material_update_count": sum(1 for item in follow_up_state_result["items"] if item.get("status") == "MATERIAL_UPDATE_FOUND"),
+        "follow_up_state_path": str(follow_up_state_result.get("state_path") or ""),
         "qualified_candidates_created_this_run": candidate_registry["created_this_run"],
         "candidates_updated_this_run": candidate_registry["updated_this_run"],
         "persistent_candidates_from_prior_runs": candidate_registry["persistent_candidates_from_prior_runs"],
@@ -3371,4 +3411,5 @@ def run_national_pipeline(
         "exclusions": {"excluded_item_count": len(exclusions), "items": exclusions},
         "failed_extractions": {"failed_extraction_count": len(failed_extractions), "items": failed_extractions},
         "manual_review": {"manual_review_count": len(manual_review), "items": manual_review},
+        "follow_up_state": follow_up_state_result,
     }

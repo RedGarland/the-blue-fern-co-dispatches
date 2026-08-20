@@ -2,7 +2,7 @@
 param(
     [string]$RepositoryRoot = "",
     [string]$PythonExecutable = "",
-    [string]$SourceBranch = "agent/refine-care-line-signal-wire-public-rendering",
+    [string]$SourceBranch = "add/pages-repo-default",
     [string]$RunDate = "",
     [switch]$SmokeTest,
     [int]$MaxSources = 0,

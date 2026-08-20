@@ -237,6 +237,17 @@ def test_legacy_current_intake_wrapper_builds_queue_from_inbox_export(tmp_path: 
     )
 
     discovery_item = _valid_current_queue_item("2026-08-17")
+    discovery_item["candidate_id"] = "food-line-current-001"
+    discovery_item["agent_finding_id"] = "finding-current-001"
+    discovery_item.pop("source_artifact_path", None)
+    discovery_item.pop("review_item_id", None)
+    discovery_item.pop("source_finding_or_intake_id", None)
+    discovery_item.pop("duplicate_check", None)
+    discovery_item.pop("freshness_check", None)
+    discovery_item.pop("proposed_section", None)
+    discovery_item.pop("proposed_rank", None)
+    discovery_item.pop("editorial_status", None)
+    discovery_item.pop("editorial_note", None)
 
     monkeypatch.setattr(
         current_intake_compat,
@@ -266,14 +277,20 @@ def test_legacy_current_intake_wrapper_builds_queue_from_inbox_export(tmp_path: 
     queue = json.loads(queue_path.read_text(encoding="utf-8"))
     assert queue["schema_version"] == "food_line_current_signal_review_v1"
     assert len(queue["items"]) == 1
+    item = queue["items"][0]
+    assert item["review_item_id"] == "food-line-current-001"
+    assert item["source_finding_or_intake_id"] == "finding-current-001"
+    assert item["source_artifact_path"].startswith("data/dispatches/food-line/agent-intake/2026-08-17/")
+    assert item["duplicate_check"]["status"] == "not_published"
+    assert item["freshness_check"]["status"] == "current"
+    assert item["editorial_status"] == "pending_editorial_review"
     report = json.loads(
         (tmp_path / "data" / "dispatches" / "food-line" / "review" / "reports" / "2026-08-17" / "current-intake.json").read_text(encoding="utf-8")
     )
     assert report["schema_version"] == "food_line_current_intake_report_v1"
     assert report["status"] == "success"
     assert report["queue"]["item_count"] == 1
-    assert report["proposal"]["draft_status"] == "draft_approved_pending_publication"
-
+    assert report["proposal"]["draft_status"] == "draft_pending_editorial_review"
 
 def test_legacy_discovery_timeout_helper_terminates_process_tree(tmp_path: Path) -> None:
     parent = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"], cwd=tmp_path)

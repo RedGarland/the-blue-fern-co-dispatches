@@ -2957,12 +2957,22 @@ def refresh_shared_homepage_from_pages_inventory(
     homepage_path = pages_repo / "index.html"
     if not homepage_path.exists():
         return {
-            "ok": False,
+            "ok": True,
             "refreshed": False,
             "target_dispatch": target_dispatch,
-            "message": f"missing homepage template: {homepage_path}",
+            "message": f"shared homepage refresh skipped; missing homepage template: {homepage_path}",
         }
     template_html = homepage_path.read_text(encoding="utf-8")
+    if target_dispatch == "gaza" and not all(
+        marker in template_html
+        for marker in ("edition-card--gaza", "dispatch-card--featured", "Dispatches From Gaza")
+    ):
+        return {
+            "ok": True,
+            "refreshed": False,
+            "target_dispatch": target_dispatch,
+            "message": "shared homepage refresh skipped; template has no refreshable Gaza card",
+        }
     releases = discover_public_releases(pages_repo, verify_root=pages_repo, homepage_html=template_html)
     latest = select_effective_latest(releases)
     release = latest.get(target_dispatch)
@@ -3803,6 +3813,7 @@ def publish_pages(
             skip_diagnostics=skip_diagnostics,
         )
         warnings.extend(_food_line_public_edition_skip_warning(report) for report in skip_diagnostics)
+        allow_root_index_change = False
         if not errors and shared_homepage_dispatch:
             homepage_refresh = refresh_shared_homepage_from_pages_inventory(
                 pages_repo,
@@ -3812,13 +3823,26 @@ def publish_pages(
             build["shared_homepage_refresh"] = homepage_refresh
             if not homepage_refresh["ok"]:
                 errors.append(str(homepage_refresh["message"]))
+            else:
+                allow_root_index_change = True
+        if not errors and not shared_homepage_dispatch and (not only_dispatches or "gaza" in only_dispatches):
+            homepage_refresh = refresh_shared_homepage_from_pages_inventory(
+                pages_repo,
+                dry_run=dry_run,
+                target_dispatch="gaza",
+            )
+            build["shared_homepage_refresh"] = homepage_refresh
+            if not homepage_refresh["ok"]:
+                errors.append(str(homepage_refresh["message"]))
+            else:
+                allow_root_index_change = True
         changed_paths_for_scope = _git_porcelain_paths(pages_repo) if not dry_run else copied
         errors.extend(
             validate_pages_repo_copy_scope(
                 pages_repo,
                 only_dispatches,
                 changed_paths=changed_paths_for_scope,
-                allow_root_index_change=bool(shared_homepage_dispatch and not errors),
+                allow_root_index_change=allow_root_index_change,
             )
         )
         if not dry_run:

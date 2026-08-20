@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-20",
+  "generated_at": "2026-08-20T13:01:10.215556Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-08-20.mp3",
+  "audio_url": "/gaza/audio/2026-08-20.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1835,
+  "tts_input_word_count": 280,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1915392,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-08-20T13:01:10.215534Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-08-20-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-20/",
+  "script_text": "This is the Gaza Dispatch audio briefing for August 20, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. State-backed Israeli settler violence forces West Bank displacement: HRW. HRW calls for sanctions and suspension of military aid as dozens of Palestinian communities are at risk of erasure. This was reported by Al Jazeera.\n\n2. Israel's Ben-Gvir posts video of gallows site for hanging Palestinians. Israel's far-right national security minister, Itamar Ben-Gvir, who has attracted international sanctions and condemnation for his activities, has posted a gloating video of the construction of the site of a gallows where Palestinians convicted of terror offences, but not Jewish extremists accused of similar crimes, will be hanged. This was reported by The Guardian.\n\n3. Israel confirms soldiers fired at car in which Hind Rajab was killed and opens criminal investigation. The five-year-old Palestinian girl initially survived the attack and pleaded for help but her body was recovered later with those of six of her relatives. This was reported by BBC News.\n\n4. Australia 'outraged' after Israel decides not to open criminal investigation into killing of aid worker in Gaza. Australia's foreign minister summoned the Israeli ambassador over \"insulting\" Zomi Frankcom decision. This was reported by BBC News.\n\n5. Ben-Gvir celebrates demolition of Palestinian homes in Israel. Far-right Israeli minister Itamar Ben-Gvir has praised the destruction of 10,000 Palestinian homes in Israel. This was reported by Al Jazeera.\n\n6. Multiple deadly Israeli strikes in Gaza in under 24 hours. BBC Verify looks at footage from two deadly strikes in under 24 hours in Gaza. This was reported by BBC News.\n\nFor the full source-backed dispatch, read the August 20, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-08-20-aljazeera-middle-east-6ed359e9eb78",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/8/20/state-backed-israeli-settler-violence-forces-west-bank-displacement-hrw?traffic_source=rss",
+      "title": "State-backed Israeli settler violence forces West Bank displacement: HRW"
+    },
+    {
+      "source_record_id": "gaza-2026-08-20-guardian-world-90da55cadb7e",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/aug/20/israel-ben-gvir-video-gallows-site-hanging-palestinians",
+      "title": "Israel's Ben-Gvir posts video of gallows site for hanging Palestinians"
+    },
+    {
+      "source_record_id": "gaza-2026-08-20-bbc-middle-east-f54d364530c7",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/crl7yjlpx2po?at_medium=RSS&at_campaign=rss",
+      "title": "Israel confirms soldiers fired at car in which Hind Rajab was killed and opens criminal investigation"
+    },
+    {
+      "source_record_id": "gaza-2026-08-20-bbc-middle-east-bb110f86449d",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/cp87g29r718o?at_medium=RSS&at_campaign=rss",
+      "title": "Australia 'outraged' after Israel decides not to open criminal investigation into killing of aid worker in Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-08-20-aljazeera-middle-east-bda449a9c001",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/20/ben-gvir-celebrates-demolition-of-palestinian-homes-in-israel?traffic_source=rss",
+      "title": "Ben-Gvir celebrates demolition of Palestinian homes in Israel"
+    },
+    {
+      "source_record_id": "gaza-2026-08-20-bbc-middle-east-860dcaa0f22e",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/videos/cp3rgxzk5x2o?at_medium=RSS&at_campaign=rss",
+      "title": "Multiple deadly Israeli strikes in Gaza in under 24 hours"
+    }
+  ]
+}

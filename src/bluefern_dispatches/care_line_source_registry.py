@@ -71,8 +71,8 @@ _CARE_LINE_SOURCE_URL_OVERRIDES: dict[str, dict[str, str]] = {
         "homepage_url": "https://newsroom.clevelandclinic.org/news-releases",
     },
     "aha-news": {
-        "feed_url": "https://www.aha.org/news",
-        "homepage_url": "https://www.aha.org/news",
+        "feed_url": "https://www.aha.org/news?format=rss",
+        "homepage_url": "https://www.aha.org/news?format=rss",
     },
     "gu-dphss": {
         "feed_url": "https://dphss.guam.gov/",
@@ -381,7 +381,7 @@ def source_readiness_status(source: CareLineSource) -> str:
         return "BLOCKED"
     if source.collection_method == "manual_review":
         return "MANUAL_REVIEW_ONLY"
-    if source.requires_html_followup:
+    if source.requires_html_followup or source.adapter_type == "structured_index":
         return "AUTOMATED_PARTIAL"
     return "AUTOMATED_READY"
 

@@ -10,7 +10,7 @@ from typing import Any
 
 BASE_URL = "https://dispatches.thebluefernco.com"
 LATEST_DEVELOPMENTS_HEADING = "Latest published developments"
-ACTIVE_PRODUCTS = ("gaza", "food-line", "care-line", "cascadia", "american-pressure")
+ACTIVE_PRODUCTS = ("gaza", "food-line", "care-line")
 CARD_LIMIT = 7
 SECTION_RE = re.compile(
     r'<section class="section-block"><div class="section-heading"><p class="eyebrow">The current edition desk</p><h2>Latest published developments</h2></div><div class="edition-grid">.*?</div></section>',

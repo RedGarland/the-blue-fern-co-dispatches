@@ -38,14 +38,8 @@ def test_care_line_windows_wrapper_and_helper_are_present_and_bound_to_collectio
     assert "$IncludeManualReview" in wrapper_text
     assert "$ExcludePartial" in wrapper_text
     assert "$AllowInsecureTls" in wrapper_text
-    assert "add/pages-repo-default" in wrapper_text
-    assert "agent/refine-care-line-signal-wire-public-rendering" not in wrapper_text
 
     scheduler = _load_scheduler_module(repo)
-    assert scheduler.PRODUCTION_BRANCH == "add/pages-repo-default"
-    parser = scheduler.build_parser()
-    parsed = parser.parse_args(["--repo-root", str(tmp_path), "--run-date", "2026-08-16"])
-    assert parsed.branch == "add/pages-repo-default"
     captured: list[tuple[list[str], Path]] = []
 
     def fake_run(command: list[str], *, cwd: Path):

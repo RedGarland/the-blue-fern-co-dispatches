@@ -292,6 +292,7 @@ def test_legacy_current_intake_wrapper_builds_queue_from_inbox_export(tmp_path: 
     assert report["queue"]["item_count"] == 1
     assert report["proposal"]["draft_status"] == "draft_pending_editorial_review"
 
+
 def test_legacy_discovery_timeout_helper_terminates_process_tree(tmp_path: Path) -> None:
     parent = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"], cwd=tmp_path)
     try:

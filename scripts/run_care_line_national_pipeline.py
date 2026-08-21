@@ -10,6 +10,11 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
+
 from bluefern_dispatches.care_line_national_pipeline import (  # noqa: E402
     SMOKE_COLLECTION_RUNS_ROOT,
     SMOKE_REVIEW_ROOT,

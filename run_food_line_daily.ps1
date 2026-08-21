@@ -133,6 +133,44 @@ function ConvertTo-FoodLineSummaryValue {
   return "$Value"
 }
 
+function ConvertTo-FoodLineJsonTailObject {
+  param(
+    [Parameter(Mandatory = $true)][string]$Text
+  )
+
+  if ([string]::IsNullOrWhiteSpace($Text)) {
+    return $null
+  }
+
+  $trimmed = $Text.TrimEnd()
+  $firstJsonStart = -1
+  for ($i = 0; $i -lt $trimmed.Length; $i++) {
+    $char = $trimmed[$i]
+    if ($char -ne '{' -and $char -ne '[') {
+      continue
+    }
+    if ($i -eq 0 -or $trimmed[$i - 1] -eq "`n" -or $trimmed[$i - 1] -eq "`r") {
+      $firstJsonStart = $i
+      break
+    }
+  }
+  if ($firstJsonStart -lt 0) {
+    $braceIndex = $trimmed.IndexOf("{")
+    $arrayIndex = $trimmed.IndexOf("[")
+    $candidates = @($braceIndex, $arrayIndex) | Where-Object { $_ -ge 0 }
+    if ($candidates.Count -eq 0) {
+      return $null
+    }
+    $firstJsonStart = ($candidates | Measure-Object -Minimum).Minimum
+  }
+
+  try {
+    return ($trimmed.Substring($firstJsonStart) | ConvertFrom-Json -ErrorAction Stop)
+  } catch {
+    return $null
+  }
+}
+
 function Write-FoodLinePayloadSummary {
   param(
     [Parameter(Mandatory = $true)][string]$LogPath,
@@ -296,7 +334,11 @@ function ConvertFrom-FoodLineJsonLines {
   if (-not $jsonText) {
     throw "Dispatch output did not include JSON."
   }
-  return $jsonText | ConvertFrom-Json
+  $jsonObject = ConvertTo-FoodLineJsonTailObject -Text $jsonText
+  if ($null -eq $jsonObject) {
+    throw "Dispatch output did not include parseable JSON."
+  }
+  return $jsonObject
 }
 
 try {

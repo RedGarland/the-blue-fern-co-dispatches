@@ -11396,24 +11396,73 @@ def test_run_food_line_dispatch_help_executes_by_path_without_script_import_fail
     assert "No module named 'scripts'" not in combined_output
 
 
-def _write_food_line_wrapper_fake_dispatch(project_root: Path, exit_code: int, payload: dict) -> None:
+def _write_food_line_wrapper_fake_dispatch(
+    project_root: Path,
+    exit_code: int,
+    payload: dict,
+    *,
+    stdout_prefix_lines: list[str] | None = None,
+    leading_json_payloads: list[dict] | None = None,
+) -> None:
     scripts_dir = project_root / "scripts"
     scripts_dir.mkdir(parents=True, exist_ok=True)
     dispatch_script = scripts_dir / "run_food_line_dispatch.py"
     payload_json = json.dumps(payload)
     dispatch_script.write_text(
         textwrap.dedent(
-            f"""
-            import json
-
-            payload = json.loads({payload_json!r})
-            print(json.dumps(payload, indent=2))
-            raise SystemExit({exit_code})
-            """
+            "\n".join(
+                [
+                    "import json",
+                    "",
+                    *(f"print({line!r})" for line in (stdout_prefix_lines or [])),
+                    *(
+                        f"print(json.dumps(json.loads({json.dumps(leading_payload)!r}), indent=2))"
+                        for leading_payload in (leading_json_payloads or [])
+                    ),
+                    f"payload = json.loads({payload_json!r})",
+                    "print(json.dumps(payload, indent=2))",
+                    f"raise SystemExit({exit_code})",
+                ]
+            )
         ).strip()
         + "\n",
         encoding="utf-8",
     )
+
+
+def _write_food_line_scheduler_helper(
+    project_root: Path,
+    *,
+    exit_code: int,
+    payload: dict,
+    preamble_lines: list[str] | None = None,
+    leading_json_payloads: list[dict] | None = None,
+) -> Path:
+    scripts_dir = project_root / "scripts"
+    scripts_dir.mkdir(parents=True, exist_ok=True)
+    helper = scripts_dir / "food_line_daily_scheduler.py"
+    argv_path = project_root / "scheduler-argv.json"
+    payload_json = json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False)
+    lines = [
+        "import json",
+        "from pathlib import Path",
+        "import sys",
+        "",
+        f"Path({str(argv_path)!r}).write_text(json.dumps(sys.argv[1:], indent=2), encoding='utf-8')",
+    ]
+    for line in preamble_lines or []:
+        lines.append(f"print({line!r})")
+    for leading_payload in leading_json_payloads or []:
+        leading_payload_json = json.dumps(leading_payload, indent=2, sort_keys=True, ensure_ascii=False)
+        lines.append(f"sys.stdout.write({leading_payload_json!r} + '\\n')")
+    lines.extend(
+        [
+            f"sys.stdout.write({payload_json!r} + '\\n')",
+            f"raise SystemExit({exit_code})",
+        ]
+    )
+    helper.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return argv_path
 
 
 def _resolve_powershell_executable() -> str:
@@ -11424,17 +11473,62 @@ def _resolve_powershell_executable() -> str:
     pytest.skip("PowerShell is not available for wrapper execution tests")
 
 
+def _run_food_line_windows_wrapper(
+    tmp_path: Path,
+    wrapper_name: str,
+    wrapper_args: list[str],
+    *,
+    payload: dict[str, object],
+    exit_code: int = 0,
+    preamble_lines: list[str] | None = None,
+) -> tuple[subprocess.CompletedProcess[str], Path]:
+    project_root = tmp_path
+    argv_path = _write_food_line_scheduler_helper(
+        project_root,
+        exit_code=exit_code,
+        payload=payload,
+        preamble_lines=preamble_lines,
+    )
+    wrapper_path = Path(__file__).resolve().parents[1] / "scripts" / "windows" / wrapper_name
+    powershell_exe = _resolve_powershell_executable()
+    completed = subprocess.run(
+        [
+            powershell_exe,
+            "-NoProfile",
+            "-NonInteractive",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            str(wrapper_path),
+            *wrapper_args,
+        ],
+        capture_output=True,
+        text=True,
+        cwd=Path(__file__).resolve().parents[1],
+        check=False,
+    )
+    return completed, argv_path
+
+
 def _run_food_line_wrapper(
     tmp_path: Path,
     payload: dict,
     exit_code: int = 0,
     *,
     dry_run: bool = False,
+    stdout_prefix_lines: list[str] | None = None,
+    leading_json_payloads: list[dict] | None = None,
 ) -> tuple[subprocess.CompletedProcess[str], Path]:
     project_root = tmp_path / "project"
     log_root = project_root / "logs" / "food-line" / "daily_ops"
     log_root.mkdir(parents=True, exist_ok=True)
-    _write_food_line_wrapper_fake_dispatch(project_root, exit_code=exit_code, payload=payload)
+    _write_food_line_wrapper_fake_dispatch(
+        project_root,
+        exit_code=exit_code,
+        payload=payload,
+        stdout_prefix_lines=stdout_prefix_lines,
+        leading_json_payloads=leading_json_payloads,
+    )
     wrapper_path = Path(__file__).resolve().parents[1] / "run_food_line_daily.ps1"
     powershell_exe = _resolve_powershell_executable()
     env = os.environ.copy()
@@ -11615,3 +11709,229 @@ def test_food_line_discovery_registry_uses_the_maine_monitor_target_sitemap_shar
         if item.get("source_id") == "maine-monitor-post-sitemap"
     )
     assert source["url"] == "https://themainemonitor.org/post-sitemap3.xml"
+def test_food_line_daily_wrapper_parses_json_with_stdout_preamble() -> None:
+    with tempfile.TemporaryDirectory() as tmpdir:
+        completed, log_path = _run_food_line_wrapper(
+            Path(tmpdir),
+            payload={
+                "ok": True,
+                "edition_date": "2026-06-23",
+                "source_count": 12,
+                "public_rendered": True,
+                "edition_mode": "current_update",
+                "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-06-23/",
+                "pages_publish_copied": False,
+                "pushed": False,
+                "bluesky_status": "skipped",
+                "audio_status": "skipped",
+            },
+            stdout_prefix_lines=["Food Line dispatch bootstrap", "Food Line dispatch completed"],
+        )
+
+        assert completed.returncode == 0
+        assert "Food Line published 2026-06-23:" in completed.stdout
+        log_text = log_path.read_text(encoding="utf-8")
+        assert "Food Line scheduled run status: PUBLISHED" in log_text
+        assert "Food Line dispatch bootstrap" in log_text
+        assert "Food Line dispatch completed" in log_text
+
+
+def test_food_line_daily_wrapper_uses_final_json_payload_when_stdout_contains_multiple_json_blobs() -> None:
+    with tempfile.TemporaryDirectory() as tmpdir:
+        completed, log_path = _run_food_line_wrapper(
+            Path(tmpdir),
+            payload={
+                "ok": True,
+                "edition_date": "2026-06-23",
+                "source_count": 12,
+                "public_rendered": True,
+                "edition_mode": "current_update",
+                "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-06-23/",
+                "pages_publish_copied": False,
+                "pushed": False,
+                "bluesky_status": "skipped",
+                "audio_status": "skipped",
+            },
+            leading_json_payloads=[
+                {
+                    "ok": True,
+                    "edition_date": "2026-06-23",
+                    "source_count": 1,
+                    "public_rendered": False,
+                    "edition_mode": "discovery_gap_summary",
+                    "skip_reason": "Discovery gap summary for diagnostics only.",
+                }
+            ],
+        )
+
+        assert completed.returncode == 0
+        assert "Food Line published 2026-06-23:" in completed.stdout
+        log_text = log_path.read_text(encoding="utf-8")
+        assert "Food Line scheduled run status: PUBLISHED" in log_text
+        assert '"edition_mode": "discovery_gap_summary"' in log_text
+        assert '"edition_mode": "current_update"' in log_text
+
+
+def test_food_line_windows_scheduler_wrappers_delegate_to_current_runner_contract(tmp_path: Path) -> None:
+    wrapper_specs = [
+        {
+            "name": "run_food_line_daily_current.ps1",
+            "args": [
+                "-RepositoryRoot",
+                "{root}",
+                "-PythonExecutable",
+                sys.executable,
+                "-SourceBranch",
+                "add/pages-repo-default",
+                "-EditionDate",
+                "2026-08-19",
+                "-RunId",
+                "food-line-scheduled-20260819T010203Z-test",
+            ],
+            "expected": [
+                "source-watch",
+                "--repo-root",
+                "{root}",
+                "--python",
+                sys.executable,
+                "--edition-date",
+                "2026-08-19",
+                "--run-id",
+                "food-line-scheduled-20260819T010203Z-test",
+                "--branch",
+                "add/pages-repo-default",
+            ],
+        },
+        {
+            "name": "resume_food_line_daily_current.ps1",
+            "args": [
+                "-RepositoryRoot",
+                "{root}",
+                "-PythonExecutable",
+                sys.executable,
+                "-SourceBranch",
+                "add/pages-repo-default",
+                "-EditionDate",
+                "2026-08-19",
+            ],
+            "expected": [
+                "resume",
+                "--repo-root",
+                "{root}",
+                "--python",
+                sys.executable,
+                "--edition-date",
+                "2026-08-19",
+                "--branch",
+                "add/pages-repo-default",
+            ],
+        },
+        {
+            "name": "run_food_line_current_intake.ps1",
+            "args": [
+                "-RepositoryRoot",
+                "{root}",
+                "-PythonExecutable",
+                sys.executable,
+                "-SourceBranch",
+                "add/pages-repo-default",
+                "-EditionDate",
+                "2026-08-19",
+                "-LockWaitSeconds",
+                "17",
+            ],
+            "expected": [
+                "intake",
+                "--repo-root",
+                "{root}",
+                "--python",
+                sys.executable,
+                "--edition-date",
+                "2026-08-19",
+                "--branch",
+                "add/pages-repo-default",
+                "--lock-wait-seconds",
+                "17",
+            ],
+        },
+    ]
+
+    for spec in wrapper_specs:
+        project_root = tmp_path / spec["name"].removesuffix(".ps1")
+        payload = {"ok": True, "command": spec["expected"][0]}
+        completed, argv_path = _run_food_line_windows_wrapper(
+            project_root,
+            spec["name"],
+            [part.format(root=str(project_root)) for part in spec["args"]],
+            payload=payload,
+        )
+
+        assert completed.returncode == 0, completed.stdout + completed.stderr
+        argv = json.loads(argv_path.read_text(encoding="utf-8"))
+        assert argv == [part.format(root=str(project_root)) for part in spec["expected"]]
+        wrapper_text = (Path(__file__).resolve().parents[1] / "scripts" / "windows" / spec["name"]).read_text(encoding="utf-8")
+        assert "add/pages-repo-default" in wrapper_text
+        assert "Join-Path $RepositoryRoot \".venv\\Scripts\\python.exe\"" in wrapper_text
+        assert "Dispatches From The Blue Fern Co" not in wrapper_text
+
+
+def test_food_line_daily_publish_wrapper_check_only_reports_release_readiness(tmp_path: Path) -> None:
+    project_root = tmp_path / "publish"
+    today = datetime.now().astimezone().date().isoformat()
+    proposed_path = project_root / "data" / "dispatches" / "food-line" / "review" / "proposed-editions" / f"{today}.json"
+    signal_review_path = project_root / "data" / "dispatches" / "food-line" / "review" / "signal-reviews" / f"{today}.json"
+    readiness_path = project_root / "data" / "dispatches" / "food-line" / "review" / "release-readiness" / f"{today}.json"
+    for path in (proposed_path, signal_review_path, readiness_path):
+        path.parent.mkdir(parents=True, exist_ok=True)
+    proposed_path.write_text(
+        json.dumps({"edition_date": today, "items": [], "approved": True}, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    signal_review_path.write_text(
+        json.dumps({"edition_date": today, "items": [], "approved": True}, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    readiness_path.write_text(
+        json.dumps(
+            {
+                "edition_date": today,
+                "status": "approved_current_review_ready_for_source_generation",
+                "source_commit": "abc123",
+                "approved_proposal_path": str(proposed_path.relative_to(project_root)).replace("\\", "/"),
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    wrapper_path = Path(__file__).resolve().parents[1] / "scripts" / "windows" / "run_food_line_daily_publish.ps1"
+    powershell_exe = _resolve_powershell_executable()
+    completed = subprocess.run(
+        [
+            powershell_exe,
+            "-NoProfile",
+            "-NonInteractive",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            str(wrapper_path),
+            "-PublicationRoot",
+            str(project_root),
+            "-CheckOnly",
+        ],
+        capture_output=True,
+        text=True,
+        cwd=Path(__file__).resolve().parents[1],
+        check=False,
+    )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    payload = json.loads(completed.stdout)
+    assert payload["status"] == "release_ready"
+    assert payload["publication_capability"] is True
+    assert payload["source_branch"] == "add/pages-repo-default"
+    assert payload["proposal_path"] == str(proposed_path)
+    assert payload["signal_review_path"] == str(signal_review_path)
+    assert payload["release_readiness_path"] == str(readiness_path)

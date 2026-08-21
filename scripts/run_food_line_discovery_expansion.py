@@ -5,6 +5,7 @@ import ctypes
 import hashlib
 import json
 import os
+import tempfile
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -92,9 +93,19 @@ def _terminal_contract_result(
 
 def _atomic_write_json(path: Path, payload: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.parent / f".{path.name}.{os.getpid()}.tmp"
-    temporary.write_text(json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
-    os.replace(temporary, path)
+    fd, temporary_name = tempfile.mkstemp(dir=str(path.parent), prefix=".tmp-")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as temporary:
+            temporary.write(json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True) + "\n")
+        os.replace(temporary_name, path)
+    finally:
+        if os.path.exists(temporary_name):
+            os.unlink(temporary_name)
+
+
+def _short_run_tag(value: str) -> str:
+    digest = hashlib.sha1(value.encode("utf-8")).hexdigest()
+    return digest[:10]
 
 
 def _export_agent_inbox(
@@ -118,7 +129,7 @@ def _export_agent_inbox(
         "findings": findings,
         "coverage_notes": "Exported source-watch findings for current Food Line intake.",
     }
-    export_path = inbox_dir / f"food-line-source-watch-{edition_date}-{run_id}.json"
+    export_path = inbox_dir / f"food-line-source-watch-{edition_date}-{_short_run_tag(run_id)}.json"
     _atomic_write_json(export_path, export_payload)
     export_sha256 = hashlib.sha256(
         json.dumps(export_payload, indent=2, ensure_ascii=False, sort_keys=True).encode("utf-8")

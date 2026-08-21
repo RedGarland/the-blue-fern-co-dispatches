@@ -143,32 +143,36 @@ function ConvertTo-FoodLineJsonTailObject {
   }
 
   $trimmed = $Text.TrimEnd()
-  $firstJsonStart = -1
+  $jsonStarts = New-Object System.Collections.Generic.List[int]
   for ($i = 0; $i -lt $trimmed.Length; $i++) {
     $char = $trimmed[$i]
     if ($char -ne '{' -and $char -ne '[') {
       continue
     }
     if ($i -eq 0 -or $trimmed[$i - 1] -eq "`n" -or $trimmed[$i - 1] -eq "`r") {
-      $firstJsonStart = $i
-      break
+      [void]$jsonStarts.Add($i)
     }
   }
-  if ($firstJsonStart -lt 0) {
+  if ($jsonStarts.Count -eq 0) {
     $braceIndex = $trimmed.IndexOf("{")
     $arrayIndex = $trimmed.IndexOf("[")
     $candidates = @($braceIndex, $arrayIndex) | Where-Object { $_ -ge 0 }
     if ($candidates.Count -eq 0) {
       return $null
     }
-    $firstJsonStart = ($candidates | Measure-Object -Minimum).Minimum
+    [void]$jsonStarts.Add(($candidates | Measure-Object -Maximum).Maximum)
   }
 
-  try {
-    return ($trimmed.Substring($firstJsonStart) | ConvertFrom-Json -ErrorAction Stop)
-  } catch {
-    return $null
+  for ($i = $jsonStarts.Count - 1; $i -ge 0; $i--) {
+    $jsonStart = $jsonStarts[$i]
+    try {
+      return ($trimmed.Substring($jsonStart) | ConvertFrom-Json -ErrorAction Stop)
+    } catch {
+      continue
+    }
   }
+
+  return $null
 }
 
 function Write-FoodLinePayloadSummary {

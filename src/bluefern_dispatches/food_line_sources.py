@@ -274,6 +274,11 @@ PRESSURE_TYPE_RULES: list[tuple[str, tuple[str, ...]]] = [
             "pantries limiting distributions",
             "buying more food",
             "pantries buying more food",
+            "service is limited",
+            "service limited",
+            "limited to zip codes",
+            "restricted to zip codes",
+            "zip codes",
             "donations dropped",
             "lower donations",
             "rising food costs",
@@ -284,6 +289,24 @@ PRESSURE_TYPE_RULES: list[tuple[str, tuple[str, ...]]] = [
             "operating costs",
             "meals away",
             "supply dropped",
+        ),
+    ),
+    (
+        "service_restoration",
+        (
+            "service restored",
+            "service restoration",
+            "restored service",
+            "restored access",
+            "reopened",
+            "reopening",
+            "resumed service",
+            "service resumed",
+            "benefits resumed",
+            "restored hours",
+            "restored distribution",
+            "reinstated",
+            "reinstated service",
         ),
     ),
     (
@@ -595,6 +618,10 @@ SOURCE_PURPOSE_VALUES = {
     "program_description",
     "unknown",
 }
+FOOD_LINE_MONITOR_MODES = {
+    "article_feed",
+    "recurring_service_page",
+}
 SOURCE_PURPOSE_CURRENT_VALUES = {
     "current_news",
     "official_notice",
@@ -754,8 +781,32 @@ def _keyword_hit(text: str, keywords: list[str] | tuple[str, ...]) -> bool:
     return any(str(keyword).strip().lower() in lowered for keyword in keywords if str(keyword).strip())
 
 
+def _normalize_food_line_monitor_mode(value: Any) -> str:
+    mode = str(value or "").strip().lower()
+    return mode if mode in FOOD_LINE_MONITOR_MODES else "article_feed"
+
+
 def _pressure_type_for_text(text: str) -> str:
     lowered = text.lower()
+    if any(
+        needle in lowered
+        for needle in (
+            "service restored",
+            "service restoration",
+            "restored service",
+            "restored access",
+            "reopened",
+            "reopening",
+            "resumed service",
+            "service resumed",
+            "benefits resumed",
+            "restored hours",
+            "restored distribution",
+            "reinstated",
+            "reinstated service",
+        )
+    ):
+        return "service_restoration"
     for pressure_type, needles in PRESSURE_TYPE_RULES:
         if any(needle in lowered for needle in needles):
             return pressure_type
@@ -1256,6 +1307,21 @@ def load_food_line_source_performance_history(root: Path) -> dict[str, dict[str,
             "last_verified_pressure_at": str(row.get("last_verified_pressure_at") or "").strip(),
             "last_fetch_error": str(row.get("last_fetch_error") or "").strip(),
             "rolling_quality_score": int(row.get("rolling_quality_score") or 0),
+            "monitor_mode": _normalize_food_line_monitor_mode(row.get("monitor_mode")),
+            "page_snapshot_fingerprint": str(row.get("page_snapshot_fingerprint") or "").strip(),
+            "page_snapshot_text": str(row.get("page_snapshot_text") or "").strip(),
+            "page_snapshot_seen_at": str(row.get("page_snapshot_seen_at") or "").strip(),
+            "page_change_state": str(row.get("page_change_state") or "").strip(),
+            "page_change_type": str(row.get("page_change_type") or "").strip(),
+            "last_material_change_at": str(row.get("last_material_change_at") or "").strip(),
+            "last_material_change_fingerprint": str(row.get("last_material_change_fingerprint") or "").strip(),
+            "last_material_change_type": str(row.get("last_material_change_type") or "").strip(),
+            "last_emitted_candidate_id": str(row.get("last_emitted_candidate_id") or "").strip(),
+            "last_emitted_candidate_at": str(row.get("last_emitted_candidate_at") or "").strip(),
+            "last_exact_supporting_passage": str(row.get("last_exact_supporting_passage") or "").strip(),
+            "prior_exact_supporting_passage": str(row.get("prior_exact_supporting_passage") or "").strip(),
+            "last_supporting_context_excerpt": str(row.get("last_supporting_context_excerpt") or "").strip(),
+            "prior_supporting_context_excerpt": str(row.get("prior_supporting_context_excerpt") or "").strip(),
         }
     return normalized
 
@@ -1268,8 +1334,8 @@ def save_food_line_source_performance_history(root: Path, payload: dict[str, dic
     return path
 
 
-def upsert_food_line_source_performance_history(
-    root: Path,
+def _update_food_line_source_performance_history_row(
+    history: dict[str, dict[str, Any]],
     source_id: str,
     *,
     items_seen: int = 0,
@@ -1278,8 +1344,22 @@ def upsert_food_line_source_performance_history(
     verified_pressure_records: int = 0,
     demoted_records: int = 0,
     rejected_records: int = 0,
+    monitor_mode: str = "",
+    page_snapshot_fingerprint: str = "",
+    page_snapshot_text: str = "",
+    page_snapshot_seen_at: str = "",
+    page_change_state: str = "",
+    page_change_type: str = "",
+    last_material_change_at: str = "",
+    last_material_change_fingerprint: str = "",
+    last_material_change_type: str = "",
+    last_emitted_candidate_id: str = "",
+    last_emitted_candidate_at: str = "",
+    last_exact_supporting_passage: str = "",
+    prior_exact_supporting_passage: str = "",
+    last_supporting_context_excerpt: str = "",
+    prior_supporting_context_excerpt: str = "",
 ) -> dict[str, Any]:
-    history = load_food_line_source_performance_history(root)
     row = dict(history.get(source_id) or {})
     row["runs_seen"] = int(row.get("runs_seen") or 0) + 1
     row["runs_fetched"] = int(row.get("runs_fetched") or 0) + int(runs_fetched)
@@ -1303,12 +1383,98 @@ def upsert_food_line_source_performance_history(
             - (8 if fetch_failure else 0),
         ),
     )
+    if monitor_mode:
+        row["monitor_mode"] = _normalize_food_line_monitor_mode(monitor_mode)
+    if page_snapshot_fingerprint:
+        row["page_snapshot_fingerprint"] = page_snapshot_fingerprint
+    if page_snapshot_text:
+        row["page_snapshot_text"] = page_snapshot_text
+    if page_snapshot_seen_at:
+        row["page_snapshot_seen_at"] = page_snapshot_seen_at
+    if page_change_state:
+        row["page_change_state"] = page_change_state
+    if page_change_type:
+        row["page_change_type"] = page_change_type
+    if last_material_change_at:
+        row["last_material_change_at"] = last_material_change_at
+    if last_material_change_fingerprint:
+        row["last_material_change_fingerprint"] = last_material_change_fingerprint
+    if last_material_change_type:
+        row["last_material_change_type"] = last_material_change_type
+    if last_emitted_candidate_id:
+        row["last_emitted_candidate_id"] = last_emitted_candidate_id
+    if last_emitted_candidate_at:
+        row["last_emitted_candidate_at"] = last_emitted_candidate_at
+    if last_exact_supporting_passage:
+        row["last_exact_supporting_passage"] = last_exact_supporting_passage
+    if prior_exact_supporting_passage:
+        row["prior_exact_supporting_passage"] = prior_exact_supporting_passage
+    if last_supporting_context_excerpt:
+        row["last_supporting_context_excerpt"] = last_supporting_context_excerpt
+    if prior_supporting_context_excerpt:
+        row["prior_supporting_context_excerpt"] = prior_supporting_context_excerpt
     history[source_id] = row
+    return row
+
+
+def upsert_food_line_source_performance_history(
+    root: Path,
+    source_id: str,
+    *,
+    items_seen: int = 0,
+    runs_fetched: int = 0,
+    fetch_failure: str = "",
+    verified_pressure_records: int = 0,
+    demoted_records: int = 0,
+    rejected_records: int = 0,
+    monitor_mode: str = "",
+    page_snapshot_fingerprint: str = "",
+    page_snapshot_text: str = "",
+    page_snapshot_seen_at: str = "",
+    page_change_state: str = "",
+    page_change_type: str = "",
+    last_material_change_at: str = "",
+    last_material_change_fingerprint: str = "",
+    last_material_change_type: str = "",
+    last_emitted_candidate_id: str = "",
+    last_emitted_candidate_at: str = "",
+    last_exact_supporting_passage: str = "",
+    prior_exact_supporting_passage: str = "",
+    last_supporting_context_excerpt: str = "",
+    prior_supporting_context_excerpt: str = "",
+) -> dict[str, Any]:
+    history = load_food_line_source_performance_history(root)
+    row = _update_food_line_source_performance_history_row(
+        history,
+        source_id,
+        items_seen=items_seen,
+        runs_fetched=runs_fetched,
+        fetch_failure=fetch_failure,
+        verified_pressure_records=verified_pressure_records,
+        demoted_records=demoted_records,
+        rejected_records=rejected_records,
+        monitor_mode=monitor_mode,
+        page_snapshot_fingerprint=page_snapshot_fingerprint,
+        page_snapshot_text=page_snapshot_text,
+        page_snapshot_seen_at=page_snapshot_seen_at,
+        page_change_state=page_change_state,
+        page_change_type=page_change_type,
+        last_material_change_at=last_material_change_at,
+        last_material_change_fingerprint=last_material_change_fingerprint,
+        last_material_change_type=last_material_change_type,
+        last_emitted_candidate_id=last_emitted_candidate_id,
+        last_emitted_candidate_at=last_emitted_candidate_at,
+        last_exact_supporting_passage=last_exact_supporting_passage,
+        prior_exact_supporting_passage=prior_exact_supporting_passage,
+        last_supporting_context_excerpt=last_supporting_context_excerpt,
+        prior_supporting_context_excerpt=prior_supporting_context_excerpt,
+    )
     save_food_line_source_performance_history(root, history)
     return row
 
 
 def classify_food_line_source_purpose(row: dict[str, Any]) -> dict[str, str]:
+    monitor_mode = _normalize_food_line_monitor_mode(row.get("monitor_mode"))
     source_name = _normalize_source_text(" ".join(
         part
         for part in (
@@ -1380,44 +1546,92 @@ def classify_food_line_source_purpose(row: dict[str, Any]) -> dict[str, str]:
     disaster_hit = any(term in content_text or term in source_name or term in page_signal_text or term in url for term in SOURCE_PURPOSE_DISASTER_TERMS)
     current_news_families = {"national_news", "local_news", "public_radio", "nonprofit_news"}
 
-    if family in current_news_families and research_hit and not current_hit:
-        source_purpose = "research_report"
-    elif research_hit and not current_hit and not resource_hit and not donation_hit and not evergreen_hit:
-        source_purpose = "research_report"
-    elif family in current_news_families:
-        if current_hit or disaster_hit or (resource_hit and concrete_pressure_hit):
-            source_purpose = "current_news"
-        elif resource_hit:
-            source_purpose = "resource_page"
-        elif donation_hit and not current_hit:
-            source_purpose = "donation_page"
-        else:
-            source_purpose = "current_news"
-    elif donation_hit:
-        source_purpose = "donation_page"
-    elif evergreen_hit:
-        source_purpose = "evergreen_context"
-    else:
+    if monitor_mode == "recurring_service_page":
+        recurring_service_change_hit = any(
+            term in content_text or term in source_name or term in page_signal_text or term in url
+            for term in (
+                "service restored",
+                "service restoration",
+                "restored service",
+                "restored access",
+                "reopened",
+                "reopening",
+                "resumed service",
+                "service resumed",
+                "benefits resumed",
+                "restored hours",
+                "restored distribution",
+                "reinstated",
+                "limited to zip codes",
+                "zip codes",
+                "high evening demand",
+                "benefit delay",
+                "benefits delayed",
+                "card vendor issue",
+                "interrupted issuance",
+            )
+        )
         if family == "food_bank_provider":
-            if resource_hit and not (current_hit or concrete_pressure_hit):
-                source_purpose = "resource_page"
-            elif current_hit or concrete_pressure_hit or any(term in source_name for term in ("update", "news", "report", "press release", "shortage", "waitlist", "closure", "hours", "demand")):
+            if donation_hit and not current_hit:
+                source_purpose = "donation_page"
+            elif current_hit or concrete_pressure_hit or recurring_service_change_hit:
                 source_purpose = "provider_update"
             else:
                 source_purpose = "resource_page"
         elif family in {"state_official", "federal_official", "state_policy_news"}:
-            source_purpose = "disaster_alert" if disaster_hit else "official_notice"
-        elif family == "economic_data":
-            source_purpose = "data_release" if source_type == "api" or any(term in source_name for term in ("data release", "dataset", "statistics", "dashboard")) else "research_report"
-        elif disaster_hit:
-            source_purpose = "disaster_alert"
-        elif current_hit:
-            source_purpose = "current_news"
-        elif resource_hit:
-            if any(term in source_name or term in url for term in ("apply", "eligibility", "benefit", "program")):
-                source_purpose = "program_description"
+            if current_hit or concrete_pressure_hit or disaster_hit or recurring_service_change_hit:
+                source_purpose = "official_notice"
             else:
                 source_purpose = "resource_page"
+        elif family in current_news_families:
+            if current_hit or concrete_pressure_hit or recurring_service_change_hit:
+                source_purpose = "current_news"
+            elif resource_hit:
+                source_purpose = "resource_page"
+            elif donation_hit and not current_hit:
+                source_purpose = "donation_page"
+            else:
+                source_purpose = "current_news"
+
+    if source_purpose == "unknown":
+        if family in current_news_families and research_hit and not current_hit:
+            source_purpose = "research_report"
+        elif research_hit and not current_hit and not resource_hit and not donation_hit and not evergreen_hit:
+            source_purpose = "research_report"
+        elif family in current_news_families:
+            if current_hit or disaster_hit or (resource_hit and concrete_pressure_hit):
+                source_purpose = "current_news"
+            elif resource_hit:
+                source_purpose = "resource_page"
+            elif donation_hit and not current_hit:
+                source_purpose = "donation_page"
+            else:
+                source_purpose = "current_news"
+        elif donation_hit:
+            source_purpose = "donation_page"
+        elif evergreen_hit:
+            source_purpose = "evergreen_context"
+        else:
+            if family == "food_bank_provider":
+                if resource_hit and not (current_hit or concrete_pressure_hit):
+                    source_purpose = "resource_page"
+                elif current_hit or concrete_pressure_hit or any(term in source_name for term in ("update", "news", "report", "press release", "shortage", "waitlist", "closure", "hours", "demand")):
+                    source_purpose = "provider_update"
+                else:
+                    source_purpose = "resource_page"
+            elif family in {"state_official", "federal_official", "state_policy_news"}:
+                source_purpose = "disaster_alert" if disaster_hit else "official_notice"
+            elif family == "economic_data":
+                source_purpose = "data_release" if source_type == "api" or any(term in source_name for term in ("data release", "dataset", "statistics", "dashboard")) else "research_report"
+            elif disaster_hit:
+                source_purpose = "disaster_alert"
+            elif current_hit:
+                source_purpose = "current_news"
+            elif resource_hit:
+                if any(term in source_name or term in url for term in ("apply", "eligibility", "benefit", "program")):
+                    source_purpose = "program_description"
+                else:
+                    source_purpose = "resource_page"
 
     current_or_evergreen = _current_or_evergreen_for_purpose(source_purpose)
     promotable = _source_purpose_promotable(source_purpose)
@@ -1426,6 +1640,17 @@ def classify_food_line_source_purpose(row: dict[str, Any]) -> dict[str, str]:
     else:
         non_promotable_reason = ""
     explicit = _normalize_source_purpose(row.get("source_purpose"), "unknown")
+    if monitor_mode == "recurring_service_page" and explicit != "unknown":
+        source_purpose = explicit
+        current_or_evergreen = _current_or_evergreen_for_purpose(source_purpose)
+        promotable = _source_purpose_promotable(source_purpose)
+        non_promotable_reason = "" if promotable else SOURCE_PURPOSE_NON_PROMOTABLE_REASONS.get(source_purpose, SOURCE_PURPOSE_NON_PROMOTABLE_REASONS["unknown"])
+        return {
+            "source_purpose": source_purpose,
+            "current_or_evergreen": current_or_evergreen,
+            "promotable": "true" if promotable else "false",
+            "non_promotable_reason": non_promotable_reason,
+        }
     if source_purpose == "unknown" and explicit != "unknown":
         source_purpose = explicit
         current_or_evergreen = _current_or_evergreen_for_purpose(source_purpose)
@@ -1707,6 +1932,25 @@ def _extract_page_evidence(payload: bytes) -> dict[str, str]:
     }
 
 
+def _normalize_food_line_service_page_snapshot_text(*parts: str) -> str:
+    text = _normalize_source_text(" ".join(part for part in parts if part), limit=1800)
+    if not text:
+        return ""
+    text = re.sub(r"(?i)\b(?:last updated|updated|posted|published)\b.*$", " ", text)
+    text = re.sub(r"(?i)\b(?:updated|posted|published)\s+(?:at|on)\b.*$", " ", text)
+    text = re.sub(r"(?i)\bhome\s+about(?:\s+us)?\s+donate\b", " ", text)
+    text = re.sub(r"(?i)\bhome\s+about(?:\s+us)?\b", " ", text)
+    text = re.sub(r"(?i)\bhome\s+donate\b", " ", text)
+    text = re.sub(r"(?i)\babout\s+donate\b", " ", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    return _normalize_source_text(text, limit=1800)
+
+
+def _food_line_service_page_snapshot_fingerprint(*parts: str) -> str:
+    text = _normalize_food_line_service_page_snapshot_text(*parts)
+    return hashlib.sha256(text.encode("utf-8")).hexdigest() if text else ""
+
+
 def _extract_page_metadata_date(payload: bytes) -> str:
     text = payload.decode("utf-8", errors="replace")
     patterns = [
@@ -1830,8 +2074,18 @@ def _build_pressure_summary(
                 location_name=place,
                 pressure_type=pressure_type,
             )
-        if any(term in lowered for term in ("reduced hours", "cut hours", "limited distribution", "closed", "capacity", "inventory", "fewer distributions", "buying more food", "pantries buying more food", "food assistance cuts", "receiving less", "squeezing", "donations dropped", "supply dropped")):
+        if any(term in lowered for term in ("reduced hours", "cut hours", "limited distribution", "service is limited", "service limited", "limited to zip codes", "restricted to zip codes", "zip codes", "closed", "capacity", "inventory", "fewer distributions", "buying more food", "pantries buying more food", "food assistance cuts", "receiving less", "squeezing", "donations dropped", "supply dropped")):
             sentence = _append_place(f"{subject} reported reduced distribution hours", place)
+            sentence = _append_groups(sentence, groups_text)
+            return _smooth_public_pressure_summary(
+                sentence + ".",
+                subject=subject,
+                location_name=place,
+                pressure_type=pressure_type,
+            )
+    elif pressure_type == "service_restoration":
+        if any(term in lowered for term in ("service restored", "service restoration", "restored service", "restored access", "reopened", "reopening", "resumed service", "service resumed", "benefits resumed", "restored hours", "restored distribution", "reinstated")):
+            sentence = _append_place(f"{subject} reported restored food access", place)
             sentence = _append_groups(sentence, groups_text)
             return _smooth_public_pressure_summary(
                 sentence + ".",
@@ -2384,6 +2638,7 @@ def load_food_line_registry(root: Path) -> list[dict[str, Any]]:
                 continue
             source_family = str(row.get("source_family") or "policy_research").strip()
             source_type = str(row.get("source_type") or "page").strip().lower()
+            monitor_mode = _normalize_food_line_monitor_mode(row.get("monitor_mode"))
             pressure_required = bool(row.get("pressure_verification_required", row.get("pressure_required", source_family not in BASELINE_FAMILIES)))
             location_scope = str(row.get("location_scope") or ("national" if str(row.get("state") or DEFAULT_STATE).strip().upper() in {"", "US"} else "state_local")).strip()
             max_age_days = int(row.get("max_age_days") or DEFAULT_MAX_AGE_DAYS.get(source_type, 14))
@@ -2399,6 +2654,7 @@ def load_food_line_registry(root: Path) -> list[dict[str, Any]]:
                     "name": source_name,
                     "source_family": source_family,
                     "source_type": source_type,
+                    "monitor_mode": monitor_mode,
                     "url": preferred_url,
                     "publisher": str(row.get("publisher") or row.get("source_name") or row.get("name") or "").strip(),
                     "state": str(row.get("state") or DEFAULT_STATE).strip().upper(),
@@ -2575,6 +2831,7 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
     no_evidence_count_by_source_id: Counter[str] = Counter()
     rejected_by_source_purpose_count = int(registry_purpose_refresh.get("blocked_count") or 0)
     demoted_by_source_purpose_count = int(registry_purpose_refresh.get("blocked_count") or 0)
+    source_performance_history = load_food_line_source_performance_history(root)
     for source in registry:
         source_id = str(source.get("source_id") or "")
         source_url = str(source.get("url") or "")
@@ -2586,6 +2843,7 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
             "source_name": str(source.get("source_name") or source.get("name") or source_id),
             "source_family": source_family,
             "url": source_url,
+            "monitor_mode": _normalize_food_line_monitor_mode(source.get("monitor_mode")),
             "fetched": False,
             "item_count": 0,
             "accepted_pressure_count": 0,
@@ -2596,8 +2854,28 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
             "fetch_failure_action": "",
             "fetch_failure_transient": False,
             "extraction_basis_used": [],
+            "page_change_state": "",
+            "page_change_detected": False,
+            "page_change_type": "",
+            "page_snapshot_fingerprint": "",
+            "page_snapshot_text": "",
+            "exact_supporting_passage": "",
+            "prior_exact_supporting_passage": "",
+            "supporting_context_excerpt": "",
+            "prior_supporting_context_excerpt": "",
         }
         source_purpose = str(source.get("source_purpose") or "unknown")
+        monitor_mode = _normalize_food_line_monitor_mode(source.get("monitor_mode"))
+        exact_supporting_passage = ""
+        supporting_context_excerpt = ""
+        page_snapshot_text = ""
+        page_snapshot_fingerprint = ""
+        prior_exact_supporting_passage = ""
+        prior_supporting_context_excerpt = ""
+        prior_snapshot_fingerprint = ""
+        page_change_state = ""
+        page_change_detected = False
+        recurring_page_source_purpose = "resource_page"
         try:
             if source_kind == "rss":
                 payload = fetch(source_url, timeout=15)
@@ -2607,17 +2885,54 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
                 payload = fetch(source_url, timeout=15)
                 page_metadata_date = _extract_page_metadata_date(payload)
                 evidence = _extract_page_evidence(payload)
+                exact_supporting_passage = clean_food_line_public_evidence_excerpt(
+                    str(evidence.get("evidence_text") or evidence.get("summary_or_snippet") or ""),
+                    title=str(evidence.get("title") or source.get("source_name") or source.get("name") or source_id),
+                )
+                supporting_context_excerpt = clean_food_line_public_evidence_excerpt(
+                    str(evidence.get("summary_or_snippet") or evidence.get("evidence_text") or ""),
+                    title=str(evidence.get("title") or source.get("source_name") or source.get("name") or source_id),
+                    limit=700,
+                )
+                page_snapshot_text = _normalize_food_line_service_page_snapshot_text(
+                    str(evidence.get("title") or ""),
+                    str(evidence.get("summary_or_snippet") or ""),
+                    str(evidence.get("evidence_text") or ""),
+                    page_metadata_date,
+                    source_url,
+                )
+                page_snapshot_fingerprint = _food_line_service_page_snapshot_fingerprint(
+                    str(evidence.get("title") or ""),
+                    str(evidence.get("summary_or_snippet") or ""),
+                    str(evidence.get("evidence_text") or ""),
+                    page_metadata_date,
+                    source_url,
+                )
+                history_row = dict(source_performance_history.get(source_id) or {})
+                prior_snapshot_fingerprint = str(history_row.get("page_snapshot_fingerprint") or "")
+                prior_exact_supporting_passage = str(history_row.get("last_exact_supporting_passage") or "")
+                prior_supporting_context_excerpt = str(history_row.get("last_supporting_context_excerpt") or "")
+                page_change_state = "baseline" if not prior_snapshot_fingerprint else ("unchanged" if page_snapshot_fingerprint == prior_snapshot_fingerprint else "changed")
+                page_change_detected = page_change_state == "changed"
+                if page_change_state == "changed":
+                    if source_family == "food_bank_provider":
+                        recurring_page_source_purpose = "provider_update"
+                    elif source_family in {"state_official", "federal_official", "state_policy_news"}:
+                        recurring_page_source_purpose = "official_notice"
+                    else:
+                        recurring_page_source_purpose = "current_news"
                 items = [
-                    {
-                        "title": evidence.get("title") or str(source.get("title_fallback") or source.get("name") or source_id),
-                        "url": source_url,
-                        "published_at": "",
-                        "page_metadata_date": page_metadata_date,
-                        "summary_or_snippet": evidence.get("summary_or_snippet") or "",
-                        "evidence_text": evidence.get("evidence_text") or "",
-                        "evidence_text_basis": evidence.get("evidence_text_basis") or "insufficient_evidence",
-                    }
-                ]
+                {
+                    "title": evidence.get("title") or str(source.get("title_fallback") or source.get("name") or source_id),
+                    "url": source_url,
+                    "published_at": "",
+                    "page_metadata_date": page_metadata_date,
+                    "summary_or_snippet": evidence.get("summary_or_snippet") or "",
+                    "evidence_text": evidence.get("evidence_text") or "",
+                    "evidence_text_basis": evidence.get("evidence_text_basis") or "insufficient_evidence",
+                    "monitor_mode": monitor_mode,
+                }
+            ]
                 published_basis = "page_metadata" if page_metadata_date else "retrieved_at_fallback"
             audit_entry["fetched"] = True
             audit_entry["item_count"] = len(items[:5])
@@ -2666,6 +2981,8 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
                     "evidence_text_basis": evidence_text_basis,
                     "source_family": source_family,
                     "source_type": source_kind,
+                    "monitor_mode": monitor_mode,
+                    "source_purpose": recurring_page_source_purpose,
                     "state": source.get("state") or DEFAULT_STATE,
                     "published_at": published_at,
                     "page_metadata_date": item_page_metadata_date,
@@ -2678,6 +2995,33 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
                 positive_keywords=source.get("positive_keywords") or [],
                 negative_keywords=source.get("negative_keywords") or [],
             )
+            if monitor_mode == "recurring_service_page" and source_kind == "page":
+                audit_entry["page_snapshot_fingerprint"] = page_snapshot_fingerprint
+                audit_entry["page_snapshot_text"] = page_snapshot_text
+                audit_entry["exact_supporting_passage"] = exact_supporting_passage
+                audit_entry["supporting_context_excerpt"] = supporting_context_excerpt
+                audit_entry["prior_exact_supporting_passage"] = prior_exact_supporting_passage
+                audit_entry["prior_supporting_context_excerpt"] = prior_supporting_context_excerpt
+                audit_entry["page_change_state"] = page_change_state
+                audit_entry["page_change_detected"] = page_change_detected
+                audit_entry["page_change_type"] = str(pressure_eval.get("pressure_type") or "context only")
+                if page_change_state in {"baseline", "unchanged"}:
+                    _update_food_line_source_performance_history_row(
+                        source_performance_history,
+                        source_id,
+                        items_seen=1,
+                        runs_fetched=1,
+                        monitor_mode=monitor_mode,
+                        page_snapshot_fingerprint=page_snapshot_fingerprint,
+                        page_snapshot_text=page_snapshot_text,
+                        page_snapshot_seen_at=retrieved_at,
+                        page_change_state=page_change_state,
+                        page_change_type=str(pressure_eval.get("pressure_type") or "context only"),
+                        last_exact_supporting_passage=exact_supporting_passage,
+                        last_supporting_context_excerpt=supporting_context_excerpt,
+                    )
+                    source_audit_rows.append(audit_entry)
+                    continue
             collected_count_by_extraction_quality[extraction_quality] += 1
             if pressure_eval.get("rejected"):
                 rejection_reason = str(pressure_eval.get("rejection_reason") or "rejected")
@@ -2693,11 +3037,58 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
                         "source_type": source_kind,
                     }
                 )
+                if monitor_mode == "recurring_service_page" and source_kind == "page":
+                    recurring_page_state = "changed_non_qualifying" if "donate" in rejection_reason.lower() else "changed_rejected"
+                    _update_food_line_source_performance_history_row(
+                        source_performance_history,
+                        source_id,
+                        items_seen=1,
+                        runs_fetched=1,
+                        monitor_mode=monitor_mode,
+                        page_snapshot_fingerprint=page_snapshot_fingerprint,
+                        page_snapshot_text=page_snapshot_text,
+                        page_snapshot_seen_at=retrieved_at,
+                        page_change_state=recurring_page_state,
+                        page_change_type=str(pressure_eval.get("pressure_type") or "context only"),
+                        last_material_change_at=retrieved_at,
+                        last_material_change_fingerprint=page_snapshot_fingerprint,
+                        last_material_change_type=str(pressure_eval.get("pressure_type") or "context only"),
+                        last_exact_supporting_passage=exact_supporting_passage,
+                        prior_exact_supporting_passage=prior_exact_supporting_passage,
+                        last_supporting_context_excerpt=supporting_context_excerpt,
+                        prior_supporting_context_excerpt=prior_supporting_context_excerpt,
+                    )
+                audit_entry["rejected_count"] = 1
+                audit_entry["top_rejection_reasons"] = [rejection_reason]
+                source_audit_rows.append(audit_entry)
                 continue
             if not bool(pressure_eval.get("pressure_signal")):
                 demoted_count_by_extraction_quality[extraction_quality] += 1
                 if str(pressure_eval.get("pressure_verification_status") or "") in {"insufficient_evidence", "demoted_context"} and not str(pressure_eval.get("evidence_text") or "").strip():
                     no_evidence_count_by_source_id[source_id] += 1
+                if monitor_mode == "recurring_service_page" and source_kind == "page":
+                    _update_food_line_source_performance_history_row(
+                        source_performance_history,
+                        source_id,
+                        items_seen=1,
+                        runs_fetched=1,
+                        monitor_mode=monitor_mode,
+                        page_snapshot_fingerprint=page_snapshot_fingerprint,
+                        page_snapshot_text=page_snapshot_text,
+                        page_snapshot_seen_at=retrieved_at,
+                        page_change_state="changed_non_qualifying",
+                        page_change_type=str(pressure_eval.get("pressure_type") or "context only"),
+                        last_material_change_at=retrieved_at,
+                        last_material_change_fingerprint=page_snapshot_fingerprint,
+                        last_material_change_type=str(pressure_eval.get("pressure_type") or "context only"),
+                        last_exact_supporting_passage=exact_supporting_passage,
+                        prior_exact_supporting_passage=prior_exact_supporting_passage,
+                        last_supporting_context_excerpt=supporting_context_excerpt,
+                        prior_supporting_context_excerpt=prior_supporting_context_excerpt,
+                    )
+                    audit_entry["demoted_count"] = 1
+                    source_audit_rows.append(audit_entry)
+                    continue
             if bool(pressure_eval.get("pressure_signal")) and str(pressure_eval.get("pressure_verification_status") or "") == "source_text_verified":
                 verified_pressure_count_by_extraction_quality[extraction_quality] += 1
             rows.append(
@@ -2712,6 +3103,8 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
                     "page_metadata_date": item_page_metadata_date,
                     "retrieved_at": retrieved_at,
                     "summary_or_snippet": summary or "Source-backed food insecurity context signal.",
+                    "exact_supporting_passage": exact_supporting_passage or str(pressure_eval.get("evidence_text") or evidence_text or summary or ""),
+                    "supporting_context_excerpt": supporting_context_excerpt or summary or "",
                     "source_type": source_kind,
                     "collector_source_type": source_kind,
                     "source_origin": "registry",
@@ -2752,32 +3145,66 @@ def collect_food_line_auto_sources(root: Path, date: str, *, fetcher: Any | None
                     "source_role": str(pressure_eval.get("source_role") or "resource_context"),
                     "map_eligible": bool(pressure_eval.get("map_eligible")),
                     "claim_supported": str(pressure_eval.get("pressure_summary") or summary or evidence_text or title or "").strip(),
+                    "monitor_mode": monitor_mode,
+                    "page_snapshot_fingerprint": page_snapshot_fingerprint if monitor_mode == "recurring_service_page" and source_kind == "page" else "",
+                    "page_snapshot_text": page_snapshot_text if monitor_mode == "recurring_service_page" and source_kind == "page" else "",
+                    "page_change_state": page_change_state if monitor_mode == "recurring_service_page" and source_kind == "page" else "",
+                    "page_change_detected": page_change_detected if monitor_mode == "recurring_service_page" and source_kind == "page" else False,
+                    "page_change_type": str(pressure_eval.get("pressure_type") or "context only") if monitor_mode == "recurring_service_page" and source_kind == "page" else "",
+                    "prior_exact_supporting_passage": prior_exact_supporting_passage if monitor_mode == "recurring_service_page" and source_kind == "page" else "",
+                    "prior_supporting_context_excerpt": prior_supporting_context_excerpt if monitor_mode == "recurring_service_page" and source_kind == "page" else "",
+                    "monitor_mode": monitor_mode,
                     "limitations": "",
                     "included": False,
                     "exclusion_reason": "",
                 }
             )
+            if monitor_mode == "recurring_service_page" and source_kind == "page":
+                _update_food_line_source_performance_history_row(
+                    source_performance_history,
+                    source_id,
+                    items_seen=1,
+                    runs_fetched=1,
+                    monitor_mode=monitor_mode,
+                    page_snapshot_fingerprint=page_snapshot_fingerprint,
+                    page_snapshot_text=page_snapshot_text,
+                    page_snapshot_seen_at=retrieved_at,
+                    page_change_state="changed_qualifying",
+                    page_change_type=str(pressure_eval.get("pressure_type") or "context only"),
+                    last_material_change_at=retrieved_at,
+                    last_material_change_fingerprint=page_snapshot_fingerprint,
+                    last_material_change_type=str(pressure_eval.get("pressure_type") or "context only"),
+                    last_emitted_candidate_id=record_id,
+                    last_emitted_candidate_at=retrieved_at,
+                    last_exact_supporting_passage=exact_supporting_passage,
+                    prior_exact_supporting_passage=prior_exact_supporting_passage,
+                    last_supporting_context_excerpt=supporting_context_excerpt,
+                    prior_supporting_context_excerpt=prior_supporting_context_excerpt,
+                )
         audit_entry["accepted_pressure_count"] = sum(1 for row in rows if str(row.get("source_id") or "") == source_id and bool(row.get("pressure_signal")))
         audit_entry["demoted_count"] = sum(1 for row in rows if str(row.get("source_id") or "") == source_id and str(row.get("pressure_verification_status") or "") == "demoted_context")
         audit_entry["rejected_count"] = sum(1 for row in rejected_news if str(row.get("source_id") or "") == source_id)
         audit_entry["top_rejection_reasons"] = [reason for reason, _count in rejection_reasons.most_common(3)]
         audit_entry["extraction_basis_used"] = sorted(extraction_basis_used)
         source_audit_rows.append(audit_entry)
-        upsert_food_line_source_performance_history(
-            root,
-            source_id,
-            items_seen=len(items[:5]),
-            runs_fetched=1,
-            verified_pressure_records=audit_entry["accepted_pressure_count"],
-            demoted_records=audit_entry["demoted_count"],
-            rejected_records=audit_entry["rejected_count"],
-        )
+        if not (monitor_mode == "recurring_service_page" and source_kind == "page"):
+            _update_food_line_source_performance_history_row(
+                source_performance_history,
+                source_id,
+                items_seen=len(items[:5]),
+                runs_fetched=1,
+                verified_pressure_records=audit_entry["accepted_pressure_count"],
+                demoted_records=audit_entry["demoted_count"],
+                rejected_records=audit_entry["rejected_count"],
+                monitor_mode=monitor_mode,
+            )
     for failure in failures:
-        upsert_food_line_source_performance_history(
-            root,
+        _update_food_line_source_performance_history_row(
+            source_performance_history,
             str(failure.get("source_id") or ""),
             fetch_failure=str(failure.get("reason") or ""),
         )
+    save_food_line_source_performance_history(root, source_performance_history)
     auto_path = root / "data" / "dispatches" / "food-line" / "sources" / edition_date / "auto_sources.json"
     auto_path.parent.mkdir(parents=True, exist_ok=True)
     auto_path.write_text(json.dumps(rows, indent=2), encoding="utf-8")

@@ -10144,6 +10144,285 @@ def test_food_line_source_performance_history_updates_on_collection(tmp_path: Pa
     assert history["history-source"]["items_seen"] >= 1
 
 
+def test_food_line_recurring_service_page_detects_material_change_and_suppresses_noise(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-08-11"
+    source_id = "stony-point-evening-pantry"
+    source_url = "https://example.org/stony-point-church/evening-food-pantry"
+    _write_source_registry(
+        tmp_path,
+        [
+            {
+                "source_id": source_id,
+                "source_name": "SPC Evening Food Pantry",
+                "publisher": "Stony Point Church",
+                "source_type": "page",
+                "url": source_url,
+                "source_family": "food_bank_provider",
+                "state": "VA",
+                "location_name": "Richmond, VA",
+                "location_scope": "state_local",
+                "enabled": True,
+                "pressure_required": True,
+                "pressure_verification_required": True,
+                "freshness_mode": "pressure",
+                "max_age_days": 14,
+                "expected_text_basis": "page_text",
+                "extraction_quality": "medium",
+                "monitor_mode": "recurring_service_page",
+                "positive_keywords": ["pantry", "demand", "zip codes", "service"],
+                "negative_keywords": ["recipe", "restaurant", "menu"],
+                "affected_group_keywords": ["families"],
+                "notes": "Recurring service-page regression fixture.",
+            }
+        ],
+    )
+    _write_pressure_registry(tmp_path, [])
+
+    baseline_html = b"""<html>
+      <head>
+        <title>SPC Evening Food Pantry</title>
+        <meta name=\"description\" content=\"Evening pantry serving Richmond residents.\" />
+        <meta property=\"article:published_time\" content=\"2026-08-11T09:00:00Z\" />
+      </head>
+      <body>
+        <article>
+          <p>SPC Evening Food Pantry serves Richmond residents with evening groceries.</p>
+          <p>Hours: Tuesday and Thursday 4-6 p.m.</p>
+        </article>
+      </body>
+    </html>"""
+    cosmetic_html = b"""<html>
+      <head>
+        <title>SPC Evening Food Pantry</title>
+        <meta name=\"description\" content=\"Evening pantry serving Richmond residents.\" />
+        <meta property=\"article:published_time\" content=\"2026-08-11T09:00:00Z\" />
+        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />
+      </head>
+      <body>
+        <article>
+          <p>SPC Evening Food Pantry serves Richmond residents with evening groceries.</p>
+          <p>Hours: Tuesday and Thursday 4-6 p.m.</p>
+        </article>
+      </body>
+    </html>"""
+    restricted_html = b"""<html>
+      <head>
+        <title>SPC Evening Food Pantry</title>
+        <meta name=\"description\" content=\"Evening pantry serving Richmond residents.\" />
+        <meta property=\"article:published_time\" content=\"2026-08-11T09:00:00Z\" />
+      </head>
+      <body>
+        <article>
+          <p>Due to high evening demand, pantry service is limited to ZIP codes 23225, 23234, 23235, and 23236.</p>
+          <p>Households outside those ZIP codes should call the parish office for other referrals.</p>
+        </article>
+      </body>
+    </html>"""
+    payloads = iter([baseline_html, cosmetic_html, restricted_html, restricted_html])
+
+    def fetcher(_url: str, timeout: int = 15):
+        return next(payloads)
+
+    baseline = food_line.collect_food_line_auto_sources(tmp_path, date, fetcher=fetcher)
+    assert baseline["source_count"] == 0
+    history_path = tmp_path / "data" / "dispatches" / "food-line" / "source_performance_history.json"
+    history = json.loads(history_path.read_text(encoding="utf-8"))
+    assert history[source_id]["page_change_state"] == "baseline"
+    assert history[source_id]["page_snapshot_fingerprint"]
+
+    cosmetic = food_line.collect_food_line_auto_sources(tmp_path, date, fetcher=fetcher)
+    assert cosmetic["source_count"] == 0
+    history = json.loads(history_path.read_text(encoding="utf-8"))
+    assert history[source_id]["page_change_state"] == "unchanged"
+    assert history[source_id]["page_snapshot_fingerprint"]
+
+    changed = food_line.collect_food_line_auto_sources(tmp_path, date, fetcher=fetcher)
+    assert changed["source_count"] == 1
+    rows = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "sources" / date / "auto_sources.json").read_text(encoding="utf-8"))
+    assert len(rows) == 1
+    row = rows[0]
+    assert row["monitor_mode"] == "recurring_service_page"
+    assert row["page_change_state"] == "changed"
+    assert row["page_change_detected"] is True
+    assert "23225" in row["exact_supporting_passage"]
+    assert "high evening demand" in row["exact_supporting_passage"].lower()
+    assert row["prior_exact_supporting_passage"]
+    assert "evening groceries" in row["prior_exact_supporting_passage"].lower()
+    history = json.loads(history_path.read_text(encoding="utf-8"))
+    assert history[source_id]["page_change_state"] == "changed_qualifying"
+    assert history[source_id]["last_emitted_candidate_id"] == row["source_record_id"]
+    assert history[source_id]["last_exact_supporting_passage"] == row["exact_supporting_passage"]
+
+    duplicate = food_line.collect_food_line_auto_sources(tmp_path, date, fetcher=fetcher)
+    assert duplicate["source_count"] == 0
+    history = json.loads(history_path.read_text(encoding="utf-8"))
+    assert history[source_id]["page_change_state"] == "unchanged"
+    assert history[source_id]["last_emitted_candidate_id"] == row["source_record_id"]
+
+
+def test_food_line_recurring_service_page_suppresses_donation_only_edits(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-08-11"
+    source_id = "community-pantry-donation-page"
+    source_url = "https://example.org/community-pantry/access"
+    _write_source_registry(
+        tmp_path,
+        [
+            {
+                "source_id": source_id,
+                "source_name": "Community Pantry Access",
+                "publisher": "Community Pantry",
+                "source_type": "page",
+                "url": source_url,
+                "source_family": "food_bank_provider",
+                "state": "TX",
+                "location_name": "Dallas, TX",
+                "location_scope": "state_local",
+                "enabled": True,
+                "pressure_required": True,
+                "pressure_verification_required": True,
+                "freshness_mode": "pressure",
+                "max_age_days": 14,
+                "expected_text_basis": "page_text",
+                "extraction_quality": "medium",
+                "monitor_mode": "recurring_service_page",
+                "positive_keywords": ["pantry", "demand", "hours", "service"],
+                "negative_keywords": ["recipe", "restaurant", "menu", "donate"],
+                "affected_group_keywords": ["families"],
+                "notes": "Donation-only edit regression fixture.",
+            }
+        ],
+    )
+    _write_pressure_registry(tmp_path, [])
+    baseline_html = b"""<html><head><title>Community Pantry Access</title><meta name=\"description\" content=\"Pantry hours and service details.\" /></head><body><article><p>The pantry serves Dallas residents with weekly distributions.</p></article></body></html>"""
+    donation_html = b"""<html><head><title>Community Pantry Access</title><meta name=\"description\" content=\"Pantry hours and service details.\" /></head><body><article><p>Donate today to help the pantry continue its mission.</p><p>Volunteer opportunities and support links.</p></article></body></html>"""
+    payloads = iter([baseline_html, donation_html])
+
+    def fetcher(_url: str, timeout: int = 15):
+        return next(payloads)
+
+    baseline = food_line.collect_food_line_auto_sources(tmp_path, date, fetcher=fetcher)
+    assert baseline["source_count"] == 0
+    changed = food_line.collect_food_line_auto_sources(tmp_path, date, fetcher=fetcher)
+    assert changed["source_count"] == 0
+    history = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "source_performance_history.json").read_text(encoding="utf-8"))
+    assert history[source_id]["page_change_state"] == "changed_non_qualifying"
+    assert history[source_id]["last_exact_supporting_passage"]
+
+
+def test_food_line_recurring_service_page_service_restoration_is_tracked(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-08-11"
+    source_id = "pantry-restoration-page"
+    source_url = "https://example.org/pantry/restoration"
+    _write_source_registry(
+        tmp_path,
+        [
+            {
+                "source_id": source_id,
+                "source_name": "Pantry Restoration Page",
+                "publisher": "Community Pantry",
+                "source_type": "page",
+                "url": source_url,
+                "source_family": "food_bank_provider",
+                "state": "LA",
+                "location_name": "New Orleans, LA",
+                "location_scope": "state_local",
+                "enabled": True,
+                "pressure_required": True,
+                "pressure_verification_required": True,
+                "freshness_mode": "pressure",
+                "max_age_days": 14,
+                "expected_text_basis": "page_text",
+                "extraction_quality": "medium",
+                "monitor_mode": "recurring_service_page",
+                "positive_keywords": ["service", "reopened", "restored", "hours"],
+                "negative_keywords": ["recipe", "restaurant", "menu"],
+                "affected_group_keywords": ["families"],
+                "notes": "Service restoration regression fixture.",
+            }
+        ],
+    )
+    _write_pressure_registry(tmp_path, [])
+    closed_html = b"""<html><head><title>Pantry Restoration Page</title><meta name=\"description\" content=\"Pantry closure notice.\" /></head><body><article><p>The pantry is closed while repairs are completed.</p><p>Service will resume when repairs finish.</p></article></body></html>"""
+    restored_html = b"""<html><head><title>Pantry Restoration Page</title><meta name=\"description\" content=\"Pantry restoration notice.\" /></head><body><article><p>Service restored after repairs and the pantry reopened for weekly distributions.</p><p>Hours have resumed on Tuesday evenings.</p></article></body></html>"""
+    payloads = iter([closed_html, restored_html])
+
+    def fetcher(_url: str, timeout: int = 15):
+        return next(payloads)
+
+    first = food_line.collect_food_line_auto_sources(tmp_path, date, fetcher=fetcher)
+    assert first["source_count"] == 0
+    second = food_line.collect_food_line_auto_sources(tmp_path, date, fetcher=fetcher)
+    assert second["source_count"] == 1
+    rows = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "sources" / date / "auto_sources.json").read_text(encoding="utf-8"))
+    row = rows[0]
+    assert row["pressure_type"] == "service_restoration"
+    assert "restored" in row["exact_supporting_passage"].lower()
+    assert "closed while repairs are completed" in row["prior_exact_supporting_passage"].lower()
+    history = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "source_performance_history.json").read_text(encoding="utf-8"))
+    assert history[source_id]["last_material_change_type"] == "service_restoration"
+    assert history[source_id]["page_change_state"] == "changed_qualifying"
+
+
+def test_food_line_recurring_service_page_official_benefit_interruption_fixture(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-08-11"
+    source_id = "oregon-snap-status-page"
+    source_url = "https://example.org/oregon/snap/status"
+    _write_source_registry(
+        tmp_path,
+        [
+            {
+                "source_id": source_id,
+                "source_name": "Oregon SNAP Status",
+                "publisher": "Oregon Department of Human Services",
+                "source_type": "page",
+                "url": source_url,
+                "source_family": "state_official",
+                "state": "OR",
+                "location_name": "Oregon",
+                "location_scope": "state_local",
+                "enabled": True,
+                "pressure_required": True,
+                "pressure_verification_required": True,
+                "freshness_mode": "pressure",
+                "max_age_days": 14,
+                "expected_text_basis": "page_text",
+                "extraction_quality": "medium",
+                "monitor_mode": "recurring_service_page",
+                "positive_keywords": ["snap", "benefit", "status", "delay", "issuance"],
+                "negative_keywords": ["recipe", "restaurant", "menu"],
+                "affected_group_keywords": ["SNAP households"],
+                "notes": "Official benefit interruption regression fixture.",
+            }
+        ],
+    )
+    _write_pressure_registry(tmp_path, [])
+    normal_html = b"""<html><head><title>Oregon SNAP Status</title><meta name=\"description\" content=\"Normal issuance continues.\" /></head><body><article><p>SNAP benefits are being issued on the normal schedule.</p><p>Households may continue to access benefits this week.</p></article></body></html>"""
+    delayed_html = b"""<html><head><title>Oregon SNAP Status</title><meta name=\"description\" content=\"SNAP benefit delay notice.\" /></head><body><article><p>SNAP benefits have been delayed because of a card vendor issue.</p><p>Households should expect interrupted issuance this week.</p></article></body></html>"""
+    payloads = iter([normal_html, delayed_html])
+
+    def fetcher(_url: str, timeout: int = 15):
+        return next(payloads)
+
+    first = food_line.collect_food_line_auto_sources(tmp_path, date, fetcher=fetcher)
+    assert first["source_count"] == 0
+    second = food_line.collect_food_line_auto_sources(tmp_path, date, fetcher=fetcher)
+    assert second["source_count"] == 1
+    rows = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "sources" / date / "auto_sources.json").read_text(encoding="utf-8"))
+    row = rows[0]
+    assert row["pressure_type"] == "benefit disruption"
+    assert "delayed" in row["exact_supporting_passage"].lower()
+    assert row["page_change_detected"] is True
+    assert row["prior_exact_supporting_passage"]
+    assert "normal schedule" in row["prior_exact_supporting_passage"].lower()
+    history = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "source_performance_history.json").read_text(encoding="utf-8"))
+    assert history[source_id]["last_material_change_type"] == "benefit disruption"
+    assert history[source_id]["last_emitted_candidate_id"] == row["source_record_id"]
+
+
 def test_food_line_candidate_intake_imports_valid_rows_and_skips_templates(tmp_path: Path):
     _ensure_assets(tmp_path)
     existing_registry = _write_candidate_registry(

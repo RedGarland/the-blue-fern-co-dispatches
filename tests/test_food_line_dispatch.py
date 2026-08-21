@@ -11931,6 +11931,8 @@ def test_food_line_daily_publish_wrapper_check_only_reports_release_readiness(tm
     payload = json.loads(completed.stdout)
     assert payload["status"] == "release_ready"
     assert payload["publication_capability"] is True
+    assert isinstance(payload["principal"], str)
+    assert payload["principal"]
     assert payload["source_branch"] == "add/pages-repo-default"
     assert payload["proposal_path"] == str(proposed_path)
     assert payload["signal_review_path"] == str(signal_review_path)

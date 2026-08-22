@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import importlib.util
 import subprocess
 import sys
@@ -14,6 +15,12 @@ def _preflight_report(lines: list[str], monkeypatch, tmp_path: Path):
     monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: None)
     monkeypatch.setattr(preflight_repo_state, "_run_git_status", lambda _repo: (0, lines))
     return preflight_repo_state.build_preflight_report(source_repo)
+
+
+def _clean_env() -> dict[str, str]:
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
+    return env
 
 
 def _load_scheduler_module(repo: Path):
@@ -129,3 +136,20 @@ def test_care_line_scheduler_verify_checkout_allows_runtime_state_but_blocks_sou
         assert "src/bluefern_dispatches/care_line_national_pipeline.py" in str(exc)
     else:  # pragma: no cover
         raise AssertionError("expected dirty checkout to fail closed")
+
+
+def test_care_line_collection_scheduler_help_executes_from_other_cwd(tmp_path: Path) -> None:
+    repo = Path(__file__).resolve().parents[1]
+    completed = subprocess.run(
+        [sys.executable, str(repo / "scripts" / "care_line_collection_scheduler.py"), "--help"],
+        cwd=tmp_path,
+        env=_clean_env(),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    combined = completed.stdout + completed.stderr
+    assert "usage:" in combined.lower()
+    assert "ModuleNotFoundError" not in combined

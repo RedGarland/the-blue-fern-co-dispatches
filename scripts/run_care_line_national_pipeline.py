@@ -25,6 +25,15 @@ SMOKE_SOURCE_LIMIT_CEILING = 3
 SMOKE_ITEMS_PER_SOURCE_CEILING = 3
 
 
+def _write_json_stdout(payload: object) -> None:
+    text = json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+    if hasattr(sys.stdout, "buffer"):
+        sys.stdout.buffer.write(text.encode("utf-8"))
+        sys.stdout.buffer.flush()
+        return
+    sys.stdout.write(text)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run the canonical non-publishing Care Line national intake pipeline.")
     parser.add_argument("--repo-root", default=str(ROOT))
@@ -70,7 +79,7 @@ def main(argv: list[str] | None = None) -> int:
         collection_runs_root=SMOKE_COLLECTION_RUNS_ROOT if args.smoke_test else Path("data/dispatches/care-line/collection-runs"),
         review_root=SMOKE_REVIEW_ROOT if args.smoke_test else Path("data/dispatches/care-line/review"),
     )
-    print(json.dumps(result, indent=2, sort_keys=True, ensure_ascii=False))
+    _write_json_stdout(result)
     status = str((result.get("run_manifest") or {}).get("status") or "")
     return 0 if status in {"success", "partial_success"} else 1
 

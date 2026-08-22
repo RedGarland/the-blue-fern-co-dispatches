@@ -444,6 +444,7 @@ def run_collection_once(
         "--repo-root", str(root),
         "--collection-only",
         "--run-date", edition_date,
+        "--run-id", run_id,
         "--fetch-timeout", str(fetch_timeout),
         "--active-queue-limit", str(active_queue_limit),
         "--low-priority-cap", str(low_priority_cap),

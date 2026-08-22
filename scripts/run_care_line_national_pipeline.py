@@ -38,6 +38,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run the canonical non-publishing Care Line national intake pipeline.")
     parser.add_argument("--repo-root", default=str(ROOT))
     parser.add_argument("--run-date", required=True)
+    parser.add_argument("--run-id", default=None)
     parser.add_argument("--collection-only", action="store_true")
     parser.add_argument("--smoke-test", action="store_true")
     parser.add_argument("--max-sources", type=int, default=None)
@@ -67,6 +68,7 @@ def main(argv: list[str] | None = None) -> int:
     result = run_national_pipeline(
         Path(args.repo_root).resolve(),
         run_date=args.run_date,
+        run_id=args.run_id,
         include_partial=not args.exclude_partial,
         include_manual_review=args.include_manual_review,
         allow_insecure_tls=args.allow_insecure_tls,

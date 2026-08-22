@@ -51,3 +51,25 @@ def test_care_line_national_pipeline_script_handles_utf8_json_on_cp1252_stdout()
     assert result.returncode == 0, result.stdout + result.stderr
     assert "unicode narrow no-break space" in result.stdout
     assert "\\u202f" not in result.stdout
+
+
+def test_care_line_national_pipeline_script_forwards_run_id(tmp_path: Path, monkeypatch) -> None:
+    repo = Path(__file__).resolve().parents[1]
+    import scripts.run_care_line_national_pipeline as cli
+
+    captured: dict[str, object] = {}
+
+    monkeypatch.setattr(cli, "run_national_pipeline", lambda *args, **kwargs: captured.update(kwargs) or {"run_manifest": {"status": "success"}})
+
+    result = cli.main([
+        "--repo-root",
+        str(repo),
+        "--run-date",
+        "2026-08-21",
+        "--run-id",
+        "scheduled-123",
+        "--collection-only",
+    ])
+
+    assert result == 0
+    assert captured["run_id"] == "scheduled-123"

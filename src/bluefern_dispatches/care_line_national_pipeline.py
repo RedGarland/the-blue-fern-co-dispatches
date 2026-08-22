@@ -1207,10 +1207,11 @@ def begin_collection_run(
     run_date: str,
     source_rows: Iterable[dict[str, Any]],
     settings: Mapping[str, Any],
+    run_id: str | None = None,
     collection_runs_root: Path = COLLECTION_RUNS_ROOT,
 ) -> dict[str, Any]:
     source_ids = [_text(row, "source_id") for row in source_rows]
-    run_id = build_run_id(root, run_date=run_date, source_ids=source_ids, collection_runs_root=collection_runs_root)
+    run_id = run_id or build_run_id(root, run_date=run_date, source_ids=source_ids, collection_runs_root=collection_runs_root)
     run_dir = root / collection_runs_root / run_date / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
     manifest = {
@@ -3247,6 +3248,7 @@ def run_national_pipeline(
     root: Path,
     *,
     run_date: str,
+    run_id: str | None = None,
     include_partial: bool = True,
     include_manual_review: bool = False,
     allow_insecure_tls: bool = False,
@@ -3284,6 +3286,7 @@ def run_national_pipeline(
         run_date=run_date,
         source_rows=source_rows,
         settings=settings,
+        run_id=run_id,
         collection_runs_root=collection_runs_root,
     )
     run_id = manifest["run_id"]

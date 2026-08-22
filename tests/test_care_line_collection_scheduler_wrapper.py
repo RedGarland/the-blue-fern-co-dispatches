@@ -122,6 +122,8 @@ def test_care_line_windows_wrapper_and_helper_are_present_and_bound_to_collectio
     assert cwd == tmp_path.resolve()
     assert Path(command[1]).name == "run_care_line_national_pipeline.py"
     assert "--collection-only" in command
+    assert "--run-id" in command
+    assert command[command.index("--run-id") + 1] == "run-1"
     assert "--smoke-test" in command
     assert "--max-sources" in command
     assert "2" in command

@@ -26,6 +26,24 @@ function Read-JsonFile {
     return Get-Content -Raw -LiteralPath $Path | ConvertFrom-Json
 }
 
+function Get-FoodLinePrincipalName {
+    if ($IsWindows) {
+        return [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+    }
+
+    $principal = [System.Environment]::UserName
+    if ([string]::IsNullOrWhiteSpace($principal)) {
+        $principal = $env:USER
+    }
+    if ([string]::IsNullOrWhiteSpace($principal)) {
+        $principal = $env:USERNAME
+    }
+    if ([string]::IsNullOrWhiteSpace($principal)) {
+        return "unknown"
+    }
+    return $principal
+}
+
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 if (-not $PublicationRoot) {
     $PublicationRoot = (Resolve-Path (Join-Path $scriptRoot "..\..")).Path
@@ -61,7 +79,7 @@ $checkResult = @{
     pages_repo = $PagesRepo
     proposed_task_name = "Blue Fern Food Line Daily Publish"
     proposed_trigger = "08:30 Pacific"
-    principal = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+    principal = Get-FoodLinePrincipalName
     bluesky_handle_available = $blueskyHandle
     bluesky_app_password_available = $blueskyPassword
     publication_capability = [bool]$readiness

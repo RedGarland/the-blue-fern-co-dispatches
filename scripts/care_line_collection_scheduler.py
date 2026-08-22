@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import getpass
 import json
 import os
 import socket
@@ -38,6 +39,14 @@ class SchedulerError(RuntimeError):
     """Fail-closed scheduler error."""
 
 
+@dataclass
+class ChildExecution:
+    pid: int | None
+    returncode: int
+    stdout: str
+    stderr: str
+
+
 def utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
@@ -55,6 +64,24 @@ def atomic_write_json(path: Path, value: dict[str, Any]) -> None:
 
 def _run(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
     return subprocess.run(command, cwd=cwd, text=True, capture_output=True, check=False)
+
+
+def _run_child(command: list[str], *, cwd: Path) -> ChildExecution:
+    process = subprocess.Popen(
+        command,
+        cwd=cwd,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    stdout, stderr = process.communicate()
+    return ChildExecution(
+        pid=process.pid,
+        returncode=int(process.returncode or 0),
+        stdout=stdout or "",
+        stderr=stderr or "",
+    )
 
 
 def _command_error(label: str, result: subprocess.CompletedProcess[str]) -> SchedulerError:
@@ -202,11 +229,185 @@ def _write_log(root: Path, *, run_date: str, run_id: str, command: list[str], re
     return path
 
 
+def _tail_lines(text: str, *, limit: int = 10) -> list[str]:
+    lines = [line for line in text.strip().splitlines() if line]
+    return lines[-limit:]
+
+
+def _scheduler_paths(root: Path, *, run_date: str, run_id: str, smoke_test: bool) -> tuple[Path, Path]:
+    log_root = SMOKE_LOG_ROOT if smoke_test else LOG_ROOT
+    receipt_root = SMOKE_RECEIPT_ROOT if smoke_test else RECEIPT_ROOT
+    return root / log_root / run_date / f"{run_id}.log", root / receipt_root / run_date / f"{run_id}.json"
+
+
+def _build_scheduler_record(
+    *,
+    root: Path,
+    run_date: str,
+    run_id: str,
+    branch: str,
+    smoke_test: bool,
+    started_at: str,
+    lock_path: Path,
+    log_path: Path,
+    receipt_path: Path,
+    command: list[str],
+) -> dict[str, Any]:
+    return {
+        "schema_version": SCHEDULER_SCHEMA,
+        "run_id": run_id,
+        "edition_date": run_date,
+        "status": "starting",
+        "ok": False,
+        "collection_only": True,
+        "smoke_test": smoke_test,
+        "started_at": started_at,
+        "completed_at": None,
+        "repo_root": str(root),
+        "working_directory": str(root),
+        "source_branch": branch,
+        "source_commit": None,
+        "principal": getpass.getuser(),
+        "process_id": os.getpid(),
+        "wrapper_path": str(root / "scripts" / "windows" / "run_care_line_national_collection.ps1"),
+        "python_executable": sys.executable,
+        "lock_path": str(lock_path.as_posix()),
+        "stale_lock_recovered": False,
+        "pipeline_exit_code": None,
+        "pipeline_status": None,
+        "pipeline_run_id": None,
+        "child_process_id": None,
+        "child_command": command,
+        "child_exit_code": None,
+        "child_stdout_tail": [],
+        "child_stderr_tail": [],
+        "wrapper_exception_type": None,
+        "wrapper_exception_message": None,
+        "failure_stage": None,
+        "run_manifest_path": "",
+        "review_queue_path": "",
+        "candidate_registry_path": "",
+        "log_path": str(log_path),
+        "receipt_path": str(receipt_path),
+        "publication_side_effects": {
+            "proposal_approval": False,
+            "edition_generation": False,
+            "release_manifest_generation": False,
+            "pages_sync": False,
+            "public_site_updates": False,
+            "signal_wire_publication": False,
+            "social_cards": False,
+            "audio": False,
+            "podcast": False,
+            "map": False,
+            "rss_publication": False,
+            "bluesky_publication": False,
+        },
+    }
+
+
+def _write_scheduler_log(
+    path: Path,
+    *,
+    record: dict[str, Any],
+    child: ChildExecution | None = None,
+    exc: Exception | None = None,
+) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    lines = [
+        f"started_at={record.get('started_at') or utc_now()}",
+        f"completed_at={record.get('completed_at') or ''}",
+        f"status={record.get('status')}",
+        f"ok={record.get('ok')}",
+        f"process_id={record.get('process_id')}",
+        f"principal={record.get('principal')}",
+        f"working_directory={record.get('working_directory')}",
+        f"repo_root={record.get('repo_root')}",
+        f"python_executable={record.get('python_executable')}",
+        f"source_branch={record.get('source_branch')}",
+        f"wrapper_path={record.get('wrapper_path')}",
+        f"command={' '.join(str(item) for item in (record.get('child_command') or []))}",
+        f"child_process_id={child.pid if child else record.get('child_process_id')}",
+        f"child_exit_code={child.returncode if child else record.get('child_exit_code')}",
+    ]
+    if record.get("wrapper_exception_type") or record.get("wrapper_exception_message"):
+        lines.extend(
+            [
+                f"wrapper_exception_type={record.get('wrapper_exception_type')}",
+                f"wrapper_exception_message={record.get('wrapper_exception_message')}",
+                f"failure_stage={record.get('failure_stage')}",
+            ]
+        )
+    if child is not None:
+        lines.extend(["", "[stdout]", child.stdout or "", "", "[stderr]", child.stderr or ""])
+    elif exc is not None:
+        lines.extend(["", "[exception]", f"{type(exc).__name__}: {exc}"])
+    path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+    return path
+
+
+def _finalize_failure(record: dict[str, Any], *, exc: Exception, stage: str) -> None:
+    record.update(
+        {
+            "status": "failure",
+            "ok": False,
+            "completed_at": utc_now(),
+            "pipeline_exit_code": record.get("pipeline_exit_code"),
+            "pipeline_status": record.get("pipeline_status"),
+            "wrapper_exception_type": type(exc).__name__,
+            "wrapper_exception_message": str(exc),
+            "failure_stage": stage,
+            "child_stdout_tail": record.get("child_stdout_tail") or [],
+            "child_stderr_tail": record.get("child_stderr_tail") or [],
+        }
+    )
+
+
+def _finalize_success(
+    record: dict[str, Any],
+    *,
+    source_commit: str,
+    child: ChildExecution,
+    pipeline_status: str,
+    pipeline_manifest: dict[str, Any] | None,
+    log_path: Path,
+) -> dict[str, Any]:
+    ok = child.returncode == 0 and pipeline_status in SUCCESS_STATUSES
+    record.update(
+        {
+            "status": pipeline_status or ("failure" if child.returncode else "unknown"),
+            "ok": ok,
+            "completed_at": utc_now(),
+            "source_commit": source_commit,
+            "pipeline_exit_code": child.returncode,
+            "pipeline_status": pipeline_status,
+            "pipeline_run_id": (pipeline_manifest or {}).get("run_id"),
+            "selected_source_ids": list((pipeline_manifest or {}).get("selected_source_ids") or []),
+            "successful_attempt_count": (pipeline_manifest or {}).get("successful_attempt_count"),
+            "failed_source_count": (pipeline_manifest or {}).get("failed_source_count"),
+            "skipped_source_count": (pipeline_manifest or {}).get("skipped_source_count"),
+            "active_review_queue_count": (pipeline_manifest or {}).get("active_review_queue_count"),
+            "manual_review_count": (pipeline_manifest or {}).get("manual_review_count"),
+            "production_review_queue_mutation_disabled": bool((pipeline_manifest or {}).get("production_review_queue_mutation_disabled")),
+            "run_manifest_path": str((pipeline_manifest or {}).get("run_manifest_path") or ""),
+            "review_queue_path": str((pipeline_manifest or {}).get("review_queue_path") or ""),
+            "candidate_registry_path": str((pipeline_manifest or {}).get("candidate_registry_path") or ""),
+            "log_path": str(log_path),
+            "child_process_id": child.pid,
+            "child_exit_code": child.returncode,
+            "child_stdout_tail": _tail_lines(child.stdout),
+            "child_stderr_tail": _tail_lines(child.stderr),
+        }
+    )
+    return record
+
+
 def run_collection_once(
     root: Path,
     *,
     run_date: str,
     branch: str,
+    run_id: str | None,
     smoke_test: bool,
     include_partial: bool,
     include_manual_review: bool,
@@ -225,136 +426,108 @@ def run_collection_once(
         max_items_per_source=max_items_per_source,
         allow_insecure_tls=allow_insecure_tls,
     )
-    run_id = f"{stamp()}-{os.getpid()}"
+    run_id = run_id or f"{stamp()}-{os.getpid()}"
     started_at = utc_now()
     lock_path = root / (SMOKE_LOCK_PATH if smoke_test else LOCK_PATH)
-    receipt_root = root / (SMOKE_RECEIPT_ROOT if smoke_test else RECEIPT_ROOT)
+    log_path, receipt_path = _scheduler_paths(root, run_date=edition_date, run_id=run_id, smoke_test=smoke_test)
+    command = [
+        sys.executable,
+        str(root / "scripts" / "run_care_line_national_pipeline.py"),
+        "--repo-root", str(root),
+        "--collection-only",
+        "--run-date", edition_date,
+        "--fetch-timeout", str(fetch_timeout),
+        "--active-queue-limit", str(active_queue_limit),
+        "--low-priority-cap", str(low_priority_cap),
+    ]
+    if smoke_test:
+        command.extend(
+            [
+                "--smoke-test",
+                "--max-sources", str(max_sources),
+                "--max-items-per-source", str(max_items_per_source),
+            ]
+        )
+    if include_manual_review:
+        command.append("--include-manual-review")
+    if not include_partial:
+        command.append("--exclude-partial")
+    if allow_insecure_tls:
+        command.append("--allow-insecure-tls")
     lock = SchedulerLock(lock_path)
-    lock_status = lock.acquire()
-    if lock_status == "already_running":
-        payload = {
-            "schema_version": SCHEDULER_SCHEMA,
-            "run_id": run_id,
-            "edition_date": edition_date,
-            "status": "already_running",
-            "ok": True,
-            "collection_only": True,
-            "smoke_test": smoke_test,
-            "selected_source_ids": [],
-            "started_at": started_at,
-            "completed_at": utc_now(),
-            "lock_path": str(lock_path.as_posix()),
-            "stale_lock_recovered": False,
-            "pipeline_exit_code": None,
-            "pipeline_status": None,
-            "production_review_queue_mutation_disabled": smoke_test,
-            "publication_side_effects": {
-                "proposal_approval": False,
-                "edition_generation": False,
-                "release_manifest_generation": False,
-                "pages_sync": False,
-                "public_site_updates": False,
-                "signal_wire_publication": False,
-                "social_cards": False,
-                "audio": False,
-                "podcast": False,
-                "map": False,
-                "rss_publication": False,
-                "bluesky_publication": False,
-            },
-        }
-        receipt_path = receipt_root / edition_date / f"{run_id}.json"
-        atomic_write_json(receipt_path, payload)
-        payload["receipt_path"] = str(receipt_path)
-        return 0, payload
-
+    receipt = _build_scheduler_record(
+        root=root,
+        run_date=edition_date,
+        run_id=run_id,
+        branch=branch,
+        smoke_test=smoke_test,
+        started_at=started_at,
+        lock_path=lock_path,
+        log_path=log_path,
+        receipt_path=receipt_path,
+        command=command,
+    )
+    atomic_write_json(receipt_path, receipt)
+    _write_scheduler_log(log_path, record=receipt)
+    lock_status = "already_running"
     try:
-        source_commit = verify_checkout(root, branch)
-        run_preflight(root)
-        command = [
-            sys.executable,
-            str(root / "scripts" / "run_care_line_national_pipeline.py"),
-            "--repo-root", str(root),
-            "--collection-only",
-            "--run-date", edition_date,
-            "--fetch-timeout", str(fetch_timeout),
-            "--active-queue-limit", str(active_queue_limit),
-            "--low-priority-cap", str(low_priority_cap),
-        ]
-        if smoke_test:
-            command.extend(
-                [
-                    "--smoke-test",
-                    "--max-sources", str(max_sources),
-                    "--max-items-per-source", str(max_items_per_source),
-                ]
+        lock_status = lock.acquire()
+        receipt["stale_lock_recovered"] = lock.stale_recovered
+        atomic_write_json(receipt_path, receipt)
+        _write_scheduler_log(log_path, record=receipt)
+        if lock_status == "already_running":
+            receipt.update(
+                {
+                    "status": "already_running",
+                    "ok": True,
+                    "completed_at": utc_now(),
+                    "stale_lock_recovered": False,
+                }
             )
-        if include_manual_review:
-            command.append("--include-manual-review")
-        if not include_partial:
-            command.append("--exclude-partial")
-        if allow_insecure_tls:
-            command.append("--allow-insecure-tls")
-        result = _run(command, cwd=root)
-        log_path = _write_log(root, run_date=edition_date, run_id=run_id, command=command, result=result, smoke_test=smoke_test)
+            atomic_write_json(receipt_path, receipt)
+            _write_scheduler_log(log_path, record=receipt)
+            return 0, receipt
+
+        failure_stage = "verify_checkout"
+        source_commit = verify_checkout(root, branch)
+        receipt["source_commit"] = source_commit
+        atomic_write_json(receipt_path, receipt)
+        failure_stage = "preflight"
+        run_preflight(root)
+        failure_stage = "launch_child"
+        child = _run_child(command, cwd=root)
         pipeline_payload: dict[str, Any] = {}
-        if result.stdout.strip():
+        pipeline_parse_error = ""
+        if child.stdout.strip():
             try:
-                pipeline_payload = json.loads(result.stdout)
-            except json.JSONDecodeError:
+                pipeline_payload = json.loads(child.stdout)
+            except json.JSONDecodeError as exc:
                 pipeline_payload = {}
+                pipeline_parse_error = str(exc)
         pipeline_manifest = pipeline_payload.get("run_manifest") if isinstance(pipeline_payload, dict) else {}
         pipeline_status = str((pipeline_manifest or {}).get("status") or "")
-        ok = result.returncode == 0 and pipeline_status in SUCCESS_STATUSES
-        receipt = {
-            "schema_version": SCHEDULER_SCHEMA,
-            "run_id": run_id,
-            "edition_date": edition_date,
-            "status": pipeline_status or ("failure" if result.returncode else "unknown"),
-            "ok": ok,
-            "collection_only": True,
-            "smoke_test": smoke_test,
-            "started_at": started_at,
-            "completed_at": utc_now(),
-            "repo_root": str(root),
-            "source_branch": branch,
-            "source_commit": source_commit,
-            "lock_path": str(lock_path.as_posix()),
-            "stale_lock_recovered": lock.stale_recovered,
-            "pipeline_exit_code": result.returncode,
-            "pipeline_status": pipeline_status,
-            "pipeline_run_id": (pipeline_manifest or {}).get("run_id"),
-            "selected_source_ids": list((pipeline_manifest or {}).get("selected_source_ids") or []),
-            "successful_attempt_count": (pipeline_manifest or {}).get("successful_attempt_count"),
-            "failed_source_count": (pipeline_manifest or {}).get("failed_source_count"),
-            "skipped_source_count": (pipeline_manifest or {}).get("skipped_source_count"),
-            "active_review_queue_count": (pipeline_manifest or {}).get("active_review_queue_count"),
-            "manual_review_count": (pipeline_manifest or {}).get("manual_review_count"),
-            "production_review_queue_mutation_disabled": bool((pipeline_manifest or {}).get("production_review_queue_mutation_disabled")),
-            "run_manifest_path": str((pipeline_manifest or {}).get("run_manifest_path") or ""),
-            "review_queue_path": str((pipeline_manifest or {}).get("review_queue_path") or ""),
-            "candidate_registry_path": str((pipeline_manifest or {}).get("candidate_registry_path") or ""),
-            "log_path": str(log_path),
-            "publication_side_effects": {
-                "proposal_approval": False,
-                "edition_generation": False,
-                "release_manifest_generation": False,
-                "pages_sync": False,
-                "public_site_updates": False,
-                "signal_wire_publication": False,
-                "social_cards": False,
-                "audio": False,
-                "podcast": False,
-                "map": False,
-                "rss_publication": False,
-                "bluesky_publication": False,
-            },
-            "stderr_tail": (result.stderr or "").strip().splitlines()[-10:],
-        }
-        receipt_path = receipt_root / edition_date / f"{run_id}.json"
+        receipt = _finalize_success(
+            receipt,
+            source_commit=source_commit,
+            child=child,
+            pipeline_status=pipeline_status,
+            pipeline_manifest=pipeline_manifest if isinstance(pipeline_manifest, dict) else None,
+            log_path=log_path,
+        )
+        if pipeline_parse_error:
+            receipt["pipeline_parse_error"] = pipeline_parse_error
+            receipt["failure_stage"] = "parse_output"
+            receipt["status"] = receipt["status"] if child.returncode else "failure"
+            receipt["ok"] = child.returncode == 0 and not pipeline_parse_error and pipeline_status in SUCCESS_STATUSES
         atomic_write_json(receipt_path, receipt)
-        receipt["receipt_path"] = str(receipt_path)
-        return (0 if ok else (result.returncode or 1)), receipt
+        _write_scheduler_log(log_path, record=receipt, child=child)
+        return (0 if receipt["ok"] else (child.returncode or 1)), receipt
+    except Exception as exc:
+        stage = locals().get("failure_stage", "unknown")
+        _finalize_failure(receipt, exc=exc, stage=stage)
+        atomic_write_json(receipt_path, receipt)
+        _write_scheduler_log(log_path, record=receipt, exc=exc)
+        return 1, receipt
     finally:
         lock.release()
 
@@ -364,6 +537,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--repo-root", required=True)
     parser.add_argument("--run-date", required=True)
     parser.add_argument("--branch", default=PRODUCTION_BRANCH)
+    parser.add_argument("--run-id", default=None)
     parser.add_argument("--smoke-test", action="store_true")
     parser.add_argument("--max-sources", type=int, default=None)
     parser.add_argument("--include-manual-review", action="store_true")
@@ -382,6 +556,7 @@ def main(argv: list[str] | None = None) -> int:
         Path(args.repo_root),
         run_date=args.run_date,
         branch=args.branch,
+        run_id=args.run_id,
         smoke_test=args.smoke_test,
         include_partial=not args.exclude_partial,
         include_manual_review=args.include_manual_review,

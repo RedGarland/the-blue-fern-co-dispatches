@@ -19,7 +19,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--max-events", type=int, default=5)
     args = parser.parse_args(argv)
     result = run_queue_poll(Path(args.repo_root), max_events=args.max_events)
-    print(json.dumps(result, indent=2, sort_keys=True, ensure_ascii=False))
+    text = json.dumps(result, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+    if hasattr(sys.stdout, "buffer"):
+        sys.stdout.buffer.write(text.encode("utf-8"))
+        sys.stdout.buffer.flush()
+    else:
+        sys.stdout.write(text)
     return 0 if result.get("ok", False) else 1
 
 

@@ -132,6 +132,24 @@ def test_care_line_windows_wrapper_and_helper_are_present_and_bound_to_collectio
     assert "--allow-insecure-tls" not in command
 
 
+def test_care_line_scheduler_child_launch_runs_real_harmless_process(tmp_path: Path) -> None:
+    repo = Path(__file__).resolve().parents[1]
+    scheduler = _load_scheduler_module(repo)
+    child = scheduler._run_child(
+        [
+            sys.executable,
+            "-c",
+            "import sys; sys.stdout.write('hello\\n'); sys.stderr.write('warn\\n'); raise SystemExit(7)",
+        ],
+        cwd=tmp_path,
+    )
+
+    assert child.pid > 0
+    assert child.returncode == 7
+    assert child.stdout == "hello\n"
+    assert child.stderr == "warn\n"
+
+
 def test_care_line_windows_wrapper_writes_diagnostic_receipt_on_python_launch_failure(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     (repo / "scripts" / "windows").mkdir(parents=True, exist_ok=True)

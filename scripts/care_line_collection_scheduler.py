@@ -73,7 +73,6 @@ def _run_child(command: list[str], *, cwd: Path) -> ChildExecution:
         text=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        check=False,
     )
     stdout, stderr = process.communicate()
     return ChildExecution(

@@ -14,7 +14,10 @@ if str(ROOT) not in sys.path:
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+from scripts.care_line_runtime_paths import CARE_LINE_ALLOWED_DIRTY_CATEGORIES, classify_care_line_runtime_path
 from scripts.food_line_runtime_paths import FOOD_LINE_ALLOWED_DIRTY_CATEGORIES, classify_food_line_runtime_path
+
+ALLOWED_DIRTY_CATEGORIES = FOOD_LINE_ALLOWED_DIRTY_CATEGORIES | CARE_LINE_ALLOWED_DIRTY_CATEGORIES
 
 
 def _run_git_status(repo: Path) -> tuple[int, list[str]]:
@@ -62,6 +65,9 @@ def classify_path(path_text: str) -> str:
     food_line_category = classify_food_line_runtime_path(path)
     if food_line_category:
         return food_line_category
+    care_line_category = classify_care_line_runtime_path(path)
+    if care_line_category:
+        return care_line_category
     if lower.startswith("output/review/") or "/review/" in lower or lower.startswith("output/dispatches/") and "/review/" in lower:
         return "review_output"
     if lower.startswith("output/site/") or lower.startswith("bluefern-dispatches-pages/"):
@@ -91,7 +97,7 @@ def classify_status_line(line: str) -> dict[str, Any] | None:
         "path": path,
         "category": category,
         "is_untracked": status == "??",
-        "is_risky": status != "??" or category not in FOOD_LINE_ALLOWED_DIRTY_CATEGORIES,
+        "is_risky": status != "??" or category not in ALLOWED_DIRTY_CATEGORIES,
     }
 
 
@@ -169,7 +175,7 @@ def build_preflight_report(source_repo: Path | None = None, pages_repo: Path | N
         "source_repo": source_report,
         "pages_repo": pages_report,
         "pages_repo_status": pages_status,
-        "allowlisted_categories": sorted(FOOD_LINE_ALLOWED_DIRTY_CATEGORIES),
+        "allowlisted_categories": sorted(ALLOWED_DIRTY_CATEGORIES),
     }
 
 

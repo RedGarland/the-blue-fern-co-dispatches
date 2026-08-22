@@ -12,6 +12,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
+from scripts.care_line_runtime_paths import CARE_LINE_ALLOWED_DIRTY_CATEGORIES, classify_care_line_runtime_path
+
 
 ROOT = Path(__file__).resolve().parents[1]
 PRODUCTION_BRANCH = "add/pages-repo-default"
@@ -57,6 +59,36 @@ def _command_error(label: str, result: subprocess.CompletedProcess[str]) -> Sche
     return SchedulerError(f"{label} failed with exit code {result.returncode}: {tail}")
 
 
+def _normalize_status_path(path_text: str) -> str:
+    text = path_text.strip().replace("\\", "/")
+    if " -> " in text:
+        text = text.split(" -> ", 1)[1].strip()
+    if text.startswith("./"):
+        return text[2:]
+    return text
+
+
+def _unexpected_dirty_paths(status_output: str) -> list[str]:
+    unexpected: list[str] = []
+    for raw_line in status_output.splitlines():
+        line = raw_line.rstrip()
+        if not line or line.startswith("## "):
+            continue
+        if len(line) < 3:
+            continue
+        status = line[:2]
+        path = _normalize_status_path(line[3:])
+        if not path:
+            continue
+        if status != "??":
+            unexpected.append(path)
+            continue
+        category = classify_care_line_runtime_path(path)
+        if category not in CARE_LINE_ALLOWED_DIRTY_CATEGORIES:
+            unexpected.append(path)
+    return sorted(dict.fromkeys(unexpected))
+
+
 def validate_date(value: str) -> str:
     try:
         return datetime.strptime(value, "%Y-%m-%d").date().isoformat()
@@ -86,8 +118,9 @@ def verify_checkout(root: Path, branch: str) -> str:
     status = _run(["git", "status", "--porcelain=v1", "--untracked-files=all"], cwd=root)
     if status.returncode != 0:
         raise _command_error("git status", status)
-    if status.stdout.strip():
-        raise SchedulerError("collection runner checkout is dirty; run failed closed")
+    unexpected = _unexpected_dirty_paths(status.stdout or "")
+    if unexpected:
+        raise SchedulerError(f"collection runner checkout is dirty; run failed closed: {', '.join(unexpected)}")
 
     current = _run(["git", "branch", "--show-current"], cwd=root)
     if current.returncode != 0:

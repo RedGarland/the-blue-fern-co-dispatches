@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -16,6 +18,14 @@ def _load_scheduler_module(repo: Path):
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
+
+
+def _resolve_powershell_executable() -> str:
+    for candidate in ("powershell.exe", "pwsh"):
+        resolved = shutil.which(candidate)
+        if resolved:
+            return resolved
+    raise RuntimeError("PowerShell is not available for wrapper execution tests")
 
 
 def test_care_line_windows_wrapper_and_helper_are_present_and_bound_to_collection_contract(tmp_path: Path) -> None:
@@ -62,7 +72,7 @@ def test_care_line_windows_wrapper_and_helper_are_present_and_bound_to_collectio
                 "production_review_queue_mutation_disabled": True,
             }
         }
-        return subprocess.CompletedProcess(command, 0, stdout=json.dumps(payload), stderr="")
+        return scheduler.ChildExecution(pid=4321, returncode=0, stdout=json.dumps(payload), stderr="")
 
     class DummyLock:
         def __init__(self, path: Path) -> None:
@@ -79,13 +89,14 @@ def test_care_line_windows_wrapper_and_helper_are_present_and_bound_to_collectio
 
     scheduler.verify_checkout = lambda root, branch: "abc123"  # type: ignore[assignment]
     scheduler.run_preflight = lambda root: None  # type: ignore[assignment]
-    scheduler._run = fake_run  # type: ignore[assignment]
+    scheduler._run_child = fake_run  # type: ignore[assignment]
     scheduler.SchedulerLock = DummyLock  # type: ignore[assignment]
 
     exit_code, receipt = scheduler.run_collection_once(
         tmp_path,
         run_date="2026-08-16",
         branch=scheduler.PRODUCTION_BRANCH,
+        run_id="run-1",
         smoke_test=True,
         include_partial=False,
         include_manual_review=True,
@@ -119,3 +130,70 @@ def test_care_line_windows_wrapper_and_helper_are_present_and_bound_to_collectio
     assert "--include-manual-review" in command
     assert "--exclude-partial" in command
     assert "--allow-insecure-tls" not in command
+
+
+def test_care_line_windows_wrapper_writes_diagnostic_receipt_on_python_launch_failure(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    (repo / "scripts" / "windows").mkdir(parents=True, exist_ok=True)
+    (repo / "status").mkdir(parents=True, exist_ok=True)
+    (repo / "logs").mkdir(parents=True, exist_ok=True)
+    shutil.copy2(Path(__file__).resolve().parents[1] / "scripts" / "windows" / "run_care_line_national_collection.ps1", repo / "scripts" / "windows" / "run_care_line_national_collection.ps1")
+    shutil.copy2(Path(__file__).resolve().parents[1] / "scripts" / "care_line_collection_scheduler.py", repo / "scripts" / "care_line_collection_scheduler.py")
+
+    powershell = _resolve_powershell_executable()
+    run_date = "2026-08-22"
+    run_id = "diagnostic-failure-1"
+    fake_python = repo / ".venv" / "Scripts" / "missing-python.exe"
+    command = [
+        powershell,
+        "-NoProfile",
+        "-NonInteractive",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        str(repo / "scripts" / "windows" / "run_care_line_national_collection.ps1"),
+        "-RepositoryRoot",
+        str(repo),
+        "-PythonExecutable",
+        str(fake_python),
+        "-SourceBranch",
+        "add/pages-repo-default",
+        "-RunDate",
+        run_date,
+        "-RunId",
+        run_id,
+    ]
+
+    completed = subprocess.run(
+        command,
+        cwd=repo,
+        env=os.environ.copy(),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    receipt = repo / "status" / "care-line" / "scheduler-runs" / run_date / f"{run_id}.json"
+    log_path = repo / "logs" / "care-line" / "collection-scheduler" / run_date / f"{run_id}.log"
+
+    assert completed.returncode != 0
+    assert receipt.exists(), completed.stdout + completed.stderr
+    assert log_path.exists(), completed.stdout + completed.stderr
+
+    receipt_data = json.loads(receipt.read_text(encoding="utf-8"))
+    assert receipt_data["run_id"] == run_id
+    assert receipt_data["status"] == "failure"
+    assert receipt_data["ok"] is False
+    assert receipt_data["failure_stage"] == "launch_python"
+    assert receipt_data["wrapper_exception_type"] == "ItemNotFoundException"
+    assert "missing-python.exe" in receipt_data["wrapper_exception_message"]
+    assert receipt_data["wrapper_path"].endswith("run_care_line_national_collection.ps1")
+    assert receipt_data["python_executable"] == str(fake_python)
+    assert receipt_data["source_branch"] == "add/pages-repo-default"
+    assert receipt_data["child_process_id"] is None
+    assert receipt_data["child_exit_code"] is None
+
+    log_text = log_path.read_text(encoding="utf-8")
+    assert "status=failure" in log_text
+    assert "failure_stage=launch_python" in log_text
+    assert "missing-python.exe" in log_text

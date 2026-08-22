@@ -1,0 +1,460 @@
+[
+  {
+    "story_id": "gaza-story-2026-08-22-008",
+    "title": "Former British and French diplomats urge action over Israel's 'erasure' of Palestine",
+    "summary": "In letter to Macron and Burnham, more than 100 senior figures accuse. Israel of ethnic cleansing and call for measures including trade ban More than 100 French and British former diplomats have said Palestine is being erased in front of the world's eyes and called for urgent action including trade and arms sales bans to press. Israel to accept a Palestinian state. An unprecedented joint letter dispenses with diplomatic language by accusing. Israel of ethnic cleansing and warning that the world no longer sees. Israel as a genuine democracy. Uphold the decisions of the international court of justice and the international criminal court. Suspend the EU-Israel association agreement and the UK-Israel trade and partnership agreement for breach of human rights provisions. Suspend arms transfers to and from Israel and all bilateral military cooperation. Insist on unrestricted aid access to Gaza, led by the UN Relief and Works Agency, other UN agencies and international NGOs, with consequences for non-compliance, and access too for journalists, diplomats and parliamentarians. Ban all trade with settlements, including goods, investment, insurance and other financial services. Warn potential bidders for the \"red line\" E1 settlement or other settlement financing/construction that their interests in and with the UK and France will suffer. Make it an offence for British and French citizens to buy property on stolen Palestinian land and remove charitable status from \"charities\" funding settlements.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 87,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "ceasefire_diplomacy",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-22-guardian-world-29302f293729"
+    ],
+    "source_ids": [
+      "gaza-2026-08-22-guardian-world-29302f293729"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/aug/22/uk-france-diplomats-israel-palestine"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-22-guardian-world-29302f293729",
+        "title": "Former British and French diplomats urge action over Israel's 'erasure' of Palestine",
+        "url": "https://www.theguardian.com/world/2026/aug/22/uk-france-diplomats-israel-palestine",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "In letter to Macron and Burnham, more than 100 senior figures accuse Israel of ethnic cleansing and call for measures including trade ban More than 100 French and British former diplomats have said Palestine is being erased in front of the world's eyes and called for urgent action including trade and arms sales bans to press Israel to accept a Palestinian state. An unprecedented joint letter dispenses with diplomatic language by accusing Israel of ethnic cleansing and warning that the world no longer sees Israel as a genuine democracy. Uphold the decisions of the international court of justice and the international criminal court. Suspend the EU-Israel association agreement and the UK-Israel trade and partnership agreement for breach of human rights provisions. Suspend arms transfers to and from Israel and all bilateral military cooperation. Insist on unrestricted aid access to Gaza, led by the UN Relief and Works Agency, other UN agencies and international NGOs, with consequences for non-compliance, and access too for journalists, diplomats and parliamentarians. Ban all trade with settlements, including goods, investment, insurance and other financial services. Warn potential bidders for the \"red line\" E1 settlement or other settlement financing/construction that their interests in and with the UK and France will suffer. Make it an offence for British and French citizens to buy property on stolen Palestinian land and remove charitable status from \"charities\" funding settlements."
+      }
+    ],
+    "generated_at": "2026-08-22T14:40:41.983347+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 87,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-22-007",
+    "title": "'Shameful': UK, Australia and Canada criticise Israel over Gaza aid convoy killings decision",
+    "summary": "Joint statement issued after IDF said it will not pursue criminal investigations into April 2024 strike that killed seven humanitarian workers Britain, Australia and Canada have called the decision of the Israeli military authorities not to open a criminal investigation into the April 2024 airstrikes that hit a convoy of aid vehicles in Gaza \"shameful\". The strikes killed seven humanitarian workers from the US-based World Central Kitchen (WCK) organisation. WCK staff from the three countries were among the casualties of the attack, which prompted global outrage.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 66,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "civilian_harm",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-22-guardian-world-223d102cbb82"
+    ],
+    "source_ids": [
+      "gaza-2026-08-22-guardian-world-223d102cbb82"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/aug/21/uk-australia-canada-criticise-israel-gaza-aid-convoy-killings-decision"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-22-guardian-world-223d102cbb82",
+        "title": "'Shameful': UK, Australia and Canada criticise Israel over Gaza aid convoy killings decision",
+        "url": "https://www.theguardian.com/world/2026/aug/21/uk-australia-canada-criticise-israel-gaza-aid-convoy-killings-decision",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Joint statement issued after IDF said it will not pursue criminal investigations into April 2024 strike that killed seven humanitarian workers Britain, Australia and Canada have called the decision of the Israeli military authorities not to open a criminal investigation into the April 2024 airstrikes that hit a convoy of aid vehicles in Gaza \"shameful\". The strikes killed seven humanitarian workers from the US-based World Central Kitchen (WCK) organisation. WCK staff from the three countries were among the casualties of the attack, which prompted global outrage."
+      }
+    ],
+    "generated_at": "2026-08-22T14:40:41.983347+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 66,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-22-011",
+    "title": "Hundreds of children take part in swimming class on Gaza's shore",
+    "summary": "On Gaza's shore, 1,300 Palestinian children joined a swimming class to cope with the trauma of Israel's genocidal war.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-22-aljazeera-middle-east-21ad4c0b8dad"
+    ],
+    "source_ids": [
+      "gaza-2026-08-22-aljazeera-middle-east-21ad4c0b8dad"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/8/22/hundreds-of-children-take-part-in-swimming-class-on-gazas-shore?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-22-aljazeera-middle-east-21ad4c0b8dad",
+        "title": "Hundreds of children take part in swimming class on Gaza's shore",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/8/22/hundreds-of-children-take-part-in-swimming-class-on-gazas-shore?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "On Gaza's shore, 1,300 Palestinian children joined a swimming class to cope with the trauma of Israel's genocidal war."
+      }
+    ],
+    "generated_at": "2026-08-22T14:40:41.983347+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-22-001",
+    "title": "UK, Canada and Australia condemn Israel for refusing criminal probe into aid worker killings in Gaza",
+    "summary": "Seven World Central Kitchen workers were killed in the Israeli strike on their convoy in 2024.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 43,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-22-bbc-middle-east-98eaf7453f8f"
+    ],
+    "source_ids": [
+      "gaza-2026-08-22-bbc-middle-east-98eaf7453f8f"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/cvgl2pe09eno?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-22-bbc-middle-east-98eaf7453f8f",
+        "title": "UK, Canada and Australia condemn Israel for refusing criminal probe into aid worker killings in Gaza",
+        "url": "https://www.bbc.co.uk/news/articles/cvgl2pe09eno?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Seven World Central Kitchen workers were killed in the Israeli strike on their convoy in 2024."
+      }
+    ],
+    "generated_at": "2026-08-22T14:40:41.983347+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 43,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-22-010",
+    "title": "Jewish activists push back against Israeli settlers",
+    "summary": "Jewish activists provide a 'protective presence' to deter settler violence in parts of the Occupied West Bank.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-22-aljazeera-middle-east-a0173a493388"
+    ],
+    "source_ids": [
+      "gaza-2026-08-22-aljazeera-middle-east-a0173a493388"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/8/22/jewish-activists-push-back-against-israeli-settlers?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-22-aljazeera-middle-east-a0173a493388",
+        "title": "Jewish activists push back against Israeli settlers",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/8/22/jewish-activists-push-back-against-israeli-settlers?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Jewish activists provide a 'protective presence' to deter settler violence in parts of the Occupied West Bank."
+      }
+    ],
+    "generated_at": "2026-08-22T14:40:41.983347+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-08-04-006",
+    "prior_edition_date": "2026-08-04",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-22-005",
+    "title": "How Israel is expanding settlements in drive to reshape West Bank",
+    "summary": "There has been a significant expansion of building and road construction on Palestinian land occupied by Israel in recent years.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 42,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-22-bbc-middle-east-c4dccacd4ef0"
+    ],
+    "source_ids": [
+      "gaza-2026-08-22-bbc-middle-east-c4dccacd4ef0"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/c2lq5g4dedpo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-22-bbc-middle-east-c4dccacd4ef0",
+        "title": "How Israel is expanding settlements in drive to reshape West Bank",
+        "url": "https://www.bbc.co.uk/news/articles/c2lq5g4dedpo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "There has been a significant expansion of building and road construction on Palestinian land occupied by Israel in recent years."
+      }
+    ],
+    "generated_at": "2026-08-22T14:40:41.983347+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 42,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-08-04-009",
+    "prior_edition_date": "2026-08-04",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-22-002",
+    "title": "Israel re-establishes closed West Bank settlement, defying growing international protests",
+    "summary": "Thirty \"pioneer families\" have arrived on a wave of nationalism driven by Israel's government, but the rapid change has left nearby Palestinian residents fearful.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 42,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-22-bbc-middle-east-8fb4af9a38a1"
+    ],
+    "source_ids": [
+      "gaza-2026-08-22-bbc-middle-east-8fb4af9a38a1"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/cn7n0l4p0kzo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-22-bbc-middle-east-8fb4af9a38a1",
+        "title": "Israel re-establishes closed West Bank settlement, defying growing international protests",
+        "url": "https://www.bbc.co.uk/news/articles/cn7n0l4p0kzo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Thirty \"pioneer families\" have arrived on a wave of nationalism driven by Israel's government, but the rapid change has left nearby Palestinian residents fearful."
+      }
+    ],
+    "generated_at": "2026-08-22T14:40:41.983347+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 42,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  }
+]

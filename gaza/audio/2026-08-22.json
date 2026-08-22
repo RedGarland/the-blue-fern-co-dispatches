@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-22",
+  "generated_at": "2026-08-22T14:41:03.886007Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-08-22.mp3",
+  "audio_url": "/gaza/audio/2026-08-22.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1807,
+  "tts_input_word_count": 285,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1885056,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-08-22T14:41:03.885968Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-08-22-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-22/",
+  "script_text": "This is the Gaza Dispatch audio briefing for August 22, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Former British and French diplomats urge action over Israel's 'erasure' of Palestine. In letter to Macron and Burnham, more than 100 senior figures accuse. This was reported by The Guardian.\n\n2. 'Shameful': UK, Australia and Canada criticise Israel over Gaza aid convoy killings decision. Joint statement issued after IDF said it will not pursue criminal investigations into April 2024 strike that killed seven humanitarian workers Britain, Australia and Canada have called the decision of the Israeli military authorities not to open a criminal investigation into the April 2024 airstrikes that hit a convoy of aid vehicles in Gaza \"shameful\". This was reported by The Guardian.\n\n3. Hundreds of children take part in swimming class on Gaza's shore. On Gaza's shore, 1,300 Palestinian children joined a swimming class to cope with the trauma of Israel's genocidal war. This was reported by Al Jazeera.\n\n4. UK, Canada and Australia condemn Israel for refusing criminal probe into aid worker killings in Gaza. Seven World Central Kitchen workers were killed in the Israeli strike on their convoy in 2024. This was reported by BBC News.\n\n5. Jewish activists push back against Israeli settlers. Jewish activists provide a 'protective presence' to deter settler violence in parts of the Occupied West Bank. This was reported by Al Jazeera.\n\n6. How Israel is expanding settlements in drive to reshape West Bank. There has been a significant expansion of building and road construction on Palestinian land occupied by Israel in recent years. This was reported by BBC News.\n\nFor the full source-backed dispatch, read the August 22, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-08-22-guardian-world-29302f293729",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/aug/22/uk-france-diplomats-israel-palestine",
+      "title": "Former British and French diplomats urge action over Israel's 'erasure' of Palestine"
+    },
+    {
+      "source_record_id": "gaza-2026-08-22-guardian-world-223d102cbb82",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/aug/21/uk-australia-canada-criticise-israel-gaza-aid-convoy-killings-decision",
+      "title": "'Shameful': UK, Australia and Canada criticise Israel over Gaza aid convoy killings decision"
+    },
+    {
+      "source_record_id": "gaza-2026-08-22-aljazeera-middle-east-21ad4c0b8dad",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/22/hundreds-of-children-take-part-in-swimming-class-on-gazas-shore?traffic_source=rss",
+      "title": "Hundreds of children take part in swimming class on Gaza's shore"
+    },
+    {
+      "source_record_id": "gaza-2026-08-22-bbc-middle-east-98eaf7453f8f",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/cvgl2pe09eno?at_medium=RSS&at_campaign=rss",
+      "title": "UK, Canada and Australia condemn Israel for refusing criminal probe into aid worker killings in Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-08-22-aljazeera-middle-east-a0173a493388",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/22/jewish-activists-push-back-against-israeli-settlers?traffic_source=rss",
+      "title": "Jewish activists push back against Israeli settlers"
+    },
+    {
+      "source_record_id": "gaza-2026-08-22-bbc-middle-east-c4dccacd4ef0",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/c2lq5g4dedpo?at_medium=RSS&at_campaign=rss",
+      "title": "How Israel is expanding settlements in drive to reshape West Bank"
+    }
+  ]
+}

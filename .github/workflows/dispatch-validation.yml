@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  statuses: write
 
 jobs:
   validate:
@@ -35,6 +36,31 @@ jobs:
 
       - name: Run focused validation tests
         run: python -m pytest -q -p no:cacheprovider --basetemp ./.pytest-temp-validation tests/test_repo_governance.py tests/test_publish_scope_validation.py tests/test_food_line_dispatch.py tests/test_dispatches_site.py
+
+      - name: Publish validate commit status for merge SHA
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const state = '${{ job.status }}' === 'success' ? 'success' : 'failure';
+            const { data: pull } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+            });
+            const sha = pull.merge_commit_sha;
+            if (!sha) {
+              throw new Error('pull_request.merge_commit_sha is unavailable');
+            }
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha,
+              state,
+              context: 'validate',
+              description: state === 'success' ? 'Dispatch validation passed' : 'Dispatch validation failed',
+              target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+            });
 
       # Broader Gaza/Cascadia/Care Line suites are deferred here to keep the
       # workflow conservative and avoid coupling Phase 2 to unrelated worktree noise.

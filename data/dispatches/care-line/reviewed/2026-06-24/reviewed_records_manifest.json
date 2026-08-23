@@ -1,0 +1,26 @@
+{
+  "care_line_only_count": 0,
+  "contract_version": "bluefern.care_line.reviewed_record.v1",
+  "date_from": "2026-06-24",
+  "date_to": "2026-06-24",
+  "duplicate_count": 0,
+  "excluded_count": 0,
+  "exporter_version": "care-line-reviewed-export-v1",
+  "input_record_count": 2,
+  "missing_dates": [],
+  "needs_evidence_review_count": 0,
+  "producer": "Care Line",
+  "record_hashes": {
+    "care-line-historical-backfill-2026-06-24-mount-carmel-franklinton-00-followup": "098b98b3fce0db8b5e37ef52c3ed8aaeae705946b19901870a14a55cbf6c5f61",
+    "care-line-historical-backfill-2026-06-24-mount-carmel-franklinton-ed": "7505e17948293b20dd857fe7af25fdf1efb5d750261a53ee53582d2a9dd4f1b9"
+  },
+  "record_ids": [
+    "care-line-historical-backfill-2026-06-24-mount-carmel-franklinton-00-followup",
+    "care-line-historical-backfill-2026-06-24-mount-carmel-franklinton-ed"
+  ],
+  "review_required_count": 0,
+  "reviewed_record_count": 2,
+  "schema_version": "bluefern.care_line.reviewed_export_manifest.v1",
+  "universal_event_ready_count": 2,
+  "withdrawn_count": 0
+}

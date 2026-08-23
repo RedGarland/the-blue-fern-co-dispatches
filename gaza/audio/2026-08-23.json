@@ -1,0 +1,74 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-23",
+  "generated_at": "2026-08-23T13:01:26.623078Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-08-23.mp3",
+  "audio_url": "/gaza/audio/2026-08-23.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1592,
+  "tts_input_word_count": 261,
+  "tts_story_count": 5,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 94464,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-08-23T13:01:26.623059Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-08-23-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-23/",
+  "script_text": "This is the Gaza Dispatch audio briefing for August 23, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Israeli forces kill Palestinian boy in occupied West Bank raid. Islam Ahmad Ajjouri was shot in the chest as Israeli forces raided the Askar refugee camp, east of Nablus. This was reported by Al Jazeera.\n\n2. Israeli air strike near Gaza refugee camp kills one person and injures two. Israeli air attack near Gaza's Maghazi camp kills one person and injures two others. This was reported by Al Jazeera.\n\n3. Burnham to face pressure at Labour conference to recognise Israel's actions in Gaza as genocide. Grassroots groups to urge PM to break with Starmer policy and impose full arms embargo on Israel Grassroots Labour groups are gearing up for a conference showdown with Andy Burnham over Gaza, as the party's members seek to force the prime minister to recognise. This was reported by The Guardian.\n\n4. 'I hate Democrats, but I love Abdul': voters who left over Gaza return for progressive push. Michigan Senate nominee and others have re-energized one-time Democratic voters who abandoned the party under Biden Two years ago, Zainab Bibi Ahmed thought she had turned her back on the Democrats for good. This was reported by The Guardian.\n\n5. Israel's war on Gaza forces Palestinians to rely on 'Stone Age' toilets. The displaced in Gaza are struggling to find safe, discreet and sanitary toilets amid health crisis. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the August 23, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 5,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-08-23-aljazeera-middle-east-6b0addb4499c",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/8/23/israeli-wounded-in-occupied-west-bank-stabbing?traffic_source=rss",
+      "title": "Israeli forces kill Palestinian boy in occupied West Bank raid"
+    },
+    {
+      "source_record_id": "gaza-2026-08-23-aljazeera-middle-east-8484a8e90c21",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/8/23/israeli-air-strike-near-gaza-refugee-camp-kills-one-person-and-injures-two?traffic_source=rss",
+      "title": "Israeli air strike near Gaza refugee camp kills one person and injures two"
+    },
+    {
+      "source_record_id": "gaza-2026-08-23-guardian-world-6dde14beedbb",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/politics/2026/aug/23/andy-burnham-pressure-labour-conference-recognise-israel-actions-gaza-genocide",
+      "title": "Burnham to face pressure at Labour conference to recognise Israel's actions in Gaza as genocide"
+    },
+    {
+      "source_record_id": "gaza-2026-08-23-guardian-world-abc7674a9c21",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/us-news/2026/aug/23/democrats-abdul-el-sayed-progressives",
+      "title": "'I hate Democrats, but I love Abdul': voters who left over Gaza return for progressive push"
+    },
+    {
+      "source_record_id": "gaza-2026-08-23-aljazeera-middle-east-e9beb982e9a3",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/features/2026/8/23/israels-war-on-gaza-forces-palestinians-to-rely-on-stone-age-toilets?traffic_source=rss",
+      "title": "Israel's war on Gaza forces Palestinians to rely on 'Stone Age' toilets"
+    }
+  ]
+}

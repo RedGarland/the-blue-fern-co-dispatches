@@ -1,0 +1,328 @@
+[
+  {
+    "story_id": "gaza-story-2026-08-23-008",
+    "title": "Israeli forces kill Palestinian boy in occupied West Bank raid",
+    "summary": "Islam Ahmad Ajjouri was shot in the chest as Israeli forces raided the Askar refugee camp, east of Nablus.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 73,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-23-aljazeera-middle-east-6b0addb4499c"
+    ],
+    "source_ids": [
+      "gaza-2026-08-23-aljazeera-middle-east-6b0addb4499c"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/8/23/israeli-wounded-in-occupied-west-bank-stabbing?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-23-aljazeera-middle-east-6b0addb4499c",
+        "title": "Israeli forces kill Palestinian boy in occupied West Bank raid",
+        "url": "https://www.aljazeera.com/news/2026/8/23/israeli-wounded-in-occupied-west-bank-stabbing?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Islam Ahmad Ajjouri was shot in the chest as Israeli forces raided the Askar refugee camp, east of Nablus."
+      }
+    ],
+    "generated_at": "2026-08-23T13:01:08.496421+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 73,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-08-16-005",
+    "prior_edition_date": "2026-08-16",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-23-007",
+    "title": "Israeli air strike near Gaza refugee camp kills one person and injures two",
+    "summary": "Israeli air attack near Gaza's Maghazi camp kills one person and injures two others.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 61,
+    "scoring_reasons": [
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-23-aljazeera-middle-east-8484a8e90c21"
+    ],
+    "source_ids": [
+      "gaza-2026-08-23-aljazeera-middle-east-8484a8e90c21"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/8/23/israeli-air-strike-near-gaza-refugee-camp-kills-one-person-and-injures-two?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-23-aljazeera-middle-east-8484a8e90c21",
+        "title": "Israeli air strike near Gaza refugee camp kills one person and injures two",
+        "url": "https://www.aljazeera.com/news/2026/8/23/israeli-air-strike-near-gaza-refugee-camp-kills-one-person-and-injures-two?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israeli air attack near Gaza's Maghazi camp kills one person and injures two others."
+      }
+    ],
+    "generated_at": "2026-08-23T13:01:08.496421+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 61,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-30-001",
+    "prior_edition_date": "2026-06-30",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-23-004",
+    "title": "Burnham to face pressure at Labour conference to recognise Israel's actions in Gaza as genocide",
+    "summary": "Grassroots groups to urge PM to break with Starmer policy and impose full arms embargo on Israel Grassroots Labour groups are gearing up for a conference showdown with Andy Burnham over Gaza, as the party's members seek to force the prime minister to recognise. Israel's actions as a genocide and impose a full arms embargo. Momentum, Labour & Palestine, the Campaign for Labour Party Democracy and Palestine Solidarity Campaign (PSC) plan to ramp up pressure on Burnham before his first Labour conference as prime minister next month.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 52,
+    "scoring_reasons": [
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-23-guardian-world-6dde14beedbb"
+    ],
+    "source_ids": [
+      "gaza-2026-08-23-guardian-world-6dde14beedbb"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/politics/2026/aug/23/andy-burnham-pressure-labour-conference-recognise-israel-actions-gaza-genocide"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-23-guardian-world-6dde14beedbb",
+        "title": "Burnham to face pressure at Labour conference to recognise Israel's actions in Gaza as genocide",
+        "url": "https://www.theguardian.com/politics/2026/aug/23/andy-burnham-pressure-labour-conference-recognise-israel-actions-gaza-genocide",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Grassroots groups to urge PM to break with Starmer policy and impose full arms embargo on Israel Grassroots Labour groups are gearing up for a conference showdown with Andy Burnham over Gaza, as the party's members seek to force the prime minister to recognise Israel's actions as a genocide and impose a full arms embargo. Momentum, Labour & Palestine, the Campaign for Labour Party Democracy and Palestine Solidarity Campaign (PSC) plan to ramp up pressure on Burnham before his first Labour conference as prime minister next month."
+      }
+    ],
+    "generated_at": "2026-08-23T13:01:08.496421+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 52,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-23-005",
+    "title": "'I hate Democrats, but I love Abdul': voters who left over Gaza return for progressive push",
+    "summary": "Michigan Senate nominee and others have re-energized one-time Democratic voters who abandoned the party under Biden Two years ago, Zainab Bibi Ahmed thought she had turned her back on the Democrats for good. Now, she is volunteering for the party's US Senate nominee in Michigan, Abdul El-Sayed. Ahmed was one of 100,000 people to vote uncommitted in the February 2024 Democratic Michigan primary , in a bid to send a message to then US president Joe Biden about his support for Israel, as people watched what Amnesty International later called a \"live-streamed genocide\" in Gaza on their screens.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 50,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-23-guardian-world-abc7674a9c21"
+    ],
+    "source_ids": [
+      "gaza-2026-08-23-guardian-world-abc7674a9c21"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/us-news/2026/aug/23/democrats-abdul-el-sayed-progressives"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-23-guardian-world-abc7674a9c21",
+        "title": "'I hate Democrats, but I love Abdul': voters who left over Gaza return for progressive push",
+        "url": "https://www.theguardian.com/us-news/2026/aug/23/democrats-abdul-el-sayed-progressives",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Michigan Senate nominee and others have re-energized one-time Democratic voters who abandoned the party under Biden Two years ago, Zainab Bibi Ahmed thought she had turned her back on the Democrats for good. Now, she is volunteering for the party's US Senate nominee in Michigan, Abdul El-Sayed. Ahmed was one of 100,000 people to vote uncommitted in the February 2024 Democratic Michigan primary , in a bid to send a message to then US president Joe Biden about his support for Israel, as people watched what Amnesty International later called a \"live-streamed genocide\" in Gaza on their screens."
+      }
+    ],
+    "generated_at": "2026-08-23T13:01:08.496421+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-23-006",
+    "title": "Israel's war on Gaza forces Palestinians to rely on 'Stone Age' toilets",
+    "summary": "The displaced in Gaza are struggling to find safe, discreet and sanitary toilets amid health crisis.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 55,
+    "scoring_reasons": [
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-23-aljazeera-middle-east-e9beb982e9a3"
+    ],
+    "source_ids": [
+      "gaza-2026-08-23-aljazeera-middle-east-e9beb982e9a3"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/features/2026/8/23/israels-war-on-gaza-forces-palestinians-to-rely-on-stone-age-toilets?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-23-aljazeera-middle-east-e9beb982e9a3",
+        "title": "Israel's war on Gaza forces Palestinians to rely on 'Stone Age' toilets",
+        "url": "https://www.aljazeera.com/features/2026/8/23/israels-war-on-gaza-forces-palestinians-to-rely-on-stone-age-toilets?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "The displaced in Gaza are struggling to find safe, discreet and sanitary toilets amid health crisis."
+      }
+    ],
+    "generated_at": "2026-08-23T13:01:08.496421+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 55,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  }
+]

@@ -13,7 +13,6 @@ import types
 import urllib.error
 from datetime import date as dt_date, datetime, timezone
 from pathlib import Path
-from zoneinfo import ZoneInfo
 
 import pytest
 from bs4 import BeautifulSoup
@@ -11474,47 +11473,6 @@ def _resolve_powershell_executable() -> str:
     pytest.skip("PowerShell is not available for wrapper execution tests")
 
 
-def _food_line_pacific_date() -> str:
-    return datetime.now(timezone.utc).astimezone(ZoneInfo("America/Los_Angeles")).date().isoformat()
-
-
-def _run_food_line_windows_wrapper(
-    tmp_path: Path,
-    wrapper_name: str,
-    wrapper_args: list[str],
-    *,
-    payload: dict[str, object],
-    exit_code: int = 0,
-    preamble_lines: list[str] | None = None,
-) -> tuple[subprocess.CompletedProcess[str], Path]:
-    project_root = tmp_path
-    argv_path = _write_food_line_scheduler_helper(
-        project_root,
-        exit_code=exit_code,
-        payload=payload,
-        preamble_lines=preamble_lines,
-    )
-    wrapper_path = Path(__file__).resolve().parents[1] / "scripts" / "windows" / wrapper_name
-    powershell_exe = _resolve_powershell_executable()
-    completed = subprocess.run(
-        [
-            powershell_exe,
-            "-NoProfile",
-            "-NonInteractive",
-            "-ExecutionPolicy",
-            "Bypass",
-            "-File",
-            str(wrapper_path),
-            *wrapper_args,
-        ],
-        capture_output=True,
-        text=True,
-        cwd=Path(__file__).resolve().parents[1],
-        check=False,
-    )
-    return completed, argv_path
-
-
 def _run_food_line_wrapper(
     tmp_path: Path,
     payload: dict,
@@ -11562,6 +11520,43 @@ def _run_food_line_wrapper(
         check=False,
     )
     return completed, log_root / "2026-06-23.log"
+
+
+def _run_food_line_windows_wrapper(
+    tmp_path: Path,
+    wrapper_name: str,
+    wrapper_args: list[str],
+    *,
+    payload: dict[str, object],
+    exit_code: int = 0,
+    preamble_lines: list[str] | None = None,
+) -> tuple[subprocess.CompletedProcess[str], Path]:
+    project_root = tmp_path
+    argv_path = _write_food_line_scheduler_helper(
+        project_root,
+        exit_code=exit_code,
+        payload=payload,
+        preamble_lines=preamble_lines,
+    )
+    wrapper_path = Path(__file__).resolve().parents[1] / "scripts" / "windows" / wrapper_name
+    powershell_exe = _resolve_powershell_executable()
+    completed = subprocess.run(
+        [
+            powershell_exe,
+            "-NoProfile",
+            "-NonInteractive",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            str(wrapper_path),
+            *wrapper_args,
+        ],
+        capture_output=True,
+        text=True,
+        cwd=Path(__file__).resolve().parents[1],
+        check=False,
+    )
+    return completed, argv_path
 
 
 def test_food_line_daily_wrapper_succeeds_for_no_public_edition_without_pages_publish() -> None:
@@ -11714,6 +11709,8 @@ def test_food_line_discovery_registry_uses_the_maine_monitor_target_sitemap_shar
         if item.get("source_id") == "maine-monitor-post-sitemap"
     )
     assert source["url"] == "https://themainemonitor.org/post-sitemap3.xml"
+
+
 def test_food_line_daily_wrapper_parses_json_with_stdout_preamble() -> None:
     with tempfile.TemporaryDirectory() as tmpdir:
         completed, log_path = _run_food_line_wrapper(
@@ -11882,7 +11879,89 @@ def test_food_line_windows_scheduler_wrappers_delegate_to_current_runner_contrac
 
 def test_food_line_daily_publish_wrapper_check_only_reports_release_readiness(tmp_path: Path) -> None:
     project_root = tmp_path / "publish"
-    today = _food_line_pacific_date()
+    project_root.mkdir(parents=True, exist_ok=True)
+    pages_repo = project_root / "bluefern-dispatches-pages"
+    pages_repo.mkdir(parents=True, exist_ok=True)
+    python_exe = project_root / ".venv" / "Scripts" / "python.exe"
+    python_exe.parent.mkdir(parents=True, exist_ok=True)
+    python_exe.write_text("", encoding="utf-8")
+
+    today = datetime.now().astimezone().date().isoformat()
+    wrapper_path = Path(__file__).resolve().parents[1] / "scripts" / "windows" / "run_food_line_daily_publish.ps1"
+    powershell_exe = _resolve_powershell_executable()
+    completed = subprocess.run(
+        [
+            powershell_exe,
+            "-NoProfile",
+            "-NonInteractive",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            str(wrapper_path),
+            "-PublicationRoot",
+            str(project_root),
+            "-CheckOnly",
+        ],
+        capture_output=True,
+        text=True,
+        cwd=Path(__file__).resolve().parents[1],
+        env={**os.environ, "BLUESKY_HANDLE": "", "BLUESKY_APP_PASSWORD": ""},
+        check=False,
+    )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    payload = json.loads(completed.stdout)
+    assert "receipt_path" not in payload
+    assert payload["status"] == "skipped_not_release_ready"
+    assert payload["publication_capability"] is False
+    assert payload["source_branch"] == "add/pages-repo-default"
+    assert payload["private_runner_root"] == str(project_root)
+    assert Path(payload["publication_runner"]).as_posix().endswith("scripts/run_runner_dispatch.ps1")
+    assert payload["pages_repo"] == str(pages_repo)
+    assert payload["proposal_path"] is None
+    assert payload["signal_review_path"] is None
+    assert payload["release_readiness_path"] is None
+
+    receipt_dir = project_root / "status" / "food-line" / "daily-publish" / "scheduler-runs" / today
+    receipts = sorted(receipt_dir.glob("*.json"))
+    assert len(receipts) == 1
+    receipt = json.loads(receipts[0].read_text(encoding="utf-8"))
+    assert receipt["task_name"] == "Blue Fern Food Line Daily Publish"
+    assert receipt["task_path"] == "\\Blue Fern Co.\\"
+    assert receipt["run_id"]
+    assert receipt["started_at"]
+    assert receipt["completed_at"]
+    assert receipt["host"]
+    assert receipt["process_id"] > 0
+    assert receipt["wrapper_path"].endswith("run_food_line_daily_publish.ps1")
+    assert receipt["working_directory"] == str(project_root)
+    assert receipt["PublicationRoot"] == str(project_root)
+    assert receipt["PagesRepo"] == str(pages_repo)
+    assert receipt["SourceBranch"] == "add/pages-repo-default"
+    assert receipt["PagesBranch"] == "gh-pages"
+    assert receipt["PythonExecutable"] == str(python_exe)
+    assert receipt["check_only"] is True
+    assert receipt["publication_capability"] is False
+    assert receipt["release_ready"] is False
+    assert receipt["status"] == "skipped_not_release_ready"
+    assert receipt["terminal_status"] == "skipped_not_release_ready"
+    assert receipt["ok"] is True
+    assert receipt["child_exit_code"] is None
+    assert receipt["error_classification"] is None
+    assert receipt["error_message"] is None
+    assert receipt["publication_attempted"] is False
+
+
+def test_food_line_daily_publish_wrapper_finalizes_failure_receipt(tmp_path: Path) -> None:
+    project_root = tmp_path / "publish"
+    project_root.mkdir(parents=True, exist_ok=True)
+    pages_repo = project_root / "bluefern-dispatches-pages"
+    pages_repo.mkdir(parents=True, exist_ok=True)
+    python_exe = project_root / ".venv" / "Scripts" / "python.exe"
+    python_exe.parent.mkdir(parents=True, exist_ok=True)
+    python_exe.write_text("", encoding="utf-8")
+
+    today = datetime.now().astimezone().date().isoformat()
     proposed_path = project_root / "data" / "dispatches" / "food-line" / "review" / "proposed-editions" / f"{today}.json"
     signal_review_path = project_root / "data" / "dispatches" / "food-line" / "review" / "signal-reviews" / f"{today}.json"
     readiness_path = project_root / "data" / "dispatches" / "food-line" / "review" / "release-readiness" / f"{today}.json"
@@ -11910,6 +11989,12 @@ def test_food_line_daily_publish_wrapper_check_only_reports_release_readiness(tm
         + "\n",
         encoding="utf-8",
     )
+    runner_dispatch_script = project_root / "scripts" / "run_runner_dispatch.ps1"
+    runner_dispatch_script.parent.mkdir(parents=True, exist_ok=True)
+    runner_dispatch_script.write_text(
+        'Write-Output "Food Line publication child invoked"\nexit 7\n',
+        encoding="utf-8",
+    )
 
     wrapper_path = Path(__file__).resolve().parents[1] / "scripts" / "windows" / "run_food_line_daily_publish.ps1"
     powershell_exe = _resolve_powershell_executable()
@@ -11924,21 +12009,31 @@ def test_food_line_daily_publish_wrapper_check_only_reports_release_readiness(tm
             str(wrapper_path),
             "-PublicationRoot",
             str(project_root),
-            "-CheckOnly",
+            "-RunnerDispatchScript",
+            str(runner_dispatch_script),
         ],
         capture_output=True,
         text=True,
         cwd=Path(__file__).resolve().parents[1],
+        env={**os.environ, "BLUESKY_HANDLE": "", "BLUESKY_APP_PASSWORD": ""},
         check=False,
     )
 
-    assert completed.returncode == 0, completed.stdout + completed.stderr
-    payload = json.loads(completed.stdout)
-    assert payload["status"] == "release_ready"
-    assert payload["publication_capability"] is True
-    assert isinstance(payload["principal"], str)
-    assert payload["principal"]
-    assert payload["source_branch"] == "add/pages-repo-default"
-    assert payload["proposal_path"] == str(proposed_path)
-    assert payload["signal_review_path"] == str(signal_review_path)
-    assert payload["release_readiness_path"] == str(readiness_path)
+    assert completed.returncode == 7, completed.stdout + completed.stderr
+    assert "Food Line publication child invoked" in completed.stdout
+
+    receipt_dir = project_root / "status" / "food-line" / "daily-publish" / "scheduler-runs" / today
+    receipts = sorted(receipt_dir.glob("*.json"))
+    assert len(receipts) == 1
+    receipt = json.loads(receipts[0].read_text(encoding="utf-8"))
+    assert receipt["task_name"] == "Blue Fern Food Line Daily Publish"
+    assert receipt["status"] == "failure"
+    assert receipt["terminal_status"] == "failure"
+    assert receipt["ok"] is False
+    assert receipt["check_only"] is False
+    assert receipt["publication_capability"] is True
+    assert receipt["release_ready"] is True
+    assert receipt["child_exit_code"] == 7
+    assert receipt["error_classification"] == "child_nonzero_exit"
+    assert receipt["error_message"] == "Food Line publication child exited with code 7"
+    assert receipt["publication_attempted"] is True

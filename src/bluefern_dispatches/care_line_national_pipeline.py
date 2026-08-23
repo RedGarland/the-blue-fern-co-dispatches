@@ -29,6 +29,9 @@ from bluefern_dispatches.care_line_record import (
 from bluefern_dispatches.care_line_discovery import discover_care_line_sources
 from bluefern_dispatches.care_line_effective_date_follow_up import (
     build_follow_up_queries,
+    _care_line_identity_text,
+    care_line_event_identity,
+    care_line_lifecycle_status,
     load_follow_up_state,
     load_reviewed_records,
     update_follow_up_state,
@@ -1188,6 +1191,10 @@ def _source_failure_filename(source_id: str) -> str:
     return f"{_slug(source_id) or 'source'}.failure.json"
 
 
+def _source_prefilter_filename(source_id: str) -> str:
+    return f"{_slug(source_id) or 'source'}.prefilter.json"
+
+
 def build_run_key(*, run_date: str, source_ids: Iterable[str]) -> str:
     normalized = sorted({str(value).strip() for value in source_ids if str(value).strip()})
     return stable_json_hash({"run_date": run_date, "source_ids": normalized})[:12]
@@ -1424,6 +1431,202 @@ def _is_restoration_without_prior_loss_context(text: str, event_type: str) -> bo
 
 def _is_service_expansion_only(text: str) -> bool:
     return bool(re.search(r"\b(expand(?:ed|ing|s)?|open(?:ed|ing|s)? new|launch(?:ed|es|ing)? new)\b", text, re.I))
+
+
+CARE_LINE_PREFILTER_NOISE_REASONS = {
+    "award_or_fundraising",
+    "construction_without_access_consequence",
+    "general_healthcare_news",
+    "hiring_or_biography",
+    "marketing_announcement",
+    "non_care_line",
+    "policy_commentary_only",
+    "resource_listing",
+    "routine_operations_only",
+}
+CARE_LINE_PREFILTER_PRIOR_LOSS_EVENT_TYPES = {
+    "bankruptcy_service_impact",
+    "capacity_reduction",
+    "facility_closure",
+    "facility_conversion",
+    "facility_relocation",
+    "hours_reduction",
+    "planned_facility_closure",
+    "service_closure",
+    "service_reduction",
+    "service_suspension",
+    "temporary_facility_suspension",
+}
+CARE_LINE_PREFILTER_ACCESS_TERMS = (
+    "access",
+    "closure",
+    "closed",
+    "closing",
+    "emergency department",
+    "emergency room",
+    "er ",
+    " ed ",
+    "hospital",
+    "clinic",
+    "maternity",
+    "ob ",
+    "labor and delivery",
+    "dialysis",
+    "oncology",
+    "behavioral health",
+    "health center",
+    "service reduction",
+    "service suspension",
+    "service closure",
+    "longer travel",
+    "farther travel",
+    "replacement",
+    "reopen",
+    "reopening",
+    "restore",
+    "restoration",
+    "relocat",
+    "delay",
+    "effective date",
+    "effective",
+)
+
+
+def _care_line_context_signature(mapping: Mapping[str, Any]) -> tuple[str, ...]:
+    facility = _care_line_identity_text(_text(mapping, "facility_name", "provider_name", "affected_provider", "organization_name"))
+    provider = _care_line_identity_text(_text(mapping, "provider_name", "affected_provider", "organization_name"))
+    city = _care_line_identity_text(_text(mapping, "city", "locality_name"))
+    county = _care_line_identity_text(_text(mapping, "county", "county_equivalent_name"))
+    state = _care_line_identity_text(_text(mapping, "state", "jurisdiction_display"))
+    service_line = _care_line_identity_text(_text(mapping, "service_line", "service_line_raw", "affected_service_line"))
+    variants = [
+        tuple(part for part in ("facility", facility, city, county, state) if part),
+        tuple(part for part in ("facility", facility, city, county, state, service_line) if part),
+        tuple(part for part in ("provider", provider, city, county, state) if part),
+        tuple(part for part in ("provider", provider, city, county, state, service_line) if part),
+        tuple(part for part in ("geography", city, county, state) if part),
+        tuple(part for part in ("geography", city, county, state, service_line) if part),
+    ]
+    return tuple("::".join(parts) for parts in variants if len(parts) > 1)
+
+
+def _care_line_history_matches(
+    reviewed_records: Iterable[CareLineReviewedRecord | Mapping[str, Any]],
+    raw_item: Mapping[str, Any],
+    *,
+    service_line: str = "",
+    event_type: str = "",
+) -> list[dict[str, Any]]:
+    candidate = dict(raw_item)
+    if service_line and not _text(candidate, "service_line", "service_line_raw", "affected_service_line"):
+        candidate["service_line"] = service_line
+    if event_type and not _text(candidate, "event_type", "event_type_raw", "canonical_event_type"):
+        candidate["event_type"] = event_type
+    candidate_keys = set(_care_line_context_signature(candidate))
+    if not candidate_keys:
+        return []
+    matches: list[dict[str, Any]] = []
+    for record in reviewed_records:
+        mapping = record if isinstance(record, Mapping) else record.model_dump(mode="json")
+        record_event_type = _text(mapping, "event_type", "event_type_raw", "canonical_event_type")
+        if record_event_type not in CARE_LINE_PREFILTER_PRIOR_LOSS_EVENT_TYPES:
+            continue
+        record_keys = set(_care_line_context_signature(mapping))
+        if not record_keys.intersection(candidate_keys):
+            continue
+        matches.append(
+            {
+                "reviewed_record_id": _text(mapping, "producer_record_id", "source_record_id", "care_line_record_id"),
+                "event_identity": care_line_event_identity(mapping),
+                "event_type": record_event_type,
+                "lifecycle_status": care_line_lifecycle_status(mapping),
+                "facility_name": _text(mapping, "facility_name", "provider_name", "affected_provider", "organization_name"),
+                "service_line": _text(mapping, "service_line", "service_line_raw", "affected_service_line"),
+                "city": _text(mapping, "city", "locality_name"),
+                "county": _text(mapping, "county", "county_equivalent_name"),
+                "state": _text(mapping, "state", "jurisdiction_display"),
+            }
+        )
+    return matches
+
+
+def _care_line_prefilter_signals(raw_item: Mapping[str, Any], lead: Mapping[str, Any], history_matches: list[dict[str, Any]]) -> tuple[list[str], list[str]]:
+    positive_signals = list(dict.fromkeys([str(value) for value in (lead.get("positive_hits") or []) if str(value).strip()] + [str(value) for value in (lead.get("context_hits") or []) if str(value).strip()]))
+    negative_reason = _text(lead, "exclusion_reason")
+    negative_signals = [negative_reason] if negative_reason else []
+    if history_matches:
+        positive_signals.append("prior_loss_context")
+    title = f"{_text(raw_item, 'title')} {_text(raw_item, 'description')}".casefold()
+    if any(term in title for term in CARE_LINE_PREFILTER_ACCESS_TERMS):
+        positive_signals.append("access_impact_terms")
+    positive_signals = list(dict.fromkeys(value for value in positive_signals if value))
+    negative_signals = list(dict.fromkeys(value for value in negative_signals if value))
+    return positive_signals, negative_signals
+
+
+def _care_line_access_prefilter(
+    raw_item: Mapping[str, Any],
+    lead: Mapping[str, Any],
+    *,
+    reviewed_records: Iterable[CareLineReviewedRecord | Mapping[str, Any]] = (),
+) -> dict[str, Any]:
+    service_line = _text(lead, "service_line_hint")
+    event_type = _text(lead, "event_type_hint")
+    history_matches = _care_line_history_matches(reviewed_records, raw_item, service_line=service_line, event_type=event_type)
+    positive_signals, negative_signals = _care_line_prefilter_signals(raw_item, lead, history_matches)
+    exclusion_reason = _text(lead, "exclusion_reason")
+    prefilter_decision = "escalate_to_full_review"
+    normalized_reason = "access_impact_plausible"
+    confidence = 0.9 if history_matches else 0.75 if positive_signals else 0.35
+    title_text = f"{_text(raw_item, 'title')} {_text(raw_item, 'description')}".casefold()
+    if _is_service_expansion_only(title_text) and not history_matches:
+        prefilter_decision = "discard"
+        normalized_reason = "service_expansion_without_prior_loss_context"
+        confidence = 0.18
+    elif _is_service_expansion_only(title_text) and history_matches:
+        normalized_reason = "prior_loss_context_detected"
+        confidence = 0.92
+    if exclusion_reason == "service_expansion_without_prior_loss_context":
+        if history_matches:
+            normalized_reason = "prior_loss_context_detected"
+            confidence = 0.92
+        else:
+            prefilter_decision = "discard"
+            normalized_reason = "service_expansion_without_prior_loss_context"
+            confidence = 0.18
+    elif exclusion_reason in CARE_LINE_PREFILTER_NOISE_REASONS:
+        if history_matches:
+            normalized_reason = "prior_loss_context_detected"
+            confidence = 0.88
+        elif positive_signals:
+            normalized_reason = "access_impact_plausible"
+            confidence = 0.7
+        else:
+            prefilter_decision = "discard"
+            normalized_reason = exclusion_reason or "no_access_impact"
+            confidence = 0.12
+    elif not positive_signals and not history_matches and exclusion_reason:
+        prefilter_decision = "discard"
+        normalized_reason = exclusion_reason
+        confidence = 0.2
+    return {
+        "schema_version": PIPELINE_SCHEMA_VERSION,
+        "raw_item_id": _text(raw_item, "raw_item_id"),
+        "lead_id": _text(lead, "lead_id"),
+        "source_id": _text(raw_item, "source_id"),
+        "source_name": _text(raw_item, "source_name"),
+        "item_url": _text(raw_item, "item_url"),
+        "title": _text(raw_item, "title"),
+        "source_publication_date": _text(raw_item, "source_publication_date"),
+        "prefilter_decision": prefilter_decision,
+        "normalized_reason": normalized_reason,
+        "positive_signals": positive_signals,
+        "negative_signals": negative_signals,
+        "confidence": round(confidence, 3),
+        "escalated_to_full_review": prefilter_decision == "escalate_to_full_review",
+        "history_match_count": len(history_matches),
+        "history_matches": history_matches[:10],
+    }
 
 
 def _extract_subject(title: str, passage: str, *, service_line: str) -> tuple[str, str]:
@@ -2306,8 +2509,28 @@ def qualify_event_lead(
     run_id: str,
     fetch_timeout: int,
     allow_insecure_tls: bool,
+    prefilter_decision: str = "",
 ) -> tuple[str, dict[str, Any]]:
-    if _text(lead, "qualification_status") != "event_lead":
+    if prefilter_decision == "discard":
+        return "prefilter_discarded", {
+            "schema_version": EXCLUSION_SCHEMA_VERSION,
+            "prefilter_decision": "discard",
+            "normalized_reason": _text(lead, "exclusion_reason") or "no_access_impact",
+            "raw_item_id": raw_item.get("raw_item_id", ""),
+            "lead_id": lead.get("lead_id", ""),
+            "source_id": raw_item.get("source_id", ""),
+            "source_name": raw_item.get("source_name", ""),
+            "item_url": raw_item.get("item_url", ""),
+            "title": raw_item.get("title", ""),
+            "source_publication_date": raw_item.get("source_publication_date", ""),
+            "confidence": 0.0,
+            "positive_signals": list(lead.get("positive_hits") or []) + list(lead.get("context_hits") or []),
+            "negative_signals": [str(_text(lead, "exclusion_reason") or "")] if _text(lead, "exclusion_reason") else [],
+            "escalated_to_full_review": False,
+            "history_match_count": 0,
+            "history_matches": [],
+        }
+    if _text(lead, "qualification_status") != "event_lead" and prefilter_decision != "escalate_to_full_review":
         exclusion_reason = _text(lead, "exclusion_reason") or "non_care_line"
         return "excluded", {
             "schema_version": EXCLUSION_SCHEMA_VERSION,
@@ -2989,6 +3212,7 @@ def run_collection_attempt(
     run_date: str,
     run_id: str,
     source_row: Mapping[str, Any],
+    historical_reviewed_records: Iterable[CareLineReviewedRecord] | None = None,
     allow_insecure_tls: bool = False,
     fetch_timeout: int = 20,
     max_items_per_source: int = 25,
@@ -3112,7 +3336,14 @@ def run_collection_attempt(
     exclusions: list[dict[str, Any]] = []
     failed_extractions: list[dict[str, Any]] = []
     manual_review: list[dict[str, Any]] = []
+    prefilter_diagnostics: list[dict[str, Any]] = []
+    prefilter_discarded: list[dict[str, Any]] = []
     for raw_item, lead in zip(raw_items, event_leads, strict=False):
+        prefilter = _care_line_access_prefilter(raw_item, lead, reviewed_records=historical_reviewed_records or ())
+        prefilter_diagnostics.append(prefilter)
+        if prefilter["prefilter_decision"] == "discard":
+            prefilter_discarded.append(prefilter)
+            continue
         status, payload_row = qualify_event_lead(
             source,
             raw_item,
@@ -3121,6 +3352,7 @@ def run_collection_attempt(
             run_id=run_id,
             fetch_timeout=fetch_timeout,
             allow_insecure_tls=allow_insecure_tls,
+            prefilter_decision=str(prefilter.get("prefilter_decision") or ""),
         )
         if status == "qualified":
             qualified_candidates.append(payload_row)
@@ -3150,6 +3382,15 @@ def run_collection_attempt(
         content_hash=content_hash,
     )
     _atomic_write(run_dir / _source_attempt_filename(source.source_id), attempt.to_payload())
+    _atomic_write(
+        run_dir / _source_prefilter_filename(source.source_id),
+        {
+            "schema_version": PIPELINE_SCHEMA_VERSION,
+            "prefilter_count": len(prefilter_diagnostics),
+            "discarded_count": len(prefilter_discarded),
+            "items": prefilter_diagnostics,
+        },
+    )
     _atomic_write(raw_artifact_path, {"schema_version": PIPELINE_SCHEMA_VERSION, "raw_items": raw_items})
     _atomic_write(run_dir / _source_event_leads_filename(source.source_id), {"schema_version": PIPELINE_SCHEMA_VERSION, "event_leads": event_leads})
     _atomic_write(run_dir / _source_candidates_filename(source.source_id), {"schema_version": PIPELINE_SCHEMA_VERSION, "qualified_candidates": qualified_candidates})
@@ -3163,6 +3404,8 @@ def run_collection_attempt(
         "exclusions": exclusions,
         "failed_extractions": failed_extractions,
         "manual_review": manual_review,
+        "prefilter_diagnostics": prefilter_diagnostics,
+        "prefilter_discarded": prefilter_discarded,
         "failure": "",
     }
 
@@ -3268,6 +3511,7 @@ def run_national_pipeline(
     if source_limit is not None:
         source_rows = source_rows[:source_limit]
     review_paths = _review_state_paths(review_root)
+    historical_reviewed_records = load_reviewed_records(root)
     settings = {
         "include_partial": include_partial,
         "include_manual_review": include_manual_review,
@@ -3297,12 +3541,15 @@ def run_national_pipeline(
     exclusions: list[dict[str, Any]] = []
     failed_extractions: list[dict[str, Any]] = []
     manual_review: list[dict[str, Any]] = []
+    prefilter_diagnostics: list[dict[str, Any]] = []
+    prefilter_discarded: list[dict[str, Any]] = []
     for source_row in source_rows:
         result = run_collection_attempt(
             root,
             run_date=run_date,
             run_id=run_id,
             source_row=source_row,
+            historical_reviewed_records=historical_reviewed_records,
             allow_insecure_tls=allow_insecure_tls,
             fetch_timeout=fetch_timeout,
             max_items_per_source=max_items_per_source,
@@ -3315,6 +3562,8 @@ def run_national_pipeline(
         exclusions.extend(result["exclusions"])
         failed_extractions.extend(result["failed_extractions"])
         manual_review.extend(result.get("manual_review", []))
+        prefilter_diagnostics.extend(result.get("prefilter_diagnostics", []))
+        prefilter_discarded.extend(result.get("prefilter_discarded", []))
     candidate_registry = update_candidate_registry_at_path(root / review_paths["candidate_registry"], edition_date=run_date, candidates=candidates)
     queue_payload = build_review_queue(candidate_registry["candidates"], edition_date=run_date, active_queue_limit=active_queue_limit, low_priority_cap=low_priority_cap)
     _write_review_private_outputs(
@@ -3326,7 +3575,7 @@ def run_national_pipeline(
         review_root=review_root,
     )
     existing_follow_up_state = load_follow_up_state(root, state_root=review_root)
-    follow_up_records = load_reviewed_records(root)
+    follow_up_records = historical_reviewed_records
     follow_up_queries = build_follow_up_queries(
         root,
         run_date,
@@ -3395,6 +3644,8 @@ def run_national_pipeline(
         "excluded_item_count": len(exclusions),
         "failed_extraction_count": len(failed_extractions),
         "manual_review_count": len(manual_review),
+        "prefilter_discarded_count": len(prefilter_discarded),
+        "prefilter_decision_count": len(prefilter_diagnostics),
         "active_review_queue_count": queue_payload["queue_item_count"],
         "backlog_item_count": queue_payload["backlog_item_count"],
         "duplicate_item_count": queue_payload["duplicate_item_count"],

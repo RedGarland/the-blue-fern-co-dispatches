@@ -18,6 +18,20 @@ Dispatches From The Blue Fern Co. is a source-based public dispatch system with 
 
 All dispatch outputs must be source-traceable, date-safe, and publication-safe.
 
+## Production Readiness
+
+Read `docs/production-readiness-contract.md` before any production-change task.
+
+- Do not equate tests, merges, clean runners, or dry-runs with production readiness.
+- Scheduled systems require actual task-service proof against the protected runtime.
+- Every production filesystem path must be verified after the final protected sync.
+- Runtime state must be explicitly classified instead of being treated as generic dirtiness.
+- Observability is a readiness requirement, not a nice-to-have.
+- Never deploy an unmerged fix directly to a production runner.
+- Use precise intermediate status language until every applicable readiness layer is proven.
+- Be conservative about scope, not iteration.
+- Optimize for production integrity, not task completion.
+
 ## Required Behavior Before Editing
 
 - Inspect the current worktree with `git status --short`.

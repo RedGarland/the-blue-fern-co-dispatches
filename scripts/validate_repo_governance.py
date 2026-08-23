@@ -11,6 +11,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 REQUIRED_FILES = [
     Path("AGENTS.md"),
     Path("docs/agent_workflow.md"),
+    Path("docs/production-readiness-contract.md"),
+    Path("docs/templates/production-readiness-proof.md"),
     Path(".github/ISSUE_TEMPLATE/dispatch_task.yml"),
     Path(".github/ISSUE_TEMPLATE/bug_report.yml"),
     Path(".github/pull_request_template.md"),
@@ -21,6 +23,9 @@ AGENTS_PHRASES = [
     "source-traceable",
     "date-safe",
     "publication-safe",
+    "production readiness",
+    "task-service proof",
+    "production-readiness-contract.md",
     "dirty worktree rules",
     "do not publish or push",
     "files changed",

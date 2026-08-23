@@ -40,6 +40,17 @@ def test_validate_repo_governance_passes_against_repo_root() -> None:
     assert errors == []
 
 
+def test_production_readiness_governance_files_are_present_and_referenced() -> None:
+    root = Path(__file__).resolve().parents[1]
+    contract = root / "docs" / "production-readiness-contract.md"
+    template = root / "docs" / "templates" / "production-readiness-proof.md"
+    agents_text = (root / "AGENTS.md").read_text(encoding="utf-8")
+
+    assert contract.exists()
+    assert template.exists()
+    assert "docs/production-readiness-contract.md" in agents_text
+
+
 def test_validate_repo_governance_reports_missing_required_file(tmp_path) -> None:
     module = _load_validator_module()
 

@@ -71,6 +71,13 @@ $readiness = Read-JsonFile -Path $readinessPath
 $blueskyHandle = [bool]$env:BLUESKY_HANDLE
 $blueskyPassword = [bool]$env:BLUESKY_APP_PASSWORD
 $startedAt = Get-UtcTimestamp
+$principal = $null
+try {
+    $principal = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+}
+catch {
+    $principal = [System.Environment]::UserName
+}
 $terminalStatus = "starting"
 $ok = $false
 $childExitCode = $null
@@ -116,7 +123,7 @@ $checkResult = @{
     pages_repo = $PagesRepo
     proposed_task_name = "Blue Fern Food Line Daily Publish"
     proposed_trigger = "08:30 Pacific"
-    principal = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+    principal = $principal
     bluesky_handle_available = $blueskyHandle
     bluesky_app_password_available = $blueskyPassword
     publication_capability = [bool]$readiness

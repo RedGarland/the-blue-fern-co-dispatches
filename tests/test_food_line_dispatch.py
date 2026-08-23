@@ -11916,7 +11916,7 @@ def test_food_line_daily_publish_wrapper_check_only_reports_release_readiness(tm
     assert payload["publication_capability"] is False
     assert payload["source_branch"] == "add/pages-repo-default"
     assert payload["private_runner_root"] == str(project_root)
-    assert payload["publication_runner"].endswith("scripts\\run_runner_dispatch.ps1")
+    assert Path(payload["publication_runner"]).as_posix().endswith("scripts/run_runner_dispatch.ps1")
     assert payload["pages_repo"] == str(pages_repo)
     assert payload["proposal_path"] is None
     assert payload["signal_review_path"] is None

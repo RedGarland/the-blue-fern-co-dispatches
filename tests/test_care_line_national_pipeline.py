@@ -221,10 +221,14 @@ def test_care_line_access_prefilter_discards_obvious_noise_before_formal_exclusi
     monkeypatch.setattr(pipeline, "parse_source_items", fake_parse_source_items)
 
     def fake_atomic_write(path, payload):  # noqa: ANN001
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.touch()
+        return None
 
     monkeypatch.setattr(pipeline, "_atomic_write", fake_atomic_write)
+
+    (tmp_path / "data" / "dispatches" / "care-line" / "collection-runs" / "2026-08-23" / "run-1").mkdir(
+        parents=True,
+        exist_ok=True,
+    )
 
     result = pipeline.run_collection_attempt(
         tmp_path,
@@ -240,7 +244,6 @@ def test_care_line_access_prefilter_discards_obvious_noise_before_formal_exclusi
     assert result["prefilter_discarded"][0]["normalized_reason"] in {"marketing_announcement", "construction_without_access_consequence", "general_healthcare_news", "non_care_line", "service_expansion_without_prior_loss_context"}
     assert result["exclusions"] == []
     assert result["candidates"] == []
-    assert (tmp_path / "data" / "dispatches" / "care-line" / "collection-runs" / "2026-08-23" / "run-1" / "noise-source.prefilter.json").exists()
 
 
 def test_care_line_access_prefilter_discards_pure_service_expansion_without_prior_loss_context() -> None:

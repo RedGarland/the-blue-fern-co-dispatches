@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from bluefern_dispatches.care_line_source_registry import CareLineSource
+
 import bluefern_dispatches.care_line_national_pipeline as pipeline
 
 
@@ -70,6 +72,23 @@ def test_national_pipeline_threads_follow_up_queries_into_discovery_and_state_up
             "updated_at": "2026-08-20T00:00:00Z",
             "run_date": run_date,
             "items": [{"status": "MATERIAL_UPDATE_FOUND"}],
+        },
+    )
+
+    monkeypatch.setattr(
+        pipeline,
+        "begin_collection_run",
+        lambda root, *, run_date, source_rows, settings, run_id=None, collection_runs_root=None: {
+            "schema_version": "test",
+            "run_id": run_id or "scheduled-001",
+            "run_key": "test-run-key",
+            "run_date": run_date,
+            "started_at": "2026-08-20T00:00:00Z",
+            "source_count": len(source_rows),
+            "source_ids": [],
+            "status": "running",
+            "settings": dict(settings),
+            "attempts": [],
         },
     )
 
@@ -142,3 +161,137 @@ def test_national_pipeline_uses_an_explicit_run_id_when_provided(tmp_path: Path,
     assert captured["run_id"] == "scheduled-123"
     assert result["run_manifest"]["run_id"] == "scheduled-123"
     assert result["run_manifest"]["run_manifest_path"].endswith("scheduled-123/run-manifest.json")
+
+
+def test_care_line_access_prefilter_discards_obvious_noise_before_formal_exclusion(tmp_path: Path, monkeypatch) -> None:
+    source = CareLineSource.model_validate(
+        {
+            "source_id": "noise-source",
+            "name": "Noise Source",
+            "publisher": "Example News",
+            "source_type": "trade_publication",
+            "feed_url": "https://example.org/feed",
+            "homepage_url": "https://example.org/",
+            "state": "OH",
+            "geographic_scope": "local",
+            "organization_type": "trade_publication",
+            "care_line_topics": ["hospital", "clinic"],
+            "authority_level": "secondary",
+            "expected_update_frequency": "daily",
+            "enabled": True,
+            "adapter_type": "rss",
+            "requires_html_followup": False,
+            "source_role": "healthcare_access_reporting",
+            "historical_depth": "current feed",
+            "created_at": "2026-08-23T00:00:00Z",
+            "updated_at": "2026-08-23T00:00:00Z",
+        }
+    )
+
+    def fake_fetch_source(_source, timeout=20, allow_insecure_tls=False):  # noqa: ANN001
+        return b"<rss><channel></channel></rss>", {"final_url": "https://example.org/feed"}
+
+    def fake_parse_source_items(_source, _payload, *, source_url, fetch_timeout, allow_insecure_tls, max_items_per_source):  # noqa: ANN001
+        return [
+            {
+                "title": "Hospital opens new wing and urgent care service",
+                "url": "https://example.org/news/new-wing",
+                "published_at": "2026-08-23T08:00:00Z",
+                "description": "The hospital hosted a grand opening and marketing event.",
+                "source": "Example News",
+                "id": "noise-1",
+            }
+        ]
+
+    monkeypatch.setattr(pipeline, "fetch_source", fake_fetch_source)
+    monkeypatch.setattr(pipeline, "parse_source_items", fake_parse_source_items)
+
+    def fake_atomic_write(path, payload):  # noqa: ANN001
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.touch()
+
+    monkeypatch.setattr(pipeline, "_atomic_write", fake_atomic_write)
+
+    result = pipeline.run_collection_attempt(
+        tmp_path,
+        run_date="2026-08-23",
+        run_id="run-1",
+        source_row={"source": source},
+        historical_reviewed_records=[],
+        collection_runs_root=Path("data/dispatches/care-line/collection-runs"),
+    )
+
+    assert len(result["prefilter_diagnostics"]) == 1
+    assert result["prefilter_diagnostics"][0]["prefilter_decision"] == "discard"
+    assert result["prefilter_discarded"][0]["normalized_reason"] in {"marketing_announcement", "construction_without_access_consequence", "general_healthcare_news", "non_care_line", "service_expansion_without_prior_loss_context"}
+    assert result["exclusions"] == []
+    assert result["candidates"] == []
+    assert (tmp_path / "data" / "dispatches" / "care-line" / "collection-runs" / "2026-08-23" / "run-1" / "noise-source.prefilter.json").exists()
+
+
+def test_care_line_access_prefilter_discards_pure_service_expansion_without_prior_loss_context() -> None:
+    raw_item = {
+        "raw_item_id": "care-line-expansion-no-history-001",
+        "source_id": "expansion-source",
+        "source_name": "Example News",
+        "item_url": "https://example.org/new-service",
+        "title": "Mount Carmel Franklinton opens new urgent care service",
+        "description": "The hospital is adding a new urgent care service after a prior closure was not documented in the reviewed state.",
+        "source_publication_date": "2026-08-23T08:00:00Z",
+        "facility_name": "Mount Carmel Franklinton Emergency Department",
+        "provider_name": "Mount Carmel Franklinton Emergency Department",
+        "city": "Columbus",
+        "state": "OH",
+    }
+    lead = pipeline.event_lead_from_raw_item(raw_item)
+
+    prefilter = pipeline._care_line_access_prefilter(raw_item, lead, reviewed_records=[])
+
+    assert prefilter["prefilter_decision"] == "discard"
+    assert prefilter["normalized_reason"] == "service_expansion_without_prior_loss_context"
+    assert prefilter["history_match_count"] == 0
+    assert prefilter["escalated_to_full_review"] is False
+
+
+def test_care_line_access_prefilter_escalates_after_prior_loss_context():
+    reviewed_records = [
+        {
+            "producer_record_id": "care-line-closure-001",
+            "source_url": "https://example.org/mount-carmel-closure",
+            "source_title": "Mount Carmel Franklinton Emergency Department closure announced",
+            "source_publisher": "Example News",
+            "source_publication_date": "2026-06-24T00:00:00Z",
+            "event_type": "facility_closure",
+            "facility_name": "Mount Carmel Franklinton Emergency Department",
+            "provider_name": "Mount Carmel Franklinton Emergency Department",
+            "city": "Columbus",
+            "state": "OH",
+            "service_line": "emergency_care",
+            "supporting_passage": "The emergency department will close on August 22.",
+            "raw_payload_hash": "hash-001",
+            "review_status": "approved",
+            "public_status": "public_approved",
+            "care_line_public_eligible": True,
+        }
+    ]
+    raw_item = {
+        "raw_item_id": "care-line-expansion-001",
+        "source_id": "noise-source",
+        "source_name": "Example News",
+        "item_url": "https://example.org/new-service",
+        "title": "Mount Carmel Franklinton opens new urgent care service",
+        "description": "The hospital is adding a new urgent care service after the prior emergency department closure.",
+        "source_publication_date": "2026-08-23T08:00:00Z",
+        "facility_name": "Mount Carmel Franklinton Emergency Department",
+        "provider_name": "Mount Carmel Franklinton Emergency Department",
+        "city": "Columbus",
+        "state": "OH",
+    }
+    lead = pipeline.event_lead_from_raw_item(raw_item)
+
+    prefilter = pipeline._care_line_access_prefilter(raw_item, lead, reviewed_records=reviewed_records)
+
+    assert prefilter["prefilter_decision"] == "escalate_to_full_review"
+    assert prefilter["normalized_reason"] == "prior_loss_context_detected"
+    assert prefilter["history_match_count"] == 1
+    assert prefilter["escalated_to_full_review"] is True

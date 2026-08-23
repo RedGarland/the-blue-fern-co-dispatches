@@ -13,6 +13,7 @@ import types
 import urllib.error
 from datetime import date as dt_date, datetime, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import pytest
 from bs4 import BeautifulSoup
@@ -11473,6 +11474,10 @@ def _resolve_powershell_executable() -> str:
     pytest.skip("PowerShell is not available for wrapper execution tests")
 
 
+def _food_line_pacific_date() -> str:
+    return datetime.now(timezone.utc).astimezone(ZoneInfo("America/Los_Angeles")).date().isoformat()
+
+
 def _run_food_line_windows_wrapper(
     tmp_path: Path,
     wrapper_name: str,
@@ -11877,7 +11882,7 @@ def test_food_line_windows_scheduler_wrappers_delegate_to_current_runner_contrac
 
 def test_food_line_daily_publish_wrapper_check_only_reports_release_readiness(tmp_path: Path) -> None:
     project_root = tmp_path / "publish"
-    today = datetime.now().astimezone().date().isoformat()
+    today = _food_line_pacific_date()
     proposed_path = project_root / "data" / "dispatches" / "food-line" / "review" / "proposed-editions" / f"{today}.json"
     signal_review_path = project_root / "data" / "dispatches" / "food-line" / "review" / "signal-reviews" / f"{today}.json"
     readiness_path = project_root / "data" / "dispatches" / "food-line" / "review" / "release-readiness" / f"{today}.json"

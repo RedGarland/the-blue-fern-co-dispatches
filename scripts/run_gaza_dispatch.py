@@ -31,6 +31,7 @@ from bluefern_dispatches.generator import (
     render_dispatch_index_for_dates,
     render_rss_for_dates,
 )
+from bluefern_dispatches.gaza_sources import collect_gaza_sources
 from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
 from bluefern_dispatches.gaza_sources import canonicalize_url, extract_canonical_from_google_wrapper
 from bluefern_dispatches.gaza_sources import build_gaza_collection_timing_metadata
@@ -52,6 +53,76 @@ BACKUP_ROOT = Path(
     os.getenv("BLUEFERN_BACKUP_ROOT", str(ROOT / "output" / "tmp-backups-pages"))
 ) / DISPATCH_SLUG
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+GAZA_COVERAGE_RESCUE_MAX_SOURCES = 12
+GAZA_COVERAGE_RESCUE_MIN_PUBLISHERS = 4
+GAZA_COVERAGE_RESCUE_MIN_SOURCES = 8
+GAZA_RESCUE_STOPWORDS = {
+    "gaza",
+    "gazan",
+    "palestine",
+    "palestinian",
+    "palestinians",
+    "israel",
+    "israeli",
+    "report",
+    "reports",
+    "reported",
+    "reporting",
+    "update",
+    "news",
+    "story",
+    "live",
+    "breaking",
+    "says",
+    "said",
+    "the",
+    "and",
+    "with",
+    "for",
+    "from",
+    "after",
+    "amid",
+    "as",
+    "of",
+    "to",
+    "in",
+    "on",
+}
+GAZA_RESCUE_EVENT_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
+    ("civilian_harm", re.compile(r"\b(killed|injured|wounded|dead|casualties?|civilian|child(?:ren)?)\b", re.I)),
+    ("displacement", re.compile(r"\b(displaced|displacement|evacuat(?:e|ion)|shelter|camp)\b", re.I)),
+    ("aid_access", re.compile(r"\b(aid|relief|humanitarian|convoy|crossing|corridor|food|water|fuel)\b", re.I)),
+    ("healthcare_disruption", re.compile(r"\b(hospital|clinic|medical|healthcare|health system|health center)\b", re.I)),
+    ("infrastructure_damage", re.compile(r"\b(strike|airstrike|bombard|shell|damage|destroy|destroyed|destroying|collapse)\b", re.I)),
+    ("ceasefire_negotiation", re.compile(r"\b(ceasefire|truce|negotiat|talks?)\b", re.I)),
+    ("crossing_status", re.compile(r"\b(crossing|border|rafah|kerem shalom|erez|philadelphi|netzarim)\b", re.I)),
+    ("detention_hostage", re.compile(r"\b(hostage|hostages|detainee|detention|captured)\b", re.I)),
+    ("military_operation", re.compile(r"\b(operation|raid|offensive|assault|military|army|strike)\b", re.I)),
+    ("policy_legal", re.compile(r"\b(icj|icc|unrwa|ocha|resolution|ruling|court)\b", re.I)),
+]
+GAZA_RESCUE_LOCATION_HINTS = (
+    "gaza city",
+    "khan younis",
+    "khan yunis",
+    "khan yunis",
+    "rafah",
+    "deir al-balah",
+    "nuseirat",
+    "zawayda",
+    "jabalia",
+    "beit lahia",
+    "beit hanoun",
+    "mawasi",
+    "muwasi",
+    "morag",
+    "netzarim",
+    "kerem shalom",
+    "erez",
+    "philadelphi",
+    "south gaza",
+    "north gaza",
+    "central gaza",
+)
 REQUIRED_SOURCE_FIELDS = {
     "source_record_id",
     "title",
@@ -517,18 +588,21 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
                 "candidate_score_breakdown": breakdown,
                 "included_in_public_summary": True,
                 "included_in_detail_dataset": False,
-                "source_record_ids": [source["source_record_id"]],
-                "source_ids": [source["source_record_id"]],
-                "source_urls": [source["url"]],
-                "publisher_names": [source["publisher"]],
+                "source_record_ids": list(source.get("source_record_ids") or [source["source_record_id"]]),
+                "source_ids": list(source.get("source_ids") or source.get("source_record_ids") or [source["source_record_id"]]),
+                "source_urls": list(source.get("source_urls") or [source["url"]]),
+                "publisher_names": list(source.get("publisher_names") or [source["publisher"]]),
                 "source_records": [
-                    {
-                        "source_record_id": source["source_record_id"],
-                        "title": source["title"],
-                        "url": source["url"],
-                        "publisher": source["publisher"],
-                        "summary_or_snippet": source.get("summary_or_snippet"),
-                    }
+                    dict(record)
+                    for record in (source.get("source_records") or [
+                        {
+                            "source_record_id": source["source_record_id"],
+                            "title": source["title"],
+                            "url": source["url"],
+                            "publisher": source["publisher"],
+                            "summary_or_snippet": source.get("summary_or_snippet"),
+                        }
+                    ])
                 ],
                 "generated_at": now,
                 "relevance_terms_matched": relevance.get("matched_terms") or [],
@@ -1405,6 +1479,254 @@ def _source_quality_recommendation(adequacy: dict[str, Any]) -> str:
     return "hold for manual supplement"
 
 
+def _gaza_thin_collection_metrics(records: list[dict[str, Any]]) -> dict[str, Any]:
+    publishers = sorted(
+        {
+            str(record.get("publisher") or "").strip()
+            for record in records
+            if str(record.get("publisher") or "").strip()
+        }
+    )
+    categories = sorted(
+        {
+            str(record.get("category_hint") or "").strip()
+            for record in records
+            if str(record.get("category_hint") or "").strip()
+        }
+    )
+    source_families = sorted(
+        {
+            str(record.get("source_type") or "").strip()
+            for record in records
+            if str(record.get("source_type") or "").strip()
+        }
+    )
+    return {
+        "usable_source_count": len(records),
+        "publisher_count": len(publishers),
+        "publishers": publishers,
+        "category_count": len(categories),
+        "categories": categories,
+        "source_family_count": len(source_families),
+        "source_families": source_families,
+        "thresholds": {
+            "target_min_usable_sources": GAZA_SOURCE_TARGET_MIN,
+            "target_min_publishers": GAZA_PUBLISHER_TARGET_MIN,
+        },
+    }
+
+
+def _gaza_should_run_coverage_rescue(records: list[dict[str, Any]]) -> dict[str, Any]:
+    metrics = _gaza_thin_collection_metrics(records)
+    reasons: list[str] = []
+    if metrics["usable_source_count"] < metrics["thresholds"]["target_min_usable_sources"]:
+        reasons.append("usable_source_count_below_target")
+    if metrics["publisher_count"] < metrics["thresholds"]["target_min_publishers"]:
+        reasons.append("publisher_diversity_below_target")
+    if metrics["category_count"] < 3 and metrics["usable_source_count"] < metrics["thresholds"]["target_min_usable_sources"]:
+        reasons.append("category_diversity_low")
+    return {
+        **metrics,
+        "thin_collection": bool(reasons),
+        "reasons": reasons,
+    }
+
+
+def _gaza_rescue_text(record: dict[str, Any]) -> str:
+    return " ".join(
+        clean_feed_text(str(record.get(field) or ""))
+        for field in ("title", "summary_or_snippet", "publisher", "category_hint", "url")
+    ).strip().lower()
+
+
+def _gaza_rescue_location_key(text: str) -> str:
+    for hint in GAZA_RESCUE_LOCATION_HINTS:
+        if hint in text:
+            return hint.replace("  ", " ").strip()
+    return "gaza"
+
+
+def _gaza_rescue_family_key(text: str) -> str:
+    for family, pattern in GAZA_RESCUE_EVENT_PATTERNS:
+        if pattern.search(text):
+            return family
+    return "general_gaza"
+
+
+def _gaza_rescue_count_band(text: str) -> str:
+    match = re.search(r"\b(?:at least|about|around|roughly)?\s*(\d{1,4}|one|two|three|four|five|six|seven|eight|nine|ten|dozens?|hundreds?|thousands?)\b", text, re.I)
+    if not match:
+        return "count_unknown"
+    token = match.group(1).casefold()
+    numeric_word_map = {
+        "one": "count_1",
+        "two": "count_2_4",
+        "three": "count_2_4",
+        "four": "count_2_4",
+        "five": "count_5_9",
+        "six": "count_5_9",
+        "seven": "count_5_9",
+        "eight": "count_5_9",
+        "nine": "count_5_9",
+        "ten": "count_10_24",
+        "dozen": "count_25_99",
+        "dozens": "count_25_99",
+        "hundred": "count_100_plus",
+        "hundreds": "count_100_plus",
+        "thousand": "count_100_plus",
+        "thousands": "count_100_plus",
+    }
+    if token.isdigit():
+        value = int(token)
+        if value == 1:
+            return "count_1"
+        if value < 5:
+            return "count_2_4"
+        if value < 10:
+            return "count_5_9"
+        if value < 25:
+            return "count_10_24"
+        if value < 100:
+            return "count_25_99"
+        return "count_100_plus"
+    return numeric_word_map.get(token, "count_unknown")
+
+
+def _gaza_rescue_topic_signature(text: str) -> str:
+    tokens = [
+        token
+        for token in re.findall(r"[a-z0-9']+", text.casefold())
+        if token not in GAZA_RESCUE_STOPWORDS and len(token) > 2
+    ]
+    if not tokens:
+        return "topic_unknown"
+    return "-".join(tokens[:6])
+
+
+def _gaza_event_equivalence_key(record: Mapping[str, Any]) -> str:
+    text = _gaza_rescue_text(dict(record))
+    published_at = str(record.get("published_at") or "").strip()[:10]
+    family = _gaza_rescue_family_key(text)
+    location = _gaza_rescue_location_key(text)
+    count_band = _gaza_rescue_count_band(text)
+    signature = _gaza_rescue_topic_signature(text)
+    return "|".join([published_at or "unknown-date", family, location, count_band, signature])
+
+
+def _gaza_rescue_publisher_priority(record: Mapping[str, Any]) -> int:
+    publisher = str(record.get("publisher") or "").casefold()
+    if "reuters" in publisher:
+        return 0
+    if any(term in publisher for term in ("associated press", " ap ", "ap news", "bbc", "al jazeera", "unrwa", "ocha", "who", "un ", "unicef", "wfp", "icrc", "msf")):
+        return 3
+    if publisher:
+        return 1
+    return 0
+
+
+def _gaza_merge_rescued_candidates(
+    base_records: list[dict[str, Any]],
+    rescued_records: list[dict[str, Any]],
+    *,
+    edition_date: str,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    merged: list[dict[str, Any]] = [dict(record) for record in base_records]
+    key_to_index = {
+        _gaza_event_equivalence_key(record): index
+        for index, record in enumerate(merged)
+    }
+    rescued_kept: list[dict[str, Any]] = []
+    rescued_duplicates: list[dict[str, Any]] = []
+    for record in rescued_records:
+        key = _gaza_event_equivalence_key(record)
+        candidate = dict(record)
+        candidate["coverage_rescue_event_key"] = key
+        candidate["coverage_rescue_selected"] = True
+        candidate["coverage_rescue_source_count"] = 1
+        candidate["source_record_ids"] = [str(candidate.get("source_record_id") or "")]
+        candidate["source_urls"] = [str(candidate.get("url") or "")]
+        candidate["publisher_names"] = [str(candidate.get("publisher") or "")]
+        candidate["source_records"] = [
+            {
+                "source_record_id": str(candidate.get("source_record_id") or ""),
+                "title": str(candidate.get("title") or ""),
+                "url": str(candidate.get("url") or ""),
+                "publisher": str(candidate.get("publisher") or ""),
+                "summary_or_snippet": str(candidate.get("summary_or_snippet") or ""),
+            }
+        ]
+        existing_index = key_to_index.get(key)
+        if existing_index is None:
+            key_to_index[key] = len(merged)
+            merged.append(candidate)
+            rescued_kept.append(candidate)
+            continue
+        existing = dict(merged[existing_index])
+        ranked_group = rank_gaza_candidates([existing, candidate], edition_date)
+        selected = max(
+            ranked_group,
+            key=lambda row: (
+                int(row.get("candidate_score") or 0),
+                _gaza_rescue_publisher_priority(row),
+                int(bool(str(row.get("canonical_url") or "").strip())),
+                int(bool(str(row.get("summary_or_snippet") or "").strip())),
+                len(str(row.get("title") or "")),
+                len(str(row.get("url") or "")),
+            ),
+        )
+        existing_ids = list(existing.get("source_record_ids") or [existing.get("source_record_id") or ""])
+        existing_urls = list(existing.get("source_urls") or [existing.get("url") or ""])
+        existing_publishers = list(existing.get("publisher_names") or [existing.get("publisher") or ""])
+        existing_records = list(existing.get("source_records") or [
+            {
+                "source_record_id": str(existing.get("source_record_id") or ""),
+                "title": str(existing.get("title") or ""),
+                "url": str(existing.get("url") or ""),
+                "publisher": str(existing.get("publisher") or ""),
+                "summary_or_snippet": str(existing.get("summary_or_snippet") or ""),
+            }
+        ])
+        candidate_id = str(candidate.get("source_record_id") or "")
+        candidate_url = str(candidate.get("url") or "")
+        candidate_publisher = str(candidate.get("publisher") or "")
+        if candidate_id and candidate_id not in existing_ids:
+            existing_ids.append(candidate_id)
+        if candidate_url and candidate_url not in existing_urls:
+            existing_urls.append(candidate_url)
+        if candidate_publisher and candidate_publisher not in existing_publishers:
+            existing_publishers.append(candidate_publisher)
+        if candidate_id and all(str(row.get("source_record_id") or "") != candidate_id for row in existing_records):
+            existing_records.append(
+                {
+                    "source_record_id": candidate_id,
+                    "title": str(candidate.get("title") or ""),
+                    "url": candidate_url,
+                    "publisher": candidate_publisher,
+                    "summary_or_snippet": str(candidate.get("summary_or_snippet") or ""),
+                }
+            )
+        selected = dict(selected)
+        selected["source_record_ids"] = existing_ids
+        selected["source_urls"] = existing_urls
+        selected["publisher_names"] = existing_publishers
+        selected["source_records"] = existing_records
+        selected["coverage_rescue_event_key"] = key
+        selected["coverage_rescue_selected"] = True
+        selected["coverage_rescue_source_count"] = len(existing_ids)
+        merged[existing_index] = selected
+        rescued_duplicates.append(candidate)
+    report = {
+        "status": "coverage_rescue_completed" if (rescued_kept or rescued_duplicates) else "coverage_rescue_completed_no_candidates",
+        "triggered": True,
+        "rescued_candidate_count": len(rescued_kept) + len(rescued_duplicates),
+        "rescued_duplicate_count": len(rescued_duplicates),
+        "event_group_count": len({candidate["coverage_rescue_event_key"] for candidate in rescued_kept + rescued_duplicates}),
+        "rescued_candidates": rescued_kept[:25],
+        "rescued_duplicates": rescued_duplicates[:25],
+    }
+    return merged, report
+
+
 def _build_source_quality_report(
     edition_date: str,
     adequacy: dict[str, Any],
@@ -1913,6 +2235,109 @@ def run_gaza_dispatch(
     raw_dir = root / "data" / "dispatches" / DISPATCH_SLUG / "raw" / edition_date
     normalized_dir = root / "data" / "dispatches" / DISPATCH_SLUG / "normalized" / edition_date
     curated_dir = root / "data" / "dispatches" / DISPATCH_SLUG / "curated" / edition_date
+    collection_inputs = list(manual_records)
+    coverage_rescue_report: dict[str, Any] = {
+        "status": "coverage_rescue_not_required",
+        "triggered": False,
+        "thin_collection": False,
+        "usable_source_count": len(manual_records),
+        "publisher_count": len(
+            {
+                str(record.get("publisher") or "").strip()
+                for record in manual_records
+                if str(record.get("publisher") or "").strip()
+            }
+        ),
+        "category_count": len(
+            {
+                str(record.get("category_hint") or "").strip()
+                for record in manual_records
+                if str(record.get("category_hint") or "").strip()
+            }
+        ),
+        "source_family_count": len(
+            {
+                str(record.get("source_type") or "").strip()
+                for record in manual_records
+                if str(record.get("source_type") or "").strip()
+            }
+        ),
+        "query_budget": 0,
+        "rescued_candidate_count": 0,
+        "rescued_duplicate_count": 0,
+        "rescued_source_count": 0,
+        "event_group_count": 0,
+        "warnings": [],
+        "errors": [],
+        "provider_diagnostics": [],
+        "review_candidates": [],
+        "failed_source_ids": [],
+        "rescue_provider_count": 0,
+    }
+    thin_metrics = _gaza_should_run_coverage_rescue(manual_records)
+    thin_collection = bool(thin_metrics["thin_collection"])
+    coverage_rescue_report.update(
+        {
+            "thin_collection": thin_collection,
+            "usable_source_count": thin_metrics["usable_source_count"],
+            "publisher_count": thin_metrics["publisher_count"],
+            "publishers": thin_metrics["publishers"],
+            "category_count": thin_metrics["category_count"],
+            "categories": thin_metrics["categories"],
+            "source_family_count": thin_metrics["source_family_count"],
+            "source_families": thin_metrics["source_families"],
+            "thresholds": thin_metrics["thresholds"],
+            "reasons": thin_metrics["reasons"],
+        }
+    )
+    rescue_source_config = root / "data" / "dispatches" / DISPATCH_SLUG / "sources.yml"
+    if thin_collection and rescue_source_config.exists():
+        rescue_result = collect_gaza_sources(
+            root,
+            edition_date,
+            max_sources=GAZA_COVERAGE_RESCUE_MAX_SOURCES,
+            min_sources=0,
+            prefer_manual=False,
+            write_output=False,
+        )
+        rescued_sources = list(rescue_result.get("sources") or [])
+        collection_inputs, rescue_merge_report = _gaza_merge_rescued_candidates(collection_inputs, rescued_sources, edition_date=edition_date)
+        coverage_rescue_report.update(
+            {
+                "triggered": True,
+                "query_budget": GAZA_COVERAGE_RESCUE_MAX_SOURCES,
+                "rescued_candidate_count": int(rescue_merge_report.get("rescued_candidate_count") or 0),
+                "rescued_duplicate_count": int(rescue_merge_report.get("rescued_duplicate_count") or 0),
+                "rescued_source_count": len(rescued_sources),
+                "event_group_count": int(rescue_merge_report.get("event_group_count") or 0),
+                "status": str(rescue_merge_report.get("status") or "coverage_rescue_partial"),
+                "warnings": list(rescue_result.get("warnings") or []),
+                "errors": list(rescue_result.get("errors") or []),
+                "provider_diagnostics": list(rescue_result.get("provider_diagnostics") or []),
+                "review_candidates": list(rescue_result.get("review_candidates") or []),
+                "failed_source_ids": list(rescue_result.get("failed_source_ids") or []),
+                "rescue_provider_count": len(list(rescue_result.get("provider_diagnostics") or [])),
+                "source_file": rescue_result.get("source_file"),
+                "source_mode_used": rescue_result.get("source_mode_used"),
+            }
+        )
+        if rescue_result.get("ok") and coverage_rescue_report["rescued_candidate_count"] > 0:
+            coverage_rescue_report["status"] = "coverage_rescue_completed"
+        elif rescue_result.get("ok") and coverage_rescue_report["rescued_candidate_count"] == 0:
+            coverage_rescue_report["status"] = "coverage_rescue_completed_no_candidates"
+        elif coverage_rescue_report["rescued_candidate_count"] > 0:
+            coverage_rescue_report["status"] = "coverage_rescue_partial"
+        else:
+            coverage_rescue_report["status"] = "coverage_rescue_failed"
+        if rescue_result.get("warnings"):
+            warnings.extend(str(item) for item in rescue_result.get("warnings") or [])
+        if rescue_result.get("errors"):
+            warnings.extend(str(item) for item in rescue_result.get("errors") or [])
+    elif thin_collection:
+        coverage_rescue_report.setdefault("warnings", []).append(
+            f"coverage rescue skipped because supplemental Gaza source config is unavailable: {rescue_source_config}"
+        )
+    manual_records = collection_inputs
     write_json(raw_dir / "raw_sources.json", manual_records, dry_run, wrote)
     normalized, norm_warnings, norm_errors = normalize_sources(
         manual_records,
@@ -2084,6 +2509,14 @@ def run_gaza_dispatch(
     collection_report["source_adequacy"] = adequacy
     if adequacy.get("warnings"):
         warnings.extend(str(item) for item in adequacy.get("warnings") or [])
+    collection_report["coverage_rescue"] = coverage_rescue_report
+    collection_report["coverage_rescue_status"] = str(coverage_rescue_report.get("status") or "coverage_rescue_not_required")
+    collection_report["coverage_rescue_triggered"] = bool(coverage_rescue_report.get("triggered"))
+    collection_report["coverage_rescue_thin_collection"] = bool(coverage_rescue_report.get("thin_collection"))
+    collection_report["coverage_rescue_candidate_count"] = int(coverage_rescue_report.get("rescued_candidate_count") or 0)
+    collection_report["coverage_rescue_duplicate_count"] = int(coverage_rescue_report.get("rescued_duplicate_count") or 0)
+    collection_report["coverage_rescue_source_count"] = int(coverage_rescue_report.get("rescued_source_count") or 0)
+    collection_report["coverage_rescue_event_group_count"] = int(coverage_rescue_report.get("event_group_count") or 0)
     collection_report["final_story_count"] = len(stories)
     collection_report["core_gaza_count"] = sum(1 for story in stories if str(story.get("story_scope") or "") == "core_gaza")
     collection_report["palestinian_development_count"] = sum(

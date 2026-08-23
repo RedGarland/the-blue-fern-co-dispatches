@@ -1,0 +1,24 @@
+{
+  "care_line_only_count": 0,
+  "contract_version": "bluefern.care_line.reviewed_record.v1",
+  "date_from": "2026-08-19",
+  "date_to": "2026-08-19",
+  "duplicate_count": 0,
+  "excluded_count": 0,
+  "exporter_version": "care-line-reviewed-export-v1",
+  "input_record_count": 1,
+  "missing_dates": [],
+  "needs_evidence_review_count": 0,
+  "producer": "Care Line",
+  "record_hashes": {
+    "care-line-historical-backfill-2026-08-19-santa-paula-hospital": "08eb4fdd2fb6cdc0546d6246f71b1fa8927f2117b90e2e7fe34317d83b99c87a"
+  },
+  "record_ids": [
+    "care-line-historical-backfill-2026-08-19-santa-paula-hospital"
+  ],
+  "review_required_count": 0,
+  "reviewed_record_count": 1,
+  "schema_version": "bluefern.care_line.reviewed_export_manifest.v1",
+  "universal_event_ready_count": 1,
+  "withdrawn_count": 0
+}

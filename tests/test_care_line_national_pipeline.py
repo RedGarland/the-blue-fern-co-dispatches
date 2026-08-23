@@ -78,18 +78,26 @@ def test_national_pipeline_threads_follow_up_queries_into_discovery_and_state_up
     monkeypatch.setattr(
         pipeline,
         "begin_collection_run",
-        lambda root, *, run_date, source_rows, settings, run_id=None, collection_runs_root=None: {
-            "schema_version": "test",
-            "run_id": run_id or "scheduled-001",
-            "run_key": "test-run-key",
-            "run_date": run_date,
-            "started_at": "2026-08-20T00:00:00Z",
-            "source_count": len(source_rows),
-            "source_ids": [],
-            "status": "running",
-            "settings": dict(settings),
-            "attempts": [],
-        },
+        lambda root, *, run_date, source_rows, settings, run_id=None, collection_runs_root=None: (
+            (root / collection_runs_root / run_date / (run_id or "scheduled-001")).mkdir(parents=True, exist_ok=True)
+            or {
+                "schema_version": "test",
+                "run_id": run_id or "scheduled-001",
+                "run_key": "test-run-key",
+                "run_date": run_date,
+                "started_at": "2026-08-20T00:00:00Z",
+                "source_count": len(source_rows),
+                "source_ids": [],
+                "status": "running",
+                "settings": dict(settings),
+                "attempts": [],
+            }
+        ),
+    )
+    monkeypatch.setattr(
+        pipeline,
+        "_atomic_write",
+        lambda path, payload: (path.parent.mkdir(parents=True, exist_ok=True), path.touch()),
     )
 
     result = pipeline.run_national_pipeline(
@@ -135,6 +143,7 @@ def test_national_pipeline_uses_an_explicit_run_id_when_provided(tmp_path: Path,
 
     def fake_begin_collection_run(root, *, run_date, source_rows, settings, run_id=None, collection_runs_root=None):  # noqa: ANN001
         captured["run_id"] = run_id
+        (root / collection_runs_root / run_date / (run_id or "scheduled-123")).mkdir(parents=True, exist_ok=True)
         return {
             "schema_version": "test",
             "run_id": run_id,
@@ -149,6 +158,11 @@ def test_national_pipeline_uses_an_explicit_run_id_when_provided(tmp_path: Path,
         }
 
     monkeypatch.setattr(pipeline, "begin_collection_run", fake_begin_collection_run)
+    monkeypatch.setattr(
+        pipeline,
+        "_atomic_write",
+        lambda path, payload: (path.parent.mkdir(parents=True, exist_ok=True), path.touch()),
+    )
 
     result = pipeline.run_national_pipeline(
         tmp_path,

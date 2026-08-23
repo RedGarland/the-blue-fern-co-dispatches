@@ -70,6 +70,10 @@ $signalReview = Read-JsonFile -Path $signalReviewPath
 $readiness = Read-JsonFile -Path $readinessPath
 $blueskyHandle = [bool]$env:BLUESKY_HANDLE
 $blueskyPassword = [bool]$env:BLUESKY_APP_PASSWORD
+$publicationShell = "powershell.exe"
+if (-not (Get-Command -Name $publicationShell -ErrorAction SilentlyContinue)) {
+    $publicationShell = "pwsh"
+}
 $startedAt = Get-UtcTimestamp
 $principal = $null
 try {
@@ -170,7 +174,7 @@ try {
             "-PostBluesky"
         )
 
-        & powershell.exe @publicationArgs
+        & $publicationShell @publicationArgs
         $childExitCode = $LASTEXITCODE
         $ok = $childExitCode -eq 0
         if ($ok) {

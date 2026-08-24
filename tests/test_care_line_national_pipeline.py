@@ -623,6 +623,174 @@ def test_care_line_access_blocked_item_without_evidence_still_fails_extraction(t
     assert result["candidates"] == []
 
 
+def test_care_line_access_blocked_item_with_explicit_source_date_can_still_qualify(tmp_path: Path, monkeypatch) -> None:
+    source = CareLineSource.model_validate(
+        {
+            "source_id": "blocked-source-explicit-date",
+            "name": "Blocked Source Explicit Date",
+            "publisher": "Example News",
+            "source_type": "trade_publication",
+            "feed_url": "https://example.org/feed",
+            "homepage_url": "https://example.org/",
+            "state": "OH",
+            "geographic_scope": "local",
+            "organization_type": "trade_publication",
+            "care_line_topics": ["hospital", "clinic"],
+            "authority_level": "secondary",
+            "expected_update_frequency": "daily",
+            "enabled": True,
+            "adapter_type": "rss",
+            "requires_html_followup": False,
+            "source_role": "healthcare_access_reporting",
+            "historical_depth": "current feed",
+            "item_permalink_available": True,
+            "created_at": "2026-08-23T00:00:00Z",
+            "updated_at": "2026-08-23T00:00:00Z",
+        }
+    )
+    raw_item = {
+        "raw_item_id": "blocked-explicit-date-1",
+        "source_id": "blocked-source-explicit-date",
+        "source_name": "Example News",
+        "item_url": "https://example.org/story",
+        "title": "Example Hospital emergency department closure announced",
+        "description": "Example Hospital emergency department will close on August 22, affecting access in Columbus.",
+        "content_text": "Example Hospital emergency department will close on August 22, affecting access in Columbus.",
+        "source_publication_date": "2026-08-23",
+        "facility_name": "Example Hospital",
+        "provider_name": "Example Hospital",
+        "city": "Columbus",
+        "state": "OH",
+        "source_state": "OH",
+        "source": "Example News",
+        "id": "blocked-explicit-date-1",
+    }
+    lead = pipeline.event_lead_from_raw_item(raw_item)
+
+    def fake_fetch_url(*args, **kwargs):  # noqa: ANN001
+        raise TimeoutError("simulated access block")
+
+    def fake_currentness_analysis(**kwargs):  # noqa: ANN001
+        return {
+            "currentness_class": "DATE_UNRESOLVED",
+            "freshness_role": "UNKNOWN",
+            "operative_event_date": "",
+            "event_announcement_date": "",
+            "event_effective_date": "",
+            "observed_date": "",
+            "background_date_references": [],
+            "currentness_confidence": 0.0,
+            "currentness_reasoning": "stubbed unresolved currentness",
+            "currentness_failed_gates": ["currentness_unresolved"],
+            "operative_event_passage": "",
+            "background_event_passages": [],
+            "title_body_agree": True,
+        }
+
+    monkeypatch.setattr(pipeline, "fetch_url", fake_fetch_url)
+    monkeypatch.setattr(pipeline, "_currentness_analysis", fake_currentness_analysis)
+
+    status, payload = pipeline.qualify_event_lead(
+        source,
+        raw_item,
+        lead,
+        artifact_path=str(tmp_path / "artifact.json"),
+        run_id="run-1",
+        fetch_timeout=5,
+        allow_insecure_tls=False,
+    )
+
+    assert status == "qualified"
+    assert payload["normalized_record"]["source_publication_date"] == "2026-08-23"
+    assert payload["qualification_result"]["currentness_class"] == "DATE_UNRESOLVED"
+    assert payload["qualification_result"]["failed_gates"] == []
+    assert payload["normalized_record"]["review_status"] == "not_reviewed"
+
+
+def test_care_line_access_blocked_item_can_use_feed_content_text_for_bounded_evidence(tmp_path: Path, monkeypatch) -> None:
+    source = CareLineSource.model_validate(
+        {
+            "source_id": "blocked-source-feed-text",
+            "name": "Blocked Source Feed Text",
+            "publisher": "Example News",
+            "source_type": "trade_publication",
+            "feed_url": "https://example.org/feed",
+            "homepage_url": "https://example.org/",
+            "state": "OH",
+            "geographic_scope": "local",
+            "organization_type": "trade_publication",
+            "care_line_topics": ["hospital", "clinic"],
+            "authority_level": "secondary",
+            "expected_update_frequency": "daily",
+            "enabled": True,
+            "adapter_type": "rss",
+            "requires_html_followup": False,
+            "source_role": "healthcare_access_reporting",
+            "historical_depth": "current feed",
+            "item_permalink_available": True,
+            "created_at": "2026-08-23T00:00:00Z",
+            "updated_at": "2026-08-23T00:00:00Z",
+        }
+    )
+    raw_item = {
+        "raw_item_id": "blocked-feed-text-1",
+        "source_id": "blocked-source-feed-text",
+        "source_name": "Example News",
+        "item_url": "https://example.org/story",
+        "title": "Example Hospital closure update",
+        "description": "",
+        "content_text": "Example Hospital emergency department closure announced on August 22, affecting access in Columbus.",
+        "source_date_state": "source_dated",
+        "source_publication_date": "2026-08-23",
+        "facility_name": "Example Hospital",
+        "provider_name": "Example Hospital",
+        "city": "Columbus",
+        "state": "OH",
+        "source_state": "OH",
+        "source": "Example News",
+        "id": "blocked-feed-text-1",
+    }
+    lead = pipeline.event_lead_from_raw_item(raw_item)
+
+    def fake_fetch_url(*args, **kwargs):  # noqa: ANN001
+        raise TimeoutError("simulated access block")
+
+    def fake_currentness_analysis(**kwargs):  # noqa: ANN001
+        return {
+            "currentness_class": "DATE_UNRESOLVED",
+            "freshness_role": "UNKNOWN",
+            "operative_event_date": "",
+            "event_announcement_date": "",
+            "event_effective_date": "",
+            "observed_date": "",
+            "background_date_references": [],
+            "currentness_confidence": 0.0,
+            "currentness_reasoning": "stubbed unresolved currentness",
+            "currentness_failed_gates": ["currentness_unresolved"],
+            "operative_event_passage": "",
+            "background_event_passages": [],
+            "title_body_agree": True,
+        }
+
+    monkeypatch.setattr(pipeline, "fetch_url", fake_fetch_url)
+    monkeypatch.setattr(pipeline, "_currentness_analysis", fake_currentness_analysis)
+
+    status, payload = pipeline.qualify_event_lead(
+        source,
+        raw_item,
+        lead,
+        artifact_path=str(tmp_path / "artifact.json"),
+        run_id="run-2",
+        fetch_timeout=5,
+        allow_insecure_tls=False,
+    )
+
+    assert status == "qualified"
+    assert payload["qualification_result"]["extraction_outcome"] == "ACCESS_BLOCKED"
+    assert payload["qualification_result"]["failed_gates"] == []
+    assert "emergency department closure announced" in payload["normalized_record"]["supporting_passage"].lower()
+
+
 def test_care_line_fetch_url_uses_certifi_trust_when_available(monkeypatch) -> None:
     fake_cafile = r"C:\fake\cacert.pem"
     original_import = builtins.__import__

@@ -2570,6 +2570,7 @@ def normalize_candidate_record(
 def _qualified_gate_failures(
     raw_item: Mapping[str, Any],
     *,
+    source_date_state: str,
     geography: Mapping[str, str],
     subject: str,
     event_type: str,
@@ -2582,7 +2583,7 @@ def _qualified_gate_failures(
         failures.append("missing_source_id")
     if not _text(raw_item, "item_url"):
         failures.append("missing_source_url")
-    if _text(raw_item, "source_date_state") != "source_dated":
+    if source_date_state != "source_dated":
         failures.append("missing_source_date")
     if not _text(geography, "state"):
         failures.append("missing_geography")
@@ -2675,10 +2676,11 @@ def qualify_event_lead(
             extraction_method = "fetch_failure"
 
     evidence_blob = _evidence_blob(raw_item, article_content)
+    body_source = _text(article_content or {}, "text") or _text(raw_item, "content_text") or _text(raw_item, "description") or evidence_blob
     if extraction_outcome in {"PAYWALLED", "PDF_REQUIRED", "SCRIPT_RENDERED", "ACCESS_BLOCKED"}:
-        passage_source = _text(article_content or {}, "text", "description") or evidence_blob
+        passage_source = body_source
     else:
-        passage_source = _text(article_content or {}, "text") or evidence_blob
+        passage_source = _text(article_content or {}, "text") or body_source
     service_line = _text(lead, "service_line_hint") or _service_line_from_text(_text(article_content or {}, "text")) or _service_line_from_text(_text(raw_item, "description")) or _service_line_from_text(evidence_blob)
     event_type = _text(lead, "event_type_hint") or _event_type_from_text(_text(article_content or {}, "text") or evidence_blob, service_line=service_line)
     if _text(lead, "event_type_hint") in {"facility_closure", "planned_facility_closure", "service_closure", "service_suspension"} and event_type in {"facility_reopening", "service_restoration"}:
@@ -2720,8 +2722,8 @@ def qualify_event_lead(
             "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
         }
 
-    source_date_state = _text(raw_item, "source_date_state")
     source_publication_date = resolved_source_publication_date
+    source_date_state = _text(raw_item, "source_date_state") or ("source_dated" if source_publication_date else "")
     has_reviewable_currentness_date = bool(
         _text(currentness, "operative_event_date")
         or _text(currentness, "event_announcement_date")
@@ -2755,13 +2757,8 @@ def qualify_event_lead(
             "currentness_failed_gates": list(currentness.get("currentness_failed_gates", [])),
             "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
         }
-    summary_text = evidence_blob
-    summary_explicit_event = bool(
-        re.search(r"\b(close|closing|closed|end|ending|suspend|suspended|halt|halted|cut|reducing|reduce|reopen|reopened|restore|restored|transfer|move)\b", summary_text, re.I)
-        and re.search(r"\b(hospital|clinic|center|ward|unit|department|labor and delivery|maternity|service|services)\b", summary_text, re.I)
-        and re.search(r"\b(effective|according to|announced|news release|transfer|move|patients|board)\b", summary_text, re.I)
-    )
-    if extraction_outcome in {"PAYWALLED", "PDF_REQUIRED", "SCRIPT_RENDERED", "ACCESS_BLOCKED"} and not summary_explicit_event:
+    blocked_supporting_passage = _supporting_passage(body_source, event_type, service_line)
+    if extraction_outcome in {"PAYWALLED", "PDF_REQUIRED", "SCRIPT_RENDERED", "ACCESS_BLOCKED"} and not blocked_supporting_passage:
         return "failed_extraction", {
             "schema_version": EXCLUSION_SCHEMA_VERSION,
             "exclusion_id": _stable_id("care-line-failed-extraction", raw_item.get("raw_item_id", ""), extraction_outcome.casefold()),
@@ -2778,7 +2775,7 @@ def qualify_event_lead(
             "extraction_outcome": extraction_outcome,
             "extraction_method": extraction_method,
             "failed_gates": ["insufficient_bounded_evidence"],
-            "supporting_text": _text(raw_item, "description") or _text(article_content or {}, "description") or evidence_blob,
+            "supporting_text": _text(raw_item, "description") or _text(article_content or {}, "description") or body_source,
             "currentness_class": _text(currentness, "currentness_class"),
             "freshness_role": _text(currentness, "freshness_role"),
             "operative_event_date": _text(currentness, "operative_event_date"),
@@ -2856,6 +2853,7 @@ def qualify_event_lead(
     access_consequences, access_exception = _access_consequences_from_text(supporting_passage, event_type)
     failed_gates = _qualified_gate_failures(
         raw_item,
+        source_date_state=source_date_state,
         geography=geography,
         subject=subject or provider,
         event_type=event_type,
@@ -2900,7 +2898,7 @@ def qualify_event_lead(
             "currentness_failed_gates": currentness_failed_gates or ["historical_context_only"],
             "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
         }
-    if currentness_class == "DATE_UNRESOLVED":
+    if currentness_class == "DATE_UNRESOLVED" and source_date_state != "source_dated":
         return "failed_extraction", {
             "schema_version": EXCLUSION_SCHEMA_VERSION,
             "exclusion_id": _stable_id("care-line-failed-extraction", raw_item.get("raw_item_id", ""), "currentness_unresolved"),

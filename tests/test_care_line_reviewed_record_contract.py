@@ -3,7 +3,9 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from pydantic import ValidationError
 
+from bluefern_dispatches.care_line_effective_date_follow_up import load_reviewed_records
 from bluefern_dispatches.care_line_record import (
     SCHEMA_VERSION,
     CareLineReviewedRecord,
@@ -178,3 +180,50 @@ def test_18_duplicate_candidate_record_is_not_ready():
 def test_19_source_explicit_confirmed_provenance_is_allowed():
     provenance = FieldProvenance(value="Example Clinic", provenance_type="source_explicit", source_field="title", supporting_text="Example Clinic announces closure", confidence=1.0, review_status="confirmed")
     assert provenance.review_status == "confirmed"
+
+
+def test_20_historical_reviewed_records_with_lifecycle_metadata_validate_and_round_trip():
+    records = load_reviewed_records(Path.cwd())
+    mount_carmel = next(
+        record for record in records if record.producer_record_id == "care-line-historical-backfill-2026-06-24-mount-carmel-franklinton-ed"
+    )
+    santa_paula = next(
+        record for record in records if record.producer_record_id == "care-line-historical-backfill-2026-08-19-santa-paula-hospital"
+    )
+
+    assert mount_carmel.event_identity == "care_line_event_e5ea71d96d89a09f"
+    assert mount_carmel.event_instance_id == "care_line_event_e5ea71d96d89a09f_09296918c472"
+    assert mount_carmel.lifecycle_status == "PENDING_EFFECTIVE_DATE"
+    assert mount_carmel.effective_follow_up_status == "pending"
+    assert mount_carmel.follow_up_window_start == "2026-08-08"
+    assert mount_carmel.follow_up_window_end == "2026-08-29"
+
+    assert santa_paula.event_identity == ""
+    assert santa_paula.event_instance_id == ""
+    assert santa_paula.lifecycle_status == ""
+    assert santa_paula.effective_follow_up_status == ""
+    assert santa_paula.follow_up_window_start == ""
+    assert santa_paula.follow_up_window_end == ""
+
+    for record in (mount_carmel, santa_paula):
+        payload = record.model_dump(mode="json")
+        round_trip = CareLineReviewedRecord.model_validate(payload)
+        assert round_trip == record
+
+
+def test_21_unknown_lifecycle_metadata_still_fails_strict_validation():
+    payload = complete_record().model_dump(mode="json")
+    payload["unexpected_lifecycle_field"] = "nope"
+    with pytest.raises(ValidationError):
+        CareLineReviewedRecord.model_validate(payload)
+
+
+def test_22_invalid_lifecycle_metadata_values_fail_validation():
+    payload = complete_record().model_dump(mode="json")
+    payload["lifecycle_status"] = "SOMETHING_ELSE"
+    with pytest.raises(ValidationError, match="lifecycle_status"):
+        CareLineReviewedRecord.model_validate(payload)
+    payload = complete_record().model_dump(mode="json")
+    payload["effective_follow_up_status"] = "tomorrow"
+    with pytest.raises(ValidationError, match="effective_follow_up_status"):
+        CareLineReviewedRecord.model_validate(payload)

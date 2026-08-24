@@ -573,12 +573,21 @@ def _rss_items(payload: bytes) -> list[dict[str, Any]]:
     root = ET.fromstring(payload)
     items = []
     for node in root.findall(".//item"):
+        content_text = ""
+        for child in list(node):
+            local_name = child.tag.rsplit("}", 1)[-1].casefold()
+            namespace = child.tag.split("}", 1)[0][1:].casefold() if child.tag.startswith("{") and "}" in child.tag else ""
+            if local_name == "encoded" and "purl.org/rss/1.0/modules/content" in namespace:
+                content_text = _clean_extracted_text(child.text or "".join(child.itertext()))
+                break
+        description = _clean_extracted_text(node.findtext("description") or "")
         items.append(
             {
                 "title": node.findtext("title") or "",
                 "url": node.findtext("link") or "",
                 "published_at": node.findtext("pubDate") or "",
-                "description": node.findtext("description") or "",
+                "description": description or content_text,
+                "content_text": content_text or description,
                 "source": node.findtext("source") or "",
                 "id": node.findtext("guid") or "",
             }
@@ -598,12 +607,16 @@ def _atom_items(payload: bytes) -> list[dict[str, Any]]:
             if rel == "alternate" and href:
                 link = href
                 break
+        content_text = _clean_extracted_text(
+            node.findtext("atom:content", default="", namespaces=ns) or node.findtext("content") or ""
+        )
         items.append(
             {
                 "title": node.findtext("atom:title", default="", namespaces=ns) or node.findtext("title") or "",
                 "url": link,
                 "published_at": node.findtext("atom:published", default="", namespaces=ns) or node.findtext("atom:updated", default="", namespaces=ns) or "",
-                "description": node.findtext("atom:summary", default="", namespaces=ns) or node.findtext("atom:content", default="", namespaces=ns) or "",
+                "description": _clean_extracted_text(node.findtext("atom:summary", default="", namespaces=ns) or node.findtext("summary") or ""),
+                "content_text": content_text,
                 "source": "",
                 "id": node.findtext("atom:id", default="", namespaces=ns) or node.findtext("id") or "",
             }
@@ -617,12 +630,16 @@ def _json_feed_items(payload: bytes) -> list[dict[str, Any]]:
     for item in data.get("items") or []:
         if not isinstance(item, Mapping):
             continue
+        content_text = _clean_extracted_text(_text(item, "content_text"))
+        content_html = _clean_extracted_text(_text(item, "content_html"))
         out.append(
             {
                 "title": _text(item, "title"),
                 "url": _text(item, "url", "external_url", "id"),
                 "published_at": _text(item, "date_published", "date_modified"),
                 "description": _text(item, "summary", "content_text", "content_html"),
+                "content_text": content_text or content_html,
+                "content_html": content_html,
                 "source": _text(data, "title"),
                 "id": _text(item, "id"),
             }
@@ -924,6 +941,26 @@ def _clean_extracted_text(value: str) -> str:
     return _bounded_text(cleaned)
 
 
+def _extract_page_metadata_date(payload: bytes) -> str:
+    text = payload.decode("utf-8", errors="replace")
+    patterns = [
+        r'<meta\b[^>]*(?:property|name)=["\']article:published_time["\'][^>]*content=["\']([^"\']+)["\']',
+        r'<meta\b[^>]*content=["\']([^"\']+)["\'][^>]*(?:property|name)=["\']article:published_time["\']',
+        r'<meta\b[^>]*(?:property|name)=["\']article:modified_time["\'][^>]*content=["\']([^"\']+)["\']',
+        r'<meta\b[^>]*content=["\']([^"\']+)["\'][^>]*(?:property|name)=["\']article:modified_time["\']',
+        r'<meta\b[^>]*(?:property|name)=["\']og:updated_time["\'][^>]*content=["\']([^"\']+)["\']',
+        r'<meta\b[^>]*content=["\']([^"\']+)["\'][^>]*(?:property|name)=["\']og:updated_time["\']',
+        r'"datePublished"\s*:\s*"([^"]+)"',
+        r'"dateModified"\s*:\s*"([^"]+)"',
+        r'<time\b[^>]*datetime=["\']([^"\']+)["\']',
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, text, re.IGNORECASE | re.DOTALL)
+        if match:
+            return _normalize_text(match.group(1))
+    return ""
+
+
 def _first_nonempty(*values: str) -> str:
     for value in values:
         if _normalize_text(value):
@@ -962,6 +999,7 @@ def _json_ld_article_fields(raw_text: str) -> dict[str, str]:
     title = ""
     description = ""
     body = ""
+    published_at = ""
     for payload in _parse_json_ld_payload(raw_text):
         type_value = str(payload.get("@type") or payload.get("type") or "")
         if type_value and not re.search(r"article|newsarticle|report", type_value, re.I):
@@ -969,10 +1007,12 @@ def _json_ld_article_fields(raw_text: str) -> dict[str, str]:
         body = _first_nonempty(body, _text(payload, "articleBody", "text"))
         description = _first_nonempty(description, _text(payload, "description"))
         title = _first_nonempty(title, _text(payload, "headline", "name"))
+        published_at = _first_nonempty(published_at, _text(payload, "datePublished", "dateModified", "dateCreated", "date"))
     return {
         "title": _bounded_text(title, max_chars=500),
         "description": _bounded_text(description, max_chars=1200),
         "text": _clean_extracted_text(body),
+        "published_at": _bounded_text(published_at, max_chars=120),
     }
 
 
@@ -1124,7 +1164,7 @@ def discovery_record_from_direct_item(
 ) -> dict[str, Any]:
     raw_url = _text(item, "url", "link", "id")
     title = _text(item, "title")
-    publication_date_raw = _text(item, "published_at", "published", "updated")
+    publication_date_raw = _text(item, "published_at", "published", "updated", "date_published", "date_modified", "date", "pubDate")
     publication_date, source_date_state = parse_source_date(publication_date_raw)
     return {
         "schema_version": RAW_ITEM_SCHEMA_VERSION,
@@ -1147,7 +1187,16 @@ def discovery_record_from_direct_item(
         "collection_method": source.collection_method,
         "item_url": raw_url,
         "title": title,
-        "description": _text(item, "description", "summary", "content"),
+        "description": _text(item, "description", "summary", "content_text", "content_html", "content"),
+        "content_text": _text(item, "content_text", "description", "summary", "content"),
+        "content_html": _text(item, "content_html"),
+        "facility_name": _text(item, "facility_name", "subject", "headline"),
+        "provider_name": _text(item, "provider_name", "affected_provider", "organization_name"),
+        "city": _text(item, "city"),
+        "state": _text(item, "state", "source_state"),
+        "source_city": _text(item, "source_city"),
+        "source_state": _text(item, "source_state", "state"),
+        "geographic_scope": _text(item, "geographic_scope", "source_geographic_scope"),
         "source_item_id": _text(item, "id") or _stable_id("feed-item", raw_url, title),
         "source_publication_date": publication_date,
         "source_publication_date_raw": publication_date_raw,
@@ -1158,6 +1207,19 @@ def discovery_record_from_direct_item(
         "archives_distinguishable_from_current": source.archives_distinguishable_from_current,
         "record_fingerprint": stable_json_hash({"source_id": source.source_id, "url": raw_url, "title": title, "published_at": publication_date or publication_date_raw}),
     }
+
+
+def _resolved_source_publication_date(
+    raw_item: Mapping[str, Any],
+    article_content: Mapping[str, Any] | None = None,
+) -> tuple[str, str, str]:
+    raw_source_date = _text(raw_item, "source_publication_date")
+    if raw_source_date:
+        return raw_source_date, "source_record", _text(raw_item, "source_publication_date_raw") or raw_source_date
+    article_source_date = _text(article_content or {}, "published_at")
+    if article_source_date:
+        return article_source_date, "article_metadata", _text(article_content or {}, "published_at_raw") or article_source_date
+    return "", "missing", ""
 
 
 def collectable_sources(
@@ -2084,6 +2146,9 @@ def _extract_article_content(
     extractor = _ScopedArticleExtractor(_source_selector_hints(source))
     extractor.feed(decoded)
     json_ld = _json_ld_article_fields(extractor.json_ld_text())
+    page_metadata_date = _extract_page_metadata_date(html_payload)
+    metadata_date_raw = _first_nonempty(json_ld["published_at"], page_metadata_date)
+    metadata_date, metadata_date_state = parse_source_date(metadata_date_raw)
     selector_text = _clean_extracted_text(extractor.scoped_text())
     article_text = _clean_extracted_text(extractor.article_text())
     full_text = _clean_extracted_text(extractor.full_text())
@@ -2123,6 +2188,10 @@ def _extract_article_content(
         "selector_text": _bounded_text(selector_text),
         "article_text": _bounded_text(article_text),
         "json_ld_text": _bounded_text(json_ld["text"]),
+        "published_at": metadata_date,
+        "published_at_raw": metadata_date_raw,
+        "published_at_state": metadata_date_state,
+        "published_at_basis": "json_ld" if json_ld["published_at"] else "page_metadata" if page_metadata_date else "",
         "extraction_method": method,
         "extraction_outcome": outcome,
         "content_hash": sha256(decoded.encode("utf-8", errors="ignore")).hexdigest(),
@@ -2134,6 +2203,8 @@ def _evidence_blob(raw_item: Mapping[str, Any], article_content: Mapping[str, An
     parts = [
         _text(raw_item, "title"),
         _text(raw_item, "description"),
+        _text(raw_item, "content_text"),
+        _text(raw_item, "content_html"),
         _text(article_content or {}, "description"),
         _text(article_content or {}, "text"),
         _text(article_content or {}, "article_text"),
@@ -2370,7 +2441,7 @@ def normalize_candidate_record(
     evidence_blob = _evidence_blob(raw_item, article_content)
     source_title = _text(article_content or {}, "title") or _text(raw_item, "title")
     source_url = _text(raw_item, "item_url")
-    source_date = _text(raw_item, "source_publication_date")
+    source_date, source_date_basis, source_date_raw = _resolved_source_publication_date(raw_item, article_content)
     currentness_date = _text(currentness, "operative_event_date") or _text(currentness, "event_announcement_date") or _text(currentness, "event_effective_date") or _text(currentness, "observed_date")
     announcement_date = source_date or currentness_date
     effective_date = _text(currentness, "event_effective_date") or (_text(currentness, "operative_event_date") if _text(currentness, "currentness_class") == "CURRENT_ANNOUNCEMENT_FUTURE_EFFECTIVE" else "")
@@ -2425,6 +2496,11 @@ def normalize_candidate_record(
                 "producer_record_id": _make_provenance(_text(raw_item, "raw_item_id"), source_field="raw_item_id", supporting_text=_text(raw_item, "raw_item_id")),
                 "source_url": _make_provenance(source_url, source_field="item_url", supporting_text=source_url),
                 "source_title": _make_provenance(source_title, source_field="title", supporting_text=source_title),
+                "source_publication_date": _make_provenance(
+                    source_date,
+                    source_field="source_publication_date" if source_date_basis == "source_record" else "published_at" if source_date_basis == "article_metadata" else "source_publication_date",
+                    supporting_text=source_date_raw or source_date,
+                ),
                 "announcement_date": _make_provenance(source_date, source_field="source_publication_date", supporting_text=source_date),
                 "supporting_passage": _make_provenance(supporting_passage, source_field="article_text", supporting_text=supporting_passage),
                 "state": _make_provenance(_text(geography, "state"), source_field="geography", supporting_text=_text(geography, "jurisdiction_display") or _text(geography, "state"), confidence=1.0 if _text(geography, "state") else 0.0, review_status="confirmed" if _text(geography, "state") else "unresolved"),
@@ -2600,18 +2676,19 @@ def qualify_event_lead(
 
     evidence_blob = _evidence_blob(raw_item, article_content)
     if extraction_outcome in {"PAYWALLED", "PDF_REQUIRED", "SCRIPT_RENDERED", "ACCESS_BLOCKED"}:
-        passage_source = _text(article_content or {}, "text", "description")
+        passage_source = _text(article_content or {}, "text", "description") or evidence_blob
     else:
         passage_source = _text(article_content or {}, "text") or evidence_blob
     service_line = _text(lead, "service_line_hint") or _service_line_from_text(_text(article_content or {}, "text")) or _service_line_from_text(_text(raw_item, "description")) or _service_line_from_text(evidence_blob)
     event_type = _text(lead, "event_type_hint") or _event_type_from_text(_text(article_content or {}, "text") or evidence_blob, service_line=service_line)
     if _text(lead, "event_type_hint") in {"facility_closure", "planned_facility_closure", "service_closure", "service_suspension"} and event_type in {"facility_reopening", "service_restoration"}:
         event_type = _text(lead, "event_type_hint")
+    resolved_source_publication_date, resolved_source_publication_date_basis, resolved_source_publication_date_raw = _resolved_source_publication_date(raw_item, article_content)
     currentness = _currentness_analysis(
         title=_text(raw_item, "title"),
-        lead_text=_text(raw_item, "description"),
+        lead_text=_text(raw_item, "description") or _text(article_content or {}, "description"),
         text=_text(article_content or {}, "text") or evidence_blob,
-        source_publication_date=_text(raw_item, "source_publication_date"),
+        source_publication_date=resolved_source_publication_date,
         event_type=event_type,
         service_line=service_line,
     )
@@ -2644,6 +2721,7 @@ def qualify_event_lead(
         }
 
     source_date_state = _text(raw_item, "source_date_state")
+    source_publication_date = resolved_source_publication_date
     has_reviewable_currentness_date = bool(
         _text(currentness, "operative_event_date")
         or _text(currentness, "event_announcement_date")
@@ -2660,14 +2738,14 @@ def qualify_event_lead(
             "source_name": raw_item.get("source_name", ""),
             "item_url": raw_item.get("item_url", ""),
             "title": raw_item.get("title", ""),
-            "source_publication_date": raw_item.get("source_publication_date", ""),
+            "source_publication_date": source_publication_date,
             "classification": "NEEDS_DATE",
             "exclusion_reason": "needs_date",
             "editorial_outcome": "NEEDS_DATE",
             "extraction_outcome": extraction_outcome,
             "extraction_method": extraction_method,
             "failed_gates": ["missing_source_date"],
-            "supporting_text": _text(raw_item, "description"),
+            "supporting_text": _text(raw_item, "description") or _text(article_content or {}, "description") or evidence_blob,
             "currentness_class": _text(currentness, "currentness_class"),
             "freshness_role": _text(currentness, "freshness_role"),
             "operative_event_date": _text(currentness, "operative_event_date"),
@@ -2677,7 +2755,7 @@ def qualify_event_lead(
             "currentness_failed_gates": list(currentness.get("currentness_failed_gates", [])),
             "lineage": {"collection_run_id": run_id, "source_artifact_path": artifact_path},
         }
-    summary_text = f"{_text(raw_item, 'title')} {_text(raw_item, 'description')}"
+    summary_text = evidence_blob
     summary_explicit_event = bool(
         re.search(r"\b(close|closing|closed|end|ending|suspend|suspended|halt|halted|cut|reducing|reduce|reopen|reopened|restore|restored|transfer|move)\b", summary_text, re.I)
         and re.search(r"\b(hospital|clinic|center|ward|unit|department|labor and delivery|maternity|service|services)\b", summary_text, re.I)
@@ -2693,14 +2771,14 @@ def qualify_event_lead(
             "source_name": raw_item.get("source_name", ""),
             "item_url": raw_item.get("item_url", ""),
             "title": raw_item.get("title", ""),
-            "source_publication_date": raw_item.get("source_publication_date", ""),
+            "source_publication_date": source_publication_date,
             "classification": "NEEDS_HUMAN_REVIEW",
             "exclusion_reason": "needs_full_article",
             "editorial_outcome": "NEEDS_HUMAN_REVIEW",
             "extraction_outcome": extraction_outcome,
             "extraction_method": extraction_method,
             "failed_gates": ["insufficient_bounded_evidence"],
-            "supporting_text": _text(raw_item, "description"),
+            "supporting_text": _text(raw_item, "description") or _text(article_content or {}, "description") or evidence_blob,
             "currentness_class": _text(currentness, "currentness_class"),
             "freshness_role": _text(currentness, "freshness_role"),
             "operative_event_date": _text(currentness, "operative_event_date"),
@@ -2722,14 +2800,14 @@ def qualify_event_lead(
             "source_name": raw_item.get("source_name", ""),
             "item_url": raw_item.get("item_url", ""),
             "title": raw_item.get("title", ""),
-            "source_publication_date": raw_item.get("source_publication_date", ""),
+            "source_publication_date": source_publication_date,
             "classification": "NEEDS_FULL_ARTICLE",
             "exclusion_reason": "needs_full_article",
             "editorial_outcome": "NEEDS_FULL_ARTICLE",
             "extraction_outcome": extraction_outcome,
             "extraction_method": extraction_method,
             "failed_gates": ["insufficient_bounded_evidence"],
-            "supporting_text": _text(raw_item, "description"),
+            "supporting_text": _text(raw_item, "description") or _text(article_content or {}, "description") or evidence_blob,
             "currentness_class": _text(currentness, "currentness_class"),
             "freshness_role": _text(currentness, "freshness_role"),
             "operative_event_date": _text(currentness, "operative_event_date"),
@@ -2750,14 +2828,14 @@ def qualify_event_lead(
             "source_name": raw_item.get("source_name", ""),
             "item_url": raw_item.get("item_url", ""),
             "title": raw_item.get("title", ""),
-            "source_publication_date": raw_item.get("source_publication_date", ""),
+            "source_publication_date": source_publication_date,
             "classification": editorial_outcome,
             "exclusion_reason": "insufficient_bounded_evidence",
             "editorial_outcome": editorial_outcome,
             "extraction_outcome": extraction_outcome,
             "extraction_method": extraction_method,
             "failed_gates": ["insufficient_bounded_evidence"],
-            "supporting_text": _text(article_content or {}, "description") or _text(raw_item, "description"),
+            "supporting_text": _text(article_content or {}, "description") or _text(raw_item, "description") or evidence_blob,
             "currentness_class": _text(currentness, "currentness_class"),
             "freshness_role": _text(currentness, "freshness_role"),
             "operative_event_date": _text(currentness, "operative_event_date"),

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import builtins
+import json
 import sys
 import types
 from pathlib import Path
@@ -335,6 +336,291 @@ def test_care_line_access_prefilter_escalates_after_prior_loss_context():
     assert prefilter["normalized_reason"] == "prior_loss_context_detected"
     assert prefilter["history_match_count"] == 1
     assert prefilter["escalated_to_full_review"] is True
+
+
+def test_care_line_feed_parsers_preserve_inline_content_fallbacks() -> None:
+    rss_payload = b"""<rss><channel><item><title>Mount Carmel updates</title><link>https://example.org/rss</link><description></description><content:encoded xmlns:content=\"http://purl.org/rss/1.0/modules/content/\">Emergency department closure announced for August 22.</content:encoded><pubDate>Mon, 23 Aug 2026 08:00:00 GMT</pubDate><guid>rss-1</guid></item></channel></rss>"""
+    atom_payload = b"""<feed xmlns=\"http://www.w3.org/2005/Atom\"><entry><title>Santa Paula update</title><id>atom-1</id><link rel=\"alternate\" href=\"https://example.org/atom\"/><summary></summary><content type=\"text\">Planned hospital closure remains under review.</content><published>2026-08-23T08:00:00Z</published></entry></feed>"""
+    json_feed_payload = json.dumps(
+        {
+            "title": "Care Line feed",
+            "items": [
+                {
+                    "id": "json-1",
+                    "title": "Care Line update",
+                    "url": "https://example.org/json",
+                    "summary": "",
+                    "content_text": "Replacement service still lacks emergency care.",
+                    "content_html": "<p>Replacement service still lacks emergency care.</p>",
+                    "date_published": "2026-08-23T08:00:00Z",
+                }
+            ],
+        }
+    ).encode("utf-8")
+
+    rss_items = pipeline._rss_items(rss_payload)
+    atom_items = pipeline._atom_items(atom_payload)
+    json_items = pipeline._json_feed_items(json_feed_payload)
+
+    assert rss_items[0]["description"] == "Emergency department closure announced for August 22."
+    assert rss_items[0]["content_text"] == "Emergency department closure announced for August 22."
+    assert atom_items[0]["description"] == ""
+    assert atom_items[0]["content_text"] == "Planned hospital closure remains under review."
+    assert json_items[0]["content_text"] == "Replacement service still lacks emergency care."
+    assert json_items[0]["content_html"] == "<p>Replacement service still lacks emergency care.</p>"
+
+
+def test_care_line_article_content_recovers_page_metadata_date_without_json_ld_date() -> None:
+    source = CareLineSource.model_validate(
+        {
+            "source_id": "metadata-source",
+            "name": "Metadata Source",
+            "publisher": "Example News",
+            "source_type": "trade_publication",
+            "feed_url": "https://example.org/feed",
+            "homepage_url": "https://example.org/",
+            "state": "OH",
+            "geographic_scope": "local",
+            "organization_type": "trade_publication",
+            "care_line_topics": ["hospital", "clinic"],
+            "authority_level": "secondary",
+            "expected_update_frequency": "daily",
+            "enabled": True,
+            "adapter_type": "rss",
+            "requires_html_followup": False,
+            "source_role": "healthcare_access_reporting",
+            "historical_depth": "current feed",
+            "created_at": "2026-08-23T00:00:00Z",
+            "updated_at": "2026-08-23T00:00:00Z",
+        }
+    )
+    html_payload = b"""
+    <html>
+      <head>
+        <meta property=\"article:published_time\" content=\"2026-08-23T07:30:00Z\"/>
+        <script type=\"application/ld+json\">
+          {"@context":"https://schema.org","@type":"NewsArticle","headline":"Example Hospital emergency department closure","articleBody":"Example Hospital emergency department closure effective August 22 was announced after a June 24 notice, with access consequences for Columbus residents."}
+        </script>
+      </head>
+      <body>
+        <article>
+          <p>Example Hospital emergency department closure effective August 22 was announced after a June 24 notice, with access consequences for Columbus residents.</p>
+        </article>
+      </body>
+    </html>
+    """
+
+    extracted = pipeline._extract_article_content(
+        source,
+        html_payload,
+        source_url="https://example.org/story",
+        response_meta={"content_type": "text/html; charset=utf-8"},
+    )
+
+    assert extracted["published_at"] == "2026-08-23"
+    assert extracted["published_at_state"] == "source_dated"
+    assert extracted["published_at_basis"] == "page_metadata"
+    assert extracted["title"] == "Example Hospital emergency department closure"
+    assert "Example Hospital emergency department closure effective August 22 was announced after a June 24 notice" in extracted["text"]
+
+
+def test_care_line_article_content_leaves_date_blank_when_no_date_metadata_present() -> None:
+    source = CareLineSource.model_validate(
+        {
+            "source_id": "metadata-source-blank",
+            "name": "Metadata Source Blank",
+            "publisher": "Example News",
+            "source_type": "trade_publication",
+            "feed_url": "https://example.org/feed",
+            "homepage_url": "https://example.org/",
+            "state": "OH",
+            "geographic_scope": "local",
+            "organization_type": "trade_publication",
+            "care_line_topics": ["hospital", "clinic"],
+            "authority_level": "secondary",
+            "expected_update_frequency": "daily",
+            "enabled": True,
+            "adapter_type": "rss",
+            "requires_html_followup": False,
+            "source_role": "healthcare_access_reporting",
+            "historical_depth": "current feed",
+            "created_at": "2026-08-23T00:00:00Z",
+            "updated_at": "2026-08-23T00:00:00Z",
+        }
+    )
+    html_payload = b"""
+    <html>
+      <head>
+        <script type=\"application/ld+json\">
+          {"@context":"https://schema.org","@type":"NewsArticle","headline":"Fallback story","articleBody":"Example Hospital emergency department closure effective August 22 was announced after a June 24 notice, with access consequences for Columbus residents."}
+        </script>
+      </head>
+      <body>
+        <article>
+          <p>Example Hospital emergency department closure effective August 22 was announced after a June 24 notice, with access consequences for Columbus residents.</p>
+        </article>
+      </body>
+    </html>
+    """
+
+    extracted = pipeline._extract_article_content(
+        source,
+        html_payload,
+        source_url="https://example.org/story",
+        response_meta={"content_type": "text/html; charset=utf-8"},
+    )
+
+    assert extracted["published_at"] == ""
+    assert extracted["published_at_state"] == "missing"
+    assert extracted["published_at_basis"] == ""
+
+
+def test_care_line_access_blocked_item_can_still_qualify_when_feed_evidence_is_sufficient(tmp_path: Path, monkeypatch) -> None:
+    source = CareLineSource.model_validate(
+        {
+            "source_id": "blocked-source",
+            "name": "Blocked Source",
+            "publisher": "Example News",
+            "source_type": "trade_publication",
+            "feed_url": "https://example.org/feed",
+            "homepage_url": "https://example.org/",
+            "state": "OH",
+            "geographic_scope": "local",
+            "organization_type": "trade_publication",
+            "care_line_topics": ["hospital", "clinic"],
+            "authority_level": "secondary",
+            "expected_update_frequency": "daily",
+            "enabled": True,
+            "adapter_type": "rss",
+            "requires_html_followup": False,
+            "source_role": "healthcare_access_reporting",
+            "historical_depth": "current feed",
+            "item_permalink_available": True,
+            "created_at": "2026-08-23T00:00:00Z",
+            "updated_at": "2026-08-23T00:00:00Z",
+        }
+    )
+
+    def fake_fetch_source(_source, timeout=20, allow_insecure_tls=False):  # noqa: ANN001
+        return b"<rss><channel></channel></rss>", {"final_url": "https://example.org/feed"}
+
+    def fake_parse_source_items(_source, _payload, *, source_url, fetch_timeout, allow_insecure_tls, max_items_per_source):  # noqa: ANN001
+        return [
+            {
+                "title": "Example Hospital closure update",
+                "url": "https://example.org/story",
+                "published_at": "2026-08-23T08:00:00Z",
+                "description": "The closure was announced and the emergency department will close on August 22, affecting access in Columbus.",
+                "content_text": "The closure was announced and the emergency department will close on August 22, affecting access in Columbus.",
+                "facility_name": "Example Hospital",
+                "provider_name": "Example Hospital",
+                "city": "Columbus",
+                "state": "OH",
+                "source": "Example News",
+                "id": "blocked-1",
+            }
+        ]
+
+    def fake_fetch_url(*args, **kwargs):  # noqa: ANN001
+        raise TimeoutError("simulated access block")
+
+    monkeypatch.setattr(pipeline, "fetch_source", fake_fetch_source)
+    monkeypatch.setattr(pipeline, "parse_source_items", fake_parse_source_items)
+    monkeypatch.setattr(pipeline, "fetch_url", fake_fetch_url)
+    monkeypatch.setattr(pipeline, "_atomic_write", lambda path, payload: None)
+
+    (tmp_path / "data" / "dispatches" / "care-line" / "collection-runs" / "2026-08-23" / "run-1").mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    result = pipeline.run_collection_attempt(
+        tmp_path,
+        run_date="2026-08-23",
+        run_id="run-1",
+        source_row={"source": source},
+        historical_reviewed_records=[],
+        collection_runs_root=Path("data/dispatches/care-line/collection-runs"),
+    )
+
+    assert result["failed_extractions"] == []
+    assert len(result["candidates"]) == 1
+    assert result["candidates"][0]["normalized_record"]["source_publication_date"] == "2026-08-23"
+    assert result["candidates"][0]["normalized_record"]["supporting_passage"]
+    assert result["attempt"]["failed_extraction_count"] == 0
+
+
+def test_care_line_access_blocked_item_without_evidence_still_fails_extraction(tmp_path: Path, monkeypatch) -> None:
+    source = CareLineSource.model_validate(
+        {
+            "source_id": "blocked-source-no-evidence",
+            "name": "Blocked Source No Evidence",
+            "publisher": "Example News",
+            "source_type": "trade_publication",
+            "feed_url": "https://example.org/feed",
+            "homepage_url": "https://example.org/",
+            "state": "OH",
+            "geographic_scope": "local",
+            "organization_type": "trade_publication",
+            "care_line_topics": ["hospital", "clinic"],
+            "authority_level": "secondary",
+            "expected_update_frequency": "daily",
+            "enabled": True,
+            "adapter_type": "rss",
+            "requires_html_followup": False,
+            "source_role": "healthcare_access_reporting",
+            "historical_depth": "current feed",
+            "item_permalink_available": True,
+            "created_at": "2026-08-23T00:00:00Z",
+            "updated_at": "2026-08-23T00:00:00Z",
+        }
+    )
+
+    def fake_fetch_source(_source, timeout=20, allow_insecure_tls=False):  # noqa: ANN001
+        return b"<rss><channel></channel></rss>", {"final_url": "https://example.org/feed"}
+
+    def fake_parse_source_items(_source, _payload, *, source_url, fetch_timeout, allow_insecure_tls, max_items_per_source):  # noqa: ANN001
+        return [
+            {
+                "title": "Example Hospital update",
+                "url": "https://example.org/story",
+                "published_at": "2026-08-23T08:00:00Z",
+                "description": "",
+                "content_text": "",
+                "facility_name": "Example Hospital",
+                "provider_name": "Example Hospital",
+                "city": "Columbus",
+                "state": "OH",
+                "source": "Example News",
+                "id": "blocked-2",
+            }
+        ]
+
+    def fake_fetch_url(*args, **kwargs):  # noqa: ANN001
+        raise TimeoutError("simulated access block")
+
+    monkeypatch.setattr(pipeline, "fetch_source", fake_fetch_source)
+    monkeypatch.setattr(pipeline, "parse_source_items", fake_parse_source_items)
+    monkeypatch.setattr(pipeline, "fetch_url", fake_fetch_url)
+    monkeypatch.setattr(pipeline, "_atomic_write", lambda path, payload: None)
+
+    (tmp_path / "data" / "dispatches" / "care-line" / "collection-runs" / "2026-08-23" / "run-1").mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    result = pipeline.run_collection_attempt(
+        tmp_path,
+        run_date="2026-08-23",
+        run_id="run-1",
+        source_row={"source": source},
+        historical_reviewed_records=[],
+        collection_runs_root=Path("data/dispatches/care-line/collection-runs"),
+    )
+
+    assert len(result["failed_extractions"]) == 1
+    assert result["failed_extractions"][0]["exclusion_reason"] in {"needs_full_article", "insufficient_bounded_evidence"}
+    assert result["candidates"] == []
 
 
 def test_care_line_fetch_url_uses_certifi_trust_when_available(monkeypatch) -> None:

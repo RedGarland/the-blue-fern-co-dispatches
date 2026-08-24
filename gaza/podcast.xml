@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Sun, 23 Aug 2026 13:01:26 +0000</lastBuildDate>
+  <lastBuildDate>Mon, 24 Aug 2026 13:01:49 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for August 24, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-08-24-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-08-24-transcript.html</guid>
+    <pubDate>Mon, 24 Aug 2026 00:00:00 +0000</pubDate>
+    <description>Israel accused of using kites as pretext to justify escalating Gaza attacks. Israel has threatened Palestinian groups against launching 'kites, drones, and balloons' from the war-torn enclave. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-08-24.mp3" length="772992" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for August 23, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-08-23-transcript.html</link>

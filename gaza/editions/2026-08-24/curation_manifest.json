@@ -1,0 +1,131 @@
+[
+  {
+    "story_id": "gaza-story-2026-08-24-004",
+    "title": "Israel accused of using kites as pretext to justify escalating Gaza attacks",
+    "summary": "Israel has threatened Palestinian groups against launching 'kites, drones, and balloons' from the war-torn enclave.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 56,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-24-aljazeera-middle-east-9bbd3c393e45"
+    ],
+    "source_ids": [
+      "gaza-2026-08-24-aljazeera-middle-east-9bbd3c393e45"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/8/24/israel-accused-of-using-kites-as-pretext-to-justify-escalating-gaza-attacks?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-24-aljazeera-middle-east-9bbd3c393e45",
+        "title": "Israel accused of using kites as pretext to justify escalating Gaza attacks",
+        "url": "https://www.aljazeera.com/news/2026/8/24/israel-accused-of-using-kites-as-pretext-to-justify-escalating-gaza-attacks?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israel has threatened Palestinian groups against launching 'kites, drones, and balloons' from the war-torn enclave."
+      }
+    ],
+    "generated_at": "2026-08-24T13:01:14.805244+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-24-003",
+    "title": "Activists occupy UK aircraft parts factory over Israel links",
+    "summary": "Pro-Palestine activists from the 'People Against Genocide' group occupied a Martin-Baker factory in the UK.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-24-aljazeera-middle-east-8927cfcbd2aa"
+    ],
+    "source_ids": [
+      "gaza-2026-08-24-aljazeera-middle-east-8927cfcbd2aa"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/8/24/activists-occupy-uk-aircraft-parts-factory-over-israel-links?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-24-aljazeera-middle-east-8927cfcbd2aa",
+        "title": "Activists occupy UK aircraft parts factory over Israel links",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/8/24/activists-occupy-uk-aircraft-parts-factory-over-israel-links?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Pro-Palestine activists from the 'People Against Genocide' group occupied a Martin-Baker factory in the UK."
+      }
+    ],
+    "generated_at": "2026-08-24T13:01:14.805244+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  }
+]

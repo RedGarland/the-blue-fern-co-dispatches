@@ -525,14 +525,44 @@ def parse_source_date(value: str) -> tuple[str, str]:
 
 def fetch_url(url: str, *, timeout: int = 20, allow_insecure_tls: bool = False, user_agent: str = "BlueFernCareLineNationalPipeline/2.0") -> tuple[bytes, dict[str, Any]]:
     request = urllib.request.Request(url, headers={"User-Agent": user_agent})
-    context = ssl._create_unverified_context() if allow_insecure_tls else None
+    if allow_insecure_tls:
+        context = ssl._create_unverified_context()  # noqa: SLF001
+        ssl_mode = "insecure"
+        insecure_ssl_used = True
+        ssl_warning = ""
+    else:
+        try:
+            import truststore  # type: ignore
+
+            context = truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+            ssl_mode = "truststore"
+            insecure_ssl_used = False
+            ssl_warning = ""
+        except Exception:  # noqa: BLE001
+            try:
+                import certifi  # type: ignore
+
+                context = ssl.create_default_context(cafile=certifi.where())
+                ssl_mode = "certifi"
+                insecure_ssl_used = False
+                ssl_warning = ""
+            except Exception:  # noqa: BLE001
+                context = ssl.create_default_context()
+                ssl_mode = "default"
+                insecure_ssl_used = False
+                ssl_warning = "truststore and certifi are unavailable; using the system default trust store."
     with urllib.request.urlopen(request, timeout=timeout, context=context) as response:  # noqa: S310
         headers = {key.lower(): value for key, value in response.headers.items()}
-        return response.read(), {
+        meta = {
             "http_status": getattr(response, "status", 0) or 0,
             "content_type": headers.get("content-type", ""),
             "final_url": response.geturl(),
+            "ssl_mode": ssl_mode,
+            "insecure_ssl_used": insecure_ssl_used,
         }
+        if ssl_warning:
+            meta["ssl_warning"] = ssl_warning
+        return response.read(), meta
 
 
 def fetch_source(source: CareLineSource, *, timeout: int = 20, allow_insecure_tls: bool = False) -> tuple[bytes, dict[str, Any]]:

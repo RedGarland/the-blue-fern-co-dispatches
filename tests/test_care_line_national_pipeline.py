@@ -1,10 +1,33 @@
 from __future__ import annotations
 
+import builtins
+import sys
+import types
 from pathlib import Path
 
 from bluefern_dispatches.care_line_source_registry import CareLineSource
 
 import bluefern_dispatches.care_line_national_pipeline as pipeline
+
+
+class _FakeResponse:
+    def __init__(self, body: bytes = b"<rss><channel /></rss>", *, status: int = 200, url: str = "https://example.org/feed") -> None:
+        self._body = body
+        self.status = status
+        self._url = url
+        self.headers = {"Content-Type": "application/rss+xml; charset=utf-8"}
+
+    def __enter__(self) -> "_FakeResponse":
+        return self
+
+    def __exit__(self, exc_type, exc, tb) -> bool:
+        return False
+
+    def read(self) -> bytes:
+        return self._body
+
+    def geturl(self) -> str:
+        return self._url
 
 
 def test_national_pipeline_threads_follow_up_queries_into_discovery_and_state_update(tmp_path: Path, monkeypatch) -> None:
@@ -312,3 +335,132 @@ def test_care_line_access_prefilter_escalates_after_prior_loss_context():
     assert prefilter["normalized_reason"] == "prior_loss_context_detected"
     assert prefilter["history_match_count"] == 1
     assert prefilter["escalated_to_full_review"] is True
+
+
+def test_care_line_fetch_url_uses_certifi_trust_when_available(monkeypatch) -> None:
+    fake_cafile = r"C:\fake\cacert.pem"
+    original_import = builtins.__import__
+
+    def fake_import(name, globals=None, locals=None, fromlist=(), level=0):  # noqa: ANN001
+        if name == "truststore":
+            raise ModuleNotFoundError("No module named 'truststore'")
+        return original_import(name, globals, locals, fromlist, level)
+
+    certifi_module = types.ModuleType("certifi")
+    certifi_module.where = lambda: fake_cafile  # type: ignore[assignment]
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+    monkeypatch.setitem(sys.modules, "certifi", certifi_module)
+
+    captured: dict[str, object] = {}
+
+    def fake_create_default_context(*, cafile=None):  # noqa: ANN001
+        captured["cafile"] = cafile
+        return object()
+
+    def fake_urlopen(request, timeout, context):  # noqa: ANN001
+        captured["request_url"] = request.full_url
+        captured["timeout"] = timeout
+        captured["context"] = context
+        return _FakeResponse()
+
+    monkeypatch.setattr(pipeline.ssl, "create_default_context", fake_create_default_context)
+    monkeypatch.setattr(pipeline.urllib.request, "urlopen", fake_urlopen)
+
+    payload, meta = pipeline.fetch_url("https://example.org/feed")
+
+    assert payload == b"<rss><channel /></rss>"
+    assert captured["cafile"] == fake_cafile
+    assert captured["request_url"] == "https://example.org/feed"
+    assert meta["ssl_mode"] == "certifi"
+    assert meta["insecure_ssl_used"] is False
+    assert "ssl_warning" not in meta
+
+
+def test_care_line_fetch_url_prefers_truststore_when_available(monkeypatch) -> None:
+    captured: dict[str, object] = {}
+    truststore_module = types.ModuleType("truststore")
+    sentinel_context = object()
+    truststore_module.SSLContext = lambda protocol: sentinel_context  # type: ignore[assignment]
+    monkeypatch.setitem(sys.modules, "truststore", truststore_module)
+
+    def fake_create_default_context(*, cafile=None):  # noqa: ANN001
+        raise AssertionError("certifi/default fallback should not be used when truststore is available")
+
+    def fake_urlopen(request, timeout, context):  # noqa: ANN001
+        captured["request_url"] = request.full_url
+        captured["timeout"] = timeout
+        captured["context"] = context
+        return _FakeResponse()
+
+    monkeypatch.setattr(pipeline.ssl, "create_default_context", fake_create_default_context)
+    monkeypatch.setattr(pipeline.urllib.request, "urlopen", fake_urlopen)
+
+    payload, meta = pipeline.fetch_url("https://example.org/feed")
+
+    assert payload == b"<rss><channel /></rss>"
+    assert captured["context"] is sentinel_context
+    assert meta["ssl_mode"] == "truststore"
+    assert meta["insecure_ssl_used"] is False
+
+
+def test_care_line_fetch_url_falls_back_to_default_trust_when_certifi_missing(monkeypatch) -> None:
+    captured: dict[str, object] = {}
+    original_import = builtins.__import__
+
+    def fake_import(name, globals=None, locals=None, fromlist=(), level=0):  # noqa: ANN001
+        if name in {"certifi", "truststore"}:
+            raise ModuleNotFoundError(f"No module named '{name}'")
+        return original_import(name, globals, locals, fromlist, level)
+
+    def fake_create_default_context(*, cafile=None):  # noqa: ANN001
+        captured["cafile"] = cafile
+        return object()
+
+    def fake_urlopen(request, timeout, context):  # noqa: ANN001
+        captured["request_url"] = request.full_url
+        captured["timeout"] = timeout
+        captured["context"] = context
+        return _FakeResponse()
+
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+    monkeypatch.setattr(pipeline.ssl, "create_default_context", fake_create_default_context)
+    monkeypatch.setattr(pipeline.urllib.request, "urlopen", fake_urlopen)
+
+    payload, meta = pipeline.fetch_url("https://example.org/feed")
+
+    assert payload == b"<rss><channel /></rss>"
+    assert captured["cafile"] is None
+    assert captured["request_url"] == "https://example.org/feed"
+    assert meta["ssl_mode"] == "default"
+    assert meta["insecure_ssl_used"] is False
+    assert meta["ssl_warning"] == "truststore and certifi are unavailable; using the system default trust store."
+
+
+def test_care_line_fetch_url_uses_unverified_context_only_for_explicit_insecure_tls(monkeypatch) -> None:
+    captured: dict[str, object] = {}
+    sentinel_context = object()
+
+    def fake_unverified_context():  # noqa: ANN001
+        captured["insecure_context_requested"] = True
+        return sentinel_context
+
+    def fake_create_default_context(*, cafile=None):  # noqa: ANN001
+        raise AssertionError("verified trust context should not be created when allow_insecure_tls=True")
+
+    def fake_urlopen(request, timeout, context):  # noqa: ANN001
+        captured["request_url"] = request.full_url
+        captured["timeout"] = timeout
+        captured["context"] = context
+        return _FakeResponse()
+
+    monkeypatch.setattr(pipeline.ssl, "_create_unverified_context", fake_unverified_context)
+    monkeypatch.setattr(pipeline.ssl, "create_default_context", fake_create_default_context)
+    monkeypatch.setattr(pipeline.urllib.request, "urlopen", fake_urlopen)
+
+    payload, meta = pipeline.fetch_url("https://example.org/feed", allow_insecure_tls=True)
+
+    assert payload == b"<rss><channel /></rss>"
+    assert captured["insecure_context_requested"] is True
+    assert captured["context"] is sentinel_context
+    assert meta["ssl_mode"] == "insecure"
+    assert meta["insecure_ssl_used"] is True

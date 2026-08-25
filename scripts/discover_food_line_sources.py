@@ -22,7 +22,7 @@ from collections import Counter
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable, Mapping
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
@@ -51,6 +51,7 @@ from bluefern_dispatches.food_line_sources import (  # noqa: E402
     resolve_food_line_fetcher,
     validate_date,
 )
+from bluefern_dispatches.incident_discovery import build_incident_follow_up_queries
 
 STATES = ["WA", "OR", "ID", "CA", "TX", "FL", "NY", "PA", "OH", "MS", "KY", "SC"]
 VALID_SOURCE_TYPES = {"rss", "page", "api"}
@@ -2382,6 +2383,7 @@ def run_food_line_discovery_gap_check(
     skip_sitemap_fallback: bool = False,
     max_sitemap_lookups_per_domain: int = 2,
     max_sitemap_urls_per_domain: int = 50,
+    incident_seeds: Iterable[Mapping[str, Any]] | None = None,
     fast: bool = False,
 ) -> dict[str, Any]:
     start = time.monotonic()
@@ -2389,6 +2391,22 @@ def run_food_line_discovery_gap_check(
     config = load_food_line_discovery_gap_queries(root)
     query_terms = list(config.get("queries") or [])
     query_terms.extend(row["query"] for row in _date_bounded_queries(date))
+    incident_seed_reports: list[dict[str, Any]] = []
+    incident_seed_queries: list[str] = []
+    for seed in list(incident_seeds or []):
+        if not isinstance(seed, Mapping):
+            continue
+        incident_result = build_incident_follow_up_queries(seed, dispatch_slug="food-line")
+        incident_seed_reports.append(
+            {k: incident_result.get(k) for k in ("seed_id", "place", "incident_type", "source_url", "source_date", "trigger_reason", "query_count", "ok")}
+        )
+        if incident_result.get("ok"):
+            for query_row in incident_result.get("queries") or []:
+                query = str(query_row.get("query") or "").strip()
+                if query and query not in incident_seed_queries:
+                    incident_seed_queries.append(query)
+    if incident_seed_queries:
+        query_terms = [*incident_seed_queries, *query_terms]
     query_terms = list(dict.fromkeys(query_terms))
     initial_query_terms = list(query_terms)
     pending_queries = list(query_terms)
@@ -2642,6 +2660,9 @@ def run_food_line_discovery_gap_check(
         "query_count": len(executed_queries),
         "queries": executed_queries,
         "initial_queries": initial_query_terms,
+        "incident_seed_count": len(incident_seed_reports),
+        "incident_seed_query_count": len(incident_seed_queries),
+        "incident_seed_diagnostics": incident_seed_reports,
         "secondary_query_count": len(secondary_query_terms),
         "secondary_queries": secondary_query_terms,
         "wrapper_candidate_count": wrapper_candidate_count,
@@ -2883,6 +2904,9 @@ def run_food_line_discovery_gap_check(
         "unresolved_review_path": str(unresolved_review_json_path),
         "unresolved_review_markdown_path": str(unresolved_review_md_path),
         "unresolved_review_count": len(unresolved_review_rows),
+        "incident_seed_count": len(incident_seed_reports),
+        "incident_seed_query_count": len(incident_seed_queries),
+        "incident_seed_diagnostics": incident_seed_reports,
         "query_errors": query_errors,
         "queries": executed_queries,
         "initial_queries": initial_query_terms,
@@ -3953,6 +3977,8 @@ def discover_food_line_sources(
     states = [state.strip().upper() for state in (states or STATES) if state.strip()]
     family_filter = {family.strip().lower() for family in (families or []) if family.strip()}
     excluded_families = {family.strip().lower() for family in (exclude_families or []) if family.strip()}
+    incident_seed_reports: list[dict[str, Any]] = []
+    incident_seed_queries: list[str] = []
     blocklist = _load_discovery_blocklist(root)
     priority = _load_discovery_priority(root)
     query_rows = _load_discovery_query_rows(root)
@@ -4434,6 +4460,9 @@ def discover_food_line_sources(
         "query_performance_history_path": str(query_performance_history_path),
         "query_performance_report_path": str(query_report_path),
         "source_registry_health_report_path": str(health_report_path),
+        "incident_seed_count": len(incident_seed_reports),
+        "incident_seed_query_count": len(incident_seed_queries),
+        "incident_seed_diagnostics": incident_seed_reports,
         "review_path": str(discovery_review_path),
         "audit_path": str(discovery_audit_path),
         "candidate_registry_path": str(candidate_registry_path),

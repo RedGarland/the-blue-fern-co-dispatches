@@ -552,9 +552,24 @@ def test_food_line_discovery_gap_prioritizes_high_confidence_candidates_and_repo
         json.dumps({"queries": ["food bank demand"], "exclude_domains": []}, indent=2),
         encoding="utf-8",
     )
-    case_report = json.loads(
-        Path("data/dispatches/food-line/discovery_gap/2026-07-09/discovery_gap_report.json").read_text(encoding="utf-8")
-    )
+    case_report = {
+        "candidates": [
+            {
+                "title": "Food bank officials respond to rising needs following SNAP cuts",
+                "publisher": "NEWS10 ABC",
+                "publisher_domain": "www.news10.com",
+                "google_news_url": "https://news.google.com/rss/articles/CBMiU05BUFA?oc=5",
+                "summary_or_snippet": "Food banks respond to rising needs following SNAP cuts.",
+            },
+            {
+                "title": "Food bank demand surges in Santa Cruz County as costs strain families",
+                "publisher": "KSBW",
+                "publisher_domain": "www.ksbw.com",
+                "google_news_url": "https://news.google.com/rss/articles/CBMiS0NC?oc=5",
+                "summary_or_snippet": "Food bank demand surges in Santa Cruz County as costs strain families.",
+            },
+        ]
+    }
     high_confidence_wrapper = next(
         row
         for row in case_report["candidates"]

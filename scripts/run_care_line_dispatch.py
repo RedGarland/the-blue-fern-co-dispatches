@@ -14,6 +14,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from bluefern_dispatches.care_line_discovery import discover_care_line_sources
+from bluefern_dispatches.incident_discovery import discover_incident_seeds, load_incident_seeds
 from bluefern_dispatches.generator import build_site, publish_pages
 
 PAGES_REPO = ROOT / "bluefern-dispatches-pages"
@@ -32,13 +33,17 @@ def _run_one_day(
 ) -> dict[str, Any]:
     discovery_result = {"ok": True, "skipped": True}
     if discover:
+        incident_seed_refresh_result = discover_incident_seeds(root)
+        incident_seeds = load_incident_seeds(root, "care-line")
         discovery_result = discover_care_line_sources(
             root,
             edition_date,
             max_results_per_query=max_results_per_query,
             max_queries=max_queries,
             max_candidates=max_candidates,
+            incident_seeds=incident_seeds,
         )
+        discovery_result["incident_seed_refresh_result"] = incident_seed_refresh_result
     build_result = build_site(
         root,
         dry_run=False,

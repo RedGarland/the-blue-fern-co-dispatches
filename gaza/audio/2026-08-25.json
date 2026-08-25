@@ -1,0 +1,68 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-25",
+  "generated_at": "2026-08-25T13:01:00.424128Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-08-25.mp3",
+  "audio_url": "/gaza/audio/2026-08-25.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 996,
+  "tts_input_word_count": 156,
+  "tts_story_count": 4,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1060224,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-08-25T13:01:00.424105Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-08-25-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-25/",
+  "script_text": "This is the Gaza Dispatch audio briefing for August 25, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Palestine weekly: After Kushner departs, Israel escalates Gaza attacks. Israel deepens Gaza attacks and West Bank expansion as countries condemn abuses but impose few consequences. This was reported by Al Jazeera.\n\n2. How water becomes a weapon of war. A Palestinian spring now fills a swimming pool that belongs to Israeli settlers. This was reported by Al Jazeera.\n\n3. IDF criminal probes challenge claims Israel refuses to investigate Gaza deaths - The Jerusalem Post. IDF criminal probes challenge claims. This was reported by The Jerusalem Post.\n\n4. Israel warns of 'forceful' response to kites flown from Gaza. Hamas says the kites found in Israeli border communities in recent days were launched by children in Gaza. This was reported by BBC News.\n\nFor the full source-backed dispatch, read the August 25, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 4,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-08-25-aljazeera-middle-east-faf8f5f664f9",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/8/25/palestine-weekly-after-kushner-departs-israel-escalates-gaza-attacks?traffic_source=rss",
+      "title": "Palestine weekly: After Kushner departs, Israel escalates Gaza attacks"
+    },
+    {
+      "source_record_id": "gaza-2026-08-25-aljazeera-middle-east-9b4eee6f2880",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/by-the-numbers-3/2026/8/25/how-water-becomes-a-weapon-of-war?traffic_source=rss",
+      "title": "How water becomes a weapon of war"
+    },
+    {
+      "source_record_id": "gaza-2026-08-25-jpost-gaza-accountability-query-42bc1497557b",
+      "publisher": "The Jerusalem Post",
+      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBjTmNvLVBDT1ZwWk5xaldsNV9iNVNaV19EQmtyS3czMnBhVW9lNkRJSm8wQUx6Y0pkaUFHNkhvcWJCQ0xpSlhvYmliNU1SQ25aUko4bk5mdmV1UGJoOTlRUDZwdHVLbzFpZ1lKUEdR?oc=5",
+      "title": "IDF criminal probes challenge claims Israel refuses to investigate Gaza deaths - The Jerusalem Post"
+    },
+    {
+      "source_record_id": "gaza-2026-08-25-bbc-middle-east-2a8522a85d6a",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/c5y58g2dp3xo?at_medium=RSS&at_campaign=rss",
+      "title": "Israel warns of 'forceful' response to kites flown from Gaza"
+    }
+  ]
+}

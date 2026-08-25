@@ -1,0 +1,260 @@
+[
+  {
+    "story_id": "gaza-story-2026-08-25-004",
+    "title": "Palestine weekly: After Kushner departs, Israel escalates Gaza attacks",
+    "summary": "Israel deepens Gaza attacks and West Bank expansion as countries condemn abuses but impose few consequences.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 62,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-25-aljazeera-middle-east-faf8f5f664f9"
+    ],
+    "source_ids": [
+      "gaza-2026-08-25-aljazeera-middle-east-faf8f5f664f9"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/8/25/palestine-weekly-after-kushner-departs-israel-escalates-gaza-attacks?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-25-aljazeera-middle-east-faf8f5f664f9",
+        "title": "Palestine weekly: After Kushner departs, Israel escalates Gaza attacks",
+        "url": "https://www.aljazeera.com/news/2026/8/25/palestine-weekly-after-kushner-departs-israel-escalates-gaza-attacks?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israel deepens Gaza attacks and West Bank expansion as countries condemn abuses but impose few consequences."
+      }
+    ],
+    "generated_at": "2026-08-25T13:00:47.615082+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 62,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-25-003",
+    "title": "How water becomes a weapon of war",
+    "summary": "A Palestinian spring now fills a swimming pool that belongs to Israeli settlers. AJLabs on how water became a weapon.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 55,
+    "scoring_reasons": [
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-25-aljazeera-middle-east-9b4eee6f2880"
+    ],
+    "source_ids": [
+      "gaza-2026-08-25-aljazeera-middle-east-9b4eee6f2880"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/by-the-numbers-3/2026/8/25/how-water-becomes-a-weapon-of-war?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-25-aljazeera-middle-east-9b4eee6f2880",
+        "title": "How water becomes a weapon of war",
+        "url": "https://www.aljazeera.com/video/by-the-numbers-3/2026/8/25/how-water-becomes-a-weapon-of-war?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "A Palestinian spring now fills a swimming pool that belongs to Israeli settlers. AJLabs on how water became a weapon."
+      }
+    ],
+    "generated_at": "2026-08-25T13:00:47.615082+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 55,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-25-005",
+    "title": "IDF criminal probes challenge claims Israel refuses to investigate Gaza deaths - The Jerusalem Post",
+    "summary": "IDF criminal probes challenge claims. Israel refuses to investigate Gaza deaths. The Jerusalem Post.",
+    "category": "military_conduct_accountability",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-25-jpost-gaza-accountability-query-42bc1497557b"
+    ],
+    "source_ids": [
+      "gaza-2026-08-25-jpost-gaza-accountability-query-42bc1497557b"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMibkFVX3lxTFBjTmNvLVBDT1ZwWk5xaldsNV9iNVNaV19EQmtyS3czMnBhVW9lNkRJSm8wQUx6Y0pkaUFHNkhvcWJCQ0xpSlhvYmliNU1SQ25aUko4bk5mdmV1UGJoOTlRUDZwdHVLbzFpZ1lKUEdR?oc=5"
+    ],
+    "publisher_names": [
+      "The Jerusalem Post"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-25-jpost-gaza-accountability-query-42bc1497557b",
+        "title": "IDF criminal probes challenge claims Israel refuses to investigate Gaza deaths - The Jerusalem Post",
+        "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBjTmNvLVBDT1ZwWk5xaldsNV9iNVNaV19EQmtyS3czMnBhVW9lNkRJSm8wQUx6Y0pkaUFHNkhvcWJCQ0xpSlhvYmliNU1SQ25aUko4bk5mdmV1UGJoOTlRUDZwdHVLbzFpZ1lKUEdR?oc=5",
+        "publisher": "The Jerusalem Post",
+        "summary_or_snippet": "IDF criminal probes challenge claims Israel refuses to investigate Gaza deaths The Jerusalem Post"
+      }
+    ],
+    "generated_at": "2026-08-25T13:00:47.615082+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "gaza_adjacent_context",
+    "claim_status": "gaza_adjacent_context",
+    "context_only": true,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-25-001",
+    "title": "Israel warns of 'forceful' response to kites flown from Gaza",
+    "summary": "Hamas says the kites found in Israeli border communities in recent days were launched by children in Gaza.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 30,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-25-bbc-middle-east-2a8522a85d6a"
+    ],
+    "source_ids": [
+      "gaza-2026-08-25-bbc-middle-east-2a8522a85d6a"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/c5y58g2dp3xo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-25-bbc-middle-east-2a8522a85d6a",
+        "title": "Israel warns of 'forceful' response to kites flown from Gaza",
+        "url": "https://www.bbc.co.uk/news/articles/c5y58g2dp3xo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Hamas says the kites found in Israeli border communities in recent days were launched by children in Gaza."
+      }
+    ],
+    "generated_at": "2026-08-25T13:00:47.615082+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 30,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  }
+]

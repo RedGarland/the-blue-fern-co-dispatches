@@ -37,7 +37,7 @@ jobs:
       - name: Run focused validation tests
         run: python -m pytest -q -p no:cacheprovider --basetemp ./.pytest-temp-validation tests/test_repo_governance.py tests/test_publish_scope_validation.py tests/test_food_line_dispatch.py tests/test_dispatches_site.py
 
-      - name: Publish validate commit status for merge SHA
+      - name: Publish validate commit status for head SHA
         if: always() && github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
@@ -48,9 +48,9 @@ jobs:
               repo: context.repo.repo,
               pull_number: context.payload.pull_request.number,
             });
-            const sha = pull.merge_commit_sha;
+            const sha = pull.head?.sha;
             if (!sha) {
-              throw new Error('pull_request.merge_commit_sha is unavailable');
+              throw new Error('pull_request.head.sha is unavailable');
             }
             await github.rest.repos.createCommitStatus({
               owner: context.repo.owner,

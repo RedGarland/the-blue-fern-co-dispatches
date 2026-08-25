@@ -81,6 +81,63 @@ def _weak_incident_source() -> dict[str, str]:
     }
 
 
+def _polluted_food_bank_source() -> dict[str, str]:
+    return {
+        "source_record_id": "food-line-auto-150e59d4733e69e1",
+        "source_id": "ktal-kmss-food-bank-summer-feeding",
+        "title": "Food bank in Shreveport aids families amid school break",
+        "url": "https://www.ktalnews.com/news/food-bank-summer-feeding/",
+        "source_name": "KTAL / KMSS Food Bank Summer Feeding",
+        "publisher": "KTAL / KMSS",
+        "published_at": "2026-08-25T00:00:00Z",
+        "page_metadata_date": "2026-06-10T23:51:07+00:00",
+        "summary_or_snippet": (
+            "Food bank in Shreveport aids families amid school break Skip to content KTALnews.com "
+            "Shreveport 82° Watch KTAL Now stream 24/7 Account Profile Log Out Shreveport 82° "
+            "Sponsored By Toggle Menu Open Navigation Close Navigation Search Please enter a search term. "
+            "Primary Menu Live📺 Weather Local Views: submit pics & videos here Severe Weather Weather Cameras "
+            "Closings & Delays Futurecast Kid’s Weathercast Interactive Radar Earthquakes Power Outages "
+            "Road Conditions Drought Watch Burn Bans Lake Levels and Forecasts Tracking the Tropics Almanac WeatheRate"
+        ),
+        "exact_supporting_passage": (
+            "Local food banks in Northwest Louisiana are offering summer feeding programs to ensure no child goes hungry, "
+            "despite rising food costs and low donations"
+        ),
+        "evidence_text": (
+            "Food bank in Shreveport aids families amid school break Local food banks in Northwest Louisiana are offering "
+            "summer feeding programs to ensure no child goes hungry, despite rising food costs and low donations."
+        ),
+        "pressure_signal": False,
+        "pressure_type": "service reduction",
+        "pressure_reason": "insufficient specific pressure evidence",
+        "pressure_summary": "",
+    }
+
+
+def _exact_support_outage_source() -> dict[str, str]:
+    return {
+        "source_record_id": "gary-power-outage-source",
+        "source_id": "gary-power-outage-source",
+        "title": "Gary, Indiana prolonged power outage closes Methodist care sites",
+        "url": "https://example.com/gary-outage",
+        "source_name": "Example News",
+        "publisher": "Example News",
+        "published_at": "2026-08-23T12:00:00Z",
+        "page_metadata_date": "2026-08-23T12:00:00Z",
+        "summary_or_snippet": "Skip to content Power Outages navigation text that should not drive seeding.",
+        "exact_supporting_passage": (
+            "Multiple days without power and an emergency declaration closed clinics and rescheduled appointments."
+        ),
+        "evidence_text": (
+            "Multiple days without power and an emergency declaration closed clinics and rescheduled appointments."
+        ),
+        "city": "Gary",
+        "state": "IN",
+        "incident_type": "power_outage",
+        "severity_evidence": "multiple days without power and an emergency declaration",
+    }
+
+
 def test_build_incident_follow_up_queries_triggers_for_severe_gary_care_line_seed():
     result = build_incident_follow_up_queries(_care_line_seed(), dispatch_slug="care-line", max_queries=2)
 
@@ -187,6 +244,35 @@ def test_discover_incident_seeds_rejects_weak_incident_source_record(tmp_path: P
     assert report["ok"] is True
     assert report["incident_seed_count"] == 0
     assert load_incident_seeds(tmp_path, "care-line") == []
+
+
+def test_discover_incident_seeds_ignores_polluted_summary_when_exact_support_is_clean(tmp_path: Path):
+    path = tmp_path / "data" / "dispatches" / "food-line" / "sources" / "2026-08-23" / "auto_sources.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps([_polluted_food_bank_source()], indent=2), encoding="utf-8")
+
+    report = discover_incident_seeds(tmp_path, source_paths=[path])
+
+    assert report["ok"] is True
+    assert report["incident_seed_count"] == 0
+    assert load_incident_seeds(tmp_path, "care-line") == []
+    assert load_incident_seeds(tmp_path, "food-line") == []
+
+
+def test_discover_incident_seeds_uses_exact_support_passage_for_legitimate_outage(tmp_path: Path):
+    path = tmp_path / "data" / "dispatches" / "care-line" / "sources" / "2026-08-23" / "manual_sources.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps([_exact_support_outage_source()], indent=2), encoding="utf-8")
+
+    report = discover_incident_seeds(tmp_path, source_paths=[path])
+    care_line_seeds = load_incident_seeds(tmp_path, "care-line")
+    food_line_seeds = load_incident_seeds(tmp_path, "food-line")
+
+    assert report["ok"] is True
+    assert report["incident_seed_count"] == 1
+    assert care_line_seeds[0]["incident_type"] == "power_outage"
+    assert care_line_seeds[0]["source_record_id"] == "gary-power-outage-source"
+    assert food_line_seeds[0]["incident_type"] == "power_outage"
 
 
 def test_discover_incident_seeds_dedupes_repeated_updates_and_refreshes_dates(tmp_path: Path):

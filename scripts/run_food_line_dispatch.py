@@ -60,6 +60,7 @@ from bluefern_dispatches.food_line_approved_proposal import (
 )
 from bluefern_dispatches.podcast_feed import write_food_line_podcast_feed
 from bluefern_dispatches.tts_provider import synthesize_speech_with_diagnostics
+from bluefern_dispatches.incident_discovery import discover_incident_seeds, load_incident_seeds
 from scripts.discover_food_line_sources import run_food_line_discovery_gap_check
 
 PAGES_REPO = ROOT / "bluefern-dispatches-pages"
@@ -4140,12 +4141,20 @@ def _food_line_resolve_discovery_gap_summary(
     ):
         return summary
     try:
-        run_food_line_discovery_gap_check(root, date, fast=True)
+        incident_seed_refresh_result = discover_incident_seeds(root)
+        run_food_line_discovery_gap_check(
+            root,
+            date,
+            fast=True,
+            incident_seeds=load_incident_seeds(root, "food-line"),
+        )
     except Exception as exc:  # noqa: BLE001
         summary = dict(summary)
         summary["warning"] = f"Food Line discovery gap check auto-run failed: {exc}"
         return summary
-    return _food_line_discovery_gap_summary(root, date, public_story_rows)
+    summary = dict(_food_line_discovery_gap_summary(root, date, public_story_rows))
+    summary["incident_seed_refresh_result"] = incident_seed_refresh_result
+    return summary
 
 
 def _food_line_map_rendered_marker_count_from_data(map_data: dict[str, Any]) -> int:

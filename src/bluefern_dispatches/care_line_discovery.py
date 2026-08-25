@@ -9,7 +9,7 @@ import urllib.parse
 from collections import Counter
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable, Mapping
 
 from bluefern_dispatches.care_line_sources import (
     care_line_review_diagnostics,
@@ -18,6 +18,7 @@ from bluefern_dispatches.care_line_sources import (
     record_is_public,
     validate_manual_source_records,
 )
+from bluefern_dispatches.incident_discovery import build_incident_follow_up_queries
 from bluefern_dispatches.food_line_sources import (
     _extract_page_evidence,
     _extract_page_metadata_date,
@@ -664,12 +665,25 @@ def discover_care_line_sources(
     max_queries: int | None = None,
     max_candidates: int | None = None,
     follow_up_queries: Iterable[Mapping[str, Any]] | None = None,
+    incident_seeds: Iterable[Mapping[str, Any]] | None = None,
     write: bool = True,
     dry_run: bool = False,
 ) -> dict[str, Any]:
     edition_date = validate_date(date)
     config = load_care_line_discovery_queries(root)
     queries = [dict(row) for row in list(follow_up_queries or []) if str(row.get("query") or "").strip()]
+    incident_seed_reports: list[dict[str, Any]] = []
+    incident_seed_rows: list[dict[str, Any]] = []
+    for seed in list(incident_seeds or []):
+        if not isinstance(seed, Mapping):
+            continue
+        incident_result = build_incident_follow_up_queries(seed, dispatch_slug="care-line")
+        incident_seed_reports.append(
+            {k: incident_result.get(k) for k in ("seed_id", "place", "incident_type", "source_url", "source_date", "trigger_reason", "query_count", "ok")}
+        )
+        if incident_result.get("ok"):
+            incident_seed_rows.extend([dict(row) for row in incident_result.get("queries") or [] if str(row.get("query") or "").strip()])
+    queries.extend(incident_seed_rows)
     queries.extend(_search_queries(edition_date, config))
     exclude_domains = {str(item).strip().lower() for item in config.get("exclude_domains") or [] if str(item).strip()}
     known = _known_source_sets(root, edition_date)
@@ -845,6 +859,9 @@ def discover_care_line_sources(
         "discovery_report_path": str(root / "data" / "dispatches" / "care-line" / "sources" / edition_date / DISCOVERY_REPORT_FILE),
         "query_count": len(executed_queries),
         "query_rows": query_rows,
+        "incident_seed_count": len(incident_seed_reports),
+        "incident_seed_query_count": len(incident_seed_rows),
+        "incident_seed_diagnostics": incident_seed_reports,
         "source_count": len(discovered_rows),
         "public_signal_count": public_signal_count,
         "claim_count": public_signal_count,
@@ -874,6 +891,7 @@ def run_care_line_discovery_gap_check(
     max_queries: int | None = None,
     max_candidates: int | None = None,
     follow_up_queries: Iterable[Mapping[str, Any]] | None = None,
+    incident_seeds: Iterable[Mapping[str, Any]] | None = None,
     write: bool = True,
     dry_run: bool = False,
 ) -> dict[str, Any]:
@@ -885,6 +903,7 @@ def run_care_line_discovery_gap_check(
         max_queries=max_queries,
         max_candidates=max_candidates,
         follow_up_queries=follow_up_queries,
+        incident_seeds=incident_seeds,
         write=write,
         dry_run=dry_run,
     )

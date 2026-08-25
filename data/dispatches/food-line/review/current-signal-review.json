@@ -1,0 +1,63 @@
+{
+  "allowed_decisions": [
+    "approve",
+    "approve_with_edit",
+    "hold",
+    "reject"
+  ],
+  "edition_date": "2026-08-24",
+  "historical_roots_excluded": [
+    "data/agent-history",
+    "data/agent-history-staging"
+  ],
+  "items": [
+    {
+      "affected_groups": [
+        "families",
+        "households without power",
+        "food bank clients"
+      ],
+      "canonical_source_url": "https://apnews.com/article/e0fbdd4a721b6269e8ec62e512299b11",
+      "confidence": "high",
+      "decision_audit": {
+        "decided_at": "2026-08-24T13:00:00Z",
+        "decided_by": "Operator",
+        "decision": "approve"
+      },
+      "duplicate_check": {
+        "matched_records": [],
+        "status": "not_published"
+      },
+      "editorial_note": "Approved for draft assembly only.",
+      "editorial_status": "approve",
+      "evidence_level": "news report",
+      "exact_supporting_passage": "AP reported that a prolonged Gary power outage spoiled food and pushed families toward hot meals and emergency food support.",
+      "freshness_check": {
+        "age_days": 0,
+        "edition_date": "2026-08-24",
+        "status": "current"
+      },
+      "location_name": "Gary",
+      "location_scope": "local",
+      "pressure_type": "service_reduction",
+      "proposed_public_headline": "Gary power outage spoils food and drives emergency meal need",
+      "proposed_public_summary": "AP reported that a prolonged Gary power outage spoiled food and forced families to seek hot meals and emergency food support.",
+      "proposed_rank": 1,
+      "proposed_section": "Core Food Pressure Signals",
+      "publication_eligible": false,
+      "publisher": "Associated Press",
+      "review_item_id": "gary-food-outage-20260824",
+      "source_artifact_path": "data/dispatches/food-line/agent-intake/2026-08-24/gary-power-outage.json",
+      "source_finding_or_intake_id": "finding_gary_food_outage_20260824",
+      "source_published_at": "2026-08-24T12:00:00Z",
+      "source_url": "https://apnews.com/article/e0fbdd4a721b6269e8ec62e512299b11",
+      "state": "IN",
+      "title": "Gary power outage spoils food and drives emergency meal need",
+      "uncertainty_note": "The source does not quantify the full household count affected.",
+      "why_it_matters": "A prolonged power outage created food spoilage and emergency meal pressure for Gary households."
+    }
+  ],
+  "production_scope": "current_nonhistorical_only",
+  "queue_id": "food-line-current-review-2026-08-24-gary",
+  "schema_version": "food_line_current_signal_review_v1"
+}

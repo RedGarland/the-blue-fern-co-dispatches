@@ -1,0 +1,91 @@
+{
+  "approved_item_count": 1,
+  "draft": true,
+  "draft_status": "draft_approved_pending_publication",
+  "edition_date": "2026-08-24",
+  "items": [
+    {
+      "headline": "Gary power outage spoils food and drives emergency meal need",
+      "location_name": "Gary",
+      "rank": 1,
+      "section": "Core Food Pressure Signals",
+      "source": "Associated Press",
+      "source_published_at": "2026-08-24T12:00:00Z",
+      "source_url": "https://apnews.com/article/e0fbdd4a721b6269e8ec62e512299b11",
+      "state": "IN",
+      "summary": "AP reported that a prolonged Gary power outage spoiled food and forced families to seek hot meals and emergency food support.",
+      "uncertainty_note": "The source does not quantify the full household count affected.",
+      "why_it_matters": "A prolonged power outage created food spoilage and emergency meal pressure for Gary households."
+    }
+  ],
+  "layout": {
+    "at_a_glance": [
+      {
+        "headline": "Gary power outage spoils food and drives emergency meal need",
+        "location_name": "Gary",
+        "rank": 1,
+        "section": "Core Food Pressure Signals",
+        "source": "Associated Press",
+        "source_published_at": "2026-08-24T12:00:00Z",
+        "source_url": "https://apnews.com/article/e0fbdd4a721b6269e8ec62e512299b11",
+        "state": "IN",
+        "summary": "AP reported that a prolonged Gary power outage spoiled food and forced families to seek hot meals and emergency food support.",
+        "uncertainty_note": "The source does not quantify the full household count affected.",
+        "why_it_matters": "A prolonged power outage created food spoilage and emergency meal pressure for Gary households."
+      }
+    ],
+    "core_food_pressure_signals": [
+      {
+        "headline": "Gary power outage spoils food and drives emergency meal need",
+        "location_name": "Gary",
+        "rank": 1,
+        "section": "Core Food Pressure Signals",
+        "source": "Associated Press",
+        "source_published_at": "2026-08-24T12:00:00Z",
+        "source_url": "https://apnews.com/article/e0fbdd4a721b6269e8ec62e512299b11",
+        "state": "IN",
+        "summary": "AP reported that a prolonged Gary power outage spoiled food and forced families to seek hot meals and emergency food support.",
+        "uncertainty_note": "The source does not quantify the full household count affected.",
+        "why_it_matters": "A prolonged power outage created food spoilage and emergency meal pressure for Gary households."
+      }
+    ],
+    "edition_summary": "This edition tracks 1 current, source-traceable food-pressure signal.",
+    "eyebrow_status": "FOOD LINE — PRIVATE DRAFT / UNPUBLISHED",
+    "generation_note": "Private editorial preview assembled from approved current-review items; final publication approval is still required and no public output was generated.",
+    "h1": "Food Line Dispatch — 2026-08-24",
+    "other_food_line_signals": [],
+    "source_mix": {
+      "publishers": {
+        "Associated Press": 1
+      },
+      "states": {
+        "IN": 1
+      }
+    },
+    "source_note": "Every item retains its canonical source URL and source publication date.",
+    "todays_read": [
+      {
+        "headline": "Gary power outage spoils food and drives emergency meal need",
+        "location_name": "Gary",
+        "rank": 1,
+        "section": "Core Food Pressure Signals",
+        "source": "Associated Press",
+        "source_published_at": "2026-08-24T12:00:00Z",
+        "source_url": "https://apnews.com/article/e0fbdd4a721b6269e8ec62e512299b11",
+        "state": "IN",
+        "summary": "AP reported that a prolonged Gary power outage spoiled food and forced families to seek hot meals and emergency food support.",
+        "uncertainty_note": "The source does not quantify the full household count affected.",
+        "why_it_matters": "A prolonged power outage created food spoilage and emergency meal pressure for Gary households."
+      }
+    ]
+  },
+  "pending_item_count": 0,
+  "publication_approval": false,
+  "publication_eligible": false,
+  "published": false,
+  "rejected_item_count": 0,
+  "schema_version": "food_line_proposed_edition_v1",
+  "selected_item_count": 1,
+  "source_queue_path": "data/dispatches/food-line/review/current-signal-review.json",
+  "source_queue_sha256": "04fe8a2fd084710dee72e94dc01d05a8cfb75c597217769e70f3c26e6a76dbfa"
+}

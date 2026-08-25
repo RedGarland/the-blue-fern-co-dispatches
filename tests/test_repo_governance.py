@@ -76,16 +76,16 @@ def test_validate_repo_governance_reports_missing_required_file(tmp_path) -> Non
     assert any("Missing required file: AGENTS.md" in error for error in errors)
 
 
-def test_dispatch_validation_workflow_bridges_validate_to_merge_sha() -> None:
+def test_dispatch_validation_workflow_bridges_validate_to_head_sha() -> None:
     root = Path(__file__).resolve().parents[1]
     workflow = (root / ".github" / "workflows" / "dispatch-validation.yml").read_text(encoding="utf-8")
 
     assert "jobs:" in workflow
     assert "  validate:" in workflow
     assert "statuses: write" in workflow
-    assert "Publish validate commit status for merge SHA" in workflow
+    assert "Publish validate commit status for head SHA" in workflow
     assert "if: always() && github.event_name == 'pull_request'" in workflow
     assert "actions/github-script@v7" in workflow
     assert "pulls.get" in workflow
-    assert "merge_commit_sha" in workflow
-    assert "pull_request.head.sha" not in workflow
+    assert "pull.head?.sha" in workflow
+    assert "merge_commit_sha" not in workflow

@@ -20,6 +20,7 @@ from urllib.parse import urljoin, urlparse
 
 from bluefern_dispatches.care_line_record import (
     AUTHORITY_LEVEL_VALUES,
+    deterministic_public_location_label,
     FieldProvenance,
     JURISDICTION_ALIASES,
     JURISDICTIONS_BY_CODE,
@@ -1592,8 +1593,12 @@ def _care_line_context_signature(mapping: Mapping[str, Any]) -> tuple[str, ...]:
     state = _care_line_identity_text(_text(mapping, "state", "jurisdiction_display"))
     service_line = _care_line_identity_text(_text(mapping, "service_line", "service_line_raw", "affected_service_line"))
     variants = [
+        tuple(part for part in ("facility", facility) if part),
+        tuple(part for part in ("facility", facility, service_line) if part),
         tuple(part for part in ("facility", facility, city, county, state) if part),
         tuple(part for part in ("facility", facility, city, county, state, service_line) if part),
+        tuple(part for part in ("provider", provider) if part),
+        tuple(part for part in ("provider", provider, service_line) if part),
         tuple(part for part in ("provider", provider, city, county, state) if part),
         tuple(part for part in ("provider", provider, city, county, state, service_line) if part),
         tuple(part for part in ("geography", city, county, state) if part),
@@ -1637,6 +1642,105 @@ def _care_line_history_matches(
                 "city": _text(mapping, "city", "locality_name"),
                 "county": _text(mapping, "county", "county_equivalent_name"),
                 "state": _text(mapping, "state", "jurisdiction_display"),
+            }
+        )
+    return matches
+
+
+def _care_line_subject_history_matches(
+    reviewed_records: Iterable[CareLineReviewedRecord | Mapping[str, Any]],
+    *,
+    subject: str = "",
+    provider: str = "",
+    service_line: str = "",
+    event_type: str = "",
+) -> list[dict[str, Any]]:
+    subject_text = _care_line_identity_text(subject or provider)
+    if not subject_text:
+        return []
+    matches: list[dict[str, Any]] = []
+    for record in reviewed_records:
+        mapping = record if isinstance(record, Mapping) else record.model_dump(mode="json")
+        record_event_type = _text(mapping, "event_type", "event_type_raw", "canonical_event_type")
+        if record_event_type not in CARE_LINE_PREFILTER_PRIOR_LOSS_EVENT_TYPES:
+            continue
+        if event_type and record_event_type and record_event_type != event_type:
+            continue
+        record_service_line = _text(mapping, "service_line", "service_line_raw", "affected_service_line")
+        if service_line and record_service_line and record_service_line != service_line:
+            continue
+        record_subjects = [
+            _care_line_identity_text(value)
+            for value in (
+                _text(mapping, "facility_name", "affected_provider", "organization_name"),
+                _text(mapping, "provider_name", "affected_provider", "organization_name"),
+            )
+            if _text(mapping, "facility_name", "provider_name", "affected_provider", "organization_name")
+        ]
+        if subject_text.casefold() not in {candidate.casefold() for candidate in record_subjects if candidate}:
+            continue
+        matches.append(
+            {
+                "reviewed_record_id": _text(mapping, "producer_record_id", "source_record_id", "care_line_record_id"),
+                "event_identity": care_line_event_identity(mapping),
+                "event_type": record_event_type,
+                "lifecycle_status": care_line_lifecycle_status(mapping),
+                "facility_name": _text(mapping, "facility_name", "provider_name", "affected_provider", "organization_name"),
+                "provider_name": _text(mapping, "provider_name", "affected_provider", "organization_name"),
+                "service_line": record_service_line,
+                "city": _text(mapping, "city", "locality_name"),
+                "county": _text(mapping, "county", "county_equivalent_name"),
+                "state": _text(mapping, "state", "jurisdiction_display"),
+                "service_region": _text(mapping, "service_region"),
+            }
+        )
+    return matches
+
+
+def _care_line_geography_history_matches(
+    reviewed_records: Iterable[CareLineReviewedRecord | Mapping[str, Any]],
+    *,
+    city: str = "",
+    county: str = "",
+    state: str = "",
+    service_line: str = "",
+    event_type: str = "",
+) -> list[dict[str, Any]]:
+    if not (city or county or state):
+        return []
+    matches: list[dict[str, Any]] = []
+    for record in reviewed_records:
+        mapping = record if isinstance(record, Mapping) else record.model_dump(mode="json")
+        record_event_type = _text(mapping, "event_type", "event_type_raw", "canonical_event_type")
+        if record_event_type not in CARE_LINE_PREFILTER_PRIOR_LOSS_EVENT_TYPES:
+            continue
+        if event_type and record_event_type and record_event_type != event_type:
+            continue
+        record_service_line = _text(mapping, "service_line", "service_line_raw", "affected_service_line")
+        if service_line and record_service_line and record_service_line != service_line:
+            continue
+        record_city = _text(mapping, "city", "locality_name")
+        record_county = _text(mapping, "county", "county_equivalent_name")
+        record_state = _text(mapping, "state", "jurisdiction_display")
+        if city and record_city and city.casefold() != record_city.casefold():
+            continue
+        if county and record_county and county.casefold() != record_county.casefold():
+            continue
+        if state and record_state and state.casefold() != record_state.casefold():
+            continue
+        matches.append(
+            {
+                "reviewed_record_id": _text(mapping, "producer_record_id", "source_record_id", "care_line_record_id"),
+                "event_identity": care_line_event_identity(mapping),
+                "event_type": record_event_type,
+                "lifecycle_status": care_line_lifecycle_status(mapping),
+                "facility_name": _text(mapping, "facility_name", "provider_name", "affected_provider", "organization_name"),
+                "provider_name": _text(mapping, "provider_name", "affected_provider", "organization_name"),
+                "service_line": record_service_line,
+                "city": record_city,
+                "county": record_county,
+                "state": record_state,
+                "service_region": _text(mapping, "service_region"),
             }
         )
     return matches
@@ -1721,84 +1825,175 @@ def _care_line_access_prefilter(
     }
 
 
-def _extract_subject(title: str, passage: str, *, service_line: str) -> tuple[str, str]:
-    patterns = [
+def _extract_subject(
+    raw_item: Mapping[str, Any],
+    title: str,
+    passage: str,
+    *,
+    service_line: str,
+    evidence_text: str = "",
+) -> tuple[str, str, dict[str, FieldProvenance]]:
+    provenance: dict[str, FieldProvenance] = {}
+    structured_facility = _text(raw_item, "facility_name", "subject", "headline")
+    structured_provider = _text(raw_item, "provider_name", "affected_provider", "organization_name")
+    if structured_facility:
+        structured_facility = _strip_leading_article_text(structured_facility)
+        structured_provider = _strip_leading_article_text(structured_provider or structured_facility)
+        provenance["facility_name"] = _make_provenance(
+            structured_facility,
+            source_field="structured_input",
+            supporting_text=structured_facility,
+            provenance_type="structured_input",
+            review_status="confirmed",
+            confidence=1.0,
+        )
+        provenance["provider_name"] = _make_provenance(
+            structured_provider or structured_facility,
+            source_field="structured_input",
+            supporting_text=structured_provider or structured_facility,
+            provenance_type="structured_input",
+            review_status="confirmed",
+            confidence=1.0,
+        )
+        return structured_facility, structured_provider or structured_facility, provenance
+    if structured_provider:
+        structured_provider = _strip_leading_article_text(structured_provider)
+        provenance["provider_name"] = _make_provenance(
+            structured_provider,
+            source_field="structured_input",
+            supporting_text=structured_provider,
+            provenance_type="structured_input",
+            review_status="confirmed",
+            confidence=1.0,
+        )
+        return "", structured_provider, provenance
+    title_text = title.strip()
+    title_source_field = "article_body" if evidence_text and title_text and title_text == evidence_text.strip() else "title"
+    title_patterns = [
         re.compile(r"^(?P<subject>.+?)\s+(?:will\s+)?(?:close|closing|closes|shut(?:ting)? down|suspend(?:s|ed|ing)?|halt(?:s|ed|ing)?|end(?:s|ed|ing)?|reduce(?:s|d|ing)? hours?|reopen(?:s|ed|ing)?|restore(?:s|d|ing)?)\b", re.I),
         re.compile(r"^(?P<subject>.+?)\s+(?:announced?|plans?|planned)\s+to\s+(?:close|suspend|end|reduce|reopen|restore)\b", re.I),
     ]
-    for pattern in patterns:
-        match = pattern.search(title.strip())
+    for pattern in title_patterns:
+        match = pattern.search(title_text)
         if match:
-            subject = match.group("subject").strip(" -:")
-            if re.search(r"\b(judge|court|request|vote|lawsuit|appeal)\b", subject, re.I):
+            subject = _strip_leading_article_text(match.group("subject"))
+            if re.search(r"\b(judge|court|request|vote|lawsuit|appeal|and|or|vs\.?|versus)\b", subject, re.I):
                 continue
-            return subject, subject
-    facility_match = re.search(
+            provenance["facility_name"] = _make_provenance(
+                subject,
+                source_field=title_source_field,
+                supporting_text=match.group(0).strip()[:500],
+                provenance_type="source_explicit",
+                review_status="confirmed",
+                confidence=1.0,
+            )
+            provenance["provider_name"] = _make_provenance(
+                subject,
+                source_field=title_source_field,
+                supporting_text=match.group(0).strip()[:500],
+                provenance_type="source_explicit",
+                review_status="confirmed",
+                confidence=1.0,
+            )
+            return subject, subject, provenance
+
+    combined_text = "\n".join(part for part in (title, passage, evidence_text) if part)
+    facility_candidates: list[str] = []
+    provider_candidates: list[str] = []
+    service_candidates: list[str] = []
+    title_source_field = "article_body" if evidence_text and title.strip() and title.strip() == evidence_text.strip() else "title"
+
+    facility_pattern = re.compile(
         r"\b([A-Z][A-Za-z0-9&'.-]+(?:\s+[A-Z][A-Za-z0-9&'.-]+){0,6}\s+"
         r"(?:Hospital|Clinic|Medical Center|Health Center|Health System|Healthcare System|Children's Hospital|Center))\b",
-        title + " " + passage,
         re.I,
     )
-    if facility_match:
-        subject = facility_match.group(1).strip()
-        return subject, subject
-    provider_match = re.search(
+    provider_pattern = re.compile(
         r"\b([A-Z][A-Za-z0-9&'.-]+(?:\s+[A-Z][A-Za-z0-9&'.-]+){0,6}\s+(?:System|Network|Services))\b",
-        title + " " + passage,
         re.I,
     )
-    if provider_match:
-        provider = provider_match.group(1).strip()
-        return "", provider
-    service_subject_match = re.search(
+    service_pattern = re.compile(
         r"\b((?:[A-Z][A-Za-z0-9&'.-]+\s+){0,4}(?:labor and delivery|labor & delivery|maternity ward|maternity unit|birthing center|birth center|maternity|labor and delivery unit|labor and delivery services))\b",
-        title + " " + passage,
         re.I,
     )
-    if service_subject_match:
-        subject = service_subject_match.group(1).strip(" -:")
-        return subject, subject
-    if service_line:
-        return "", ""
-    return "", ""
 
-
-def _extract_geography(raw_item: Mapping[str, Any], text: str) -> dict[str, str]:
-    state = _text(raw_item, "source_state")
-    jurisdiction_display = JURISDICTIONS_BY_CODE.get(state, {}).get("display", state)
-    match_city_state = re.search(r"\b([A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*([A-Z]{2})\b", text)
-    if match_city_state:
-        city = match_city_state.group(1).strip()
-        explicit_state = match_city_state.group(2).strip().upper()
-        if explicit_state in JURISDICTIONS_BY_CODE:
-            return {
-                "state": explicit_state,
-                "city": city,
-                "geographic_scope": "city",
-                "jurisdiction_display": JURISDICTIONS_BY_CODE[explicit_state]["display"],
-                "service_region": "",
-            }
-    lowered = text.casefold()
-    for alias, entry in JURISDICTION_ALIASES.items():
-        if len(alias) < 3:
+    for match in facility_pattern.finditer(combined_text):
+        subject = match.group(1).strip()
+        if re.search(r"\b(judge|court|request|vote|lawsuit|appeal)\b", subject, re.I):
             continue
-        if re.search(rf"\b{re.escape(alias)}\b", lowered, re.I):
-            state = entry["code"]
-            jurisdiction_display = entry["display"]
-            break
-    service_region = ""
-    region_match = re.search(r"\b([A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+){0,2}\s+(?:region|area|service area|service region))\b", text)
-    if region_match:
-        service_region = region_match.group(1).strip()
-    geographic_scope = "service_region" if service_region else "statewide" if state else ""
-    return {
-        "state": state,
-        "city": "",
-        "geographic_scope": geographic_scope,
-        "jurisdiction_display": jurisdiction_display or state,
-        "service_region": service_region,
-    }
+        if subject.casefold() not in {candidate.casefold() for candidate in facility_candidates}:
+            facility_candidates.append(subject)
 
+    for match in provider_pattern.finditer(combined_text):
+        provider = match.group(1).strip()
+        if re.search(r"\b(judge|court|request|vote|lawsuit|appeal)\b", provider, re.I):
+            continue
+        if provider.casefold() not in {candidate.casefold() for candidate in provider_candidates}:
+            provider_candidates.append(provider)
+
+    for match in service_pattern.finditer(combined_text):
+        subject = match.group(1).strip(" -:")
+        if subject.casefold() not in {candidate.casefold() for candidate in service_candidates}:
+            service_candidates.append(subject)
+
+    if len(facility_candidates) == 1:
+        subject = _strip_leading_article_text(facility_candidates[0])
+        support = next((match.group(0).strip() for match in facility_pattern.finditer(combined_text) if match.group(1).strip().casefold() == subject.casefold()), subject)
+        provenance["facility_name"] = _make_provenance(
+            subject,
+            source_field=title_source_field if subject.casefold() in title_text.casefold() else "article_body",
+            supporting_text=support[:500],
+            provenance_type="source_explicit",
+            review_status="confirmed",
+            confidence=1.0,
+        )
+        provenance["provider_name"] = _make_provenance(
+            subject,
+            source_field=title_source_field if subject.casefold() in title_text.casefold() else "article_body",
+            supporting_text=support[:500],
+            provenance_type="source_explicit",
+            review_status="confirmed",
+            confidence=1.0,
+        )
+        return subject, subject, provenance
+
+    if len(provider_candidates) == 1 and not facility_candidates:
+        provider = _strip_leading_article_text(provider_candidates[0])
+        support = next((match.group(0).strip() for match in provider_pattern.finditer(combined_text) if match.group(1).strip().casefold() == provider.casefold()), provider)
+        provenance["provider_name"] = _make_provenance(
+            provider,
+            source_field=title_source_field if provider.casefold() in title_text.casefold() else "article_body",
+            supporting_text=support[:500],
+            provenance_type="source_explicit",
+            review_status="confirmed",
+            confidence=1.0,
+        )
+        return "", provider, provenance
+
+    if len(service_candidates) == 1 and not facility_candidates and not provider_candidates:
+        subject = _strip_leading_article_text(service_candidates[0])
+        support = next((match.group(0).strip() for match in service_pattern.finditer(combined_text) if match.group(1).strip(" -:").casefold() == subject.casefold()), subject)
+        provenance["facility_name"] = _make_provenance(
+            subject,
+            source_field=title_source_field if subject.casefold() in title_text.casefold() else "article_body",
+            supporting_text=support[:500],
+            provenance_type="source_explicit",
+            review_status="confirmed",
+            confidence=1.0,
+        )
+        provenance["provider_name"] = _make_provenance(
+            subject,
+            source_field=title_source_field if subject.casefold() in title_text.casefold() else "article_body",
+            supporting_text=support[:500],
+            provenance_type="source_explicit",
+            review_status="confirmed",
+            confidence=1.0,
+        )
+        return subject, subject, provenance
+
+    if service_line:
+        return "", "", provenance
+    return "", "", provenance
 
 def _permanence_from_text(text: str, event_type: str) -> str:
     lowered = text.lower()
@@ -2199,6 +2394,441 @@ def _extract_article_content(
     }
 
 
+def _jurisdiction_code_from_text(value: str) -> str:
+    text = str(value or "").strip()
+    if not text:
+        return ""
+    code = text.upper()
+    if code in JURISDICTIONS_BY_CODE:
+        return code
+    alias = JURISDICTION_ALIASES.get(text.casefold())
+    if alias:
+        return str(alias["code"])
+    return ""
+
+
+def _leading_dateline_text(text: str) -> str:
+    if not text:
+        return ""
+    stripped = text.lstrip()
+    if not stripped:
+        return ""
+    first_paragraph = stripped.split("\n\n", 1)[0]
+    lines = [line.strip() for line in first_paragraph.splitlines() if line.strip()]
+    if not lines:
+        return ""
+    return " ".join(lines[:2])[:320]
+
+
+def _strip_leading_article_text(value: str) -> str:
+    text = _normalize_text(value)
+    if not text:
+        return ""
+    return re.sub(r"^(?:the|a|an)\s+", "", text, flags=re.I).strip(" -:;,")
+
+
+def _care_line_explicit_geography_mentions(text: str) -> set[tuple[str, str]]:
+    if not text:
+        return set()
+    mentions: set[tuple[str, str]] = set()
+    line_dateline_pattern = re.compile(
+        r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2}|[A-Z][A-Za-z .'-]{2,24})\s*(?:\([^)]*\)\s*)?(?:[â€”â€“-]{1,2}|\u2014|\u2013)\s*",
+        re.I,
+    )
+    mention_patterns = (
+        re.compile(r"\b([A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*([A-Z]{2})\b"),
+        re.compile(r"\b([A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*([A-Z][A-Za-z .'-]{2,24})\b"),
+    )
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        match = line_dateline_pattern.match(line)
+        if not match:
+            continue
+        resolved_state = _jurisdiction_code_from_text(match.group("state").strip())
+        if resolved_state:
+            mentions.add((resolved_state, match.group("city").strip().title()))
+    for pattern in mention_patterns:
+        for match in pattern.finditer(text):
+            resolved_state = _jurisdiction_code_from_text(match.group(2).strip())
+            if resolved_state:
+                mentions.add((resolved_state, match.group(1).strip().title()))
+    return mentions
+
+
+def _geography_candidate_from_text(text: str) -> dict[str, str]:
+    if not text:
+        return {}
+    line_dateline_candidates: list[tuple[str, str]] = []
+    line_dateline_pattern = re.compile(
+        r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2}|[A-Z][A-Za-z .'-]{2,24})\s*(?:\([^)]*\)\s*)?(?:[—–-]{1,2}|\u2014|\u2013)\s*",
+        re.I,
+    )
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        match = line_dateline_pattern.match(line)
+        if not match:
+            continue
+        resolved_state = _jurisdiction_code_from_text(match.group("state").strip())
+        if not resolved_state:
+            continue
+        city = match.group("city").strip().title()
+        mention = (resolved_state, city)
+        if mention not in line_dateline_candidates:
+            line_dateline_candidates.append(mention)
+    if len(line_dateline_candidates) > 1:
+        return {}
+    if len(line_dateline_candidates) == 1 and "\n\n" not in text:
+        resolved_state, city = line_dateline_candidates[0]
+        return {
+            "state": resolved_state,
+            "city": city,
+            "geographic_scope": "city",
+            "jurisdiction_display": JURISDICTIONS_BY_CODE[resolved_state]["display"],
+            "service_region": "",
+        }
+    candidates: list[dict[str, str]] = []
+    leading = _leading_dateline_text(text)
+    if leading:
+        direct_patterns = (
+            re.compile(r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2})\s*(?:\([^)]*\)\s*)?(?:[—–-]{1,2}|\u2014|\u2013)\s*", re.I),
+            re.compile(r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Za-z][A-Za-z .'-]{1,24})\s*(?:\([^)]*\)\s*)?(?:[—–-]{1,2}|\u2014|\u2013)\s*", re.I),
+        )
+        for pattern in direct_patterns:
+            match = pattern.match(leading)
+            if not match:
+                continue
+            city = match.group("city").strip().title()
+            state_text = match.group("state").strip()
+            resolved_state = _jurisdiction_code_from_text(state_text)
+            if resolved_state:
+                candidate = {
+                    "state": resolved_state,
+                    "city": city,
+                    "geographic_scope": "city",
+                    "jurisdiction_display": JURISDICTIONS_BY_CODE[resolved_state]["display"],
+                    "service_region": "",
+                }
+                if candidate not in candidates:
+                    candidates.append(candidate)
+    dateline_mentions: list[tuple[str, str]] = []
+    dateline_line_patterns = (
+        re.compile(r"^\s*(?P<city>[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*(?P<state>[A-Z]{2}|[A-Z][A-Za-z .'-]{2,24})\s*(?:\([^)]*\)\s*)?(?:[—–-]{1,2}|\u2014|\u2013)\s*", re.I),
+    )
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        for pattern in dateline_line_patterns:
+            match = pattern.match(line)
+            if not match:
+                continue
+            resolved_state = _jurisdiction_code_from_text(match.group("state").strip())
+            if not resolved_state:
+                continue
+            city = match.group("city").strip().title()
+            mention = (resolved_state, city)
+            if mention not in dateline_mentions:
+                dateline_mentions.append(mention)
+    if len(dateline_mentions) == 1:
+        resolved_state, city = dateline_mentions[0]
+        return {
+            "state": resolved_state,
+            "city": city,
+            "geographic_scope": "city",
+            "jurisdiction_display": JURISDICTIONS_BY_CODE[resolved_state]["display"],
+            "service_region": "",
+        }
+    if len(dateline_mentions) > 1:
+        return {}
+    all_mentions: list[dict[str, str]] = []
+    mention_patterns = (
+        re.compile(r"\b([A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*([A-Z]{2})\b"),
+        re.compile(r"\b([A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*([A-Z][A-Za-z .'-]{2,24})\b"),
+    )
+    for pattern in mention_patterns:
+        for match in pattern.finditer(text):
+            resolved_state = _jurisdiction_code_from_text(match.group(2).strip())
+            if not resolved_state:
+                continue
+            mention = {
+                "state": resolved_state,
+                "city": match.group(1).strip().title(),
+                "geographic_scope": "city",
+                "jurisdiction_display": JURISDICTIONS_BY_CODE[resolved_state]["display"],
+                "service_region": "",
+            }
+            if mention not in all_mentions:
+                all_mentions.append(mention)
+    if len(all_mentions) > 1:
+        return {}
+    for sentence in _sentence_candidates(text):
+        if not sentence.strip():
+            continue
+        if not (
+            _keyword_hits(sentence, HEALTHCARE_CONTEXT_PATTERNS)
+            or _keyword_hits(sentence, ACCESS_CONSEQUENCE_PATTERNS)
+            or re.search(r"\b(hospital|clinic|center|health center|medical center|system|provider|facility)\b", sentence, re.I)
+        ):
+            continue
+        match = re.search(r"\b([A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*([A-Z]{2})\b", sentence)
+        if match:
+            city = match.group(1).strip().title()
+            explicit_state = match.group(2).strip().upper()
+            if explicit_state in JURISDICTIONS_BY_CODE:
+                candidate = {
+                    "state": explicit_state,
+                    "city": city,
+                    "geographic_scope": "city",
+                    "jurisdiction_display": JURISDICTIONS_BY_CODE[explicit_state]["display"],
+                    "service_region": "",
+                }
+                if candidate not in candidates:
+                    candidates.append(candidate)
+        for alias, entry in JURISDICTION_ALIASES.items():
+            if len(alias) < 3:
+                continue
+            if not re.search(rf"\b{re.escape(alias)}\b", sentence, re.I):
+                continue
+            state = str(entry["code"])
+            city_match = re.search(r"\b([A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}),\s*([A-Z][A-Za-z.'-]{2,24})\b", sentence)
+            candidate = None
+            if city_match:
+                city = city_match.group(1).strip().title()
+                state_text = city_match.group(2).strip()
+                resolved_state = _jurisdiction_code_from_text(state_text)
+                if resolved_state:
+                    candidate = {
+                        "state": resolved_state,
+                        "city": city,
+                        "geographic_scope": "city",
+                        "jurisdiction_display": JURISDICTIONS_BY_CODE[resolved_state]["display"],
+                        "service_region": "",
+                    }
+            else:
+                candidate = {
+                    "state": state,
+                    "city": "",
+                    "geographic_scope": "statewide",
+                    "jurisdiction_display": JURISDICTIONS_BY_CODE.get(state, {}).get("display", state),
+                    "service_region": "",
+                }
+            if candidate and candidate not in candidates:
+                candidates.append(candidate)
+    return {}
+
+
+def _extract_geography(
+    raw_item: Mapping[str, Any],
+    text: str,
+    *,
+    article_content: Mapping[str, Any] | None = None,
+    reviewed_records: Iterable[CareLineReviewedRecord | Mapping[str, Any]] = (),
+    service_line: str = "",
+    event_type: str = "",
+    subject: str = "",
+    provider: str = "",
+) -> tuple[dict[str, str], dict[str, FieldProvenance]]:
+    structured_state = _text(raw_item, "state", "source_state")
+    structured_city = _text(raw_item, "city", "source_city", "locality_name")
+    structured_scope = _text(raw_item, "geographic_scope", "source_geographic_scope")
+    structured_service_region = _text(raw_item, "service_region")
+    structured_location_text = _text(raw_item, "location_text")
+    if not structured_state and article_content:
+        structured_state = _text(article_content, "state", "source_state")
+        if not structured_city:
+            structured_city = _text(article_content, "city", "source_city", "locality_name")
+        if not structured_scope:
+            structured_scope = _text(article_content, "geographic_scope", "source_geographic_scope")
+        if not structured_service_region:
+            structured_service_region = _text(article_content, "service_region")
+        if not structured_location_text:
+            structured_location_text = _text(article_content, "location_text")
+    geography: dict[str, str] = {
+        "state": "",
+        "city": "",
+        "geographic_scope": "",
+        "jurisdiction_display": "",
+        "service_region": "",
+    }
+    provenance: dict[str, FieldProvenance] = {}
+    state_code = _jurisdiction_code_from_text(structured_state)
+    if state_code:
+        geography["state"] = state_code
+        geography["jurisdiction_display"] = JURISDICTIONS_BY_CODE[state_code]["display"]
+        geography["city"] = structured_city
+        structured_scope_key = structured_scope.casefold()
+        if structured_service_region:
+            geography["geographic_scope"] = "service_region"
+        elif structured_scope_key in {"city", "locality"}:
+            geography["geographic_scope"] = "city"
+        elif structured_scope_key in {"county", "county_equivalent"}:
+            geography["geographic_scope"] = "county"
+        elif structured_scope_key in {"service_region", "region"}:
+            geography["geographic_scope"] = "service_region"
+        elif structured_scope_key in {"statewide", "jurisdiction_wide", "national"}:
+            geography["geographic_scope"] = structured_scope_key if structured_scope_key != "national" else "statewide"
+        else:
+            geography["geographic_scope"] = "city" if structured_city else "statewide"
+        geography["service_region"] = structured_service_region
+        provenance["state"] = _make_provenance(
+            state_code,
+            source_field="structured_input",
+            supporting_text=structured_location_text or structured_city or geography["jurisdiction_display"],
+            provenance_type="structured_input",
+            review_status="confirmed",
+            confidence=1.0,
+        )
+        if structured_city:
+            provenance["city"] = _make_provenance(
+                structured_city,
+                source_field="structured_input",
+                supporting_text=structured_location_text or f"{structured_city}, {geography['jurisdiction_display']}",
+                provenance_type="structured_input",
+                review_status="confirmed",
+                confidence=1.0,
+            )
+        if structured_location_text:
+            provenance["location_text"] = _make_provenance(
+                structured_location_text,
+                source_field="structured_input",
+                supporting_text=structured_location_text,
+                provenance_type="structured_input",
+                review_status="confirmed",
+                confidence=1.0,
+            )
+        return geography, provenance
+
+    evidence_texts: list[tuple[str, str]] = []
+    for source_field, candidate_text in (
+        ("article_dateline", _text(raw_item, "title")),
+        ("article_dateline", _text(article_content or {}, "text", "article_text", "selector_text")),
+        ("article_dateline", _text(raw_item, "content_text")),
+    ):
+        leading = _leading_dateline_text(candidate_text)
+        if leading:
+            evidence_texts.append((source_field, leading))
+    for source_field, candidate_text in (
+        ("bounded_body_explicit", text),
+        ("bounded_body_explicit", _text(article_content or {}, "text", "article_text", "selector_text")),
+        ("bounded_body_explicit", _text(raw_item, "content_text", "description")),
+    ):
+        if candidate_text:
+            evidence_texts.append((source_field, candidate_text))
+
+    explicit_mentions: set[tuple[str, str]] = set()
+    for candidate_text in (
+        _text(raw_item, "title"),
+        _text(article_content or {}, "text", "article_text", "selector_text"),
+        _text(raw_item, "content_text", "description"),
+        text,
+    ):
+        explicit_mentions.update(_care_line_explicit_geography_mentions(candidate_text))
+    if len(explicit_mentions) > 1:
+        return geography, provenance
+
+    explicit_candidates: list[tuple[str, dict[str, str], str]] = []
+    for source_field, candidate_text in evidence_texts:
+        candidate = _geography_candidate_from_text(candidate_text)
+        if candidate and candidate.get("state"):
+            candidate_key = (candidate["state"], candidate.get("city", ""), candidate.get("service_region", ""))
+            if not any(existing_key == candidate_key for _, existing, _ in explicit_candidates for existing_key in [(existing.get("state", ""), existing.get("city", ""), existing.get("service_region", ""))]):
+                explicit_candidates.append((source_field, candidate, candidate_text))
+    if len(explicit_candidates) == 1:
+        source_field, candidate, candidate_text = explicit_candidates[0]
+        geography.update(candidate)
+        provenance["state"] = _make_provenance(
+            candidate.get("state", ""),
+            source_field=source_field,
+            supporting_text=candidate_text[:500],
+            provenance_type="source_explicit",
+            review_status="confirmed",
+            confidence=1.0,
+        )
+        if candidate.get("city"):
+            provenance["city"] = _make_provenance(
+                candidate["city"],
+                source_field=source_field,
+                supporting_text=candidate_text[:500],
+                provenance_type="source_explicit",
+                review_status="confirmed",
+                confidence=1.0,
+            )
+        geography["geographic_scope"] = candidate.get("geographic_scope", geography["geographic_scope"])
+        geography["jurisdiction_display"] = candidate.get("jurisdiction_display", geography["jurisdiction_display"])
+        geography["service_region"] = candidate.get("service_region", geography["service_region"])
+        if candidate.get("service_region"):
+            provenance["location_text"] = _make_provenance(
+                candidate["service_region"],
+                source_field=source_field,
+                supporting_text=candidate_text[:500],
+                provenance_type="source_explicit",
+                review_status="confirmed",
+                confidence=1.0,
+            )
+
+    if reviewed_records:
+        history_candidates = dict(raw_item)
+        if subject and not _text(history_candidates, "facility_name", "provider_name"):
+            history_candidates["facility_name"] = subject
+            history_candidates["provider_name"] = provider or subject
+        if geography["city"]:
+            history_candidates["city"] = geography["city"]
+        if geography["state"]:
+            history_candidates["state"] = geography["state"]
+        history_matches = _care_line_history_matches(reviewed_records, history_candidates, service_line=service_line, event_type=event_type)
+        if len(history_matches) == 1:
+            history = history_matches[0]
+            history_state = _text(history, "state")
+            if history_state:
+                if not geography["state"]:
+                    geography["state"] = history_state
+                geography["jurisdiction_display"] = JURISDICTIONS_BY_CODE.get(history_state, {}).get("display", history_state)
+                provenance["state"] = _make_provenance(
+                    history_state,
+                    source_field="entity_history",
+                    supporting_text=_text(history, "facility_name", "provider_name", "city", "state"),
+                    provenance_type="cross_artifact_join",
+                    review_status="proposed",
+                    confidence=1.0,
+            )
+            history_city = _text(history, "city")
+            if history_city:
+                if not geography["city"]:
+                    geography["city"] = history_city
+                provenance["city"] = _make_provenance(
+                    history_city,
+                    source_field="entity_history",
+                    supporting_text=_text(history, "facility_name", "provider_name", "city", "state"),
+                    provenance_type="cross_artifact_join",
+                    review_status="proposed",
+                    confidence=1.0,
+                )
+            history_scope = "service_region" if _text(history, "service_region") else "statewide"
+            if not geography["geographic_scope"]:
+                geography["geographic_scope"] = history_scope
+            if _text(history, "service_region"):
+                if not geography["service_region"]:
+                    geography["service_region"] = _text(history, "service_region")
+                provenance["location_text"] = _make_provenance(
+                    geography["service_region"],
+                    source_field="entity_history",
+                    supporting_text=_text(history, "facility_name", "provider_name", "service_region"),
+                    provenance_type="cross_artifact_join",
+                    review_status="proposed",
+                    confidence=1.0,
+                )
+
+    if geography["state"] and not geography["geographic_scope"]:
+        geography["geographic_scope"] = "statewide" if not geography["city"] else "city"
+    if geography["state"] and not geography["jurisdiction_display"]:
+        geography["jurisdiction_display"] = JURISDICTIONS_BY_CODE.get(geography["state"], {}).get("display", geography["state"])
+    return geography, provenance
+
+
 def _evidence_blob(raw_item: Mapping[str, Any], article_content: Mapping[str, Any] | None) -> str:
     parts = [
         _text(raw_item, "title"),
@@ -2422,8 +3052,10 @@ def normalize_candidate_record(
     article_content: Mapping[str, Any] | None,
     supporting_passage: str,
     geography: Mapping[str, str],
+    geography_provenance: Mapping[str, FieldProvenance] | None,
     subject: str,
     provider: str,
+    subject_provenance: Mapping[str, FieldProvenance] | None,
     event_type: str,
     service_line: str,
     access_consequences: list[str],
@@ -2447,6 +3079,23 @@ def normalize_candidate_record(
     effective_date = _text(currentness, "event_effective_date") or (_text(currentness, "operative_event_date") if _text(currentness, "currentness_class") == "CURRENT_ANNOUNCEMENT_FUTURE_EFFECTIVE" else "")
     text_for_summary = supporting_passage or _text(raw_item, "description") or source_title
     authority_level = _normalize_authority_level(_text(raw_item, "authority_level"))
+    field_provenance = {
+        "producer_record_id": _make_provenance(_text(raw_item, "raw_item_id"), source_field="raw_item_id", supporting_text=_text(raw_item, "raw_item_id")),
+        "source_url": _make_provenance(source_url, source_field="item_url", supporting_text=source_url),
+        "source_title": _make_provenance(source_title, source_field="title", supporting_text=source_title),
+        "source_publication_date": _make_provenance(
+            source_date,
+            source_field="source_publication_date" if source_date_basis == "source_record" else "published_at" if source_date_basis == "article_metadata" else "source_publication_date",
+            supporting_text=source_date_raw or source_date,
+        ),
+        "announcement_date": _make_provenance(source_date, source_field="source_publication_date", supporting_text=source_date),
+        "supporting_passage": _make_provenance(supporting_passage, source_field="article_text", supporting_text=supporting_passage),
+        "state": _make_provenance(_text(geography, "state"), source_field="geography", supporting_text=_text(geography, "jurisdiction_display") or _text(geography, "state"), confidence=1.0 if _text(geography, "state") else 0.0, review_status="confirmed" if _text(geography, "state") else "unresolved"),
+    }
+    if geography_provenance:
+        field_provenance.update(dict(geography_provenance))
+    if subject_provenance:
+        field_provenance.update(dict(subject_provenance))
     reviewed = CareLineReviewedRecord.model_validate(
         {
             "producer_record_id": _text(raw_item, "raw_item_id"),
@@ -2473,6 +3122,12 @@ def normalize_candidate_record(
             "service_line_raw": service_line,
             "facility_name": facility_name,
             "provider_name": provider_name or facility_name or subject,
+            "location_text": deterministic_public_location_label(
+                facility_name=facility_name or provider_name or subject,
+                locality=_text(geography, "city"),
+                jurisdiction_display=_text(geography, "jurisdiction_display"),
+                service_region=_text(geography, "service_region"),
+            ),
             "facility_type": _facility_type_from_text(evidence_blob),
             "city": _text(geography, "city"),
             "state": _text(geography, "state"),
@@ -2492,19 +3147,7 @@ def normalize_candidate_record(
             "evidence_provenance_type": "source_explicit",
             "evidence_valid_for_universal_event": qualification_status == "qualified",
             "verification_notes": access_exception,
-            "field_provenance": {
-                "producer_record_id": _make_provenance(_text(raw_item, "raw_item_id"), source_field="raw_item_id", supporting_text=_text(raw_item, "raw_item_id")),
-                "source_url": _make_provenance(source_url, source_field="item_url", supporting_text=source_url),
-                "source_title": _make_provenance(source_title, source_field="title", supporting_text=source_title),
-                "source_publication_date": _make_provenance(
-                    source_date,
-                    source_field="source_publication_date" if source_date_basis == "source_record" else "published_at" if source_date_basis == "article_metadata" else "source_publication_date",
-                    supporting_text=source_date_raw or source_date,
-                ),
-                "announcement_date": _make_provenance(source_date, source_field="source_publication_date", supporting_text=source_date),
-                "supporting_passage": _make_provenance(supporting_passage, source_field="article_text", supporting_text=supporting_passage),
-                "state": _make_provenance(_text(geography, "state"), source_field="geography", supporting_text=_text(geography, "jurisdiction_display") or _text(geography, "state"), confidence=1.0 if _text(geography, "state") else 0.0, review_status="confirmed" if _text(geography, "state") else "unresolved"),
-            },
+            "field_provenance": field_provenance,
             "metadata": {
                 "pipeline_schema_version": PIPELINE_SCHEMA_VERSION,
                 "collection_run_id": run_id,
@@ -2591,7 +3234,7 @@ def _qualified_gate_failures(
         failures.append("missing_subject")
     if not event_type:
         failures.append("missing_event_type")
-    facility_wide = bool(re.search(r"\b(hospital|clinic|center|health center|medical center)\b", subject, re.I))
+    facility_wide = bool(re.search(r"\b(hospital|clinic|center|health center|medical center|emergency department|emergency room|er)\b", subject, re.I))
     healthcare_passage = bool(_keyword_hits(supporting_passage, HEALTHCARE_CONTEXT_PATTERNS)) or bool(service_line)
     subject_invalid = bool(re.search(r"\b(court|ruling|order|law|bill|governor|congress|judge|approvals?)\b", subject, re.I))
     if event_type in {"service_closure", "service_suspension", "service_reduction", "hours_reduction"} and not service_line and not facility_wide:
@@ -2616,6 +3259,7 @@ def qualify_event_lead(
     run_id: str,
     fetch_timeout: int,
     allow_insecure_tls: bool,
+    reviewed_records: Iterable[CareLineReviewedRecord | Mapping[str, Any]] = (),
     prefilter_decision: str = "",
 ) -> tuple[str, dict[str, Any]]:
     if prefilter_decision == "discard":
@@ -2848,8 +3492,205 @@ def qualify_event_lead(
         service_line = supporting_service_line
     elif event_type in {"facility_closure", "planned_facility_closure", "temporary_facility_suspension", "facility_conversion", "facility_relocation", "facility_reopening"}:
         service_line = ""
-    geography = _extract_geography(raw_item, supporting_passage or evidence_blob)
-    subject, provider = _extract_subject(_text(raw_item, "title"), supporting_passage, service_line=service_line)
+    geography, geography_provenance = _extract_geography(
+        raw_item,
+        supporting_passage or evidence_blob,
+        article_content=article_content,
+        reviewed_records=reviewed_records,
+        service_line=service_line,
+        event_type=event_type,
+    )
+    subject, provider, subject_provenance = _extract_subject(
+        raw_item,
+        _text(raw_item, "title"),
+        supporting_passage,
+        service_line=service_line,
+        evidence_text=evidence_blob,
+    )
+    if reviewed_records and not geography.get("state") and (subject or provider):
+        geo_history_matches = _care_line_subject_history_matches(
+            reviewed_records,
+            subject=subject,
+            provider=provider,
+            service_line=service_line,
+            event_type=event_type,
+        )
+        if len(geo_history_matches) == 1:
+            history = geo_history_matches[0]
+            history_label = _text(history, "facility_name", "provider_name", "city", "state")
+            if _text(history, "state"):
+                geography["state"] = _text(history, "state")
+                geography["jurisdiction_display"] = JURISDICTIONS_BY_CODE.get(geography["state"], {}).get("display", geography["state"])
+                geography_provenance["state"] = _make_provenance(
+                    geography["state"],
+                    source_field="entity_history",
+                    supporting_text=history_label,
+                    provenance_type="cross_artifact_join",
+                    review_status="proposed",
+                    confidence=1.0,
+                )
+            if _text(history, "city"):
+                geography["city"] = _text(history, "city")
+                geography_provenance["city"] = _make_provenance(
+                    geography["city"],
+                    source_field="entity_history",
+                    supporting_text=history_label,
+                    provenance_type="cross_artifact_join",
+                    review_status="proposed",
+                    confidence=1.0,
+                )
+            if _text(history, "service_region"):
+                geography["service_region"] = _text(history, "service_region")
+                geography_provenance["location_text"] = _make_provenance(
+                    geography["service_region"],
+                    source_field="entity_history",
+                    supporting_text=history_label,
+                    provenance_type="cross_artifact_join",
+                    review_status="proposed",
+                    confidence=1.0,
+                )
+            if not geography.get("geographic_scope"):
+                geography["geographic_scope"] = "service_region" if _text(history, "service_region") else "statewide"
+    if reviewed_records and not subject and (geography.get("state") or geography.get("city")):
+        subject_history_matches = _care_line_geography_history_matches(
+            reviewed_records,
+            city=_text(geography, "city"),
+            county=_text(geography, "county"),
+            state=_text(geography, "state"),
+            service_line=service_line,
+            event_type=event_type,
+        )
+        if len(subject_history_matches) == 1:
+            history = subject_history_matches[0]
+            history_label = _text(history, "facility_name", "provider_name", "city", "state")
+            if _text(history, "facility_name"):
+                subject = _strip_leading_article_text(_text(history, "facility_name"))
+                subject_provenance["facility_name"] = _make_provenance(
+                    subject,
+                    source_field="entity_history",
+                    supporting_text=history_label,
+                    provenance_type="cross_artifact_join",
+                    review_status="proposed",
+                    confidence=1.0,
+                )
+                subject_provenance["provider_name"] = _make_provenance(
+                    subject,
+                    source_field="entity_history",
+                    supporting_text=history_label,
+                    provenance_type="cross_artifact_join",
+                    review_status="proposed",
+                    confidence=1.0,
+                )
+    if reviewed_records:
+        history_candidates = dict(raw_item)
+        if subject and not _text(history_candidates, "facility_name", "provider_name"):
+            history_candidates["facility_name"] = subject
+            history_candidates["provider_name"] = provider or subject
+        if provider and not _text(history_candidates, "provider_name"):
+            history_candidates["provider_name"] = provider
+        if geography.get("city"):
+            history_candidates["city"] = geography["city"]
+        if geography.get("state"):
+            history_candidates["state"] = geography["state"]
+        history_matches = _care_line_history_matches(reviewed_records, history_candidates, service_line=service_line, event_type=event_type)
+        if len(history_matches) == 1:
+            history = history_matches[0]
+            history_label = _text(history, "facility_name", "provider_name", "city", "state")
+            if _text(history, "facility_name"):
+                subject = _strip_leading_article_text(_text(history, "facility_name"))
+                subject_provenance["facility_name"] = _make_provenance(
+                    subject,
+                    source_field="entity_history",
+                    supporting_text=history_label,
+                    provenance_type="cross_artifact_join",
+                    review_status="proposed",
+                    confidence=1.0,
+                )
+                subject_provenance["provider_name"] = _make_provenance(
+                    subject,
+                    source_field="entity_history",
+                    supporting_text=history_label,
+                    provenance_type="cross_artifact_join",
+                    review_status="proposed",
+                    confidence=1.0,
+                )
+            if _text(history, "provider_name"):
+                provider = _text(history, "provider_name")
+                subject_provenance["provider_name"] = _make_provenance(
+                    provider,
+                    source_field="entity_history",
+                    supporting_text=history_label,
+                    provenance_type="cross_artifact_join",
+                    review_status="proposed",
+                    confidence=1.0,
+                )
+            if not geography.get("state") and _text(history, "state"):
+                geography["state"] = _text(history, "state")
+                geography["jurisdiction_display"] = JURISDICTIONS_BY_CODE.get(geography["state"], {}).get("display", geography["state"])
+                geography_provenance["state"] = _make_provenance(
+                    geography["state"],
+                    source_field="entity_history",
+                    supporting_text=history_label,
+                    provenance_type="cross_artifact_join",
+                    review_status="proposed",
+                    confidence=1.0,
+                )
+            if not geography.get("city") and _text(history, "city"):
+                geography["city"] = _text(history, "city")
+                geography_provenance["city"] = _make_provenance(
+                    geography["city"],
+                    source_field="entity_history",
+                    supporting_text=history_label,
+                    provenance_type="cross_artifact_join",
+                    review_status="proposed",
+                    confidence=1.0,
+                )
+            if not geography.get("geographic_scope"):
+                geography["geographic_scope"] = "service_region" if _text(history, "service_region") else "statewide"
+            if _text(history, "service_region") and not geography.get("service_region"):
+                geography["service_region"] = _text(history, "service_region")
+                geography_provenance["location_text"] = _make_provenance(
+                    geography["service_region"],
+                    source_field="entity_history",
+                    supporting_text=history_label,
+                    provenance_type="cross_artifact_join",
+                    review_status="proposed",
+                    confidence=1.0,
+                )
+    if reviewed_records and (subject or provider):
+        subject_history_matches = _care_line_subject_history_matches(
+            reviewed_records,
+            subject=subject,
+            provider=provider,
+                service_line=service_line,
+                event_type=event_type,
+            )
+        if len(subject_history_matches) == 1:
+            history = subject_history_matches[0]
+            history_label = _text(history, "facility_name", "provider_name", "city", "state")
+            if _text(history, "state"):
+                if not geography.get("state"):
+                    geography["state"] = _text(history, "state")
+                geography["jurisdiction_display"] = JURISDICTIONS_BY_CODE.get(geography["state"], {}).get("display", geography["state"])
+                geography_provenance["state"] = _make_provenance(
+                    geography["state"],
+                    source_field="entity_history",
+                    supporting_text=history_label,
+                    provenance_type="cross_artifact_join",
+                    review_status="proposed",
+                    confidence=1.0,
+                )
+            if _text(history, "city"):
+                if not geography.get("city"):
+                    geography["city"] = _text(history, "city")
+                geography_provenance["city"] = _make_provenance(
+                    geography["city"],
+                    source_field="entity_history",
+                    supporting_text=history_label,
+                    provenance_type="cross_artifact_join",
+                    review_status="proposed",
+                    confidence=1.0,
+                )
     access_consequences, access_exception = _access_consequences_from_text(supporting_passage, event_type)
     failed_gates = _qualified_gate_failures(
         raw_item,
@@ -2972,8 +3813,10 @@ def qualify_event_lead(
         article_content=article_content,
         supporting_passage=supporting_passage,
         geography=geography,
+        geography_provenance=geography_provenance,
         subject=subject,
         provider=provider,
+        subject_provenance=subject_provenance,
         event_type=event_type,
         service_line=service_line,
         access_consequences=access_consequences,
@@ -3458,6 +4301,7 @@ def run_collection_attempt(
             run_id=run_id,
             fetch_timeout=fetch_timeout,
             allow_insecure_tls=allow_insecure_tls,
+            reviewed_records=historical_reviewed_records or (),
             prefilter_decision=str(prefilter.get("prefilter_decision") or ""),
         )
         if status == "qualified":

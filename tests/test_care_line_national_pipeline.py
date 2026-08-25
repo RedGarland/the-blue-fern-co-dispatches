@@ -918,3 +918,255 @@ def test_care_line_fetch_url_uses_unverified_context_only_for_explicit_insecure_
     assert captured["context"] is sentinel_context
     assert meta["ssl_mode"] == "insecure"
     assert meta["insecure_ssl_used"] is True
+
+
+def _care_line_recovery_source() -> CareLineSource:
+    return CareLineSource.model_validate(
+        {
+            "source_id": "care-line-recovery-source",
+            "name": "Care Line Recovery Source",
+            "publisher": "Example News",
+            "source_type": "trade_publication",
+            "feed_url": "https://example.org/feed",
+            "homepage_url": "https://example.org/",
+            "state": "OH",
+            "geographic_scope": "local",
+            "organization_type": "trade_publication",
+            "care_line_topics": ["hospital", "clinic", "care access"],
+            "authority_level": "secondary",
+            "expected_update_frequency": "daily",
+            "enabled": True,
+            "adapter_type": "rss",
+            "requires_html_followup": False,
+            "source_role": "healthcare_access_reporting",
+            "historical_depth": "current feed",
+            "created_at": "2026-08-23T00:00:00Z",
+            "updated_at": "2026-08-23T00:00:00Z",
+        }
+    )
+
+
+def _care_line_recovery_lead() -> dict[str, object]:
+    return {
+        "lead_id": "lead-001",
+        "positive_hits": ["close"],
+        "context_hits": ["hospital"],
+        "exclusion_reason": "",
+        "service_line_hint": "emergency_care",
+        "event_type_hint": "facility_closure",
+        "qualification_status": "event_lead",
+        "full_article_required": False,
+    }
+
+
+def _care_line_history_record() -> dict[str, str]:
+    return {
+        "producer_record_id": "history-001",
+        "source_title": "Mount Carmel Franklinton Emergency Department closes",
+        "supporting_passage": "Mount Carmel Franklinton Emergency Department closes",
+        "event_type": "facility_closure",
+        "service_line": "emergency_care",
+        "facility_name": "Mount Carmel Franklinton Emergency Department",
+        "provider_name": "Mount Carmel Franklinton Emergency Department",
+        "city": "Columbus",
+        "state": "OH",
+    }
+
+
+def test_care_line_geography_recovers_from_structured_input_and_dateline() -> None:
+    structured_geo, structured_provenance = pipeline._extract_geography(
+        {"state": "OH", "city": "Columbus", "geographic_scope": "city", "location_text": "Columbus, OH"},
+        "",
+    )
+    assert structured_geo["state"] == "OH"
+    assert structured_geo["city"] == "Columbus"
+    assert structured_provenance["state"].source_field == "structured_input"
+    assert structured_provenance["city"].source_field == "structured_input"
+
+    dateline_geo, dateline_provenance = pipeline._extract_geography(
+        {"title": "Mount Carmel update"},
+        "COLUMBUS, Ohio (AP) — Mount Carmel Franklinton Emergency Department will close on August 22.",
+        article_content={"text": "COLUMBUS, Ohio (AP) — Mount Carmel Franklinton Emergency Department will close on August 22."},
+    )
+    assert dateline_geo["state"] == "OH"
+    assert dateline_geo["city"] == "Columbus"
+    assert dateline_provenance["state"].source_field == "article_dateline"
+    assert dateline_provenance["city"].source_field == "article_dateline"
+
+
+def test_care_line_geography_rejects_unrelated_or_ambiguous_locations() -> None:
+    unrelated_geo, unrelated_provenance = pipeline._extract_geography(
+        {"title": "Care line update"},
+        "A general conference in Cleveland was discussed without any access impact.",
+    )
+    assert unrelated_geo["state"] == ""
+    assert unrelated_geo["city"] == ""
+    assert unrelated_provenance == {}
+
+    ambiguous_geo, ambiguous_provenance = pipeline._extract_geography(
+        {"title": "Care line update"},
+        "COLUMBUS, Ohio — Mount Carmel Franklinton Emergency Department will close.\n\nDAYTON, Ohio — Another hospital will close.",
+        article_content={
+            "text": "COLUMBUS, Ohio — Mount Carmel Franklinton Emergency Department will close.\n\nDAYTON, Ohio — Another hospital will close."
+        },
+    )
+    assert ambiguous_geo["state"] == ""
+    assert ambiguous_geo["city"] == ""
+    assert ambiguous_provenance == {}
+
+
+def test_care_line_subject_recovers_from_structured_input_title_and_body() -> None:
+    structured_subject, structured_provider, structured_provenance = pipeline._extract_subject(
+        {"facility_name": "Example Clinic", "provider_name": "Example Clinic"},
+        "ignored",
+        "",
+        service_line="",
+    )
+    assert structured_subject == "Example Clinic"
+    assert structured_provider == "Example Clinic"
+    assert structured_provenance["facility_name"].source_field == "structured_input"
+
+    title_subject, title_provider, title_provenance = pipeline._extract_subject(
+        {"title": "Example Clinic announces closure"},
+        "Example Clinic announces closure",
+        "",
+        service_line="",
+        evidence_text="",
+    )
+    assert title_subject == "Example Clinic"
+    assert title_provider == "Example Clinic"
+    assert title_provenance["facility_name"].source_field == "title"
+
+    body_subject, body_provider, body_provenance = pipeline._extract_subject(
+        {"title": "Access update"},
+        "The Riverside Clinic will suspend services this month.",
+        "",
+        service_line="",
+        evidence_text="The Riverside Clinic will suspend services this month.",
+    )
+    assert body_subject == "Riverside Clinic"
+    assert body_provider == "Riverside Clinic"
+    assert body_provenance["facility_name"].source_field == "article_body"
+
+    ambiguous_subject, ambiguous_provider, ambiguous_provenance = pipeline._extract_subject(
+        {"title": "Access update"},
+        "Riverside Clinic and Valley Medical Center will close.",
+        "",
+        service_line="",
+        evidence_text="Riverside Clinic and Valley Medical Center will close.",
+    )
+    assert ambiguous_subject == ""
+    assert ambiguous_provider == ""
+    assert ambiguous_provenance == {}
+
+    publisher_subject, publisher_provider, publisher_provenance = pipeline._extract_subject(
+        {"title": "Cleveland, Ohio newsroom update"},
+        "Cleveland, Ohio newsroom update",
+        "",
+        service_line="",
+        evidence_text="Cleveland, Ohio newsroom update",
+    )
+    assert publisher_subject == ""
+    assert publisher_provider == ""
+    assert publisher_provenance == {}
+
+
+def test_care_line_history_recovery_fills_missing_partner_field(monkeypatch) -> None:
+    monkeypatch.setattr(pipeline, "_can_fetch_item_url", lambda *args, **kwargs: False)
+    source = _care_line_recovery_source()
+    lead = _care_line_recovery_lead()
+    result_status, payload = pipeline.qualify_event_lead(
+        source,
+        {
+            "raw_item_id": "geo-history-001",
+            "source_id": "care-line-recovery-source",
+            "source_name": "Care Line Recovery Source",
+            "item_url": "https://example.org/story",
+            "title": "Mount Carmel Franklinton Emergency Department closes",
+            "description": "The department will close on August 22.",
+            "content_text": "The department will close on August 22.",
+            "source_publication_date": "2026-08-23",
+            "source_date_state": "source_dated",
+        },
+        lead,
+        artifact_path="data/dispatches/care-line/sources/2026-08-23/raw.json",
+        run_id="recovery-test-geo-history",
+        fetch_timeout=5,
+        allow_insecure_tls=False,
+        reviewed_records=[_care_line_history_record()],
+    )
+    assert result_status == "qualified"
+    normalized = payload["normalized_record"]
+    assert normalized["facility_name"] == "Mount Carmel Franklinton Emergency Department"
+    assert normalized["field_provenance"]["facility_name"]["source_field"] == "entity_history"
+    assert normalized["field_provenance"]["state"]["source_field"] == "entity_history"
+
+
+def test_care_line_subject_history_recovery_fills_missing_geography(monkeypatch) -> None:
+    monkeypatch.setattr(pipeline, "_can_fetch_item_url", lambda *args, **kwargs: False)
+    source = _care_line_recovery_source()
+    lead = _care_line_recovery_lead()
+    result_status, payload = pipeline.qualify_event_lead(
+        source,
+        {
+            "raw_item_id": "subject-history-001",
+            "source_id": "care-line-recovery-source",
+            "source_name": "Care Line Recovery Source",
+            "item_url": "https://example.org/story",
+            "title": "Columbus, Ohio — Emergency department update",
+            "description": "The emergency department will close on August 22.",
+            "content_text": "The emergency department will close on August 22.",
+            "source_publication_date": "2026-08-23",
+            "source_date_state": "source_dated",
+        },
+        lead,
+        artifact_path="data/dispatches/care-line/sources/2026-08-23/raw.json",
+        run_id="recovery-test-subject-history",
+        fetch_timeout=5,
+        allow_insecure_tls=False,
+        reviewed_records=[_care_line_history_record()],
+    )
+    assert result_status == "qualified"
+    normalized = payload["normalized_record"]
+    assert normalized["city"] == "Columbus"
+    assert normalized["state"] == "OH"
+    assert normalized["field_provenance"]["city"]["source_field"] == "entity_history"
+    assert normalized["field_provenance"]["state"]["source_field"] == "entity_history"
+    assert normalized["facility_name"] == "Mount Carmel Franklinton Emergency Department"
+
+
+def test_care_line_recovered_geography_and_subject_do_not_imply_qualification(monkeypatch) -> None:
+    monkeypatch.setattr(pipeline, "_can_fetch_item_url", lambda *args, **kwargs: False)
+    source = _care_line_recovery_source()
+    lead = {
+        "lead_id": "lead-002",
+        "positive_hits": ["update"],
+        "context_hits": ["hospital"],
+        "exclusion_reason": "",
+        "service_line_hint": "",
+        "event_type_hint": "",
+        "qualification_status": "event_lead",
+        "full_article_required": False,
+    }
+    status, payload = pipeline.qualify_event_lead(
+        source,
+        {
+            "raw_item_id": "recovery-qualify-001",
+            "source_id": "care-line-recovery-source",
+            "source_name": "Care Line Recovery Source",
+            "item_url": "https://example.org/story",
+            "title": "Columbus, Ohio — Mount Carmel Franklinton Emergency Department update",
+            "description": "A routine update on the department.",
+            "content_text": "A routine update on the department.",
+            "source_publication_date": "2026-08-23",
+            "source_date_state": "source_dated",
+        },
+        lead,
+        artifact_path="data/dispatches/care-line/sources/2026-08-23/raw.json",
+        run_id="recovery-test-qualification",
+        fetch_timeout=5,
+        allow_insecure_tls=False,
+        reviewed_records=[_care_line_history_record()],
+    )
+    assert status != "qualified"
+    assert payload["exclusion_reason"] in {"missing_event_type", "needs_access_consequence", "missing_subject", "needs_full_article"}

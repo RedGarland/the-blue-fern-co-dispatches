@@ -82,6 +82,12 @@ def test_dispatch_validation_workflow_bridges_validate_to_head_sha() -> None:
 
     assert "jobs:" in workflow
     assert "  validate:" in workflow
+    assert "pull_request:" in workflow
+    assert "types:" in workflow
+    assert "- opened" in workflow
+    assert "- synchronize" in workflow
+    assert "- reopened" in workflow
+    assert "- ready_for_review" in workflow
     assert "statuses: write" in workflow
     assert "Publish validate commit status for head SHA" in workflow
     assert "if: always() && github.event_name == 'pull_request'" in workflow

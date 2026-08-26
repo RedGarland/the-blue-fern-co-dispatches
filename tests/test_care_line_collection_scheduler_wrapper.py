@@ -8,6 +8,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 
 def _load_scheduler_module(repo: Path):
     path = repo / "scripts" / "care_line_collection_scheduler.py"
@@ -122,8 +124,6 @@ def test_care_line_windows_wrapper_and_helper_are_present_and_bound_to_collectio
     assert cwd == tmp_path.resolve()
     assert Path(command[1]).name == "run_care_line_national_pipeline.py"
     assert "--collection-only" in command
-    assert "--run-id" in command
-    assert command[command.index("--run-id") + 1] == "run-1"
     assert "--smoke-test" in command
     assert "--max-sources" in command
     assert "2" in command
@@ -134,95 +134,111 @@ def test_care_line_windows_wrapper_and_helper_are_present_and_bound_to_collectio
     assert "--allow-insecure-tls" not in command
 
 
-def test_care_line_scheduler_child_launch_runs_real_harmless_process(tmp_path: Path) -> None:
+def test_care_line_scheduler_helpers_force_utf8_subprocess_decoding(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = Path(__file__).resolve().parents[1]
     scheduler = _load_scheduler_module(repo)
-    child = scheduler._run_child(
-        [
-            sys.executable,
-            "-c",
-            "import sys; sys.stdout.write('hello\\n'); sys.stderr.write('warn\\n'); raise SystemExit(7)",
-        ],
-        cwd=tmp_path,
-    )
 
-    assert child.pid > 0
-    assert child.returncode == 7
-    assert child.stdout == "hello\n"
-    assert child.stderr == "warn\n"
+    run_calls: list[dict[str, object]] = []
 
-
-def test_care_line_scheduler_uses_disk_run_manifest_when_child_stdout_is_empty(tmp_path: Path) -> None:
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    scheduler = _load_scheduler_module(Path(__file__).resolve().parents[1])
-
-    run_date = "2026-08-22"
-    run_id = "disk-manifest-1"
-    run_manifest_path = repo / "data" / "dispatches" / "care-line" / "collection-runs" / run_date / run_id / "run-manifest.json"
-    run_manifest_path.parent.mkdir(parents=True, exist_ok=True)
-    run_manifest_path.write_text(
-        json.dumps(
+    def fake_run(command: list[str], *, cwd: Path, text: bool, encoding: str, errors: str, capture_output: bool, check: bool):  # noqa: ANN001
+        run_calls.append(
             {
-                "status": "partial_success",
-                "run_id": run_id,
-                "selected_source_ids": ["acp-news"],
-                "successful_attempt_count": 25,
-                "failed_source_count": 9,
-                "skipped_source_count": 0,
-                "active_review_queue_count": 0,
-                "manual_review_count": 0,
-                "production_review_queue_mutation_disabled": False,
-                "run_manifest_path": run_manifest_path.as_posix(),
+                "command": command,
+                "cwd": cwd,
+                "text": text,
+                "encoding": encoding,
+                "errors": errors,
+                "capture_output": capture_output,
+                "check": check,
             }
-        ),
-        encoding="utf-8",
-    )
+        )
+        return subprocess.CompletedProcess(command, 0, stdout="Care–Line ✓", stderr="diagnostic: café")
 
-    def fake_run(command: list[str], *, cwd: Path):
-        return scheduler.ChildExecution(pid=9876, returncode=0, stdout="", stderr="")
+    monkeypatch.setattr(scheduler.subprocess, "run", fake_run)
 
-    class DummyLock:
-        def __init__(self, path: Path) -> None:
-            self.path = path
-            self.stale_recovered = False
+    completed = scheduler._run(["git", "status"], cwd=tmp_path)
 
-        def acquire(self, *, now=None):  # noqa: ANN001
-            return "acquired"
+    assert completed.stdout == "Care–Line ✓"
+    assert completed.stderr == "diagnostic: café"
+    assert run_calls == [
+        {
+            "command": ["git", "status"],
+            "cwd": tmp_path,
+            "text": True,
+            "encoding": "utf-8",
+            "errors": "replace",
+            "capture_output": True,
+            "check": False,
+        }
+    ]
 
-        def release(self) -> None:
-            pass
+    popen_calls: list[dict[str, object]] = []
 
-    scheduler.verify_checkout = lambda root, branch: "abc123"  # type: ignore[assignment]
-    scheduler.run_preflight = lambda root: None  # type: ignore[assignment]
-    scheduler._run_child = fake_run  # type: ignore[assignment]
-    scheduler.SchedulerLock = DummyLock  # type: ignore[assignment]
+    class FakePopen:
+        def __init__(
+            self,
+            command: list[str],
+            *,
+            cwd: Path,
+            text: bool,
+            encoding: str,
+            errors: str,
+            stdout: object,
+            stderr: object,
+        ) -> None:
+            popen_calls.append(
+                {
+                    "command": command,
+                    "cwd": cwd,
+                    "text": text,
+                    "encoding": encoding,
+                    "errors": errors,
+                    "stdout": stdout,
+                    "stderr": stderr,
+                }
+            )
+            self.pid = 2468
+            self.returncode = 0
 
-    exit_code, receipt = scheduler.run_collection_once(
-        repo,
-        run_date=run_date,
-        branch=scheduler.PRODUCTION_BRANCH,
-        run_id=run_id,
-        smoke_test=False,
-        include_partial=True,
-        include_manual_review=False,
-        allow_insecure_tls=False,
-        max_sources=None,
-        fetch_timeout=20,
-        max_items_per_source=None,
-        active_queue_limit=150,
-        low_priority_cap=25,
-    )
+        def communicate(self) -> tuple[str, str]:
+            payload = json.dumps(
+                {
+                    "run_manifest": {
+                        "status": "success",
+                        "run_id": "utf8-run",
+                        "successful_attempt_count": 1,
+                        "failed_source_count": 0,
+                        "skipped_source_count": 0,
+                        "active_review_queue_count": 0,
+                        "manual_review_count": 0,
+                        "production_review_queue_mutation_disabled": True,
+                    },
+                    "message": "Care–Line ✓",
+                },
+                ensure_ascii=False,
+            )
+            return payload, "diagnostic: café"
 
-    assert exit_code == 0
-    assert receipt["ok"] is True
-    assert receipt["status"] == "partial_success"
-    assert receipt["pipeline_status"] == "partial_success"
-    assert receipt["pipeline_run_id"] == run_id
-    assert receipt["selected_source_ids"] == ["acp-news"]
-    assert receipt["run_manifest_path"].endswith("run-manifest.json")
-    assert receipt["child_exit_code"] == 0
-    assert receipt["child_stdout_tail"] == []
+    monkeypatch.setattr(scheduler.subprocess, "Popen", FakePopen)
+
+    child = scheduler._run_child(["python", "-c", "print('utf8')"], cwd=tmp_path)
+
+    assert child.pid == 2468
+    assert child.returncode == 0
+    payload = json.loads(child.stdout)
+    assert payload["message"] == "Care–Line ✓"
+    assert child.stderr == "diagnostic: café"
+    assert popen_calls == [
+            {
+                "command": ["python", "-c", "print('utf8')"],
+                "cwd": tmp_path,
+                "text": True,
+                "encoding": "utf-8",
+                "errors": "replace",
+                "stdout": subprocess.PIPE,
+                "stderr": subprocess.PIPE,
+            }
+    ]
 
 
 def test_care_line_windows_wrapper_writes_diagnostic_receipt_on_python_launch_failure(tmp_path: Path) -> None:

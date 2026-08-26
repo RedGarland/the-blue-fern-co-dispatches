@@ -42,6 +42,10 @@ def test_care_line_runtime_paths_are_allowed_but_nearby_paths_stay_risky(monkeyp
         "?? data/dispatches/care-line/review/effective-date-follow-up-state.json",
         "?? data/dispatches/care-line/collection-runs/2026-08-22/run-manifest.json",
         "?? data/dispatches/care-line/queue-runs/2026-08-22/20260822T191105Z-89152084.json",
+        "?? data/dispatches/care-line/sources/2026-08-23/discovered_sources.json",
+        "?? data/dispatches/care-line/sources/2026-08-23/discovery_report.json",
+        "?? data/dispatches/incidents/incident_seeds.json",
+        "?? data/dispatches/incidents/incident_seed_discovery_report.json",
         "?? logs/care-line/collection-scheduler/2026-08-22.log",
         "?? status/care-line/locks/national-collection.lock",
         "?? status/care-line/scheduler-runs/2026-08-22/receipt.json",
@@ -78,6 +82,10 @@ def test_care_line_runtime_path_classification_is_narrow_and_strict() -> None:
     assert preflight_repo_state.classify_path("data/dispatches/care-line/review/current-review-queue.json") == "review_state"
     assert preflight_repo_state.classify_path("data/dispatches/care-line/collection-runs/2026-08-22/run-manifest.json") == "local_run_state"
     assert preflight_repo_state.classify_path("data/dispatches/care-line/queue-runs/2026-08-22/20260822T191105Z-89152084.json") == "local_run_state"
+    assert preflight_repo_state.classify_path("data/dispatches/care-line/sources/2026-08-23/discovered_sources.json") == "local_run_state"
+    assert preflight_repo_state.classify_path("data/dispatches/care-line/sources/2026-08-23/discovery_report.json") == "local_run_state"
+    assert preflight_repo_state.classify_path("data/dispatches/incidents/incident_seeds.json") == "local_run_state"
+    assert preflight_repo_state.classify_path("data/dispatches/incidents/incident_seed_discovery_report.json") == "local_run_state"
     assert preflight_repo_state.classify_path("logs/care-line/collection-scheduler/2026-08-22.log") == "logs"
     assert preflight_repo_state.classify_path("status/care-line/effective-date-follow-up-state.json") == "local_run_state"
     assert preflight_repo_state.classify_path("data/dispatches/care-line/reviewed/2026-08-22/reviewed_records.json") == "unknown"
@@ -100,6 +108,10 @@ def test_care_line_scheduler_verify_checkout_allows_runtime_state_but_blocks_sou
                         "?? data/dispatches/care-line/review/current-review-queue.json",
                         "?? data/dispatches/care-line/collection-runs/2026-08-22/run-manifest.json",
                         "?? logs/care-line/collection-scheduler/2026-08-22.log",
+                        "?? data/dispatches/care-line/sources/2026-08-23/discovered_sources.json",
+                        "?? data/dispatches/care-line/sources/2026-08-23/discovery_report.json",
+                        "?? data/dispatches/incidents/incident_seeds.json",
+                        "?? data/dispatches/incidents/incident_seed_discovery_report.json",
                         "?? status/care-line/effective-date-follow-up-state.json",
                         "?? status/care-line/locks/national-collection.lock",
                         "?? status/care-line/scheduler-runs/2026-08-22/receipt.json",

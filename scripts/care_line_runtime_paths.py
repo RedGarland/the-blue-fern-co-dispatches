@@ -5,6 +5,8 @@ import re
 CARE_LINE_REVIEW_RE = re.compile(r"^data/dispatches/care-line/review(?:/.*)?$")
 CARE_LINE_COLLECTION_RUNS_RE = re.compile(r"^data/dispatches/care-line/collection-runs(?:/.*)?$")
 CARE_LINE_QUEUE_RUNS_RE = re.compile(r"^data/dispatches/care-line/queue-runs(?:/.*)?$")
+CARE_LINE_SOURCES_RE = re.compile(r"^data/dispatches/care-line/sources(?:/.*)?$")
+CARE_LINE_INCIDENTS_RE = re.compile(r"^data/dispatches/incidents(?:/.*)?$")
 CARE_LINE_LOGS_RE = re.compile(r"^logs/care-line(?:/.*)?$")
 CARE_LINE_STATUS_LOCKS_RE = re.compile(r"^status/care-line/locks(?:/.*)?$")
 CARE_LINE_STATUS_SCHEDULER_RUNS_RE = re.compile(r"^status/care-line/scheduler-runs(?:/.*)?$")
@@ -39,6 +41,10 @@ def classify_care_line_runtime_path(path_text: str) -> str | None:
         return "local_run_state"
     if CARE_LINE_QUEUE_RUNS_RE.match(lower):
         return "local_run_state"
+    if CARE_LINE_SOURCES_RE.match(lower):
+        return "local_run_state"
+    if CARE_LINE_INCIDENTS_RE.match(lower):
+        return "local_run_state"
     if CARE_LINE_STATUS_LOCKS_RE.match(lower):
         return "local_run_state"
     if CARE_LINE_STATUS_SCHEDULER_RUNS_RE.match(lower):
@@ -55,6 +61,8 @@ def care_line_runtime_paths() -> list[str]:
         "data/dispatches/care-line/review/",
         "data/dispatches/care-line/collection-runs/",
         "data/dispatches/care-line/queue-runs/",
+        "data/dispatches/care-line/sources/",
+        "data/dispatches/incidents/",
         "logs/care-line/",
         "status/care-line/locks/",
         "status/care-line/scheduler-runs/",

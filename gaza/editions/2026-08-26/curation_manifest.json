@@ -1,0 +1,340 @@
+[
+  {
+    "story_id": "gaza-story-2026-08-26-001",
+    "title": "Israel's seizure of Unrwa training college in East Jerusalem condemned",
+    "summary": "It marks the shutting of the last of the Palestinian refugee agency's facilities in the sector of the city, after Israel passed a law against it.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 79,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-26-bbc-middle-east-7072e939f438"
+    ],
+    "source_ids": [
+      "gaza-2026-08-26-bbc-middle-east-7072e939f438"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/c5yl89yrldpo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-26-bbc-middle-east-7072e939f438",
+        "title": "Israel's seizure of Unrwa training college in East Jerusalem condemned",
+        "url": "https://www.bbc.co.uk/news/articles/c5yl89yrldpo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "It marks the shutting of the last of the Palestinian refugee agency's facilities in the sector of the city, after Israel passed a law against it."
+      }
+    ],
+    "generated_at": "2026-08-26T13:00:48.323283+00:00",
+    "relevance_terms_matched": [
+      "east jerusalem",
+      "gaza",
+      "palestin",
+      "unrwa"
+    ],
+    "top_story_relevance_score": 79,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-26-004",
+    "title": "Israeli attacks kill five in Gaza, including two children, medics say - BBC",
+    "summary": "An Israeli strike on Monday killed a four-year-old boy, while a 10-year-old girl was hit by a bullet inside her tent, according to medics and relatives.",
+    "category": "medical_evacuation_health_system",
+    "story_scope": "core_gaza",
+    "score": 53,
+    "scoring_reasons": [
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence",
+      "merged_duplicate_story=gaza-story-2026-08-26-002"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-26-bbc-gaza-health-query-4dd8ee658e59",
+      "gaza-2026-08-26-bbc-middle-east-abdc38dcabfb"
+    ],
+    "source_ids": [
+      "gaza-2026-08-26-bbc-gaza-health-query-4dd8ee658e59",
+      "gaza-2026-08-26-bbc-middle-east-abdc38dcabfb"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1qQlE1YnhjMk1kdnQ5V1RYYW9rQXVJMTZJdmJLOFAxQ2NVdTluc1RfVmZnTW9WcC1NS2JlVFNYcldLeWtYR3pXVlI5LUZ1dXEwVDJmM0QwMV93UQ?oc=5",
+      "https://www.bbc.co.uk/news/articles/ce8x1rdgp3lo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-26-bbc-gaza-health-query-4dd8ee658e59",
+        "title": "Israeli attacks kill five in Gaza, including two children, medics say - BBC",
+        "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1qQlE1YnhjMk1kdnQ5V1RYYW9rQXVJMTZJdmJLOFAxQ2NVdTluc1RfVmZnTW9WcC1NS2JlVFNYcldLeWtYR3pXVlI5LUZ1dXEwVDJmM0QwMV93UQ?oc=5",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Israeli attacks kill five in Gaza, including two children, medics say BBC"
+      },
+      {
+        "source_record_id": "gaza-2026-08-26-bbc-middle-east-abdc38dcabfb",
+        "title": "Israeli attacks kill five in Gaza, including two children, medics say",
+        "url": "https://www.bbc.co.uk/news/articles/ce8x1rdgp3lo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "An Israeli strike on Monday killed a four-year-old boy, while a 10-year-old girl was hit by a bullet inside her tent, according to medics and relatives."
+      }
+    ],
+    "generated_at": "2026-08-26T13:00:48.323283+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 53,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-15-002",
+    "prior_edition_date": "2026-07-15",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-26-006",
+    "title": "Fake US thinktank set up and funded by Israel sought to game AI for propaganda",
+    "summary": "In effort to prime chatbots to make pro-Israel arguments the site published 124 reports, over 560,000 words in nine days, Guardian analysis shows. A pro-Israel messaging website badged with the name of a thinktank that does not exist has published more than half a million words in nine days, built on a commercial platform that promises to optimize content so that AI chatbots will cite it. The site gives. Israel's position on subjects including the torture of Palestinian prisoners , Israeli war crimes and whether. Israel has deliberately starved Palestinians in Gaza, all presented as neutral research.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-26-guardian-world-87e9bebd429e"
+    ],
+    "source_ids": [
+      "gaza-2026-08-26-guardian-world-87e9bebd429e"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/aug/26/fake-thinktank-israel-ai-propaganda"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-26-guardian-world-87e9bebd429e",
+        "title": "Fake US thinktank set up and funded by Israel sought to game AI for propaganda",
+        "url": "https://www.theguardian.com/world/2026/aug/26/fake-thinktank-israel-ai-propaganda",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "In effort to prime chatbots to make pro-Israel arguments the site published 124 reports, over 560,000 words in nine days, Guardian analysis shows A pro-Israel messaging website badged with the name of a thinktank that does not exist has published more than half a million words in nine days, built on a commercial platform that promises to optimize content so that AI chatbots will cite it. The site gives Israel's position on subjects including the torture of Palestinian prisoners , Israeli war crimes and whether Israel has deliberately starved Palestinians in Gaza, all presented as neutral research."
+      }
+    ],
+    "generated_at": "2026-08-26T13:00:48.323283+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-26-002",
+    "title": "Israeli attacks kill five in Gaza, including two children, medics say",
+    "summary": "An Israeli strike on Monday killed a four-year-old boy, while a 10-year-old girl was hit by a bullet inside her tent, according to medics and relatives.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 48,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-26-bbc-middle-east-abdc38dcabfb"
+    ],
+    "source_ids": [
+      "gaza-2026-08-26-bbc-middle-east-abdc38dcabfb"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/ce8x1rdgp3lo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-26-bbc-middle-east-abdc38dcabfb",
+        "title": "Israeli attacks kill five in Gaza, including two children, medics say",
+        "url": "https://www.bbc.co.uk/news/articles/ce8x1rdgp3lo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "An Israeli strike on Monday killed a four-year-old boy, while a 10-year-old girl was hit by a bullet inside her tent, according to medics and relatives."
+      }
+    ],
+    "generated_at": "2026-08-26T13:00:48.323283+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 48,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "merge_into_existing",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-08-26-004",
+    "prior_edition_date": "2026-08-26",
+    "dedupe_classification": "duplicate_merged",
+    "dedupe_reasons": [
+      "within_edition_normalized_title"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-08-26-005",
+    "title": "On scraps of land and under constant threat, Gaza farmers struggle to survive",
+    "summary": "Efforts to rebuild domestic food production face severe challenges and have come at deadly cost As Gaza's population of 2.1 million has been hemmed into an ever smaller slice of the territory, farmers are using every last remaining patch of unspoiled earth, no matter how tiny, in their struggle to survive. With severe shortages of water, fertiliser and pesticide, and with more than 80% of greenhouses ruined, it has taken inventiveness and determination to clear land of debris and coax new seedlings into life. Moreover, venturing out into the open to tend to plants can be deadly.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 42,
+    "scoring_reasons": [
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-26-guardian-world-9d66d1b0f59a"
+    ],
+    "source_ids": [
+      "gaza-2026-08-26-guardian-world-9d66d1b0f59a"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/aug/26/gaza-farmers-struggle-scraps-of-land-constant-threat"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-26-guardian-world-9d66d1b0f59a",
+        "title": "On scraps of land and under constant threat, Gaza farmers struggle to survive",
+        "url": "https://www.theguardian.com/world/2026/aug/26/gaza-farmers-struggle-scraps-of-land-constant-threat",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Efforts to rebuild domestic food production face severe challenges and have come at deadly cost As Gaza's population of 2.1 million has been hemmed into an ever smaller slice of the territory, farmers are using every last remaining patch of unspoiled earth, no matter how tiny, in their struggle to survive. With severe shortages of water, fertiliser and pesticide, and with more than 80% of greenhouses ruined, it has taken inventiveness and determination to clear land of debris and coax new seedlings into life. Moreover, venturing out into the open to tend to plants can be deadly."
+      }
+    ],
+    "generated_at": "2026-08-26T13:00:48.323283+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 42,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

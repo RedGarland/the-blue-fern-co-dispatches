@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Tue, 25 Aug 2026 13:01:00 +0000</lastBuildDate>
+  <lastBuildDate>Wed, 26 Aug 2026 13:01:07 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for August 26, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-08-26-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-08-26-transcript.html</guid>
+    <pubDate>Wed, 26 Aug 2026 00:00:00 +0000</pubDate>
+    <description>Israel's seizure of Unrwa training college in East Jerusalem condemned. It marks the shutting of the last of the Palestinian refugee agency's facilities in the sector of the city, after Israel passed a law against it. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-08-26.mp3" length="1532928" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for August 25, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-08-25-transcript.html</link>

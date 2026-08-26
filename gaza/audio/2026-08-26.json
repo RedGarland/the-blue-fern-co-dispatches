@@ -1,0 +1,74 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-26",
+  "generated_at": "2026-08-26T13:01:07.463803Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-08-26.mp3",
+  "audio_url": "/gaza/audio/2026-08-26.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1447,
+  "tts_input_word_count": 239,
+  "tts_story_count": 4,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1532928,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-08-26T13:01:07.463783Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-08-26-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-26/",
+  "script_text": "This is the Gaza Dispatch audio briefing for August 26, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Israel's seizure of Unrwa training college in East Jerusalem condemned. It marks the shutting of the last of the Palestinian refugee agency's facilities in the sector of the city, after Israel passed a law against it. This was reported by BBC News.\n\n2. Israeli attacks kill five in Gaza, including two children, medics say - BBC. An Israeli strike on Monday killed a four-year-old boy, while a 10-year-old girl was hit by a bullet inside her tent, according to medics and relatives. This was reported by BBC News.\n\n3. Fake US thinktank set up and funded by Israel sought to game AI for propaganda. In effort to prime chatbots to make pro-Israel arguments the site published 124 reports, over 560,000 words in nine days, Guardian analysis shows. This was reported by The Guardian.\n\n4. On scraps of land and under constant threat, Gaza farmers struggle to survive. Efforts to rebuild domestic food production face severe challenges and have come at deadly cost As Gaza's population of 2.1 million has been hemmed into an ever smaller slice of the territory, farmers are using every last remaining patch of unspoiled earth, no matter how tiny, in their struggle to survive. This was reported by The Guardian.\n\nFor the full source-backed dispatch, read the August 26, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 5,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-08-26-bbc-middle-east-7072e939f438",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/c5yl89yrldpo?at_medium=RSS&at_campaign=rss",
+      "title": "Israel's seizure of Unrwa training college in East Jerusalem condemned"
+    },
+    {
+      "source_record_id": "gaza-2026-08-26-bbc-gaza-health-query-4dd8ee658e59",
+      "publisher": "BBC News",
+      "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1qQlE1YnhjMk1kdnQ5V1RYYW9rQXVJMTZJdmJLOFAxQ2NVdTluc1RfVmZnTW9WcC1NS2JlVFNYcldLeWtYR3pXVlI5LUZ1dXEwVDJmM0QwMV93UQ?oc=5",
+      "title": "Israeli attacks kill five in Gaza, including two children, medics say - BBC"
+    },
+    {
+      "source_record_id": "gaza-2026-08-26-bbc-middle-east-abdc38dcabfb",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/ce8x1rdgp3lo?at_medium=RSS&at_campaign=rss",
+      "title": "Israeli attacks kill five in Gaza, including two children, medics say"
+    },
+    {
+      "source_record_id": "gaza-2026-08-26-guardian-world-87e9bebd429e",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/aug/26/fake-thinktank-israel-ai-propaganda",
+      "title": "Fake US thinktank set up and funded by Israel sought to game AI for propaganda"
+    },
+    {
+      "source_record_id": "gaza-2026-08-26-guardian-world-9d66d1b0f59a",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/aug/26/gaza-farmers-struggle-scraps-of-land-constant-threat",
+      "title": "On scraps of land and under constant threat, Gaza farmers struggle to survive"
+    }
+  ]
+}

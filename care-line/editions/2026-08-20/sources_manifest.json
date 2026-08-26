@@ -1,0 +1,19 @@
+[
+  {
+    "source_id": "care-line-historical-backfill-2026-08-20-gary-power-outage",
+    "title": "Methodist Hospitals Gary outage update",
+    "url": "https://methodisthospitals.org/",
+    "publisher": "Methodist Hospitals",
+    "published_at": "2026-08-23",
+    "retrieved_at": "2026-08-26T01:17:13.419543+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "care-line-story-001"
+    ],
+    "claim_ids": [
+      "care-line-claim-001"
+    ],
+    "dispatch_slug": "care-line",
+    "edition_date": "2026-08-20"
+  }
+]

@@ -63,7 +63,15 @@ def atomic_write_json(path: Path, value: dict[str, Any]) -> None:
 
 
 def _run(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(command, cwd=cwd, text=True, capture_output=True, check=False)
+    return subprocess.run(
+        command,
+        cwd=cwd,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        capture_output=True,
+        check=False,
+    )
 
 
 def _run_child(command: list[str], *, cwd: Path) -> ChildExecution:
@@ -71,8 +79,11 @@ def _run_child(command: list[str], *, cwd: Path) -> ChildExecution:
         command,
         cwd=cwd,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
+        check=False,
     )
     stdout, stderr = process.communicate()
     return ChildExecution(
@@ -81,15 +92,6 @@ def _run_child(command: list[str], *, cwd: Path) -> ChildExecution:
         stdout=stdout or "",
         stderr=stderr or "",
     )
-
-
-def _load_pipeline_manifest_from_disk(root: Path, *, run_date: str, run_id: str, smoke_test: bool) -> dict[str, Any] | None:
-    run_manifest_root = SMOKE_COLLECTION_RUNS_ROOT if smoke_test else Path("data/dispatches/care-line/collection-runs")
-    run_manifest_path = root / run_manifest_root / run_date / run_id / "run-manifest.json"
-    if not run_manifest_path.exists():
-        return None
-    payload = json.loads(run_manifest_path.read_text(encoding="utf-8"))
-    return payload if isinstance(payload, dict) else None
 
 
 def _command_error(label: str, result: subprocess.CompletedProcess[str]) -> SchedulerError:
@@ -444,7 +446,6 @@ def run_collection_once(
         "--repo-root", str(root),
         "--collection-only",
         "--run-date", edition_date,
-        "--run-id", run_id,
         "--fetch-timeout", str(fetch_timeout),
         "--active-queue-limit", str(active_queue_limit),
         "--low-priority-cap", str(low_priority_cap),
@@ -513,15 +514,6 @@ def run_collection_once(
             except json.JSONDecodeError as exc:
                 pipeline_payload = {}
                 pipeline_parse_error = str(exc)
-        if not pipeline_payload:
-            pipeline_manifest_from_disk = _load_pipeline_manifest_from_disk(
-                root,
-                run_date=edition_date,
-                run_id=run_id,
-                smoke_test=smoke_test,
-            )
-            if pipeline_manifest_from_disk:
-                pipeline_payload = {"run_manifest": pipeline_manifest_from_disk}
         pipeline_manifest = pipeline_payload.get("run_manifest") if isinstance(pipeline_payload, dict) else {}
         pipeline_status = str((pipeline_manifest or {}).get("status") or "")
         receipt = _finalize_success(

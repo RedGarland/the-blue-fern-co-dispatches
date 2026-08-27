@@ -185,7 +185,6 @@ def test_care_line_scheduler_helpers_force_utf8_subprocess_decoding(tmp_path: Pa
             errors: str,
             stdout: object,
             stderr: object,
-            check: bool,
         ) -> None:
             popen_calls.append(
                 {
@@ -196,7 +195,6 @@ def test_care_line_scheduler_helpers_force_utf8_subprocess_decoding(tmp_path: Pa
                     "errors": errors,
                     "stdout": stdout,
                     "stderr": stderr,
-                    "check": check,
                 }
             )
             self.pid = 2468
@@ -239,9 +237,31 @@ def test_care_line_scheduler_helpers_force_utf8_subprocess_decoding(tmp_path: Pa
             "errors": "replace",
             "stdout": subprocess.PIPE,
             "stderr": subprocess.PIPE,
-            "check": False,
         }
     ]
+
+
+def test_care_line_scheduler_real_child_uses_utf8_decoding(tmp_path: Path) -> None:
+    repo = Path(__file__).resolve().parents[1]
+    scheduler = _load_scheduler_module(repo)
+
+    child = scheduler._run_child(
+        [
+            sys.executable,
+            "-c",
+            (
+                "import sys; "
+                "sys.stdout.buffer.write('Care–Line ✓\\n'.encode('utf-8')); "
+                "sys.stderr.buffer.write('diagnostic: café\\n'.encode('utf-8'))"
+            ),
+        ],
+        cwd=tmp_path,
+    )
+
+    assert child.pid is not None
+    assert child.returncode == 0
+    assert "Care–Line ✓" in child.stdout
+    assert "diagnostic: café" in child.stderr
 
 
 def test_care_line_windows_wrapper_writes_diagnostic_receipt_on_python_launch_failure(tmp_path: Path) -> None:

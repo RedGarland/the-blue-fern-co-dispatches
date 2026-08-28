@@ -13,6 +13,7 @@ import types
 import urllib.error
 from datetime import date as dt_date, datetime, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import pytest
 from bs4 import BeautifulSoup
@@ -11475,6 +11476,10 @@ def _resolve_powershell_executable() -> str:
     pytest.skip("PowerShell is not available for wrapper execution tests")
 
 
+def _food_line_pacific_today() -> str:
+    return datetime.now(ZoneInfo("America/Los_Angeles")).date().isoformat()
+
+
 def _run_food_line_wrapper(
     tmp_path: Path,
     payload: dict,
@@ -11888,7 +11893,7 @@ def test_food_line_daily_publish_wrapper_check_only_reports_release_readiness(tm
     python_exe.parent.mkdir(parents=True, exist_ok=True)
     python_exe.write_text("", encoding="utf-8")
 
-    today = datetime.now().astimezone().date().isoformat()
+    today = _food_line_pacific_today()
     wrapper_path = Path(__file__).resolve().parents[1] / "scripts" / "windows" / "run_food_line_daily_publish.ps1"
     powershell_exe = _resolve_powershell_executable()
     completed = subprocess.run(
@@ -11918,7 +11923,7 @@ def test_food_line_daily_publish_wrapper_check_only_reports_release_readiness(tm
     assert payload["publication_capability"] is False
     assert payload["source_branch"] == "add/pages-repo-default"
     assert payload["private_runner_root"] == str(project_root)
-    assert payload["publication_runner"].endswith("scripts\\run_runner_dispatch.ps1")
+    assert Path(payload["publication_runner"]).as_posix().endswith("scripts/run_runner_dispatch.ps1")
     assert payload["pages_repo"] == str(pages_repo)
     assert payload["proposal_path"] is None
     assert payload["signal_review_path"] is None
@@ -11963,7 +11968,7 @@ def test_food_line_daily_publish_wrapper_finalizes_failure_receipt(tmp_path: Pat
     python_exe.parent.mkdir(parents=True, exist_ok=True)
     python_exe.write_text("", encoding="utf-8")
 
-    today = datetime.now().astimezone().date().isoformat()
+    today = _food_line_pacific_today()
     proposed_path = project_root / "data" / "dispatches" / "food-line" / "review" / "proposed-editions" / f"{today}.json"
     signal_review_path = project_root / "data" / "dispatches" / "food-line" / "review" / "signal-reviews" / f"{today}.json"
     readiness_path = project_root / "data" / "dispatches" / "food-line" / "review" / "release-readiness" / f"{today}.json"

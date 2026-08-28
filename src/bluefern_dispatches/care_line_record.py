@@ -119,33 +119,6 @@ WORKFLOW_STATE_VALUES = {
 }
 DATE_PRECISION_VALUES = {"day", "month", "unknown"}
 DATE_KIND_VALUES = {"source_publication", "announcement", "effective", "observed", "review", "publication"}
-CARE_LINE_LIFECYCLE_STATUSES = {
-    "ANNOUNCED",
-    "PENDING_EFFECTIVE_DATE",
-    "EFFECTIVE",
-    "DELAYED",
-    "CANCELLED",
-    "RESTORED",
-    "SUPERSEDED",
-}
-CARE_LINE_REVIEWED_LIFECYCLE_STATUS = Literal[
-    "",
-    "ANNOUNCED",
-    "PENDING_EFFECTIVE_DATE",
-    "EFFECTIVE",
-    "DELAYED",
-    "CANCELLED",
-    "RESTORED",
-    "SUPERSEDED",
-]
-CARE_LINE_REVIEWED_FOLLOW_UP_STATUS = Literal[
-    "",
-    "pending",
-    "effective_date_reached",
-    "post_effective_follow_up",
-]
-EFFECTIVE_DATE_FOLLOW_UP_LOOKBACK_DAYS = 14
-EFFECTIVE_DATE_FOLLOW_UP_LOOKAHEAD_DAYS = 7
 AUTHORITY_LEVEL_VALUES = {
     "primary",
     "official",
@@ -155,6 +128,8 @@ AUTHORITY_LEVEL_VALUES = {
     "unknown",
 }
 RURALITY_VALUES = {"rural", "urban", "frontier", "mixed", "unknown"}
+CARE_LINE_REVIEWED_LIFECYCLE_STATUS = Literal["", "ANNOUNCED", "PENDING_EFFECTIVE_DATE", "EFFECTIVE", "DELAYED", "CANCELLED", "RESTORED", "SUPERSEDED"]
+CARE_LINE_REVIEWED_FOLLOW_UP_STATUS = Literal["", "pending", "effective_date_reached", "post_effective_follow_up"]
 
 LEGACY_TO_CANONICAL_EVENT_TYPE = {
     "facility_closure": "FACILITY_CLOSURE",
@@ -469,12 +444,10 @@ def _looks_private_path(value: str) -> bool:
     return "/bluefern-dispatches-pages/" in text or "/output/site/" in text or text.startswith("output/site/")
 
 
-def _care_line_value(row: Any, *keys: str) -> str:
-    for key in keys:
-        value = row.get(key) if isinstance(row, Mapping) else getattr(row, key, None)
-        if value not in (None, "", [], {}):
-            return str(value).strip()
-    return ""
+def _care_line_value(value: Any) -> str:
+    if value in (None, "", [], {}):
+        return ""
+    return str(value).strip()
 
 
 def _care_line_identity_text(value: str) -> str:
@@ -491,13 +464,22 @@ def _parse_iso_date_text(value: str) -> date | None:
         return None
 
 
+def _care_line_text(row: Mapping[str, Any] | "CareLineReviewedRecord", *keys: str) -> str:
+    mapping = row if isinstance(row, Mapping) else row.model_dump(mode="json")
+    for key in keys:
+        text = _care_line_value(mapping.get(key))
+        if text:
+            return text
+    return ""
+
+
 def care_line_follow_up_window(
-    row: Any,
+    row: Mapping[str, Any] | "CareLineReviewedRecord",
     *,
-    lookback_days: int = EFFECTIVE_DATE_FOLLOW_UP_LOOKBACK_DAYS,
-    lookahead_days: int = EFFECTIVE_DATE_FOLLOW_UP_LOOKAHEAD_DAYS,
+    lookback_days: int = 14,
+    lookahead_days: int = 7,
 ) -> tuple[str, str]:
-    effective = _parse_iso_date_text(_care_line_value(row, "effective_date", "effective_date_text"))
+    effective = _parse_iso_date_text(_care_line_text(row, "effective_date", "effective_date_text"))
     if effective is None:
         return "", ""
     start = effective - timedelta(days=max(0, int(lookback_days)))
@@ -505,20 +487,20 @@ def care_line_follow_up_window(
     return start.isoformat(), end.isoformat()
 
 
-def care_line_event_identity(row: Any) -> str:
+def care_line_event_identity(row: Mapping[str, Any] | "CareLineReviewedRecord") -> str:
     text = " ".join(
         part
         for part in (
-            _care_line_value(row, "source_title", "title"),
-            _care_line_value(row, "supporting_passage", "effective_evidence_text", "claim_summary"),
-            _care_line_value(row, "review_notes", "verification_notes"),
-            _care_line_value(row, "reviewer_note"),
+            _care_line_text(row, "source_title", "title"),
+            _care_line_text(row, "supporting_passage", "effective_evidence_text", "claim_summary"),
+            _care_line_text(row, "review_notes", "verification_notes"),
+            _care_line_text(row, "reviewer_note"),
         )
         if part
     ).casefold()
-    event_type = _care_line_value(row, "event_type", "event_type_raw", "canonical_event_type").casefold()
-    effective = _care_line_value(row, "effective_date", "effective_date_text")
-    if not effective and not _care_line_value(row, "supersedes_record_id") and not any(
+    event_type = _care_line_text(row, "event_type", "event_type_raw", "canonical_event_type").casefold()
+    effective = _care_line_text(row, "effective_date", "effective_date_text")
+    if not effective and not _care_line_text(row, "supersedes_record_id") and not any(
         term in text
         for term in (
             "cancel",
@@ -555,47 +537,46 @@ def care_line_event_identity(row: Any) -> str:
     ):
         return ""
     payload = {
-        "facility_name": _care_line_identity_text(_care_line_value(row, "facility_name", "provider_name", "affected_provider", "organization_name")),
-        "provider_name": _care_line_identity_text(_care_line_value(row, "provider_name", "affected_provider", "organization_name")),
-        "parent_organization": _care_line_identity_text(_care_line_value(row, "parent_organization")),
-        "operator_name": _care_line_identity_text(_care_line_value(row, "operator_name", "operator")),
-        "city": _care_line_identity_text(_care_line_value(row, "city", "locality_name")),
-        "county": _care_line_identity_text(_care_line_value(row, "county", "county_equivalent_name")),
-        "state": _care_line_identity_text(_care_line_value(row, "state", "jurisdiction_display")),
-        "service_line": _care_line_identity_text(_care_line_value(row, "service_line", "service_line_canonical", "service_line_raw", "affected_service_line")),
-        "event_type": _care_line_identity_text(_care_line_value(row, "event_type", "event_type_raw", "canonical_event_type")),
+        "facility_name": _care_line_identity_text(_care_line_text(row, "facility_name", "provider_name", "affected_provider", "organization_name")),
+        "provider_name": _care_line_identity_text(_care_line_text(row, "provider_name", "affected_provider", "organization_name")),
+        "parent_organization": _care_line_identity_text(_care_line_text(row, "parent_organization")),
+        "operator_name": _care_line_identity_text(_care_line_text(row, "operator_name", "operator")),
+        "city": _care_line_identity_text(_care_line_text(row, "city", "locality_name")),
+        "county": _care_line_identity_text(_care_line_text(row, "county", "county_equivalent_name")),
+        "state": _care_line_identity_text(_care_line_text(row, "state", "jurisdiction_display")),
+        "service_line": _care_line_identity_text(_care_line_text(row, "service_line", "service_line_canonical", "service_line_raw", "affected_service_line")),
+        "event_type": _care_line_identity_text(_care_line_text(row, "event_type", "event_type_raw", "canonical_event_type")),
     }
     if not any(payload.values()):
         return ""
     return f"care_line_event_{stable_json_hash(payload)[:16]}"
 
 
-def care_line_event_instance_id(row: Any) -> str:
+def care_line_event_instance_id(row: Mapping[str, Any] | "CareLineReviewedRecord") -> str:
     event_identity = care_line_event_identity(row)
     if not event_identity:
         return ""
     payload = {
         "event_identity": event_identity,
-        "announcement_date": _care_line_value(row, "announcement_date", "published_at", "source_publication_date"),
-        "effective_date": _care_line_value(row, "effective_date", "effective_date_text"),
-        "source_publication_date": _care_line_value(row, "source_publication_date", "publication_date", "source_published_date"),
+        "announcement_date": _care_line_text(row, "announcement_date", "published_at", "source_publication_date"),
+        "effective_date": _care_line_text(row, "effective_date", "effective_date_text"),
+        "source_publication_date": _care_line_text(row, "source_publication_date", "publication_date", "source_published_date"),
     }
     return f"{event_identity}_{stable_json_hash(payload)[:12]}"
 
 
-def care_line_lifecycle_status(row: Any) -> str:
+def care_line_lifecycle_status(row: Mapping[str, Any] | "CareLineReviewedRecord") -> str:
     text = " ".join(
         part
         for part in (
-            _care_line_value(row, "source_title", "title"),
-            _care_line_value(row, "supporting_passage", "effective_evidence_text", "claim_summary"),
-            _care_line_value(row, "review_notes", "verification_notes"),
-            _care_line_value(row, "reviewer_note"),
+            _care_line_text(row, "source_title", "title"),
+            _care_line_text(row, "supporting_passage", "effective_evidence_text", "claim_summary"),
+            _care_line_text(row, "review_notes", "verification_notes"),
+            _care_line_text(row, "reviewer_note"),
         )
         if part
     ).casefold()
-    event_type = _care_line_value(row, "event_type", "event_type_raw", "canonical_event_type").casefold()
-    has_effective_date = bool(_care_line_value(row, "effective_date", "effective_date_text"))
+    event_type = _care_line_text(row, "event_type", "event_type_raw", "canonical_event_type").casefold()
     has_lifecycle_terms = any(
         term in text
         for term in (
@@ -644,7 +625,7 @@ def care_line_lifecycle_status(row: Any) -> str:
             "closed today",
         )
     )
-    if _care_line_value(row, "supersedes_record_id") or _care_line_value(row, "record_status").casefold() == "superseded":
+    if _care_line_text(row, "supersedes_record_id") or _care_line_text(row, "record_status").casefold() == "superseded":
         return "SUPERSEDED"
     if has_lifecycle_terms and any(term in text for term in ("cancel", "cancelled", "canceled", "withdraw", "withdrawn", "revers", "abandon", "rescind")):
         return "CANCELLED"
@@ -652,9 +633,9 @@ def care_line_lifecycle_status(row: Any) -> str:
         return "DELAYED"
     if has_lifecycle_terms and (event_type in {"facility_reopening", "service_restoration"} or any(term in text for term in ("reopen", "reopened", "reopening", "restore", "restored", "resumed", "resume", "reinstat"))):
         return "RESTORED"
-    effective = _parse_iso_date_text(_care_line_value(row, "effective_date", "effective_date_text"))
+    effective = _parse_iso_date_text(_care_line_text(row, "effective_date", "effective_date_text"))
     if effective is not None:
-        source_date = _parse_iso_date_text(_care_line_value(row, "source_publication_date", "published_at", "source_published_date", "announcement_date"))
+        source_date = _parse_iso_date_text(_care_line_text(row, "source_publication_date", "published_at", "source_published_date", "announcement_date"))
         if source_date is not None and source_date < effective:
             return "PENDING_EFFECTIVE_DATE"
         return "EFFECTIVE"
@@ -663,14 +644,14 @@ def care_line_lifecycle_status(row: Any) -> str:
     return ""
 
 
-def care_line_effective_follow_up_status(row: Any, *, reference_date: str | None = None) -> str:
+def care_line_effective_follow_up_status(row: Mapping[str, Any] | "CareLineReviewedRecord", *, reference_date: str | None = None) -> str:
     lifecycle_status = care_line_lifecycle_status(row)
     if lifecycle_status not in {"PENDING_EFFECTIVE_DATE", "EFFECTIVE"}:
         return ""
-    effective = _parse_iso_date_text(_care_line_value(row, "effective_date", "effective_date_text"))
+    effective = _parse_iso_date_text(_care_line_text(row, "effective_date", "effective_date_text"))
     if effective is None:
         return ""
-    reference = _parse_iso_date_text(reference_date or _care_line_value(row, "source_publication_date", "published_at", "source_published_date", "announcement_date"))
+    reference = _parse_iso_date_text(reference_date or _care_line_text(row, "source_publication_date", "published_at", "source_published_date", "announcement_date"))
     if reference is None:
         return lifecycle_status
     if reference < effective:
@@ -900,12 +881,6 @@ class CareLineReviewedRecord(BaseModel):
     date_precision: str = ""
     announcement_date_precision: str = ""
     effective_date_precision: str = ""
-    event_identity: str = ""
-    event_instance_id: str = ""
-    lifecycle_status: CARE_LINE_REVIEWED_LIFECYCLE_STATUS = ""
-    effective_follow_up_status: CARE_LINE_REVIEWED_FOLLOW_UP_STATUS = ""
-    follow_up_window_start: str = ""
-    follow_up_window_end: str = ""
     observed_date: str = ""
     observed_date_precision: str = ""
     review_date: str = ""
@@ -922,6 +897,12 @@ class CareLineReviewedRecord(BaseModel):
     access_consequences: list[str] = Field(default_factory=list)
     verification_state: str = ""
     workflow_state: str = ""
+    event_identity: str = ""
+    event_instance_id: str = ""
+    lifecycle_status: CARE_LINE_REVIEWED_LIFECYCLE_STATUS = ""
+    effective_follow_up_status: CARE_LINE_REVIEWED_FOLLOW_UP_STATUS = ""
+    follow_up_window_start: str = ""
+    follow_up_window_end: str = ""
 
     facility_name: str = ""
     provider_name: str = ""
@@ -1023,6 +1004,41 @@ class CareLineReviewedRecord(BaseModel):
             object.__setattr__(self, "workflow_state", normalize_workflow_state(self.workflow_state))
         else:
             object.__setattr__(self, "workflow_state", self._default_workflow_state())
+        expected_event_identity = care_line_event_identity(self)
+        if self.event_identity:
+            if expected_event_identity and self.event_identity != expected_event_identity:
+                raise ValueError("event_identity does not match the canonical Care Line lifecycle value")
+        else:
+            object.__setattr__(self, "event_identity", expected_event_identity)
+        expected_event_instance_id = care_line_event_instance_id(self)
+        if self.event_instance_id:
+            if expected_event_instance_id and self.event_instance_id != expected_event_instance_id:
+                raise ValueError("event_instance_id does not match the canonical Care Line lifecycle value")
+        else:
+            object.__setattr__(self, "event_instance_id", expected_event_instance_id)
+        expected_lifecycle_status = care_line_lifecycle_status(self)
+        if self.lifecycle_status:
+            if expected_lifecycle_status and self.lifecycle_status != expected_lifecycle_status:
+                raise ValueError("lifecycle_status does not match the canonical Care Line lifecycle value")
+        else:
+            object.__setattr__(self, "lifecycle_status", expected_lifecycle_status)
+        expected_follow_up_status = care_line_effective_follow_up_status(self)
+        if self.effective_follow_up_status:
+            if expected_follow_up_status and self.effective_follow_up_status != expected_follow_up_status:
+                raise ValueError("effective_follow_up_status does not match the canonical Care Line lifecycle value")
+        else:
+            object.__setattr__(self, "effective_follow_up_status", expected_follow_up_status)
+        expected_window_start, expected_window_end = care_line_follow_up_window(self)
+        if self.follow_up_window_start:
+            if expected_window_start and self.follow_up_window_start != expected_window_start:
+                raise ValueError("follow_up_window_start does not match the canonical Care Line lifecycle value")
+        else:
+            object.__setattr__(self, "follow_up_window_start", expected_window_start)
+        if self.follow_up_window_end:
+            if expected_window_end and self.follow_up_window_end != expected_window_end:
+                raise ValueError("follow_up_window_end does not match the canonical Care Line lifecycle value")
+        else:
+            object.__setattr__(self, "follow_up_window_end", expected_window_end)
         if self.geographic_scope:
             normalized_scope, canonical_scope = normalize_geographic_scope(self.geographic_scope)
             object.__setattr__(self, "geographic_scope", normalized_scope)
@@ -1075,29 +1091,6 @@ class CareLineReviewedRecord(BaseModel):
             ),
         )
         object.__setattr__(self, "map_eligible", self._map_eligible_default())
-        event_identity = care_line_event_identity(self)
-        if self.event_identity not in {"", event_identity}:
-            raise ValueError(f"unsupported event_identity: {self.event_identity}")
-        object.__setattr__(self, "event_identity", event_identity)
-        event_instance_id = care_line_event_instance_id(self) if event_identity else ""
-        if self.event_instance_id not in {"", event_instance_id}:
-            raise ValueError(f"unsupported event_instance_id: {self.event_instance_id}")
-        object.__setattr__(self, "event_instance_id", event_instance_id)
-        lifecycle_status = care_line_lifecycle_status(self)
-        if self.lifecycle_status not in {"", lifecycle_status}:
-            raise ValueError(f"unsupported lifecycle_status: {self.lifecycle_status}")
-        object.__setattr__(self, "lifecycle_status", lifecycle_status)
-        effective_follow_up_status = care_line_effective_follow_up_status(self)
-        if self.effective_follow_up_status not in {"", effective_follow_up_status}:
-            raise ValueError(f"unsupported effective_follow_up_status: {self.effective_follow_up_status}")
-        object.__setattr__(self, "effective_follow_up_status", effective_follow_up_status)
-        follow_up_start, follow_up_end = care_line_follow_up_window(self)
-        if self.follow_up_window_start not in {"", follow_up_start}:
-            raise ValueError(f"unsupported follow_up_window_start: {self.follow_up_window_start}")
-        if self.follow_up_window_end not in {"", follow_up_end}:
-            raise ValueError(f"unsupported follow_up_window_end: {self.follow_up_window_end}")
-        object.__setattr__(self, "follow_up_window_start", follow_up_start)
-        object.__setattr__(self, "follow_up_window_end", follow_up_end)
         if not self.version_id:
             object.__setattr__(self, "version_id", reviewed_record_version_id(self))
         return self
@@ -1301,7 +1294,6 @@ class CareLineReviewedRecord(BaseModel):
             "universal_event_type": self.event_type,
             "service_line": self.service_line,
             "service_line_canonical": self.service_line_canonical,
-            "effective_follow_up_status": self.effective_follow_up_status,
             "additional_service_lines": list(self.additional_service_lines),
             "affected_service_line": self.service_line_raw,
             "announcement_date": self.announcement_date,
@@ -1347,12 +1339,6 @@ class CareLineReviewedRecord(BaseModel):
                 "validation_profile": self.validation_profile(),
                 "canonical_event_type": self.canonical_event_type,
                 "service_line_canonical": self.service_line_canonical,
-                "event_identity": self.event_identity,
-                "event_instance_id": self.event_instance_id,
-                "lifecycle_status": self.lifecycle_status,
-                "effective_follow_up_status": self.effective_follow_up_status,
-                "follow_up_window_start": self.follow_up_window_start,
-                "follow_up_window_end": self.follow_up_window_end,
                 "verification_state": self.verification_state,
                 "workflow_state": self.workflow_state,
                 "access_consequences": list(self.access_consequences),
@@ -1365,15 +1351,8 @@ class CareLineReviewedRecord(BaseModel):
 
 def reviewed_record_version_id(record: CareLineReviewedRecord) -> str:
     payload = record.model_dump(mode="json", exclude={"version_id", "created_at", "updated_at"})
-    for key in (
-        "event_identity",
-        "event_instance_id",
-        "lifecycle_status",
-        "effective_follow_up_status",
-        "follow_up_window_start",
-        "follow_up_window_end",
-    ):
-        if not str(payload.get(key) or "").strip():
+    for key in ("event_identity", "event_instance_id", "lifecycle_status", "effective_follow_up_status", "follow_up_window_start", "follow_up_window_end"):
+        if payload.get(key) == "":
             payload.pop(key, None)
     return f"care_line_reviewed_{stable_json_hash(payload)[:16]}"
 

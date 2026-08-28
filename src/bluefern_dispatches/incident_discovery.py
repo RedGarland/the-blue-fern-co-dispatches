@@ -104,6 +104,16 @@ def _incident_type(seed: Mapping[str, Any]) -> str:
 
 
 def _severity_evidence(seed: Mapping[str, Any]) -> str:
+    support_text = _seed_support_text(seed)
+    if support_text:
+        return " ".join(
+            part
+            for part in (
+                support_text,
+                _first_text(seed, "title", "source_title"),
+            )
+            if part
+        ).casefold()
     return " ".join(
         part
         for part in (
@@ -119,6 +129,16 @@ def _severity_evidence(seed: Mapping[str, Any]) -> str:
 
 def _seed_id(seed: Mapping[str, Any]) -> str:
     return _first_text(seed, "incident_id", "seed_id", "source_id", "id") or "incident-seed"
+
+
+def _seed_support_text(record: Mapping[str, Any]) -> str:
+    exact_support = _first_text(record, "exact_supporting_passage", "claim_supported", "supporting_context_excerpt")
+    if exact_support:
+        return exact_support
+    body_text = _first_text(record, "content_text", "body_text", "article_text")
+    if body_text:
+        return body_text
+    return _first_text(record, "summary", "summary_or_snippet", "description", "evidence_text")
 
 
 def _trigger_reason(seed: Mapping[str, Any]) -> str:
@@ -187,6 +207,22 @@ def _format_date(value: date_type | None) -> str:
 
 
 def _seed_text(record: Mapping[str, Any]) -> str:
+    support_text = _seed_support_text(record)
+    if support_text:
+        return _normalize_text(
+            " ".join(
+                part
+                for part in (
+                    support_text,
+                    _first_text(record, "title", "source_title"),
+                    _first_text(record, "publisher", "source_name"),
+                    _first_text(record, "place", "location_name", "city", "incident_place", "jurisdiction"),
+                    _first_text(record, "state", "source_state", "jurisdiction_state", "state_hint"),
+                    _first_text(record, "incident_type", "incident_kind", "type", "category"),
+                )
+                if part
+            )
+        )
     parts = [
         _first_text(record, "title", "source_title"),
         _first_text(record, "summary", "summary_or_snippet", "description", "content_text", "body_text", "article_text"),
@@ -203,7 +239,8 @@ def _normalize_text(value: Any) -> str:
 
 
 def _seed_place(record: Mapping[str, Any]) -> str:
-    return _first_text(record, "place", "location_name", "city", "incident_place", "jurisdiction", "location_scope", "geographic_scope")
+    place = _first_text(record, "place", "location_name", "city", "incident_place", "jurisdiction", "location_scope", "geographic_scope")
+    return place
 
 
 def _seed_state(record: Mapping[str, Any]) -> str:
@@ -332,7 +369,7 @@ def _seed_from_record(record: Mapping[str, Any], *, source_path: Path, discovere
             "source_title": record.get("source_title") or record.get("title") or "",
         }
     )
-    if trigger_reason in {"incident_type_out_of_scope", "insufficient_severity_evidence"}:
+    if trigger_reason == "incident_type_out_of_scope" or trigger_reason == "insufficient_severity_evidence":
         return None
     place = _seed_place(record)
     state = _seed_state(record)
@@ -348,13 +385,13 @@ def _seed_from_record(record: Mapping[str, Any], *, source_path: Path, discovere
     incident_id = _first_text(record, "incident_id", "seed_id", "source_id", "id")
     if not incident_id:
         key_source = _seed_identity_key(
-            {
-                "incident_type": incident_type,
-                "place": place,
-                "state": state,
-                "incident_window_key": explicit_incident_start_date,
-            }
-        )
+        {
+            "incident_type": incident_type,
+            "place": place,
+            "state": state,
+            "incident_window_key": explicit_incident_start_date,
+        }
+    )
         incident_id = f"incident-{re.sub(r'[^a-z0-9]+', '-', key_source.lower()).strip('-')[:48] or 'seed'}"
     dispatch_targets = _seed_dispatch_targets(record, incident_type)
     source_text = _seed_text(record)

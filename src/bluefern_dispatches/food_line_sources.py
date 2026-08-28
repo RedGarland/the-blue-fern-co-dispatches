@@ -819,8 +819,16 @@ def _pressure_type_for_text(text: str) -> str:
         )
     ):
         return "service_restoration"
+    if _has_household_food_purchase_tradeoff(lowered):
+        return "household hardship"
     if _has_quantified_food_assistance_increase(lowered):
         return "demand strain"
+    if _has_severe_pantry_inventory_pressure(lowered):
+        return "service reduction"
+    if _has_record_demand_with_access_barrier(lowered):
+        return "demand strain"
+    if _has_funding_loss_distribution_suspension(lowered):
+        return "service reduction"
     if _has_supply_loss_mitigation_pressure(lowered):
         return "supply pressure"
     for pressure_type, needles in PRESSURE_TYPE_RULES:
@@ -875,6 +883,144 @@ def _has_supply_loss_mitigation_pressure(text: str) -> bool:
     if not any(term in lowered for term in ("replace", "replacement", "must spend")):
         return False
     return True
+
+
+def _has_household_food_purchase_tradeoff(text: str) -> bool:
+    lowered = text.lower()
+    if not any(term in lowered for term in ("grocery", "groceries", "food purchases", "food spending", "food budget", "buy food", "buy groceries")):
+        return False
+    if not any(term in lowered for term in ("utility", "utilities", "electricity", "power bill", "power bills", "electric bill", "electric bills", "heating bill", "heating bills")):
+        return False
+    return any(
+        term in lowered
+        for term in (
+            "cut back on groceries",
+            "spend less on groceries",
+            "buy less food",
+            "reduce food purchases",
+            "reduce grocery spending",
+            "choose between utilities and groceries",
+            "trade off groceries and utilities",
+            "utilities and groceries",
+            "electricity costs are consuming",
+            "household budget",
+            "essential costs",
+        )
+    )
+
+
+def _has_severe_pantry_inventory_pressure(text: str) -> bool:
+    lowered = text.lower()
+    if not any(term in lowered for term in ("food bank", "food pantry", "pantry", "food assistance", "meal program", "free produce", "food distribution")):
+        return False
+    inventory_pressure = any(
+        term in lowered
+        for term in (
+            "desperately low",
+            "critically low",
+            "nearly empty",
+            "almost empty",
+            "bare shelves",
+            "empty shelves",
+            "running low",
+            "low inventory",
+            "inventory is low",
+            "inventory is nearly empty",
+        )
+    )
+    imminent_cutback = any(
+        term in lowered
+        for term in (
+            "may have to cut back",
+            "have to cut back",
+            "may have to reduce service",
+            "may need to reduce service",
+            "may have to provide inadequate meals",
+            "could have to cut back",
+            "cannot maintain",
+            "can't maintain",
+            "not be able to maintain",
+            "if inventory is not replenished",
+            "if supplies are not replenished",
+        )
+    )
+    return inventory_pressure and imminent_cutback
+
+
+def _has_record_demand_with_access_barrier(text: str) -> bool:
+    lowered = text.lower()
+    if not any(term in lowered for term in ("demand", "families", "visitors", "households", "need", "requests", "assistance")):
+        return False
+    if not any(
+        term in lowered
+        for term in (
+            "near-record demand",
+            "near record demand",
+            "record demand",
+            "all-time high",
+            "all time high",
+            "nearing an all-time high",
+            "significant growth",
+            "more families seeking assistance",
+            "working families",
+            "daytime hours",
+            "scheduling constraints",
+            "access friction",
+            "difficulty accessing",
+            "hard to access",
+            "expanded evening hours",
+            "evening hours",
+        )
+    ):
+        return False
+    return any(
+        term in lowered
+        for term in (
+            "expanded evening hours",
+            "evening hours",
+            "daytime hours",
+            "work schedule",
+            "working families",
+            "scheduling constraints",
+            "access friction",
+            "difficulty accessing",
+            "hard to access",
+        )
+    )
+
+
+def _has_funding_loss_distribution_suspension(text: str) -> bool:
+    lowered = text.lower()
+    if not any(term in lowered for term in ("distribution", "weekly", "weekly distribution", "produce share", "free produce", "food distribution", "meal program", "pantry")):
+        return False
+    if not any(term in lowered for term in ("funding", "grant", "grants", "bridge funding", "emergency bridge funding", "funding loss", "lost funding", "funds ran out", "funding ran out", "grant ended", "grants ended")):
+        return False
+    return any(
+        term in lowered
+        for term in (
+            "canceled",
+            "cancelled",
+            "suspended",
+            "suspension",
+            "stopped",
+            "ended",
+            "will not continue",
+            "no longer funded",
+            "run out",
+            "runs out",
+        )
+    )
+
+
+def _has_concrete_food_pressure_signal(text: str) -> bool:
+    return any(
+        (
+            _has_household_food_purchase_tradeoff(text),
+            _has_severe_pantry_inventory_pressure(text),
+            _has_record_demand_with_access_barrier(text),
+            _has_funding_loss_distribution_suspension(text),
+        )
+    )
 
 
 def _infer_affected_groups(text: str) -> list[str]:
@@ -1583,8 +1729,9 @@ def classify_food_line_source_purpose(row: dict[str, Any]) -> dict[str, str]:
     resource_hit = any(term in page_signal_text or term in url for term in SOURCE_PURPOSE_RESOURCE_TERMS)
     research_hit = any(term in content_text or term in source_name or term in page_signal_text for term in SOURCE_PURPOSE_RESEARCH_TERMS)
     current_hit = any(term in content_text or term in source_name or term in page_signal_text or term in url for term in SOURCE_PURPOSE_CURRENT_TERMS)
-    concrete_pressure_hit = any(
-        term in content_text or term in source_name or term in page_signal_text or term in url
+    concrete_pressure_text = " ".join(part for part in (content_text, source_name, page_signal_text, url) if part)
+    concrete_pressure_hit = _has_concrete_food_pressure_signal(concrete_pressure_text) or any(
+        term in concrete_pressure_text
         for term in (
             "record-low inventory",
             "low inventory",
@@ -1863,6 +2010,14 @@ def clean_food_line_public_evidence_excerpt(text: str, *, title: str = "", limit
 def _pressure_match_terms(text: str) -> list[str]:
     lowered = str(text or "").lower()
     terms: list[str] = []
+    if _has_household_food_purchase_tradeoff(lowered):
+        terms.append("household food-purchasing tradeoff")
+    if _has_severe_pantry_inventory_pressure(lowered):
+        terms.append("severe pantry inventory pressure")
+    if _has_record_demand_with_access_barrier(lowered):
+        terms.append("record demand with access barrier")
+    if _has_funding_loss_distribution_suspension(lowered):
+        terms.append("funding-loss distribution suspension")
     for _, needles in PRESSURE_TYPE_RULES:
         for needle in needles:
             if needle in lowered and needle not in terms:
@@ -2123,7 +2278,7 @@ def _build_pressure_summary(
             )
 
     if pressure_type == "demand strain":
-        if any(term in lowered for term in ("demand", "lines", "wait", "families", "pantry", "need", "requirements shift", "more food to", "get more food to")):
+        if any(term in lowered for term in ("demand", "lines", "wait", "families", "pantry", "need", "requirements shift", "more food to", "get more food to", "near-record demand", "near record demand", "all-time high", "all time high", "working families", "daytime hours", "expanded evening hours", "evening hours", "access friction", "difficulty accessing", "hard to access")):
             sentence = _append_place(f"{subject} reported rising food-assistance demand", place)
             sentence = _append_groups(sentence, groups_text)
             return _smooth_public_pressure_summary(
@@ -2155,8 +2310,13 @@ def _build_pressure_summary(
                 location_name=place,
                 pressure_type=pressure_type,
             )
-        if any(term in lowered for term in ("reduced hours", "cut hours", "limited distribution", "service is limited", "service limited", "limited to zip codes", "restricted to zip codes", "zip codes", "closed", "capacity", "inventory", "fewer distributions", "buying more food", "pantries buying more food", "food assistance cuts", "receiving less", "squeezing", "donations dropped", "supply dropped")):
-            sentence = _append_place(f"{subject} reported reduced distribution hours", place)
+        if any(term in lowered for term in ("reduced hours", "cut hours", "limited distribution", "service is limited", "service limited", "limited to zip codes", "restricted to zip codes", "zip codes", "closed", "capacity", "inventory", "fewer distributions", "buying more food", "pantries buying more food", "food assistance cuts", "receiving less", "squeezing", "donations dropped", "supply dropped", "desperately low", "critically low", "nearly empty", "may have to cut back", "may have to provide inadequate meals", "grant ended", "grants ended", "funding ran out", "funding loss", "canceled", "cancelled", "weekly distribution", "free produce", "produce share")):
+            if any(term in lowered for term in ("grant ended", "grants ended", "funding ran out", "funding loss", "canceled", "cancelled", "weekly distribution", "free produce", "produce share")):
+                sentence = _append_place(f"{subject} reported a recurring food-distribution suspension after funding loss", place)
+            elif any(term in lowered for term in ("desperately low", "critically low", "nearly empty", "may have to cut back", "may have to provide inadequate meals")):
+                sentence = _append_place(f"{subject} reported critically low pantry inventory and possible service cutbacks", place)
+            else:
+                sentence = _append_place(f"{subject} reported reduced distribution hours", place)
             sentence = _append_groups(sentence, groups_text)
             return _smooth_public_pressure_summary(
                 sentence + ".",
@@ -2226,9 +2386,11 @@ def _build_pressure_summary(
                 pressure_type=pressure_type,
             )
     elif pressure_type == "household hardship":
-        if any(term in lowered for term in ("skipping meals", "unable to afford food", "food hardship", "food insecurity", "food sufficiency", "food insufficiency", "hunger increased", "going hungry", "medical bills", "medical cost", "medical costs", "medical debt", "health care bills", "health-care bills", "out-of-pocket", "insurance burden", "prescription costs", "financial stress", "sports betting", "sports-betting", "gambling")):
+        if any(term in lowered for term in ("skipping meals", "unable to afford food", "food hardship", "food insecurity", "food sufficiency", "food insufficiency", "hunger increased", "going hungry", "medical bills", "medical cost", "medical costs", "medical debt", "health care bills", "health-care bills", "out-of-pocket", "insurance burden", "prescription costs", "financial stress", "sports betting", "sports-betting", "gambling", "cut back on groceries", "spend less on groceries", "buy less food", "reduce food purchases", "grocery spending", "utility costs", "electricity costs", "power bill", "power bills", "utility bills")):
             if any(term in lowered for term in ("medical bills", "medical cost", "medical costs", "medical debt", "health care bills", "health-care bills", "out-of-pocket", "insurance burden", "prescription costs")):
                 sentence = f"{subject} reported household food hardship tied to health-care costs"
+            elif any(term in lowered for term in ("cut back on groceries", "spend less on groceries", "buy less food", "reduce food purchases", "grocery spending", "utility costs", "electricity costs", "power bill", "power bills", "utility bills")):
+                sentence = f"{subject} reported household food hardship tied to utility costs"
             else:
                 sentence = f"{subject} reported household food hardship"
             sentence = _append_place(sentence, place)

@@ -1,0 +1,68 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-28",
+  "generated_at": "2026-08-28T13:01:06.218596Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-08-28.mp3",
+  "audio_url": "/gaza/audio/2026-08-28.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1114,
+  "tts_input_word_count": 177,
+  "tts_story_count": 4,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1145856,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-08-28T13:01:06.218577Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-08-28-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-28/",
+  "script_text": "This is the Gaza Dispatch audio briefing for August 28, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Board of Peace's Gaza envoy criticises Israeli strikes and Hamas actions. Nickolay Mladenov warns that a collapse of last October's ceasefire would be \"a point of no return\" for the region. This was reported by BBC News.\n\n2. Children take cover behind shopping cart during Israeli drone fire. Video shows children in Gaza taking cover behind a shopping cart during a reported gun attack by an Israeli drone. This was reported by Al Jazeera.\n\n3. Armed with a whistle, Gaza's lifeguards do what they can to save swimmers. Shortages leave Gaza's lifeguards without essential rescue equipment, as Palestinians flock to the beaches. This was reported by Al Jazeera.\n\n4. PA activists face 'terror' charges over Trump golf resort protest: Report. Protesters targeted Trump's Ayrshire resort with red paint and slogans saying 'Gaza is not 4 sale'. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the August 28, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 4,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-08-28-bbc-middle-east-b42465192e5a",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/cew92l07kwzo?at_medium=RSS&at_campaign=rss",
+      "title": "Board of Peace's Gaza envoy criticises Israeli strikes and Hamas actions"
+    },
+    {
+      "source_record_id": "gaza-2026-08-28-aljazeera-middle-east-92b022c66b2b",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/28/children-take-cover-behind-shopping-cart-during-israeli-drone-fire?traffic_source=rss",
+      "title": "Children take cover behind shopping cart during Israeli drone fire"
+    },
+    {
+      "source_record_id": "gaza-2026-08-28-aljazeera-middle-east-b21d4ea45d3a",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/features/2026/8/28/armed-with-a-whistle-gazas-lifeguards-do-what-they-can-to-save-swimmers?traffic_source=rss",
+      "title": "Armed with a whistle, Gaza's lifeguards do what they can to save swimmers"
+    },
+    {
+      "source_record_id": "gaza-2026-08-28-aljazeera-middle-east-135aa1f40d2d",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/8/28/pa-activists-face-terror-charges-over-trump-golf-resort-protest-report?traffic_source=rss",
+      "title": "PA activists face 'terror' charges over Trump golf resort protest: Report"
+    }
+  ]
+}

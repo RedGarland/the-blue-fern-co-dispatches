@@ -1,0 +1,258 @@
+[
+  {
+    "story_id": "gaza-story-2026-08-28-001",
+    "title": "Board of Peace's Gaza envoy criticises Israeli strikes and Hamas actions",
+    "summary": "Nickolay Mladenov warns that a collapse of last October's ceasefire would be \"a point of no return\" for the region.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 56,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-28-bbc-middle-east-b42465192e5a"
+    ],
+    "source_ids": [
+      "gaza-2026-08-28-bbc-middle-east-b42465192e5a"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/cew92l07kwzo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-28-bbc-middle-east-b42465192e5a",
+        "title": "Board of Peace's Gaza envoy criticises Israeli strikes and Hamas actions",
+        "url": "https://www.bbc.co.uk/news/articles/cew92l07kwzo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Nickolay Mladenov warns that a collapse of last October's ceasefire would be \"a point of no return\" for the region."
+      }
+    ],
+    "generated_at": "2026-08-28T13:00:51.953127+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-28-005",
+    "title": "Children take cover behind shopping cart during Israeli drone fire",
+    "summary": "Video shows children in Gaza taking cover behind a shopping cart during a reported gun attack by an Israeli drone.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 50,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-28-aljazeera-middle-east-92b022c66b2b"
+    ],
+    "source_ids": [
+      "gaza-2026-08-28-aljazeera-middle-east-92b022c66b2b"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/8/28/children-take-cover-behind-shopping-cart-during-israeli-drone-fire?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-28-aljazeera-middle-east-92b022c66b2b",
+        "title": "Children take cover behind shopping cart during Israeli drone fire",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/8/28/children-take-cover-behind-shopping-cart-during-israeli-drone-fire?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Video shows children in Gaza taking cover behind a shopping cart during a reported gun attack by an Israeli drone."
+      }
+    ],
+    "generated_at": "2026-08-28T13:00:51.953127+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-15-002",
+    "prior_edition_date": "2026-06-15",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-28-006",
+    "title": "Armed with a whistle, Gaza's lifeguards do what they can to save swimmers",
+    "summary": "Shortages leave Gaza's lifeguards without essential rescue equipment, as Palestinians flock to the beaches.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-28-aljazeera-middle-east-b21d4ea45d3a"
+    ],
+    "source_ids": [
+      "gaza-2026-08-28-aljazeera-middle-east-b21d4ea45d3a"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/features/2026/8/28/armed-with-a-whistle-gazas-lifeguards-do-what-they-can-to-save-swimmers?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-28-aljazeera-middle-east-b21d4ea45d3a",
+        "title": "Armed with a whistle, Gaza's lifeguards do what they can to save swimmers",
+        "url": "https://www.aljazeera.com/features/2026/8/28/armed-with-a-whistle-gazas-lifeguards-do-what-they-can-to-save-swimmers?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Shortages leave Gaza's lifeguards without essential rescue equipment, as Palestinians flock to the beaches."
+      }
+    ],
+    "generated_at": "2026-08-28T13:00:51.953127+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-28-004",
+    "title": "PA activists face 'terror' charges over Trump golf resort protest: Report",
+    "summary": "Protesters targeted Trump's Ayrshire resort with red paint and slogans saying 'Gaza is not 4 sale'.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-28-aljazeera-middle-east-135aa1f40d2d"
+    ],
+    "source_ids": [
+      "gaza-2026-08-28-aljazeera-middle-east-135aa1f40d2d"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/8/28/pa-activists-face-terror-charges-over-trump-golf-resort-protest-report?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-28-aljazeera-middle-east-135aa1f40d2d",
+        "title": "PA activists face 'terror' charges over Trump golf resort protest: Report",
+        "url": "https://www.aljazeera.com/news/2026/8/28/pa-activists-face-terror-charges-over-trump-golf-resort-protest-report?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Protesters targeted Trump's Ayrshire resort with red paint and slogans saying 'Gaza is not 4 sale'."
+      }
+    ],
+    "generated_at": "2026-08-28T13:00:51.953127+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

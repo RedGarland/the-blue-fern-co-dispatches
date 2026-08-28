@@ -2406,6 +2406,22 @@ def run_food_line_discovery_gap_check(
                 if query and query not in incident_seed_queries:
                     incident_seed_queries.append(query)
     if incident_seed_queries:
+        query_terms = list(dict.fromkeys([*incident_seed_queries, *query_terms]))
+    incident_seed_reports: list[dict[str, Any]] = []
+    incident_seed_queries: list[str] = []
+    for seed in list(incident_seeds or []):
+        if not isinstance(seed, Mapping):
+            continue
+        incident_result = build_incident_follow_up_queries(seed, dispatch_slug="food-line")
+        incident_seed_reports.append(
+            {k: incident_result.get(k) for k in ("seed_id", "place", "incident_type", "source_url", "source_date", "trigger_reason", "query_count", "ok")}
+        )
+        if incident_result.get("ok"):
+            for query_row in incident_result.get("queries") or []:
+                query = str(query_row.get("query") or "").strip()
+                if query and query not in incident_seed_queries:
+                    incident_seed_queries.append(query)
+    if incident_seed_queries:
         query_terms = [*incident_seed_queries, *query_terms]
     query_terms = list(dict.fromkeys(query_terms))
     initial_query_terms = list(query_terms)
@@ -2660,9 +2676,6 @@ def run_food_line_discovery_gap_check(
         "query_count": len(executed_queries),
         "queries": executed_queries,
         "initial_queries": initial_query_terms,
-        "incident_seed_count": len(incident_seed_reports),
-        "incident_seed_query_count": len(incident_seed_queries),
-        "incident_seed_diagnostics": incident_seed_reports,
         "secondary_query_count": len(secondary_query_terms),
         "secondary_queries": secondary_query_terms,
         "wrapper_candidate_count": wrapper_candidate_count,
@@ -2728,6 +2741,9 @@ def run_food_line_discovery_gap_check(
         "elapsed_seconds": round(time.monotonic() - start, 3),
         "query_errors": query_errors,
         "candidates": candidates,
+        "incident_seed_count": len(incident_seed_reports),
+        "incident_seed_query_count": len(incident_seed_queries),
+        "incident_seed_diagnostics": incident_seed_reports,
         "summary": {
             "candidates_reviewed": len(candidates),
             "likely_qualifying": len(grouped_by_class["likely_qualifying"]),
@@ -2899,14 +2915,14 @@ def run_food_line_discovery_gap_check(
         "needs_review_count": len(grouped_by_class["needs_review"]),
         "likely_resource_only_count": len(grouped_by_class["likely_resource_only"]),
         "duplicate_or_known_count": len(grouped_by_class["duplicate_or_known"]),
+        "incident_seed_count": len(incident_seed_reports),
+        "incident_seed_query_count": len(incident_seed_queries),
+        "incident_seed_diagnostics": incident_seed_reports,
         "report_path": str(report_json_path),
         "report_markdown_path": str(report_md_path),
         "unresolved_review_path": str(unresolved_review_json_path),
         "unresolved_review_markdown_path": str(unresolved_review_md_path),
         "unresolved_review_count": len(unresolved_review_rows),
-        "incident_seed_count": len(incident_seed_reports),
-        "incident_seed_query_count": len(incident_seed_queries),
-        "incident_seed_diagnostics": incident_seed_reports,
         "query_errors": query_errors,
         "queries": executed_queries,
         "initial_queries": initial_query_terms,
@@ -3977,8 +3993,6 @@ def discover_food_line_sources(
     states = [state.strip().upper() for state in (states or STATES) if state.strip()]
     family_filter = {family.strip().lower() for family in (families or []) if family.strip()}
     excluded_families = {family.strip().lower() for family in (exclude_families or []) if family.strip()}
-    incident_seed_reports: list[dict[str, Any]] = []
-    incident_seed_queries: list[str] = []
     blocklist = _load_discovery_blocklist(root)
     priority = _load_discovery_priority(root)
     query_rows = _load_discovery_query_rows(root)
@@ -4040,6 +4054,8 @@ def discover_food_line_sources(
     skipped_count = 0
     rejected_count = 0
     discovered_candidate_count = 0
+    incident_seed_reports: list[dict[str, Any]] = []
+    incident_seed_queries: list[str] = []
 
     def _seed_allowed(seed: dict[str, Any]) -> tuple[bool, str]:
         nonlocal skipped_known_bad_count, skipped_quarantined_count, skipped_archived_count

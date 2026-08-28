@@ -292,6 +292,18 @@ PRESSURE_TYPE_RULES: list[tuple[str, tuple[str, ...]]] = [
         ),
     ),
     (
+        "supply pressure",
+        (
+            "expected supply",
+            "supply loss",
+            "funding loss",
+            "replace lost government support",
+            "must spend",
+            "replacement cost",
+            "support loss",
+        ),
+    ),
+    (
         "service_restoration",
         (
             "service restored",
@@ -807,10 +819,62 @@ def _pressure_type_for_text(text: str) -> str:
         )
     ):
         return "service_restoration"
+    if _has_quantified_food_assistance_increase(lowered):
+        return "demand strain"
+    if _has_supply_loss_mitigation_pressure(lowered):
+        return "supply pressure"
     for pressure_type, needles in PRESSURE_TYPE_RULES:
         if any(needle in lowered for needle in needles):
             return pressure_type
     return "context only"
+
+
+def _has_quantified_food_assistance_increase(text: str) -> bool:
+    lowered = text.lower()
+    if not any(
+        term in lowered
+        for term in (
+            "pantry",
+            "food bank",
+            "food pantry",
+            "food assistance",
+            "food insecurity",
+            "demand",
+            "need",
+            "families",
+            "visitors",
+            "lines",
+            "requests",
+        )
+    ):
+        return False
+    return bool(
+        re.search(r"\b(?:up|increase(?:d|s)?|increas(?:ing)?|rose|grew|higher)\b(?:[^.]{0,30})\b~?\d+(?:\.\d+)?\s*(?:%|percent)", lowered)
+        or re.search(r"\b~?\d+(?:\.\d+)?\s*(?:%|percent)(?:[^.]{0,30})\b(?:up|increase(?:d|s)?|increas(?:ing)?|rose|grew|higher)\b", lowered)
+    )
+
+
+def _has_supply_loss_mitigation_pressure(text: str) -> bool:
+    lowered = text.lower()
+    if not any(term in lowered for term in ("food bank", "food pantry", "pantry", "food assistance")):
+        return False
+    if not any(term in lowered for term in ("supply", "funding", "support", "government support")):
+        return False
+    if not any(
+        term in lowered
+        for term in (
+            "expected supply",
+            "supply loss",
+            "supply reduction",
+            "funding loss",
+            "support loss",
+            "lost government support",
+        )
+    ):
+        return False
+    if not any(term in lowered for term in ("replace", "replacement", "must spend")):
+        return False
+    return True
 
 
 def _infer_affected_groups(text: str) -> list[str]:
@@ -1803,6 +1867,10 @@ def _pressure_match_terms(text: str) -> list[str]:
         for needle in needles:
             if needle in lowered and needle not in terms:
                 terms.append(needle)
+    if _has_quantified_food_assistance_increase(lowered) and "quantified demand increase" not in terms:
+        terms.append("quantified demand increase")
+    if _has_supply_loss_mitigation_pressure(lowered) and "supply pressure" not in terms:
+        terms.append("supply pressure")
     return terms
 
 
@@ -2057,6 +2125,19 @@ def _build_pressure_summary(
     if pressure_type == "demand strain":
         if any(term in lowered for term in ("demand", "lines", "wait", "families", "pantry", "need", "requirements shift", "more food to", "get more food to")):
             sentence = _append_place(f"{subject} reported rising food-assistance demand", place)
+            sentence = _append_groups(sentence, groups_text)
+            return _smooth_public_pressure_summary(
+                sentence + ".",
+                subject=subject,
+                location_name=place,
+                pressure_type=pressure_type,
+            )
+    elif pressure_type == "supply pressure":
+        if any(term in lowered for term in ("expected supply", "government support", "replace", "replacement", "must spend", "spend", "shortfall", "gap", "supply loss", "funding loss")):
+            if any(term in lowered for term in ("replace", "replacement", "must spend", "spend", "funding loss")):
+                sentence = _append_place(f"{subject} reported supply pressure after a funding loss", place)
+            else:
+                sentence = _append_place(f"{subject} reported supply pressure", place)
             sentence = _append_groups(sentence, groups_text)
             return _smooth_public_pressure_summary(
                 sentence + ".",

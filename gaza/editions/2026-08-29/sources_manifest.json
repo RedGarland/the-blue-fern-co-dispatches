@@ -10,7 +10,7 @@
     "wrapper_url": null,
     "publisher": "BBC News",
     "published_at": "2026-08-28T14:06:13+00:00",
-    "retrieved_at": "2026-08-29T17:19:20.039338+00:00",
+    "retrieved_at": "2026-08-29T19:19:30.833123+00:00",
     "retrieved_local_date": "2026-08-29",
     "post_edition_date_source": false,
     "summary_or_snippet": "The BBC's Lucy Williamson reports on settler attacks on Palestinians, which have been observed over the last week alone.",
@@ -62,7 +62,7 @@
     "wrapper_url": null,
     "publisher": "BBC News",
     "published_at": "2026-08-27T14:17:24+00:00",
-    "retrieved_at": "2026-08-29T17:19:20.039338+00:00",
+    "retrieved_at": "2026-08-29T19:19:30.833123+00:00",
     "retrieved_local_date": "2026-08-29",
     "post_edition_date_source": false,
     "summary_or_snippet": "Nickolay Mladenov warns that a collapse of last October's ceasefire would be \"a point of no return\" for the region.",
@@ -116,7 +116,7 @@
     "wrapper_url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQdWFOWFdWSk0xUWluQi1NZ3dodGxMTEVtY29Pb1NVcU5wRm9ucnFfZUI5Y2lhRXFVSncwU1RaYjRGRWdCSHhpRHpHSVNSb3ZqN2dMb1VRc2pkNFRlNEZqX0dZb1NFOEhxQ3NNeERCNTZBNGFZSTNHLXRKMEZjcDhnYnZlM0ZTRmZLSTBCb05JWVd6ZlVVTXN4ejROTzB3ekVJODRMclNJQ2hGV3BhYnZtNWJzaTdMYVk?oc=5",
     "publisher": "UNICEF",
     "published_at": "2026-08-28T08:56:44+00:00",
-    "retrieved_at": "2026-08-29T17:19:20.039338+00:00",
+    "retrieved_at": "2026-08-29T19:19:30.833123+00:00",
     "retrieved_local_date": "2026-08-29",
     "post_edition_date_source": false,
     "summary_or_snippet": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza Unicef",
@@ -160,9 +160,113 @@
     "claim_fingerprint": "gaza|unicef|four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in gaza|humanitarian|2026-08-28"
   },
   {
-    "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-47f97bdd55e6",
-    "source_id": "gaza-2026-08-29-aljazeera-middle-east-47f97bdd55e6",
-    "title": "Israeli attacks across Gaza kill two people, hit hospital supply warehouse",
+    "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-04d6b190c1dd",
+    "source_id": "gaza-2026-08-29-aljazeera-middle-east-04d6b190c1dd",
+    "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
+    "url": "https://www.aljazeera.com/news/2026/8/29/us-judge-rules-against-trumps-effort-to-deport-pro-palestinian-students?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/news/2026/8/29/us-judge-rules-against-trumps-effort-to-deport-pro-palestinian-students?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-08-29T18:56:19+00:00",
+    "retrieved_at": "2026-08-29T19:19:30.833123+00:00",
+    "retrieved_local_date": "2026-08-29",
+    "post_edition_date_source": false,
+    "summary_or_snippet": "A federal judge criticised the Trump government for attempting to infringe upon foreign students' rights to free speech.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "aljazeera-middle-east",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "Traceable to Al Jazeera via a direct publisher URL dated 2026-08-29T18:56:19+00:00; title, publisher, URL, and published_at are preserved in the record.",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-08-29",
+    "used_in_story_ids": [
+      "gaza-story-2026-08-29-004"
+    ],
+    "claim_ids": [],
+    "story_selection_excluded_reason": null,
+    "candidate_score": 40,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "peripheral",
+    "dedupe_key": "gaza|al jazeera|us judge rules against trump s effort to deport pro palestinian students|conflict|2026-08-29",
+    "title_fingerprint": "us judge rules against trump s effort to deport pro palestinian students",
+    "claim_fingerprint": "gaza|al jazeera|us judge rules against trump s effort to deport pro palestinian students|conflict|2026-08-29"
+  },
+  {
+    "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-0a8256cd8f33",
+    "source_id": "gaza-2026-08-29-aljazeera-middle-east-0a8256cd8f33",
+    "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
+    "url": "https://www.aljazeera.com/video/newsfeed/2026/8/29/israeli-army-arrests-six-palestinians-after-settler-violence-in-west-bank?traffic_source=rss",
+    "canonical_url": "https://www.aljazeera.com/video/newsfeed/2026/8/29/israeli-army-arrests-six-palestinians-after-settler-violence-in-west-bank?traffic_source=rss",
+    "canonical_url_attempted": false,
+    "canonicalization_status": "direct_url",
+    "wrapper_url": null,
+    "publisher": "Al Jazeera",
+    "published_at": "2026-08-29T17:09:10+00:00",
+    "retrieved_at": "2026-08-29T19:19:30.833123+00:00",
+    "retrieved_local_date": "2026-08-29",
+    "post_edition_date_source": false,
+    "summary_or_snippet": "Israeli settlers stormed Qusra in the occupied West Bank, attacking Palestinian residents and damaging homes.",
+    "source_type": "rss",
+    "region_scope": "Gaza",
+    "category_hint": "conflict",
+    "reliability_tier": "reported-public-source",
+    "provider_id": "aljazeera-middle-east",
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "traceability_note": "Traceable to Al Jazeera via a direct publisher URL dated 2026-08-29T17:09:10+00:00; title, publisher, URL, and published_at are preserved in the record.",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-08-29",
+    "used_in_story_ids": [
+      "gaza-story-2026-08-29-005"
+    ],
+    "claim_ids": [],
+    "story_selection_excluded_reason": null,
+    "candidate_score": 44,
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "ranking_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "relevance_band": "peripheral",
+    "dedupe_key": "gaza|al jazeera|israeli army arrests six palestinians after settler violence in west bank|conflict|2026-08-29",
+    "title_fingerprint": "israeli army arrests six palestinians after settler violence in west bank",
+    "claim_fingerprint": "gaza|al jazeera|israeli army arrests six palestinians after settler violence in west bank|conflict|2026-08-29"
+  },
+  {
+    "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-4a6429a19ef9",
+    "source_id": "gaza-2026-08-29-aljazeera-middle-east-4a6429a19ef9",
+    "title": "Israeli attacks in Gaza kill four people, hit hospital supply warehouse",
     "url": "https://www.aljazeera.com/news/2026/8/29/israeli-attacks-across-gaza-kill-two-people-hit-hospital-supply-warehouse?traffic_source=rss",
     "canonical_url": "https://www.aljazeera.com/news/2026/8/29/israeli-attacks-across-gaza-kill-two-people-hit-hospital-supply-warehouse?traffic_source=rss",
     "canonical_url_attempted": false,
@@ -170,7 +274,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-08-29T15:25:43+00:00",
-    "retrieved_at": "2026-08-29T17:19:20.039338+00:00",
+    "retrieved_at": "2026-08-29T19:19:30.833123+00:00",
     "retrieved_local_date": "2026-08-29",
     "post_edition_date_source": false,
     "summary_or_snippet": "Gaza's Health Ministry reports rising casualties amid escalated Israeli attacks, with victims trapped under rubble.",
@@ -185,7 +289,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-08-29",
     "used_in_story_ids": [
-      "gaza-story-2026-08-29-004"
+      "gaza-story-2026-08-29-006"
     ],
     "claim_ids": [],
     "story_selection_excluded_reason": null,
@@ -208,9 +312,9 @@
       "date_confidence"
     ],
     "relevance_band": "core",
-    "dedupe_key": "gaza|al jazeera|israeli attacks across gaza kill two people hit hospital supply warehouse|conflict|2026-08-29",
-    "title_fingerprint": "israeli attacks across gaza kill two people hit hospital supply warehouse",
-    "claim_fingerprint": "gaza|al jazeera|israeli attacks across gaza kill two people hit hospital supply warehouse|conflict|2026-08-29"
+    "dedupe_key": "gaza|al jazeera|israeli attacks in gaza kill four people hit hospital supply warehouse|conflict|2026-08-29",
+    "title_fingerprint": "israeli attacks in gaza kill four people hit hospital supply warehouse",
+    "claim_fingerprint": "gaza|al jazeera|israeli attacks in gaza kill four people hit hospital supply warehouse|conflict|2026-08-29"
   },
   {
     "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-9405cc7b6dba",
@@ -223,7 +327,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-08-29T13:11:41+00:00",
-    "retrieved_at": "2026-08-29T17:19:20.039338+00:00",
+    "retrieved_at": "2026-08-29T19:19:30.833123+00:00",
     "retrieved_local_date": "2026-08-29",
     "post_edition_date_source": false,
     "summary_or_snippet": "At least four people trapped inside their home, as earlier siege on Palestinian families has continued for three weeks.",
@@ -238,7 +342,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-08-29",
     "used_in_story_ids": [
-      "gaza-story-2026-08-29-005"
+      "gaza-story-2026-08-29-007"
     ],
     "claim_ids": [],
     "story_selection_excluded_reason": null,
@@ -274,7 +378,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-08-29T13:10:04+00:00",
-    "retrieved_at": "2026-08-29T17:19:20.039338+00:00",
+    "retrieved_at": "2026-08-29T19:19:30.833123+00:00",
     "retrieved_local_date": "2026-08-29",
     "post_edition_date_source": false,
     "summary_or_snippet": "An UNRWA vocational centre in the occupied West Bank has been raided by Israeli forces and ordered to close.",
@@ -289,7 +393,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-08-29",
     "used_in_story_ids": [
-      "gaza-story-2026-08-29-006"
+      "gaza-story-2026-08-29-008"
     ],
     "claim_ids": [],
     "story_selection_excluded_reason": null,
@@ -317,9 +421,9 @@
     "claim_fingerprint": "gaza|al jazeera|israel raids shutters unrwa lifeline for palestinian refugees|conflict|2026-08-29"
   },
   {
-    "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-b5c5f68cacee",
-    "source_id": "gaza-2026-08-29-aljazeera-middle-east-b5c5f68cacee",
-    "title": "UNRWA's first and last vocational college in East Jerusalem is under threat",
+    "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-3dedea520b10",
+    "source_id": "gaza-2026-08-29-aljazeera-middle-east-3dedea520b10",
+    "title": "UNRWA's first and last vocational college in East Jerusalem is under attack",
     "url": "https://www.aljazeera.com/features/2026/8/29/unrwas-first-and-last-vocational-college-in-east-jerusalem-is-under-threat?traffic_source=rss",
     "canonical_url": "https://www.aljazeera.com/features/2026/8/29/unrwas-first-and-last-vocational-college-in-east-jerusalem-is-under-threat?traffic_source=rss",
     "canonical_url_attempted": false,
@@ -327,7 +431,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-08-29T12:58:25+00:00",
-    "retrieved_at": "2026-08-29T17:19:20.039338+00:00",
+    "retrieved_at": "2026-08-29T19:19:30.833123+00:00",
     "retrieved_local_date": "2026-08-29",
     "post_edition_date_source": false,
     "summary_or_snippet": "Israel threatens the Qalandiya Training Centre, one of Jerusalem's oldest still-operational educational institutions.",
@@ -342,16 +446,16 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-08-29",
     "used_in_story_ids": [
-      "gaza-story-2026-08-29-007"
+      "gaza-story-2026-08-29-009"
     ],
     "claim_ids": [],
     "story_selection_excluded_reason": null,
-    "candidate_score": 44,
+    "candidate_score": 56,
     "candidate_score_breakdown": {
       "humanitarian_impact": 12,
       "aid_access": 0,
       "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
+      "civilian_harm": 12,
       "displacement": 0,
       "health_infrastructure": 0,
       "accountability_legal": 0,
@@ -360,13 +464,14 @@
     },
     "ranking_reasons": [
       "humanitarian_impact",
+      "civilian_harm",
       "source_reliability",
       "date_confidence"
     ],
     "relevance_band": "core",
-    "dedupe_key": "gaza|al jazeera|unrwa s first and last vocational college in east jerusalem is under threat|conflict|2026-08-29",
-    "title_fingerprint": "unrwa s first and last vocational college in east jerusalem is under threat",
-    "claim_fingerprint": "gaza|al jazeera|unrwa s first and last vocational college in east jerusalem is under threat|conflict|2026-08-29"
+    "dedupe_key": "gaza|al jazeera|unrwa s first and last vocational college in east jerusalem is under attack|conflict|2026-08-29",
+    "title_fingerprint": "unrwa s first and last vocational college in east jerusalem is under attack",
+    "claim_fingerprint": "gaza|al jazeera|unrwa s first and last vocational college in east jerusalem is under attack|conflict|2026-08-29"
   },
   {
     "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-b3ba54a3c26e",
@@ -379,7 +484,7 @@
     "wrapper_url": null,
     "publisher": "Al Jazeera",
     "published_at": "2026-08-29T12:56:27+00:00",
-    "retrieved_at": "2026-08-29T17:19:20.039338+00:00",
+    "retrieved_at": "2026-08-29T19:19:30.833123+00:00",
     "retrieved_local_date": "2026-08-29",
     "post_edition_date_source": false,
     "summary_or_snippet": "After nearly three years of war, a farmer returns to Sheikh Ijlin's renowned grape fields.",
@@ -428,7 +533,7 @@
     "wrapper_url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPQ3FmcjlycjlqYTlNSzJueHF3d2ZkRHJ3c2ZEbFJkYzZ6ZERHdVE0WXFlV3Y0Uy10emVoZzV4dlBleGRrbTV6a0Z1WkJPVHBTM1NqdExfRUZvRGk5bHJRdnZSdEdBbXBSN2h4VmE0SzB2emV4NHdQQUZSSWRpUlNGRjNaamtWbEdUbGtoSlNtMzF6TGd0b05SdHMtRTFaYVk?oc=5",
     "publisher": "Associated Press",
     "published_at": "2026-08-28T22:15:00+00:00",
-    "retrieved_at": "2026-08-29T17:19:20.039338+00:00",
+    "retrieved_at": "2026-08-29T19:19:30.833123+00:00",
     "retrieved_local_date": "2026-08-29",
     "post_edition_date_source": false,
     "summary_or_snippet": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East AP News",
@@ -443,7 +548,7 @@
     "dispatch_slug": "gaza",
     "edition_date": "2026-08-29",
     "used_in_story_ids": [
-      "gaza-story-2026-08-29-009"
+      "gaza-story-2026-08-29-011"
     ],
     "claim_ids": [],
     "story_selection_excluded_reason": null,

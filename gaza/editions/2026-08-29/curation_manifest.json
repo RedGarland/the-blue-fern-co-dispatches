@@ -1,6 +1,6 @@
 [
   {
-    "story_id": "gaza-story-2026-08-29-006",
+    "story_id": "gaza-story-2026-08-29-008",
     "title": "Israel raids, shutters UNRWA lifeline for Palestinian refugees",
     "summary": "An UNRWA vocational centre in the occupied West Bank has been raided by Israeli forces and ordered to close.",
     "category": "palestinian_development",
@@ -53,7 +53,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T17:19:25.747120+00:00",
+    "generated_at": "2026-08-29T19:19:36.601871+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -136,7 +136,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T17:19:25.747120+00:00",
+    "generated_at": "2026-08-29T19:19:36.601871+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -162,14 +162,15 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-007",
-    "title": "UNRWA's first and last vocational college in East Jerusalem is under threat",
+    "story_id": "gaza-story-2026-08-29-009",
+    "title": "UNRWA's first and last vocational college in East Jerusalem is under attack",
     "summary": "Israel threatens the Qalandiya Training Centre, one of Jerusalem's oldest still-operational educational institutions.",
     "category": "palestinian_development",
     "story_scope": "palestinian_development",
-    "score": 65,
+    "score": 77,
     "scoring_reasons": [
       "humanitarian_impact",
+      "civilian_harm",
       "source_reliability",
       "date_confidence"
     ],
@@ -177,7 +178,7 @@
       "humanitarian_impact": 12,
       "aid_access": 0,
       "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
+      "civilian_harm": 12,
       "displacement": 0,
       "health_infrastructure": 0,
       "accountability_legal": 0,
@@ -187,10 +188,10 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-08-29-aljazeera-middle-east-b5c5f68cacee"
+      "gaza-2026-08-29-aljazeera-middle-east-3dedea520b10"
     ],
     "source_ids": [
-      "gaza-2026-08-29-aljazeera-middle-east-b5c5f68cacee"
+      "gaza-2026-08-29-aljazeera-middle-east-3dedea520b10"
     ],
     "source_urls": [
       "https://www.aljazeera.com/features/2026/8/29/unrwas-first-and-last-vocational-college-in-east-jerusalem-is-under-threat?traffic_source=rss"
@@ -200,8 +201,8 @@
     ],
     "source_records": [
       {
-        "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-b5c5f68cacee",
-        "title": "UNRWA's first and last vocational college in East Jerusalem is under threat",
+        "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-3dedea520b10",
+        "title": "UNRWA's first and last vocational college in East Jerusalem is under attack",
         "url": "https://www.aljazeera.com/features/2026/8/29/unrwas-first-and-last-vocational-college-in-east-jerusalem-is-under-threat?traffic_source=rss",
         "publisher": "Al Jazeera",
         "summary_or_snippet": "Israel threatens the Qalandiya Training Centre, one of Jerusalem's oldest still-operational educational institutions.",
@@ -214,13 +215,13 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T17:19:25.747120+00:00",
+    "generated_at": "2026-08-29T19:19:36.601871+00:00",
     "relevance_terms_matched": [
       "east jerusalem",
       "gaza",
       "unrwa"
     ],
-    "top_story_relevance_score": 65,
+    "top_story_relevance_score": 77,
     "substantive_ground": true,
     "flotilla_only": false,
     "attribution_mode": "reported_public_source",
@@ -242,8 +243,88 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-004",
-    "title": "Israeli attacks across Gaza kill two people, hit hospital supply warehouse",
+    "story_id": "gaza-story-2026-08-29-005",
+    "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
+    "summary": "Israeli settlers stormed Qusra in the occupied West Bank, attacking Palestinian residents and damaging homes.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 62,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-29-aljazeera-middle-east-0a8256cd8f33"
+    ],
+    "source_ids": [
+      "gaza-2026-08-29-aljazeera-middle-east-0a8256cd8f33"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/8/29/israeli-army-arrests-six-palestinians-after-settler-violence-in-west-bank?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-0a8256cd8f33",
+        "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/8/29/israeli-army-arrests-six-palestinians-after-settler-violence-in-west-bank?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israeli settlers stormed Qusra in the occupied West Bank, attacking Palestinian residents and damaging homes.",
+        "event_date": "2026-08-29T17:09:10+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-08-29T19:19:36.601871+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 62,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-08-29T17:09:10+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-08-22-010",
+    "prior_edition_date": "2026-08-22",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-29-006",
+    "title": "Israeli attacks in Gaza kill four people, hit hospital supply warehouse",
     "summary": "Gaza's Health Ministry reports rising casualties amid escalated Israeli attacks, with victims trapped under rubble.",
     "category": "conflict",
     "story_scope": "core_gaza",
@@ -268,10 +349,10 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-08-29-aljazeera-middle-east-47f97bdd55e6"
+      "gaza-2026-08-29-aljazeera-middle-east-4a6429a19ef9"
     ],
     "source_ids": [
-      "gaza-2026-08-29-aljazeera-middle-east-47f97bdd55e6"
+      "gaza-2026-08-29-aljazeera-middle-east-4a6429a19ef9"
     ],
     "source_urls": [
       "https://www.aljazeera.com/news/2026/8/29/israeli-attacks-across-gaza-kill-two-people-hit-hospital-supply-warehouse?traffic_source=rss"
@@ -281,8 +362,8 @@
     ],
     "source_records": [
       {
-        "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-47f97bdd55e6",
-        "title": "Israeli attacks across Gaza kill two people, hit hospital supply warehouse",
+        "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-4a6429a19ef9",
+        "title": "Israeli attacks in Gaza kill four people, hit hospital supply warehouse",
         "url": "https://www.aljazeera.com/news/2026/8/29/israeli-attacks-across-gaza-kill-two-people-hit-hospital-supply-warehouse?traffic_source=rss",
         "publisher": "Al Jazeera",
         "summary_or_snippet": "Gaza's Health Ministry reports rising casualties amid escalated Israeli attacks, with victims trapped under rubble.",
@@ -295,7 +376,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T17:19:25.747120+00:00",
+    "generated_at": "2026-08-29T19:19:36.601871+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -373,7 +454,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T17:19:25.747120+00:00",
+    "generated_at": "2026-08-29T19:19:36.601871+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -401,7 +482,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-009",
+    "story_id": "gaza-story-2026-08-29-011",
     "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
     "summary": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East AP News.",
     "category": "conflict",
@@ -453,7 +534,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T17:19:25.747120+00:00",
+    "generated_at": "2026-08-29T19:19:36.601871+00:00",
     "relevance_terms_matched": [
       "gaza",
       "west bank"
@@ -480,7 +561,86 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-005",
+    "story_id": "gaza-story-2026-08-29-004",
+    "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
+    "summary": "A federal judge criticised the Trump government for attempting to infringe upon foreign students' rights to free speech.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 52,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-29-aljazeera-middle-east-04d6b190c1dd"
+    ],
+    "source_ids": [
+      "gaza-2026-08-29-aljazeera-middle-east-04d6b190c1dd"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/8/29/us-judge-rules-against-trumps-effort-to-deport-pro-palestinian-students?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-04d6b190c1dd",
+        "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
+        "url": "https://www.aljazeera.com/news/2026/8/29/us-judge-rules-against-trumps-effort-to-deport-pro-palestinian-students?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "A federal judge criticised the Trump government for attempting to infringe upon foreign students' rights to free speech.",
+        "event_date": "2026-08-29T18:56:19+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-08-29T19:19:36.601871+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 52,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-08-29T18:56:19+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-29-007",
     "title": "Israeli settlers surround Palestinian home in occupied West Bank's Qusra",
     "summary": "At least four people trapped inside their home, as earlier siege on Palestinian families has continued for three weeks.",
     "category": "palestinian_development",
@@ -531,7 +691,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T17:19:25.747120+00:00",
+    "generated_at": "2026-08-29T19:19:36.601871+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",

@@ -2,7 +2,7 @@
 
 - Status: **daily_briefing**
 - Recommendation: **publish normally**
-- Sources: 9 from 4 publishers
+- Sources: 11 from 4 publishers
 - Publishers: Al Jazeera, Associated Press, BBC News, UNICEF
 - Categories: 2
 - All stories from one publisher: false
@@ -11,7 +11,7 @@
 - Claim-attributed sources: 0
 
 ## Source families
-- news_media: 5
+- news_media: 7
 - regional_local: 1
 - wire_international: 3
 

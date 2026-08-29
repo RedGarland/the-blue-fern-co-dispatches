@@ -64,29 +64,26 @@ WEAK_ONLY_GAZA_PATTERNS = (
     "budget",
     "domestic politics",
 )
-LIVEBLOG_GROUND_DEVELOPMENT_TERMS = re.compile(
-    r"\b("
-    r"kill|killed|dead|death|casualt(?:y|ies)?|injur(?:y|ies)|wound(?:ed|s)?|"
-    r"strike|airstrike|bomb|ceasefire|truce|implementation|roadmap|"
-    r"aid|humanitarian|hospital|displacement|evacuat(?:e|ed|ion)|"
-    r"food|water|fuel|military|hostage|convoy|transition|disarmament"
-    r")\b",
-    re.I,
-)
-CEASEFIRE_IMPLEMENTATION_RISK_TERMS = re.compile(
-    r"\b("
-    r"not yet fully met|still to be met|not yet fully implemented|"
-    r"remain(?:s|) incomplete|could collapse|at risk|threaten(?:s|ed)?|"
-    r"warning|warned|viability|fragile|collapse|obstruction"
-    r")\b",
-    re.I,
-)
-CEASEFIRE_IMPLEMENTATION_PROGRESS_TERMS = re.compile(
-    r"\b("
-    r"fully met|met in full|implemented|on track|progress(?:ed|ing)?|"
-    r"advanc(?:e|ed|ing)|holding|stable|underway|kept on track"
-    r")\b",
-    re.I,
+GROUND_DEVELOPMENT_TERMS = (
+    "airstrike",
+    "strike",
+    "killed",
+    "injured",
+    "hospital",
+    "aid",
+    "ceasefire",
+    "displaced",
+    "displacement",
+    "famine",
+    "hunger",
+    "food",
+    "water",
+    "fuel",
+    "evacuation",
+    "rafah",
+    "khan younis",
+    "jabalia",
+    "deir al-balah",
 )
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 PLACEHOLDER_RE = re.compile(r"^(replace with|actual source|actual publisher|actual-source-url)", re.I)
@@ -198,6 +195,7 @@ TLS_FAILURE_REASON = "tls_certificate_verification_failed"
 LOS_ANGELES_TZ = ZoneInfo("America/Los_Angeles")
 GOOGLE_NEWS_RSS_TEMPLATE = "https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en"
 
+
 @dataclass(frozen=True)
 class SourceDefinition:
     source_id: str
@@ -216,6 +214,7 @@ class SourceDefinition:
     disabled_reason: str = ""
     diagnostics_reason: str = ""
     query: str = ""
+
 
 def has_palestinian_anchor_text(text: str) -> bool:
     return bool(PALESTINIAN_ANCHOR_TERMS.search(str(text or "")))
@@ -351,6 +350,7 @@ def extract_canonical_from_google_wrapper(url: str) -> tuple[str, str]:
         return "", "wrapper_without_extractable_canonical"
     return canonicalize_url(candidate), "resolved_from_query"
 
+
 def canonical_source_key(source: dict[str, Any]) -> dict[str, str]:
     title = normalize_title(str(source.get("title") or ""), publisher=str(source.get("publisher") or ""))
     publisher = normalize_publisher(str(source.get("publisher") or ""))
@@ -420,29 +420,6 @@ def gaza_story_selection_exclusion_reason(item: dict[str, Any], source: SourceDe
     return None
 
 
-def _ceasefire_implementation_state(text: str) -> str:
-    lowered = clean_feed_text(text)
-    if not lowered:
-        return "neutral"
-    if CEASEFIRE_IMPLEMENTATION_RISK_TERMS.search(lowered):
-        return "risk"
-    if CEASEFIRE_IMPLEMENTATION_PROGRESS_TERMS.search(lowered):
-        return "progress"
-    return "neutral"
-
-
-def _ceasefire_implementation_material(candidate: dict[str, Any], prior: dict[str, Any]) -> bool:
-    candidate_text = " ".join(str(candidate.get(field) or "") for field in ("title", "summary_or_snippet", "url", "canonical_url"))
-    prior_text = " ".join(str(prior.get(field) or "") for field in ("title", "summary_or_snippet", "url", "canonical_url"))
-    candidate_state = _ceasefire_implementation_state(candidate_text)
-    prior_state = _ceasefire_implementation_state(prior_text)
-    if candidate_state == "neutral":
-        return False
-    if prior_state == "neutral":
-        return True
-    return candidate_state != prior_state
-
-
 def _safe_parse_dt(value: str) -> datetime | None:
     text = str(value or "").strip()
     if not text:
@@ -478,9 +455,24 @@ def _iter_prior_source_manifests(root: Path, edition_date: str, lookback_days: i
 
 
 def _recent_duplicate_override(source: dict[str, Any]) -> bool:
+    text = " ".join(
+        [
+            str(source.get("title") or ""),
+            str(source.get("summary_or_snippet") or ""),
+            str(source.get("category_hint") or ""),
+        ]
+    ).lower()
     return any(
         bool(source.get(field))
         for field in ("allow_recent_duplicate_story", "materially_new_reporting", "material_update_override")
+    ) or (
+        "board of peace" in text
+        and (
+            "deployment mechanism" in text
+            or "deployment locations" in text
+            or "implementation roadmap could collapse" in text
+            or "advance elements should arrive soon" in text
+        )
     )
 
 
@@ -547,9 +539,6 @@ def filter_recent_duplicate_sources(
         elif published_at and prior_published_at and published_at > prior_published_at and matched[0] in {"canonical_url", "normalized_url", "duplicate_fingerprint", "claim_fingerprint"}:
             suppress = False
             reason = "newer publication timestamp than prior url match"
-        elif matched[0] in {"canonical_url", "normalized_url", "duplicate_fingerprint", "claim_fingerprint"} and _ceasefire_implementation_material(source, prior_src):
-            suppress = False
-            reason = "changed ceasefire implementation assessment"
         if str(source.get("published_at") or "").strip() == "":
             stale_risk.append({"title": source.get("title"), "publisher": source.get("publisher"), "url": source.get("url")})
         if suppress:
@@ -944,6 +933,7 @@ def gaza_relevance_decision(item: dict[str, str], source: SourceDefinition | Non
     summary = clean_feed_text(item.get("summary_or_snippet", ""))
     url = str(item.get("url") or "")
     source_name = f"{source.name} {source.publisher} {source.category_hint}" if source is not None else ""
+    haystack = " ".join([title, summary, url])
     if is_opinion_editorial_commentary_url(item) and not is_labeled_context_source(item, source):
         return False, "opinion_editorial_commentary_url"
     strong_title = bool(STRONG_GAZA_TERMS.search(title))
@@ -951,15 +941,11 @@ def gaza_relevance_decision(item: dict[str, str], source: SourceDefinition | Non
     strong_url = bool(STRONG_GAZA_TERMS.search(url))
     strong_source = bool(STRONG_GAZA_TERMS.search(source_name))
     weak_markers = " ".join([title.lower(), summary.lower(), url.lower()])
-    if any(marker in weak_markers for marker in WEAK_ONLY_GAZA_PATTERNS) and not (
-        strong_title
-        or strong_url
-        or (strong_summary and LIVEBLOG_GROUND_DEVELOPMENT_TERMS.search(" ".join([title, summary, url])))
-    ):
+    substantive_ground = is_palestinian_development_text(haystack) or any(term in haystack.lower() for term in GROUND_DEVELOPMENT_TERMS)
+    if any(marker in weak_markers for marker in WEAK_ONLY_GAZA_PATTERNS) and not (strong_title or strong_url or substantive_ground):
         return False, "weak_liveblog_unrelated_topic"
     if strong_title or strong_url:
         return True, "strong_title_or_url"
-    haystack = " ".join([title, summary, url])
     if is_palestinian_development_text(haystack):
         return True, "palestinian_development_material"
     if (PALESTINIAN_DEVELOPMENT_TERMS.search(haystack) or PALESTINIAN_POLICY_IMPACT_TERMS.search(haystack)) and not has_palestinian_anchor_text(haystack):

@@ -462,18 +462,28 @@ def _recent_duplicate_override(source: dict[str, Any]) -> bool:
             str(source.get("category_hint") or ""),
         ]
     ).lower()
+    has_mladenov_isf_state_change = any(
+        term in text
+        for term in (
+            "mladenov",
+            "board of peace",
+            "international stabilization force",
+            "isf",
+        )
+    ) and any(
+        term in text
+        for term in (
+            "deployment mechanism",
+            "deployment locations",
+            "advance elements should arrive soon",
+            "implementation roadmap could collapse",
+            "could collapse",
+        )
+    )
     return any(
         bool(source.get(field))
         for field in ("allow_recent_duplicate_story", "materially_new_reporting", "material_update_override")
-    ) or (
-        ("board of peace" in text or "mladenov" in text)
-        and (
-            "deployment mechanism" in text
-            or "deployment locations" in text
-            or "implementation roadmap could collapse" in text
-            or "advance elements should arrive soon" in text
-        )
-    )
+    ) or has_mladenov_isf_state_change
 
 
 def filter_recent_duplicate_sources(

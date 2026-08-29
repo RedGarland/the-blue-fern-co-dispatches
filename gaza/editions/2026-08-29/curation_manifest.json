@@ -1,87 +1,5 @@
 [
   {
-    "story_id": "gaza-story-2026-08-29-009",
-    "title": "Israel raids, shutters UNRWA lifeline for Palestinian refugees",
-    "summary": "An UNRWA vocational centre in the occupied West Bank has been raided by Israeli forces and ordered to close.",
-    "category": "palestinian_development",
-    "story_scope": "palestinian_development",
-    "score": 82,
-    "scoring_reasons": [
-      "humanitarian_impact",
-      "displacement",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 12,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 8,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-08-29-aljazeera-middle-east-ee0edcc570d0"
-    ],
-    "source_ids": [
-      "gaza-2026-08-29-aljazeera-middle-east-ee0edcc570d0"
-    ],
-    "source_urls": [
-      "https://www.aljazeera.com/video/newsfeed/2026/8/29/israel-raids-shutters-unrwa-lifeline-for-palestinian-refugees?traffic_source=rss"
-    ],
-    "publisher_names": [
-      "Al Jazeera"
-    ],
-    "source_records": [
-      {
-        "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-ee0edcc570d0",
-        "title": "Israel raids, shutters UNRWA lifeline for Palestinian refugees",
-        "url": "https://www.aljazeera.com/video/newsfeed/2026/8/29/israel-raids-shutters-unrwa-lifeline-for-palestinian-refugees?traffic_source=rss",
-        "publisher": "Al Jazeera",
-        "summary_or_snippet": "An UNRWA vocational centre in the occupied West Bank has been raided by Israeli forces and ordered to close.",
-        "event_date": "2026-08-29T13:10:04+00:00",
-        "location": "Gaza",
-        "development_type": "primary_report",
-        "affected_system": "conflict",
-        "attribution": "Al Jazeera",
-        "uncertainty": "reported source",
-        "casualty_counts": {}
-      }
-    ],
-    "generated_at": "2026-08-29T20:48:40.733579+00:00",
-    "relevance_terms_matched": [
-      "gaza",
-      "palestin",
-      "unrwa",
-      "west bank"
-    ],
-    "top_story_relevance_score": 82,
-    "substantive_ground": true,
-    "flotilla_only": false,
-    "attribution_mode": "reported_public_source",
-    "claim_status": "reported_public_source",
-    "context_only": false,
-    "core_ground_development": true,
-    "development_type": "primary_report",
-    "affected_system": "conflict",
-    "location": "Gaza",
-    "event_date": "2026-08-29T13:10:04+00:00",
-    "attribution": "Al Jazeera",
-    "uncertainty": "reported source",
-    "casualty_counts": {},
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-08-04-009",
-    "prior_edition_date": "2026-08-04",
-    "dedupe_classification": "major_update",
-    "dedupe_reasons": []
-  },
-  {
     "story_id": "gaza-story-2026-08-29-003",
     "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef",
     "summary": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza Unicef.",
@@ -136,7 +54,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T20:48:40.733579+00:00",
+    "generated_at": "2026-08-29T21:38:34.291312+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -215,7 +133,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T20:48:40.733579+00:00",
+    "generated_at": "2026-08-29T21:38:34.291312+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -293,7 +211,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T20:48:40.733579+00:00",
+    "generated_at": "2026-08-29T21:38:34.291312+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -374,7 +292,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T20:48:40.733579+00:00",
+    "generated_at": "2026-08-29T21:38:34.291312+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -452,7 +370,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T20:48:40.733579+00:00",
+    "generated_at": "2026-08-29T21:38:34.291312+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -480,7 +398,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-010",
+    "story_id": "gaza-story-2026-08-29-008",
     "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
     "summary": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East AP News.",
     "category": "conflict",
@@ -532,7 +450,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T20:48:40.733579+00:00",
+    "generated_at": "2026-08-29T21:38:34.291312+00:00",
     "relevance_terms_matched": [
       "gaza",
       "west bank"
@@ -611,7 +529,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T20:48:40.733579+00:00",
+    "generated_at": "2026-08-29T21:38:34.291312+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -638,49 +556,50 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-008",
-    "title": "Israeli settlers surround Palestinian home in occupied West Bank's Qusra",
-    "summary": "At least four people trapped inside their home, as earlier siege on Palestinian families has continued for three weeks.",
-    "category": "palestinian_development",
-    "story_scope": "palestinian_development",
-    "score": 50,
+    "story_id": "gaza-story-2026-08-29-009",
+    "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
+    "summary": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 41,
     "scoring_reasons": [
+      "ceasefire_diplomacy",
       "source_reliability",
       "date_confidence"
     ],
     "candidate_score_breakdown": {
       "humanitarian_impact": 0,
       "aid_access": 0,
-      "ceasefire_diplomacy": 0,
+      "ceasefire_diplomacy": 8,
       "civilian_harm": 0,
       "displacement": 0,
       "health_infrastructure": 0,
       "accountability_legal": 0,
       "source_reliability": 14,
-      "date_confidence": 18
+      "date_confidence": 10
     },
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-08-29-aljazeera-middle-east-9405cc7b6dba"
+      "gaza-2026-08-29-aljazeera-board-of-peace-isf-query-3c1fa6c3ec94"
     ],
     "source_ids": [
-      "gaza-2026-08-29-aljazeera-middle-east-9405cc7b6dba"
+      "gaza-2026-08-29-aljazeera-board-of-peace-isf-query-3c1fa6c3ec94"
     ],
     "source_urls": [
-      "https://www.aljazeera.com/news/2026/8/29/israeli-settlers-surround-palestinian-home-in-occupied-west-banks-qusra?traffic_source=rss"
+      "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNdkpxdFc5VUFLYjJ1bTJ2Q2w5MXpKLVBJdEpGOC1nMjFUVEJFVzh0U2hwbTVtbzZPS0FSVTRnN21TLWI3dkVVSHNXdWl4QUZ5Q2lSM2xHWkFRMFZPRU5nUUQydGdBYnUzUUFLWXZUcW1jUENKTEZnQ3gzZmhlYy1OdVB1b3FYN21OOGRWNDMxYjZmLXFlRUtnTGJJOUtsaS1hdFJaQjFjOXF5QdIBrwFBVV95cUxNSC1xcVVjZ1FOdGQ0b2NYMzJtc3h0X2tuSThQZ1pFaHpmT1Atb0lfOUMzVmswdTJZNWg5NkNDSWh1aDZzTVVCRFUxYW5xSHQtLU94ZXZ4NVl0d2ZPbnFzTVVYeldmNDNVWEx5eGxhVEhGbmdrZFY2UFJ3eDJJM2xNdlZJWWl6aDJ4eWlzOUhwN1FENHczVXFIS3Z1djF3aW5RSVlQbjVrSnNLQTdKa2ZJ?oc=5"
     ],
     "publisher_names": [
       "Al Jazeera"
     ],
     "source_records": [
       {
-        "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-9405cc7b6dba",
-        "title": "Israeli settlers surround Palestinian home in occupied West Bank's Qusra",
-        "url": "https://www.aljazeera.com/news/2026/8/29/israeli-settlers-surround-palestinian-home-in-occupied-west-banks-qusra?traffic_source=rss",
+        "source_record_id": "gaza-2026-08-29-aljazeera-board-of-peace-isf-query-3c1fa6c3ec94",
+        "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
+        "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNdkpxdFc5VUFLYjJ1bTJ2Q2w5MXpKLVBJdEpGOC1nMjFUVEJFVzh0U2hwbTVtbzZPS0FSVTRnN21TLWI3dkVVSHNXdWl4QUZ5Q2lSM2xHWkFRMFZPRU5nUUQydGdBYnUzUUFLWXZUcW1jUENKTEZnQ3gzZmhlYy1OdVB1b3FYN21OOGRWNDMxYjZmLXFlRUtnTGJJOUtsaS1hdFJaQjFjOXF5QdIBrwFBVV95cUxNSC1xcVVjZ1FOdGQ0b2NYMzJtc3h0X2tuSThQZ1pFaHpmT1Atb0lfOUMzVmswdTJZNWg5NkNDSWh1aDZzTVVCRFUxYW5xSHQtLU94ZXZ4NVl0d2ZPbnFzTVVYeldmNDNVWEx5eGxhVEhGbmdrZFY2UFJ3eDJJM2xNdlZJWWl6aDJ4eWlzOUhwN1FENHczVXFIS3Z1djF3aW5RSVlQbjVrSnNLQTdKa2ZJ?oc=5",
         "publisher": "Al Jazeera",
-        "summary_or_snippet": "At least four people trapped inside their home, as earlier siege on Palestinian families has continued for three weeks.",
-        "event_date": "2026-08-29T13:11:41+00:00",
+        "summary_or_snippet": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera",
+        "event_date": "2026-08-28T16:48:33+00:00",
         "location": "Gaza",
         "development_type": "primary_report",
         "affected_system": "conflict",
@@ -689,30 +608,28 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T20:48:40.733579+00:00",
+    "generated_at": "2026-08-29T21:38:34.291312+00:00",
     "relevance_terms_matched": [
-      "gaza",
-      "palestin",
-      "west bank"
+      "gaza"
     ],
-    "top_story_relevance_score": 50,
-    "substantive_ground": false,
+    "top_story_relevance_score": 41,
+    "substantive_ground": true,
     "flotilla_only": false,
     "attribution_mode": "reported_public_source",
     "claim_status": "reported_public_source",
     "context_only": false,
-    "core_ground_development": false,
+    "core_ground_development": true,
     "development_type": "primary_report",
     "affected_system": "conflict",
     "location": "Gaza",
-    "event_date": "2026-08-29T13:11:41+00:00",
+    "event_date": "2026-08-28T16:48:33+00:00",
     "attribution": "Al Jazeera",
     "uncertainty": "reported source",
     "casualty_counts": {},
     "include_decision": "include",
     "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-08-04-009",
-    "prior_edition_date": "2026-08-04",
+    "prior_story_matched": "gaza-story-2026-08-28-001",
+    "prior_edition_date": "2026-08-28",
     "dedupe_classification": "major_update",
     "dedupe_reasons": []
   }

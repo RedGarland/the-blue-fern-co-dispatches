@@ -2,14 +2,14 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-08-29",
-  "generated_at": "2026-08-29T20:48:40.733579+00:00",
+  "generated_at": "2026-08-29T21:38:34.291312+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-29/",
   "local_output_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-08-29",
   "local_dispatch_output_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\dispatches\\gaza\\editions\\2026-08-29",
   "local_backup_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\tmp-backups-pages\\gaza\\2026-08-29",
   "template_version": "gaza-source-record-v1",
-  "source_count": 10,
-  "story_count": 9,
+  "source_count": 9,
+  "story_count": 8,
   "source_adequacy_status": "daily_briefing",
   "source_adequacy_label": "Daily briefing",
   "publisher_count": 4,
@@ -42,11 +42,11 @@
   ],
   "errors": [],
   "scheduled_run_local_time": "2026-08-29T06:00:00-07:00",
-  "actual_run_local_time": "2026-08-29T13:48:40-07:00",
+  "actual_run_local_time": "2026-08-29T14:38:34-07:00",
   "source_window_start_utc": "2026-08-27T14:17:24Z",
   "source_window_end_utc": "2026-08-29T20:07:47Z",
-  "first_source_retrieved_at": "2026-08-29T20:48:33.999616Z",
-  "last_source_retrieved_at": "2026-08-29T20:48:33.999616Z",
+  "first_source_retrieved_at": "2026-08-29T21:38:28.736675Z",
+  "last_source_retrieved_at": "2026-08-29T21:38:28.736675Z",
   "contains_later_same_day_update": false,
   "later_same_day_update_count": 0,
   "later_same_day_update_batch_count": 0,
@@ -58,8 +58,8 @@
   "post_edition_date_retrieval_batches": [],
   "retrieval_batches": [
     {
-      "retrieved_at": "2026-08-29T20:48:33.999616Z",
-      "retrieved_at_local": "2026-08-29T13:48:33-07:00",
+      "retrieved_at": "2026-08-29T21:38:28.736675Z",
+      "retrieved_at_local": "2026-08-29T14:38:28-07:00",
       "retrieved_local_date": "2026-08-29",
       "batch_classification": "scheduled_or_pre_scheduled_batch",
       "source_record_ids": [
@@ -70,11 +70,10 @@
         "gaza-2026-08-29-aljazeera-middle-east-04d6b190c1dd",
         "gaza-2026-08-29-aljazeera-middle-east-0a8256cd8f33",
         "gaza-2026-08-29-aljazeera-middle-east-4a6429a19ef9",
-        "gaza-2026-08-29-aljazeera-middle-east-9405cc7b6dba",
-        "gaza-2026-08-29-aljazeera-middle-east-ee0edcc570d0",
-        "gaza-2026-08-29-ap-gaza-attribution-query-f5136b8fcfab"
+        "gaza-2026-08-29-ap-gaza-attribution-query-f5136b8fcfab",
+        "gaza-2026-08-29-aljazeera-board-of-peace-isf-query-3c1fa6c3ec94"
       ],
-      "source_count": 10
+      "source_count": 9
     }
   ]
 }

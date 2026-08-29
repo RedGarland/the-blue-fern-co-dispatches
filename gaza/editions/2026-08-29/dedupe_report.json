@@ -1,19 +1,8 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-08-29",
-  "candidates_seen": 9,
+  "candidates_seen": 8,
   "included_stories": [
-    {
-      "story_id": "gaza-story-2026-08-29-009",
-      "title": "Israel raids, shutters UNRWA lifeline for Palestinian refugees",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "update_term_in_title_or_snippet"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
     {
       "story_id": "gaza-story-2026-08-29-003",
       "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef",
@@ -69,7 +58,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-010",
+      "story_id": "gaza-story-2026-08-29-008",
       "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
       "classification": "major_update",
       "material_update": false,
@@ -89,8 +78,8 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-008",
-      "title": "Israeli settlers surround Palestinian home in occupied West Bank's Qusra",
+      "story_id": "gaza-story-2026-08-29-009",
+      "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
       "classification": "major_update",
       "material_update": false,
       "material_update_reasons": [],
@@ -102,21 +91,6 @@
   "continuing_developments": [],
   "major_updates": [
     {
-      "story_id": "gaza-story-2026-08-29-009",
-      "title": "Israel raids, shutters UNRWA lifeline for Palestinian refugees",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "update_term_in_title_or_snippet"
-      ],
-      "duplicate_reasons": [],
-      "watchlist_status": "material_follow_up",
-      "prior_story_matched": "gaza-story-2026-08-04-009",
-      "prior_edition_date": "2026-08-04",
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
       "story_id": "gaza-story-2026-08-29-006",
       "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
       "classification": "major_update",
@@ -146,7 +120,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-010",
+      "story_id": "gaza-story-2026-08-29-008",
       "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
       "classification": "major_update",
       "material_update": false,
@@ -159,15 +133,15 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-008",
-      "title": "Israeli settlers surround Palestinian home in occupied West Bank's Qusra",
+      "story_id": "gaza-story-2026-08-29-009",
+      "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
       "classification": "major_update",
       "material_update": false,
       "material_update_reasons": [],
       "duplicate_reasons": [],
       "watchlist_status": "publication_candidate",
-      "prior_story_matched": "gaza-story-2026-08-04-009",
-      "prior_edition_date": "2026-08-04",
+      "prior_story_matched": "gaza-story-2026-08-28-001",
+      "prior_edition_date": "2026-08-28",
       "include_decision": "include",
       "public_rendered": true
     }
@@ -175,21 +149,6 @@
   "merged_sources": 0,
   "duplicate_groups": [],
   "reasons": [
-    {
-      "story_id": "gaza-story-2026-08-29-009",
-      "title": "Israel raids, shutters UNRWA lifeline for Palestinian refugees",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "update_term_in_title_or_snippet"
-      ],
-      "duplicate_reasons": [],
-      "watchlist_status": "material_follow_up",
-      "prior_story_matched": "gaza-story-2026-08-04-009",
-      "prior_edition_date": "2026-08-04",
-      "include_decision": "include",
-      "public_rendered": true
-    },
     {
       "story_id": "gaza-story-2026-08-29-003",
       "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef",
@@ -265,7 +224,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-010",
+      "story_id": "gaza-story-2026-08-29-008",
       "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
       "classification": "major_update",
       "material_update": false,
@@ -293,15 +252,15 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-008",
-      "title": "Israeli settlers surround Palestinian home in occupied West Bank's Qusra",
+      "story_id": "gaza-story-2026-08-29-009",
+      "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
       "classification": "major_update",
       "material_update": false,
       "material_update_reasons": [],
       "duplicate_reasons": [],
       "watchlist_status": "publication_candidate",
-      "prior_story_matched": "gaza-story-2026-08-04-009",
-      "prior_edition_date": "2026-08-04",
+      "prior_story_matched": "gaza-story-2026-08-28-001",
+      "prior_edition_date": "2026-08-28",
       "include_decision": "include",
       "public_rendered": true
     }

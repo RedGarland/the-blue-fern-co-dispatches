@@ -54,6 +54,16 @@ GAZA_CONTEXT_TERMS = re.compile(
     r"\b(gaza|israel|war|aid|humanitarian|unrwa|ocha|ceasefire|hostage|airstrike|hospital|famine|food|displacement|military)\b",
     re.I,
 )
+ALJAZEERA_ISF_QUERY_SOURCE_ID = "aljazeera-board-of-peace-isf-query"
+ALJAZEERA_ISF_FACT_TERMS = (
+    "mechanism for deploying",
+    "mechanism for deployment",
+    "deployment locations",
+    "advance elements",
+    "should arrive",
+    "international stabilization force",
+    "board of peace",
+)
 WEAK_ONLY_GAZA_PATTERNS = (
     "live",
     "live blog",
@@ -889,6 +899,57 @@ def fetch_feed_payload(source_id: str, url: str, timeout: int = 20) -> dict[str,
     }
 
 
+def fetch_article_payload(url: str, timeout: int = 20) -> dict[str, Any]:
+    request = urllib.request.Request(url, headers={"User-Agent": "BlueFernDispatches/1.0"})
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            raw = response.read()
+            final_url = str(getattr(response, "geturl", lambda: url)() or url)
+            content_type = str(response.headers.get("Content-Type") or "")
+            try:
+                body = raw.decode("utf-8", errors="replace")
+            except Exception:  # noqa: BLE001
+                body = raw.decode("latin-1", errors="replace")
+            return {
+                "ok": True,
+                "url": url,
+                "final_url": final_url,
+                "status_code": int(getattr(response, "status", 200) or 200),
+                "content_type": content_type,
+                "content_bytes": raw,
+                "content_text": body,
+            }
+    except Exception as exc:  # noqa: BLE001
+        return {
+            "ok": False,
+            "url": url,
+            "final_url": url,
+            "status_code": None,
+            "content_type": "",
+            "content_bytes": None,
+            "content_text": None,
+            "failure_reason": f"{type(exc).__name__}: {exc}",
+        }
+
+
+def _extract_aljazeera_isf_excerpt(article_text: str) -> str:
+    text = clean_feed_text(article_text)
+    if not text:
+        return ""
+    lowered = text.lower()
+    if not any(term in lowered for term in ALJAZEERA_ISF_FACT_TERMS):
+        return ""
+    sentences = re.split(r"(?<=[.!?])\s+", text)
+    matching = [
+        sentence.strip()
+        for sentence in sentences
+        if any(term in sentence.lower() for term in ALJAZEERA_ISF_FACT_TERMS)
+    ]
+    if matching:
+        return " ".join(matching[:3]).strip()
+    return text[:500].strip()
+
+
 def parse_rss_items(content: bytes, content_type: str = "", content_encoding: str = "") -> list[dict[str, str]]:
     data = content
     ctype = str(content_type or "").lower()
@@ -1214,6 +1275,17 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
     if not wrapper_url:
         canonical_status = "direct_url"
     summary = clean_feed_text(item.get("summary_or_snippet", ""))
+    feed_summary = summary
+    content_text = None
+    if source.source_id == ALJAZEERA_ISF_QUERY_SOURCE_ID:
+        article_payload = fetch_article_payload(url)
+        if article_payload.get("ok"):
+            article_text = str(article_payload.get("content_text") or "")
+            excerpt = _extract_aljazeera_isf_excerpt(article_text)
+            if excerpt:
+                content_text = excerpt
+                if excerpt.lower() not in summary.lower():
+                    summary = f"{summary} {excerpt}".strip() if summary else excerpt
     traceability_note, traceability_error = _governance_traceability_note(
         publisher=source.publisher,
         published_at=published_at,
@@ -1233,6 +1305,8 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
         "published_at": published_at,
         "retrieved_at": retrieved_at,
         "summary_or_snippet": summary,
+        "feed_summary_or_snippet": feed_summary,
+        "content_text": content_text,
         "source_type": "rss",
         "provider_id": source.source_id,
         "collector_source_type": source.type,

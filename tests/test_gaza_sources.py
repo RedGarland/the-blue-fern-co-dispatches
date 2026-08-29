@@ -1572,6 +1572,147 @@ def test_aljazeera_gaza_or_palestine_context_item_accepted(work_root, monkeypatc
     assert result["source_count"] == 1
 
 
+def test_aljazeera_board_of_peace_isf_article_enrichment_adds_material_facts(work_root, monkeypatch):
+    path = work_root / "data" / "dispatches" / "gaza" / "sources.yml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        """sources:
+  - source_id: aljazeera-board-of-peace-isf-query
+    name: Al Jazeera Board of Peace ISF Query
+    query: site:aljazeera.com Gaza Mladenov "Board of Peace" "International Stabilization Force" deployment
+    type: google_news_rss
+    enabled: true
+    source_state: enabled
+    publisher: Al Jazeera
+    reliability_tier: reported-public-source
+    category_hint: conflict
+    region_scope: Gaza
+""",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_feed_payload",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "source_id": "aljazeera-board-of-peace-isf-query",
+            "url": "https://example.com/rss.xml",
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload(
+                [
+                    {
+                        "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
+                        "url": "https://news.google.com/rss/articles/wrapper-123",
+                        "published_at": "2026-08-28T16:48:33+00:00",
+                        "summary_or_snippet": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera",
+                    }
+                ]
+            ),
+            "content_text": None,
+        },
+    )
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_article_payload",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "url": "https://news.google.com/rss/articles/wrapper-123",
+            "final_url": "https://www.aljazeera.com/news/2026/8/28/board-of-peace-envoy-mladenov-warns-gaza-ceasefire-risks-collapse",
+            "status_code": 200,
+            "content_type": "text/html; charset=utf-8",
+            "content_bytes": b"<html><body><p>The Board of Peace has determined the mechanism for deploying the International Stabilization Force in Gaza and its deployment locations.</p><p>Advance elements should arrive soon.</p></body></html>",
+            "content_text": "The Board of Peace has determined the mechanism for deploying the International Stabilization Force in Gaza and its deployment locations. Advance elements should arrive soon.",
+        },
+    )
+
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-08-29", min_sources=0, prefer_manual=False)
+
+    assert result["source_count"] == 1
+    record = result["sources"][0]
+    assert "mechanism for deploying" in record["summary_or_snippet"].lower()
+    assert "deployment locations" in record["summary_or_snippet"].lower()
+    assert "advance elements" in record["summary_or_snippet"].lower()
+    assert "deployment mechanism" not in record["feed_summary_or_snippet"].lower()
+    assert "deployment locations" not in record["feed_summary_or_snippet"].lower()
+    assert "advance elements" not in record["feed_summary_or_snippet"].lower()
+    assert "mechanism for deploying" in str(record["content_text"]).lower()
+
+
+def test_aljazeera_board_of_peace_isf_article_enrichment_falls_back_on_fetch_failure(work_root, monkeypatch):
+    path = work_root / "data" / "dispatches" / "gaza" / "sources.yml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        """sources:
+  - source_id: aljazeera-board-of-peace-isf-query
+    name: Al Jazeera Board of Peace ISF Query
+    query: site:aljazeera.com Gaza Mladenov "Board of Peace" "International Stabilization Force" deployment
+    type: google_news_rss
+    enabled: true
+    source_state: enabled
+    publisher: Al Jazeera
+    reliability_tier: reported-public-source
+    category_hint: conflict
+    region_scope: Gaza
+""",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_feed_payload",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "source_id": "aljazeera-board-of-peace-isf-query",
+            "url": "https://example.com/rss.xml",
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload(
+                [
+                    {
+                        "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
+                        "url": "https://news.google.com/rss/articles/wrapper-123",
+                        "published_at": "2026-08-28T16:48:33+00:00",
+                        "summary_or_snippet": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera",
+                    }
+                ]
+            ),
+            "content_text": None,
+        },
+    )
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_article_payload",
+        lambda *_args, **_kwargs: {
+            "ok": False,
+            "url": "https://news.google.com/rss/articles/wrapper-123",
+            "final_url": "https://www.aljazeera.com/news/2026/8/28/board-of-peace-envoy-mladenov-warns-gaza-ceasefire-risks-collapse",
+            "status_code": None,
+            "content_type": "",
+            "content_bytes": None,
+            "content_text": None,
+            "failure_reason": "HTTPError: 403 Forbidden",
+        },
+    )
+
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-08-29", min_sources=0, prefer_manual=False)
+
+    assert result["source_count"] == 1
+    record = result["sources"][0]
+    assert record["summary_or_snippet"] == "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera"
+    assert record["feed_summary_or_snippet"] == "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera"
+    assert record["content_text"] is None
+
+
 def test_unrelated_live_blog_with_incidental_gaza_rejected(work_root, monkeypatch):
     write_config(work_root)
     monkeypatch.setattr(

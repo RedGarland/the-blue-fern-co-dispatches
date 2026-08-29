@@ -1,0 +1,78 @@
+{
+  "dispatch_name": "Dispatches From Gaza",
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-29",
+  "generated_at": "2026-08-29T17:19:25.747120+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-29/",
+  "local_output_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-08-29",
+  "local_dispatch_output_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\dispatches\\gaza\\editions\\2026-08-29",
+  "local_backup_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\tmp-backups-pages\\gaza\\2026-08-29",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 9,
+  "story_count": 7,
+  "source_adequacy_status": "daily_briefing",
+  "source_adequacy_label": "Daily briefing",
+  "publisher_count": 4,
+  "publishers": [
+    "Al Jazeera",
+    "Associated Press",
+    "BBC News",
+    "UNICEF"
+  ],
+  "source_adequacy_warnings": [],
+  "allow_post_edition_date_sources": false,
+  "post_edition_date_sources_included": false,
+  "post_edition_date_source_count": 0,
+  "source_manifest_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-08-29\\sources_manifest.json",
+  "curation_manifest_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-08-29\\curation_manifest.json",
+  "free_public_artifacts": [
+    "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-08-29\\index.html",
+    "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-08-29\\edition_manifest.json",
+    "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-08-29\\sources_manifest.json",
+    "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-08-29\\curation_manifest.json"
+  ],
+  "paid_or_detail_artifacts": [],
+  "detail_artifacts_publicly_exposed": false,
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "public_exposed": true,
+  "warnings": [
+    "suppressed 1 repeated/stale candidate sources via cross-edition dedupe"
+  ],
+  "errors": [],
+  "scheduled_run_local_time": "2026-08-29T06:00:00-07:00",
+  "actual_run_local_time": "2026-08-29T10:19:25-07:00",
+  "source_window_start_utc": "2026-08-27T14:17:24Z",
+  "source_window_end_utc": "2026-08-29T15:25:43Z",
+  "first_source_retrieved_at": "2026-08-29T17:19:20.039338Z",
+  "last_source_retrieved_at": "2026-08-29T17:19:20.039338Z",
+  "contains_later_same_day_update": false,
+  "later_same_day_update_count": 0,
+  "later_same_day_update_batch_count": 0,
+  "later_same_day_update_source_count": 0,
+  "contains_post_edition_date_update": false,
+  "post_edition_date_update_count": 0,
+  "post_edition_date_update_batch_count": 0,
+  "post_edition_date_update_source_count": 0,
+  "post_edition_date_retrieval_batches": [],
+  "retrieval_batches": [
+    {
+      "retrieved_at": "2026-08-29T17:19:20.039338Z",
+      "retrieved_at_local": "2026-08-29T10:19:20-07:00",
+      "retrieved_local_date": "2026-08-29",
+      "batch_classification": "scheduled_or_pre_scheduled_batch",
+      "source_record_ids": [
+        "gaza-2026-08-29-bbc-middle-east-48df2689ef18",
+        "gaza-2026-08-29-bbc-middle-east-b42465192e5a",
+        "gaza-2026-08-29-unicef-gaza-water-query-5aaa884581d8",
+        "gaza-2026-08-29-aljazeera-middle-east-47f97bdd55e6",
+        "gaza-2026-08-29-aljazeera-middle-east-9405cc7b6dba",
+        "gaza-2026-08-29-aljazeera-middle-east-ee0edcc570d0",
+        "gaza-2026-08-29-aljazeera-middle-east-b5c5f68cacee",
+        "gaza-2026-08-29-aljazeera-middle-east-b3ba54a3c26e",
+        "gaza-2026-08-29-ap-gaza-attribution-query-f5136b8fcfab"
+      ],
+      "source_count": 9
+    }
+  ]
+}

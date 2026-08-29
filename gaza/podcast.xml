@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Fri, 28 Aug 2026 13:01:06 +0000</lastBuildDate>
+  <lastBuildDate>Sat, 29 Aug 2026 17:19:43 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for August 29, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-08-29-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-08-29-transcript.html</guid>
+    <pubDate>Sat, 29 Aug 2026 00:00:00 +0000</pubDate>
+    <description>Israel raids, shutters UNRWA lifeline for Palestinian refugees. An UNRWA vocational centre in the occupied West Bank has been raided by Israeli forces and ordered to close. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-08-29.mp3" length="1835520" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for August 28, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-08-28-transcript.html</link>

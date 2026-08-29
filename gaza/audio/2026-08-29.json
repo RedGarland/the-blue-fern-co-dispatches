@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-29",
+  "generated_at": "2026-08-29T17:19:43.568905Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-08-29.mp3",
+  "audio_url": "/gaza/audio/2026-08-29.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1659,
+  "tts_input_word_count": 260,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1835520,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-08-29T17:19:43.568880Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-08-29-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-29/",
+  "script_text": "This is the Gaza Dispatch audio briefing for August 29, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Israel raids, shutters UNRWA lifeline for Palestinian refugees. An UNRWA vocational centre in the occupied West Bank has been raided by Israeli forces and ordered to close. This was reported by Al Jazeera.\n\n2. Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef. Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza Unicef. This was reported by UNICEF.\n\n3. UNRWA's first and last vocational college in East Jerusalem is under threat. Israel threatens the Qalandiya Training Centre, one of Jerusalem's oldest still-operational educational institutions. This was reported by Al Jazeera.\n\n4. Israeli attacks across Gaza kill two people, hit hospital supply warehouse. Gaza's Health Ministry reports rising casualties amid escalated Israeli attacks, with victims trapped under rubble. This was reported by Al Jazeera.\n\n5. BBC tracks one week of Israeli settler violence in occupied West Bank. The BBC's Lucy Williamson reports on settler attacks on Palestinians, which have been observed over the last week alone. This was reported by BBC News.\n\n6. Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News. Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East AP News. This was reported by Associated Press.\n\nFor the full source-backed dispatch, read the August 29, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-ee0edcc570d0",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/29/israel-raids-shutters-unrwa-lifeline-for-palestinian-refugees?traffic_source=rss",
+      "title": "Israel raids, shutters UNRWA lifeline for Palestinian refugees"
+    },
+    {
+      "source_record_id": "gaza-2026-08-29-unicef-gaza-water-query-5aaa884581d8",
+      "publisher": "UNICEF",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQdWFOWFdWSk0xUWluQi1NZ3dodGxMTEVtY29Pb1NVcU5wRm9ucnFfZUI5Y2lhRXFVSncwU1RaYjRGRWdCSHhpRHpHSVNSb3ZqN2dMb1VRc2pkNFRlNEZqX0dZb1NFOEhxQ3NNeERCNTZBNGFZSTNHLXRKMEZjcDhnYnZlM0ZTRmZLSTBCb05JWVd6ZlVVTXN4ejROTzB3ekVJODRMclNJQ2hGV3BhYnZtNWJzaTdMYVk?oc=5",
+      "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef"
+    },
+    {
+      "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-b5c5f68cacee",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/features/2026/8/29/unrwas-first-and-last-vocational-college-in-east-jerusalem-is-under-threat?traffic_source=rss",
+      "title": "UNRWA's first and last vocational college in East Jerusalem is under threat"
+    },
+    {
+      "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-47f97bdd55e6",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/8/29/israeli-attacks-across-gaza-kill-two-people-hit-hospital-supply-warehouse?traffic_source=rss",
+      "title": "Israeli attacks across Gaza kill two people, hit hospital supply warehouse"
+    },
+    {
+      "source_record_id": "gaza-2026-08-29-bbc-middle-east-48df2689ef18",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/videos/c3wjq1188g9o?at_medium=RSS&at_campaign=rss",
+      "title": "BBC tracks one week of Israeli settler violence in occupied West Bank"
+    },
+    {
+      "source_record_id": "gaza-2026-08-29-ap-gaza-attribution-query-f5136b8fcfab",
+      "publisher": "Associated Press",
+      "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPQ3FmcjlycjlqYTlNSzJueHF3d2ZkRHJ3c2ZEbFJkYzZ6ZERHdVE0WXFlV3Y0Uy10emVoZzV4dlBleGRrbTV6a0Z1WkJPVHBTM1NqdExfRUZvRGk5bHJRdnZSdEdBbXBSN2h4VmE0SzB2emV4NHdQQUZSSWRpUlNGRjNaamtWbEdUbGtoSlNtMzF6TGd0b05SdHMtRTFaYVk?oc=5",
+      "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News"
+    }
+  ]
+}

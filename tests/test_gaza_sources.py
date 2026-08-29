@@ -8,6 +8,8 @@ from pathlib import Path
 import pytest
 
 from bluefern_dispatches import gaza_sources
+from bluefern_dispatches.story_dedupe import dedupe_public_stories
+from scripts.run_gaza_dispatch import curate_stories, normalize_sources
 from scripts import check_gaza_sources
 
 
@@ -720,6 +722,50 @@ def test_july_3_july_4_elpais_duplicate_marks_recent_story_but_keeps_audit_recor
     assert report["suppressed_candidates"][0]["story_selection_excluded_reason"] == "duplicate_recent_story"
 
 
+def test_recent_duplicate_keeps_changed_ceasefire_implementation_assessment(work_root):
+    prior_manifest = work_root / "output" / "dispatches" / "gaza" / "editions" / "2026-08-25" / "sources_manifest.json"
+    prior_manifest.parent.mkdir(parents=True, exist_ok=True)
+    prior_manifest.write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "gaza-2026-08-25-un-roadmap-001",
+                    "title": "Board of Peace outlines Gaza ceasefire roadmap",
+                    "url": "https://www.un.org/securitycouncil/meeting/board-of-peace-gaza-roadmap",
+                    "canonical_url": "https://www.un.org/securitycouncil/meeting/board-of-peace-gaza-roadmap",
+                    "publisher": "UN Security Council",
+                    "published_at": "",
+                    "retrieved_at": "2026-08-25T10:00:00+00:00",
+                    "summary_or_snippet": "Officials described a roadmap for ceasefire implementation and transition steps that remain on track.",
+                    "category_hint": "diplomatic",
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    candidates = [
+        {
+            "source_record_id": "gaza-2026-08-26-un-roadmap-002",
+            "title": "Board of Peace outlines Gaza ceasefire roadmap",
+            "url": "https://www.un.org/securitycouncil/meeting/board-of-peace-gaza-roadmap",
+            "canonical_url": "https://www.un.org/securitycouncil/meeting/board-of-peace-gaza-roadmap",
+            "publisher": "UN Security Council",
+            "published_at": "",
+            "retrieved_at": "2026-08-26T10:00:00+00:00",
+            "summary_or_snippet": "The envoy warned Hamas had not yet fully met its ceasefire commitment and that the implementation roadmap could collapse.",
+            "category_hint": "diplomatic",
+        }
+    ]
+
+    normalized, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-08-26", candidates)
+
+    assert len(normalized) == 1
+    assert "story_selection_excluded_reason" not in normalized[0]
+    assert report["suppressed_candidate_count"] == 0
+    assert report["kept_candidate_count"] == 1
+
+
 def test_recent_duplicate_can_pass_with_explicit_material_update_override(work_root):
     prior_manifest = work_root / "bluefern-dispatches-pages" / "gaza" / "editions" / "2026-07-03" / "sources_manifest.json"
     prior_manifest.parent.mkdir(parents=True, exist_ok=True)
@@ -817,6 +863,28 @@ def test_relevance_rejects_guardian_australia_coal_live_blog():
     assert reason in {"weak_liveblog_unrelated_topic", "gaza_mention_only_without_strong_topic_signal"}
 
 
+def test_relevance_keeps_gaza_liveblog_with_ground_development_in_summary():
+    source = gaza_sources.SourceDefinition(
+        source_id="guardian-world",
+        name="Guardian World",
+        url="https://www.theguardian.com/world/rss",
+        type="rss",
+        enabled=True,
+        publisher="The Guardian",
+        reliability_tier="reported-public-source",
+        category_hint="conflict",
+        region_scope="Gaza",
+    )
+    item = {
+        "title": "Live updates: Middle East conflict",
+        "url": "https://www.theguardian.com/world/live/2026/aug/26/middle-east-live-blog",
+        "summary_or_snippet": "Israeli strike in Khan Younis kills one and wounds several in Gaza, military says operative was targeted.",
+    }
+    accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
+    assert accepted is True
+    assert reason == "strong_summary"
+
+
 def test_relevance_keeps_guardian_unrwa_archive_story():
     source = gaza_sources.SourceDefinition(
         source_id="guardian-world",
@@ -857,6 +925,70 @@ def test_relevance_keeps_bbc_gaza_rubble_story():
     }
     accepted, _reason = gaza_sources.gaza_relevance_decision(item, source)
     assert accepted is True
+
+
+def test_relevance_keeps_traceable_gaza_strike_when_civilian_status_is_unresolved():
+    source = gaza_sources.SourceDefinition(
+        source_id="ap-middle-east",
+        name="AP Middle East",
+        url="https://apnews.com/hub/middle-east",
+        type="rss",
+        enabled=True,
+        publisher="Associated Press",
+        reliability_tier="reported-public-source",
+        category_hint="conflict",
+        region_scope="Gaza",
+    )
+    item = {
+        "title": "Israeli strike in Khan Younis kills one and wounds several in Gaza, military says operative was targeted",
+        "url": "https://apnews.com/article/gaza-khan-younis-strike-operative-targeted",
+        "summary_or_snippet": "One person was killed and several were injured. The military said the target was an operative, while civilian status remained unresolved in the reporting.",
+    }
+
+    accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
+
+    assert accepted is True
+    assert reason in {"strong_title_or_url", "strong_summary"}
+
+
+def test_khan_younis_casualty_fixture_survives_full_gaza_path(work_root):
+    edition_date = "2026-08-26"
+    now = "2026-08-26T12:00:00+00:00"
+    record = {
+        "source_record_id": "gaza-khan-younis-strike-operative-targeted",
+        "title": "Israeli strike in Khan Younis kills one and wounds several in Gaza, military says operative was targeted",
+        "url": "https://apnews.com/article/gaza-khan-younis-strike-operative-targeted",
+        "publisher": "Associated Press",
+        "published_at": "2026-08-26T09:15:00+00:00",
+        "retrieved_at": now,
+        "summary_or_snippet": "One person was killed and several were injured. The military said the target was an operative, while civilian status remained unresolved in the reporting.",
+        "source_type": "rss",
+        "region_scope": "Gaza",
+        "category_hint": "conflict",
+        "reliability_tier": "reported-public-source",
+    }
+
+    normalized, warnings, errors = normalize_sources([record], edition_date, now)
+    assert not warnings
+    assert not errors
+    assert len(normalized) == 1
+    assert normalized[0]["story_selection_excluded_reason"] in {None, ""}
+    assert normalized[0]["canonical_url"].startswith("https://apnews.com/article/")
+
+    deduped_sources, report = gaza_sources.filter_recent_duplicate_sources(work_root, edition_date, normalized)
+    assert len(deduped_sources) == 1
+    assert report["suppressed_candidate_count"] == 0
+
+    stories, relevance_decisions, _top_story_candidates = curate_stories(deduped_sources, edition_date, now)
+    assert any(item["reason"] == "incidental_topic_or_flotilla_only" for item in relevance_decisions)
+    assert len(stories) == 1
+    assert stories[0]["title"] == normalized[0]["title"]
+
+    dedupe_result = dedupe_public_stories(work_root, "gaza", edition_date, stories)
+    assert len(dedupe_result.stories) == 1
+    assert dedupe_result.stories[0]["dedupe_classification"] in {"new", "major_update", "continuing_development"}
+    assert not dedupe_result.report["duplicate_skipped"]
+    assert dedupe_result.report["duplicate_groups"] == []
 
 
 def test_relevance_rejects_equatorial_guinea_asylum_without_palestinian_anchor():

@@ -213,6 +213,8 @@ def test_legacy_current_intake_wrapper_writes_report_and_proposal(tmp_path: Path
     assert report["queue"]["item_count"] == 1
     assert report["proposal"]["draft_status"] == "draft_approved_pending_publication"
     assert Path(report["proposal"]["markdown_path"]).exists()
+
+
 def test_legacy_current_intake_wrapper_builds_queue_from_inbox_export(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.chdir(tmp_path)
     inbox = tmp_path / "data" / "dispatches" / "food-line" / "agent-inbox"
@@ -289,6 +291,150 @@ def test_legacy_current_intake_wrapper_builds_queue_from_inbox_export(tmp_path: 
     assert report["status"] == "success"
     assert report["queue"]["item_count"] == 1
     assert report["proposal"]["draft_status"] == "draft_pending_editorial_review"
+
+
+def test_legacy_current_intake_wrapper_records_duplicate_source_watch_findings_explicitly(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    inbox = tmp_path / "data" / "dispatches" / "food-line" / "agent-inbox"
+    inbox.mkdir(parents=True, exist_ok=True)
+    export_path = inbox / "food-line-source-watch-2026-08-19-food-line-scheduled-test.json"
+    export_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "food_line_source_watch_agent_export_v1",
+                "agent_name": "Food Line Source Watch",
+                "agent_run_id": "food-line-scheduled-test",
+                "completed_at": "2026-08-19T10:00:00Z",
+                "findings": [
+                    {"title": "first"},
+                    {"title": "second"},
+                ],
+                "coverage_notes": "synthetic test",
+            },
+            indent=2,
+            sort_keys=True,
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    duplicate_item = _valid_current_queue_item("2026-08-19")
+    duplicate_item["candidate_id"] = "food-line-current-001"
+    duplicate_item["agent_duplicate_key"] = "duplicate-source-watch-finding"
+    duplicate_item["agent_finding_id"] = "finding-current-001"
+    duplicate_item.pop("review_item_id", None)
+    duplicate_item.pop("source_finding_or_intake_id", None)
+
+    second_duplicate_item = _valid_current_queue_item("2026-08-19")
+    second_duplicate_item["candidate_id"] = "food-line-current-002"
+    second_duplicate_item["agent_duplicate_key"] = "duplicate-source-watch-finding"
+    second_duplicate_item["agent_finding_id"] = "finding-current-002"
+    second_duplicate_item.pop("review_item_id", None)
+    second_duplicate_item.pop("source_finding_or_intake_id", None)
+
+    findings = [object(), object()]
+    mapped_rows = [duplicate_item, second_duplicate_item]
+
+    monkeypatch.setattr(
+        current_intake_compat,
+        "adapt_food_line_agent_output",
+        lambda payload, *, agent_name, agent_run_id: list(findings),
+    )
+    monkeypatch.setattr(
+        current_intake_compat,
+        "map_finding_to_food_line_candidate",
+        lambda finding, *, edition_date: dict(mapped_rows.pop(0)),
+    )
+
+    code = current_intake_compat.main(
+        [
+            "--edition-date",
+            "2026-08-19",
+            "--inbox",
+            str(inbox),
+            "--build-review-queue",
+            "--build-proposed-edition",
+        ]
+    )
+
+    assert code == 0
+    intake_path = tmp_path / "data" / "dispatches" / "food-line" / "agent-intake" / "2026-08-19" / "food-line-scheduled-test.json"
+    intake = json.loads(intake_path.read_text(encoding="utf-8"))
+    candidate_rows = intake["candidate_rows"]
+    assert len(candidate_rows) == 2
+    assert candidate_rows[0]["candidate_disposition"] == "reviewable"
+    assert candidate_rows[1]["candidate_disposition"] == "duplicate"
+    assert candidate_rows[1]["candidate_disposition_reason"] == "duplicate agent_duplicate_key within intake"
+    assert intake["counts"]["eligible_for_review"] == 1
+    assert intake["counts"]["duplicate"] == 1
+    report = json.loads(
+        (tmp_path / "data" / "dispatches" / "food-line" / "review" / "reports" / "2026-08-19" / "current-intake.json").read_text(encoding="utf-8")
+    )
+    assert report["status"] == "success"
+    assert report["queue"]["item_count"] == 1
+    assert report["proposal"]["draft_status"] == "draft_approved_pending_publication"
+
+
+def test_legacy_current_intake_wrapper_accepts_source_published_date_from_inbox_export(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    inbox = tmp_path / "data" / "dispatches" / "food-line" / "agent-inbox"
+    inbox.mkdir(parents=True, exist_ok=True)
+    export_path = inbox / "food-line-source-watch-2026-08-19-food-line-scheduled-test.json"
+    export_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "food_line_source_watch_agent_export_v1",
+                "agent_name": "Food Line Source Watch",
+                "agent_run_id": "food-line-scheduled-test",
+                "completed_at": "2026-08-19T10:00:00Z",
+                "findings": [
+                    {
+                        "title": "Pantry could not continue safely",
+                        "publisher": "Example News",
+                        "source_url": "https://example.org/current-food-pressure",
+                        "canonical_source_url": "https://example.org/current-food-pressure",
+                        "exact_supporting_passage": "The pantry provided food to an average of 960 people and distributed approximately 34,000 pounds of food each month. Building conditions and repair costs made it impossible to continue operating the pantry safely and sustainably.",
+                        "summary": "A pressure signal.",
+                        "location_name": "Example City",
+                        "state": "CA",
+                        "location_scope": "city",
+                        "pressure_type": "service_closure",
+                        "source_role": "pressure_reporting",
+                        "evidence_level": "direct_reporting",
+                        "source_published_date": "2026-08-19",
+                    }
+                ],
+                "coverage_notes": "synthetic test",
+            },
+            indent=2,
+            sort_keys=True,
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    code = current_intake_compat.main(
+        [
+            "--edition-date",
+            "2026-08-19",
+            "--inbox",
+            str(inbox),
+            "--build-review-queue",
+            "--build-proposed-edition",
+        ]
+    )
+
+    assert code == 0
+    report_path = tmp_path / "data" / "dispatches" / "food-line" / "review" / "reports" / "2026-08-19" / "current-intake.json"
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["schema_version"] == "food_line_current_intake_report_v1"
+    assert report["status"] == "success"
+    assert report["errors"] == []
+    assert report["queue"]["item_count"] == 1
+    assert report["proposal"]["draft_status"] == "draft_pending_editorial_review"
+    assert Path(report["proposal"]["markdown_path"]).exists()
 
 
 def test_legacy_discovery_timeout_helper_terminates_process_tree(tmp_path: Path) -> None:

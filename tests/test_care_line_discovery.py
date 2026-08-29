@@ -234,6 +234,73 @@ def test_care_line_discovery_classifies_direct_pressure_and_wrapper_records():
     assert google_news_wrapper["public_eligible"] is False
 
 
+def test_care_line_discovery_treats_date_bearing_openings_and_closures_as_current_pressure_but_keeps_planned_expansion_on_watchlist():
+    future_loss = classify_care_line_discovery_candidate(
+        {
+            "title": "Clinic will close on September 1",
+            "summary_or_snippet": "The clinic will close on September 1 and patients will need to travel farther for care.",
+            "publisher": "Example News",
+            "source_name": "Example News",
+            "location_name": "Texas",
+            "state": "TX",
+        },
+        known_status="unknown_domain_new_article",
+    )
+    same_day_opening = classify_care_line_discovery_candidate(
+        {
+            "title": "Clinic opens today to expand access",
+            "summary_or_snippet": "The clinic opens today and will serve patients in Dallas.",
+            "publisher": "Example News",
+            "source_name": "Example News",
+            "location_name": "Texas",
+            "state": "TX",
+        },
+        known_status="unknown_domain_new_article",
+    )
+    treatment_opening = classify_care_line_discovery_candidate(
+        {
+            "title": "Wellness Ranch opens residential treatment campus in Franklin",
+            "summary_or_snippet": "The new residential treatment campus opens today and will admit patients immediately.",
+            "publisher": "Example News",
+            "source_name": "Example News",
+            "location_name": "Kentucky",
+            "state": "KY",
+        },
+        known_status="unknown_domain_new_article",
+    )
+    planned_expansion = classify_care_line_discovery_candidate(
+        {
+            "title": "Hospital plans to expand behavioral health services",
+            "summary_or_snippet": "The hospital plans to expand behavioral health services but has not announced an opening date.",
+            "publisher": "Example News",
+            "source_name": "Example News",
+            "location_name": "Texas",
+            "state": "TX",
+        },
+        known_status="unknown_domain_new_article",
+    )
+    ownership_announcement = classify_care_line_discovery_candidate(
+        {
+            "title": "Hospital names new CEO",
+            "summary_or_snippet": "The hospital named a new CEO but did not announce any service or access change.",
+            "publisher": "Example News",
+            "source_name": "Example News",
+        },
+        known_status="unknown_domain_new_article",
+    )
+
+    assert future_loss["classification"] == "likely_qualifying"
+    assert future_loss["public_eligible"] is True
+    assert same_day_opening["classification"] == "likely_qualifying"
+    assert same_day_opening["public_eligible"] is True
+    assert treatment_opening["classification"] == "likely_qualifying"
+    assert treatment_opening["public_eligible"] is True
+    assert planned_expansion["classification"] == "likely_resource_only"
+    assert planned_expansion["public_eligible"] is False
+    assert ownership_announcement["classification"] == "likely_resource_only"
+    assert ownership_announcement["public_eligible"] is False
+
+
 def test_care_line_discovery_writes_current_signal_pack_and_builds_current_update_edition(monkeypatch):
     repo = Path(__file__).resolve().parents[1]
     work = _work_root()

@@ -30,6 +30,30 @@ def test_adapter_preserves_passage_and_private_payload_and_pending_review():
     assert candidate["evidence_text"] == finding.exact_supporting_passage
 
 
+def test_source_published_date_is_accepted_for_intake_freshness():
+    payload = _row()
+    payload.pop("source_published_at")
+    payload["source_published_date"] = "2026-07-27"
+    finding = adapt_food_line_agent_output([payload], agent_name="fixture", agent_run_id="run-1", discovered_at="2026-07-27T00:00:00Z")[0]
+    assert finding.source_published_at == "2026-07-27"
+    candidate = map_finding_to_food_line_candidate(finding, edition_date="2026-07-27")
+    assert candidate["published_at"] == "2026-07-27"
+    assert candidate["source_published_date"] == "2026-07-27"
+
+
+def test_retrieved_at_is_accepted_when_publication_dates_are_missing():
+    payload = _row()
+    payload.pop("source_published_at")
+    payload["source_published_date"] = ""
+    payload["publication_date"] = ""
+    payload["retrieved_at"] = "2026-07-27T08:15:00Z"
+    finding = adapt_food_line_agent_output([payload], agent_name="fixture", agent_run_id="run-1", discovered_at="2026-07-27T00:00:00Z")[0]
+    assert finding.source_published_at == "2026-07-27T08:15:00Z"
+    candidate = map_finding_to_food_line_candidate(finding, edition_date="2026-07-27")
+    assert candidate["published_at"] == "2026-07-27T08:15:00Z"
+    assert candidate["source_published_date"] == "2026-07-27"
+
+
 def test_missing_evidence_and_invalid_url_fail_closed():
     missing = adapt_food_line_agent_output([_row(exact_supporting_passage="")], agent_name="fixture", agent_run_id="run-1")[0]
     invalid = adapt_food_line_agent_output([_row(source_url="http://example.com/story")], agent_name="fixture", agent_run_id="run-1")[0]

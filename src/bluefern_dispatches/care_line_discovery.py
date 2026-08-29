@@ -9,7 +9,7 @@ import urllib.parse
 from collections import Counter
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any, Iterable, Mapping
+from typing import Any, Mapping
 
 from bluefern_dispatches.care_line_sources import (
     care_line_review_diagnostics,
@@ -182,6 +182,9 @@ NEGATIVE_TERMS = (
 POSITIVE_TERMS = (
     "closing",
     "closure",
+    "will close",
+    "closes on",
+    "closing on",
     "shutting down",
     "cutting services",
     "ending labor and delivery",
@@ -205,6 +208,12 @@ POSITIVE_TERMS = (
     "waitlist",
     "reduced service",
     "longer travel",
+    "same-day opening",
+    "opens today",
+    "opening today",
+    "opened today",
+    "reopens today",
+    "reopening today",
 )
 
 
@@ -552,7 +561,7 @@ def classify_care_line_discovery_candidate(
         classification = "likely_resource_only"
     else:
         classification = "needs_review"
-    if direct_pressure and any(term in text.lower() for term in ("health tips", "symptoms", "recipe", "wellness", "new technology")):
+    if direct_pressure and any(term in text.lower() for term in ("health tips", "symptoms", "recipe", "new technology")):
         classification = "likely_resource_only"
     if wrapper_candidate and direct_pressure:
         classification = "needs_review"
@@ -678,9 +687,7 @@ def discover_care_line_sources(
         if not isinstance(seed, Mapping):
             continue
         incident_result = build_incident_follow_up_queries(seed, dispatch_slug="care-line")
-        incident_seed_reports.append(
-            {k: incident_result.get(k) for k in ("seed_id", "place", "incident_type", "source_url", "source_date", "trigger_reason", "query_count", "ok")}
-        )
+        incident_seed_reports.append({k: incident_result.get(k) for k in ("seed_id", "place", "incident_type", "source_url", "source_date", "trigger_reason", "query_count", "ok")})
         if incident_result.get("ok"):
             incident_seed_rows.extend([dict(row) for row in incident_result.get("queries") or [] if str(row.get("query") or "").strip()])
     queries.extend(incident_seed_rows)

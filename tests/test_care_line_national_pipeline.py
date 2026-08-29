@@ -6,6 +6,8 @@ import sys
 import types
 from pathlib import Path
 
+import pytest
+
 from bluefern_dispatches.care_line_source_registry import CareLineSource
 
 import bluefern_dispatches.care_line_national_pipeline as pipeline
@@ -789,6 +791,78 @@ def test_care_line_access_blocked_item_can_use_feed_content_text_for_bounded_evi
     assert payload["qualification_result"]["extraction_outcome"] == "ACCESS_BLOCKED"
     assert payload["qualification_result"]["failed_gates"] == []
     assert "emergency department closure announced" in payload["normalized_record"]["supporting_passage"].lower()
+
+
+@pytest.mark.parametrize(
+    "title,description,expected_service_line_hint",
+    [
+        (
+            "Hospital phaseout of labor and delivery continues",
+            "The hospital is phasing out labor and delivery over the next several months while prenatal and gynecology care continue.",
+            "labor_and_delivery",
+        ),
+        (
+            "Home health agency closes",
+            "The home health agency is closing and patients will be transferred to another provider.",
+            "home_health",
+        ),
+        (
+            "Public health department removes clinical care at multiple sites",
+            "The public health department removes clinical care at multiple sites while nonclinical programming remains.",
+            "clinical_services",
+        ),
+        (
+            "Addiction treatment program shuts down after legal ruling",
+            "The addiction treatment program is shutting down after the legal ruling while other programs continue operating.",
+            "substance_use_treatment",
+        ),
+    ],
+)
+def test_care_line_additional_service_loss_classes_remain_reviewable(
+    tmp_path: Path,
+    monkeypatch,
+    title: str,
+    description: str,
+    expected_service_line_hint: str,
+) -> None:
+    monkeypatch.setattr(pipeline, "_can_fetch_item_url", lambda *args, **kwargs: False)
+    source = _care_line_recovery_source()
+    raw_item = {
+        "raw_item_id": f"false-negative-{expected_service_line_hint}",
+        "source_id": "care-line-recovery-source",
+        "source_name": "Care Line Recovery Source",
+        "item_url": "https://example.org/story",
+        "title": title,
+        "description": description,
+        "content_text": description,
+        "source_publication_date": "2026-08-23",
+        "source_date_state": "source_dated",
+        "facility_name": "Example Hospital",
+        "provider_name": "Example Hospital",
+        "city": "Columbus",
+        "state": "OH",
+    }
+    lead = pipeline.event_lead_from_raw_item(raw_item)
+
+    assert lead["qualification_status"] == "event_lead"
+    assert lead["exclusion_reason"] == ""
+    assert lead["service_line_hint"] == expected_service_line_hint
+    assert lead["event_type_hint"] in {"facility_closure", "planned_facility_closure", "service_closure", "service_suspension"}
+
+    status, payload = pipeline.qualify_event_lead(
+        source,
+        raw_item,
+        lead,
+        artifact_path=str(tmp_path / "artifact.json"),
+        run_id="care-line-false-negative-regression",
+        fetch_timeout=5,
+        allow_insecure_tls=False,
+    )
+
+    assert status == "qualified"
+    assert payload["normalized_record"]["review_status"] == "not_reviewed"
+    assert payload["qualification_result"]["failed_gates"] == []
+    assert payload["normalized_record"]["service_line"]
 
 
 def test_care_line_fetch_url_uses_certifi_trust_when_available(monkeypatch) -> None:

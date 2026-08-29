@@ -195,7 +195,7 @@ POSITIVE_EVENT_PATTERNS: list[tuple[str, str, re.Pattern[str]]] = [
     ("facility_closure", "closure", re.compile(r"\b(close|closed|closing|closure|remain(?:s)? closed|still closed|shut(?:ting)? down|cease(?:s|d)? operations?)\b", re.I)),
     ("planned_facility_closure", "closure", re.compile(r"\b(will close|plans? to close|set to close|scheduled to close)\b", re.I)),
     ("temporary_facility_suspension", "suspension", re.compile(r"\b(temp(?:orary|orarily)? (?:close|closure|shut(?:down)?|suspend)|temporarily halt)\b", re.I)),
-    ("service_closure", "service", re.compile(r"\b(end(?:ing)?|stop(?:ping)?|discontinu(?:e|ing)|eliminat(?:e|ing))\b", re.I)),
+    ("service_closure", "service", re.compile(r"\b(end(?:ing)?|stop(?:ping)?|discontinu(?:e|ing)|eliminat(?:e|ing)|cancel(?:ed|led|s|ling)?|phase(?:d|s|ing)?\s*out|remove(?:s|d|ing)?\s+(?:clinical care|clinical services|services?|care))\b", re.I)),
     ("service_suspension", "service", re.compile(r"\b(suspend(?:ed|ing|s)?|remain(?:s)? suspended|still suspended|halt(?:ed|ing|s)?|pause(?:d|s|ing)? services?|stop admissions|divert(?:ed|ing|s)?)\b", re.I)),
     ("hours_reduction", "hours", re.compile(r"\b(reduc(?:e|es|ed|ing) hours?|cut(?:s|ting)? hours?|shorter hours?)\b", re.I)),
     ("capacity_reduction", "capacity", re.compile(r"\b(reduc(?:e|es|ed|ing) beds?|cut(?:s|ting)? beds?|capacity reduction|fewer beds?|reduce capacity)\b", re.I)),
@@ -215,6 +215,7 @@ HEALTHCARE_CONTEXT_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("behavioral_health", re.compile(r"\b(behavioral health|mental health|psychiatric)\b", re.I)),
     ("dialysis", re.compile(r"\b(dialysis)\b", re.I)),
     ("pharmacy", re.compile(r"\b(pharmacy)\b", re.I)),
+    ("home_health", re.compile(r"\b(home health|home-health|home care)\b", re.I)),
     ("ambulance_ems", re.compile(r"\b(ambulance|EMS|emergency medical services)\b", re.I)),
     ("inpatient_care", re.compile(r"\b(inpatient|admissions?)\b", re.I)),
     ("primary_care", re.compile(r"\b(primary care|family medicine)\b", re.I)),
@@ -223,6 +224,9 @@ HEALTHCARE_CONTEXT_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("oncology", re.compile(r"\boncology|cancer care\b", re.I)),
     ("rehabilitation", re.compile(r"\brehabilitation\b", re.I)),
     ("surgery", re.compile(r"\bsurgery|surgical\b", re.I)),
+    ("substance_use_treatment", re.compile(r"\b(addiction treatment|substance use treatment|MAT|medication-assisted treatment|opioid treatment)\b", re.I)),
+    ("clinical_services", re.compile(r"\b(clinical care|clinical services)\b", re.I)),
+    ("public_health", re.compile(r"\b(public health department|public health clinic|health department)\b", re.I)),
 ]
 
 NEGATIVE_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
@@ -258,6 +262,7 @@ SERVICE_LINE_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("psychiatric_care", re.compile(r"\bpsychiatric\b", re.I)),
     ("dialysis", re.compile(r"\bdialysis\b", re.I)),
     ("pharmacy", re.compile(r"\bpharmacy\b", re.I)),
+    ("home_health", re.compile(r"\b(home health|home-health|home care)\b", re.I)),
     ("ambulance_ems", re.compile(r"\b(ambulance|EMS|emergency medical services)\b", re.I)),
     ("inpatient_care", re.compile(r"\b(inpatient|admissions?)\b", re.I)),
     ("primary_care", re.compile(r"\b(primary care|family medicine)\b", re.I)),
@@ -266,6 +271,8 @@ SERVICE_LINE_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("oncology", re.compile(r"\boncology|cancer care\b", re.I)),
     ("rehabilitation", re.compile(r"\brehabilitation\b", re.I)),
     ("surgery", re.compile(r"\bsurgery|surgical\b", re.I)),
+    ("substance_use_treatment", re.compile(r"\b(addiction treatment|substance use treatment|MAT|medication-assisted treatment|opioid treatment)\b", re.I)),
+    ("clinical_services", re.compile(r"\b(clinical care|clinical services)\b", re.I)),
     ("specialty_care", re.compile(r"\bspecialty care\b", re.I)),
 ]
 

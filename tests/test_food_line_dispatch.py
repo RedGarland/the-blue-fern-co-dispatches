@@ -4218,7 +4218,13 @@ def test_food_line_output_includes_scope_counts(tmp_path: Path):
     "title,summary,family,expected_pressure_type",
     [
         ("Food bank sees rising demand from families", "Food bank demand increased and pantry lines grew.", "local_news", "demand strain"),
+        ("Pantry use is up 6% as families keep coming back", "Pantry use is up 6% over July as families keep coming back.", "local_news", "demand strain"),
+        ("Regional food bank loses expected supply", "The food bank loses approximately 4 million pounds of expected supply and must spend roughly $10 million to replace lost government support, while the network remains operational.", "food_bank_provider", "supply pressure"),
         ("Pantry cuts hours due to low inventory", "The pantry reduced hours because shelves were bare.", "food_bank_provider", "service reduction"),
+        ("Households cut groceries to cover utility bills", "A family cut back on groceries because electricity costs are consuming the household budget.", "local_news", "household hardship"),
+        ("Pantry shelves nearly empty before weekend service", "The pantry says supplies are desperately low and it may have to cut back on meals if inventory is not replenished.", "food_bank_provider", "service reduction"),
+        ("Pantry demand nears an all-time high", "Demand is nearing an all-time high and the pantry expanded evening hours because working families cannot get there during the day.", "food_bank_provider", "demand strain"),
+        ("Weekly produce share canceled after grants end", "The weekly free produce distribution was canceled after grants ended and bridge funding ran out, though the organization still plans to ask for donations.", "food_bank_provider", "service reduction"),
         ("SNAP benefits delayed", "Households reported a SNAP delay and application backlog.", "state_official", "benefit disruption"),
         ("Summer meal site closure", "The meal site closed and children are missing meals.", "school_meals_child_nutrition", "child meal gap"),
         ("Meals on Wheels waitlist grows", "The senior meal waitlist grew and providers could not serve seniors.", "senior_meals", "senior meal strain"),
@@ -4248,6 +4254,28 @@ def test_food_line_pressure_classification_examples(tmp_path: Path, title: str, 
         "elevated demand signal",
         "context signal",
     }
+
+
+def test_food_line_funding_loss_distribution_suspension_is_not_treated_as_donation_page(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    date = "2026-06-04"
+    p = _manual_path(tmp_path, date)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    row = _pressure_row(
+        1,
+        "Weekly produce share canceled after grants end",
+        "The weekly free produce distribution was canceled after grants ended and bridge funding ran out, though the organization still plans to ask for donations.",
+        family="food_bank_provider",
+    )
+    p.write_text(json.dumps([row], indent=2), encoding="utf-8")
+
+    result = run_food_line_dispatch(tmp_path, date)
+    manifest = json.loads((tmp_path / "output" / "site" / "food-line" / "editions" / date / "sources_manifest.json").read_text(encoding="utf-8"))
+
+    assert result["pressure_signal_count"] == 1
+    assert manifest[0]["pressure_type"] == "service reduction"
+    assert manifest[0]["pressure_signal"] is True
+    assert manifest[0]["source_purpose"] != "donation_page"
 
 
 def test_food_line_broad_context_terms_do_not_create_current_story_lead(tmp_path: Path):

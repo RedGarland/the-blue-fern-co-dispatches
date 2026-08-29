@@ -139,6 +139,21 @@ UPDATE_TERMS = {
     "orders",
     "ordered",
 }
+CEASEFIRE_IMPLEMENTATION_RISK_TERMS = re.compile(
+    r"\b("
+    r"not yet fully met|still to be met|not yet fully implemented|"
+    r"remain(?:s|) incomplete|could collapse|at risk|threaten(?:s|ed)?|"
+    r"warning|warned|viability|fragile|collapse|obstruction"
+    r")\b",
+    re.I,
+)
+CEASEFIRE_IMPLEMENTATION_PROGRESS_TERMS = re.compile(
+    r"\b("
+    r"fully met|met in full|implemented|on track|progress(?:ed|ing)?|"
+    r"advanc(?:e|ed|ing)|holding|stable|underway|kept on track"
+    r")\b",
+    re.I,
+)
 OFFICIAL_TERMS = {
     "agency",
     "authority",
@@ -156,6 +171,16 @@ OFFICIAL_TERMS = {
     "official",
     "state",
     "tribal",
+}
+OFFICIAL_SOURCE_PHRASES = {
+    "board of peace",
+    "ocha",
+    "security council",
+    "un web tv",
+    "united nations",
+    "unrwa",
+    "world health organization",
+    "world health organisation",
 }
 GAZA_EVENT_ROLE_PREFIXES = (
     "cameraman",
@@ -273,6 +298,38 @@ def story_source_urls(story: dict[str, Any]) -> list[str]:
     return unique_strings(urls)
 
 
+def story_source_record_ids(story: dict[str, Any]) -> list[str]:
+    record_ids: list[str] = []
+    for value in story.get("source_record_ids") or []:
+        if value:
+            record_ids.append(str(value))
+    for record in story.get("source_records") or []:
+        if not isinstance(record, dict):
+            continue
+        for field in ("source_record_id", "record_id", "candidate_id", "id"):
+            value = record.get(field)
+            if value:
+                record_ids.append(str(value))
+                break
+    return unique_strings(record_ids)
+
+
+def story_source_origin_types(story: dict[str, Any]) -> list[str]:
+    origin_types: list[str] = []
+    for value in story.get("source_origin_types") or []:
+        if value:
+            origin_types.append(str(value))
+    for record in story.get("source_records") or []:
+        if not isinstance(record, dict):
+            continue
+        for field in ("source_origin", "source_type", "source_role", "registry_status"):
+            value = record.get(field)
+            if value:
+                origin_types.append(str(value))
+                break
+    return unique_strings(origin_types)
+
+
 def story_canonical_urls(story: dict[str, Any]) -> list[str]:
     urls = []
     for record in story.get("source_records") or []:
@@ -329,6 +386,22 @@ def source_dates(story: dict[str, Any]) -> list[str]:
     return sorted(unique_strings(dates))
 
 
+def story_traceability(story: dict[str, Any]) -> dict[str, Any]:
+    source_records = [record for record in story.get("source_records") or [] if isinstance(record, dict)]
+    source_record_ids = story_source_record_ids(story)
+    return {
+        "source_record_count": len(source_records) or len(source_record_ids),
+        "source_record_ids": source_record_ids,
+        "source_origin_types": story_source_origin_types(story),
+        "source_urls": story_source_urls(story),
+        "canonical_urls": story_canonical_urls(story),
+        "identity_urls": story_identity_urls(story),
+        "publishers": story_publishers(story),
+        "geographies": story_geographies(story),
+        "source_dates": source_dates(story),
+    }
+
+
 def source_family(value: Any) -> str:
     text = normalize_text(value)
     return re.sub(r"\b(news|media|daily|times|post|press|wire|agency|public|radio|tv|television)\b", "", text).strip()
@@ -351,6 +424,29 @@ def has_new_numbers(story: dict[str, Any]) -> bool:
     return bool(re.search(r"\b(new|now|reports?|reported)\b.*\b\d+[\d,]*(?:\.\d+)?\b", text))
 
 
+def ceasefire_implementation_state(text: str) -> str:
+    lowered = normalize_text(text)
+    if not lowered:
+        return "neutral"
+    if CEASEFIRE_IMPLEMENTATION_RISK_TERMS.search(lowered):
+        return "risk"
+    if CEASEFIRE_IMPLEMENTATION_PROGRESS_TERMS.search(lowered):
+        return "progress"
+    return "neutral"
+
+
+def ceasefire_implementation_material(candidate: dict[str, Any], prior: dict[str, Any]) -> bool:
+    candidate_text = " ".join(str(candidate.get(field) or "") for field in ("title", "summary", "url"))
+    prior_text = " ".join(str(prior.get(field) or "") for field in ("title", "summary", "url"))
+    candidate_state = ceasefire_implementation_state(candidate_text)
+    prior_state = ceasefire_implementation_state(prior_text)
+    if candidate_state == "neutral":
+        return False
+    if prior_state == "neutral":
+        return True
+    return candidate_state != prior_state
+
+
 def is_official_source(story: dict[str, Any]) -> bool:
     for record in story.get("source_records") or []:
         if not isinstance(record, dict):
@@ -365,6 +461,8 @@ def is_official_source(story: dict[str, Any]) -> bool:
         if source_type.startswith("official") or reliability in {"official public", "official-public"}:
             return True
         if OFFICIAL_TERMS & set(publisher_text.split()):
+            return True
+        if any(phrase in publisher_text for phrase in OFFICIAL_SOURCE_PHRASES):
             return True
     return False
 
@@ -637,6 +735,8 @@ def material_update(candidate: dict[str, Any], prior: dict[str, Any] | None) -> 
         reasons.append("update_term_in_title_or_snippet")
     if has_new_numbers(candidate):
         reasons.append("reports_new_numbers")
+    if ceasefire_implementation_material(candidate, prior):
+        reasons.append("changed_ceasefire_implementation_assessment")
     candidate_dates = source_dates(candidate)
     prior_dates = list(prior.get("source_dates") or [])
     if candidate_dates and prior_dates and max(candidate_dates) > max(prior_dates) and (has_update_terms(candidate) or has_new_numbers(candidate)):
@@ -666,10 +766,16 @@ def classify_against_prior(candidate: dict[str, Any], prior_rows: list[dict[str,
         fuzzy_title = similarity(candidate_title, prior_title) >= 0.86
         topic_match = has_same_topic(candidate, prior)
         if exact_url and not has_new_detail(candidate, prior):
+            if ceasefire_implementation_material(candidate, prior):
+                return "continuing_development", ["same_topic", "changed_ceasefire_implementation_assessment"], prior
             return "duplicate_skip", ["exact_or_normalized_source_url", "no_new_summary_detail"], prior
         if title_match and not has_new_detail(candidate, prior):
+            if ceasefire_implementation_material(candidate, prior):
+                return "continuing_development", ["same_topic", "changed_ceasefire_implementation_assessment"], prior
             return "duplicate_skip", ["normalized_title", "no_new_summary_detail"], prior
         if publisher_title and not has_new_detail(candidate, prior):
+            if ceasefire_implementation_material(candidate, prior):
+                return "continuing_development", ["same_topic", "changed_ceasefire_implementation_assessment"], prior
             return "duplicate_skip", ["publisher_title", "no_new_summary_detail"], prior
         if is_major_update(candidate, prior):
             return "major_update", ["same_topic", "material_new_development"], prior
@@ -698,6 +804,8 @@ def memory_row(dispatch_slug: str, edition_date: str, story: dict[str, Any], pri
         "summary": story.get("summary"),
         "source_urls": source_urls,
         "canonical_urls": unique_strings(canonical_urls),
+        "source_record_ids": story_source_record_ids(story),
+        "source_origin_types": story_source_origin_types(story),
         "publisher_names": story_publishers(story),
         "category": story.get("category"),
         "geographies": unique_strings(list(prior.get("geographies", []) if prior else []) + story_geographies(story)),
@@ -725,6 +833,8 @@ def memory_row_from_source(dispatch_slug: str, edition_date: str, source: dict[s
         "summary": str(source.get("summary_or_snippet") or ""),
         "source_urls": unique_strings([str(source.get("url") or "").strip()]),
         "canonical_urls": unique_strings([source_url] if source_url else []),
+        "source_record_ids": unique_strings([str(source.get("source_record_id") or "").strip()]),
+        "source_origin_types": unique_strings([str(source.get("source_type") or "").strip()]),
         "publisher_names": unique_strings([publisher] if publisher else []),
         "category": category,
         "geographies": unique_strings([str(source.get("region_scope") or "")]),
@@ -746,10 +856,31 @@ def decision_record(
     prior: dict[str, Any] | None,
     include: bool,
 ) -> dict[str, Any]:
+    novelty_status = "new" if classification == "new" else classification
+    if include and classification in {"major_update", "continuing_development"}:
+        watchlist_status = "material_follow_up"
+    elif include:
+        watchlist_status = "publication_candidate"
+    elif classification == "duplicate_skip":
+        watchlist_status = "duplicate"
+    elif classification in {"major_update", "continuing_development"} and not material:
+        watchlist_status = "held_for_watchlist"
+    else:
+        watchlist_status = "rejected"
+    decision_reason = (
+        "included_after_dedupe_and_material_review"
+        if include
+        else "; ".join(unique_strings([*duplicate_reasons, *material_reasons, classification])) or "excluded"
+    )
     return {
         "story_id": story.get("story_id"),
         "title": story.get("title"),
         "classification": classification,
+        "novelty_status": novelty_status,
+        "watchlist_status": watchlist_status,
+        "publication_eligible": bool(include),
+        "qualification_status": "qualifying" if include else "not_qualifying",
+        "decision_reason": decision_reason,
         "material_update": material,
         "material_update_reasons": material_reasons,
         "duplicate_reasons": duplicate_reasons,
@@ -757,6 +888,8 @@ def decision_record(
         "prior_edition_date": prior.get("edition_date") if prior else None,
         "include_decision": "include" if include else "skip",
         "public_rendered": bool(include),
+        "source_traceability": story_traceability(story),
+        "prior_story_traceability": story_traceability(prior) if prior else None,
     }
 
 
@@ -935,6 +1068,28 @@ def dedupe_public_stories(
         skipped.append(merged_decision)
         decisions.append(merged_decision)
     for story in collapsed:
+        if dispatch_slug == "cascadia" and any(
+            isinstance(record, dict) and record.get("source_type") == "existing_cascadia_manifest"
+            for record in story.get("source_records", [])
+        ):
+            annotated = dict(story)
+            annotated["dedupe_classification"] = "existing_manifest_backfill"
+            annotated["dedupe_reasons"] = ["preserve_existing_cascadia_manifest_backfill"]
+            annotated["material_update"] = True
+            annotated["material_update_reasons"] = ["existing_cascadia_manifest_backfill"]
+            decision = decision_record(
+                story,
+                "existing_manifest_backfill",
+                True,
+                ["existing_cascadia_manifest_backfill"],
+                [],
+                None,
+                True,
+            )
+            decisions.append(decision)
+            included.append(annotated)
+            new_memory_rows.append(memory_row(dispatch_slug, edition_date, annotated, None))
+            continue
         classification, why, prior = classify_against_prior(story, prior_rows)
         material, material_reasons = material_update(story, prior)
         include = classification in {"new", "major_update"} or (classification == "continuing_development" and material)

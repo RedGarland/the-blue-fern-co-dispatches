@@ -37,10 +37,6 @@ def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
-def _short_run_tag(value: str) -> str:
-    return hashlib.sha1(value.encode("utf-8")).hexdigest()[:10]
-
-
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Process the private Food Line current intake.")
     parser.add_argument("--edition-date", required=True)
@@ -67,7 +63,7 @@ def _queue_source_paths(root: Path, inbox: Path, edition_date: str) -> list[Path
 
 def _agent_intake_artifact_path(root: Path, edition_date: str, agent_run_id: str) -> Path:
     safe_run_id = str(agent_run_id or edition_date).strip() or edition_date
-    return root / "data" / "dispatches" / "food-line" / "agent-intake" / edition_date / f"{_short_run_tag(safe_run_id)}.json"
+    return root / "data" / "dispatches" / "food-line" / "agent-intake" / edition_date / f"{safe_run_id}.json"
 
 
 def _queue_item_from_candidate(
@@ -219,9 +215,25 @@ def _build_review_queue(root: Path, edition_date: str, inbox: Path) -> dict[str,
                 source_artifact_path=intake_path.relative_to(root).as_posix(),
                 proposed_rank=len(intake_rows) + 1,
             )
-            intake_rows.append(dict(row))
+            intake_row = dict(row)
+            intake_row["candidate_disposition"] = "reviewable" if bool(intake_row.get("eligible_for_review", True)) else "excluded"
+            if intake_row["candidate_disposition"] == "excluded":
+                intake_row["candidate_disposition_reason"] = str(
+                    intake_row.get("exclusion_reason")
+                    or intake_row.get("rejection_reason")
+                    or intake_row.get("editorial_note")
+                    or "not eligible for review"
+                ).strip()
+            intake_rows.append(intake_row)
             duplicate_key = str(row.get("agent_duplicate_key") or row.get("candidate_id") or "")
             if duplicate_key and duplicate_key in seen_duplicate_keys:
+                intake_rows[-1]["candidate_disposition"] = "duplicate"
+                intake_rows[-1]["candidate_disposition_reason"] = "duplicate agent_duplicate_key within intake"
+                intake_rows[-1]["eligible_for_review"] = False
+                intake_rows[-1]["editorial_status"] = "reject"
+                intake_rows[-1]["editorial_note"] = (
+                    "Duplicate Food Line Source Watch finding retained for audit but excluded from the review queue."
+                )
                 continue
             if duplicate_key:
                 seen_duplicate_keys.add(duplicate_key)
@@ -231,7 +243,8 @@ def _build_review_queue(root: Path, edition_date: str, inbox: Path) -> dict[str,
         intake_artifact["candidate_rows"] = intake_rows
         intake_artifact["counts"] = {
             "eligible_for_review": sum(1 for row in intake_rows if bool(row.get("eligible_for_review", True))),
-            "excluded": sum(1 for row in intake_rows if not bool(row.get("eligible_for_review", True))),
+            "excluded": sum(1 for row in intake_rows if str(row.get("candidate_disposition") or "") == "excluded"),
+            "duplicate": sum(1 for row in intake_rows if str(row.get("candidate_disposition") or "") == "duplicate"),
         }
         write_json_atomic(intake_path, intake_artifact)
     queue = {

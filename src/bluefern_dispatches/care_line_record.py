@@ -275,6 +275,10 @@ SERVICE_LINE_ALIASES = {
     "oncology": "ONCOLOGY",
     "pharmacy": "PHARMACY",
     "rehabilitation": "REHABILITATION",
+    "home health": "HOME_HEALTH",
+    "home-health": "HOME_HEALTH",
+    "clinical care": "MULTIPLE_SERVICES",
+    "clinical services": "MULTIPLE_SERVICES",
     "surgery": "SURGERY",
     "skilled nursing": "SKILLED_NURSING",
     "substance use treatment": "SUBSTANCE_USE_TREATMENT",
@@ -1178,12 +1182,14 @@ class CareLineReviewedRecord(BaseModel):
 
     def validation_issues(self) -> list[ValidationIssue]:
         issues: list[ValidationIssue] = []
+        is_statewide_capacity_event = self.event_type in STATEWIDE_EVENT_TYPES and self.event_type_raw != "service_reduction"
+        is_service_reduction_like = self.event_type in SERVICE_EVENT_TYPES or self.event_type_raw == "service_reduction"
         if self.event_type in NON_OPERATIONAL_EVENT_TYPES:
             return issues if self.universal_event_status != "universal_event_ready" else [ValidationIssue(field="event_type", code="non_operational_event", message="non-operational Care Line records cannot be Universal Events")]
         if self.event_type not in CARE_LINE_EVENT_TYPES:
             issues.append(ValidationIssue(field="event_type", code="unsupported_event_type", message="unsupported or missing event type"))
             return issues
-        if not self.has_subject and self.event_type not in STATEWIDE_EVENT_TYPES:
+        if not self.has_subject and not is_statewide_capacity_event:
             issues.append(ValidationIssue(field="facility_name", code="missing_subject", message="facility or provider subject is required"))
         if not self.has_location:
             issues.append(ValidationIssue(field="location", code="missing_geography", message="state plus one meaningful geography component is required"))
@@ -1191,7 +1197,7 @@ class CareLineReviewedRecord(BaseModel):
             issues.append(ValidationIssue(field="announcement_date", code="missing_event_date", message="announcement or effective date is required"))
         if not self.supporting_passage.strip():
             issues.append(ValidationIssue(field="supporting_passage", code="missing_evidence", message="supporting passage is required"))
-        if self.event_type in SERVICE_EVENT_TYPES and self.service_line in {"", "unknown"}:
+        if is_service_reduction_like and self.service_line in {"", "unknown"}:
             issues.append(ValidationIssue(field="service_line", code="missing_service_line", message="service-line event requires a reviewed service line"))
         if self.service_expansion_requires_prior_loss_link and (
             self.universal_event_status == "universal_event_ready" or self.care_line_public_eligible or self.workflow_state == "APPROVED"
@@ -1207,7 +1213,7 @@ class CareLineReviewedRecord(BaseModel):
             issues.append(ValidationIssue(field="new_owner", code="missing_owner_or_operator", message="ownership/operator event requires former/new owner or operator"))
         if self.event_type in FACILITY_EVENT_TYPES and not self.permanence.strip():
             issues.append(ValidationIssue(field="permanence", code="missing_permanence", message="facility event requires permanence or reviewed unknown"))
-        if self.event_type in STATEWIDE_EVENT_TYPES:
+        if is_statewide_capacity_event:
             if self.geographic_scope_canonical != "JURISDICTION_WIDE":
                 issues.append(ValidationIssue(field="geographic_scope", code="statewide_scope_required", message="statewide profile requires statewide geography"))
             if not self.change_direction.strip():

@@ -109,13 +109,14 @@ def test_food_line_discovery_bridge_keeps_google_news_metadata_but_intakes_publi
     _ensure_assets(tmp_path)
     edition_date = "2026-06-21"
     google_news_url = "https://news.google.com/rss/articles/CBMiAXY?oc=5"
-    publisher_url = "https://www.axios.com/local/charlotte/2026/06/19/charlotte-summer-food-insecurity-school-break-mecklenburg-nourish-up-snap-changes"
+    publisher_url = "https://www.axios.com/local/charlotte/2026/06/20/charlotte-summer-food-insecurity-school-break-mecklenburg-nourish-up-snap-changes"
     rss_items = [
         {
             "title": "Charlotte nonprofits brace for summer hunger surge",
             "link": google_news_url,
             "source_url": publisher_url,
             "publisher": "Axios Charlotte",
+            "pubDate": "Sat, 21 Jun 2026 12:00:00 GMT",
             "description": "Charlotte nonprofits expect increased need as school meals end and SNAP changes tighten access.",
         }
     ]
@@ -134,7 +135,6 @@ def test_food_line_discovery_bridge_keeps_google_news_metadata_but_intakes_publi
         edition_mode="no_current_update",
         max_queries=1,
         max_results_per_query=10,
-        public_claim_lookback_days=1,
     )
     bridge = run_food_line_discovery_intake_bridge(tmp_path, edition_date)
     source_rows = json.loads(Path(bridge["discovery_source_input_path"]).read_text(encoding="utf-8"))

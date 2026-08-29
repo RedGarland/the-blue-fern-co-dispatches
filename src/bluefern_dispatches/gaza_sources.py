@@ -466,7 +466,7 @@ def _recent_duplicate_override(source: dict[str, Any]) -> bool:
         bool(source.get(field))
         for field in ("allow_recent_duplicate_story", "materially_new_reporting", "material_update_override")
     ) or (
-        "board of peace" in text
+        ("board of peace" in text or "mladenov" in text)
         and (
             "deployment mechanism" in text
             or "deployment locations" in text

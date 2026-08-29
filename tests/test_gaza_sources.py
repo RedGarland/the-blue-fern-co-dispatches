@@ -773,6 +773,50 @@ def test_recent_duplicate_keeps_changed_ceasefire_implementation_assessment(work
     assert report["kept_candidate_count"] == 1
 
 
+def test_recent_duplicate_keeps_mladenov_isf_state_change(work_root):
+    prior_manifest = work_root / "output" / "dispatches" / "gaza" / "editions" / "2026-08-27" / "sources_manifest.json"
+    prior_manifest.parent.mkdir(parents=True, exist_ok=True)
+    prior_manifest.write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "gaza-2026-08-27-bbc-middle-east-b42465192e5a",
+                    "title": "Board of Peace's Gaza envoy criticises Israeli strikes and Hamas actions",
+                    "url": "https://www.bbc.com/news/articles/b42465192e5a",
+                    "canonical_url": "https://www.bbc.com/news/articles/b42465192e5a",
+                    "publisher": "BBC News",
+                    "published_at": "2026-08-27T08:00:00+00:00",
+                    "retrieved_at": "2026-08-27T08:05:00+00:00",
+                    "summary_or_snippet": "The envoy criticised Israeli strikes and Hamas actions in Gaza.",
+                    "category_hint": "diplomatic",
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    candidates = [
+        {
+            "source_record_id": "gaza-2026-08-28-bbc-middle-east-b42465192e5a",
+            "title": "Board of Peace's Gaza envoy criticises Israeli strikes and Hamas actions",
+            "url": "https://www.bbc.com/news/articles/b42465192e5a",
+            "canonical_url": "https://www.bbc.com/news/articles/b42465192e5a",
+            "publisher": "BBC News",
+            "published_at": "2026-08-28T08:00:00+00:00",
+            "retrieved_at": "2026-08-28T08:05:00+00:00",
+            "summary_or_snippet": "Mladenov said the Board of Peace had determined the deployment mechanism and deployment locations for the ISF and said advance elements should arrive soon.",
+            "category_hint": "diplomatic",
+        }
+    ]
+
+    normalized, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-08-28", candidates)
+
+    assert len(normalized) == 1
+    assert "story_selection_excluded_reason" not in normalized[0]
+    assert report["suppressed_candidate_count"] == 0
+    assert report["kept_candidate_count"] == 1
+
+
 def test_recent_duplicate_can_pass_with_explicit_material_update_override(work_root):
     prior_manifest = work_root / "bluefern-dispatches-pages" / "gaza" / "editions" / "2026-07-03" / "sources_manifest.json"
     prior_manifest.parent.mkdir(parents=True, exist_ok=True)

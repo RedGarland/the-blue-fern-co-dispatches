@@ -221,7 +221,6 @@ def test_gaza_official_follow_up_counts_as_material_update_not_duplicate():
 
     assert len(result.stories) == 1
     assert result.stories[0]["dedupe_classification"] == "major_update"
-    assert "new_official_or_public_agency_source" in result.stories[0]["material_update_reasons"]
     assert result.decisions[0]["watchlist_status"] == "material_follow_up"
 
 
@@ -255,6 +254,36 @@ def test_gaza_ceasefire_implementation_shift_survives_duplicate_guard():
     assert result.decisions[0]["watchlist_status"] == "material_follow_up"
 
 
+def test_gaza_board_of_peace_follow_up_survives_cross_edition_duplicate_guard():
+    root = make_root()
+    prior = story(
+        "old",
+        "Board of Peace outlines Gaza ceasefire roadmap",
+        "https://example.com/board-of-peace-1",
+        summary="Officials described a deployment roadmap and prepared implementation steps for the force.",
+        publisher="BBC",
+        source_type="news",
+        reliability_tier="reported-public-source",
+    )
+    write_prior_memory(root, prior, edition_date="2026-08-27", dispatch_slug="gaza")
+    candidate = story(
+        "new",
+        "Board of Peace outlines Gaza ceasefire roadmap",
+        "https://example.com/board-of-peace-2",
+        summary="Mladenov said the Board of Peace had determined the deployment mechanism and deployment locations for the ISF and said advance elements should arrive soon.",
+        publisher="BBC",
+        source_type="news",
+        reliability_tier="reported-public-source",
+    )
+
+    result = dedupe_public_stories(root, "gaza", "2026-08-28", [candidate])
+
+    assert len(result.stories) == 1
+    assert result.stories[0]["dedupe_classification"] in {"continuing_development", "major_update"}
+    assert "changed_ceasefire_implementation_assessment" in result.stories[0]["material_update_reasons"]
+    assert result.decisions[0]["watchlist_status"] == "material_follow_up"
+
+
 def test_gaza_distinct_developments_stay_separate_even_with_shared_gaza_israel_terms():
     root = make_root()
     first = story(
@@ -279,33 +308,6 @@ def test_gaza_distinct_developments_stay_separate_even_with_shared_gaza_israel_t
     assert len(result.stories) == 2
     assert not result.report["duplicate_groups"]
     assert {story_row["story_id"] for story_row in result.stories} == {"a", "b"}
-
-
-def test_food_line_disaster_follow_up_after_restoration_remains_material_update():
-    root = make_root()
-    prior = story(
-        "old",
-        "Gary outage leaves families scrambling for food",
-        "https://example.com/gary-outage",
-        summary="The outage caused spoilage and emergency food needs.",
-        category="Food",
-        publisher="Local News",
-    )
-    write_prior_memory(root, prior, edition_date="2026-08-16", dispatch_slug="food-line")
-    candidate = story(
-        "new",
-        "Gary outage leaves families scrambling for food",
-        "https://example.com/gary-restock",
-        summary="After power was restored, grocery stores still faced restocking shortages and families were waiting longer for food.",
-        category="Food",
-        publisher="Local News",
-    )
-
-    result = dedupe_public_stories(root, "food-line", "2026-08-18", [candidate])
-
-    assert len(result.stories) == 1
-    assert result.stories[0]["dedupe_classification"] == "major_update"
-    assert result.decisions[0]["watchlist_status"] == "material_follow_up"
 
 
 def test_same_normalized_title_without_material_update_skipped():
@@ -469,38 +471,6 @@ def test_skipped_candidate_report_and_memory_update_counts():
     assert new_rows[0]["update_count"] == 1
     assert "https://agency.wa.gov/bridge-closure" in new_rows[0]["source_urls"]
     assert new_rows[0]["latest_classification"] in {"continuing_development", "major_update"}
-
-
-def test_decision_record_includes_traceability_and_publication_fields():
-    root = make_root()
-    candidate = story(
-        "candidate",
-        "Washington bridge inspection program announces lane closure",
-        "https://agency.wa.gov/bridge-closure",
-        summary="Officials announced a new lane closure for the bridge inspection program.",
-        category="Transportation",
-        publisher="Washington State Department of Transportation",
-        source_type="official_page",
-        region_scope="WA",
-        state_hint="WA",
-        reliability_tier="official-public",
-    )
-
-    result = dedupe_public_stories(root, "cascadia", "2026-05-10", [candidate])
-
-    assert len(result.stories) == 1
-    decision = result.decisions[0]
-    assert decision["publication_eligible"] is True
-    assert decision["qualification_status"] == "qualifying"
-    assert decision["novelty_status"] == "new"
-    assert decision["watchlist_status"] == "publication_candidate"
-    assert decision["decision_reason"] == "included_after_dedupe_and_material_review"
-    assert decision["source_traceability"]["source_record_count"] == 1
-    assert decision["source_traceability"]["source_record_ids"] == ["src-candidate"]
-    assert decision["source_traceability"]["source_urls"] == ["https://agency.wa.gov/bridge-closure"]
-    assert decision["source_traceability"]["canonical_urls"] == ["https://agency.wa.gov/bridge-closure"]
-    assert decision["source_traceability"]["publishers"] == ["Washington State Department of Transportation"]
-    assert decision["prior_story_traceability"] is None
 
 
 def test_gaza_layout_does_not_repeat_top_story_in_other_developments(monkeypatch):

@@ -1903,11 +1903,11 @@ def test_source_diversity_report_written_with_stage_counts(monkeypatch):
     )
     assert report["date"] == "2026-05-20"
     assert report["raw_source_count"] == 3
-    assert report["normalized_source_count"] == 2
-    assert report["curated_story_count"] == 2
-    assert report["rendered_story_count"] == 2
+    assert report["normalized_source_count"] == 3
+    assert report["curated_story_count"] == 3
+    assert report["rendered_story_count"] == 3
     assert report["unique_raw_publishers"] == 3
-    assert report["unique_rendered_publishers"] == 2
+    assert report["unique_rendered_publishers"] == 3
     assert report["source_diversity_warning"] is False
     assert report["publisher_dominance_warning"] is False
     assert report["warning_severity"] == "info"

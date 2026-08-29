@@ -107,6 +107,42 @@ tiers:
       region_scope: Gaza
       source_group: major_ground_development
       discovery_role: strong_ground_development
+    - source_id: wafa-gaza-query
+      name: WAFA Gaza Query
+      query: site:wafa.ps Gaza Khan Younis Rafah displacement hospital water evacuation
+      type: google_news_rss
+      enabled: true
+      source_state: enabled
+      publisher: WAFA
+      reliability_tier: reported-public-source
+      category_hint: conflict
+      region_scope: Gaza
+      source_group: major_ground_development
+      discovery_role: strong_ground_development
+    - source_id: who-gaza-evacuation-query
+      name: WHO Gaza Evacuation Query
+      query: site:who.int Gaza patients evacuated children companions medical evacuation
+      type: google_news_rss
+      enabled: true
+      source_state: enabled
+      publisher: WHO
+      reliability_tier: official-humanitarian-source
+      category_hint: health
+      region_scope: Gaza
+      source_group: institutional
+      discovery_role: strong_ground_development
+    - source_id: unicef-gaza-water-query
+      name: UNICEF Gaza Water Query
+      query: site:unicef.org Gaza water well desalination facility children
+      type: google_news_rss
+      enabled: true
+      source_state: enabled
+      publisher: UNICEF
+      reliability_tier: official-humanitarian-source
+      category_hint: humanitarian
+      region_scope: Gaza
+      source_group: institutional
+      discovery_role: strong_ground_development
     - source_id: guardian-world
       name: Guardian World
       url: https://www.theguardian.com/world/rss
@@ -154,6 +190,18 @@ tiers:
       region_scope: Gaza
       source_group: accountability_secondary
       discovery_role: secondary_accountability
+    - source_id: ap-gaza-attribution-query
+      name: AP Gaza Attribution Query
+      query: site:apnews.com Gaza Israeli military acknowledged strikes not aware Khan Younis
+      type: google_news_rss
+      enabled: true
+      source_state: enabled
+      publisher: Associated Press
+      reliability_tier: reported-public-source
+      category_hint: conflict
+      region_scope: Gaza
+      source_group: accountability_secondary
+      discovery_role: secondary_accountability
     - source_id: haaretz-israel-news
       name: Haaretz Israel News
       url: https://www.haaretz.com/srv/haaretz-rss
@@ -166,6 +214,18 @@ tiers:
       category_hint: conflict
       region_scope: Gaza
       source_group: region-specialist
+    - source_id: haaretz-gaza-query
+      name: Haaretz Gaza Query
+      query: site:haaretz.com Gaza Palestinian militias IDF Shin Bet displacement abuse
+      type: google_news_rss
+      enabled: true
+      source_state: enabled
+      publisher: Haaretz
+      reliability_tier: reported-public-source
+      category_hint: conflict
+      region_scope: Gaza
+      source_group: region-specialist
+      discovery_role: secondary_accountability
     - source_id: times-of-israel-rss
       name: Times of Israel
       url: https://www.timesofisrael.com/feed/
@@ -178,6 +238,18 @@ tiers:
       category_hint: conflict
       region_scope: Gaza
       source_group: region-specialist
+    - source_id: dirco-icj-query
+      name: DIRCO ICJ Compliance Query
+      query: site:dirco.gov.za ICJ Gaza compliance dossier provisional measures
+      type: google_news_rss
+      enabled: true
+      source_state: enabled
+      publisher: DIRCO
+      reliability_tier: reported-public-source
+      category_hint: legal
+      region_scope: Gaza
+      source_group: accountability_secondary
+      discovery_role: secondary_accountability
   manual_supplements:
     - source_id: manual-supplement
       name: Manual Supplements

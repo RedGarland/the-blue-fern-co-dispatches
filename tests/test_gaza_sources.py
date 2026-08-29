@@ -115,6 +115,13 @@ def test_repo_gaza_sources_config_includes_targeted_query_providers():
     assert by_id["bbc-gaza-health-query"].type == "google_news_rss"
     assert by_id["elpais-gaza-humanitarian-query"].type == "google_news_rss"
     assert by_id["jpost-gaza-accountability-query"].type == "google_news_rss"
+    assert by_id["wafa-gaza-query"].publisher == "WAFA"
+    assert by_id["wafa-gaza-query"].type == "google_news_rss"
+    assert by_id["who-gaza-evacuation-query"].publisher == "WHO"
+    assert by_id["unicef-gaza-water-query"].publisher == "UNICEF"
+    assert by_id["ap-gaza-attribution-query"].publisher == "Associated Press"
+    assert by_id["haaretz-gaza-query"].publisher == "Haaretz"
+    assert by_id["dirco-icj-query"].publisher == "DIRCO"
 
 
 def test_rss_source_records_normalize_and_write(work_root, monkeypatch):
@@ -989,6 +996,85 @@ def test_khan_younis_casualty_fixture_survives_full_gaza_path(work_root):
     assert dedupe_result.stories[0]["dedupe_classification"] in {"new", "major_update", "continuing_development"}
     assert not dedupe_result.report["duplicate_skipped"]
     assert dedupe_result.report["duplicate_groups"] == []
+
+
+def test_one_source_one_development_stays_one_candidate():
+    source = {
+        "source_record_id": "simple-001",
+        "title": "Israeli strike kills one in Gaza City",
+        "publisher": "WAFA",
+        "published_at": "2026-08-28T12:00:00Z",
+        "retrieved_at": "2026-08-28T12:05:00Z",
+        "summary_or_snippet": "A Palestinian was killed in Gaza City.",
+        "source_type": "news",
+        "region_scope": "Gaza",
+        "category_hint": "conflict",
+        "reliability_tier": "reported-public-source",
+        "url": "https://example.com/simple",
+        "candidate_score": 80,
+        "ranking_reasons": ["test"],
+        "candidate_score_breakdown": {},
+    }
+    stories, _, _ = curate_stories([source], "2026-08-28", "2026-08-28T12:00:00Z")
+    assert len(stories) == 1
+    assert stories[0]["development_type"] == "primary_report"
+
+
+def test_unicef_multi_development_release_splits_into_two_candidates():
+    source = {
+        "source_record_id": "unicef-001",
+        "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza",
+        "publisher": "UNICEF",
+        "published_at": "2026-08-28T12:00:00Z",
+        "retrieved_at": "2026-08-28T12:05:00Z",
+        "summary_or_snippet": (
+            "The vital nutrition supplies were intended to support more than 40,500 vulnerable children and 4,900 pregnant and breastfeeding women. "
+            "Just one day earlier on August 24, a UNICEF-supported water well and desalination facility in Deir al Balah was severely damaged by a nearby strike. "
+            "More than 4,000 people, including around 2,000 children, rely on safe drinking water from the facility. UNICEF and partners are providing emergency water trucking."
+        ),
+        "source_type": "news",
+        "region_scope": "Gaza",
+        "category_hint": "humanitarian",
+        "reliability_tier": "reported-public-source",
+        "url": "https://example.com/unicef-multi",
+        "candidate_score": 90,
+        "ranking_reasons": ["test"],
+        "candidate_score_breakdown": {},
+    }
+    stories, _, _ = curate_stories([source], "2026-08-28", "2026-08-28T12:00:00Z")
+    assert len(stories) == 2
+    assert {story["development_type"] for story in stories} == {"primary_report", "infrastructure_service_loss"}
+    water_story = next(story for story in stories if story["development_type"] == "infrastructure_service_loss")
+    assert "Deir al-Balah" in water_story["location"]
+    assert "water infrastructure" == water_story["affected_system"]
+
+
+def test_civil_defense_recovery_milestone_keeps_recovered_remains_separate():
+    source = {
+        "source_record_id": "civil-defense-001",
+        "title": "Gaza Civil Defense reports recovered bodies from destroyed homes",
+        "publisher": "Gaza Civil Defense",
+        "published_at": "2026-08-27T12:00:00Z",
+        "retrieved_at": "2026-08-27T12:05:00Z",
+        "summary_or_snippet": "Civil Defense reported 233 bodies/remains recovered from 20 destroyed homes, including 73 children and 106 women, with 174 still unrecovered.",
+        "source_type": "news",
+        "region_scope": "Gaza",
+        "category_hint": "humanitarian",
+        "reliability_tier": "reported-public-source",
+        "url": "https://example.com/recovery",
+        "candidate_score": 88,
+        "ranking_reasons": ["test"],
+        "candidate_score_breakdown": {},
+    }
+    stories, _, _ = curate_stories([source], "2026-08-27", "2026-08-27T12:00:00Z")
+    assert len(stories) == 2
+    recovery_story = next(story for story in stories if story["development_type"] == "recovery_milestone")
+    counts = recovery_story["casualty_counts"]
+    assert counts["new_deaths"] == 0
+    assert counts["recovered_remains"] == 233
+    assert counts["still_missing"] == 174
+    assert counts["children_recovered"] == 73
+    assert counts["women_recovered"] == 106
 
 
 def test_relevance_rejects_equatorial_guinea_asylum_without_palestinian_anchor():

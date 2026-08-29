@@ -1,5 +1,86 @@
 [
   {
+    "story_id": "gaza-story-2026-08-29-004",
+    "title": "Palestinian woman and NBC News team reportedly attacked in West Bank",
+    "summary": "Matt Bradley and crew assaulted while interviewing woman who said settlers had driven family out of home. A Palestinian woman and an NBC News team are reported to have been attacked and injured by masked Israeli settlers in the Israeli-occupied West Bank on Saturday, amid worsening confrontations in the area. Benjamin Netanyahu said he condemned the violence committed \"by a handful of rioters\".",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 80,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-29-guardian-world-4b2093fd72ba"
+    ],
+    "source_ids": [
+      "gaza-2026-08-29-guardian-world-4b2093fd72ba"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/aug/29/nbc-news-team-attacked-west-bank"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-29-guardian-world-4b2093fd72ba",
+        "title": "Palestinian woman and NBC News team reportedly attacked in West Bank",
+        "url": "https://www.theguardian.com/world/2026/aug/29/nbc-news-team-attacked-west-bank",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Matt Bradley and crew assaulted while interviewing woman who said settlers had driven family out of home A Palestinian woman and an NBC News team are reported to have been attacked and injured by masked Israeli settlers in the Israeli-occupied West Bank on Saturday, amid worsening confrontations in the area. Benjamin Netanyahu said he condemned the violence committed \"by a handful of rioters\".",
+        "event_date": "2026-08-29T21:55:08+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-08-29T22:42:35.172381+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 80,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-08-29T21:55:08+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-08-04-009",
+    "prior_edition_date": "2026-08-04",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
     "story_id": "gaza-story-2026-08-29-003",
     "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef",
     "summary": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza Unicef.",
@@ -27,25 +108,25 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-08-29-unicef-gaza-water-query-5aaa884581d8"
+      "gaza-2026-08-29-unicef-gaza-water-query-711011519f55"
     ],
     "source_ids": [
-      "gaza-2026-08-29-unicef-gaza-water-query-5aaa884581d8"
+      "gaza-2026-08-29-unicef-gaza-water-query-711011519f55"
     ],
     "source_urls": [
-      "https://news.google.com/rss/articles/CBMitwFBVV95cUxQdWFOWFdWSk0xUWluQi1NZ3dodGxMTEVtY29Pb1NVcU5wRm9ucnFfZUI5Y2lhRXFVSncwU1RaYjRGRWdCSHhpRHpHSVNSb3ZqN2dMb1VRc2pkNFRlNEZqX0dZb1NFOEhxQ3NNeERCNTZBNGFZSTNHLXRKMEZjcDhnYnZlM0ZTRmZLSTBCb05JWVd6ZlVVTXN4ejROTzB3ekVJODRMclNJQ2hGV3BhYnZtNWJzaTdMYVk?oc=5"
+      "https://news.google.com/rss/articles/CBMivgFBVV95cUxPQVppUFhxZGFWOWk1TW5mdE9Ha3JkcFJzZlRnbkdIRzljaXN3bjVIRmRuWWptUmdib3dlN0hDRmlDRTZQZFl4ZGswbFdzVHU1ZzVKeTgyR0xZOTlSTEYzaG5lMFd4eFlzQ2dhUWs3X3Y5cXdkY3JLZlZ3VC1JdWlfdHhVUV9mX0VtbW5KeE5QRFkzamlhcVBBYmpKSnZETk1rSEJjYWNfcUtvRFdWX1YyUTBtdVk0VjFuTWNBNGhn?oc=5"
     ],
     "publisher_names": [
       "UNICEF"
     ],
     "source_records": [
       {
-        "source_record_id": "gaza-2026-08-29-unicef-gaza-water-query-5aaa884581d8",
+        "source_record_id": "gaza-2026-08-29-unicef-gaza-water-query-711011519f55",
         "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef",
-        "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQdWFOWFdWSk0xUWluQi1NZ3dodGxMTEVtY29Pb1NVcU5wRm9ucnFfZUI5Y2lhRXFVSncwU1RaYjRGRWdCSHhpRHpHSVNSb3ZqN2dMb1VRc2pkNFRlNEZqX0dZb1NFOEhxQ3NNeERCNTZBNGFZSTNHLXRKMEZjcDhnYnZlM0ZTRmZLSTBCb05JWVd6ZlVVTXN4ejROTzB3ekVJODRMclNJQ2hGV3BhYnZtNWJzaTdMYVk?oc=5",
+        "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPQVppUFhxZGFWOWk1TW5mdE9Ha3JkcFJzZlRnbkdIRzljaXN3bjVIRmRuWWptUmdib3dlN0hDRmlDRTZQZFl4ZGswbFdzVHU1ZzVKeTgyR0xZOTlSTEYzaG5lMFd4eFlzQ2dhUWs3X3Y5cXdkY3JLZlZ3VC1JdWlfdHhVUV9mX0VtbW5KeE5QRFkzamlhcVBBYmpKSnZETk1rSEJjYWNfcUtvRFdWX1YyUTBtdVk0VjFuTWNBNGhn?oc=5",
         "publisher": "UNICEF",
         "summary_or_snippet": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza Unicef",
-        "event_date": "2026-08-28T08:56:44+00:00",
+        "event_date": "2026-08-28T10:22:19+00:00",
         "location": "Gaza",
         "development_type": "primary_report",
         "affected_system": "humanitarian",
@@ -54,7 +135,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T21:38:34.291312+00:00",
+    "generated_at": "2026-08-29T22:42:35.172381+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -68,7 +149,7 @@
     "development_type": "primary_report",
     "affected_system": "humanitarian",
     "location": "Gaza",
-    "event_date": "2026-08-28T08:56:44+00:00",
+    "event_date": "2026-08-28T10:22:19+00:00",
     "attribution": "UNICEF",
     "uncertainty": "reported source",
     "casualty_counts": {},
@@ -80,7 +161,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-004",
+    "story_id": "gaza-story-2026-08-29-005",
     "title": "Gaza runs out of cancer medicines, as Israeli strikes continue",
     "summary": "Officials at Gaza's Al-Aqsa Martyrs Hospital say cancer medicines have completely run out, as Israeli strikes continue.",
     "category": "conflict",
@@ -133,7 +214,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T21:38:34.291312+00:00",
+    "generated_at": "2026-08-29T22:42:35.172381+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -159,7 +240,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-006",
+    "story_id": "gaza-story-2026-08-29-007",
     "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
     "summary": "Israeli settlers stormed Qusra in the occupied West Bank, attacking Palestinian residents and damaging homes.",
     "category": "palestinian_development",
@@ -211,7 +292,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T21:38:34.291312+00:00",
+    "generated_at": "2026-08-29T22:42:35.172381+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -239,7 +320,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-007",
+    "story_id": "gaza-story-2026-08-29-008",
     "title": "Israeli attacks in Gaza kill four people, hit hospital supply warehouse",
     "summary": "Gaza's Health Ministry reports rising casualties amid escalated Israeli attacks, with victims trapped under rubble.",
     "category": "conflict",
@@ -292,7 +373,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T21:38:34.291312+00:00",
+    "generated_at": "2026-08-29T22:42:35.172381+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -370,7 +451,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T21:38:34.291312+00:00",
+    "generated_at": "2026-08-29T22:42:35.172381+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -398,7 +479,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-008",
+    "story_id": "gaza-story-2026-08-29-009",
     "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
     "summary": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East AP News.",
     "category": "conflict",
@@ -450,7 +531,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T21:38:34.291312+00:00",
+    "generated_at": "2026-08-29T22:42:35.172381+00:00",
     "relevance_terms_matched": [
       "gaza",
       "west bank"
@@ -477,7 +558,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-005",
+    "story_id": "gaza-story-2026-08-29-006",
     "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
     "summary": "A federal judge criticised the Trump government for attempting to infringe upon foreign students' rights to free speech.",
     "category": "palestinian_development",
@@ -529,7 +610,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T21:38:34.291312+00:00",
+    "generated_at": "2026-08-29T22:42:35.172381+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -556,7 +637,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-009",
+    "story_id": "gaza-story-2026-08-29-010",
     "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
     "summary": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera.",
     "category": "conflict",
@@ -608,7 +689,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T21:38:34.291312+00:00",
+    "generated_at": "2026-08-29T22:42:35.172381+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],

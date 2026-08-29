@@ -1,8 +1,20 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-08-29",
-  "candidates_seen": 8,
+  "candidates_seen": 9,
   "included_stories": [
+    {
+      "story_id": "gaza-story-2026-08-29-004",
+      "title": "Palestinian woman and NBC News team reportedly attacked in West Bank",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "update_term_in_title_or_snippet"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
     {
       "story_id": "gaza-story-2026-08-29-003",
       "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef",
@@ -15,7 +27,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-004",
+      "story_id": "gaza-story-2026-08-29-005",
       "title": "Gaza runs out of cancer medicines, as Israeli strikes continue",
       "classification": "new",
       "material_update": true,
@@ -26,7 +38,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-006",
+      "story_id": "gaza-story-2026-08-29-007",
       "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
       "classification": "major_update",
       "material_update": false,
@@ -35,7 +47,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-007",
+      "story_id": "gaza-story-2026-08-29-008",
       "title": "Israeli attacks in Gaza kill four people, hit hospital supply warehouse",
       "classification": "new",
       "material_update": true,
@@ -58,7 +70,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-008",
+      "story_id": "gaza-story-2026-08-29-009",
       "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
       "classification": "major_update",
       "material_update": false,
@@ -67,7 +79,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-005",
+      "story_id": "gaza-story-2026-08-29-006",
       "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
       "classification": "new",
       "material_update": true,
@@ -78,7 +90,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-009",
+      "story_id": "gaza-story-2026-08-29-010",
       "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
       "classification": "major_update",
       "material_update": false,
@@ -91,7 +103,23 @@
   "continuing_developments": [],
   "major_updates": [
     {
-      "story_id": "gaza-story-2026-08-29-006",
+      "story_id": "gaza-story-2026-08-29-004",
+      "title": "Palestinian woman and NBC News team reportedly attacked in West Bank",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "update_term_in_title_or_snippet"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-08-04-009",
+      "prior_edition_date": "2026-08-04",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-29-007",
       "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
       "classification": "major_update",
       "material_update": false,
@@ -120,7 +148,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-008",
+      "story_id": "gaza-story-2026-08-29-009",
       "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
       "classification": "major_update",
       "material_update": false,
@@ -133,7 +161,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-009",
+      "story_id": "gaza-story-2026-08-29-010",
       "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
       "classification": "major_update",
       "material_update": false,
@@ -150,6 +178,22 @@
   "duplicate_groups": [],
   "reasons": [
     {
+      "story_id": "gaza-story-2026-08-29-004",
+      "title": "Palestinian woman and NBC News team reportedly attacked in West Bank",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher",
+        "update_term_in_title_or_snippet"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-08-04-009",
+      "prior_edition_date": "2026-08-04",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
       "story_id": "gaza-story-2026-08-29-003",
       "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef",
       "classification": "new",
@@ -165,7 +209,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-004",
+      "story_id": "gaza-story-2026-08-29-005",
       "title": "Gaza runs out of cancer medicines, as Israeli strikes continue",
       "classification": "new",
       "material_update": true,
@@ -180,7 +224,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-006",
+      "story_id": "gaza-story-2026-08-29-007",
       "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
       "classification": "major_update",
       "material_update": false,
@@ -193,7 +237,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-007",
+      "story_id": "gaza-story-2026-08-29-008",
       "title": "Israeli attacks in Gaza kill four people, hit hospital supply warehouse",
       "classification": "new",
       "material_update": true,
@@ -224,7 +268,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-008",
+      "story_id": "gaza-story-2026-08-29-009",
       "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
       "classification": "major_update",
       "material_update": false,
@@ -237,7 +281,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-005",
+      "story_id": "gaza-story-2026-08-29-006",
       "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
       "classification": "new",
       "material_update": true,
@@ -252,7 +296,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-009",
+      "story_id": "gaza-story-2026-08-29-010",
       "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
       "classification": "major_update",
       "material_update": false,

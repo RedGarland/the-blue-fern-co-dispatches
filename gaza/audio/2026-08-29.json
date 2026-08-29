@@ -1,7 +1,7 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-08-29",
-  "generated_at": "2026-08-29T21:38:51.583251Z",
+  "generated_at": "2026-08-29T22:42:50.930784Z",
   "audio_status": "audio_file_ready",
   "audio_file": "2026-08-29.mp3",
   "audio_url": "/gaza/audio/2026-08-29.mp3",
@@ -21,29 +21,35 @@
       "voice": "alloy"
     }
   ],
-  "tts_input_character_count": 1657,
-  "tts_input_word_count": 261,
+  "tts_input_character_count": 1639,
+  "tts_input_word_count": 248,
   "tts_story_count": 6,
   "tts_segment_count": 1,
   "audio_duration_seconds": null,
-  "audio_file_size_bytes": 1802496,
+  "audio_file_size_bytes": 1661568,
   "estimated_cost_usd": null,
   "estimated_cost_note": "pricing input not configured",
   "tts_pricing_basis": null,
   "tts_pricing_model": null,
-  "cost_logged_at": "2026-08-29T21:38:51.583216Z",
+  "cost_logged_at": "2026-08-29T22:42:50.930758Z",
   "segue_chime": "none",
   "segue_chime_count": 0,
   "segue_chime_asset": null,
   "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-08-29-transcript.html",
   "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-29/",
-  "script_text": "This is the Gaza Dispatch audio briefing for August 29, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef. Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza Unicef. This was reported by UNICEF.\n\n2. Gaza runs out of cancer medicines, as Israeli strikes continue. Officials at Gaza's Al-Aqsa Martyrs Hospital say cancer medicines have completely run out, as Israeli strikes continue. This was reported by Al Jazeera.\n\n3. Israeli army arrests six Palestinians after settler violence in West Bank. Israeli settlers stormed Qusra in the occupied West Bank, attacking Palestinian residents and damaging homes. This was reported by Al Jazeera.\n\n4. Israeli attacks in Gaza kill four people, hit hospital supply warehouse. Gaza's Health Ministry reports rising casualties amid escalated Israeli attacks, with victims trapped under rubble. This was reported by Al Jazeera.\n\n5. BBC tracks one week of Israeli settler violence in occupied West Bank. The BBC's Lucy Williamson reports on settler attacks on Palestinians, which have been observed over the last week alone. This was reported by BBC News.\n\n6. Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News. Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East AP News. This was reported by Associated Press.\n\nFor the full source-backed dispatch, read the August 29, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "script_text": "This is the Gaza Dispatch audio briefing for August 29, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Palestinian woman and NBC News team reportedly attacked in West Bank. Matt Bradley and crew assaulted while interviewing woman who said settlers had driven family out of home. This was reported by The Guardian.\n\n2. Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef. Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza Unicef. This was reported by UNICEF.\n\n3. Gaza runs out of cancer medicines, as Israeli strikes continue. Officials at Gaza's Al-Aqsa Martyrs Hospital say cancer medicines have completely run out, as Israeli strikes continue. This was reported by Al Jazeera.\n\n4. Israeli army arrests six Palestinians after settler violence in West Bank. Israeli settlers stormed Qusra in the occupied West Bank, attacking Palestinian residents and damaging homes. This was reported by Al Jazeera.\n\n5. Israeli attacks in Gaza kill four people, hit hospital supply warehouse. Gaza's Health Ministry reports rising casualties amid escalated Israeli attacks, with victims trapped under rubble. This was reported by Al Jazeera.\n\n6. BBC tracks one week of Israeli settler violence in occupied West Bank. The BBC's Lucy Williamson reports on settler attacks on Palestinians, which have been observed over the last week alone. This was reported by BBC News.\n\nFor the full source-backed dispatch, read the August 29, 2026 Gaza edition at dispatches.thebluefernco.com.",
   "source_count": 6,
   "sources": [
     {
-      "source_record_id": "gaza-2026-08-29-unicef-gaza-water-query-5aaa884581d8",
+      "source_record_id": "gaza-2026-08-29-guardian-world-4b2093fd72ba",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/aug/29/nbc-news-team-attacked-west-bank",
+      "title": "Palestinian woman and NBC News team reportedly attacked in West Bank"
+    },
+    {
+      "source_record_id": "gaza-2026-08-29-unicef-gaza-water-query-711011519f55",
       "publisher": "UNICEF",
-      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQdWFOWFdWSk0xUWluQi1NZ3dodGxMTEVtY29Pb1NVcU5wRm9ucnFfZUI5Y2lhRXFVSncwU1RaYjRGRWdCSHhpRHpHSVNSb3ZqN2dMb1VRc2pkNFRlNEZqX0dZb1NFOEhxQ3NNeERCNTZBNGFZSTNHLXRKMEZjcDhnYnZlM0ZTRmZLSTBCb05JWVd6ZlVVTXN4ejROTzB3ekVJODRMclNJQ2hGV3BhYnZtNWJzaTdMYVk?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPQVppUFhxZGFWOWk1TW5mdE9Ha3JkcFJzZlRnbkdIRzljaXN3bjVIRmRuWWptUmdib3dlN0hDRmlDRTZQZFl4ZGswbFdzVHU1ZzVKeTgyR0xZOTlSTEYzaG5lMFd4eFlzQ2dhUWs3X3Y5cXdkY3JLZlZ3VC1JdWlfdHhVUV9mX0VtbW5KeE5QRFkzamlhcVBBYmpKSnZETk1rSEJjYWNfcUtvRFdWX1YyUTBtdVk0VjFuTWNBNGhn?oc=5",
       "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef"
     },
     {
@@ -69,12 +75,6 @@
       "publisher": "BBC News",
       "url": "https://www.bbc.co.uk/news/videos/c3wjq1188g9o?at_medium=RSS&at_campaign=rss",
       "title": "BBC tracks one week of Israeli settler violence in occupied West Bank"
-    },
-    {
-      "source_record_id": "gaza-2026-08-29-ap-gaza-attribution-query-f5136b8fcfab",
-      "publisher": "Associated Press",
-      "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPQ3FmcjlycjlqYTlNSzJueHF3d2ZkRHJ3c2ZEbFJkYzZ6ZERHdVE0WXFlV3Y0Uy10emVoZzV4dlBleGRrbTV6a0Z1WkJPVHBTM1NqdExfRUZvRGk5bHJRdnZSdEdBbXBSN2h4VmE0SzB2emV4NHdQQUZSSWRpUlNGRjNaamtWbEdUbGtoSlNtMzF6TGd0b05SdHMtRTFaYVk?oc=5",
-      "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News"
     }
   ]
 }

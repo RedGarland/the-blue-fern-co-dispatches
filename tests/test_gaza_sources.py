@@ -1572,7 +1572,27 @@ def test_aljazeera_gaza_or_palestine_context_item_accepted(work_root, monkeypatc
     assert result["source_count"] == 1
 
 
+ALJAZEERA_WRAPPER_TOKEN = "CBMiOpaqueMladenovProductionArticleId"
+ALJAZEERA_WRAPPER_URL = f"https://news.google.com/rss/articles/{ALJAZEERA_WRAPPER_TOKEN}?oc=5"
+ALJAZEERA_ARTICLE_URL = "https://www.aljazeera.com/news/2026/8/28/board-of-peace-envoy-mladenov-warns-gaza-ceasefire-risks-collapse"
+ALJAZEERA_FEED_TITLE = "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera"
+ALJAZEERA_FEED_SUMMARY = "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera"
+ALJAZEERA_ARTICLE_TEXT = (
+    "The Board of Peace has determined the mechanism for deploying the International Stabilization Force in Gaza "
+    "and its deployment locations. Advance elements should arrive soon."
+)
+
+
+def _google_wrapper_html() -> str:
+    return (
+        f'<html><body><div data-n-a-id="{ALJAZEERA_WRAPPER_TOKEN}" '
+        'data-n-a-ts="1782841548" data-n-a-sg="mock-signature"></div></body></html>'
+    )
+
+
 def test_aljazeera_board_of_peace_isf_article_enrichment_adds_material_facts(work_root, monkeypatch):
+    from bluefern_dispatches import food_line_discovery_expansion
+
     path = work_root / "data" / "dispatches" / "gaza" / "sources.yml"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
@@ -1607,34 +1627,72 @@ def test_aljazeera_board_of_peace_isf_article_enrichment_adds_material_facts(wor
             "content_bytes": _rss_payload(
                 [
                     {
-                        "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
-                        "url": "https://news.google.com/rss/articles/wrapper-123",
+                        "title": ALJAZEERA_FEED_TITLE,
+                        "url": ALJAZEERA_WRAPPER_URL,
                         "published_at": "2026-08-28T16:48:33+00:00",
-                        "summary_or_snippet": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera",
+                        "summary_or_snippet": ALJAZEERA_FEED_SUMMARY,
                     }
                 ]
             ),
             "content_text": None,
         },
     )
+    rpc_calls = []
+    article_fetches = []
     monkeypatch.setattr(
-        gaza_sources,
-        "fetch_article_payload",
-        lambda *_args, **_kwargs: {
+        food_line_discovery_expansion,
+        "_google_news_rpc_request",
+        lambda article_id, timestamp, signature: (
+            rpc_calls.append((article_id, timestamp, signature)) or ALJAZEERA_ARTICLE_URL,
+            "",
+        ),
+    )
+
+    def fake_article_fetch(url, *_args, **_kwargs):
+        article_fetches.append(url)
+        if url == ALJAZEERA_WRAPPER_URL:
+            wrapper_html = _google_wrapper_html()
+            return {
+                "ok": True,
+                "url": url,
+                "final_url": url,
+                "status_code": 200,
+                "content_type": "text/html; charset=utf-8",
+                "content_bytes": wrapper_html.encode("utf-8"),
+                "content_text": wrapper_html,
+            }
+        assert url == ALJAZEERA_ARTICLE_URL
+        return {
             "ok": True,
-            "url": "https://news.google.com/rss/articles/wrapper-123",
-            "final_url": "https://www.aljazeera.com/news/2026/8/28/board-of-peace-envoy-mladenov-warns-gaza-ceasefire-risks-collapse",
+            "url": url,
+            "final_url": url,
             "status_code": 200,
             "content_type": "text/html; charset=utf-8",
-            "content_bytes": b"<html><body><p>The Board of Peace has determined the mechanism for deploying the International Stabilization Force in Gaza and its deployment locations.</p><p>Advance elements should arrive soon.</p></body></html>",
-            "content_text": "The Board of Peace has determined the mechanism for deploying the International Stabilization Force in Gaza and its deployment locations. Advance elements should arrive soon.",
-        },
-    )
+            "content_bytes": ALJAZEERA_ARTICLE_TEXT.encode("utf-8"),
+            "content_text": ALJAZEERA_ARTICLE_TEXT,
+        }
+
+    monkeypatch.setattr(gaza_sources, "fetch_article_payload", fake_article_fetch)
 
     result = gaza_sources.collect_gaza_sources(work_root, "2026-08-29", min_sources=0, prefer_manual=False)
 
     assert result["source_count"] == 1
     record = result["sources"][0]
+    assert rpc_calls == [(ALJAZEERA_WRAPPER_TOKEN, "1782841548", "mock-signature")]
+    assert article_fetches == [ALJAZEERA_WRAPPER_URL, ALJAZEERA_ARTICLE_URL]
+    assert record["source_record_id"].startswith("gaza-2026-08-29-aljazeera-board-of-peace-isf-query-")
+    assert record["title"] == ALJAZEERA_FEED_TITLE
+    assert record["published_at"] == "2026-08-28T16:48:33+00:00"
+    assert record["url"] == ALJAZEERA_WRAPPER_URL
+    assert record["wrapper_url"] == ALJAZEERA_WRAPPER_URL
+    assert record["canonical_url"] == ALJAZEERA_ARTICLE_URL
+    assert record["resolved_canonical_url"] == ALJAZEERA_ARTICLE_URL
+    assert record["canonicalization_method"] == "google_news_rpc"
+    assert record["canonicalization_status"] == "google_news_resolved_same_domain"
+    assert record["canonicalization_failure_reason"] is None
+    assert record["enrichment_attempted"] is True
+    assert record["enrichment_status"] == "enriched_material_excerpt"
+    assert record["enrichment_failure_reason"] is None
     assert "mechanism for deploying" in record["summary_or_snippet"].lower()
     assert "deployment locations" in record["summary_or_snippet"].lower()
     assert "advance elements" in record["summary_or_snippet"].lower()
@@ -1643,8 +1701,25 @@ def test_aljazeera_board_of_peace_isf_article_enrichment_adds_material_facts(wor
     assert "advance elements" not in record["feed_summary_or_snippet"].lower()
     assert "mechanism for deploying" in str(record["content_text"]).lower()
 
+    raw_record = json.loads(Path(result["source_file"]).read_text(encoding="utf-8"))[0]
+    assert raw_record["wrapper_url"] == ALJAZEERA_WRAPPER_URL
+    assert raw_record["canonical_url"] == ALJAZEERA_ARTICLE_URL
+    assert "deployment locations" in raw_record["summary_or_snippet"].lower()
+    normalized, warnings, errors = normalize_sources(
+        [raw_record],
+        "2026-08-29",
+        "2026-08-29T18:00:00+00:00",
+    )
+    assert warnings == []
+    assert errors == []
+    assert normalized[0]["wrapper_url"] == ALJAZEERA_WRAPPER_URL
+    assert normalized[0]["canonical_url"] == ALJAZEERA_ARTICLE_URL
+    assert "mechanism for deploying" in normalized[0]["summary_or_snippet"].lower()
+    assert "deployment locations" in normalized[0]["summary_or_snippet"].lower()
+    assert "advance elements" in normalized[0]["summary_or_snippet"].lower()
 
-def test_aljazeera_board_of_peace_isf_article_enrichment_falls_back_on_fetch_failure(work_root, monkeypatch):
+
+def test_aljazeera_wrapper_resolution_failure_keeps_feed_fallback(work_root, monkeypatch):
     path = work_root / "data" / "dispatches" / "gaza" / "sources.yml"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
@@ -1679,10 +1754,10 @@ def test_aljazeera_board_of_peace_isf_article_enrichment_falls_back_on_fetch_fai
             "content_bytes": _rss_payload(
                 [
                     {
-                        "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
-                        "url": "https://news.google.com/rss/articles/wrapper-123",
+                        "title": ALJAZEERA_FEED_TITLE,
+                        "url": ALJAZEERA_WRAPPER_URL,
                         "published_at": "2026-08-28T16:48:33+00:00",
-                        "summary_or_snippet": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera",
+                        "summary_or_snippet": ALJAZEERA_FEED_SUMMARY,
                     }
                 ]
             ),
@@ -1694,13 +1769,13 @@ def test_aljazeera_board_of_peace_isf_article_enrichment_falls_back_on_fetch_fai
         "fetch_article_payload",
         lambda *_args, **_kwargs: {
             "ok": False,
-            "url": "https://news.google.com/rss/articles/wrapper-123",
-            "final_url": "https://www.aljazeera.com/news/2026/8/28/board-of-peace-envoy-mladenov-warns-gaza-ceasefire-risks-collapse",
+            "url": ALJAZEERA_WRAPPER_URL,
+            "final_url": ALJAZEERA_WRAPPER_URL,
             "status_code": None,
             "content_type": "",
             "content_bytes": None,
             "content_text": None,
-            "failure_reason": "HTTPError: 403 Forbidden",
+            "failure_reason": "TimeoutError: wrapper timed out",
         },
     )
 
@@ -1708,9 +1783,262 @@ def test_aljazeera_board_of_peace_isf_article_enrichment_falls_back_on_fetch_fai
 
     assert result["source_count"] == 1
     record = result["sources"][0]
-    assert record["summary_or_snippet"] == "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera"
-    assert record["feed_summary_or_snippet"] == "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera"
+    assert record["canonical_url"] == gaza_sources.canonicalize_url(ALJAZEERA_WRAPPER_URL)
+    assert record["canonicalization_status"] == "google_news_failed_fetch_error"
+    assert "wrapper timed out" in record["canonicalization_failure_reason"]
+    assert record["enrichment_attempted"] is False
+    assert record["enrichment_status"] == "skipped_canonical_resolution_failed"
+    assert record["summary_or_snippet"] == ALJAZEERA_FEED_SUMMARY
+    assert record["feed_summary_or_snippet"] == ALJAZEERA_FEED_SUMMARY
     assert record["content_text"] is None
+
+
+def test_aljazeera_wrapper_rejects_wrong_domain_resolution(work_root, monkeypatch):
+    from bluefern_dispatches import food_line_discovery_expansion
+
+    path = work_root / "data" / "dispatches" / "gaza" / "sources.yml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        """sources:
+  - source_id: aljazeera-board-of-peace-isf-query
+    name: Al Jazeera Board of Peace ISF Query
+    query: site:aljazeera.com Gaza Mladenov "Board of Peace" "International Stabilization Force" deployment
+    type: google_news_rss
+    enabled: true
+    source_state: enabled
+    publisher: Al Jazeera
+    reliability_tier: reported-public-source
+    category_hint: conflict
+    region_scope: Gaza
+""",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_feed_payload",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "source_id": "aljazeera-board-of-peace-isf-query",
+            "url": "https://example.com/rss.xml",
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload(
+                [
+                    {
+                        "title": ALJAZEERA_FEED_TITLE,
+                        "url": ALJAZEERA_WRAPPER_URL,
+                        "published_at": "2026-08-28T16:48:33+00:00",
+                        "summary_or_snippet": ALJAZEERA_FEED_SUMMARY,
+                    }
+                ]
+            ),
+            "content_text": None,
+        },
+    )
+    fetched = []
+
+    def fake_article_fetch(url, *_args, **_kwargs):
+        fetched.append(url)
+        assert url == ALJAZEERA_WRAPPER_URL
+        wrapper_html = _google_wrapper_html()
+        return {
+            "ok": True,
+            "url": url,
+            "final_url": url,
+            "status_code": 200,
+            "content_type": "text/html; charset=utf-8",
+            "content_bytes": wrapper_html.encode("utf-8"),
+            "content_text": wrapper_html,
+        }
+
+    monkeypatch.setattr(
+        food_line_discovery_expansion,
+        "_google_news_rpc_request",
+        lambda *_args: ("https://attacker.example/not-al-jazeera", ""),
+    )
+    monkeypatch.setattr(gaza_sources, "fetch_article_payload", fake_article_fetch)
+
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-08-29", min_sources=0, prefer_manual=False)
+
+    record = result["sources"][0]
+    assert fetched == [ALJAZEERA_WRAPPER_URL]
+    assert record["url"] == ALJAZEERA_WRAPPER_URL
+    assert record["wrapper_url"] == ALJAZEERA_WRAPPER_URL
+    assert record["canonical_url"] == gaza_sources.canonicalize_url(ALJAZEERA_WRAPPER_URL)
+    assert record["resolved_canonical_url"] is None
+    assert record["canonicalization_status"] == "rejected_wrong_publisher_domain"
+    assert "not aljazeera.com" in record["canonicalization_failure_reason"]
+    assert record["enrichment_attempted"] is False
+    assert record["enrichment_status"] == "skipped_canonical_resolution_failed"
+    assert record["summary_or_snippet"] == ALJAZEERA_FEED_SUMMARY
+    assert record["content_text"] is None
+
+
+def test_aljazeera_article_fetch_failure_keeps_feed_fallback(work_root, monkeypatch):
+    from bluefern_dispatches import food_line_discovery_expansion
+
+    path = work_root / "data" / "dispatches" / "gaza" / "sources.yml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        """sources:
+  - source_id: aljazeera-board-of-peace-isf-query
+    name: Al Jazeera Board of Peace ISF Query
+    query: site:aljazeera.com Gaza Mladenov "Board of Peace" "International Stabilization Force" deployment
+    type: google_news_rss
+    enabled: true
+    source_state: enabled
+    publisher: Al Jazeera
+    reliability_tier: reported-public-source
+    category_hint: conflict
+    region_scope: Gaza
+""",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_feed_payload",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "source_id": "aljazeera-board-of-peace-isf-query",
+            "url": "https://example.com/rss.xml",
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload(
+                [
+                    {
+                        "title": ALJAZEERA_FEED_TITLE,
+                        "url": ALJAZEERA_WRAPPER_URL,
+                        "published_at": "2026-08-28T16:48:33+00:00",
+                        "summary_or_snippet": ALJAZEERA_FEED_SUMMARY,
+                    }
+                ]
+            ),
+            "content_text": None,
+        },
+    )
+    fetched = []
+    monkeypatch.setattr(
+        food_line_discovery_expansion,
+        "_google_news_rpc_request",
+        lambda *_args: (ALJAZEERA_ARTICLE_URL, ""),
+    )
+
+    def fake_article_fetch(url, *_args, **_kwargs):
+        fetched.append(url)
+        if url == ALJAZEERA_WRAPPER_URL:
+            wrapper_html = _google_wrapper_html()
+            return {
+                "ok": True,
+                "url": url,
+                "final_url": url,
+                "status_code": 200,
+                "content_type": "text/html; charset=utf-8",
+                "content_bytes": wrapper_html.encode("utf-8"),
+                "content_text": wrapper_html,
+            }
+        assert url == ALJAZEERA_ARTICLE_URL
+        return {
+            "ok": False,
+            "url": url,
+            "final_url": url,
+            "status_code": 403,
+            "content_type": "text/html",
+            "content_bytes": None,
+            "content_text": None,
+            "failure_reason": "HTTPError: 403 Forbidden",
+        }
+
+    monkeypatch.setattr(gaza_sources, "fetch_article_payload", fake_article_fetch)
+
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-08-29", min_sources=0, prefer_manual=False)
+
+    record = result["sources"][0]
+    assert fetched == [ALJAZEERA_WRAPPER_URL, ALJAZEERA_ARTICLE_URL]
+    assert record["canonical_url"] == ALJAZEERA_ARTICLE_URL
+    assert record["resolved_canonical_url"] == ALJAZEERA_ARTICLE_URL
+    assert record["enrichment_attempted"] is True
+    assert record["enrichment_status"] == "failed_article_fetch"
+    assert record["enrichment_failure_reason"] == "HTTPError: 403 Forbidden"
+    assert record["summary_or_snippet"] == ALJAZEERA_FEED_SUMMARY
+    assert record["feed_summary_or_snippet"] == ALJAZEERA_FEED_SUMMARY
+    assert record["content_text"] is None
+
+
+def test_ordinary_google_news_source_keeps_existing_wrapper_behavior(monkeypatch):
+    source = gaza_sources.SourceDefinition(
+        source_id="bbc-gaza-query",
+        name="BBC Gaza Query",
+        url="https://news.google.com/rss/search?q=site%3Abbc.com+Gaza",
+        type="google_news_rss",
+        enabled=True,
+        publisher="BBC",
+        reliability_tier="reported-public-source",
+        category_hint="humanitarian_conditions",
+        region_scope="Gaza",
+    )
+    monkeypatch.setattr(
+        gaza_sources,
+        "_resolve_aljazeera_google_news_wrapper",
+        lambda *_args, **_kwargs: pytest.fail("ordinary providers must not invoke Al Jazeera resolution"),
+    )
+
+    record = gaza_sources.normalize_rss_item(
+        {
+            "title": "Aid convoys enter Gaza - BBC",
+            "url": ALJAZEERA_WRAPPER_URL,
+            "published_at": "2026-08-29T10:00:00+00:00",
+            "summary_or_snippet": "Aid convoys entered Gaza through the crossing.",
+        },
+        source,
+        "2026-08-29",
+        "2026-08-29T12:00:00+00:00",
+    )
+
+    assert record is not None
+    assert record["url"] == ALJAZEERA_WRAPPER_URL
+    assert record["wrapper_url"] == ALJAZEERA_WRAPPER_URL
+    assert record["canonical_url"] == gaza_sources.canonicalize_url(ALJAZEERA_WRAPPER_URL)
+    assert record["canonicalization_status"] == "wrapper_without_extractable_canonical"
+    assert "enrichment_status" not in record
+
+
+def test_unchanged_prior_board_of_peace_story_remains_suppressible(work_root):
+    prior_manifest = work_root / "output" / "dispatches" / "gaza" / "editions" / "2026-08-27" / "sources_manifest.json"
+    prior_manifest.parent.mkdir(parents=True, exist_ok=True)
+    prior = {
+        "source_record_id": "gaza-2026-08-27-board-of-peace-existing",
+        "title": "Board of Peace outlines Gaza deployment roadmap",
+        "url": "https://www.aljazeera.com/news/2026/8/27/board-of-peace-outlines-gaza-deployment-roadmap",
+        "canonical_url": "https://www.aljazeera.com/news/2026/8/27/board-of-peace-outlines-gaza-deployment-roadmap",
+        "publisher": "Al Jazeera",
+        "published_at": "2026-08-27T10:00:00+00:00",
+        "retrieved_at": "2026-08-27T11:00:00+00:00",
+        "summary_or_snippet": "The Board of Peace outlined its existing Gaza deployment roadmap.",
+        "category_hint": "conflict",
+    }
+    prior_manifest.write_text(json.dumps([prior], indent=2), encoding="utf-8")
+    candidate = {
+        **prior,
+        "source_record_id": "gaza-2026-08-29-board-of-peace-unchanged",
+        "retrieved_at": "2026-08-29T11:00:00+00:00",
+    }
+
+    annotated, report = gaza_sources.filter_recent_duplicate_sources(work_root, "2026-08-29", [candidate])
+
+    assert len(annotated) == 1
+    assert annotated[0]["story_selection_excluded_reason"] == "duplicate_recent_story"
+    assert report["suppressed_candidate_count"] == 1
+    assert report["kept_candidate_count"] == 0
 
 
 def test_unrelated_live_blog_with_incidental_gaza_rejected(work_root, monkeypatch):

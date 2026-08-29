@@ -1,6 +1,6 @@
 [
   {
-    "story_id": "gaza-story-2026-08-29-008",
+    "story_id": "gaza-story-2026-08-29-009",
     "title": "Israel raids, shutters UNRWA lifeline for Palestinian refugees",
     "summary": "An UNRWA vocational centre in the occupied West Bank has been raided by Israeli forces and ordered to close.",
     "category": "palestinian_development",
@@ -53,7 +53,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T19:51:12.820536+00:00",
+    "generated_at": "2026-08-29T20:48:40.733579+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -136,7 +136,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T19:51:12.820536+00:00",
+    "generated_at": "2026-08-29T20:48:40.733579+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -162,25 +162,25 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-009",
-    "title": "UNRWA's first and last vocational college in East Jerusalem is under attack",
-    "summary": "Israel threatens the Qalandiya Training Centre, one of Jerusalem's oldest still-operational educational institutions.",
-    "category": "palestinian_development",
-    "story_scope": "palestinian_development",
-    "score": 77,
+    "story_id": "gaza-story-2026-08-29-004",
+    "title": "Gaza runs out of cancer medicines, as Israeli strikes continue",
+    "summary": "Officials at Gaza's Al-Aqsa Martyrs Hospital say cancer medicines have completely run out, as Israeli strikes continue.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 64,
     "scoring_reasons": [
-      "humanitarian_impact",
       "civilian_harm",
+      "health_infrastructure",
       "source_reliability",
       "date_confidence"
     ],
     "candidate_score_breakdown": {
-      "humanitarian_impact": 12,
+      "humanitarian_impact": 0,
       "aid_access": 0,
       "ceasefire_diplomacy": 0,
       "civilian_harm": 12,
       "displacement": 0,
-      "health_infrastructure": 0,
+      "health_infrastructure": 8,
       "accountability_legal": 0,
       "source_reliability": 14,
       "date_confidence": 18
@@ -188,25 +188,25 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-08-29-aljazeera-middle-east-3dedea520b10"
+      "gaza-2026-08-29-aljazeera-middle-east-fcd9a3b4242c"
     ],
     "source_ids": [
-      "gaza-2026-08-29-aljazeera-middle-east-3dedea520b10"
+      "gaza-2026-08-29-aljazeera-middle-east-fcd9a3b4242c"
     ],
     "source_urls": [
-      "https://www.aljazeera.com/features/2026/8/29/unrwas-first-and-last-vocational-college-in-east-jerusalem-is-under-threat?traffic_source=rss"
+      "https://www.aljazeera.com/video/newsfeed/2026/8/29/29-08-sv-gaza-hospitals-targetting-fm?traffic_source=rss"
     ],
     "publisher_names": [
       "Al Jazeera"
     ],
     "source_records": [
       {
-        "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-3dedea520b10",
-        "title": "UNRWA's first and last vocational college in East Jerusalem is under attack",
-        "url": "https://www.aljazeera.com/features/2026/8/29/unrwas-first-and-last-vocational-college-in-east-jerusalem-is-under-threat?traffic_source=rss",
+        "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-fcd9a3b4242c",
+        "title": "Gaza runs out of cancer medicines, as Israeli strikes continue",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/8/29/29-08-sv-gaza-hospitals-targetting-fm?traffic_source=rss",
         "publisher": "Al Jazeera",
-        "summary_or_snippet": "Israel threatens the Qalandiya Training Centre, one of Jerusalem's oldest still-operational educational institutions.",
-        "event_date": "2026-08-29T12:58:25+00:00",
+        "summary_or_snippet": "Officials at Gaza's Al-Aqsa Martyrs Hospital say cancer medicines have completely run out, as Israeli strikes continue.",
+        "event_date": "2026-08-29T20:07:47+00:00",
         "location": "Gaza",
         "development_type": "primary_report",
         "affected_system": "conflict",
@@ -215,13 +215,11 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T19:51:12.820536+00:00",
+    "generated_at": "2026-08-29T20:48:40.733579+00:00",
     "relevance_terms_matched": [
-      "east jerusalem",
-      "gaza",
-      "unrwa"
+      "gaza"
     ],
-    "top_story_relevance_score": 77,
+    "top_story_relevance_score": 64,
     "substantive_ground": true,
     "flotilla_only": false,
     "attribution_mode": "reported_public_source",
@@ -231,7 +229,7 @@
     "development_type": "primary_report",
     "affected_system": "conflict",
     "location": "Gaza",
-    "event_date": "2026-08-29T12:58:25+00:00",
+    "event_date": "2026-08-29T20:07:47+00:00",
     "attribution": "Al Jazeera",
     "uncertainty": "reported source",
     "casualty_counts": {},
@@ -243,7 +241,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-005",
+    "story_id": "gaza-story-2026-08-29-006",
     "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
     "summary": "Israeli settlers stormed Qusra in the occupied West Bank, attacking Palestinian residents and damaging homes.",
     "category": "palestinian_development",
@@ -295,7 +293,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T19:51:12.820536+00:00",
+    "generated_at": "2026-08-29T20:48:40.733579+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -323,7 +321,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-006",
+    "story_id": "gaza-story-2026-08-29-007",
     "title": "Israeli attacks in Gaza kill four people, hit hospital supply warehouse",
     "summary": "Gaza's Health Ministry reports rising casualties amid escalated Israeli attacks, with victims trapped under rubble.",
     "category": "conflict",
@@ -376,7 +374,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T19:51:12.820536+00:00",
+    "generated_at": "2026-08-29T20:48:40.733579+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -454,7 +452,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T19:51:12.820536+00:00",
+    "generated_at": "2026-08-29T20:48:40.733579+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -482,7 +480,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-011",
+    "story_id": "gaza-story-2026-08-29-010",
     "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
     "summary": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East AP News.",
     "category": "conflict",
@@ -534,7 +532,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T19:51:12.820536+00:00",
+    "generated_at": "2026-08-29T20:48:40.733579+00:00",
     "relevance_terms_matched": [
       "gaza",
       "west bank"
@@ -561,7 +559,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-004",
+    "story_id": "gaza-story-2026-08-29-005",
     "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
     "summary": "A federal judge criticised the Trump government for attempting to infringe upon foreign students' rights to free speech.",
     "category": "palestinian_development",
@@ -613,7 +611,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T19:51:12.820536+00:00",
+    "generated_at": "2026-08-29T20:48:40.733579+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -640,7 +638,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-007",
+    "story_id": "gaza-story-2026-08-29-008",
     "title": "Israeli settlers surround Palestinian home in occupied West Bank's Qusra",
     "summary": "At least four people trapped inside their home, as earlier siege on Palestinian families has continued for three weeks.",
     "category": "palestinian_development",
@@ -691,7 +689,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-29T19:51:12.820536+00:00",
+    "generated_at": "2026-08-29T20:48:40.733579+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",

@@ -4,7 +4,7 @@
   "candidates_seen": 9,
   "included_stories": [
     {
-      "story_id": "gaza-story-2026-08-29-008",
+      "story_id": "gaza-story-2026-08-29-009",
       "title": "Israel raids, shutters UNRWA lifeline for Palestinian refugees",
       "classification": "major_update",
       "material_update": true,
@@ -26,8 +26,8 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-009",
-      "title": "UNRWA's first and last vocational college in East Jerusalem is under attack",
+      "story_id": "gaza-story-2026-08-29-004",
+      "title": "Gaza runs out of cancer medicines, as Israeli strikes continue",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -37,7 +37,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-005",
+      "story_id": "gaza-story-2026-08-29-006",
       "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
       "classification": "major_update",
       "material_update": false,
@@ -46,7 +46,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-006",
+      "story_id": "gaza-story-2026-08-29-007",
       "title": "Israeli attacks in Gaza kill four people, hit hospital supply warehouse",
       "classification": "new",
       "material_update": true,
@@ -69,7 +69,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-011",
+      "story_id": "gaza-story-2026-08-29-010",
       "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
       "classification": "major_update",
       "material_update": false,
@@ -78,7 +78,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-004",
+      "story_id": "gaza-story-2026-08-29-005",
       "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
       "classification": "new",
       "material_update": true,
@@ -89,7 +89,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-007",
+      "story_id": "gaza-story-2026-08-29-008",
       "title": "Israeli settlers surround Palestinian home in occupied West Bank's Qusra",
       "classification": "major_update",
       "material_update": false,
@@ -102,7 +102,7 @@
   "continuing_developments": [],
   "major_updates": [
     {
-      "story_id": "gaza-story-2026-08-29-008",
+      "story_id": "gaza-story-2026-08-29-009",
       "title": "Israel raids, shutters UNRWA lifeline for Palestinian refugees",
       "classification": "major_update",
       "material_update": true,
@@ -117,7 +117,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-005",
+      "story_id": "gaza-story-2026-08-29-006",
       "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
       "classification": "major_update",
       "material_update": false,
@@ -146,7 +146,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-011",
+      "story_id": "gaza-story-2026-08-29-010",
       "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
       "classification": "major_update",
       "material_update": false,
@@ -159,7 +159,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-007",
+      "story_id": "gaza-story-2026-08-29-008",
       "title": "Israeli settlers surround Palestinian home in occupied West Bank's Qusra",
       "classification": "major_update",
       "material_update": false,
@@ -176,7 +176,7 @@
   "duplicate_groups": [],
   "reasons": [
     {
-      "story_id": "gaza-story-2026-08-29-008",
+      "story_id": "gaza-story-2026-08-29-009",
       "title": "Israel raids, shutters UNRWA lifeline for Palestinian refugees",
       "classification": "major_update",
       "material_update": true,
@@ -206,8 +206,8 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-009",
-      "title": "UNRWA's first and last vocational college in East Jerusalem is under attack",
+      "story_id": "gaza-story-2026-08-29-004",
+      "title": "Gaza runs out of cancer medicines, as Israeli strikes continue",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -221,7 +221,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-005",
+      "story_id": "gaza-story-2026-08-29-006",
       "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
       "classification": "major_update",
       "material_update": false,
@@ -234,7 +234,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-006",
+      "story_id": "gaza-story-2026-08-29-007",
       "title": "Israeli attacks in Gaza kill four people, hit hospital supply warehouse",
       "classification": "new",
       "material_update": true,
@@ -265,7 +265,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-011",
+      "story_id": "gaza-story-2026-08-29-010",
       "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
       "classification": "major_update",
       "material_update": false,
@@ -278,7 +278,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-004",
+      "story_id": "gaza-story-2026-08-29-005",
       "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
       "classification": "new",
       "material_update": true,
@@ -293,7 +293,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-007",
+      "story_id": "gaza-story-2026-08-29-008",
       "title": "Israeli settlers surround Palestinian home in occupied West Bank's Qusra",
       "classification": "major_update",
       "material_update": false,

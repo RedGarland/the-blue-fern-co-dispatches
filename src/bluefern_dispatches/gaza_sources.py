@@ -932,6 +932,106 @@ def fetch_article_payload(url: str, timeout: int = 20) -> dict[str, Any]:
         }
 
 
+def _is_aljazeera_url(url: str) -> bool:
+    try:
+        parts = urlsplit(str(url or "").strip())
+    except ValueError:
+        return False
+    hostname = str(parts.hostname or "").lower().rstrip(".")
+    return parts.scheme.lower() in {"http", "https"} and (
+        hostname == "aljazeera.com" or hostname.endswith(".aljazeera.com")
+    )
+
+
+def _bounded_diagnostic(value: Any, limit: int = 300) -> str:
+    text = WHITESPACE_RE.sub(" ", str(value or "")).strip()
+    return text[:limit]
+
+
+def _resolve_aljazeera_google_news_wrapper(url: str) -> dict[str, Any]:
+    result: dict[str, Any] = {
+        "attempted": False,
+        "resolved_url": "",
+        "canonicalization_method": "google_news_wrapper_resolver",
+        "canonicalization_status": "not_wrapper",
+        "failure_reason": "",
+    }
+    if not _looks_like_google_news_wrapper(url):
+        return result
+
+    result["attempted"] = True
+
+    def fetcher(target_url: str, timeout: int = 15) -> dict[str, Any]:
+        payload = fetch_article_payload(target_url, timeout=timeout)
+        raw = payload.get("content_bytes")
+        if not isinstance(raw, (bytes, bytearray)):
+            raw = str(payload.get("content_text") or "").encode("utf-8")
+        final_url = str(payload.get("final_url") or target_url).strip()
+        redirect_chain = [target_url]
+        if final_url and final_url != target_url:
+            redirect_chain.append(final_url)
+        return {
+            "payload": bytes(raw),
+            "error": "" if payload.get("ok") else _bounded_diagnostic(payload.get("failure_reason") or "wrapper fetch failed"),
+            "response_status": payload.get("status_code"),
+            "final_response_url": final_url,
+            "content_type": str(payload.get("content_type") or ""),
+            "redirect_chain": redirect_chain,
+        }
+
+    try:
+        from bluefern_dispatches.food_line_discovery_expansion import _resolve_google_news_wrapper
+
+        resolved, error, attempted, debug = _resolve_google_news_wrapper(
+            fetcher,
+            url,
+            publisher_url="https://www.aljazeera.com/",
+            publisher_name="Al Jazeera",
+        )
+    except Exception as exc:  # noqa: BLE001
+        result["canonicalization_status"] = "failed_resolver_exception"
+        result["failure_reason"] = _bounded_diagnostic(f"{type(exc).__name__}: {exc}")
+        return result
+
+    result["attempted"] = bool(attempted)
+    resolver_status = _bounded_diagnostic(debug.get("google_news_resolution_status"))
+    candidate = canonicalize_url(str(resolved or ""))
+    probed_candidate = str(
+        candidate
+        or debug.get("accepted_candidate_url")
+        or debug.get("google_news_rpc_url")
+        or debug.get("redirect_url_found")
+        or debug.get("canonical_url_found")
+        or ""
+    ).strip()
+    if candidate and resolver_status.startswith("resolved_") and _is_aljazeera_url(candidate):
+        resolution_methods = (
+            (debug.get("decoded_google_news_url"), "google_news_article_id_decode"),
+            (debug.get("redirect_url_found"), "google_news_redirect"),
+            (debug.get("google_news_rpc_url"), "google_news_rpc"),
+            (debug.get("canonical_url_found"), "google_news_html_canonical"),
+            (debug.get("html_candidate_url_found"), "google_news_html_candidate"),
+        )
+        for method_url, method_name in resolution_methods:
+            if method_url and canonicalize_url(str(method_url)) == candidate:
+                result["canonicalization_method"] = method_name
+                break
+        result["resolved_url"] = candidate
+        result["canonicalization_status"] = f"google_news_{resolver_status}"
+        return result
+
+    if probed_candidate and not _is_aljazeera_url(probed_candidate):
+        result["canonicalization_status"] = "rejected_wrong_publisher_domain"
+        result["failure_reason"] = "resolved candidate hostname is not aljazeera.com or a subdomain"
+        return result
+
+    result["canonicalization_status"] = f"google_news_{resolver_status}" if resolver_status else "failed_unresolved_wrapper"
+    result["failure_reason"] = _bounded_diagnostic(
+        debug.get("rejection_reason") or error or "unresolved Google News wrapper"
+    )
+    return result
+
+
 def _extract_aljazeera_isf_excerpt(article_text: str) -> str:
     text = clean_feed_text(article_text)
     if not text:
@@ -1277,15 +1377,70 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
     summary = clean_feed_text(item.get("summary_or_snippet", ""))
     feed_summary = summary
     content_text = None
+    canonicalization_method = "query_parameter" if canonical_status == "resolved_from_query" else canonical_status
+    canonicalization_failure_reason = ""
+    resolved_canonical_url = canonical_url if not wrapper_url else ""
+    enrichment_attempted = False
+    enrichment_status = "not_applicable"
+    enrichment_failure_reason = ""
     if source.source_id == ALJAZEERA_ISF_QUERY_SOURCE_ID:
-        article_payload = fetch_article_payload(url)
-        if article_payload.get("ok"):
+        enrichment_status = "pending"
+        if wrapper_url and canonical_status != "resolved_from_query":
+            resolution = _resolve_aljazeera_google_news_wrapper(url)
+            canonicalization_method = str(resolution.get("canonicalization_method") or "google_news_wrapper_resolver")
+            canonical_status = str(resolution.get("canonicalization_status") or "failed_unresolved_wrapper")
+            canonicalization_failure_reason = str(resolution.get("failure_reason") or "")
+            resolved = str(resolution.get("resolved_url") or "").strip()
+            if resolved:
+                canonical_url = resolved
+                resolved_canonical_url = resolved
+        elif wrapper_url:
+            canonicalization_method = "google_news_query_parameter"
+            if _is_aljazeera_url(canonical_url):
+                resolved_canonical_url = canonical_url
+            else:
+                canonicalization_failure_reason = "resolved candidate hostname is not aljazeera.com or a subdomain"
+                canonical_status = "rejected_wrong_publisher_domain"
+                canonical_url = canonicalize_url(url)
+        else:
+            canonicalization_method = "direct_url"
+            resolved_canonical_url = canonical_url if _is_aljazeera_url(canonical_url) else ""
+            if not resolved_canonical_url:
+                canonical_status = "rejected_wrong_publisher_domain"
+                canonicalization_failure_reason = "direct source hostname is not aljazeera.com or a subdomain"
+
+        if resolved_canonical_url:
+            enrichment_attempted = True
+            article_payload = fetch_article_payload(resolved_canonical_url)
+        else:
+            article_payload = None
+            enrichment_status = "skipped_canonical_resolution_failed"
+            enrichment_failure_reason = canonicalization_failure_reason or "no trusted Al Jazeera article URL"
+
+        if article_payload and article_payload.get("ok"):
+            final_article_url = canonicalize_url(str(article_payload.get("final_url") or resolved_canonical_url))
+            if not _is_aljazeera_url(final_article_url):
+                enrichment_status = "failed_untrusted_article_redirect"
+                enrichment_failure_reason = "article fetch redirected outside aljazeera.com"
+                article_payload = None
+            elif final_article_url:
+                canonical_url = final_article_url
+                resolved_canonical_url = final_article_url
+
+        if article_payload and article_payload.get("ok"):
             article_text = str(article_payload.get("content_text") or "")
             excerpt = _extract_aljazeera_isf_excerpt(article_text)
             if excerpt:
                 content_text = excerpt
                 if excerpt.lower() not in summary.lower():
                     summary = f"{summary} {excerpt}".strip() if summary else excerpt
+                enrichment_status = "enriched_material_excerpt"
+            else:
+                enrichment_status = "failed_no_material_excerpt"
+                enrichment_failure_reason = "article body did not contain targeted deployment-state facts"
+        elif article_payload is not None:
+            enrichment_status = "failed_article_fetch"
+            enrichment_failure_reason = _bounded_diagnostic(article_payload.get("failure_reason") or "article fetch failed")
     traceability_note, traceability_error = _governance_traceability_note(
         publisher=source.publisher,
         published_at=published_at,
@@ -1320,6 +1475,18 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
         "canonical_url": canonical_url,
         "canonicalization_status": canonical_status,
         "wrapper_url": wrapper_url or None,
+        **(
+            {
+                "resolved_canonical_url": resolved_canonical_url or None,
+                "canonicalization_method": canonicalization_method,
+                "canonicalization_failure_reason": canonicalization_failure_reason or None,
+                "enrichment_attempted": enrichment_attempted,
+                "enrichment_status": enrichment_status,
+                "enrichment_failure_reason": enrichment_failure_reason or None,
+            }
+            if source.source_id == ALJAZEERA_ISF_QUERY_SOURCE_ID
+            else {}
+        ),
         "published_at_missing": published_at == "",
         "traceability_note": traceability_note,
         "attribution_mode": attribution_mode,

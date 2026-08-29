@@ -202,13 +202,13 @@ tiers:
       region_scope: Gaza
       source_group: accountability_secondary
       discovery_role: secondary_accountability
-    - source_id: bbc-board-of-peace-isf-query
-      name: BBC Board of Peace ISF Query
-      query: site:bbc.com/news/articles Gaza Mladenov "Board of Peace" "International Stabilization Force" "deployment mechanism" "deployment locations" "advance elements"
+    - source_id: aljazeera-board-of-peace-isf-query
+      name: Al Jazeera Board of Peace ISF Query
+      query: site:aljazeera.com Gaza Mladenov "Board of Peace" "International Stabilization Force" deployment
       type: google_news_rss
       enabled: true
       source_state: enabled
-      publisher: BBC News
+      publisher: Al Jazeera
       reliability_tier: reported-public-source
       category_hint: conflict
       region_scope: Gaza

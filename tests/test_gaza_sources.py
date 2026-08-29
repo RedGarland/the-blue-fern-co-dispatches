@@ -120,9 +120,11 @@ def test_repo_gaza_sources_config_includes_targeted_query_providers():
     assert by_id["who-gaza-evacuation-query"].publisher == "WHO"
     assert by_id["unicef-gaza-water-query"].publisher == "UNICEF"
     assert by_id["ap-gaza-attribution-query"].publisher == "Associated Press"
-    assert by_id["bbc-board-of-peace-isf-query"].type == "google_news_rss"
-    assert "Mladenov" in by_id["bbc-board-of-peace-isf-query"].query
-    assert "International Stabilization Force" in by_id["bbc-board-of-peace-isf-query"].query
+    assert by_id["aljazeera-board-of-peace-isf-query"].type == "google_news_rss"
+    assert by_id["aljazeera-board-of-peace-isf-query"].publisher == "Al Jazeera"
+    assert "Mladenov" in by_id["aljazeera-board-of-peace-isf-query"].query
+    assert "International Stabilization Force" in by_id["aljazeera-board-of-peace-isf-query"].query
+    assert "deployment" in by_id["aljazeera-board-of-peace-isf-query"].query
     assert by_id["haaretz-gaza-query"].publisher == "Haaretz"
     assert by_id["dirco-icj-query"].publisher == "DIRCO"
 

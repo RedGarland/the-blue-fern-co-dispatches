@@ -2083,7 +2083,10 @@ def test_production_shaped_provider_saturation_still_runs_and_retains_isf_candid
     assert feed_calls == [source_id for source_id, *_rest in specs]
     assert feed_calls[-1] == "aljazeera-board-of-peace-isf-query"
     assert resolved_wrappers == [ALJAZEERA_WRAPPER_URL]
-    assert article_fetches == [ALJAZEERA_ARTICLE_URL]
+    assert article_fetches == [
+        "https://apnews.com/article/gaza-strike-casualties-hospital",
+        ALJAZEERA_ARTICLE_URL,
+    ]
     assert result["stage_counts"]["accepted_before_global_source_cap"] == 13
     assert result["stage_counts"]["excluded_by_global_source_cap"] == 1
     assert result["source_count"] == 12
@@ -3370,3 +3373,395 @@ def test_wafa_tal_al_hawa_conflicting_retained_count_is_explicit_not_harmonized(
     assert wafa_story["casualty_counts"]["conflicting_reports"] is True
     assert "other retained publisher reported 2 killed and 1 injured" in wafa_story["summary"].lower()
     assert "conflicting counts remain unresolved" in wafa_story["summary"].lower()
+
+
+AP_WRAPPER_URL = (
+    "https://news.google.com/rss/articles/"
+    "CBMinwFBVV95cUxPQ3FmcjlycjlqYTlNSzJueHF3d2ZkRHJ3c2ZEbFJkYzZ6ZERHdVE0WXFlV3Y0Uy10emVoZzV4dlBleGRrbTV6a0Z1WkJPVHBTM1NqdExfRUZvRGk5bHJRdnZSdEdBbXBSN2h4VmE0SzB2emV4NHdQQUZSSWRpUlNGRjNaamtWbEdUbGtoSlNtMzF6TGd0b05SdHMtRTFaYVk?oc=5"
+)
+AP_ARTICLE_URL = "https://apnews.com/article/middle-east-iran-israel-august-28-2026-6c8334dbec806f41666ff75e728768b8"
+AP_ARTICLE_FIXTURE = Path(__file__).parent / "fixtures" / "gaza" / "ap_article_middle_east_aug_28.html"
+
+
+def _ap_source() -> gaza_sources.SourceDefinition:
+    return gaza_sources.SourceDefinition(
+        source_id=gaza_sources.AP_ATTRIBUTION_QUERY_SOURCE_ID,
+        name="AP Gaza Attribution Query",
+        url="",
+        query="site:apnews.com Gaza Israeli military acknowledged strikes not aware Khan Younis",
+        type="google_news_rss",
+        enabled=True,
+        publisher="Associated Press",
+        reliability_tier="reported-public-source",
+        category_hint="conflict",
+        region_scope="Gaza",
+        source_group="accountability_secondary",
+        discovery_role="secondary_accountability",
+    )
+
+
+def _ap_item() -> dict[str, str]:
+    return {
+        "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
+        "url": AP_WRAPPER_URL,
+        "published_at": "2026-08-28T12:00:00Z",
+        "summary_or_snippet": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
+    }
+
+
+def _mock_ap_shared_resolution(monkeypatch, candidate: str, status: str = "resolved_same_domain") -> None:
+    from bluefern_dispatches import food_line_discovery_expansion
+
+    monkeypatch.setattr(
+        food_line_discovery_expansion,
+        "_resolve_google_news_wrapper",
+        lambda *_args, **_kwargs: (
+            candidate,
+            "" if candidate else "rpc_without_article_url",
+            True,
+            {
+                "google_news_resolution_status": status,
+                "google_news_rpc_url": candidate,
+                "accepted_candidate_url": candidate,
+                "rejection_reason": "" if candidate else "no publisher article URL found",
+            },
+        ),
+    )
+
+
+def test_ap_opaque_wrapper_resolves_only_to_ap_article_and_preserves_wrapper(monkeypatch):
+    _mock_ap_shared_resolution(monkeypatch, AP_ARTICLE_URL)
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_article_payload",
+        lambda url, timeout=20: {
+            "ok": True,
+            "url": url,
+            "final_url": url,
+            "status_code": 200,
+            "content_type": "text/html",
+            "content_bytes": AP_ARTICLE_FIXTURE.read_bytes(),
+            "content_text": AP_ARTICLE_FIXTURE.read_text(encoding="utf-8"),
+        },
+    )
+
+    record = gaza_sources.normalize_rss_item(_ap_item(), _ap_source(), "2026-08-29", "2026-08-29T18:00:00Z")
+
+    assert record is not None
+    assert record["url"] == AP_WRAPPER_URL
+    assert record["wrapper_url"] == AP_WRAPPER_URL
+    assert record["canonical_url"] == AP_ARTICLE_URL
+    assert record["resolved_canonical_url"] == AP_ARTICLE_URL
+    assert record["canonicalization_method"] == "google_news_rpc"
+    assert record["canonicalization_status"] == "google_news_resolved_same_domain"
+    assert record["article_fetch_status"] == "article_prose_extracted"
+    assert record["content_available"] is True
+    assert record["article_body_length"] == len(record["content_text"])
+    assert "resolved canonical publisher URL" in record["traceability_note"]
+
+
+@pytest.mark.parametrize(
+    ("candidate", "expected_status"),
+    [
+        ("https://example.com/article/ap-copy", "rejected_wrong_publisher_domain"),
+        ("https://apnews.com/", "rejected_non_article_url"),
+        ("https://apnews.com/hub/israel-hamas-war", "rejected_non_article_url"),
+        ("", "google_news_rpc_without_article_url"),
+    ],
+)
+def test_ap_wrapper_resolution_fails_closed_for_untrusted_or_nonarticle_candidates(monkeypatch, candidate, expected_status):
+    _mock_ap_shared_resolution(monkeypatch, candidate, "rpc_without_article_url" if not candidate else "resolved_same_domain")
+
+    result = gaza_sources._resolve_ap_google_news_wrapper(AP_WRAPPER_URL)
+
+    assert result["resolved_url"] == ""
+    assert result["canonicalization_status"] == expected_status
+
+
+def test_ap_wrapper_retry_is_bounded_for_transient_network_failure(monkeypatch):
+    from bluefern_dispatches import food_line_discovery_expansion
+
+    attempts = []
+    sleeps = []
+
+    def fetch(url, timeout=20):
+        attempts.append(url)
+        if len(attempts) == 1:
+            return {"ok": False, "failure_reason": "URLError: handshake operation timed out", "exception_type": "URLError"}
+        return {"ok": True, "url": url, "final_url": url, "status_code": 200, "content_bytes": b"wrapper", "content_text": "wrapper"}
+
+    def shared(fetcher, wrapper, **_kwargs):
+        fetcher(wrapper)
+        return AP_ARTICLE_URL, "", True, {
+            "google_news_resolution_status": "resolved_same_domain",
+            "google_news_rpc_url": AP_ARTICLE_URL,
+        }
+
+    monkeypatch.setattr(food_line_discovery_expansion, "_resolve_google_news_wrapper", shared)
+    monkeypatch.setattr(gaza_sources, "fetch_article_payload", fetch)
+    monkeypatch.setattr(gaza_sources.time_module, "sleep", sleeps.append)
+
+    result = gaza_sources._resolve_ap_google_news_wrapper(AP_WRAPPER_URL)
+
+    assert result["resolved_url"] == AP_ARTICLE_URL
+    assert attempts == [AP_WRAPPER_URL, AP_WRAPPER_URL]
+    assert sleeps == [1.0]
+
+
+@pytest.mark.parametrize(
+    ("failure_reason", "expected_attempts", "expected_sleeps"),
+    [
+        ("URLError: timed out", 3, [1.0, 2.0]),
+        ("SSLCertVerificationError: certificate verify failed", 1, []),
+    ],
+)
+def test_ap_wrapper_retry_stops_after_three_transient_failures_and_never_retries_certificate_failures(
+    monkeypatch, failure_reason, expected_attempts, expected_sleeps
+):
+    from bluefern_dispatches import food_line_discovery_expansion
+
+    attempts = []
+    sleeps = []
+
+    def fetch(url, timeout=20):
+        attempts.append(url)
+        return {"ok": False, "failure_reason": failure_reason, "exception_type": "URLError"}
+
+    def shared(fetcher, wrapper, **_kwargs):
+        response = fetcher(wrapper)
+        return "", response["error"], True, {
+            "google_news_resolution_status": "failed_fetch_error",
+            "rejection_reason": response["error"],
+        }
+
+    monkeypatch.setattr(food_line_discovery_expansion, "_resolve_google_news_wrapper", shared)
+    monkeypatch.setattr(gaza_sources, "fetch_article_payload", fetch)
+    monkeypatch.setattr(gaza_sources.time_module, "sleep", sleeps.append)
+
+    result = gaza_sources._resolve_ap_google_news_wrapper(AP_WRAPPER_URL)
+
+    assert result["resolved_url"] == ""
+    assert len(attempts) == expected_attempts
+    assert sleeps == expected_sleeps
+
+
+def test_ap_article_prose_extraction_uses_real_body_shape_excludes_noise_and_is_bounded():
+    html_text = AP_ARTICLE_FIXTURE.read_text(encoding="utf-8").replace(
+        "</div>\n    </div>",
+        f"<p>{'bounded article prose ' * 1000}</p></div>\n    </div>",
+        1,
+    )
+
+    prose = gaza_sources._extract_ap_article_prose(html_text)
+
+    assert "two brothers and another relative" in prose.lower()
+    assert "military confirmed the gaza strikes" in prose.lower()
+    assert "site navigation" not in prose.lower()
+    assert "caption noise" not in prose.lower()
+    assert "abdeen" not in prose.lower()
+    assert "al-qarara" not in prose.lower()
+    assert len(prose) <= gaza_sources.AP_ARTICLE_PROSE_MAX_CHARS
+
+
+def test_ap_fetch_failure_keeps_feed_fallback_and_truthful_diagnostics(monkeypatch):
+    monkeypatch.setattr(
+        gaza_sources,
+        "_resolve_ap_google_news_wrapper",
+        lambda _url: {
+            "resolved_url": AP_ARTICLE_URL,
+            "canonicalization_method": "google_news_rpc",
+            "canonicalization_status": "google_news_resolved_same_domain",
+            "failure_reason": "",
+        },
+    )
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_article_payload",
+        lambda *_args, **_kwargs: {"ok": False, "failure_reason": "TimeoutError: timed out"},
+    )
+
+    record = gaza_sources.normalize_rss_item(_ap_item(), _ap_source(), "2026-08-29", "2026-08-29T18:00:00Z")
+
+    assert record is not None
+    assert record["canonical_url"] == AP_ARTICLE_URL
+    assert record["summary_or_snippet"] == _ap_item()["summary_or_snippet"]
+    assert record["content_text"] is None
+    assert record["article_fetch_attempted"] is True
+    assert record["article_fetch_status"] == "failed_article_fetch"
+    assert record["content_available"] is False
+
+
+def test_ap_final_redirect_outside_article_domain_is_rejected(monkeypatch):
+    monkeypatch.setattr(
+        gaza_sources,
+        "_resolve_ap_google_news_wrapper",
+        lambda _url: {
+            "resolved_url": AP_ARTICLE_URL,
+            "canonicalization_method": "google_news_rpc",
+            "canonicalization_status": "google_news_resolved_same_domain",
+            "failure_reason": "",
+        },
+    )
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_article_payload",
+        lambda *_args, **_kwargs: {"ok": True, "final_url": "https://example.com/copied-story", "content_text": "noise"},
+    )
+
+    record = gaza_sources.normalize_rss_item(_ap_item(), _ap_source(), "2026-08-29", "2026-08-29T18:00:00Z")
+
+    assert record is not None
+    assert record["resolved_canonical_url"] is None
+    assert record["canonical_url"] == gaza_sources.canonicalize_url(AP_WRAPPER_URL)
+    assert record["article_fetch_status"] == "failed_untrusted_article_redirect"
+    assert "canonical publisher resolution was not established" in record["traceability_note"]
+
+
+def _normalized_ap_record(monkeypatch) -> tuple[dict, list[dict]]:
+    monkeypatch.setattr(
+        gaza_sources,
+        "_resolve_ap_google_news_wrapper",
+        lambda _url: {
+            "resolved_url": AP_ARTICLE_URL,
+            "canonicalization_method": "google_news_rpc",
+            "canonicalization_status": "google_news_resolved_same_domain",
+            "failure_reason": "",
+        },
+    )
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_article_payload",
+        lambda url, timeout=20: {
+            "ok": True,
+            "url": url,
+            "final_url": url,
+            "content_text": AP_ARTICLE_FIXTURE.read_text(encoding="utf-8"),
+        },
+    )
+    raw = gaza_sources.normalize_rss_item(_ap_item(), _ap_source(), "2026-08-29", "2026-08-29T18:00:00Z")
+    assert raw is not None
+    normalized, warnings, errors = normalize_sources([raw], "2026-08-29", "2026-08-29T18:00:00Z")
+    assert errors == []
+    assert warnings == []
+    return raw, normalized
+
+
+def test_ap_body_produces_separate_corroboration_and_attribution_fragments_with_shared_provenance(monkeypatch):
+    raw, normalized = _normalized_ap_record(monkeypatch)
+
+    fragments = raw["ap_event_fragments"]
+    assert [fragment["development_type"] for fragment in fragments] == [
+        "casualty_corroboration",
+        "military_attribution_follow_up",
+    ]
+    casualty, attribution = fragments
+    assert casualty["casualty_counts"] == {"reported_deaths": 3}
+    assert casualty["location"] == "outside Khan Younis"
+    assert "Abdeen" not in casualty["summary"]
+    assert "Al-Qarara" not in casualty["summary"]
+    assert "did not identify" in casualty["uncertainty"]
+    assert "two Gaza City strikes" in attribution["summary"]
+    assert "not aware of the Khan Younis strike" in attribution["summary"]
+    assert attribution["casualty_counts"] == {}
+    assert attribution["category"] == "military_conduct_accountability"
+    assert len(normalized[0]["ap_event_fragments"]) == 2
+    assert normalized[0]["content_text"] == raw["content_text"]
+    assert normalized[0]["article_body_length"] == len(raw["content_text"])
+
+    stories, _rejected, _top = curate_stories(normalized, "2026-08-29", "2026-08-29T18:00:00Z")
+    assert len(stories) == 2
+    assert {story["development_type"] for story in stories} == {
+        "casualty_corroboration",
+        "military_attribution_follow_up",
+    }
+    assert all(story["source_urls"] == [AP_WRAPPER_URL] for story in stories)
+    assert all(story["source_records"][0]["canonical_url"] == AP_ARTICLE_URL for story in stories)
+
+
+def test_ap_attribution_follow_up_survives_alongside_overlapping_wafa_casualty(tmp_path, monkeypatch):
+    _raw, normalized = _normalized_ap_record(monkeypatch)
+    ap_stories, _rejected, _top = curate_stories(normalized, "2026-08-29", "2026-08-29T18:00:00Z")
+    wafa_story = {
+        **next(story for story in ap_stories if story["development_type"] == "casualty_corroboration"),
+        "story_id": "wafa-overlapping-casualty",
+        "title": "WAFA reports three Abdeen family members killed near Al-Qarara",
+        "summary": "WAFA reported three Abdeen family members killed near Al-Qarara, north of Khan Younis.",
+        "publisher_names": ["WAFA"],
+        "source_urls": ["https://english.wafa.ps/Pages/Details/160000"],
+    }
+
+    result = dedupe_public_stories(tmp_path, "gaza", "2026-08-29", [wafa_story, *ap_stories], dry_run=True)
+
+    assert any(story["development_type"] == "military_attribution_follow_up" for story in result.stories)
+
+
+def test_ap_unresolved_wrapper_is_rejected_by_collection(tmp_path, monkeypatch):
+    config = tmp_path / "data" / "dispatches" / "gaza" / "sources.yml"
+    config.parent.mkdir(parents=True)
+    config.write_text(
+        """sources:
+  - source_id: ap-gaza-attribution-query
+    name: AP Gaza Attribution Query
+    query: site:apnews.com Gaza attribution
+    type: google_news_rss
+    enabled: true
+    publisher: Associated Press
+    reliability_tier: reported-public-source
+    category_hint: conflict
+    region_scope: Gaza
+""",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_feed_payload",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "status_code": 200,
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload([_ap_item()]),
+            "backend_used": "python",
+        },
+    )
+    monkeypatch.setattr(
+        gaza_sources,
+        "_resolve_ap_google_news_wrapper",
+        lambda _url: {
+            "resolved_url": "",
+            "canonicalization_method": "google_news_rpc",
+            "canonicalization_status": "google_news_rpc_without_article_url",
+            "failure_reason": "no publisher article URL found",
+        },
+    )
+
+    result = gaza_sources.collect_gaza_sources(tmp_path, "2026-08-29", min_sources=0, prefer_manual=False, write_output=False)
+
+    assert result["sources"] == []
+    diagnostic = result["provider_diagnostics"][0]
+    assert diagnostic["rejected_counts"]["rejected_untrusted_canonical"] == 1
+    assert diagnostic["canonicalization_failures"][0]["canonicalization_status"] == "google_news_rpc_without_article_url"
+
+
+def test_ap_empty_article_body_is_not_reported_as_success(monkeypatch):
+    monkeypatch.setattr(
+        gaza_sources,
+        "_resolve_ap_google_news_wrapper",
+        lambda _url: {
+            "resolved_url": AP_ARTICLE_URL,
+            "canonicalization_method": "google_news_rpc",
+            "canonicalization_status": "google_news_resolved_same_domain",
+            "failure_reason": "",
+        },
+    )
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_article_payload",
+        lambda url, timeout=20: {"ok": True, "final_url": url, "content_text": "<html><body>feed-title only</body></html>"},
+    )
+
+    record = gaza_sources.normalize_rss_item(_ap_item(), _ap_source(), "2026-08-29", "2026-08-29T18:00:00Z")
+
+    assert record["article_fetch_status"] == "insufficient_article_content"
+    assert record["content_available"] is False
+    assert record["article_body_length"] == 0

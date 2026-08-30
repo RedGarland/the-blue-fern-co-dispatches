@@ -1,0 +1,21 @@
+[
+  {
+    "story_id": "gaza-story-001",
+    "title": "Dispatches From Gaza - 2026-08-30",
+    "summary": "Structured daily briefing synthesizing key developments from public reporting.",
+    "category": "humanitarian",
+    "score": 100,
+    "scoring_reasons": [
+      "Preserved from existing Gaza public edition."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "gaza-src-001",
+      "gaza-src-002",
+      "gaza-src-003"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  }
+]

@@ -1,7 +1,7 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-08-29",
-  "generated_at": "2026-08-29T23:32:07.359430Z",
+  "generated_at": "2026-08-30T00:50:13.704946Z",
   "audio_status": "audio_file_ready",
   "audio_file": "2026-08-29.mp3",
   "audio_url": "/gaza/audio/2026-08-29.mp3",
@@ -21,23 +21,23 @@
       "voice": "alloy"
     }
   ],
-  "tts_input_character_count": 1639,
-  "tts_input_word_count": 248,
+  "tts_input_character_count": 1642,
+  "tts_input_word_count": 254,
   "tts_story_count": 6,
   "tts_segment_count": 1,
   "audio_duration_seconds": null,
-  "audio_file_size_bytes": 1640832,
+  "audio_file_size_bytes": 1706496,
   "estimated_cost_usd": null,
   "estimated_cost_note": "pricing input not configured",
   "tts_pricing_basis": null,
   "tts_pricing_model": null,
-  "cost_logged_at": "2026-08-29T23:32:07.359393Z",
+  "cost_logged_at": "2026-08-30T00:50:13.704916Z",
   "segue_chime": "none",
   "segue_chime_count": 0,
   "segue_chime_asset": null,
   "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-08-29-transcript.html",
   "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-29/",
-  "script_text": "This is the Gaza Dispatch audio briefing for August 29, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Palestinian woman and NBC News team reportedly attacked in West Bank. Matt Bradley and crew assaulted while interviewing woman who said settlers had driven family out of home. This was reported by The Guardian.\n\n2. Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef. Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza Unicef. This was reported by UNICEF.\n\n3. Gaza runs out of cancer medicines, as Israeli strikes continue. Officials at Gaza's Al-Aqsa Martyrs Hospital say cancer medicines have completely run out, as Israeli strikes continue. This was reported by Al Jazeera.\n\n4. Israeli army arrests six Palestinians after settler violence in West Bank. Israeli settlers stormed Qusra in the occupied West Bank, attacking Palestinian residents and damaging homes. This was reported by Al Jazeera.\n\n5. Israeli attacks in Gaza kill four people, hit hospital supply warehouse. Gaza's Health Ministry reports rising casualties amid escalated Israeli attacks, with victims trapped under rubble. This was reported by Al Jazeera.\n\n6. BBC tracks one week of Israeli settler violence in occupied West Bank. The BBC's Lucy Williamson reports on settler attacks on Palestinians, which have been observed over the last week alone. This was reported by BBC News.\n\nFor the full source-backed dispatch, read the August 29, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "script_text": "This is the Gaza Dispatch audio briefing for August 29, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Palestinian woman and NBC News team reportedly attacked in West Bank. Matt Bradley and crew assaulted while interviewing woman who said settlers had driven family out of home. This was reported by The Guardian.\n\n2. Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef. Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza Unicef. This was reported by UNICEF.\n\n3. Israeli settlers attack international news team in occupied West Bank. A news team, working for the US network NBC and a Palestinian woman were injured in an attack by masked Israeli settler. This was reported by Al Jazeera.\n\n4. Gaza runs out of cancer medicines, as Israeli strikes continue. Officials at Gaza's Al-Aqsa Martyrs Hospital say cancer medicines have completely run out, as Israeli strikes continue. This was reported by Al Jazeera.\n\n5. Israeli army arrests six Palestinians after settler violence in West Bank. Israeli settlers stormed Qusra in the occupied West Bank, attacking Palestinian residents and damaging homes. This was reported by Al Jazeera.\n\n6. BBC tracks one week of Israeli settler violence in occupied West Bank. The BBC's Lucy Williamson reports on settler attacks on Palestinians, which have been observed over the last week alone. This was reported by BBC News.\n\nFor the full source-backed dispatch, read the August 29, 2026 Gaza edition at dispatches.thebluefernco.com.",
   "source_count": 6,
   "sources": [
     {
@@ -53,6 +53,12 @@
       "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef"
     },
     {
+      "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-4ba8eb1457de",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/29/israeli-settlers-attack-international-news-team-in-occupied-west-bank?traffic_source=rss",
+      "title": "Israeli settlers attack international news team in occupied West Bank"
+    },
+    {
       "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-fcd9a3b4242c",
       "publisher": "Al Jazeera",
       "url": "https://www.aljazeera.com/video/newsfeed/2026/8/29/29-08-sv-gaza-hospitals-targetting-fm?traffic_source=rss",
@@ -63,12 +69,6 @@
       "publisher": "Al Jazeera",
       "url": "https://www.aljazeera.com/video/newsfeed/2026/8/29/israeli-army-arrests-six-palestinians-after-settler-violence-in-west-bank?traffic_source=rss",
       "title": "Israeli army arrests six Palestinians after settler violence in West Bank"
-    },
-    {
-      "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-4a6429a19ef9",
-      "publisher": "Al Jazeera",
-      "url": "https://www.aljazeera.com/news/2026/8/29/israeli-attacks-across-gaza-kill-two-people-hit-hospital-supply-warehouse?traffic_source=rss",
-      "title": "Israeli attacks in Gaza kill four people, hit hospital supply warehouse"
     },
     {
       "source_record_id": "gaza-2026-08-29-bbc-middle-east-48df2689ef18",

@@ -401,6 +401,23 @@ def normalize_sources(
                 "used_in_story_ids": [],
                 "claim_ids": [],
                 "story_selection_excluded_reason": selection_exclusion_reason,
+                **(
+                    {
+                        "resolved_canonical_url": record.get("resolved_canonical_url"),
+                        "canonicalization_method": record.get("canonicalization_method"),
+                        "canonicalization_failure_reason": record.get("canonicalization_failure_reason"),
+                        "article_fetch_attempted": bool(record.get("article_fetch_attempted")),
+                        "article_fetch_status": record.get("article_fetch_status"),
+                        "article_fetch_failure_reason": record.get("article_fetch_failure_reason"),
+                        "article_fetch_backend": record.get("article_fetch_backend"),
+                        "content_available": bool(record.get("content_available")),
+                        "article_body_length": int(record.get("article_body_length") or 0),
+                        "content_text": str(record.get("content_text") or "") or None,
+                        "ap_event_fragments": list(record.get("ap_event_fragments") or []),
+                    }
+                    if str(record.get("provider_id") or "") == "ap-gaza-attribution-query"
+                    else {}
+                ),
             }
         )
     ranked = rank_gaza_candidates(normalized, edition_date)
@@ -518,6 +535,13 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
 
         def add_fragment(**fragment: Any) -> None:
             fragments.append(fragment)
+
+        if str(source.get("provider_id") or "") == "ap-gaza-attribution-query":
+            ap_fragments = source.get("ap_event_fragments") or []
+            if isinstance(ap_fragments, list):
+                trusted_fragments = [fragment for fragment in ap_fragments if isinstance(fragment, dict)]
+                if trusted_fragments:
+                    return trusted_fragments
 
         base_scope = _story_scope(source)
         base_summary = _sanitize_story_summary(str(source.get("title") or ""), str(source.get("summary_or_snippet") or ""))
@@ -783,6 +807,11 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
                             "source_record_id": source["source_record_id"],
                             "title": source["title"],
                             "url": source["url"],
+                            **(
+                                {"canonical_url": source.get("canonical_url")}
+                                if str(source.get("provider_id") or "") == "ap-gaza-attribution-query"
+                                else {}
+                            ),
                             "publisher": source["publisher"],
                             "summary_or_snippet": source.get("summary_or_snippet"),
                             "event_date": fragment.get("event_date"),

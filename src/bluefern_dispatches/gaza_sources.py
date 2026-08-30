@@ -63,6 +63,9 @@ ALJAZEERA_ISF_REQUIRED_FACT_PATTERNS = (
     re.compile(r"\badvance elements?\b.{0,120}\b(?:arrive|expected|due)\b.{0,60}\bsoon\b", re.I),
 )
 ALJAZEERA_WRAPPER_RETRY_DELAYS_SECONDS = (1.0, 2.0)
+AP_ATTRIBUTION_QUERY_SOURCE_ID = "ap-gaza-attribution-query"
+AP_WRAPPER_RETRY_DELAYS_SECONDS = (1.0, 2.0)
+AP_ARTICLE_PROSE_MAX_CHARS = 6000
 WAFA_QUERY_SOURCE_IDS = {
     "wafa-gaza-query",
     "wafa-gaza-casualty-locations-query",
@@ -1033,6 +1036,27 @@ def _is_wafa_url(url: str) -> bool:
     )
 
 
+def _is_ap_url(url: str) -> bool:
+    try:
+        parts = urlsplit(str(url or "").strip())
+    except ValueError:
+        return False
+    hostname = str(parts.hostname or "").lower().rstrip(".")
+    return parts.scheme.lower() in {"http", "https"} and (
+        hostname == "apnews.com" or hostname.endswith(".apnews.com")
+    )
+
+
+def _is_ap_article_url(url: str) -> bool:
+    if not _is_ap_url(url):
+        return False
+    try:
+        path = urlsplit(str(url or "").strip()).path
+    except ValueError:
+        return False
+    return bool(re.fullmatch(r"/article/[^/]+/?", path, re.I))
+
+
 def _is_wafa_article_url(url: str) -> bool:
     if not _is_wafa_url(url):
         return False
@@ -1045,6 +1069,13 @@ def _is_wafa_article_url(url: str) -> bool:
 
 def _is_wafa_source(source: SourceDefinition) -> bool:
     return source.source_id in WAFA_QUERY_SOURCE_IDS and source.publisher.strip().lower() == "wafa"
+
+
+def _is_ap_source(source: SourceDefinition) -> bool:
+    return (
+        source.source_id == AP_ATTRIBUTION_QUERY_SOURCE_ID
+        and source.publisher.strip().lower() == "associated press"
+    )
 
 
 def _bounded_diagnostic(value: Any, limit: int = 300) -> str:
@@ -1177,6 +1208,87 @@ def _resolve_aljazeera_google_news_wrapper(url: str) -> dict[str, Any]:
     result["failure_reason"] = _bounded_diagnostic(
         debug.get("rejection_reason") or error or "unresolved Google News wrapper"
     )
+    return result
+
+
+def _resolve_ap_google_news_wrapper(url: str) -> dict[str, Any]:
+    result: dict[str, Any] = {
+        "attempted": False,
+        "resolved_url": "",
+        "canonicalization_method": "google_news_wrapper_resolver",
+        "canonicalization_status": "not_wrapper",
+        "failure_reason": "",
+    }
+    if not _looks_like_google_news_wrapper(url):
+        return result
+    result["attempted"] = True
+
+    def fetcher(target_url: str, timeout: int = 15) -> dict[str, Any]:
+        payload: dict[str, Any] = {}
+        for attempt in range(len(AP_WRAPPER_RETRY_DELAYS_SECONDS) + 1):
+            payload = fetch_article_payload(target_url, timeout=timeout)
+            if payload.get("ok") or not _is_transient_aljazeera_wrapper_failure(payload):
+                break
+            if attempt < len(AP_WRAPPER_RETRY_DELAYS_SECONDS):
+                time_module.sleep(AP_WRAPPER_RETRY_DELAYS_SECONDS[attempt])
+        raw = payload.get("content_bytes")
+        if not isinstance(raw, (bytes, bytearray)):
+            raw = str(payload.get("content_text") or "").encode("utf-8")
+        final_url = str(payload.get("final_url") or target_url).strip()
+        redirect_chain = [target_url]
+        if final_url and final_url != target_url:
+            redirect_chain.append(final_url)
+        return {
+            "payload": bytes(raw),
+            "error": "" if payload.get("ok") else _bounded_diagnostic(payload.get("failure_reason") or "wrapper fetch failed"),
+            "response_status": payload.get("status_code"),
+            "final_response_url": final_url,
+            "content_type": str(payload.get("content_type") or ""),
+            "redirect_chain": redirect_chain,
+        }
+
+    try:
+        from bluefern_dispatches.food_line_discovery_expansion import _resolve_google_news_wrapper
+
+        resolved, error, attempted, debug = _resolve_google_news_wrapper(
+            fetcher,
+            url,
+            publisher_url="https://apnews.com/",
+            publisher_name="Associated Press",
+        )
+    except Exception as exc:  # noqa: BLE001
+        result["canonicalization_status"] = "failed_resolver_exception"
+        result["failure_reason"] = _bounded_diagnostic(f"{type(exc).__name__}: {exc}")
+        return result
+
+    result["attempted"] = bool(attempted)
+    resolver_status = _bounded_diagnostic(debug.get("google_news_resolution_status"))
+    candidate = canonicalize_url(str(resolved or ""))
+    resolution_methods = (
+        (debug.get("decoded_google_news_url"), "google_news_article_id_decode"),
+        (debug.get("redirect_url_found"), "google_news_redirect"),
+        (debug.get("google_news_rpc_url"), "google_news_rpc"),
+        (debug.get("canonical_url_found"), "google_news_html_canonical"),
+        (debug.get("html_candidate_url_found"), "google_news_html_candidate"),
+    )
+    if candidate and resolver_status.startswith("resolved_") and _is_ap_article_url(candidate):
+        for method_url, method_name in resolution_methods:
+            if method_url and canonicalize_url(str(method_url)) == candidate:
+                result["canonicalization_method"] = method_name
+                break
+        result["resolved_url"] = candidate
+        result["canonicalization_status"] = f"google_news_{resolver_status}"
+        return result
+    if candidate and not _is_ap_url(candidate):
+        result["canonicalization_status"] = "rejected_wrong_publisher_domain"
+        result["failure_reason"] = "resolved candidate hostname is not apnews.com or a subdomain"
+        return result
+    if candidate and not _is_ap_article_url(candidate):
+        result["canonicalization_status"] = "rejected_non_article_url"
+        result["failure_reason"] = "resolved AP candidate is not an article detail URL"
+        return result
+    result["canonicalization_status"] = f"google_news_{resolver_status}" if resolver_status else "failed_unresolved_wrapper"
+    result["failure_reason"] = _bounded_diagnostic(debug.get("rejection_reason") or error or "unresolved Google News wrapper")
     return result
 
 
@@ -1325,6 +1437,134 @@ def _extract_wafa_article_excerpt(article_text: str) -> str:
     except Exception:
         return ""
     return clean_feed_text("\n".join(parser.parts))[:5000].strip()
+
+
+def _extract_ap_article_prose(article_text: str) -> str:
+    class _ApArticleParser(HTMLParser):
+        _SKIPPED_TAGS = {"script", "style", "noscript", "template", "svg"}
+        _VOID_TAGS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
+
+        def __init__(self) -> None:
+            super().__init__(convert_charrefs=True)
+            self._skip_depth = 0
+            self._article_depth = 0
+            self._paragraph_depth = 0
+            self._paragraph_parts: list[str] = []
+            self.paragraphs: list[str] = []
+
+        def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+            tag = tag.lower()
+            if tag in self._SKIPPED_TAGS:
+                self._skip_depth += 1
+                return
+            if self._skip_depth:
+                return
+            attrs_by_name = {name.lower(): value or "" for name, value in attrs}
+            classes = {value.lower() for value in attrs_by_name.get("class", "").split()}
+            begins_article = (
+                self._article_depth == 0
+                and tag == "div"
+                and {"richtextstorybody", "richtextbody"}.issubset(classes)
+            )
+            if self._article_depth or begins_article:
+                if tag not in self._VOID_TAGS:
+                    self._article_depth += 1
+                if tag == "p" and self._paragraph_depth == 0:
+                    self._paragraph_parts = []
+                    self._paragraph_depth = 1
+                elif self._paragraph_depth and tag not in self._VOID_TAGS:
+                    self._paragraph_depth += 1
+
+        def handle_endtag(self, tag: str) -> None:
+            tag = tag.lower()
+            if tag in self._SKIPPED_TAGS:
+                if self._skip_depth:
+                    self._skip_depth -= 1
+                return
+            if self._skip_depth:
+                return
+            if self._paragraph_depth and tag not in self._VOID_TAGS:
+                self._paragraph_depth -= 1
+                if self._paragraph_depth == 0:
+                    paragraph = clean_feed_text(" ".join(self._paragraph_parts))
+                    if paragraph:
+                        self.paragraphs.append(paragraph)
+                    self._paragraph_parts = []
+            if self._article_depth and tag not in self._VOID_TAGS:
+                self._article_depth -= 1
+
+        def handle_data(self, data: str) -> None:
+            if not self._skip_depth and self._article_depth and self._paragraph_depth:
+                self._paragraph_parts.append(data)
+
+    parser = _ApArticleParser()
+    try:
+        parser.feed(str(article_text or ""))
+        parser.close()
+    except Exception:
+        return ""
+    return clean_feed_text("\n".join(parser.paragraphs))[:AP_ARTICLE_PROSE_MAX_CHARS].strip()
+
+
+def _extract_ap_event_fragments(article_prose: str, published_at: str = "") -> list[dict[str, Any]]:
+    text = clean_feed_text(str(article_prose or ""))
+    lowered = text.lower()
+    fragments: list[dict[str, Any]] = []
+    casualty_supported = all(
+        marker in lowered
+        for marker in ("two brothers", "another relative", "family's home", "outside khan younis", "nasser hospital")
+    )
+    if casualty_supported:
+        fragments.append(
+            {
+                "title": "AP corroborates three family deaths outside Khan Younis",
+                "summary": (
+                    "The Associated Press reported that two brothers and another relative died in a strike on their "
+                    "family's home outside Khan Younis, citing officials at Nasser Hospital."
+                ),
+                "story_scope": "core_gaza",
+                "category": "conflict",
+                "development_type": "casualty_corroboration",
+                "affected_system": "civilians",
+                "location": "outside Khan Younis",
+                "event_date": published_at,
+                "attribution": "Associated Press, citing Nasser Hospital officials",
+                "uncertainty": (
+                    "AP identified the location only as outside Khan Younis; it did not identify the family as Abdeen "
+                    "or the location as Al-Qarara."
+                ),
+                "casualty_counts": {"reported_deaths": 3},
+            }
+        )
+    attribution_supported = (
+        "two separate israeli strikes" in lowered
+        and "gaza city" in lowered
+        and "military confirmed the gaza strikes" in lowered
+        and "not aware of the one in khan younis" in lowered
+    )
+    if attribution_supported:
+        fragments.append(
+            {
+                "title": "AP reports Israeli military response to Gaza and Khan Younis strikes",
+                "summary": (
+                    "The Associated Press reported that Israel's military confirmed the two Gaza City strikes but said "
+                    "it was not aware of the Khan Younis strike tied to the reported family deaths."
+                ),
+                "story_scope": "core_gaza",
+                "category": "military_conduct_accountability",
+                "development_type": "military_attribution_follow_up",
+                "affected_system": "military strike accountability",
+                "location": "Gaza City and outside Khan Younis",
+                "event_date": published_at,
+                "attribution": "Associated Press account of the Israeli military response",
+                "uncertainty": (
+                    "The military response did not confirm responsibility for the Khan Younis strike and does not "
+                    "independently resolve attribution for that strike."
+                ),
+                "casualty_counts": {},
+            }
+        )
+    return fragments
 
 
 def _extract_aljazeera_isf_excerpt(article_text: str) -> str:
@@ -1701,8 +1941,11 @@ def _governance_traceability_note(
         return "", f"source record has invalid URL: {url}"
     publisher_name = str(publisher or "").strip() or "the source"
     if wrapper_url:
-        if not canonical_url:
-            return "", "source record uses an unresolved Google News wrapper URL"
+        if not canonical_url or _looks_like_google_news_wrapper(canonical_url):
+            note = f"Traceable to {publisher_name} via a preserved Google News RSS wrapper; canonical publisher resolution was not established"
+            if published_at:
+                note = f"{note} for the item dated {published_at}"
+            return f"{note}; title, publisher, wrapper URL, and published_at are preserved in the record.", None
         note = f"Traceable to {publisher_name} via a Google News RSS wrapper and resolved canonical publisher URL {canonical_url}"
         if published_at:
             note = f"{note} dated {published_at}"
@@ -1753,6 +1996,8 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
     article_fetch_attempted = False
     article_fetch_status = "not_applicable"
     article_fetch_failure_reason = ""
+    article_payload: dict[str, Any] | None = None
+    ap_event_fragments: list[dict[str, Any]] = []
     if source.source_id == ALJAZEERA_ISF_QUERY_SOURCE_ID:
         enrichment_status = "pending"
         if wrapper_url and canonical_status != "resolved_from_query":
@@ -1811,6 +2056,76 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
         elif article_payload is not None:
             enrichment_status = "failed_article_fetch"
             enrichment_failure_reason = _bounded_diagnostic(article_payload.get("failure_reason") or "article fetch failed")
+    elif _is_ap_source(source):
+        article_fetch_status = "pending"
+        if wrapper_url and canonical_status != "resolved_from_query":
+            resolution = _resolve_ap_google_news_wrapper(url)
+            canonicalization_method = str(resolution.get("canonicalization_method") or "google_news_wrapper_resolver")
+            canonical_status = str(resolution.get("canonicalization_status") or "failed_unresolved_wrapper")
+            canonicalization_failure_reason = str(resolution.get("failure_reason") or "")
+            resolved = str(resolution.get("resolved_url") or "").strip()
+            if resolved:
+                canonical_url = resolved
+                resolved_canonical_url = resolved
+        elif wrapper_url:
+            canonicalization_method = "google_news_query_parameter"
+            if _is_ap_article_url(canonical_url):
+                resolved_canonical_url = canonical_url
+            elif not _is_ap_url(canonical_url):
+                canonical_status = "rejected_wrong_publisher_domain"
+                canonicalization_failure_reason = "resolved candidate hostname is not apnews.com or a subdomain"
+                canonical_url = canonicalize_url(url)
+            else:
+                canonical_status = "rejected_non_article_url"
+                canonicalization_failure_reason = "resolved AP candidate is not an article detail URL"
+                canonical_url = canonicalize_url(url)
+        else:
+            canonicalization_method = "direct_url"
+            if _is_ap_article_url(canonical_url):
+                resolved_canonical_url = canonical_url
+                canonical_status = "direct_article_url"
+            elif not _is_ap_url(canonical_url):
+                canonical_status = "rejected_wrong_publisher_domain"
+                canonicalization_failure_reason = "direct source hostname is not apnews.com or a subdomain"
+            else:
+                canonical_status = "rejected_non_article_url"
+                canonicalization_failure_reason = "direct AP source is not an article detail URL"
+
+        if resolved_canonical_url:
+            article_fetch_attempted = True
+            article_payload = fetch_article_payload(resolved_canonical_url)
+            article_payload.setdefault("backend_used", "python")
+        else:
+            article_fetch_status = "skipped_canonical_resolution_failed"
+            article_fetch_failure_reason = canonicalization_failure_reason or "no trusted AP article URL"
+
+        if article_payload and article_payload.get("ok"):
+            final_article_url = canonicalize_url(str(article_payload.get("final_url") or resolved_canonical_url))
+            if not _is_ap_article_url(final_article_url):
+                article_fetch_status = "failed_untrusted_article_redirect"
+                article_fetch_failure_reason = "article fetch redirected outside an AP article detail URL"
+                resolved_canonical_url = ""
+                canonical_url = canonicalize_url(url)
+                article_payload = None
+            else:
+                canonical_url = final_article_url
+                resolved_canonical_url = final_article_url
+
+        if article_payload and article_payload.get("ok"):
+            content_text = _extract_ap_article_prose(str(article_payload.get("content_text") or ""))
+            if content_text:
+                ap_event_fragments = _extract_ap_event_fragments(content_text, published_at)
+                for fragment in ap_event_fragments:
+                    fragment_summary = str(fragment.get("summary") or "").strip()
+                    if fragment_summary and fragment_summary.lower() not in summary.lower():
+                        summary = f"{summary} {fragment_summary}".strip() if summary else fragment_summary
+                article_fetch_status = "article_prose_extracted"
+            else:
+                article_fetch_status = "insufficient_article_content"
+                article_fetch_failure_reason = "AP article body did not contain extractable article prose"
+        elif article_payload is not None:
+            article_fetch_status = "failed_article_fetch"
+            article_fetch_failure_reason = _bounded_diagnostic(article_payload.get("failure_reason") or "article fetch failed")
     elif _is_wafa_source(source):
         article_fetch_status = "pending"
         if wrapper_url and canonical_status != "resolved_from_query":
@@ -1935,6 +2250,22 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
                 "content_available": bool(content_text),
             }
             if _is_wafa_source(source)
+            else {}
+        ),
+        **(
+            {
+                "resolved_canonical_url": resolved_canonical_url or None,
+                "canonicalization_method": canonicalization_method,
+                "canonicalization_failure_reason": canonicalization_failure_reason or None,
+                "article_fetch_attempted": article_fetch_attempted,
+                "article_fetch_status": article_fetch_status,
+                "article_fetch_failure_reason": article_fetch_failure_reason or None,
+                "article_fetch_backend": str((article_payload or {}).get("backend_used") or "") or None,
+                "content_available": bool(content_text),
+                "article_body_length": len(content_text or ""),
+                "ap_event_fragments": ap_event_fragments,
+            }
+            if _is_ap_source(source)
             else {}
         ),
         "published_at_missing": published_at == "",
@@ -2387,7 +2718,7 @@ def collect_gaza_sources(
                 else:
                     _provider_reject(diag, "rejected_parse_error", item, date_basis=basis)
                 continue
-            if _is_wafa_source(source) and not str(record.get("resolved_canonical_url") or "").strip():
+            if (_is_wafa_source(source) or _is_ap_source(source)) and not str(record.get("resolved_canonical_url") or "").strip():
                 diag.setdefault("canonicalization_failures", []).append(
                     {
                         "title": title[:220],

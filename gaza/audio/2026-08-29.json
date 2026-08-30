@@ -1,7 +1,7 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-08-29",
-  "generated_at": "2026-08-30T01:46:58.391469Z",
+  "generated_at": "2026-08-30T03:12:31.558355Z",
   "audio_status": "audio_file_ready",
   "audio_file": "2026-08-29.mp3",
   "audio_url": "/gaza/audio/2026-08-29.mp3",
@@ -21,25 +21,37 @@
       "voice": "alloy"
     }
   ],
-  "tts_input_character_count": 1642,
-  "tts_input_word_count": 254,
+  "tts_input_character_count": 1695,
+  "tts_input_word_count": 264,
   "tts_story_count": 6,
   "tts_segment_count": 1,
   "audio_duration_seconds": null,
-  "audio_file_size_bytes": 1691520,
+  "audio_file_size_bytes": 1644288,
   "estimated_cost_usd": null,
   "estimated_cost_note": "pricing input not configured",
   "tts_pricing_basis": null,
   "tts_pricing_model": null,
-  "cost_logged_at": "2026-08-30T01:46:58.391443Z",
+  "cost_logged_at": "2026-08-30T03:12:31.558333Z",
   "segue_chime": "none",
   "segue_chime_count": 0,
   "segue_chime_asset": null,
   "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-08-29-transcript.html",
   "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-29/",
-  "script_text": "This is the Gaza Dispatch audio briefing for August 29, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Palestinian woman and NBC News team reportedly attacked in West Bank. Matt Bradley and crew assaulted while interviewing woman who said settlers had driven family out of home. This was reported by The Guardian.\n\n2. Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - UNICEF. Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza UNICEF. This was reported by UNICEF.\n\n3. Israeli settlers attack international news team in occupied West Bank. A news team, working for the US network NBC and a Palestinian woman were injured in an attack by masked Israeli settler. This was reported by Al Jazeera.\n\n4. Gaza runs out of cancer medicines, as Israeli strikes continue. Officials at Gaza's Al-Aqsa Martyrs Hospital say cancer medicines have completely run out, as Israeli strikes continue. This was reported by Al Jazeera.\n\n5. Israeli army arrests six Palestinians after settler violence in West Bank. Israeli settlers stormed Qusra in the occupied West Bank, attacking Palestinian residents and damaging homes. This was reported by Al Jazeera.\n\n6. BBC tracks one week of Israeli settler violence in occupied West Bank. The BBC's Lucy Williamson reports on settler attacks on Palestinians, which have been observed over the last week alone. This was reported by BBC News.\n\nFor the full source-backed dispatch, read the August 29, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "script_text": "This is the Gaza Dispatch audio briefing for August 29, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. WAFA reports three injured in strike on Al-Aqsa hospital medicine warehouse. WAFA reported three Palestinians injured after a drone struck a medicine warehouse inside Al-Aqsa Martyrs Hospital in Deir al-Balah; the extent of damage was not immediately known. This was reported by WAFA.\n\n2. WAFA reports casualties in Tal al-Hawa motorbike strike. WAFA reported 1 killed and 2 injured in a strike on a motorbike in Tal al-Hawa, Gaza City. This was reported by WAFA.\n\n3. Palestinian woman and NBC News team reportedly attacked in West Bank. Matt Bradley and crew assaulted while interviewing woman who said settlers had driven family out of home. This was reported by The Guardian.\n\n4. Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef. Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza Unicef. This was reported by UNICEF.\n\n5. WAFA reports one killed and several injured in Al-Mashahara tent strike. WAFA reported one Palestinian killed and several injured when shelling targeted a tent sheltering displaced people in Al-Mashahara, east of Gaza City. This was reported by WAFA.\n\n6. Israeli settlers attack international news team in occupied West Bank. A news team, working for the US network NBC and a Palestinian woman were injured in an attack by masked Israeli settler. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the August 29, 2026 Gaza edition at dispatches.thebluefernco.com.",
   "source_count": 6,
   "sources": [
+    {
+      "source_record_id": "gaza-2026-08-29-wafa-gaza-health-infrastructure-query-def1bd447fee",
+      "publisher": "WAFA",
+      "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFB3S1pidEU5aGRZVGtIUlVFSXVJTHUxVzBxWldIWUhncGJweVI0S0wzaXUyQzYxMWlUdGd0cmU4ck1nUXFEZWkwZ2xrQXRwbzJUTjBVaHB5VQ?oc=5",
+      "title": "Three Palestinians injured in Israeli drone strike on medicine warehouse at Gaza hospital - WAFA Agency"
+    },
+    {
+      "source_record_id": "gaza-2026-08-29-wafa-gaza-motorbike-query-93def3f625bb",
+      "publisher": "WAFA",
+      "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFAwX3RXa3ZrSElXS1d6RHY3aVBXRmZGdlNLZzhGWEFod1pkNGtWMG52WGV4RXg0N3RCOFkwSDNBejhWMkRSZ2tkY2ZLdmdNcUtkNzVaSlFuVQ?oc=5",
+      "title": "Palestinian killed, two injured in Israeli drone strike in Gaza City - WAFA Agency"
+    },
     {
       "source_record_id": "gaza-2026-08-29-guardian-world-4b2093fd72ba",
       "publisher": "The Guardian",
@@ -47,34 +59,22 @@
       "title": "Palestinian woman and NBC News team reportedly attacked in West Bank"
     },
     {
-      "source_record_id": "gaza-2026-08-29-unicef-gaza-water-query-26ac36050160",
+      "source_record_id": "gaza-2026-08-29-unicef-gaza-water-query-711011519f55",
       "publisher": "UNICEF",
       "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPQVppUFhxZGFWOWk1TW5mdE9Ha3JkcFJzZlRnbkdIRzljaXN3bjVIRmRuWWptUmdib3dlN0hDRmlDRTZQZFl4ZGswbFdzVHU1ZzVKeTgyR0xZOTlSTEYzaG5lMFd4eFlzQ2dhUWs3X3Y5cXdkY3JLZlZ3VC1JdWlfdHhVUV9mX0VtbW5KeE5QRFkzamlhcVBBYmpKSnZETk1rSEJjYWNfcUtvRFdWX1YyUTBtdVk0VjFuTWNBNGhn?oc=5",
-      "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - UNICEF"
+      "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef"
+    },
+    {
+      "source_record_id": "gaza-2026-08-29-wafa-gaza-displacement-tent-query-18f1e365ef68",
+      "publisher": "WAFA",
+      "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFBmbTYwRHlTS3c2WDFCUlFrT0ItbHBINmJyR29hMlFBNUtjUVJfd1duUVducmdNUmt3MHZJT1dfUTJQUklHaTRRTXp5aUpmdk1Zc1lYeFNGdw?oc=5",
+      "title": "Palestinian killed, others injured in Israeli shelling of displacement tent in Gaza City - WAFA Agency"
     },
     {
       "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-4ba8eb1457de",
       "publisher": "Al Jazeera",
       "url": "https://www.aljazeera.com/video/newsfeed/2026/8/29/israeli-settlers-attack-international-news-team-in-occupied-west-bank?traffic_source=rss",
       "title": "Israeli settlers attack international news team in occupied West Bank"
-    },
-    {
-      "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-fcd9a3b4242c",
-      "publisher": "Al Jazeera",
-      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/29/29-08-sv-gaza-hospitals-targetting-fm?traffic_source=rss",
-      "title": "Gaza runs out of cancer medicines, as Israeli strikes continue"
-    },
-    {
-      "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-0a8256cd8f33",
-      "publisher": "Al Jazeera",
-      "url": "https://www.aljazeera.com/video/newsfeed/2026/8/29/israeli-army-arrests-six-palestinians-after-settler-violence-in-west-bank?traffic_source=rss",
-      "title": "Israeli army arrests six Palestinians after settler violence in West Bank"
-    },
-    {
-      "source_record_id": "gaza-2026-08-29-bbc-middle-east-48df2689ef18",
-      "publisher": "BBC News",
-      "url": "https://www.bbc.co.uk/news/videos/c3wjq1188g9o?at_medium=RSS&at_campaign=rss",
-      "title": "BBC tracks one week of Israeli settler violence in occupied West Bank"
     }
   ]
 }

@@ -1,6 +1,180 @@
 [
   {
-    "story_id": "gaza-story-2026-08-29-004",
+    "story_id": "gaza-story-2026-08-29-006",
+    "title": "WAFA reports three injured in strike on Al-Aqsa hospital medicine warehouse",
+    "summary": "WAFA reported three Palestinians injured after a drone struck a medicine warehouse inside Al-Aqsa Martyrs Hospital in Deir al-Balah; the extent of damage was not immediately known.",
+    "category": "health_infrastructure",
+    "story_scope": "core_gaza",
+    "score": 111,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-29-wafa-gaza-health-infrastructure-query-def1bd447fee"
+    ],
+    "source_ids": [
+      "gaza-2026-08-29-wafa-gaza-health-infrastructure-query-def1bd447fee"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMiV0FVX3lxTFB3S1pidEU5aGRZVGtIUlVFSXVJTHUxVzBxWldIWUhncGJweVI0S0wzaXUyQzYxMWlUdGd0cmU4ck1nUXFEZWkwZ2xrQXRwbzJUTjBVaHB5VQ?oc=5"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-29-wafa-gaza-health-infrastructure-query-def1bd447fee",
+        "title": "Three Palestinians injured in Israeli drone strike on medicine warehouse at Gaza hospital - WAFA Agency",
+        "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFB3S1pidEU5aGRZVGtIUlVFSXVJTHUxVzBxWldIWUhncGJweVI0S0wzaXUyQzYxMWlUdGd0cmU4ck1nUXFEZWkwZ2xrQXRwbzJUTjBVaHB5VQ?oc=5",
+        "publisher": "WAFA",
+        "summary_or_snippet": "Three Palestinians injured in Israeli drone strike on medicine warehouse at Gaza hospital WAFA Agency GAZA, August 29, 2026 (WAFA) - Three Palestinians were injured on Saturday after an Israeli drone struck a medicine warehouse inside the Al-Aqsa Martyrs Hospital in Deir al-Balah, central Gaza. Eyewitnesses said an Israeli drone carried out the strike on the medicine warehouse inside the hospital. The extent of the damage was not immediately known. The strike injured three Palestinians who were inside the hospital receiving medical care. Since the ceasefire in Gaza took effect on October 11, 2025, around 1,313 Palestinians have been killed and more than 4,361 injured by Israeli attacks, while the bodies of 815 Palestinians have been recovered from under the rubble, according to Palestinian medical sources. Since the start of Israel's military offensive on Gaza in October 2023, 73,449 Palestinians have been killed and 174,472 injured, with around 90% of civilian infrastructure destroyed. M.N",
+        "event_date": "2026-08-29T13:50:10+00:00",
+        "location": "Al-Aqsa Martyrs Hospital, Deir al-Balah",
+        "development_type": "infrastructure_casualty_event",
+        "affected_system": "hospital medicine supplies",
+        "attribution": "WAFA",
+        "uncertainty": "WAFA eyewitness account; damage extent not immediately known",
+        "casualty_counts": {
+          "new_injuries": 3
+        }
+      }
+    ],
+    "generated_at": "2026-08-30T03:12:13.612101+00:00",
+    "relevance_terms_matched": [
+      "deir al-balah",
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 111,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "infrastructure_casualty_event",
+    "affected_system": "hospital medicine supplies",
+    "location": "Al-Aqsa Martyrs Hospital, Deir al-Balah",
+    "event_date": "2026-08-29T13:50:10+00:00",
+    "attribution": "WAFA",
+    "uncertainty": "WAFA eyewitness account; damage extent not immediately known",
+    "casualty_counts": {
+      "new_injuries": 3
+    },
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-29-005",
+    "title": "WAFA reports casualties in Tal al-Hawa motorbike strike",
+    "summary": "WAFA reported 1 killed and 2 injured in a strike on a motorbike in Tal al-Hawa, Gaza City.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 87,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-29-wafa-gaza-motorbike-query-93def3f625bb"
+    ],
+    "source_ids": [
+      "gaza-2026-08-29-wafa-gaza-motorbike-query-93def3f625bb"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMiV0FVX3lxTFAwX3RXa3ZrSElXS1d6RHY3aVBXRmZGdlNLZzhGWEFod1pkNGtWMG52WGV4RXg0N3RCOFkwSDNBejhWMkRSZ2tkY2ZLdmdNcUtkNzVaSlFuVQ?oc=5"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-29-wafa-gaza-motorbike-query-93def3f625bb",
+        "title": "Palestinian killed, two injured in Israeli drone strike in Gaza City - WAFA Agency",
+        "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFAwX3RXa3ZrSElXS1d6RHY3aVBXRmZGdlNLZzhGWEFod1pkNGtWMG52WGV4RXg0N3RCOFkwSDNBejhWMkRSZ2tkY2ZLdmdNcUtkNzVaSlFuVQ?oc=5",
+        "publisher": "WAFA",
+        "summary_or_snippet": "Palestinian killed, two injured in Israeli drone strike in Gaza City WAFA Agency GAZA, August 29, 2026 (WAFA) - A Palestinian was killed and two others were injured on Saturday after an Israeli drone struck an electric motorcycle in the Tal al-Hawa neighborhood, southwest of Gaza City. WAFA correspondent reported that the victim and the two injured Palestinians were taken to al-Quds Hospital following the strike. Since the ceasefire in Gaza took effect on October 11, 2025, around 1,313 Palestinians have been killed and more than 4,361 injured, while the bodies of 815 Palestinians have been recovered from under the rubble, according to Palestinian medical sources. Since the start of Israel's military offensive on Gaza in October 2023, 73,449 Palestinians have been killed and 174,472 injured, with around 90% of civilian infrastructure destroyed. The United Nations has estimated reconstruction costs at approximately $70 billion. M.N",
+        "event_date": "2026-08-29T14:26:12+00:00",
+        "location": "Tal al-Hawa, Gaza City",
+        "development_type": "casualty_event",
+        "affected_system": "civilians",
+        "attribution": "WAFA",
+        "uncertainty": "WAFA report only; no cross-source consensus implied",
+        "casualty_counts": {
+          "new_deaths": 1,
+          "new_injuries": 2
+        }
+      }
+    ],
+    "generated_at": "2026-08-30T03:12:13.612101+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 87,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "casualty_event",
+    "affected_system": "civilians",
+    "location": "Tal al-Hawa, Gaza City",
+    "event_date": "2026-08-29T14:26:12+00:00",
+    "attribution": "WAFA",
+    "uncertainty": "WAFA report only; no cross-source consensus implied",
+    "casualty_counts": {
+      "new_deaths": 1,
+      "new_injuries": 2
+    },
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-29-008",
     "title": "Palestinian woman and NBC News team reportedly attacked in West Bank",
     "summary": "Matt Bradley and crew assaulted while interviewing woman who said settlers had driven family out of home. A Palestinian woman and an NBC News team are reported to have been attacked and injured by masked Israeli settlers in the Israeli-occupied West Bank on Saturday, amid worsening confrontations in the area. Benjamin Netanyahu said he condemned the violence committed \"by a handful of rioters\".",
     "category": "palestinian_development",
@@ -53,7 +227,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T01:46:41.943466+00:00",
+    "generated_at": "2026-08-30T03:12:13.612101+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -81,9 +255,9 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-003",
-    "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - UNICEF",
-    "summary": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza UNICEF.",
+    "story_id": "gaza-story-2026-08-29-007",
+    "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef",
+    "summary": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza Unicef.",
     "category": "humanitarian",
     "story_scope": "core_gaza",
     "score": 74,
@@ -108,10 +282,10 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-08-29-unicef-gaza-water-query-26ac36050160"
+      "gaza-2026-08-29-unicef-gaza-water-query-711011519f55"
     ],
     "source_ids": [
-      "gaza-2026-08-29-unicef-gaza-water-query-26ac36050160"
+      "gaza-2026-08-29-unicef-gaza-water-query-711011519f55"
     ],
     "source_urls": [
       "https://news.google.com/rss/articles/CBMivgFBVV95cUxPQVppUFhxZGFWOWk1TW5mdE9Ha3JkcFJzZlRnbkdIRzljaXN3bjVIRmRuWWptUmdib3dlN0hDRmlDRTZQZFl4ZGswbFdzVHU1ZzVKeTgyR0xZOTlSTEYzaG5lMFd4eFlzQ2dhUWs3X3Y5cXdkY3JLZlZ3VC1JdWlfdHhVUV9mX0VtbW5KeE5QRFkzamlhcVBBYmpKSnZETk1rSEJjYWNfcUtvRFdWX1YyUTBtdVk0VjFuTWNBNGhn?oc=5"
@@ -121,11 +295,11 @@
     ],
     "source_records": [
       {
-        "source_record_id": "gaza-2026-08-29-unicef-gaza-water-query-26ac36050160",
-        "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - UNICEF",
+        "source_record_id": "gaza-2026-08-29-unicef-gaza-water-query-711011519f55",
+        "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef",
         "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPQVppUFhxZGFWOWk1TW5mdE9Ha3JkcFJzZlRnbkdIRzljaXN3bjVIRmRuWWptUmdib3dlN0hDRmlDRTZQZFl4ZGswbFdzVHU1ZzVKeTgyR0xZOTlSTEYzaG5lMFd4eFlzQ2dhUWs3X3Y5cXdkY3JLZlZ3VC1JdWlfdHhVUV9mX0VtbW5KeE5QRFkzamlhcVBBYmpKSnZETk1rSEJjYWNfcUtvRFdWX1YyUTBtdVk0VjFuTWNBNGhn?oc=5",
         "publisher": "UNICEF",
-        "summary_or_snippet": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza UNICEF",
+        "summary_or_snippet": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza Unicef",
         "event_date": "2026-08-28T10:22:19+00:00",
         "location": "Gaza",
         "development_type": "primary_report",
@@ -135,7 +309,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T01:46:41.943466+00:00",
+    "generated_at": "2026-08-30T03:12:13.612101+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -161,7 +335,94 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-005",
+    "story_id": "gaza-story-2026-08-29-004",
+    "title": "WAFA reports one killed and several injured in Al-Mashahara tent strike",
+    "summary": "WAFA reported one Palestinian killed and several injured when shelling targeted a tent sheltering displaced people in Al-Mashahara, east of Gaza City.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 76,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-29-wafa-gaza-displacement-tent-query-18f1e365ef68"
+    ],
+    "source_ids": [
+      "gaza-2026-08-29-wafa-gaza-displacement-tent-query-18f1e365ef68"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMiV0FVX3lxTFBmbTYwRHlTS3c2WDFCUlFrT0ItbHBINmJyR29hMlFBNUtjUVJfd1duUVducmdNUmt3MHZJT1dfUTJQUklHaTRRTXp5aUpmdk1Zc1lYeFNGdw?oc=5"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-29-wafa-gaza-displacement-tent-query-18f1e365ef68",
+        "title": "Palestinian killed, others injured in Israeli shelling of displacement tent in Gaza City - WAFA Agency",
+        "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFBmbTYwRHlTS3c2WDFCUlFrT0ItbHBINmJyR29hMlFBNUtjUVJfd1duUVducmdNUmt3MHZJT1dfUTJQUklHaTRRTXp5aUpmdk1Zc1lYeFNGdw?oc=5",
+        "publisher": "WAFA",
+        "summary_or_snippet": "Palestinian killed, others injured in Israeli shelling of displacement tent in Gaza City WAFA Agency GAZA, August 28, 2026 (WAFA) - A Palestinian was killed, and others were injured this evening in an Israeli shelling targeting a tent sheltering displaced persons in the Al-Mashahara area, east of Gaza City, local sources reported. Sources reported that the body of a slain Palestinian and several injured individuals were transferred to Al-Shifa Medical Complex following the shelling of a tent sheltering a large number of displaced people. The latest attack brought the number of Palestinians killed in Gaza since dawn today to five. Israeli forces have continued to carry out airstrikes and artillery shelling across various parts of Gaza City, amid ongoing artillery fire targeting the city's eastern and northern areas. T.R.",
+        "event_date": "2026-08-28T14:39:18+00:00",
+        "location": "Al-Mashahara, east of Gaza City",
+        "development_type": "casualty_event",
+        "affected_system": "displaced civilians",
+        "attribution": "WAFA",
+        "uncertainty": "WAFA attributed the account to local sources; injuries were reported only as several",
+        "casualty_counts": {
+          "new_deaths": 1,
+          "injuries_reported_as": "several"
+        }
+      }
+    ],
+    "generated_at": "2026-08-30T03:12:13.612101+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 76,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "casualty_event",
+    "affected_system": "displaced civilians",
+    "location": "Al-Mashahara, east of Gaza City",
+    "event_date": "2026-08-28T14:39:18+00:00",
+    "attribution": "WAFA",
+    "uncertainty": "WAFA attributed the account to local sources; injuries were reported only as several",
+    "casualty_counts": {
+      "new_deaths": 1,
+      "injuries_reported_as": "several"
+    },
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-14-004",
+    "prior_edition_date": "2026-06-14",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-29-009",
     "title": "Israeli settlers attack international news team in occupied West Bank",
     "summary": "A news team, working for the US network NBC and a Palestinian woman were injured in an attack by masked Israeli settler.",
     "category": "palestinian_development",
@@ -213,7 +474,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T01:46:41.943466+00:00",
+    "generated_at": "2026-08-30T03:12:13.612101+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -241,7 +502,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-006",
+    "story_id": "gaza-story-2026-08-29-010",
     "title": "Gaza runs out of cancer medicines, as Israeli strikes continue",
     "summary": "Officials at Gaza's Al-Aqsa Martyrs Hospital say cancer medicines have completely run out, as Israeli strikes continue.",
     "category": "conflict",
@@ -294,7 +555,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T01:46:41.943466+00:00",
+    "generated_at": "2026-08-30T03:12:13.612101+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -317,86 +578,6 @@
     "prior_story_matched": null,
     "prior_edition_date": null,
     "dedupe_classification": "new",
-    "dedupe_reasons": []
-  },
-  {
-    "story_id": "gaza-story-2026-08-29-008",
-    "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
-    "summary": "Israeli settlers stormed Qusra in the occupied West Bank, attacking Palestinian residents and damaging homes.",
-    "category": "palestinian_development",
-    "story_scope": "palestinian_development",
-    "score": 62,
-    "scoring_reasons": [
-      "civilian_harm",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 12,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-08-29-aljazeera-middle-east-0a8256cd8f33"
-    ],
-    "source_ids": [
-      "gaza-2026-08-29-aljazeera-middle-east-0a8256cd8f33"
-    ],
-    "source_urls": [
-      "https://www.aljazeera.com/video/newsfeed/2026/8/29/israeli-army-arrests-six-palestinians-after-settler-violence-in-west-bank?traffic_source=rss"
-    ],
-    "publisher_names": [
-      "Al Jazeera"
-    ],
-    "source_records": [
-      {
-        "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-0a8256cd8f33",
-        "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
-        "url": "https://www.aljazeera.com/video/newsfeed/2026/8/29/israeli-army-arrests-six-palestinians-after-settler-violence-in-west-bank?traffic_source=rss",
-        "publisher": "Al Jazeera",
-        "summary_or_snippet": "Israeli settlers stormed Qusra in the occupied West Bank, attacking Palestinian residents and damaging homes.",
-        "event_date": "2026-08-29T17:09:10+00:00",
-        "location": "Gaza",
-        "development_type": "primary_report",
-        "affected_system": "conflict",
-        "attribution": "Al Jazeera",
-        "uncertainty": "reported source",
-        "casualty_counts": {}
-      }
-    ],
-    "generated_at": "2026-08-30T01:46:41.943466+00:00",
-    "relevance_terms_matched": [
-      "gaza",
-      "palestin",
-      "west bank"
-    ],
-    "top_story_relevance_score": 62,
-    "substantive_ground": false,
-    "flotilla_only": false,
-    "attribution_mode": "reported_public_source",
-    "claim_status": "reported_public_source",
-    "context_only": false,
-    "core_ground_development": false,
-    "development_type": "primary_report",
-    "affected_system": "conflict",
-    "location": "Gaza",
-    "event_date": "2026-08-29T17:09:10+00:00",
-    "attribution": "Al Jazeera",
-    "uncertainty": "reported source",
-    "casualty_counts": {},
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-08-22-010",
-    "prior_edition_date": "2026-08-22",
-    "dedupe_classification": "major_update",
     "dedupe_reasons": []
   },
   {
@@ -452,7 +633,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T01:46:41.943466+00:00",
+    "generated_at": "2026-08-30T03:12:13.612101+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -480,7 +661,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-009",
+    "story_id": "gaza-story-2026-08-29-012",
     "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
     "summary": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East AP News.",
     "category": "conflict",
@@ -532,7 +713,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T01:46:41.943466+00:00",
+    "generated_at": "2026-08-30T03:12:13.612101+00:00",
     "relevance_terms_matched": [
       "gaza",
       "west bank"
@@ -559,86 +740,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-010",
-    "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
-    "summary": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera. The Board of Peace has \"determined the mechanism for deploying the International Stabilization Force [ISF] and its deployment locations in the Gaza Strip,\" he said, noting that Morocco agreed to take part, though Turkiye will not participate after Israel vetoed Ankara's involvement. He added that the force's \"advance elements should arrive in the Gaza Strip soon\".",
-    "category": "conflict",
-    "story_scope": "core_gaza",
-    "score": 56,
-    "scoring_reasons": [
-      "humanitarian_impact",
-      "ceasefire_diplomacy",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 12,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 8,
-      "civilian_harm": 0,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 10
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-08-29-aljazeera-board-of-peace-isf-query-3c1fa6c3ec94"
-    ],
-    "source_ids": [
-      "gaza-2026-08-29-aljazeera-board-of-peace-isf-query-3c1fa6c3ec94"
-    ],
-    "source_urls": [
-      "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNdkpxdFc5VUFLYjJ1bTJ2Q2w5MXpKLVBJdEpGOC1nMjFUVEJFVzh0U2hwbTVtbzZPS0FSVTRnN21TLWI3dkVVSHNXdWl4QUZ5Q2lSM2xHWkFRMFZPRU5nUUQydGdBYnUzUUFLWXZUcW1jUENKTEZnQ3gzZmhlYy1OdVB1b3FYN21OOGRWNDMxYjZmLXFlRUtnTGJJOUtsaS1hdFJaQjFjOXF5QdIBrwFBVV95cUxNSC1xcVVjZ1FOdGQ0b2NYMzJtc3h0X2tuSThQZ1pFaHpmT1Atb0lfOUMzVmswdTJZNWg5NkNDSWh1aDZzTVVCRFUxYW5xSHQtLU94ZXZ4NVl0d2ZPbnFzTVVYeldmNDNVWEx5eGxhVEhGbmdrZFY2UFJ3eDJJM2xNdlZJWWl6aDJ4eWlzOUhwN1FENHczVXFIS3Z1djF3aW5RSVlQbjVrSnNLQTdKa2ZJ?oc=5"
-    ],
-    "publisher_names": [
-      "Al Jazeera"
-    ],
-    "source_records": [
-      {
-        "source_record_id": "gaza-2026-08-29-aljazeera-board-of-peace-isf-query-3c1fa6c3ec94",
-        "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
-        "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNdkpxdFc5VUFLYjJ1bTJ2Q2w5MXpKLVBJdEpGOC1nMjFUVEJFVzh0U2hwbTVtbzZPS0FSVTRnN21TLWI3dkVVSHNXdWl4QUZ5Q2lSM2xHWkFRMFZPRU5nUUQydGdBYnUzUUFLWXZUcW1jUENKTEZnQ3gzZmhlYy1OdVB1b3FYN21OOGRWNDMxYjZmLXFlRUtnTGJJOUtsaS1hdFJaQjFjOXF5QdIBrwFBVV95cUxNSC1xcVVjZ1FOdGQ0b2NYMzJtc3h0X2tuSThQZ1pFaHpmT1Atb0lfOUMzVmswdTJZNWg5NkNDSWh1aDZzTVVCRFUxYW5xSHQtLU94ZXZ4NVl0d2ZPbnFzTVVYeldmNDNVWEx5eGxhVEhGbmdrZFY2UFJ3eDJJM2xNdlZJWWl6aDJ4eWlzOUhwN1FENHczVXFIS3Z1djF3aW5RSVlQbjVrSnNLQTdKa2ZJ?oc=5",
-        "publisher": "Al Jazeera",
-        "summary_or_snippet": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera The Board of Peace has \"determined the mechanism for deploying the International Stabilization Force [ISF] and its deployment locations in the Gaza Strip,\" he said, noting that Morocco agreed to take part, though Turkiye will not participate after Israel vetoed Ankara's involvement. He added that the force's \"advance elements should arrive in the Gaza Strip soon\".",
-        "event_date": "2026-08-28T16:48:33+00:00",
-        "location": "Gaza",
-        "development_type": "primary_report",
-        "affected_system": "conflict",
-        "attribution": "Al Jazeera",
-        "uncertainty": "reported source",
-        "casualty_counts": {}
-      }
-    ],
-    "generated_at": "2026-08-30T01:46:41.943466+00:00",
-    "relevance_terms_matched": [
-      "gaza"
-    ],
-    "top_story_relevance_score": 56,
-    "substantive_ground": true,
-    "flotilla_only": false,
-    "attribution_mode": "reported_public_source",
-    "claim_status": "reported_public_source",
-    "context_only": false,
-    "core_ground_development": true,
-    "development_type": "primary_report",
-    "affected_system": "conflict",
-    "location": "Gaza",
-    "event_date": "2026-08-28T16:48:33+00:00",
-    "attribution": "Al Jazeera",
-    "uncertainty": "reported source",
-    "casualty_counts": {},
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-07-23-003",
-    "prior_edition_date": "2026-07-23",
-    "dedupe_classification": "major_update",
-    "dedupe_reasons": []
-  },
-  {
-    "story_id": "gaza-story-2026-08-29-007",
+    "story_id": "gaza-story-2026-08-29-011",
     "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
     "summary": "A federal judge criticised the Trump government for attempting to infringe upon foreign students' rights to free speech.",
     "category": "palestinian_development",
@@ -690,7 +792,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T01:46:41.943466+00:00",
+    "generated_at": "2026-08-30T03:12:13.612101+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -709,6 +811,87 @@
     "attribution": "Al Jazeera",
     "uncertainty": "reported source",
     "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-29-003",
+    "title": "WAFA reports three Abdeen family members killed near Al-Qarara",
+    "summary": "WAFA reported that three members of the Abdeen family were reported killed near Al-Qarara, north of Khan Younis; the account remained attributed to local sources.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 30,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-29-wafa-gaza-casualty-locations-query-c75c74da9056"
+    ],
+    "source_ids": [
+      "gaza-2026-08-29-wafa-gaza-casualty-locations-query-c75c74da9056"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMiVEFVX3lxTE15RkZFbkpUeExKdmN6NkRndzNQYjUxZG8tWVJ6ZEFHU1o3QUVKdlJ0TFRkSy1lTU1uQ29ZV3lIdkhuMkNpZmpKNDltYldNRUFQcEhLRA?oc=5"
+    ],
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-29-wafa-gaza-casualty-locations-query-c75c74da9056",
+        "title": "\u05e9\u05dc\u05d5\u05e9\u05d4 \u05ea\u05d5\u05e9\u05d1\u05d9\u05dd \u05e0\u05d4\u05e8\u05d2\u05d5 \u05d1\u05ea\u05e7\u05d9\u05e4\u05ea \u05db\u05d5\u05d7\u05d5\u05ea \u05d4\u05db\u05d9\u05d1\u05d5\u05e9 \u05de\u05e6\u05e4\u05d5\u05df\u05be\u05de\u05d6\u05e8\u05d7 \u05dc\u05d7'\u05d0\u05df \u05d9\u05d5\u05e0\u05e1 - \u05e1\u05d5\u05db\u05e0\u05d5\u05ea \u05d4\u05d9\u05d3\u05d9\u05e2\u05d5\u05ea \u05d4\u05e4\u05dc\u05e1\u05d8\u05d9\u05e0\u05d9\u05ea",
+        "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE15RkZFbkpUeExKdmN6NkRndzNQYjUxZG8tWVJ6ZEFHU1o3QUVKdlJ0TFRkSy1lTU1uQ29ZV3lIdkhuMkNpZmpKNDltYldNRUFQcEhLRA?oc=5",
+        "publisher": "WAFA",
+        "summary_or_snippet": "\u05e9\u05dc\u05d5\u05e9\u05d4 \u05ea\u05d5\u05e9\u05d1\u05d9\u05dd \u05e0\u05d4\u05e8\u05d2\u05d5 \u05d1\u05ea\u05e7\u05d9\u05e4\u05ea \u05db\u05d5\u05d7\u05d5\u05ea \u05d4\u05db\u05d9\u05d1\u05d5\u05e9 \u05de\u05e6\u05e4\u05d5\u05df\u05be\u05de\u05d6\u05e8\u05d7 \u05dc\u05d7'\u05d0\u05df \u05d9\u05d5\u05e0\u05e1 \u05e1\u05d5\u05db\u05e0\u05d5\u05ea \u05d4\u05d9\u05d3\u05d9\u05e2\u05d5\u05ea \u05d4\u05e4\u05dc\u05e1\u05d8\u05d9\u05e0\u05d9\u05ea \u05d7'\u05d0\u05df \u05d9\u05d5\u05e0\u05e1, 28 \u05d1\u05d0\u05d5\u05d2\u05d5\u05e1\u05d8 2026, \u05d5\u05d5\u05d0\u05e4\u05d0 - \u05e9\u05dc\u05d5\u05e9\u05d4 \u05ea\u05d5\u05e9\u05d1\u05d9\u05dd \u05e0\u05d4\u05e8\u05d2\u05d5 \u05d4\u05d9\u05d5\u05dd, \u05d9\u05d5\u05dd \u05e9\u05d9\u05e9\u05d9, \u05d1\u05ea\u05e7\u05d9\u05e4\u05d4 \u05e9\u05dc \u05de\u05d8\u05d5\u05e1\u05d9 \u05d4\u05db\u05d9\u05d1\u05d5\u05e9 \u05d1\u05e2\u05d9\u05d9\u05e8\u05d4 \u05d0\u05dc\u05be\u05e7\u05e8\u05d0\u05e8\u05d4, \u05de\u05e6\u05e4\u05d5\u05df\u05be\u05de\u05d6\u05e8\u05d7 \u05dc\u05e2\u05d9\u05e8 \u05d7'\u05d0\u05df \u05d9\u05d5\u05e0\u05e1 \u05e9\u05d1\u05d3\u05e8\u05d5\u05dd \u05e8\u05e6\u05d5\u05e2\u05ea \u05e2\u05d6\u05d4. \u05de\u05e7\u05d5\u05e8\u05d5\u05ea \u05de\u05e7\u05d5\u05de\u05d9\u05d9\u05dd \u05de\u05e1\u05e8\u05d5 \u05db\u05d9 \u05db\u05dc\u05d9 \u05d8\u05d9\u05e1 \u05d1\u05dc\u05ea\u05d9 \u05de\u05d0\u05d5\u05d9\u05e9 \u05e9\u05dc \u05d4\u05db\u05d9\u05d1\u05d5\u05e9 \u05ea\u05e7\u05e3 \u05e7\u05d1\u05d5\u05e6\u05ea \u05d7\u05e7\u05dc\u05d0\u05d9\u05dd \u05d1\u05e2\u05d9\u05d9\u05e8\u05d4 \u05d0\u05dc\u05be\u05e7\u05e8\u05d0\u05e8\u05d4. \u05d1\u05ea\u05e7\u05d9\u05e4\u05d4 \u05e0\u05d4\u05e8\u05d2\u05d5 \u05e9\u05dc\u05d5\u05e9\u05d4 \u05de\u05d1\u05e0\u05d9 \u05de\u05e9\u05e4\u05d7\u05ea \u05e2\u05d0\u05d1\u05d3\u05d9\u05df.",
+        "event_date": "2026-08-28T12:09:40+00:00",
+        "location": "Al-Qarara, north of Khan Younis",
+        "development_type": "casualty_event",
+        "affected_system": "civilians",
+        "attribution": "WAFA",
+        "uncertainty": "WAFA attributed the account to local sources",
+        "casualty_counts": {
+          "new_deaths": 3
+        }
+      }
+    ],
+    "generated_at": "2026-08-30T03:12:13.612101+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 30,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "casualty_event",
+    "affected_system": "civilians",
+    "location": "Al-Qarara, north of Khan Younis",
+    "event_date": "2026-08-28T12:09:40+00:00",
+    "attribution": "WAFA",
+    "uncertainty": "WAFA attributed the account to local sources",
+    "casualty_counts": {
+      "new_deaths": 3
+    },
     "include_decision": "include",
     "public_rendered": true,
     "prior_story_matched": null,

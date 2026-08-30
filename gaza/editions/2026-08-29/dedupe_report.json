@@ -1,10 +1,32 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-08-29",
-  "candidates_seen": 9,
+  "candidates_seen": 11,
   "included_stories": [
     {
-      "story_id": "gaza-story-2026-08-29-004",
+      "story_id": "gaza-story-2026-08-29-006",
+      "title": "WAFA reports three injured in strike on Al-Aqsa hospital medicine warehouse",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-29-005",
+      "title": "WAFA reports casualties in Tal al-Hawa motorbike strike",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-29-008",
       "title": "Palestinian woman and NBC News team reportedly attacked in West Bank",
       "classification": "major_update",
       "material_update": true,
@@ -16,8 +38,8 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-003",
-      "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - UNICEF",
+      "story_id": "gaza-story-2026-08-29-007",
+      "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -27,7 +49,18 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-005",
+      "story_id": "gaza-story-2026-08-29-004",
+      "title": "WAFA reports one killed and several injured in Al-Mashahara tent strike",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "update_term_in_title_or_snippet"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-29-009",
       "title": "Israeli settlers attack international news team in occupied West Bank",
       "classification": "major_update",
       "material_update": false,
@@ -36,22 +69,13 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-006",
+      "story_id": "gaza-story-2026-08-29-010",
       "title": "Gaza runs out of cancer medicines, as Israeli strikes continue",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
         "new_story"
       ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-08-29-008",
-      "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
-      "classification": "major_update",
-      "material_update": false,
-      "material_update_reasons": [],
       "include_decision": "include",
       "public_rendered": true
     },
@@ -68,7 +92,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-009",
+      "story_id": "gaza-story-2026-08-29-012",
       "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
       "classification": "major_update",
       "material_update": false,
@@ -77,19 +101,19 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-010",
-      "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
-      "classification": "major_update",
+      "story_id": "gaza-story-2026-08-29-011",
+      "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
+      "classification": "new",
       "material_update": true,
       "material_update_reasons": [
-        "changed_ceasefire_implementation_assessment"
+        "new_story"
       ],
       "include_decision": "include",
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-007",
-      "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
+      "story_id": "gaza-story-2026-08-29-003",
+      "title": "WAFA reports three Abdeen family members killed near Al-Qarara",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -103,7 +127,7 @@
   "continuing_developments": [],
   "major_updates": [
     {
-      "story_id": "gaza-story-2026-08-29-004",
+      "story_id": "gaza-story-2026-08-29-008",
       "title": "Palestinian woman and NBC News team reportedly attacked in West Bank",
       "classification": "major_update",
       "material_update": true,
@@ -119,7 +143,22 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-005",
+      "story_id": "gaza-story-2026-08-29-004",
+      "title": "WAFA reports one killed and several injured in Al-Mashahara tent strike",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "update_term_in_title_or_snippet"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-06-14-004",
+      "prior_edition_date": "2026-06-14",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-29-009",
       "title": "Israeli settlers attack international news team in occupied West Bank",
       "classification": "major_update",
       "material_update": false,
@@ -128,19 +167,6 @@
       "watchlist_status": "publication_candidate",
       "prior_story_matched": "gaza-story-2026-08-04-009",
       "prior_edition_date": "2026-08-04",
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-08-29-008",
-      "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
-      "classification": "major_update",
-      "material_update": false,
-      "material_update_reasons": [],
-      "duplicate_reasons": [],
-      "watchlist_status": "publication_candidate",
-      "prior_story_matched": "gaza-story-2026-08-22-010",
-      "prior_edition_date": "2026-08-22",
       "include_decision": "include",
       "public_rendered": true
     },
@@ -161,7 +187,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-009",
+      "story_id": "gaza-story-2026-08-29-012",
       "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
       "classification": "major_update",
       "material_update": false,
@@ -172,28 +198,43 @@
       "prior_edition_date": "2026-07-31",
       "include_decision": "include",
       "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-08-29-010",
-      "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "changed_ceasefire_implementation_assessment"
-      ],
-      "duplicate_reasons": [],
-      "watchlist_status": "material_follow_up",
-      "prior_story_matched": "gaza-story-2026-07-23-003",
-      "prior_edition_date": "2026-07-23",
-      "include_decision": "include",
-      "public_rendered": true
     }
   ],
   "merged_sources": 0,
   "duplicate_groups": [],
   "reasons": [
     {
-      "story_id": "gaza-story-2026-08-29-004",
+      "story_id": "gaza-story-2026-08-29-006",
+      "title": "WAFA reports three injured in strike on Al-Aqsa hospital medicine warehouse",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-29-005",
+      "title": "WAFA reports casualties in Tal al-Hawa motorbike strike",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-29-008",
       "title": "Palestinian woman and NBC News team reportedly attacked in West Bank",
       "classification": "major_update",
       "material_update": true,
@@ -209,8 +250,8 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-003",
-      "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - UNICEF",
+      "story_id": "gaza-story-2026-08-29-007",
+      "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -224,7 +265,22 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-005",
+      "story_id": "gaza-story-2026-08-29-004",
+      "title": "WAFA reports one killed and several injured in Al-Mashahara tent strike",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "update_term_in_title_or_snippet"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-06-14-004",
+      "prior_edition_date": "2026-06-14",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-29-009",
       "title": "Israeli settlers attack international news team in occupied West Bank",
       "classification": "major_update",
       "material_update": false,
@@ -237,7 +293,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-006",
+      "story_id": "gaza-story-2026-08-29-010",
       "title": "Gaza runs out of cancer medicines, as Israeli strikes continue",
       "classification": "new",
       "material_update": true,
@@ -252,19 +308,6 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-008",
-      "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
-      "classification": "major_update",
-      "material_update": false,
-      "material_update_reasons": [],
-      "duplicate_reasons": [],
-      "watchlist_status": "publication_candidate",
-      "prior_story_matched": "gaza-story-2026-08-22-010",
-      "prior_edition_date": "2026-08-22",
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
       "story_id": "gaza-story-2026-08-29-001",
       "title": "BBC tracks one week of Israeli settler violence in occupied West Bank",
       "classification": "major_update",
@@ -281,7 +324,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-009",
+      "story_id": "gaza-story-2026-08-29-012",
       "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
       "classification": "major_update",
       "material_update": false,
@@ -294,23 +337,23 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-010",
-      "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
-      "classification": "major_update",
+      "story_id": "gaza-story-2026-08-29-011",
+      "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
+      "classification": "new",
       "material_update": true,
       "material_update_reasons": [
-        "changed_ceasefire_implementation_assessment"
+        "new_story"
       ],
       "duplicate_reasons": [],
       "watchlist_status": "material_follow_up",
-      "prior_story_matched": "gaza-story-2026-07-23-003",
-      "prior_edition_date": "2026-07-23",
+      "prior_story_matched": null,
+      "prior_edition_date": null,
       "include_decision": "include",
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-007",
-      "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
+      "story_id": "gaza-story-2026-08-29-003",
+      "title": "WAFA reports three Abdeen family members killed near Al-Qarara",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [

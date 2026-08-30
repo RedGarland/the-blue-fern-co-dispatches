@@ -2,16 +2,17 @@
 
 - Status: **daily_briefing**
 - Recommendation: **publish normally**
-- Sources: 10 from 5 publishers
-- Publishers: Al Jazeera, Associated Press, BBC News, The Guardian, UNICEF
-- Categories: 2
+- Sources: 12 from 6 publishers
+- Publishers: Al Jazeera, Associated Press, BBC News, The Guardian, UNICEF, WAFA
+- Categories: 4
 - All stories from one publisher: false
-- Core ground-development sources: 7
+- Core ground-development sources: 9
 - Context-only sources: 0
 - Claim-attributed sources: 0
 
 ## Source families
-- news_media: 6
+- news_media: 4
+- other_public_media: 4
 - regional_local: 1
 - wire_international: 3
 
@@ -22,8 +23,6 @@
 - who-gaza-evacuation-query: no matching Gaza items for 2026-08-29
 - elpais-gaza-humanitarian-query: no matching Gaza items for 2026-08-29
 - jpost-gaza-accountability-query: no matching Gaza items for 2026-08-29
-- haaretz-gaza-query: no matching Gaza items for 2026-08-29
-- dirco-icj-query: no matching Gaza items for 2026-08-29
 
 ## Warnings
 - <none>

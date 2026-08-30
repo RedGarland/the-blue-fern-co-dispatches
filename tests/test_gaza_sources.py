@@ -1637,16 +1637,25 @@ def test_aljazeera_board_of_peace_isf_article_enrichment_adds_material_facts(wor
             "content_text": None,
         },
     )
-    rpc_calls = []
+    rpc_requests = []
     article_fetches = []
-    monkeypatch.setattr(
-        food_line_discovery_expansion,
-        "_google_news_rpc_request",
-        lambda article_id, timestamp, signature: (
-            rpc_calls.append((article_id, timestamp, signature)) or ALJAZEERA_ARTICLE_URL,
-            "",
-        ),
-    )
+    rpc_response_text = (Path(__file__).parent / "fixtures" / "google_news_rpc_garturlres_with_amp.txt").read_text(encoding="utf-8")
+
+    class _RpcResponse:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self, limit: int) -> bytes:
+            return rpc_response_text.encode("utf-8")
+
+    def fake_rpc_urlopen(request, *args, **kwargs):
+        rpc_requests.append(request)
+        return _RpcResponse()
+
+    monkeypatch.setattr(food_line_discovery_expansion.urllib.request, "urlopen", fake_rpc_urlopen)
 
     def fake_article_fetch(url, *_args, **_kwargs):
         article_fetches.append(url)
@@ -1678,7 +1687,8 @@ def test_aljazeera_board_of_peace_isf_article_enrichment_adds_material_facts(wor
 
     assert result["source_count"] == 1
     record = result["sources"][0]
-    assert rpc_calls == [(ALJAZEERA_WRAPPER_TOKEN, "1782841548", "mock-signature")]
+    assert len(rpc_requests) == 1
+    assert rpc_requests[0].full_url.endswith("/batchexecute?rpcids=Fbv4je")
     assert article_fetches == [ALJAZEERA_WRAPPER_URL, ALJAZEERA_ARTICLE_URL]
     assert record["source_record_id"].startswith("gaza-2026-08-29-aljazeera-board-of-peace-isf-query-")
     assert record["title"] == ALJAZEERA_FEED_TITLE
@@ -1717,6 +1727,79 @@ def test_aljazeera_board_of_peace_isf_article_enrichment_adds_material_facts(wor
     assert "mechanism for deploying" in normalized[0]["summary_or_snippet"].lower()
     assert "deployment locations" in normalized[0]["summary_or_snippet"].lower()
     assert "advance elements" in normalized[0]["summary_or_snippet"].lower()
+
+
+def test_aljazeera_wrapper_retries_transient_timeout_then_resolves(monkeypatch):
+    from bluefern_dispatches import food_line_discovery_expansion
+
+    fetch_attempts = []
+    sleep_delays = []
+
+    def fake_article_fetch(url, *_args, **_kwargs):
+        fetch_attempts.append(url)
+        if len(fetch_attempts) == 1:
+            return {
+                "ok": False,
+                "url": url,
+                "final_url": url,
+                "status_code": None,
+                "content_type": "",
+                "content_bytes": None,
+                "content_text": None,
+                "failure_reason": "URLError: <urlopen error _ssl.c:1015: The handshake operation timed out>",
+            }
+        wrapper_html = _google_wrapper_html()
+        return {
+            "ok": True,
+            "url": url,
+            "final_url": url,
+            "status_code": 200,
+            "content_type": "text/html; charset=utf-8",
+            "content_bytes": wrapper_html.encode("utf-8"),
+            "content_text": wrapper_html,
+        }
+
+    monkeypatch.setattr(gaza_sources, "fetch_article_payload", fake_article_fetch)
+    monkeypatch.setattr(gaza_sources.time_module, "sleep", sleep_delays.append)
+    monkeypatch.setattr(food_line_discovery_expansion, "_google_news_rpc_request", lambda *_args: (ALJAZEERA_ARTICLE_URL, ""))
+
+    result = gaza_sources._resolve_aljazeera_google_news_wrapper(ALJAZEERA_WRAPPER_URL)
+
+    assert fetch_attempts == [ALJAZEERA_WRAPPER_URL, ALJAZEERA_WRAPPER_URL]
+    assert sleep_delays == [1.0]
+    assert result["resolved_url"] == ALJAZEERA_ARTICLE_URL
+    assert result["canonicalization_status"] == "google_news_resolved_same_domain"
+    assert result["failure_reason"] == ""
+
+
+def test_aljazeera_wrapper_does_not_retry_deterministic_rpc_failure(monkeypatch):
+    from bluefern_dispatches import food_line_discovery_expansion
+
+    fetch_attempts = []
+
+    def fake_article_fetch(url, *_args, **_kwargs):
+        fetch_attempts.append(url)
+        wrapper_html = _google_wrapper_html()
+        return {
+            "ok": True,
+            "url": url,
+            "final_url": url,
+            "status_code": 200,
+            "content_type": "text/html; charset=utf-8",
+            "content_bytes": wrapper_html.encode("utf-8"),
+            "content_text": wrapper_html,
+        }
+
+    monkeypatch.setattr(gaza_sources, "fetch_article_payload", fake_article_fetch)
+    monkeypatch.setattr(gaza_sources.time_module, "sleep", lambda _delay: pytest.fail("deterministic parser failures must not sleep"))
+    monkeypatch.setattr(food_line_discovery_expansion, "_google_news_rpc_request", lambda *_args: ("", "rpc_without_article_url"))
+
+    result = gaza_sources._resolve_aljazeera_google_news_wrapper(ALJAZEERA_WRAPPER_URL)
+
+    assert fetch_attempts == [ALJAZEERA_WRAPPER_URL]
+    assert result["resolved_url"] == ""
+    assert result["canonicalization_status"] == "google_news_failed_no_resolved_url"
+    assert result["failure_reason"] == "no_resolved_url"
 
 
 def test_aljazeera_wrapper_resolution_failure_keeps_feed_fallback(work_root, monkeypatch):
@@ -1764,10 +1847,12 @@ def test_aljazeera_wrapper_resolution_failure_keeps_feed_fallback(work_root, mon
             "content_text": None,
         },
     )
-    monkeypatch.setattr(
-        gaza_sources,
-        "fetch_article_payload",
-        lambda *_args, **_kwargs: {
+    fetch_attempts = []
+    sleep_delays = []
+
+    def failing_article_fetch(*_args, **_kwargs):
+        fetch_attempts.append(len(fetch_attempts) + 1)
+        return {
             "ok": False,
             "url": ALJAZEERA_WRAPPER_URL,
             "final_url": ALJAZEERA_WRAPPER_URL,
@@ -1775,17 +1860,21 @@ def test_aljazeera_wrapper_resolution_failure_keeps_feed_fallback(work_root, mon
             "content_type": "",
             "content_bytes": None,
             "content_text": None,
-            "failure_reason": "TimeoutError: wrapper timed out",
-        },
-    )
+            "failure_reason": f"TimeoutError: wrapper timed out on attempt {fetch_attempts[-1]}",
+        }
+
+    monkeypatch.setattr(gaza_sources, "fetch_article_payload", failing_article_fetch)
+    monkeypatch.setattr(gaza_sources.time_module, "sleep", sleep_delays.append)
 
     result = gaza_sources.collect_gaza_sources(work_root, "2026-08-29", min_sources=0, prefer_manual=False)
 
     assert result["source_count"] == 1
     record = result["sources"][0]
+    assert fetch_attempts == [1, 2, 3]
+    assert sleep_delays == [1.0, 2.0]
     assert record["canonical_url"] == gaza_sources.canonicalize_url(ALJAZEERA_WRAPPER_URL)
     assert record["canonicalization_status"] == "google_news_failed_fetch_error"
-    assert "wrapper timed out" in record["canonicalization_failure_reason"]
+    assert "wrapper timed out on attempt 3" in record["canonicalization_failure_reason"]
     assert record["enrichment_attempted"] is False
     assert record["enrichment_status"] == "skipped_canonical_resolution_failed"
     assert record["summary_or_snippet"] == ALJAZEERA_FEED_SUMMARY

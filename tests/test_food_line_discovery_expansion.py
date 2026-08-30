@@ -1170,6 +1170,48 @@ def test_google_news_rpc_request_parses_escaped_garturlres(monkeypatch: pytest.M
     assert error == ""
 
 
+def test_google_news_rpc_request_parses_garturlres_with_amp_fallback(monkeypatch: pytest.MonkeyPatch):
+    response_text = (Path(__file__).parent / "fixtures" / "google_news_rpc_garturlres_with_amp.txt").read_text(encoding="utf-8")
+
+    class _Response:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self, limit: int) -> bytes:
+            return response_text.encode("utf-8")
+
+    monkeypatch.setattr(expansion_module.urllib.request, "urlopen", lambda *args, **kwargs: _Response())
+
+    resolved, error = expansion_module._google_news_rpc_request("token", "1788047985", "sig")
+
+    assert resolved == "https://www.aljazeera.com/news/2026/8/28/board-of-peace-envoy-mladenov-warns-gaza-ceasefire-risks-collapse"
+    assert error == ""
+
+
+def test_google_news_rpc_request_without_article_url_fails_safely(monkeypatch: pytest.MonkeyPatch):
+    response_text = ")]}'\n\n[[\"wrb.fr\",\"Fbv4je\",\"[\\\"garturlres\\\",null,0]\",null,null,null,\"generic\"]]"
+
+    class _Response:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self, limit: int) -> bytes:
+            return response_text.encode("utf-8")
+
+    monkeypatch.setattr(expansion_module.urllib.request, "urlopen", lambda *args, **kwargs: _Response())
+
+    resolved, error = expansion_module._google_news_rpc_request("token", "1788047985", "sig")
+
+    assert resolved == ""
+    assert error == "rpc_without_article_url"
+
+
 def test_resolve_google_news_wrapper_records_bounded_rejected_candidate_sample():
     homepage_url = "https://www.kxan.com"
     listing_url = "https://www.kxan.com/news"

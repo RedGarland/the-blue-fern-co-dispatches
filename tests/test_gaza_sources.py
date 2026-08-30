@@ -133,6 +133,10 @@ def test_repo_gaza_sources_config_includes_targeted_query_providers():
     assert "deployment" in by_id["aljazeera-board-of-peace-isf-query"].query
     assert by_id["haaretz-gaza-query"].publisher == "Haaretz"
     assert by_id["dirco-icj-query"].publisher == "DIRCO"
+    assert by_id["ocha-opt-updates"].type == "ocha_report_index"
+    assert by_id["ocha-opt-updates"].source_state == "enabled"
+    assert by_id["ocha-opt-updates"].url == "https://www.ochaopt.org/publications/situation-reports"
+    assert all(source.url != "https://www.ochaopt.org/updates/rss.xml" for source in sources if source.source_state == "enabled")
 
 
 def test_rss_source_records_normalize_and_write(work_root, monkeypatch):
@@ -3765,3 +3769,237 @@ def test_ap_empty_article_body_is_not_reported_as_success(monkeypatch):
     assert record["article_fetch_status"] == "insufficient_article_content"
     assert record["content_available"] is False
     assert record["article_body_length"] == 0
+
+
+def _ocha_source() -> gaza_sources.SourceDefinition:
+    return gaza_sources.SourceDefinition(
+        source_id="ocha-opt-updates",
+        name="OCHA OPT Situation Reports",
+        url="https://www.ochaopt.org/publications/situation-reports",
+        type="ocha_report_index",
+        enabled=True,
+        publisher="OCHA",
+        reliability_tier="official-humanitarian-source",
+        category_hint="humanitarian",
+        region_scope="Gaza",
+        source_tier="official_humanitarian",
+        source_group="institutional",
+    )
+
+
+def _ocha_fixture(name: str) -> str:
+    return (Path(__file__).parent / "fixtures" / "gaza" / name).read_text(encoding="utf-8")
+
+
+def test_ocha_official_listing_discovers_only_report_shaped_candidates():
+    items = gaza_sources._discover_ocha_report_items(
+        _ocha_fixture("ocha_situation_reports_listing.html"),
+        "https://www.ochaopt.org/publications/situation-reports",
+    )
+
+    assert items == [
+        {
+            "title": "Humanitarian Situation Report | 28 August 2026",
+            "url": "https://www.ochaopt.org/content/humanitarian-situation-report-28-august-2026",
+            "published_at": "2026-08-28T00:00:00+00:00",
+            "summary_or_snippet": "Official OCHA humanitarian situation report.",
+            "discovery_url": "https://www.ochaopt.org/publications/situation-reports",
+        }
+    ]
+    assert gaza_sources._is_ocha_report_url("https://www.ochaopt.org/") is False
+    assert gaza_sources._is_ocha_report_url("https://www.ochaopt.org/publications/situation-reports") is False
+    assert gaza_sources._is_ocha_report_url(
+        "https://example.com/content/humanitarian-situation-report-28-august-2026"
+    ) is False
+
+
+def test_ocha_healthcare_body_and_fragment_are_scoped_bounded_and_non_casualty():
+    fixture = _ocha_fixture("ocha_situation_report_healthcare_aug_28.html")
+    fixture = fixture.replace(
+        "</div>\n    </main>",
+        f"<p>{'unrelated ' * 5000}</p></div>\n    </main>",
+    )
+    body = gaza_sources._extract_ocha_report_body(fixture)
+    excerpt = gaza_sources._extract_ocha_healthcare_excerpt(body)
+    fragments = gaza_sources._extract_ocha_healthcare_fragments(excerpt, "2026-08-28T00:00:00+00:00")
+
+    assert len(body) <= gaza_sources.OCHA_REPORT_BODY_MAX_CHARS
+    assert "Subscribe Site menu Donate" not in body
+    assert "Privacy Contact Careers" not in body
+    assert "metadata noise" not in body
+    assert "flour deliveries" not in body
+    assert "IV solutions had been depleted" in excerpt
+    assert "dialysis supplies" in excerpt
+    assert "laboratory reagents" in excerpt
+    assert "oxygen equipment" in excerpt
+    assert "Four health centres" in excerpt
+    assert "four to five days" in excerpt
+    assert "Between 10 and 16 August" in excerpt
+    assert "flour deliveries" not in excerpt
+    assert len(excerpt) <= gaza_sources.OCHA_HEALTHCARE_PROSE_MAX_CHARS
+    assert len(fragments) == 1
+    assert fragments[0]["development_type"] == "healthcare_access_disruption"
+    assert fragments[0]["casualty_counts"] == {}
+
+
+@pytest.mark.parametrize(
+    "candidate,expected_status",
+    [
+        ("https://www.ochaopt.org/", "rejected_non_report_url"),
+        ("https://www.ochaopt.org/publications/situation-reports", "rejected_non_report_url"),
+        (
+            "https://example.com/content/humanitarian-situation-report-28-august-2026",
+            "rejected_wrong_publisher_domain",
+        ),
+    ],
+)
+def test_ocha_normalization_rejects_untrusted_non_report_candidates(monkeypatch, candidate, expected_status):
+    monkeypatch.setattr(
+        gaza_sources,
+        "_fetch_ocha_article_payload",
+        lambda *_args, **_kwargs: pytest.fail("untrusted candidate must not be fetched"),
+    )
+    record = gaza_sources.normalize_rss_item(
+        {
+            "title": "Humanitarian Situation Report | 28 August 2026",
+            "url": candidate,
+            "published_at": "2026-08-28T00:00:00+00:00",
+            "summary_or_snippet": "OCHA Gaza health report.",
+            "discovery_url": "https://www.ochaopt.org/publications/situation-reports",
+        },
+        _ocha_source(),
+        "2026-08-29",
+        "2026-08-29T18:00:00+00:00",
+    )
+
+    assert record is not None
+    assert record["canonicalization_status"] == expected_status
+    assert record["resolved_canonical_url"] is None
+    assert record["article_fetch_attempted"] is False
+    assert record["article_fetch_status"] == "skipped_canonical_resolution_failed"
+
+
+def test_ocha_report_fetch_failure_keeps_truthful_listing_fallback(monkeypatch):
+    monkeypatch.setattr(
+        gaza_sources,
+        "_fetch_ocha_article_payload",
+        lambda *_args, **_kwargs: {
+            "ok": False,
+            "failure_reason": "TimeoutError: timed out",
+            "final_url": "https://www.ochaopt.org/content/humanitarian-situation-report-28-august-2026",
+        },
+    )
+    record = gaza_sources.normalize_rss_item(
+        {
+            "title": "Humanitarian Situation Report | 28 August 2026",
+            "url": "https://www.ochaopt.org/content/humanitarian-situation-report-28-august-2026",
+            "published_at": "2026-08-28T00:00:00+00:00",
+            "summary_or_snippet": "Official OCHA situation report.",
+            "discovery_url": "https://www.ochaopt.org/publications/situation-reports",
+        },
+        _ocha_source(),
+        "2026-08-29",
+        "2026-08-29T18:00:00+00:00",
+    )
+
+    assert record is not None
+    assert record["summary_or_snippet"] == "Official OCHA situation report."
+    assert record["article_fetch_attempted"] is True
+    assert record["article_fetch_status"] == "failed_report_fetch"
+    assert record["article_fetch_failure_reason"] == "TimeoutError: timed out"
+    assert record["content_available"] is False
+    assert record["ocha_healthcare_fragments"] == []
+
+
+def test_ocha_aug_28_report_collects_by_publication_date_and_curates_healthcare_fragment(work_root, monkeypatch):
+    config = work_root / "data" / "dispatches" / "gaza" / "sources.yml"
+    config.parent.mkdir(parents=True, exist_ok=True)
+    config.write_text(
+        """sources:
+  - source_id: ocha-opt-updates
+    name: OCHA OPT Situation Reports
+    url: https://www.ochaopt.org/publications/situation-reports
+    type: ocha_report_index
+    enabled: true
+    source_state: enabled
+    publisher: OCHA
+    reliability_tier: official-humanitarian-source
+    category_hint: humanitarian
+    region_scope: Gaza
+    source_tier: official_humanitarian
+    source_group: institutional
+""",
+        encoding="utf-8",
+    )
+    listing = _ocha_fixture("ocha_situation_reports_listing.html")
+    report = _ocha_fixture("ocha_situation_report_healthcare_aug_28.html")
+    calls = []
+
+    def fake_fetch(url, timeout=20):
+        calls.append(url)
+        body = listing if url.endswith("/publications/situation-reports") else report
+        return {
+            "ok": True,
+            "url": url,
+            "final_url": url,
+            "status_code": 200,
+            "content_type": "text/html",
+            "content_bytes": body.encode("utf-8"),
+            "content_text": body,
+        }
+
+    monkeypatch.setattr(gaza_sources, "_fetch_ocha_article_payload", fake_fetch)
+    monkeypatch.setattr(gaza_sources, "utc_now", lambda: "2026-08-29T18:00:00+00:00")
+    result = gaza_sources.collect_gaza_sources(
+        work_root,
+        "2026-08-29",
+        max_sources=12,
+        min_sources=1,
+        prefer_manual=False,
+        write_output=False,
+    )
+
+    assert result["ok"] is True
+    assert result["source_count"] == 1
+    assert calls == [
+        "https://www.ochaopt.org/publications/situation-reports",
+        "https://www.ochaopt.org/content/humanitarian-situation-report-28-august-2026",
+    ]
+    assert "https://www.ochaopt.org/updates/rss.xml" not in calls
+    record = result["sources"][0]
+    assert record["published_at"] == "2026-08-28T00:00:00+00:00"
+    assert record["discovery_url"] == "https://www.ochaopt.org/publications/situation-reports"
+    assert record["resolved_canonical_url"].endswith("humanitarian-situation-report-28-august-2026")
+    assert record["canonicalization_status"] == "resolved_official_report_url"
+    assert record["article_fetch_status"] == "healthcare_prose_extracted"
+    assert record["content_available"] is True
+    diag = next(row for row in result["provider_diagnostics"] if row["source_id"] == "ocha-opt-updates")
+    assert diag["raw_items"] == 1
+    assert diag["items_in_date_window"] == 1
+    assert diag["accepted"] == 1
+
+    normalized, warnings, errors = normalize_sources(
+        result["sources"], "2026-08-29", "2026-08-29T18:00:00+00:00"
+    )
+    assert warnings == []
+    assert errors == []
+    stories, rejected, _top = curate_stories(normalized, "2026-08-29", "2026-08-29T18:00:00+00:00")
+    assert rejected == []
+    assert len(stories) == 1
+    assert stories[0]["development_type"] == "healthcare_access_disruption"
+    assert stories[0]["casualty_counts"] == {}
+    assert "flour deliveries" not in stories[0]["summary"]
+
+    late_record = {**result["sources"][0], "retrieved_at": "2026-08-30T18:00:00+00:00"}
+    late_normalized, _warnings, late_errors = normalize_sources(
+        [late_record], "2026-08-29", "2026-08-30T18:00:00+00:00"
+    )
+    assert late_errors == []
+    assert late_normalized[0]["story_selection_excluded_reason"] == (
+        "post-edition-date retrieval excluded from prior-date Gaza rerun"
+    )
+    late_stories, late_rejected, _top = curate_stories(
+        late_normalized, "2026-08-29", "2026-08-30T18:00:00+00:00"
+    )
+    assert late_stories == []
+    assert late_rejected[0]["reason"] == "post-edition-date retrieval excluded from prior-date Gaza rerun"

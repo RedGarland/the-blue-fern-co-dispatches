@@ -2019,6 +2019,42 @@ def test_dominance_warning_without_low_diversity_for_seven_stories_three_publish
     assert "single_publisher_supplies_more_than_60_percent_of_rendered_stories" in report["warning_reason"]
 
 
+def test_source_diversity_report_preserves_global_source_cap_diagnostics():
+    source = {"publisher": "Publisher A"}
+    story = {"publisher_names": ["Publisher A"]}
+    report = build_source_diversity_report(
+        "2026-08-29",
+        raw_sources=[source],
+        normalized_sources=[source],
+        curated_stories=[story],
+        rendered_stories=[story],
+        collection_report={
+            "stage_counts": {"excluded_by_global_source_cap": 1},
+            "provider_diagnostics": [
+                {
+                    "source_id": "late-provider",
+                    "publisher": "Publisher B",
+                    "status": "ok",
+                    "raw_items": 1,
+                    "accepted": 1,
+                    "accepted_before_global_source_cap": 1,
+                    "retained_after_global_source_cap": 0,
+                    "excluded_by_global_source_cap": 1,
+                }
+            ],
+        },
+        cross_edition_report={},
+        stage_drop_diagnostics={},
+    )
+    provider = report["publisher_breakdown_by_source_stage"]["late-provider"]
+    assert provider["status"] == "ok"
+    assert provider["accepted_before_global_source_cap"] == 1
+    assert provider["retained_after_global_source_cap"] == 0
+    assert provider["excluded_by_global_source_cap"] == 1
+    assert "accepted_records_excluded_by_global_source_cap" in provider["explanation_flags"]
+    assert report["known_drop_reasons"]["excluded_by_global_source_cap"] == 1
+
+
 def test_serious_warning_for_five_stories_one_publisher(monkeypatch):
     raw_sources = [{"publisher": "Publisher A"} for _ in range(5)]
     normalized_sources = list(raw_sources)

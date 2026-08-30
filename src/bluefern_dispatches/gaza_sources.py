@@ -2001,6 +2001,43 @@ def rank_gaza_candidates(records: list[dict[str, Any]], edition_date: str) -> li
     return [rank_gaza_candidate(record, edition_date) for record in records]
 
 
+def _candidate_selection_timestamp(record: dict[str, Any]) -> float:
+    value = str(record.get("published_at") or "").strip()
+    if not value:
+        return 0.0
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return 0.0
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.timestamp()
+
+
+def select_gaza_candidates(
+    records: list[dict[str, Any]],
+    edition_date: str,
+    max_sources: int,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Apply the final source cap after every provider has had an attempt."""
+    ranked = rank_gaza_candidates(records, edition_date)
+    limit = max(0, int(max_sources))
+    if len(ranked) <= limit:
+        return ranked, []
+    ordered = sorted(
+        ranked,
+        key=lambda record: (
+            -int(record.get("candidate_score") or 0),
+            -_candidate_selection_timestamp(record),
+            str(record.get("provider_id") or ""),
+            str(record.get("source_record_id") or ""),
+            str(record.get("canonical_url") or record.get("url") or ""),
+            str(record.get("title") or ""),
+        ),
+    )
+    return ordered[:limit], ordered[limit:]
+
+
 def validate_source_records(records: list[dict[str, Any]], min_sources: int = 1) -> list[str]:
     errors: list[str] = []
     if len(records) < min_sources:
@@ -2157,8 +2194,6 @@ def collect_gaza_sources(
         _maybe_queue_review(diag, reason, item, relevance_band=relevance_band, date_basis=date_basis)
 
     for source in definitions:
-        if len(records) >= max_sources:
-            break
         if source.source_state != "enabled":
             skip_reason = source.source_state
             if source.source_state == "disabled" and source.disabled_reason:
@@ -2241,6 +2276,8 @@ def collect_gaza_sources(
                 "rejected_parse_error": 0,
             },
             "top_rejected_examples": [],
+            "provider_candidate_cap": max(1, int(max_sources)),
+            "items_not_inspected_after_provider_candidate_cap": 0,
         }
         fetch = fetch_feed_payload(source.source_id, fetch_url)
         diag["backend_used"] = str(fetch.get("backend_used") or "python")
@@ -2296,8 +2333,9 @@ def collect_gaza_sources(
             diag["rejected_counts"]["rejected_parse_error"] = int(diag["rejected_counts"].get("rejected_parse_error", 0)) + 1
             provider_diagnostics.append(diag)
             continue
-        for item in items:
-            if len(records) >= max_sources:
+        for item_index, item in enumerate(items):
+            if int(diag.get("accepted") or 0) >= int(diag["provider_candidate_cap"]):
+                diag["items_not_inspected_after_provider_candidate_cap"] = len(items) - item_index
                 break
             # Filtering gates order (pre-dedupe):
             # 1) missing title/url
@@ -2385,7 +2423,30 @@ def collect_gaza_sources(
         provider_diagnostics.append(diag)
 
     stage_counts["accepted_before_rank"] = len(records)
-    records = rank_gaza_candidates(records, edition_date)
+    records, global_cap_exclusions = select_gaza_candidates(records, edition_date, max_sources)
+    retained_by_provider: dict[str, list[str]] = {}
+    for record in records:
+        provider_id = str(record.get("provider_id") or "")
+        retained_by_provider.setdefault(provider_id, []).append(str(record.get("source_record_id") or ""))
+    excluded_by_provider: dict[str, list[str]] = {}
+    for record in global_cap_exclusions:
+        provider_id = str(record.get("provider_id") or "")
+        excluded_by_provider.setdefault(provider_id, []).append(str(record.get("source_record_id") or ""))
+    for diag in provider_diagnostics:
+        if not isinstance(diag, dict):
+            continue
+        provider_id = str(diag.get("source_id") or "")
+        accepted_count = int(diag.get("accepted") or 0)
+        retained_ids = retained_by_provider.get(provider_id, [])
+        excluded_ids = excluded_by_provider.get(provider_id, [])
+        diag["accepted_before_global_source_cap"] = accepted_count
+        diag["retained_after_global_source_cap"] = len(retained_ids)
+        diag["excluded_by_global_source_cap"] = len(excluded_ids)
+        diag["final_retained_source_record_ids"] = retained_ids
+        diag["global_source_cap_excluded_record_ids"] = excluded_ids
+    stage_counts["accepted_before_global_source_cap"] = int(stage_counts["accepted_before_rank"])
+    stage_counts["excluded_by_global_source_cap"] = len(global_cap_exclusions)
+    stage_counts["final_retained_sources"] = len(records)
     validation_errors = validate_source_records(records, min_sources=min_sources)
     errors.extend(validation_errors)
     source_file = None
@@ -2414,6 +2475,16 @@ def collect_gaza_sources(
         "providers_successful": sorted(set(working_providers)),
         "skipped_providers": skipped_providers,
         "working_providers": sorted(set(working_providers)),
+        "global_source_cap_exclusions": [
+            {
+                "source_record_id": str(record.get("source_record_id") or ""),
+                "provider_id": str(record.get("provider_id") or ""),
+                "title": str(record.get("title") or ""),
+                "candidate_score": int(record.get("candidate_score") or 0),
+                "reason": "excluded_by_global_source_cap",
+            }
+            for record in global_cap_exclusions
+        ],
         "top_rejected_examples": [
             example
             for diag in provider_diagnostics

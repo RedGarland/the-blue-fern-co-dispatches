@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+from bluefern_dispatches import gaza_audio
 from bluefern_dispatches.gaza_audio import build_gaza_audio_script, select_gaza_audio_stories, write_audio_index, write_gaza_audio_outputs
 
 
@@ -357,6 +358,32 @@ def test_provider_none_keeps_script_only_behavior(tmp_path: Path):
     assert metadata["audio_file"] is None
     assert metadata["tts_provider"] == "none"
     assert not (tmp_path / "output" / "site" / "gaza" / "audio" / f"{date}.mp3").exists()
+
+
+def test_audio_and_feed_outputs_remain_pinned_to_requested_date_after_utc_rollover(tmp_path: Path, monkeypatch):
+    edition_date = "2026-08-29"
+    monkeypatch.setattr(gaza_audio, "_iso_now", lambda: "2026-08-30T00:30:00Z")
+    _write_edition(
+        tmp_path,
+        edition_date,
+        curation=[{"title": "Gaza update", "summary": "Summary from Gaza.", "source_record_ids": ["s1"], "included_in_public_summary": True}],
+        sources=[{"source_record_id": "s1", "publisher": "Reuters", "url": "https://example.com/s1", "title": "S1"}],
+    )
+
+    result = write_gaza_audio_outputs(tmp_path, edition_date, dry_run=False, tts_provider="none")
+    metadata = json.loads(result.metadata_path.read_text(encoding="utf-8"))
+    flash = json.loads(result.flash_briefing_path.read_text(encoding="utf-8"))
+    podcast = result.podcast_path.read_text(encoding="utf-8")
+
+    assert result.edition_date == edition_date
+    assert metadata["edition_date"] == edition_date
+    assert metadata["generated_at"].startswith("2026-08-30T")
+    assert f"/gaza/editions/{edition_date}/" in metadata["edition_url"]
+    assert edition_date in result.transcript_path.name
+    assert edition_date in json.dumps(flash)
+    assert "2026-08-30-transcript" not in json.dumps(flash)
+    assert edition_date in podcast
+    assert "2026-08-30-transcript" not in podcast
 
 
 def test_provider_none_refresh_preserves_existing_mp3_enclosure(tmp_path: Path):

@@ -119,6 +119,54 @@ tiers:
       region_scope: Gaza
       source_group: major_ground_development
       discovery_role: strong_ground_development
+    - source_id: wafa-gaza-casualty-locations-query
+      name: WAFA Gaza Al-Qarara Casualty Query
+      query: site:hebrew.wafa.ps אל־קרארה עאבדין
+      type: google_news_rss
+      enabled: true
+      source_state: enabled
+      publisher: WAFA
+      reliability_tier: reported-public-source
+      category_hint: conflict
+      region_scope: Gaza
+      source_group: major_ground_development
+      discovery_role: strong_ground_development
+    - source_id: wafa-gaza-displacement-tent-query
+      name: WAFA Gaza Displacement Tent Query
+      query: site:wafa.ps Gaza City "Al-Mashahara" tent displaced
+      type: google_news_rss
+      enabled: true
+      source_state: enabled
+      publisher: WAFA
+      reliability_tier: reported-public-source
+      category_hint: displacement
+      region_scope: Gaza
+      source_group: major_ground_development
+      discovery_role: strong_ground_development
+    - source_id: wafa-gaza-motorbike-query
+      name: WAFA Gaza Motorbike Query
+      query: site:wafa.ps Gaza City "Tal al-Hawa" (motorcycle OR motorbike)
+      type: google_news_rss
+      enabled: true
+      source_state: enabled
+      publisher: WAFA
+      reliability_tier: reported-public-source
+      category_hint: conflict
+      region_scope: Gaza
+      source_group: major_ground_development
+      discovery_role: strong_ground_development
+    - source_id: wafa-gaza-health-infrastructure-query
+      name: WAFA Gaza Health Infrastructure Query
+      query: site:wafa.ps Gaza ("Al-Aqsa" OR "Deir al-Balah") (hospital OR warehouse)
+      type: google_news_rss
+      enabled: true
+      source_state: enabled
+      publisher: WAFA
+      reliability_tier: reported-public-source
+      category_hint: health_infrastructure
+      region_scope: Gaza
+      source_group: major_ground_development
+      discovery_role: strong_ground_development
     - source_id: who-gaza-evacuation-query
       name: WHO Gaza Evacuation Query
       query: site:who.int Gaza patients evacuated children companions medical evacuation

@@ -117,6 +117,12 @@ def test_repo_gaza_sources_config_includes_targeted_query_providers():
     assert by_id["jpost-gaza-accountability-query"].type == "google_news_rss"
     assert by_id["wafa-gaza-query"].publisher == "WAFA"
     assert by_id["wafa-gaza-query"].type == "google_news_rss"
+    assert by_id["wafa-gaza-casualty-locations-query"].query == "site:hebrew.wafa.ps אל־קרארה עאבדין"
+    assert by_id["wafa-gaza-displacement-tent-query"].query == 'site:wafa.ps Gaza City "Al-Mashahara" tent displaced'
+    assert by_id["wafa-gaza-motorbike-query"].query == 'site:wafa.ps Gaza City "Tal al-Hawa" (motorcycle OR motorbike)'
+    assert by_id["wafa-gaza-health-infrastructure-query"].query == (
+        'site:wafa.ps Gaza ("Al-Aqsa" OR "Deir al-Balah") (hospital OR warehouse)'
+    )
     assert by_id["who-gaza-evacuation-query"].publisher == "WHO"
     assert by_id["unicef-gaza-water-query"].publisher == "UNICEF"
     assert by_id["ap-gaza-attribution-query"].publisher == "Associated Press"
@@ -2412,3 +2418,580 @@ def test_generic_iran_lebanon_story_without_palestinian_relevance_rejected(work_
     result = gaza_sources.collect_gaza_sources(work_root, "2026-05-07", min_sources=0, prefer_manual=False)
     assert result["source_count"] == 0
     assert result["review_candidates"] == []
+
+
+WAFA_FIXTURE_DIR = Path(__file__).parent / "fixtures"
+WAFA_WRAPPER_BASE = "https://news.google.com/rss/articles/"
+WAFA_CASES = {
+    "qarara": {
+        "title": "שלושה תושבים נהרגו בתקיפת כוחות הכיבוש מצפון־מזרח לח'אן יונס - WAFA",
+        "wrapper": f"{WAFA_WRAPPER_BASE}CBMiWafaQarara?oc=5",
+        "article": "https://hebrew.wafa.ps/Pages/Details/24313",
+        "published_at": "2026-08-28T12:09:40+00:00",
+        "fixture": "wafa_al_qarara_abdeen.html",
+        "needle": "עאבדין",
+    },
+    "mashahara": {
+        "title": "Palestinian killed, others injured in displacement tent in Gaza City - WAFA",
+        "wrapper": f"{WAFA_WRAPPER_BASE}CBMiWafaMashahara?oc=5",
+        "article": "https://english.wafa.ps/Pages/Details/174161",
+        "published_at": "2026-08-28T17:37:00+00:00",
+        "fixture": "wafa_al_mashahara.html",
+        "needle": "al-mashahara",
+    },
+    "tal": {
+        "title": "Palestinian killed, two injured in Tal al-Hawa motorbike strike in Gaza City - WAFA",
+        "wrapper": f"{WAFA_WRAPPER_BASE}CBMiWafaTalAlHawa?oc=5",
+        "article": "https://english.wafa.ps/Pages/Details/174181",
+        "published_at": "2026-08-29T15:00:00+00:00",
+        "fixture": "wafa_tal_al_hawa.html",
+        "needle": "tal al-hawa",
+    },
+    "aqsa": {
+        "title": "Three Palestinians injured in strike on medicine warehouse at Gaza hospital - WAFA",
+        "wrapper": f"{WAFA_WRAPPER_BASE}CBMiWafaAlAqsa?oc=5",
+        "article": "https://english.wafa.ps/Pages/Details/174180",
+        "published_at": "2026-08-29T16:21:00+00:00",
+        "fixture": "wafa_al_aqsa_warehouse.html",
+        "needle": "medicine warehouse inside al-aqsa martyrs hospital",
+    },
+}
+
+
+def _wafa_source(source_id: str = "wafa-gaza-casualty-locations-query") -> gaza_sources.SourceDefinition:
+    return gaza_sources.SourceDefinition(
+        source_id=source_id,
+        name="WAFA Gaza Test Query",
+        url="",
+        query="site:wafa.ps Gaza test",
+        type="google_news_rss",
+        enabled=True,
+        publisher="WAFA",
+        reliability_tier="reported-public-source",
+        category_hint="conflict",
+        region_scope="Gaza",
+        source_group="major_ground_development",
+    )
+
+
+@pytest.mark.parametrize("case_name", ["qarara", "mashahara", "tal", "aqsa"])
+def test_wafa_article_prose_fixtures_extract_target_material_without_template_noise(case_name):
+    case = WAFA_CASES[case_name]
+    article_html = (WAFA_FIXTURE_DIR / case["fixture"]).read_text(encoding="utf-8")
+
+    excerpt = gaza_sources._extract_wafa_article_excerpt(article_html)
+
+    assert case["needle"] in excerpt.lower()
+    assert "latest news and site navigation" not in excerpt.lower()
+    assert "templatenoise" not in excerpt.lower()
+
+
+def test_wafa_google_wrapper_accepts_only_article_detail_in_publisher_family(monkeypatch):
+    from bluefern_dispatches import food_line_discovery_expansion
+
+    wrapper = WAFA_CASES["aqsa"]["wrapper"]
+    article = WAFA_CASES["aqsa"]["article"]
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_article_payload",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "final_url": wrapper,
+            "status_code": 200,
+            "content_type": "text/html",
+            "content_bytes": b"<html></html>",
+            "content_text": "<html></html>",
+        },
+    )
+    monkeypatch.setattr(
+        food_line_discovery_expansion,
+        "_resolve_google_news_wrapper",
+        lambda *_args, **_kwargs: (
+            article,
+            "",
+            True,
+            {"google_news_resolution_status": "resolved_same_domain", "google_news_rpc_url": article},
+        ),
+    )
+
+    result = gaza_sources._resolve_wafa_google_news_wrapper(wrapper)
+
+    assert result["resolved_url"] == article
+    assert result["canonicalization_method"] == "google_news_rpc"
+    assert result["canonicalization_status"] == "google_news_resolved_same_domain"
+
+
+@pytest.mark.parametrize(
+    ("candidate", "expected_status"),
+    [
+        ("https://attacker.example/Pages/Details/174180", "rejected_wrong_publisher_domain"),
+        ("https://english.wafa.ps/Pages/LastNews", "rejected_non_article_url"),
+        ("", "google_news_failed_no_resolved_url"),
+    ],
+)
+def test_wafa_google_wrapper_rejects_wrong_domain_listing_and_unresolved(monkeypatch, candidate, expected_status):
+    from bluefern_dispatches import food_line_discovery_expansion
+
+    wrapper = WAFA_CASES["aqsa"]["wrapper"]
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_article_payload",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "final_url": wrapper,
+            "status_code": 200,
+            "content_type": "text/html",
+            "content_bytes": b"<html></html>",
+            "content_text": "<html></html>",
+        },
+    )
+    monkeypatch.setattr(
+        food_line_discovery_expansion,
+        "_resolve_google_news_wrapper",
+        lambda *_args, **_kwargs: (
+            candidate,
+            "no_resolved_url" if not candidate else "",
+            True,
+            {
+                "google_news_resolution_status": "failed_no_resolved_url" if not candidate else "resolved_same_domain",
+                "google_news_rpc_url": candidate,
+                "rejection_reason": "no_resolved_url" if not candidate else "",
+            },
+        ),
+    )
+
+    result = gaza_sources._resolve_wafa_google_news_wrapper(wrapper)
+
+    assert result["resolved_url"] == ""
+    assert result["canonicalization_status"] == expected_status
+
+
+def test_wafa_bounded_queries_discover_and_enrich_all_four_regression_cases(work_root, monkeypatch):
+    config = work_root / "data" / "dispatches" / "gaza" / "sources.yml"
+    config.parent.mkdir(parents=True, exist_ok=True)
+    config.write_text(
+        """sources:
+  - source_id: wafa-gaza-casualty-locations-query
+    name: WAFA Gaza Al-Qarara Casualty Query
+    query: site:hebrew.wafa.ps אל־קרארה עאבדין
+    type: google_news_rss
+    enabled: true
+    source_state: enabled
+    publisher: WAFA
+    reliability_tier: reported-public-source
+    category_hint: conflict
+    region_scope: Gaza
+  - source_id: wafa-gaza-displacement-tent-query
+    name: WAFA Gaza Displacement Tent Query
+    query: site:wafa.ps Gaza City \"Al-Mashahara\" tent displaced
+    type: google_news_rss
+    enabled: true
+    source_state: enabled
+    publisher: WAFA
+    reliability_tier: reported-public-source
+    category_hint: displacement
+    region_scope: Gaza
+  - source_id: wafa-gaza-motorbike-query
+    name: WAFA Gaza Motorbike Query
+    query: site:wafa.ps Gaza City \"Tal al-Hawa\" (motorcycle OR motorbike)
+    type: google_news_rss
+    enabled: true
+    source_state: enabled
+    publisher: WAFA
+    reliability_tier: reported-public-source
+    category_hint: conflict
+    region_scope: Gaza
+  - source_id: wafa-gaza-health-infrastructure-query
+    name: WAFA Gaza Health Infrastructure Query
+    query: site:wafa.ps Gaza (\"Al-Aqsa\" OR \"Deir al-Balah\") (hospital OR warehouse)
+    type: google_news_rss
+    enabled: true
+    source_state: enabled
+    publisher: WAFA
+    reliability_tier: reported-public-source
+    category_hint: health_infrastructure
+    region_scope: Gaza
+""",
+        encoding="utf-8",
+    )
+
+    def feed_payload(case_names):
+        items = [
+            {
+                "title": WAFA_CASES[name]["title"],
+                "url": WAFA_CASES[name]["wrapper"],
+                "published_at": WAFA_CASES[name]["published_at"],
+                "summary_or_snippet": WAFA_CASES[name]["title"],
+            }
+            for name in case_names
+        ]
+        items.append(
+            {
+                "title": "European football result",
+                "url": f"{WAFA_WRAPPER_BASE}CBMiWafaUnrelated?oc=5",
+                "published_at": "2026-08-29T10:00:00+00:00",
+                "summary_or_snippet": "Club match coverage without Palestinian or Gaza relevance.",
+            }
+        )
+        return _rss_payload(items)
+
+    feed_urls = []
+
+    def fake_feed_fetch(_source_id, url, *_args, **_kwargs):
+        feed_urls.append(url)
+        if "%D7%90%D7%9C" in url:
+            case_names = ["qarara"]
+        elif "Al-Mashahara" in url:
+            case_names = ["mashahara"]
+        elif "Tal+al-Hawa" in url:
+            case_names = ["tal"]
+        else:
+            case_names = ["aqsa"]
+        return {
+            "ok": True,
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": feed_payload(case_names),
+            "content_text": None,
+        }
+
+    by_wrapper = {case["wrapper"]: case for case in WAFA_CASES.values()}
+    by_article = {case["article"]: case for case in WAFA_CASES.values()}
+    monkeypatch.setattr(gaza_sources, "fetch_feed_payload", fake_feed_fetch)
+    monkeypatch.setattr(
+        gaza_sources,
+        "_resolve_wafa_google_news_wrapper",
+        lambda url: {
+            "resolved_url": by_wrapper[url]["article"],
+            "canonicalization_method": "google_news_rpc",
+            "canonicalization_status": "google_news_resolved_same_domain",
+            "failure_reason": "",
+        },
+    )
+
+    def fake_article_fetch(url, *_args, **_kwargs):
+        case = by_article[url]
+        article_html = (WAFA_FIXTURE_DIR / case["fixture"]).read_text(encoding="utf-8")
+        return {
+            "ok": True,
+            "final_url": url,
+            "status_code": 200,
+            "content_type": "text/html",
+            "content_bytes": article_html.encode("utf-8"),
+            "content_text": article_html,
+        }
+
+    monkeypatch.setattr(gaza_sources, "fetch_article_payload", fake_article_fetch)
+
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-08-29", min_sources=0, prefer_manual=False)
+
+    assert result["source_count"] == 4
+    hebrew_feed_url = next(url for url in feed_urls if "%D7%90%D7%9C" in url)
+    assert "hl=he" in hebrew_feed_url
+    assert "gl=IL" in hebrew_feed_url
+    assert "ceid=IL:he" in hebrew_feed_url
+    assert result["rejected_by_reason"].get("rejected_low_relevance", 0) + result["rejected_by_reason"].get(
+        "rejected_no_palestinian_anchor", 0
+    ) == 4
+    assert all(row["url"].startswith(WAFA_WRAPPER_BASE) for row in result["sources"])
+    assert all(row["canonicalization_status"] == "google_news_resolved_same_domain" for row in result["sources"])
+    assert all(row["article_fetch_status"] == "article_prose_extracted" for row in result["sources"])
+    assert all(row["content_available"] is True for row in result["sources"])
+    assert {row["canonical_url"] for row in result["sources"]} == set(by_article)
+    for case in WAFA_CASES.values():
+        record = next(row for row in result["sources"] if row["canonical_url"] == case["article"])
+        assert record["wrapper_url"] == case["wrapper"]
+        assert case["needle"] in record["content_text"].lower()
+        assert case["needle"] in record["summary_or_snippet"].lower()
+
+    normalized, warnings, errors = normalize_sources(
+        result["sources"],
+        "2026-08-29",
+        "2026-08-29T18:00:00+00:00",
+    )
+    assert warnings == []
+    assert errors == []
+    assert len(normalized) == 4
+    for case in WAFA_CASES.values():
+        record = next(row for row in normalized if row["canonical_url"] == case["article"])
+        assert case["needle"] in record["summary_or_snippet"].lower()
+
+
+def test_wafa_article_fetch_failure_keeps_truthful_title_summary_fallback(monkeypatch):
+    case = WAFA_CASES["aqsa"]
+    monkeypatch.setattr(
+        gaza_sources,
+        "_resolve_wafa_google_news_wrapper",
+        lambda _url: {
+            "resolved_url": case["article"],
+            "canonicalization_method": "google_news_rpc",
+            "canonicalization_status": "google_news_resolved_same_domain",
+            "failure_reason": "",
+        },
+    )
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_article_payload",
+        lambda *_args, **_kwargs: {
+            "ok": False,
+            "final_url": case["article"],
+            "failure_reason": "TimeoutError: bounded article fetch timed out",
+        },
+    )
+    item = {
+        "title": case["title"],
+        "url": case["wrapper"],
+        "published_at": case["published_at"],
+        "summary_or_snippet": "Title-only Google News summary.",
+    }
+
+    record = gaza_sources.normalize_rss_item(
+        item,
+        _wafa_source("wafa-gaza-health-infrastructure-query"),
+        "2026-08-29",
+        "2026-08-29T18:00:00+00:00",
+    )
+
+    assert record is not None
+    assert record["summary_or_snippet"] == "Title-only Google News summary."
+    assert record["feed_summary_or_snippet"] == "Title-only Google News summary."
+    assert record["content_text"] is None
+    assert record["content_available"] is False
+    assert record["article_fetch_attempted"] is True
+    assert record["article_fetch_status"] == "failed_article_fetch"
+    assert "timed out" in record["article_fetch_failure_reason"]
+
+
+def test_wafa_collection_fails_closed_when_wrapper_has_no_trusted_canonical(work_root, monkeypatch):
+    config = work_root / "data" / "dispatches" / "gaza" / "sources.yml"
+    config.parent.mkdir(parents=True, exist_ok=True)
+    config.write_text(
+        """sources:
+  - source_id: wafa-gaza-health-infrastructure-query
+    name: WAFA Gaza Health Infrastructure Query
+    query: site:wafa.ps Gaza hospital warehouse
+    type: google_news_rss
+    enabled: true
+    source_state: enabled
+    publisher: WAFA
+    reliability_tier: reported-public-source
+    category_hint: health_infrastructure
+    region_scope: Gaza
+""",
+        encoding="utf-8",
+    )
+    case = WAFA_CASES["aqsa"]
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_feed_payload",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload(
+                [
+                    {
+                        "title": case["title"],
+                        "url": case["wrapper"],
+                        "published_at": case["published_at"],
+                        "summary_or_snippet": case["title"],
+                    }
+                ]
+            ),
+            "content_text": None,
+        },
+    )
+    monkeypatch.setattr(
+        gaza_sources,
+        "_resolve_wafa_google_news_wrapper",
+        lambda _url: {
+            "resolved_url": "",
+            "canonicalization_method": "google_news_rpc",
+            "canonicalization_status": "google_news_failed_no_resolved_url",
+            "failure_reason": "no_resolved_url",
+        },
+    )
+
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-08-29", min_sources=0, prefer_manual=False)
+
+    assert result["source_count"] == 0
+    assert result["rejected_by_reason"]["rejected_untrusted_canonical"] == 1
+    diag = result["provider_diagnostics"][0]
+    assert diag["canonicalization_failures"] == [
+        {
+            "title": case["title"],
+            "wrapper_url": case["wrapper"],
+            "canonicalization_method": "google_news_rpc",
+            "canonicalization_status": "google_news_failed_no_resolved_url",
+            "canonicalization_failure_reason": "no_resolved_url",
+        }
+    ]
+
+
+def test_wafa_article_fetch_uses_existing_curl_backend_after_python_tls_failure(monkeypatch):
+    article = WAFA_CASES["aqsa"]["article"]
+    article_html = (WAFA_FIXTURE_DIR / WAFA_CASES["aqsa"]["fixture"]).read_bytes()
+    marker = b"\nBLUEFERN_WAFA_FINAL_URL:"
+
+    monkeypatch.delenv("GAZA_FETCH_BACKEND", raising=False)
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_article_payload",
+        lambda *_args, **_kwargs: {
+            "ok": False,
+            "final_url": article,
+            "failure_reason": "SSLCertVerificationError: certificate verify failed",
+        },
+    )
+
+    class _CurlResult:
+        returncode = 0
+        stdout = article_html + marker + article.encode("utf-8")
+        stderr = b""
+
+    monkeypatch.setattr(gaza_sources.subprocess, "run", lambda *_args, **_kwargs: _CurlResult())
+
+    payload = gaza_sources._fetch_wafa_article_payload(article)
+
+    assert payload["ok"] is True
+    assert payload["backend_used"] == "curl"
+    assert payload["final_url"] == article
+    assert "Al-Aqsa Martyrs Hospital" in payload["content_text"]
+
+
+def test_wafa_target_events_are_separate_and_preserve_attribution_and_counts():
+    sources = []
+    for index, (case_name, case) in enumerate(WAFA_CASES.items(), start=1):
+        article_html = (WAFA_FIXTURE_DIR / case["fixture"]).read_text(encoding="utf-8")
+        excerpt = gaza_sources._extract_wafa_article_excerpt(article_html)
+        sources.append(
+            {
+                "source_record_id": f"wafa-{case_name}",
+                "provider_id": {
+                    "qarara": "wafa-gaza-casualty-locations-query",
+                    "mashahara": "wafa-gaza-displacement-tent-query",
+                    "tal": "wafa-gaza-motorbike-query",
+                    "aqsa": "wafa-gaza-health-infrastructure-query",
+                }[case_name],
+                "title": case["title"],
+                "publisher": "WAFA",
+                "published_at": case["published_at"],
+                "retrieved_at": "2026-08-29T18:00:00+00:00",
+                "summary_or_snippet": excerpt,
+                "source_type": "rss",
+                "region_scope": "Gaza",
+                "category_hint": "conflict",
+                "reliability_tier": "reported-public-source",
+                "url": case["wrapper"],
+                "canonical_url": case["article"],
+                "candidate_score": 90 - index,
+                "ranking_reasons": ["test"],
+                "candidate_score_breakdown": {},
+            }
+        )
+
+    stories, rejected, _ = curate_stories(sources, "2026-08-29", "2026-08-29T18:00:00+00:00")
+
+    assert not any(item["action"] == "rejected" for item in rejected)
+    assert len(stories) == 4
+    assert {story["location"] for story in stories} == {
+        "Al-Qarara, north of Khan Younis",
+        "Al-Mashahara, east of Gaza City",
+        "Tal al-Hawa, Gaza City",
+        "Al-Aqsa Martyrs Hospital, Deir al-Balah",
+    }
+    qarara = next(story for story in stories if "Al-Qarara" in story["location"])
+    mashahara = next(story for story in stories if "Al-Mashahara" in story["location"])
+    aqsa = next(story for story in stories if "Al-Aqsa" in story["location"])
+    tal = next(story for story in stories if "Tal al-Hawa" in story["location"])
+    assert "local sources" in qarara["uncertainty"]
+    assert qarara["casualty_counts"] == {"new_deaths": 3}
+    assert mashahara["casualty_counts"] == {"new_deaths": 1, "injuries_reported_as": "several"}
+    assert aqsa["category"] == "health_infrastructure"
+    assert aqsa["affected_system"] == "hospital medicine supplies"
+    assert "shortage" not in aqsa["summary"].lower()
+    assert tal["casualty_counts"] == {"new_deaths": 1, "new_injuries": 2}
+    assert "no cross-source consensus implied" in tal["uncertainty"]
+
+
+def test_wafa_multi_incident_roundup_splits_only_supported_target_events():
+    combined = " ".join(
+        gaza_sources._extract_wafa_article_excerpt(
+            (WAFA_FIXTURE_DIR / case["fixture"]).read_text(encoding="utf-8")
+        )
+        for case in WAFA_CASES.values()
+    )
+    source = {
+        "source_record_id": "wafa-roundup",
+        "provider_id": "wafa-gaza-motorbike-query",
+        "title": "WAFA Gaza casualty and infrastructure roundup",
+        "publisher": "WAFA",
+        "published_at": "2026-08-29T16:21:00+00:00",
+        "retrieved_at": "2026-08-29T18:00:00+00:00",
+        "summary_or_snippet": combined,
+        "source_type": "rss",
+        "region_scope": "Gaza",
+        "category_hint": "conflict",
+        "reliability_tier": "reported-public-source",
+        "url": WAFA_CASES["aqsa"]["wrapper"],
+        "candidate_score": 90,
+        "ranking_reasons": ["test"],
+        "candidate_score_breakdown": {},
+    }
+
+    stories, rejected, _ = curate_stories([source], "2026-08-29", "2026-08-29T18:00:00+00:00")
+
+    assert not any(item["action"] == "rejected" for item in rejected)
+    assert len(stories) == 4
+    assert len({story["location"] for story in stories}) == 4
+
+
+def test_wafa_tal_al_hawa_conflicting_retained_count_is_explicit_not_harmonized():
+    case = WAFA_CASES["tal"]
+    wafa_source = {
+        "source_record_id": "wafa-tal",
+        "provider_id": "wafa-gaza-casualty-locations-query",
+        "title": case["title"],
+        "publisher": "WAFA",
+        "published_at": case["published_at"],
+        "retrieved_at": "2026-08-29T18:00:00+00:00",
+        "summary_or_snippet": gaza_sources._extract_wafa_article_excerpt(
+            (WAFA_FIXTURE_DIR / case["fixture"]).read_text(encoding="utf-8")
+        ),
+        "source_type": "rss",
+        "region_scope": "Gaza",
+        "category_hint": "conflict",
+        "reliability_tier": "reported-public-source",
+        "url": case["wrapper"],
+        "candidate_score": 90,
+        "ranking_reasons": ["test"],
+        "candidate_score_breakdown": {},
+    }
+    other_source = {
+        **wafa_source,
+        "source_record_id": "other-tal",
+        "provider_id": "other-source",
+        "publisher": "Other retained publisher",
+        "title": "Two killed and one injured in Tal al-Hawa motorcycle strike",
+        "summary_or_snippet": "Two Palestinians were killed and one was injured in a strike on a motorcycle in Tal al-Hawa, Gaza City.",
+        "url": "https://example.com/tal-al-hawa-report",
+    }
+
+    stories, _, _ = curate_stories([wafa_source, other_source], "2026-08-29", "2026-08-29T18:00:00+00:00")
+
+    wafa_story = next(story for story in stories if story["publisher_names"] == ["WAFA"])
+    assert wafa_story["casualty_counts"]["new_deaths"] == 1
+    assert wafa_story["casualty_counts"]["new_injuries"] == 2
+    assert wafa_story["casualty_counts"]["conflicting_reports"] is True
+    assert "other retained publisher reported 2 killed and 1 injured" in wafa_story["summary"].lower()
+    assert "conflicting counts remain unresolved" in wafa_story["summary"].lower()

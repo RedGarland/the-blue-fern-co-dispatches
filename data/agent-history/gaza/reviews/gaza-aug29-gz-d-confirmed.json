@@ -1,0 +1,58 @@
+{
+  "schema_version": "gaza_historical_editorial_review_v2",
+  "review_type": "historical_editorial_review",
+  "domain": "gaza",
+  "raw_sha256": "81f4574dae4e26d5763697516bb096d13ae240a6801b235d8631d5e5d39682b4",
+  "audit_candidate_id": "GZ-D",
+  "agent_run_id": "gaza-aug29-confirmed-intake-recovery",
+  "normalized_artifact_sha256": "0e5d19a7345b2e0073151fa8b9a781c0de7287630667b07df77914ce2b2952c6",
+  "report_artifact_sha256": "173ebbe832730e39d6d480c0701bead3684036659c62216abd592d456b67b0f3",
+  "decision": "confirmed",
+  "decision_reason": "The OCHA report, citing Gaza's Ministry of Health, supports the IV-solution depletion claim for the bounded August 10-23 reporting period; the exact onset remains unstated, wider shortages remain context, and the claim is distinct from the cancer-medicine story.",
+  "candidate_event_fingerprint": "sha256:f1e218f5c634c35b4a4dc3462f0dbefef41f7a92865c9c4620a9da807e1f6761",
+  "current_review_status": "pending_review",
+  "current_publication_eligible": false,
+  "current_publication_approval": false,
+  "current_queue_action": "none",
+  "resulting_review_state": "substantively_reviewed",
+  "archive_mutation_authorized": false,
+  "edition_authorized": false,
+  "publication_authorized": false,
+  "queue_authorized": false,
+  "source_record_authorized": false,
+  "cluster_authorized": false,
+  "audio_authorized": false,
+  "date_assessment": {
+    "event_period": {
+      "start": "2026-08-10",
+      "end": "2026-08-23"
+    },
+    "source_published_at": "2026-08-29"
+  },
+  "taxonomy_review": {
+    "domain": "gaza",
+    "category": "healthcare_access"
+  },
+  "attribution_assessment": {
+    "mode": "official_claim",
+    "attributed_to": "United Nations OCHA, citing Gaza's Ministry of Health",
+    "safe_future_wording": "OCHA, citing Gaza's Ministry of Health, reported that central IV-solution stocks were depleted during the August 10-23 reporting period; the precise depletion onset was not stated.",
+    "attribution_preserved": true,
+    "uncertainty_preserved": true,
+    "unsupported_certainty_escalation": false
+  },
+  "evidence_references": [
+    {
+      "role": "principal",
+      "url": "https://www.ochaopt.org/content/humanitarian-situation-report-28-august-2026",
+      "supporting_passage": "OCHA, citing Gaza's Ministry of Health, reported that central IV solution stocks were depleted during the August 10-23 reporting period amid broader medical-supply shortages."
+    }
+  ],
+  "duplicate_and_authoritative_match_check": {
+    "candidate_remains_distinct": true,
+    "existing_edition_match": null,
+    "existing_source_match": null,
+    "existing_story_cluster_match": null,
+    "existing_historical_match": null
+  }
+}

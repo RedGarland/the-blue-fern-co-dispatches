@@ -573,6 +573,28 @@ def test_gaza_substantive_review_changes_only_status_and_is_idempotent(
     assert len(list(audit_path.parent.glob("*.json"))) == 1
 
 
+def test_gaza_legacy_substantive_review_dry_run_writes_nothing(
+    tmp_path: Path,
+    capsys,
+):
+    args, paths = gaza_substantive_review_fixture(tmp_path)
+    args.append("--dry-run")
+    before = {
+        path: hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in paths.values()
+    }
+    code, result = run_json(capsys, args)
+    assert code == 0
+    assert result["status"] == "dry_run_validated"
+    assert result["persistent_mutation"] is False
+    assert {
+        path: hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in paths.values()
+    } == before
+    assert not Path(result["decision_audit_path"]).exists()
+    assert not (tmp_path / "data/agent-history/gaza/reports/history-index.json").exists()
+
+
 def _set_nested(value: dict, path: tuple[str, ...], replacement: object) -> None:
     current = value
     for key in path[:-1]:

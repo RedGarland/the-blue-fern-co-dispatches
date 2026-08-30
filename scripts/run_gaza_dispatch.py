@@ -483,6 +483,34 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
             ]
         ).strip()
 
+    def _reported_count(text: str, outcome: str) -> int | None:
+        number_words = {"one": 1, "two": 2, "three": 3}
+        match = re.search(
+            rf"\b(one|two|three|1|2|3)\b(?:(?!\b(?:killed|injured)\b).){{0,50}}\b{outcome}\b",
+            text,
+            re.I,
+        )
+        if match:
+            token = match.group(1).lower()
+            return number_words.get(token, int(token) if token.isdigit() else None)
+        if outcome == "killed" and re.search(r"\b(?:a|one) palestinian\b.{0,40}\bkilled\b|\bpalestinian killed\b", text, re.I):
+            return 1
+        return None
+
+    tal_al_hawa_reports: list[dict[str, Any]] = []
+    for candidate_source in sources:
+        candidate_text = _source_text_blob(candidate_source)
+        lowered_candidate = candidate_text.lower()
+        if "tal al-hawa" not in lowered_candidate or not any(term in lowered_candidate for term in ("motorbike", "motorcycle")):
+            continue
+        tal_al_hawa_reports.append(
+            {
+                "publisher": str(candidate_source.get("publisher") or "the retained source"),
+                "deaths": _reported_count(candidate_text, "killed"),
+                "injuries": _reported_count(candidate_text, "injured"),
+            }
+        )
+
     def _extract_gaza_story_fragments(source: dict[str, Any]) -> list[dict[str, Any]]:
         text = _source_text_blob(source)
         lowered = text.lower()
@@ -506,6 +534,123 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
             uncertainty="reported source",
             casualty_counts={},
         )
+
+        is_wafa = str(source.get("publisher") or "").strip().lower() == "wafa" and str(
+            source.get("provider_id") or ""
+        ).startswith("wafa-gaza-")
+        if is_wafa:
+            wafa_fragments: list[dict[str, Any]] = []
+
+            def add_wafa_fragment(**fragment: Any) -> None:
+                wafa_fragments.append(fragment)
+
+            qarara_english = "al-qarara" in lowered and "abdeen" in lowered and bool(
+                re.search(r"\bthree\b.{0,80}\b(?:members|family)\b.{0,120}\bkilled\b", lowered)
+            )
+            qarara_hebrew = all(term in text for term in ("אל־קרארה", "עאבדין", "שלושה", "נהרגו"))
+            if qarara_english or qarara_hebrew:
+                has_local_source_attribution = "local sources" in lowered or "מקורות מקומיים" in text
+                attribution = "WAFA attributed the account to local sources" if has_local_source_attribution else "WAFA reported the deaths without independent attribution"
+                add_wafa_fragment(
+                    title="WAFA reports three Abdeen family members killed near Al-Qarara",
+                    summary=(
+                        "WAFA reported that three members of the Abdeen family were reported killed near Al-Qarara, "
+                        "north of Khan Younis; the account remained attributed to local sources."
+                    ),
+                    story_scope="core_gaza",
+                    category="conflict",
+                    development_type="casualty_event",
+                    affected_system="civilians",
+                    location="Al-Qarara, north of Khan Younis",
+                    event_date=str(source.get("published_at") or ""),
+                    attribution=str(source.get("publisher") or ""),
+                    uncertainty=attribution,
+                    casualty_counts={"new_deaths": 3},
+                )
+
+            if "al-mashahara" in lowered and "tent" in lowered and ("displaced" in lowered or "displacement" in lowered):
+                add_wafa_fragment(
+                    title="WAFA reports one killed and several injured in Al-Mashahara tent strike",
+                    summary=(
+                        "WAFA reported one Palestinian killed and several injured when shelling targeted a tent sheltering "
+                        "displaced people in Al-Mashahara, east of Gaza City."
+                    ),
+                    story_scope="core_gaza",
+                    category="conflict",
+                    development_type="casualty_event",
+                    affected_system="displaced civilians",
+                    location="Al-Mashahara, east of Gaza City",
+                    event_date=str(source.get("published_at") or ""),
+                    attribution=str(source.get("publisher") or ""),
+                    uncertainty="WAFA attributed the account to local sources; injuries were reported only as several",
+                    casualty_counts={"new_deaths": 1, "injuries_reported_as": "several"},
+                )
+
+            if "tal al-hawa" in lowered and any(term in lowered for term in ("motorbike", "motorcycle")):
+                wafa_deaths = _reported_count(text, "killed")
+                wafa_injuries = _reported_count(text, "injured")
+                conflicting = [
+                    report
+                    for report in tal_al_hawa_reports
+                    if (report.get("deaths"), report.get("injuries")) != (wafa_deaths, wafa_injuries)
+                    and (report.get("deaths") is not None or report.get("injuries") is not None)
+                ]
+                if conflicting:
+                    other = conflicting[0]
+                    summary = (
+                        f"WAFA reported {wafa_deaths if wafa_deaths is not None else 'an unspecified number of'} killed and "
+                        f"{wafa_injuries if wafa_injuries is not None else 'an unspecified number of'} injured in a strike on a motorbike "
+                        f"in Tal al-Hawa. {other['publisher']} reported {other.get('deaths') if other.get('deaths') is not None else 'an unspecified number of'} "
+                        f"killed and {other.get('injuries') if other.get('injuries') is not None else 'an unspecified number of'} injured; "
+                        "the conflicting counts remain unresolved."
+                    )
+                    uncertainty = "conflicting retained casualty counts; no reconciliation applied"
+                else:
+                    deaths_text = str(wafa_deaths) if wafa_deaths is not None else "an unspecified number of"
+                    injuries_text = str(wafa_injuries) if wafa_injuries is not None else "an unspecified number of"
+                    summary = f"WAFA reported {deaths_text} killed and {injuries_text} injured in a strike on a motorbike in Tal al-Hawa, Gaza City."
+                    uncertainty = "WAFA report only; no cross-source consensus implied"
+                counts: dict[str, Any] = {}
+                if wafa_deaths is not None:
+                    counts["new_deaths"] = wafa_deaths
+                if wafa_injuries is not None:
+                    counts["new_injuries"] = wafa_injuries
+                if conflicting:
+                    counts["conflicting_reports"] = True
+                add_wafa_fragment(
+                    title="WAFA reports casualties in Tal al-Hawa motorbike strike",
+                    summary=summary,
+                    story_scope="core_gaza",
+                    category="conflict",
+                    development_type="casualty_event",
+                    affected_system="civilians",
+                    location="Tal al-Hawa, Gaza City",
+                    event_date=str(source.get("published_at") or ""),
+                    attribution=str(source.get("publisher") or ""),
+                    uncertainty=uncertainty,
+                    casualty_counts=counts,
+                )
+
+            if "al-aqsa martyrs hospital" in lowered and "warehouse" in lowered and re.search(r"\bthree\b.{0,80}\binjured\b|\binjured\b.{0,80}\bthree\b", lowered):
+                add_wafa_fragment(
+                    title="WAFA reports three injured in strike on Al-Aqsa hospital medicine warehouse",
+                    summary=(
+                        "WAFA reported three Palestinians injured after a drone struck a medicine warehouse inside "
+                        "Al-Aqsa Martyrs Hospital in Deir al-Balah; the extent of damage was not immediately known."
+                    ),
+                    story_scope="core_gaza",
+                    category="health_infrastructure",
+                    development_type="infrastructure_casualty_event",
+                    affected_system="hospital medicine supplies",
+                    location="Al-Aqsa Martyrs Hospital, Deir al-Balah",
+                    event_date=str(source.get("published_at") or ""),
+                    attribution=str(source.get("publisher") or ""),
+                    uncertainty="WAFA eyewitness account; damage extent not immediately known",
+                    casualty_counts={"new_injuries": 3},
+                )
+
+            if wafa_fragments:
+                return wafa_fragments
 
         if "water well and desalination facility" in lowered and "emergency water trucking" in lowered:
             add_fragment(
@@ -558,7 +703,7 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
                 },
             )
 
-        if "al-mashahara" in lowered and "tent" in lowered and ("displaced" in lowered or "displacement" in lowered):
+        if not is_wafa and "al-mashahara" in lowered and "tent" in lowered and ("displaced" in lowered or "displacement" in lowered):
             add_fragment(
                 title="Palestinian killed in shelling of displacement tent in Al-Mashahara",
                 summary=(

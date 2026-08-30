@@ -63,6 +63,14 @@ ALJAZEERA_ISF_REQUIRED_FACT_PATTERNS = (
     re.compile(r"\badvance elements?\b.{0,120}\b(?:arrive|expected|due)\b.{0,60}\bsoon\b", re.I),
 )
 ALJAZEERA_WRAPPER_RETRY_DELAYS_SECONDS = (1.0, 2.0)
+WAFA_QUERY_SOURCE_IDS = {
+    "wafa-gaza-query",
+    "wafa-gaza-casualty-locations-query",
+    "wafa-gaza-displacement-tent-query",
+    "wafa-gaza-motorbike-query",
+    "wafa-gaza-health-infrastructure-query",
+}
+WAFA_MAX_RESULTS_PER_QUERY = 20
 WEAK_ONLY_GAZA_PATTERNS = (
     "live",
     "live blog",
@@ -203,6 +211,7 @@ SOURCE_STATES = {"enabled", "diagnostics_only", "manual_only", "disabled"}
 TLS_FAILURE_REASON = "tls_certificate_verification_failed"
 LOS_ANGELES_TZ = ZoneInfo("America/Los_Angeles")
 GOOGLE_NEWS_RSS_TEMPLATE = "https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en"
+GOOGLE_NEWS_RSS_HEBREW_TEMPLATE = "https://news.google.com/rss/search?q={query}&hl=he&gl=IL&ceid=IL:he"
 
 
 @dataclass(frozen=True)
@@ -931,6 +940,77 @@ def fetch_article_payload(url: str, timeout: int = 20) -> dict[str, Any]:
         }
 
 
+def _fetch_wafa_article_payload(url: str, timeout: int = 20) -> dict[str, Any]:
+    backend_pref = str(os.getenv("GAZA_FETCH_BACKEND", "auto") or "auto").strip().lower()
+    python_payload = None if backend_pref == "curl" else fetch_article_payload(url, timeout=timeout)
+    if python_payload and (python_payload.get("ok") or not _is_tls_error(str(python_payload.get("failure_reason") or ""))):
+        python_payload["backend_used"] = "python"
+        return python_payload
+    if backend_pref == "python":
+        return python_payload or {
+            "ok": False,
+            "url": url,
+            "final_url": url,
+            "failure_reason": "python article fetch unavailable",
+            "backend_used": "python",
+        }
+
+    marker = b"\nBLUEFERN_WAFA_FINAL_URL:"
+    cmd = [
+        "curl.exe",
+        "--silent",
+        "--show-error",
+        "--location",
+        "--max-time",
+        str(timeout),
+        "--fail",
+        "--user-agent",
+        "BlueFernDispatches/1.0",
+        "--write-out",
+        marker.decode("ascii") + "%{url_effective}",
+        url,
+    ]
+    if str(os.getenv("GAZA_ALLOW_CURL_NO_REVOKE", "")).strip() == "1":
+        cmd.insert(1, "--ssl-no-revoke")
+    proc = subprocess.run(cmd, capture_output=True, text=False, check=False)
+    if proc.returncode != 0:
+        stderr_text = (proc.stderr or b"").decode("utf-8", errors="replace").strip()
+        return {
+            "ok": False,
+            "url": url,
+            "final_url": url,
+            "status_code": None,
+            "content_type": "",
+            "content_bytes": None,
+            "content_text": None,
+            "failure_reason": f"curl_failed(rc={proc.returncode}): {stderr_text}",
+            "backend_used": "curl",
+        }
+    body, separator, final_url_bytes = (proc.stdout or b"").rpartition(marker)
+    if not separator:
+        return {
+            "ok": False,
+            "url": url,
+            "final_url": url,
+            "status_code": None,
+            "content_type": "",
+            "content_bytes": None,
+            "content_text": None,
+            "failure_reason": "curl response did not include final URL diagnostics",
+            "backend_used": "curl",
+        }
+    return {
+        "ok": True,
+        "url": url,
+        "final_url": final_url_bytes.decode("utf-8", errors="replace").strip() or url,
+        "status_code": 200,
+        "content_type": "text/html",
+        "content_bytes": body,
+        "content_text": body.decode("utf-8", errors="replace"),
+        "backend_used": "curl",
+    }
+
+
 def _is_aljazeera_url(url: str) -> bool:
     try:
         parts = urlsplit(str(url or "").strip())
@@ -940,6 +1020,31 @@ def _is_aljazeera_url(url: str) -> bool:
     return parts.scheme.lower() in {"http", "https"} and (
         hostname == "aljazeera.com" or hostname.endswith(".aljazeera.com")
     )
+
+
+def _is_wafa_url(url: str) -> bool:
+    try:
+        parts = urlsplit(str(url or "").strip())
+    except ValueError:
+        return False
+    hostname = str(parts.hostname or "").lower().rstrip(".")
+    return parts.scheme.lower() in {"http", "https"} and (
+        hostname == "wafa.ps" or hostname.endswith(".wafa.ps")
+    )
+
+
+def _is_wafa_article_url(url: str) -> bool:
+    if not _is_wafa_url(url):
+        return False
+    try:
+        path = urlsplit(str(url or "").strip()).path
+    except ValueError:
+        return False
+    return bool(re.fullmatch(r"/Pages/Details/\d+/?", path, re.I))
+
+
+def _is_wafa_source(source: SourceDefinition) -> bool:
+    return source.source_id in WAFA_QUERY_SOURCE_IDS and source.publisher.strip().lower() == "wafa"
 
 
 def _bounded_diagnostic(value: Any, limit: int = 300) -> str:
@@ -1073,6 +1178,153 @@ def _resolve_aljazeera_google_news_wrapper(url: str) -> dict[str, Any]:
         debug.get("rejection_reason") or error or "unresolved Google News wrapper"
     )
     return result
+
+
+def _resolve_wafa_google_news_wrapper(url: str) -> dict[str, Any]:
+    result: dict[str, Any] = {
+        "attempted": False,
+        "resolved_url": "",
+        "canonicalization_method": "google_news_wrapper_resolver",
+        "canonicalization_status": "not_wrapper",
+        "failure_reason": "",
+    }
+    if not _looks_like_google_news_wrapper(url):
+        return result
+    result["attempted"] = True
+
+    def fetcher(target_url: str, timeout: int = 15) -> dict[str, Any]:
+        payload = _fetch_wafa_article_payload(target_url, timeout=timeout)
+        raw = payload.get("content_bytes")
+        if not isinstance(raw, (bytes, bytearray)):
+            raw = str(payload.get("content_text") or "").encode("utf-8")
+        final_url = str(payload.get("final_url") or target_url).strip()
+        redirect_chain = [target_url]
+        if final_url and final_url != target_url:
+            redirect_chain.append(final_url)
+        return {
+            "payload": bytes(raw),
+            "error": "" if payload.get("ok") else _bounded_diagnostic(payload.get("failure_reason") or "wrapper fetch failed"),
+            "response_status": payload.get("status_code"),
+            "final_response_url": final_url,
+            "content_type": str(payload.get("content_type") or ""),
+            "redirect_chain": redirect_chain,
+        }
+
+    try:
+        from bluefern_dispatches.food_line_discovery_expansion import _resolve_google_news_wrapper
+
+        resolved, error, attempted, debug = _resolve_google_news_wrapper(
+            fetcher,
+            url,
+            publisher_url="https://www.wafa.ps/",
+            publisher_name="WAFA",
+        )
+    except Exception as exc:  # noqa: BLE001
+        result["canonicalization_status"] = "failed_resolver_exception"
+        result["failure_reason"] = _bounded_diagnostic(f"{type(exc).__name__}: {exc}")
+        return result
+
+    result["attempted"] = bool(attempted)
+    resolver_status = _bounded_diagnostic(debug.get("google_news_resolution_status"))
+    candidate = canonicalize_url(str(resolved or ""))
+    resolution_methods = (
+        (debug.get("decoded_google_news_url"), "google_news_article_id_decode"),
+        (debug.get("redirect_url_found"), "google_news_redirect"),
+        (debug.get("google_news_rpc_url"), "google_news_rpc"),
+        (debug.get("canonical_url_found"), "google_news_html_canonical"),
+        (debug.get("html_candidate_url_found"), "google_news_html_candidate"),
+    )
+    if candidate and resolver_status.startswith("resolved_") and _is_wafa_article_url(candidate):
+        for method_url, method_name in resolution_methods:
+            if method_url and canonicalize_url(str(method_url)) == candidate:
+                result["canonicalization_method"] = method_name
+                break
+        result["resolved_url"] = candidate
+        result["canonicalization_status"] = f"google_news_{resolver_status}"
+        return result
+
+    if candidate and not _is_wafa_url(candidate):
+        result["canonicalization_status"] = "rejected_wrong_publisher_domain"
+        result["failure_reason"] = "resolved candidate hostname is not wafa.ps or a subdomain"
+        return result
+    if candidate and not _is_wafa_article_url(candidate):
+        result["canonicalization_status"] = "rejected_non_article_url"
+        result["failure_reason"] = "resolved WAFA candidate is not an article detail URL"
+        return result
+    result["canonicalization_status"] = f"google_news_{resolver_status}" if resolver_status else "failed_unresolved_wrapper"
+    result["failure_reason"] = _bounded_diagnostic(debug.get("rejection_reason") or error or "unresolved Google News wrapper")
+    return result
+
+
+def _extract_wafa_article_excerpt(article_text: str) -> str:
+    class _WafaArticleParser(HTMLParser):
+        _SKIPPED_TAGS = {"script", "style", "noscript", "template", "svg"}
+        _BLOCK_TAGS = {"blockquote", "br", "div", "h1", "h2", "h3", "li", "p"}
+        _VOID_TAGS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
+
+        def __init__(self) -> None:
+            super().__init__(convert_charrefs=True)
+            self._skip_depth = 0
+            self._article_container_depth = 0
+            self._content_depth = 0
+            self._captured_content = False
+            self.parts: list[str] = []
+
+        def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+            tag = tag.lower()
+            if tag in self._SKIPPED_TAGS:
+                self._skip_depth += 1
+                return
+            if self._skip_depth:
+                return
+            attrs_by_name = {name.lower(): value or "" for name, value in attrs}
+            classes = {value.lower() for value in attrs_by_name.get("class", "").split()}
+            begins_container = self._article_container_depth == 0 and tag == "div" and "single-blog" in classes
+            if self._article_container_depth or begins_container:
+                if tag not in self._VOID_TAGS:
+                    self._article_container_depth += 1
+            begins_content = (
+                self._article_container_depth > 0
+                and not self._captured_content
+                and self._content_depth == 0
+                and tag == "div"
+                and "content" in classes
+            )
+            if self._content_depth or begins_content:
+                if tag not in self._VOID_TAGS:
+                    self._content_depth += 1
+                if tag in self._BLOCK_TAGS:
+                    self.parts.append("\n")
+
+        def handle_endtag(self, tag: str) -> None:
+            tag = tag.lower()
+            if tag in self._SKIPPED_TAGS:
+                if self._skip_depth:
+                    self._skip_depth -= 1
+                return
+            if self._skip_depth:
+                return
+            if self._content_depth:
+                if tag in self._BLOCK_TAGS:
+                    self.parts.append("\n")
+                if tag not in self._VOID_TAGS:
+                    self._content_depth -= 1
+                    if self._content_depth == 0:
+                        self._captured_content = True
+            if self._article_container_depth and tag not in self._VOID_TAGS:
+                self._article_container_depth -= 1
+
+        def handle_data(self, data: str) -> None:
+            if not self._skip_depth and self._content_depth:
+                self.parts.append(data)
+
+    parser = _WafaArticleParser()
+    try:
+        parser.feed(str(article_text or ""))
+        parser.close()
+    except Exception:
+        return ""
+    return clean_feed_text("\n".join(parser.parts))[:5000].strip()
 
 
 def _extract_aljazeera_isf_excerpt(article_text: str) -> str:
@@ -1219,6 +1471,15 @@ def gaza_relevance_decision(item: dict[str, str], source: SourceDefinition | Non
     strong_source = bool(STRONG_GAZA_TERMS.search(source_name))
     weak_markers = " ".join([title.lower(), summary.lower(), url.lower()])
     substantive_ground = is_palestinian_development_text(haystack) or any(term in haystack.lower() for term in GROUND_DEVELOPMENT_TERMS)
+    if (
+        source is not None
+        and source.source_id == "wafa-gaza-casualty-locations-query"
+        and source.publisher.strip().lower() == "wafa"
+        and ("ח'אן יונס" in haystack or "חאן יונס" in haystack)
+        and "שלושה" in haystack
+        and any(term in haystack for term in ("נהרגו", "הרוגים"))
+    ):
+        return True, "wafa_hebrew_al_qarara_query_match"
     if any(marker in weak_markers for marker in WEAK_ONLY_GAZA_PATTERNS) and not (strong_title or strong_url or substantive_ground):
         return False, "weak_liveblog_unrelated_topic"
     if strong_title or strong_url:
@@ -1489,6 +1750,9 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
     enrichment_attempted = False
     enrichment_status = "not_applicable"
     enrichment_failure_reason = ""
+    article_fetch_attempted = False
+    article_fetch_status = "not_applicable"
+    article_fetch_failure_reason = ""
     if source.source_id == ALJAZEERA_ISF_QUERY_SOURCE_ID:
         enrichment_status = "pending"
         if wrapper_url and canonical_status != "resolved_from_query":
@@ -1547,6 +1811,72 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
         elif article_payload is not None:
             enrichment_status = "failed_article_fetch"
             enrichment_failure_reason = _bounded_diagnostic(article_payload.get("failure_reason") or "article fetch failed")
+    elif _is_wafa_source(source):
+        article_fetch_status = "pending"
+        if wrapper_url and canonical_status != "resolved_from_query":
+            resolution = _resolve_wafa_google_news_wrapper(url)
+            canonicalization_method = str(resolution.get("canonicalization_method") or "google_news_wrapper_resolver")
+            canonical_status = str(resolution.get("canonicalization_status") or "failed_unresolved_wrapper")
+            canonicalization_failure_reason = str(resolution.get("failure_reason") or "")
+            resolved = str(resolution.get("resolved_url") or "").strip()
+            if resolved:
+                canonical_url = resolved
+                resolved_canonical_url = resolved
+        elif wrapper_url:
+            canonicalization_method = "google_news_query_parameter"
+            if _is_wafa_article_url(canonical_url):
+                resolved_canonical_url = canonical_url
+            elif not _is_wafa_url(canonical_url):
+                canonical_status = "rejected_wrong_publisher_domain"
+                canonicalization_failure_reason = "resolved candidate hostname is not wafa.ps or a subdomain"
+                canonical_url = canonicalize_url(url)
+            else:
+                canonical_status = "rejected_non_article_url"
+                canonicalization_failure_reason = "resolved WAFA candidate is not an article detail URL"
+                canonical_url = canonicalize_url(url)
+        else:
+            canonicalization_method = "direct_url"
+            if _is_wafa_article_url(canonical_url):
+                resolved_canonical_url = canonical_url
+                canonical_status = "direct_article_url"
+            elif not _is_wafa_url(canonical_url):
+                canonical_status = "rejected_wrong_publisher_domain"
+                canonicalization_failure_reason = "direct source hostname is not wafa.ps or a subdomain"
+            else:
+                canonical_status = "rejected_non_article_url"
+                canonicalization_failure_reason = "direct WAFA source is not an article detail URL"
+
+        if resolved_canonical_url:
+            article_fetch_attempted = True
+            article_payload = _fetch_wafa_article_payload(resolved_canonical_url)
+        else:
+            article_payload = None
+            article_fetch_status = "skipped_canonical_resolution_failed"
+            article_fetch_failure_reason = canonicalization_failure_reason or "no trusted WAFA article URL"
+
+        if article_payload and article_payload.get("ok"):
+            final_article_url = canonicalize_url(str(article_payload.get("final_url") or resolved_canonical_url))
+            if not _is_wafa_article_url(final_article_url):
+                article_fetch_status = "failed_untrusted_article_redirect"
+                article_fetch_failure_reason = "article fetch redirected outside a WAFA article detail URL"
+                article_payload = None
+            else:
+                canonical_url = final_article_url
+                resolved_canonical_url = final_article_url
+
+        if article_payload and article_payload.get("ok"):
+            excerpt = _extract_wafa_article_excerpt(str(article_payload.get("content_text") or ""))
+            if excerpt:
+                content_text = excerpt
+                if excerpt.lower() not in summary.lower():
+                    summary = f"{summary} {excerpt}".strip() if summary else excerpt
+                article_fetch_status = "article_prose_extracted"
+            else:
+                article_fetch_status = "insufficient_article_content"
+                article_fetch_failure_reason = "WAFA article body did not contain extractable article prose"
+        elif article_payload is not None:
+            article_fetch_status = "failed_article_fetch"
+            article_fetch_failure_reason = _bounded_diagnostic(article_payload.get("failure_reason") or "article fetch failed")
     traceability_note, traceability_error = _governance_traceability_note(
         publisher=source.publisher,
         published_at=published_at,
@@ -1591,6 +1921,20 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
                 "enrichment_failure_reason": enrichment_failure_reason or None,
             }
             if source.source_id == ALJAZEERA_ISF_QUERY_SOURCE_ID
+            else {}
+        ),
+        **(
+            {
+                "resolved_canonical_url": resolved_canonical_url or None,
+                "canonicalization_method": canonicalization_method,
+                "canonicalization_failure_reason": canonicalization_failure_reason or None,
+                "article_fetch_attempted": article_fetch_attempted,
+                "article_fetch_status": article_fetch_status,
+                "article_fetch_failure_reason": article_fetch_failure_reason or None,
+                "article_fetch_backend": str((article_payload or {}).get("backend_used") or "") or None,
+                "content_available": bool(content_text),
+            }
+            if _is_wafa_source(source)
             else {}
         ),
         "published_at_missing": published_at == "",
@@ -1848,7 +2192,10 @@ def collect_gaza_sources(
         source_record_start = len(records)
         fetch_url = source.url
         if source.type == "google_news_rss":
-            fetch_url = build_google_news_rss_url(source.query or source.url)
+            if source.source_id == "wafa-gaza-casualty-locations-query":
+                fetch_url = GOOGLE_NEWS_RSS_HEBREW_TEMPLATE.format(query=quote_plus(source.query or source.url))
+            else:
+                fetch_url = build_google_news_rss_url(source.query or source.url)
         if not str(fetch_url or "").strip():
             warnings.append(f"{source.source_id}: missing_fetch_url")
             failed_source_ids.append({"source_id": source.source_id, "reason": "missing_fetch_url"})
@@ -1925,6 +2272,8 @@ def collect_gaza_sources(
                 content_type=str(fetch.get("content_type") or ""),
                 content_encoding=str(fetch.get("content_encoding") or ""),
             )
+            if _is_wafa_source(source):
+                items = items[:WAFA_MAX_RESULTS_PER_QUERY]
             diag["raw_items"] = len(items)
             stage_counts["raw_candidates"] += len(items)
         except (TimeoutError, ET.ParseError, OSError, ValueError) as exc:
@@ -1999,6 +2348,18 @@ def collect_gaza_sources(
                     _provider_reject(diag, "rejected_missing_url", item, date_basis=basis)
                 else:
                     _provider_reject(diag, "rejected_parse_error", item, date_basis=basis)
+                continue
+            if _is_wafa_source(source) and not str(record.get("resolved_canonical_url") or "").strip():
+                diag.setdefault("canonicalization_failures", []).append(
+                    {
+                        "title": title[:220],
+                        "wrapper_url": url[:500],
+                        "canonicalization_method": record.get("canonicalization_method"),
+                        "canonicalization_status": record.get("canonicalization_status"),
+                        "canonicalization_failure_reason": record.get("canonicalization_failure_reason"),
+                    }
+                )
+                _provider_reject(diag, "rejected_untrusted_canonical", item, date_basis=basis)
                 continue
             url_key = canonicalize_url(str(record.get("canonical_url") or record["url"])).lower()
             if url_key in seen_urls:

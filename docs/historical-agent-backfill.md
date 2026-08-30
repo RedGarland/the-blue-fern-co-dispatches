@@ -148,6 +148,29 @@ Evidence references are structured HTTPS records with principal or corroborating
 
 A `corrected` decision additionally requires a resolvable prior candidate or published-story reference, prior and corrected fingerprints for the same event identity, a changed field or claim, unequal old/new values, indexed supporting evidence, materiality, remaining uncertainty, and `prior_public_artifact_overwritten: false`. Required corroboration must use multiple evidence references. Review records never rewrite prior public artifacts.
 
+### Private Gaza published-story lineage
+
+When protected source history no longer contains a public story needed for a historical correction, do not add it to operational `story_memory.json` merely to satisfy review. Use the private published-story lineage owner under `data/agent-history/gaza/lineage/published-stories/`. Each record is created from a clean local `gh-pages` checkout at an exact ancestor commit and binds the repository identity, commit, canonical edition paths, Git blob IDs, SHA-256 hashes, exact public story/title/claim, source-to-story use, dedupe retention, and rendered title/claim.
+
+The sanctioned command validates the pinned Git objects before writing:
+
+```powershell
+python scripts/import_historical_agent_runs.py backfill-published-lineage `
+  --repo-root . `
+  --pages-repo <clean-pages-checkout> `
+  --pages-commit <exact-commit> `
+  --story-id <exact-story-id> `
+  --edition-date YYYY-MM-DD `
+  --expected-title <exact-public-title> `
+  --expected-prior-claim <exact-public-summary> `
+  --backfill-reason <bounded-private-lineage-reason> `
+  --dry-run
+```
+
+Remove `--dry-run` only after reviewing the no-write result. An exact replay returns `idempotent_noop`. The command writes one private lineage record and has no review, approval, queue, edition, publication, audio, or Pages mutation authority.
+
+Lineage canonicalization separates a stable event identity from the versioned public claim. The stable identity is deterministically derived from evidenced domain, event date, location, incident type, mechanism, and incident object. The prior claim identity uses the repository's existing story topic-fingerprint function over the exact published title, summary, and category. Both are recomputed during protected-source lookup; supplied hashes are never trusted. A private-lineage correction must provide the stored stable-event and prior-claim fingerprints, and the selected candidate plus cited evidence must remain compatible with the stored date, location, incident type, mechanism, object, and initial reported value. Missing, duplicate, cross-domain, or tampered lineage fails closed.
+
 Apply mode writes only one deterministic private decision record under `data/agent-history/gaza/reviews/decisions/`; raw, normalized, and import-report artifacts remain byte-identical. `--dry-run` performs the full validation without creating a directory or file. An exact replay is `idempotent_noop`; any replay that changes the decision, review digest, evidence, reasoning, identity, or resulting state fails closed instead of replacing the prior decision.
 
 Read-only first-batch checks:

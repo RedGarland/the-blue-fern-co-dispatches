@@ -3,9 +3,11 @@ from __future__ import annotations
 
 import base64
 import hashlib
+import html
 import json
 import os
 import re
+import subprocess
 import tempfile
 from collections import Counter
 from datetime import datetime, timezone
@@ -25,6 +27,15 @@ from .ice_historical import (
 
 DOMAINS = ("food-line", "care-line", "gaza", "ice")
 SCHEMA_VERSION = "historical_agent_raw_v1"
+GAZA_PUBLISHED_LINEAGE_SCHEMA = "gaza_published_story_lineage_v1"
+GAZA_PUBLISHED_LINEAGE_CANONICALIZATION = "gaza_published_story_lineage_c14n_v1"
+GAZA_PAGES_REPOSITORY = "https://github.com/RedGarland/the-blue-fern-co-dispatches.git"
+GAZA_PUBLISHED_LINEAGE_ARTIFACTS = {
+    "curation_manifest": "curation_manifest.json",
+    "dedupe_report": "dedupe_report.json",
+    "sources_manifest": "sources_manifest.json",
+    "rendered_edition": "index.html",
+}
 
 
 class HistoricalEnvelopeError(ValueError):
@@ -84,6 +95,10 @@ def atomic_json(path: Path, value: Any) -> None:
 
 def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def _canonical_fingerprint(value: Any) -> str:
+    return "sha256:" + sha256_bytes(canonical_json(value).encode("utf-8"))
 
 
 def archive_root(root: Path, domain: str) -> Path:
@@ -207,6 +222,734 @@ def _care_json_objects(root: Path) -> list[tuple[str, dict[str, Any]]]:
 
             visit(value)
     return objects
+
+
+def _lineage_text(value: Any) -> str:
+    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9]+", " ", str(value or "").lower())).strip()
+
+
+def _lineage_story_text(story: dict[str, Any]) -> str:
+    values = [story.get("title"), story.get("summary")]
+    for source in story.get("source_records") or []:
+        if isinstance(source, dict):
+            values.extend((source.get("title"), source.get("summary_or_snippet")))
+    return _lineage_text(" ".join(str(value or "") for value in values))
+
+
+def gaza_stable_event_identity_inputs(story: dict[str, Any]) -> dict[str, str]:
+    """Derive bounded, claim-independent Gaza event identity from evidenced story fields."""
+    event_date = str(story.get("event_date") or "")[:10]
+    location = _lineage_text(story.get("location"))
+    location_key = _lineage_text(str(story.get("location") or "").split(",", 1)[0])
+    text = _lineage_story_text(story)
+    incident_type = _lineage_text(story.get("development_type"))
+    if not incident_type and re.search(r"\b(kill|killed|death|dead|injur|injured|wound|wounded)\b", text):
+        incident_type = "casualty event"
+    mechanism = "strike" if re.search(r"\b(strike|struck|airstrike|attack|attacked)\b", text) else ""
+    incident_object = "motorcycle" if re.search(
+        r"\b(motorcycle|motorbike|motor bike|electric bike|electric motorcycle)\b", text
+    ) else ""
+    inputs = {
+        "domain": "gaza",
+        "event_date": event_date,
+        "location": location,
+        "location_key": location_key,
+        "incident_type": incident_type,
+        "mechanism": mechanism,
+        "incident_object": incident_object,
+    }
+    missing = [key for key, value in inputs.items() if not value]
+    if missing:
+        raise ValueError(
+            "published Gaza story lacks stable event identity fields: "
+            + ", ".join(missing)
+        )
+    if not re.fullmatch(r"20\d{2}-\d{2}-\d{2}", event_date):
+        raise ValueError("published Gaza story event_date is invalid")
+    return inputs
+
+
+def gaza_stable_event_fingerprint(inputs: dict[str, str]) -> str:
+    expected = {
+        "domain",
+        "event_date",
+        "location",
+        "location_key",
+        "incident_type",
+        "mechanism",
+        "incident_object",
+    }
+    if set(inputs) != expected:
+        raise ValueError("Gaza stable event identity inputs are incomplete or unsupported")
+    normalized = {key: _lineage_text(value) for key, value in inputs.items()}
+    if normalized["domain"] != "gaza":
+        raise ValueError("Gaza stable event identity domain must remain gaza")
+    normalized["event_date"] = str(inputs["event_date"])
+    return _canonical_fingerprint(
+        {
+            "canonicalization_version": GAZA_PUBLISHED_LINEAGE_CANONICALIZATION,
+            "identity_type": "stable_event",
+            "inputs": normalized,
+        }
+    )
+
+
+def _number_from_claim(value: Any) -> int | None:
+    text = _lineage_text(value)
+    words = {
+        "zero": 0,
+        "one": 1,
+        "two": 2,
+        "three": 3,
+        "four": 4,
+        "five": 5,
+        "six": 6,
+        "seven": 7,
+        "eight": 8,
+        "nine": 9,
+        "ten": 10,
+    }
+    match = re.search(r"\b(\d+|zero|one|two|three|four|five|six|seven|eight|nine|ten)\b", text)
+    if not match:
+        return None
+    return int(match.group(1)) if match.group(1).isdigit() else words[match.group(1)]
+
+
+def gaza_candidate_matches_published_lineage(
+    finding: dict[str, Any],
+    lineage: dict[str, Any],
+    evidence: list[dict[str, Any]],
+) -> bool:
+    """Fail-closed same-event check for a correction against private published lineage."""
+    stable = lineage["stable_event_identity"]["inputs"]
+    if str(finding.get("event_date") or "")[:10] != stable["event_date"]:
+        return False
+    candidate_text = _lineage_text(
+        " ".join(
+            [
+                str(finding.get("title") or ""),
+                str(finding.get("summary") or ""),
+                str(finding.get("exact_supporting_passage") or ""),
+            ]
+        )
+    )
+    evidence_text = _lineage_text(
+        " ".join(str(item.get("supporting_passage") or "") for item in evidence)
+    )
+    combined_text = f"{candidate_text} {evidence_text}".strip()
+    if stable["location_key"] not in candidate_text:
+        return False
+    if stable["mechanism"] == "strike" and not re.search(
+        r"\b(strike|struck|airstrike|attack|attacked)\b", candidate_text
+    ):
+        return False
+    if stable["incident_object"] == "motorcycle" and not re.search(
+        r"\b(motorcycle|motorbike|motor bike|electric bike|electric motorcycle)\b",
+        combined_text,
+    ):
+        return False
+    if stable["incident_type"] == "casualty event" and not re.search(
+        r"\b(kill|killed|death|dead|injur|injured|wound|wounded|casualty|casualties)\b",
+        candidate_text,
+    ):
+        return False
+    prior_deaths = lineage["prior_claim"].get("casualty_counts", {}).get("new_deaths")
+    initial_report = (finding.get("material_update_lineage") or {}).get("initial_report")
+    return isinstance(prior_deaths, int) and _number_from_claim(initial_report) == prior_deaths
+
+
+def _git_output(repo: Path, *args: str) -> bytes:
+    try:
+        return subprocess.check_output(
+            ["git", "-C", str(repo), *args],
+            stderr=subprocess.PIPE,
+        )
+    except subprocess.CalledProcessError as exc:
+        detail = exc.stderr.decode("utf-8", errors="replace").strip()
+        raise ValueError(f"Pages Git provenance check failed: {detail or 'git command failed'}") from exc
+
+
+def _git_text(repo: Path, *args: str) -> str:
+    return _git_output(repo, *args).decode("utf-8", errors="strict").strip()
+
+
+def _lineage_artifact_paths(edition_date: str) -> dict[str, str]:
+    if not re.fullmatch(r"20\d{2}-\d{2}-\d{2}", edition_date):
+        raise ValueError("published lineage edition date must be an ISO date")
+    base = f"gaza/editions/{edition_date}"
+    return {
+        role: f"{base}/{filename}"
+        for role, filename in GAZA_PUBLISHED_LINEAGE_ARTIFACTS.items()
+    }
+
+
+def _dicts(value: Any) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    if isinstance(value, dict):
+        rows.append(value)
+        for child in value.values():
+            rows.extend(_dicts(child))
+    elif isinstance(value, list):
+        for child in value:
+            rows.extend(_dicts(child))
+    return rows
+
+
+def _lineage_record_fingerprint(record: dict[str, Any]) -> str:
+    payload = {key: value for key, value in record.items() if key != "record_fingerprint"}
+    return _canonical_fingerprint(payload)
+
+
+def build_gaza_published_story_lineage(
+    pages_repo: Path,
+    *,
+    pages_commit: str,
+    story_id: str,
+    edition_date: str,
+    expected_title: str,
+    expected_prior_claim: str,
+    backfill_reason: str,
+    created_at: str | None = None,
+) -> dict[str, Any]:
+    """Build one private lineage record from immutable local Pages Git objects."""
+    pages_repo = pages_repo.resolve()
+    if not (pages_repo / ".git").exists():
+        raise ValueError("Pages repository path is not a Git checkout")
+    if not re.fullmatch(r"[0-9a-f]{40}", pages_commit):
+        raise ValueError("Pages commit must be an exact lowercase Git OID")
+    if not re.fullmatch(r"gaza-story-20\d{2}-\d{2}-\d{2}-\d{3}", story_id):
+        raise ValueError("published Gaza story ID is invalid")
+    remote = _git_text(pages_repo, "remote", "get-url", "origin")
+    if remote.rstrip("/") != GAZA_PAGES_REPOSITORY.rstrip("/"):
+        raise ValueError("Pages repository identity does not match the protected repository")
+    branch = _git_text(pages_repo, "branch", "--show-current")
+    if branch != "gh-pages":
+        raise ValueError("Pages repository must be on gh-pages")
+    pinned_type = _git_text(pages_repo, "cat-file", "-t", pages_commit)
+    if pinned_type != "commit":
+        raise ValueError("pinned Pages object is not a commit")
+    head = _git_text(pages_repo, "rev-parse", "HEAD")
+    try:
+        subprocess.run(
+            ["git", "-C", str(pages_repo), "merge-base", "--is-ancestor", pages_commit, head],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    except subprocess.CalledProcessError as exc:
+        raise ValueError("pinned Pages commit is not an ancestor of the observed Pages head") from exc
+
+    paths = _lineage_artifact_paths(edition_date)
+    artifact_bytes: dict[str, bytes] = {}
+    artifacts: list[dict[str, Any]] = []
+    for role, path in paths.items():
+        blob = _git_text(pages_repo, "rev-parse", f"{pages_commit}:{path}")
+        data = _git_output(pages_repo, "show", f"{pages_commit}:{path}")
+        artifact_bytes[role] = data
+        artifacts.append(
+            {
+                "role": role,
+                "path": path,
+                "git_blob_oid": blob,
+                "sha256": sha256_bytes(data),
+                "byte_length": len(data),
+            }
+        )
+
+    try:
+        curation = json.loads(artifact_bytes["curation_manifest"])
+        sources = json.loads(artifact_bytes["sources_manifest"])
+        dedupe = json.loads(artifact_bytes["dedupe_report"])
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError("pinned Pages evidence is not valid JSON") from exc
+    story_matches = [row for row in _dicts(curation) if row.get("story_id") == story_id]
+    if len(story_matches) != 1:
+        raise ValueError("pinned curation manifest must contain the story ID exactly once")
+    story = story_matches[0]
+    if story.get("title") != expected_title:
+        raise ValueError("pinned Pages story title differs from the expected prior story")
+    if story.get("summary") != expected_prior_claim:
+        raise ValueError("pinned Pages prior claim differs from the expected claim")
+    if story.get("public_rendered") is not True or story.get("included_in_public_summary") is not True:
+        raise ValueError("pinned Pages story is not an included public story")
+    if str(story.get("event_date") or "")[:10] != edition_date:
+        raise ValueError("pinned Pages story event date differs from the edition date")
+
+    source_ids = [str(value) for value in story.get("source_record_ids") or []]
+    source_matches = [
+        row
+        for row in _dicts(sources)
+        if str(row.get("source_record_id") or "") in source_ids
+        and story_id in [str(value) for value in row.get("used_in_story_ids") or []]
+    ]
+    if not source_ids or len(source_matches) != len(set(source_ids)):
+        raise ValueError("pinned Pages sources do not resolve the story lineage exactly")
+    dedupe_matches = [
+        row
+        for row in _dicts(dedupe)
+        if row.get("story_id") == story_id and row.get("title") == expected_title
+    ]
+    if not dedupe_matches or not all(row.get("public_rendered") is True for row in dedupe_matches):
+        raise ValueError("pinned Pages dedupe evidence does not retain the public story")
+    rendered = artifact_bytes["rendered_edition"].decode("utf-8", errors="strict")
+    if html.escape(expected_title, quote=False) not in rendered or html.escape(
+        expected_prior_claim, quote=False
+    ) not in rendered:
+        raise ValueError("pinned rendered edition does not contain the exact title and prior claim")
+
+    story_evidence = {
+        key: story.get(key)
+        for key in (
+            "story_id",
+            "title",
+            "summary",
+            "category",
+            "event_date",
+            "location",
+            "development_type",
+            "casualty_counts",
+            "attribution",
+            "publisher_names",
+            "source_record_ids",
+            "source_urls",
+            "public_rendered",
+            "included_in_public_summary",
+        )
+    }
+    source_evidence = [
+        {
+            key: row.get(key)
+            for key in (
+                "source_record_id",
+                "title",
+                "publisher",
+                "url",
+                "canonical_url",
+                "published_at",
+                "dispatch_slug",
+                "category_hint",
+                "claim_fingerprint",
+                "used_in_story_ids",
+            )
+        }
+        for row in source_matches
+    ]
+    dedupe_evidence: list[dict[str, Any]] = []
+    for row in dedupe_matches:
+        projection = {
+            key: row.get(key)
+            for key in (
+                "story_id",
+                "title",
+                "classification",
+                "include_decision",
+                "public_rendered",
+            )
+        }
+        if projection not in dedupe_evidence:
+            dedupe_evidence.append(projection)
+    stable_inputs = gaza_stable_event_identity_inputs(story)
+    stable_fingerprint = gaza_stable_event_fingerprint(stable_inputs)
+    from .story_dedupe import topic_fingerprint
+
+    claim_inputs = {
+        "title": story["title"],
+        "summary": story["summary"],
+        "category": story.get("category") or "",
+    }
+    prior_claim_fingerprint = "topic_fingerprint_v1:" + topic_fingerprint(claim_inputs)
+    provenance = {
+        "repository": GAZA_PAGES_REPOSITORY,
+        "branch": "gh-pages",
+        "pinned_commit": pages_commit,
+        "observed_head_at_backfill": head,
+        "observed_head_contains_pinned_commit": True,
+        "artifacts": artifacts,
+    }
+    provenance["provenance_fingerprint"] = _canonical_fingerprint(provenance)
+    record = {
+        "schema_version": GAZA_PUBLISHED_LINEAGE_SCHEMA,
+        "domain": "gaza",
+        "story_id": story_id,
+        "edition_date": edition_date,
+        "story_title": expected_title,
+        "prior_claim": {
+            "text": expected_prior_claim,
+            "casualty_counts": story.get("casualty_counts") or {},
+        },
+        "source_attribution": story.get("attribution") or "",
+        "source_records": source_evidence,
+        "pages_provenance": provenance,
+        "evidence": {
+            "story": story_evidence,
+            "story_sha256": _canonical_fingerprint(story_evidence),
+            "sources": source_evidence,
+            "sources_sha256": _canonical_fingerprint(source_evidence),
+            "dedupe": dedupe_evidence,
+            "dedupe_sha256": _canonical_fingerprint(dedupe_evidence),
+            "rendered_title": expected_title,
+            "rendered_claim": expected_prior_claim,
+        },
+        "canonicalization_version": GAZA_PUBLISHED_LINEAGE_CANONICALIZATION,
+        "stable_event_identity": {
+            "inputs": stable_inputs,
+            "fingerprint": stable_fingerprint,
+        },
+        "prior_claim_identity": {
+            "inputs": claim_inputs,
+            "fingerprint": prior_claim_fingerprint,
+        },
+        "backfill_reason": str(backfill_reason).strip(),
+        "created_at": created_at or datetime.now(timezone.utc).isoformat(),
+        "publication_mutation": False,
+        "review_authority": False,
+        "approval_authority": False,
+    }
+    if not record["backfill_reason"]:
+        raise ValueError("published lineage backfill reason is required")
+    record["record_fingerprint"] = _lineage_record_fingerprint(record)
+    validate_gaza_published_story_lineage(record)
+    return record
+
+
+def validate_gaza_published_story_lineage(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate one repository-owned private published-story lineage record."""
+    if not isinstance(record, dict) or record.get("schema_version") != GAZA_PUBLISHED_LINEAGE_SCHEMA:
+        raise ValueError("Gaza published-story lineage schema is invalid")
+    expected_record_fields = {
+        "schema_version",
+        "domain",
+        "story_id",
+        "edition_date",
+        "story_title",
+        "prior_claim",
+        "source_attribution",
+        "source_records",
+        "pages_provenance",
+        "evidence",
+        "canonicalization_version",
+        "stable_event_identity",
+        "prior_claim_identity",
+        "backfill_reason",
+        "created_at",
+        "publication_mutation",
+        "review_authority",
+        "approval_authority",
+        "record_fingerprint",
+    }
+    if set(record) != expected_record_fields:
+        raise ValueError("Gaza published-story lineage fields are incomplete or unsupported")
+    if record.get("domain") != "gaza":
+        raise ValueError("Gaza published-story lineage has a cross-domain record")
+    if record.get("canonicalization_version") != GAZA_PUBLISHED_LINEAGE_CANONICALIZATION:
+        raise ValueError("Gaza published-story lineage canonicalization version is invalid")
+    story_id = str(record.get("story_id") or "")
+    edition_date = str(record.get("edition_date") or "")
+    if not re.fullmatch(r"gaza-story-20\d{2}-\d{2}-\d{2}-\d{3}", story_id):
+        raise ValueError("Gaza published-story lineage story ID is invalid")
+    expected_paths = _lineage_artifact_paths(edition_date)
+    for key in ("publication_mutation", "review_authority", "approval_authority"):
+        if record.get(key) is not False:
+            raise ValueError(f"Gaza published-story lineage {key} must be false")
+    if not str(record.get("backfill_reason") or "").strip():
+        raise ValueError("Gaza published-story lineage backfill reason is missing")
+    created_at = str(record.get("created_at") or "").strip()
+    if not created_at:
+        raise ValueError("Gaza published-story lineage created_at is missing")
+    try:
+        parsed_created_at = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise ValueError("Gaza published-story lineage created_at is invalid") from exc
+    if parsed_created_at.tzinfo is None:
+        raise ValueError("Gaza published-story lineage created_at must include a timezone")
+    if not str(record.get("source_attribution") or "").strip():
+        raise ValueError("Gaza published-story lineage source attribution is missing")
+
+    provenance = record.get("pages_provenance")
+    if not isinstance(provenance, dict):
+        raise ValueError("Gaza published-story lineage Pages provenance is missing")
+    if set(provenance) != {
+        "repository",
+        "branch",
+        "pinned_commit",
+        "observed_head_at_backfill",
+        "observed_head_contains_pinned_commit",
+        "artifacts",
+        "provenance_fingerprint",
+    }:
+        raise ValueError("Gaza published-story lineage Pages provenance fields are invalid")
+    if provenance.get("repository") != GAZA_PAGES_REPOSITORY or provenance.get("branch") != "gh-pages":
+        raise ValueError("Gaza published-story lineage Pages repository identity is invalid")
+    for key in ("pinned_commit", "observed_head_at_backfill"):
+        if not re.fullmatch(r"[0-9a-f]{40}", str(provenance.get(key) or "")):
+            raise ValueError(f"Gaza published-story lineage {key} is invalid")
+    if provenance.get("observed_head_contains_pinned_commit") is not True:
+        raise ValueError("Gaza published-story lineage does not prove Pages ancestry")
+    artifacts = provenance.get("artifacts")
+    if not isinstance(artifacts, list) or len(artifacts) != len(expected_paths):
+        raise ValueError("Gaza published-story lineage artifact inventory is incomplete")
+    by_role = {str(item.get("role") or ""): item for item in artifacts if isinstance(item, dict)}
+    if set(by_role) != set(expected_paths) or len(by_role) != len(artifacts):
+        raise ValueError("Gaza published-story lineage artifact roles are duplicated or invalid")
+    for role, path in expected_paths.items():
+        artifact = by_role[role]
+        if set(artifact) != {
+            "role",
+            "path",
+            "git_blob_oid",
+            "sha256",
+            "byte_length",
+        }:
+            raise ValueError("Gaza published-story lineage artifact fields are invalid")
+        if artifact.get("path") != path:
+            raise ValueError("Gaza published-story lineage artifact path is invalid")
+        if not re.fullmatch(r"[0-9a-f]{40}", str(artifact.get("git_blob_oid") or "")):
+            raise ValueError("Gaza published-story lineage Git blob OID is invalid")
+        if not re.fullmatch(r"[0-9a-f]{64}", str(artifact.get("sha256") or "")):
+            raise ValueError("Gaza published-story lineage artifact SHA-256 is invalid")
+        if not isinstance(artifact.get("byte_length"), int) or artifact["byte_length"] <= 0:
+            raise ValueError("Gaza published-story lineage artifact byte length is invalid")
+    expected_provenance_fingerprint = _canonical_fingerprint(
+        {key: value for key, value in provenance.items() if key != "provenance_fingerprint"}
+    )
+    if provenance.get("provenance_fingerprint") != expected_provenance_fingerprint:
+        raise ValueError("Gaza published-story lineage Pages provenance fingerprint differs")
+
+    evidence = record.get("evidence")
+    if not isinstance(evidence, dict) or not isinstance(evidence.get("story"), dict):
+        raise ValueError("Gaza published-story lineage story evidence is missing")
+    if set(evidence) != {
+        "story",
+        "story_sha256",
+        "sources",
+        "sources_sha256",
+        "dedupe",
+        "dedupe_sha256",
+        "rendered_title",
+        "rendered_claim",
+    }:
+        raise ValueError("Gaza published-story lineage evidence fields are invalid")
+    story = evidence["story"]
+    if set(story) != {
+        "story_id",
+        "title",
+        "summary",
+        "category",
+        "event_date",
+        "location",
+        "development_type",
+        "casualty_counts",
+        "attribution",
+        "publisher_names",
+        "source_record_ids",
+        "source_urls",
+        "public_rendered",
+        "included_in_public_summary",
+    }:
+        raise ValueError("Gaza published-story lineage story evidence fields are invalid")
+    if story.get("story_id") != story_id:
+        raise ValueError("Gaza published-story lineage evidence points to another story")
+    if story.get("title") != record.get("story_title"):
+        raise ValueError("Gaza published-story lineage title differs from evidence")
+    prior_claim = record.get("prior_claim")
+    if (
+        not isinstance(prior_claim, dict)
+        or set(prior_claim) != {"text", "casualty_counts"}
+        or story.get("summary") != prior_claim.get("text")
+    ):
+        raise ValueError("Gaza published-story lineage prior claim differs from evidence")
+    if story.get("casualty_counts") != prior_claim.get("casualty_counts"):
+        raise ValueError("Gaza published-story lineage casualty claim differs from evidence")
+    if str(story.get("event_date") or "")[:10] != edition_date:
+        raise ValueError("Gaza published-story lineage edition date differs from evidence")
+    if story.get("public_rendered") is not True or story.get("included_in_public_summary") is not True:
+        raise ValueError("Gaza published-story lineage evidence is not public")
+    if evidence.get("rendered_title") != record.get("story_title") or evidence.get(
+        "rendered_claim"
+    ) != prior_claim.get("text"):
+        raise ValueError("Gaza published-story lineage rendered evidence differs")
+    for key in ("story", "sources", "dedupe"):
+        if evidence.get(f"{key}_sha256") != _canonical_fingerprint(evidence.get(key)):
+            raise ValueError(f"Gaza published-story lineage {key} evidence hash differs")
+    sources = evidence.get("sources")
+    if not isinstance(sources, list) or not sources or sources != record.get("source_records"):
+        raise ValueError("Gaza published-story lineage source evidence differs")
+    expected_source_fields = {
+        "source_record_id",
+        "title",
+        "publisher",
+        "url",
+        "canonical_url",
+        "published_at",
+        "dispatch_slug",
+        "category_hint",
+        "claim_fingerprint",
+        "used_in_story_ids",
+    }
+    if any(not isinstance(source, dict) or set(source) != expected_source_fields for source in sources):
+        raise ValueError("Gaza published-story lineage source fields are invalid")
+    story_source_ids = {str(value) for value in story.get("source_record_ids") or []}
+    if {
+        str(item.get("source_record_id") or "")
+        for item in sources
+        if isinstance(item, dict) and story_id in (item.get("used_in_story_ids") or [])
+    } != story_source_ids:
+        raise ValueError("Gaza published-story lineage source-to-story identity differs")
+    from .gaza_sources import story_claim_fingerprint
+
+    for source in sources:
+        if source.get("dispatch_slug") != "gaza" or str(source.get("published_at") or "")[:10] != edition_date:
+            raise ValueError("Gaza published-story lineage source domain or date differs")
+        if source.get("claim_fingerprint") != story_claim_fingerprint(source):
+            raise ValueError("Gaza published-story lineage source claim fingerprint differs")
+    dedupe = evidence.get("dedupe")
+    expected_dedupe_fields = {
+        "story_id",
+        "title",
+        "classification",
+        "include_decision",
+        "public_rendered",
+    }
+    if not isinstance(dedupe, list) or not dedupe or any(
+        not isinstance(item, dict)
+        or set(item) != expected_dedupe_fields
+        or
+        item.get("story_id") != story_id
+        or item.get("title") != record.get("story_title")
+        or item.get("public_rendered") is not True
+        for item in dedupe
+    ):
+        raise ValueError("Gaza published-story lineage dedupe evidence differs")
+
+    stable = record.get("stable_event_identity")
+    if not isinstance(stable, dict) or set(stable) != {"inputs", "fingerprint"}:
+        raise ValueError("Gaza published-story lineage stable event identity is missing")
+    derived_inputs = gaza_stable_event_identity_inputs(story)
+    if stable.get("inputs") != derived_inputs:
+        raise ValueError("Gaza published-story lineage stable event inputs differ")
+    if stable.get("fingerprint") != gaza_stable_event_fingerprint(derived_inputs):
+        raise ValueError("Gaza published-story lineage stable event fingerprint differs")
+    claim_identity = record.get("prior_claim_identity")
+    if not isinstance(claim_identity, dict) or set(claim_identity) != {"inputs", "fingerprint"}:
+        raise ValueError("Gaza published-story lineage prior claim identity is missing")
+    claim_inputs = {
+        "title": story.get("title"),
+        "summary": story.get("summary"),
+        "category": story.get("category") or "",
+    }
+    if claim_identity.get("inputs") != claim_inputs:
+        raise ValueError("Gaza published-story lineage prior claim inputs differ")
+    from .story_dedupe import topic_fingerprint
+
+    expected_claim_fingerprint = "topic_fingerprint_v1:" + topic_fingerprint(claim_inputs)
+    if claim_identity.get("fingerprint") != expected_claim_fingerprint:
+        raise ValueError("Gaza published-story lineage prior claim fingerprint differs")
+    if record.get("record_fingerprint") != _lineage_record_fingerprint(record):
+        raise ValueError("Gaza published-story lineage record fingerprint differs")
+    return record
+
+
+def gaza_published_lineage_path(root: Path, story_id: str) -> Path:
+    return (
+        archive_root(root, "gaza")
+        / "lineage"
+        / "published-stories"
+        / f"{story_id}.json"
+    )
+
+
+def record_gaza_published_story_lineage(
+    repo_root: Path,
+    pages_repo: Path,
+    *,
+    pages_commit: str,
+    story_id: str,
+    edition_date: str,
+    expected_title: str,
+    expected_prior_claim: str,
+    backfill_reason: str,
+    dry_run: bool,
+) -> dict[str, Any]:
+    path = gaza_published_lineage_path(repo_root, story_id)
+    if path.exists():
+        existing = json.loads(path.read_text(encoding="utf-8"))
+        validate_gaza_published_story_lineage(existing)
+        for key, expected in (
+            ("story_id", story_id),
+            ("edition_date", edition_date),
+            ("story_title", expected_title),
+        ):
+            if existing.get(key) != expected:
+                raise ValueError(f"existing published lineage conflicts at {key}")
+        if existing.get("prior_claim", {}).get("text") != expected_prior_claim:
+            raise ValueError("existing published lineage conflicts at prior_claim")
+        if existing.get("pages_provenance", {}).get("pinned_commit") != pages_commit:
+            raise ValueError("existing published lineage conflicts at pinned Pages commit")
+        build_gaza_published_story_lineage(
+            pages_repo,
+            pages_commit=pages_commit,
+            story_id=story_id,
+            edition_date=edition_date,
+            expected_title=expected_title,
+            expected_prior_claim=expected_prior_claim,
+            backfill_reason=backfill_reason,
+            created_at=existing.get("created_at"),
+        )
+        return {
+            "status": "idempotent_noop",
+            "domain": "gaza",
+            "story_id": story_id,
+            "lineage_path": str(path),
+            "publication_mutation": False,
+            "review_authority": False,
+        }
+    record = build_gaza_published_story_lineage(
+        pages_repo,
+        pages_commit=pages_commit,
+        story_id=story_id,
+        edition_date=edition_date,
+        expected_title=expected_title,
+        expected_prior_claim=expected_prior_claim,
+        backfill_reason=backfill_reason,
+    )
+    if dry_run:
+        return {
+            "status": "dry_run_validated",
+            "domain": "gaza",
+            "story_id": story_id,
+            "lineage_path": str(path),
+            "stable_event_fingerprint": record["stable_event_identity"]["fingerprint"],
+            "prior_claim_fingerprint": record["prior_claim_identity"]["fingerprint"],
+            "persistent_mutation": False,
+            "publication_mutation": False,
+            "review_authority": False,
+        }
+    atomic_json(path, record)
+    return {
+        "status": "lineage_recorded",
+        "domain": "gaza",
+        "story_id": story_id,
+        "lineage_path": str(path),
+        "stable_event_fingerprint": record["stable_event_identity"]["fingerprint"],
+        "prior_claim_fingerprint": record["prior_claim_identity"]["fingerprint"],
+        "publication_mutation": False,
+        "review_authority": False,
+    }
+
+
+def load_gaza_published_story_lineages(root: Path) -> list[tuple[Path, dict[str, Any]]]:
+    lineage_root = archive_root(root, "gaza") / "lineage" / "published-stories"
+    loaded: list[tuple[Path, dict[str, Any]]] = []
+    seen: set[str] = set()
+    for path in sorted(lineage_root.glob("*.json")) if lineage_root.exists() else []:
+        value = json.loads(path.read_text(encoding="utf-8"))
+        validate_gaza_published_story_lineage(value)
+        story_id = value["story_id"]
+        if story_id in seen:
+            raise ValueError(f"duplicate Gaza published-story lineage: {story_id}")
+        seen.add(story_id)
+        loaded.append((path, value))
+    return loaded
 
 
 def care_line_match_targets(root: Path) -> dict[str, Any]:
@@ -560,6 +1303,48 @@ def gaza_match_targets(root: Path) -> dict[str, Any]:
             }, sort_keys=True)
             if cluster["title"] and cluster["edition_date"] and cluster["publisher"]:
                 clusters_by_composite.setdefault(composite, []).append(cluster)
+
+    for path, lineage in load_gaza_published_story_lineages(root):
+        story_id = lineage["story_id"]
+        source_records = lineage.get("source_records") or []
+        urls = sorted(
+            {
+                _clean_url(source.get("canonical_url") or source.get("url"))
+                for source in source_records
+                if isinstance(source, dict)
+                and (source.get("canonical_url") or source.get("url"))
+            }
+        )
+        identifiers = [
+            story_id,
+            lineage["stable_event_identity"]["fingerprint"],
+            lineage["prior_claim_identity"]["fingerprint"],
+        ]
+        cluster = {
+            "path": str(path.relative_to(root)),
+            "cluster_id": story_id,
+            "identifiers": identifiers,
+            "edition_date": lineage["edition_date"],
+            "title": lineage["story_title"],
+            "publisher": str(lineage.get("source_attribution") or ""),
+            "urls": urls,
+            "record_type": "private_published_story_lineage",
+            "lineage_record": lineage,
+        }
+        for identifier in identifiers:
+            clusters_by_id.setdefault(identifier, []).append(cluster)
+        for url in urls:
+            clusters_by_url.setdefault(url, []).append(cluster)
+        composite = json.dumps(
+            {
+                "title": _normalized_headline(cluster["title"]),
+                "date": cluster["edition_date"],
+                "publisher": cluster["publisher"].lower().strip(),
+            },
+            sort_keys=True,
+        )
+        if cluster["title"] and cluster["edition_date"] and cluster["publisher"]:
+            clusters_by_composite.setdefault(composite, []).append(cluster)
 
     historical_identities: set[str] = set()
     historical_root = root / "data" / "agent-history" / "gaza" / "normalized"

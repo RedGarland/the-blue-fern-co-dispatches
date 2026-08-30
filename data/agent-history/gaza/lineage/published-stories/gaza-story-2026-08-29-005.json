@@ -1,0 +1,153 @@
+{
+  "approval_authority": false,
+  "backfill_reason": "Restore immutable private lineage for a prior public story required by historical correction review.",
+  "canonicalization_version": "gaza_published_story_lineage_c14n_v1",
+  "created_at": "2026-08-30T21:46:41.325021+00:00",
+  "domain": "gaza",
+  "edition_date": "2026-08-29",
+  "evidence": {
+    "dedupe": [
+      {
+        "classification": "new",
+        "include_decision": "include",
+        "public_rendered": true,
+        "story_id": "gaza-story-2026-08-29-005",
+        "title": "WAFA reports casualties in Tal al-Hawa motorbike strike"
+      }
+    ],
+    "dedupe_sha256": "sha256:197f16d82675ee6c82b6dede408b8f177d7f81ee1d58d7cac2590a6ea3fc8e82",
+    "rendered_claim": "WAFA reported 1 killed and 2 injured in a strike on a motorbike in Tal al-Hawa, Gaza City.",
+    "rendered_title": "WAFA reports casualties in Tal al-Hawa motorbike strike",
+    "sources": [
+      {
+        "canonical_url": "https://english.wafa.ps/Pages/Details/174181",
+        "category_hint": "conflict",
+        "claim_fingerprint": "gaza|wafa|palestinian killed two injured in israeli drone strike in gaza city|conflict|2026-08-29",
+        "dispatch_slug": "gaza",
+        "published_at": "2026-08-29T14:26:12+00:00",
+        "publisher": "WAFA",
+        "source_record_id": "gaza-2026-08-29-wafa-gaza-motorbike-query-93def3f625bb",
+        "title": "Palestinian killed, two injured in Israeli drone strike in Gaza City - WAFA Agency",
+        "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFAwX3RXa3ZrSElXS1d6RHY3aVBXRmZGdlNLZzhGWEFod1pkNGtWMG52WGV4RXg0N3RCOFkwSDNBejhWMkRSZ2tkY2ZLdmdNcUtkNzVaSlFuVQ?oc=5",
+        "used_in_story_ids": [
+          "gaza-story-2026-08-29-005"
+        ]
+      }
+    ],
+    "sources_sha256": "sha256:5731c22465c4fc152b0ba4d57c4bc32ecf95573505e59a7ac8ff5c20dcb4880f",
+    "story": {
+      "attribution": "WAFA",
+      "casualty_counts": {
+        "new_deaths": 1,
+        "new_injuries": 2
+      },
+      "category": "conflict",
+      "development_type": "casualty_event",
+      "event_date": "2026-08-29T14:26:12+00:00",
+      "included_in_public_summary": true,
+      "location": "Tal al-Hawa, Gaza City",
+      "public_rendered": true,
+      "publisher_names": [
+        "WAFA"
+      ],
+      "source_record_ids": [
+        "gaza-2026-08-29-wafa-gaza-motorbike-query-93def3f625bb"
+      ],
+      "source_urls": [
+        "https://news.google.com/rss/articles/CBMiV0FVX3lxTFAwX3RXa3ZrSElXS1d6RHY3aVBXRmZGdlNLZzhGWEFod1pkNGtWMG52WGV4RXg0N3RCOFkwSDNBejhWMkRSZ2tkY2ZLdmdNcUtkNzVaSlFuVQ?oc=5"
+      ],
+      "story_id": "gaza-story-2026-08-29-005",
+      "summary": "WAFA reported 1 killed and 2 injured in a strike on a motorbike in Tal al-Hawa, Gaza City.",
+      "title": "WAFA reports casualties in Tal al-Hawa motorbike strike"
+    },
+    "story_sha256": "sha256:d8a17b3cb13d882a1ec0738c53903100bb3053ddd0bb494395979c803ba98ed2"
+  },
+  "pages_provenance": {
+    "artifacts": [
+      {
+        "byte_length": 39610,
+        "git_blob_oid": "11a8b21581b37b843a7954cae26b1ef2d4fd4be7",
+        "path": "gaza/editions/2026-08-29/curation_manifest.json",
+        "role": "curation_manifest",
+        "sha256": "829494eb6775cd36d84359630e6f4dd24efd7e4188a4ee0b46d9f9144b1c8882"
+      },
+      {
+        "byte_length": 14681,
+        "git_blob_oid": "ee2c4b15af074416af3dd62f2fbdc7fb5bfe4cf2",
+        "path": "gaza/editions/2026-08-29/dedupe_report.json",
+        "role": "dedupe_report",
+        "sha256": "ee75d0a4cccd4f69b1155ddb0688145cd1c2aab736f760797bb8a5d74c745034"
+      },
+      {
+        "byte_length": 39398,
+        "git_blob_oid": "ea35423c37b8cc9d3ded9a40d47e8680d3aa4515",
+        "path": "gaza/editions/2026-08-29/sources_manifest.json",
+        "role": "sources_manifest",
+        "sha256": "a1c4db89cde783b00335f029b9283d186e41470331446754e4a3dae299a3db89"
+      },
+      {
+        "byte_length": 13516,
+        "git_blob_oid": "057ef0601512d226a2b16724dd58b5e87ed219fe",
+        "path": "gaza/editions/2026-08-29/index.html",
+        "role": "rendered_edition",
+        "sha256": "9b682a420feddd7a5d67b3e01062d4d4ca610c3c89bc303e6d8bad984e5ef75b"
+      }
+    ],
+    "branch": "gh-pages",
+    "observed_head_at_backfill": "58402033fa63cfdea799764957bad8a9ccaf2e02",
+    "observed_head_contains_pinned_commit": true,
+    "pinned_commit": "fccfcd6a1fa91141bf69d140a4bf0097d3ab807d",
+    "provenance_fingerprint": "sha256:203304ed0983825cbb7f1c36fb92461e3e12e0e7eac720ec885a5db4bfd57976",
+    "repository": "https://github.com/RedGarland/the-blue-fern-co-dispatches.git"
+  },
+  "prior_claim": {
+    "casualty_counts": {
+      "new_deaths": 1,
+      "new_injuries": 2
+    },
+    "text": "WAFA reported 1 killed and 2 injured in a strike on a motorbike in Tal al-Hawa, Gaza City."
+  },
+  "prior_claim_identity": {
+    "fingerprint": "topic_fingerprint_v1:b24fa304e5ee9501",
+    "inputs": {
+      "category": "conflict",
+      "summary": "WAFA reported 1 killed and 2 injured in a strike on a motorbike in Tal al-Hawa, Gaza City.",
+      "title": "WAFA reports casualties in Tal al-Hawa motorbike strike"
+    }
+  },
+  "publication_mutation": false,
+  "record_fingerprint": "sha256:9fc88359e86e074530bc981b29d01e6ce200db71a2d4d9bacc8a55fa496c1377",
+  "review_authority": false,
+  "schema_version": "gaza_published_story_lineage_v1",
+  "source_attribution": "WAFA",
+  "source_records": [
+    {
+      "canonical_url": "https://english.wafa.ps/Pages/Details/174181",
+      "category_hint": "conflict",
+      "claim_fingerprint": "gaza|wafa|palestinian killed two injured in israeli drone strike in gaza city|conflict|2026-08-29",
+      "dispatch_slug": "gaza",
+      "published_at": "2026-08-29T14:26:12+00:00",
+      "publisher": "WAFA",
+      "source_record_id": "gaza-2026-08-29-wafa-gaza-motorbike-query-93def3f625bb",
+      "title": "Palestinian killed, two injured in Israeli drone strike in Gaza City - WAFA Agency",
+      "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFAwX3RXa3ZrSElXS1d6RHY3aVBXRmZGdlNLZzhGWEFod1pkNGtWMG52WGV4RXg0N3RCOFkwSDNBejhWMkRSZ2tkY2ZLdmdNcUtkNzVaSlFuVQ?oc=5",
+      "used_in_story_ids": [
+        "gaza-story-2026-08-29-005"
+      ]
+    }
+  ],
+  "stable_event_identity": {
+    "fingerprint": "sha256:d97bf626b0a150d93ff8ceaea19b6759662f6954a4b6259c1bc79ed89daee891",
+    "inputs": {
+      "domain": "gaza",
+      "event_date": "2026-08-29",
+      "incident_object": "motorcycle",
+      "incident_type": "casualty event",
+      "location": "tal al hawa gaza city",
+      "location_key": "tal al hawa",
+      "mechanism": "strike"
+    }
+  },
+  "story_id": "gaza-story-2026-08-29-005",
+  "story_title": "WAFA reports casualties in Tal al-Hawa motorbike strike"
+}

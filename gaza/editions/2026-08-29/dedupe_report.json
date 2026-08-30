@@ -17,7 +17,7 @@
     },
     {
       "story_id": "gaza-story-2026-08-29-003",
-      "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef",
+      "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - UNICEF",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -28,6 +28,15 @@
     },
     {
       "story_id": "gaza-story-2026-08-29-005",
+      "title": "Israeli settlers attack international news team in occupied West Bank",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-29-006",
       "title": "Gaza runs out of cancer medicines, as Israeli strikes continue",
       "classification": "new",
       "material_update": true,
@@ -38,22 +47,11 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-007",
+      "story_id": "gaza-story-2026-08-29-008",
       "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
       "classification": "major_update",
       "material_update": false,
       "material_update_reasons": [],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-08-29-008",
-      "title": "Israeli attacks in Gaza kill four people, hit hospital supply warehouse",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
       "include_decision": "include",
       "public_rendered": true
     },
@@ -79,22 +77,24 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-006",
+      "story_id": "gaza-story-2026-08-29-010",
+      "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "changed_ceasefire_implementation_assessment"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-29-007",
       "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
         "new_story"
       ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-08-29-010",
-      "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
-      "classification": "major_update",
-      "material_update": false,
-      "material_update_reasons": [],
       "include_decision": "include",
       "public_rendered": true
     }
@@ -119,7 +119,20 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-007",
+      "story_id": "gaza-story-2026-08-29-005",
+      "title": "Israeli settlers attack international news team in occupied West Bank",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "watchlist_status": "publication_candidate",
+      "prior_story_matched": "gaza-story-2026-08-04-009",
+      "prior_edition_date": "2026-08-04",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-29-008",
       "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
       "classification": "major_update",
       "material_update": false,
@@ -164,12 +177,14 @@
       "story_id": "gaza-story-2026-08-29-010",
       "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
       "classification": "major_update",
-      "material_update": false,
-      "material_update_reasons": [],
+      "material_update": true,
+      "material_update_reasons": [
+        "changed_ceasefire_implementation_assessment"
+      ],
       "duplicate_reasons": [],
-      "watchlist_status": "publication_candidate",
-      "prior_story_matched": "gaza-story-2026-08-28-001",
-      "prior_edition_date": "2026-08-28",
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-07-23-003",
+      "prior_edition_date": "2026-07-23",
       "include_decision": "include",
       "public_rendered": true
     }
@@ -195,7 +210,7 @@
     },
     {
       "story_id": "gaza-story-2026-08-29-003",
-      "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef",
+      "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - UNICEF",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -210,6 +225,19 @@
     },
     {
       "story_id": "gaza-story-2026-08-29-005",
+      "title": "Israeli settlers attack international news team in occupied West Bank",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "watchlist_status": "publication_candidate",
+      "prior_story_matched": "gaza-story-2026-08-04-009",
+      "prior_edition_date": "2026-08-04",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-29-006",
       "title": "Gaza runs out of cancer medicines, as Israeli strikes continue",
       "classification": "new",
       "material_update": true,
@@ -224,7 +252,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-007",
+      "story_id": "gaza-story-2026-08-29-008",
       "title": "Israeli army arrests six Palestinians after settler violence in West Bank",
       "classification": "major_update",
       "material_update": false,
@@ -233,21 +261,6 @@
       "watchlist_status": "publication_candidate",
       "prior_story_matched": "gaza-story-2026-08-22-010",
       "prior_edition_date": "2026-08-22",
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-08-29-008",
-      "title": "Israeli attacks in Gaza kill four people, hit hospital supply warehouse",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "duplicate_reasons": [],
-      "watchlist_status": "material_follow_up",
-      "prior_story_matched": null,
-      "prior_edition_date": null,
       "include_decision": "include",
       "public_rendered": true
     },
@@ -281,7 +294,22 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-006",
+      "story_id": "gaza-story-2026-08-29-010",
+      "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "changed_ceasefire_implementation_assessment"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-07-23-003",
+      "prior_edition_date": "2026-07-23",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-29-007",
       "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
       "classification": "new",
       "material_update": true,
@@ -292,19 +320,6 @@
       "watchlist_status": "material_follow_up",
       "prior_story_matched": null,
       "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-08-29-010",
-      "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
-      "classification": "major_update",
-      "material_update": false,
-      "material_update_reasons": [],
-      "duplicate_reasons": [],
-      "watchlist_status": "publication_candidate",
-      "prior_story_matched": "gaza-story-2026-08-28-001",
-      "prior_edition_date": "2026-08-28",
       "include_decision": "include",
       "public_rendered": true
     }

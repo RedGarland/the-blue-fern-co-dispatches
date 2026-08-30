@@ -53,7 +53,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T00:49:56.303711+00:00",
+    "generated_at": "2026-08-30T01:46:41.943466+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -82,8 +82,8 @@
   },
   {
     "story_id": "gaza-story-2026-08-29-003",
-    "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef",
-    "summary": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza Unicef.",
+    "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - UNICEF",
+    "summary": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza UNICEF.",
     "category": "humanitarian",
     "story_scope": "core_gaza",
     "score": 74,
@@ -108,10 +108,10 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-08-29-unicef-gaza-water-query-711011519f55"
+      "gaza-2026-08-29-unicef-gaza-water-query-26ac36050160"
     ],
     "source_ids": [
-      "gaza-2026-08-29-unicef-gaza-water-query-711011519f55"
+      "gaza-2026-08-29-unicef-gaza-water-query-26ac36050160"
     ],
     "source_urls": [
       "https://news.google.com/rss/articles/CBMivgFBVV95cUxPQVppUFhxZGFWOWk1TW5mdE9Ha3JkcFJzZlRnbkdIRzljaXN3bjVIRmRuWWptUmdib3dlN0hDRmlDRTZQZFl4ZGswbFdzVHU1ZzVKeTgyR0xZOTlSTEYzaG5lMFd4eFlzQ2dhUWs3X3Y5cXdkY3JLZlZ3VC1JdWlfdHhVUV9mX0VtbW5KeE5QRFkzamlhcVBBYmpKSnZETk1rSEJjYWNfcUtvRFdWX1YyUTBtdVk0VjFuTWNBNGhn?oc=5"
@@ -121,11 +121,11 @@
     ],
     "source_records": [
       {
-        "source_record_id": "gaza-2026-08-29-unicef-gaza-water-query-711011519f55",
-        "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef",
+        "source_record_id": "gaza-2026-08-29-unicef-gaza-water-query-26ac36050160",
+        "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - UNICEF",
         "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPQVppUFhxZGFWOWk1TW5mdE9Ha3JkcFJzZlRnbkdIRzljaXN3bjVIRmRuWWptUmdib3dlN0hDRmlDRTZQZFl4ZGswbFdzVHU1ZzVKeTgyR0xZOTlSTEYzaG5lMFd4eFlzQ2dhUWs3X3Y5cXdkY3JLZlZ3VC1JdWlfdHhVUV9mX0VtbW5KeE5QRFkzamlhcVBBYmpKSnZETk1rSEJjYWNfcUtvRFdWX1YyUTBtdVk0VjFuTWNBNGhn?oc=5",
         "publisher": "UNICEF",
-        "summary_or_snippet": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza Unicef",
+        "summary_or_snippet": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza UNICEF",
         "event_date": "2026-08-28T10:22:19+00:00",
         "location": "Gaza",
         "development_type": "primary_report",
@@ -135,7 +135,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T00:49:56.303711+00:00",
+    "generated_at": "2026-08-30T01:46:41.943466+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -213,7 +213,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T00:49:56.303711+00:00",
+    "generated_at": "2026-08-30T01:46:41.943466+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -294,7 +294,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T00:49:56.303711+00:00",
+    "generated_at": "2026-08-30T01:46:41.943466+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -372,7 +372,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T00:49:56.303711+00:00",
+    "generated_at": "2026-08-30T01:46:41.943466+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -452,7 +452,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T00:49:56.303711+00:00",
+    "generated_at": "2026-08-30T01:46:41.943466+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -532,7 +532,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T00:49:56.303711+00:00",
+    "generated_at": "2026-08-30T01:46:41.943466+00:00",
     "relevance_terms_matched": [
       "gaza",
       "west bank"
@@ -555,6 +555,85 @@
     "public_rendered": true,
     "prior_story_matched": "gaza-story-2026-07-31-005",
     "prior_edition_date": "2026-07-31",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-08-29-010",
+    "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
+    "summary": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera. The Board of Peace has \"determined the mechanism for deploying the International Stabilization Force [ISF] and its deployment locations in the Gaza Strip,\" he said, noting that Morocco agreed to take part, though Turkiye will not participate after Israel vetoed Ankara's involvement. He added that the force's \"advance elements should arrive in the Gaza Strip soon\".",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 56,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-08-29-aljazeera-board-of-peace-isf-query-3c1fa6c3ec94"
+    ],
+    "source_ids": [
+      "gaza-2026-08-29-aljazeera-board-of-peace-isf-query-3c1fa6c3ec94"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNdkpxdFc5VUFLYjJ1bTJ2Q2w5MXpKLVBJdEpGOC1nMjFUVEJFVzh0U2hwbTVtbzZPS0FSVTRnN21TLWI3dkVVSHNXdWl4QUZ5Q2lSM2xHWkFRMFZPRU5nUUQydGdBYnUzUUFLWXZUcW1jUENKTEZnQ3gzZmhlYy1OdVB1b3FYN21OOGRWNDMxYjZmLXFlRUtnTGJJOUtsaS1hdFJaQjFjOXF5QdIBrwFBVV95cUxNSC1xcVVjZ1FOdGQ0b2NYMzJtc3h0X2tuSThQZ1pFaHpmT1Atb0lfOUMzVmswdTJZNWg5NkNDSWh1aDZzTVVCRFUxYW5xSHQtLU94ZXZ4NVl0d2ZPbnFzTVVYeldmNDNVWEx5eGxhVEhGbmdrZFY2UFJ3eDJJM2xNdlZJWWl6aDJ4eWlzOUhwN1FENHczVXFIS3Z1djF3aW5RSVlQbjVrSnNLQTdKa2ZJ?oc=5"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-08-29-aljazeera-board-of-peace-isf-query-3c1fa6c3ec94",
+        "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
+        "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNdkpxdFc5VUFLYjJ1bTJ2Q2w5MXpKLVBJdEpGOC1nMjFUVEJFVzh0U2hwbTVtbzZPS0FSVTRnN21TLWI3dkVVSHNXdWl4QUZ5Q2lSM2xHWkFRMFZPRU5nUUQydGdBYnUzUUFLWXZUcW1jUENKTEZnQ3gzZmhlYy1OdVB1b3FYN21OOGRWNDMxYjZmLXFlRUtnTGJJOUtsaS1hdFJaQjFjOXF5QdIBrwFBVV95cUxNSC1xcVVjZ1FOdGQ0b2NYMzJtc3h0X2tuSThQZ1pFaHpmT1Atb0lfOUMzVmswdTJZNWg5NkNDSWh1aDZzTVVCRFUxYW5xSHQtLU94ZXZ4NVl0d2ZPbnFzTVVYeldmNDNVWEx5eGxhVEhGbmdrZFY2UFJ3eDJJM2xNdlZJWWl6aDJ4eWlzOUhwN1FENHczVXFIS3Z1djF3aW5RSVlQbjVrSnNLQTdKa2ZJ?oc=5",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera The Board of Peace has \"determined the mechanism for deploying the International Stabilization Force [ISF] and its deployment locations in the Gaza Strip,\" he said, noting that Morocco agreed to take part, though Turkiye will not participate after Israel vetoed Ankara's involvement. He added that the force's \"advance elements should arrive in the Gaza Strip soon\".",
+        "event_date": "2026-08-28T16:48:33+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-08-30T01:46:41.943466+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-08-28T16:48:33+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
     "dedupe_classification": "major_update",
     "dedupe_reasons": []
   },
@@ -611,7 +690,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T00:49:56.303711+00:00",
+    "generated_at": "2026-08-30T01:46:41.943466+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -635,86 +714,6 @@
     "prior_story_matched": null,
     "prior_edition_date": null,
     "dedupe_classification": "new",
-    "dedupe_reasons": []
-  },
-  {
-    "story_id": "gaza-story-2026-08-29-010",
-    "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
-    "summary": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' | Gaza News | Al Jazeera {\"@type\":\"NewsMediaOrganization\",\"@id\":\" Jazeera\",\"url\":\" Jazeera Media Network\",\"alternateName\":\"\u0634\u0628\u0643\u0629 \u0627\u0644\u062c\u0632\u064a\u0631\u0629 \u0627\u0644\u0625\u0639\u0644\u0627\u0645\u064a\u0629\"},\"@context\":\" {\"@context\":\" of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse'\",\"description\":\"In an interview with Al Jazeera, Nicolay Mladenov says that a return to war would be 'devastating'.\",\"author\":{\"@type\":\"Person\",\"name\":\"Al Jazeera Staff\",\"url\":\" {\"@context\":\" of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse'\",\"speakable\":{\"@type\":\"SpeakableSpecification\",\"cssSelector\":[\".article-header\"]},\"url\":\" {\"@context\":\" of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse'\",\"uploadDate\":\"2026-08-28T16:44:45Z\",\"description\":\"In an interview with Al Jazeera, Nicolay Mladenov says that a return to war would be 'devastating'.\",\"publisher\":{\"@id\":\" {\"@context\":\" window.environment='production'; window.isDelegatedSite=false; function getMetaValue(e,t,a){var n=void 0===a?\"\":a,u=(document.head||document.getElementsByTagName(\"head\")[0]).querySelector(\"meta[\"+(t||\"name\")+'=\"'+e+'\"]');return u?u.getAttribute(\"content\")||\"\":n} function gtag(){dataLayer.push(arguments)}function hasPerformanceGroupCookie(){var a=document.cookie.match(/OptanonConsent=([^;]+)/);return!!a&&/groups=[^&]*C0002(%3A|:)1/.test(a[1])}window.dataLayer=window.dataLayer||[],gtag(\"js\",new Date),gtag(\"set\",\"allow_google_signals\",hasPerformanceGroupCookie()),gtag(\"config\",\"G-XN9JB9Q0M1\",{send_page_view:!1,anonymize_ip:!0}) !function(){window._sf_endpt=(new Date).getTime();var e=window._sf_async_config=window._sf_async_config||{};e.uid=3291,e.domain=0===window.location.hostname.indexOf(\"aje.aj\")?\"staging.\"+window.location.hostname:\"www.aljazeera.com\",e.flickerControl=!1,e.useCanonical=!0,e.useCanonicalDomain=!0,e.title=getMetaValue(\"og:title\",\"property\")||document.title,e.type=getMetaValue(\" pageType\"),e.authors=getMetaValue(\"author\"),e.sections=getMetaValue(\"pageSection\")}() var documentHead=document.head||document.getElementsByTagName(\"head\")[0],canonicalNode=documentHead.querySelector('link[rel=\"canonical\"]'),searchTermsNode=documentHead.querySelector('meta[name=\"searchTerms\"]');const AJ_ANALYTICS_REDIRECT_DATA_KEY=\"aj_analytics_redirect_data\";if(window.previousCanonical=\"\",window.previousSearchTerm=searchTermsNode?searchTermsNode.content:\"\",canonicalNode&&sendPageView(),\"function\"==typeof window.MutationObserver){function callback(e,a){for(var t=0;t [e.toLowerCase(),a]));return[\"utm_source\",\"utm_medium\",\"utm_campaign\",\"utm_content\",\"utm_term\"].filter(e=>t.has(e)).map(e=>`${e}=${encodeURIComponent(t.get(e))}`).join(\"&\")}function getUtmParamsObject(e){const a=new URLSearchParams(e),t=new URLSearchParams(Array.from(a,([e,a])=>[e.toLowerCase(),a]));return[\"utm_source\",\"utm_medium\",\"utm_campaign\",\"utm_content\",\"utm_term\"].filter(e=>t.has(e)).reduce((e,a)=>(e[a]=t.get(a),e),{})}function sendPageView(){if(\"true\"===getMetaValue(\"isPreview\"))return;var e=documentHead.querySelector('link[rel=\"canonical\"]'),a=e?e.href:window.location.href,t=getMetaValue(\"pageType\"),n=getMetaValue(\"pageSection\"),i=getMetaValue(\"pageAuthors\"),o=getMetaValue(\"searchTerms\"),s=getMetaValue(\"pageTitle\")||document.title,r=getMetaValueByName(\"pageTemplate\"),m=a,l=a.replace(/(https|http):\\/\\/(w ww\\.)?/,\"\"),u=window.location.search||\"\",g=window.isDelegatedSite||window.location.hostname.includes(\"ajnet.me\")?\"Proxy\":\"BaseSite\";o&&(m+=\"?term=\"+encodeURIComponent(o)),u&&(m+=-1===m.indexOf(\"?\")?\"?\"+getUTMQueryParams(u):\"&\"+getUTMQueryParams(u)),setCustomDimensions();const d=getMetaValueByName(\"topics\"),c=getMetaValueByName(\"primaryTopic\"),y=getMetaValueByName(\"where\"),w=getMetaValueByName(\"tags\"),M=getMetaValueByName(\"primaryTag\"),p=getMetaValueByName(\"contentType\"),V=getMetaValueByName(\"sourceTaxonomy\"),N=getMetaValueByName(\"taxonomyTerms\"),h=getMetaValueByName(\"displayAuthors\"),B=getM etaValueByName(\"featuredMedia\"),f=getMetaValueByName(\"publishedDate\"),S=getMetaValueByName(\"programTaxonomy\"),v=getMetaValueByName(\"postID\"),_=getMetaValueByName(\"postLabel\"),b=getMetaValueByName(\"lastDate\"),P=getMetaValueByName(\"articleSlug\"),T=getMetaValueByName(\"internalTaxonomies\"),A=getMetaValueByName(\"internalRep orting\"),L=getMediaEmbeds(),k=getMetaValue(\"siteModule\");var D=getMetaValueByName(\"channel\");const E=[\"aja\"].includes(D);var O={send_to:getMetaValueByName(\"ga4\"),page_title:E?`\u200f${s}\u200f`:s,dimension15:\"Web\",page_location:decodeURI(m)};const I=(e,a)=>{a&&(O[e]=a)};if(I(\"dimension1\",d),I(\"dimension2\",c),I(\"dimension3\",y),I(\"dimension4\",w),I(\"dimension5\",M),I(\"dimension6\",p),I(\"dimension7\",V),I(\"dimension8\",N),I(\"dimension9\",h),I(\"dimension10\",B),I(\"dimension11\",f),I(\"dimension12\",S),I(\"dimension13\",\"Generic Page\"===r?r:t),I(\"dimension14\",v),I(\"dimension16\",_),I(\"dimension17\",b),I(\"dimension18\",L),I(\"dimension19\",P),I(\"dimension20\",T),null!==A&&I(\"dimension26\",A),gtag(\"event\",\"page_view\",O),window.pSUPERFLY&&window.pSUPERFLY.virtualPage){let e=n;k&&(e=e?`${e},zMod: ${k}`:\"zMod: \"+k),_sf_async_config.title=s,_sf_async_config.type=t,_sf_async_config.authors=i,_sf_async_config.sections=e,pSUPERFLY.virtualPage({sections:e,authors:i,type:t,title:s,path:l})}window.previousCanonical=a,window.previousSearchTerm=o;const U=void 0!==window.amplitude&&void 0!==window.amplitude.track&&void 0!==window.amplitude.invoked;if(D&&s){var x=!1,R={};const e=\"10.0\";if(-1!==[\"Landing Page\",\"Home Page\",\"Search Page\",\"Sitemap Page\",\"Author Page\",\"Sponsored Post\",\"Match Centre\",\"Accounts\",\"404 Page\",\"Staff Directory Page\"].indexOf(t)){const a=getMetaValueByName(\"pageLink\")||window.location.pathname;R={channel:D,sourcePlatform:\"Web\",uCMSAmplitudeVersion:e,distribution:g,id:getMetaValueByName(\"postID\"),referralSource:document.referrer||null,link:a,title:n||s,type:r||t,index:getMetaValueByName(\"position\"),screenWidth:window.screen.width,screenHeight:window.s creen.height,isMobileExperience:window.screen.width e.startsWith(\"firebase:authUser:\"));if((!i||\"Signed Out\"===i)&&l){let e;try{e=JSON.parse(window.localStorage.getItem(l))}catch(e){console.error(\"Error parsing user data.\",e)}e&&(i=\"Signed. In\"===i?\"lgdin\":\"anon\";(window._cbq=window._cbq||[]).push([\"_acct\",W]);const d=new Event(\"analytics:page-view-change\");window.dispatchEvent(d),U&&x?window.amplitude.track(x,R):x&&(window.amplitudeOpenEvent={event:x,eventProperties:R})}} !function(){var t=null,n=0,e=null;function o(){var t=document.cookie.match(/OptanonConsent=([^;]+)/);return t?t[1]:\"\"}function r(){var t=window.OnetrustActiveGroups;return String(\"string\"==typeof t?t:\"\")+\"|\"+o()}function i(){if(function(){var t=window.OnetrustActiveGroups;if(\"string\"==typeof t&&t.length>0)return/(^|,)C0004(,|$)/.test(t);var n=o();return!!n&&/groups=[^&]*C0004(%3A|:)1/.test(n)}()){try{window.localStorage.removeItem(\"_pbjs_id_optout\")}catch(t){}document.cookie=\"_pbjs_id_optout=; Path=/; SameSite=Lax; Secure; Expires=Thu, 01 Jan 1970 00:00:01 GMT\"}else{try{window.localStorage.setItem(\"_pbjs_id_optout\",\"1\")}catch(t){}document.cookie=\"_pbjs_id_optout=1; Path=/; SameSite=Lax; Secure; Max-Age=31536000\"}e=r()}function u(){null!==t&&(clearInterval(t),t=null)}window.syncPrebidUserIdOptoutFromTargetingConsent=function(){u(),i()},window.addEventListener(\"OneTrustGroupsUpdated\",(function(){u(),i()})),i(),t=setInterval((function(){n++,r()!==e&&i(),n>=30&&u()}),500)}(); !function(){if(!window.__ucmsQuantcastLoaded){window.__ucmsQuantcastLoaded=!0,window._qevents=window._qevents||[],window._qevents.push({qacct:\"p-DAMBunjxFvwVp\"});var e=document.createElement(\"script\");e.src=\" var usrPersonaAds = 0 // 0: personalized, 1: non-personalized var isNonPersonalizedAds = 0 // Google Signals Consent status var allowGoogleSignals = false function OptanonWrapper() { window.syncPrebidUserIdOptoutFromTargetingConsent && window.syncPrebidUserIdOptoutFromTargetingConsent() isNonPersonalizedAds = /(^|,)C0004(,|$)/.test(window.OnetrustActiveGroups || '') ? In\",o=e.emailVerified?\"Verified\":\"Not Verified\")}m||(m=window.localStorage.getItem(\"userSignInMethod\")),R.signinStatus=i||\"Signed Out\",R.verificationStatus=o||\"Not Verified\",R.authType=m||\"none\";var W=\"Signed. Listen Listen (4 mins) Save Share Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' on social media share-nodes Share facebook x whatsapp-stroke copylink google Add Al Jazeera on Google info Nickolay Mladenov, left, the High Representative for the Board of Peace [File: John Thys/AP] By Al Jazeera Staff Published. History of flotilla campaigns caret-right News | Gaza Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' In an interview with Al Jazeera, Nicolay Mladenov says that a return to war would be 'devastating'. On 28 Aug 2026 28 Aug 2026. The failure of both sides to adhere to the roadmap for peace \"threatens a collapse of the ceasefire in Gaza\", Nikolay Mladenov, the high representative for the Board of Peace, has warned in an interview with Al Jazeera.",
-    "category": "conflict",
-    "story_scope": "core_gaza",
-    "score": 51,
-    "scoring_reasons": [
-      "aid_access",
-      "ceasefire_diplomacy",
-      "displacement",
-      "source_reliability",
-      "date_confidence"
-    ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 12,
-      "ceasefire_diplomacy": 8,
-      "civilian_harm": 0,
-      "displacement": 8,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 10
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-08-29-aljazeera-board-of-peace-isf-query-3c1fa6c3ec94"
-    ],
-    "source_ids": [
-      "gaza-2026-08-29-aljazeera-board-of-peace-isf-query-3c1fa6c3ec94"
-    ],
-    "source_urls": [
-      "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNdkpxdFc5VUFLYjJ1bTJ2Q2w5MXpKLVBJdEpGOC1nMjFUVEJFVzh0U2hwbTVtbzZPS0FSVTRnN21TLWI3dkVVSHNXdWl4QUZ5Q2lSM2xHWkFRMFZPRU5nUUQydGdBYnUzUUFLWXZUcW1jUENKTEZnQ3gzZmhlYy1OdVB1b3FYN21OOGRWNDMxYjZmLXFlRUtnTGJJOUtsaS1hdFJaQjFjOXF5QdIBrwFBVV95cUxNSC1xcVVjZ1FOdGQ0b2NYMzJtc3h0X2tuSThQZ1pFaHpmT1Atb0lfOUMzVmswdTJZNWg5NkNDSWh1aDZzTVVCRFUxYW5xSHQtLU94ZXZ4NVl0d2ZPbnFzTVVYeldmNDNVWEx5eGxhVEhGbmdrZFY2UFJ3eDJJM2xNdlZJWWl6aDJ4eWlzOUhwN1FENHczVXFIS3Z1djF3aW5RSVlQbjVrSnNLQTdKa2ZJ?oc=5"
-    ],
-    "publisher_names": [
-      "Al Jazeera"
-    ],
-    "source_records": [
-      {
-        "source_record_id": "gaza-2026-08-29-aljazeera-board-of-peace-isf-query-3c1fa6c3ec94",
-        "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
-        "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNdkpxdFc5VUFLYjJ1bTJ2Q2w5MXpKLVBJdEpGOC1nMjFUVEJFVzh0U2hwbTVtbzZPS0FSVTRnN21TLWI3dkVVSHNXdWl4QUZ5Q2lSM2xHWkFRMFZPRU5nUUQydGdBYnUzUUFLWXZUcW1jUENKTEZnQ3gzZmhlYy1OdVB1b3FYN21OOGRWNDMxYjZmLXFlRUtnTGJJOUtsaS1hdFJaQjFjOXF5QdIBrwFBVV95cUxNSC1xcVVjZ1FOdGQ0b2NYMzJtc3h0X2tuSThQZ1pFaHpmT1Atb0lfOUMzVmswdTJZNWg5NkNDSWh1aDZzTVVCRFUxYW5xSHQtLU94ZXZ4NVl0d2ZPbnFzTVVYeldmNDNVWEx5eGxhVEhGbmdrZFY2UFJ3eDJJM2xNdlZJWWl6aDJ4eWlzOUhwN1FENHczVXFIS3Z1djF3aW5RSVlQbjVrSnNLQTdKa2ZJ?oc=5",
-        "publisher": "Al Jazeera",
-        "summary_or_snippet": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' | Gaza News | Al Jazeera {\"@type\":\"NewsMediaOrganization\",\"@id\":\" Jazeera\",\"url\":\" Jazeera Media Network\",\"alternateName\":\"\u0634\u0628\u0643\u0629 \u0627\u0644\u062c\u0632\u064a\u0631\u0629 \u0627\u0644\u0625\u0639\u0644\u0627\u0645\u064a\u0629\"},\"@context\":\" {\"@context\":\" of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse'\",\"description\":\"In an interview with Al Jazeera, Nicolay Mladenov says that a return to war would be 'devastating'.\",\"author\":{\"@type\":\"Person\",\"name\":\"Al Jazeera Staff\",\"url\":\" {\"@context\":\" of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse'\",\"speakable\":{\"@type\":\"SpeakableSpecification\",\"cssSelector\":[\".article-header\"]},\"url\":\" {\"@context\":\" of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse'\",\"uploadDate\":\"2026-08-28T16:44:45Z\",\"description\":\"In an interview with Al Jazeera, Nicolay Mladenov says that a return to war would be 'devastating'.\",\"publisher\":{\"@id\":\" {\"@context\":\" window.environment='production'; window.isDelegatedSite=false; function getMetaValue(e,t,a){var n=void 0===a?\"\":a,u=(document.head||document.getElementsByTagName(\"head\")[0]).querySelector(\"meta[\"+(t||\"name\")+'=\"'+e+'\"]');return u?u.getAttribute(\"content\")||\"\":n} function gtag(){dataLayer.push(arguments)}function hasPerformanceGroupCookie(){var a=document.cookie.match(/OptanonConsent=([^;]+)/);return!!a&&/groups=[^&]*C0002(%3A|:)1/.test(a[1])}window.dataLayer=window.dataLayer||[],gtag(\"js\",new Date),gtag(\"set\",\"allow_google_signals\",hasPerformanceGroupCookie()),gtag(\"config\",\"G-XN9JB9Q0M1\",{send_page_view:!1,anonymize_ip:!0}) !function(){window._sf_endpt=(new Date).getTime();var e=window._sf_async_config=window._sf_async_config||{};e.uid=3291,e.domain=0===window.location.hostname.indexOf(\"aje.aj\")?\"staging.\"+window.location.hostname:\"www.aljazeera.com\",e.flickerControl=!1,e.useCanonical=!0,e.useCanonicalDomain=!0,e.title=getMetaValue(\"og:title\",\"property\")||document.title,e.type=getMetaValue(\"pageType\"),e.authors=getMetaValue(\"author\"),e.sections=getMetaValue(\"pageSection\")}() var documentHead=document.head||document.getElementsByTagName(\"head\")[0],canonicalNode=documentHead.querySelector('link[rel=\"canonical\"]'),searchTermsNode=documentHead.querySelector('meta[name=\"searchTerms\"]');const AJ_ANALYTICS_REDIRECT_DATA_KEY=\"aj_analytics_redirect_data\";if(window.previousCanonical=\"\",window.previousSearchTerm=searchTermsNode?searchTermsNode.content:\"\",canonicalNode&&sendPageView(),\"function\"==typeof window.MutationObserver){function callback(e,a){for(var t=0;t [e.toLowerCase(),a]));return[\"utm_source\",\"utm_medium\",\"utm_campaign\",\"utm_content\",\"utm_term\"].filter(e=>t.has(e)).map(e=>`${e}=${encodeURIComponent(t.get(e))}`).join(\"&\")}function getUtmParamsObject(e){const a=new URLSearchParams(e),t=new URLSearchParams(Array.from(a,([e,a])=>[e.toLowerCase(),a]));return[\"utm_source\",\"utm_medium\",\"utm_campaign\",\"utm_content\",\"utm_term\"].filter(e=>t.has(e)).reduce((e,a)=>(e[a]=t.get(a),e),{})}function sendPageView(){if(\"true\"===getMetaValue(\"isPreview\"))return;var e=documentHead.querySelector('link[rel=\"canonical\"]'),a=e?e.href:window.location.href,t=getMetaValue(\"pageType\"),n=getMetaValue(\"pageSection\"),i=getMetaValue(\"pageAuthors\"),o=getMetaValue(\"searchTerms\"),s=getMetaValue(\"pageTitle\")||document.title,r=getMetaValueByName(\"pageTemplate\"),m=a,l=a.replace(/(https|http):\\/\\/(www\\.)?/,\"\"),u=window.location.search||\"\",g=window.isDelegatedSite||window.location.hostname.includes(\"ajnet.me\")?\"Proxy\":\"BaseSite\";o&&(m+=\"?term=\"+encodeURIComponent(o)),u&&(m+=-1===m.indexOf(\"?\")?\"?\"+getUTMQueryParams(u):\"&\"+getUTMQueryParams(u)),setCustomDimensions();const d=getMetaValueByName(\"topics\"),c=getMetaValueByName(\"primaryTopic\"),y=getMetaValueByName(\"where\"),w=getMetaValueByName(\"tags\"),M=getMetaValueByName(\"primaryTag\"),p=getMetaValueByName(\"contentType\"),V=getMetaValueByName(\"sourceTaxonomy\"),N=getMetaValueByName(\"taxonomyTerms\"),h=getMetaValueByName(\"displayAuthors\"),B=getMetaValueByName(\"featuredMedia\"),f=getMetaValueByName(\"publishedDate\"),S=getMetaValueByName(\"programTaxonomy\"),v=getMetaValueByName(\"postID\"),_=getMetaValueByName(\"postLabel\"),b=getMetaValueByName(\"lastDate\"),P=getMetaValueByName(\"articleSlug\"),T=getMetaValueByName(\"internalTaxonomies\"),A=getMetaValueByName(\"internalReporting\"),L=getMediaEmbeds(),k=getMetaValue(\"siteModule\");var D=getMetaValueByName(\"channel\");const E=[\"aja\"].includes(D);var O={send_to:getMetaValueByName(\"ga4\"),page_title:E?`\u200f${s}\u200f`:s,dimension15:\"Web\",page_location:decodeURI(m)};const I=(e,a)=>{a&&(O[e]=a)};if(I(\"dimension1\",d),I(\"dimension2\",c),I(\"dimension3\",y),I(\"dimension4\",w),I(\"dimension5\",M),I(\"dimension6\",p),I(\"dimension7\",V),I(\"dimension8\",N),I(\"dimension9\",h),I(\"dimension10\",B),I(\"dimension11\",f),I(\"dimension12\",S),I(\"dimension13\",\"Generic Page\"===r?r:t),I(\"dimension14\",v),I(\"dimension16\",_),I(\"dimension17\",b),I(\"dimension18\",L),I(\"dimension19\",P),I(\"dimension20\",T),null!==A&&I(\"dimension26\",A),gtag(\"event\",\"page_view\",O),window.pSUPERFLY&&window.pSUPERFLY.virtualPage){let e=n;k&&(e=e?`${e},zMod: ${k}`:\"zMod: \"+k),_sf_async_config.title=s,_sf_async_config.type=t,_sf_async_config.authors=i,_sf_async_config.sections=e,pSUPERFLY.virtualPage({sections:e,authors:i,type:t,title:s,path:l})}window.previousCanonical=a,window.previousSearchTerm=o;const U=void 0!==window.amplitude&&void 0!==window.amplitude.track&&void 0!==window.amplitude.invoked;if(D&&s){var x=!1,R={};const e=\"10.0\";if(-1!==[\"Landing Page\",\"Home Page\",\"Search Page\",\"Sitemap Page\",\"Author Page\",\"Sponsored Post\",\"Match Centre\",\"Accounts\",\"404 Page\",\"Staff Directory Page\"].indexOf(t)){const a=getMetaValueByName(\"pageLink\")||window.location.pathname;R={channel:D,sourcePlatform:\"Web\",uCMSAmplitudeVersion:e,distribution:g,id:getMetaValueByName(\"postID\"),referralSource:document.referrer||null,link:a,title:n||s,type:r||t,index:getMetaValueByName(\"position\"),screenWidth:window.screen.width,screenHeight:window.screen.height,isMobileExperience:window.screen.width e.startsWith(\"firebase:authUser:\"));if((!i||\"Signed Out\"===i)&&l){let e;try{e=JSON.parse(window.localStorage.getItem(l))}catch(e){console.error(\"Error parsing user data.\",e)}e&&(i=\"Signed In\",o=e.emailVerified?\"Verified\":\"Not Verified\")}m||(m=window.localStorage.getItem(\"userSignInMethod\")),R.signinStatus=i||\"Signed Out\",R.verificationStatus=o||\"Not Verified\",R.authType=m||\"none\";var W=\"Signed In\"===i?\"lgdin\":\"anon\";(window._cbq=window._cbq||[]).push([\"_acct\",W]);const d=new Event(\"analytics:page-view-change\");window.dispatchEvent(d),U&&x?window.amplitude.track(x,R):x&&(window.amplitudeOpenEvent={event:x,eventProperties:R})}} !function(){var t=null,n=0,e=null;function o(){var t=document.cookie.match(/OptanonConsent=([^;]+)/);return t?t[1]:\"\"}function r(){var t=window.OnetrustActiveGroups;return String(\"string\"==typeof t?t:\"\")+\"|\"+o()}function i(){if(function(){var t=window.OnetrustActiveGroups;if(\"string\"==typeof t&&t.length>0)return/(^|,)C0004(,|$)/.test(t);var n=o();return!!n&&/groups=[^&]*C0004(%3A|:)1/.test(n)}()){try{window.localStorage.removeItem(\"_pbjs_id_optout\")}catch(t){}document.cookie=\"_pbjs_id_optout=; Path=/; SameSite=Lax; Secure; Expires=Thu, 01 Jan 1970 00:00:01 GMT\"}else{try{window.localStorage.setItem(\"_pbjs_id_optout\",\"1\")}catch(t){}document.cookie=\"_pbjs_id_optout=1; Path=/; SameSite=Lax; Secure; Max-Age=31536000\"}e=r()}function u(){null!==t&&(clearInterval(t),t=null)}window.syncPrebidUserIdOptoutFromTargetingConsent=function(){u(),i()},window.addEventListener(\"OneTrustGroupsUpdated\",(function(){u(),i()})),i(),t=setInterval((function(){n++,r()!==e&&i(),n>=30&&u()}),500)}(); !function(){if(!window.__ucmsQuantcastLoaded){window.__ucmsQuantcastLoaded=!0,window._qevents=window._qevents||[],window._qevents.push({qacct:\"p-DAMBunjxFvwVp\"});var e=document.createElement(\"script\");e.src=\" var usrPersonaAds = 0 // 0: personalized, 1: non-personalized var isNonPersonalizedAds = 0 // Google Signals Consent status var allowGoogleSignals = false function OptanonWrapper() { window.syncPrebidUserIdOptoutFromTargetingConsent && window.syncPrebidUserIdOptoutFromTargetingConsent() isNonPersonalizedAds = /(^|,)C0004(,|$)/.test(window.OnetrustActiveGroups || '') ? History of flotilla campaigns caret-right News | Gaza Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' In an interview with Al Jazeera, Nicolay Mladenov says that a return to war would be 'devastating'. Listen Listen (4 mins) Save Share Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' on social media share-nodes Share facebook x whatsapp-stroke copylink google Add Al Jazeera on Google info Nickolay Mladenov, left, the High Representative for the Board of Peace [File: John Thys/AP] By Al Jazeera Staff Published On 28 Aug 2026 28 Aug 2026 The failure of both sides to adhere to the roadmap for peace \"threatens a collapse of the ceasefire in Gaza\", Nikolay Mladenov, the high representative for the Board of Peace, has warned in an interview with Al Jazeera.",
-        "event_date": "2026-08-28T16:48:33+00:00",
-        "location": "Gaza",
-        "development_type": "primary_report",
-        "affected_system": "conflict",
-        "attribution": "Al Jazeera",
-        "uncertainty": "reported source",
-        "casualty_counts": {}
-      }
-    ],
-    "generated_at": "2026-08-30T00:49:56.303711+00:00",
-    "relevance_terms_matched": [
-      "gaza"
-    ],
-    "top_story_relevance_score": 51,
-    "substantive_ground": true,
-    "flotilla_only": false,
-    "attribution_mode": "reported_public_source",
-    "claim_status": "reported_public_source",
-    "context_only": false,
-    "core_ground_development": false,
-    "development_type": "primary_report",
-    "affected_system": "conflict",
-    "location": "Gaza",
-    "event_date": "2026-08-28T16:48:33+00:00",
-    "attribution": "Al Jazeera",
-    "uncertainty": "reported source",
-    "casualty_counts": {},
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-08-28-001",
-    "prior_edition_date": "2026-08-28",
-    "dedupe_classification": "major_update",
     "dedupe_reasons": []
   }
 ]

@@ -160,7 +160,16 @@ def test_manual_source_validation_accepts_bom_prefixed_json(isolated: Path) -> N
     assert result["status"] == "valid"
 
 
-def test_no_publishable_source_run_is_operator_success(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.mark.parametrize(
+    "error_message",
+    [
+        "No valid traceable Gaza sources survived normalization and dedupe; refusing public edition generation.",
+        "all candidates were suppressed as repeated or stale-risk",
+    ],
+)
+def test_no_publishable_source_run_is_operator_success(
+    isolated: Path, monkeypatch: pytest.MonkeyPatch, error_message: str
+) -> None:
     args = operator.parse_args(["--date", "2026-06-26", "--skip-audio", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
     _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
     monkeypatch.setattr(
@@ -175,7 +184,7 @@ def test_no_publishable_source_run_is_operator_success(isolated: Path, monkeypat
                 "generation_ok": False,
                 "validation_ok": False,
                 "tests_ok": False,
-                "errors": ["No valid traceable Gaza sources survived normalization and dedupe; refusing public edition generation."],
+                "errors": [error_message],
             },
             "{}",
         ),
@@ -183,6 +192,85 @@ def test_no_publishable_source_run_is_operator_success(isolated: Path, monkeypat
     result = operator.run_operator(args)
     assert result["ok"] is True
     assert result["operator_status"] == "NO_PUBLICATION_NEEDED"
+
+
+def test_zero_story_curation_refusal_is_expected_no_publication_without_push(
+    isolated: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    args = operator.parse_args(
+        ["--date", "2026-08-30", "--skip-audio", "--push", "--pages-repo", str(isolated / "bluefern-dispatches-pages")]
+    )
+    _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
+    monkeypatch.setattr(
+        operator,
+        "_capture_daily_run",
+        lambda run_args: (
+            1,
+            {
+                "source_count": 11,
+                "publisher_count": 6,
+                "public_story_count": 0,
+                "generation_ok": False,
+                "validation_ok": False,
+                "tests_ok": True,
+                "errors": ["No source-backed Gaza stories survived curation/dedupe; refusing public edition generation."],
+            },
+            "{}",
+        ),
+    )
+    monkeypatch.setattr(
+        operator,
+        "_run_command",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("Pages push must not run")),
+    )
+    monkeypatch.setattr(
+        operator,
+        "verify_live_publication",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("live verification must not run")),
+    )
+
+    result = operator.run_operator(args)
+
+    assert result["ok"] is True
+    assert result["operator_status"] == "NO_PUBLICATION_NEEDED"
+    assert result["public_story_count"] == 0
+    assert result["pages_commit_sha"] is None
+    assert result["pages_push_ok"] is None
+    assert result["remote_tree_verify_ok"] is None
+    assert result["next_action"] == "No dispatch was published because no new source-backed Gaza update qualified."
+    email_body = operator._build_email_body(result)
+    assert "operator_status: NO_PUBLICATION_NEEDED" in email_body
+    assert "operator_status: FAILED" not in email_body
+
+
+def test_unknown_zero_story_curation_error_remains_failed(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    args = operator.parse_args(["--date", "2026-08-30", "--skip-audio", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
+    _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
+    monkeypatch.setattr(
+        operator,
+        "_capture_daily_run",
+        lambda run_args: (
+            1,
+            {
+                "source_count": 11,
+                "publisher_count": 6,
+                "public_story_count": 0,
+                "generation_ok": False,
+                "validation_ok": False,
+                "tests_ok": True,
+                "errors": ["No source-backed Gaza stories survived curation because the runtime crashed."],
+            },
+            "{}",
+        ),
+    )
+
+    result = operator.run_operator(args)
+
+    assert result["ok"] is False
+    assert result["operator_status"] == "FAILED"
+    assert result["generation_ok"] is False
+    assert result["validation_ok"] is False
+    assert result["next_action"] == "No source-backed Gaza stories survived curation because the runtime crashed."
 
 
 def test_pages_sync_uses_fetch_and_reset_safely(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:

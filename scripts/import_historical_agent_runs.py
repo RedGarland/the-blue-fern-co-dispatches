@@ -532,7 +532,818 @@ def _renormalize_ice(args: argparse.Namespace) -> int:
     return 0
 
 
+GAZA_EDITORIAL_DECISIONS = {
+    "confirmed": "substantively_reviewed",
+    "corrected": "substantively_reviewed",
+    "deferred": "pending_review",
+    "rejected": "excluded",
+    "duplicate": "excluded",
+}
+
+GAZA_TAXONOMY_ALLOWLISTS = {
+    "category": {
+        "aid_access",
+        "ceasefire_diplomacy",
+        "civilian_harm",
+        "detention_disappearance",
+        "displacement",
+        "healthcare_access",
+        "humanitarian_access",
+        "humanitarian_operations",
+        "infrastructure_damage",
+        "legal_diplomatic",
+    },
+    "event_type": {
+        "aid_access_change",
+        "casualty_event",
+        "ceasefire_or_diplomatic_development",
+        "detention_or_disappearance_analysis",
+        "displacement_event",
+        "healthcare_access_deterioration",
+        "humanitarian_worker_injury",
+        "infrastructure_damage",
+        "legal_filing",
+    },
+    "gaza_role": {
+        "civilian_harm",
+        "core_gaza",
+        "detention_disappearance",
+        "healthcare_access",
+        "humanitarian_access",
+        "humanitarian_operations_and_safety",
+        "legal_diplomatic",
+    },
+    "source_role": {
+        "official_government_statement",
+        "official_humanitarian_report",
+        "primary_source",
+        "primary_un_humanitarian_report",
+        "reported_public_source",
+        "secondary_news_report",
+    },
+}
+
+GAZA_ATTRIBUTION_MODES = {
+    "direct_official_record",
+    "official_claim",
+    "organizational_estimate",
+    "allegation",
+    "single_source_report",
+    "multi_source_disputed_quantity",
+}
+
+
+def _clean_review_url(value: object) -> str:
+    return str(value or "").strip().lower().split("?")[0].rstrip("/")
+
+
+def _require_nonempty_string(value: object, label: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{label} must be a nonempty string")
+    return value.strip()
+
+
+def _require_bounded_string(value: object, label: str, *, maximum: int = 4000) -> str:
+    text = _require_nonempty_string(value, label)
+    if len(text) > maximum:
+        raise ValueError(f"{label} exceeds the {maximum}-character limit")
+    return text
+
+
+def _parse_review_date(value: object, label: str) -> str:
+    text = _require_nonempty_string(value, label)
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", text):
+        raise ValueError(f"{label} must be an ISO calendar date")
+    try:
+        datetime.fromisoformat(text)
+    except ValueError as exc:
+        raise ValueError(f"{label} is not a valid calendar date") from exc
+    return text
+
+
+def _review_candidate_identifier(review: dict) -> tuple[str, str]:
+    identifiers = [
+        ("finding_id", review.get("normalized_finding_id")),
+        ("audit_candidate_id", review.get("audit_candidate_id")),
+    ]
+    present = [
+        (field, str(value).strip())
+        for field, value in identifiers
+        if isinstance(value, str) and value.strip()
+    ]
+    if len(present) != 1:
+        raise ValueError(
+            "Gaza editorial review must declare exactly one of "
+            "normalized_finding_id or audit_candidate_id"
+        )
+    return present[0]
+
+
+def _gaza_candidate_fingerprint(finding: dict) -> str:
+    excluded = {
+        "audit_candidate_id",
+        "candidate_created",
+        "deduplication_outcome",
+        "finding_id",
+        "historical_outcome",
+        "matched_edition_date",
+        "matched_source_or_cluster_id",
+        "publication_approval",
+        "publication_eligible",
+        "queue_action",
+        "review_status",
+    }
+    immutable_claim = {
+        key: value
+        for key, value in finding.items()
+        if key not in excluded
+    }
+    return "sha256:" + hashlib.sha256(
+        canonical_json(immutable_claim).encode("utf-8")
+    ).hexdigest()
+
+
+def _matching_report_candidate(report: dict, finding: dict, id_field: str, identifier: str) -> dict:
+    report_findings = report.get("gaza_findings")
+    if not isinstance(report_findings, list) or not report_findings:
+        raise ValueError("Gaza import report contains no gaza_findings")
+    explicit_matches = [
+        row for row in report_findings
+        if isinstance(row, dict) and str(row.get(id_field) or "") == identifier
+    ]
+    if len(explicit_matches) > 1:
+        raise ValueError("Gaza candidate identifier is duplicated in the import report")
+    if explicit_matches:
+        return explicit_matches[0]
+
+    # Older import reports predate audit_candidate_id.  Their corresponding row is
+    # still bound by exact run, URL, title, and source-date lineage.
+    finding_url = _clean_review_url(
+        finding.get("canonical_source_url") or finding.get("source_url")
+    )
+    finding_title = str(finding.get("title") or "").strip()
+    finding_date = str(
+        finding.get("source_published_at") or finding.get("source_date") or ""
+    )[:10]
+    finding_run = str(finding.get("agent_run_id") or "")
+    lineage_matches = []
+    for row in report_findings:
+        if not isinstance(row, dict):
+            continue
+        row_url = _clean_review_url(
+            row.get("canonical_source_url") or row.get("source_url")
+        )
+        row_title = str(row.get("title") or "").strip()
+        row_date = str(
+            row.get("source_published_at") or row.get("source_date") or ""
+        )[:10]
+        row_run = str(row.get("agent_run_id") or "")
+        if (
+            finding_url
+            and row_url == finding_url
+            and row_title == finding_title
+            and row_date == finding_date
+            and row_run == finding_run
+        ):
+            lineage_matches.append(row)
+    if len(lineage_matches) != 1:
+        raise ValueError(
+            "Gaza candidate must resolve exactly once in the normalized and import "
+            "report lineage"
+        )
+    return lineage_matches[0]
+
+
+def _validate_gaza_review_dates(review: dict, finding: dict) -> dict:
+    assessment = review.get("date_assessment")
+    if not isinstance(assessment, dict):
+        raise ValueError("Gaza editorial review date_assessment is missing")
+    publication = _parse_review_date(
+        finding.get("source_published_at") or finding.get("source_date"),
+        "candidate source publication date",
+    )
+    if assessment.get("source_published_at") != publication:
+        raise ValueError("Gaza review source publication date does not match candidate")
+
+    event_date = str(finding.get("event_date") or "").strip()
+    period_start = str(finding.get("event_period_start") or "").strip()
+    period_end = str(finding.get("event_period_end") or "").strip()
+    if event_date and (period_start or period_end):
+        raise ValueError("Gaza candidate cannot declare both event_date and event period")
+    if event_date:
+        event_date = _parse_review_date(event_date, "candidate event_date")
+        if assessment.get("event_date") != event_date:
+            raise ValueError("Gaza review event_date does not match candidate")
+        if assessment.get("event_period") not in (None, {}):
+            raise ValueError("Gaza point-date candidate cannot acquire an event period")
+        event_boundary = event_date
+        result = {"event_date": event_date, "source_published_at": publication}
+    else:
+        if not period_start and not period_end and (
+            finding.get("event_date_status") == "unknown"
+            or finding.get("event_onset_unknown") is True
+        ):
+            if assessment.get("event_date_status") != "unknown":
+                raise ValueError("Gaza review must retain the candidate's unknown event date")
+            explanation = _require_bounded_string(
+                assessment.get("unknown_event_date_explanation"),
+                "unknown event date explanation",
+            )
+            result = {
+                "event_date_status": "unknown",
+                "unknown_event_date_explanation": explanation,
+                "source_published_at": publication,
+            }
+            event_boundary = ""
+        elif not period_start or not period_end:
+            raise ValueError("Gaza candidate must contain an event date or bounded event period")
+        else:
+            period_start = _parse_review_date(period_start, "candidate event_period_start")
+            period_end = _parse_review_date(period_end, "candidate event_period_end")
+            if period_start > period_end:
+                raise ValueError("Gaza candidate event period start must not follow its end")
+            if assessment.get("event_date") not in (None, ""):
+                raise ValueError("Gaza period candidate cannot acquire a point event_date")
+            if assessment.get("event_period") != {
+                "start": period_start,
+                "end": period_end,
+            }:
+                raise ValueError("Gaza review event period does not match candidate")
+            event_boundary = period_start
+            result = {
+                "event_period_start": period_start,
+                "event_period_end": period_end,
+                "source_published_at": publication,
+            }
+
+    if event_boundary and publication < event_boundary:
+        if assessment.get("publication_precedes_event_supported") is not True:
+            raise ValueError("Gaza publication date precedes the event boundary")
+        _require_nonempty_string(
+            assessment.get("publication_precedes_event_explanation"),
+            "publication-before-event explanation",
+        )
+    for candidate_key, review_key in (
+        ("discovered_at", "discovered_at"),
+        ("imported_at", "imported_at"),
+    ):
+        candidate_value = str(finding.get(candidate_key) or "").strip()
+        if candidate_value and assessment.get(review_key) != candidate_value:
+            raise ValueError(f"Gaza review {review_key} does not match candidate")
+    return result
+
+
+def _validate_gaza_review_taxonomy(review: dict, finding: dict) -> dict:
+    taxonomy = review.get("taxonomy_review")
+    if not isinstance(taxonomy, dict):
+        raise ValueError("Gaza editorial review taxonomy_review is missing")
+    unexpected = set(taxonomy) - {"domain", *GAZA_TAXONOMY_ALLOWLISTS}
+    if unexpected:
+        raise ValueError(
+            "Gaza review taxonomy contains unsupported fields: "
+            + ", ".join(sorted(unexpected))
+        )
+    validated: dict[str, str] = {}
+    for field, allowlist in GAZA_TAXONOMY_ALLOWLISTS.items():
+        candidate_value = str(finding.get(field) or "").strip()
+        review_value = str(taxonomy.get(field) or "").strip()
+        if candidate_value:
+            if candidate_value not in allowlist:
+                raise ValueError(f"Gaza candidate {field} is outside the allowlist")
+            if review_value != candidate_value:
+                raise ValueError(f"Gaza review {field} does not match candidate")
+            validated[field] = candidate_value
+        elif review_value:
+            raise ValueError(f"Gaza review cannot substitute a missing {field}")
+    if not validated.get("category") and not validated.get("event_type"):
+        raise ValueError("Gaza candidate must have an allowed category or event_type")
+    if taxonomy.get("domain") not in (None, "gaza"):
+        raise ValueError("Gaza review taxonomy domain must remain gaza")
+    return validated
+
+
+def _validate_gaza_evidence(review: dict, finding: dict) -> list[dict]:
+    references = review.get("evidence_references")
+    if not isinstance(references, list) or not references:
+        raise ValueError("Gaza editorial review requires evidence references")
+    candidate_url = _clean_review_url(
+        finding.get("canonical_source_url") or finding.get("source_url")
+    )
+    if not candidate_url:
+        raise ValueError("Gaza candidate source URL is missing")
+    validated: list[dict] = []
+    for reference in references:
+        if not isinstance(reference, dict):
+            raise ValueError("Gaza evidence reference must be an object")
+        role = reference.get("role")
+        if role not in {"principal", "corroborating"}:
+            raise ValueError("Gaza evidence role must be principal or corroborating")
+        url = _require_nonempty_string(reference.get("url"), "evidence URL")
+        if not re.match(r"^https://[^\s]+$", url, flags=re.I):
+            raise ValueError("Gaza evidence URL must be HTTPS")
+        passage = _require_nonempty_string(
+            reference.get("supporting_passage"), "evidence supporting passage"
+        )
+        validated.append({"role": role, "url": url, "supporting_passage": passage})
+    principal_urls = {
+        _clean_review_url(item["url"])
+        for item in validated
+        if item["role"] == "principal"
+    }
+    if candidate_url not in principal_urls:
+        raise ValueError("Gaza principal evidence source does not match candidate")
+    return validated
+
+
+def _validate_gaza_attribution(review: dict) -> dict:
+    attribution = review.get("attribution_assessment")
+    if not isinstance(attribution, dict):
+        raise ValueError("Gaza editorial review attribution_assessment is missing")
+    mode = attribution.get("mode")
+    if mode not in GAZA_ATTRIBUTION_MODES:
+        raise ValueError("Gaza attribution mode is not allowed")
+    _require_nonempty_string(attribution.get("attributed_to"), "attribution authority")
+    _require_nonempty_string(
+        attribution.get("safe_future_wording"), "safe future wording"
+    )
+    if attribution.get("attribution_preserved") is not True:
+        raise ValueError("Gaza attribution must remain explicit")
+    if attribution.get("unsupported_certainty_escalation") is not False:
+        raise ValueError("Gaza review must reject unsupported certainty escalation")
+    if attribution.get("uncertainty_preserved") is not True:
+        raise ValueError("Gaza attribution must preserve uncertainty")
+    if mode == "organizational_estimate":
+        if attribution.get("estimate_not_independently_verified") is not True:
+            raise ValueError("Gaza organizational estimate must retain verification limits")
+        if attribution.get("methodology_preserved") is not True:
+            raise ValueError("Gaza organizational estimate must preserve methodology")
+    if mode == "allegation" and attribution.get("allegation_not_adjudicated") is not True:
+        raise ValueError("Gaza allegation must remain distinct from an adjudicated fact")
+    if mode == "single_source_report" and attribution.get(
+        "single_source_uncertainty_preserved"
+    ) is not True:
+        raise ValueError("Gaza single-source report must retain source uncertainty")
+    if mode == "multi_source_disputed_quantity":
+        values = attribution.get("disputed_values")
+        if not isinstance(values, list) or len(values) < 2:
+            raise ValueError("Gaza disputed quantity requires at least two values")
+        normalized_values = {
+            canonical_json(item.get("value"))
+            for item in values
+            if isinstance(item, dict)
+            and isinstance(item.get("source_url"), str)
+            and re.match(r"^https://[^\s]+$", item["source_url"], flags=re.I)
+            and "value" in item
+        }
+        if len(normalized_values) < 2 or len(normalized_values) != len(values):
+            raise ValueError("Gaza disputed values must be distinct and source-backed")
+        if attribution.get("dispute_unresolved") is not True:
+            raise ValueError("Gaza disputed quantity must remain unresolved")
+    return attribution
+
+
+def _validate_gaza_prior_reference(repo_root: Path, reference: dict, label: str) -> None:
+    reference_id = _require_nonempty_string(reference.get("id"), f"{label} id")
+    if reference.get("type") == "historical_candidate":
+        normalized_root = archive_root(repo_root, "gaza") / "normalized"
+        matches = []
+        for path in normalized_root.rglob("*.json") if normalized_root.exists() else []:
+            try:
+                record = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                continue
+            for candidate in record.get("findings", []):
+                if isinstance(candidate, dict) and reference_id in {
+                    str(candidate.get("finding_id") or ""),
+                    str(candidate.get("audit_candidate_id") or ""),
+                }:
+                    matches.append((path, candidate))
+        if len(matches) != 1:
+            raise ValueError(f"{label} must resolve exactly once as a historical candidate")
+        return
+    targets = gaza_match_targets(repo_root)
+    matches = list(targets["clusters_by_id"].get(reference_id, []))
+    matches.extend(
+        source
+        for sources in targets["sources_by_url"].values()
+        for source in sources
+        if reference_id in source.get("story_ids", [])
+    )
+    matches.extend(
+        edition
+        for edition in targets["editions"].values()
+        if edition.get("edition_id") == reference_id
+    )
+    if not matches:
+        raise ValueError(f"{label} does not resolve as a published story")
+
+
+def _validate_gaza_decision_details(
+    review: dict,
+    decision: str,
+    evidence: list[dict],
+    repo_root: Path,
+) -> dict:
+    details: dict[str, object] = {}
+    if decision in {"confirmed", "corrected"}:
+        duplicate_check = review.get("duplicate_and_authoritative_match_check")
+        if (
+            not isinstance(duplicate_check, dict)
+            or duplicate_check.get("candidate_remains_distinct") is not True
+            or duplicate_check.get("existing_edition_match") is not None
+            or duplicate_check.get("existing_source_match") is not None
+            or duplicate_check.get("existing_story_cluster_match") is not None
+            or duplicate_check.get("existing_historical_match") is not None
+        ):
+            raise ValueError(
+                "confirmed or corrected Gaza review requires a clear bounded "
+                "duplicate and authoritative-match check"
+            )
+        details["duplicate_and_authoritative_match_check"] = duplicate_check
+    if decision == "corrected":
+        lineage = review.get("correction_lineage")
+        if not isinstance(lineage, dict):
+            raise ValueError("corrected decision requires correction_lineage")
+        prior = lineage.get("prior_reference")
+        if not isinstance(prior, dict) or prior.get("type") not in {
+            "historical_candidate",
+            "published_story",
+        }:
+            raise ValueError("correction lineage requires a prior candidate or story reference")
+        if str(prior.get("id") or "") in {
+            str(review.get("normalized_finding_id") or ""),
+            str(review.get("audit_candidate_id") or ""),
+        }:
+            raise ValueError("correction prior reference cannot be the selected candidate")
+        _validate_gaza_prior_reference(repo_root, prior, "correction prior reference")
+        if prior.get("type") == "published_story":
+            _parse_review_date(prior.get("edition_date"), "prior story edition_date")
+        prior_fp = lineage.get("prior_event_fingerprint")
+        corrected_fp = lineage.get("corrected_event_fingerprint")
+        if not isinstance(prior_fp, dict) or not isinstance(corrected_fp, dict):
+            raise ValueError("correction lineage requires prior and corrected fingerprints")
+        prior_identity = _require_nonempty_string(
+            prior_fp.get("event_identity"), "prior event identity"
+        )
+        corrected_identity = _require_nonempty_string(
+            corrected_fp.get("event_identity"), "corrected event identity"
+        )
+        if prior_identity != corrected_identity:
+            raise ValueError("correction fingerprints refer to unrelated events")
+        old_fp = _require_nonempty_string(prior_fp.get("fingerprint"), "prior fingerprint")
+        new_fp = _require_nonempty_string(
+            corrected_fp.get("fingerprint"), "corrected fingerprint"
+        )
+        if old_fp == new_fp:
+            raise ValueError("correction fingerprints must differ")
+        if new_fp != review.get("candidate_event_fingerprint"):
+            raise ValueError("corrected fingerprint must match the selected candidate")
+        _require_nonempty_string(lineage.get("field_or_claim"), "corrected field or claim")
+        if "previous_value" not in lineage or "corrected_value" not in lineage:
+            raise ValueError("correction lineage requires previous and corrected values")
+        if canonical_json(lineage["previous_value"]) == canonical_json(
+            lineage["corrected_value"]
+        ):
+            raise ValueError("correction previous and corrected values must differ")
+        indexes = lineage.get("evidence_reference_indexes")
+        if (
+            not isinstance(indexes, list)
+            or not indexes
+            or not all(isinstance(value, int) and 0 <= value < len(evidence) for value in indexes)
+        ):
+            raise ValueError("correction lineage requires traceable evidence indexes")
+        if lineage.get("corroboration_required") is True and len(set(indexes)) < 2:
+            raise ValueError("correction requiring corroboration needs multiple references")
+        _require_bounded_string(
+            lineage.get("materiality_explanation"), "correction materiality explanation"
+        )
+        uncertainty = lineage.get("remaining_uncertainty")
+        if not isinstance(uncertainty, dict) or not isinstance(
+            uncertainty.get("persists"), bool
+        ):
+            raise ValueError("correction lineage must state remaining uncertainty")
+        if uncertainty["persists"]:
+            _require_bounded_string(
+                uncertainty.get("description"), "remaining uncertainty description"
+            )
+        if lineage.get("prior_public_artifact_overwritten") is not False:
+            raise ValueError("review cannot overwrite a prior public artifact")
+        details["correction_lineage"] = lineage
+    elif decision == "deferred":
+        details["unresolved_requirement"] = _require_bounded_string(
+            review.get("unresolved_requirement"), "deferred unresolved requirement"
+        )
+    elif decision == "rejected":
+        details["rejection_basis"] = _require_bounded_string(
+            review.get("rejection_basis"), "rejection basis"
+        )
+    elif decision == "duplicate":
+        matched = review.get("matched_reference")
+        if not isinstance(matched, dict) or matched.get("type") not in {
+            "historical_candidate",
+            "published_story",
+        }:
+            raise ValueError("duplicate decision requires a matched reference")
+        if str(matched.get("id") or "") in {
+            str(review.get("normalized_finding_id") or ""),
+            str(review.get("audit_candidate_id") or ""),
+        }:
+            raise ValueError("duplicate reference cannot be the selected candidate")
+        _validate_gaza_prior_reference(repo_root, matched, "duplicate reference")
+        _require_nonempty_string(
+            matched.get("event_fingerprint"), "duplicate event fingerprint"
+        )
+        details["matched_reference"] = matched
+    return details
+
+
+def _review_gaza_editorial_candidate(args: argparse.Namespace) -> int:
+    if args.decision not in GAZA_EDITORIAL_DECISIONS:
+        raise ValueError(
+            "unsupported Gaza editorial decision; expected one of: "
+            + ", ".join(sorted(GAZA_EDITORIAL_DECISIONS))
+        )
+    raw_sha = str(args.raw_sha or "")
+    if not re.fullmatch(r"[0-9a-f]{64}", raw_sha):
+        raise ValueError("--raw-sha must be an exact lowercase SHA-256 digest")
+    expected_review_sha = str(args.review_artifact_sha256 or "")
+    if not re.fullmatch(r"[0-9a-f]{64}", expected_review_sha):
+        raise ValueError("--review-artifact-sha256 must be an exact lowercase SHA-256 digest")
+
+    repo_root = args.repo_root.resolve()
+    base = archive_root(repo_root, "gaza")
+    raw_path = base / "raw" / f"{raw_sha}.json"
+    normalized_path = base / "normalized" / f"{raw_sha}.json"
+    report_path = base / "reports" / f"{raw_sha}.json"
+    missing = [str(path) for path in (raw_path, normalized_path, report_path) if not path.is_file()]
+    if missing:
+        raise ValueError("historical review target is incomplete; missing: " + ", ".join(missing))
+
+    review_path = args.review_artifact.resolve()
+    reviews_root = (base / "reviews").resolve()
+    try:
+        relative_review = review_path.relative_to(reviews_root)
+    except ValueError as exc:
+        raise ValueError(f"review artifact must be under {reviews_root}") from exc
+    if not relative_review.parts or relative_review.parts[0].lower() == "decisions":
+        raise ValueError("review artifact must be independent of decision records")
+    if not review_path.is_file():
+        raise ValueError(f"review artifact does not exist: {review_path}")
+    review_bytes = review_path.read_bytes()
+    actual_review_sha = sha256_bytes(review_bytes)
+    if actual_review_sha != expected_review_sha:
+        raise ValueError("review artifact SHA-256 mismatch")
+
+    raw_bytes = raw_path.read_bytes()
+    normalized_bytes = normalized_path.read_bytes()
+    report_bytes = report_path.read_bytes()
+    raw_record = json.loads(raw_bytes.decode("utf-8"))
+    normalized_record = json.loads(normalized_bytes.decode("utf-8"))
+    report = json.loads(report_bytes.decode("utf-8"))
+    review = json.loads(review_bytes.decode("utf-8"))
+    for label, payload in (
+        ("raw archive", raw_record),
+        ("normalized record", normalized_record),
+        ("import report", report),
+        ("editorial review", review),
+    ):
+        if not isinstance(payload, dict) or payload.get("domain") != "gaza":
+            raise ValueError(f"{label} must be a Gaza JSON object")
+    if raw_record.get("raw_sha256") != raw_sha:
+        raise ValueError("raw archive SHA-256 identity does not match")
+    if normalized_record.get("raw_sha256") != raw_sha:
+        raise ValueError("normalized record SHA-256 identity does not match")
+    if report.get("input_sha256") != raw_sha:
+        raise ValueError("import report SHA-256 identity does not match")
+    if review.get("raw_sha256") != raw_sha:
+        raise ValueError("editorial review SHA-256 identity does not match")
+    encoded = raw_record.get("raw_bytes_base64")
+    try:
+        preserved_raw = base64.b64decode(encoded, validate=True)
+    except (ValueError, TypeError) as exc:
+        raise ValueError("historical raw archive bytes are malformed") from exc
+    if sha256_bytes(preserved_raw) != raw_sha:
+        raise ValueError("historical raw archive bytes do not match content address")
+    normalized_sha = sha256_bytes(normalized_bytes)
+    report_sha = sha256_bytes(report_bytes)
+    if review.get("normalized_artifact_sha256") != normalized_sha:
+        raise ValueError("normalized artifact digest does not match review lineage")
+    if review.get("report_artifact_sha256") != report_sha:
+        raise ValueError("report artifact digest does not match review lineage")
+    if review.get("schema_version") != "gaza_historical_editorial_review_v2":
+        raise ValueError("Gaza editorial review schema_version is invalid")
+    if review.get("review_type") != "historical_editorial_review":
+        raise ValueError("Gaza editorial review review_type is invalid")
+    if review.get("decision") != args.decision:
+        raise ValueError("review artifact decision does not match CLI decision")
+
+    id_field, identifier = _review_candidate_identifier(review)
+    findings = normalized_record.get("findings")
+    if not isinstance(findings, list) or not findings:
+        raise ValueError("historical normalized record contains no findings")
+    matches = [
+        item for item in findings
+        if isinstance(item, dict) and str(item.get(id_field) or "") == identifier
+    ]
+    if len(matches) != 1:
+        raise ValueError("Gaza candidate identifier must resolve exactly once")
+    finding = matches[0]
+    if finding.get("domain") not in (None, "", "gaza"):
+        raise ValueError("Gaza candidate domain does not match")
+    report_candidate = _matching_report_candidate(report, finding, id_field, identifier)
+    if report_candidate.get("domain") not in (None, "", "gaza"):
+        raise ValueError("Gaza report candidate domain does not match")
+    run_values = [
+        str(value or "").strip()
+        for value in (
+            raw_record.get("agent_run_id"),
+            normalized_record.get("agent_run_id"),
+            finding.get("agent_run_id"),
+            report_candidate.get("agent_run_id"),
+            review.get("agent_run_id"),
+        )
+    ]
+    if any(not value for value in run_values) or len(set(run_values)) != 1:
+        raise ValueError("Gaza candidate agent_run_id lineage does not match")
+    finding_url = _clean_review_url(
+        finding.get("canonical_source_url") or finding.get("source_url")
+    )
+    report_url = _clean_review_url(
+        report_candidate.get("canonical_source_url")
+        or report_candidate.get("source_url")
+    )
+    finding_date = str(
+        finding.get("source_published_at") or finding.get("source_date") or ""
+    )[:10]
+    report_date = str(
+        report_candidate.get("source_published_at")
+        or report_candidate.get("source_date")
+        or ""
+    )[:10]
+    if (
+        not finding_url
+        or report_url != finding_url
+        or report_date != finding_date
+        or str(report_candidate.get("title") or "").strip()
+        != str(finding.get("title") or "").strip()
+    ):
+        raise ValueError("Gaza candidate source lineage does not match import report")
+    if finding.get("historical_outcome") != "new_historical_candidate":
+        raise ValueError("Gaza editorial review requires a new_historical_candidate")
+    if finding.get("review_status") != "pending_review":
+        raise ValueError("Gaza candidate must remain pending_review before decision recording")
+    if finding.get("publication_eligible") is not False or finding.get(
+        "publication_approval"
+    ) is not False:
+        raise ValueError("Gaza candidate must remain nonpublishable and nonapproved")
+    if finding.get("queue_action") not in (None, "", "none"):
+        raise ValueError("Gaza candidate must not be queued")
+    forbidden_active_states = {
+        "approval": True,
+        "approved": True,
+        "publication_ready": True,
+        "release_authorized": True,
+        "release_ready": True,
+        "queued": True,
+        "publishing": True,
+        "publishing_authorized": True,
+        "published": True,
+    }
+    for key, forbidden in forbidden_active_states.items():
+        if finding.get(key) == forbidden or review.get(key) == forbidden:
+            raise ValueError(f"Gaza editorial review cannot set {key}")
+
+    required_review_values = {
+        "decision_reason": str,
+        "current_review_status": "pending_review",
+        "current_publication_eligible": False,
+        "current_publication_approval": False,
+        "current_queue_action": "none",
+        "resulting_review_state": GAZA_EDITORIAL_DECISIONS[args.decision],
+        "archive_mutation_authorized": False,
+        "edition_authorized": False,
+        "publication_authorized": False,
+        "queue_authorized": False,
+        "source_record_authorized": False,
+        "cluster_authorized": False,
+        "audio_authorized": False,
+    }
+    for key, expected in required_review_values.items():
+        if expected is str:
+            _require_bounded_string(
+                review.get(key), f"Gaza review {key}", maximum=2000
+            )
+        elif review.get(key) != expected:
+            raise ValueError(f"Gaza review {key} must be exactly {expected!r}")
+
+    evidence = _validate_gaza_evidence(review, finding)
+    candidate_fingerprint = _gaza_candidate_fingerprint(finding)
+    if review.get("candidate_event_fingerprint") != candidate_fingerprint:
+        raise ValueError("Gaza candidate event fingerprint does not match")
+    dates = _validate_gaza_review_dates(review, finding)
+    taxonomy = _validate_gaza_review_taxonomy(review, finding)
+    attribution = _validate_gaza_attribution(review)
+    decision_details = _validate_gaza_decision_details(
+        review, args.decision, evidence, repo_root
+    )
+
+    identifier_key = f"{id_field}:{identifier}"
+    identity_digest = hashlib.sha256(identifier_key.encode("utf-8")).hexdigest()[:20]
+    decision_path = base / "reviews" / "decisions" / (
+        f"{raw_sha[:24]}-{identity_digest}.json"
+    )
+    try:
+        review_display = review_path.relative_to(repo_root).as_posix()
+    except ValueError:
+        review_display = review_path.as_posix()
+    immutable = {
+        "schema_version": "gaza_historical_editorial_decision_v2",
+        "domain": "gaza",
+        "raw_sha256": raw_sha,
+        "raw_archive_artifact_path": raw_path.relative_to(repo_root).as_posix(),
+        "raw_archive_artifact_sha256": sha256_bytes(raw_bytes),
+        id_field: identifier,
+        "agent_run_id": review["agent_run_id"],
+        "normalized_artifact_path": normalized_path.relative_to(repo_root).as_posix(),
+        "normalized_artifact_sha256": normalized_sha,
+        "report_artifact_path": report_path.relative_to(repo_root).as_posix(),
+        "report_artifact_sha256": report_sha,
+        "review_artifact_path": review_display,
+        "review_artifact_sha256": actual_review_sha,
+        "operator": args.operator,
+        "decision": args.decision,
+        "decision_reason": review["decision_reason"],
+        "candidate_event_fingerprint": candidate_fingerprint,
+        "previous_review_status": "pending_review",
+        "resulting_review_state": GAZA_EDITORIAL_DECISIONS[args.decision],
+        "publication_eligible": False,
+        "publication_approval": False,
+        "publication_authorized": False,
+        "queue_authorized": False,
+        "queue_action": "none",
+        "archive_content_change_authorized": False,
+        "edition_authorized": False,
+        "source_record_authorized": False,
+        "cluster_authorized": False,
+        "audio_authorized": False,
+        "date_assessment": dates,
+        "taxonomy_review": taxonomy,
+        "attribution_assessment": attribution,
+        "evidence_references": evidence,
+        **decision_details,
+    }
+    if decision_path.exists():
+        existing = json.loads(decision_path.read_text(encoding="utf-8"))
+        if not isinstance(existing, dict):
+            raise ValueError("existing Gaza editorial decision must be a JSON object")
+        for key, expected in immutable.items():
+            if existing.get(key) != expected:
+                raise ValueError(f"existing Gaza editorial decision conflicts at {key}")
+        result = {
+            "status": "idempotent_noop",
+            "domain": "gaza",
+            id_field: identifier,
+            "decision": args.decision,
+            "resulting_review_state": GAZA_EDITORIAL_DECISIONS[args.decision],
+            "decision_audit_path": str(decision_path),
+            "publication_authorized": False,
+        }
+        print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))
+        return 0
+    if args.dry_run:
+        result = {
+            "status": "dry_run_validated",
+            "domain": "gaza",
+            id_field: identifier,
+            "decision": args.decision,
+            "resulting_review_state": GAZA_EDITORIAL_DECISIONS[args.decision],
+            "decision_audit_path": str(decision_path),
+            "publication_authorized": False,
+            "persistent_mutation": False,
+        }
+        print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))
+        return 0
+
+    audit = {**immutable, "decided_at": datetime.now(timezone.utc).isoformat()}
+    atomic_json(decision_path, audit)
+    result = {
+        "status": "decision_recorded",
+        "domain": "gaza",
+        id_field: identifier,
+        "decision": args.decision,
+        "previous_review_status": "pending_review",
+        "resulting_review_state": GAZA_EDITORIAL_DECISIONS[args.decision],
+        "decision_audit_path": str(decision_path),
+        "publication_authorized": False,
+        "normalized_artifact_unchanged": sha256_bytes(normalized_path.read_bytes()) == normalized_sha,
+    }
+    print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))
+    return 0
+
+
 def _review_historical_candidate(args: argparse.Namespace) -> int:
+    if args.domain == "gaza" and args.decision in GAZA_EDITORIAL_DECISIONS:
+        return _review_gaza_editorial_candidate(args)
     supported_decisions = {
         ("ice", "substantively-valid"): {
             "audit_decision": "accept_substantively_valid_historical_candidate",
@@ -1333,6 +2144,21 @@ def _review_historical_candidate(args: argparse.Namespace) -> int:
         raise ValueError(
             "a substantive decision audit already exists for a pending candidate"
         )
+    if args.dry_run:
+        result = {
+            "status": "dry_run_validated",
+            "domain": args.domain,
+            "raw_sha256": raw_sha,
+            "normalized_finding_id": finding_id,
+            "previous_review_status": previous_status,
+            "new_review_status": decision_spec["new_status"],
+            "review_artifact_sha256": actual_review_sha,
+            "decision_audit_path": str(audit_path),
+            "publication_authorized": False,
+            "persistent_mutation": False,
+        }
+        print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))
+        return 0
 
     updated_record = json.loads(json.dumps(normalized_record, ensure_ascii=False))
     updated_finding = updated_record["findings"][finding_index]
@@ -1400,6 +2226,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--review-artifact", type=Path)
     parser.add_argument("--review-artifact-sha256")
     parser.add_argument("--operator", default="William Patton")
+    parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
     if args.operation.startswith("batch-"):
         if not args.domain or not args.input_dir:

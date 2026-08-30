@@ -539,6 +539,7 @@ def collect_or_load_sources(
             "providers_successful": providers_successful,
             "provider_failures": provider_failures,
             "provider_diagnostics": provider_diagnostics,
+            "global_source_cap_exclusions": list(collected.get("global_source_cap_exclusions") or []),
             "skipped_providers": list(collected.get("skipped_providers") or []),
             "working_providers": list(collected.get("working_providers") or []),
             "stage_counts": dict(collected.get("stage_counts") or {}),

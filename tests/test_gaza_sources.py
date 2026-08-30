@@ -903,6 +903,150 @@ def test_rank_gaza_candidates_prioritizes_humanitarian_high_value_items():
     assert high["candidate_score_breakdown"]["date_confidence"] >= 18
 
 
+def test_select_gaza_candidates_is_deterministic_and_preserves_under_cap_order():
+    records = [
+        {
+            "source_record_id": f"source-{index:02d}",
+            "provider_id": f"provider-{index:02d}",
+            "title": f"Gaza ceasefire update {index}",
+            "summary_or_snippet": "A Palestinian ceasefire development was reported.",
+            "category_hint": "conflict",
+            "publisher": f"Publisher {index}",
+            "reliability_tier": "editorial-record",
+            "published_at": "2026-08-27T08:00:00+00:00",
+            "url": f"https://news.test.invalid/gaza-{index}",
+        }
+        for index in range(12)
+    ]
+    under_cap, under_cap_excluded = gaza_sources.select_gaza_candidates(records[:3], "2026-08-29", 12)
+    assert [row["source_record_id"] for row in under_cap] == ["source-00", "source-01", "source-02"]
+    assert under_cap_excluded == []
+
+    late_high_value = {
+        "source_record_id": "source-late-high",
+        "provider_id": "provider-late",
+        "title": "UNRWA says Gaza hospital aid access expands after humanitarian emergency",
+        "summary_or_snippet": "Humanitarian aid reached civilians facing displacement and hospital pressure.",
+        "category_hint": "humanitarian",
+        "publisher": "UNRWA",
+        "reliability_tier": "official-humanitarian-source",
+        "published_at": "2026-08-29T12:00:00+00:00",
+        "url": "https://www.unrwa.org/newsroom/gaza-late-high",
+    }
+    first, first_excluded = gaza_sources.select_gaza_candidates([*records, late_high_value], "2026-08-29", 12)
+    second, second_excluded = gaza_sources.select_gaza_candidates([*records, late_high_value], "2026-08-29", 12)
+    assert len(first) == 12
+    assert "source-late-high" in {row["source_record_id"] for row in first}
+    assert [row["source_record_id"] for row in first] == [row["source_record_id"] for row in second]
+    assert [row["source_record_id"] for row in first_excluded] == [row["source_record_id"] for row in second_excluded]
+
+
+def test_collection_attempts_late_provider_after_early_saturation_and_reports_cap_exclusion(work_root, monkeypatch):
+    config_path = work_root / "data" / "dispatches" / "gaza" / "sources.yml"
+    config_path.parent.mkdir(parents=True, exist_ok=True)
+    config_path.write_text(
+        """sources:
+  - source_id: early-provider
+    name: Early Provider
+    url: https://early.test.invalid/rss
+    type: rss
+    enabled: true
+    source_state: enabled
+    publisher: Early Publisher
+    reliability_tier: editorial-record
+    category_hint: conflict
+    region_scope: Gaza
+  - source_id: late-high-provider
+    name: Late High Provider
+    url: https://www.unrwa.org/rss
+    type: rss
+    enabled: true
+    source_state: enabled
+    publisher: UNRWA
+    reliability_tier: official-humanitarian-source
+    category_hint: humanitarian
+    region_scope: Gaza
+  - source_id: late-low-provider
+    name: Late Low Provider
+    url: https://late.test.invalid/rss
+    type: rss
+    enabled: true
+    source_state: enabled
+    publisher: Late Publisher
+    reliability_tier: editorial-record
+    category_hint: conflict
+    region_scope: Gaza
+""",
+        encoding="utf-8",
+    )
+    feed_calls = []
+
+    def item(index, *, title="Gaza ceasefire update", published_at="2026-08-28T08:00:00+00:00", host="early.test.invalid"):
+        return {
+            "title": f"{title} {index}",
+            "url": f"https://{host}/news/gaza-{index}",
+            "published_at": published_at,
+            "summary_or_snippet": "A Palestinian ceasefire development was reported.",
+        }
+
+    def fake_fetch(source_id, _url, *_args, **_kwargs):
+        feed_calls.append(source_id)
+        if source_id == "early-provider":
+            items = [item(index) for index in range(13)]
+        elif source_id == "late-high-provider":
+            items = [
+                item(
+                    100,
+                    title="UNRWA Gaza hospital humanitarian aid access expands for displaced civilians",
+                    published_at="2026-08-29T12:00:00+00:00",
+                    host="www.unrwa.org",
+                )
+            ]
+        else:
+            items = [item(200, published_at="2026-08-27T08:00:00+00:00", host="late.test.invalid")]
+        return {
+            "ok": True,
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload(items),
+            "content_text": None,
+        }
+
+    monkeypatch.setattr(gaza_sources, "fetch_feed_payload", fake_fetch)
+    result = gaza_sources.collect_gaza_sources(
+        work_root,
+        "2026-08-29",
+        max_sources=12,
+        min_sources=0,
+        prefer_manual=False,
+        write_output=False,
+    )
+
+    assert feed_calls == ["early-provider", "late-high-provider", "late-low-provider"]
+    assert result["source_count"] == 12
+    assert result["stage_counts"]["accepted_before_global_source_cap"] == 14
+    assert result["stage_counts"]["excluded_by_global_source_cap"] == 2
+    assert result["stage_counts"]["final_retained_sources"] == 12
+    assert any(row["provider_id"] == "late-high-provider" for row in result["sources"])
+    early = next(row for row in result["provider_diagnostics"] if row["source_id"] == "early-provider")
+    assert early["raw_items"] == 13
+    assert early["accepted_before_global_source_cap"] == 12
+    assert early["provider_candidate_cap"] == 12
+    assert early["items_not_inspected_after_provider_candidate_cap"] == 1
+    late_low = next(row for row in result["provider_diagnostics"] if row["source_id"] == "late-low-provider")
+    assert late_low["status"] == "ok"
+    assert late_low["raw_items"] == 1
+    assert late_low["accepted_before_global_source_cap"] == 1
+    assert late_low["retained_after_global_source_cap"] == 0
+    assert late_low["excluded_by_global_source_cap"] == 1
+    assert not any(row["source_id"] == "late-low-provider" for row in result["failed_source_ids"])
+
+
 def test_relevance_rejects_guardian_australia_coal_live_blog():
     source = gaza_sources.SourceDefinition(
         source_id="guardian-world",
@@ -1735,6 +1879,237 @@ def test_aljazeera_board_of_peace_isf_article_enrichment_adds_material_facts(wor
     assert "mechanism for deploying" in normalized[0]["summary_or_snippet"].lower()
     assert "deployment locations" in normalized[0]["summary_or_snippet"].lower()
     assert "advance elements" in normalized[0]["summary_or_snippet"].lower()
+
+
+def test_production_shaped_provider_saturation_still_runs_and_retains_isf_candidate(work_root, monkeypatch):
+    specs = [
+        ("bbc-middle-east", "BBC News", "rss", "https://feeds.bbci.co.uk/news/world/middle_east/rss.xml", ""),
+        ("wafa-gaza-casualty-locations-query", "WAFA", "google_news_rss", "", "site:hebrew.wafa.ps Al-Qarara Abdeen"),
+        ("wafa-gaza-displacement-tent-query", "WAFA", "google_news_rss", "", 'site:wafa.ps Gaza City "Al-Mashahara" tent displaced'),
+        ("wafa-gaza-motorbike-query", "WAFA", "google_news_rss", "", 'site:wafa.ps Gaza City "Tal al-Hawa" motorbike'),
+        ("wafa-gaza-health-infrastructure-query", "WAFA", "google_news_rss", "", 'site:wafa.ps Gaza "Al-Aqsa" warehouse'),
+        ("unicef-gaza-water-query", "UNICEF", "rss", "https://www.unicef.org/press-releases/rss.xml", ""),
+        ("guardian-world", "The Guardian", "rss", "https://www.theguardian.com/world/rss", ""),
+        ("aljazeera-middle-east", "Al Jazeera", "rss", "https://www.aljazeera.com/xml/rss/all.xml", ""),
+        ("ap-gaza-attribution-query", "Associated Press", "rss", "https://apnews.com/hub/middle-east", ""),
+        (
+            "aljazeera-board-of-peace-isf-query",
+            "Al Jazeera",
+            "google_news_rss",
+            "",
+            'site:aljazeera.com Gaza Mladenov "Board of Peace" "International Stabilization Force" deployment',
+        ),
+    ]
+    config_lines = ["sources:"]
+    for source_id, publisher, source_type, url, query in specs:
+        config_lines.extend(
+            [
+                f"  - source_id: {source_id}",
+                f"    name: {source_id}",
+                f"    type: {source_type}",
+                "    enabled: true",
+                "    source_state: enabled",
+                f"    publisher: {publisher}",
+                "    reliability_tier: reported-public-source",
+                "    category_hint: conflict",
+                "    region_scope: Gaza",
+            ]
+        )
+        if url:
+            config_lines.append(f"    url: {url}")
+        if query:
+            config_lines.append(f"    query: {query}")
+    config_path = work_root / "data" / "dispatches" / "gaza" / "sources.yml"
+    config_path.parent.mkdir(parents=True, exist_ok=True)
+    config_path.write_text("\n".join(config_lines) + "\n", encoding="utf-8")
+
+    def feed_item(title, url, published_at="2026-08-29T12:00:00+00:00", summary="Palestinian Gaza development reported."):
+        return {
+            "title": title,
+            "url": url,
+            "published_at": published_at,
+            "summary_or_snippet": summary,
+        }
+
+    feed_items = {
+        "bbc-middle-east": [
+            feed_item(
+                "Gaza ceasefire update",
+                "https://www.bbc.co.uk/news/articles/gaza-low-priority",
+                "2026-08-27T08:00:00+00:00",
+                "A Palestinian ceasefire development was reported.",
+            ),
+            feed_item(
+                "Gaza hospital aid strike kills civilians",
+                "https://www.bbc.co.uk/news/articles/gaza-hospital-aid",
+                summary="Humanitarian aid and civilian harm affected a Gaza hospital.",
+            ),
+        ],
+        "wafa-gaza-casualty-locations-query": [
+            feed_item(
+                "Three members of the Abdeen family killed near Al-Qarara in Gaza",
+                "https://hebrew.wafa.ps/Pages/Details/24313",
+                "2026-08-28T12:09:40+00:00",
+                "Local sources reported three members of the Abdeen family killed north of Khan Younis.",
+            )
+        ],
+        "wafa-gaza-displacement-tent-query": [
+            feed_item(
+                "One killed and several injured in Al-Mashahara displacement tent strike in Gaza",
+                "https://english.wafa.ps/Pages/Details/174161",
+                "2026-08-28T14:39:18+00:00",
+                "A tent sheltering displaced people in east Gaza City was struck.",
+            )
+        ],
+        "wafa-gaza-motorbike-query": [
+            feed_item(
+                "One killed and two injured in Tal al-Hawa motorbike strike in Gaza",
+                "https://english.wafa.ps/Pages/Details/174181",
+                summary="WAFA reported casualties after a motorbike strike in Gaza City.",
+            )
+        ],
+        "wafa-gaza-health-infrastructure-query": [
+            feed_item(
+                "Three injured in Al-Aqsa hospital medicine warehouse strike in Gaza",
+                "https://english.wafa.ps/Pages/Details/174180",
+                summary="A medicine warehouse at Al-Aqsa Martyrs Hospital in Deir al-Balah was struck.",
+            )
+        ],
+        "unicef-gaza-water-query": [
+            feed_item(
+                "UNICEF reports Gaza water infrastructure destroyed in strike",
+                "https://www.unicef.org/press-releases/gaza-water-infrastructure",
+                summary="Children and displaced civilians lost humanitarian water access.",
+            )
+        ],
+        "guardian-world": [
+            feed_item(
+                "Gaza humanitarian aid access worsens after hospital strike",
+                "https://www.theguardian.com/world/2026/aug/29/gaza-humanitarian-aid",
+                summary="Civilian harm and displacement increased after the strike.",
+            )
+        ],
+        "aljazeera-middle-east": [
+            feed_item(
+                f"Gaza hospital and humanitarian aid development {index}",
+                f"https://www.aljazeera.com/news/2026/8/29/gaza-humanitarian-development-{index}",
+                summary="Humanitarian aid, hospital access and civilian harm were reported in Gaza.",
+            )
+            for index in range(3)
+        ],
+        "ap-gaza-attribution-query": [
+            feed_item(
+                "AP reports Gaza strike casualties and hospital pressure",
+                "https://apnews.com/article/gaza-strike-casualties-hospital",
+                summary="The Associated Press reported civilian harm and hospital pressure in Gaza.",
+            )
+        ],
+        "aljazeera-board-of-peace-isf-query": [
+            feed_item(
+                ALJAZEERA_FEED_TITLE,
+                ALJAZEERA_WRAPPER_URL,
+                "2026-08-28T16:48:33+00:00",
+                ALJAZEERA_FEED_SUMMARY,
+            )
+        ],
+    }
+    feed_calls = []
+
+    def fake_feed_fetch(source_id, _url, *_args, **_kwargs):
+        feed_calls.append(source_id)
+        return {
+            "ok": True,
+            "status_code": 200,
+            "failure_reason": None,
+            "exception_type": None,
+            "tls_error": False,
+            "backend_used": "python",
+            "content_type": "application/rss+xml",
+            "content_encoding": "",
+            "content_bytes": _rss_payload(feed_items[source_id]),
+            "content_text": None,
+        }
+
+    resolved_wrappers = []
+
+    def fake_aljazeera_resolver(url):
+        resolved_wrappers.append(url)
+        return {
+            "resolved_url": ALJAZEERA_ARTICLE_URL,
+            "canonicalization_method": "google_news_rpc",
+            "canonicalization_status": "google_news_resolved_same_domain",
+            "failure_reason": "",
+        }
+
+    article_fetches = []
+
+    def fake_article_fetch(url, *_args, **_kwargs):
+        article_fetches.append(url)
+        article_text = ALJAZEERA_ARTICLE_FIXTURE.read_text(encoding="utf-8")
+        return {
+            "ok": True,
+            "url": url,
+            "final_url": url,
+            "status_code": 200,
+            "content_type": "text/html; charset=utf-8",
+            "content_bytes": article_text.encode("utf-8"),
+            "content_text": article_text,
+        }
+
+    monkeypatch.setattr(gaza_sources, "fetch_feed_payload", fake_feed_fetch)
+    monkeypatch.setattr(gaza_sources, "_resolve_aljazeera_google_news_wrapper", fake_aljazeera_resolver)
+    monkeypatch.setattr(gaza_sources, "fetch_article_payload", fake_article_fetch)
+    monkeypatch.setattr(
+        gaza_sources,
+        "_fetch_wafa_article_payload",
+        lambda url, *_args, **_kwargs: {
+            "ok": False,
+            "url": url,
+            "final_url": url,
+            "failure_reason": "fixture body unavailable",
+            "backend_used": "python",
+        },
+    )
+
+    result = gaza_sources.collect_gaza_sources(
+        work_root,
+        "2026-08-29",
+        max_sources=12,
+        min_sources=0,
+        prefer_manual=False,
+        write_output=False,
+    )
+
+    assert feed_calls == [source_id for source_id, *_rest in specs]
+    assert feed_calls[-1] == "aljazeera-board-of-peace-isf-query"
+    assert resolved_wrappers == [ALJAZEERA_WRAPPER_URL]
+    assert article_fetches == [ALJAZEERA_ARTICLE_URL]
+    assert result["stage_counts"]["accepted_before_global_source_cap"] == 13
+    assert result["stage_counts"]["excluded_by_global_source_cap"] == 1
+    assert result["source_count"] == 12
+    isf_diag = next(
+        row for row in result["provider_diagnostics"] if row["source_id"] == "aljazeera-board-of-peace-isf-query"
+    )
+    assert isf_diag["status"] == "ok"
+    assert isf_diag["raw_items"] == 1
+    assert isf_diag["accepted_before_global_source_cap"] == 1
+    assert isf_diag["retained_after_global_source_cap"] == 1
+    assert isf_diag["excluded_by_global_source_cap"] == 0
+    isf_record = next(row for row in result["sources"] if row["provider_id"] == "aljazeera-board-of-peace-isf-query")
+    assert isf_record["canonical_url"] == ALJAZEERA_ARTICLE_URL
+    assert isf_record["enrichment_status"] == "enriched_material_excerpt"
+    assert "mechanism for deploying" in isf_record["summary_or_snippet"].lower()
+    assert "deployment locations" in isf_record["summary_or_snippet"].lower()
+    assert "advance elements" in isf_record["summary_or_snippet"].lower()
+    normalized, warnings, errors = normalize_sources(
+        result["sources"],
+        "2026-08-29",
+        "2026-08-29T18:00:00+00:00",
+    )
+    assert warnings == []
+    assert errors == []
+    normalized_isf = next(row for row in normalized if row["provider_id"] == "aljazeera-board-of-peace-isf-query")
+    assert "advance elements" in normalized_isf["summary_or_snippet"].lower()
 
 
 def test_aljazeera_article_prose_fixture_recovers_all_required_deployment_facts():

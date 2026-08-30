@@ -1131,6 +1131,8 @@ def build_source_diversity_report(
                 explanation_flags.append("items_fetched_but_none_passed_filters")
         elif status == "ok":
             explanation_flags.append("accepted_records_present")
+            if int(row.get("excluded_by_global_source_cap") or 0) > 0:
+                explanation_flags.append("accepted_records_excluded_by_global_source_cap")
         stage_explanation = " / ".join(explanation_flags) if explanation_flags else "status_not_classified"
         by_source_stage[source_id] = {
             "source_id": source_id,
@@ -1140,6 +1142,11 @@ def build_source_diversity_report(
             "reason": reason or None,
             "raw_items": int(row.get("raw_candidates") or row.get("raw_items") or 0),
             "accepted_before_dedupe": int(row.get("accepted_before_dedupe") or row.get("accepted") or 0),
+            "accepted_before_global_source_cap": int(
+                row.get("accepted_before_global_source_cap") or row.get("accepted") or 0
+            ),
+            "retained_after_global_source_cap": int(row.get("retained_after_global_source_cap") or 0),
+            "excluded_by_global_source_cap": int(row.get("excluded_by_global_source_cap") or 0),
             "rejected_counts": rejected_counts,
             "stage_explanation": stage_explanation,
             "explanation_flags": explanation_flags,
@@ -1171,6 +1178,9 @@ def build_source_diversity_report(
         "known_drop_reasons": {
             "collection_rejection_counts_by_reason": dict(collection_report.get("rejection_counts_by_reason") or {}),
             "suppressed_after_dedupe": int(cross_edition_report.get("suppressed_candidate_count", 0)),
+            "excluded_by_global_source_cap": int(
+                (collection_report.get("stage_counts") or {}).get("excluded_by_global_source_cap") or 0
+            ),
             "provider_failures": list(collection_report.get("provider_failures") or []),
             "low_relevance_survivors": int(collection_report.get("low_relevance_survivors") or 0),
         },
@@ -2270,6 +2280,11 @@ def run_gaza_dispatch(
         diag["raw_candidates"] = raw_candidates
         diag["accepted_before_dedupe"] = accepted_before
         diag["kept_after_dedupe"] = diag.get("kept_after_dedupe")
+        diag["accepted_before_global_source_cap"] = int(
+            diag.get("accepted_before_global_source_cap") or accepted_before
+        )
+        diag["retained_after_global_source_cap"] = int(diag.get("retained_after_global_source_cap") or 0)
+        diag["excluded_by_global_source_cap"] = int(diag.get("excluded_by_global_source_cap") or 0)
         diag["tls_error"] = bool(diag.get("tls_error"))
         diag["backend_used"] = str(diag.get("backend_used") or "python")
     rejected_by_reason = dict(context.get("rejected_by_reason") or {})
@@ -2286,6 +2301,13 @@ def run_gaza_dispatch(
         "raw_candidates": int(context_stage.get("raw_candidates") or len(manual_records)),
         "normalized_candidates": len(normalized),
         "accepted_before_dedupe": int(cross_edition_report.get("input_candidate_count", 0)),
+        "accepted_before_global_source_cap": int(
+            context_stage.get("accepted_before_global_source_cap")
+            or context_stage.get("accepted_before_rank")
+            or len(normalized)
+        ),
+        "excluded_by_global_source_cap": int(context_stage.get("excluded_by_global_source_cap") or 0),
+        "final_retained_sources": int(context_stage.get("final_retained_sources") or len(normalized)),
     }
     low_relevance_survivors = sum(1 for row in normalized if str(row.get("relevance_band") or "") == "low")
     no_story_explanation = "stories_available"
@@ -2311,6 +2333,7 @@ def run_gaza_dispatch(
         "accepted_candidate_count_before_dedupe": int(cross_edition_report.get("input_candidate_count", 0)),
         "kept_after_dedupe": int(cross_edition_report.get("kept_candidate_count", 0)),
         "suppressed_after_dedupe": int(cross_edition_report.get("suppressed_candidate_count", 0)),
+        "excluded_by_global_source_cap": int(context_stage.get("excluded_by_global_source_cap") or 0),
         "rejection_counts_by_reason": rejected_by_reason,
         "top_rejected_examples": list(context.get("top_rejected_examples") or [])[:25],
         "review_candidates": list(context.get("review_candidates") or [])[:25],
@@ -2328,6 +2351,7 @@ def run_gaza_dispatch(
         "providers_successful_count": len(providers_successful),
         "provider_diagnostics": provider_diagnostics,
         "source_providers_attempted": provider_diagnostics,
+        "global_source_cap_exclusions": list(context.get("global_source_cap_exclusions") or []),
         "source_family_counts": dict(context.get("source_family_counts") or _source_family_counts_from_sources(normalized)),
         "stage_counts": stage_counts,
         "google_wrapper_count": int(cross_edition_report.get("google_wrapper_count", 0)),

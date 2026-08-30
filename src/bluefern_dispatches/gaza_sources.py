@@ -10,6 +10,7 @@ import os
 import re
 import subprocess
 import string
+import time as time_module
 import unicodedata
 import urllib.error
 import urllib.request
@@ -64,6 +65,7 @@ ALJAZEERA_ISF_FACT_TERMS = (
     "international stabilization force",
     "board of peace",
 )
+ALJAZEERA_WRAPPER_RETRY_DELAYS_SECONDS = (1.0, 2.0)
 WEAK_ONLY_GAZA_PATTERNS = (
     "live",
     "live blog",
@@ -948,6 +950,41 @@ def _bounded_diagnostic(value: Any, limit: int = 300) -> str:
     return text[:limit]
 
 
+def _is_transient_aljazeera_wrapper_failure(payload: dict[str, Any]) -> bool:
+    if payload.get("ok"):
+        return False
+    failure = str(payload.get("failure_reason") or "").lower()
+    if any(marker in failure for marker in ("certificate_verify_failed", "certificate verification", "self signed certificate")):
+        return False
+    exception_type = str(payload.get("exception_type") or "").lower()
+    if exception_type in {
+        "connectionabortederror",
+        "connectionerror",
+        "connectionrefusederror",
+        "connectionreseterror",
+        "remotedisconnected",
+        "sslerror",
+        "timeouterror",
+    }:
+        return True
+    return any(
+        marker in failure
+        for marker in (
+            "connection aborted",
+            "connection refused",
+            "connection reset",
+            "handshake operation timed out",
+            "remote end closed connection",
+            "remote disconnected",
+            "ssl handshake",
+            "temporarily unavailable",
+            "timed out",
+            "timeout",
+            "tls handshake",
+        )
+    )
+
+
 def _resolve_aljazeera_google_news_wrapper(url: str) -> dict[str, Any]:
     result: dict[str, Any] = {
         "attempted": False,
@@ -962,7 +999,13 @@ def _resolve_aljazeera_google_news_wrapper(url: str) -> dict[str, Any]:
     result["attempted"] = True
 
     def fetcher(target_url: str, timeout: int = 15) -> dict[str, Any]:
-        payload = fetch_article_payload(target_url, timeout=timeout)
+        payload: dict[str, Any] = {}
+        for attempt in range(len(ALJAZEERA_WRAPPER_RETRY_DELAYS_SECONDS) + 1):
+            payload = fetch_article_payload(target_url, timeout=timeout)
+            if payload.get("ok") or not _is_transient_aljazeera_wrapper_failure(payload):
+                break
+            if attempt < len(ALJAZEERA_WRAPPER_RETRY_DELAYS_SECONDS):
+                time_module.sleep(ALJAZEERA_WRAPPER_RETRY_DELAYS_SECONDS[attempt])
         raw = payload.get("content_bytes")
         if not isinstance(raw, (bytes, bytearray)):
             raw = str(payload.get("content_text") or "").encode("utf-8")
@@ -996,12 +1039,15 @@ def _resolve_aljazeera_google_news_wrapper(url: str) -> dict[str, Any]:
     result["attempted"] = bool(attempted)
     resolver_status = _bounded_diagnostic(debug.get("google_news_resolution_status"))
     candidate = canonicalize_url(str(resolved or ""))
+    canonical_candidate = str(debug.get("canonical_url_found") or "").strip()
+    if _looks_like_google_news_wrapper(canonical_candidate):
+        canonical_candidate = ""
     probed_candidate = str(
         candidate
         or debug.get("accepted_candidate_url")
         or debug.get("google_news_rpc_url")
         or debug.get("redirect_url_found")
-        or debug.get("canonical_url_found")
+        or canonical_candidate
         or ""
     ).strip()
     if candidate and resolver_status.startswith("resolved_") and _is_aljazeera_url(candidate):

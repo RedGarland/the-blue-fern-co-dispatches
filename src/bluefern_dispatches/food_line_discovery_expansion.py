@@ -2773,6 +2773,37 @@ def _extract_google_news_rpc_metadata(text: str, *, article_id: str = "") -> tup
     return "", "", ""
 
 
+def _extract_google_news_rpc_article_url(text: str) -> str:
+    stripped = str(text or "").lstrip()
+    if stripped.startswith(")]}'"):
+        stripped = stripped[4:].lstrip()
+    try:
+        response_rows = json.loads(stripped)
+    except (TypeError, ValueError):
+        response_rows = []
+    if isinstance(response_rows, list):
+        for row in response_rows:
+            if not isinstance(row, list) or len(row) < 3 or row[0:2] != ["wrb.fr", "Fbv4je"]:
+                continue
+            nested_payload = row[2]
+            if isinstance(nested_payload, str):
+                try:
+                    nested_payload = json.loads(nested_payload)
+                except (TypeError, ValueError):
+                    continue
+            if (
+                isinstance(nested_payload, list)
+                and len(nested_payload) >= 2
+                and nested_payload[0] == "garturlres"
+                and isinstance(nested_payload[1], str)
+            ):
+                return _normalize_url(nested_payload[1])
+    match = re.search(r'\[\\"garturlres\\",\\"(https?://[^"]+)\\",\d+\]', text)
+    if not match:
+        match = re.search(r'\["garturlres","(https?://[^"]+)",\d+\]', text)
+    return _normalize_url(match.group(1)) if match else ""
+
+
 def _google_news_rpc_request(article_id: str, timestamp: str, signature: str) -> tuple[str, str]:
     inner_payload = json.dumps(
         ["garturlreq", GOOGLE_NEWS_RPC_CONTEXT, article_id, int(timestamp), signature],
@@ -2796,12 +2827,10 @@ def _google_news_rpc_request(article_id: str, timestamp: str, signature: str) ->
             text = response.read(500_000).decode("utf-8", errors="replace")
     except Exception as exc:  # noqa: BLE001
         return "", f"{type(exc).__name__}: {exc}"
-    match = re.search(r'\[\\"garturlres\\",\\"(https?://[^"]+)\\",\d+\]', text)
-    if not match:
-        match = re.search(r'\["garturlres","(https?://[^"]+)",\d+\]', text)
-    if not match:
+    resolved_url = _extract_google_news_rpc_article_url(text)
+    if not resolved_url:
         return "", "rpc_without_article_url"
-    return _normalize_url(match.group(1)), ""
+    return resolved_url, ""
 
 
 def _extract_google_news_article_url(payload: bytes, *, publisher_url: str = "", publisher_name: str = "") -> tuple[str, str]:

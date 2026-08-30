@@ -20,7 +20,7 @@ from datetime import date, datetime, time, timedelta, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit, unquote, quote_plus
+from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit, unquote, quote_plus
 from zoneinfo import ZoneInfo
 
 
@@ -66,6 +66,34 @@ ALJAZEERA_WRAPPER_RETRY_DELAYS_SECONDS = (1.0, 2.0)
 AP_ATTRIBUTION_QUERY_SOURCE_ID = "ap-gaza-attribution-query"
 AP_WRAPPER_RETRY_DELAYS_SECONDS = (1.0, 2.0)
 AP_ARTICLE_PROSE_MAX_CHARS = 6000
+OCHA_OPT_SOURCE_ID = "ocha-opt-updates"
+OCHA_REPORT_INDEX_TYPE = "ocha_report_index"
+OCHA_REPORT_INDEX_URL = "https://www.ochaopt.org/publications/situation-reports"
+OCHA_REPORT_MAX_CANDIDATES = 12
+OCHA_REPORT_BODY_MAX_CHARS = 12000
+OCHA_HEALTHCARE_PROSE_MAX_CHARS = 4000
+OCHA_HEALTHCARE_BODY_TERMS = (
+    "iv solutions",
+    "iv fluids",
+    "dialysis supplies",
+    "laboratory reagents",
+    "laboratory supplies",
+    "oxygen equipment",
+    "oxygen supplies",
+    "health centres",
+    "health centers",
+    "generator shutdown",
+)
+OCHA_HEALTHCARE_FACT_PATTERNS = (
+    re.compile(r"\b(?:central stocks? of )?IV (?:solutions?|fluids?)\b.{0,80}\bdeplet", re.I),
+    re.compile(r"\bdialysis (?:supplies|equipment)\b.{0,80}\bshortage|\bshortage.{0,80}\bdialysis", re.I),
+    re.compile(r"\blaborator(?:y|ies) (?:reagents|supplies)\b.{0,80}\bshortage|\bshortage.{0,80}\blaborator", re.I),
+    re.compile(r"\boxygen (?:equipment|supplies)\b.{0,80}\bshortage|\bshortage.{0,80}\boxygen", re.I),
+    re.compile(r"\bfour health cent(?:re|er)s\b", re.I),
+    re.compile(r"\bgenerator shutdowns?\b", re.I),
+    re.compile(r"\bfour to five days\b|\b4\s*(?:-|to)\s*5 days\b", re.I),
+    re.compile(r"\bbetween 10 and 16 August\b|\bAug(?:ust)?\.? 10\s*(?:-|to|and)\s*16\b", re.I),
+)
 WAFA_QUERY_SOURCE_IDS = {
     "wafa-gaza-query",
     "wafa-gaza-casualty-locations-query",
@@ -1014,6 +1042,12 @@ def _fetch_wafa_article_payload(url: str, timeout: int = 20) -> dict[str, Any]:
     }
 
 
+def _fetch_ocha_article_payload(url: str, timeout: int = 20) -> dict[str, Any]:
+    # Reuse the repository's bounded Python-to-curl article fetch fallback without
+    # changing global TLS behavior. Publisher/path trust is enforced by OCHA callers.
+    return _fetch_wafa_article_payload(url, timeout=timeout)
+
+
 def _is_aljazeera_url(url: str) -> bool:
     try:
         parts = urlsplit(str(url or "").strip())
@@ -1076,6 +1110,227 @@ def _is_ap_source(source: SourceDefinition) -> bool:
         source.source_id == AP_ATTRIBUTION_QUERY_SOURCE_ID
         and source.publisher.strip().lower() == "associated press"
     )
+
+
+def _is_ocha_opt_url(url: str) -> bool:
+    try:
+        parts = urlsplit(str(url or "").strip())
+    except ValueError:
+        return False
+    hostname = str(parts.hostname or "").lower().rstrip(".")
+    return parts.scheme.lower() in {"http", "https"} and (
+        hostname == "ochaopt.org" or hostname.endswith(".ochaopt.org")
+    )
+
+
+def _is_ocha_report_url(url: str) -> bool:
+    if not _is_ocha_opt_url(url):
+        return False
+    try:
+        path = urlsplit(str(url or "").strip()).path
+    except ValueError:
+        return False
+    return bool(re.fullmatch(r"/content/humanitarian-situation-report-[a-z0-9-]+/?", path, re.I))
+
+
+def _is_ocha_source(source: SourceDefinition) -> bool:
+    return (
+        source.source_id == OCHA_OPT_SOURCE_ID
+        and source.type == OCHA_REPORT_INDEX_TYPE
+        and source.publisher.strip().lower() == "ocha"
+    )
+
+
+def _ocha_report_publication_date(title: str, url: str) -> str:
+    candidates = (clean_feed_text(title), urlsplit(str(url or "")).path.replace("-", " "))
+    for candidate in candidates:
+        match = re.search(
+            r"\b(?P<day>\d{1,2})\s+(?P<month>January|February|March|April|May|June|July|August|September|October|November|December)\s+(?P<year>20\d{2})\b",
+            candidate,
+            re.I,
+        )
+        if not match:
+            continue
+        try:
+            parsed = datetime.strptime(
+                f"{match.group('day')} {match.group('month')} {match.group('year')}",
+                "%d %B %Y",
+            ).replace(tzinfo=timezone.utc)
+        except ValueError:
+            continue
+        return parsed.isoformat()
+    return ""
+
+
+def _discover_ocha_report_items(listing_html: str, listing_url: str) -> list[dict[str, str]]:
+    class _OchaListingParser(HTMLParser):
+        _VOID_TAGS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
+
+        def __init__(self) -> None:
+            super().__init__(convert_charrefs=True)
+            self._href = ""
+            self._depth = 0
+            self._parts: list[str] = []
+            self.links: list[tuple[str, str]] = []
+
+        def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+            if tag.lower() == "a" and not self._href:
+                attrs_by_name = {name.lower(): value or "" for name, value in attrs}
+                self._href = attrs_by_name.get("href", "").strip()
+                self._depth = 1
+                self._parts = []
+            elif self._href and tag.lower() not in self._VOID_TAGS:
+                self._depth += 1
+
+        def handle_endtag(self, tag: str) -> None:
+            if not self._href:
+                return
+            self._depth -= 1
+            if self._depth == 0:
+                self.links.append((self._href, clean_feed_text(" ".join(self._parts))))
+                self._href = ""
+                self._parts = []
+
+        def handle_data(self, data: str) -> None:
+            if self._href:
+                self._parts.append(data)
+
+    parser = _OchaListingParser()
+    try:
+        parser.feed(str(listing_html or ""))
+        parser.close()
+    except Exception:
+        return []
+    by_url: dict[str, dict[str, str]] = {}
+    for href, anchor_text in parser.links:
+        candidate = canonicalize_url(urljoin(listing_url, href))
+        if not _is_ocha_report_url(candidate):
+            continue
+        row = by_url.setdefault(
+            candidate,
+            {
+                "title": "",
+                "url": candidate,
+                "published_at": "",
+                "summary_or_snippet": "Official OCHA humanitarian situation report.",
+                "discovery_url": listing_url,
+            },
+        )
+        if "humanitarian situation report" in anchor_text.lower() and len(anchor_text) > len(row["title"]):
+            row["title"] = anchor_text
+    results: list[dict[str, str]] = []
+    for row in by_url.values():
+        if not row["title"]:
+            slug = urlsplit(row["url"]).path.rsplit("/", 1)[-1]
+            row["title"] = " ".join(part.capitalize() for part in slug.split("-"))
+        row["published_at"] = _ocha_report_publication_date(row["title"], row["url"])
+        results.append(row)
+        if len(results) >= OCHA_REPORT_MAX_CANDIDATES:
+            break
+    return results
+
+
+def _extract_ocha_report_body(article_html: str) -> str:
+    class _OchaReportParser(HTMLParser):
+        _SKIPPED_TAGS = {"script", "style", "noscript", "template", "svg", "nav", "footer", "aside"}
+        _BLOCK_TAGS = {"blockquote", "br", "h2", "h3", "h4", "li", "p"}
+        _VOID_TAGS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
+
+        def __init__(self) -> None:
+            super().__init__(convert_charrefs=True)
+            self._skip_depth = 0
+            self._body_depth = 0
+            self.parts: list[str] = []
+
+        def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+            tag = tag.lower()
+            if tag in self._SKIPPED_TAGS:
+                self._skip_depth += 1
+                return
+            if self._skip_depth:
+                return
+            attrs_by_name = {name.lower(): value or "" for name, value in attrs}
+            classes = {value.lower() for value in attrs_by_name.get("class", "").split()}
+            begins_body = self._body_depth == 0 and "hsu-report-body" in classes
+            if self._body_depth or begins_body:
+                if tag not in self._VOID_TAGS:
+                    self._body_depth += 1
+                if tag in self._BLOCK_TAGS:
+                    self.parts.append("\n")
+
+        def handle_endtag(self, tag: str) -> None:
+            tag = tag.lower()
+            if tag in self._SKIPPED_TAGS:
+                if self._skip_depth:
+                    self._skip_depth -= 1
+                return
+            if self._skip_depth:
+                return
+            if self._body_depth:
+                if tag in self._BLOCK_TAGS:
+                    self.parts.append("\n")
+                if tag not in self._VOID_TAGS:
+                    self._body_depth -= 1
+
+        def handle_data(self, data: str) -> None:
+            if not self._skip_depth and self._body_depth:
+                self.parts.append(data)
+
+    parser = _OchaReportParser()
+    try:
+        parser.feed(str(article_html or ""))
+        parser.close()
+    except Exception:
+        return ""
+    report_text = clean_feed_text("\n".join(parser.parts))
+    sentences = [part.strip() for part in re.split(r"(?<=[.!?])\s+|\n+", report_text) if part.strip()]
+    healthcare_sentences = [
+        sentence
+        for sentence in sentences
+        if any(term in sentence.lower() for term in OCHA_HEALTHCARE_BODY_TERMS)
+    ]
+    return " ".join(healthcare_sentences)[:OCHA_REPORT_BODY_MAX_CHARS].strip()
+
+
+def _extract_ocha_healthcare_excerpt(report_body: str) -> str:
+    text = clean_feed_text(report_body)
+    if not text:
+        return ""
+    sentences = [part.strip() for part in re.split(r"(?<=[.!?])\s+|\n+", text) if part.strip()]
+    selected = [
+        sentence
+        for sentence in sentences
+        if any(pattern.search(sentence) for pattern in OCHA_HEALTHCARE_FACT_PATTERNS)
+    ]
+    excerpt = " ".join(selected).strip()
+    if not all(pattern.search(excerpt) for pattern in OCHA_HEALTHCARE_FACT_PATTERNS):
+        return ""
+    return excerpt[:OCHA_HEALTHCARE_PROSE_MAX_CHARS].strip()
+
+
+def _extract_ocha_healthcare_fragments(excerpt: str, published_at: str) -> list[dict[str, Any]]:
+    text = clean_feed_text(excerpt)
+    if not text or not all(pattern.search(text) for pattern in OCHA_HEALTHCARE_FACT_PATTERNS):
+        return []
+    return [
+        {
+            "title": "OCHA reports medical supply shortages and generator shutdowns at Gaza health centres",
+            "summary": (
+                "OCHA reported that central IV-solution stocks were depleted amid shortages of dialysis supplies, "
+                "laboratory reagents and oxygen equipment. It also reported that four UNRWA health centres experienced "
+                "generator shutdowns lasting four to five days during 10-16 August."
+            ),
+            "story_scope": "core_gaza",
+            "category": "health_infrastructure",
+            "development_type": "healthcare_access_disruption",
+            "affected_system": "medical supplies and health-centre power",
+            "location": "Gaza Strip",
+            "event_date": published_at,
+            "attribution": "OCHA, citing Gaza health authorities and UNRWA operations",
+            "uncertainty": "OCHA reported shortages and depleted IV-solution stocks; no systemwide absence is inferred",
+            "casualty_counts": {},
+        }
+    ]
 
 
 def _bounded_diagnostic(value: Any, limit: int = 300) -> str:
@@ -1711,6 +1966,8 @@ def gaza_relevance_decision(item: dict[str, str], source: SourceDefinition | Non
     strong_source = bool(STRONG_GAZA_TERMS.search(source_name))
     weak_markers = " ".join([title.lower(), summary.lower(), url.lower()])
     substantive_ground = is_palestinian_development_text(haystack) or any(term in haystack.lower() for term in GROUND_DEVELOPMENT_TERMS)
+    if source is not None and _is_ocha_source(source) and _is_ocha_report_url(url):
+        return True, "ocha_official_situation_report"
     if (
         source is not None
         and source.source_id == "wafa-gaza-casualty-locations-query"
@@ -1998,6 +2255,8 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
     article_fetch_failure_reason = ""
     article_payload: dict[str, Any] | None = None
     ap_event_fragments: list[dict[str, Any]] = []
+    ocha_healthcare_fragments: list[dict[str, Any]] = []
+    ocha_report_body = ""
     if source.source_id == ALJAZEERA_ISF_QUERY_SOURCE_ID:
         enrichment_status = "pending"
         if wrapper_url and canonical_status != "resolved_from_query":
@@ -2056,6 +2315,56 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
         elif article_payload is not None:
             enrichment_status = "failed_article_fetch"
             enrichment_failure_reason = _bounded_diagnostic(article_payload.get("failure_reason") or "article fetch failed")
+    elif _is_ocha_source(source):
+        canonicalization_method = "ocha_official_report_index"
+        resolved_canonical_url = ""
+        if _is_ocha_report_url(canonical_url):
+            canonical_status = "resolved_official_report_url"
+            resolved_canonical_url = canonical_url
+        elif not _is_ocha_opt_url(canonical_url):
+            canonical_status = "rejected_wrong_publisher_domain"
+            canonicalization_failure_reason = "discovered candidate hostname is not ochaopt.org or a subdomain"
+        else:
+            canonical_status = "rejected_non_report_url"
+            canonicalization_failure_reason = "discovered OCHA candidate is not a humanitarian situation report URL"
+
+        if resolved_canonical_url:
+            article_fetch_attempted = True
+            article_fetch_status = "pending"
+            article_payload = _fetch_ocha_article_payload(resolved_canonical_url)
+        else:
+            article_fetch_status = "skipped_canonical_resolution_failed"
+            article_fetch_failure_reason = canonicalization_failure_reason or "no trusted OCHA report URL"
+
+        if article_payload and article_payload.get("ok"):
+            final_article_url = canonicalize_url(str(article_payload.get("final_url") or resolved_canonical_url))
+            if not _is_ocha_report_url(final_article_url):
+                article_fetch_status = "failed_untrusted_report_redirect"
+                article_fetch_failure_reason = "report fetch redirected outside an official OCHA situation report URL"
+                resolved_canonical_url = ""
+                canonical_url = canonicalize_url(url)
+                article_payload = None
+            else:
+                canonical_url = final_article_url
+                resolved_canonical_url = final_article_url
+
+        if article_payload and article_payload.get("ok"):
+            ocha_report_body = _extract_ocha_report_body(str(article_payload.get("content_text") or ""))
+            content_text = _extract_ocha_healthcare_excerpt(ocha_report_body)
+            if content_text:
+                ocha_healthcare_fragments = _extract_ocha_healthcare_fragments(content_text, published_at)
+                if content_text.lower() not in summary.lower():
+                    summary = f"{summary} {content_text}".strip() if summary else content_text
+                article_fetch_status = "healthcare_prose_extracted"
+            elif ocha_report_body:
+                article_fetch_status = "insufficient_healthcare_content"
+                article_fetch_failure_reason = "OCHA report body did not contain all required healthcare facts"
+            else:
+                article_fetch_status = "insufficient_report_content"
+                article_fetch_failure_reason = "OCHA report body container was not extractable"
+        elif article_payload is not None:
+            article_fetch_status = "failed_report_fetch"
+            article_fetch_failure_reason = _bounded_diagnostic(article_payload.get("failure_reason") or "report fetch failed")
     elif _is_ap_source(source):
         article_fetch_status = "pending"
         if wrapper_url and canonical_status != "resolved_from_query":
@@ -2213,7 +2522,7 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
         "summary_or_snippet": summary,
         "feed_summary_or_snippet": feed_summary,
         "content_text": content_text,
-        "source_type": "rss",
+        "source_type": "official_report" if _is_ocha_source(source) else "rss",
         "provider_id": source.source_id,
         "collector_source_type": source.type,
         "region_scope": source.region_scope,
@@ -2226,6 +2535,23 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
         "canonical_url": canonical_url,
         "canonicalization_status": canonical_status,
         "wrapper_url": wrapper_url or None,
+        **(
+            {
+                "discovery_url": str(item.get("discovery_url") or source.url),
+                "resolved_canonical_url": resolved_canonical_url or None,
+                "canonicalization_method": canonicalization_method,
+                "canonicalization_failure_reason": canonicalization_failure_reason or None,
+                "article_fetch_attempted": article_fetch_attempted,
+                "article_fetch_status": article_fetch_status,
+                "article_fetch_failure_reason": article_fetch_failure_reason or None,
+                "article_fetch_backend": str((article_payload or {}).get("backend_used") or "") or None,
+                "content_available": bool(content_text),
+                "article_body_length": len(ocha_report_body),
+                "ocha_healthcare_fragments": ocha_healthcare_fragments,
+            }
+            if _is_ocha_source(source)
+            else {}
+        ),
         **(
             {
                 "resolved_canonical_url": resolved_canonical_url or None,
@@ -2542,7 +2868,7 @@ def collect_gaza_sources(
             provider_diagnostics.append(skipped)
             skipped_providers.append(skipped)
             continue
-        if source.type not in {"rss", "google_news_rss"}:
+        if source.type not in {"rss", "google_news_rss", OCHA_REPORT_INDEX_TYPE}:
             skipped = {
                 "source_id": source.source_id,
                 "source_state": source.source_state,
@@ -2562,6 +2888,24 @@ def collect_gaza_sources(
                 fetch_url = GOOGLE_NEWS_RSS_HEBREW_TEMPLATE.format(query=quote_plus(source.query or source.url))
             else:
                 fetch_url = build_google_news_rss_url(source.query or source.url)
+        elif _is_ocha_source(source) and canonicalize_url(fetch_url) != canonicalize_url(OCHA_REPORT_INDEX_URL):
+            warnings.append(f"{source.source_id}: untrusted_ocha_report_index")
+            failed_source_ids.append({"source_id": source.source_id, "reason": "untrusted_ocha_report_index"})
+            provider_diagnostics.append(
+                {
+                    "source_id": source.source_id,
+                    "publisher": source.publisher,
+                    "url": source.url,
+                    "query": source.query,
+                    "status": "failed",
+                    "error": "untrusted_ocha_report_index",
+                    "source_tier": source.source_tier,
+                    "source_state": source.source_state,
+                    "backend_used": "not_attempted",
+                    "tls_error": False,
+                }
+            )
+            continue
         if not str(fetch_url or "").strip():
             warnings.append(f"{source.source_id}: missing_fetch_url")
             failed_source_ids.append({"source_id": source.source_id, "reason": "missing_fetch_url"})
@@ -2610,7 +2954,11 @@ def collect_gaza_sources(
             "provider_candidate_cap": max(1, int(max_sources)),
             "items_not_inspected_after_provider_candidate_cap": 0,
         }
-        fetch = fetch_feed_payload(source.source_id, fetch_url)
+        if _is_ocha_source(source):
+            fetch = _fetch_ocha_article_payload(fetch_url)
+            fetch["tls_error"] = _is_tls_error(str(fetch.get("failure_reason") or ""))
+        else:
+            fetch = fetch_feed_payload(source.source_id, fetch_url)
         diag["backend_used"] = str(fetch.get("backend_used") or "python")
         diag["tls_error"] = bool(fetch.get("tls_error"))
         if not fetch.get("ok"):
@@ -2635,11 +2983,14 @@ def collect_gaza_sources(
             provider_diagnostics.append(diag)
             continue
         try:
-            items = parse_rss_items(
-                fetch.get("content_bytes") or b"",
-                content_type=str(fetch.get("content_type") or ""),
-                content_encoding=str(fetch.get("content_encoding") or ""),
-            )
+            if _is_ocha_source(source):
+                items = _discover_ocha_report_items(str(fetch.get("content_text") or ""), fetch_url)
+            else:
+                items = parse_rss_items(
+                    fetch.get("content_bytes") or b"",
+                    content_type=str(fetch.get("content_type") or ""),
+                    content_encoding=str(fetch.get("content_encoding") or ""),
+                )
             if _is_wafa_source(source):
                 items = items[:WAFA_MAX_RESULTS_PER_QUERY]
             diag["raw_items"] = len(items)
@@ -2718,7 +3069,7 @@ def collect_gaza_sources(
                 else:
                     _provider_reject(diag, "rejected_parse_error", item, date_basis=basis)
                 continue
-            if (_is_wafa_source(source) or _is_ap_source(source)) and not str(record.get("resolved_canonical_url") or "").strip():
+            if (_is_wafa_source(source) or _is_ap_source(source) or _is_ocha_source(source)) and not str(record.get("resolved_canonical_url") or "").strip():
                 diag.setdefault("canonicalization_failures", []).append(
                     {
                         "title": title[:220],

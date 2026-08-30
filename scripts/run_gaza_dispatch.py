@@ -418,6 +418,24 @@ def normalize_sources(
                     if str(record.get("provider_id") or "") == "ap-gaza-attribution-query"
                     else {}
                 ),
+                **(
+                    {
+                        "discovery_url": record.get("discovery_url"),
+                        "resolved_canonical_url": record.get("resolved_canonical_url"),
+                        "canonicalization_method": record.get("canonicalization_method"),
+                        "canonicalization_failure_reason": record.get("canonicalization_failure_reason"),
+                        "article_fetch_attempted": bool(record.get("article_fetch_attempted")),
+                        "article_fetch_status": record.get("article_fetch_status"),
+                        "article_fetch_failure_reason": record.get("article_fetch_failure_reason"),
+                        "article_fetch_backend": record.get("article_fetch_backend"),
+                        "content_available": bool(record.get("content_available")),
+                        "article_body_length": int(record.get("article_body_length") or 0),
+                        "content_text": str(record.get("content_text") or "") or None,
+                        "ocha_healthcare_fragments": list(record.get("ocha_healthcare_fragments") or []),
+                    }
+                    if str(record.get("provider_id") or "") == "ocha-opt-updates"
+                    else {}
+                ),
             }
         )
     ranked = rank_gaza_candidates(normalized, edition_date)
@@ -540,6 +558,13 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
             ap_fragments = source.get("ap_event_fragments") or []
             if isinstance(ap_fragments, list):
                 trusted_fragments = [fragment for fragment in ap_fragments if isinstance(fragment, dict)]
+                if trusted_fragments:
+                    return trusted_fragments
+
+        if str(source.get("provider_id") or "") == "ocha-opt-updates":
+            ocha_fragments = source.get("ocha_healthcare_fragments") or []
+            if isinstance(ocha_fragments, list):
+                trusted_fragments = [fragment for fragment in ocha_fragments if isinstance(fragment, dict)]
                 if trusted_fragments:
                     return trusted_fragments
 
@@ -809,7 +834,7 @@ def curate_stories(sources: list[dict[str, Any]], edition_date: str, now: str) -
                             "url": source["url"],
                             **(
                                 {"canonical_url": source.get("canonical_url")}
-                                if str(source.get("provider_id") or "") == "ap-gaza-attribution-query"
+                                if str(source.get("provider_id") or "") in {"ap-gaza-attribution-query", "ocha-opt-updates"}
                                 else {}
                             ),
                             "publisher": source["publisher"],

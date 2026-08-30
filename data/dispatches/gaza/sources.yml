@@ -1,12 +1,11 @@
 tiers:
   official_humanitarian:
     - source_id: ocha-opt-updates
-      name: OCHA OPT Updates
-      url: https://www.ochaopt.org/updates/rss.xml
-      type: rss
-      enabled: false
-      source_state: disabled
-      disabled_reason: "dead endpoint (historical 404)"
+      name: OCHA OPT Situation Reports
+      url: https://www.ochaopt.org/publications/situation-reports
+      type: ocha_report_index
+      enabled: true
+      source_state: enabled
       publisher: OCHA
       reliability_tier: official-humanitarian-source
       category_hint: humanitarian

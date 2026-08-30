@@ -1,5 +1,10 @@
 # Historical agent backfill
 
+Formal corrections to an already published Gaza story use the separate,
+approval-gated package contract in
+[`gaza-formal-historical-corrections.md`](gaza-formal-historical-corrections.md),
+not the generic historical publisher described here.
+
 Historical scheduled-agent exports are preserved privately under `data/agent-history/`:
 
 ```text

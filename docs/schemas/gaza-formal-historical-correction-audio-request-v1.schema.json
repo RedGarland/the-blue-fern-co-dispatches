@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dispatches.thebluefernco.com/schemas/gaza-formal-historical-correction-audio-request-v1.schema.json",
+  "title": "Gaza formal historical correction audio request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "correction_id", "story_id", "owning_edition_date", "correction_date", "script_text", "script_sha256", "tts_provider", "tts_model", "tts_voice", "public_path", "render_authorized", "publication_authorized"],
+  "properties": {
+    "schema_version": {"const": "gaza_formal_historical_correction_audio_request_v1"},
+    "correction_id": {"type": "string", "pattern": "^gaza-correction-v1-[0-9a-f]{20}$"},
+    "story_id": {"type": "string", "minLength": 1},
+    "owning_edition_date": {"type": "string", "format": "date"},
+    "correction_date": {"type": "string", "format": "date"},
+    "script_text": {"type": "string", "minLength": 1},
+    "script_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "tts_provider": {"type": "string", "minLength": 1},
+    "tts_model": {"type": "string", "minLength": 1},
+    "tts_voice": {"type": "string", "minLength": 1},
+    "public_path": {"type": "string", "pattern": "^gaza/audio/corrections/.+\\.mp3$"},
+    "render_authorized": {"const": false},
+    "publication_authorized": {"const": false}
+  }
+}

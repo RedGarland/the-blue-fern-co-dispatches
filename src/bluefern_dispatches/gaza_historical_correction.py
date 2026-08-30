@@ -1,14 +1,15 @@
 """Approval-gated packaging for formal Gaza historical corrections.
 
-This module does not publish, mutate Pages, create approvals, or reuse the daily
-historical publisher.  It validates a complete, independently approved set of
-replacement representations and can atomically stage that set outside both Git
-repositories for a later, separately controlled release step.
+This module cannot publish, mutate Pages, or reuse the daily historical
+publisher. It derives non-authorizing previews, creates commit-ready package
+approval artifacts from those validator-owned outputs, and can atomically stage
+an approved set outside both Git repositories for a later release step.
 """
 
 from __future__ import annotations
 
 import hashlib
+import html
 import json
 import os
 import re
@@ -24,6 +25,7 @@ from .historical_agent_archive import validate_gaza_published_story_lineage
 
 PROPOSAL_SCHEMA = "gaza_formal_historical_correction_proposal_v1"
 APPROVAL_SCHEMA = "gaza_formal_historical_correction_release_approval_v1"
+APPROVAL_REQUEST_SCHEMA = "gaza_formal_historical_correction_approval_request_v1"
 PACKAGE_SCHEMA = "gaza_formal_historical_correction_package_v1"
 
 # The full claim-bearing public representation set.  source_quality_report is
@@ -50,6 +52,14 @@ REPLACEMENT_PATHS = {
     "correction_audio_metadata": "gaza/audio/corrections/{correction_id}.json",
     "correction_transcript": "gaza/audio/corrections/{correction_id}-transcript.html",
     "correction_audio": "gaza/audio/corrections/{correction_id}.mp3",
+}
+
+# The MP3 is intentionally absent from preapproval preview output. Approval
+# binds a deterministic script/configuration request. A rendered binary can be
+# supplied only after that approval and is then bound into the private staged
+# package for a later publication review.
+PREVIEW_PATHS = {
+    role: path for role, path in REPLACEMENT_PATHS.items() if role != "correction_audio"
 }
 
 UNCHANGED_PATHS = {
@@ -403,6 +413,569 @@ def _expected_public_path(role: str, correction: dict[str, Any]) -> str:
     )
 
 
+def _json_document(value: Any) -> bytes:
+    return (json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
+
+
+def _public_correction_record(correction: dict[str, Any]) -> dict[str, Any]:
+    return {
+        key: correction[key]
+        for key in (
+            "correction_id",
+            "story_id",
+            "owning_edition_date",
+            "correction_date",
+            "stable_event_fingerprint",
+            "prior_claim_fingerprint",
+            "corrected_claim_fingerprint",
+            "prior_claim",
+            "corrected_claim",
+            "change_reason",
+            "source_attribution",
+            "evidence_references",
+            "casualty_change",
+            "injury_disagreement",
+        )
+    }
+
+
+def _correction_script(correction: dict[str, Any]) -> str:
+    return (
+        f"Formal correction {correction['correction_id']} for story {correction['story_id']}. "
+        f"The story remains part of the {correction['owning_edition_date']} Gaza edition. "
+        f"This correction was recorded on {correction['correction_date']}. "
+        f"Prior claim: {correction['prior_claim']} "
+        f"Corrected claim: {correction['corrected_claim']} "
+        f"Attribution: {correction['source_attribution']}. "
+        "The injury count remains unresolved between the attributed sources."
+    )
+
+
+def _correction_notice_html(correction: dict[str, Any]) -> str:
+    record = _public_correction_record(correction)
+    links = "".join(
+        f'<li><a href="{html.escape(item["url"], quote=True)}">'
+        f'{html.escape(item["role"], quote=False)}</a>: '
+        f'{html.escape(item["supporting_passage"], quote=False)}</li>'
+        for item in record["evidence_references"]
+    )
+    return (
+        f'<section class="formal-correction" id="correction-{record["correction_id"]}">'
+        f'<p><strong>Formal correction {record["correction_id"]}</strong></p>'
+        f'<p>Story: {record["story_id"]}. Owning edition: {record["owning_edition_date"]}. '
+        f'Correction date: {record["correction_date"]}.</p>'
+        f'<p>Prior claim: {html.escape(record["prior_claim"], quote=False)}</p>'
+        f'<p>Corrected claim: {html.escape(record["corrected_claim"], quote=False)}</p>'
+        f'<p>Attribution: {html.escape(record["source_attribution"], quote=False)}. '
+        "The injury count remains unresolved.</p>"
+        f'<ul>{links}</ul></section>'
+    )
+
+
+def _append_before(text: str, marker: str, addition: str, label: str) -> str:
+    if marker not in text:
+        raise CorrectionValidationError(f"{label} lacks the required insertion boundary")
+    return text.replace(marker, addition + marker, 1)
+
+
+def _render_preview_payloads(
+    pages_root: Path,
+    correction: dict[str, Any],
+    audio_request: dict[str, Any],
+) -> dict[str, bytes]:
+    record = _public_correction_record(correction)
+    payloads: dict[str, bytes] = {}
+    date = correction["owning_edition_date"]
+
+    curation_path = _repo_path(pages_root, f"gaza/editions/{date}/curation_manifest.json", "curation")
+    curation = _load_json(curation_path, "curation manifest")
+    if not isinstance(curation, list):
+        raise CorrectionValidationError("curation manifest must remain a story list")
+    matches = [row for row in curation if isinstance(row, dict) and row.get("story_id") == correction["story_id"]]
+    if len(matches) != 1:
+        raise CorrectionValidationError("prior public story does not resolve exactly once in curation")
+    story = matches[0]
+    if story.get("summary") != correction["prior_claim"]:
+        raise CorrectionValidationError("current curation prior claim differs from lineage")
+    history = story.get("correction_history")
+    if history not in (None, []):
+        raise CorrectionValidationError("current curation already contains correction history")
+    story["summary"] = correction["corrected_claim"]
+    story["casualty_counts"] = {"new_deaths": 2}
+    story["event_fingerprint"] = correction["stable_event_fingerprint"]
+    story["injury_disagreement"] = correction["injury_disagreement"]
+    story["correction_history"] = [record]
+    payloads["curation_manifest"] = _json_document(curation)
+
+    dedupe = _load_json(
+        _repo_path(pages_root, f"gaza/editions/{date}/dedupe_report.json", "dedupe"),
+        "dedupe report",
+    )
+    if not isinstance(dedupe, dict) or dedupe.get("corrections") not in (None, []):
+        raise CorrectionValidationError("dedupe report already has correction state")
+    dedupe["corrections"] = [record]
+    payloads["dedupe_report"] = _json_document(dedupe)
+
+    edition = _load_json(
+        _repo_path(pages_root, f"gaza/editions/{date}/edition_manifest.json", "edition manifest"),
+        "edition manifest",
+    )
+    if not isinstance(edition, dict) or edition.get("corrections") not in (None, []):
+        raise CorrectionValidationError("edition manifest already has correction state")
+    edition_record = {**record, "aggregates_recomputed_from_corrected_story_versions": True}
+    edition["corrections"] = [edition_record]
+    payloads["edition_manifest"] = _json_document(edition)
+    payloads["correction_manifest"] = _json_document(record)
+
+    prior_audio = _load_json(
+        _repo_path(pages_root, f"gaza/audio/{date}.json", "prior audio metadata"),
+        "prior audio metadata",
+    )
+    if not isinstance(prior_audio, dict):
+        raise CorrectionValidationError("prior audio metadata must be an object")
+    prior_audio.update(
+        {
+            "audio_status": "superseded_by_formal_correction",
+            "superseded_by_correction_id": correction["correction_id"],
+            "replacement_audio_url": f"/gaza/audio/corrections/{correction['correction_id']}.mp3",
+        }
+    )
+    payloads["original_audio_metadata"] = _json_document(prior_audio)
+    payloads["correction_audio_metadata"] = _json_document(
+        {
+            "audio_status": "formal_correction",
+            "render_status": "pending_approved_render",
+            "rendered_audio_sha256": None,
+            "correction_id": correction["correction_id"],
+            "story_id": correction["story_id"],
+            "owning_edition_date": correction["owning_edition_date"],
+            "correction_date": correction["correction_date"],
+            "script_text": audio_request["script_text"],
+            "script_sha256": audio_request["script_sha256"],
+            "tts_provider": audio_request["tts_provider"],
+            "tts_model": audio_request["tts_model"],
+            "tts_voice": audio_request["tts_voice"],
+            "injury_disagreement": correction["injury_disagreement"],
+        }
+    )
+
+    notice = _correction_notice_html(correction)
+    edition_html_path = _repo_path(pages_root, f"gaza/editions/{date}/index.html", "edition HTML")
+    edition_html = edition_html_path.read_text(encoding="utf-8")
+    if edition_html.count(correction["prior_claim"]) != 1:
+        raise CorrectionValidationError("edition HTML does not contain the exact prior claim once")
+    edition_html = edition_html.replace(correction["prior_claim"], correction["corrected_claim"], 1)
+    payloads["edition_html"] = _append_before(edition_html, "</main>", notice, "edition HTML").encode("utf-8")
+
+    prior_transcript_path = _repo_path(pages_root, f"gaza/audio/{date}-transcript.html", "prior transcript")
+    prior_transcript = prior_transcript_path.read_text(encoding="utf-8")
+    payloads["original_transcript"] = _append_before(
+        prior_transcript, "</main>", notice, "prior transcript"
+    ).encode("utf-8")
+    payloads["correction_transcript"] = (
+        "<!doctype html><html><body><main>" + notice +
+        f"<p>{html.escape(audio_request['script_text'], quote=False)}</p></main></body></html>"
+    ).encode("utf-8")
+    payloads["correction_page"] = (
+        "<!doctype html><html><body><main>" + notice + "</main></body></html>"
+    ).encode("utf-8")
+
+    description = " | ".join(
+        str(correction[field])
+        for field in ("correction_id", "story_id", "correction_date", "prior_claim", "corrected_claim")
+    )
+    link = f"https://dispatches.thebluefernco.com/gaza/corrections/{correction['correction_id']}/"
+    rss_item = (
+        "<item><title>Formal correction</title>"
+        f"<link>{html.escape(link)}</link><guid isPermaLink=\"false\">{correction['correction_id']}</guid>"
+        f"<description>{html.escape(description, quote=False)}</description></item>"
+    )
+    podcast_item = (
+        "<item><title>Formal correction</title>"
+        f"<link>{html.escape(link)}</link><guid isPermaLink=\"false\">{correction['correction_id']}</guid>"
+        f"<description>{html.escape(description, quote=False)}</description>"
+        f"<enclosure url=\"https://dispatches.thebluefernco.com/gaza/audio/corrections/{correction['correction_id']}.mp3\" "
+        "type=\"audio/mpeg\" length=\"0\" /></item>"
+    )
+    for role, relative, item in (
+        ("rss", "gaza/rss.xml", rss_item),
+        ("podcast", "gaza/podcast.xml", podcast_item),
+        ("audio_podcast", "gaza/audio/podcast.xml", podcast_item),
+    ):
+        current = _repo_path(pages_root, relative, role).read_text(encoding="utf-8")
+        payloads[role] = _append_before(current, "</channel>", item, role).encode("utf-8")
+
+    payloads["flash_briefing"] = _json_document(
+        [
+            {
+                "uid": correction["correction_id"],
+                "updateDate": correction["correction_date"],
+                "titleText": "Formal correction to Gaza historical report",
+                "mainText": audio_request["script_text"],
+                "redirectionUrl": link,
+            }
+        ]
+    )
+    for role, relative in (
+        ("audio_index", "gaza/audio/index.html"),
+        ("gaza_index", "gaza/index.html"),
+        ("gaza_archive", "gaza/archive.html"),
+        ("root_index", "index.html"),
+    ):
+        current = _repo_path(pages_root, relative, role).read_text(encoding="utf-8")
+        marker = "</main>" if "</main>" in current else "</body>"
+        payloads[role] = _append_before(current, marker, notice, role).encode("utf-8")
+    if set(payloads) != set(PREVIEW_PATHS):
+        missing = sorted(set(PREVIEW_PATHS) - set(payloads))
+        raise CorrectionValidationError(f"preview renderer is incomplete: {missing}")
+    return payloads
+
+
+def prepare_correction_proposal(
+    *,
+    source_root: Path,
+    pages_root: Path,
+    story_id: str,
+    review_path: str,
+    decision_audit_path: str,
+    correction_date: str,
+    output_root: Path,
+    tts_provider: str,
+    tts_model: str,
+    tts_voice: str,
+) -> dict[str, Any]:
+    source_root = source_root.resolve()
+    pages_root = pages_root.resolve()
+    output_root = output_root.resolve()
+    for forbidden, label in ((source_root, "source"), (pages_root, "Pages")):
+        try:
+            output_root.relative_to(forbidden)
+        except ValueError:
+            pass
+        else:
+            raise CorrectionValidationError(f"proposal output must be outside the {label} repository")
+    if _git(pages_root, "status", "--porcelain"):
+        raise CorrectionValidationError("Pages repository is dirty")
+    if _git(pages_root, "rev-parse", "--abbrev-ref", "HEAD") != "gh-pages":
+        raise CorrectionValidationError("Pages repository is not on gh-pages")
+    source_commit = _git(source_root, "rev-parse", "HEAD")
+    pages_head = _git(pages_root, "rev-parse", "HEAD")
+    lineage_relative = (
+        f"data/agent-history/gaza/lineage/published-stories/{story_id}.json"
+    )
+    lineage_path = _repo_path(source_root, lineage_relative, "published lineage")
+    review_file = _repo_path(source_root, review_path, "editorial review")
+    audit_file = _repo_path(source_root, decision_audit_path, "decision audit")
+    lineage = _load_json(lineage_path, "published lineage")
+    review = _load_json(review_file, "editorial review")
+    audit = _load_json(audit_file, "decision audit")
+    correction_lineage = review.get("correction_lineage", {})
+    correction = {
+        "correction_id": "",
+        "story_id": story_id,
+        "owning_edition_date": lineage.get("edition_date"),
+        "correction_date": correction_date,
+        "stable_event_fingerprint": lineage.get("stable_event_identity", {}).get("fingerprint"),
+        "prior_claim_fingerprint": lineage.get("prior_claim_identity", {}).get("fingerprint"),
+        "corrected_claim_fingerprint": review.get("candidate_event_fingerprint"),
+        "prior_claim": lineage.get("prior_claim", {}).get("text"),
+        "corrected_claim": review.get("attribution_assessment", {}).get("safe_future_wording"),
+        "change_reason": review.get("decision_reason"),
+        "source_attribution": review.get("attribution_assessment", {}).get("attributed_to"),
+        "evidence_references": review.get("evidence_references"),
+        "casualty_change": {
+            "field": correction_lineage.get("field_or_claim"),
+            "previous_value": correction_lineage.get("previous_value"),
+            "corrected_value": correction_lineage.get("corrected_value"),
+            "operation": "replace",
+        },
+        "injury_disagreement": {
+            "unresolved": review.get("attribution_assessment", {}).get("dispute_unresolved"),
+            "reports": review.get("attribution_assessment", {}).get("disputed_values"),
+        },
+    }
+    correction["correction_id"] = correction_identity(
+        story_id,
+        correction["stable_event_fingerprint"],
+        correction["prior_claim_fingerprint"],
+        correction["corrected_claim_fingerprint"],
+    )
+    correction = _validate_correction({"correction": correction})
+    private_evidence = {
+        "lineage_path": lineage_relative,
+        "lineage_sha256": sha256_file(lineage_path),
+        "review_path": review_path,
+        "review_sha256": sha256_file(review_file),
+        "decision_audit_path": decision_audit_path,
+        "decision_audit_sha256": sha256_file(audit_file),
+        "raw_sha256": review.get("raw_sha256"),
+        "normalized_artifact_sha256": review.get("normalized_artifact_sha256"),
+        "report_artifact_sha256": review.get("report_artifact_sha256"),
+    }
+    validation_shell = {"private_evidence": private_evidence}
+    _validate_private_evidence(source_root, validation_shell, correction)
+    script = _correction_script(correction)
+    audio_request = {
+        "schema_version": "gaza_formal_historical_correction_audio_request_v1",
+        "correction_id": correction["correction_id"],
+        "story_id": story_id,
+        "owning_edition_date": correction["owning_edition_date"],
+        "correction_date": correction_date,
+        "script_text": script,
+        "script_sha256": "sha256:" + sha256_bytes(script.encode("utf-8")),
+        "tts_provider": str(tts_provider).strip(),
+        "tts_model": str(tts_model).strip(),
+        "tts_voice": str(tts_voice).strip(),
+        "public_path": _expected_public_path("correction_audio", correction),
+        "render_authorized": False,
+        "publication_authorized": False,
+    }
+    if any(not audio_request[key] for key in ("tts_provider", "tts_model", "tts_voice")):
+        raise CorrectionValidationError("audio request provider, model, and voice are required")
+    preview_payloads = _render_preview_payloads(pages_root, correction, audio_request)
+    target = output_root / correction["correction_id"]
+    representations = []
+    for role in sorted(PREVIEW_PATHS):
+        public_path = _expected_public_path(role, correction)
+        current_path = _repo_path(pages_root, public_path, f"{role} public artifact")
+        representations.append(
+            {
+                "role": role,
+                "public_path": public_path,
+                "input_path": f"preview/{public_path}",
+                "prior_sha256": None if role in NEW_ROLES else sha256_file(current_path),
+                "corrected_sha256": sha256_bytes(preview_payloads[role]),
+            }
+        )
+    unchanged = [
+        {
+            "role": role,
+            "public_path": template.format(date=correction["owning_edition_date"]),
+            "sha256": sha256_file(
+                _repo_path(
+                    pages_root,
+                    template.format(date=correction["owning_edition_date"]),
+                    f"{role} dependency",
+                )
+            ),
+        }
+        for role, template in sorted(UNCHANGED_PATHS.items())
+    ]
+    audio_request_bytes = _json_document(audio_request)
+    audio_request_entry = {
+        "input_path": "audio_request.json",
+        "public_path": audio_request["public_path"],
+        "sha256": sha256_bytes(audio_request_bytes),
+        "script_sha256": audio_request["script_sha256"],
+    }
+    set_payload = [
+        {
+            "role": row["role"],
+            "public_path": row["public_path"],
+            "corrected_sha256": row["corrected_sha256"],
+        }
+        for row in representations
+    ] + [{"role": "correction_audio_request", **audio_request_entry}]
+    artifact_set_sha = "sha256:" + sha256_bytes(_canonical_bytes(set_payload))
+    proposal = {
+        "schema_version": PROPOSAL_SCHEMA,
+        "operation": "formal_historical_correction",
+        "domain": "gaza",
+        "source_commit": source_commit,
+        "correction": correction,
+        "private_evidence": private_evidence,
+        "pages_state": {
+            "branch": "gh-pages",
+            "expected_head": pages_head,
+            "representations": representations,
+            "unchanged_dependencies": unchanged,
+            "audio_request": audio_request_entry,
+            "artifact_set_sha256": artifact_set_sha,
+        },
+        "proposal_sha256": "",
+    }
+    proposal["proposal_sha256"] = fingerprint_payload(proposal, "proposal_sha256")
+    approval_request = {
+        "schema_version": APPROVAL_REQUEST_SCHEMA,
+        "scope": "formal_historical_correction_package_and_audio",
+        "proposal_sha256": proposal["proposal_sha256"],
+        "correction_id": correction["correction_id"],
+        "source_commit": source_commit,
+        "pages_head": pages_head,
+        "artifact_set_sha256": artifact_set_sha,
+        "audio_request_sha256": audio_request_entry["sha256"],
+        "package_authorized": False,
+        "audio_authorized": False,
+        "publication_authorized": False,
+        "request_sha256": "",
+    }
+    approval_request["request_sha256"] = fingerprint_payload(approval_request, "request_sha256")
+    expected_files = {
+        "proposal.json": _json_document(proposal),
+        "audio_request.json": audio_request_bytes,
+        "approval_request.json": _json_document(approval_request),
+        **{
+            f"preview/{_expected_public_path(role, correction)}": preview_payloads[role]
+            for role in PREVIEW_PATHS
+        },
+    }
+    if target.exists():
+        for relative, expected in expected_files.items():
+            path = _repo_path(target, relative, "existing proposal output")
+            if not path.is_file() or path.read_bytes() != expected:
+                raise CorrectionValidationError("existing proposal conflicts with deterministic output")
+        return {
+            "status": "idempotent_noop",
+            "correction_id": correction["correction_id"],
+            "proposal_path": str(target / "proposal.json"),
+            "approval_request_path": str(target / "approval_request.json"),
+            "proposal_sha256": proposal["proposal_sha256"],
+            "artifact_set_sha256": artifact_set_sha,
+            "persistent_mutation": False,
+            "publication_authorized": False,
+        }
+    output_root.mkdir(parents=True, exist_ok=True)
+    temp = Path(tempfile.mkdtemp(prefix=f".{correction['correction_id']}-", dir=output_root))
+    try:
+        for relative, content in expected_files.items():
+            path = _repo_path(temp, relative, "proposal output")
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(content)
+        os.replace(temp, target)
+    except Exception:
+        shutil.rmtree(temp, ignore_errors=True)
+        raise
+    return {
+        "status": "proposal_created",
+        "correction_id": correction["correction_id"],
+        "proposal_path": str(target / "proposal.json"),
+        "approval_request_path": str(target / "approval_request.json"),
+        "proposal_sha256": proposal["proposal_sha256"],
+        "artifact_set_sha256": artifact_set_sha,
+        "persistent_mutation": True,
+        "pages_mutation": False,
+        "publication_authorized": False,
+    }
+
+
+def create_package_approval(
+    *,
+    source_root: Path,
+    pages_root: Path,
+    proposal_path: Path,
+    input_root: Path,
+    approval_request_path: Path,
+    output_path: Path,
+    approval_id: str,
+    approver: str,
+    approved_at: str,
+) -> dict[str, Any]:
+    source_root = source_root.resolve()
+    pages_root = pages_root.resolve()
+    input_root = input_root.resolve()
+    output_path = output_path.resolve()
+    approvals_root = (source_root / "approvals").resolve()
+    try:
+        output_path.relative_to(approvals_root)
+    except ValueError as exc:
+        raise CorrectionValidationError(
+            "package approval output must be under the source approvals directory"
+        ) from exc
+    proposal = _validate_proposal_shape(_load_json(proposal_path, "correction proposal"))
+    correction = _validate_correction(proposal)
+    if _git(source_root, "rev-parse", "HEAD") != proposal["source_commit"]:
+        raise CorrectionValidationError("source history drifted before package approval")
+    _validate_private_evidence(source_root, proposal, correction)
+    rows = _validate_pages_and_representations(
+        pages_root, input_root, proposal, correction
+    )
+    _validate_representation_semantics(input_root, rows, correction)
+    request = _exact_fields(
+        _load_json(approval_request_path, "approval request"),
+        {
+            "schema_version",
+            "scope",
+            "proposal_sha256",
+            "correction_id",
+            "source_commit",
+            "pages_head",
+            "artifact_set_sha256",
+            "audio_request_sha256",
+            "package_authorized",
+            "audio_authorized",
+            "publication_authorized",
+            "request_sha256",
+        },
+        "approval request",
+    )
+    if request["schema_version"] != APPROVAL_REQUEST_SCHEMA:
+        raise CorrectionValidationError("approval request schema is unsupported")
+    if request["request_sha256"] != fingerprint_payload(request, "request_sha256"):
+        raise CorrectionValidationError("approval request fingerprint differs")
+    if any(request[key] is not False for key in ("package_authorized", "audio_authorized", "publication_authorized")):
+        raise CorrectionValidationError("approval request must remain non-authorizing")
+    expected_request = {
+        "schema_version": APPROVAL_REQUEST_SCHEMA,
+        "scope": "formal_historical_correction_package_and_audio",
+        "proposal_sha256": proposal["proposal_sha256"],
+        "correction_id": correction["correction_id"],
+        "source_commit": proposal["source_commit"],
+        "pages_head": proposal["pages_state"]["expected_head"],
+        "artifact_set_sha256": proposal["pages_state"]["artifact_set_sha256"],
+        "audio_request_sha256": proposal["pages_state"]["audio_request"]["sha256"],
+        "package_authorized": False,
+        "audio_authorized": False,
+        "publication_authorized": False,
+        "request_sha256": "",
+    }
+    expected_request["request_sha256"] = fingerprint_payload(
+        expected_request, "request_sha256"
+    )
+    if request != expected_request:
+        raise CorrectionValidationError(
+            "approval request is not validator-produced for the current proposal"
+        )
+    if not all(str(value).strip() for value in (approval_id, approver, approved_at)):
+        raise CorrectionValidationError("approval ID, approver, and approval time are required")
+    approval = {
+        "schema_version": APPROVAL_SCHEMA,
+        "scope": "formal_historical_correction",
+        "approval_id": approval_id,
+        "proposal_sha256": request["proposal_sha256"],
+        "correction_id": request["correction_id"],
+        "source_commit": request["source_commit"],
+        "pages_head": request["pages_head"],
+        "artifact_set_sha256": request["artifact_set_sha256"],
+        "audio_request_sha256": request["audio_request_sha256"],
+        "approved_at": approved_at,
+        "approver": approver,
+        "package_authorized": True,
+        "audio_authorized": True,
+        "publication_authorized": False,
+        "approval_fingerprint": "",
+    }
+    approval["approval_fingerprint"] = fingerprint_payload(approval, "approval_fingerprint")
+    content = _json_document(approval)
+    if output_path.exists():
+        if output_path.read_bytes() == content:
+            return {"status": "idempotent_noop", "approval_path": str(output_path)}
+        raise CorrectionValidationError("conflicting package approval already exists")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = output_path.with_name(f".{output_path.name}.tmp")
+    try:
+        temporary.write_bytes(content)
+        os.replace(temporary, output_path)
+    except Exception:
+        temporary.unlink(missing_ok=True)
+        raise
+    return {
+        "status": "package_approval_created",
+        "approval_path": str(output_path),
+        "approval_fingerprint": approval["approval_fingerprint"],
+        "publication_authorized": False,
+    }
+
+
 def _validate_pages_and_representations(
     pages_root: Path,
     input_root: Path,
@@ -411,7 +984,14 @@ def _validate_pages_and_representations(
 ) -> dict[str, dict[str, Any]]:
     pages = _exact_fields(
         proposal["pages_state"],
-        {"branch", "expected_head", "representations", "unchanged_dependencies", "artifact_set_sha256"},
+        {
+            "branch",
+            "expected_head",
+            "representations",
+            "unchanged_dependencies",
+            "audio_request",
+            "artifact_set_sha256",
+        },
         "Pages state",
     )
     if pages["branch"] != "gh-pages" or not re.fullmatch(r"[0-9a-f]{40}", str(pages["expected_head"])):
@@ -424,10 +1004,10 @@ def _validate_pages_and_representations(
         raise CorrectionValidationError("Pages history drifted from the approved head")
 
     rows = pages["representations"]
-    if not isinstance(rows, list) or len(rows) != len(REPLACEMENT_PATHS):
+    if not isinstance(rows, list) or len(rows) != len(PREVIEW_PATHS):
         raise CorrectionValidationError("correction representation inventory is partial")
     by_role = {str(row.get("role")): row for row in rows if isinstance(row, dict)}
-    if set(by_role) != set(REPLACEMENT_PATHS) or len(by_role) != len(rows):
+    if set(by_role) != set(PREVIEW_PATHS) or len(by_role) != len(rows):
         raise CorrectionValidationError("correction representation roles are missing or duplicated")
     for role, row in by_role.items():
         _exact_fields(row, {"role", "public_path", "input_path", "prior_sha256", "corrected_sha256"}, f"{role} representation")
@@ -459,10 +1039,31 @@ def _validate_pages_and_representations(
         if not path.is_file() or sha256_file(path) != _require_sha(row["sha256"], f"{role} dependency hash"):
             raise CorrectionValidationError(f"{role} dependency drifted")
 
+    audio_request_entry = _exact_fields(
+        pages["audio_request"],
+        {"input_path", "public_path", "sha256", "script_sha256"},
+        "audio request entry",
+    )
+    if audio_request_entry["public_path"] != _expected_public_path("correction_audio", correction):
+        raise CorrectionValidationError("audio request public path is invalid")
+    request_path = _repo_path(input_root, audio_request_entry["input_path"], "audio request")
+    if not request_path.is_file() or sha256_file(request_path) != _require_sha(
+        audio_request_entry["sha256"], "audio request hash"
+    ):
+        raise CorrectionValidationError("audio request hash differs")
+    audio_request = _load_json(request_path, "audio request")
+    if audio_request.get("correction_id") != correction["correction_id"]:
+        raise CorrectionValidationError("audio request binds another correction")
+    if audio_request.get("script_sha256") != audio_request_entry["script_sha256"]:
+        raise CorrectionValidationError("audio request script hash differs")
+    if audio_request.get("render_authorized") is not False or audio_request.get("publication_authorized") is not False:
+        raise CorrectionValidationError("preapproval audio request must be non-authorizing")
+    if audio_request.get("script_text") != _correction_script(correction):
+        raise CorrectionValidationError("audio request script is not validator-derived")
     set_payload = [
         {"role": role, "public_path": by_role[role]["public_path"], "corrected_sha256": by_role[role]["corrected_sha256"]}
         for role in sorted(by_role)
-    ]
+    ] + [{"role": "correction_audio_request", **audio_request_entry}]
     expected_set_hash = "sha256:" + sha256_bytes(_canonical_bytes(set_payload))
     if pages["artifact_set_sha256"] != expected_set_hash:
         raise CorrectionValidationError("approved artifact-set fingerprint differs")
@@ -617,6 +1218,7 @@ def _load_independent_approval(
             "source_commit",
             "pages_head",
             "artifact_set_sha256",
+            "audio_request_sha256",
             "approved_at",
             "approver",
             "package_authorized",
@@ -640,6 +1242,8 @@ def _load_independent_approval(
         raise CorrectionValidationError("release approval binds another Pages history")
     if approval["artifact_set_sha256"] != proposal["pages_state"]["artifact_set_sha256"]:
         raise CorrectionValidationError("release approval binds another artifact set")
+    if approval["audio_request_sha256"] != proposal["pages_state"]["audio_request"]["sha256"]:
+        raise CorrectionValidationError("release approval binds another audio request")
     if approval["package_authorized"] is not True or approval["audio_authorized"] is not True:
         raise CorrectionValidationError("release approval does not authorize the complete package and audio")
     if approval["publication_authorized"] is not False:
@@ -692,6 +1296,7 @@ def plan_correction(
         "approval_id": approval["approval_id"],
         "approval_commit": approval_commit,
         "artifact_set_sha256": proposal["pages_state"]["artifact_set_sha256"],
+        "audio_request": proposal["pages_state"]["audio_request"],
         "representations": [
             {
                 "role": role,
@@ -715,6 +1320,7 @@ def stage_correction_package(
     *,
     plan: dict[str, Any],
     input_root: Path,
+    rendered_audio_path: Path,
     staging_root: Path,
     source_root: Path,
     pages_root: Path,
@@ -723,6 +1329,7 @@ def stage_correction_package(
     staging_root = staging_root.resolve()
     source_root = source_root.resolve()
     pages_root = pages_root.resolve()
+    rendered_audio_path = rendered_audio_path.resolve()
     for forbidden, label in ((source_root, "source"), (pages_root, "Pages")):
         try:
             staging_root.relative_to(forbidden)
@@ -733,32 +1340,98 @@ def stage_correction_package(
     correction_id = str(plan.get("correction_id") or "")
     if plan.get("status") != "validated_plan" or not correction_id:
         raise CorrectionValidationError("only a fully validated plan may be staged")
+    if not rendered_audio_path.is_file() or rendered_audio_path.read_bytes()[:3] != b"ID3":
+        raise CorrectionValidationError("approved audio render is missing or is not an MP3 asset")
+    audio_content = rendered_audio_path.read_bytes()
+    rendered_audio_sha256 = sha256_bytes(audio_content)
+    preview_rows = plan.get("representations")
+    if not isinstance(preview_rows, list) or len(preview_rows) != len(PREVIEW_PATHS):
+        raise CorrectionValidationError("validated preview representation set is incomplete")
+    final_content: dict[str, bytes] = {}
+    final_rows: list[dict[str, str]] = []
+    for row in preview_rows:
+        source = _repo_path(input_root, row["input_path"], "approved preview input")
+        if not source.is_file() or sha256_file(source) != row["corrected_sha256"]:
+            raise CorrectionValidationError(f"approved preview input is missing for {row['role']}")
+        content = source.read_bytes()
+        if row["role"] == "correction_audio_metadata":
+            metadata = json.loads(content.decode("utf-8"))
+            metadata["render_status"] = "rendered_for_private_review"
+            metadata["rendered_audio_sha256"] = rendered_audio_sha256
+            content = _json_document(metadata)
+        elif row["role"] in {"podcast", "audio_podcast"}:
+            marker = b'type="audio/mpeg" length="0"'
+            if content.count(marker) != 1:
+                raise CorrectionValidationError(
+                    f"{row['role']} lacks one correction-audio length placeholder"
+                )
+            content = content.replace(
+                marker,
+                f'type="audio/mpeg" length="{len(audio_content)}"'.encode("ascii"),
+                1,
+            )
+        final_content[row["role"]] = content
+        final_rows.append(
+            {
+                "role": row["role"],
+                "public_path": row["public_path"],
+                "sha256": sha256_bytes(content),
+            }
+        )
+    audio_public_path = plan["audio_request"]["public_path"]
+    final_content["correction_audio"] = audio_content
+    final_rows.append(
+        {
+            "role": "correction_audio",
+            "public_path": audio_public_path,
+            "sha256": sha256_bytes(audio_content),
+        }
+    )
+    final_rows.sort(key=lambda row: row["role"])
+    package_artifact_set_sha256 = "sha256:" + sha256_bytes(_canonical_bytes(final_rows))
     target = staging_root / correction_id
     manifest = {
-        **{k: v for k, v in plan.items() if k not in {"status", "persistent_mutation"}},
+        **{
+            k: v
+            for k, v in plan.items()
+            if k not in {"status", "persistent_mutation", "representations"}
+        },
         "status": "staged_correction_package",
+        "preview_representations": preview_rows,
+        "representations": final_rows,
+        "rendered_audio_sha256": rendered_audio_sha256,
+        "package_artifact_set_sha256": package_artifact_set_sha256,
+        "publication_authorized": False,
         "package_manifest_sha256": "",
     }
     manifest["package_manifest_sha256"] = fingerprint_payload(manifest, "package_manifest_sha256")
     if target.exists():
         existing_path = target / "package_manifest.json"
         if existing_path.is_file() and _load_json(existing_path, "existing package manifest") == manifest:
-            for row in plan["representations"]:
+            for row in manifest["representations"]:
                 staged = _repo_path(target, row["public_path"], "staged representation")
-                if not staged.is_file() or sha256_file(staged) != row["corrected_sha256"]:
+                if not staged.is_file() or sha256_file(staged) != row["sha256"]:
                     raise CorrectionValidationError("existing package conflicts with approved artifact hashes")
             return {**manifest, "status": "idempotent_noop", "package_path": str(target)}
         raise CorrectionValidationError("conflicting correction package already exists")
     staging_root.mkdir(parents=True, exist_ok=True)
     temp = Path(tempfile.mkdtemp(prefix=f".{correction_id}-", dir=staging_root))
     try:
-        for row in plan["representations"]:
-            source = _repo_path(input_root, row["input_path"], "approved input")
-            if not source.is_file() or sha256_file(source) != row["corrected_sha256"]:
-                raise CorrectionValidationError(f"approved input is missing for {row['role']}")
+        for row in manifest["representations"]:
             destination = _repo_path(temp, row["public_path"], "staged representation")
             destination.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(source, destination)
+            if row["role"] == "correction_audio":
+                shutil.copyfile(rendered_audio_path, destination)
+            elif row["role"] in {
+                "correction_audio_metadata",
+                "podcast",
+                "audio_podcast",
+            }:
+                destination.write_bytes(final_content[row["role"]])
+            else:
+                preview = next(item for item in preview_rows if item["role"] == row["role"])
+                source = _repo_path(input_root, preview["input_path"], "approved input")
+                shutil.copyfile(source, destination)
         (temp / "package_manifest.json").write_text(
             json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
             encoding="utf-8",
@@ -768,3 +1441,56 @@ def stage_correction_package(
         shutil.rmtree(temp, ignore_errors=True)
         raise
     return {**manifest, "package_path": str(target)}
+
+
+def verify_staged_package(
+    *,
+    plan: dict[str, Any],
+    package_root: Path,
+    source_root: Path,
+    pages_root: Path,
+) -> dict[str, Any]:
+    package_root = package_root.resolve()
+    source_root = source_root.resolve()
+    pages_root = pages_root.resolve()
+    manifest_path = package_root / "package_manifest.json"
+    manifest = _load_json(manifest_path, "staged package manifest")
+    if manifest.get("schema_version") != PACKAGE_SCHEMA:
+        raise CorrectionValidationError("staged package schema is unsupported")
+    if manifest.get("correction_id") != plan.get("correction_id"):
+        raise CorrectionValidationError("staged package binds another correction")
+    if manifest.get("proposal_sha256") != plan.get("proposal_sha256"):
+        raise CorrectionValidationError("staged package binds another proposal")
+    if manifest.get("artifact_set_sha256") != plan.get("artifact_set_sha256"):
+        raise CorrectionValidationError("staged package binds another approved preview set")
+    if manifest.get("publication_authorized") is not False:
+        raise CorrectionValidationError("staged package improperly carries publication authority")
+    if manifest.get("package_manifest_sha256") != fingerprint_payload(
+        manifest, "package_manifest_sha256"
+    ):
+        raise CorrectionValidationError("staged package manifest fingerprint differs")
+    rows = manifest.get("representations")
+    if not isinstance(rows, list) or {row.get("role") for row in rows if isinstance(row, dict)} != set(REPLACEMENT_PATHS):
+        raise CorrectionValidationError("staged package representation set is incomplete")
+    for row in rows:
+        path = _repo_path(package_root, row["public_path"], "staged representation")
+        if not path.is_file() or sha256_file(path) != row["sha256"]:
+            raise CorrectionValidationError(f"staged representation differs: {row['role']}")
+    if manifest.get("package_artifact_set_sha256") != "sha256:" + sha256_bytes(
+        _canonical_bytes(sorted(rows, key=lambda row: row["role"]))
+    ):
+        raise CorrectionValidationError("staged package artifact-set fingerprint differs")
+    if _git(source_root, "rev-parse", "HEAD") != plan.get("approval_commit"):
+        raise CorrectionValidationError("source history drifted after package approval")
+    if _git(pages_root, "status", "--porcelain"):
+        raise CorrectionValidationError("Pages repository is dirty")
+    if _git(pages_root, "rev-parse", "HEAD") != plan.get("pages_head"):
+        raise CorrectionValidationError("Pages history drifted after package staging")
+    return {
+        "status": "staged_package_verified",
+        "correction_id": plan["correction_id"],
+        "package_manifest_sha256": manifest["package_manifest_sha256"],
+        "package_artifact_set_sha256": manifest["package_artifact_set_sha256"],
+        "publication_authorized": False,
+        "persistent_mutation": False,
+    }

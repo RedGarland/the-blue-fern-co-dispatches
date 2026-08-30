@@ -1,25 +1,27 @@
 from __future__ import annotations
 
-import copy
 import hashlib
 import json
+import os
 import subprocess
+import sys
 from pathlib import Path
+from xml.etree import ElementTree
 
 import pytest
 
 from bluefern_dispatches.gaza_historical_correction import (
-    APPROVAL_SCHEMA,
-    NEW_ROLES,
-    PROPOSAL_SCHEMA,
+    PREVIEW_PATHS,
     REPLACEMENT_PATHS,
     UNCHANGED_PATHS,
     CorrectionValidationError,
-    correction_identity,
     fingerprint_payload,
     plan_correction,
+    prepare_correction_proposal,
+    create_package_approval,
     sha256_file,
     stage_correction_package,
+    verify_staged_package,
 )
 from bluefern_dispatches.gaza_sources import story_claim_fingerprint
 from bluefern_dispatches.historical_agent_archive import build_gaza_published_story_lineage
@@ -138,17 +140,20 @@ def _make_pages(pages: Path) -> tuple[str, dict[str, object]]:
         },
     )
     _write_json(edition / "edition_manifest.json", {"edition_date": DATE, "story_count": 1})
-    (edition / "index.html").write_text(f"<h1>{TITLE}</h1><p>{PRIOR}</p>", encoding="utf-8")
+    (edition / "index.html").write_text(
+        f"<html><body><main><h1>{TITLE}</h1><p>{PRIOR}</p></main></body></html>",
+        encoding="utf-8",
+    )
     (edition / "source_quality_report.md").write_text("# Synthetic source quality\n", encoding="utf-8")
     existing_text = {
         "gaza/rss.xml": "<rss><channel><item><guid>edition</guid></item></channel></rss>",
-        f"gaza/audio/{DATE}-transcript.html": f"<p>{PRIOR}</p>",
+        f"gaza/audio/{DATE}-transcript.html": f"<html><body><main><p>{PRIOR}</p></main></body></html>",
         "gaza/podcast.xml": "<rss><channel><item><guid>episode</guid></item></channel></rss>",
         "gaza/audio/podcast.xml": "<rss><channel><item><guid>episode</guid></item></channel></rss>",
-        "gaza/audio/index.html": f"<p>{TITLE}</p>",
-        "gaza/index.html": f"<p>{TITLE}</p>",
-        "gaza/archive.html": f"<p>{TITLE}</p>",
-        "index.html": f"<p>{TITLE}</p>",
+        "gaza/audio/index.html": f"<html><body><main><p>{TITLE}</p></main></body></html>",
+        "gaza/index.html": f"<html><body><main><p>{TITLE}</p></main></body></html>",
+        "gaza/archive.html": f"<html><body><main><p>{TITLE}</p></main></body></html>",
+        "index.html": f"<html><body><main><p>{TITLE}</p></main></body></html>",
     }
     for relative, text in existing_text.items():
         path = pages / relative
@@ -164,114 +169,6 @@ def _make_pages(pages: Path) -> tuple[str, dict[str, object]]:
         [{"uid": DATE, "mainText": PRIOR}],
     )
     return _commit(pages, "Synthetic prior public state"), story
-
-
-def _correction_record(correction: dict[str, object]) -> dict[str, object]:
-    return {
-        "correction_id": correction["correction_id"],
-        "story_id": correction["story_id"],
-        "owning_edition_date": correction["owning_edition_date"],
-        "correction_date": correction["correction_date"],
-        "stable_event_fingerprint": correction["stable_event_fingerprint"],
-        "prior_claim": correction["prior_claim"],
-        "corrected_claim": correction["corrected_claim"],
-        "change_reason": correction["change_reason"],
-        "source_attribution": correction["source_attribution"],
-        "evidence_references": correction["evidence_references"],
-        "casualty_change": correction["casualty_change"],
-        "injury_disagreement": correction["injury_disagreement"],
-    }
-
-
-def _semantic_text(correction: dict[str, object], wrapper: str = "p") -> str:
-    body = " | ".join(
-        str(correction[field])
-        for field in ("correction_id", "story_id", "correction_date", "prior_claim", "corrected_claim")
-    )
-    return f"<{wrapper}>{body}</{wrapper}>"
-
-
-def _feed(correction: dict[str, object], podcast: bool) -> str:
-    description = " | ".join(
-        str(correction[field])
-        for field in ("correction_id", "story_id", "correction_date", "prior_claim", "corrected_claim")
-    )
-    enclosure = (
-        f'<enclosure url="https://example.test/gaza/audio/corrections/{correction["correction_id"]}.mp3" '
-        'type="audio/mpeg" />'
-        if podcast
-        else ""
-    )
-    return (
-        "<rss><channel><item>"
-        f"<guid>{correction['correction_id']}</guid>"
-        f"<link>https://example.test/gaza/corrections/{correction['correction_id']}/</link>"
-        f"<description>{description}</description>{enclosure}"
-        "</item><item><guid>original-edition-guid</guid></item></channel></rss>"
-    )
-
-
-def _make_inputs(input_root: Path, correction: dict[str, object]) -> dict[str, Path]:
-    record = _correction_record(correction)
-    paths: dict[str, Path] = {}
-    for role in REPLACEMENT_PATHS:
-        path = input_root / f"{role}.artifact"
-        path.parent.mkdir(parents=True, exist_ok=True)
-        if role == "curation_manifest":
-            payload = [
-                {
-                    "story_id": STORY_ID,
-                    "title": TITLE,
-                    "summary": CORRECTED,
-                    "event_fingerprint": correction["stable_event_fingerprint"],
-                    "casualty_counts": {"new_deaths": 2},
-                    "injury_disagreement": {"unresolved": True, "reports": DISPUTE},
-                    "correction_history": [record],
-                }
-            ]
-            _write_json(path, payload)
-        elif role == "dedupe_report":
-            _write_json(path, {"included_stories": [{"story_id": STORY_ID}], "corrections": [record]})
-        elif role == "edition_manifest":
-            edition_record = {**record, "aggregates_recomputed_from_corrected_story_versions": True}
-            _write_json(path, {"edition_date": DATE, "story_count": 1, "corrections": [edition_record]})
-        elif role == "correction_manifest":
-            _write_json(path, record)
-        elif role == "original_audio_metadata":
-            _write_json(
-                path,
-                {
-                    "audio_status": "superseded_by_formal_correction",
-                    "superseded_by_correction_id": correction["correction_id"],
-                    "original_script_text": PRIOR,
-                    "replacement_audio_url": f"/gaza/audio/corrections/{correction['correction_id']}.mp3",
-                },
-            )
-        elif role == "correction_audio_metadata":
-            _write_json(
-                path,
-                {
-                    "audio_status": "formal_correction",
-                    "correction_id": correction["correction_id"],
-                    "story_id": STORY_ID,
-                    "owning_edition_date": DATE,
-                    "correction_date": CORRECTION_DATE,
-                    "script_text": _semantic_text(correction),
-                    "injury_disagreement": {"unresolved": True, "reports": DISPUTE},
-                },
-            )
-        elif role == "flash_briefing":
-            _write_json(path, [{"uid": correction["correction_id"], "mainText": _semantic_text(correction)}])
-        elif role == "rss":
-            path.write_text(_feed(correction, False), encoding="utf-8")
-        elif role in {"podcast", "audio_podcast"}:
-            path.write_text(_feed(correction, True), encoding="utf-8")
-        elif role == "correction_audio":
-            path.write_bytes(b"ID3-synthetic-corrected-audio")
-        else:
-            path.write_text(_semantic_text(correction), encoding="utf-8")
-        paths[role] = path
-    return paths
 
 
 def _build_case(tmp_path: Path, *, with_approval: bool = True) -> dict[str, object]:
@@ -295,29 +192,6 @@ def _build_case(tmp_path: Path, *, with_approval: bool = True) -> dict[str, obje
     event_fingerprint = lineage["stable_event_identity"]["fingerprint"]
     prior_fingerprint = lineage["prior_claim_identity"]["fingerprint"]
     corrected_fingerprint = "sha256:" + hashlib.sha256(CORRECTED.encode()).hexdigest()
-    correction = {
-        "correction_id": correction_identity(
-            STORY_ID, event_fingerprint, prior_fingerprint, corrected_fingerprint
-        ),
-        "story_id": STORY_ID,
-        "owning_edition_date": DATE,
-        "correction_date": CORRECTION_DATE,
-        "stable_event_fingerprint": event_fingerprint,
-        "prior_claim_fingerprint": prior_fingerprint,
-        "corrected_claim_fingerprint": corrected_fingerprint,
-        "prior_claim": PRIOR,
-        "corrected_claim": CORRECTED,
-        "change_reason": "Two independent sources update the death count while disagreeing on injuries.",
-        "source_attribution": "Source B and Source C",
-        "evidence_references": EVIDENCE,
-        "casualty_change": {
-            "field": "casualty_counts.new_deaths",
-            "previous_value": 1,
-            "corrected_value": 2,
-            "operation": "replace",
-        },
-        "injury_disagreement": {"unresolved": True, "reports": DISPUTE},
-    }
     lineage_path = source / "data" / "agent-history" / "gaza" / "lineage" / "published-stories" / f"{STORY_ID}.json"
     _write_json(lineage_path, lineage)
     raw_path = source / "data" / "agent-history" / "gaza" / "raw" / "raw.json"
@@ -335,12 +209,14 @@ def _build_case(tmp_path: Path, *, with_approval: bool = True) -> dict[str, obje
         "current_publication_eligible": False,
         "current_publication_approval": False,
         "candidate_event_fingerprint": corrected_fingerprint,
+        "decision_reason": "Two independent sources update the death count while disagreeing on injuries.",
         "normalized_artifact_sha256": sha256_file(normalized_path),
         "report_artifact_sha256": sha256_file(report_path),
         "attribution_assessment": {
             "safe_future_wording": CORRECTED,
             "attributed_to": "Source B and Source C",
             "disputed_values": DISPUTE,
+            "dispute_unresolved": True,
         },
         "evidence_references": EVIDENCE,
         "correction_lineage": {
@@ -355,6 +231,7 @@ def _build_case(tmp_path: Path, *, with_approval: bool = True) -> dict[str, obje
             },
             "previous_value": 1,
             "corrected_value": 2,
+            "field_or_claim": "casualty_counts.new_deaths",
             "prior_public_artifact_overwritten": False,
         },
     }
@@ -386,83 +263,39 @@ def _build_case(tmp_path: Path, *, with_approval: bool = True) -> dict[str, obje
     _write_json(audit_path, audit)
     source_commit = _commit(source, "Synthetic private reviewed state")
 
-    input_paths = _make_inputs(inputs, correction)
-    representations = []
-    for role in REPLACEMENT_PATHS:
-        public_path = REPLACEMENT_PATHS[role].format(date=DATE, correction_id=correction["correction_id"])
-        representations.append(
-            {
-                "role": role,
-                "public_path": public_path,
-                "input_path": input_paths[role].relative_to(inputs).as_posix(),
-                "prior_sha256": None if role in NEW_ROLES else sha256_file(pages / public_path),
-                "corrected_sha256": sha256_file(input_paths[role]),
-            }
-        )
-    set_payload = [
-        {"role": row["role"], "public_path": row["public_path"], "corrected_sha256": row["corrected_sha256"]}
-        for row in sorted(representations, key=lambda item: item["role"])
-    ]
-    artifact_set_sha = "sha256:" + hashlib.sha256(
-        json.dumps(set_payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
-    ).hexdigest()
-    unchanged = [
-        {
-            "role": role,
-            "public_path": template.format(date=DATE),
-            "sha256": sha256_file(pages / template.format(date=DATE)),
-        }
-        for role, template in UNCHANGED_PATHS.items()
-    ]
-    proposal = {
-        "schema_version": PROPOSAL_SCHEMA,
-        "operation": "formal_historical_correction",
-        "domain": "gaza",
-        "source_commit": source_commit,
-        "correction": correction,
-        "private_evidence": {
-            "lineage_path": lineage_path.relative_to(source).as_posix(),
-            "lineage_sha256": sha256_file(lineage_path),
-            "review_path": review_path.relative_to(source).as_posix(),
-            "review_sha256": sha256_file(review_path),
-            "decision_audit_path": audit_path.relative_to(source).as_posix(),
-            "decision_audit_sha256": sha256_file(audit_path),
-            "raw_sha256": raw_identity,
-            "normalized_artifact_sha256": sha256_file(normalized_path),
-            "report_artifact_sha256": sha256_file(report_path),
-        },
-        "pages_state": {
-            "branch": "gh-pages",
-            "expected_head": pages_head,
-            "representations": representations,
-            "unchanged_dependencies": unchanged,
-            "artifact_set_sha256": artifact_set_sha,
-        },
-        "proposal_sha256": "",
-    }
-    proposal["proposal_sha256"] = fingerprint_payload(proposal, "proposal_sha256")
-    _write_json(proposal_path, proposal)
+    proposal_root = tmp_path / "proposals"
+    prepared = prepare_correction_proposal(
+        source_root=source,
+        pages_root=pages,
+        story_id=STORY_ID,
+        review_path=review_path.relative_to(source).as_posix(),
+        decision_audit_path=audit_path.relative_to(source).as_posix(),
+        correction_date=CORRECTION_DATE,
+        output_root=proposal_root,
+        tts_provider="synthetic-tts",
+        tts_model="synthetic-model-v1",
+        tts_voice="synthetic-voice",
+    )
+    inputs = Path(prepared["proposal_path"]).parent
+    proposal_path = Path(prepared["proposal_path"])
+    proposal = json.loads(proposal_path.read_text(encoding="utf-8"))
+    correction = proposal["correction"]
     approval_path = "approvals/synthetic-correction.json"
     if with_approval:
-        approval = {
-            "schema_version": APPROVAL_SCHEMA,
-            "scope": "formal_historical_correction",
-            "approval_id": "synthetic-independent-approval",
-            "proposal_sha256": proposal["proposal_sha256"],
-            "correction_id": correction["correction_id"],
-            "source_commit": source_commit,
-            "pages_head": pages_head,
-            "artifact_set_sha256": artifact_set_sha,
-            "approved_at": "2026-09-02T12:00:00+00:00",
-            "approver": "Independent Synthetic Reviewer",
-            "package_authorized": True,
-            "audio_authorized": True,
-            "publication_authorized": False,
-            "approval_fingerprint": "",
-        }
-        approval["approval_fingerprint"] = fingerprint_payload(approval, "approval_fingerprint")
-        _write_json(source / approval_path, approval)
+        create_package_approval(
+            source_root=source,
+            pages_root=pages,
+            proposal_path=proposal_path,
+            input_root=inputs,
+            approval_request_path=inputs / "approval_request.json",
+            output_path=source / approval_path,
+            approval_id="synthetic-independent-approval",
+            approver="Independent Synthetic Reviewer",
+            approved_at="2026-09-02T12:00:00+00:00",
+        )
         _commit(source, "Independent synthetic approval")
+    rendered_audio = tmp_path / "rendered-correction.mp3"
+    rendered_audio.write_bytes(b"ID3-synthetic-approved-render")
     return {
         "source": source,
         "pages": pages,
@@ -471,6 +304,11 @@ def _build_case(tmp_path: Path, *, with_approval: bool = True) -> dict[str, obje
         "proposal": proposal,
         "correction": correction,
         "approval_path": approval_path,
+        "rendered_audio": rendered_audio,
+        "proposal_result": prepared,
+        "proposal_root": proposal_root,
+        "review_relative": review_path.relative_to(source).as_posix(),
+        "audit_relative": audit_path.relative_to(source).as_posix(),
     }
 
 
@@ -491,6 +329,213 @@ def _rewrite_proposal(case: dict[str, object]) -> None:
     _write_json(case["proposal_path"], proposal)
 
 
+def _prepare_again(case: dict[str, object], output_root: Path) -> dict[str, object]:
+    return prepare_correction_proposal(
+        source_root=case["source"],
+        pages_root=case["pages"],
+        story_id=STORY_ID,
+        review_path=case["review_relative"],
+        decision_audit_path=case["audit_relative"],
+        correction_date=CORRECTION_DATE,
+        output_root=output_root,
+        tts_provider="synthetic-tts",
+        tts_model="synthetic-model-v1",
+        tts_voice="synthetic-voice",
+    )
+
+
+def _cli(*args: object) -> dict[str, object]:
+    script = Path(__file__).parents[1] / "scripts" / "gaza_historical_correction.py"
+    result = subprocess.run(
+        [sys.executable, str(script), *[str(value) for value in args]],
+        check=True,
+        capture_output=True,
+        text=True,
+        env={**os.environ, "PYTHONPATH": str(Path(__file__).parents[1] / "src")},
+    )
+    return json.loads(result.stdout)
+
+
+def test_cli_executes_complete_nonpublication_workflow(tmp_path: Path) -> None:
+    case = _build_case(tmp_path, with_approval=False)
+    cli_root = tmp_path / "cli-proposals"
+    proposed = _cli(
+        "--mode", "propose",
+        "--source-root", case["source"],
+        "--pages-root", case["pages"],
+        "--story-id", STORY_ID,
+        "--review-path", case["review_relative"],
+        "--decision-audit-path", case["audit_relative"],
+        "--correction-date", CORRECTION_DATE,
+        "--proposal-root", cli_root,
+        "--tts-provider", "synthetic-tts",
+        "--tts-model", "synthetic-model-v1",
+        "--tts-voice", "synthetic-voice",
+    )
+    assert proposed["status"] == "proposal_created"
+    proposal_dir = Path(proposed["proposal_path"]).parent
+    approval_relative = "approvals/cli-synthetic-correction.json"
+    approved = _cli(
+        "--mode", "approve-package",
+        "--source-root", case["source"],
+        "--pages-root", case["pages"],
+        "--proposal", proposal_dir / "proposal.json",
+        "--input-root", proposal_dir,
+        "--approval-request", proposal_dir / "approval_request.json",
+        "--approval-output", case["source"] / approval_relative,
+        "--approval-id", "cli-independent-approval",
+        "--approver", "CLI Independent Reviewer",
+        "--approved-at", "2026-09-02T12:00:00+00:00",
+    )
+    assert approved["status"] == "package_approval_created"
+    _commit(case["source"], "Commit CLI synthetic approval")
+    common = (
+        "--source-root", case["source"],
+        "--pages-root", case["pages"],
+        "--proposal", proposal_dir / "proposal.json",
+        "--input-root", proposal_dir,
+        "--approval-ref", "HEAD",
+        "--approval-path", approval_relative,
+    )
+    planned = _cli("--mode", "plan", *common)
+    assert planned["status"] == "validated_plan"
+    staging = tmp_path / "cli-staging"
+    staged = _cli(
+        "--mode", "stage",
+        *common,
+        "--rendered-audio", case["rendered_audio"],
+        "--staging-root", staging,
+    )
+    assert staged["status"] == "staged_correction_package"
+    verified = _cli(
+        "--mode", "verify-staged",
+        *common,
+        "--package-root", staged["package_path"],
+    )
+    assert verified["status"] == "staged_package_verified"
+    assert verified["publication_authorized"] is False
+    assert _run(case["pages"], "status", "--porcelain") == ""
+
+
+def test_proposal_is_non_authorizing_deterministic_and_replay_safe(tmp_path: Path) -> None:
+    case = _build_case(tmp_path, with_approval=False)
+    source_head = _run(case["source"], "rev-parse", "HEAD")
+    pages_head = _run(case["pages"], "rev-parse", "HEAD")
+    first = case["proposal_result"]
+    replay = _prepare_again(case, case["proposal_root"])
+    second_root = tmp_path / "second-proposal-root"
+    independent = _prepare_again(case, second_root)
+    assert first["status"] == "proposal_created"
+    assert replay["status"] == "idempotent_noop"
+    assert independent["proposal_sha256"] == first["proposal_sha256"]
+    assert independent["artifact_set_sha256"] == first["artifact_set_sha256"]
+    assert _run(case["source"], "rev-parse", "HEAD") == source_head
+    assert _run(case["pages"], "rev-parse", "HEAD") == pages_head
+    assert _run(case["pages"], "status", "--porcelain") == ""
+    request = json.loads((case["inputs"] / "approval_request.json").read_text(encoding="utf-8"))
+    assert request["package_authorized"] is False
+    assert request["audio_authorized"] is False
+    assert request["publication_authorized"] is False
+    assert not list(case["inputs"].rglob("*.mp3"))
+
+    preview = next((case["inputs"] / "preview").rglob("*.html"))
+    preview.write_text("conflict", encoding="utf-8")
+    with pytest.raises(CorrectionValidationError, match="conflicts with deterministic output"):
+        _prepare_again(case, case["proposal_root"])
+
+
+def test_approval_is_created_from_request_and_replay_is_safe(tmp_path: Path) -> None:
+    case = _build_case(tmp_path, with_approval=False)
+    output = case["source"] / "approvals" / "reviewer-approval.json"
+    kwargs = {
+        "source_root": case["source"],
+        "pages_root": case["pages"],
+        "proposal_path": case["proposal_path"],
+        "input_root": case["inputs"],
+        "approval_request_path": case["inputs"] / "approval_request.json",
+        "output_path": output,
+        "approval_id": "reviewer-approval-1",
+        "approver": "Independent Reviewer",
+        "approved_at": "2026-09-02T12:00:00+00:00",
+    }
+    first = create_package_approval(**kwargs)
+    second = create_package_approval(**kwargs)
+    assert first["status"] == "package_approval_created"
+    assert second["status"] == "idempotent_noop"
+    approval = json.loads(output.read_text(encoding="utf-8"))
+    request = json.loads((case["inputs"] / "approval_request.json").read_text(encoding="utf-8"))
+    for key in (
+        "proposal_sha256",
+        "correction_id",
+        "source_commit",
+        "pages_head",
+        "artifact_set_sha256",
+        "audio_request_sha256",
+    ):
+        assert approval[key] == request[key]
+    assert approval["package_authorized"] is True
+    assert approval["audio_authorized"] is True
+    assert approval["publication_authorized"] is False
+    with pytest.raises(CorrectionValidationError, match="conflicting"):
+        create_package_approval(**{**kwargs, "approver": "Conflicting Reviewer"})
+
+
+def test_approval_rejects_self_consistent_but_nonvalidator_request(tmp_path: Path) -> None:
+    case = _build_case(tmp_path, with_approval=False)
+    request_path = tmp_path / "invented-approval-request.json"
+    request = json.loads(
+        (case["inputs"] / "approval_request.json").read_text(encoding="utf-8")
+    )
+    request["artifact_set_sha256"] = "sha256:" + "1" * 64
+    request["request_sha256"] = fingerprint_payload(request, "request_sha256")
+    _write_json(request_path, request)
+    with pytest.raises(CorrectionValidationError, match="not validator-produced"):
+        create_package_approval(
+            source_root=case["source"],
+            pages_root=case["pages"],
+            proposal_path=case["proposal_path"],
+            input_root=case["inputs"],
+            approval_request_path=request_path,
+            output_path=case["source"] / "approvals" / "invented.json",
+            approval_id="invented-approval",
+            approver="Synthetic Reviewer",
+            approved_at="2026-09-02T12:00:00+00:00",
+        )
+
+
+def test_approval_output_must_be_commit_ready_source_artifact(tmp_path: Path) -> None:
+    case = _build_case(tmp_path, with_approval=False)
+    with pytest.raises(CorrectionValidationError, match="source approvals directory"):
+        create_package_approval(
+            source_root=case["source"],
+            pages_root=case["pages"],
+            proposal_path=case["proposal_path"],
+            input_root=case["inputs"],
+            approval_request_path=case["inputs"] / "approval_request.json",
+            output_path=tmp_path / "detached-approval.json",
+            approval_id="detached-approval",
+            approver="Synthetic Reviewer",
+            approved_at="2026-09-02T12:00:00+00:00",
+        )
+
+
+def test_working_tree_approval_cannot_supply_authority(tmp_path: Path) -> None:
+    case = _build_case(tmp_path, with_approval=False)
+    create_package_approval(
+        source_root=case["source"],
+        pages_root=case["pages"],
+        proposal_path=case["proposal_path"],
+        input_root=case["inputs"],
+        approval_request_path=case["inputs"] / "approval_request.json",
+        output_path=case["source"] / case["approval_path"],
+        approval_id="uncommitted-approval",
+        approver="Synthetic Reviewer",
+        approved_at="2026-09-02T12:00:00+00:00",
+    )
+    with pytest.raises(CorrectionValidationError, match="committed approval artifact"):
+        _plan(case)
+
+
 def test_successful_full_package_plan_is_read_only(tmp_path: Path) -> None:
     case = _build_case(tmp_path)
     before = {
@@ -505,7 +550,7 @@ def test_successful_full_package_plan_is_read_only(tmp_path: Path) -> None:
         "files": sorted(path.relative_to(tmp_path).as_posix() for path in tmp_path.rglob("*") if path.is_file()),
     }
     assert plan["status"] == "validated_plan"
-    assert len(plan["representations"]) == len(REPLACEMENT_PATHS)
+    assert len(plan["representations"]) == len(PREVIEW_PATHS)
     assert len(plan["unchanged_dependencies"]) == len(UNCHANGED_PATHS)
     assert plan["publication_authorized"] is False
     assert before == after
@@ -529,6 +574,8 @@ def test_documented_json_schemas_parse() -> None:
     schema_root = Path(__file__).parents[1] / "docs" / "schemas"
     for name in (
         "gaza-formal-historical-correction-proposal-v1.schema.json",
+        "gaza-formal-historical-correction-audio-request-v1.schema.json",
+        "gaza-formal-historical-correction-approval-request-v1.schema.json",
         "gaza-formal-historical-correction-approval-v1.schema.json",
     ):
         payload = json.loads((schema_root / name).read_text(encoding="utf-8"))
@@ -659,6 +706,7 @@ def test_stage_is_atomic_idempotent_and_rejects_conflict(tmp_path: Path, monkeyp
         stage_correction_package(
             plan=plan,
             input_root=case["inputs"],
+            rendered_audio_path=case["rendered_audio"],
             staging_root=staging,
             source_root=case["source"],
             pages_root=case["pages"],
@@ -669,6 +717,7 @@ def test_stage_is_atomic_idempotent_and_rejects_conflict(tmp_path: Path, monkeyp
     first = stage_correction_package(
         plan=plan,
         input_root=case["inputs"],
+        rendered_audio_path=case["rendered_audio"],
         staging_root=staging,
         source_root=case["source"],
         pages_root=case["pages"],
@@ -676,12 +725,37 @@ def test_stage_is_atomic_idempotent_and_rejects_conflict(tmp_path: Path, monkeyp
     second = stage_correction_package(
         plan=plan,
         input_root=case["inputs"],
+        rendered_audio_path=case["rendered_audio"],
         staging_root=staging,
         source_root=case["source"],
         pages_root=case["pages"],
     )
     assert first["status"] == "staged_correction_package"
     assert second["status"] == "idempotent_noop"
+    package_root = staging / plan["correction_id"]
+    verified = verify_staged_package(
+        plan=plan,
+        package_root=package_root,
+        source_root=case["source"],
+        pages_root=case["pages"],
+    )
+    assert verified["status"] == "staged_package_verified"
+    assert verified["publication_authorized"] is False
+    staged_manifest = json.loads((package_root / "package_manifest.json").read_text(encoding="utf-8"))
+    assert len(staged_manifest["representations"]) == len(REPLACEMENT_PATHS)
+    assert staged_manifest["rendered_audio_sha256"] == sha256_file(case["rendered_audio"])
+    assert staged_manifest["audio_request"]["sha256"] == case["proposal"]["pages_state"]["audio_request"]["sha256"]
+    for role in ("podcast", "audio_podcast"):
+        row = next(item for item in staged_manifest["representations"] if item["role"] == role)
+        feed = ElementTree.fromstring((package_root / row["public_path"]).read_bytes())
+        correction_item = next(
+            item
+            for item in feed.findall(".//item")
+            if item.findtext("guid") == plan["correction_id"]
+        )
+        assert correction_item.find("enclosure").attrib["length"] == str(
+            case["rendered_audio"].stat().st_size
+        )
     manifest = staging / plan["correction_id"] / "package_manifest.json"
     payload = json.loads(manifest.read_text(encoding="utf-8"))
     payload["approval_id"] = "conflict"
@@ -690,7 +764,41 @@ def test_stage_is_atomic_idempotent_and_rejects_conflict(tmp_path: Path, monkeyp
         stage_correction_package(
             plan=plan,
             input_root=case["inputs"],
+            rendered_audio_path=case["rendered_audio"],
             staging_root=staging,
+            source_root=case["source"],
+            pages_root=case["pages"],
+        )
+
+
+def test_staged_verification_rejects_source_and_pages_drift(tmp_path: Path) -> None:
+    case = _build_case(tmp_path)
+    plan = _plan(case)
+    staging = tmp_path / "staging"
+    result = stage_correction_package(
+        plan=plan,
+        input_root=case["inputs"],
+        rendered_audio_path=case["rendered_audio"],
+        staging_root=staging,
+        source_root=case["source"],
+        pages_root=case["pages"],
+    )
+    package_root = Path(result["package_path"])
+    (case["pages"] / "working-tree-drift").write_text("drift", encoding="utf-8")
+    with pytest.raises(CorrectionValidationError, match="Pages repository is dirty"):
+        verify_staged_package(
+            plan=plan,
+            package_root=package_root,
+            source_root=case["source"],
+            pages_root=case["pages"],
+        )
+    (case["pages"] / "working-tree-drift").unlink()
+    (case["source"] / "source-drift").write_text("drift", encoding="utf-8")
+    _commit(case["source"], "Synthetic source drift")
+    with pytest.raises(CorrectionValidationError, match="source history drifted"):
+        verify_staged_package(
+            plan=plan,
+            package_root=package_root,
             source_root=case["source"],
             pages_root=case["pages"],
         )

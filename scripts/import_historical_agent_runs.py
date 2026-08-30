@@ -5,7 +5,27 @@ from datetime import datetime, timezone
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from bluefern_dispatches.historical_agent_archive import DOMAINS, SCHEMA_VERSION, HistoricalEnvelopeError, _care_report, _gaza_report, _ice_report, archive_root, atomic_json, build_inventory, canonical_json, care_line_match_targets, food_line_match_targets, gaza_match_targets, normalize_records, parse_historical_input, sha256_bytes, validate_input
+from bluefern_dispatches.historical_agent_archive import (
+    DOMAINS,
+    SCHEMA_VERSION,
+    HistoricalEnvelopeError,
+    _care_report,
+    _gaza_report,
+    _ice_report,
+    archive_root,
+    atomic_json,
+    build_inventory,
+    canonical_json,
+    care_line_match_targets,
+    food_line_match_targets,
+    gaza_candidate_matches_published_lineage,
+    gaza_match_targets,
+    normalize_records,
+    parse_historical_input,
+    record_gaza_published_story_lineage,
+    sha256_bytes,
+    validate_input,
+)
 from bluefern_dispatches.ice_historical import explicit_detection_date_text, extract_detection_date, ice_aggregate_metrics, normalize_detection_date
 
 SUPPORTED_BATCH_EXTENSIONS = {".txt", ".md", ".json"}
@@ -902,7 +922,9 @@ def _validate_gaza_attribution(review: dict) -> dict:
     return attribution
 
 
-def _validate_gaza_prior_reference(repo_root: Path, reference: dict, label: str) -> None:
+def _validate_gaza_prior_reference(
+    repo_root: Path, reference: dict, label: str
+) -> dict | None:
     reference_id = _require_nonempty_string(reference.get("id"), f"{label} id")
     if reference.get("type") == "historical_candidate":
         normalized_root = archive_root(repo_root, "gaza") / "normalized"
@@ -920,7 +942,11 @@ def _validate_gaza_prior_reference(repo_root: Path, reference: dict, label: str)
                     matches.append((path, candidate))
         if len(matches) != 1:
             raise ValueError(f"{label} must resolve exactly once as a historical candidate")
-        return
+        return {
+            "record_type": "historical_candidate",
+            "path": str(matches[0][0]),
+            "candidate": matches[0][1],
+        }
     targets = gaza_match_targets(repo_root)
     matches = list(targets["clusters_by_id"].get(reference_id, []))
     matches.extend(
@@ -936,6 +962,14 @@ def _validate_gaza_prior_reference(repo_root: Path, reference: dict, label: str)
     )
     if not matches:
         raise ValueError(f"{label} does not resolve as a published story")
+    lineage_matches = [
+        match
+        for match in matches
+        if match.get("record_type") == "private_published_story_lineage"
+    ]
+    if len(lineage_matches) > 1:
+        raise ValueError(f"{label} resolves to duplicate private lineage records")
+    return lineage_matches[0] if lineage_matches else matches[0]
 
 
 def _validate_gaza_decision_details(
@@ -943,6 +977,7 @@ def _validate_gaza_decision_details(
     decision: str,
     evidence: list[dict],
     repo_root: Path,
+    finding: dict,
 ) -> dict:
     details: dict[str, object] = {}
     if decision in {"confirmed", "corrected"}:
@@ -975,7 +1010,9 @@ def _validate_gaza_decision_details(
             str(review.get("audit_candidate_id") or ""),
         }:
             raise ValueError("correction prior reference cannot be the selected candidate")
-        _validate_gaza_prior_reference(repo_root, prior, "correction prior reference")
+        prior_target = _validate_gaza_prior_reference(
+            repo_root, prior, "correction prior reference"
+        )
         if prior.get("type") == "published_story":
             _parse_review_date(prior.get("edition_date"), "prior story edition_date")
         prior_fp = lineage.get("prior_event_fingerprint")
@@ -998,6 +1035,27 @@ def _validate_gaza_decision_details(
             raise ValueError("correction fingerprints must differ")
         if new_fp != review.get("candidate_event_fingerprint"):
             raise ValueError("corrected fingerprint must match the selected candidate")
+        if (
+            isinstance(prior_target, dict)
+            and prior_target.get("record_type") == "private_published_story_lineage"
+        ):
+            lineage_record = prior_target["lineage_record"]
+            if prior.get("edition_date") != lineage_record.get("edition_date"):
+                raise ValueError("correction prior edition differs from private lineage")
+            if prior_identity != lineage_record["stable_event_identity"]["fingerprint"]:
+                raise ValueError(
+                    "correction event identity differs from private published lineage"
+                )
+            if old_fp != lineage_record["prior_claim_identity"]["fingerprint"]:
+                raise ValueError(
+                    "correction prior fingerprint differs from private published lineage"
+                )
+            if not gaza_candidate_matches_published_lineage(
+                finding, lineage_record, evidence
+            ):
+                raise ValueError(
+                    "corrected candidate is not same-event compatible with private lineage"
+                )
         _require_nonempty_string(lineage.get("field_or_claim"), "corrected field or claim")
         if "previous_value" not in lineage or "corrected_value" not in lineage:
             raise ValueError("correction lineage requires previous and corrected values")
@@ -1244,7 +1302,7 @@ def _review_gaza_editorial_candidate(args: argparse.Namespace) -> int:
     taxonomy = _validate_gaza_review_taxonomy(review, finding)
     attribution = _validate_gaza_attribution(review)
     decision_details = _validate_gaza_decision_details(
-        review, args.decision, evidence, repo_root
+        review, args.decision, evidence, repo_root, finding
     )
 
     identifier_key = f"{id_field}:{identifier}"
@@ -2217,7 +2275,7 @@ def _review_historical_candidate(args: argparse.Namespace) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Preserve and normalize historical agent exports privately")
-    parser.add_argument("operation", choices=["validate", "dry-run", "import", "inventory", "normalize", "report", "renormalize", "review", "batch-validate", "batch-dry-run", "batch-import"])
+    parser.add_argument("operation", choices=["validate", "dry-run", "import", "inventory", "normalize", "report", "renormalize", "review", "backfill-published-lineage", "batch-validate", "batch-dry-run", "batch-import"])
     parser.add_argument("--domain", choices=DOMAINS); parser.add_argument("--input", type=Path); parser.add_argument("--input-dir", type=Path); parser.add_argument("--correction", type=Path); parser.add_argument("--repo-root", type=Path, default=Path.cwd()); parser.add_argument("--captured-at", default="")
     parser.add_argument("--recursive", action="store_true"); parser.add_argument("--allow-partial-import", action="store_true")
     parser.add_argument("--maintenance-reason", default="add first-class ICE detection_date from an explicit raw-alert field")
@@ -2227,6 +2285,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--review-artifact-sha256")
     parser.add_argument("--operator", default="William Patton")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--pages-repo", type=Path)
+    parser.add_argument("--pages-commit")
+    parser.add_argument("--story-id")
+    parser.add_argument("--edition-date")
+    parser.add_argument("--expected-title")
+    parser.add_argument("--expected-prior-claim")
+    parser.add_argument("--backfill-reason")
     args = parser.parse_args(argv)
     if args.operation.startswith("batch-"):
         if not args.domain or not args.input_dir:
@@ -2256,6 +2321,35 @@ def main(argv: list[str] | None = None) -> int:
         if missing:
             parser.error("review requires " + ", ".join(missing))
         return _review_historical_candidate(args)
+    if args.operation == "backfill-published-lineage":
+        missing = [
+            name
+            for name, value in (
+                ("--pages-repo", args.pages_repo),
+                ("--pages-commit", args.pages_commit),
+                ("--story-id", args.story_id),
+                ("--edition-date", args.edition_date),
+                ("--expected-title", args.expected_title),
+                ("--expected-prior-claim", args.expected_prior_claim),
+                ("--backfill-reason", args.backfill_reason),
+            )
+            if not value
+        ]
+        if missing:
+            parser.error("backfill-published-lineage requires " + ", ".join(missing))
+        result = record_gaza_published_story_lineage(
+            args.repo_root.resolve(),
+            args.pages_repo.resolve(),
+            pages_commit=args.pages_commit,
+            story_id=args.story_id,
+            edition_date=args.edition_date,
+            expected_title=args.expected_title,
+            expected_prior_claim=args.expected_prior_claim,
+            backfill_reason=args.backfill_reason,
+            dry_run=args.dry_run,
+        )
+        print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))
+        return 0
     if not args.domain or not args.input: parser.error("--domain and --input are required")
     if args.operation == "renormalize":
         return _renormalize_ice(args)

@@ -1,0 +1,62 @@
+{
+  "agent_run_id": "gaza-aug29-confirmed-intake-recovery",
+  "archive_content_change_authorized": false,
+  "attribution_assessment": {
+    "attributed_to": "United Nations OCHA, citing Gaza's Ministry of Health",
+    "attribution_preserved": true,
+    "mode": "official_claim",
+    "safe_future_wording": "OCHA, citing Gaza's Ministry of Health, reported that central IV-solution stocks were depleted during the August 10-23 reporting period; the precise depletion onset was not stated.",
+    "uncertainty_preserved": true,
+    "unsupported_certainty_escalation": false
+  },
+  "audio_authorized": false,
+  "audit_candidate_id": "GZ-D",
+  "candidate_event_fingerprint": "sha256:f1e218f5c634c35b4a4dc3462f0dbefef41f7a92865c9c4620a9da807e1f6761",
+  "cluster_authorized": false,
+  "date_assessment": {
+    "event_period_end": "2026-08-23",
+    "event_period_start": "2026-08-10",
+    "source_published_at": "2026-08-29"
+  },
+  "decided_at": "2026-08-30T22:20:26.869129+00:00",
+  "decision": "confirmed",
+  "decision_reason": "The OCHA report, citing Gaza's Ministry of Health, supports the IV-solution depletion claim for the bounded August 10-23 reporting period; the exact onset remains unstated, wider shortages remain context, and the claim is distinct from the cancer-medicine story.",
+  "domain": "gaza",
+  "duplicate_and_authoritative_match_check": {
+    "candidate_remains_distinct": true,
+    "existing_edition_match": null,
+    "existing_historical_match": null,
+    "existing_source_match": null,
+    "existing_story_cluster_match": null
+  },
+  "edition_authorized": false,
+  "evidence_references": [
+    {
+      "role": "principal",
+      "supporting_passage": "OCHA, citing Gaza's Ministry of Health, reported that central IV solution stocks were depleted during the August 10-23 reporting period amid broader medical-supply shortages.",
+      "url": "https://www.ochaopt.org/content/humanitarian-situation-report-28-august-2026"
+    }
+  ],
+  "normalized_artifact_path": "data/agent-history/gaza/normalized/81f4574dae4e26d5763697516bb096d13ae240a6801b235d8631d5e5d39682b4.json",
+  "normalized_artifact_sha256": "0e5d19a7345b2e0073151fa8b9a781c0de7287630667b07df77914ce2b2952c6",
+  "operator": "William Patton",
+  "previous_review_status": "pending_review",
+  "publication_approval": false,
+  "publication_authorized": false,
+  "publication_eligible": false,
+  "queue_action": "none",
+  "queue_authorized": false,
+  "raw_archive_artifact_path": "data/agent-history/gaza/raw/81f4574dae4e26d5763697516bb096d13ae240a6801b235d8631d5e5d39682b4.json",
+  "raw_archive_artifact_sha256": "294e583a7b4d94b64467b1bc89ab88583c45642ba1e661fde3a9c1d30dddc6dd",
+  "raw_sha256": "81f4574dae4e26d5763697516bb096d13ae240a6801b235d8631d5e5d39682b4",
+  "report_artifact_path": "data/agent-history/gaza/reports/81f4574dae4e26d5763697516bb096d13ae240a6801b235d8631d5e5d39682b4.json",
+  "report_artifact_sha256": "173ebbe832730e39d6d480c0701bead3684036659c62216abd592d456b67b0f3",
+  "resulting_review_state": "substantively_reviewed",
+  "review_artifact_path": "data/agent-history/gaza/reviews/gaza-aug29-gz-d-confirmed.json",
+  "review_artifact_sha256": "a57437639d243156ad39d1082c26dd08a60768cc9cd6dc304a2d9171408491f6",
+  "schema_version": "gaza_historical_editorial_decision_v2",
+  "source_record_authorized": false,
+  "taxonomy_review": {
+    "category": "healthcare_access"
+  }
+}

@@ -39,7 +39,7 @@
     },
     {
       "story_id": "gaza-story-2026-08-29-007",
-      "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef",
+      "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - UNICEF",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -92,7 +92,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-012",
+      "story_id": "gaza-story-2026-08-29-011",
       "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
       "classification": "major_update",
       "material_update": false,
@@ -101,12 +101,12 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-011",
-      "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
-      "classification": "new",
+      "story_id": "gaza-story-2026-08-29-012",
+      "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
+      "classification": "major_update",
       "material_update": true,
       "material_update_reasons": [
-        "new_story"
+        "changed_ceasefire_implementation_assessment"
       ],
       "include_decision": "include",
       "public_rendered": true
@@ -187,7 +187,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-012",
+      "story_id": "gaza-story-2026-08-29-011",
       "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
       "classification": "major_update",
       "material_update": false,
@@ -196,6 +196,21 @@
       "watchlist_status": "publication_candidate",
       "prior_story_matched": "gaza-story-2026-07-31-005",
       "prior_edition_date": "2026-07-31",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-08-29-012",
+      "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "changed_ceasefire_implementation_assessment"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-07-23-003",
+      "prior_edition_date": "2026-07-23",
       "include_decision": "include",
       "public_rendered": true
     }
@@ -251,7 +266,7 @@
     },
     {
       "story_id": "gaza-story-2026-08-29-007",
-      "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef",
+      "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - UNICEF",
       "classification": "new",
       "material_update": true,
       "material_update_reasons": [
@@ -324,7 +339,7 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-012",
+      "story_id": "gaza-story-2026-08-29-011",
       "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
       "classification": "major_update",
       "material_update": false,
@@ -337,17 +352,17 @@
       "public_rendered": true
     },
     {
-      "story_id": "gaza-story-2026-08-29-011",
-      "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
-      "classification": "new",
+      "story_id": "gaza-story-2026-08-29-012",
+      "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
+      "classification": "major_update",
       "material_update": true,
       "material_update_reasons": [
-        "new_story"
+        "changed_ceasefire_implementation_assessment"
       ],
       "duplicate_reasons": [],
       "watchlist_status": "material_follow_up",
-      "prior_story_matched": null,
-      "prior_edition_date": null,
+      "prior_story_matched": "gaza-story-2026-07-23-003",
+      "prior_edition_date": "2026-07-23",
       "include_decision": "include",
       "public_rendered": true
     },

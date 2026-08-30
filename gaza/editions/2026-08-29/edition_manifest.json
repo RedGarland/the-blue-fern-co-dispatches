@@ -2,7 +2,7 @@
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-08-29",
-  "generated_at": "2026-08-30T03:12:13.612101+00:00",
+  "generated_at": "2026-08-30T05:14:37.467735+00:00",
   "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-08-29/",
   "local_output_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-08-29",
   "local_dispatch_output_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\dispatches\\gaza\\editions\\2026-08-29",
@@ -43,11 +43,11 @@
   ],
   "errors": [],
   "scheduled_run_local_time": "2026-08-29T06:00:00-07:00",
-  "actual_run_local_time": "2026-08-29T20:12:13-07:00",
+  "actual_run_local_time": "2026-08-29T22:14:37-07:00",
   "source_window_start_utc": "2026-08-27T14:17:24Z",
   "source_window_end_utc": "2026-08-29T23:48:22Z",
-  "first_source_retrieved_at": "2026-08-30T03:11:58.123524Z",
-  "last_source_retrieved_at": "2026-08-30T03:11:58.123524Z",
+  "first_source_retrieved_at": "2026-08-30T05:14:19.829741Z",
+  "last_source_retrieved_at": "2026-08-30T05:14:19.829741Z",
   "contains_later_same_day_update": false,
   "later_same_day_update_count": 0,
   "later_same_day_update_batch_count": 0,
@@ -59,8 +59,8 @@
   "post_edition_date_retrieval_batches": [],
   "retrieval_batches": [
     {
-      "retrieved_at": "2026-08-30T03:11:58.123524Z",
-      "retrieved_at_local": "2026-08-29T20:11:58-07:00",
+      "retrieved_at": "2026-08-30T05:14:19.829741Z",
+      "retrieved_at_local": "2026-08-29T22:14:19-07:00",
       "retrieved_local_date": "2026-08-29",
       "batch_classification": "scheduled_or_pre_scheduled_batch",
       "source_record_ids": [
@@ -70,12 +70,12 @@
         "gaza-2026-08-29-wafa-gaza-displacement-tent-query-18f1e365ef68",
         "gaza-2026-08-29-wafa-gaza-motorbike-query-93def3f625bb",
         "gaza-2026-08-29-wafa-gaza-health-infrastructure-query-def1bd447fee",
-        "gaza-2026-08-29-unicef-gaza-water-query-711011519f55",
+        "gaza-2026-08-29-unicef-gaza-water-query-26ac36050160",
         "gaza-2026-08-29-guardian-world-4b2093fd72ba",
         "gaza-2026-08-29-aljazeera-middle-east-4ba8eb1457de",
         "gaza-2026-08-29-aljazeera-middle-east-fcd9a3b4242c",
-        "gaza-2026-08-29-aljazeera-middle-east-04d6b190c1dd",
-        "gaza-2026-08-29-ap-gaza-attribution-query-f5136b8fcfab"
+        "gaza-2026-08-29-ap-gaza-attribution-query-f5136b8fcfab",
+        "gaza-2026-08-29-aljazeera-board-of-peace-isf-query-3c1fa6c3ec94"
       ],
       "source_count": 12
     }

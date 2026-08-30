@@ -57,7 +57,7 @@
         }
       }
     ],
-    "generated_at": "2026-08-30T03:12:13.612101+00:00",
+    "generated_at": "2026-08-30T05:14:37.467735+00:00",
     "relevance_terms_matched": [
       "deir al-balah",
       "gaza",
@@ -144,7 +144,7 @@
         }
       }
     ],
-    "generated_at": "2026-08-30T03:12:13.612101+00:00",
+    "generated_at": "2026-08-30T05:14:37.467735+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -227,7 +227,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T03:12:13.612101+00:00",
+    "generated_at": "2026-08-30T05:14:37.467735+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -256,8 +256,8 @@
   },
   {
     "story_id": "gaza-story-2026-08-29-007",
-    "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef",
-    "summary": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza Unicef.",
+    "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - UNICEF",
+    "summary": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza UNICEF.",
     "category": "humanitarian",
     "story_scope": "core_gaza",
     "score": 74,
@@ -282,10 +282,10 @@
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-08-29-unicef-gaza-water-query-711011519f55"
+      "gaza-2026-08-29-unicef-gaza-water-query-26ac36050160"
     ],
     "source_ids": [
-      "gaza-2026-08-29-unicef-gaza-water-query-711011519f55"
+      "gaza-2026-08-29-unicef-gaza-water-query-26ac36050160"
     ],
     "source_urls": [
       "https://news.google.com/rss/articles/CBMivgFBVV95cUxPQVppUFhxZGFWOWk1TW5mdE9Ha3JkcFJzZlRnbkdIRzljaXN3bjVIRmRuWWptUmdib3dlN0hDRmlDRTZQZFl4ZGswbFdzVHU1ZzVKeTgyR0xZOTlSTEYzaG5lMFd4eFlzQ2dhUWs3X3Y5cXdkY3JLZlZ3VC1JdWlfdHhVUV9mX0VtbW5KeE5QRFkzamlhcVBBYmpKSnZETk1rSEJjYWNfcUtvRFdWX1YyUTBtdVk0VjFuTWNBNGhn?oc=5"
@@ -295,11 +295,11 @@
     ],
     "source_records": [
       {
-        "source_record_id": "gaza-2026-08-29-unicef-gaza-water-query-711011519f55",
-        "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - Unicef",
+        "source_record_id": "gaza-2026-08-29-unicef-gaza-water-query-26ac36050160",
+        "title": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza - UNICEF",
         "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPQVppUFhxZGFWOWk1TW5mdE9Ha3JkcFJzZlRnbkdIRzljaXN3bjVIRmRuWWptUmdib3dlN0hDRmlDRTZQZFl4ZGswbFdzVHU1ZzVKeTgyR0xZOTlSTEYzaG5lMFd4eFlzQ2dhUWs3X3Y5cXdkY3JLZlZ3VC1JdWlfdHhVUV9mX0VtbW5KeE5QRFkzamlhcVBBYmpKSnZETk1rSEJjYWNfcUtvRFdWX1YyUTBtdVk0VjFuTWNBNGhn?oc=5",
         "publisher": "UNICEF",
-        "summary_or_snippet": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza Unicef",
+        "summary_or_snippet": "Four children killed as separate attacks destroy humanitarian supplies and damage critical water infrastructure in Gaza UNICEF",
         "event_date": "2026-08-28T10:22:19+00:00",
         "location": "Gaza",
         "development_type": "primary_report",
@@ -309,7 +309,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T03:12:13.612101+00:00",
+    "generated_at": "2026-08-30T05:14:37.467735+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -392,7 +392,7 @@
         }
       }
     ],
-    "generated_at": "2026-08-30T03:12:13.612101+00:00",
+    "generated_at": "2026-08-30T05:14:37.467735+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin"
@@ -474,7 +474,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T03:12:13.612101+00:00",
+    "generated_at": "2026-08-30T05:14:37.467735+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -555,7 +555,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T03:12:13.612101+00:00",
+    "generated_at": "2026-08-30T05:14:37.467735+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],
@@ -633,7 +633,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T03:12:13.612101+00:00",
+    "generated_at": "2026-08-30T05:14:37.467735+00:00",
     "relevance_terms_matched": [
       "gaza",
       "palestin",
@@ -661,7 +661,7 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-012",
+    "story_id": "gaza-story-2026-08-29-011",
     "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East - AP News",
     "summary": "Israeli strikes kill 5 in Gaza and 3 in West Bank, and other news in the Middle East AP News.",
     "category": "conflict",
@@ -713,7 +713,7 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T03:12:13.612101+00:00",
+    "generated_at": "2026-08-30T05:14:37.467735+00:00",
     "relevance_terms_matched": [
       "gaza",
       "west bank"
@@ -740,50 +740,51 @@
     "dedupe_reasons": []
   },
   {
-    "story_id": "gaza-story-2026-08-29-011",
-    "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
-    "summary": "A federal judge criticised the Trump government for attempting to infringe upon foreign students' rights to free speech.",
-    "category": "palestinian_development",
-    "story_scope": "palestinian_development",
-    "score": 52,
+    "story_id": "gaza-story-2026-08-29-012",
+    "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
+    "summary": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera. The Board of Peace has \"determined the mechanism for deploying the International Stabilization Force [ISF] and its deployment locations in the Gaza Strip,\" he said, noting that Morocco agreed to take part, though Turkiye will not participate after Israel vetoed Ankara's involvement. He added that the force's \"advance elements should arrive in the Gaza Strip soon\".",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 56,
     "scoring_reasons": [
-      "accountability_legal",
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
       "source_reliability",
       "date_confidence"
     ],
     "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
+      "humanitarian_impact": 12,
       "aid_access": 0,
-      "ceasefire_diplomacy": 0,
+      "ceasefire_diplomacy": 8,
       "civilian_harm": 0,
       "displacement": 0,
       "health_infrastructure": 0,
-      "accountability_legal": 8,
+      "accountability_legal": 0,
       "source_reliability": 14,
-      "date_confidence": 18
+      "date_confidence": 10
     },
     "included_in_public_summary": true,
     "included_in_detail_dataset": false,
     "source_record_ids": [
-      "gaza-2026-08-29-aljazeera-middle-east-04d6b190c1dd"
+      "gaza-2026-08-29-aljazeera-board-of-peace-isf-query-3c1fa6c3ec94"
     ],
     "source_ids": [
-      "gaza-2026-08-29-aljazeera-middle-east-04d6b190c1dd"
+      "gaza-2026-08-29-aljazeera-board-of-peace-isf-query-3c1fa6c3ec94"
     ],
     "source_urls": [
-      "https://www.aljazeera.com/news/2026/8/29/us-judge-rules-against-trumps-effort-to-deport-pro-palestinian-students?traffic_source=rss"
+      "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNdkpxdFc5VUFLYjJ1bTJ2Q2w5MXpKLVBJdEpGOC1nMjFUVEJFVzh0U2hwbTVtbzZPS0FSVTRnN21TLWI3dkVVSHNXdWl4QUZ5Q2lSM2xHWkFRMFZPRU5nUUQydGdBYnUzUUFLWXZUcW1jUENKTEZnQ3gzZmhlYy1OdVB1b3FYN21OOGRWNDMxYjZmLXFlRUtnTGJJOUtsaS1hdFJaQjFjOXF5QdIBrwFBVV95cUxNSC1xcVVjZ1FOdGQ0b2NYMzJtc3h0X2tuSThQZ1pFaHpmT1Atb0lfOUMzVmswdTJZNWg5NkNDSWh1aDZzTVVCRFUxYW5xSHQtLU94ZXZ4NVl0d2ZPbnFzTVVYeldmNDNVWEx5eGxhVEhGbmdrZFY2UFJ3eDJJM2xNdlZJWWl6aDJ4eWlzOUhwN1FENHczVXFIS3Z1djF3aW5RSVlQbjVrSnNLQTdKa2ZJ?oc=5"
     ],
     "publisher_names": [
       "Al Jazeera"
     ],
     "source_records": [
       {
-        "source_record_id": "gaza-2026-08-29-aljazeera-middle-east-04d6b190c1dd",
-        "title": "US judge rules against Trump's effort to deport pro-Palestinian students",
-        "url": "https://www.aljazeera.com/news/2026/8/29/us-judge-rules-against-trumps-effort-to-deport-pro-palestinian-students?traffic_source=rss",
+        "source_record_id": "gaza-2026-08-29-aljazeera-board-of-peace-isf-query-3c1fa6c3ec94",
+        "title": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' - Al Jazeera",
+        "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNdkpxdFc5VUFLYjJ1bTJ2Q2w5MXpKLVBJdEpGOC1nMjFUVEJFVzh0U2hwbTVtbzZPS0FSVTRnN21TLWI3dkVVSHNXdWl4QUZ5Q2lSM2xHWkFRMFZPRU5nUUQydGdBYnUzUUFLWXZUcW1jUENKTEZnQ3gzZmhlYy1OdVB1b3FYN21OOGRWNDMxYjZmLXFlRUtnTGJJOUtsaS1hdFJaQjFjOXF5QdIBrwFBVV95cUxNSC1xcVVjZ1FOdGQ0b2NYMzJtc3h0X2tuSThQZ1pFaHpmT1Atb0lfOUMzVmswdTJZNWg5NkNDSWh1aDZzTVVCRFUxYW5xSHQtLU94ZXZ4NVl0d2ZPbnFzTVVYeldmNDNVWEx5eGxhVEhGbmdrZFY2UFJ3eDJJM2xNdlZJWWl6aDJ4eWlzOUhwN1FENHczVXFIS3Z1djF3aW5RSVlQbjVrSnNLQTdKa2ZJ?oc=5",
         "publisher": "Al Jazeera",
-        "summary_or_snippet": "A federal judge criticised the Trump government for attempting to infringe upon foreign students' rights to free speech.",
-        "event_date": "2026-08-29T18:56:19+00:00",
+        "summary_or_snippet": "Board of Peace envoy Mladenov warns Gaza ceasefire risks 'collapse' Al Jazeera The Board of Peace has \"determined the mechanism for deploying the International Stabilization Force [ISF] and its deployment locations in the Gaza Strip,\" he said, noting that Morocco agreed to take part, though Turkiye will not participate after Israel vetoed Ankara's involvement. He added that the force's \"advance elements should arrive in the Gaza Strip soon\".",
+        "event_date": "2026-08-28T16:48:33+00:00",
         "location": "Gaza",
         "development_type": "primary_report",
         "affected_system": "conflict",
@@ -792,30 +793,29 @@
         "casualty_counts": {}
       }
     ],
-    "generated_at": "2026-08-30T03:12:13.612101+00:00",
+    "generated_at": "2026-08-30T05:14:37.467735+00:00",
     "relevance_terms_matched": [
-      "gaza",
-      "palestin"
+      "gaza"
     ],
-    "top_story_relevance_score": 52,
-    "substantive_ground": false,
+    "top_story_relevance_score": 56,
+    "substantive_ground": true,
     "flotilla_only": false,
     "attribution_mode": "reported_public_source",
     "claim_status": "reported_public_source",
     "context_only": false,
-    "core_ground_development": false,
+    "core_ground_development": true,
     "development_type": "primary_report",
     "affected_system": "conflict",
     "location": "Gaza",
-    "event_date": "2026-08-29T18:56:19+00:00",
+    "event_date": "2026-08-28T16:48:33+00:00",
     "attribution": "Al Jazeera",
     "uncertainty": "reported source",
     "casualty_counts": {},
     "include_decision": "include",
     "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
     "dedupe_reasons": []
   },
   {
@@ -872,7 +872,7 @@
         }
       }
     ],
-    "generated_at": "2026-08-30T03:12:13.612101+00:00",
+    "generated_at": "2026-08-30T05:14:37.467735+00:00",
     "relevance_terms_matched": [
       "gaza"
     ],

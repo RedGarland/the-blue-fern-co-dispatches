@@ -1581,6 +1581,7 @@ ALJAZEERA_ARTICLE_TEXT = (
     "The Board of Peace has determined the mechanism for deploying the International Stabilization Force in Gaza "
     "and its deployment locations. Advance elements should arrive soon."
 )
+ALJAZEERA_ARTICLE_FIXTURE = Path(__file__).parent / "fixtures" / "aljazeera_mladenov_article.html"
 
 
 def _google_wrapper_html() -> str:
@@ -1671,14 +1672,15 @@ def test_aljazeera_board_of_peace_isf_article_enrichment_adds_material_facts(wor
                 "content_text": wrapper_html,
             }
         assert url == ALJAZEERA_ARTICLE_URL
+        article_text = ALJAZEERA_ARTICLE_FIXTURE.read_text(encoding="utf-8")
         return {
             "ok": True,
             "url": url,
             "final_url": url,
             "status_code": 200,
             "content_type": "text/html; charset=utf-8",
-            "content_bytes": ALJAZEERA_ARTICLE_TEXT.encode("utf-8"),
-            "content_text": ALJAZEERA_ARTICLE_TEXT,
+            "content_bytes": article_text.encode("utf-8"),
+            "content_text": article_text,
         }
 
     monkeypatch.setattr(gaza_sources, "fetch_article_payload", fake_article_fetch)
@@ -1727,6 +1729,91 @@ def test_aljazeera_board_of_peace_isf_article_enrichment_adds_material_facts(wor
     assert "mechanism for deploying" in normalized[0]["summary_or_snippet"].lower()
     assert "deployment locations" in normalized[0]["summary_or_snippet"].lower()
     assert "advance elements" in normalized[0]["summary_or_snippet"].lower()
+
+
+def test_aljazeera_article_prose_fixture_recovers_all_required_deployment_facts():
+    excerpt = gaza_sources._extract_aljazeera_isf_excerpt(ALJAZEERA_ARTICLE_FIXTURE.read_text(encoding="utf-8"))
+
+    assert "mechanism for deploying" in excerpt.lower()
+    assert "deployment locations" in excerpt.lower()
+    assert "advance elements should arrive" in excerpt.lower()
+    assert "window.pagedata" not in excerpt.lower()
+    assert "latest coverage" not in excerpt.lower()
+
+
+@pytest.mark.parametrize(
+    "article_text",
+    [
+        "<html><script>Board of Peace advance elements</script><body><nav>Board of Peace</nav><p>Generic ceasefire coverage.</p></body></html>",
+        "The Board of Peace discussed the International Stabilization Force and the Gaza ceasefire.",
+        "The deployment mechanism was discussed, but no location or arrival state was reported.",
+    ],
+)
+def test_aljazeera_article_enrichment_rejects_incomplete_or_script_only_facts(article_text):
+    assert gaza_sources._extract_aljazeera_isf_excerpt(article_text) == ""
+
+
+def test_aljazeera_article_enrichment_accepts_plain_text_only_with_all_three_concepts():
+    excerpt = gaza_sources._extract_aljazeera_isf_excerpt(ALJAZEERA_ARTICLE_TEXT)
+
+    assert excerpt == ALJAZEERA_ARTICLE_TEXT
+
+
+def test_aljazeera_script_heavy_article_without_all_facts_is_not_marked_enriched(monkeypatch):
+    source = gaza_sources.SourceDefinition(
+        source_id=gaza_sources.ALJAZEERA_ISF_QUERY_SOURCE_ID,
+        name="Al Jazeera Board of Peace ISF Query",
+        url="https://news.google.com/rss/search?q=aljazeera+gaza+isf",
+        type="google_news_rss",
+        enabled=True,
+        publisher="Al Jazeera",
+        reliability_tier="reported-public-source",
+        category_hint="conflict",
+        region_scope="Gaza",
+    )
+    monkeypatch.setattr(
+        gaza_sources,
+        "_resolve_aljazeera_google_news_wrapper",
+        lambda _url: {
+            "canonicalization_method": "google_news_rpc",
+            "canonicalization_status": "google_news_resolved_same_domain",
+            "failure_reason": "",
+            "resolved_url": ALJAZEERA_ARTICLE_URL,
+        },
+    )
+    article_text = (
+        "<html><script>Board of Peace advance elements should arrive soon</script>"
+        "<body><div class='wysiwyg wysiwyg--all-content'><p>The Board of Peace discussed Gaza and the ISF.</p>"
+        "</div></body></html>"
+    )
+    monkeypatch.setattr(
+        gaza_sources,
+        "fetch_article_payload",
+        lambda _url: {
+            "ok": True,
+            "final_url": ALJAZEERA_ARTICLE_URL,
+            "content_text": article_text,
+        },
+    )
+
+    record = gaza_sources.normalize_rss_item(
+        {
+            "title": ALJAZEERA_FEED_TITLE,
+            "url": ALJAZEERA_WRAPPER_URL,
+            "published_at": "2026-08-28T16:48:33+00:00",
+            "summary_or_snippet": ALJAZEERA_FEED_SUMMARY,
+        },
+        source,
+        "2026-08-29",
+        "2026-08-29T18:00:00+00:00",
+    )
+
+    assert record is not None
+    assert record["enrichment_attempted"] is True
+    assert record["enrichment_status"] == "insufficient_article_content"
+    assert record["enrichment_failure_reason"] == "article body did not contain all required deployment-state facts"
+    assert record["content_text"] is None
+    assert record["summary_or_snippet"] == ALJAZEERA_FEED_SUMMARY
 
 
 def test_aljazeera_wrapper_retries_transient_timeout_then_resolves(monkeypatch):

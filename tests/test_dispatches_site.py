@@ -1697,6 +1697,66 @@ def test_pages_publish_copies_gaza_audio_and_feed_artifacts(built_site):
     assert "output/detail/" in result["files_that_would_be_skipped"]
 
 
+def test_gaza_scoped_publish_pins_requested_date_across_utc_rollover(built_site, monkeypatch):
+    work, backup_root, _ = built_site
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    (pages_repo / "index.html").write_text("<html>Root home</html>", encoding="utf-8")
+    (pages_repo / "CNAME").write_text(CNAME_VALUE + "\n", encoding="utf-8")
+    dispatch_root = work / "output" / "dispatches"
+    (dispatch_root / "gaza").mkdir(parents=True, exist_ok=True)
+    (dispatch_root / "gaza" / "archive.html").write_text("<html>Gaza archive</html>", encoding="utf-8")
+    add_gaza_site_edition(dispatch_root, "2026-05-03")
+    monkeypatch.delenv("BLUEFERN_SEED_EDITION_DATE", raising=False)
+
+    class AfterMidnightUtc(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            instant = cls(2026, 5, 4, 0, 30, tzinfo=generator.timezone.utc)
+            return instant.astimezone(tz) if tz else instant.replace(tzinfo=None)
+
+    monkeypatch.setattr(generator, "datetime", AfterMidnightUtc)
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=False,
+        no_push=True,
+        backup_root=backup_root,
+        expect_date="2026-05-03",
+        expect_dispatches=("gaza",),
+        only_dispatches=("gaza",),
+    )
+
+    assert result["ok"] is True, result["errors"]
+    assert (work / "output" / "site" / "gaza" / "editions" / "2026-05-03" / "index.html").exists()
+    assert not (work / "output" / "site" / "gaza" / "editions" / "2026-05-04").exists()
+    assert (pages_repo / "gaza" / "editions" / "2026-05-03" / "index.html").exists()
+    assert not (pages_repo / "gaza" / "editions" / "2026-05-04").exists()
+    assert all("/gaza/editions/2026-05-04/" not in url for url in result["build"]["public_urls"])
+    assert "2026-05-04" not in (pages_repo / "gaza" / "archive.html").read_text(encoding="utf-8")
+    assert "2026-05-04" not in (pages_repo / "gaza" / "rss.xml").read_text(encoding="utf-8")
+
+
+def test_gaza_pages_scope_excludes_public_editions_after_requested_date(tmp_path):
+    site_root = tmp_path / "site"
+    (site_root / "gaza").mkdir(parents=True, exist_ok=True)
+    (site_root / "gaza" / "archive.html").write_text("<html>Gaza archive</html>", encoding="utf-8")
+    add_gaza_site_edition(site_root, "2026-08-29")
+    add_gaza_site_edition(site_root, "2026-08-30")
+
+    files = generator.collect_public_site_files(
+        site_root,
+        only_dispatches=("gaza",),
+        public_max_dates={"gaza": "2026-08-29"},
+    )
+    relative_paths = {path.relative_to(site_root).as_posix() for path in files}
+
+    assert "gaza/editions/2026-08-29/index.html" in relative_paths
+    assert not any(path.startswith("gaza/editions/2026-08-30/") for path in relative_paths)
+
+
 def test_pages_publish_rejects_gaza_history_shrink_on_archive_and_audio_surfaces(tmp_path, monkeypatch):
     work = tmp_path / "repo"
     work.mkdir()

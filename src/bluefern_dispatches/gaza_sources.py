@@ -17,6 +17,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from datetime import date, datetime, time, timedelta, timezone
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit, unquote, quote_plus
@@ -56,14 +57,10 @@ GAZA_CONTEXT_TERMS = re.compile(
     re.I,
 )
 ALJAZEERA_ISF_QUERY_SOURCE_ID = "aljazeera-board-of-peace-isf-query"
-ALJAZEERA_ISF_FACT_TERMS = (
-    "mechanism for deploying",
-    "mechanism for deployment",
-    "deployment locations",
-    "advance elements",
-    "should arrive",
-    "international stabilization force",
-    "board of peace",
+ALJAZEERA_ISF_REQUIRED_FACT_PATTERNS = (
+    re.compile(r"\b(?:determined|established|agreed|finali[sz]ed)\b.{0,120}\bmechanism\b.{0,120}\bdeploy", re.I),
+    re.compile(r"\bdeployment locations?\b", re.I),
+    re.compile(r"\badvance elements?\b.{0,120}\b(?:arrive|expected|due)\b.{0,60}\bsoon\b", re.I),
 )
 ALJAZEERA_WRAPPER_RETRY_DELAYS_SECONDS = (1.0, 2.0)
 WEAK_ONLY_GAZA_PATTERNS = (
@@ -1079,21 +1076,84 @@ def _resolve_aljazeera_google_news_wrapper(url: str) -> dict[str, Any]:
 
 
 def _extract_aljazeera_isf_excerpt(article_text: str) -> str:
-    text = clean_feed_text(article_text)
+    class _ArticleProseParser(HTMLParser):
+        _SKIPPED_TAGS = {"script", "style", "noscript", "template", "svg"}
+        _BLOCK_TAGS = {"article", "blockquote", "br", "div", "h1", "h2", "h3", "li", "p"}
+        _VOID_TAGS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
+
+        def __init__(self) -> None:
+            super().__init__(convert_charrefs=True)
+            self._skip_depth = 0
+            self._article_depth = 0
+            self.article_parts: list[str] = []
+            self.visible_parts: list[str] = []
+
+        def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+            tag = tag.lower()
+            if tag in self._SKIPPED_TAGS:
+                self._skip_depth += 1
+                return
+            if self._skip_depth:
+                return
+            attrs_by_name = {name.lower(): value or "" for name, value in attrs}
+            classes = set(attrs_by_name.get("class", "").split())
+            begins_article = self._article_depth == 0 and "wysiwyg--all-content" in classes
+            if self._article_depth or begins_article:
+                if tag not in self._VOID_TAGS:
+                    self._article_depth += 1
+                if tag in self._BLOCK_TAGS:
+                    self.article_parts.append("\n")
+            if tag in self._BLOCK_TAGS:
+                self.visible_parts.append("\n")
+
+        def handle_endtag(self, tag: str) -> None:
+            tag = tag.lower()
+            if tag in self._SKIPPED_TAGS:
+                if self._skip_depth:
+                    self._skip_depth -= 1
+                return
+            if self._skip_depth:
+                return
+            if tag in self._BLOCK_TAGS:
+                self.visible_parts.append("\n")
+                if self._article_depth:
+                    self.article_parts.append("\n")
+            if self._article_depth and tag not in self._VOID_TAGS:
+                self._article_depth -= 1
+
+        def handle_data(self, data: str) -> None:
+            if self._skip_depth:
+                return
+            self.visible_parts.append(data)
+            if self._article_depth:
+                self.article_parts.append(data)
+
+    parser = _ArticleProseParser()
+    try:
+        parser.feed(article_text)
+        parser.close()
+    except Exception:
+        return ""
+    parts = parser.article_parts or parser.visible_parts
+    text = clean_feed_text("\n".join(parts))
     if not text:
         return ""
-    lowered = text.lower()
-    if not any(term in lowered for term in ALJAZEERA_ISF_FACT_TERMS):
+    if not all(pattern.search(text) for pattern in ALJAZEERA_ISF_REQUIRED_FACT_PATTERNS):
         return ""
-    sentences = re.split(r"(?<=[.!?])\s+", text)
-    matching = [
-        sentence.strip()
-        for sentence in sentences
-        if any(term in sentence.lower() for term in ALJAZEERA_ISF_FACT_TERMS)
-    ]
-    if matching:
-        return " ".join(matching[:3]).strip()
-    return text[:500].strip()
+    sentences = [item.strip() for item in re.split(r"(?<=[.!?])\s+|\n+", text) if item.strip()]
+    selected: list[str] = []
+    covered: set[int] = set()
+    for sentence in sentences:
+        hits = {index for index, pattern in enumerate(ALJAZEERA_ISF_REQUIRED_FACT_PATTERNS) if pattern.search(sentence)}
+        if hits - covered:
+            selected.append(sentence)
+            covered.update(hits)
+        if len(covered) == len(ALJAZEERA_ISF_REQUIRED_FACT_PATTERNS):
+            break
+    excerpt = " ".join(selected).strip()
+    if not all(pattern.search(excerpt) for pattern in ALJAZEERA_ISF_REQUIRED_FACT_PATTERNS):
+        return ""
+    return excerpt[:2000].strip()
 
 
 def parse_rss_items(content: bytes, content_type: str = "", content_encoding: str = "") -> list[dict[str, str]]:
@@ -1482,8 +1542,8 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
                     summary = f"{summary} {excerpt}".strip() if summary else excerpt
                 enrichment_status = "enriched_material_excerpt"
             else:
-                enrichment_status = "failed_no_material_excerpt"
-                enrichment_failure_reason = "article body did not contain targeted deployment-state facts"
+                enrichment_status = "insufficient_article_content"
+                enrichment_failure_reason = "article body did not contain all required deployment-state facts"
         elif article_payload is not None:
             enrichment_status = "failed_article_fetch"
             enrichment_failure_reason = _bounded_diagnostic(article_payload.get("failure_reason") or "article fetch failed")

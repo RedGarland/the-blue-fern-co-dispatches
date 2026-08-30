@@ -1,0 +1,32 @@
+{
+  "agent_run_id": "food-line-aug29-confirmed-intake-recovery",
+  "counts": {
+    "excluded": 9
+  },
+  "dry_run": false,
+  "duplicate_keys": [
+    "1c321bc80c6729e92c0ae65974c430983ef4e494be9fc5d17006b9db5168d470",
+    "434999e753b40f7fc07feb328fa5459b4344eacd87ad3eae1baeaec07bc0e1d4",
+    "579763b7c47ae9c6ab54e011857081ae552146c289a55c0768f160179b26a83e",
+    "63c0a9c5fdf6270766659457d255879dbf1ef210dffcac14d3e38ff41ecdd4a0",
+    "6ca6c069b33b1dc7f940c02e59b37b26724f9d7b934fab36a661ff7ba00bc363",
+    "bf59f4cb3a3cdab534f89899ca7166f42b6d8ebf3dba916cabfcaf84566e6bde",
+    "d9810f71eafe8fe9c70aaec4e9cd3c2c567b129cad684c8de98370e3c2dd948b",
+    "e60be3fbbea0899f4ece916196f757effe29c7e17802b341b58d9972a269bd33",
+    "f975020231e41e9244eda08c124aab27b5ba854c7853ce85f6312c720baf3e7b"
+  ],
+  "edition_date": "2026-08-29",
+  "finding_ids": [
+    "finding_3cec0dcbaadc424302dd33a8",
+    "finding_7a1a9dfd65b6a871aefb2520",
+    "finding_d70b77db1ef5002e228c7468",
+    "finding_1fa17a6891e583aa878faf69",
+    "finding_173181a14a0c4cdefe160b26",
+    "finding_2c41e7ee8a79bf43824a79d5",
+    "finding_2c0f8706f698967fc76bde06",
+    "finding_669e5d0b75918d4b9452367d",
+    "finding_7a44fef7775ce49802185230"
+  ],
+  "input_sha256": "50f7bd768b4fd7491299c575211541fc9b0ab522061539133d7c099587a0fa2d",
+  "schema_version": "food_line_agent_intake_report_v1"
+}

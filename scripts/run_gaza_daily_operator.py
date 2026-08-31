@@ -828,6 +828,7 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
             "No valid traceable Gaza sources survived normalization and dedupe" in item
             or "all candidates were suppressed as repeated or stale-risk" in item
             or "No source-backed Gaza stories survived curation/dedupe" in item
+            or "No substantive Gaza/Palestinian ground-development story cleared threshold" in item
             for item in errors
         )
         if no_publication:

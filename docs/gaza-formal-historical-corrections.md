@@ -63,6 +63,16 @@ reviewed script, script hash, provider, model, voice, correction identity, and
 future public path. It is not a rendered binary and has both
 `render_authorized` and `publication_authorized` set to false.
 
+The prior flash briefing is bound to its owning edition by the exact generated
+UID `gaza-YYYY-MM-DD` and the exact dated MP3 path
+`/gaza/audio/YYYY-MM-DD.mp3`. The correction validator accepts that canonical
+site path or the equivalent HTTPS URL on `dispatches.thebluefernco.com`; it does
+not accept an edition-page redirect. The same date, dispatch, MP3 filename,
+transcript identity, and enclosure identity must agree in the edition audio
+metadata, existing MP3, transcript, and both Gaza podcast feeds. Queries,
+fragments, alternate hosts, encoded paths, traversal, and filename lookalikes
+fail closed.
+
 After package/audio approval is committed, an audio worker may render that exact
 request. TTS bytes can be nondeterministic, so the package approval does not claim
 to bind bytes that do not yet exist. `stage` records the rendered MP3 hash and

@@ -16,6 +16,7 @@ from bluefern_dispatches.gaza_historical_correction import (
     REPLACEMENT_PATHS,
     UNCHANGED_PATHS,
     CorrectionValidationError,
+    _EditionAudioOwnership,
     fingerprint_payload,
     plan_correction,
     prepare_correction_proposal,
@@ -31,6 +32,7 @@ from bluefern_dispatches.gaza_historical_correction import (
     _render_flash_briefing_json,
     _render_original_audio_metadata_json,
     _render_story_scoped_edition_html,
+    _validate_edition_audio_ownership,
     sha256_file,
     stage_correction_package,
     verify_staged_package,
@@ -293,11 +295,26 @@ def _make_pages(
     _write_json(edition / "edition_manifest.json", {"edition_date": DATE, "story_count": 3})
     (edition / "index.html").write_text(_synthetic_edition_html(), encoding="utf-8")
     (edition / "source_quality_report.md").write_text("# Synthetic source quality\n", encoding="utf-8")
+    prior_audio = b"ID3-prior-synthetic-audio"
+    prior_audio_url = f"/gaza/audio/{DATE}.mp3"
+    prior_audio_public_url = f"https://dispatches.thebluefernco.com{prior_audio_url}"
+    prior_transcript_url = (
+        f"https://dispatches.thebluefernco.com/gaza/audio/{DATE}-transcript.html"
+    )
+    prior_podcast_item = (
+        f"<item><title>Gaza Briefing for {DATE}</title>"
+        f"<link>{prior_transcript_url}</link><guid>{prior_transcript_url}</guid>"
+        f'<enclosure url="{prior_audio_public_url}" length="{len(prior_audio)}" '
+        'type="audio/mpeg" /></item>'
+    )
     existing_text = {
         "gaza/rss.xml": "<rss><channel><item><guid>edition</guid></item></channel></rss>",
-        f"gaza/audio/{DATE}-transcript.html": f"<html><body><main><p>{PRIOR}</p></main></body></html>",
-        "gaza/podcast.xml": "<rss><channel><item><guid>episode</guid></item></channel></rss>",
-        "gaza/audio/podcast.xml": "<rss><channel><item><guid>episode</guid></item></channel></rss>",
+        f"gaza/audio/{DATE}-transcript.html": (
+            f'<html><body><main><audio src="{prior_audio_url}"></audio>'
+            f"<p>{PRIOR}</p></main></body></html>"
+        ),
+        "gaza/podcast.xml": f"<rss><channel>{prior_podcast_item}</channel></rss>",
+        "gaza/audio/podcast.xml": f"<rss><channel>{prior_podcast_item}</channel></rss>",
         "gaza/audio/index.html": f"<html><body><main><p>{TITLE}</p></main></body></html>",
         "gaza/index.html": f"<html><body><main><p>{TITLE}</p></main></body></html>",
         "gaza/archive.html": f"<html><body><main><p>{TITLE}</p></main></body></html>",
@@ -310,20 +327,26 @@ def _make_pages(
     _write_json(
         pages / "gaza" / "audio" / f"{DATE}.json",
         {
+            "dispatch_slug": "gaza",
             "edition_date": DATE,
             "audio_status": "generated",
             "script_text": PRIOR,
             "audio_file": f"{DATE}.mp3",
+            "audio_url": prior_audio_url,
+            "audio_mime_type": "audio/mpeg",
+            "audio_file_size_bytes": len(prior_audio),
+            "transcript_url": prior_transcript_url,
+            "edition_url": f"https://dispatches.thebluefernco.com/gaza/editions/{DATE}/",
         },
     )
-    (pages / "gaza" / "audio" / f"{DATE}.mp3").write_bytes(b"ID3-prior-synthetic-audio")
+    (pages / "gaza" / "audio" / f"{DATE}.mp3").write_bytes(prior_audio)
     _write_json(
         pages / "gaza" / "flash-briefing.json",
         [
             {
                 "uid": f"gaza-{DATE}",
                 "mainText": PRIOR,
-                "redirectionUrl": f"https://dispatches.thebluefernco.com/gaza/editions/{DATE}/",
+                "redirectionUrl": prior_audio_url,
             }
         ],
     )
@@ -812,6 +835,16 @@ def test_text_artifact_rejects_ambiguous_or_unsupported_input(
         _read_text_artifact(path, "synthetic artifact")
 
 
+def _synthetic_audio_ownership() -> _EditionAudioOwnership:
+    return _EditionAudioOwnership(
+        edition_date=DATE,
+        audio_path=f"/gaza/audio/{DATE}.mp3",
+        transcript_path=f"/gaza/audio/{DATE}-transcript.html",
+        edition_path=f"/gaza/editions/{DATE}/",
+        audio_size_bytes=len(b"ID3-prior-synthetic-audio"),
+    )
+
+
 def _render_production_shaped_json(tmp_path: Path) -> tuple[dict[str, bytes], dict[str, bytes]]:
     correction = _synthetic_correction()
     record = _public_correction_record(correction)
@@ -855,9 +888,240 @@ def _render_production_shaped_json(tmp_path: Path) -> tuple[dict[str, bytes], di
             {"script_text": reader.audio_script},
             reader,
             link,
+            _synthetic_audio_ownership(),
         ),
     }
     return originals, outputs
+
+
+def _render_flash_redirect(tmp_path: Path, redirect: str, *, uid: str | None = None) -> bytes:
+    payload = json.loads((JSON_PRESERVATION_FIXTURES / "flash_briefing.json").read_text(encoding="utf-8"))
+    if uid is None:
+        uid = f"gaza-{DATE}"
+    payload[0]["uid"] = uid
+    payload[0]["redirectionUrl"] = redirect
+    path = tmp_path / "flash-briefing.json"
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    correction = _synthetic_correction()
+    reader = _reader_correction_copy(correction)
+    return _render_flash_briefing_json(
+        _load_json_document(path, "flash briefing"),
+        correction,
+        {"script_text": reader.audio_script},
+        reader,
+        "https://dispatches.thebluefernco.com/gaza/corrections/synthetic/",
+        _synthetic_audio_ownership(),
+    )
+
+
+@pytest.mark.parametrize(
+    "redirect",
+    [
+        f"/gaza/audio/{DATE}.mp3",
+        f"https://dispatches.thebluefernco.com/gaza/audio/{DATE}.mp3",
+    ],
+)
+def test_flash_briefing_accepts_canonical_relative_or_sanctioned_absolute_audio_url(
+    tmp_path: Path, redirect: str
+) -> None:
+    output = json.loads(_render_flash_redirect(tmp_path, redirect))
+    assert output[0]["uid"] == _synthetic_correction()["correction_id"]
+
+
+@pytest.mark.parametrize(
+    "redirect",
+    [
+        "/gaza/audio/2026-08-28.mp3",
+        f"/care-line/audio/{DATE}.mp3",
+        f"/Gaza/audio/{DATE}.mp3",
+        f"/gaza/audio/{DATE}.wav",
+        f"/gaza/audio/{DATE}.mp30",
+        f"/gaza/audio/{DATE}-extra.mp3",
+        f"/gaza/audio/{DATE}.mp3?download=1",
+        f"/gaza/audio/{DATE}.mp3#fragment",
+        f"/gaza/audio/%32%30%32%36-08-29.mp3",
+        f"/gaza/audio/../audio/{DATE}.mp3",
+        f"/gaza/audio/%2e%2e/audio/{DATE}.mp3",
+        f"https://example.test/gaza/audio/{DATE}.mp3",
+        f"https://dispatches.thebluefernco.com.evil.test/gaza/audio/{DATE}.mp3",
+        f"https://user@dispatches.thebluefernco.com/gaza/audio/{DATE}.mp3",
+        f"https://dispatches.thebluefernco.com:443/gaza/audio/{DATE}.mp3",
+        f"https://dispatches.thebluefernco.com/gaza/editions/{DATE}/",
+    ],
+)
+def test_flash_briefing_rejects_noncanonical_or_wrong_audio_url(
+    tmp_path: Path, redirect: str
+) -> None:
+    with pytest.raises(CorrectionValidationError):
+        _render_flash_redirect(tmp_path, redirect)
+
+
+def test_flash_briefing_requires_exact_uid_and_redirection_field(tmp_path: Path) -> None:
+    with pytest.raises(CorrectionValidationError, match="another owning edition"):
+        _render_flash_redirect(tmp_path, f"/gaza/audio/{DATE}.mp3", uid=DATE)
+
+    correction = _synthetic_correction()
+    reader = _reader_correction_copy(correction)
+    for missing in ("uid", "redirectionUrl"):
+        payload = json.loads(
+            (JSON_PRESERVATION_FIXTURES / "flash_briefing.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        del payload[0][missing]
+        path = tmp_path / f"missing-{missing}.json"
+        path.write_text(json.dumps(payload), encoding="utf-8")
+        with pytest.raises(CorrectionValidationError, match="missing required field"):
+            _render_flash_briefing_json(
+                _load_json_document(path, "flash briefing"),
+                correction,
+                {"script_text": reader.audio_script},
+                reader,
+                "https://dispatches.thebluefernco.com/gaza/corrections/synthetic/",
+                _synthetic_audio_ownership(),
+            )
+
+
+@pytest.mark.parametrize(
+    ("newline", "final_newline", "bom"),
+    [
+        ("\n", True, False),
+        ("\n", False, True),
+        ("\r\n", True, True),
+        ("\r\n", False, False),
+    ],
+)
+def test_flash_briefing_patch_preserves_concrete_syntax_and_is_byte_reversible(
+    tmp_path: Path, newline: str, final_newline: bool, bom: bool
+) -> None:
+    path, document = _fixture_document(
+        tmp_path,
+        "flash_briefing.json",
+        newline=newline,
+        final_newline=final_newline,
+        bom=bom,
+    )
+    original = path.read_bytes()
+    correction = _synthetic_correction()
+    reader = _reader_correction_copy(correction)
+    output = _render_flash_briefing_json(
+        document,
+        correction,
+        {"script_text": reader.audio_script},
+        reader,
+        "https://dispatches.thebluefernco.com/gaza/corrections/synthetic/",
+        _synthetic_audio_ownership(),
+    )
+    assert document.render(()) == original
+    assert output.startswith(b"\xef\xbb\xbf") is bom
+    body = output[3:] if bom else output
+    assert (b"\r\n" in body) is (newline == "\r\n")
+    assert body.endswith(newline.encode()) is final_newline
+    assert json.loads(body)[0]["uid"] == correction["correction_id"]
+
+
+def test_edition_audio_ownership_matches_metadata_mp3_transcript_and_both_feeds(
+    tmp_path: Path,
+) -> None:
+    pages = tmp_path / "pages"
+    _make_pages(pages)
+    ownership = _validate_edition_audio_ownership(pages, _synthetic_correction())
+    assert ownership == _synthetic_audio_ownership()
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("dispatch_slug", "care-line", "dispatch identity"),
+        ("edition_date", "2026-08-28", "edition identity"),
+        ("audio_file", "2026-08-29-copy.mp3", "audio filename"),
+        ("audio_mime_type", "audio/wav", "MIME type"),
+        ("audio_file_size_bytes", 999, "file size"),
+        ("audio_url", "/gaza/audio/2026-08-28.mp3", "metadata URL"),
+        (
+            "transcript_url",
+            "https://dispatches.thebluefernco.com/gaza/audio/2026-08-28-transcript.html",
+            "metadata transcript URL",
+        ),
+        (
+            "edition_url",
+            "https://dispatches.thebluefernco.com/gaza/editions/2026-08-28/",
+            "metadata edition URL",
+        ),
+    ],
+)
+def test_edition_audio_ownership_rejects_mismatched_metadata(
+    tmp_path: Path, field: str, value: object, message: str
+) -> None:
+    pages = tmp_path / "pages"
+    _make_pages(pages)
+    path = pages / "gaza" / "audio" / f"{DATE}.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload[field] = value
+    _write_json(path, payload)
+    with pytest.raises(CorrectionValidationError, match=message):
+        _validate_edition_audio_ownership(pages, _synthetic_correction())
+
+
+def test_edition_audio_ownership_rejects_missing_metadata(tmp_path: Path) -> None:
+    pages = tmp_path / "pages"
+    _make_pages(pages)
+    (pages / "gaza" / "audio" / f"{DATE}.json").unlink()
+    with pytest.raises(CorrectionValidationError, match="audio metadata"):
+        _validate_edition_audio_ownership(pages, _synthetic_correction())
+
+
+def test_edition_audio_ownership_rejects_mismatched_transcript_audio(
+    tmp_path: Path,
+) -> None:
+    pages = tmp_path / "pages"
+    _make_pages(pages)
+    path = pages / "gaza" / "audio" / f"{DATE}-transcript.html"
+    path.write_text(
+        path.read_text(encoding="utf-8").replace(
+            f"/gaza/audio/{DATE}.mp3", "/gaza/audio/2026-08-28.mp3"
+        ),
+        encoding="utf-8",
+    )
+    with pytest.raises(CorrectionValidationError, match="transcript audio URL"):
+        _validate_edition_audio_ownership(pages, _synthetic_correction())
+
+
+@pytest.mark.parametrize(
+    ("old", "new", "message"),
+    [
+        (
+            f"https://dispatches.thebluefernco.com/gaza/audio/{DATE}.mp3",
+            "https://dispatches.thebluefernco.com/gaza/audio/2026-08-28.mp3",
+            "enclosure URL",
+        ),
+        (
+            f"https://dispatches.thebluefernco.com/gaza/audio/{DATE}-transcript.html",
+            "https://dispatches.thebluefernco.com/gaza/audio/2026-08-28-transcript.html",
+            "transcript link",
+        ),
+    ],
+)
+def test_edition_audio_ownership_rejects_mismatched_feed_identity(
+    tmp_path: Path, old: str, new: str, message: str
+) -> None:
+    pages = tmp_path / "pages"
+    _make_pages(pages)
+    path = pages / "gaza" / "podcast.xml"
+    path.write_text(path.read_text(encoding="utf-8").replace(old, new), encoding="utf-8")
+    with pytest.raises(CorrectionValidationError, match=message):
+        _validate_edition_audio_ownership(pages, _synthetic_correction())
+
+
+def test_edition_audio_ownership_rejects_duplicate_feed_item(tmp_path: Path) -> None:
+    pages = tmp_path / "pages"
+    _make_pages(pages)
+    path = pages / "gaza" / "podcast.xml"
+    body = path.read_text(encoding="utf-8")
+    item = body[body.index("<item>") : body.index("</item>") + len("</item>")]
+    path.write_text(body.replace("</channel>", item + "</channel>"), encoding="utf-8")
+    with pytest.raises(CorrectionValidationError, match="missing or ambiguous"):
+        _validate_edition_audio_ownership(pages, _synthetic_correction())
 
 
 def test_production_shaped_existing_json_preserves_lexemes_and_is_byte_reversible(
@@ -1110,6 +1374,7 @@ def test_role_specific_json_ownership_and_type_drift_fail_closed(
             {"script_text": reader.audio_script},
             reader,
             "https://dispatches.thebluefernco.com/gaza/corrections/synthetic/",
+            _synthetic_audio_ownership(),
         ),
     }
     with pytest.raises(CorrectionValidationError, match=message):

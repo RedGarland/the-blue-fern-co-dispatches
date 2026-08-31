@@ -601,7 +601,7 @@ def test_mocked_tts_success_writes_mp3_and_updates_metadata(tmp_path: Path, monk
     transcript = result.transcript_path.read_text(encoding="utf-8")
     assert "<audio controls" in transcript
     flash = json.loads(result.flash_briefing_path.read_text(encoding="utf-8"))
-    assert flash[0]["redirectionUrl"].endswith(f"/gaza/audio/{date}.mp3")
+    assert flash[0]["redirectionUrl"] == f"/gaza/audio/{date}.mp3"
 
 
 def _wav_bytes(duration_seconds: float = 0.1) -> bytes:

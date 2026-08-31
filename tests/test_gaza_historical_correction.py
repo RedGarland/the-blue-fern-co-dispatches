@@ -536,6 +536,25 @@ def test_working_tree_approval_cannot_supply_authority(tmp_path: Path) -> None:
         _plan(case)
 
 
+def test_approval_commit_cannot_smuggle_other_source_changes(tmp_path: Path) -> None:
+    case = _build_case(tmp_path, with_approval=False)
+    create_package_approval(
+        source_root=case["source"],
+        pages_root=case["pages"],
+        proposal_path=case["proposal_path"],
+        input_root=case["inputs"],
+        approval_request_path=case["inputs"] / "approval_request.json",
+        output_path=case["source"] / case["approval_path"],
+        approval_id="mixed-commit-approval",
+        approver="Synthetic Reviewer",
+        approved_at="2026-09-02T12:00:00+00:00",
+    )
+    (case["source"] / "unrelated.txt").write_text("unsanctioned", encoding="utf-8")
+    _commit(case["source"], "Mixed approval and source change")
+    with pytest.raises(CorrectionValidationError, match="only the approval artifact"):
+        _plan(case)
+
+
 def test_successful_full_package_plan_is_read_only(tmp_path: Path) -> None:
     case = _build_case(tmp_path)
     before = {
@@ -685,6 +704,39 @@ def test_pages_history_drift_is_rejected(tmp_path: Path) -> None:
     _commit(case["pages"], "Pages history drift")
     with pytest.raises(CorrectionValidationError, match="history drifted"):
         _plan(case)
+
+
+def test_source_history_drift_is_rejected_before_planning(tmp_path: Path) -> None:
+    case = _build_case(tmp_path)
+    (case["source"] / "unrelated.txt").write_text("drift", encoding="utf-8")
+    _commit(case["source"], "Source history drift")
+    with pytest.raises(CorrectionValidationError, match="committed package approval"):
+        _plan(case)
+
+
+@pytest.mark.parametrize("target", ["source", "pages"])
+def test_stale_validated_plan_cannot_stage_after_drift(
+    tmp_path: Path, target: str
+) -> None:
+    case = _build_case(tmp_path)
+    plan = _plan(case)
+    if target == "source":
+        (case["source"] / "unrelated.txt").write_text("drift", encoding="utf-8")
+        _commit(case["source"], "Source history drift")
+        message = "source history drifted"
+    else:
+        (case["pages"] / "unrelated.txt").write_text("drift", encoding="utf-8")
+        _commit(case["pages"], "Pages history drift")
+        message = "Pages history drifted"
+    with pytest.raises(CorrectionValidationError, match=message):
+        stage_correction_package(
+            plan=plan,
+            input_root=case["inputs"],
+            rendered_audio_path=case["rendered_audio"],
+            staging_root=tmp_path / "staging",
+            source_root=case["source"],
+            pages_root=case["pages"],
+        )
 
 
 def test_stage_is_atomic_idempotent_and_rejects_conflict(tmp_path: Path, monkeypatch) -> None:

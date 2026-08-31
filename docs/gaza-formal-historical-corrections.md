@@ -19,7 +19,8 @@ committed package-approval phase:
    artifact, read with `git show <approval-ref>:<approval-path>`. The approval
    binds the proposal, source commit, Pages head, correction identity, complete
    preview-set fingerprint, and deterministic correction-audio request. A
-   working-tree file is not accepted as authority.
+   working-tree file is not accepted as authority, and the approval commit may
+   contain no other source change.
 
 The private review and decision audit must continue to say that publication,
 queue, edition, archive, source-record, cluster, and audio authority are false.
@@ -99,8 +100,10 @@ ledger and original spoken artifact while making the supersession explicit.
 repositories. A temporary directory and atomic rename expose the complete output.
 Exact replay is an `idempotent_noop`; conflicting replay fails. `plan` validates
 the committed approval and writes nothing. `stage` uses the same atomic pattern
-outside both repositories. `verify-staged` rechecks every staged hash plus source
-and Pages heads without writing.
+outside both repositories. Both transitions require the exact approval commit
+and approved Pages head; a stale validated plan cannot cross the staging
+boundary. `verify-staged` rechecks every staged hash plus source and Pages heads
+without writing.
 
 The validator fails closed for absent or duplicated lineage, wrong story/date or
 domain, changed fingerprints, evidence or public hash drift, altered approval,

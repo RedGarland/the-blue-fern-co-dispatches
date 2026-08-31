@@ -1197,7 +1197,34 @@ def _load_independent_approval(
 ) -> tuple[dict[str, Any], str]:
     if not approval_ref or not approval_path:
         raise CorrectionValidationError("a separately committed approval ref and path are required")
-    approval_commit = _git(source_root, "rev-parse", f"{approval_ref}^{{commit}}")
+    approval_ref_commit = _git(source_root, "rev-parse", f"{approval_ref}^{{commit}}")
+    approval_commit = _git(
+        source_root,
+        "log",
+        "-1",
+        "--format=%H",
+        approval_ref_commit,
+        "--",
+        approval_path,
+    )
+    if not approval_commit:
+        raise CorrectionValidationError("committed approval artifact is missing")
+    changed_paths = {
+        line
+        for line in _git(
+            source_root,
+            "diff-tree",
+            "--no-commit-id",
+            "--name-only",
+            "-r",
+            approval_commit,
+        ).splitlines()
+        if line
+    }
+    if changed_paths != {approval_path}:
+        raise CorrectionValidationError(
+            "package approval commit must contain only the approval artifact"
+        )
     try:
         raw = subprocess.run(
             ["git", "-C", str(source_root), "show", f"{approval_commit}:{approval_path}"],
@@ -1281,6 +1308,10 @@ def plan_correction(
     approval, approval_commit = _load_independent_approval(
         source_root, approval_ref, approval_path, proposal, correction
     )
+    if source_head != approval_commit:
+        raise CorrectionValidationError(
+            "source history drifted from the committed package approval"
+        )
     return {
         "schema_version": PACKAGE_SCHEMA,
         "status": "validated_plan",
@@ -1340,6 +1371,12 @@ def stage_correction_package(
     correction_id = str(plan.get("correction_id") or "")
     if plan.get("status") != "validated_plan" or not correction_id:
         raise CorrectionValidationError("only a fully validated plan may be staged")
+    if _git(source_root, "rev-parse", "HEAD") != plan.get("approval_commit"):
+        raise CorrectionValidationError("source history drifted before package staging")
+    if _git(pages_root, "status", "--porcelain"):
+        raise CorrectionValidationError("Pages repository is dirty")
+    if _git(pages_root, "rev-parse", "HEAD") != plan.get("pages_head"):
+        raise CorrectionValidationError("Pages history drifted before package staging")
     if not rendered_audio_path.is_file() or rendered_audio_path.read_bytes()[:3] != b"ID3":
         raise CorrectionValidationError("approved audio render is missing or is not an MP3 asset")
     audio_content = rendered_audio_path.read_bytes()

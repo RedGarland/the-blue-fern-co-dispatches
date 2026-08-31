@@ -675,6 +675,42 @@ def _git(repo: Path, *args: str) -> str:
     return result.stdout.strip()
 
 
+def _git_blob(repo: Path, revision: str, path: str) -> bytes:
+    try:
+        return subprocess.run(
+            ["git", "-C", str(repo), "show", f"{revision}:{path}"],
+            check=True,
+            capture_output=True,
+        ).stdout
+    except subprocess.CalledProcessError as exc:
+        raise CorrectionValidationError(
+            "independently committed approval artifact is missing or invalid"
+        ) from exc
+
+
+def _commit_parents(repo: Path, revision: str) -> list[str]:
+    row = _git(repo, "rev-list", "--parents", "-n", "1", revision).split()
+    if not row or row[0] != revision:
+        raise CorrectionValidationError("approval Git topology is malformed or unavailable")
+    return row[1:]
+
+
+def _approval_only_diff(
+    repo: Path,
+    base: str,
+    revision: str,
+    approval_path: str,
+) -> bool:
+    return _git(
+        repo,
+        "diff",
+        "--name-status",
+        "--no-renames",
+        base,
+        revision,
+    ).splitlines() == [f"A\t{approval_path}"]
+
+
 def _require_sha(value: Any, label: str, *, prefix: bool = False) -> str:
     text = str(value or "")
     pattern = r"sha256:[0-9a-f]{64}" if prefix else r"[0-9a-f]{64}"
@@ -2549,45 +2585,28 @@ def _load_independent_approval(
     approval_path: str,
     proposal: dict[str, Any],
     correction: dict[str, Any],
-) -> tuple[dict[str, Any], str]:
+) -> tuple[dict[str, Any], str, bytes]:
     if not approval_ref or not approval_path:
         raise CorrectionValidationError("a separately committed approval ref and path are required")
-    approval_ref_commit = _git(source_root, "rev-parse", f"{approval_ref}^{{commit}}")
-    approval_commit = _git(
+    approval_commit = _git(source_root, "rev-parse", f"{approval_ref}^{{commit}}")
+    raw = _git_blob(source_root, approval_commit, approval_path)
+    approval_parents = _commit_parents(source_root, approval_commit)
+    if approval_parents != [proposal["source_commit"]]:
+        raise CorrectionValidationError(
+            "package approval commit must have only the proposal source commit as its parent"
+        )
+    if not _approval_only_diff(
         source_root,
-        "log",
-        "-1",
-        "--format=%H",
-        approval_ref_commit,
-        "--",
+        proposal["source_commit"],
+        approval_commit,
         approval_path,
-    )
-    if not approval_commit:
-        raise CorrectionValidationError("committed approval artifact is missing")
-    changed_paths = {
-        line
-        for line in _git(
-            source_root,
-            "diff-tree",
-            "--no-commit-id",
-            "--name-only",
-            "-r",
-            approval_commit,
-        ).splitlines()
-        if line
-    }
-    if changed_paths != {approval_path}:
+    ):
         raise CorrectionValidationError(
             "package approval commit must contain only the approval artifact"
         )
     try:
-        raw = subprocess.run(
-            ["git", "-C", str(source_root), "show", f"{approval_commit}:{approval_path}"],
-            check=True,
-            capture_output=True,
-        ).stdout
         approval = json.loads(raw.decode("utf-8"))
-    except (subprocess.CalledProcessError, UnicodeError, json.JSONDecodeError) as exc:
+    except (UnicodeError, json.JSONDecodeError) as exc:
         raise CorrectionValidationError("independently committed approval artifact is missing or invalid") from exc
     approval = _exact_fields(
         approval,
@@ -2632,10 +2651,45 @@ def _load_independent_approval(
         raise CorrectionValidationError("package approval must not smuggle publication authority")
     if not str(approval["approver"]).strip() or not str(approval["approved_at"]).strip():
         raise CorrectionValidationError("release approval lacks a named authority and timestamp")
-    _git(source_root, "merge-base", "--is-ancestor", proposal["source_commit"], approval_commit)
-    current = _git(source_root, "rev-parse", "HEAD")
-    _git(source_root, "merge-base", "--is-ancestor", proposal["source_commit"], current)
-    return approval, approval_commit
+    return approval, approval_commit, raw
+
+
+def _validate_approval_source_topology(
+    source_root: Path,
+    *,
+    source_head: str,
+    proposal_source_commit: str,
+    approval_commit: str,
+    approval_path: str,
+    approval_blob: bytes,
+) -> str:
+    if source_head == approval_commit:
+        if _git_blob(source_root, source_head, approval_path) != approval_blob:
+            raise CorrectionValidationError("approval blob differs at the validated source head")
+        return "direct_approval_commit"
+
+    source_parents = _commit_parents(source_root, source_head)
+    if source_parents != [proposal_source_commit, approval_commit]:
+        raise CorrectionValidationError(
+            "source history is neither the direct approval commit nor its exact normal merge"
+        )
+    _git(source_root, "merge-base", "--is-ancestor", approval_commit, source_head)
+    if _git(source_root, "rev-parse", f"{source_head}^{{tree}}") != _git(
+        source_root, "rev-parse", f"{approval_commit}^{{tree}}"
+    ):
+        raise CorrectionValidationError("approval merge tree differs from the approval commit tree")
+    if not _approval_only_diff(
+        source_root,
+        proposal_source_commit,
+        source_head,
+        approval_path,
+    ):
+        raise CorrectionValidationError(
+            "approval merge must contain only the approval artifact"
+        )
+    if _git_blob(source_root, source_head, approval_path) != approval_blob:
+        raise CorrectionValidationError("approval blob differs at the validated source head")
+    return "normal_approval_merge"
 
 
 def plan_correction(
@@ -2660,13 +2714,17 @@ def plan_correction(
     _validate_private_evidence(source_root, proposal, correction)
     rows = _validate_pages_and_representations(pages_root, input_root, proposal, correction)
     _validate_representation_semantics(input_root, rows, correction)
-    approval, approval_commit = _load_independent_approval(
+    approval, approval_commit, approval_blob = _load_independent_approval(
         source_root, approval_ref, approval_path, proposal, correction
     )
-    if source_head != approval_commit:
-        raise CorrectionValidationError(
-            "source history drifted from the committed package approval"
-        )
+    approval_topology = _validate_approval_source_topology(
+        source_root,
+        source_head=source_head,
+        proposal_source_commit=proposal["source_commit"],
+        approval_commit=approval_commit,
+        approval_path=approval_path,
+        approval_blob=approval_blob,
+    )
     return {
         "schema_version": PACKAGE_SCHEMA,
         "status": "validated_plan",
@@ -2681,6 +2739,8 @@ def plan_correction(
         "proposal_sha256": proposal["proposal_sha256"],
         "approval_id": approval["approval_id"],
         "approval_commit": approval_commit,
+        "validated_source_commit": source_head,
+        "approval_topology": approval_topology,
         "artifact_set_sha256": proposal["pages_state"]["artifact_set_sha256"],
         "audio_request": proposal["pages_state"]["audio_request"],
         "representations": [
@@ -2726,7 +2786,7 @@ def stage_correction_package(
     correction_id = str(plan.get("correction_id") or "")
     if plan.get("status") != "validated_plan" or not correction_id:
         raise CorrectionValidationError("only a fully validated plan may be staged")
-    if _git(source_root, "rev-parse", "HEAD") != plan.get("approval_commit"):
+    if _git(source_root, "rev-parse", "HEAD") != plan.get("validated_source_commit"):
         raise CorrectionValidationError("source history drifted before package staging")
     if _git(pages_root, "status", "--porcelain"):
         raise CorrectionValidationError("Pages repository is dirty")
@@ -2872,7 +2932,7 @@ def verify_staged_package(
         _canonical_bytes(sorted(rows, key=lambda row: row["role"]))
     ):
         raise CorrectionValidationError("staged package artifact-set fingerprint differs")
-    if _git(source_root, "rev-parse", "HEAD") != plan.get("approval_commit"):
+    if _git(source_root, "rev-parse", "HEAD") != plan.get("validated_source_commit"):
         raise CorrectionValidationError("source history drifted after package approval")
     if _git(pages_root, "status", "--porcelain"):
         raise CorrectionValidationError("Pages repository is dirty")

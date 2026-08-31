@@ -115,10 +115,15 @@ ledger and original spoken artifact while making the supersession explicit.
 repositories. A temporary directory and atomic rename expose the complete output.
 Exact replay is an `idempotent_noop`; conflicting replay fails. `plan` validates
 the committed approval and writes nothing. `stage` uses the same atomic pattern
-outside both repositories. Both transitions require the exact approval commit
-and approved Pages head; a stale validated plan cannot cross the staging
-boundary. `verify-staged` rechecks every staged hash plus source and Pages heads
-without writing.
+outside both repositories. The approval ref must resolve to the approval-only
+commit itself. The source checkout may be that exact commit or its exact normal
+two-parent merge: the proposal source is first parent, the approval commit is
+second parent, the merge and approval commits have the same tree, and the only
+proposal-to-merge change is the byte-identical approval artifact. Descendants,
+rewritten commits, intervening base changes, conflict edits, and unrelated files
+fail closed. The validated source commit and approved Pages head remain bound
+through staging, so a stale plan cannot cross that boundary. `verify-staged`
+rechecks every staged hash plus source and Pages heads without writing.
 
 The validator fails closed for absent or duplicated lineage, wrong story/date or
 domain, changed fingerprints, evidence or public hash drift, altered approval,
@@ -194,9 +199,16 @@ python scripts/gaza_historical_correction.py `
   --pages-root C:\path\to\pages `
   --proposal C:\private\proposals\CORRECTION_ID\proposal.json `
   --input-root C:\private\proposals\CORRECTION_ID `
-  --approval-ref refs/remotes/origin/add/pages-repo-default `
+  --approval-ref EXACT_APPROVAL_ONLY_COMMIT_SHA `
   --approval-path approvals/gaza/example.json
 ```
+
+If protected source changes after an approval merge, that older proposal is
+superseded even when its evidence files are unchanged. Hash-verify and quarantine
+the old proposal without overwriting it, generate a fresh proposal against the
+new protected source commit, obtain a new approval-only commit whose sole parent
+is that source commit, and merge it normally with no intervening base change.
+Only that fresh direct approval commit or its exact merge topology may plan.
 
 Staging adds:
 

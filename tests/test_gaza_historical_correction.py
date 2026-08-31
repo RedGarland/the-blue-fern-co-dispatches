@@ -487,6 +487,7 @@ def _build_case(
     proposal = json.loads(proposal_path.read_text(encoding="utf-8"))
     correction = proposal["correction"]
     approval_path = "approvals/synthetic-correction.json"
+    approval_commit = None
     if with_approval:
         create_package_approval(
             source_root=source,
@@ -499,7 +500,7 @@ def _build_case(
             approver="Independent Synthetic Reviewer",
             approved_at="2026-09-02T12:00:00+00:00",
         )
-        _commit(source, "Independent synthetic approval")
+        approval_commit = _commit(source, "Independent synthetic approval")
     rendered_audio = tmp_path / "rendered-correction.mp3"
     rendered_audio.write_bytes(b"ID3-synthetic-approved-render")
     return {
@@ -510,6 +511,7 @@ def _build_case(
         "proposal": proposal,
         "correction": correction,
         "approval_path": approval_path,
+        "approval_commit": approval_commit,
         "rendered_audio": rendered_audio,
         "proposal_result": prepared,
         "proposal_root": proposal_root,
@@ -518,15 +520,41 @@ def _build_case(
     }
 
 
-def _plan(case: dict[str, object]) -> dict[str, object]:
+def _plan(
+    case: dict[str, object],
+    *,
+    approval_ref: str | None = None,
+    approval_path: str | None = None,
+) -> dict[str, object]:
     return plan_correction(
         source_root=case["source"],
         pages_root=case["pages"],
         proposal_path=case["proposal_path"],
         input_root=case["inputs"],
-        approval_ref="HEAD",
-        approval_path=case["approval_path"],
+        approval_ref=approval_ref or "HEAD",
+        approval_path=approval_path or case["approval_path"],
     )
+
+
+def _merge_approval(case: dict[str, object]) -> str:
+    source = case["source"]
+    approval_commit = case["approval_commit"]
+    _run(source, "checkout", "--detach", case["proposal"]["source_commit"])
+    _run(source, "merge", "--no-ff", approval_commit, "-m", "Merge synthetic approval")
+    return _run(source, "rev-parse", "HEAD")
+
+
+def _commit_tree(
+    repo: Path,
+    tree: str,
+    parents: list[str],
+    message: str,
+) -> str:
+    args = ["commit-tree", tree]
+    for parent in parents:
+        args.extend(("-p", parent))
+    args.extend(("-m", message))
+    return _run(repo, *args)
 
 
 def _rewrite_proposal(case: dict[str, object]) -> None:
@@ -1658,6 +1686,203 @@ def test_approval_commit_cannot_smuggle_other_source_changes(tmp_path: Path) -> 
         _plan(case)
 
 
+def test_direct_approval_commit_topology_succeeds(tmp_path: Path) -> None:
+    case = _build_case(tmp_path)
+    plan = _plan(case, approval_ref=case["approval_commit"])
+    assert plan["approval_topology"] == "direct_approval_commit"
+    assert plan["approval_commit"] == case["approval_commit"]
+    assert plan["validated_source_commit"] == case["approval_commit"]
+    assert plan["publication_authorized"] is False
+
+
+def test_exact_two_parent_approval_merge_is_read_only_and_replayable(tmp_path: Path) -> None:
+    case = _build_case(tmp_path)
+    merge_commit = _merge_approval(case)
+    source = case["source"]
+    approval_commit = case["approval_commit"]
+    assert _run(source, "rev-list", "--parents", "-n", "1", merge_commit).split()[1:] == [
+        case["proposal"]["source_commit"],
+        approval_commit,
+    ]
+    assert _run(source, "rev-parse", f"{merge_commit}^{{tree}}") == _run(
+        source, "rev-parse", f"{approval_commit}^{{tree}}"
+    )
+    assert subprocess.run(
+        ["git", "-C", str(source), "show", f"{merge_commit}:{case['approval_path']}"],
+        check=True,
+        capture_output=True,
+    ).stdout == subprocess.run(
+        ["git", "-C", str(source), "show", f"{approval_commit}:{case['approval_path']}"],
+        check=True,
+        capture_output=True,
+    ).stdout
+    before = {
+        "source_head": _run(source, "rev-parse", "HEAD"),
+        "source_status": _run(source, "status", "--porcelain"),
+        "pages_head": _run(case["pages"], "rev-parse", "HEAD"),
+        "pages_status": _run(case["pages"], "status", "--porcelain"),
+    }
+    first = _plan(case, approval_ref=approval_commit)
+    second = _plan(case, approval_ref=approval_commit)
+    assert first == second
+    assert first["approval_topology"] == "normal_approval_merge"
+    assert first["approval_commit"] == approval_commit
+    assert first["validated_source_commit"] == merge_commit
+    assert first["persistent_mutation"] is False
+    assert first["pages_mutation"] is False
+    assert first["publication_authorized"] is False
+    assert before == {
+        "source_head": _run(source, "rev-parse", "HEAD"),
+        "source_status": _run(source, "status", "--porcelain"),
+        "pages_head": _run(case["pages"], "rev-parse", "HEAD"),
+        "pages_status": _run(case["pages"], "status", "--porcelain"),
+    }
+
+
+@pytest.mark.parametrize("filename", ["unrelated.txt", "validator.py"])
+def test_commit_after_approval_merge_fails_for_old_proposal(
+    tmp_path: Path, filename: str
+) -> None:
+    case = _build_case(tmp_path)
+    _merge_approval(case)
+    (case["source"] / filename).write_text("protected source evolution", encoding="utf-8")
+    _commit(case["source"], "Source evolution after approval merge")
+    with pytest.raises(CorrectionValidationError, match="exact normal merge"):
+        _plan(case, approval_ref=case["approval_commit"])
+
+
+def test_intervening_base_commit_before_merge_fails(tmp_path: Path) -> None:
+    case = _build_case(tmp_path)
+    source = case["source"]
+    _run(source, "checkout", "--detach", case["proposal"]["source_commit"])
+    (source / "intervening.txt").write_text("base advanced", encoding="utf-8")
+    _commit(source, "Intervening base commit")
+    _run(source, "merge", "--no-ff", case["approval_commit"], "-m", "Merge stale approval")
+    with pytest.raises(CorrectionValidationError, match="exact normal merge"):
+        _plan(case, approval_ref=case["approval_commit"])
+
+
+@pytest.mark.parametrize("altered_path", ["unrelated.txt", "approvals/synthetic-correction.json"])
+def test_merge_tree_or_approval_blob_edit_fails(
+    tmp_path: Path, altered_path: str
+) -> None:
+    case = _build_case(tmp_path)
+    _merge_approval(case)
+    path = case["source"] / altered_path
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("conflict-resolution edit", encoding="utf-8")
+    _run(case["source"], "add", altered_path)
+    _run(case["source"], "commit", "--amend", "--no-edit")
+    with pytest.raises(CorrectionValidationError, match="merge tree differs"):
+        _plan(case, approval_ref=case["approval_commit"])
+
+
+def test_wrong_merge_parent_order_fails(tmp_path: Path) -> None:
+    case = _build_case(tmp_path)
+    source = case["source"]
+    approval = case["approval_commit"]
+    proposal_source = case["proposal"]["source_commit"]
+    tree = _run(source, "rev-parse", f"{approval}^{{tree}}")
+    wrong_merge = _commit_tree(
+        source, tree, [approval, proposal_source], "Wrong parent order"
+    )
+    _run(source, "checkout", "--detach", wrong_merge)
+    with pytest.raises(CorrectionValidationError, match="exact normal merge"):
+        _plan(case, approval_ref=approval)
+
+
+def test_three_parent_approval_merge_fails(tmp_path: Path) -> None:
+    case = _build_case(tmp_path)
+    source = case["source"]
+    approval = case["approval_commit"]
+    proposal_source = case["proposal"]["source_commit"]
+    proposal_tree = _run(source, "rev-parse", f"{proposal_source}^{{tree}}")
+    third_parent = _commit_tree(source, proposal_tree, [proposal_source], "Third parent")
+    approval_tree = _run(source, "rev-parse", f"{approval}^{{tree}}")
+    three_parent_merge = _commit_tree(
+        source,
+        approval_tree,
+        [proposal_source, approval, third_parent],
+        "Three-parent approval merge",
+    )
+    _run(source, "checkout", "--detach", three_parent_merge)
+    with pytest.raises(CorrectionValidationError, match="exact normal merge"):
+        _plan(case, approval_ref=approval)
+
+
+@pytest.mark.parametrize("message", ["Squash substitute", "Cherry-pick substitute"])
+def test_rewritten_approval_commit_substitute_fails(
+    tmp_path: Path, message: str
+) -> None:
+    case = _build_case(tmp_path)
+    source = case["source"]
+    approval = case["approval_commit"]
+    proposal_source = case["proposal"]["source_commit"]
+    tree = _run(source, "rev-parse", f"{approval}^{{tree}}")
+    substitute = _commit_tree(source, tree, [proposal_source], message)
+    assert substitute != approval
+    _run(source, "checkout", "--detach", substitute)
+    with pytest.raises(CorrectionValidationError, match="exact normal merge"):
+        _plan(case, approval_ref=approval)
+
+
+def test_approval_commit_with_wrong_or_multiple_parents_fails(tmp_path: Path) -> None:
+    case = _build_case(tmp_path)
+    source = case["source"]
+    approval = case["approval_commit"]
+    proposal_source = case["proposal"]["source_commit"]
+    proposal_tree = _run(source, "rev-parse", f"{proposal_source}^{{tree}}")
+    wrong_parent = _commit_tree(source, proposal_tree, [proposal_source], "Wrong parent base")
+    approval_tree = _run(source, "rev-parse", f"{approval}^{{tree}}")
+    for parents in ([wrong_parent], [proposal_source, wrong_parent]):
+        invalid_approval = _commit_tree(source, approval_tree, parents, "Invalid approval parents")
+        _run(source, "checkout", "--detach", invalid_approval)
+        with pytest.raises(CorrectionValidationError, match="only the proposal source commit"):
+            _plan(case, approval_ref=invalid_approval)
+
+
+def test_second_approval_file_and_wrong_approval_path_fail(tmp_path: Path) -> None:
+    case = _build_case(tmp_path)
+    source = case["source"]
+    (source / "approvals" / "second.json").write_text("{}\n", encoding="utf-8")
+    _run(source, "add", "approvals/second.json")
+    _run(source, "commit", "--amend", "--no-edit")
+    with pytest.raises(CorrectionValidationError, match="only the approval artifact"):
+        _plan(case)
+
+    clean_case = _build_case(tmp_path / "wrong-path")
+    with pytest.raises(CorrectionValidationError, match="committed approval artifact"):
+        _plan(
+            clean_case,
+            approval_ref=clean_case["approval_commit"],
+            approval_path="approvals/wrong.json",
+        )
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("source_commit", "f" * 40, "binds another source commit"),
+        ("pages_head", "e" * 40, "binds another Pages history"),
+    ],
+)
+def test_approval_source_and_pages_binding_mismatch_fail(
+    tmp_path: Path, field: str, value: str, message: str
+) -> None:
+    case = _build_case(tmp_path)
+    approval_path = case["source"] / case["approval_path"]
+    approval = json.loads(approval_path.read_text(encoding="utf-8"))
+    approval[field] = value
+    approval["approval_fingerprint"] = fingerprint_payload(
+        approval, "approval_fingerprint"
+    )
+    _write_json(approval_path, approval)
+    _run(case["source"], "add", case["approval_path"])
+    _run(case["source"], "commit", "--amend", "--no-edit")
+    with pytest.raises(CorrectionValidationError, match=message):
+        _plan(case)
+
+
 def test_successful_full_package_plan_is_read_only(tmp_path: Path) -> None:
     case = _build_case(tmp_path)
     before = {
@@ -1813,8 +2038,8 @@ def test_source_history_drift_is_rejected_before_planning(tmp_path: Path) -> Non
     case = _build_case(tmp_path)
     (case["source"] / "unrelated.txt").write_text("drift", encoding="utf-8")
     _commit(case["source"], "Source history drift")
-    with pytest.raises(CorrectionValidationError, match="committed package approval"):
-        _plan(case)
+    with pytest.raises(CorrectionValidationError, match="exact normal merge"):
+        _plan(case, approval_ref=case["approval_commit"])
 
 
 @pytest.mark.parametrize("target", ["source", "pages"])

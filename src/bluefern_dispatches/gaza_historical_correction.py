@@ -31,6 +31,7 @@ PROPOSAL_SCHEMA = "gaza_formal_historical_correction_proposal_v1"
 APPROVAL_SCHEMA = "gaza_formal_historical_correction_release_approval_v1"
 APPROVAL_REQUEST_SCHEMA = "gaza_formal_historical_correction_approval_request_v1"
 PACKAGE_SCHEMA = "gaza_formal_historical_correction_package_v1"
+PUBLIC_SITE_HOST = "dispatches.thebluefernco.com"
 
 # The full claim-bearing public representation set.  source_quality_report is
 # intentionally not here: it is a collection diagnostic and does not expose the
@@ -83,6 +84,15 @@ NEW_ROLES = {
 
 class CorrectionValidationError(ValueError):
     """The proposed correction failed a closed validation boundary."""
+
+
+@dataclass(frozen=True)
+class _EditionAudioOwnership:
+    edition_date: str
+    audio_path: str
+    transcript_path: str
+    edition_path: str
+    audio_size_bytes: int
 
 
 _UTF8_BOM = b"\xef\xbb\xbf"
@@ -1551,31 +1561,196 @@ def _render_original_audio_metadata_json(
     return document.render(edits)
 
 
+def _canonical_public_path(value: Any, label: str) -> str:
+    if not isinstance(value, str) or not value or value != value.strip():
+        raise CorrectionValidationError(f"{label} is not a canonical public URL or path")
+    if any(ord(character) < 32 for character in value) or "\\" in value or "%" in value:
+        raise CorrectionValidationError(f"{label} uses an encoded or unsafe path form")
+    try:
+        parsed = urlsplit(value)
+    except ValueError as exc:
+        raise CorrectionValidationError(f"{label} is not a valid public URL or path") from exc
+    if parsed.query or parsed.fragment:
+        raise CorrectionValidationError(f"{label} may not contain a query or fragment")
+    if parsed.scheme or parsed.netloc:
+        if parsed.scheme != "https" or parsed.netloc != PUBLIC_SITE_HOST:
+            raise CorrectionValidationError(f"{label} does not use the sanctioned public origin")
+    elif not parsed.path.startswith("/") or parsed.path.startswith("//"):
+        raise CorrectionValidationError(f"{label} is not an absolute site path")
+    segments = parsed.path.split("/")
+    if any(segment in {".", ".."} for segment in segments):
+        raise CorrectionValidationError(f"{label} contains path traversal")
+    return parsed.path
+
+
+def _require_public_path(value: Any, expected: str, label: str) -> None:
+    if _canonical_public_path(value, label) != expected:
+        raise CorrectionValidationError(f"{label} is not bound to the owning Gaza edition")
+
+
+def _optional_public_path(value: Any, label: str) -> str | None:
+    try:
+        return _canonical_public_path(value, label)
+    except CorrectionValidationError:
+        return None
+
+
+def _validate_transcript_audio_identity(
+    transcript_path: Path, ownership: _EditionAudioOwnership
+) -> None:
+    if not transcript_path.is_file():
+        raise CorrectionValidationError("owning-edition transcript is missing")
+    artifact = _read_text_artifact(transcript_path, "owning-edition transcript")
+    nodes = _StrictHtmlTreeParser(artifact.text).finish()
+    audio_nodes = [node for node in nodes if node.tag == "audio"]
+    if len(audio_nodes) != 1:
+        raise CorrectionValidationError(
+            "owning-edition transcript audio identity is missing or ambiguous"
+        )
+    _require_public_path(
+        audio_nodes[0].attrs.get("src"),
+        ownership.audio_path,
+        "owning-edition transcript audio URL",
+    )
+
+
+def _validate_podcast_audio_identity(
+    feed_path: Path, role: str, ownership: _EditionAudioOwnership
+) -> None:
+    try:
+        root = ElementTree.fromstring(feed_path.read_bytes())
+    except (OSError, ElementTree.ParseError) as exc:
+        raise CorrectionValidationError(f"{role} is not readable XML: {exc}") from exc
+    candidates: list[ElementTree.Element] = []
+    for item in root.findall(".//item"):
+        enclosure = item.find("enclosure")
+        enclosure_url = enclosure.attrib.get("url", "") if enclosure is not None else ""
+        paths = {
+            _optional_public_path(item.findtext("link", default=""), f"{role} item link"),
+            _optional_public_path(item.findtext("guid", default=""), f"{role} item GUID"),
+            _optional_public_path(enclosure_url, f"{role} enclosure URL"),
+        }
+        if ownership.audio_path in paths or ownership.transcript_path in paths:
+            candidates.append(item)
+    if len(candidates) != 1:
+        raise CorrectionValidationError(
+            f"{role} owning-edition item is missing or ambiguous"
+        )
+    item = candidates[0]
+    _require_public_path(
+        item.findtext("link", default=""),
+        ownership.transcript_path,
+        f"{role} transcript link",
+    )
+    _require_public_path(
+        item.findtext("guid", default=""),
+        ownership.transcript_path,
+        f"{role} transcript GUID",
+    )
+    enclosure = item.find("enclosure")
+    if enclosure is None:
+        raise CorrectionValidationError(f"{role} owning-edition item lacks an enclosure")
+    _require_public_path(
+        enclosure.attrib.get("url"), ownership.audio_path, f"{role} enclosure URL"
+    )
+    if enclosure.attrib.get("type") != "audio/mpeg":
+        raise CorrectionValidationError(f"{role} owning-edition enclosure type drifted")
+    if enclosure.attrib.get("length") != str(ownership.audio_size_bytes):
+        raise CorrectionValidationError(f"{role} owning-edition enclosure length drifted")
+
+
+def _validate_edition_audio_ownership(
+    pages_root: Path, correction: dict[str, Any]
+) -> _EditionAudioOwnership:
+    date = correction["owning_edition_date"]
+    audio_file = f"{date}.mp3"
+    audio_path = f"/gaza/audio/{audio_file}"
+    transcript_path = f"/gaza/audio/{date}-transcript.html"
+    edition_path = f"/gaza/editions/{date}/"
+    metadata = _load_json(
+        _repo_path(pages_root, f"gaza/audio/{date}.json", "owning-edition audio metadata"),
+        "owning-edition audio metadata",
+    )
+    if not isinstance(metadata, dict):
+        raise CorrectionValidationError("owning-edition audio metadata must be an object")
+    if metadata.get("dispatch_slug") != "gaza":
+        raise CorrectionValidationError("owning-edition audio metadata changed dispatch identity")
+    if metadata.get("edition_date") != date:
+        raise CorrectionValidationError("owning-edition audio metadata changed edition identity")
+    if metadata.get("audio_file") != audio_file:
+        raise CorrectionValidationError("owning-edition audio metadata changed audio filename")
+    _require_public_path(
+        metadata.get("audio_url"), audio_path, "owning-edition audio metadata URL"
+    )
+    _require_public_path(
+        metadata.get("transcript_url"),
+        transcript_path,
+        "owning-edition audio metadata transcript URL",
+    )
+    _require_public_path(
+        metadata.get("edition_url"),
+        edition_path,
+        "owning-edition audio metadata edition URL",
+    )
+    mp3_path = _repo_path(pages_root, f"gaza/audio/{audio_file}", "owning-edition MP3")
+    if not mp3_path.is_file():
+        raise CorrectionValidationError("owning-edition MP3 is missing")
+    audio_size_bytes = mp3_path.stat().st_size
+    if metadata.get("audio_mime_type") != "audio/mpeg":
+        raise CorrectionValidationError("owning-edition audio metadata MIME type drifted")
+    if metadata.get("audio_file_size_bytes") != audio_size_bytes:
+        raise CorrectionValidationError("owning-edition audio metadata file size drifted")
+    ownership = _EditionAudioOwnership(
+        edition_date=date,
+        audio_path=audio_path,
+        transcript_path=transcript_path,
+        edition_path=edition_path,
+        audio_size_bytes=audio_size_bytes,
+    )
+    _validate_transcript_audio_identity(
+        _repo_path(
+            pages_root,
+            f"gaza/audio/{date}-transcript.html",
+            "owning-edition transcript",
+        ),
+        ownership,
+    )
+    for role, relative in (
+        ("Gaza podcast feed", "gaza/podcast.xml"),
+        ("Gaza audio podcast feed", "gaza/audio/podcast.xml"),
+    ):
+        _validate_podcast_audio_identity(
+            _repo_path(pages_root, relative, role), role, ownership
+        )
+    return ownership
+
+
 def _render_flash_briefing_json(
     document: _JsonDocument,
     correction: dict[str, Any],
     audio_request: dict[str, Any],
     reader: _ReaderCorrectionCopy,
     link: str,
+    ownership: _EditionAudioOwnership,
 ) -> bytes:
     root = _require_json_kind(document.root, "array", "flash briefing")
     if len(root.items) != 1:
         raise CorrectionValidationError("flash briefing owning item is missing or ambiguous")
     item = _require_json_kind(root.items[0], "object", "flash briefing owning item")
     uid = _require_json_member(item, "uid", "flash briefing owning item")
-    expected_uids = {
-        correction["owning_edition_date"],
-        f"gaza-{correction['owning_edition_date']}",
-    }
-    if uid.value.kind != "string" or uid.value.value not in expected_uids:
+    expected_uid = f"gaza-{correction['owning_edition_date']}"
+    if uid.value.kind != "string" or uid.value.value != expected_uid:
         raise CorrectionValidationError("flash briefing is bound to another owning edition")
-    redirection = item.member("redirectionUrl")
-    if redirection is not None and (
-        redirection.value.kind != "string"
-        or f"/gaza/editions/{correction['owning_edition_date']}/"
-        not in redirection.value.value
-    ):
-        raise CorrectionValidationError("flash briefing edition link drifted")
+    if ownership.edition_date != correction["owning_edition_date"]:
+        raise CorrectionValidationError("flash briefing audio ownership changed edition")
+    redirection = _require_json_member(item, "redirectionUrl", "flash briefing owning item")
+    if redirection.value.kind != "string":
+        raise CorrectionValidationError("flash briefing audio URL has type drift")
+    _require_public_path(
+        redirection.value.value,
+        ownership.audio_path,
+        "flash briefing audio URL",
+    )
     replacement = [
         {
             "uid": correction["correction_id"],
@@ -1656,6 +1831,7 @@ def _render_preview_payloads(
     payloads["original_audio_metadata"] = _render_original_audio_metadata_json(
         prior_audio_document, correction
     )
+    audio_ownership = _validate_edition_audio_ownership(pages_root, correction)
     payloads["correction_audio_metadata"] = _json_document(
         {
             "audio_status": "formal_correction",
@@ -1717,7 +1893,7 @@ def _render_preview_payloads(
         "flash briefing",
     )
     payloads["flash_briefing"] = _render_flash_briefing_json(
-        flash_document, correction, audio_request, reader, link
+        flash_document, correction, audio_request, reader, link, audio_ownership
     )
     for role, relative in (
         ("audio_index", "gaza/audio/index.html"),
@@ -2289,6 +2465,11 @@ def _validate_json_semantics(path: Path, role: str, correction: dict[str, Any]) 
             raise CorrectionValidationError("flash briefing machine date differs")
         if item.get("titleText") != reader.heading or item.get("mainText") != reader.audio_script:
             raise CorrectionValidationError("flash briefing reader copy differs")
+        _require_public_path(
+            item.get("redirectionUrl"),
+            f"/gaza/corrections/{correction['correction_id']}/",
+            "flash briefing correction URL",
+        )
         _require_reader_prose(
             str(item["titleText"]) + " " + str(item["mainText"]),
             correction,

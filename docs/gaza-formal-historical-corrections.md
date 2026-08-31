@@ -130,6 +130,19 @@ malformed markup, duplicate insertion boundaries, and ambiguous target ranges
 fail before output is created. New correction-only files continue to use the
 repository's canonical UTF-8/LF format.
 
+Existing public JSON follows the same lexical-preservation rule and is not
+globally reserialized. A strict concrete-syntax parser resolves bounded value or
+insertion spans through the owning edition, story ID, manifest relationship, and
+unique object path. Before mutation, the zero-edit representation must reproduce
+the source bytes exactly. Each patch preserves the original BOM, encoding,
+newline and final-newline state, sibling-key order, unrelated whitespace,
+escaping, and numeric/scalar spelling. New correction-owned members have a
+deterministic append order without reordering existing members. The renderer
+also applies the inverse span edits in memory and requires exact reconstruction
+of the original bytes before exposing a preview. Missing, duplicate, ambiguous,
+type-drifted, malformed, mixed-newline, or unsupported inputs fail closed. Only
+new correction-owned JSON files use canonical deterministic serialization.
+
 Run the commands below from the repository root. The wrapper bootstraps this
 checkout's local `src` directory, so no caller-supplied `PYTHONPATH` or globally
 installed package is required.

@@ -137,21 +137,359 @@ def _read_text_artifact(path: Path, label: str) -> _TextArtifact:
     )
 
 
-def _json_document_like(value: Any, artifact: _TextArtifact, label: str) -> bytes:
-    text = json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
+@dataclass(frozen=True)
+class _JsonMember:
+    key: str
+    key_start: int
+    value: "_JsonNode"
+
+
+@dataclass(frozen=True)
+class _JsonNode:
+    kind: str
+    start: int
+    end: int
+    value: Any
+    members: tuple[_JsonMember, ...] = ()
+    items: tuple["_JsonNode", ...] = ()
+
+    def member(self, key: str) -> _JsonMember | None:
+        matches = [member for member in self.members if member.key == key]
+        if len(matches) > 1:
+            raise CorrectionValidationError(f"JSON object contains duplicate key {key!r}")
+        return matches[0] if matches else None
+
+
+class _JsonConcreteParser:
+    """Small strict parser retaining spans for bounded lexical JSON edits."""
+
+    _NUMBER = re.compile(r"-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?")
+
+    def __init__(self, text: str, label: str) -> None:
+        self.text = text
+        self.label = label
+        self.index = 0
+
+    def parse(self) -> _JsonNode:
+        self._skip_whitespace()
+        node = self._parse_value()
+        self._skip_whitespace()
+        if self.index != len(self.text):
+            self._fail("has trailing non-whitespace content")
+        return node
+
+    def _fail(self, message: str) -> None:
+        raise CorrectionValidationError(
+            f"{self.label} is malformed JSON at character {self.index}: {message}"
+        )
+
+    def _skip_whitespace(self) -> None:
+        while self.index < len(self.text) and self.text[self.index] in " \t\r\n":
+            self.index += 1
+
+    def _parse_value(self) -> _JsonNode:
+        if self.index >= len(self.text):
+            self._fail("expected a value")
+        marker = self.text[self.index]
+        if marker == "{":
+            return self._parse_object()
+        if marker == "[":
+            return self._parse_array()
+        if marker == '"':
+            return self._parse_string()
+        for literal, value, kind in (
+            ("true", True, "boolean"),
+            ("false", False, "boolean"),
+            ("null", None, "null"),
+        ):
+            if self.text.startswith(literal, self.index):
+                start = self.index
+                self.index += len(literal)
+                return _JsonNode(kind, start, self.index, value)
+        match = self._NUMBER.match(self.text, self.index)
+        if match:
+            start = self.index
+            self.index = match.end()
+            token = match.group(0)
+            return _JsonNode("number", start, self.index, json.loads(token))
+        self._fail("expected an object, array, string, number, boolean, or null")
+        raise AssertionError("unreachable")
+
+    def _parse_string(self) -> _JsonNode:
+        start = self.index
+        try:
+            value, end = json.decoder.scanstring(self.text, start + 1, True)
+        except (json.JSONDecodeError, UnicodeDecodeError, ValueError) as exc:
+            self._fail(f"invalid string: {exc}")
+        self.index = end
+        return _JsonNode("string", start, end, value)
+
+    def _parse_object(self) -> _JsonNode:
+        start = self.index
+        self.index += 1
+        self._skip_whitespace()
+        members: list[_JsonMember] = []
+        keys: set[str] = set()
+        if self.index < len(self.text) and self.text[self.index] == "}":
+            self.index += 1
+            return _JsonNode("object", start, self.index, {}, tuple(members))
+        while True:
+            if self.index >= len(self.text) or self.text[self.index] != '"':
+                self._fail("object key must be a string")
+            key_node = self._parse_string()
+            key = str(key_node.value)
+            if key in keys:
+                self._fail(f"duplicate object key {key!r}")
+            keys.add(key)
+            self._skip_whitespace()
+            if self.index >= len(self.text) or self.text[self.index] != ":":
+                self._fail("object key is missing a colon")
+            self.index += 1
+            self._skip_whitespace()
+            value = self._parse_value()
+            members.append(_JsonMember(key, key_node.start, value))
+            self._skip_whitespace()
+            if self.index >= len(self.text):
+                self._fail("object is not closed")
+            marker = self.text[self.index]
+            if marker == "}":
+                self.index += 1
+                return _JsonNode(
+                    "object",
+                    start,
+                    self.index,
+                    {member.key: member.value.value for member in members},
+                    tuple(members),
+                )
+            if marker != ",":
+                self._fail("object members must be separated by commas")
+            self.index += 1
+            self._skip_whitespace()
+
+    def _parse_array(self) -> _JsonNode:
+        start = self.index
+        self.index += 1
+        self._skip_whitespace()
+        items: list[_JsonNode] = []
+        if self.index < len(self.text) and self.text[self.index] == "]":
+            self.index += 1
+            return _JsonNode("array", start, self.index, [], items=tuple(items))
+        while True:
+            items.append(self._parse_value())
+            self._skip_whitespace()
+            if self.index >= len(self.text):
+                self._fail("array is not closed")
+            marker = self.text[self.index]
+            if marker == "]":
+                self.index += 1
+                return _JsonNode(
+                    "array", start, self.index, [item.value for item in items], items=tuple(items)
+                )
+            if marker != ",":
+                self._fail("array values must be separated by commas")
+            self.index += 1
+            self._skip_whitespace()
+
+
+@dataclass(frozen=True)
+class _JsonEdit:
+    start: int
+    end: int
+    replacement: str
+    owner: str
+
+
+@dataclass(frozen=True)
+class _JsonDocument:
+    artifact: _TextArtifact
+    root: _JsonNode
+    original_bytes: bytes
+    label: str
+
+    def render(self, edits: list[_JsonEdit] | tuple[_JsonEdit, ...]) -> bytes:
+        ordered = sorted(edits, key=lambda edit: (edit.start, edit.end))
+        cursor = 0
+        pieces: list[str] = []
+        reverse: list[_JsonEdit] = []
+        output_length = 0
+        for edit in ordered:
+            if edit.start < cursor or edit.start < 0 or edit.end < edit.start:
+                raise CorrectionValidationError(f"{self.label} has overlapping JSON edits")
+            if edit.end > len(self.artifact.text):
+                raise CorrectionValidationError(f"{self.label} JSON edit is out of bounds")
+            unchanged = self.artifact.text[cursor:edit.start]
+            pieces.extend((unchanged, edit.replacement))
+            output_length += len(unchanged)
+            reverse.append(
+                _JsonEdit(
+                    output_length,
+                    output_length + len(edit.replacement),
+                    self.artifact.text[edit.start:edit.end],
+                    edit.owner,
+                )
+            )
+            output_length += len(edit.replacement)
+            cursor = edit.end
+        pieces.append(self.artifact.text[cursor:])
+        patched_text = "".join(pieces)
+        patched = self.artifact.encode(patched_text, self.label)
+
+        reverse_cursor = 0
+        reversed_pieces: list[str] = []
+        for edit in reverse:
+            reversed_pieces.extend((patched_text[reverse_cursor:edit.start], edit.replacement))
+            reverse_cursor = edit.end
+        reversed_pieces.append(patched_text[reverse_cursor:])
+        reversed_bytes = self.artifact.encode("".join(reversed_pieces), self.label)
+        if reversed_bytes != self.original_bytes:
+            raise CorrectionValidationError(
+                f"{self.label} JSON patch is not exactly byte-reversible"
+            )
+        return patched
+
+
+def _load_json_document(path: Path, label: str) -> _JsonDocument:
+    raw = path.read_bytes()
+    artifact = _read_text_artifact(path, label)
+    root = _JsonConcreteParser(artifact.text, label).parse()
+    document = _JsonDocument(artifact, root, raw, label)
+    if document.render(()) != raw:
+        raise CorrectionValidationError(
+            f"{label} cannot be represented byte-for-byte before mutation"
+        )
+    return document
+
+
+def _require_json_kind(node: _JsonNode, kind: str, label: str) -> _JsonNode:
+    if node.kind != kind:
+        raise CorrectionValidationError(f"{label} has drifted from JSON {kind}")
+    return node
+
+
+def _require_json_member(node: _JsonNode, key: str, label: str) -> _JsonMember:
+    _require_json_kind(node, "object", label)
+    member = node.member(key)
+    if member is None:
+        raise CorrectionValidationError(f"{label} is missing required field {key!r}")
+    return member
+
+
+def _json_values_equal(left: Any, right: Any) -> bool:
+    return type(left) is type(right) and left == right
+
+
+def _json_fragment(value: Any, artifact: _TextArtifact, base_indent: str = "") -> str:
+    text = json.dumps(value, ensure_ascii=False, sort_keys=False, indent=2)
+    if base_indent:
+        text = text.replace("\n", "\n" + base_indent)
     if artifact.newline != "\n":
         text = text.replace("\n", artifact.newline)
-    if not artifact.final_newline:
-        text = text[:-len(artifact.newline)]
-    return artifact.encode(text, label)
+    return text
 
 
-def _load_json_artifact(path: Path, label: str) -> tuple[Any, _TextArtifact]:
-    artifact = _read_text_artifact(path, label)
-    try:
-        return json.loads(artifact.text), artifact
-    except json.JSONDecodeError as exc:
-        raise CorrectionValidationError(f"{label} is not readable canonical JSON: {exc}") from exc
+def _line_indent(text: str, offset: int, label: str) -> str:
+    line_start = text.rfind("\n", 0, offset) + 1
+    indent = text[line_start:offset]
+    if any(character not in " \t\r" for character in indent):
+        raise CorrectionValidationError(f"{label} has unsupported inline JSON key placement")
+    return indent.removesuffix("\r")
+
+
+def _replace_json_value(
+    document: _JsonDocument,
+    member: _JsonMember,
+    *,
+    expected: Any,
+    replacement: Any,
+    owner: str,
+) -> _JsonEdit:
+    if not _json_values_equal(member.value.value, expected):
+        raise CorrectionValidationError(f"{owner} current JSON value drifted")
+    indent = _line_indent(document.artifact.text, member.key_start, owner)
+    return _JsonEdit(
+        member.value.start,
+        member.value.end,
+        _json_fragment(replacement, document.artifact, indent),
+        owner,
+    )
+
+
+def _insert_json_members(
+    document: _JsonDocument,
+    node: _JsonNode,
+    entries: list[tuple[str, Any]],
+    owner: str,
+) -> _JsonEdit | None:
+    _require_json_kind(node, "object", owner)
+    if not entries:
+        return None
+    for key, _ in entries:
+        if node.member(key) is not None:
+            raise CorrectionValidationError(f"{owner} field {key!r} already exists")
+    close = node.end - 1
+    if not node.members:
+        existing = document.artifact.text[node.start + 1:close]
+        if existing.strip():
+            raise CorrectionValidationError(f"{owner} empty object has unexpected content")
+        parent_indent = _line_indent(document.artifact.text, close, owner)
+        member_indent = parent_indent + "  "
+        rendered = ("," + document.artifact.newline + member_indent).join(
+            json.dumps(key, ensure_ascii=False)
+            + ": "
+            + _json_fragment(value, document.artifact, member_indent)
+            for key, value in entries
+        )
+        if document.artifact.newline in existing:
+            replacement = (
+                document.artifact.newline + member_indent + rendered
+                + document.artifact.newline + parent_indent
+            )
+        else:
+            replacement = rendered
+        return _JsonEdit(node.start + 1, close, replacement, owner)
+
+    last = node.members[-1]
+    tail = document.artifact.text[last.value.end:close]
+    if tail.strip():
+        raise CorrectionValidationError(f"{owner} object tail is not bounded whitespace")
+    member_indent = _line_indent(document.artifact.text, last.key_start, owner)
+    separator = (
+        "," + document.artifact.newline + member_indent
+        if document.artifact.newline in tail
+        else ", "
+    )
+    rendered = separator.join(
+        json.dumps(key, ensure_ascii=False)
+        + ": "
+        + _json_fragment(value, document.artifact, member_indent)
+        for key, value in entries
+    )
+    return _JsonEdit(last.value.end, last.value.end, separator + rendered, owner)
+
+
+def _replace_or_insert_json_member(
+    document: _JsonDocument,
+    node: _JsonNode,
+    key: str,
+    *,
+    allowed_existing: tuple[Any, ...],
+    replacement: Any,
+    owner: str,
+) -> tuple[list[_JsonEdit], list[tuple[str, Any]]]:
+    member = node.member(key)
+    if member is None:
+        return [], [(key, replacement)]
+    if not any(_json_values_equal(member.value.value, allowed) for allowed in allowed_existing):
+        raise CorrectionValidationError(f"{owner} field {key!r} has conflicting state or type drift")
+    return [
+        _replace_json_value(
+            document,
+            member,
+            expected=member.value.value,
+            replacement=replacement,
+            owner=f"{owner}.{key}",
+        )
+    ], []
 
 
 _VOID_HTML_TAGS = {
@@ -1019,6 +1357,246 @@ def _render_story_scoped_edition_html(
     return _apply_html_replacements(source, replacements)
 
 
+def _require_owning_date(
+    node: _JsonNode, key: str, owning_date: str, label: str
+) -> None:
+    member = _require_json_member(node, key, label)
+    if member.value.kind != "string" or member.value.value != owning_date:
+        raise CorrectionValidationError(f"{label} is bound to another owning edition")
+
+
+def _story_id_matches(node: _JsonNode, story_id: str) -> bool:
+    if node.kind != "object":
+        return False
+    member = node.member("story_id")
+    return bool(
+        member is not None
+        and member.value.kind == "string"
+        and member.value.value == story_id
+    )
+
+
+def _render_curation_manifest_json(
+    document: _JsonDocument,
+    correction: dict[str, Any],
+    record: dict[str, Any],
+    reader: _ReaderCorrectionCopy,
+) -> bytes:
+    root = _require_json_kind(document.root, "array", "curation manifest")
+    matches = [item for item in root.items if _story_id_matches(item, correction["story_id"])]
+    if len(matches) != 1:
+        raise CorrectionValidationError(
+            "prior public story does not resolve exactly once in curation"
+        )
+    story = matches[0]
+    event_date = _require_json_member(story, "event_date", "curation owning story")
+    if (
+        event_date.value.kind != "string"
+        or not str(event_date.value.value).startswith(correction["owning_edition_date"])
+    ):
+        raise CorrectionValidationError("curation owning story is bound to another edition date")
+
+    summary = _require_json_member(story, "summary", "curation owning story")
+    if summary.value.kind != "string":
+        raise CorrectionValidationError("curation owning story summary has type drift")
+    edits = [
+        _replace_json_value(
+            document,
+            summary,
+            expected=correction["prior_claim"],
+            replacement=reader.story_update,
+            owner="curation owning story summary",
+        )
+    ]
+
+    casualty = _require_json_member(story, "casualty_counts", "curation owning story")
+    _require_json_kind(casualty.value, "object", "curation casualty counts")
+    casualty_change = correction["casualty_change"]
+    casualty_key = _casualty_count_key(correction)
+    prior_count = _require_json_member(casualty.value, casualty_key, "curation casualty counts")
+    if not _json_values_equal(prior_count.value.value, casualty_change["previous_value"]):
+        raise CorrectionValidationError("curation prior casualty value drifted")
+    unexpected_counts = set(casualty.value.value) - {casualty_key, "new_injuries"}
+    if unexpected_counts:
+        raise CorrectionValidationError("curation casualty object contains unrelated counts")
+    edits.append(
+        _replace_json_value(
+            document,
+            casualty,
+            expected=casualty.value.value,
+            replacement={casualty_key: casualty_change["corrected_value"]},
+            owner="curation casualty counts",
+        )
+    )
+
+    insertions: list[tuple[str, Any]] = []
+    fingerprint = story.member("event_fingerprint")
+    if fingerprint is None:
+        insertions.append(("event_fingerprint", correction["stable_event_fingerprint"]))
+    elif (
+        fingerprint.value.kind != "string"
+        or fingerprint.value.value != correction["stable_event_fingerprint"]
+    ):
+        raise CorrectionValidationError("curation stable event identity drifted")
+
+    if story.member("injury_disagreement") is not None:
+        raise CorrectionValidationError("curation already contains injury disagreement state")
+    insertions.append(("injury_disagreement", correction["injury_disagreement"]))
+
+    history_edits, history_insertions = _replace_or_insert_json_member(
+        document,
+        story,
+        "correction_history",
+        allowed_existing=(None, []),
+        replacement=[record],
+        owner="curation owning story",
+    )
+    edits.extend(history_edits)
+    insertions.extend(history_insertions)
+    insertion_edit = _insert_json_members(
+        document, story, insertions, "curation owning story"
+    )
+    if insertion_edit is not None:
+        edits.append(insertion_edit)
+    return document.render(edits)
+
+
+def _render_dedupe_report_json(
+    document: _JsonDocument,
+    correction: dict[str, Any],
+    record: dict[str, Any],
+) -> bytes:
+    root = _require_json_kind(document.root, "object", "dedupe report")
+    _require_owning_date(root, "edition_date", correction["owning_edition_date"], "dedupe report")
+    included = _require_json_member(root, "included_stories", "dedupe report")
+    _require_json_kind(included.value, "array", "dedupe included stories")
+    matches = [
+        item for item in included.value.items
+        if _story_id_matches(item, correction["story_id"])
+    ]
+    if len(matches) != 1:
+        raise CorrectionValidationError(
+            "dedupe report does not resolve the owning story exactly once"
+        )
+    edits, insertions = _replace_or_insert_json_member(
+        document,
+        root,
+        "corrections",
+        allowed_existing=(None, []),
+        replacement=[record],
+        owner="dedupe report",
+    )
+    insertion_edit = _insert_json_members(document, root, insertions, "dedupe report")
+    if insertion_edit is not None:
+        edits.append(insertion_edit)
+    return document.render(edits)
+
+
+def _render_edition_manifest_json(
+    document: _JsonDocument,
+    correction: dict[str, Any],
+    record: dict[str, Any],
+) -> bytes:
+    root = _require_json_kind(document.root, "object", "edition manifest")
+    _require_owning_date(root, "edition_date", correction["owning_edition_date"], "edition manifest")
+    edition_record = {
+        **record,
+        "aggregates_recomputed_from_corrected_story_versions": True,
+    }
+    edits, insertions = _replace_or_insert_json_member(
+        document,
+        root,
+        "corrections",
+        allowed_existing=(None, []),
+        replacement=[edition_record],
+        owner="edition manifest",
+    )
+    insertion_edit = _insert_json_members(document, root, insertions, "edition manifest")
+    if insertion_edit is not None:
+        edits.append(insertion_edit)
+    return document.render(edits)
+
+
+def _render_original_audio_metadata_json(
+    document: _JsonDocument, correction: dict[str, Any]
+) -> bytes:
+    root = _require_json_kind(document.root, "object", "prior audio metadata")
+    _require_owning_date(
+        root, "edition_date", correction["owning_edition_date"], "prior audio metadata"
+    )
+    status = _require_json_member(root, "audio_status", "prior audio metadata")
+    if status.value.kind != "string" or status.value.value == "superseded_by_formal_correction":
+        raise CorrectionValidationError("prior audio metadata status has conflicting state or type drift")
+    edits = [
+        _replace_json_value(
+            document,
+            status,
+            expected=status.value.value,
+            replacement="superseded_by_formal_correction",
+            owner="prior audio metadata status",
+        )
+    ]
+    insertions = [
+        ("superseded_by_correction_id", correction["correction_id"]),
+        (
+            "replacement_audio_url",
+            f"/gaza/audio/corrections/{correction['correction_id']}.mp3",
+        ),
+    ]
+    insertion_edit = _insert_json_members(
+        document, root, insertions, "prior audio metadata"
+    )
+    if insertion_edit is not None:
+        edits.append(insertion_edit)
+    return document.render(edits)
+
+
+def _render_flash_briefing_json(
+    document: _JsonDocument,
+    correction: dict[str, Any],
+    audio_request: dict[str, Any],
+    reader: _ReaderCorrectionCopy,
+    link: str,
+) -> bytes:
+    root = _require_json_kind(document.root, "array", "flash briefing")
+    if len(root.items) != 1:
+        raise CorrectionValidationError("flash briefing owning item is missing or ambiguous")
+    item = _require_json_kind(root.items[0], "object", "flash briefing owning item")
+    uid = _require_json_member(item, "uid", "flash briefing owning item")
+    expected_uids = {
+        correction["owning_edition_date"],
+        f"gaza-{correction['owning_edition_date']}",
+    }
+    if uid.value.kind != "string" or uid.value.value not in expected_uids:
+        raise CorrectionValidationError("flash briefing is bound to another owning edition")
+    redirection = item.member("redirectionUrl")
+    if redirection is not None and (
+        redirection.value.kind != "string"
+        or f"/gaza/editions/{correction['owning_edition_date']}/"
+        not in redirection.value.value
+    ):
+        raise CorrectionValidationError("flash briefing edition link drifted")
+    replacement = [
+        {
+            "uid": correction["correction_id"],
+            "updateDate": correction["correction_date"],
+            "titleText": reader.heading,
+            "mainText": audio_request["script_text"],
+            "redirectionUrl": link,
+        }
+    ]
+    return document.render(
+        [
+            _JsonEdit(
+                root.start,
+                root.end,
+                _json_fragment(replacement, document.artifact),
+                "flash briefing owning item",
+            )
+        ]
+    )
+
+
 def _render_preview_payloads(
     pages_root: Path,
     correction: dict[str, Any],
@@ -1030,18 +1608,8 @@ def _render_preview_payloads(
     date = correction["owning_edition_date"]
 
     curation_path = _repo_path(pages_root, f"gaza/editions/{date}/curation_manifest.json", "curation")
-    curation, curation_artifact = _load_json_artifact(curation_path, "curation manifest")
-    if not isinstance(curation, list):
-        raise CorrectionValidationError("curation manifest must remain a story list")
-    matches = [row for row in curation if isinstance(row, dict) and row.get("story_id") == correction["story_id"]]
-    if len(matches) != 1:
-        raise CorrectionValidationError("prior public story does not resolve exactly once in curation")
-    story = matches[0]
-    if story.get("summary") != correction["prior_claim"]:
-        raise CorrectionValidationError("current curation prior claim differs from lineage")
-    history = story.get("correction_history")
-    if history not in (None, []):
-        raise CorrectionValidationError("current curation already contains correction history")
+    curation_document = _load_json_document(curation_path, "curation manifest")
+    curation = curation_document.root.value
     sources = _load_json(
         _repo_path(pages_root, f"gaza/editions/{date}/sources_manifest.json", "sources"),
         "sources manifest",
@@ -1060,57 +1628,33 @@ def _render_preview_payloads(
     )
     payloads["edition_html"] = edition_artifact.encode(edition_html, "edition HTML")
 
-    story["summary"] = reader.story_update
-    casualty_change = correction["casualty_change"]
-    story["casualty_counts"] = {
-        _casualty_count_key(correction): casualty_change["corrected_value"]
-    }
-    story["event_fingerprint"] = correction["stable_event_fingerprint"]
-    story["injury_disagreement"] = correction["injury_disagreement"]
-    story["correction_history"] = [record]
-    payloads["curation_manifest"] = _json_document_like(
-        curation, curation_artifact, "curation manifest"
+    payloads["curation_manifest"] = _render_curation_manifest_json(
+        curation_document, correction, record, reader
     )
 
-    dedupe, dedupe_artifact = _load_json_artifact(
+    dedupe_document = _load_json_document(
         _repo_path(pages_root, f"gaza/editions/{date}/dedupe_report.json", "dedupe"),
         "dedupe report",
     )
-    if not isinstance(dedupe, dict) or dedupe.get("corrections") not in (None, []):
-        raise CorrectionValidationError("dedupe report already has correction state")
-    dedupe["corrections"] = [record]
-    payloads["dedupe_report"] = _json_document_like(
-        dedupe, dedupe_artifact, "dedupe report"
+    payloads["dedupe_report"] = _render_dedupe_report_json(
+        dedupe_document, correction, record
     )
 
-    edition, edition_artifact = _load_json_artifact(
+    edition_document = _load_json_document(
         _repo_path(pages_root, f"gaza/editions/{date}/edition_manifest.json", "edition manifest"),
         "edition manifest",
     )
-    if not isinstance(edition, dict) or edition.get("corrections") not in (None, []):
-        raise CorrectionValidationError("edition manifest already has correction state")
-    edition_record = {**record, "aggregates_recomputed_from_corrected_story_versions": True}
-    edition["corrections"] = [edition_record]
-    payloads["edition_manifest"] = _json_document_like(
-        edition, edition_artifact, "edition manifest"
+    payloads["edition_manifest"] = _render_edition_manifest_json(
+        edition_document, correction, record
     )
     payloads["correction_manifest"] = _json_document(record)
 
-    prior_audio, prior_audio_artifact = _load_json_artifact(
+    prior_audio_document = _load_json_document(
         _repo_path(pages_root, f"gaza/audio/{date}.json", "prior audio metadata"),
         "prior audio metadata",
     )
-    if not isinstance(prior_audio, dict):
-        raise CorrectionValidationError("prior audio metadata must be an object")
-    prior_audio.update(
-        {
-            "audio_status": "superseded_by_formal_correction",
-            "superseded_by_correction_id": correction["correction_id"],
-            "replacement_audio_url": f"/gaza/audio/corrections/{correction['correction_id']}.mp3",
-        }
-    )
-    payloads["original_audio_metadata"] = _json_document_like(
-        prior_audio, prior_audio_artifact, "prior audio metadata"
+    payloads["original_audio_metadata"] = _render_original_audio_metadata_json(
+        prior_audio_document, correction
     )
     payloads["correction_audio_metadata"] = _json_document(
         {
@@ -1168,20 +1712,12 @@ def _render_preview_payloads(
             _append_before(current.text, "</channel>", item, role), role
         )
 
-    flash_path = _repo_path(pages_root, "gaza/flash-briefing.json", "flash briefing")
-    _, flash_artifact = _load_json_artifact(flash_path, "flash briefing")
-    payloads["flash_briefing"] = _json_document_like(
-        [
-            {
-                "uid": correction["correction_id"],
-                "updateDate": correction["correction_date"],
-                "titleText": reader.heading,
-                "mainText": audio_request["script_text"],
-                "redirectionUrl": link,
-            }
-        ],
-        flash_artifact,
+    flash_document = _load_json_document(
+        _repo_path(pages_root, "gaza/flash-briefing.json", "flash briefing"),
         "flash briefing",
+    )
+    payloads["flash_briefing"] = _render_flash_briefing_json(
+        flash_document, correction, audio_request, reader, link
     )
     for role, relative in (
         ("audio_index", "gaza/audio/index.html"),

@@ -21,8 +21,15 @@ from bluefern_dispatches.gaza_historical_correction import (
     prepare_correction_proposal,
     create_package_approval,
     _correction_notice_html,
+    _load_json_document,
+    _public_correction_record,
     _reader_correction_copy,
     _read_text_artifact,
+    _render_curation_manifest_json,
+    _render_dedupe_report_json,
+    _render_edition_manifest_json,
+    _render_flash_briefing_json,
+    _render_original_audio_metadata_json,
     _render_story_scoped_edition_html,
     sha256_file,
     stage_correction_package,
@@ -58,6 +65,13 @@ EVIDENCE = [
     },
 ]
 
+JSON_PRESERVATION_FIXTURES = (
+    Path(__file__).parent
+    / "fixtures"
+    / "gaza"
+    / "correction_json_byte_preservation"
+)
+
 
 def _run(repo: Path, *args: str) -> str:
     result = subprocess.run(
@@ -82,6 +96,26 @@ def _write_exact_text(
     normalized = text.replace("\r\n", "\n").replace("\r", "\n").rstrip("\n")
     formatted = normalized.replace("\n", newline) + (newline if final_newline else "")
     path.write_bytes((b"\xef\xbb\xbf" if bom else b"") + formatted.encode("utf-8"))
+
+
+def _fixture_document(
+    tmp_path: Path,
+    name: str,
+    *,
+    newline: str = "\n",
+    final_newline: bool = True,
+    bom: bool = False,
+):
+    source = JSON_PRESERVATION_FIXTURES / name
+    path = tmp_path / name
+    _write_exact_text(
+        path,
+        source.read_text(encoding="utf-8"),
+        newline=newline,
+        final_newline=final_newline,
+        bom=bom,
+    )
+    return path, _load_json_document(path, name)
 
 
 def _commit(repo: Path, message: str) -> str:
@@ -244,6 +278,7 @@ def _make_pages(
     _write_json(
         edition / "dedupe_report.json",
         {
+            "edition_date": DATE,
             "included_stories": [
                 {
                     "story_id": STORY_ID,
@@ -274,12 +309,23 @@ def _make_pages(
         path.write_text(text, encoding="utf-8")
     _write_json(
         pages / "gaza" / "audio" / f"{DATE}.json",
-        {"audio_status": "generated", "script_text": PRIOR, "audio_file": f"{DATE}.mp3"},
+        {
+            "edition_date": DATE,
+            "audio_status": "generated",
+            "script_text": PRIOR,
+            "audio_file": f"{DATE}.mp3",
+        },
     )
     (pages / "gaza" / "audio" / f"{DATE}.mp3").write_bytes(b"ID3-prior-synthetic-audio")
     _write_json(
         pages / "gaza" / "flash-briefing.json",
-        [{"uid": DATE, "mainText": PRIOR}],
+        [
+            {
+                "uid": f"gaza-{DATE}",
+                "mainText": PRIOR,
+                "redirectionUrl": f"https://dispatches.thebluefernco.com/gaza/editions/{DATE}/",
+            }
+        ],
     )
     if text_format is not None:
         newline, final_newline, bom = text_format
@@ -764,6 +810,310 @@ def test_text_artifact_rejects_ambiguous_or_unsupported_input(
     path.write_bytes(payload)
     with pytest.raises(CorrectionValidationError, match=message):
         _read_text_artifact(path, "synthetic artifact")
+
+
+def _render_production_shaped_json(tmp_path: Path) -> tuple[dict[str, bytes], dict[str, bytes]]:
+    correction = _synthetic_correction()
+    record = _public_correction_record(correction)
+    reader = _reader_correction_copy(correction)
+    link = (
+        "https://dispatches.thebluefernco.com/gaza/corrections/"
+        f"{correction['correction_id']}/"
+    )
+    names = {
+        "curation_manifest": "curation_manifest.json",
+        "dedupe_report": "dedupe_report.json",
+        "edition_manifest": "edition_manifest.json",
+        "original_audio_metadata": "audio_metadata.json",
+        "flash_briefing": "flash_briefing.json",
+    }
+    documents = {
+        role: _fixture_document(tmp_path, name)[1]
+        for role, name in names.items()
+    }
+    assert all(
+        document.render(()) == document.original_bytes
+        for document in documents.values()
+    )
+    originals = {role: document.original_bytes for role, document in documents.items()}
+    outputs = {
+        "curation_manifest": _render_curation_manifest_json(
+            documents["curation_manifest"], correction, record, reader
+        ),
+        "dedupe_report": _render_dedupe_report_json(
+            documents["dedupe_report"], correction, record
+        ),
+        "edition_manifest": _render_edition_manifest_json(
+            documents["edition_manifest"], correction, record
+        ),
+        "original_audio_metadata": _render_original_audio_metadata_json(
+            documents["original_audio_metadata"], correction
+        ),
+        "flash_briefing": _render_flash_briefing_json(
+            documents["flash_briefing"],
+            correction,
+            {"script_text": reader.audio_script},
+            reader,
+            link,
+        ),
+    }
+    return originals, outputs
+
+
+def test_production_shaped_existing_json_preserves_lexemes_and_is_byte_reversible(
+    tmp_path: Path,
+) -> None:
+    originals, outputs = _render_production_shaped_json(tmp_path)
+    correction = _synthetic_correction()
+
+    curation_before = json.loads(originals["curation_manifest"].decode("utf-8"))
+    curation_after = json.loads(outputs["curation_manifest"].decode("utf-8"))
+    prior_story = next(row for row in curation_before if row["story_id"] == STORY_ID)
+    corrected_story = next(row for row in curation_after if row["story_id"] == STORY_ID)
+    assert list(corrected_story)[: len(prior_story)] == list(prior_story)
+    assert list(corrected_story)[-3:] == [
+        "event_fingerprint",
+        "injury_disagreement",
+        "correction_history",
+    ]
+    assert corrected_story["summary"] == _reader_correction_copy(correction).story_update
+    assert corrected_story["casualty_counts"] == {"new_deaths": 2}
+    assert corrected_story["correction_history"][0]["story_id"] == STORY_ID
+    curation_text = outputs["curation_manifest"].decode("utf-8")
+    for lexical in (
+        "1.2300e+02",
+        r"slash:\/",
+        r'quote:\"',
+        "control:\\n",
+        "unicode:\\u263a",
+    ):
+        assert lexical in curation_text
+
+    for role in ("dedupe_report", "edition_manifest", "original_audio_metadata"):
+        before = json.loads(originals[role].decode("utf-8"))
+        after = json.loads(outputs[role].decode("utf-8"))
+        assert list(after)[: len(before)] == list(before)
+    assert list(json.loads(outputs["dedupe_report"])["corrections"][0]) == list(
+        _public_correction_record(correction)
+    )
+    assert json.loads(outputs["edition_manifest"])["corrections"][0][
+        "aggregates_recomputed_from_corrected_story_versions"
+    ] is True
+    audio = json.loads(outputs["original_audio_metadata"])
+    assert audio["audio_status"] == "superseded_by_formal_correction"
+    assert list(audio)[-2:] == [
+        "superseded_by_correction_id",
+        "replacement_audio_url",
+    ]
+    assert "1.024e+03" in outputs["original_audio_metadata"].decode("utf-8")
+    assert "123.4500" in outputs["original_audio_metadata"].decode("utf-8")
+
+    flash = json.loads(outputs["flash_briefing"])
+    assert list(flash[0]) == ["uid", "updateDate", "titleText", "mainText", "redirectionUrl"]
+    assert flash[0]["uid"] == correction["correction_id"]
+
+    # Re-rendering the same owned spans is deterministic without rewriting the
+    # input fixtures or depending on dictionary sorting.
+    assert _render_curation_manifest_json(
+        _load_json_document(tmp_path / "curation_manifest.json", "curation manifest"),
+        correction,
+        _public_correction_record(correction),
+        _reader_correction_copy(correction),
+    ) == outputs["curation_manifest"]
+
+    # Every renderer call above performs an internal inverse-span reconstruction
+    # and raises unless the reconstructed bytes equal this original input exactly.
+    for role, original in originals.items():
+        assert hashlib.sha256(original).digest() != hashlib.sha256(outputs[role]).digest()
+
+
+@pytest.mark.parametrize(
+    ("newline", "final_newline", "bom"),
+    [
+        ("\n", True, False),
+        ("\n", False, True),
+        ("\r\n", True, True),
+        ("\r\n", False, False),
+    ],
+)
+def test_existing_json_patch_preserves_bom_newlines_and_final_newline(
+    tmp_path: Path, newline: str, final_newline: bool, bom: bool
+) -> None:
+    path, document = _fixture_document(
+        tmp_path,
+        "curation_manifest.json",
+        newline=newline,
+        final_newline=final_newline,
+        bom=bom,
+    )
+    original = path.read_bytes()
+    assert document.render(()) == original
+    correction = _synthetic_correction()
+    output = _render_curation_manifest_json(
+        document,
+        correction,
+        _public_correction_record(correction),
+        _reader_correction_copy(correction),
+    )
+    assert output.startswith(b"\xef\xbb\xbf") is bom
+    body = output[3:] if bom else output
+    if newline == "\r\n":
+        assert b"\n" not in body.replace(b"\r\n", b"")
+    else:
+        assert b"\r" not in body
+    assert body.endswith(newline.encode("ascii")) is final_newline
+    assert b"1.2300e+02" in body
+    assert b"6.250E-1" not in body
+
+
+@pytest.mark.parametrize(
+    ("payload", "message"),
+    [
+        (b'{"value": 1,}', "malformed JSON"),
+        (b'{"value": 1}\r\n{"other": 2}\n', "mixed newlines"),
+        (b'{"value": 1}\r{"other": 2}', "bare-CR"),
+        (b"\xff\xfe{\x00}\x00", "non-UTF-8"),
+        (b'{"value": 1, "value": 2}', "duplicate object key"),
+    ],
+)
+def test_json_preservation_rejects_unrepresentable_input(
+    tmp_path: Path, payload: bytes, message: str
+) -> None:
+    path = tmp_path / "invalid.json"
+    path.write_bytes(payload)
+    with pytest.raises(CorrectionValidationError, match=message):
+        _load_json_document(path, "synthetic JSON")
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (
+            lambda text: text.replace(
+                '"gaza-story-2026-08-29-006"', f'"{STORY_ID}"', 1
+            ),
+            "exactly once",
+        ),
+        (
+            lambda text: text.replace(
+                '"event_date": "2026-08-29T12:00:00+00:00"',
+                '"event_date": "2026-08-28T12:00:00+00:00"',
+                1,
+            ),
+            "another edition date",
+        ),
+        (
+            lambda text: text.replace(
+                f'"summary": "{PRIOR}"', '"summary": 42', 1
+            ),
+            "summary has type drift",
+        ),
+        (
+            lambda text: text.replace('"new_deaths": 1', '"new_deaths": "1"', 1),
+            "prior casualty value drifted",
+        ),
+    ],
+)
+def test_curation_json_targeting_fails_closed(
+    tmp_path: Path, mutation, message: str
+) -> None:
+    source = (JSON_PRESERVATION_FIXTURES / "curation_manifest.json").read_text(
+        encoding="utf-8"
+    )
+    path = tmp_path / "curation.json"
+    path.write_text(mutation(source), encoding="utf-8")
+    document = _load_json_document(path, "curation manifest")
+    correction = _synthetic_correction()
+    with pytest.raises(CorrectionValidationError, match=message):
+        _render_curation_manifest_json(
+            document,
+            correction,
+            _public_correction_record(correction),
+            _reader_correction_copy(correction),
+        )
+
+
+def test_curation_json_wrong_story_id_fails_closed(tmp_path: Path) -> None:
+    _, document = _fixture_document(tmp_path, "curation_manifest.json")
+    correction = _synthetic_correction()
+    correction["story_id"] = "gaza-story-2026-08-29-999"
+    with pytest.raises(CorrectionValidationError, match="exactly once"):
+        _render_curation_manifest_json(
+            document,
+            correction,
+            _public_correction_record(correction),
+            _reader_correction_copy(correction),
+        )
+
+
+@pytest.mark.parametrize(
+    ("fixture", "mutation", "renderer", "message"),
+    [
+        (
+            "dedupe_report.json",
+            lambda text: text.replace('"edition_date": "2026-08-29"', '"edition_date": "2026-08-28"'),
+            "dedupe",
+            "another owning edition",
+        ),
+        (
+            "dedupe_report.json",
+            lambda text: json.dumps(
+                {**json.loads(text), "included_stories": {}}, indent=2
+            )
+            + "\n",
+            "dedupe",
+            "drifted from JSON array",
+        ),
+        (
+            "edition_manifest.json",
+            lambda text: text.replace('"edition_date": "2026-08-29"', '"edition_date": 20260829'),
+            "edition",
+            "another owning edition",
+        ),
+        (
+            "audio_metadata.json",
+            lambda text: text.replace('"audio_status": "audio_file_ready"', '"audio_status": null'),
+            "audio",
+            "type drift",
+        ),
+        (
+            "flash_briefing.json",
+            lambda text: text.replace('"uid": "gaza-2026-08-29"', '"uid": "gaza-2026-08-28"'),
+            "flash",
+            "another owning edition",
+        ),
+        (
+            "flash_briefing.json",
+            lambda text: text[:-2] + ",\n  {}\n]\n",
+            "flash",
+            "missing or ambiguous",
+        ),
+    ],
+)
+def test_role_specific_json_ownership_and_type_drift_fail_closed(
+    tmp_path: Path, fixture: str, mutation, renderer: str, message: str
+) -> None:
+    source = (JSON_PRESERVATION_FIXTURES / fixture).read_text(encoding="utf-8")
+    path = tmp_path / fixture
+    path.write_text(mutation(source), encoding="utf-8")
+    document = _load_json_document(path, fixture)
+    correction = _synthetic_correction()
+    record = _public_correction_record(correction)
+    reader = _reader_correction_copy(correction)
+    calls = {
+        "dedupe": lambda: _render_dedupe_report_json(document, correction, record),
+        "edition": lambda: _render_edition_manifest_json(document, correction, record),
+        "audio": lambda: _render_original_audio_metadata_json(document, correction),
+        "flash": lambda: _render_flash_briefing_json(
+            document,
+            correction,
+            {"script_text": reader.audio_script},
+            reader,
+            "https://dispatches.thebluefernco.com/gaza/corrections/synthetic/",
+        ),
+    }
+    with pytest.raises(CorrectionValidationError, match=message):
+        calls[renderer]()
 
 
 @pytest.mark.parametrize(

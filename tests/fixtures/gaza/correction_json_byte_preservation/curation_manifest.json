@@ -1,0 +1,26 @@
+[
+  {
+    "story_id": "gaza-story-2026-08-29-006",
+    "title": "Unrelated synthetic story",
+    "summary": "Unrelated text with café and an escaped value: \u2014",
+    "event_date": "2026-08-29T10:00:00+00:00",
+    "casualty_counts": null
+  },
+  {
+    "story_id": "gaza-story-2026-08-29-005",
+    "title": "Synthetic report on Tal al-Hawa motorcycle strike",
+    "summary": "Source A reported 1 killed and 2 injured in a motorcycle strike in Tal al-Hawa.",
+    "category": "conflict",
+    "score": 1.2300e+02,
+    "included_in_public_summary": true,
+    "unrelated_null": null,
+    "escaped_lexeme": "slash:\/ quote:\" control:\n unicode:\u263a",
+    "event_date": "2026-08-29T12:00:00+00:00",
+    "casualty_counts": {
+      "new_deaths": 1,
+      "new_injuries": 2
+    },
+    "include_decision": "include",
+    "public_rendered": true
+  }
+]

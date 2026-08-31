@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import html
 import json
 import os
 import subprocess
@@ -20,6 +21,8 @@ from bluefern_dispatches.gaza_historical_correction import (
     prepare_correction_proposal,
     create_package_approval,
     _correction_notice_html,
+    _reader_correction_copy,
+    _read_text_artifact,
     _render_story_scoped_edition_html,
     sha256_file,
     stage_correction_package,
@@ -66,6 +69,19 @@ def _run(repo: Path, *args: str) -> str:
 def _write_json(path: Path, payload: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+
+
+def _write_exact_text(
+    path: Path,
+    text: str,
+    *,
+    newline: str,
+    final_newline: bool,
+    bom: bool,
+) -> None:
+    normalized = text.replace("\r\n", "\n").replace("\r", "\n").rstrip("\n")
+    formatted = normalized.replace("\n", newline) + (newline if final_newline else "")
+    path.write_bytes((b"\xef\xbb\xbf" if bom else b"") + formatted.encode("utf-8"))
 
 
 def _commit(repo: Path, message: str) -> str:
@@ -207,7 +223,11 @@ def _render_synthetic_html(
     )
 
 
-def _make_pages(pages: Path) -> tuple[str, dict[str, object]]:
+def _make_pages(
+    pages: Path,
+    *,
+    text_format: tuple[str, bool, bool] | None = None,
+) -> tuple[str, dict[str, object]]:
     _init_repo(pages, "gh-pages")
     _run(
         pages,
@@ -261,15 +281,39 @@ def _make_pages(pages: Path) -> tuple[str, dict[str, object]]:
         pages / "gaza" / "flash-briefing.json",
         [{"uid": DATE, "mainText": PRIOR}],
     )
+    if text_format is not None:
+        newline, final_newline, bom = text_format
+        existing_text_roles = {
+            "edition_html", "rss", "original_transcript", "podcast",
+            "audio_podcast", "audio_index", "gaza_index", "gaza_archive",
+            "root_index",
+        }
+        for role in existing_text_roles:
+            path = pages / REPLACEMENT_PATHS[role].format(
+                date=DATE, correction_id="unused"
+            )
+            text = path.read_text(encoding="utf-8")
+            _write_exact_text(
+                path,
+                text,
+                newline=newline,
+                final_newline=final_newline,
+                bom=bom,
+            )
     return _commit(pages, "Synthetic prior public state"), story
 
 
-def _build_case(tmp_path: Path, *, with_approval: bool = True) -> dict[str, object]:
+def _build_case(
+    tmp_path: Path,
+    *,
+    with_approval: bool = True,
+    text_format: tuple[str, bool, bool] | None = None,
+) -> dict[str, object]:
     pages = tmp_path / "pages"
     source = tmp_path / "source"
     inputs = tmp_path / "inputs"
     proposal_path = tmp_path / "proposal.json"
-    pages_head, story = _make_pages(pages)
+    pages_head, story = _make_pages(pages, text_format=text_format)
     _init_repo(source, "feature")
 
     lineage = build_gaza_published_story_lineage(
@@ -516,13 +560,17 @@ def test_cli_executes_complete_nonpublication_workflow(tmp_path: Path) -> None:
 def test_story_scoped_html_updates_today_and_body_only() -> None:
     source = _synthetic_edition_html()
     rendered = _render_synthetic_html(source)
-    notice = _correction_notice_html(_synthetic_correction())
+    correction = _synthetic_correction()
+    reader = _reader_correction_copy(correction)
+    notice = _correction_notice_html(correction)
     expected = source.replace(
         f"<p>{PRIOR}</p>",
-        f'<p><a href="#{STORY_ID}">{CORRECTED}</a></p>',
+        f'<p><a href="#{STORY_ID}">{reader.today_update}</a></p>',
         1,
     )
-    expected = expected.replace(f"<p>{PRIOR}</p>", f"<p>{CORRECTED}</p>", 1)
+    expected = expected.replace(
+        f"<p>{PRIOR}</p>", f"<p>{reader.story_update}</p>", 1
+    )
     expected = expected.replace(
         f"<article><h3>{TITLE}</h3>",
         f'<article id="{STORY_ID}"><h3>{TITLE}</h3>',
@@ -652,17 +700,193 @@ def test_story_scoped_html_rejects_changed_owning_date() -> None:
         _render_synthetic_html(source)
 
 
-def test_story_scoped_html_escapes_corrected_claim() -> None:
+def test_story_scoped_html_does_not_expose_review_machine_wording() -> None:
     corrected = 'Corrected & attributed <two> "deaths".'
     rendered = _render_synthetic_html(corrected_claim=corrected)
-    assert "Corrected &amp; attributed &lt;two&gt; \"deaths\"." in rendered
     assert "Corrected & attributed <two>" not in rendered
+    assert "Corrected &amp; attributed &lt;two&gt;" not in rendered
+    assert _reader_correction_copy(_synthetic_correction()).story_update in rendered
 
 
 def test_story_scoped_html_rejects_malformed_markup() -> None:
     source = _synthetic_edition_html().replace("</article>", "", 1)
     with pytest.raises(CorrectionValidationError, match="mismatched|unclosed|malformed"):
         _render_synthetic_html(source)
+
+
+@pytest.mark.parametrize(
+    ("newline", "final_newline", "bom"),
+    [
+        ("\n", False, False),
+        ("\n", True, False),
+        ("\r\n", False, False),
+        ("\r\n", True, True),
+    ],
+)
+def test_text_artifact_preserves_utf8_byte_conventions(
+    tmp_path: Path,
+    newline: str,
+    final_newline: bool,
+    bom: bool,
+) -> None:
+    path = tmp_path / "artifact.html"
+    _write_exact_text(
+        path,
+        "<p>Gaza \u2014 non-ASCII</p>\n<p>unchanged</p>",
+        newline=newline,
+        final_newline=final_newline,
+        bom=bom,
+    )
+    artifact = _read_text_artifact(path, "synthetic artifact")
+    output = artifact.encode(
+        artifact.text.replace("Gaza", "Corrected Gaza", 1), "synthetic artifact"
+    )
+    assert output.startswith(b"\xef\xbb\xbf") is bom
+    body = output[3:] if bom else output
+    assert (b"\r\n" in body) is (newline == "\r\n")
+    assert b"\n" not in body.replace(b"\r\n", b"") if newline == "\r\n" else b"\r" not in body
+    assert body.endswith(newline.encode("ascii")) is final_newline
+    assert "non-ASCII" in body.decode("utf-8")
+
+
+@pytest.mark.parametrize(
+    ("payload", "message"),
+    [
+        (b"one\r\ntwo\n", "mixed newlines"),
+        (b"one\rtwo", "bare-CR"),
+        (b"\xff\xfe", "non-UTF-8"),
+    ],
+)
+def test_text_artifact_rejects_ambiguous_or_unsupported_input(
+    tmp_path: Path, payload: bytes, message: str
+) -> None:
+    path = tmp_path / "invalid.txt"
+    path.write_bytes(payload)
+    with pytest.raises(CorrectionValidationError, match=message):
+        _read_text_artifact(path, "synthetic artifact")
+
+
+@pytest.mark.parametrize(
+    ("newline", "final_newline", "bom"),
+    [("\n", False, False), ("\r\n", True, True)],
+)
+def test_proposal_preserves_existing_text_bytes_and_edition_is_exactly_reversible(
+    tmp_path: Path,
+    newline: str,
+    final_newline: bool,
+    bom: bool,
+) -> None:
+    case = _build_case(
+        tmp_path,
+        with_approval=False,
+        text_format=(newline, final_newline, bom),
+    )
+    correction = case["correction"]
+    reader = _reader_correction_copy(correction)
+    preview_root = case["inputs"] / "preview"
+
+    original_path = case["pages"] / REPLACEMENT_PATHS["edition_html"].format(
+        date=DATE, correction_id=correction["correction_id"]
+    )
+    preview_path = preview_root / REPLACEMENT_PATHS["edition_html"].format(
+        date=DATE, correction_id=correction["correction_id"]
+    )
+    original = original_path.read_bytes()
+    preview = preview_path.read_bytes()
+    prefix = b"\xef\xbb\xbf" if bom else b""
+    assert preview.startswith(prefix)
+    preview_text = preview[len(prefix):].decode("utf-8")
+    reversed_text = preview_text.replace(
+        f'<p><a href="#{STORY_ID}">{html.escape(reader.today_update, quote=False)}</a></p>',
+        f"<p>{PRIOR}</p>",
+        1,
+    ).replace(
+        f"<p>{html.escape(reader.story_update, quote=False)}</p>",
+        f"<p>{PRIOR}</p>",
+        1,
+    ).replace(
+        f'<article id="{STORY_ID}">',
+        "<article>",
+        1,
+    ).replace(
+        _correction_notice_html(correction),
+        "",
+        1,
+    )
+    assert prefix + reversed_text.encode("utf-8") == original
+
+    for role in {
+        "rss", "original_transcript", "podcast", "audio_podcast",
+        "audio_index", "gaza_index", "gaza_archive", "root_index",
+    }:
+        relative = REPLACEMENT_PATHS[role].format(
+            date=DATE, correction_id=correction["correction_id"]
+        )
+        before = (case["pages"] / relative).read_bytes()
+        after = (preview_root / relative).read_bytes()
+        common_prefix = os.path.commonprefix((before, after))
+        prefix_length = len(common_prefix)
+        common_suffix_length = 0
+        while (
+            common_suffix_length < len(before) - prefix_length
+            and before[-1 - common_suffix_length] == after[-1 - common_suffix_length]
+        ):
+            common_suffix_length += 1
+        assert before == (
+            after[:prefix_length]
+            + (after[len(after) - common_suffix_length:] if common_suffix_length else b"")
+        )
+
+
+def test_public_copy_is_reader_facing_while_machine_identity_remains_structured(
+    tmp_path: Path,
+) -> None:
+    case = _build_case(tmp_path, with_approval=False)
+    correction = case["correction"]
+    reader = _reader_correction_copy(correction)
+    inputs = case["inputs"]
+    preview_root = inputs / "preview"
+    audio_request = json.loads((inputs / "audio_request.json").read_text(encoding="utf-8"))
+    script = audio_request["script_text"]
+    assert script == reader.audio_script
+    assert "August 29" in script
+    assert correction["correction_id"] not in script
+    assert STORY_ID not in script
+    assert DATE not in script and CORRECTION_DATE not in script
+    assert "affiliation" not in script.casefold()
+
+    for role in ("rss", "podcast", "audio_podcast"):
+        relative = REPLACEMENT_PATHS[role].format(
+            date=DATE, correction_id=correction["correction_id"]
+        )
+        root = ElementTree.fromstring((preview_root / relative).read_bytes())
+        item = next(
+            node for node in root.findall(".//item")
+            if node.findtext("guid") == correction["correction_id"]
+        )
+        description = item.findtext("description", default="")
+        assert description == reader.feed_description
+        assert " | " not in description
+        assert correction["correction_id"] not in description
+        assert STORY_ID not in description
+
+    edition_relative = REPLACEMENT_PATHS["edition_html"].format(
+        date=DATE, correction_id=correction["correction_id"]
+    )
+    edition = (preview_root / edition_relative).read_text(encoding="utf-8-sig")
+    assert f'href="#{STORY_ID}">{reader.today_update}</a>' in edition
+    assert reader.notice in edition
+    assert "originally reported, citing Source A" in edition
+    curation = json.loads(
+        (preview_root / REPLACEMENT_PATHS["curation_manifest"].format(
+            date=DATE, correction_id=correction["correction_id"]
+        )).read_text(encoding="utf-8-sig")
+    )
+    story = next(row for row in curation if row["story_id"] == STORY_ID)
+    assert story["casualty_counts"] == {"new_deaths": 2}
+    assert "new_injuries" not in story["casualty_counts"]
+    assert story["injury_disagreement"]["unresolved"] is True
+    assert story["correction_history"][0]["correction_id"] == correction["correction_id"]
 
 
 def test_cli_help_works_without_pythonpath_from_repo_root() -> None:

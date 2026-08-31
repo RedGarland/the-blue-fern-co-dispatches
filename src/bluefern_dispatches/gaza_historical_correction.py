@@ -21,6 +21,7 @@ from datetime import datetime
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 from xml.etree import ElementTree
 
 from .historical_agent_archive import validate_gaza_published_story_lineage
@@ -82,6 +83,75 @@ NEW_ROLES = {
 
 class CorrectionValidationError(ValueError):
     """The proposed correction failed a closed validation boundary."""
+
+
+_UTF8_BOM = b"\xef\xbb\xbf"
+
+
+@dataclass(frozen=True)
+class _TextArtifact:
+    text: str
+    bom: bytes
+    newline: str
+    final_newline: bool
+
+    def encode(self, text: str, label: str) -> bytes:
+        detected = _text_newline_state(text, label)
+        if detected[0] is not None and detected[0] != self.newline:
+            raise CorrectionValidationError(f"{label} changed newline convention")
+        if detected[1] != self.final_newline:
+            raise CorrectionValidationError(f"{label} changed final-newline state")
+        try:
+            return self.bom + text.encode("utf-8")
+        except UnicodeEncodeError as exc:
+            raise CorrectionValidationError(f"{label} is not encodable as UTF-8") from exc
+
+
+def _text_newline_state(text: str, label: str) -> tuple[str | None, bool]:
+    without_crlf = text.replace("\r\n", "")
+    if "\r" in without_crlf:
+        raise CorrectionValidationError(f"{label} has unsupported bare-CR newlines")
+    has_crlf = "\r\n" in text
+    has_lf = "\n" in without_crlf
+    if has_crlf and has_lf:
+        raise CorrectionValidationError(f"{label} has ambiguous mixed newlines")
+    newline = "\r\n" if has_crlf else "\n" if has_lf else None
+    final_newline = text.endswith("\r\n" if has_crlf else "\n") if newline else False
+    return newline, final_newline
+
+
+def _read_text_artifact(path: Path, label: str) -> _TextArtifact:
+    raw = path.read_bytes()
+    bom = _UTF8_BOM if raw.startswith(_UTF8_BOM) else b""
+    body = raw[len(bom):]
+    try:
+        text = body.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise CorrectionValidationError(f"{label} uses an unsupported non-UTF-8 encoding") from exc
+    newline, final_newline = _text_newline_state(text, label)
+    return _TextArtifact(
+        text=text,
+        bom=bom,
+        newline=newline or "\n",
+        final_newline=final_newline,
+    )
+
+
+def _json_document_like(value: Any, artifact: _TextArtifact, label: str) -> bytes:
+    text = json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
+    if artifact.newline != "\n":
+        text = text.replace("\n", artifact.newline)
+    if not artifact.final_newline:
+        text = text[:-len(artifact.newline)]
+    return artifact.encode(text, label)
+
+
+def _load_json_artifact(path: Path, label: str) -> tuple[Any, _TextArtifact]:
+    artifact = _read_text_artifact(path, label)
+    try:
+        return json.loads(artifact.text), artifact
+    except json.JSONDecodeError as exc:
+        raise CorrectionValidationError(f"{label} is not readable canonical JSON: {exc}") from exc
 
 
 _VOID_HTML_TAGS = {
@@ -545,42 +615,189 @@ def _public_correction_record(correction: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _correction_script(correction: dict[str, Any]) -> str:
-    return (
-        f"Formal correction {correction['correction_id']} for story {correction['story_id']}. "
-        f"The story remains part of the {correction['owning_edition_date']} Gaza edition. "
-        f"This correction was recorded on {correction['correction_date']}. "
-        f"Prior claim: {correction['prior_claim']} "
-        f"Corrected claim: {correction['corrected_claim']} "
-        f"Attribution: {correction['source_attribution']}. "
-        "The injury count remains unresolved between the attributed sources."
+@dataclass(frozen=True)
+class _ReaderCorrectionCopy:
+    heading: str
+    notice: str
+    story_update: str
+    today_update: str
+    audio_script: str
+    feed_description: str
+    source_labels: dict[str, str]
+
+
+def _natural_date(value: Any, label: str, *, include_year: bool = True) -> str:
+    try:
+        parsed = datetime.strptime(str(value), "%Y-%m-%d")
+    except ValueError as exc:
+        raise CorrectionValidationError(f"{label} is not a valid calendar date") from exc
+    rendered = f"{parsed.strftime('%B')} {parsed.day}"
+    return f"{rendered}, {parsed.year}" if include_year else rendered
+
+
+def _number_word(value: int) -> str:
+    words = (
+        "zero", "one", "two", "three", "four", "five", "six", "seven",
+        "eight", "nine", "ten", "eleven", "twelve",
     )
+    return words[value] if 0 <= value < len(words) else str(value)
+
+
+def _casualty_phrase(value: int, outcome: str) -> str:
+    subject = "person" if value == 1 else "people"
+    verb = "was" if value == 1 else "were"
+    return f"{_number_word(value)} {subject} {verb} {outcome}"
+
+
+def _casualty_count_key(correction: dict[str, Any]) -> str:
+    field_name = str((correction.get("casualty_change") or {}).get("field") or "")
+    prefix = "casualty_counts."
+    if not field_name.startswith(prefix) or not field_name[len(prefix):]:
+        raise CorrectionValidationError("correction casualty field is not a bounded story count")
+    return field_name[len(prefix):]
+
+
+def _evidence_source_label(item: dict[str, Any]) -> str:
+    passage = str(item.get("supporting_passage") or "").strip()
+    match = re.match(
+        r"^(.+?)(?:'s|\s+(?:reported|described|said|stated|documented)\b)",
+        passage,
+        flags=re.IGNORECASE,
+    )
+    if match:
+        return match.group(1).strip()
+    host = (urlsplit(str(item.get("url") or "")).hostname or "").lower()
+    if host.startswith("www."):
+        host = host[4:]
+    if not host:
+        raise CorrectionValidationError("correction evidence lacks a reader-facing source label")
+    return host
+
+
+def _join_names(values: list[str]) -> str:
+    if len(values) == 1:
+        return values[0]
+    if len(values) == 2:
+        return f"{values[0]} and {values[1]}"
+    return ", ".join(values[:-1]) + f", and {values[-1]}"
+
+
+def _reader_correction_copy(correction: dict[str, Any]) -> _ReaderCorrectionCopy:
+    prior = str(correction["prior_claim"]).strip()
+    prior_without_period = prior[:-1] if prior.endswith(".") else prior
+    prior_match = re.fullmatch(
+        r"(?P<source>.+?)\s+reported\s+(?P<deaths>\d+)\s+killed\s+and\s+"
+        r"(?P<injuries>\d+)\s+injured(?P<context>.*)",
+        prior_without_period,
+        flags=re.IGNORECASE,
+    )
+    if not prior_match:
+        raise CorrectionValidationError(
+            "correction prior claim cannot be rendered as bounded reader-facing casualty copy"
+        )
+    prior_deaths = int(prior_match.group("deaths"))
+    prior_injuries = int(prior_match.group("injuries"))
+    change = correction.get("casualty_change") or {}
+    if prior_deaths != change.get("previous_value"):
+        raise CorrectionValidationError("reader-facing prior death count differs from correction model")
+    corrected_deaths = change.get("corrected_value")
+    if not isinstance(corrected_deaths, int):
+        raise CorrectionValidationError("reader-facing corrected death count is not an integer")
+    context = prior_match.group("context").strip()
+    context = f" {context}" if context else ""
+
+    evidence = correction.get("evidence_references")
+    reports = (correction.get("injury_disagreement") or {}).get("reports")
+    if not isinstance(evidence, list) or not evidence or not isinstance(reports, list) or len(reports) < 2:
+        raise CorrectionValidationError("reader-facing correction lacks disputed source evidence")
+    labels_by_url = {
+        str(item.get("url") or ""): _evidence_source_label(item)
+        for item in evidence
+        if isinstance(item, dict)
+    }
+    labeled_reports: list[tuple[str, int]] = []
+    for report in reports:
+        if not isinstance(report, dict) or not isinstance(report.get("value"), int):
+            raise CorrectionValidationError("reader-facing injury report is incomplete")
+        url = str(report.get("source_url") or "")
+        label = labels_by_url.get(url)
+        if not label:
+            raise CorrectionValidationError("injury report lacks matching attributed evidence")
+        labeled_reports.append((label, report["value"]))
+    if len({label for label, _ in labeled_reports}) != len(labeled_reports):
+        raise CorrectionValidationError("reader-facing injury sources are ambiguous")
+    correcting_sources = _join_names([label for label, _ in labeled_reports])
+    injury_parts = []
+    for index, (label, value) in enumerate(labeled_reports):
+        count = _number_word(value)
+        detail = f"{count} {'person' if value == 1 else 'people'} injured" if index == 0 else count
+        injury_parts.append(f"{label} reported {detail}")
+    injury_reports = (
+        f"{injury_parts[0]}, while {injury_parts[1]}"
+        if len(injury_parts) == 2
+        else "; ".join(injury_parts[:-1]) + f"; and {injury_parts[-1]}"
+    )
+    prior_source = prior_match.group("source").strip()
+    edition_date = _natural_date(correction["owning_edition_date"], "owning edition", include_year=False)
+    correction_date = _natural_date(correction["correction_date"], "correction date")
+    prior_fact = (
+        f"{_casualty_phrase(prior_deaths, 'killed')} and "
+        f"{_number_word(prior_injuries)} {'person was' if prior_injuries == 1 else 'were'} injured"
+        f"{context}"
+    )
+    corrected_fact = f"{_casualty_phrase(corrected_deaths, 'killed')}{context}"
+    story_update = (
+        f"Reporting from {correcting_sources} said {corrected_fact}. "
+        f"{injury_reports}; the injury count remains unresolved."
+    )
+    notice = (
+        f"The {edition_date} Gaza dispatch originally reported, citing {prior_source}, "
+        f"that {prior_fact}. {story_update} "
+        "The story has been updated to reflect the revised death toll and the differing injury reports."
+    )
+    audio_script = (
+        f"A correction to our {edition_date} Gaza dispatch: The original story, citing "
+        f"{prior_source}, reported that {prior_fact}. Reporting from {correcting_sources} "
+        f"said {_casualty_phrase(corrected_deaths, 'killed')}. {injury_reports}, so the injury "
+        "count remains unresolved."
+    )
+    heading = f"Correction — {correction_date}"
+    return _ReaderCorrectionCopy(
+        heading=heading,
+        notice=notice,
+        story_update=story_update,
+        today_update=f"Corrected: {story_update}",
+        audio_script=audio_script,
+        feed_description=f"{heading}. {notice}",
+        source_labels=labels_by_url,
+    )
+
+
+def _correction_script(correction: dict[str, Any]) -> str:
+    return _reader_correction_copy(correction).audio_script
 
 
 def _correction_notice_html(correction: dict[str, Any]) -> str:
     record = _public_correction_record(correction)
+    reader = _reader_correction_copy(correction)
     links = "".join(
         f'<li><a href="{html.escape(item["url"], quote=True)}">'
-        f'{html.escape(item["role"], quote=False)}</a>: '
+        f'{html.escape(reader.source_labels[item["url"]], quote=False)}</a>: '
         f'{html.escape(item["supporting_passage"], quote=False)}</li>'
         for item in record["evidence_references"]
     )
     return (
         f'<section class="formal-correction" id="correction-{record["correction_id"]}">'
-        f'<p><strong>Formal correction {record["correction_id"]}</strong></p>'
-        f'<p>Story: {record["story_id"]}. Owning edition: {record["owning_edition_date"]}. '
-        f'Correction date: {record["correction_date"]}.</p>'
-        f'<p>Prior claim: {html.escape(record["prior_claim"], quote=False)}</p>'
-        f'<p>Corrected claim: {html.escape(record["corrected_claim"], quote=False)}</p>'
-        f'<p>Attribution: {html.escape(record["source_attribution"], quote=False)}. '
-        "The injury count remains unresolved.</p>"
+        f'<h2>{html.escape(reader.heading, quote=False)}</h2>'
+        f'<p>{html.escape(reader.notice, quote=False)}</p>'
+        "<p><strong>Sources</strong></p>"
         f'<ul>{links}</ul></section>'
     )
 
 
 def _append_before(text: str, marker: str, addition: str, label: str) -> str:
-    if marker not in text:
-        raise CorrectionValidationError(f"{label} lacks the required insertion boundary")
+    if text.count(marker) != 1:
+        raise CorrectionValidationError(f"{label} lacks one unambiguous insertion boundary")
     return text.replace(marker, addition + marker, 1)
 
 
@@ -632,7 +849,7 @@ def _render_story_scoped_edition_html(
     nodes = _StrictHtmlTreeParser(source).finish()
     story_id = str(correction["story_id"])
     prior_claim = str(correction["prior_claim"])
-    corrected_claim = str(correction["corrected_claim"])
+    reader = _reader_correction_copy(correction)
 
     story_matches = [
         (index, row)
@@ -771,17 +988,18 @@ def _render_story_scoped_edition_html(
             "edition HTML prior claim has an unrelated or ambiguous occurrence"
         )
 
-    escaped_claim = html.escape(corrected_claim, quote=False)
+    escaped_today = html.escape(reader.today_update, quote=False)
+    escaped_story = html.escape(reader.story_update, quote=False)
     replacements = [
         (
             today_paragraph.start,
             today_paragraph.end or today_paragraph.start,
-            f'<p><a href="{html.escape(expected_anchor, quote=True)}">{escaped_claim}</a></p>',
+            f'<p><a href="{html.escape(expected_anchor, quote=True)}">{escaped_today}</a></p>',
         ),
         (
             body_paragraph.start,
             body_paragraph.end or body_paragraph.start,
-            f"<p>{escaped_claim}</p>",
+            f"<p>{escaped_story}</p>",
         ),
         (
             article.end_tag_start or article.start_tag_end,
@@ -807,11 +1025,12 @@ def _render_preview_payloads(
     audio_request: dict[str, Any],
 ) -> dict[str, bytes]:
     record = _public_correction_record(correction)
+    reader = _reader_correction_copy(correction)
     payloads: dict[str, bytes] = {}
     date = correction["owning_edition_date"]
 
     curation_path = _repo_path(pages_root, f"gaza/editions/{date}/curation_manifest.json", "curation")
-    curation = _load_json(curation_path, "curation manifest")
+    curation, curation_artifact = _load_json_artifact(curation_path, "curation manifest")
     if not isinstance(curation, list):
         raise CorrectionValidationError("curation manifest must remain a story list")
     matches = [row for row in curation if isinstance(row, dict) and row.get("story_id") == correction["story_id"]]
@@ -832,31 +1051,39 @@ def _render_preview_payloads(
 
     notice = _correction_notice_html(correction)
     edition_html_path = _repo_path(pages_root, f"gaza/editions/{date}/index.html", "edition HTML")
+    edition_artifact = _read_text_artifact(edition_html_path, "edition HTML")
     edition_html = _render_story_scoped_edition_html(
-        edition_html_path.read_text(encoding="utf-8"),
+        edition_artifact.text,
         correction=correction,
         curation=curation,
         sources=sources,
     )
-    payloads["edition_html"] = edition_html.encode("utf-8")
+    payloads["edition_html"] = edition_artifact.encode(edition_html, "edition HTML")
 
-    story["summary"] = correction["corrected_claim"]
-    story["casualty_counts"] = {"new_deaths": 2}
+    story["summary"] = reader.story_update
+    casualty_change = correction["casualty_change"]
+    story["casualty_counts"] = {
+        _casualty_count_key(correction): casualty_change["corrected_value"]
+    }
     story["event_fingerprint"] = correction["stable_event_fingerprint"]
     story["injury_disagreement"] = correction["injury_disagreement"]
     story["correction_history"] = [record]
-    payloads["curation_manifest"] = _json_document(curation)
+    payloads["curation_manifest"] = _json_document_like(
+        curation, curation_artifact, "curation manifest"
+    )
 
-    dedupe = _load_json(
+    dedupe, dedupe_artifact = _load_json_artifact(
         _repo_path(pages_root, f"gaza/editions/{date}/dedupe_report.json", "dedupe"),
         "dedupe report",
     )
     if not isinstance(dedupe, dict) or dedupe.get("corrections") not in (None, []):
         raise CorrectionValidationError("dedupe report already has correction state")
     dedupe["corrections"] = [record]
-    payloads["dedupe_report"] = _json_document(dedupe)
+    payloads["dedupe_report"] = _json_document_like(
+        dedupe, dedupe_artifact, "dedupe report"
+    )
 
-    edition = _load_json(
+    edition, edition_artifact = _load_json_artifact(
         _repo_path(pages_root, f"gaza/editions/{date}/edition_manifest.json", "edition manifest"),
         "edition manifest",
     )
@@ -864,10 +1091,12 @@ def _render_preview_payloads(
         raise CorrectionValidationError("edition manifest already has correction state")
     edition_record = {**record, "aggregates_recomputed_from_corrected_story_versions": True}
     edition["corrections"] = [edition_record]
-    payloads["edition_manifest"] = _json_document(edition)
+    payloads["edition_manifest"] = _json_document_like(
+        edition, edition_artifact, "edition manifest"
+    )
     payloads["correction_manifest"] = _json_document(record)
 
-    prior_audio = _load_json(
+    prior_audio, prior_audio_artifact = _load_json_artifact(
         _repo_path(pages_root, f"gaza/audio/{date}.json", "prior audio metadata"),
         "prior audio metadata",
     )
@@ -880,7 +1109,9 @@ def _render_preview_payloads(
             "replacement_audio_url": f"/gaza/audio/corrections/{correction['correction_id']}.mp3",
         }
     )
-    payloads["original_audio_metadata"] = _json_document(prior_audio)
+    payloads["original_audio_metadata"] = _json_document_like(
+        prior_audio, prior_audio_artifact, "prior audio metadata"
+    )
     payloads["correction_audio_metadata"] = _json_document(
         {
             "audio_status": "formal_correction",
@@ -900,10 +1131,11 @@ def _render_preview_payloads(
     )
 
     prior_transcript_path = _repo_path(pages_root, f"gaza/audio/{date}-transcript.html", "prior transcript")
-    prior_transcript = prior_transcript_path.read_text(encoding="utf-8")
-    payloads["original_transcript"] = _append_before(
-        prior_transcript, "</main>", notice, "prior transcript"
-    ).encode("utf-8")
+    prior_transcript = _read_text_artifact(prior_transcript_path, "prior transcript")
+    payloads["original_transcript"] = prior_transcript.encode(
+        _append_before(prior_transcript.text, "</main>", notice, "prior transcript"),
+        "prior transcript",
+    )
     payloads["correction_transcript"] = (
         "<!doctype html><html><body><main>" + notice +
         f"<p>{html.escape(audio_request['script_text'], quote=False)}</p></main></body></html>"
@@ -912,18 +1144,15 @@ def _render_preview_payloads(
         "<!doctype html><html><body><main>" + notice + "</main></body></html>"
     ).encode("utf-8")
 
-    description = " | ".join(
-        str(correction[field])
-        for field in ("correction_id", "story_id", "correction_date", "prior_claim", "corrected_claim")
-    )
+    description = reader.feed_description
     link = f"https://dispatches.thebluefernco.com/gaza/corrections/{correction['correction_id']}/"
     rss_item = (
-        "<item><title>Formal correction</title>"
+        f"<item><title>{html.escape(reader.heading, quote=False)}</title>"
         f"<link>{html.escape(link)}</link><guid isPermaLink=\"false\">{correction['correction_id']}</guid>"
         f"<description>{html.escape(description, quote=False)}</description></item>"
     )
     podcast_item = (
-        "<item><title>Formal correction</title>"
+        f"<item><title>{html.escape(reader.heading, quote=False)}</title>"
         f"<link>{html.escape(link)}</link><guid isPermaLink=\"false\">{correction['correction_id']}</guid>"
         f"<description>{html.escape(description, quote=False)}</description>"
         f"<enclosure url=\"https://dispatches.thebluefernco.com/gaza/audio/corrections/{correction['correction_id']}.mp3\" "
@@ -934,19 +1163,25 @@ def _render_preview_payloads(
         ("podcast", "gaza/podcast.xml", podcast_item),
         ("audio_podcast", "gaza/audio/podcast.xml", podcast_item),
     ):
-        current = _repo_path(pages_root, relative, role).read_text(encoding="utf-8")
-        payloads[role] = _append_before(current, "</channel>", item, role).encode("utf-8")
+        current = _read_text_artifact(_repo_path(pages_root, relative, role), role)
+        payloads[role] = current.encode(
+            _append_before(current.text, "</channel>", item, role), role
+        )
 
-    payloads["flash_briefing"] = _json_document(
+    flash_path = _repo_path(pages_root, "gaza/flash-briefing.json", "flash briefing")
+    _, flash_artifact = _load_json_artifact(flash_path, "flash briefing")
+    payloads["flash_briefing"] = _json_document_like(
         [
             {
                 "uid": correction["correction_id"],
                 "updateDate": correction["correction_date"],
-                "titleText": "Formal correction to Gaza historical report",
+                "titleText": reader.heading,
                 "mainText": audio_request["script_text"],
                 "redirectionUrl": link,
             }
-        ]
+        ],
+        flash_artifact,
+        "flash briefing",
     )
     for role, relative in (
         ("audio_index", "gaza/audio/index.html"),
@@ -954,9 +1189,16 @@ def _render_preview_payloads(
         ("gaza_archive", "gaza/archive.html"),
         ("root_index", "index.html"),
     ):
-        current = _repo_path(pages_root, relative, role).read_text(encoding="utf-8")
-        marker = "</main>" if "</main>" in current else "</body>"
-        payloads[role] = _append_before(current, marker, notice, role).encode("utf-8")
+        current = _read_text_artifact(_repo_path(pages_root, relative, role), role)
+        if "</main>" in current.text:
+            marker = "</main>"
+        elif "</body>" in current.text:
+            marker = "</body>"
+        else:
+            raise CorrectionValidationError(f"{role} lacks a bounded insertion marker")
+        payloads[role] = current.encode(
+            _append_before(current.text, marker, notice, role), role
+        )
     if set(payloads) != set(PREVIEW_PATHS):
         missing = sorted(set(PREVIEW_PATHS) - set(payloads))
         raise CorrectionValidationError(f"preview renderer is incomplete: {missing}")
@@ -1402,10 +1644,31 @@ def _validate_pages_and_representations(
     return by_role
 
 
-def _require_text_semantics(text: str, correction: dict[str, Any], role: str) -> None:
-    for field in ("correction_id", "story_id", "correction_date", "prior_claim", "corrected_claim"):
-        if str(correction[field]) not in text:
-            raise CorrectionValidationError(f"{role} does not visibly preserve correction {field}")
+def _require_reader_prose(
+    text: str,
+    correction: dict[str, Any],
+    role: str,
+    *,
+    expected: tuple[str, ...],
+) -> None:
+    normalized = " ".join(text.split())
+    for value in expected:
+        if " ".join(value.split()) not in normalized:
+            raise CorrectionValidationError(f"{role} lacks required reader-facing correction copy")
+    for field in ("correction_id", "story_id"):
+        if str(correction[field]) in normalized:
+            raise CorrectionValidationError(f"{role} exposes machine correction {field} as prose")
+    expected_copy = " ".join(" ".join(value.split()) for value in expected)
+    for field in ("owning_edition_date", "correction_date"):
+        if str(correction[field]) in expected_copy:
+            raise CorrectionValidationError(f"{role} exposes an ISO correction date as prose")
+
+
+def _visible_html_text(path: Path, role: str) -> str:
+    artifact = _read_text_artifact(path, role)
+    nodes = _StrictHtmlTreeParser(artifact.text).finish()
+    roots = [node for node in nodes if node.parent is None]
+    return " ".join(node.text for node in roots)
 
 
 def _validate_json_semantics(path: Path, role: str, correction: dict[str, Any]) -> None:
@@ -1417,11 +1680,15 @@ def _validate_json_semantics(path: Path, role: str, correction: dict[str, Any]) 
         if len(matches) != 1:
             raise CorrectionValidationError("curation must preserve exactly one owning story")
         story = matches[0]
-        if story.get("summary") != correction["corrected_claim"]:
+        reader = _reader_correction_copy(correction)
+        if story.get("summary") != reader.story_update:
             raise CorrectionValidationError("curation story does not use reviewed corrected wording")
         counts = story.get("casualty_counts")
-        if counts != {"new_deaths": 2}:
-            raise CorrectionValidationError("curation must replace deaths with two and omit a resolved injury total")
+        casualty_change = correction["casualty_change"]
+        if counts != {_casualty_count_key(correction): casualty_change["corrected_value"]}:
+            raise CorrectionValidationError(
+                "curation must replace the corrected casualty field and omit a resolved injury total"
+            )
         if story.get("event_fingerprint") != correction["stable_event_fingerprint"]:
             raise CorrectionValidationError("curation changed stable event identity")
         history = story.get("correction_history")
@@ -1465,13 +1732,33 @@ def _validate_json_semantics(path: Path, role: str, correction: dict[str, Any]) 
         if payload.get("story_id") != correction["story_id"] or payload.get("owning_edition_date") != correction["owning_edition_date"]:
             raise CorrectionValidationError("correction audio was modeled as a new story or edition")
         script = str(payload.get("script_text") or "")
-        _require_text_semantics(script, correction, role)
+        if script != _correction_script(correction):
+            raise CorrectionValidationError("correction audio script is not validator-derived")
+        _require_reader_prose(
+            script,
+            correction,
+            role,
+            expected=(_reader_correction_copy(correction).audio_script,),
+        )
         if payload.get("injury_disagreement") != correction["injury_disagreement"]:
             raise CorrectionValidationError("correction audio resolves the injury disagreement")
     elif role == "flash_briefing":
         if not isinstance(payload, list) or len(payload) != 1:
             raise CorrectionValidationError("flash briefing correction must be one atomic update")
-        _require_text_semantics(_canonical_bytes(payload).decode("utf-8"), correction, role)
+        item = payload[0]
+        reader = _reader_correction_copy(correction)
+        if not isinstance(item, dict) or item.get("uid") != correction["correction_id"]:
+            raise CorrectionValidationError("flash briefing lacks its machine correction identity")
+        if item.get("updateDate") != correction["correction_date"]:
+            raise CorrectionValidationError("flash briefing machine date differs")
+        if item.get("titleText") != reader.heading or item.get("mainText") != reader.audio_script:
+            raise CorrectionValidationError("flash briefing reader copy differs")
+        _require_reader_prose(
+            str(item["titleText"]) + " " + str(item["mainText"]),
+            correction,
+            role,
+            expected=(reader.heading, reader.audio_script),
+        )
 
 
 def _validate_feed(path: Path, role: str, correction: dict[str, Any]) -> None:
@@ -1488,11 +1775,22 @@ def _validate_feed(path: Path, role: str, correction: dict[str, Any]) -> None:
     if len(matches) != 1:
         raise CorrectionValidationError(f"{role} requires one correction item with a unique correction GUID")
     item = matches[0]
+    reader = _reader_correction_copy(correction)
     link = item.findtext("link", default="")
+    title = item.findtext("title", default="")
     description = item.findtext("description", default="")
     if correction["correction_id"] not in link:
         raise CorrectionValidationError(f"{role} correction item is not linked to the correction record")
-    _require_text_semantics(description, correction, role)
+    if title != reader.heading or description != reader.feed_description:
+        raise CorrectionValidationError(f"{role} correction item lacks readable correction copy")
+    if " | " in description:
+        raise CorrectionValidationError(f"{role} exposes a pipe-delimited machine record")
+    _require_reader_prose(
+        title + " " + description,
+        correction,
+        role,
+        expected=(reader.heading, reader.notice),
+    )
     if role in {"podcast", "audio_podcast"}:
         enclosure = item.find("enclosure")
         if enclosure is None or correction["correction_id"] not in enclosure.attrib.get("url", ""):
@@ -1513,11 +1811,19 @@ def _validate_representation_semantics(
         elif role in {"rss", "podcast", "audio_podcast"}:
             _validate_feed(path, role, correction)
         else:
-            try:
-                text = path.read_text(encoding="utf-8")
-            except UnicodeError as exc:
-                raise CorrectionValidationError(f"{role} is not UTF-8 text") from exc
-            _require_text_semantics(text, correction, role)
+            visible = _visible_html_text(path, role)
+            reader = _reader_correction_copy(correction)
+            expected = [reader.heading, reader.notice]
+            if role == "edition_html":
+                expected.extend((reader.today_update, reader.story_update))
+            elif role == "correction_transcript":
+                expected.append(reader.audio_script)
+            _require_reader_prose(
+                visible,
+                correction,
+                role,
+                expected=tuple(expected),
+            )
 
 
 def _load_independent_approval(

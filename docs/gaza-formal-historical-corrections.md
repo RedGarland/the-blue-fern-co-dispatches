@@ -45,11 +45,16 @@ sources disagree. Both attributed injury reports remain in the correction record
 The edition manifest must attest that aggregates were recomputed from corrected
 story versions.
 
-Every corrected representation must show the prior claim, corrected claim,
-correction ID, story ID, and correction date. The existing edition and audio are
-marked as corrected or superseded rather than silently erased. RSS and both
-podcast feeds require a distinct correction item, URL, GUID, and (for podcasts) a
-distinct approved correction-audio enclosure.
+Reader-facing surfaces use natural dates and ordinary correction prose. They do
+not display or speak correction IDs, story IDs, version names, ISO dates, or a
+pipe-delimited metadata record. Those machine identities remain in correction
+manifests, structured metadata, feed GUIDs, technical links, hashes, and approval
+materials. The existing edition and audio are marked as corrected or superseded
+rather than silently erased. Today's Read visibly marks and links the corrected
+story, and the full story retains a visible correction notice with attributed
+source links and unresolved injury reports. RSS and both podcast feeds require a
+readable correction item, distinct URL and GUID, and (for podcasts) a distinct
+approved correction-audio enclosure.
 
 ## Audio boundary
 
@@ -116,6 +121,14 @@ stable story's unique curation position and source-manifest URLs. It requires
 one matching Today’s Read projection and one matching full article, then adds
 an explicit story anchor/link to the corrected preview. It does not globally
 replace matching prose or reserialize the page.
+
+Existing UTF-8 HTML/XML public text artifacts are read as bytes before patching.
+The renderer preserves an existing UTF-8 BOM, CRLF-versus-LF convention, final
+newline state, and all bytes outside the validated insertion or story-owned
+ranges. Mixed newline conventions, bare carriage returns, unsupported encodings,
+malformed markup, duplicate insertion boundaries, and ambiguous target ranges
+fail before output is created. New correction-only files continue to use the
+repository's canonical UTF-8/LF format.
 
 Run the commands below from the repository root. The wrapper bootstraps this
 checkout's local `src` directory, so no caller-supplied `PYTHONPATH` or globally

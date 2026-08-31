@@ -14,6 +14,13 @@ gaza/{raw,normalized,reports}
 ice/{raw,normalized,reports}
 ```
 
+Aggregate Food Line handoffs containing multiple fenced run envelopes use the
+separate event-recovery workflow documented in
+[`food-line-historical-event-recovery.md`](food-line-historical-event-recovery.md).
+It preserves the complete aggregate input, requires reviewed event clustering
+and explicit private dispositions, and remains outside current intake and all
+publication paths.
+
 Raw records are content-addressed by SHA-256, retain the original text and original bytes (base64), and are written atomically. Reimporting identical bytes is an idempotent no-op. Historical data is never treated as current merely because it was imported today. Event dates or intervals, source publication dates, agent detection dates, `captured_at`, `original_run_at`, `imported_at`, and normalization-maintenance times remain separate.
 
 ## Commands

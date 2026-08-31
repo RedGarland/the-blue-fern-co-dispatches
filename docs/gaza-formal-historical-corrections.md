@@ -111,6 +111,16 @@ resolved injury uncertainty, double-counted deaths, partial public surfaces,
 stale audio/feed/transcript content, new-edition behavior, and second-story
 behavior.
 
+For legacy edition HTML, the correction renderer binds the target through the
+stable story's unique curation position and source-manifest URLs. It requires
+one matching Today’s Read projection and one matching full article, then adds
+an explicit story anchor/link to the corrected preview. It does not globally
+replace matching prose or reserialize the page.
+
+Run the commands below from the repository root. The wrapper bootstraps this
+checkout's local `src` directory, so no caller-supplied `PYTHONPATH` or globally
+installed package is required.
+
 Example proposal creation:
 
 ```powershell

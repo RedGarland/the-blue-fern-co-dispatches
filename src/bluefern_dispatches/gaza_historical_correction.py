@@ -16,6 +16,9 @@ import re
 import shutil
 import subprocess
 import tempfile
+from dataclasses import dataclass, field
+from datetime import datetime
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 from xml.etree import ElementTree
@@ -79,6 +82,109 @@ NEW_ROLES = {
 
 class CorrectionValidationError(ValueError):
     """The proposed correction failed a closed validation boundary."""
+
+
+_VOID_HTML_TAGS = {
+    "area", "base", "br", "col", "embed", "hr", "img", "input", "link",
+    "meta", "param", "source", "track", "wbr",
+}
+
+
+@dataclass
+class _HtmlNode:
+    tag: str
+    attrs: dict[str, str | None]
+    start: int
+    start_tag_end: int
+    parent: "_HtmlNode | None"
+    end_tag_start: int | None = None
+    end: int | None = None
+    children: list["_HtmlNode"] = field(default_factory=list)
+    text_parts: list[str] = field(default_factory=list)
+
+    @property
+    def text(self) -> str:
+        return "".join(self.text_parts)
+
+
+class _StrictHtmlTreeParser(HTMLParser):
+    """Record exact element spans while rejecting malformed target HTML."""
+
+    def __init__(self, source: str) -> None:
+        super().__init__(convert_charrefs=True)
+        self.source = source
+        self.line_starts = [0]
+        self.line_starts.extend(index + 1 for index, char in enumerate(source) if char == "\n")
+        self.roots: list[_HtmlNode] = []
+        self.nodes: list[_HtmlNode] = []
+        self.stack: list[_HtmlNode] = []
+
+    def _offset(self) -> int:
+        line, column = self.getpos()
+        return self.line_starts[line - 1] + column
+
+    def _tag_end(self, start: int, raw_tag: str | None = None) -> int:
+        if raw_tag:
+            return start + len(raw_tag)
+        end = self.source.find(">", start)
+        if end < 0:
+            raise CorrectionValidationError("edition HTML contains an unterminated tag")
+        return end + 1
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        start = self._offset()
+        names = [name.lower() for name, _ in attrs]
+        if len(names) != len(set(names)):
+            raise CorrectionValidationError(
+                f"edition HTML has duplicate attributes on tag: {tag.lower()}"
+            )
+        parent = self.stack[-1] if self.stack else None
+        node = _HtmlNode(
+            tag.lower(), dict(attrs), start,
+            self._tag_end(start, self.get_starttag_text()), parent,
+        )
+        (parent.children if parent else self.roots).append(node)
+        self.nodes.append(node)
+        if node.tag in _VOID_HTML_TAGS:
+            node.end_tag_start = node.start_tag_end
+            node.end = node.start_tag_end
+        else:
+            self.stack.append(node)
+
+    def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        self.handle_starttag(tag, attrs)
+        if self.stack and self.stack[-1].tag == tag.lower():
+            node = self.stack.pop()
+            node.end_tag_start = node.start_tag_end
+            node.end = node.start_tag_end
+
+    def handle_endtag(self, tag: str) -> None:
+        normalized = tag.lower()
+        if not self.stack or self.stack[-1].tag != normalized:
+            raise CorrectionValidationError(
+                f"edition HTML has a mismatched closing tag: {normalized}"
+            )
+        node = self.stack.pop()
+        node.end_tag_start = self._offset()
+        node.end = self._tag_end(node.end_tag_start)
+
+    def handle_data(self, data: str) -> None:
+        for node in self.stack:
+            node.text_parts.append(data)
+
+    def finish(self) -> list[_HtmlNode]:
+        try:
+            self.feed(self.source)
+            self.close()
+        except CorrectionValidationError:
+            raise
+        except Exception as exc:
+            raise CorrectionValidationError(f"edition HTML is malformed: {exc}") from exc
+        if self.stack:
+            raise CorrectionValidationError(
+                f"edition HTML has an unclosed tag: {self.stack[-1].tag}"
+            )
+        return self.nodes
 
 
 def _canonical_bytes(value: Any) -> bytes:
@@ -478,6 +584,223 @@ def _append_before(text: str, marker: str, addition: str, label: str) -> str:
     return text.replace(marker, addition + marker, 1)
 
 
+def _normalized_html_text(node: _HtmlNode) -> str:
+    return " ".join(node.text.split())
+
+
+def _is_descendant(node: _HtmlNode, ancestor: _HtmlNode) -> bool:
+    current: _HtmlNode | None = node
+    while current is not None:
+        if current is ancestor:
+            return True
+        current = current.parent
+    return False
+
+
+def _descendants(nodes: list[_HtmlNode], ancestor: _HtmlNode, tag: str) -> list[_HtmlNode]:
+    return [node for node in nodes if node.tag == tag and _is_descendant(node, ancestor)]
+
+
+def _apply_html_replacements(
+    source: str, replacements: list[tuple[int, int, str]]
+) -> str:
+    result = source
+    previous_start = len(source) + 1
+    for start, end, replacement in sorted(replacements, reverse=True):
+        if start < 0 or end < start or end > len(source) or end > previous_start:
+            raise CorrectionValidationError("edition HTML correction ranges overlap or are invalid")
+        result = result[:start] + replacement + result[end:]
+        previous_start = start
+    return result
+
+
+def _render_story_scoped_edition_html(
+    source: str,
+    *,
+    correction: dict[str, Any],
+    curation: list[Any],
+    sources: list[Any],
+) -> str:
+    """Correct only the manifest-owned Today summary and full story article.
+
+    Legacy Gaza HTML did not emit story IDs. For that shape, ownership is
+    established by the stable story's unique curation ordinal (the generator's
+    first-three Today projection) and its source-manifest URL set. The corrected
+    preview emits an explicit story anchor and Today link for future validation.
+    """
+
+    nodes = _StrictHtmlTreeParser(source).finish()
+    story_id = str(correction["story_id"])
+    prior_claim = str(correction["prior_claim"])
+    corrected_claim = str(correction["corrected_claim"])
+
+    story_matches = [
+        (index, row)
+        for index, row in enumerate(curation)
+        if isinstance(row, dict) and row.get("story_id") == story_id
+    ]
+    if len(story_matches) != 1:
+        raise CorrectionValidationError(
+            "edition HTML target does not resolve to one curation story"
+        )
+    story_ordinal, story = story_matches[0]
+    if story_ordinal >= 3:
+        raise CorrectionValidationError(
+            "edition HTML target is outside the generator's Today’s Read projection"
+        )
+
+    today_headings = [
+        node for node in nodes
+        if node.tag == "h2" and _normalized_html_text(node) == "Today’s Read"
+    ]
+    glance_headings = [
+        node for node in nodes
+        if node.tag == "h2" and _normalized_html_text(node) == "At A Glance"
+    ]
+    if len(today_headings) != 1 or len(glance_headings) != 1:
+        raise CorrectionValidationError(
+            "edition HTML must contain one Today’s Read and one At A Glance boundary"
+        )
+    today_heading = today_headings[0]
+    glance_heading = glance_headings[0]
+    if today_heading.parent is None or today_heading.parent is not glance_heading.parent:
+        raise CorrectionValidationError("edition HTML summary boundaries do not share an owner")
+    siblings = today_heading.parent.children
+    today_index = siblings.index(today_heading)
+    glance_index = siblings.index(glance_heading)
+    if glance_index <= today_index:
+        raise CorrectionValidationError("edition HTML summary boundaries are reordered")
+    today_paragraphs = [
+        node for node in siblings[today_index + 1:glance_index] if node.tag == "p"
+    ]
+    # The first paragraph is the generated lead; the next three map to the
+    # first three curation rows in stable order.
+    target_summary_index = story_ordinal + 1
+    if target_summary_index >= len(today_paragraphs):
+        raise CorrectionValidationError("edition HTML lacks the target Today’s Read summary")
+    today_paragraph = today_paragraphs[target_summary_index]
+    if today_paragraph.text.count(prior_claim) != 1:
+        raise CorrectionValidationError(
+            "target Today’s Read summary does not contain the exact prior claim once"
+        )
+    today_links = _descendants(nodes, today_paragraph, "a")
+    expected_anchor = f"#{story_id}"
+    if today_links and (
+        len(today_links) != 1 or today_links[0].attrs.get("href") != expected_anchor
+    ):
+        raise CorrectionValidationError("target Today’s Read summary links to another story")
+
+    source_record_ids = {
+        str(value) for value in story.get("source_record_ids", []) if str(value)
+    }
+    expected_urls = {
+        str(value) for value in story.get("source_urls", []) if str(value)
+    }
+    matched_source_records = [
+        row for row in sources
+        if isinstance(row, dict) and str(row.get("source_record_id", "")) in source_record_ids
+    ]
+    if len(matched_source_records) != len(source_record_ids) or not source_record_ids:
+        raise CorrectionValidationError(
+            "edition HTML target source records do not resolve exactly in the source manifest"
+        )
+    for row in matched_source_records:
+        for field_name in ("url", "canonical_url", "resolved_canonical_url"):
+            value = str(row.get(field_name) or "")
+            if value:
+                expected_urls.add(value)
+    if not expected_urls:
+        raise CorrectionValidationError("edition HTML target has no manifest-backed source URL")
+
+    articles = [node for node in nodes if node.tag == "article"]
+    article_matches: list[_HtmlNode] = []
+    for article in articles:
+        hrefs = {
+            str(link.attrs.get("href") or "")
+            for link in _descendants(nodes, article, "a")
+        }
+        if hrefs & expected_urls:
+            article_matches.append(article)
+    if len(article_matches) != 1:
+        raise CorrectionValidationError(
+            "edition HTML target article does not resolve exactly by manifest source URL"
+        )
+    article = article_matches[0]
+    article_id = article.attrs.get("id")
+    if article_id not in (None, story_id):
+        raise CorrectionValidationError("edition HTML target article anchor changed")
+    headings = _descendants(nodes, article, "h3")
+    if len(headings) != 1 or _normalized_html_text(headings[0]) != str(story.get("title") or ""):
+        raise CorrectionValidationError("edition HTML target article title differs from curation")
+    try:
+        owning_date = datetime.strptime(
+            str(correction["owning_edition_date"]), "%Y-%m-%d"
+        )
+    except ValueError as exc:
+        raise CorrectionValidationError("edition HTML target owning date is invalid") from exc
+    rendered_date = f"{owning_date.strftime('%B')} {owning_date.day}, {owning_date.year}"
+    metadata = _descendants(nodes, article, "em")
+    if len(metadata) != 1 or rendered_date not in _normalized_html_text(metadata[0]):
+        raise CorrectionValidationError("edition HTML target article owning date changed")
+
+    body_paragraphs = [
+        node for node in _descendants(nodes, article, "p")
+        if node.text.count(prior_claim)
+    ]
+    if len(body_paragraphs) != 1 or body_paragraphs[0].text.count(prior_claim) != 1:
+        raise CorrectionValidationError(
+            "target article body does not contain the exact prior claim once"
+        )
+    body_paragraph = body_paragraphs[0]
+
+    # Count only the smallest owning elements so nested link text is not
+    # double-counted. Every occurrence must belong to one of the two selected
+    # story surfaces; a third or unrelated occurrence fails closed.
+    claim_nodes = [node for node in nodes if prior_claim in node.text]
+    leaf_claim_nodes = [
+        node for node in claim_nodes
+        if not any(prior_claim in child.text for child in node.children)
+    ]
+    occurrence_count = sum(node.text.count(prior_claim) for node in leaf_claim_nodes)
+    if occurrence_count != 2 or any(
+        not _is_descendant(node, today_paragraph)
+        and not _is_descendant(node, body_paragraph)
+        for node in leaf_claim_nodes
+    ):
+        raise CorrectionValidationError(
+            "edition HTML prior claim has an unrelated or ambiguous occurrence"
+        )
+
+    escaped_claim = html.escape(corrected_claim, quote=False)
+    replacements = [
+        (
+            today_paragraph.start,
+            today_paragraph.end or today_paragraph.start,
+            f'<p><a href="{html.escape(expected_anchor, quote=True)}">{escaped_claim}</a></p>',
+        ),
+        (
+            body_paragraph.start,
+            body_paragraph.end or body_paragraph.start,
+            f"<p>{escaped_claim}</p>",
+        ),
+        (
+            article.end_tag_start or article.start_tag_end,
+            article.end_tag_start or article.start_tag_end,
+            _correction_notice_html(correction),
+        ),
+    ]
+    if article_id is None:
+        start_tag = source[article.start:article.start_tag_end]
+        replacements.append(
+            (
+                article.start,
+                article.start_tag_end,
+                start_tag[:-1] + f' id="{html.escape(story_id, quote=True)}">',
+            )
+        )
+    return _apply_html_replacements(source, replacements)
+
+
 def _render_preview_payloads(
     pages_root: Path,
     correction: dict[str, Any],
@@ -500,6 +823,23 @@ def _render_preview_payloads(
     history = story.get("correction_history")
     if history not in (None, []):
         raise CorrectionValidationError("current curation already contains correction history")
+    sources = _load_json(
+        _repo_path(pages_root, f"gaza/editions/{date}/sources_manifest.json", "sources"),
+        "sources manifest",
+    )
+    if not isinstance(sources, list):
+        raise CorrectionValidationError("sources manifest must remain a source list")
+
+    notice = _correction_notice_html(correction)
+    edition_html_path = _repo_path(pages_root, f"gaza/editions/{date}/index.html", "edition HTML")
+    edition_html = _render_story_scoped_edition_html(
+        edition_html_path.read_text(encoding="utf-8"),
+        correction=correction,
+        curation=curation,
+        sources=sources,
+    )
+    payloads["edition_html"] = edition_html.encode("utf-8")
+
     story["summary"] = correction["corrected_claim"]
     story["casualty_counts"] = {"new_deaths": 2}
     story["event_fingerprint"] = correction["stable_event_fingerprint"]
@@ -558,14 +898,6 @@ def _render_preview_payloads(
             "injury_disagreement": correction["injury_disagreement"],
         }
     )
-
-    notice = _correction_notice_html(correction)
-    edition_html_path = _repo_path(pages_root, f"gaza/editions/{date}/index.html", "edition HTML")
-    edition_html = edition_html_path.read_text(encoding="utf-8")
-    if edition_html.count(correction["prior_claim"]) != 1:
-        raise CorrectionValidationError("edition HTML does not contain the exact prior claim once")
-    edition_html = edition_html.replace(correction["prior_claim"], correction["corrected_claim"], 1)
-    payloads["edition_html"] = _append_before(edition_html, "</main>", notice, "edition HTML").encode("utf-8")
 
     prior_transcript_path = _repo_path(pages_root, f"gaza/audio/{date}-transcript.html", "prior transcript")
     prior_transcript = prior_transcript_path.read_text(encoding="utf-8")

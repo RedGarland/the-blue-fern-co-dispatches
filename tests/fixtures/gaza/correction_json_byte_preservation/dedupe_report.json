@@ -1,0 +1,21 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-29",
+  "candidates_seen": 2,
+  "included_stories": [
+    {
+      "story_id": "gaza-story-2026-08-29-006",
+      "classification": "new"
+    },
+    {
+      "story_id": "gaza-story-2026-08-29-005",
+      "classification": "new",
+      "include_decision": "include"
+    }
+  ],
+  "duplicate_skipped": 0,
+  "continuing_developments": false,
+  "diagnostic_ratio": 6.250E-1,
+  "diagnostic_note": "preserve\/this",
+  "reasons": null
+}

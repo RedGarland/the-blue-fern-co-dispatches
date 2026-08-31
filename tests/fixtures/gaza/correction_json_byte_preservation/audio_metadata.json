@@ -1,0 +1,13 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-08-29",
+  "generated_at": "2026-08-30T05:14:55.618181Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-08-29.mp3",
+  "tts_provider": "openai",
+  "tts_input_character_count": 1.024e+03,
+  "audio_duration_seconds": 123.4500,
+  "segue_chime": true,
+  "tts_error": null,
+  "script_text": "Synthetic existing audio text."
+}

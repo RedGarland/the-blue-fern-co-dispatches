@@ -243,6 +243,97 @@ def test_zero_story_curation_refusal_is_expected_no_publication_without_push(
     assert "operator_status: FAILED" not in email_body
 
 
+def test_no_substantive_ground_refusal_is_success_with_publication_flags_and_preserves_counts(
+    isolated: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    pages_repo = isolated / "bluefern-dispatches-pages"
+    _stub_operator_success(monkeypatch, pages_repo=pages_repo)
+    daily_args_seen: list[str] = []
+
+    def fake_daily(run_args: list[str]):
+        daily_args_seen.extend(run_args)
+        return (
+            1,
+            {
+                "source_count": 5,
+                "publisher_count": 3,
+                "publishers": ["BBC News", "The Guardian", "WAFA"],
+                "public_story_count": 0,
+                "generation_ok": False,
+                "validation_ok": False,
+                "tests_ok": True,
+                "pages_commit_sha": None,
+                "errors": [
+                    "No substantive Gaza/Palestinian ground-development story cleared threshold; "
+                    "publication blocked (use --allow-thin-edition to override)."
+                ],
+            },
+            "{}",
+        )
+
+    emails: list[tuple[str, str]] = []
+    monkeypatch.setattr(operator, "_capture_daily_run", fake_daily)
+    monkeypatch.setattr(
+        operator,
+        "_run_command",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("publication command must not run")),
+    )
+    monkeypatch.setattr(
+        operator,
+        "_verify_requested_audio_artifacts",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("audio verification must not run")),
+    )
+    monkeypatch.setattr(
+        operator,
+        "verify_live_publication",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("live verification must not run")),
+    )
+    monkeypatch.setattr(
+        operator,
+        "maybe_post_gaza_dispatch_to_bluesky",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("Bluesky posting must not run")),
+    )
+    monkeypatch.setattr(operator, "send_email", lambda subject, body, *_args, **_kwargs: emails.append((subject, body)))
+
+    code = operator.main(
+        [
+            "--date",
+            "2026-08-31",
+            "--push",
+            "--post-bluesky",
+            "--generate-audio",
+            "--email-report",
+            "--tts-provider",
+            "openai",
+            "--pages-repo",
+            str(pages_repo),
+        ]
+    )
+
+    output = capsys.readouterr().out
+    result = json.loads(output[output.find("{") :])
+    assert code == 0
+    assert result["ok"] is True
+    assert result["operator_status"] == "NO_PUBLICATION_NEEDED"
+    assert result["source_count"] == 5
+    assert result["publisher_count"] == 3
+    assert result["public_story_count"] == 0
+    assert result["pages_commit_sha"] is None
+    assert result["pages_push_ok"] is None
+    assert result["remote_tree_verify_ok"] is None
+    assert result["audio_status"] == "audio_skipped"
+    assert result["bluesky_status"] == "skipped"
+    assert "--generate-audio" in daily_args_seen
+    assert emails
+    assert "NO_PUBLICATION_NEEDED" in emails[0][0]
+    assert "FAILED" not in emails[0][0]
+    assert "source_count: 5" in emails[0][1]
+    assert "publisher_count: 3" in emails[0][1]
+    assert "public_story_count: 0" in emails[0][1]
+
+
 def test_unknown_zero_story_curation_error_remains_failed(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     args = operator.parse_args(["--date", "2026-08-30", "--skip-audio", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
     _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")

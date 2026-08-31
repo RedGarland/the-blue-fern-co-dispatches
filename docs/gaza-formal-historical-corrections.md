@@ -1,0 +1,166 @@
+# Gaza Formal Historical Corrections
+
+This capability packages a correction to an already published Gaza story. It is
+not the daily generator, a historical-edition publisher, or an editorial approval
+workflow. It cannot mutate or publish Pages.
+
+## Authority boundary
+
+The workflow has a non-authorizing preapproval phase and an independently
+committed package-approval phase:
+
+1. `propose` derives a private proposal and all deterministic preview surfaces
+   from validator-owned evidence. The proposal is hash-bound to the
+   substantively reviewed `corrected` decision and audit, every private evidence
+   hash, the source commit, the exact Pages head, every prior public artifact
+   hash, and every proposed preview hash. It also emits a non-authorizing approval
+   request. The operator supplies no hashes.
+2. A separately committed `gaza_formal_historical_correction_release_approval_v1`
+   artifact, read with `git show <approval-ref>:<approval-path>`. The approval
+   binds the proposal, source commit, Pages head, correction identity, complete
+   preview-set fingerprint, and deterministic correction-audio request. A
+   working-tree file is not accepted as authority, and the approval commit may
+   contain no other source change.
+
+The private review and decision audit must continue to say that publication,
+queue, edition, archive, source-record, cluster, and audio authority are false.
+The package approval authorizes only private package construction and rendering
+the exact approved audio script/configuration; its
+`publication_authorized` field must also be false. Publishing the staged package
+therefore remains a separate human-controlled operation that this command cannot
+perform.
+
+No approval artifact or proposal for GZ-01 is included by this capability change.
+
+## Stable identity and public history
+
+The operation retains the original story ID, owning edition date, stable-event
+fingerprint, prior-claim fingerprint, and corrected-claim fingerprint. Its
+correction ID is a deterministic digest of those immutable identities. The
+correction date is distinct from the event and owning-edition date.
+
+The corrected story replaces `new_deaths: 1` with `new_deaths: 2`; it is never an
+increment of two. The corrected story omits `new_injuries` because the reviewed
+sources disagree. Both attributed injury reports remain in the correction record.
+The edition manifest must attest that aggregates were recomputed from corrected
+story versions.
+
+Every corrected representation must show the prior claim, corrected claim,
+correction ID, story ID, and correction date. The existing edition and audio are
+marked as corrected or superseded rather than silently erased. RSS and both
+podcast feeds require a distinct correction item, URL, GUID, and (for podcasts) a
+distinct approved correction-audio enclosure.
+
+## Audio boundary
+
+Preapproval “correction audio” means a deterministic request containing the
+reviewed script, script hash, provider, model, voice, correction identity, and
+future public path. It is not a rendered binary and has both
+`render_authorized` and `publication_authorized` set to false.
+
+After package/audio approval is committed, an audio worker may render that exact
+request. TTS bytes can be nondeterministic, so the package approval does not claim
+to bind bytes that do not yet exist. `stage` records the rendered MP3 hash and
+the binary-dependent podcast enclosure length, then records the complete
+19-surface package hash. A later publication reviewer must approve that staged
+manifest and rendered binary. This PR does not implement that later publication
+approval or any audio-provider call.
+
+## Complete package boundary
+
+The validator rejects a partial package. It requires replacement representations
+for:
+
+- edition HTML, curation, dedupe, and edition manifests;
+- a public correction page and correction manifest;
+- RSS;
+- prior-audio supersession metadata and transcript;
+- correction audio, metadata, and transcript;
+- both podcast feeds;
+- flash briefing;
+- Gaza audio, dispatch, archive, and root indexes.
+
+The edition source manifest, source-quality report, and original MP3 remain
+immutable dependencies whose exact hashes are checked. The correction manifest
+holds the correcting source attribution. This preserves the historical source
+ledger and original spoken artifact while making the supersession explicit.
+
+## State machine and command ownership
+
+| Transition | Owner | Persistent output | Authority gained |
+| --- | --- | --- | --- |
+| reviewed → proposed | correction CLI `propose` | deterministic private proposal, 18 text/metadata previews, audio request, non-authorizing approval request | none |
+| proposed → package approved | independent reviewer using `approve-package`, followed by normal Git review/commit | approval artifact | private package construction and approved-request audio rendering only |
+| approved → planned | correction CLI `plan` | none | none beyond committed approval |
+| planned → staged | correction CLI `stage` plus an approved-request audio render | atomic private 19-surface package and staged manifest | none; publication remains false |
+| staged → verified | correction CLI `verify-staged` | none | none |
+| verified → published | later publication authority and atomic Pages application | not implemented | not available in this PR |
+
+`propose` writes only under a caller-selected root outside the source and Pages
+repositories. A temporary directory and atomic rename expose the complete output.
+Exact replay is an `idempotent_noop`; conflicting replay fails. `plan` validates
+the committed approval and writes nothing. `stage` uses the same atomic pattern
+outside both repositories. Both transitions require the exact approval commit
+and approved Pages head; a stale validated plan cannot cross the staging
+boundary. `verify-staged` rechecks every staged hash plus source and Pages heads
+without writing.
+
+The validator fails closed for absent or duplicated lineage, wrong story/date or
+domain, changed fingerprints, evidence or public hash drift, altered approval,
+resolved injury uncertainty, double-counted deaths, partial public surfaces,
+stale audio/feed/transcript content, new-edition behavior, and second-story
+behavior.
+
+Example proposal creation:
+
+```powershell
+python scripts/gaza_historical_correction.py --mode propose `
+  --source-root C:\path\to\source --pages-root C:\path\to\pages `
+  --story-id gaza-story-YYYY-MM-DD-NNN `
+  --review-path data/agent-history/gaza/reviews/example.json `
+  --decision-audit-path data/agent-history/gaza/reviews/decisions/example.json `
+  --correction-date YYYY-MM-DD --proposal-root C:\private\proposals `
+  --tts-provider openai --tts-model gpt-4o-mini-tts --tts-voice alloy
+```
+
+An independent reviewer creates the commit-ready approval exclusively from the
+generated request:
+
+```powershell
+python scripts/gaza_historical_correction.py --mode approve-package `
+  --source-root C:\path\to\source `
+  --pages-root C:\path\to\pages `
+  --proposal C:\private\proposals\CORRECTION_ID\proposal.json `
+  --input-root C:\private\proposals\CORRECTION_ID `
+  --approval-request C:\private\proposals\CORRECTION_ID\approval_request.json `
+  --approval-output C:\path\to\source\approvals\gaza\example.json `
+  --approval-id REVIEW-ID --approver "Reviewer Name" `
+  --approved-at 2026-09-02T12:00:00+00:00
+```
+
+After that artifact is independently reviewed and committed, read-only planning
+uses:
+
+```powershell
+python scripts/gaza_historical_correction.py `
+  --mode plan `
+  --source-root C:\path\to\source `
+  --pages-root C:\path\to\pages `
+  --proposal C:\private\proposals\CORRECTION_ID\proposal.json `
+  --input-root C:\private\proposals\CORRECTION_ID `
+  --approval-ref refs/remotes/origin/add/pages-repo-default `
+  --approval-path approvals/gaza/example.json
+```
+
+Staging adds:
+
+```powershell
+--mode stage --rendered-audio C:\private\render.mp3 `
+  --staging-root C:\private\correction-staging
+```
+
+Verification uses `--mode verify-staged --package-root <staged-package>` with
+the same proposal and approval arguments.
+
+There is intentionally no `apply`, `publish`, `push`, audio-generation, social,
+email, or scheduler mode.

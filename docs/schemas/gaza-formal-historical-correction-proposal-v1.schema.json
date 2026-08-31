@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dispatches.thebluefernco.com/schemas/gaza-formal-historical-correction-proposal-v1.schema.json",
+  "title": "Gaza formal historical correction proposal v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "operation", "domain", "source_commit", "correction", "private_evidence", "pages_state", "proposal_sha256"],
+  "properties": {
+    "schema_version": {"const": "gaza_formal_historical_correction_proposal_v1"},
+    "operation": {"const": "formal_historical_correction"},
+    "domain": {"const": "gaza"},
+    "source_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "proposal_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "correction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["correction_id", "story_id", "owning_edition_date", "correction_date", "stable_event_fingerprint", "prior_claim_fingerprint", "corrected_claim_fingerprint", "prior_claim", "corrected_claim", "change_reason", "source_attribution", "evidence_references", "casualty_change", "injury_disagreement"],
+      "properties": {
+        "correction_id": {"type": "string", "pattern": "^gaza-correction-v1-[0-9a-f]{20}$"},
+        "story_id": {"type": "string", "pattern": "^gaza-story-20[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{3}$"},
+        "owning_edition_date": {"type": "string", "format": "date"},
+        "correction_date": {"type": "string", "format": "date"},
+        "stable_event_fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "prior_claim_fingerprint": {"type": "string", "pattern": "^topic_fingerprint_v1:[0-9a-f]{16}$"},
+        "corrected_claim_fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "prior_claim": {"type": "string", "minLength": 1},
+        "corrected_claim": {"type": "string", "minLength": 1},
+        "change_reason": {"type": "string", "minLength": 1},
+        "source_attribution": {"type": "string", "minLength": 1},
+        "evidence_references": {"type": "array", "minItems": 2, "maxItems": 2},
+        "casualty_change": {"const": {"field": "casualty_counts.new_deaths", "previous_value": 1, "corrected_value": 2, "operation": "replace"}},
+        "injury_disagreement": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["unresolved", "reports"],
+          "properties": {
+            "unresolved": {"const": true},
+            "reports": {"type": "array", "minItems": 2, "maxItems": 2}
+          }
+        }
+      }
+    },
+    "private_evidence": {"type": "object"},
+    "pages_state": {"type": "object"}
+  }
+}

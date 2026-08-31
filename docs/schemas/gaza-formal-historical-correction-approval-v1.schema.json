@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dispatches.thebluefernco.com/schemas/gaza-formal-historical-correction-approval-v1.schema.json",
+  "title": "Gaza formal historical correction package approval v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "scope", "approval_id", "proposal_sha256", "correction_id", "source_commit", "pages_head", "artifact_set_sha256", "audio_request_sha256", "approved_at", "approver", "package_authorized", "audio_authorized", "publication_authorized", "approval_fingerprint"],
+  "properties": {
+    "schema_version": {"const": "gaza_formal_historical_correction_release_approval_v1"},
+    "scope": {"const": "formal_historical_correction"},
+    "approval_id": {"type": "string", "minLength": 1},
+    "proposal_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "correction_id": {"type": "string", "pattern": "^gaza-correction-v1-[0-9a-f]{20}$"},
+    "source_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "pages_head": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "artifact_set_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "audio_request_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "approved_at": {"type": "string", "format": "date-time"},
+    "approver": {"type": "string", "minLength": 1},
+    "package_authorized": {"const": true},
+    "audio_authorized": {"const": true},
+    "publication_authorized": {"const": false},
+    "approval_fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

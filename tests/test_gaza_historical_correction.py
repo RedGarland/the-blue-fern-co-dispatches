@@ -19,6 +19,8 @@ from bluefern_dispatches.gaza_historical_correction import (
     plan_correction,
     prepare_correction_proposal,
     create_package_approval,
+    _correction_notice_html,
+    _render_story_scoped_edition_html,
     sha256_file,
     stage_correction_package,
     verify_staged_package,
@@ -111,6 +113,100 @@ def _prior_story(event_date: str = DATE) -> dict[str, object]:
     }
 
 
+def _synthetic_public_state() -> tuple[list[dict[str, object]], list[dict[str, object]]]:
+    story = _prior_story()
+    source = story.pop("_source")
+    other_stories = [
+        {
+            "story_id": f"gaza-story-2026-08-29-00{index}",
+            "title": f"Unrelated synthetic story {index}",
+            "summary": f"Unrelated synthetic summary {index}.",
+            "category": "humanitarian",
+            "event_date": f"{DATE}T10:0{index}:00+00:00",
+            "source_record_ids": [f"unrelated-source-{index}"],
+            "source_urls": [f"https://unrelated.example/article-{index}"],
+            "public_rendered": True,
+            "included_in_public_summary": True,
+        }
+        for index in (1, 2)
+    ]
+    other_sources = [
+        {
+            "source_record_id": f"unrelated-source-{index}",
+            "title": f"Unrelated source {index}",
+            "publisher": "Unrelated",
+            "url": f"https://unrelated.example/article-{index}",
+            "published_at": f"{DATE}T10:0{index}:00+00:00",
+        }
+        for index in (1, 2)
+    ]
+    return [story, *other_stories], [source, *other_sources]
+
+
+def _synthetic_edition_html() -> str:
+    return (
+        "<!doctype html><html><body><main>\n"
+        f"<h1>Gaza Dispatch \u2014 {DATE}</h1>\n"
+        "<h2>Today\u2019s Read</h2>\n"
+        "<p>Synthetic lead paragraph.</p>\n"
+        f"<p>{PRIOR}</p>\n"
+        "<p>Unrelated synthetic summary 1.</p>\n"
+        "<p>Unrelated synthetic summary 2.</p>\n"
+        "<h2>At A Glance</h2>\n<ul><li>Three developments.</li></ul>\n"
+        "<h2>Core Gaza Developments</h2>\n"
+        f"<article><h3>{TITLE}</h3>"
+        "<p><em>Source A \u00b7 conflict \u00b7 Gaza \u00b7 August 29, 2026</em></p>"
+        f"<p>{PRIOR}</p>"
+        '<p><strong>Sources:</strong></p><ul><li><a href="https://source-a.example/wrapper">'
+        "Synthetic source title</a> - Source A</li></ul></article>\n"
+        "<article><h3>Unrelated synthetic story 1</h3>"
+        "<p><em>Unrelated \u00b7 humanitarian \u00b7 Gaza \u00b7 August 29, 2026</em></p>"
+        "<p>Unrelated synthetic summary 1.</p>"
+        '<a href="https://unrelated.example/article-1">Source</a></article>\n'
+        "<article><h3>Unrelated synthetic story 2</h3>"
+        "<p><em>Unrelated \u00b7 humanitarian \u00b7 Gaza \u00b7 August 29, 2026</em></p>"
+        "<p>Unrelated synthetic summary 2.</p>"
+        '<a href="https://unrelated.example/article-2">Source</a></article>\n'
+        "</main></body></html>"
+    )
+
+
+def _synthetic_correction(*, corrected_claim: str = CORRECTED) -> dict[str, object]:
+    return {
+        "correction_id": "gaza-correction-v1-synthetic",
+        "story_id": STORY_ID,
+        "owning_edition_date": DATE,
+        "correction_date": CORRECTION_DATE,
+        "stable_event_fingerprint": "sha256:" + "1" * 64,
+        "prior_claim_fingerprint": "topic_fingerprint_v1:" + "2" * 16,
+        "corrected_claim_fingerprint": "sha256:" + "3" * 64,
+        "prior_claim": PRIOR,
+        "corrected_claim": corrected_claim,
+        "change_reason": "Synthetic correction.",
+        "source_attribution": "Source B and Source C",
+        "evidence_references": EVIDENCE,
+        "casualty_change": {
+            "field": "casualty_counts.new_deaths",
+            "previous_value": 1,
+            "corrected_value": 2,
+            "operation": "replace",
+        },
+        "injury_disagreement": {"unresolved": True, "reports": DISPUTE},
+    }
+
+
+def _render_synthetic_html(
+    source: str | None = None, *, corrected_claim: str = CORRECTED
+) -> str:
+    curation, sources = _synthetic_public_state()
+    return _render_story_scoped_edition_html(
+        source if source is not None else _synthetic_edition_html(),
+        correction=_synthetic_correction(corrected_claim=corrected_claim),
+        curation=curation,
+        sources=sources,
+    )
+
+
 def _make_pages(pages: Path) -> tuple[str, dict[str, object]]:
     _init_repo(pages, "gh-pages")
     _run(
@@ -120,11 +216,11 @@ def _make_pages(pages: Path) -> tuple[str, dict[str, object]]:
         "origin",
         "https://github.com/RedGarland/the-blue-fern-co-dispatches.git",
     )
-    story = _prior_story()
-    source = story.pop("_source")
+    curation, sources = _synthetic_public_state()
+    story = curation[0]
     edition = pages / "gaza" / "editions" / DATE
-    _write_json(edition / "curation_manifest.json", [story])
-    _write_json(edition / "sources_manifest.json", [source])
+    _write_json(edition / "curation_manifest.json", curation)
+    _write_json(edition / "sources_manifest.json", sources)
     _write_json(
         edition / "dedupe_report.json",
         {
@@ -139,11 +235,8 @@ def _make_pages(pages: Path) -> tuple[str, dict[str, object]]:
             ]
         },
     )
-    _write_json(edition / "edition_manifest.json", {"edition_date": DATE, "story_count": 1})
-    (edition / "index.html").write_text(
-        f"<html><body><main><h1>{TITLE}</h1><p>{PRIOR}</p></main></body></html>",
-        encoding="utf-8",
-    )
+    _write_json(edition / "edition_manifest.json", {"edition_date": DATE, "story_count": 3})
+    (edition / "index.html").write_text(_synthetic_edition_html(), encoding="utf-8")
     (edition / "source_quality_report.md").write_text("# Synthetic source quality\n", encoding="utf-8")
     existing_text = {
         "gaza/rss.xml": "<rss><channel><item><guid>edition</guid></item></channel></rss>",
@@ -346,12 +439,15 @@ def _prepare_again(case: dict[str, object], output_root: Path) -> dict[str, obje
 
 def _cli(*args: object) -> dict[str, object]:
     script = Path(__file__).parents[1] / "scripts" / "gaza_historical_correction.py"
+    environment = dict(os.environ)
+    environment.pop("PYTHONPATH", None)
     result = subprocess.run(
         [sys.executable, str(script), *[str(value) for value in args]],
         check=True,
         capture_output=True,
         text=True,
-        env={**os.environ, "PYTHONPATH": str(Path(__file__).parents[1] / "src")},
+        cwd=Path(__file__).parents[1],
+        env=environment,
     )
     return json.loads(result.stdout)
 
@@ -415,6 +511,174 @@ def test_cli_executes_complete_nonpublication_workflow(tmp_path: Path) -> None:
     assert verified["status"] == "staged_package_verified"
     assert verified["publication_authorized"] is False
     assert _run(case["pages"], "status", "--porcelain") == ""
+
+
+def test_story_scoped_html_updates_today_and_body_only() -> None:
+    source = _synthetic_edition_html()
+    rendered = _render_synthetic_html(source)
+    notice = _correction_notice_html(_synthetic_correction())
+    expected = source.replace(
+        f"<p>{PRIOR}</p>",
+        f'<p><a href="#{STORY_ID}">{CORRECTED}</a></p>',
+        1,
+    )
+    expected = expected.replace(f"<p>{PRIOR}</p>", f"<p>{CORRECTED}</p>", 1)
+    expected = expected.replace(
+        f"<article><h3>{TITLE}</h3>",
+        f'<article id="{STORY_ID}"><h3>{TITLE}</h3>',
+        1,
+    )
+    target_end = "Synthetic source title</a> - Source A</li></ul></article>"
+    expected = expected.replace(
+        target_end,
+        "Synthetic source title</a> - Source A</li></ul>" + notice + "</article>",
+        1,
+    )
+    assert rendered == expected
+    assert rendered.count(f'href="#{STORY_ID}"') == 1
+    assert rendered.count(f'<article id="{STORY_ID}">') == 1
+
+
+@pytest.mark.parametrize("missing", ["today", "body"])
+def test_story_scoped_html_requires_both_claim_occurrences(missing: str) -> None:
+    source = _synthetic_edition_html()
+    token = f"<p>{PRIOR}</p>"
+    if missing == "today":
+        source = source.replace(token, "<p>Missing Today claim.</p>", 1)
+    else:
+        position = source.rfind(token)
+        source = source[:position] + "<p>Missing body claim.</p>" + source[position + len(token):]
+    with pytest.raises(CorrectionValidationError, match="prior claim"):
+        _render_synthetic_html(source)
+
+
+def test_story_scoped_html_rejects_duplicate_today_node() -> None:
+    source = _synthetic_edition_html().replace(
+        "<h2>At A Glance</h2>", f"<p>{PRIOR}</p>\n<h2>At A Glance</h2>", 1
+    )
+    with pytest.raises(CorrectionValidationError, match="unrelated or ambiguous"):
+        _render_synthetic_html(source)
+
+
+def test_story_scoped_html_rejects_duplicate_story_body_node() -> None:
+    source = _synthetic_edition_html().replace(
+        "<p><strong>Sources:</strong></p>",
+        f"<p>{PRIOR}</p><p><strong>Sources:</strong></p>",
+        1,
+    )
+    with pytest.raises(CorrectionValidationError, match="target article body"):
+        _render_synthetic_html(source)
+
+
+def test_story_scoped_html_rejects_today_link_to_wrong_story() -> None:
+    source = _synthetic_edition_html().replace(
+        f"<p>{PRIOR}</p>", f'<p><a href="#wrong-story">{PRIOR}</a></p>', 1
+    )
+    with pytest.raises(CorrectionValidationError, match="links to another story"):
+        _render_synthetic_html(source)
+
+
+def test_story_scoped_html_rejects_matching_claim_in_unrelated_story() -> None:
+    source = _synthetic_edition_html().replace(
+        "<p>Unrelated synthetic summary 1.</p>",
+        f"<p>Unrelated synthetic summary 1.</p><p>{PRIOR}</p>",
+        1,
+    )
+    with pytest.raises(CorrectionValidationError, match="unrelated or ambiguous"):
+        _render_synthetic_html(source)
+
+
+def test_story_scoped_html_rejects_third_unowned_occurrence() -> None:
+    source = _synthetic_edition_html().replace(
+        "</main>", f"<aside><p>{PRIOR}</p></aside></main>", 1
+    )
+    with pytest.raises(CorrectionValidationError, match="unrelated or ambiguous"):
+        _render_synthetic_html(source)
+
+
+def test_story_scoped_html_tolerates_reordered_unrelated_stories() -> None:
+    source = _synthetic_edition_html()
+    first_start = source.index("<article><h3>Unrelated synthetic story 1")
+    second_start = source.index("<article><h3>Unrelated synthetic story 2")
+    end = source.index("</main>", second_start)
+    first_article = source[first_start:second_start]
+    second_article = source[second_start:end]
+    reordered = source[:first_start] + second_article + first_article + source[end:]
+    rendered = _render_synthetic_html(reordered)
+    assert rendered.index("Unrelated synthetic story 2") < rendered.index(
+        "Unrelated synthetic story 1"
+    )
+
+
+def test_story_scoped_html_ignores_similar_title_with_different_source_identity() -> None:
+    source = _synthetic_edition_html().replace(
+        "</main>",
+        (
+            f"<article><h3>{TITLE}</h3>"
+            "<p><em>Other · conflict · Gaza · August 29, 2026</em></p>"
+            "<p>Different claim.</p>"
+            '<a href="https://different.example/article">Source</a></article></main>'
+        ),
+        1,
+    )
+    rendered = _render_synthetic_html(source)
+    assert rendered.count(f"<h3>{TITLE}</h3>") == 2
+    assert rendered.count(f'id="{STORY_ID}"') == 1
+
+
+def test_story_scoped_html_rejects_changed_article_anchor() -> None:
+    source = _synthetic_edition_html().replace(
+        f"<article><h3>{TITLE}</h3>",
+        f'<article id="different-story"><h3>{TITLE}</h3>',
+        1,
+    )
+    with pytest.raises(CorrectionValidationError, match="anchor changed"):
+        _render_synthetic_html(source)
+
+
+def test_story_scoped_html_rejects_changed_article_source_identity() -> None:
+    source = _synthetic_edition_html().replace(
+        "https://source-a.example/wrapper",
+        "https://different.example/article",
+        1,
+    )
+    with pytest.raises(CorrectionValidationError, match="manifest source URL"):
+        _render_synthetic_html(source)
+
+
+def test_story_scoped_html_rejects_changed_owning_date() -> None:
+    source = _synthetic_edition_html().replace("August 29, 2026", "August 28, 2026", 1)
+    with pytest.raises(CorrectionValidationError, match="owning date changed"):
+        _render_synthetic_html(source)
+
+
+def test_story_scoped_html_escapes_corrected_claim() -> None:
+    corrected = 'Corrected & attributed <two> "deaths".'
+    rendered = _render_synthetic_html(corrected_claim=corrected)
+    assert "Corrected &amp; attributed &lt;two&gt; \"deaths\"." in rendered
+    assert "Corrected & attributed <two>" not in rendered
+
+
+def test_story_scoped_html_rejects_malformed_markup() -> None:
+    source = _synthetic_edition_html().replace("</article>", "", 1)
+    with pytest.raises(CorrectionValidationError, match="mismatched|unclosed|malformed"):
+        _render_synthetic_html(source)
+
+
+def test_cli_help_works_without_pythonpath_from_repo_root() -> None:
+    root = Path(__file__).parents[1]
+    environment = dict(os.environ)
+    environment.pop("PYTHONPATH", None)
+    result = subprocess.run(
+        [sys.executable, "scripts/gaza_historical_correction.py", "--help"],
+        cwd=root,
+        env=environment,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "--mode" in result.stdout
 
 
 def test_proposal_is_non_authorizing_deterministic_and_replay_safe(tmp_path: Path) -> None:
@@ -864,7 +1128,14 @@ def test_no_new_edition_second_story_scheduler_or_publication_side_effect(tmp_pa
     assert all(f"gaza/editions/{CORRECTION_DATE}/" not in row["public_path"] for row in plan["representations"])
     curation_row = next(row for row in plan["representations"] if row["role"] == "curation_manifest")
     curation = json.loads((case["inputs"] / curation_row["input_path"]).read_text(encoding="utf-8"))
-    assert [story["story_id"] for story in curation] == [STORY_ID]
+    assert [story["story_id"] for story in curation] == [
+        STORY_ID,
+        "gaza-story-2026-08-29-001",
+        "gaza-story-2026-08-29-002",
+    ]
+    assert curation[0]["correction_history"][0]["story_id"] == STORY_ID
+    assert "correction_history" not in curation[1]
+    assert "correction_history" not in curation[2]
     assert plan["pages_mutation"] is False
     assert plan["publication_authorized"] is False
     assert not any("scheduler" in row["public_path"] for row in plan["representations"])

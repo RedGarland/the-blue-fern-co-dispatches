@@ -1,0 +1,103 @@
+{
+  "approval_authorized": false,
+  "archive_mutation_authorized": false,
+  "audio_authorized": false,
+  "decision": "confirmed",
+  "decision_reason": "The reporting directly documents a fire-related interruption of physical pantry operations and a temporary substitute.",
+  "dedupe_assessment": {
+    "checked_surfaces": [
+      "current_intake",
+      "existing_historical_records",
+      "food_line_pages_history",
+      "review_and_publication_queues",
+      "source_and_generated_output",
+      "story_memory_and_claim_ledgers"
+    ],
+    "continued_condition_assessment": "No match was found on any required duplicate surface. The source supports a one-month substitution after the fire-related closure and does not establish the pantry's current operating status.",
+    "matched_reference": null,
+    "result": "no_match"
+  },
+  "domain": "food-line",
+  "event_assessment": {
+    "affected_population": [
+      "Wayne households relying on pantry groceries",
+      "donors unable to use the pantry's usual collection location",
+      "pantry clients receiving temporary gift-card assistance instead of normal food distributions"
+    ],
+    "attribution": "TAPinto Wayne reported the pantry's fire-related displacement and quoted its temporary switch to mailed grocery gift cards.",
+    "event_end_date": "2026-08-06",
+    "event_start_date": "2026-08-06",
+    "location": "Wayne Township",
+    "measurable_change": {
+      "description": "The Wayne Interfaith Network Food Pantry has been displaced from the Wayne Community Center following a fire-related closure. Its normal collection and physical grocery-distribution operations are paused, and it is temporarily mailing grocery gift cards instead.",
+      "measurement": "We've reverted back to what we did during COVID, and we're just mailing gift cards for the month.",
+      "supporting_finding_ids": [
+        "food-line-history-finding-c8c8645c8673fd728b0a4c39"
+      ],
+      "type": "direct_service_loss_or_closure"
+    },
+    "organization": "Wayne Interfaith Network Food Pantry",
+    "service": "Physical pantry grocery collection and distribution.",
+    "uncertainty": {
+      "causal": {
+        "note": "No unresolved causal attribution is required for this disposition.",
+        "status": "resolved"
+      },
+      "condition": {
+        "note": "The documented condition is supported by the cited source passage and preserved run evidence.",
+        "status": "resolved"
+      },
+      "severity": {
+        "note": "The available evidence is sufficient for historical review without asserting additional severity.",
+        "status": "resolved"
+      }
+    }
+  },
+  "event_fingerprint": "sha256:1b6027676baf62119e2d06af66ea1624d938be122e2141e150e4a73a924d31b1",
+  "event_id": "food-line-event-1b6027676baf62119e2d06af",
+  "evidence_references": [
+    {
+      "canonical_source_url": "https://www.tapinto.net/towns/wayne/articles/wayne-s-win-food-pantry-needs-help-during-community-center-closure",
+      "exact_supporting_passages": [
+        "We've reverted back to what we did during COVID, and we're just mailing gift cards for the month."
+      ],
+      "publisher": "TAPinto Wayne",
+      "role": "principal",
+      "source_published_at": "2026-08-06T08:44:00-04:00"
+    }
+  ],
+  "generation_authorized": false,
+  "intake_authorized": false,
+  "operator": "Codex historical editorial review",
+  "pages_authorized": false,
+  "pages_head": "f81e7119c333b75441fab1260ef96270dc07c6b1",
+  "priority": 1,
+  "publication_approval": false,
+  "publication_authorized": false,
+  "publication_copy": {
+    "headline": "Wayne pantry shifted to gift cards after fire displacement",
+    "source_links": [
+      "https://www.tapinto.net/towns/wayne/articles/wayne-s-win-food-pantry-needs-help-during-community-center-closure"
+    ],
+    "summary": "After a fire-related community-center closure displaced the Wayne Interfaith Network pantry, the program paused physical grocery distribution and mailed grocery gift cards for the month."
+  },
+  "publication_eligible": false,
+  "queue_authorized": false,
+  "recommended_batch": {
+    "batch_id": "food-line-august-2026-retrospective-01",
+    "edition_introduction": "This retrospective documents food-access interruptions reported during August, with each account bounded to what the cited sources established.",
+    "edition_title": "Food Line retrospective: August service interruptions",
+    "order": 5
+  },
+  "recovery_artifact_set_sha256": "sha256:f9f0aaca7c6154fc241ea7ddba980ed2cf6361fe0eb49e9e3695b779a5e36416",
+  "recovery_identity_sha256": "sha256:ca591d5e0fb79dc832a0fdee261b91c6c17aa6175328fccd4518056d87525ae5",
+  "recovery_path": "data/agent-history/food-line/recovery-migrations/sha256-ca591d5e0fb79dc832a0fdee261b91c6",
+  "review_artifact_path": "data/agent-history/food-line/reviews/recovery-submissions/food-line-event-1b6027676baf62119e2d06af.json",
+  "review_artifact_sha256": "764c21ffb835ea6145b4deb67723f22edcf0a8ebcdebf7c63cb90f03cebfb626",
+  "reviewed_at": "2026-09-01T04:30:00Z",
+  "reviewed_by": "Codex historical editorial review",
+  "scheduled_task_change_authorized": false,
+  "schema_version": "food_line_historical_event_editorial_decision_v1",
+  "social_authorized": false,
+  "source_head": "74e5c17e74a44efddb466bd4ef66f57f58dc29c1"
+}

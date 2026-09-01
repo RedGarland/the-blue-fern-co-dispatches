@@ -1,0 +1,109 @@
+{
+  "approval_authorized": false,
+  "archive_mutation_authorized": false,
+  "audio_authorized": false,
+  "decision": "confirmed",
+  "decision_reason": "The reporting directly documents loss of a fixed-site pantry that had served about 500 families each month.",
+  "dedupe_assessment": {
+    "checked_surfaces": [
+      "current_intake",
+      "existing_historical_records",
+      "food_line_pages_history",
+      "review_and_publication_queues",
+      "source_and_generated_output",
+      "story_memory_and_claim_ledgers"
+    ],
+    "continued_condition_assessment": "No match was found on any required duplicate surface. The evidence supports the bounded August closure and delivery substitution, not an assertion about the center's present status.",
+    "matched_reference": null,
+    "result": "no_match"
+  },
+  "domain": "food-line",
+  "event_assessment": {
+    "affected_population": [
+      "approximately 500 low-income families previously receiving monthly food boxes",
+      "approximately 500 low-income families previously served each month",
+      "families using the center for food and other emergency assistance",
+      "households also relying on transportation or utility assistance formerly provided at the center",
+      "households relying on recurring pantry access",
+      "people needing fresh vegetables, meat and staple foods",
+      "southwestern Utah households relying on recurring food boxes"
+    ],
+    "attribution": "The Salt Lake Tribune reported the Salvation Army's center and pantry closure and the pantry's prior monthly service volume.",
+    "event_end_date": "2026-08-01",
+    "event_start_date": "2026-08-01",
+    "location": "Washington City and surrounding Washington County communities; Washington City and surrounding southwestern Utah communities",
+    "measurable_change": {
+      "description": "The Salvation Army closed its Washington City center and four-day-a-week food pantry after rising rent and an expiring lease made the building financially unsustainable. The pantry had supplied food boxes to about 500 low-income families each month. Staff and volunteers continue taking requests and delivering food to housing complexes, but the fixed-site pantry remains closed.",
+      "measurement": "center closure date: 2026-07-20; lease expiration date: 2026-07-31; reported monthly service volume: Approximately 500 low-income families; requested replacement space: 3,000 to 6,000 square feet for less than $7,000 per month",
+      "supporting_finding_ids": [
+        "food-line-history-finding-18d1dafd2e376c2eac420dbd",
+        "food-line-history-finding-9ae6761b162b683e59b2b16b"
+      ],
+      "type": "direct_service_loss_or_closure"
+    },
+    "organization": "Salvation Army St. George Outpost",
+    "service": "Fixed-site emergency pantry service and recurring monthly food boxes.",
+    "uncertainty": {
+      "causal": {
+        "note": "No unresolved causal attribution is required for this disposition.",
+        "status": "resolved"
+      },
+      "condition": {
+        "note": "The documented condition is supported by the cited source passage and preserved run evidence.",
+        "status": "resolved"
+      },
+      "severity": {
+        "note": "The available evidence is sufficient for historical review without asserting additional severity.",
+        "status": "resolved"
+      }
+    }
+  },
+  "event_fingerprint": "sha256:89dcb46b6eb83f4749feea2374ef9a45da99fc8040b39424990899794e0f926f",
+  "event_id": "food-line-event-89dcb46b6eb83f4749feea23",
+  "evidence_references": [
+    {
+      "canonical_source_url": "https://www.sltrib.com/news/2026/08/01/high-rent-leads-closing-salvation",
+      "exact_supporting_passages": [
+        "The pantry provided food boxes filled with fresh vegetables, quality meats and other staples to 500 low-income families each month.",
+        "the Salvation Army has closed its center in Washington City and shut down its food pantry while its leaders search for a new home."
+      ],
+      "publisher": "The Salt Lake Tribune",
+      "role": "principal",
+      "source_published_at": "2026-08-01"
+    }
+  ],
+  "generation_authorized": false,
+  "intake_authorized": false,
+  "operator": "Codex historical editorial review",
+  "pages_authorized": false,
+  "pages_head": "f81e7119c333b75441fab1260ef96270dc07c6b1",
+  "priority": 1,
+  "publication_approval": false,
+  "publication_authorized": false,
+  "publication_copy": {
+    "headline": "Washington City pantry closure displaced monthly food-box service",
+    "source_links": [
+      "https://www.sltrib.com/news/2026/08/01/high-rent-leads-closing-salvation"
+    ],
+    "summary": "Rising rent forced the Salvation Army's Washington City center and four-day-a-week pantry to close; the fixed site had served about 500 low-income families each month, while staff shifted to deliveries."
+  },
+  "publication_eligible": false,
+  "queue_authorized": false,
+  "recommended_batch": {
+    "batch_id": "food-line-august-2026-retrospective-01",
+    "edition_introduction": "This retrospective documents food-access interruptions reported during August, with each account bounded to what the cited sources established.",
+    "edition_title": "Food Line retrospective: August service interruptions",
+    "order": 2
+  },
+  "recovery_artifact_set_sha256": "sha256:f9f0aaca7c6154fc241ea7ddba980ed2cf6361fe0eb49e9e3695b779a5e36416",
+  "recovery_identity_sha256": "sha256:ca591d5e0fb79dc832a0fdee261b91c6c17aa6175328fccd4518056d87525ae5",
+  "recovery_path": "data/agent-history/food-line/recovery-migrations/sha256-ca591d5e0fb79dc832a0fdee261b91c6",
+  "review_artifact_path": "data/agent-history/food-line/reviews/recovery-submissions/food-line-event-89dcb46b6eb83f4749feea23.json",
+  "review_artifact_sha256": "0bc9c3c4d29d0dff27d79ce932cb6d21c9b70dc86c5221ab5b68a2d81d47c467",
+  "reviewed_at": "2026-09-01T04:30:00Z",
+  "reviewed_by": "Codex historical editorial review",
+  "scheduled_task_change_authorized": false,
+  "schema_version": "food_line_historical_event_editorial_decision_v1",
+  "social_authorized": false,
+  "source_head": "74e5c17e74a44efddb466bd4ef66f57f58dc29c1"
+}

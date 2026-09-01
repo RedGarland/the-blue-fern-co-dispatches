@@ -1,0 +1,68 @@
+{
+  "disposition_counts": {
+    "already_published": 2,
+    "confirmed_historical_review_candidate": 320,
+    "deferred_specific_evidence_gap": 67,
+    "duplicate_or_corroboration": 10,
+    "excluded_under_existing_rules": 15
+  },
+  "duplicate_finding_occurrence_count": 0,
+  "event_cluster_count": 414,
+  "fence_count": 389,
+  "input_sha256": "762cfe62b52e49efce0157edefa945f8a539980b8fbe1f62f2181224cf340e4b",
+  "invalid_envelope_block_count": 0,
+  "invalid_envelopes": [],
+  "invalid_findings": [],
+  "malformed_blocks": [
+    {
+      "block_sha256": "fdb9cff463fcbfa52c67863d52ed95bbcf3c93f6fcb75705f0e6fde2b8828cfb",
+      "error": "JSONDecodeError: Extra data: line 159 column 1 (char 12316)",
+      "fence_index": 387,
+      "label": "json",
+      "line": 32578,
+      "reason": "invalid_json"
+    }
+  ],
+  "malformed_json_block_count": 1,
+  "out_of_scope_finding_count": 3,
+  "out_of_scope_findings": [
+    {
+      "agent_run_id": "food-line-source-watch-20260731T164511Z-new-york-pantry-demand-snap-loss",
+      "canonical_source_url": "https://highlandscurrent.org/2026/07/31/food-pantries-see-increased-demand",
+      "completed_or_started_at": "2026-07-31T16:51:00Z",
+      "fence_index": 1,
+      "finding_index": 1,
+      "occurrence_id": "occurrence-762cfe62b52e-0001-0001",
+      "reason": "agent_run_outside_requested_month",
+      "title": "Food Pantries See Increased Demand"
+    },
+    {
+      "agent_run_id": "food-line-source-watch-20260731T194749Z-wisconsin-snap-food-bank-pressure",
+      "canonical_source_url": "https://www.wpr.org/news/thousands-wisconsinites-have-lost-food-aid-largest-cut-us-history",
+      "completed_or_started_at": "2026-07-31T19:51:00Z",
+      "fence_index": 2,
+      "finding_index": 1,
+      "occurrence_id": "occurrence-762cfe62b52e-0002-0001",
+      "reason": "agent_run_outside_requested_month",
+      "title": "Thousands of Wisconsinites have lost food aid in largest cut in US history"
+    },
+    {
+      "agent_run_id": "food-line-source-watch-20260731T224433Z-st-louis-ruler-foods-closure",
+      "canonical_source_url": "https://www.ksdk.com/article/money/business/ruler-foods-south-grand-boulevard-closure-leaves-some-south-st-louis-residents-searching-for-affordable-groceries/63-2e6e6ca3-df04-4a91-a3f2-2d974e4107d1",
+      "completed_or_started_at": "2026-07-31T22:50:00Z",
+      "fence_index": 3,
+      "finding_index": 1,
+      "occurrence_id": "occurrence-762cfe62b52e-0003-0001",
+      "reason": "agent_run_outside_requested_month",
+      "title": "Ruler Foods closure leaves some south St. Louis residents searching for affordable groceries"
+    }
+  ],
+  "publication_approval": false,
+  "raw_finding_count": 508,
+  "retained_finding_count": 505,
+  "run_month": "2026-08",
+  "schema_version": "food_line_historical_recovery_validation_v1",
+  "unique_canonical_source_count": 437,
+  "valid": true,
+  "valid_json_block_count": 388
+}

@@ -1,0 +1,19 @@
+{
+  "artifact_hashes": {
+    "disposition_matrix.json": "df0f548e1bcf323af9145a6fbd787a1e333f012f3df887a664c99437370e7263",
+    "event_cluster_manifest.json": "1d8404aa00878ed253be9916485f83378ce29bdc9a75633a2ab88ca5a9749d72",
+    "import_validation_report.json": "7bbc6fb0e9df0efb389e67ea76a1e31277ddbdc432af2efe0123a45583dff9c0",
+    "live_site_reconciliation_report.json": "d9f883b9615853edff78cb5f0b6995dadfcb1b1eee91a0df77ecdea3b13ed6f7",
+    "normalized_findings.json": "f9e87fcecbb2e3bdef927c70fdcae57f73b13e0890660d968e7c61cb7fc78e20",
+    "normalized_unique_sources.json": "4be076c7414841f23c05223bd44b656909e1af5f9091bfb4ccb1eb988b6841d9",
+    "priority_confirmed_candidates.json": "e34b924a9bf0db1bc9aaa6d0a218b6936c0a9bdd526cf0c89a113c8edfdf92a9",
+    "raw_archive.json": "2b325433f5a991acb75e53877b262230b1312a9acf25e8d652c747cd5163de80"
+  },
+  "artifact_set_sha256": "sha256:f22e17876696e923866f97649258d01ff6ba65fdc84cf65fd4a119837cc92616",
+  "cluster_spec_sha256": "3c33409e196de2c43781e6633d301c7b64c466e454942e0c083f90c96c720c10",
+  "input_sha256": "762cfe62b52e49efce0157edefa945f8a539980b8fbe1f62f2181224cf340e4b",
+  "public_output_written": false,
+  "publication_approval": false,
+  "queue_items_created": 0,
+  "schema_version": "food_line_historical_recovery_v1"
+}

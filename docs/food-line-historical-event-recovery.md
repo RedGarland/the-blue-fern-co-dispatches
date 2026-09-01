@@ -210,3 +210,60 @@ one of:
 Deferred clusters require an exact `unresolved_requirement`; excluded clusters
 require an exact `exclusion_rule`. Generic "insufficient evidence" labels do
 not satisfy the review contract.
+
+## Migrated-event editorial review
+
+Recovery and migration stop before substantive editorial review. The
+sanctioned `review` operation records one independent decision for an event in
+an exact four-tier successor. It derives the successor path from its complete
+content identity, validates every immutable artifact and the artifact-set
+identity, requires the event to resolve exactly once in both the event and
+confirmed-candidate manifests, and binds a clean Pages checkout and source
+HEAD. It never accepts an arbitrary recovery path.
+
+Review submissions belong under:
+
+```text
+data/agent-history/food-line/reviews/recovery-submissions/
+```
+
+The owner writes deterministic decisions under:
+
+```text
+data/agent-history/food-line/reviews/recovery-decisions/
+  <32-character-successor-identity-prefix>/<event-id>.json
+```
+
+The closed decisions are `confirmed`, `deferred_specific_evidence_gap`,
+`excluded_under_existing_rules`, `duplicate_or_corroboration`, and
+`already_published`. A submission binds exact recovery, artifact-set, event,
+source, Pages, evidence, date, event-fact, uncertainty, and dedupe state. It
+must show checks across Pages history, source/generated output, story memory
+and claim ledgers, current intake, review/publication queues, and prior
+historical records. Duplicate and already-published decisions require a real
+repository-bound matched artifact. Confirmed decisions alone may include
+reader-facing copy and one of the six ordered slots in a clearly named August
+2026 retrospective batch.
+
+The submission and decision must keep archive, intake, queue, generation,
+approval, publication, Pages, audio, social, and scheduled-task authority
+false. Historical dates do not pass through current-intake freshness checks.
+Exact replay returns `idempotent_noop`; a changed submission or decision fails
+closed. Validate without writing by adding `--review-dry-run`.
+
+```powershell
+python scripts/import_food_line_historical_recovery.py review `
+  --repo-root . `
+  --pages-root <clean-gh-pages-checkout> `
+  --successor-identity sha256:<64-character-successor-identity> `
+  --artifact-set sha256:<64-character-artifact-set-identity> `
+  --event-id food-line-event-<24-hex-characters> `
+  --decision confirmed `
+  --review-artifact data/agent-history/food-line/reviews/recovery-submissions/<review>.json `
+  --review-artifact-sha256 <64-character-review-digest> `
+  --operator <operator>
+```
+
+This transition records private editorial state only. A later, separately
+authorized capability is still required to approve, queue, generate, or
+publish a retrospective edition.

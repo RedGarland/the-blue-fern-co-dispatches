@@ -15,6 +15,7 @@ from bluefern_dispatches.food_line_historical_recovery import (  # noqa: E402
     import_recovery,
     migrate_recovery_to_four_tiers,
     parse_aggregate_handoff,
+    record_historical_event_review,
     sha256_bytes,
     validate_migration_implementation_commit,
 )
@@ -22,8 +23,8 @@ from bluefern_dispatches.food_line_historical_recovery import (  # noqa: E402
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Build a private Food Line historical event-review recovery")
-    parser.add_argument("operation", choices=("inspect", "template", "validate", "dry-run", "import", "migrate"))
-    parser.add_argument("--input", required=True, type=Path)
+    parser.add_argument("operation", choices=("inspect", "template", "validate", "dry-run", "import", "migrate", "review"))
+    parser.add_argument("--input", type=Path)
     parser.add_argument("--cluster-spec", type=Path)
     parser.add_argument("--template-output", type=Path)
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
@@ -38,9 +39,49 @@ def main(argv: list[str] | None = None) -> int:
         "--implementation-source-commit",
         help="40-character commit containing the migration implementation (migrate only)",
     )
+    parser.add_argument("--successor-identity", help="exact four-tier successor sha256: identity (review only)")
+    parser.add_argument("--artifact-set", help="exact four-tier successor artifact-set identity (review only)")
+    parser.add_argument("--event-id", help="exact recovered event identity (review only)")
+    parser.add_argument("--decision", help="closed historical editorial decision (review only)")
+    parser.add_argument("--review-artifact", type=Path, help="independent private review JSON (review only)")
+    parser.add_argument("--review-artifact-sha256", help="exact SHA-256 of the independent review JSON")
+    parser.add_argument("--operator", help="operator recording the reviewed decision")
+    parser.add_argument("--review-dry-run", action="store_true", help="validate a review without recording it")
     args = parser.parse_args(argv)
 
     try:
+        if args.operation == "review":
+            if (
+                args.pages_root is None
+                or not args.successor_identity
+                or not args.artifact_set
+                or not args.event_id
+                or not args.decision
+                or args.review_artifact is None
+                or not args.review_artifact_sha256
+                or not args.operator
+            ):
+                parser.error(
+                    "review requires --pages-root, --successor-identity, --artifact-set, "
+                    "--event-id, --decision, --review-artifact, --review-artifact-sha256, "
+                    "and --operator"
+                )
+            result = record_historical_event_review(
+                args.repo_root.resolve(),
+                args.pages_root.resolve(),
+                successor_identity_sha256=args.successor_identity,
+                artifact_set_sha256=args.artifact_set,
+                event_id=args.event_id,
+                decision=args.decision,
+                review_artifact_path=args.review_artifact,
+                review_artifact_sha256=args.review_artifact_sha256,
+                operator=args.operator,
+                dry_run=args.review_dry_run,
+            )
+            print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))
+            return 0
+        if args.input is None:
+            parser.error(f"{args.operation} requires --input")
         if args.operation == "migrate":
             if (
                 args.cluster_spec is None

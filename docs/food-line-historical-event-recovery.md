@@ -76,6 +76,61 @@ Confirmed candidates use four reporting tiers only:
 The tier is private prioritization metadata. It does not change qualification,
 disposition, review state, or publication authority.
 
+## Five-tier recovery migration
+
+Recoveries created before the four-tier policy was merged remain immutable
+evidence. Do not edit or replay-import them with newer priority semantics. The
+sanctioned `migrate` operation instead derives the predecessor from the complete
+input digest, validates all eight payload artifacts and the recovery manifest,
+and writes a distinct
+successor under:
+
+```text
+data/agent-history/food-line/recovery-migrations/
+  sha256-<32-character-successor-identity-prefix>/
+```
+
+The complete successor identity binds the migration and recovery schemas, full
+input digest, predecessor artifact-set identity, old and new priority-policy
+versions, and the four-tier semantic labels. The successor manifest also binds
+the exact predecessor path and artifact hashes, cluster-specification hash,
+implementation source commit, new artifact hashes, and new artifact-set
+identity. A digest-prefix collision or any path alias, link, reparse point,
+unexpected file, schema drift, hash drift, input drift, or specification drift
+fails closed.
+
+The migration copies the predecessor reconciliation snapshot and artifacts in
+memory, then permits only a priority value of `5` on a
+`disaster_household_food_loss` row to become `4`. Event and candidate membership,
+identity, disposition, evidence, uncertainty, qualification, URLs, dates,
+descriptions, and authority fields must compare exactly. Tier summaries are
+recomputed in migration lineage. The complete event manifest can contain one
+more migrated disaster-loss row than the confirmed-candidate report when that
+event has a non-confirmed disposition; this does not change its disposition.
+
+The successor is created atomically. Exact replay compares every expected byte
+and returns `idempotent_noop`; a changed file or lineage argument is a conflict.
+The operation accepts no predecessor path, Pages output path, queue path, or
+publication option and grants no approval authority.
+
+After synchronizing to the protected commit that contains this operation, run:
+
+```powershell
+python scripts/import_food_line_historical_recovery.py migrate `
+  --input <exact-original-aggregate.md> `
+  --cluster-spec <exact-reviewed-cluster-spec.json> `
+  --captured-at <exact-original-capture-time> `
+  --run-month <YYYY-MM> `
+  --repo-root . `
+  --predecessor-artifact-set sha256:<64-character-artifact-set-digest> `
+  --implementation-source-commit <40-character-protected-source-commit>
+```
+
+Repeat that command unchanged to prove non-mutating replay. Migration remains a
+private evidence operation: it does not write Food Line intake, review or
+publication queues, generated output, Pages, feeds, audio, social output, or
+scheduled tasks.
+
 ## Workflow
 
 Inspect without writing:

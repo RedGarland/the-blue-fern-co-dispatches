@@ -8,6 +8,7 @@ import os
 import re
 import shutil
 import stat
+import subprocess
 import tempfile
 from collections import Counter
 from dataclasses import dataclass
@@ -21,6 +22,25 @@ from .agent_findings import finding_from_payload, normalize_source_url
 RAW_SCHEMA = "food_line_historical_recovery_raw_v1"
 SPEC_SCHEMA = "food_line_historical_event_cluster_spec_v1"
 RECOVERY_SCHEMA = "food_line_historical_recovery_v1"
+MIGRATION_SCHEMA = "food_line_historical_recovery_migration_v1"
+FIVE_TIER_PRIORITY_POLICY = "food_line_historical_priority_policy_v1_five_tier"
+FOUR_TIER_PRIORITY_POLICY = "food_line_historical_priority_policy_v2_four_tier"
+FOUR_TIER_PRIORITY_SEMANTICS = {
+    "tier_1": "closures_suspensions_and_direct_service_reductions",
+    "tier_2": "measured_benefit_loss_with_emergency_food_demand",
+    "tier_3": "quantified_inventory_supply_or_capacity_strain",
+    "tier_4": "other_demonstrated_access_affordability_or_disaster_related_food_losses",
+}
+RECOVERY_ARTIFACT_SCHEMAS = {
+    "raw_archive.json": RAW_SCHEMA,
+    "normalized_unique_sources.json": "food_line_historical_unique_sources_v1",
+    "normalized_findings.json": "food_line_historical_normalized_findings_v1",
+    "event_cluster_manifest.json": "food_line_historical_event_clusters_v1",
+    "live_site_reconciliation_report.json": "food_line_historical_reconciliation_v1",
+    "disposition_matrix.json": "food_line_historical_dispositions_v1",
+    "import_validation_report.json": "food_line_historical_recovery_validation_v1",
+    "priority_confirmed_candidates.json": "food_line_historical_priority_candidates_v1",
+}
 DISPOSITIONS = {
     "already_published",
     "duplicate_or_corroboration",
@@ -952,3 +972,457 @@ def dry_run_result(root: Path, artifacts: dict[str, Any], *, cluster_spec_sha256
         "would_write": False,
         "publication_approval": False,
     }
+
+
+def _validated_real_file(path: Path, label: str) -> tuple[Path, bytes]:
+    if ".." in path.parts:
+        raise FoodLineHistoricalRecoveryError(f"{label} must not use path traversal")
+    absolute = path.absolute()
+    if not absolute.is_file() or _is_reparse_point(absolute):
+        raise FoodLineHistoricalRecoveryError(f"{label} must be an existing real file")
+    try:
+        resolved = absolute.resolve(strict=True)
+    except OSError as exc:
+        raise FoodLineHistoricalRecoveryError(f"{label} does not resolve") from exc
+    if not _same_path(absolute, resolved):
+        raise FoodLineHistoricalRecoveryError(f"{label} resolves through a path alias")
+    try:
+        return resolved, resolved.read_bytes()
+    except OSError as exc:
+        raise FoodLineHistoricalRecoveryError(f"unable to read {label}") from exc
+
+
+def _load_validated_predecessor(
+    root: Path,
+    input_path: Path,
+    cluster_spec_path: Path,
+    *,
+    expected_artifact_set_sha256: str,
+    captured_at: str,
+    run_month: str,
+) -> tuple[_CurrentRecoveryIdentity, dict[str, Any], dict[str, Any]]:
+    if not re.fullmatch(r"sha256:[0-9a-f]{64}", expected_artifact_set_sha256):
+        raise FoodLineHistoricalRecoveryError(
+            "predecessor artifact-set identity must be sha256 followed by 64 lowercase hexadecimal characters"
+        )
+    _, input_bytes = _validated_real_file(input_path, "historical recovery input")
+    input_sha256 = sha256_bytes(input_bytes)
+    identity = _validated_current_recovery_identity(root, input_sha256)
+    if not identity.target.exists():
+        raise FoodLineHistoricalRecoveryError("content-addressed predecessor recovery does not exist")
+
+    expected_names = set(RECOVERY_ARTIFACT_SCHEMAS) | {"recovery_manifest.json"}
+    entries: dict[str, Path] = {}
+    for entry in identity.target.iterdir():
+        if _is_reparse_point(entry) or not entry.is_file():
+            raise FoodLineHistoricalRecoveryError(f"predecessor contains an unsafe or non-file entry: {entry.name}")
+        entries[entry.name] = entry
+    if set(entries) != expected_names:
+        missing = sorted(expected_names - set(entries))
+        unexpected = sorted(set(entries) - expected_names)
+        raise FoodLineHistoricalRecoveryError(
+            f"predecessor file inventory drifted: missing={missing} unexpected={unexpected}"
+        )
+
+    try:
+        manifest = json.loads(entries["recovery_manifest.json"].read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise FoodLineHistoricalRecoveryError("predecessor recovery manifest is invalid") from exc
+    if not isinstance(manifest, dict) or manifest.get("schema_version") != RECOVERY_SCHEMA:
+        raise FoodLineHistoricalRecoveryError("predecessor recovery schema drifted")
+    expected_manifest_fields = {
+        "schema_version",
+        "input_sha256",
+        "cluster_spec_sha256",
+        "artifact_hashes",
+        "artifact_set_sha256",
+        "publication_approval",
+        "public_output_written",
+        "queue_items_created",
+    }
+    if set(manifest) != expected_manifest_fields:
+        raise FoodLineHistoricalRecoveryError("predecessor recovery manifest fields drifted")
+    if manifest.get("input_sha256") != input_sha256:
+        raise FoodLineHistoricalRecoveryError("predecessor recovery input hash drifted")
+    artifact_hashes = manifest.get("artifact_hashes")
+    if not isinstance(artifact_hashes, dict) or set(artifact_hashes) != set(RECOVERY_ARTIFACT_SCHEMAS):
+        raise FoodLineHistoricalRecoveryError("predecessor artifact hash inventory drifted")
+    if any(not re.fullmatch(r"[0-9a-f]{64}", str(value)) for value in artifact_hashes.values()):
+        raise FoodLineHistoricalRecoveryError("predecessor artifact hash is malformed")
+    calculated_artifact_set = _fingerprint(dict(sorted(artifact_hashes.items())))
+    if manifest.get("artifact_set_sha256") != calculated_artifact_set:
+        raise FoodLineHistoricalRecoveryError("predecessor artifact-set identity is internally inconsistent")
+    if calculated_artifact_set != expected_artifact_set_sha256:
+        raise FoodLineHistoricalRecoveryError(
+            "predecessor artifact-set identity does not match the requested migration"
+        )
+    if (
+        manifest.get("publication_approval") is not False
+        or manifest.get("public_output_written") is not False
+        or manifest.get("queue_items_created") != 0
+    ):
+        raise FoodLineHistoricalRecoveryError("predecessor recovery carries publication or queue authority")
+
+    artifacts: dict[str, Any] = {}
+    for name, expected_schema in RECOVERY_ARTIFACT_SCHEMAS.items():
+        raw = entries[name].read_bytes()
+        if sha256_bytes(raw) != artifact_hashes[name]:
+            raise FoodLineHistoricalRecoveryError(f"predecessor artifact hash drifted: {name}")
+        try:
+            value = json.loads(raw.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise FoodLineHistoricalRecoveryError(f"predecessor artifact is invalid JSON: {name}") from exc
+        if not isinstance(value, dict) or value.get("schema_version") != expected_schema:
+            raise FoodLineHistoricalRecoveryError(f"predecessor artifact schema drifted: {name}")
+        if value.get("input_sha256") != input_sha256:
+            raise FoodLineHistoricalRecoveryError(f"predecessor artifact input hash drifted: {name}")
+        artifacts[name] = value
+
+    _, cluster_spec_bytes = _validated_real_file(cluster_spec_path, "historical recovery cluster specification")
+    cluster_spec_sha256 = sha256_bytes(cluster_spec_bytes)
+    if manifest.get("cluster_spec_sha256") != cluster_spec_sha256:
+        raise FoodLineHistoricalRecoveryError("predecessor cluster-specification hash drifted")
+    if artifacts["event_cluster_manifest.json"].get("cluster_spec_sha256") != cluster_spec_sha256:
+        raise FoodLineHistoricalRecoveryError("event manifest cluster-specification hash drifted")
+    try:
+        cluster_spec = json.loads(cluster_spec_bytes.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise FoodLineHistoricalRecoveryError("historical recovery cluster specification is invalid JSON") from exc
+    if (
+        not isinstance(cluster_spec, dict)
+        or cluster_spec.get("schema_version") != SPEC_SCHEMA
+        or cluster_spec.get("input_sha256") != input_sha256
+        or cluster_spec.get("run_month") != run_month
+    ):
+        raise FoodLineHistoricalRecoveryError("cluster specification does not bind the requested predecessor")
+
+    raw_archive = artifacts["raw_archive.json"]
+    try:
+        archived_input = base64.b64decode(raw_archive.get("raw_bytes_base64", ""), validate=True)
+    except (ValueError, TypeError) as exc:
+        raise FoodLineHistoricalRecoveryError("predecessor raw archive does not contain valid source bytes") from exc
+    if archived_input != input_bytes or sha256_bytes(archived_input) != input_sha256:
+        raise FoodLineHistoricalRecoveryError("predecessor raw archive does not preserve the bound input")
+    if raw_archive.get("raw_text") != input_bytes.decode("utf-8", errors="replace"):
+        raise FoodLineHistoricalRecoveryError("predecessor raw archive decoded text drifted")
+    if raw_archive.get("captured_at") != _timestamp(captured_at, "captured_at"):
+        raise FoodLineHistoricalRecoveryError("predecessor captured_at drifted")
+    if not re.fullmatch(r"20\d{2}-(?:0[1-9]|1[0-2])", run_month or ""):
+        raise FoodLineHistoricalRecoveryError("run_month must be YYYY-MM")
+    for name, value in artifacts.items():
+        if value.get("run_month") != run_month:
+            raise FoodLineHistoricalRecoveryError(f"predecessor run-month drifted: {name}")
+
+    validation = artifacts["import_validation_report.json"]
+    sources = artifacts["normalized_unique_sources.json"]
+    events = artifacts["event_cluster_manifest.json"]
+    dispositions = artifacts["disposition_matrix.json"]
+    candidates = artifacts["priority_confirmed_candidates.json"]
+    if validation.get("retained_finding_count") != sources.get("finding_count"):
+        raise FoodLineHistoricalRecoveryError("predecessor retained-finding totals are inconsistent")
+    if validation.get("retained_finding_count") != len(artifacts["normalized_findings.json"].get("findings", [])):
+        raise FoodLineHistoricalRecoveryError("predecessor normalized-finding inventory is inconsistent")
+    if validation.get("unique_canonical_source_count") != sources.get("unique_canonical_source_count"):
+        raise FoodLineHistoricalRecoveryError("predecessor unique-source totals are inconsistent")
+    if validation.get("event_cluster_count") != events.get("cluster_count"):
+        raise FoodLineHistoricalRecoveryError("predecessor event-cluster totals are inconsistent")
+    if events.get("cluster_count") != len(events.get("clusters", [])):
+        raise FoodLineHistoricalRecoveryError("predecessor event-cluster inventory is inconsistent")
+    if validation.get("disposition_counts") != dispositions.get("counts"):
+        raise FoodLineHistoricalRecoveryError("predecessor disposition totals are inconsistent")
+    confirmed_count = dispositions["counts"].get("confirmed_historical_review_candidate")
+    if candidates.get("confirmed_candidate_count") != confirmed_count:
+        raise FoodLineHistoricalRecoveryError("predecessor confirmed-candidate totals are inconsistent")
+    if candidates.get("confirmed_candidate_count") != len(candidates.get("candidates", [])):
+        raise FoodLineHistoricalRecoveryError("predecessor confirmed-candidate inventory is inconsistent")
+    event_ids = {row.get("event_id") for row in events["clusters"]}
+    disposition_ids = {row.get("event_id") for row in dispositions.get("events", [])}
+    confirmed_event_ids = {
+        row.get("event_id")
+        for row in events["clusters"]
+        if row.get("proposed_disposition") == "confirmed_historical_review_candidate"
+    }
+    candidate_ids = {row.get("event_id") for row in candidates["candidates"]}
+    if event_ids != disposition_ids or confirmed_event_ids != candidate_ids:
+        raise FoodLineHistoricalRecoveryError("predecessor event identities are inconsistent across artifacts")
+    if candidates.get("publication_approval") is not False or events.get("publication_approval") is not False:
+        raise FoodLineHistoricalRecoveryError("predecessor artifacts carry publication authority")
+    return identity, artifacts, manifest
+
+
+def _priority_counts(rows: list[dict[str, Any]]) -> dict[str, int]:
+    counts = Counter(int(row.get("priority", -1)) for row in rows)
+    return {str(priority): counts[priority] for priority in sorted(counts)}
+
+
+def _audit_four_tier_semantic_diff(
+    predecessor: dict[str, Any], successor: dict[str, Any]
+) -> dict[str, dict[str, dict[str, int]]]:
+    if set(predecessor) != set(RECOVERY_ARTIFACT_SCHEMAS) or set(successor) != set(RECOVERY_ARTIFACT_SCHEMAS):
+        raise FoodLineHistoricalRecoveryError("migration artifact inventory changed")
+    for name in set(RECOVERY_ARTIFACT_SCHEMAS) - {
+        "event_cluster_manifest.json",
+        "priority_confirmed_candidates.json",
+    }:
+        if predecessor[name] != successor[name]:
+            raise FoodLineHistoricalRecoveryError(f"migration changed an unapproved artifact: {name}")
+
+    transition: dict[str, dict[str, dict[str, int]]] = {}
+    for name, row_key in (
+        ("event_cluster_manifest.json", "clusters"),
+        ("priority_confirmed_candidates.json", "candidates"),
+    ):
+        old_document = predecessor[name]
+        new_document = successor[name]
+        old_header = {key: value for key, value in old_document.items() if key != row_key}
+        new_header = {key: value for key, value in new_document.items() if key != row_key}
+        if old_header != new_header:
+            raise FoodLineHistoricalRecoveryError(f"migration changed unapproved metadata: {name}")
+        old_rows = old_document.get(row_key)
+        new_rows = new_document.get(row_key)
+        if not isinstance(old_rows, list) or not isinstance(new_rows, list) or len(old_rows) != len(new_rows):
+            raise FoodLineHistoricalRecoveryError(f"migration changed row membership: {name}")
+        for index, (old_row, new_row) in enumerate(zip(old_rows, new_rows, strict=True), start=1):
+            if not isinstance(old_row, dict) or not isinstance(new_row, dict):
+                raise FoodLineHistoricalRecoveryError(f"migration row is not an object: {name} row {index}")
+            old_priority = old_row.get("priority")
+            expected_priority = 4 if old_priority == 5 else old_priority
+            if old_priority not in {1, 2, 3, 4, 5} or new_row.get("priority") != expected_priority:
+                raise FoodLineHistoricalRecoveryError(f"migration priority transition is invalid: {name} row {index}")
+            consequence = old_row.get("measured_access_consequence")
+            consequence_type = consequence.get("type") if isinstance(consequence, dict) else None
+            if old_priority == 5 and consequence_type != "disaster_household_food_loss":
+                raise FoodLineHistoricalRecoveryError("Tier 5 is not bound to disaster-related demonstrated loss")
+            if consequence_type == "disaster_household_food_loss" and old_priority != 5:
+                raise FoodLineHistoricalRecoveryError("five-tier predecessor has an unexpected disaster-loss priority")
+            old_without_priority = {key: value for key, value in old_row.items() if key != "priority"}
+            new_without_priority = {key: value for key, value in new_row.items() if key != "priority"}
+            if old_without_priority != new_without_priority:
+                raise FoodLineHistoricalRecoveryError(f"migration changed unapproved semantics: {name} row {index}")
+        if any(row.get("priority") == 5 for row in new_rows):
+            raise FoodLineHistoricalRecoveryError(f"migration retained Tier 5: {name}")
+        if not any(row.get("priority") == 5 for row in old_rows):
+            raise FoodLineHistoricalRecoveryError(f"five-tier predecessor has no Tier 5 rows: {name}")
+        transition[name] = {
+            "predecessor": _priority_counts(old_rows),
+            "successor": _priority_counts(new_rows),
+        }
+    return transition
+
+
+def _four_tier_successor(predecessor: dict[str, Any]) -> dict[str, Any]:
+    successor = json.loads(canonical_json(predecessor))
+    for name, row_key in (
+        ("event_cluster_manifest.json", "clusters"),
+        ("priority_confirmed_candidates.json", "candidates"),
+    ):
+        for row in successor[name][row_key]:
+            if row.get("priority") == 5:
+                row["priority"] = 4
+    _audit_four_tier_semantic_diff(predecessor, successor)
+    return successor
+
+
+def _validated_migration_target(root: Path, successor_identity_sha256: str) -> Path:
+    if not re.fullmatch(r"sha256:[0-9a-f]{64}", successor_identity_sha256):
+        raise FoodLineHistoricalRecoveryError("successor identity is malformed")
+    repository_root = root.absolute().resolve(strict=True)
+    food_line_root = repository_root / "data" / "agent-history" / "food-line"
+    migration_root = food_line_root / "recovery-migrations"
+    target = migration_root / f"sha256-{successor_identity_sha256.removeprefix('sha256:')[:32]}"
+    current = repository_root
+    for component in ("data", "agent-history", "food-line", "recovery-migrations", target.name):
+        current = current / component
+        if current.exists() and _is_reparse_point(current):
+            raise FoodLineHistoricalRecoveryError(f"migration path contains a symlink or junction: {current}")
+    if food_line_root.is_dir():
+        for candidate in food_line_root.iterdir():
+            if (
+                os.path.normcase(candidate.name) == os.path.normcase(migration_root.name)
+                and candidate.name != migration_root.name
+            ):
+                raise FoodLineHistoricalRecoveryError("migration root uses a non-canonical case alias")
+    if migration_root.is_dir():
+        for candidate in migration_root.iterdir():
+            if os.path.normcase(candidate.name) == os.path.normcase(target.name) and candidate.name != target.name:
+                raise FoodLineHistoricalRecoveryError("successor target uses a non-canonical case alias")
+    if target.parent != migration_root:
+        raise FoodLineHistoricalRecoveryError("successor target escaped the migration root")
+    if target.exists():
+        if not target.is_dir() or not _same_path(target.resolve(strict=True), target):
+            raise FoodLineHistoricalRecoveryError("successor target is not a real canonical directory")
+    return target
+
+
+def migrate_recovery_to_four_tiers(
+    root: Path,
+    input_path: Path,
+    cluster_spec_path: Path,
+    *,
+    predecessor_artifact_set_sha256: str,
+    implementation_source_commit: str,
+    captured_at: str,
+    run_month: str,
+) -> dict[str, Any]:
+    """Create an immutable four-tier successor from one validated five-tier recovery."""
+    if not re.fullmatch(r"[0-9a-f]{40}", implementation_source_commit):
+        raise FoodLineHistoricalRecoveryError(
+            "implementation source commit must be exactly 40 lowercase hexadecimal characters"
+        )
+    predecessor_identity, predecessor, predecessor_manifest = _load_validated_predecessor(
+        root,
+        input_path,
+        cluster_spec_path,
+        expected_artifact_set_sha256=predecessor_artifact_set_sha256,
+        captured_at=captured_at,
+        run_month=run_month,
+    )
+    successor = _four_tier_successor(predecessor)
+    transition = _audit_four_tier_semantic_diff(predecessor, successor)
+    identity_payload = {
+        "migration_schema_version": MIGRATION_SCHEMA,
+        "recovery_schema_version": RECOVERY_SCHEMA,
+        "input_sha256": predecessor_identity.input_sha256,
+        "predecessor_artifact_set_sha256": predecessor_artifact_set_sha256,
+        "predecessor_priority_policy_version": FIVE_TIER_PRIORITY_POLICY,
+        "successor_priority_policy_version": FOUR_TIER_PRIORITY_POLICY,
+        "successor_priority_semantics": FOUR_TIER_PRIORITY_SEMANTICS,
+    }
+    successor_identity_sha256 = _fingerprint(identity_payload)
+    target = _validated_migration_target(root, successor_identity_sha256)
+    hashes = _artifact_hashes(successor)
+    artifact_set_sha256 = _fingerprint(hashes)
+    predecessor_relative_path = predecessor_identity.target.relative_to(
+        predecessor_identity.repository_root
+    ).as_posix()
+    validation = successor["import_validation_report.json"]
+    manifest = {
+        "schema_version": MIGRATION_SCHEMA,
+        "successor_identity_sha256": successor_identity_sha256,
+        "successor_identity": identity_payload,
+        "input_sha256": predecessor_identity.input_sha256,
+        "cluster_spec_sha256": predecessor_manifest["cluster_spec_sha256"],
+        "captured_at": captured_at,
+        "run_month": run_month,
+        "implementation_source_commit": implementation_source_commit,
+        "predecessor": {
+            "path": predecessor_relative_path,
+            "artifact_set_sha256": predecessor_artifact_set_sha256,
+            "artifact_hashes": predecessor_manifest["artifact_hashes"],
+        },
+        "priority_policy_transition": {
+            "from": FIVE_TIER_PRIORITY_POLICY,
+            "to": FOUR_TIER_PRIORITY_POLICY,
+            "semantics": FOUR_TIER_PRIORITY_SEMANTICS,
+            "tier_counts": transition,
+            "event_to_confirmed_tier_5_difference": {
+                "count": (
+                    transition["event_cluster_manifest.json"]["predecessor"].get("5", 0)
+                    - transition["priority_confirmed_candidates.json"]["predecessor"].get("5", 0)
+                ),
+                "reason": (
+                    "event manifest includes non-confirmed dispositions; "
+                    "candidate report includes confirmed events only"
+                ),
+            },
+        },
+        "recovery_totals": {
+            "retained_findings": validation["retained_finding_count"],
+            "unique_canonical_urls": validation["unique_canonical_source_count"],
+            "event_clusters": validation["event_cluster_count"],
+            "dispositions": validation["disposition_counts"],
+        },
+        "artifact_hashes": hashes,
+        "artifact_set_sha256": artifact_set_sha256,
+        "publication_approval": False,
+        "public_output_written": False,
+        "queue_items_created": 0,
+        "pages_files_written": 0,
+        "generated_output_files_written": 0,
+        "audio_files_written": 0,
+        "social_posts_created": 0,
+        "scheduled_tasks_changed": 0,
+    }
+    expected_names = set(RECOVERY_ARTIFACT_SCHEMAS) | {"recovery_manifest.json"}
+    if target.exists():
+        entries = list(target.iterdir())
+        if any(_is_reparse_point(entry) or not entry.is_file() for entry in entries):
+            raise FoodLineHistoricalRecoveryError("existing successor contains an unsafe or non-file entry")
+        if {entry.name for entry in entries} != expected_names:
+            raise FoodLineHistoricalRecoveryError("existing successor file inventory drifted")
+        for name, value in {**successor, "recovery_manifest.json": manifest}.items():
+            expected_bytes = canonical_json(value).encode("utf-8")
+            if (target / name).read_bytes() != expected_bytes:
+                raise FoodLineHistoricalRecoveryError(f"refusing conflicting migration replay: {name}")
+        return {
+            "status": "idempotent_noop",
+            "recovery_path": str(target),
+            "successor_identity_sha256": successor_identity_sha256,
+            "artifact_set_sha256": artifact_set_sha256,
+            "artifact_count": len(successor) + 1,
+            "priority_transition": transition,
+            "recovery_totals": manifest["recovery_totals"],
+            "would_write": False,
+            "publication_approval": False,
+            "queue_items_created": 0,
+            "pages_files_written": 0,
+        }
+
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if _is_reparse_point(target.parent):
+        raise FoodLineHistoricalRecoveryError("migration root became a symlink or junction")
+    temporary = Path(tempfile.mkdtemp(prefix=target.name + ".", dir=target.parent))
+    try:
+        for name, value in successor.items():
+            _atomic_json(temporary / name, value)
+        _atomic_json(temporary / "recovery_manifest.json", manifest)
+        os.replace(temporary, target)
+    except OSError as exc:
+        raise FoodLineHistoricalRecoveryError(f"atomic successor creation failed: {exc}") from exc
+    finally:
+        if temporary.exists():
+            shutil.rmtree(temporary)
+    return {
+        "status": "migrated",
+        "recovery_path": str(target),
+        "successor_identity_sha256": successor_identity_sha256,
+        "artifact_set_sha256": artifact_set_sha256,
+        "artifact_count": len(successor) + 1,
+        "priority_transition": transition,
+        "recovery_totals": manifest["recovery_totals"],
+        "would_write": True,
+        "publication_approval": False,
+        "queue_items_created": 0,
+        "pages_files_written": 0,
+    }
+
+
+def validate_migration_implementation_commit(root: Path, source_commit: str) -> None:
+    """Require the recorded commit to be protected-history code containing this owner."""
+    if not re.fullmatch(r"[0-9a-f]{40}", source_commit):
+        raise FoodLineHistoricalRecoveryError(
+            "implementation source commit must be exactly 40 lowercase hexadecimal characters"
+        )
+    commands = (
+        ["git", "-C", str(root), "rev-parse", "--show-toplevel"],
+        ["git", "-C", str(root), "merge-base", "--is-ancestor", source_commit, "HEAD"],
+        [
+            "git",
+            "-C",
+            str(root),
+            "show",
+            f"{source_commit}:src/bluefern_dispatches/food_line_historical_recovery.py",
+        ],
+    )
+    try:
+        root_result = subprocess.run(commands[0], check=True, capture_output=True, text=True)
+        if not _same_path(Path(root_result.stdout.strip()), root.resolve(strict=True)):
+            raise FoodLineHistoricalRecoveryError("repository root does not bind the migration source commit")
+        subprocess.run(commands[1], check=True, capture_output=True, text=True)
+        source_result = subprocess.run(commands[2], check=True, capture_output=True, text=True)
+    except (OSError, subprocess.CalledProcessError) as exc:
+        raise FoodLineHistoricalRecoveryError(
+            "implementation source commit is not an ancestor containing the migration owner"
+        ) from exc
+    if "def migrate_recovery_to_four_tiers(" not in source_result.stdout:
+        raise FoodLineHistoricalRecoveryError("implementation source commit does not contain the migration owner")

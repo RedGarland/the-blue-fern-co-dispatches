@@ -7,8 +7,10 @@ import json
 import os
 import re
 import shutil
+import stat
 import tempfile
 from collections import Counter
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -32,8 +34,8 @@ CONSEQUENCE_PRIORITIES = {
     "benefit_access_contraction_with_emergency_demand": 2,
     "inventory_or_capacity_strain": 3,
     "grocery_or_school_meal_access_loss": 4,
-    "disaster_household_food_loss": 5,
-    "risk_or_mitigation_only": 6,
+    "disaster_household_food_loss": 4,
+    "risk_or_mitigation_only": 4,
 }
 PUBLIC_CATEGORIES = {"source_site_output", "pages_public_output"}
 
@@ -322,11 +324,119 @@ def cluster_spec_template(parsed: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _collect_urls(base: Path) -> dict[str, list[str]]:
+@dataclass(frozen=True)
+class _CurrentRecoveryIdentity:
+    input_sha256: str
+    repository_root: Path
+    recovery_root: Path
+    target: Path
+
+
+def _is_reparse_point(path: Path) -> bool:
+    try:
+        attributes = getattr(path.lstat(), "st_file_attributes", 0)
+    except OSError as exc:
+        raise FoodLineHistoricalRecoveryError(f"unable to inspect recovery path: {path}") from exc
+    return path.is_symlink() or bool(attributes & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0))
+
+
+def _same_path(left: Path, right: Path) -> bool:
+    return os.path.normcase(os.path.abspath(left)) == os.path.normcase(os.path.abspath(right))
+
+
+def _validated_current_recovery_identity(root: Path, input_sha256: str) -> _CurrentRecoveryIdentity:
+    if not re.fullmatch(r"[0-9a-f]{64}", input_sha256):
+        raise FoodLineHistoricalRecoveryError("recovery input_sha256 must be exactly 64 lowercase hexadecimal characters")
+    absolute_root = root.absolute()
+    if not absolute_root.exists() or _is_reparse_point(absolute_root):
+        raise FoodLineHistoricalRecoveryError("recovery repository root must be an existing real directory")
+    try:
+        repository_root = absolute_root.resolve(strict=True)
+    except OSError as exc:
+        raise FoodLineHistoricalRecoveryError("recovery repository root does not resolve") from exc
+    if not repository_root.is_dir() or _is_reparse_point(repository_root):
+        raise FoodLineHistoricalRecoveryError("recovery repository root must be a real directory")
+
+    recovery_root = repository_root / "data" / "agent-history" / "food-line" / "recoveries"
+    target = recovery_root / f"sha256-{input_sha256[:32]}"
+    try:
+        target.relative_to(recovery_root)
+    except ValueError as exc:  # pragma: no cover - constructed components are fixed
+        raise FoodLineHistoricalRecoveryError("current recovery target escaped the private recovery root") from exc
+    if target.parent != recovery_root:
+        raise FoodLineHistoricalRecoveryError("current recovery target must be a direct child of the private recovery root")
+    if recovery_root.is_dir():
+        for candidate in recovery_root.iterdir():
+            if os.path.normcase(candidate.name) == os.path.normcase(target.name) and candidate.name != target.name:
+                raise FoodLineHistoricalRecoveryError("current recovery target uses a non-canonical case alias")
+
+    current = repository_root
+    for component in ("data", "agent-history", "food-line", "recoveries", target.name):
+        current = current / component
+        if current.exists() and _is_reparse_point(current):
+            raise FoodLineHistoricalRecoveryError(f"current recovery path contains a symlink or junction: {current}")
+
+    if target.exists():
+        if not target.is_dir():
+            raise FoodLineHistoricalRecoveryError("current recovery target exists but is not a directory")
+        try:
+            resolved_target = target.resolve(strict=True)
+        except OSError as exc:
+            raise FoodLineHistoricalRecoveryError("current recovery target does not resolve") from exc
+        if not _same_path(resolved_target, target):
+            raise FoodLineHistoricalRecoveryError("current recovery target resolves through an alias")
+        manifest_path = target / "recovery_manifest.json"
+        if not manifest_path.is_file() or _is_reparse_point(manifest_path):
+            raise FoodLineHistoricalRecoveryError("current recovery manifest is missing or unsafe")
+        try:
+            existing_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise FoodLineHistoricalRecoveryError("current recovery manifest is missing or invalid") from exc
+        if (
+            existing_manifest.get("schema_version") != RECOVERY_SCHEMA
+            or existing_manifest.get("input_sha256") != input_sha256
+        ):
+            raise FoodLineHistoricalRecoveryError("current recovery manifest does not bind the validated recovery identity")
+
+    return _CurrentRecoveryIdentity(
+        input_sha256=input_sha256,
+        repository_root=repository_root,
+        recovery_root=recovery_root,
+        target=target,
+    )
+
+
+def _collect_urls(base: Path, *, current_recovery: _CurrentRecoveryIdentity | None = None) -> dict[str, list[str]]:
     matches: dict[str, list[str]] = {}
     if not base.exists():
         return matches
-    paths = [base] if base.is_file() else [path for path in base.rglob("*") if path.is_file()]
+    if base.is_file():
+        paths = [base]
+    else:
+        paths = []
+        for directory, child_directories, filenames in os.walk(base, followlinks=False):
+            directory_path = Path(directory)
+            child_directories.sort()
+            filenames.sort()
+            if current_recovery is not None:
+                retained_directories = []
+                for name in child_directories:
+                    child = directory_path / name
+                    if _same_path(child, current_recovery.target):
+                        continue
+                    if _is_reparse_point(child):
+                        raise FoodLineHistoricalRecoveryError(
+                            f"historical recovery scan encountered a symlink or junction: {child}"
+                        )
+                    retained_directories.append(name)
+                child_directories[:] = retained_directories
+                for name in filenames:
+                    child = directory_path / name
+                    if _is_reparse_point(child):
+                        raise FoodLineHistoricalRecoveryError(
+                            f"historical recovery scan encountered a symlink or junction: {child}"
+                        )
+            paths.extend(directory_path / name for name in filenames)
     url_pattern = re.compile(r"https://[^\s\"'<>]+", flags=re.I)
     for path in sorted(paths):
         if path.suffix.lower() not in {".csv", ".html", ".json", ".jsonl", ".md", ".txt", ".xml"}:
@@ -342,7 +452,13 @@ def _collect_urls(base: Path) -> dict[str, list[str]]:
     return {url: sorted(set(paths)) for url, paths in matches.items()}
 
 
-def build_reconciliation(root: Path, pages_root: Path | None, sources: list[dict[str, Any]]) -> dict[str, Any]:
+def _build_reconciliation(
+    root: Path,
+    pages_root: Path | None,
+    sources: list[dict[str, Any]],
+    *,
+    current_recovery: _CurrentRecoveryIdentity | None,
+) -> dict[str, Any]:
     categories = {
         "source_site_output": [root / "output" / "site" / "food-line"],
         "source_generated_output": [root / "output" / "dispatches" / "food-line" / "editions"],
@@ -368,7 +484,8 @@ def build_reconciliation(root: Path, pages_root: Path | None, sources: list[dict
     for category, paths in categories.items():
         merged: dict[str, list[str]] = {}
         for path in paths:
-            for url, matched_paths in _collect_urls(path).items():
+            exclusion = current_recovery if category == "historical_agent_records" else None
+            for url, matched_paths in _collect_urls(path, current_recovery=exclusion).items():
                 merged.setdefault(url, []).extend(matched_paths)
         indexes[category] = {url: sorted(set(values)) for url, values in merged.items()}
     source_rows = []
@@ -396,6 +513,11 @@ def build_reconciliation(root: Path, pages_root: Path | None, sources: list[dict
         },
         "sources": source_rows,
     }
+
+
+def build_reconciliation(root: Path, pages_root: Path | None, sources: list[dict[str, Any]]) -> dict[str, Any]:
+    """Reconcile normally without exposing a caller-controlled path exclusion."""
+    return _build_reconciliation(root, pages_root, sources, current_recovery=None)
 
 
 def _reference_exists(root: Path, pages_root: Path | None, reference: str) -> bool:
@@ -627,7 +749,13 @@ def build_recovery(
         raise FoodLineHistoricalRecoveryError(f"invalid cluster spec: {exc}") from exc
     if not isinstance(spec, dict):
         raise FoodLineHistoricalRecoveryError("cluster spec must be a JSON object")
-    reconciliation = build_reconciliation(root, pages_root, parsed["sources"])
+    current_recovery = _validated_current_recovery_identity(root, parsed["input_sha256"])
+    reconciliation = _build_reconciliation(
+        current_recovery.repository_root,
+        pages_root,
+        parsed["sources"],
+        current_recovery=current_recovery,
+    )
     reconciliation["input_sha256"] = parsed["input_sha256"]
     reconciliation["run_month"] = parsed["run_month"]
     clusters = validate_clusters(spec, parsed, reconciliation, root=root, pages_root=pages_root)
@@ -753,7 +881,7 @@ def _recovery_directory(root: Path, input_sha256: str) -> Path:
     # The complete digest remains authoritative in the manifest. A bounded
     # digest prefix keeps artifact paths usable in standard Windows worktrees;
     # a prefix collision fails closed when the manifest is compared.
-    return root / "data" / "agent-history" / "food-line" / "recoveries" / f"sha256-{input_sha256[:32]}"
+    return _validated_current_recovery_identity(root, input_sha256).target
 
 
 def import_recovery(root: Path, artifacts: dict[str, Any], *, cluster_spec_sha256: str) -> dict[str, Any]:

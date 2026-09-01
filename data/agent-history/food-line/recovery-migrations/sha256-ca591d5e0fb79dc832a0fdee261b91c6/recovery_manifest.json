@@ -1,0 +1,116 @@
+{
+  "artifact_hashes": {
+    "disposition_matrix.json": "df0f548e1bcf323af9145a6fbd787a1e333f012f3df887a664c99437370e7263",
+    "event_cluster_manifest.json": "432c10d1731b3a4836f1366b9f70d4ee849075fac7a0ce77a1fc835a17a041f0",
+    "import_validation_report.json": "7bbc6fb0e9df0efb389e67ea76a1e31277ddbdc432af2efe0123a45583dff9c0",
+    "live_site_reconciliation_report.json": "d9f883b9615853edff78cb5f0b6995dadfcb1b1eee91a0df77ecdea3b13ed6f7",
+    "normalized_findings.json": "f9e87fcecbb2e3bdef927c70fdcae57f73b13e0890660d968e7c61cb7fc78e20",
+    "normalized_unique_sources.json": "4be076c7414841f23c05223bd44b656909e1af5f9091bfb4ccb1eb988b6841d9",
+    "priority_confirmed_candidates.json": "e561bb452d3ee916958cdd9720499406867b281c630cb47db85321c88e31e835",
+    "raw_archive.json": "2b325433f5a991acb75e53877b262230b1312a9acf25e8d652c747cd5163de80"
+  },
+  "artifact_set_sha256": "sha256:f9f0aaca7c6154fc241ea7ddba980ed2cf6361fe0eb49e9e3695b779a5e36416",
+  "audio_files_written": 0,
+  "captured_at": "2026-08-31T23:45:00Z",
+  "cluster_spec_sha256": "3c33409e196de2c43781e6633d301c7b64c466e454942e0c083f90c96c720c10",
+  "generated_output_files_written": 0,
+  "implementation_source_commit": "68c3e5bd2c7e27db9f622df8b40a5d7ee7557c0c",
+  "input_sha256": "762cfe62b52e49efce0157edefa945f8a539980b8fbe1f62f2181224cf340e4b",
+  "pages_files_written": 0,
+  "predecessor": {
+    "artifact_hashes": {
+      "disposition_matrix.json": "df0f548e1bcf323af9145a6fbd787a1e333f012f3df887a664c99437370e7263",
+      "event_cluster_manifest.json": "1d8404aa00878ed253be9916485f83378ce29bdc9a75633a2ab88ca5a9749d72",
+      "import_validation_report.json": "7bbc6fb0e9df0efb389e67ea76a1e31277ddbdc432af2efe0123a45583dff9c0",
+      "live_site_reconciliation_report.json": "d9f883b9615853edff78cb5f0b6995dadfcb1b1eee91a0df77ecdea3b13ed6f7",
+      "normalized_findings.json": "f9e87fcecbb2e3bdef927c70fdcae57f73b13e0890660d968e7c61cb7fc78e20",
+      "normalized_unique_sources.json": "4be076c7414841f23c05223bd44b656909e1af5f9091bfb4ccb1eb988b6841d9",
+      "priority_confirmed_candidates.json": "e34b924a9bf0db1bc9aaa6d0a218b6936c0a9bdd526cf0c89a113c8edfdf92a9",
+      "raw_archive.json": "2b325433f5a991acb75e53877b262230b1312a9acf25e8d652c747cd5163de80"
+    },
+    "artifact_set_sha256": "sha256:f22e17876696e923866f97649258d01ff6ba65fdc84cf65fd4a119837cc92616",
+    "path": "data/agent-history/food-line/recoveries/sha256-762cfe62b52e49efce0157edefa945f8"
+  },
+  "priority_policy_transition": {
+    "event_to_confirmed_tier_5_difference": {
+      "count": 1,
+      "reason": "event manifest includes non-confirmed dispositions; candidate report includes confirmed events only"
+    },
+    "from": "food_line_historical_priority_policy_v1_five_tier",
+    "semantics": {
+      "tier_1": "closures_suspensions_and_direct_service_reductions",
+      "tier_2": "measured_benefit_loss_with_emergency_food_demand",
+      "tier_3": "quantified_inventory_supply_or_capacity_strain",
+      "tier_4": "other_demonstrated_access_affordability_or_disaster_related_food_losses"
+    },
+    "tier_counts": {
+      "event_cluster_manifest.json": {
+        "predecessor": {
+          "1": 169,
+          "2": 20,
+          "3": 60,
+          "4": 75,
+          "5": 22,
+          "6": 68
+        },
+        "successor": {
+          "1": 169,
+          "2": 20,
+          "3": 60,
+          "4": 97,
+          "6": 68
+        }
+      },
+      "priority_confirmed_candidates.json": {
+        "predecessor": {
+          "1": 158,
+          "2": 20,
+          "3": 57,
+          "4": 64,
+          "5": 21
+        },
+        "successor": {
+          "1": 158,
+          "2": 20,
+          "3": 57,
+          "4": 85
+        }
+      }
+    },
+    "to": "food_line_historical_priority_policy_v2_four_tier"
+  },
+  "public_output_written": false,
+  "publication_approval": false,
+  "queue_items_created": 0,
+  "recovery_totals": {
+    "dispositions": {
+      "already_published": 2,
+      "confirmed_historical_review_candidate": 320,
+      "deferred_specific_evidence_gap": 67,
+      "duplicate_or_corroboration": 10,
+      "excluded_under_existing_rules": 15
+    },
+    "event_clusters": 414,
+    "retained_findings": 505,
+    "unique_canonical_urls": 437
+  },
+  "run_month": "2026-08",
+  "scheduled_tasks_changed": 0,
+  "schema_version": "food_line_historical_recovery_migration_v1",
+  "social_posts_created": 0,
+  "successor_identity": {
+    "input_sha256": "762cfe62b52e49efce0157edefa945f8a539980b8fbe1f62f2181224cf340e4b",
+    "migration_schema_version": "food_line_historical_recovery_migration_v1",
+    "predecessor_artifact_set_sha256": "sha256:f22e17876696e923866f97649258d01ff6ba65fdc84cf65fd4a119837cc92616",
+    "predecessor_priority_policy_version": "food_line_historical_priority_policy_v1_five_tier",
+    "recovery_schema_version": "food_line_historical_recovery_v1",
+    "successor_priority_policy_version": "food_line_historical_priority_policy_v2_four_tier",
+    "successor_priority_semantics": {
+      "tier_1": "closures_suspensions_and_direct_service_reductions",
+      "tier_2": "measured_benefit_loss_with_emergency_food_demand",
+      "tier_3": "quantified_inventory_supply_or_capacity_strain",
+      "tier_4": "other_demonstrated_access_affordability_or_disaster_related_food_losses"
+    }
+  },
+  "successor_identity_sha256": "sha256:ca591d5e0fb79dc832a0fdee261b91c6c17aa6175328fccd4518056d87525ae5"
+}

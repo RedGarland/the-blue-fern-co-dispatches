@@ -1,0 +1,2693 @@
+{
+  "exact_url_match_counts": {
+    "agent_intake_and_inbox": 9,
+    "historical_agent_records": 0,
+    "pages_public_output": 2,
+    "review_and_publication_queues": 0,
+    "source_generated_output": 0,
+    "source_records_and_claim_ledgers": 0,
+    "source_site_output": 0
+  },
+  "input_sha256": "762cfe62b52e49efce0157edefa945f8a539980b8fbe1f62f2181224cf340e4b",
+  "run_month": "2026-08",
+  "schema_version": "food_line_historical_reconciliation_v1",
+  "source_count": 437,
+  "sources": [
+    {
+      "canonical_source_url": "https://kbrb.net/community-events",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-0097838044439d0db10762f4"
+    },
+    {
+      "canonical_source_url": "https://camasprairiefoodbank.org",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-00d74b6f09409b33cd4ded5d"
+    },
+    {
+      "canonical_source_url": "https://www.riveroakstx.com/m/newsflash/home/detail/46",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-013bb1c6f4fd723c2e4e3e8a"
+    },
+    {
+      "canonical_source_url": "https://www.mysanantonio.com/news/hill-country/article/hill-country-food-demand-flooding-22400893.php",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-02b6afb4ee95dac8db6ac610"
+    },
+    {
+      "canonical_source_url": "https://285south.com/are-you-concerned-about-yourself-and-your-neighbors",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-02f9b0e297910f367943392a"
+    },
+    {
+      "canonical_source_url": "https://www.dhs.state.il.us/page.aspx?item=179768",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-0375d1d967c44fb733e1249d"
+    },
+    {
+      "canonical_source_url": "https://www.kunm.org/public-health-new-mexico/2026-08-20/food-insecurity-banks-snap-lost-coverage-federal-cuts-hr1-obba",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-03d5a72160837e5325bce498"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/casaviewchristianchurch/posts/-food-distribution-updateour-free-food-distribution-scheduled-for-tuesday-august/1361783089456896",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-042dc51642198315858862f5"
+    },
+    {
+      "canonical_source_url": "https://www.vidorisd.org/70290_2",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-043d565b5a982a95889878f7"
+    },
+    {
+      "canonical_source_url": "https://www.churchofthepalms.org",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-0537e15b9949654dd27f3d3b"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/maplevalleyfoodbank/p/db53dpgj5s4",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-05503c4a5d0d844d1721903c"
+    },
+    {
+      "canonical_source_url": "https://www.betterlivesri.org/providence-food-pantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-064c033323cc2a509cc70afe"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/groups/jeromeazbulletinboard/posts/2838272736546024",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-066be855db075e31aaf1ebe0"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/nfnhoodcounty/posts/neighbors-we-were-informed-earlier-this-week-that-the-mobile-drive-through-pantr/1444302364390729",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-06c8479548d49c8d0f7839cd"
+    },
+    {
+      "canonical_source_url": "https://www.westernmassnews.com/2026/08/05/food-bank-western-massachusetts-sees-strain-rising-delivery-costs",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-06fa71552e01bec8ab866738"
+    },
+    {
+      "canonical_source_url": "https://www.csueastbay.edu/wellbeing/basic-needs-support/food-pantry.html",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-0715b1c74190750758e6ba56"
+    },
+    {
+      "canonical_source_url": "https://humanservices.hawaii.gov/dhs-announces-extended-deadline-for-snap-recipients-requesting-replacement-benefits-after-tropical-cyclone-lala",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-080ac8b3f267a89ece195058"
+    },
+    {
+      "canonical_source_url": "https://resolvephilly.org/gih/philadelphia-community-fridges-food-insecurity",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-086a7da9e1aa0fc83662f8ab"
+    },
+    {
+      "canonical_source_url": "https://cotable.org/events",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-08a94b730b5298ebcb2fdde7"
+    },
+    {
+      "canonical_source_url": "https://www.wowt.com/2026/08/06/omaha-open-door-mission-food-pantry-shelves-running-dangerously-low",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-08eb0b5be093149aaa7b2cac"
+    },
+    {
+      "canonical_source_url": "https://www.tigard-or.gov/explore-tigard/tigard-senior-center",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-0a28fa82be200c01107f4e7c"
+    },
+    {
+      "canonical_source_url": "https://gov-pritzker-newsroom.prezly.com/governor-pritzker-launches-fresh-program-to-support-up-to-175000-illinoisans-the-trump-administration-kicked-off-snap",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-0a4a946be6a1683627b2d39e"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/bigivy.communitycenter/posts/food-pantry-will-be-closed-aug-19th-20th-we-will-still-be-open-the-18th-to-meet-/1516014593899000",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-0b10473d7f534f104128e321"
+    },
+    {
+      "canonical_source_url": "https://www.aol.com/articles/searcy-county-school-district-closed-014047000.html",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-0bbb87b5df603d1caa33fd85"
+    },
+    {
+      "canonical_source_url": "https://www.toledoblade.com/local/politics/2026/08/24/lucas-county-snap-funding-gap/stories/20260803085",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-0cbb7480c2c6de78c8b546d9"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/finneycountyks/posts/the-finney-county-health-department-southwest-kansas-wic-swks-wic-and-finney-cou/1493022382866121",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-0d974af99f857e533ac80ff8"
+    },
+    {
+      "canonical_source_url": "https://wyofile.com/church-at-center-of-wind-river-controversy-lodges-discrimination-complaint-against-wyoming-food-bank",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-10a71eb56b1fa44cb852955d"
+    },
+    {
+      "canonical_source_url": "https://www.reddit.com/r/quincyma/comments/1vyk71c/august_with_good_neighbors",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-10d4740e16e972600fb6f8a1"
+    },
+    {
+      "canonical_source_url": "https://6abc.com/post/snap-card-skimming-suspect-arrested-bristol-borough-police-seek-2nd-man/19736209",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-118d1b37ab4f4e22ca8819f1"
+    },
+    {
+      "canonical_source_url": "https://www.trinitypride.org/index.php?articleid=82648124&pageid=smartsitefeed&psqfeed=true",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-11cb46d64b39255b3d514987"
+    },
+    {
+      "canonical_source_url": "https://www.dallascollege.edu/resources/food-pantries/mobile-food-truck",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-11f40ec0eb8c643f56d83eff"
+    },
+    {
+      "canonical_source_url": "https://hungercantwait.org/event/second-harvest-food-bank-food-distribution-123",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-12816b8401e3b82a233cf7b0"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/61579247051856/posts/the-food-pantry-will-be-closed-8152026-and-8162026this-situation-hurt-me-deeply-/122198990258974901",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-12e23b8642d723fd85024f83"
+    },
+    {
+      "canonical_source_url": "https://basicneeds.ucr.edu/rpantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-1436c0dc3bd008239ffc90fb"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/olivetfoodandclothingpantry/posts/pantry-closure-noticethe-olivet-food-pantry-will-be-closed-for-vacation-wednesda/1548179077349549",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-15e711b0994305db14436043"
+    },
+    {
+      "canonical_source_url": "https://www.wptv.com/news/local-news/our-community/lake-worth-beach-boynton-beach-lantana/demand-for-free-meals-surges-at-boca-helping-hands-in-lake-worth-beach",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-16cc9b36e1625daa2e7f4dee"
+    },
+    {
+      "canonical_source_url": "https://kobi5.com/news/food-banks-continue-to-face-food-shortages-as-more-families-seek-help-313556",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-1733179737526f300ceb5cb2"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/cherokeeschools/posts/as-we-prepare-for-the-20262027-school-year-we-want-to-share-an-important-update-/1728101815990365",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-1756b89a8944a359928129a1"
+    },
+    {
+      "canonical_source_url": "https://sabathani.org/food-distribution",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-17c174df2d124ec0d8bf2b45"
+    },
+    {
+      "canonical_source_url": "https://forage.statuspage.io/incidents/bgs0pxjw51hm",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-180abc0ace8d8224d1383e4e"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/postandcourier/p/db28lsdevk-",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-19117c742b62343278e75921"
+    },
+    {
+      "canonical_source_url": "https://stedlowell.com",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-196d47bf68370b6be27c2879"
+    },
+    {
+      "canonical_source_url": "https://www.fbd.org/program/mobile-pantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-198004807baf8094bab91693"
+    },
+    {
+      "canonical_source_url": "https://www.kcra.com/article/yuba-sutter-food-bank-distribution-canceled-at-wheatland-union-high-school-after-bomb-threat/73467198",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-19943f469efb7b998b3ed8a2"
+    },
+    {
+      "canonical_source_url": "https://spectrumnews1.com/wi/milwaukee/news/2026/07/22/kenosha--schools--free--meals--change",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-1a265e9fc53c3e35d0e88625"
+    },
+    {
+      "canonical_source_url": "https://goodmorningwilton.com/wilton-food-pantry-demand-donations",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-1b25f13a9e5cd1a7638f30dd"
+    },
+    {
+      "canonical_source_url": "https://www.wearescpps.org/departments/child-nutrition/freereduced-meal-applications",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-1bd785eb563ec8e9ebbeba9c"
+    },
+    {
+      "canonical_source_url": "https://www.kfvs12.com/2026/08/21/carbondale-district-95-turns-community-after-federal-funding-loss",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-1bf59d99288961a4c3dc635d"
+    },
+    {
+      "canonical_source_url": "https://houmatimes.com/news/lafourche-schools-to-end-free-breakfast-and-lunch-for-most-students-in-2026-2027",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-1d33a8252bccf1665df8f5ef"
+    },
+    {
+      "canonical_source_url": "https://childcare.hr.iastate.edu/resource-pantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-1d624ed7144f01a3d772d714"
+    },
+    {
+      "canonical_source_url": "https://www.unf.edu/sg/law/index.html",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-1f3b2848e1cffdd6aa45378d"
+    },
+    {
+      "canonical_source_url": "https://www.wmtv15news.com/2026/08/26/food-insecurity-rises-southwestern-wisconsin-grocery-prices-climb",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-1f6bed17a5641ebb18eedac3"
+    },
+    {
+      "canonical_source_url": "https://www.abc57.com/news/knox-community-schools-ends-universal-free-meals-for-all-students",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-1f7b1d251d2ceeef4a6d344a"
+    },
+    {
+      "canonical_source_url": "https://www.northernnewsnow.com/2026/07/28/superior-food-pantry-closing-after-more-than-30-years",
+      "matches": {
+        "pages_public_output": [
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\bluefern-dispatches-pages\\food-line\\editions\\2026-07-31\\claim_ledger.html",
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\bluefern-dispatches-pages\\food-line\\editions\\2026-07-31\\curation_manifest.json",
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\bluefern-dispatches-pages\\food-line\\editions\\2026-07-31\\edition_manifest.json",
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\bluefern-dispatches-pages\\food-line\\editions\\2026-07-31\\index.html",
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\bluefern-dispatches-pages\\food-line\\editions\\2026-07-31\\source_table.html",
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\bluefern-dispatches-pages\\food-line\\editions\\2026-07-31\\sources_manifest.json"
+        ]
+      },
+      "published_exact_url_match": true,
+      "source_id": "food-line-history-source-1f9bd60b55f3e27fb072e3e8"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/jerichobaptist2/posts/reminder-jericho-baptist-food-bank-will-not-be-open-tomorrow-morning-since-the-f/1057936526747535",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-21001414b34022cb6d473224"
+    },
+    {
+      "canonical_source_url": "https://www.udistrictfoodbank.org/communityconnector/food-bank-closed",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-217116e3e2a4c972a67e02d4"
+    },
+    {
+      "canonical_source_url": "https://www.fishdunellenarea.org",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-21ad075a9491ed17e150bd81"
+    },
+    {
+      "canonical_source_url": "https://www.altoonamirror.com/news/local-news/2026/08/filling-a-need-ivyside-eats-helps-penn-state-altoona-students-fight-food-insecurity",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-21e017348692e32720bbc1bd"
+    },
+    {
+      "canonical_source_url": "https://weeklyview.net/2026/08/27/midwest-food-bank-indiana-breaks-ground-on-new-distribution-center",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-2298dab354ad23bca5ec59ff"
+    },
+    {
+      "canonical_source_url": "https://www.northcarolinahealthnews.org/2026/08/04/snap-food-insecurity-pantries-guilford",
+      "matches": {
+        "pages_public_output": [
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\bluefern-dispatches-pages\\food-line\\editions\\2026-08-05\\claim_ledger.html",
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\bluefern-dispatches-pages\\food-line\\editions\\2026-08-05\\curation_manifest.json",
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\bluefern-dispatches-pages\\food-line\\editions\\2026-08-05\\edition_manifest.json",
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\bluefern-dispatches-pages\\food-line\\editions\\2026-08-05\\index.html",
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\bluefern-dispatches-pages\\food-line\\editions\\2026-08-05\\source_table.html",
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\bluefern-dispatches-pages\\food-line\\editions\\2026-08-05\\sources_manifest.json"
+        ]
+      },
+      "published_exact_url_match": true,
+      "source_id": "food-line-history-source-244eb7acc8f231047eeb6805"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/dmarcunited/posts/the-dmarc-southside-food-pantry-warehouse-and-administrative-offices-will-be-clo/1473698538124769",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-2541ce9b26881e4f60c3e018"
+    },
+    {
+      "canonical_source_url": "https://www.waitsburgsd.org/article/3005835",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-263f07bbb2eeafd9a33f355b"
+    },
+    {
+      "canonical_source_url": "https://www.lex18.com/news/covering-kentucky/we-are-very-limited-millersburg-food-pantry-needs-food-donations-commercial-refrigerator",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-27515228f4165ecd5cb4b022"
+    },
+    {
+      "canonical_source_url": "https://www.nyc.gov/site/doh/health/health-topics/groceries-to-go.page",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-278e0e28448f55c6d89f0b11"
+    },
+    {
+      "canonical_source_url": "https://pittsburghfoodbank.org/find-food/the-market",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-286edd5f2c4be9862d8bb57e"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/christmasofhope/reel/dcecld4ib3p",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-2a63fd2a62c2f9150d9ed9c7"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/churchofthesowercots/posts/the-mobile-food-drop-for-august-21-has-been-canceled-by-2ndharvest-food-bank-due/1551185171720912",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-2aa584120406faf760e0fa8c"
+    },
+    {
+      "canonical_source_url": "https://kinder.rice.edu/urbanedge/houston-snap-enrollment-down-18-pantries-report-increased-demand-program-eligibility",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-2b9c699af36afa45583a1db8"
+    },
+    {
+      "canonical_source_url": "https://www.washingtoncountyor.gov/wic",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-2bb4450af7240a3286019899"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/swoopspantry/p/db3vhy7jnv1",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-2bc966e44d2f4e3cfd6a3bef"
+    },
+    {
+      "canonical_source_url": "https://www.click2houston.com/news/local/2026/08/03/33-houston-isd-schools-ending-automatic-free-lunch-program-what-parents-need-to-know",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-2c666b1e9bc1ea771b39a77a"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/douglasscomser",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-2c72bd50db8e95929d5ee07d"
+    },
+    {
+      "canonical_source_url": "https://www.inquirer.com/politics/philadelphia/hunger-pantry-feast-of-justice-joel-berg-20260811.html",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-2cf0d1d65aaaac08491c59f6"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/icstucson.org/posts/notice-august-18please-note-that-the-mobile-food-bank-food-distribution-at-conne/1499170365571622",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-2e48d45d789ffb7a91850523"
+    },
+    {
+      "canonical_source_url": "https://www.browardschools.com/bcps-departments/food-and-nutrition-services/meal-benefits",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-2eaf29fe9842d9e07bf20297"
+    },
+    {
+      "canonical_source_url": "https://www.brysonisd.net/vnotifier/?message_id=25176&page=listmessage",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-2f0219f41c38b280de584056"
+    },
+    {
+      "canonical_source_url": "https://forage.statuspage.io/incidents/4cm38rbf8s3g",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-2fc48dc3dc92cd8a746ab829"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/sharpsburglibrary15215/photos/as-we-prepare-to-sunset-our-food-pantry-september-1-were-working-to-restock-our-/1481901057307315",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-2fd6491f59291465f9e098e9"
+    },
+    {
+      "canonical_source_url": "https://www.kolotv.com/2026/08/23/washoe-county-school-closures-slated-monday-due-hawk-fire/?outputtype=amp",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-2fec09296694204f42c6deb3"
+    },
+    {
+      "canonical_source_url": "https://www.wjcl.com/article/statesboro-food-bank-food-shortage/73424439",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-30a679844947cc279f456ef9"
+    },
+    {
+      "canonical_source_url": "https://www.midsouthfoodbank.org/mobile-pantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-312114a0dc74447814db7425"
+    },
+    {
+      "canonical_source_url": "https://www.wdrb.com/news/food-pantry-in-southern-indiana-sees-record-numbers-of-people-in-need/article_168bf4f2-1d17-4976-9b5b-990b0226f4df.html",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-3262e6a0c39b97969ae45bd5"
+    },
+    {
+      "canonical_source_url": "https://cowboystatedaily.com/2026/08/24/what-a-mountain-of-free-potatoes-in-cheyenne-says-about-the-economy",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-3288aab57068a39cc0899ce8"
+    },
+    {
+      "canonical_source_url": "https://www.dhs.wisconsin.gov/foodshare/news.htm",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-360d1600c3b67bb60f60b8ad"
+    },
+    {
+      "canonical_source_url": "https://www.co.iron.wi.gov/m/newsflash/home/detail/95",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-36a570c1172918e5f0d49408"
+    },
+    {
+      "canonical_source_url": "https://www.houstonchronicle.com/news/houston-texas/trending/article/snap-enrollement-houston-food-bank-pantries-22375244.php",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-36bd3ac55845500d50a89c41"
+    },
+    {
+      "canonical_source_url": "https://abcnews.com/us/wirestory/survival-mode-indiana-residents-endure-ninth-day-power-135822526",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-384f02cb0f97d75c90bda416"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/hamiltontwpnj/posts/please-be-advised-that-the-hamilton-township-senior-center-will-be-closed-on-thu/1489685089863213",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-3864e620d0a49805e8c11a49"
+    },
+    {
+      "canonical_source_url": "https://www.goodmancenter.org/contact",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-386f3525989f3395de694553"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/mokapuelementaryschool/photos/m%c5%8dkapu-elementary-familiesfor-tuesday-august-18-2026-all-schools-in-the-kailua-k/1672232498239718",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-3935c6db591b86477344354b"
+    },
+    {
+      "canonical_source_url": "https://www.mora.k12.nm.us/live-feed",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-39728c76fc1c61aa1e59d2aa"
+    },
+    {
+      "canonical_source_url": "https://www.klcc.org/human-interest/2026-08-30/drain-farmstand-hopes-fill-fresh-option-food-desert",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-3a982eb59d259d580e81d5be"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/fdpiruteindiantribe/posts/-august-13-2026-important-hours-closure-updates-temporary-closure-todaythe-ute-f/1377912214477307",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-3a9d9f70b3135262e23c5f01"
+    },
+    {
+      "canonical_source_url": "https://www.walb.com/2026/08/28/albany-rescue-mission-says-rising-costs-could-force-closure-after-38-years",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-3ac729ed6a89120f9b85c4d6"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/p/db_i2c8hcqp",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-3b6589b869d0a86dd011c602"
+    },
+    {
+      "canonical_source_url": "https://katu.com/news/local/shuttered-parkrose-grocery-outlet-owner-fund-raising-for-new-store-in-food-desert-east-portland-oregon-residents-business-local-low-income-equality-community",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-3bf9812055e962e257123749"
+    },
+    {
+      "canonical_source_url": "https://www.dshs.wa.gov/ffa/washington-wildfires-emergency-updates-august-2026",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-3d0882fbe94c83c7550381b1"
+    },
+    {
+      "canonical_source_url": "https://www.kcur.org/environment-agriculture/2026-08-24/older-americans-high-food-prices",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-3d478d551383f22d1ded32b5"
+    },
+    {
+      "canonical_source_url": "https://www.lacrosselibrary.org/about",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-3e1904168feed92ff6461e42"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/cfswic/posts/alert-randolph-county-wic-will-be-closed-thursday-august-20th-due-to-a-shortage-/1374932441484779",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-3f0f1bd2abce3215f01468e2"
+    },
+    {
+      "canonical_source_url": "https://www.kolotv.com/2026/08/25/catholic-charities-extends-food-pantry-hours-hawk-fire-residents",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-3f2d0bb3f87d21d59795e9f4"
+    },
+    {
+      "canonical_source_url": "https://patch.com/connecticut/farmington/back-school-food-drive-slated-farmington-stop-shop",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-411d839e120be0b7b7dee026"
+    },
+    {
+      "canonical_source_url": "https://www.prattlibrary.org/about-us/diversity-equity-inclusion/dei-projects/pratt-free-market",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-419645d53456ca51ccf94fbc"
+    },
+    {
+      "canonical_source_url": "https://www.kunm.org/local-news/2026-08-17/demand-climbs-new-mexico-food-pantries-federal-food-aid-shrinks",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-42ee70a9f17c9ee7ec120ea3"
+    },
+    {
+      "canonical_source_url": "https://thecurrentga.org/2026/08/04/good-spread-peanut-butter-a-win-win-for-communities-in-u-s-abroad",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-43eb004f3c34d68f54c990b3"
+    },
+    {
+      "canonical_source_url": "https://fox4beaumont.com/news/vidor-isd-ends-free-meals-at-two-campuses-after-losing-federal-eligibility-provision",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-43fa3fd380fb84de2792ea2f"
+    },
+    {
+      "canonical_source_url": "https://ftb.org/groceries-meals/groceries-on-the-go",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-450afe5ccb414c2cf2fba55e"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/p/db_9gnpt9ir",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-456f55e6cd39dd0abb1e868f"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/100082394910460/posts/the-pantry-is-closed-friday-august-14-as-we-continue-our-well-needed-time-off-an/1060502593372895",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-45766a7ef57fec424d0c0b73"
+    },
+    {
+      "canonical_source_url": "https://bfa.wv.gov/article/west-virginia-department-human-services-extends-deadline-report-snap-food-losses-0",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-46d24b3aa682f3465c5f58d1"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/midnorthfoodpantry/p/dchyfyuj1sv",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-47b25050e77ac73a554d9c77"
+    },
+    {
+      "canonical_source_url": "https://www.ou.edu/foodpantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-4904db468d15d1f27a811d85"
+    },
+    {
+      "canonical_source_url": "https://www.burtonisd.net/live-feed",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-49d78cab17bd01fc835a9d34"
+    },
+    {
+      "canonical_source_url": "https://www.lenawee.mi.us/m/newsflash/home/detail/2974",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-4a0f31343bc3f77e017cf3c2"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/vsproud/posts/-important-meal-program-update-for-the-2026-2027-school-yeardue-to-budget-constr/1697803482354463",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-4a16e74ba24b45b33524342c"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/greatercalvaryfgbc/p/db8nwhcicvj",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-4a4c18adb7a388c0ecd6457c"
+    },
+    {
+      "canonical_source_url": "https://penncapital-star.com/government-politics/food-banks-across-pennsylvania-are-struggling-to-keep-up-in-the-face-of-snap-cuts-economic-pain",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-4b27afb8f57673952861a8ad"
+    },
+    {
+      "canonical_source_url": "https://hawaiipublicschools.org/2026-hidoe-to-begin-weekly-meal-box-distribution-for-children-in-ka%ca%bbu-communities",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-4bb7abd23ebbc4ccd51e0785"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/laredowic/posts/-important-wic-updateeffective-august-1-2026-our-ladrillera-wic-clinic-located-a/1549327733873236",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-4c74711ab7390f1bac3f3919"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/nsjcenter/posts/notice-unfortunately-free-food-friday-free-store-are-canceled-this-friday-august/1049811584472831",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-4d37e437b40cf8b737cd6dfa"
+    },
+    {
+      "canonical_source_url": "https://www.sfchronicle.com/sf/article/lucky-store-in-sf-closing-soon-22359274.php",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-4d54aabb9e87d312da7f4a20"
+    },
+    {
+      "canonical_source_url": "https://union.uni.edu/panther-pantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-4eddee45027b90449bcc77ae"
+    },
+    {
+      "canonical_source_url": "https://www.reuters.com/business/environment/tens-thousands-ordered-evacuate-nevada-fire-threatens-reno-2026-08-23",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-4f971a7891c2d99f06100cf6"
+    },
+    {
+      "canonical_source_url": "https://cceok.org/mobile-pantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-501487176dfd54d6645a85d0"
+    },
+    {
+      "canonical_source_url": "https://cooperativeministry.com",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-5129c36526468badfc0a2295"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/100064779183886/posts/important-food-pantry-updatewe-sincerely-apologize-for-the-inconvenience-but-the/1465401828962443",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-51346e3d2376bdad4a158bca"
+    },
+    {
+      "canonical_source_url": "https://abc11.com/post/durham-county-raises-concerns-snap-funding-changes-hr-1/19737008",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-514c48cc24e024dad98ead21"
+    },
+    {
+      "canonical_source_url": "https://hayward-ca.gov/discover/news/aug26/food-pantry-south-hayward-parish-closing-after-more-50-years-service",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-53bf111a5af381e41c2c878c"
+    },
+    {
+      "canonical_source_url": "https://eles.osceolaschools.net/index.php?articleid=82929991&pageid=smartsitefeed&psqfeed=true",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-540cafbeeb99f9ae13169864"
+    },
+    {
+      "canonical_source_url": "https://www.feedwm.org/mobile-pantry-schedule",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-548e14b441e5490e17a381ba"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/pavymca/posts/attention-the-senior-choice-market-on-thursday-august-20-is-canceledwe-apologize/122142364083106434",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-552c0dc3b6903828f4547c21"
+    },
+    {
+      "canonical_source_url": "https://www.witn.com/2026/08/29/food-lion-feeds-helps-stock-ecu-pantry-students-return-campus",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-5709f4d0af1924fbabd22e40"
+    },
+    {
+      "canonical_source_url": "https://www.dallasobserver.com/news/dallas-fort-worth-families-face-snap-federal-cuts-40700744",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-574ca296aa5ace7e25d25b2f"
+    },
+    {
+      "canonical_source_url": "https://txchildren.org/backlog-of-medicaid-and-snap-applications-skyrockets-in-texas",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-5881298d64a08dc8b73d63a6"
+    },
+    {
+      "canonical_source_url": "https://www.stlamerican.com/business/ferguson-food-pantry-calls-on-community-for-help",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-59530aadaf628dda024f1bc3"
+    },
+    {
+      "canonical_source_url": "https://www.sjsd.k12.mo.us/departments/nutrition-services",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-595ea24955086f00a4accfec"
+    },
+    {
+      "canonical_source_url": "https://www.riversidesd.org/apps/pages/index.jsp?urec_id=2791184&type=d&prec_id=2309796",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-596287fb6e4a7c16458ca3e9"
+    },
+    {
+      "canonical_source_url": "https://www.montgomerymag.com/craig-rice-montgomery-county-hunger-crisis",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-5992f742aa1d864fa85d48e1"
+    },
+    {
+      "canonical_source_url": "https://www.wmbfnews.com/2026/07/11/lattas-only-grocery-store-will-permanently-close-september",
+      "matches": {
+        "agent_intake_and_inbox": [
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\.worktrees\\food-line-august-2026-private-recovery\\data\\dispatches\\food-line\\agent-intake\\2026-08-29\\food-line-aug29-confirmed-intake-recovery.json"
+        ]
+      },
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-59ffe6bb755fe28867970b16"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/cu_anschutzstudentaffairs/p/dccr8rxuai3",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-5a203470002706957f780523"
+    },
+    {
+      "canonical_source_url": "https://northplattebulletin.com/malines-superfoods-to-close-in-sutherland",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-5aa461af97db7ef9534a5f76"
+    },
+    {
+      "canonical_source_url": "https://www.gowatertown.net/watertown-salvation-army-looks-for-help-to-restock-food-shelves",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-5af07616eb7a671fa0ce0f00"
+    },
+    {
+      "canonical_source_url": "https://www.templebethel.com/jfed-food-pantry.html",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-5b1186027beb09ff636cb670"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/p/db5wxkfgicx",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-5b39b7e6c65702979c397c94"
+    },
+    {
+      "canonical_source_url": "https://www.kosu.org/oklahoma-ends-third-meal-school-funding",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-5c1ed5198f625836e13466bf"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/hopkinsfoodpantry/p/dcjsutogead",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-5c2ca739e5406605127bf1af"
+    },
+    {
+      "canonical_source_url": "https://www.burtonisd.net/live_feeds/12615378",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-5c6ecd4bc2b2d6d061b7a18a"
+    },
+    {
+      "canonical_source_url": "https://www.fsaglensfalls.org/newsletters/august-2026-newsletter",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-5cb56b891cd2ecb22cb08a6b"
+    },
+    {
+      "canonical_source_url": "https://www.theintelligencer.com/news/article/edwardsville-il-glen-ed-pantry-summer-meals-22379250.php",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-5cffb6048a96cd61d5adee96"
+    },
+    {
+      "canonical_source_url": "https://www.fbnn.org/hawk-fire-how-the-food-bank-is-supporting-our-community",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-5d3c015e7305d06ab5af8f89"
+    },
+    {
+      "canonical_source_url": "https://viconsortium.com/vi-government/virgin-islands-usvi-agencies-warn-of-rising-hunger-and-homelessness-as-snap-rules-take-effect-sept--1",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-5d6cabf08bea73e3d6fbf601"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/blakeskwikstop/posts/-ebtsnapwe-are-temporarily-suspending-ebtsnap-until-august-31st-to-prepare-our-s/1695336262216882",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-5de2dc5334268a933aa812ca"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/heartsandhandsofbaytown/posts/due-to-the-extreme-heat-forecast-for-friday-august-21-and-ongoing-construction-a/1504471075058498",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-5ec5a409df254cb804d8dfc8"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/thelegacyofhopefoundation/posts/the-legacy-of-hope-foundation-will-be-closed-next-week-august-17th-through-augus/1375534684676182",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-5f8a2268a2f15ed181d03209"
+    },
+    {
+      "canonical_source_url": "https://www.hardin.kyschools.us/live-feed",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-60e71b5e12d5de735e3a52e8"
+    },
+    {
+      "canonical_source_url": "https://www.fox13seattle.com/news/fred-meyer-tacoma-wa",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-619950d266c427c7b34ed971"
+    },
+    {
+      "canonical_source_url": "https://www.hhfp.org/events/closed-for-inventory",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-61a99f8500d1a60f968b569e"
+    },
+    {
+      "canonical_source_url": "https://inewsource.org/2026/08/02/food-stamps-calfresh-san-diego",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-6240bb9c1e86a31d97d65b09"
+    },
+    {
+      "canonical_source_url": "https://www.ketv.com/article/snap-delays-impact-families-across-nebraska/73525953",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-625b605cefe252bee5688d38"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/regengrabandgo/videos/-a-quick-update-from-regen-grab-goregen-grab-go-will-be-closed-through-august-24/4511024532519363",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-6292208b0bac54b6f8379b4e"
+    },
+    {
+      "canonical_source_url": "https://www.coalgateschools.org/live-feed",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-63bc46efe52db78373e850b7"
+    },
+    {
+      "canonical_source_url": "https://www.axios.com/local/cincinnati/2026/08/14/freestore-foodbank-feed-america-report-call-to-action",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-63e19e3d730c336dc2d69ccc"
+    },
+    {
+      "canonical_source_url": "https://www.expressnews.com/news/education/article/snap-cuts-school-lunch-san-antonio-22253063.php",
+      "matches": {
+        "agent_intake_and_inbox": [
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\.worktrees\\food-line-august-2026-private-recovery\\data\\dispatches\\food-line\\agent-intake\\2026-08-29\\food-line-aug29-confirmed-intake-recovery.json"
+        ]
+      },
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-648047dfccfc652d75951da9"
+    },
+    {
+      "canonical_source_url": "https://www.feastofjustice.org/hours",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-649916e20e424868c2d21631"
+    },
+    {
+      "canonical_source_url": "https://greatplainsfoodbank.org/food-distributions",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-64dd5ba89177bc2b93d13aca"
+    },
+    {
+      "canonical_source_url": "https://www.manisteenews.com/news/article/manistee-senior-center-volunteers-22396393.php",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-652c92ffa7a765cf7f113817"
+    },
+    {
+      "canonical_source_url": "https://caofseia.org/august-september-2026-center-closures",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-6546ec946f54c01de3680949"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/hopeinternationalfoodpantry/posts/-a-heartfelt-thank-you-coolidge-after-many-years-of-serving-our-community-hope-i/1081026470947420",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-654c34a43d2b1cc6b9b2b6e7"
+    },
+    {
+      "canonical_source_url": "https://wck.org/news/spokane-wa-wildfires",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-657676a7b0d71b5d613729f1"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/ourdailybreadyork/photos/1328531422652693",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-6586e9dce924fa1e5dc4bfc9"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/blackriverbaptistchurch/posts/there-will-not-be-a-food-pantry-distribution-at-black-river-baptist-church-for-t/1360646249613579",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-666133c2376a6bbce93bdf48"
+    },
+    {
+      "canonical_source_url": "https://www.cbsnews.com/chicago/news/gary-crocery-stores-short-supply",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-66b1220b6e9ab0e230f1678b"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/p/db9epvdhxew",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-679917a965ceae00de3eb8ad"
+    },
+    {
+      "canonical_source_url": "https://www.caringplacetx.org/how-to-help/event-calendar.html/event/2026/08/14/all-locations-closed/568484",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-68202a0b793a028be3ac8da8"
+    },
+    {
+      "canonical_source_url": "https://www.whec.com/top-news/the-only-grocery-store-in-the-village-of-wolcott-in-wayne-county-has-closed-earlier-than-expected",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-6862b6a529436b99f420581e"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/texarkanatxparks/posts/-collins-senior-center-closed-august-20-21-please-be-aware-that-the-collins-seni/1520863610074724",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-68f6b702fc11c7b79e682df5"
+    },
+    {
+      "canonical_source_url": "https://nbcmontana.com/news/local/north-valley-food-bank-sees-demand-as-montana-families-seek-food-assistance",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-697d8a734e5df72f621aaa49"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/cornerstonebennett/posts/the-bennett-food-bank-will-be-closed-this-saturday-august-22-households-are-welc/1464371409058137",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-697e190f289b0b892a7d998d"
+    },
+    {
+      "canonical_source_url": "https://www.wandtv.com/news/illinois/springfield-organizations-seeing-increase-in-need-after-snap-changes/article_7a9e8f5e-60d9-4154-a1ba-16b6a21efffc.html",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-6aba09cd9b80a8ef01398f15"
+    },
+    {
+      "canonical_source_url": "https://www.fox32chicago.com/news/nw-indiana-power-outages-storm",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-6c144798fa264bca39bb5ae8"
+    },
+    {
+      "canonical_source_url": "https://wlos.com/news/local/snap-enrollment-drops-western-north-carolina-food-pantries-surge-demand-supplemental-nutrition-assistance-program-buncombe-county-eligibility",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-6c309f0b951af47712417de7"
+    },
+    {
+      "canonical_source_url": "https://www.ctfoodshare.org/tefap-resources",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-6d11a088786d3632b60603b1"
+    },
+    {
+      "canonical_source_url": "https://provisionsoutreach.org/get-help",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-6d2af13eafb9b1248a423227"
+    },
+    {
+      "canonical_source_url": "https://www.secondharvestetn.org/mp/claiborne-county-27",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-6db36230ce4b9bd831babbe9"
+    },
+    {
+      "canonical_source_url": "https://www.wdbj7.com/2026/07/31/secret-service-partners-with-danville-snap-theft-probebut-families-expecting-august-benefits-may-face-risk",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-6e3b007a86800a0c1953498d"
+    },
+    {
+      "canonical_source_url": "https://www.albany.edu/dean-students/supplemental-support-services/purple-pantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-6f5de7b3abcfe207d4f92c00"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/p/db5wmzmjdan",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-7085016c578ebdadfcd4e09f"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/61584192055479/posts/bbc-food-pantry-noticedue-to-a-temporary-food-shortage-bbc-food-pantry-will-be-c/122143376145139735",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-71bc555b059db20fa4e8ad99"
+    },
+    {
+      "canonical_source_url": "https://greatplainsfoodbank.org/a-record-186366-neighbors-turn-to-great-plains-food-bank-and-its-partners-as-food-insecurity-continues-to-rise",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-71c27ae5236ff45fb761d026"
+    },
+    {
+      "canonical_source_url": "https://www.cbsnews.com/atlanta/news/the-grocery-spot-gives-atlanta-families-a-place-to-shop-with-dignity-as-nonprofit-faces-financial-strain",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-7332943f9e4edd567c8c4dd8"
+    },
+    {
+      "canonical_source_url": "https://www.kob.com/new-mexico/snap-households-affected-by-flooding-get-relief-to-replace-supplies",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-73d6b3f327ec747a65da356e"
+    },
+    {
+      "canonical_source_url": "https://krishnamoorthi.house.gov/media/press-releases/krishnamoorthi-demands-usda-action-trump-backed-snap-cuts-put-free-school",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-74315b2c570e27003cca288c"
+    },
+    {
+      "canonical_source_url": "https://www.boisestate.edu/campusfoodpantry/about-us",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-74b724775a292e34b65d42c8"
+    },
+    {
+      "canonical_source_url": "https://www.norwalkps.org/departments/communications/nps-blog/~board/homepage-posts/post/norwalk-public-schools-returns-to-traditional-lunch-meal-program",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-74b83be37b53368b3b123939"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/lighthousemichigan/posts/please-note-our-pontiac-food-pantry-located-at-46156-woodward-ave-will-be-closed/1537764948380532",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-7650b64e2e594f920ca3181f"
+    },
+    {
+      "canonical_source_url": "https://www.sjsd.k12.mo.us/page-4",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-76587af0cd7cc85a406a4dc6"
+    },
+    {
+      "canonical_source_url": "https://www.kolotv.com/2026/08/26/some-wcsd-schools-remain-closed-wednesday-amid-hawk-fire-evacuations",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-76a356e1f6eb29f9322077f5"
+    },
+    {
+      "canonical_source_url": "https://forage.statuspage.io/incidents/2s84mjr1pwf9",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-77034d635d01d62b86a222d4"
+    },
+    {
+      "canonical_source_url": "https://www.kq2.com/news/local-news/2026/08/06/sjsd-now-requires-application-for-free-reduced-meal-benefits",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-7767c6cd63c0d98e29743781"
+    },
+    {
+      "canonical_source_url": "https://sanjosespotlight.com/san-jose-food-lines-grow-longer-as-more-people-seek-help",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-777c2c0985183a00a30e83a1"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/coalitionforabetteracre/p/dcbswhjjw-5",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-77f40c2d3069e9e2f39e5b4b"
+    },
+    {
+      "canonical_source_url": "https://ktul.com/news/local/new-data-show-100000-fewer-oklahomans-on-snap-as-food-pantry-demand-persists",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-78038979900bce36149a9815"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/p/dcjrtv6ls1p",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-7840ba2753a3c286fe9ae679"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/svdpnorthernkentucky/posts/due-to-continued-power-outage-following-yesterdays-severe-weather-the-cold-sprin/1501429402017667",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-7844605bf3758758c4d19014"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/beaconfounders/photos/important-updateheads-up-everyone-the-food-pantry-originally-scheduled-for-tomor/1651060120361055",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-7845066fb6dc7e4089b2b154"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/nativehealthphoenix/posts/the-air-conditioning-issues-are-being-worked-on-and-we-will-reopen-for-a-limited/1398071282539709",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-78d55c14452679c58af15f24"
+    },
+    {
+      "canonical_source_url": "https://www.axios.com/local/houston/2026/08/05/food-insecurity-climbs-across-the-houston-region",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-7920c2977a78f4c5aab98cdd"
+    },
+    {
+      "canonical_source_url": "https://www.fox8live.com/2026/07/14/free-school-meals-ending-many-st-charles-parish-students",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-7c3b8ce369fb816b90638122"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/donaanacc/videos/-firstlight-comfort-casita-food-pantry-updatethe-firstlight-comfort-casita-food-/1037368989218987",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-7c7117d60c766e2656743454"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/northernilfoodbank/posts/update-our-mobile-market-at-the-latin-pentecostal-church-in-lake-county-is-cance/1473824698103917",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-7ce4deb9faad7f132cd294ea"
+    },
+    {
+      "canonical_source_url": "https://www.howardcc.edu/services--support/basic-needs-and-emergency-support/food-resources-fueling-dragons",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-7d063d894e5c67a9ff5cb445"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/foodforpeopleinc/p/dcjgfrtgy82",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-7d61936cf746f26156aecf59"
+    },
+    {
+      "canonical_source_url": "https://www.washington.edu/anyhungryhusky/get-food",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-7e83d66d965488768072ebcb"
+    },
+    {
+      "canonical_source_url": "https://katv.com/news/local/little-rock-compassion-center-says-food-supplies-are-desperately-low-seeks-donations-katv-news-share-inform-public-community-assist",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-7e8a71c2cc51c75d929a5265"
+    },
+    {
+      "canonical_source_url": "https://www.dudleyma.gov/m/newsflash/home/detail/153",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-7fd0f262c84bb1dcf9095ad0"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/caldwellcountyschools/posts/community-eligibility-provision-cep-notification-for-the-2026-2027-school-year/1053263900565642",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-7fd270dc28b9b957e47fb8d9"
+    },
+    {
+      "canonical_source_url": "https://mountainstatespotlight.org/2026/08/03/snap-cuts-strain-pantries",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8077516adb12742bb90413d7"
+    },
+    {
+      "canonical_source_url": "https://www.atlantanewsfirst.com/2026/08/17/study-shows-georgia-families-skipping-meals-taking-debt-survive",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-80be0b62f25dac15b9a3ac4b"
+    },
+    {
+      "canonical_source_url": "https://www.vintontoday.com/articles/news/article1046162.html",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8143b728c02635f2226343ca"
+    },
+    {
+      "canonical_source_url": "https://www.stanthonyofpaduastl.com/food-pantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8215672bee5c4e553b5d34a2"
+    },
+    {
+      "canonical_source_url": "https://www.live5news.com/2026/08/13/save-lot-closure-expands-north-charleston-neighborhoods-food-desert",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-82547e9bdbc010f570523c51"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/100064678360866/posts/good-afternoon-we-wanted-to-make-you-all-aware-that-pemiscot-county-health-cente/1488140690018529",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-82ac811cd91d8a814878df69"
+    },
+    {
+      "canonical_source_url": "https://dsst.fsu.edu/basic-needs-hub/food-thought-pantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-82da62ace082abcfd5be67f3"
+    },
+    {
+      "canonical_source_url": "https://www.midcoastyouth.org/programs-services",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-83540437460512d0d6d00d43"
+    },
+    {
+      "canonical_source_url": "https://www.toacorn.com/articles/rotary-donation-helps-manna-prepare-for-increased-food-needs",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8373294182f0fa14ec9a0fda"
+    },
+    {
+      "canonical_source_url": "https://www.wilx.com/2026/08/19/we-need-you-now-more-than-ever-eastside-lansing-food-co-op-asks-community-help-stay-open",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-84f9fe7765b56644077b56a7"
+    },
+    {
+      "canonical_source_url": "https://www.bengamla-charter.com/apps/pages/index.jsp?type=d&urec_id=306450",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-851c4a4c225b1b2f4c2b2e5e"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/p/dcldvvzldgp",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8544faafcdfec34fe8c2fe0d"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/wmbdnews/posts/after-being-an-outlet-for-food-and-other-daily-resources-for-6-years-the-porch-p/1514253217398128",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8557065eded3ce00f75b81d6"
+    },
+    {
+      "canonical_source_url": "https://www.2news.com/news/local/food-bank-seeks-volunteers-to-prepare-emergency-food-for-fire-victims/article_07d6c17e-ab26-4b6d-8ef9-f8d6f20ed737.html",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-857bf063944d03ff77d9ab0a"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/welbornecommunityfoodpantry/posts/before-closing-at-602-due-to-the-storm-the-food-pantry-served-61-families-repres/1546191640879134",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-85c4ea565eaceb8e482d7640"
+    },
+    {
+      "canonical_source_url": "https://cotable.org/event/closed-4",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-85ef2250a54ad97927a0edb5"
+    },
+    {
+      "canonical_source_url": "https://njrise.org/pantry-updates",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-867204b58955001bfec173bd"
+    },
+    {
+      "canonical_source_url": "https://www.rappahannockschools.us/meals2026",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8738df9e6813ed50b32b5335"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/madisoncountyhealthdeptmo/posts/mchd-wic-will-be-closed-from-1130-am-130pm-on-thursday-aug-20-2026/1494771656164212",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-886c03c0558290b07e194dd2"
+    },
+    {
+      "canonical_source_url": "https://www.rushville.k12.in.us/live-feed",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-896c6b36b81a1b1f7b0c534a"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/chesapeakehd",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8a919dc03697fdee72568fbf"
+    },
+    {
+      "canonical_source_url": "https://www.wfyi.org/statewide/2026-08-25/gary-residents-turn-to-prayer-nipsco-power-outage",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8af1c56bf31ee93ae2786802"
+    },
+    {
+      "canonical_source_url": "https://www.tapinto.net/towns/wayne/articles/wayne-s-win-food-pantry-needs-help-during-community-center-closure",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8b2711c9d9a2985ae4d9bc37"
+    },
+    {
+      "canonical_source_url": "https://mirrorindy.org/garfield-park-safeway-neighborhood-grocery-store-closure-food-desert-southside-indy",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8b8a0f6f6d198de738685fc3"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/p/dcjm_hedadp",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8b91a295839cf0bdb80bcc98"
+    },
+    {
+      "canonical_source_url": "https://mwe.springbranchisd.com/o/tce/live-feed",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8ba391338925d3f0576017d7"
+    },
+    {
+      "canonical_source_url": "https://supportcenter.highline.edu/community-pantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8be0deb39dfe546d672ede9f"
+    },
+    {
+      "canonical_source_url": "https://www.weau.com/2026/08/03/thousands-wisconsinites-lose-snap-benefits-local-food-banks-feel-squeeze",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8c207991b89b364bb7eafd74"
+    },
+    {
+      "canonical_source_url": "https://www.actionnews5.com/2026/08/26/lost-power-had-toss-groceries-heres-where-mid-south-residents-can-find-food",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8c44451ae5f1f5ed3b54e6f7"
+    },
+    {
+      "canonical_source_url": "https://kennedy.house.gov/news/documentsingle.aspx?documentid=2469",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8ce92372654fdd7f6ee22e2e"
+    },
+    {
+      "canonical_source_url": "https://www.wcpo.com/news/local-news/hamilton-county/cincinnati/we-needed-this-place-avondale-grocery-store-closure-leaves-residents-questioning-food-access-options",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8d04476496e595a490920bcf"
+    },
+    {
+      "canonical_source_url": "https://wlos.com/news/local/food-donations-manna-foodbank-drop-24-percent-need-reaches-historic-levels-western-north-carolina-meals-nonprofit-organization-hungry-families-farmers-decline",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8d1bab44d03ff9ccf209c638"
+    },
+    {
+      "canonical_source_url": "https://www.uml.edu/student-services/uml-strive/food-pantry/locations.aspx",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8da1469eb4c367f83f7ce32d"
+    },
+    {
+      "canonical_source_url": "https://www.foodbankrockies.org/find-food",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8f6ef9195ce81fa57b2e2e3f"
+    },
+    {
+      "canonical_source_url": "https://www.mysanantonio.com/business/article/factory-closure-mass-layoffs-san-antonio-22377724.php",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-8f85128e256b12aa9697bd67"
+    },
+    {
+      "canonical_source_url": "https://mynews13.com/fl/orlando/news/2026/08/29/florida-snap-participation-drops-nearly-0-as-orlando-groups-see-demand-rise",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-9005ba20535e102aed8578c3"
+    },
+    {
+      "canonical_source_url": "https://www.clark.edu/campus-life/student-support/penguinpantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-90896bf91c52db649e1ccee1"
+    },
+    {
+      "canonical_source_url": "https://www.dhs.state.il.us/page.aspx?item=174038",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-9101a07bd741d3264251cceb"
+    },
+    {
+      "canonical_source_url": "https://urbandalefoodpantry.org",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-9190dbb35a1b7a959371e8e8"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/defiancecountyhealthdepartment/posts/office-closure-noticeour-health-department-and-wic-offices-will-be-closed-tuesda/1477234897771718",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-91b7b6ea71e25cd76e4531be"
+    },
+    {
+      "canonical_source_url": "https://www.templecollege.edu/resources/circle-support/leopard-pantry.html",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-92977c3191d47a15ab11c0c7"
+    },
+    {
+      "canonical_source_url": "https://www.loraincountyhealth.com/wicnews",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-937ffdf4a225fc2f6a52867d"
+    },
+    {
+      "canonical_source_url": "https://www.forgottenharvest.org/find-food",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-93ba202293122acf5ff501dc"
+    },
+    {
+      "canonical_source_url": "https://www.srmt-nsn.gov/calendar/food-distribution-office-and-grocery-store-closed-8-17-to-8-21",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-94b3d8677a9501f7a0d0a822"
+    },
+    {
+      "canonical_source_url": "https://www.axios.com/local/portland/2026/08/06/food-insecurity-multnomah-county-2024",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-9504acf08dd713e39aa813c3"
+    },
+    {
+      "canonical_source_url": "https://www.polkcountyiowa.gov/news-and-announcements/polk-county-invests-in-knock-and-drop-iowa-kadi-pantry-to-extend-evening-hours",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-95fa465d22c9c588e06caec4"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/woodcountyohiowic/posts/heads-up-our-wic-office-will-be-closed-from-1230-until-430-today-we-will-reopen-/1495383845963986",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-96f31782406b1bc93e66335a"
+    },
+    {
+      "canonical_source_url": "https://www.wdam.com/2026/08/11/our-biggest-need-is-food-glory-house-pantry-facing-shortage-donations-needed",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-97ce8a3c226177aa63a9e8a7"
+    },
+    {
+      "canonical_source_url": "https://www.dilworthsoupkitchen.org/news-events/dilworth-soup-kitchen-temporarily-suspending-lunches-in-dilworth-continues-to-provide-lunches-to-charlotte-housing-authority-towers",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-980c07393fdc2d0f36eb9d04"
+    },
+    {
+      "canonical_source_url": "https://northdakotamonitor.com/2026/08/06/great-plains-food-bank-sees-record-numbers-seeking-food-assistance",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-98135cd4de1594fed3419d2f"
+    },
+    {
+      "canonical_source_url": "https://deanofstudents.utexas.edu/sos/ut-outpost.php",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-981815a7557404df1abc36e6"
+    },
+    {
+      "canonical_source_url": "https://www.wyomingpublicmedia.org/health/2026-08-27/local-food-program-in-albany-county-forced-to-halt-shares",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-98a6d67cb5eb77d2effab22e"
+    },
+    {
+      "canonical_source_url": "https://capitolcitynow.com/news/248842-springfield-organizations-seeing-increase-in-need-after-snap-changes",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-98d1736ad344f53f4462bd4f"
+    },
+    {
+      "canonical_source_url": "https://stcolumbaministries.com/food-pantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-99583d31b2ee19857f040d3b"
+    },
+    {
+      "canonical_source_url": "https://lancasterchooseslove.org/event/resource-center-wednesday-5",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-99a53bdee5cacc44b40bf046"
+    },
+    {
+      "canonical_source_url": "https://www.wearescpps.org/for-families/inbox/overview/school-meal-update",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-99afca351785c91c0a6efdd5"
+    },
+    {
+      "canonical_source_url": "https://www.washington.edu/anyhungryhusky/the-uw-food-pantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-99f912c4a0ea4a4a79666e58"
+    },
+    {
+      "canonical_source_url": "https://civileats.com/2026/08/11/in-these-orchards-fruit-has-all-but-disappeared-this-year",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-9ac8ca15170a3b505dce3766"
+    },
+    {
+      "canonical_source_url": "https://www.reuters.com/legal/litigation/massachusetts-anti-hunger-advocate-fasts-protest-trump-food-stamp-cuts-2026-08-16",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-9b391de121e38ccd865a1a21"
+    },
+    {
+      "canonical_source_url": "https://www.thecooldown.com/sustainable-food/valley-view-food-bank-arizona-help",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-9b41d2f03c379c9fb9182889"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/groups/salmonrivergrange/posts/1753368679005787",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-9beb6b123a620f24be683439"
+    },
+    {
+      "canonical_source_url": "https://www.kleinisd.net/page/cep-update",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-9c42c4b1d1b5194bfc76172c"
+    },
+    {
+      "canonical_source_url": "https://www.sltrib.com/news/2026/08/01/high-rent-leads-closing-salvation",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-9cb5d938e49d0c8cad597f36"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/mmsdlakeview/posts/our-food-pantry-scheduled-for-monday-august-17-2026-has-been-cancelledour-next-f/1690649416395634",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-9d8ea4108497406e9d194929"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/100052303552769/posts/update-we-have-closed-it-is-to-hot-in-our-building-today-call-in-the-morning-on-/1617817596638343",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-9e61fe3f7f0a96b189735c57"
+    },
+    {
+      "canonical_source_url": "https://www.fbnn.org/get-involved/volunteer/volunteerschedule",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-9e7aed6e9a46e845b1b83bc7"
+    },
+    {
+      "canonical_source_url": "https://www.opb.org/article/2026/08/13/oregon-snap-cuts-food-costs-rising-hunger",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-9eea072e34be91ccbfb5223d"
+    },
+    {
+      "canonical_source_url": "https://www.wypr.org/wypr-news/2026-07-30/over-40-000-marylanders-have-lost-food-assistance-following-trump-administration-snap-changes",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-a07ad27ee321a2950e522b30"
+    },
+    {
+      "canonical_source_url": "https://www.neifb.org/programs/cedar-valley-food-pantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-a113ac4193ed5d3a5d2e33d4"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/theunforgottenhaven/posts/important-updateplease-read-carefully-as-of-august-4-2026-we-are-temporarily-not/1475706591252107",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-a1309b9ea03c90fd9b5afaed"
+    },
+    {
+      "canonical_source_url": "https://www.wyomingpublicmedia.org/politics-government/2026-08-17/i-have-to-ring-alarm-bells-rock-river-food-pantry-on-the-verge-of-closure",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-a2165e09a2e0e7dbe8b6cf17"
+    },
+    {
+      "canonical_source_url": "https://www.wtkr.com/news/in-the-community/norfolk/norfolk-food-bank-sees-growing-demand-amid-snap-changes",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-a24acdf3679590691d71e7e6"
+    },
+    {
+      "canonical_source_url": "https://www.the-sun.com/money/16831657/snap-payments-delayed-kansas",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-a28e3f38fb03815a80e60298"
+    },
+    {
+      "canonical_source_url": "https://gatheratscott.com/fresh-food-wednesday",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-a498cab0cdc44760dda6728e"
+    },
+    {
+      "canonical_source_url": "https://mainetown.com",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-a4ad6c1069b40a50ddb6f679"
+    },
+    {
+      "canonical_source_url": "https://www.memphisflyer.com/thousands-lost-snap-in-shelby-county-advocates-call-statewide-trend-a-crisis",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-a543f9f989b0098173df7417"
+    },
+    {
+      "canonical_source_url": "https://www.stamfordpublicschools.org/departments/chartwells-dining-services/free-or-reduced-price-lunch",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-a5ec810300f12829b9e99b8f"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/sec.harv/posts/important-changes-for-thursdaythe-hiawatha-mobile-has-been-cancelled-for-this-mo/1572191814951471",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-a68c9a7b4641cde4fdae8b35"
+    },
+    {
+      "canonical_source_url": "https://www.permianbasinmission.org",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-a712101a40702781d7cfea4b"
+    },
+    {
+      "canonical_source_url": "https://www.riverfoodpantry.org/category/events",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-a7aa7e21e0eb667ed2575066"
+    },
+    {
+      "canonical_source_url": "https://www.bangordailynews.com/2026/08/29/down-east/downeast-business/eastport-grocery-store-iga-close-next-week-joam40zk0w",
+      "matches": {
+        "agent_intake_and_inbox": [
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\.worktrees\\food-line-august-2026-private-recovery\\data\\dispatches\\food-line\\agent-intake\\2026-08-29\\food-line-aug29-confirmed-intake-recovery.json"
+        ]
+      },
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-a866d4b5a2b1fe5f19660e92"
+    },
+    {
+      "canonical_source_url": "https://www.martinsville.k12.il.us/article/2962815",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-a8b544ee8745d1ccd38cdd4a"
+    },
+    {
+      "canonical_source_url": "https://www.knopnews2.com/2026/07/30/malines-superfoods-close-permanently-august-after-years-serving-sutherland",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-a8b6687adc9ac21615a93ef2"
+    },
+    {
+      "canonical_source_url": "https://news.dadeschools.net/cmnc/new/37828",
+      "matches": {
+        "agent_intake_and_inbox": [
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\.worktrees\\food-line-august-2026-private-recovery\\data\\dispatches\\food-line\\agent-intake\\2026-08-29\\food-line-aug29-confirmed-intake-recovery.json"
+        ]
+      },
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-a902676e30387c24a91b6d5c"
+    },
+    {
+      "canonical_source_url": "https://www.desertmission.com/food-bank",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-a9444281c624953f88b7e592"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/p/dbojn8_euek",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-aa17dc7e2463ff71e51f9dc8"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/groups/2173004146379573/posts/2868446183502029",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ab4ea69fe4f1b1fb0fe0254c"
+    },
+    {
+      "canonical_source_url": "https://eles.osceolaschools.net",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ab99a63566ad7e7a5d002aaf"
+    },
+    {
+      "canonical_source_url": "https://buckscountybeacon.com/2026/08/window-shopping-for-food-in-the-time-of-trump-and-the-gops-snap-cuts",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-abd2f8d66590a83d4879df0c"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/100064862739897/posts/cancelled-there-will-be-no-distribution-on-friday-august-21st-due-to-kool-deadwo/1543964224442321",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ac237501821e554f9f05dd31"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/pahumanservices/posts/please-note-ebt-transactions-and-services-will-be-under-maintenance-on-august-13/1505284391626663",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ad2ff08c8daa2113bf2f1967"
+    },
+    {
+      "canonical_source_url": "https://www.nbcstpete.com/northside-food-pantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-add9126b98b9005e947fe45e"
+    },
+    {
+      "canonical_source_url": "https://inewsource.org/2026/08/09/san-diego-county-free-food-distribution",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-adf56f65c6ac7b7c3b28f9d0"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/lacostemvisd/posts/the-food-bank-distribution-scheduled-for-august-25-2026-has-been-canceled-due-to/2244209809773361",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ae6a777df9c7c0e776ba5ac7"
+    },
+    {
+      "canonical_source_url": "https://www.utsa.edu/students/advocacy/pantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ae82de99f02cc2dec4d09177"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/p/dw1w4qqjpud",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-aea5859591eb1ee27bad310a"
+    },
+    {
+      "canonical_source_url": "https://www.cbsnews.com/texas/news/ross-fire-near-palo-pinto-high-wildfire-risk",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-afae5adae364caeaee93ff6f"
+    },
+    {
+      "canonical_source_url": "https://www.mvr3.k12.mo.us/article/3035514",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-b0625e7d445ad8002ed8e63c"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/starkhealthdept1920/posts/our-wic-clinic-will-be-closed-tomorrow-friday-august-14-we-will-reopen-on-monday/1475578184596369",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-b1393bcf6d6b083eae429d59"
+    },
+    {
+      "canonical_source_url": "https://www.sfsimplified.com/why-thousands-of-kids-are-at-risk-of-losing-free-school-lunch",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-b1c1ede201df18ebbb7cc2a0"
+    },
+    {
+      "canonical_source_url": "https://signalcleveland.org/cleveland-hot-meals-program-struggles-with-federal-funding-freeze",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-b3460a8b142f1e9c828240aa"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/salvationarmycalumet/posts/food-pantry-program-will-be-closed-wednesday-august-12th-to-restock-our-shelves/122266457684145541",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-b41e98d2a1416b93524d25d7"
+    },
+    {
+      "canonical_source_url": "https://www.wuwm.com/changes-to-snap-requirements-cause-millions-to-lose-benefits",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-b4607c515b0525024be56f51"
+    },
+    {
+      "canonical_source_url": "https://thebeaconnews.org/stories/2026/08/26/shepherds-center-nonprofit-serving-jackson-county-seniors-grappling-with-25-funding-reduction",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-b4d4475debf29435c1efe859"
+    },
+    {
+      "canonical_source_url": "https://www.wndu.com/2026/02/20/plymouth-schools-end-free-lunch-program-2026-27-school-year",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-b5a424697778008219ef1066"
+    },
+    {
+      "canonical_source_url": "https://tigardlife.com/local-news/as-local-need-grows-tigard-food-pantry-expands-to-six-days-a-week",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-b638ec378ed148d8df30571c"
+    },
+    {
+      "canonical_source_url": "https://www.franklinfoodpantry.org/fy26infographicpressrelease",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-b81e4e31f874db35bde55725"
+    },
+    {
+      "canonical_source_url": "https://www.northernnewsnow.com/2026/08/07/superior-choice-credit-union-hands-out-200-food-boxes-following-local-food-shelf-closure",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-b8eb20f4a75ddc0e04eb155a"
+    },
+    {
+      "canonical_source_url": "https://www.kcrg.com/2026/08/28/iowa-snap-hotline-faces-federal-funding-cuts-food-banks-work-cover-difference",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-b98785908fd15f8fc6c3dee8"
+    },
+    {
+      "canonical_source_url": "https://www.hawaiipublicradio.org/2026-08-21/kohala-food-hub-shifts-to-help-local-community",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-bac5dd809efee3af7a3ea210"
+    },
+    {
+      "canonical_source_url": "https://www.colorado.edu/support/basicneeds/buff-pantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-bbdf61687c9d122d7aea49dd"
+    },
+    {
+      "canonical_source_url": "https://publichealthwatch.org/2026/08/27/soaring-electricity-costs-pose-texas-public-health-threat",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-bc3593470b192e47fe3b7c84"
+    },
+    {
+      "canonical_source_url": "https://westernwaynenews.com/volunteers-come-together-in-hagerstown",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-bcbb1b946c2b13680aac65fe"
+    },
+    {
+      "canonical_source_url": "https://www.kctv5.com/2026/08/15/kansas-snap-enrollment-drops-sharply-new-requirements-take-hold",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-bcd1753f12740d1b95b2b7b5"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/itspossibleadaeze/reel/dcokhbtx5sj",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-bd3317e8d788a77254ee4181"
+    },
+    {
+      "canonical_source_url": "https://www.einpresswire.com/article/937331896/smack-dab-turns-successful-day-of-service-into-monthly-community-tradition",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-bd6b27da4d6fe710627d39b3"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/unitedcommunityactionnetwork/posts/important-notice-wic-office-closure-august-25th-26th-and-27thplease-note-that-al/1483896100439740",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-be941175d3505cd59a5fd999"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/maricopapantry/posts/monday-8172026-we-served-another-578-fafmilies-this-morning-and-ran-out-of-prett/1053413607078087",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-becde05f28b034c57d99493e"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/reel/db898zeati1",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-c172c098e37c23dc58d40071"
+    },
+    {
+      "canonical_source_url": "https://www.ksat.com/news/local/2026/08/04/san-antonio-school-meal-program-changes-what-parents-need-to-know-before-first-day",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-c17cfb414e36b33a39732594"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/jacksoncountyohiowic/posts/we-will-be-closed-thursday-82026-from-8am-1pm-due-to-a-scheduled-power-outage/1560593259192880",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-c195ed296b2c41bee6355545"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/p/db8-k_ok2eo",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-c299f8c4e49fe93dc9f1c782"
+    },
+    {
+      "canonical_source_url": "https://www.wusf.org/education/2026-08-03/why-school-lunch-prices-going-up-again-florida",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-c2c2fbd88f6cf68fb7ad18ae"
+    },
+    {
+      "canonical_source_url": "https://www.theflanaganfoundation.org/pantry-dates",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-c32dd92fe84bf619dc1fcf33"
+    },
+    {
+      "canonical_source_url": "https://sharefoodbringhope.org",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-c38103f149b1fdcfb1a6d51f"
+    },
+    {
+      "canonical_source_url": "https://www.wflx.com/2026/07/10/free-meals-are-ending-certain-schools-palm-beach-county-heres-what-families-need-know",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-c75051038af95f6ede50a0ef"
+    },
+    {
+      "canonical_source_url": "https://apnews.com/article/34f582040d8f35a6f44443cdc57692e4",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-c817b148b3691354a4f57380"
+    },
+    {
+      "canonical_source_url": "https://www.ksat.com/news/local/2026/08/21/she-nearly-died-in-the-kerrville-floods-over-a-month-later-strangers-are-still-rebuilding-her-life-for-free",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-c85754ba388cd0b9f28c6ff7"
+    },
+    {
+      "canonical_source_url": "https://icstucson.org/what-we-do/emergency-assistance/food-bank",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-c8578257802c5a8ac5ad3d25"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/psulionspantry/p/dcbta2rx-v3",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-c87dc7a8f5fefc669a34ccea"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/p/dcmlyyutw24",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-c8c1b40cd665cf521f9a3d35"
+    },
+    {
+      "canonical_source_url": "https://sistercarmen.org/calendar/main",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-c8ded6609bd0a04778818f66"
+    },
+    {
+      "canonical_source_url": "https://www.therepublic.com/2026/08/26/were-at-our-gills-love-chapel-seeking-larger-facility-as-pantry-outgrows-current-space",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-c914d972a7980d4feed99751"
+    },
+    {
+      "canonical_source_url": "https://www.garycsc.k12.in.us/live-feed",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-c9fa0a6a9dd4291df034b5c7"
+    },
+    {
+      "canonical_source_url": "https://manchestercrc.org/whats-new",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ca521c06e947b83e8a5a62ff"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/915kmfp/p/db--j1enk1_",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ca6c8079b11c54c6d89d1da6"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/summershomeforhope_/p/dcjieonztbr",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-cacd4c7b14dd5756540fd9d8"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/cityofrgc/posts/the-rio-grande-city-food-pantry-distribution-was-held-on-august-19-2026-at-fort-/1351770657128572",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-cb59ae68b62399313c9ccd4e"
+    },
+    {
+      "canonical_source_url": "https://www.cbsnews.com/chicago/news/nipsco-power-outages-storms-hit-northwest-indiana",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ce6d8b77ba6eb31536fc7c96"
+    },
+    {
+      "canonical_source_url": "https://hawaiipublicschools.org/2026-hawaii-island-public-schools-open-friday",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-d02d74e7170ba35b32b20798"
+    },
+    {
+      "canonical_source_url": "https://apps.oregon.gov/oregon-newsroom/or/odhs/posts/post/snap-recipients-in-10-oregon-counties-have-more-time-to-replace-food-lost-during-recent-fires",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-d13a9ee6429bc51d37b1c212"
+    },
+    {
+      "canonical_source_url": "https://www.springbranchisd.com/article/3017172",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-d2515cc18b5cef36f9679bd8"
+    },
+    {
+      "canonical_source_url": "https://catholiccharities.org/food",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-d26e6fa1e18aab555e80afd0"
+    },
+    {
+      "canonical_source_url": "https://forage.statuspage.io/incidents/kn3wjvhbstdj",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-d424a1215a442903eeba28c2"
+    },
+    {
+      "canonical_source_url": "https://www.12news.com/article/life/food/demand-food-boxes-nearly-doubles-at-phoenix-nonprofit-after-snap-cuts-hit-arizona/75-a2925995-b10a-4916-97e0-e1495c17029c",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-d4262060479fbd9cd5200420"
+    },
+    {
+      "canonical_source_url": "https://www.navytimes.com/news/your-military/2026/08/28/dod-confirms-refrigeration-disruption-at-military-commissaries",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-d5138f9897a8fc4d6c34d951"
+    },
+    {
+      "canonical_source_url": "https://www.wkdzradio.com/2026/08/10/peadds-letter-explains-immediate-changes-to-home-delivered-meals/news-edge",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-d549a10727e504376744d1a3"
+    },
+    {
+      "canonical_source_url": "https://spotlightdelaware.org/2026/08/21/delawares-haitians-face-uncertain-future-after-trump-strips-immigration-protections",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-d60076727212bb9199e77986"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/laredowic/posts/-important-our-wic-clinics-will-be-closing-at-1200-pm-on-thursday-august-20-2026/1587095200096489",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-d6af3664550763392a86737e"
+    },
+    {
+      "canonical_source_url": "https://www.redfordinterfaithrelief.org",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-d6ff06f2a1b69236335d93c6"
+    },
+    {
+      "canonical_source_url": "https://dph.sc.gov/public/public-health-clinics",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-d79461cce61547ff0c42e2b5"
+    },
+    {
+      "canonical_source_url": "https://www.indiancreekschools.com/back-to-school",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-d874d61944c1471fab7477b3"
+    },
+    {
+      "canonical_source_url": "https://www.ctinsider.com/connecticut/article/food-allowance-state-300-snap-work-requirements-22373147.php",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-d95ed42d335517aa27595a65"
+    },
+    {
+      "canonical_source_url": "https://hilltophouse.org",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-d96683b21f0c553e07af25c4"
+    },
+    {
+      "canonical_source_url": "https://stljewishlight.org/news/news-local/jfs-pantry-faces-rising-demand",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-d9acb5358beef68453ae842d"
+    },
+    {
+      "canonical_source_url": "https://www.mybuckhannon.com/rock-cave-iga-closing-permanently-after-nearly-four-decades-of-hawkins-family-ownership",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-d9eff576b92cde8c5295fe9e"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/dickinsonamenfoodpantry/posts/-important-noticebeginning-august-1-amen-food-pantry-will-be-limited-to-one-visi/1071318825230072",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-db5494febd5a146f7003be9d"
+    },
+    {
+      "canonical_source_url": "https://www.whas11.com/article/news/local/prices-are-way-up-supply-at-louisville-food-bank-decreases-as-number-of-food-insecure-rises/417-08678b3f-3b3f-43a4-a2e8-139a3eed9071",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-db95b6b80e3b547447e4bba3"
+    },
+    {
+      "canonical_source_url": "https://www.pilsenfoodpantry.com/food",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-dc0a0bfc4dd9cd8bf3321ddc"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/newcastle.k12.ok.us/posts/as-we-get-ready-to-welcome-students-back-for-another-school-year-we-want-to-shar/1466168728879263",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-dc1d1308648616e9fa75c8f7"
+    },
+    {
+      "canonical_source_url": "https://azfoodbanks.org/visits-increase",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-dc3b1f294f97806a5a0c86b7"
+    },
+    {
+      "canonical_source_url": "https://abc3340.com/news/abc-3340-news-iteam/i-team-examines-whats-changing-for-snap-recipients-across-alabama-dhr-usda",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-dd8f3f615feafc110bc7d42b"
+    },
+    {
+      "canonical_source_url": "https://clcpublichealth.org/contact",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ddeae7d3cbb8cac82b712495"
+    },
+    {
+      "canonical_source_url": "https://www.valpo.k12.in.us/apps/news/article/2220567?categoryid=11101",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-de92e3ee00d86e589218d5ed"
+    },
+    {
+      "canonical_source_url": "https://abidinglove.org/food-pantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-df06d56ceb68e5c7d1a7f2ec"
+    },
+    {
+      "canonical_source_url": "https://portal.ct.gov/governor/news/press-releases/2026/08-2026/governor-lamont-announces-distribution-of-state-funded-food-assistance",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-dfcc415abecbd2e7fc7b0feb"
+    },
+    {
+      "canonical_source_url": "https://path.osceolaschools.net",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-e1142b2b4a0f49657ffba9a2"
+    },
+    {
+      "canonical_source_url": "https://patch.com/pennsylvania/doylestown/new-britain-food-pantry-signs-lease-new-home-warrington",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-e12c34706394b608d87e5726"
+    },
+    {
+      "canonical_source_url": "https://ctmirror.org/2026/08/20/report-snap-benefits-vanishing-faster-than-ct-officials-expected",
+      "matches": {
+        "agent_intake_and_inbox": [
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\.worktrees\\food-line-august-2026-private-recovery\\data\\dispatches\\food-line\\agent-intake\\2026-08-29\\food-line-aug29-confirmed-intake-recovery.json"
+        ]
+      },
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-e2c97535cc2e6061a36f8148"
+    },
+    {
+      "canonical_source_url": "https://www.cleveland19.com/2026/07/31/heinens-closing-downtown-cleveland-location-friday",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-e310881baf19417061f2d491"
+    },
+    {
+      "canonical_source_url": "https://www.southamboynj.gov/news/view/4373/food-pantry-closed-august-21st-to-september-7th-2026",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-e3783a621ae7a5c0ef6d792f"
+    },
+    {
+      "canonical_source_url": "https://foodbankonline.org/directory/listing/vision-life-ministries",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-e42d4d9906361da77b55ba77"
+    },
+    {
+      "canonical_source_url": "https://www.expressnews.com/news/article/storm-san-antonio-outages-22409275.php",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-e439627e02ac51e861930e47"
+    },
+    {
+      "canonical_source_url": "https://www.seasholmen.org/food-pantry.html",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-e463a319e157d0711b15f612"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/projectselfsufficiencyofsussexcounty/posts/the-project-self-sufficiency-food-pantry-will-close-at-100-pm-on-thursday-august/1494307622742946",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-e47aa147edf2a6495160e834"
+    },
+    {
+      "canonical_source_url": "https://www.cascadia.edu/student-resources/health-and-wellness-support/kodiak_cave.aspx",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-e5899f8cab677c075504a1d7"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/ebsworcester/posts/important-food-distribution-updatedue-to-an-emergency-closure-at-the-worcester-c/1371045691797829",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-e659a8a883f71bcd7064a37c"
+    },
+    {
+      "canonical_source_url": "https://www.cambridgema.gov/services/summerfoodprogram",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-e6c7d4631072b72b8231b97f"
+    },
+    {
+      "canonical_source_url": "https://www.ctinsider.com/news/article/derby-food-pantry-valley-ct-22380681.php",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-e78adcece0de5db161917fcc"
+    },
+    {
+      "canonical_source_url": "https://www.bengamla-charter.com/apps/pages/index.jsp?type=d&urec_id=527476",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-e7afec1f74479c3d9c29ada2"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/northsideoutreach/posts/this-past-saturday-75-families-visited-the-northside-outreach-center-food-pantry/1470088231821824",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-e856abe38fe917995c9d0208"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/fpcedgewood/p/dbv2cr7udca",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-e9721d6bd20c180edd318f7e"
+    },
+    {
+      "canonical_source_url": "https://www.houstonchronicle.com/news/houston-texas/education/hisd/article/free-lunch-cuts-kids-hungry-22371829.php",
+      "matches": {
+        "agent_intake_and_inbox": [
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\.worktrees\\food-line-august-2026-private-recovery\\data\\dispatches\\food-line\\agent-intake\\2026-08-29\\food-line-aug29-confirmed-intake-recovery.json"
+        ]
+      },
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ea5f6172ae62deca93fb0df7"
+    },
+    {
+      "canonical_source_url": "https://thenativevoice.net/ashland-community-food-bank-needs-donations-volunteers",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-eaea65f9945b69030bd84c9d"
+    },
+    {
+      "canonical_source_url": "https://glasgownews1.com/2026/08/28/food-insecurity-climbs-in-barren-county",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ebf16915022f9be9b442f6b3"
+    },
+    {
+      "canonical_source_url": "https://growinghome.org/initiatives-programs/food/food-pantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ebf9eb9aa56c9ce7cec1b12f"
+    },
+    {
+      "canonical_source_url": "https://www.feedingflorida.org/our-work/fresh-access-bucks",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ec1e96085bcb2e3553c10e30"
+    },
+    {
+      "canonical_source_url": "https://www.yourcharlotteschools.net/index.php?articleid=78165856&pageid=smartsitefeed&psqfeed=true",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ec205632844dca3afe02b0a2"
+    },
+    {
+      "canonical_source_url": "https://gov.texas.gov/news/post/governor-abbott-hhsc-announce-snap-replacement-benefits-extension-for-texans-affected-by-flooding-8-3",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ece2a7954676d69b2ae8f552"
+    },
+    {
+      "canonical_source_url": "https://www.actionnews5.com/2026/08/28/organizations-help-memphians-restock-fridges-after-days-without-power",
+      "matches": {
+        "agent_intake_and_inbox": [
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\.worktrees\\food-line-august-2026-private-recovery\\data\\dispatches\\food-line\\agent-intake\\2026-08-29\\food-line-aug29-confirmed-intake-recovery.json"
+        ]
+      },
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ed3115364f540281726cf1b1"
+    },
+    {
+      "canonical_source_url": "https://chicago.suntimes.com/news/2026/07/25/shoppers-left-stranded-as-save-a-lot-grocery-stores-permanently-close-we-have-to-eat-too",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ed5cc162b756dbc0a541c025"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/campusfoodpantry/p/db_rdrtmztr",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-edee669cd3342e874c20158d"
+    },
+    {
+      "canonical_source_url": "https://chehalisschools.org/140530_2",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ef8a9d8b78eec5c83d4c59e5"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/100091414759578/posts/the-matura-madison-county-outreach-center-will-be-closed-friday-august-28-2026/999090433148106",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ef8b646727fc4ae98d57fd99"
+    },
+    {
+      "canonical_source_url": "https://www.mylpsd.com/article/3041050",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ef8bf5d1adedee0b31cfa83a"
+    },
+    {
+      "canonical_source_url": "https://www.startribune.com/federal-cuts-push-minnesota-food-shelves-to-lean-on-community/601880316",
+      "matches": {
+        "agent_intake_and_inbox": [
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\.worktrees\\food-line-august-2026-private-recovery\\data\\dispatches\\food-line\\agent-intake\\2026-08-29\\food-line-aug29-confirmed-intake-recovery.json"
+        ]
+      },
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-efc02bc4374953be01d3f4a7"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/pakpeds/posts/our-food-drive-on-august-20th-has-been-canceled-we-apologize-for-any-inconvenien/1580564057417542",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-f03aea34e9c70ee586f313ae"
+    },
+    {
+      "canonical_source_url": "https://scl.cornell.edu/residential-life/dining/about-dining/food-security/cornell-food-pantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-f0808f9483b8801ca6aaedc3"
+    },
+    {
+      "canonical_source_url": "https://brightmoorconnection.org",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-f0fdd92793670b813c6665ab"
+    },
+    {
+      "canonical_source_url": "https://www.sjb-ola.org/cans",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-f1a1858797fd609de63ee69c"
+    },
+    {
+      "canonical_source_url": "https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/3548/rvs/841321de-1426-4608-ac00-5cb47b2b3596/april-8%2c-2026-draft-agenda-%281%29-%281%29.pdf?disposition=inline",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-f45d5352a53c6a2256b9333c"
+    },
+    {
+      "canonical_source_url": "https://www.cfbisd.edu/departments/student-nutrition-services/universal-breakfast-program-change",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-f4c55b14e7ec10134fc389de"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/villageofdecatur/posts/the-decatur-senior-center-will-have-no-meal-on-august-17-2026-due-to-power-being/1470812828414713",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-f56dbfb0722d9fac4e31afba"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/p/db3cjphldd8",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-f5a95058d34547fbadbfb531"
+    },
+    {
+      "canonical_source_url": "https://plentyfoodpantry.org/event/plenty-closed-15",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-f622a0013286ed8be6cabeac"
+    },
+    {
+      "canonical_source_url": "https://spectrumnews1.com/ky/louisville/news/2026/07/23/food-pantries-see-rising-demand-as-snap-enrollment-falls",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-f636d2d1cb3a072d99ee9407"
+    },
+    {
+      "canonical_source_url": "https://news.vintontoday.com/articles/news/article1046162.html",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-f74803e9690aad2dc393da5f"
+    },
+    {
+      "canonical_source_url": "https://www.fdlband.org/news_detail_t29_r741.php",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-f7801b89ff760ffaec42a015"
+    },
+    {
+      "canonical_source_url": "https://bis.worcesterk12.org/o/bis/live-feed",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-f783f58dc19d51ed34a5f69b"
+    },
+    {
+      "canonical_source_url": "https://www.iworksmc.org",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-f8ac497b9706482cb6f8d0a3"
+    },
+    {
+      "canonical_source_url": "https://www.tulsalibrary.org/food-resources",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-f900ed6680979e2317193fa0"
+    },
+    {
+      "canonical_source_url": "https://www.ksat.com/news/local/2026/08/28/advocates-said-green-card-delays-are-leaving-some-san-antonio-refugee-families-without-snap-benefits",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-f93dec4b16efd4c379cf6976"
+    },
+    {
+      "canonical_source_url": "https://www.fgcu.edu/adminservices/foodpantry",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-fa5ebf6226c64e7627cdf026"
+    },
+    {
+      "canonical_source_url": "https://www.plymouth.k12.in.us/live_feeds/12822999",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-fa64c2a9f6b2ffd1f411bbcc"
+    },
+    {
+      "canonical_source_url": "https://www.palmbeachschools.org/studentsparents/food-and-nutrition-services/updates-to-the-school-meals-program",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-fbe37c5b7b8b10c6bf8586e4"
+    },
+    {
+      "canonical_source_url": "https://www.sfchronicle.com/california/article/big-sur-highway-1-closure-wildfires-22408034.php",
+      "matches": {
+        "agent_intake_and_inbox": [
+          "C:\\PythonProjects\\Dispatches From The Blue Fern Co\\.worktrees\\food-line-august-2026-private-recovery\\data\\dispatches\\food-line\\agent-intake\\2026-08-29\\food-line-aug29-confirmed-intake-recovery.json"
+        ]
+      },
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-fc875623fc8765a1fc9011ec"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/forestgrovesd/posts/summer-meals-will-be-suspended-tomorrow-august-11th-as-all-nutrition-services-st/1626411346150574",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-fdb3298932c6e48dfd3abe0a"
+    },
+    {
+      "canonical_source_url": "https://www.facebook.com/hopehouseottawaks/posts/important-hope-house-update-hope-house-will-be-closed-starting-tuesday-august-18/1483638680460094",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-fdef031940bab05f2e60a7b3"
+    },
+    {
+      "canonical_source_url": "https://www.valpo.k12.in.us/apps/news/article/2219427?categoryid=11101",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-fe4a760d3c7ba4ba765930db"
+    },
+    {
+      "canonical_source_url": "https://foodfinder.oregonfoodbank.org/locations/esther-s-pantry?q=troutdale",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-fee2fcf959e94949f133d293"
+    },
+    {
+      "canonical_source_url": "https://www.instagram.com/p/db6fi9hfjjt",
+      "matches": {},
+      "published_exact_url_match": false,
+      "source_id": "food-line-history-source-ff27661ac256534a1daca0bf"
+    }
+  ]
+}

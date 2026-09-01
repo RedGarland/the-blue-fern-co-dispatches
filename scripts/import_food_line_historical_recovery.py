@@ -13,14 +13,16 @@ from bluefern_dispatches.food_line_historical_recovery import (  # noqa: E402
     cluster_spec_template,
     dry_run_result,
     import_recovery,
+    migrate_recovery_to_four_tiers,
     parse_aggregate_handoff,
     sha256_bytes,
+    validate_migration_implementation_commit,
 )
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Build a private Food Line historical event-review recovery")
-    parser.add_argument("operation", choices=("inspect", "template", "validate", "dry-run", "import"))
+    parser.add_argument("operation", choices=("inspect", "template", "validate", "dry-run", "import", "migrate"))
     parser.add_argument("--input", required=True, type=Path)
     parser.add_argument("--cluster-spec", type=Path)
     parser.add_argument("--template-output", type=Path)
@@ -28,9 +30,45 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--pages-root", type=Path)
     parser.add_argument("--captured-at", default="")
     parser.add_argument("--run-month", help="retain findings from agent runs completed/started in YYYY-MM")
+    parser.add_argument(
+        "--predecessor-artifact-set",
+        help="exact sha256: artifact-set identity of the immutable predecessor (migrate only)",
+    )
+    parser.add_argument(
+        "--implementation-source-commit",
+        help="40-character commit containing the migration implementation (migrate only)",
+    )
     args = parser.parse_args(argv)
 
     try:
+        if args.operation == "migrate":
+            if (
+                args.cluster_spec is None
+                or not args.captured_at
+                or not args.run_month
+                or not args.predecessor_artifact_set
+                or not args.implementation_source_commit
+            ):
+                parser.error(
+                    "migrate requires --cluster-spec, --captured-at, --run-month, "
+                    "--predecessor-artifact-set, and --implementation-source-commit"
+                )
+            repository_root = args.repo_root.resolve()
+            validate_migration_implementation_commit(
+                repository_root,
+                args.implementation_source_commit,
+            )
+            result = migrate_recovery_to_four_tiers(
+                repository_root,
+                args.input,
+                args.cluster_spec,
+                predecessor_artifact_set_sha256=args.predecessor_artifact_set,
+                implementation_source_commit=args.implementation_source_commit,
+                captured_at=args.captured_at,
+                run_month=args.run_month,
+            )
+            print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))
+            return 0
         parsed = parse_aggregate_handoff(args.input.read_bytes(), run_month=args.run_month)
         if args.operation == "inspect":
             result = {

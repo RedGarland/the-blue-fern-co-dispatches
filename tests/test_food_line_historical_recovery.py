@@ -9,13 +9,17 @@ import pytest
 
 from bluefern_dispatches.food_line_historical_recovery import (
     CONSEQUENCE_PRIORITIES,
+    FOUR_TIER_PRIORITY_POLICY,
+    FIVE_TIER_PRIORITY_POLICY,
     FoodLineHistoricalRecoveryError,
+    _audit_four_tier_semantic_diff,
     _recovery_directory,
     _validated_current_recovery_identity,
     build_reconciliation,
     build_recovery,
     cluster_spec_template,
     import_recovery,
+    migrate_recovery_to_four_tiers,
     parse_aggregate_handoff,
     sha256_bytes,
     validate_clusters,
@@ -123,6 +127,137 @@ def _write_input_and_spec(tmp_path: Path, raw: bytes, spec: dict) -> tuple[Path,
     spec_path = tmp_path / "clusters.json"
     spec_path.write_text(json.dumps(spec, indent=2), encoding="utf-8")
     return input_path, spec_path
+
+
+def _import_five_tier_predecessor(
+    root: Path,
+    input_path: Path,
+    spec_path: Path,
+    *,
+    captured_at: str = "2026-09-01T00:00:00Z",
+    run_month: str | None = None,
+) -> dict:
+    artifacts = build_recovery(
+        root,
+        input_path,
+        spec_path,
+        pages_root=None,
+        captured_at=captured_at,
+        run_month=run_month,
+    )
+    for name, row_key in (
+        ("event_cluster_manifest.json", "clusters"),
+        ("priority_confirmed_candidates.json", "candidates"),
+    ):
+        for row in artifacts[name][row_key]:
+            if row["measured_access_consequence"]["type"] == "disaster_household_food_loss":
+                row["priority"] = 5
+    return import_recovery(
+        root,
+        artifacts,
+        cluster_spec_sha256=sha256_bytes(spec_path.read_bytes()),
+    )
+
+
+def _migration_arguments(
+    root: Path,
+    input_path: Path,
+    spec_path: Path,
+    predecessor_artifact_set: str,
+    *,
+    source_commit: str = "a" * 40,
+) -> dict:
+    return {
+        "root": root,
+        "input_path": input_path,
+        "cluster_spec_path": spec_path,
+        "predecessor_artifact_set_sha256": predecessor_artifact_set,
+        "implementation_source_commit": source_commit,
+        "captured_at": "2026-09-01T00:00:00Z",
+        "run_month": "2026-08",
+    }
+
+
+def _production_shaped_spec(parsed: dict) -> dict:
+    finding_ids = [item["finding_id"] for item in parsed["findings"]]
+    groups = []
+    cursor = 0
+    for index in range(414):
+        size = 2 if index < 91 else 1
+        groups.append(finding_ids[cursor : cursor + size])
+        cursor += size
+    assert cursor == 505
+
+    consequence_types = (
+        ["direct_service_loss_or_closure"] * 158
+        + ["benefit_access_contraction_with_emergency_demand"] * 20
+        + ["inventory_or_capacity_strain"] * 57
+        + ["grocery_or_school_meal_access_loss"] * 64
+        + ["disaster_household_food_loss"] * 21
+        + ["disaster_household_food_loss"]
+        + ["grocery_or_school_meal_access_loss"] * 93
+    )
+    dispositions = (
+        ["confirmed_historical_review_candidate"] * 320
+        + ["deferred_specific_evidence_gap"] * 67
+        + ["excluded_under_existing_rules"] * 15
+        + ["duplicate_or_corroboration"] * 10
+        + ["already_published"] * 2
+    )
+    clusters = []
+    for index, (group, consequence_type, disposition) in enumerate(
+        zip(groups, consequence_types, dispositions, strict=True)
+    ):
+        prior_match = {"status": "none"}
+        if disposition == "already_published":
+            prior_match = {"status": "exact_source_url"}
+        clusters.append(
+            {
+                "location": f"Synthetic County {index}, Arizona",
+                "organization": f"Synthetic Food Operator {index}",
+                "event_start_date": "2026-08-10",
+                "event_end_date": "2026-08-10",
+                "pressure_category": f"historical food pressure {index}",
+                "underlying_development": f"bounded synthetic development {index}",
+                "affected_population": ["households"],
+                "finding_ids": group,
+                "primary_finding_id": group[0],
+                "measured_access_consequence": {
+                    "type": consequence_type,
+                    "description": f"Measured access consequence {index}.",
+                    "measurement": str(index),
+                    "supporting_finding_ids": [group[0]],
+                },
+                "uncertainty": {
+                    "condition": {"status": "resolved", "note": "The condition is directly reported."},
+                    "causal": {"status": "unresolved", "note": "Causal allocation remains unresolved."},
+                    "severity": {"status": "unresolved", "note": "Full severity remains unresolved."},
+                },
+                "prior_publication_match": prior_match,
+                "proposed_disposition": disposition,
+                "disposition_reason": f"Event-specific reviewed disposition {index}.",
+                "unresolved_requirement": (
+                    f"Additional specific evidence {index} is required."
+                    if disposition == "deferred_specific_evidence_gap"
+                    else None
+                ),
+                "exclusion_rule": (
+                    f"Existing bounded exclusion rule {index}."
+                    if disposition == "excluded_under_existing_rules"
+                    else None
+                ),
+            }
+        )
+    return {
+        "schema_version": "food_line_historical_event_cluster_spec_v1",
+        "input_sha256": parsed["input_sha256"],
+        "run_month": "2026-08",
+        "reviewed_by": "fixture-reviewer",
+        "reviewed_at": "2026-09-01T00:00:00Z",
+        "publication_approval": False,
+        "unassigned_finding_ids": [],
+        "clusters": clusters,
+    }
 
 
 def test_aggregate_parser_preserves_malformed_block_and_deduplicates_exact_findings() -> None:
@@ -625,6 +760,371 @@ def test_disaster_losses_use_tier_four_and_no_tier_five_is_emitted(tmp_path: Pat
     assert priorities == [4]
     assert 5 not in priorities
     assert 5 not in event_priorities
+
+
+def test_five_tier_migration_is_out_of_place_exactly_replayable_and_non_authorizing(
+    tmp_path: Path,
+) -> None:
+    raw = _aggregate(
+        _envelope(
+            "run-migrate",
+            [_finding(pressure_type="disaster_household_food_loss")],
+        )
+    )
+    parsed = parse_aggregate_handoff(raw, run_month="2026-08")
+    spec = _cluster_spec(parsed)
+    spec["run_month"] = "2026-08"
+    spec["clusters"][0]["measured_access_consequence"]["type"] = "disaster_household_food_loss"
+    input_path, spec_path = _write_input_and_spec(tmp_path, raw, spec)
+    earlier = tmp_path / "data" / "agent-history" / "food-line" / "recoveries" / "sha256-earlier"
+    earlier.mkdir(parents=True)
+    (earlier / "record.json").write_text(
+        json.dumps({"url": "https://news.example.org/pantry"}), encoding="utf-8"
+    )
+    pages = tmp_path / "configured-pages"
+    pages.mkdir()
+    pages_marker = pages / "unchanged.txt"
+    pages_marker.write_text("unchanged", encoding="utf-8")
+    predecessor = _import_five_tier_predecessor(
+        tmp_path,
+        input_path,
+        spec_path,
+        run_month="2026-08",
+    )
+    predecessor_path = Path(predecessor["recovery_path"])
+    predecessor_before = {
+        path.name: (sha256_bytes(path.read_bytes()), path.stat().st_size, path.stat().st_mtime_ns)
+        for path in predecessor_path.iterdir()
+    }
+
+    first = migrate_recovery_to_four_tiers(
+        **_migration_arguments(tmp_path, input_path, spec_path, predecessor["artifact_set_sha256"])
+    )
+    successor_path = Path(first["recovery_path"])
+    successor_before = {
+        path.name: (sha256_bytes(path.read_bytes()), path.stat().st_size, path.stat().st_mtime_ns)
+        for path in successor_path.iterdir()
+    }
+    replay = migrate_recovery_to_four_tiers(
+        **_migration_arguments(tmp_path, input_path, spec_path, predecessor["artifact_set_sha256"])
+    )
+    successor_after = {
+        path.name: (sha256_bytes(path.read_bytes()), path.stat().st_size, path.stat().st_mtime_ns)
+        for path in successor_path.iterdir()
+    }
+    predecessor_after = {
+        path.name: (sha256_bytes(path.read_bytes()), path.stat().st_size, path.stat().st_mtime_ns)
+        for path in predecessor_path.iterdir()
+    }
+
+    assert first["status"] == "migrated"
+    assert replay["status"] == "idempotent_noop"
+    assert first["successor_identity_sha256"] == replay["successor_identity_sha256"]
+    assert first["artifact_set_sha256"] == replay["artifact_set_sha256"]
+    assert predecessor_before == predecessor_after
+    assert successor_before == successor_after
+    assert predecessor_path != successor_path
+    manifest = json.loads((successor_path / "recovery_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["predecessor"]["artifact_set_sha256"] == predecessor["artifact_set_sha256"]
+    assert manifest["priority_policy_transition"]["from"] == FIVE_TIER_PRIORITY_POLICY
+    assert manifest["priority_policy_transition"]["to"] == FOUR_TIER_PRIORITY_POLICY
+    assert manifest["priority_policy_transition"]["tier_counts"]["event_cluster_manifest.json"] == {
+        "predecessor": {"5": 1},
+        "successor": {"4": 1},
+    }
+    successor_events = json.loads((successor_path / "event_cluster_manifest.json").read_text(encoding="utf-8"))
+    predecessor_reconciliation = json.loads(
+        (predecessor_path / "live_site_reconciliation_report.json").read_text(encoding="utf-8")
+    )
+    successor_reconciliation = json.loads(
+        (successor_path / "live_site_reconciliation_report.json").read_text(encoding="utf-8")
+    )
+    assert successor_events["clusters"][0]["priority"] == 4
+    assert predecessor_reconciliation == successor_reconciliation
+    historical_matches = successor_reconciliation["sources"][0]["matches"]["historical_agent_records"]
+    assert historical_matches == [str(earlier / "record.json")]
+    assert pages_marker.read_text(encoding="utf-8") == "unchanged"
+    assert first["publication_approval"] is False
+    assert first["queue_items_created"] == 0
+    assert first["pages_files_written"] == 0
+    assert not (tmp_path / "data" / "dispatches" / "food-line" / "agent-intake").exists()
+    assert not (tmp_path / "data" / "universal_events" / "publication-state").exists()
+    assert not (tmp_path / "output").exists()
+
+
+def test_production_shaped_migration_preserves_totals_and_expected_tier_transition(tmp_path: Path) -> None:
+    findings = []
+    for index in range(505):
+        url_index = index if index < 437 else index - 437
+        findings.append(
+            _finding(
+                title=f"August historical finding {index}",
+                source_url=f"https://news.example.org/august/{url_index}?utm_source=watch",
+                canonical_source_url=f"https://news.example.org/august/{url_index}?utm_source=watch",
+                exact_supporting_passage=f"Measured historical food pressure {index} was reported.",
+            )
+        )
+    raw = _aggregate(_envelope("run-production-shaped", findings))
+    parsed = parse_aggregate_handoff(raw, run_month="2026-08")
+    assert parsed["retained_finding_count"] == 505
+    assert parsed["unique_canonical_source_count"] == 437
+    spec = _production_shaped_spec(parsed)
+    input_path, spec_path = _write_input_and_spec(tmp_path, raw, spec)
+    finding_by_id = {item["finding_id"]: item for item in parsed["findings"]}
+    published_urls = [
+        finding_by_id[cluster["primary_finding_id"]]["canonical_source_url"]
+        for cluster in spec["clusters"][-2:]
+    ]
+    public = tmp_path / "output" / "site" / "food-line" / "history.html"
+    public.parent.mkdir(parents=True)
+    public.write_text("\n".join(published_urls), encoding="utf-8")
+    predecessor = _import_five_tier_predecessor(
+        tmp_path,
+        input_path,
+        spec_path,
+        run_month="2026-08",
+    )
+
+    result = migrate_recovery_to_four_tiers(
+        **_migration_arguments(tmp_path, input_path, spec_path, predecessor["artifact_set_sha256"])
+    )
+    manifest = json.loads((Path(result["recovery_path"]) / "recovery_manifest.json").read_text(encoding="utf-8"))
+    tiers = manifest["priority_policy_transition"]["tier_counts"]
+
+    assert result["status"] == "migrated"
+    assert result["recovery_totals"] == {
+        "retained_findings": 505,
+        "unique_canonical_urls": 437,
+        "event_clusters": 414,
+        "dispositions": {
+            "already_published": 2,
+            "confirmed_historical_review_candidate": 320,
+            "deferred_specific_evidence_gap": 67,
+            "duplicate_or_corroboration": 10,
+            "excluded_under_existing_rules": 15,
+        },
+    }
+    assert tiers["priority_confirmed_candidates.json"] == {
+        "predecessor": {"1": 158, "2": 20, "3": 57, "4": 64, "5": 21},
+        "successor": {"1": 158, "2": 20, "3": 57, "4": 85},
+    }
+    assert tiers["event_cluster_manifest.json"]["predecessor"]["5"] == 22
+    assert tiers["event_cluster_manifest.json"]["successor"].get("5") is None
+    assert tiers["event_cluster_manifest.json"]["predecessor"]["5"] - tiers[
+        "priority_confirmed_candidates.json"
+    ]["predecessor"]["5"] == 1
+
+
+def test_migration_fails_for_predecessor_drift_unexpected_files_and_binding_drift(tmp_path: Path) -> None:
+    raw = _aggregate(_envelope("run-guard", [_finding(pressure_type="disaster_household_food_loss")]))
+    parsed = parse_aggregate_handoff(raw, run_month="2026-08")
+    spec = _cluster_spec(parsed)
+    spec["run_month"] = "2026-08"
+    spec["clusters"][0]["measured_access_consequence"]["type"] = "disaster_household_food_loss"
+    input_path, spec_path = _write_input_and_spec(tmp_path, raw, spec)
+    predecessor = _import_five_tier_predecessor(
+        tmp_path, input_path, spec_path, run_month="2026-08"
+    )
+    arguments = _migration_arguments(tmp_path, input_path, spec_path, predecessor["artifact_set_sha256"])
+    predecessor_path = Path(predecessor["recovery_path"])
+    unexpected = predecessor_path / "unexpected.json"
+    unexpected.write_text("{}", encoding="utf-8")
+    with pytest.raises(FoodLineHistoricalRecoveryError, match="file inventory drifted"):
+        migrate_recovery_to_four_tiers(**arguments)
+    unexpected.unlink()
+    artifact = predecessor_path / "normalized_findings.json"
+    original = artifact.read_bytes()
+    artifact.write_bytes(original + b" ")
+    with pytest.raises(FoodLineHistoricalRecoveryError, match="artifact hash drifted"):
+        migrate_recovery_to_four_tiers(**arguments)
+    artifact.write_bytes(original)
+    spec_path.write_bytes(spec_path.read_bytes() + b" ")
+    with pytest.raises(FoodLineHistoricalRecoveryError, match="cluster-specification hash drifted"):
+        migrate_recovery_to_four_tiers(**arguments)
+
+
+def test_migration_semantic_audit_rejects_any_nonpriority_change(tmp_path: Path) -> None:
+    raw = _aggregate(_envelope("run-semantic", [_finding(pressure_type="disaster_household_food_loss")]))
+    parsed = parse_aggregate_handoff(raw, run_month="2026-08")
+    spec = _cluster_spec(parsed)
+    spec["run_month"] = "2026-08"
+    spec["clusters"][0]["measured_access_consequence"]["type"] = "disaster_household_food_loss"
+    input_path, spec_path = _write_input_and_spec(tmp_path, raw, spec)
+    predecessor_result = _import_five_tier_predecessor(
+        tmp_path, input_path, spec_path, run_month="2026-08"
+    )
+    predecessor_path = Path(predecessor_result["recovery_path"])
+    predecessor = {
+        name: json.loads((predecessor_path / name).read_text(encoding="utf-8"))
+        for name in (
+            "raw_archive.json",
+            "normalized_unique_sources.json",
+            "normalized_findings.json",
+            "event_cluster_manifest.json",
+            "live_site_reconciliation_report.json",
+            "disposition_matrix.json",
+            "import_validation_report.json",
+            "priority_confirmed_candidates.json",
+        )
+    }
+    successor = json.loads(json.dumps(predecessor))
+    successor["event_cluster_manifest.json"]["clusters"][0]["priority"] = 4
+    successor["priority_confirmed_candidates.json"]["candidates"][0]["priority"] = 4
+    successor["event_cluster_manifest.json"]["clusters"][0]["organization_display"] = "Changed"
+
+    with pytest.raises(FoodLineHistoricalRecoveryError, match="unapproved semantics"):
+        _audit_four_tier_semantic_diff(predecessor, successor)
+
+
+def test_migration_atomic_failure_leaves_no_successor_or_predecessor_change(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    raw = _aggregate(_envelope("run-atomic", [_finding(pressure_type="disaster_household_food_loss")]))
+    parsed = parse_aggregate_handoff(raw, run_month="2026-08")
+    spec = _cluster_spec(parsed)
+    spec["run_month"] = "2026-08"
+    spec["clusters"][0]["measured_access_consequence"]["type"] = "disaster_household_food_loss"
+    input_path, spec_path = _write_input_and_spec(tmp_path, raw, spec)
+    predecessor = _import_five_tier_predecessor(
+        tmp_path, input_path, spec_path, run_month="2026-08"
+    )
+    predecessor_path = Path(predecessor["recovery_path"])
+    before = {path.name: sha256_bytes(path.read_bytes()) for path in predecessor_path.iterdir()}
+    import bluefern_dispatches.food_line_historical_recovery as recovery_module
+
+    original_replace = recovery_module.os.replace
+
+    def fail_directory_replace(source, destination):
+        if Path(destination).parent.name == "recovery-migrations":
+            raise OSError("synthetic final replace failure")
+        return original_replace(source, destination)
+
+    monkeypatch.setattr(recovery_module.os, "replace", fail_directory_replace)
+    with pytest.raises(FoodLineHistoricalRecoveryError, match="atomic successor creation failed"):
+        migrate_recovery_to_four_tiers(
+            **_migration_arguments(tmp_path, input_path, spec_path, predecessor["artifact_set_sha256"])
+        )
+
+    migration_root = tmp_path / "data" / "agent-history" / "food-line" / "recovery-migrations"
+    assert list(migration_root.iterdir()) == []
+    assert before == {path.name: sha256_bytes(path.read_bytes()) for path in predecessor_path.iterdir()}
+
+
+def test_migration_rejects_reparse_predecessor_and_conflicting_successor(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    raw = _aggregate(_envelope("run-reparse", [_finding(pressure_type="disaster_household_food_loss")]))
+    parsed = parse_aggregate_handoff(raw, run_month="2026-08")
+    spec = _cluster_spec(parsed)
+    spec["run_month"] = "2026-08"
+    spec["clusters"][0]["measured_access_consequence"]["type"] = "disaster_household_food_loss"
+    input_path, spec_path = _write_input_and_spec(tmp_path, raw, spec)
+    predecessor = _import_five_tier_predecessor(
+        tmp_path, input_path, spec_path, run_month="2026-08"
+    )
+    arguments = _migration_arguments(tmp_path, input_path, spec_path, predecessor["artifact_set_sha256"])
+    predecessor_path = Path(predecessor["recovery_path"])
+    import bluefern_dispatches.food_line_historical_recovery as recovery_module
+
+    original = recovery_module._is_reparse_point
+    monkeypatch.setattr(
+        recovery_module,
+        "_is_reparse_point",
+        lambda path: True if path == predecessor_path else original(path),
+    )
+    with pytest.raises(FoodLineHistoricalRecoveryError, match="symlink or junction"):
+        migrate_recovery_to_four_tiers(**arguments)
+    monkeypatch.setattr(recovery_module, "_is_reparse_point", original)
+    created = migrate_recovery_to_four_tiers(**arguments)
+    successor_artifact = Path(created["recovery_path"]) / "normalized_findings.json"
+    successor_artifact.write_bytes(successor_artifact.read_bytes() + b" ")
+    with pytest.raises(FoodLineHistoricalRecoveryError, match="conflicting migration replay"):
+        migrate_recovery_to_four_tiers(**arguments)
+
+
+def test_migration_rejects_traversal_reparse_root_and_arbitrary_predecessor_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    raw = _aggregate(_envelope("run-paths", [_finding(pressure_type="disaster_household_food_loss")]))
+    parsed = parse_aggregate_handoff(raw, run_month="2026-08")
+    spec = _cluster_spec(parsed)
+    spec["run_month"] = "2026-08"
+    spec["clusters"][0]["measured_access_consequence"]["type"] = "disaster_household_food_loss"
+    input_path, spec_path = _write_input_and_spec(tmp_path, raw, spec)
+    predecessor = _import_five_tier_predecessor(
+        tmp_path, input_path, spec_path, run_month="2026-08"
+    )
+    arguments = _migration_arguments(tmp_path, input_path, spec_path, predecessor["artifact_set_sha256"])
+    traversal_input = input_path.parent / "nested" / ".." / input_path.name
+    with pytest.raises(FoodLineHistoricalRecoveryError, match="path traversal"):
+        migrate_recovery_to_four_tiers(**{**arguments, "input_path": traversal_input})
+    with pytest.raises(TypeError):
+        migrate_recovery_to_four_tiers(  # type: ignore[call-arg]
+            **arguments,
+            predecessor_path=tmp_path / "arbitrary",
+        )
+
+    import bluefern_dispatches.food_line_historical_recovery as recovery_module
+
+    original = recovery_module._is_reparse_point
+    monkeypatch.setattr(
+        recovery_module,
+        "_is_reparse_point",
+        lambda path: True if path.name == "recovery-migrations" else original(path),
+    )
+    with pytest.raises(FoodLineHistoricalRecoveryError, match="symlink or junction"):
+        migrate_recovery_to_four_tiers(**arguments)
+
+
+def test_cli_migrate_requires_bound_identity_and_replays_without_mutation(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    raw = _aggregate(_envelope("run-cli-migrate", [_finding(pressure_type="disaster_household_food_loss")]))
+    parsed = parse_aggregate_handoff(raw, run_month="2026-08")
+    spec = _cluster_spec(parsed)
+    spec["run_month"] = "2026-08"
+    spec["clusters"][0]["measured_access_consequence"]["type"] = "disaster_household_food_loss"
+    input_path, spec_path = _write_input_and_spec(tmp_path, raw, spec)
+    predecessor = _import_five_tier_predecessor(
+        tmp_path, input_path, spec_path, run_month="2026-08"
+    )
+    import scripts.import_food_line_historical_recovery as cli_module
+
+    monkeypatch.setattr(cli_module, "validate_migration_implementation_commit", lambda *_: None)
+    arguments = [
+        "migrate",
+        "--input",
+        str(input_path),
+        "--cluster-spec",
+        str(spec_path),
+        "--captured-at",
+        "2026-09-01T00:00:00Z",
+        "--run-month",
+        "2026-08",
+        "--repo-root",
+        str(tmp_path),
+        "--predecessor-artifact-set",
+        predecessor["artifact_set_sha256"],
+        "--implementation-source-commit",
+        "b" * 40,
+    ]
+
+    assert main(arguments) == 0
+    first = json.loads(capsys.readouterr().out)
+    before = {
+        path.name: (sha256_bytes(path.read_bytes()), path.stat().st_mtime_ns)
+        for path in Path(first["recovery_path"]).iterdir()
+    }
+    assert main(arguments) == 0
+    second = json.loads(capsys.readouterr().out)
+    after = {
+        path.name: (sha256_bytes(path.read_bytes()), path.stat().st_mtime_ns)
+        for path in Path(first["recovery_path"]).iterdir()
+    }
+
+    assert first["status"] == "migrated"
+    assert second["status"] == "idempotent_noop"
+    assert before == after
 
 
 def test_conflicting_replay_fails_closed(tmp_path: Path) -> None:

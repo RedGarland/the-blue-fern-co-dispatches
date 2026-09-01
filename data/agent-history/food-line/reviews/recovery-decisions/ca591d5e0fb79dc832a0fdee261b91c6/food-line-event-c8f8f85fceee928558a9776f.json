@@ -1,0 +1,104 @@
+{
+  "approval_authorized": false,
+  "archive_mutation_authorized": false,
+  "audio_authorized": false,
+  "decision": "confirmed",
+  "decision_reason": "The reporting directly documents quantified food-bank demand growth alongside reduced SNAP participation.",
+  "dedupe_assessment": {
+    "checked_surfaces": [
+      "current_intake",
+      "existing_historical_records",
+      "food_line_pages_history",
+      "review_and_publication_queues",
+      "source_and_generated_output",
+      "story_memory_and_claim_ledgers"
+    ],
+    "continued_condition_assessment": "No match was found on any required duplicate surface. The demand increase is direct, while the evidence does not assign the SNAP decline to a single cause.",
+    "matched_reference": null,
+    "result": "no_match"
+  },
+  "domain": "food-line",
+  "event_assessment": {
+    "affected_population": [
+      "Montanans who have lost SNAP benefits",
+      "northwest Montana households seeking food-bank assistance",
+      "rural households served by mobile and partner pantries",
+      "working families unable to cover food and household costs"
+    ],
+    "attribution": "NBC Montana reported North Valley Food Bank's visit, weekly-service, and SNAP-participation figures.",
+    "event_end_date": "2026-08-17",
+    "event_start_date": "2026-08-17",
+    "location": "Whitefish and northwest Montana, including mobile and partner-pantry service areas",
+    "measurable_change": {
+      "description": "North Valley Food Bank in Whitefish reports substantially higher food-assistance demand alongside reduced SNAP participation and continued household cost pressure. Pantry visits increased from about 23,700 to 29,000 over the past year, the food bank is serving more than 1,500 people each week, and NBC Montana reports that more than 7,000 Montanans are no longer receiving SNAP following a roughly 9 percent participation decline. The food bank also reports more working families seeking assistance and sharply higher food-purchasing costs.",
+      "measurement": "reported weekly neighbors served: More than 1,500; prior year pantry visits: 23700; current reported pantry visits: 29000; reported snap participation change: Approximately 9 percent decline",
+      "supporting_finding_ids": [
+        "food-line-history-finding-3e06f0e340f2db5ef3a52484"
+      ],
+      "type": "benefit_access_contraction_with_emergency_demand"
+    },
+    "organization": "North Valley Food Bank",
+    "service": "Food-bank, mobile-pantry, and partner-pantry assistance.",
+    "uncertainty": {
+      "causal": {
+        "note": "NBC Montana reports the approximately 9 percent SNAP participation decline and more than 7,000-person reduction, but the reviewed material does not independently allocate that decline among specific eligibility rules, administrative renewal requirements, income changes, or other causes. The increase in food-bank demand itself is directly documented.",
+        "status": "unresolved"
+      },
+      "condition": {
+        "note": "The documented condition is supported by the cited source passage and preserved run evidence.",
+        "status": "resolved"
+      },
+      "severity": {
+        "note": "The available evidence is sufficient for historical review without asserting additional severity.",
+        "status": "resolved"
+      }
+    }
+  },
+  "event_fingerprint": "sha256:c8f8f85fceee928558a9776f64d27e65eec6d0e70e7305fc977a414c626fcf12",
+  "event_id": "food-line-event-c8f8f85fceee928558a9776f",
+  "evidence_references": [
+    {
+      "canonical_source_url": "https://nbcmontana.com/news/local/north-valley-food-bank-sees-demand-as-montana-families-seek-food-assistance",
+      "exact_supporting_passages": [
+        "More families in Northwest Montana are turning to food banks as grocery costs and changes to SNAP benefits put additional pressure on households."
+      ],
+      "publisher": "NBC Montana",
+      "role": "principal",
+      "source_published_at": "2026-08-17"
+    }
+  ],
+  "generation_authorized": false,
+  "intake_authorized": false,
+  "operator": "Codex historical editorial review",
+  "pages_authorized": false,
+  "pages_head": "f81e7119c333b75441fab1260ef96270dc07c6b1",
+  "priority": 2,
+  "publication_approval": false,
+  "publication_authorized": false,
+  "publication_copy": {
+    "headline": "North Valley Food Bank visits rose amid SNAP contraction",
+    "source_links": [
+      "https://nbcmontana.com/news/local/north-valley-food-bank-sees-demand-as-montana-families-seek-food-assistance"
+    ],
+    "summary": "North Valley Food Bank reported pantry visits rising from about 23,700 to 29,000 over a year and more than 1,500 people served weekly as Montana SNAP participation declined by about 9 percent."
+  },
+  "publication_eligible": false,
+  "queue_authorized": false,
+  "recommended_batch": {
+    "batch_id": "food-line-august-2026-retrospective-02",
+    "edition_introduction": "This retrospective documents August benefit-access contractions and the emergency-food demand reported alongside them, while preserving the limits of the available evidence.",
+    "edition_title": "Food Line retrospective: benefit losses and rising demand",
+    "order": 2
+  },
+  "recovery_artifact_set_sha256": "sha256:f9f0aaca7c6154fc241ea7ddba980ed2cf6361fe0eb49e9e3695b779a5e36416",
+  "recovery_identity_sha256": "sha256:ca591d5e0fb79dc832a0fdee261b91c6c17aa6175328fccd4518056d87525ae5",
+  "recovery_path": "data/agent-history/food-line/recovery-migrations/sha256-ca591d5e0fb79dc832a0fdee261b91c6",
+  "review_artifact_path": "data/agent-history/food-line/reviews/recovery-submissions/food-line-event-c8f8f85fceee928558a9776f.json",
+  "review_artifact_sha256": "cdaabad9b2ef4b0cc671126100f2a3a79cbec68191250d577ece5a513d2f186c",
+  "reviewed_at": "2026-09-01T04:30:00Z",
+  "reviewed_by": "Codex historical editorial review",
+  "scheduled_task_change_authorized": false,
+  "schema_version": "food_line_historical_event_editorial_decision_v1",
+  "social_authorized": false,
+  "source_head": "74e5c17e74a44efddb466bd4ef66f57f58dc29c1"
+}

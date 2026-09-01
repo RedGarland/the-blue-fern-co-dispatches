@@ -1,0 +1,103 @@
+{
+  "approval_authorized": false,
+  "archive_mutation_authorized": false,
+  "audio_authorized": false,
+  "decision": "confirmed",
+  "decision_reason": "The reporting directly connects a measured statewide benefit-participation decline with provider-reported demand growth.",
+  "dedupe_assessment": {
+    "checked_surfaces": [
+      "current_intake",
+      "existing_historical_records",
+      "food_line_pages_history",
+      "review_and_publication_queues",
+      "source_and_generated_output",
+      "story_memory_and_claim_ledgers"
+    ],
+    "continued_condition_assessment": "No match was found on any required duplicate surface. The review preserves that the statewide participation decline has multiple possible causes and that provider demand was not reported as one statewide percentage.",
+    "matched_reference": null,
+    "result": "no_match"
+  },
+  "event_assessment": {
+    "affected_population": [
+      "Central Florida households seeking food-bank assistance",
+      "Florida households losing or failing to renew SNAP eligibility",
+      "Florida residents no longer receiving SNAP",
+      "families with children joining low-cost grocery assistance programs",
+      "families with children newly seeking food assistance",
+      "food-bank and hunger-relief clients in Central Florida",
+      "households denied SNAP during recertification or reapplication",
+      "low-income Central Florida families seeking alternative grocery assistance"
+    ],
+    "attribution": "Spectrum News 13 reported Florida's SNAP participation decline and increased demand reported by Central Florida providers.",
+    "event_end_date": "2026-08-29",
+    "event_start_date": "2026-08-29",
+    "location": "Orange County and the broader Central Florida food-assistance service area; Statewide SNAP participation decline with documented effects in Orange County and Central Florida",
+    "measurable_change": {
+      "description": "Florida SNAP participation has fallen roughly 20 percent since July 2025, while Central Florida food-assistance providers report increased demand. United Against Poverty in Orlando reports increased new grocery-program memberships, including families with children. Second Harvest of Central Florida reports greater need than at the same time last year and currently distributes food equivalent to about 300,000 meals per day.",
+      "measurement": "reported florida snap participation change: Nearly 20 percent decline since July 2025; latest usda state data month: May 2026; usda data as of: 2026-08-14; national may 2026 snap participation: 36562128",
+      "supporting_finding_ids": [
+        "food-line-history-finding-2e8c520c3d6278d16922740c",
+        "food-line-history-finding-9dddfb4a59833e54ea699f5c"
+      ],
+      "type": "benefit_access_contraction_with_emergency_demand"
+    },
+    "organization": "Florida SNAP program and Central Florida hunger-relief network",
+    "service": "SNAP assistance and emergency grocery and food-bank programs.",
+    "uncertainty": {
+      "causal": {
+        "note": "The participation decline is documented in current USDA-derived reporting, but participation counts alone cannot establish why every former participant left SNAP. Federal eligibility changes are one documented factor, and the report provides a direct recent loss example, but the statewide causal split among eligibility changes, administrative churn, income changes and other factors is not quantified. The statewide participation decline does not establish why every former participant left SNAP. Current reporting identifies tighter eligibility rules as one factor but does not quantify their exact contribution. Provider demand increases are directly reported but not expressed as a single percentage increase.",
+        "status": "unresolved"
+      },
+      "condition": {
+        "note": "The documented condition is supported by the cited source passage and preserved run evidence.",
+        "status": "resolved"
+      },
+      "severity": {
+        "note": "The participation decline is documented in current USDA-derived reporting, but participation counts alone cannot establish why every former participant left SNAP. Federal eligibility changes are one documented factor, and the report provides a direct recent loss example, but the statewide causal split among eligibility changes, administrative churn, income changes and other factors is not quantified. The statewide participation decline does not establish why every former participant left SNAP. Current reporting identifies tighter eligibility rules as one factor but does not quantify their exact contribution. Provider demand increases are directly reported but not expressed as a single percentage increase.",
+        "status": "unresolved"
+      }
+    }
+  },
+  "event_fingerprint": "sha256:a5ba25e3f030a7a1248624a8f1d48b45fcce778065712807df56be30ecec5877",
+  "event_id": "food-line-event-a5ba25e3f030a7a1248624a8",
+  "evidence_references": [
+    {
+      "canonical_source_url": "https://mynews13.com/fl/orlando/news/2026/08/29/florida-snap-participation-drops-nearly-0-as-orlando-groups-see-demand-rise",
+      "exact_supporting_passages": [
+        "In Florida, SNAP participation has dropped nearly 20% since July 2025.",
+        "Higgerson said Second Harvest of Central Florida is seeing increased need compared with this time last year."
+      ],
+      "publisher": "Spectrum News 13",
+      "role": "principal",
+      "source_published_at": "2026-08-29T12:38:00-04:00"
+    }
+  ],
+  "generation_authorized": false,
+  "intake_authorized": false,
+  "pages_authorized": false,
+  "pages_head": "f81e7119c333b75441fab1260ef96270dc07c6b1",
+  "publication_authorized": false,
+  "publication_copy": {
+    "headline": "Florida SNAP participation fell as Central Florida demand rose",
+    "source_links": [
+      "https://mynews13.com/fl/orlando/news/2026/08/29/florida-snap-participation-drops-nearly-0-as-orlando-groups-see-demand-rise"
+    ],
+    "summary": "Florida SNAP participation was reported down nearly 20 percent from July 2025, while Central Florida providers reported higher demand and Second Harvest said need exceeded the prior year's level."
+  },
+  "queue_authorized": false,
+  "recommended_batch": {
+    "batch_id": "food-line-august-2026-retrospective-02",
+    "edition_introduction": "This retrospective documents August benefit-access contractions and the emergency-food demand reported alongside them, while preserving the limits of the available evidence.",
+    "edition_title": "Food Line retrospective: benefit losses and rising demand",
+    "order": 3
+  },
+  "recovery_artifact_set_sha256": "sha256:f9f0aaca7c6154fc241ea7ddba980ed2cf6361fe0eb49e9e3695b779a5e36416",
+  "recovery_identity_sha256": "sha256:ca591d5e0fb79dc832a0fdee261b91c6c17aa6175328fccd4518056d87525ae5",
+  "review_type": "historical_event_editorial_review",
+  "reviewed_at": "2026-09-01T04:30:00Z",
+  "reviewed_by": "Codex historical editorial review",
+  "scheduled_task_change_authorized": false,
+  "schema_version": "food_line_historical_event_editorial_review_v1",
+  "social_authorized": false,
+  "source_head": "74e5c17e74a44efddb466bd4ef66f57f58dc29c1"
+}

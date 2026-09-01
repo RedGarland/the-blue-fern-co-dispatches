@@ -1,0 +1,95 @@
+{
+  "approval_authorized": false,
+  "archive_mutation_authorized": false,
+  "audio_authorized": false,
+  "decision": "confirmed",
+  "decision_reason": "The official college page directly documents a bounded interruption in regular pantry shopping.",
+  "dedupe_assessment": {
+    "checked_surfaces": [
+      "current_intake",
+      "existing_historical_records",
+      "food_line_pages_history",
+      "review_and_publication_queues",
+      "source_and_generated_output",
+      "story_memory_and_claim_ledgers"
+    ],
+    "continued_condition_assessment": "No match was found on any required duplicate surface. The source described a scheduled August interruption and reopening, so the review does not present the closure as ongoing.",
+    "matched_reference": null,
+    "result": "no_match"
+  },
+  "event_assessment": {
+    "affected_population": [
+      "Temple College employees eligible to use the pantry",
+      "Temple College students experiencing food insecurity who normally use the Leopard Food Pantry"
+    ],
+    "attribution": "Temple College directly listed the Leopard Food Pantry's August closure and scheduled reopening sequence.",
+    "event_end_date": "2026-08-01",
+    "event_start_date": "2026-08-01",
+    "location": "Temple College campus food-pantry program; Temple and Taylor locations are listed by the operator, but the closure notice does not separately specify location-by-location applicability",
+    "measurable_change": {
+      "description": "Temple College's Leopard Food Pantry is in an active August service interruption. The official page lists the pantry as closed August 1 through August 19 and separately states that August 19 through August 24 are dedicated to new-shopper registration and pantry tours, during which regular shopping is closed. Regular pantry shopping is scheduled to resume August 25.",
+      "measurement": "formal closure period: 2026-08-01 through 2026-08-19; new shopper registration and tour dates: ['2026-08-19', '2026-08-20', '2026-08-21', '2026-08-24']; regular shopping status during registration days: Closed for regular shopping; scheduled regular pantry reopening: 2026-08-25T11:00:00-05:00",
+      "supporting_finding_ids": [
+        "food-line-history-finding-5edd64feb40de906c86030d4"
+      ],
+      "type": "direct_service_loss_or_closure"
+    },
+    "organization": "Temple College Leopard Food Pantry",
+    "service": "Campus food-pantry shopping for students and eligible employees.",
+    "uncertainty": {
+      "causal": {
+        "note": "No unresolved causal attribution is required for this disposition.",
+        "status": "resolved"
+      },
+      "condition": {
+        "note": "The documented condition is supported by the cited source passage and preserved run evidence.",
+        "status": "resolved"
+      },
+      "severity": {
+        "note": "The available evidence is sufficient for historical review without asserting additional severity.",
+        "status": "resolved"
+      }
+    }
+  },
+  "event_fingerprint": "sha256:d3d39dff7768b42114ada8ba7d27151a955d3eff3796e331d5848f72308bfa46",
+  "event_id": "food-line-event-d3d39dff7768b42114ada8ba",
+  "evidence_references": [
+    {
+      "canonical_source_url": "https://www.templecollege.edu/resources/circle-support/leopard-pantry.html",
+      "exact_supporting_passages": [
+        "The Leopard Pantry will be closed on the following dates: August 1-19"
+      ],
+      "publisher": "Temple College",
+      "role": "principal",
+      "source_published_at": ""
+    }
+  ],
+  "generation_authorized": false,
+  "intake_authorized": false,
+  "pages_authorized": false,
+  "pages_head": "f81e7119c333b75441fab1260ef96270dc07c6b1",
+  "publication_authorized": false,
+  "publication_copy": {
+    "headline": "Temple College pantry paused regular August shopping",
+    "source_links": [
+      "https://www.templecollege.edu/resources/circle-support/leopard-pantry.html"
+    ],
+    "summary": "Temple College listed its Leopard Food Pantry as closed for regular shopping during Aug. 1â€“19, followed by new-shopper registration days before a scheduled Aug. 25 reopening."
+  },
+  "queue_authorized": false,
+  "recommended_batch": {
+    "batch_id": "food-line-august-2026-retrospective-01",
+    "edition_introduction": "This retrospective documents food-access interruptions reported during August, with each account bounded to what the cited sources established.",
+    "edition_title": "Food Line retrospective: August service interruptions",
+    "order": 6
+  },
+  "recovery_artifact_set_sha256": "sha256:f9f0aaca7c6154fc241ea7ddba980ed2cf6361fe0eb49e9e3695b779a5e36416",
+  "recovery_identity_sha256": "sha256:ca591d5e0fb79dc832a0fdee261b91c6c17aa6175328fccd4518056d87525ae5",
+  "review_type": "historical_event_editorial_review",
+  "reviewed_at": "2026-09-01T04:30:00Z",
+  "reviewed_by": "Codex historical editorial review",
+  "scheduled_task_change_authorized": false,
+  "schema_version": "food_line_historical_event_editorial_review_v1",
+  "social_authorized": false,
+  "source_head": "74e5c17e74a44efddb466bd4ef66f57f58dc29c1"
+}

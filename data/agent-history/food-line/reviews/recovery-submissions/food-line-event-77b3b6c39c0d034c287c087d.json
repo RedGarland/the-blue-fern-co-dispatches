@@ -1,0 +1,95 @@
+{
+  "approval_authorized": false,
+  "archive_mutation_authorized": false,
+  "audio_authorized": false,
+  "decision": "confirmed",
+  "decision_reason": "The provider notice directly documents a temporary loss of intake access for new pantry clients.",
+  "dedupe_assessment": {
+    "checked_surfaces": [
+      "current_intake",
+      "existing_historical_records",
+      "food_line_pages_history",
+      "review_and_publication_queues",
+      "source_and_generated_output",
+      "story_memory_and_claim_ledgers"
+    ],
+    "continued_condition_assessment": "No match was found on any required duplicate surface. The evidence establishes the dated intake pause but does not establish how many households were unable to enroll or how long the pause lasted.",
+    "matched_reference": null,
+    "result": "no_match"
+  },
+  "event_assessment": {
+    "affected_population": [
+      "new households seeking free grocery assistance",
+      "people attempting to register for monthly pantry shopping"
+    ],
+    "attribution": "The Unforgotten Haven directly announced that it had temporarily stopped accepting new pantry clients.",
+    "event_end_date": "2026-08-04",
+    "event_start_date": "2026-08-04",
+    "location": "Blackwood, Gloucester County",
+    "measurable_change": {
+      "description": "The Unforgotten Haven has temporarily stopped accepting new clients for its monthly free-grocery pantry shopping program. The organization's primary website confirms that people in need normally register and may shop for free groceries once every 30 days.",
+      "measurement": "effective date: 2026-08-04; normal service: Registered people in need may shop for free groceries once every 30 days per household.; pantry address: 45 South Black Horse Pike, Blackwood, NJ 08012",
+      "supporting_finding_ids": [
+        "food-line-history-finding-d3e03f4f55cdcf60299c17d8"
+      ],
+      "type": "direct_service_loss_or_closure"
+    },
+    "organization": "The Unforgotten Haven",
+    "service": "New-client intake for monthly free-grocery pantry shopping.",
+    "uncertainty": {
+      "causal": {
+        "note": "No unresolved causal attribution is required for this disposition.",
+        "status": "resolved"
+      },
+      "condition": {
+        "note": "The documented condition is supported by the cited source passage and preserved run evidence.",
+        "status": "resolved"
+      },
+      "severity": {
+        "note": "The available evidence is sufficient for historical review without asserting additional severity.",
+        "status": "resolved"
+      }
+    }
+  },
+  "event_fingerprint": "sha256:77b3b6c39c0d034c287c087d74669d7f05d90f5a8deb154f81b6759e1918f82d",
+  "event_id": "food-line-event-77b3b6c39c0d034c287c087d",
+  "evidence_references": [
+    {
+      "canonical_source_url": "https://www.facebook.com/theunforgottenhaven/posts/important-updateplease-read-carefully-as-of-august-4-2026-we-are-temporarily-not/1475706591252107",
+      "exact_supporting_passages": [
+        "As of August 4, 2026 we are TEMPORARILY NOT accepting NEW Clients for Our Monthly Shopping at Our Pantry!"
+      ],
+      "publisher": "The Unforgotten Haven",
+      "role": "principal",
+      "source_published_at": ""
+    }
+  ],
+  "generation_authorized": false,
+  "intake_authorized": false,
+  "pages_authorized": false,
+  "pages_head": "f81e7119c333b75441fab1260ef96270dc07c6b1",
+  "publication_authorized": false,
+  "publication_copy": {
+    "headline": "Unforgotten Haven paused new-client pantry intake",
+    "source_links": [
+      "https://www.facebook.com/theunforgottenhaven/posts/important-updateplease-read-carefully-as-of-august-4-2026-we-are-temporarily-not/1475706591252107"
+    ],
+    "summary": "The Unforgotten Haven stopped accepting new clients for monthly pantry shopping as of Aug. 4, while its established pantry service remained available to registered households."
+  },
+  "queue_authorized": false,
+  "recommended_batch": {
+    "batch_id": "food-line-august-2026-retrospective-01",
+    "edition_introduction": "This retrospective documents food-access interruptions reported during August, with each account bounded to what the cited sources established.",
+    "edition_title": "Food Line retrospective: August service interruptions",
+    "order": 4
+  },
+  "recovery_artifact_set_sha256": "sha256:f9f0aaca7c6154fc241ea7ddba980ed2cf6361fe0eb49e9e3695b779a5e36416",
+  "recovery_identity_sha256": "sha256:ca591d5e0fb79dc832a0fdee261b91c6c17aa6175328fccd4518056d87525ae5",
+  "review_type": "historical_event_editorial_review",
+  "reviewed_at": "2026-09-01T04:30:00Z",
+  "reviewed_by": "Codex historical editorial review",
+  "scheduled_task_change_authorized": false,
+  "schema_version": "food_line_historical_event_editorial_review_v1",
+  "social_authorized": false,
+  "source_head": "74e5c17e74a44efddb466bd4ef66f57f58dc29c1"
+}

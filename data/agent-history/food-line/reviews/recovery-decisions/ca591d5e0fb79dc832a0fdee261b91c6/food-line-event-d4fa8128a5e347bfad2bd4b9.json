@@ -1,0 +1,118 @@
+{
+  "approval_authorized": false,
+  "archive_mutation_authorized": false,
+  "audio_authorized": false,
+  "decision": "confirmed",
+  "decision_reason": "Two sources jointly document reduced benefit access and materially higher emergency-food demand in Arizona.",
+  "dedupe_assessment": {
+    "checked_surfaces": [
+      "current_intake",
+      "existing_historical_records",
+      "food_line_pages_history",
+      "review_and_publication_queues",
+      "source_and_generated_output",
+      "story_memory_and_claim_ledgers"
+    ],
+    "continued_condition_assessment": "No match was found on any required duplicate surface. The review preserves that visits are not unique-household counts and that the sources do not quantify turnaways or allocate the SNAP decline among causes.",
+    "matched_reference": null,
+    "result": "no_match"
+  },
+  "domain": "food-line",
+  "event_assessment": {
+    "affected_population": [
+      "Arizona residents no longer receiving SNAP",
+      "Arizona residents who lost SNAP benefits",
+      "families experiencing delays obtaining or restoring food-assistance eligibility",
+      "first-time food-bank users",
+      "households relying on emergency food assistance",
+      "households seeking emergency food boxes",
+      "low-income households facing administrative or eligibility barriers to SNAP"
+    ],
+    "attribution": "12News reported near-doubled food-box demand at St. Vincent de Paul, while the Arizona Food Bank Network documented historically elevated food-bank need.",
+    "event_end_date": "2026-08-26",
+    "event_start_date": "2026-08-08",
+    "location": "Phoenix metropolitan area; Statewide",
+    "measurable_change": {
+      "description": "St. Vincent de Paul in Phoenix is experiencing sharply increased demand for emergency food boxes as hundreds of thousands of Arizonans have lost SNAP access. The provider's own current materials corroborate the underlying strain: families now seeking assistance include people who were not seeking help six months earlier, some applicants face benefit-system delays exceeding a month, and its twice-monthly drive-through food distribution operates only until available food is exhausted.",
+      "measurement": "food bank network condition: Arizona Food Bank Network reports that food-bank visits have been increasing and began outpacing SNAP participation in late 2025.; food bank need condition: The network reports that people need food banks more than at any point in the previous 10 years.; current snap tracker url: https://www.cbpp.org/research/food-assistance/snap-tracker-people-are-losing-food-assistance-as-the-harmful-2025; current snap tracker updated at: 2026-08-26",
+      "supporting_finding_ids": [
+        "food-line-history-finding-96bfa38feb9045ca24965d5c",
+        "food-line-history-finding-a16a77683acd36641ef56011"
+      ],
+      "type": "benefit_access_contraction_with_emergency_demand"
+    },
+    "organization": "Society of St. Vincent de Paul Phoenix",
+    "service": "SNAP food assistance and emergency food-box distribution.",
+    "uncertainty": {
+      "causal": {
+        "note": "Food-bank visits are service encounters rather than a count of unique households and should not be compared one-for-one with SNAP enrollment. Arizona SNAP participation has partially rebounded from its May 2026 low, although it remains substantially below July 2025 levels. The reviewed evidence does not establish what share of the SNAP decline reflects changed eligibility, administrative barriers, economic changes or other causes. The reviewed sources do not establish the exact current number of food boxes available per distribution, the number of households turned away after supplies are exhausted, whether every recent distribution has run out, or the precise baseline period used by 12News for the reported near-doubling in demand. The finding therefore establishes substantial current capacity pressure but not a quantified service shortfall.",
+        "status": "unresolved"
+      },
+      "condition": {
+        "note": "The documented condition is supported by the cited source passage and preserved run evidence.",
+        "status": "resolved"
+      },
+      "severity": {
+        "note": "Food-bank visits are service encounters rather than a count of unique households and should not be compared one-for-one with SNAP enrollment. Arizona SNAP participation has partially rebounded from its May 2026 low, although it remains substantially below July 2025 levels. The reviewed evidence does not establish what share of the SNAP decline reflects changed eligibility, administrative barriers, economic changes or other causes. The reviewed sources do not establish the exact current number of food boxes available per distribution, the number of households turned away after supplies are exhausted, whether every recent distribution has run out, or the precise baseline period used by 12News for the reported near-doubling in demand. The finding therefore establishes substantial current capacity pressure but not a quantified service shortfall.",
+        "status": "unresolved"
+      }
+    }
+  },
+  "event_fingerprint": "sha256:d4fa8128a5e347bfad2bd4b925aac748a4ef849564805605fcdb96fa14b1ec51",
+  "event_id": "food-line-event-d4fa8128a5e347bfad2bd4b9",
+  "evidence_references": [
+    {
+      "canonical_source_url": "https://azfoodbanks.org/visits-increase",
+      "exact_supporting_passages": [
+        "people need food banks now more than at any point in the last 10 years."
+      ],
+      "publisher": "Arizona Food Bank Network",
+      "role": "principal",
+      "source_published_at": "2026-06-30"
+    },
+    {
+      "canonical_source_url": "https://www.12news.com/article/life/food/demand-food-boxes-nearly-doubles-at-phoenix-nonprofit-after-snap-cuts-hit-arizona/75-a2925995-b10a-4916-97e0-e1495c17029c",
+      "exact_supporting_passages": [
+        "Demand for food boxes nearly doubles at Phoenix nonprofit after SNAP cuts hit Arizona."
+      ],
+      "publisher": "12News",
+      "role": "corroborating",
+      "source_published_at": "2026-08-08T10:46:00-07:00"
+    }
+  ],
+  "generation_authorized": false,
+  "intake_authorized": false,
+  "operator": "Codex historical editorial review",
+  "pages_authorized": false,
+  "pages_head": "f81e7119c333b75441fab1260ef96270dc07c6b1",
+  "priority": 2,
+  "publication_approval": false,
+  "publication_authorized": false,
+  "publication_copy": {
+    "headline": "Phoenix food-box demand rose as Arizona SNAP access contracted",
+    "source_links": [
+      "https://azfoodbanks.org/visits-increase",
+      "https://www.12news.com/article/life/food/demand-food-boxes-nearly-doubles-at-phoenix-nonprofit-after-snap-cuts-hit-arizona/75-a2925995-b10a-4916-97e0-e1495c17029c"
+    ],
+    "summary": "St. Vincent de Paul in Phoenix reported that demand for food boxes had nearly doubled as Arizona food-bank visits rose and SNAP access contracted; the sources did not establish a precise turnaway count or causal split."
+  },
+  "publication_eligible": false,
+  "queue_authorized": false,
+  "recommended_batch": {
+    "batch_id": "food-line-august-2026-retrospective-02",
+    "edition_introduction": "This retrospective documents August benefit-access contractions and the emergency-food demand reported alongside them, while preserving the limits of the available evidence.",
+    "edition_title": "Food Line retrospective: benefit losses and rising demand",
+    "order": 1
+  },
+  "recovery_artifact_set_sha256": "sha256:f9f0aaca7c6154fc241ea7ddba980ed2cf6361fe0eb49e9e3695b779a5e36416",
+  "recovery_identity_sha256": "sha256:ca591d5e0fb79dc832a0fdee261b91c6c17aa6175328fccd4518056d87525ae5",
+  "recovery_path": "data/agent-history/food-line/recovery-migrations/sha256-ca591d5e0fb79dc832a0fdee261b91c6",
+  "review_artifact_path": "data/agent-history/food-line/reviews/recovery-submissions/food-line-event-d4fa8128a5e347bfad2bd4b9.json",
+  "review_artifact_sha256": "5cbac79cc944808c4d9dba46f4ef23251b95c5cd133ee6520e94ffcafec6f35d",
+  "reviewed_at": "2026-09-01T04:30:00Z",
+  "reviewed_by": "Codex historical editorial review",
+  "scheduled_task_change_authorized": false,
+  "schema_version": "food_line_historical_event_editorial_decision_v1",
+  "social_authorized": false,
+  "source_head": "74e5c17e74a44efddb466bd4ef66f57f58dc29c1"
+}

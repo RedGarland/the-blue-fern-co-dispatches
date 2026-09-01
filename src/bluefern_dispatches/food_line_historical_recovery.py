@@ -48,6 +48,23 @@ DISPOSITIONS = {
     "deferred_specific_evidence_gap",
     "excluded_under_existing_rules",
 }
+HISTORICAL_EVENT_REVIEW_SCHEMA = "food_line_historical_event_editorial_review_v1"
+HISTORICAL_EVENT_DECISION_SCHEMA = "food_line_historical_event_editorial_decision_v1"
+HISTORICAL_EVENT_DECISIONS = {
+    "confirmed",
+    "deferred_specific_evidence_gap",
+    "excluded_under_existing_rules",
+    "duplicate_or_corroboration",
+    "already_published",
+}
+HISTORICAL_DEDUPE_SURFACES = {
+    "food_line_pages_history",
+    "source_and_generated_output",
+    "story_memory_and_claim_ledgers",
+    "current_intake",
+    "review_and_publication_queues",
+    "existing_historical_records",
+}
 UNCERTAINTY_STATUSES = {"resolved", "unresolved", "not_applicable"}
 CONSEQUENCE_PRIORITIES = {
     "direct_service_loss_or_closure": 1,
@@ -1511,3 +1528,481 @@ def validate_migration_implementation_commit(root: Path, source_commit: str) -> 
         ) from exc
     if "def migrate_recovery_to_four_tiers(" not in source_result.stdout:
         raise FoodLineHistoricalRecoveryError("implementation source commit does not contain the migration owner")
+
+
+def _require_review_text(value: Any, field: str, *, maximum: int = 4000) -> str:
+    text = _text(value)
+    if not text:
+        raise FoodLineHistoricalRecoveryError(f"{field} is required")
+    if len(text) > maximum:
+        raise FoodLineHistoricalRecoveryError(f"{field} exceeds {maximum} characters")
+    return text
+
+
+def _load_validated_four_tier_successor(
+    root: Path,
+    successor_identity_sha256: str,
+    artifact_set_sha256: str,
+) -> tuple[Path, dict[str, Any], dict[str, Any]]:
+    """Load one exact immutable four-tier successor without accepting an arbitrary path."""
+    if not re.fullmatch(r"sha256:[0-9a-f]{64}", artifact_set_sha256):
+        raise FoodLineHistoricalRecoveryError("successor artifact-set identity is malformed")
+    target = _validated_migration_target(root, successor_identity_sha256)
+    if not target.is_dir():
+        raise FoodLineHistoricalRecoveryError("requested four-tier successor does not exist")
+    expected_names = set(RECOVERY_ARTIFACT_SCHEMAS) | {"recovery_manifest.json"}
+    entries: dict[str, Path] = {}
+    for entry in target.iterdir():
+        if _is_reparse_point(entry) or not entry.is_file():
+            raise FoodLineHistoricalRecoveryError(
+                f"four-tier successor contains an unsafe or non-file entry: {entry.name}"
+            )
+        entries[entry.name] = entry
+    if set(entries) != expected_names:
+        raise FoodLineHistoricalRecoveryError("four-tier successor file inventory drifted")
+    try:
+        manifest = json.loads(entries["recovery_manifest.json"].read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise FoodLineHistoricalRecoveryError("four-tier successor manifest is invalid") from exc
+    if not isinstance(manifest, dict) or manifest.get("schema_version") != MIGRATION_SCHEMA:
+        raise FoodLineHistoricalRecoveryError("four-tier successor manifest schema drifted")
+    if manifest.get("successor_identity_sha256") != successor_identity_sha256:
+        raise FoodLineHistoricalRecoveryError("four-tier successor identity does not match")
+    if manifest.get("artifact_set_sha256") != artifact_set_sha256:
+        raise FoodLineHistoricalRecoveryError("four-tier successor artifact-set identity does not match")
+    transition = manifest.get("priority_policy_transition")
+    if not isinstance(transition, dict) or transition.get("to") != FOUR_TIER_PRIORITY_POLICY:
+        raise FoodLineHistoricalRecoveryError("successor is not governed by the four-tier policy")
+    authority_guards = {
+        "publication_approval": False,
+        "public_output_written": False,
+        "queue_items_created": 0,
+        "pages_files_written": 0,
+        "generated_output_files_written": 0,
+        "audio_files_written": 0,
+        "social_posts_created": 0,
+        "scheduled_tasks_changed": 0,
+    }
+    if any(manifest.get(key) != expected for key, expected in authority_guards.items()):
+        raise FoodLineHistoricalRecoveryError("four-tier successor carries publication or mutation authority")
+    artifact_hashes = manifest.get("artifact_hashes")
+    if not isinstance(artifact_hashes, dict) or set(artifact_hashes) != set(RECOVERY_ARTIFACT_SCHEMAS):
+        raise FoodLineHistoricalRecoveryError("four-tier successor artifact hash inventory drifted")
+    if _fingerprint(dict(sorted(artifact_hashes.items()))) != artifact_set_sha256:
+        raise FoodLineHistoricalRecoveryError("four-tier successor artifact-set identity is inconsistent")
+    artifacts: dict[str, Any] = {}
+    input_sha256 = manifest.get("input_sha256")
+    for name, schema in RECOVERY_ARTIFACT_SCHEMAS.items():
+        raw = entries[name].read_bytes()
+        if sha256_bytes(raw) != artifact_hashes.get(name):
+            raise FoodLineHistoricalRecoveryError(f"four-tier successor artifact drifted: {name}")
+        try:
+            payload = json.loads(raw.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise FoodLineHistoricalRecoveryError(f"four-tier successor artifact is invalid: {name}") from exc
+        if not isinstance(payload, dict) or payload.get("schema_version") != schema:
+            raise FoodLineHistoricalRecoveryError(f"four-tier successor artifact schema drifted: {name}")
+        if payload.get("input_sha256") != input_sha256:
+            raise FoodLineHistoricalRecoveryError(f"four-tier successor input lineage drifted: {name}")
+        artifacts[name] = payload
+    candidates = artifacts["priority_confirmed_candidates.json"]
+    if candidates.get("publication_approval") is not False:
+        raise FoodLineHistoricalRecoveryError("confirmed-candidate report carries publication authority")
+    rows = candidates.get("candidates")
+    if not isinstance(rows, list) or any(row.get("priority") not in {1, 2, 3, 4} for row in rows):
+        raise FoodLineHistoricalRecoveryError("confirmed-candidate report is not limited to tiers 1 through 4")
+    return target, manifest, artifacts
+
+
+def _validated_clean_pages_head(pages_root: Path) -> tuple[Path, str]:
+    absolute = pages_root.absolute()
+    if not absolute.is_dir() or _is_reparse_point(absolute):
+        raise FoodLineHistoricalRecoveryError("Pages root must be an existing real directory")
+    resolved = absolute.resolve(strict=True)
+    if not _same_path(absolute, resolved):
+        raise FoodLineHistoricalRecoveryError("Pages root resolves through a path alias")
+    try:
+        top = subprocess.run(
+            ["git", "-C", str(resolved), "rev-parse", "--show-toplevel"],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+        head = subprocess.run(
+            ["git", "-C", str(resolved), "rev-parse", "HEAD"],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+        status = subprocess.run(
+            ["git", "-C", str(resolved), "status", "--porcelain"],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout
+    except (OSError, subprocess.CalledProcessError) as exc:
+        raise FoodLineHistoricalRecoveryError("Pages root is not a readable Git checkout") from exc
+    if not _same_path(Path(top), resolved) or status.strip():
+        raise FoodLineHistoricalRecoveryError("Pages checkout must be the clean repository root")
+    if not re.fullmatch(r"[0-9a-f]{40}", head):
+        raise FoodLineHistoricalRecoveryError("Pages HEAD is malformed")
+    return resolved, head
+
+
+def _validate_review_evidence(review: dict[str, Any], event: dict[str, Any]) -> list[dict[str, Any]]:
+    event_sources = event.get("sources")
+    evidence = review.get("evidence_references")
+    if not isinstance(event_sources, list) or not event_sources:
+        raise FoodLineHistoricalRecoveryError("recovered event has no source evidence")
+    if not isinstance(evidence, list) or not evidence:
+        raise FoodLineHistoricalRecoveryError("review evidence_references must be non-empty")
+    source_by_url = {
+        normalize_source_url(str(row.get("canonical_source_url") or "")): row
+        for row in event_sources
+        if isinstance(row, dict) and row.get("canonical_source_url")
+    }
+    validated: list[dict[str, Any]] = []
+    principal = 0
+    for index, row in enumerate(evidence):
+        if not isinstance(row, dict) or set(row) != {
+            "canonical_source_url",
+            "publisher",
+            "source_published_at",
+            "role",
+            "exact_supporting_passages",
+        }:
+            raise FoodLineHistoricalRecoveryError(f"evidence_references[{index}] fields are invalid")
+        url = normalize_source_url(_require_review_text(row.get("canonical_source_url"), "evidence URL", maximum=2000))
+        source = source_by_url.get(url)
+        if source is None:
+            raise FoodLineHistoricalRecoveryError("review evidence URL is not bound to the recovered event")
+        if row.get("publisher") != source.get("publisher") or row.get("source_published_at") != source.get("source_published_at"):
+            raise FoodLineHistoricalRecoveryError("review evidence publisher or publication date drifted")
+        if row.get("role") not in {"principal", "corroborating"}:
+            raise FoodLineHistoricalRecoveryError("review evidence role is invalid")
+        principal += row.get("role") == "principal"
+        passages = row.get("exact_supporting_passages")
+        if not isinstance(passages, list) or not passages:
+            raise FoodLineHistoricalRecoveryError("review evidence requires exact supporting passages")
+        cleaned = [_require_review_text(value, "supporting passage") for value in passages]
+        preserved = _text(source.get("exact_supporting_passage"))
+        if preserved and preserved not in cleaned:
+            raise FoodLineHistoricalRecoveryError("review evidence omits the preserved recovery passage")
+        validated.append({**row, "canonical_source_url": url, "exact_supporting_passages": cleaned})
+    if not principal:
+        raise FoodLineHistoricalRecoveryError("review requires at least one principal source")
+    return validated
+
+
+def _validate_publication_copy(copy: Any, batch: Any, event: dict[str, Any]) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+    if not isinstance(copy, dict) or set(copy) != {"headline", "summary", "source_links"}:
+        raise FoodLineHistoricalRecoveryError("confirmed review publication_copy fields are invalid")
+    headline = _require_review_text(copy.get("headline"), "publication headline", maximum=180)
+    summary = _require_review_text(copy.get("summary"), "publication summary", maximum=1200)
+    source_links = copy.get("source_links")
+    allowed_links = {
+        normalize_source_url(str(row.get("canonical_source_url") or ""))
+        for row in event.get("sources") or []
+        if isinstance(row, dict)
+    }
+    if not isinstance(source_links, list) or not source_links:
+        raise FoodLineHistoricalRecoveryError("confirmed review requires source links")
+    normalized_links = [normalize_source_url(_require_review_text(value, "source link", maximum=2000)) for value in source_links]
+    if any(value not in allowed_links for value in normalized_links):
+        raise FoodLineHistoricalRecoveryError("publication copy contains a source link outside the recovered event")
+    public_text = f"{headline} {summary}"
+    if re.search(r"food-line-event-|sha256:|\b20\d{2}-\d{2}-\d{2}\b|\|", public_text, re.I):
+        raise FoodLineHistoricalRecoveryError("publication copy exposes internal identity, ISO date, or pipe metadata")
+    if not isinstance(batch, dict) or set(batch) != {"batch_id", "order", "edition_title", "edition_introduction"}:
+        raise FoodLineHistoricalRecoveryError("confirmed review recommended_batch fields are invalid")
+    batch_id = _require_review_text(batch.get("batch_id"), "batch_id", maximum=100)
+    if not re.fullmatch(r"food-line-august-2026-retrospective-[0-9]{2}", batch_id):
+        raise FoodLineHistoricalRecoveryError("batch_id is outside the sanctioned August 2026 retrospective namespace")
+    order = batch.get("order")
+    if not isinstance(order, int) or isinstance(order, bool) or not 1 <= order <= 6:
+        raise FoodLineHistoricalRecoveryError("batch order must honor the six-story Food Line cap")
+    edition_title = _require_review_text(batch.get("edition_title"), "edition title", maximum=180)
+    edition_introduction = _require_review_text(batch.get("edition_introduction"), "edition introduction", maximum=1200)
+    if re.search(r"food-line-event-|sha256:|\b20\d{2}-\d{2}-\d{2}\b|\|", f"{edition_title} {edition_introduction}", re.I):
+        raise FoodLineHistoricalRecoveryError("batch copy exposes internal identity, ISO date, or pipe metadata")
+    return (
+        {"headline": headline, "summary": summary, "source_links": normalized_links},
+        {
+            "batch_id": batch_id,
+            "order": order,
+            "edition_title": edition_title,
+            "edition_introduction": edition_introduction,
+        },
+    )
+
+
+def _validated_review_decision_path(
+    repository_root: Path,
+    successor_identity_sha256: str,
+    event_id: str,
+) -> Path:
+    relative_parts = (
+        "data",
+        "agent-history",
+        "food-line",
+        "reviews",
+        "recovery-decisions",
+        successor_identity_sha256.removeprefix("sha256:")[:32],
+    )
+    current = repository_root
+    for component in relative_parts:
+        current = current / component
+        if current.exists() and _is_reparse_point(current):
+            raise FoodLineHistoricalRecoveryError(
+                f"historical review decision path contains a symlink or junction: {current}"
+            )
+    decision_path = current / f"{event_id}.json"
+    if decision_path.exists() and (
+        not decision_path.is_file() or _is_reparse_point(decision_path)
+    ):
+        raise FoodLineHistoricalRecoveryError("historical review decision target is unsafe")
+    return decision_path
+
+
+def record_historical_event_review(
+    root: Path,
+    pages_root: Path,
+    *,
+    successor_identity_sha256: str,
+    artifact_set_sha256: str,
+    event_id: str,
+    decision: str,
+    review_artifact_path: Path,
+    review_artifact_sha256: str,
+    operator: str,
+    dry_run: bool = False,
+) -> dict[str, Any]:
+    """Record one deterministic, non-authorizing review of a migrated event cluster."""
+    if decision not in HISTORICAL_EVENT_DECISIONS:
+        raise FoodLineHistoricalRecoveryError("unsupported historical event review decision")
+    if not re.fullmatch(r"food-line-event-[0-9a-f]{24}", event_id):
+        raise FoodLineHistoricalRecoveryError("event_id is malformed")
+    if not re.fullmatch(r"[0-9a-f]{64}", review_artifact_sha256):
+        raise FoodLineHistoricalRecoveryError("review artifact SHA-256 is malformed")
+    operator = _require_review_text(operator, "operator", maximum=200)
+    repository_root = root.absolute().resolve(strict=True)
+    target, _manifest, artifacts = _load_validated_four_tier_successor(
+        repository_root, successor_identity_sha256, artifact_set_sha256
+    )
+    pages_repository, pages_head = _validated_clean_pages_head(pages_root)
+    review_path, review_bytes = _validated_real_file(review_artifact_path, "historical event review artifact")
+    reviews_root = (repository_root / "data" / "agent-history" / "food-line" / "reviews").resolve()
+    submissions_root = reviews_root / "recovery-submissions"
+    try:
+        review_path.relative_to(submissions_root)
+    except ValueError as exc:
+        raise FoodLineHistoricalRecoveryError(
+            "review artifact must be under the private recovery-submissions directory"
+        ) from exc
+    if sha256_bytes(review_bytes) != review_artifact_sha256:
+        raise FoodLineHistoricalRecoveryError("review artifact SHA-256 mismatch")
+    try:
+        review = json.loads(review_bytes.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise FoodLineHistoricalRecoveryError("review artifact is not valid UTF-8 JSON") from exc
+    if not isinstance(review, dict) or review.get("schema_version") != HISTORICAL_EVENT_REVIEW_SCHEMA:
+        raise FoodLineHistoricalRecoveryError("historical event review schema is invalid")
+    expected_review_fields = {
+        "schema_version", "review_type", "source_head", "pages_head", "recovery_identity_sha256",
+        "recovery_artifact_set_sha256", "event_id", "event_fingerprint", "decision",
+        "decision_reason", "reviewed_by", "reviewed_at", "evidence_references", "event_assessment",
+        "dedupe_assessment", "publication_copy", "recommended_batch", "archive_mutation_authorized",
+        "intake_authorized", "queue_authorized", "generation_authorized", "approval_authorized",
+        "publication_authorized", "pages_authorized", "audio_authorized", "social_authorized",
+        "scheduled_task_change_authorized",
+    }
+    if set(review) != expected_review_fields or review.get("review_type") != "historical_event_editorial_review":
+        raise FoodLineHistoricalRecoveryError("historical event review fields are invalid")
+    if any(
+        review.get(key) is not False
+        for key in (
+            "archive_mutation_authorized", "intake_authorized", "queue_authorized",
+            "generation_authorized", "approval_authorized", "publication_authorized",
+            "pages_authorized", "audio_authorized", "social_authorized",
+            "scheduled_task_change_authorized",
+        )
+    ):
+        raise FoodLineHistoricalRecoveryError("historical event review cannot grant mutation or publication authority")
+    try:
+        source_head = subprocess.run(
+            ["git", "-C", str(repository_root), "rev-parse", "HEAD"],
+            check=True, capture_output=True, text=True,
+        ).stdout.strip()
+    except (OSError, subprocess.CalledProcessError) as exc:
+        raise FoodLineHistoricalRecoveryError("unable to bind source HEAD") from exc
+    identity_values = {
+        "source_head": source_head,
+        "pages_head": pages_head,
+        "recovery_identity_sha256": successor_identity_sha256,
+        "recovery_artifact_set_sha256": artifact_set_sha256,
+        "event_id": event_id,
+        "decision": decision,
+    }
+    if any(review.get(key) != value for key, value in identity_values.items()):
+        raise FoodLineHistoricalRecoveryError("review source, Pages, recovery, event, or decision binding drifted")
+    _require_review_text(review.get("decision_reason"), "decision_reason", maximum=2000)
+    _require_review_text(review.get("reviewed_by"), "reviewed_by", maximum=200)
+    _timestamp(review.get("reviewed_at"), "reviewed_at")
+
+    events = artifacts["event_cluster_manifest.json"].get("clusters")
+    matches = [row for row in events or [] if isinstance(row, dict) and row.get("event_id") == event_id]
+    candidates = artifacts["priority_confirmed_candidates.json"].get("candidates")
+    candidate_matches = [row for row in candidates or [] if isinstance(row, dict) and row.get("event_id") == event_id]
+    if len(matches) != 1 or len(candidate_matches) != 1:
+        raise FoodLineHistoricalRecoveryError("event must resolve once in both event and confirmed-candidate manifests")
+    event = matches[0]
+    candidate = candidate_matches[0]
+    if event.get("proposed_disposition") != "confirmed_historical_review_candidate":
+        raise FoodLineHistoricalRecoveryError("event is not a confirmed private review candidate")
+    if review.get("event_fingerprint") != event.get("event_fingerprint") or candidate.get("event_fingerprint") != event.get("event_fingerprint"):
+        raise FoodLineHistoricalRecoveryError("event fingerprint lineage drifted")
+    evidence = _validate_review_evidence(review, event)
+
+    assessment = review.get("event_assessment")
+    if not isinstance(assessment, dict) or set(assessment) != {
+        "location", "organization", "affected_population", "event_start_date", "event_end_date",
+        "service", "measurable_change", "attribution", "uncertainty",
+    }:
+        raise FoodLineHistoricalRecoveryError("event_assessment fields are invalid")
+    exact_assessment = {
+        "location": event.get("location_display"),
+        "organization": event.get("organization_display"),
+        "affected_population": event.get("affected_population"),
+        "event_start_date": event.get("event_start_date"),
+        "event_end_date": event.get("event_end_date"),
+        "measurable_change": event.get("measured_access_consequence"),
+        "uncertainty": event.get("uncertainty"),
+    }
+    if any(assessment.get(key) != value for key, value in exact_assessment.items()):
+        raise FoodLineHistoricalRecoveryError("review event facts or uncertainty drifted from the recovered event")
+    _require_review_text(assessment.get("service"), "event service", maximum=500)
+    _require_review_text(assessment.get("attribution"), "event attribution", maximum=1200)
+
+    dedupe = review.get("dedupe_assessment")
+    if not isinstance(dedupe, dict) or set(dedupe) != {
+        "result", "checked_surfaces", "matched_reference", "continued_condition_assessment"
+    }:
+        raise FoodLineHistoricalRecoveryError("dedupe_assessment fields are invalid")
+    if set(dedupe.get("checked_surfaces") or []) != HISTORICAL_DEDUPE_SURFACES or len(dedupe["checked_surfaces"]) != len(HISTORICAL_DEDUPE_SURFACES):
+        raise FoodLineHistoricalRecoveryError("dedupe assessment did not cover every required surface")
+    _require_review_text(dedupe.get("continued_condition_assessment"), "continued-condition assessment", maximum=1200)
+    expected_dedupe = {
+        "confirmed": {"no_match"},
+        "deferred_specific_evidence_gap": {"no_match"},
+        "excluded_under_existing_rules": {"no_match"},
+        "duplicate_or_corroboration": {"duplicate_existing_event", "corroborating_source"},
+        "already_published": {"already_published"},
+    }[decision]
+    if dedupe.get("result") not in expected_dedupe:
+        raise FoodLineHistoricalRecoveryError("dedupe result does not match the editorial decision")
+    matched_reference = dedupe.get("matched_reference")
+    if dedupe.get("result") == "no_match":
+        if matched_reference is not None:
+            raise FoodLineHistoricalRecoveryError("no-match dedupe result cannot carry a matched reference")
+    else:
+        if not isinstance(matched_reference, dict) or set(matched_reference) != {
+            "repository", "artifact_path", "reference_id", "event_fingerprint", "canonical_source_url"
+        }:
+            raise FoodLineHistoricalRecoveryError("matched dedupe reference fields are invalid")
+        repository = matched_reference.get("repository")
+        base = repository_root if repository == "source" else pages_repository if repository == "pages" else None
+        if base is None:
+            raise FoodLineHistoricalRecoveryError("matched dedupe reference repository is invalid")
+        relative = Path(_require_review_text(matched_reference.get("artifact_path"), "matched artifact path", maximum=1000))
+        if relative.is_absolute() or ".." in relative.parts:
+            raise FoodLineHistoricalRecoveryError("matched dedupe artifact path must be repository-relative")
+        unresolved_path = base
+        for component in relative.parts:
+            unresolved_path = unresolved_path / component
+            if unresolved_path.exists() and _is_reparse_point(unresolved_path):
+                raise FoodLineHistoricalRecoveryError("matched dedupe reference uses a symlink or junction")
+        matched_path = unresolved_path.resolve(strict=True)
+        try:
+            matched_path.relative_to(base)
+        except ValueError as exc:
+            raise FoodLineHistoricalRecoveryError("matched dedupe reference escaped its repository") from exc
+        if not matched_path.is_file() or _is_reparse_point(matched_path):
+            raise FoodLineHistoricalRecoveryError("matched dedupe reference is not a real file")
+        _require_review_text(matched_reference.get("reference_id"), "matched reference ID", maximum=300)
+        matched_fingerprint = _require_review_text(
+            matched_reference.get("event_fingerprint"), "matched event fingerprint", maximum=100
+        )
+        if not re.fullmatch(r"sha256:[0-9a-f]{64}", matched_fingerprint):
+            raise FoodLineHistoricalRecoveryError("matched event fingerprint is malformed")
+        normalize_source_url(_require_review_text(matched_reference.get("canonical_source_url"), "matched source URL", maximum=2000))
+
+    if decision == "confirmed":
+        if (assessment.get("uncertainty") or {}).get("condition", {}).get("status") != "resolved":
+            raise FoodLineHistoricalRecoveryError("confirmed review requires a resolved demonstrated condition")
+        publication_copy, recommended_batch = _validate_publication_copy(
+            review.get("publication_copy"), review.get("recommended_batch"), event
+        )
+    else:
+        if review.get("publication_copy") is not None or review.get("recommended_batch") is not None:
+            raise FoodLineHistoricalRecoveryError("non-confirmed review cannot prepare publication copy or a batch slot")
+        publication_copy, recommended_batch = None, None
+
+    decision_path = _validated_review_decision_path(
+        repository_root, successor_identity_sha256, event_id
+    )
+    immutable = {
+        "schema_version": HISTORICAL_EVENT_DECISION_SCHEMA,
+        "domain": "food-line",
+        "source_head": source_head,
+        "pages_head": pages_head,
+        "recovery_path": target.relative_to(repository_root).as_posix(),
+        "recovery_identity_sha256": successor_identity_sha256,
+        "recovery_artifact_set_sha256": artifact_set_sha256,
+        "review_artifact_path": review_path.relative_to(repository_root).as_posix(),
+        "review_artifact_sha256": review_artifact_sha256,
+        "operator": operator,
+        "reviewed_by": review["reviewed_by"],
+        "reviewed_at": review["reviewed_at"],
+        "event_id": event_id,
+        "event_fingerprint": event["event_fingerprint"],
+        "priority": candidate["priority"],
+        "decision": decision,
+        "decision_reason": review["decision_reason"],
+        "evidence_references": evidence,
+        "event_assessment": assessment,
+        "dedupe_assessment": dedupe,
+        "publication_copy": publication_copy,
+        "recommended_batch": recommended_batch,
+        "publication_eligible": False,
+        "publication_approval": False,
+        "archive_mutation_authorized": False,
+        "intake_authorized": False,
+        "queue_authorized": False,
+        "generation_authorized": False,
+        "approval_authorized": False,
+        "publication_authorized": False,
+        "pages_authorized": False,
+        "audio_authorized": False,
+        "social_authorized": False,
+        "scheduled_task_change_authorized": False,
+    }
+    if decision_path.exists():
+        if decision_path.read_bytes() != canonical_json(immutable).encode("utf-8"):
+            raise FoodLineHistoricalRecoveryError("refusing a conflicting historical event decision replay")
+        status = "idempotent_noop"
+    elif dry_run:
+        status = "dry_run_validated"
+    else:
+        _atomic_json(decision_path, immutable)
+        status = "decision_recorded"
+    return {
+        "status": status,
+        "event_id": event_id,
+        "decision": decision,
+        "decision_path": str(decision_path),
+        "persistent_mutation": status == "decision_recorded",
+        "publication_approval": False,
+        "queue_items_created": 0,
+        "pages_files_written": 0,
+        "generated_output_files_written": 0,
+    }

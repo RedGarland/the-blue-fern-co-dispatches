@@ -76,6 +76,14 @@ Confirmed candidates use four reporting tiers only:
 The tier is private prioritization metadata. It does not change qualification,
 disposition, review state, or publication authority.
 
+The four-tier contract applies only to confirmed-candidate ranking. A legacy
+complete event manifest may also contain the internal value `6` for a
+`risk_or_mitigation_only` event that was deferred, excluded, or retained only
+as duplicate/corroboration evidence. That value is an excluded-event sentinel,
+not a fifth candidate tier. It must never appear in
+`priority_confirmed_candidates.json` and grants no eligibility, approval, queue,
+or publication authority.
+
 ## Five-tier recovery migration
 
 Recoveries created before the four-tier policy was merged remain immutable
@@ -100,13 +108,17 @@ unexpected file, schema drift, hash drift, input drift, or specification drift
 fails closed.
 
 The migration copies the predecessor reconciliation snapshot and artifacts in
-memory, then permits only a priority value of `5` on a
-`disaster_household_food_loss` row to become `4`. Event and candidate membership,
-identity, disposition, evidence, uncertainty, qualification, URLs, dates,
-descriptions, and authority fields must compare exactly. Tier summaries are
-recomputed in migration lineage. The complete event manifest can contain one
-more migrated disaster-loss row than the confirmed-candidate report when that
-event has a non-confirmed disposition; this does not change its disposition.
+memory. Priorities `1` through `4` remain unchanged, and only a priority value
+of `5` on a `disaster_household_food_loss` row may become `4`. A legacy priority
+`6` may remain `6` only in the complete event manifest when the row proves the
+bounded risk-only, non-candidate state described above; it is rejected from the
+candidate report, from confirmed or authority-bearing rows, and from any other
+consequence or transition. Event and candidate membership, identity,
+disposition, evidence, uncertainty, qualification, URLs, dates, descriptions,
+and authority fields must compare exactly. Tier summaries are recomputed in
+migration lineage. The complete event manifest can contain one more migrated
+disaster-loss row than the confirmed-candidate report when that event has a
+non-confirmed disposition; this does not change its disposition.
 
 The successor is created atomically. Exact replay compares every expected byte
 and returns `idempotent_noop`; a changed file or lineage argument is a conflict.

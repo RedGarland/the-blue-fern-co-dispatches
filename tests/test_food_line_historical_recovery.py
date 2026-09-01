@@ -150,8 +150,14 @@ def _import_five_tier_predecessor(
         ("priority_confirmed_candidates.json", "candidates"),
     ):
         for row in artifacts[name][row_key]:
-            if row["measured_access_consequence"]["type"] == "disaster_household_food_loss":
+            consequence_type = row["measured_access_consequence"]["type"]
+            if consequence_type == "disaster_household_food_loss":
                 row["priority"] = 5
+            elif (
+                name == "event_cluster_manifest.json"
+                and consequence_type == "risk_or_mitigation_only"
+            ):
+                row["priority"] = 6
     return import_recovery(
         root,
         artifacts,
@@ -188,15 +194,26 @@ def _production_shaped_spec(parsed: dict) -> dict:
         cursor += size
     assert cursor == 505
 
-    consequence_types = (
+    confirmed_consequence_types = (
         ["direct_service_loss_or_closure"] * 158
         + ["benefit_access_contraction_with_emergency_demand"] * 20
         + ["inventory_or_capacity_strain"] * 57
         + ["grocery_or_school_meal_access_loss"] * 64
         + ["disaster_household_food_loss"] * 21
-        + ["disaster_household_food_loss"]
-        + ["grocery_or_school_meal_access_loss"] * 93
     )
+    noncandidate_consequence_types = []
+    remaining_noncandidate_types = iter(
+        ["disaster_household_food_loss"]
+        + ["direct_service_loss_or_closure"] * 11
+        + ["inventory_or_capacity_strain"] * 3
+        + ["grocery_or_school_meal_access_loss"] * 11
+    )
+    for offset in range(94):
+        if offset < 59 or 67 <= offset < 74 or 82 <= offset < 84:
+            noncandidate_consequence_types.append("risk_or_mitigation_only")
+        else:
+            noncandidate_consequence_types.append(next(remaining_noncandidate_types))
+    consequence_types = confirmed_consequence_types + noncandidate_consequence_types
     dispositions = (
         ["confirmed_historical_review_candidate"] * 320
         + ["deferred_specific_evidence_gap"] * 67
@@ -258,6 +275,97 @@ def _production_shaped_spec(parsed: dict) -> dict:
         "unassigned_finding_ids": [],
         "clusters": clusters,
     }
+
+
+def _priority_six_semantic_documents(tmp_path: Path) -> tuple[dict, dict]:
+    raw = _aggregate(
+        _envelope(
+            "run-priority-six-semantic",
+            [
+                _finding(
+                    title="Flood destroyed household food",
+                    canonical_source_url="https://news.example.org/flood-loss",
+                    source_url="https://news.example.org/flood-loss",
+                    pressure_type="disaster_household_food_loss",
+                ),
+                _finding(
+                    title="Storm risk prompted mitigation planning",
+                    canonical_source_url="https://news.example.org/storm-risk",
+                    source_url="https://news.example.org/storm-risk",
+                    pressure_type="risk_or_mitigation_only",
+                ),
+            ],
+        )
+    )
+    parsed = parse_aggregate_handoff(raw, run_month="2026-08")
+    finding_ids = [item["finding_id"] for item in parsed["findings"]]
+    spec = _cluster_spec(parsed)
+    confirmed = spec["clusters"][0]
+    confirmed["finding_ids"] = [finding_ids[0]]
+    confirmed["primary_finding_id"] = finding_ids[0]
+    confirmed["measured_access_consequence"] = {
+        "type": "disaster_household_food_loss",
+        "description": "A documented household food loss occurred.",
+        "measurement": "one documented household loss",
+        "supporting_finding_ids": [finding_ids[0]],
+    }
+    risk = json.loads(json.dumps(confirmed))
+    risk.update(
+        {
+            "location": "Risk County, Arizona",
+            "organization": "Risk County Emergency Office",
+            "pressure_category": "mitigation planning",
+            "underlying_development": "storm risk prompted contingency planning",
+            "finding_ids": [finding_ids[1]],
+            "primary_finding_id": finding_ids[1],
+            "measured_access_consequence": {
+                "type": "risk_or_mitigation_only",
+                "description": "The report described risk and mitigation planning only.",
+                "measurement": "no demonstrated access loss",
+                "supporting_finding_ids": [finding_ids[1]],
+            },
+            "proposed_disposition": "deferred_specific_evidence_gap",
+            "disposition_reason": "No demonstrated food-access loss was established.",
+            "unresolved_requirement": "A demonstrated food-access consequence is required.",
+            "exclusion_rule": None,
+        }
+    )
+    spec["clusters"] = [confirmed, risk]
+    input_path, spec_path = _write_input_and_spec(tmp_path, raw, spec)
+    predecessor = build_recovery(
+        tmp_path,
+        input_path,
+        spec_path,
+        pages_root=None,
+        captured_at="2026-09-01T00:00:00Z",
+        run_month="2026-08",
+    )
+    for name, row_key in (
+        ("event_cluster_manifest.json", "clusters"),
+        ("priority_confirmed_candidates.json", "candidates"),
+    ):
+        for row in predecessor[name][row_key]:
+            consequence_type = row["measured_access_consequence"]["type"]
+            if consequence_type == "disaster_household_food_loss":
+                row["priority"] = 5
+            elif (
+                name == "event_cluster_manifest.json"
+                and consequence_type == "risk_or_mitigation_only"
+            ):
+                row["priority"] = 6
+    successor = json.loads(json.dumps(predecessor))
+    for name, row_key in (
+        ("event_cluster_manifest.json", "clusters"),
+        ("priority_confirmed_candidates.json", "candidates"),
+    ):
+        for row in successor[name][row_key]:
+            if row["priority"] == 5:
+                row["priority"] = 4
+    return predecessor, successor
+
+
+def _row_with_priority(document: dict, row_key: str, priority: int) -> dict:
+    return next(row for row in document[row_key] if row["priority"] == priority)
 
 
 def test_aggregate_parser_preserves_malformed_block_and_deduplicates_exact_findings() -> None:
@@ -908,11 +1016,57 @@ def test_production_shaped_migration_preserves_totals_and_expected_tier_transiti
         "predecessor": {"1": 158, "2": 20, "3": 57, "4": 64, "5": 21},
         "successor": {"1": 158, "2": 20, "3": 57, "4": 85},
     }
-    assert tiers["event_cluster_manifest.json"]["predecessor"]["5"] == 22
-    assert tiers["event_cluster_manifest.json"]["successor"].get("5") is None
+    assert tiers["event_cluster_manifest.json"] == {
+        "predecessor": {"1": 169, "2": 20, "3": 60, "4": 75, "5": 22, "6": 68},
+        "successor": {"1": 169, "2": 20, "3": 60, "4": 97, "6": 68},
+    }
     assert tiers["event_cluster_manifest.json"]["predecessor"]["5"] - tiers[
         "priority_confirmed_candidates.json"
     ]["predecessor"]["5"] == 1
+    successor_path = Path(result["recovery_path"])
+    predecessor_events = json.loads(
+        (Path(predecessor["recovery_path"]) / "event_cluster_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )["clusters"]
+    predecessor_candidate_ids = {
+        row["event_id"]
+        for row in json.loads(
+            (
+                Path(predecessor["recovery_path"])
+                / "priority_confirmed_candidates.json"
+            ).read_text(encoding="utf-8")
+        )["candidates"]
+    }
+    successor_events = json.loads(
+        (successor_path / "event_cluster_manifest.json").read_text(encoding="utf-8")
+    )["clusters"]
+    successor_candidates = json.loads(
+        (successor_path / "priority_confirmed_candidates.json").read_text(encoding="utf-8")
+    )["candidates"]
+    priority_six_events = [row for row in successor_events if row["priority"] == 6]
+    assert len(priority_six_events) == 68
+    assert all(
+        row["measured_access_consequence"]["type"] == "risk_or_mitigation_only"
+        and row["proposed_disposition"] != "confirmed_historical_review_candidate"
+        for row in priority_six_events
+    )
+    assert all(row["priority"] in {1, 2, 3, 4} for row in successor_candidates)
+    event_only_disaster_rows = [
+        row
+        for row in predecessor_events
+        if row["priority"] == 5 and row["event_id"] not in predecessor_candidate_ids
+    ]
+    assert len(event_only_disaster_rows) == 1
+    event_only_disaster = event_only_disaster_rows[0]
+    migrated_event_only_disaster = next(
+        row for row in successor_events if row["event_id"] == event_only_disaster["event_id"]
+    )
+    assert event_only_disaster["proposed_disposition"] != "confirmed_historical_review_candidate"
+    assert migrated_event_only_disaster["priority"] == 4
+    assert migrated_event_only_disaster["proposed_disposition"] == event_only_disaster[
+        "proposed_disposition"
+    ]
 
 
 def test_migration_fails_for_predecessor_drift_unexpected_files_and_binding_drift(tmp_path: Path) -> None:
@@ -973,6 +1127,126 @@ def test_migration_semantic_audit_rejects_any_nonpriority_change(tmp_path: Path)
     successor["event_cluster_manifest.json"]["clusters"][0]["organization_display"] = "Changed"
 
     with pytest.raises(FoodLineHistoricalRecoveryError, match="unapproved semantics"):
+        _audit_four_tier_semantic_diff(predecessor, successor)
+
+
+def test_migration_semantic_audit_preserves_proven_noncandidate_priority_six(tmp_path: Path) -> None:
+    predecessor, successor = _priority_six_semantic_documents(tmp_path)
+
+    transition = _audit_four_tier_semantic_diff(predecessor, successor)
+
+    assert transition["event_cluster_manifest.json"] == {
+        "predecessor": {"5": 1, "6": 1},
+        "successor": {"4": 1, "6": 1},
+    }
+    assert transition["priority_confirmed_candidates.json"] == {
+        "predecessor": {"5": 1},
+        "successor": {"4": 1},
+    }
+
+
+def test_migration_semantic_audit_rejects_priority_six_in_candidate_report(
+    tmp_path: Path,
+) -> None:
+    predecessor, successor = _priority_six_semantic_documents(tmp_path)
+    for document in (predecessor, successor):
+        candidate = document["priority_confirmed_candidates.json"]["candidates"][0]
+        candidate["priority"] = 6
+
+    with pytest.raises(FoodLineHistoricalRecoveryError, match="forbidden in candidate rankings"):
+        _audit_four_tier_semantic_diff(predecessor, successor)
+
+
+def test_migration_semantic_audit_rejects_confirmed_priority_six_event(
+    tmp_path: Path,
+) -> None:
+    predecessor, successor = _priority_six_semantic_documents(tmp_path)
+    for document in (predecessor, successor):
+        risk = _row_with_priority(document["event_cluster_manifest.json"], "clusters", 6)
+        risk["proposed_disposition"] = "confirmed_historical_review_candidate"
+        risk["unresolved_requirement"] = None
+
+    with pytest.raises(FoodLineHistoricalRecoveryError, match="not demonstrably non-candidate"):
+        _audit_four_tier_semantic_diff(predecessor, successor)
+
+
+def test_migration_semantic_audit_rejects_priority_six_candidate_identity_contamination(
+    tmp_path: Path,
+) -> None:
+    predecessor, successor = _priority_six_semantic_documents(tmp_path)
+    for document in (predecessor, successor):
+        risk = _row_with_priority(document["event_cluster_manifest.json"], "clusters", 6)
+        candidate = json.loads(
+            json.dumps(document["priority_confirmed_candidates.json"]["candidates"][0])
+        )
+        candidate["event_id"] = risk["event_id"]
+        candidate["priority"] = 4
+        document["priority_confirmed_candidates.json"]["candidates"].append(candidate)
+
+    with pytest.raises(
+        FoodLineHistoricalRecoveryError,
+        match="appears in the confirmed-candidate report",
+    ):
+        _audit_four_tier_semantic_diff(predecessor, successor)
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        (
+            "measured_access_consequence",
+            {"type": "grocery_or_school_meal_access_loss"},
+            "not risk-or-mitigation-only",
+        ),
+        ("disposition_reason", "", "lacks a disposition reason"),
+        ("unresolved_requirement", None, "lacks bounded evidence-gap proof"),
+        ("publication_eligible", True, "conflicting eligibility or authority"),
+        ("publication_authorized", True, "conflicting eligibility or authority"),
+    ],
+)
+def test_migration_semantic_audit_rejects_unproven_priority_six(
+    tmp_path: Path, field: str, value: object, message: str
+) -> None:
+    predecessor, successor = _priority_six_semantic_documents(tmp_path)
+    for document in (predecessor, successor):
+        risk = _row_with_priority(document["event_cluster_manifest.json"], "clusters", 6)
+        risk[field] = value
+
+    with pytest.raises(FoodLineHistoricalRecoveryError, match=message):
+        _audit_four_tier_semantic_diff(predecessor, successor)
+
+
+@pytest.mark.parametrize("new_priority", [4, 5])
+def test_migration_semantic_audit_rejects_priority_six_mutation(
+    tmp_path: Path, new_priority: int
+) -> None:
+    predecessor, successor = _priority_six_semantic_documents(tmp_path)
+    risk = _row_with_priority(successor["event_cluster_manifest.json"], "clusters", 6)
+    risk["priority"] = new_priority
+
+    with pytest.raises(FoodLineHistoricalRecoveryError, match="changed legacy Priority 6"):
+        _audit_four_tier_semantic_diff(predecessor, successor)
+
+
+def test_migration_semantic_audit_rejects_new_priority_six(tmp_path: Path) -> None:
+    predecessor, successor = _priority_six_semantic_documents(tmp_path)
+    confirmed = _row_with_priority(successor["event_cluster_manifest.json"], "clusters", 4)
+    confirmed["priority"] = 6
+
+    with pytest.raises(FoodLineHistoricalRecoveryError, match="priority transition is invalid"):
+        _audit_four_tier_semantic_diff(predecessor, successor)
+
+
+def test_migration_semantic_audit_rejects_mixed_valid_and_invalid_priority_six(tmp_path: Path) -> None:
+    predecessor, successor = _priority_six_semantic_documents(tmp_path)
+    for document in (predecessor, successor):
+        valid = _row_with_priority(document["event_cluster_manifest.json"], "clusters", 6)
+        invalid = json.loads(json.dumps(valid))
+        invalid["event_id"] = "food-line-event-invalid-priority-six"
+        invalid["measured_access_consequence"]["type"] = "inventory_or_capacity_strain"
+        document["event_cluster_manifest.json"]["clusters"].append(invalid)
+
+    with pytest.raises(FoodLineHistoricalRecoveryError, match="not risk-or-mitigation-only"):
         _audit_four_tier_semantic_diff(predecessor, successor)
 
 

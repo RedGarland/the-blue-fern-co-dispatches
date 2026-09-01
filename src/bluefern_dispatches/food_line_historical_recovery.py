@@ -1155,6 +1155,53 @@ def _priority_counts(rows: list[dict[str, Any]]) -> dict[str, int]:
     return {str(priority): counts[priority] for priority in sorted(counts)}
 
 
+def _validate_legacy_priority_six_event(
+    row: dict[str, Any], *, candidate_event_ids: set[str]
+) -> None:
+    event_id = row.get("event_id")
+    if not isinstance(event_id, str) or not event_id:
+        raise FoodLineHistoricalRecoveryError("legacy Priority 6 event is missing its event identity")
+    if event_id in candidate_event_ids:
+        raise FoodLineHistoricalRecoveryError("legacy Priority 6 event appears in the confirmed-candidate report")
+    consequence = row.get("measured_access_consequence")
+    if not isinstance(consequence, dict) or consequence.get("type") != "risk_or_mitigation_only":
+        raise FoodLineHistoricalRecoveryError("legacy Priority 6 event is not risk-or-mitigation-only")
+    disposition = row.get("proposed_disposition")
+    if disposition not in {
+        "deferred_specific_evidence_gap",
+        "excluded_under_existing_rules",
+        "duplicate_or_corroboration",
+    }:
+        raise FoodLineHistoricalRecoveryError("legacy Priority 6 event is not demonstrably non-candidate")
+    if not _text(row.get("disposition_reason")):
+        raise FoodLineHistoricalRecoveryError("legacy Priority 6 event lacks a disposition reason")
+    unresolved_requirement = _text(row.get("unresolved_requirement"))
+    exclusion_rule = _text(row.get("exclusion_rule"))
+    if disposition == "deferred_specific_evidence_gap" and (
+        not unresolved_requirement or exclusion_rule
+    ):
+        raise FoodLineHistoricalRecoveryError("legacy Priority 6 deferred event lacks bounded evidence-gap proof")
+    if disposition == "excluded_under_existing_rules" and (
+        not exclusion_rule or unresolved_requirement
+    ):
+        raise FoodLineHistoricalRecoveryError("legacy Priority 6 excluded event lacks bounded exclusion proof")
+    if disposition == "duplicate_or_corroboration" and (unresolved_requirement or exclusion_rule):
+        raise FoodLineHistoricalRecoveryError("legacy Priority 6 duplicate event has conflicting disposition fields")
+    for field in (
+        "candidate_eligible",
+        "eligible_for_review",
+        "historical_review_candidate",
+        "publication_approval",
+        "publication_authorized",
+        "publication_eligible",
+        "qualifies_for_review",
+    ):
+        if row.get(field) not in (None, False, 0, ""):
+            raise FoodLineHistoricalRecoveryError(
+                f"legacy Priority 6 event has conflicting eligibility or authority: {field}"
+            )
+
+
 def _audit_four_tier_semantic_diff(
     predecessor: dict[str, Any], successor: dict[str, Any]
 ) -> dict[str, dict[str, dict[str, int]]]:
@@ -1167,6 +1214,23 @@ def _audit_four_tier_semantic_diff(
         if predecessor[name] != successor[name]:
             raise FoodLineHistoricalRecoveryError(f"migration changed an unapproved artifact: {name}")
 
+    predecessor_candidate_rows = predecessor["priority_confirmed_candidates.json"].get(
+        "candidates"
+    )
+    successor_candidate_rows = successor["priority_confirmed_candidates.json"].get(
+        "candidates"
+    )
+    if not isinstance(predecessor_candidate_rows, list) or not isinstance(successor_candidate_rows, list):
+        raise FoodLineHistoricalRecoveryError("migration candidate rows are invalid")
+    predecessor_candidate_ids = {
+        row.get("event_id") for row in predecessor_candidate_rows if isinstance(row, dict)
+    }
+    successor_candidate_ids = {
+        row.get("event_id") for row in successor_candidate_rows if isinstance(row, dict)
+    }
+    if predecessor_candidate_ids != successor_candidate_ids or None in predecessor_candidate_ids:
+        raise FoodLineHistoricalRecoveryError("migration changed or invalidated candidate identities")
+
     transition: dict[str, dict[str, dict[str, int]]] = {}
     for name, row_key in (
         ("event_cluster_manifest.json", "clusters"),
@@ -1178,6 +1242,8 @@ def _audit_four_tier_semantic_diff(
         new_header = {key: value for key, value in new_document.items() if key != row_key}
         if old_header != new_header:
             raise FoodLineHistoricalRecoveryError(f"migration changed unapproved metadata: {name}")
+        if old_document.get("publication_approval") is not False:
+            raise FoodLineHistoricalRecoveryError(f"migration source carries publication authority: {name}")
         old_rows = old_document.get(row_key)
         new_rows = new_document.get(row_key)
         if not isinstance(old_rows, list) or not isinstance(new_rows, list) or len(old_rows) != len(new_rows):
@@ -1186,8 +1252,27 @@ def _audit_four_tier_semantic_diff(
             if not isinstance(old_row, dict) or not isinstance(new_row, dict):
                 raise FoodLineHistoricalRecoveryError(f"migration row is not an object: {name} row {index}")
             old_priority = old_row.get("priority")
+            if old_priority == 6:
+                if name != "event_cluster_manifest.json":
+                    raise FoodLineHistoricalRecoveryError("legacy Priority 6 is forbidden in candidate rankings")
+                _validate_legacy_priority_six_event(
+                    old_row,
+                    candidate_event_ids=predecessor_candidate_ids,
+                )
+                _validate_legacy_priority_six_event(
+                    new_row,
+                    candidate_event_ids=successor_candidate_ids,
+                )
+                if new_row.get("priority") != 6:
+                    raise FoodLineHistoricalRecoveryError(
+                        f"migration changed legacy Priority 6: {name} row {index}"
+                    )
+            elif old_priority not in {1, 2, 3, 4, 5}:
+                raise FoodLineHistoricalRecoveryError(
+                    f"migration priority transition is invalid: {name} row {index}"
+                )
             expected_priority = 4 if old_priority == 5 else old_priority
-            if old_priority not in {1, 2, 3, 4, 5} or new_row.get("priority") != expected_priority:
+            if new_row.get("priority") != expected_priority:
                 raise FoodLineHistoricalRecoveryError(f"migration priority transition is invalid: {name} row {index}")
             consequence = old_row.get("measured_access_consequence")
             consequence_type = consequence.get("type") if isinstance(consequence, dict) else None

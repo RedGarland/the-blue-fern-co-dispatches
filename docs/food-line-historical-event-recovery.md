@@ -55,6 +55,27 @@ The recovery manifest retains the complete input SHA-256 and content-binds the
 cluster specification and every artifact. Exact replay returns
 `idempotent_noop`; a conflicting replay or digest-prefix collision fails.
 
+Historical reconciliation excludes only the exact content-addressed recovery
+currently being created or replayed. The exclusion is derived internally from
+the validated 64-character input SHA-256 and the resolved private recovery
+root; the CLI exposes no arbitrary path-exclusion option. An existing target
+must be a real direct-child directory with a manifest that binds the same full
+input digest. Parent records, sibling and later recoveries, and lookalike paths
+remain visible. This keeps the pre-import reconciliation snapshot stable on an
+exact replay while allowing genuine later historical-record drift to fail
+closed.
+
+Confirmed candidates use four reporting tiers only:
+
+1. closures, suspensions, and direct service reductions;
+2. measured benefit loss combined with emergency-food demand;
+3. quantified inventory, supply, or capacity strain;
+4. all other demonstrated access, affordability, school/grocery, or
+   disaster-related food losses.
+
+The tier is private prioritization metadata. It does not change qualification,
+disposition, review state, or publication authority.
+
 ## Workflow
 
 Inspect without writing:

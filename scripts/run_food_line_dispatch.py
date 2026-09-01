@@ -13,6 +13,7 @@ import time
 from collections import Counter
 from datetime import date as date_type, datetime, timedelta, timezone
 from difflib import SequenceMatcher
+from email.utils import format_datetime
 from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
@@ -58,7 +59,14 @@ from bluefern_dispatches.food_line_approved_proposal import (
     sha256_file,
     write_json_deterministic,
 )
+from bluefern_dispatches.food_line_retrospective import (
+    RetrospectiveBundle,
+    load_retrospective_plan,
+    record_retrospective_publication,
+    verify_complete_output,
+)
 from bluefern_dispatches.podcast_feed import write_food_line_podcast_feed
+from bluefern_dispatches.pages_release_safety import sync_pages_from_source
 from bluefern_dispatches.tts_provider import synthesize_speech_with_diagnostics
 from bluefern_dispatches.incident_discovery import discover_incident_seeds, load_incident_seeds
 from scripts.discover_food_line_sources import run_food_line_discovery_gap_check
@@ -1568,13 +1576,18 @@ def _public_source_table_rows_html(
     primary_row: dict[str, Any] | None = None,
     continuing_rows: list[dict[str, Any]] | None = None,
     edition_mode: str = "current_update",
+    include_record_ids: bool = True,
 ) -> str:
     continuing_rows = list(continuing_rows or [])
     if not rows:
-        return "<tr><td colspan='16'>No verified pressure sources were published today.</td></tr>"
+        return f"<tr><td colspan='{16 if include_record_ids else 15}'>No verified pressure sources were published today.</td></tr>"
+    def record_cell(row: dict[str, Any]) -> str:
+        if not include_record_ids:
+            return ""
+        return f"<td>{html.escape(str(row.get('source_record_id') or ''))}</td>"
+
     return "".join(
-        "<tr>"
-        f"<td>{html.escape(str(s.get('source_record_id') or ''))}</td>"
+        f"<tr>{record_cell(s)}"
         f"<td>{html.escape(str(s.get('title') or ''))}</td>"
         f"<td>{html.escape(str(s.get('publisher') or ''))}</td>"
         f"<td>{html.escape(str(s.get('location_name') or s.get('state') or ''))}</td>"
@@ -4667,6 +4680,9 @@ def render_food_line_edition(
     continuing_rows: list[dict[str, Any]],
     edition_mode: str = "current_update",
     display_public_rows: list[dict[str, Any]] | None = None,
+    retrospective_title: str = "",
+    retrospective_introduction: str = "",
+    retrospective_disclosure: str = "",
 ) -> str:
     pressure_rows = _public_source_rows(sources)
     reviewed_count = len(sources)
@@ -4738,6 +4754,15 @@ def render_food_line_edition(
         policy_section_html = f"<h2>Policy / Benefits Signals</h2>{f'<div>{policy_items}</div>' if policy_items else '<p>No policy / benefits signals qualified today.</p>'}"
         provider_section_html = f"<h2>Provider / Operations Signals</h2>{f'<div>{provider_items}</div>' if provider_items else '<p>No provider / operations signals qualified today.</p>'}"
     page_footer = footer("../../")
+    retrospective_banner = ""
+    if retrospective_disclosure:
+        retrospective_banner = (
+            "<section class='food-line-panel food-line-retrospective-disclosure'>"
+            f"<h2>{html.escape(retrospective_title or 'Retrospective recovery')}</h2>"
+            f"<p>{html.escape(retrospective_disclosure)}</p>"
+            f"<p>{html.escape(retrospective_introduction)}</p>"
+            "</section>"
+        )
     body = f"""{_food_line_theme_styles()}
 {header(DISPATCH_NAME, "../../", "../../archive.html", "/food-line/")}
 <main class="container briefing food-line-shell">
@@ -4748,6 +4773,7 @@ def render_food_line_edition(
     <h1>{DISPATCH_NAME}</h1>
     {summary_html}
   </section>
+  {retrospective_banner}
   <section class="food-line-panel">
     <h2>Today’s Read</h2>
     {today_read_html}
@@ -4785,6 +4811,7 @@ def _source_table_html(
     primary_row: dict[str, Any] | None = None,
     continuing_rows: list[dict[str, Any]] | None = None,
     edition_mode: str = "current_update",
+    include_record_ids: bool = True,
 ) -> str:
     effective_rows = public_rows or list(sources)
     rows = _public_source_table_rows_html(
@@ -4792,6 +4819,7 @@ def _source_table_html(
         primary_row=primary_row,
         continuing_rows=continuing_rows,
         edition_mode=edition_mode,
+        include_record_ids=include_record_ids,
     )
     page_rows = []
     audit_rows = []
@@ -4857,7 +4885,7 @@ def _source_table_html(
         f"<p><a href=\"./claim_ledger.html\">Open the claim ledger</a></p>"
         f"<table class='food-line-source-table'>"
         "<tr>"
-        "<th>Record ID</th><th>Title</th><th>Publisher</th><th>Location</th><th>Source link</th><th>Source family</th><th>How it was used</th><th>Issue</th><th>What happened</th><th>What the source says</th><th>Verification status</th><th>Who may be affected</th><th>Used on public page</th><th>source_freshness_status</th><th>source_freshness_date_basis</th><th>source_public_story_eligible</th>"
+        f"{'<th>Record ID</th>' if include_record_ids else ''}<th>Title</th><th>Publisher</th><th>Location</th><th>Source link</th><th>Source family</th><th>How it was used</th><th>Issue</th><th>What happened</th><th>What the source says</th><th>Verification status</th><th>Who may be affected</th><th>Used on public page</th><th>source_freshness_status</th><th>source_freshness_date_basis</th><th>source_public_story_eligible</th>"
         "</tr>"
         f"{rows}</table></section></main>{page_footer}"
     )
@@ -6950,12 +6978,26 @@ def _update_index_archive(root: Path, date: str, mission: str, *, max_edition_da
     )
     _write_text(dispatch_root / "index.html", _food_line_page(f"{DISPATCH_NAME}", f"{BASE_URL}/food-line/", "assets/site.css", idx_body))
     _write_text(dispatch_root / "archive.html", _food_line_page(f"{DISPATCH_NAME} Archive", f"{BASE_URL}/food-line/archive.html", "assets/site.css", archive_body))
+    def rss_publication_date(public_date: str) -> str:
+        manifest = _food_line_public_edition_manifest(root, public_date) or {}
+        raw = str(manifest.get("published_at") or manifest.get("generated_at") or "").strip()
+        if not raw:
+            return ""
+        try:
+            parsed = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+        except ValueError:
+            return ""
+        if parsed.tzinfo is None:
+            return ""
+        return format_datetime(parsed)
+
     rss_entries = "".join(
         f"""
     <item>
       <title>{html.escape(_food_line_public_edition_label(root, public_date))}</title>
       <link>{BASE_URL}/food-line/editions/{html.escape(public_date)}/</link>
       <guid isPermaLink="true">{BASE_URL}/food-line/editions/{html.escape(public_date)}/</guid>
+      {f'<pubDate>{html.escape(rss_publication_date(public_date))}</pubDate>' if rss_publication_date(public_date) else ''}
     </item>"""
         for public_date in public_dates
     )
@@ -7186,6 +7228,229 @@ def _run_food_line_approved_proposal(root: Path, date: str, approved_proposal_pa
     }
 
 
+def _run_food_line_retrospective(
+    root: Path,
+    date: str,
+    *,
+    pages_root: Path,
+    approval_commit: str,
+    approval_path: str,
+    publication_timestamp: str,
+    generate_audio: bool,
+    require_audio: bool,
+    force_audio_regenerate: bool,
+    tts_provider: str,
+    audio_model: str,
+    audio_voice: str,
+    audio_format: str,
+    audio_timeout_seconds: float,
+) -> dict[str, Any]:
+    bundle = load_retrospective_plan(
+        root,
+        pages_root,
+        approval_commit=approval_commit,
+        approval_path=approval_path,
+        publication_timestamp=publication_timestamp,
+    )
+    if bundle.edition_date != date:
+        raise ValueError("retrospective approval edition date does not match --date")
+    if (generate_audio or require_audio or force_audio_regenerate) and not bundle.audio_authorized:
+        raise ValueError("retrospective audio requires exact approval authority")
+    if bundle.audio_authorized and not (generate_audio and require_audio):
+        raise ValueError("an audio-authorized retrospective requires --generate-audio and --require-audio")
+    sources = [dict(row) for row in bundle.source_rows]
+    lead_row = sources[0]
+    continuing_rows = sources[1:]
+    previous_context = _load_previous_edition_context(root, date)
+    adequacy = source_adequacy(sources)
+    role_counts = _role_counts(sources)
+    scope_counts = _scope_counts(sources)
+    mission = "The Food Line Dispatch tracks daily signs of food insecurity across the United States - benefit disruptions, pantry strain, school-meal gaps, price pressure, and local access failures - using source-backed public records and reporting."
+    html_page = render_food_line_edition(
+        date,
+        sources,
+        adequacy,
+        lead_row,
+        "historical_retrospective",
+        role_counts,
+        scope_counts,
+        previous_context,
+        "new_primary",
+        continuing_rows,
+        edition_mode="historical_retrospective",
+        display_public_rows=sources,
+        retrospective_title=bundle.title,
+        retrospective_introduction=bundle.introduction,
+        retrospective_disclosure=bundle.disclosure,
+    )
+    source_table = _source_table_html(
+        date,
+        sources,
+        sources,
+        primary_row=lead_row,
+        continuing_rows=continuing_rows,
+        edition_mode="historical_retrospective",
+        include_record_ids=False,
+    )
+    claim_ledger_html = _food_line_claim_ledger_html(
+        date,
+        sources,
+        lead_row,
+        continuing_rows,
+        edition_mode="historical_retrospective",
+        review_counts=(len(sources), 0),
+        exclusion_reason_counts={},
+    )
+    source_commit = _food_line_source_commit(root)
+    manifest = {
+        "dispatch_slug": DISPATCH_SLUG,
+        "dispatch_name": DISPATCH_NAME,
+        "edition_date": date,
+        "generated_at": utc_now(),
+        "published_at": bundle.publication_timestamp,
+        "generator_source_commit": source_commit,
+        "generation_mode": "approved_migrated_event_retrospective",
+        "edition_mode": "historical_retrospective",
+        "retrospective": True,
+        "retrospective_title": bundle.title,
+        "retrospective_introduction": bundle.introduction,
+        "retrospective_disclosure": bundle.disclosure,
+        "source_count": len(sources),
+        "story_count": len(sources),
+        "source_adequacy": adequacy,
+        "lead_source_record_id": lead_row["source_record_id"],
+        "lead_source_canonical_url": lead_row["canonical_source_url"],
+        "continuing_pressure_source_record_ids": [row["source_record_id"] for row in continuing_rows],
+        "previous_edition_date": previous_context.get("previous_edition_date"),
+        "primary_signal_status": "new_primary",
+        "public_rendered": True,
+        "public_signal_count": len(sources),
+        "qualified_primary_count": 1,
+        "source_freshness_status": "approved_historical_retrospective",
+        "freshness_window_days": 0,
+        "skip_reason": "",
+        "claim_count": len(sources),
+        "claim_ledger_path": f"/food-line/editions/{date}/claim_ledger.html",
+        "source_table_path": f"/food-line/editions/{date}/source_table.html",
+        "validation_status": "ok",
+        "approval_commit": bundle.approval.commit,
+        "approval_path": bundle.approval.path,
+        "approval_sha256": bundle.approval.sha256,
+        "ordered_rendered_copy_sha256": bundle.approval.payload["ordered_rendered_copy_sha256"],
+        "publication_status": "approved_pending_pages_publication",
+        "publication_approval": True,
+        "publication_eligible": True,
+        "pages_status": "not_synced",
+        "bluesky_status": "not_authorized",
+        "audio_status": "approved_pending_render" if bundle.audio_authorized else "not_authorized",
+        "map_status": "not_published",
+        "podcast_status": "approved_pending_render" if bundle.audio_authorized else "unchanged_no_audio_authority",
+        "schedule_status": "not_changed",
+        "public_url": f"{BASE_URL}/food-line/editions/{date}/",
+        "bluesky_post_text": None,
+        "bluesky_post_ready": False,
+    }
+    site_edition = root / "output" / "site" / DISPATCH_SLUG / "editions" / date
+    dispatch_edition = root / "output" / "dispatches" / DISPATCH_SLUG / "editions" / date
+    for edition_dir in (site_edition, dispatch_edition):
+        _write_text(edition_dir / "index.html", html_page)
+        _write_text(edition_dir / "source_table.html", source_table)
+        _write_text(edition_dir / "claim_ledger.html", claim_ledger_html)
+        _write_json(edition_dir / "sources_manifest.json", sources)
+        _write_json(edition_dir / "curation_manifest.json", {"stories": sources})
+        _write_json(edition_dir / "edition_manifest.json", manifest)
+    _update_index_archive(root, date, mission)
+    audio_result: dict[str, Any] = {"audio_status": "not_authorized", "audio_generated": False, "errors": []}
+    if bundle.audio_authorized:
+        audio_result = write_food_line_audio(
+            root,
+            date,
+            sources,
+            adequacy,
+            lead_row,
+            "historical_retrospective",
+            previous_context,
+            continuing_rows,
+            generate_audio=generate_audio,
+            require_audio=require_audio,
+            force_audio_regenerate=force_audio_regenerate,
+            tts_provider=tts_provider,
+            audio_model=audio_model,
+            audio_voice=audio_voice,
+            audio_format=audio_format,
+            audio_timeout_seconds=audio_timeout_seconds,
+            edition_mode="historical_retrospective",
+        )
+        if audio_result.get("errors"):
+            raise ValueError("retrospective audio generation failed: " + "; ".join(audio_result["errors"]))
+    release_sources = [
+        root / "output" / "site" / DISPATCH_SLUG / "index.html",
+        root / "output" / "site" / DISPATCH_SLUG / "archive.html",
+        root / "output" / "site" / DISPATCH_SLUG / "rss.xml",
+    ]
+    release_sources.extend(
+        site_edition / filename
+        for filename in (
+            "index.html", "source_table.html", "claim_ledger.html", "sources_manifest.json",
+            "curation_manifest.json", "edition_manifest.json",
+        )
+    )
+    if bundle.audio_authorized:
+        audio_root = root / "output" / "site" / DISPATCH_SLUG / "audio"
+        release_sources.extend(
+            [
+                audio_root / f"{date}.mp3", audio_root / f"{date}.json",
+                audio_root / f"{date}-transcript.html", audio_root / "index.html", audio_root / "podcast.xml",
+            ]
+        )
+    release_manifest = build_release_manifest(
+        root=root,
+        pages_root=pages_root,
+        edition_date=date,
+        source_commit=source_commit,
+        source_paths=release_sources,
+        provenance_role="approved_retrospective_generated_output",
+    )
+    release_manifest.update(
+        {
+            "release_mode": "approved_migrated_event_retrospective",
+            "approval_commit": bundle.approval.commit,
+            "approval_path": bundle.approval.path,
+            "approval_sha256": bundle.approval.sha256,
+            "ordered_rendered_copy_sha256": bundle.approval.payload["ordered_rendered_copy_sha256"],
+            "pages_pre_publish_commit": bundle.pages_head,
+            "publication_timestamp": bundle.publication_timestamp,
+            "expected_public_paths": list(bundle.expected_public_paths),
+        }
+    )
+    release_manifest_path = root / "data" / "dispatches" / DISPATCH_SLUG / "review" / "releases" / f"{date}.json"
+    write_json_deterministic(release_manifest_path, release_manifest)
+    verification = verify_complete_output(root, bundle)
+    return {
+        "ok": True,
+        "edition_date": date,
+        "generation_mode": "approved_migrated_event_retrospective",
+        "public_rendered": True,
+        "publication_status": "approved_pending_pages_publication",
+        "publication_timestamp": bundle.publication_timestamp,
+        "retrospective_disclosure": bundle.disclosure,
+        "story_count": len(sources),
+        "approval_commit": bundle.approval.commit,
+        "approval_path": bundle.approval.path,
+        "approval_sha256": bundle.approval.sha256,
+        "pages_status": "not_synced",
+        "bluesky_status": "not_authorized",
+        "audio_status": audio_result.get("audio_status"),
+        "edition_output_paths": [str(site_edition), str(dispatch_edition)],
+        "release_manifest_path": str(release_manifest_path),
+        "release_manifest_sha256": sha256_file(release_manifest_path),
+        "release_entries": release_manifest["entries"],
+        "output_verification": verification,
+        "_retrospective_bundle": bundle,
+        "errors": [],
+    }
+
+
 def _food_line_release_candidate_paths(root: Path, date: str) -> dict[str, Path]:
     review_root = root / "data" / "dispatches" / "food-line" / "review"
     return {
@@ -7304,8 +7569,39 @@ def run_food_line_dispatch(
     dry_run_requested: bool = False,
     audit_allow_live_discovery: bool = False,
     approved_proposal_path: Path | str | None = None,
+    retrospective_approval_commit: str | None = None,
+    retrospective_approval_path: str | None = None,
+    retrospective_publication_timestamp: str | None = None,
+    retrospective_pages_root: Path | None = None,
 ) -> dict[str, Any]:
     date = validate_date(date)
+    retrospective_values = (
+        retrospective_approval_commit,
+        retrospective_approval_path,
+        retrospective_publication_timestamp,
+        retrospective_pages_root,
+    )
+    if any(value is not None for value in retrospective_values):
+        if not all(value is not None for value in retrospective_values):
+            raise ValueError("retrospective generation requires approval commit, approval path, publication timestamp, and Pages root")
+        if approved_proposal_path is not None or collect or use_discovery_candidates or audit_source_collection:
+            raise ValueError("retrospective generation cannot use current proposal, collection, discovery, or source audit inputs")
+        return _run_food_line_retrospective(
+            root.resolve(),
+            date,
+            pages_root=Path(retrospective_pages_root).resolve(),
+            approval_commit=str(retrospective_approval_commit),
+            approval_path=str(retrospective_approval_path),
+            publication_timestamp=str(retrospective_publication_timestamp),
+            generate_audio=generate_audio,
+            require_audio=require_audio,
+            force_audio_regenerate=force_audio_regenerate,
+            tts_provider=tts_provider,
+            audio_model=audio_model,
+            audio_voice=audio_voice,
+            audio_format=audio_format,
+            audio_timeout_seconds=audio_timeout_seconds,
+        )
     if approved_proposal_path is not None:
         if collect or use_discovery_candidates or audit_source_collection:
             raise ValueError("--approved-proposal cannot be combined with collection, discovery intake, or source-collection audit")
@@ -8402,6 +8698,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--approved-proposal",
         help="Generate from a fail-closed approved current-review proposal; does not grant publication authority.",
     )
+    p.add_argument("--retrospective-approval-commit", help="Full committed approval commit for a migrated-event retrospective.")
+    p.add_argument("--retrospective-approval-path", help="Repository-relative committed retrospective approval path.")
+    p.add_argument("--retrospective-publication-timestamp", help="Actual later publication timestamp; never the historical edition date.")
+    p.add_argument("--retrospective-pages-root", help="Clean bound gh-pages checkout used for vacancy and drift validation.")
     p.add_argument(
         "--include-discovery-gap-summary",
         action="store_true",
@@ -8492,6 +8792,22 @@ def main(argv: list[str] | None = None) -> int:
             raise ValueError("--approved-proposal requires one explicit --date and does not support date ranges")
         if args.approved_proposal and (args.publish or args.push or args.post_bluesky or args.dry_run_bluesky):
             raise ValueError("--approved-proposal generation does not authorize Pages publication or Bluesky operations")
+        retrospective_requested = any(
+            (
+                args.retrospective_approval_commit,
+                args.retrospective_approval_path,
+                args.retrospective_publication_timestamp,
+                args.retrospective_pages_root,
+            )
+        )
+        if retrospective_requested and (args.start_date or args.end_date):
+            raise ValueError("retrospective generation requires one explicit --date")
+        if retrospective_requested and (args.collect or args.use_discovery_candidates or args.audit_source_collection):
+            raise ValueError("retrospective generation cannot run collection, discovery, or source audit")
+        if retrospective_requested and (args.post_bluesky or args.dry_run_bluesky):
+            raise ValueError("retrospective approval grants no social authority")
+        if retrospective_requested and args.publish and not args.push:
+            raise ValueError("retrospective publication requires atomic Pages commit, push, and live verification")
         gold_set_path = Path(args.gold_set).resolve() if args.gold_set else None
         if args.audit_source_collection and gold_set_path is not None and not gold_set_path.exists():
             raise ValueError(f"gold set file not found: {gold_set_path}")
@@ -8546,6 +8862,10 @@ def main(argv: list[str] | None = None) -> int:
                     dry_run_requested=bool(args.dry_run),
                     audit_allow_live_discovery=bool(args.audit_live_discovery),
                     approved_proposal_path=args.approved_proposal,
+                    retrospective_approval_commit=args.retrospective_approval_commit,
+                    retrospective_approval_path=args.retrospective_approval_path,
+                    retrospective_publication_timestamp=args.retrospective_publication_timestamp,
+                    retrospective_pages_root=Path(args.retrospective_pages_root) if args.retrospective_pages_root else None,
                 )
             if args.check_only:
                 result.setdefault("check_only", True)
@@ -8565,20 +8885,56 @@ def main(argv: list[str] | None = None) -> int:
                     result["publish_skipped_reason"] = publish_skip_reason
                     result["pages_publish_skipped_reason"] = publish_skip_reason
                 else:
-                    ok, errors, publish_payload = publish_food_line_pages(Path.cwd(), args.date)
-                    result["pages_publish_copied"] = ok
-                    result["pages_publish_result"] = publish_payload
-                    if not ok:
-                        result["ok"] = False
-                        result["errors"] = errors
-                    elif args.push:
-                        pushed, message = push_pages_repo()
-                        result["pushed"] = pushed
-                        if not pushed:
+                    if retrospective_requested:
+                        release_manifest = Path(str(result.get("release_manifest_path") or "")).resolve()
+                        publish_payload = sync_pages_from_source(
+                            dispatch="food-line",
+                            dates=[args.date],
+                            require_source_branch="add/pages-repo-default",
+                            pages_branch="gh-pages",
+                            source_repo=Path.cwd(),
+                            pages_repo=Path(args.retrospective_pages_root).resolve(),
+                            commit=True,
+                            push=bool(args.push),
+                            live_check=bool(args.push),
+                            release_manifest=release_manifest,
+                            include_rss=True,
+                        )
+                        ok = bool(publish_payload.get("ok"))
+                        errors = [str(item) for item in publish_payload.get("errors") or []]
+                        result["pages_publish_copied"] = ok
+                        result["pages_publish_result"] = publish_payload
+                        result["pushed"] = bool(publish_payload.get("pushed"))
+                        if not ok:
                             result["ok"] = False
-                            result["errors"] = [message]
-                        else:
-                            result["push_message"] = message
+                            result["errors"] = errors
+                        elif args.push:
+                            bundle = result.get("_retrospective_bundle")
+                            if not isinstance(bundle, RetrospectiveBundle):
+                                raise ValueError("retrospective publication bundle is unavailable for durable recording")
+                            live_result = publish_payload.get("live_check") or {}
+                            result["publication_recording"] = record_retrospective_publication(
+                                Path.cwd(),
+                                Path(args.retrospective_pages_root).resolve(),
+                                bundle,
+                                pages_commit=str(publish_payload.get("commit_hash") or ""),
+                                live_check_ok=bool(live_result.get("ok")),
+                            )
+                    else:
+                        ok, errors, publish_payload = publish_food_line_pages(Path.cwd(), args.date)
+                        result["pages_publish_copied"] = ok
+                        result["pages_publish_result"] = publish_payload
+                        if not ok:
+                            result["ok"] = False
+                            result["errors"] = errors
+                        elif args.push:
+                            pushed, message = push_pages_repo()
+                            result["pushed"] = pushed
+                            if not pushed:
+                                result["ok"] = False
+                                result["errors"] = [message]
+                            else:
+                                result["push_message"] = message
             elif args.publish and args.dry_run:
                 result["publish_skipped_reason"] = "dry_run"
             elif args.publish and not result.get("ok"):
@@ -8704,6 +9060,7 @@ def main(argv: list[str] | None = None) -> int:
             "'scripts\\run_food_line_dispatch.py' --date (Get-Date -Format 'yyyy-MM-dd') --publish --push --post-bluesky\""
         )
         result["git_push_occurred"] = bool(result.get("pushed"))
+        result.pop("_retrospective_bundle", None)
     except Exception as exc:  # noqa: BLE001
         result = {"ok": False, "errors": [str(exc)]}
     print(json.dumps(result, indent=2))

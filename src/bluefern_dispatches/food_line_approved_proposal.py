@@ -302,6 +302,7 @@ def build_release_manifest(
     approved_proposal_sha256: str | None = None,
     review_snapshot_path: str | None = None,
     review_snapshot_sha256: str | None = None,
+    provenance_role: str = "generated_output",
 ) -> dict[str, Any]:
     root = root.resolve()
     pages_root = pages_root.resolve()
@@ -323,7 +324,6 @@ def build_release_manifest(
         else:
             target_sha = sha256_file(target)
             action = "unchanged" if target_sha == source_sha else "modify"
-        provenance_role = "generated_output"
         entries.append(
             {
                 "source_path": source_rel,

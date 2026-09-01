@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import hashlib
+import html
 import json
 import re
 import subprocess
@@ -212,12 +213,154 @@ def _git_commit_exists(repo_root: Path, commit: str) -> bool:
     return result.returncode == 0
 
 
+def _git_is_ancestor(repo_root: Path, ancestor: str, descendant: str) -> bool:
+    result = _git_run(repo_root, "merge-base", "--is-ancestor", ancestor, descendant)
+    return result.returncode == 0
+
+
 def _git_file_bytes(repo_root: Path, commit: str, relpath: str) -> bytes | None:
     spec = f"{commit}:{relpath}"
     result = _git_run(repo_root, "cat-file", "--filters", spec, text=False)
     if result.returncode != 0:
         return None
     return bytes(result.stdout)
+
+
+def _git_blob_bytes(repo_root: Path, commit: str, relpath: str) -> bytes | None:
+    resolved = _git_run(repo_root, "rev-parse", f"{commit}:{relpath}")
+    if resolved.returncode != 0:
+        return None
+    blob = resolved.stdout.strip()
+    result = _git_run(repo_root, "cat-file", "blob", blob, text=False)
+    if result.returncode != 0:
+        return None
+    return bytes(result.stdout)
+
+
+def _validate_retrospective_release_authority(
+    *,
+    payload: dict[str, Any],
+    dispatch: str,
+    declared_date: dt.date | None,
+    source_repo_root: Path,
+    pages_repo_root: Path | None,
+) -> list[str]:
+    if payload.get("release_mode") != "approved_migrated_event_retrospective":
+        return ["approved retrospective generated output requires the exact retrospective release mode"]
+    if dispatch != "food-line" or declared_date is None or pages_repo_root is None:
+        return ["approved retrospective generated output requires Food Line, one date, and a Pages checkout"]
+    approval_commit = str(payload.get("approval_commit") or "").strip().lower()
+    approval_path = _normalize_path(str(payload.get("approval_path") or ""))
+    approval_sha = str(payload.get("approval_sha256") or "").removeprefix("sha256:").strip().lower()
+    source_commit = str(payload.get("source_commit") or "").strip().lower()
+    pages_head = str(payload.get("pages_pre_publish_commit") or "").strip().lower()
+    errors: list[str] = []
+    if not re.fullmatch(r"[0-9a-f]{40}", approval_commit):
+        errors.append("retrospective release approval_commit must be a full lowercase commit ID")
+    if not re.fullmatch(r"approvals/food-line/[a-z0-9-]+-approval\.json", approval_path):
+        errors.append("retrospective release approval_path is outside the approval owner")
+    if not re.fullmatch(r"[0-9a-f]{64}", approval_sha):
+        errors.append("retrospective release approval_sha256 is malformed")
+    if not re.fullmatch(r"[0-9a-f]{40}", source_commit) or not _git_commit_exists(source_repo_root, source_commit):
+        errors.append("retrospective release source_commit is missing or malformed")
+    if errors:
+        return errors
+    if approval_commit == source_commit or not _git_is_ancestor(source_repo_root, approval_commit, source_commit):
+        errors.append("retrospective approval must be consumed after its normal protected merge")
+    changed = [
+        _normalize_path(line)
+        for line in _git_run(source_repo_root, "diff-tree", "--no-commit-id", "--name-only", "-r", approval_commit).stdout.splitlines()
+        if line.strip()
+    ]
+    if approval_path not in changed or any(
+        not re.fullmatch(r"approvals/food-line/[a-z0-9-]+-approval\.json", path) for path in changed
+    ):
+        errors.append("retrospective approval authority did not originate in an approval-only commit")
+    raw = _git_blob_bytes(source_repo_root, approval_commit, approval_path)
+    if raw is None:
+        errors.append("retrospective approval is missing from committed Git history")
+        return errors
+    if _sha256_bytes(raw) != approval_sha:
+        errors.append("retrospective approval SHA-256 does not match committed Git history")
+        return errors
+    try:
+        approval = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        errors.append("retrospective approval is not valid committed UTF-8 JSON")
+        return errors
+    required_flags = {
+        "schema_version": "food_line_retrospective_approval_v1",
+        "approval_type": "migrated_event_retrospective_batch",
+        "edition_date": declared_date.isoformat(),
+        "generation_authorized": True,
+        "publication_authorized": True,
+        "pages_authorized": True,
+        "social_authorized": False,
+        "scheduled_task_change_authorized": False,
+        "daily_collection_authorized": False,
+        "source_configuration_change_authorized": False,
+        "audio_authorized": False,
+        "audio_policy": "existing_optional_audio_explicitly_not_authorized",
+        "executed": False,
+        "published": False,
+    }
+    if not isinstance(approval, dict) or any(approval.get(key) != value for key, value in required_flags.items()):
+        errors.append("retrospective approval schema, edition, or authority flags are invalid")
+    if str(approval.get("pages_head") or "").lower() != pages_head:
+        errors.append("retrospective release Pages binding does not match its committed approval")
+    actual_pages_head = _git_run(pages_repo_root, "rev-parse", "HEAD").stdout.strip().lower()
+    if pages_head != actual_pages_head:
+        errors.append("retrospective release Pages checkout drifted from the approved head")
+    sources_path = source_repo_root / "output" / "site" / "food-line" / "editions" / declared_date.isoformat() / "sources_manifest.json"
+    edition_path = source_repo_root / "output" / "site" / "food-line" / "editions" / declared_date.isoformat() / "index.html"
+    edition_manifest_path = source_repo_root / "output" / "site" / "food-line" / "editions" / declared_date.isoformat() / "edition_manifest.json"
+    try:
+        sources = json.loads(sources_path.read_text(encoding="utf-8"))
+        edition_manifest = json.loads(edition_manifest_path.read_text(encoding="utf-8"))
+        edition_html = edition_path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        errors.append("retrospective generated public-copy surfaces are missing or invalid")
+        return errors
+    if not isinstance(sources, list) or len(sources) != approval.get("story_count"):
+        errors.append("retrospective generated story inventory does not match the approval")
+        return errors
+    rendered_copies: list[dict[str, Any]] = []
+    for source in sources:
+        if not isinstance(source, dict):
+            errors.append("retrospective generated source inventory contains a malformed row")
+            return errors
+        copy = {
+            "headline": str(source.get("title") or ""),
+            "summary": str(source.get("summary_or_snippet") or ""),
+            "source_links": list(source.get("source_links") or []),
+        }
+        if not copy["headline"] or not copy["summary"] or not copy["source_links"]:
+            errors.append("retrospective generated public copy is incomplete")
+            return errors
+        rendered_copies.append(copy)
+        if html.escape(copy["headline"]) not in edition_html or html.escape(copy["summary"]) not in edition_html:
+            errors.append("retrospective edition HTML does not contain its exact approved public copy")
+            return errors
+    rendered_hash = "sha256:" + _sha256_bytes(
+        (json.dumps(rendered_copies, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n").encode("utf-8")
+    )
+    expected_rendered_hash = str(approval.get("ordered_rendered_copy_sha256") or "")
+    if rendered_hash != expected_rendered_hash:
+        errors.append("retrospective generated public copy does not match the committed approval")
+    exact_manifest = {
+        "approval_commit": approval_commit,
+        "approval_path": approval_path,
+        "approval_sha256": approval_sha,
+        "ordered_rendered_copy_sha256": expected_rendered_hash,
+        "edition_date": declared_date.isoformat(),
+        "published_at": str(payload.get("publication_timestamp") or ""),
+        "retrospective_disclosure": approval.get("retrospective_disclosure"),
+    }
+    if not isinstance(edition_manifest, dict) or any(edition_manifest.get(key) != value for key, value in exact_manifest.items()):
+        errors.append("retrospective edition manifest drifted from the committed approval or release timestamp")
+    if html.escape(str(approval.get("retrospective_disclosure") or "")) not in edition_html:
+        errors.append("retrospective edition HTML is missing the exact approved disclosure")
+    return errors
 
 
 def _release_manifest_delta(
@@ -260,6 +403,20 @@ def _release_manifest_delta(
     if not isinstance(entries, list) or not entries:
         errors.append("release manifest must contain a non-empty entries list")
         return source_paths, pages_paths, errors
+    retrospective_role_requested = any(
+        isinstance(entry, dict) and entry.get("provenance_role") == "approved_retrospective_generated_output"
+        for entry in entries
+    )
+    retrospective_authority_errors: list[str] = []
+    if retrospective_role_requested:
+        retrospective_authority_errors = _validate_retrospective_release_authority(
+            payload=payload,
+            dispatch=dispatch,
+            declared_date=declared_date,
+            source_repo_root=source_repo_root,
+            pages_repo_root=pages_repo_root,
+        )
+        errors.extend(retrospective_authority_errors)
     seen_source: set[str] = set()
     seen_pages: set[str] = set()
     source_root = source_repo_root.resolve()
@@ -339,9 +496,12 @@ def _release_manifest_delta(
             if not source_file.exists():
                 errors.append(f"release manifest runtime editorial input is missing in the working tree: {source_rel}")
         else:
-            if provenance_role != "generated_output":
+            if provenance_role not in {"generated_output", "approved_retrospective_generated_output"}:
                 errors.append(f"release manifest entry {source_rel} has unknown provenance_role: {provenance_role or '<missing>'}")
-            if source_commit and _git_commit_exists(source_root, source_commit):
+            if provenance_role == "approved_retrospective_generated_output":
+                if retrospective_authority_errors:
+                    errors.append(f"retrospective generated output lacks valid committed authority: {source_rel}")
+            elif source_commit and _git_commit_exists(source_root, source_commit):
                 file_bytes = _git_file_bytes(source_root, source_commit, source_rel)
                 if file_bytes is None:
                     errors.append(

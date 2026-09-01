@@ -264,6 +264,59 @@ python scripts/import_food_line_historical_recovery.py review `
   --operator <operator>
 ```
 
-This transition records private editorial state only. A later, separately
-authorized capability is still required to approve, queue, generate, or
-publish a retrospective edition.
+This transition records private editorial state only. It does not itself
+approve, queue, generate, or publish a retrospective edition.
+
+## Migrated-event retrospective publication
+
+`scripts/manage_food_line_retrospective.py` is the separate authority owner
+for a bounded migrated-event retrospective. It accepts only confirmed
+decisions and correction overlays read as exact blobs from committed Git
+history. The approval request stays outside the repository; the deterministic
+approval JSON is the only artifact committed by the approval PR. A protected
+merge must place that approval-only commit strictly behind the current source
+HEAD before `plan`, preview, generation, or publication will accept it.
+
+The owner enforces a maximum of six ordered stories, one recovery and artifact
+set, exact submission/decision/evidence/source/public-copy hashes, an
+independent approver, a clean bound `gh-pages` checkout, and an unoccupied
+edition identity. Authority is limited to the named batch and nine public
+representations: edition HTML, source table, claim ledger, source/curation/
+edition manifests, Food Line homepage, archive, and RSS. Daily collection,
+source configuration, schedules, social output, and unrelated candidates stay
+unauthorized. Food Line audio remains optional under the existing publication
+rule and is explicitly not authorized by this retrospective owner.
+
+An encoding correction never edits the protected decision. The
+`correct-public-copy` command binds its commit, path, blob, SHA-256, event,
+field, prior Unicode text and prior UTF-8 bytes, and permits one exact
+replacement. Missing, repeated, changed, already-corrected, or broader edits
+fail closed. Exact replay returns `idempotent_noop`.
+
+Approvals keep `edition_date` separate from the actual later
+`publication_timestamp`. Reader-facing copy must disclose that the edition is
+a retrospective recovery of previously missed August 2026 reporting, and RSS
+uses the real publication timestamp. Plan validation searches source output,
+Pages, feeds, release and publication state, queues, source manifests, and
+story memory for date reuse or prior publication/dedupe collisions.
+
+The sanctioned sequence is:
+
+1. Create and merge any required correction-overlay-only PR.
+2. Create both approvals from private request JSON, replay them, and merge the
+   approval-only PR normally.
+3. Run `plan` twice.
+4. Create and verify a deterministic preview under a private directory outside
+   the repository.
+5. Run the normal Food Line generator with the committed approval and actual
+   publication timestamp.
+6. Publish with `--publish --push`; the existing guarded Pages owner validates
+   the exact release manifest, copies the edition plus homepage/archive/RSS,
+   commits, pushes, and live-checks the edition and manifests.
+7. Only after successful live verification, record the exact Pages commit in
+   Food Line publication state and append the approved event fingerprints and
+   source URLs to story memory.
+
+The publish command refuses `--publish` without `--push`, any social flag, any
+audio flag, source/Pages drift, partial output, or a stale/different approval.
+No scheduler behavior is changed.

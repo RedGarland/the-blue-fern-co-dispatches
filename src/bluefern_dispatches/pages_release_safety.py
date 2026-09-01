@@ -24,6 +24,7 @@ DEFAULT_SOURCE_BRANCH = "add/pages-repo-default"
 DEFAULT_PAGES_REPO_NAME = "bluefern-dispatches-pages"
 SUPPORTED_DISPATCHES = ("food-line",)
 REQUIRED_FOOD_LINE_ROOT_FILES = ("index.html", "archive.html")
+OPTIONAL_FOOD_LINE_ROOT_FILES = ("rss.xml",)
 FALLBACK_TIME_OUT_SECS = 20
 
 
@@ -154,15 +155,19 @@ def _parse_dates(values: Sequence[str]) -> tuple[str, ...]:
     return tuple(parsed)
 
 
-def _allowed_pages_prefixes(dispatch: str, dates: Sequence[str]) -> list[str]:
-    prefixes = [f"{dispatch}/index.html", f"{dispatch}/archive.html"]
+def _release_root_files(*, include_rss: bool = False) -> tuple[str, ...]:
+    return REQUIRED_FOOD_LINE_ROOT_FILES + (OPTIONAL_FOOD_LINE_ROOT_FILES if include_rss else ())
+
+
+def _allowed_pages_prefixes(dispatch: str, dates: Sequence[str], *, include_rss: bool = False) -> list[str]:
+    prefixes = [f"{dispatch}/{filename}" for filename in _release_root_files(include_rss=include_rss)]
     for date_text in dates:
         prefixes.append(f"{dispatch}/editions/{date_text}/")
     return prefixes
 
 
-def _allowed_source_prefixes(dispatch: str, dates: Sequence[str]) -> list[str]:
-    prefixes = [f"output/site/{dispatch}/index.html", f"output/site/{dispatch}/archive.html"]
+def _allowed_source_prefixes(dispatch: str, dates: Sequence[str], *, include_rss: bool = False) -> list[str]:
+    prefixes = [f"output/site/{dispatch}/{filename}" for filename in _release_root_files(include_rss=include_rss)]
     for date_text in dates:
         prefixes.append(f"output/site/{dispatch}/editions/{date_text}/")
     return prefixes
@@ -187,7 +192,14 @@ def _edition_files(source_root: Path, dispatch: str, date_text: str) -> list[Pat
     return files
 
 
-def _build_copy_plan(source_root: Path, pages_repo: Path, dispatch: str, dates: Sequence[str]) -> CopyPlan:
+def _build_copy_plan(
+    source_root: Path,
+    pages_repo: Path,
+    dispatch: str,
+    dates: Sequence[str],
+    *,
+    include_rss: bool = False,
+) -> CopyPlan:
     if dispatch != "food-line":
         raise ValueError(f"Unsupported dispatch '{dispatch}'. Supported dispatches: {', '.join(SUPPORTED_DISPATCHES)}.")
 
@@ -198,7 +210,7 @@ def _build_copy_plan(source_root: Path, pages_repo: Path, dispatch: str, dates: 
     edition_dirs: list[tuple[Path, Path]] = []
     root_files: list[tuple[Path, Path]] = []
 
-    for filename in REQUIRED_FOOD_LINE_ROOT_FILES:
+    for filename in _release_root_files(include_rss=include_rss):
         source_file = source_root / "output" / "site" / dispatch / filename
         if not source_file.exists():
             raise FileNotFoundError(f"missing required source artifact: {source_file}")
@@ -279,8 +291,14 @@ def _pages_changed_paths(pages_repo: Path) -> list[str]:
     return _git_status_paths(pages_repo)
 
 
-def _changed_paths_within_release_scope(dispatch: str, dates: Sequence[str], changed_paths: Sequence[str]) -> list[str]:
-    allowed_prefixes = _allowed_pages_prefixes(dispatch, dates)
+def _changed_paths_within_release_scope(
+    dispatch: str,
+    dates: Sequence[str],
+    changed_paths: Sequence[str],
+    *,
+    include_rss: bool = False,
+) -> list[str]:
+    allowed_prefixes = _allowed_pages_prefixes(dispatch, dates, include_rss=include_rss)
     return _paths_within_prefixes(changed_paths, allowed_prefixes)
 
 
@@ -370,6 +388,7 @@ def sync_pages_from_source(
     report_file: Path | None = None,
     fetch_status: Callable[[str, int], int] | None = None,
     release_manifest: Path | None = None,
+    include_rss: bool = False,
 ) -> dict[str, Any]:
     if live_check_only and (commit or push):
         return {
@@ -453,7 +472,13 @@ def sync_pages_from_source(
         }
 
     try:
-        plan = _build_copy_plan(source_root, pages_root, dispatch, selected_dates)
+        plan = _build_copy_plan(
+            source_root,
+            pages_root,
+            dispatch,
+            selected_dates,
+            include_rss=include_rss,
+        )
     except FileNotFoundError as exc:
         return {
             "ok": False,
@@ -553,8 +578,8 @@ def sync_pages_from_source(
             "modifications": [entry["pages_path"] for entry in delta_entries if entry["action"] == "modify"],
             "unchanged": [entry["pages_path"] for entry in delta_entries if entry["action"] == "unchanged"],
             "deletions": [],
-            "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates),
-            "allowed_source_prefixes": _allowed_source_prefixes(dispatch, selected_dates),
+            "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates, include_rss=include_rss),
+            "allowed_source_prefixes": _allowed_source_prefixes(dispatch, selected_dates, include_rss=include_rss),
             "warnings": warnings,
             "errors": [] if not live_check_result or live_check_result["ok"] else list(live_check_result["failures"]),
         }
@@ -565,7 +590,12 @@ def sync_pages_from_source(
 
     _copy_selection(plan)
     changed_pages_paths = _pages_changed_paths(pages_root)
-    unexpected_changes = _changed_paths_within_release_scope(dispatch, selected_dates, changed_pages_paths)
+    unexpected_changes = _changed_paths_within_release_scope(
+        dispatch,
+        selected_dates,
+        changed_pages_paths,
+        include_rss=include_rss,
+    )
     errors.extend(public_site_contains_detail_artifacts(source_root / "output" / "site"))
     errors.extend(public_site_contains_blocked_public_text(source_root / "output" / "site"))
     if unexpected_changes:
@@ -593,8 +623,8 @@ def sync_pages_from_source(
             "pages_status": _pages_status_text(pages_root),
             "planned_source_paths": planned_source_paths,
             "planned_pages_paths": planned_pages_paths,
-            "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates),
-            "allowed_source_prefixes": _allowed_source_prefixes(dispatch, selected_dates),
+            "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates, include_rss=include_rss),
+            "allowed_source_prefixes": _allowed_source_prefixes(dispatch, selected_dates, include_rss=include_rss),
             "warnings": warnings,
             "errors": errors,
         }
@@ -604,7 +634,9 @@ def sync_pages_from_source(
         return report
 
     commit_message = _deterministic_commit_message(selected_dates)
-    stage_paths = [f"{dispatch}/index.html", f"{dispatch}/archive.html"] + [f"{dispatch}/editions/{date_text}" for date_text in selected_dates]
+    stage_paths = [f"{dispatch}/{filename}" for filename in _release_root_files(include_rss=include_rss)] + [
+        f"{dispatch}/editions/{date_text}" for date_text in selected_dates
+    ]
     add_result = _run_git(pages_root, "add", "-A", "--", *stage_paths)
     if add_result.returncode != 0:
         return {
@@ -626,8 +658,8 @@ def sync_pages_from_source(
             "pages_status": _pages_status_text(pages_root),
             "planned_source_paths": planned_source_paths,
             "planned_pages_paths": planned_pages_paths,
-            "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates),
-            "allowed_source_prefixes": _allowed_source_prefixes(dispatch, selected_dates),
+            "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates, include_rss=include_rss),
+            "allowed_source_prefixes": _allowed_source_prefixes(dispatch, selected_dates, include_rss=include_rss),
             "warnings": warnings,
             "errors": [add_result.stderr.strip() or add_result.stdout.strip() or "git add failed"],
         }
@@ -654,8 +686,8 @@ def sync_pages_from_source(
             "pages_status": _pages_status_text(pages_root),
             "planned_source_paths": planned_source_paths,
             "planned_pages_paths": planned_pages_paths,
-            "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates),
-            "allowed_source_prefixes": _allowed_source_prefixes(dispatch, selected_dates),
+            "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates, include_rss=include_rss),
+            "allowed_source_prefixes": _allowed_source_prefixes(dispatch, selected_dates, include_rss=include_rss),
             "warnings": warnings,
             "errors": [] if not live_check_result or live_check_result["ok"] else list(live_check_result["failures"]),
         }
@@ -685,8 +717,8 @@ def sync_pages_from_source(
             "pages_status": _source_status_text(pages_root),
             "planned_source_paths": planned_source_paths,
             "planned_pages_paths": planned_pages_paths,
-            "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates),
-            "allowed_source_prefixes": _allowed_source_prefixes(dispatch, selected_dates),
+            "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates, include_rss=include_rss),
+            "allowed_source_prefixes": _allowed_source_prefixes(dispatch, selected_dates, include_rss=include_rss),
             "warnings": warnings,
             "errors": [commit_result.stderr.strip() or commit_result.stdout.strip() or "git commit failed"],
         }
@@ -712,8 +744,8 @@ def sync_pages_from_source(
             "pages_status": _pages_status_text(pages_root),
             "planned_source_paths": planned_source_paths,
             "planned_pages_paths": planned_pages_paths,
-            "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates),
-            "allowed_source_prefixes": _allowed_source_prefixes(dispatch, selected_dates),
+            "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates, include_rss=include_rss),
+            "allowed_source_prefixes": _allowed_source_prefixes(dispatch, selected_dates, include_rss=include_rss),
             "warnings": warnings,
             "errors": [f"pages repo is dirty after commit: {pages_root}"],
         }
@@ -757,8 +789,8 @@ def sync_pages_from_source(
         "pages_status": _pages_status_text(pages_root),
         "planned_source_paths": planned_source_paths,
         "planned_pages_paths": planned_pages_paths,
-        "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates),
-        "allowed_source_prefixes": _allowed_source_prefixes(dispatch, selected_dates),
+        "allowed_pages_prefixes": _allowed_pages_prefixes(dispatch, selected_dates, include_rss=include_rss),
+        "allowed_source_prefixes": _allowed_source_prefixes(dispatch, selected_dates, include_rss=include_rss),
         "warnings": warnings,
         "errors": errors,
         "commit_message": commit_message,

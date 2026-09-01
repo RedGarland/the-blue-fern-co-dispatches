@@ -1108,6 +1108,13 @@ def _food_line_public_edition_listability_report(site_root: Path, edition_date: 
     report["edition_mode"] = str(manifest.get("edition_mode") or "").strip()
     report["source_freshness_status"] = str(manifest.get("source_freshness_status") or "").strip()
     report["skip_reason"] = str(manifest.get("skip_reason") or "").strip()
+    historical_retrospective = (
+        report["edition_mode"] == "historical_retrospective"
+        and manifest.get("retrospective") is True
+        and bool(str(manifest.get("retrospective_disclosure") or "").strip())
+        and bool(str(manifest.get("published_at") or "").strip())
+        and manifest.get("publication_approval") is True
+    )
     report["missing_required_fields"] = [field for field in freshness_keys if field not in manifest]
     if report["dispatch_slug_value"] != "food-line":
         report["false_or_invalid_fields"].append("dispatch_slug")
@@ -1129,7 +1136,7 @@ def _food_line_public_edition_listability_report(site_root: Path, edition_date: 
         report["reasons"].append("freshness_window_days is missing or invalid")
     else:
         report["freshness_window_days"] = freshness_window_days
-        if freshness_window_days <= 0:
+        if freshness_window_days <= 0 and not historical_retrospective:
             report["false_or_invalid_fields"].append("freshness_window_days")
             report["reasons"].append("freshness_window_days must be greater than zero")
     try:
@@ -1147,7 +1154,7 @@ def _food_line_public_edition_listability_report(site_root: Path, edition_date: 
         elif qualified_primary_count <= 0:
             report["false_or_invalid_fields"].append("qualified_primary_count")
             report["reasons"].append("current_update editions require qualified_primary_count greater than 0")
-        elif report["edition_mode"] != "current_update":
+        elif report["edition_mode"] not in {"current_update", "historical_retrospective"}:
             report["false_or_invalid_fields"].append("edition_mode")
             report["reasons"].append(f"edition_mode must be current_update for public Food Line editions (found {report['edition_mode'] or 'missing'})")
     if report["skip_reason"]:
@@ -1162,13 +1169,14 @@ def _food_line_public_edition_listability_report(site_root: Path, edition_date: 
         and report["public_rendered"] is True
         and report["source_freshness_status"] != ""
         and report["freshness_window_days"] is not None
-        and int(report["freshness_window_days"]) > 0
+        and (int(report["freshness_window_days"]) > 0 or historical_retrospective)
         and report["qualified_primary_count"] is not None
         and (
             (report["edition_mode"] == "no_current_update" and int(report["qualified_primary_count"]) == 0)
             or (report["edition_mode"] == "current_update" and int(report["qualified_primary_count"]) > 0)
+            or (historical_retrospective and int(report["qualified_primary_count"]) > 0)
         )
-        and report["edition_mode"] in {"current_update", "no_current_update"}
+        and report["edition_mode"] in {"current_update", "no_current_update", "historical_retrospective"}
         and not report["skip_reason"]
     )
     return report

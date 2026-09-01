@@ -34,6 +34,15 @@ python scripts\sync_pages_from_source.py --dispatch food-line --dates YYYY-MM-DD
 
 Release-manifest validation hashes every source and pre-sync Pages file, verifies the exact source-to-Pages mapping and action, requires a clean Pages checkout, and fails if a generated edition file is missing from the manifest. Unrelated source-repository dirt is ignored only because it is absent from the hashed copy plan; it is neither copied nor treated as release input.
 
+Approved migrated-event retrospectives use the same owner with an additional
+internal `include_rss` gate. Their generated-output role is accepted only when
+the release manifest resolves an exact committed retrospective approval from
+an approval-only commit, proves that commit was normally merged behind the
+current source commit, validates its authority flags and SHA-256 against the
+raw Git blob, and matches the clean pre-publish Pages HEAD. This exception does
+not change the default daily copy plan: ordinary releases still copy only the
+homepage, archive, and selected edition directories.
+
 ## Commit And Push
 
 ```powershell
@@ -70,6 +79,10 @@ The script only copies these Food Line paths:
 - `output/site/food-line/index.html`
 - `output/site/food-line/archive.html`
 - `output/site/food-line/editions/YYYY-MM-DD/`
+
+The retrospective publication owner may additionally include
+`output/site/food-line/rss.xml` when its committed approval and exact release
+manifest validate. RSS remains outside the default daily copy plan.
 
 That means it refuses to copy:
 

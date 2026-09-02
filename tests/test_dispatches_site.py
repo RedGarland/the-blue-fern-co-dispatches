@@ -3143,6 +3143,92 @@ def test_gaza_public_lists_merge_pages_repo_history_when_local_site_is_sparser(t
         assert "2026-07-03" in body
 
 
+def test_gaza_public_lists_do_not_apply_later_runner_dedupe_to_pages_history(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    pages_root = tmp_path / "bluefern-dispatches-pages"
+    add_gaza_public_history_surface(
+        pages_root,
+        ["2026-08-29", "2026-08-28"],
+        audio_dates=["2026-08-29", "2026-08-28"],
+    )
+    add_gaza_public_history_surface(site_root, [])
+    for edition_date in ("2026-08-28", "2026-08-29"):
+        add_gaza_site_edition(pages_root, edition_date)
+    for edition_date in ("2026-09-01", "2026-09-02"):
+        add_gaza_site_edition(site_root, edition_date)
+    add_gaza_site_edition(site_root, "2026-08-29")
+
+    later_dedupe = tmp_path / "data" / "dispatches" / "gaza" / "editions" / "2026-08-29" / "dedupe_report.json"
+    later_dedupe.parent.mkdir(parents=True, exist_ok=True)
+    later_dedupe.write_text(
+        json.dumps(
+            {
+                "input_candidate_count": 12,
+                "kept_candidate_count": 0,
+                "suppressed_candidate_count": 1,
+            }
+        ),
+        encoding="utf-8",
+    )
+    audio_files = [
+        pages_root / "gaza" / "audio" / "index.html",
+        pages_root / "gaza" / "audio" / "podcast.xml",
+        pages_root / "gaza" / "podcast.xml",
+    ]
+    audio_before = {path: path.read_bytes() for path in audio_files}
+
+    dates = generator.discover_public_edition_dates(site_root, "gaza", pages_repo=pages_root)
+    dispatch = DispatchConfig(
+        slug="gaza",
+        name="Dispatches From Gaza",
+        edition_date="2026-09-02",
+        tagline="Daily briefing",
+        logo="gaza-logo.png",
+        sources=[],
+        stories=[],
+        detail_artifacts=[],
+    )
+    archive_html = generator.render_archive_for_dates(dispatch, dates, site_root)
+    rss_xml = generator.render_rss_for_dates(dispatch, dates, site_root)
+
+    assert dates == ["2026-09-02", "2026-09-01", "2026-08-29", "2026-08-28"]
+    assert generator._gaza_public_edition_is_listable(site_root, "2026-08-28", pages_root) is True
+    assert generator._gaza_public_edition_is_listable(site_root, "2026-08-29", pages_root) is True
+    assert generator._gaza_public_edition_is_listable(site_root, "2026-09-01", pages_root) is True
+    assert generator._gaza_public_edition_is_listable(site_root, "2026-09-02", pages_root) is True
+    assert "2026-08-29" in archive_html
+    assert "2026-08-29" in rss_xml
+    assert {path: path.read_bytes() for path in audio_files} == audio_before
+
+
+def test_gaza_pages_history_still_rejects_malformed_edition(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    pages_root = tmp_path / "bluefern-dispatches-pages"
+    edition = pages_root / "gaza" / "editions" / "2026-08-29"
+    edition.mkdir(parents=True)
+    (edition / "edition_manifest.json").write_text("{not-json", encoding="utf-8")
+    (edition / "sources_manifest.json").write_text(json.dumps([{"source_id": "source-1"}]), encoding="utf-8")
+    (edition / "curation_manifest.json").write_text(json.dumps([{"story_id": "story-1"}]), encoding="utf-8")
+
+    assert generator._gaza_public_edition_is_listable(site_root, "2026-08-29", pages_root) is False
+    assert generator.discover_public_edition_dates(site_root, "gaza", pages_repo=pages_root) == []
+
+
+def test_gaza_local_edition_with_failed_dedupe_remains_unlistable(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    add_gaza_public_history_surface(site_root, [])
+    add_gaza_site_edition(site_root, "2026-09-02")
+    dedupe_path = tmp_path / "data" / "dispatches" / "gaza" / "editions" / "2026-09-02" / "dedupe_report.json"
+    dedupe_path.parent.mkdir(parents=True, exist_ok=True)
+    dedupe_path.write_text(
+        json.dumps({"input_candidate_count": 8, "kept_candidate_count": 0}),
+        encoding="utf-8",
+    )
+
+    assert generator._gaza_public_edition_is_listable(site_root, "2026-09-02") is False
+    assert generator.discover_public_edition_dates(site_root, "gaza") == []
+
+
 def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch):
     repo = Path(__file__).parent.parent
     work = repo / "output" / "test-runs" / uuid.uuid4().hex / "repo"

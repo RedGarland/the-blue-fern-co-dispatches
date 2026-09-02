@@ -1364,7 +1364,8 @@ def _gaza_public_edition_dirs(site_root: Path, pages_repo: Path | None = None) -
 def _gaza_public_edition_is_listable(site_root: Path, edition_date: str, pages_repo: Path | None = None) -> bool:
     repo_root = site_root.parents[1]
     pages_repo = _pages_repo_root_for_site_root(site_root, pages_repo)
-    candidate_dirs = [site_root / "gaza" / "editions" / edition_date]
+    local_edition_dir = site_root / "gaza" / "editions" / edition_date
+    candidate_dirs = [local_edition_dir]
     if pages_repo is not None:
         candidate_dirs.append(pages_repo / "gaza" / "editions" / edition_date)
     for edition_dir in candidate_dirs:
@@ -1407,8 +1408,14 @@ def _gaza_public_edition_is_listable(site_root: Path, edition_date: str, pages_r
         story_count = len(curation_payload) if curation_payload is not None else int(manifest.get("story_count", 0) or 0)
         if source_count <= 0 or story_count <= 0:
             continue
-        dedupe_path = repo_root / "data" / "dispatches" / "gaza" / "editions" / edition_date / "dedupe_report.json"
-        if dedupe_path.exists():
+        # A Pages edition is an immutable publication record. Do not let a later
+        # same-date runner attempt's mutable dedupe report invalidate it.
+        dedupe_path = (
+            repo_root / "data" / "dispatches" / "gaza" / "editions" / edition_date / "dedupe_report.json"
+            if edition_dir == local_edition_dir
+            else None
+        )
+        if dedupe_path is not None and dedupe_path.exists():
             try:
                 dedupe_payload = json.loads(dedupe_path.read_text(encoding="utf-8"))
             except (OSError, json.JSONDecodeError):

@@ -23,6 +23,7 @@ from bluefern_dispatches.food_line_retrospective import (
 )
 from bluefern_dispatches.pages_release_safety import sync_pages_from_source
 from scripts.run_food_line_dispatch import run_food_line_dispatch
+from scripts.run_food_line_retrospective_batches import run_atomic_retrospective_batches
 
 
 DEFECTIVE = "Aug. 1Ã¢â‚¬â€œ19"
@@ -526,3 +527,48 @@ def test_partial_generated_output_is_rejected(tmp_path: Path, retrospective_case
     (source / "output/site/food-line/editions/2026-08-31/claim_ledger.html").unlink()
     with pytest.raises(FoodLineRetrospectiveError, match="incomplete or unsafe"):
         verify_complete_output(source, bundle)
+
+
+def test_two_approvals_publish_in_one_pages_commit_and_record_nine_events(
+    tmp_path: Path, retrospective_case: dict
+) -> None:
+    case = retrospective_case
+    source = _clone(case["root"], tmp_path / "atomic-source")
+    pages = _clone(case["pages"], tmp_path / "atomic-pages")
+    _git(pages, "config", "user.name", "Fixture")
+    _git(pages, "config", "user.email", "fixture@example.invalid")
+    bundles = [
+        load_retrospective_plan(
+            source, pages, approval_commit=case["approval_commit"], approval_path=path,
+            publication_timestamp="2026-09-01T12:00:00Z",
+        )
+        for path in case["approval_paths"]
+    ]
+    result = run_atomic_retrospective_batches(
+        source_root=source,
+        pages_root=pages,
+        source_branch="protected",
+        pages_branch="gh-pages",
+        approval_commits=[case["approval_commit"], case["approval_commit"]],
+        approval_paths=case["approval_paths"],
+        publication_timestamp="2026-09-01T12:00:00Z",
+        commit_pages=True,
+        push_pages=False,
+        live_check=False,
+        record_publication=False,
+    )
+    assert result["edition_dates"] == ["2026-08-30", "2026-08-31"]
+    assert result["story_counts"] == [6, 3]
+    pages_commit = str(result["pages_result"]["commit_hash"])
+    assert _git(pages, "rev-parse", "HEAD^") == _git(case["pages"], "rev-parse", "HEAD")
+    assert (pages / "food-line/editions/2026-08-30/index.html").is_file()
+    assert (pages / "food-line/editions/2026-08-31/index.html").is_file()
+    rss = (pages / "food-line/rss.xml").read_text(encoding="utf-8")
+    assert "/2026-08-30/" in rss and "/2026-08-31/" in rss
+    recordings = [
+        record_retrospective_publication(source, pages, bundle, pages_commit=pages_commit, live_check_ok=True)
+        for bundle in bundles
+    ]
+    assert [row["story_memory_rows"] for row in recordings] == [6, 3]
+    memory = json.loads((source / "data/records/story_memory.json").read_text(encoding="utf-8"))
+    assert sum(1 for row in memory if row.get("retrospective") is True) == 9

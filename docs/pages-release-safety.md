@@ -84,6 +84,12 @@ The retrospective publication owner may additionally include
 `output/site/food-line/rss.xml` when its committed approval and exact release
 manifest validate. RSS remains outside the default daily copy plan.
 
+When two or more committed retrospective approvals bind the same clean Pages
+HEAD, the batch owner supplies one exact manifest per date and the guarded sync
+copies all selected edition directories and the final shared roots in one
+Pages commit. Publishing those approvals sequentially is intentionally
+rejected after the first commit advances Pages.
+
 That means it refuses to copy:
 
 - `output/site/assets/`

@@ -308,11 +308,15 @@ The sanctioned sequence is:
 3. Run `plan` twice.
 4. Create and verify a deterministic preview under a private directory outside
    the repository.
-5. Run the normal Food Line generator with the committed approval and actual
-   publication timestamp.
+5. For one approval, run the normal Food Line generator with the committed
+   approval and actual publication timestamp. For approvals that share one
+   pre-publish Pages binding, use
+   `scripts/run_food_line_retrospective_batches.py`; it validates every
+   approval before writing and generates all members before Pages changes.
 6. Publish with `--publish --push`; the existing guarded Pages owner validates
-   the exact release manifest, copies the edition plus homepage/archive/RSS,
-   commits, pushes, and live-checks the edition and manifests.
+   one exact release manifest per date, copies all approved editions plus the
+   final homepage/archive/RSS, makes one atomic Pages commit, pushes, and
+   live-checks every edition and manifest.
 7. Only after successful live verification, record the exact Pages commit in
    Food Line publication state and append the approved event fingerprints and
    source URLs to story memory.

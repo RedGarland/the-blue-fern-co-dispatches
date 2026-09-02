@@ -7244,14 +7244,22 @@ def _run_food_line_retrospective(
     audio_voice: str,
     audio_format: str,
     audio_timeout_seconds: float,
+    prevalidated_bundle: RetrospectiveBundle | None = None,
 ) -> dict[str, Any]:
-    bundle = load_retrospective_plan(
+    bundle = prevalidated_bundle or load_retrospective_plan(
         root,
         pages_root,
         approval_commit=approval_commit,
         approval_path=approval_path,
         publication_timestamp=publication_timestamp,
     )
+    if prevalidated_bundle is not None and (
+        bundle.approval.commit != approval_commit
+        or bundle.approval.path != approval_path
+        or bundle.publication_timestamp != publication_timestamp
+        or bundle.pages_head != _food_line_source_commit(pages_root)
+    ):
+        raise ValueError("prevalidated retrospective bundle bindings drifted")
     if bundle.edition_date != date:
         raise ValueError("retrospective approval edition date does not match --date")
     if (generate_audio or require_audio or force_audio_regenerate) and not bundle.audio_authorized:
@@ -7449,6 +7457,70 @@ def _run_food_line_retrospective(
         "_retrospective_bundle": bundle,
         "errors": [],
     }
+
+
+def generate_prevalidated_food_line_retrospective(
+    root: Path,
+    pages_root: Path,
+    bundle: RetrospectiveBundle,
+) -> dict[str, Any]:
+    """Generate one already-validated member of an atomic retrospective batch set."""
+    return _run_food_line_retrospective(
+        root.resolve(),
+        bundle.edition_date,
+        pages_root=pages_root.resolve(),
+        approval_commit=bundle.approval.commit,
+        approval_path=bundle.approval.path,
+        publication_timestamp=bundle.publication_timestamp,
+        generate_audio=False,
+        require_audio=False,
+        force_audio_regenerate=False,
+        tts_provider="openai",
+        audio_model="gpt-4o-mini-tts",
+        audio_voice="alloy",
+        audio_format="mp3",
+        audio_timeout_seconds=120.0,
+        prevalidated_bundle=bundle,
+    )
+
+
+def refresh_food_line_retrospective_release_manifest(
+    root: Path,
+    pages_root: Path,
+    bundle: RetrospectiveBundle,
+) -> Path:
+    root = root.resolve()
+    pages_root = pages_root.resolve()
+    edition = root / "output" / "site" / DISPATCH_SLUG / "editions" / bundle.edition_date
+    source_paths = [
+        root / "output" / "site" / DISPATCH_SLUG / "index.html",
+        root / "output" / "site" / DISPATCH_SLUG / "archive.html",
+        root / "output" / "site" / DISPATCH_SLUG / "rss.xml",
+        *sorted(path for path in edition.rglob("*") if path.is_file()),
+    ]
+    manifest = build_release_manifest(
+        root=root,
+        pages_root=pages_root,
+        edition_date=bundle.edition_date,
+        source_commit=bundle.source_head,
+        source_paths=source_paths,
+        provenance_role="approved_retrospective_generated_output",
+    )
+    manifest.update(
+        {
+            "release_mode": "approved_migrated_event_retrospective",
+            "approval_commit": bundle.approval.commit,
+            "approval_path": bundle.approval.path,
+            "approval_sha256": bundle.approval.sha256,
+            "ordered_rendered_copy_sha256": bundle.approval.payload["ordered_rendered_copy_sha256"],
+            "pages_pre_publish_commit": bundle.pages_head,
+            "publication_timestamp": bundle.publication_timestamp,
+            "expected_public_paths": list(bundle.expected_public_paths),
+        }
+    )
+    path = root / "data" / "dispatches" / DISPATCH_SLUG / "review" / "releases" / f"{bundle.edition_date}.json"
+    write_json_deterministic(path, manifest)
+    return path
 
 
 def _food_line_release_candidate_paths(root: Path, date: str) -> dict[str, Path]:

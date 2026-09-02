@@ -239,7 +239,11 @@ def _build_copy_plan(
     )
 
 
-def _validate_declared_scope(plan: CopyPlan, pages_branch: str, release_manifest: Path | None = None) -> list[str]:
+def _validate_declared_scope(
+    plan: CopyPlan,
+    pages_branch: str,
+    release_manifests: dict[str, Path] | None = None,
+) -> list[str]:
     errors: list[str] = []
     for date_text in plan.dates:
         source_paths = [str(path.relative_to(plan.source_root)) for path in plan.source_paths if f"/editions/{date_text}/" in _normalize_relpath(path)]
@@ -263,7 +267,7 @@ def _validate_declared_scope(plan: CopyPlan, pages_branch: str, release_manifest
                 strict=True,
                 source_changed_paths=source_paths,
                 pages_changed_paths=pages_paths,
-                release_manifest_path=release_manifest,
+                release_manifest_path=(release_manifests or {}).get(date_text),
             )
         )
     return errors
@@ -388,6 +392,7 @@ def sync_pages_from_source(
     report_file: Path | None = None,
     fetch_status: Callable[[str, int], int] | None = None,
     release_manifest: Path | None = None,
+    release_manifests: Sequence[Path] | None = None,
     include_rss: bool = False,
 ) -> dict[str, Any]:
     if live_check_only and (commit or push):
@@ -413,8 +418,23 @@ def sync_pages_from_source(
     selected_dates = _parse_dates(dates)
     if not selected_dates:
         return {"ok": False, "errors": ["At least one YYYY-MM-DD date must be provided."]}
+    if release_manifest is not None and release_manifests:
+        return {"ok": False, "errors": ["release_manifest and release_manifests cannot be combined."]}
     if release_manifest is not None and len(selected_dates) != 1:
         return {"ok": False, "errors": ["--release-manifest currently requires exactly one release date."]}
+    manifest_paths = [release_manifest] if release_manifest is not None else list(release_manifests or [])
+    manifest_by_date: dict[str, Path] = {}
+    for manifest_path in manifest_paths:
+        try:
+            manifest_payload = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+            return {"ok": False, "errors": [f"unable to read release manifest {manifest_path}: {exc}"]}
+        manifest_date = str(manifest_payload.get("edition_date") or "") if isinstance(manifest_payload, dict) else ""
+        if manifest_date not in selected_dates or manifest_date in manifest_by_date:
+            return {"ok": False, "errors": ["release manifests must bind each selected date exactly once."]}
+        manifest_by_date[manifest_date] = Path(manifest_path).resolve()
+    if manifest_paths and set(manifest_by_date) != set(selected_dates):
+        return {"ok": False, "errors": ["release manifests must cover every selected date exactly once."]}
 
     source_root = (source_repo or Path(__file__).resolve().parents[2]).resolve()
     pages_root = (pages_repo or (source_root / DEFAULT_PAGES_REPO_NAME)).resolve()
@@ -442,9 +462,9 @@ def sync_pages_from_source(
 
     if source_branch != require_source_branch:
         errors.append(f"source branch mismatch: expected {require_source_branch}, found {source_branch or '<detached>'}")
-    if not dry_run and release_manifest is None and not _food_line_source_repo_clean(source_root):
+    if not dry_run and not manifest_paths and not _food_line_source_repo_clean(source_root):
         errors.append(f"source repo must be clean before sync: {source_root}")
-    if (not dry_run or release_manifest is not None) and not _repo_clean(pages_root):
+    if (not dry_run or manifest_paths) and not _repo_clean(pages_root):
         errors.append(f"pages repo must be clean before sync: {pages_root}")
     if pages_pre_branch != pages_branch:
         errors.append(f"pages repo branch mismatch: expected {pages_branch}, found {pages_pre_branch or '<detached>'}")
@@ -500,7 +520,7 @@ def sync_pages_from_source(
             "source_status": _source_status_text(source_root),
             "pages_status": _pages_status_text(pages_root),
         }
-    scope_errors = _validate_declared_scope(plan, pages_branch, release_manifest=release_manifest)
+    scope_errors = _validate_declared_scope(plan, pages_branch, release_manifests=manifest_by_date)
     pre_copy_errors = []
     pre_copy_errors.extend(public_site_contains_detail_artifacts(source_root / "output" / "site"))
     pre_copy_errors.extend(public_site_contains_blocked_public_text(source_root / "output" / "site"))
@@ -817,6 +837,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--cache-bust", help="Optional cache-bust token appended to live-check URLs.")
     parser.add_argument("--report-file", help="Optional JSON report file path.")
     parser.add_argument("--release-manifest", help="Exact release manifest to validate before any source-to-Pages copy.")
+    parser.add_argument("--release-manifests", nargs="+", help="One exact release manifest per selected date for one atomic multi-date release.")
     return parser
 
 
@@ -838,6 +859,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         cache_bust=args.cache_bust,
         report_file=Path(args.report_file).resolve() if args.report_file else None,
         release_manifest=Path(args.release_manifest).resolve() if args.release_manifest else None,
+        release_manifests=[Path(path).resolve() for path in args.release_manifests] if args.release_manifests else None,
     )
     print(json.dumps(report, indent=2))
     return 0 if report.get("ok") else 1

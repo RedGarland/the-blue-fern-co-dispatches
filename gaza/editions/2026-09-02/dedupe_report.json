@@ -1,0 +1,546 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-09-02",
+  "candidates_seen": 11,
+  "included_stories": [
+    {
+      "story_id": "gaza-story-2026-09-02-009",
+      "title": "Two Palestinians killed as settlers, Israeli forces raid West Bank village",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-006",
+      "title": "UK must end all trade with Israel, says co-founder of BDS movement",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-001",
+      "title": "More than 900 killed in Gaza this year despite ceasefire, Hamas-run health ministry says",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "reports_new_numbers"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-002",
+      "title": "Israel says Hamas security chief captured as strikes kill four during Gaza raid",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-012",
+      "title": "Will the EU take action against Israel?",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-007",
+      "title": "Ed Miliband promises 'comprehensive reset' of UK policy toward Israel",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-011",
+      "title": "Dreams shattered: Gaza amputees struggle under blockade and rubble",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-005",
+      "title": "Israel 'seeking Trump's support for plan to expel Palestinians from Gaza'",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-010",
+      "title": "Israeli protesters call for an end to settler violence",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-008",
+      "title": "Israel still wants to remove Palestinians from Gaza, defence minister says",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-003",
+      "title": "UK raises case of British activist detained by settlers in West Bank with Israel",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "duplicate_skipped": [],
+  "continuing_developments": [],
+  "major_updates": [
+    {
+      "story_id": "gaza-story-2026-09-02-009",
+      "title": "Two Palestinians killed as settlers, Israeli forces raid West Bank village",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "watchlist_status": "publication_candidate",
+      "prior_story_matched": "gaza-story-2026-08-04-009",
+      "prior_edition_date": "2026-08-04",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-006",
+      "title": "UK must end all trade with Israel, says co-founder of BDS movement",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-08-29-011",
+      "prior_edition_date": "2026-08-29",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-001",
+      "title": "More than 900 killed in Gaza this year despite ceasefire, Hamas-run health ministry says",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "reports_new_numbers"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-08-05-002",
+      "prior_edition_date": "2026-08-05",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-002",
+      "title": "Israel says Hamas security chief captured as strikes kill four during Gaza raid",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-07-23-003",
+      "prior_edition_date": "2026-07-23",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-012",
+      "title": "Will the EU take action against Israel?",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-08-26-006",
+      "prior_edition_date": "2026-08-26",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-007",
+      "title": "Ed Miliband promises 'comprehensive reset' of UK policy toward Israel",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-005",
+      "title": "Israel 'seeking Trump's support for plan to expel Palestinians from Gaza'",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-07-23-003",
+      "prior_edition_date": "2026-07-23",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-010",
+      "title": "Israeli protesters call for an end to settler violence",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-08-29-008",
+      "prior_edition_date": "2026-08-29",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-008",
+      "title": "Israel still wants to remove Palestinians from Gaza, defence minister says",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "watchlist_status": "publication_candidate",
+      "prior_story_matched": "gaza-story-2026-07-23-003",
+      "prior_edition_date": "2026-07-23",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-003",
+      "title": "UK raises case of British activist detained by settlers in West Bank with Israel",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "merged_sources": 0,
+  "duplicate_groups": [],
+  "reasons": [
+    {
+      "story_id": "gaza-story-2026-09-02-009",
+      "title": "Two Palestinians killed as settlers, Israeli forces raid West Bank village",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "watchlist_status": "publication_candidate",
+      "prior_story_matched": "gaza-story-2026-08-04-009",
+      "prior_edition_date": "2026-08-04",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-006",
+      "title": "UK must end all trade with Israel, says co-founder of BDS movement",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-08-29-011",
+      "prior_edition_date": "2026-08-29",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-001",
+      "title": "More than 900 killed in Gaza this year despite ceasefire, Hamas-run health ministry says",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "reports_new_numbers"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-08-05-002",
+      "prior_edition_date": "2026-08-05",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-002",
+      "title": "Israel says Hamas security chief captured as strikes kill four during Gaza raid",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-07-23-003",
+      "prior_edition_date": "2026-07-23",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-012",
+      "title": "Will the EU take action against Israel?",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-08-26-006",
+      "prior_edition_date": "2026-08-26",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-007",
+      "title": "Ed Miliband promises 'comprehensive reset' of UK policy toward Israel",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-011",
+      "title": "Dreams shattered: Gaza amputees struggle under blockade and rubble",
+      "classification": "new",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": null,
+      "prior_edition_date": null,
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-005",
+      "title": "Israel 'seeking Trump's support for plan to expel Palestinians from Gaza'",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-07-23-003",
+      "prior_edition_date": "2026-07-23",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-010",
+      "title": "Israeli protesters call for an end to settler violence",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-08-29-008",
+      "prior_edition_date": "2026-08-29",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-008",
+      "title": "Israel still wants to remove Palestinians from Gaza, defence minister says",
+      "classification": "major_update",
+      "material_update": false,
+      "material_update_reasons": [],
+      "duplicate_reasons": [],
+      "watchlist_status": "publication_candidate",
+      "prior_story_matched": "gaza-story-2026-07-23-003",
+      "prior_edition_date": "2026-07-23",
+      "include_decision": "include",
+      "public_rendered": true
+    },
+    {
+      "story_id": "gaza-story-2026-09-02-003",
+      "title": "UK raises case of British activist detained by settlers in West Bank with Israel",
+      "classification": "major_update",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_source_url_different_publisher"
+      ],
+      "duplicate_reasons": [],
+      "watchlist_status": "material_follow_up",
+      "prior_story_matched": "gaza-story-2026-05-28-004",
+      "prior_edition_date": "2026-05-28",
+      "include_decision": "include",
+      "public_rendered": true
+    }
+  ],
+  "prior_editions_checked": [
+    "2026-08-29",
+    "2026-08-28",
+    "2026-08-26",
+    "2026-08-25",
+    "2026-08-24",
+    "2026-08-23",
+    "2026-08-22",
+    "2026-08-20",
+    "2026-08-19",
+    "2026-08-18",
+    "2026-08-17",
+    "2026-08-16",
+    "2026-08-15",
+    "2026-08-12",
+    "2026-08-08",
+    "2026-08-07",
+    "2026-08-05",
+    "2026-08-04",
+    "2026-08-03",
+    "2026-08-01",
+    "2026-07-31",
+    "2026-07-30",
+    "2026-07-29",
+    "2026-07-28",
+    "2026-07-27",
+    "2026-07-26",
+    "2026-07-25",
+    "2026-07-24",
+    "2026-07-23",
+    "2026-07-21",
+    "2026-07-20",
+    "2026-07-19",
+    "2026-07-18",
+    "2026-07-17",
+    "2026-07-16",
+    "2026-07-15",
+    "2026-07-13",
+    "2026-07-11",
+    "2026-07-10",
+    "2026-07-08",
+    "2026-07-06",
+    "2026-07-05",
+    "2026-07-04",
+    "2026-07-03",
+    "2026-07-02",
+    "2026-07-01",
+    "2026-06-30",
+    "2026-06-29",
+    "2026-06-28",
+    "2026-06-27",
+    "2026-06-26",
+    "2026-06-25",
+    "2026-06-24",
+    "2026-06-22",
+    "2026-06-21",
+    "2026-06-20",
+    "2026-06-19",
+    "2026-06-18",
+    "2026-06-17",
+    "2026-06-16",
+    "2026-06-15",
+    "2026-06-14",
+    "2026-06-13",
+    "2026-06-12",
+    "2026-06-11",
+    "2026-06-10",
+    "2026-06-09",
+    "2026-06-08",
+    "2026-06-07",
+    "2026-06-06",
+    "2026-06-05",
+    "2026-06-04",
+    "2026-06-03",
+    "2026-06-02",
+    "2026-06-01",
+    "2026-05-31",
+    "2026-05-30",
+    "2026-05-29",
+    "2026-05-28",
+    "2026-05-27",
+    "2026-05-26",
+    "2026-05-25",
+    "2026-05-24",
+    "2026-05-23",
+    "2026-05-22",
+    "2026-05-21",
+    "2026-05-20",
+    "2026-05-19",
+    "2026-05-18",
+    "2026-05-17",
+    "2026-05-16",
+    "2026-05-15",
+    "2026-05-14",
+    "2026-05-13",
+    "2026-05-12",
+    "2026-05-11",
+    "2026-05-10",
+    "2026-05-09",
+    "2026-05-08",
+    "2026-05-07",
+    "2026-05-06",
+    "2026-05-05",
+    "2026-05-04",
+    "2026-05-03",
+    "2026-04-30"
+  ]
+}

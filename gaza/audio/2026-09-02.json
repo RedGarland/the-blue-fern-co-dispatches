@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-09-02",
+  "generated_at": "2026-09-02T23:22:46.178987Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-09-02.mp3",
+  "audio_url": "/gaza/audio/2026-09-02.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1943,
+  "tts_input_word_count": 308,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1906560,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-09-02T23:22:46.178951Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-09-02-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-09-02/",
+  "script_text": "This is the Gaza Dispatch audio briefing for September 2, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Two Palestinians killed as settlers, Israeli forces raid West Bank village. Teenagers killed in settlers attack on al-Mughayyer as West Bank violence continues. This was reported by Al Jazeera.\n\n2. UK must end all trade with Israel, says co-founder of BDS movement. Exclusive: sanctions against ministers and settler groups are 'smoke and mirrors cop-out' says Omar Barghouti Britain's legal and ethical obligation to stop a genocide in Gaza requires it to take bigger steps than halting trade with illegal Israeli settlements or imposing further sanctions, Omar Barghouti, the co-founder of the Boycott, Divestment, Sanctions (BDS) movement has said. This was reported by The Guardian.\n\n3. More than 900 killed in Gaza this year despite ceasefire, Hamas-run health ministry says. The ministry says the total number of people killed in the Strip since 10 October is now more than 1,300, including 301 children. This was reported by BBC News.\n\n4. Israel says Hamas security chief captured as strikes kill four during Gaza raid. The Israeli military says it carried out strikes in Gaza City during a raid by special forces to capture the head of Hamas's internal security service. This was reported by BBC News.\n\n5. Will the EU take action against Israel? Surge in Israeli settler attacks against Palestinians. This was reported by Al Jazeera.\n\n6. Ed Miliband promises 'comprehensive reset' of UK policy toward Israel. Foreign secretary tells MPs he will try to stop illegal settlements carving up the West Bank Ed Miliband has promised to \"reset\" Britain's policy on Israel, saying he will try to stop British companies helping build settlements in the West Bank. This was reported by The Guardian.\n\nFor the full source-backed dispatch, read the September 2, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-09-02-aljazeera-middle-east-ab3be734fce2",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/9/2/two-palestinian-killed-as-settlers-israeli-forces-raid-west-bank-village?traffic_source=rss",
+      "title": "Two Palestinians killed as settlers, Israeli forces raid West Bank village"
+    },
+    {
+      "source_record_id": "gaza-2026-09-02-guardian-world-2660731f5e97",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/sep/02/uk-must-end-all-trade-with-israel-says-co-founder-of-bds-movement",
+      "title": "UK must end all trade with Israel, says co-founder of BDS movement"
+    },
+    {
+      "source_record_id": "gaza-2026-09-02-bbc-middle-east-bced4ab5d2be",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/c7708dy33pdo?at_medium=RSS&at_campaign=rss",
+      "title": "More than 900 killed in Gaza this year despite ceasefire, Hamas-run health ministry says"
+    },
+    {
+      "source_record_id": "gaza-2026-09-02-bbc-middle-east-60222b3aa6c7",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/c1wxex4vg35o?at_medium=RSS&at_campaign=rss",
+      "title": "Israel says Hamas security chief captured as strikes kill four during Gaza raid"
+    },
+    {
+      "source_record_id": "gaza-2026-09-02-aljazeera-middle-east-38626cafac14",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/inside-story/2026/9/2/will-the-eu-take-action-against-israel?traffic_source=rss",
+      "title": "Will the EU take action against Israel?"
+    },
+    {
+      "source_record_id": "gaza-2026-09-02-guardian-world-60dcd11496a8",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/politics/2026/sep/01/ed-miliband-promises-reset-of-uk-policy-toward-israel",
+      "title": "Ed Miliband promises 'comprehensive reset' of UK policy toward Israel"
+    }
+  ]
+}

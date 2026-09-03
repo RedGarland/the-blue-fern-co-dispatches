@@ -15,8 +15,10 @@ from urllib.parse import urlsplit
 
 
 CORRECTION_SCHEMA = "food_line_retrospective_public_copy_correction_v1"
-APPROVAL_REQUEST_SCHEMA = "food_line_retrospective_approval_request_v1"
-APPROVAL_SCHEMA = "food_line_retrospective_approval_v1"
+LEGACY_APPROVAL_REQUEST_SCHEMA = "food_line_retrospective_approval_request_v1"
+LEGACY_APPROVAL_SCHEMA = "food_line_retrospective_approval_v1"
+APPROVAL_REQUEST_SCHEMA = "food_line_retrospective_approval_request_v2"
+APPROVAL_SCHEMA = "food_line_retrospective_approval_v2"
 PLAN_SCHEMA = "food_line_retrospective_publication_plan_v1"
 PREVIEW_SCHEMA = "food_line_retrospective_private_preview_v1"
 PUBLICATION_STATE_SCHEMA = "food_line_retrospective_publication_state_v1"
@@ -387,7 +389,46 @@ def _apply_overlay(decision: CommittedJson, overlay: CommittedJson | None) -> tu
 def approval_path_for(batch_id: str) -> str:
     if not RETROSPECTIVE_BATCH_RE.fullmatch(str(batch_id or "")):
         raise FoodLineRetrospectiveError("retrospective batch ID is malformed")
+    return f"{APPROVAL_PREFIX}{batch_id}-approval-v2.json"
+
+
+def legacy_v1_approval_path_for(batch_id: str) -> str:
+    if not RETROSPECTIVE_BATCH_RE.fullmatch(str(batch_id or "")):
+        raise FoodLineRetrospectiveError("retrospective batch ID is malformed")
     return f"{APPROVAL_PREFIX}{batch_id}-approval.json"
+
+
+def _batch_id_from_v2_approval_path(approval_path: str) -> str:
+    if not approval_path.startswith(APPROVAL_PREFIX) or not approval_path.endswith("-approval-v2.json"):
+        raise FoodLineRetrospectiveError("retrospective approval must use the owner-derived V2 approval path")
+    batch_id = approval_path[len(APPROVAL_PREFIX) : -len("-approval-v2.json")]
+    try:
+        expected_path = approval_path_for(batch_id)
+    except FoodLineRetrospectiveError as exc:
+        raise FoodLineRetrospectiveError(
+            "retrospective approval must use the owner-derived V2 approval path"
+        ) from exc
+    if expected_path != approval_path:
+        raise FoodLineRetrospectiveError("retrospective approval must use the owner-derived V2 approval path")
+    return batch_id
+
+
+def _is_v2_approval_path(approval_path: str) -> bool:
+    try:
+        _batch_id_from_v2_approval_path(approval_path)
+    except FoodLineRetrospectiveError:
+        return False
+    return True
+
+
+def _is_legacy_v1_approval_path(approval_path: str) -> bool:
+    if not approval_path.startswith(APPROVAL_PREFIX) or not approval_path.endswith("-approval.json"):
+        return False
+    batch_id = approval_path[len(APPROVAL_PREFIX) : -len("-approval.json")]
+    try:
+        return legacy_v1_approval_path_for(batch_id) == approval_path
+    except FoodLineRetrospectiveError:
+        return False
 
 
 def _iso_timestamp(value: Any, label: str) -> tuple[str, datetime]:
@@ -554,9 +595,8 @@ def create_retrospective_approval(root: Path, request_path: Path) -> dict[str, A
         line
         for line in status_lines
         if not (
-            line.startswith("?? approvals/food-line/")
-            and line.endswith("-approval.json")
-            and ".." not in line
+            line.startswith("?? ")
+            and _is_v2_approval_path(line[3:].replace("\\", "/"))
         )
     ]
     if unexpected_status:
@@ -678,11 +718,12 @@ def create_retrospective_approval(root: Path, request_path: Path) -> dict[str, A
 
 
 def _approval_only_commit(root: Path, approval_commit: str, approval_path: str) -> None:
+    _batch_id_from_v2_approval_path(approval_path)
     changed = [line for line in _git(root, "diff-tree", "--no-commit-id", "--name-only", "-r", approval_commit).splitlines() if line]
     if approval_path not in changed or any(
-        not path.startswith(APPROVAL_PREFIX) or not path.endswith("-approval.json") for path in changed
+        not _is_v2_approval_path(path) for path in changed
     ):
-        raise FoodLineRetrospectiveError("approval authority must come from an exact approval-only commit")
+        raise FoodLineRetrospectiveError("V2 approval authority must come from an exact V2-approval-only commit")
 
 
 def _clean_pages(pages_root: Path, expected_head: str) -> str:
@@ -840,11 +881,22 @@ def load_retrospective_plan(
         raise FoodLineRetrospectiveError("retrospective authority requires a clean source worktree")
     approval_commit = _require_commit(root, approval_commit, strict_ancestor=True)
     approval_path = _safe_relative(approval_path, prefix=APPROVAL_PREFIX)
+    if _is_legacy_v1_approval_path(approval_path):
+        raise FoodLineRetrospectiveError(
+            "obsolete Food Line retrospective V1 approval; renewed V2 approval is required"
+        )
+    path_batch_id = _batch_id_from_v2_approval_path(approval_path)
     _approval_only_commit(root, approval_commit, approval_path)
     approval = load_committed_json(root, commit=approval_commit, path=approval_path, prefix=APPROVAL_PREFIX)
     row = approval.payload
+    if row.get("schema_version") == LEGACY_APPROVAL_SCHEMA:
+        raise FoodLineRetrospectiveError(
+            "obsolete Food Line retrospective V1 approval; renewed V2 approval is required"
+        )
     if row.get("schema_version") != APPROVAL_SCHEMA or row.get("approval_type") != "migrated_event_retrospective_batch":
         raise FoodLineRetrospectiveError("retrospective approval schema is invalid")
+    if row.get("batch_id") != path_batch_id or approval_path_for(row.get("batch_id")) != approval_path:
+        raise FoodLineRetrospectiveError("retrospective approval path does not match its bound batch ID")
     identity_source = dict(row)
     stored_fingerprint = identity_source.pop("approval_fingerprint", None)
     if stored_fingerprint != fingerprint(identity_source):

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dispatches.thebluefernco.com/schemas/gaza-historical-catchup-plan-v2.schema.json",
+  "title": "Gaza historical catch-up plan v2",
+  "type": "object",
+  "required": ["schema_version", "status", "ok", "persistent_mutation", "pages_mutation", "catchup_id", "publication_date", "public_path", "public_url", "pages_head", "approval_pages_head", "item_count", "publication_authorized", "audio_authorized", "social_authorized", "expected_pages_paths"],
+  "properties": {
+    "schema_version": {"const": "gaza_historical_catchup_plan_v2"},
+    "status": {"const": "validated_plan"}, "ok": {"const": true},
+    "persistent_mutation": {"const": false}, "pages_mutation": {"const": false},
+    "catchup_id": {"type": "string"}, "publication_date": {"type": "string", "format": "date"},
+    "public_path": {"type": "string"}, "public_url": {"type": "string", "format": "uri"},
+    "pages_head": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "approval_pages_head": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "item_count": {"type": "integer", "minimum": 1, "maximum": 15},
+    "publication_authorized": {"const": true}, "audio_authorized": {"const": false}, "social_authorized": {"const": false},
+    "expected_pages_paths": {"type": "array", "items": {"type": "string"}}
+  }
+}

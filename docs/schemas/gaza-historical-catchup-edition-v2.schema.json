@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dispatches.thebluefernco.com/schemas/gaza-historical-catchup-edition-v2.schema.json",
+  "title": "Gaza historical catch-up edition manifest v2",
+  "type": "object",
+  "required": ["schema_version", "dispatch_slug", "briefing_type", "edition_date", "published_at", "catchup_id", "public_path", "public_url", "source_count", "story_count", "public_exposed", "audio_authorized", "social_authorized"],
+  "properties": {
+    "schema_version": {"const": "gaza_historical_catchup_edition_v2"}, "dispatch_slug": {"const": "gaza"},
+    "briefing_type": {"const": "historical_catchup"}, "edition_date": {"type": "string", "format": "date"},
+    "published_at": {"type": "string", "format": "date-time"}, "catchup_id": {"type": "string"},
+    "public_path": {"type": "string"}, "public_url": {"type": "string", "format": "uri"},
+    "source_count": {"type": "integer", "minimum": 1}, "story_count": {"type": "integer", "minimum": 1},
+    "public_exposed": {"const": true}, "audio_authorized": {"const": false}, "social_authorized": {"const": false}
+  }
+}

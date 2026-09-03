@@ -5,7 +5,6 @@ import html
 import json
 import os
 import re
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -19,23 +18,18 @@ from urllib.parse import urlsplit
 
 from bluefern_dispatches.generator import (
     BASE_URL,
-    DispatchConfig,
     footer,
     header,
     page,
-    public_edition_is_listable,
-    render_archive_for_dates,
-    render_dispatch_index_for_dates,
-    render_rss_for_dates,
 )
 
 
-APPROVAL_REQUEST_SCHEMA = "gaza_historical_catchup_approval_request_v1"
-APPROVAL_SCHEMA = "gaza_historical_catchup_approval_v1"
-PLAN_SCHEMA = "gaza_historical_catchup_plan_v1"
-PREVIEW_SCHEMA = "gaza_historical_catchup_private_preview_v1"
-RELEASE_SCHEMA = "gaza_historical_catchup_release_manifest_v1"
-PUBLICATION_STATE_SCHEMA = "gaza_historical_catchup_publication_state_v1"
+APPROVAL_REQUEST_SCHEMA = "gaza_historical_catchup_approval_request_v2"
+APPROVAL_SCHEMA = "gaza_historical_catchup_approval_v2"
+PLAN_SCHEMA = "gaza_historical_catchup_plan_v2"
+PREVIEW_SCHEMA = "gaza_historical_catchup_private_preview_v2"
+RELEASE_SCHEMA = "gaza_historical_catchup_release_manifest_v2"
+PUBLICATION_STATE_SCHEMA = "gaza_historical_catchup_publication_state_v2"
 
 REVIEW_PREFIX = "data/agent-history/gaza/reviews/"
 DECISION_PREFIX = "data/agent-history/gaza/reviews/decisions/"
@@ -45,8 +39,6 @@ STATE_PREFIX = "data/dispatches/gaza/historical-catchup-publication-state/"
 
 CATCHUP_RE = re.compile(r"gaza-historical-catchup-[a-z0-9][a-z0-9-]{2,80}")
 COMMIT_RE = re.compile(r"[0-9a-f]{40}")
-SHA256_RE = re.compile(r"(?:sha256:)?[0-9a-f]{64}")
-DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
 MAX_ITEMS = 15
 MOJIBAKE_MARKERS = ("Ã", "Â", "â€", "â€™", "â€œ", "â€�", "ðŸ", "ï»¿", "�")
 
@@ -95,10 +87,23 @@ class CatchupBundle:
     disclosure: str
     source_head: str
     pages_head: str
+    approval_pages_head: str
+    public_path: str
+    public_url: str
     items: tuple[dict[str, Any], ...]
     pages_root: Path
-    prior_edition_dates: tuple[str, ...]
     expected_pages_paths: tuple[str, ...]
+
+
+def public_path_for(catchup_id: str) -> str:
+    value = str(catchup_id or "").strip()
+    if not CATCHUP_RE.fullmatch(value):
+        raise GazaHistoricalCatchupError("catch-up ID is malformed")
+    return f"gaza/catchups/{value}/"
+
+
+def public_url_for(catchup_id: str) -> str:
+    return f"{BASE_URL}/{public_path_for(catchup_id)}"
 
 
 def canonical_json(payload: Any) -> bytes:
@@ -277,6 +282,132 @@ def _clean_pages(pages_root: Path, expected_head: str) -> tuple[Path, str]:
     if head != expected_head:
         raise GazaHistoricalCatchupError("Pages checkout drifted from the approval binding")
     return pages, head
+
+
+def _git_blob_bytes(root: Path, revision: str, path: str) -> bytes:
+    result = subprocess.run(
+        ["git", "-C", str(root), "show", f"{revision}:{path}"],
+        check=False,
+        capture_output=True,
+    )
+    if result.returncode:
+        raise GazaHistoricalCatchupError(f"required Pages history surface is missing at {revision}: {path}")
+    return result.stdout
+
+
+def _git_path_exists(root: Path, revision: str, path: str) -> bool:
+    return subprocess.run(
+        ["git", "-C", str(root), "cat-file", "-e", f"{revision}:{path}"],
+        check=False,
+        capture_output=True,
+    ).returncode == 0
+
+
+def _public_history_identities(raw: bytes) -> set[str]:
+    text = raw.decode("utf-8")
+    paths = re.findall(
+        r"(?:https://[^/]+)?(?:/gaza/)?((?:editions/\d{4}-\d{2}-\d{2}|catchups/gaza-historical-catchup-[a-z0-9-]+)/)",
+        text,
+    )
+    return {f"/gaza/{path}" for path in paths}
+
+
+def _validate_added_publications(pages: Path, baseline: str, head: str) -> set[str]:
+    changed = {
+        value for value in _git(pages, "diff", "--name-only", baseline, head, "--", "gaza/editions", "gaza/catchups").splitlines()
+        if value
+    }
+    prior = {
+        value for value in _git(pages, "ls-tree", "-r", "--name-only", baseline, "gaza/editions", "gaza/catchups").splitlines()
+        if value
+    }
+    for relative in prior & changed:
+        raise GazaHistoricalCatchupError(
+            f"Pages descendant modified a relevant prior Gaza publication surface: {relative}"
+        )
+    added = changed - prior
+    roots: set[str] = set()
+    for relative in added:
+        parts = PurePosixPath(relative).parts
+        if len(parts) < 4 or parts[0] != "gaza" or parts[1] not in {"editions", "catchups"}:
+            raise GazaHistoricalCatchupError(f"Pages descendant added a malformed Gaza publication path: {relative}")
+        roots.add("/".join(parts[:3]))
+    for public_root in roots:
+        required = {
+            f"{public_root}/index.html",
+            f"{public_root}/edition_manifest.json",
+            f"{public_root}/sources_manifest.json",
+            f"{public_root}/curation_manifest.json",
+        }
+        if not required <= {value for value in added if value.startswith(public_root + "/")}:
+            raise GazaHistoricalCatchupError(f"Pages descendant contains an incomplete Gaza publication: {public_root}")
+        for relative in required - {f"{public_root}/index.html"}:
+            try:
+                json.loads((pages / relative).read_text(encoding="utf-8"))
+            except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+                raise GazaHistoricalCatchupError(f"Pages descendant contains an invalid Gaza manifest: {relative}") from exc
+    return {f"/{public_root}/" for public_root in roots}
+
+
+def _clean_pages_for_plan(
+    pages_root: Path,
+    approved_head: str,
+    *,
+    public_path: str,
+) -> tuple[Path, str]:
+    pages, head = _clean_pages_checkout(pages_root)
+    if not COMMIT_RE.fullmatch(approved_head):
+        raise GazaHistoricalCatchupError("Pages approval binding is malformed")
+    if head == approved_head:
+        return pages, head
+    ancestor = subprocess.run(
+        ["git", "-C", str(pages), "merge-base", "--is-ancestor", approved_head, head],
+        check=False,
+        capture_output=True,
+    )
+    if ancestor.returncode:
+        raise GazaHistoricalCatchupError("Pages checkout is not a strict descendant of the approval binding")
+    target = pages / public_path.rstrip("/")
+    if target.exists():
+        raise GazaHistoricalCatchupError("approved catch-up public path is already occupied")
+    added_publications = _validate_added_publications(pages, approved_head, head)
+    for relative in ("gaza/archive.html", "gaza/rss.xml"):
+        prior = _public_history_identities(_git_blob_bytes(pages, approved_head, relative))
+        current_path = pages / relative
+        if not current_path.is_file():
+            raise GazaHistoricalCatchupError(f"required Pages history surface is missing: {relative}")
+        current = _public_history_identities(current_path.read_bytes())
+        if not (prior | added_publications) <= current:
+            raise GazaHistoricalCatchupError(f"Pages descendant dropped Gaza history from {relative}")
+    index_path = pages / "gaza/index.html"
+    if not index_path.is_file():
+        raise GazaHistoricalCatchupError("required Pages homepage is missing")
+    for identity in _public_history_identities(index_path.read_bytes()):
+        relative = identity.split("/gaza/", 1)[1]
+        if not (pages / "gaza" / relative).is_dir():
+            raise GazaHistoricalCatchupError("Pages homepage references a missing Gaza publication")
+    for relative in NON_MUTATED_DEPENDENCIES:
+        if _git_path_exists(pages, approved_head, relative) and not (pages / relative).is_file():
+            raise GazaHistoricalCatchupError(f"Pages descendant dropped a required non-mutated dependency: {relative}")
+    flash = pages / "gaza/flash-briefing.json"
+    if flash.is_file():
+        try:
+            json.loads(flash.read_text(encoding="utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise GazaHistoricalCatchupError("Pages descendant contains an invalid flash-briefing dependency") from exc
+    return pages, head
+
+
+def _clean_pages_checkout(pages_root: Path) -> tuple[Path, str]:
+    pages = pages_root.absolute().resolve(strict=True)
+    top = Path(_git(pages, "rev-parse", "--show-toplevel")).resolve(strict=True)
+    if not os.path.samefile(pages, top):
+        raise GazaHistoricalCatchupError("Pages root must be the exact checkout root")
+    if _git(pages, "branch", "--show-current") != "gh-pages":
+        raise GazaHistoricalCatchupError("Pages checkout must be on gh-pages")
+    if _git(pages, "status", "--porcelain", "--untracked-files=all"):
+        raise GazaHistoricalCatchupError("Pages checkout must be clean")
+    return pages, _git(pages, "rev-parse", "HEAD")
 
 
 def _source_status_for_approval(root: Path, approval_path: str) -> list[str]:
@@ -483,7 +614,7 @@ def _approval_request(path: Path, root: Path, pages: Path) -> tuple[dict[str, An
     expected = {
         "schema_version", "catchup_id", "publication_date", "title", "introduction",
         "retrospective_disclosure", "approved_by", "approved_at", "source_base_commit",
-        "pages_head", "review_bindings", "decision_bindings", "item_order",
+        "pages_head", "public_path", "public_url", "review_bindings", "decision_bindings", "item_order",
         "publication_authorized", "audio_authorized", "social_authorized",
     }
     if not isinstance(payload, dict) or set(payload) != expected or payload.get("schema_version") != APPROVAL_REQUEST_SCHEMA:
@@ -497,6 +628,10 @@ def create_approval(root: Path, pages_root: Path, request_path: Path) -> dict[st
     request, request_raw = _approval_request(request_path, root, pages)
     catchup_id = str(request.get("catchup_id") or "")
     approval_path = approval_path_for(catchup_id)
+    public_path = public_path_for(catchup_id)
+    public_url = public_url_for(catchup_id)
+    if request.get("public_path") != public_path or request.get("public_url") != public_url:
+        raise GazaHistoricalCatchupError("approval request does not bind the canonical catch-up path and URL")
     if _source_status_for_approval(root, approval_path):
         raise GazaHistoricalCatchupError("approval creation requires a clean source worktree")
     source_base = _require_commit(root, request.get("source_base_commit"))
@@ -569,6 +704,8 @@ def create_approval(root: Path, pages_root: Path, request_path: Path) -> dict[st
         "approval_type": "gaza_historical_true_miss_catchup",
         "catchup_id": catchup_id,
         "publication_date": publication_date.isoformat(),
+        "public_path": public_path,
+        "public_url": public_url,
         "title": title,
         "introduction": introduction,
         "retrospective_disclosure": disclosure,
@@ -643,29 +780,14 @@ def _approval_only_commit(root: Path, approval_commit: str, approval_path: str) 
         raise GazaHistoricalCatchupError("approval authority must come from an exact one-file approval-only commit")
 
 
-def _existing_edition_dates(pages: Path) -> tuple[str, ...]:
-    editions = pages / "gaza" / "editions"
-    if not editions.is_dir():
-        return ()
-    return tuple(
-        sorted(
-            (
-                path.name
-                for path in editions.iterdir()
-                if path.is_dir() and DATE_RE.fullmatch(path.name) and (path / "index.html").is_file()
-            ),
-            reverse=True,
-        )
-    )
-
-
-def _assert_vacant(root: Path, pages: Path, publication_date: str) -> None:
+def _assert_vacant(root: Path, pages: Path, catchup_id: str) -> None:
+    public_path = public_path_for(catchup_id).rstrip("/")
     occupied = [
         path
         for path in (
-            pages / "gaza" / "editions" / publication_date,
-            root / "output" / "site" / "gaza" / "editions" / publication_date,
-            root / "output" / "dispatches" / "gaza" / "editions" / publication_date,
+            pages / public_path,
+            root / "output" / "site" / public_path,
+            root / "output" / "dispatches" / "gaza" / "catchups" / catchup_id,
         )
         if path.exists()
     ]
@@ -678,10 +800,10 @@ def _assert_vacant(root: Path, pages: Path, publication_date: str) -> None:
                 raise GazaHistoricalCatchupError(f"publication-state artifact is unreadable: {path}") from exc
             if not isinstance(payload, dict):
                 raise GazaHistoricalCatchupError(f"publication-state artifact is malformed: {path}")
-            if payload.get("publication_date") == publication_date:
+            if payload.get("catchup_id") == catchup_id or payload.get("public_path") == public_path_for(catchup_id):
                 occupied.append(path)
     if occupied:
-        raise GazaHistoricalCatchupError("catch-up publication date is already occupied: " + ", ".join(map(str, occupied)))
+        raise GazaHistoricalCatchupError("approved catch-up public path is already occupied: " + ", ".join(map(str, occupied)))
 
 
 def _assert_no_public_collision(root: Path, pages: Path, items: Sequence[dict[str, Any]]) -> None:
@@ -703,7 +825,9 @@ def _assert_no_public_collision(root: Path, pages: Path, items: Sequence[dict[st
                 or row.get("story_id") in story_ids
             ):
                 collisions.append(f"{memory_path}#{index}")
-    for manifest in (pages / "gaza" / "editions").glob("*/curation_manifest.json"):
+    manifests = list((pages / "gaza" / "editions").glob("*/curation_manifest.json"))
+    manifests.extend((pages / "gaza" / "catchups").glob("*/curation_manifest.json"))
+    for manifest in manifests:
         payload = json.loads(manifest.read_text(encoding="utf-8"))
         rows = payload if isinstance(payload, list) else payload.get("stories") if isinstance(payload, dict) else None
         if not isinstance(rows, list):
@@ -738,6 +862,10 @@ def load_plan(
     _approval_only_commit(root, approval_commit, approval_path)
     approval = load_committed_json(root, commit=approval_commit, path=approval_path, prefix=APPROVAL_PREFIX)
     row = approval.payload
+    if row.get("schema_version") == "gaza_historical_catchup_approval_v1":
+        raise GazaHistoricalCatchupError(
+            "obsolete date-keyed historical catch-up approval; renewed human approval for the canonical catch-up path is required"
+        )
     if row.get("schema_version") != APPROVAL_SCHEMA or row.get("approval_type") != "gaza_historical_true_miss_catchup":
         raise GazaHistoricalCatchupError("historical catch-up approval schema is invalid")
     identity_source = dict(row)
@@ -773,7 +901,17 @@ def load_plan(
     }
     if incoming != {approval_path}:
         raise GazaHistoricalCatchupError("protected source changed beyond the exact approval-only artifact; a new approval is required")
-    pages, pages_head = _clean_pages(pages_root, str(row.get("pages_head") or ""))
+    catchup_id = str(row.get("catchup_id") or "")
+    public_path = public_path_for(catchup_id)
+    public_url = public_url_for(catchup_id)
+    if row.get("public_path") != public_path or row.get("public_url") != public_url:
+        raise GazaHistoricalCatchupError("approval does not bind the canonical catch-up path and URL")
+    approval_pages_head = str(row.get("pages_head") or "")
+    pages, pages_head = _clean_pages_for_plan(
+        pages_root,
+        approval_pages_head,
+        public_path=public_path,
+    )
     publication_date = date.fromisoformat(str(row.get("publication_date") or ""))
     timestamp_text, timestamp = _timestamp(publication_timestamp, "publication timestamp")
     _, approved_at = _timestamp(row.get("approved_at"), "approved_at")
@@ -781,7 +919,7 @@ def load_plan(
         raise GazaHistoricalCatchupError("publication timestamp must fall on the approved real publication date")
     if timestamp < approved_at:
         raise GazaHistoricalCatchupError("publication timestamp predates approval")
-    _assert_vacant(root, pages, publication_date.isoformat())
+    _assert_vacant(root, pages, catchup_id)
     stored_items = row.get("approved_items")
     if not isinstance(stored_items, list) or not 1 <= len(stored_items) <= MAX_ITEMS or row.get("item_count") != len(stored_items):
         raise GazaHistoricalCatchupError("approval item inventory is invalid")
@@ -805,11 +943,10 @@ def load_plan(
     if fingerprint(public_copy_set) != row.get("ordered_public_copy_sha256"):
         raise GazaHistoricalCatchupError("ordered approved public-copy identity drifted")
     _assert_no_public_collision(root, pages, checked)
-    prior_dates = _existing_edition_dates(pages)
-    expected = _expected_pages_paths(publication_date.isoformat())
+    expected = _expected_pages_paths(catchup_id)
     bundle = CatchupBundle(
         approval=approval,
-        catchup_id=str(row["catchup_id"]),
+        catchup_id=catchup_id,
         publication_date=publication_date.isoformat(),
         publication_timestamp=timestamp_text,
         title=_public_text(row.get("title"), "catch-up title"),
@@ -817,9 +954,11 @@ def load_plan(
         disclosure=_public_text(row.get("retrospective_disclosure"), "retrospective disclosure"),
         source_head=source_head,
         pages_head=pages_head,
+        approval_pages_head=approval_pages_head,
+        public_path=public_path,
+        public_url=public_url,
         items=tuple(checked),
         pages_root=pages,
-        prior_edition_dates=prior_dates,
         expected_pages_paths=expected,
     )
     _validate_plan_surfaces(bundle)
@@ -836,10 +975,13 @@ def plan_result(bundle: CatchupBundle) -> dict[str, Any]:
         "catchup_id": bundle.catchup_id,
         "publication_date": bundle.publication_date,
         "publication_timestamp": bundle.publication_timestamp,
+        "public_path": bundle.public_path,
+        "public_url": bundle.public_url,
         "approval_commit": bundle.approval.commit,
         "approval_path": bundle.approval.path,
         "source_head": bundle.source_head,
         "pages_head": bundle.pages_head,
+        "approval_pages_head": bundle.approval_pages_head,
         "item_count": len(bundle.items),
         "all_review_decision_bindings_validated": True,
         "all_public_copy_reproduced": True,
@@ -859,6 +1001,8 @@ def _preview_payload(bundle: CatchupBundle) -> dict[str, Any]:
         "catchup_id": bundle.catchup_id,
         "publication_date": bundle.publication_date,
         "publication_timestamp": bundle.publication_timestamp,
+        "public_path": bundle.public_path,
+        "public_url": bundle.public_url,
         "title": bundle.title,
         "introduction": bundle.introduction,
         "retrospective_disclosure": bundle.disclosure,
@@ -867,6 +1011,7 @@ def _preview_payload(bundle: CatchupBundle) -> dict[str, Any]:
         "approval_sha256": bundle.approval.sha256,
         "source_head": bundle.source_head,
         "pages_head": bundle.pages_head,
+        "approval_pages_head": bundle.approval_pages_head,
         "items": [item["public_copy"] for item in bundle.items],
         "publication_executed": False,
         "pages_mutation": False,
@@ -927,7 +1072,7 @@ def _render_edition(bundle: CatchupBundle) -> bytes:
 {footer("../../")}"""
     return page(
         f"Dispatches From Gaza - {bundle.publication_date}",
-        f"{BASE_URL}/gaza/editions/{bundle.publication_date}/",
+        bundle.public_url,
         "../../assets/site.css",
         body,
         "Dispatches From Gaza",
@@ -983,16 +1128,20 @@ def _manifests(bundle: CatchupBundle) -> tuple[dict[str, Any], list[dict[str, An
                 "uncertainty": copy["uncertainty"],
                 "included_in_public_summary": True,
                 "historical_catchup": True,
+                "historical_catchup_id": bundle.catchup_id,
+                "public_url": bundle.public_url,
                 "approval_sha256": bundle.approval.sha256,
             }
         )
     edition = {
-        "schema_version": "gaza_historical_catchup_edition_v1",
+        "schema_version": "gaza_historical_catchup_edition_v2",
         "dispatch_slug": "gaza",
         "briefing_type": "historical_catchup",
         "edition_date": bundle.publication_date,
         "published_at": bundle.publication_timestamp,
         "catchup_id": bundle.catchup_id,
+        "public_path": bundle.public_path,
+        "public_url": bundle.public_url,
         "edition_title": bundle.title,
         "edition_introduction": bundle.introduction,
         "retrospective_disclosure": bundle.disclosure,
@@ -1020,8 +1169,8 @@ def _manifests(bundle: CatchupBundle) -> tuple[dict[str, Any], list[dict[str, An
     return edition, sources, stories, dedupe
 
 
-def _expected_pages_paths(publication_date: str) -> tuple[str, ...]:
-    base = f"gaza/editions/{publication_date}"
+def _expected_pages_paths(catchup_id: str) -> tuple[str, ...]:
+    base = public_path_for(catchup_id).rstrip("/")
     return (
         f"{base}/index.html",
         f"{base}/edition_manifest.json",
@@ -1032,49 +1181,69 @@ def _expected_pages_paths(publication_date: str) -> tuple[str, ...]:
     )
 
 
-def _render_navigation(bundle: CatchupBundle, edition_manifest: dict[str, Any]) -> tuple[bytes, bytes, bytes]:
-    dates = tuple(sorted({bundle.publication_date, *bundle.prior_edition_dates}, reverse=True))
-    dispatch = DispatchConfig(
-        slug="gaza",
-        name="Dispatches From Gaza",
-        edition_date=bundle.publication_date,
-        tagline="Daily briefing",
-        logo="gaza-logo.png",
-        sources=[],
-        stories=[],
-        detail_artifacts=[],
+def _insert_archive_entry(raw: bytes, bundle: CatchupBundle) -> bytes:
+    text = raw.decode("utf-8")
+    relative_url = f"catchups/{bundle.catchup_id}/"
+    if bundle.public_path in text or relative_url in text:
+        raise GazaHistoricalCatchupError("catch-up navigation entry already exists")
+    start = text.find('<ul class="edition-list">')
+    if start < 0:
+        raise GazaHistoricalCatchupError("Gaza navigation has no edition list")
+    insertion = text.find("\n", start)
+    if insertion < 0:
+        raise GazaHistoricalCatchupError("Gaza navigation edition list is malformed")
+    label = f"Historical catch-up / {bundle.publication_date} — {bundle.title}"
+    row = (
+        f'      <li class="historical-catchup"><span class="edition-date">{html.escape(bundle.publication_date)}</span>'
+        f'<a href="{html.escape(relative_url, quote=True)}">{html.escape(label)}</a></li>\n'
     )
-    with tempfile.TemporaryDirectory(prefix="bluefern-gaza-catchup-nav-") as temporary:
-        context = Path(temporary)
-        for day in bundle.prior_edition_dates:
-            source = bundle.pages_root / "gaza" / "editions" / day / "edition_manifest.json"
-            if source.is_file():
-                destination = context / "gaza" / "editions" / day / "edition_manifest.json"
-                destination.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copyfile(source, destination)
-        current = context / "gaza" / "editions" / bundle.publication_date / "edition_manifest.json"
-        current.parent.mkdir(parents=True, exist_ok=True)
-        current.write_bytes(canonical_json(edition_manifest))
-        if (bundle.pages_root / "gaza" / "audio" / "index.html").is_file():
-            audio = context / "gaza" / "audio" / "index.html"
-            audio.parent.mkdir(parents=True, exist_ok=True)
-            audio.write_text("", encoding="utf-8")
-        index = render_dispatch_index_for_dates(dispatch, list(dates), context).encode("utf-8")
-        archive = render_archive_for_dates(dispatch, list(dates), context).encode("utf-8")
-        rss_text = render_rss_for_dates(dispatch, list(dates), context)
-    edition_url = f"{BASE_URL}/gaza/editions/{bundle.publication_date}/"
-    needle = f"    <guid>{edition_url}</guid>"
-    pub_date = format_datetime(datetime.fromisoformat(bundle.publication_timestamp.replace("Z", "+00:00")).astimezone(timezone.utc))
-    if rss_text.count(needle) != 1:
-        raise GazaHistoricalCatchupError("unable to bind the real catch-up publication timestamp into RSS")
-    rss_text = rss_text.replace(needle, needle + f"\n    <pubDate>{html.escape(pub_date)}</pubDate>", 1)
-    return index, archive, rss_text.encode("utf-8")
+    return (text[: insertion + 1] + row + text[insertion + 1 :]).encode("utf-8")
+
+
+def _insert_rss_entry(raw: bytes, bundle: CatchupBundle) -> bytes:
+    text = raw.decode("utf-8")
+    if bundle.public_url in text:
+        raise GazaHistoricalCatchupError("catch-up RSS entry already exists")
+    marker = "  <item>"
+    offset = text.find(marker)
+    if offset < 0:
+        closing = "</channel>"
+        offset = text.find(closing)
+        if offset < 0:
+            raise GazaHistoricalCatchupError("Gaza RSS channel is malformed")
+    pub_date = format_datetime(
+        datetime.fromisoformat(bundle.publication_timestamp.replace("Z", "+00:00")).astimezone(timezone.utc)
+    )
+    item = (
+        "  <item>\n"
+        f"    <title>{html.escape(bundle.title)}</title>\n"
+        f"    <link>{html.escape(bundle.public_url)}</link>\n"
+        f"    <guid>{html.escape(bundle.public_url)}</guid>\n"
+        f"    <pubDate>{html.escape(pub_date)}</pubDate>\n"
+        f"    <description>{html.escape(bundle.disclosure)}</description>\n"
+        "  </item>\n"
+    )
+    return (text[:offset] + item + text[offset:]).encode("utf-8")
+
+
+def _render_navigation(bundle: CatchupBundle, edition_manifest: dict[str, Any]) -> tuple[bytes, bytes, bytes]:
+    del edition_manifest
+    index_path = bundle.pages_root / "gaza/index.html"
+    archive_path = bundle.pages_root / "gaza/archive.html"
+    rss_path = bundle.pages_root / "gaza/rss.xml"
+    if not all(path.is_file() for path in (index_path, archive_path, rss_path)):
+        raise GazaHistoricalCatchupError("required Gaza navigation or RSS surface is missing")
+    return (
+        _insert_archive_entry(index_path.read_bytes(), bundle),
+        _insert_archive_entry(archive_path.read_bytes(), bundle),
+        _insert_rss_entry(rss_path.read_bytes(), bundle),
+    )
 
 
 def _stage_payload(bundle: CatchupBundle) -> tuple[dict[str, bytes], dict[str, Any]]:
     edition, sources, curation, dedupe = _manifests(bundle)
     index, archive, rss = _render_navigation(bundle, edition)
-    base = f"gaza/editions/{bundle.publication_date}"
+    base = bundle.public_path.rstrip("/")
     files = {
         f"{base}/index.html": _render_edition(bundle),
         f"{base}/edition_manifest.json": canonical_json(edition),
@@ -1100,12 +1269,15 @@ def _stage_payload(bundle: CatchupBundle) -> tuple[dict[str, bytes], dict[str, A
         "catchup_id": bundle.catchup_id,
         "publication_date": bundle.publication_date,
         "publication_timestamp": bundle.publication_timestamp,
+        "public_path": bundle.public_path,
+        "public_url": bundle.public_url,
         "approval_commit": bundle.approval.commit,
         "approval_path": bundle.approval.path,
         "approval_blob_sha1": bundle.approval.blob_sha1,
         "approval_sha256": bundle.approval.sha256,
         "source_head": bundle.source_head,
         "pages_head": bundle.pages_head,
+        "approval_pages_head": bundle.approval_pages_head,
         "item_count": len(bundle.items),
         "ordered_public_copy_sha256": bundle.approval.payload["ordered_public_copy_sha256"],
         "entries": entries,
@@ -1218,10 +1390,10 @@ def _assert_history_bytes(bundle: CatchupBundle, staged: dict[str, bytes]) -> No
         prior_path = bundle.pages_root / relative
         if not prior_path.is_file() or relative not in staged:
             raise GazaHistoricalCatchupError(f"required history surface is missing: {relative}")
-        pattern = r"(?:/gaza/)?editions/(\d{4}-\d{2}-\d{2})/"
-        prior_dates = set(re.findall(pattern, prior_path.read_text(encoding="utf-8")))
-        staged_dates = set(re.findall(pattern, staged[relative].decode("utf-8")))
-        if not prior_dates <= staged_dates or bundle.publication_date not in staged_dates:
+        prior_identities = _public_history_identities(prior_path.read_bytes())
+        staged_identities = _public_history_identities(staged[relative])
+        canonical_identity = f"/gaza/catchups/{bundle.catchup_id}/"
+        if not prior_identities <= staged_identities or canonical_identity not in staged_identities:
             raise GazaHistoricalCatchupError(f"history-shrink validation failed for {relative}")
 
 
@@ -1230,14 +1402,9 @@ def _validate_plan_surfaces(bundle: CatchupBundle) -> None:
     if set(files) != set(bundle.expected_pages_paths):
         raise GazaHistoricalCatchupError("planned Pages inventory does not match the sanctioned catch-up surfaces")
     _assert_history_bytes(bundle, {key: files[key] for key in PUBLIC_ENTRY_NAMES})
-    with tempfile.TemporaryDirectory(prefix="bluefern-gaza-catchup-listability-") as temporary:
-        site = Path(temporary) / "site"
-        for relative, raw in files.items():
-            target = site / relative
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(raw)
-        if not public_edition_is_listable(site, "gaza", bundle.publication_date):
-            raise GazaHistoricalCatchupError("planned catch-up edition does not satisfy Gaza public listability")
+    target = bundle.public_path + "index.html"
+    if target not in files or bundle.public_url.encode("utf-8") not in files[target]:
+        raise GazaHistoricalCatchupError("planned catch-up does not satisfy canonical public listability")
     if release.get("audio_authorized") is not False or release.get("social_authorized") is not False:
         raise GazaHistoricalCatchupError("planned catch-up release gained unsupported side authority")
 
@@ -1285,6 +1452,8 @@ def _record_publication(root: Path, bundle: CatchupBundle, pages_commit: str) ->
         "catchup_id": bundle.catchup_id,
         "publication_date": bundle.publication_date,
         "published_at": bundle.publication_timestamp,
+        "public_path": bundle.public_path,
+        "public_url": bundle.public_url,
         "approval_commit": bundle.approval.commit,
         "approval_path": bundle.approval.path,
         "approval_sha256": bundle.approval.sha256,
@@ -1375,7 +1544,15 @@ def published_replay_result(
     approval_path = _safe_relative(approval_path, prefix=APPROVAL_PREFIX)
     _approval_only_commit(root, approval_commit, approval_path)
     approval = load_committed_json(root, commit=approval_commit, path=approval_path, prefix=APPROVAL_PREFIX)
+    if approval.payload.get("schema_version") != APPROVAL_SCHEMA:
+        raise GazaHistoricalCatchupError(
+            "obsolete date-keyed historical catch-up approval; renewed human approval for the canonical catch-up path is required"
+        )
     catchup_id = str(approval.payload.get("catchup_id") or "")
+    public_path = public_path_for(catchup_id)
+    public_url = public_url_for(catchup_id)
+    if approval.payload.get("public_path") != public_path or approval.payload.get("public_url") != public_url:
+        raise GazaHistoricalCatchupError("approval does not bind the canonical catch-up path and URL")
     state_path = _publication_state_path(root, catchup_id)
     if not state_path.is_file():
         return None
@@ -1398,6 +1575,9 @@ def published_replay_result(
         or state.get("approval_commit") != approval.commit
         or state.get("approval_path") != approval.path
         or state.get("approval_sha256") != approval.sha256
+        or state.get("catchup_id") != catchup_id
+        or state.get("public_path") != public_path
+        or state.get("public_url") != public_url
         or state.get("candidate_ids") != expected_candidates
         or state.get("event_fingerprints") != expected_fingerprints
         or state.get("published") is not True
@@ -1475,7 +1655,7 @@ def publish_stage(
         staged = set(_git(bundle.pages_root, "diff", "--cached", "--name-only").splitlines())
         if staged != set(files):
             raise GazaHistoricalCatchupError("Pages staged inventory escaped the approved catch-up package")
-        _git(bundle.pages_root, "commit", "-m", f"Publish Gaza historical catch-up {bundle.publication_date}")
+        _git(bundle.pages_root, "commit", "-m", f"Publish Gaza historical catch-up {bundle.catchup_id}")
     except Exception:
         for target, prior in backups.items():
             if prior is None:
@@ -1515,7 +1695,7 @@ def publish_stage(
     recorded = _record_publication(root, bundle, pages_commit)
     live_verified = False
     if live_base_url:
-        url = live_base_url.rstrip("/") + f"/gaza/editions/{bundle.publication_date}/?v={pages_commit[:12]}"
+        url = live_base_url.rstrip("/") + f"/{bundle.public_path}?v={pages_commit[:12]}"
         try:
             with urllib.request.urlopen(url, timeout=20) as response:
                 body = response.read().decode("utf-8")

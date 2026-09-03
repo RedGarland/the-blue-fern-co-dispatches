@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dispatches.thebluefernco.com/schemas/gaza-historical-catchup-private-preview-v2.schema.json",
+  "title": "Gaza historical catch-up private preview v2",
+  "type": "object",
+  "required": ["schema_version", "catchup_id", "publication_date", "publication_timestamp", "public_path", "public_url", "approval_commit", "approval_path", "approval_sha256", "source_head", "pages_head", "approval_pages_head", "items", "publication_executed", "pages_mutation", "audio_authorized", "social_authorized", "preview_fingerprint"],
+  "properties": {
+    "schema_version": {"const": "gaza_historical_catchup_private_preview_v2"},
+    "catchup_id": {"type": "string"}, "publication_date": {"type": "string", "format": "date"},
+    "publication_timestamp": {"type": "string", "format": "date-time"}, "public_path": {"type": "string"},
+    "public_url": {"type": "string", "format": "uri"}, "pages_head": {"type": "string"},
+    "approval_pages_head": {"type": "string"}, "publication_executed": {"const": false},
+    "pages_mutation": {"const": false}, "audio_authorized": {"const": false}, "social_authorized": {"const": false}
+  }
+}

@@ -196,9 +196,13 @@ def _make_case(
     _json(old_dir / "curation_manifest.json", old_curation)
     for relative, raw in {
         "index.html": "root home\n",
-        "gaza/index.html": f'/gaza/editions/{old}/\n',
-        "gaza/archive.html": f'/gaza/editions/{old}/\n',
-        "gaza/rss.xml": f'<guid>https://dispatches.bluefern.company/gaza/editions/{old}/</guid>\n',
+        "gaza/index.html": f'<ul class="edition-list">\n<li><a href="editions/{old}/">{old}</a></li>\n</ul>\n',
+        "gaza/archive.html": f'<ul class="edition-list">\n<li><a href="editions/{old}/">{old}</a></li>\n</ul>\n',
+        "gaza/rss.xml": (
+            "<rss><channel><description>Daily briefing</description>\n"
+            f'<item><guid>https://dispatches.thebluefernco.com/gaza/editions/{old}/</guid></item>\n'
+            "</channel></rss>\n"
+        ),
         "gaza/podcast.xml": "podcast unchanged\n",
         "gaza/flash-briefing.json": "{}\n",
     }.items():
@@ -206,7 +210,7 @@ def _make_case(
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(raw, encoding="utf-8")
     if occupied:
-        target = pages / "gaza/editions/2026-09-04"
+        target = pages / "gaza/catchups/gaza-historical-catchup-synthetic"
         target.mkdir(parents=True)
         (target / "index.html").write_text("occupied", encoding="utf-8")
     pages_head = _commit(pages, "pages baseline", "index.html", "gaza")
@@ -224,6 +228,8 @@ def _make_case(
         "approved_at": "2026-09-03T18:00:00Z",
         "source_base_commit": source_base,
         "pages_head": pages_head,
+        "public_path": "gaza/catchups/gaza-historical-catchup-synthetic/",
+        "public_url": "https://dispatches.thebluefernco.com/gaza/catchups/gaza-historical-catchup-synthetic/",
         "review_bindings": [_binding(root, source_base, review_path)],
         "decision_bindings": [_binding(root, source_base, decision_path)],
         "item_order": [candidate],
@@ -264,6 +270,39 @@ def _plan(case: dict):
         case["root"], case["pages"], approval_commit=case["approval_commit"],
         approval_path=case["approval_path"], publication_timestamp="2026-09-04T17:30:00Z",
     )
+
+
+def _add_daily_publication(
+    case: dict,
+    *,
+    day: str = "2026-09-04",
+    candidate_id: str | None = None,
+    complete: bool = True,
+) -> str:
+    root = case["pages"] / "gaza/editions" / day
+    root.mkdir(parents=True, exist_ok=True)
+    (root / "index.html").write_text("normal daily edition\n", encoding="utf-8")
+    _json(root / "edition_manifest.json", {"dispatch_slug": "gaza", "edition_date": day, "source_count": 1, "story_count": 1})
+    if complete:
+        _json(root / "sources_manifest.json", [{"source_record_id": "daily-source"}])
+        story = {"story_id": "daily-story"}
+        if candidate_id:
+            story["historical_candidate_id"] = candidate_id
+        _json(root / "curation_manifest.json", [story])
+    for relative in ("gaza/index.html", "gaza/archive.html"):
+        path = case["pages"] / relative
+        path.write_text(path.read_text(encoding="utf-8").replace(
+            '<ul class="edition-list">',
+            f'<ul class="edition-list">\n<li><a href="editions/{day}/">{day}</a></li>',
+            1,
+        ), encoding="utf-8")
+    rss = case["pages"] / "gaza/rss.xml"
+    rss.write_text(rss.read_text(encoding="utf-8").replace(
+        "</channel>",
+        f'<item><guid>https://dispatches.thebluefernco.com/gaza/editions/{day}/</guid></item>\n</channel>',
+        1,
+    ), encoding="utf-8")
+    return _commit(case["pages"], "publish intervening daily edition", "gaza")
 
 
 def test_committed_authority_approval_replay_and_public_copy(tmp_path: Path) -> None:
@@ -403,6 +442,8 @@ def test_approval_topology_plan_preview_stage_and_no_side_authority(tmp_path: Pa
     release = json.loads(Path(staged["release_manifest"]).read_text(encoding="utf-8"))
     paths = {row["pages_path"] for row in release["entries"]}
     assert "gaza/index.html" in paths and "gaza/archive.html" in paths and "gaza/rss.xml" in paths
+    assert "gaza/catchups/gaza-historical-catchup-synthetic/index.html" in paths
+    assert not any(path.startswith("gaza/editions/2026-09-04/") for path in paths)
     assert not any("podcast" in path or "flash" in path or "audio" in path for path in paths)
     assert _git(case["root"], "rev-parse", "HEAD") == source_head
     assert _git(case["pages"], "rev-parse", "HEAD") == pages_head
@@ -445,7 +486,7 @@ def test_stage_tampering_forged_manifest_and_history_shrink_fail_closed(tmp_path
     bundle = _plan(case)
     stage = create_stage(bundle, case["root"], case["private"] / "stage")
     target = Path(stage["stage_root"])
-    edition = target / "site/gaza/editions/2026-09-04/index.html"
+    edition = target / "site/gaza/catchups/gaza-historical-catchup-synthetic/index.html"
     edition.write_text(edition.read_text(encoding="utf-8").replace("233", "999"), encoding="utf-8")
     manifest_path = target / "release_manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -463,7 +504,7 @@ def test_stage_tampering_forged_manifest_and_history_shrink_fail_closed(tmp_path
         publish_stage(case["root"], bundle, case["private"] / "stage", push=True)
     assert _git(case["pages"], "rev-parse", "HEAD") == pages_head
     assert _git(case["pages"], "status", "--porcelain", "--untracked-files=all") == ""
-    assert not (case["pages"] / "gaza/editions/2026-09-04").exists()
+    assert not (case["pages"] / "gaza/catchups/gaza-historical-catchup-synthetic").exists()
 
     # History shrink is checked independently immediately before Pages mutation.
     files, release = owner._stage_payload(bundle)
@@ -498,6 +539,10 @@ def test_atomic_publish_push_replay_and_daily_dedupe(tmp_path: Path) -> None:
     assert published_replay_result(
         case["root"], case["pages"], approval_commit=case["approval_commit"], approval_path=case["approval_path"]
     )["status"] == "idempotent_noop"
+    state = json.loads((case["root"] / owner.STATE_PREFIX / f"{bundle.catchup_id}.json").read_text(encoding="utf-8"))
+    assert state["catchup_id"] == bundle.catchup_id
+    assert state["public_path"] == bundle.public_path
+    assert state["public_url"] == bundle.public_url
 
     copy = bundle.items[0]["public_copy"]
     later = {
@@ -528,8 +573,95 @@ def test_dirty_or_wrong_pages_and_pages_drift_rejected(tmp_path: Path) -> None:
         _plan(wrong)
 
     drift = _approve_and_merge(_make_case(tmp_path / "drift"))
-    marker = drift["pages"] / "marker.txt"
-    marker.write_text("drift", encoding="utf-8")
-    _commit(drift["pages"], "pages drift", "marker.txt")
-    with pytest.raises(GazaHistoricalCatchupError, match="drifted"):
+    _git(drift["pages"], "commit", "--amend", "--no-edit")
+    with pytest.raises(GazaHistoricalCatchupError, match="not a strict descendant"):
         _plan(drift)
+
+
+def test_daily_edition_and_catchup_coexist_with_distinct_navigation_and_rss(tmp_path: Path) -> None:
+    case = _approve_and_merge(_make_case(tmp_path))
+    _add_daily_publication(case)
+    daily_head = _add_daily_publication(case, day="2026-09-05")
+    editions_root = case["pages"] / "gaza/editions"
+    daily_bytes = {path.relative_to(editions_root): path.read_bytes() for path in editions_root.rglob("*") if path.is_file()}
+
+    bundle = _plan(case)
+    assert bundle.approval_pages_head == case["pages_head"]
+    assert bundle.pages_head == daily_head
+    assert bundle.public_path == "gaza/catchups/gaza-historical-catchup-synthetic/"
+    assert bundle.public_url.endswith("/gaza/catchups/gaza-historical-catchup-synthetic/")
+    stage = create_stage(bundle, case["root"], case["private"] / "stage")
+    site = Path(stage["stage_root"]) / "site"
+    assert (site / bundle.public_path / "index.html").is_file()
+    assert not (site / "gaza/editions/2026-09-04/index.html").exists()
+    for relative in ("gaza/index.html", "gaza/archive.html", "gaza/rss.xml"):
+        text = (site / relative).read_text(encoding="utf-8")
+        assert "/gaza/editions/2026-09-04/" in text or "editions/2026-09-04/" in text
+        assert "/gaza/editions/2026-09-05/" in text or "editions/2026-09-05/" in text
+        assert "catchups/gaza-historical-catchup-synthetic/" in text
+    archive = (site / "gaza/archive.html").read_text(encoding="utf-8")
+    assert "Historical catch-up / 2026-09-04" in archive
+    rss = (site / "gaza/rss.xml").read_text(encoding="utf-8")
+    assert rss.count(bundle.public_url) == 2
+    assert bundle.disclosure in rss
+    assert {path.relative_to(editions_root): path.read_bytes() for path in editions_root.rglob("*") if path.is_file()} == daily_bytes
+
+
+def test_pages_descendant_safety_rejects_collision_history_loss_and_incomplete_publication(tmp_path: Path) -> None:
+    collision = _approve_and_merge(_make_case(tmp_path / "collision"))
+    _add_daily_publication(collision, candidate_id=collision["candidate"])
+    with pytest.raises(GazaHistoricalCatchupError, match="already represented"):
+        _plan(collision)
+
+    modified = _approve_and_merge(_make_case(tmp_path / "modified"))
+    manifest = modified["pages"] / "gaza/editions/2026-09-01/curation_manifest.json"
+    _json(manifest, [{"story_id": "changed-prior-claim"}])
+    _commit(modified["pages"], "modify prior claim", "gaza/editions/2026-09-01/curation_manifest.json")
+    with pytest.raises(GazaHistoricalCatchupError, match="modified a relevant prior"):
+        _plan(modified)
+
+    shrink = _approve_and_merge(_make_case(tmp_path / "shrink"))
+    archive = shrink["pages"] / "gaza/archive.html"
+    archive.write_text(archive.read_text(encoding="utf-8").replace("2026-09-01", "removed"), encoding="utf-8")
+    _commit(shrink["pages"], "drop archive history", "gaza/archive.html")
+    with pytest.raises(GazaHistoricalCatchupError, match="dropped Gaza history"):
+        _plan(shrink)
+
+    incomplete = _approve_and_merge(_make_case(tmp_path / "incomplete"))
+    _add_daily_publication(incomplete, complete=False)
+    with pytest.raises(GazaHistoricalCatchupError, match="incomplete Gaza publication"):
+        _plan(incomplete)
+
+
+def test_obsolete_date_keyed_approval_requires_renewed_human_approval(tmp_path: Path) -> None:
+    protected_approval = json.loads(
+        (
+            Path(__file__).resolve().parents[1]
+            / "approvals/gaza/gaza-historical-catchup-aug29-sep02-2026-batch-01-approval.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert protected_approval["schema_version"] == "gaza_historical_catchup_approval_v1"
+    assert "public_path" not in protected_approval and "public_url" not in protected_approval
+    assert protected_approval["schema_version"] != owner.APPROVAL_SCHEMA
+
+    case = _make_case(tmp_path)
+    created = create_approval(case["root"], case["pages"], case["request_path"])
+    path = case["root"] / created["approval_path"]
+    approval = json.loads(path.read_text(encoding="utf-8"))
+    approval["schema_version"] = "gaza_historical_catchup_approval_v1"
+    identity = dict(approval)
+    identity.pop("approval_fingerprint", None)
+    approval["approval_fingerprint"] = owner.fingerprint(identity)
+    _json(path, approval)
+    case["approval_path"] = created["approval_path"]
+    case["approval_commit"] = _commit(case["root"], "obsolete approval only", created["approval_path"])
+    _commit(case["root"], "protected merge", allow_empty=True)
+    with pytest.raises(GazaHistoricalCatchupError, match="renewed human approval"):
+        _plan(case)
+
+    forged = _make_case(tmp_path / "forged-path")
+    forged["request"]["public_path"] = "gaza/editions/2026-09-04/"
+    forged["request"]["public_url"] = "https://dispatches.thebluefernco.com/gaza/editions/2026-09-04/"
+    _json(forged["request_path"], forged["request"])
+    with pytest.raises(GazaHistoricalCatchupError, match="canonical catch-up path"):
+        create_approval(forged["root"], forged["pages"], forged["request_path"])

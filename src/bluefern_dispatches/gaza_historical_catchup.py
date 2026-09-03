@@ -595,11 +595,20 @@ def _derive_public_copy(
     }
 
 
-def approval_path_for(catchup_id: str) -> str:
+def legacy_v1_approval_path_for(catchup_id: str) -> str:
     value = str(catchup_id or "").strip()
     if not CATCHUP_RE.fullmatch(value):
         raise GazaHistoricalCatchupError("catch-up ID is malformed")
     return f"{APPROVAL_PREFIX}{value}-approval.json"
+
+
+def approval_path_for(catchup_id: str, *, schema_version: str = APPROVAL_SCHEMA) -> str:
+    value = str(catchup_id or "").strip()
+    if not CATCHUP_RE.fullmatch(value):
+        raise GazaHistoricalCatchupError("catch-up ID is malformed")
+    if schema_version != APPROVAL_SCHEMA:
+        raise GazaHistoricalCatchupError("new catch-up approval path requires the current V2 approval schema")
+    return f"{APPROVAL_PREFIX}{value}-approval-v2.json"
 
 
 def _approval_request(path: Path, root: Path, pages: Path) -> tuple[dict[str, Any], bytes]:
@@ -868,6 +877,9 @@ def load_plan(
         )
     if row.get("schema_version") != APPROVAL_SCHEMA or row.get("approval_type") != "gaza_historical_true_miss_catchup":
         raise GazaHistoricalCatchupError("historical catch-up approval schema is invalid")
+    catchup_id = str(row.get("catchup_id") or "")
+    if approval_path != approval_path_for(catchup_id, schema_version=str(row.get("schema_version") or "")):
+        raise GazaHistoricalCatchupError("V2 approval must use the exact owner-derived versioned approval path")
     identity_source = dict(row)
     stored = identity_source.pop("approval_fingerprint", None)
     if stored != fingerprint(identity_source):
@@ -901,7 +913,6 @@ def load_plan(
     }
     if incoming != {approval_path}:
         raise GazaHistoricalCatchupError("protected source changed beyond the exact approval-only artifact; a new approval is required")
-    catchup_id = str(row.get("catchup_id") or "")
     public_path = public_path_for(catchup_id)
     public_url = public_url_for(catchup_id)
     if row.get("public_path") != public_path or row.get("public_url") != public_url:
@@ -1549,6 +1560,10 @@ def published_replay_result(
             "obsolete date-keyed historical catch-up approval; renewed human approval for the canonical catch-up path is required"
         )
     catchup_id = str(approval.payload.get("catchup_id") or "")
+    if approval_path != approval_path_for(
+        catchup_id, schema_version=str(approval.payload.get("schema_version") or "")
+    ):
+        raise GazaHistoricalCatchupError("V2 approval must use the exact owner-derived versioned approval path")
     public_path = public_path_for(catchup_id)
     public_url = public_url_for(catchup_id)
     if approval.payload.get("public_path") != public_path or approval.payload.get("public_url") != public_url:

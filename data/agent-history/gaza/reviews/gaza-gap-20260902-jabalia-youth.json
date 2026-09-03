@@ -2,14 +2,14 @@
   "schema_version": "gaza_historical_editorial_review_v2",
   "review_type": "historical_editorial_review",
   "domain": "gaza",
-  "raw_sha256": "e8de8bafb132187519d8ef1802daf10e21c31db2e4fd2326c38a640531e4d27a",
+  "raw_sha256": "e10c82bcd220897edd26cb7be683238336a17a94384210315549c4632af3b25b",
   "audit_candidate_id": "GZ-GAP-20260902-JABALIA-YOUTH",
   "agent_run_id": "gaza-aug29-sep02-gap-adjudication-20260902",
-  "normalized_artifact_sha256": "f4e3c63a0289904037c8fec49d96cea2940b919375537a6b122da69b166cfdb0",
-  "report_artifact_sha256": "379184271aeb77e2d920e94232907cb9d02769070dc652fb9028682dc482346d",
+  "normalized_artifact_sha256": "df641fad6620c15c3019605ad9873d38a786a105f23779e23ac78e210421213e",
+  "report_artifact_sha256": "7562f42c518d2d5e94686534a4e8b2ee8283b9b34210a8da46f8846144668fe7",
   "decision": "confirmed",
   "decision_reason": "WAFA and Xinhua reporting support a specific Sep. 2 Jabalia casualty event that is not substantively represented by the public cumulative toll story.",
-  "candidate_event_fingerprint": "sha256:2f80938d9850d587497e5947192a638b88d9daec26fcbd9e7ed0ef4c5e0afdf5",
+  "candidate_event_fingerprint": "sha256:0223f0251c2faa1bcba166de854ba929a2e6b53e2c49cd61401cc4bc66df2849",
   "current_review_status": "pending_review",
   "current_publication_eligible": false,
   "current_publication_approval": false,
@@ -22,8 +22,17 @@
   "source_record_authorized": false,
   "cluster_authorized": false,
   "audio_authorized": false,
-  "date_assessment": {"event_date": "2026-09-02", "source_published_at": "2026-09-02"},
-  "taxonomy_review": {"domain": "gaza", "category": "civilian_harm", "event_type": "casualty_event", "gaza_role": "civilian_harm", "source_role": "reported_public_source"},
+  "date_assessment": {
+    "event_date": "2026-09-02",
+    "source_published_at": "2026-09-02"
+  },
+  "taxonomy_review": {
+    "domain": "gaza",
+    "category": "civilian_harm",
+    "event_type": "casualty_event",
+    "gaza_role": "civilian_harm",
+    "source_role": "reported_public_source"
+  },
   "attribution_assessment": {
     "mode": "single_source_report",
     "attributed_to": "Al-Shifa Hospital medical sources reported by WAFA",
@@ -34,8 +43,22 @@
     "single_source_uncertainty_preserved": true
   },
   "evidence_references": [
-    {"role": "principal", "url": "https://english.wafa.ps/Pages/Details/174303", "supporting_passage": "WAFA cited Al-Shifa medical sources reporting a youth's body and one wounded person after the al-Hawja strike."},
-    {"role": "corroborating", "url": "https://english.news.cn/20260902/31379645bddf45549eefb5427c7917d3/c.html", "supporting_passage": "Xinhua cited Al-Shifa saying two bodies, including a 16-year-old boy, arrived after separate Jabalia fire and drone incidents."}
+    {
+      "role": "principal",
+      "url": "https://english.wafa.ps/Pages/Details/174303",
+      "supporting_passage": "WAFA cited Al-Shifa medical sources reporting a youth's body and one wounded person after the al-Hawja strike."
+    },
+    {
+      "role": "corroborating",
+      "url": "https://english.news.cn/20260902/31379645bddf45549eefb5427c7917d3/c.html",
+      "supporting_passage": "Xinhua cited Al-Shifa saying two bodies, including a 16-year-old boy, arrived after separate Jabalia fire and drone incidents."
+    }
   ],
-  "duplicate_and_authoritative_match_check": {"candidate_remains_distinct": true, "existing_edition_match": null, "existing_source_match": null, "existing_story_cluster_match": null, "existing_historical_match": null}
+  "duplicate_and_authoritative_match_check": {
+    "candidate_remains_distinct": true,
+    "existing_edition_match": null,
+    "existing_source_match": null,
+    "existing_story_cluster_match": null,
+    "existing_historical_match": null
+  }
 }

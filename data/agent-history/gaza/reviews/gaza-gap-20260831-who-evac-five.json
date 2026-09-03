@@ -2,14 +2,14 @@
   "schema_version": "gaza_historical_editorial_review_v2",
   "review_type": "historical_editorial_review",
   "domain": "gaza",
-  "raw_sha256": "e8de8bafb132187519d8ef1802daf10e21c31db2e4fd2326c38a640531e4d27a",
+  "raw_sha256": "e10c82bcd220897edd26cb7be683238336a17a94384210315549c4632af3b25b",
   "audit_candidate_id": "GZ-GAP-20260831-WHO-EVAC-FIVE",
   "agent_run_id": "gaza-aug29-sep02-gap-adjudication-20260902",
-  "normalized_artifact_sha256": "f4e3c63a0289904037c8fec49d96cea2940b919375537a6b122da69b166cfdb0",
-  "report_artifact_sha256": "379184271aeb77e2d920e94232907cb9d02769070dc652fb9028682dc482346d",
+  "normalized_artifact_sha256": "df641fad6620c15c3019605ad9873d38a786a105f23779e23ac78e210421213e",
+  "report_artifact_sha256": "7562f42c518d2d5e94686534a4e8b2ee8283b9b34210a8da46f8846144668fe7",
   "decision": "confirmed",
   "decision_reason": "WHO's direct account and Romania's destination breakdown support a distinct Aug. 31 medical evacuation absent from the public Gaza record.",
-  "candidate_event_fingerprint": "sha256:34113d476d0c726505c75ea97c12fe738789a90696ba026edf51bc831b4a8f8f",
+  "candidate_event_fingerprint": "sha256:e4011ef0f9f9a89945ff05b7722e9851db778a13b46402e32eb89012665ee3a0",
   "current_review_status": "pending_review",
   "current_publication_eligible": false,
   "current_publication_approval": false,
@@ -22,8 +22,16 @@
   "source_record_authorized": false,
   "cluster_authorized": false,
   "audio_authorized": false,
-  "date_assessment": {"event_date": "2026-08-31", "source_published_at": "2026-09-02"},
-  "taxonomy_review": {"domain": "gaza", "category": "healthcare_access", "gaza_role": "healthcare_access", "source_role": "primary_un_humanitarian_report"},
+  "date_assessment": {
+    "event_date": "2026-08-31",
+    "source_published_at": "2026-09-02"
+  },
+  "taxonomy_review": {
+    "domain": "gaza",
+    "category": "healthcare_access",
+    "gaza_role": "healthcare_access",
+    "source_role": "primary_un_humanitarian_report"
+  },
   "attribution_assessment": {
     "mode": "direct_official_record",
     "attributed_to": "World Health Organization; destination split separately attributed to Romania's Ministry of Foreign Affairs",
@@ -33,8 +41,22 @@
     "unsupported_certainty_escalation": false
   },
   "evidence_references": [
-    {"role": "principal", "url": "https://www.who.int/news-room/speeches/item/who-director-general-s-opening-remarks-at-the-media-briefing---2-september-2026", "supporting_passage": "WHO said it supported evacuation of five children from Gaza to Romania and Belgium with 14 companions on Monday."},
-    {"role": "corroborating", "url": "https://www.romania-actualitati.ro/news-in-english/romania-conducts-12th-medical-evacuation-flight-from-the-gaza-strip-id233797.html", "supporting_passage": "Romania's public broadcaster said two children would receive treatment in Romania and three would be transferred to Belgium."}
+    {
+      "role": "principal",
+      "url": "https://www.who.int/news-room/speeches/item/who-director-general-s-opening-remarks-at-the-media-briefing---2-september-2026",
+      "supporting_passage": "WHO said it supported evacuation of five children from Gaza to Romania and Belgium with 14 companions on Monday."
+    },
+    {
+      "role": "corroborating",
+      "url": "https://www.romania-actualitati.ro/news-in-english/romania-conducts-12th-medical-evacuation-flight-from-the-gaza-strip-id233797.html",
+      "supporting_passage": "Romania's public broadcaster said two children would receive treatment in Romania and three would be transferred to Belgium."
+    }
   ],
-  "duplicate_and_authoritative_match_check": {"candidate_remains_distinct": true, "existing_edition_match": null, "existing_source_match": null, "existing_story_cluster_match": null, "existing_historical_match": null}
+  "duplicate_and_authoritative_match_check": {
+    "candidate_remains_distinct": true,
+    "existing_edition_match": null,
+    "existing_source_match": null,
+    "existing_story_cluster_match": null,
+    "existing_historical_match": null
+  }
 }

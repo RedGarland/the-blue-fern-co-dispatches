@@ -2,14 +2,14 @@
   "schema_version": "gaza_historical_editorial_review_v2",
   "review_type": "historical_editorial_review",
   "domain": "gaza",
-  "raw_sha256": "e8de8bafb132187519d8ef1802daf10e21c31db2e4fd2326c38a640531e4d27a",
+  "raw_sha256": "e10c82bcd220897edd26cb7be683238336a17a94384210315549c4632af3b25b",
   "audit_candidate_id": "GZ-GAP-20260901-WHO-WATER-DIARRHEA",
   "agent_run_id": "gaza-aug29-sep02-gap-adjudication-20260902",
-  "normalized_artifact_sha256": "f4e3c63a0289904037c8fec49d96cea2940b919375537a6b122da69b166cfdb0",
-  "report_artifact_sha256": "379184271aeb77e2d920e94232907cb9d02769070dc652fb9028682dc482346d",
+  "normalized_artifact_sha256": "df641fad6620c15c3019605ad9873d38a786a105f23779e23ac78e210421213e",
+  "report_artifact_sha256": "7562f42c518d2d5e94686534a4e8b2ee8283b9b34210a8da46f8846144668fe7",
   "decision": "confirmed",
   "decision_reason": "WHO supplied new bounded measurements of water contamination and acute watery diarrhea plus an explicit health-system capacity constraint not represented in public Gaza history.",
-  "candidate_event_fingerprint": "sha256:6cc4bfd0076eed1550f2664aaab2961ca0ea1bd0e651ac6c47f5774abc294a3b",
+  "candidate_event_fingerprint": "sha256:bd3b775f5e34eba64df6c5b142cb436834e542e6eedcc21e3e18900d1662735e",
   "current_review_status": "pending_review",
   "current_publication_eligible": false,
   "current_publication_approval": false,
@@ -22,8 +22,20 @@
   "source_record_authorized": false,
   "cluster_authorized": false,
   "audio_authorized": false,
-  "date_assessment": {"event_period": {"start": "2026-01-01", "end": "2026-08-31"}, "source_published_at": "2026-09-02"},
-  "taxonomy_review": {"domain": "gaza", "category": "healthcare_access", "event_type": "healthcare_access_deterioration", "gaza_role": "healthcare_access", "source_role": "primary_un_humanitarian_report"},
+  "date_assessment": {
+    "event_period": {
+      "start": "2026-01-01",
+      "end": "2026-08-31"
+    },
+    "source_published_at": "2026-09-02"
+  },
+  "taxonomy_review": {
+    "domain": "gaza",
+    "category": "healthcare_access",
+    "event_type": "healthcare_access_deterioration",
+    "gaza_role": "healthcare_access",
+    "source_role": "primary_un_humanitarian_report"
+  },
   "attribution_assessment": {
     "mode": "direct_official_record",
     "attributed_to": "World Health Organization",
@@ -33,9 +45,27 @@
     "unsupported_certainty_escalation": false
   },
   "evidence_references": [
-    {"role": "principal", "url": "https://www.who.int/news-room/speeches/item/who-director-general-s-opening-remarks-at-the-media-briefing---2-september-2026", "supporting_passage": "WHO said water contamination was increasing, acute watery diarrhoea cases had nearly doubled, and the overwhelmed health system could not manage surges."},
-    {"role": "corroborating", "url": "https://english.wafa.ps/Pages/Details/174290", "supporting_passage": "WAFA reported WHO measurements from more than 6,700 samples: contamination rose from under 6 percent to over 18 percent."},
-    {"role": "corroborating", "url": "https://www.aljazeera.com/news/2026/9/1/health-crisis-looming-as-gaza-heads-towards-rainy-season-warns-who", "supporting_passage": "Al Jazeera reported WHO's measured rise to more than 48,000 acute diarrhea cases in August from about 27,000 in March."}
+    {
+      "role": "principal",
+      "url": "https://www.who.int/news-room/speeches/item/who-director-general-s-opening-remarks-at-the-media-briefing---2-september-2026",
+      "supporting_passage": "WHO said water contamination was increasing, acute watery diarrhoea cases had nearly doubled, and the overwhelmed health system could not manage surges."
+    },
+    {
+      "role": "corroborating",
+      "url": "https://english.wafa.ps/Pages/Details/174290",
+      "supporting_passage": "WAFA reported WHO measurements from more than 6,700 samples: contamination rose from under 6 percent to over 18 percent."
+    },
+    {
+      "role": "corroborating",
+      "url": "https://www.aljazeera.com/news/2026/9/1/health-crisis-looming-as-gaza-heads-towards-rainy-season-warns-who",
+      "supporting_passage": "Al Jazeera reported WHO's measured rise to more than 48,000 acute diarrhea cases in August from about 27,000 in March."
+    }
   ],
-  "duplicate_and_authoritative_match_check": {"candidate_remains_distinct": true, "existing_edition_match": null, "existing_source_match": null, "existing_story_cluster_match": null, "existing_historical_match": null}
+  "duplicate_and_authoritative_match_check": {
+    "candidate_remains_distinct": true,
+    "existing_edition_match": null,
+    "existing_source_match": null,
+    "existing_story_cluster_match": null,
+    "existing_historical_match": null
+  }
 }

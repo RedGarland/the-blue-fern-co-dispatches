@@ -3,13 +3,13 @@
   "review_type": "historical_editorial_review",
   "domain": "gaza",
   "raw_sha256": "e10c82bcd220897edd26cb7be683238336a17a94384210315549c4632af3b25b",
-  "audit_candidate_id": "GZ-GAP-20260831-PARK",
+  "audit_candidate_id": "GZ-GAP-20260902-FAMILY-RECOVERY-21",
   "agent_run_id": "gaza-aug29-sep02-gap-adjudication-20260902",
   "normalized_artifact_sha256": "df641fad6620c15c3019605ad9873d38a786a105f23779e23ac78e210421213e",
   "report_artifact_sha256": "7562f42c518d2d5e94686534a4e8b2ee8283b9b34210a8da46f8846144668fe7",
   "decision": "confirmed",
-  "decision_reason": "Reuters, AP and Anadolu reporting support a distinct Aug. 31 strike near Gaza City's municipal park that is absent from public and protected historical records.",
-  "candidate_event_fingerprint": "sha256:f420a3fc6eb0416edeb4d18c62871733cda0e62bcd9cfe3f62b0d76dd1eb66be",
+  "decision_reason": "Al Jazeera reports a completed, family-specific recovery of 21 bodies that is absent from public Gaza history; the exact recovery date and possible inclusion in a wider Civil Defence aggregate remain unresolved.",
+  "candidate_event_fingerprint": "sha256:f37da38072704d30d47e098b9a243a3196109c789f40ade6d9a6f83e26d2d1e8",
   "current_review_status": "pending_review",
   "current_publication_eligible": false,
   "current_publication_approval": false,
@@ -23,20 +23,21 @@
   "cluster_authorized": false,
   "audio_authorized": false,
   "date_assessment": {
-    "event_date": "2026-08-31",
-    "source_published_at": "2026-08-31"
+    "event_date_status": "unknown",
+    "event_onset_unknown": true,
+    "unknown_event_date_explanation": "The source confirms that the recovery occurred but does not state its exact date.",
+    "source_published_at": "2026-09-02"
   },
   "taxonomy_review": {
     "domain": "gaza",
     "category": "civilian_harm",
-    "event_type": "casualty_event",
-    "gaza_role": "civilian_harm",
-    "source_role": "secondary_news_report"
+    "gaza_role": "humanitarian_operations_and_safety",
+    "source_role": "reported_public_source"
   },
   "attribution_assessment": {
     "mode": "single_source_report",
-    "attributed_to": "Gaza hospital and medical officials",
-    "safe_future_wording": "Medical officials reported two people killed and two critically wounded near Gaza City's municipal park.",
+    "attributed_to": "Al Jazeera",
+    "safe_future_wording": "Al Jazeera reported that a Gaza Civil Defence worker helped recover the bodies of 21 relatives from their destroyed family home after a nearly three-year wait; the exact recovery date was not stated.",
     "attribution_preserved": true,
     "uncertainty_preserved": true,
     "unsupported_certainty_escalation": false,
@@ -45,13 +46,8 @@
   "evidence_references": [
     {
       "role": "principal",
-      "url": "https://www.marketscreener.com/news/israeli-fire-kills-two-people-in-gaza-medics-say-ce7858dcde8bfe26",
-      "supporting_passage": "Reuters reported two people killed and several wounded when a strike hit near Gaza City's municipal public park."
-    },
-    {
-      "role": "corroborating",
-      "url": "https://www.aa.com.tr/en/middle-east/5-palestinians-killed-several-others-injured-in-israeli-attacks-on-gaza/4042500",
-      "supporting_passage": "Anadolu reported two people killed and others injured at a residential-building entrance near Gaza Municipality Park."
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/9/2/gaza-civil-defence-worker-finds-21-relatives-beneath-rubble",
+      "supporting_passage": "Al Jazeera reported that a Civil Defence worker helped recover 21 relatives from the rubble of their destroyed family home."
     }
   ],
   "duplicate_and_authoritative_match_check": {

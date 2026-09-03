@@ -1,0 +1,68 @@
+{
+  "agent_run_id": "gaza-aug29-sep02-gap-adjudication-20260902",
+  "archive_content_change_authorized": false,
+  "attribution_assessment": {
+    "attributed_to": "World Health Organization; destination split separately attributed to Romania's Ministry of Foreign Affairs",
+    "attribution_preserved": true,
+    "mode": "direct_official_record",
+    "safe_future_wording": "WHO said five children and 14 companions were evacuated to Romania and Belgium; Romania said two children stayed and three transferred to Belgium.",
+    "uncertainty_preserved": true,
+    "unsupported_certainty_escalation": false
+  },
+  "audio_authorized": false,
+  "audit_candidate_id": "GZ-GAP-20260831-WHO-EVAC-FIVE",
+  "candidate_event_fingerprint": "sha256:34113d476d0c726505c75ea97c12fe738789a90696ba026edf51bc831b4a8f8f",
+  "cluster_authorized": false,
+  "date_assessment": {
+    "event_date": "2026-08-31",
+    "source_published_at": "2026-09-02"
+  },
+  "decided_at": "2026-09-03T00:39:37.289792+00:00",
+  "decision": "confirmed",
+  "decision_reason": "WHO's direct account and Romania's destination breakdown support a distinct Aug. 31 medical evacuation absent from the public Gaza record.",
+  "domain": "gaza",
+  "duplicate_and_authoritative_match_check": {
+    "candidate_remains_distinct": true,
+    "existing_edition_match": null,
+    "existing_historical_match": null,
+    "existing_source_match": null,
+    "existing_story_cluster_match": null
+  },
+  "edition_authorized": false,
+  "evidence_references": [
+    {
+      "role": "principal",
+      "supporting_passage": "WHO said it supported evacuation of five children from Gaza to Romania and Belgium with 14 companions on Monday.",
+      "url": "https://www.who.int/news-room/speeches/item/who-director-general-s-opening-remarks-at-the-media-briefing---2-september-2026"
+    },
+    {
+      "role": "corroborating",
+      "supporting_passage": "Romania's public broadcaster said two children would receive treatment in Romania and three would be transferred to Belgium.",
+      "url": "https://www.romania-actualitati.ro/news-in-english/romania-conducts-12th-medical-evacuation-flight-from-the-gaza-strip-id233797.html"
+    }
+  ],
+  "normalized_artifact_path": "data/agent-history/gaza/normalized/e8de8bafb132187519d8ef1802daf10e21c31db2e4fd2326c38a640531e4d27a.json",
+  "normalized_artifact_sha256": "f4e3c63a0289904037c8fec49d96cea2940b919375537a6b122da69b166cfdb0",
+  "operator": "Codex historical editorial review",
+  "previous_review_status": "pending_review",
+  "publication_approval": false,
+  "publication_authorized": false,
+  "publication_eligible": false,
+  "queue_action": "none",
+  "queue_authorized": false,
+  "raw_archive_artifact_path": "data/agent-history/gaza/raw/e8de8bafb132187519d8ef1802daf10e21c31db2e4fd2326c38a640531e4d27a.json",
+  "raw_archive_artifact_sha256": "e6edc42255311ed168ed5a1cc233a0d7ffba32c5030e04f3720462622c20d637",
+  "raw_sha256": "e8de8bafb132187519d8ef1802daf10e21c31db2e4fd2326c38a640531e4d27a",
+  "report_artifact_path": "data/agent-history/gaza/reports/e8de8bafb132187519d8ef1802daf10e21c31db2e4fd2326c38a640531e4d27a.json",
+  "report_artifact_sha256": "379184271aeb77e2d920e94232907cb9d02769070dc652fb9028682dc482346d",
+  "resulting_review_state": "substantively_reviewed",
+  "review_artifact_path": "data/agent-history/gaza/reviews/gaza-gap-20260831-who-evac-five.json",
+  "review_artifact_sha256": "1de525a9e69a51e2a16750b8cfdd0ec74ef25a2e86384724bbe423a85fb7e2f0",
+  "schema_version": "gaza_historical_editorial_decision_v2",
+  "source_record_authorized": false,
+  "taxonomy_review": {
+    "category": "healthcare_access",
+    "gaza_role": "healthcare_access",
+    "source_role": "primary_un_humanitarian_report"
+  }
+}

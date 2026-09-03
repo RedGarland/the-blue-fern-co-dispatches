@@ -1,0 +1,41 @@
+{
+  "schema_version": "gaza_historical_editorial_review_v2",
+  "review_type": "historical_editorial_review",
+  "domain": "gaza",
+  "raw_sha256": "e8de8bafb132187519d8ef1802daf10e21c31db2e4fd2326c38a640531e4d27a",
+  "audit_candidate_id": "GZ-GAP-20260831-PARK",
+  "agent_run_id": "gaza-aug29-sep02-gap-adjudication-20260902",
+  "normalized_artifact_sha256": "f4e3c63a0289904037c8fec49d96cea2940b919375537a6b122da69b166cfdb0",
+  "report_artifact_sha256": "379184271aeb77e2d920e94232907cb9d02769070dc652fb9028682dc482346d",
+  "decision": "confirmed",
+  "decision_reason": "Reuters, AP and Anadolu reporting support a distinct Aug. 31 strike near Gaza City's municipal park that is absent from public and protected historical records.",
+  "candidate_event_fingerprint": "sha256:111be9bd3b0098c9494df0c2250191847fe27076aef6c05f9bd02ef44ee22ef5",
+  "current_review_status": "pending_review",
+  "current_publication_eligible": false,
+  "current_publication_approval": false,
+  "current_queue_action": "none",
+  "resulting_review_state": "substantively_reviewed",
+  "archive_mutation_authorized": false,
+  "edition_authorized": false,
+  "publication_authorized": false,
+  "queue_authorized": false,
+  "source_record_authorized": false,
+  "cluster_authorized": false,
+  "audio_authorized": false,
+  "date_assessment": {"event_date": "2026-08-31", "source_published_at": "2026-08-31"},
+  "taxonomy_review": {"domain": "gaza", "category": "civilian_harm", "event_type": "casualty_event", "gaza_role": "civilian_harm", "source_role": "secondary_news_report"},
+  "attribution_assessment": {
+    "mode": "single_source_report",
+    "attributed_to": "Gaza hospital and medical officials",
+    "safe_future_wording": "Medical officials reported two people killed and two critically wounded near Gaza City's municipal park.",
+    "attribution_preserved": true,
+    "uncertainty_preserved": true,
+    "unsupported_certainty_escalation": false,
+    "single_source_uncertainty_preserved": true
+  },
+  "evidence_references": [
+    {"role": "principal", "url": "https://www.marketscreener.com/news/israeli-fire-kills-two-people-in-gaza-medics-say-ce7858dcde8bfe26", "supporting_passage": "Reuters reported two people killed and several wounded when a strike hit near Gaza City's municipal public park."},
+    {"role": "corroborating", "url": "https://www.aa.com.tr/en/middle-east/5-palestinians-killed-several-others-injured-in-israeli-attacks-on-gaza/4042500", "supporting_passage": "Anadolu reported two people killed and others injured at a residential-building entrance near Gaza Municipality Park."}
+  ],
+  "duplicate_and_authoritative_match_check": {"candidate_remains_distinct": true, "existing_edition_match": null, "existing_source_match": null, "existing_story_cluster_match": null, "existing_historical_match": null}
+}

@@ -308,6 +308,7 @@ def _add_daily_publication(
 def test_committed_authority_approval_replay_and_public_copy(tmp_path: Path) -> None:
     case = _make_case(tmp_path)
     first = create_approval(case["root"], case["pages"], case["request_path"])
+    assert first["approval_path"] == "approvals/gaza/gaza-historical-catchup-synthetic-approval-v2.json"
     path = case["root"] / first["approval_path"]
     raw, timestamp = path.read_bytes(), path.stat().st_mtime_ns
     second = create_approval(case["root"], case["pages"], case["request_path"])
@@ -332,6 +333,81 @@ def test_committed_authority_approval_replay_and_public_copy(tmp_path: Path) -> 
     _json(case["request_path"], changed)
     with pytest.raises(GazaHistoricalCatchupError, match="conflicting"):
         create_approval(case["root"], case["pages"], case["request_path"])
+
+
+def test_real_v1_and_new_v2_approval_coexist_without_mutating_v1(tmp_path: Path) -> None:
+    case = _make_case(tmp_path)
+    catchup_id = case["request"]["catchup_id"]
+    legacy_relative = owner.legacy_v1_approval_path_for(catchup_id)
+    v2_relative = owner.approval_path_for(catchup_id)
+    protected_v1 = (
+        Path(__file__).resolve().parents[1]
+        / "approvals/gaza/gaza-historical-catchup-aug29-sep02-2026-batch-01-approval.json"
+    )
+    legacy = case["root"] / legacy_relative
+    legacy.parent.mkdir(parents=True, exist_ok=True)
+    legacy.write_bytes(protected_v1.read_bytes())
+    source_base = _commit(case["root"], "preserve immutable V1 approval", legacy_relative)
+    case["request"]["source_base_commit"] = source_base
+    _json(case["request_path"], case["request"])
+    before = (legacy.read_bytes(), legacy.stat().st_size, legacy.stat().st_mtime_ns)
+
+    first = create_approval(case["root"], case["pages"], case["request_path"])
+    v2 = case["root"] / v2_relative
+    v2_before = (v2.read_bytes(), v2.stat().st_size, v2.stat().st_mtime_ns)
+    replay = create_approval(case["root"], case["pages"], case["request_path"])
+
+    assert first["status"] == "approval_created" and first["approval_path"] == v2_relative
+    assert replay["status"] == "idempotent_noop"
+    assert (legacy.read_bytes(), legacy.stat().st_size, legacy.stat().st_mtime_ns) == before
+    assert (v2.read_bytes(), v2.stat().st_size, v2.stat().st_mtime_ns) == v2_before
+    assert {path.name for path in legacy.parent.glob("*.json")} == {legacy.name, v2.name}
+
+
+def test_v2_approval_path_is_schema_owned_and_mixed_or_alternate_topology_fails(tmp_path: Path) -> None:
+    with pytest.raises(GazaHistoricalCatchupError, match="current V2"):
+        owner.approval_path_for("gaza-historical-catchup-synthetic", schema_version="gaza_historical_catchup_approval_v1")
+
+    mixed = _make_case(tmp_path / "mixed")
+    created = create_approval(mixed["root"], mixed["pages"], mixed["request_path"])
+    legacy_relative = owner.legacy_v1_approval_path_for(mixed["request"]["catchup_id"])
+    protected_v1 = (
+        Path(__file__).resolve().parents[1]
+        / "approvals/gaza/gaza-historical-catchup-aug29-sep02-2026-batch-01-approval.json"
+    )
+    legacy = mixed["root"] / legacy_relative
+    legacy.write_bytes(protected_v1.read_bytes())
+    mixed["approval_path"] = created["approval_path"]
+    mixed["approval_commit"] = _commit(
+        mixed["root"], "mixed V1 and V2 approval", created["approval_path"], legacy_relative
+    )
+    _commit(mixed["root"], "protected merge", allow_empty=True)
+    with pytest.raises(GazaHistoricalCatchupError, match="approval-only"):
+        _plan(mixed)
+
+    alternate = _make_case(tmp_path / "alternate")
+    created = create_approval(alternate["root"], alternate["pages"], alternate["request_path"])
+    expected = alternate["root"] / created["approval_path"]
+    alternate_relative = "approvals/gaza/gaza-historical-catchup-synthetic-manual-approval-v2.json"
+    (alternate["root"] / alternate_relative).write_bytes(expected.read_bytes())
+    expected.unlink()
+    alternate["approval_path"] = alternate_relative
+    alternate["approval_commit"] = _commit(alternate["root"], "alternate V2 approval path", alternate_relative)
+    _commit(alternate["root"], "protected merge", allow_empty=True)
+    with pytest.raises(GazaHistoricalCatchupError, match="owner-derived versioned"):
+        _plan(alternate)
+
+    v1_path = _make_case(tmp_path / "v1-path")
+    created = create_approval(v1_path["root"], v1_path["pages"], v1_path["request_path"])
+    expected = v1_path["root"] / created["approval_path"]
+    legacy_relative = owner.legacy_v1_approval_path_for(v1_path["request"]["catchup_id"])
+    (v1_path["root"] / legacy_relative).write_bytes(expected.read_bytes())
+    expected.unlink()
+    v1_path["approval_path"] = legacy_relative
+    v1_path["approval_commit"] = _commit(v1_path["root"], "V2 stored at V1 path", legacy_relative)
+    _commit(v1_path["root"], "protected merge", allow_empty=True)
+    with pytest.raises(GazaHistoricalCatchupError, match="owner-derived versioned"):
+        _plan(v1_path)
 
 
 @pytest.mark.parametrize(
@@ -634,15 +710,25 @@ def test_pages_descendant_safety_rejects_collision_history_loss_and_incomplete_p
 
 
 def test_obsolete_date_keyed_approval_requires_renewed_human_approval(tmp_path: Path) -> None:
-    protected_approval = json.loads(
-        (
-            Path(__file__).resolve().parents[1]
-            / "approvals/gaza/gaza-historical-catchup-aug29-sep02-2026-batch-01-approval.json"
-        ).read_text(encoding="utf-8")
+    protected_path = (
+        Path(__file__).resolve().parents[1]
+        / "approvals/gaza/gaza-historical-catchup-aug29-sep02-2026-batch-01-approval.json"
     )
+    protected_approval = json.loads(protected_path.read_text(encoding="utf-8"))
     assert protected_approval["schema_version"] == "gaza_historical_catchup_approval_v1"
     assert "public_path" not in protected_approval and "public_url" not in protected_approval
     assert protected_approval["schema_version"] != owner.APPROVAL_SCHEMA
+
+    legacy = _make_case(tmp_path / "real-legacy")
+    legacy_relative = owner.legacy_v1_approval_path_for(legacy["request"]["catchup_id"])
+    legacy_path = legacy["root"] / legacy_relative
+    legacy_path.parent.mkdir(parents=True, exist_ok=True)
+    legacy_path.write_bytes(protected_path.read_bytes())
+    legacy["approval_path"] = legacy_relative
+    legacy["approval_commit"] = _commit(legacy["root"], "obsolete V1 approval only", legacy_relative)
+    _commit(legacy["root"], "protected merge", allow_empty=True)
+    with pytest.raises(GazaHistoricalCatchupError, match="renewed human approval"):
+        _plan(legacy)
 
     case = _make_case(tmp_path)
     created = create_approval(case["root"], case["pages"], case["request_path"])

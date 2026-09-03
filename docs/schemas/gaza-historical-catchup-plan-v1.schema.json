@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dispatches.bluefern.company/schemas/gaza-historical-catchup-plan-v1.schema.json",
+  "title": "Gaza historical catch-up plan v1",
+  "type": "object",
+  "required": ["schema_version", "status", "ok", "persistent_mutation", "pages_mutation", "item_count", "publication_authorized", "audio_authorized", "social_authorized", "expected_pages_paths"],
+  "properties": {
+    "schema_version": {"const": "gaza_historical_catchup_plan_v1"},
+    "status": {"const": "validated_plan"},
+    "ok": {"const": true},
+    "persistent_mutation": {"const": false},
+    "pages_mutation": {"const": false},
+    "item_count": {"type": "integer", "minimum": 1, "maximum": 15},
+    "publication_authorized": {"const": true},
+    "audio_authorized": {"const": false},
+    "social_authorized": {"const": false},
+    "expected_pages_paths": {"type": "array", "minItems": 8, "uniqueItems": true, "items": {"type": "string"}}
+  }
+}

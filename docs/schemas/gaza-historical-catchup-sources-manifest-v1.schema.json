@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dispatches.bluefern.company/schemas/gaza-historical-catchup-sources-manifest-v1.schema.json",
+  "title": "Gaza historical catch-up sources manifest v1",
+  "type": "array",
+  "minItems": 1,
+  "maxItems": 15,
+  "items": {
+    "type": "object",
+    "required": ["source_record_id", "historical_candidate_id", "url", "canonical_url", "source_urls", "publisher", "published_at", "event_fingerprint", "historical_classification", "approval_sha256"],
+    "properties": {
+      "url": {"type": "string", "format": "uri"},
+      "canonical_url": {"type": "string", "format": "uri"},
+      "historical_classification": {"const": "confirmed_true_miss"}
+    }
+  }
+}

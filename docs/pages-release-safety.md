@@ -37,11 +37,19 @@ Release-manifest validation hashes every source and pre-sync Pages file, verifie
 Approved migrated-event retrospectives use the same owner with an additional
 internal `include_rss` gate. Their generated-output role is accepted only when
 the release manifest resolves an exact committed retrospective approval from
-an approval-only commit, proves that commit was normally merged behind the
+an exact V2-approval-only commit, proves that commit was normally merged behind the
 current source commit, validates its authority flags and SHA-256 against the
 raw Git blob, and matches the clean pre-publish Pages HEAD. This exception does
 not change the default daily copy plan: ordinary releases still copy only the
 homepage, archive, and selected edition directories.
+
+The current owner accepts only
+`approvals/food-line/<batch-id>-approval-v2.json` with schema
+`food_line_retrospective_approval_v2`. Unversioned V1 approval files are
+immutable historical records and produce a renewal-required error if supplied
+to planning or publish-scope validation. A V2 approval does not mutate Pages;
+its exact Pages binding is checked later by the separately authorized publish
+operation.
 
 ## Commit And Push
 

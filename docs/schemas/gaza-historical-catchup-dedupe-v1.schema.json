@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dispatches.bluefern.company/schemas/gaza-historical-catchup-dedupe-v1.schema.json",
+  "title": "Gaza historical catch-up dedupe report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "catchup_id", "publication_date", "input_candidate_count", "kept_candidate_count", "suppressed_candidate_count", "event_fingerprints", "candidate_ids"],
+  "properties": {
+    "schema_version": {"const": "gaza_historical_catchup_dedupe_v1"},
+    "catchup_id": {"type": "string"},
+    "publication_date": {"type": "string", "format": "date"},
+    "input_candidate_count": {"type": "integer", "minimum": 1, "maximum": 15},
+    "kept_candidate_count": {"type": "integer", "minimum": 1, "maximum": 15},
+    "suppressed_candidate_count": {"const": 0},
+    "event_fingerprints": {"type": "array", "minItems": 1, "maxItems": 15, "uniqueItems": true},
+    "candidate_ids": {"type": "array", "minItems": 1, "maxItems": 15, "uniqueItems": true}
+  }
+}

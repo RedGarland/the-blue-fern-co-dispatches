@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dispatches.bluefern.company/schemas/gaza-historical-catchup-release-manifest-v1.schema.json",
+  "title": "Gaza historical catch-up release manifest v1",
+  "type": "object",
+  "required": [
+    "schema_version", "catchup_id", "publication_date", "publication_timestamp",
+    "approval_commit", "approval_path", "approval_blob_sha1", "approval_sha256",
+    "source_head", "pages_head", "item_count", "ordered_public_copy_sha256",
+    "entries", "non_mutated_dependencies", "audio_authorized", "social_authorized",
+    "podcast_or_flash_mutation", "publication_executed", "release_fingerprint"
+  ],
+  "$defs": {
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pages_path", "sha256", "length"],
+      "properties": {
+        "pages_path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "length": {"type": "integer", "minimum": 0}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "gaza_historical_catchup_release_manifest_v1"},
+    "catchup_id": {"type": "string"},
+    "publication_date": {"type": "string", "format": "date"},
+    "publication_timestamp": {"type": "string", "format": "date-time"},
+    "item_count": {"type": "integer", "minimum": 1, "maximum": 15},
+    "entries": {"type": "array", "minItems": 8, "items": {"$ref": "#/$defs/file"}},
+    "non_mutated_dependencies": {"type": "array", "items": {"$ref": "#/$defs/file"}},
+    "audio_authorized": {"const": false},
+    "social_authorized": {"const": false},
+    "podcast_or_flash_mutation": {"const": false},
+    "publication_executed": {"const": false},
+    "release_fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

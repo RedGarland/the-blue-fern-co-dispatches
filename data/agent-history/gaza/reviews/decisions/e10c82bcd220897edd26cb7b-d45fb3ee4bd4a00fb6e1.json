@@ -1,0 +1,68 @@
+{
+  "agent_run_id": "gaza-aug29-sep02-gap-adjudication-20260902",
+  "archive_content_change_authorized": false,
+  "attribution_assessment": {
+    "attributed_to": "Palestinian Red Crescent Society and witnesses reported by WAFA",
+    "attribution_preserved": true,
+    "mode": "official_claim",
+    "safe_future_wording": "WAFA reported five fishermen injured off Gaza City; PRCS said it transported all five to two hospitals.",
+    "uncertainty_preserved": true,
+    "unsupported_certainty_escalation": false
+  },
+  "audio_authorized": false,
+  "audit_candidate_id": "GZ-GAP-20260831-FISHERMEN",
+  "candidate_event_fingerprint": "sha256:a8788572bbc894382c45bbcfcd47b26261470bf2412670a5ecc8bd63abfd8b25",
+  "cluster_authorized": false,
+  "date_assessment": {
+    "event_date": "2026-08-31",
+    "source_published_at": "2026-08-31"
+  },
+  "decided_at": "2026-09-03T00:57:31.449146+00:00",
+  "decision": "confirmed",
+  "decision_reason": "WAFA's PRCS-attributed transfer count and corroborating reporting support a distinct Aug. 31 harm-to-livelihood event absent from public history.",
+  "domain": "gaza",
+  "duplicate_and_authoritative_match_check": {
+    "candidate_remains_distinct": true,
+    "existing_edition_match": null,
+    "existing_historical_match": null,
+    "existing_source_match": null,
+    "existing_story_cluster_match": null
+  },
+  "edition_authorized": false,
+  "evidence_references": [
+    {
+      "role": "principal",
+      "supporting_passage": "PRCS said its crews transported three injured fishermen to Al-Saraya Field Hospital and two to Al-Shifa Hospital.",
+      "url": "https://english.wafa.ps/Pages/Details/174242"
+    },
+    {
+      "role": "corroborating",
+      "supporting_passage": "Anadolu also reported PRCS crews transported five fishermen injured by fire from Israeli warboats.",
+      "url": "https://www.aa.com.tr/en/middle-east/5-palestinians-killed-several-others-injured-in-israeli-attacks-on-gaza/4042500"
+    }
+  ],
+  "normalized_artifact_path": "data/agent-history/gaza/normalized/e10c82bcd220897edd26cb7be683238336a17a94384210315549c4632af3b25b.json",
+  "normalized_artifact_sha256": "df641fad6620c15c3019605ad9873d38a786a105f23779e23ac78e210421213e",
+  "operator": "Codex historical editorial review",
+  "previous_review_status": "pending_review",
+  "publication_approval": false,
+  "publication_authorized": false,
+  "publication_eligible": false,
+  "queue_action": "none",
+  "queue_authorized": false,
+  "raw_archive_artifact_path": "data/agent-history/gaza/raw/e10c82bcd220897edd26cb7be683238336a17a94384210315549c4632af3b25b.json",
+  "raw_archive_artifact_sha256": "1f7c7195c70fcd4023273e061038e8bd69e7821b07816016a70572de0a44f9e4",
+  "raw_sha256": "e10c82bcd220897edd26cb7be683238336a17a94384210315549c4632af3b25b",
+  "report_artifact_path": "data/agent-history/gaza/reports/e10c82bcd220897edd26cb7be683238336a17a94384210315549c4632af3b25b.json",
+  "report_artifact_sha256": "7562f42c518d2d5e94686534a4e8b2ee8283b9b34210a8da46f8846144668fe7",
+  "resulting_review_state": "substantively_reviewed",
+  "review_artifact_path": "data/agent-history/gaza/reviews/gaza-gap-20260831-fishermen.json",
+  "review_artifact_sha256": "478704405643e8ae157197fcf6b22bf51d21c2a22513b92e653d44a3e65f64c0",
+  "schema_version": "gaza_historical_editorial_decision_v2",
+  "source_record_authorized": false,
+  "taxonomy_review": {
+    "category": "humanitarian_access",
+    "gaza_role": "humanitarian_access",
+    "source_role": "reported_public_source"
+  }
+}

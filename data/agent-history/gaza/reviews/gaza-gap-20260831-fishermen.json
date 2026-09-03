@@ -1,0 +1,62 @@
+{
+  "schema_version": "gaza_historical_editorial_review_v2",
+  "review_type": "historical_editorial_review",
+  "domain": "gaza",
+  "raw_sha256": "e10c82bcd220897edd26cb7be683238336a17a94384210315549c4632af3b25b",
+  "audit_candidate_id": "GZ-GAP-20260831-FISHERMEN",
+  "agent_run_id": "gaza-aug29-sep02-gap-adjudication-20260902",
+  "normalized_artifact_sha256": "df641fad6620c15c3019605ad9873d38a786a105f23779e23ac78e210421213e",
+  "report_artifact_sha256": "7562f42c518d2d5e94686534a4e8b2ee8283b9b34210a8da46f8846144668fe7",
+  "decision": "confirmed",
+  "decision_reason": "WAFA's PRCS-attributed transfer count and corroborating reporting support a distinct Aug. 31 harm-to-livelihood event absent from public history.",
+  "candidate_event_fingerprint": "sha256:a8788572bbc894382c45bbcfcd47b26261470bf2412670a5ecc8bd63abfd8b25",
+  "current_review_status": "pending_review",
+  "current_publication_eligible": false,
+  "current_publication_approval": false,
+  "current_queue_action": "none",
+  "resulting_review_state": "substantively_reviewed",
+  "archive_mutation_authorized": false,
+  "edition_authorized": false,
+  "publication_authorized": false,
+  "queue_authorized": false,
+  "source_record_authorized": false,
+  "cluster_authorized": false,
+  "audio_authorized": false,
+  "date_assessment": {
+    "event_date": "2026-08-31",
+    "source_published_at": "2026-08-31"
+  },
+  "taxonomy_review": {
+    "domain": "gaza",
+    "category": "humanitarian_access",
+    "gaza_role": "humanitarian_access",
+    "source_role": "reported_public_source"
+  },
+  "attribution_assessment": {
+    "mode": "official_claim",
+    "attributed_to": "Palestinian Red Crescent Society and witnesses reported by WAFA",
+    "safe_future_wording": "WAFA reported five fishermen injured off Gaza City; PRCS said it transported all five to two hospitals.",
+    "attribution_preserved": true,
+    "uncertainty_preserved": true,
+    "unsupported_certainty_escalation": false
+  },
+  "evidence_references": [
+    {
+      "role": "principal",
+      "url": "https://english.wafa.ps/Pages/Details/174242",
+      "supporting_passage": "PRCS said its crews transported three injured fishermen to Al-Saraya Field Hospital and two to Al-Shifa Hospital."
+    },
+    {
+      "role": "corroborating",
+      "url": "https://www.aa.com.tr/en/middle-east/5-palestinians-killed-several-others-injured-in-israeli-attacks-on-gaza/4042500",
+      "supporting_passage": "Anadolu also reported PRCS crews transported five fishermen injured by fire from Israeli warboats."
+    }
+  ],
+  "duplicate_and_authoritative_match_check": {
+    "candidate_remains_distinct": true,
+    "existing_edition_match": null,
+    "existing_source_match": null,
+    "existing_story_cluster_match": null,
+    "existing_historical_match": null
+  }
+}

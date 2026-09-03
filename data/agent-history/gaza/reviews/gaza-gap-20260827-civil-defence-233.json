@@ -1,0 +1,65 @@
+{
+  "schema_version": "gaza_historical_editorial_review_v2",
+  "review_type": "historical_editorial_review",
+  "domain": "gaza",
+  "raw_sha256": "e10c82bcd220897edd26cb7be683238336a17a94384210315549c4632af3b25b",
+  "audit_candidate_id": "GZ-GAP-20260827-CIVIL-DEFENCE-233",
+  "agent_run_id": "gaza-aug29-sep02-gap-adjudication-20260902",
+  "normalized_artifact_sha256": "df641fad6620c15c3019605ad9873d38a786a105f23779e23ac78e210421213e",
+  "report_artifact_sha256": "7562f42c518d2d5e94686534a4e8b2ee8283b9b34210a8da46f8846144668fe7",
+  "decision": "confirmed",
+  "decision_reason": "The attributed 51-day recovery milestone is a qualifying prior-window development absent from public history; all quantities remain explicitly attributed to Gaza Civil Defence.",
+  "candidate_event_fingerprint": "sha256:89e1e1b319ee9eab3eb6d31187169bc341c8fd74f650f90ed5c82953b86227e4",
+  "current_review_status": "pending_review",
+  "current_publication_eligible": false,
+  "current_publication_approval": false,
+  "current_queue_action": "none",
+  "resulting_review_state": "substantively_reviewed",
+  "archive_mutation_authorized": false,
+  "edition_authorized": false,
+  "publication_authorized": false,
+  "queue_authorized": false,
+  "source_record_authorized": false,
+  "cluster_authorized": false,
+  "audio_authorized": false,
+  "date_assessment": {
+    "event_period": {
+      "start": "2026-07-08",
+      "end": "2026-08-27"
+    },
+    "source_published_at": "2026-08-27"
+  },
+  "taxonomy_review": {
+    "domain": "gaza",
+    "category": "civilian_harm",
+    "gaza_role": "humanitarian_operations_and_safety",
+    "source_role": "reported_public_source"
+  },
+  "attribution_assessment": {
+    "mode": "official_claim",
+    "attributed_to": "Gaza Civil Defence official Mohammed Abu Dan, reported by the Palestinian Information Center",
+    "safe_future_wording": "Gaza Civil Defence said 233 bodies or remains, including 73 children and 106 women, were recovered from 20 homes while 174 remained missing.",
+    "attribution_preserved": true,
+    "uncertainty_preserved": true,
+    "unsupported_certainty_escalation": false
+  },
+  "evidence_references": [
+    {
+      "role": "principal",
+      "url": "https://english.palinfo.com/news/2026/08/27/369054/",
+      "supporting_passage": "The report quoted Gaza Civil Defence saying 233 bodies were recovered from 20 homes and 174 remained missing."
+    },
+    {
+      "role": "corroborating",
+      "url": "https://en.ypagency.net/403415",
+      "supporting_passage": "A second regional report preserved the Civil Defence totals of 233 recovered, including 73 children and 106 women."
+    }
+  ],
+  "duplicate_and_authoritative_match_check": {
+    "candidate_remains_distinct": true,
+    "existing_edition_match": null,
+    "existing_source_match": null,
+    "existing_story_cluster_match": null,
+    "existing_historical_match": null
+  }
+}

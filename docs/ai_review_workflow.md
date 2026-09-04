@@ -24,7 +24,7 @@ This repository allows optional AI assistance, but AI output is advisory until a
 
 ## Codex Safe Execution Scope
 
-Codex may reduce git and PR friction by carrying out safe mechanical source-repo steps after a scoped implementation task, but merge, publish, Pages, and editorial decisions remain human-controlled.
+Codex may reduce git and PR friction by carrying out safe mechanical source-repo steps after a scoped implementation task, including an exact-head merge of a bounded routine source PR. Publish, Pages, editorial, approval, release, and governance-expansion decisions remain human-controlled.
 
 Safe Codex-allowed actions:
 
@@ -39,12 +39,15 @@ Safe Codex-allowed actions:
 - create a GitHub PR against the approved base branch
 - run or watch PR checks
 - open the PR in the browser with `gh pr view --web`
-- after the human confirms the PR was merged, switch back to base, pull with `--ff-only`, verify the latest commit, verify source status, verify Pages repo status
+- synchronize with the current protected base and prove required checks on the exact PR head immediately before an eligible merge
+- merge only a `CODEX_AUTO_MERGE_ELIGIBLE` PR with exact-head protection
+- after any merge, fetch the protected branch, prove it contains the reviewed head, and verify source and Pages status
 - delete local and remote feature branches after merge confirmation
 
-Human-only actions:
+Human-merge-required actions:
 
-- merge a PR
+- merge a PR that carries editorial, approval, publication, correction/withdrawal, release, or public-output authority
+- merge a PR that expands Codex/AI authority or changes repository governance, branch protection, rulesets, credentials, destructive-operation authority, or consequential external-egress policy
 - publish public editions
 - sync, commit, or push the Pages repo
 - post to Bluesky or other social platforms
@@ -55,6 +58,8 @@ Human-only actions:
 - commit generated public output unless explicitly instructed
 - use `git add .`
 - delete broad generated folders without explicit instruction
+
+Codex must never use routine merge permission to expand its own permissions. A routine source merge does not authorize Pages activity or publication.
 
 Explicit instruction required:
 

@@ -1,6 +1,6 @@
 # Codex PR Workflow
 
-This workflow is the standard source-repo path for Codex implementation work in this project. It is PR-only, source-repo only, and stops before merge unless the user explicitly asks for a post-merge cleanup step.
+This workflow is the standard source-repo path for Codex implementation work in this project. It is source-repo only and classifies each validated PR before merge.
 
 ## Scope
 
@@ -9,11 +9,13 @@ This workflow is the standard source-repo path for Codex implementation work in 
 - Pages repo: `C:\PythonProjects\Dispatches From The Blue Fern Co\bluefern-dispatches-pages`
 - Pages branch: `gh-pages`
 
-## Human Boundary
+## Authority Boundary
 
-- Codex does not merge PRs.
-- A human reviews the PR in GitHub and clicks Merge.
-- Codex may resume only after the human confirms that the PR was merged.
+- A mechanical source merge is not editorial or publication authority.
+- Codex may merge only a bounded routine source PR classified `CODEX_AUTO_MERGE_ELIGIBLE` after current-base synchronization and exact-head validation.
+- A PR classified `HUMAN_MERGE_REQUIRED` stops for human merge with the exact reason reported.
+- Codex must never merge a PR that expands its own authority or materially changes repository governance permissions.
+- No source merge authorizes Pages activity, publication, audio, social posting, candidate approval, or source-gate relaxation.
 
 ## Hard Prohibitions
 
@@ -203,25 +205,65 @@ The PR body should include:
 - tests and validation run
 - explicit statement that no publish, no Pages sync, and no Pages push occurred
 
-### 14. Watch Checks And Open The PR
+### 14. Watch Checks And Classify The PR
 
 Run:
 
 ```powershell
 gh pr checks --watch
-gh pr view --web
 ```
 
-Then stop.
+Then apply the merge classification below. Opening a browser is optional and is not required for an eligible routine merge.
 
-Stop condition:
+## Merge Classification
 
-- Codex stops before merge.
-- Human review and merge happen in GitHub.
+Classify exactly one:
+
+- `CODEX_AUTO_MERGE_ELIGIBLE`
+- `HUMAN_MERGE_REQUIRED`
+
+### CODEX_AUTO_MERGE_ELIGIBLE
+
+All conditions are mandatory:
+
+1. The task is authorized and bounded.
+2. The PR contains only in-scope routine source-repository implementation material such as application code, tests, documentation, schemas, or non-public configuration.
+3. The merge creates no editorial, approval, publication, release, correction/withdrawal, or other human decision authority and causes no consequential public side effect.
+4. No Pages or public generated artifacts are committed or pushed.
+5. The base is `add/pages-repo-default`.
+6. Fetch the current protected base and verify the feature branch is synchronized with it. If the base advanced, synchronize safely and rerun validation on the resulting exact feature head.
+7. Record the exact PR head immediately before merge and require `reviewed_head == head_immediately_before_merge`.
+8. Verify the PR is open, non-draft, and mergeable/clean.
+9. Verify `validate`, GitGuardian/security when present, and every other required check succeeded on that exact head.
+10. Recheck the changed-file inventory against the authorized scope.
+11. Require no unresolved review issue or newly discovered blocker.
+12. Merge with exact-head protection and without admin, bypass, or force options:
+
+```powershell
+gh pr merge <PR_NUMBER> --merge --match-head-commit <EXACT_PR_HEAD>
+```
+
+If the protected base or PR head changed, do not merge. Re-inspect the diff, synchronize when needed, and rerun checks before taking another exact-head snapshot.
+
+After merge, fetch the protected branch, verify the PR is merged, prove the protected result contains the exact reviewed PR head, verify source and Pages status, and only then clean up the feature branch.
+
+### HUMAN_MERGE_REQUIRED
+
+Stop before merge and report `READY FOR HUMAN MERGE` with the exact reason when any condition applies:
+
+- the PR introduces or changes `approvals/**` or other editorial, approval, publication, release, correction/withdrawal, or human decision authority
+- the PR records a substantive editorial decision or publication-state/story-memory release handoff
+- the PR commits or pushes Pages/public generated content as a release action
+- the PR changes branch protection, repository rulesets, credentials, secrets, destructive-operation authority, or consequential external-egress policy
+- the PR expands or materially changes Codex/AI authority or repository governance boundaries
+- the task has become behavior-changing or scope-expanding beyond its authorization
+- an unresolved review issue, blocker, or other explicit human decision remains
+
+Codex must never use `CODEX_AUTO_MERGE_ELIGIBLE` to expand its own permissions. This governance PR is therefore `HUMAN_MERGE_REQUIRED`.
 
 ## Post-Merge Cleanup Workflow
 
-Only run this after the human explicitly confirms the PR was merged.
+Run this after an eligible mechanical merge or after a human confirms a required human merge.
 
 ### 1. Return To Base
 

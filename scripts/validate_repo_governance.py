@@ -11,11 +11,45 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 REQUIRED_FILES = [
     Path("AGENTS.md"),
     Path("docs/agent_workflow.md"),
+    Path("docs/ai_review_workflow.md"),
+    Path("docs/dispatches-project.md"),
+    Path("docs/project-contract.md"),
+    Path("docs/pages-publish-safety.md"),
     Path("docs/production-readiness-contract.md"),
     Path("docs/templates/production-readiness-proof.md"),
+    Path("docs/workflows/codex_pr_workflow.md"),
     Path(".github/ISSUE_TEMPLATE/dispatch_task.yml"),
     Path(".github/ISSUE_TEMPLATE/bug_report.yml"),
     Path(".github/pull_request_template.md"),
+]
+
+MERGE_GOVERNANCE_FILES = [
+    Path("AGENTS.md"),
+    Path("docs/agent_workflow.md"),
+    Path("docs/ai_review_workflow.md"),
+    Path("docs/dispatches-project.md"),
+    Path("docs/project-contract.md"),
+    Path("docs/pages-publish-safety.md"),
+    Path("docs/workflows/codex_pr_workflow.md"),
+]
+
+MERGE_POLICY_CONCEPTS = {
+    "bounded routine source PR merge": ("bounded routine source pr", "bounded, routine source pr"),
+    "exact PR head": ("exact pr head",),
+    "current protected base synchronization": ("current protected base",),
+    "required checks": ("required check",),
+    "human authority boundary": ("human merge is required", "human-merge-required", "human_merge_required"),
+    "publication separate from merge": ("source merge does not authorize", "source pr merge does not authorize"),
+    "self-expansion requires human merge": ("expand its own authority", "expands its own permissions"),
+}
+
+OBSOLETE_ABSOLUTE_MERGE_PATTERNS = [
+    re.compile(r"\bcodex does not merge prs\b", re.I),
+    re.compile(r"\bcodex must not merge a pr\b", re.I),
+    re.compile(r"\bcodex is never merge\b", re.I),
+    re.compile(r"\bcodex must not make pages, publish, or merge decisions\b", re.I),
+    re.compile(r"\bhuman review remains required before merge, publication, or pages activity\b", re.I),
+    re.compile(r"^\s*-\s*merge a pr\s*$", re.I),
 ]
 
 AGENTS_PHRASES = [
@@ -101,6 +135,35 @@ def _contains_all(text: str, phrases: list[str]) -> list[str]:
         if phrase.lower() not in lowered:
             missing.append(phrase)
     return missing
+
+
+def _validate_merge_governance(text_by_path: dict[Path, str]) -> list[str]:
+    errors: list[str] = []
+    combined = "\n".join(text_by_path.values()).lower()
+    for label, alternatives in MERGE_POLICY_CONCEPTS.items():
+        if not any(alternative in combined for alternative in alternatives):
+            errors.append(f"Merge governance: missing required concept '{label}'.")
+
+    for path, text in text_by_path.items():
+        for line_number, line in enumerate(text.splitlines(), start=1):
+            for pattern in OBSOLETE_ABSOLUTE_MERGE_PATTERNS:
+                if pattern.search(line):
+                    errors.append(
+                        f"{path}:{line_number}: obsolete absolute no-merge governance statement: {line.strip()}"
+                    )
+            lowered = line.lower()
+            if "no ai agent may merge" in lowered and not any(
+                qualifier in lowered
+                for qualifier in ("authority-bearing", "editorial", "publication", "governance")
+            ):
+                errors.append(
+                    f"{path}:{line_number}: unqualified obsolete AI no-merge statement: {line.strip()}"
+                )
+            if any(phrase in lowered for phrase in ("click merge", "clicks merge")) and "unconditional" not in lowered:
+                errors.append(
+                    f"{path}:{line_number}: obsolete unconditional human click-merge instruction: {line.strip()}"
+                )
+    return errors
 
 
 def _yaml_load(text: str) -> Any:
@@ -233,6 +296,13 @@ def validate_repo_governance(repo_root: Path | None = None) -> list[str]:
             f"docs/agent_workflow.md: missing expected text '{phrase}'."
             for phrase in _contains_all(workflow_text, WORKFLOW_PHRASES)
         )
+
+    merge_governance = {
+        relative: _read_text(root / relative)
+        for relative in MERGE_GOVERNANCE_FILES
+        if (root / relative).exists()
+    }
+    errors.extend(_validate_merge_governance(merge_governance))
 
     pr_template_path = root / ".github/pull_request_template.md"
     if pr_template_path.exists():

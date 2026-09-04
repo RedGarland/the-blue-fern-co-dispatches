@@ -17,7 +17,7 @@ Rules:
 
 ## Codex Safe Execution Scope
 
-Codex may prepare source-repo pull requests, but Codex must not make Pages, publish, or merge decisions.
+Codex may prepare and mechanically merge a bounded routine source-repo pull request after current-base synchronization, exact-head validation, scope review, mergeability proof, and successful required checks. This source merge authority does not grant Pages or publication authority.
 
 Codex may:
 
@@ -27,17 +27,19 @@ Codex may:
 - create a source-repo commit with a scoped message
 - create a PR against the approved base branch
 - watch PR checks and open the PR in the browser
-- after the human confirms merge, switch back to base, pull with `--ff-only`, verify the latest commit, verify source repo status, and verify Pages repo status
+- merge only a `CODEX_AUTO_MERGE_ELIGIBLE` source PR with exact-head protection
+- after any merge, fetch the protected base, prove the exact reviewed head landed, and verify source and Pages status
 - delete local and remote feature branches only after merge confirmation
 
 Codex must not:
 
-- merge a PR
 - sync, commit, or push the Pages repo
 - treat dry-run publish validation as permission to publish
 - commit generated public output unless explicitly instructed
 - use `git add .`
 - delete broad generated folders without explicit instruction
+
+Human merge remains required for authority-bearing, governance-expanding, editorial, approval, correction/withdrawal, release, publication-state, Pages/public-output, credential, ruleset, and consequential external-egress changes. Codex must not use routine merge permission to expand its own authority. A successful source merge never authorizes a Pages sync, commit, push, or public release.
 
 Explicit instruction remains required for:
 

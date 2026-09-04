@@ -64,7 +64,8 @@ Expected outcomes:
 - PR templates capture validation evidence
 - optional AI review assists without bypassing traceability rules
 - issue-to-branch-to-PR stays the default path for implementation work
-- no AI agent may merge, publish, push, or sync Pages without explicit instruction
+- bounded routine source PR merges may be mechanical after exact-head validation
+- authority-bearing, governance, and public-release PRs retain a human merge boundary
 - AI review comments are resolved through new commits, not manual untracked edits
 - release and publish remain separate explicit steps after validation
 
@@ -91,7 +92,7 @@ Recommended roles:
 
 ## Codex Safe Execution Scope
 
-Codex may carry out safe mechanical source-repo workflow steps after completing a scoped code, config, test, or documentation task, but merge, publication, and editorial authority remain human-only.
+Codex may carry out safe mechanical source-repo workflow steps after completing a scoped code, config, test, or documentation task. That includes merging a bounded routine source PR when it is classified `CODEX_AUTO_MERGE_ELIGIBLE`; editorial, approval, publication, release, and governance-expansion authority remain human-controlled.
 
 For the reusable step-by-step PR procedure, including preflight, staging discipline, PR creation, checks, and post-merge cleanup, see `docs/workflows/codex_pr_workflow.md`.
 
@@ -108,12 +109,17 @@ Safe Codex-allowed actions:
 - create a GitHub pull request against the approved base branch
 - run or watch PR checks
 - open the PR in the browser with `gh pr view --web`
-- after the human confirms the PR was merged, switch back to base, pull with `--ff-only`, verify the latest commit, verify source repo status, verify Pages repo status
+- fetch and synchronize with the current protected base before merge
+- record and recheck the exact PR head immediately before merge
+- merge an eligible PR only after scope, mergeability, and all required checks are proven on that exact head
+- after any merge, fetch the protected branch and prove it contains the reviewed PR head before cleanup
 - delete local and remote feature branches only after merge confirmation
 
-Human-only actions:
+Human-merge-required actions:
 
-- click merge or otherwise complete a PR merge
+- merge a PR that creates or changes editorial, approval, publication, release, correction/withdrawal, or other human decision authority
+- merge a PR that changes Codex/AI authority, repository governance boundaries, branch protection, rulesets, credentials, secrets, destructive-operation authority, or consequential external-egress policy
+- merge a PR that commits or pushes Pages/public generated release content or records publication-state/story-memory release authority
 - publish public editions
 - sync, commit, or push the Pages repo
 - post to Bluesky or other social platforms
@@ -124,6 +130,8 @@ Human-only actions:
 - commit generated public output unless explicitly instructed
 - use `git add .`
 - delete broad generated folders without explicit instruction
+
+Codex must never use routine merge permission to expand its own permissions. A routine source merge does not authorize publication, Pages activity, audio, social posting, editorial approval, candidate approval, or source-gate relaxation.
 
 Safe only with explicit instruction:
 
@@ -171,16 +179,22 @@ gh pr view --web
 
 ## Intended Development Process
 
-1. User describes a task or opens an issue.
-2. Assistant drafts a precise Codex prompt with scope, constraints, and validation requirements.
-3. Codex implements the requested change in the source repo.
-4. Codex runs focused tests and validation.
-5. Codex reports what changed, what was tested, and what was intentionally not touched.
-6. User reviews the result and sends follow-up instructions if needed.
-7. Assistant decides the next prompt or next action.
-8. Commits stay isolated to one task or one release step.
-9. Publishing is separate from implementation.
-10. Pages repo changes happen only when explicitly requested.
+Routine path:
+
+1. Task is authorized and bounded.
+2. Codex implements, validates, commits, and opens the source PR.
+3. Codex fetches the current protected base and synchronizes the feature branch if needed.
+4. Codex records the exact PR head and proves scope, open/non-draft state, mergeability, and required checks on that head.
+5. Codex merges with exact-head protection and performs post-merge verification.
+
+Authority-bearing path:
+
+1. Task is implemented and validated in an isolated PR.
+2. Codex proves exact-head checks and reports why the PR is `HUMAN_MERGE_REQUIRED`.
+3. A human merges the PR.
+4. Codex performs post-merge verification when requested.
+
+In both paths, commits stay isolated to one task or release step, publishing remains separate from implementation, and Pages changes happen only when explicitly authorized.
 
 ## Human-error Risks This Workflow Is Designed To Reduce
 

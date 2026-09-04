@@ -22,7 +22,7 @@ These are the current non-negotiable operating rules for this project.
 
 ## Codex Safe Execution Scope
 
-Codex may perform safe mechanical PR-preparation steps in the source repo when the user explicitly asks for that workflow step, but Codex is never merge, publication, Pages, or editorial authority.
+Mechanical source merge authority is distinct from editorial, publication, Pages, and release authority. Codex may prepare and merge a bounded routine source PR after proving the current-base, exact-head, scope, mergeability, and required-check conditions below. Codex is never permitted to infer or create human decision authority from that mechanical merge.
 
 Codex may:
 
@@ -37,12 +37,13 @@ Codex may:
 - create a PR against the approved base branch
 - run or watch PR checks
 - open the PR in the browser with `gh pr view --web`
-- after the human confirms merge, switch back to base, pull with `--ff-only`, verify the latest commit, verify source repo status, verify Pages repo status
+- classify the PR as `CODEX_AUTO_MERGE_ELIGIBLE` or `HUMAN_MERGE_REQUIRED`
+- merge a `CODEX_AUTO_MERGE_ELIGIBLE` PR with exact-head protection only after synchronizing it with the current protected base, recording the exact PR head, and proving all required checks succeeded on that head
+- after any merge, fetch the protected branch, prove the reviewed PR head is contained in the protected result, and verify source and Pages status
 - delete local and remote feature branches only after merge confirmation
 
 Codex must not:
 
-- merge a PR
 - publish a public edition
 - sync, commit, or push the Pages repo
 - post to Bluesky or other social platforms
@@ -53,6 +54,17 @@ Codex must not:
 - commit generated public output unless explicitly instructed
 - use `git add .`
 - delete broad generated folders without explicit instruction
+
+`HUMAN_MERGE_REQUIRED` applies when the PR itself:
+
+- introduces or changes `approvals/**` or other editorial, approval, publication, release, correction, or withdrawal authority
+- records a substantive human editorial decision or publication-state/story-memory release handoff
+- commits or pushes Pages/public generated release content as a release action
+- changes branch protection, repository rulesets, credentials, secrets, destructive-operation authority, or consequential external-egress policy
+- expands or materially changes Codex/AI authority or any repository governance boundary
+- exceeds the task's existing authorization or has an unresolved review issue or blocker
+
+Codex must never use routine merge permission to merge a change that expands its own permissions. Publication remains a separately authorized boundary: a successful source PR merge does not authorize Pages sync, public release, audio, social posting, editorial approval, candidate approval, or source-gate relaxation.
 
 Codex may do the following only with explicit instruction:
 

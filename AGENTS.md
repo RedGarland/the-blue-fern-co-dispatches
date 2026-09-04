@@ -147,6 +147,16 @@ Read `docs/production-readiness-contract.md` before any production-change task.
 - Verify the staged file list before committing.
 - Keep source-repo commits separate from Pages-repo publish commits.
 
+## Pull Request Merge Authority
+
+- Be conservative about scope, not iteration.
+- Codex may merge a bounded routine source PR only when the task is authorized, the branch is synchronized with the current protected base, the changed-file inventory is in scope, the PR is open, non-draft, and mergeable, and every required check has succeeded on the exact PR head immediately before merge.
+- If the protected base or reviewed PR head changes, stop, synchronize or re-review as applicable, and rerun exact-head validation before merging.
+- Use exact-head protection such as `gh pr merge --merge --match-head-commit <EXACT_PR_HEAD>`; never use admin, bypass, or force merge.
+- Human merge is required when the PR creates or changes editorial, approval, publication, release, correction/withdrawal, governance, credential, external-egress, destructive-operation, or other human decision authority, or causes a consequential public side effect.
+- Codex must never use routine merge permission to expand its own authority or repository governance permissions.
+- A source PR merge does not authorize Pages sync, publication, audio, social posting, source-gate relaxation, or any other public release action; those remain separately authorized.
+
 ## Publishing And Pushing
 
 - Do not publish or push unless the user explicitly asks.

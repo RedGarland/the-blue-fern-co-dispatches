@@ -40,6 +40,53 @@ def test_validate_repo_governance_passes_against_repo_root() -> None:
     assert errors == []
 
 
+def test_merge_governance_requires_bounded_exact_head_policy() -> None:
+    module = _load_validator_module()
+    policy = {
+        Path("policy.md"): """
+Codex may merge a bounded routine source PR after synchronizing with the current protected base.
+The exact PR head and every required check must be verified immediately before merge.
+Human merge is required for authority-bearing or governance changes.
+A source merge does not authorize publication or Pages activity.
+Codex must never expand its own authority through routine merge permission.
+""",
+    }
+
+    assert module._validate_merge_governance(policy) == []
+    incomplete = {Path("policy.md"): policy[Path("policy.md")].replace("The exact PR head", "The reviewed revision")}
+    errors = module._validate_merge_governance(incomplete)
+    assert "Merge governance: missing required concept 'exact PR head'." in errors
+
+    workflow = (
+        Path(__file__).resolve().parents[1] / "docs" / "workflows" / "codex_pr_workflow.md"
+    ).read_text(encoding="utf-8")
+    assert "reviewed_head == head_immediately_before_merge" in workflow
+    assert "--match-head-commit <EXACT_PR_HEAD>" in workflow
+    assert "This governance PR is therefore `HUMAN_MERGE_REQUIRED`" in workflow
+
+
+def test_merge_governance_rejects_obsolete_absolute_prohibitions() -> None:
+    module = _load_validator_module()
+    valid = """
+Codex may merge a bounded routine source PR after synchronizing with the current protected base.
+The exact PR head and every required check must be verified immediately before merge.
+Human merge is required for authority-bearing or governance changes.
+A source merge does not authorize publication or Pages activity.
+Codex must never expand its own authority through routine merge permission.
+"""
+    obsolete = [
+        "Codex does not merge PRs.",
+        "Codex must not merge a PR.",
+        "No AI agent may merge without explicit instruction.",
+        "- merge a PR",
+        "A human reviews the PR in GitHub and clicks Merge.",
+    ]
+
+    for statement in obsolete:
+        errors = module._validate_merge_governance({Path("policy.md"): valid + statement})
+        assert any("obsolete" in error for error in errors), statement
+
+
 def test_production_readiness_governance_files_are_present_and_referenced() -> None:
     root = Path(__file__).resolve().parents[1]
     contract = root / "docs" / "production-readiness-contract.md"

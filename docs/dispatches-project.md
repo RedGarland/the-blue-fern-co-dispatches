@@ -89,7 +89,7 @@ This wide-discovery, strict-vetting pattern should be reusable across Gaza, Food
 
 ## Codex Safe Execution Scope
 
-Source-repo work should follow a PR-only workflow. Codex may perform safe mechanical source-repo steps when explicitly asked, but human review remains required before merge, publication, or Pages activity.
+Source-repo work should follow a PR workflow. Codex may mechanically merge a bounded routine source PR after synchronization with the current protected base and successful scope, mergeability, required-check, and exact-head validation. Human authority remains required for editorial, approval, publication, release, Pages, and governance-expansion decisions.
 
 Codex may:
 
@@ -104,12 +104,12 @@ Codex may:
 - create a PR against the approved base branch
 - run or watch PR checks
 - open the PR in the browser with `gh pr view --web`
-- after the human confirms merge, switch back to base, pull with `--ff-only`, verify the latest commit, verify source repo status, verify Pages repo status
+- merge only a `CODEX_AUTO_MERGE_ELIGIBLE` source PR with exact-head protection
+- after any merge, fetch the protected branch, prove the reviewed PR head landed, and verify source and Pages status
 - delete local and remote feature branches only after merge confirmation
 
 Codex must not:
 
-- merge a PR
 - publish public editions
 - sync, commit, or push the Pages repo
 - post to Bluesky or other social platforms
@@ -120,6 +120,8 @@ Codex must not:
 - commit generated public output unless explicitly instructed
 - use `git add .`
 - delete broad generated folders without explicit instruction
+
+Human merge is required for authority-bearing, governance-expanding, editorial, approval, correction/withdrawal, release, publication-state, public-output, credential, ruleset, and consequential external-egress changes. Codex must never use routine merge permission to expand its own authority, and source merge success does not authorize publication or Pages activity.
 
 Explicit instruction remains required for:
 

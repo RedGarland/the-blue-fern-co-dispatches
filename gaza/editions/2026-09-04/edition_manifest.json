@@ -1,0 +1,78 @@
+{
+  "dispatch_name": "Dispatches From Gaza",
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-09-04",
+  "generated_at": "2026-09-04T13:00:59.428369+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-09-04/",
+  "local_output_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-09-04",
+  "local_dispatch_output_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\dispatches\\gaza\\editions\\2026-09-04",
+  "local_backup_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\tmp-backups-pages\\gaza\\2026-09-04",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 6,
+  "story_count": 4,
+  "source_adequacy_status": "limited_source_update",
+  "source_adequacy_label": "Limited-source update",
+  "publisher_count": 2,
+  "publishers": [
+    "BBC News",
+    "The Guardian"
+  ],
+  "source_adequacy_warnings": [
+    "This is a limited-source update generated from 6 saved source records from 2 publishers. It should be read as a partial update, not a full daily briefing."
+  ],
+  "allow_post_edition_date_sources": false,
+  "post_edition_date_sources_included": false,
+  "post_edition_date_source_count": 0,
+  "source_manifest_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-09-04\\sources_manifest.json",
+  "curation_manifest_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-09-04\\curation_manifest.json",
+  "free_public_artifacts": [
+    "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-09-04\\index.html",
+    "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-09-04\\edition_manifest.json",
+    "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-09-04\\sources_manifest.json",
+    "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-09-04\\curation_manifest.json"
+  ],
+  "paid_or_detail_artifacts": [],
+  "detail_artifacts_publicly_exposed": false,
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "public_exposed": true,
+  "warnings": [
+    "suppressed 1 repeated/stale candidate sources via cross-edition dedupe",
+    "This is a limited-source update generated from 6 saved source records from 2 publishers. It should be read as a partial update, not a full daily briefing.",
+    "manual supplement recommended: add source-backed records at C:\\BlueFernRunner\\GazaDispatchesCurrent6\\data\\dispatches\\gaza\\sources\\2026-09-04\\manual_sources.template.json",
+    "source diversity warning: rendered_story_count>=4_with_low_unique_rendered_publishers(<3), single_publisher_supplies_more_than_60_percent_of_rendered_stories"
+  ],
+  "errors": [],
+  "scheduled_run_local_time": "2026-09-04T06:00:00-07:00",
+  "actual_run_local_time": "2026-09-04T06:00:59-07:00",
+  "source_window_start_utc": "2026-09-02T11:51:46Z",
+  "source_window_end_utc": "2026-09-04T12:39:05Z",
+  "first_source_retrieved_at": "2026-09-04T13:00:51.455553Z",
+  "last_source_retrieved_at": "2026-09-04T13:00:51.455553Z",
+  "contains_later_same_day_update": false,
+  "later_same_day_update_count": 0,
+  "later_same_day_update_batch_count": 0,
+  "later_same_day_update_source_count": 0,
+  "contains_post_edition_date_update": false,
+  "post_edition_date_update_count": 0,
+  "post_edition_date_update_batch_count": 0,
+  "post_edition_date_update_source_count": 0,
+  "post_edition_date_retrieval_batches": [],
+  "retrieval_batches": [
+    {
+      "retrieved_at": "2026-09-04T13:00:51.455553Z",
+      "retrieved_at_local": "2026-09-04T06:00:51-07:00",
+      "retrieved_local_date": "2026-09-04",
+      "batch_classification": "scheduled_or_pre_scheduled_batch",
+      "source_record_ids": [
+        "gaza-2026-09-04-bbc-middle-east-d31614f810f9",
+        "gaza-2026-09-04-bbc-middle-east-bced4ab5d2be",
+        "gaza-2026-09-04-bbc-middle-east-a6709cd444d0",
+        "gaza-2026-09-04-guardian-world-6f1f0c42ae65",
+        "gaza-2026-09-04-guardian-world-2fc3df71e30f",
+        "gaza-2026-09-04-guardian-world-5c388d6bd3c2"
+      ],
+      "source_count": 6
+    }
+  ]
+}

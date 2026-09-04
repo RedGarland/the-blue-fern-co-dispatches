@@ -1,0 +1,404 @@
+[
+  {
+    "story_id": "gaza-story-2026-09-04-005",
+    "title": "Israelis shoot dead two Palestinian teenagers after settlers encircle village",
+    "summary": "Troops escort settlers into al-Mughayyir and raze village outside Hebron as ethnic cleansing of West Bank continues Israelis have shot dead two teenagers in a Palestinian village encircled by settlers, and Israeli troops have razed an entire village outside Hebron, in the latest attacks in a surge of Israeli terror and ethnic cleansing across the occupied West Bank. The shootings targeted Khalil Abu Alia, 16, who was about to start 11th grade at the al-Mughayyir boys school, and 19-year-old Omar al-Nassan, who graduated from the same institution with top marks this summer.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 66,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-04-guardian-world-2fc3df71e30f"
+    ],
+    "source_ids": [
+      "gaza-2026-09-04-guardian-world-2fc3df71e30f"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/sep/03/israelis-shoot-dead-two-palestinian-teenagers-after-settlers-encircle-village"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-04-guardian-world-2fc3df71e30f",
+        "title": "Israelis shoot dead two Palestinian teenagers after settlers encircle village",
+        "url": "https://www.theguardian.com/world/2026/sep/03/israelis-shoot-dead-two-palestinian-teenagers-after-settlers-encircle-village",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Troops escort settlers into al-Mughayyir and raze village outside Hebron as ethnic cleansing of West Bank continues Israelis have shot dead two teenagers in a Palestinian village encircled by settlers, and Israeli troops have razed an entire village outside Hebron, in the latest attacks in a surge of Israeli terror and ethnic cleansing across the occupied West Bank. The shootings targeted Khalil Abu Alia, 16, who was about to start 11th grade at the al-Mughayyir boys school, and 19-year-old Omar al-Nassan, who graduated from the same institution with top marks this summer.",
+        "event_date": "2026-09-03T19:33:00+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-04T13:00:59.428369+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 66,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-03T19:33:00+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-02-009",
+    "prior_edition_date": "2026-09-02",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-04-003",
+    "title": "'We expect our sons to be killed,' father of teen shot dead in West Bank tells BBC",
+    "summary": "Palestinian teenagers Omar al-Naasan and Khalil Abu Alia were shot dead when Israeli settlers and soldiers entered a village in the occupied West Bank.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 65,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-04-bbc-middle-east-a6709cd444d0"
+    ],
+    "source_ids": [
+      "gaza-2026-09-04-bbc-middle-east-a6709cd444d0"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/videos/cn8evz26eyqo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-04-bbc-middle-east-a6709cd444d0",
+        "title": "'We expect our sons to be killed,' father of teen shot dead in West Bank tells BBC",
+        "url": "https://www.bbc.co.uk/news/videos/cn8evz26eyqo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Palestinian teenagers Omar al-Naasan and Khalil Abu Alia were shot dead when Israeli settlers and soldiers entered a village in the occupied West Bank.",
+        "event_date": "2026-09-04T12:39:05+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-04T13:00:59.428369+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 65,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-04T12:39:05+00:00",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-02-009",
+    "prior_edition_date": "2026-09-02",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-04-006",
+    "title": "Far-right Israeli minister outlines plan for removal of all Palestinians from Gaza",
+    "summary": "Itamar Ben-Gvir claims proposal for illegal forced displacement of 2 million people is 'realistic' and 'concrete' Israel's far-right national security minister has set out a plan for the illegal forced expulsion of all Palestinians from the Gaza Strip, with the intention of sending them abroad. Speaking in the run-up to close-fought Israeli elections, Itamar Ben-Gvir said the plan aimed to remove 250,000 Palestinians from Gaza in the first year, followed by the rest of its population of roughly 2 million over the next six years.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 62,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-04-guardian-world-5c388d6bd3c2"
+    ],
+    "source_ids": [
+      "gaza-2026-09-04-guardian-world-5c388d6bd3c2"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/sep/03/israel-far-right-minister-itamar-ben-gvir-plan-removal-palestinians-gaza"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-04-guardian-world-5c388d6bd3c2",
+        "title": "Far-right Israeli minister outlines plan for removal of all Palestinians from Gaza",
+        "url": "https://www.theguardian.com/world/2026/sep/03/israel-far-right-minister-itamar-ben-gvir-plan-removal-palestinians-gaza",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Itamar Ben-Gvir claims proposal for illegal forced displacement of 2 million people is 'realistic' and 'concrete' Israel's far-right national security minister has set out a plan for the illegal forced expulsion of all Palestinians from the Gaza Strip, with the intention of sending them abroad. Speaking in the run-up to close-fought Israeli elections, Itamar Ben-Gvir said the plan aimed to remove 250,000 Palestinians from Gaza in the first year, followed by the rest of its population of roughly 2 million over the next six years.",
+        "event_date": "2026-09-03T18:01:05+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-04T13:00:59.428369+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 62,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-03T18:01:05+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-08-20-007",
+    "prior_edition_date": "2026-08-20",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-04-001",
+    "title": "Palestinian teens killed during settler attack on West Bank village",
+    "summary": "Al-Mughayyir's council says they were trying to stop settlers stealing sheep, but the Israeli military says they threw stones at its troops.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 57,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-04-bbc-middle-east-d31614f810f9"
+    ],
+    "source_ids": [
+      "gaza-2026-09-04-bbc-middle-east-d31614f810f9"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/cj6482r6yl4o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-04-bbc-middle-east-d31614f810f9",
+        "title": "Palestinian teens killed during settler attack on West Bank village",
+        "url": "https://www.bbc.co.uk/news/articles/cj6482r6yl4o?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Al-Mughayyir's council says they were trying to stop settlers stealing sheep, but the Israeli military says they threw stones at its troops.",
+        "event_date": "2026-09-03T15:05:57+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-04T13:00:59.428369+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 57,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-03T15:05:57+00:00",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "skip",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-09-03-001",
+    "prior_edition_date": "2026-09-03",
+    "dedupe_classification": "duplicate_skip",
+    "dedupe_reasons": [
+      "exact_or_normalized_source_url",
+      "no_new_summary_detail"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-09-04-004",
+    "title": "Seeds of hope: how a local farming project is offering a lifeline to Gaza",
+    "summary": "Family-run Al-Qarara Seed Bank is striving to help Palestinians gain sovereignty over their food security Salama Ayesh Muhanna still remembers the first seeds he planted on his family's land in al-Qarara, Gaza. At just 17, Muhanna had proudly sprouted cucumbers. \"I was very happy because I saw the results,\" Muhanna says. \"We were farmers at heart.\".",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 47,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-04-guardian-world-6f1f0c42ae65"
+    ],
+    "source_ids": [
+      "gaza-2026-09-04-guardian-world-6f1f0c42ae65"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/environment/2026/sep/04/seed-bank-hope-farming-project-gaza-al-qarara"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-04-guardian-world-6f1f0c42ae65",
+        "title": "Seeds of hope: how a local farming project is offering a lifeline to Gaza",
+        "url": "https://www.theguardian.com/environment/2026/sep/04/seed-bank-hope-farming-project-gaza-al-qarara",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Family-run Al-Qarara Seed Bank is striving to help Palestinians gain sovereignty over their food security Salama Ayesh Muhanna still remembers the first seeds he planted on his family's land in al-Qarara, Gaza. At just 17, Muhanna had proudly sprouted cucumbers. \"I was very happy because I saw the results,\" Muhanna says. \"We were farmers at heart.\"",
+        "event_date": "2026-09-04T12:37:57+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-04T13:00:59.428369+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 47,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-04T12:37:57+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

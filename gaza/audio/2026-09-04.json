@@ -1,0 +1,68 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-09-04",
+  "generated_at": "2026-09-04T13:01:17.759020Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-09-04.mp3",
+  "audio_url": "/gaza/audio/2026-09-04.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1743,
+  "tts_input_word_count": 274,
+  "tts_story_count": 4,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1676160,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-09-04T13:01:17.759002Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-09-04-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-09-04/",
+  "script_text": "This is the Gaza Dispatch audio briefing for September 4, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Israelis shoot dead two Palestinian teenagers after settlers encircle village. Troops escort settlers into al-Mughayyir and raze village outside Hebron as ethnic cleansing of West Bank continues Israelis have shot dead two teenagers in a Palestinian village encircled by settlers, and Israeli troops have razed an entire village outside Hebron, in the latest attacks in a surge of Israeli terror and ethnic cleansing across the occupied West Bank. This was reported by The Guardian.\n\n2. 'We expect our sons to be killed,' father of teen shot dead in West Bank tells BBC. Palestinian teenagers Omar al-Naasan and Khalil Abu Alia were shot dead when Israeli settlers and soldiers entered a village in the occupied West Bank. This was reported by BBC News.\n\n3. Far-right Israeli minister outlines plan for removal of all Palestinians from Gaza. Itamar Ben-Gvir claims proposal for illegal forced displacement of 2 million people is 'realistic' and 'concrete' Israel's far-right national security minister has set out a plan for the illegal forced expulsion of all Palestinians from the Gaza Strip, with the intention of sending them abroad. This was reported by The Guardian.\n\n4. Seeds of hope: how a local farming project is offering a lifeline to Gaza. Family-run Al-Qarara Seed Bank is striving to help Palestinians gain sovereignty over their food security Salama Ayesh Muhanna still remembers the first seeds he planted on his family's land in al-Qarara, Gaza. This was reported by The Guardian.\n\nFor the full source-backed dispatch, read the September 4, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 4,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-09-04-guardian-world-2fc3df71e30f",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/sep/03/israelis-shoot-dead-two-palestinian-teenagers-after-settlers-encircle-village",
+      "title": "Israelis shoot dead two Palestinian teenagers after settlers encircle village"
+    },
+    {
+      "source_record_id": "gaza-2026-09-04-bbc-middle-east-a6709cd444d0",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/videos/cn8evz26eyqo?at_medium=RSS&at_campaign=rss",
+      "title": "'We expect our sons to be killed,' father of teen shot dead in West Bank tells BBC"
+    },
+    {
+      "source_record_id": "gaza-2026-09-04-guardian-world-5c388d6bd3c2",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/sep/03/israel-far-right-minister-itamar-ben-gvir-plan-removal-palestinians-gaza",
+      "title": "Far-right Israeli minister outlines plan for removal of all Palestinians from Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-09-04-guardian-world-6f1f0c42ae65",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/environment/2026/sep/04/seed-bank-hope-farming-project-gaza-al-qarara",
+      "title": "Seeds of hope: how a local farming project is offering a lifeline to Gaza"
+    }
+  ]
+}

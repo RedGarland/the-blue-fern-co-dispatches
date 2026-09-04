@@ -19,9 +19,10 @@ from bluefern_dispatches.food_line_retrospective import (
     create_private_preview,
     create_retrospective_approval,
     load_retrospective_plan,
+    load_retrospective_verification_bundle,
     plan_result,
     verify_private_preview,
-    verify_complete_output,
+    verify_generated_retrospective_set,
 )
 
 
@@ -59,8 +60,8 @@ def _parser() -> argparse.ArgumentParser:
     verify = subparsers.add_parser("verify-output", help="Verify exact generated retrospective public surfaces.")
     verify.add_argument("--repo-root", type=Path, required=True)
     verify.add_argument("--pages-root", type=Path, required=True)
-    verify.add_argument("--approval-commit", required=True)
-    verify.add_argument("--approval-path", required=True)
+    verify.add_argument("--approval-commit", action="append", required=True)
+    verify.add_argument("--approval-path", action="append", required=True)
     verify.add_argument("--publication-timestamp", required=True)
 
     for operation, help_text in (
@@ -98,6 +99,20 @@ def main(argv: Sequence[str] | None = None) -> int:
             )
         elif args.operation == "approve":
             result = create_retrospective_approval(args.repo_root, args.request)
+        elif args.operation == "verify-output":
+            if len(args.approval_commit) != len(args.approval_path):
+                raise FoodLineRetrospectiveError("verify-output requires matching approval commits and paths")
+            bundles = [
+                load_retrospective_verification_bundle(
+                    args.repo_root,
+                    args.pages_root,
+                    approval_commit=commit,
+                    approval_path=path,
+                    publication_timestamp=args.publication_timestamp,
+                )
+                for commit, path in zip(args.approval_commit, args.approval_path)
+            ]
+            result = verify_generated_retrospective_set(args.repo_root, args.pages_root, bundles)
         else:
             bundle = load_retrospective_plan(
                 args.repo_root,
@@ -113,7 +128,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             elif args.operation == "verify-preview":
                 result = verify_private_preview(bundle, args.repo_root, args.preview_root)
             else:
-                result = verify_complete_output(args.repo_root, bundle)
+                raise FoodLineRetrospectiveError(f"unsupported operation: {args.operation}")
     except (FoodLineRetrospectiveError, OSError, ValueError) as exc:
         result = {"ok": False, "status": f"{args.operation}_failed", "errors": [str(exc)]}
     print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))

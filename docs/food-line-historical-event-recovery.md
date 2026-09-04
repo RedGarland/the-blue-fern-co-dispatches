@@ -324,11 +324,22 @@ The sanctioned sequence is:
    pre-publish Pages binding, use
    `scripts/run_food_line_retrospective_batches.py`; it validates every
    approval before writing and generates all members before Pages changes.
-6. Publish with `--publish --push`; the existing guarded Pages owner validates
+   Retrospective shared surfaces use the bound clean Pages archive and RSS as
+   immutable prior history, then add the approved generated editions. Existing
+   archive identities and RSS items cannot be dropped or replaced by this
+   authority.
+6. Post-generation verification may be repeated with `verify-output`, passing
+   one matching `--approval-commit` and `--approval-path` pair per batch. This
+   operation revalidates committed authority and the Pages binding without
+   rerunning pre-generation vacancy checks; it permits only the exact generated
+   edition, shared-surface, mirror, and release-manifest paths, and checks their
+   hashes. The normal `plan` command continues to require a clean source tree
+   and vacant edition identities.
+7. Publish with `--publish --push`; the existing guarded Pages owner validates
    one exact release manifest per date, copies all approved editions plus the
    final homepage/archive/RSS, makes one atomic Pages commit, pushes, and
    live-checks every edition and manifest.
-7. Only after successful live verification, record the exact Pages commit in
+8. Only after successful live verification, record the exact Pages commit in
    Food Line publication state and append the approved event fingerprints and
    source URLs to story memory.
 

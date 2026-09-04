@@ -6909,18 +6909,63 @@ def write_food_line_audio(
     }
 
 
-def _update_index_archive(root: Path, date: str, mission: str, *, max_edition_date: str | None = None) -> None:
+def _bound_pages_archive_labels(pages_root: Path | None) -> dict[str, str]:
+    if pages_root is None:
+        return {}
+    path = pages_root / "food-line" / "archive.html"
+    if not path.is_file():
+        return {}
+    text = path.read_text(encoding="utf-8")
+    labels: dict[str, str] = {}
+    pattern = re.compile(r'<a\b[^>]*href=["\'](?:/food-line/)?editions/(\d{4}-\d{2}-\d{2})/["\'][^>]*>(.*?)</a>', re.I | re.S)
+    for match in pattern.finditer(text):
+        label = html.unescape(re.sub(r"<[^>]+>", "", match.group(2))).strip()
+        if label:
+            labels.setdefault(match.group(1), label)
+    return labels
+
+
+def _bound_pages_rss_items(pages_root: Path | None) -> dict[str, str]:
+    if pages_root is None:
+        return {}
+    path = pages_root / "food-line" / "rss.xml"
+    if not path.is_file():
+        return {}
+    text = path.read_text(encoding="utf-8")
+    items: dict[str, str] = {}
+    for match in re.finditer(r"<item\b[^>]*>.*?</item>", text, re.I | re.S):
+        date_match = re.search(r"https://dispatches\.thebluefernco\.com/food-line/editions/(\d{4}-\d{2}-\d{2})/", match.group(0))
+        if date_match:
+            items.setdefault(date_match.group(1), match.group(0))
+    return items
+
+
+def _update_index_archive(
+    root: Path,
+    date: str,
+    mission: str,
+    *,
+    max_edition_date: str | None = None,
+    retrospective_pages_root: Path | None = None,
+) -> None:
     dispatch_root = root / "output" / "site" / DISPATCH_SLUG
-    public_dates = _food_line_home_archive_dates(root, max_edition_date=max_edition_date)
+    pages_labels = _bound_pages_archive_labels(retrospective_pages_root)
+    pages_rss_items = _bound_pages_rss_items(retrospective_pages_root)
+    public_dates = sorted(
+        set(_food_line_home_archive_dates(root, max_edition_date=max_edition_date)) | set(pages_labels) | set(pages_rss_items),
+        reverse=True,
+    )
+    def public_label(public_date: str) -> str:
+        return pages_labels.get(public_date) or _food_line_public_edition_label(root, public_date)
     latest_public_date = public_dates[0] if public_dates else ""
-    latest_public_label = _food_line_public_edition_label(root, latest_public_date) if latest_public_date else ""
+    latest_public_label = public_label(latest_public_date) if latest_public_date else ""
     recent_public_dates = public_dates[: min(len(public_dates), 11)]
     archive_entries_html = "".join(
-        f'<li><a href="editions/{html.escape(public_date)}/">{html.escape(_food_line_public_edition_label(root, public_date))}</a></li>'
+        f'<li><a href="editions/{html.escape(public_date)}/">{html.escape(public_label(public_date))}</a></li>'
         for public_date in public_dates
     )
     recent_entries_html = "".join(
-        f'<li><a href="editions/{html.escape(public_date)}/">{html.escape(_food_line_public_edition_label(root, public_date))}</a></li>'
+        f'<li><a href="editions/{html.escape(public_date)}/">{html.escape(public_label(public_date))}</a></li>'
         for public_date in recent_public_dates
     )
     page_footer = footer("")
@@ -6991,16 +7036,17 @@ def _update_index_archive(root: Path, date: str, mission: str, *, max_edition_da
             return ""
         return format_datetime(parsed)
 
-    rss_entries = "".join(
-        f"""
+    def rss_entry(public_date: str) -> str:
+        if public_date in pages_rss_items:
+            return pages_rss_items[public_date]
+        return f"""
     <item>
-      <title>{html.escape(_food_line_public_edition_label(root, public_date))}</title>
+      <title>{html.escape(public_label(public_date))}</title>
       <link>{BASE_URL}/food-line/editions/{html.escape(public_date)}/</link>
       <guid isPermaLink="true">{BASE_URL}/food-line/editions/{html.escape(public_date)}/</guid>
       {f'<pubDate>{html.escape(rss_publication_date(public_date))}</pubDate>' if rss_publication_date(public_date) else ''}
     </item>"""
-        for public_date in public_dates
-    )
+    rss_entries = "".join(rss_entry(public_date) for public_date in public_dates)
     rss_body = f"""<?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
   <channel>
@@ -7367,7 +7413,7 @@ def _run_food_line_retrospective(
         _write_json(edition_dir / "sources_manifest.json", sources)
         _write_json(edition_dir / "curation_manifest.json", {"stories": sources})
         _write_json(edition_dir / "edition_manifest.json", manifest)
-    _update_index_archive(root, date, mission)
+    _update_index_archive(root, date, mission, retrospective_pages_root=pages_root)
     audio_result: dict[str, Any] = {"audio_status": "not_authorized", "audio_generated": False, "errors": []}
     if bundle.audio_authorized:
         audio_result = write_food_line_audio(
@@ -7433,7 +7479,7 @@ def _run_food_line_retrospective(
     )
     release_manifest_path = root / "data" / "dispatches" / DISPATCH_SLUG / "review" / "releases" / f"{date}.json"
     write_json_deterministic(release_manifest_path, release_manifest)
-    verification = verify_complete_output(root, bundle)
+    verification = verify_complete_output(root, bundle, pages_root=pages_root)
     return {
         "ok": True,
         "edition_date": date,

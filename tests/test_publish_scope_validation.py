@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -235,3 +236,41 @@ def test_strict_release_manifest_rejects_omitted_generated_file(tmp_path: Path, 
         release_manifest_path=manifest,
     )
     assert any("omits generated Food Line publication files" in error for error in errors)
+
+
+def test_strict_retrospective_manifest_rejects_history_shrink(tmp_path: Path, monkeypatch) -> None:
+    module = _load_validator_module()
+    source, pages, manifest = _release_fixture(tmp_path)
+    (source / "output/site/food-line/archive.html").write_text(
+        '<a href="editions/2026-06-19/">new</a>', encoding="utf-8"
+    )
+    (source / "output/site/food-line/rss.xml").write_text(
+        '<rss><channel><item><link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-19/</link></item></channel></rss>',
+        encoding="utf-8",
+    )
+    (pages / "food-line").mkdir(parents=True)
+    (pages / "food-line/archive.html").write_text(
+        '<a href="editions/2026-06-18/">old</a>', encoding="utf-8"
+    )
+    (pages / "food-line/rss.xml").write_text(
+        '<rss><channel><item><link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-18/</link></item></channel></rss>',
+        encoding="utf-8",
+    )
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    for entry in payload["entries"]:
+        entry["provenance_role"] = "approved_retrospective_generated_output"
+        entry["source_sha256"] = hashlib.sha256((source / entry["source_path"]).read_bytes()).hexdigest()
+    write_json_deterministic(manifest, payload)
+    monkeypatch.setattr(module, "_validate_retrospective_release_authority", lambda **_kwargs: [])
+    monkeypatch.setattr(module, "_git_status_porcelain", lambda _root: [])
+    errors = module.validate_publish_scope(
+        dispatch="food-line",
+        date_text="2026-06-19",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        strict=True,
+        release_manifest_path=manifest,
+    )
+    assert any("archive dropped: ['2026-06-18']" in error for error in errors)
+    assert any("rss dropped: ['2026-06-18']" in error for error in errors)

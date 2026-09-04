@@ -98,6 +98,13 @@ copies all selected edition directories and the final shared roots in one
 Pages commit. Publishing those approvals sequentially is intentionally
 rejected after the first commit advances Pages.
 
+Before either dry-run or publication, retrospective release validation compares
+the candidate archive and RSS with that bound Pages HEAD. Every existing archive
+edition identity and canonical RSS item must remain present, and an approved
+edition destination must be vacant. The preparation owner performs the same
+check, so incomplete source-generated history cannot silently shrink public
+history even when the release manifest otherwise matches.
+
 That means it refuses to copy:
 
 - `output/site/assets/`

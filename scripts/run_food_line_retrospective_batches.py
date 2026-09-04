@@ -17,7 +17,7 @@ from bluefern_dispatches.food_line_retrospective import (
     RetrospectiveBundle,
     load_retrospective_plan,
     record_retrospective_publication,
-    verify_complete_output,
+    verify_generated_retrospective_set,
 )
 from bluefern_dispatches.pages_release_safety import sync_pages_from_source
 from scripts.run_food_line_dispatch import (
@@ -94,7 +94,8 @@ def run_atomic_retrospective_batches(
     )
     generated = [generate_prevalidated_food_line_retrospective(source_root, pages_root, bundle) for bundle in bundles]
     manifests = [refresh_food_line_retrospective_release_manifest(source_root, pages_root, bundle) for bundle in bundles]
-    verified = [verify_complete_output(source_root, bundle) for bundle in bundles]
+    verified_set = verify_generated_retrospective_set(source_root, pages_root, bundles)
+    verified = verified_set["verification_results"]
     pages_result = sync_pages_from_source(
         dispatch="food-line",
         dates=[bundle.edition_date for bundle in bundles],
@@ -136,6 +137,7 @@ def run_atomic_retrospective_batches(
         "release_manifests": [str(path) for path in manifests],
         "generation_results": [{key: value for key, value in row.items() if key != "_retrospective_bundle"} for row in generated],
         "verification_results": verified,
+        "post_generation_verification": verified_set,
         "pages_result": pages_result,
         "publication_recordings": recordings,
         "social_authorized": False,

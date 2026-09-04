@@ -433,6 +433,19 @@ def _release_manifest_delta(
             pages_repo_root=pages_repo_root,
         )
         errors.extend(retrospective_authority_errors)
+        if pages_repo_root is not None:
+            from bluefern_dispatches.food_line_retrospective import (
+                FoodLineRetrospectiveError,
+                assert_retrospective_history_monotonic,
+            )
+            try:
+                assert_retrospective_history_monotonic(
+                    pages_repo_root,
+                    source_repo_root / "output" / "site",
+                    edition_dates=[declared_date.isoformat()] if declared_date is not None else [],
+                )
+            except FoodLineRetrospectiveError as exc:
+                errors.append(str(exc))
     seen_source: set[str] = set()
     seen_pages: set[str] = set()
     source_root = source_repo_root.resolve()

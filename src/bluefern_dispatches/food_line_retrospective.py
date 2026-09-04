@@ -19,8 +19,10 @@ LEGACY_V1_APPROVAL_REQUEST_SCHEMA = "food_line_retrospective_approval_request_v1
 LEGACY_V1_APPROVAL_SCHEMA = "food_line_retrospective_approval_v1"
 LEGACY_V2_APPROVAL_REQUEST_SCHEMA = "food_line_retrospective_approval_request_v2"
 LEGACY_V2_APPROVAL_SCHEMA = "food_line_retrospective_approval_v2"
-APPROVAL_REQUEST_SCHEMA = "food_line_retrospective_approval_request_v3"
-APPROVAL_SCHEMA = "food_line_retrospective_approval_v3"
+LEGACY_V3_APPROVAL_REQUEST_SCHEMA = "food_line_retrospective_approval_request_v3"
+LEGACY_V3_APPROVAL_SCHEMA = "food_line_retrospective_approval_v3"
+APPROVAL_REQUEST_SCHEMA = "food_line_retrospective_approval_request_v4"
+APPROVAL_SCHEMA = "food_line_retrospective_approval_v4"
 PLAN_SCHEMA = "food_line_retrospective_publication_plan_v1"
 PREVIEW_SCHEMA = "food_line_retrospective_private_preview_v1"
 PUBLICATION_STATE_SCHEMA = "food_line_retrospective_publication_state_v1"
@@ -94,6 +96,22 @@ def _git(root: Path, *args: str, check: bool = True) -> str:
     if check and result.returncode != 0:
         raise FoodLineRetrospectiveError(result.stderr.strip() or result.stdout.strip() or f"git {' '.join(args)} failed")
     return result.stdout.strip()
+
+
+def _git_porcelain_lines(root: Path) -> list[str]:
+    result = subprocess.run(
+        ["git", "-C", str(root), "status", "--porcelain=v1", "--untracked-files=all"],
+        check=False,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    if result.returncode != 0:
+        raise FoodLineRetrospectiveError(result.stderr.strip() or "git status --porcelain=v1 failed")
+    lines = result.stdout.splitlines()
+    if any(len(line) < 4 or line[2] != " " for line in lines):
+        raise FoodLineRetrospectiveError("git porcelain status output is malformed")
+    return lines
 
 
 def _root(root: Path) -> Path:
@@ -391,7 +409,7 @@ def _apply_overlay(decision: CommittedJson, overlay: CommittedJson | None) -> tu
 def approval_path_for(batch_id: str) -> str:
     if not RETROSPECTIVE_BATCH_RE.fullmatch(str(batch_id or "")):
         raise FoodLineRetrospectiveError("retrospective batch ID is malformed")
-    return f"{APPROVAL_PREFIX}{batch_id}-approval-v3.json"
+    return f"{APPROVAL_PREFIX}{batch_id}-approval-v4.json"
 
 
 def legacy_v1_approval_path_for(batch_id: str) -> str:
@@ -406,24 +424,30 @@ def legacy_v2_approval_path_for(batch_id: str) -> str:
     return f"{APPROVAL_PREFIX}{batch_id}-approval-v2.json"
 
 
-def _batch_id_from_v3_approval_path(approval_path: str) -> str:
-    if not approval_path.startswith(APPROVAL_PREFIX) or not approval_path.endswith("-approval-v3.json"):
-        raise FoodLineRetrospectiveError("retrospective approval must use the owner-derived V3 approval path")
-    batch_id = approval_path[len(APPROVAL_PREFIX) : -len("-approval-v3.json")]
+def legacy_v3_approval_path_for(batch_id: str) -> str:
+    if not RETROSPECTIVE_BATCH_RE.fullmatch(str(batch_id or "")):
+        raise FoodLineRetrospectiveError("retrospective batch ID is malformed")
+    return f"{APPROVAL_PREFIX}{batch_id}-approval-v3.json"
+
+
+def _batch_id_from_v4_approval_path(approval_path: str) -> str:
+    if not approval_path.startswith(APPROVAL_PREFIX) or not approval_path.endswith("-approval-v4.json"):
+        raise FoodLineRetrospectiveError("retrospective approval must use the owner-derived V4 approval path")
+    batch_id = approval_path[len(APPROVAL_PREFIX) : -len("-approval-v4.json")]
     try:
         expected_path = approval_path_for(batch_id)
     except FoodLineRetrospectiveError as exc:
         raise FoodLineRetrospectiveError(
-            "retrospective approval must use the owner-derived V3 approval path"
+            "retrospective approval must use the owner-derived V4 approval path"
         ) from exc
     if expected_path != approval_path:
-        raise FoodLineRetrospectiveError("retrospective approval must use the owner-derived V3 approval path")
+        raise FoodLineRetrospectiveError("retrospective approval must use the owner-derived V4 approval path")
     return batch_id
 
 
-def _is_v3_approval_path(approval_path: str) -> bool:
+def _is_v4_approval_path(approval_path: str) -> bool:
     try:
-        _batch_id_from_v3_approval_path(approval_path)
+        _batch_id_from_v4_approval_path(approval_path)
     except FoodLineRetrospectiveError:
         return False
     return True
@@ -445,6 +469,16 @@ def _is_legacy_v2_approval_path(approval_path: str) -> bool:
     batch_id = approval_path[len(APPROVAL_PREFIX) : -len("-approval-v2.json")]
     try:
         return legacy_v2_approval_path_for(batch_id) == approval_path
+    except FoodLineRetrospectiveError:
+        return False
+
+
+def _is_legacy_v3_approval_path(approval_path: str) -> bool:
+    if not approval_path.startswith(APPROVAL_PREFIX) or not approval_path.endswith("-approval-v3.json"):
+        return False
+    batch_id = approval_path[len(APPROVAL_PREFIX) : -len("-approval-v3.json")]
+    try:
+        return legacy_v3_approval_path_for(batch_id) == approval_path
     except FoodLineRetrospectiveError:
         return False
 
@@ -608,13 +642,13 @@ def create_retrospective_approval(root: Path, request_path: Path) -> dict[str, A
     current_head = _git(root, "rev-parse", "HEAD")
     if source_base != current_head:
         raise FoodLineRetrospectiveError("approval must be prepared from the exact clean protected source base")
-    status_lines = [line for line in _git(root, "status", "--porcelain", "--untracked-files=all").splitlines() if line]
+    status_lines = _git_porcelain_lines(root)
     unexpected_status = [
         line
         for line in status_lines
         if not (
             line.startswith("?? ")
-            and _is_v3_approval_path(line[3:].replace("\\", "/"))
+            and _is_v4_approval_path(line[3:].replace("\\", "/"))
         )
     ]
     if unexpected_status:
@@ -736,12 +770,12 @@ def create_retrospective_approval(root: Path, request_path: Path) -> dict[str, A
 
 
 def _approval_only_commit(root: Path, approval_commit: str, approval_path: str) -> None:
-    _batch_id_from_v3_approval_path(approval_path)
+    _batch_id_from_v4_approval_path(approval_path)
     changed = [line for line in _git(root, "diff-tree", "--no-commit-id", "--name-only", "-r", approval_commit).splitlines() if line]
     if approval_path not in changed or any(
-        not _is_v3_approval_path(path) for path in changed
+        not _is_v4_approval_path(path) for path in changed
     ):
-        raise FoodLineRetrospectiveError("V3 approval authority must come from an exact V3-approval-only commit")
+        raise FoodLineRetrospectiveError("V4 approval authority must come from an exact V4-approval-only commit")
 
 
 def _clean_pages(pages_root: Path, expected_head: str) -> str:
@@ -749,7 +783,7 @@ def _clean_pages(pages_root: Path, expected_head: str) -> str:
     top = Path(_git(pages, "rev-parse", "--show-toplevel")).resolve(strict=True)
     if not os.path.samefile(pages, top):
         raise FoodLineRetrospectiveError("Pages root must be the exact checkout root")
-    if _git(pages, "status", "--porcelain", "--untracked-files=all"):
+    if _git_porcelain_lines(pages):
         raise FoodLineRetrospectiveError("Pages checkout must be clean")
     head = _git(pages, "rev-parse", "HEAD")
     if head != expected_head:
@@ -953,29 +987,37 @@ def _load_retrospective_bundle(
     post_generation: bool,
 ) -> RetrospectiveBundle:
     root = _root(root)
-    if not post_generation and _git(root, "status", "--porcelain", "--untracked-files=all"):
+    if not post_generation and _git_porcelain_lines(root):
         raise FoodLineRetrospectiveError("retrospective authority requires a clean source worktree")
     approval_commit = _require_commit(root, approval_commit, strict_ancestor=True)
     approval_path = _safe_relative(approval_path, prefix=APPROVAL_PREFIX)
     if _is_legacy_v1_approval_path(approval_path):
         raise FoodLineRetrospectiveError(
-            "obsolete Food Line retrospective V1 approval; renewed V3 approval is required"
+            "obsolete Food Line retrospective V1 approval; renewed V4 approval is required"
         )
     if _is_legacy_v2_approval_path(approval_path):
         raise FoodLineRetrospectiveError(
-            "obsolete Food Line retrospective V2 approval; renewed V3 approval is required"
+            "obsolete Food Line retrospective V2 approval; renewed V4 approval is required"
         )
-    path_batch_id = _batch_id_from_v3_approval_path(approval_path)
+    if _is_legacy_v3_approval_path(approval_path):
+        raise FoodLineRetrospectiveError(
+            "obsolete Food Line retrospective V3 approval; renewed V4 approval is required"
+        )
+    path_batch_id = _batch_id_from_v4_approval_path(approval_path)
     _approval_only_commit(root, approval_commit, approval_path)
     approval = load_committed_json(root, commit=approval_commit, path=approval_path, prefix=APPROVAL_PREFIX)
     row = approval.payload
     if row.get("schema_version") == LEGACY_V1_APPROVAL_SCHEMA:
         raise FoodLineRetrospectiveError(
-            "obsolete Food Line retrospective V1 approval; renewed V3 approval is required"
+            "obsolete Food Line retrospective V1 approval; renewed V4 approval is required"
         )
     if row.get("schema_version") == LEGACY_V2_APPROVAL_SCHEMA:
         raise FoodLineRetrospectiveError(
-            "obsolete Food Line retrospective V2 approval; renewed V3 approval is required"
+            "obsolete Food Line retrospective V2 approval; renewed V4 approval is required"
+        )
+    if row.get("schema_version") == LEGACY_V3_APPROVAL_SCHEMA:
+        raise FoodLineRetrospectiveError(
+            "obsolete Food Line retrospective V3 approval; renewed V4 approval is required"
         )
     if row.get("schema_version") != APPROVAL_SCHEMA or row.get("approval_type") != "migrated_event_retrospective_batch":
         raise FoodLineRetrospectiveError("retrospective approval schema is invalid")
@@ -1333,7 +1375,7 @@ def record_retrospective_publication(
         raise FoodLineRetrospectiveError("publication state requires successful post-push live verification")
     if not COMMIT_RE.fullmatch(str(pages_commit or "")):
         raise FoodLineRetrospectiveError("published Pages commit is malformed")
-    if _git(pages, "status", "--porcelain", "--untracked-files=all"):
+    if _git_porcelain_lines(pages):
         raise FoodLineRetrospectiveError("Pages checkout drifted before publication-state recording")
     if _git(pages, "branch", "--show-current") != "gh-pages" or _git(pages, "rev-parse", "HEAD") != pages_commit:
         raise FoodLineRetrospectiveError("Pages publication commit is not the clean current gh-pages head")
@@ -1487,7 +1529,7 @@ def verify_generated_retrospective_set(
         )
         expected_dirty.add(f"data/dispatches/food-line/review/releases/{bundle.edition_date}.json")
     actual_dirty: set[str] = set()
-    for line in _git(root, "status", "--porcelain", "--untracked-files=all").splitlines():
+    for line in _git_porcelain_lines(root):
         value = line[3:].strip()
         if " -> " in value:
             value = value.rsplit(" -> ", 1)[-1]

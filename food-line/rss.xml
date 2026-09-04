@@ -1,98 +1,96 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
-<channel>
-  <title>Food Line Dispatch</title>
-  <link>https://dispatches.thebluefernco.com/food-line/</link>
-  <description>Source-backed daily Food Line dispatch covering pantry demand, benefit disruption, and food-access pressure across the United States.</description>
-  <item>
+  <channel>
+    <title>Food Line Dispatch RSS</title>
+    <link>https://dispatches.thebluefernco.com/food-line/</link>
+    <description>The Food Line Dispatch tracks daily signs of food insecurity across the United States - benefit disruptions, pantry strain, school-meal gaps, price pressure, and local access failures - using source-backed public records and reporting.</description>
+    <language>en-us</language>
+    <item>
+      <title>2026-08-31 — Phoenix metropolitan area; Statewide food-bank strain, Whitefish and northwest Montana, including mobile and partner-pantry service areas pantry demand, and Orange County and the broader Central Florida food-assistance service area; Statewide SNAP participation decline with documented effects in Orange County and Central Florida food pressure</title>
+      <link>https://dispatches.thebluefernco.com/food-line/editions/2026-08-31/</link>
+      <guid isPermaLink="true">https://dispatches.thebluefernco.com/food-line/editions/2026-08-31/</guid>
+      <pubDate>Fri, 04 Sep 2026 20:50:27 +0000</pubDate>
+    </item>
+    <item>
+      <title>2026-08-30 — Norfolk and surrounding households; provider states no residency restriction pantry demand, Washington City and surrounding Washington County communities; Washington City and surrounding southwestern Utah communities pantry demand, Laredo, particularly households that previously used the Pinder Avenue clinic food pressure, Blackwood, Gloucester County pantry demand, Wayne Township pantry demand, and Temple College campus food-pantry program; Temple and Taylor locations are listed by the operator, but the closure notice does not separately specify location-by-location applicability pantry demand</title>
+      <link>https://dispatches.thebluefernco.com/food-line/editions/2026-08-30/</link>
+      <guid isPermaLink="true">https://dispatches.thebluefernco.com/food-line/editions/2026-08-30/</guid>
+      <pubDate>Fri, 04 Sep 2026 20:50:27 +0000</pubDate>
+    </item><item>
     <title>Food Line Dispatch - 2026-08-24</title>
     <link>https://dispatches.thebluefernco.com/food-line/editions/2026-08-24/</link>
     <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-08-24/</guid>
     <description>2026-08-24</description>
-  </item>
-  <item>
+  </item><item>
     <title>Food Line Dispatch - 2026-08-16</title>
     <link>https://dispatches.thebluefernco.com/food-line/editions/2026-08-16/</link>
     <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-08-16/</guid>
     <description>2026-08-16</description>
-  </item>
-  <item>
+  </item><item>
     <title>Food Line Dispatch - 2026-08-05</title>
     <link>https://dispatches.thebluefernco.com/food-line/editions/2026-08-05/</link>
     <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-08-05/</guid>
     <description>2026-08-05</description>
-  </item>
-  <item>
+  </item><item>
     <title>Food Line Dispatch - 2026-07-31</title>
     <link>https://dispatches.thebluefernco.com/food-line/editions/2026-07-31/</link>
     <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-07-31/</guid>
     <description>2026-07-31</description>
-  </item>
-  <item>
+  </item><item>
     <title>Food Line Dispatch - 2026-07-28</title>
     <link>https://dispatches.thebluefernco.com/food-line/editions/2026-07-28/</link>
     <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-07-28/</guid>
     <description>2026-07-28</description>
-  </item>
-  <item>
+  </item><item>
     <title>Food Line Dispatch - 2026-06-20</title>
     <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-20/</link>
     <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-20/</guid>
     <description>2026-06-20</description>
-  </item>
-  <item>
+  </item><item>
     <title>Food Line Dispatch - 2026-06-19</title>
     <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-19/</link>
     <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-19/</guid>
     <description>2026-06-19</description>
-  </item>
-  <item>
+  </item><item>
     <title>Food Line Dispatch - 2026-06-18</title>
     <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-18/</link>
     <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-18/</guid>
     <description>2026-06-18</description>
-  </item>
-  <item>
+  </item><item>
     <title>Food Line Dispatch - 2026-06-17</title>
     <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-17/</link>
     <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-17/</guid>
     <description>2026-06-17</description>
-  </item>
-  <item>
+  </item><item>
     <title>Food Line Dispatch - 2026-06-16</title>
     <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-16/</link>
     <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-16/</guid>
     <description>2026-06-16</description>
-  </item>
-  <item>
+  </item><item>
     <title>Food Line Dispatch - 2026-06-14</title>
     <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-14/</link>
     <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-14/</guid>
     <description>2026-06-14</description>
-  </item>
-  <item>
+  </item><item>
     <title>Food Line Dispatch - 2026-06-13</title>
     <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-13/</link>
     <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-13/</guid>
     <description>2026-06-13</description>
-  </item>
-  <item>
+  </item><item>
     <title>Food Line Dispatch - 2026-06-09</title>
     <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-09/</link>
     <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-09/</guid>
     <description>2026-06-09</description>
-  </item>
-  <item>
+  </item><item>
     <title>Food Line Dispatch - 2026-06-07</title>
     <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-07/</link>
     <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-07/</guid>
     <description>2026-06-07</description>
-  </item>
-  <item>
+  </item><item>
     <title>Food Line Dispatch - 2026-06-06</title>
     <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-06/</link>
     <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-06/</guid>
     <description>2026-06-06</description>
   </item>
-</channel>
+  </channel>
 </rss>

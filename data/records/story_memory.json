@@ -1,410 +1,662 @@
 [
   {
-    "dispatch_slug": "cascadia",
-    "edition_date": "2026-05-09",
-    "story_id": "story-47d1c1987bf8",
-    "title": "Oregon emergency management preparedness notice emphasizes public safety coordination",
-    "normalized_title": "oregon emergency management preparedness notice emphasizes public safety coordination",
-    "summary": "Oregon emergency management public information is used here as a manual source record for a public safety coordination signal. It is included because the source metadata ties it to public safety in Oregon.",
-    "source_urls": [
-      "https://www.oregon.gov/oem"
-    ],
     "canonical_urls": [
       "https://www.oregon.gov/oem"
-    ],
-    "publisher_names": [
-      "Blue Fern Cascadia Manual Source File"
     ],
     "category": "Public safety",
-    "topic_fingerprint": "1110239afb5ce6b3",
-    "first_seen_date": "2026-05-09",
-    "last_seen_date": "2026-05-09",
-    "update_count": 0
-  },
-  {
     "dispatch_slug": "cascadia",
     "edition_date": "2026-05-09",
-    "story_id": "story-be7947ea23b2",
-    "title": "Washington bridge inspection program flags transportation maintenance backlog",
-    "normalized_title": "washington bridge inspection program flags transportation maintenance backlog",
-    "summary": "WSDOT bridge structure information is used here as a manual source record for a transportation maintenance signal. It is included because the source metadata ties it to transportation in Washington.",
-    "source_urls": [
-      "https://wsdot.wa.gov/travel/roads-bridges/bridge-structures"
-    ],
-    "canonical_urls": [
-      "https://wsdot.wa.gov/travel/roads-bridges/bridge-structures"
-    ],
+    "first_seen_date": "2026-05-09",
+    "last_seen_date": "2026-05-09",
+    "normalized_title": "oregon emergency management preparedness notice emphasizes public safety coordination",
     "publisher_names": [
       "Blue Fern Cascadia Manual Source File"
     ],
-    "category": "Transportation",
-    "topic_fingerprint": "5728d3f626b07953",
-    "first_seen_date": "2026-05-09",
-    "last_seen_date": "2026-05-09",
+    "source_urls": [
+      "https://www.oregon.gov/oem"
+    ],
+    "story_id": "story-47d1c1987bf8",
+    "summary": "Oregon emergency management public information is used here as a manual source record for a public safety coordination signal. It is included because the source metadata ties it to public safety in Oregon.",
+    "title": "Oregon emergency management preparedness notice emphasizes public safety coordination",
+    "topic_fingerprint": "1110239afb5ce6b3",
     "update_count": 0
   },
   {
-    "dispatch_slug": "cascadia",
-    "edition_date": "2026-05-10",
-    "story_id": "story-062399431de1",
-    "title": "SPR News Today : Could WA draw new districts ? One Democratic leader thinks there more support now",
-    "normalized_title": "spr news today could wa draw new districts one democratic leader thinks there more support now",
-    "summary": "This source was flagged as a Transportation signal for Washington based on its title and source metadata. It is included because the source metadata ties it to transportation in Washington.",
-    "source_urls": [
-      "https://www.artnews.com/art-news/news/converge-45-triennial-2026-artist-list-1234783141",
-      "https://www.spokanepublicradio.org/regional-news/2026-05-06/spr-news-today-could-wa-draw-new-districts-one-democratic-leader-thinks-theres-more-support-now"
+    "canonical_urls": [
+      "https://wsdot.wa.gov/travel/roads-bridges/bridge-structures"
     ],
+    "category": "Transportation",
+    "dispatch_slug": "cascadia",
+    "edition_date": "2026-05-09",
+    "first_seen_date": "2026-05-09",
+    "last_seen_date": "2026-05-09",
+    "normalized_title": "washington bridge inspection program flags transportation maintenance backlog",
+    "publisher_names": [
+      "Blue Fern Cascadia Manual Source File"
+    ],
+    "source_urls": [
+      "https://wsdot.wa.gov/travel/roads-bridges/bridge-structures"
+    ],
+    "story_id": "story-be7947ea23b2",
+    "summary": "WSDOT bridge structure information is used here as a manual source record for a transportation maintenance signal. It is included because the source metadata ties it to transportation in Washington.",
+    "title": "Washington bridge inspection program flags transportation maintenance backlog",
+    "topic_fingerprint": "5728d3f626b07953",
+    "update_count": 0
+  },
+  {
     "canonical_urls": [
       "https://www.artnews.com/art-news/news/converge-45-triennial-2026-artist-list-1234783141",
       "https://www.spokanepublicradio.org/regional-news/2026-05-06/spr-news-today-could-wa-draw-new-districts-one-democratic-leader-thinks-theres-more-support-now"
     ],
-    "publisher_names": [
-      "spokanepublicradio.org"
-    ],
     "category": "Transportation",
+    "dispatch_slug": "cascadia",
+    "edition_date": "2026-05-10",
+    "first_seen_date": "2026-05-03",
     "geographies": [
       "WA"
+    ],
+    "last_seen_date": "2026-05-10",
+    "latest_classification": "continuing_development",
+    "normalized_title": "spr news today could wa draw new districts one democratic leader thinks there more support now",
+    "publisher_names": [
+      "spokanepublicradio.org"
     ],
     "source_dates": [
       "2026-05-06T18:15:00Z",
       "2026-05-09T17:59:42.114827+00:00"
     ],
+    "source_urls": [
+      "https://www.artnews.com/art-news/news/converge-45-triennial-2026-artist-list-1234783141",
+      "https://www.spokanepublicradio.org/regional-news/2026-05-06/spr-news-today-could-wa-draw-new-districts-one-democratic-leader-thinks-theres-more-support-now"
+    ],
+    "story_id": "story-062399431de1",
+    "summary": "This source was flagged as a Transportation signal for Washington based on its title and source metadata. It is included because the source metadata ties it to transportation in Washington.",
+    "title": "SPR News Today : Could WA draw new districts ? One Democratic leader thinks there more support now",
     "topic_fingerprint": "446e9c3e39a436f6",
-    "first_seen_date": "2026-05-03",
-    "last_seen_date": "2026-05-10",
-    "update_count": 1,
-    "latest_classification": "continuing_development"
+    "update_count": 1
   },
   {
-    "dispatch_slug": "cascadia",
-    "edition_date": "2026-05-10",
-    "story_id": "story-0fdbd6f791e1",
-    "title": "Facing low snowpack , severe drought , WA officials in search of answers",
-    "normalized_title": "facing low snowpack severe drought wa officials in search of answers",
-    "summary": "This source was flagged as a Environment and climate signal for Washington based on its title and source metadata. It is included because the source metadata ties it to environment and climate in Washington.",
-    "source_urls": [
-      "https://www.seattletimes.com/seattle-news/disaster-assistance-centers-open-to-help-flood-survivors-with-losses",
-      "https://www.seattletimes.com/seattle-news/climate-lab/facing-low-snowpack-severe-drought-wa-officials-in-search-of-answers"
-    ],
     "canonical_urls": [
       "https://www.seattletimes.com/seattle-news/disaster-assistance-centers-open-to-help-flood-survivors-with-losses",
       "https://www.seattletimes.com/seattle-news/climate-lab/facing-low-snowpack-severe-drought-wa-officials-in-search-of-answers"
     ],
-    "publisher_names": [
-      "seattletimes.com"
-    ],
     "category": "Environment and climate",
+    "dispatch_slug": "cascadia",
+    "edition_date": "2026-05-10",
+    "first_seen_date": "2026-05-03",
     "geographies": [
       "WA"
+    ],
+    "last_seen_date": "2026-05-10",
+    "latest_classification": "continuing_development",
+    "normalized_title": "facing low snowpack severe drought wa officials in search of answers",
+    "publisher_names": [
+      "seattletimes.com"
     ],
     "source_dates": [
       "2026-05-08T00:15:00Z",
       "2026-05-09T17:59:42.114827+00:00"
     ],
-    "topic_fingerprint": "f5ea81bd1ca4fa71",
-    "first_seen_date": "2026-05-03",
-    "last_seen_date": "2026-05-10",
-    "update_count": 1,
-    "latest_classification": "continuing_development"
-  },
-  {
-    "dispatch_slug": "cascadia",
-    "edition_date": "2026-05-10",
-    "story_id": "story-25faabb5d285",
-    "title": "Will this year El Ni\u00f1o impact fire season in Oregon ? Not so fast",
-    "normalized_title": "will this year el ni o impact fire season in oregon not so fast",
-    "summary": "This source was flagged as a Environment and climate signal for Oregon based on its title and source metadata. It is included because the source metadata ties it to environment and climate in Oregon.",
     "source_urls": [
       "https://www.seattletimes.com/seattle-news/disaster-assistance-centers-open-to-help-flood-survivors-with-losses",
-      "https://www.kgw.com/article/weather/el-nino-fire-season-winter-weather-drought-snowpack-problems/283-a83102a1-928e-4868-8ffd-3449dfa2a08c"
+      "https://www.seattletimes.com/seattle-news/climate-lab/facing-low-snowpack-severe-drought-wa-officials-in-search-of-answers"
     ],
+    "story_id": "story-0fdbd6f791e1",
+    "summary": "This source was flagged as a Environment and climate signal for Washington based on its title and source metadata. It is included because the source metadata ties it to environment and climate in Washington.",
+    "title": "Facing low snowpack , severe drought , WA officials in search of answers",
+    "topic_fingerprint": "f5ea81bd1ca4fa71",
+    "update_count": 1
+  },
+  {
     "canonical_urls": [
       "https://www.seattletimes.com/seattle-news/disaster-assistance-centers-open-to-help-flood-survivors-with-losses",
       "https://www.kgw.com/article/weather/el-nino-fire-season-winter-weather-drought-snowpack-problems/283-a83102a1-928e-4868-8ffd-3449dfa2a08c"
     ],
-    "publisher_names": [
-      "kgw.com"
-    ],
     "category": "Environment and climate",
+    "dispatch_slug": "cascadia",
+    "edition_date": "2026-05-10",
+    "first_seen_date": "2026-05-03",
     "geographies": [
       "OR"
+    ],
+    "last_seen_date": "2026-05-10",
+    "latest_classification": "continuing_development",
+    "normalized_title": "will this year el ni o impact fire season in oregon not so fast",
+    "publisher_names": [
+      "kgw.com"
     ],
     "source_dates": [
       "2026-05-07T19:00:00Z",
       "2026-05-09T17:59:42.114827+00:00"
     ],
+    "source_urls": [
+      "https://www.seattletimes.com/seattle-news/disaster-assistance-centers-open-to-help-flood-survivors-with-losses",
+      "https://www.kgw.com/article/weather/el-nino-fire-season-winter-weather-drought-snowpack-problems/283-a83102a1-928e-4868-8ffd-3449dfa2a08c"
+    ],
+    "story_id": "story-25faabb5d285",
+    "summary": "This source was flagged as a Environment and climate signal for Oregon based on its title and source metadata. It is included because the source metadata ties it to environment and climate in Oregon.",
+    "title": "Will this year El Niño impact fire season in Oregon ? Not so fast",
     "topic_fingerprint": "2643b45ed9ee95f9",
-    "first_seen_date": "2026-05-03",
-    "last_seen_date": "2026-05-10",
-    "update_count": 1,
-    "latest_classification": "continuing_development"
+    "update_count": 1
   },
   {
-    "dispatch_slug": "cascadia",
-    "edition_date": "2026-05-10",
-    "story_id": "story-8536e7e9a964",
-    "title": "Medicaid contract is stalled after a lawsuit . Now , Idaho officials are delaying privatization",
-    "normalized_title": "medicaid contract is stalled after a lawsuit now idaho officials are delaying privatization",
-    "summary": "This source was flagged as a Healthcare signal for Idaho based on its title and source metadata. It is included because the source metadata ties it to healthcare in Idaho.",
-    "source_urls": [
-      "https://www.idahostatejournal.com/freeaccess/medicaid-contract-is-stalled-after-a-lawsuit-now-idaho-officials-are-delaying-privatization/article_ea0b7b4b-f12b-4c1d-9667-3387493eaf73.html"
-    ],
     "canonical_urls": [
       "https://www.idahostatejournal.com/freeaccess/medicaid-contract-is-stalled-after-a-lawsuit-now-idaho-officials-are-delaying-privatization/article_ea0b7b4b-f12b-4c1d-9667-3387493eaf73.html"
     ],
-    "publisher_names": [
-      "idahostatejournal.com"
-    ],
     "category": "Healthcare",
+    "dispatch_slug": "cascadia",
+    "edition_date": "2026-05-10",
+    "first_seen_date": "2026-05-10",
     "geographies": [
       "ID"
+    ],
+    "last_seen_date": "2026-05-10",
+    "latest_classification": "new",
+    "normalized_title": "medicaid contract is stalled after a lawsuit now idaho officials are delaying privatization",
+    "publisher_names": [
+      "idahostatejournal.com"
     ],
     "source_dates": [
       "2026-05-06T23:15:00Z",
       "2026-05-09T17:59:42.114827+00:00"
     ],
+    "source_urls": [
+      "https://www.idahostatejournal.com/freeaccess/medicaid-contract-is-stalled-after-a-lawsuit-now-idaho-officials-are-delaying-privatization/article_ea0b7b4b-f12b-4c1d-9667-3387493eaf73.html"
+    ],
+    "story_id": "story-8536e7e9a964",
+    "summary": "This source was flagged as a Healthcare signal for Idaho based on its title and source metadata. It is included because the source metadata ties it to healthcare in Idaho.",
+    "title": "Medicaid contract is stalled after a lawsuit . Now , Idaho officials are delaying privatization",
     "topic_fingerprint": "daf852049665dddf",
-    "first_seen_date": "2026-05-10",
-    "last_seen_date": "2026-05-10",
-    "update_count": 0,
-    "latest_classification": "new"
+    "update_count": 0
   },
   {
-    "dispatch_slug": "cascadia",
-    "edition_date": "2026-05-10",
-    "story_id": "story-c965b0e4f594",
-    "title": "New wave of text scams target Idaho courts and state agencies",
-    "normalized_title": "new wave of text scams target idaho courts and state agencies",
-    "summary": "A surge in sophisticated text scams impersonating Idaho government agencies is costing residents thousands and prompting experts to warn the public about how to spot and avoid fraud. It is included because the source metadata ties it to government in Idaho.",
-    "source_urls": [
-      "https://www.boisestatepublicradio.org/show/idaho-matters/2026-05-05/text-scams-target-idaho-courts-state-agencies"
-    ],
     "canonical_urls": [
       "https://www.boisestatepublicradio.org/show/idaho-matters/2026-05-05/text-scams-target-idaho-courts-state-agencies"
     ],
-    "publisher_names": [
-      "Boise State Public Radio"
-    ],
     "category": "Government and public services",
+    "dispatch_slug": "cascadia",
+    "edition_date": "2026-05-10",
+    "first_seen_date": "2026-05-10",
     "geographies": [
       "ID"
+    ],
+    "last_seen_date": "2026-05-10",
+    "latest_classification": "new",
+    "normalized_title": "new wave of text scams target idaho courts and state agencies",
+    "publisher_names": [
+      "Boise State Public Radio"
     ],
     "source_dates": [
       "2026-05-05T19:01:27Z",
       "2026-05-09T17:59:42.114827+00:00"
     ],
+    "source_urls": [
+      "https://www.boisestatepublicradio.org/show/idaho-matters/2026-05-05/text-scams-target-idaho-courts-state-agencies"
+    ],
+    "story_id": "story-c965b0e4f594",
+    "summary": "A surge in sophisticated text scams impersonating Idaho government agencies is costing residents thousands and prompting experts to warn the public about how to spot and avoid fraud. It is included because the source metadata ties it to government in Idaho.",
+    "title": "New wave of text scams target Idaho courts and state agencies",
     "topic_fingerprint": "51954af9e439d64f",
-    "first_seen_date": "2026-05-10",
-    "last_seen_date": "2026-05-10",
-    "update_count": 0,
-    "latest_classification": "new"
+    "update_count": 0
   },
   {
-    "dispatch_slug": "cascadia",
-    "edition_date": "2026-05-10",
-    "story_id": "story-ebe9d6f8b02c",
-    "title": "Oregon regulators move to make data centers pay more for grid expansion",
-    "normalized_title": "oregon regulators move to make data centers pay more for grid expansion",
-    "summary": "This source was flagged as a Transportation signal for Oregon based on its title and source metadata. It is included because the source metadata ties it to transportation in Oregon.",
-    "source_urls": [
-      "https://www.artnews.com/art-news/news/converge-45-triennial-2026-artist-list-1234783141",
-      "https://katu.com/news/local/oregon-regulators-move-to-make-data-centers-pay-more-for-grid-expansion-hillsboro-portland-salem-coporations-environment-center-local-outcry-pollution-bills-expenses-utilities"
-    ],
     "canonical_urls": [
       "https://www.artnews.com/art-news/news/converge-45-triennial-2026-artist-list-1234783141",
       "https://katu.com/news/local/oregon-regulators-move-to-make-data-centers-pay-more-for-grid-expansion-hillsboro-portland-salem-coporations-environment-center-local-outcry-pollution-bills-expenses-utilities"
     ],
-    "publisher_names": [
-      "katu.com"
-    ],
     "category": "Transportation",
+    "dispatch_slug": "cascadia",
+    "edition_date": "2026-05-10",
+    "first_seen_date": "2026-05-03",
     "geographies": [
       "OR"
+    ],
+    "last_seen_date": "2026-05-10",
+    "latest_classification": "continuing_development",
+    "normalized_title": "oregon regulators move to make data centers pay more for grid expansion",
+    "publisher_names": [
+      "katu.com"
     ],
     "source_dates": [
       "2026-05-09T01:15:00Z",
       "2026-05-09T17:59:42.114827+00:00"
     ],
+    "source_urls": [
+      "https://www.artnews.com/art-news/news/converge-45-triennial-2026-artist-list-1234783141",
+      "https://katu.com/news/local/oregon-regulators-move-to-make-data-centers-pay-more-for-grid-expansion-hillsboro-portland-salem-coporations-environment-center-local-outcry-pollution-bills-expenses-utilities"
+    ],
+    "story_id": "story-ebe9d6f8b02c",
+    "summary": "This source was flagged as a Transportation signal for Oregon based on its title and source metadata. It is included because the source metadata ties it to transportation in Oregon.",
+    "title": "Oregon regulators move to make data centers pay more for grid expansion",
     "topic_fingerprint": "9a59f0212a2c6298",
-    "first_seen_date": "2026-05-03",
-    "last_seen_date": "2026-05-10",
-    "update_count": 1,
-    "latest_classification": "continuing_development"
+    "update_count": 1
   },
   {
-    "dispatch_slug": "gaza",
-    "edition_date": "2026-05-05",
-    "story_id": "gaza-story-2026-05-05-001",
-    "title": "Actual source title",
-    "normalized_title": "actual source title",
-    "summary": "Short source-backed summary.",
-    "source_urls": [
-      "https://actual-source-url"
-    ],
+    "approval_sha256": "52a3815055fd77d8f32b6177a343cbce351aae52f8a0c4c1a86c940b89e3db0b",
     "canonical_urls": [
-      "https://actual-source-url"
+      "https://www.sltrib.com/news/2026/08/01/high-rent-leads-closing-salvation"
     ],
+    "dispatch_slug": "food-line",
+    "edition_date": "2026-08-30",
+    "event_fingerprint": "sha256:89dcb46b6eb83f4749feea2374ef9a45da99fc8040b39424990899794e0f926f",
+    "first_seen_date": "2026-08-30",
+    "last_seen_date": "2026-08-30",
+    "latest_classification": "new",
+    "normalized_title": "washington city pantry closure displaced monthly food box service",
+    "published_at": "2026-09-04T20:50:27Z",
     "publisher_names": [
-      "Actual publisher"
+      "The Salt Lake Tribune"
     ],
-    "category": "humanitarian",
-    "topic_fingerprint": "c9d1b400832e2870",
-    "first_seen_date": "2026-05-05",
-    "last_seen_date": "2026-05-05",
+    "retrospective": true,
+    "source_dates": [
+      "2026-08-01"
+    ],
+    "source_urls": [
+      "https://www.sltrib.com/news/2026/08/01/high-rent-leads-closing-salvation"
+    ],
+    "story_id": "food-line-retrospective-50b4f6ad13c2a2454ffe",
+    "summary": "Rising rent forced the Salvation Army's Washington City center and four-day-a-week pantry to close; the fixed site had served about 500 low-income families each month, while staff shifted to deliveries.",
+    "title": "Washington City pantry closure displaced monthly food-box service",
     "update_count": 0
   },
   {
-    "dispatch_slug": "gaza",
-    "edition_date": "2026-05-07",
-    "story_id": "gaza-story-2026-05-07-001",
-    "title": "Hamas says a son of its chief negotiator was killed in an Israeli strike on Gaza",
-    "normalized_title": "hamas says a son of its chief negotiator was killed in an israeli strike on gaza",
-    "summary": "Associated Press reported Hamas said Azzam al-Hayya, son of chief negotiator Khalil al-Hayya, was killed in an Israeli strike on Gaza.",
-    "source_urls": [
-      "https://apnews.com/article/cfb7d60979a86c973b9885a9bf18649f"
+    "approval_sha256": "52a3815055fd77d8f32b6177a343cbce351aae52f8a0c4c1a86c940b89e3db0b",
+    "canonical_urls": [
+      "https://www.tapinto.net/towns/wayne/articles/wayne-s-win-food-pantry-needs-help-during-community-center-closure"
     ],
+    "dispatch_slug": "food-line",
+    "edition_date": "2026-08-30",
+    "event_fingerprint": "sha256:1b6027676baf62119e2d06af66ea1624d938be122e2141e150e4a73a924d31b1",
+    "first_seen_date": "2026-08-30",
+    "last_seen_date": "2026-08-30",
+    "latest_classification": "new",
+    "normalized_title": "wayne pantry shifted to gift cards after fire displacement",
+    "published_at": "2026-09-04T20:50:27Z",
+    "publisher_names": [
+      "TAPinto Wayne"
+    ],
+    "retrospective": true,
+    "source_dates": [
+      "2026-08-06T08:44:00-04:00"
+    ],
+    "source_urls": [
+      "https://www.tapinto.net/towns/wayne/articles/wayne-s-win-food-pantry-needs-help-during-community-center-closure"
+    ],
+    "story_id": "food-line-retrospective-67b5e7a48b127643ae46",
+    "summary": "After a fire-related community-center closure displaced the Wayne Interfaith Network pantry, the program paused physical grocery distribution and mailed grocery gift cards for the month.",
+    "title": "Wayne pantry shifted to gift cards after fire displacement",
+    "update_count": 0
+  },
+  {
+    "approval_sha256": "52a3815055fd77d8f32b6177a343cbce351aae52f8a0c4c1a86c940b89e3db0b",
+    "canonical_urls": [
+      "https://www.facebook.com/laredowic/posts/-important-wic-updateeffective-august-1-2026-our-ladrillera-wic-clinic-located-a/1549327733873236"
+    ],
+    "dispatch_slug": "food-line",
+    "edition_date": "2026-08-30",
+    "event_fingerprint": "sha256:35bedca2280d813b365b987002de57c7ea7a8ca90d431ea709fd9bea7b82de90",
+    "first_seen_date": "2026-08-30",
+    "last_seen_date": "2026-08-30",
+    "latest_classification": "new",
+    "normalized_title": "laredo wic closed its la ladrillera clinic",
+    "published_at": "2026-09-04T20:50:27Z",
+    "publisher_names": [
+      "Laredo WIC"
+    ],
+    "retrospective": true,
+    "source_dates": [
+      ""
+    ],
+    "source_urls": [
+      "https://www.facebook.com/laredowic/posts/-important-wic-updateeffective-august-1-2026-our-ladrillera-wic-clinic-located-a/1549327733873236"
+    ],
+    "story_id": "food-line-retrospective-6858ec66c40ad8e1e585",
+    "summary": "Laredo WIC permanently closed its La Ladrillera clinic at 2100 Pinder on Aug. 1, reducing local access for participants who had used that site.",
+    "title": "Laredo WIC closed its La Ladrillera clinic",
+    "update_count": 0
+  },
+  {
+    "approval_sha256": "52a3815055fd77d8f32b6177a343cbce351aae52f8a0c4c1a86c940b89e3db0b",
+    "canonical_urls": [
+      "https://www.templecollege.edu/resources/circle-support/leopard-pantry.html"
+    ],
+    "dispatch_slug": "food-line",
+    "edition_date": "2026-08-30",
+    "event_fingerprint": "sha256:d3d39dff7768b42114ada8ba7d27151a955d3eff3796e331d5848f72308bfa46",
+    "first_seen_date": "2026-08-30",
+    "last_seen_date": "2026-08-30",
+    "latest_classification": "new",
+    "normalized_title": "temple college pantry paused regular august shopping",
+    "published_at": "2026-09-04T20:50:27Z",
+    "publisher_names": [
+      "Temple College"
+    ],
+    "retrospective": true,
+    "source_dates": [
+      ""
+    ],
+    "source_urls": [
+      "https://www.templecollege.edu/resources/circle-support/leopard-pantry.html"
+    ],
+    "story_id": "food-line-retrospective-e6b06583274fcec6e38c",
+    "summary": "Temple College listed its Leopard Food Pantry as closed for regular shopping during Aug. 1–19, followed by new-shopper registration days before a scheduled Aug. 25 reopening.",
+    "title": "Temple College pantry paused regular August shopping",
+    "update_count": 0
+  },
+  {
+    "approval_sha256": "52a3815055fd77d8f32b6177a343cbce351aae52f8a0c4c1a86c940b89e3db0b",
+    "canonical_urls": [
+      "https://stcolumbaministries.com/food-pantry"
+    ],
+    "dispatch_slug": "food-line",
+    "edition_date": "2026-08-30",
+    "event_fingerprint": "sha256:24bf465a99b2b12b941464d79d851224ded52b1665caaa06f67888e2ce6d3484",
+    "first_seen_date": "2026-08-30",
+    "last_seen_date": "2026-08-30",
+    "latest_classification": "new",
+    "normalized_title": "broken pipe closed st columba pantry for restoration",
+    "published_at": "2026-09-04T20:50:27Z",
+    "publisher_names": [
+      "St. Columba Ecumenical Ministries, Inc."
+    ],
+    "retrospective": true,
+    "source_dates": [
+      ""
+    ],
+    "source_urls": [
+      "https://stcolumbaministries.com/food-pantry"
+    ],
+    "story_id": "food-line-retrospective-e7f3ffac0d2d6afff35b",
+    "summary": "St. Columba Ecumenical Ministries said a broken pipe forced its Norfolk food pantry to close for restoration beginning July 27, interrupting a service that normally offered up to three days of groceries once every 30 days.",
+    "title": "Broken pipe closed St. Columba pantry for restoration",
+    "update_count": 0
+  },
+  {
+    "approval_sha256": "52a3815055fd77d8f32b6177a343cbce351aae52f8a0c4c1a86c940b89e3db0b",
+    "canonical_urls": [
+      "https://www.facebook.com/theunforgottenhaven/posts/important-updateplease-read-carefully-as-of-august-4-2026-we-are-temporarily-not/1475706591252107"
+    ],
+    "dispatch_slug": "food-line",
+    "edition_date": "2026-08-30",
+    "event_fingerprint": "sha256:77b3b6c39c0d034c287c087d74669d7f05d90f5a8deb154f81b6759e1918f82d",
+    "first_seen_date": "2026-08-30",
+    "last_seen_date": "2026-08-30",
+    "latest_classification": "new",
+    "normalized_title": "unforgotten haven paused new client pantry intake",
+    "published_at": "2026-09-04T20:50:27Z",
+    "publisher_names": [
+      "The Unforgotten Haven"
+    ],
+    "retrospective": true,
+    "source_dates": [
+      ""
+    ],
+    "source_urls": [
+      "https://www.facebook.com/theunforgottenhaven/posts/important-updateplease-read-carefully-as-of-august-4-2026-we-are-temporarily-not/1475706591252107"
+    ],
+    "story_id": "food-line-retrospective-fdbae5e272ca8440cebf",
+    "summary": "The Unforgotten Haven stopped accepting new clients for monthly pantry shopping as of Aug. 4, while its established pantry service remained available to registered households.",
+    "title": "Unforgotten Haven paused new-client pantry intake",
+    "update_count": 0
+  },
+  {
+    "approval_sha256": "a129b07de69821b47ffb17030dc20ea23766ba0540df5155826e7524e4651b96",
+    "canonical_urls": [
+      "https://mynews13.com/fl/orlando/news/2026/08/29/florida-snap-participation-drops-nearly-0-as-orlando-groups-see-demand-rise"
+    ],
+    "dispatch_slug": "food-line",
+    "edition_date": "2026-08-31",
+    "event_fingerprint": "sha256:a5ba25e3f030a7a1248624a8f1d48b45fcce778065712807df56be30ecec5877",
+    "first_seen_date": "2026-08-31",
+    "last_seen_date": "2026-08-31",
+    "latest_classification": "new",
+    "normalized_title": "florida snap participation fell as central florida demand rose",
+    "published_at": "2026-09-04T20:50:27Z",
+    "publisher_names": [
+      "Spectrum News 13"
+    ],
+    "retrospective": true,
+    "source_dates": [
+      "2026-08-29T12:38:00-04:00"
+    ],
+    "source_urls": [
+      "https://mynews13.com/fl/orlando/news/2026/08/29/florida-snap-participation-drops-nearly-0-as-orlando-groups-see-demand-rise"
+    ],
+    "story_id": "food-line-retrospective-71c54641cb82a996d74a",
+    "summary": "Florida SNAP participation was reported down nearly 20 percent from July 2025, while Central Florida providers reported higher demand and Second Harvest said need exceeded the prior year's level.",
+    "title": "Florida SNAP participation fell as Central Florida demand rose",
+    "update_count": 0
+  },
+  {
+    "approval_sha256": "a129b07de69821b47ffb17030dc20ea23766ba0540df5155826e7524e4651b96",
+    "canonical_urls": [
+      "https://nbcmontana.com/news/local/north-valley-food-bank-sees-demand-as-montana-families-seek-food-assistance"
+    ],
+    "dispatch_slug": "food-line",
+    "edition_date": "2026-08-31",
+    "event_fingerprint": "sha256:c8f8f85fceee928558a9776f64d27e65eec6d0e70e7305fc977a414c626fcf12",
+    "first_seen_date": "2026-08-31",
+    "last_seen_date": "2026-08-31",
+    "latest_classification": "new",
+    "normalized_title": "north valley food bank visits rose amid snap contraction",
+    "published_at": "2026-09-04T20:50:27Z",
+    "publisher_names": [
+      "NBC Montana"
+    ],
+    "retrospective": true,
+    "source_dates": [
+      "2026-08-17"
+    ],
+    "source_urls": [
+      "https://nbcmontana.com/news/local/north-valley-food-bank-sees-demand-as-montana-families-seek-food-assistance"
+    ],
+    "story_id": "food-line-retrospective-7f65805fabc6d6a76800",
+    "summary": "North Valley Food Bank reported pantry visits rising from about 23,700 to 29,000 over a year and more than 1,500 people served weekly as Montana SNAP participation declined by about 9 percent.",
+    "title": "North Valley Food Bank visits rose amid SNAP contraction",
+    "update_count": 0
+  },
+  {
+    "approval_sha256": "a129b07de69821b47ffb17030dc20ea23766ba0540df5155826e7524e4651b96",
+    "canonical_urls": [
+      "https://azfoodbanks.org/visits-increase"
+    ],
+    "dispatch_slug": "food-line",
+    "edition_date": "2026-08-31",
+    "event_fingerprint": "sha256:d4fa8128a5e347bfad2bd4b925aac748a4ef849564805605fcdb96fa14b1ec51",
+    "first_seen_date": "2026-08-31",
+    "last_seen_date": "2026-08-31",
+    "latest_classification": "new",
+    "normalized_title": "phoenix food box demand rose as arizona snap access contracted",
+    "published_at": "2026-09-04T20:50:27Z",
+    "publisher_names": [
+      "Arizona Food Bank Network"
+    ],
+    "retrospective": true,
+    "source_dates": [
+      "2026-06-30"
+    ],
+    "source_urls": [
+      "https://azfoodbanks.org/visits-increase"
+    ],
+    "story_id": "food-line-retrospective-cae58348c495f1cae6f1",
+    "summary": "St. Vincent de Paul in Phoenix reported that demand for food boxes had nearly doubled as Arizona food-bank visits rose and SNAP access contracted; the sources did not establish a precise turnaway count or causal split.",
+    "title": "Phoenix food-box demand rose as Arizona SNAP access contracted",
+    "update_count": 0
+  },
+  {
+    "canonical_urls": [
+      "https://actual-source-url"
+    ],
+    "category": "humanitarian",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-05",
+    "first_seen_date": "2026-05-05",
+    "last_seen_date": "2026-05-05",
+    "normalized_title": "actual source title",
+    "publisher_names": [
+      "Actual publisher"
+    ],
+    "source_urls": [
+      "https://actual-source-url"
+    ],
+    "story_id": "gaza-story-2026-05-05-001",
+    "summary": "Short source-backed summary.",
+    "title": "Actual source title",
+    "topic_fingerprint": "c9d1b400832e2870",
+    "update_count": 0
+  },
+  {
     "canonical_urls": [
       "https://apnews.com/article/cfb7d60979a86c973b9885a9bf18649f"
     ],
+    "category": "conflict",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-07",
+    "first_seen_date": "2026-05-07",
+    "geographies": [],
+    "last_seen_date": "2026-05-07",
+    "latest_classification": "new",
+    "normalized_title": "hamas says a son of its chief negotiator was killed in an israeli strike on gaza",
     "publisher_names": [
       "Associated Press"
     ],
-    "category": "conflict",
-    "geographies": [],
     "source_dates": [],
+    "source_urls": [
+      "https://apnews.com/article/cfb7d60979a86c973b9885a9bf18649f"
+    ],
+    "story_id": "gaza-story-2026-05-07-001",
+    "summary": "Associated Press reported Hamas said Azzam al-Hayya, son of chief negotiator Khalil al-Hayya, was killed in an Israeli strike on Gaza.",
+    "title": "Hamas says a son of its chief negotiator was killed in an Israeli strike on Gaza",
     "topic_fingerprint": "c8060b80b05bf42d",
-    "first_seen_date": "2026-05-07",
-    "last_seen_date": "2026-05-07",
-    "update_count": 0,
-    "latest_classification": "new"
+    "update_count": 0
   },
   {
-    "dispatch_slug": "gaza",
-    "edition_date": "2026-05-07",
-    "story_id": "gaza-story-2026-05-07-002",
-    "title": "Gazans confined to less than half of strip: UN",
-    "normalized_title": "gazans confined to less than half of strip un",
-    "summary": "Xinhua reported UN humanitarians said 2.1 million people in Gaza remained confined to less than half of the strip and cited OCHA on access constraints.",
-    "source_urls": [
-      "https://www.china.org.cn/world/Off_the_Wire/2026-05/07/content_118480011.shtml"
-    ],
     "canonical_urls": [
       "https://www.china.org.cn/world/Off_the_Wire/2026-05/07/content_118480011.shtml"
     ],
+    "category": "humanitarian",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-05-07",
+    "first_seen_date": "2026-05-07",
+    "geographies": [],
+    "last_seen_date": "2026-05-07",
+    "latest_classification": "new",
+    "normalized_title": "gazans confined to less than half of strip un",
     "publisher_names": [
       "Xinhua"
     ],
-    "category": "humanitarian",
-    "geographies": [],
     "source_dates": [],
+    "source_urls": [
+      "https://www.china.org.cn/world/Off_the_Wire/2026-05/07/content_118480011.shtml"
+    ],
+    "story_id": "gaza-story-2026-05-07-002",
+    "summary": "Xinhua reported UN humanitarians said 2.1 million people in Gaza remained confined to less than half of the strip and cited OCHA on access constraints.",
+    "title": "Gazans confined to less than half of strip: UN",
     "topic_fingerprint": "dc0759dc4f75d5d3",
-    "first_seen_date": "2026-05-07",
-    "last_seen_date": "2026-05-07",
-    "update_count": 0,
-    "latest_classification": "new"
+    "update_count": 0
   },
   {
-    "dispatch_slug": "gaza",
-    "edition_date": "2026-06-20",
-    "story_id": "gaza-story-2026-06-20-001",
-    "title": "Parents and two daughters killed in Israeli strike in Gaza",
-    "normalized_title": "parents and two daughters killed in israeli strike in gaza",
-    "summary": "Israel has repeatedly violated the October ceasefire brokered by the US.",
-    "source_urls": [
-      "https://www.newarab.com/news/israel-has-killed-more-1000-people-gaza-ceasefire",
-      "https://www.aljazeera.com/news/2026/6/20/family-including-two-daughters-killed-in-israeli-strikes-on-gaza?traffic_source=rss"
-    ],
     "canonical_urls": [
       "https://www.newarab.com/news/israel-has-killed-more-1000-people-gaza-ceasefire",
       "https://www.aljazeera.com/news/2026/6/20/family-including-two-daughters-killed-in-israeli-strikes-on-gaza?traffic_source=rss"
     ],
+    "category": "conflict",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-06-20",
+    "first_seen_date": "2026-06-18",
+    "geographies": [],
+    "last_seen_date": "2026-06-20",
+    "latest_classification": "major_update",
+    "normalized_title": "parents and two daughters killed in israeli strike in gaza",
     "publisher_names": [
       "Al Jazeera"
     ],
-    "category": "conflict",
-    "geographies": [],
     "source_dates": [],
+    "source_urls": [
+      "https://www.newarab.com/news/israel-has-killed-more-1000-people-gaza-ceasefire",
+      "https://www.aljazeera.com/news/2026/6/20/family-including-two-daughters-killed-in-israeli-strikes-on-gaza?traffic_source=rss"
+    ],
+    "story_id": "gaza-story-2026-06-20-001",
+    "summary": "Israel has repeatedly violated the October ceasefire brokered by the US.",
+    "title": "Parents and two daughters killed in Israeli strike in Gaza",
     "topic_fingerprint": "34ae9ff3f5102abd",
-    "first_seen_date": "2026-06-18",
-    "last_seen_date": "2026-06-20",
-    "update_count": 1,
-    "latest_classification": "major_update"
+    "update_count": 1
   },
   {
-    "dispatch_slug": "gaza",
-    "edition_date": "2026-07-01",
-    "story_id": "gaza-story-2026-07-01-001",
-    "title": "Expansion of areas under Israeli control in Gaza endangers civilians and relief efforts",
-    "normalized_title": "expansion of areas under israeli control in gaza endangers civilians and relief efforts",
-    "summary": "The United Nations and NGOs warn that the continued expansion of areas under Israeli control in Gaza is intensifying risks to civilians and further constraining humanitarian efforts.",
-    "source_urls": [
-      "https://www.ochaopt.org/content/expansion-areas-under-israeli-control-gaza-endangers-civilians-and-relief-efforts"
-    ],
     "canonical_urls": [
       "https://www.ochaopt.org/content/expansion-areas-under-israeli-control-gaza-endangers-civilians-and-relief-efforts"
     ],
+    "category": "humanitarian",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-07-01",
+    "first_seen_date": "2026-07-01",
+    "geographies": [],
+    "last_seen_date": "2026-07-01",
+    "latest_classification": "new",
+    "normalized_title": "expansion of areas under israeli control in gaza endangers civilians and relief efforts",
     "publisher_names": [
       "OCHA oPt"
     ],
-    "category": "humanitarian",
-    "geographies": [],
     "source_dates": [],
+    "source_urls": [
+      "https://www.ochaopt.org/content/expansion-areas-under-israeli-control-gaza-endangers-civilians-and-relief-efforts"
+    ],
+    "story_id": "gaza-story-2026-07-01-001",
+    "summary": "The United Nations and NGOs warn that the continued expansion of areas under Israeli control in Gaza is intensifying risks to civilians and further constraining humanitarian efforts.",
+    "title": "Expansion of areas under Israeli control in Gaza endangers civilians and relief efforts",
     "topic_fingerprint": "0b460b40e4d15207",
-    "first_seen_date": "2026-07-01",
-    "last_seen_date": "2026-07-01",
-    "update_count": 0,
-    "latest_classification": "new"
+    "update_count": 0
   },
   {
-    "dispatch_slug": "gaza",
-    "edition_date": "2026-07-01",
-    "story_id": "gaza-story-2026-07-01-002",
-    "title": "UN chief fears for 'millions' of Palestinians amid UNRWA funding shortfall",
-    "normalized_title": "un chief fears for millions of palestinians amid unrwa funding shortfall",
-    "summary": "UN Secretary-General Antonio Guterres called on countries to cover a $100m UNRWA funding gap, warning that millions of Palestinians are at risk and describing living conditions in Gaza as utterly appalling.",
-    "source_urls": [
-      "https://www.aljazeera.com/news/2026/7/1/un-chief-fears-for-millions-of-palestinians-amid-unrwa-funding-shortfall"
-    ],
     "canonical_urls": [
       "https://www.aljazeera.com/news/2026/7/1/un-chief-fears-for-millions-of-palestinians-amid-unrwa-funding-shortfall"
-    ],
-    "publisher_names": [
-      "Al Jazeera"
     ],
     "category": "humanitarian",
-    "geographies": [],
-    "source_dates": [],
-    "topic_fingerprint": "1bd772f9c41adc4e",
-    "first_seen_date": "2026-07-01",
-    "last_seen_date": "2026-07-01",
-    "update_count": 0,
-    "latest_classification": "new"
-  },
-  {
     "dispatch_slug": "gaza",
     "edition_date": "2026-07-01",
-    "story_id": "gaza-story-2026-07-01-003",
-    "title": "Israeli forces kill Palestinian goalkeeper in Gaza",
-    "normalized_title": "israeli forces kill palestinian goalkeeper in gaza",
-    "summary": "Palestinian goalkeeper Saleem Al-Ashqar was shot dead by Israeli forces in Gaza.",
-    "source_urls": [
-      "https://www.aljazeera.com/video/newsfeed/2026/6/11/video-shows-gaza-teen-fisherman-before-israeli-forces-killed-him-at-sea?traffic_source=rss",
-      "https://www.aljazeera.com/video/newsfeed/2026/7/1/israeli-forces-kill-palestinian-goalkeeper-in-gaza"
+    "first_seen_date": "2026-07-01",
+    "geographies": [],
+    "last_seen_date": "2026-07-01",
+    "latest_classification": "new",
+    "normalized_title": "un chief fears for millions of palestinians amid unrwa funding shortfall",
+    "publisher_names": [
+      "Al Jazeera"
     ],
+    "source_dates": [],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/7/1/un-chief-fears-for-millions-of-palestinians-amid-unrwa-funding-shortfall"
+    ],
+    "story_id": "gaza-story-2026-07-01-002",
+    "summary": "UN Secretary-General Antonio Guterres called on countries to cover a $100m UNRWA funding gap, warning that millions of Palestinians are at risk and describing living conditions in Gaza as utterly appalling.",
+    "title": "UN chief fears for 'millions' of Palestinians amid UNRWA funding shortfall",
+    "topic_fingerprint": "1bd772f9c41adc4e",
+    "update_count": 0
+  },
+  {
     "canonical_urls": [
       "https://www.aljazeera.com/video/newsfeed/2026/6/11/video-shows-gaza-teen-fisherman-before-israeli-forces-killed-him-at-sea?traffic_source=rss",
       "https://www.aljazeera.com/video/newsfeed/2026/7/1/israeli-forces-kill-palestinian-goalkeeper-in-gaza"
-    ],
-    "publisher_names": [
-      "Al Jazeera"
     ],
     "category": "conflict",
-    "geographies": [],
-    "source_dates": [],
-    "topic_fingerprint": "12ddee4849ca6fff",
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-07-01",
     "first_seen_date": "2026-06-11",
+    "geographies": [],
     "last_seen_date": "2026-07-01",
-    "update_count": 1,
-    "latest_classification": "major_update"
+    "latest_classification": "major_update",
+    "normalized_title": "israeli forces kill palestinian goalkeeper in gaza",
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_dates": [],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/6/11/video-shows-gaza-teen-fisherman-before-israeli-forces-killed-him-at-sea?traffic_source=rss",
+      "https://www.aljazeera.com/video/newsfeed/2026/7/1/israeli-forces-kill-palestinian-goalkeeper-in-gaza"
+    ],
+    "story_id": "gaza-story-2026-07-01-003",
+    "summary": "Palestinian goalkeeper Saleem Al-Ashqar was shot dead by Israeli forces in Gaza.",
+    "title": "Israeli forces kill Palestinian goalkeeper in Gaza",
+    "topic_fingerprint": "12ddee4849ca6fff",
+    "update_count": 1
   }
 ]

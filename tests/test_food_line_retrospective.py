@@ -11,6 +11,7 @@ import pytest
 from bluefern_dispatches.food_line_retrospective import (
     APPROVAL_PREFIX,
     APPROVAL_REQUEST_SCHEMA,
+    APPROVAL_SCHEMA,
     CORRECTION_PREFIX,
     DECISION_PREFIX,
     LEGACY_V1_APPROVAL_SCHEMA,
@@ -64,6 +65,53 @@ SOURCE_HISTORY_DATES = tuple(
     for value in PUBLISHED_HISTORY_DATES
     if value not in {"2026-08-24", "2026-08-16", "2026-08-05", "2026-07-31", "2026-07-28"}
 )
+
+REAL_RETROSPECTIVE_BATCHES = {
+    "food-line-august-2026-retrospective-01": {
+        "edition_date": "2026-08-30",
+        "ordered_copy": "sha256:c5df2c9764ba78a0966a8e4d35c3ec74b161fb325683965a63b62558aee50e4f",
+    },
+    "food-line-august-2026-retrospective-02": {
+        "edition_date": "2026-08-31",
+        "ordered_copy": "sha256:cc32d446adbac5546e078ed57df5fdb7b5222dcdbdeb7eaf96f1b083518e87c5",
+    },
+}
+REAL_LEGACY_APPROVALS = {
+    "v1": {
+        "schema": LEGACY_V1_APPROVAL_SCHEMA,
+        "path_for": legacy_v1_approval_path_for,
+        "expectations": {
+            "food-line-august-2026-retrospective-01": {
+                "sha256": "8f0602de3dcae6bc92894ab08403bd3436a70487de90357d622dd1de0deb8425",
+                "length": 10356,
+                "blob": "72469c9c00c799fb83a8a1015fbc4404b1080568",
+            },
+            "food-line-august-2026-retrospective-02": {
+                "sha256": "013007d878b78cb70e89912ecdf349d843dc03914ede2c1c3a16cdbe3cdc4f4e",
+                "length": 5953,
+                "blob": "4e29b3b6a1979e7821ee6f7c7d840cc6460fffaf",
+            },
+        },
+    },
+    "v2": {
+        "schema": LEGACY_V2_APPROVAL_SCHEMA,
+        "path_for": legacy_v2_approval_path_for,
+        "expectations": {
+            "food-line-august-2026-retrospective-01": {
+                "sha256": "abb9046540797e87e6b605dbe6848cf8fd81e66c5b97d0d1c5f94e646cf1f9c7",
+                "length": 10356,
+                "blob": "7f14365e67629e7add635480075f4768a613b34e",
+            },
+            "food-line-august-2026-retrospective-02": {
+                "sha256": "64350df3ae3aef67ee6b9d8d19b749d654a0cc65979b6fabfe1d6644eb8e92f3",
+                "length": 5953,
+                "blob": "eb4ad87daf6c813402d64d0394d6c473d18acea1",
+            },
+        },
+    },
+}
+REAL_V3_SOURCE_BASE = "62d2fe5852fc51c95d4205236561e0c133e2a2c2"
+REAL_V3_PAGES_HEAD = "cd48dd3c3e9060d718897e5b0254328f2b8b3b6b"
 
 
 def _git(root: Path, *args: str) -> str:
@@ -631,32 +679,175 @@ def test_real_v1_approvals_and_public_copy_fingerprints_are_immutable() -> None:
             assert "Aug. 1–19" in temple and "Ã" not in temple
 
 
-def test_real_v2_approvals_are_immutable_and_v3_paths_are_absent() -> None:
-    root = Path(__file__).resolve().parents[1]
-    expectations = {
-        "food-line-august-2026-retrospective-01": {
-            "sha256": "abb9046540797e87e6b605dbe6848cf8fd81e66c5b97d0d1c5f94e646cf1f9c7",
-            "length": 10356,
-            "blob": "7f14365e67629e7add635480075f4768a613b34e",
-            "fingerprint": "sha256:d6ea6b4f53d0aa28114a506d52deca61a11a7edfb55289d74822a0563c67b802",
-        },
-        "food-line-august-2026-retrospective-02": {
-            "sha256": "64350df3ae3aef67ee6b9d8d19b749d654a0cc65979b6fabfe1d6644eb8e92f3",
-            "length": 5953,
-            "blob": "eb4ad87daf6c813402d64d0394d6c473d18acea1",
-            "fingerprint": "sha256:c6353cf35d07df68edbfb443f12b1566905a3d219018b0e2edf962465da81cca",
-        },
+def _assert_real_approval_lifecycle(root: Path, *, verify_git_blobs: bool = False) -> str:
+    for legacy in REAL_LEGACY_APPROVALS.values():
+        for batch_id, expected in legacy["expectations"].items():
+            path = legacy["path_for"](batch_id)
+            raw = (root / path).read_bytes()
+            approval = json.loads(raw.decode("utf-8"))
+            assert len(raw) == expected["length"]
+            assert hashlib.sha256(raw).hexdigest() == expected["sha256"]
+            assert approval["schema_version"] == legacy["schema"]
+            assert approval["batch_id"] == batch_id
+            if verify_git_blobs:
+                assert _git(root, "rev-parse", f"HEAD:{path}") == expected["blob"]
+
+    expected_paths = {approval_path_for(batch_id) for batch_id in REAL_RETROSPECTIVE_BATCHES}
+    approval_dir = root / APPROVAL_PREFIX
+    alternates = {
+        path.relative_to(root).as_posix()
+        for batch_id in REAL_RETROSPECTIVE_BATCHES
+        for path in approval_dir.glob(f"{batch_id}*-approval-v3.json")
+    } - expected_paths
+    assert not alternates, f"alternate/conflicting V3 approval paths: {sorted(alternates)}"
+
+    present = {path for path in expected_paths if (root / path).exists()}
+    assert not present or present == expected_paths, "partial V3 approval authority is invalid"
+    if not present:
+        return "pre_approval"
+
+    authority = {
+        "generation_authorized": True,
+        "publication_authorized": True,
+        "pages_authorized": True,
+        "audio_authorized": False,
+        "social_authorized": False,
+        "scheduled_task_change_authorized": False,
+        "daily_collection_authorized": False,
+        "source_configuration_change_authorized": False,
+        "executed": False,
+        "published": False,
     }
-    for batch_id, expected in expectations.items():
-        path = legacy_v2_approval_path_for(batch_id)
-        raw = (root / path).read_bytes()
-        approval = json.loads(raw.decode("utf-8"))
-        assert len(raw) == expected["length"]
-        assert hashlib.sha256(raw).hexdigest() == expected["sha256"]
-        assert _git(root, "rev-parse", f"HEAD:{path}") == expected["blob"]
-        assert approval["schema_version"] == LEGACY_V2_APPROVAL_SCHEMA
-        assert approval["approval_fingerprint"] == expected["fingerprint"]
-        assert not (root / approval_path_for(batch_id)).exists()
+    for batch_id, expected in REAL_RETROSPECTIVE_BATCHES.items():
+        path = approval_path_for(batch_id)
+        approval = json.loads((root / path).read_bytes().decode("utf-8"))
+        assert approval["schema_version"] == APPROVAL_SCHEMA
+        assert approval["batch_id"] == batch_id
+        assert approval_path_for(approval["batch_id"]) == path
+        assert approval["edition_date"] == expected["edition_date"]
+        assert approval["ordered_public_copy_sha256"] == expected["ordered_copy"]
+        assert approval["approved_by"] == "William Patton"
+        assert approval["source_base_commit"] == REAL_V3_SOURCE_BASE
+        assert approval["pages_head"] == REAL_V3_PAGES_HEAD
+        assert re.fullmatch(r"[0-9a-f]{40}", approval["source_base_commit"])
+        assert re.fullmatch(r"[0-9a-f]{40}", approval["pages_head"])
+        assert all(approval[key] == value for key, value in authority.items())
+        identity = dict(approval)
+        stored_fingerprint = identity.pop("approval_fingerprint")
+        assert stored_fingerprint == fingerprint(identity)
+    return "approved"
+
+
+def _copy_real_legacy_approvals(source: Path, target: Path) -> None:
+    for legacy in REAL_LEGACY_APPROVALS.values():
+        for batch_id in REAL_RETROSPECTIVE_BATCHES:
+            path = legacy["path_for"](batch_id)
+            destination = target / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes((source / path).read_bytes())
+
+
+def _valid_real_v3_approval(batch_id: str) -> dict:
+    expected = REAL_RETROSPECTIVE_BATCHES[batch_id]
+    approval = {
+        "schema_version": APPROVAL_SCHEMA,
+        "batch_id": batch_id,
+        "edition_date": expected["edition_date"],
+        "ordered_public_copy_sha256": expected["ordered_copy"],
+        "approved_by": "William Patton",
+        "source_base_commit": REAL_V3_SOURCE_BASE,
+        "pages_head": REAL_V3_PAGES_HEAD,
+        "generation_authorized": True,
+        "publication_authorized": True,
+        "pages_authorized": True,
+        "audio_authorized": False,
+        "social_authorized": False,
+        "scheduled_task_change_authorized": False,
+        "daily_collection_authorized": False,
+        "source_configuration_change_authorized": False,
+        "executed": False,
+        "published": False,
+    }
+    approval["approval_fingerprint"] = fingerprint(approval)
+    return approval
+
+
+def _write_real_v3_approvals(root: Path) -> None:
+    for batch_id in REAL_RETROSPECTIVE_BATCHES:
+        _write_json(root / approval_path_for(batch_id), _valid_real_v3_approval(batch_id))
+
+
+def test_real_legacy_approvals_are_immutable_and_v3_lifecycle_is_valid() -> None:
+    root = Path(__file__).resolve().parents[1]
+    assert _assert_real_approval_lifecycle(root, verify_git_blobs=True) in {"pre_approval", "approved"}
+
+
+def test_real_v3_lifecycle_accepts_preapproval_and_complete_authority(tmp_path: Path) -> None:
+    root = Path(__file__).resolve().parents[1]
+    _copy_real_legacy_approvals(root, tmp_path)
+    assert _assert_real_approval_lifecycle(tmp_path) == "pre_approval"
+    _write_real_v3_approvals(tmp_path)
+    assert _assert_real_approval_lifecycle(tmp_path) == "approved"
+
+
+@pytest.mark.parametrize("missing_batch", tuple(REAL_RETROSPECTIVE_BATCHES))
+def test_real_v3_lifecycle_rejects_partial_authority(tmp_path: Path, missing_batch: str) -> None:
+    root = Path(__file__).resolve().parents[1]
+    _copy_real_legacy_approvals(root, tmp_path)
+    _write_real_v3_approvals(tmp_path)
+    (tmp_path / approval_path_for(missing_batch)).unlink()
+    with pytest.raises(AssertionError, match="partial V3"):
+        _assert_real_approval_lifecycle(tmp_path)
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    (
+        ("schema_version", "food_line_retrospective_approval_v2"),
+        ("batch_id", "food-line-august-2026-retrospective-02"),
+        ("ordered_public_copy_sha256", "sha256:" + "0" * 64),
+        ("audio_authorized", True),
+        ("social_authorized", True),
+        ("daily_collection_authorized", True),
+    ),
+)
+def test_real_v3_lifecycle_rejects_invalid_sanctioned_artifact(
+    tmp_path: Path, field: str, value: object
+) -> None:
+    root = Path(__file__).resolve().parents[1]
+    _copy_real_legacy_approvals(root, tmp_path)
+    _write_real_v3_approvals(tmp_path)
+    path = tmp_path / approval_path_for("food-line-august-2026-retrospective-01")
+    approval = json.loads(path.read_text(encoding="utf-8"))
+    approval[field] = value
+    identity = dict(approval)
+    identity.pop("approval_fingerprint")
+    approval["approval_fingerprint"] = fingerprint(identity)
+    _write_json(path, approval)
+    with pytest.raises(AssertionError):
+        _assert_real_approval_lifecycle(tmp_path)
+
+
+@pytest.mark.parametrize("legacy_version", ("v1", "v2"))
+def test_real_v3_lifecycle_rejects_modified_legacy_approval(tmp_path: Path, legacy_version: str) -> None:
+    root = Path(__file__).resolve().parents[1]
+    _copy_real_legacy_approvals(root, tmp_path)
+    batch_id = "food-line-august-2026-retrospective-01"
+    path = tmp_path / REAL_LEGACY_APPROVALS[legacy_version]["path_for"](batch_id)
+    path.write_bytes(path.read_bytes() + b"\n")
+    with pytest.raises(AssertionError):
+        _assert_real_approval_lifecycle(tmp_path)
+
+
+def test_real_v3_lifecycle_rejects_alternate_conflicting_path(tmp_path: Path) -> None:
+    root = Path(__file__).resolve().parents[1]
+    _copy_real_legacy_approvals(root, tmp_path)
+    alternate = tmp_path / APPROVAL_PREFIX / (
+        "food-line-august-2026-retrospective-01-alternate-approval-v3.json"
+    )
+    _write_json(alternate, _valid_real_v3_approval("food-line-august-2026-retrospective-01"))
+    with pytest.raises(AssertionError, match="alternate/conflicting"):
+        _assert_real_approval_lifecycle(tmp_path)
 
 
 def test_worktree_drift_date_collision_and_backdated_timestamp_fail_closed(

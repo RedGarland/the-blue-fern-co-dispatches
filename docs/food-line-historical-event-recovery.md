@@ -277,14 +277,16 @@ approval JSON is the only artifact committed by the approval PR. A protected
 merge must place that approval-only commit strictly behind the current source
 HEAD before `plan`, preview, generation, or publication will accept it.
 
-Renewal uses `food_line_retrospective_approval_request_v2` and writes only the
-owner-derived path `approvals/food-line/<batch-id>-approval-v2.json`. Existing
-V1 approvals remain immutable historical authority records at their original
-unversioned paths; they are never overwritten, renamed, or treated as current
-authority. Planning rejects V1 with an explicit renewal-required diagnostic.
-A renewed V2 request must bind the exact current protected source commit and
+Current renewal uses `food_line_retrospective_approval_request_v3` and writes
+only the owner-derived path
+`approvals/food-line/<batch-id>-approval-v3.json`. Existing V1 and V2
+approvals remain immutable historical authority records at their original
+unversioned and `-approval-v2.json` paths; they are never overwritten,
+renamed, or treated as current authority. Planning rejects V1 and V2 with an
+explicit V3-renewal-required diagnostic. A renewed V3 request must bind the
+exact current protected source commit and
 the exact clean current Pages commit, while reusing the already protected
-decisions and correction overlays. Creating V2 records approval authority
+decisions and correction overlays. Creating V3 records approval authority
 only; generation and publication remain separate, explicit operations.
 
 The owner enforces a maximum of six ordered stories, one recovery and artifact
@@ -313,8 +315,8 @@ story memory for date reuse or prior publication/dedupe collisions.
 The sanctioned sequence is:
 
 1. Create and merge any required correction-overlay-only PR.
-2. Create both V2 approvals from private request JSON, replay them, and merge
-   the V2-approval-only PR normally. The corresponding V1 files remain
+2. Create both V3 approvals from private request JSON, replay them, and merge
+   the V3-approval-only PR normally. The corresponding V1 and V2 files remain
    byte-identical historical records.
 3. Run `plan` twice.
 4. Create and verify a deterministic preview under a private directory outside

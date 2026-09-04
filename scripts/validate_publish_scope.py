@@ -262,12 +262,18 @@ def _validate_retrospective_release_authority(
         approval_path,
     )
     v2_approval_path = re.fullmatch(
-        r"approvals/food-line/(food-line-[a-z0-9-]+-retrospective-[0-9]{2})-approval-v2\.json",
+        r"approvals/food-line/food-line-[a-z0-9-]+-retrospective-[0-9]{2}-approval-v2\.json",
+        approval_path,
+    )
+    v3_approval_path = re.fullmatch(
+        r"approvals/food-line/(food-line-[a-z0-9-]+-retrospective-[0-9]{2})-approval-v3\.json",
         approval_path,
     )
     if legacy_approval_path:
-        errors.append("obsolete Food Line retrospective V1 approval; renewed V2 approval is required")
-    elif not v2_approval_path:
+        errors.append("obsolete Food Line retrospective V1 approval; renewed V3 approval is required")
+    elif v2_approval_path:
+        errors.append("obsolete Food Line retrospective V2 approval; renewed V3 approval is required")
+    elif not v3_approval_path:
         errors.append("retrospective release approval_path is outside the approval owner")
     if not re.fullmatch(r"[0-9a-f]{64}", approval_sha):
         errors.append("retrospective release approval_sha256 is malformed")
@@ -284,12 +290,12 @@ def _validate_retrospective_release_authority(
     ]
     if approval_path not in changed or any(
         not re.fullmatch(
-            r"approvals/food-line/food-line-[a-z0-9-]+-retrospective-[0-9]{2}-approval-v2\.json",
+            r"approvals/food-line/food-line-[a-z0-9-]+-retrospective-[0-9]{2}-approval-v3\.json",
             path,
         )
         for path in changed
     ):
-        errors.append("retrospective approval authority did not originate in a V2-approval-only commit")
+        errors.append("retrospective approval authority did not originate in a V3-approval-only commit")
     raw = _git_blob_bytes(source_repo_root, approval_commit, approval_path)
     if raw is None:
         errors.append("retrospective approval is missing from committed Git history")
@@ -303,7 +309,7 @@ def _validate_retrospective_release_authority(
         errors.append("retrospective approval is not valid committed UTF-8 JSON")
         return errors
     required_flags = {
-        "schema_version": "food_line_retrospective_approval_v2",
+        "schema_version": "food_line_retrospective_approval_v3",
         "approval_type": "migrated_event_retrospective_batch",
         "edition_date": declared_date.isoformat(),
         "generation_authorized": True,
@@ -320,7 +326,7 @@ def _validate_retrospective_release_authority(
     }
     if not isinstance(approval, dict) or any(approval.get(key) != value for key, value in required_flags.items()):
         errors.append("retrospective approval schema, edition, or authority flags are invalid")
-    if isinstance(approval, dict) and v2_approval_path and approval.get("batch_id") != v2_approval_path.group(1):
+    if isinstance(approval, dict) and v3_approval_path and approval.get("batch_id") != v3_approval_path.group(1):
         errors.append("retrospective approval path does not match its bound batch ID")
     if str(approval.get("pages_head") or "").lower() != pages_head:
         errors.append("retrospective release Pages binding does not match its committed approval")

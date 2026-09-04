@@ -20,7 +20,9 @@ from bluefern_dispatches.care_line_render import (
     render_care_line_source_table_html,
 )
 from bluefern_dispatches.root_homepage import (
+    ACTIVE_PRODUCTS,
     discover_public_releases,
+    render_dispatch_directory_from_releases,
     render_sitewide_homepage_from_template,
     select_effective_latest,
 )
@@ -2904,6 +2906,7 @@ def copy_public_site_to_pages(
     only_dispatches: tuple[str, ...] = (),
     public_max_dates: dict[str, str] | None = None,
     skip_diagnostics: list[dict[str, Any]] | None = None,
+    exclude_shared_release_surfaces: bool = False,
 ) -> tuple[list[str], list[str]]:
     copied: list[str] = []
     skipped = [
@@ -2927,6 +2930,9 @@ def copy_public_site_to_pages(
     ):
         target = pages_repo / source.relative_to(site_root)
         relative = source.relative_to(site_root).as_posix()
+        if exclude_shared_release_surfaces and (relative == "index.html" or relative.startswith("dispatches/")):
+            skipped.append(f"shared release surface owned by inventory refresh: {target}")
+            continue
         if tuple(only_dispatches) == (CARE_LINE_DISPATCH_SLUG,):
             in_signal_scope = relative in {"signals/feed.xml", "care-line/signals/feed.xml"} or relative.startswith("events/")
             if not in_signal_scope:
@@ -2963,13 +2969,14 @@ def copy_public_site_to_pages(
     return copied, skipped
 
 
-def refresh_shared_homepage_from_pages_inventory(
+def refresh_shared_release_surfaces_from_pages_inventory(
     pages_repo: Path,
     *,
     dry_run: bool,
     target_dispatch: str = "gaza",
 ) -> dict[str, Any]:
     homepage_path = pages_repo / "index.html"
+    directory_path = pages_repo / "dispatches" / "index.html"
     if not homepage_path.exists():
         return {
             "ok": True,
@@ -2998,19 +3005,52 @@ def refresh_shared_homepage_from_pages_inventory(
             "target_dispatch": target_dispatch,
             "message": f"no eligible public release found for {target_dispatch} in Pages inventory",
         }
+    if not directory_path.exists():
+        return {
+            "ok": False,
+            "refreshed": False,
+            "target_dispatch": target_dispatch,
+            "changed_surfaces": [],
+            "message": f"shared release-surface refresh blocked; missing dispatch directory template: {directory_path}",
+        }
     refreshed_html = render_sitewide_homepage_from_template(template_html, release)
+    directory_html = directory_path.read_text(encoding="utf-8")
+    refreshed_directory_html = render_dispatch_directory_from_releases(directory_html, latest)
+    changed_surfaces: list[str] = []
+    if refreshed_html != template_html:
+        changed_surfaces.append("index.html")
+    if refreshed_directory_html != directory_html:
+        changed_surfaces.append("dispatches/index.html")
     if not dry_run:
-        homepage_path.write_text(refreshed_html, encoding="utf-8")
+        if "index.html" in changed_surfaces:
+            homepage_path.write_text(refreshed_html, encoding="utf-8")
+        if "dispatches/index.html" in changed_surfaces:
+            directory_path.write_text(refreshed_directory_html, encoding="utf-8")
     return {
         "ok": True,
-        "refreshed": True,
+        "refreshed": bool(changed_surfaces),
         "target_dispatch": target_dispatch,
+        "changed_surfaces": changed_surfaces,
         "public_url": release.public_url,
         "edition_date": release.edition_date,
         "title": release.title,
         "source_count": release.source_count,
-        "message": "shared homepage refreshed from Pages inventory",
+        "message": "shared release surfaces refreshed from Pages inventory",
     }
+
+
+def refresh_shared_homepage_from_pages_inventory(
+    pages_repo: Path,
+    *,
+    dry_run: bool,
+    target_dispatch: str = "gaza",
+) -> dict[str, Any]:
+    """Compatibility wrapper for callers transitioning to shared release surfaces."""
+    return refresh_shared_release_surfaces_from_pages_inventory(
+        pages_repo,
+        dry_run=dry_run,
+        target_dispatch=target_dispatch,
+    )
 
 
 def remove_non_publishable_pages_editions(site_root: Path, pages_repo: Path, dry_run: bool) -> list[dict[str, str]]:
@@ -3487,7 +3527,8 @@ def validate_pages_repo_copy_scope(
     only_dispatches: tuple[str, ...],
     changed_paths: Sequence[str | Path] | None = None,
     *,
-    allow_root_index_change: bool = False,
+    allowed_shared_surface_changes: Sequence[str | Path] = (),
+    enforce_shared_surface_authorization: bool = True,
 ) -> list[str]:
     errors: list[str] = []
     pages_repo = pages_repo.resolve()
@@ -3498,6 +3539,14 @@ def validate_pages_repo_copy_scope(
             changed_paths = _git_status_changed_paths(pages_repo)
         except RuntimeError as exc:
             return [str(exc)]
+    requested_shared_surfaces = {Path(str(path).replace("\\", "/")).as_posix() for path in allowed_shared_surface_changes}
+    sanctioned_shared_surfaces = {"index.html", "dispatches/index.html"}
+    invalid_shared_surfaces = requested_shared_surfaces - sanctioned_shared_surfaces
+    if invalid_shared_surfaces:
+        errors.append(
+            "invalid shared release-surface authorization: " + ", ".join(sorted(invalid_shared_surfaces))
+        )
+    allowed_shared_surfaces = requested_shared_surfaces & sanctioned_shared_surfaces
     for raw_path in changed_paths:
         candidate = Path(raw_path)
         if candidate.is_absolute():
@@ -3508,7 +3557,10 @@ def validate_pages_repo_copy_scope(
         rel_path = Path(str(candidate).replace("\\", "/"))
         top_level = rel_path.parts[0] if rel_path.parts else ""
         rel_text = rel_path.as_posix()
-        if allow_root_index_change and rel_text == "index.html":
+        if rel_text in allowed_shared_surfaces:
+            continue
+        if top_level == "dispatches":
+            errors.append(f"pages_publish_unrelated_changes_detected: unexpected publish changes in {rel_text}")
             continue
         if gaza_only_publish:
             if top_level == "gaza":
@@ -3522,6 +3574,11 @@ def validate_pages_repo_copy_scope(
             errors.append(f"paid/detail artifacts were copied into the Pages repo: {rel_text}")
             continue
         if top_level in DISPATCH_LABELS and top_level not in allowed_dispatches:
+            errors.append(f"pages_publish_unrelated_changes_detected: unexpected publish changes in {rel_text}")
+            continue
+        active_product_publish = bool(only_dispatches) and set(only_dispatches).issubset(set(ACTIVE_PRODUCTS))
+        established_shared_path = rel_text == "CNAME" or top_level == "assets"
+        if enforce_shared_surface_authorization and active_product_publish and top_level not in allowed_dispatches and not established_shared_path:
             errors.append(f"pages_publish_unrelated_changes_detected: unexpected publish changes in {rel_text}")
     return sorted(set(errors))
 
@@ -3826,6 +3883,9 @@ def publish_pages(
             )
         if (not only_dispatches) or ("cascadia" in only_dispatches):
             removed_stale_artifacts = remove_stale_cascadia_pages_artifacts(site_root, pages_repo, dry_run=dry_run)
+        shared_surface_refresh_planned = bool(shared_homepage_dispatch) or (
+            not shared_homepage_dispatch and ((not only_dispatches) or ("gaza" in only_dispatches))
+        )
         copied, skipped = copy_public_site_to_pages(
             site_root,
             pages_repo,
@@ -3833,38 +3893,42 @@ def publish_pages(
             only_dispatches=only_dispatches,
             public_max_dates=public_max_dates,
             skip_diagnostics=skip_diagnostics,
+            exclude_shared_release_surfaces=shared_surface_refresh_planned,
         )
         warnings.extend(_food_line_public_edition_skip_warning(report) for report in skip_diagnostics)
-        allow_root_index_change = False
+        allowed_shared_surface_changes: list[str] = []
         if not errors and shared_homepage_dispatch:
-            homepage_refresh = refresh_shared_homepage_from_pages_inventory(
+            homepage_refresh = refresh_shared_release_surfaces_from_pages_inventory(
                 pages_repo,
                 dry_run=dry_run,
                 target_dispatch=shared_homepage_dispatch,
             )
+            build["shared_release_surface_refresh"] = homepage_refresh
             build["shared_homepage_refresh"] = homepage_refresh
             if not homepage_refresh["ok"]:
                 errors.append(str(homepage_refresh["message"]))
             else:
-                allow_root_index_change = True
+                allowed_shared_surface_changes = list(homepage_refresh.get("changed_surfaces") or [])
         if not errors and not shared_homepage_dispatch and (not only_dispatches or "gaza" in only_dispatches):
-            homepage_refresh = refresh_shared_homepage_from_pages_inventory(
+            homepage_refresh = refresh_shared_release_surfaces_from_pages_inventory(
                 pages_repo,
                 dry_run=dry_run,
                 target_dispatch="gaza",
             )
+            build["shared_release_surface_refresh"] = homepage_refresh
             build["shared_homepage_refresh"] = homepage_refresh
             if not homepage_refresh["ok"]:
                 errors.append(str(homepage_refresh["message"]))
             else:
-                allow_root_index_change = True
+                allowed_shared_surface_changes = list(homepage_refresh.get("changed_surfaces") or [])
         changed_paths_for_scope = _git_porcelain_paths(pages_repo) if not dry_run else copied
         errors.extend(
             validate_pages_repo_copy_scope(
                 pages_repo,
                 only_dispatches,
                 changed_paths=changed_paths_for_scope,
-                allow_root_index_change=allow_root_index_change,
+                allowed_shared_surface_changes=allowed_shared_surface_changes,
+                enforce_shared_surface_authorization=shared_surface_refresh_planned,
             )
         )
         if not dry_run:

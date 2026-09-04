@@ -1,12 +1,18 @@
 import json
+import re
 from datetime import date
 from pathlib import Path
 
+import pytest
+
 from bluefern_dispatches.root_homepage import (
     discover_public_releases,
+    render_dispatch_directory_from_releases,
     render_homepage_from_template,
+    select_effective_latest,
     select_homepage_cards,
 )
+from bluefern_dispatches.generator import refresh_shared_release_surfaces_from_pages_inventory
 
 
 TEMPLATE_HTML = (
@@ -15,6 +21,30 @@ TEMPLATE_HTML = (
     '<h2>Latest published developments</h2></div><div class="edition-grid"><article>stale</article></div></section>'
     '<section class="section-block section-block--quiet"><h2>Unrelated section</h2><p>Keep me stable.</p></section>'
     "</body></html>"
+)
+
+DIRECTORY_TEMPLATE = (
+    '<!doctype html><html><body><main><div class="directory-list">'
+    '<article class="dispatch-card dispatch-card--featured"><h3 class="latest-headline"><a href="/gaza/editions/2026-08-05/">Old Gaza</a></h3>'
+    '<p class="date-line">Dispatches From Gaza &middot; August 5, 2026</p><h2>Dispatches From Gaza</h2>'
+    '<a class="button" href="/gaza/editions/2026-08-05/">Read latest</a></article>'
+    '<article class="dispatch-card dispatch-card--featured"><h3 class="latest-headline"><a href="/food-line/editions/2026-08-05/">Old Food</a></h3>'
+    '<p class="date-line">Food Line Dispatch &middot; August 5, 2026</p><h2>Food Line Dispatch</h2>'
+    '<a class="button" href="/food-line/editions/2026-08-05/">Read latest</a></article>'
+    '<article class="dispatch-card dispatch-card--featured"><h3 class="latest-headline"><a href="/care-line/editions/2026-08-05/">Old Care</a></h3>'
+    '<p class="date-line">Care Line &middot; August 5, 2026</p><h2>The Care Line Dispatch</h2>'
+    '<a class="button" href="/care-line/editions/2026-08-05/">Read latest</a></article>'
+    '</div></main><footer><a href="/methodology/">How we work</a> Ã‚Â· <a href="/about/">About this project</a></footer></body></html>'
+)
+
+SHARED_ROOT_TEMPLATE = DIRECTORY_TEMPLATE.replace(
+    "<main>",
+    '<main><section class="section-block"><div class="section-heading"><p class="eyebrow">The current edition desk</p>'
+    '<h2>Latest published developments</h2></div><div class="edition-grid">'
+    '<article class="edition-card edition-card--gaza"><h3><a href="/gaza/editions/2026-08-05/">Old Gaza</a></h3>'
+    '<p class="edition-source">Dispatches From Gaza &middot; August 5, 2026</p>'
+    '<p class="edition-meta">1 public source</p></article></div></section>',
+    1,
 )
 
 
@@ -154,6 +184,140 @@ def test_homepage_refresh_requires_verification_for_source_only_not_published_re
     )
     releases = discover_public_releases(source_root, verify_root=None, as_of=date(2026, 8, 5), homepage_html=TEMPLATE_HTML)
     assert releases == []
+
+
+def test_homepage_refresh_accepts_only_live_archive_listed_transitional_release(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_release(
+        public_root,
+        "food-line",
+        "2026-08-31",
+        title="Retrospective food release",
+        source_count=3,
+        public_release_status="approved_pending_pages_publication",
+        pages_release_status="not_synced",
+    )
+
+    live = discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 4), homepage_html=TEMPLATE_HTML)
+    not_verified = discover_public_releases(public_root, verify_root=None, as_of=date(2026, 9, 4), homepage_html=TEMPLATE_HTML)
+    other_root = discover_public_releases(public_root, verify_root=tmp_path / "other", as_of=date(2026, 9, 4), homepage_html=TEMPLATE_HTML)
+
+    assert [(item.slug, item.edition_date) for item in live] == [("food-line", "2026-08-31")]
+    assert not_verified == []
+    assert other_root == []
+
+
+@pytest.mark.parametrize("terminal_status", ["rejected", "suppressed", "withdrawn", "withheld", "failed", "unpublished"])
+def test_homepage_refresh_rejects_terminal_release_even_when_live_and_listed(tmp_path, terminal_status):
+    public_root = tmp_path / "pages"
+    _write_release(
+        public_root,
+        "food-line",
+        "2026-08-31",
+        title="Blocked food release",
+        source_count=3,
+        public_release_status=terminal_status,
+        pages_release_status="not_synced",
+    )
+
+    releases = discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 4), homepage_html=TEMPLATE_HTML)
+
+    assert releases == []
+
+
+def test_homepage_refresh_excludes_future_transitional_release(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_release(
+        public_root,
+        "food-line",
+        "2026-09-05",
+        title="Future food release",
+        source_count=3,
+        public_release_status="approved_pending_pages_publication",
+        pages_release_status="not_synced",
+    )
+
+    assert discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 4), homepage_html=TEMPLATE_HTML) == []
+
+
+def _write_current_directory_inventory(public_root: Path) -> None:
+    _write_release(public_root, "gaza", "2026-09-04", title="Current Gaza", source_count=7)
+    _write_release(
+        public_root,
+        "food-line",
+        "2026-08-31",
+        title="Current Food",
+        source_count=3,
+        public_release_status="approved_pending_pages_publication",
+        pages_release_status="not_synced",
+    )
+    _write_release(public_root, "care-line", "2026-08-20", title="Current Care", source_count=2)
+
+
+def test_dispatch_directory_refreshes_all_active_products_and_is_byte_idempotent(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_current_directory_inventory(public_root)
+    releases = discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 4), homepage_html=TEMPLATE_HTML)
+    latest = select_effective_latest(releases)
+
+    rendered = render_dispatch_directory_from_releases(DIRECTORY_TEMPLATE, latest)
+
+    assert "/gaza/editions/2026-09-04/" in rendered
+    assert "/food-line/editions/2026-08-31/" in rendered
+    assert "/care-line/editions/2026-08-20/" in rendered
+    assert "Ã" not in rendered
+    assert "�" not in rendered
+    assert "How we work</a> &middot; <a href=\"/about/\">About this project" in rendered
+    assert render_dispatch_directory_from_releases(rendered, latest) == rendered
+    for link in re.findall(r'<a class="button" href="([^"]+)">Read latest</a>', rendered):
+        assert (public_root / link.strip("/") / "index.html").exists()
+
+
+def test_shared_release_refresh_reports_exact_changed_surfaces(tmp_path):
+    public_root = tmp_path / "pages"
+    public_root.mkdir(parents=True)
+    (public_root / "index.html").write_text(SHARED_ROOT_TEMPLATE, encoding="utf-8")
+    (public_root / "dispatches").mkdir()
+    (public_root / "dispatches" / "index.html").write_text(DIRECTORY_TEMPLATE, encoding="utf-8")
+    _write_current_directory_inventory(public_root)
+
+    result = refresh_shared_release_surfaces_from_pages_inventory(
+        public_root,
+        dry_run=False,
+        target_dispatch="gaza",
+    )
+
+    assert result["ok"] is True
+    assert result["changed_surfaces"] == ["index.html", "dispatches/index.html"]
+    assert "/gaza/editions/2026-09-04/" in (public_root / "index.html").read_text(encoding="utf-8")
+    directory = (public_root / "dispatches" / "index.html").read_text(encoding="utf-8")
+    assert "/gaza/editions/2026-09-04/" in directory
+    assert "/food-line/editions/2026-08-31/" in directory
+    assert "/care-line/editions/2026-08-20/" in directory
+
+
+@pytest.mark.parametrize(
+    ("slug", "new_date"),
+    [("gaza", "2026-09-05"), ("food-line", "2026-09-01"), ("care-line", "2026-08-21")],
+)
+def test_targeted_release_refresh_does_not_regress_other_directory_cards(tmp_path, slug, new_date):
+    public_root = tmp_path / "pages"
+    _write_current_directory_inventory(public_root)
+    baseline_latest = select_effective_latest(
+        discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 4), homepage_html=TEMPLATE_HTML)
+    )
+    baseline = render_dispatch_directory_from_releases(DIRECTORY_TEMPLATE, baseline_latest)
+    _write_release(public_root, slug, new_date, title=f"New {slug}", source_count=4)
+    refreshed_latest = select_effective_latest(
+        discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 5), homepage_html=TEMPLATE_HTML)
+    )
+
+    refreshed = render_dispatch_directory_from_releases(baseline, refreshed_latest)
+
+    expected = {"gaza": "2026-09-04", "food-line": "2026-08-31", "care-line": "2026-08-20"}
+    expected[slug] = new_date
+    for product, edition_date in expected.items():
+        assert f"/{product}/editions/{edition_date}/" in refreshed
 
 
 def test_homepage_refresh_is_deterministic_and_does_not_invent_time(tmp_path):

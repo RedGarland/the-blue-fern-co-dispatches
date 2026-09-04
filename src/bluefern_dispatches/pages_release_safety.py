@@ -14,6 +14,10 @@ from pathlib import Path
 from typing import Any, Callable, Sequence
 
 from bluefern_dispatches.generator import public_site_contains_blocked_public_text, public_site_contains_detail_artifacts
+from bluefern_dispatches.food_line_retrospective import (
+    FoodLineRetrospectiveError,
+    assert_retrospective_history_monotonic,
+)
 from scripts.food_line_runtime_paths import FOOD_LINE_ALLOWED_DIRTY_CATEGORIES, classify_food_line_runtime_path
 from scripts.validate_publish_scope import validate_publish_scope
 
@@ -424,12 +428,19 @@ def sync_pages_from_source(
         return {"ok": False, "errors": ["--release-manifest currently requires exactly one release date."]}
     manifest_paths = [release_manifest] if release_manifest is not None else list(release_manifests or [])
     manifest_by_date: dict[str, Path] = {}
+    retrospective_release = False
     for manifest_path in manifest_paths:
         try:
             manifest_payload = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
         except (OSError, UnicodeError, json.JSONDecodeError) as exc:
             return {"ok": False, "errors": [f"unable to read release manifest {manifest_path}: {exc}"]}
         manifest_date = str(manifest_payload.get("edition_date") or "") if isinstance(manifest_payload, dict) else ""
+        entries = manifest_payload.get("entries") if isinstance(manifest_payload, dict) else None
+        if isinstance(entries, list) and any(
+            isinstance(entry, dict) and entry.get("provenance_role") == "approved_retrospective_generated_output"
+            for entry in entries
+        ):
+            retrospective_release = True
         if manifest_date not in selected_dates or manifest_date in manifest_by_date:
             return {"ok": False, "errors": ["release manifests must bind each selected date exactly once."]}
         manifest_by_date[manifest_date] = Path(manifest_path).resolve()
@@ -524,6 +535,15 @@ def sync_pages_from_source(
     pre_copy_errors = []
     pre_copy_errors.extend(public_site_contains_detail_artifacts(source_root / "output" / "site"))
     pre_copy_errors.extend(public_site_contains_blocked_public_text(source_root / "output" / "site"))
+    if retrospective_release:
+        try:
+            assert_retrospective_history_monotonic(
+                pages_root,
+                source_root / "output" / "site",
+                edition_dates=selected_dates,
+            )
+        except FoodLineRetrospectiveError as exc:
+            pre_copy_errors.append(str(exc))
     if scope_errors:
         pre_copy_errors.extend(scope_errors)
     if pre_copy_errors:

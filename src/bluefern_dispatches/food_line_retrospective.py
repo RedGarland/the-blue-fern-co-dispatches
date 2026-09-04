@@ -868,16 +868,74 @@ def _expected_paths(edition_date: str, *, audio: bool) -> tuple[str, ...]:
     return tuple(paths)
 
 
-def load_retrospective_plan(
+def food_line_public_history(public_root: Path) -> dict[str, set[str]]:
+    food_line_root = public_root / "food-line"
+    archive_path = food_line_root / "archive.html"
+    rss_path = food_line_root / "rss.xml"
+    archive_text = archive_path.read_text(encoding="utf-8") if archive_path.is_file() else ""
+    rss_text = rss_path.read_text(encoding="utf-8") if rss_path.is_file() else ""
+    archive_dates = set(
+        re.findall(r'(?:/food-line/)?editions/(\d{4}-\d{2}-\d{2})/', archive_text)
+    )
+    rss_urls = set(
+        re.findall(
+            r'https://dispatches\.thebluefernco\.com/food-line/editions/\d{4}-\d{2}-\d{2}/',
+            rss_text,
+        )
+    )
+    return {"archive_dates": archive_dates, "rss_urls": rss_urls}
+
+
+def assert_retrospective_history_monotonic(
+    pages_root: Path,
+    candidate_site_root: Path,
+    *,
+    edition_dates: Sequence[str],
+) -> dict[str, Any]:
+    pages_root = pages_root.resolve(strict=True)
+    candidate_site_root = candidate_site_root.resolve(strict=True)
+    prior = food_line_public_history(pages_root)
+    prepared = food_line_public_history(candidate_site_root)
+    archive_dropped = sorted(prior["archive_dates"] - prepared["archive_dates"])
+    rss_dropped_urls = sorted(prior["rss_urls"] - prepared["rss_urls"])
+    rss_dropped = [value.rstrip("/").rsplit("/", 1)[-1] for value in rss_dropped_urls]
+    occupied = sorted(
+        edition_date
+        for edition_date in edition_dates
+        if (pages_root / "food-line" / "editions" / edition_date).exists()
+    )
+    if archive_dropped or rss_dropped or occupied:
+        raise FoodLineRetrospectiveError(
+            "Food Line retrospective publication would shrink public history: "
+            f"archive dropped: {archive_dropped}; rss dropped: {rss_dropped}; "
+            f"existing edition directories selected for replacement: {occupied}"
+        )
+    return {
+        "prior_archive_count": len(prior["archive_dates"]),
+        "prepared_archive_count": len(prepared["archive_dates"]),
+        "archive_added": sorted(prepared["archive_dates"] - prior["archive_dates"]),
+        "archive_dropped": archive_dropped,
+        "prior_rss_count": len(prior["rss_urls"]),
+        "prepared_rss_count": len(prepared["rss_urls"]),
+        "rss_added": sorted(
+            value.rstrip("/").rsplit("/", 1)[-1]
+            for value in prepared["rss_urls"] - prior["rss_urls"]
+        ),
+        "rss_dropped": rss_dropped,
+    }
+
+
+def _load_retrospective_bundle(
     root: Path,
     pages_root: Path,
     *,
     approval_commit: str,
     approval_path: str,
     publication_timestamp: str,
+    post_generation: bool,
 ) -> RetrospectiveBundle:
     root = _root(root)
-    if _git(root, "status", "--porcelain", "--untracked-files=all"):
+    if not post_generation and _git(root, "status", "--porcelain", "--untracked-files=all"):
         raise FoodLineRetrospectiveError("retrospective authority requires a clean source worktree")
     approval_commit = _require_commit(root, approval_commit, strict_ancestor=True)
     approval_path = _safe_relative(approval_path, prefix=APPROVAL_PREFIX)
@@ -926,7 +984,8 @@ def load_retrospective_plan(
     if timestamp < approved_at:
         raise FoodLineRetrospectiveError("publication timestamp predates approval")
     pages_head = _clean_pages(pages_root, str(row.get("pages_head") or ""))
-    assert_edition_vacant(root, pages_root.resolve(), edition.isoformat())
+    if not post_generation:
+        assert_edition_vacant(root, pages_root.resolve(), edition.isoformat())
     decisions = row.get("decision_bindings")
     corrections = row.get("correction_bindings")
     if not isinstance(decisions, list) or not 1 <= len(decisions) <= MAX_STORIES or row.get("story_count") != len(decisions):
@@ -968,7 +1027,8 @@ def load_retrospective_plan(
         raise FoodLineRetrospectiveError("ordered public-copy identity drifted")
     if fingerprint(public_copies) != row.get("ordered_rendered_copy_sha256"):
         raise FoodLineRetrospectiveError("ordered rendered-copy identity drifted")
-    assert_no_dedupe_collision(root, pages_root.resolve(), source_rows, checked_bindings)
+    if not post_generation:
+        assert_no_dedupe_collision(root, pages_root.resolve(), source_rows, checked_bindings)
     disclosure = validate_public_text(row.get("retrospective_disclosure"), "retrospective disclosure")
     if not all(term in disclosure.lower() for term in ("retrospective", "august 2026", "previously missed")):
         raise FoodLineRetrospectiveError("retrospective disclosure is missing required reader-facing context")
@@ -980,6 +1040,7 @@ def load_retrospective_plan(
         "src/bluefern_dispatches/food_line_approved_proposal.py",
         "src/bluefern_dispatches/generator.py",
         "scripts/run_food_line_dispatch.py",
+        "scripts/run_food_line_retrospective_batches.py",
         "scripts/manage_food_line_retrospective.py",
         "scripts/validate_publish_scope.py",
         "src/bluefern_dispatches/pages_release_safety.py",
@@ -1004,6 +1065,42 @@ def load_retrospective_plan(
         correction_bindings=tuple(corrections),
         audio_authorized=bool(row.get("audio_authorized")),
         expected_public_paths=expected_paths,
+    )
+
+
+def load_retrospective_plan(
+    root: Path,
+    pages_root: Path,
+    *,
+    approval_commit: str,
+    approval_path: str,
+    publication_timestamp: str,
+) -> RetrospectiveBundle:
+    return _load_retrospective_bundle(
+        root,
+        pages_root,
+        approval_commit=approval_commit,
+        approval_path=approval_path,
+        publication_timestamp=publication_timestamp,
+        post_generation=False,
+    )
+
+
+def load_retrospective_verification_bundle(
+    root: Path,
+    pages_root: Path,
+    *,
+    approval_commit: str,
+    approval_path: str,
+    publication_timestamp: str,
+) -> RetrospectiveBundle:
+    return _load_retrospective_bundle(
+        root,
+        pages_root,
+        approval_commit=approval_commit,
+        approval_path=approval_path,
+        publication_timestamp=publication_timestamp,
+        post_generation=True,
     )
 
 
@@ -1278,7 +1375,12 @@ def record_retrospective_publication(
     }
 
 
-def verify_complete_output(root: Path, bundle: RetrospectiveBundle) -> dict[str, Any]:
+def verify_complete_output(
+    root: Path,
+    bundle: RetrospectiveBundle,
+    *,
+    pages_root: Path | None = None,
+) -> dict[str, Any]:
     missing = [path for path in bundle.expected_public_paths if not (root / path).is_file()]
     expected_edition = {
         path
@@ -1322,6 +1424,13 @@ def verify_complete_output(root: Path, bundle: RetrospectiveBundle) -> dict[str,
         raise FoodLineRetrospectiveError("edition date and actual publication timestamp are not kept separate")
     if payload.get("retrospective_disclosure") != bundle.disclosure:
         raise FoodLineRetrospectiveError("rendered retrospective disclosure drifted")
+    history = None
+    if pages_root is not None:
+        history = assert_retrospective_history_monotonic(
+            pages_root,
+            root / "output" / "site",
+            edition_dates=[bundle.edition_date],
+        )
     return {
         "status": "preview_verified",
         "ok": True,
@@ -1329,4 +1438,75 @@ def verify_complete_output(root: Path, bundle: RetrospectiveBundle) -> dict[str,
         "expected_public_paths": list(bundle.expected_public_paths),
         "mojibake_free": True,
         "edition_date_separate_from_publication_timestamp": True,
+        "history_monotonicity": history,
+    }
+
+
+def verify_generated_retrospective_set(
+    root: Path,
+    pages_root: Path,
+    bundles: Sequence[RetrospectiveBundle],
+) -> dict[str, Any]:
+    root = _root(root)
+    if not bundles:
+        raise FoodLineRetrospectiveError("post-generation verification requires at least one validated approval")
+    expected_dirty: set[str] = set()
+    for bundle in bundles:
+        expected_dirty.update(bundle.expected_public_paths)
+        edition_prefix = f"output/site/food-line/editions/{bundle.edition_date}/"
+        expected_dirty.update(
+            path.replace("output/site/", "output/dispatches/", 1)
+            for path in bundle.expected_public_paths
+            if path.startswith(edition_prefix)
+        )
+        expected_dirty.add(f"data/dispatches/food-line/review/releases/{bundle.edition_date}.json")
+    actual_dirty: set[str] = set()
+    for line in _git(root, "status", "--porcelain", "--untracked-files=all").splitlines():
+        value = line[3:].strip()
+        if " -> " in value:
+            value = value.rsplit(" -> ", 1)[-1]
+        actual_dirty.add(value.replace("\\", "/"))
+    unexpected_dirty = sorted(actual_dirty - expected_dirty)
+    if unexpected_dirty:
+        raise FoodLineRetrospectiveError(
+            "post-generation verification found unrelated dirty paths: " + json.dumps(unexpected_dirty)
+        )
+    results = [verify_complete_output(root, bundle, pages_root=pages_root) for bundle in bundles]
+    for bundle in bundles:
+        site_edition = root / "output" / "site" / "food-line" / "editions" / bundle.edition_date
+        dispatch_edition = root / "output" / "dispatches" / "food-line" / "editions" / bundle.edition_date
+        for filename in (
+            "index.html", "source_table.html", "claim_ledger.html", "sources_manifest.json",
+            "curation_manifest.json", "edition_manifest.json",
+        ):
+            site_path = site_edition / filename
+            dispatch_path = dispatch_edition / filename
+            if not dispatch_path.is_file() or dispatch_path.read_bytes() != site_path.read_bytes():
+                raise FoodLineRetrospectiveError(
+                    f"retrospective dispatch mirror is missing or drifted: {dispatch_path.relative_to(root).as_posix()}"
+                )
+        manifest_path = root / "data" / "dispatches" / "food-line" / "review" / "releases" / f"{bundle.edition_date}.json"
+        if not manifest_path.is_file():
+            raise FoodLineRetrospectiveError(f"retrospective release manifest is missing: {manifest_path}")
+        manifest = _read_json_file(manifest_path)
+        entries = manifest.get("entries") if isinstance(manifest, dict) else None
+        if not isinstance(entries, list):
+            raise FoodLineRetrospectiveError("retrospective release manifest entries are invalid")
+        for entry in entries:
+            relative = str(entry.get("source_path") or "") if isinstance(entry, dict) else ""
+            path = root / relative
+            if not relative or not path.is_file() or sha256_bytes(path.read_bytes()) != str(entry.get("source_sha256") or ""):
+                raise FoodLineRetrospectiveError(f"retrospective generated bytes drifted from release manifest: {relative}")
+    history = assert_retrospective_history_monotonic(
+        pages_root,
+        root / "output" / "site",
+        edition_dates=[bundle.edition_date for bundle in bundles],
+    )
+    return {
+        "status": "post_generation_verified",
+        "ok": True,
+        "batch_count": len(bundles),
+        "allowed_dirty_paths": sorted(actual_dirty),
+        "verification_results": results,
+        "history_monotonicity": history,
     }

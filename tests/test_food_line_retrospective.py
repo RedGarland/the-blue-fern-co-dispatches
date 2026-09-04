@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import subprocess
 from pathlib import Path
 
@@ -15,6 +16,7 @@ from bluefern_dispatches.food_line_retrospective import (
     LEGACY_APPROVAL_SCHEMA,
     FoodLineRetrospectiveError,
     _apply_overlay,
+    assert_retrospective_history_monotonic,
     create_private_preview,
     create_public_copy_correction,
     create_retrospective_approval,
@@ -22,18 +24,43 @@ from bluefern_dispatches.food_line_retrospective import (
     legacy_v1_approval_path_for,
     load_committed_json,
     load_retrospective_plan,
+    load_retrospective_verification_bundle,
     plan_result,
     record_retrospective_publication,
     verify_private_preview,
     verify_complete_output,
+    verify_generated_retrospective_set,
 )
 from bluefern_dispatches.pages_release_safety import sync_pages_from_source
 from scripts.run_food_line_dispatch import run_food_line_dispatch
 from scripts.run_food_line_retrospective_batches import run_atomic_retrospective_batches
+from scripts.manage_food_line_retrospective import main as manage_retrospective_main
 
 
 DEFECTIVE = "Aug. 1Ã¢â‚¬â€œ19"
 CORRECTED = "Aug. 1\u201319"
+PUBLISHED_HISTORY_DATES = (
+    "2026-08-24",
+    "2026-08-16",
+    "2026-08-05",
+    "2026-07-31",
+    "2026-07-28",
+    "2026-06-20",
+    "2026-06-19",
+    "2026-06-18",
+    "2026-06-17",
+    "2026-06-16",
+    "2026-06-14",
+    "2026-06-13",
+    "2026-06-09",
+    "2026-06-07",
+    "2026-06-06",
+)
+SOURCE_HISTORY_DATES = tuple(
+    value
+    for value in PUBLISHED_HISTORY_DATES
+    if value not in {"2026-08-24", "2026-08-16", "2026-08-05", "2026-07-31", "2026-07-28"}
+)
 
 
 def _git(root: Path, *args: str) -> str:
@@ -66,6 +93,62 @@ def _binding(root: Path, commit: str, path: str) -> dict[str, str]:
         "blob_sha1": _git(root, "rev-parse", f"{commit}:{path}"),
         "sha256": hashlib.sha256(raw).hexdigest(),
     }
+
+
+def _history_dates(text: str) -> set[str]:
+    return set(re.findall(r"/food-line/editions/(\d{4}-\d{2}-\d{2})/", text)) | set(
+        re.findall(r'(?<!/)editions/(\d{4}-\d{2}-\d{2})/', text)
+    )
+
+
+def _seed_production_shaped_history(root: Path, pages: Path) -> None:
+    (pages / "food-line").mkdir(parents=True, exist_ok=True)
+    for edition_date in SOURCE_HISTORY_DATES:
+        edition = root / "output" / "site" / "food-line" / "editions" / edition_date
+        edition.mkdir(parents=True, exist_ok=True)
+        (edition / "index.html").write_text(f"<h1>{edition_date}</h1>\n", encoding="utf-8")
+        _write_json(
+            edition / "edition_manifest.json",
+            {
+                "dispatch_slug": "food-line",
+                "edition_date": edition_date,
+                "public_rendered": True,
+                "edition_mode": "current_update",
+                "source_freshness_status": "fresh",
+                "freshness_window_days": 2,
+                "stale_public_story_count": 0,
+                "excluded_stale_source_count": 0,
+                "stale_source_ids": [],
+                "qualified_primary_count": 1,
+                "skip_reason": "",
+                "public_archive_title": f"Food Line Dispatch - {edition_date}",
+            },
+        )
+    archive_items = "".join(
+        f'<li><a href="editions/{edition_date}/">Food Line Dispatch - {edition_date}</a></li>'
+        for edition_date in PUBLISHED_HISTORY_DATES
+    )
+    rss_items = "".join(
+        "\n  <item>\n"
+        f"    <title>Food Line Dispatch - {edition_date}</title>\n"
+        f"    <link>https://dispatches.thebluefernco.com/food-line/editions/{edition_date}/</link>\n"
+        f"    <guid>https://dispatches.thebluefernco.com/food-line/editions/{edition_date}/</guid>\n"
+        f"    <description>{edition_date}</description>\n"
+        "  </item>"
+        for edition_date in PUBLISHED_HISTORY_DATES
+    )
+    (pages / "food-line" / "archive.html").write_text(
+        f"<html><body><ul>{archive_items}</ul></body></html>\n",
+        encoding="utf-8",
+    )
+    (pages / "food-line" / "rss.xml").write_text(
+        f'<?xml version="1.0" encoding="UTF-8"?><rss><channel>{rss_items}\n</channel></rss>\n',
+        encoding="utf-8",
+    )
+    for edition_date in PUBLISHED_HISTORY_DATES:
+        edition = pages / "food-line" / "editions" / edition_date
+        edition.mkdir(parents=True, exist_ok=True)
+        (edition / "index.html").write_text(f"<h1>{edition_date}</h1>\n", encoding="utf-8")
 
 
 def _decision(event_number: int, *, batch: int, order: int, mojibake: bool = False) -> tuple[dict, dict]:
@@ -163,7 +246,8 @@ def _fixture(tmp_path: Path) -> dict:
         decision_path = f"{DECISION_PREFIX}{'c' * 32}/{event_id}.json"
         _write_json(root / decision_path, decision)
         decision_paths.append(decision_path)
-    initial = _commit(root, "protected decisions", "src", "scripts", "data")
+    _seed_production_shaped_history(root, pages)
+    initial = _commit(root, "protected decisions", "src", "scripts", "data", "output")
 
     temple_path = decision_paths[5]
     correction = create_public_copy_correction(
@@ -185,14 +269,7 @@ def _fixture(tmp_path: Path) -> dict:
 
     _git(pages, "init", "-b", "gh-pages")
     _git(pages, "config", "core.autocrlf", "false")
-    for relative, text in (
-        ("food-line/index.html", "Food Line"),
-        ("food-line/archive.html", "Archive"),
-        ("food-line/rss.xml", "<rss></rss>"),
-    ):
-        path = pages / relative
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(text, encoding="utf-8")
+    (pages / "food-line" / "index.html").write_text("Food Line", encoding="utf-8")
     pages_head = _commit(pages, "pages fixture", "food-line")
 
     legacy_paths: list[str] = []
@@ -761,3 +838,99 @@ def test_two_approvals_publish_in_one_pages_commit_and_record_nine_events(
     assert [row["story_memory_rows"] for row in recordings] == [6, 3]
     memory = json.loads((source / "data/records/story_memory.json").read_text(encoding="utf-8"))
     assert sum(1 for row in memory if row.get("retrospective") is True) == 9
+
+
+def test_production_shaped_retrospective_preserves_pages_history(
+    tmp_path: Path, retrospective_case: dict
+) -> None:
+    case = retrospective_case
+    source = _clone(case["root"], tmp_path / "history-source")
+    pages = _clone(case["pages"], tmp_path / "history-pages")
+    before_archive = _history_dates((pages / "food-line/archive.html").read_text(encoding="utf-8"))
+    pages_rss_text = (pages / "food-line/rss.xml").read_text(encoding="utf-8")
+    before_rss = _history_dates(pages_rss_text)
+    prior_rss_blocks = re.findall(r"<item\b[^>]*>.*?</item>", pages_rss_text, re.I | re.S)
+
+    result = run_atomic_retrospective_batches(
+        source_root=source,
+        pages_root=pages,
+        source_branch="protected",
+        pages_branch="gh-pages",
+        approval_commits=[case["approval_commit"], case["approval_commit"]],
+        approval_paths=case["approval_paths"],
+        publication_timestamp="2026-09-01T12:00:00Z",
+        commit_pages=False,
+        push_pages=False,
+        live_check=False,
+        record_publication=False,
+    )
+
+    after_archive = _history_dates((source / "output/site/food-line/archive.html").read_text(encoding="utf-8"))
+    prepared_rss_text = (source / "output/site/food-line/rss.xml").read_text(encoding="utf-8")
+    after_rss = _history_dates(prepared_rss_text)
+    assert before_archive == set(PUBLISHED_HISTORY_DATES)
+    assert before_rss == set(PUBLISHED_HISTORY_DATES)
+    assert after_archive == before_archive | {"2026-08-30", "2026-08-31"}
+    assert after_rss == before_rss | {"2026-08-30", "2026-08-31"}
+    assert all(block in prepared_rss_text for block in prior_rss_blocks)
+    assert result["pages_result"]["ok"] is True
+    assert result["pages_result"]["commit_status"] == "dry-run"
+
+    verification_bundles = [
+        load_retrospective_verification_bundle(
+            source,
+            pages,
+            approval_commit=case["approval_commit"],
+            approval_path=path,
+            publication_timestamp="2026-09-01T12:00:00Z",
+        )
+        for path in case["approval_paths"]
+    ]
+    verified = verify_generated_retrospective_set(source, pages, verification_bundles)
+    assert verified["status"] == "post_generation_verified"
+    assert verified["history_monotonicity"]["prior_archive_count"] == 15
+    assert verified["history_monotonicity"]["prepared_archive_count"] == 17
+    assert verified["history_monotonicity"]["archive_dropped"] == []
+    assert verified["history_monotonicity"]["rss_dropped"] == []
+    cli_args = [
+        "verify-output",
+        "--repo-root", str(source),
+        "--pages-root", str(pages),
+        "--publication-timestamp", "2026-09-01T12:00:00Z",
+    ]
+    for path in case["approval_paths"]:
+        cli_args.extend(["--approval-commit", case["approval_commit"], "--approval-path", path])
+    assert manage_retrospective_main(cli_args) == 0
+
+    unrelated = source / "unexpected.txt"
+    unrelated.write_text("not sanctioned", encoding="utf-8")
+    with pytest.raises(FoodLineRetrospectiveError, match="unrelated dirty paths"):
+        verify_generated_retrospective_set(source, pages, verification_bundles)
+    unrelated.unlink()
+
+    rendered = source / "output/site/food-line/editions/2026-08-30/index.html"
+    original = rendered.read_bytes()
+    rendered.write_bytes(original + b"drift")
+    with pytest.raises(FoodLineRetrospectiveError, match="drifted"):
+        verify_generated_retrospective_set(source, pages, verification_bundles)
+    rendered.write_bytes(original)
+
+
+def test_retrospective_history_guard_reports_archive_and_rss_drops(tmp_path: Path) -> None:
+    pages = tmp_path / "pages"
+    candidate = tmp_path / "candidate"
+    _seed_production_shaped_history(tmp_path / "source-history", pages)
+    (candidate / "food-line").mkdir(parents=True)
+    kept = PUBLISHED_HISTORY_DATES[5:]
+    archive_items = "".join(f'<a href="editions/{value}/">{value}</a>' for value in kept)
+    rss_items = "".join(
+        f'<item><link>https://dispatches.thebluefernco.com/food-line/editions/{value}/</link></item>'
+        for value in kept
+    )
+    (candidate / "food-line/archive.html").write_text(archive_items, encoding="utf-8")
+    (candidate / "food-line/rss.xml").write_text(f"<rss><channel>{rss_items}</channel></rss>", encoding="utf-8")
+    with pytest.raises(FoodLineRetrospectiveError) as caught:
+        assert_retrospective_history_monotonic(pages, candidate, edition_dates=["2026-08-30"])
+    message = str(caught.value)
+    for value in PUBLISHED_HISTORY_DATES[:5]:
+        assert value in message

@@ -74,6 +74,50 @@ def _release_manifest(source: Path, pages: Path, date_text: str) -> Path:
     return path
 
 
+def _mark_retrospective(manifest_path: Path) -> None:
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    for entry in payload["entries"]:
+        entry["provenance_role"] = "approved_retrospective_generated_output"
+    write_json_deterministic(manifest_path, payload)
+
+
+def test_retrospective_pages_dry_run_rejects_history_shrink(release_repos: tuple[Path, Path]) -> None:
+    source, pages = release_repos
+    _write_food_line_site(source, ["2026-08-30"])
+    (source / "output/site/food-line/archive.html").write_text(
+        '<a href="editions/2026-08-30/">new</a>', encoding="utf-8"
+    )
+    (source / "output/site/food-line/rss.xml").write_text(
+        '<rss><channel><item><link>https://dispatches.thebluefernco.com/food-line/editions/2026-08-30/</link></item></channel></rss>',
+        encoding="utf-8",
+    )
+    (pages / "food-line").mkdir(parents=True)
+    (pages / "food-line/archive.html").write_text(
+        '<a href="editions/2026-08-24/">old</a>', encoding="utf-8"
+    )
+    (pages / "food-line/rss.xml").write_text(
+        '<rss><channel><item><link>https://dispatches.thebluefernco.com/food-line/editions/2026-08-24/</link></item></channel></rss>',
+        encoding="utf-8",
+    )
+    _commit_repo(source, "retrospective candidate")
+    _commit_repo(pages, "published history")
+    manifest = _release_manifest(source, pages, "2026-08-30")
+    _mark_retrospective(manifest)
+    report = pages_release_safety.sync_pages_from_source(
+        dispatch="food-line",
+        dates=["2026-08-30"],
+        require_source_branch="add/pages-repo-default",
+        source_repo=source,
+        pages_repo=pages,
+        dry_run=True,
+        release_manifest=manifest,
+        include_rss=True,
+    )
+    assert report["ok"] is False
+    assert any("archive dropped: ['2026-08-24']" in error for error in report["errors"])
+    assert any("rss dropped: ['2026-08-24']" in error for error in report["errors"])
+
+
 def _release_manifest_with_runtime_inputs(source: Path, pages: Path, date_text: str) -> Path:
     manifest_path = _release_manifest(source, pages, date_text)
     payload = json.loads(manifest_path.read_text(encoding="utf-8"))

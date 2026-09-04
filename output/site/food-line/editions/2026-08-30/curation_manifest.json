@@ -1,0 +1,414 @@
+{
+  "stories": [
+    {
+      "story_id": "food-line-retrospective-e7f3ffac0d2d6afff35b",
+      "source_record_id": "food_line_source_99583d31b2ee1985",
+      "title": "Broken pipe closed St. Columba pantry for restoration",
+      "summary": "St. Columba Ecumenical Ministries said a broken pipe forced its Norfolk food pantry to close for restoration beginning July 27, interrupting a service that normally offered up to three days of groceries once every 30 days.",
+      "url": "https://stcolumbaministries.com/food-pantry",
+      "canonical_source_url": "https://stcolumbaministries.com/food-pantry",
+      "publisher": "St. Columba Ecumenical Ministries, Inc.",
+      "publisher_names": [
+        "St. Columba Ecumenical Ministries, Inc."
+      ],
+      "source_urls": [
+        "https://stcolumbaministries.com/food-pantry"
+      ],
+      "canonical_urls": [
+        "https://stcolumbaministries.com/food-pantry"
+      ],
+      "source_links": [
+        "https://stcolumbaministries.com/food-pantry"
+      ],
+      "published_at": "",
+      "source_published_date": "",
+      "summary_or_snippet": "St. Columba Ecumenical Ministries said a broken pipe forced its Norfolk food pantry to close for restoration beginning July 27, interrupting a service that normally offered up to three days of groceries once every 30 days.",
+      "pressure_summary": "St. Columba Ecumenical Ministries said a broken pipe forced its Norfolk food pantry to close for restoration beginning July 27, interrupting a service that normally offered up to three days of groceries once every 30 days.",
+      "approved_public_summary": "St. Columba Ecumenical Ministries said a broken pipe forced its Norfolk food pantry to close for restoration beginning July 27, interrupting a service that normally offered up to three days of groceries once every 30 days.",
+      "evidence_text": "Effective July 27, 2026, our Food Pantry is closed for restoration due to a broken pipe.",
+      "exact_supporting_passage": "Effective July 27, 2026, our Food Pantry is closed for restoration due to a broken pipe.",
+      "evidence_text_basis": "protected_historical_editorial_review",
+      "evidence_level": "source-backed historical review",
+      "confidence": "high",
+      "pressure_signal": true,
+      "pressure_verification_status": "source_text_verified",
+      "pressure_type": "service_reduction",
+      "pressure_reason": "protected retrospective decision documents a demonstrated food-access condition",
+      "pressure_match_terms": [
+        "food access"
+      ],
+      "source_role": "local_signal",
+      "source_family": "historical_recovery",
+      "source_type": "approved_retrospective",
+      "source_purpose": "historical_retrospective",
+      "collector_source_type": "protected_review",
+      "location_name": "Norfolk and surrounding households; provider states no residency restriction",
+      "state": "",
+      "location_scope": "state_local",
+      "affected_groups": [
+        "households seeking emergency pantry groceries",
+        "low-income residents",
+        "people experiencing homelessness or acute food need"
+      ],
+      "supported_product_geography": true,
+      "source_public_story_eligible": true,
+      "freshness_status": "approved_historical_retrospective",
+      "source_freshness_status": "approved_historical_retrospective",
+      "source_freshness_date_basis": "source_published_at",
+      "freshness_role": "historical_retrospective",
+      "primary_eligible": true,
+      "qualifies_for_public_inclusion": true,
+      "public_inclusion_reason": "",
+      "public_inclusion_bucket": "included_as_lead",
+      "included": true,
+      "included_as_lead": true,
+      "review_status": "approved",
+      "traceability_status": "traceable",
+      "public_claim_eligible": true,
+      "public_claim_blockers": [],
+      "map_eligible": false
+    },
+    {
+      "story_id": "food-line-retrospective-50b4f6ad13c2a2454ffe",
+      "source_record_id": "food_line_source_9cb5d938e49d0c8c",
+      "title": "Washington City pantry closure displaced monthly food-box service",
+      "summary": "Rising rent forced the Salvation Army's Washington City center and four-day-a-week pantry to close; the fixed site had served about 500 low-income families each month, while staff shifted to deliveries.",
+      "url": "https://www.sltrib.com/news/2026/08/01/high-rent-leads-closing-salvation",
+      "canonical_source_url": "https://www.sltrib.com/news/2026/08/01/high-rent-leads-closing-salvation",
+      "publisher": "The Salt Lake Tribune",
+      "publisher_names": [
+        "The Salt Lake Tribune"
+      ],
+      "source_urls": [
+        "https://www.sltrib.com/news/2026/08/01/high-rent-leads-closing-salvation"
+      ],
+      "canonical_urls": [
+        "https://www.sltrib.com/news/2026/08/01/high-rent-leads-closing-salvation"
+      ],
+      "source_links": [
+        "https://www.sltrib.com/news/2026/08/01/high-rent-leads-closing-salvation"
+      ],
+      "published_at": "2026-08-01",
+      "source_published_date": "2026-08-01",
+      "summary_or_snippet": "Rising rent forced the Salvation Army's Washington City center and four-day-a-week pantry to close; the fixed site had served about 500 low-income families each month, while staff shifted to deliveries.",
+      "pressure_summary": "Rising rent forced the Salvation Army's Washington City center and four-day-a-week pantry to close; the fixed site had served about 500 low-income families each month, while staff shifted to deliveries.",
+      "approved_public_summary": "Rising rent forced the Salvation Army's Washington City center and four-day-a-week pantry to close; the fixed site had served about 500 low-income families each month, while staff shifted to deliveries.",
+      "evidence_text": "The pantry provided food boxes filled with fresh vegetables, quality meats and other staples to 500 low-income families each month.",
+      "exact_supporting_passage": "The pantry provided food boxes filled with fresh vegetables, quality meats and other staples to 500 low-income families each month.",
+      "evidence_text_basis": "protected_historical_editorial_review",
+      "evidence_level": "source-backed historical review",
+      "confidence": "high",
+      "pressure_signal": true,
+      "pressure_verification_status": "source_text_verified",
+      "pressure_type": "service_reduction",
+      "pressure_reason": "protected retrospective decision documents a demonstrated food-access condition",
+      "pressure_match_terms": [
+        "food access"
+      ],
+      "source_role": "local_signal",
+      "source_family": "historical_recovery",
+      "source_type": "approved_retrospective",
+      "source_purpose": "historical_retrospective",
+      "collector_source_type": "protected_review",
+      "location_name": "Washington City and surrounding Washington County communities; Washington City and surrounding southwestern Utah communities",
+      "state": "",
+      "location_scope": "state_local",
+      "affected_groups": [
+        "approximately 500 low-income families previously receiving monthly food boxes",
+        "approximately 500 low-income families previously served each month",
+        "families using the center for food and other emergency assistance",
+        "households also relying on transportation or utility assistance formerly provided at the center",
+        "households relying on recurring pantry access",
+        "people needing fresh vegetables, meat and staple foods",
+        "southwestern Utah households relying on recurring food boxes"
+      ],
+      "supported_product_geography": true,
+      "source_public_story_eligible": true,
+      "freshness_status": "approved_historical_retrospective",
+      "source_freshness_status": "approved_historical_retrospective",
+      "source_freshness_date_basis": "source_published_at",
+      "freshness_role": "historical_retrospective",
+      "primary_eligible": true,
+      "qualifies_for_public_inclusion": true,
+      "public_inclusion_reason": "",
+      "public_inclusion_bucket": "included_as_lead",
+      "included": true,
+      "included_as_lead": true,
+      "review_status": "approved",
+      "traceability_status": "traceable",
+      "public_claim_eligible": true,
+      "public_claim_blockers": [],
+      "map_eligible": false
+    },
+    {
+      "story_id": "food-line-retrospective-6858ec66c40ad8e1e585",
+      "source_record_id": "food_line_source_4c74711ab7390f1b",
+      "title": "Laredo WIC closed its La Ladrillera clinic",
+      "summary": "Laredo WIC permanently closed its La Ladrillera clinic at 2100 Pinder on Aug. 1, reducing local access for participants who had used that site.",
+      "url": "https://www.facebook.com/laredowic/posts/-important-wic-updateeffective-august-1-2026-our-ladrillera-wic-clinic-located-a/1549327733873236",
+      "canonical_source_url": "https://www.facebook.com/laredowic/posts/-important-wic-updateeffective-august-1-2026-our-ladrillera-wic-clinic-located-a/1549327733873236",
+      "publisher": "Laredo WIC",
+      "publisher_names": [
+        "Laredo WIC"
+      ],
+      "source_urls": [
+        "https://www.facebook.com/laredowic/posts/-important-wic-updateeffective-august-1-2026-our-ladrillera-wic-clinic-located-a/1549327733873236"
+      ],
+      "canonical_urls": [
+        "https://www.facebook.com/laredowic/posts/-important-wic-updateeffective-august-1-2026-our-ladrillera-wic-clinic-located-a/1549327733873236"
+      ],
+      "source_links": [
+        "https://www.facebook.com/laredowic/posts/-important-wic-updateeffective-august-1-2026-our-ladrillera-wic-clinic-located-a/1549327733873236"
+      ],
+      "published_at": "",
+      "source_published_date": "",
+      "summary_or_snippet": "Laredo WIC permanently closed its La Ladrillera clinic at 2100 Pinder on Aug. 1, reducing local access for participants who had used that site.",
+      "pressure_summary": "Laredo WIC permanently closed its La Ladrillera clinic at 2100 Pinder on Aug. 1, reducing local access for participants who had used that site.",
+      "approved_public_summary": "Laredo WIC permanently closed its La Ladrillera clinic at 2100 Pinder on Aug. 1, reducing local access for participants who had used that site.",
+      "evidence_text": "Effective August 1, 2026, our Ladrillera WIC Clinic located at 2100 Pinder will permanently close.",
+      "exact_supporting_passage": "Effective August 1, 2026, our Ladrillera WIC Clinic located at 2100 Pinder will permanently close.",
+      "evidence_text_basis": "protected_historical_editorial_review",
+      "evidence_level": "source-backed historical review",
+      "confidence": "high",
+      "pressure_signal": true,
+      "pressure_verification_status": "source_text_verified",
+      "pressure_type": "service_reduction",
+      "pressure_reason": "protected retrospective decision documents a demonstrated food-access condition",
+      "pressure_match_terms": [
+        "food access"
+      ],
+      "source_role": "local_signal",
+      "source_family": "historical_recovery",
+      "source_type": "approved_retrospective",
+      "source_purpose": "historical_retrospective",
+      "collector_source_type": "protected_review",
+      "location_name": "Laredo, particularly households that previously used the Pinder Avenue clinic",
+      "state": "",
+      "location_scope": "state_local",
+      "affected_groups": [
+        "WIC participants who previously used the La Ladrillera clinic",
+        "participants facing additional travel or transportation requirements after the clinic closure",
+        "pregnant and postpartum participants, infants, and young children requiring WIC services in the affected service area"
+      ],
+      "supported_product_geography": true,
+      "source_public_story_eligible": true,
+      "freshness_status": "approved_historical_retrospective",
+      "source_freshness_status": "approved_historical_retrospective",
+      "source_freshness_date_basis": "source_published_at",
+      "freshness_role": "historical_retrospective",
+      "primary_eligible": true,
+      "qualifies_for_public_inclusion": true,
+      "public_inclusion_reason": "",
+      "public_inclusion_bucket": "included_as_lead",
+      "included": true,
+      "included_as_lead": true,
+      "review_status": "approved",
+      "traceability_status": "traceable",
+      "public_claim_eligible": true,
+      "public_claim_blockers": [],
+      "map_eligible": false
+    },
+    {
+      "story_id": "food-line-retrospective-fdbae5e272ca8440cebf",
+      "source_record_id": "food_line_source_a1309b9ea03c90fd",
+      "title": "Unforgotten Haven paused new-client pantry intake",
+      "summary": "The Unforgotten Haven stopped accepting new clients for monthly pantry shopping as of Aug. 4, while its established pantry service remained available to registered households.",
+      "url": "https://www.facebook.com/theunforgottenhaven/posts/important-updateplease-read-carefully-as-of-august-4-2026-we-are-temporarily-not/1475706591252107",
+      "canonical_source_url": "https://www.facebook.com/theunforgottenhaven/posts/important-updateplease-read-carefully-as-of-august-4-2026-we-are-temporarily-not/1475706591252107",
+      "publisher": "The Unforgotten Haven",
+      "publisher_names": [
+        "The Unforgotten Haven"
+      ],
+      "source_urls": [
+        "https://www.facebook.com/theunforgottenhaven/posts/important-updateplease-read-carefully-as-of-august-4-2026-we-are-temporarily-not/1475706591252107"
+      ],
+      "canonical_urls": [
+        "https://www.facebook.com/theunforgottenhaven/posts/important-updateplease-read-carefully-as-of-august-4-2026-we-are-temporarily-not/1475706591252107"
+      ],
+      "source_links": [
+        "https://www.facebook.com/theunforgottenhaven/posts/important-updateplease-read-carefully-as-of-august-4-2026-we-are-temporarily-not/1475706591252107"
+      ],
+      "published_at": "",
+      "source_published_date": "",
+      "summary_or_snippet": "The Unforgotten Haven stopped accepting new clients for monthly pantry shopping as of Aug. 4, while its established pantry service remained available to registered households.",
+      "pressure_summary": "The Unforgotten Haven stopped accepting new clients for monthly pantry shopping as of Aug. 4, while its established pantry service remained available to registered households.",
+      "approved_public_summary": "The Unforgotten Haven stopped accepting new clients for monthly pantry shopping as of Aug. 4, while its established pantry service remained available to registered households.",
+      "evidence_text": "As of August 4, 2026 we are TEMPORARILY NOT accepting NEW Clients for Our Monthly Shopping at Our Pantry!",
+      "exact_supporting_passage": "As of August 4, 2026 we are TEMPORARILY NOT accepting NEW Clients for Our Monthly Shopping at Our Pantry!",
+      "evidence_text_basis": "protected_historical_editorial_review",
+      "evidence_level": "source-backed historical review",
+      "confidence": "high",
+      "pressure_signal": true,
+      "pressure_verification_status": "source_text_verified",
+      "pressure_type": "service_reduction",
+      "pressure_reason": "protected retrospective decision documents a demonstrated food-access condition",
+      "pressure_match_terms": [
+        "food access"
+      ],
+      "source_role": "local_signal",
+      "source_family": "historical_recovery",
+      "source_type": "approved_retrospective",
+      "source_purpose": "historical_retrospective",
+      "collector_source_type": "protected_review",
+      "location_name": "Blackwood, Gloucester County",
+      "state": "",
+      "location_scope": "state_local",
+      "affected_groups": [
+        "new households seeking free grocery assistance",
+        "people attempting to register for monthly pantry shopping"
+      ],
+      "supported_product_geography": true,
+      "source_public_story_eligible": true,
+      "freshness_status": "approved_historical_retrospective",
+      "source_freshness_status": "approved_historical_retrospective",
+      "source_freshness_date_basis": "source_published_at",
+      "freshness_role": "historical_retrospective",
+      "primary_eligible": true,
+      "qualifies_for_public_inclusion": true,
+      "public_inclusion_reason": "",
+      "public_inclusion_bucket": "included_as_lead",
+      "included": true,
+      "included_as_lead": true,
+      "review_status": "approved",
+      "traceability_status": "traceable",
+      "public_claim_eligible": true,
+      "public_claim_blockers": [],
+      "map_eligible": false
+    },
+    {
+      "story_id": "food-line-retrospective-67b5e7a48b127643ae46",
+      "source_record_id": "food_line_source_8b2711c9d9a2985a",
+      "title": "Wayne pantry shifted to gift cards after fire displacement",
+      "summary": "After a fire-related community-center closure displaced the Wayne Interfaith Network pantry, the program paused physical grocery distribution and mailed grocery gift cards for the month.",
+      "url": "https://www.tapinto.net/towns/wayne/articles/wayne-s-win-food-pantry-needs-help-during-community-center-closure",
+      "canonical_source_url": "https://www.tapinto.net/towns/wayne/articles/wayne-s-win-food-pantry-needs-help-during-community-center-closure",
+      "publisher": "TAPinto Wayne",
+      "publisher_names": [
+        "TAPinto Wayne"
+      ],
+      "source_urls": [
+        "https://www.tapinto.net/towns/wayne/articles/wayne-s-win-food-pantry-needs-help-during-community-center-closure"
+      ],
+      "canonical_urls": [
+        "https://www.tapinto.net/towns/wayne/articles/wayne-s-win-food-pantry-needs-help-during-community-center-closure"
+      ],
+      "source_links": [
+        "https://www.tapinto.net/towns/wayne/articles/wayne-s-win-food-pantry-needs-help-during-community-center-closure"
+      ],
+      "published_at": "2026-08-06T08:44:00-04:00",
+      "source_published_date": "2026-08-06T08:44:00-04:00",
+      "summary_or_snippet": "After a fire-related community-center closure displaced the Wayne Interfaith Network pantry, the program paused physical grocery distribution and mailed grocery gift cards for the month.",
+      "pressure_summary": "After a fire-related community-center closure displaced the Wayne Interfaith Network pantry, the program paused physical grocery distribution and mailed grocery gift cards for the month.",
+      "approved_public_summary": "After a fire-related community-center closure displaced the Wayne Interfaith Network pantry, the program paused physical grocery distribution and mailed grocery gift cards for the month.",
+      "evidence_text": "We've reverted back to what we did during COVID, and we're just mailing gift cards for the month.",
+      "exact_supporting_passage": "We've reverted back to what we did during COVID, and we're just mailing gift cards for the month.",
+      "evidence_text_basis": "protected_historical_editorial_review",
+      "evidence_level": "source-backed historical review",
+      "confidence": "high",
+      "pressure_signal": true,
+      "pressure_verification_status": "source_text_verified",
+      "pressure_type": "service_reduction",
+      "pressure_reason": "protected retrospective decision documents a demonstrated food-access condition",
+      "pressure_match_terms": [
+        "food access"
+      ],
+      "source_role": "local_signal",
+      "source_family": "historical_recovery",
+      "source_type": "approved_retrospective",
+      "source_purpose": "historical_retrospective",
+      "collector_source_type": "protected_review",
+      "location_name": "Wayne Township",
+      "state": "",
+      "location_scope": "state_local",
+      "affected_groups": [
+        "Wayne households relying on pantry groceries",
+        "donors unable to use the pantry's usual collection location",
+        "pantry clients receiving temporary gift-card assistance instead of normal food distributions"
+      ],
+      "supported_product_geography": true,
+      "source_public_story_eligible": true,
+      "freshness_status": "approved_historical_retrospective",
+      "source_freshness_status": "approved_historical_retrospective",
+      "source_freshness_date_basis": "source_published_at",
+      "freshness_role": "historical_retrospective",
+      "primary_eligible": true,
+      "qualifies_for_public_inclusion": true,
+      "public_inclusion_reason": "",
+      "public_inclusion_bucket": "included_as_lead",
+      "included": true,
+      "included_as_lead": true,
+      "review_status": "approved",
+      "traceability_status": "traceable",
+      "public_claim_eligible": true,
+      "public_claim_blockers": [],
+      "map_eligible": false
+    },
+    {
+      "story_id": "food-line-retrospective-e6b06583274fcec6e38c",
+      "source_record_id": "food_line_source_92977c3191d47a15",
+      "title": "Temple College pantry paused regular August shopping",
+      "summary": "Temple College listed its Leopard Food Pantry as closed for regular shopping during Aug. 1\u201319, followed by new-shopper registration days before a scheduled Aug. 25 reopening.",
+      "url": "https://www.templecollege.edu/resources/circle-support/leopard-pantry.html",
+      "canonical_source_url": "https://www.templecollege.edu/resources/circle-support/leopard-pantry.html",
+      "publisher": "Temple College",
+      "publisher_names": [
+        "Temple College"
+      ],
+      "source_urls": [
+        "https://www.templecollege.edu/resources/circle-support/leopard-pantry.html"
+      ],
+      "canonical_urls": [
+        "https://www.templecollege.edu/resources/circle-support/leopard-pantry.html"
+      ],
+      "source_links": [
+        "https://www.templecollege.edu/resources/circle-support/leopard-pantry.html"
+      ],
+      "published_at": "",
+      "source_published_date": "",
+      "summary_or_snippet": "Temple College listed its Leopard Food Pantry as closed for regular shopping during Aug. 1\u201319, followed by new-shopper registration days before a scheduled Aug. 25 reopening.",
+      "pressure_summary": "Temple College listed its Leopard Food Pantry as closed for regular shopping during Aug. 1\u201319, followed by new-shopper registration days before a scheduled Aug. 25 reopening.",
+      "approved_public_summary": "Temple College listed its Leopard Food Pantry as closed for regular shopping during Aug. 1\u201319, followed by new-shopper registration days before a scheduled Aug. 25 reopening.",
+      "evidence_text": "The Leopard Pantry will be closed on the following dates: August 1-19",
+      "exact_supporting_passage": "The Leopard Pantry will be closed on the following dates: August 1-19",
+      "evidence_text_basis": "protected_historical_editorial_review",
+      "evidence_level": "source-backed historical review",
+      "confidence": "high",
+      "pressure_signal": true,
+      "pressure_verification_status": "source_text_verified",
+      "pressure_type": "service_reduction",
+      "pressure_reason": "protected retrospective decision documents a demonstrated food-access condition",
+      "pressure_match_terms": [
+        "food access"
+      ],
+      "source_role": "local_signal",
+      "source_family": "historical_recovery",
+      "source_type": "approved_retrospective",
+      "source_purpose": "historical_retrospective",
+      "collector_source_type": "protected_review",
+      "location_name": "Temple College campus food-pantry program; Temple and Taylor locations are listed by the operator, but the closure notice does not separately specify location-by-location applicability",
+      "state": "",
+      "location_scope": "state_local",
+      "affected_groups": [
+        "Temple College employees eligible to use the pantry",
+        "Temple College students experiencing food insecurity who normally use the Leopard Food Pantry"
+      ],
+      "supported_product_geography": true,
+      "source_public_story_eligible": true,
+      "freshness_status": "approved_historical_retrospective",
+      "source_freshness_status": "approved_historical_retrospective",
+      "source_freshness_date_basis": "source_published_at",
+      "freshness_role": "historical_retrospective",
+      "primary_eligible": true,
+      "qualifies_for_public_inclusion": true,
+      "public_inclusion_reason": "",
+      "public_inclusion_bucket": "included_as_lead",
+      "included": true,
+      "included_as_lead": true,
+      "review_status": "approved",
+      "traceability_status": "traceable",
+      "public_claim_eligible": true,
+      "public_claim_blockers": [],
+      "map_eligible": false
+    }
+  ]
+}

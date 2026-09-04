@@ -1,0 +1,217 @@
+[
+  {
+    "story_id": "food-line-retrospective-cae58348c495f1cae6f1",
+    "source_record_id": "food_line_source_dc3b1f294f97806a",
+    "title": "Phoenix food-box demand rose as Arizona SNAP access contracted",
+    "summary": "St. Vincent de Paul in Phoenix reported that demand for food boxes had nearly doubled as Arizona food-bank visits rose and SNAP access contracted; the sources did not establish a precise turnaway count or causal split.",
+    "url": "https://azfoodbanks.org/visits-increase",
+    "canonical_source_url": "https://azfoodbanks.org/visits-increase",
+    "publisher": "Arizona Food Bank Network",
+    "publisher_names": [
+      "Arizona Food Bank Network"
+    ],
+    "source_urls": [
+      "https://azfoodbanks.org/visits-increase"
+    ],
+    "canonical_urls": [
+      "https://azfoodbanks.org/visits-increase"
+    ],
+    "source_links": [
+      "https://azfoodbanks.org/visits-increase",
+      "https://www.12news.com/article/life/food/demand-food-boxes-nearly-doubles-at-phoenix-nonprofit-after-snap-cuts-hit-arizona/75-a2925995-b10a-4916-97e0-e1495c17029c"
+    ],
+    "published_at": "2026-06-30",
+    "source_published_date": "2026-06-30",
+    "summary_or_snippet": "St. Vincent de Paul in Phoenix reported that demand for food boxes had nearly doubled as Arizona food-bank visits rose and SNAP access contracted; the sources did not establish a precise turnaway count or causal split.",
+    "pressure_summary": "St. Vincent de Paul in Phoenix reported that demand for food boxes had nearly doubled as Arizona food-bank visits rose and SNAP access contracted; the sources did not establish a precise turnaway count or causal split.",
+    "approved_public_summary": "St. Vincent de Paul in Phoenix reported that demand for food boxes had nearly doubled as Arizona food-bank visits rose and SNAP access contracted; the sources did not establish a precise turnaway count or causal split.",
+    "evidence_text": "people need food banks now more than at any point in the last 10 years.",
+    "exact_supporting_passage": "people need food banks now more than at any point in the last 10 years.",
+    "evidence_text_basis": "protected_historical_editorial_review",
+    "evidence_level": "source-backed historical review",
+    "confidence": "high",
+    "pressure_signal": true,
+    "pressure_verification_status": "source_text_verified",
+    "pressure_type": "service_reduction",
+    "pressure_reason": "protected retrospective decision documents a demonstrated food-access condition",
+    "pressure_match_terms": [
+      "food access"
+    ],
+    "source_role": "local_signal",
+    "source_family": "historical_recovery",
+    "source_type": "approved_retrospective",
+    "source_purpose": "historical_retrospective",
+    "collector_source_type": "protected_review",
+    "location_name": "Phoenix metropolitan area; Statewide",
+    "state": "",
+    "location_scope": "state_local",
+    "affected_groups": [
+      "Arizona residents no longer receiving SNAP",
+      "Arizona residents who lost SNAP benefits",
+      "families experiencing delays obtaining or restoring food-assistance eligibility",
+      "first-time food-bank users",
+      "households relying on emergency food assistance",
+      "households seeking emergency food boxes",
+      "low-income households facing administrative or eligibility barriers to SNAP"
+    ],
+    "supported_product_geography": true,
+    "source_public_story_eligible": true,
+    "freshness_status": "approved_historical_retrospective",
+    "source_freshness_status": "approved_historical_retrospective",
+    "source_freshness_date_basis": "source_published_at",
+    "freshness_role": "historical_retrospective",
+    "primary_eligible": true,
+    "qualifies_for_public_inclusion": true,
+    "public_inclusion_reason": "",
+    "public_inclusion_bucket": "included_as_lead",
+    "included": true,
+    "included_as_lead": true,
+    "review_status": "approved",
+    "traceability_status": "traceable",
+    "public_claim_eligible": true,
+    "public_claim_blockers": [],
+    "map_eligible": false
+  },
+  {
+    "story_id": "food-line-retrospective-7f65805fabc6d6a76800",
+    "source_record_id": "food_line_source_697d8a734e5df72f",
+    "title": "North Valley Food Bank visits rose amid SNAP contraction",
+    "summary": "North Valley Food Bank reported pantry visits rising from about 23,700 to 29,000 over a year and more than 1,500 people served weekly as Montana SNAP participation declined by about 9 percent.",
+    "url": "https://nbcmontana.com/news/local/north-valley-food-bank-sees-demand-as-montana-families-seek-food-assistance",
+    "canonical_source_url": "https://nbcmontana.com/news/local/north-valley-food-bank-sees-demand-as-montana-families-seek-food-assistance",
+    "publisher": "NBC Montana",
+    "publisher_names": [
+      "NBC Montana"
+    ],
+    "source_urls": [
+      "https://nbcmontana.com/news/local/north-valley-food-bank-sees-demand-as-montana-families-seek-food-assistance"
+    ],
+    "canonical_urls": [
+      "https://nbcmontana.com/news/local/north-valley-food-bank-sees-demand-as-montana-families-seek-food-assistance"
+    ],
+    "source_links": [
+      "https://nbcmontana.com/news/local/north-valley-food-bank-sees-demand-as-montana-families-seek-food-assistance"
+    ],
+    "published_at": "2026-08-17",
+    "source_published_date": "2026-08-17",
+    "summary_or_snippet": "North Valley Food Bank reported pantry visits rising from about 23,700 to 29,000 over a year and more than 1,500 people served weekly as Montana SNAP participation declined by about 9 percent.",
+    "pressure_summary": "North Valley Food Bank reported pantry visits rising from about 23,700 to 29,000 over a year and more than 1,500 people served weekly as Montana SNAP participation declined by about 9 percent.",
+    "approved_public_summary": "North Valley Food Bank reported pantry visits rising from about 23,700 to 29,000 over a year and more than 1,500 people served weekly as Montana SNAP participation declined by about 9 percent.",
+    "evidence_text": "More families in Northwest Montana are turning to food banks as grocery costs and changes to SNAP benefits put additional pressure on households.",
+    "exact_supporting_passage": "More families in Northwest Montana are turning to food banks as grocery costs and changes to SNAP benefits put additional pressure on households.",
+    "evidence_text_basis": "protected_historical_editorial_review",
+    "evidence_level": "source-backed historical review",
+    "confidence": "high",
+    "pressure_signal": true,
+    "pressure_verification_status": "source_text_verified",
+    "pressure_type": "service_reduction",
+    "pressure_reason": "protected retrospective decision documents a demonstrated food-access condition",
+    "pressure_match_terms": [
+      "food access"
+    ],
+    "source_role": "local_signal",
+    "source_family": "historical_recovery",
+    "source_type": "approved_retrospective",
+    "source_purpose": "historical_retrospective",
+    "collector_source_type": "protected_review",
+    "location_name": "Whitefish and northwest Montana, including mobile and partner-pantry service areas",
+    "state": "",
+    "location_scope": "state_local",
+    "affected_groups": [
+      "Montanans who have lost SNAP benefits",
+      "northwest Montana households seeking food-bank assistance",
+      "rural households served by mobile and partner pantries",
+      "working families unable to cover food and household costs"
+    ],
+    "supported_product_geography": true,
+    "source_public_story_eligible": true,
+    "freshness_status": "approved_historical_retrospective",
+    "source_freshness_status": "approved_historical_retrospective",
+    "source_freshness_date_basis": "source_published_at",
+    "freshness_role": "historical_retrospective",
+    "primary_eligible": true,
+    "qualifies_for_public_inclusion": true,
+    "public_inclusion_reason": "",
+    "public_inclusion_bucket": "included_as_lead",
+    "included": true,
+    "included_as_lead": true,
+    "review_status": "approved",
+    "traceability_status": "traceable",
+    "public_claim_eligible": true,
+    "public_claim_blockers": [],
+    "map_eligible": false
+  },
+  {
+    "story_id": "food-line-retrospective-71c54641cb82a996d74a",
+    "source_record_id": "food_line_source_9005ba20535e102a",
+    "title": "Florida SNAP participation fell as Central Florida demand rose",
+    "summary": "Florida SNAP participation was reported down nearly 20 percent from July 2025, while Central Florida providers reported higher demand and Second Harvest said need exceeded the prior year's level.",
+    "url": "https://mynews13.com/fl/orlando/news/2026/08/29/florida-snap-participation-drops-nearly-0-as-orlando-groups-see-demand-rise",
+    "canonical_source_url": "https://mynews13.com/fl/orlando/news/2026/08/29/florida-snap-participation-drops-nearly-0-as-orlando-groups-see-demand-rise",
+    "publisher": "Spectrum News 13",
+    "publisher_names": [
+      "Spectrum News 13"
+    ],
+    "source_urls": [
+      "https://mynews13.com/fl/orlando/news/2026/08/29/florida-snap-participation-drops-nearly-0-as-orlando-groups-see-demand-rise"
+    ],
+    "canonical_urls": [
+      "https://mynews13.com/fl/orlando/news/2026/08/29/florida-snap-participation-drops-nearly-0-as-orlando-groups-see-demand-rise"
+    ],
+    "source_links": [
+      "https://mynews13.com/fl/orlando/news/2026/08/29/florida-snap-participation-drops-nearly-0-as-orlando-groups-see-demand-rise"
+    ],
+    "published_at": "2026-08-29T12:38:00-04:00",
+    "source_published_date": "2026-08-29T12:38:00-04:00",
+    "summary_or_snippet": "Florida SNAP participation was reported down nearly 20 percent from July 2025, while Central Florida providers reported higher demand and Second Harvest said need exceeded the prior year's level.",
+    "pressure_summary": "Florida SNAP participation was reported down nearly 20 percent from July 2025, while Central Florida providers reported higher demand and Second Harvest said need exceeded the prior year's level.",
+    "approved_public_summary": "Florida SNAP participation was reported down nearly 20 percent from July 2025, while Central Florida providers reported higher demand and Second Harvest said need exceeded the prior year's level.",
+    "evidence_text": "In Florida, SNAP participation has dropped nearly 20% since July 2025.",
+    "exact_supporting_passage": "In Florida, SNAP participation has dropped nearly 20% since July 2025.",
+    "evidence_text_basis": "protected_historical_editorial_review",
+    "evidence_level": "source-backed historical review",
+    "confidence": "high",
+    "pressure_signal": true,
+    "pressure_verification_status": "source_text_verified",
+    "pressure_type": "service_reduction",
+    "pressure_reason": "protected retrospective decision documents a demonstrated food-access condition",
+    "pressure_match_terms": [
+      "food access"
+    ],
+    "source_role": "local_signal",
+    "source_family": "historical_recovery",
+    "source_type": "approved_retrospective",
+    "source_purpose": "historical_retrospective",
+    "collector_source_type": "protected_review",
+    "location_name": "Orange County and the broader Central Florida food-assistance service area; Statewide SNAP participation decline with documented effects in Orange County and Central Florida",
+    "state": "",
+    "location_scope": "state_local",
+    "affected_groups": [
+      "Central Florida households seeking food-bank assistance",
+      "Florida households losing or failing to renew SNAP eligibility",
+      "Florida residents no longer receiving SNAP",
+      "families with children joining low-cost grocery assistance programs",
+      "families with children newly seeking food assistance",
+      "food-bank and hunger-relief clients in Central Florida",
+      "households denied SNAP during recertification or reapplication",
+      "low-income Central Florida families seeking alternative grocery assistance"
+    ],
+    "supported_product_geography": true,
+    "source_public_story_eligible": true,
+    "freshness_status": "approved_historical_retrospective",
+    "source_freshness_status": "approved_historical_retrospective",
+    "source_freshness_date_basis": "source_published_at",
+    "freshness_role": "historical_retrospective",
+    "primary_eligible": true,
+    "qualifies_for_public_inclusion": true,
+    "public_inclusion_reason": "",
+    "public_inclusion_bucket": "included_as_lead",
+    "included": true,
+    "included_as_lead": true,
+    "review_status": "approved",
+    "traceability_status": "traceable",
+    "public_claim_eligible": true,
+    "public_claim_blockers": [],
+    "map_eligible": false
+  }
+]

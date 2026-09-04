@@ -660,6 +660,32 @@ def make_pages_repo(path):
     return path
 
 
+def add_shared_dispatch_directory_template(pages_repo: Path) -> None:
+    if not (pages_repo / "index.html").exists():
+        (pages_repo / "index.html").write_text("<html><body>Legacy root homepage fixture</body></html>", encoding="utf-8")
+    directory = pages_repo / "dispatches" / "index.html"
+    directory.parent.mkdir(parents=True, exist_ok=True)
+    cards = []
+    for slug, product_name in (
+        ("gaza", "Dispatches From Gaza"),
+        ("food-line", "Food Line Dispatch"),
+        ("care-line", "The Care Line Dispatch"),
+    ):
+        cards.append(
+            '<article class="dispatch-card dispatch-card--featured">'
+            f'<h3 class="latest-headline"><a href="/{slug}/editions/2026-05-03/">Old {slug}</a></h3>'
+            f'<p class="date-line">{product_name} &middot; May 3, 2026</p>'
+            f'<h2>{product_name}</h2><a class="button" href="/{slug}/editions/2026-05-03/">Read latest</a></article>'
+        )
+    directory.write_text(
+        '<!doctype html><html><body><main><div class="directory-list">'
+        + "".join(cards)
+        + '</div></main><footer><a href="/methodology/">How we work</a> &middot; '
+        '<a href="/about/">About this project</a></footer></body></html>',
+        encoding="utf-8",
+    )
+
+
 def write_min_food_line_public_edition(
     root: Path,
     edition_date: str,
@@ -1087,6 +1113,7 @@ def test_pages_dry_run_with_new_edition_reports_copies_without_parity_failure(bu
 def test_pages_copy_creates_cname_and_preserves_git(built_site):
     work, backup_root, _ = built_site
     pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    add_shared_dispatch_directory_template(pages_repo)
 
     result = publish_pages(
         work,
@@ -1273,6 +1300,7 @@ def test_gaza_expect_date_does_not_require_same_date_cascadia(built_site):
     work, backup_root, _ = built_site
     site_root = work / "output" / "site"
     pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    add_shared_dispatch_directory_template(pages_repo)
     add_gaza_site_edition(site_root, "2026-05-09")
 
     result = publish_pages(
@@ -1867,7 +1895,7 @@ def test_pages_publish_preserves_gaza_audio_history_from_explicit_pages_repo_whe
     monkeypatch.setattr(generator, "build_site", fake_build_site)
     monkeypatch.setattr(
         generator,
-        "refresh_shared_homepage_from_pages_inventory",
+        "refresh_shared_release_surfaces_from_pages_inventory",
         lambda *args, **kwargs: {
             "ok": True,
             "refreshed": True,
@@ -2377,14 +2405,14 @@ def test_pages_publish_refreshes_shared_homepage_before_commit(tmp_path, monkeyp
     monkeypatch.setattr(generator, "validate_pages_repo_after_copy", lambda *args, **kwargs: [])
     monkeypatch.setattr(generator, "ensure_pages_branch", lambda *args, **kwargs: {"current_branch": "gh-pages", "target_pages_branch": "gh-pages", "checked_out_branch": "gh-pages", "fetch_attempted": False, "fetched": False, "created_pages_branch": False, "warnings": [], "errors": []})
     monkeypatch.setattr(generator, "maybe_commit_pages_repo", lambda *args, **kwargs: {"would_commit": False, "committed": False, "commit_sha": None, "committed_branch": None, "message": "commit flag not set"})
-    def fake_refresh_shared_homepage_from_pages_inventory(pages_repo_path: Path, *, dry_run: bool, target_dispatch: str = "gaza"):
+    def fake_refresh_shared_release_surfaces_from_pages_inventory(pages_repo_path: Path, *, dry_run: bool, target_dispatch: str = "gaza"):
         homepage = pages_repo_path / "index.html"
         homepage.write_text(
             "<html><body><section class=\"section-block\"><div class=\"section-heading\"><p class=\"eyebrow\">The current edition desk</p><h2>Latest published developments</h2></div><div class=\"edition-grid\"><article class=\"edition-card edition-card--gaza\"><p class=\"topic-badge topic-badge--gaza\">GAZA</p><h3><a href=\"/gaza/editions/2026-08-15/\">New Gaza edition</a></h3><p class=\"edition-source\">Dispatches From Gaza &middot; August 15, 2026</p><p class=\"edition-provenance\">Based on public source reporting</p><p class=\"edition-meta\">1 public source</p></article></div></section></body></html>",
             encoding="utf-8",
         )
         return {"ok": True, "refreshed": True, "target_dispatch": target_dispatch, "public_url": "/gaza/editions/2026-08-15/", "edition_date": "2026-08-15", "title": "New Gaza edition", "source_count": 1, "message": "shared homepage refreshed from Pages inventory"}
-    monkeypatch.setattr(generator, "refresh_shared_homepage_from_pages_inventory", fake_refresh_shared_homepage_from_pages_inventory)
+    monkeypatch.setattr(generator, "refresh_shared_release_surfaces_from_pages_inventory", fake_refresh_shared_release_surfaces_from_pages_inventory)
     monkeypatch.setattr(generator, "_gaza_homepage_recent_edition_guard", lambda *args, **kwargs: {"ok": True, "decision": "allowed", "reasons": [], "old_dates": [], "new_dates": ["2026-08-15"], "added_dates": ["2026-08-15"], "removed_dates": []})
     monkeypatch.setattr(generator, "_gaza_public_surface_history_diagnostics", lambda *args, **kwargs: [])
 
@@ -2436,7 +2464,7 @@ def test_pages_publish_blocks_when_shared_homepage_cannot_discover_new_gaza_rele
     monkeypatch.setattr(generator, "validate_pages_copy_parity", lambda *args, **kwargs: [])
     monkeypatch.setattr(generator, "validate_cascadia_pages_copy_consistency", lambda *args, **kwargs: [])
     monkeypatch.setattr(generator, "validate_pages_repo_after_copy", lambda *args, **kwargs: [])
-    def fake_refresh_shared_homepage_from_pages_inventory(pages_repo_path: Path, *, dry_run: bool, target_dispatch: str = "gaza"):
+    def fake_refresh_shared_release_surfaces_from_pages_inventory(pages_repo_path: Path, *, dry_run: bool, target_dispatch: str = "gaza"):
         return {
             "ok": False,
             "refreshed": False,
@@ -2444,7 +2472,7 @@ def test_pages_publish_blocks_when_shared_homepage_cannot_discover_new_gaza_rele
             "message": "no eligible public release found for gaza in Pages inventory",
         }
 
-    monkeypatch.setattr(generator, "refresh_shared_homepage_from_pages_inventory", fake_refresh_shared_homepage_from_pages_inventory)
+    monkeypatch.setattr(generator, "refresh_shared_release_surfaces_from_pages_inventory", fake_refresh_shared_release_surfaces_from_pages_inventory)
     monkeypatch.setattr(generator, "maybe_commit_pages_repo", lambda *args, **kwargs: {"would_commit": False, "committed": False, "commit_sha": None, "committed_branch": None, "message": "commit flag not set"})
     monkeypatch.setattr(generator, "discover_public_releases", lambda *args, **kwargs: [])
     monkeypatch.setattr(generator, "_gaza_homepage_recent_edition_guard", lambda *args, **kwargs: {"ok": True, "decision": "allowed", "reasons": [], "old_dates": [], "new_dates": ["2026-08-15"], "added_dates": ["2026-08-15"], "removed_dates": []})
@@ -2516,7 +2544,7 @@ def test_pages_publish_refreshes_shared_homepage_for_food_line_when_explicitly_e
     monkeypatch.setattr(generator, "validate_pages_repo_after_copy", lambda *args, **kwargs: [])
     monkeypatch.setattr(
         generator,
-        "refresh_shared_homepage_from_pages_inventory",
+        "refresh_shared_release_surfaces_from_pages_inventory",
         lambda pages_repo_path, *, dry_run, target_dispatch="gaza": {
             "ok": True,
             "refreshed": True,
@@ -3069,6 +3097,7 @@ def test_commit_flag_does_not_imply_push(built_site):
 def test_pages_publish_commits_on_gh_pages_branch(built_site):
     work, backup_root, _ = built_site
     pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    add_shared_dispatch_directory_template(pages_repo)
 
     result = publish_pages(work, pages_repo, None, dry_run=False, commit=True, no_push=True, backup_root=backup_root, pages_branch="gh-pages")
 
@@ -3334,6 +3363,33 @@ def test_pages_publish_refreshes_shared_homepage_before_commit(tmp_path, monkeyp
         "<a class=\"text-link\" href=\"/care-line/archive.html\">Archive</a><a class=\"support-link\" href=\"/care-line/rss.xml\">Feed</a></div></article></div></section></body></html>"
     )
     (pages_repo / "index.html").write_text(stale_home, encoding="utf-8")
+    (pages_repo / "dispatches").mkdir(parents=True, exist_ok=True)
+    (pages_repo / "dispatches" / "index.html").write_text(stale_home, encoding="utf-8")
+    for slug, title in (
+        ("food-line", "Superior food pantry closes after more than 30 years"),
+        ("care-line", "Miles Hospital proposes closing its labor and delivery center"),
+    ):
+        edition = pages_repo / slug / "editions" / "2026-08-05"
+        edition.mkdir(parents=True, exist_ok=True)
+        (edition / "index.html").write_text(f"<html><body><article><h3>{title}</h3></article></body></html>", encoding="utf-8")
+        (edition / "edition_manifest.json").write_text(
+            json.dumps(
+                {
+                    "dispatch_slug": slug,
+                    "edition_date": "2026-08-05",
+                    "public_archive_title": title,
+                    "source_count": 1,
+                    "public_release_status": "published",
+                    "pages_release_status": "synced",
+                }
+            ),
+            encoding="utf-8",
+        )
+        (edition / "sources_manifest.json").write_text(json.dumps([{"title": title}]), encoding="utf-8")
+        (pages_repo / slug / "archive.html").write_text(
+            f'<html><body><a href="editions/2026-08-05/">{title}</a></body></html>',
+            encoding="utf-8",
+        )
     site_root = work / "output" / "site"
     site_root.mkdir(parents=True, exist_ok=True)
     (site_root / "index.html").write_text(stale_home, encoding="utf-8")

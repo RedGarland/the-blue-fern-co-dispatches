@@ -195,17 +195,57 @@ def test_allowed_path_validation_rejects_unexpected_pages_diff(release_repos: tu
     assert "notes.txt" in report["errors"][0]
 
 
-def test_allowed_path_validation_can_permit_root_index_refresh_for_shared_homepage(release_repos: tuple[Path, Path]) -> None:
+def test_allowed_path_validation_can_permit_exact_shared_release_surfaces(release_repos: tuple[Path, Path]) -> None:
     _source, pages = release_repos
 
     errors = generator.validate_pages_repo_copy_scope(
         pages,
         ("food-line",),
-        changed_paths=["food-line/index.html", "index.html"],
-        allow_root_index_change=True,
+        changed_paths=["food-line/index.html", "index.html", "dispatches/index.html"],
+        allowed_shared_surface_changes=["index.html", "dispatches/index.html"],
     )
 
     assert errors == []
+
+
+def test_allowed_path_validation_rejects_unsanctioned_dispatch_directory_change(release_repos: tuple[Path, Path]) -> None:
+    _source, pages = release_repos
+
+    errors = generator.validate_pages_repo_copy_scope(
+        pages,
+        ("food-line",),
+        changed_paths=["food-line/index.html", "dispatches/index.html"],
+        allowed_shared_surface_changes=[],
+    )
+
+    assert any("dispatches/index.html" in error for error in errors)
+
+
+def test_allowed_path_validation_rejects_other_dispatch_and_root_paths(release_repos: tuple[Path, Path]) -> None:
+    _source, pages = release_repos
+
+    errors = generator.validate_pages_repo_copy_scope(
+        pages,
+        ("care-line",),
+        changed_paths=["care-line/index.html", "dispatches/anything-else.html", "notes.html"],
+        allowed_shared_surface_changes=["dispatches/index.html"],
+    )
+
+    assert any("dispatches/anything-else.html" in error for error in errors)
+    assert any("notes.html" in error for error in errors)
+
+
+def test_allowed_path_validation_rejects_invalid_shared_surface_authorization(release_repos: tuple[Path, Path]) -> None:
+    _source, pages = release_repos
+
+    errors = generator.validate_pages_repo_copy_scope(
+        pages,
+        ("gaza",),
+        changed_paths=["gaza/index.html"],
+        allowed_shared_surface_changes=["dispatches/anything-else.html"],
+    )
+
+    assert any("invalid shared release-surface authorization" in error for error in errors)
 
 
 def test_missing_source_artifact_rejection(release_repos: tuple[Path, Path]) -> None:

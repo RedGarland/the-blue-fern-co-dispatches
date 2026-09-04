@@ -17,7 +17,7 @@ SECTION_RE = re.compile(
     re.DOTALL,
 )
 DATE_DIR_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-INVALID_RELEASE_MARKERS = {"failed", "not_published", "not_synced", "rejected", "suppressed", "unpublished", "withheld", "withdrawn"}
+TERMINAL_RELEASE_MARKERS = {"failed", "not_published", "rejected", "suppressed", "unpublished", "withheld", "withdrawn"}
 INVALID_RELEASE_BOOLEAN_FIELDS = ("failed", "suppressed", "unpublished", "withheld", "withdrawn")
 PRODUCT_META: dict[str, dict[str, str]] = {
     "gaza": {"badge": "GAZA", "badge_class": "gaza", "publication_name": "Dispatches From Gaza"},
@@ -213,18 +213,27 @@ def _release_is_eligible(*, public_root: Path, verify_root: Path | None, slug: s
     release_status, pages_status = _published_status(manifest)
     status_values = [release_status, pages_status, str(manifest.get("release_status") or ""), str(manifest.get("status") or ""), str(manifest.get("disposition") or "")]
     normalized_statuses = {re.sub(r"[^a-z0-9]+", "_", value.strip().lower()).strip("_") for value in status_values if value.strip()}
-    has_negative_status = any(marker == status or marker in status.split("_") or marker in status for status in normalized_statuses for marker in INVALID_RELEASE_MARKERS) or any(manifest.get(field) is True for field in INVALID_RELEASE_BOOLEAN_FIELDS)
+    has_terminal_status = any(
+        marker == status or marker in status.split("_") or marker in status
+        for status in normalized_statuses
+        for marker in TERMINAL_RELEASE_MARKERS
+    ) or any(manifest.get(field) is True for field in INVALID_RELEASE_BOOLEAN_FIELDS)
     has_positive_status = release_status == "published" or pages_status == "synced"
     live_verified = False
-    if verify_root is not None:
+    verified_from_public_inventory = verify_root is not None and verify_root.resolve() == public_root.resolve()
+    if verified_from_public_inventory:
         live_verified = (verify_root / slug / "editions" / edition_date / "index.html").exists()
     archive_listed = _public_archive_mentions(public_root, slug, edition_date)
     legacy_ok = not release_status and not pages_status and _dispatch_listing_mentions(public_root, slug, edition_date)
-    if has_negative_status:
+    transitional_pages_status = pages_status == "not_synced"
+    transitional_live_release = transitional_pages_status and verified_from_public_inventory and live_verified and archive_listed
+    if has_terminal_status:
         return False, release_status, pages_status, live_verified
     if not archive_listed:
         return False, release_status, pages_status, live_verified
-    if not (has_positive_status or live_verified or legacy_ok):
+    if transitional_pages_status and not transitional_live_release:
+        return False, release_status, pages_status, live_verified
+    if not (has_positive_status or transitional_live_release or live_verified or legacy_ok):
         return False, release_status, pages_status, live_verified
     return True, release_status, pages_status, live_verified
 
@@ -385,3 +394,18 @@ def render_sitewide_homepage_from_template(template_html: str, release: PublicRe
 
 def render_dispatch_directory_from_template(template_html: str, release: PublicRelease) -> str:
     return _replace_active_dispatch_card(template_html, release)
+
+
+def render_dispatch_directory_from_releases(template_html: str, latest: dict[str, PublicRelease]) -> str:
+    missing = [slug for slug in ACTIVE_PRODUCTS if slug not in latest]
+    if missing:
+        raise ValueError(f"No eligible public release found for active dispatches: {', '.join(missing)}")
+    refreshed = template_html
+    for slug in ACTIVE_PRODUCTS:
+        refreshed = render_dispatch_directory_from_template(refreshed, latest[slug])
+    return re.sub(
+        r'(<a href="/methodology/">How we work</a>)\s+.*?\s+(<a href="/about/">About this project</a>)',
+        r'\1 &middot; \2',
+        refreshed,
+        count=1,
+    )

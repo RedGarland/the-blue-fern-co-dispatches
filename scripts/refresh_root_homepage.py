@@ -6,8 +6,8 @@ from pathlib import Path
 
 from bluefern_dispatches.root_homepage import (
     discover_public_releases,
+    render_dispatch_directory_from_releases,
     render_homepage_from_template,
-    render_dispatch_directory_from_template,
     render_sitewide_homepage_from_template,
     select_effective_latest,
     select_homepage_cards,
@@ -56,7 +56,7 @@ def main(argv: list[str] | None = None) -> int:
         directory_output_path = Path(args.directory_output_html)
         directory_output_path.parent.mkdir(parents=True, exist_ok=True)
         directory_output_path.write_text(
-            render_dispatch_directory_from_template(directory_template, latest[args.target_dispatch]),
+            render_dispatch_directory_from_releases(directory_template, latest),
             encoding="utf-8",
         )
 

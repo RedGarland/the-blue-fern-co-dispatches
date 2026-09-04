@@ -18,6 +18,7 @@ from bluefern_dispatches.food_line_retrospective import (
     LEGACY_V1_APPROVAL_SCHEMA,
     LEGACY_V2_APPROVAL_SCHEMA,
     LEGACY_V3_APPROVAL_SCHEMA,
+    LEGACY_V4_APPROVAL_SCHEMA,
     FoodLineRetrospectiveError,
     _git_porcelain_lines,
     _apply_overlay,
@@ -30,6 +31,7 @@ from bluefern_dispatches.food_line_retrospective import (
     legacy_v1_approval_path_for,
     legacy_v2_approval_path_for,
     legacy_v3_approval_path_for,
+    legacy_v4_approval_path_for,
     load_committed_json,
     load_retrospective_plan,
     load_retrospective_verification_bundle,
@@ -126,6 +128,22 @@ REAL_LEGACY_APPROVALS = {
                 "sha256": "ceb87887242d8dba1034ea02a3490e92e70f598002b4ade4ff318b6a85647ce2",
                 "length": 5953,
                 "blob": "12e63430b44de859db9c9c12c274205f7a8f35ae",
+            },
+        },
+    },
+    "v4": {
+        "schema": LEGACY_V4_APPROVAL_SCHEMA,
+        "path_for": legacy_v4_approval_path_for,
+        "expectations": {
+            "food-line-august-2026-retrospective-01": {
+                "sha256": "fce3ba01f0e006882d9193015a009e57b1d9c3ca327318cb6ec3139b4fd1ba84",
+                "length": 10356,
+                "blob": "f50558250cb71def35a478d2dd9a95974a744926",
+            },
+            "food-line-august-2026-retrospective-02": {
+                "sha256": "4ac25b417fd077ae0b9420aca0667961b15065f897229d17933b34f132203472",
+                "length": 5953,
+                "blob": "87a8d2a42d2c59f568db79fc7657af8c1c03ccb2",
             },
         },
     },
@@ -390,11 +408,13 @@ def _fixture(tmp_path: Path) -> dict:
     legacy_paths: list[str] = []
     legacy_v2_paths: list[str] = []
     legacy_v3_paths: list[str] = []
+    legacy_v4_paths: list[str] = []
     for batch in (1, 2):
         batch_id = f"food-line-august-2026-retrospective-{batch:02d}"
         legacy_path = legacy_v1_approval_path_for(batch_id)
         legacy_v2_path = legacy_v2_approval_path_for(batch_id)
         legacy_v3_path = legacy_v3_approval_path_for(batch_id)
+        legacy_v4_path = legacy_v4_approval_path_for(batch_id)
         _write_json(
             root / legacy_path,
             {
@@ -419,10 +439,19 @@ def _fixture(tmp_path: Path) -> dict:
                 "historical_fixture": True,
             },
         )
+        _write_json(
+            root / legacy_v4_path,
+            {
+                "schema_version": LEGACY_V4_APPROVAL_SCHEMA,
+                "batch_id": batch_id,
+                "historical_fixture": True,
+            },
+        )
         legacy_paths.append(legacy_path)
         legacy_v2_paths.append(legacy_v2_path)
         legacy_v3_paths.append(legacy_v3_path)
-    historical_paths = legacy_paths + legacy_v2_paths + legacy_v3_paths
+        legacy_v4_paths.append(legacy_v4_path)
+    historical_paths = legacy_paths + legacy_v2_paths + legacy_v3_paths + legacy_v4_paths
     legacy_commit = _commit(root, "preserve legacy retrospective approvals", *historical_paths)
     legacy_bytes = {path: (root / path).read_bytes() for path in historical_paths}
     legacy_times = {path: (root / path).stat().st_mtime_ns for path in historical_paths}
@@ -473,6 +502,7 @@ def _fixture(tmp_path: Path) -> dict:
         "legacy_paths": legacy_paths,
         "legacy_v2_paths": legacy_v2_paths,
         "legacy_v3_paths": legacy_v3_paths,
+        "legacy_v4_paths": legacy_v4_paths,
         "legacy_bytes": legacy_bytes,
         "legacy_times": legacy_times,
         "approval_commit": approval_commit,
@@ -560,13 +590,13 @@ def test_nine_clean_records_two_batches_and_normal_merge_plan(retrospective_case
     assert all(row["status"] == "validated_plan" and row["persistent_mutation"] is False for row in plans)
 
 
-def test_v1_v2_v3_and_v4_coexist_without_mutating_legacy_bytes(retrospective_case: dict) -> None:
+def test_v1_v2_v3_v4_and_v5_coexist_without_mutating_legacy_bytes(retrospective_case: dict) -> None:
     case = retrospective_case
     assert case["approval_paths"] == [
-        "approvals/food-line/food-line-august-2026-retrospective-01-approval-v4.json",
-        "approvals/food-line/food-line-august-2026-retrospective-02-approval-v4.json",
+        "approvals/food-line/food-line-august-2026-retrospective-01-approval-v5.json",
+        "approvals/food-line/food-line-august-2026-retrospective-02-approval-v5.json",
     ]
-    for path in case["legacy_paths"] + case["legacy_v2_paths"] + case["legacy_v3_paths"]:
+    for path in case["legacy_paths"] + case["legacy_v2_paths"] + case["legacy_v3_paths"] + case["legacy_v4_paths"]:
         target = case["root"] / path
         assert target.read_bytes() == case["legacy_bytes"][path]
         assert target.stat().st_mtime_ns == case["legacy_times"][path]
@@ -575,12 +605,12 @@ def test_v1_v2_v3_and_v4_coexist_without_mutating_legacy_bytes(retrospective_cas
     for path in case["approval_paths"]:
         target = case["root"] / path
         approval = json.loads(target.read_text(encoding="utf-8"))
-        assert approval["schema_version"] == "food_line_retrospective_approval_v4"
+        assert approval["schema_version"] == "food_line_retrospective_approval_v5"
         assert approval["pages_head"] == _git(case["pages"], "rev-parse", "HEAD")
         assert target.read_bytes() == case["approval_bytes"][path]
         assert target.stat().st_mtime_ns == case["approval_times"][path]
     approval_names = sorted(path.as_posix() for path in (case["root"] / APPROVAL_PREFIX).glob("*.json"))
-    assert len(approval_names) == 8
+    assert len(approval_names) == 10
 
 
 def test_v3_schemas_preserve_v2_material_contract_fields() -> None:
@@ -605,6 +635,18 @@ def test_v4_schemas_preserve_v3_material_contract_fields() -> None:
         assert v4["required"] == v3["required"]
         assert set(v4["properties"]) == set(v3["properties"])
         assert v4["properties"]["schema_version"]["const"] == stem.replace("-", "_") + "_v4"
+
+
+def test_v5_schemas_preserve_v4_material_contract_fields() -> None:
+    root = Path(__file__).resolve().parents[1]
+    for stem in ("food-line-retrospective-approval-request", "food-line-retrospective-approval"):
+        v4 = json.loads((root / "docs" / "schemas" / f"{stem}-v4.schema.json").read_text(encoding="utf-8"))
+        v5 = json.loads((root / "docs" / "schemas" / f"{stem}-v5.schema.json").read_text(encoding="utf-8"))
+        assert v5["$schema"] == "https://json-schema.org/draft/2020-12/schema"
+        assert v5["type"] == "object" and v5["additionalProperties"] is False
+        assert v5["required"] == v4["required"]
+        assert set(v5["properties"]) == set(v4["properties"])
+        assert v5["properties"]["schema_version"]["const"] == stem.replace("-", "_") + "_v5"
 
 
 def test_v1_approval_is_obsolete_and_cannot_be_planned(tmp_path: Path, retrospective_case: dict) -> None:
@@ -644,7 +686,16 @@ def test_v3_approval_is_obsolete_and_cannot_be_planned(retrospective_case: dict)
         )
 
 
-def test_conflicting_v4_replay_and_alternate_paths_fail_closed(tmp_path: Path, retrospective_case: dict) -> None:
+def test_v4_approval_is_obsolete_and_cannot_be_planned(retrospective_case: dict) -> None:
+    case = retrospective_case
+    with pytest.raises(FoodLineRetrospectiveError, match="obsolete Food Line retrospective V4 approval; renewed V5 approval is required"):
+        load_retrospective_plan(
+            case["root"], case["pages"], approval_commit=case["legacy_commit"],
+            approval_path=case["legacy_v4_paths"][0], publication_timestamp="2026-09-01T12:00:00Z",
+        )
+
+
+def test_conflicting_v5_replay_and_alternate_paths_fail_closed(tmp_path: Path, retrospective_case: dict) -> None:
     case = retrospective_case
     conflicting = json.loads((case["requests"] / "batch-1.json").read_text(encoding="utf-8"))
     conflicting["source_base_commit"] = case["merged_head"]
@@ -655,19 +706,19 @@ def test_conflicting_v4_replay_and_alternate_paths_fail_closed(tmp_path: Path, r
         create_retrospective_approval(case["root"], conflict_path)
 
     source = _clone(case["root"], tmp_path / "alternate-path-source")
-    alternate = "approvals/food-line/alternate-approval-v4.json"
+    alternate = "approvals/food-line/alternate-approval-v5.json"
     (source / alternate).parent.mkdir(parents=True, exist_ok=True)
     (source / alternate).write_bytes((source / case["approval_paths"][0]).read_bytes())
     alternate_commit = _commit(source, "attempt alternate approval path", alternate)
     _git(source, "commit", "--allow-empty", "-m", "merge alternate approval")
-    with pytest.raises(FoodLineRetrospectiveError, match="owner-derived V4 approval path"):
+    with pytest.raises(FoodLineRetrospectiveError, match="owner-derived V5 approval path"):
         load_retrospective_plan(
             source, case["pages"], approval_commit=alternate_commit, approval_path=alternate,
             publication_timestamp="2026-09-01T12:00:00Z",
         )
 
 
-def test_mixed_legacy_v4_or_unrelated_approval_commit_fails_closed(tmp_path: Path, retrospective_case: dict) -> None:
+def test_mixed_legacy_v5_or_unrelated_approval_commit_fails_closed(tmp_path: Path, retrospective_case: dict) -> None:
     case = retrospective_case
     mixed = _clone(case["root"], tmp_path / "mixed-approval-source")
     (mixed / case["legacy_paths"][0]).write_text('{"changed":true}\n', encoding="utf-8")
@@ -676,7 +727,7 @@ def test_mixed_legacy_v4_or_unrelated_approval_commit_fails_closed(tmp_path: Pat
     _write_json(mixed / case["approval_paths"][0], v4)
     mixed_commit = _commit(mixed, "attempt mixed V1 and V4 mutation", case["legacy_paths"][0], case["approval_paths"][0])
     _git(mixed, "commit", "--allow-empty", "-m", "merge mixed approval")
-    with pytest.raises(FoodLineRetrospectiveError, match="V4-approval-only"):
+    with pytest.raises(FoodLineRetrospectiveError, match="V5-approval-only"):
         load_retrospective_plan(
             mixed, case["pages"], approval_commit=mixed_commit, approval_path=case["approval_paths"][0],
             publication_timestamp="2026-09-01T12:00:00Z",
@@ -694,7 +745,7 @@ def test_mixed_legacy_v4_or_unrelated_approval_commit_fails_closed(tmp_path: Pat
         case["approval_paths"][0],
     )
     _git(mixed_v2, "commit", "--allow-empty", "-m", "merge mixed V2 V4 approval")
-    with pytest.raises(FoodLineRetrospectiveError, match="V4-approval-only"):
+    with pytest.raises(FoodLineRetrospectiveError, match="V5-approval-only"):
         load_retrospective_plan(
             mixed_v2, case["pages"], approval_commit=mixed_v2_commit, approval_path=case["approval_paths"][0],
             publication_timestamp="2026-09-01T12:00:00Z",
@@ -703,17 +754,17 @@ def test_mixed_legacy_v4_or_unrelated_approval_commit_fails_closed(tmp_path: Pat
     mixed_all = _clone(case["root"], tmp_path / "mixed-all-versions-source")
     for path in (
         case["legacy_paths"][0], case["legacy_v2_paths"][0],
-        case["legacy_v3_paths"][0], case["approval_paths"][0],
+        case["legacy_v3_paths"][0], case["legacy_v4_paths"][0], case["approval_paths"][0],
     ):
         (mixed_all / path).write_bytes((mixed_all / path).read_bytes() + b" ")
     mixed_all_commit = _commit(
         mixed_all,
         "attempt mixed V1 V2 V3 and V4 mutation",
         case["legacy_paths"][0], case["legacy_v2_paths"][0],
-        case["legacy_v3_paths"][0], case["approval_paths"][0],
+        case["legacy_v3_paths"][0], case["legacy_v4_paths"][0], case["approval_paths"][0],
     )
     _git(mixed_all, "commit", "--allow-empty", "-m", "merge all-version approval")
-    with pytest.raises(FoodLineRetrospectiveError, match="V4-approval-only"):
+    with pytest.raises(FoodLineRetrospectiveError, match="V5-approval-only"):
         load_retrospective_plan(
             mixed_all, case["pages"], approval_commit=mixed_all_commit, approval_path=case["approval_paths"][0],
             publication_timestamp="2026-09-01T12:00:00Z",
@@ -726,7 +777,7 @@ def test_mixed_legacy_v4_or_unrelated_approval_commit_fails_closed(tmp_path: Pat
     _write_json(unrelated / case["approval_paths"][0], altered)
     unrelated_commit = _commit(unrelated, "attempt approval plus source", "README.md", case["approval_paths"][0])
     _git(unrelated, "commit", "--allow-empty", "-m", "merge unsafe approval")
-    with pytest.raises(FoodLineRetrospectiveError, match="V4-approval-only"):
+    with pytest.raises(FoodLineRetrospectiveError, match="V5-approval-only"):
         load_retrospective_plan(
             unrelated, case["pages"], approval_commit=unrelated_commit, approval_path=case["approval_paths"][0],
             publication_timestamp="2026-09-01T12:00:00Z",
@@ -798,12 +849,12 @@ def _assert_real_approval_lifecycle(root: Path, *, verify_git_blobs: bool = Fals
     alternates = {
         path.relative_to(root).as_posix()
         for batch_id in REAL_RETROSPECTIVE_BATCHES
-        for path in approval_dir.glob(f"{batch_id}*-approval-v4.json")
+        for path in approval_dir.glob(f"{batch_id}*-approval-v5.json")
     } - expected_paths
-    assert not alternates, f"alternate/conflicting V4 approval paths: {sorted(alternates)}"
+    assert not alternates, f"alternate/conflicting V5 approval paths: {sorted(alternates)}"
 
     present = {path for path in expected_paths if (root / path).exists()}
-    assert not present or present == expected_paths, "partial V4 approval authority is invalid"
+    assert not present or present == expected_paths, "partial V5 approval authority is invalid"
     if not present:
         return "pre_approval"
 
@@ -846,7 +897,7 @@ def _copy_real_legacy_approvals(source: Path, target: Path) -> None:
             destination.write_bytes((source / path).read_bytes())
 
 
-def _valid_real_v4_approval(batch_id: str) -> dict:
+def _valid_real_v5_approval(batch_id: str) -> dict:
     expected = REAL_RETROSPECTIVE_BATCHES[batch_id]
     approval = {
         "schema_version": APPROVAL_SCHEMA,
@@ -871,31 +922,31 @@ def _valid_real_v4_approval(batch_id: str) -> dict:
     return approval
 
 
-def _write_real_v4_approvals(root: Path) -> None:
+def _write_real_v5_approvals(root: Path) -> None:
     for batch_id in REAL_RETROSPECTIVE_BATCHES:
-        _write_json(root / approval_path_for(batch_id), _valid_real_v4_approval(batch_id))
+        _write_json(root / approval_path_for(batch_id), _valid_real_v5_approval(batch_id))
 
 
-def test_real_legacy_approvals_are_immutable_and_v4_lifecycle_is_valid() -> None:
+def test_real_legacy_approvals_are_immutable_and_v5_lifecycle_is_valid() -> None:
     root = Path(__file__).resolve().parents[1]
     assert _assert_real_approval_lifecycle(root, verify_git_blobs=True) in {"pre_approval", "approved"}
 
 
-def test_real_v4_lifecycle_accepts_preapproval_and_complete_authority(tmp_path: Path) -> None:
+def test_real_v5_lifecycle_accepts_preapproval_and_complete_authority(tmp_path: Path) -> None:
     root = Path(__file__).resolve().parents[1]
     _copy_real_legacy_approvals(root, tmp_path)
     assert _assert_real_approval_lifecycle(tmp_path) == "pre_approval"
-    _write_real_v4_approvals(tmp_path)
+    _write_real_v5_approvals(tmp_path)
     assert _assert_real_approval_lifecycle(tmp_path) == "approved"
 
 
 @pytest.mark.parametrize("missing_batch", tuple(REAL_RETROSPECTIVE_BATCHES))
-def test_real_v4_lifecycle_rejects_partial_authority(tmp_path: Path, missing_batch: str) -> None:
+def test_real_v5_lifecycle_rejects_partial_authority(tmp_path: Path, missing_batch: str) -> None:
     root = Path(__file__).resolve().parents[1]
     _copy_real_legacy_approvals(root, tmp_path)
-    _write_real_v4_approvals(tmp_path)
+    _write_real_v5_approvals(tmp_path)
     (tmp_path / approval_path_for(missing_batch)).unlink()
-    with pytest.raises(AssertionError, match="partial V4"):
+    with pytest.raises(AssertionError, match="partial V5"):
         _assert_real_approval_lifecycle(tmp_path)
 
 
@@ -910,12 +961,12 @@ def test_real_v4_lifecycle_rejects_partial_authority(tmp_path: Path, missing_bat
         ("daily_collection_authorized", True),
     ),
 )
-def test_real_v4_lifecycle_rejects_invalid_sanctioned_artifact(
+def test_real_v5_lifecycle_rejects_invalid_sanctioned_artifact(
     tmp_path: Path, field: str, value: object
 ) -> None:
     root = Path(__file__).resolve().parents[1]
     _copy_real_legacy_approvals(root, tmp_path)
-    _write_real_v4_approvals(tmp_path)
+    _write_real_v5_approvals(tmp_path)
     path = tmp_path / approval_path_for("food-line-august-2026-retrospective-01")
     approval = json.loads(path.read_text(encoding="utf-8"))
     approval[field] = value
@@ -928,7 +979,7 @@ def test_real_v4_lifecycle_rejects_invalid_sanctioned_artifact(
 
 
 @pytest.mark.parametrize("legacy_version", tuple(REAL_LEGACY_APPROVALS))
-def test_real_v4_lifecycle_rejects_modified_legacy_approval(tmp_path: Path, legacy_version: str) -> None:
+def test_real_v5_lifecycle_rejects_modified_legacy_approval(tmp_path: Path, legacy_version: str) -> None:
     root = Path(__file__).resolve().parents[1]
     _copy_real_legacy_approvals(root, tmp_path)
     batch_id = "food-line-august-2026-retrospective-01"
@@ -938,13 +989,13 @@ def test_real_v4_lifecycle_rejects_modified_legacy_approval(tmp_path: Path, lega
         _assert_real_approval_lifecycle(tmp_path)
 
 
-def test_real_v4_lifecycle_rejects_alternate_conflicting_path(tmp_path: Path) -> None:
+def test_real_v5_lifecycle_rejects_alternate_conflicting_path(tmp_path: Path) -> None:
     root = Path(__file__).resolve().parents[1]
     _copy_real_legacy_approvals(root, tmp_path)
     alternate = tmp_path / APPROVAL_PREFIX / (
-        "food-line-august-2026-retrospective-01-alternate-approval-v4.json"
+        "food-line-august-2026-retrospective-01-alternate-approval-v5.json"
     )
-    _write_json(alternate, _valid_real_v4_approval("food-line-august-2026-retrospective-01"))
+    _write_json(alternate, _valid_real_v5_approval("food-line-august-2026-retrospective-01"))
     with pytest.raises(AssertionError, match="alternate/conflicting"):
         _assert_real_approval_lifecycle(tmp_path)
 
@@ -1316,6 +1367,74 @@ def test_production_shaped_retrospective_preserves_pages_history(
         verify_generated_retrospective_set(source, pages, verification_bundles)
     rendered.write_bytes(original)
 
+
+def _retrospective_transaction_hashes(root: Path) -> dict[str, str]:
+    paths = [
+        "output/site/food-line/index.html",
+        "output/site/food-line/archive.html",
+        "output/site/food-line/rss.xml",
+    ]
+    for edition in ("2026-08-30", "2026-08-31"):
+        paths.extend(
+            f"output/site/food-line/editions/{edition}/{name}"
+            for name in (
+                "index.html", "source_table.html", "claim_ledger.html",
+                "sources_manifest.json", "curation_manifest.json", "edition_manifest.json",
+            )
+        )
+        paths.append(f"data/dispatches/food-line/review/releases/{edition}.json")
+    return {path: hashlib.sha256((root / path).read_bytes()).hexdigest() for path in paths}
+
+
+def _run_reproducible_fixture(case: dict, root: Path, pages: Path, timestamp: str) -> dict[str, str]:
+    result = run_atomic_retrospective_batches(
+        source_root=root,
+        pages_root=pages,
+        source_branch="protected",
+        pages_branch="gh-pages",
+        approval_commits=[case["approval_commit"], case["approval_commit"]],
+        approval_paths=case["approval_paths"],
+        publication_timestamp=timestamp,
+        commit_pages=False,
+        push_pages=False,
+        live_check=False,
+        record_publication=False,
+    )
+    assert result["pages_result"]["commit_status"] == "dry-run"
+    return _retrospective_transaction_hashes(root)
+
+
+def test_retrospective_transaction_is_byte_reproducible_from_publication_timestamp(
+    tmp_path: Path, retrospective_case: dict, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    case = retrospective_case
+    roots = [_clone(case["root"], tmp_path / f"source-{index}") for index in range(4)]
+    pages = [_clone(case["pages"], tmp_path / f"pages-{index}") for index in range(4)]
+
+    monkeypatch.setattr("scripts.run_food_line_dispatch.utc_now", lambda: "2030-01-01T00:00:00Z")
+    first = _run_reproducible_fixture(case, roots[0], pages[0], "2026-09-01T12:00:00Z")
+    monkeypatch.setattr("scripts.run_food_line_dispatch.utc_now", lambda: "2040-01-01T00:00:00Z")
+    second = _run_reproducible_fixture(case, roots[1], pages[1], "2026-09-01T12:00:00+00:00")
+
+    assert first == second
+    for edition in ("2026-08-30", "2026-08-31"):
+        manifest_path = f"output/site/food-line/editions/{edition}/edition_manifest.json"
+        manifest = json.loads((roots[0] / manifest_path).read_text(encoding="utf-8"))
+        assert manifest["generated_at"] == "2026-09-01T12:00:00Z"
+        assert manifest["published_at"] == "2026-09-01T12:00:00Z"
+
+    monkeypatch.setattr("scripts.run_food_line_dispatch.utc_now", lambda: "2050-01-01T00:00:00Z")
+    changed = _run_reproducible_fixture(case, roots[2], pages[2], "2026-09-01T13:00:00Z")
+    monkeypatch.setattr("scripts.run_food_line_dispatch.utc_now", lambda: "2060-01-01T00:00:00Z")
+    changed_replay = _run_reproducible_fixture(case, roots[3], pages[3], "2026-09-01T13:00:00+00:00")
+
+    assert changed == changed_replay
+    assert changed != first
+    for edition in ("2026-08-30", "2026-08-31"):
+        manifest_path = f"output/site/food-line/editions/{edition}/edition_manifest.json"
+        manifest = json.loads((roots[2] / manifest_path).read_text(encoding="utf-8"))
+        assert manifest["generated_at"] == "2026-09-01T13:00:00Z"
+        assert manifest["published_at"] == "2026-09-01T13:00:00Z"
 
 def test_retrospective_history_guard_reports_archive_and_rss_drops(tmp_path: Path) -> None:
     pages = tmp_path / "pages"

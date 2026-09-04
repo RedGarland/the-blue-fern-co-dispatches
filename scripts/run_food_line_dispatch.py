@@ -7360,7 +7360,10 @@ def _run_food_line_retrospective(
         "dispatch_slug": DISPATCH_SLUG,
         "dispatch_name": DISPATCH_NAME,
         "edition_date": date,
-        "generated_at": utc_now(),
+        # Historical retrospective manifests are content-addressed release
+        # material. The sanctioned transaction timestamp is deterministic;
+        # sampling processor wall time here would make identical releases drift.
+        "generated_at": bundle.publication_timestamp,
         "published_at": bundle.publication_timestamp,
         "generator_source_commit": source_commit,
         "generation_mode": "approved_migrated_event_retrospective",

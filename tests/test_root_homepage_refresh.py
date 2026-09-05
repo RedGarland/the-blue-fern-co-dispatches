@@ -9,6 +9,7 @@ from bluefern_dispatches.root_homepage import (
     discover_public_releases,
     render_dispatch_directory_from_releases,
     render_homepage_from_template,
+    render_sitewide_homepage_from_template,
     select_effective_latest,
     select_homepage_cards,
 )
@@ -46,6 +47,8 @@ SHARED_ROOT_TEMPLATE = DIRECTORY_TEMPLATE.replace(
     '<p class="edition-meta">1 public source</p></article></div></section>',
     1,
 )
+
+MOJIBAKE_SEPARATOR = "\u00c3\u201a\u00c2\u00b7"
 
 
 def _write_release(
@@ -271,6 +274,37 @@ def test_dispatch_directory_refreshes_all_active_products_and_is_byte_idempotent
     assert render_dispatch_directory_from_releases(rendered, latest) == rendered
     for link in re.findall(r'<a class="button" href="([^"]+)">Read latest</a>', rendered):
         assert (public_root / link.strip("/") / "index.html").exists()
+
+
+def test_shared_root_render_normalizes_only_footer_separator_and_is_byte_idempotent(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_current_directory_inventory(public_root)
+    latest = select_effective_latest(
+        discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 4), homepage_html=SHARED_ROOT_TEMPLATE)
+    )
+    template = SHARED_ROOT_TEMPLATE.replace("</main>", f'<p id="unrelated">Keep {MOJIBAKE_SEPARATOR} unchanged.</p></main>')
+
+    rendered = render_sitewide_homepage_from_template(template, latest["gaza"])
+
+    assert 'How we work</a> &middot; <a href="/about/">About this project' in rendered
+    assert f'Keep {MOJIBAKE_SEPARATOR} unchanged.' in rendered
+    assert render_sitewide_homepage_from_template(rendered, latest["gaza"]) == rendered
+
+
+def test_dispatch_directory_render_normalizes_footer_separator_and_preserves_correct_footer(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_current_directory_inventory(public_root)
+    latest = select_effective_latest(
+        discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 4), homepage_html=SHARED_ROOT_TEMPLATE)
+    )
+
+    rendered = render_dispatch_directory_from_releases(DIRECTORY_TEMPLATE, latest)
+    already_correct = rendered.replace("</main>", f'<p id="unrelated-directory">Keep {MOJIBAKE_SEPARATOR} unchanged.</p></main>')
+
+    assert 'How we work</a> &middot; <a href="/about/">About this project' in rendered
+    assert render_dispatch_directory_from_releases(rendered, latest) == rendered
+    assert f'Keep {MOJIBAKE_SEPARATOR} unchanged.' in already_correct
+    assert render_dispatch_directory_from_releases(already_correct, latest) == already_correct
 
 
 def test_shared_release_refresh_reports_exact_changed_surfaces(tmp_path):

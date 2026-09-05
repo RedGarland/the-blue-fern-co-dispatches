@@ -1,0 +1,19 @@
+[
+  {
+    "story_id": "care-line-story-001",
+    "title": "Methodist Hospitals Gary outage update",
+    "summary": "Methodist Hospitals said the Midlake campus was without power and closed, MPG appointments were rescheduled, the Gary MPG office was closed, and oxygen access shifted to Northlake.",
+    "category": "Hospital / Clinic Operations Signals",
+    "score": 100,
+    "scoring_reasons": [
+      "Methodist Hospitals said the Midlake campus was without power and closed, MPG appointments were rescheduled, the Gary MPG office was closed, and oxygen access shifted to Northlake."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "care-line-historical-backfill-2026-08-20-gary-power-outage"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  }
+]

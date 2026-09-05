@@ -1,0 +1,19 @@
+[
+  {
+    "source_id": "care-line-historical-backfill-2026-08-19-santa-paula-hospital",
+    "title": "Santa Paula Hospital will close with no plans for a replacement",
+    "url": "https://www.kclu.org/local-news/2026-08-19/santa-paula-hospital-will-close-with-no-plans-for-a-replacement",
+    "publisher": "KCLU",
+    "published_at": "2026-08-19",
+    "retrieved_at": "2026-09-05T20:52:38.870572+00:00",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "care-line-story-001"
+    ],
+    "claim_ids": [
+      "care-line-claim-001"
+    ],
+    "dispatch_slug": "care-line",
+    "edition_date": "2026-08-19"
+  }
+]

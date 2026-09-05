@@ -1,0 +1,36 @@
+[
+  {
+    "source_id": "care_line_candidate_20260809_damariscotta",
+    "title": "Despite community pushback, MaineHealth announces closure of Damariscotta birthing center",
+    "url": "https://mainemorningstar.com/2026/08/06/despite-community-pushback-mainehealth-announces-closure-of-damariscotta-birthing-center/",
+    "publisher": "Nonprofit Policy Reporting (Maine)",
+    "published_at": "2026-08-06",
+    "retrieved_at": "2026-08-10T00:15:00Z",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "care-line-story-001"
+    ],
+    "claim_ids": [
+      "care-line-claim-001"
+    ],
+    "dispatch_slug": "care-line",
+    "edition_date": "2026-08-09"
+  },
+  {
+    "source_id": "care_line_candidate_20260809_massachusetts_behavioral",
+    "title": "Massachusetts behavioral health provider to close after 40+ years",
+    "url": "https://www.beckersbehavioralhealth.com/behavioral-health-news/massachusetts-behavioral-health-provider-to-close-after-40-years/",
+    "publisher": "Becker's Behavioral Health",
+    "published_at": "2026-08-07",
+    "retrieved_at": "2026-08-10T00:15:00Z",
+    "archive_path": null,
+    "used_in_story_ids": [
+      "care-line-story-002"
+    ],
+    "claim_ids": [
+      "care-line-claim-002"
+    ],
+    "dispatch_slug": "care-line",
+    "edition_date": "2026-08-09"
+  }
+]

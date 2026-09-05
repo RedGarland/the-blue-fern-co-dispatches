@@ -1,0 +1,19 @@
+[
+  {
+    "story_id": "care-line-story-001",
+    "title": "Santa Paula Hospital will close with no plans for a replacement",
+    "summary": "Santa Paula Hospital won't meet new seismic safety standards required by 2030, and Ventura County is currently planning to close it. The county is trying to figure out what it will do to meet the Santa Clara River Valley's future health care needs.",
+    "category": "Hospital / Clinic Operations Signals",
+    "score": 100,
+    "scoring_reasons": [
+      "Santa Paula Hospital won't meet new seismic safety standards required by 2030, and Ventura County is currently planning to close it. The county is trying to figure out what it will do to meet the Santa Clara River Valley's future health care needs."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "care-line-historical-backfill-2026-08-19-santa-paula-hospital"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  }
+]

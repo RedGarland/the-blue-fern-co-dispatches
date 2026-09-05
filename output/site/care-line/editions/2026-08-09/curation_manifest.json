@@ -1,0 +1,36 @@
+[
+  {
+    "story_id": "care-line-story-001",
+    "title": "Despite community pushback, MaineHealth announces closure of Damariscotta birthing center",
+    "summary": "MaineHealth is closing inpatient labor and delivery services at Lincoln Hospital in Damariscotta.",
+    "category": "Hospital / Clinic Operations Signals",
+    "score": 100,
+    "scoring_reasons": [
+      "MaineHealth announced it will close the labor and delivery service at Lincoln Hospital in Damariscotta, adding pressure to rural maternity access in mid-coast Maine."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "care_line_candidate_20260809_damariscotta"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  },
+  {
+    "story_id": "care-line-story-002",
+    "title": "Massachusetts behavioral health provider to close after 40+ years",
+    "summary": "Community Healthlink will cease operations after more than 40 years of service.",
+    "category": "Hospital / Clinic Operations Signals",
+    "score": 100,
+    "scoring_reasons": [
+      "A Massachusetts behavioral health provider says it will cease operations after more than 40 years, raising access concerns for affected patients and programs."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "care_line_candidate_20260809_massachusetts_behavioral"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  }
+]

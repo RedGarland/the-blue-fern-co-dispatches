@@ -1,0 +1,84 @@
+{
+  "dispatch_name": "The Care Line Dispatch",
+  "dispatch_slug": "care-line",
+  "public_visible": true,
+  "edition_date": "2026-08-19",
+  "generated_at": "2026-09-05T20:52:38.870572+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/care-line/editions/2026-08-19/",
+  "local_output_path": "C:\\Users\\willb\\OneDrive\\Desktop\\Python\\Dispatches From The Blue Fern Co\\_codex_care_line_aug19\\output\\site\\care-line\\editions\\2026-08-19",
+  "local_backup_path": "output\\tmp-backups-pages\\care-line\\2026-08-19",
+  "template_version": "dispatches-static-v1",
+  "source_count": 1,
+  "story_count": 1,
+  "source_manifest_path": "C:\\Users\\willb\\OneDrive\\Desktop\\Python\\Dispatches From The Blue Fern Co\\_codex_care_line_aug19\\output\\site\\care-line\\editions\\2026-08-19\\sources_manifest.json",
+  "curation_manifest_path": "C:\\Users\\willb\\OneDrive\\Desktop\\Python\\Dispatches From The Blue Fern Co\\_codex_care_line_aug19\\output\\site\\care-line\\editions\\2026-08-19\\curation_manifest.json",
+  "free_public_artifacts": [
+    "C:\\Users\\willb\\OneDrive\\Desktop\\Python\\Dispatches From The Blue Fern Co\\_codex_care_line_aug19\\output\\site\\care-line\\editions\\2026-08-19\\index.html",
+    "C:\\Users\\willb\\OneDrive\\Desktop\\Python\\Dispatches From The Blue Fern Co\\_codex_care_line_aug19\\output\\site\\care-line\\editions\\2026-08-19\\sources_manifest.json",
+    "C:\\Users\\willb\\OneDrive\\Desktop\\Python\\Dispatches From The Blue Fern Co\\_codex_care_line_aug19\\output\\site\\care-line\\editions\\2026-08-19\\curation_manifest.json",
+    "C:\\Users\\willb\\OneDrive\\Desktop\\Python\\Dispatches From The Blue Fern Co\\_codex_care_line_aug19\\output\\site\\care-line\\editions\\2026-08-19\\source_table.html",
+    "C:\\Users\\willb\\OneDrive\\Desktop\\Python\\Dispatches From The Blue Fern Co\\_codex_care_line_aug19\\output\\site\\care-line\\editions\\2026-08-19\\claim_ledger.html"
+  ],
+  "paid_or_detail_artifacts": [],
+  "claim_count": 1,
+  "qualified_public_claim_count": 1,
+  "lead_signal_count": 1,
+  "public_signal_count": 1,
+  "public_rendered": true,
+  "stale_current_signal_count": 0,
+  "resource_only_count": 0,
+  "wrapper_candidate_count": 0,
+  "secondary_query_count": 0,
+  "qualified_but_not_public_count": 0,
+  "source_families": [
+    "KCLU"
+  ],
+  "pressure_source_count_by_family": {
+    "KCLU": 1
+  },
+  "pressure_source_count_by_state": {
+    "CA": 1
+  },
+  "exclusion_reason_counts": {},
+  "exclusion_reason_summary": "",
+  "discovery_gap_check": {
+    "source_count": 1,
+    "public_signal_count": 1,
+    "claim_count": 1,
+    "excluded_source_count": 0,
+    "excluded_count": 0,
+    "wrapper_candidate_count": 0,
+    "secondary_query_count": 0,
+    "qualified_but_not_public_count": 0,
+    "stale_count": 0,
+    "weak_count": 0,
+    "not_traceable_count": 0,
+    "source_families": [
+      "KCLU"
+    ],
+    "pressure_source_count_by_family": {
+      "KCLU": 1
+    },
+    "pressure_source_count_by_state": {
+      "CA": 1
+    },
+    "exclusion_reason_counts": {},
+    "exclusion_reason_summary": ""
+  },
+  "public_summary": "Santa Paula Hospital won't meet new seismic safety standards required by 2030, and Ventura County is currently planning to close it. The county is trying to figure out what it will do to meet the Santa Clara River Valley's future health care needs. This edition uses real, traceable source records.",
+  "public_archive_title": "Limited-source update",
+  "public_archive_subtitle": "Santa Paula Hospital won't meet new seismic safety standards required by 2030, and Ventura County is currently planning to close it. The county is trying to figure out what it will do to meet the Santa Clara River Valley's future health care needs. This edition uses real, traceable source records.",
+  "source_adequacy_status": "LIMITED_SOURCE_UPDATE",
+  "source_adequacy_label": "Limited-source update",
+  "edition_mode": "current_update",
+  "reviewed_source_count": 1,
+  "excluded_source_count": 0,
+  "source_table_path": "/care-line/editions/2026-08-19/source_table.html",
+  "claim_ledger_path": "/care-line/editions/2026-08-19/claim_ledger.html",
+  "future_paid_fields_todo": [],
+  "detail_artifacts_publicly_exposed": false,
+  "warnings": [
+    "detention watch generation skipped: detention watch input not found: C:\\Users\\willb\\OneDrive\\Desktop\\Python\\Dispatches From The Blue Fern Co\\_codex_care_line_aug19\\data\\dispatches\\cascadia\\detention_watch\\baseline_2026-05-03.json"
+  ],
+  "errors": []
+}

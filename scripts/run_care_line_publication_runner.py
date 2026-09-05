@@ -187,14 +187,23 @@ def _run_publish_flow(
             temp_pages = temp_root / "pages"
             _clone_repo(repo_root, temp_source, branch=source_branch)
             _clone_repo(pages_repo, temp_pages, branch=pages_branch)
-            build = build_site(temp_source, dry_run=True, only_dispatches=(DISPATCH,), dispatch_seed_dates={DISPATCH: edition_date}, pages_repo=temp_pages)
+            isolated_backup_root = temp_source / "output" / "tmp-backups-pages"
+            build = build_site(
+                temp_source,
+                dry_run=False,
+                backup_root=isolated_backup_root,
+                only_dispatches=(DISPATCH,),
+                dispatch_seed_dates={DISPATCH: edition_date},
+                pages_repo=temp_pages,
+            )
             publish = publish_pages(
                 temp_source,
                 temp_pages,
                 None,
-                dry_run=True,
+                dry_run=False,
                 commit=False,
                 no_push=True,
+                backup_root=isolated_backup_root,
                 only_dispatches=(DISPATCH,),
                 shared_homepage_dispatch=DISPATCH,
                 expect_date=edition_date,

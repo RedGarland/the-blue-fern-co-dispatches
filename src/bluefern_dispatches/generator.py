@@ -1492,6 +1492,46 @@ def _gaza_public_surface_history_diagnostics(
     return diagnostics
 
 
+def _care_line_public_surface_date_sets(public_root: Path) -> dict[str, set[str]]:
+    care_line_root = public_root / CARE_LINE_DISPATCH_SLUG
+    edition_pattern = re.compile(
+        rf"(?:/{re.escape(CARE_LINE_DISPATCH_SLUG)}/)?editions/(\d{{4}}-\d{{2}}-\d{{2}})/"
+    )
+    return {
+        f"{CARE_LINE_DISPATCH_SLUG}/archive.html": set(
+            edition_pattern.findall(_read_text_if_exists(care_line_root / "archive.html"))
+        ),
+        f"{CARE_LINE_DISPATCH_SLUG}/rss.xml": set(
+            edition_pattern.findall(_read_text_if_exists(care_line_root / "rss.xml"))
+        ),
+    }
+
+
+def _care_line_public_surface_history_diagnostics(
+    previous_root: Path,
+    current_root: Path,
+) -> list[dict[str, Any]]:
+    diagnostics: list[dict[str, Any]] = []
+    previous = _care_line_public_surface_date_sets(previous_root)
+    current = _care_line_public_surface_date_sets(current_root)
+    for surface in sorted(previous.keys() | current.keys()):
+        before_dates = previous.get(surface, set())
+        after_dates = current.get(surface, set())
+        dropped_dates = sorted(before_dates - after_dates, reverse=True)
+        diagnostics.append(
+            {
+                "surface": surface,
+                "previous_count": len(before_dates),
+                "current_count": len(after_dates),
+                "preserved_dates": sorted(before_dates & after_dates, reverse=True),
+                "added_dates": sorted(after_dates - before_dates, reverse=True),
+                "dropped_dates": dropped_dates,
+                "ok": not dropped_dates,
+            }
+        )
+    return diagnostics
+
+
 def _gaza_homepage_recent_edition_dates_from_html(html_text: str) -> list[str]:
     if not html_text:
         return []
@@ -1846,6 +1886,73 @@ def reconcile_gaza_public_editions(
         "skipped": skipped,
         "archive_entries": archive_entries,
     }
+
+
+def reconcile_care_line_public_editions_from_pages(
+    site_root: Path,
+    pages_repo: Path | None,
+    *,
+    dry_run: bool,
+    wrote: list[str],
+) -> dict[str, list[dict[str, str]]]:
+    result: dict[str, list[dict[str, str]]] = {
+        "discovered": [],
+        "backfilled": [],
+        "skipped": [],
+    }
+    if pages_repo is None:
+        return result
+    pages_editions_root = pages_repo / CARE_LINE_DISPATCH_SLUG / "editions"
+    if not pages_editions_root.exists():
+        return result
+    for source_dir in sorted(
+        (
+            path
+            for path in pages_editions_root.iterdir()
+            if path.is_dir() and len(path.name) == 10
+        ),
+        key=lambda path: path.name,
+    ):
+        edition_date = source_dir.name
+        result["discovered"].append(
+            {
+                "edition_date": edition_date,
+                "source": "pages_repo",
+                "path": str(source_dir),
+            }
+        )
+        target_dir = site_root / CARE_LINE_DISPATCH_SLUG / "editions" / edition_date
+        if target_dir.exists():
+            continue
+        if not existing_public_edition_files(pages_repo, CARE_LINE_DISPATCH_SLUG, edition_date):
+            result["skipped"].append(
+                {
+                    "edition_date": edition_date,
+                    "reason": "missing_required_public_artifacts",
+                }
+            )
+            continue
+        if not public_edition_is_listable(pages_repo, CARE_LINE_DISPATCH_SLUG, edition_date):
+            result["skipped"].append(
+                {
+                    "edition_date": edition_date,
+                    "reason": "non_publishable_or_failed_listability_rules",
+                }
+            )
+            continue
+        copied_paths = [target_dir / path.relative_to(source_dir) for path in source_dir.rglob("*") if path.is_file()]
+        wrote.extend(str(path) for path in copied_paths)
+        if not dry_run:
+            shutil.copytree(source_dir, target_dir)
+        result["backfilled"].append(
+            {
+                "edition_date": edition_date,
+                "source": "pages_repo",
+                "source_path": str(source_dir),
+                "target_path": str(target_dir),
+            }
+        )
+    return result
 
 
 def _display_date_range_for_week(edition_date: str) -> str:
@@ -2471,6 +2578,11 @@ def build_site(
         "skipped": [],
         "archive_entries": [],
     }
+    care_line_reconcile: dict[str, list[dict[str, str]]] = {
+        "discovered": [],
+        "backfilled": [],
+        "skipped": [],
+    }
 
     for asset in PUBLIC_SITE_ASSETS:
         copy_asset(root / "assets" / asset, site_root / "assets" / asset, dry_run, wrote, warnings)
@@ -2503,6 +2615,13 @@ def build_site(
         wrote=wrote,
         only_dispatches=only_dispatches,
     )
+    if (not only_dispatches) or (CARE_LINE_DISPATCH_SLUG in only_dispatches):
+        care_line_reconcile = reconcile_care_line_public_editions_from_pages(
+            site_root,
+            pages_repo.resolve() if pages_repo is not None else None,
+            dry_run=dry_run,
+            wrote=wrote,
+        )
     if not only_dispatches or "gaza" in only_dispatches:
         gaza_reconcile = reconcile_gaza_public_editions(
             root,
@@ -2711,6 +2830,9 @@ def build_site(
         "gaza_editions_backfilled": gaza_reconcile.get("backfilled", []),
         "gaza_editions_skipped": gaza_reconcile.get("skipped", []),
         "gaza_archive_entries_written": gaza_reconcile.get("archive_entries", []),
+        "care_line_pages_editions_discovered": care_line_reconcile.get("discovered", []),
+        "care_line_pages_editions_backfilled": care_line_reconcile.get("backfilled", []),
+        "care_line_pages_editions_skipped": care_line_reconcile.get("skipped", []),
         "warnings": warnings,
         "errors": errors,
         "publication_scope": publication_scope,
@@ -2893,6 +3015,9 @@ def validate_pages_publish(
             elif source_edition.exists() and not (source_edition / "index.html").exists():
                 label = DISPATCH_LABELS.get(dispatch_slug, dispatch_slug)
                 errors.append(f"expected {label} edition exists but index is missing: {source_edition / 'index.html'}")
+            elif dispatch_slug == CARE_LINE_DISPATCH_SLUG and not public_edition_is_listable(site_root, dispatch_slug, expect_date):
+                label = DISPATCH_LABELS.get(dispatch_slug, dispatch_slug)
+                errors.append(f"expected generated {label} edition is not listable: {expect_date}")
     cname = pages_repo / "CNAME"
     if cname.exists() and cname.read_text(encoding="utf-8").strip() != CNAME_VALUE:
         errors.append(f"CNAME value is not correct in {cname}")
@@ -2907,6 +3032,7 @@ def copy_public_site_to_pages(
     public_max_dates: dict[str, str] | None = None,
     skip_diagnostics: list[dict[str, Any]] | None = None,
     exclude_shared_release_surfaces: bool = False,
+    expect_date: str | None = None,
 ) -> tuple[list[str], list[str]]:
     copied: list[str] = []
     skipped = [
@@ -2935,13 +3061,20 @@ def copy_public_site_to_pages(
             continue
         if tuple(only_dispatches) == (CARE_LINE_DISPATCH_SLUG,):
             in_signal_scope = relative in {"signals/feed.xml", "care-line/signals/feed.xml"} or relative.startswith("events/")
-            if not in_signal_scope:
+            in_release_surface_scope = bool(expect_date) and relative in {
+                "care-line/index.html",
+                "care-line/archive.html",
+                "care-line/rss.xml",
+            }
+            in_expected_edition_scope = bool(expect_date) and relative.startswith(
+                f"care-line/editions/{expect_date}/"
+            )
+            if not (in_signal_scope or in_release_surface_scope or in_expected_edition_scope):
                 skipped.append(f"out-of-scope Care Line artifact: {target}")
                 continue
         if (
             tuple(only_dispatches) == (CARE_LINE_DISPATCH_SLUG,)
             and target.exists()
-            and (relative.startswith("events/") or relative.startswith("signals/") or relative.startswith("care-line/signals/"))
             and source.suffix.lower() in {".html", ".xml", ".json", ".txt", ".css"}
             and source.read_text(encoding="utf-8") .replace("\r\n", "\n")
             == target.read_text(encoding="utf-8", errors="replace").replace("\r\n", "\n")
@@ -3465,6 +3598,7 @@ def validate_pages_repo_after_copy(
     expect_date: str | None,
     expect_dispatches: tuple[str, ...] = (),
     only_dispatches: tuple[str, ...] = (),
+    previous_care_line_history: dict[str, set[str]] | None = None,
 ) -> list[str]:
     errors: list[str] = []
     if not (pages_repo / ".git").exists():
@@ -3490,24 +3624,61 @@ def validate_pages_repo_after_copy(
         errors.append(f"blocked private artifact names are present in Pages repo: {', '.join(blocked_text)}")
     dispatches_to_check = _expected_dispatches_for_date_checks(expect_date, expect_dispatches, only_dispatches)
     if expect_date:
-        if "gaza" in dispatches_to_check and public_edition_is_listable(site_root, "gaza", expect_date):
-            if not (pages_repo / "gaza" / "editions" / expect_date / "index.html").exists():
-                errors.append(f"expected Gaza edition missing: {expect_date}")
-        if "cascadia" in dispatches_to_check and public_edition_is_listable(site_root, "cascadia", expect_date):
-            if not (pages_repo / "cascadia" / "editions" / expect_date / "index.html").exists():
-                errors.append(f"expected Cascadia edition missing: {expect_date}")
-        if "american-pressure" in dispatches_to_check and public_edition_is_listable(site_root, "american-pressure", expect_date):
-            if not (pages_repo / "american-pressure" / "editions" / expect_date / "index.html").exists():
-                errors.append(f"expected American Pressure edition missing: {expect_date}")
-        if "food-line" in dispatches_to_check and public_edition_is_listable(site_root, "food-line", expect_date):
-            if not (pages_repo / "food-line" / "editions" / expect_date / "index.html").exists():
-                errors.append(f"expected Food Line edition missing: {expect_date}")
-        if CARE_LINE_DISPATCH_SLUG in dispatches_to_check and public_edition_is_listable(site_root, CARE_LINE_DISPATCH_SLUG, expect_date):
-            if not (pages_repo / CARE_LINE_DISPATCH_SLUG / "editions" / expect_date / "index.html").exists():
-                errors.append(f"expected Care Line edition missing: {expect_date}")
+        for dispatch_slug in ("gaza", "cascadia", "american-pressure", "food-line"):
+            if dispatch_slug not in dispatches_to_check or not public_edition_is_listable(site_root, dispatch_slug, expect_date):
+                continue
+            label = DISPATCH_LABELS.get(dispatch_slug, dispatch_slug)
+            if not (pages_repo / dispatch_slug / "editions" / expect_date / "index.html").exists():
+                errors.append(f"expected {label} edition missing: {expect_date}")
+        if CARE_LINE_DISPATCH_SLUG in dispatches_to_check:
+            label = "Care Line"
+            source_edition = site_root / CARE_LINE_DISPATCH_SLUG / "editions" / expect_date
+            pages_edition = pages_repo / CARE_LINE_DISPATCH_SLUG / "editions" / expect_date
+            required_names = [
+                "index.html",
+                "edition_manifest.json",
+                "sources_manifest.json",
+                "curation_manifest.json",
+                "source_table.html",
+                "claim_ledger.html",
+            ]
+            if not public_edition_is_listable(site_root, CARE_LINE_DISPATCH_SLUG, expect_date):
+                errors.append(f"expected generated {label} edition is not listable: {expect_date}")
+            elif not (pages_edition / "index.html").exists():
+                errors.append(f"expected {label} edition missing: {expect_date}")
+            else:
+                if not public_edition_is_listable(pages_repo, CARE_LINE_DISPATCH_SLUG, expect_date):
+                    errors.append(f"expected {label} edition is not listable after copy: {expect_date}")
+                for name in required_names:
+                    source_path = source_edition / name
+                    target_path = pages_edition / name
+                    if not source_path.exists():
+                        errors.append(f"expected generated {label} edition file missing: {source_path}")
+                    elif not target_path.exists():
+                        errors.append(f"expected {label} edition file missing after copy: {target_path}")
+                    elif source_path.read_bytes() != target_path.read_bytes():
+                        errors.append(f"expected {label} edition file differs after copy: {target_path}")
         if "food-line" in dispatches_to_check and not public_edition_is_listable(site_root, "food-line", expect_date):
             if (pages_repo / "food-line" / "editions" / expect_date / "index.html").exists():
                 errors.append(f"unexpected Food Line edition present for skipped day: {expect_date}")
+        if CARE_LINE_DISPATCH_SLUG in dispatches_to_check:
+            generated_history = _care_line_public_surface_date_sets(site_root)
+            pages_history = _care_line_public_surface_date_sets(pages_repo)
+            for surface in sorted(generated_history):
+                source_path = site_root / surface
+                target_path = pages_repo / surface
+                if expect_date not in pages_history.get(surface, set()):
+                    errors.append(f"expected Care Line edition missing from {surface}: {expect_date}")
+                if source_path.exists() and target_path.exists() and source_path.read_bytes() != target_path.read_bytes():
+                    errors.append(f"Care Line public surface differs after copy: {target_path}")
+            if previous_care_line_history is not None:
+                for surface, previous_dates in previous_care_line_history.items():
+                    dropped_dates = sorted(previous_dates - pages_history.get(surface, set()), reverse=True)
+                    if dropped_dates:
+                        errors.append(
+                            f"care-line public history shrink detected for {surface}: "
+                            f"dropped_dates={', '.join(dropped_dates)}"
+                        )
     return errors
 
 
@@ -3843,6 +4014,28 @@ def publish_pages(
                     f"gaza public history shrink detected for {surface}: previous_count={previous_count}; current_count={current_count}; dropped_dates={dropped}"
                 )
         errors.extend(gaza_surface_error_messages)
+    care_line_history_before: dict[str, set[str]] | None = None
+    care_line_history_diagnostics: list[dict[str, Any]] = []
+    care_line_scope_selected = CARE_LINE_DISPATCH_SLUG in only_dispatches or CARE_LINE_DISPATCH_SLUG in expect_dispatches
+    if care_line_scope_selected:
+        care_line_history_before = _care_line_public_surface_date_sets(pages_repo)
+        care_line_history_diagnostics = _care_line_public_surface_history_diagnostics(pages_repo, site_root)
+        for report in care_line_history_diagnostics:
+            if report["dropped_dates"]:
+                surface = str(report.get("surface") or "care-line surface")
+                dropped = ", ".join(str(item) for item in report["dropped_dates"])
+                errors.append(
+                    f"care-line public history shrink detected for {surface}: "
+                    f"previous_count={report['previous_count']}; current_count={report['current_count']}; "
+                    f"dropped_dates={dropped}"
+                )
+            if expect_date and expect_date not in {
+                *report.get("preserved_dates", []),
+                *report.get("added_dates", []),
+            }:
+                errors.append(
+                    f"expected Care Line edition missing from generated {report['surface']}: {expect_date}"
+                )
     branch_result = {
         "current_branch": None,
         "target_pages_branch": pages_branch,
@@ -3894,6 +4087,7 @@ def publish_pages(
             public_max_dates=public_max_dates,
             skip_diagnostics=skip_diagnostics,
             exclude_shared_release_surfaces=shared_surface_refresh_planned,
+            expect_date=expect_date,
         )
         warnings.extend(_food_line_public_edition_skip_warning(report) for report in skip_diagnostics)
         allowed_shared_surface_changes: list[str] = []
@@ -3942,6 +4136,7 @@ def publish_pages(
                     expect_date,
                     expect_dispatches=expect_dispatches,
                     only_dispatches=only_dispatches,
+                    previous_care_line_history=care_line_history_before,
                 )
             )
         if not errors:
@@ -4020,6 +4215,7 @@ def publish_pages(
         "build": build,
         "gaza_public_surface_history": gaza_history_diagnostics,
         "gaza_homepage_recent_edition_guard": gaza_homepage_guard,
+        "care_line_public_surface_history": care_line_history_diagnostics,
     }
 
 

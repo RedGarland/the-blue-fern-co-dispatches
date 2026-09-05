@@ -6909,19 +6909,58 @@ def write_food_line_audio(
     }
 
 
-def _bound_pages_archive_labels(pages_root: Path | None) -> dict[str, str]:
+def _food_line_archive_title_without_date(date: str, value: str) -> str:
+    text = " ".join(str(value or "").split()).strip()
+    for separator in (" — ", " - "):
+        prefix = f"{date}{separator}"
+        if text.startswith(prefix):
+            return text[len(prefix) :].strip()
+    return text
+
+
+def _bound_pages_archive_entries(pages_root: Path | None) -> dict[str, dict[str, str]]:
     if pages_root is None:
         return {}
     path = pages_root / "food-line" / "archive.html"
     if not path.is_file():
         return {}
     text = path.read_text(encoding="utf-8")
+    entries: dict[str, dict[str, str]] = {}
+    link_pattern = re.compile(
+        r'<a\b[^>]*href=["\'](?:/food-line/)?editions/(\d{4}-\d{2}-\d{2})/["\'][^>]*>(.*?)</a>',
+        re.I | re.S,
+    )
+    for list_item in re.finditer(r"<li\b[^>]*>(.*?)</li>", text, re.I | re.S):
+        item_html = list_item.group(1)
+        link_match = link_pattern.search(item_html)
+        if link_match is None:
+            continue
+        date = link_match.group(1)
+        raw_label = html.unescape(re.sub(r"<[^>]+>", "", link_match.group(2))).strip()
+        title = _food_line_archive_title_without_date(date, raw_label)
+        summary_match = re.search(r"<small\b[^>]*>(.*?)</small>", item_html, re.I | re.S)
+        summary = ""
+        if summary_match is not None:
+            summary = html.unescape(re.sub(r"<[^>]+>", "", summary_match.group(1))).strip()
+        if title:
+            entries.setdefault(
+                date,
+                {
+                    "date": date,
+                    "href": f"editions/{date}/",
+                    "raw_label": raw_label,
+                    "title": title,
+                    "summary": summary,
+                },
+            )
+    return entries
+
+
+def _bound_pages_archive_labels(pages_root: Path | None) -> dict[str, str]:
     labels: dict[str, str] = {}
-    pattern = re.compile(r'<a\b[^>]*href=["\'](?:/food-line/)?editions/(\d{4}-\d{2}-\d{2})/["\'][^>]*>(.*?)</a>', re.I | re.S)
-    for match in pattern.finditer(text):
-        label = html.unescape(re.sub(r"<[^>]+>", "", match.group(2))).strip()
-        if label:
-            labels.setdefault(match.group(1), label)
+    for date, entry in _bound_pages_archive_entries(pages_root).items():
+        raw_label = entry["raw_label"]
+        labels[date] = raw_label if raw_label.startswith(date) else f"{date} — {entry['title']}"
     return labels
 
 
@@ -6938,6 +6977,183 @@ def _bound_pages_rss_items(pages_root: Path | None) -> dict[str, str]:
         if date_match:
             items.setdefault(date_match.group(1), match.group(0))
     return items
+
+
+def _food_line_archive_edition_dir(root: Path, pages_root: Path | None, date: str) -> Path | None:
+    candidates = []
+    if pages_root is not None:
+        candidates.append(pages_root / "food-line" / "editions" / date)
+    candidates.append(root / "output" / "site" / DISPATCH_SLUG / "editions" / date)
+    return next((candidate for candidate in candidates if candidate.is_dir()), None)
+
+
+def _food_line_archive_manifest_and_lead(
+    root: Path,
+    pages_root: Path | None,
+    date: str,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    edition_dir = _food_line_archive_edition_dir(root, pages_root, date)
+    if edition_dir is None:
+        return {}, {}
+    try:
+        manifest_payload = _read_json(edition_dir / "edition_manifest.json")
+    except Exception:  # noqa: BLE001
+        manifest_payload = {}
+    manifest = manifest_payload if isinstance(manifest_payload, dict) else {}
+    try:
+        sources_payload = _read_json(edition_dir / "sources_manifest.json")
+    except Exception:  # noqa: BLE001
+        sources_payload = []
+    sources = [row for row in sources_payload if isinstance(row, dict)] if isinstance(sources_payload, list) else []
+    lead_id = str(manifest.get("lead_source_record_id") or "").strip()
+    lead = next(
+        (row for row in sources if lead_id and str(row.get("source_record_id") or "").strip() == lead_id),
+        sources[0] if sources else {},
+    )
+    return manifest, lead
+
+
+def _food_line_archive_entry(
+    root: Path,
+    pages_root: Path | None,
+    date: str,
+    bound_entries: dict[str, dict[str, str]],
+) -> dict[str, str]:
+    bound = bound_entries.get(date, {})
+    manifest, lead = _food_line_archive_manifest_and_lead(root, pages_root, date)
+    no_current_update = str(manifest.get("edition_mode") or manifest.get("render_mode") or "").strip() == "no_current_update"
+    if "public_signal_count" in manifest:
+        try:
+            no_current_update = no_current_update or int(manifest.get("public_signal_count") or 0) <= 0
+        except (TypeError, ValueError):
+            pass
+
+    generated_title = _food_line_archive_title_without_date(date, _food_line_public_edition_label(root, date))
+    if generated_title == date:
+        generated_title = ""
+    title_candidates = [
+        manifest.get("public_archive_title"),
+        manifest.get("headline"),
+        manifest.get("lead_headline"),
+    ]
+    if not no_current_update:
+        title_candidates.append(lead.get("title"))
+    title_candidates.extend([bound.get("title"), generated_title])
+    title = next(
+        (
+            candidate
+            for value in title_candidates
+            if (candidate := _food_line_archive_title_without_date(date, str(value or "")))
+        ),
+        date,
+    )
+
+    summary_candidates = [
+        manifest.get("public_archive_subtitle"),
+        manifest.get("public_summary"),
+        manifest.get("edition_summary"),
+    ]
+    if not no_current_update:
+        summary_candidates.extend(
+            [
+                lead.get("pressure_summary"),
+                lead.get("summary_or_snippet"),
+                lead.get("claim_supported"),
+                lead.get("evidence_text"),
+            ]
+        )
+    summary_candidates.append(bound.get("summary"))
+    summary = next((" ".join(str(value).split()).strip() for value in summary_candidates if str(value or "").strip()), "")
+    return {
+        "date": date,
+        "href": f"editions/{date}/",
+        "title": title,
+        "summary": summary,
+    }
+
+
+def _food_line_archive_artifact_exists(root: Path, pages_root: Path | None, date: str, name: str) -> bool:
+    candidates = [root / "output" / "site" / DISPATCH_SLUG / "editions" / date / name]
+    if pages_root is not None:
+        candidates.insert(0, pages_root / "food-line" / "editions" / date / name)
+    return any(candidate.is_file() for candidate in candidates)
+
+
+def _render_food_line_archive_page(root: Path, public_dates: list[str], pages_root: Path | None) -> str:
+    bound_entries = _bound_pages_archive_entries(pages_root)
+    entries = [_food_line_archive_entry(root, pages_root, date, bound_entries) for date in public_dates]
+    entries_html = "".join(
+        "".join(
+            [
+                f'<li><span class="edition-date">{html.escape(entry["date"])}</span>',
+                f'<a href="{html.escape(entry["href"])}">{html.escape(entry["title"])}</a>',
+                f'<br><small>{html.escape(entry["summary"])}</small>' if entry["summary"] else "",
+                "</li>",
+            ]
+        )
+        for entry in entries
+    )
+    latest = entries[0] if entries else None
+    latest_links = ""
+    if latest is not None:
+        latest_links = f'<p><a href="{html.escape(latest["href"])}">Read the latest briefing</a></p>\n'
+        if latest["summary"]:
+            latest_links += f'    <p>{html.escape(latest["summary"])}</p>\n'
+        if _food_line_archive_artifact_exists(root, pages_root, latest["date"], "source_table.html") and _food_line_archive_artifact_exists(
+            root, pages_root, latest["date"], "claim_ledger.html"
+        ):
+            latest_links += (
+                f'    <p><a href="{html.escape(latest["href"])}source_table.html">Source table</a> | '
+                f'<a href="{html.escape(latest["href"])}claim_ledger.html">Claim ledger</a></p>\n'
+            )
+    else:
+        latest_links = "<p>No public editions have been published yet.</p>\n"
+
+    page_footer = footer("")
+    archive_body = "".join(
+        [
+            _food_line_theme_styles(),
+            header(DISPATCH_NAME, "", "archive.html", "/food-line/"),
+            '<main class="home food-line-shell">\n',
+            '  <section class="food-line-hero">\n',
+            _food_line_logo_html("food-line-logo--home", "assets/"),
+            '    <p class="eyebrow">The Blue Fern Co.</p>\n',
+            '    <h1>Food Line Archive</h1>\n',
+            '    <p>Chronological archive of source-backed Food Line editions.</p>\n',
+            '  </section>\n',
+            '  <section class="food-line-panel">\n',
+            '    <h2>Latest edition</h2>\n',
+            f"    {latest_links}",
+            '    <h2>Archive</h2>\n',
+            f'    <ul class="edition-list">{entries_html}</ul>\n',
+            '    <p><a href="index.html">Back to the Food Line home page</a></p>\n',
+            '  </section>\n',
+            '</main>\n',
+            page_footer,
+        ]
+    )
+    return _food_line_page(f"{DISPATCH_NAME} Archive", f"{BASE_URL}/food-line/archive.html", "assets/site.css", archive_body)
+
+
+def refresh_food_line_archive_from_public_state(
+    root: Path,
+    pages_root: Path,
+    *,
+    max_edition_date: str | None = None,
+) -> dict[str, Any]:
+    pages_labels = _bound_pages_archive_labels(pages_root)
+    pages_rss_items = _bound_pages_rss_items(pages_root)
+    public_dates = sorted(
+        set(_food_line_home_archive_dates(root, max_edition_date=max_edition_date)) | set(pages_labels) | set(pages_rss_items),
+        reverse=True,
+    )
+    archive_path = root / "output" / "site" / DISPATCH_SLUG / "archive.html"
+    _write_text(archive_path, _render_food_line_archive_page(root, public_dates, pages_root))
+    return {
+        "archive_path": str(archive_path),
+        "edition_dates": public_dates,
+        "entry_count": len(public_dates),
+    }
 
 
 def _update_index_archive(
@@ -6960,10 +7176,6 @@ def _update_index_archive(
     latest_public_date = public_dates[0] if public_dates else ""
     latest_public_label = public_label(latest_public_date) if latest_public_date else ""
     recent_public_dates = public_dates[: min(len(public_dates), 11)]
-    archive_entries_html = "".join(
-        f'<li><a href="editions/{html.escape(public_date)}/">{html.escape(public_label(public_date))}</a></li>'
-        for public_date in public_dates
-    )
     recent_entries_html = "".join(
         f'<li><a href="editions/{html.escape(public_date)}/">{html.escape(public_label(public_date))}</a></li>'
         for public_date in recent_public_dates
@@ -6999,30 +7211,8 @@ def _update_index_archive(
             page_footer,
         ]
     )
-    archive_body = "".join(
-        [
-            _food_line_theme_styles(),
-            header(DISPATCH_NAME, "", "archive.html", "/food-line/"),
-            '<main class="home food-line-shell">\n',
-            '  <section class="food-line-hero">\n',
-            _food_line_logo_html("food-line-logo--home", "assets/"),
-            '    <p class="eyebrow">The Blue Fern Co.</p>\n',
-            '    <h1>Food Line Archive</h1>\n',
-            '    <p>Chronological archive of source-backed Food Line editions.</p>\n',
-            '  </section>\n',
-            '  <section class="food-line-panel">\n',
-            '    <h2>Latest edition</h2>\n',
-            f"{'<p><a href=\"editions/{0}/\">{1}</a></p>'.format(latest_public_date, html.escape(latest_public_label)) if latest_public_date else '<p>No public editions have been published yet.</p>'}\n",
-            '    <h2>Archive</h2>\n',
-            f"    <ul>{archive_entries_html}</ul>\n",
-            '    <p><a href="index.html">Back to the Food Line home page</a></p>\n',
-            '  </section>\n',
-            '</main>\n',
-            page_footer,
-        ]
-    )
     _write_text(dispatch_root / "index.html", _food_line_page(f"{DISPATCH_NAME}", f"{BASE_URL}/food-line/", "assets/site.css", idx_body))
-    _write_text(dispatch_root / "archive.html", _food_line_page(f"{DISPATCH_NAME} Archive", f"{BASE_URL}/food-line/archive.html", "assets/site.css", archive_body))
+    _write_text(dispatch_root / "archive.html", _render_food_line_archive_page(root, public_dates, retrospective_pages_root))
     def rss_publication_date(public_date: str) -> str:
         manifest = _food_line_public_edition_manifest(root, public_date) or {}
         raw = str(manifest.get("published_at") or manifest.get("generated_at") or "").strip()

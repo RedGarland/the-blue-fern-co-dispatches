@@ -31,7 +31,8 @@ EXPECTED_FRAC_SOURCE_URL = (
 class ArchiveEntry:
     date_text: str
     href: str
-    label: str
+    title: str
+    summary: str = ""
 
 
 def _parse_date(date_text: str) -> dt_date:
@@ -62,6 +63,15 @@ def _extract_date_from_label(label: str) -> str:
     return validate_date(text[:10])
 
 
+def _title_without_date(date_text: str, label: str) -> str:
+    text = " ".join(str(label or "").split()).strip()
+    for separator in (" — ", " - "):
+        prefix = f"{date_text}{separator}"
+        if text.startswith(prefix):
+            return text[len(prefix) :].strip()
+    return text
+
+
 def _collect_archive_entries(archive_list: Any) -> list[ArchiveEntry]:
     entries: list[ArchiveEntry] = []
     for item in archive_list.find_all("li", recursive=False):
@@ -70,8 +80,11 @@ def _collect_archive_entries(archive_list: Any) -> list[ArchiveEntry]:
             continue
         href = _normalize_href(link.get("href", ""))
         label = link.get_text(" ", strip=True)
-        date_text = _extract_date_from_label(label)
-        entries.append(ArchiveEntry(date_text=date_text, href=href, label=label))
+        date_node = item.find("span", class_="edition-date", recursive=False)
+        date_text = validate_date(date_node.get_text(" ", strip=True)) if date_node is not None else _extract_date_from_label(label)
+        summary_node = item.find("small", recursive=False)
+        summary = summary_node.get_text(" ", strip=True) if summary_node is not None else ""
+        entries.append(ArchiveEntry(date_text=date_text, href=href, title=_title_without_date(date_text, label), summary=summary))
     return entries
 
 
@@ -110,10 +123,10 @@ def _build_entry_map(entries: list[ArchiveEntry]) -> dict[str, ArchiveEntry]:
         if existing is None:
             by_date[entry.date_text] = entry
             continue
-        if existing.href != entry.href or existing.label != entry.label:
+        if existing.href != entry.href or existing.title != entry.title or existing.summary != entry.summary:
             raise ValueError(
                 f"Food Line archive contains conflicting entries for {entry.date_text}: "
-                f"{existing.href} / {existing.label!r} versus {entry.href} / {entry.label!r}"
+                f"{existing.href} / {existing.title!r} versus {entry.href} / {entry.title!r}"
             )
     return by_date
 
@@ -124,18 +137,28 @@ def _sorted_entries(entries: list[ArchiveEntry]) -> list[ArchiveEntry]:
 
 def _set_archive_list(soup: BeautifulSoup, archive_list: Any, entries: list[ArchiveEntry]) -> None:
     archive_list.clear()
+    archive_list["class"] = sorted(set(archive_list.get("class", [])) | {"edition-list"})
     for entry in entries:
         li = soup.new_tag("li")
+        date_node = soup.new_tag("span")
+        date_node["class"] = "edition-date"
+        date_node.string = entry.date_text
+        li.append(date_node)
         link = soup.new_tag("a", href=entry.href)
-        link.string = entry.label
+        link.string = entry.title
         li.append(link)
+        if entry.summary:
+            li.append(soup.new_tag("br"))
+            summary = soup.new_tag("small")
+            summary.string = entry.summary
+            li.append(summary)
         archive_list.append(li)
 
 
 def _set_latest_paragraph(soup: BeautifulSoup, latest_paragraph: Any, latest_entry: ArchiveEntry) -> None:
     latest_paragraph.clear()
     link = soup.new_tag("a", href=latest_entry.href)
-    link.string = latest_entry.label
+    link.string = "Read the latest briefing"
     latest_paragraph.append(link)
 
 
@@ -168,16 +191,16 @@ def update_food_line_archive_for_review_only(
     entries = _collect_archive_entries(archive_list)
     by_date = _build_entry_map(entries)
 
-    new_entry = ArchiveEntry(date_text=edition_date, href=normalized_href, label=f"{edition_date} — {title}")
+    new_entry = ArchiveEntry(date_text=edition_date, href=normalized_href, title=_title_without_date(edition_date, title))
     already_present = False
     entry_added = False
 
     existing = by_date.get(edition_date)
     if existing is not None:
-        if existing.href != new_entry.href or existing.label != new_entry.label:
+        if existing.href != new_entry.href or existing.title != new_entry.title:
             raise ValueError(
                 f"Food Line archive already contains {edition_date} with different content: "
-                f"{existing.href} / {existing.label!r}"
+                f"{existing.href} / {existing.title!r}"
             )
         already_present = True
     else:
@@ -209,7 +232,7 @@ def update_food_line_archive_for_review_only(
         "planned_entry": {
             "date": edition_date,
             "title": title,
-            "label": new_entry.label,
+            "label": new_entry.title,
             "href": edition_url,
         },
     }

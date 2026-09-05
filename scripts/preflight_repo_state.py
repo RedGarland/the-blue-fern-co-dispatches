@@ -15,7 +15,11 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from scripts.care_line_runtime_paths import CARE_LINE_ALLOWED_DIRTY_CATEGORIES, classify_care_line_runtime_path
-from scripts.food_line_runtime_paths import FOOD_LINE_ALLOWED_DIRTY_CATEGORIES, classify_food_line_runtime_path
+from scripts.food_line_runtime_paths import (
+    FOOD_LINE_ALLOWED_DIRTY_CATEGORIES,
+    classify_food_line_runtime_path,
+    is_food_line_mutable_tracked_runtime_path,
+)
 
 ALLOWED_DIRTY_CATEGORIES = FOOD_LINE_ALLOWED_DIRTY_CATEGORIES | CARE_LINE_ALLOWED_DIRTY_CATEGORIES
 
@@ -92,12 +96,13 @@ def classify_status_line(line: str) -> dict[str, Any] | None:
     if not path:
         return None
     category = classify_path(path)
+    allowed_tracked_runtime = status == " M" and is_food_line_mutable_tracked_runtime_path(path)
     return {
         "status": status,
         "path": path,
         "category": category,
         "is_untracked": status == "??",
-        "is_risky": status != "??" or category not in ALLOWED_DIRTY_CATEGORIES,
+        "is_risky": not allowed_tracked_runtime and (status != "??" or category not in ALLOWED_DIRTY_CATEGORIES),
     }
 
 

@@ -16,6 +16,9 @@ FOOD_LINE_DISCOVERY_RUNS_RE = re.compile(r"^data/dispatches/food-line/discovery-
 FOOD_LINE_STATUS_RE = re.compile(r"^status/food-line(?:/.*)?$")
 FOOD_LINE_LOGS_RE = re.compile(r"^logs/food-line(?:/.*)?$")
 FOOD_LINE_AGENT_HISTORY_RE = re.compile(r"^data/agent-history-staging/food-line(?:/.*)?$")
+FOOD_LINE_MUTABLE_TRACKED_RUNTIME_PATHS = frozenset(
+    {"data/dispatches/food-line/source_performance_history.json"}
+)
 
 FOOD_LINE_RUNTIME_CATEGORIES = {
     "local_run_state",
@@ -69,6 +72,10 @@ def classify_food_line_runtime_path(path_text: str) -> str | None:
     if FOOD_LINE_LOGS_RE.match(lower):
         return "logs"
     return None
+
+
+def is_food_line_mutable_tracked_runtime_path(path_text: str) -> bool:
+    return _normalize_path(path_text).lower() in FOOD_LINE_MUTABLE_TRACKED_RUNTIME_PATHS
 
 
 def food_line_runtime_paths() -> list[str]:

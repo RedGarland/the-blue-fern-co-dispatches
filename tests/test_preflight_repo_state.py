@@ -5,6 +5,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from scripts import preflight_repo_state
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -47,11 +49,33 @@ def test_food_line_source_performance_history_is_allowed_but_other_data_paths_ar
     report = preflight_repo_state.build_preflight_report(source_repo)
 
     assert report["ok"] is False
-    assert {entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]} == set()
-    assert {entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]} == {
+    assert {entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]} == {
         "data/dispatches/food-line/source_performance_history.json",
+    }
+    assert {entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]} == {
         "data/dispatches/food-line/source_registry.json",
     }
+
+
+@pytest.mark.parametrize("status", ["M ", "MM", " D", "D "])
+def test_food_line_source_performance_history_staged_or_deleted_state_remains_risky(
+    monkeypatch, tmp_path, status
+):
+    source_repo = tmp_path / "repo"
+    source_repo.mkdir()
+    monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: None)
+    monkeypatch.setattr(
+        preflight_repo_state,
+        "_run_git_status",
+        lambda _repo: (0, [f"{status} data/dispatches/food-line/source_performance_history.json"]),
+    )
+
+    report = preflight_repo_state.build_preflight_report(source_repo)
+
+    assert report["ok"] is False
+    assert [entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]] == [
+        "data/dispatches/food-line/source_performance_history.json"
+    ]
 
 
 def test_food_line_discovery_candidates_path_is_allowed_but_nearby_paths_stay_risky(monkeypatch, tmp_path):

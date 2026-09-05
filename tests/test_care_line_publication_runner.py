@@ -358,6 +358,48 @@ def test_publication_path_posts_bluesky_after_pages_publish(release_repos: tuple
     assert result["bluesky_result"]["post_uri"] == "at://did:plc:test/app.bsky.feed.post/123"
 
 
+def test_isolated_publication_does_not_generate_into_long_lived_source(
+    release_repos: tuple[Path, Path], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source, pages = release_repos
+    source_head = _git_output(source, "rev-parse", "HEAD")
+    publication_roots: list[Path] = []
+
+    monkeypatch.setattr(runner, "build_site", lambda *args, **kwargs: _successful_build())
+
+    def fake_publish(publication_root: Path, *args: object, **kwargs: object) -> dict[str, object]:
+        publication_roots.append(publication_root)
+        return {
+            "ok": True,
+            "warnings": [],
+            "errors": [],
+            "build": {"public_rendered": True, "public_signal_count": 1},
+            "pushed": True,
+        }
+
+    monkeypatch.setattr(runner, "publish_pages", fake_publish)
+    result = runner._run_publish_flow(
+        repo_root=source,
+        pages_repo=pages,
+        source_branch="add/pages-repo-default",
+        pages_branch="gh-pages",
+        edition_date=DATE,
+        check_only=False,
+        dry_run_full=False,
+        publish=True,
+        push=True,
+        post_bluesky=False,
+        isolated_source=True,
+    )
+
+    assert result["ok"] is True
+    assert result["isolated_source"] is True
+    assert len(publication_roots) == 1
+    assert publication_roots[0].resolve() != source.resolve()
+    assert _git_output(source, "rev-parse", "HEAD") == source_head
+    assert _git_output(source, "status", "--short") == ""
+
+
 def test_sanctioned_publish_adds_new_care_line_backfill_without_replacing_newer_release(
     production_release_repos: tuple[Path, Path],
     monkeypatch: pytest.MonkeyPatch,

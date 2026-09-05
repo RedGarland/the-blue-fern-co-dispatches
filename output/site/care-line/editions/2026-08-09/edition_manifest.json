@@ -1,0 +1,91 @@
+{
+  "dispatch_name": "The Care Line Dispatch",
+  "dispatch_slug": "care-line",
+  "public_visible": true,
+  "lifecycle_state": "active",
+  "edition_date": "2026-08-09",
+  "generated_at": "2026-08-10T15:00:44.745728+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/care-line/editions/2026-08-09/",
+  "local_output_path": "C:\\BlueFernRunner\\CareLineNationalCurrent\\output\\site\\care-line\\editions\\2026-08-09",
+  "local_backup_path": "C:\\BlueFernRunner\\CareLineNationalCurrent\\output\\tmp-backups-pages\\care-line\\2026-08-09",
+  "template_version": "dispatches-static-v1",
+  "source_count": 2,
+  "story_count": 2,
+  "source_manifest_path": "C:\\BlueFernRunner\\CareLineNationalCurrent\\output\\site\\care-line\\editions\\2026-08-09\\sources_manifest.json",
+  "curation_manifest_path": "C:\\BlueFernRunner\\CareLineNationalCurrent\\output\\site\\care-line\\editions\\2026-08-09\\curation_manifest.json",
+  "free_public_artifacts": [
+    "C:\\BlueFernRunner\\CareLineNationalCurrent\\output\\site\\care-line\\editions\\2026-08-09\\index.html",
+    "C:\\BlueFernRunner\\CareLineNationalCurrent\\output\\site\\care-line\\editions\\2026-08-09\\sources_manifest.json",
+    "C:\\BlueFernRunner\\CareLineNationalCurrent\\output\\site\\care-line\\editions\\2026-08-09\\curation_manifest.json",
+    "C:\\BlueFernRunner\\CareLineNationalCurrent\\output\\site\\care-line\\editions\\2026-08-09\\source_table.html",
+    "C:\\BlueFernRunner\\CareLineNationalCurrent\\output\\site\\care-line\\editions\\2026-08-09\\claim_ledger.html"
+  ],
+  "paid_or_detail_artifacts": [],
+  "claim_count": 2,
+  "qualified_public_claim_count": 2,
+  "lead_signal_count": 2,
+  "public_signal_count": 2,
+  "public_rendered": true,
+  "stale_current_signal_count": 0,
+  "resource_only_count": 0,
+  "wrapper_candidate_count": 0,
+  "secondary_query_count": 0,
+  "qualified_but_not_public_count": 0,
+  "source_families": [
+    "Becker's Behavioral Health",
+    "Nonprofit Policy Reporting (Maine)"
+  ],
+  "pressure_source_count_by_family": {
+    "Becker's Behavioral Health": 1,
+    "Nonprofit Policy Reporting (Maine)": 1
+  },
+  "pressure_source_count_by_state": {
+    "MAINE": 1,
+    "MASSACHUSETTS": 1
+  },
+  "exclusion_reason_counts": {},
+  "exclusion_reason_summary": "",
+  "discovery_gap_check": {
+    "source_count": 2,
+    "public_signal_count": 2,
+    "claim_count": 2,
+    "excluded_source_count": 0,
+    "excluded_count": 0,
+    "wrapper_candidate_count": 0,
+    "secondary_query_count": 0,
+    "qualified_but_not_public_count": 0,
+    "stale_count": 0,
+    "weak_count": 0,
+    "not_traceable_count": 0,
+    "source_families": [
+      "Becker's Behavioral Health",
+      "Nonprofit Policy Reporting (Maine)"
+    ],
+    "pressure_source_count_by_family": {
+      "Becker's Behavioral Health": 1,
+      "Nonprofit Policy Reporting (Maine)": 1
+    },
+    "pressure_source_count_by_state": {
+      "MAINE": 1,
+      "MASSACHUSETTS": 1
+    },
+    "exclusion_reason_counts": {},
+    "exclusion_reason_summary": ""
+  },
+  "public_summary": "This limited-source update reflects the approved Care Line access developments available in the replay evidence.",
+  "public_archive_title": "Limited-source update",
+  "public_archive_subtitle": "This limited-source update reflects the approved Care Line access developments available in the replay evidence.",
+  "source_adequacy_status": "LIMITED_SOURCE_UPDATE",
+  "source_adequacy_label": "Limited-source update",
+  "edition_mode": "current_update",
+  "reviewed_source_count": 2,
+  "excluded_source_count": 0,
+  "source_table_path": "/care-line/editions/2026-08-09/source_table.html",
+  "claim_ledger_path": "/care-line/editions/2026-08-09/claim_ledger.html",
+  "future_paid_fields_todo": [],
+  "detail_artifacts_publicly_exposed": false,
+  "warnings": [
+    "detention watch generation skipped: detention watch input not found: C:\\BlueFernRunner\\CareLineNationalCurrent\\data\\dispatches\\cascadia\\detention_watch\\baseline_2026-05-03.json"
+  ],
+  "errors": []
+}

@@ -1,0 +1,19 @@
+[
+  {
+    "story_id": "care-line-story-001",
+    "title": "Miles Hospital proposes closing its labor and delivery center",
+    "summary": "NPR reports that a coalition in mid-coast Maine is fighting a proposed closure of Miles Hospital's labor and delivery center.",
+    "category": "Maternity / Family Care Signals",
+    "score": 100,
+    "scoring_reasons": [
+      "A proposed closure of a local labor and delivery service line would reduce maternity-care access if approved."
+    ],
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_ids": [
+      "care-line-2026-08-05-npr-miles-labor-delivery-proposal"
+    ],
+    "excluded_reason": null,
+    "editorial_admin_copy": false
+  }
+]

@@ -16,6 +16,11 @@ SECTION_RE = re.compile(
     r'<section class="section-block"><div class="section-heading"><p class="eyebrow">The current edition desk</p><h2>Latest published developments</h2></div><div class="edition-grid">.*?</div></section>',
     re.DOTALL,
 )
+SHARED_FOOTER_SEPARATOR_RE = re.compile(
+    r'(?P<methodology><a href="/methodology/">How we work</a>)\s+'
+    r'(?:\u00c3\u201a\u00c2\u00b7|&middot;)\s+'
+    r'(?P<about><a href="/about/">About this project</a>)'
+)
 DATE_DIR_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 TERMINAL_RELEASE_MARKERS = {"failed", "not_published", "rejected", "suppressed", "unpublished", "withheld", "withdrawn"}
 INVALID_RELEASE_BOOLEAN_FIELDS = ("failed", "suppressed", "unpublished", "withheld", "withdrawn")
@@ -388,12 +393,21 @@ def _replace_active_dispatch_card(template_html: str, release: PublicRelease) ->
     return template_html[: match.start()] + updated + template_html[match.end() :]
 
 
+def _normalize_shared_footer_separator(template_html: str) -> str:
+    return SHARED_FOOTER_SEPARATOR_RE.sub(
+        r'\g<methodology> &middot; \g<about>',
+        template_html,
+        count=1,
+    )
+
+
 def render_sitewide_homepage_from_template(template_html: str, release: PublicRelease) -> str:
-    return _replace_active_dispatch_card(_replace_latest_edition_card(template_html, release), release)
+    refreshed = _replace_active_dispatch_card(_replace_latest_edition_card(template_html, release), release)
+    return _normalize_shared_footer_separator(refreshed)
 
 
 def render_dispatch_directory_from_template(template_html: str, release: PublicRelease) -> str:
-    return _replace_active_dispatch_card(template_html, release)
+    return _normalize_shared_footer_separator(_replace_active_dispatch_card(template_html, release))
 
 
 def render_dispatch_directory_from_releases(template_html: str, latest: dict[str, PublicRelease]) -> str:
@@ -403,9 +417,4 @@ def render_dispatch_directory_from_releases(template_html: str, latest: dict[str
     refreshed = template_html
     for slug in ACTIVE_PRODUCTS:
         refreshed = render_dispatch_directory_from_template(refreshed, latest[slug])
-    return re.sub(
-        r'(<a href="/methodology/">How we work</a>)\s+.*?\s+(<a href="/about/">About this project</a>)',
-        r'\1 &middot; \2',
-        refreshed,
-        count=1,
-    )
+    return _normalize_shared_footer_separator(refreshed)

@@ -17,7 +17,10 @@ FOOD_LINE_STATUS_RE = re.compile(r"^status/food-line(?:/.*)?$")
 FOOD_LINE_LOGS_RE = re.compile(r"^logs/food-line(?:/.*)?$")
 FOOD_LINE_AGENT_HISTORY_RE = re.compile(r"^data/agent-history-staging/food-line(?:/.*)?$")
 FOOD_LINE_MUTABLE_TRACKED_RUNTIME_PATHS = frozenset(
-    {"data/dispatches/food-line/source_performance_history.json"}
+    {
+        "data/dispatches/food-line/review/current-signal-review.json",
+        "data/dispatches/food-line/source_performance_history.json",
+    }
 )
 
 FOOD_LINE_RUNTIME_CATEGORIES = {

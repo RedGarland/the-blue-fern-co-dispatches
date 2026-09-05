@@ -57,6 +57,24 @@ def test_food_line_source_performance_history_is_allowed_but_other_data_paths_ar
     }
 
 
+def test_food_line_current_review_runtime_state_is_allowed(monkeypatch, tmp_path):
+    source_repo = tmp_path / "repo"
+    source_repo.mkdir()
+    monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: None)
+    monkeypatch.setattr(
+        preflight_repo_state,
+        "_run_git_status",
+        lambda _repo: (0, [" M data/dispatches/food-line/review/current-signal-review.json"]),
+    )
+
+    report = preflight_repo_state.build_preflight_report(source_repo)
+
+    assert report["ok"] is True
+    assert [entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]] == [
+        "data/dispatches/food-line/review/current-signal-review.json"
+    ]
+
+
 @pytest.mark.parametrize("status", ["M ", "MM", " D", "D "])
 def test_food_line_source_performance_history_staged_or_deleted_state_remains_risky(
     monkeypatch, tmp_path, status
@@ -75,6 +93,25 @@ def test_food_line_source_performance_history_staged_or_deleted_state_remains_ri
     assert report["ok"] is False
     assert [entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]] == [
         "data/dispatches/food-line/source_performance_history.json"
+    ]
+
+
+@pytest.mark.parametrize("status", ["M ", "MM", " D", "D "])
+def test_food_line_current_review_staged_or_deleted_state_remains_risky(monkeypatch, tmp_path, status):
+    source_repo = tmp_path / "repo"
+    source_repo.mkdir()
+    monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: None)
+    monkeypatch.setattr(
+        preflight_repo_state,
+        "_run_git_status",
+        lambda _repo: (0, [f"{status} data/dispatches/food-line/review/current-signal-review.json"]),
+    )
+
+    report = preflight_repo_state.build_preflight_report(source_repo)
+
+    assert report["ok"] is False
+    assert [entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]] == [
+        "data/dispatches/food-line/review/current-signal-review.json"
     ]
 
 

@@ -88,6 +88,19 @@ def test_scheduler_accepts_successful_source_watch_runtime_state_for_the_next_ru
     assert scheduler._unexpected_dirty_paths(status) == []
 
 
+def test_scheduler_accepts_current_intake_review_state_for_the_next_run() -> None:
+    status = "\n".join(
+        [
+            " M data/dispatches/food-line/review/current-signal-review.json",
+            "?? data/dispatches/food-line/review/proposed-editions/2026-09-04.json",
+            "?? data/dispatches/food-line/review/reports/2026-09-04/current-intake.json",
+            "?? logs/food-line/current-intake/2026-09-04/receipt.json",
+        ]
+    )
+
+    assert scheduler._unexpected_dirty_paths(status) == []
+
+
 def test_checkout_validation_preserves_durable_runtime_evidence(tmp_path: Path) -> None:
     subprocess.run(["git", "init", "-b", scheduler.PRODUCTION_BRANCH], cwd=tmp_path, check=True, capture_output=True)
     subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=tmp_path, check=True)
@@ -122,6 +135,9 @@ def test_checkout_validation_preserves_durable_runtime_evidence(tmp_path: Path) 
         "MM data/dispatches/food-line/source_performance_history.json",
         " D data/dispatches/food-line/source_performance_history.json",
         " M data/dispatches/food-line/source_registry.json",
+        "M  data/dispatches/food-line/review/current-signal-review.json",
+        "MM data/dispatches/food-line/review/current-signal-review.json",
+        " D data/dispatches/food-line/review/current-signal-review.json",
         "?? data/dispatches/food-line/unrecognized-runtime.json",
     ],
 )

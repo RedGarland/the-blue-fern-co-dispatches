@@ -75,6 +75,60 @@ def test_food_line_daily_scheduler_defaults_to_production_branch() -> None:
     assert args.branch == "add/pages-repo-default"
 
 
+def test_scheduler_accepts_successful_source_watch_runtime_state_for_the_next_run() -> None:
+    status = "\n".join(
+        [
+            " M data/dispatches/food-line/source_performance_history.json",
+            "?? status/food-line/runs/2026-09-04.json",
+            "?? data/dispatches/food-line/discovery-runs/2026-09-04/run-1/run-state.json",
+            "?? logs/food-line/source-watch/2026-09-04/receipt.json",
+        ]
+    )
+
+    assert scheduler._unexpected_dirty_paths(status) == []
+
+
+def test_checkout_validation_preserves_durable_runtime_evidence(tmp_path: Path) -> None:
+    subprocess.run(["git", "init", "-b", scheduler.PRODUCTION_BRANCH], cwd=tmp_path, check=True, capture_output=True)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "config", "user.name", "Test User"], cwd=tmp_path, check=True)
+    history = tmp_path / "data" / "dispatches" / "food-line" / "source_performance_history.json"
+    history.parent.mkdir(parents=True)
+    history.write_text('{"runs_seen": 1}\n', encoding="utf-8")
+    subprocess.run(["git", "add", "--", str(history.relative_to(tmp_path))], cwd=tmp_path, check=True)
+    subprocess.run(["git", "commit", "-m", "baseline"], cwd=tmp_path, check=True, capture_output=True)
+    history.write_text('{"runs_seen": 2}\n', encoding="utf-8")
+    run_state = tmp_path / "status" / "food-line" / "runs" / "2026-09-04.json"
+    receipt = tmp_path / "logs" / "food-line" / "source-watch" / "2026-09-04" / "receipt.json"
+    run_state.parent.mkdir(parents=True)
+    receipt.parent.mkdir(parents=True)
+    run_state.write_text('{"status": "completed"}\n', encoding="utf-8")
+    receipt.write_text('{"exit_code": 0}\n', encoding="utf-8")
+
+    head = scheduler.verify_checkout(tmp_path, scheduler.PRODUCTION_BRANCH, update=False)
+
+    assert head == subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=tmp_path, check=True, capture_output=True, text=True
+    ).stdout.strip()
+    assert history.read_text(encoding="utf-8") == '{"runs_seen": 2}\n'
+    assert run_state.read_text(encoding="utf-8") == '{"status": "completed"}\n'
+    assert receipt.read_text(encoding="utf-8") == '{"exit_code": 0}\n'
+
+
+@pytest.mark.parametrize(
+    "status_line",
+    [
+        "M  data/dispatches/food-line/source_performance_history.json",
+        "MM data/dispatches/food-line/source_performance_history.json",
+        " D data/dispatches/food-line/source_performance_history.json",
+        " M data/dispatches/food-line/source_registry.json",
+        "?? data/dispatches/food-line/unrecognized-runtime.json",
+    ],
+)
+def test_scheduler_tracked_or_unrecognized_drift_still_fails_closed(status_line: str) -> None:
+    assert scheduler._unexpected_dirty_paths(status_line)
+
+
 def test_legacy_discovery_wrapper_writes_run_state_and_query_plan(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.chdir(tmp_path)
     (tmp_path / "data" / "dispatches" / "food-line").mkdir(parents=True, exist_ok=True)

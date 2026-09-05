@@ -21,7 +21,7 @@ if str(ROOT) not in sys.path:
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from scripts.food_line_runtime_paths import classify_food_line_runtime_path
+from scripts.food_line_runtime_paths import classify_food_line_runtime_path, is_food_line_mutable_tracked_runtime_path
 
 PRODUCTION_BRANCH = "add/pages-repo-default"
 PRIVATE_AGENT_INBOX_ROOT = ROOT / "data" / "dispatches" / "food-line" / "agent-inbox"
@@ -179,6 +179,8 @@ def _unexpected_dirty_paths(status_output: str) -> list[str]:
         status = line[:2]
         path = _parse_porcelain_paths(raw_line)[0]
         category = classify_food_line_runtime_path(path)
+        if status == " M" and is_food_line_mutable_tracked_runtime_path(path):
+            continue
         if status != "??" or category not in {"review_output", "logs", "cache", "virtualenv", "local_run_state"}:
             unexpected.append(path)
     return sorted(unexpected)

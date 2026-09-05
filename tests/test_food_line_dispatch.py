@@ -1554,7 +1554,7 @@ def test_food_line_2026_06_06_blocks_stale_prior_year_current_story_candidates(t
     assert 'href="/gaza/"' in index_html
     assert 'href="/cascadia/"' in index_html
     assert 'href="/food-line/"' in index_html
-    assert "2026-06-06 — No qualifying update" in archive_html
+    assert '<span class="edition-date">2026-06-06</span><a href="editions/2026-06-06/">No qualifying update</a>' in archive_html
     assert "Food Line Audio" in audio_index_html
     assert "Open the podcast feed" in audio_index_html
     assert f"/food-line/audio/{date}-transcript.html" in podcast_xml
@@ -1964,8 +1964,8 @@ def test_food_line_homepage_omits_pressure_map_link_when_map_artifact_is_absent(
     archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
 
     assert "2026-06-07 — No qualifying update" in index_html
-    assert "2026-06-07 — No qualifying update" in archive_html
-    assert "2026-06-06 — No qualifying update" in archive_html
+    assert '<span class="edition-date">2026-06-07</span><a href="editions/2026-06-07/">No qualifying update</a>' in archive_html
+    assert '<span class="edition-date">2026-06-06</span><a href="editions/2026-06-06/">No qualifying update</a>' in archive_html
     assert "2026-06-05" not in index_html
     assert "2026-06-05" not in archive_html
     assert 'href="map/"' not in index_html
@@ -3785,7 +3785,7 @@ def test_food_line_june_11_with_kold_becomes_current_update_and_map_eligible(tmp
     assert 'Browse the Food Line archive' in home_html
     assert 'No current update' not in home_html
     assert '2026-06-11' in home_html
-    assert '2026-06-11 — Tucson food-bank strain and Roanoke St. Francis House shortage' in archive_html
+    assert '<span class="edition-date">2026-06-11</span><a href="editions/2026-06-11/">Tucson food bank sees surge in visitors as inflation rises</a>' in archive_html
 
 
 def test_food_line_archive_titles_and_home_link_are_source_specific(tmp_path: Path):
@@ -3808,9 +3808,14 @@ def test_food_line_archive_titles_and_home_link_are_source_specific(tmp_path: Pa
     assert "<h2>Recent Editions</h2>" in home_html
     assert "Open the full archive" in home_html
     assert "2026-06-12 — Horry County pantry demand, Tulsa fuel costs, and Tennessee SNAP enrollment" in home_html
-    assert "2026-06-10 — Northwest Louisiana food-bank inventory" in archive_html
-    assert "2026-06-11 — Roanoke St. Francis House shortage and Tucson food-bank strain" in archive_html
-    assert "2026-06-12 — Horry County pantry demand, Tulsa fuel costs, and Tennessee SNAP enrollment" in archive_html
+    archive_soup = BeautifulSoup(archive_html, "html.parser")
+    archive_entries = {
+        item.find("span", class_="edition-date").get_text(strip=True): item.find("a", recursive=False).get_text(strip=True)
+        for item in archive_soup.select("ul.edition-list > li")
+    }
+    assert archive_entries["2026-06-10"] == "Food Bank of Northwest Louisiana says summer feeding need is tightening inventory"
+    assert archive_entries["2026-06-11"] == "Why Roanoke's St. Francis House is facing its tightest food shortage ever this summer"
+    assert archive_entries["2026-06-12"] == "Grand Strand food providers say inflation is driving more families to pantries"
     assert "Pantry demand and summer food-bank strain" not in home_html
     assert "Pantry demand and summer food-bank strain" not in archive_html
 
@@ -5722,7 +5727,8 @@ def test_food_line_archive_review_only_updater_apply_adds_one_entry_and_only_arc
     assert result["already_present"] is False
     assert result["pages_repo_mutated"] is True
     assert result["changed_files"] == [str(archive_path.resolve())]
-    assert archive_html.count("2026-06-12 — Food Line Dispatch - 2026-06-12") == 1
+    assert archive_html.count('<span class="edition-date">2026-06-12</span>') == 1
+    assert archive_html.count('>Food Line Dispatch - 2026-06-12</a>') == 1
     assert 'href="editions/2026-06-12/"' in archive_html
     assert archive_html.index("2026-06-13") < archive_html.index("2026-06-12")
     assert archive_html.index("2026-06-12") < archive_html.index("2026-06-09")
@@ -5759,7 +5765,8 @@ def test_food_line_archive_review_only_updater_repeat_apply_is_idempotent(tmp_pa
     assert second["pages_repo_mutated"] is False
     assert second["changed_files"] == []
     assert archive_path.read_text(encoding="utf-8") == first_archive
-    assert first_archive.count("2026-06-12 — Food Line Dispatch - 2026-06-12") == 1
+    assert first_archive.count('<span class="edition-date">2026-06-12</span>') == 1
+    assert first_archive.count('>Food Line Dispatch - 2026-06-12</a>') == 1
 
 
 def test_food_line_archive_review_only_updater_missing_edition_fails_closed(tmp_path: Path):

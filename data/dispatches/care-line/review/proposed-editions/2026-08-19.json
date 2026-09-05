@@ -1,0 +1,18 @@
+{
+  "approved_signal_ids": [
+    "care-line-historical-backfill-2026-08-19-santa-paula-hospital"
+  ],
+  "edition_date": "2026-08-19",
+  "edition_mode": "current_update",
+  "edition_summary": "Santa Paula Hospital won't meet new seismic safety standards required by 2030, and Ventura County is currently planning to close it. The county is trying to figure out what it will do to meet the Santa Clara River Valley's future health care needs. This edition uses real, traceable source records.",
+  "headline": "Care Line limited-source update",
+  "public_developments": 1,
+  "publisher_count": 1,
+  "release_ready": true,
+  "reviewed_record_path": "C:/PythonProjects/Dispatches From The Blue Fern Co/.worktrees/care-line-august-backfill-20260905/data/dispatches/care-line/reviewed/2026-08-19/reviewed_records.json",
+  "reviewed_record_sha256": "682cd2ee636e3eab938c43d3a3436f3d3e9a32eb0f9c33b33dcef4e4b0b76adb",
+  "schema_version": "bluefern.care_line.proposed_edition.v1",
+  "source_adequacy_label": "Limited-source update",
+  "source_adequacy_status": "LIMITED_SOURCE_UPDATE",
+  "source_count": 1
+}

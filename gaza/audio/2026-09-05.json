@@ -1,0 +1,74 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-09-05",
+  "generated_at": "2026-09-05T13:01:37.732752Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-09-05.mp3",
+  "audio_url": "/gaza/audio/2026-09-05.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1783,
+  "tts_input_word_count": 282,
+  "tts_story_count": 5,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1816320,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-09-05T13:01:37.732733Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-09-05-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-09-05/",
+  "script_text": "This is the Gaza Dispatch audio briefing for September 5, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Death on the road to Rafah: the night the IDF targeted World Central Kitchen aid workers. The Israeli army had helped plan the delivery of food aid on 1 April 2024, but things went wrong from the beginning and ended in seven deaths \u2022 Exclusive: why seven international aid workers were killed in Israeli airstrike. This was reported by The Guardian.\n\n2. 'Guilt by association': why seven international aid workers were killed in Israeli airstrike. Exclusive: Guardian investigation reveals targeting of World Central Kitchen convoy was result of widely used military tactic \u2022 Death on the road to Rafah: the night the IDF targeted World Central Kitchen aid workers Seven aid workers killed in an airstrike in Gaza were marked as targets under an Israeli military practice of establishing guilt by association, a Guardian investigation shows. This was reported by The Guardian.\n\n3. Gaza refugee says sister-in-law 'would be alive' if Home Office had let her come to UK. Anwar, who lives in Glasgow, says Home Office refused visa application despite Maryam having cancer. This was reported by The Guardian.\n\n4. US ambassador to Israel meets Palestinian-Americans in occupied West Bank. US Ambassador to Israel Mike Huckabee has visited Turmus Ayya in the occupied West Bank. This was reported by Al Jazeera.\n\n5. Israel must protect West Bank's Palestinians amid settler pogroms: US envoy. Huckabee labels some of the settlers committing violence as 'terrorists' though analysts say his visit is 'symbolic'. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the September 5, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 5,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-09-05-guardian-world-b98d6e4faeb6",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/sep/05/gaza-aid-workers-world-central-kitchen-idf-israel",
+      "title": "Death on the road to Rafah: the night the IDF targeted World Central Kitchen aid workers"
+    },
+    {
+      "source_record_id": "gaza-2026-09-05-guardian-world-70cf4a556690",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/sep/05/aid-workers-gaza-killed-in-israel-airstrike-investigation",
+      "title": "'Guilt by association': why seven international aid workers were killed in Israeli airstrike"
+    },
+    {
+      "source_record_id": "gaza-2026-09-05-guardian-world-4ebe97ef439a",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/uk-news/2026/sep/05/gaza-refugee-visa-refusal-home-office",
+      "title": "Gaza refugee says sister-in-law 'would be alive' if Home Office had let her come to UK"
+    },
+    {
+      "source_record_id": "gaza-2026-09-05-aljazeera-middle-east-a0a00bbc8ad4",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/9/5/us-ambassador-to-israel-meets-palestinian-americans-in-occupied-west-bank?traffic_source=rss",
+      "title": "US ambassador to Israel meets Palestinian-Americans in occupied West Bank"
+    },
+    {
+      "source_record_id": "gaza-2026-09-05-aljazeera-middle-east-0188164c465c",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/9/5/israel-must-guarantee-safety-of-west-bank-population-ambassador?traffic_source=rss",
+      "title": "Israel must protect West Bank's Palestinians amid settler pogroms: US envoy"
+    }
+  ]
+}

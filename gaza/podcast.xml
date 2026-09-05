@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Fri, 04 Sep 2026 13:01:17 +0000</lastBuildDate>
+  <lastBuildDate>Sat, 05 Sep 2026 13:01:37 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for September 5, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-09-05-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-09-05-transcript.html</guid>
+    <pubDate>Sat, 05 Sep 2026 00:00:00 +0000</pubDate>
+    <description>Death on the road to Rafah: the night the IDF targeted World Central Kitchen aid workers. The Israeli army had helped plan the delivery of food aid on 1 April 2024, but things went wrong from the beginning and ended in seven deaths • Exclusive: why seven international aid workers were killed in Israeli airstrike. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-09-05.mp3" length="1816320" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for September 4, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-09-04-transcript.html</link>

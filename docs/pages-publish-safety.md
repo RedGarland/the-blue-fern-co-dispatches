@@ -13,6 +13,7 @@ Rules:
 
 - Local publish behavior: the publisher copies the generated `output/site` files into the `bluefern-dispatches-pages` repository and creates a local commit by default. Pushing those commits to the remote is an explicit, separate step (the publisher skips push unless invoked with an explicit push option).
 - Gaza publishes now fail closed if the new build would drop existing public-history dates from `gaza/archive.html`, `gaza/rss.xml`, `gaza/audio/index.html`, `gaza/audio/podcast.xml`, or `gaza/podcast.xml`. Use `--allow-listing-shrink` only for a deliberate, reviewed archival pruning operation.
+- A scoped Care Line publish may add an expected, listable edition that is not yet present on Pages. Before copying, the generated edition must be listable and the generated archive/RSS must preserve every published date. After copying, the expected edition and all required edition files must exist byte-for-byte on Pages, while newer Pages editions remain untouched.
 - To publish live from this machine, either run the dispatch runner with its `--push` flag (for example `scripts\run_daily_gaza.py --push`) or run `git push origin gh-pages` from inside the `bluefern-dispatches-pages` repo. Do not push the Pages branch from the source repo.
 
 ## Codex Safe Execution Scope

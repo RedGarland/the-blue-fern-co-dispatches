@@ -41,17 +41,27 @@ def test_source_published_date_is_accepted_for_intake_freshness():
     assert candidate["source_published_date"] == "2026-07-27"
 
 
-def test_retrieved_at_is_accepted_when_publication_dates_are_missing():
+def test_rfc_source_publication_date_is_normalized_without_using_retrieval_time():
+    payload = _row(source_published_at="", publication_date="Mon, 27 Jul 2026 08:15:00 -0400")
+    finding = adapt_food_line_agent_output([payload], agent_name="fixture", agent_run_id="run-1")[0]
+
+    assert finding.source_published_at == "2026-07-27T08:15:00-04:00"
+
+
+def test_retrieved_at_establishes_freshness_without_inventing_a_publication_date():
     payload = _row()
     payload.pop("source_published_at")
     payload["source_published_date"] = ""
     payload["publication_date"] = ""
     payload["retrieved_at"] = "2026-07-27T08:15:00Z"
+    payload["exact_supporting_passage"] = "The pantry remains unable to supply food to everyone seeking assistance."
     finding = adapt_food_line_agent_output([payload], agent_name="fixture", agent_run_id="run-1", discovered_at="2026-07-27T00:00:00Z")[0]
-    assert finding.source_published_at == "2026-07-27T08:15:00Z"
+    assert finding.source_published_at == ""
     candidate = map_finding_to_food_line_candidate(finding, edition_date="2026-07-27")
-    assert candidate["published_at"] == "2026-07-27T08:15:00Z"
-    assert candidate["source_published_date"] == "2026-07-27"
+    assert candidate["published_at"] == ""
+    assert candidate["source_published_date"] == ""
+    assert candidate["freshness_check"]["basis"] == "newly_surfaced_active_condition"
+    assert candidate["freshness_check"]["basis_date"] == "2026-07-27"
 
 
 def test_missing_evidence_and_invalid_url_fail_closed():
@@ -71,12 +81,39 @@ def test_dry_run_writes_nothing(tmp_path: Path):
 
 def test_import_is_private_and_idempotent_shape(tmp_path: Path):
     source = tmp_path / "agent.json"
-    source.write_text(json.dumps([_row(), _row(source_url="https://example.com/story?gclid=2")]), encoding="utf-8")
+    passage = "The community pantry closed permanently, ending a local food-access point."
+    source.write_text(
+        json.dumps([_row(exact_supporting_passage=passage), _row(source_url="https://example.com/story?gclid=2", exact_supporting_passage=passage)]),
+        encoding="utf-8",
+    )
     first = process(tmp_path, source, edition_date="2026-07-27", agent_name="fixture", agent_run_id="run-1", dry_run=False)
     second = process(tmp_path, source, edition_date="2026-07-27", agent_name="fixture", agent_run_id="run-1", dry_run=False)
     assert first["finding_ids"] == second["finding_ids"]
     assert (tmp_path / "data/dispatches/food-line/agent-intake/2026-07-27/run-1.json").exists()
     assert not (tmp_path / "output").exists()
+    artifact = first["artifact"]
+    assert len(artifact["candidate_rows"]) == 2
+    assert artifact["candidate_rows"][1]["review_retention_disposition"] == "duplicate"
+    assert artifact["lifecycle_reconciliation"]["unaccounted"] == 0
+
+
+def test_source_watch_validation_accepts_missing_publication_date_for_later_event_aware_review(tmp_path: Path):
+    source = tmp_path / "source-watch.json"
+    payload = _envelope(
+        {
+            "final_trace_url": "https://example.org/pantry",
+            "discovered_title": "Pantry closes next week",
+            "discovered_publisher": "Example Pantry",
+            "evidence_text": "The pantry will close permanently on August 3, 2026.",
+            "source_published_date": "",
+        }
+    )
+    source.write_text(json.dumps(payload), encoding="utf-8")
+
+    result = validate_input(source)
+
+    assert result["valid"] is True
+    assert result["missing_publication_dates"] == [0]
 
 
 def _envelope(row):

@@ -45,6 +45,7 @@ from bluefern_dispatches.care_line_source_registry import (
     source_readiness_status,
 )
 from bluefern_dispatches.care_line_sources import load_pressure_source_registry
+from bluefern_dispatches.source_based_qualification import assess_review_retention
 
 
 COLLECTION_RUNS_ROOT = Path("data/dispatches/care-line/collection-runs")
@@ -3375,13 +3376,54 @@ def qualify_event_lead(
 
     source_publication_date = resolved_source_publication_date
     source_date_state = _text(raw_item, "source_date_state") or ("source_dated" if source_publication_date else "")
+    qualification_edition_date = (
+        _text(raw_item, "discovery_date", "collection_date", "target_date", "collected_at")[:10]
+        or source_publication_date
+        or utc_now().split("T", 1)[0]
+    )
+    preliminary_source_retention = assess_review_retention(
+        {
+            **dict(raw_item),
+            "canonical_source_url": _text(raw_item, "item_url"),
+            "publisher": _text(raw_item, "source_publisher", "source_name") or source.name,
+            "exact_supporting_passage": evidence_blob,
+            "source_published_at": source_publication_date,
+            "event_type": event_type,
+            "freshness_role": _text(currentness, "freshness_role"),
+            "operative_event_date": _text(currentness, "operative_event_date"),
+            "event_announcement_date": _text(currentness, "event_announcement_date"),
+            "event_effective_date": _text(currentness, "event_effective_date"),
+            "observed_date": _text(currentness, "observed_date"),
+        },
+        dispatch="care-line",
+        edition_date=qualification_edition_date,
+    )
     has_reviewable_currentness_date = bool(
         _text(currentness, "operative_event_date")
         or _text(currentness, "event_announcement_date")
         or _text(currentness, "event_effective_date")
         or _text(currentness, "observed_date")
     )
-    if source_date_state != "source_dated" and not has_reviewable_currentness_date:
+    has_reviewable_currentness = has_reviewable_currentness_date or bool(
+        preliminary_source_retention["eligible_for_review"]
+        and preliminary_source_retention["current_relevance"]
+    )
+    if (
+        not source_publication_date
+        and has_reviewable_currentness
+        and _text(currentness, "currentness_class") == "DATE_UNRESOLVED"
+    ):
+        currentness = dict(currentness)
+        currentness["currentness_class"] = "CURRENT_ACTIVE_SOURCE_STATUS"
+        currentness["freshness_role"] = "CURRENT"
+        currentness["currentness_reasoning"] = (
+            f"shared source-based currentness: {preliminary_source_retention['freshness_basis']}"
+        )
+        currentness["currentness_failed_gates"] = [
+            gate for gate in list(currentness.get("currentness_failed_gates", []))
+            if gate != "currentness_unresolved"
+        ]
+    if source_date_state != "source_dated" and not has_reviewable_currentness:
         return "failed_extraction", {
             "schema_version": EXCLUSION_SCHEMA_VERSION,
             "exclusion_id": _stable_id("care-line-failed-extraction", raw_item.get("raw_item_id", ""), "needs_date"),
@@ -3709,7 +3751,7 @@ def qualify_event_lead(
         supporting_passage=supporting_passage,
         access_consequences=access_consequences,
     )
-    if source_date_state != "source_dated" and has_reviewable_currentness_date:
+    if source_date_state != "source_dated" and has_reviewable_currentness:
         failed_gates = [gate for gate in failed_gates if gate != "missing_source_date"]
     extraction_confidence = min(1.0, 0.55 + 0.07 * len(_keyword_hits(supporting_passage, [(label, pattern) for label, _, pattern in POSITIVE_EVENT_PATTERNS])) + (0.1 if article_content else 0.0))
     full_article_required = bool(_text(lead, "full_article_required")) and not article_content
@@ -3841,6 +3883,39 @@ def qualify_event_lead(
     candidate["qualification_result"]["extraction_outcome"] = extraction_outcome
     candidate["qualification_result"]["extraction_method"] = extraction_method
     candidate["qualification_result"]["content_hash"] = extraction_hash
+    source_based_retention = assess_review_retention(
+        {
+            **dict(raw_item),
+            "canonical_source_url": _text(raw_item, "item_url"),
+            "publisher": _text(raw_item, "source_publisher", "source_name") or source.name,
+            "exact_supporting_passage": supporting_passage,
+            "source_published_at": source_publication_date,
+            "event_type": event_type,
+            "access_consequences": access_consequences,
+            "concrete_strain_hint": bool(event_type and access_consequences),
+            "freshness_role": freshness_role,
+            "operative_event_date": _text(currentness, "operative_event_date"),
+            "event_announcement_date": _text(currentness, "event_announcement_date"),
+            "event_effective_date": _text(currentness, "event_effective_date"),
+            "observed_date": _text(currentness, "observed_date"),
+            "freshness_basis_date": (
+                _text(currentness, "operative_event_date", "event_announcement_date", "event_effective_date", "observed_date")
+                or source_publication_date
+            ),
+        },
+        dispatch="care-line",
+        edition_date=qualification_edition_date,
+    )
+    if (
+        not source_publication_date
+        and preliminary_source_retention["eligible_for_review"]
+        and preliminary_source_retention["freshness_basis"]
+    ):
+        source_based_retention["freshness_basis"] = preliminary_source_retention["freshness_basis"]
+        source_based_retention["freshness_check"] = preliminary_source_retention["freshness_check"]
+    candidate["qualification_result"]["source_based_review_retention"] = source_based_retention
+    candidate["qualification_result"]["review_retention_disposition"] = source_based_retention["disposition"]
+    candidate["qualification_result"]["review_transition_owner"] = source_based_retention["next_transition_owner"]
     if full_article_required:
         candidate["qualification_result"]["review_warnings"] = list(dict.fromkeys(candidate["qualification_result"].get("review_warnings", []) + ["full_article_recommended"]))
     return "qualified", candidate

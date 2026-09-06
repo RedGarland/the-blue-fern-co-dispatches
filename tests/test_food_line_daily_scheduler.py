@@ -433,7 +433,7 @@ def test_legacy_current_intake_wrapper_records_duplicate_source_watch_findings_e
     intake = json.loads(intake_path.read_text(encoding="utf-8"))
     candidate_rows = intake["candidate_rows"]
     assert len(candidate_rows) == 2
-    assert candidate_rows[0]["candidate_disposition"] == "reviewable"
+    assert candidate_rows[0]["candidate_disposition"] == "retained_for_review"
     assert candidate_rows[1]["candidate_disposition"] == "duplicate"
     assert candidate_rows[1]["candidate_disposition_reason"] == "duplicate agent_duplicate_key within intake"
     assert intake["counts"]["eligible_for_review"] == 1

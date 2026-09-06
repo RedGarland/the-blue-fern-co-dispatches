@@ -10,6 +10,7 @@ import subprocess
 import shutil
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
+from email.utils import format_datetime
 from pathlib import Path
 from typing import Any
 
@@ -92,6 +93,17 @@ CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE = CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_SURFAC
 GAZA_HOME_RECENT_EDITION_LIMIT = 10
 GAZA_HOME_RECENT_EDITION_MIN = 3
 GAZA_PUBLIC_HISTORY_DATE_RE = re.compile(r"(?:/gaza/)?editions/(\d{4}-\d{2}-\d{2})/")
+GAZA_HISTORICAL_CATCHUP_ID_RE = re.compile(r"gaza-historical-catchup-[a-z0-9][a-z0-9-]{2,80}")
+GAZA_PUBLIC_HISTORY_CATCHUP_RE = re.compile(
+    r"(?:(?:https://dispatches\.thebluefernco\.com)?/gaza/)?catchups/(gaza-historical-catchup-[a-z0-9][a-z0-9-]{2,80})/"
+)
+GAZA_HISTORICAL_CATCHUP_REQUIRED_FILES = (
+    "index.html",
+    "edition_manifest.json",
+    "sources_manifest.json",
+    "curation_manifest.json",
+    "dedupe_report.json",
+)
 GAZA_AUDIO_INDEX_DATE_RE = re.compile(r'<span class="gaza-audio-index-date"><strong>(\d{4}-\d{2}-\d{2})</strong>')
 GAZA_AUDIO_PODCAST_DATE_RE = re.compile(r"/gaza/audio/(\d{4}-\d{2}-\d{2})-transcript\.html")
 GAZA_HOME_EDITION_LIST_RE = re.compile(r'<ul class="edition-list">(.*?)</ul>', re.DOTALL)
@@ -155,6 +167,17 @@ class DispatchConfig:
     body_html: str | None = None
     detail_artifacts: list[str] | None = None
     raw_records: list[dict[str, Any]] | None = None
+
+
+@dataclass(frozen=True)
+class GazaHistoricalCatchupEntry:
+    catchup_id: str
+    publication_date: str
+    published_at: str
+    public_path: str
+    public_url: str
+    title: str
+    description: str
 
 
 GAZA_BODY_HTML = """<p><strong>Dispatches From Gaza</strong></p>
@@ -1430,6 +1453,153 @@ def _gaza_public_edition_is_listable(site_root: Path, edition_date: str, pages_r
     return False
 
 
+def _load_json_file(path: Path) -> Any | None:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+
+
+def _gaza_historical_catchup_entry(package_dir: Path) -> GazaHistoricalCatchupEntry | None:
+    catchup_id = package_dir.name
+    if not GAZA_HISTORICAL_CATCHUP_ID_RE.fullmatch(catchup_id):
+        return None
+    if any(not (package_dir / filename).is_file() for filename in GAZA_HISTORICAL_CATCHUP_REQUIRED_FILES):
+        return None
+    manifest = _load_json_file(package_dir / "edition_manifest.json")
+    sources = _load_json_file(package_dir / "sources_manifest.json")
+    curation = _load_json_file(package_dir / "curation_manifest.json")
+    dedupe = _load_json_file(package_dir / "dedupe_report.json")
+    if not isinstance(manifest, dict) or not isinstance(sources, list) or not isinstance(curation, list) or not isinstance(dedupe, dict):
+        return None
+
+    publication_date = str(manifest.get("edition_date") or "").strip()
+    published_at = str(manifest.get("published_at") or "").strip()
+    public_path = f"gaza/catchups/{catchup_id}/"
+    public_url = f"{BASE_URL}/{public_path}"
+    approval_path = f"approvals/gaza/{catchup_id}-approval-v2.json"
+    try:
+        datetime.strptime(publication_date, "%Y-%m-%d")
+        published_datetime = datetime.fromisoformat(published_at.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if published_datetime.tzinfo is None:
+        return None
+
+    if any(
+        (
+            manifest.get("schema_version") != "gaza_historical_catchup_edition_v2",
+            manifest.get("dispatch_slug") != "gaza",
+            manifest.get("briefing_type") != "historical_catchup",
+            manifest.get("catchup_id") != catchup_id,
+            manifest.get("approval_path") != approval_path,
+            manifest.get("public_path") != public_path,
+            manifest.get("public_url") != public_url,
+            manifest.get("public_exposed") is not True,
+            manifest.get("audio_authorized") is not False,
+            manifest.get("social_authorized") is not False,
+            dedupe.get("schema_version") != "gaza_historical_catchup_dedupe_v1",
+            dedupe.get("catchup_id") != catchup_id,
+            dedupe.get("publication_date") != publication_date,
+        )
+    ):
+        return None
+    if not re.fullmatch(r"[0-9a-f]{40}", str(manifest.get("approval_commit") or "")):
+        return None
+    if not re.fullmatch(r"[0-9a-f]{40}", str(manifest.get("source_head") or "")):
+        return None
+    if not re.fullmatch(r"[0-9a-f]{40}", str(manifest.get("pages_pre_publish_head") or "")):
+        return None
+    if not re.fullmatch(r"[0-9a-f]{64}", str(manifest.get("approval_sha256") or "")):
+        return None
+
+    story_count = int(manifest.get("story_count", 0) or 0)
+    source_count = int(manifest.get("source_count", 0) or 0)
+    if story_count <= 0 or source_count <= 0 or len(curation) != story_count or len(sources) != source_count:
+        return None
+    candidate_ids = [str(item.get("historical_candidate_id") or "").strip() for item in curation if isinstance(item, dict)]
+    fingerprints = [str(item.get("event_fingerprint") or "").strip() for item in curation if isinstance(item, dict)]
+    story_ids = [str(item.get("story_id") or "").strip() for item in curation if isinstance(item, dict)]
+    if not all(candidate_ids) or not all(fingerprints) or not all(story_ids):
+        return None
+    if len(set(candidate_ids)) != story_count or len(set(fingerprints)) != story_count or len(set(story_ids)) != story_count:
+        return None
+    if any(
+        item.get("historical_catchup") is not True
+        or item.get("historical_catchup_id") != catchup_id
+        or item.get("included_in_public_summary") is not True
+        or item.get("public_url") != public_url
+        for item in curation
+        if isinstance(item, dict)
+    ):
+        return None
+    dedupe_candidates = [str(item) for item in dedupe.get("candidate_ids") or []]
+    dedupe_fingerprints = [str(item) for item in dedupe.get("event_fingerprints") or []]
+    if set(dedupe_candidates) != set(candidate_ids) or set(dedupe_fingerprints) != set(fingerprints):
+        return None
+    if int(dedupe.get("input_candidate_count", 0) or 0) < story_count:
+        return None
+    if int(dedupe.get("kept_candidate_count", 0) or 0) != story_count:
+        return None
+    source_candidates = {
+        str(item.get("historical_candidate_id") or "").strip()
+        for item in sources
+        if isinstance(item, dict)
+    }
+    source_fingerprints = {
+        str(item.get("event_fingerprint") or "").strip()
+        for item in sources
+        if isinstance(item, dict)
+    }
+    if not set(candidate_ids).issubset(source_candidates) or not set(fingerprints).issubset(source_fingerprints):
+        return None
+    if public_url not in _read_text_if_exists(package_dir / "index.html"):
+        return None
+
+    title = str(manifest.get("edition_title") or "").strip()
+    description = str(manifest.get("retrospective_disclosure") or "").strip()
+    if not title or not description:
+        return None
+    return GazaHistoricalCatchupEntry(
+        catchup_id=catchup_id,
+        publication_date=publication_date,
+        published_at=published_at,
+        public_path=public_path,
+        public_url=public_url,
+        title=title,
+        description=description,
+    )
+
+
+def discover_gaza_historical_catchups(
+    site_root: Path,
+    *,
+    pages_repo: Path | None = None,
+    max_public_date: str | None = None,
+) -> list[GazaHistoricalCatchupEntry]:
+    roots: list[Path] = []
+    resolved_pages_repo = _pages_repo_root_for_site_root(site_root, pages_repo)
+    if resolved_pages_repo is not None:
+        roots.append(resolved_pages_repo / "gaza" / "catchups")
+    roots.append(site_root / "gaza" / "catchups")
+    entries: dict[str, GazaHistoricalCatchupEntry] = {}
+    for root in roots:
+        if not root.exists():
+            continue
+        for package_dir in sorted(root.iterdir()):
+            if not package_dir.is_dir() or package_dir.name in entries:
+                continue
+            entry = _gaza_historical_catchup_entry(package_dir)
+            if entry is None or (max_public_date and entry.publication_date > max_public_date):
+                continue
+            entries[entry.catchup_id] = entry
+    return sorted(
+        entries.values(),
+        key=lambda entry: (entry.publication_date, entry.published_at, entry.catchup_id),
+        reverse=True,
+    )
+
+
 def _read_text_if_exists(path: Path) -> str:
     if not path.exists():
         return ""
@@ -1438,6 +1608,10 @@ def _read_text_if_exists(path: Path) -> str:
 
 def _extract_gaza_public_history_dates(text: str) -> set[str]:
     return set(GAZA_PUBLIC_HISTORY_DATE_RE.findall(text))
+
+
+def _extract_gaza_public_history_catchups(text: str) -> set[str]:
+    return set(GAZA_PUBLIC_HISTORY_CATCHUP_RE.findall(text))
 
 
 def _extract_gaza_audio_index_dates(text: str) -> set[str]:
@@ -1464,6 +1638,15 @@ def _gaza_public_surface_date_sets(public_root: Path, *, audio_root: Path | None
     return result
 
 
+def _gaza_public_surface_catchup_sets(public_root: Path) -> dict[str, set[str]]:
+    gaza_root = public_root / "gaza"
+    return {
+        "gaza/index.html": _extract_gaza_public_history_catchups(_read_text_if_exists(gaza_root / "index.html")),
+        "gaza/archive.html": _extract_gaza_public_history_catchups(_read_text_if_exists(gaza_root / "archive.html")),
+        "gaza/rss.xml": _extract_gaza_public_history_catchups(_read_text_if_exists(gaza_root / "rss.xml")),
+    }
+
+
 def _gaza_public_surface_history_diagnostics(
     previous_root: Path,
     current_root: Path,
@@ -1473,11 +1656,16 @@ def _gaza_public_surface_history_diagnostics(
     diagnostics: list[dict[str, Any]] = []
     previous = _gaza_public_surface_date_sets(previous_root)
     current = _gaza_public_surface_date_sets(current_root, audio_root=current_audio_root)
-    for surface in sorted(previous.keys() | current.keys()):
+    previous_catchups = _gaza_public_surface_catchup_sets(previous_root)
+    current_catchups = _gaza_public_surface_catchup_sets(current_root)
+    for surface in sorted(previous.keys() | current.keys() | previous_catchups.keys() | current_catchups.keys()):
         before_dates = previous.get(surface, set())
         after_dates = current.get(surface, set())
+        before_catchups = previous_catchups.get(surface, set())
+        after_catchups = current_catchups.get(surface, set())
         dropped_dates = sorted(before_dates - after_dates, reverse=True)
         added_dates = sorted(after_dates - before_dates, reverse=True)
+        dropped_catchups = sorted(before_catchups - after_catchups)
         diagnostics.append(
             {
                 "surface": surface,
@@ -1486,7 +1674,10 @@ def _gaza_public_surface_history_diagnostics(
                 "preserved_dates": sorted(before_dates & after_dates, reverse=True),
                 "added_dates": added_dates,
                 "dropped_dates": dropped_dates,
-                "ok": not dropped_dates,
+                "preserved_catchups": sorted(before_catchups & after_catchups),
+                "added_catchups": sorted(after_catchups - before_catchups),
+                "dropped_catchups": dropped_catchups,
+                "ok": not dropped_dates and not dropped_catchups,
             }
         )
     return diagnostics
@@ -1650,6 +1841,51 @@ def render_edition_list_item(site_root: Path, dispatch: DispatchConfig, date: st
     return (
         f'      <li><span class="edition-date">{html.escape(date)}</span>'
         f'<a href="editions/{date}/">{html.escape(label)}</a>{actions}{subtitle_html}</li>'
+    )
+
+
+def render_gaza_historical_catchup_list_item(entry: GazaHistoricalCatchupEntry) -> str:
+    return (
+        f'      <li class="historical-catchup"><span class="edition-date">{html.escape(entry.publication_date)}</span>'
+        f'<a href="catchups/{html.escape(entry.catchup_id)}/">Historical catch-up / '
+        f'{html.escape(entry.publication_date)} — {html.escape(entry.title)}</a></li>'
+    )
+
+
+def _gaza_public_history_rows(
+    edition_dates: list[str],
+    catchups: list[GazaHistoricalCatchupEntry],
+) -> list[tuple[str, str | GazaHistoricalCatchupEntry]]:
+    rows: list[tuple[str, str | GazaHistoricalCatchupEntry]] = [("daily", date) for date in dict.fromkeys(edition_dates)]
+    rows.extend(("catchup", entry) for entry in {entry.catchup_id: entry for entry in catchups}.values())
+    return sorted(
+        rows,
+        key=lambda row: (
+            row[1].publication_date if isinstance(row[1], GazaHistoricalCatchupEntry) else row[1],
+            1 if row[0] == "catchup" else 0,
+            row[1].published_at if isinstance(row[1], GazaHistoricalCatchupEntry) else "",
+            row[1].catchup_id if isinstance(row[1], GazaHistoricalCatchupEntry) else "",
+        ),
+        reverse=True,
+    )
+
+
+def _render_gaza_public_history_list(
+    site_root: Path,
+    dispatch: DispatchConfig,
+    edition_dates: list[str],
+    catchups: list[GazaHistoricalCatchupEntry],
+    *,
+    limit: int | None = None,
+) -> str:
+    rows = _gaza_public_history_rows(edition_dates, catchups)
+    if limit is not None:
+        rows = rows[:limit]
+    return "\n".join(
+        render_gaza_historical_catchup_list_item(value)
+        if kind == "catchup" and isinstance(value, GazaHistoricalCatchupEntry)
+        else render_edition_list_item(site_root, dispatch, str(value))
+        for kind, value in rows
     )
 
 
@@ -2030,7 +2266,13 @@ def remove_unlistable_public_cascadia_editions(site_root: Path, dry_run: bool, w
     return removed
 
 
-def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: list[str], site_root: Path | None = None) -> str:
+def render_dispatch_index_for_dates(
+    dispatch: DispatchConfig,
+    edition_dates: list[str],
+    site_root: Path | None = None,
+    *,
+    gaza_catchups: list[GazaHistoricalCatchupEntry] | None = None,
+) -> str:
     latest = edition_dates[0] if edition_dates else ""
     signal_pack_note = ""
     if dispatch.slug == "cascadia":
@@ -2053,10 +2295,21 @@ def render_dispatch_index_for_dates(dispatch: DispatchConfig, edition_dates: lis
         else "Structured briefings compiled from traceable source records."
     )
     site_root = site_root or Path("output") / "site"
-    recent = "\n".join(
-        render_edition_list_item(site_root, dispatch, date)
-        for date in edition_dates[:GAZA_HOME_RECENT_EDITION_LIMIT]
-    )
+    if dispatch.slug == "gaza":
+        if gaza_catchups is None:
+            gaza_catchups = discover_gaza_historical_catchups(site_root)
+        recent = _render_gaza_public_history_list(
+            site_root,
+            dispatch,
+            edition_dates,
+            gaza_catchups,
+            limit=GAZA_HOME_RECENT_EDITION_LIMIT,
+        )
+    else:
+        recent = "\n".join(
+            render_edition_list_item(site_root, dispatch, date)
+            for date in edition_dates[:GAZA_HOME_RECENT_EDITION_LIMIT]
+        )
     map_link = ""
     dashboard_link = ""
     explainer_block = ""
@@ -2188,7 +2441,13 @@ def render_archive(dispatch: DispatchConfig) -> str:
     return page(f"{dispatch.name} Archive", f"{BASE_URL}/{dispatch.slug}/archive.html", "assets/site.css", body, dispatch.name)
 
 
-def render_archive_for_dates(dispatch: DispatchConfig, edition_dates: list[str], site_root: Path | None = None) -> str:
+def render_archive_for_dates(
+    dispatch: DispatchConfig,
+    edition_dates: list[str],
+    site_root: Path | None = None,
+    *,
+    gaza_catchups: list[GazaHistoricalCatchupEntry] | None = None,
+) -> str:
     site_root = site_root or Path("output") / "site"
     gaza_audio_link = ""
     if dispatch.slug == "gaza" and (site_root / "gaza" / "audio" / "index.html").exists():
@@ -2218,10 +2477,15 @@ def render_archive_for_dates(dispatch: DispatchConfig, edition_dates: list[str],
   </main>
 {footer("")}"""
         return page(f"{dispatch.name} Archive", f"{BASE_URL}/{dispatch.slug}/archive.html", "assets/site.css", body, dispatch.name)
-    items = "\n".join(
-        render_edition_list_item(site_root, dispatch, date)
-        for date in edition_dates
-    )
+    if dispatch.slug == "gaza":
+        if gaza_catchups is None:
+            gaza_catchups = discover_gaza_historical_catchups(site_root)
+        items = _render_gaza_public_history_list(site_root, dispatch, edition_dates, gaza_catchups)
+    else:
+        items = "\n".join(
+            render_edition_list_item(site_root, dispatch, date)
+            for date in edition_dates
+        )
     body = f"""{header(dispatch.name, "", "archive.html")}
   <main class="archive">
     <section class="hero">
@@ -2339,17 +2603,51 @@ def render_rss(dispatch: DispatchConfig) -> str:
 """
 
 
-def render_rss_for_dates(dispatch: DispatchConfig, edition_dates: list[str], site_root: Path | None = None) -> str:
+def render_rss_for_dates(
+    dispatch: DispatchConfig,
+    edition_dates: list[str],
+    site_root: Path | None = None,
+    *,
+    gaza_catchups: list[GazaHistoricalCatchupEntry] | None = None,
+) -> str:
     site_root = site_root or Path("output") / "site"
-    items = "\n".join(
-        f"""  <item>
+    if dispatch.slug == "gaza":
+        if gaza_catchups is None:
+            gaza_catchups = discover_gaza_historical_catchups(site_root)
+        rendered_items: list[str] = []
+        for kind, value in _gaza_public_history_rows(edition_dates, gaza_catchups):
+            if kind == "catchup" and isinstance(value, GazaHistoricalCatchupEntry):
+                published_datetime = datetime.fromisoformat(value.published_at.replace("Z", "+00:00")).astimezone(timezone.utc)
+                rendered_items.append(
+                    f"""  <item>
+    <title>{html.escape(value.title)}</title>
+    <link>{html.escape(value.public_url)}</link>
+    <guid>{html.escape(value.public_url)}</guid>
+    <pubDate>{format_datetime(published_datetime)}</pubDate>
+    <description>{html.escape(value.description)}</description>
+  </item>"""
+                )
+                continue
+            date = str(value)
+            rendered_items.append(
+                f"""  <item>
     <title>{html.escape(dispatch.name)} - {html.escape(public_edition_label(site_root, dispatch, date))}</title>
     <link>{BASE_URL}/{dispatch.slug}/editions/{date}/</link>
     <guid>{BASE_URL}/{dispatch.slug}/editions/{date}/</guid>
     <description>{html.escape(public_edition_subtitle(site_root, dispatch, date) or public_edition_label(site_root, dispatch, date))}</description>
   </item>"""
-        for date in edition_dates
-    )
+            )
+        items = "\n".join(rendered_items)
+    else:
+        items = "\n".join(
+            f"""  <item>
+    <title>{html.escape(dispatch.name)} - {html.escape(public_edition_label(site_root, dispatch, date))}</title>
+    <link>{BASE_URL}/{dispatch.slug}/editions/{date}/</link>
+    <guid>{BASE_URL}/{dispatch.slug}/editions/{date}/</guid>
+    <description>{html.escape(public_edition_subtitle(site_root, dispatch, date) or public_edition_label(site_root, dispatch, date))}</description>
+  </item>"""
+            for date in edition_dates
+        )
     return f"""<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0">
 <channel>
@@ -2756,15 +3054,44 @@ def build_site(
                         f"care-line edition {dispatch.edition_date} did not meet listability checks: "
                         f"{'; '.join(str(item) for item in report.get('reasons') or []) or 'no specific reason recorded'}"
                     )
-            edition_dates = discover_public_edition_dates(site_root, dispatch.slug, max_edition_date=max_public_date)
+            edition_dates = discover_public_edition_dates(
+                site_root,
+                dispatch.slug,
+                max_edition_date=max_public_date,
+                pages_repo=pages_repo,
+            )
             if dispatch.edition_date not in edition_dates and public_edition_is_listable(site_root, dispatch.slug, dispatch.edition_date):
                 if not max_public_date or dispatch.edition_date <= max_public_date:
                     edition_dates = sorted([*edition_dates, dispatch.edition_date], reverse=True)
             if dispatch.slug == "american-pressure" and edition_dates:
                 _refresh_american_pressure_map_route(site_root, edition_dates[0], dry_run, wrote)
-            write_text(dispatch_public_root / "index.html", render_dispatch_index_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
-            write_text(dispatch_public_root / "archive.html", render_archive_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
-            write_text(dispatch_public_root / "rss.xml", render_rss_for_dates(dispatch, edition_dates, site_root), dry_run, wrote)
+            gaza_catchups = (
+                discover_gaza_historical_catchups(
+                    site_root,
+                    pages_repo=pages_repo,
+                    max_public_date=max_public_date,
+                )
+                if dispatch.slug == "gaza"
+                else None
+            )
+            write_text(
+                dispatch_public_root / "index.html",
+                render_dispatch_index_for_dates(dispatch, edition_dates, site_root, gaza_catchups=gaza_catchups),
+                dry_run,
+                wrote,
+            )
+            write_text(
+                dispatch_public_root / "archive.html",
+                render_archive_for_dates(dispatch, edition_dates, site_root, gaza_catchups=gaza_catchups),
+                dry_run,
+                wrote,
+            )
+            write_text(
+                dispatch_public_root / "rss.xml",
+                render_rss_for_dates(dispatch, edition_dates, site_root, gaza_catchups=gaza_catchups),
+                dry_run,
+                wrote,
+            )
     if not only_dispatches or CARE_LINE_DISPATCH_SLUG in only_dispatches:
         try:
             if care_line_signal_wire is None:
@@ -4005,13 +4332,16 @@ def publish_pages(
             errors.append(f"gaza homepage recent-editions guard blocked publish: {guard_reasons}")
         gaza_history_diagnostics = _gaza_public_surface_history_diagnostics(pages_repo, site_root, current_audio_root=gaza_audio_root)
         for report in gaza_history_diagnostics:
-            if report["dropped_dates"] and not allow_listing_shrink:
+            if (report["dropped_dates"] or report["dropped_catchups"]) and not allow_listing_shrink:
                 surface = str(report.get("surface") or "gaza surface")
                 dropped = ", ".join(str(item) for item in report["dropped_dates"])
+                dropped_catchups = ", ".join(str(item) for item in report["dropped_catchups"])
                 previous_count = int(report.get("previous_count") or 0)
                 current_count = int(report.get("current_count") or 0)
                 gaza_surface_error_messages.append(
-                    f"gaza public history shrink detected for {surface}: previous_count={previous_count}; current_count={current_count}; dropped_dates={dropped}"
+                    f"gaza public history shrink detected for {surface}: previous_count={previous_count}; "
+                    f"current_count={current_count}; dropped_dates={dropped or 'none'}; "
+                    f"dropped_catchups={dropped_catchups or 'none'}"
                 )
         errors.extend(gaza_surface_error_messages)
     care_line_history_before: dict[str, set[str]] | None = None

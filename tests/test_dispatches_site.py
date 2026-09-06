@@ -1170,6 +1170,125 @@ def add_gaza_site_edition(site_root: Path, edition_date: str) -> None:
     archive.write_text(archive.read_text(encoding="utf-8") + f"\n{edition_date}\n", encoding="utf-8")
 
 
+def add_gaza_historical_catchup_publication(
+    public_root: Path,
+    *,
+    catchup_id: str = "gaza-historical-catchup-synthetic-history",
+    publication_date: str = "2026-09-03",
+    published_at: str = "2026-09-03T19:54:18Z",
+) -> tuple[str, dict[Path, bytes]]:
+    public_path = f"gaza/catchups/{catchup_id}/"
+    public_url = f"{BASE_URL}/{public_path}"
+    package = public_root / public_path
+    package.mkdir(parents=True, exist_ok=True)
+    candidate_id = "GZ-GAP-SYNTHETIC-HISTORY"
+    event_fingerprint = "sha256:" + "c" * 64
+    story_id = "gaza-catchup-synthetic-history"
+    title = "Recovered Gaza development"
+    disclosure = "Recovered through historical review and published retrospectively."
+    (package / "index.html").write_text(
+        f'<html><body><link rel="canonical" href="{public_url}"><h1>{title}</h1></body></html>',
+        encoding="utf-8",
+    )
+    (package / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "gaza_historical_catchup_edition_v2",
+                "dispatch_slug": "gaza",
+                "briefing_type": "historical_catchup",
+                "catchup_id": catchup_id,
+                "edition_date": publication_date,
+                "published_at": published_at,
+                "edition_title": title,
+                "retrospective_disclosure": disclosure,
+                "approval_commit": "a" * 40,
+                "approval_path": f"approvals/gaza/{catchup_id}-approval-v2.json",
+                "approval_sha256": "b" * 64,
+                "source_head": "d" * 40,
+                "pages_pre_publish_head": "e" * 40,
+                "public_path": public_path,
+                "public_url": public_url,
+                "public_exposed": True,
+                "story_count": 1,
+                "source_count": 1,
+                "audio_authorized": False,
+                "social_authorized": False,
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    (package / "sources_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "historical_candidate_id": candidate_id,
+                    "event_fingerprint": event_fingerprint,
+                    "canonical_url": "https://example.com/gaza-history",
+                    "url": "https://example.com/gaza-history",
+                }
+            ],
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    (package / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": story_id,
+                    "historical_candidate_id": candidate_id,
+                    "event_fingerprint": event_fingerprint,
+                    "historical_catchup": True,
+                    "historical_catchup_id": catchup_id,
+                    "included_in_public_summary": True,
+                    "public_url": public_url,
+                    "title": title,
+                }
+            ],
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    (package / "dedupe_report.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "gaza_historical_catchup_dedupe_v1",
+                "catchup_id": catchup_id,
+                "publication_date": publication_date,
+                "candidate_ids": [candidate_id],
+                "event_fingerprints": [event_fingerprint],
+                "input_candidate_count": 1,
+                "kept_candidate_count": 1,
+                "suppressed_candidate_count": 0,
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    list_item = (
+        f'<li class="historical-catchup"><span class="edition-date">{publication_date}</span>'
+        f'<a href="catchups/{catchup_id}/">Historical catch-up / {publication_date} — {title}</a></li>'
+    )
+    for name in ("index.html", "archive.html"):
+        path = public_root / "gaza" / name
+        text = path.read_text(encoding="utf-8")
+        if '<ul class="edition-list">' in text:
+            text = text.replace('<ul class="edition-list">', f'<ul class="edition-list">{list_item}', 1)
+        else:
+            text = text.replace("</body>", f"{list_item}</body>", 1)
+        path.write_text(text, encoding="utf-8")
+    rss_path = public_root / "gaza" / "rss.xml"
+    rss = rss_path.read_text(encoding="utf-8")
+    rss_item = (
+        f"<item><title>{title}</title><link>{public_url}</link><guid>{public_url}</guid>"
+        f"<pubDate>Thu, 03 Sep 2026 19:54:18 +0000</pubDate><description>{disclosure}</description></item>"
+    )
+    rss_path.write_text(rss.replace("</channel>", f"{rss_item}</channel>", 1), encoding="utf-8")
+    immutable = {path.relative_to(package): path.read_bytes() for path in package.iterdir() if path.is_file()}
+    return public_url, immutable
+
+
 def add_gaza_public_history_surface(
     site_root: Path,
     dates: list[str],
@@ -1208,6 +1327,84 @@ def add_gaza_public_history_surface(
     (gaza_root / "podcast.xml").write_text(podcast_xml, encoding="utf-8")
     for date_text in edition_dates:
         (audio_root / f"{date_text}-transcript.html").write_text(f"<html>{date_text}</html>", encoding="utf-8")
+
+
+def test_later_gaza_daily_regeneration_preserves_historical_catchup_union(tmp_path: Path) -> None:
+    site_root = tmp_path / "output" / "site"
+    pages_root = tmp_path / "bluefern-dispatches-pages"
+    add_gaza_public_history_surface(pages_root, ["2026-09-03", "2026-09-02", "2026-08-29"])
+    add_gaza_public_history_surface(site_root, [])
+    for edition_date in ("2026-08-29", "2026-09-02", "2026-09-03"):
+        add_gaza_site_edition(pages_root, edition_date)
+    public_url, immutable_before = add_gaza_historical_catchup_publication(pages_root)
+    second_public_url, second_immutable_before = add_gaza_historical_catchup_publication(
+        pages_root,
+        catchup_id="gaza-historical-catchup-second",
+        publication_date="2026-09-02",
+        published_at="2026-09-02T20:00:00Z",
+    )
+    for name in ("index.html", "archive.html", "rss.xml"):
+        assert "gaza-historical-catchup-synthetic-history" in (pages_root / "gaza" / name).read_text(encoding="utf-8")
+        assert "gaza-historical-catchup-second" in (pages_root / "gaza" / name).read_text(encoding="utf-8")
+
+    dispatch = DispatchConfig(
+        slug="gaza",
+        name="Dispatches From Gaza",
+        edition_date="2026-09-04",
+        tagline="Daily briefing",
+        logo="gaza-logo.png",
+        sources=[],
+        stories=[],
+        detail_artifacts=[],
+    )
+    add_gaza_site_edition(site_root, "2026-09-04")
+    daily_dates = generator.discover_public_edition_dates(site_root, "gaza", pages_repo=pages_root)
+    first = {
+        "index.html": generator.render_dispatch_index_for_dates(dispatch, daily_dates, site_root),
+        "archive.html": generator.render_archive_for_dates(dispatch, daily_dates, site_root),
+        "rss.xml": generator.render_rss_for_dates(dispatch, daily_dates, site_root),
+    }
+    for name, text in first.items():
+        (site_root / "gaza" / name).write_text(text, encoding="utf-8")
+        assert "gaza-historical-catchup-synthetic-history" in text
+
+    add_gaza_site_edition(site_root, "2026-09-05")
+    daily_dates = generator.discover_public_edition_dates(site_root, "gaza", pages_repo=pages_root)
+    dispatch = DispatchConfig(**{**dispatch.__dict__, "edition_date": "2026-09-05"})
+    second = {
+        "index.html": generator.render_dispatch_index_for_dates(dispatch, daily_dates, site_root),
+        "archive.html": generator.render_archive_for_dates(dispatch, daily_dates, site_root),
+        "rss.xml": generator.render_rss_for_dates(dispatch, daily_dates, site_root),
+    }
+    replay = {
+        "index.html": generator.render_dispatch_index_for_dates(dispatch, daily_dates, site_root),
+        "archive.html": generator.render_archive_for_dates(dispatch, daily_dates, site_root),
+        "rss.xml": generator.render_rss_for_dates(dispatch, daily_dates, site_root),
+    }
+
+    assert second == replay
+    assert 'href="editions/2026-09-05/">Read the latest briefing</a>' in second["index.html"]
+    assert second["archive.html"].count("catchups/gaza-historical-catchup-synthetic-history/") == 1
+    assert second["archive.html"].count("catchups/gaza-historical-catchup-second/") == 1
+    assert second["rss.xml"].count(public_url) == 2
+    assert second["rss.xml"].count(second_public_url) == 2
+    for edition_date in ("2026-08-29", "2026-09-02", "2026-09-03", "2026-09-04", "2026-09-05"):
+        assert edition_date in second["archive.html"]
+        assert edition_date in second["rss.xml"]
+    package = pages_root / "gaza" / "catchups" / "gaza-historical-catchup-synthetic-history"
+    assert {path.relative_to(package): path.read_bytes() for path in package.iterdir() if path.is_file()} == immutable_before
+    second_package = pages_root / "gaza" / "catchups" / "gaza-historical-catchup-second"
+    assert {path.relative_to(second_package): path.read_bytes() for path in second_package.iterdir() if path.is_file()} == second_immutable_before
+
+
+def test_gaza_historical_catchup_discovery_rejects_unsanctioned_directory(tmp_path: Path) -> None:
+    site_root = tmp_path / "output" / "site"
+    pages_root = tmp_path / "bluefern-dispatches-pages"
+    arbitrary = pages_root / "gaza" / "catchups" / "gaza-historical-catchup-arbitrary"
+    arbitrary.mkdir(parents=True)
+    (arbitrary / "index.html").write_text("<html>not an approved package</html>", encoding="utf-8")
+
+    assert generator.discover_gaza_historical_catchups(site_root, pages_repo=pages_root) == []
 
 
 def add_cascadia_site_edition(site_root: Path, edition_date: str) -> None:
@@ -1798,6 +1995,12 @@ def test_pages_publish_rejects_gaza_history_shrink_on_archive_and_audio_surfaces
     add_gaza_public_history_surface(pages_repo, ["2026-07-03", "2026-07-04"])
     add_gaza_site_edition(pages_repo, "2026-07-03")
     add_gaza_site_edition(pages_repo, "2026-07-04")
+    add_gaza_historical_catchup_publication(
+        pages_repo,
+        catchup_id="gaza-historical-catchup-history-guard",
+        publication_date="2026-07-03",
+        published_at="2026-07-03T20:00:00Z",
+    )
     backup_root = work / "backups"
 
     def fake_build_site(*args, **kwargs):
@@ -1828,6 +2031,21 @@ def test_pages_publish_rejects_gaza_history_shrink_on_archive_and_audio_surfaces
     assert result["ok"] is False
     assert any("gaza public history shrink detected" in error for error in result["errors"])
     assert any(item["surface"] == "gaza/archive.html" and item["dropped_dates"] == ["2026-07-03"] for item in result["gaza_public_surface_history"])
+    assert any(
+        item["surface"] == "gaza/archive.html"
+        and item["dropped_catchups"] == ["gaza-historical-catchup-history-guard"]
+        for item in result["gaza_public_surface_history"]
+    )
+    assert any(
+        item["surface"] == "gaza/index.html"
+        and item["dropped_catchups"] == ["gaza-historical-catchup-history-guard"]
+        for item in result["gaza_public_surface_history"]
+    )
+    assert any(
+        item["surface"] == "gaza/rss.xml"
+        and item["dropped_catchups"] == ["gaza-historical-catchup-history-guard"]
+        for item in result["gaza_public_surface_history"]
+    )
     assert any(item["surface"] == "gaza/audio/index.html" and item["dropped_dates"] == ["2026-07-03"] for item in result["gaza_public_surface_history"])
 
 

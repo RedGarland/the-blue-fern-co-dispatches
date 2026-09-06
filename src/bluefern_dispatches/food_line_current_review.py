@@ -10,6 +10,8 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 from urllib.parse import urlsplit
 
+from .source_based_qualification import validate_current_freshness_check
+
 
 QUEUE_SCHEMA_VERSION = "food_line_current_signal_review_v1"
 PROPOSED_EDITION_SCHEMA_VERSION = "food_line_proposed_edition_v1"
@@ -178,8 +180,11 @@ def _validate_item(item: Any, index: int, *, edition_date: date) -> dict[str, An
     canonical_url = _require_https(item["canonical_source_url"], f"items[{index}].canonical_source_url")
     if _article_url_identity(source_url) != _article_url_identity(canonical_url):
         raise ValueError(f"items[{index}] source and canonical URLs must identify the same article")
-    source_published_at = _require_date(item["source_published_at"], f"items[{index}].source_published_at")
-    source_date = date.fromisoformat(source_published_at[:10])
+    source_published_at = str(item["source_published_at"] or "").strip()
+    source_date = None
+    if source_published_at:
+        source_published_at = _require_date(source_published_at, f"items[{index}].source_published_at")
+        source_date = date.fromisoformat(source_published_at[:10])
 
     affected_groups = item["affected_groups"]
     if not isinstance(affected_groups, list) or any(not isinstance(value, str) for value in affected_groups):
@@ -192,15 +197,23 @@ def _validate_item(item: Any, index: int, *, edition_date: date) -> dict[str, An
     freshness_check = item["freshness_check"]
     if not isinstance(freshness_check, dict) or freshness_check.get("status") != "current":
         raise ValueError(f"items[{index}] is not current enough for the proposed daily edition")
-    age_days = (edition_date - source_date).days
-    if age_days < 0 or age_days > CURRENT_FRESHNESS_WINDOW_DAYS:
-        raise ValueError(f"items[{index}] is outside the {CURRENT_FRESHNESS_WINDOW_DAYS}-day current review window")
-    try:
-        reported_age_days = int(freshness_check.get("age_days"))
-    except (TypeError, ValueError) as exc:
-        raise ValueError(f"items[{index}].freshness_check.age_days must be an integer") from exc
-    if reported_age_days != age_days or freshness_check.get("edition_date") != edition_date.isoformat():
-        raise ValueError(f"items[{index}].freshness_check does not match the source and edition dates")
+    if freshness_check.get("basis") or not source_date:
+        try:
+            validate_current_freshness_check(freshness_check, edition_date=edition_date)
+        except ValueError as exc:
+            raise ValueError(f"items[{index}].{exc}") from exc
+    else:
+        # Backward-compatible validation for already-durable queues. New intake
+        # always writes an explicit basis and basis_date.
+        age_days = (edition_date - source_date).days
+        if age_days < 0 or age_days > CURRENT_FRESHNESS_WINDOW_DAYS:
+            raise ValueError(f"items[{index}] is outside the {CURRENT_FRESHNESS_WINDOW_DAYS}-day current review window")
+        try:
+            reported_age_days = int(freshness_check.get("age_days"))
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"items[{index}].freshness_check.age_days must be an integer") from exc
+        if reported_age_days != age_days or freshness_check.get("edition_date") != edition_date.isoformat():
+            raise ValueError(f"items[{index}].freshness_check does not match the source and edition dates")
 
     status = str(item["editorial_status"] or "").strip()
     if status not in ALLOWED_EDITORIAL_STATUSES:
@@ -234,6 +247,26 @@ def validate_queue(payload: Any) -> dict[str, Any]:
     if not isinstance(items, list):
         raise ValueError("items must be a list")
     validated = [_validate_item(item, index, edition_date=edition_date) for index, item in enumerate(items)]
+    lifecycle = payload.get("review_lifecycle")
+    if lifecycle is not None:
+        if not isinstance(lifecycle, dict):
+            raise ValueError("review_lifecycle must be an object")
+        dispositions = lifecycle.get("dispositions")
+        try:
+            discovered = int(lifecycle.get("discovered", -1))
+            terminal_or_handoff = int(lifecycle.get("terminal_or_handoff", -1))
+            unaccounted = int(lifecycle.get("unaccounted", -1))
+            disposition_counts = {str(key): int(value) for key, value in dispositions.items()} if isinstance(dispositions, dict) else {}
+        except (TypeError, ValueError) as exc:
+            raise ValueError("review_lifecycle counts must be integers") from exc
+        if not isinstance(dispositions, dict) or any(value < 0 for value in disposition_counts.values()):
+            raise ValueError("review_lifecycle.dispositions must contain non-negative counts")
+        if discovered != terminal_or_handoff or unaccounted != 0 or sum(disposition_counts.values()) != discovered:
+            raise ValueError("review_lifecycle must account for every discovery")
+        if disposition_counts.get("retained_for_review", 0) != len(validated):
+            raise ValueError("review_lifecycle retained_for_review count must match queue items")
+        if lifecycle.get("pending_review_owner") != "human_editorial_review":
+            raise ValueError("review_lifecycle must identify the pending review owner")
     review_ids = [str(item["review_item_id"]) for item in validated]
     if len(review_ids) != len(set(review_ids)):
         raise ValueError("review_item_id values must be unique")
@@ -347,6 +380,7 @@ def build_proposed_edition(queue: dict[str, Any]) -> dict[str, Any]:
             "source": item["publisher"],
             "source_url": item["canonical_source_url"],
             "source_published_at": item["source_published_at"],
+            "freshness_check": item["freshness_check"],
             "why_it_matters": item["why_it_matters"],
             "uncertainty_note": item["uncertainty_note"],
             "section": item["proposed_section"],
@@ -405,7 +439,7 @@ def build_proposed_edition(queue: dict[str, Any]) -> dict[str, Any]:
                 "publishers": dict(sorted(publisher_counts.items())),
                 "states": dict(sorted(state_counts.items())),
             },
-            "source_note": "Every item retains its canonical source URL and source publication date.",
+            "source_note": "Every item retains its canonical source URL, any available source publication date, and its explicit currentness basis.",
         },
     }
 
@@ -441,7 +475,7 @@ def render_operator_markdown(queue: dict[str, Any], proposed: dict[str, Any]) ->
                     "",
                     f"Why it matters: {item['why_it_matters']}",
                     "",
-                    f"Source: [{item['source']}]({item['source_url']}) — {item['source_published_at']}",
+                    f"Source: [{item['source']}]({item['source_url']}) — {item['source_published_at'] or 'publication date unavailable'}; freshness: {item['freshness_check'].get('basis', 'legacy source-date check')} ({item['freshness_check'].get('basis_date') or item['source_published_at'][:10]})",
                     "",
                     f"Uncertainty: {item['uncertainty_note'] or 'None recorded.'}",
                     "",

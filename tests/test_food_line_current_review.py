@@ -121,6 +121,40 @@ def test_current_queue_enforces_three_day_freshness() -> None:
         )
 
 
+def test_current_queue_accepts_event_aware_freshness_without_a_publication_date() -> None:
+    payload = _queue(
+        [
+            _item(
+                source_published_at="",
+                freshness_check={
+                    "status": "current",
+                    "basis": "newly_effective",
+                    "basis_date": "2026-07-31",
+                    "age_days": 0,
+                    "edition_date": "2026-07-31",
+                    "reason": "",
+                },
+            )
+        ]
+    )
+
+    assert validate_queue(payload) == payload
+
+
+def test_current_queue_rejects_undated_item_without_an_explicit_freshness_basis() -> None:
+    with pytest.raises(ValueError, match="must include a basis"):
+        validate_queue(
+            _queue(
+                [
+                    _item(
+                        source_published_at="",
+                        freshness_check={"status": "current", "age_days": 0, "edition_date": "2026-07-31"},
+                    )
+                ]
+            )
+        )
+
+
 def test_editorial_decision_never_grants_publication_authority() -> None:
     payload = _queue([_item()])
     apply_editorial_decision(

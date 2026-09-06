@@ -6,6 +6,8 @@ import json
 import re
 from dataclasses import asdict, dataclass, field
 from collections.abc import Mapping
+from datetime import date, datetime
+from email.utils import parsedate_to_datetime
 from typing import Any
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
@@ -30,6 +32,28 @@ def _text(value: Any) -> str:
 
 def _slug(value: str) -> str:
     return re.sub(r"\s+", " ", _text(value).lower())
+
+
+def _source_publication_date(payload: Mapping[str, Any]) -> str:
+    raw = _text(
+        payload.get("source_published_at")
+        or payload.get("source_published_date")
+        or payload.get("published_at")
+        or payload.get("publication_date")
+    )
+    if not raw:
+        return ""
+    try:
+        parsed_date = date.fromisoformat(raw[:10])
+        return raw if raw.startswith(parsed_date.isoformat()) else parsed_date.isoformat()
+    except ValueError:
+        try:
+            return datetime.fromisoformat(raw.replace("Z", "+00:00")).isoformat()
+        except ValueError:
+            try:
+                return parsedate_to_datetime(raw).isoformat()
+            except (TypeError, ValueError, OverflowError):
+                return ""
 
 
 def duplicate_key_for(*, canonical_source_url: str, title: str, publisher: str) -> str:
@@ -70,14 +94,31 @@ class FoodLineAgentFinding:
 
 
 def finding_from_payload(payload: dict[str, Any], *, agent_name: str, agent_run_id: str, discovered_at: str) -> FoodLineAgentFinding:
-    source = _text(payload.get("canonical_source_url") or payload.get("canonical_url") or payload.get("source_url") or payload.get("url"))
+    source = _text(
+        payload.get("canonical_source_url")
+        or payload.get("canonical_url")
+        or payload.get("final_trace_url")
+        or payload.get("source_url")
+        or payload.get("discovered_url")
+        or payload.get("url")
+    )
     canonical = normalize_source_url(source)
-    title = _text(payload.get("title") or payload.get("headline"))
-    publisher = _text(payload.get("publisher") or payload.get("source_name"))
+    title = _text(payload.get("title") or payload.get("headline") or payload.get("selected_title") or payload.get("discovered_title"))
+    publisher = _text(
+        payload.get("publisher")
+        or payload.get("discovered_publisher")
+        or payload.get("source_name")
+        or payload.get("direct_source_name")
+    )
+    supporting_passage = _text(
+        payload.get("exact_supporting_passage")
+        or payload.get("passage")
+        or payload.get("evidence_text")
+    )
     duplicate_key = duplicate_key_for(canonical_source_url=canonical, title=title, publisher=publisher)
-    identity = "|".join((agent_name, agent_run_id, duplicate_key, _slug(payload.get("exact_supporting_passage") or payload.get("passage"))))
+    identity = "|".join((agent_name, agent_run_id, duplicate_key, _slug(supporting_passage)))
     finding_id = "finding_" + hashlib.sha256(identity.encode("utf-8")).hexdigest()[:24]
-    reason = "" if canonical and _text(payload.get("exact_supporting_passage") or payload.get("passage")) else "missing_traceable_source_or_supporting_passage"
+    reason = "" if canonical and publisher and supporting_passage else "missing_traceable_source_or_supporting_passage"
     if "agent_query_context" in payload:
         query_context = payload.get("agent_query_context")
     elif "query_context" in payload:
@@ -94,19 +135,14 @@ def finding_from_payload(payload: dict[str, Any], *, agent_name: str, agent_run_
         finding_id=finding_id, agent_name=agent_name, agent_run_id=agent_run_id,
         discovered_at=discovered_at, source_url=_text(payload.get("source_url") or source),
         canonical_source_url=canonical, publisher=publisher,
-        source_published_at=_text(
-            payload.get("source_published_at")
-            or payload.get("source_published_date")
-            or payload.get("published_at")
-            or payload.get("publication_date")
-            or payload.get("retrieved_at")
-        ),
-        title=title, exact_supporting_passage=_text(payload.get("exact_supporting_passage") or payload.get("passage")),
-        summary=_text(payload.get("summary") or payload.get("summary_or_snippet")),
-        location_name=_text(payload.get("location_name") or payload.get("location")),
-        state=_text(payload.get("state")).upper(), location_scope=_text(payload.get("location_scope")),
+        source_published_at=_source_publication_date(payload),
+        title=title, exact_supporting_passage=supporting_passage,
+        summary=_text(payload.get("summary") or payload.get("summary_or_snippet") or payload.get("pressure_summary")),
+        location_name=_text(payload.get("location_name") or payload.get("location") or payload.get("metro") or payload.get("state_or_territory")),
+        state=_text(payload.get("state") or payload.get("state_abbrev") or payload.get("state_hint")).upper(),
+        location_scope=_text(payload.get("location_scope") or payload.get("geographic_scope")),
         affected_groups=[_text(v) for v in payload.get("affected_groups") or [] if _text(v)],
-        pressure_type=_text(payload.get("pressure_type")), confidence=_text(payload.get("confidence")),
+        pressure_type=_text(payload.get("pressure_type") or payload.get("pressure_signal_type_hint")), confidence=_text(payload.get("confidence")),
         source_role=_text(payload.get("source_role")), evidence_level=_text(payload.get("evidence_level")),
         agent_query_context=query_context,
         duplicate_key=duplicate_key, review_status="pending_review", exclusion_reason=reason,

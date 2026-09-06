@@ -863,6 +863,10 @@ def test_care_line_additional_service_loss_classes_remain_reviewable(
     assert payload["normalized_record"]["review_status"] == "not_reviewed"
     assert payload["qualification_result"]["failed_gates"] == []
     assert payload["normalized_record"]["service_line"]
+    retention = payload["qualification_result"]["source_based_review_retention"]
+    assert retention["eligible_for_review"] is True
+    assert retention["disposition"] == "retained_for_review"
+    assert payload["qualification_result"]["review_transition_owner"] == "human_editorial_review"
 
 
 def test_care_line_fetch_url_uses_certifi_trust_when_available(monkeypatch) -> None:
@@ -1045,6 +1049,62 @@ def _care_line_history_record() -> dict[str, str]:
         "city": "Columbus",
         "state": "OH",
     }
+
+
+def test_undated_current_first_party_closure_reaches_care_line_review(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(pipeline, "_can_fetch_item_url", lambda *args, **kwargs: False)
+    source = CareLineSource.model_validate(
+        {
+            **_care_line_recovery_source().model_dump(mode="json"),
+            "name": "Example Clinic",
+            "publisher": "Example Clinic",
+            "source_type": "healthcare_organization",
+            "organization_type": "healthcare_organization",
+            "source_role": "provider_operator",
+        }
+    )
+    evidence = (
+        "Example Clinic is permanently closed. Patients in Columbus must travel farther "
+        "to the remaining clinic for primary care."
+    )
+    raw_item = {
+        "raw_item_id": "undated-first-party-closure",
+        "source_id": source.source_id,
+        "source_name": source.name,
+        "source_publisher": source.publisher,
+        "source_type": source.source_type,
+        "source_role": source.source_role,
+        "item_url": "https://example.org/clinic-status",
+        "title": "Example Clinic status",
+        "description": evidence,
+        "content_text": evidence,
+        "source_publication_date": "",
+        "source_date_state": "missing",
+        "discovery_date": "2026-09-05",
+        "facility_name": "Example Clinic",
+        "provider_name": "Example Clinic",
+        "city": "Columbus",
+        "state": "OH",
+    }
+    lead = {**_care_line_recovery_lead(), "service_line_hint": "primary_care"}
+
+    status, candidate = pipeline.qualify_event_lead(
+        source,
+        raw_item,
+        lead,
+        artifact_path=str(tmp_path / "artifact.json"),
+        run_id="undated-first-party",
+        fetch_timeout=5,
+        allow_insecure_tls=False,
+    )
+    queue = pipeline.build_review_queue([candidate], edition_date="2026-09-05")
+
+    assert status == "qualified"
+    assert candidate["normalized_record"]["source_publication_date"] == ""
+    assert candidate["qualification_result"]["freshness_role"] == "CURRENT"
+    assert candidate["qualification_result"]["source_based_review_retention"]["freshness_basis"] == "current_first_party_status"
+    assert candidate["qualification_result"]["public_eligibility_precheck"] is False
+    assert queue["queue_item_count"] == 1
 
 
 def test_care_line_geography_recovers_from_structured_input_and_dateline() -> None:

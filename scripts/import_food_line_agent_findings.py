@@ -36,15 +36,17 @@ def validate_input(input_path: Path) -> dict[str, Any]:
     seen: dict[str, int] = {}
     for index, row in enumerate(payload["findings"]):
         if not isinstance(row, dict): result["fields_requiring_human_review"].append(f"findings[{index}]"); continue
-        url = str(row.get("canonical_source_url") or row.get("source_url") or row.get("url") or "")
+        url = str(row.get("canonical_source_url") or row.get("canonical_url") or row.get("final_trace_url") or row.get("source_url") or row.get("discovered_url") or row.get("url") or "")
         if not url.lower().startswith("https://"): result["invalid_urls"].append(index)
-        if not str(row.get("exact_supporting_passage") or row.get("passage") or "").strip(): result["missing_evidence"].append(index)
-        if not str(row.get("source_published_at") or row.get("published_at") or row.get("publication_date") or "").strip(): result["missing_publication_dates"].append(index)
-        identity = json.dumps({"url": url.split("?")[0].lower().rstrip("/"), "title": str(row.get("title") or row.get("headline") or "").strip().lower(), "publisher": str(row.get("publisher") or "").strip().lower()}, sort_keys=True)
+        if not str(row.get("exact_supporting_passage") or row.get("passage") or row.get("evidence_text") or "").strip(): result["missing_evidence"].append(index)
+        if not str(row.get("source_published_at") or row.get("source_published_date") or row.get("published_at") or row.get("publication_date") or "").strip(): result["missing_publication_dates"].append(index)
+        identity = json.dumps({"url": url.split("?")[0].lower().rstrip("/"), "title": str(row.get("title") or row.get("headline") or row.get("selected_title") or row.get("discovered_title") or "").strip().lower(), "publisher": str(row.get("publisher") or row.get("discovered_publisher") or row.get("source_name") or "").strip().lower()}, sort_keys=True)
         if identity in seen: result["duplicate_findings"].append({"first": seen[identity], "duplicate": index})
         else: seen[identity] = index
         result["fields_requiring_human_review"].append(index)
-    result["valid"] = not result["error"] if "error" in result else not (result["invalid_urls"] or result["missing_evidence"] or result["missing_publication_dates"] or result["duplicate_findings"])
+    # Missing publication dates are diagnostic, not invalid: event-aware
+    # currentness is established during edition-specific qualification.
+    result["valid"] = not result["error"] if "error" in result else not (result["invalid_urls"] or result["missing_evidence"] or result["duplicate_findings"])
     return result
 
 def process(root: Path, input_path: Path, *, edition_date: str, agent_name: str, agent_run_id: str, dry_run: bool) -> dict[str, Any]:
@@ -61,12 +63,19 @@ def process(root: Path, input_path: Path, *, edition_date: str, agent_name: str,
         raise ValueError("refusing reimport: run artifact exists for a different input hash")
     findings = adapt_food_line_agent_output(payload, agent_name=effective_agent, agent_run_id=effective_run)
     candidates = [map_finding_to_food_line_candidate(item, edition_date=edition_date) for item in findings]
-    seen: set[str] = set(); deduped = []
+    seen: set[str] = set(); audited_rows = []
     for row in candidates:
-        if row["agent_duplicate_key"] in seen: row["exclusion_reason"] = "duplicate_article_within_run"; continue
-        seen.add(row["agent_duplicate_key"]); deduped.append(row)
-    counts = Counter("eligible_for_review" if row["eligible_for_review"] else "excluded" for row in candidates)
-    artifact = {"schema_version": "food_line_agent_intake_v1", "agent_name": effective_agent, "agent_run_id": effective_run, "started_at": envelope.get("started_at", ""), "completed_at": envelope.get("completed_at", ""), "search_window": envelope.get("search_window", {"edition_date": edition_date}), "findings": [item.to_dict() for item in findings], "candidate_rows": deduped, "counts": dict(counts), "coverage_notes": envelope.get("coverage_notes", "Private intake only; review is required before publication."), "input_sha256": input_hash, "input_filename": input_path.name}
+        review_eligible = bool(row.get("eligible_for_review"))
+        if review_eligible and row["agent_duplicate_key"] in seen:
+            row["exclusion_reason"] = "duplicate_article_within_run"
+            row["eligible_for_review"] = False
+            row["review_retention_disposition"] = "duplicate"
+            row["review_transition_owner"] = ""
+        elif review_eligible:
+            seen.add(row["agent_duplicate_key"])
+        audited_rows.append(row)
+    counts = Counter(str(row.get("review_retention_disposition") or "rejected_with_reason") for row in audited_rows)
+    artifact = {"schema_version": "food_line_agent_intake_v1", "agent_name": effective_agent, "agent_run_id": effective_run, "started_at": envelope.get("started_at", ""), "completed_at": envelope.get("completed_at", ""), "search_window": envelope.get("search_window", {"edition_date": edition_date}), "findings": [item.to_dict() for item in findings], "candidate_rows": audited_rows, "counts": dict(counts), "lifecycle_reconciliation": {"discovered": len(findings), "terminal_or_handoff": len(audited_rows), "unaccounted": len(findings) - len(audited_rows)}, "coverage_notes": envelope.get("coverage_notes", "Private intake only; review is required before publication."), "input_sha256": input_hash, "input_filename": input_path.name}
     report = {"schema_version": "food_line_agent_intake_report_v1", "agent_run_id": effective_run, "edition_date": edition_date, "dry_run": dry_run, "counts": dict(counts), "finding_ids": [item.finding_id for item in findings], "duplicate_keys": sorted(seen), "input_sha256": input_hash}
     if not dry_run:
         _atomic_json(artifact_path, artifact)

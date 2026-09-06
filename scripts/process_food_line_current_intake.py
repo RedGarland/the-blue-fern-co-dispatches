@@ -124,7 +124,14 @@ def _queue_item_from_candidate(
             age_days = (datetime.fromisoformat(edition_date) - datetime.fromisoformat(source_date[:10])).days
         except ValueError as exc:
             raise ValueError(f"items[{proposed_rank - 1}].freshness_check could not be derived from source_published_at") from exc
-        freshness_check = {"status": "current", "age_days": age_days, "edition_date": edition_date}
+        freshness_check = {
+            "status": "current",
+            "basis": "newly_published",
+            "basis_date": source_date,
+            "age_days": age_days,
+            "edition_date": edition_date,
+            "reason": "",
+        }
     proposed_section = str(
         row.get("proposed_section")
         or ("Core Food Pressure Signals" if bool(row.get("pressure_signal", True)) else "Other Food Line Signals")
@@ -182,6 +189,8 @@ def _build_review_queue(root: Path, edition_date: str, inbox: Path) -> dict[str,
     queue_path = root / PRIVATE_QUEUE_PATH
     items: list[dict[str, Any]] = []
     seen_duplicate_keys: set[str] = set()
+    lifecycle_counts: Counter[str] = Counter()
+    discovered_count = 0
     for source_index, source_path in enumerate(_queue_source_paths(root, inbox, edition_date), start=1):
         payload = json.loads(source_path.read_text(encoding="utf-8"))
         agent_name = str(payload.get("agent_name") or "Food Line Source Watch") if isinstance(payload, dict) else "Food Line Source Watch"
@@ -208,25 +217,38 @@ def _build_review_queue(root: Path, edition_date: str, inbox: Path) -> dict[str,
             "input_filename": source_path.name,
         }
         for finding in findings:
+            discovered_count += 1
             candidate = map_finding_to_food_line_candidate(finding, edition_date=edition_date)
             row = _queue_item_from_candidate(
                 candidate,
                 edition_date=edition_date,
                 source_artifact_path=intake_path.relative_to(root).as_posix(),
-                proposed_rank=len(intake_rows) + 1,
+                proposed_rank=discovered_count,
             )
             intake_row = dict(row)
-            intake_row["candidate_disposition"] = "reviewable" if bool(intake_row.get("eligible_for_review", True)) else "excluded"
-            if intake_row["candidate_disposition"] == "excluded":
+            intake_row["candidate_disposition"] = str(
+                intake_row.get("review_retention_disposition")
+                or ("retained_for_review" if bool(intake_row.get("eligible_for_review", True)) else "rejected_with_reason")
+            )
+            if intake_row["candidate_disposition"] != "retained_for_review":
                 intake_row["candidate_disposition_reason"] = str(
                     intake_row.get("exclusion_reason")
                     or intake_row.get("rejection_reason")
                     or intake_row.get("editorial_note")
                     or "not eligible for review"
                 ).strip()
+                intake_row["review_transition_owner"] = ""
+            else:
+                intake_row["candidate_disposition_reason"] = str(
+                    intake_row.get("qualification_reason") or "source-backed current strain retained for editorial review"
+                ).strip()
+                intake_row["review_transition_owner"] = str(
+                    intake_row.get("review_transition_owner") or "human_editorial_review"
+                )
             intake_rows.append(intake_row)
             duplicate_key = str(row.get("agent_duplicate_key") or row.get("candidate_id") or "")
-            if duplicate_key and duplicate_key in seen_duplicate_keys:
+            review_eligible = bool(row.get("eligible_for_review", True))
+            if review_eligible and duplicate_key and duplicate_key in seen_duplicate_keys:
                 intake_rows[-1]["candidate_disposition"] = "duplicate"
                 intake_rows[-1]["candidate_disposition_reason"] = "duplicate agent_duplicate_key within intake"
                 intake_rows[-1]["eligible_for_review"] = False
@@ -234,18 +256,32 @@ def _build_review_queue(root: Path, edition_date: str, inbox: Path) -> dict[str,
                 intake_rows[-1]["editorial_note"] = (
                     "Duplicate Food Line Source Watch finding retained for audit but excluded from the review queue."
                 )
+                intake_rows[-1]["review_transition_owner"] = ""
+                lifecycle_counts["duplicate"] += 1
+                continue
+            if not review_eligible:
+                lifecycle_counts[intake_row["candidate_disposition"]] += 1
                 continue
             if duplicate_key:
                 seen_duplicate_keys.add(duplicate_key)
-            if not bool(row.get("eligible_for_review", True)):
-                continue
             items.append(row)
+            lifecycle_counts["retained_for_review"] += 1
         intake_artifact["candidate_rows"] = intake_rows
         intake_artifact["counts"] = {
             "eligible_for_review": sum(1 for row in intake_rows if bool(row.get("eligible_for_review", True))),
-            "excluded": sum(1 for row in intake_rows if str(row.get("candidate_disposition") or "") == "excluded"),
             "duplicate": sum(1 for row in intake_rows if str(row.get("candidate_disposition") or "") == "duplicate"),
+            "retained_for_review": sum(1 for row in intake_rows if str(row.get("candidate_disposition") or "") == "retained_for_review"),
+            "rejected_with_reason": sum(1 for row in intake_rows if str(row.get("candidate_disposition") or "") == "rejected_with_reason"),
+            "deferred_with_reason": sum(1 for row in intake_rows if str(row.get("candidate_disposition") or "") == "deferred_with_reason"),
+            "invalid_source_with_reason": sum(1 for row in intake_rows if str(row.get("candidate_disposition") or "") == "invalid_source_with_reason"),
         }
+        intake_artifact["lifecycle_reconciliation"] = {
+            "discovered": len(findings),
+            "terminal_or_handoff": len(intake_rows),
+            "unaccounted": len(findings) - len(intake_rows),
+        }
+        if len(findings) != len(intake_rows):
+            raise ValueError(f"Food Line lifecycle reconciliation failed for {source_path.name}")
         write_json_atomic(intake_path, intake_artifact)
     queue = {
         "schema_version": QUEUE_SCHEMA_VERSION,
@@ -254,11 +290,20 @@ def _build_review_queue(root: Path, edition_date: str, inbox: Path) -> dict[str,
         "production_scope": CURRENT_PRODUCTION_SCOPE,
         "historical_roots_excluded": list(HISTORICAL_ROOTS),
         "allowed_decisions": list(ALLOWED_DECISIONS),
+        "review_lifecycle": {
+            "discovered": discovered_count,
+            "terminal_or_handoff": sum(lifecycle_counts.values()),
+            "unaccounted": discovered_count - sum(lifecycle_counts.values()),
+            "dispositions": dict(sorted(lifecycle_counts.items())),
+            "pending_review_owner": "human_editorial_review",
+        },
         "items": sorted(
             items,
             key=lambda item: (int(item.get("proposed_rank") or 0), str(item.get("review_item_id") or "")),
         ),
     }
+    if queue["review_lifecycle"]["unaccounted"] != 0:
+        raise ValueError("Food Line lifecycle reconciliation found unaccounted discoveries")
     write_json_atomic(queue_path, queue)
     return queue
 

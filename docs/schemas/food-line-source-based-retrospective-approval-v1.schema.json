@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bluefern.example/schemas/food-line-source-based-retrospective-approval-v1.schema.json",
+  "title": "Food Line source-based retrospective editorial approval v1",
+  "type": "object",
+  "required": ["schema_version", "approval_type", "dispatch", "batch_id", "approved_items"],
+  "properties": {
+    "schema_version": {"const": "food_line_source_based_retrospective_approval_v1"},
+    "approval_type": {"const": "source_based_retrospective_editorial_approval"},
+    "dispatch": {"const": "food-line"},
+    "batch_id": {"type": "string"},
+    "approved_for_retrospective_editorial_use": {"const": true},
+    "approved_for_release": {"const": false},
+    "approved_for_publication": {"const": false},
+    "release_authorized": {"const": false},
+    "publication_authorized": {"const": false},
+    "pages_authorized": {"const": false},
+    "social_authorized": {"const": false},
+    "audio_authorized": {"const": false},
+    "scheduled_task_change_authorized": {"const": false},
+    "approved_items": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 6
+    }
+  }
+}

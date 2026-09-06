@@ -1761,6 +1761,31 @@ def _validate_edition_audio_ownership(
     return ownership
 
 
+def _validate_flash_briefing_audio_ownership(
+    pages_root: Path,
+    document: _JsonDocument,
+    correction: dict[str, Any],
+) -> _EditionAudioOwnership:
+    root = _require_json_kind(document.root, "array", "flash briefing")
+    if len(root.items) != 1:
+        raise CorrectionValidationError("flash briefing owning item is missing or ambiguous")
+    item = _require_json_kind(root.items[0], "object", "flash briefing owning item")
+    uid = _require_json_member(item, "uid", "flash briefing owning item")
+    if uid.value.kind != "string":
+        raise CorrectionValidationError("flash briefing is bound to another owning edition")
+    match = re.fullmatch(r"gaza-(20\d{2}-\d{2}-\d{2})", str(uid.value.value))
+    if match is None:
+        raise CorrectionValidationError("flash briefing is bound to another owning edition")
+    flash_date = match.group(1)
+    _natural_date(flash_date, "flash briefing owning edition")
+    if flash_date < correction["owning_edition_date"]:
+        raise CorrectionValidationError("flash briefing predates the corrected owning edition")
+    return _validate_edition_audio_ownership(
+        pages_root,
+        {"owning_edition_date": flash_date},
+    )
+
+
 def _render_flash_briefing_json(
     document: _JsonDocument,
     correction: dict[str, Any],
@@ -1774,11 +1799,11 @@ def _render_flash_briefing_json(
         raise CorrectionValidationError("flash briefing owning item is missing or ambiguous")
     item = _require_json_kind(root.items[0], "object", "flash briefing owning item")
     uid = _require_json_member(item, "uid", "flash briefing owning item")
-    expected_uid = f"gaza-{correction['owning_edition_date']}"
+    expected_uid = f"gaza-{ownership.edition_date}"
     if uid.value.kind != "string" or uid.value.value != expected_uid:
         raise CorrectionValidationError("flash briefing is bound to another owning edition")
-    if ownership.edition_date != correction["owning_edition_date"]:
-        raise CorrectionValidationError("flash briefing audio ownership changed edition")
+    if ownership.edition_date < correction["owning_edition_date"]:
+        raise CorrectionValidationError("flash briefing predates the corrected owning edition")
     redirection = _require_json_member(item, "redirectionUrl", "flash briefing owning item")
     if redirection.value.kind != "string":
         raise CorrectionValidationError("flash briefing audio URL has type drift")
@@ -1867,7 +1892,7 @@ def _render_preview_payloads(
     payloads["original_audio_metadata"] = _render_original_audio_metadata_json(
         prior_audio_document, correction
     )
-    audio_ownership = _validate_edition_audio_ownership(pages_root, correction)
+    _validate_edition_audio_ownership(pages_root, correction)
     payloads["correction_audio_metadata"] = _json_document(
         {
             "audio_status": "formal_correction",
@@ -1928,8 +1953,18 @@ def _render_preview_payloads(
         _repo_path(pages_root, "gaza/flash-briefing.json", "flash briefing"),
         "flash briefing",
     )
+    flash_audio_ownership = _validate_flash_briefing_audio_ownership(
+        pages_root,
+        flash_document,
+        correction,
+    )
     payloads["flash_briefing"] = _render_flash_briefing_json(
-        flash_document, correction, audio_request, reader, link, audio_ownership
+        flash_document,
+        correction,
+        audio_request,
+        reader,
+        link,
+        flash_audio_ownership,
     )
     for role, relative in (
         ("audio_index", "gaza/audio/index.html"),

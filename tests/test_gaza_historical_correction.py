@@ -33,6 +33,7 @@ from bluefern_dispatches.gaza_historical_correction import (
     _render_original_audio_metadata_json,
     _render_story_scoped_edition_html,
     _validate_edition_audio_ownership,
+    _validate_flash_briefing_audio_ownership,
     sha256_file,
     stage_correction_package,
     verify_staged_package,
@@ -372,17 +373,79 @@ def _make_pages(
     return _commit(pages, "Synthetic prior public state"), story
 
 
+def _add_newer_flash_briefing_state(pages: Path, latest_date: str) -> str:
+    latest_audio = b"ID3-newer-synthetic-audio"
+    latest_audio_url = f"/gaza/audio/{latest_date}.mp3"
+    latest_public_audio_url = f"https://dispatches.thebluefernco.com{latest_audio_url}"
+    latest_transcript_url = (
+        f"https://dispatches.thebluefernco.com/gaza/audio/{latest_date}-transcript.html"
+    )
+    _write_json(
+        pages / "gaza" / "audio" / f"{latest_date}.json",
+        {
+            "dispatch_slug": "gaza",
+            "edition_date": latest_date,
+            "audio_status": "generated",
+            "script_text": "Synthetic newer Gaza briefing.",
+            "audio_file": f"{latest_date}.mp3",
+            "audio_url": latest_audio_url,
+            "audio_mime_type": "audio/mpeg",
+            "audio_file_size_bytes": len(latest_audio),
+            "transcript_url": latest_transcript_url,
+            "edition_url": (
+                f"https://dispatches.thebluefernco.com/gaza/editions/{latest_date}/"
+            ),
+        },
+    )
+    (pages / "gaza" / "audio" / f"{latest_date}.mp3").write_bytes(latest_audio)
+    (pages / "gaza" / "audio" / f"{latest_date}-transcript.html").write_text(
+        f'<html><body><main><audio src="{latest_audio_url}"></audio>'
+        "<p>Synthetic newer Gaza briefing.</p></main></body></html>",
+        encoding="utf-8",
+    )
+    latest_item = (
+        f"<item><title>Gaza Briefing for {latest_date}</title>"
+        f"<link>{latest_transcript_url}</link><guid>{latest_transcript_url}</guid>"
+        f'<enclosure url="{latest_public_audio_url}" length="{len(latest_audio)}" '
+        'type="audio/mpeg" /></item>'
+    )
+    for relative in ("gaza/podcast.xml", "gaza/audio/podcast.xml"):
+        path = pages / relative
+        path.write_text(
+            path.read_text(encoding="utf-8").replace(
+                "<channel>", f"<channel>{latest_item}", 1
+            ),
+            encoding="utf-8",
+        )
+    _write_json(
+        pages / "gaza" / "flash-briefing.json",
+        [
+            {
+                "uid": f"gaza-{latest_date}",
+                "updateDate": f"{latest_date}T13:01:37Z",
+                "titleText": f"Gaza Dispatch {latest_date}",
+                "mainText": "Synthetic newer Gaza briefing.",
+                "redirectionUrl": latest_audio_url,
+            }
+        ],
+    )
+    return _commit(pages, "Publish newer synthetic Gaza briefing")
+
+
 def _build_case(
     tmp_path: Path,
     *,
     with_approval: bool = True,
     text_format: tuple[str, bool, bool] | None = None,
+    newer_flash_date: str | None = None,
 ) -> dict[str, object]:
     pages = tmp_path / "pages"
     source = tmp_path / "source"
     inputs = tmp_path / "inputs"
     proposal_path = tmp_path / "proposal.json"
     pages_head, story = _make_pages(pages, text_format=text_format)
+    if newer_flash_date is not None:
+        pages_head = _add_newer_flash_briefing_state(pages, newer_flash_date)
     _init_repo(source, "feature")
 
     lineage = build_gaza_published_story_lineage(
@@ -1010,6 +1073,23 @@ def test_flash_briefing_requires_exact_uid_and_redirection_field(tmp_path: Path)
             )
 
 
+def test_flash_briefing_owner_cannot_predate_corrected_edition(
+    tmp_path: Path,
+) -> None:
+    pages = tmp_path / "pages"
+    _make_pages(pages)
+    flash_path = pages / "gaza" / "flash-briefing.json"
+    payload = json.loads(flash_path.read_text(encoding="utf-8"))
+    payload[0]["uid"] = "gaza-2026-08-28"
+    _write_json(flash_path, payload)
+    with pytest.raises(CorrectionValidationError, match="predates"):
+        _validate_flash_briefing_audio_ownership(
+            pages,
+            _load_json_document(flash_path, "flash briefing"),
+            _synthetic_correction(),
+        )
+
+
 @pytest.mark.parametrize(
     ("newline", "final_newline", "bom"),
     [
@@ -1573,6 +1653,46 @@ def test_proposal_is_non_authorizing_deterministic_and_replay_safe(tmp_path: Pat
     preview.write_text("conflict", encoding="utf-8")
     with pytest.raises(CorrectionValidationError, match="conflicts with deterministic output"):
         _prepare_again(case, case["proposal_root"])
+
+
+def test_historical_proposal_accepts_newer_current_flash_briefing(
+    tmp_path: Path,
+) -> None:
+    latest_date = "2026-09-05"
+    case = _build_case(
+        tmp_path,
+        with_approval=False,
+        newer_flash_date=latest_date,
+    )
+    flash_path = case["pages"] / "gaza" / "flash-briefing.json"
+    flash_document = _load_json_document(flash_path, "flash briefing")
+    ownership = _validate_flash_briefing_audio_ownership(
+        case["pages"],
+        flash_document,
+        case["correction"],
+    )
+    assert ownership.edition_date == latest_date
+
+    proposal = case["proposal"]
+    assert proposal["pages_state"]["expected_head"] == _run(
+        case["pages"], "rev-parse", "HEAD"
+    )
+    flash_row = next(
+        row
+        for row in proposal["pages_state"]["representations"]
+        if row["role"] == "flash_briefing"
+    )
+    assert flash_row["prior_sha256"] == sha256_file(flash_path)
+    preview = json.loads(
+        (case["inputs"] / flash_row["input_path"]).read_text(encoding="utf-8")
+    )
+    assert preview[0]["uid"] == case["correction"]["correction_id"]
+    assert all(
+        f"gaza/editions/{latest_date}/" not in row["public_path"]
+        for row in proposal["pages_state"]["representations"]
+    )
+    assert _prepare_again(case, case["proposal_root"])["status"] == "idempotent_noop"
+    assert _run(case["pages"], "status", "--porcelain") == ""
 
 
 def test_approval_is_created_from_request_and_replay_is_safe(tmp_path: Path) -> None:

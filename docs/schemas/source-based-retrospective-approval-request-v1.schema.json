@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bluefern.example/schemas/source-based-retrospective-approval-request-v1.schema.json",
+  "title": "Source-based retrospective approval request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dispatch",
+    "batch_id",
+    "approved_by",
+    "approved_at",
+    "source_base_commit",
+    "approval_prep_artifact_path",
+    "approval_prep_artifact_sha256",
+    "approved_item_source_identifiers"
+  ],
+  "properties": {
+    "schema_version": {"const": "bluefern.source_based_retrospective_approval_request.v1"},
+    "dispatch": {"enum": ["food-line", "care-line"]},
+    "batch_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,96}$"},
+    "approved_by": {"type": "string", "minLength": 1},
+    "approved_at": {"type": "string", "minLength": 1},
+    "source_base_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "approval_prep_artifact_path": {"type": "string", "minLength": 1},
+    "approval_prep_artifact_sha256": {"type": "string", "pattern": "^(sha256:)?[0-9a-f]{64}$"},
+    "approved_item_source_identifiers": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 6,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    }
+  }
+}

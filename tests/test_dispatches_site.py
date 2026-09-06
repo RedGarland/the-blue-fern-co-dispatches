@@ -1334,7 +1334,17 @@ def test_later_gaza_daily_regeneration_preserves_historical_catchup_union(tmp_pa
     pages_root = tmp_path / "bluefern-dispatches-pages"
     add_gaza_public_history_surface(pages_root, ["2026-09-03", "2026-09-02", "2026-08-29"])
     add_gaza_public_history_surface(site_root, [])
-    for edition_date in ("2026-08-29", "2026-09-02", "2026-09-03"):
+    for edition_date in (
+        "2026-08-23",
+        "2026-08-24",
+        "2026-08-25",
+        "2026-08-26",
+        "2026-08-27",
+        "2026-08-28",
+        "2026-08-29",
+        "2026-09-02",
+        "2026-09-03",
+    ):
         add_gaza_site_edition(pages_root, edition_date)
     public_url, immutable_before = add_gaza_historical_catchup_publication(pages_root)
     second_public_url, second_immutable_before = add_gaza_historical_catchup_publication(
@@ -1384,6 +1394,9 @@ def test_later_gaza_daily_regeneration_preserves_historical_catchup_union(tmp_pa
 
     assert second == replay
     assert 'href="editions/2026-09-05/">Read the latest briefing</a>' in second["index.html"]
+    assert len(set(re.findall(r'editions/(\d{4}-\d{2}-\d{2})/', second["index.html"]))) == 10
+    assert "2026-08-24" in second["index.html"]
+    assert "2026-08-23" not in second["index.html"]
     assert second["archive.html"].count("catchups/gaza-historical-catchup-synthetic-history/") == 1
     assert second["archive.html"].count("catchups/gaza-historical-catchup-second/") == 1
     assert second["rss.xml"].count(public_url) == 2

@@ -2301,9 +2301,8 @@ def render_dispatch_index_for_dates(
         recent = _render_gaza_public_history_list(
             site_root,
             dispatch,
-            edition_dates,
+            edition_dates[:GAZA_HOME_RECENT_EDITION_LIMIT],
             gaza_catchups,
-            limit=GAZA_HOME_RECENT_EDITION_LIMIT,
         )
     else:
         recent = "\n".join(

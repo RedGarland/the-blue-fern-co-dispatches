@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bluefern.example/schemas/food-line-source-based-retrospective-release-v1.schema.json",
+  "title": "Food Line source-based retrospective release authorization v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "release_type",
+    "dispatch",
+    "release_batch_id",
+    "item_count",
+    "release_authorized",
+    "publication_authorized",
+    "pages_authorized",
+    "social_authorized",
+    "audio_authorized",
+    "schedule_authorized",
+    "scheduled_task_change_authorized",
+    "release_items"
+  ],
+  "properties": {
+    "schema_version": {"const": "food_line_source_based_retrospective_release_v1"},
+    "release_type": {"const": "source_based_retrospective_release_authorization"},
+    "dispatch": {"const": "food-line"},
+    "release_authorized": {"const": true},
+    "publication_authorized": {"const": false},
+    "pages_authorized": {"const": false},
+    "social_authorized": {"const": false},
+    "audio_authorized": {"const": false},
+    "schedule_authorized": {"const": false},
+    "scheduled_task_change_authorized": {"const": false},
+    "release_items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "approval_item_id",
+          "dispatch",
+          "release_decision",
+          "release_authorized",
+          "publication_authorized",
+          "pages_authorized",
+          "social_authorized",
+          "audio_authorized",
+          "schedule_authorized",
+          "date_binding_classification",
+          "recommended_public_date_binding",
+          "wording_constraints"
+        ],
+        "properties": {
+          "dispatch": {"const": "food-line"},
+          "release_decision": {"const": "release_authorized"},
+          "release_authorized": {"const": true},
+          "publication_authorized": {"const": false},
+          "pages_authorized": {"const": false},
+          "social_authorized": {"const": false},
+          "audio_authorized": {"const": false},
+          "schedule_authorized": {"const": false}
+        }
+      }
+    }
+  }
+}

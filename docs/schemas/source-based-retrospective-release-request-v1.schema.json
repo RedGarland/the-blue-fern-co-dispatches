@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bluefern.example/schemas/source-based-retrospective-release-request-v1.schema.json",
+  "title": "Source-based retrospective release authorization request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dispatch",
+    "release_batch_id",
+    "authorized_by",
+    "authorized_at",
+    "source_base_commit",
+    "retrospective_coverage_month",
+    "release_readiness_review_path",
+    "release_readiness_review_sha256",
+    "expected_item_count",
+    "approval_bindings"
+  ],
+  "properties": {
+    "schema_version": {"const": "bluefern.source_based_retrospective_release_request.v1"},
+    "dispatch": {"enum": ["food-line", "care-line"]},
+    "release_batch_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,120}$"},
+    "authorized_by": {"type": "string", "minLength": 1},
+    "authorized_at": {"type": "string", "minLength": 1},
+    "source_base_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "retrospective_coverage_month": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}$"},
+    "release_readiness_review_path": {"type": "string", "minLength": 1},
+    "release_readiness_review_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "expected_item_count": {"type": "integer", "minimum": 1},
+    "approval_bindings": {"type": "array", "minItems": 1}
+  }
+}

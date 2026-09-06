@@ -658,5 +658,337 @@
     "title": "Israeli forces kill Palestinian goalkeeper in Gaza",
     "topic_fingerprint": "12ddee4849ca6fff",
     "update_count": 1
+  },
+  {
+    "approval_sha256": "53435c4ba693fda0002a8a93eff2e4e9ab44339718e5ae8e89de404d2e523723",
+    "canonical_urls": [
+      "https://english.wafa.ps/Pages/Details/174242"
+    ],
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-09-03",
+    "event_fingerprint": "sha256:a8788572bbc894382c45bbcfcd47b26261470bf2412670a5ecc8bd63abfd8b25",
+    "first_seen_date": "2026-09-03",
+    "historical_candidate_id": "GZ-GAP-20260831-FISHERMEN",
+    "historical_catchup": true,
+    "last_seen_date": "2026-09-03",
+    "latest_classification": "new",
+    "normalized_title": "five fishermen injured by israeli naval gunfire off gaza city",
+    "published_at": "2026-09-03T19:54:18Z",
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_dates": [
+      "2026-08-31"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/174242",
+      "https://www.aa.com.tr/en/middle-east/5-palestinians-killed-several-others-injured-in-israeli-attacks-on-gaza/4042500"
+    ],
+    "story_id": "gaza-catchup-13355d304fec4631c7a1",
+    "summary": "WAFA reported five fishermen injured off Gaza City; PRCS said it transported all five to two hospitals.",
+    "title": "Five fishermen injured by Israeli naval gunfire off Gaza City",
+    "update_count": 0
+  },
+  {
+    "approval_sha256": "53435c4ba693fda0002a8a93eff2e4e9ab44339718e5ae8e89de404d2e523723",
+    "canonical_urls": [
+      "https://english.wafa.ps/Pages/Details/174312"
+    ],
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-09-03",
+    "event_fingerprint": "sha256:3bab21385d64568f21bd4b86616611018a9c93168efe2747afd68a14d0a0f33c",
+    "first_seen_date": "2026-09-03",
+    "historical_candidate_id": "GZ-GAP-20260902-PWA-SEWAGE",
+    "historical_catchup": true,
+    "last_seen_date": "2026-09-03",
+    "latest_classification": "new",
+    "normalized_title": "palestinian water authority reports gaza wastewater treatment collapse",
+    "published_at": "2026-09-03T19:54:18Z",
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_dates": [
+      "2026-09-02"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/174312"
+    ],
+    "story_id": "gaza-catchup-1f206bb13da918fbb89c",
+    "summary": "PWA reported about 55,000 cubic metres of untreated wastewater discharged daily and all five main treatment plants out of operation.",
+    "title": "Palestinian Water Authority reports Gaza wastewater treatment collapse",
+    "update_count": 0
+  },
+  {
+    "approval_sha256": "53435c4ba693fda0002a8a93eff2e4e9ab44339718e5ae8e89de404d2e523723",
+    "canonical_urls": [
+      "https://www.who.int/news-room/speeches/item/who-director-general-s-opening-remarks-at-the-media-briefing---2-september-2026"
+    ],
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-09-03",
+    "event_fingerprint": "sha256:bd3b775f5e34eba64df6c5b142cb436834e542e6eedcc21e3e18900d1662735e",
+    "first_seen_date": "2026-09-03",
+    "historical_candidate_id": "GZ-GAP-20260901-WHO-WATER-DIARRHEA",
+    "historical_catchup": true,
+    "last_seen_date": "2026-09-03",
+    "latest_classification": "new",
+    "normalized_title": "who reports tripling water contamination and near doubling of acute watery diarrhea in gaza",
+    "published_at": "2026-09-03T19:54:18Z",
+    "publisher_names": [
+      "World Health Organization"
+    ],
+    "source_dates": [
+      "2026-09-02"
+    ],
+    "source_urls": [
+      "https://www.who.int/news-room/speeches/item/who-director-general-s-opening-remarks-at-the-media-briefing---2-september-2026",
+      "https://english.wafa.ps/Pages/Details/174290",
+      "https://www.aljazeera.com/news/2026/9/1/health-crisis-looming-as-gaza-heads-towards-rainy-season-warns-who"
+    ],
+    "story_id": "gaza-catchup-2a02416a66f92621d28f",
+    "summary": "WHO reported microbiological contamination rose from under 6 percent in January to over 18 percent in August and acute watery diarrhea cases nearly doubled.",
+    "title": "WHO reports tripling water contamination and near-doubling of acute watery diarrhea in Gaza",
+    "update_count": 0
+  },
+  {
+    "approval_sha256": "53435c4ba693fda0002a8a93eff2e4e9ab44339718e5ae8e89de404d2e523723",
+    "canonical_urls": [
+      "https://www.marketscreener.com/news/israeli-fire-kills-two-people-in-gaza-medics-say-ce7858dcde8bfe26"
+    ],
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-09-03",
+    "event_fingerprint": "sha256:f420a3fc6eb0416edeb4d18c62871733cda0e62bcd9cfe3f62b0d76dd1eb66be",
+    "first_seen_date": "2026-09-03",
+    "historical_candidate_id": "GZ-GAP-20260831-PARK",
+    "historical_catchup": true,
+    "last_seen_date": "2026-09-03",
+    "latest_classification": "new",
+    "normalized_title": "two palestinians killed near gaza city municipal park",
+    "published_at": "2026-09-03T19:54:18Z",
+    "publisher_names": [
+      "Reuters"
+    ],
+    "source_dates": [
+      "2026-08-31"
+    ],
+    "source_urls": [
+      "https://www.marketscreener.com/news/israeli-fire-kills-two-people-in-gaza-medics-say-ce7858dcde8bfe26",
+      "https://www.aa.com.tr/en/middle-east/5-palestinians-killed-several-others-injured-in-israeli-attacks-on-gaza/4042500"
+    ],
+    "story_id": "gaza-catchup-2a589449173a73d7c815",
+    "summary": "Medical officials reported two people killed and two critically wounded near Gaza City's municipal park.",
+    "title": "Two Palestinians killed near Gaza City municipal park",
+    "update_count": 0
+  },
+  {
+    "approval_sha256": "53435c4ba693fda0002a8a93eff2e4e9ab44339718e5ae8e89de404d2e523723",
+    "canonical_urls": [
+      "https://www.marketscreener.com/news/israeli-fire-kills-two-people-in-gaza-medics-say-ce7858dcde8bfe26"
+    ],
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-09-03",
+    "event_fingerprint": "sha256:c89e5327f582cc23a921a57e27b28825b9d8bacc7cab948dd870493c5e1f3536",
+    "first_seen_date": "2026-09-03",
+    "historical_candidate_id": "GZ-GAP-20260831-TAL-AL-HAWA-VEHICLE",
+    "historical_catchup": true,
+    "last_seen_date": "2026-09-03",
+    "latest_classification": "new",
+    "normalized_title": "three palestinians killed in tal al hawa vehicle strike",
+    "published_at": "2026-09-03T19:54:18Z",
+    "publisher_names": [
+      "Reuters"
+    ],
+    "source_dates": [
+      "2026-08-31"
+    ],
+    "source_urls": [
+      "https://www.marketscreener.com/news/israeli-fire-kills-two-people-in-gaza-medics-say-ce7858dcde8bfe26",
+      "https://english.wafa.ps/Pages/Details/174259",
+      "https://www.aa.com.tr/en/middle-east/5-palestinians-killed-several-others-injured-in-israeli-attacks-on-gaza/4042500"
+    ],
+    "story_id": "gaza-catchup-3d59ca1273b2d30792fe",
+    "summary": "Medical officials reported three Palestinians killed in a vehicle strike in Tal al-Hawa on Aug. 31; no injury count is resolved.",
+    "title": "Three Palestinians killed in Tal al-Hawa vehicle strike",
+    "update_count": 0
+  },
+  {
+    "approval_sha256": "53435c4ba693fda0002a8a93eff2e4e9ab44339718e5ae8e89de404d2e523723",
+    "canonical_urls": [
+      "https://english.palinfo.com/news/2026/08/27/369054/"
+    ],
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-09-03",
+    "event_fingerprint": "sha256:89e1e1b319ee9eab3eb6d31187169bc341c8fd74f650f90ed5c82953b86227e4",
+    "first_seen_date": "2026-09-03",
+    "historical_candidate_id": "GZ-GAP-20260827-CIVIL-DEFENCE-233",
+    "historical_catchup": true,
+    "last_seen_date": "2026-09-03",
+    "latest_classification": "new",
+    "normalized_title": "gaza civil defence reports 233 bodies recovered from 20 destroyed homes",
+    "published_at": "2026-09-03T19:54:18Z",
+    "publisher_names": [
+      "Palestinian Information Center"
+    ],
+    "source_dates": [
+      "2026-08-27"
+    ],
+    "source_urls": [
+      "https://english.palinfo.com/news/2026/08/27/369054/",
+      "https://en.ypagency.net/403415"
+    ],
+    "story_id": "gaza-catchup-3ea7302e9b0c20f2917f",
+    "summary": "Gaza Civil Defence said 233 bodies or remains, including 73 children and 106 women, were recovered from 20 homes while 174 remained missing.",
+    "title": "Gaza Civil Defence reports 233 bodies recovered from 20 destroyed homes",
+    "update_count": 0
+  },
+  {
+    "approval_sha256": "53435c4ba693fda0002a8a93eff2e4e9ab44339718e5ae8e89de404d2e523723",
+    "canonical_urls": [
+      "https://www.who.int/news-room/speeches/item/who-director-general-s-opening-remarks-at-the-media-briefing---2-september-2026"
+    ],
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-09-03",
+    "event_fingerprint": "sha256:e4011ef0f9f9a89945ff05b7722e9851db778a13b46402e32eb89012665ee3a0",
+    "first_seen_date": "2026-09-03",
+    "historical_candidate_id": "GZ-GAP-20260831-WHO-EVAC-FIVE",
+    "historical_catchup": true,
+    "last_seen_date": "2026-09-03",
+    "latest_classification": "new",
+    "normalized_title": "who supports evacuation of five gaza children to romania and belgium",
+    "published_at": "2026-09-03T19:54:18Z",
+    "publisher_names": [
+      "World Health Organization"
+    ],
+    "source_dates": [
+      "2026-09-02"
+    ],
+    "source_urls": [
+      "https://www.who.int/news-room/speeches/item/who-director-general-s-opening-remarks-at-the-media-briefing---2-september-2026",
+      "https://www.romania-actualitati.ro/news-in-english/romania-conducts-12th-medical-evacuation-flight-from-the-gaza-strip-id233797.html"
+    ],
+    "story_id": "gaza-catchup-6d702c82e25301c9f17e",
+    "summary": "WHO said five children and 14 companions were evacuated to Romania and Belgium; Romania said two children stayed and three transferred to Belgium.",
+    "title": "WHO supports evacuation of five Gaza children to Romania and Belgium",
+    "update_count": 0
+  },
+  {
+    "approval_sha256": "53435c4ba693fda0002a8a93eff2e4e9ab44339718e5ae8e89de404d2e523723",
+    "canonical_urls": [
+      "https://english.wafa.ps/Pages/Details/174303"
+    ],
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-09-03",
+    "event_fingerprint": "sha256:0223f0251c2faa1bcba166de854ba929a2e6b53e2c49cd61401cc4bc66df2849",
+    "first_seen_date": "2026-09-03",
+    "historical_candidate_id": "GZ-GAP-20260902-JABALIA-YOUTH",
+    "historical_catchup": true,
+    "last_seen_date": "2026-09-03",
+    "latest_classification": "new",
+    "normalized_title": "palestinian youth killed in jabalia drone strike",
+    "published_at": "2026-09-03T19:54:18Z",
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_dates": [
+      "2026-09-02"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/174303",
+      "https://english.news.cn/20260902/31379645bddf45549eefb5427c7917d3/c.html"
+    ],
+    "story_id": "gaza-catchup-947ff7f415058413accc",
+    "summary": "WAFA reported a Palestinian youth killed and another person wounded in a drone strike in Jabalia's al-Hawja area.",
+    "title": "Palestinian youth killed in Jabalia drone strike",
+    "update_count": 0
+  },
+  {
+    "approval_sha256": "53435c4ba693fda0002a8a93eff2e4e9ab44339718e5ae8e89de404d2e523723",
+    "canonical_urls": [
+      "https://apnews.com/article/49cf07bcd4f9166f93f51136892d76a6"
+    ],
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-09-03",
+    "event_fingerprint": "sha256:47281c8802345ab41f1a136e8cb0d13a4fba5c637ddb1a0c562d6cdbf1047c3b",
+    "first_seen_date": "2026-09-03",
+    "historical_candidate_id": "GZ-GAP-20260830-DEIR-CHILD",
+    "historical_catchup": true,
+    "last_seen_date": "2026-09-03",
+    "latest_classification": "new",
+    "normalized_title": "two palestinians including a three year old child killed in deir al balah strike",
+    "published_at": "2026-09-03T19:54:18Z",
+    "publisher_names": [
+      "Associated Press"
+    ],
+    "source_dates": [
+      "2026-08-30"
+    ],
+    "source_urls": [
+      "https://apnews.com/article/49cf07bcd4f9166f93f51136892d76a6",
+      "https://english.wafa.ps/Pages/Details/174199",
+      "https://www.aljazeera.com/video/newsfeed/2026/8/30/israeli-strike-kills-3-year-old-child-in-gaza"
+    ],
+    "story_id": "gaza-catchup-b6070212c8fb7e74359b",
+    "summary": "Gaza medical officials reported two people killed, including a three-year-old child; the Israeli military said the adult was a Hamas operative.",
+    "title": "Two Palestinians, including a three-year-old child, killed in Deir al-Balah strike",
+    "update_count": 0
+  },
+  {
+    "approval_sha256": "53435c4ba693fda0002a8a93eff2e4e9ab44339718e5ae8e89de404d2e523723",
+    "canonical_urls": [
+      "https://english.wafa.ps/Pages/Details/174303"
+    ],
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-09-03",
+    "event_fingerprint": "sha256:885acb8363b071888bb8906e50cb041792d358485c127a6ef9f9dd6e5f396fd8",
+    "first_seen_date": "2026-09-03",
+    "historical_candidate_id": "GZ-GAP-20260902-DEIR-WOMAN-DIES",
+    "historical_catchup": true,
+    "last_seen_date": "2026-09-03",
+    "latest_classification": "new",
+    "normalized_title": "displaced woman dies from wounds sustained in deir al balah",
+    "published_at": "2026-09-03T19:54:18Z",
+    "publisher_names": [
+      "WAFA"
+    ],
+    "source_dates": [
+      "2026-09-02"
+    ],
+    "source_urls": [
+      "https://english.wafa.ps/Pages/Details/174303",
+      "https://english.news.cn/20260902/31379645bddf45549eefb5427c7917d3/c.html"
+    ],
+    "story_id": "gaza-catchup-f26b97b36890f0e6d9ed",
+    "summary": "WAFA reported that displaced 51-year-old Amina al-Hissi died Sep. 2 from wounds sustained when Israeli forces shot her the previous day.",
+    "title": "Displaced woman dies from wounds sustained in Deir al-Balah",
+    "update_count": 0
+  },
+  {
+    "approval_sha256": "53435c4ba693fda0002a8a93eff2e4e9ab44339718e5ae8e89de404d2e523723",
+    "canonical_urls": [
+      "https://news.un.org/en/story/2026/08/1168229"
+    ],
+    "dispatch_slug": "gaza",
+    "edition_date": "2026-09-03",
+    "event_fingerprint": "sha256:438ff1fec5cb984c9192522b0005dfd7fc41ded64643ec2c0964736f7fa46f8b",
+    "first_seen_date": "2026-09-03",
+    "historical_candidate_id": "GZ-GAP-20260828-WHO-EVAC-106",
+    "historical_catchup": true,
+    "last_seen_date": "2026-09-03",
+    "latest_classification": "new",
+    "normalized_title": "who supports evacuation of 106 gaza patients through rafah and kerem shalom",
+    "published_at": "2026-09-03T19:54:18Z",
+    "publisher_names": [
+      "UN News"
+    ],
+    "source_dates": [
+      "2026-08-28"
+    ],
+    "source_urls": [
+      "https://news.un.org/en/story/2026/08/1168229",
+      "https://www.globalissues.org/news/2026/08/28/43928"
+    ],
+    "story_id": "gaza-catchup-f6bfb5913c1a690692da",
+    "summary": "WHO said it supported evacuation of 106 patients, including 19 children, with 132 companions through two crossings during the preceding week.",
+    "title": "WHO supports evacuation of 106 Gaza patients through Rafah and Kerem Shalom",
+    "update_count": 0
   }
 ]

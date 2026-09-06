@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bluefern.example/schemas/care-line-source-based-retrospective-publication-v1.schema.json",
+  "title": "Care Line source-based retrospective publication authorization v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "publication_type",
+    "dispatch",
+    "publication_batch_id",
+    "item_count",
+    "publication_authorized",
+    "pages_authorized",
+    "pages_push_authorized",
+    "social_authorized",
+    "audio_authorized",
+    "schedule_authorized",
+    "scheduled_task_change_authorized",
+    "public_generation_authorized",
+    "public_artifacts_generated",
+    "publication_items"
+  ],
+  "properties": {
+    "schema_version": {"const": "care_line_source_based_retrospective_publication_authorization_v1"},
+    "publication_type": {"const": "source_based_retrospective_publication_authorization"},
+    "dispatch": {"const": "care-line"},
+    "publication_authorized": {"const": true},
+    "pages_authorized": {"const": false},
+    "pages_push_authorized": {"const": false},
+    "social_authorized": {"const": false},
+    "audio_authorized": {"const": false},
+    "schedule_authorized": {"const": false},
+    "scheduled_task_change_authorized": {"const": false},
+    "public_generation_authorized": {"const": false},
+    "public_artifacts_generated": {"const": false},
+    "publication_items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "publication_item_id",
+          "release_batch_id",
+          "release_item_id",
+          "dispatch",
+          "publication_decision",
+          "publication_authorized",
+          "pages_authorized",
+          "pages_push_authorized",
+          "social_authorized",
+          "audio_authorized",
+          "schedule_authorized",
+          "public_generation_authorized",
+          "public_artifacts_generated",
+          "chronology_classification",
+          "event_or_effective_date_or_range",
+          "public_edition_date_or_placement",
+          "public_wording_constraints",
+          "source_traceability_status"
+        ],
+        "properties": {
+          "dispatch": {"const": "care-line"},
+          "publication_decision": {"const": "publication_authorized"},
+          "publication_authorized": {"const": true},
+          "pages_authorized": {"const": false},
+          "pages_push_authorized": {"const": false},
+          "social_authorized": {"const": false},
+          "audio_authorized": {"const": false},
+          "schedule_authorized": {"const": false},
+          "public_generation_authorized": {"const": false},
+          "public_artifacts_generated": {"const": false}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,160 @@
+[
+  {
+    "story_id": "gaza-story-2026-09-07-001",
+    "title": "UN expert Francesca Albanese calls for 'true paradigm shift' as Miliband resets policy on Israel",
+    "summary": "Exclusive: UN special rapporteur on occupied territories says ban on goods from settlements 'important' but must go further if it is to amount to more than a 'press release' The UK's planned ban on trade with unlawful Israeli settlements is a welcome, if overdue, first step and must be judged according to its practical impact, a UN expert has told the Guardian. The UK foreign secretary, Ed Miliband, has vowed to act more decisively against Israeli settlements, as well as continued restrictions of aid into Gaza, prompting the US ambassador to Israel, Mike Huckabee, to claim on Saturday that Downing Street was motivated by \"Jew hatred\".",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 59,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-07-guardian-world-2be04c113c1e"
+    ],
+    "source_ids": [
+      "gaza-2026-09-07-guardian-world-2be04c113c1e"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/sep/07/un-francesca-albanese-miliband-israel-palestine-settlements-trade"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-07-guardian-world-2be04c113c1e",
+        "title": "UN expert Francesca Albanese calls for 'true paradigm shift' as Miliband resets policy on Israel",
+        "url": "https://www.theguardian.com/world/2026/sep/07/un-francesca-albanese-miliband-israel-palestine-settlements-trade",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Exclusive: UN special rapporteur on occupied territories says ban on goods from settlements 'important' but must go further if it is to amount to more than a 'press release' The UK's planned ban on trade with unlawful Israeli settlements is a welcome, if overdue, first step and must be judged according to its practical impact, a UN expert has told the Guardian. The UK foreign secretary, Ed Miliband, has vowed to act more decisively against Israeli settlements, as well as continued restrictions of aid into Gaza, prompting the US ambassador to Israel, Mike Huckabee, to claim on Saturday that Downing Street was motivated by \"Jew hatred\".",
+        "event_date": "2026-09-07T04:00:25+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-07T13:02:41.968971+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 59,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-07T04:00:25+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-07-002",
+    "title": "Israel's Katz threatens 'full-scale war' against PA after settler stabbed",
+    "summary": "The stabbing follows a wave of pogroms against Palestinians in the occupied West Bank by Israeli settlers.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 50,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-07-aljazeera-middle-east-9c5743d84780"
+    ],
+    "source_ids": [
+      "gaza-2026-09-07-aljazeera-middle-east-9c5743d84780"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/9/7/israeli-wounded-in-stabbing-in-occupied-west-bank?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-07-aljazeera-middle-east-9c5743d84780",
+        "title": "Israel's Katz threatens 'full-scale war' against PA after settler stabbed",
+        "url": "https://www.aljazeera.com/news/2026/9/7/israeli-wounded-in-stabbing-in-occupied-west-bank?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "The stabbing follows a wave of pogroms against Palestinians in the occupied West Bank by Israeli settlers.",
+        "event_date": "2026-09-07T08:31:26+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-07T13:02:41.968971+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-07T08:31:26+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-02-010",
+    "prior_edition_date": "2026-09-02",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  }
+]

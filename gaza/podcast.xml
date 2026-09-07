@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Sat, 05 Sep 2026 13:01:37 +0000</lastBuildDate>
+  <lastBuildDate>Mon, 07 Sep 2026 13:02:53 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for September 7, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-09-07-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-09-07-transcript.html</guid>
+    <pubDate>Mon, 07 Sep 2026 00:00:00 +0000</pubDate>
+    <description>UN expert Francesca Albanese calls for 'true paradigm shift' as Miliband resets policy on Israel. Exclusive: UN special rapporteur on occupied territories says ban on goods from settlements 'important' but must go further if it is to amount to more than a 'press release' The UK's planned ban on trade with unlawful Israeli settlements is a welcome, if overdue, first step and must be judged according to its practical impact, a UN expert has told the Guardian. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-09-07.mp3" length="1029888" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for September 5, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-09-05-transcript.html</link>

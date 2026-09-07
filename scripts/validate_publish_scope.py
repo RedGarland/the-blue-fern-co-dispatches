@@ -137,7 +137,7 @@ SITEWIDE_PAGES_PREFIXES = (
 
 DATE_DIR_RE = r"(?:editions|review|sources)/(?P<date>\d{4}-\d{2}-\d{2})(?:/|$)"
 AUDIO_DATE_RE = r"audio/(?P<date>\d{4}-\d{2}-\d{2})(?:-v\d+)?(?:-transcript)?\.(?:html|json|mp3)$"
-SOURCE_ARTIFACT_FAMILIES = ("source-based-retrospective",)
+SOURCE_ARTIFACT_FAMILIES = ("source-based-retrospective", "dispatch-archive")
 
 
 def _sha256_bytes(data: bytes) -> str:
@@ -700,6 +700,33 @@ def _validate_source_based_retrospective_scope(
     return errors
 
 
+def _validate_dispatch_archive_scope(
+    *,
+    paths: Sequence[str],
+    dispatch: str,
+    context: str,
+    allow_audio: bool,
+    allow_map: bool,
+    allow_bluesky: bool,
+) -> list[str]:
+    errors: list[str] = []
+    if dispatch not in {"food-line", "care-line"}:
+        return ["dispatch-archive publish scope is supported only for food-line and care-line"]
+    allowed = f"output/site/{dispatch}/archive.html" if context.startswith("source") else f"{dispatch}/archive.html"
+    for raw_path in paths:
+        path = _normalize_path(raw_path)
+        audio, map_artifact, bluesky = _classify_path(path)
+        if audio and not allow_audio:
+            errors.append(f"{context} path uses audio/transcript/podcast artifacts without --allow-audio: {path}")
+        if map_artifact and not allow_map:
+            errors.append(f"{context} path uses map artifacts without --allow-map: {path}")
+        if bluesky and not allow_bluesky:
+            errors.append(f"{context} path uses Bluesky artifacts without --allow-bluesky: {path}")
+        if path != allowed:
+            errors.append(f"{context} path is outside the exact {dispatch} archive scope: {path}")
+    return errors
+
+
 def validate_publish_scope(
     *,
     dispatch: str,
@@ -732,8 +759,9 @@ def validate_publish_scope(
         errors.append(f"Unknown source artifact family '{source_artifact_family}'.")
 
     is_source_based_retrospective = source_artifact_family == "source-based-retrospective"
+    is_dispatch_archive = source_artifact_family == "dispatch-archive"
 
-    if dispatch != "sitewide" and declared_date is None and not is_source_based_retrospective:
+    if dispatch != "sitewide" and declared_date is None and not is_source_based_retrospective and not is_dispatch_archive:
         errors.append("--date is required for dated dispatch scopes unless --dispatch sitewide is used.")
 
     if pages_repo_root is not None and not allow_pages:
@@ -787,6 +815,17 @@ def validate_publish_scope(
                 allow_bluesky=allow_bluesky,
             )
         )
+    elif is_dispatch_archive:
+        errors.extend(
+            _validate_dispatch_archive_scope(
+                paths=source_changed_paths,
+                dispatch=dispatch,
+                context="source repo",
+                allow_audio=allow_audio,
+                allow_map=allow_map,
+                allow_bluesky=allow_bluesky,
+            )
+        )
     else:
         errors.extend(
             _validate_paths(
@@ -807,6 +846,17 @@ def validate_publish_scope(
                     paths=pages_changed_paths or (),
                     dispatch=dispatch,
                     publication_batch_id=publication_batch_id,
+                    context="Pages repo",
+                    allow_audio=allow_audio,
+                    allow_map=allow_map,
+                    allow_bluesky=allow_bluesky,
+                )
+            )
+        elif is_dispatch_archive:
+            errors.extend(
+                _validate_dispatch_archive_scope(
+                    paths=pages_changed_paths or (),
+                    dispatch=dispatch,
                     context="Pages repo",
                     allow_audio=allow_audio,
                     allow_map=allow_map,

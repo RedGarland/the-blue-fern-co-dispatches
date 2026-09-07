@@ -137,6 +137,7 @@ SITEWIDE_PAGES_PREFIXES = (
 
 DATE_DIR_RE = r"(?:editions|review|sources)/(?P<date>\d{4}-\d{2}-\d{2})(?:/|$)"
 AUDIO_DATE_RE = r"audio/(?P<date>\d{4}-\d{2}-\d{2})(?:-v\d+)?(?:-transcript)?\.(?:html|json|mp3)$"
+SOURCE_ARTIFACT_FAMILIES = ("source-based-retrospective",)
 
 
 def _sha256_bytes(data: bytes) -> str:
@@ -661,6 +662,44 @@ def _validate_paths(
     return errors
 
 
+def _validate_source_based_retrospective_scope(
+    *,
+    paths: Sequence[str],
+    dispatch: str,
+    publication_batch_id: str | None,
+    context: str,
+    allow_audio: bool,
+    allow_map: bool,
+    allow_bluesky: bool,
+) -> list[str]:
+    errors: list[str] = []
+    if dispatch not in {"food-line", "care-line"}:
+        return ["source-based-retrospective publish scope is supported only for food-line and care-line"]
+    batch = str(publication_batch_id or "").strip()
+    if not re.fullmatch(r"[a-z0-9][a-z0-9-]{2,120}", batch):
+        return ["--publication-batch-id is required for source-based-retrospective scope"]
+    source_prefix = f"output/site/{dispatch}/source-based-retrospectives/{batch}/"
+    pages_prefix = f"{dispatch}/source-based-retrospectives/{batch}/"
+    allowed_prefix = source_prefix if context.startswith("source") else pages_prefix
+    allowed_names = {"index.html", "items.json"}
+    for raw_path in paths:
+        path = _normalize_path(raw_path)
+        audio, map_artifact, bluesky = _classify_path(path)
+        if audio and not allow_audio:
+            errors.append(f"{context} path uses audio/transcript/podcast artifacts without --allow-audio: {path}")
+        if map_artifact and not allow_map:
+            errors.append(f"{context} path uses map artifacts without --allow-map: {path}")
+        if bluesky and not allow_bluesky:
+            errors.append(f"{context} path uses Bluesky artifacts without --allow-bluesky: {path}")
+        if not path.startswith(allowed_prefix):
+            errors.append(f"{context} path is outside the source-based retrospective {dispatch} batch scope: {path}")
+            continue
+        leaf = path.removeprefix(allowed_prefix)
+        if "/" in leaf or leaf not in allowed_names:
+            errors.append(f"{context} path is not an allowed source-based retrospective public artifact: {path}")
+    return errors
+
+
 def validate_publish_scope(
     *,
     dispatch: str,
@@ -675,6 +714,8 @@ def validate_publish_scope(
     source_changed_paths: Sequence[str] | None = None,
     pages_changed_paths: Sequence[str] | None = None,
     release_manifest_path: Path | str | None = None,
+    source_artifact_family: str | None = None,
+    publication_batch_id: str | None = None,
 ) -> list[str]:
     errors: list[str] = []
 
@@ -687,7 +728,12 @@ def validate_publish_scope(
     except ValueError as exc:
         return [str(exc)]
 
-    if dispatch != "sitewide" and declared_date is None:
+    if source_artifact_family is not None and source_artifact_family not in SOURCE_ARTIFACT_FAMILIES:
+        errors.append(f"Unknown source artifact family '{source_artifact_family}'.")
+
+    is_source_based_retrospective = source_artifact_family == "source-based-retrospective"
+
+    if dispatch != "sitewide" and declared_date is None and not is_source_based_retrospective:
         errors.append("--date is required for dated dispatch scopes unless --dispatch sitewide is used.")
 
     if pages_repo_root is not None and not allow_pages:
@@ -729,30 +775,56 @@ def validate_publish_scope(
             errors.append(str(exc))
             pages_changed_paths = ()
 
-    errors.extend(
-        _validate_paths(
-            paths=source_changed_paths,
-            dispatch=dispatch,
-            declared_date=declared_date,
-            context="source repo",
-            allow_audio=allow_audio,
-            allow_map=allow_map,
-            allow_bluesky=allow_bluesky,
-        )
-    )
-
-    if pages_repo_root is not None and allow_pages:
+    if is_source_based_retrospective:
         errors.extend(
-            _validate_paths(
-                paths=pages_changed_paths or (),
+            _validate_source_based_retrospective_scope(
+                paths=source_changed_paths,
                 dispatch=dispatch,
-                declared_date=declared_date,
-                context="Pages repo",
+                publication_batch_id=publication_batch_id,
+                context="source repo",
                 allow_audio=allow_audio,
                 allow_map=allow_map,
                 allow_bluesky=allow_bluesky,
             )
         )
+    else:
+        errors.extend(
+            _validate_paths(
+                paths=source_changed_paths,
+                dispatch=dispatch,
+                declared_date=declared_date,
+                context="source repo",
+                allow_audio=allow_audio,
+                allow_map=allow_map,
+                allow_bluesky=allow_bluesky,
+            )
+        )
+
+    if (pages_repo_root is not None and allow_pages) or pages_changed_paths is not None:
+        if is_source_based_retrospective:
+            errors.extend(
+                _validate_source_based_retrospective_scope(
+                    paths=pages_changed_paths or (),
+                    dispatch=dispatch,
+                    publication_batch_id=publication_batch_id,
+                    context="Pages repo",
+                    allow_audio=allow_audio,
+                    allow_map=allow_map,
+                    allow_bluesky=allow_bluesky,
+                )
+            )
+        else:
+            errors.extend(
+                _validate_paths(
+                    paths=pages_changed_paths or (),
+                    dispatch=dispatch,
+                    declared_date=declared_date,
+                    context="Pages repo",
+                    allow_audio=allow_audio,
+                    allow_map=allow_map,
+                    allow_bluesky=allow_bluesky,
+                )
+            )
 
     if strict:
         # Strict mode currently keeps the same conservative checks but records
@@ -774,6 +846,8 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--allow-bluesky", action="store_true", help="Explicitly allow Bluesky state/post artifacts.")
     parser.add_argument("--strict", action="store_true", help="Fail closed on publish-sensitive files outside the declared scope.")
     parser.add_argument("--release-manifest", help="Validate the exact source-to-Pages delta declared by a deterministic release manifest.")
+    parser.add_argument("--source-artifact-family", choices=SOURCE_ARTIFACT_FAMILIES, help="Validate a bounded generated source artifact family instead of a dated edition scope.")
+    parser.add_argument("--publication-batch-id", help="Publication batch ID required by source-based-retrospective scope.")
     return parser
 
 
@@ -799,6 +873,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         allow_bluesky=args.allow_bluesky,
         strict=args.strict,
         release_manifest_path=args.release_manifest,
+        source_artifact_family=args.source_artifact_family,
+        publication_batch_id=args.publication_batch_id,
     )
 
     if errors:
@@ -817,6 +893,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     print(f"- Strict mode: {bool(args.strict)}")
     if args.release_manifest:
         print(f"- Release manifest: {Path(args.release_manifest).resolve()}")
+    if args.source_artifact_family:
+        print(f"- Source artifact family: {args.source_artifact_family}")
+    if args.publication_batch_id:
+        print(f"- Publication batch ID: {args.publication_batch_id}")
     if args.allow_pages:
         print("- Pages repo inspection enabled.")
     if args.allow_audio:

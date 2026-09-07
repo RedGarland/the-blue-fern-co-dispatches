@@ -48,6 +48,10 @@ from bluefern_dispatches.care_line_sources import (
 )
 from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
 from bluefern_dispatches.public_prose import html_contains_public_prose_violations
+from bluefern_dispatches.source_based_retrospective_archive import (
+    discover_deployed_retrospective_archive_entries,
+    render_retrospective_recoveries_section,
+)
 
 
 BASE_URL = "https://dispatches.thebluefernco.com"
@@ -2446,6 +2450,7 @@ def render_archive_for_dates(
     site_root: Path | None = None,
     *,
     gaza_catchups: list[GazaHistoricalCatchupEntry] | None = None,
+    retrospective_pages_root: Path | None = None,
 ) -> str:
     site_root = site_root or Path("output") / "site"
     gaza_audio_link = ""
@@ -2456,6 +2461,11 @@ def render_archive_for_dates(
             render_edition_list_item(site_root, dispatch, date)
             for date in edition_dates
         )
+        retrospective_entries = discover_deployed_retrospective_archive_entries(
+            retrospective_pages_root,
+            CARE_LINE_DISPATCH_SLUG,
+        )
+        retrospective_section = render_retrospective_recoveries_section(retrospective_entries)
         latest = edition_dates[0] if edition_dates else ""
         latest_link = f'<p><a href="editions/{latest}/">Read the latest briefing</a></p>' if latest else "<p>No public edition is currently listed.</p>"
         subtitle = public_edition_subtitle(site_root, dispatch, latest) if latest else ""
@@ -2473,6 +2483,7 @@ def render_archive_for_dates(
     <ul class="edition-list">
 {items}
     </ul>
+{retrospective_section.rstrip()}
   </main>
 {footer("")}"""
         return page(f"{dispatch.name} Archive", f"{BASE_URL}/{dispatch.slug}/archive.html", "assets/site.css", body, dispatch.name)

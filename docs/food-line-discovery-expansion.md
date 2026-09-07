@@ -164,6 +164,60 @@ When `edition_mode` is `no_current_update`, this confidence is especially import
 - candidates found but review incomplete
 - continuing pressure only
 
+## Scheduled Source-Watch Exit Contract
+
+The scheduled source-watch path is:
+
+`Task Scheduler -> scripts/windows/run_food_line_daily_current.ps1 -> scripts/food_line_daily_scheduler.py source-watch -> scripts/run_food_line_discovery_expansion.py`
+
+The PowerShell wrapper exits with the Python scheduler result. The scheduler may report success only after it validates the durable bounded run-state, not merely because files exist.
+
+Child exit meanings:
+
+- `0`: the child reported structured success and the durable run-state must still qualify.
+- nonzero: fail closed unless the child provides parseable structured terminal JSON with an explicitly allowed nonfatal outcome.
+
+The only allowed nonfatal child outcome is currently:
+
+- `completed_with_exclusions`
+
+For a nonzero child exit to normalize to scheduler success, all of these must be true:
+
+- terminal structured child output is present and parseable;
+- `child_outcome_classification` is `completed_with_exclusions`;
+- durable run-state status is also `completed_with_exclusions`;
+- required coverage thresholds pass;
+- all terminal partitions completed;
+- required agent export exists;
+- no child or durable fatal/final error is present;
+- child identity/status/export fields do not contradict durable run-state.
+
+The scheduler must fail closed if child output is missing, malformed, unknown, fatal, contradictory, incomplete, nonqualifying, or missing required exports. A child exit `0` does not override a nonqualifying durable state.
+
+Source-watch receipts include bounded audit fields for this boundary:
+
+- `child_exit_code`
+- `child_terminal_output_found`
+- `child_terminal_output_parsed`
+- `child_outcome_classification`
+- `child_declared_outcome`
+- `child_terminal_status`
+- `child_terminal_ok`
+- `child_error_type`
+- `child_error_message`
+- `child_validation_error`
+- `child_stdout_tail`
+- `child_stdout_truncated`
+- `child_stdout_char_count`
+- `child_stderr_tail`
+- `child_stderr_truncated`
+- `child_stderr_char_count`
+- `child_output_char_limit`
+- `required_export_required`
+- `required_export_present`
+
+The stdout/stderr fields are bounded diagnostic tails, not complete logs. They are intended to preserve enough evidence to explain scheduler normalization without storing unlimited subprocess output.
+
 ## Axios Charlotte Example
 
 An Axios Charlotte story that returned `403` to automated fetches would still be retained as a discovery candidate.

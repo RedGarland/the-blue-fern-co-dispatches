@@ -30,6 +30,8 @@ FOOD_LINE_DISCOVERY_MAX_QUERIES = 200
 QUALIFYING_COLLECTION_STATUSES = {"completed", "completed_with_exclusions"}
 QUALIFYING_EXPORT_STATUSES = {"success", "success_with_exclusions", "no_exportable_findings"}
 RESUMABLE_COLLECTION_STATUSES = {"partial", "timed_out", "cancelled", "failed"}
+ALLOWED_NONFATAL_CHILD_OUTCOMES = {"completed_with_exclusions"}
+CHILD_OUTPUT_AUDIT_CHAR_LIMIT = 4096
 RUN_STATE_SCHEMA = "food_line_bounded_run_state_v1"
 RUN_RECORD_SCHEMA = "food_line_scheduled_run_record_v1"
 SOURCE_RECEIPT_SCHEMA = "food_line_source_watch_receipt_v1"
@@ -148,6 +150,153 @@ def _command_error(label: str, result: subprocess.CompletedProcess[str]) -> Sche
     detail = (result.stderr or result.stdout or "no command output").strip().splitlines()
     tail = detail[-1] if detail else "no command output"
     return SchedulerError(f"{label} failed with exit code {result.returncode}: {tail}")
+
+
+def _bounded_output_tail(value: str | None, *, limit: int = CHILD_OUTPUT_AUDIT_CHAR_LIMIT) -> dict[str, Any]:
+    text = value or ""
+    truncated = len(text) > limit
+    return {
+        "tail": text[-limit:] if truncated else text,
+        "truncated": truncated,
+        "char_count": len(text),
+        "limit": limit,
+    }
+
+
+def _parse_child_terminal_result(stdout: str | None) -> tuple[dict[str, Any] | None, str]:
+    text = (stdout or "").strip()
+    if not text:
+        return None, "missing"
+    try:
+        payload = json.loads(text)
+    except json.JSONDecodeError:
+        return None, "malformed"
+    if not isinstance(payload, dict):
+        return None, "malformed"
+    return payload, "parsed"
+
+
+def _nonempty_text(value: Any) -> str:
+    return str(value or "").strip()
+
+
+def _state_requires_export(state: dict[str, Any]) -> bool:
+    export = state.get("agent_export") if isinstance(state.get("agent_export"), dict) else {}
+    return export.get("status") in {"success", "success_with_exclusions"}
+
+
+def _required_export_exists(state: dict[str, Any]) -> bool:
+    export = state.get("agent_export") if isinstance(state.get("agent_export"), dict) else {}
+    if export.get("status") == "no_exportable_findings":
+        return True
+    if export.get("status") not in {"success", "success_with_exclusions"}:
+        return False
+    path_text = _nonempty_text(export.get("path"))
+    if not path_text:
+        return False
+    return Path(path_text).exists()
+
+
+def _child_state_contradiction(payload: dict[str, Any], state: dict[str, Any]) -> str:
+    child_status = _nonempty_text(payload.get("status"))
+    durable_status = _nonempty_text(state.get("status"))
+    if child_status and durable_status and child_status != durable_status:
+        return f"child status {child_status!r} does not match durable status {durable_status!r}"
+    child_run_id = _nonempty_text(payload.get("run_id"))
+    durable_run_id = _nonempty_text(state.get("run_id"))
+    if child_run_id and durable_run_id and child_run_id != durable_run_id:
+        return "child run_id does not match durable run_id"
+    child_date = _nonempty_text(payload.get("edition_date"))
+    durable_date = _nonempty_text(state.get("edition_date"))
+    if child_date and durable_date and child_date != durable_date:
+        return "child edition_date does not match durable edition_date"
+    child_error = _nonempty_text(payload.get("fatal_error") or payload.get("final_error"))
+    durable_error = _nonempty_text(state.get("final_error"))
+    if child_error or durable_error:
+        if child_error != durable_error:
+            return "child fatal/final error contradicts durable final_error"
+    child_export = payload.get("agent_export") if isinstance(payload.get("agent_export"), dict) else {}
+    durable_export = state.get("agent_export") if isinstance(state.get("agent_export"), dict) else {}
+    child_export_status = _nonempty_text(child_export.get("status"))
+    durable_export_status = _nonempty_text(durable_export.get("status"))
+    if child_export_status and durable_export_status and child_export_status != durable_export_status:
+        return "child export status does not match durable export status"
+    return ""
+
+
+def child_result_audit(result: subprocess.CompletedProcess[str], state: dict[str, Any]) -> dict[str, Any]:
+    payload, parse_status = _parse_child_terminal_result(result.stdout)
+    stdout = _bounded_output_tail(result.stdout)
+    stderr = _bounded_output_tail(result.stderr)
+    terminal_found = parse_status != "missing"
+    terminal_parsed = parse_status == "parsed"
+    classification = "missing_terminal_result" if parse_status == "missing" else "malformed_terminal_result" if parse_status == "malformed" else "unknown"
+    validation_error = "" if terminal_parsed else f"child terminal output {parse_status}"
+    child_status = ""
+    child_ok: bool | None = None
+    child_declared_outcome = ""
+    child_error_type = ""
+    child_error_message = ""
+    contradiction = ""
+    if payload is not None:
+        child_status = _nonempty_text(payload.get("status"))
+        child_ok = bool(payload.get("ok"))
+        child_declared_outcome = _nonempty_text(payload.get("child_outcome_classification"))
+        child_error_type = _nonempty_text(payload.get("error_type"))
+        child_error_message = _nonempty_text(payload.get("error_message") or payload.get("error"))
+        contradiction = _child_state_contradiction(payload, state)
+        if _nonempty_text(payload.get("fatal_error") or payload.get("final_error")):
+            classification = "fatal"
+            validation_error = "child terminal result reports a fatal/final error"
+        elif contradiction:
+            classification = "contradiction"
+            validation_error = contradiction
+        elif child_declared_outcome in ALLOWED_NONFATAL_CHILD_OUTCOMES:
+            classification = f"allowed_nonfatal_{child_declared_outcome}"
+            validation_error = ""
+        elif result.returncode == 0 and child_ok:
+            classification = "success"
+            validation_error = ""
+        else:
+            classification = "unknown"
+            validation_error = "child terminal result lacks an allowed outcome classification"
+    return {
+        "child_exit_code": int(result.returncode),
+        "child_terminal_output_found": terminal_found,
+        "child_terminal_output_parsed": terminal_parsed,
+        "child_outcome_classification": classification,
+        "child_declared_outcome": child_declared_outcome,
+        "child_terminal_status": child_status,
+        "child_terminal_ok": child_ok,
+        "child_error_type": child_error_type,
+        "child_error_message": child_error_message,
+        "child_validation_error": validation_error,
+        "child_stdout_tail": stdout["tail"],
+        "child_stdout_truncated": stdout["truncated"],
+        "child_stdout_char_count": stdout["char_count"],
+        "child_stderr_tail": stderr["tail"],
+        "child_stderr_truncated": stderr["truncated"],
+        "child_stderr_char_count": stderr["char_count"],
+        "child_output_char_limit": CHILD_OUTPUT_AUDIT_CHAR_LIMIT,
+        "required_export_present": _required_export_exists(state),
+        "required_export_required": _state_requires_export(state),
+    }
+
+
+def child_result_allows_scheduler_success(
+    result: subprocess.CompletedProcess[str],
+    state: dict[str, Any],
+    audit: dict[str, Any],
+) -> bool:
+    if not collection_qualifies(state):
+        return False
+    if _state_requires_export(state) and not bool(audit.get("required_export_present")):
+        return False
+    if int(result.returncode) == 0:
+        return audit.get("child_outcome_classification") == "success"
+    return audit.get("child_outcome_classification") in {
+        f"allowed_nonfatal_{outcome}" for outcome in ALLOWED_NONFATAL_CHILD_OUTCOMES
+    }
 
 
 def _parse_porcelain_paths(output: str) -> list[str]:
@@ -412,6 +561,8 @@ def run_source_watch(args: argparse.Namespace) -> int:
             survivors = surviving_worker_pids(run_dir)
             if survivors:
                 raise SchedulerError(f"source watch left surviving worker processes: {survivors}")
+            child_audit = child_result_audit(result, state)
+            scheduler_success = child_result_allows_scheduler_success(result, state, child_audit)
             plan_path = run_dir / "query-plan.json"
             plan = read_json(plan_path)
             receipt = {
@@ -427,18 +578,21 @@ def run_source_watch(args: argparse.Namespace) -> int:
                 **_safe_state_summary(state),
                 "resume_status": "not_attempted",
                 "command_exit_code": command_exit,
-                "exit_code": 0 if collection_qualifies(state) else (command_exit or 2),
+                **child_audit,
+                "exit_code": 0 if scheduler_success else (command_exit or 2),
             }
             receipt_path = _source_receipt_path(layout, edition_date, "source-watch")
             atomic_write_json(receipt_path, receipt)
             record.update({"last_status": state.get("status"), "source_receipt_path": str(receipt_path)})
             atomic_write_json(layout.run_record(edition_date), record)
-            print(json.dumps({"ok": collection_qualifies(state), "receipt_path": str(receipt_path), **receipt}, indent=2))
-            if collection_qualifies(state):
+            print(json.dumps({"ok": scheduler_success, "receipt_path": str(receipt_path), **receipt}, indent=2))
+            if scheduler_success:
                 return 0
             attention = write_attention(
                 layout, edition_date, "source_watch_nonqualifying", "Food Line source watch did not qualify",
                 run_id=run_id, final_status=state.get("status"), receipt_path=str(receipt_path),
+                child_validation_error=child_audit.get("child_validation_error"),
+                child_outcome_classification=child_audit.get("child_outcome_classification"),
             )
             return command_exit or 2
     except SchedulerError as exc:

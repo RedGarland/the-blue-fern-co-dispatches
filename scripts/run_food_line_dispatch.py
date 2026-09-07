@@ -67,6 +67,10 @@ from bluefern_dispatches.food_line_retrospective import (
 )
 from bluefern_dispatches.podcast_feed import write_food_line_podcast_feed
 from bluefern_dispatches.pages_release_safety import sync_pages_from_source
+from bluefern_dispatches.source_based_retrospective_archive import (
+    discover_deployed_retrospective_archive_entries,
+    render_retrospective_recoveries_section,
+)
 from bluefern_dispatches.tts_provider import synthesize_speech_with_diagnostics
 from bluefern_dispatches.incident_discovery import discover_incident_seeds, load_incident_seeds
 from scripts.discover_food_line_sources import run_food_line_discovery_gap_check
@@ -7082,6 +7086,8 @@ def _food_line_archive_artifact_exists(root: Path, pages_root: Path | None, date
 def _render_food_line_archive_page(root: Path, public_dates: list[str], pages_root: Path | None) -> str:
     bound_entries = _bound_pages_archive_entries(pages_root)
     entries = [_food_line_archive_entry(root, pages_root, date, bound_entries) for date in public_dates]
+    retrospective_entries = discover_deployed_retrospective_archive_entries(pages_root, DISPATCH_SLUG)
+    retrospective_section = render_retrospective_recoveries_section(retrospective_entries)
     entries_html = "".join(
         "".join(
             [
@@ -7126,6 +7132,7 @@ def _render_food_line_archive_page(root: Path, public_dates: list[str], pages_ro
             f"    {latest_links}",
             '    <h2>Archive</h2>\n',
             f'    <ul class="edition-list">{entries_html}</ul>\n',
+            retrospective_section,
             '    <p><a href="index.html">Back to the Food Line home page</a></p>\n',
             '  </section>\n',
             '</main>\n',

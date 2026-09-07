@@ -174,16 +174,19 @@ The PowerShell wrapper exits with the Python scheduler result. The scheduler may
 
 Child exit meanings:
 
-- `0`: the child reported structured success and the durable run-state must still qualify.
-- nonzero: fail closed unless the child provides parseable structured terminal JSON with an explicitly allowed nonfatal outcome.
+- `0`: the child reported structured success or an explicitly classified completed nonfatal warning state, and the durable run-state must still qualify.
+- nonzero: fail closed. There is no ordinary child contract that emits `ok=true` with a nonzero process exit.
 
-The only allowed nonfatal child outcome is currently:
+The only allowed completed nonfatal child outcome is currently:
 
 - `completed_with_exclusions`
 
-For a nonzero child exit to normalize to scheduler success, all of these must be true:
+For `completed_with_exclusions` to count as scheduler success, all of these must be true:
 
+- child process exit is `0`;
 - terminal structured child output is present and parseable;
+- terminal payload has `ok: true`;
+- terminal payload has `status: completed_with_exclusions`;
 - `child_outcome_classification` is `completed_with_exclusions`;
 - durable run-state status is also `completed_with_exclusions`;
 - required coverage thresholds pass;
@@ -192,7 +195,7 @@ For a nonzero child exit to normalize to scheduler success, all of these must be
 - no child or durable fatal/final error is present;
 - child identity/status/export fields do not contradict durable run-state.
 
-The scheduler must fail closed if child output is missing, malformed, unknown, fatal, contradictory, incomplete, nonqualifying, or missing required exports. A child exit `0` does not override a nonqualifying durable state.
+The scheduler must fail closed if child output is missing, malformed, unknown, fatal, contradictory, incomplete, nonqualifying, missing required exports, or returned with a nonzero child process exit. A child exit `0` does not override a nonqualifying durable state.
 
 Source-watch receipts include bounded audit fields for this boundary:
 

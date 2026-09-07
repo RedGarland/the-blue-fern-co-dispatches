@@ -252,8 +252,15 @@ def child_result_audit(result: subprocess.CompletedProcess[str], state: dict[str
             classification = "contradiction"
             validation_error = contradiction
         elif child_declared_outcome in ALLOWED_NONFATAL_CHILD_OUTCOMES:
-            classification = f"allowed_nonfatal_{child_declared_outcome}"
-            validation_error = ""
+            if child_ok:
+                classification = f"allowed_nonfatal_{child_declared_outcome}"
+                validation_error = ""
+            else:
+                classification = "unknown"
+                validation_error = "allowed nonfatal child outcome requires ok=true"
+        elif child_status in ALLOWED_NONFATAL_CHILD_OUTCOMES:
+            classification = "unknown"
+            validation_error = "nonfatal child status lacks an allowed outcome classification"
         elif result.returncode == 0 and child_ok:
             classification = "success"
             validation_error = ""
@@ -292,11 +299,13 @@ def child_result_allows_scheduler_success(
         return False
     if _state_requires_export(state) and not bool(audit.get("required_export_present")):
         return False
-    if int(result.returncode) == 0:
-        return audit.get("child_outcome_classification") == "success"
-    return audit.get("child_outcome_classification") in {
+    if int(result.returncode) != 0:
+        return False
+    allowed_nonfatal_classifications = {
         f"allowed_nonfatal_{outcome}" for outcome in ALLOWED_NONFATAL_CHILD_OUTCOMES
     }
+    classification = audit.get("child_outcome_classification")
+    return classification == "success" or classification in allowed_nonfatal_classifications
 
 
 def _parse_porcelain_paths(output: str) -> list[str]:

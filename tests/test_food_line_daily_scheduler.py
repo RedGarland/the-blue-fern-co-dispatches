@@ -870,6 +870,112 @@ def test_legacy_discovery_wrapper_reports_malformed_child_output_and_stderr_is_t
     assert "invalid JSON" in payload["error_message"]
 
 
+def test_real_child_completed_with_exclusions_contract_is_exit_zero_and_scheduler_success(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    edition_date = "2026-09-07"
+    run_id = "completed-with-exclusions-contract"
+    monkeypatch.chdir(tmp_path)
+
+    def fake_plan(root: Path, edition_date: str, **kwargs: object) -> list[dict[str, object]]:
+        return [
+            {
+                "query_id": "q-1",
+                "query_family": "source_watch",
+                "geographic_scope": "national",
+                "discovery_channel": "direct_rss",
+                "query_text": "food access strain",
+            }
+        ]
+
+    def fake_discovery(root: Path, edition_date: str, **kwargs: object) -> dict[str, object]:
+        return {
+            "ok": True,
+            "status": "completed_with_exclusions",
+            "candidate_count": 1,
+            "public_eligible_candidate_count": 1,
+            "direct_source_count": 1,
+            "source_count": 1,
+            "rejected_news_count": 2,
+            "fetch_failure_count_by_type": {"http_503": 1},
+            "queries_completed": 1,
+            "queries_failed": 0,
+            "queries_timed_out": 0,
+            "partitions_completed": 1,
+            "resumable": False,
+            "candidates": [
+                {
+                    "title": "Pantry documents food access strain",
+                    "source_url": "https://example.org/food-access-strain",
+                    "publisher": "Example Pantry",
+                }
+            ],
+        }
+
+    monkeypatch.setattr(discovery_compat, "build_food_line_discovery_query_plan", fake_plan)
+    monkeypatch.setattr(discovery_compat, "run_food_line_discovery_expansion", fake_discovery)
+
+    child_exit = discovery_compat.main(
+        [
+            "--date",
+            edition_date,
+            "--run-id",
+            run_id,
+            "--profile",
+            "daily-current",
+            "--max-run-minutes",
+            "0.01",
+            "--export-agent-inbox",
+            "--agent-inbox-dir",
+            str(tmp_path / "status" / "food-line" / "runtime" / "agent-inbox"),
+        ]
+    )
+    child_stdout = capsys.readouterr().out
+    child_payload = json.loads(child_stdout)
+    state_path = Path(str(child_payload["run_state_path"]))
+    durable_state = json.loads(state_path.read_text(encoding="utf-8"))
+
+    assert child_exit == 0
+    assert child_payload["ok"] is True
+    assert child_payload["status"] == "completed_with_exclusions"
+    assert child_payload["child_outcome_classification"] == "completed_with_exclusions"
+    assert child_payload["fatal_error"] == ""
+    assert durable_state["status"] == "completed_with_exclusions"
+    assert durable_state["final_error"] == ""
+    assert durable_state["queries_completed"] == durable_state["queries_total"]
+    assert durable_state["queries_failed"] == 0
+    assert durable_state["queries_timed_out"] == 0
+    assert durable_state["agent_export"]["status"] == "success_with_exclusions"
+    assert Path(durable_state["agent_export"]["path"]).exists()
+
+    monkeypatch.setattr(scheduler, "verify_checkout", lambda *args, **kwargs: "test-source-commit")
+    monkeypatch.setattr(scheduler, "run_preflight", lambda *args, **kwargs: None)
+    monkeypatch.setattr(scheduler, "surviving_worker_pids", lambda *args, **kwargs: [])
+    monkeypatch.setattr(
+        scheduler,
+        "_invoke_python",
+        lambda python, root, arguments: subprocess.CompletedProcess(
+            [str(python), *arguments], child_exit, stdout=child_stdout, stderr=""
+        ),
+    )
+
+    scheduler_exit = scheduler.run_source_watch(_source_watch_args(tmp_path, edition_date=edition_date, run_id=run_id))
+    receipts = sorted((tmp_path / "logs" / "food-line" / "source-watch" / edition_date).glob("*-source-watch.json"))
+    assert len(receipts) == 1
+    receipt = json.loads(receipts[0].read_text(encoding="utf-8"))
+
+    assert scheduler_exit == 0
+    assert receipt["exit_code"] == 0
+    assert receipt["command_exit_code"] == 0
+    assert receipt["child_terminal_status"] == "completed_with_exclusions"
+    assert receipt["child_terminal_ok"] is True
+    assert receipt["child_declared_outcome"] == "completed_with_exclusions"
+    assert receipt["child_outcome_classification"] == "allowed_nonfatal_completed_with_exclusions"
+    assert receipt["child_validation_error"] == ""
+    assert receipt["required_export_present"] is True
+    assert not (tmp_path / "output" / "site").exists()
+
+
 def _source_watch_args(tmp_path: Path, *, edition_date: str = "2026-09-07", run_id: str = "source-watch-test") -> scheduler.argparse.Namespace:
     return scheduler.argparse.Namespace(
         repo_root=str(tmp_path),
@@ -1013,13 +1119,13 @@ def test_source_watch_child_zero_with_structured_success_returns_scheduler_zero(
     assert receipt["child_terminal_output_parsed"] is True
 
 
-def test_source_watch_child_one_explicit_nonfatal_with_qualified_state_returns_scheduler_zero(
+def test_source_watch_child_zero_explicit_nonfatal_with_qualified_state_returns_scheduler_zero(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     code, receipt = _run_source_watch_with_child(
         tmp_path,
         monkeypatch,
-        child_exit=1,
+        child_exit=0,
         child_stdout=_child_payload(
             status="completed_with_exclusions",
             ok=True,
@@ -1032,7 +1138,9 @@ def test_source_watch_child_one_explicit_nonfatal_with_qualified_state_returns_s
 
     assert code == 0
     assert receipt["exit_code"] == 0
-    assert receipt["command_exit_code"] == 1
+    assert receipt["command_exit_code"] == 0
+    assert receipt["child_terminal_ok"] is True
+    assert receipt["child_declared_outcome"] == "completed_with_exclusions"
     assert receipt["child_outcome_classification"] == "allowed_nonfatal_completed_with_exclusions"
     assert receipt["child_validation_error"] == ""
 
@@ -1059,13 +1167,13 @@ def test_source_watch_child_one_malformed_terminal_result_fails_closed(
     assert receipt["child_outcome_classification"] == "malformed_terminal_result"
 
 
-def test_source_watch_child_one_unknown_classification_fails_closed(
+def test_source_watch_child_zero_unknown_nonfatal_classification_fails_closed(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     code, receipt = _run_source_watch_with_child(
         tmp_path,
         monkeypatch,
-        child_exit=1,
+        child_exit=0,
         child_stdout=_child_payload(
             status="completed_with_exclusions",
             ok=True,
@@ -1075,7 +1183,7 @@ def test_source_watch_child_one_unknown_classification_fails_closed(
         export_status="success_with_exclusions",
     )
 
-    assert code == 1
+    assert code == 2
     assert receipt["child_outcome_classification"] == "unknown"
     assert "lacks an allowed outcome" in receipt["child_validation_error"]
 
@@ -1103,19 +1211,41 @@ def test_source_watch_child_one_explicit_fatal_result_fails_closed(
     assert "fatal/final error" in receipt["child_validation_error"]
 
 
-def test_source_watch_child_one_contradicting_durable_state_fails_closed(
+def test_source_watch_allowed_nonfatal_outcome_requires_child_ok_true(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     code, receipt = _run_source_watch_with_child(
         tmp_path,
         monkeypatch,
         child_exit=1,
+        child_stdout=_child_payload(
+            status="collection_failure",
+            ok=False,
+            outcome="completed_with_exclusions",
+            export_status="success_with_exclusions",
+        ),
+        state_status="collection_failure",
+        export_status="success_with_exclusions",
+    )
+
+    assert code == 1
+    assert receipt["child_outcome_classification"] == "unknown"
+    assert receipt["child_validation_error"] == "allowed nonfatal child outcome requires ok=true"
+
+
+def test_source_watch_child_zero_contradicting_durable_state_fails_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    code, receipt = _run_source_watch_with_child(
+        tmp_path,
+        monkeypatch,
+        child_exit=0,
         child_stdout=_child_payload(status="completed", ok=True, outcome="completed_with_exclusions"),
         state_status="completed_with_exclusions",
         export_status="success_with_exclusions",
     )
 
-    assert code == 1
+    assert code == 2
     assert receipt["child_outcome_classification"] == "contradiction"
     assert "does not match durable status" in receipt["child_validation_error"]
 
@@ -1143,7 +1273,7 @@ def test_source_watch_missing_required_export_fails_closed(
     code, receipt = _run_source_watch_with_child(
         tmp_path,
         monkeypatch,
-        child_exit=1,
+        child_exit=0,
         child_stdout=_child_payload(
             status="completed_with_exclusions",
             ok=True,
@@ -1155,7 +1285,7 @@ def test_source_watch_missing_required_export_fails_closed(
         export_present=False,
     )
 
-    assert code == 1
+    assert code == 2
     assert receipt["required_export_required"] is True
     assert receipt["required_export_present"] is False
 
@@ -1189,7 +1319,7 @@ def test_source_watch_receipt_contains_child_audit_fields_and_no_public_side_eff
     code, receipt = _run_source_watch_with_child(
         tmp_path,
         monkeypatch,
-        child_exit=1,
+        child_exit=0,
         child_stdout=_child_payload(
             status="completed_with_exclusions",
             ok=True,

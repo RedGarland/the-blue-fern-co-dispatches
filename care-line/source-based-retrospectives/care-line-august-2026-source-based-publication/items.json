@@ -1,0 +1,54 @@
+[
+  {
+    "event": "Brattleboro VA clinic reopened after repair closure",
+    "event_or_effective_date_or_range": "2026-09-01",
+    "location": "Brattleboro, Vermont",
+    "pressure_type": "",
+    "public_chronology": "Restoration or reopening",
+    "public_edition_date_or_placement": "2026-09-01",
+    "public_wording_constraints": "Review wording must remain limited to the traceable supporting evidence.",
+    "publisher": "U.S. Department of Veterans Affairs",
+    "source_publication_date": "closed February 2026; reopening September 1, 2026",
+    "source_url": "https://www.va.gov/white-river-junction-health-care/news-releases/brattleboro-va-clinic-to-reopen-september-1/",
+    "state_or_territory": "VT"
+  },
+  {
+    "event": "Council Bluffs hospital ended labor-delivery and Level II NICU services",
+    "event_or_effective_date_or_range": "2026-08-31/2026-09-01",
+    "location": "Council Bluffs, Iowa",
+    "pressure_type": "",
+    "public_chronology": "August-to-September transition",
+    "public_edition_date_or_placement": "2026-08-31/2026-09-01",
+    "public_wording_constraints": "Review wording must remain limited to the traceable supporting evidence.",
+    "publisher": "CHI Health",
+    "source_publication_date": "after August 31, 2026 / effective September 1, 2026",
+    "source_url": "https://www.chihealth.com/services/maternity/maternity-care-council-bluffs.html",
+    "state_or_territory": "IA"
+  },
+  {
+    "event": "Newark-Wayne hospital set final maternity shutdown dates",
+    "event_or_effective_date_or_range": "2026-08-31/2026-09-03",
+    "location": "Wayne County, New York",
+    "pressure_type": "",
+    "public_chronology": "August-to-September transition",
+    "public_edition_date_or_placement": "2026-08-31/2026-09-03",
+    "public_wording_constraints": "Review wording must remain limited to the traceable supporting evidence.",
+    "publisher": "Rochester Regional Health",
+    "source_publication_date": "after August 31, 2026; formal suspension September 3, 2026",
+    "source_url": "https://www.rochesterregional.org/locations/hospitals/newark/update",
+    "state_or_territory": "NY"
+  },
+  {
+    "event": "Heights University Hospital remained closed after final ED shutdown",
+    "event_or_effective_date_or_range": "2026-03-14 continuing; August 27 public record",
+    "location": "Jersey City, New Jersey",
+    "pressure_type": "",
+    "public_chronology": "August reporting on a continuing prior access loss",
+    "public_edition_date_or_placement": "2026-03-14 continuing; August 27 public record",
+    "public_wording_constraints": "Review wording must remain limited to the traceable supporting evidence.",
+    "publisher": "New Jersey Department of Health",
+    "source_publication_date": "final ED suspension March 14, 2026; August 27, 2026 public record",
+    "source_url": "https://www.nj.gov/health/healthfacilities/documents/closure/hudson-regional-heights-university-hospital.pdf",
+    "state_or_territory": "NJ"
+  }
+]

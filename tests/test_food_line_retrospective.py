@@ -152,7 +152,7 @@ REAL_LEGACY_APPROVALS = {
 
 def _git(root: Path, *args: str) -> str:
     result = subprocess.run(
-        ["git", "-C", str(root), *args],
+        ["git", "-c", "core.longpaths=true", "-C", str(root), *args],
         check=True,
         capture_output=True,
         text=True,
@@ -215,7 +215,12 @@ def test_git_porcelain_lines_reject_malformed_status(monkeypatch: pytest.MonkeyP
 
 def _write_json(path: Path, payload: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+    text = json.dumps(payload, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
+    filesystem_path = str(path)
+    if not filesystem_path.startswith("\\\\?\\") and len(str(path.resolve())) >= 240:
+        filesystem_path = "\\\\?\\" + str(path.resolve())
+    with open(filesystem_path, "w", encoding="utf-8") as handle:
+        handle.write(text)
 
 
 def _binding(root: Path, commit: str, path: str) -> dict[str, str]:

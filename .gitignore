@@ -54,3 +54,7 @@ data/dispatches/food-line/candidate_source_registry.json
 data/dispatches/food-line/discovery_gap/
 data/dispatches/food-line/editions/
 data/dispatches/food-line/sources/
+
+# Shadow operational event ledger
+data/state/*.sqlite
+data/state/*.sqlite-*

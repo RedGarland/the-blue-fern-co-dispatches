@@ -141,6 +141,43 @@ def test_current_queue_accepts_event_aware_freshness_without_a_publication_date(
     assert validate_queue(payload) == payload
 
 
+def test_current_queue_accepts_unb_same_article_path_case_canonicalization() -> None:
+    source_url = "https://unb.com.bd/m/category/Bangladesh/govt-rolls-out-stipends-school-meals-to-reduce-school-dropout-state-minister/194884"
+    canonical_source_url = "https://unb.com.bd/m/category/bangladesh/govt-rolls-out-stipends-school-meals-to-reduce-school-dropout-state-minister/194884"
+
+    payload = _queue([_item(source_url=source_url, canonical_source_url=canonical_source_url)])
+
+    assert validate_queue(payload) == payload
+
+
+def test_current_queue_does_not_globally_lowercase_article_paths() -> None:
+    with pytest.raises(ValueError, match="source and canonical URLs must identify the same article"):
+        validate_queue(
+            _queue(
+                [
+                    _item(
+                        source_url="https://example.org/News/Food-Access",
+                        canonical_source_url="https://example.org/news/food-access",
+                    )
+                ]
+            )
+        )
+
+
+def test_current_queue_rejects_distinct_unb_article_paths() -> None:
+    with pytest.raises(ValueError, match="source and canonical URLs must identify the same article"):
+        validate_queue(
+            _queue(
+                [
+                    _item(
+                        source_url="https://unb.com.bd/m/category/Bangladesh/story-one/194884",
+                        canonical_source_url="https://unb.com.bd/m/category/bangladesh/story-two/194884",
+                    )
+                ]
+            )
+        )
+
+
 def test_current_queue_rejects_undated_item_without_an_explicit_freshness_basis() -> None:
     with pytest.raises(ValueError, match="must include a basis"):
         validate_queue(

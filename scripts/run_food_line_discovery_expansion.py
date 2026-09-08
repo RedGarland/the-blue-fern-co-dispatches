@@ -579,7 +579,7 @@ def main(argv: list[str] | None = None) -> int:
             error_type=type(exc).__name__,
             error_message=str(exc),
         )
-    print(json.dumps(result, indent=2, ensure_ascii=False))
+    print(json.dumps(result, indent=2, ensure_ascii=True))
     return 0 if result.get("ok") else 1
 
 

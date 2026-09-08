@@ -17,6 +17,9 @@ from scripts import run_food_line_discovery_expansion as discovery_compat
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEDULER = ROOT / "scripts" / "food_line_daily_scheduler.py"
+SOURCE_WATCH_WRAPPER = ROOT / "scripts" / "windows" / "run_food_line_daily_current.ps1"
+SOURCE_WATCH_RESUME_WRAPPER = ROOT / "scripts" / "windows" / "resume_food_line_daily_current.ps1"
+CURRENT_INTAKE_WRAPPER = ROOT / "scripts" / "windows" / "run_food_line_current_intake.ps1"
 
 
 def _clean_env() -> dict[str, str]:
@@ -38,6 +41,13 @@ def test_food_line_daily_scheduler_imports_without_pythonpath_injection(tmp_path
     assert completed.returncode == 0, completed.stdout + completed.stderr
     assert "IMPORT_OK" in completed.stdout
     assert "ModuleNotFoundError" not in completed.stdout + completed.stderr
+
+
+def test_food_line_windows_wrappers_force_utf8_child_io() -> None:
+    for wrapper in (SOURCE_WATCH_WRAPPER, SOURCE_WATCH_RESUME_WRAPPER, CURRENT_INTAKE_WRAPPER):
+        text = wrapper.read_text(encoding="utf-8")
+        assert "$env:PYTHONIOENCODING = \"utf-8\"" in text
+        assert "[Console]::OutputEncoding = $utf8" in text
 
 
 def test_food_line_daily_scheduler_help_executes_from_other_cwd(tmp_path: Path) -> None:
@@ -296,6 +306,7 @@ def test_legacy_current_intake_wrapper_builds_queue_from_inbox_export(tmp_path: 
                 "schema_version": "food_line_source_watch_agent_export_v1",
                 "agent_name": "Food Line Source Watch",
                 "agent_run_id": "food-line-scheduled-test",
+                "edition_date": "2026-08-17",
                 "findings": [{"title": "placeholder finding"}],
             },
             indent=2,
@@ -361,6 +372,129 @@ def test_legacy_current_intake_wrapper_builds_queue_from_inbox_export(tmp_path: 
     assert report["status"] == "success"
     assert report["queue"]["item_count"] == 1
     assert report["proposal"]["draft_status"] == "draft_pending_editorial_review"
+    assert report["selected_input_count"] == 1
+    assert report["selected_inputs"][0]["path"] == "data/dispatches/food-line/agent-inbox/food-line-source-watch-2026-08-17-food-line-scheduled-test.json"
+
+
+def test_current_intake_uses_only_current_dated_handoff(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    inbox = tmp_path / "data" / "dispatches" / "food-line" / "agent-inbox"
+    inbox.mkdir(parents=True, exist_ok=True)
+    for edition_date, title in (
+        ("2026-08-16", "older"),
+        ("2026-08-17", "current"),
+    ):
+        (inbox / f"food-line-source-watch-{edition_date}.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": "food_line_source_watch_agent_export_v1",
+                    "agent_name": "Food Line Source Watch",
+                    "agent_run_id": f"run-{edition_date}",
+                    "edition_date": edition_date,
+                    "findings": [{"title": title}],
+                },
+                indent=2,
+                sort_keys=True,
+                ensure_ascii=False,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+
+    consumed_titles: list[str] = []
+    discovery_item = _valid_current_queue_item("2026-08-17")
+    discovery_item["candidate_id"] = "food-line-current-001"
+    discovery_item["agent_finding_id"] = "finding-current-001"
+
+    def fake_adapt(payload: dict[str, object], *, agent_name: str, agent_run_id: str) -> list[dict[str, object]]:
+        title = str(payload["findings"][0]["title"])
+        consumed_titles.append(title)
+        return [{"title": title}]
+
+    monkeypatch.setattr(current_intake_compat, "adapt_food_line_agent_output", fake_adapt)
+    monkeypatch.setattr(
+        current_intake_compat,
+        "map_finding_to_food_line_candidate",
+        lambda finding, *, edition_date: dict(discovery_item),
+    )
+
+    code = current_intake_compat.main(
+        [
+            "--edition-date",
+            "2026-08-17",
+            "--inbox",
+            str(inbox),
+            "--build-review-queue",
+            "--build-proposed-edition",
+        ]
+    )
+
+    assert code == 0
+    assert consumed_titles == ["current"]
+    assert (inbox / "food-line-source-watch-2026-08-16.json").exists()
+    report = json.loads(
+        (tmp_path / "data" / "dispatches" / "food-line" / "review" / "reports" / "2026-08-17" / "current-intake.json").read_text(encoding="utf-8")
+    )
+    assert report["selected_input_count"] == 1
+    assert report["selected_inputs"][0]["path"].endswith("food-line-source-watch-2026-08-17.json")
+
+
+def test_current_intake_multiple_current_handoffs_are_deterministic(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    inbox = tmp_path / "data" / "dispatches" / "food-line" / "agent-inbox"
+    inbox.mkdir(parents=True, exist_ok=True)
+    for suffix in ("b", "a"):
+        (inbox / f"food-line-source-watch-2026-08-17-{suffix}.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": "food_line_source_watch_agent_export_v1",
+                    "agent_name": "Food Line Source Watch",
+                    "agent_run_id": f"run-{suffix}",
+                    "edition_date": "2026-08-17",
+                    "findings": [{"title": suffix}],
+                },
+                sort_keys=True,
+            ),
+            encoding="utf-8",
+        )
+
+    paths = current_intake_compat._queue_source_paths(tmp_path, inbox, "2026-08-17")
+
+    assert [path.name for path in paths] == [
+        "food-line-source-watch-2026-08-17-a.json",
+        "food-line-source-watch-2026-08-17-b.json",
+    ]
+
+
+def test_current_intake_no_current_handoff_writes_empty_private_noop(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    inbox = tmp_path / "data" / "dispatches" / "food-line" / "agent-inbox"
+    inbox.mkdir(parents=True, exist_ok=True)
+    (inbox / "food-line-source-watch-2026-08-16.json").write_text(
+        json.dumps({"edition_date": "2026-08-16", "findings": []}),
+        encoding="utf-8",
+    )
+
+    code = current_intake_compat.main(
+        [
+            "--edition-date",
+            "2026-08-17",
+            "--inbox",
+            str(inbox),
+            "--build-review-queue",
+            "--build-proposed-edition",
+        ]
+    )
+
+    assert code == 0
+    queue = json.loads((tmp_path / "data/dispatches/food-line/review/current-signal-review.json").read_text(encoding="utf-8"))
+    report = json.loads(
+        (tmp_path / "data/dispatches/food-line/review/reports/2026-08-17/current-intake.json").read_text(encoding="utf-8")
+    )
+    assert queue["items"] == []
+    assert queue["source_inputs"] == []
+    assert report["selected_input_count"] == 0
+    assert report["proposal"]["draft_status"] == "blocked_no_reviewable_current_signals"
 
 
 def test_legacy_current_intake_wrapper_records_duplicate_source_watch_findings_explicitly(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -374,6 +508,7 @@ def test_legacy_current_intake_wrapper_records_duplicate_source_watch_findings_e
                 "schema_version": "food_line_source_watch_agent_export_v1",
                 "agent_name": "Food Line Source Watch",
                 "agent_run_id": "food-line-scheduled-test",
+                "edition_date": "2026-08-19",
                 "completed_at": "2026-08-19T10:00:00Z",
                 "findings": [
                     {"title": "first"},
@@ -457,6 +592,7 @@ def test_legacy_current_intake_wrapper_accepts_source_published_date_from_inbox_
                 "schema_version": "food_line_source_watch_agent_export_v1",
                 "agent_name": "Food Line Source Watch",
                 "agent_run_id": "food-line-scheduled-test",
+                "edition_date": "2026-08-19",
                 "completed_at": "2026-08-19T10:00:00Z",
                 "findings": [
                     {
@@ -519,6 +655,24 @@ def test_legacy_discovery_timeout_helper_terminates_process_tree(tmp_path: Path)
     finally:
         if parent.poll() is None:
             parent.kill()
+
+
+def test_food_line_discovery_terminal_json_is_ascii_safe_for_windows_cp1252(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(
+        discovery_compat,
+        "run_food_line_discovery_expansion",
+        lambda *args, **kwargs: {"ok": True, "status": "completed", "marker": "\ufeff"},
+    )
+
+    code = discovery_compat.main(["--date", "2026-09-08"])
+
+    output = capsys.readouterr().out
+    output.encode("cp1252")
+    assert code == 0
+    assert json.loads(output)["marker"] == "\ufeff"
 
 
 def test_legacy_discovery_wrapper_timeout_writes_timed_out_state_and_releases_lock(

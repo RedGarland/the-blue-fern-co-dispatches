@@ -196,7 +196,12 @@ def test_every_discovery_has_a_durable_disposition_and_duplicates_do_not_enter_r
         "state_abbrev": "CA",
     }
     invalid = {**good, "final_trace_url": "", "canonical_url": "", "source_url": "", "discovered_title": "Untraceable claim"}
-    payload = {"agent_name": "Food Line Source Watch", "agent_run_id": "run-1", "findings": [good, dict(good), invalid]}
+    payload = {
+        "agent_name": "Food Line Source Watch",
+        "agent_run_id": "run-1",
+        "edition_date": EDITION,
+        "findings": [good, dict(good), invalid],
+    }
     (inbox / "run.json").write_text(json.dumps(payload), encoding="utf-8")
 
     queue = _build_review_queue(tmp_path, EDITION, inbox)
@@ -222,6 +227,7 @@ def test_multiple_source_watch_exports_receive_unique_review_ranks(tmp_path: Pat
         payload = {
             "agent_name": "Food Line Source Watch",
             "agent_run_id": f"run-{index}",
+            "edition_date": EDITION,
             "findings": [
                 {
                     "final_trace_url": f"https://example.org/pantry-{index}",

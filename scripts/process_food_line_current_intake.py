@@ -51,11 +51,19 @@ def _queue_source_paths(root: Path, inbox: Path, edition_date: str) -> list[Path
     discovery_candidates = root / "data" / "dispatches" / "food-line" / "discovery" / edition_date / "discovery_candidates.json"
     paths: list[Path] = []
     if inbox.exists():
-        paths.extend(
-            path
-            for path in sorted(inbox.rglob("*.json"))
-            if path.is_file() and "processed" not in path.parts
-        )
+        for path in sorted(inbox.rglob("*.json")):
+            if not path.is_file() or "processed" in path.parts:
+                continue
+            try:
+                payload = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            if not isinstance(payload, dict):
+                continue
+            search_window = payload.get("search_window") if isinstance(payload.get("search_window"), dict) else {}
+            payload_date = str(payload.get("edition_date") or search_window.get("edition_date") or "").strip()
+            if payload_date == edition_date:
+                paths.append(path)
     if not paths and discovery_candidates.exists():
         paths.append(discovery_candidates)
     return paths
@@ -297,6 +305,13 @@ def _build_review_queue(root: Path, edition_date: str, inbox: Path) -> dict[str,
             "dispositions": dict(sorted(lifecycle_counts.items())),
             "pending_review_owner": "human_editorial_review",
         },
+        "source_inputs": [
+            {
+                "path": path.relative_to(root).as_posix() if path.is_relative_to(root) else str(path),
+                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            }
+            for path in _queue_source_paths(root, inbox, edition_date)
+        ],
         "items": sorted(
             items,
             key=lambda item: (int(item.get("proposed_rank") or 0), str(item.get("review_item_id") or "")),
@@ -317,6 +332,7 @@ def _current_intake_report(root: Path, edition_date: str, inbox: Path) -> dict[s
         json_path, markdown_path, proposed = write_proposed_edition(root, queue)
     inbox_count = len([path for path in inbox.rglob("*") if path.is_file()]) if inbox.exists() else 0
     queue_item_count = len(queue.get("items") or [])
+    source_inputs = queue.get("source_inputs") if isinstance(queue.get("source_inputs"), list) else []
     approved_count = int(proposed.get("approved_item_count") or 0)
     pending_count = int(proposed.get("pending_item_count") or 0)
     rejected_count = int(proposed.get("rejected_item_count") or 0)
@@ -332,6 +348,8 @@ def _current_intake_report(root: Path, edition_date: str, inbox: Path) -> dict[s
         "dry_run_count": 0,
         "import_attempt_count": queue_item_count,
         "idempotent_noop_count": 0,
+        "selected_input_count": len(source_inputs),
+        "selected_inputs": source_inputs,
         "errors": [],
         "status": status,
         "queue": {
@@ -371,7 +389,7 @@ def main(argv: list[str] | None = None) -> int:
         if not args.dry_run:
             report_path = root / "data" / "dispatches" / "food-line" / "review" / "reports" / args.edition_date / "current-intake.json"
             write_json_atomic(report_path, report)
-        print(json.dumps(report, indent=2, ensure_ascii=False))
+        print(json.dumps(report, indent=2, ensure_ascii=True))
         return 0
     except (OSError, ValueError) as exc:
         report = {
@@ -389,7 +407,7 @@ def main(argv: list[str] | None = None) -> int:
                 "schedule": False,
             },
         }
-        print(json.dumps(report, indent=2, ensure_ascii=False))
+        print(json.dumps(report, indent=2, ensure_ascii=True))
         return 1
 
 

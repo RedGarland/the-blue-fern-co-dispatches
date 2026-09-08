@@ -92,6 +92,10 @@ def atomic_write_json(path: Path, value: dict[str, Any]) -> None:
     os.replace(temporary, path)
 
 
+def terminal_json(value: dict[str, Any]) -> str:
+    return json.dumps(value, indent=2, sort_keys=True, ensure_ascii=True)
+
+
 def read_json(path: Path) -> dict[str, Any]:
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
@@ -594,7 +598,7 @@ def run_source_watch(args: argparse.Namespace) -> int:
             atomic_write_json(receipt_path, receipt)
             record.update({"last_status": state.get("status"), "source_receipt_path": str(receipt_path)})
             atomic_write_json(layout.run_record(edition_date), record)
-            print(json.dumps({"ok": scheduler_success, "receipt_path": str(receipt_path), **receipt}, indent=2))
+            print(terminal_json({"ok": scheduler_success, "receipt_path": str(receipt_path), **receipt}))
             if scheduler_success:
                 return 0
             attention = write_attention(
@@ -707,7 +711,7 @@ def run_resume(args: argparse.Namespace) -> int:
             atomic_write_json(receipt_path, receipt)
             record.update({"last_status": state.get("status"), "resume_status": resume_status, "resume_receipt_path": str(receipt_path)})
             atomic_write_json(layout.run_record(edition_date), record)
-            print(json.dumps({"ok": collection_qualifies(state), "receipt_path": str(receipt_path), **receipt}, indent=2))
+            print(terminal_json({"ok": collection_qualifies(state), "receipt_path": str(receipt_path), **receipt}))
             if collection_qualifies(state):
                 return 0
             write_attention(
@@ -787,7 +791,7 @@ def run_intake(args: argparse.Namespace) -> int:
         atomic_write_json(receipt_path, receipt)
         record.update({"intake_receipt_path": str(receipt_path), "intake_completed_at": utc_now()})
         atomic_write_json(layout.run_record(edition_date), record)
-        print(json.dumps({"ok": True, "receipt_path": str(receipt_path), **receipt}, indent=2))
+        print(terminal_json({"ok": True, "receipt_path": str(receipt_path), **receipt}))
         return 0
     except SchedulerError as exc:
         write_attention(layout, edition_date, "current_intake_failed", str(exc))

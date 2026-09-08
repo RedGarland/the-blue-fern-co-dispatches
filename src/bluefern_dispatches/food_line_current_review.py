@@ -65,6 +65,7 @@ PRIVATE_PAYLOAD_KEYS = {
     "hidden_instructions",
 }
 CURRENT_FRESHNESS_WINDOW_DAYS = 3
+PATH_CASE_INSENSITIVE_ARTICLE_HOSTS = frozenset({"unb.com.bd", "www.unb.com.bd"})
 
 
 def canonical_json(payload: Any) -> str:
@@ -117,7 +118,11 @@ def _require_https(value: Any, field: str) -> str:
 
 def _article_url_identity(value: str) -> tuple[str, str]:
     parsed = urlsplit(value)
-    return parsed.netloc.lower(), parsed.path.rstrip("/") or "/"
+    host = parsed.netloc.lower()
+    path = parsed.path.rstrip("/") or "/"
+    if host in PATH_CASE_INSENSITIVE_ARTICLE_HOSTS:
+        path = path.lower()
+    return host, path
 
 
 def _validate_source_artifact_path(value: Any) -> str:

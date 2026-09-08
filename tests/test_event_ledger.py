@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -337,6 +339,64 @@ def test_inspect_ledger_does_not_create_missing_database(tmp_path: Path) -> None
 
     assert summary["event_count"] == 0
     assert not ledger_path.exists()
+
+
+def test_inspector_script_bootstraps_src_and_does_not_create_missing_database(tmp_path: Path) -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    ledger_path = tmp_path / "missing.sqlite"
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(repo_root / "scripts" / "inspect_food_line_event_ledger.py"),
+            "--repo-root",
+            str(tmp_path),
+            "--ledger-path",
+            str(ledger_path),
+        ],
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout)
+    assert payload["event_count"] == 0
+    assert not ledger_path.exists()
+
+
+def test_inspector_script_reads_existing_ledger_without_mutating_it(tmp_path: Path) -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    ledger_path = tmp_path / DEFAULT_LEDGER_PATH
+    before = write_food_line_shadow_events(
+        tmp_path,
+        [food_candidate()],
+        run_id="run-1",
+        edition_date="2026-09-02",
+    )
+    before_bytes = ledger_path.read_bytes()
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(repo_root / "scripts" / "inspect_food_line_event_ledger.py"),
+            "--repo-root",
+            str(tmp_path),
+            "--ledger-path",
+            str(ledger_path),
+        ],
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert before["ok"] is True
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout)
+    assert payload["event_count"] == 1
+    assert ledger_path.read_bytes() == before_bytes
 
 
 def manual_fallback_record() -> dict[str, object]:

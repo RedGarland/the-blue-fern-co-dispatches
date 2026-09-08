@@ -28,6 +28,7 @@ from bluefern_dispatches.food_line_discovery_expansion import (
 
 RUN_STATE_SCHEMA = "food_line_bounded_run_state_v1"
 QUERY_PLAN_SCHEMA = "food_line_bounded_query_plan_v1"
+NONFATAL_COMPLETED_WITH_EXCLUSIONS = "completed_with_exclusions"
 
 
 def _utc_now() -> str:
@@ -35,12 +36,14 @@ def _utc_now() -> str:
 
 
 def _terminal_status(result: dict[str, object]) -> str:
-    if bool(result.get("timed_out")) or str(result.get("status") or "") == "timed_out":
+    raw_status = str(result.get("status") or "").strip()
+    if bool(result.get("timed_out")) or raw_status == "timed_out":
         return "timeout"
+    if bool(result.get("ok")) and raw_status == NONFATAL_COMPLETED_WITH_EXCLUSIONS:
+        return NONFATAL_COMPLETED_WITH_EXCLUSIONS
     if not bool(result.get("ok")):
-        status = str(result.get("status") or "").strip()
-        if status in {"child_process_failure", "malformed_child_output", "collection_failure"}:
-            return status
+        if raw_status in {"child_process_failure", "malformed_child_output", "collection_failure"}:
+            return raw_status
         return "collection_failure"
     candidate_count = int(result.get("candidate_count") or result.get("public_eligible_candidate_count") or 0)
     return "zero_result_completion" if candidate_count <= 0 else "success"
@@ -76,6 +79,9 @@ def _terminal_contract_result(
         error_type = status
     if not bool(payload.get("ok")) and not error_message:
         error_message = status.replace("_", " ")
+    if status == NONFATAL_COMPLETED_WITH_EXCLUSIONS and bool(payload.get("ok")):
+        payload.setdefault("child_outcome_classification", NONFATAL_COMPLETED_WITH_EXCLUSIONS)
+        payload.setdefault("fatal_error", "")
     return {
         **payload,
         "ok": bool(payload.get("ok")),

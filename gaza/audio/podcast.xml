@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Mon, 07 Sep 2026 13:02:53 +0000</lastBuildDate>
+  <lastBuildDate>Tue, 08 Sep 2026 13:02:49 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for September 8, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-09-08-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-09-08-transcript.html</guid>
+    <pubDate>Tue, 08 Sep 2026 00:00:00 +0000</pubDate>
+    <description>Israeli forces kill Palestinian man and withhold his body near Nablus. Israeli forces shot and killed a Palestinian man amid raids and arrests across the occupied West Bank. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-09-08.mp3" length="1345920" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for September 7, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-09-07-transcript.html</link>

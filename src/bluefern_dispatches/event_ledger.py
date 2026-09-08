@@ -20,21 +20,6 @@ DISCOVERY_CLASSES = {
     "duplicate_source",
     "historical_recovery",
 }
-MEANINGFUL_UPDATE_TERMS = {
-    "became scheduled",
-    "completed",
-    "closed",
-    "closure date",
-    "expanded",
-    "extension",
-    "failed",
-    "increased",
-    "longer",
-    "reopened",
-    "reversed",
-    "worsened",
-}
-
 
 @dataclass(frozen=True)
 class EventRecord:
@@ -116,6 +101,26 @@ def _date_or_none(value: Any) -> str | None:
     return text
 
 
+def _event_effective_at(candidate: dict[str, Any]) -> str | None:
+    return _date_or_none(
+        _first_present(
+            candidate,
+            "effective_at",
+            "event_date",
+            "closure_date",
+            "service_change_date",
+            "benefit_interruption_date",
+            "distribution_date",
+        )
+    )
+
+
+def _historical_reference_at(candidate: dict[str, Any]) -> str | None:
+    return _event_effective_at(candidate) or _date_or_none(
+        _first_present(candidate, "source_published_at", "source_published_date", "published_at")
+    )
+
+
 def food_line_event_identity_components(candidate: dict[str, Any]) -> dict[str, str]:
     location = _first_present(
         candidate,
@@ -139,6 +144,7 @@ def food_line_event_identity_components(candidate: dict[str, Any]) -> dict[str, 
     event_type = _first_present(candidate, "pressure_type", "event_type", "classification_status")
     normalized_subject = _first_present(
         candidate,
+        "event_identity_subject",
         "normalized_subject",
         "pressure_summary",
         "public_summary",
@@ -146,14 +152,20 @@ def food_line_event_identity_components(candidate: dict[str, Any]) -> dict[str, 
         "title",
         "discovered_title",
     )
-    effective_at = _first_present(candidate, "effective_at", "event_date", "source_published_date")
+    occurrence_key = _first_present(
+        candidate,
+        "event_occurrence_key",
+        "recurrence_key",
+        "episode_id",
+        "incident_id",
+    )
     return {
         "dispatch": "food-line",
         "location": normalized_text(location),
         "organization": normalized_text(organization),
         "event_type": normalized_text(event_type),
-        "effective_at": normalized_text(effective_at),
         "normalized_subject": normalized_text(normalized_subject),
+        "occurrence_key": normalized_text(occurrence_key),
     }
 
 
@@ -163,10 +175,10 @@ def event_id_for_components(components: dict[str, str]) -> str:
     organization = slug(components.get("organization"))
     event_type = slug(components.get("event_type"))
     subject = slug(components.get("normalized_subject"))
-    effective = re.sub(r"[^0-9]", "", nonempty(components.get("effective_at")))
+    occurrence = slug(components.get("occurrence_key"))
     base = "-".join(part for part in (dispatch, location, organization, event_type) if part and part != "unknown")
-    if effective:
-        base = f"{base}-{effective}" if base else effective
+    if occurrence and occurrence != "unknown":
+        base = f"{base}-{occurrence}" if base else occurrence
     if not base or base == dispatch:
         digest = hashlib.sha256(json.dumps(components, sort_keys=True).encode("utf-8")).hexdigest()[:12]
         base = "-".join(part for part in (dispatch, subject[:48], digest) if part and part != "unknown")
@@ -218,11 +230,20 @@ def event_record_from_food_line_candidate(
         event_type=_first_present(candidate, "pressure_type", "event_type", "classification_status") or None,
         normalized_subject=normalized_text(_first_present(candidate, "normalized_subject", "pressure_summary", "public_summary", "selected_title", "title", "discovered_title")) or None,
         location=location,
-        effective_at=_date_or_none(_first_present(candidate, "effective_at", "event_date", "source_published_date")),
+        effective_at=_event_effective_at(candidate),
         first_discovered_at=observed_at,
         last_observed_at=observed_at,
         discovery_class=discovery_class,
-        status=_first_present(candidate, "status", "classification_status", "candidate_review_status") or None,
+        status=_first_present(
+            candidate,
+            "lifecycle_status",
+            "closure_state",
+            "service_status",
+            "status",
+            "classification_status",
+            "candidate_review_status",
+        )
+        or None,
         sources=[source],
         evidence={
             "exact_supporting_passage": source.get("exact_supporting_passage"),
@@ -246,7 +267,23 @@ def event_record_from_food_line_candidate(
             "duplicate_of": _first_present(candidate, "duplicate_of") or None,
             "discovery_channel": _first_present(candidate, "discovery_channel") or None,
         },
-        domain_data={key: candidate.get(key) for key in ("pressure_type", "source_role", "date_match_status", "discovery_lane") if key in candidate},
+        domain_data={
+            key: candidate.get(key)
+            for key in (
+                "pressure_type",
+                "source_role",
+                "date_match_status",
+                "discovery_lane",
+                "geographic_scope",
+                "scope",
+                "service_area",
+                "service_level",
+                "service_status",
+                "closure_state",
+                "lifecycle_stage",
+            )
+            if key in candidate
+        },
     )
 
 
@@ -362,26 +399,77 @@ def get_event(conn: sqlite3.Connection, event_id: str) -> dict[str, Any] | None:
     return _event_from_row(row) if row else None
 
 
+def get_event_sources(conn: sqlite3.Connection, event_id: str) -> list[dict[str, Any]]:
+    return [
+        {
+            "source_url": row["source_url"],
+            "canonical_source_url": row["canonical_source_url"],
+            "publisher": row["publisher"],
+            "source_published_at": row["source_published_at"],
+            "title": row["title"],
+            "exact_supporting_passage": row["exact_supporting_passage"],
+            "discovered_at": row["discovered_at"],
+            "confidence": row["confidence"],
+            "source_role": row["source_role"],
+        }
+        for row in conn.execute(
+            """
+            SELECT source_url, canonical_source_url, publisher, source_published_at,
+                   title, exact_supporting_passage, discovered_at, confidence, source_role
+            FROM source_observations
+            WHERE event_id = ?
+            ORDER BY observation_id
+            """,
+            (event_id,),
+        )
+    ]
+
+
+def _population_fingerprint(value: Any) -> str:
+    if value is None or value == "":
+        return ""
+    return _json(value)
+
+
 def _material_change_reasons(candidate: dict[str, Any], existing: dict[str, Any] | None) -> list[str]:
     if not existing:
         return []
     reasons: list[str] = []
-    status = _first_present(candidate, "status", "classification_status", "candidate_review_status")
+    status = _first_present(
+        candidate,
+        "lifecycle_status",
+        "closure_state",
+        "service_status",
+        "status",
+        "classification_status",
+        "candidate_review_status",
+    )
     if status and status != nonempty(existing.get("status")):
         reasons.append("status changed")
+    effective_at = _event_effective_at(candidate)
+    existing_effective_at = existing.get("effective_at")
+    if effective_at and effective_at != existing_effective_at:
+        if existing_effective_at:
+            reasons.append("effective date changed")
+        else:
+            reasons.append("effective date became known")
     affected = candidate.get("affected_population") or candidate.get("affected_groups")
-    if affected and affected != existing.get("affected_population"):
+    if affected and _population_fingerprint(affected) != _population_fingerprint(existing.get("affected_population")):
         reasons.append("affected population changed")
-    text = normalized_text(
-        " ".join(
-            _first_present(candidate, key)
-            for key in ("selected_title", "title", "pressure_summary", "public_summary", "evidence_text", "summary_or_snippet")
-        )
+    scope = _first_present(candidate, "geographic_scope", "scope", "service_area")
+    existing_domain = existing.get("domain_data") or {}
+    existing_scope = nonempty(existing_domain.get("geographic_scope") or existing_domain.get("scope") or existing_domain.get("service_area"))
+    if scope and existing_scope and normalized_text(scope) != normalized_text(existing_scope):
+        reasons.append("geographic scope changed")
+    service_level = _first_present(candidate, "service_level", "service_status", "closure_state", "lifecycle_stage")
+    existing_service_level = nonempty(
+        existing_domain.get("service_level")
+        or existing_domain.get("service_status")
+        or existing_domain.get("closure_state")
+        or existing_domain.get("lifecycle_stage")
     )
-    for term in MEANINGFUL_UPDATE_TERMS:
-        if term in text:
-            reasons.append(f"material update term: {term}")
-            break
+    if service_level and existing_service_level and normalized_text(service_level) != normalized_text(existing_service_level):
+        reasons.append("service level changed")
     return reasons
 
 
@@ -394,8 +482,8 @@ def classify_food_line_candidate(
 ) -> tuple[str, list[str]]:
     resolved_event_id = event_id or food_line_event_id(candidate)
     existing = get_event(conn, resolved_event_id)
-    effective_at = _date_or_none(_first_present(candidate, "effective_at", "event_date", "source_published_date"))
-    if not existing and monitoring_start and effective_at and effective_at < monitoring_start:
+    historical_reference_at = _historical_reference_at(candidate)
+    if not existing and monitoring_start and historical_reference_at and historical_reference_at < monitoring_start:
         return "historical_recovery", ["effective date predates live monitoring window"]
     if not existing:
         return "new_development", ["no existing event with same event identity"]
@@ -409,6 +497,11 @@ def upsert_event_record(conn: sqlite3.Connection, event: EventRecord, *, candida
     source = event.sources[0] if event.sources else {}
     canonical = nonempty(source.get("canonical_source_url")) or canonical_source_url(source.get("source_url")) or f"missing:{hashlib.sha256(_json(source).encode('utf-8')).hexdigest()}"
     with conn:
+        existing = get_event(conn, event.event_id)
+        existing_sources = list(existing.get("sources") or []) if existing else []
+        accumulated_sources = [*existing_sources]
+        if not any(nonempty(item.get("canonical_source_url")) == canonical for item in accumulated_sources):
+            accumulated_sources.append({**source, "canonical_source_url": canonical})
         conn.execute(
             """
             INSERT INTO events (
@@ -444,7 +537,7 @@ def upsert_event_record(conn: sqlite3.Connection, event: EventRecord, *, candida
                 event.last_observed_at,
                 event.discovery_class,
                 event.status,
-                _json(event.sources),
+                _json(accumulated_sources),
                 _json(event.evidence),
                 _json(event.impact),
                 _json(event.affected_population) if event.affected_population is not None else None,
@@ -488,6 +581,11 @@ def upsert_event_record(conn: sqlite3.Connection, event: EventRecord, *, candida
                 _json(candidate),
                 _json(material_change_reasons or []),
             ),
+        )
+        accumulated_sources = get_event_sources(conn, event.event_id)
+        conn.execute(
+            "UPDATE events SET sources_json = ? WHERE event_id = ?",
+            (_json(accumulated_sources), event.event_id),
         )
     return {
         "event_id": event.event_id,

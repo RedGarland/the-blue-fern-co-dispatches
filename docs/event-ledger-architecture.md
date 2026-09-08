@@ -15,15 +15,23 @@ Production discovery still preserves source URLs, but ledger identity is based o
 - dispatch
 - location
 - organization or facility
-- pressure/event type
-- effective date when known
+- pressure or event type
 - normalized subject as fallback
+- explicit occurrence key when needed for separate recurring events at the same entity
 
 For example:
 
-`food-line-rantoul-price-cutter-grocery-closure-20260902`
+`food-line-rantoul-price-cutter-grocery-closure`
 
 Article URLs are stored as source observations. They do not define the event ID.
+
+Mutable lifecycle dates are not part of the default identity. If a closure is first announced without an exact date and later receives a scheduled or completed date, those observations should normally remain attached to one underlying event. When the same organization has genuinely separate recurring events, callers may provide an explicit occurrence key to distinguish them deterministically.
+
+## Source observations
+
+`source_observations` is the authoritative source-history table. It stores one row per unique canonical source URL for an event and preserves source URLs, publisher, publication date, title, exact supporting passage, discovery time, confidence, and source role.
+
+The `events.sources_json` column is a denormalized read snapshot rebuilt from `source_observations` during writes. It is not an independent authority and must not drop previously observed sources.
 
 ## Live vs. historical recovery
 

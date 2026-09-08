@@ -24,6 +24,7 @@ from bluefern_dispatches.food_line_sources import (
     resolve_food_line_fetcher,
     validate_date,
 )
+from bluefern_dispatches.event_ledger import write_food_line_shadow_events
 
 DISPATCH_SLUG = "food-line"
 DISCOVERY_DIR_NAME = "discovery"
@@ -4737,6 +4738,30 @@ def run_food_line_discovery_expansion(
         "no_current_update": edition_mode == "no_current_update",
         "no_current_update_reason": discovery_confidence_reason if edition_mode == "no_current_update" else "",
     }
+    if dry_run:
+        audit_summary["shadow_event_ledger"] = {
+            "ok": True,
+            "shadow_mode": True,
+            "status": "skipped_dry_run",
+            "candidate_count": candidate_count,
+        }
+    else:
+        try:
+            audit_summary["shadow_event_ledger"] = write_food_line_shadow_events(
+                root,
+                candidates,
+                run_id=f"food-line-discovery-{date_text}-{discovered_at}",
+                edition_date=date_text,
+            )
+        except Exception as exc:  # noqa: BLE001
+            audit_summary["shadow_event_ledger"] = {
+                "ok": False,
+                "shadow_mode": True,
+                "status": "failed_nonblocking",
+                "error_type": type(exc).__name__,
+                "error_message": str(exc),
+                "candidate_count": candidate_count,
+            }
     if not dry_run:
         _write_json(candidate_path, candidates)
         _write_json(audit_json_path, audit_summary)

@@ -1,0 +1,31 @@
+﻿schema_version: 1
+categories:
+  enforcement:
+    examples: [arrests, raids, workplace_operations, courthouse_activity, residential_or_community_enforcement, targeted_operations, multi_agency_operations]
+  detention:
+    examples: [facility_capacity_change, overcrowding, contract_change, expansion, closure, transfer, relocation, conditions, emergency_event]
+  removals_deportations:
+    examples: [removal_flights, repatriations, deportation_operations, transfer_chains, destination_changes, unusual_removal_practices]
+  fatalities_injuries_medical_events:
+    examples: [death_in_custody, enforcement_related_death, serious_injury, hospitalization, emergency_transfer, delayed_care_allegation, suicide_self_harm, medical_emergency]
+  use_of_force:
+    examples: [shooting, firearm_discharge, taser_deployment, physical_force, pursuit, tactical_deployment, restraint_incident]
+  legal_oversight_accountability:
+    examples: [federal_court_action, state_local_litigation, civil_rights_investigation, inspector_general_finding, doj_investigation, congressional_investigation, misconduct_finding, settlement, verdict]
+  policy_operations:
+    examples: [dhs_ice_policy_change, detention_standard, enforcement_priority, 287g, sanctuary_policy_interaction, implementation_change]
+  verified_community_impact:
+    examples: [school_disruption, workforce_disruption, agricultural_disruption, business_disruption, emergency_advisory, demonstration, humanitarian_response, local_government_response]
+location_precision:
+  - exact_facility
+  - street_or_site
+  - city
+  - county
+  - state_or_territory
+  - multi_location
+  - unknown
+severity:
+  critical: documented immediate severe human impact including death, fatal enforcement incident, mass casualty, or major detention emergency
+  high: serious injury, hospitalization, firearm discharge, major detention capacity/transfer event, major multi-site operation, or material court order
+  medium: substantial enforcement/removal activity, facility contract/capacity change, policy implementation, or verified community disruption
+  low: minor administrative or procedural/legal update without immediate operational effect

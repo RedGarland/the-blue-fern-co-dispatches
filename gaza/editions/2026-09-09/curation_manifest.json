@@ -1,0 +1,801 @@
+[
+  {
+    "story_id": "gaza-story-2026-09-09-001",
+    "title": "Conflicting court rulings on Missouri map threaten November's election | First Thing",
+    "summary": "The state can't use new congressional districts under one court order - or its old ones under another. Plus, the architects in Europe turning urban spaces into areas of climate respite Don't already get First Thing in your inbox? Sign up here Good morning. Conservative justice Brett Kavanaugh denied the emergency request from Missouri officials to use a congressional map in November that was redrawn with Donald Trump's support to give Republicans an edge in the midterms, but a ruling by a federal judge in Missouri temporarily prevented the state from using its old congressional maps. Clashing court rulings plunged Missouri's congressional elections into uncertainty less than two months before the November midterms that will decide which party controls a closely divided Congress. Why is there legal action over the maps? The Missouri supreme court has previously ruled that the new map must go before voters to approve or reject the new districts, meaning it cannot be used in time for the November election. The president and Republicans had fumed over the decision, with Trump calling it \"horrible, ridiculous, and unconstitutional\". What are the significant changes to the map intended to favor Republicans? The revised map targeted the fifth congressional district, held by longtime Democratic representative Emanuel Cleaver of Kansas City. It reassigned portions of Kansas City to two neighboring districts represented by Republicans and stretched the remainder of Cleaver's district far eastward into rural Republican areas. What has the British prime minister said? Writing in the Guardian, Andy Burnham said he would \"not stand by\" as horrific suffering continued, and that for too long the UK had been hesitant to act \"fearful of being accused of being anti-Israel\". \"The measures we are taking,\" he said, \"are about targeting illegal settlements and increasing the pressure on the Israeli government to change course. We are not imposing sanctions on Israel as a whole.\" How has. Israel reacted? Israel has ordered the closure of the British consulate in occupied East Jerusalem among retaliatory measures including entry bans on several UK lawmakers. The Israeli government added that longstanding British involvement in the training of Palestinian security forces on the West Bank would be terminated. Britain will also be excluded from the US-led Gaza coordination mission.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 81,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-09-guardian-world-29d81de29ad9"
+    ],
+    "source_ids": [
+      "gaza-2026-09-09-guardian-world-29d81de29ad9"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/us-news/2026/sep/09/first-thing-court-orders-missouri-map-threaten-november-midterm-election"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-09-guardian-world-29d81de29ad9",
+        "title": "Conflicting court rulings on Missouri map threaten November's election | First Thing",
+        "url": "https://www.theguardian.com/us-news/2026/sep/09/first-thing-court-orders-missouri-map-threaten-november-midterm-election",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "The state can't use new congressional districts under one court order - or its old ones under another. Plus, the architects in Europe turning urban spaces into areas of climate respite Don't already get First Thing in your inbox? Sign up here Good morning. Clashing court rulings plunged Missouri's congressional elections into uncertainty less than two months before the November midterms that will decide which party controls a closely divided Congress. Conservative justice Brett Kavanaugh denied the emergency request from Missouri officials to use a congressional map in November that was redrawn with Donald Trump's support to give Republicans an edge in the midterms, but a ruling by a federal judge in Missouri temporarily prevented the state from using its old congressional maps. Why is there legal action over the maps? The Missouri supreme court has previously ruled that the new map must go before voters to approve or reject the new districts, meaning it cannot be used in time for the November election. The president and Republicans had fumed over the decision, with Trump calling it \"horrible, ridiculous, and unconstitutional\". What are the significant changes to the map intended to favor Republicans? The revised map targeted the fifth congressional district, held by longtime Democratic representative Emanuel Cleaver of Kansas City. It reassigned portions of Kansas City to two neighboring districts represented by Republicans and stretched the remainder of Cleaver's district far eastward into rural Republican areas. What has the British prime minister said? Writing in the Guardian, Andy Burnham said he would \"not stand by\" as horrific suffering continued, and that for too long the UK had been hesitant to act \"fearful of being accused of being anti-Israel\". \"The measures we are taking,\" he said, \"are about targeting illegal settlements and increasing the pressure on the Israeli government to change course. We are not imposing sanctions on Israel as a whole.\" How has Israel reacted? Israel has ordered the closure of the British consulate in occupied East Jerusalem among retaliatory measures including entry bans on several UK lawmakers. The Israeli government added that longstanding British involvement in the training of Palestinian security forces on the West Bank would be terminated. Britain will also be excluded from the US-led Gaza coordination mission.",
+        "event_date": "2026-09-09T11:28:25+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-09T13:01:51.498051+00:00",
+    "relevance_terms_matched": [
+      "east jerusalem",
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 81,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-09T11:28:25+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-02-012",
+    "prior_edition_date": "2026-09-02",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-09-002",
+    "title": "Wednesday briefing: Inside sweeping UK sanctions on trade with Israeli settlements",
+    "summary": "In today's newsletter: Ed Miliband has announced the strongest statement on Israel's actions ever issued by the the UK government, but will it make a meaningful difference to Palestinians? Good morning. For almost half a century, British governments have condemned illegal Israeli settlements, acknowledging they represent an obstacle to peace and threaten the prospect of a two-state solution. And yet no government has ever compelled. In a powerful and emotive speech, the foreign secretary recounted childhood memories of picking oranges on his grandmother's kibbutz, accused Israeli \"terrorists\" of ethnic cleansing in the West Bank and announced a series of new measures intended to address what he described as a \"deeply painful contrast\" between rhetoric and reality. Israel to stop its expansion. UK news | Police have been told by the government they expect better intelligence gathering after masked far-right groups took to the streets at the weekend, the Guardian has learned, as the Kent force admitted mishandling warnings of potential trouble. UK politics | Andy Burnham should tackle inequality in the UK by introducing a wealth tax, universal free personal social care and bringing gas and electricity networks under public ownership, according to a report from more than a dozen influential thinkers. Airline industry | Flight delays and cancellations were expected to continue today at UK airports after another air traffic control failure kept planes grounded for hours, affecting hundreds of thousands of passengers. Iran | Iranian forces claimed to have seized an American underwater drone in the strait of Hormuz that the US military said had \"malfunctioned\" more than a day earlier. US news | Donald Trump gave sizeable holiday gifts to four White House aides, according to new financial disclosures released by the administration, including $45,000 to executive assistant Natalie Harp.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 74,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "health_infrastructure",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 8,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-09-guardian-world-0585fc586448"
+    ],
+    "source_ids": [
+      "gaza-2026-09-09-guardian-world-0585fc586448"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/sep/09/wednesday-briefing-inside-sweeping-uk-sanctions-on-trade-with-israeli-settlements"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-09-guardian-world-0585fc586448",
+        "title": "Wednesday briefing: Inside sweeping UK sanctions on trade with Israeli settlements",
+        "url": "https://www.theguardian.com/world/2026/sep/09/wednesday-briefing-inside-sweeping-uk-sanctions-on-trade-with-israeli-settlements",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "In today's newsletter: Ed Miliband has announced the strongest statement on Israel's actions ever issued by the the UK government, but will it make a meaningful difference to Palestinians? Good morning. For almost half a century, British governments have condemned illegal Israeli settlements, acknowledging they represent an obstacle to peace and threaten the prospect of a two-state solution. And yet no government has ever compelled Israel to stop its expansion. Ed Miliband's statement in the House of Commons yesterday was an attempt to change that. In a powerful and emotive speech, the foreign secretary recounted childhood memories of picking oranges on his grandmother's kibbutz, accused Israeli \"terrorists\" of ethnic cleansing in the West Bank and announced a series of new measures intended to address what he described as a \"deeply painful contrast\" between rhetoric and reality. UK news | Police have been told by the government they expect better intelligence gathering after masked far-right groups took to the streets at the weekend, the Guardian has learned, as the Kent force admitted mishandling warnings of potential trouble. UK politics | Andy Burnham should tackle inequality in the UK by introducing a wealth tax, universal free personal social care and bringing gas and electricity networks under public ownership, according to a report from more than a dozen influential thinkers. Airline industry | Flight delays and cancellations were expected to continue today at UK airports after another air traffic control failure kept planes grounded for hours, affecting hundreds of thousands of passengers. Iran | Iranian forces claimed to have seized an American underwater drone in the strait of Hormuz that the US military said had \"malfunctioned\" more than a day earlier. US news | Donald Trump gave sizeable holiday gifts to four White House aides, according to new financial disclosures released by the administration, including $45,000 to executive assistant Natalie Harp.",
+        "event_date": "2026-09-09T05:46:18+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-09T13:01:51.498051+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 74,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-09T05:46:18+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "exclude_written_public_edition",
+    "public_rendered": false,
+    "excluded_reason": "excluded marker 'UK politics |'",
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": null,
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-09-004",
+    "title": "Israel tells UK to close East Jerusalem consulate within 30 days",
+    "summary": "Israel announced it would close the consulate after UK said it was imposing sanctions on illegal settlements.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 67,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-09-aljazeera-middle-east-63e9dc809410"
+    ],
+    "source_ids": [
+      "gaza-2026-09-09-aljazeera-middle-east-63e9dc809410"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/9/9/israel-tells-uk-to-close-east-jerusalem-consulate-within-30-days?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-09-aljazeera-middle-east-63e9dc809410",
+        "title": "Israel tells UK to close East Jerusalem consulate within 30 days",
+        "url": "https://www.aljazeera.com/news/2026/9/9/israel-tells-uk-to-close-east-jerusalem-consulate-within-30-days?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israel announced it would close the consulate after UK said it was imposing sanctions on illegal settlements.",
+        "event_date": "2026-09-09T10:09:06+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-09T13:01:51.498051+00:00",
+    "relevance_terms_matched": [
+      "east jerusalem",
+      "gaza"
+    ],
+    "top_story_relevance_score": 67,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-09T10:09:06+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-09-003",
+    "title": "UK 'showing leadership' with West Bank sanctions, says Burnham as he faces Badenoch at PMQs - politics live",
+    "summary": "PM and leader of the opposition spar over defence spending Alex Burghart , the deputy Tory leader, was giving interviews this morning. On. Israel, he opened up a new line of attack against the government, accusing it of hypocrisy. This is what he told GB News. At the same time that Labour were saying all these things about Israel in the House of Commons, they put out a communique. They put out an account of a conversation that Andy Burnham has had with the Chinese president, and it said how constructive they wanted to be with China, how they wanted to work with China, and what a great relationship we have.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 71,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-09-guardian-world-eea00b9cc834"
+    ],
+    "source_ids": [
+      "gaza-2026-09-09-guardian-world-eea00b9cc834"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/politics/live/2026/sep/09/uk-israel-west-bank-ed-miliband-andy-burnham-uk-politics-latest-news-updates"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-09-guardian-world-eea00b9cc834",
+        "title": "UK 'showing leadership' with West Bank sanctions, says Burnham as he faces Badenoch at PMQs - politics live",
+        "url": "https://www.theguardian.com/politics/live/2026/sep/09/uk-israel-west-bank-ed-miliband-andy-burnham-uk-politics-latest-news-updates",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "PM and leader of the opposition spar over defence spending Alex Burghart , the deputy Tory leader, was giving interviews this morning. On Israel, he opened up a new line of attack against the government, accusing it of hypocrisy. This is what he told GB News. At the same time that Labour were saying all these things about Israel in the House of Commons, they put out a communique. They put out an account of a conversation that Andy Burnham has had with the Chinese president, and it said how constructive they wanted to be with China, how they wanted to work with China, and what a great relationship we have.",
+        "event_date": "2026-09-09T12:53:51+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-09T13:01:51.498051+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 71,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-09T12:53:51+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-08-04-009",
+    "prior_edition_date": "2026-08-04",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-09-011",
+    "title": "UK announces sanctions on West Bank settlements prompting furious Israeli response",
+    "summary": "Britain's foreign secretary accuses settlers of carrying out the \"ethnic cleansing\" of Palestinians, as. Israel responds by shutting the UK consulate in East Jerusalem.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 56,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-09-bbc-middle-east-2e825a364237"
+    ],
+    "source_ids": [
+      "gaza-2026-09-09-bbc-middle-east-2e825a364237"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/c4g7zen0vveo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-09-bbc-middle-east-2e825a364237",
+        "title": "UK announces sanctions on West Bank settlements prompting furious Israeli response",
+        "url": "https://www.bbc.co.uk/news/articles/c4g7zen0vveo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Britain's foreign secretary accuses settlers of carrying out the \"ethnic cleansing\" of Palestinians, as Israel responds by shutting the UK consulate in East Jerusalem.",
+        "event_date": "2026-09-09T01:45:15+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-09T13:01:51.498051+00:00",
+    "relevance_terms_matched": [
+      "east jerusalem",
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-09T01:45:15+00:00",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-08-007",
+    "prior_edition_date": "2026-09-08",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-09-009",
+    "title": "How has Israel hit back against sanctions by the UK, others?",
+    "summary": "Israel announced four countermeasures including the closure of the British consulate in East Jerusalem.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-09-aljazeera-middle-east-ce26304e51ed"
+    ],
+    "source_ids": [
+      "gaza-2026-09-09-aljazeera-middle-east-ce26304e51ed"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/9/9/how-has-israel-hit-back-against-sanctions-by-the-uk-others?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-09-aljazeera-middle-east-ce26304e51ed",
+        "title": "How has Israel hit back against sanctions by the UK, others?",
+        "url": "https://www.aljazeera.com/news/2026/9/9/how-has-israel-hit-back-against-sanctions-by-the-uk-others?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israel announced four countermeasures including the closure of the British consulate in East Jerusalem.",
+        "event_date": "2026-09-09T12:17:50+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-09T13:01:51.498051+00:00",
+    "relevance_terms_matched": [
+      "east jerusalem",
+      "gaza"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-09T12:17:50+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-09-006",
+    "title": "UK accuses Israeli 'terrorists' of ethnic cleansing in West Bank with government backing",
+    "summary": "Ed Miliband announces sanctions on trade with settlements as PM says in the Guardian it is time to act I believe in a two-state solution in the Middle East. That's why we're taking action to keep that hope alive | Andy Burnham Settler terrorists supported by Benjamin Netanyahu's government are committing ethnic cleansing in the West Bank, Ed Miliband has said, in the UK's starkest condemnation since the foundation of the Israeli state. Andy Burnham, the prime minister, said he would \"not stand by\" as horrific suffering continued, writing in the Guardian that for too long the UK had been hesitant to act , \"fearful of being accused of being anti-Israel\". An import ban on goods from illegal settlements in the occupied territories and a new ban for arms licences and other exports that \"materially contribute to the occupation\". A comprehensive sanctions regime against providing services such as construction or financing for Israeli settlements and a ban on advertising them in the UK. Personal sanctions against key individuals accused of promoting settler violence. A new ban for arms licences and other exports that \"materially contribute to the occupation\".",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 49,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-09-guardian-world-637e5e76deeb"
+    ],
+    "source_ids": [
+      "gaza-2026-09-09-guardian-world-637e5e76deeb"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/sep/08/uk-accuses-israeli-terrorists-ethnic-cleansing-west-bank-government-backing"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-09-guardian-world-637e5e76deeb",
+        "title": "UK accuses Israeli 'terrorists' of ethnic cleansing in West Bank with government backing",
+        "url": "https://www.theguardian.com/world/2026/sep/08/uk-accuses-israeli-terrorists-ethnic-cleansing-west-bank-government-backing",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Ed Miliband announces sanctions on trade with settlements as PM says in the Guardian it is time to act I believe in a two-state solution in the Middle East. That's why we're taking action to keep that hope alive | Andy Burnham Settler terrorists supported by Benjamin Netanyahu's government are committing ethnic cleansing in the West Bank, Ed Miliband has said, in the UK's starkest condemnation since the foundation of the Israeli state. Andy Burnham, the prime minister, said he would \"not stand by\" as horrific suffering continued, writing in the Guardian that for too long the UK had been hesitant to act , \"fearful of being accused of being anti-Israel\". An import ban on goods from illegal settlements in the occupied territories and a new ban for arms licences and other exports that \"materially contribute to the occupation\". A comprehensive sanctions regime against providing services such as construction or financing for Israeli settlements and a ban on advertising them in the UK. Personal sanctions against key individuals accused of promoting settler violence. A new ban for arms licences and other exports that \"materially contribute to the occupation\".",
+        "event_date": "2026-09-08T19:00:50+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-09T13:01:51.498051+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 49,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-08T19:00:50+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-08-007",
+    "prior_edition_date": "2026-09-08",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-09-005",
+    "title": "Australia considers new Israel sanctions but won't join UK in banning trade with 'settler terrorists'",
+    "summary": "Penny Wong has concerns about blanket ban announced by UK, France and Canada, but says new 'targeted measures' planned over Israeli settlers Follow our Australia news live blog for latest updates Get our breaking news email , free app or daily news podcast Australia is preparing another round of sanctions against Israel but has stopped short of joining the UK in banning trade with Israeli settlements in the West Bank. Overnight, the UK government offered its strongest condemnation yet of Israel's occupation , with the foreign secretary, Ed Miliband, calling efforts to control the West Bank unlawful. He said his government agreed there was \"ethnic cleansing of Palestinians in areas of the West Bank, perpetrated by settler terrorists\".",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 45,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-09-guardian-world-a4ff591a76e8"
+    ],
+    "source_ids": [
+      "gaza-2026-09-09-guardian-world-a4ff591a76e8"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/australia-news/2026/sep/09/australia-considers-new-israel-sanctions-but-wont-join-uk-in-banning-trade-with-settler-terrorists-ntwnfb"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-09-guardian-world-a4ff591a76e8",
+        "title": "Australia considers new Israel sanctions but won't join UK in banning trade with 'settler terrorists'",
+        "url": "https://www.theguardian.com/australia-news/2026/sep/09/australia-considers-new-israel-sanctions-but-wont-join-uk-in-banning-trade-with-settler-terrorists-ntwnfb",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Penny Wong has concerns about blanket ban announced by UK, France and Canada, but says new 'targeted measures' planned over Israeli settlers Follow our Australia news live blog for latest updates Get our breaking news email , free app or daily news podcast Australia is preparing another round of sanctions against Israel but has stopped short of joining the UK in banning trade with Israeli settlements in the West Bank. Overnight, the UK government offered its strongest condemnation yet of Israel's occupation , with the foreign secretary, Ed Miliband, calling efforts to control the West Bank unlawful. He said his government agreed there was \"ethnic cleansing of Palestinians in areas of the West Bank, perpetrated by settler terrorists\".",
+        "event_date": "2026-09-09T01:38:02+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-09T13:01:51.498051+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 45,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-09T01:38:02+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-08-007",
+    "prior_edition_date": "2026-09-08",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-09-012",
+    "title": "Chris Mason: Burnham looks to show he will go further than Starmer with West Bank sanctions",
+    "summary": "It is hoped that coordinated action minimises the blowback to any one country from Israel or America, our political editor writes.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 36,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-09-bbc-middle-east-64aa22e83533"
+    ],
+    "source_ids": [
+      "gaza-2026-09-09-bbc-middle-east-64aa22e83533"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/c3v439n5xlpo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-09-bbc-middle-east-64aa22e83533",
+        "title": "Chris Mason: Burnham looks to show he will go further than Starmer with West Bank sanctions",
+        "url": "https://www.bbc.co.uk/news/articles/c3v439n5xlpo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "It is hoped that coordinated action minimises the blowback to any one country from Israel or America, our political editor writes.",
+        "event_date": "2026-09-08T23:52:28+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-09T13:01:51.498051+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 36,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-08T23:52:28+00:00",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-05-28-004",
+    "prior_edition_date": "2026-05-28",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-09-010",
+    "title": "Turkish jets perform dramatic flyover above Egypt's pyramids",
+    "summary": "The Turkish Air Force's aerobatic team, performed this spectacular demonstration flight over Egypt's Pyramids of Gaza.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-09-aljazeera-middle-east-96149faa0e1b"
+    ],
+    "source_ids": [
+      "gaza-2026-09-09-aljazeera-middle-east-96149faa0e1b"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/9/9/turkish-jets-perform-dramatic-flyover-above-egypts-pyramids?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-09-aljazeera-middle-east-96149faa0e1b",
+        "title": "Turkish jets perform dramatic flyover above Egypt's pyramids",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/9/9/turkish-jets-perform-dramatic-flyover-above-egypts-pyramids?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "The Turkish Air Force's aerobatic team, performed this spectacular demonstration flight over Egypt's Pyramids of Gaza.",
+        "event_date": "2026-09-09T09:56:42+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-09T13:01:51.498051+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-09T09:56:42+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

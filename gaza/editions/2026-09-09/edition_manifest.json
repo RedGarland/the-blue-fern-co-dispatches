@@ -1,0 +1,84 @@
+{
+  "dispatch_name": "Dispatches From Gaza",
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-09-09",
+  "generated_at": "2026-09-09T13:01:51.498051+00:00",
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-09-09/",
+  "local_output_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-09-09",
+  "local_dispatch_output_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\dispatches\\gaza\\editions\\2026-09-09",
+  "local_backup_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\tmp-backups-pages\\gaza\\2026-09-09",
+  "template_version": "gaza-source-record-v1",
+  "source_count": 12,
+  "story_count": 9,
+  "source_adequacy_status": "limited_source_update",
+  "source_adequacy_label": "Limited-source update",
+  "publisher_count": 3,
+  "publishers": [
+    "Al Jazeera",
+    "BBC News",
+    "The Guardian"
+  ],
+  "source_adequacy_warnings": [
+    "This is a limited-source update generated from 12 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing."
+  ],
+  "allow_post_edition_date_sources": false,
+  "post_edition_date_sources_included": false,
+  "post_edition_date_source_count": 0,
+  "source_manifest_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-09-09\\sources_manifest.json",
+  "curation_manifest_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-09-09\\curation_manifest.json",
+  "free_public_artifacts": [
+    "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-09-09\\index.html",
+    "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-09-09\\edition_manifest.json",
+    "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-09-09\\sources_manifest.json",
+    "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-09-09\\curation_manifest.json"
+  ],
+  "paid_or_detail_artifacts": [],
+  "detail_artifacts_publicly_exposed": false,
+  "is_free_public": true,
+  "has_detail_tier": false,
+  "public_exposed": true,
+  "warnings": [
+    "suppressed 1 repeated/stale candidate sources via cross-edition dedupe",
+    "This is a limited-source update generated from 12 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.",
+    "manual supplement recommended: add source-backed records at C:\\BlueFernRunner\\GazaDispatchesCurrent6\\data\\dispatches\\gaza\\sources\\2026-09-09\\manual_sources.template.json"
+  ],
+  "errors": [],
+  "scheduled_run_local_time": "2026-09-09T06:00:00-07:00",
+  "actual_run_local_time": "2026-09-09T06:01:51-07:00",
+  "source_window_start_utc": "2026-09-07T21:12:37Z",
+  "source_window_end_utc": "2026-09-09T12:53:51Z",
+  "first_source_retrieved_at": "2026-09-09T13:01:41.350946Z",
+  "last_source_retrieved_at": "2026-09-09T13:01:41.350946Z",
+  "contains_later_same_day_update": false,
+  "later_same_day_update_count": 0,
+  "later_same_day_update_batch_count": 0,
+  "later_same_day_update_source_count": 0,
+  "contains_post_edition_date_update": false,
+  "post_edition_date_update_count": 0,
+  "post_edition_date_update_batch_count": 0,
+  "post_edition_date_update_source_count": 0,
+  "post_edition_date_retrieval_batches": [],
+  "retrieval_batches": [
+    {
+      "retrieved_at": "2026-09-09T13:01:41.350946Z",
+      "retrieved_at_local": "2026-09-09T06:01:41-07:00",
+      "retrieved_local_date": "2026-09-09",
+      "batch_classification": "scheduled_or_pre_scheduled_batch",
+      "source_record_ids": [
+        "gaza-2026-09-09-guardian-world-29d81de29ad9",
+        "gaza-2026-09-09-guardian-world-0585fc586448",
+        "gaza-2026-09-09-guardian-world-eea00b9cc834",
+        "gaza-2026-09-09-aljazeera-middle-east-63e9dc809410",
+        "gaza-2026-09-09-guardian-world-a4ff591a76e8",
+        "gaza-2026-09-09-guardian-world-637e5e76deeb",
+        "gaza-2026-09-09-guardian-world-b4e50e4a0986",
+        "gaza-2026-09-09-bbc-middle-east-1eb6adaf3393",
+        "gaza-2026-09-09-aljazeera-middle-east-ce26304e51ed",
+        "gaza-2026-09-09-aljazeera-middle-east-96149faa0e1b",
+        "gaza-2026-09-09-bbc-middle-east-2e825a364237",
+        "gaza-2026-09-09-bbc-middle-east-64aa22e83533"
+      ],
+      "source_count": 12
+    }
+  ]
+}

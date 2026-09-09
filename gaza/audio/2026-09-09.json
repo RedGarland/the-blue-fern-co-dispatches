@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-09-09",
+  "generated_at": "2026-09-09T13:02:10.282488Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-09-09.mp3",
+  "audio_url": "/gaza/audio/2026-09-09.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1677,
+  "tts_input_word_count": 266,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1657728,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-09-09T13:02:10.282463Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-09-09-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-09-09/",
+  "script_text": "This is the Gaza Dispatch audio briefing for September 9, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Conflicting court rulings on Missouri map threaten November's election | First Thing. The state can't use new congressional districts under one court order - or its old ones under another. This was reported by The Guardian.\n\n2. Israel tells UK to close East Jerusalem consulate within 30 days. Israel announced it would close the consulate after UK said it was imposing sanctions on illegal settlements. This was reported by Al Jazeera.\n\n3. UK 'showing leadership' with West Bank sanctions, says Burnham as he faces Badenoch at PMQs - politics live. PM and leader of the opposition spar over defence spending Alex Burghart , the deputy Tory leader, was giving interviews this morning. This was reported by The Guardian.\n\n4. UK announces sanctions on West Bank settlements prompting furious Israeli response. Britain's foreign secretary accuses settlers of carrying out the \"ethnic cleansing\" of Palestinians, as. This was reported by BBC News.\n\n5. How has Israel hit back against sanctions by the UK, others? Israel announced four countermeasures including the closure of the British consulate in East Jerusalem. This was reported by Al Jazeera.\n\n6. UK accuses Israeli 'terrorists' of ethnic cleansing in West Bank with government backing. Ed Miliband announces sanctions on trade with settlements as PM says in the Guardian it is time to act I believe in a two-state solution in the Middle East. This was reported by The Guardian.\n\nFor the full source-backed dispatch, read the September 9, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-09-09-guardian-world-29d81de29ad9",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/us-news/2026/sep/09/first-thing-court-orders-missouri-map-threaten-november-midterm-election",
+      "title": "Conflicting court rulings on Missouri map threaten November's election | First Thing"
+    },
+    {
+      "source_record_id": "gaza-2026-09-09-aljazeera-middle-east-63e9dc809410",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/9/9/israel-tells-uk-to-close-east-jerusalem-consulate-within-30-days?traffic_source=rss",
+      "title": "Israel tells UK to close East Jerusalem consulate within 30 days"
+    },
+    {
+      "source_record_id": "gaza-2026-09-09-guardian-world-eea00b9cc834",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/politics/live/2026/sep/09/uk-israel-west-bank-ed-miliband-andy-burnham-uk-politics-latest-news-updates",
+      "title": "UK 'showing leadership' with West Bank sanctions, says Burnham as he faces Badenoch at PMQs - politics live"
+    },
+    {
+      "source_record_id": "gaza-2026-09-09-bbc-middle-east-2e825a364237",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/c4g7zen0vveo?at_medium=RSS&at_campaign=rss",
+      "title": "UK announces sanctions on West Bank settlements prompting furious Israeli response"
+    },
+    {
+      "source_record_id": "gaza-2026-09-09-aljazeera-middle-east-ce26304e51ed",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/9/9/how-has-israel-hit-back-against-sanctions-by-the-uk-others?traffic_source=rss",
+      "title": "How has Israel hit back against sanctions by the UK, others?"
+    },
+    {
+      "source_record_id": "gaza-2026-09-09-guardian-world-637e5e76deeb",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/sep/08/uk-accuses-israeli-terrorists-ethnic-cleansing-west-bank-government-backing",
+      "title": "UK accuses Israeli 'terrorists' of ethnic cleansing in West Bank with government backing"
+    }
+  ]
+}

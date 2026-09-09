@@ -1,7 +1,7 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-09-09",
-  "generated_at": "2026-09-09T13:02:10.282488Z",
+  "generated_at": "2026-09-09T19:00:37.658470Z",
   "audio_status": "audio_file_ready",
   "audio_file": "2026-09-09.mp3",
   "audio_url": "/gaza/audio/2026-09-09.mp3",
@@ -21,31 +21,25 @@
       "voice": "alloy"
     }
   ],
-  "tts_input_character_count": 1677,
-  "tts_input_word_count": 266,
+  "tts_input_character_count": 2013,
+  "tts_input_word_count": 321,
   "tts_story_count": 6,
   "tts_segment_count": 1,
   "audio_duration_seconds": null,
-  "audio_file_size_bytes": 1657728,
+  "audio_file_size_bytes": 1937664,
   "estimated_cost_usd": null,
   "estimated_cost_note": "pricing input not configured",
   "tts_pricing_basis": null,
   "tts_pricing_model": null,
-  "cost_logged_at": "2026-09-09T13:02:10.282463Z",
+  "cost_logged_at": "2026-09-09T19:00:37.658441Z",
   "segue_chime": "none",
   "segue_chime_count": 0,
   "segue_chime_asset": null,
   "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-09-09-transcript.html",
   "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-09-09/",
-  "script_text": "This is the Gaza Dispatch audio briefing for September 9, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Conflicting court rulings on Missouri map threaten November's election | First Thing. The state can't use new congressional districts under one court order - or its old ones under another. This was reported by The Guardian.\n\n2. Israel tells UK to close East Jerusalem consulate within 30 days. Israel announced it would close the consulate after UK said it was imposing sanctions on illegal settlements. This was reported by Al Jazeera.\n\n3. UK 'showing leadership' with West Bank sanctions, says Burnham as he faces Badenoch at PMQs - politics live. PM and leader of the opposition spar over defence spending Alex Burghart , the deputy Tory leader, was giving interviews this morning. This was reported by The Guardian.\n\n4. UK announces sanctions on West Bank settlements prompting furious Israeli response. Britain's foreign secretary accuses settlers of carrying out the \"ethnic cleansing\" of Palestinians, as. This was reported by BBC News.\n\n5. How has Israel hit back against sanctions by the UK, others? Israel announced four countermeasures including the closure of the British consulate in East Jerusalem. This was reported by Al Jazeera.\n\n6. UK accuses Israeli 'terrorists' of ethnic cleansing in West Bank with government backing. Ed Miliband announces sanctions on trade with settlements as PM says in the Guardian it is time to act I believe in a two-state solution in the Middle East. This was reported by The Guardian.\n\nFor the full source-backed dispatch, read the September 9, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "script_text": "This is the Gaza Dispatch audio briefing for September 9, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Israel tells UK to close East Jerusalem consulate within 30 days. Israel announced it would close the consulate after UK said it was imposing sanctions on illegal settlements. This was reported by Al Jazeera.\n\n2. UK 'showing leadership' with West Bank sanctions, says Burnham as he faces Badenoch at PMQs - politics live. PM and leader of the opposition spar over defence spending Alex Burghart , the deputy Tory leader, was giving interviews this morning. This was reported by The Guardian.\n\n3. UK announces sanctions on West Bank settlements prompting furious Israeli response. Britain's foreign secretary accuses settlers of carrying out the \"ethnic cleansing\" of Palestinians, as. This was reported by BBC News.\n\n4. How has Israel hit back against sanctions by the UK, others? Israel announced four countermeasures including the closure of the British consulate in East Jerusalem. This was reported by Al Jazeera.\n\n5. UK accuses Israeli 'terrorists' of ethnic cleansing in West Bank with government backing. Ed Miliband announces sanctions on trade with settlements as PM says in the Guardian it is time to act I believe in a two-state solution in the Middle East. This was reported by The Guardian.\n\n6. Australia considers new Israel sanctions but won't join UK in banning trade with 'settler terrorists'. Penny Wong has concerns about blanket ban announced by UK, France and Canada, but says new 'targeted measures' planned over Israeli settlers Follow our Australia news live blog for latest updates Get our breaking news email , free app or daily news podcast Australia is preparing another round of sanctions against Israel but has stopped short of joining the UK in banning trade with Israeli settlements in the West Bank. This was reported by The Guardian.\n\nFor the full source-backed dispatch, read the September 9, 2026 Gaza edition at dispatches.thebluefernco.com.",
   "source_count": 6,
   "sources": [
-    {
-      "source_record_id": "gaza-2026-09-09-guardian-world-29d81de29ad9",
-      "publisher": "The Guardian",
-      "url": "https://www.theguardian.com/us-news/2026/sep/09/first-thing-court-orders-missouri-map-threaten-november-midterm-election",
-      "title": "Conflicting court rulings on Missouri map threaten November's election | First Thing"
-    },
     {
       "source_record_id": "gaza-2026-09-09-aljazeera-middle-east-63e9dc809410",
       "publisher": "Al Jazeera",
@@ -75,6 +69,12 @@
       "publisher": "The Guardian",
       "url": "https://www.theguardian.com/world/2026/sep/08/uk-accuses-israeli-terrorists-ethnic-cleansing-west-bank-government-backing",
       "title": "UK accuses Israeli 'terrorists' of ethnic cleansing in West Bank with government backing"
+    },
+    {
+      "source_record_id": "gaza-2026-09-09-guardian-world-a4ff591a76e8",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/australia-news/2026/sep/09/australia-considers-new-israel-sanctions-but-wont-join-uk-in-banning-trade-with-settler-terrorists-ntwnfb",
+      "title": "Australia considers new Israel sanctions but won't join UK in banning trade with 'settler terrorists'"
     }
   ]
 }

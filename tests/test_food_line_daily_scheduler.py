@@ -879,6 +879,9 @@ def test_food_line_resume_passes_run_id_to_status_and_resume_commands(
         "scheduled_start_at": "2026-08-19T18:34:44.502059Z",
         "resume_attempted": False,
     }
+    run_record_path = layout_root / "status" / "food-line" / "runs" / f"{edition_date}.json"
+    run_record_path.parent.mkdir(parents=True, exist_ok=True)
+    run_record_path.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
     captured_commands: list[list[str]] = []
 
@@ -1499,3 +1502,222 @@ def test_source_watch_receipt_contains_child_audit_fields_and_no_public_side_eff
     ):
         assert key in receipt
     assert not (tmp_path / "output" / "site").exists()
+
+
+def _resume_args(tmp_path: Path, *, edition_date: str = "2026-09-07") -> scheduler.argparse.Namespace:
+    return scheduler.argparse.Namespace(
+        repo_root=str(tmp_path),
+        python=str(tmp_path / ".venv" / "Scripts" / "python.exe"),
+        edition_date=edition_date,
+        branch=scheduler.PRODUCTION_BRANCH,
+        test_mode=True,
+        stale_lock_minutes=45,
+    )
+
+
+def _intake_args(tmp_path: Path, *, edition_date: str = "2026-09-07") -> scheduler.argparse.Namespace:
+    return scheduler.argparse.Namespace(
+        repo_root=str(tmp_path),
+        python=str(tmp_path / ".venv" / "Scripts" / "python.exe"),
+        edition_date=edition_date,
+        branch=scheduler.PRODUCTION_BRANCH,
+        test_mode=True,
+        lock_wait_seconds=0,
+        lock_poll_seconds=0.01,
+    )
+
+
+def _run_record_payload(tmp_path: Path, *, edition_date: str, run_id: str, status: str) -> dict[str, object]:
+    return {
+        "schema_version": scheduler.RUN_RECORD_SCHEMA,
+        "edition_date": edition_date,
+        "run_id": run_id,
+        "source_commit": "test-source-commit",
+        "source_branch": scheduler.PRODUCTION_BRANCH,
+        "run_state_path": str(
+            tmp_path
+            / "data"
+            / "dispatches"
+            / "food-line"
+            / "discovery-runs"
+            / edition_date
+            / run_id
+            / "run-state.json"
+        ),
+        "scheduled_start_at": "2026-09-07T12:30:00Z",
+        "source_watch_status": status,
+        "last_status": status,
+        "resume_attempted": False,
+        "release_ready": False,
+    }
+
+
+def _write_run_record(tmp_path: Path, *, edition_date: str = "2026-09-07", run_id: str = "source-watch-test", status: str) -> Path:
+    path = tmp_path / "status" / "food-line" / "runs" / f"{edition_date}.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(_run_record_payload(tmp_path, edition_date=edition_date, run_id=run_id, status=status), indent=2, sort_keys=True)
+        + "\n",
+        encoding="utf-8",
+    )
+    return path
+
+
+def test_resume_before_source_watch_initialization_is_successful_noop(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    def fail_if_locked(*args: object, **kwargs: object) -> object:
+        raise AssertionError("resume must not acquire the source-watch lock before a run record exists")
+
+    monkeypatch.setattr(scheduler, "source_lock", fail_if_locked)
+
+    code = scheduler.run_resume(_resume_args(tmp_path))
+
+    assert code == 0
+    assert not (tmp_path / "status" / "food-line" / "locks" / "source-watch.lock").exists()
+    receipt = json.loads(next((tmp_path / "logs" / "food-line" / "source-watch" / "2026-09-07").glob("*-status-resume.json")).read_text(encoding="utf-8"))
+    assert receipt["final_status"] == scheduler.UPSTREAM_NOT_INITIALIZED_STATUS
+    assert receipt["exit_code"] == 0
+    terminal = json.loads(capsys.readouterr().out)
+    assert terminal["ok"] is True
+    assert terminal["final_status"] == scheduler.UPSTREAM_NOT_INITIALIZED_STATUS
+
+
+def test_source_watch_after_resume_preinitialization_noop_can_complete(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    assert scheduler.run_resume(_resume_args(tmp_path)) == 0
+
+    code, receipt = _run_source_watch_with_child(
+        tmp_path,
+        monkeypatch,
+        child_exit=0,
+        child_stdout=_child_payload(status="completed", ok=True),
+    )
+
+    assert code == 0
+    assert receipt["exit_code"] == 0
+    run_record = json.loads((tmp_path / "status" / "food-line" / "runs" / "2026-09-07.json").read_text(encoding="utf-8"))
+    assert run_record["source_watch_status"] == "completed"
+    assert run_record["source_receipt_path"]
+
+
+def test_source_watch_active_lock_collision_writes_daily_contract(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    lock_dir = tmp_path / "status" / "food-line" / "locks" / "source-watch.lock"
+    lock_dir.mkdir(parents=True)
+    (lock_dir / "owner.json").write_text(
+        json.dumps({"task": "status-resume", "pid": os.getpid(), "acquired_at": "2026-09-07T13:00:00Z"}),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(scheduler, "process_is_running", lambda pid: True)
+
+    code = scheduler.run_source_watch(_source_watch_args(tmp_path))
+
+    assert code == 10
+    assert lock_dir.exists()
+    record = json.loads((tmp_path / "status" / "food-line" / "runs" / "2026-09-07.json").read_text(encoding="utf-8"))
+    assert record["source_watch_status"] == scheduler.BLOCKED_OVERLAPPING_STATUS
+    assert record["lock_owner"]["task"] == "status-resume"
+    receipt = json.loads(next((tmp_path / "logs" / "food-line" / "source-watch" / "2026-09-07").glob("*-source-watch.json")).read_text(encoding="utf-8"))
+    assert receipt["final_status"] == scheduler.BLOCKED_OVERLAPPING_STATUS
+    assert receipt["exit_code"] == 10
+
+
+def test_active_lock_is_not_reclaimed_even_after_stale_threshold(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    lock_dir = tmp_path / "status" / "food-line" / "locks" / "source-watch.lock"
+    lock_dir.mkdir(parents=True)
+    (lock_dir / "owner.json").write_text(json.dumps({"pid": os.getpid(), "task": "source-watch"}), encoding="utf-8")
+    old = time.time() - 7200
+    os.utime(lock_dir, (old, old))
+    monkeypatch.setattr(scheduler, "process_is_running", lambda pid: True)
+
+    code = scheduler.run_source_watch(_source_watch_args(tmp_path))
+
+    assert code == 10
+    assert lock_dir.exists()
+    record = json.loads((tmp_path / "status" / "food-line" / "runs" / "2026-09-07.json").read_text(encoding="utf-8"))
+    assert record["source_watch_status"] == scheduler.BLOCKED_OVERLAPPING_STATUS
+
+
+def test_proven_stale_lock_is_reclaimed_before_source_watch_runs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    lock_dir = tmp_path / "status" / "food-line" / "locks" / "source-watch.lock"
+    lock_dir.mkdir(parents=True)
+    (lock_dir / "owner.json").write_text(json.dumps({"pid": 999999, "task": "source-watch"}), encoding="utf-8")
+    old = time.time() - 7200
+    os.utime(lock_dir, (old, old))
+    monkeypatch.setattr(scheduler, "process_is_running", lambda pid: False)
+
+    code, receipt = _run_source_watch_with_child(
+        tmp_path,
+        monkeypatch,
+        child_exit=0,
+        child_stdout=_child_payload(status="completed", ok=True),
+    )
+
+    assert code == 0
+    assert receipt["exit_code"] == 0
+    assert not lock_dir.exists()
+    attention = sorted((tmp_path / "logs" / "food-line" / "operator-attention" / "2026-09-07").glob("*.json"))
+    assert any(json.loads(path.read_text(encoding="utf-8"))["category"] == "stale_lock_reclaimed" for path in attention)
+
+
+def test_ambiguous_stale_lock_is_not_reclaimed(
+    tmp_path: Path,
+) -> None:
+    lock_dir = tmp_path / "status" / "food-line" / "locks" / "source-watch.lock"
+    lock_dir.mkdir(parents=True)
+    old = time.time() - 7200
+    os.utime(lock_dir, (old, old))
+
+    code = scheduler.run_source_watch(_source_watch_args(tmp_path))
+
+    assert code == 10
+    assert lock_dir.exists()
+    record = json.loads((tmp_path / "status" / "food-line" / "runs" / "2026-09-07.json").read_text(encoding="utf-8"))
+    assert record["source_watch_status"] == scheduler.AMBIGUOUS_STALE_LOCK_STATUS
+
+
+def test_current_intake_missing_source_watch_record_is_successful_upstream_noop(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    code = scheduler.run_intake(_intake_args(tmp_path))
+
+    assert code == 0
+    receipt = json.loads(next((tmp_path / "logs" / "food-line" / "current-intake" / "2026-09-07").glob("*-current-intake.json")).read_text(encoding="utf-8"))
+    assert receipt["status"] == scheduler.UPSTREAM_NOT_INITIALIZED_STATUS
+    assert receipt["exit_code"] == 0
+    terminal = json.loads(capsys.readouterr().out)
+    assert terminal["ok"] is True
+
+
+def test_current_intake_blocked_source_watch_record_is_successful_upstream_noop(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    _write_run_record(tmp_path, status=scheduler.BLOCKED_OVERLAPPING_STATUS)
+
+    code = scheduler.run_intake(_intake_args(tmp_path))
+
+    assert code == 0
+    receipt = json.loads(next((tmp_path / "logs" / "food-line" / "current-intake" / "2026-09-07").glob("*-current-intake.json")).read_text(encoding="utf-8"))
+    assert receipt["status"] == "upstream_blocked"
+    assert receipt["source_status"] == scheduler.BLOCKED_OVERLAPPING_STATUS
+    assert receipt["exit_code"] == 0
+    terminal = json.loads(capsys.readouterr().out)
+    assert terminal["ok"] is True
+
+
+def test_current_intake_corrupt_source_watch_record_still_fails_closed(tmp_path: Path) -> None:
+    record = tmp_path / "status" / "food-line" / "runs" / "2026-09-07.json"
+    record.parent.mkdir(parents=True)
+    record.write_text("{not-json", encoding="utf-8")
+
+    code = scheduler.run_intake(_intake_args(tmp_path))
+
+    assert code == 10
+    assert not list((tmp_path / "logs" / "food-line" / "current-intake" / "2026-09-07").glob("*-current-intake.json"))

@@ -58,3 +58,6 @@ data/dispatches/food-line/sources/
 # Shadow operational event ledger
 data/state/*.sqlite
 data/state/*.sqlite-*
+
+# ICE monitor-only operational artifacts
+data/dispatches/ice/monitor/

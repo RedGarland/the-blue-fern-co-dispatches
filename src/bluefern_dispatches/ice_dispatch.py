@@ -1,9 +1,12 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import argparse
 import hashlib
+import html
 import json
+import os
 import re
+import subprocess
 import tempfile
 import urllib.error
 import urllib.parse
@@ -16,6 +19,90 @@ from typing import Any, Iterable
 
 DISPATCH_ID = "ice"
 SCHEMA_VERSION = 1
+
+ICE_KEYWORDS = (
+    "ice", "immigration and customs enforcement", "detention", "detained", "detainee", "deportation", "deported",
+    "removal", "removed", "raid", "raids", "arrest", "arrests", "custody", "287(g)", "worksite", "workplace",
+    "enforcement operation", "federal register", "immigration enforcement",
+)
+ICE_KEYWORD_PATTERNS = tuple(
+    re.compile(pattern, re.IGNORECASE)
+    for pattern in (
+        r"\bice\b",
+        r"\bimmigration and customs enforcement\b",
+        r"\bimmigration enforcement\b",
+        r"\bdetention\b",
+        r"\bdetained\b",
+        r"\bdetainee\b",
+        r"\bdeport(?:ation|ed|s)?\b",
+        r"\bremov(?:al|ed|als|e|es|ing)\b",
+        r"\b287\(g\)\b",
+        r"\bworksite\b",
+        r"\bworkplace\b",
+        r"\bimmigration enforcement operation\b",
+        r"\bfederal register\b",
+    )
+)
+ICE_EVENT_SIGNAL_PATTERNS = tuple(
+    re.compile(pattern, re.IGNORECASE)
+    for pattern in (
+        r"\barrest(?:s|ed|ing)?\b",
+        r"\bdetain(?:ed|s|ing)?\b",
+        r"\bdetainee\b",
+        r"\bdeport(?:ation|ed|s)?\b",
+        r"\bremov(?:al|ed|als|e|es|ing)\b",
+        r"\braid(?:s)?\b",
+        r"\bcustody\b",
+        r"\bfacilit(?:y|ies)\b",
+        r"\bcontract(?:s|ed|ing)?\b",
+        r"\blawsuit\b",
+        r"\bjudge\b",
+        r"\bcourt\b",
+        r"\binvestigation\b",
+        r"\baudit\b",
+        r"\breport\b",
+        r"\bnotice\b",
+        r"\brule(?:making)?\b",
+        r"\bpolicy\b",
+        r"\boperation\b",
+        r"\b287\(g\)\b",
+        r"\bmedical\b",
+        r"\bdeath\b",
+        r"\bdied\b",
+        r"\bforce\b",
+        r"\bshooting\b",
+        r"\bcharged?\b",
+        r"\breleased on bond\b",
+        r"\bhindered\b",
+        r"\bdoes not fully address\b",
+        r"\bdeficien(?:cy|cies)\b",
+    )
+)
+STATIC_LINK_PATH_FRAGMENTS = (
+    "/topics/",
+    "/reader-aids/",
+    "/practice-advisories/",
+)
+STATIC_LINK_TITLES = {
+    "1-866-dhs-2-ice",
+    "ice fallen officers",
+    "immigration and customs enforcement",
+    "office of the federal register announcements",
+    "understanding the federal register",
+    "practice advisories",
+}
+STATE_NAMES = {
+    "alabama": "AL", "alaska": "AK", "arizona": "AZ", "arkansas": "AR", "california": "CA", "colorado": "CO",
+    "connecticut": "CT", "delaware": "DE", "florida": "FL", "georgia": "GA", "hawaii": "HI", "idaho": "ID",
+    "illinois": "IL", "indiana": "IN", "iowa": "IA", "kansas": "KS", "kentucky": "KY", "louisiana": "LA",
+    "maine": "ME", "maryland": "MD", "massachusetts": "MA", "michigan": "MI", "minnesota": "MN", "mississippi": "MS",
+    "missouri": "MO", "montana": "MT", "nebraska": "NE", "nevada": "NV", "new hampshire": "NH", "new jersey": "NJ",
+    "new mexico": "NM", "new york": "NY", "north carolina": "NC", "north dakota": "ND", "ohio": "OH", "oklahoma": "OK",
+    "oregon": "OR", "pennsylvania": "PA", "rhode island": "RI", "south carolina": "SC", "south dakota": "SD",
+    "tennessee": "TN", "texas": "TX", "utah": "UT", "vermont": "VT", "virginia": "VA", "washington": "WA",
+    "west virginia": "WV", "wisconsin": "WI", "wyoming": "WY", "district of columbia": "DC", "puerto rico": "PR",
+    "guam": "GU", "u.s. virgin islands": "VI", "virgin islands": "VI", "northern mariana islands": "MP", "american samoa": "AS",
+}
 US_AND_TERRITORIES = {
     "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS",
     "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY",
@@ -578,45 +665,306 @@ def validate_endpoint(url: str, *, timeout: float = 10.0) -> dict[str, Any]:
         return {"url": url, "ok": False, "status": None, "error": str(exc)}
 
 
-def run_diagnostic(registry_path: Path, *, fixture_path: Path | None = None, output_dir: Path | None = None, validate_endpoints: bool = False) -> dict[str, Any]:
+
+@dataclass(frozen=True)
+class FetchResult:
+    url: str
+    ok: bool
+    status: int | None
+    content: str
+    error: str | None
+    fetch_stack: str
+
+
+def _decode_bytes(data: bytes) -> str:
+    for encoding in ("utf-8-sig", "utf-8", "windows-1252"):
+        try:
+            return data.decode(encoding)
+        except UnicodeDecodeError:
+            continue
+    return data.decode("utf-8", errors="replace")
+
+
+def fetch_url_secure(url: str, *, timeout: float = 15.0) -> FetchResult:
+    request = urllib.request.Request(url, method="GET", headers={"User-Agent": "BlueFern-ICE-Phase2-Diagnostic/1.0"})
+    urllib_error: str | None = None
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:  # nosec - TLS remains verified by Python
+            body = response.read(750_000)
+            return FetchResult(url=url, ok=200 <= int(response.status) < 400, status=int(response.status), content=_decode_bytes(body), error=None, fetch_stack="python_urllib")
+    except Exception as exc:  # pragma: no cover - platform/network dependent
+        urllib_error = str(exc)
+    ps = """
+$ProgressPreference = 'SilentlyContinue'
+try {
+  [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+  $targetUrl = [string]$env:BLUEFERN_ICE_FETCH_URL
+  $timeoutSec = [int]$env:BLUEFERN_ICE_FETCH_TIMEOUT
+  $resp = Invoke-WebRequest -Uri $targetUrl -Method Get -UseBasicParsing -TimeoutSec $timeoutSec -MaximumRedirection 5
+  $content = [string]$resp.Content
+  if ($content.Length -gt 750000) { $content = $content.Substring(0, 750000) }
+  @{ok=($resp.StatusCode -ge 200 -and $resp.StatusCode -lt 400); status=[int]$resp.StatusCode; url=[string]$resp.BaseResponse.ResponseUri.AbsoluteUri; content=$content; error=$null} | ConvertTo-Json -Compress -Depth 3
+  exit 0
+} catch {
+  $status = $null
+  if ($_.Exception.Response -and $_.Exception.Response.StatusCode) { $status = [int]$_.Exception.Response.StatusCode }
+  @{ok=$false; status=$status; url=[string]$env:BLUEFERN_ICE_FETCH_URL; content=''; error=$_.Exception.Message} | ConvertTo-Json -Compress -Depth 3
+  exit 0
+}
+"""
+    try:
+        env = dict(os.environ)
+        env["BLUEFERN_ICE_FETCH_URL"] = url
+        env["BLUEFERN_ICE_FETCH_TIMEOUT"] = str(int(timeout))
+        completed = subprocess.run(
+            ["powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", ps],
+            check=False,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            timeout=timeout + 5,
+            env=env,
+        )
+        payload = json.loads(completed.stdout.strip()) if completed.stdout.strip() else {}
+        return FetchResult(
+            url=str(payload.get("url") or url),
+            ok=bool(payload.get("ok")),
+            status=payload.get("status"),
+            content=str(payload.get("content") or ""),
+            error=payload.get("error") or urllib_error,
+            fetch_stack="windows_invoke_webrequest_after_urllib_failure",
+        )
+    except Exception as exc:  # pragma: no cover - platform/network dependent
+        return FetchResult(url=url, ok=False, status=None, content="", error=f"urllib failed: {urllib_error}; powershell failed: {exc}", fetch_stack="failed")
+
+
+def _strip_html(value: str) -> str:
+    text = re.sub(r"(?is)<(script|style).*?</\1>", " ", value)
+    text = re.sub(r"(?s)<[^>]+>", " ", text)
+    return _clean(html.unescape(text))
+
+
+def _anchor_candidates(source: dict[str, Any], html_text: str) -> list[dict[str, str]]:
+    base = source.get("url") or source.get("documentation_url") or ""
+    rows: list[dict[str, str]] = []
+    seen: set[str] = set()
+    for match in re.finditer(r'(?is)<a\s+[^>]*href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', html_text):
+        href, label_html = match.groups()
+        title = _strip_html(label_html)
+        if len(title) < 12:
+            continue
+        absolute = urllib.parse.urljoin(base, html.unescape(href))
+        canonical = canonicalize_url(absolute)
+        if canonical in seen:
+            continue
+        seen.add(canonical)
+        rows.append({"title": title, "url": absolute, "canonical_url": canonical})
+    return rows
+
+
+def _keyword_hit(text: str) -> bool:
+    return any(pattern.search(text) for pattern in ICE_KEYWORD_PATTERNS)
+
+
+def _event_signal_hit(text: str) -> bool:
+    return _keyword_hit(text) and any(pattern.search(text) for pattern in ICE_EVENT_SIGNAL_PATTERNS)
+
+
+def _is_fetchable_article_link(link: dict[str, str]) -> bool:
+    parsed = urllib.parse.urlparse(link["canonical_url"])
+    if parsed.scheme not in {"http", "https"}:
+        return False
+    path = parsed.path.lower()
+    title = _clean(link["title"]).lower()
+    if title in STATIC_LINK_TITLES:
+        return False
+    if any(fragment in path for fragment in STATIC_LINK_PATH_FRAGMENTS):
+        return False
+    if parsed.netloc.endswith("federalregister.gov") and not re.search(r"/documents/\d{4}/", path):
+        return False
+    return True
+
+
+def _extract_passage(html_text: str, title: str) -> str | None:
+    plain = _strip_html(html_text)
+    title_words = [w for w in re.findall(r"[A-Za-z0-9]+", title.lower()) if len(w) > 3]
+    sentences = re.split(r"(?<=[.!?])\s+", plain)
+    for sentence in sentences:
+        lower = sentence.lower()
+        if _keyword_hit(lower) and (not title_words or any(word in lower for word in title_words[:8])):
+            return sentence[:700]
+    for sentence in sentences:
+        if _keyword_hit(sentence):
+            return sentence[:700]
+    return title[:700]
+
+
+def _infer_category(text: str) -> str:
+    lower = text.lower()
+    if any(term in lower for term in ("death", "died", "fatal", "medical", "hospital", "suicide")):
+        return IceCategory.FATALITIES_MEDICAL.value
+    if any(term in lower for term in ("shooting", "firearm", "force", "taser", "pursuit")):
+        return IceCategory.USE_OF_FORCE.value
+    if any(term in lower for term in ("detention", "detainee", "facility", "custody", "contract", "jail")):
+        return IceCategory.DETENTION.value
+    if any(term in lower for term in ("deport", "removal", "removed", "repatriation", "flight")):
+        return IceCategory.REMOVALS.value
+    if any(term in lower for term in ("court", "lawsuit", "judge", "settlement", "investigation", "oig", "rights", "oversight")):
+        return IceCategory.LEGAL_OVERSIGHT.value
+    if any(term in lower for term in ("policy", "rule", "federal register", "287(g)", "standards")):
+        return IceCategory.POLICY_OPERATIONS.value
+    if any(term in lower for term in ("school", "farm", "workforce", "business", "community")):
+        return IceCategory.VERIFIED_COMMUNITY_IMPACT.value
+    return IceCategory.ENFORCEMENT.value
+
+
+def _infer_location(text: str) -> dict[str, Any]:
+    lower = text.lower()
+    for name, code in sorted(STATE_NAMES.items(), key=lambda item: len(item[0]), reverse=True):
+        if re.search(rf"\b{re.escape(name)}\b", lower):
+            return {"state_or_territory": code, "location_precision": LocationPrecision.STATE_OR_TERRITORY.value}
+    for code in US_AND_TERRITORIES:
+        if re.search(rf"\b{re.escape(code)}\b", text):
+            return {"state_or_territory": code, "location_precision": LocationPrecision.STATE_OR_TERRITORY.value}
+    return {"location_precision": LocationPrecision.UNKNOWN.value}
+
+
+def _infer_impact(text: str) -> dict[str, int | None]:
+    impact: dict[str, int | None] = {}
+    patterns = {
+        "arrests_count": r"\b(\d{1,4})\s+(?:people\s+)?(?:were\s+)?arrest",
+        "detained_count": r"\b(\d{1,4})\s+(?:people\s+)?(?:were\s+)?detain",
+        "removed_count": r"\b(\d{1,4})\s+(?:people\s+)?(?:were\s+)?(?:removed|deported)",
+        "fatalities_count": r"\b(\d{1,3})\s+(?:people\s+)?(?:died|deaths|fatalit)",
+        "injuries_count": r"\b(\d{1,3})\s+(?:people\s+)?(?:injured|injur)",
+        "hospitalized_count": r"\b(\d{1,3})\s+(?:people\s+)?(?:hospitalized|sent to hospital|taken to hospital)",
+    }
+    for field, pattern in patterns.items():
+        match = re.search(pattern, text, flags=re.IGNORECASE)
+        if match:
+            impact[field] = int(match.group(1))
+    return impact
+
+
+def _candidate_from_link(source: dict[str, Any], link: dict[str, str], article: FetchResult, retrieved_at: str) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+    if not _is_fetchable_article_link(link):
+        return None, {"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "non_article_or_static_link"}
+    passage = _extract_passage(article.content, link["title"])
+    combined = f"{link['title']} {passage or ''}"
+    if not _keyword_hit(combined):
+        return None, {"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "no_ice_keyword_in_title_or_passage"}
+    if not _event_signal_hit(combined):
+        return None, {"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "no_event_level_ice_signal"}
+    category = _infer_category(combined)
+    candidate = {
+        "event_date": None,
+        "event_type": link["title"],
+        "primary_category": category,
+        "status": "reported",
+        "location": _infer_location(combined),
+        "impact": _infer_impact(combined),
+        "agencies": {"ice": _keyword_hit(combined), "dhs": "dhs" in combined.lower(), "cbp": "cbp" in combined.lower()},
+        "sources": [{
+            "source_url": link["url"],
+            "canonical_source_url": link["canonical_url"],
+            "publisher": source["publisher"],
+            "source_type": source["source_type"],
+            "tier": int(source["tier"]),
+            "published_at": None,
+            "retrieved_at": retrieved_at,
+            "exact_supporting_passage": passage,
+            "reference_metadata": {"source_id": source["source_id"], "index_url": source.get("url"), "fetch_stack": article.fetch_stack},
+        }],
+        "verification_status": "source_traceable",
+        "geographic_confidence": "textual_inference" if (_infer_location(combined).get("state_or_territory")) else "unknown",
+        "event_confidence": "needs_manual_review",
+    }
+    return candidate, None
+
+
+def collect_live_candidates(sources: list[dict[str, Any]], *, max_per_source: int = 3, timeout: float = 15.0) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[ProviderHealth], list[dict[str, Any]]]:
+    retrieved_at = utc_now()
+    raw_candidates: list[dict[str, Any]] = []
+    exclusions: list[dict[str, Any]] = []
+    provider_health: list[ProviderHealth] = []
+    fetch_results: list[dict[str, Any]] = []
+    for source in sources:
+        attempted = bool(source.get("enabled")) and source.get("collection_mechanism") != "documented_manual" and bool(source.get("url"))
+        if not attempted:
+            provider_health.append(ProviderHealth(source_id=source["source_id"], publisher=source["publisher"], tier=int(source["tier"]), attempted=False, success=False))
+            continue
+        index = fetch_url_secure(source["url"], timeout=timeout)
+        fetch_results.append({"source_id": source["source_id"], "url": index.url, "ok": index.ok, "status": index.status, "fetch_stack": index.fetch_stack, "error": index.error})
+        if not index.ok:
+            provider_health.append(ProviderHealth(source_id=source["source_id"], publisher=source["publisher"], tier=int(source["tier"]), attempted=True, success=False, http_status=index.status, error=index.error))
+            continue
+        links = [link for link in _anchor_candidates(source, index.content) if _keyword_hit(link["title"])]
+        accepted = 0
+        failed_records = 0
+        for link in links[:max_per_source]:
+            if not _is_fetchable_article_link(link):
+                exclusions.append({"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "non_article_or_static_link"})
+                continue
+            article = fetch_url_secure(link["url"], timeout=timeout)
+            fetch_results.append({"source_id": source["source_id"], "url": article.url, "ok": article.ok, "status": article.status, "fetch_stack": article.fetch_stack, "error": article.error})
+            if not article.ok:
+                failed_records += 1
+                exclusions.append({"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "article_fetch_failed", "status": article.status, "error": article.error})
+                continue
+            candidate, exclusion = _candidate_from_link(source, link, article, retrieved_at)
+            if candidate:
+                raw_candidates.append(candidate)
+                accepted += 1
+            elif exclusion:
+                exclusions.append(exclusion)
+        provider_health.append(ProviderHealth(source_id=source["source_id"], publisher=source["publisher"], tier=int(source["tier"]), attempted=True, success=True, accepted_records=accepted, failed_records=failed_records, http_status=index.status))
+    return raw_candidates, exclusions, provider_health, fetch_results
+
+def run_diagnostic(registry_path: Path, *, fixture_path: Path | None = None, output_dir: Path | None = None, validate_endpoints: bool = False, live: bool = False, max_per_source: int = 3) -> dict[str, Any]:
     started = utc_now()
     sources = load_source_registry(registry_path)
     endpoint_results = []
+    fetch_results: list[dict[str, Any]] = []
     provider_health: list[ProviderHealth] = []
-    for source in sources:
-        attempted = bool(source.get("enabled")) and source.get("collection_mechanism") != "documented_manual"
-        endpoint_result = None
-        if validate_endpoints and attempted and source.get("url"):
-            endpoint_result = validate_endpoint(source["url"])
-            endpoint_results.append({"source_id": source["source_id"], **endpoint_result})
-        success = bool(endpoint_result["ok"]) if endpoint_result else attempted
-        provider_health.append(
-            ProviderHealth(
-                source_id=source["source_id"],
-                publisher=source["publisher"],
-                tier=int(source["tier"]),
-                attempted=attempted,
-                success=success,
-                accepted_records=0,
-                http_status=endpoint_result.get("status") if endpoint_result else None,
-                error=endpoint_result.get("error") if endpoint_result else None,
+    raw_candidates: list[dict[str, Any]] = []
+    collection_exclusions: list[dict[str, Any]] = []
+    if live:
+        raw_candidates, collection_exclusions, provider_health, fetch_results = collect_live_candidates(sources, max_per_source=max_per_source)
+    else:
+        for source in sources:
+            attempted = bool(source.get("enabled")) and source.get("collection_mechanism") != "documented_manual"
+            endpoint_result = None
+            if validate_endpoints and attempted and source.get("url"):
+                endpoint_result = validate_endpoint(source["url"])
+                endpoint_results.append({"source_id": source["source_id"], **endpoint_result})
+            success = bool(endpoint_result["ok"]) if endpoint_result else attempted
+            provider_health.append(
+                ProviderHealth(
+                    source_id=source["source_id"],
+                    publisher=source["publisher"],
+                    tier=int(source["tier"]),
+                    attempted=attempted,
+                    success=success,
+                    accepted_records=0,
+                    http_status=endpoint_result.get("status") if endpoint_result else None,
+                    error=endpoint_result.get("error") if endpoint_result else None,
+                )
             )
-        )
-    raw_candidates = []
-    if fixture_path:
-        raw_candidates = json.loads(fixture_path.read_text(encoding="utf-8-sig"))
+        if fixture_path:
+            raw_candidates = json.loads(fixture_path.read_text(encoding="utf-8-sig"))
     normalized: list[IceEvent] = []
-    exclusions: list[dict[str, Any]] = []
+    exclusions: list[dict[str, Any]] = list(collection_exclusions)
     for candidate in raw_candidates:
         try:
             normalized.append(normalize_ice_candidate(candidate, observed_at=started))
         except Exception as exc:
             exclusions.append({"candidate": candidate, "reason": str(exc)})
-    # attribute fixture candidates to the first enabled provider for a deterministic non-public diagnostic
-    for idx, health in enumerate(provider_health):
-        if health.attempted and normalized:
-            provider_health[idx] = ProviderHealth(**{**asdict(health), "accepted_records": len(normalized)})
-            break
+    if fixture_path and not live:
+        # attribute fixture candidates to the first enabled provider for a deterministic non-public diagnostic
+        for idx, health in enumerate(provider_health):
+            if health.attempted and normalized:
+                provider_health[idx] = ProviderHealth(**{**asdict(health), "accepted_records": len(normalized)})
+                break
     completed = utc_now()
     report = build_collection_report(
         run_id=f"ice-diagnostic-{_hash_payload({'started': started, 'events': [e.event_id for e in normalized]}, 12)}",
@@ -632,6 +980,7 @@ def run_diagnostic(registry_path: Path, *, fixture_path: Path | None = None, out
         "normalized_events": [event_to_dict(e) for e in normalized],
         "exclusions": exclusions,
         "endpoint_validation": endpoint_results,
+        "fetch_results": fetch_results,
         "publication_decision": decision.value,
         "publication_decision_reason": reason,
         "public_side_effects": False,
@@ -642,8 +991,8 @@ def run_diagnostic(registry_path: Path, *, fixture_path: Path | None = None, out
         (output_dir / "raw_candidates.json").write_text(json.dumps(raw_candidates, indent=2, sort_keys=True), encoding="utf-8")
         (output_dir / "normalized_events.json").write_text(json.dumps(result["normalized_events"], indent=2, sort_keys=True), encoding="utf-8")
         (output_dir / "exclusions.json").write_text(json.dumps(exclusions, indent=2, sort_keys=True), encoding="utf-8")
+        (output_dir / "fetch_results.json").write_text(json.dumps(fetch_results, indent=2, sort_keys=True), encoding="utf-8")
     return result
-
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run a non-public ICE Dispatch Phase 1 collection diagnostic.")
@@ -651,8 +1000,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--fixture", type=Path)
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--validate-endpoints", action="store_true")
+    parser.add_argument("--live", action="store_true", help="Fetch and extract bounded live candidates from enabled registry sources.")
+    parser.add_argument("--max-per-source", type=int, default=3)
     args = parser.parse_args(argv)
-    result = run_diagnostic(args.registry, fixture_path=args.fixture, output_dir=args.output_dir, validate_endpoints=args.validate_endpoints)
+    result = run_diagnostic(args.registry, fixture_path=args.fixture, output_dir=args.output_dir, validate_endpoints=args.validate_endpoints, live=args.live, max_per_source=args.max_per_source)
     print(json.dumps({"run_id": result["run_manifest"]["run_id"], "health": result["run_manifest"]["health"], "publication_decision": result["publication_decision"], "normalized_events": len(result["normalized_events"]), "exclusions": len(result["exclusions"]), "public_side_effects": False}, sort_keys=True))
     return 0
 

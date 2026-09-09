@@ -1,0 +1,80 @@
+{
+  "schema_version": "gaza-public-correction-lineage-v1",
+  "correction_id": "gaza-2026-09-09-remove-missouri-giza-scope-mismatches",
+  "edition_date": "2026-09-09",
+  "corrected_at": "2026-09-09T18:44:53.752700Z",
+  "correction_type": "source_scope_correction",
+  "basis": "Remove two non-Gaza items admitted before segment-scope/Gaza-Giza hardening; preserve all legitimate September 9 Gaza items and all prior editions.",
+  "pre_correction_pages_head": "79b1dcb3d498e5c627f0e30daf81480b44a5755f",
+  "source_hardening_pr": 333,
+  "source_hardening_merge_commit": "00264f8bfbdff11a8d7a95a246a263759f0959ae",
+  "removed_items": [
+    {
+      "story_id": "gaza-story-2026-09-09-001",
+      "source_record_ids": [
+        "gaza-2026-09-09-guardian-world-29d81de29ad9"
+      ],
+      "title": "Conflicting court rulings on Missouri map threaten November's election | First Thing",
+      "reason": "non_gaza_segment_scope_mismatch",
+      "source_urls": [
+        "https://www.theguardian.com/us-news/2026/sep/09/first-thing-court-orders-missouri-map-threaten-november-midterm-election"
+      ]
+    },
+    {
+      "story_id": "gaza-story-2026-09-09-010",
+      "source_record_ids": [
+        "gaza-2026-09-09-aljazeera-middle-east-96149faa0e1b"
+      ],
+      "title": "Turkish jets perform dramatic flyover above Egypt's pyramids",
+      "reason": "giza_not_gaza_geography_mismatch",
+      "source_urls": [
+        "https://www.aljazeera.com/video/newsfeed/2026/9/9/turkish-jets-perform-dramatic-flyover-above-egypts-pyramids?traffic_source=rss"
+      ]
+    }
+  ],
+  "preserved_public_story_ids": [
+    "gaza-story-2026-09-09-004",
+    "gaza-story-2026-09-09-003",
+    "gaza-story-2026-09-09-011",
+    "gaza-story-2026-09-09-009",
+    "gaza-story-2026-09-09-006",
+    "gaza-story-2026-09-09-005",
+    "gaza-story-2026-09-09-012"
+  ],
+  "preserved_non_public_story_ids": [
+    "gaza-story-2026-09-09-002"
+  ],
+  "preserved_source_record_ids": [
+    "gaza-2026-09-09-guardian-world-0585fc586448",
+    "gaza-2026-09-09-guardian-world-eea00b9cc834",
+    "gaza-2026-09-09-aljazeera-middle-east-63e9dc809410",
+    "gaza-2026-09-09-guardian-world-a4ff591a76e8",
+    "gaza-2026-09-09-guardian-world-637e5e76deeb",
+    "gaza-2026-09-09-guardian-world-b4e50e4a0986",
+    "gaza-2026-09-09-bbc-middle-east-1eb6adaf3393",
+    "gaza-2026-09-09-aljazeera-middle-east-ce26304e51ed",
+    "gaza-2026-09-09-bbc-middle-east-2e825a364237",
+    "gaza-2026-09-09-bbc-middle-east-64aa22e83533"
+  ],
+  "public_counts_after_correction": {
+    "source_records": 10,
+    "public_stories": 7,
+    "curation_records": 8
+  },
+  "surfaces_updated": [
+    "gaza/editions/2026-09-09/index.html",
+    "gaza/editions/2026-09-09/edition_manifest.json",
+    "gaza/editions/2026-09-09/curation_manifest.json",
+    "gaza/editions/2026-09-09/sources_manifest.json",
+    "gaza/editions/2026-09-09/dedupe_report.json",
+    "index.html",
+    "dispatches/index.html"
+  ],
+  "surfaces_checked_without_change": [
+    "gaza/index.html",
+    "gaza/archive.html",
+    "gaza/rss.xml"
+  ],
+  "audio_regenerated": false,
+  "bluesky_repost_required": true
+}

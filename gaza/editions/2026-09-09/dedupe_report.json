@@ -1,20 +1,8 @@
 {
   "dispatch_slug": "gaza",
   "edition_date": "2026-09-09",
-  "candidates_seen": 9,
+  "candidates_seen": 7,
   "included_stories": [
-    {
-      "story_id": "gaza-story-2026-09-09-001",
-      "title": "Conflicting court rulings on Missouri map threaten November's election | First Thing",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_source_url_different_publisher",
-        "update_term_in_title_or_snippet"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
     {
       "story_id": "gaza-story-2026-09-09-004",
       "title": "Israel tells UK to close East Jerusalem consulate within 30 days",
@@ -95,38 +83,11 @@
       ],
       "include_decision": "include",
       "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-09-09-010",
-      "title": "Turkish jets perform dramatic flyover above Egypt's pyramids",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
     }
   ],
   "duplicate_skipped": [],
   "continuing_developments": [],
   "major_updates": [
-    {
-      "story_id": "gaza-story-2026-09-09-001",
-      "title": "Conflicting court rulings on Missouri map threaten November's election | First Thing",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_source_url_different_publisher",
-        "update_term_in_title_or_snippet"
-      ],
-      "duplicate_reasons": [],
-      "watchlist_status": "material_follow_up",
-      "prior_story_matched": "gaza-story-2026-09-02-012",
-      "prior_edition_date": "2026-09-02",
-      "include_decision": "include",
-      "public_rendered": true
-    },
     {
       "story_id": "gaza-story-2026-09-09-003",
       "title": "UK 'showing leadership' with West Bank sanctions, says Burnham as he faces Badenoch at PMQs - politics live",
@@ -211,22 +172,6 @@
   "duplicate_groups": [],
   "reasons": [
     {
-      "story_id": "gaza-story-2026-09-09-001",
-      "title": "Conflicting court rulings on Missouri map threaten November's election | First Thing",
-      "classification": "major_update",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_source_url_different_publisher",
-        "update_term_in_title_or_snippet"
-      ],
-      "duplicate_reasons": [],
-      "watchlist_status": "material_follow_up",
-      "prior_story_matched": "gaza-story-2026-09-02-012",
-      "prior_edition_date": "2026-09-02",
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
       "story_id": "gaza-story-2026-09-09-004",
       "title": "Israel tells UK to close East Jerusalem consulate within 30 days",
       "classification": "new",
@@ -332,21 +277,6 @@
       "watchlist_status": "material_follow_up",
       "prior_story_matched": "gaza-story-2026-05-28-004",
       "prior_edition_date": "2026-05-28",
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-09-09-010",
-      "title": "Turkish jets perform dramatic flyover above Egypt's pyramids",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "duplicate_reasons": [],
-      "watchlist_status": "material_follow_up",
-      "prior_story_matched": null,
-      "prior_edition_date": null,
       "include_decision": "include",
       "public_rendered": true
     }
@@ -463,5 +393,6 @@
     "2026-05-04",
     "2026-05-03",
     "2026-04-30"
-  ]
+  ],
+  "included_story_count": 7
 }

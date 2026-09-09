@@ -5,6 +5,7 @@ import ctypes
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -37,8 +38,44 @@ RUN_RECORD_SCHEMA = "food_line_scheduled_run_record_v1"
 SOURCE_RECEIPT_SCHEMA = "food_line_source_watch_receipt_v1"
 INTAKE_RECEIPT_SCHEMA = "food_line_current_intake_receipt_v1"
 ATTENTION_SCHEMA = "food_line_operator_attention_v1"
+INITIALIZING_STATUS = "initializing"
+RUNNING_STATUS = "running"
+BLOCKED_OVERLAPPING_STATUS = "blocked_overlapping_run"
+UPSTREAM_NOT_INITIALIZED_STATUS = "source_watch_not_initialized"
+UPSTREAM_IN_PROGRESS_STATUS = "source_watch_in_progress"
+AMBIGUOUS_STALE_LOCK_STATUS = "stale_lock_ambiguous"
+UPSTREAM_BLOCKED_STATUSES = {
+    BLOCKED_OVERLAPPING_STATUS,
+    UPSTREAM_NOT_INITIALIZED_STATUS,
+    UPSTREAM_IN_PROGRESS_STATUS,
+    AMBIGUOUS_STALE_LOCK_STATUS,
+}
+TERMINAL_SUCCESS_STATUSES = {*QUALIFYING_COLLECTION_STATUSES}
+
+
 class SchedulerError(RuntimeError):
     """A fail-closed operational error."""
+
+
+class SourceLockUnavailable(SchedulerError):
+    """Raised when the source-watch lock is held by another active or ambiguous owner."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        kind: str,
+        attention: Path,
+        lock_path: Path,
+        lock_age_seconds: float,
+        owner_metadata: dict[str, Any],
+    ) -> None:
+        super().__init__(message)
+        self.kind = kind
+        self.attention = attention
+        self.lock_path = lock_path
+        self.lock_age_seconds = lock_age_seconds
+        self.owner_metadata = owner_metadata
 
 
 @dataclass(frozen=True)
@@ -106,6 +143,12 @@ def read_json(path: Path) -> dict[str, Any]:
     return value
 
 
+def read_optional_json(path: Path) -> dict[str, Any] | None:
+    if not path.exists():
+        return None
+    return read_json(path)
+
+
 def sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -131,6 +174,56 @@ def process_is_running(pid: int) -> bool:
         return exit_code.value == still_active
     finally:
         ctypes.windll.kernel32.CloseHandle(handle)
+
+
+def _read_lock_owner(lock_dir: Path) -> dict[str, Any]:
+    owner = lock_dir / "owner.json"
+    if not owner.exists():
+        return {}
+    try:
+        value = json.loads(owner.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {"owner_read_error": "missing_or_corrupt_owner_json"}
+    return value if isinstance(value, dict) else {"owner_read_error": "owner_json_not_object"}
+
+
+def _lock_owner_pid(owner: dict[str, Any]) -> int | None:
+    try:
+        pid = int(owner.get("pid") or 0)
+    except (TypeError, ValueError):
+        return None
+    return pid if pid > 0 else None
+
+
+def _lock_is_proven_stale(owner: dict[str, Any], *, age_seconds: float, stale_seconds: float) -> bool:
+    if age_seconds < stale_seconds:
+        return False
+    pid = _lock_owner_pid(owner)
+    if pid is None:
+        return False
+    return not process_is_running(pid)
+
+
+def _reclaim_stale_lock(layout: Layout, edition_date: str, lock_dir: Path, owner: dict[str, Any], age_seconds: float) -> bool:
+    recovery_dir = lock_dir.with_name(f"{lock_dir.name}.stale.{os.getpid()}.{int(time.time())}")
+    try:
+        lock_dir.rename(recovery_dir)
+    except OSError:
+        return False
+    try:
+        shutil.rmtree(recovery_dir)
+    except OSError:
+        return False
+    write_attention(
+        layout,
+        edition_date,
+        "stale_lock_reclaimed",
+        "Food Line source-watch lock was proven stale and reclaimed",
+        lock_path=str(lock_dir),
+        lock_age_seconds=round(age_seconds, 3),
+        lock_owner=owner,
+    )
+    return True
 
 
 def surviving_worker_pids(run_dir: Path) -> list[int]:
@@ -418,28 +511,218 @@ def write_attention(layout: Layout, edition_date: str, category: str, message: s
     return path
 
 
+def _run_record_status(record: dict[str, Any] | None) -> str:
+    if not isinstance(record, dict):
+        return ""
+    return _nonempty_text(record.get("source_watch_status") or record.get("last_status") or record.get("status"))
+
+
+def _existing_record_is_success(record: dict[str, Any] | None) -> bool:
+    return _run_record_status(record) in TERMINAL_SUCCESS_STATUSES and bool(record.get("source_receipt_path") if isinstance(record, dict) else False)
+
+
+def write_run_record(layout: Layout, edition_date: str, record: dict[str, Any], *, preserve_success: bool = True) -> None:
+    existing: dict[str, Any] | None = None
+    try:
+        existing = read_optional_json(layout.run_record(edition_date))
+    except SchedulerError:
+        existing = None
+    if preserve_success and existing and _existing_record_is_success(existing):
+        return
+    payload = dict(record)
+    payload.setdefault("schema_version", RUN_RECORD_SCHEMA)
+    payload.setdefault("edition_date", edition_date)
+    payload["updated_at"] = utc_now()
+    atomic_write_json(layout.run_record(edition_date), payload)
+
+
+def initial_run_record(
+    layout: Layout,
+    edition_date: str,
+    run_id: str,
+    *,
+    source_branch: str,
+    started_at: str,
+) -> dict[str, Any]:
+    state_path = layout.run_dir(edition_date, run_id) / "run-state.json"
+    return {
+        "schema_version": RUN_RECORD_SCHEMA,
+        "edition_date": edition_date,
+        "run_id": run_id,
+        "source_branch": source_branch,
+        "run_state_path": str(state_path),
+        "scheduled_start_at": started_at,
+        "attempted_at": started_at,
+        "source_watch_status": INITIALIZING_STATUS,
+        "last_status": INITIALIZING_STATUS,
+        "resume_attempted": False,
+        "release_ready": False,
+    }
+
+
+def write_blocked_source_watch_record(
+    layout: Layout,
+    edition_date: str,
+    run_id: str,
+    *,
+    source_branch: str,
+    started_at: str,
+    lock_error: SourceLockUnavailable,
+) -> dict[str, Any]:
+    record = initial_run_record(layout, edition_date, run_id, source_branch=source_branch, started_at=started_at)
+    record.update(
+        {
+            "source_watch_status": BLOCKED_OVERLAPPING_STATUS if lock_error.kind == "overlapping_run" else AMBIGUOUS_STALE_LOCK_STATUS,
+            "last_status": BLOCKED_OVERLAPPING_STATUS if lock_error.kind == "overlapping_run" else AMBIGUOUS_STALE_LOCK_STATUS,
+            "error": str(lock_error),
+            "attention_path": str(lock_error.attention),
+            "lock_path": str(lock_error.lock_path),
+            "lock_age_seconds": round(lock_error.lock_age_seconds, 3),
+            "lock_owner": lock_error.owner_metadata,
+        }
+    )
+    write_run_record(layout, edition_date, record)
+    return record
+
+
+def _source_noop_receipt(
+    *,
+    action: str,
+    started_at: str,
+    edition_date: str,
+    source_branch: str,
+    run_id: str | None,
+    status: str,
+    reason: str,
+    record: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    return {
+        "schema_version": SOURCE_RECEIPT_SCHEMA,
+        "action": action,
+        "task_started_at": started_at,
+        "task_completed_at": utc_now(),
+        "edition_date": edition_date,
+        "source_branch": source_branch,
+        "run_id": run_id,
+        "final_status": status,
+        "resume_status": status if action == "status_resume" else "not_applicable",
+        "reason": reason,
+        "source_watch_status": _run_record_status(record) or status,
+        "command_exit_code": 0,
+        "exit_code": 0,
+    }
+
+
+def _write_source_noop(
+    layout: Layout,
+    edition_date: str,
+    receipt: dict[str, Any],
+    *,
+    receipt_action: str,
+) -> Path:
+    receipt_path = _source_receipt_path(layout, edition_date, receipt_action)
+    atomic_write_json(receipt_path, receipt)
+    return receipt_path
+
+
+def _write_intake_upstream_skip(
+    layout: Layout,
+    edition_date: str,
+    started_at: str,
+    *,
+    record: dict[str, Any] | None,
+    status: str,
+    reason: str,
+) -> Path:
+    receipt = {
+        "schema_version": INTAKE_RECEIPT_SCHEMA,
+        "task_started_at": started_at,
+        "task_completed_at": utc_now(),
+        "edition_date": edition_date,
+        "source_commit": record.get("source_commit") if isinstance(record, dict) else None,
+        "qualifying_discovery_run_id": record.get("run_id") if isinstance(record, dict) else None,
+        "source_status": _run_record_status(record) or status,
+        "source_export_status": None,
+        "inbox_files_discovered": 0,
+        "accepted_files": 0,
+        "imported_findings": 0,
+        "exclusions": [reason],
+        "queue_item_count": 0,
+        "proposal_status": status,
+        "proposal_path": None,
+        "operator_review_required": False,
+        "publication_side_effects": {},
+        "command_exit_code": 0,
+        "exit_code": 0,
+        "status": status,
+        "reason": reason,
+    }
+    receipt_path = _intake_receipt_path(layout, edition_date)
+    atomic_write_json(receipt_path, receipt)
+    return receipt_path
+
+
 @contextmanager
-def source_lock(layout: Layout, edition_date: str, task: str, *, stale_minutes: int = 45):
+def source_lock(layout: Layout, edition_date: str, task: str, *, stale_minutes: int = 45, run_id: str | None = None):
     lock_dir = layout.lock_dir
     lock_dir.parent.mkdir(parents=True, exist_ok=True)
     try:
         lock_dir.mkdir()
     except FileExistsError as exc:
         age_seconds = max(0.0, time.time() - lock_dir.stat().st_mtime)
-        kind = "stale_lock" if age_seconds >= stale_minutes * 60 else "overlapping_run"
-        attention = write_attention(
-            layout,
-            edition_date,
-            kind,
-            "Food Line source-watch lock already exists",
-            lock_path=str(lock_dir),
-            lock_age_seconds=round(age_seconds, 3),
-        )
-        raise SchedulerError(f"source-watch lock exists ({kind}); see {attention}") from exc
-    atomic_write_json(
-        lock_dir / "owner.json",
-        {"task": task, "pid": os.getpid(), "acquired_at": utc_now(), "edition_date": edition_date},
-    )
+        owner_metadata = _read_lock_owner(lock_dir)
+        stale_seconds = max(0, stale_minutes) * 60
+        if _lock_is_proven_stale(owner_metadata, age_seconds=age_seconds, stale_seconds=stale_seconds):
+            if _reclaim_stale_lock(layout, edition_date, lock_dir, owner_metadata, age_seconds):
+                lock_dir.mkdir()
+            else:
+                owner_metadata = _read_lock_owner(lock_dir)
+                kind = "stale_lock_ambiguous"
+                attention = write_attention(
+                    layout,
+                    edition_date,
+                    kind,
+                    "Food Line source-watch lock could not be safely reclaimed",
+                    lock_path=str(lock_dir),
+                    lock_age_seconds=round(age_seconds, 3),
+                    lock_owner=owner_metadata,
+                )
+                raise SourceLockUnavailable(
+                    f"source-watch lock exists ({kind}); see {attention}",
+                    kind=kind,
+                    attention=attention,
+                    lock_path=lock_dir,
+                    lock_age_seconds=age_seconds,
+                    owner_metadata=owner_metadata,
+                ) from exc
+        else:
+            kind = "overlapping_run" if age_seconds < stale_seconds else "stale_lock_ambiguous"
+            if _lock_owner_pid(owner_metadata) is not None and process_is_running(int(owner_metadata["pid"])):
+                kind = "overlapping_run"
+            message = "Food Line source-watch lock already exists"
+            if kind == "stale_lock_ambiguous":
+                message = "Food Line source-watch lock could not be proven stale"
+            attention = write_attention(
+                layout,
+                edition_date,
+                kind,
+                message,
+                lock_path=str(lock_dir),
+                lock_age_seconds=round(age_seconds, 3),
+                lock_owner=owner_metadata,
+            )
+            raise SourceLockUnavailable(
+                f"source-watch lock exists ({kind}); see {attention}",
+                kind=kind,
+                attention=attention,
+                lock_path=lock_dir,
+                lock_age_seconds=age_seconds,
+                owner_metadata=owner_metadata,
+            ) from exc
+    owner_payload = {"task": task, "pid": os.getpid(), "acquired_at": utc_now(), "edition_date": edition_date}
+    if run_id:
+        owner_payload["run_id"] = run_id
+    atomic_write_json(lock_dir / "owner.json", owner_payload)
     try:
         yield
     finally:
@@ -535,23 +818,20 @@ def run_source_watch(args: argparse.Namespace) -> int:
     layout = Layout(root)
     command_exit = 10
     started_at = utc_now()
+    record = initial_run_record(layout, edition_date, run_id, source_branch=args.branch, started_at=started_at)
+    write_run_record(layout, edition_date, record)
     try:
-        with source_lock(layout, edition_date, "source-watch", stale_minutes=args.stale_lock_minutes):
+        with source_lock(layout, edition_date, "source-watch", stale_minutes=args.stale_lock_minutes, run_id=run_id):
+            record["source_watch_status"] = RUNNING_STATUS
+            record["last_status"] = RUNNING_STATUS
+            record["source_watch_started_at"] = utc_now()
+            write_run_record(layout, edition_date, record)
             source_commit = verify_checkout(root, args.branch, update=not args.test_mode, test_mode=args.test_mode)
             run_preflight(root, python, test_mode=args.test_mode)
             run_dir = layout.run_dir(edition_date, run_id)
             state_path = run_dir / "run-state.json"
-            record = {
-                "schema_version": RUN_RECORD_SCHEMA,
-                "edition_date": edition_date,
-                "run_id": run_id,
-                "source_commit": source_commit,
-                "source_branch": args.branch,
-                "run_state_path": str(state_path),
-                "scheduled_start_at": started_at,
-                "resume_attempted": False,
-            }
-            atomic_write_json(layout.run_record(edition_date), record)
+            record.update({"source_commit": source_commit, "run_state_path": str(state_path)})
+            write_run_record(layout, edition_date, record)
             result = _invoke_python(
                 python,
                 root,
@@ -596,8 +876,8 @@ def run_source_watch(args: argparse.Namespace) -> int:
             }
             receipt_path = _source_receipt_path(layout, edition_date, "source-watch")
             atomic_write_json(receipt_path, receipt)
-            record.update({"last_status": state.get("status"), "source_receipt_path": str(receipt_path)})
-            atomic_write_json(layout.run_record(edition_date), record)
+            record.update({"last_status": state.get("status"), "source_watch_status": state.get("status"), "source_receipt_path": str(receipt_path)})
+            write_run_record(layout, edition_date, record, preserve_success=False)
             print(terminal_json({"ok": scheduler_success, "receipt_path": str(receipt_path), **receipt}))
             if scheduler_success:
                 return 0
@@ -608,8 +888,45 @@ def run_source_watch(args: argparse.Namespace) -> int:
                 child_outcome_classification=child_audit.get("child_outcome_classification"),
             )
             return command_exit or 2
+    except SourceLockUnavailable as exc:
+        blocked = write_blocked_source_watch_record(
+            layout,
+            edition_date,
+            run_id,
+            source_branch=args.branch,
+            started_at=started_at,
+            lock_error=exc,
+        )
+        receipt = _source_noop_receipt(
+            action="source_watch",
+            started_at=started_at,
+            edition_date=edition_date,
+            source_branch=args.branch,
+            run_id=run_id,
+            status=_run_record_status(blocked),
+            reason=str(exc),
+            record=blocked,
+        )
+        receipt.update(
+            {
+                "lock_path": str(exc.lock_path),
+                "lock_age_seconds": round(exc.lock_age_seconds, 3),
+                "lock_owner": exc.owner_metadata,
+                "attention_path": str(exc.attention),
+                "command_exit_code": 10,
+                "exit_code": 10,
+            }
+        )
+        receipt_path = _write_source_noop(layout, edition_date, receipt, receipt_action="source-watch")
+        blocked["source_receipt_path"] = str(receipt_path)
+        write_run_record(layout, edition_date, blocked, preserve_success=False)
+        print(terminal_json({"ok": False, "receipt_path": str(receipt_path), **receipt}))
+        return 10
     except SchedulerError as exc:
-        write_attention(layout, edition_date, "source_watch_failed", str(exc), run_id=run_id)
+        attention = write_attention(layout, edition_date, "source_watch_failed", str(exc), run_id=run_id)
+        record.update({"last_status": "failed", "source_watch_status": "failed", "error": str(exc), "attention_path": str(attention)})
+        write_run_record(layout, edition_date, record, preserve_success=False)
+        print(terminal_json({"ok": False, "edition_date": edition_date, "run_id": run_id, "status": "failed", "reason": str(exc), "attention_path": str(attention), "exit_code": command_exit if command_exit not in {0, 10} else 10}))
         print(str(exc), file=sys.stderr)
         return command_exit if command_exit not in {0, 10} else 10
 
@@ -628,6 +945,24 @@ def _load_record_and_state(layout: Layout, edition_date: str) -> tuple[dict[str,
     return record, state, expected
 
 
+def _load_run_record(layout: Layout, edition_date: str) -> dict[str, Any] | None:
+    record = read_optional_json(layout.run_record(edition_date))
+    if record is None:
+        return None
+    if record.get("schema_version") != RUN_RECORD_SCHEMA or record.get("edition_date") != edition_date:
+        raise SchedulerError("scheduled Food Line run record is structurally invalid")
+    return record
+
+
+def _expected_state_path(layout: Layout, edition_date: str, record: dict[str, Any]) -> Path:
+    run_id = str(record.get("run_id") or "")
+    expected = layout.run_dir(edition_date, run_id) / "run-state.json"
+    recorded = Path(str(record.get("run_state_path") or "")).resolve()
+    if recorded != expected.resolve():
+        raise SchedulerError("scheduled Food Line run-state path is outside the expected run directory")
+    return expected
+
+
 def _verify_same_source_commit(root: Path, branch: str, expected: str, *, test_mode: bool) -> None:
     current = verify_checkout(root, branch, update=False, test_mode=test_mode)
     if not test_mode and current != expected:
@@ -639,88 +974,127 @@ def run_resume(args: argparse.Namespace) -> int:
     python = Path(args.python).resolve()
     edition_date = validate_date(args.edition_date)
     layout = Layout(root)
+    started_at = utc_now()
     try:
-        with source_lock(layout, edition_date, "status-resume", stale_minutes=args.stale_lock_minutes):
-            record, state, state_path = _load_record_and_state(layout, edition_date)
-            _verify_same_source_commit(root, args.branch, str(record.get("source_commit")), test_mode=args.test_mode)
-            run_preflight(root, python, test_mode=args.test_mode)
-            run_id = str(record["run_id"])
-            status_result = _invoke_python(
-                python,
-                root,
-                ["scripts/run_food_line_discovery_expansion.py", "--status-run", run_id, "--run-id", run_id],
+        record = _load_run_record(layout, edition_date)
+        if record is None:
+            receipt = _source_noop_receipt(
+                action="status_resume",
+                started_at=started_at,
+                edition_date=edition_date,
+                source_branch=args.branch,
+                run_id=None,
+                status=UPSTREAM_NOT_INITIALIZED_STATUS,
+                reason="source watch has not initialized the daily run record",
             )
-            if status_result.returncode != 0:
-                raise _command_error("source-watch status inspection", status_result)
-            resume_status = "resume_not_required"
-            command_exit = 0
-            if not collection_qualifies(state):
-                if state.get("status") not in RESUMABLE_COLLECTION_STATUSES or not bool(state.get("resumable")):
-                    raise SchedulerError(f"source-watch state is not qualifying or resumable: {state.get('status')}")
-                if int(state.get("resume_count") or 0) >= 1 or bool(record.get("resume_attempted")):
-                    raise SchedulerError("source-watch already used its one permitted resume")
-                record["resume_attempted"] = True
-                record["resume_started_at"] = utc_now()
-                atomic_write_json(layout.run_record(edition_date), record)
-                resume_status = "resume_attempted"
-                resumed = _invoke_python(
-                    python,
-                    root,
-                    [
-                        "scripts/run_food_line_discovery_expansion.py",
-                        "--date", edition_date,
-                        "--resume-run", run_id,
-                        "--run-id", run_id,
-                        "--max-run-minutes", f"{FOOD_LINE_DISCOVERY_MAX_RUN_MINUTES:g}",
-                        "--max-queries", str(FOOD_LINE_DISCOVERY_MAX_QUERIES),
-                        "--export-agent-inbox",
-                        "--agent-inbox-dir", str(PRIVATE_AGENT_INBOX_ROOT),
-                    ],
-                )
-                command_exit = int(resumed.returncode)
-                inspected = _invoke_python(
-                    python,
-                    root,
-                    ["scripts/run_food_line_discovery_expansion.py", "--status-run", run_id, "--run-id", run_id],
-                )
-                if inspected.returncode != 0:
-                    raise _command_error("post-resume status inspection", inspected)
-                state = read_json(state_path)
-                validate_run_state(state, edition_date, run_id)
-                resume_status = "resume_qualified" if collection_qualifies(state) else "resume_nonqualifying"
-
-            survivors = surviving_worker_pids(state_path.parent)
-            if survivors:
-                raise SchedulerError(f"source watch resume left surviving worker processes: {survivors}")
-
-            receipt = {
-                "schema_version": SOURCE_RECEIPT_SCHEMA,
-                "action": "status_resume",
-                "task_started_at": record.get("resume_started_at") or utc_now(),
-                "task_completed_at": utc_now(),
-                "edition_date": edition_date,
-                "source_commit": record.get("source_commit"),
-                "source_branch": args.branch,
-                "run_id": run_id,
-                **_safe_state_summary(state),
-                "resume_status": resume_status,
-                "command_exit_code": command_exit,
-                "exit_code": 0 if collection_qualifies(state) else (command_exit or 2),
-            }
-            receipt_path = _source_receipt_path(layout, edition_date, "status-resume")
-            atomic_write_json(receipt_path, receipt)
-            record.update({"last_status": state.get("status"), "resume_status": resume_status, "resume_receipt_path": str(receipt_path)})
-            atomic_write_json(layout.run_record(edition_date), record)
-            print(terminal_json({"ok": collection_qualifies(state), "receipt_path": str(receipt_path), **receipt}))
-            if collection_qualifies(state):
-                return 0
-            write_attention(
-                layout, edition_date, "resume_nonqualifying", "Food Line source watch remained nonqualifying after its bounded resume",
-                run_id=run_id, final_status=state.get("status"), receipt_path=str(receipt_path),
+            receipt_path = _write_source_noop(layout, edition_date, receipt, receipt_action="status-resume")
+            print(terminal_json({"ok": True, "receipt_path": str(receipt_path), **receipt}))
+            return 0
+        status = _run_record_status(record)
+        if status in UPSTREAM_BLOCKED_STATUSES | {INITIALIZING_STATUS, RUNNING_STATUS, "failed"}:
+            skip_status = UPSTREAM_IN_PROGRESS_STATUS if status in {INITIALIZING_STATUS, RUNNING_STATUS} else "upstream_blocked"
+            receipt = _source_noop_receipt(
+                action="status_resume",
+                started_at=started_at,
+                edition_date=edition_date,
+                source_branch=args.branch,
+                run_id=str(record.get("run_id") or ""),
+                status=skip_status,
+                reason=f"source watch state is not resumable: {status}",
+                record=record,
             )
-            return command_exit or 2
+            receipt_path = _write_source_noop(layout, edition_date, receipt, receipt_action="status-resume")
+            record.update({"resume_status": receipt["resume_status"], "resume_receipt_path": str(receipt_path)})
+            write_run_record(layout, edition_date, record, preserve_success=False)
+            print(terminal_json({"ok": True, "receipt_path": str(receipt_path), **receipt}))
+            return 0
+        state_path = _expected_state_path(layout, edition_date, record)
+        state = read_json(state_path)
+        validate_run_state(state, edition_date, str(record.get("run_id") or ""))
+        _verify_same_source_commit(root, args.branch, str(record.get("source_commit")), test_mode=args.test_mode)
+        run_preflight(root, python, test_mode=args.test_mode)
+        run_id = str(record["run_id"])
+        status_result = _invoke_python(
+            python,
+            root,
+            ["scripts/run_food_line_discovery_expansion.py", "--status-run", run_id, "--run-id", run_id],
+        )
+        if status_result.returncode != 0:
+            raise _command_error("source-watch status inspection", status_result)
+        command_exit = 0
+        resume_status = "resume_not_required"
+        if not collection_qualifies(state):
+            if state.get("status") not in RESUMABLE_COLLECTION_STATUSES or not bool(state.get("resumable")):
+                raise SchedulerError(f"source-watch state is not qualifying or resumable: {state.get('status')}")
+            with source_lock(layout, edition_date, "status-resume", stale_minutes=args.stale_lock_minutes, run_id=str(record.get("run_id") or "")):
+                record, state, state_path = _load_record_and_state(layout, edition_date)
+                if collection_qualifies(state) or state.get("status") not in RESUMABLE_COLLECTION_STATUSES or not bool(state.get("resumable")):
+                    resume_status = "resume_not_required"
+                else:
+                    if int(state.get("resume_count") or 0) >= 1 or bool(record.get("resume_attempted")):
+                        raise SchedulerError("source-watch already used its one permitted resume")
+                    record["resume_attempted"] = True
+                    record["resume_started_at"] = utc_now()
+                    write_run_record(layout, edition_date, record, preserve_success=False)
+                    resumed = _invoke_python(
+                        python,
+                        root,
+                        [
+                            "scripts/run_food_line_discovery_expansion.py",
+                            "--date", edition_date,
+                            "--resume-run", str(record["run_id"]),
+                            "--run-id", str(record["run_id"]),
+                            "--max-run-minutes", f"{FOOD_LINE_DISCOVERY_MAX_RUN_MINUTES:g}",
+                            "--max-queries", str(FOOD_LINE_DISCOVERY_MAX_QUERIES),
+                            "--export-agent-inbox",
+                            "--agent-inbox-dir", str(PRIVATE_AGENT_INBOX_ROOT),
+                        ],
+                    )
+                    command_exit = int(resumed.returncode)
+                    inspected = _invoke_python(
+                        python,
+                        root,
+                        ["scripts/run_food_line_discovery_expansion.py", "--status-run", str(record["run_id"]), "--run-id", str(record["run_id"])],
+                    )
+                    if inspected.returncode != 0:
+                        raise _command_error("post-resume status inspection", inspected)
+                    state = read_json(state_path)
+                    validate_run_state(state, edition_date, str(record["run_id"]))
+                    resume_status = "resume_qualified" if collection_qualifies(state) else "resume_nonqualifying"
+
+        survivors = surviving_worker_pids(state_path.parent)
+        if survivors:
+            raise SchedulerError(f"source watch resume left surviving worker processes: {survivors}")
+
+        receipt = {
+            "schema_version": SOURCE_RECEIPT_SCHEMA,
+            "action": "status_resume",
+            "task_started_at": record.get("resume_started_at") or started_at,
+            "task_completed_at": utc_now(),
+            "edition_date": edition_date,
+            "source_commit": record.get("source_commit"),
+            "source_branch": args.branch,
+            "run_id": run_id,
+            **_safe_state_summary(state),
+            "resume_status": resume_status,
+            "command_exit_code": command_exit,
+            "exit_code": 0 if collection_qualifies(state) else (command_exit or 2),
+        }
+        receipt_path = _source_receipt_path(layout, edition_date, "status-resume")
+        atomic_write_json(receipt_path, receipt)
+        record.update({"last_status": state.get("status"), "source_watch_status": state.get("status"), "resume_status": resume_status, "resume_receipt_path": str(receipt_path)})
+        write_run_record(layout, edition_date, record, preserve_success=False)
+        print(terminal_json({"ok": collection_qualifies(state), "receipt_path": str(receipt_path), **receipt}))
+        if collection_qualifies(state):
+            return 0
+        write_attention(
+            layout, edition_date, "resume_nonqualifying", "Food Line source watch remained nonqualifying after its bounded resume",
+            run_id=run_id, final_status=state.get("status"), receipt_path=str(receipt_path),
+        )
+        return command_exit or 2
     except SchedulerError as exc:
         write_attention(layout, edition_date, "status_resume_failed", str(exc))
+        print(terminal_json({"ok": False, "edition_date": edition_date, "status": "status_resume_failed", "reason": str(exc), "exit_code": 10}))
         print(str(exc), file=sys.stderr)
         return 10
 
@@ -734,6 +1108,33 @@ def run_intake(args: argparse.Namespace) -> int:
     command_exit = 10
     try:
         wait_for_source_lock(layout, edition_date, wait_seconds=args.lock_wait_seconds, poll_seconds=args.lock_poll_seconds)
+        record = _load_run_record(layout, edition_date)
+        if record is None:
+            receipt_path = _write_intake_upstream_skip(
+                layout,
+                edition_date,
+                started_at,
+                record=None,
+                status=UPSTREAM_NOT_INITIALIZED_STATUS,
+                reason="source watch has not initialized the daily run record",
+            )
+            print(terminal_json({"ok": True, "receipt_path": str(receipt_path), "status": UPSTREAM_NOT_INITIALIZED_STATUS, "exit_code": 0}))
+            return 0
+        status = _run_record_status(record)
+        if status in UPSTREAM_BLOCKED_STATUSES | {INITIALIZING_STATUS, RUNNING_STATUS, "failed"}:
+            skip_status = UPSTREAM_IN_PROGRESS_STATUS if status in {INITIALIZING_STATUS, RUNNING_STATUS} else "upstream_blocked"
+            receipt_path = _write_intake_upstream_skip(
+                layout,
+                edition_date,
+                started_at,
+                record=record,
+                status=skip_status,
+                reason=f"source watch state is not intake-ready: {status}",
+            )
+            record.update({"intake_status": skip_status, "intake_receipt_path": str(receipt_path)})
+            write_run_record(layout, edition_date, record, preserve_success=False)
+            print(terminal_json({"ok": True, "receipt_path": str(receipt_path), "status": skip_status, "exit_code": 0}))
+            return 0
         record, state, _ = _load_record_and_state(layout, edition_date)
         _verify_same_source_commit(root, args.branch, str(record.get("source_commit")), test_mode=args.test_mode)
         run_preflight(root, python, test_mode=args.test_mode)

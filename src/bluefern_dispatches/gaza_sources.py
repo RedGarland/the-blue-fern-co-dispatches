@@ -301,6 +301,63 @@ def clean_feed_text(value: str) -> str:
     return WHITESPACE_RE.sub(" ", stripped).strip()
 
 
+GIZA_ENTITY_TERMS = re.compile(r"\b(giza|pyramid(?:s)?)\b", re.I)
+SEGMENT_CONTEXT_TITLE_TERMS = re.compile(
+    r"\b(gaza|palestin|israel|middle east|west bank|east jerusalem|unrwa|ocha|humanitarian|aid|ceasefire|hostage|war|conflict)\b",
+    re.I,
+)
+MULTI_TOPIC_SURFACE_TERMS = re.compile(
+    r"\b(first thing|newsletter|morning briefing|daily briefing|live blog|also in the news|in other news|headlines|top stories|more news)\b",
+    re.I,
+)
+
+
+def _has_gaza_scope_anchor(text: str) -> bool:
+    return bool(GAZA_TERMS.search(str(text or "")) or PALESTINE_TERMS.search(str(text or "")))
+
+
+def _looks_like_non_gaza_giza_item(title: str, summary: str, url: str) -> bool:
+    item_surface = " ".join([title, summary, url])
+    if not GIZA_ENTITY_TERMS.search(item_surface):
+        return False
+    title_url = " ".join([title, url])
+    if GAZA_TERMS.search(title_url) or PALESTINE_TERMS.search(title_url):
+        return False
+    if re.search(r"\bgaza\b", item_surface, re.I):
+        return False
+    return True
+
+
+def _looks_like_cross_segment_scope_mismatch(title: str, summary: str, url: str) -> bool:
+    """Reject document-level Gaza mentions that do not scope to the feed item.
+
+    Some feeds expose multi-topic newsletters as one broad summary. A non-Gaza
+    item title can then inherit Gaza/Palestinian terms from a separate section of
+    the same document. For long, briefing/newsletter-like summaries, require the
+    title or URL to carry a compatible regional/topic anchor before summary text
+    can admit the item.
+    """
+    if not summary or len(summary) < 500:
+        return False
+    if not _has_gaza_scope_anchor(summary):
+        return False
+    title_url = " ".join([title, url])
+    if SEGMENT_CONTEXT_TITLE_TERMS.search(title_url):
+        return False
+    summary_lower = summary.lower()
+    if MULTI_TOPIC_SURFACE_TERMS.search(summary) or summary_lower.count(" - ") >= 3 or summary_lower.count("; ") >= 4:
+        return True
+    return False
+
+
+def gaza_collection_url_dedupe_key(record: dict[str, Any]) -> str:
+    base = canonicalize_url(str(record.get("canonical_url") or record.get("url") or "")).lower()
+    segment_id = str(record.get("segment_id") or record.get("source_segment_id") or "").strip().lower()
+    if segment_id:
+        return f"{base}#segment:{segment_id}"
+    return base
+
+
 def _fold_diacritics(value: str) -> str:
     return "".join(char for char in unicodedata.normalize("NFKD", str(value or "")) if not unicodedata.combining(char))
 
@@ -1953,13 +2010,19 @@ def fetch_rss_items(url: str, timeout: int = 20) -> list[dict[str, str]]:
 
 
 def gaza_relevance_decision(item: dict[str, str], source: SourceDefinition | None = None) -> tuple[bool, str]:
-    title = clean_feed_text(item.get("title", ""))
-    summary = clean_feed_text(item.get("summary_or_snippet", ""))
+    parent_title = clean_feed_text(item.get("title", ""))
+    segment_title = clean_feed_text(item.get("segment_title", ""))
+    title = segment_title or parent_title
+    summary = clean_feed_text(item.get("segment_text", "") or item.get("summary_or_snippet", ""))
     url = str(item.get("url") or "")
     source_name = f"{source.name} {source.publisher} {source.category_hint}" if source is not None else ""
     haystack = " ".join([title, summary, url])
     if is_opinion_editorial_commentary_url(item) and not is_labeled_context_source(item, source):
         return False, "opinion_editorial_commentary_url"
+    if _looks_like_non_gaza_giza_item(title, summary, url):
+        return False, "non_gaza_geographic_entity"
+    if _looks_like_cross_segment_scope_mismatch(title, summary, url):
+        return False, "cross_segment_scope_mismatch"
     strong_title = bool(STRONG_GAZA_TERMS.search(title))
     strong_summary = bool(STRONG_GAZA_TERMS.search(summary))
     strong_url = bool(STRONG_GAZA_TERMS.search(url))
@@ -2228,7 +2291,9 @@ def _governance_attribution_mode(source: SourceDefinition, url: str) -> str:
 
 
 def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_date: str, retrieved_at: str) -> dict[str, Any] | None:
-    title = clean_feed_text(item.get("title", ""))
+    parent_document_title = clean_feed_text(item.get("title", ""))
+    segment_title = clean_feed_text(item.get("segment_title", ""))
+    title = segment_title or parent_document_title
     url = (item.get("url") or "").strip()
     if not title or not url or not url.startswith(("http://", "https://")):
         return None
@@ -2594,6 +2659,10 @@ def normalize_rss_item(item: dict[str, str], source: SourceDefinition, edition_d
             if _is_ap_source(source)
             else {}
         ),
+        "segment_id": str(item.get("segment_id") or item.get("source_segment_id") or "").strip() or None,
+        "segment_title": segment_title or None,
+        "parent_document_title": parent_document_title if segment_title else None,
+        "parent_document_url": str(item.get("parent_document_url") or item.get("discovery_url") or "").strip() or None,
         "published_at_missing": published_at == "",
         "traceability_note": traceability_note,
         "attribution_mode": attribution_mode,
@@ -2948,6 +3017,8 @@ def collect_gaza_sources(
                 "rejected_weak_date_basis": 0,
                 "rejected_low_relevance": 0,
                 "rejected_no_palestinian_anchor": 0,
+                "cross_segment_scope_mismatch": 0,
+                "non_gaza_geographic_entity": 0,
                 "rejected_parse_error": 0,
             },
             "top_rejected_examples": [],
@@ -3046,6 +3117,8 @@ def collect_gaza_sources(
                     _provider_reject(diag, "rejected_low_relevance", item, relevance_band=low_relevance)
                 elif relevance_reason == "rejected_no_palestinian_anchor":
                     _provider_reject(diag, "rejected_no_palestinian_anchor", item, relevance_band="off_topic")
+                elif relevance_reason in {"cross_segment_scope_mismatch", "non_gaza_geographic_entity"}:
+                    _provider_reject(diag, relevance_reason, item, relevance_band="off_topic")
                 else:
                     _provider_reject(diag, "rejected_off_topic", item, relevance_band="off_topic")
                 continue
@@ -3081,7 +3154,7 @@ def collect_gaza_sources(
                 )
                 _provider_reject(diag, "rejected_untrusted_canonical", item, date_basis=basis)
                 continue
-            url_key = canonicalize_url(str(record.get("canonical_url") or record["url"])).lower()
+            url_key = gaza_collection_url_dedupe_key(record)
             if url_key in seen_urls:
                 _provider_reject(diag, "duplicate_url_in_collection", item, relevance_band=str(record.get("relevance_band") or "core"), date_basis=basis)
                 continue

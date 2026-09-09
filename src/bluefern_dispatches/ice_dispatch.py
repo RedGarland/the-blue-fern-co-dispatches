@@ -11,7 +11,7 @@ import tempfile
 import urllib.error
 import urllib.parse
 import urllib.request
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 from enum import Enum
@@ -706,6 +706,15 @@ def event_with_accumulated_sources(existing: IceEvent, candidate: IceEvent) -> I
     by_url: dict[str, IceSourceObservation] = {source.canonical_source_url: source for source in existing.sources}
     for source in candidate.sources:
         by_url.setdefault(source.canonical_source_url, source)
+    lineage = IceLineage(
+        fingerprint=existing.lineage.fingerprint,
+        event_key=existing.lineage.event_key,
+        canonical_event_id=existing.lineage.canonical_event_id or existing.event_id,
+        related_event_ids=tuple(_dedupe_preserve_order((*existing.lineage.related_event_ids, *candidate.lineage.related_event_ids))),
+        supersedes=tuple(_dedupe_preserve_order((*existing.lineage.supersedes, *candidate.lineage.supersedes))),
+        corrected_by=tuple(_dedupe_preserve_order((*existing.lineage.corrected_by, *candidate.lineage.corrected_by))),
+        edition_ids=tuple(_dedupe_preserve_order((*existing.lineage.edition_ids, *candidate.lineage.edition_ids))),
+    )
     return IceEvent(
         event_id=existing.event_id,
         dispatch=existing.dispatch,
@@ -732,7 +741,7 @@ def event_with_accumulated_sources(existing: IceEvent, candidate: IceEvent) -> I
         agencies=existing.agencies,
         sources=tuple(by_url.values()),
         editorial=existing.editorial,
-        lineage=existing.lineage,
+        lineage=lineage,
         schema_version=existing.schema_version,
     )
 
@@ -1464,6 +1473,341 @@ def run_diagnostic(registry_path: Path, *, fixture_path: Path | None = None, out
         (output_dir / "exclusions.json").write_text(json.dumps(exclusions, indent=2, sort_keys=True), encoding="utf-8")
         (output_dir / "fetch_results.json").write_text(json.dumps(fetch_results, indent=2, sort_keys=True), encoding="utf-8")
     return result
+
+
+APPROVED_EDITION_REVIEW_STATUSES = {"QUALIFIES", "UPDATE_TO_EXISTING_EVENT", "CORRECTION"}
+BLOCKED_EDITION_REVIEW_STATUSES = {
+    "NEEDS_CORROBORATION",
+    "DUPLICATE",
+    "OUT_OF_SCOPE",
+    "INSUFFICIENT_CURRENTNESS",
+    "INSUFFICIENT_EVIDENCE",
+    "DOES_NOT_QUALIFY",
+}
+EDITION_SEVERITY_ORDER = {Severity.CRITICAL: 0, Severity.HIGH: 1, Severity.MEDIUM: 2, Severity.LOW: 3}
+ICE_CANONICAL_URL_ROOT = "https://dispatches.thebluefernco.com/ice/editions"
+
+
+def _event_from_reviewed_record(record: IceEvent | dict[str, Any]) -> IceEvent:
+    if isinstance(record, IceEvent):
+        return record
+    if record.get("dispatch") == DISPATCH_ID and record.get("schema_version"):
+        sources = [
+            {
+                "source_url": source["source_url"],
+                "canonical_source_url": source.get("canonical_source_url"),
+                "publisher": source["publisher"],
+                "source_type": source.get("source_type"),
+                "tier": source.get("tier"),
+                "published_at": source.get("published_at"),
+                "modified_at": source.get("modified_at"),
+                "date_source": source.get("date_source"),
+                "date_confidence": source.get("date_confidence"),
+                "retrieved_at": source.get("retrieved_at"),
+                "exact_supporting_passage": source.get("exact_supporting_passage"),
+                "archive_url": source.get("archive_url"),
+                "reference_metadata": source.get("reference_metadata"),
+            }
+            for source in record.get("sources") or []
+        ]
+        return normalize_ice_candidate({
+            "event_id": record.get("event_id"),
+            "canonical_event_id": (record.get("lineage") or {}).get("canonical_event_id") or record.get("event_id"),
+            "event_date": record.get("event_date"),
+            "event_time": record.get("event_time"),
+            "event_type": record["event_type"],
+            "primary_category": record["primary_category"],
+            "secondary_categories": record.get("secondary_categories") or [],
+            "status": record.get("status"),
+            "location": record.get("location") or {},
+            "impact": record.get("impact") or {},
+            "agencies": record.get("agencies") or {},
+            "sources": sources,
+            "verification_status": (record.get("editorial") or {}).get("verification_status") or "source_traceable",
+            "corroboration_count": (record.get("editorial") or {}).get("corroboration_count"),
+            "geographic_confidence": (record.get("editorial") or {}).get("geographic_confidence"),
+            "event_confidence": (record.get("editorial") or {}).get("event_confidence"),
+            "currentness_status": (record.get("editorial") or {}).get("currentness_status"),
+            "currentness_confidence": (record.get("editorial") or {}).get("currentness_confidence"),
+            "supersedes": (record.get("lineage") or {}).get("supersedes") or [],
+            "corrected_by": (record.get("lineage") or {}).get("corrected_by") or [],
+            "edition_ids": (record.get("lineage") or {}).get("edition_ids") or [],
+        })
+    return normalize_ice_candidate(record)
+
+
+def reviewed_ice_events(records: Iterable[IceEvent | dict[str, Any]]) -> tuple[list[IceEvent], list[dict[str, Any]]]:
+    accepted: list[IceEvent] = []
+    excluded: list[dict[str, Any]] = []
+    for index, record in enumerate(records):
+        status = _clean(record.get("review_status") if isinstance(record, dict) else "QUALIFIES").upper()
+        if not status:
+            status = "QUALIFIES"
+        event_id = record.event_id if isinstance(record, IceEvent) else record.get("canonical_event_id") or record.get("event_id") or f"input-{index}"
+        if status not in APPROVED_EDITION_REVIEW_STATUSES:
+            excluded.append({"event_id": event_id, "review_status": status, "reason": "review_status_not_edition_eligible"})
+            continue
+        event = _event_from_reviewed_record(record)
+        if status == "UPDATE_TO_EXISTING_EVENT" and event.status.lower() not in {"updated", "ruling", "follow-up"}:
+            event = replace(event, status="updated")
+        if not event.editorial.public_eligibility:
+            excluded.append({"event_id": event.event_id, "review_status": status, "reason": event.editorial.exclusion_reason or "not_publicly_eligible"})
+            continue
+        accepted.append(event)
+    canonical, relationships = canonicalize_event_observations(accepted)
+    duplicate_ids = {row["event_id"] for row in relationships if row["relationship"] != EventRelationship.NEW_EVENT.value}
+    excluded.extend({"event_id": event_id, "reason": "collapsed_into_canonical_event"} for event_id in sorted(duplicate_ids))
+    return canonical, excluded
+
+
+def ice_edition_editorial_decision(events: Iterable[IceEvent]) -> tuple[str, str]:
+    event_list = list(events)
+    if not event_list:
+        return "NO_PUBLICATION_NEEDED", "no reviewed eligible ICE events"
+    if any(event.severity in {Severity.CRITICAL, Severity.HIGH} for event in event_list):
+        return "ELIGIBLE_FOR_EDITION", "reviewed high/critical ICE event present"
+    medium = [event for event in event_list if event.severity == Severity.MEDIUM]
+    if len(medium) >= 3:
+        return "ELIGIBLE_FOR_EDITION", "multiple coherent medium ICE events"
+    if any(event.primary_category in {IceCategory.LEGAL_OVERSIGHT, IceCategory.POLICY_OPERATIONS, IceCategory.DETENTION} and event.severity == Severity.MEDIUM for event in event_list):
+        return "ELIGIBLE_FOR_EDITION", "single consequential legal/policy/operational ICE event"
+    return "NO_PUBLICATION_NEEDED", "reviewed events do not meet ICE edition threshold"
+
+
+def _reverse_date_key(value: str | None) -> int:
+    normalized = _normalized_date(value)
+    if not normalized:
+        return 99999999
+    return -int(normalized.replace("-", ""))
+
+
+def _event_sort_key(event: IceEvent) -> tuple[Any, ...]:
+    event_date = event.event_date or max((source.modified_at or source.published_at or "" for source in event.sources), default="")
+    location = event.location
+    return (
+        EDITION_SEVERITY_ORDER[event.severity],
+        _reverse_date_key(event_date),
+        event.editorial.currentness_status or "",
+        location.state_or_territory or "",
+        location.county_or_equivalent or "",
+        location.city or "",
+        event.event_id,
+    )
+
+
+def _source_rows(event: IceEvent) -> list[dict[str, Any]]:
+    rows = []
+    for source in event.sources:
+        rows.append({
+            "publisher": source.publisher,
+            "source_url": source.source_url,
+            "canonical_source_url": source.canonical_source_url,
+            "published_at": source.published_at,
+            "modified_at": source.modified_at,
+            "date_source": source.date_source,
+            "date_confidence": source.date_confidence,
+            "source_tier": source.tier,
+            "supporting_evidence": source.exact_supporting_passage,
+            "canonical_event_id": event.lineage.canonical_event_id or event.event_id,
+        })
+    return rows
+
+
+def _event_summary(event: IceEvent) -> str:
+    source_passage = next((source.exact_supporting_passage for source in event.sources if source.exact_supporting_passage), "")
+    base = source_passage or event.event_type
+    return _clean(base)[:360]
+
+
+def ice_edition_items(events: Iterable[IceEvent]) -> list[dict[str, Any]]:
+    rows = []
+    for event in sorted(events, key=_event_sort_key):
+        mapped = map_ready_event(event)
+        rows.append({
+            "canonical_event_id": event.lineage.canonical_event_id or event.event_id,
+            "event_id": event.event_id,
+            "title": event.event_type,
+            "summary": _event_summary(event),
+            "event_date": event.event_date,
+            "published_at": min((source.published_at for source in event.sources if source.published_at), default=None),
+            "modified_at": max((source.modified_at for source in event.sources if source.modified_at), default=None),
+            "category": event.primary_category.value,
+            "severity": event.severity.value,
+            "status": event.status,
+            "location": _plain(event.location),
+            "impact": _plain(event.impact),
+            "agencies": _plain(event.agencies),
+            "source_count": len(event.sources),
+            "source_tiers": sorted({source.tier for source in event.sources}),
+            "corroboration_count": event.editorial.corroboration_count,
+            "currentness_status": event.editorial.currentness_status,
+            "currentness_confidence": event.editorial.currentness_confidence,
+            "map_readiness": mapped["map_readiness"],
+            "lineage": _plain(event.lineage),
+            "sources": _source_rows(event),
+            "edition_relationship": "CORRECTION" if event.lineage.supersedes else "UPDATE" if event.status.lower() in {"updated", "ruling", "follow-up"} else "NEW EVENT",
+        })
+    return rows
+
+
+def ice_archive_candidate(edition_date: str, items: list[dict[str, Any]], editorial_decision: str, generated_at: str) -> dict[str, Any]:
+    return {
+        "dispatch": DISPATCH_ID,
+        "edition_date": edition_date,
+        "title": f"ICE Dispatch — {edition_date}",
+        "canonical_url_candidate": f"{ICE_CANONICAL_URL_ROOT}/{edition_date}/",
+        "story_count": len(items),
+        "severity_summary": {severity.value: sum(1 for item in items if item["severity"] == severity.value) for severity in Severity},
+        "category_summary": {category.value: sum(1 for item in items if item["category"] == category.value) for category in IceCategory},
+        "generated_at": generated_at,
+        "editorial_decision": editorial_decision,
+        "non_public": True,
+    }
+
+
+def ice_rss_candidate(edition_date: str, items: list[dict[str, Any]], generated_at: str) -> dict[str, Any]:
+    canonical_url = f"{ICE_CANONICAL_URL_ROOT}/{edition_date}/"
+    stable_guid = f"bluefern-ice-{edition_date}-{_hash_payload([item['canonical_event_id'] for item in items], 12)}"
+    highest = next((item["severity"] for item in items), "none")
+    return {
+        "guid": stable_guid,
+        "guid_is_permalink": False,
+        "canonical_url_candidate": canonical_url,
+        "title": f"ICE Dispatch — {edition_date}",
+        "description": f"{len(items)} reviewed ICE event candidate(s); highest severity: {highest}.",
+        "pub_date": generated_at,
+        "edition_date": edition_date,
+        "non_public": True,
+    }
+
+
+def ice_map_payload(edition_date: str, items: list[dict[str, Any]]) -> dict[str, Any]:
+    events = []
+    for item in items:
+        location = item["location"]
+        events.append({
+            "canonical_event_id": item["canonical_event_id"],
+            "title": item["title"],
+            "summary": item["summary"],
+            "event_date": item["event_date"],
+            "category": item["category"],
+            "severity": item["severity"],
+            "state_or_territory": location.get("state_or_territory"),
+            "county": location.get("county_or_equivalent"),
+            "city": location.get("city"),
+            "facility": location.get("facility_name"),
+            "latitude": location.get("latitude"),
+            "longitude": location.get("longitude"),
+            "location_precision": location.get("location_precision"),
+            "geography_source": location.get("geography_source"),
+            "geography_provenance": location.get("geography_provenance"),
+            "map_readiness": item["map_readiness"],
+            "source_count": item["source_count"],
+            "edition_relationship": item["edition_relationship"],
+        })
+    return {
+        "dispatch": DISPATCH_ID,
+        "edition_date": edition_date,
+        "filters": ["date_range", "category", "severity", "state_or_territory", "event_type", "facility"],
+        "events": events,
+        "non_public": True,
+    }
+
+
+def render_ice_candidate_html(edition_date: str, items: list[dict[str, Any]], manifest: dict[str, Any]) -> str:
+    cards = []
+    for item in items:
+        sources = "".join(
+            f"<li><a href=\"{html.escape(source['source_url'], quote=True)}\">{html.escape(source['publisher'])}</a> "
+            f"(tier {source['source_tier']}; published {html.escape(str(source['published_at'] or 'unknown'))})</li>"
+            for source in item["sources"]
+        )
+        location = item["location"]
+        place = ", ".join([part for part in (location.get("facility_name"), location.get("city"), location.get("county_or_equivalent"), location.get("state_or_territory")) if part]) or "Location unresolved"
+        cards.append(
+            "<article class=\"ice-event-card\" data-canonical-event-id=\"{event_id}\" data-map-readiness=\"{map_ready}\">"
+            "<h2>{title}</h2><p>{summary}</p>"
+            "<p><strong>Category:</strong> {category} · <strong>Severity:</strong> {severity} · <strong>Relationship:</strong> {relationship}</p>"
+            "<p><strong>Location:</strong> {place}</p>"
+            "<p><strong>Currentness:</strong> {currentness}</p>"
+            "<h3>Sources</h3><ul>{sources}</ul></article>".format(
+                event_id=html.escape(item["canonical_event_id"], quote=True),
+                map_ready=html.escape(item["map_readiness"], quote=True),
+                title=html.escape(item["title"]),
+                summary=html.escape(item["summary"]),
+                category=html.escape(item["category"]),
+                severity=html.escape(item["severity"]),
+                relationship=html.escape(item["edition_relationship"]),
+                place=html.escape(place),
+                currentness=html.escape(str(item["currentness_status"] or "unknown")),
+                sources=sources,
+            )
+        )
+    return """<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>ICE Dispatch Candidate — {date}</title></head>
+<body data-bluefern-non-public="true">
+<main>
+<p><strong>NON-PUBLIC TEST ARTIFACT — DO NOT PUBLISH</strong></p>
+<h1>ICE Dispatch Candidate — {date}</h1>
+<p>Editorial decision: {decision}. Collection state: {collection_state}.</p>
+{cards}
+</main>
+</body>
+</html>
+""".format(
+        date=html.escape(edition_date),
+        decision=html.escape(manifest["editorial_decision"]),
+        collection_state=html.escape(manifest["collection_state"]),
+        cards="\n".join(cards),
+    )
+
+
+def generate_ice_edition_candidate(
+    reviewed_records: Iterable[IceEvent | dict[str, Any]],
+    *,
+    edition_date: str,
+    collection_state: str,
+    output_dir: Path | None = None,
+    generated_at: str | None = None,
+) -> dict[str, Any]:
+    generated = generated_at or utc_now()
+    canonical_events, review_exclusions = reviewed_ice_events(reviewed_records)
+    editorial_decision, decision_reason = ice_edition_editorial_decision(canonical_events)
+    collection_state_clean = _clean(collection_state).lower()
+    items = ice_edition_items(canonical_events) if editorial_decision == "ELIGIBLE_FOR_EDITION" else []
+    manifest = {
+        "dispatch": DISPATCH_ID,
+        "edition_date": edition_date,
+        "generated_at": generated,
+        "non_public": True,
+        "editorial_decision": editorial_decision,
+        "editorial_decision_reason": decision_reason,
+        "collection_state": collection_state_clean,
+        "collection_warning": "collection degraded; candidate requires explicit review before any future publication" if collection_state_clean == "degraded" else None,
+        "input_contract": "reviewed_canonical_events_only",
+        "accepted_event_count": len(canonical_events),
+        "rendered_event_count": len(items),
+        "review_exclusions": review_exclusions,
+        "public_side_effects": False,
+    }
+    result: dict[str, Any] = {"manifest": manifest, "items": items, "public_side_effects": False}
+    if editorial_decision == "ELIGIBLE_FOR_EDITION":
+        archive = ice_archive_candidate(edition_date, items, editorial_decision, generated)
+        rss = ice_rss_candidate(edition_date, items, generated)
+        map_payload = ice_map_payload(edition_date, items)
+        html_text = render_ice_candidate_html(edition_date, items, manifest)
+        result.update({"html": html_text, "archive_candidate": archive, "rss_candidate": rss, "map_payload": map_payload})
+    if output_dir:
+        output_dir.mkdir(parents=True, exist_ok=True)
+        (output_dir / "edition_manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8")
+        if editorial_decision == "ELIGIBLE_FOR_EDITION":
+            (output_dir / "index.html").write_text(result["html"], encoding="utf-8")
+            (output_dir / "archive_candidate.json").write_text(json.dumps(result["archive_candidate"], indent=2, sort_keys=True), encoding="utf-8")
+            (output_dir / "rss_candidate.json").write_text(json.dumps(result["rss_candidate"], indent=2, sort_keys=True), encoding="utf-8")
+            (output_dir / "map_payload.json").write_text(json.dumps(result["map_payload"], indent=2, sort_keys=True), encoding="utf-8")
+    return result
+
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run a non-public ICE Dispatch Phase 1 collection diagnostic.")

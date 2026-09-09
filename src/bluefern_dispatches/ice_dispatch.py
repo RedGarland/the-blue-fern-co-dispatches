@@ -179,6 +179,8 @@ class IceSourceObservation:
     tier: int
     published_at: str | None = None
     modified_at: str | None = None
+    date_source: str | None = None
+    date_confidence: str | None = None
     retrieved_at: str | None = None
     exact_supporting_passage: str | None = None
     archive_url: str | None = None
@@ -510,6 +512,8 @@ def normalize_ice_candidate(candidate: dict[str, Any], *, observed_at: str | Non
             tier=int(src.get("tier") or 3),
             published_at=src.get("published_at"),
             modified_at=src.get("modified_at"),
+            date_source=src.get("date_source"),
+            date_confidence=src.get("date_confidence"),
             retrieved_at=src.get("retrieved_at") or observed,
             exact_supporting_passage=src.get("exact_supporting_passage"),
             archive_url=src.get("archive_url"),
@@ -818,7 +822,7 @@ def evaluate_collection_health(provider_health: Iterable[ProviderHealth], *, sha
         return CollectionHealth.COLLECTION_FAILED
     if shared_service_failures or len(failures) >= max(2, len(attempted) // 2):
         return CollectionHealth.COLLECTION_DEGRADED
-    if failures or sum(p.accepted_records for p in successes) == 0:
+    if failures:
         return CollectionHealth.LIMITED_SOURCE_UPDATE
     return CollectionHealth.HEALTHY
 
@@ -984,6 +988,83 @@ def extract_publication_dates(html_text: str) -> dict[str, str | None]:
         "published_at": min(published) if published else None,
         "modified_at": max(modified) if modified else None,
     }
+
+
+def _date_evidence(published_at: str | None, modified_at: str | None, source: str | None, confidence: str | None) -> dict[str, str | None]:
+    return {
+        "published_at": published_at,
+        "modified_at": modified_at,
+        "date_source": source,
+        "date_confidence": confidence,
+    }
+
+
+def extract_pdf_text_date_evidence(pdf_text: str) -> dict[str, str | None]:
+    bounded = pdf_text[:50_000]
+    visible_patterns = (
+        r"\b(?:Report Date|Issue Date|Date Issued|Published|Release Date)\s*:?\s*([A-Z][a-z]+ \d{1,2}, 20\d{2})\b",
+        r"\b(?:Report Date|Issue Date|Date Issued|Published|Release Date)\s*:?\s*(20\d{2}-\d{1,2}-\d{1,2})\b",
+    )
+    for pattern in visible_patterns:
+        match = re.search(pattern, bounded, re.IGNORECASE)
+        if match:
+            parsed = parse_datetime_evidence(match.group(1))
+            if parsed:
+                return _date_evidence(parsed, None, "pdf_visible_report_date", "official_visible_text")
+    metadata_match = re.search(r"/(?:CreationDate|ModDate)\s*\(D:(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})(?:([+-])(\d{2})'?(\d{2})'?)?", bounded)
+    if metadata_match:
+        y, mo, d, hh, mm, ss = (int(part) for part in metadata_match.groups()[:6])
+        dt = datetime(y, mo, d, hh, mm, ss, tzinfo=timezone.utc)
+        sign, offset_h, offset_m = metadata_match.groups()[6:]
+        if sign and offset_h and offset_m:
+            offset = timedelta(hours=int(offset_h), minutes=int(offset_m))
+            dt = dt - offset if sign == "+" else dt + offset
+        parsed = dt.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+        return _date_evidence(parsed, None, "pdf_document_metadata", "document_metadata")
+    return _date_evidence(None, None, None, None)
+
+
+def _oig_listing_date_for_link(row_html: str) -> str | None:
+    match = re.search(r'(?is)<td[^>]+views-field-field-issue-date[^>]*>.*?<time[^>]+datetime=["\']([^"\']+)["\']', row_html)
+    if not match:
+        return None
+    return parse_datetime_evidence(html.unescape(match.group(1)))
+
+
+def _row_for_link(html_text: str, href: str) -> str | None:
+    escaped_href = re.escape(href)
+    for row_match in re.finditer(r"(?is)<tr\b.*?</tr>", html_text):
+        row = row_match.group(0)
+        if re.search(escaped_href, row):
+            return row
+    return None
+
+
+def listing_date_evidence_for_link(source: dict[str, Any], index_html: str, link: dict[str, str]) -> dict[str, str | None]:
+    if source.get("source_id") != "dhs-oig-reports":
+        return _date_evidence(None, None, None, None)
+    parsed = urllib.parse.urlparse(link["url"])
+    hrefs = [parsed.path, urllib.parse.urlparse(link["canonical_url"]).path, link["url"]]
+    for href in _dedupe_preserve_order([h for h in hrefs if h]):
+        row = _row_for_link(index_html, href)
+        if not row:
+            continue
+        published_at = _oig_listing_date_for_link(row)
+        if published_at:
+            return _date_evidence(published_at, None, "oig_listing_issue_date", "official_listing_metadata")
+    return _date_evidence(None, None, None, None)
+
+
+def best_date_evidence(source: dict[str, Any], link: dict[str, str], index_html: str, article_text: str) -> dict[str, str | None]:
+    listing = listing_date_evidence_for_link(source, index_html, link)
+    if listing["published_at"]:
+        return listing
+    html_dates = extract_publication_dates(article_text)
+    if html_dates["published_at"] or html_dates["modified_at"]:
+        return _date_evidence(html_dates["published_at"], html_dates["modified_at"], "article_structured_metadata", "structured_metadata")
+    if urllib.parse.urlparse(link["canonical_url"]).path.lower().endswith(".pdf"):
+        return extract_pdf_text_date_evidence(article_text)
+    return _date_evidence(None, None, None, None)
 
 
 def currentness_for_dates(*, published_at: str | None, modified_at: str | None, event_date: str | None, retrieved_at: str, window_hours: int | None = None) -> dict[str, str]:
@@ -1204,7 +1285,7 @@ def _infer_impact(text: str) -> dict[str, int | None]:
     return impact
 
 
-def _candidate_from_link(source: dict[str, Any], link: dict[str, str], article: FetchResult, retrieved_at: str, *, window_hours: int | None = None) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+def _candidate_from_link(source: dict[str, Any], link: dict[str, str], article: FetchResult, retrieved_at: str, *, index_html: str = "", window_hours: int | None = None) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
     if not _is_fetchable_article_link(link):
         return None, {"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "non_article_or_static_link"}
     passage = _extract_passage(article.content, link["title"])
@@ -1214,7 +1295,7 @@ def _candidate_from_link(source: dict[str, Any], link: dict[str, str], article: 
     if not _event_signal_hit(combined):
         return None, {"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "no_event_level_ice_signal"}
     category = _infer_category(combined)
-    dates = extract_publication_dates(article.content)
+    dates = best_date_evidence(source, link, index_html, article.content)
     currentness = currentness_for_dates(
         published_at=dates["published_at"],
         modified_at=dates["modified_at"],
@@ -1230,6 +1311,8 @@ def _candidate_from_link(source: dict[str, Any], link: dict[str, str], article: 
             "reason": currentness["status"],
             "published_at": dates["published_at"],
             "modified_at": dates["modified_at"],
+            "date_source": dates["date_source"],
+            "date_confidence": dates["date_confidence"],
         }
     candidate = {
         "event_date": None,
@@ -1247,6 +1330,8 @@ def _candidate_from_link(source: dict[str, Any], link: dict[str, str], article: 
             "tier": int(source["tier"]),
             "published_at": dates["published_at"],
             "modified_at": dates["modified_at"],
+            "date_source": dates["date_source"],
+            "date_confidence": dates["date_confidence"],
             "retrieved_at": retrieved_at,
             "exact_supporting_passage": passage,
             "reference_metadata": {"source_id": source["source_id"], "index_url": source.get("url"), "fetch_stack": article.fetch_stack},
@@ -1289,7 +1374,7 @@ def collect_live_candidates(sources: list[dict[str, Any]], *, max_per_source: in
                 failed_records += 1
                 exclusions.append({"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "article_fetch_failed", "status": article.status, "error": article.error})
                 continue
-            candidate, exclusion = _candidate_from_link(source, link, article, retrieved_at, window_hours=window_hours)
+            candidate, exclusion = _candidate_from_link(source, link, article, retrieved_at, index_html=index.content, window_hours=window_hours)
             if candidate:
                 raw_candidates.append(candidate)
                 accepted += 1

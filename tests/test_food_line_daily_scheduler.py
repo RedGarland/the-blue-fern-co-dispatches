@@ -1581,6 +1581,17 @@ def test_resume_before_source_watch_initialization_is_successful_noop(
     terminal = json.loads(capsys.readouterr().out)
     assert terminal["ok"] is True
     assert terminal["final_status"] == scheduler.UPSTREAM_NOT_INITIALIZED_STATUS
+    operational = json.loads(
+        next(
+            (tmp_path / "status" / "operational-health" / "food-line" / "2026-09-07" / "runs").glob(
+                "food_line_source_watch_resume-*.json"
+            )
+        ).read_text(encoding="utf-8")
+    )
+    assert operational["schema_version"] == "bluefern_operational_health_receipt_v1"
+    assert operational["status"] == "UPSTREAM_BLOCKED"
+    assert operational["artifact_refs"]["task_receipt"].endswith("-status-resume.json")
+    assert receipt["operational_health_receipt_path"].endswith(".json")
 
 
 def test_source_watch_after_resume_preinitialization_noop_can_complete(
@@ -1623,6 +1634,13 @@ def test_source_watch_active_lock_collision_writes_daily_contract(
     receipt = json.loads(next((tmp_path / "logs" / "food-line" / "source-watch" / "2026-09-07").glob("*-source-watch.json")).read_text(encoding="utf-8"))
     assert receipt["final_status"] == scheduler.BLOCKED_OVERLAPPING_STATUS
     assert receipt["exit_code"] == 10
+    operational = json.loads(
+        next((tmp_path / "status" / "operational-health" / "food-line" / "2026-09-07" / "runs").glob("food_line_source_watch-*.json")).read_text(
+            encoding="utf-8"
+        )
+    )
+    assert operational["status"] == "FAILED"
+    assert operational["classification"] == scheduler.BLOCKED_OVERLAPPING_STATUS
 
 
 def test_active_lock_is_not_reclaimed_even_after_stale_threshold(
@@ -1710,6 +1728,13 @@ def test_current_intake_blocked_source_watch_record_is_successful_upstream_noop(
     assert receipt["exit_code"] == 0
     terminal = json.loads(capsys.readouterr().out)
     assert terminal["ok"] is True
+    operational = json.loads(
+        next((tmp_path / "status" / "operational-health" / "food-line" / "2026-09-07" / "runs").glob("food_line_current_intake-*.json")).read_text(
+            encoding="utf-8"
+        )
+    )
+    assert operational["status"] == "UPSTREAM_BLOCKED"
+    assert operational["upstream_dependency_status"] == scheduler.BLOCKED_OVERLAPPING_STATUS
 
 
 def test_current_intake_corrupt_source_watch_record_still_fails_closed(tmp_path: Path) -> None:
@@ -1720,4 +1745,13 @@ def test_current_intake_corrupt_source_watch_record_still_fails_closed(tmp_path:
     code = scheduler.run_intake(_intake_args(tmp_path))
 
     assert code == 10
-    assert not list((tmp_path / "logs" / "food-line" / "current-intake" / "2026-09-07").glob("*-current-intake.json"))
+    receipt = json.loads(
+        next((tmp_path / "logs" / "food-line" / "current-intake" / "2026-09-07").glob("*-current-intake.json")).read_text(encoding="utf-8")
+    )
+    assert receipt["status"] == "current_intake_failed"
+    operational = json.loads(
+        next((tmp_path / "status" / "operational-health" / "food-line" / "2026-09-07" / "runs").glob("food_line_current_intake-*.json")).read_text(
+            encoding="utf-8"
+        )
+    )
+    assert operational["status"] == "FAILED"

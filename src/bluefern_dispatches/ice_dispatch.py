@@ -83,6 +83,14 @@ STATIC_LINK_PATH_FRAGMENTS = (
     "/topics/",
     "/reader-aids/",
     "/practice-advisories/",
+    "/factsheets",
+    "/detention-facilities",
+    "/detain/detention-management",
+    "/self-deportation",
+    "/immigration-enforcement-frequently-asked-questions",
+    "/identify-and-arrest",
+    "/live",
+    "/about-immigration/",
 )
 STATIC_LINK_TITLES = {
     "1-866-dhs-2-ice",
@@ -982,7 +990,7 @@ def extract_publication_dates(html_text: str) -> dict[str, str | None]:
         if parsed:
             published.append(parsed)
     if not published:
-        visible = _strip_html(html_text[:20_000])
+        visible = _strip_html(html_text[:100_000])
         for pattern in (
             r"\b(?:Published|Posted|Issued|Release Date)\s*:?\s*([A-Z][a-z]+ \d{1,2}, 20\d{2})",
             r"\b(20\d{2}-\d{1,2}-\d{1,2})\b",
@@ -1176,12 +1184,44 @@ def _anchor_candidates(source: dict[str, Any], html_text: str) -> list[dict[str,
     return rows
 
 
+def _matches_any_pattern(value: str, patterns: Iterable[str]) -> bool:
+    return any(re.search(pattern, value, flags=re.IGNORECASE) for pattern in patterns)
+
+
+def _source_link_allowed(source: dict[str, Any], link: dict[str, str]) -> bool:
+    path = urllib.parse.urlparse(link["canonical_url"]).path
+    title = _clean(link["title"])
+    include_patterns = source.get("include_path_patterns") or ()
+    exclude_patterns = source.get("exclude_path_patterns") or ()
+    title_keywords = source.get("title_keywords") or ()
+    if include_patterns and not _matches_any_pattern(path, include_patterns):
+        return False
+    if exclude_patterns and _matches_any_pattern(path, exclude_patterns):
+        return False
+    if title_keywords and not any(_clean(keyword).lower() in title.lower() for keyword in title_keywords):
+        return False
+    return True
+
+
 def _keyword_hit(text: str) -> bool:
     return any(pattern.search(text) for pattern in ICE_KEYWORD_PATTERNS)
 
 
 def _event_signal_hit(text: str) -> bool:
     return _keyword_hit(text) and any(pattern.search(text) for pattern in ICE_EVENT_SIGNAL_PATTERNS)
+
+
+def _generic_politics_without_concrete_ice_action(text: str) -> bool:
+    lower = text.lower()
+    if not any(term in lower for term in ("debate", "rhetoric", "public opinion", "political reaction", "campaign", "opinion", "editorial")):
+        return False
+    concrete = (
+        "arrest", "detain", "detainee", "custody", "death", "died", "medical", "hospital",
+        "shooting", "firearm", "force", "taser", "pursuit", "injury", "injured",
+        "deport", "removal", "remove", "lawsuit", "court", "judge", "ruling", "injunction",
+        "287(g)", "facility", "jail", "operation", "worksite", "raid",
+    )
+    return not any(term in lower for term in concrete)
 
 
 def _is_fetchable_article_link(link: dict[str, str]) -> bool:
@@ -1221,7 +1261,7 @@ def _infer_category(text: str) -> str:
         return IceCategory.USE_OF_FORCE.value
     if any(term in lower for term in ("detention", "detainee", "facility", "custody", "contract", "jail")):
         return IceCategory.DETENTION.value
-    if any(term in lower for term in ("deport", "removal", "removed", "repatriation", "flight")):
+    if any(term in lower for term in ("deport", "deports", "deported", "removal", "remove", "removes", "removed", "repatriation", "flight")):
         return IceCategory.REMOVALS.value
     if any(term in lower for term in ("court", "lawsuit", "judge", "settlement", "investigation", "oig", "rights", "oversight")):
         return IceCategory.LEGAL_OVERSIGHT.value
@@ -1301,6 +1341,8 @@ def _candidate_from_link(source: dict[str, Any], link: dict[str, str], article: 
     combined = f"{link['title']} {passage or ''}"
     if not _keyword_hit(combined):
         return None, {"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "no_ice_keyword_in_title_or_passage"}
+    if _generic_politics_without_concrete_ice_action(combined):
+        return None, {"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "generic_politics_without_concrete_ice_action"}
     if not _event_signal_hit(combined):
         return None, {"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "no_event_level_ice_signal"}
     category = _infer_category(combined)
@@ -1370,7 +1412,7 @@ def collect_live_candidates(sources: list[dict[str, Any]], *, max_per_source: in
         if not index.ok:
             provider_health.append(ProviderHealth(source_id=source["source_id"], publisher=source["publisher"], tier=int(source["tier"]), attempted=True, success=False, http_status=index.status, error=index.error))
             continue
-        links = [link for link in _anchor_candidates(source, index.content) if _keyword_hit(link["title"])]
+        links = [link for link in _anchor_candidates(source, index.content) if _source_link_allowed(source, link) and _keyword_hit(link["title"])]
         accepted = 0
         failed_records = 0
         for link in links[:max_per_source]:

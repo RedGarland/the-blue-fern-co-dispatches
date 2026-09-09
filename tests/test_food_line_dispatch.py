@@ -11990,6 +11990,15 @@ def test_food_line_daily_publish_wrapper_check_only_reports_release_readiness(tm
     assert receipt["error_classification"] is None
     assert receipt["error_message"] is None
     assert receipt["publication_attempted"] is False
+    assert receipt["operational_health_receipt_path"]
+    operational = json.loads(Path(receipt["operational_health_receipt_path"]).read_text(encoding="utf-8"))
+    assert operational["schema_version"] == "bluefern_operational_health_receipt_v1"
+    assert operational["dispatch"] == "food-line"
+    assert operational["task_key"] == "food_line_daily_publish"
+    assert operational["status"] == "SAFE_NO_OP"
+    assert operational["classification"] == "skipped_not_release_ready"
+    assert operational["publication_attempted"] is False
+    assert operational["artifact_refs"]["task_receipt"] == str(receipts[0])
 
 
 def test_food_line_daily_publish_wrapper_finalizes_failure_receipt(tmp_path: Path) -> None:

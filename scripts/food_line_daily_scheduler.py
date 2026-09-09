@@ -23,6 +23,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from scripts.food_line_runtime_paths import classify_food_line_runtime_path, is_food_line_mutable_tracked_runtime_path
+from bluefern_dispatches.operational_health import build_food_line_operational_receipt, write_operational_receipt
 
 PRODUCTION_BRANCH = "add/pages-repo-default"
 PRIVATE_AGENT_INBOX_ROOT = ROOT / "data" / "dispatches" / "food-line" / "agent-inbox"
@@ -810,6 +811,51 @@ def _intake_receipt_path(layout: Layout, edition_date: str) -> Path:
     return layout.intake_log_dir(edition_date) / f"{stamp()}-current-intake.json"
 
 
+def _write_food_line_operational_health_receipt(
+    layout: Layout,
+    edition_date: str,
+    *,
+    action: str,
+    task_receipt: dict[str, Any],
+    task_receipt_path: Path,
+    task_status: str | None = None,
+) -> Path:
+    status_value = task_status or _nonempty_text(
+        task_receipt.get("status")
+        or task_receipt.get("terminal_status")
+        or task_receipt.get("final_status")
+        or task_receipt.get("resume_status")
+        or "unknown"
+    )
+    receipt = build_food_line_operational_receipt(
+        action=action,
+        scheduled_for=edition_date,
+        started_at=_nonempty_text(task_receipt.get("task_started_at") or task_receipt.get("started_at")),
+        completed_at=_nonempty_text(task_receipt.get("task_completed_at") or task_receipt.get("completed_at")),
+        exit_code=int(task_receipt["exit_code"]) if task_receipt.get("exit_code") is not None else None,
+        task_status=status_value,
+        classification=status_value,
+        run_id=_nonempty_text(task_receipt.get("run_id")),
+        runner_path=str(layout.root),
+        branch=_nonempty_text(task_receipt.get("source_branch") or task_receipt.get("SourceBranch")),
+        source_head=_nonempty_text(task_receipt.get("source_commit")),
+        public_side_effects=task_receipt.get("publication_side_effects") if isinstance(task_receipt.get("publication_side_effects"), dict) else {},
+        collection_health=_nonempty_text(task_receipt.get("final_status") or task_receipt.get("source_status")),
+        upstream_dependency_status=_nonempty_text(task_receipt.get("source_watch_status") or task_receipt.get("source_status")),
+        publication_attempted=bool(task_receipt.get("publication_attempted")) if task_receipt.get("publication_attempted") is not None else None,
+        publication_status=_nonempty_text(task_receipt.get("publication_status") or task_receipt.get("terminal_status")),
+        artifact_refs={"task_receipt": str(task_receipt_path)},
+        operator_attention_ref=_nonempty_text(task_receipt.get("attention_path")),
+        details={
+            "legacy_schema_version": task_receipt.get("schema_version"),
+            "legacy_action": task_receipt.get("action") or action,
+            "release_ready": task_receipt.get("release_ready"),
+            "intake_status": task_receipt.get("proposal_status") or task_receipt.get("status"),
+        },
+    )
+    return write_operational_receipt(layout.root, receipt).receipt_path
+
+
 def run_source_watch(args: argparse.Namespace) -> int:
     root = Path(args.repo_root).resolve()
     python = Path(args.python).resolve()
@@ -876,6 +922,16 @@ def run_source_watch(args: argparse.Namespace) -> int:
             }
             receipt_path = _source_receipt_path(layout, edition_date, "source-watch")
             atomic_write_json(receipt_path, receipt)
+            operational_receipt_path = _write_food_line_operational_health_receipt(
+                layout,
+                edition_date,
+                action="source_watch",
+                task_receipt=receipt,
+                task_receipt_path=receipt_path,
+                task_status=str(state.get("status") or ""),
+            )
+            receipt["operational_health_receipt_path"] = str(operational_receipt_path)
+            atomic_write_json(receipt_path, receipt)
             record.update({"last_status": state.get("status"), "source_watch_status": state.get("status"), "source_receipt_path": str(receipt_path)})
             write_run_record(layout, edition_date, record, preserve_success=False)
             print(terminal_json({"ok": scheduler_success, "receipt_path": str(receipt_path), **receipt}))
@@ -918,6 +974,15 @@ def run_source_watch(args: argparse.Namespace) -> int:
             }
         )
         receipt_path = _write_source_noop(layout, edition_date, receipt, receipt_action="source-watch")
+        operational_receipt_path = _write_food_line_operational_health_receipt(
+            layout,
+            edition_date,
+            action="source_watch",
+            task_receipt=receipt,
+            task_receipt_path=receipt_path,
+        )
+        receipt["operational_health_receipt_path"] = str(operational_receipt_path)
+        atomic_write_json(receipt_path, receipt)
         blocked["source_receipt_path"] = str(receipt_path)
         write_run_record(layout, edition_date, blocked, preserve_success=False)
         print(terminal_json({"ok": False, "receipt_path": str(receipt_path), **receipt}))
@@ -926,6 +991,32 @@ def run_source_watch(args: argparse.Namespace) -> int:
         attention = write_attention(layout, edition_date, "source_watch_failed", str(exc), run_id=run_id)
         record.update({"last_status": "failed", "source_watch_status": "failed", "error": str(exc), "attention_path": str(attention)})
         write_run_record(layout, edition_date, record, preserve_success=False)
+        failure_receipt = {
+            "schema_version": SOURCE_RECEIPT_SCHEMA,
+            "action": "source_watch",
+            "task_started_at": started_at,
+            "task_completed_at": utc_now(),
+            "edition_date": edition_date,
+            "source_branch": args.branch,
+            "run_id": run_id,
+            "final_status": "failed",
+            "reason": str(exc),
+            "attention_path": str(attention),
+            "command_exit_code": command_exit if command_exit not in {0, 10} else 10,
+            "exit_code": command_exit if command_exit not in {0, 10} else 10,
+        }
+        receipt_path = _source_receipt_path(layout, edition_date, "source-watch")
+        atomic_write_json(receipt_path, failure_receipt)
+        operational_receipt_path = _write_food_line_operational_health_receipt(
+            layout,
+            edition_date,
+            action="source_watch",
+            task_receipt=failure_receipt,
+            task_receipt_path=receipt_path,
+            task_status="failed",
+        )
+        failure_receipt["operational_health_receipt_path"] = str(operational_receipt_path)
+        atomic_write_json(receipt_path, failure_receipt)
         print(terminal_json({"ok": False, "edition_date": edition_date, "run_id": run_id, "status": "failed", "reason": str(exc), "attention_path": str(attention), "exit_code": command_exit if command_exit not in {0, 10} else 10}))
         print(str(exc), file=sys.stderr)
         return command_exit if command_exit not in {0, 10} else 10
@@ -988,6 +1079,15 @@ def run_resume(args: argparse.Namespace) -> int:
                 reason="source watch has not initialized the daily run record",
             )
             receipt_path = _write_source_noop(layout, edition_date, receipt, receipt_action="status-resume")
+            operational_receipt_path = _write_food_line_operational_health_receipt(
+                layout,
+                edition_date,
+                action="status_resume",
+                task_receipt=receipt,
+                task_receipt_path=receipt_path,
+            )
+            receipt["operational_health_receipt_path"] = str(operational_receipt_path)
+            atomic_write_json(receipt_path, receipt)
             print(terminal_json({"ok": True, "receipt_path": str(receipt_path), **receipt}))
             return 0
         status = _run_record_status(record)
@@ -1004,6 +1104,15 @@ def run_resume(args: argparse.Namespace) -> int:
                 record=record,
             )
             receipt_path = _write_source_noop(layout, edition_date, receipt, receipt_action="status-resume")
+            operational_receipt_path = _write_food_line_operational_health_receipt(
+                layout,
+                edition_date,
+                action="status_resume",
+                task_receipt=receipt,
+                task_receipt_path=receipt_path,
+            )
+            receipt["operational_health_receipt_path"] = str(operational_receipt_path)
+            atomic_write_json(receipt_path, receipt)
             record.update({"resume_status": receipt["resume_status"], "resume_receipt_path": str(receipt_path)})
             write_run_record(layout, edition_date, record, preserve_success=False)
             print(terminal_json({"ok": True, "receipt_path": str(receipt_path), **receipt}))
@@ -1082,6 +1191,16 @@ def run_resume(args: argparse.Namespace) -> int:
         }
         receipt_path = _source_receipt_path(layout, edition_date, "status-resume")
         atomic_write_json(receipt_path, receipt)
+        operational_receipt_path = _write_food_line_operational_health_receipt(
+            layout,
+            edition_date,
+            action="status_resume",
+            task_receipt=receipt,
+            task_receipt_path=receipt_path,
+            task_status=resume_status,
+        )
+        receipt["operational_health_receipt_path"] = str(operational_receipt_path)
+        atomic_write_json(receipt_path, receipt)
         record.update({"last_status": state.get("status"), "source_watch_status": state.get("status"), "resume_status": resume_status, "resume_receipt_path": str(receipt_path)})
         write_run_record(layout, edition_date, record, preserve_success=False)
         print(terminal_json({"ok": collection_qualifies(state), "receipt_path": str(receipt_path), **receipt}))
@@ -1093,7 +1212,34 @@ def run_resume(args: argparse.Namespace) -> int:
         )
         return command_exit or 2
     except SchedulerError as exc:
-        write_attention(layout, edition_date, "status_resume_failed", str(exc))
+        attention = write_attention(layout, edition_date, "status_resume_failed", str(exc))
+        failure_receipt = {
+            "schema_version": SOURCE_RECEIPT_SCHEMA,
+            "action": "status_resume",
+            "task_started_at": started_at,
+            "task_completed_at": utc_now(),
+            "edition_date": edition_date,
+            "source_branch": args.branch,
+            "run_id": None,
+            "final_status": "status_resume_failed",
+            "resume_status": "status_resume_failed",
+            "reason": str(exc),
+            "attention_path": str(attention),
+            "command_exit_code": 10,
+            "exit_code": 10,
+        }
+        receipt_path = _source_receipt_path(layout, edition_date, "status-resume")
+        atomic_write_json(receipt_path, failure_receipt)
+        operational_receipt_path = _write_food_line_operational_health_receipt(
+            layout,
+            edition_date,
+            action="status_resume",
+            task_receipt=failure_receipt,
+            task_receipt_path=receipt_path,
+            task_status="status_resume_failed",
+        )
+        failure_receipt["operational_health_receipt_path"] = str(operational_receipt_path)
+        atomic_write_json(receipt_path, failure_receipt)
         print(terminal_json({"ok": False, "edition_date": edition_date, "status": "status_resume_failed", "reason": str(exc), "exit_code": 10}))
         print(str(exc), file=sys.stderr)
         return 10
@@ -1118,6 +1264,17 @@ def run_intake(args: argparse.Namespace) -> int:
                 status=UPSTREAM_NOT_INITIALIZED_STATUS,
                 reason="source watch has not initialized the daily run record",
             )
+            receipt = read_json(receipt_path)
+            operational_receipt_path = _write_food_line_operational_health_receipt(
+                layout,
+                edition_date,
+                action="current_intake",
+                task_receipt=receipt,
+                task_receipt_path=receipt_path,
+                task_status=UPSTREAM_NOT_INITIALIZED_STATUS,
+            )
+            receipt["operational_health_receipt_path"] = str(operational_receipt_path)
+            atomic_write_json(receipt_path, receipt)
             print(terminal_json({"ok": True, "receipt_path": str(receipt_path), "status": UPSTREAM_NOT_INITIALIZED_STATUS, "exit_code": 0}))
             return 0
         status = _run_record_status(record)
@@ -1131,6 +1288,17 @@ def run_intake(args: argparse.Namespace) -> int:
                 status=skip_status,
                 reason=f"source watch state is not intake-ready: {status}",
             )
+            receipt = read_json(receipt_path)
+            operational_receipt_path = _write_food_line_operational_health_receipt(
+                layout,
+                edition_date,
+                action="current_intake",
+                task_receipt=receipt,
+                task_receipt_path=receipt_path,
+                task_status=skip_status,
+            )
+            receipt["operational_health_receipt_path"] = str(operational_receipt_path)
+            atomic_write_json(receipt_path, receipt)
             record.update({"intake_status": skip_status, "intake_receipt_path": str(receipt_path)})
             write_run_record(layout, edition_date, record, preserve_success=False)
             print(terminal_json({"ok": True, "receipt_path": str(receipt_path), "status": skip_status, "exit_code": 0}))
@@ -1190,12 +1358,58 @@ def run_intake(args: argparse.Namespace) -> int:
         }
         receipt_path = _intake_receipt_path(layout, edition_date)
         atomic_write_json(receipt_path, receipt)
+        operational_receipt_path = _write_food_line_operational_health_receipt(
+            layout,
+            edition_date,
+            action="current_intake",
+            task_receipt=receipt,
+            task_receipt_path=receipt_path,
+            task_status=str(report.get("status") or ""),
+        )
+        receipt["operational_health_receipt_path"] = str(operational_receipt_path)
+        atomic_write_json(receipt_path, receipt)
         record.update({"intake_receipt_path": str(receipt_path), "intake_completed_at": utc_now()})
         atomic_write_json(layout.run_record(edition_date), record)
         print(terminal_json({"ok": True, "receipt_path": str(receipt_path), **receipt}))
         return 0
     except SchedulerError as exc:
-        write_attention(layout, edition_date, "current_intake_failed", str(exc))
+        attention = write_attention(layout, edition_date, "current_intake_failed", str(exc))
+        failure_receipt = {
+            "schema_version": INTAKE_RECEIPT_SCHEMA,
+            "task_started_at": started_at,
+            "task_completed_at": utc_now(),
+            "edition_date": edition_date,
+            "source_commit": None,
+            "qualifying_discovery_run_id": None,
+            "source_status": None,
+            "source_export_status": None,
+            "inbox_files_discovered": 0,
+            "accepted_files": 0,
+            "imported_findings": 0,
+            "exclusions": [str(exc)],
+            "queue_item_count": 0,
+            "proposal_status": "current_intake_failed",
+            "proposal_path": None,
+            "operator_review_required": False,
+            "publication_side_effects": {},
+            "command_exit_code": command_exit if command_exit not in {0, 10} else 10,
+            "exit_code": command_exit if command_exit not in {0, 10} else 10,
+            "status": "current_intake_failed",
+            "reason": str(exc),
+            "attention_path": str(attention),
+        }
+        receipt_path = _intake_receipt_path(layout, edition_date)
+        atomic_write_json(receipt_path, failure_receipt)
+        operational_receipt_path = _write_food_line_operational_health_receipt(
+            layout,
+            edition_date,
+            action="current_intake",
+            task_receipt=failure_receipt,
+            task_receipt_path=receipt_path,
+            task_status="current_intake_failed",
+        )
+        failure_receipt["operational_health_receipt_path"] = str(operational_receipt_path)
+        atomic_write_json(receipt_path, failure_receipt)
         print(str(exc), file=sys.stderr)
         return command_exit if command_exit not in {0, 10} else 10
 

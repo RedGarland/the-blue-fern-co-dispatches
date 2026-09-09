@@ -45,6 +45,74 @@ function Write-AtomicJson {
     Move-Item -LiteralPath $temporary -Destination $Path -Force
 }
 
+function Get-OperationalStatus {
+    param([string]$TaskStatus)
+    if ($TaskStatus -eq "published") { return "SUCCESS" }
+    if ($TaskStatus -eq "skipped_not_release_ready" -or $TaskStatus -eq "no_qualifying_edition") { return "SAFE_NO_OP" }
+    if ($TaskStatus -eq "failure") { return "FAILED" }
+    return "UNKNOWN"
+}
+
+function Get-SourceHead {
+    param([string]$Root)
+    try {
+        $head = & git -C $Root rev-parse HEAD 2>$null
+        if ($LASTEXITCODE -eq 0) { return [string]$head }
+    }
+    catch {}
+    return $null
+}
+
+function Write-OperationalHealthReceipt {
+    param(
+        [Parameter(Mandatory = $true)][string]$Root,
+        [Parameter(Mandatory = $true)][string]$Date,
+        [Parameter(Mandatory = $true)][hashtable]$TaskReceipt,
+        [Parameter(Mandatory = $true)][string]$TaskReceiptPath
+    )
+
+    $status = [string]$TaskReceipt.status
+    $operational = [ordered]@{
+        schema_version = "bluefern_operational_health_receipt_v1"
+        dispatch = "food-line"
+        task_key = "food_line_daily_publish"
+        task_name = "Blue Fern Food Line Daily Publish"
+        scheduled_for = $Date
+        started_at = $TaskReceipt.started_at
+        completed_at = $TaskReceipt.completed_at
+        observed_at = $TaskReceipt.completed_at
+        receipt_created_at = Get-UtcTimestamp
+        exit_code = if ($TaskReceipt.ok) { 0 } elseif ($null -ne $TaskReceipt.child_exit_code) { [int]$TaskReceipt.child_exit_code } else { 1 }
+        status = Get-OperationalStatus -TaskStatus $status
+        classification = $status
+        run_id = $TaskReceipt.run_id
+        failure_stage = if ($status -eq "failure") { "daily_publish" } else { $null }
+        runner_id = $TaskReceipt.host
+        runner_path = $Root
+        branch = $SourceBranch
+        source_head = Get-SourceHead -Root $Root
+        next_expected_run = $null
+        public_side_effects = @{}
+        collection_health = $null
+        upstream_dependency_status = $null
+        publication_attempted = [bool]$TaskReceipt.publication_attempted
+        publication_status = $status
+        artifact_refs = @{ task_receipt = $TaskReceiptPath }
+        operator_attention_ref = $null
+        details = @{
+            legacy_schema_version = $TaskReceipt.schema_version
+            check_only = [bool]$TaskReceipt.check_only
+            release_ready = [bool]$TaskReceipt.release_ready
+        }
+    }
+    $base = Join-Path $Root "status\operational-health\food-line\$Date"
+    $runPath = Join-Path (Join-Path $base "runs") ("food_line_daily_publish-{0}.json" -f (($TaskReceipt.run_id -replace '[^A-Za-z0-9_.-]', '-')))
+    $latestPath = Join-Path $base "latest.json"
+    Write-AtomicJson -Path $runPath -Payload $operational
+    Write-AtomicJson -Path $latestPath -Payload $operational
+    return $runPath
+}
+
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 if (-not $PublicationRoot) {
     $PublicationRoot = (Resolve-Path (Join-Path $scriptRoot "..\..")).Path
@@ -203,6 +271,9 @@ finally {
     $receipt.error_classification = $errorClassification
     $receipt.error_message = $errorMessage
     $receipt.publication_attempted = [bool]$publicationAttempted
+    Write-AtomicJson -Path $receiptPath -Payload $receipt
+    $operationalReceiptPath = Write-OperationalHealthReceipt -Root $PublicationRoot -Date $today -TaskReceipt $receipt -TaskReceiptPath $receiptPath
+    $receipt.operational_health_receipt_path = $operationalReceiptPath
     Write-AtomicJson -Path $receiptPath -Payload $receipt
 }
 

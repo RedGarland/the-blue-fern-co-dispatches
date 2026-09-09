@@ -128,7 +128,7 @@ def test_windows_fetch_fallback_keeps_tls_verification(monkeypatch):
 
 
 def test_live_diagnostic_writes_only_explicit_output_dir(tmp_path, monkeypatch):
-    def fake_collect(sources, *, max_per_source=3):
+    def fake_collect(sources, *, max_per_source=3, window_hours=72):
         return [], [], [], []
     monkeypatch.setattr("bluefern_dispatches.ice_dispatch.collect_live_candidates", fake_collect)
     persistent = Path("output/test-runs")

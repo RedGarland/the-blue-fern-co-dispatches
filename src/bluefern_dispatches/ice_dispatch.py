@@ -12,7 +12,8 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any, Iterable
@@ -161,6 +162,14 @@ class EventRelationship(str, Enum):
     CORRECTION = "correction"
     FOLLOW_UP_WITH_NEW_FACTS = "follow_up_with_new_material_facts"
 
+class MapReadiness(str, Enum):
+    MAPPABLE_EXACT = "MAPPABLE_EXACT"
+    MAPPABLE_CITY = "MAPPABLE_CITY"
+    MAPPABLE_COUNTY = "MAPPABLE_COUNTY"
+    MAPPABLE_STATE = "MAPPABLE_STATE"
+    MULTI_LOCATION = "MULTI_LOCATION"
+    NOT_YET_MAPPABLE = "NOT_YET_MAPPABLE"
+
 @dataclass(frozen=True)
 class IceSourceObservation:
     source_url: str
@@ -169,6 +178,7 @@ class IceSourceObservation:
     source_type: str
     tier: int
     published_at: str | None = None
+    modified_at: str | None = None
     retrieved_at: str | None = None
     exact_supporting_passage: str | None = None
     archive_url: str | None = None
@@ -215,6 +225,8 @@ class IceEditorialState:
     source_quality: str | None = None
     geographic_confidence: str | None = None
     event_confidence: str | None = None
+    currentness_status: str | None = None
+    currentness_confidence: str | None = None
     public_eligibility: bool = False
     exclusion_reason: str | None = None
     curation_notes: str | None = None
@@ -222,6 +234,7 @@ class IceEditorialState:
 @dataclass(frozen=True)
 class IceLineage:
     fingerprint: str
+    event_key: str | None = None
     canonical_event_id: str | None = None
     related_event_ids: tuple[str, ...] = ()
     supersedes: tuple[str, ...] = ()
@@ -322,20 +335,146 @@ def _hash_payload(payload: Any, length: int = 16) -> str:
     return hashlib.sha256(json.dumps(payload, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()[:length]
 
 
-def stable_event_fingerprint(candidate: dict[str, Any]) -> str:
+STOP_SUBJECT_TOKENS = {
+    "the", "and", "for", "with", "from", "after", "before", "into", "about", "over", "under", "that", "this",
+    "says", "say", "said", "public", "should", "not", "rush", "judgment", "lawyer", "allegedly", "lied",
+    "released", "bond", "charged", "charge", "charges", "report", "reports", "reported", "new", "latest",
+    "video", "watch", "press", "release", "official", "announces", "announced", "one", "year",
+}
+EVENT_SUBJECT_SYNONYMS = {
+    "shoot": "shooting",
+    "shoots": "shooting",
+    "shot": "shooting",
+    "fatal": "death",
+    "fatalities": "death",
+    "deaths": "death",
+    "died": "death",
+    "arrests": "arrest",
+    "arrested": "arrest",
+    "detained": "detention",
+    "detainees": "detainee",
+    "facilities": "facility",
+    "lawsuits": "lawsuit",
+    "rulings": "ruling",
+    "orders": "order",
+}
+
+
+def _normalized_date(value: Any) -> str | None:
+    if not value:
+        return None
+    text = _clean(value)
+    if not text:
+        return None
+    try:
+        if text.endswith("Z"):
+            dt = datetime.fromisoformat(text.replace("Z", "+00:00"))
+            return dt.astimezone(timezone.utc).date().isoformat()
+        if "T" in text:
+            dt = datetime.fromisoformat(text)
+            if dt.tzinfo:
+                dt = dt.astimezone(timezone.utc)
+            return dt.date().isoformat()
+        return datetime.fromisoformat(text[:10]).date().isoformat()
+    except ValueError:
+        return text[:10] if re.match(r"\d{4}-\d{2}-\d{2}", text) else None
+
+
+def _candidate_dates(candidate: dict[str, Any]) -> dict[str, str | None]:
+    sources = candidate.get("sources") or []
+    source_dates = [
+        _normalized_date(src.get("published_at") or src.get("modified_at"))
+        for src in sources
+        if src.get("published_at") or src.get("modified_at")
+    ]
+    observed_dates = [
+        _normalized_date(candidate.get("event_date")),
+        _normalized_date(candidate.get("effective_at")),
+        *_dedupe_preserve_order(source_dates),
+    ]
+    return {
+        "event": next((d for d in observed_dates if d), None),
+        "published": next((d for d in source_dates if d), None),
+    }
+
+
+def _dedupe_preserve_order(values: Iterable[Any]) -> list[Any]:
+    seen: set[Any] = set()
+    rows: list[Any] = []
+    for value in values:
+        if value in seen:
+            continue
+        seen.add(value)
+        rows.append(value)
+    return rows
+
+
+def _subject_tokens(text: str) -> list[str]:
+    tokens: list[str] = []
+    for raw in re.findall(r"[a-zA-Z0-9]+", text.lower()):
+        token = EVENT_SUBJECT_SYNONYMS.get(raw, raw)
+        if len(token) < 3 or token in STOP_SUBJECT_TOKENS:
+            continue
+        tokens.append(token)
+    return _dedupe_preserve_order(tokens)
+
+
+def _material_subject(candidate: dict[str, Any]) -> str:
+    text = " ".join(
+        _clean(part)
+        for part in (
+            candidate.get("event_type"),
+            candidate.get("subject"),
+            candidate.get("event_summary"),
+            candidate.get("description"),
+            *((s.get("exact_supporting_passage") or "") for s in candidate.get("sources") or []),
+        )
+    )
+    lower = text.lower()
+    if "ice officer" in lower and "shooting" in lower:
+        return "ice-officer-shooting"
+    if "enforcement operation" in lower or ("operation" in lower and ("arrest" in lower or "worksite" in lower)):
+        return "ice-enforcement-operation"
+    if "electronic health record" in lower:
+        return "ice-electronic-health-record-system"
+    if "fentanyl" in lower and "homeland security investigations" in lower:
+        return "ice-hsi-fentanyl-countering"
+    if "custody" in lower and ("death" in lower or "deaths" in lower):
+        return "ice-custody-deaths"
+    tokens = _subject_tokens(text)
+    priority = [
+        token
+        for token in tokens
+        if token in {
+            "ice", "immigration", "customs", "enforcement", "officer", "shooting", "death", "detention",
+            "facility", "fentanyl", "health", "record", "lawsuit", "ruling", "arrest", "raid", "removal",
+            "deportation", "medical", "custody", "contract", "287", "operation",
+        }
+    ]
+    material = priority[:8] or tokens[:8]
+    return "-".join(material) or "unknown-subject"
+
+
+def stable_event_key(candidate: dict[str, Any]) -> str:
     location = candidate.get("location") or {}
     agencies = candidate.get("agencies") or {}
+    dates = _candidate_dates(candidate)
     payload = {
         "dispatch": DISPATCH_ID,
-        "event_type": _slug(candidate.get("event_type")),
-        "event_date": candidate.get("event_date"),
+        "category": _slug(candidate.get("primary_category")),
+        "subject": _material_subject(candidate),
+        "event_or_publication_date": dates["event"] or dates["published"],
         "state_or_territory": _slug(location.get("state_or_territory")),
         "county_or_equivalent": _slug(location.get("county_or_equivalent")),
         "city": _slug(location.get("city")),
         "facility_name": _slug(location.get("facility_name")),
-        "agencies": sorted([_slug(x) for x in agencies.get("state_local_agencies", []) + agencies.get("other_federal_agencies", [])]),
+        "agencies": sorted([_slug(x) for x in agencies.get("state_local_agencies", []) + agencies.get("other_federal_agencies", []) + agencies.get("contractors", []) + agencies.get("facility_operators", [])]),
     }
-    return f"ice-{_hash_payload(payload, 20)}"
+    return json.dumps(payload, sort_keys=True, ensure_ascii=False)
+
+
+def stable_event_fingerprint(candidate: dict[str, Any]) -> str:
+    return f"ice-{_hash_payload(stable_event_key(candidate), 20)}"
 
 
 def _parse_category(value: str) -> IceCategory:
@@ -370,6 +509,7 @@ def normalize_ice_candidate(candidate: dict[str, Any], *, observed_at: str | Non
             source_type=_clean(src.get("source_type") or "unknown"),
             tier=int(src.get("tier") or 3),
             published_at=src.get("published_at"),
+            modified_at=src.get("modified_at"),
             retrieved_at=src.get("retrieved_at") or observed,
             exact_supporting_passage=src.get("exact_supporting_passage"),
             archive_url=src.get("archive_url"),
@@ -438,6 +578,8 @@ def normalize_ice_candidate(candidate: dict[str, Any], *, observed_at: str | Non
         source_quality=source_quality,
         geographic_confidence=candidate.get("geographic_confidence"),
         event_confidence=candidate.get("event_confidence"),
+        currentness_status=candidate.get("currentness_status"),
+        currentness_confidence=candidate.get("currentness_confidence"),
         public_eligibility=public_eligible,
         exclusion_reason=exclusion,
         curation_notes=candidate.get("curation_notes"),
@@ -446,6 +588,7 @@ def normalize_ice_candidate(candidate: dict[str, Any], *, observed_at: str | Non
     event_id = candidate.get("event_id") or fingerprint
     lineage = IceLineage(
         fingerprint=fingerprint,
+        event_key=stable_event_key(candidate),
         canonical_event_id=candidate.get("canonical_event_id") or event_id,
         related_event_ids=tuple(candidate.get("related_event_ids") or ()),
         supersedes=tuple(candidate.get("supersedes") or ()),
@@ -529,12 +672,14 @@ def edition_publication_decision(events: Iterable[IceEvent], collection_health: 
 def compare_event_observation(existing: IceEvent | None, candidate: IceEvent) -> tuple[EventRelationship, list[str]]:
     if existing is None:
         return EventRelationship.NEW_EVENT, ["no matching event fingerprint"]
-    if existing.lineage.fingerprint != candidate.lineage.fingerprint:
+    if existing.lineage.event_key != candidate.lineage.event_key and existing.lineage.fingerprint != candidate.lineage.fingerprint:
         return EventRelationship.NEW_EVENT, ["different event fingerprint"]
     reasons: list[str] = []
     if candidate.status != existing.status:
         reasons.append("status changed")
-    if candidate.event_date and candidate.event_date != existing.event_date:
+    if candidate.event_date and not existing.event_date:
+        reasons.append("event date established")
+    elif candidate.event_date and candidate.event_date != existing.event_date:
         reasons.append("event date changed")
     for field_name in ("arrests_count", "detained_count", "removed_count", "fatalities_count", "injuries_count", "hospitalized_count"):
         if getattr(candidate.impact, field_name) is not None and getattr(candidate.impact, field_name) != getattr(existing.impact, field_name):
@@ -545,8 +690,81 @@ def compare_event_observation(existing: IceEvent | None, candidate: IceEvent) ->
     if reasons:
         return EventRelationship.UPDATE_TO_EXISTING_EVENT, reasons
     if new_urls:
-        return EventRelationship.FOLLOW_UP_WITH_NEW_FACTS, ["new source attached to same event"]
+        existing_publishers = {s.publisher for s in existing.sources}
+        candidate_publishers = {s.publisher for s in candidate.sources}
+        if existing_publishers.isdisjoint(candidate_publishers):
+            return EventRelationship.FOLLOW_UP_WITH_NEW_FACTS, ["new publisher source attached to same event"]
+        return EventRelationship.DUPLICATE_COVERAGE, ["new source attached to same canonical event"]
     return EventRelationship.DUPLICATE_COVERAGE, ["same event fingerprint and source set"]
+
+
+def event_with_accumulated_sources(existing: IceEvent, candidate: IceEvent) -> IceEvent:
+    by_url: dict[str, IceSourceObservation] = {source.canonical_source_url: source for source in existing.sources}
+    for source in candidate.sources:
+        by_url.setdefault(source.canonical_source_url, source)
+    return IceEvent(
+        event_id=existing.event_id,
+        dispatch=existing.dispatch,
+        event_date=candidate.event_date or existing.event_date,
+        event_time=candidate.event_time or existing.event_time,
+        first_observed_at=existing.first_observed_at,
+        last_updated_at=max(existing.last_updated_at, candidate.last_updated_at),
+        location=candidate.location if candidate.location.location_precision != LocationPrecision.UNKNOWN else existing.location,
+        primary_category=existing.primary_category,
+        secondary_categories=tuple(_dedupe_preserve_order((*existing.secondary_categories, *candidate.secondary_categories))),
+        event_type=existing.event_type,
+        severity=max((existing.severity, candidate.severity), key=lambda item: [Severity.LOW, Severity.MEDIUM, Severity.HIGH, Severity.CRITICAL].index(item)),
+        status=candidate.status if candidate.status != existing.status else existing.status,
+        impact=IceImpact(
+            arrests_count=candidate.impact.arrests_count if candidate.impact.arrests_count is not None else existing.impact.arrests_count,
+            detained_count=candidate.impact.detained_count if candidate.impact.detained_count is not None else existing.impact.detained_count,
+            removed_count=candidate.impact.removed_count if candidate.impact.removed_count is not None else existing.impact.removed_count,
+            fatalities_count=candidate.impact.fatalities_count if candidate.impact.fatalities_count is not None else existing.impact.fatalities_count,
+            injuries_count=candidate.impact.injuries_count if candidate.impact.injuries_count is not None else existing.impact.injuries_count,
+            hospitalized_count=candidate.impact.hospitalized_count if candidate.impact.hospitalized_count is not None else existing.impact.hospitalized_count,
+            children_affected_count=candidate.impact.children_affected_count if candidate.impact.children_affected_count is not None else existing.impact.children_affected_count,
+            other_quantitative_impact={**existing.impact.other_quantitative_impact, **candidate.impact.other_quantitative_impact},
+        ),
+        agencies=existing.agencies,
+        sources=tuple(by_url.values()),
+        editorial=existing.editorial,
+        lineage=existing.lineage,
+        schema_version=existing.schema_version,
+    )
+
+
+def canonicalize_event_observations(events: Iterable[IceEvent]) -> tuple[list[IceEvent], list[dict[str, Any]]]:
+    canonical: dict[str, IceEvent] = {}
+    relationships: list[dict[str, Any]] = []
+    for event in events:
+        existing = canonical.get(event.lineage.fingerprint)
+        relationship, reasons = compare_event_observation(existing, event)
+        relationships.append({
+            "event_id": event.event_id,
+            "canonical_event_id": existing.event_id if existing else event.event_id,
+            "relationship": relationship.value,
+            "reasons": reasons,
+            "source_urls": [source.canonical_source_url for source in event.sources],
+        })
+        if existing is None:
+            canonical[event.lineage.fingerprint] = event
+        elif relationship in {EventRelationship.DUPLICATE_COVERAGE, EventRelationship.FOLLOW_UP_WITH_NEW_FACTS, EventRelationship.UPDATE_TO_EXISTING_EVENT, EventRelationship.CORRECTION}:
+            canonical[event.lineage.fingerprint] = event_with_accumulated_sources(existing, event)
+    return list(canonical.values()), relationships
+
+
+def map_readiness_for_location(location: IceLocation) -> MapReadiness:
+    if location.location_precision in {LocationPrecision.EXACT_FACILITY, LocationPrecision.STREET_OR_SITE} and location.latitude is not None and location.longitude is not None:
+        return MapReadiness.MAPPABLE_EXACT
+    if location.location_precision == LocationPrecision.MULTI_LOCATION:
+        return MapReadiness.MULTI_LOCATION
+    if location.city:
+        return MapReadiness.MAPPABLE_CITY
+    if location.county_or_equivalent:
+        return MapReadiness.MAPPABLE_COUNTY
+    if location.state_or_territory:
+        return MapReadiness.MAPPABLE_STATE
+    return MapReadiness.NOT_YET_MAPPABLE
 
 
 def map_ready_event(event: IceEvent) -> dict[str, Any]:
@@ -565,6 +783,7 @@ def map_ready_event(event: IceEvent) -> dict[str, Any]:
         "location_precision": location.location_precision.value,
         "geography_source": location.geography_source,
         "geography_provenance": location.geography_provenance,
+        "map_readiness": map_readiness_for_location(location).value,
     }
 
 
@@ -683,6 +902,111 @@ def _decode_bytes(data: bytes) -> str:
         except UnicodeDecodeError:
             continue
     return data.decode("utf-8", errors="replace")
+
+
+def parse_datetime_evidence(value: Any) -> str | None:
+    text = _clean(value)
+    if not text:
+        return None
+    text = text.replace("\u00a0", " ")
+    try:
+        dt = parsedate_to_datetime(text)
+    except (TypeError, ValueError):
+        dt = None
+    if dt is None:
+        normalized = text.replace("Z", "+00:00")
+        try:
+            dt = datetime.fromisoformat(normalized)
+        except ValueError:
+            date_match = re.search(r"\b(20\d{2})[-/](\d{1,2})[-/](\d{1,2})\b", text)
+            if date_match:
+                y, m, d = (int(part) for part in date_match.groups())
+                dt = datetime(y, m, d, tzinfo=timezone.utc)
+            else:
+                month_match = re.search(
+                    r"\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2}),\s+(20\d{2})\b",
+                    text,
+                    re.IGNORECASE,
+                )
+                if not month_match:
+                    return None
+                dt = datetime.strptime(" ".join(month_match.groups()), "%B %d %Y").replace(tzinfo=timezone.utc)
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def extract_publication_dates(html_text: str) -> dict[str, str | None]:
+    published: list[str] = []
+    modified: list[str] = []
+    for script in re.findall(r'(?is)<script[^>]+type=["\']application/ld\+json["\'][^>]*>(.*?)</script>', html_text):
+        try:
+            payload = json.loads(html.unescape(script).strip())
+        except json.JSONDecodeError:
+            continue
+        nodes = payload if isinstance(payload, list) else [payload]
+        for node in nodes:
+            if isinstance(node, dict) and isinstance(node.get("@graph"), list):
+                nodes.extend(node["@graph"])
+            if not isinstance(node, dict):
+                continue
+            for key, bucket in (("datePublished", published), ("dateCreated", published), ("dateModified", modified)):
+                parsed = parse_datetime_evidence(node.get(key))
+                if parsed:
+                    bucket.append(parsed)
+    for match in re.finditer(r'(?is)<meta\s+[^>]*(?:property|name)=["\']([^"\']+)["\'][^>]*content=["\']([^"\']+)["\']', html_text):
+        name, content = match.groups()
+        lname = name.lower()
+        parsed = parse_datetime_evidence(html.unescape(content))
+        if not parsed:
+            continue
+        if "modified" in lname or "updated" in lname:
+            modified.append(parsed)
+        elif "published" in lname or lname in {"date", "dc.date", "article:published_time"}:
+            published.append(parsed)
+    for match in re.finditer(r'(?is)<time\s+[^>]*datetime=["\']([^"\']+)["\']', html_text):
+        parsed = parse_datetime_evidence(html.unescape(match.group(1)))
+        if parsed:
+            published.append(parsed)
+    if not published:
+        visible = _strip_html(html_text[:20_000])
+        for pattern in (
+            r"\b(?:Published|Posted|Issued|Release Date)\s*:?\s*([A-Z][a-z]+ \d{1,2}, 20\d{2})",
+            r"\b(20\d{2}-\d{1,2}-\d{1,2})\b",
+        ):
+            match = re.search(pattern, visible)
+            if match:
+                parsed = parse_datetime_evidence(match.group(1))
+                if parsed:
+                    published.append(parsed)
+                    break
+    return {
+        "published_at": min(published) if published else None,
+        "modified_at": max(modified) if modified else None,
+    }
+
+
+def currentness_for_dates(*, published_at: str | None, modified_at: str | None, event_date: str | None, retrieved_at: str, window_hours: int | None = None) -> dict[str, str]:
+    if not window_hours:
+        return {"status": "not_window_limited", "confidence": "not_assessed"}
+    retrieved = datetime.fromisoformat(retrieved_at.replace("Z", "+00:00"))
+    cutoff = retrieved - timedelta(hours=window_hours)
+    for value, status in ((modified_at, "current_update_to_older_event"), (published_at, "current_publication")):
+        if not value:
+            continue
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        if parsed >= cutoff:
+            return {"status": status, "confidence": "date_supported"}
+    if published_at or modified_at:
+        return {"status": "stale_resurfaced_article", "confidence": "date_supported"}
+    if event_date:
+        parsed_date = _normalized_date(event_date)
+        if parsed_date:
+            event_dt = datetime.fromisoformat(parsed_date).replace(tzinfo=timezone.utc)
+            if event_dt >= cutoff:
+                return {"status": "current_event_date", "confidence": "event_date_supported"}
+            return {"status": "stale_event_date", "confidence": "event_date_supported"}
+    return {"status": "unresolved_date", "confidence": "undated_current_surface"}
 
 
 def fetch_url_secure(url: str, *, timeout: float = 15.0) -> FetchResult:
@@ -820,12 +1144,46 @@ def _infer_category(text: str) -> str:
 
 def _infer_location(text: str) -> dict[str, Any]:
     lower = text.lower()
+    city_state = re.search(r"\b(?:in|near|at)\s+([A-Z][A-Za-z .'-]{2,60}),\s+([A-Z][A-Za-z .'-]{2,40})\b", text)
+    if city_state:
+        city, state_name = (_clean(part) for part in city_state.groups())
+        state_code = STATE_NAMES.get(state_name.lower())
+        if state_code:
+            return {
+                "state_or_territory": state_code,
+                "city": city,
+                "location_precision": LocationPrecision.CITY.value,
+                "geography_source": "source_text",
+                "geography_provenance": city_state.group(0),
+            }
+    county_state = re.search(r"\b([A-Z][A-Za-z .'-]{2,60}\s+County),\s+([A-Z][A-Za-z .'-]{2,40})\b", text)
+    if county_state:
+        county, state_name = (_clean(part) for part in county_state.groups())
+        state_code = STATE_NAMES.get(state_name.lower())
+        if state_code:
+            return {
+                "state_or_territory": state_code,
+                "county_or_equivalent": county,
+                "location_precision": LocationPrecision.COUNTY.value,
+                "geography_source": "source_text",
+                "geography_provenance": county_state.group(0),
+            }
     for name, code in sorted(STATE_NAMES.items(), key=lambda item: len(item[0]), reverse=True):
         if re.search(rf"\b{re.escape(name)}\b", lower):
-            return {"state_or_territory": code, "location_precision": LocationPrecision.STATE_OR_TERRITORY.value}
+            return {
+                "state_or_territory": code,
+                "location_precision": LocationPrecision.STATE_OR_TERRITORY.value,
+                "geography_source": "source_text",
+                "geography_provenance": name,
+            }
     for code in US_AND_TERRITORIES:
         if re.search(rf"\b{re.escape(code)}\b", text):
-            return {"state_or_territory": code, "location_precision": LocationPrecision.STATE_OR_TERRITORY.value}
+            return {
+                "state_or_territory": code,
+                "location_precision": LocationPrecision.STATE_OR_TERRITORY.value,
+                "geography_source": "source_text",
+                "geography_provenance": code,
+            }
     return {"location_precision": LocationPrecision.UNKNOWN.value}
 
 
@@ -846,7 +1204,7 @@ def _infer_impact(text: str) -> dict[str, int | None]:
     return impact
 
 
-def _candidate_from_link(source: dict[str, Any], link: dict[str, str], article: FetchResult, retrieved_at: str) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+def _candidate_from_link(source: dict[str, Any], link: dict[str, str], article: FetchResult, retrieved_at: str, *, window_hours: int | None = None) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
     if not _is_fetchable_article_link(link):
         return None, {"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "non_article_or_static_link"}
     passage = _extract_passage(article.content, link["title"])
@@ -856,6 +1214,23 @@ def _candidate_from_link(source: dict[str, Any], link: dict[str, str], article: 
     if not _event_signal_hit(combined):
         return None, {"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "no_event_level_ice_signal"}
     category = _infer_category(combined)
+    dates = extract_publication_dates(article.content)
+    currentness = currentness_for_dates(
+        published_at=dates["published_at"],
+        modified_at=dates["modified_at"],
+        event_date=None,
+        retrieved_at=retrieved_at,
+        window_hours=window_hours,
+    )
+    if currentness["status"] in {"stale_resurfaced_article", "stale_event_date"}:
+        return None, {
+            "source_id": source["source_id"],
+            "source_url": link["url"],
+            "title": link["title"],
+            "reason": currentness["status"],
+            "published_at": dates["published_at"],
+            "modified_at": dates["modified_at"],
+        }
     candidate = {
         "event_date": None,
         "event_type": link["title"],
@@ -870,7 +1245,8 @@ def _candidate_from_link(source: dict[str, Any], link: dict[str, str], article: 
             "publisher": source["publisher"],
             "source_type": source["source_type"],
             "tier": int(source["tier"]),
-            "published_at": None,
+            "published_at": dates["published_at"],
+            "modified_at": dates["modified_at"],
             "retrieved_at": retrieved_at,
             "exact_supporting_passage": passage,
             "reference_metadata": {"source_id": source["source_id"], "index_url": source.get("url"), "fetch_stack": article.fetch_stack},
@@ -878,11 +1254,13 @@ def _candidate_from_link(source: dict[str, Any], link: dict[str, str], article: 
         "verification_status": "source_traceable",
         "geographic_confidence": "textual_inference" if (_infer_location(combined).get("state_or_territory")) else "unknown",
         "event_confidence": "needs_manual_review",
+        "currentness_status": currentness["status"],
+        "currentness_confidence": currentness["confidence"],
     }
     return candidate, None
 
 
-def collect_live_candidates(sources: list[dict[str, Any]], *, max_per_source: int = 3, timeout: float = 15.0) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[ProviderHealth], list[dict[str, Any]]]:
+def collect_live_candidates(sources: list[dict[str, Any]], *, max_per_source: int = 3, timeout: float = 15.0, window_hours: int | None = 72) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[ProviderHealth], list[dict[str, Any]]]:
     retrieved_at = utc_now()
     raw_candidates: list[dict[str, Any]] = []
     exclusions: list[dict[str, Any]] = []
@@ -911,7 +1289,7 @@ def collect_live_candidates(sources: list[dict[str, Any]], *, max_per_source: in
                 failed_records += 1
                 exclusions.append({"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "article_fetch_failed", "status": article.status, "error": article.error})
                 continue
-            candidate, exclusion = _candidate_from_link(source, link, article, retrieved_at)
+            candidate, exclusion = _candidate_from_link(source, link, article, retrieved_at, window_hours=window_hours)
             if candidate:
                 raw_candidates.append(candidate)
                 accepted += 1
@@ -920,7 +1298,7 @@ def collect_live_candidates(sources: list[dict[str, Any]], *, max_per_source: in
         provider_health.append(ProviderHealth(source_id=source["source_id"], publisher=source["publisher"], tier=int(source["tier"]), attempted=True, success=True, accepted_records=accepted, failed_records=failed_records, http_status=index.status))
     return raw_candidates, exclusions, provider_health, fetch_results
 
-def run_diagnostic(registry_path: Path, *, fixture_path: Path | None = None, output_dir: Path | None = None, validate_endpoints: bool = False, live: bool = False, max_per_source: int = 3) -> dict[str, Any]:
+def run_diagnostic(registry_path: Path, *, fixture_path: Path | None = None, output_dir: Path | None = None, validate_endpoints: bool = False, live: bool = False, max_per_source: int = 3, window_hours: int | None = 72) -> dict[str, Any]:
     started = utc_now()
     sources = load_source_registry(registry_path)
     endpoint_results = []
@@ -929,7 +1307,7 @@ def run_diagnostic(registry_path: Path, *, fixture_path: Path | None = None, out
     raw_candidates: list[dict[str, Any]] = []
     collection_exclusions: list[dict[str, Any]] = []
     if live:
-        raw_candidates, collection_exclusions, provider_health, fetch_results = collect_live_candidates(sources, max_per_source=max_per_source)
+        raw_candidates, collection_exclusions, provider_health, fetch_results = collect_live_candidates(sources, max_per_source=max_per_source, window_hours=window_hours)
     else:
         for source in sources:
             attempted = bool(source.get("enabled")) and source.get("collection_mechanism") != "documented_manual"
@@ -959,28 +1337,33 @@ def run_diagnostic(registry_path: Path, *, fixture_path: Path | None = None, out
             normalized.append(normalize_ice_candidate(candidate, observed_at=started))
         except Exception as exc:
             exclusions.append({"candidate": candidate, "reason": str(exc)})
+    canonical_events, event_relationships = canonicalize_event_observations(normalized)
     if fixture_path and not live:
         # attribute fixture candidates to the first enabled provider for a deterministic non-public diagnostic
         for idx, health in enumerate(provider_health):
             if health.attempted and normalized:
-                provider_health[idx] = ProviderHealth(**{**asdict(health), "accepted_records": len(normalized)})
+                provider_health[idx] = ProviderHealth(**{**asdict(health), "accepted_records": len(canonical_events)})
                 break
     completed = utc_now()
     report = build_collection_report(
         run_id=f"ice-diagnostic-{_hash_payload({'started': started, 'events': [e.event_id for e in normalized]}, 12)}",
         provider_health=provider_health,
-        events=normalized,
+        events=canonical_events,
         started_at=started,
         completed_at=completed,
     )
-    decision, reason = edition_publication_decision(normalized, report.health)
+    decision, reason = edition_publication_decision(canonical_events, report.health)
     result = {
         "run_manifest": _plain(report),
         "raw_candidates": raw_candidates,
         "normalized_events": [event_to_dict(e) for e in normalized],
+        "canonical_events": [event_to_dict(e) for e in canonical_events],
+        "event_relationships": event_relationships,
+        "map_readiness": [map_ready_event(e) for e in canonical_events],
         "exclusions": exclusions,
         "endpoint_validation": endpoint_results,
         "fetch_results": fetch_results,
+        "collection_window_hours": window_hours if live else None,
         "publication_decision": decision.value,
         "publication_decision_reason": reason,
         "public_side_effects": False,
@@ -990,6 +1373,9 @@ def run_diagnostic(registry_path: Path, *, fixture_path: Path | None = None, out
         (output_dir / "run_manifest.json").write_text(json.dumps(result["run_manifest"], indent=2, sort_keys=True), encoding="utf-8")
         (output_dir / "raw_candidates.json").write_text(json.dumps(raw_candidates, indent=2, sort_keys=True), encoding="utf-8")
         (output_dir / "normalized_events.json").write_text(json.dumps(result["normalized_events"], indent=2, sort_keys=True), encoding="utf-8")
+        (output_dir / "canonical_events.json").write_text(json.dumps(result["canonical_events"], indent=2, sort_keys=True), encoding="utf-8")
+        (output_dir / "event_relationships.json").write_text(json.dumps(event_relationships, indent=2, sort_keys=True), encoding="utf-8")
+        (output_dir / "map_readiness.json").write_text(json.dumps(result["map_readiness"], indent=2, sort_keys=True), encoding="utf-8")
         (output_dir / "exclusions.json").write_text(json.dumps(exclusions, indent=2, sort_keys=True), encoding="utf-8")
         (output_dir / "fetch_results.json").write_text(json.dumps(fetch_results, indent=2, sort_keys=True), encoding="utf-8")
     return result
@@ -1002,8 +1388,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--validate-endpoints", action="store_true")
     parser.add_argument("--live", action="store_true", help="Fetch and extract bounded live candidates from enabled registry sources.")
     parser.add_argument("--max-per-source", type=int, default=3)
+    parser.add_argument("--window-hours", type=int, default=72, help="Live collection freshness window based on published/modified/event dates when available.")
     args = parser.parse_args(argv)
-    result = run_diagnostic(args.registry, fixture_path=args.fixture, output_dir=args.output_dir, validate_endpoints=args.validate_endpoints, live=args.live, max_per_source=args.max_per_source)
+    result = run_diagnostic(args.registry, fixture_path=args.fixture, output_dir=args.output_dir, validate_endpoints=args.validate_endpoints, live=args.live, max_per_source=args.max_per_source, window_hours=args.window_hours)
     print(json.dumps({"run_id": result["run_manifest"]["run_id"], "health": result["run_manifest"]["health"], "publication_decision": result["publication_decision"], "normalized_events": len(result["normalized_events"]), "exclusions": len(result["exclusions"]), "public_side_effects": False}, sort_keys=True))
     return 0
 

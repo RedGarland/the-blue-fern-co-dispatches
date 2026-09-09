@@ -4003,3 +4003,275 @@ def test_ocha_aug_28_report_collects_by_publication_date_and_curates_healthcare_
     )
     assert late_stories == []
     assert late_rejected[0]["reason"] == "post-edition-date retrieval excluded from prior-date Gaza rerun"
+
+
+def test_relevance_rejects_guardian_first_thing_cross_segment_missouri_leakage():
+    source = gaza_sources.SourceDefinition(
+        source_id="guardian-world",
+        name="Guardian World",
+        url="https://www.theguardian.com/world/rss",
+        type="rss",
+        enabled=True,
+        publisher="The Guardian",
+        reliability_tier="reported-public-source",
+        category_hint="conflict",
+        region_scope="Gaza",
+    )
+    summary = (
+        "First Thing newsletter. Conflicting court rulings on Missouri map create uncertainty for state elections; "
+        "other US political headlines follow. Morning briefing headlines - economy update - courts update - campaign update. "
+        "Also in the news, Gaza aid agencies warn that humanitarian access remains constrained and Palestinian civilians face "
+        "continued displacement. Sign up for more news and newsletters. "
+        + "Background and analysis. " * 35
+    )
+    item = {
+        "title": "Conflicting court rulings on Missouri map create uncertainty",
+        "url": "https://www.theguardian.com/us-news/2026/sep/09/missouri-map-court-rulings-first-thing",
+        "summary_or_snippet": summary,
+    }
+
+    accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
+
+    assert accepted is False
+    assert reason == "cross_segment_scope_mismatch"
+
+
+def test_relevance_keeps_gaza_segment_from_multi_topic_parent_when_title_is_scoped():
+    source = gaza_sources.SourceDefinition(
+        source_id="guardian-world",
+        name="Guardian World",
+        url="https://www.theguardian.com/world/rss",
+        type="rss",
+        enabled=True,
+        publisher="The Guardian",
+        reliability_tier="reported-public-source",
+        category_hint="conflict",
+        region_scope="Gaza",
+    )
+    item = {
+        "title": "Gaza aid agencies warn access remains constrained",
+        "url": "https://www.theguardian.com/world/2026/sep/09/first-thing#gaza-aid",
+        "summary_or_snippet": (
+            "First Thing newsletter. US politics headline - courts headline - economy headline. "
+            "Gaza aid agencies warn that humanitarian access remains constrained and Palestinian civilians face displacement. "
+            + "Background. " * 40
+        ),
+    }
+
+    accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
+
+    assert accepted is True
+    assert reason in {"strong_title_or_url", "palestinian_development_material", "palestine_with_gaza_context"}
+
+
+
+def test_relevance_uses_segment_title_when_parent_newsletter_title_is_generic():
+    source = gaza_sources.SourceDefinition(
+        source_id="guardian-world",
+        name="Guardian World",
+        url="https://www.theguardian.com/world/rss",
+        type="rss",
+        enabled=True,
+        publisher="The Guardian",
+        reliability_tier="reported-public-source",
+        category_hint="conflict",
+        region_scope="Gaza",
+    )
+    item = {
+        "title": "First Thing: today\'s global headlines",
+        "segment_title": "Gaza hospital fuel shortages deepen",
+        "segment_text": "Hospitals in Gaza reported fuel shortages affecting patient care.",
+        "url": "https://www.theguardian.com/world/2026/sep/09/first-thing",
+        "summary_or_snippet": "First Thing newsletter with several unrelated global headlines.",
+    }
+
+    accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
+
+    assert accepted is True
+    assert reason == "strong_title_or_url"
+
+
+def test_relevance_rejects_giza_pyramids_as_non_gaza_geographic_entity():
+    source = gaza_sources.SourceDefinition(
+        source_id="middle-east-query",
+        name="Middle East Query",
+        url="https://news.google.com/rss/search?q=Gaza",
+        type="google_news_rss",
+        enabled=True,
+        publisher="Example Wire",
+        reliability_tier="reported-public-source",
+        category_hint="conflict",
+        region_scope="Gaza",
+    )
+    item = {
+        "title": "Turkish jets perform dramatic flyover above Egypt's pyramids",
+        "url": "https://example.com/world/2026/09/09/turkish-jets-giza-pyramids",
+        "summary_or_snippet": "The aircraft flew above the pyramids near Giza and Cairo during an Egyptian ceremony.",
+    }
+
+    accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
+
+    assert accepted is False
+    assert reason == "non_gaza_geographic_entity"
+
+
+@pytest.mark.parametrize(
+    "title,url,summary",
+    [
+        ("Gaza City hospital reports fuel pressure", "https://example.com/gaza-city-hospital", "Hospital officials in Gaza City reported fuel shortages."),
+        ("Aid groups warn of famine risk in the Gaza Strip", "https://example.com/gaza-strip-food", "Humanitarian agencies described food access pressure."),
+        ("Khan Younis strike injures displaced Palestinians", "https://example.com/khan-younis-strike", "The strike in southern Gaza wounded civilians."),
+    ],
+)
+def test_relevance_keeps_real_gaza_entities_after_giza_guard(title, url, summary):
+    source = gaza_sources.SourceDefinition(
+        source_id="test-rss",
+        name="Test RSS",
+        url="https://example.com/rss.xml",
+        type="rss",
+        enabled=True,
+        publisher="Example Publisher",
+        reliability_tier="reported-public-source",
+        category_hint="conflict",
+        region_scope="Gaza",
+    )
+
+    accepted, reason = gaza_sources.gaza_relevance_decision({"title": title, "url": url, "summary_or_snippet": summary}, source)
+
+    assert accepted is True, reason
+
+
+def test_collection_rejects_missouri_newsletter_leak_but_keeps_scoped_gaza_segment(work_root, monkeypatch):
+    write_config(work_root)
+    items = [
+        {
+            "title": "Conflicting court rulings on Missouri map create uncertainty",
+            "url": "https://www.theguardian.com/us-news/2026/sep/09/missouri-map-court-rulings-first-thing",
+            "published_at": "2026-09-09T12:00:00+00:00",
+            "summary_or_snippet": "First Thing newsletter. Missouri courts lead today. Also in the news; Gaza aid access remains constrained; Palestinian civilians remain displaced. " + "Background. " * 50,
+        },
+        {
+            "title": "Gaza aid access remains constrained, agencies say",
+            "url": "https://www.theguardian.com/world/2026/sep/09/first-thing#gaza-aid",
+            "published_at": "2026-09-09T12:01:00+00:00",
+            "summary_or_snippet": "Gaza aid access remains constrained and displaced Palestinians face worsening shelter pressure.",
+            "segment_id": "gaza-aid",
+            "segment_title": "Gaza aid access",
+            "parent_document_url": "https://www.theguardian.com/world/2026/sep/09/first-thing",
+        },
+    ]
+    monkeypatch.setattr(gaza_sources, "parse_rss_items", lambda *_args, **_kwargs: items)
+    monkeypatch.setattr(gaza_sources, "fetch_feed_payload", lambda *_args, **_kwargs: {
+        "ok": True,
+        "source_id": "test-rss",
+        "url": "https://example.com/rss.xml",
+        "status_code": 200,
+        "failure_reason": None,
+        "exception_type": None,
+        "tls_error": False,
+        "backend_used": "python",
+        "content_type": "application/rss+xml",
+        "content_encoding": "",
+        "content_bytes": b"<rss />",
+        "content_text": None,
+    })
+
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-09-09", max_sources=12, min_sources=1, prefer_manual=False)
+
+    assert result["ok"] is True
+    assert [record["title"] for record in result["sources"]] == ["Gaza aid access"]
+    assert result["sources"][0]["segment_id"] == "gaza-aid"
+    assert result["sources"][0]["parent_document_url"].endswith("/first-thing")
+    diag = next(d for d in result["provider_diagnostics"] if d.get("source_id") == "test-rss")
+    assert diag["rejected_counts"]["cross_segment_scope_mismatch"] >= 1
+
+
+def test_collection_rejects_giza_and_keeps_gaza_from_same_feed(work_root, monkeypatch):
+    write_config(work_root)
+    monkeypatch.setattr(gaza_sources, "fetch_feed_payload", lambda *_args, **_kwargs: {
+        "ok": True,
+        "source_id": "test-rss",
+        "url": "https://example.com/rss.xml",
+        "status_code": 200,
+        "failure_reason": None,
+        "exception_type": None,
+        "tls_error": False,
+        "backend_used": "python",
+        "content_type": "application/rss+xml",
+        "content_encoding": "",
+        "content_bytes": _rss_payload([
+            {
+                "title": "Turkish jets perform dramatic flyover above Egypt's pyramids",
+                "url": "https://example.com/giza-pyramids",
+                "published_at": "2026-09-09T12:00:00+00:00",
+                "summary_or_snippet": "The aircraft flew above the pyramids near Giza and Cairo.",
+            },
+            {
+                "title": "Gaza City families face new water shortages",
+                "url": "https://example.com/gaza-water",
+                "published_at": "2026-09-09T12:01:00+00:00",
+                "summary_or_snippet": "Residents in Gaza City reported worsening water access.",
+            },
+        ]),
+        "content_text": None,
+    })
+
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-09-09", max_sources=12, min_sources=1, prefer_manual=False)
+
+    assert [record["url"] for record in result["sources"]] == ["https://example.com/gaza-water"]
+    diag = next(d for d in result["provider_diagnostics"] if d.get("source_id") == "test-rss")
+    assert diag["rejected_counts"]["non_gaza_geographic_entity"] >= 1
+
+
+def test_same_parent_same_segment_duplicate_suppressed_but_distinct_gaza_segments_survive(work_root, monkeypatch):
+    write_config(work_root)
+    parent = "https://www.theguardian.com/world/2026/sep/09/first-thing"
+    items = [
+        {
+            "title": "Gaza hospital fuel shortages deepen",
+            "url": parent,
+            "published_at": "2026-09-09T12:00:00+00:00",
+            "summary_or_snippet": "Gaza hospitals reported fuel shortages affecting care.",
+            "segment_id": "gaza-hospitals",
+            "segment_title": "Gaza hospitals",
+            "parent_document_url": parent,
+        },
+        {
+            "title": "Gaza hospital fuel shortages deepen",
+            "url": parent,
+            "published_at": "2026-09-09T12:01:00+00:00",
+            "summary_or_snippet": "Gaza hospitals reported fuel shortages affecting care.",
+            "segment_id": "gaza-hospitals",
+            "segment_title": "Gaza hospitals",
+            "parent_document_url": parent,
+        },
+        {
+            "title": "Gaza aid convoy delays leave families waiting",
+            "url": parent,
+            "published_at": "2026-09-09T12:02:00+00:00",
+            "summary_or_snippet": "Aid convoy delays in Gaza left displaced families waiting for food distribution.",
+            "segment_id": "gaza-aid-convoy",
+            "segment_title": "Gaza aid convoy",
+            "parent_document_url": parent,
+        },
+    ]
+    monkeypatch.setattr(gaza_sources, "parse_rss_items", lambda *_args, **_kwargs: items)
+    monkeypatch.setattr(gaza_sources, "fetch_feed_payload", lambda *_args, **_kwargs: {
+        "ok": True,
+        "source_id": "test-rss",
+        "url": "https://example.com/rss.xml",
+        "status_code": 200,
+        "failure_reason": None,
+        "exception_type": None,
+        "tls_error": False,
+        "backend_used": "python",
+        "content_type": "application/rss+xml",
+        "content_encoding": "",
+        "content_bytes": b"<rss />",
+        "content_text": None,
+    })
+
+    result = gaza_sources.collect_gaza_sources(work_root, "2026-09-09", max_sources=12, min_sources=1, prefer_manual=False)
+
+    assert [record["segment_id"] for record in result["sources"]] == ["gaza-hospitals", "gaza-aid-convoy"]
+    assert result["rejected_by_reason"]["duplicate_url_in_collection"] == 1

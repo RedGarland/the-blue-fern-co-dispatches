@@ -1,0 +1,28 @@
+{
+  "accepted_files": 20,
+  "command_exit_code": 0,
+  "edition_date": "2026-09-07",
+  "exclusions": [],
+  "exit_code": 0,
+  "imported_findings": 20,
+  "inbox_files_discovered": 7,
+  "operator_review_required": true,
+  "proposal_path": "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-07.md",
+  "proposal_status": "draft_pending_editorial_review",
+  "publication_side_effects": {
+    "audio": false,
+    "bluesky": false,
+    "maps": false,
+    "pages": false,
+    "public_output": false,
+    "schedule": false
+  },
+  "qualifying_discovery_run_id": "food-line-scheduled-20260907-20260907T123002Z-3e5890bd",
+  "queue_item_count": 20,
+  "schema_version": "food_line_current_intake_receipt_v1",
+  "source_commit": "c64ceda294e47c39ac5468a3d365cdfdd3028880",
+  "source_export_status": "success_with_exclusions",
+  "source_status": "completed_with_exclusions",
+  "task_completed_at": "2026-09-07T13:10:08.917419Z",
+  "task_started_at": "2026-09-07T13:10:03.035298Z"
+}

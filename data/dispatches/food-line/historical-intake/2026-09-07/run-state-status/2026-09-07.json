@@ -1,0 +1,16 @@
+{
+  "edition_date": "2026-09-07",
+  "intake_completed_at": "2026-09-07T13:10:08.918451Z",
+  "intake_receipt_path": "C:\\BlueFernRunner\\FoodLineCurrent6\\logs\\food-line\\current-intake\\2026-09-07\\20260907T131008Z-current-intake.json",
+  "last_status": "completed_with_exclusions",
+  "resume_attempted": false,
+  "resume_receipt_path": "C:\\BlueFernRunner\\FoodLineCurrent6\\logs\\food-line\\source-watch\\2026-09-07\\20260907T130005Z-status-resume.json",
+  "resume_status": "resume_not_required",
+  "run_id": "food-line-scheduled-20260907-20260907T123002Z-3e5890bd",
+  "run_state_path": "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\discovery-runs\\2026-09-07\\food-line-scheduled-20260907-20260907T123002Z-3e5890bd\\run-state.json",
+  "scheduled_start_at": "2026-09-07T12:30:02.885809Z",
+  "schema_version": "food_line_scheduled_run_record_v1",
+  "source_branch": "add/pages-repo-default",
+  "source_commit": "c64ceda294e47c39ac5468a3d365cdfdd3028880",
+  "source_receipt_path": "C:\\BlueFernRunner\\FoodLineCurrent6\\logs\\food-line\\source-watch\\2026-09-07\\20260907T123450Z-source-watch.json"
+}

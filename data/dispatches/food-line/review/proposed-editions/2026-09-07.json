@@ -1,0 +1,608 @@
+{
+  "approved_item_count": 10,
+  "draft": true,
+  "draft_status": "draft_approved_pending_publication",
+  "edition_date": "2026-09-07",
+  "historical_editorial_disposition": {
+    "approve_with_edit": 10,
+    "approved": 10,
+    "decision_owner": "human_editorial_review",
+    "decision_timestamp": "2026-09-10T02:22:03.971368Z",
+    "held": 0,
+    "historical_date": "2026-09-07",
+    "pending": 0,
+    "publication_approval": false,
+    "publication_eligible": false,
+    "receipt_path": "data/dispatches/food-line/historical-intake/2026-09-07/editorial-dispositions.json",
+    "rejected": 10,
+    "schema_version": "food_line_historical_editorial_disposition_v1",
+    "selected": 10
+  },
+  "items": [
+    {
+      "freshness_check": {
+        "basis": "",
+        "status": ""
+      },
+      "headline": "US convenience stores warn SNAP stocking rule could reduce food access",
+      "location_name": "national, US",
+      "rank": 110,
+      "section": "Core Food Pressure Signals",
+      "source": "AgroLatam",
+      "source_published_at": "",
+      "source_url": "https://www.agrolatam.com/usa/news/usda-snap-rule-convenience-stores-food-access-2026",
+      "state": "",
+      "summary": "Convenience-store groups warned USDA that a new SNAP stocking rule could strain compliance for 117,000 U.S. stores and reduce food access in rural and underserved areas, according to AgroLatam.",
+      "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+      "why_it_matters": "U.S. SNAP stocking-rule story contains concrete rural/underserved food-access risk; wording restrained to a warning/proposal."
+    },
+    {
+      "freshness_check": {
+        "basis": "",
+        "status": ""
+      },
+      "headline": "San Antonio SNAP households can seek replacement benefits after storm food loss",
+      "location_name": "San Antonio, Texas",
+      "rank": 114,
+      "section": "Core Food Pressure Signals",
+      "source": "KSAT",
+      "source_published_at": "",
+      "source_url": "https://www.ksat.com/news/local/2026/09/04/snap-recipients-who-lost-food-during-fridays-storm-may-be-eligible-for-replacement-benefits",
+      "state": "TX",
+      "summary": "KSAT reported that SNAP recipients who lost food when a Friday storm knocked out power could seek replacement benefits through a San Antonio Food Bank-supported process.",
+      "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+      "why_it_matters": "San Antonio SNAP replacement-benefit story documents storm-related food loss and a bounded relief path."
+    },
+    {
+      "freshness_check": {
+        "basis": "",
+        "status": ""
+      },
+      "headline": "Gary families report denied SNAP replacement claims after power-outage food loss",
+      "location_name": "Gary, Indiana",
+      "rank": 124,
+      "section": "Core Food Pressure Signals",
+      "source": "The 19th News",
+      "source_published_at": "",
+      "source_url": "https://19thnews.org/2026/09/gary-indiana-power-outage-families-snap-benefits",
+      "state": "IN",
+      "summary": "The 19th reported that Gary families lost weeks of food during a power outage and had SNAP replacement claims denied, leaving households unable to replace spoiled food.",
+      "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+      "why_it_matters": "Gary power-outage story documents families losing food they could not afford to replace and denied SNAP replacement claims."
+    },
+    {
+      "freshness_check": {
+        "basis": "",
+        "status": ""
+      },
+      "headline": "SNAP cuts could threaten free school meals for millions of children",
+      "location_name": "national, US",
+      "rank": 138,
+      "section": "Core Food Pressure Signals",
+      "source": "Common Dreams",
+      "source_published_at": "",
+      "source_url": "",
+      "state": "",
+      "summary": "Common Dreams reported advocates warning that SNAP cuts could increase hunger and imperil free school meal access for millions of children.",
+      "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+      "why_it_matters": "National SNAP/school-meal story is in scope, but the draft wording incorrectly said benefit delay; approved only with restrained SNAP-cut/free-school-meal wording."
+    },
+    {
+      "freshness_check": {
+        "basis": "",
+        "status": ""
+      },
+      "headline": "Palm Springs food bank displacement halts weekly aid for 250 families",
+      "location_name": "Palm Springs, California",
+      "rank": 154,
+      "section": "Core Food Pressure Signals",
+      "source": "Hoodline",
+      "source_published_at": "",
+      "source_url": "",
+      "state": "CA",
+      "summary": "Hoodline reported that a Palm Springs fire-station project displaced Well in the Desert from its longtime site, halting weekly food-bank help to 250 families.",
+      "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+      "why_it_matters": "Palm Springs item documents a food bank displaced from its site and weekly aid halted for 250 families."
+    },
+    {
+      "freshness_check": {
+        "basis": "",
+        "status": ""
+      },
+      "headline": "Southwestern Pennsylvania food banks warn food insecurity has surpassed pandemic levels",
+      "location_name": "Southwestern Pennsylvania",
+      "rank": 164,
+      "section": "Core Food Pressure Signals",
+      "source": "Herald-Standard",
+      "source_published_at": "",
+      "source_url": "",
+      "state": "PA",
+      "summary": "The Herald-Standard reported that regional food banks warned food insecurity in Southwestern Pennsylvania has eclipsed pandemic levels, with one in eight residents affected.",
+      "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+      "why_it_matters": "Southwestern Pennsylvania Hunger Action Month story includes concrete regional food insecurity and food-bank strain, not just commemorative framing."
+    },
+    {
+      "freshness_check": {
+        "basis": "",
+        "status": ""
+      },
+      "headline": "Food-stamp roll purge linked to school-meal access losses",
+      "location_name": "national, US",
+      "rank": 210,
+      "section": "Core Food Pressure Signals",
+      "source": "wsws.org",
+      "source_published_at": "",
+      "source_url": "",
+      "state": "",
+      "summary": "WSWS reported that SNAP benefit losses affected millions of people and that schools were seeing declines in free breakfast and lunch enrollment.",
+      "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+      "why_it_matters": "U.S. SNAP-roll purge story contains concrete benefit and school-meal access impacts; wording must be attributed and restrained."
+    },
+    {
+      "freshness_check": {
+        "basis": "",
+        "status": ""
+      },
+      "headline": "North Richmond farm expands food access as CalFresh cuts deepen hunger",
+      "location_name": "North Richmond / East Bay, California",
+      "rank": 214,
+      "section": "Core Food Pressure Signals",
+      "source": "KQED",
+      "source_published_at": "",
+      "source_url": "",
+      "state": "CA",
+      "summary": "KQED reported that, as new federal rules push Californians off food assistance, a North Richmond nonprofit is expanding produce access in the East Bay.",
+      "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+      "why_it_matters": "North Richmond item links CalFresh cuts and local produce access; retained evidence supports a concrete East Bay food-access signal."
+    },
+    {
+      "freshness_check": {
+        "basis": "",
+        "status": ""
+      },
+      "headline": "Nevada SNAP households face deadline for fire-related food-loss replacement",
+      "location_name": "Nevada",
+      "rank": 243,
+      "section": "Core Food Pressure Signals",
+      "source": "KTVN",
+      "source_published_at": "",
+      "source_url": "",
+      "state": "NV",
+      "summary": "KTVN reported that Nevada residents who lost SNAP-purchased food during recent fires or power outages had until September 7 to request replacement benefits.",
+      "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+      "why_it_matters": "Nevada fire/power-outage SNAP replacement-benefit deadline is a concrete food-loss and benefit-access pressure signal."
+    },
+    {
+      "freshness_check": {
+        "age_days": 0,
+        "basis": "newly_published",
+        "basis_date": "2026-09-07",
+        "edition_date": "2026-09-07",
+        "reason": "",
+        "status": "current"
+      },
+      "headline": "North Carolina food banks report widening hunger amid demand and federal cuts",
+      "location_name": "North Carolina",
+      "rank": 274,
+      "section": "Core Food Pressure Signals",
+      "source": "citizen-times.com",
+      "source_published_at": "2026-09-07",
+      "source_url": "https://www.citizen-times.com/story/news/2026/09/07/hunger-crisis-widens-in-north-carolina-as-food-banks-face-more-demand-federal-cuts/91607995007",
+      "state": "NC",
+      "summary": "Citizen Times reported that hunger was widening in North Carolina as food banks faced more demand and federal cuts.",
+      "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+      "why_it_matters": "North Carolina food-bank demand/federal-cuts item is U.S.-scope and source-backed; it also exposes the national/default geography weakness."
+    }
+  ],
+  "layout": {
+    "at_a_glance": [
+      {
+        "freshness_check": {
+          "basis": "",
+          "status": ""
+        },
+        "headline": "US convenience stores warn SNAP stocking rule could reduce food access",
+        "location_name": "national, US",
+        "rank": 110,
+        "section": "Core Food Pressure Signals",
+        "source": "AgroLatam",
+        "source_published_at": "",
+        "source_url": "https://www.agrolatam.com/usa/news/usda-snap-rule-convenience-stores-food-access-2026",
+        "state": "",
+        "summary": "Convenience-store groups warned USDA that a new SNAP stocking rule could strain compliance for 117,000 U.S. stores and reduce food access in rural and underserved areas, according to AgroLatam.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "U.S. SNAP stocking-rule story contains concrete rural/underserved food-access risk; wording restrained to a warning/proposal."
+      },
+      {
+        "freshness_check": {
+          "basis": "",
+          "status": ""
+        },
+        "headline": "San Antonio SNAP households can seek replacement benefits after storm food loss",
+        "location_name": "San Antonio, Texas",
+        "rank": 114,
+        "section": "Core Food Pressure Signals",
+        "source": "KSAT",
+        "source_published_at": "",
+        "source_url": "https://www.ksat.com/news/local/2026/09/04/snap-recipients-who-lost-food-during-fridays-storm-may-be-eligible-for-replacement-benefits",
+        "state": "TX",
+        "summary": "KSAT reported that SNAP recipients who lost food when a Friday storm knocked out power could seek replacement benefits through a San Antonio Food Bank-supported process.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "San Antonio SNAP replacement-benefit story documents storm-related food loss and a bounded relief path."
+      },
+      {
+        "freshness_check": {
+          "basis": "",
+          "status": ""
+        },
+        "headline": "Gary families report denied SNAP replacement claims after power-outage food loss",
+        "location_name": "Gary, Indiana",
+        "rank": 124,
+        "section": "Core Food Pressure Signals",
+        "source": "The 19th News",
+        "source_published_at": "",
+        "source_url": "https://19thnews.org/2026/09/gary-indiana-power-outage-families-snap-benefits",
+        "state": "IN",
+        "summary": "The 19th reported that Gary families lost weeks of food during a power outage and had SNAP replacement claims denied, leaving households unable to replace spoiled food.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "Gary power-outage story documents families losing food they could not afford to replace and denied SNAP replacement claims."
+      },
+      {
+        "freshness_check": {
+          "basis": "",
+          "status": ""
+        },
+        "headline": "SNAP cuts could threaten free school meals for millions of children",
+        "location_name": "national, US",
+        "rank": 138,
+        "section": "Core Food Pressure Signals",
+        "source": "Common Dreams",
+        "source_published_at": "",
+        "source_url": "",
+        "state": "",
+        "summary": "Common Dreams reported advocates warning that SNAP cuts could increase hunger and imperil free school meal access for millions of children.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "National SNAP/school-meal story is in scope, but the draft wording incorrectly said benefit delay; approved only with restrained SNAP-cut/free-school-meal wording."
+      },
+      {
+        "freshness_check": {
+          "basis": "",
+          "status": ""
+        },
+        "headline": "Palm Springs food bank displacement halts weekly aid for 250 families",
+        "location_name": "Palm Springs, California",
+        "rank": 154,
+        "section": "Core Food Pressure Signals",
+        "source": "Hoodline",
+        "source_published_at": "",
+        "source_url": "",
+        "state": "CA",
+        "summary": "Hoodline reported that a Palm Springs fire-station project displaced Well in the Desert from its longtime site, halting weekly food-bank help to 250 families.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "Palm Springs item documents a food bank displaced from its site and weekly aid halted for 250 families."
+      },
+      {
+        "freshness_check": {
+          "basis": "",
+          "status": ""
+        },
+        "headline": "Southwestern Pennsylvania food banks warn food insecurity has surpassed pandemic levels",
+        "location_name": "Southwestern Pennsylvania",
+        "rank": 164,
+        "section": "Core Food Pressure Signals",
+        "source": "Herald-Standard",
+        "source_published_at": "",
+        "source_url": "",
+        "state": "PA",
+        "summary": "The Herald-Standard reported that regional food banks warned food insecurity in Southwestern Pennsylvania has eclipsed pandemic levels, with one in eight residents affected.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "Southwestern Pennsylvania Hunger Action Month story includes concrete regional food insecurity and food-bank strain, not just commemorative framing."
+      },
+      {
+        "freshness_check": {
+          "basis": "",
+          "status": ""
+        },
+        "headline": "Food-stamp roll purge linked to school-meal access losses",
+        "location_name": "national, US",
+        "rank": 210,
+        "section": "Core Food Pressure Signals",
+        "source": "wsws.org",
+        "source_published_at": "",
+        "source_url": "",
+        "state": "",
+        "summary": "WSWS reported that SNAP benefit losses affected millions of people and that schools were seeing declines in free breakfast and lunch enrollment.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "U.S. SNAP-roll purge story contains concrete benefit and school-meal access impacts; wording must be attributed and restrained."
+      },
+      {
+        "freshness_check": {
+          "basis": "",
+          "status": ""
+        },
+        "headline": "North Richmond farm expands food access as CalFresh cuts deepen hunger",
+        "location_name": "North Richmond / East Bay, California",
+        "rank": 214,
+        "section": "Core Food Pressure Signals",
+        "source": "KQED",
+        "source_published_at": "",
+        "source_url": "",
+        "state": "CA",
+        "summary": "KQED reported that, as new federal rules push Californians off food assistance, a North Richmond nonprofit is expanding produce access in the East Bay.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "North Richmond item links CalFresh cuts and local produce access; retained evidence supports a concrete East Bay food-access signal."
+      },
+      {
+        "freshness_check": {
+          "basis": "",
+          "status": ""
+        },
+        "headline": "Nevada SNAP households face deadline for fire-related food-loss replacement",
+        "location_name": "Nevada",
+        "rank": 243,
+        "section": "Core Food Pressure Signals",
+        "source": "KTVN",
+        "source_published_at": "",
+        "source_url": "",
+        "state": "NV",
+        "summary": "KTVN reported that Nevada residents who lost SNAP-purchased food during recent fires or power outages had until September 7 to request replacement benefits.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "Nevada fire/power-outage SNAP replacement-benefit deadline is a concrete food-loss and benefit-access pressure signal."
+      },
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-09-07",
+          "edition_date": "2026-09-07",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "North Carolina food banks report widening hunger amid demand and federal cuts",
+        "location_name": "North Carolina",
+        "rank": 274,
+        "section": "Core Food Pressure Signals",
+        "source": "citizen-times.com",
+        "source_published_at": "2026-09-07",
+        "source_url": "https://www.citizen-times.com/story/news/2026/09/07/hunger-crisis-widens-in-north-carolina-as-food-banks-face-more-demand-federal-cuts/91607995007",
+        "state": "NC",
+        "summary": "Citizen Times reported that hunger was widening in North Carolina as food banks faced more demand and federal cuts.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "North Carolina food-bank demand/federal-cuts item is U.S.-scope and source-backed; it also exposes the national/default geography weakness."
+      }
+    ],
+    "core_food_pressure_signals": [
+      {
+        "freshness_check": {
+          "basis": "",
+          "status": ""
+        },
+        "headline": "US convenience stores warn SNAP stocking rule could reduce food access",
+        "location_name": "national, US",
+        "rank": 110,
+        "section": "Core Food Pressure Signals",
+        "source": "AgroLatam",
+        "source_published_at": "",
+        "source_url": "https://www.agrolatam.com/usa/news/usda-snap-rule-convenience-stores-food-access-2026",
+        "state": "",
+        "summary": "Convenience-store groups warned USDA that a new SNAP stocking rule could strain compliance for 117,000 U.S. stores and reduce food access in rural and underserved areas, according to AgroLatam.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "U.S. SNAP stocking-rule story contains concrete rural/underserved food-access risk; wording restrained to a warning/proposal."
+      },
+      {
+        "freshness_check": {
+          "basis": "",
+          "status": ""
+        },
+        "headline": "San Antonio SNAP households can seek replacement benefits after storm food loss",
+        "location_name": "San Antonio, Texas",
+        "rank": 114,
+        "section": "Core Food Pressure Signals",
+        "source": "KSAT",
+        "source_published_at": "",
+        "source_url": "https://www.ksat.com/news/local/2026/09/04/snap-recipients-who-lost-food-during-fridays-storm-may-be-eligible-for-replacement-benefits",
+        "state": "TX",
+        "summary": "KSAT reported that SNAP recipients who lost food when a Friday storm knocked out power could seek replacement benefits through a San Antonio Food Bank-supported process.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "San Antonio SNAP replacement-benefit story documents storm-related food loss and a bounded relief path."
+      },
+      {
+        "freshness_check": {
+          "basis": "",
+          "status": ""
+        },
+        "headline": "Gary families report denied SNAP replacement claims after power-outage food loss",
+        "location_name": "Gary, Indiana",
+        "rank": 124,
+        "section": "Core Food Pressure Signals",
+        "source": "The 19th News",
+        "source_published_at": "",
+        "source_url": "https://19thnews.org/2026/09/gary-indiana-power-outage-families-snap-benefits",
+        "state": "IN",
+        "summary": "The 19th reported that Gary families lost weeks of food during a power outage and had SNAP replacement claims denied, leaving households unable to replace spoiled food.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "Gary power-outage story documents families losing food they could not afford to replace and denied SNAP replacement claims."
+      },
+      {
+        "freshness_check": {
+          "basis": "",
+          "status": ""
+        },
+        "headline": "SNAP cuts could threaten free school meals for millions of children",
+        "location_name": "national, US",
+        "rank": 138,
+        "section": "Core Food Pressure Signals",
+        "source": "Common Dreams",
+        "source_published_at": "",
+        "source_url": "",
+        "state": "",
+        "summary": "Common Dreams reported advocates warning that SNAP cuts could increase hunger and imperil free school meal access for millions of children.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "National SNAP/school-meal story is in scope, but the draft wording incorrectly said benefit delay; approved only with restrained SNAP-cut/free-school-meal wording."
+      },
+      {
+        "freshness_check": {
+          "basis": "",
+          "status": ""
+        },
+        "headline": "Palm Springs food bank displacement halts weekly aid for 250 families",
+        "location_name": "Palm Springs, California",
+        "rank": 154,
+        "section": "Core Food Pressure Signals",
+        "source": "Hoodline",
+        "source_published_at": "",
+        "source_url": "",
+        "state": "CA",
+        "summary": "Hoodline reported that a Palm Springs fire-station project displaced Well in the Desert from its longtime site, halting weekly food-bank help to 250 families.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "Palm Springs item documents a food bank displaced from its site and weekly aid halted for 250 families."
+      },
+      {
+        "freshness_check": {
+          "basis": "",
+          "status": ""
+        },
+        "headline": "Southwestern Pennsylvania food banks warn food insecurity has surpassed pandemic levels",
+        "location_name": "Southwestern Pennsylvania",
+        "rank": 164,
+        "section": "Core Food Pressure Signals",
+        "source": "Herald-Standard",
+        "source_published_at": "",
+        "source_url": "",
+        "state": "PA",
+        "summary": "The Herald-Standard reported that regional food banks warned food insecurity in Southwestern Pennsylvania has eclipsed pandemic levels, with one in eight residents affected.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "Southwestern Pennsylvania Hunger Action Month story includes concrete regional food insecurity and food-bank strain, not just commemorative framing."
+      },
+      {
+        "freshness_check": {
+          "basis": "",
+          "status": ""
+        },
+        "headline": "Food-stamp roll purge linked to school-meal access losses",
+        "location_name": "national, US",
+        "rank": 210,
+        "section": "Core Food Pressure Signals",
+        "source": "wsws.org",
+        "source_published_at": "",
+        "source_url": "",
+        "state": "",
+        "summary": "WSWS reported that SNAP benefit losses affected millions of people and that schools were seeing declines in free breakfast and lunch enrollment.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "U.S. SNAP-roll purge story contains concrete benefit and school-meal access impacts; wording must be attributed and restrained."
+      },
+      {
+        "freshness_check": {
+          "basis": "",
+          "status": ""
+        },
+        "headline": "North Richmond farm expands food access as CalFresh cuts deepen hunger",
+        "location_name": "North Richmond / East Bay, California",
+        "rank": 214,
+        "section": "Core Food Pressure Signals",
+        "source": "KQED",
+        "source_published_at": "",
+        "source_url": "",
+        "state": "CA",
+        "summary": "KQED reported that, as new federal rules push Californians off food assistance, a North Richmond nonprofit is expanding produce access in the East Bay.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "North Richmond item links CalFresh cuts and local produce access; retained evidence supports a concrete East Bay food-access signal."
+      },
+      {
+        "freshness_check": {
+          "basis": "",
+          "status": ""
+        },
+        "headline": "Nevada SNAP households face deadline for fire-related food-loss replacement",
+        "location_name": "Nevada",
+        "rank": 243,
+        "section": "Core Food Pressure Signals",
+        "source": "KTVN",
+        "source_published_at": "",
+        "source_url": "",
+        "state": "NV",
+        "summary": "KTVN reported that Nevada residents who lost SNAP-purchased food during recent fires or power outages had until September 7 to request replacement benefits.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "Nevada fire/power-outage SNAP replacement-benefit deadline is a concrete food-loss and benefit-access pressure signal."
+      },
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-09-07",
+          "edition_date": "2026-09-07",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "North Carolina food banks report widening hunger amid demand and federal cuts",
+        "location_name": "North Carolina",
+        "rank": 274,
+        "section": "Core Food Pressure Signals",
+        "source": "citizen-times.com",
+        "source_published_at": "2026-09-07",
+        "source_url": "https://www.citizen-times.com/story/news/2026/09/07/hunger-crisis-widens-in-north-carolina-as-food-banks-face-more-demand-federal-cuts/91607995007",
+        "state": "NC",
+        "summary": "Citizen Times reported that hunger was widening in North Carolina as food banks faced more demand and federal cuts.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "North Carolina food-bank demand/federal-cuts item is U.S.-scope and source-backed; it also exposes the national/default geography weakness."
+      }
+    ],
+    "edition_summary": "This private review package contains 10 item-level approved Food Line signals awaiting a separate release decision.",
+    "eyebrow_status": "FOOD LINE — PRIVATE DRAFT / UNPUBLISHED",
+    "generation_note": "Private editorial review update assembled from retained September 7 evidence; final publication approval is still required and no public output was generated.",
+    "h1": "Food Line Dispatch — 2026-09-07",
+    "other_food_line_signals": [],
+    "source_mix": {
+      "publishers": {
+        "AgroLatam": 1,
+        "Common Dreams": 1,
+        "Herald-Standard": 1,
+        "Hoodline": 1,
+        "KQED": 1,
+        "KSAT": 1,
+        "KTVN": 1,
+        "The 19th News": 1,
+        "citizen-times.com": 1,
+        "wsws.org": 1
+      },
+      "states": {
+        "CA": 2,
+        "IN": 1,
+        "NC": 1,
+        "NV": 1,
+        "PA": 1,
+        "TX": 1,
+        "US": 3
+      }
+    },
+    "source_note": "Every item retains its canonical source URL, any available source publication date, and its explicit currentness basis.",
+    "todays_read": [
+      {
+        "freshness_check": {
+          "basis": "",
+          "status": ""
+        },
+        "headline": "US convenience stores warn SNAP stocking rule could reduce food access",
+        "location_name": "national, US",
+        "rank": 110,
+        "section": "Core Food Pressure Signals",
+        "source": "AgroLatam",
+        "source_published_at": "",
+        "source_url": "https://www.agrolatam.com/usa/news/usda-snap-rule-convenience-stores-food-access-2026",
+        "state": "",
+        "summary": "Convenience-store groups warned USDA that a new SNAP stocking rule could strain compliance for 117,000 U.S. stores and reduce food access in rural and underserved areas, according to AgroLatam.",
+        "uncertainty_note": "Item-level editorial approval only; wording must remain limited to retained evidence.",
+        "why_it_matters": "U.S. SNAP stocking-rule story contains concrete rural/underserved food-access risk; wording restrained to a warning/proposal."
+      }
+    ]
+  },
+  "pending_item_count": 0,
+  "publication_approval": false,
+  "publication_eligible": false,
+  "published": false,
+  "rejected_item_count": 10,
+  "schema_version": "food_line_proposed_edition_v1",
+  "selected_item_count": 10,
+  "source_queue_path": "data/dispatches/food-line/historical-intake/2026-09-07/current-signal-review.json",
+  "source_queue_sha256": "179c6b98ac74a905bc89b6b2c47c3314384508087c29b4b7675fe8b1f069fc65"
+}

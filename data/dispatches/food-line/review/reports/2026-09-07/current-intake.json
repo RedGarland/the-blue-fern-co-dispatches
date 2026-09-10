@@ -1,0 +1,52 @@
+{
+  "accepted_file_count": 20,
+  "created_at": "2026-09-07T13:10:08.859560Z",
+  "discovered_file_count": 7,
+  "dry_run_count": 0,
+  "edition_date": "2026-09-07",
+  "errors": [],
+  "historical_editorial_disposition": {
+    "approve_with_edit": 10,
+    "approved": 10,
+    "decision_owner": "human_editorial_review",
+    "decision_timestamp": "2026-09-10T02:22:03.971368Z",
+    "held": 0,
+    "historical_date": "2026-09-07",
+    "pending": 0,
+    "publication_approval": false,
+    "publication_eligible": false,
+    "receipt_path": "data/dispatches/food-line/historical-intake/2026-09-07/editorial-dispositions.json",
+    "rejected": 10,
+    "schema_version": "food_line_historical_editorial_disposition_v1",
+    "selected": 10
+  },
+  "idempotent_noop_count": 0,
+  "import_attempt_count": 20,
+  "import_count": 20,
+  "inbox": "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\agent-inbox",
+  "proposal": {
+    "draft_status": "draft_approved_pending_publication",
+    "json_path": "data/dispatches/food-line/review/proposed-editions/2026-09-07.json",
+    "markdown_path": "data/dispatches/food-line/review/proposed-editions/2026-09-07.md",
+    "status": "updated"
+  },
+  "publication_side_effects": {
+    "audio": false,
+    "bluesky": false,
+    "maps": false,
+    "pages": false,
+    "public_output": false,
+    "schedule": false
+  },
+  "queue": {
+    "approved_item_count": 10,
+    "held_item_count": 0,
+    "item_count": 20,
+    "path": "data/dispatches/food-line/historical-intake/2026-09-07/current-signal-review.json",
+    "pending_item_count": 0,
+    "rejected_item_count": 10,
+    "status": "historical_review_recorded"
+  },
+  "schema_version": "food_line_current_intake_report_v1",
+  "status": "success"
+}

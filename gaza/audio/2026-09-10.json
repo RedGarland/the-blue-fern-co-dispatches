@@ -1,0 +1,80 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-09-10",
+  "generated_at": "2026-09-10T18:37:10.765651Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-09-10.mp3",
+  "audio_url": "/gaza/audio/2026-09-10.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1579,
+  "tts_input_word_count": 247,
+  "tts_story_count": 6,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1683456,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-09-10T18:37:10.765627Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-09-10-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-09-10/",
+  "script_text": "This is the Gaza Dispatch audio briefing for September 10, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Family of four killed as they slept in Israeli strike on Gaza. Four members of a Palestinian family, including girls aged 8 and 12, were killed in an Israeli air attack as they slept. This was reported by Al Jazeera.\n\n2. Senior UK rabbis come out in support of sanctions on Israeli settlements. Spiritual leaders stress diversity of views within Jewish community and warn against inaction on settler violence 'It's a good start': prominent Israelis welcome UK sanctions Prominent British rabbis have backed Ed Miliband's sanctions on Israeli settlements, warning that the time for inaction on settler violence must come to an end. This was reported by The Guardian.\n\n3. Israel arrests 100 Palestinians in a week as West Bank pogroms continue. Palestinian Prisoner's Society says detained include children, journalists and ex-prisoner freed in recent exchange deal. This was reported by Al Jazeera.\n\n4. Jerusalem Daily: Israeli strikes devastate Gaza. Israeli air strikes have killed and injured dozens across Gaza. This was reported by Al Jazeera.\n\n5. Muted US response to UK's West Bank sanctions may reflect simmering frustration. The UK accuses. This was reported by BBC News.\n\n6. How Israel responded to UK sanctions on West Bank settlements. BBC correspondent Katy Watson reports from Jerusalem. This was reported by BBC News.\n\nFor the full source-backed dispatch, read the September 10, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 6,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-09-10-aljazeera-middle-east-622484e525b3",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/9/10/family-of-four-killed-as-they-slept-in-israeli-strike-on-gaza?traffic_source=rss",
+      "title": "Family of four killed as they slept in Israeli strike on Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-09-10-guardian-world-1fabbc931613",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/politics/2026/sep/09/senior-uk-rabbis-come-out-in-support-of-sanctions-on-israeli-settlements",
+      "title": "Senior UK rabbis come out in support of sanctions on Israeli settlements"
+    },
+    {
+      "source_record_id": "gaza-2026-09-10-aljazeera-middle-east-4f58d09b9421",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/9/10/israel-arrests-100-palestinians-in-a-week-as-west-bank-pogroms-continue?traffic_source=rss",
+      "title": "Israel arrests 100 Palestinians in a week as West Bank pogroms continue"
+    },
+    {
+      "source_record_id": "gaza-2026-09-10-aljazeera-middle-east-441d66e02f4e",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/9/10/jerusalem-daily-israeli-strikes-devastate-gaza?traffic_source=rss",
+      "title": "Jerusalem Daily: Israeli strikes devastate Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-09-10-bbc-middle-east-ffcb9bb713ef",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/cevw2lxnwk9o?at_medium=RSS&at_campaign=rss",
+      "title": "Muted US response to UK's West Bank sanctions may reflect simmering frustration"
+    },
+    {
+      "source_record_id": "gaza-2026-09-10-bbc-middle-east-9ee40a1c9b06",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/videos/cj4jwnzd2dgo?at_medium=RSS&at_campaign=rss",
+      "title": "How Israel responded to UK sanctions on West Bank settlements"
+    }
+  ]
+}

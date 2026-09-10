@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Wed, 09 Sep 2026 19:00:37 +0000</lastBuildDate>
+  <lastBuildDate>Thu, 10 Sep 2026 18:37:10 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for September 10, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-09-10-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-09-10-transcript.html</guid>
+    <pubDate>Thu, 10 Sep 2026 00:00:00 +0000</pubDate>
+    <description>Family of four killed as they slept in Israeli strike on Gaza. Four members of a Palestinian family, including girls aged 8 and 12, were killed in an Israeli air attack as they slept. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-09-10.mp3" length="1683456" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for September 9, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-09-09-transcript.html</link>

@@ -1,0 +1,631 @@
+[
+  {
+    "story_id": "gaza-story-2026-09-10-001",
+    "title": "Family of four killed as they slept in Israeli strike on Gaza",
+    "summary": "Four members of a Palestinian family, including girls aged 8 and 12, were killed in an Israeli air attack as they slept.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 62,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-10-aljazeera-middle-east-622484e525b3"
+    ],
+    "source_ids": [
+      "gaza-2026-09-10-aljazeera-middle-east-622484e525b3"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/9/10/family-of-four-killed-as-they-slept-in-israeli-strike-on-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-10-aljazeera-middle-east-622484e525b3",
+        "title": "Family of four killed as they slept in Israeli strike on Gaza",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/9/10/family-of-four-killed-as-they-slept-in-israeli-strike-on-gaza?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Four members of a Palestinian family, including girls aged 8 and 12, were killed in an Israeli air attack as they slept",
+        "event_date": "2026-09-10T17:32:28+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-10T18:36:52.588176+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 62,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-10T17:32:28+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-08-008",
+    "prior_edition_date": "2026-07-08",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-10-004",
+    "title": "Senior UK rabbis come out in support of sanctions on Israeli settlements",
+    "summary": "Spiritual leaders stress diversity of views within Jewish community and warn against inaction on settler violence 'It's a good start': prominent Israelis welcome UK sanctions Prominent British rabbis have backed Ed Miliband's sanctions on Israeli settlements, warning that the time for inaction on settler violence must come to an end. The intervention comes after the UK's chief rabbi, the spiritual leader of mainstream Orthodox Jews in the UK, Sir Ephraim Mirvis, described UK sanctions against illegal Israeli settlements in the occupied Palestinian territories as a \"dark day for British Jews\" and warned they could embolden people who \"use hatred as a weapon against Jews\".",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 56,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-10-guardian-world-1fabbc931613"
+    ],
+    "source_ids": [
+      "gaza-2026-09-10-guardian-world-1fabbc931613"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/politics/2026/sep/09/senior-uk-rabbis-come-out-in-support-of-sanctions-on-israeli-settlements"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-10-guardian-world-1fabbc931613",
+        "title": "Senior UK rabbis come out in support of sanctions on Israeli settlements",
+        "url": "https://www.theguardian.com/politics/2026/sep/09/senior-uk-rabbis-come-out-in-support-of-sanctions-on-israeli-settlements",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Spiritual leaders stress diversity of views within Jewish community and warn against inaction on settler violence 'It's a good start': prominent Israelis welcome UK sanctions Prominent British rabbis have backed Ed Miliband's sanctions on Israeli settlements, warning that the time for inaction on settler violence must come to an end. The intervention comes after the UK's chief rabbi, the spiritual leader of mainstream Orthodox Jews in the UK, Sir Ephraim Mirvis, described UK sanctions against illegal Israeli settlements in the occupied Palestinian territories as a \"dark day for British Jews\" and warned they could embolden people who \"use hatred as a weapon against Jews\".",
+        "event_date": "2026-09-09T17:57:14+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-10T18:36:52.588176+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-09T17:57:14+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-08-007",
+    "prior_edition_date": "2026-09-08",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-10-006",
+    "title": "Israel arrests 100 Palestinians in a week as West Bank pogroms continue",
+    "summary": "Palestinian Prisoner's Society says detained include children, journalists and ex-prisoner freed in recent exchange deal.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 50,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-10-aljazeera-middle-east-4f58d09b9421"
+    ],
+    "source_ids": [
+      "gaza-2026-09-10-aljazeera-middle-east-4f58d09b9421"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/9/10/israel-arrests-100-palestinians-in-a-week-as-west-bank-pogroms-continue?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-10-aljazeera-middle-east-4f58d09b9421",
+        "title": "Israel arrests 100 Palestinians in a week as West Bank pogroms continue",
+        "url": "https://www.aljazeera.com/news/2026/9/10/israel-arrests-100-palestinians-in-a-week-as-west-bank-pogroms-continue?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Palestinian Prisoner's Society says detained include children, journalists and ex-prisoner freed in recent exchange deal",
+        "event_date": "2026-09-10T17:00:17+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-10T18:36:52.588176+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-10T17:00:17+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-26-003",
+    "prior_edition_date": "2026-07-26",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-10-002",
+    "title": "Jerusalem Daily: Israeli strikes devastate Gaza",
+    "summary": "Israeli air strikes have killed and injured dozens across Gaza.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 49,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-10-aljazeera-middle-east-441d66e02f4e"
+    ],
+    "source_ids": [
+      "gaza-2026-09-10-aljazeera-middle-east-441d66e02f4e"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/9/10/jerusalem-daily-israeli-strikes-devastate-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-10-aljazeera-middle-east-441d66e02f4e",
+        "title": "Jerusalem Daily: Israeli strikes devastate Gaza",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/9/10/jerusalem-daily-israeli-strikes-devastate-gaza?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israeli air strikes have killed and injured dozens across Gaza.",
+        "event_date": "2026-09-10T16:27:37+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-10T18:36:52.588176+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 49,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-10T16:27:37+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-30-005",
+    "prior_edition_date": "2026-07-30",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-10-008",
+    "title": "Muted US response to UK's West Bank sanctions may reflect simmering frustration",
+    "summary": "The UK accuses. Israel's government of turning a blind eye to the \"ethnic cleansing\" of Palestinians by settlers.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 42,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-10-bbc-middle-east-ffcb9bb713ef"
+    ],
+    "source_ids": [
+      "gaza-2026-09-10-bbc-middle-east-ffcb9bb713ef"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/cevw2lxnwk9o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-10-bbc-middle-east-ffcb9bb713ef",
+        "title": "Muted US response to UK's West Bank sanctions may reflect simmering frustration",
+        "url": "https://www.bbc.co.uk/news/articles/cevw2lxnwk9o?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "The UK accuses Israel's government of turning a blind eye to the \"ethnic cleansing\" of Palestinians by settlers.",
+        "event_date": "2026-09-09T21:21:13+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-10T18:36:52.588176+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 42,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-09T21:21:13+00:00",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-09-011",
+    "prior_edition_date": "2026-09-09",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-10-012",
+    "title": "How Israel responded to UK sanctions on West Bank settlements",
+    "summary": "BBC correspondent Katy Watson reports from Jerusalem.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 36,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-10-bbc-middle-east-9ee40a1c9b06"
+    ],
+    "source_ids": [
+      "gaza-2026-09-10-bbc-middle-east-9ee40a1c9b06"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/videos/cj4jwnzd2dgo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-10-bbc-middle-east-9ee40a1c9b06",
+        "title": "How Israel responded to UK sanctions on West Bank settlements",
+        "url": "https://www.bbc.co.uk/news/videos/cj4jwnzd2dgo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "BBC correspondent Katy Watson reports from Jerusalem.",
+        "event_date": "2026-09-08T21:25:52+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-10T18:36:52.588176+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 36,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-08T21:25:52+00:00",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-09-011",
+    "prior_edition_date": "2026-09-09",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-10-011",
+    "title": "British-Israeli relations at lowest ebb in decades",
+    "summary": "Israel's response to London's trade ban with Israeli settlements in the occupied West Bank shows how important this moment is.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 36,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-10-bbc-middle-east-3221d9d126db"
+    ],
+    "source_ids": [
+      "gaza-2026-09-10-bbc-middle-east-3221d9d126db"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/c5ydlex9yn3o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-10-bbc-middle-east-3221d9d126db",
+        "title": "British-Israeli relations at lowest ebb in decades",
+        "url": "https://www.bbc.co.uk/news/articles/c5ydlex9yn3o?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Israel's response to London's trade ban with Israeli settlements in the occupied West Bank shows how important this moment is.",
+        "event_date": "2026-09-08T21:46:31+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-10T18:36:52.588176+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "west bank"
+    ],
+    "top_story_relevance_score": 36,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-08T21:46:31+00:00",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-09-006",
+    "prior_edition_date": "2026-09-09",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-10-007",
+    "title": "How a community living under demolition orders from Israel view UK sanctions",
+    "summary": "BBC's Middle East Correspondent Lucy Williamson visits the Palestinian community of Khan al Ahmar in the so-called E1 area, and the neighbouring Israeli settlement of Maale Admumim.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 36,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-10-bbc-middle-east-726d465ab825"
+    ],
+    "source_ids": [
+      "gaza-2026-09-10-bbc-middle-east-726d465ab825"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/videos/cy5zpze3qe3o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-10-bbc-middle-east-726d465ab825",
+        "title": "How a community living under demolition orders from Israel view UK sanctions",
+        "url": "https://www.bbc.co.uk/news/videos/cy5zpze3qe3o?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "BBC's Middle East Correspondent Lucy Williamson visits the Palestinian community of Khan al Ahmar in the so-called E1 area, and the neighbouring Israeli settlement of Maale Admumim.",
+        "event_date": "2026-09-09T22:17:22+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-10T18:36:52.588176+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 36,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-09T22:17:22+00:00",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  }
+]

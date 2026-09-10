@@ -1,0 +1,34 @@
+{
+  "schema_version": "food_line_nonoriginal_editorial_dispositions_v1",
+  "provenance": "NONORIGINAL_HISTORICAL_RECONSTRUCTION",
+  "historical_gap_status": "OPEN / NONORIGINAL_RECONSTRUCTION_AVAILABLE",
+  "original_runtime_status": {
+    "2026-09-01": "FAILED / UPSTREAM_BLOCKED",
+    "2026-09-02": "FAILED / UPSTREAM_BLOCKED",
+    "2026-09-03": "FAILED / UPSTREAM_BLOCKED"
+  },
+  "faithful_replay_status": "UNAVAILABLE",
+  "nonoriginal_reconstruction_status": "COMPLETE",
+  "reviewed_count": 4,
+  "disposition_totals": {"approve": 0, "approve_with_edit": 4, "hold": 0, "reject": 0},
+  "publication_state": {
+    "publication_eligible": false,
+    "publication_approval": false,
+    "published": false,
+    "release_decision": "PENDING_SEPARATE_DECISION"
+  },
+  "normal_review_queue_modified": false,
+  "pages_unchanged": true,
+  "archive_unchanged": true,
+  "rss_unchanged": true,
+  "homepage_unchanged": true,
+  "audio_social_output_created": false,
+  "release_approval_created": false,
+  "items": [
+    {"reconstruction_id": "fl-nonoriginal-20260901-001", "historical_date": "2026-09-01", "decision": "APPROVE_WITH_EDIT", "duplicate_status": "NEW_RECONSTRUCTED_EVENT"},
+    {"reconstruction_id": "fl-nonoriginal-20260902-001", "historical_date": "2026-09-02", "decision": "APPROVE_WITH_EDIT", "duplicate_status": "NEW_RECONSTRUCTED_EVENT"},
+    {"reconstruction_id": "fl-nonoriginal-20260902-002", "historical_date": "2026-09-02", "decision": "APPROVE_WITH_EDIT", "duplicate_status": "NEW_RECONSTRUCTED_EVENT"},
+    {"reconstruction_id": "fl-nonoriginal-20260903-001", "historical_date": "2026-09-03", "decision": "APPROVE_WITH_EDIT", "duplicate_status": "NEW_RECONSTRUCTED_EVENT"}
+  ],
+  "future_boundary": "Item-level review is not publication authorization. Any publication requires a separate release decision."
+}

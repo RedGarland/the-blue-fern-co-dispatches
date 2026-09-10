@@ -257,15 +257,30 @@ def _build_review_queue(root: Path, edition_date: str, inbox: Path) -> dict[str,
             duplicate_key = str(row.get("agent_duplicate_key") or row.get("candidate_id") or "")
             review_eligible = bool(row.get("eligible_for_review", True))
             if review_eligible and duplicate_key and duplicate_key in seen_duplicate_keys:
-                intake_rows[-1]["candidate_disposition"] = "duplicate"
+                prior = next(
+                    (
+                        existing
+                        for existing in intake_rows[:-1]
+                        if str(existing.get("agent_duplicate_key") or existing.get("candidate_id") or "") == duplicate_key
+                    ),
+                    {},
+                )
+                duplicate_target = str(prior.get("candidate_id") or prior.get("review_item_id") or "")
+                intake_rows[-1]["candidate_disposition"] = "duplicate_with_reason"
                 intake_rows[-1]["candidate_disposition_reason"] = "duplicate agent_duplicate_key within intake"
+                intake_rows[-1]["duplicate_linkage"] = {
+                    "target_candidate_id": duplicate_target,
+                    "represented_facts": [str(prior.get("title") or ""), str(prior.get("exact_supporting_passage") or "")],
+                    "new_facts_considered": [str(intake_rows[-1].get("title") or ""), str(intake_rows[-1].get("exact_supporting_passage") or "")],
+                    "why_not_distinct": "same Source Watch duplicate key within the intake export",
+                }
                 intake_rows[-1]["eligible_for_review"] = False
                 intake_rows[-1]["editorial_status"] = "reject"
                 intake_rows[-1]["editorial_note"] = (
                     "Duplicate Food Line Source Watch finding retained for audit but excluded from the review queue."
                 )
                 intake_rows[-1]["review_transition_owner"] = ""
-                lifecycle_counts["duplicate"] += 1
+                lifecycle_counts["duplicate_with_reason"] += 1
                 continue
             if not review_eligible:
                 lifecycle_counts[intake_row["candidate_disposition"]] += 1
@@ -277,7 +292,7 @@ def _build_review_queue(root: Path, edition_date: str, inbox: Path) -> dict[str,
         intake_artifact["candidate_rows"] = intake_rows
         intake_artifact["counts"] = {
             "eligible_for_review": sum(1 for row in intake_rows if bool(row.get("eligible_for_review", True))),
-            "duplicate": sum(1 for row in intake_rows if str(row.get("candidate_disposition") or "") == "duplicate"),
+            "duplicate_with_reason": sum(1 for row in intake_rows if str(row.get("candidate_disposition") or "") == "duplicate_with_reason"),
             "retained_for_review": sum(1 for row in intake_rows if str(row.get("candidate_disposition") or "") == "retained_for_review"),
             "rejected_with_reason": sum(1 for row in intake_rows if str(row.get("candidate_disposition") or "") == "rejected_with_reason"),
             "deferred_with_reason": sum(1 for row in intake_rows if str(row.get("candidate_disposition") or "") == "deferred_with_reason"),

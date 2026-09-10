@@ -4054,8 +4054,36 @@ def build_review_queue(
     for item in all_candidates:
         hints = item.get("duplicate_cluster_hints") if isinstance(item.get("duplicate_cluster_hints"), Mapping) else {}
         cluster_id = str(hints.get("cluster_id") or "")
-        duplicate_status = "canonical" if canonical_by_cluster.get(cluster_id) == item.get("candidate_id") else "duplicate" if cluster_id else "uncertain"
+        cluster_members = [
+            candidate
+            for candidate in all_candidates
+            if str((candidate.get("duplicate_cluster_hints") or {}).get("cluster_id") or "") == cluster_id
+        ] if cluster_id else []
+        source_urls = {
+            str((candidate.get("normalized_record") or {}).get("source_url") or "").strip()
+            for candidate in cluster_members
+        }
+        same_source_cluster = bool(cluster_id and len(source_urls) == 1 and "" not in source_urls)
+        duplicate_status = (
+            "canonical" if canonical_by_cluster.get(cluster_id) == item.get("candidate_id") and same_source_cluster
+            else "duplicate" if same_source_cluster else "uncertain"
+        )
         row = _queue_row_from_candidate(item, cluster_id=cluster_id, duplicate_status=duplicate_status)
+        if duplicate_status == "duplicate":
+            canonical_id = str(canonical_by_cluster.get(cluster_id) or "")
+            canonical = next((candidate for candidate in cluster_members if candidate.get("candidate_id") == canonical_id), {})
+            row["duplicate_linkage"] = {
+                "target_candidate_id": canonical_id,
+                "represented_facts": [
+                    str((canonical.get("normalized_record") or {}).get("supporting_passage") or ""),
+                    str((canonical.get("normalized_record") or {}).get("event_type") or ""),
+                ],
+                "new_facts_considered": [
+                    str((item.get("normalized_record") or {}).get("supporting_passage") or ""),
+                    str((item.get("normalized_record") or {}).get("event_type") or ""),
+                ],
+                "why_not_distinct": "same source URL and duplicate event cluster",
+            }
         if duplicate_status == "duplicate":
             duplicate_rows.append(row)
         else:
@@ -4373,7 +4401,18 @@ def run_collection_attempt(
         prefilter = _care_line_access_prefilter(raw_item, lead, reviewed_records=historical_reviewed_records or ())
         prefilter_diagnostics.append(prefilter)
         if prefilter["prefilter_decision"] == "discard":
-            prefilter_discarded.append(prefilter)
+            prefilter_row = {
+                **prefilter,
+                "schema_version": EXCLUSION_SCHEMA_VERSION,
+                "exclusion_id": _stable_id("care-line-prefilter-exclusion", raw_item.get("raw_item_id", ""), prefilter.get("normalized_reason", "")),
+                "exclusion_reason": str(prefilter.get("normalized_reason") or "prefilter_discarded"),
+                "editorial_outcome": "EXCLUDED",
+                "classification": str(prefilter.get("normalized_reason") or "prefilter_discarded").upper(),
+                "supporting_text": _text(raw_item, "description", "content_text"),
+                "lineage": {"collection_run_id": run_id, "source_artifact_path": raw_item.get("source_artifact_path", "")},
+            }
+            prefilter_discarded.append(prefilter_row)
+            exclusions.append(prefilter_row)
             continue
         status, payload_row = qualify_event_lead(
             source,

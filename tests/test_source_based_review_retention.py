@@ -212,9 +212,10 @@ def test_every_discovery_has_a_durable_disposition_and_duplicates_do_not_enter_r
     assert len(queue["items"]) == 1
     assert [row["candidate_disposition"] for row in intake["candidate_rows"]] == [
         "retained_for_review",
-        "duplicate",
+        "duplicate_with_reason",
         "invalid_source_with_reason",
     ]
+    assert intake["candidate_rows"][1]["duplicate_linkage"]["target_candidate_id"]
     assert intake["lifecycle_reconciliation"] == {"discovered": 3, "terminal_or_handoff": 3, "unaccounted": 0}
     assert queue["review_lifecycle"]["unaccounted"] == 0
     assert queue["review_lifecycle"]["pending_review_owner"] == "human_editorial_review"

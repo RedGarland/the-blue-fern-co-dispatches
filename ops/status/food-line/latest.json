@@ -1,0 +1,86 @@
+{
+  "aggregate_status": "FAILED",
+  "dispatch": "food-line",
+  "incident_reference": {
+    "date": "2026-09-10"
+  },
+  "last_exported_at": "2026-09-10T20:01:00Z",
+  "last_receipt_at": "2026-09-10T15:30:02.456887Z",
+  "latest_runtime_proof_date": "2026-09-10T15:30:02.456887Z",
+  "next_expected_run": null,
+  "observed_date": "2026-09-10",
+  "public_side_effects": {
+    "publication_attempted": false,
+    "publication_status": "skipped_not_release_ready"
+  },
+  "publication_attempted": false,
+  "publication_status": "skipped_not_release_ready",
+  "receipt_completeness": "COMPLETE",
+  "recovery_lifecycle": "RECOVERY_PENDING_RUNTIME_PROOF",
+  "runner_source_head": "ab56ccb54905a966b32170d3c70f57b541f0988a",
+  "schema_version": "bluefern_external_operational_status_v1",
+  "stale_after": "2026-09-10T14:00:00Z",
+  "stale_observability": false,
+  "task_summaries": [
+    {
+      "artifact_id": "20260910T131003Z-current-intake.json",
+      "classification": "upstream_blocked",
+      "completed_at": "2026-09-10T13:10:03.762997Z",
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {},
+      "publication_attempted": null,
+      "publication_status": "",
+      "run_id": "",
+      "scheduled_for": "2026-09-10",
+      "started_at": "2026-09-10T13:10:03.761465Z",
+      "status": "UPSTREAM_BLOCKED",
+      "task_key": "food_line_current_intake"
+    },
+    {
+      "artifact_id": "26128-defda5fc.json",
+      "classification": "skipped_not_release_ready",
+      "completed_at": "2026-09-10T15:30:02.4568874Z",
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {},
+      "publication_attempted": false,
+      "publication_status": "skipped_not_release_ready",
+      "run_id": "20260910T153002Z-26128-ce2ef957",
+      "scheduled_for": "2026-09-10",
+      "started_at": "2026-09-10T15:30:02.3207940Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "food_line_daily_publish"
+    },
+    {
+      "artifact_id": "20260910T123005Z-source-watch.json",
+      "classification": "failed",
+      "completed_at": "2026-09-10T12:30:05.323565Z",
+      "exit_code": 10,
+      "next_expected_run": null,
+      "public_side_effects": {},
+      "publication_attempted": null,
+      "publication_status": "",
+      "run_id": "food-line-scheduled-20260910-20260910T123002Z-c93dd7cd",
+      "scheduled_for": "2026-09-10",
+      "started_at": "2026-09-10T12:30:03.517907Z",
+      "status": "FAILED",
+      "task_key": "food_line_source_watch"
+    },
+    {
+      "artifact_id": "20260910T130003Z-status-resume.json",
+      "classification": "upstream_blocked",
+      "completed_at": "2026-09-10T13:00:03.356396Z",
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {},
+      "publication_attempted": null,
+      "publication_status": "",
+      "run_id": "food-line-scheduled-20260910-20260910T123002Z-c93dd7cd",
+      "scheduled_for": "2026-09-10",
+      "started_at": "2026-09-10T13:00:03.355164Z",
+      "status": "UPSTREAM_BLOCKED",
+      "task_key": "food_line_source_watch_resume"
+    }
+  ]
+}

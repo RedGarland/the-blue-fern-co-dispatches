@@ -227,6 +227,56 @@ Proposed external paths:
 
 `ops/status/` must remain excluded from Pages publication.
 
+### Phase 1 serialized exporter
+
+The Phase 1 exporter is `scripts/export_operational_status.py`. It reads the
+authoritative local receipt directory, evaluates the whole Food Line task chain,
+sanitizes operational fields, and atomically writes the following artifacts to
+a dedicated operational-status checkout:
+
+- `ops/status/food-line/latest.json`
+- `ops/status/food-line/history/YYYY-MM-DD.json`
+- `ops/status/system/latest.json`
+
+The exporter must receive explicit `--source-root` and `--status-checkout`
+paths. The status checkout must be separate from every production runner and
+from the Pages checkout. One process-wide file lock serializes exporters; a
+contending process exits nonzero. Repeated exports reuse the previous export
+timestamp when the sanitized payload is byte-equivalent, and atomic replacement
+prevents partial JSON artifacts.
+
+The Food Line status payload reports aggregate dispatch health, receipt
+completeness, task summaries, recovery lifecycle, publication state, and bounded
+staleness fields. It never exports raw source content, editorial notes, private
+queue data, credentials, environment variables, or local filesystem paths.
+
+The Scheduled Dispatch Watch should consume `food-line/latest.json` as follows:
+
+1. Read `aggregate_status` for dispatch health. `FAILED` is a real task failure;
+   `STALE_OBSERVABILITY` means the status surface cannot establish a current
+   result and must not be treated as yesterday's health.
+2. Read `task_summaries` to identify failed, upstream-blocked, degraded, or
+   safe-no-op tasks. `SAFE_NO_OP` from Daily Publish never masks an upstream
+   failure.
+3. Require `receipt_completeness == COMPLETE` before treating a day as fully
+   observed. `PARTIAL`, `MISSING`, and `INCONSISTENT` are observable data-quality
+   conditions, not publication results.
+4. Read `recovery_lifecycle` separately. `RECOVERY_PENDING_RUNTIME_PROOF`
+   remains pending after code merge, runner rollout, preflight, or export;
+   only a later successful runtime receipt can establish `RECOVERED`.
+5. Read `publication_attempted`, `publication_status`, and `public_side_effects`
+   independently. No public edition is not itself a task failure.
+
+The system artifact marks Food Line `MIGRATED` and all other dispatches
+`NOT_MIGRATED`; those entries are not synthesized failures. Migration order is:
+
+1. Food Line
+2. Care Line
+3. Gaza
+4. ICE
+5. Cascadia
+6. American Pressure
+
 ## Git contention strategy
 
 Use one serialized exporter. Do not have every scheduled task independently commit and push. The exporter should use a dedicated operational-status clone/worktree or isolated checkout. Production runners should not need to push from dirty runtime worktrees.

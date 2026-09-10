@@ -205,3 +205,61 @@ def test_supplied_historical_alert_shape_dry_runs_without_mutation():
     assert result["would_write"] is False
     assert source.read_bytes() == before
     assert Path("data/agent-history").exists()  # pre-existing private archive remains untouched
+
+
+def test_food_line_agent_does_not_default_latin_america_to_us_scope():
+    payload = _row(
+        title="El NiÃ±o Food Insecurity 16 Million People in Latin America",
+        source_url="https://www.telesurenglish.net/el-nino-food-insecurity-16million-people",
+        publisher="teleSUR English",
+        state="",
+        location_name="",
+        exact_supporting_passage="Up to 16 million people in Latin America and the Caribbean could face food insecurity.",
+        summary="Food insecurity in Latin America and the Caribbean.",
+    )
+    finding = adapt_food_line_agent_output([payload], agent_name="fixture", agent_run_id="run-1", discovered_at="2026-09-08T00:00:00Z")[0]
+    candidate = map_finding_to_food_line_candidate(finding, edition_date="2026-09-08")
+    assert candidate["state"] == ""
+    assert candidate["location_name"] == "Latin America and the Caribbean"
+    assert candidate["location_scope"] == "international"
+    assert candidate["eligible_for_review"] is False
+    assert "outside_food_line_us_territories_scope" in candidate["exclusion_reason"]
+
+
+def test_food_line_agent_does_not_default_bangladesh_to_us_scope():
+    payload = _row(
+        title="Govt rolls out stipends, school meals to reduce school dropout: State Minister",
+        source_url="https://unb.com.bd/m/category/Bangladesh/govt-rolls-out-stipends-school-meals-to-reduce-school-dropout-state-minister/194884",
+        publisher="unb.com.bd",
+        state="",
+        location_name="",
+        exact_supporting_passage="The Bangladesh government has taken measures including school feeding programmes.",
+        summary="Bangladesh school feeding policy.",
+    )
+    finding = adapt_food_line_agent_output([payload], agent_name="fixture", agent_run_id="run-1", discovered_at="2026-09-08T00:00:00Z")[0]
+    candidate = map_finding_to_food_line_candidate(finding, edition_date="2026-09-08")
+    assert candidate["state"] == ""
+    assert candidate["location_name"] == "Bangladesh"
+    assert candidate["location_scope"] == "international"
+    assert candidate["eligible_for_review"] is False
+    assert "outside_food_line_us_territories_scope" in candidate["exclusion_reason"]
+
+
+def test_food_line_agent_resolves_north_carolina_from_retained_text():
+    payload = {
+        "title": "Over 500,000 N.C. children qualify for free or reduced school meals. Federal SNAP cuts could cause decrease",
+        "source_url": "https://dailytarheel.com/480556/city-state/over-500000-n-c-children-qualify-for-free-or-reduced-school-meals-federal-snap-cuts-could-cause-decrease",
+        "publisher": "The Daily Tar Heel",
+        "source_published_at": "2026-09-08",
+        "state": "",
+        "location_name": "",
+        "exact_supporting_passage": "Recent SNAP eligibility restrictions and cuts could cause thousands of North Carolina students to lose automatic eligibility for free school meals.",
+        "summary": "School-age children receiving SNAP are automatically eligible for free school meals in North Carolina, and SNAP cuts could cause thousands to lose that access.",
+        "confidence": "high",
+        "agent_query_context": {"query": "SNAP school meals"},
+    }
+    finding = adapt_food_line_agent_output([payload], agent_name="fixture", agent_run_id="run-1", discovered_at="2026-09-08T00:00:00Z")[0]
+    candidate = map_finding_to_food_line_candidate(finding, edition_date="2026-09-08")
+    assert candidate["state"] == "NC"
+    assert candidate["location_name"] == "North Carolina"
+    assert candidate["eligible_for_review"] is True

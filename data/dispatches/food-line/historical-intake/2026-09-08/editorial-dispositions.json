@@ -1,0 +1,122 @@
+{
+  "counts": {
+    "approved": 1,
+    "pending": 0,
+    "publication_approval": false,
+    "publication_eligible": false,
+    "rejected": 2,
+    "selected": 1
+  },
+  "decision_owner": "human_editorial_review",
+  "decision_timestamp": "2026-09-10T01:16:17.049436Z",
+  "decisions": [
+    {
+      "after": {
+        "editorial_status": "reject",
+        "location_name": "Latin America and the Caribbean",
+        "location_scope": "international",
+        "proposed_public_headline": "El Niño Food Insecurity 16 Million People in Latin America",
+        "proposed_public_summary": "teleSUR English reported household food hardship, affecting rural residents.",
+        "publication_eligible": false,
+        "selected_for_publication_consideration": false,
+        "state": ""
+      },
+      "before": {
+        "editorial_status": "pending_editorial_review",
+        "location_name": "national",
+        "location_scope": "national",
+        "proposed_public_headline": "El Niño Food Insecurity 16 Million People in Latin America",
+        "proposed_public_summary": "teleSUR English reported household food hardship, affecting rural residents.",
+        "state": "US"
+      },
+      "candidate_id": "finding_dcfd8c4c3725a9cb069ec574",
+      "decision_owner": "human_editorial_review",
+      "decision_reason": "OUT_OF_SCOPE_GEOGRAPHY",
+      "decision_timestamp": "2026-09-10T01:16:17.049436Z",
+      "final_editorial_decision": "reject",
+      "historical_date": "2026-09-08",
+      "original_pending_status": "pending_editorial_review",
+      "original_retained_source_artifact": "data/dispatches/food-line/agent-intake/2026-09-08/food-line-scheduled-20260908-20260908T123002Z-a0a7b021.json",
+      "replay_lineage_path": "data/dispatches/food-line/historical-intake/2026-09-08/replay-receipt.json",
+      "review_item_id": "finding_dcfd8c4c3725a9cb069ec574",
+      "source_url": "https://www.telesurenglish.net/el-nino-food-insecurity-16million-people",
+      "source_watch_run_id": "food-line-scheduled-20260908-20260908T123002Z-a0a7b021"
+    },
+    {
+      "after": {
+        "editorial_status": "approve_with_edit",
+        "location_name": "North Carolina",
+        "location_scope": "state",
+        "proposed_public_headline": "North Carolina students could lose automatic free-school-meal eligibility as SNAP rules tighten",
+        "proposed_public_summary": "Recent SNAP eligibility restrictions and cuts could cause thousands of North Carolina students to lose automatic eligibility for free school meals, according to The Daily Tar Heel.",
+        "publication_eligible": false,
+        "selected_for_publication_consideration": true,
+        "state": "NC"
+      },
+      "before": {
+        "editorial_status": "pending_editorial_review",
+        "location_name": "national",
+        "location_scope": "national",
+        "proposed_public_headline": "Over 500,000 N.C. children qualify for free or reduced school meals. Federal SNAP cuts could cause decrease",
+        "proposed_public_summary": "The Daily Tar Heel reported a SNAP benefit delay, affecting children, SNAP households.",
+        "state": "US"
+      },
+      "candidate_id": "finding_1c3cb30a0ce9abe71d9097bf",
+      "decision_owner": "human_editorial_review",
+      "decision_reason": "IN_SCOPE_FOOD_ACCESS_PRESSURE",
+      "decision_timestamp": "2026-09-10T01:16:17.049436Z",
+      "final_editorial_decision": "approve_with_edit",
+      "historical_date": "2026-09-08",
+      "original_pending_status": "pending_editorial_review",
+      "original_retained_source_artifact": "data/dispatches/food-line/agent-intake/2026-09-08/food-line-scheduled-20260908-20260908T123002Z-a0a7b021.json",
+      "replay_lineage_path": "data/dispatches/food-line/historical-intake/2026-09-08/replay-receipt.json",
+      "review_item_id": "finding_1c3cb30a0ce9abe71d9097bf",
+      "source_url": "https://dailytarheel.com/480556/city-state/over-500000-n-c-children-qualify-for-free-or-reduced-school-meals-federal-snap-cuts-could-cause-decrease",
+      "source_watch_run_id": "food-line-scheduled-20260908-20260908T123002Z-a0a7b021"
+    },
+    {
+      "after": {
+        "editorial_status": "reject",
+        "location_name": "Bangladesh",
+        "location_scope": "international",
+        "proposed_public_headline": "Govt rolls out stipends, school meals to reduce school dropout: State Minister",
+        "proposed_public_summary": "unb.com.bd reported pressure on school meals access.",
+        "publication_eligible": false,
+        "selected_for_publication_consideration": false,
+        "state": ""
+      },
+      "before": {
+        "editorial_status": "pending_editorial_review",
+        "location_name": "national",
+        "location_scope": "national",
+        "proposed_public_headline": "Govt rolls out stipends, school meals to reduce school dropout: State Minister",
+        "proposed_public_summary": "unb.com.bd reported pressure on school meals access.",
+        "state": "US"
+      },
+      "candidate_id": "finding_020d46faa53691a9b37ecd79",
+      "decision_owner": "human_editorial_review",
+      "decision_reason": "OUT_OF_SCOPE_GEOGRAPHY",
+      "decision_timestamp": "2026-09-10T01:16:17.049436Z",
+      "final_editorial_decision": "reject",
+      "historical_date": "2026-09-08",
+      "original_pending_status": "pending_editorial_review",
+      "original_retained_source_artifact": "data/dispatches/food-line/agent-intake/2026-09-08/food-line-scheduled-20260908-20260908T123002Z-a0a7b021.json",
+      "replay_lineage_path": "data/dispatches/food-line/historical-intake/2026-09-08/replay-receipt.json",
+      "review_item_id": "finding_020d46faa53691a9b37ecd79",
+      "source_url": "https://unb.com.bd/m/category/Bangladesh/govt-rolls-out-stipends-school-meals-to-reduce-school-dropout-state-minister/194884",
+      "source_watch_run_id": "food-line-scheduled-20260908-20260908T123002Z-a0a7b021"
+    }
+  ],
+  "historical_date": "2026-09-08",
+  "publication_side_effects": {
+    "audio": false,
+    "bluesky": false,
+    "maps": false,
+    "pages": false,
+    "public_output": false,
+    "schedule": false
+  },
+  "replay_lineage_path": "data/dispatches/food-line/historical-intake/2026-09-08/replay-receipt.json",
+  "schema_version": "food_line_historical_editorial_disposition_v1",
+  "source_watch_run_id": "food-line-scheduled-20260908-20260908T123002Z-a0a7b021"
+}

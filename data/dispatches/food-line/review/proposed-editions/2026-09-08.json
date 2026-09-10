@@ -1,0 +1,260 @@
+{
+  "approved_item_count": 0,
+  "draft": true,
+  "draft_status": "draft_pending_editorial_review",
+  "edition_date": "2026-09-08",
+  "historical_replay": {
+    "auto_approval": false,
+    "historical_date": "2026-09-08",
+    "publication_side_effects": false,
+    "replay_reason": "missing_current_intake",
+    "replayed_at": "2026-09-10T00:42:27.643643Z",
+    "schema_version": "food_line_historical_current_intake_replay_v1",
+    "source_watch_run_id": "food-line-scheduled-20260908-20260908T123002Z-a0a7b021"
+  },
+  "items": [
+    {
+      "freshness_check": {
+        "age_days": 0,
+        "basis": "newly_published",
+        "basis_date": "2026-09-08",
+        "edition_date": "2026-09-08",
+        "reason": "",
+        "status": "current"
+      },
+      "headline": "El Niño Food Insecurity 16 Million People in Latin America",
+      "location_name": "national",
+      "rank": 5,
+      "section": "Core Food Pressure Signals",
+      "source": "teleSUR English",
+      "source_published_at": "2026-09-08",
+      "source_url": "https://www.telesurenglish.net/el-nino-food-insecurity-16million-people",
+      "state": "US",
+      "summary": "teleSUR English reported household food hardship, affecting rural residents.",
+      "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+      "why_it_matters": "teleSUR English reported household food hardship, affecting rural residents."
+    },
+    {
+      "freshness_check": {
+        "age_days": 0,
+        "basis": "newly_published",
+        "basis_date": "2026-09-08",
+        "edition_date": "2026-09-08",
+        "reason": "",
+        "status": "current"
+      },
+      "headline": "Over 500,000 N.C. children qualify for free or reduced school meals. Federal SNAP cuts could cause decrease",
+      "location_name": "national",
+      "rank": 8,
+      "section": "Core Food Pressure Signals",
+      "source": "The Daily Tar Heel",
+      "source_published_at": "2026-09-08",
+      "source_url": "https://dailytarheel.com/480556/city-state/over-500000-n-c-children-qualify-for-free-or-reduced-school-meals-federal-snap-cuts-could-cause-decrease",
+      "state": "US",
+      "summary": "The Daily Tar Heel reported a SNAP benefit delay, affecting children, SNAP households.",
+      "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+      "why_it_matters": "The Daily Tar Heel reported a SNAP benefit delay, affecting children, SNAP households."
+    },
+    {
+      "freshness_check": {
+        "age_days": 0,
+        "basis": "newly_published",
+        "basis_date": "2026-09-08",
+        "edition_date": "2026-09-08",
+        "reason": "",
+        "status": "current"
+      },
+      "headline": "Govt rolls out stipends, school meals to reduce school dropout: State Minister",
+      "location_name": "national",
+      "rank": 26,
+      "section": "Core Food Pressure Signals",
+      "source": "unb.com.bd",
+      "source_published_at": "2026-09-08",
+      "source_url": "https://unb.com.bd/m/category/bangladesh/govt-rolls-out-stipends-school-meals-to-reduce-school-dropout-state-minister/194884",
+      "state": "US",
+      "summary": "unb.com.bd reported pressure on school meals access.",
+      "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+      "why_it_matters": "unb.com.bd reported pressure on school meals access."
+    }
+  ],
+  "layout": {
+    "at_a_glance": [
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-09-08",
+          "edition_date": "2026-09-08",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "El Niño Food Insecurity 16 Million People in Latin America",
+        "location_name": "national",
+        "rank": 5,
+        "section": "Core Food Pressure Signals",
+        "source": "teleSUR English",
+        "source_published_at": "2026-09-08",
+        "source_url": "https://www.telesurenglish.net/el-nino-food-insecurity-16million-people",
+        "state": "US",
+        "summary": "teleSUR English reported household food hardship, affecting rural residents.",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "teleSUR English reported household food hardship, affecting rural residents."
+      },
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-09-08",
+          "edition_date": "2026-09-08",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "Over 500,000 N.C. children qualify for free or reduced school meals. Federal SNAP cuts could cause decrease",
+        "location_name": "national",
+        "rank": 8,
+        "section": "Core Food Pressure Signals",
+        "source": "The Daily Tar Heel",
+        "source_published_at": "2026-09-08",
+        "source_url": "https://dailytarheel.com/480556/city-state/over-500000-n-c-children-qualify-for-free-or-reduced-school-meals-federal-snap-cuts-could-cause-decrease",
+        "state": "US",
+        "summary": "The Daily Tar Heel reported a SNAP benefit delay, affecting children, SNAP households.",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "The Daily Tar Heel reported a SNAP benefit delay, affecting children, SNAP households."
+      },
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-09-08",
+          "edition_date": "2026-09-08",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "Govt rolls out stipends, school meals to reduce school dropout: State Minister",
+        "location_name": "national",
+        "rank": 26,
+        "section": "Core Food Pressure Signals",
+        "source": "unb.com.bd",
+        "source_published_at": "2026-09-08",
+        "source_url": "https://unb.com.bd/m/category/bangladesh/govt-rolls-out-stipends-school-meals-to-reduce-school-dropout-state-minister/194884",
+        "state": "US",
+        "summary": "unb.com.bd reported pressure on school meals access.",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "unb.com.bd reported pressure on school meals access."
+      }
+    ],
+    "core_food_pressure_signals": [
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-09-08",
+          "edition_date": "2026-09-08",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "El Niño Food Insecurity 16 Million People in Latin America",
+        "location_name": "national",
+        "rank": 5,
+        "section": "Core Food Pressure Signals",
+        "source": "teleSUR English",
+        "source_published_at": "2026-09-08",
+        "source_url": "https://www.telesurenglish.net/el-nino-food-insecurity-16million-people",
+        "state": "US",
+        "summary": "teleSUR English reported household food hardship, affecting rural residents.",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "teleSUR English reported household food hardship, affecting rural residents."
+      },
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-09-08",
+          "edition_date": "2026-09-08",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "Over 500,000 N.C. children qualify for free or reduced school meals. Federal SNAP cuts could cause decrease",
+        "location_name": "national",
+        "rank": 8,
+        "section": "Core Food Pressure Signals",
+        "source": "The Daily Tar Heel",
+        "source_published_at": "2026-09-08",
+        "source_url": "https://dailytarheel.com/480556/city-state/over-500000-n-c-children-qualify-for-free-or-reduced-school-meals-federal-snap-cuts-could-cause-decrease",
+        "state": "US",
+        "summary": "The Daily Tar Heel reported a SNAP benefit delay, affecting children, SNAP households.",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "The Daily Tar Heel reported a SNAP benefit delay, affecting children, SNAP households."
+      },
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-09-08",
+          "edition_date": "2026-09-08",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "Govt rolls out stipends, school meals to reduce school dropout: State Minister",
+        "location_name": "national",
+        "rank": 26,
+        "section": "Core Food Pressure Signals",
+        "source": "unb.com.bd",
+        "source_published_at": "2026-09-08",
+        "source_url": "https://unb.com.bd/m/category/bangladesh/govt-rolls-out-stipends-school-meals-to-reduce-school-dropout-state-minister/194884",
+        "state": "US",
+        "summary": "unb.com.bd reported pressure on school meals access.",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "unb.com.bd reported pressure on school meals access."
+      }
+    ],
+    "edition_summary": "This edition tracks 3 current, source-traceable food-pressure signals.",
+    "eyebrow_status": "FOOD LINE — PRIVATE DRAFT / UNPUBLISHED",
+    "generation_note": "Private editorial preview assembled from current-review items that are pending or approved; no public output was generated.",
+    "h1": "Food Line Dispatch — 2026-09-08",
+    "other_food_line_signals": [],
+    "source_mix": {
+      "publishers": {
+        "The Daily Tar Heel": 1,
+        "teleSUR English": 1,
+        "unb.com.bd": 1
+      },
+      "states": {
+        "US": 3
+      }
+    },
+    "source_note": "Every item retains its canonical source URL, any available source publication date, and its explicit currentness basis.",
+    "todays_read": [
+      {
+        "freshness_check": {
+          "age_days": 0,
+          "basis": "newly_published",
+          "basis_date": "2026-09-08",
+          "edition_date": "2026-09-08",
+          "reason": "",
+          "status": "current"
+        },
+        "headline": "El Niño Food Insecurity 16 Million People in Latin America",
+        "location_name": "national",
+        "rank": 5,
+        "section": "Core Food Pressure Signals",
+        "source": "teleSUR English",
+        "source_published_at": "2026-09-08",
+        "source_url": "https://www.telesurenglish.net/el-nino-food-insecurity-16million-people",
+        "state": "US",
+        "summary": "teleSUR English reported household food hardship, affecting rural residents.",
+        "uncertainty_note": "Review wording must remain limited to the traceable supporting evidence.",
+        "why_it_matters": "teleSUR English reported household food hardship, affecting rural residents."
+      }
+    ]
+  },
+  "pending_item_count": 3,
+  "publication_approval": false,
+  "publication_eligible": false,
+  "published": false,
+  "rejected_item_count": 0,
+  "schema_version": "food_line_proposed_edition_v1",
+  "selected_item_count": 3,
+  "source_queue_path": "data/dispatches/food-line/review/current-signal-review.json",
+  "source_queue_sha256": "861df59ce7330e2e0e5e0aed793d86f24ca8137af267c785b7e950683f321b0b"
+}

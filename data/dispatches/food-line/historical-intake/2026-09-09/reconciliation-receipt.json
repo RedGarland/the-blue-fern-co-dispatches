@@ -1,0 +1,178 @@
+{
+  "editorial_safety": {
+    "auto_approval": false,
+    "item_approvals": 0,
+    "publication_approval": false
+  },
+  "final_classification": "FOOD LINE SEP 9 — HISTORICAL REPLAY BLOCKED / INSUFFICIENT EVIDENCE",
+  "historical_date": "2026-09-09",
+  "historical_evidence_boundary": {
+    "absent": [
+      "data/dispatches/food-line/discovery-runs/2026-09-09",
+      "data/dispatches/food-line/discovery/2026-09-09/discovery_candidates.json",
+      "data/dispatches/food-line/agent-intake/2026-09-09",
+      "data/dispatches/food-line/agent-inbox/food-line-source-watch-2026-09-09*.json",
+      "data/dispatches/food-line/review/reports/2026-09-09/current-intake.json",
+      "data/dispatches/food-line/review/proposed-editions/2026-09-09.json",
+      "data/dispatches/food-line/review/proposed-editions/2026-09-09.md"
+    ],
+    "current_state_fallback": false,
+    "daily_publish_receipts": [
+      {
+        "classification": "RETAINED_HISTORICAL_EVIDENCE",
+        "path": "data/dispatches/food-line/historical-intake/2026-09-09/daily-publish-receipt/33256-8b517d51.json",
+        "publication_attempted": false,
+        "release_ready": false,
+        "sha256": "9934beafc8041a42ca959f7a2387e4f792a0717c42baa27f6d9fe7ecf9b3181d",
+        "status": "skipped_not_release_ready",
+        "terminal_status": "skipped_not_release_ready"
+      }
+    ],
+    "fresh_source_watch_run": false,
+    "network_access": false,
+    "operator_attention": [
+      {
+        "category": "overlapping_run",
+        "classification": "FAILURE_DIAGNOSTIC_ONLY",
+        "created_at": "2026-09-09T13:00:33.620856Z",
+        "message": "Food Line source-watch lock already exists",
+        "path": "data/dispatches/food-line/historical-intake/2026-09-09/operator-attention/20260909T130033Z-overlapping_run.json",
+        "sha256": "df6242fb77bad6a1db1f31fe45ea0d6b7169893ccfa2e5b6d36cc22494ba36a5"
+      },
+      {
+        "category": "status_resume_failed",
+        "classification": "FAILURE_DIAGNOSTIC_ONLY",
+        "created_at": "2026-09-09T13:00:34.129092Z",
+        "message": "missing or corrupt JSON state: C:\\BlueFernRunner\\FoodLineCurrent6\\status\\food-line\\runs\\2026-09-09.json",
+        "path": "data/dispatches/food-line/historical-intake/2026-09-09/operator-attention/20260909T130034Z-status_resume_failed.json",
+        "sha256": "e847f32e78e094b807a62d6cfcc79bde5d1fc8ddd529bd2f6eccef12d5a61c2a"
+      },
+      {
+        "category": "source_watch_failed",
+        "classification": "FAILURE_DIAGNOSTIC_ONLY",
+        "created_at": "2026-09-09T13:00:43.813870Z",
+        "message": "source-watch lock exists (overlapping_run); see C:\\BlueFernRunner\\FoodLineCurrent6\\logs\\food-line\\operator-attention\\2026-09-09\\20260909T130033Z-overlapping_run.json",
+        "path": "data/dispatches/food-line/historical-intake/2026-09-09/operator-attention/20260909T130043Z-source_watch_failed.json",
+        "sha256": "24cb5341fa91d8beaee3748accb8ba79622c3a0498463301ac2af97b72d32e84"
+      },
+      {
+        "category": "current_intake_failed",
+        "classification": "FAILURE_DIAGNOSTIC_ONLY",
+        "created_at": "2026-09-09T16:09:35.029112Z",
+        "message": "missing or corrupt JSON state: C:\\BlueFernRunner\\FoodLineCurrent6\\status\\food-line\\runs\\2026-09-09.json",
+        "path": "data/dispatches/food-line/historical-intake/2026-09-09/operator-attention/20260909T160935Z-current_intake_failed.json",
+        "sha256": "e74abdf6005743dd9c8a88efb213c330cca354c8b2a24f0a303636f4e508e5ae"
+      }
+    ],
+    "retained_source_discovery_evidence": false,
+    "retained_source_watch_handoff": false,
+    "unsafe_for_replay": [
+      "September 10+ source/web state",
+      "fresh Source Watch output not retained by the original September 9 run"
+    ]
+  },
+  "operational_health_handling": {
+    "fabricated_success_receipt": false,
+    "historical_reconciliation_status": "BLOCKED",
+    "original_runtime_classification": "FAILED_UPSTREAM_BLOCKED",
+    "recovery_lifecycle_effect": "none; Sep. 9 remains an original runtime incident until later real scheduled runtime proof"
+  },
+  "original_sep9_failure_lineage": {
+    "current_intake": {
+      "operator_attention_refs": [
+        {
+          "category": "current_intake_failed",
+          "classification": "FAILURE_DIAGNOSTIC_ONLY",
+          "created_at": "2026-09-09T16:09:35.029112Z",
+          "message": "missing or corrupt JSON state: C:\\BlueFernRunner\\FoodLineCurrent6\\status\\food-line\\runs\\2026-09-09.json",
+          "path": "data/dispatches/food-line/historical-intake/2026-09-09/operator-attention/20260909T160935Z-current_intake_failed.json",
+          "sha256": "e74abdf6005743dd9c8a88efb213c330cca354c8b2a24f0a303636f4e508e5ae"
+        }
+      ],
+      "reason": "missing/corrupt September 9 source-watch run-state",
+      "runtime_status": "UPSTREAM_BLOCKED"
+    },
+    "daily_publish": {
+      "reason": "skipped_not_release_ready; release_ready=false; publication_attempted=false",
+      "receipt_refs": [
+        {
+          "classification": "RETAINED_HISTORICAL_EVIDENCE",
+          "path": "data/dispatches/food-line/historical-intake/2026-09-09/daily-publish-receipt/33256-8b517d51.json",
+          "publication_attempted": false,
+          "release_ready": false,
+          "sha256": "9934beafc8041a42ca959f7a2387e4f792a0717c42baa27f6d9fe7ecf9b3181d",
+          "status": "skipped_not_release_ready",
+          "terminal_status": "skipped_not_release_ready"
+        }
+      ],
+      "runtime_status": "SAFE_NO_OP"
+    },
+    "resume": {
+      "operator_attention_refs": [
+        {
+          "category": "status_resume_failed",
+          "classification": "FAILURE_DIAGNOSTIC_ONLY",
+          "created_at": "2026-09-09T13:00:34.129092Z",
+          "message": "missing or corrupt JSON state: C:\\BlueFernRunner\\FoodLineCurrent6\\status\\food-line\\runs\\2026-09-09.json",
+          "path": "data/dispatches/food-line/historical-intake/2026-09-09/operator-attention/20260909T130034Z-status_resume_failed.json",
+          "sha256": "e847f32e78e094b807a62d6cfcc79bde5d1fc8ddd529bd2f6eccef12d5a61c2a"
+        }
+      ],
+      "reason": "missing or corrupt JSON state for status/food-line/runs/2026-09-09.json",
+      "runtime_status": "FAILED"
+    },
+    "source_watch": {
+      "operator_attention_refs": [
+        {
+          "category": "overlapping_run",
+          "classification": "FAILURE_DIAGNOSTIC_ONLY",
+          "created_at": "2026-09-09T13:00:33.620856Z",
+          "message": "Food Line source-watch lock already exists",
+          "path": "data/dispatches/food-line/historical-intake/2026-09-09/operator-attention/20260909T130033Z-overlapping_run.json",
+          "sha256": "df6242fb77bad6a1db1f31fe45ea0d6b7169893ccfa2e5b6d36cc22494ba36a5"
+        },
+        {
+          "category": "source_watch_failed",
+          "classification": "FAILURE_DIAGNOSTIC_ONLY",
+          "created_at": "2026-09-09T13:00:43.813870Z",
+          "message": "source-watch lock exists (overlapping_run); see C:\\BlueFernRunner\\FoodLineCurrent6\\logs\\food-line\\operator-attention\\2026-09-09\\20260909T130033Z-overlapping_run.json",
+          "path": "data/dispatches/food-line/historical-intake/2026-09-09/operator-attention/20260909T130043Z-source_watch_failed.json",
+          "sha256": "24cb5341fa91d8beaee3748accb8ba79622c3a0498463301ac2af97b72d32e84"
+        }
+      ],
+      "reason": "overlapping source-watch lock before valid run-state existed",
+      "runtime_status": "FAILED"
+    }
+  },
+  "publication_side_effects": {
+    "archive": false,
+    "audio": false,
+    "bluesky": false,
+    "homepage": false,
+    "maps": false,
+    "pages": false,
+    "public_output": false,
+    "rss": false,
+    "schedule": false
+  },
+  "replay_feasibility": "LIMITED_REPLAY",
+  "replay_mechanism": {
+    "action": "historical_reconciliation_only",
+    "current_intake_replay": "not_performed_no_supportable_source_watch_input_set",
+    "proposed_edition": "not_created",
+    "source_watch_reconstruction": "not_performed_no_retained_discovery_evidence"
+  },
+  "replay_reason": "scheduler_overlap_missing_run_state",
+  "replay_result": {
+    "approved": 0,
+    "considered": 0,
+    "duplicate": 0,
+    "imported": 0,
+    "pending": 0,
+    "rejected": 0,
+    "selected": 0,
+    "unresolved": 0
+  },
+  "replayed_at": "2026-09-10T02:02:21.562740Z",
+  "schema_version": "food_line_historical_reconciliation_v1"
+}

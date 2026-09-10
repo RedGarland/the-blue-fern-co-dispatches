@@ -1,0 +1,33 @@
+{
+  "schema_version": "food_line_bounded_run_state_v1",
+  "run_id": "food-line-scheduled-20260908-20260908T123002Z-a0a7b021",
+  "edition_date": "2026-09-08",
+  "started_at": "2026-09-08T12:36:28.468612Z",
+  "completed_at": "2026-09-08T12:36:28.468621Z",
+  "status": "completed_with_exclusions",
+  "resumable": false,
+  "resume_count": 0,
+  "partitions_total": 1,
+  "partitions_completed": 1,
+  "queries_total": 1033,
+  "queries_completed": 200,
+  "queries_failed": 0,
+  "queries_timed_out": 0,
+  "candidates_discovered": 43,
+  "query_plan_sha256": "110d0f57be77a42ee36a85b8d9dd82ee750c01c6edff25b8455b518c4e1b61bc",
+  "final_error": "",
+  "options": {
+    "required_coverage_threshold": 0.9,
+    "direct_source_coverage_threshold": 0.75
+  },
+  "coverage": {
+    "required_success_ratio": 1.0,
+    "direct_success_ratio": 1.0
+  },
+  "agent_export": {
+    "status": "success_with_exclusions",
+    "path": "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\agent-inbox\\food-line-source-watch-2026-09-08-2f442e8562.json",
+    "sha256": "b25dd1a82eb0dcdfefc93ef03d05a47ea005d429ef9deccbadbe6b127fa93aac"
+  },
+  "next_action": "No collection action required."
+}

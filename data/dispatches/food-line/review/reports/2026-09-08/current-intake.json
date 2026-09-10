@@ -1,0 +1,93 @@
+{
+  "accepted_file_count": 3,
+  "created_at": "2026-09-10T00:42:27.765179Z",
+  "discovered_file_count": 2,
+  "discovery_candidates_path": "data/dispatches/food-line/discovery/2026-09-08/discovery_candidates.json",
+  "dry_run_count": 0,
+  "edition_date": "2026-09-08",
+  "errors": [],
+  "historical_date": "2026-09-08",
+  "historical_evidence_boundary": {
+    "daily_publish_receipts": [
+      {
+        "path": "data/dispatches/food-line/historical-intake/2026-09-08/daily-publish-receipt/2332-17075312.json",
+        "sha256": "c315edd9466df7ba1879b1769cc8b9596e7ffd63f88de2090a407c141f85eba3"
+      }
+    ],
+    "discovery_candidates": {
+      "path": "data/dispatches/food-line/discovery/2026-09-08/discovery_candidates.json",
+      "sha256": "acfac6bb274f9b248d81438f5d297d4ba223b1959158c724323c0551e1335ea7"
+    },
+    "operator_attention": [
+      {
+        "path": "data/dispatches/food-line/historical-intake/2026-09-08/operator-attention/20260908T123628Z-source_watch_nonqualifying.json",
+        "sha256": "02441fe24576db43042ae6c238c319a27547d7d94f17909d2e570076bea545fb"
+      },
+      {
+        "path": "data/dispatches/food-line/historical-intake/2026-09-08/operator-attention/20260908T131009Z-current_intake_failed.json",
+        "sha256": "e2e118e3a752f30dc745b519bac0f7f316016789d366522cce07bd70bdbde24b"
+      }
+    ],
+    "retained_input_copies": [
+      {
+        "path": "data/dispatches/food-line/historical-intake/2026-09-08/retained-inputs/food-line-source-watch-2026-09-08-2f442e8562.json",
+        "sha256": "042f4fc12f67bd6394c0795d8f8fe87ff07d1645575cd2ecf9639641b9c3acb8"
+      }
+    ],
+    "selected_inputs": [
+      {
+        "path": "data/dispatches/food-line/agent-inbox/food-line-source-watch-2026-09-08-2f442e8562.json",
+        "sha256": "042f4fc12f67bd6394c0795d8f8fe87ff07d1645575cd2ecf9639641b9c3acb8"
+      }
+    ],
+    "source_watch_query_plan": {
+      "path": "data/dispatches/food-line/discovery-runs/2026-09-08/food-line-scheduled-20260908-20260908T123002Z-a0a7b021/query-plan.json",
+      "sha256": "8f1bd549877e21abc56286bcb1f4fd56908a966511f30e30be09bb841db90462"
+    },
+    "source_watch_run_state": {
+      "path": "data/dispatches/food-line/discovery-runs/2026-09-08/food-line-scheduled-20260908-20260908T123002Z-a0a7b021/run-state.json",
+      "sha256": "f3568140c5328e931d11d2ab99a83e2a8f13fa114807343497e76ef84b027dda"
+    }
+  },
+  "historical_replay": true,
+  "idempotent_noop_count": 0,
+  "import_attempt_count": 3,
+  "import_count": 3,
+  "inbox": "data\\dispatches\\food-line\\agent-inbox",
+  "proposal": {
+    "draft_status": "draft_pending_editorial_review",
+    "json_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co.worktrees\\food-line-sep8-intake\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-08.json",
+    "markdown_path": "C:\\PythonProjects\\Dispatches From The Blue Fern Co.worktrees\\food-line-sep8-intake\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-08.md",
+    "status": "written"
+  },
+  "publication_side_effects": {
+    "audio": false,
+    "bluesky": false,
+    "maps": false,
+    "pages": false,
+    "public_output": false,
+    "schedule": false
+  },
+  "queue": {
+    "approved_item_count": 0,
+    "item_count": 3,
+    "path": "data/dispatches/food-line/historical-intake/2026-09-08/current-signal-review.json",
+    "pending_item_count": 3,
+    "rejected_item_count": 0,
+    "status": "written"
+  },
+  "replay_reason": "missing_current_intake",
+  "replayed_at": "2026-09-10T00:42:27.643643Z",
+  "schema_version": "food_line_current_intake_report_v1",
+  "selected_input_count": 1,
+  "selected_inputs": [
+    {
+      "path": "data\\dispatches\\food-line\\agent-inbox\\food-line-source-watch-2026-09-08-2f442e8562.json",
+      "sha256": "042f4fc12f67bd6394c0795d8f8fe87ff07d1645575cd2ecf9639641b9c3acb8"
+    }
+  ],
+  "source_watch_query_plan_path": "data/dispatches/food-line/discovery-runs/2026-09-08/food-line-scheduled-20260908-20260908T123002Z-a0a7b021/query-plan.json",
+  "source_watch_run_id": "food-line-scheduled-20260908-20260908T123002Z-a0a7b021",
+  "source_watch_run_state_path": "data/dispatches/food-line/discovery-runs/2026-09-08/food-line-scheduled-20260908-20260908T123002Z-a0a7b021/run-state.json",
+  "status": "success"
+}

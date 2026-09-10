@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -70,6 +71,27 @@ def _git_current_branch(repo: Path) -> str:
     return _git_output(repo, "branch", "--show-current")
 
 
+def _canonical_repo_relative_path(repo: Path, path: str) -> str:
+    """Return a safe, case-normalized repository-relative path identity."""
+    raw_path = str(path or "").strip()
+    if not raw_path:
+        raise ValueError("protected path must not be empty")
+
+    repo_root = repo.resolve()
+    candidate = Path(raw_path)
+    if not candidate.is_absolute():
+        candidate = repo_root / candidate
+    try:
+        relative = candidate.resolve(strict=False).relative_to(repo_root)
+    except ValueError as exc:
+        raise ValueError(f"path escapes repository root: {path}") from exc
+
+    normalized = relative.as_posix()
+    if not normalized or normalized == ".":
+        raise ValueError(f"path must identify an item inside repository: {path}")
+    return normalized.casefold() if os.name == "nt" else normalized
+
+
 def _is_safe_cleanup_path(path: str) -> bool:
     normalized = str(path or "").replace("\\", "/").strip()
     if FOOD_LINE_DISCOVERY_CANDIDATES_RE.match(normalized.lower()):
@@ -80,9 +102,15 @@ def _is_safe_cleanup_path(path: str) -> bool:
     )
 
 
-def build_cleanup_plan(entries: list[dict[str, Any]], protected_paths: list[str] | None = None) -> dict[str, list[str]]:
+def build_cleanup_plan(
+    entries: list[dict[str, Any]],
+    protected_paths: list[str] | None = None,
+    *,
+    repo: Path | None = None,
+) -> dict[str, list[str]]:
+    repo_root = (repo or ROOT).resolve()
     protected = {
-        str(path or "").replace("\\", "/").strip()
+        _canonical_repo_relative_path(repo_root, path)
         for path in (protected_paths or [])
         if str(path or "").strip()
     }
@@ -93,7 +121,8 @@ def build_cleanup_plan(entries: list[dict[str, Any]], protected_paths: list[str]
         path = str(entry.get("path") or "").replace("\\", "/").strip()
         if not path:
             continue
-        if path in protected:
+        path_identity = _canonical_repo_relative_path(repo_root, path)
+        if path_identity in protected:
             skipped_paths.append(path)
             continue
         if not _is_safe_cleanup_path(path):
@@ -217,7 +246,7 @@ def postflight_runner_repos(
     protected_paths: list[str] | None = None,
 ) -> dict[str, Any]:
     entries_before = _git_status_entries(source_repo)
-    cleanup_plan = build_cleanup_plan(entries_before, protected_paths=protected_paths)
+    cleanup_plan = build_cleanup_plan(entries_before, protected_paths=protected_paths, repo=source_repo)
     cleanup_result = apply_cleanup_plan(source_repo, cleanup_plan)
     report_after = _preflight_summary(source_repo, pages_repo)
     source_entries_after = _git_status_entries(source_repo)

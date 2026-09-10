@@ -1,6 +1,16 @@
 from __future__ import annotations
 
+import subprocess
+
+import pytest
+
 from scripts.runner_repo_maintenance import build_cleanup_plan
+from scripts.runner_repo_maintenance import postflight_runner_repos
+
+
+def _git(repo, *args: str) -> None:
+    result = subprocess.run(["git", *args], cwd=repo, check=False, capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
 
 
 def test_cleanup_plan_limits_cleanup_to_approved_generated_and_temp_paths() -> None:
@@ -66,6 +76,85 @@ def test_cleanup_plan_skips_protected_paths() -> None:
 
     assert plan["clean_paths"] == ["logs/runner-gaza-20260710-070330.log"]
     assert plan["skipped_paths"] == ["logs/runner-gaza-20260710-070329.log"]
+
+
+@pytest.mark.parametrize(
+    "protected_path",
+    [
+        "{root}/logs/runner.log",
+        "{root}/logs/./runner.log",
+        "{root}/LOGS\\RUNNER.LOG",
+        "{root}/logs/runner.log".replace("\\", "/"),
+    ],
+)
+def test_cleanup_plan_normalizes_protected_path_forms(tmp_path, protected_path: str) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    rendered = protected_path.format(root=str(repo))
+
+    plan = build_cleanup_plan(
+        [{"path": "logs/runner.log", "is_untracked": True}],
+        protected_paths=[rendered],
+        repo=repo,
+    )
+
+    assert plan["clean_paths"] == []
+    assert plan["skipped_paths"] == ["logs/runner.log"]
+
+
+def test_cleanup_plan_rejects_protected_path_outside_repository(tmp_path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+
+    with pytest.raises(ValueError, match="escapes repository root"):
+        build_cleanup_plan(
+            [{"path": "logs/runner.log", "is_untracked": True}],
+            protected_paths=[str(tmp_path / "outside.log")],
+            repo=repo,
+        )
+
+
+def test_cleanup_plan_does_not_treat_prefix_collision_as_protected(tmp_path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+
+    plan = build_cleanup_plan(
+        [{"path": "logs/runner.log.backup", "is_untracked": True}],
+        protected_paths=[str(repo / "logs/runner.log")],
+        repo=repo,
+    )
+
+    assert plan["clean_paths"] == ["logs/runner.log.backup"]
+    assert plan["skipped_paths"] == []
+
+
+def test_postflight_preserves_absolute_protected_log_and_reconciles_generated_output(tmp_path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _git(repo, "init", "-b", "main")
+    _git(repo, "config", "user.email", "tests@example.com")
+    _git(repo, "config", "user.name", "Tests")
+
+    tracked = repo / "output" / "site" / "gaza" / "index.html"
+    tracked.parent.mkdir(parents=True)
+    tracked.write_text("committed\n", encoding="utf-8")
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-m", "fixture")
+    tracked.write_text("generated drift\n", encoding="utf-8")
+
+    protected_log = repo / "logs" / "runner-gaza-20260910-060035.log"
+    protected_log.parent.mkdir()
+    protected_log.write_text("historical failure\n", encoding="utf-8")
+    generated = repo / "output" / "site" / "gaza" / "generated.html"
+    generated.write_text("temporary output\n", encoding="utf-8")
+
+    result = postflight_runner_repos(repo, repo, protected_paths=[str(protected_log)])
+
+    assert result["ok"] is True
+    assert tracked.read_text(encoding="utf-8") == "committed\n"
+    assert not generated.exists()
+    assert protected_log.exists()
+    assert result["cleanup_plan"]["skipped_paths"] == ["logs/runner-gaza-20260910-060035.log"]
 
 
 def test_cleanup_plan_cleans_only_date_scoped_food_line_discovery_candidates() -> None:

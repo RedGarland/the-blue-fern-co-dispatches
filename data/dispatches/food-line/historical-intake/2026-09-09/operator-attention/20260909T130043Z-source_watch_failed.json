@@ -1,0 +1,11 @@
+{
+  "category": "source_watch_failed",
+  "created_at": "2026-09-09T13:00:43.813870Z",
+  "details": {
+    "run_id": "food-line-scheduled-20260909-20260909T130018Z-4c334a0a"
+  },
+  "edition_date": "2026-09-09",
+  "message": "source-watch lock exists (overlapping_run); see C:\\BlueFernRunner\\FoodLineCurrent6\\logs\\food-line\\operator-attention\\2026-09-09\\20260909T130033Z-overlapping_run.json",
+  "requires_operator_attention": true,
+  "schema_version": "food_line_operator_attention_v1"
+}

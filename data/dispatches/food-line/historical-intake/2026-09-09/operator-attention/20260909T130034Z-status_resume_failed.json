@@ -1,0 +1,9 @@
+{
+  "category": "status_resume_failed",
+  "created_at": "2026-09-09T13:00:34.129092Z",
+  "details": {},
+  "edition_date": "2026-09-09",
+  "message": "missing or corrupt JSON state: C:\\BlueFernRunner\\FoodLineCurrent6\\status\\food-line\\runs\\2026-09-09.json",
+  "requires_operator_attention": true,
+  "schema_version": "food_line_operator_attention_v1"
+}

@@ -1396,8 +1396,15 @@ def _candidate_from_link(source: dict[str, Any], link: dict[str, str], article: 
     return candidate, None
 
 
-def collect_live_candidates(sources: list[dict[str, Any]], *, max_per_source: int = 3, timeout: float = 15.0, window_hours: int | None = 72) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[ProviderHealth], list[dict[str, Any]]]:
-    retrieved_at = utc_now()
+def collect_live_candidates(
+    sources: list[dict[str, Any]],
+    *,
+    max_per_source: int = 3,
+    timeout: float = 15.0,
+    window_hours: int | None = 72,
+    observed_at: str | None = None,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[ProviderHealth], list[dict[str, Any]]]:
+    retrieved_at = observed_at or utc_now()
     raw_candidates: list[dict[str, Any]] = []
     exclusions: list[dict[str, Any]] = []
     provider_health: list[ProviderHealth] = []

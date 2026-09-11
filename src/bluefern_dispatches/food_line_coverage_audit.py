@@ -11,6 +11,7 @@ from typing import Any
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from bluefern_dispatches.food_line_sources import canonical_url, normalize_title, validate_date
+from bluefern_dispatches.food_line_runtime_state import source_performance_history_path
 
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 ACTIVE_BENCHMARK_STATUSES = {"approved", "reviewed"}
@@ -419,7 +420,9 @@ def _load_run_manifest(root: Path, date: str) -> dict[str, Any] | None:
 
 
 def _load_source_performance_history(root: Path) -> dict[str, Any]:
-    path = root / "data" / "dispatches" / "food-line" / "source_performance_history.json"
+    from .food_line_runtime_state import source_performance_history_path
+
+    path = source_performance_history_path(root)
     payload = _read_json(path)
     return payload if isinstance(payload, dict) else {}
 
@@ -498,7 +501,7 @@ def _artifact_availability(root: Path, date: str) -> dict[str, Any]:
         "discovery_candidates": (discovery_dir / "discovery_candidates.json").exists(),
         "discovery_intake": review_files["discovery_intake.json"],
         "discovery_gap_report": (gap_dir / "discovery_gap_report.json").exists(),
-        "source_performance_history": (root / "data" / "dispatches" / "food-line" / "source_performance_history.json").exists(),
+        "source_performance_history": source_performance_history_path(root).exists(),
         "source_registry": (root / "data" / "dispatches" / "food-line" / "source_registry.json").exists(),
         "discovery_queries": (root / "data" / "dispatches" / "food-line" / "discovery_gap_queries.json").exists(),
     }
@@ -1194,7 +1197,7 @@ def build_food_line_coverage_audit(
                 if isinstance(payload, dict)
             },
             "discovery_queries": discovery_queries,
-            "source_performance_history_path": str(root / "data" / "dispatches" / "food-line" / "source_performance_history.json"),
+        "source_performance_history_path": str(source_performance_history_path(root)),
             "source_registry_path": str(root / "data" / "dispatches" / "food-line" / "source_registry.json"),
         },
     }

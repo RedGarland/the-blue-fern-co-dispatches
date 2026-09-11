@@ -246,7 +246,7 @@ def load_approved_proposal(root: Path, proposal_path: Path | str, edition_date: 
     queue_path, _ = _relative_private_path(
         root,
         str(proposal.get("source_queue_path") or ""),
-        expected_prefix="data/dispatches/food-line/review/",
+        expected_prefix="status/food-line/runtime/",
         label="review queue",
     )
     if queue_path.name != "current-signal-review.json":

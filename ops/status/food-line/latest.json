@@ -1,13 +1,13 @@
 {
   "agent_handoff": {
-    "last_attempt_at": "2026-09-11T02:14:35Z",
-    "last_failure_at": "2026-09-11T02:14:35Z",
+    "last_attempt_at": null,
+    "last_failure_at": null,
     "last_success_at": null,
     "latest_agent_run_id": null,
-    "latest_classification": "MALFORMED",
-    "latest_status": "FAILED",
+    "latest_classification": null,
+    "latest_status": null,
     "stale": false,
-    "state": "HANDOFF_FAILED",
+    "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
   "aggregate_status": "FAILED",
@@ -15,7 +15,7 @@
   "incident_reference": {
     "date": "2026-09-10"
   },
-  "last_exported_at": "2026-09-11T15:42:35Z",
+  "last_exported_at": "2026-09-11T16:36:00Z",
   "last_receipt_at": "2026-09-10T15:30:02.456887Z",
   "latest_runtime_proof_date": "2026-09-10T15:30:02.456887Z",
   "next_expected_run": null,

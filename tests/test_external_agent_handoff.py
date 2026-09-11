@@ -102,6 +102,20 @@ def test_care_import_uses_normalized_registry_and_review_queue(tmp_path: Path) -
     assert queue["queue_item_count"] == 1
 
 
+def test_care_import_accepts_utf8_bom_envelope(tmp_path: Path) -> None:
+    source = tmp_path / "care-bom.json"
+    raw = json.dumps(_envelope("care-line", "care-bom-run-1")).encode("utf-8")
+    source.write_bytes(b"\xef\xbb\xbf" + raw)
+
+    code, receipt = import_envelope(tmp_path, source, dispatch="care-line")
+
+    assert code == 0
+    assert receipt["status"] == "SUCCESS"
+    assert receipt["classification"] == "ACCEPTED"
+    assert receipt["unaccounted"] == 0
+    assert (tmp_path / receipt["archive_ref"]).read_bytes() == source.read_bytes()
+
+
 def test_receipt_is_symbolic_and_reconciliation_is_terminal(tmp_path: Path) -> None:
     source = tmp_path / "food.json"
     _write(source, _envelope())

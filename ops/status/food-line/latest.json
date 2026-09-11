@@ -1,10 +1,21 @@
 {
+  "agent_handoff": {
+    "last_attempt_at": "2026-09-11T02:14:35Z",
+    "last_failure_at": "2026-09-11T02:14:35Z",
+    "last_success_at": null,
+    "latest_agent_run_id": null,
+    "latest_classification": "MALFORMED",
+    "latest_status": "FAILED",
+    "stale": false,
+    "state": "HANDOFF_FAILED",
+    "unaccounted_count": 0
+  },
   "aggregate_status": "FAILED",
   "dispatch": "food-line",
   "incident_reference": {
     "date": "2026-09-10"
   },
-  "last_exported_at": "2026-09-10T20:01:00Z",
+  "last_exported_at": "2026-09-11T15:42:35Z",
   "last_receipt_at": "2026-09-10T15:30:02.456887Z",
   "latest_runtime_proof_date": "2026-09-10T15:30:02.456887Z",
   "next_expected_run": null,
@@ -16,7 +27,7 @@
   "publication_attempted": false,
   "publication_status": "skipped_not_release_ready",
   "receipt_completeness": "COMPLETE",
-  "recovery_lifecycle": "RECOVERY_PENDING_RUNTIME_PROOF",
+  "recovery_lifecycle": "INCIDENT_OPEN",
   "runner_source_head": "ab56ccb54905a966b32170d3c70f57b541f0988a",
   "schema_version": "bluefern_external_operational_status_v1",
   "stale_after": "2026-09-10T14:00:00Z",

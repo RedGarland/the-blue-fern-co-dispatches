@@ -346,6 +346,21 @@ The system artifact marks Food Line `MIGRATED` and all other dispatches
 
 Use one serialized exporter. Do not have every scheduled task independently commit and push. The exporter should use a dedicated operational-status clone/worktree or isolated checkout. Production runners should not need to push from dirty runtime worktrees.
 
+## Scheduled operational-status export
+
+The single Windows task `\Blue Fern Co\Blue Fern Operational Status Export`
+runs at 15 minutes past each hour with `StartWhenAvailable` and
+`MultipleInstances IgnoreNew`. Its action is
+`scripts/run_operational_status_export.ps1`, which invokes only the serialized
+status exporter against the Food Line receipt root and the sanctioned
+`OperationalStatusCurrent` checkout. It never invokes Source Watch, Resume,
+Current Intake, Daily Publish, editorial review, or Pages publication.
+
+The exporter records a bounded local receipt under
+`logs/operational-status-exporter/` with start/completion time, exit code,
+status-change and commit/push results, source/status heads, and a failure
+classification. These local receipts are not exported as public status data.
+
 ## History retention
 
 Recommended externally surfaced retention:

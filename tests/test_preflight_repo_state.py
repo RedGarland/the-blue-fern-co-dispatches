@@ -32,6 +32,70 @@ def test_classify_path_covers_expected_categories():
     assert preflight_repo_state.classify_path("some/unknown/path.txt") == "unknown"
 
 
+@pytest.mark.parametrize(
+    "path",
+    [
+        "data/private-agent-handoff/inbox/food-line/synthetic-food-handoff-20260910-001.json",
+        "data/private-agent-handoff/archive/care-line/2026-09-10/synthetic-care-handoff-20260910-001.json",
+        "data/private-agent-handoff/receipts/food-line/2026-09-10/synthetic-food-handoff-20260910-001-attempt-20260911T021459.547492Z-06e00afbe286.json",
+        "data/private-agent-handoff/receipts/care-line/unknown-date/unknown-run-attempt-20260911T021437.536828Z-6f4a05d22e47.json",
+        "data/private-agent-handoff/retired/food-line/synthetic-food-handoff-20260910-001/active/a-F-synthetic-food-handoff-20260910-001-9c33adea.json",
+        "data/private-agent-handoff/retired/care-line/synthetic-care-handoff-20260910-001/active-before-cleanup/a-C-current-review-queue-ab8d48a5.json",
+        "data/private-agent-handoff/cleanup/food-line/synthetic-food-handoff-20260910-001-20260911T021713.130201Z.json",
+    ],
+)
+def test_external_handoff_evidence_is_allowed(path):
+    assert preflight_repo_state.classify_path(path) == "local_run_state"
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "data/private-agent-handoff/receipts/gaza/2026-09-10/receipt.json",
+        "data/private-agent-handoff/retired/food-line/real-run/active/evidence.json",
+        "data/private-agent-handoff/cleanup/care-line/synthetic-run.json",
+        "data/private-agent-handoff/archive/food-line/2026-09-10/../secret.json",
+        "data/private-agent-handoff/receipts/food-line/2026-09-10/receipt.txt",
+        "data/private-agent-handoff/unrelated.json",
+        "data/other-runtime/evidence.json",
+    ],
+)
+def test_unrelated_or_unsafe_handoff_paths_remain_unknown(path):
+    assert preflight_repo_state.classify_path(path) == "unknown"
+
+
+def test_production_shaped_external_handoff_evidence_is_clean_but_nearby_dirt_is_risky(monkeypatch, tmp_path):
+    source_repo = tmp_path / "repo"
+    source_repo.mkdir()
+    monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: None)
+    monkeypatch.setattr(
+        preflight_repo_state,
+        "_run_git_status",
+        lambda _repo: (
+            0,
+            [
+                "## add/pages-repo-default",
+                "?? data/private-agent-handoff/cleanup/food-line/synthetic-food-handoff-20260910-001-20260911T021713.130201Z.json",
+                "?? data/private-agent-handoff/retired/care-line/synthetic-care-handoff-20260910-001/audit/a-C-receipt.json",
+                "?? data/private-agent-handoff/receipts/food-line/unknown-date/unknown-run-attempt-20260911T021437.536828Z-6f4a05d22e47.json",
+                "?? data/private-agent-handoff/cleanup/food-line/unrelated.json",
+            ],
+        ),
+    )
+    report = preflight_repo_state.build_preflight_report(source_repo)
+    assert report["ok"] is False
+    assert {
+        entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]
+    } == {
+        "data/private-agent-handoff/cleanup/food-line/synthetic-food-handoff-20260910-001-20260911T021713.130201Z.json",
+        "data/private-agent-handoff/retired/care-line/synthetic-care-handoff-20260910-001/audit/a-C-receipt.json",
+        "data/private-agent-handoff/receipts/food-line/unknown-date/unknown-run-attempt-20260911T021437.536828Z-6f4a05d22e47.json",
+    }
+    assert [entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]] == [
+        "data/private-agent-handoff/cleanup/food-line/unrelated.json"
+    ]
+
+
 def test_food_line_source_performance_history_is_allowed_but_other_data_paths_are_not(monkeypatch, tmp_path):
     source_repo = tmp_path / "repo"
     source_repo.mkdir()

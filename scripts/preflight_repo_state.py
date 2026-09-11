@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import re
 import subprocess
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -22,6 +23,19 @@ from scripts.food_line_runtime_paths import (
 )
 
 ALLOWED_DIRTY_CATEGORIES = FOOD_LINE_ALLOWED_DIRTY_CATEGORIES | CARE_LINE_ALLOWED_DIRTY_CATEGORIES
+
+_HANDOFF_FILE = r"[A-Za-z0-9][A-Za-z0-9._-]{0,180}\.json"
+_HANDOFF_DISPATCH = r"(?:food-line|care-line)"
+_HANDOFF_DATE = r"(?:\d{4}-\d{2}-\d{2}|unknown-date)"
+_SYNTHETIC_ID = r"synthetic-[A-Za-z0-9][A-Za-z0-9._-]{0,180}"
+EXTERNAL_HANDOFF_EVIDENCE_RE = re.compile(
+    rf"^data/private-agent-handoff/(?:inbox/{_HANDOFF_DISPATCH}/{_HANDOFF_FILE}|"
+    rf"archive/{_HANDOFF_DISPATCH}/{_HANDOFF_DATE}/{_HANDOFF_FILE}|"
+    rf"receipts/{_HANDOFF_DISPATCH}/{_HANDOFF_DATE}/{_HANDOFF_FILE}|"
+    rf"retired/{_HANDOFF_DISPATCH}/{_SYNTHETIC_ID}/(?:active|audit|active-before-cleanup)/{_HANDOFF_FILE}|"
+    rf"cleanup/{_HANDOFF_DISPATCH}/{_SYNTHETIC_ID}-\d{{8}}T\d{{6}}\.\d{{6}}Z\.json)$",
+    re.IGNORECASE,
+)
 
 
 def _run_git_status(repo: Path) -> tuple[int, list[str]]:
@@ -66,6 +80,8 @@ def classify_path(path_text: str) -> str:
         return "docs"
     if lower.startswith("src/") or lower.startswith("scripts/") or root_name in {"pyproject.toml", "requirements.txt", ".gitignore"}:
         return "source"
+    if EXTERNAL_HANDOFF_EVIDENCE_RE.fullmatch(lower):
+        return "local_run_state"
     food_line_category = classify_food_line_runtime_path(path)
     if food_line_category:
         return food_line_category

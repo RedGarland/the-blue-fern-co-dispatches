@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -40,6 +41,7 @@ HANDOFF_STATES = {
     "HANDOFF_STALE_UNPROCESSED",
 }
 HANDOFF_TERMINAL_STATUSES = {"SUCCESS", "SAFE_NO_OP", "FAILED"}
+RETIREMENT_SHA_RE = re.compile(r"^[0-9a-f]{64}$", re.IGNORECASE)
 
 
 class ExportError(RuntimeError):
@@ -148,13 +150,42 @@ def _handoff_summary_row(value: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _retired_proof_receipts(source_root: Path, dispatch: str) -> set[tuple[str, str]]:
+    """Load exact proof-retirement identities without treating malformed data as a wildcard."""
+    root = source_root / "data" / "private-agent-handoff" / "cleanup" / dispatch
+    retired: set[tuple[str, str]] = set()
+    for path in sorted(root.glob("proof-receipt-retirement-*.json")):
+        value = _parse_json(path)
+        receipt_ref = value.get("receipt_ref")
+        receipt_sha256 = str(value.get("receipt_sha256") or "").lower()
+        attempt_id = value.get("receipt_attempt_id")
+        if (
+            value.get("dispatch") != dispatch
+            or value.get("synthetic_proof") is not True
+            or not isinstance(receipt_ref, str)
+            or Path(receipt_ref).is_absolute()
+            or ".." in Path(receipt_ref).parts
+            or not receipt_ref.startswith(f"data/private-agent-handoff/receipts/{dispatch}/")
+            or not isinstance(attempt_id, str)
+            or attempt_id != Path(receipt_ref).stem
+            or not RETIREMENT_SHA_RE.fullmatch(receipt_sha256)
+            or value.get("audit_preserved") is not True
+        ):
+            raise ExportError(f"invalid proof retirement identity: {path.name}")
+        retired.add((receipt_ref.replace("\\", "/"), receipt_sha256))
+    return retired
+
+
 def load_agent_handoff_status(source_root: Path, dispatch: str) -> dict[str, Any]:
     """Summarize active sanitized handoff evidence without exporting payload content."""
     receipt_root = source_root / "data" / "private-agent-handoff" / "receipts" / dispatch
+    retired = _retired_proof_receipts(source_root, dispatch)
     receipts: list[dict[str, Any]] = []
     for path in sorted(receipt_root.glob("*/*.json")):
         value = _parse_json(path)
-        if value.get("dispatch") == dispatch:
+        receipt_ref = path.relative_to(source_root).as_posix()
+        receipt_sha256 = hashlib.sha256(path.read_bytes()).hexdigest()
+        if value.get("dispatch") == dispatch and (receipt_ref, receipt_sha256) not in retired:
             receipts.append(value)
     receipts.sort(key=lambda item: _handoff_time(item) or datetime.min.replace(tzinfo=timezone.utc))
     inbox_root = source_root / "data" / "private-agent-handoff" / "inbox" / dispatch

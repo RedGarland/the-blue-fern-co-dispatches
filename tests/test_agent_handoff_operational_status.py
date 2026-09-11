@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from pathlib import Path
 
 from bluefern_dispatches.operational_health import build_operational_receipt
 from bluefern_dispatches.operational_status_exporter import build_food_line_status, export_status
+from scripts.retire_external_agent_proof_receipt import retire_proof_receipt
 
 
 DATE = "2026-09-10"
@@ -37,6 +39,28 @@ def _write_inbox(root: Path, dispatch: str, run_id: str) -> None:
     path = root / "data/private-agent-handoff/inbox" / dispatch / f"{run_id}.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps({"agent_run_id": run_id, "raw_agent_payload": "private"}), encoding="utf-8")
+
+
+def _write_malformed_proof(root: Path, dispatch: str = "food-line") -> tuple[str, str]:
+    path = root / "data/private-agent-handoff/receipts" / dispatch / "unknown-date" / "unknown-run-attempt-20260911T021435.418564Z-deadbeef1234.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": "bluefern.external_agent_handoff_receipt.v1",
+                "dispatch": dispatch,
+                "agent_run_id": "",
+                "input_filename": "external-agent-envelope.json",
+                "input_sha256": "deadbeef" * 8,
+                "receipt_created_at": "2026-09-11T02:14:35Z",
+                "status": "FAILED",
+                "classification": "MALFORMED",
+                "error": "Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)",
+            }
+        ),
+        encoding="utf-8",
+    )
+    return path.relative_to(root).as_posix(), hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _scheduled_source(root: Path, *, failed: bool = False) -> Path:
@@ -140,6 +164,55 @@ def test_retired_artifacts_do_not_pollute_live_status(tmp_path: Path) -> None:
     (retired / "receipt.json").write_text(json.dumps({"status": "FAILED", "dispatch": "food-line"}), encoding="utf-8")
     status = build_food_line_status(source_root=source, date=DATE, evaluated_at=EVALUATED, exported_at=EVALUATED)
     assert status["agent_handoff"]["state"] == "NO_EXTERNAL_HANDOFF_EXPECTED"
+
+
+def test_unknown_date_and_malformed_alone_remain_live_failures(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    _write_malformed_proof(source)
+    status = build_food_line_status(source_root=source, date=DATE, evaluated_at=EVALUATED, exported_at=EVALUATED)
+    assert status["agent_handoff"]["state"] == "HANDOFF_FAILED"
+    assert status["agent_handoff"]["latest_classification"] == "MALFORMED"
+
+
+def test_exactly_retired_proof_receipt_is_excluded_but_audit_is_preserved(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    receipt_ref, receipt_sha = _write_malformed_proof(source)
+    dry = retire_proof_receipt(source, dispatch="food-line", receipt=receipt_ref, receipt_sha256=receipt_sha, proof_run_id="synthetic-food-handoff-20260910-001")
+    assert dry["result"] == "DRY_RUN_NO_CHANGES"
+    assert (source / receipt_ref).exists()
+    applied = retire_proof_receipt(source, dispatch="food-line", receipt=receipt_ref, receipt_sha256=receipt_sha, proof_run_id="synthetic-food-handoff-20260910-001", apply=True)
+    status = build_food_line_status(source_root=source, date=DATE, evaluated_at=EVALUATED, exported_at=EVALUATED)
+    assert status["agent_handoff"]["state"] == "NO_EXTERNAL_HANDOFF_EXPECTED"
+    assert (source / receipt_ref).exists()
+    assert (source / applied["tombstone_ref"]).exists()
+
+
+def test_proof_retirement_requires_exact_identity_and_does_not_hide_other_failure(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    receipt_ref, receipt_sha = _write_malformed_proof(source)
+    try:
+        retire_proof_receipt(source, dispatch="care-line", receipt=receipt_ref, receipt_sha256=receipt_sha, proof_run_id="synthetic-care-handoff-20260910-001", apply=True)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("wrong dispatch was accepted")
+    try:
+        retire_proof_receipt(source, dispatch="food-line", receipt=receipt_ref, receipt_sha256="0" * 64, proof_run_id="synthetic-food-handoff-20260910-001", apply=True)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("wrong receipt hash was accepted")
+    _write_handoff(source, "food-line", status="FAILED", classification="IDEMPOTENCY_CONFLICT", run_id="real-failure", created="2026-09-11T03:00:00Z")
+    status = build_food_line_status(source_root=source, date=DATE, evaluated_at=EVALUATED, exported_at=EVALUATED)
+    assert status["agent_handoff"]["latest_classification"] == "IDEMPOTENCY_CONFLICT"
+
+
+def test_retired_proof_does_not_change_food_completeness(tmp_path: Path) -> None:
+    source = _scheduled_source(tmp_path / "source")
+    receipt_ref, receipt_sha = _write_malformed_proof(source)
+    retire_proof_receipt(source, dispatch="food-line", receipt=receipt_ref, receipt_sha256=receipt_sha, proof_run_id="synthetic-food-handoff-20260910-001", apply=True)
+    status = build_food_line_status(source_root=source, date=DATE, evaluated_at=EVALUATED, exported_at=EVALUATED)
+    assert status["receipt_completeness"] == "COMPLETE"
 
 
 def test_handoff_status_exports_only_sanitized_metadata(tmp_path: Path) -> None:

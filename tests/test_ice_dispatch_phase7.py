@@ -108,7 +108,9 @@ def test_source_path_and_title_filters_remove_shared_navigation_before_fetch(mon
         return FetchResult(url, True, 200, '<meta property="article:published_time" content="2026-09-08T12:00:00Z"><p>ICE said the detainee passed away after a medical emergency in New Jersey.</p>', None, "test")
 
     monkeypatch.setattr("bluefern_dispatches.ice_dispatch.fetch_url_secure", fake_fetch)
-    raw, exclusions, health, _ = collect_live_candidates([source()], max_per_source=5, window_hours=72)
+    raw, exclusions, health, _ = collect_live_candidates(
+        [source()], max_per_source=5, window_hours=72, observed_at="2026-09-09T00:00:00Z"
+    )
 
     assert len(raw) == 1
     assert "factsheets" not in " ".join(fetched)
@@ -124,7 +126,9 @@ def test_targeted_source_preserves_date_evidence_and_currentness(monkeypatch):
         return FetchResult(url, True, 200, '<meta property="article:published_time" content="2026-09-08T12:00:00Z"><p>ICE said a detainee passed away at the Saipan ICE facility in the Northern Mariana Islands.</p>', None, "test")
 
     monkeypatch.setattr("bluefern_dispatches.ice_dispatch.fetch_url_secure", fake_fetch)
-    raw, _, _, _ = collect_live_candidates([source(title_keywords=["passes away"])], max_per_source=1, window_hours=72)
+    raw, _, _, _ = collect_live_candidates(
+        [source(title_keywords=["passes away"])], max_per_source=1, window_hours=72, observed_at="2026-09-09T00:00:00Z"
+    )
 
     assert raw[0]["sources"][0]["date_source"] == "article_structured_metadata"
     assert raw[0]["currentness_status"] == "current_publication"

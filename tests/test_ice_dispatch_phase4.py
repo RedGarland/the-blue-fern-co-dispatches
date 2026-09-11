@@ -94,7 +94,9 @@ def test_current_oig_pdf_is_current_and_historical_pdf_is_stale(monkeypatch):
             """, None, "test")
         return FetchResult(url, True, 200, "<p>ICE audit report found detention deficiencies.</p>", None, "test")
     monkeypatch.setattr("bluefern_dispatches.ice_dispatch.fetch_url_secure", fake_fetch)
-    raw, exclusions, health, _ = collect_live_candidates([source], max_per_source=2, window_hours=72)
+    raw, exclusions, health, _ = collect_live_candidates(
+        [source], max_per_source=2, window_hours=72, observed_at="2026-09-09T00:00:00Z"
+    )
     assert len(raw) == 1
     assert raw[0]["sources"][0]["published_at"] == "2026-09-08T12:00:00Z"
     assert raw[0]["sources"][0]["date_source"] == "oig_listing_issue_date"

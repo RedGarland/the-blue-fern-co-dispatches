@@ -97,7 +97,7 @@
       "recovery_lifecycle": "HEALTHY"
     }
   },
-  "exported_at": "2026-09-11T16:36:00Z",
+  "exported_at": "2026-09-11T18:07:41Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "FAILED"

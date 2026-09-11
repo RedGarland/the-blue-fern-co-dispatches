@@ -33,6 +33,13 @@ HEX_HEAD_RE = re.compile(r"^[0-9a-f]{7,64}$", re.IGNORECASE)
 PRIVATE_KEY_RE = re.compile(r"(?:path|body|excerpt|source|raw|secret|token|credential|password|environment|env)", re.IGNORECASE)
 
 NON_MIGRATED_DISPATCHES = ("gaza", "care-line", "ice", "cascadia", "american-pressure")
+HANDOFF_STATES = {
+    "NO_EXTERNAL_HANDOFF_EXPECTED",
+    "HANDOFF_RECEIVED_SUCCESS",
+    "HANDOFF_FAILED",
+    "HANDOFF_STALE_UNPROCESSED",
+}
+HANDOFF_TERMINAL_STATUSES = {"SUCCESS", "SAFE_NO_OP", "FAILED"}
 
 
 class ExportError(RuntimeError):
@@ -104,6 +111,96 @@ def load_food_line_receipts(source_root: Path, date: str) -> list[dict[str, Any]
             raise ExportError(f"invalid operational receipt {path.name}: {exc}") from exc
         receipts.append(receipt)
     return receipts
+
+
+def _handoff_timestamp(value: Any) -> datetime | None:
+    return parse_timestamp(str(value or ""))
+
+
+def _handoff_time(receipt: dict[str, Any] | None) -> datetime | None:
+    if receipt is None:
+        return None
+    for key in ("receipt_created_at", "completed_at", "started_at"):
+        parsed = _handoff_timestamp(receipt.get(key))
+        if parsed is not None:
+            return parsed
+    return None
+
+
+def _handoff_count(value: Any) -> int:
+    if isinstance(value, bool):
+        return int(value)
+    try:
+        return max(0, int(value or 0))
+    except (TypeError, ValueError):
+        return 0
+
+
+def _handoff_summary_row(value: dict[str, Any]) -> dict[str, Any]:
+    status = str(value.get("status") or "")
+    classification = str(value.get("classification") or "")
+    return {
+        "agent_run_id": _safe_identifier(value.get("agent_run_id")),
+        "status": status if status in HANDOFF_TERMINAL_STATUSES | {"SAFE_NO_OP"} else "UNKNOWN",
+        "classification": classification if SAFE_KEY_RE.fullmatch(classification) else None,
+        "receipt_created_at": value.get("receipt_created_at") if _handoff_timestamp(value.get("receipt_created_at")) else None,
+        "unaccounted_count": _handoff_count(value.get("unaccounted_count", value.get("unaccounted"))),
+    }
+
+
+def load_agent_handoff_status(source_root: Path, dispatch: str) -> dict[str, Any]:
+    """Summarize active sanitized handoff evidence without exporting payload content."""
+    receipt_root = source_root / "data" / "private-agent-handoff" / "receipts" / dispatch
+    receipts: list[dict[str, Any]] = []
+    for path in sorted(receipt_root.glob("*/*.json")):
+        value = _parse_json(path)
+        if value.get("dispatch") == dispatch:
+            receipts.append(value)
+    receipts.sort(key=lambda item: _handoff_time(item) or datetime.min.replace(tzinfo=timezone.utc))
+    inbox_root = source_root / "data" / "private-agent-handoff" / "inbox" / dispatch
+    delivered: list[dict[str, Any]] = []
+    for path in sorted(inbox_root.glob("*.json")):
+        try:
+            value = _parse_json(path)
+        except ExportError:
+            value = {}
+        agent_run_id = _safe_identifier(value.get("agent_run_id"))
+        if agent_run_id:
+            delivered.append({"agent_run_id": agent_run_id})
+
+    terminal = [item for item in receipts if str(item.get("status")) in HANDOFF_TERMINAL_STATUSES]
+    latest = receipts[-1] if receipts else None
+    latest_terminal = terminal[-1] if terminal else None
+    latest_id = _safe_identifier((latest or {}).get("agent_run_id"))
+    latest_time = _handoff_time(latest)
+    last_success = max(
+        (_handoff_time(item) for item in terminal if item.get("status") in {"SUCCESS", "SAFE_NO_OP"}),
+        default=None,
+    )
+    last_failure = max(
+        (_handoff_time(item) for item in terminal if item.get("status") == "FAILED"),
+        default=None,
+    )
+    latest_unaccounted = _handoff_count((latest_terminal or {}).get("unaccounted_count", (latest_terminal or {}).get("unaccounted")))
+    if latest_terminal is None:
+        state = "HANDOFF_STALE_UNPROCESSED" if delivered else "NO_EXTERNAL_HANDOFF_EXPECTED"
+    elif latest_terminal.get("status") == "FAILED":
+        state = "HANDOFF_FAILED"
+    elif latest_terminal.get("status") in {"SUCCESS", "SAFE_NO_OP"}:
+        state = "HANDOFF_RECEIVED_SUCCESS" if latest_unaccounted == 0 else "HANDOFF_FAILED"
+    else:
+        state = "HANDOFF_STALE_UNPROCESSED"
+    return {
+        "state": state,
+        "last_attempt_at": _iso(latest_time) if latest_time else None,
+        "last_success_at": _iso(last_success) if last_success else None,
+        "last_failure_at": _iso(last_failure) if last_failure else None,
+        "latest_agent_run_id": latest_id or (delivered[-1]["agent_run_id"] if delivered else None),
+        "latest_status": (latest_terminal or latest or {}).get("status") if (latest_terminal or latest) else None,
+        "latest_classification": (latest_terminal or latest or {}).get("classification") if (latest_terminal or latest) else None,
+        "unaccounted_count": latest_unaccounted,
+        "stale": state == "HANDOFF_STALE_UNPROCESSED",
+    }
 
 
 def receipt_completeness(
@@ -245,6 +342,7 @@ def build_food_line_status(
     source_heads.discard(None)
     publication_attempted = any(receipt.get("publication_attempted") is True for receipt in receipts)
     publication_statuses = [receipt.get("publication_status") for receipt in receipts if receipt.get("publication_status")]
+    agent_handoff = load_agent_handoff_status(source_root, "food-line")
     return {
         "schema_version": EXTERNAL_STATUS_SCHEMA_VERSION,
         "dispatch": "food-line",
@@ -267,15 +365,17 @@ def build_food_line_status(
         "last_exported_at": exported_at,
         "next_expected_run": next((item.get("next_expected_run") for item in receipts if item.get("next_expected_run")), None),
         "stale_after": stale_after,
+        "agent_handoff": agent_handoff,
     }
 
 
-def build_system_status(food_line_status: dict[str, Any], *, exported_at: str) -> dict[str, Any]:
+def build_system_status(food_line_status: dict[str, Any], *, source_root: Path, exported_at: str) -> dict[str, Any]:
     states = {
         "food-line": {
             "migration_status": "MIGRATED",
             "aggregate_status": food_line_status["aggregate_status"],
             "recovery_lifecycle": food_line_status["recovery_lifecycle"],
+            "agent_handoff": food_line_status["agent_handoff"],
         }
     }
     for dispatch in NON_MIGRATED_DISPATCHES:
@@ -283,6 +383,19 @@ def build_system_status(food_line_status: dict[str, Any], *, exported_at: str) -
             "migration_status": "NOT_MIGRATED",
             "aggregate_status": "UNKNOWN",
             "recovery_lifecycle": RecoveryState.HEALTHY.value,
+            "agent_handoff": load_agent_handoff_status(source_root, dispatch)
+            if dispatch in {"care-line", "food-line"}
+            else {
+                "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
+                "last_attempt_at": None,
+                "last_success_at": None,
+                "last_failure_at": None,
+                "latest_agent_run_id": None,
+                "latest_status": None,
+                "latest_classification": None,
+                "unaccounted_count": 0,
+                "stale": False,
+            },
         }
     return {
         "schema_version": SYSTEM_STATUS_SCHEMA_VERSION,
@@ -384,7 +497,7 @@ def export_status(
         reused = _reuse_exported_at(food_path, food_payload)
         if reused:
             food_payload["last_exported_at"] = reused
-        system_payload = build_system_status(food_payload, exported_at=food_payload["last_exported_at"])
+        system_payload = build_system_status(food_payload, source_root=source_root, exported_at=food_payload["last_exported_at"])
         history_path = status_checkout / "ops" / "status" / "food-line" / "history" / f"{date}.json"
         system_path = status_checkout / "ops" / "status" / "system" / "latest.json"
         atomic_write_json(food_path, food_payload)

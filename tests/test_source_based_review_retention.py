@@ -7,6 +7,7 @@ import pytest
 
 from bluefern_dispatches.adapters.food_line_agent import adapt_food_line_agent_output, map_finding_to_food_line_candidate
 from bluefern_dispatches.food_line_current_review import load_queue
+from bluefern_dispatches.food_line_runtime_state import current_queue_path
 from bluefern_dispatches.source_based_qualification import assess_review_retention
 from scripts.process_food_line_current_intake import _build_review_queue
 
@@ -205,7 +206,7 @@ def test_every_discovery_has_a_durable_disposition_and_duplicates_do_not_enter_r
     (inbox / "run.json").write_text(json.dumps(payload), encoding="utf-8")
 
     queue = _build_review_queue(tmp_path, EDITION, inbox)
-    validated = load_queue(tmp_path / "data/dispatches/food-line/review/current-signal-review.json")
+    validated = load_queue(current_queue_path(tmp_path))
     intake = json.loads((tmp_path / "data/dispatches/food-line/agent-intake/2026-09-05/run-1.json").read_text(encoding="utf-8"))
 
     assert queue == validated

@@ -271,7 +271,7 @@ def import_envelope(root: Path, input_path: Path, *, dispatch: str) -> tuple[int
     edition_date = "unknown-date"
     archive_ref = ""
     try:
-        payload = json.loads(raw.decode("utf-8"))
+        payload = json.loads(raw.decode("utf-8-sig"))
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         result = _write_failure_receipt(root, dispatch=dispatch, edition_date=edition_date, run_id=run_id, digest=digest, classification="MALFORMED", exit_code=2, error=str(exc))
         return 2, result

@@ -216,10 +216,30 @@ It reports system health, dispatch states, open incidents, recovery-pending disp
 ### Care Line
 
 - Task keys: `care_line_collection`, `care_line_reviewed_event_queue`, `care_line_approved_release_publication`.
-- Emission point: each wrapper/runner after durable local receipt is written.
+- Source execution points are the guarded national collection wrapper
+  (`scripts/windows/run_care_line_national_collection.ps1` and
+  `scripts/care_line_collection_scheduler.py`), the reviewed-event queue
+  runner (`scripts/run_care_line_reviewed_event_queue.py` and
+  `src/bluefern_dispatches/care_line_queue_runner.py`), and the approved-release
+  publication wrapper (`scripts/windows/run_care_line_approved_release_publication.ps1`
+  and `scripts/care_line_publication_scheduler.py`). Each writes the shared
+  receipt only after its existing Care-specific receipt is durable.
+- The collection task uses a stable task key for every scheduled instance;
+  distinct `scheduled_for` and `run_id` values identify repeated runs. Queue
+  and publication receipts use their stable task keys as well.
+- Collection and publication cadence is intentionally reported as
+  `configured scheduler time` until the installed Task Scheduler definitions
+  are separately audited. The source wrappers do not register or modify tasks.
 - Success/no-op: collection/queue success is `SUCCESS`; no approved release is `SAFE_NO_OP`; blocked upstream approval state is `UPSTREAM_BLOCKED`; guarded publication failure is `FAILED`.
 - Dependencies: collection before queue; approved-release artifacts before publication.
 - Likely grace window: 120 minutes.
+
+The Care exporter accepts explicit local Care receipts and writes
+`ops/status/care-line/latest.json` plus date history. It permits repeated
+collection instances and ignores future expected instances until their
+scheduled time plus grace has elapsed. The system export still reports Care as
+`NOT_MIGRATED`; a Care artifact or external handoff receipt is not proof of a
+production migration or a public edition.
 
 ### ICE
 
@@ -259,6 +279,8 @@ Proposed external paths:
 
 - `ops/status/food-line/latest.json`
 - `ops/status/food-line/history/2026-09-10.json`
+- `ops/status/care-line/latest.json`
+- `ops/status/care-line/history/2026-09-10.json`
 - `ops/status/gaza/latest.json`
 - `ops/status/system/latest.json`
 

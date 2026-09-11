@@ -9,11 +9,12 @@ import sys
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any, Iterable, Iterator
 from zoneinfo import ZoneInfo
 
 from .operational_health import (
     DISPATCH_AGGREGATE_SCHEMA_VERSION,
+    CARE_LINE_TASK_EXPECTATIONS,
     FOOD_LINE_TASK_EXPECTATIONS,
     OperationalStatus,
     RecoveryContext,
@@ -98,19 +99,33 @@ def _sanitized_public_side_effects(value: Any) -> dict[str, Any]:
     return result if isinstance(result, dict) else {}
 
 
-def _receipt_paths(source_root: Path, date: str) -> list[Path]:
-    root = source_root / "status" / "operational-health" / "food-line" / date / "runs"
+def _receipt_paths(source_root: Path, dispatch: str, date: str) -> list[Path]:
+    root = source_root / "status" / "operational-health" / dispatch / date / "runs"
     return sorted(root.glob("*.json"))
 
 
 def load_food_line_receipts(source_root: Path, date: str) -> list[dict[str, Any]]:
     receipts = []
-    for path in _receipt_paths(source_root, date):
+    for path in _receipt_paths(source_root, "food-line", date):
         receipt = _parse_json(path)
         try:
             validate_operational_receipt(receipt)
         except ValueError as exc:
             raise ExportError(f"invalid operational receipt {path.name}: {exc}") from exc
+        receipts.append(receipt)
+    return receipts
+
+
+def load_care_line_receipts(source_root: Path, date: str) -> list[dict[str, Any]]:
+    receipts = []
+    for path in _receipt_paths(source_root, "care-line", date):
+        receipt = _parse_json(path)
+        try:
+            validate_operational_receipt(receipt)
+        except ValueError as exc:
+            raise ExportError(f"invalid operational receipt {path.name}: {exc}") from exc
+        if receipt.get("dispatch") != "care-line":
+            raise ExportError(f"receipt dispatch mismatch: {path.name}")
         receipts.append(receipt)
     return receipts
 
@@ -238,8 +253,9 @@ def receipt_completeness(
     receipts: list[dict[str, Any]],
     *,
     source_root: Path,
+    expectations: tuple[Any, ...] = FOOD_LINE_TASK_EXPECTATIONS,
 ) -> tuple[str, dict[str, str]]:
-    expected = {item.task_key for item in FOOD_LINE_TASK_EXPECTATIONS}
+    expected = {item.task_key for item in expectations}
     grouped: dict[str, list[dict[str, Any]]] = {}
     linkage: dict[str, str] = {}
     inconsistent = False
@@ -262,7 +278,7 @@ def receipt_completeness(
             inconsistent = True
         else:
             linkage[task_key] = symbolic
-    if any(len(grouped.get(task_key, [])) != 1 for task_key in expected):
+    if expectations == FOOD_LINE_TASK_EXPECTATIONS and any(len(grouped.get(task_key, [])) != 1 for task_key in expected):
         inconsistent = inconsistent or any(len(grouped.get(task_key, [])) > 1 for task_key in expected)
     missing = expected - set(grouped)
     if inconsistent:
@@ -282,6 +298,7 @@ def _staleness(
     *,
     date: str,
     evaluated_at: str,
+    expectations: tuple[Any, ...] = FOOD_LINE_TASK_EXPECTATIONS,
 ) -> tuple[bool, str | None, str | None]:
     evaluated = parse_timestamp(evaluated_at)
     if evaluated is None:
@@ -289,15 +306,16 @@ def _staleness(
     observed = [parse_timestamp(str(item.get("observed_at") or "")) for item in receipts]
     observed = [value for value in observed if value is not None]
     last_receipt = max(observed) if observed else None
-    stale_after = min(
+    known_deadlines = [
         _expected_run(date, item.expected_time, item.timezone) + timedelta(minutes=item.grace_minutes)
-        for item in FOOD_LINE_TASK_EXPECTATIONS
-    )
-    missing_expected = {item.task_key for item in FOOD_LINE_TASK_EXPECTATIONS} - {
+        for item in expectations if item.expected_time != "configured scheduler time"
+    ]
+    stale_after = min(known_deadlines) if known_deadlines else None
+    missing_expected = {item.task_key for item in expectations if item.expected_time != "configured scheduler time"} - {
         str(receipt.get("task_key")) for receipt in receipts
     }
-    stale = evaluated > stale_after and (not observed or bool(missing_expected))
-    return stale, _iso(last_receipt) if last_receipt else None, _iso(stale_after)
+    stale = bool(stale_after) and evaluated > stale_after and (not observed or bool(missing_expected))
+    return stale, _iso(last_receipt) if last_receipt else None, _iso(stale_after) if stale_after else None
 
 
 def _safe_head(value: Any) -> str | None:
@@ -400,7 +418,71 @@ def build_food_line_status(
     }
 
 
-def build_system_status(food_line_status: dict[str, Any], *, source_root: Path, exported_at: str) -> dict[str, Any]:
+def build_care_line_status(
+    *,
+    source_root: Path,
+    date: str,
+    evaluated_at: str,
+    exported_at: str,
+    recovery: RecoveryContext | None = None,
+    expected_instances: Iterable[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    receipts = load_care_line_receipts(source_root, date)
+    completeness, linkage = receipt_completeness(
+        receipts, source_root=source_root, expectations=CARE_LINE_TASK_EXPECTATIONS
+    )
+    aggregate = evaluate_dispatch_health(
+        dispatch="care-line",
+        receipts=receipts,
+        expectations=CARE_LINE_TASK_EXPECTATIONS,
+        evaluated_at=evaluated_at,
+        expected_instances=list(expected_instances) if expected_instances is not None else [
+            {"task_key": receipt.get("task_key"), "scheduled_for": receipt.get("scheduled_for")}
+            for receipt in receipts
+        ],
+        recovery=recovery,
+    ) if receipts else {
+        "overall_health": OperationalStatus.UNKNOWN.value,
+        "recovery_state": RecoveryState.HEALTHY.value,
+        "expected_tasks": [item.task_key for item in CARE_LINE_TASK_EXPECTATIONS],
+        "completed_tasks": [], "missed_tasks": [], "failed_tasks": [],
+        "degraded_tasks": [], "upstream_blocked_tasks": [],
+        "stale_observability": [], "latest_success_at": None,
+    }
+    aggregate_status = aggregate["overall_health"] if receipts else OperationalStatus.UNKNOWN.value
+    source_heads = {_safe_head(receipt.get("source_head")) for receipt in receipts}
+    source_heads.discard(None)
+    publication_attempted = any(receipt.get("publication_attempted") is True for receipt in receipts)
+    publication_statuses = [receipt.get("publication_status") for receipt in receipts if receipt.get("publication_status")]
+    return {
+        "schema_version": EXTERNAL_STATUS_SCHEMA_VERSION,
+        "dispatch": "care-line",
+        "migration_status": "NOT_MIGRATED",
+        "observed_date": date,
+        "aggregate_status": aggregate_status,
+        "scheduled_health_authoritative": bool(receipts),
+        "recovery_lifecycle": _recovery_state(aggregate_status, recovery),
+        "receipt_completeness": completeness if receipts else "NO_PROOF",
+        "task_summaries": [_task_summary(receipt, linkage) for receipt in receipts],
+        "runner_source_head": sorted(source_heads)[0] if len(source_heads) == 1 else None,
+        "publication_attempted": publication_attempted,
+        "publication_status": publication_statuses[-1] if publication_statuses else None,
+        "public_side_effects": {"publication_attempted": publication_attempted, "publication_status": publication_statuses[-1] if publication_statuses else None},
+        "stale_observability": bool(aggregate.get("stale_observability")),
+        "last_receipt_at": max((_handoff_time(item) for item in receipts), default=None).isoformat().replace("+00:00", "Z") if receipts else None,
+        "last_exported_at": exported_at,
+        "agent_handoff": load_agent_handoff_status(source_root, "care-line"),
+        "scheduled_task_keys": [item.task_key for item in CARE_LINE_TASK_EXPECTATIONS],
+    }
+
+
+def build_system_status(
+    food_line_status: dict[str, Any],
+    *,
+    source_root: Path,
+    exported_at: str,
+    care_line_status: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     states = {
         "food-line": {
             "migration_status": "MIGRATED",
@@ -428,6 +510,10 @@ def build_system_status(food_line_status: dict[str, Any], *, source_root: Path, 
                 "stale": False,
             },
         }
+    if care_line_status is not None:
+        states["care-line"]["scheduled_health_available"] = bool(care_line_status.get("scheduled_health_authoritative"))
+        # Care remains NOT_MIGRATED until production deployment and real proof.
+        states["care-line"]["agent_handoff"] = care_line_status["agent_handoff"]
     return {
         "schema_version": SYSTEM_STATUS_SCHEMA_VERSION,
         "exported_at": exported_at,
@@ -510,6 +596,7 @@ def export_status(
     evaluated_at: str,
     recovery: RecoveryContext | None = None,
     exported_at: str | None = None,
+    care_source_root: Path | None = None,
 ) -> dict[str, Any]:
     source_root = source_root.resolve()
     status_checkout = status_checkout.resolve()
@@ -528,17 +615,42 @@ def export_status(
         reused = _reuse_exported_at(food_path, food_payload)
         if reused:
             food_payload["last_exported_at"] = reused
-        system_payload = build_system_status(food_payload, source_root=source_root, exported_at=food_payload["last_exported_at"])
+        care_payload = build_care_line_status(
+            source_root=(care_source_root or source_root).resolve(),
+            date=date,
+            evaluated_at=evaluated_at,
+            exported_at=food_payload["last_exported_at"],
+        ) if care_source_root is not None else None
+        system_payload = build_system_status(
+            food_payload,
+            source_root=source_root,
+            exported_at=food_payload["last_exported_at"],
+            care_line_status=care_payload,
+        )
         history_path = status_checkout / "ops" / "status" / "food-line" / "history" / f"{date}.json"
+        care_path = status_checkout / "ops" / "status" / "care-line" / "latest.json"
+        care_history_path = status_checkout / "ops" / "status" / "care-line" / "history" / f"{date}.json"
         system_path = status_checkout / "ops" / "status" / "system" / "latest.json"
         atomic_write_json(food_path, food_payload)
         atomic_write_json(history_path, food_payload)
+        if care_payload is not None:
+            care_reused = _reuse_exported_at(care_path, care_payload)
+            if care_reused:
+                care_payload["last_exported_at"] = care_reused
+            atomic_write_json(care_path, care_payload)
+            atomic_write_json(care_history_path, care_payload)
         atomic_write_json(system_path, system_payload)
-    return {"food_line": food_payload, "system": system_payload, "paths": [
+    paths = [
         "ops/status/food-line/latest.json",
         f"ops/status/food-line/history/{date}.json",
         "ops/status/system/latest.json",
-    ]}
+    ]
+    if care_payload is not None:
+        paths[2:2] = ["ops/status/care-line/latest.json", f"ops/status/care-line/history/{date}.json"]
+    result = {"food_line": food_payload, "system": system_payload, "paths": paths}
+    if care_payload is not None:
+        result["care_line"] = care_payload
+    return result
 
 
 def validate_status_paths(paths: list[str]) -> None:

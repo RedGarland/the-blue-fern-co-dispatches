@@ -21,6 +21,7 @@ from bluefern_dispatches.care_line_reviewed_event_queue import (
 from bluefern_dispatches.universal_events.care_line_signal_wire import (
     build_care_line_signal_wire_publication,
 )
+from bluefern_dispatches.operational_health import build_care_line_operational_receipt, write_operational_receipt
 
 LOCK_NAME = "care-line-reviewed-event-queue.lock"
 REPORT_ROOT = Path("data/dispatches/care-line/queue-runs")
@@ -96,6 +97,21 @@ def run_queue_poll(root: Path, *, max_events: int = 5, now: datetime | None = No
     lock = QueueRunLock(root / QUEUE_PATH.parent / LOCK_NAME)
     lock_status = lock.acquire(now=started)
     if lock_status == "already_running":
+        write_operational_receipt(
+            root,
+            build_care_line_operational_receipt(
+                task_key="care_line_reviewed_event_queue",
+                scheduled_for=started.strftime("%Y-%m-%d"),
+                started_at=_stamp(started),
+                completed_at=_stamp(started),
+                exit_code=0,
+                task_status="already_running",
+                run_id=run_id,
+                runner_path=str(root),
+                public_side_effects={"publication": False, "pages_sync": False, "bluesky_publication": False},
+                details={"lock_status": lock_status},
+            ),
+        )
         return {"run_id": run_id, "status": lock_status, "ok": True, "report_path": None}
     try:
         enqueue_result = enqueue(root, dry_run=False)
@@ -126,6 +142,30 @@ def run_queue_poll(root: Path, *, max_events: int = 5, now: datetime | None = No
         report_path = root / REPORT_ROOT / started.strftime("%Y-%m-%d") / f"{run_id}.json"
         _write_report(report_path, report)
         report["report_path"] = str(report_path)
+        write_operational_receipt(
+            root,
+            build_care_line_operational_receipt(
+                task_key="care_line_reviewed_event_queue",
+                scheduled_for=started.strftime("%Y-%m-%d"),
+                started_at=report["started_at"],
+                completed_at=report["completed_at"],
+                exit_code=0 if report["ok"] else 1,
+                task_status=status,
+                run_id=run_id,
+                runner_path=str(root),
+                public_side_effects={
+                    "queue_mutation": True,
+                    "publication": False,
+                    "pages_sync": False,
+                    "bluesky_publication": False,
+                },
+                artifact_refs={"task_receipt": str(report_path)},
+                details={
+                    "selected_event_count": len(release.get("selected_event_ids") or []),
+                    "queue_path": str((root / QUEUE_PATH).as_posix()),
+                },
+            ),
+        )
         return report
     finally:
         lock.release()

@@ -41,6 +41,43 @@ Optional shared fields supported in the same envelope:
 
 The receipt must not include credentials, tokens, full environment dumps, raw source text, private editorial notes, or full logs. Dispatch-specific extensions live only under `details` unless promoted deliberately into a shared field.
 
+## Two operational health dimensions
+
+Operational status exposes two distinct dimensions:
+
+1. **Scheduled operational health** is the authoritative execution health for
+   scheduled pipelines. Food Line daily completeness continues to use only
+   `food_line_source_watch`, `food_line_source_watch_resume`,
+   `food_line_current_intake`, and `food_line_daily_publish`.
+2. **External agent handoff health** is an optional, event-driven status
+   dimension derived from sanitized metadata in
+   `data/private-agent-handoff/receipts/<dispatch>/` and active inbox metadata.
+
+The handoff dimension uses these states:
+
+- `NO_EXTERNAL_HANDOFF_EXPECTED`: no external delivery is known for the
+  evaluation window. This is informational and does not count as a missing
+  scheduled receipt or degrade dispatch health.
+- `HANDOFF_RECEIVED_SUCCESS`: the latest accepted or safely idempotent attempt
+  is terminal and all findings are accounted for.
+- `HANDOFF_FAILED`: the latest terminal attempt failed, including malformed
+  input, idempotency conflict, archive/write failure, downstream import
+  failure, or an accepted receipt with unaccounted findings.
+- `HANDOFF_STALE_UNPROCESSED`: delivery evidence exists without a terminal
+  handoff receipt, or a nonterminal attempt remains unresolved. Absence of
+  external traffic never implies this state.
+
+The exported section is named `agent_handoff` and contains only symbolic run
+identifiers, timestamps, status/classification, an unaccounted count, and a
+stale flag. Raw envelopes, supporting passages, absolute paths, credentials,
+tokens, and retired/quarantined payloads are excluded. A handoff failure may be
+alertable at system level, but it does not rewrite scheduled task receipts;
+`SAFE_NO_OP` does not mask a scheduled failure.
+
+Care Line remains `NOT_MIGRATED` for scheduled operational-health aggregation.
+Its system status may expose the supplementary `agent_handoff` section, but
+handoff receipts do not constitute a Care daily aggregate or full migration.
+
 ## Common status model
 
 Common statuses:
@@ -264,6 +301,12 @@ The Scheduled Dispatch Watch should consume `food-line/latest.json` as follows:
 4. Read `recovery_lifecycle` separately. `RECOVERY_PENDING_RUNTIME_PROOF`
    remains pending after code merge, runner rollout, preflight, or export;
    only a later successful runtime receipt can establish `RECOVERED`.
+
+The Watch should alert on `HANDOFF_FAILED` and `HANDOFF_STALE_UNPROCESSED`.
+It should not alert on `NO_EXTERNAL_HANDOFF_EXPECTED` or
+`HANDOFF_RECEIVED_SUCCESS`. Scheduled Food aggregate status remains the
+authoritative pipeline execution signal; Care handoff status remains
+supplementary until scheduled Care receipts are migrated.
 5. Read `publication_attempted`, `publication_status`, and `public_side_effects`
    independently. No public edition is not itself a task failure.
 

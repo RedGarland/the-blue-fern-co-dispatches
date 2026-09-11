@@ -4,7 +4,8 @@ The current-signal review queue is a private editorial boundary between current 
 
 Private paths:
 
-- Queue: `data/dispatches/food-line/review/current-signal-review.json`
+- Runtime queue: `status/food-line/runtime/current-signal-review.json`
+- Canonical seed: `data/dispatches/food-line/review/current-signal-review.json`
 - Proposed edition JSON: `data/dispatches/food-line/review/proposed-editions/YYYY-MM-DD.json`
 - Operator preview: `data/dispatches/food-line/review/proposed-editions/YYYY-MM-DD.md`
 

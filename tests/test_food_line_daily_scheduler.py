@@ -88,7 +88,7 @@ def test_food_line_daily_scheduler_defaults_to_production_branch() -> None:
 def test_scheduler_accepts_successful_source_watch_runtime_state_for_the_next_run() -> None:
     status = "\n".join(
         [
-            " M data/dispatches/food-line/source_performance_history.json",
+            "?? status/food-line/runtime/source_performance_history.json",
             "?? status/food-line/runs/2026-09-04.json",
             "?? data/dispatches/food-line/discovery-runs/2026-09-04/run-1/run-state.json",
             "?? logs/food-line/source-watch/2026-09-04/receipt.json",
@@ -101,7 +101,7 @@ def test_scheduler_accepts_successful_source_watch_runtime_state_for_the_next_ru
 def test_scheduler_accepts_current_intake_review_state_for_the_next_run() -> None:
     status = "\n".join(
         [
-            " M data/dispatches/food-line/review/current-signal-review.json",
+            "?? status/food-line/runtime/current-signal-review.json",
             "?? data/dispatches/food-line/review/proposed-editions/2026-09-04.json",
             "?? data/dispatches/food-line/review/reports/2026-09-04/current-intake.json",
             "?? logs/food-line/current-intake/2026-09-04/receipt.json",
@@ -120,7 +120,9 @@ def test_checkout_validation_preserves_durable_runtime_evidence(tmp_path: Path) 
     history.write_text('{"runs_seen": 1}\n', encoding="utf-8")
     subprocess.run(["git", "add", "--", str(history.relative_to(tmp_path))], cwd=tmp_path, check=True)
     subprocess.run(["git", "commit", "-m", "baseline"], cwd=tmp_path, check=True, capture_output=True)
-    history.write_text('{"runs_seen": 2}\n', encoding="utf-8")
+    runtime_history = tmp_path / "status" / "food-line" / "runtime" / "source_performance_history.json"
+    runtime_history.parent.mkdir(parents=True)
+    runtime_history.write_text('{"runs_seen": 2}\n', encoding="utf-8")
     run_state = tmp_path / "status" / "food-line" / "runs" / "2026-09-04.json"
     receipt = tmp_path / "logs" / "food-line" / "source-watch" / "2026-09-04" / "receipt.json"
     run_state.parent.mkdir(parents=True)
@@ -133,7 +135,7 @@ def test_checkout_validation_preserves_durable_runtime_evidence(tmp_path: Path) 
     assert head == subprocess.run(
         ["git", "rev-parse", "HEAD"], cwd=tmp_path, check=True, capture_output=True, text=True
     ).stdout.strip()
-    assert history.read_text(encoding="utf-8") == '{"runs_seen": 2}\n'
+    assert runtime_history.read_text(encoding="utf-8") == '{"runs_seen": 2}\n'
     assert run_state.read_text(encoding="utf-8") == '{"status": "completed"}\n'
     assert receipt.read_text(encoding="utf-8") == '{"exit_code": 0}\n'
 
@@ -353,7 +355,7 @@ def test_legacy_current_intake_wrapper_builds_queue_from_inbox_export(tmp_path: 
     )
 
     assert code == 0
-    queue_path = tmp_path / "data" / "dispatches" / "food-line" / "review" / "current-signal-review.json"
+    queue_path = tmp_path / "status" / "food-line" / "runtime" / "current-signal-review.json"
     assert queue_path.exists()
     queue = json.loads(queue_path.read_text(encoding="utf-8"))
     assert queue["schema_version"] == "food_line_current_signal_review_v1"
@@ -487,7 +489,7 @@ def test_current_intake_no_current_handoff_writes_empty_private_noop(tmp_path: P
     )
 
     assert code == 0
-    queue = json.loads((tmp_path / "data/dispatches/food-line/review/current-signal-review.json").read_text(encoding="utf-8"))
+    queue = json.loads((tmp_path / "status/food-line/runtime/current-signal-review.json").read_text(encoding="utf-8"))
     report = json.loads(
         (tmp_path / "data/dispatches/food-line/review/reports/2026-08-17/current-intake.json").read_text(encoding="utf-8")
     )

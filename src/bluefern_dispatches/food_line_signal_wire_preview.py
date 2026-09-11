@@ -481,7 +481,9 @@ def _event_from_record(
 
 
 def _load_examples(project_root: Path) -> list[dict[str, Any]]:
-    review = _load_json(project_root / "data" / "dispatches" / "food-line" / "review" / "current-signal-review.json")
+    from .food_line_runtime_state import current_queue_path
+
+    review = _load_json(current_queue_path(project_root))
     current_item = (review.get("items") or [{}])[0] if review else {}
     history_root = project_root / "data" / "agent-history" / "food-line" / "normalized"
     examples = [

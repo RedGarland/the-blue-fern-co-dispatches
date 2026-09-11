@@ -63,7 +63,7 @@ def _fixture(root: Path) -> tuple[Path, dict, dict]:
         "production_scope": "current_nonhistorical_only",
         "items": [item],
     }
-    queue_path = root / "data/dispatches/food-line/review/current-signal-review.json"
+    queue_path = root / "status/food-line/runtime/current-signal-review.json"
     _write_json(queue_path, queue)
     public_item = {
         "rank": 1,
@@ -90,7 +90,7 @@ def _fixture(root: Path) -> tuple[Path, dict, dict]:
         "approved_item_count": 1,
         "pending_item_count": 0,
         "rejected_item_count": 0,
-        "source_queue_path": "data/dispatches/food-line/review/current-signal-review.json",
+        "source_queue_path": "status/food-line/runtime/current-signal-review.json",
         "source_queue_sha256": hashlib.sha256(queue_path.read_bytes()).hexdigest(),
         "items": [public_item],
     }
@@ -100,7 +100,7 @@ def _fixture(root: Path) -> tuple[Path, dict, dict]:
 
 
 def _rewrite(root: Path, proposal_path: Path, proposal: dict, queue: dict) -> None:
-    queue_path = root / "data/dispatches/food-line/review/current-signal-review.json"
+    queue_path = root / "status/food-line/runtime/current-signal-review.json"
     _write_json(queue_path, queue)
     proposal["source_queue_sha256"] = hashlib.sha256(queue_path.read_bytes()).hexdigest()
     _write_json(proposal_path, proposal)

@@ -16,6 +16,8 @@ from email.utils import parsedate_to_datetime
 from pathlib import Path
 from typing import Any
 
+from .food_line_runtime_state import source_performance_history_path
+
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 INVALID_XML_ENTITY_RE = re.compile(r"&(?!(?:amp|lt|gt|apos|quot|#\d+|#x[0-9A-Fa-f]+);)")
 RSS_ITEM_RE = re.compile(r"<item\b[^>]*>(.*?)</item>", re.IGNORECASE | re.DOTALL)
@@ -1490,13 +1492,9 @@ def _ensure_candidate_lifecycle_fields(row: dict[str, Any]) -> dict[str, Any]:
 
 
 def load_food_line_source_performance_history(root: Path) -> dict[str, dict[str, Any]]:
-    data_root = root / "data" / "dispatches" / "food-line"
-    repo_root = Path(__file__).resolve().parents[2] / "data" / "dispatches" / "food-line"
-    path = data_root / "source_performance_history.json"
-    if not path.exists():
-        if food_line_test_mode_enabled():
-            return {}
-        path = repo_root / "source_performance_history.json"
+    path = source_performance_history_path(root)
+    if not path.exists() and food_line_test_mode_enabled():
+        return {}
     if not path.exists():
         return {}
     payload = json.loads(path.read_text(encoding="utf-8"))
@@ -1537,8 +1535,7 @@ def load_food_line_source_performance_history(root: Path) -> dict[str, dict[str,
 
 
 def save_food_line_source_performance_history(root: Path, payload: dict[str, dict[str, Any]]) -> Path:
-    data_root = root / "data" / "dispatches" / "food-line"
-    path = data_root / "source_performance_history.json"
+    path = source_performance_history_path(root)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
     return path

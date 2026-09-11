@@ -9972,7 +9972,7 @@ def test_food_line_candidate_cleanup_reports_and_changes_statuses(tmp_path: Path
             },
         ],
     )
-    history_path = tmp_path / "data" / "dispatches" / "food-line" / "source_performance_history.json"
+    history_path = tmp_path / "status" / "food-line" / "runtime" / "source_performance_history.json"
     history_path.parent.mkdir(parents=True, exist_ok=True)
     history_path.write_text(
         json.dumps(
@@ -10104,7 +10104,7 @@ def test_food_line_candidate_cleanup_archives_repeated_broken_no_text_candidates
             }
         ],
     )
-    history_path = tmp_path / "data" / "dispatches" / "food-line" / "source_performance_history.json"
+    history_path = tmp_path / "status" / "food-line" / "runtime" / "source_performance_history.json"
     history_path.parent.mkdir(parents=True, exist_ok=True)
     history_path.write_text(
         json.dumps(
@@ -10172,7 +10172,7 @@ def test_food_line_source_performance_history_updates_on_collection(tmp_path: Pa
 
     result = food_line.collect_food_line_auto_sources(tmp_path, date, fetcher=fetcher)
     assert result["collector_audit_path"]
-    history_path = tmp_path / "data" / "dispatches" / "food-line" / "source_performance_history.json"
+    history_path = tmp_path / "status" / "food-line" / "runtime" / "source_performance_history.json"
     assert history_path.exists()
     history = json.loads(history_path.read_text(encoding="utf-8"))
     assert "history-source" in history
@@ -10262,7 +10262,7 @@ def test_food_line_recurring_service_page_detects_material_change_and_suppresses
 
     baseline = food_line.collect_food_line_auto_sources(tmp_path, date, fetcher=fetcher)
     assert baseline["source_count"] == 0
-    history_path = tmp_path / "data" / "dispatches" / "food-line" / "source_performance_history.json"
+    history_path = tmp_path / "status" / "food-line" / "runtime" / "source_performance_history.json"
     history = json.loads(history_path.read_text(encoding="utf-8"))
     assert history[source_id]["page_change_state"] == "baseline"
     assert history[source_id]["page_snapshot_fingerprint"]
@@ -10342,7 +10342,7 @@ def test_food_line_recurring_service_page_suppresses_donation_only_edits(tmp_pat
     assert baseline["source_count"] == 0
     changed = food_line.collect_food_line_auto_sources(tmp_path, date, fetcher=fetcher)
     assert changed["source_count"] == 0
-    history = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "source_performance_history.json").read_text(encoding="utf-8"))
+    history = json.loads((tmp_path / "status" / "food-line" / "runtime" / "source_performance_history.json").read_text(encoding="utf-8"))
     assert history[source_id]["page_change_state"] == "changed_non_qualifying"
     assert history[source_id]["last_exact_supporting_passage"]
 
@@ -10397,7 +10397,7 @@ def test_food_line_recurring_service_page_service_restoration_is_tracked(tmp_pat
     assert row["pressure_type"] == "service_restoration"
     assert "restored" in row["exact_supporting_passage"].lower()
     assert "closed while repairs are completed" in row["prior_exact_supporting_passage"].lower()
-    history = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "source_performance_history.json").read_text(encoding="utf-8"))
+    history = json.loads((tmp_path / "status" / "food-line" / "runtime" / "source_performance_history.json").read_text(encoding="utf-8"))
     assert history[source_id]["last_material_change_type"] == "service_restoration"
     assert history[source_id]["page_change_state"] == "changed_qualifying"
 
@@ -10454,7 +10454,7 @@ def test_food_line_recurring_service_page_official_benefit_interruption_fixture(
     assert row["page_change_detected"] is True
     assert row["prior_exact_supporting_passage"]
     assert "normal schedule" in row["prior_exact_supporting_passage"].lower()
-    history = json.loads((tmp_path / "data" / "dispatches" / "food-line" / "source_performance_history.json").read_text(encoding="utf-8"))
+    history = json.loads((tmp_path / "status" / "food-line" / "runtime" / "source_performance_history.json").read_text(encoding="utf-8"))
     assert history[source_id]["last_material_change_type"] == "benefit disruption"
     assert history[source_id]["last_emitted_candidate_id"] == row["source_record_id"]
 

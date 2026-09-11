@@ -71,7 +71,10 @@ def test_same_run_different_hash_is_conflict_without_overwrite(tmp_path: Path) -
     _write(source, changed)
     code, result = import_envelope(tmp_path, source, dispatch="food-line")
     assert code != 0
-    assert result["status"] == "CONFLICT"
+    assert result["status"] == "FAILED"
+    assert result["classification"] == "IDEMPOTENCY_CONFLICT"
+    assert result["existing_archive_sha256"]
+    assert Path(tmp_path / result["receipt_ref"]).exists()
 
 
 def test_malformed_and_unsupported_dispatch_fail_closed(tmp_path: Path) -> None:

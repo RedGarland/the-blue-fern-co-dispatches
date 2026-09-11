@@ -21,6 +21,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from scripts.care_line_runtime_paths import CARE_LINE_ALLOWED_DIRTY_CATEGORIES, classify_care_line_runtime_path
+from bluefern_dispatches.operational_health import build_care_line_operational_receipt, write_operational_receipt
 PRODUCTION_BRANCH = "add/pages-repo-default"
 SCHEDULER_SCHEMA = "care_line_collection_scheduler_receipt_v1"
 STATUS_ROOT = Path("status/care-line")
@@ -355,6 +356,35 @@ def _write_scheduler_log(
     return path
 
 
+def _write_operational_health_receipt(root: Path, record: dict[str, Any]) -> None:
+    status = str(record.get("status") or "failure")
+    receipt = build_care_line_operational_receipt(
+        task_key="care_line_collection",
+        # The wrapper receives the edition date, while each installed trigger
+        # supplies its own run instance. Preserve the instance timestamp until
+        # the scheduler can pass an explicit scheduled trigger timestamp.
+        scheduled_for=str(record.get("scheduled_for") or record.get("started_at") or record.get("edition_date") or "unknown"),
+        started_at=record.get("started_at"),
+        completed_at=record.get("completed_at"),
+        exit_code=record.get("pipeline_exit_code") if record.get("pipeline_exit_code") is not None else (0 if record.get("ok") else 1),
+        task_status=status,
+        run_id=record.get("run_id"),
+        runner_path=str(root),
+        branch=record.get("source_branch"),
+        source_head=record.get("source_commit"),
+        public_side_effects=record.get("publication_side_effects"),
+        collection_health=record.get("pipeline_status"),
+        artifact_refs={"task_receipt": str(record.get("receipt_path") or "")},
+        details={
+            "collection_only": bool(record.get("collection_only")),
+            "smoke_test": bool(record.get("smoke_test")),
+            "pipeline_run_id": record.get("pipeline_run_id"),
+            "failure_stage": record.get("failure_stage"),
+        },
+    )
+    write_operational_receipt(root, receipt)
+
+
 def _finalize_failure(record: dict[str, Any], *, exc: Exception, stage: str) -> None:
     record.update(
         {
@@ -495,6 +525,7 @@ def run_collection_once(
             )
             atomic_write_json(receipt_path, receipt)
             _write_scheduler_log(log_path, record=receipt)
+            _write_operational_health_receipt(root, receipt)
             return 0, receipt
 
         failure_stage = "verify_checkout"
@@ -530,12 +561,14 @@ def run_collection_once(
             receipt["ok"] = child.returncode == 0 and not pipeline_parse_error and pipeline_status in SUCCESS_STATUSES
         atomic_write_json(receipt_path, receipt)
         _write_scheduler_log(log_path, record=receipt, child=child)
+        _write_operational_health_receipt(root, receipt)
         return (0 if receipt["ok"] else (child.returncode or 1)), receipt
     except Exception as exc:
         stage = locals().get("failure_stage", "unknown")
         _finalize_failure(receipt, exc=exc, stage=stage)
         atomic_write_json(receipt_path, receipt)
         _write_scheduler_log(log_path, record=receipt, exc=exc)
+        _write_operational_health_receipt(root, receipt)
         return 1, receipt
     finally:
         lock.release()

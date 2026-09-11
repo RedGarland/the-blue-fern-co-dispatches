@@ -30,6 +30,7 @@ def _default_date(source_root: Path) -> str:
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Serialize sanitized operational status for the Scheduled Dispatch Watch.")
     parser.add_argument("--source-root", type=Path, required=True, help="Production runner containing local receipts.")
+    parser.add_argument("--care-source-root", type=Path, help="Optional Care Line runner containing shared Care receipts.")
     parser.add_argument("--status-checkout", type=Path, required=True, help="Dedicated operational-status checkout.")
     parser.add_argument("--date", help="Receipt date in YYYY-MM-DD form; defaults to the newest local date.")
     parser.add_argument("--evaluated-at", help="UTC evaluation timestamp; defaults to current UTC time.")
@@ -58,6 +59,7 @@ def main(argv: list[str] | None = None) -> int:
             evaluated_at=evaluated_at,
             exported_at=args.exported_at,
             recovery=load_recovery_context(args.recovery_context),
+            care_source_root=args.care_source_root,
         )
         if args.push:
             commit_and_push_status(
@@ -70,7 +72,7 @@ def main(argv: list[str] | None = None) -> int:
     except ExportError as exc:
         print(f"export failed: {exc}", file=sys.stderr)
         return 1
-    print(json.dumps({"ok": True, "paths": result["paths"], "food_line": result["food_line"]}, indent=2, sort_keys=True))
+    print(json.dumps({"ok": True, "paths": result["paths"], "food_line": result["food_line"], "care_line": result.get("care_line")}, indent=2, sort_keys=True))
     return 0
 
 

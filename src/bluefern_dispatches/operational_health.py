@@ -107,16 +107,47 @@ FOOD_LINE_TASK_EXPECTATIONS: tuple[TaskExpectation, ...] = (
 )
 
 
+# Installed scheduler definitions own Care cadence. These expectations describe
+# the source-side execution contract without inventing a production trigger.
+CARE_LINE_TASK_EXPECTATIONS: tuple[TaskExpectation, ...] = (
+    TaskExpectation(
+        dispatch="care-line",
+        task_key="care_line_collection",
+        task_name="Blue Fern Care Line National Collection",
+        timezone="America/Los_Angeles",
+        cadence="scheduled",
+        expected_time="configured scheduler time",
+        grace_minutes=120,
+    ),
+    TaskExpectation(
+        dispatch="care-line",
+        task_key="care_line_reviewed_event_queue",
+        task_name="Blue Fern Care Line Reviewed Event Queue",
+        timezone="America/Los_Angeles",
+        cadence="daily",
+        expected_time="08:00",
+        grace_minutes=120,
+        upstream_dependencies=("care_line_collection",),
+    ),
+    TaskExpectation(
+        dispatch="care-line",
+        task_key="care_line_approved_release_publication",
+        task_name="Blue Fern Care Line Approved Release Publication",
+        timezone="America/Los_Angeles",
+        cadence="configured",
+        expected_time="configured scheduler time",
+        grace_minutes=120,
+        upstream_dependencies=("care_line_reviewed_event_queue",),
+    ),
+)
+
+
 MIGRATION_TASK_EXPECTATIONS: dict[str, tuple[TaskExpectation, ...]] = {
     "gaza": (
         TaskExpectation("gaza", "gaza_daily_dispatch", "Daily - Dispatches From Gaza", "America/Los_Angeles", "daily", "configured scheduler time", 120),
     ),
     "food-line": FOOD_LINE_TASK_EXPECTATIONS,
-    "care-line": (
-        TaskExpectation("care-line", "care_line_collection", "Blue Fern Care Line National Collection", "America/Los_Angeles", "daily", "06:00", 120),
-        TaskExpectation("care-line", "care_line_reviewed_event_queue", "Blue Fern Care Line Reviewed Event Queue", "America/Los_Angeles", "daily", "08:00", 120),
-        TaskExpectation("care-line", "care_line_approved_release_publication", "Blue Fern Care Line Approved Release Publication", "America/Los_Angeles", "daily", "08:30", 120),
-    ),
+    "care-line": CARE_LINE_TASK_EXPECTATIONS,
     "ice": (
         TaskExpectation("ice", "ice_monitor", "Daily - ICE Monitor", "America/Los_Angeles", "daily", "21:15", 180),
     ),
@@ -382,6 +413,84 @@ def build_food_line_operational_receipt(
     )
 
 
+def map_care_line_status(task_key: str, task_status: str, *, exit_code: int | None = None) -> OperationalStatus:
+    if task_key == "care_line_collection":
+        if task_status in {"success", "partial_success", "completed"}:
+            return OperationalStatus.DEGRADED if task_status == "partial_success" else OperationalStatus.SUCCESS
+        if task_status in {"already_running", "safe_no_op"}:
+            return OperationalStatus.SAFE_NO_OP
+        if task_status in {"upstream_blocked", "source_state_blocked"}:
+            return OperationalStatus.UPSTREAM_BLOCKED
+    elif task_key == "care_line_reviewed_event_queue":
+        if task_status in {"ready_for_operator_release", "success"}:
+            return OperationalStatus.SUCCESS
+        if task_status in {"nothing_to_publish", "already_running", "safe_no_op"}:
+            return OperationalStatus.SAFE_NO_OP
+        if task_status in {"upstream_blocked", "no_collection_receipt"}:
+            return OperationalStatus.UPSTREAM_BLOCKED
+    elif task_key == "care_line_approved_release_publication":
+        if task_status in {"publication_success", "published"}:
+            return OperationalStatus.SUCCESS
+        if task_status in {"safe_no_op", "no_approved_release", "already_published", "already_running"}:
+            return OperationalStatus.SAFE_NO_OP
+        if task_status in {"upstream_blocked", "not_release_ready"}:
+            return OperationalStatus.UPSTREAM_BLOCKED
+    if exit_code not in (None, 0):
+        return OperationalStatus.FAILED
+    return OperationalStatus.UNKNOWN
+
+
+def build_care_line_operational_receipt(
+    *,
+    task_key: str,
+    scheduled_for: str,
+    started_at: str | None,
+    completed_at: str | None,
+    exit_code: int | None,
+    task_status: str,
+    run_id: str | None = None,
+    runner_path: str | None = None,
+    branch: str | None = None,
+    source_head: str | None = None,
+    public_side_effects: dict[str, Any] | None = None,
+    collection_health: str | None = None,
+    upstream_dependency_status: str | None = None,
+    publication_attempted: bool | None = None,
+    publication_status: str | None = None,
+    artifact_refs: dict[str, str] | None = None,
+    operator_attention_ref: str | None = None,
+    details: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    names = {item.task_key: item.task_name for item in CARE_LINE_TASK_EXPECTATIONS}
+    if task_key not in names:
+        raise ValueError(f"unknown Care Line task key: {task_key}")
+    status = map_care_line_status(task_key, task_status, exit_code=exit_code)
+    return build_operational_receipt(
+        dispatch="care-line",
+        task_key=task_key,
+        task_name=names[task_key],
+        scheduled_for=scheduled_for,
+        started_at=started_at,
+        completed_at=completed_at,
+        exit_code=exit_code,
+        status=status,
+        classification=task_status,
+        run_id=run_id,
+        failure_stage=task_key if status in {OperationalStatus.FAILED, OperationalStatus.DEGRADED} else None,
+        runner_path=runner_path,
+        branch=branch,
+        source_head=source_head,
+        public_side_effects=public_side_effects or {},
+        collection_health=collection_health,
+        upstream_dependency_status=upstream_dependency_status,
+        publication_attempted=publication_attempted,
+        publication_status=publication_status,
+        artifact_refs=artifact_refs,
+        operator_attention_ref=operator_attention_ref,
+        details=details,
+    )
+
+
 def evaluate_dispatch_health(
     *,
     dispatch: str,
@@ -389,6 +498,7 @@ def evaluate_dispatch_health(
     expectations: Iterable[TaskExpectation],
     evaluated_at: str,
     recovery: RecoveryContext | None = None,
+    expected_instances: Iterable[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     receipt_by_task: dict[str, dict[str, Any]] = {}
     for receipt in receipts:
@@ -404,7 +514,53 @@ def evaluate_dispatch_health(
     latest_success: datetime | None = None
     evaluated_dt = parse_timestamp(evaluated_at) or datetime.now(timezone.utc)
 
+    instance_rows = list(expected_instances or [])
+    instances_by_task: dict[str, list[dict[str, Any]]] = {}
+    for instance in instance_rows:
+        instances_by_task.setdefault(str(instance.get("task_key") or ""), []).append(instance)
+
     for expectation in expected:
+        task_instances = instances_by_task.get(expectation.task_key)
+        if instance_rows and not task_instances:
+            # A supplied instance schedule is authoritative for this
+            # evaluation window; absent future/configured tasks are not inferred
+            # as missed without an elapsed instance.
+            continue
+        if task_instances:
+            task_receipts = [receipt for receipt in receipts if str(receipt.get("task_key")) == expectation.task_key]
+            for instance in task_instances:
+                scheduled = parse_timestamp(str(instance.get("scheduled_for") or ""))
+                if scheduled is not None and scheduled.tzinfo is None:
+                    scheduled = scheduled.replace(tzinfo=timezone.utc)
+                due = scheduled is None or evaluated_dt >= scheduled + timedelta(minutes=expectation.grace_minutes)
+                if not due:
+                    continue
+                receipt = next(
+                    (
+                        candidate for candidate in task_receipts
+                        if str(candidate.get("scheduled_for") or "") == str(instance.get("scheduled_for") or "")
+                    ),
+                    None,
+                )
+                if receipt is None:
+                    if expectation.required:
+                        missed.append(f"{expectation.task_key}:{instance.get('scheduled_for')}")
+                    continue
+                completed.append(f"{expectation.task_key}:{instance.get('scheduled_for')}")
+                status = str(receipt["status"])
+                observed = parse_timestamp(str(receipt.get("observed_at") or ""))
+                if observed and evaluated_dt - observed > timedelta(minutes=max(expectation.grace_minutes * 2, 1)):
+                    stale.append(f"{expectation.task_key}:{instance.get('scheduled_for')}")
+                if status == OperationalStatus.FAILED.value:
+                    failed.append(f"{expectation.task_key}:{instance.get('scheduled_for')}")
+                elif status == OperationalStatus.DEGRADED.value:
+                    degraded.append(f"{expectation.task_key}:{instance.get('scheduled_for')}")
+                elif status == OperationalStatus.UPSTREAM_BLOCKED.value:
+                    upstream_blocked.append(f"{expectation.task_key}:{instance.get('scheduled_for')}")
+                elif status in {OperationalStatus.SUCCESS.value, OperationalStatus.SAFE_NO_OP.value} and observed:
+                    latest_success = max(latest_success, observed) if latest_success else observed
+            continue
+
         receipt = receipt_by_task.get(expectation.task_key)
         if receipt is None:
             if expectation.required:

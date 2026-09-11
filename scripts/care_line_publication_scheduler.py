@@ -22,6 +22,7 @@ if str(SRC) not in sys.path:
 from bluefern_dispatches.care_line_release_render import CareLineApprovedReleaseBundle, load_approved_release
 from bluefern_dispatches.generator import public_edition_is_listable
 from scripts.care_line_runtime_paths import CARE_LINE_ALLOWED_DIRTY_CATEGORIES, classify_care_line_runtime_path
+from bluefern_dispatches.operational_health import build_care_line_operational_receipt, write_operational_receipt
 
 PRODUCTION_BRANCH = "add/pages-repo-default"
 PAGES_BRANCH = "gh-pages"
@@ -316,6 +317,37 @@ def _write_log(path: Path, receipt: dict[str, Any], child: ChildExecution | None
     path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
 
 
+def _write_operational_health_receipt(root: Path, record: dict[str, Any]) -> None:
+    status = str(record.get("status") or "failure")
+    write_operational_receipt(
+        root,
+        build_care_line_operational_receipt(
+            task_key="care_line_approved_release_publication",
+            scheduled_for=str(record.get("run_date") or "unknown"),
+            started_at=record.get("started_at"),
+            completed_at=record.get("completed_at"),
+            exit_code=record.get("child_exit_code") if record.get("child_exit_code") is not None else (0 if record.get("ok") else 1),
+            task_status=status,
+            run_id=record.get("run_id"),
+            runner_path=str(root),
+            branch=record.get("source_branch"),
+            source_head=record.get("source_head_before"),
+            public_side_effects=record.get("unauthorized_side_effects") or {
+                "pages_sync": bool(record.get("pages_changed")),
+                "publication": bool(record.get("publication_attempted")),
+            },
+            publication_attempted=bool(record.get("publication_attempted")),
+            publication_status=record.get("publication_runner_status") or status,
+            artifact_refs={"task_receipt": str(record.get("receipt_path") or "")},
+            details={
+                "release_ready": bool(record.get("release_ready")),
+                "no_op_reason": record.get("no_op_reason"),
+                "failure_stage": record.get("failure_stage"),
+            },
+        ),
+    )
+
+
 def _initial_receipt(
     root: Path,
     pages_root: Path,
@@ -415,6 +447,7 @@ def run_publication_once(
             receipt.update({"ok": True, "status": "safe_no_op", "no_op_reason": "already_running", "completed_at": utc_now()})
             atomic_write_json(receipt_path, receipt)
             _write_log(log_path, receipt)
+            _write_operational_health_receipt(root, receipt)
             return 0, receipt
 
         stage = "source_state"
@@ -458,6 +491,7 @@ def run_publication_once(
             )
             atomic_write_json(receipt_path, receipt)
             _write_log(log_path, receipt)
+            _write_operational_health_receipt(root, receipt)
             return 0, receipt
         if len(pending) != 1:
             raise PublicationSchedulerError(
@@ -553,6 +587,7 @@ def run_publication_once(
         receipt.update({"ok": True, "status": "publication_success", "completed_at": utc_now()})
         atomic_write_json(receipt_path, receipt)
         _write_log(log_path, receipt, child)
+        _write_operational_health_receipt(root, receipt)
         return 0, receipt
     except Exception as exc:  # noqa: BLE001
         receipt.update(
@@ -566,6 +601,7 @@ def run_publication_once(
         )
         atomic_write_json(receipt_path, receipt)
         _write_log(log_path, receipt, child)
+        _write_operational_health_receipt(root, receipt)
         return 1, receipt
     finally:
         lock.release()

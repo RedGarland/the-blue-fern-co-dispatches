@@ -569,10 +569,11 @@ def test_legacy_current_intake_wrapper_records_duplicate_source_watch_findings_e
     candidate_rows = intake["candidate_rows"]
     assert len(candidate_rows) == 2
     assert candidate_rows[0]["candidate_disposition"] == "retained_for_review"
-    assert candidate_rows[1]["candidate_disposition"] == "duplicate"
+    assert candidate_rows[1]["candidate_disposition"] == "duplicate_with_reason"
     assert candidate_rows[1]["candidate_disposition_reason"] == "duplicate agent_duplicate_key within intake"
+    assert candidate_rows[1]["duplicate_linkage"]["target_candidate_id"] == "food-line-current-001"
     assert intake["counts"]["eligible_for_review"] == 1
-    assert intake["counts"]["duplicate"] == 1
+    assert intake["counts"]["duplicate_with_reason"] == 1
     report = json.loads(
         (tmp_path / "data" / "dispatches" / "food-line" / "review" / "reports" / "2026-08-19" / "current-intake.json").read_text(encoding="utf-8")
     )

@@ -268,7 +268,9 @@ def test_care_line_access_prefilter_discards_obvious_noise_before_formal_exclusi
     assert len(result["prefilter_diagnostics"]) == 1
     assert result["prefilter_diagnostics"][0]["prefilter_decision"] == "discard"
     assert result["prefilter_discarded"][0]["normalized_reason"] in {"marketing_announcement", "construction_without_access_consequence", "general_healthcare_news", "non_care_line", "service_expansion_without_prior_loss_context"}
-    assert result["exclusions"] == []
+    assert len(result["exclusions"]) == 1
+    assert result["exclusions"][0]["exclusion_reason"] in {"marketing_announcement", "construction_without_access_consequence", "general_healthcare_news", "non_care_line", "service_expansion_without_prior_loss_context"}
+    assert result["exclusions"][0]["lineage"]["collection_run_id"] == "run-1"
     assert result["candidates"] == []
 
 

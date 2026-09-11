@@ -10,6 +10,8 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 from urllib.parse import urlsplit
 
+from .food_line_runtime_state import CURRENT_QUEUE_PATH
+
 from .source_based_qualification import validate_current_freshness_check
 
 
@@ -26,7 +28,7 @@ CURRENT_SOURCE_PREFIXES = (
     "data/dispatches/food-line/sources/",
     "output/review/food-line/",
 )
-PRIVATE_QUEUE_PATH = Path("data/dispatches/food-line/review/current-signal-review.json")
+PRIVATE_QUEUE_PATH = CURRENT_QUEUE_PATH
 PRIVATE_PROPOSED_EDITION_ROOT = Path("data/dispatches/food-line/review/proposed-editions")
 
 REQUIRED_ITEM_FIELDS = (
@@ -420,7 +422,7 @@ def build_proposed_edition(queue: dict[str, Any]) -> dict[str, Any]:
         "published": False,
         "publication_eligible": False,
         "publication_approval": False,
-        "source_queue_path": PRIVATE_QUEUE_PATH.as_posix(),
+        "source_queue_path": CURRENT_QUEUE_PATH.as_posix(),
         "source_queue_sha256": payload_sha256(validated),
         "selected_item_count": len(public_items),
         "approved_item_count": approved_item_count,

@@ -839,7 +839,7 @@ def assert_edition_vacant(root: Path, pages: Path, edition_date: str) -> None:
         root / "output" / "site" / "food-line" / "rss.xml",
         root / "output" / "site" / "food-line" / "podcast.xml",
         root / "data" / "records" / "story_memory.json",
-        root / "data" / "dispatches" / "food-line" / "review" / "current-signal-review.json",
+        root / "status" / "food-line" / "runtime" / "current-signal-review.json",
         pages / "food-line" / "index.html",
         pages / "food-line" / "archive.html",
         pages / "food-line" / "rss.xml",

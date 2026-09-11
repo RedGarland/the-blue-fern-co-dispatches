@@ -27,7 +27,7 @@ def test_classify_path_covers_expected_categories():
     assert preflight_repo_state.classify_path("logs/gaza-daily-2026-06-22.log") == "logs"
     assert preflight_repo_state.classify_path(".pytest-temp-gaza-wide/") == "cache"
     assert preflight_repo_state.classify_path(".venv/Scripts/python.exe") == "virtualenv"
-    assert preflight_repo_state.classify_path("data/dispatches/food-line/source_performance_history.json") == "local_run_state"
+    assert preflight_repo_state.classify_path("status/food-line/runtime/source_performance_history.json") == "local_run_state"
     assert preflight_repo_state.classify_path("data/dispatches/food-line/discovery/2026-06-25/discovery_candidates.json") == "local_run_state"
     assert preflight_repo_state.classify_path("some/unknown/path.txt") == "unknown"
 
@@ -99,7 +99,7 @@ def test_production_shaped_external_handoff_evidence_is_clean_but_nearby_dirt_is
     ]
 
 
-def test_food_line_source_performance_history_is_allowed_but_other_data_paths_are_not(monkeypatch, tmp_path):
+def test_food_line_tracked_runtime_state_is_risky_but_sanctioned_runtime_path_is_allowed(monkeypatch, tmp_path):
     source_repo = tmp_path / "repo"
     source_repo.mkdir()
     monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: None)
@@ -108,6 +108,7 @@ def test_food_line_source_performance_history_is_allowed_but_other_data_paths_ar
         return 0, [
             "## add/food-line-fix",
             " M data/dispatches/food-line/source_performance_history.json",
+            "?? status/food-line/runtime/source_performance_history.json",
             " M data/dispatches/food-line/source_registry.json",
         ]
 
@@ -117,14 +118,15 @@ def test_food_line_source_performance_history_is_allowed_but_other_data_paths_ar
 
     assert report["ok"] is False
     assert {entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]} == {
-        "data/dispatches/food-line/source_performance_history.json",
+        "status/food-line/runtime/source_performance_history.json",
     }
     assert {entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]} == {
+        "data/dispatches/food-line/source_performance_history.json",
         "data/dispatches/food-line/source_registry.json",
     }
 
 
-def test_food_line_current_review_runtime_state_is_allowed(monkeypatch, tmp_path):
+def test_food_line_current_review_tracked_state_is_risky(monkeypatch, tmp_path):
     source_repo = tmp_path / "repo"
     source_repo.mkdir()
     monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: None)
@@ -136,8 +138,8 @@ def test_food_line_current_review_runtime_state_is_allowed(monkeypatch, tmp_path
 
     report = preflight_repo_state.build_preflight_report(source_repo)
 
-    assert report["ok"] is True
-    assert [entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]] == [
+    assert report["ok"] is False
+    assert [entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]] == [
         "data/dispatches/food-line/review/current-signal-review.json"
     ]
 

@@ -11,7 +11,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from bluefern_dispatches.food_line_current_review import (
     ALLOWED_DECISIONS,
-    PRIVATE_QUEUE_PATH,
     apply_editorial_decision,
     load_queue,
     payload_sha256,
@@ -19,6 +18,7 @@ from bluefern_dispatches.food_line_current_review import (
     write_json_atomic,
     write_proposed_edition,
 )
+from bluefern_dispatches.food_line_runtime_state import current_queue_path
 
 
 def _utc_now() -> str:
@@ -27,7 +27,7 @@ def _utc_now() -> str:
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Manage the private Food Line current editorial review queue")
-    parser.add_argument("--queue", default=str(PRIVATE_QUEUE_PATH), help="Private current-review queue path")
+    parser.add_argument("--queue", default=None, help="Private current-review queue path")
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("validate", help="Validate the private queue without writing")
     subparsers.add_parser("inspect", help="Summarize the private queue without writing")
@@ -48,7 +48,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     root = Path.cwd()
-    queue_path = (root / args.queue).resolve() if not Path(args.queue).is_absolute() else Path(args.queue).resolve()
+    requested_queue = Path(args.queue) if args.queue else current_queue_path(root)
+    queue_path = (root / requested_queue).resolve() if not requested_queue.is_absolute() else requested_queue.resolve()
     try:
         queue = load_queue(queue_path)
         result: dict[str, Any]

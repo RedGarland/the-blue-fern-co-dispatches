@@ -18,6 +18,7 @@ if str(SRC) not in sys.path:
 
 from scripts import process_food_line_current_intake as current_intake
 from bluefern_dispatches.food_line_current_review import build_proposed_edition, write_json_atomic
+from bluefern_dispatches.food_line_runtime_state import current_queue_path
 
 SCHEMA_VERSION = "food_line_historical_current_intake_replay_v1"
 REASON = "missing_current_intake"
@@ -116,7 +117,7 @@ def run_replay(
             raise ValueError(f"input escaped historical boundary: {path}")
 
     boundary_inputs = _copy_selected_inputs_to_boundary(root, historical_date, selected_inputs)
-    queue_path = root / "data" / "dispatches" / "food-line" / "review" / "current-signal-review.json"
+    queue_path = current_queue_path(root)
     original_queue_bytes = queue_path.read_bytes() if queue_path.exists() else None
     try:
         queue = current_intake._build_review_queue(root, historical_date, inbox)

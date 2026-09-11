@@ -7,7 +7,7 @@ FOOD_LINE_DISCOVERY_CANDIDATES_RE = re.compile(
     r"^data/dispatches/food-line/discovery/\d{4}-\d{2}-\d{2}/discovery_candidates\.json$"
 )
 FOOD_LINE_DISCOVERY_RUN_ROOT_RE = re.compile(r"^data/dispatches/food-line/discovery(?:/.*)?$")
-FOOD_LINE_SOURCE_PERFORMANCE_HISTORY_RE = re.compile(r"^data/dispatches/food-line/source_performance_history\.json$")
+FOOD_LINE_SOURCE_PERFORMANCE_HISTORY_RE = re.compile(r"^status/food-line/runtime/source_performance_history\.json$")
 FOOD_LINE_AGENT_INBOX_RE = re.compile(r"^data/dispatches/food-line/agent-inbox(?:/.*)?$")
 FOOD_LINE_AGENT_INTAKE_RE = re.compile(r"^data/dispatches/food-line/agent-intake(?:/.*)?$")
 FOOD_LINE_REVIEW_RE = re.compile(r"^data/dispatches/food-line/review(?:/.*)?$")
@@ -16,12 +16,7 @@ FOOD_LINE_DISCOVERY_RUNS_RE = re.compile(r"^data/dispatches/food-line/discovery-
 FOOD_LINE_STATUS_RE = re.compile(r"^status/food-line(?:/.*)?$")
 FOOD_LINE_LOGS_RE = re.compile(r"^logs/food-line(?:/.*)?$")
 FOOD_LINE_AGENT_HISTORY_RE = re.compile(r"^data/agent-history-staging/food-line(?:/.*)?$")
-FOOD_LINE_MUTABLE_TRACKED_RUNTIME_PATHS = frozenset(
-    {
-        "data/dispatches/food-line/review/current-signal-review.json",
-        "data/dispatches/food-line/source_performance_history.json",
-    }
-)
+FOOD_LINE_MUTABLE_TRACKED_RUNTIME_PATHS = frozenset()
 
 FOOD_LINE_RUNTIME_CATEGORIES = {
     "local_run_state",
@@ -55,6 +50,8 @@ def classify_food_line_runtime_path(path_text: str) -> str | None:
     if FOOD_LINE_AGENT_INBOX_RE.match(lower):
         return "local_run_state"
     if FOOD_LINE_SOURCE_PERFORMANCE_HISTORY_RE.match(lower):
+        return "local_run_state"
+    if lower.startswith("status/food-line/runtime/"):
         return "local_run_state"
     if FOOD_LINE_AGENT_INTAKE_RE.match(lower):
         return "local_run_state"

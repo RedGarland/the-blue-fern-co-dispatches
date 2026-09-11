@@ -60,7 +60,7 @@ def _write_site(repo: Path) -> None:
 
 def _write_release_inputs(repo: Path) -> tuple[Path, Path, Path]:
     review_root = repo / "data" / "dispatches" / "food-line" / "review"
-    queue_path = review_root / "current-signal-review.json"
+    queue_path = repo / "status" / "food-line" / "runtime" / "current-signal-review.json"
     proposal_path = review_root / "proposed-editions" / f"{DATE}.json"
     readiness_path = review_root / "release-readiness" / f"{DATE}.json"
     queue = {
@@ -117,7 +117,7 @@ def _write_release_inputs(repo: Path) -> tuple[Path, Path, Path]:
         "approved_item_count": 1,
         "pending_item_count": 0,
         "rejected_item_count": 0,
-        "source_queue_path": "data/dispatches/food-line/review/current-signal-review.json",
+        "source_queue_path": "status/food-line/runtime/current-signal-review.json",
         "source_queue_sha256": hashlib.sha256(queue_path.read_bytes()).hexdigest(),
         "items": [
             {
@@ -142,7 +142,7 @@ def _write_release_inputs(repo: Path) -> tuple[Path, Path, Path]:
         "status": "approved_current_review_ready_for_source_generation",
         "approved_proposal_path": "data/dispatches/food-line/review/proposed-editions/2026-08-15.json",
         "approved_proposal_sha256": hashlib.sha256(proposal_path.read_bytes()).hexdigest(),
-        "review_snapshot_path": "data/dispatches/food-line/review/current-signal-review.json",
+        "review_snapshot_path": "status/food-line/runtime/current-signal-review.json",
         "review_snapshot_sha256": hashlib.sha256(queue_path.read_bytes()).hexdigest(),
     }
     _write_json(readiness_path, readiness)
@@ -162,7 +162,7 @@ def release_repos(tmp_path: Path) -> tuple[Path, Path]:
 
 def _bundle(source: Path) -> ApprovedProposalBundle:
     proposal_path = source / "data" / "dispatches" / "food-line" / "review" / "proposed-editions" / f"{DATE}.json"
-    queue_path = source / "data" / "dispatches" / "food-line" / "review" / "current-signal-review.json"
+    queue_path = source / "status" / "food-line" / "runtime" / "current-signal-review.json"
     proposal = json.loads(proposal_path.read_text(encoding="utf-8"))
     queue = json.loads(queue_path.read_text(encoding="utf-8"))
     return ApprovedProposalBundle(
@@ -184,7 +184,7 @@ def test_dry_run_full_materializes_only_validated_private_inputs_and_leaves_real
     source_head = _git_output(source, "rev-parse", "HEAD")
     pages_head = _git_output(pages, "rev-parse", "HEAD")
     proposal_path = source / "data" / "dispatches" / "food-line" / "review" / "proposed-editions" / f"{DATE}.json"
-    queue_path = source / "data" / "dispatches" / "food-line" / "review" / "current-signal-review.json"
+    queue_path = source / "status" / "food-line" / "runtime" / "current-signal-review.json"
     readiness_path = source / "data" / "dispatches" / "food-line" / "review" / "release-readiness" / f"{DATE}.json"
     bundle = _bundle(source)
     captured: dict[str, Path] = {}
@@ -242,7 +242,7 @@ def test_dry_run_full_materializes_only_validated_private_inputs_and_leaves_real
     assert result["status"] == "dry_run_full_success"
     assert result["copied_private_inputs"] == [
         "data/dispatches/food-line/review/proposed-editions/2026-08-15.json",
-        "data/dispatches/food-line/review/current-signal-review.json",
+        "status/food-line/runtime/current-signal-review.json",
         "data/dispatches/food-line/review/release-readiness/2026-08-15.json",
     ]
     assert result["publication_report"]["planned_pages_paths"] == ["food-line/index.html", "food-line/archive.html", "index.html"]
@@ -251,7 +251,7 @@ def test_dry_run_full_materializes_only_validated_private_inputs_and_leaves_real
     assert _git_output(pages, "rev-parse", "HEAD") == pages_head
     assert _git_output(pages, "status", "--short") == ""
     assert source.joinpath("data/dispatches/food-line/review/proposed-editions", f"{DATE}.json").exists()
-    assert source.joinpath("data/dispatches/food-line/review/current-signal-review.json").exists()
+    assert source.joinpath("status/food-line/runtime/current-signal-review.json").exists()
     assert source.joinpath("data/dispatches/food-line/review/release-readiness", f"{DATE}.json").exists()
     assert "root homepage" in (source / "output" / "site" / "index.html").read_text(encoding="utf-8")
 
@@ -263,7 +263,7 @@ def test_dry_run_full_fails_closed_when_validated_private_input_disappears(
     source_head = _git_output(source, "rev-parse", "HEAD")
     pages_head = _git_output(pages, "rev-parse", "HEAD")
     proposal_path = source / "data" / "dispatches" / "food-line" / "review" / "proposed-editions" / f"{DATE}.json"
-    queue_path = source / "data" / "dispatches" / "food-line" / "review" / "current-signal-review.json"
+    queue_path = source / "status" / "food-line" / "runtime" / "current-signal-review.json"
     readiness_path = source / "data" / "dispatches" / "food-line" / "review" / "release-readiness" / f"{DATE}.json"
     bundle = _bundle(source)
 

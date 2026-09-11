@@ -28,6 +28,7 @@ from bluefern_dispatches.food_line_current_review import (
     write_json_atomic,
     write_proposed_edition,
 )
+from bluefern_dispatches.food_line_runtime_state import current_queue_path
 
 
 REPORT_SCHEMA = "food_line_current_intake_report_v1"
@@ -194,7 +195,7 @@ def _finding_payload(finding: Any) -> dict[str, Any]:
 
 
 def _build_review_queue(root: Path, edition_date: str, inbox: Path) -> dict[str, Any]:
-    queue_path = root / PRIVATE_QUEUE_PATH
+    queue_path = current_queue_path(root)
     items: list[dict[str, Any]] = []
     seen_duplicate_keys: set[str] = set()
     lifecycle_counts: Counter[str] = Counter()
@@ -339,7 +340,7 @@ def _build_review_queue(root: Path, edition_date: str, inbox: Path) -> dict[str,
 
 
 def _current_intake_report(root: Path, edition_date: str, inbox: Path) -> dict[str, Any]:
-    queue_path = root / "data" / "dispatches" / "food-line" / "review" / "current-signal-review.json"
+    queue_path = current_queue_path(root)
     queue = load_queue(queue_path)
     proposed = build_proposed_edition(queue)
     json_path = markdown_path = None
@@ -397,7 +398,7 @@ def main(argv: list[str] | None = None) -> int:
     root = Path.cwd()
     inbox = Path(args.inbox)
     try:
-        queue_path = root / "data" / "dispatches" / "food-line" / "review" / "current-signal-review.json"
+        queue_path = current_queue_path(root)
         if args.build_review_queue or not queue_path.exists():
             _build_review_queue(root, args.edition_date, inbox)
         report = _current_intake_report(root, args.edition_date, inbox)

@@ -1,37 +1,103 @@
 {
   "dispatches": {
     "american-pressure": {
+      "agent_handoff": {
+        "last_attempt_at": null,
+        "last_failure_at": null,
+        "last_success_at": null,
+        "latest_agent_run_id": null,
+        "latest_classification": null,
+        "latest_status": null,
+        "stale": false,
+        "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
+        "unaccounted_count": 0
+      },
       "aggregate_status": "UNKNOWN",
       "migration_status": "NOT_MIGRATED",
       "recovery_lifecycle": "HEALTHY"
     },
     "care-line": {
+      "agent_handoff": {
+        "last_attempt_at": "2026-09-11T02:14:37Z",
+        "last_failure_at": "2026-09-11T02:14:37Z",
+        "last_success_at": null,
+        "latest_agent_run_id": null,
+        "latest_classification": "MALFORMED",
+        "latest_status": "FAILED",
+        "stale": false,
+        "state": "HANDOFF_FAILED",
+        "unaccounted_count": 0
+      },
       "aggregate_status": "UNKNOWN",
       "migration_status": "NOT_MIGRATED",
       "recovery_lifecycle": "HEALTHY"
     },
     "cascadia": {
+      "agent_handoff": {
+        "last_attempt_at": null,
+        "last_failure_at": null,
+        "last_success_at": null,
+        "latest_agent_run_id": null,
+        "latest_classification": null,
+        "latest_status": null,
+        "stale": false,
+        "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
+        "unaccounted_count": 0
+      },
       "aggregate_status": "UNKNOWN",
       "migration_status": "NOT_MIGRATED",
       "recovery_lifecycle": "HEALTHY"
     },
     "food-line": {
+      "agent_handoff": {
+        "last_attempt_at": "2026-09-11T02:14:35Z",
+        "last_failure_at": "2026-09-11T02:14:35Z",
+        "last_success_at": null,
+        "latest_agent_run_id": null,
+        "latest_classification": "MALFORMED",
+        "latest_status": "FAILED",
+        "stale": false,
+        "state": "HANDOFF_FAILED",
+        "unaccounted_count": 0
+      },
       "aggregate_status": "FAILED",
       "migration_status": "MIGRATED",
-      "recovery_lifecycle": "RECOVERY_PENDING_RUNTIME_PROOF"
+      "recovery_lifecycle": "INCIDENT_OPEN"
     },
     "gaza": {
+      "agent_handoff": {
+        "last_attempt_at": null,
+        "last_failure_at": null,
+        "last_success_at": null,
+        "latest_agent_run_id": null,
+        "latest_classification": null,
+        "latest_status": null,
+        "stale": false,
+        "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
+        "unaccounted_count": 0
+      },
       "aggregate_status": "UNKNOWN",
       "migration_status": "NOT_MIGRATED",
       "recovery_lifecycle": "HEALTHY"
     },
     "ice": {
+      "agent_handoff": {
+        "last_attempt_at": null,
+        "last_failure_at": null,
+        "last_success_at": null,
+        "latest_agent_run_id": null,
+        "latest_classification": null,
+        "latest_status": null,
+        "stale": false,
+        "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
+        "unaccounted_count": 0
+      },
       "aggregate_status": "UNKNOWN",
       "migration_status": "NOT_MIGRATED",
       "recovery_lifecycle": "HEALTHY"
     }
   },
-  "exported_at": "2026-09-10T20:01:00Z",
+  "exported_at": "2026-09-11T15:42:35Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "FAILED"

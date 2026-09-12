@@ -1,0 +1,19 @@
+{
+  "dispatch_slug": "food-line",
+  "dispatch_name": "Food Line Dispatch",
+  "edition_date": "2026-09-12",
+  "published_at": "2026-09-12T00:00:00Z",
+  "publication_mode": "recovery-disclosed current publication",
+  "story_count": 4,
+  "source_count": 4,
+  "recovery_disclosure": "Recovery note: These items were recovered after the September 10 Food Line collection failed. They were reconstructed from separately preserved, source-backed evidence and subsequently human reviewed. They are not artifacts from the failed production run.",
+  "placement": "2026-09-12 recovery-disclosed current Food Line publication placement; not a September 10 normal-production edition",
+  "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-09-12/",
+  "claim_ledger_path": "/food-line/editions/2026-09-12/claim_ledger.html",
+  "source_table_path": "/food-line/editions/2026-09-12/source_table.html",
+  "validation_status": "ok",
+  "publication_status": "published_pending_live_verification",
+  "social_status": "not_authorized",
+  "audio_status": "not_authorized",
+  "schedule_status": "not_changed"
+}

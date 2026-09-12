@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "correction_type": {
+      "const": "stale_reference_hash_binding"
+    },
+    "eligible_for_automatic_publication": {
+      "const": false
+    },
+    "original_production_artifact_present": {
+      "const": false
+    },
+    "production_collection_failed_before_discovery": {
+      "const": true
+    },
+    "provenance_class": {
+      "const": "operator_recovered_source_watch_evidence"
+    },
+    "publication_approval": {
+      "const": false
+    },
+    "publication_eligible": {
+      "const": false
+    },
+    "publication_performed": {
+      "const": false
+    },
+    "release_preparation_eligible": {
+      "const": true
+    },
+    "schema_version": {
+      "const": "bluefern.food_line.operator_recovery_release_prep_correction.v1"
+    }
+  },
+  "required": [
+    "schema_version",
+    "correction_type",
+    "item_id",
+    "provenance_class",
+    "original_release_prep_path",
+    "original_release_prep_sha256",
+    "original_stored_editorial_review_sha256",
+    "original_stored_release_decision_sha256",
+    "authoritative_editorial_review_ref",
+    "authoritative_editorial_review_sha256",
+    "authoritative_release_decision_ref",
+    "authoritative_release_decision_sha256",
+    "protected_source_commit",
+    "correction_reason",
+    "corrected_at",
+    "original_production_artifact_present",
+    "production_collection_failed_before_discovery",
+    "release_preparation_eligible",
+    "eligible_for_automatic_publication",
+    "publication_eligible",
+    "publication_approval",
+    "publication_performed",
+    "source_url",
+    "publisher",
+    "event_date",
+    "geography",
+    "duplicate_disposition",
+    "approved_headline",
+    "approved_summary",
+    "editorial_disposition"
+  ],
+  "title": "Food Line operator-recovery release-prep correction v1",
+  "type": "object"
+}

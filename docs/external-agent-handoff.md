@@ -128,3 +128,22 @@ The authorization means only that the reviewed private items may advance to a
 separate publication-authorization decision. It is not directly consumable by
 public generation and does not modify public output, archive/RSS/homepage,
 Pages, scheduler state, or operational-health state.
+
+If a committed release-prep v1 artifact contains stale hashes for its
+editorial-review or release-decision references, the original release-prep
+artifact remains immutable. A correction overlay using schema
+`bluefern.food_line.operator_recovery_release_prep_correction.v1` may be
+committed under
+`data/private-agent-handoff/operator-recovery/food-line/<YYYY-MM-DD>/release-prep-corrections/<item-id>-correction-v1.json`.
+The overlay is valid only for `stale_reference_hash_binding`, must bind the
+exact original release-prep path and SHA-256, must record the prior stored
+hashes, and must bind the current protected editorial-review and
+release-decision artifact hashes. It may replace only those stale reference
+hashes during downstream release-authorization validation.
+
+The correction overlay must preserve item identity, provenance, source URL,
+publisher, event date, geography, duplicate disposition, reviewed headline,
+reviewed summary, editorial disposition, failed-runtime distinction, and all
+false publication flags. It grants no release, publication, public-generation,
+Pages, scheduler, social, audio, archive/RSS/homepage, or operational-health
+authority by itself.

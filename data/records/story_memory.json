@@ -990,5 +990,153 @@
     "summary": "WHO said it supported evacuation of 106 patients, including 19 children, with 132 companions through two crossings during the preceding week.",
     "title": "WHO supports evacuation of 106 Gaza patients through Rafah and Kerem Shalom",
     "update_count": 0
+  },
+  {
+    "dispatch_slug": "food-line",
+    "edition_date": "2026-09-12",
+    "published_at": "2026-09-12T00:00:00Z",
+    "story_id": "food-line-recovery-4c5a0a1b707d7b0417a3",
+    "title": "Hawaii Island Salvation Army pantries report staple shortages after Lala",
+    "normalized_title": "hawaii island salvation army pantries report staple shortages after lala",
+    "summary": "Big Island Now reported that Salvation Army food pantries in Hilo, Honokaa, and Kona needed donations because staple supplies were low after Lala-related pressure. The pantries normally distribute about 75 to 150 food bags during weekly distributions at each site, and the Hilo corps reported 20 new families seeking help.",
+    "source_urls": [
+      "https://bigislandnow.com/2026/09/08/community-donations-needed-to-replenish-food-pantries-across-hawai%ca%bbi-island-following-lala"
+    ],
+    "canonical_urls": [
+      "https://bigislandnow.com/2026/09/08/community-donations-needed-to-replenish-food-pantries-across-hawai%ca%bbi-island-following-lala"
+    ],
+    "publisher_names": [
+      "Big Island Now"
+    ],
+    "source_dates": [
+      "2026-09-08"
+    ],
+    "first_seen_date": "2026-09-12",
+    "last_seen_date": "2026-09-12",
+    "update_count": 0,
+    "latest_classification": "new",
+    "recovery_disclosed": true,
+    "original_production_status": "failed",
+    "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-09-12/",
+    "operator_recovery_item_id": "finding_0ca835b632814684d8f1f2ec",
+    "provenance_class": "operator_recovered_source_watch_evidence",
+    "operator_recovery_provenance": "operator_recovered_source_watch_evidence",
+    "original_agent_run_id": "food-line-source-watch-20260910T110306Z-hawaii-island-pantry-shortages",
+    "production_collection_failed_before_discovery": true,
+    "original_production_artifact_present": false,
+    "september_10_original_production_status": "failed",
+    "publication_identity": "recovery_disclosed_current_publication",
+    "event_identity": "finding_0ca835b632814684d8f1f2ec"
+  },
+  {
+    "dispatch_slug": "food-line",
+    "edition_date": "2026-09-12",
+    "published_at": "2026-09-12T00:00:00Z",
+    "story_id": "food-line-recovery-29f1d788b3bcc43a0456",
+    "title": "Eastport's only full-size grocery store remains without a committed reopening",
+    "normalized_title": "eastport s only full size grocery store remains without a committed reopening",
+    "summary": "The Portland Press Herald reported that R&M IGA Foodliner closed after its owner retired and had been the only full-size grocery serving Eastport and the Pleasant Point reservation. Passamaquoddy voters rejected a purchase due-diligence proposal, and without a reopening commitment residents would need to drive about 35 minutes or more to Calais for full-service grocery access.",
+    "source_urls": [
+      "https://www.pressherald.com/2026/09/09/passamaquoddy-nation-will-not-buy-eastport-grocery-store"
+    ],
+    "canonical_urls": [
+      "https://www.pressherald.com/2026/09/09/passamaquoddy-nation-will-not-buy-eastport-grocery-store"
+    ],
+    "publisher_names": [
+      "Portland Press Herald"
+    ],
+    "source_dates": [
+      "2026-09-09"
+    ],
+    "first_seen_date": "2026-09-12",
+    "last_seen_date": "2026-09-12",
+    "update_count": 0,
+    "latest_classification": "new",
+    "recovery_disclosed": true,
+    "original_production_status": "failed",
+    "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-09-12/",
+    "operator_recovery_item_id": "finding_5a56d5dbd54a3ceca06f44d6",
+    "provenance_class": "operator_recovered_source_watch_evidence",
+    "operator_recovery_provenance": "operator_recovered_source_watch_evidence",
+    "original_agent_run_id": "food-line-source-watch-20260910T133110Z-eastport-maine-grocery-access",
+    "production_collection_failed_before_discovery": true,
+    "original_production_artifact_present": false,
+    "september_10_original_production_status": "failed",
+    "publication_identity": "recovery_disclosed_current_publication",
+    "event_identity": "finding_5a56d5dbd54a3ceca06f44d6"
+  },
+  {
+    "dispatch_slug": "food-line",
+    "edition_date": "2026-09-12",
+    "published_at": "2026-09-12T00:00:00Z",
+    "story_id": "food-line-recovery-ca86874a242cb6d9672d",
+    "title": "Puerto Rico water shutoffs add food-preparation and prepared-food costs",
+    "normalized_title": "puerto rico water shutoffs add food preparation and prepared food costs",
+    "summary": "The Guardian reported unreliable water service and rotating shutoffs in Puerto Rico, including more than 180,000 homes without public access to potable water during 48-hour shutoff cycles. The Food Line relevance is the reported burden on cooking and household budgets, including residents spending more time and money on water and prepared food.",
+    "source_urls": [
+      "https://www.theguardian.com/us-news/ng-interactive/2026/sep/10/puerto-rico-water-access"
+    ],
+    "canonical_urls": [
+      "https://www.theguardian.com/us-news/ng-interactive/2026/sep/10/puerto-rico-water-access"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_dates": [
+      "2026-09-10"
+    ],
+    "first_seen_date": "2026-09-12",
+    "last_seen_date": "2026-09-12",
+    "update_count": 0,
+    "latest_classification": "new",
+    "recovery_disclosed": true,
+    "original_production_status": "failed",
+    "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-09-12/",
+    "operator_recovery_item_id": "finding_4341336d9c9a9cb00b9543ca",
+    "provenance_class": "operator_recovered_source_watch_evidence",
+    "operator_recovery_provenance": "operator_recovered_source_watch_evidence",
+    "original_agent_run_id": "food-line-source-watch-20260910T145615Z-puerto-rico-water-food-access",
+    "production_collection_failed_before_discovery": true,
+    "original_production_artifact_present": false,
+    "september_10_original_production_status": "failed",
+    "publication_identity": "recovery_disclosed_current_publication",
+    "event_identity": "finding_4341336d9c9a9cb00b9543ca"
+  },
+  {
+    "dispatch_slug": "food-line",
+    "edition_date": "2026-09-12",
+    "published_at": "2026-09-12T00:00:00Z",
+    "story_id": "food-line-recovery-9b643ca49a96a0c35b9f",
+    "title": "Texas SNAP redetermination delays interrupted benefits for an East Texas household",
+    "normalized_title": "texas snap redetermination delays interrupted benefits for an east texas household",
+    "summary": "The Texas Tribune reported that Texas SNAP redetermination timeliness fell from 83 percent in January to 28 percent in July. The article also documented an East Texas household whose benefits did not arrive after a timely reapplication, leading the family to rely on food banks that sometimes did not have enough food.",
+    "source_urls": [
+      "https://www.texastribune.org/2026/09/10/texas-medicaid-snap-food-stamps-approval-delay"
+    ],
+    "canonical_urls": [
+      "https://www.texastribune.org/2026/09/10/texas-medicaid-snap-food-stamps-approval-delay"
+    ],
+    "publisher_names": [
+      "The Texas Tribune"
+    ],
+    "source_dates": [
+      "2026-09-10"
+    ],
+    "first_seen_date": "2026-09-12",
+    "last_seen_date": "2026-09-12",
+    "update_count": 0,
+    "latest_classification": "new",
+    "recovery_disclosed": true,
+    "original_production_status": "failed",
+    "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-09-12/",
+    "operator_recovery_item_id": "finding_ba095f74fbb914bc56aeb120",
+    "provenance_class": "operator_recovered_source_watch_evidence",
+    "operator_recovery_provenance": "operator_recovered_source_watch_evidence",
+    "original_agent_run_id": "food-line-source-watch-20260910T210515Z-texas-snap-redetermination",
+    "production_collection_failed_before_discovery": true,
+    "original_production_artifact_present": false,
+    "september_10_original_production_status": "failed",
+    "publication_identity": "recovery_disclosed_current_publication",
+    "event_identity": "finding_ba095f74fbb914bc56aeb120"
   }
 ]

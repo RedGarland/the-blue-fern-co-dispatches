@@ -62,3 +62,50 @@ This path admits recovered evidence only to human review. It does not publish,
 modify Pages, change schedules, create public artifacts, or infer release
 authorization. Prose-only summaries and synthetic/test handoffs are rejected for
 operator recovery.
+
+After human review, a Food Line item with this provenance may advance only to
+the private state `OPERATOR_RECOVERY_RELEASE_PREP_ELIGIBLE`, and only through
+the narrow validator owned by
+`scripts/prepare_food_line_operator_recovery_release.py`. This state means the
+item has passed lineage, source, editorial, dedupe, currentness, geography, and
+materiality checks for controlled private release preparation. It is not
+publication approval and it is not original production evidence.
+
+The private release-preparation validator fails closed unless all of these are
+true:
+
+- `provenance_class` is `operator_recovered_source_watch_evidence`
+- `original_production_artifact_present` is `false`
+- `production_collection_failed_before_discovery` is `true`
+- the original agent run ID is present
+- the source URL is HTTPS and traceable
+- publisher/source identity is present
+- source-backed supporting evidence is present
+- recovery reconciliation disposition is `retained_for_review`
+- item-level editorial disposition is `APPROVE` or `APPROVE_WITH_EDIT`
+- `HOLD` and `REJECT` items are rejected
+- source verification is valid
+- duplicate state is resolved and nonblocking
+- event/currentness date is explicitly bound
+- geography is in Food Line scope
+- material Food Line relevance is confirmed
+- reviewed headline and summary are present
+- `eligible_for_automatic_publication` is `false`
+- `publication_approval` is `false`
+- `publication_performed` is `false`
+- the original failed production runtime remains unchanged
+- operational-health state is not modified
+
+The validator writes only deterministic private artifacts under
+`data/private-agent-handoff/operator-recovery/food-line/<YYYY-MM-DD>/release-prep/`.
+It must reject synthetic/test evidence, retired synthetic evidence, prose-only
+recovery, missing reconciliation, missing editorial review, missing source
+evidence, missing original run ID, unresolved duplicates, fabricated
+original-production lineage, `eligible_for_automatic_publication: true`,
+`publication_approval: true`, missing event dates, and missing
+geography/materiality confirmation.
+
+This governance extension authorizes only human-reviewed operator-recovered
+evidence to enter controlled private release preparation. It does not authorize
+public generation, archive/RSS/homepage changes, Pages changes, publication
+state changes, schedules, social output, audio, or operational-health recovery.

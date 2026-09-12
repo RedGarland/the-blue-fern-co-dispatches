@@ -19,6 +19,20 @@ Only current production inputs may support queue items:
 
 The validator rejects `data/agent-history/` and `data/agent-history-staging/`. Historical review status, even `substantively_reviewed`, never authorizes entry into this queue.
 
+Operator-recovered Source Watch evidence is not an ordinary current production
+input and must not be relabeled as original production evidence. After a
+completed human editorial review, this provenance can enter only the separate
+private release-preparation state
+`OPERATOR_RECOVERY_RELEASE_PREP_ELIGIBLE`, using
+`scripts/prepare_food_line_operator_recovery_release.py`. That path writes
+private release-preparation artifacts under
+`data/private-agent-handoff/operator-recovery/food-line/<YYYY-MM-DD>/release-prep/`
+and keeps `eligible_for_automatic_publication`, `publication_eligible`,
+`publication_approval`, and `publication_performed` false. It does not enqueue
+items in the current production review queue, generate public output, update
+archive/RSS/homepage, modify Pages, change schedules, or change operational
+health.
+
 Validate or inspect without writing:
 
 ```powershell

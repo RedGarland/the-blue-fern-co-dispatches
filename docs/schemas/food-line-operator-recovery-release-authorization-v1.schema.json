@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "dispatch": {
+      "const": "food-line"
+    },
+    "eligible_for_automatic_publication": {
+      "const": false
+    },
+    "item_count": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "pages_authorized": {
+      "const": false
+    },
+    "publication_approval": {
+      "const": false
+    },
+    "publication_authorized": {
+      "const": false
+    },
+    "publication_eligible": {
+      "const": false
+    },
+    "publication_performed": {
+      "const": false
+    },
+    "public_generation_authorized": {
+      "const": false
+    },
+    "release_authorization_state": {
+      "const": "OPERATOR_RECOVERY_RELEASE_AUTHORIZED"
+    },
+    "release_authorized": {
+      "const": true
+    },
+    "release_id": {
+      "pattern": "^[a-z0-9][a-z0-9-]{2,120}$",
+      "type": "string"
+    },
+    "release_items": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "eligible_for_automatic_publication": {
+            "const": false
+          },
+          "original_production_artifact_present": {
+            "const": false
+          },
+          "production_collection_failed_before_discovery": {
+            "const": true
+          },
+          "provenance_class": {
+            "const": "operator_recovered_source_watch_evidence"
+          },
+          "publication_approval": {
+            "const": false
+          },
+          "publication_authorized": {
+            "const": false
+          },
+          "publication_eligible": {
+            "const": false
+          },
+          "publication_performed": {
+            "const": false
+          },
+          "public_generation_authorized": {
+            "const": false
+          },
+          "release_authorized": {
+            "const": true
+          }
+        },
+        "required": [
+          "item_id",
+          "release_prep_path",
+          "release_prep_sha256",
+          "provenance_class",
+          "original_agent_run_id",
+          "source_url",
+          "publisher",
+          "source_verification",
+          "event_date",
+          "geography",
+          "duplicate_disposition",
+          "reviewed_headline",
+          "reviewed_summary",
+          "release_authorized",
+          "publication_authorized",
+          "public_generation_authorized",
+          "publication_performed"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "release_type": {
+      "const": "food_line_operator_recovery_release_authorization"
+    },
+    "schema_version": {
+      "const": "bluefern.food_line.operator_recovery_release_authorization.v1"
+    }
+  },
+  "required": [
+    "schema_version",
+    "release_type",
+    "dispatch",
+    "release_id",
+    "release_authorization_state",
+    "source_base_commit",
+    "item_count",
+    "release_items",
+    "hold_item_exclusion",
+    "release_authorized",
+    "publication_authorized",
+    "public_generation_authorized",
+    "pages_authorized",
+    "publication_performed"
+  ],
+  "title": "Food Line operator-recovery release authorization v1",
+  "type": "object"
+}

@@ -109,3 +109,22 @@ This governance extension authorizes only human-reviewed operator-recovered
 evidence to enter controlled private release preparation. It does not authorize
 public generation, archive/RSS/homepage changes, Pages changes, publication
 state changes, schedules, social output, audio, or operational-health recovery.
+
+Operator-recovery release authorization is a separate private governance owner
+after release preparation. It is managed by
+`scripts/authorize_food_line_operator_recovery_release.py`, consumes only
+committed protected release-prep artifacts with exact SHA-256 bindings, and
+writes a deterministic batch artifact under
+`releases/food-line/operator-recovery/<release-id>-release-v1.json` using schema
+`bluefern.food_line.operator_recovery_release_authorization.v1`.
+
+The release-authorization owner may set `release_authorized: true` only for the
+exact hash-bound operator-recovered items in the request. It must keep
+`eligible_for_automatic_publication`, `publication_eligible`,
+`publication_approval`, `publication_authorized`,
+`public_generation_authorized`, `pages_authorized`, `social_authorized`,
+`audio_authorized`, `schedule_authorized`, and `publication_performed` false.
+The authorization means only that the reviewed private items may advance to a
+separate publication-authorization decision. It is not directly consumable by
+public generation and does not modify public output, archive/RSS/homepage,
+Pages, scheduler state, or operational-health state.

@@ -1,0 +1,56 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-09-12",
+  "generated_at": "2026-09-12T13:01:06.371117Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-09-12.mp3",
+  "audio_url": "/gaza/audio/2026-09-12.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 623,
+  "tts_input_word_count": 100,
+  "tts_story_count": 2,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 693888,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-09-12T13:01:06.371099Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-09-12-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-09-12/",
+  "script_text": "This is the Gaza Dispatch audio briefing for September 12, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Left with nothing, people in Gaza are forced to rent generators by the hour. Israel's destruction of homes and infrastructure in Gaza has forced Palestinians to rent generators by the hour. This was reported by Al Jazeera.\n\n2. How to plan a wedding when you don't know what tomorrow will bring. In Gaza, weddings have become acts of defiance. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the September 12, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 2,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-09-12-aljazeera-middle-east-49e040a38dac",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/features/2026/9/12/left-with-nothing-people-in-gaza-are-forced-to-rent-generators-by-the-hour?traffic_source=rss",
+      "title": "Left with nothing, people in Gaza are forced to rent generators by the hour"
+    },
+    {
+      "source_record_id": "gaza-2026-09-12-aljazeera-middle-east-3bfd97672ae7",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/features/longform/2026/9/12/how-to-plan-a-wedding-when-you-dont-know-what-tomorrow-will-bring?traffic_source=rss",
+      "title": "How to plan a wedding when you don't know what tomorrow will bring"
+    }
+  ]
+}

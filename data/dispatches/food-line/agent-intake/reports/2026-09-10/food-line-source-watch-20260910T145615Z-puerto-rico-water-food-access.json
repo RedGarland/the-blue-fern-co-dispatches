@@ -1,0 +1,16 @@
+{
+  "agent_run_id": "food-line-source-watch-20260910T145615Z-puerto-rico-water-food-access",
+  "counts": {
+    "retained_for_review": 1
+  },
+  "dry_run": false,
+  "duplicate_keys": [
+    "21d950e0a09027b09ca9086086c1fa76e4f955d713b825fe50cc0bf22160043b"
+  ],
+  "edition_date": "2026-09-10",
+  "finding_ids": [
+    "finding_4341336d9c9a9cb00b9543ca"
+  ],
+  "input_sha256": "3565ac12a61d7831ce69b7e48e74184f11571d3537fde07c4c44935f254d5bad",
+  "schema_version": "food_line_agent_intake_report_v1"
+}

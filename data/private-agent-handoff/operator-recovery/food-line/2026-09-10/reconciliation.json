@@ -1,0 +1,139 @@
+{
+  "accepted_as_valid_recovery_evidence": 5,
+  "deferred_with_reason": 0,
+  "dispatch": "food-line",
+  "duplicate_with_reason": 0,
+  "edition_date": "2026-09-10",
+  "invalid_source_with_reason": 0,
+  "operator_preserved_payloads_submitted": 5,
+  "original_production_artifact_present": false,
+  "pages_modified": false,
+  "production_collection_failed_before_discovery": true,
+  "provenance_class": "operator_recovered_source_watch_evidence",
+  "publication_performed": false,
+  "rejected_with_reason": 0,
+  "retained_for_review": 5,
+  "rows": [
+    {
+      "agent_run_id": "food-line-source-watch-20260910T110306Z-hawaii-island-pantry-shortages",
+      "candidate_id": "finding_0ca835b632814684d8f1f2ec",
+      "canonical_source_url": "https://bigislandnow.com/2026/09/08/community-donations-needed-to-replenish-food-pantries-across-hawai%ca%bbi-island-following-lala",
+      "corrected_disposition": "retained_for_review",
+      "duplicate_linkage": {},
+      "eligible_for_automatic_publication": false,
+      "provenance_class": "operator_recovered_source_watch_evidence",
+      "publisher": "Big Island Now",
+      "reason": "",
+      "receipt_classification": "ACCEPTED",
+      "receipt_status": "SUCCESS",
+      "resolution_status": "accounted",
+      "title": "Community donations needed to replenish food pantries across Hawaii Island following Lala"
+    },
+    {
+      "agent_run_id": "food-line-source-watch-20260910T113349Z-eastport-mobile-pantry-cancelled",
+      "candidate_id": "finding_1cae6cc95cacbe13fa5eb7f8",
+      "canonical_source_url": "https://www.aacpl.net/event/mobile-food-pantry-despensa-movil-de-alimentos-240256",
+      "corrected_disposition": "retained_for_review",
+      "duplicate_linkage": {},
+      "eligible_for_automatic_publication": false,
+      "provenance_class": "operator_recovered_source_watch_evidence",
+      "publisher": "Anne Arundel County Public Library",
+      "reason": "",
+      "receipt_classification": "ACCEPTED",
+      "receipt_status": "SUCCESS",
+      "resolution_status": "accounted",
+      "title": "Mobile Food Pantry | Despensa Movil de Alimentos"
+    },
+    {
+      "agent_run_id": "food-line-source-watch-20260910T133110Z-eastport-maine-grocery-access",
+      "candidate_id": "finding_5a56d5dbd54a3ceca06f44d6",
+      "canonical_source_url": "https://www.pressherald.com/2026/09/09/passamaquoddy-nation-will-not-buy-eastport-grocery-store",
+      "corrected_disposition": "retained_for_review",
+      "duplicate_linkage": {},
+      "eligible_for_automatic_publication": false,
+      "provenance_class": "operator_recovered_source_watch_evidence",
+      "publisher": "Portland Press Herald",
+      "reason": "",
+      "receipt_classification": "ACCEPTED",
+      "receipt_status": "SUCCESS",
+      "resolution_status": "accounted",
+      "title": "Passamaquoddy Nation will not buy Eastport grocery store"
+    },
+    {
+      "agent_run_id": "food-line-source-watch-20260910T145615Z-puerto-rico-water-food-access",
+      "candidate_id": "finding_4341336d9c9a9cb00b9543ca",
+      "canonical_source_url": "https://www.theguardian.com/us-news/ng-interactive/2026/sep/10/puerto-rico-water-access",
+      "corrected_disposition": "retained_for_review",
+      "duplicate_linkage": {},
+      "eligible_for_automatic_publication": false,
+      "provenance_class": "operator_recovered_source_watch_evidence",
+      "publisher": "The Guardian",
+      "reason": "",
+      "receipt_classification": "ACCEPTED",
+      "receipt_status": "SUCCESS",
+      "resolution_status": "accounted",
+      "title": "While Puerto Ricans protest for reliable access to water, the governor washes her hands"
+    },
+    {
+      "agent_run_id": "food-line-source-watch-20260910T210515Z-texas-snap-redetermination",
+      "candidate_id": "finding_ba095f74fbb914bc56aeb120",
+      "canonical_source_url": "https://www.texastribune.org/2026/09/10/texas-medicaid-snap-food-stamps-approval-delay",
+      "corrected_disposition": "retained_for_review",
+      "duplicate_linkage": {},
+      "eligible_for_automatic_publication": false,
+      "provenance_class": "operator_recovered_source_watch_evidence",
+      "publisher": "The Texas Tribune",
+      "reason": "",
+      "receipt_classification": "ACCEPTED",
+      "receipt_status": "SUCCESS",
+      "resolution_status": "accounted",
+      "title": "More than 200,000 Texans are waiting for Medicaid approval"
+    }
+  ],
+  "schema_version": "bluefern.operator_recovered_source_watch_reconciliation.v1",
+  "source_verification": [
+    {
+      "agent_run_id": "food-line-source-watch-20260910T110306Z-hawaii-island-pantry-shortages",
+      "canonical_source_url": "https://bigislandnow.com/2026/09/08/community-donations-needed-to-replenish-food-pantries-across-hawai%CA%BBi-island-following-lala/",
+      "publisher": "Big Island Now",
+      "source_role": "local_news",
+      "source_verification_status": "current_url_verified",
+      "supporting_evidence_present": true
+    },
+    {
+      "agent_run_id": "food-line-source-watch-20260910T113349Z-eastport-mobile-pantry-cancelled",
+      "canonical_source_url": "https://www.aacpl.net/event/mobile-food-pantry-despensa-movil-de-alimentos-240256",
+      "publisher": "Anne Arundel County Public Library",
+      "source_role": "direct_service_calendar",
+      "source_verification_status": "current_url_verified",
+      "supporting_evidence_present": true
+    },
+    {
+      "agent_run_id": "food-line-source-watch-20260910T133110Z-eastport-maine-grocery-access",
+      "canonical_source_url": "https://www.pressherald.com/2026/09/09/passamaquoddy-nation-will-not-buy-eastport-grocery-store/",
+      "publisher": "Portland Press Herald",
+      "source_role": "local_news",
+      "source_verification_status": "current_url_verified",
+      "supporting_evidence_present": true
+    },
+    {
+      "agent_run_id": "food-line-source-watch-20260910T145615Z-puerto-rico-water-food-access",
+      "canonical_source_url": "https://www.theguardian.com/us-news/ng-interactive/2026/sep/10/puerto-rico-water-access",
+      "publisher": "The Guardian",
+      "source_role": "national_news",
+      "source_verification_status": "current_url_verified",
+      "supporting_evidence_present": true
+    },
+    {
+      "agent_run_id": "food-line-source-watch-20260910T210515Z-texas-snap-redetermination",
+      "canonical_source_url": "https://www.texastribune.org/2026/09/10/texas-medicaid-snap-food-stamps-approval-delay/",
+      "publisher": "The Texas Tribune",
+      "source_role": "state_news",
+      "source_verification_status": "current_url_verified",
+      "supporting_evidence_present": true
+    }
+  ],
+  "synthetic_evidence_used": false,
+  "unaccounted": 0,
+  "unavailable_or_incomplete": 0
+}

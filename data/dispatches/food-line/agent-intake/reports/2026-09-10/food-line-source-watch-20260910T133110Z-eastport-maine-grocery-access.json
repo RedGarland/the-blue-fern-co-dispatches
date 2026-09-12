@@ -1,0 +1,16 @@
+{
+  "agent_run_id": "food-line-source-watch-20260910T133110Z-eastport-maine-grocery-access",
+  "counts": {
+    "retained_for_review": 1
+  },
+  "dry_run": false,
+  "duplicate_keys": [
+    "4cb4893fc024f59399df36b8ee9f567258aa6333bf54d09f7f80b6ccc88ac385"
+  ],
+  "edition_date": "2026-09-10",
+  "finding_ids": [
+    "finding_5a56d5dbd54a3ceca06f44d6"
+  ],
+  "input_sha256": "7ceaa8f2689ef40b16d3f6890f42b147cb27f07990509328c3ace5ac2470bf7a",
+  "schema_version": "food_line_agent_intake_report_v1"
+}

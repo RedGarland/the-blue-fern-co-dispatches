@@ -1,0 +1,37 @@
+{
+  "agent_run_id": "food-line-source-watch-20260910T133110Z-eastport-maine-grocery-access",
+  "archive_ref": "data/private-agent-handoff/archive/food-line/2026-09-10/food-line-source-watch-20260910T133110Z-eastport-maine-grocery-access.json",
+  "classification": "ACCEPTED",
+  "completed_at": "2026-09-10T13:31:10Z",
+  "deferred_count": 0,
+  "dispatch": "food-line",
+  "duplicate_count": 0,
+  "eligible_for_automatic_publication": false,
+  "exit_code": 0,
+  "import_result": "accepted",
+  "imported_artifact_ref": "data/dispatches/food-line/agent-intake/2026-09-10/food-line-source-watch-20260910T133110Z-eastport-maine-grocery-access.json",
+  "imported_count": 1,
+  "input_filename": "external-agent-envelope.json",
+  "input_sha256": "7ceaa8f2689ef40b16d3f6890f42b147cb27f07990509328c3ace5ac2470bf7a",
+  "invalid_count": 0,
+  "original_production_artifact_present": false,
+  "provenance_class": "operator_recovered_source_watch_evidence",
+  "public_side_effects": false,
+  "receipt_created_at": "2026-09-12T01:13:25Z",
+  "reconciliation": [
+    {
+      "candidate_id": "finding_5a56d5dbd54a3ceca06f44d6",
+      "duplicate_linkage": {},
+      "finding_id": "",
+      "reason": "do not describe closure as permanent Review wording must remain limited to the traceable supporting evidence.",
+      "terminal_disposition": "retained_for_review",
+      "unaccounted": false
+    }
+  ],
+  "rejected_count": 0,
+  "schema_version": "bluefern.external_agent_handoff_receipt.v1",
+  "started_at": "2026-09-10T13:31:10Z",
+  "status": "SUCCESS",
+  "unaccounted": 0,
+  "validation_result": "passed"
+}

@@ -1,0 +1,16 @@
+{
+  "agent_run_id": "food-line-source-watch-20260910T113349Z-eastport-mobile-pantry-cancelled",
+  "counts": {
+    "retained_for_review": 1
+  },
+  "dry_run": false,
+  "duplicate_keys": [
+    "682769b8c289b5ac2579bea3e00d26c80554949e469b7bea17dbd90ca8bdeca7"
+  ],
+  "edition_date": "2026-09-10",
+  "finding_ids": [
+    "finding_1cae6cc95cacbe13fa5eb7f8"
+  ],
+  "input_sha256": "0494f2993b01b025fb082c401e4480f455085a4ad47c115ce03135c24c92a325",
+  "schema_version": "food_line_agent_intake_report_v1"
+}

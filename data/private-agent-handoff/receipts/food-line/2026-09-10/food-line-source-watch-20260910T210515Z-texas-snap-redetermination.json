@@ -1,0 +1,37 @@
+{
+  "agent_run_id": "food-line-source-watch-20260910T210515Z-texas-snap-redetermination",
+  "archive_ref": "data/private-agent-handoff/archive/food-line/2026-09-10/food-line-source-watch-20260910T210515Z-texas-snap-redetermination.json",
+  "classification": "ACCEPTED",
+  "completed_at": "2026-09-10T21:05:15Z",
+  "deferred_count": 0,
+  "dispatch": "food-line",
+  "duplicate_count": 0,
+  "eligible_for_automatic_publication": false,
+  "exit_code": 0,
+  "import_result": "accepted",
+  "imported_artifact_ref": "data/dispatches/food-line/agent-intake/2026-09-10/food-line-source-watch-20260910T210515Z-texas-snap-redetermination.json",
+  "imported_count": 1,
+  "input_filename": "external-agent-envelope.json",
+  "input_sha256": "285794a45a7fb6bdb1e5feaba38ce5c130b73b906bfb8a2e38434b4e75ccd786",
+  "invalid_count": 0,
+  "original_production_artifact_present": false,
+  "provenance_class": "operator_recovered_source_watch_evidence",
+  "public_side_effects": false,
+  "receipt_created_at": "2026-09-12T01:13:25Z",
+  "reconciliation": [
+    {
+      "candidate_id": "finding_ba095f74fbb914bc56aeb120",
+      "duplicate_linkage": {},
+      "finding_id": "",
+      "reason": "statewide SNAP enrollment decline is not attributed solely to administrative delay Review wording must remain limited to the traceable supporting evidence.",
+      "terminal_disposition": "retained_for_review",
+      "unaccounted": false
+    }
+  ],
+  "rejected_count": 0,
+  "schema_version": "bluefern.external_agent_handoff_receipt.v1",
+  "started_at": "2026-09-10T21:05:15Z",
+  "status": "SUCCESS",
+  "unaccounted": 0,
+  "validation_result": "passed"
+}

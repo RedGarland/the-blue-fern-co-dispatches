@@ -1,0 +1,58 @@
+{
+  "agent_name": "Food Line Source Watch",
+  "agent_run_id": "food-line-source-watch-20260910T113349Z-eastport-mobile-pantry-cancelled",
+  "completed_at": "2026-09-10T11:33:49Z",
+  "coverage_notes": "Operator-preserved complete Source Watch payload; not original production runner output.",
+  "findings": [
+    {
+      "affected_groups": [
+        "mobile pantry clients",
+        "households seeking fresh produce",
+        "households seeking shelf-stable food"
+      ],
+      "agent_query_context": {
+        "discovery_basis": "operator-preserved Source Watch result"
+      },
+      "canonical_source_url": "https://www.aacpl.net/event/mobile-food-pantry-despensa-movil-de-alimentos-240256",
+      "concrete_strain_hint": true,
+      "confidence": "high",
+      "discovery_basis": "operator-preserved Source Watch payload",
+      "evidence_level": "source_backed_exact_passage",
+      "exact_supporting_passage": "Friday, September 11, 2026 2:00pm-3:00pm Cancelled",
+      "exclusion_reason": null,
+      "location_name": "Annapolis",
+      "location_scope": "local",
+      "newness_note": "September 11 cancelled distribution observed during September 10 monitoring",
+      "pressure_type": "service reduction",
+      "publisher": "Anne Arundel County Public Library",
+      "qualification_reason": "documented cancellation of a direct food distribution",
+      "review_status": "pending_review",
+      "source_published_at": "2026-09-11",
+      "source_role": "direct_service_calendar",
+      "source_verification_status": "current_url_verified",
+      "state": "MD",
+      "summary": "A direct food distribution at Eastport-Annapolis Neck Library offering fresh produce, canned foods, and dry foods was marked cancelled with no replacement distribution confirmed.",
+      "title": "Mobile Food Pantry | Despensa Movil de Alimentos",
+      "uncertainty_note": "materiality remains for downstream editorial review"
+    }
+  ],
+  "provenance_class": "operator_recovered_source_watch_evidence",
+  "recovery_provenance": {
+    "eligible_for_automatic_publication": false,
+    "eligible_for_review": true,
+    "operator_preserved_at": null,
+    "original_production_artifact_present": false,
+    "production_collection_failed_before_discovery": true,
+    "provenance_class": "operator_recovered_source_watch_evidence",
+    "recovery_method": "complete externally preserved Source Watch payload",
+    "recovery_reason": "original production Source Watch artifact absent because scheduled collection failed closed before discovery",
+    "recovery_timestamp": "2026-09-11T00:00:00Z"
+  },
+  "schema_version": 1,
+  "search_window": {
+    "date_from": "2026-09-10",
+    "date_to": "2026-09-10",
+    "edition_date": "2026-09-10"
+  },
+  "started_at": "2026-09-10T11:33:49Z"
+}

@@ -1,0 +1,16 @@
+{
+  "agent_run_id": "food-line-source-watch-20260910T210515Z-texas-snap-redetermination",
+  "counts": {
+    "retained_for_review": 1
+  },
+  "dry_run": false,
+  "duplicate_keys": [
+    "93eaddfe2dc57dc2687900116380beb8eed009bb6df2547e4aa9579eb36bd414"
+  ],
+  "edition_date": "2026-09-10",
+  "finding_ids": [
+    "finding_ba095f74fbb914bc56aeb120"
+  ],
+  "input_sha256": "285794a45a7fb6bdb1e5feaba38ce5c130b73b906bfb8a2e38434b4e75ccd786",
+  "schema_version": "food_line_agent_intake_report_v1"
+}

@@ -1,0 +1,16 @@
+{
+  "agent_run_id": "food-line-source-watch-20260910T110306Z-hawaii-island-pantry-shortages",
+  "counts": {
+    "retained_for_review": 1
+  },
+  "dry_run": false,
+  "duplicate_keys": [
+    "607455dd8597cc4ff043a12cc0dc2e4c73729fb3c453415ee6ec70de30178292"
+  ],
+  "edition_date": "2026-09-10",
+  "finding_ids": [
+    "finding_0ca835b632814684d8f1f2ec"
+  ],
+  "input_sha256": "4dae2f776209f39a60077dba10c84fd6571aecff52e043108de679ccc0870354",
+  "schema_version": "food_line_agent_intake_report_v1"
+}

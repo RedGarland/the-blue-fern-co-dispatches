@@ -1,0 +1,57 @@
+{
+  "agent_name": "Food Line Source Watch",
+  "agent_run_id": "food-line-source-watch-20260910T110306Z-hawaii-island-pantry-shortages",
+  "completed_at": "2026-09-10T11:03:06Z",
+  "coverage_notes": "Operator-preserved complete Source Watch payload; not original production runner output.",
+  "findings": [
+    {
+      "affected_groups": [
+        "pantry clients",
+        "new families seeking food assistance",
+        "Hurricane Lala-affected households"
+      ],
+      "agent_query_context": {
+        "discovery_basis": "operator-preserved Source Watch result"
+      },
+      "canonical_source_url": "https://bigislandnow.com/2026/09/08/community-donations-needed-to-replenish-food-pantries-across-hawai%CA%BBi-island-following-lala/",
+      "confidence": "high",
+      "discovery_basis": "operator-preserved Source Watch payload",
+      "evidence_level": "source_backed_exact_passage",
+      "exact_supporting_passage": "The Salvation Army corps food pantries in Hilo, Honokaa, and Kona distribute between 75 and 150 food bags, at an average cost of $50 per bag, during weekly distributions at each corps location.",
+      "exclusion_reason": null,
+      "location_name": "Hawaii Island",
+      "location_scope": "county",
+      "newness_note": "current consequence surfaced in September 10 monitoring",
+      "pressure_type": "pantry_shortage",
+      "publisher": "Big Island Now",
+      "qualification_reason": "documented food pantry staple shortages and growing household demand",
+      "review_status": "pending_review",
+      "source_published_at": "2026-09-08",
+      "source_role": "local_news",
+      "source_verification_status": "current_url_verified",
+      "state": "HI",
+      "summary": "Salvation Army food pantries serving Hilo, Honokaa, and Kona reported staple shortages, rising demand, 20 new families at Hilo, and shared Hurricane Lala resource pressure.",
+      "title": "Community donations needed to replenish food pantries across Hawaii Island following Lala",
+      "uncertainty_note": "operator recovery; original production artifact absent"
+    }
+  ],
+  "provenance_class": "operator_recovered_source_watch_evidence",
+  "recovery_provenance": {
+    "eligible_for_automatic_publication": false,
+    "eligible_for_review": true,
+    "operator_preserved_at": null,
+    "original_production_artifact_present": false,
+    "production_collection_failed_before_discovery": true,
+    "provenance_class": "operator_recovered_source_watch_evidence",
+    "recovery_method": "complete externally preserved Source Watch payload",
+    "recovery_reason": "original production Source Watch artifact absent because scheduled collection failed closed before discovery",
+    "recovery_timestamp": "2026-09-11T00:00:00Z"
+  },
+  "schema_version": 1,
+  "search_window": {
+    "date_from": "2026-09-10",
+    "date_to": "2026-09-10",
+    "edition_date": "2026-09-10"
+  },
+  "started_at": "2026-09-10T11:03:06Z"
+}

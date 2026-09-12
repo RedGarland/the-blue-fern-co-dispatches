@@ -32,6 +32,7 @@ EXTERNAL_HANDOFF_EVIDENCE_RE = re.compile(
     rf"^data/private-agent-handoff/(?:inbox/{_HANDOFF_DISPATCH}/{_HANDOFF_FILE}|"
     rf"archive/{_HANDOFF_DISPATCH}/{_HANDOFF_DATE}/{_HANDOFF_FILE}|"
     rf"receipts/{_HANDOFF_DISPATCH}/{_HANDOFF_DATE}/{_HANDOFF_FILE}|"
+    rf"operator-recovery/{_HANDOFF_DISPATCH}/{_HANDOFF_DATE}/(?:{_HANDOFF_FILE}|source-payloads/{_HANDOFF_FILE})|"
     rf"retired/{_HANDOFF_DISPATCH}/{_SYNTHETIC_ID}/(?:active|audit|active-before-cleanup)/{_HANDOFF_FILE}|"
     rf"cleanup/{_HANDOFF_DISPATCH}/{_SYNTHETIC_ID}-\d{{8}}T\d{{6}}\.\d{{6}}Z\.json|"
     rf"cleanup/{_HANDOFF_DISPATCH}/proof-receipt-retirement-[A-Za-z0-9.-]+\.json)$",

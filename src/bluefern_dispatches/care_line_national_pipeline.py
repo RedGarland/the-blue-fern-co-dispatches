@@ -4,7 +4,10 @@ import json
 import os
 import re
 import ssl
+import subprocess
 import tempfile
+import time
+import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
 from collections import Counter
@@ -191,6 +194,34 @@ BOILERPLATE_HINTS = (
 MAX_EXTRACTED_TEXT_CHARS = 24000
 
 SOURCE_FAILURE_CLASSES = {"HTTPError", "ValueError", "ParseError", "TimeoutError", "URLError"}
+FETCH_BACKEND_URLLIB = "python_urllib"
+FETCH_BACKEND_WINDOWS_POWERSHELL = "windows_powershell_invoke_webrequest"
+MAX_FETCH_FAILURE_SNIPPET_CHARS = 1000
+SAFE_FAILURE_RESPONSE_HEADERS = {
+    "cache-control",
+    "cf-ray",
+    "content-encoding",
+    "content-language",
+    "content-length",
+    "content-type",
+    "date",
+    "expires",
+    "location",
+    "retry-after",
+    "server",
+    "strict-transport-security",
+    "vary",
+    "x-cache",
+    "x-served-by",
+}
+CARE_LINE_FETCH_HEADERS = {
+    "User-Agent": "BlueFernCareLineNationalPipeline/2.0 (+https://dispatches.thebluefernco.com/)",
+    "Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml, text/html;q=0.4, */*;q=0.1",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Accept-Encoding": "identity",
+    "Cache-Control": "no-cache",
+}
+TRANSIENT_FETCH_STATUSES = {408, 429, 500, 502, 503, 504}
 
 POSITIVE_EVENT_PATTERNS: list[tuple[str, str, re.Pattern[str]]] = [
     ("facility_closure", "closure", re.compile(r"\b(close|closed|closing|closure|remain(?:s)? closed|still closed|shut(?:ting)? down|cease(?:s|d)? operations?)\b", re.I)),
@@ -532,8 +563,236 @@ def parse_source_date(value: str) -> tuple[str, str]:
     return "", "unparseable"
 
 
-def fetch_url(url: str, *, timeout: int = 20, allow_insecure_tls: bool = False, user_agent: str = "BlueFernCareLineNationalPipeline/2.0") -> tuple[bytes, dict[str, Any]]:
-    request = urllib.request.Request(url, headers={"User-Agent": user_agent})
+class ProviderFetchError(Exception):
+    def __init__(self, message: str, *, diagnostics: Mapping[str, Any] | None = None) -> None:
+        super().__init__(message)
+        self.diagnostics = dict(diagnostics or {})
+
+
+class ProviderFeedFormatError(Exception):
+    def __init__(self, message: str, *, diagnostics: Mapping[str, Any] | None = None) -> None:
+        super().__init__(message)
+        self.diagnostics = dict(diagnostics or {})
+
+
+def _safe_failure_headers(headers: Mapping[str, Any] | None) -> dict[str, str]:
+    safe: dict[str, str] = {}
+    if not headers:
+        return safe
+    for key, value in headers.items():
+        normalized = str(key).lower()
+        if normalized in SAFE_FAILURE_RESPONSE_HEADERS:
+            safe[normalized] = str(value)[:300]
+    return safe
+
+
+def _bounded_body_snippet(body: bytes | str | None, *, limit: int = MAX_FETCH_FAILURE_SNIPPET_CHARS) -> str:
+    if body is None:
+        return ""
+    text = body.decode("utf-8", errors="replace") if isinstance(body, bytes) else str(body)
+    text = re.sub(r"\s+", " ", text).strip()
+    return text[:limit]
+
+
+def _http_error_diagnostics(
+    exc: urllib.error.HTTPError,
+    *,
+    source_url: str,
+    backend: str,
+    request_headers: Mapping[str, str],
+    started_at: str,
+    retry_count: int,
+) -> dict[str, Any]:
+    body = b""
+    try:
+        body = exc.read(MAX_FETCH_FAILURE_SNIPPET_CHARS * 4)
+    except Exception:  # noqa: BLE001
+        body = b""
+    return {
+        "source_url": source_url,
+        "final_url": getattr(exc, "url", source_url) or source_url,
+        "backend": backend,
+        "client": "urllib.request",
+        "request_headers": dict(request_headers),
+        "http_status": int(getattr(exc, "code", 0) or 0),
+        "content_type": str((exc.headers or {}).get("Content-Type") or ""),
+        "response_headers": _safe_failure_headers(exc.headers),
+        "body_snippet": _bounded_body_snippet(body),
+        "body_received": bool(body),
+        "retry_count": retry_count,
+        "retry_after": str((exc.headers or {}).get("Retry-After") or ""),
+        "exception_type": type(exc).__name__,
+        "exception_message": str(exc),
+        "started_at": started_at,
+        "completed_at": utc_now(),
+        "source_health_status": _classify_fetch_diagnostics(
+            {
+                "http_status": int(getattr(exc, "code", 0) or 0),
+                "content_type": str((exc.headers or {}).get("Content-Type") or ""),
+                "body_snippet": _bounded_body_snippet(body),
+                "exception_type": type(exc).__name__,
+            }
+        ),
+    }
+
+
+def _exception_diagnostics(
+    exc: BaseException,
+    *,
+    source_url: str,
+    backend: str,
+    request_headers: Mapping[str, str],
+    started_at: str,
+    retry_count: int,
+) -> dict[str, Any]:
+    return {
+        "source_url": source_url,
+        "final_url": source_url,
+        "backend": backend,
+        "client": "urllib.request",
+        "request_headers": dict(request_headers),
+        "http_status": 0,
+        "content_type": "",
+        "response_headers": {},
+        "body_snippet": "",
+        "body_received": False,
+        "retry_count": retry_count,
+        "retry_after": "",
+        "exception_type": type(exc).__name__,
+        "exception_message": str(exc),
+        "started_at": started_at,
+        "completed_at": utc_now(),
+        "source_health_status": _classify_fetch_diagnostics({"exception_type": type(exc).__name__, "exception_message": str(exc)}),
+    }
+
+
+def _retry_after_seconds(value: str | None) -> float | None:
+    if not value:
+        return None
+    text = str(value).strip()
+    if text.isdigit():
+        return max(0.0, float(text))
+    try:
+        parsed = parsedate_to_datetime(text)
+    except Exception:  # noqa: BLE001
+        return None
+    return max(0.0, (parsed - datetime.now(timezone.utc)).total_seconds())
+
+
+def _classify_fetch_diagnostics(diagnostics: Mapping[str, Any]) -> str:
+    status = int(diagnostics.get("http_status") or 0)
+    exception_type = str(diagnostics.get("exception_type") or "")
+    content_type = str(diagnostics.get("content_type") or "").lower()
+    body_snippet = str(diagnostics.get("body_snippet") or "").lower()
+    if status == 403:
+        return "persistent_403"
+    if status in TRANSIENT_FETCH_STATUSES:
+        return "transient_failure"
+    if status == 404:
+        return "endpoint_invalid"
+    if exception_type == "ParseError":
+        if "html" in content_type or body_snippet.startswith("<!doctype html") or body_snippet.startswith("<html"):
+            return "html_instead_of_feed"
+        return "malformed_feed"
+    if exception_type in {"TimeoutError", "URLError"}:
+        return "transient_failure"
+    return "unresolved"
+
+
+def _looks_like_html(payload: bytes) -> bool:
+    prefix = payload[:256].lstrip().lower()
+    return prefix.startswith(b"<!doctype html") or prefix.startswith(b"<html")
+
+
+def _secure_windows_http_fallback(url: str, *, timeout: int, headers: Mapping[str, str]) -> tuple[bytes, dict[str, Any]]:
+    if os.name != "nt":
+        raise ProviderFetchError(
+            "secure Windows HTTP fallback unavailable on this platform",
+            diagnostics={
+                "source_url": url,
+                "backend": FETCH_BACKEND_WINDOWS_POWERSHELL,
+                "source_health_status": "fallback_failed",
+                "exception_type": "UnsupportedPlatform",
+                "exception_message": "Windows fallback is only available on Windows.",
+            },
+        )
+    started_at = utc_now()
+    with tempfile.TemporaryDirectory(prefix="bluefern-care-line-fetch-") as tmp:
+        body_path = Path(tmp) / "body.bin"
+        meta_path = Path(tmp) / "meta.json"
+        headers_path = Path(tmp) / "headers.json"
+        headers_path.write_text(json.dumps(dict(headers), ensure_ascii=True), encoding="utf-8")
+        script = (
+            "$ErrorActionPreference='Stop';"
+            "[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12;"
+            f"$headersObj=Get-Content -Raw -LiteralPath '{headers_path}' | ConvertFrom-Json;"
+            "$headers=@{};"
+            "$headersObj.psobject.Properties | ForEach-Object { $headers[$_.Name]=$_.Value };"
+            f"$resp=Invoke-WebRequest -Uri '{url}' -Headers $headers -TimeoutSec {int(timeout)} -MaximumRedirection 5 -UseBasicParsing;"
+            f"$fs=[IO.File]::OpenWrite('{body_path}');"
+            "try { $resp.RawContentStream.CopyTo($fs) } finally { $fs.Dispose() };"
+            "$meta=[ordered]@{"
+            "http_status=[int]$resp.StatusCode;"
+            "content_type=[string]$resp.Headers['Content-Type'];"
+            "final_url=[string]$resp.BaseResponse.ResponseUri.AbsoluteUri;"
+            "response_headers=$resp.Headers"
+            "};"
+            f"$meta|ConvertTo-Json -Depth 4|Set-Content -LiteralPath '{meta_path}' -Encoding UTF8;"
+        )
+        completed = subprocess.run(  # noqa: S603
+            ["powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", script],
+            capture_output=True,
+            text=True,
+            timeout=timeout + 10,
+            check=False,
+        )
+        if completed.returncode != 0:
+            diagnostics = {
+                "source_url": url,
+                "backend": FETCH_BACKEND_WINDOWS_POWERSHELL,
+                "client": "Invoke-WebRequest",
+                "http_status": 0,
+                "content_type": "",
+                "response_headers": {},
+                "body_snippet": _bounded_body_snippet(completed.stderr),
+                "body_received": False,
+                "retry_count": 0,
+                "exception_type": "WindowsFallbackError",
+                "exception_message": completed.stderr.strip()[:500],
+                "started_at": started_at,
+                "completed_at": utc_now(),
+                "source_health_status": "fallback_failed",
+            }
+            raise ProviderFetchError("secure Windows HTTP fallback failed", diagnostics=diagnostics)
+        payload = body_path.read_bytes()
+        meta_payload = json.loads(meta_path.read_text(encoding="utf-8-sig")) if meta_path.exists() else {}
+        return payload, {
+            "http_status": int(meta_payload.get("http_status") or 0),
+            "content_type": str(meta_payload.get("content_type") or ""),
+            "final_url": str(meta_payload.get("final_url") or url),
+            "response_headers": _safe_failure_headers(meta_payload.get("response_headers") or {}),
+            "backend": FETCH_BACKEND_WINDOWS_POWERSHELL,
+            "client": "Invoke-WebRequest",
+            "fallback_used": True,
+            "source_health_status": "fallback_success",
+        }
+
+
+def fetch_url(
+    url: str,
+    *,
+    timeout: int = 20,
+    allow_insecure_tls: bool = False,
+    user_agent: str | None = None,
+    max_retries: int = 1,
+    sleep_func: Any = time.sleep,
+    allow_windows_fallback: bool = True,
+) -> tuple[bytes, dict[str, Any]]:
+    headers = dict(CARE_LINE_FETCH_HEADERS)
+    if user_agent:
+        headers["User-Agent"] = user_agent
+    request = urllib.request.Request(url, headers=headers)
+    started_at = utc_now()
     if allow_insecure_tls:
         context = ssl._create_unverified_context()  # noqa: SLF001
         ssl_mode = "insecure"
@@ -560,18 +819,54 @@ def fetch_url(url: str, *, timeout: int = 20, allow_insecure_tls: bool = False, 
                 ssl_mode = "default"
                 insecure_ssl_used = False
                 ssl_warning = "truststore and certifi are unavailable; using the system default trust store."
-    with urllib.request.urlopen(request, timeout=timeout, context=context) as response:  # noqa: S310
-        headers = {key.lower(): value for key, value in response.headers.items()}
-        meta = {
-            "http_status": getattr(response, "status", 0) or 0,
-            "content_type": headers.get("content-type", ""),
-            "final_url": response.geturl(),
-            "ssl_mode": ssl_mode,
-            "insecure_ssl_used": insecure_ssl_used,
-        }
-        if ssl_warning:
-            meta["ssl_warning"] = ssl_warning
-        return response.read(), meta
+    retry_count = 0
+    last_diagnostics: dict[str, Any] = {}
+    for attempt_number in range(max(0, max_retries) + 1):
+        try:
+            with urllib.request.urlopen(request, timeout=timeout, context=context) as response:  # noqa: S310
+                response_headers = {key.lower(): value for key, value in response.headers.items()}
+                meta = {
+                    "http_status": getattr(response, "status", 0) or 0,
+                    "content_type": response_headers.get("content-type", ""),
+                    "final_url": response.geturl(),
+                    "ssl_mode": ssl_mode,
+                    "insecure_ssl_used": insecure_ssl_used,
+                    "backend": FETCH_BACKEND_URLLIB,
+                    "client": "urllib.request",
+                    "request_headers": headers,
+                    "retry_count": retry_count,
+                    "response_headers": _safe_failure_headers(response_headers),
+                }
+                if ssl_warning:
+                    meta["ssl_warning"] = ssl_warning
+                return response.read(), meta
+        except urllib.error.HTTPError as exc:
+            diagnostics = _http_error_diagnostics(exc, source_url=url, backend=FETCH_BACKEND_URLLIB, request_headers=headers, started_at=started_at, retry_count=retry_count)
+            last_diagnostics = diagnostics
+            status = int(diagnostics.get("http_status") or 0)
+            if status == 403 and allow_windows_fallback:
+                try:
+                    payload, fallback_meta = _secure_windows_http_fallback(url, timeout=timeout, headers=headers)
+                    fallback_meta.update({"ssl_mode": ssl_mode, "insecure_ssl_used": insecure_ssl_used, "request_headers": headers, "retry_count": retry_count})
+                    return payload, fallback_meta
+                except ProviderFetchError as fallback_exc:
+                    diagnostics["fallback_diagnostics"] = fallback_exc.diagnostics
+                    diagnostics["source_health_status"] = "fallback_failed"
+            retry_after = _retry_after_seconds(str(diagnostics.get("retry_after") or ""))
+            if status in TRANSIENT_FETCH_STATUSES and attempt_number < max_retries:
+                retry_count += 1
+                sleep_func(min(retry_after if retry_after is not None else 0.25 * retry_count, 1.0))
+                continue
+            raise ProviderFetchError(f"HTTPError: HTTP Error {status}: {getattr(exc, 'reason', '') or exc.msg}", diagnostics=diagnostics) from exc
+        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            diagnostics = _exception_diagnostics(exc, source_url=url, backend=FETCH_BACKEND_URLLIB, request_headers=headers, started_at=started_at, retry_count=retry_count)
+            last_diagnostics = diagnostics
+            if attempt_number < max_retries:
+                retry_count += 1
+                sleep_func(0.25 * retry_count)
+                continue
+            raise ProviderFetchError(f"{type(exc).__name__}: {exc}", diagnostics=diagnostics) from exc
+    raise ProviderFetchError("fetch failed", diagnostics=last_diagnostics)
 
 
 def fetch_source(source: CareLineSource, *, timeout: int = 20, allow_insecure_tls: bool = False) -> tuple[bytes, dict[str, Any]]:
@@ -1141,10 +1436,47 @@ def parse_source_items(
     allow_insecure_tls: bool,
     max_items_per_source: int,
 ) -> list[dict[str, Any]]:
+    if source.adapter_type in {"rss", "atom"} and _looks_like_html(payload):
+        raise ProviderFeedFormatError(
+            "HTML returned where feed XML was expected",
+            diagnostics={
+                "exception_type": "ParseError",
+                "content_type": "text/html",
+                "body_snippet": _bounded_body_snippet(payload),
+                "body_received": bool(payload),
+                "source_health_status": "html_instead_of_feed",
+            },
+        )
     if source.adapter_type == "rss":
-        return _rss_items(payload)[:max_items_per_source]
+        try:
+            return _rss_items(payload)[:max_items_per_source]
+        except ET.ParseError as exc:
+            raise ProviderFeedFormatError(
+                f"ParseError: {exc}",
+                diagnostics={
+                    "exception_type": "ParseError",
+                    "exception_message": str(exc),
+                    "content_type": "",
+                    "body_snippet": _bounded_body_snippet(payload),
+                    "body_received": bool(payload),
+                    "source_health_status": "malformed_feed",
+                },
+            ) from exc
     if source.adapter_type == "atom":
-        return _atom_items(payload)[:max_items_per_source]
+        try:
+            return _atom_items(payload)[:max_items_per_source]
+        except ET.ParseError as exc:
+            raise ProviderFeedFormatError(
+                f"ParseError: {exc}",
+                diagnostics={
+                    "exception_type": "ParseError",
+                    "exception_message": str(exc),
+                    "content_type": "",
+                    "body_snippet": _bounded_body_snippet(payload),
+                    "body_received": bool(payload),
+                    "source_health_status": "malformed_feed",
+                },
+            ) from exc
     if source.adapter_type == "json_feed":
         return _json_feed_items(payload)[:max_items_per_source]
     if source.adapter_type == "structured_index":
@@ -4241,6 +4573,8 @@ class CollectionAttempt:
     parser_version: str = PARSER_VERSION
     content_hash: str = ""
     retry_state: str = "not_retried"
+    fetch_diagnostics: Mapping[str, Any] | None = None
+    source_health_status: str = ""
 
     def to_payload(self) -> dict[str, Any]:
         return {
@@ -4262,6 +4596,8 @@ class CollectionAttempt:
             "parser_version": self.parser_version,
             "content_hash": self.content_hash,
             "retry_state": self.retry_state,
+            "source_health_status": self.source_health_status or ("success" if self.collection_status in {"ok", "partial"} else ""),
+            "fetch_diagnostics": dict(self.fetch_diagnostics or {}),
         }
 
 
@@ -4322,6 +4658,45 @@ def run_collection_attempt(
         )
         _atomic_write(run_dir / _source_attempt_filename(source.source_id), attempt.to_payload())
         return {"attempt": attempt.to_payload(), "raw_items": [], "event_leads": [], "candidates": [], "exclusions": [], "failed_extractions": [], "manual_review": [], "failure": attempt.failure_reason}
+    payload: bytes = b""
+    fetch_meta: dict[str, Any] = {}
+
+    def _fetch_failure_result(failure: str, diagnostics: Mapping[str, Any] | None = None) -> dict[str, Any]:
+        merged_diagnostics = dict(diagnostics or {})
+        merged_diagnostics.setdefault("provider_id", source.source_id)
+        merged_diagnostics.setdefault("source_url", source.feed_url)
+        merged_diagnostics.setdefault("retry_count", 0)
+        source_health_status = str(merged_diagnostics.get("source_health_status") or _classify_fetch_diagnostics(merged_diagnostics))
+        attempt = CollectionAttempt(
+            source_id=source.source_id,
+            source_name=source.name,
+            readiness=source_readiness_status(source),
+            readiness_reason=source_readiness_reason(source),
+            collection_status="failed",
+            item_count=0,
+            raw_item_count=0,
+            event_lead_count=0,
+            qualified_candidate_count=0,
+            excluded_item_count=0,
+            failed_extraction_count=0,
+            started_at=started_at,
+            completed_at=utc_now(),
+            source_urls=(),
+            failure_reason=failure,
+            retry_state=f"retried_{merged_diagnostics.get('retry_count')}" if int(merged_diagnostics.get("retry_count") or 0) else "not_retried",
+            fetch_diagnostics=merged_diagnostics,
+            source_health_status=source_health_status,
+        )
+        failure_payload = {
+            "source_id": source.source_id,
+            "failure_reason": failure,
+            "source_health_status": source_health_status,
+            "fetch_diagnostics": merged_diagnostics,
+        }
+        _atomic_write(run_dir / _source_attempt_filename(source.source_id), attempt.to_payload())
+        _atomic_write(run_dir / _source_failure_filename(source.source_id), failure_payload)
+        return {"attempt": attempt.to_payload(), "raw_items": [], "event_leads": [], "candidates": [], "exclusions": [], "failed_extractions": [], "manual_review": [], "failure": failure}
+
     try:
         payload, fetch_meta = fetch_source(source, timeout=fetch_timeout, allow_insecure_tls=allow_insecure_tls)
         items = parse_source_items(
@@ -4332,50 +4707,38 @@ def run_collection_attempt(
             allow_insecure_tls=allow_insecure_tls,
             max_items_per_source=max_items_per_source,
         )
+    except ProviderFetchError as exc:
+        failure = str(exc) or f"{type(exc).__name__}: fetch failed"
+        return _fetch_failure_result(failure, exc.diagnostics)
+    except ProviderFeedFormatError as exc:
+        diagnostics = {**fetch_meta, **exc.diagnostics}
+        diagnostics.setdefault("source_url", source.feed_url)
+        diagnostics.setdefault("final_url", str(fetch_meta.get("final_url") or source.feed_url))
+        diagnostics.setdefault("backend", str(fetch_meta.get("backend") or FETCH_BACKEND_URLLIB))
+        diagnostics.setdefault("client", str(fetch_meta.get("client") or "urllib.request"))
+        diagnostics.setdefault("http_status", fetch_meta.get("http_status", 0))
+        diagnostics.setdefault("content_type", fetch_meta.get("content_type", ""))
+        diagnostics.setdefault("response_headers", fetch_meta.get("response_headers", {}))
+        diagnostics.setdefault("body_received", bool(payload))
+        diagnostics.setdefault("retry_count", fetch_meta.get("retry_count", 0))
+        failure = str(exc)
+        return _fetch_failure_result(failure, diagnostics)
     except ET.ParseError as exc:
         failure = f"ParseError: {exc}"
-        attempt = CollectionAttempt(
-            source_id=source.source_id,
-            source_name=source.name,
-            readiness=source_readiness_status(source),
-            readiness_reason=source_readiness_reason(source),
-            collection_status="failed",
-            item_count=0,
-            raw_item_count=0,
-            event_lead_count=0,
-            qualified_candidate_count=0,
-            excluded_item_count=0,
-            failed_extraction_count=0,
-            started_at=started_at,
-            completed_at=utc_now(),
-            source_urls=(),
-            failure_reason=failure,
-        )
-        _atomic_write(run_dir / _source_attempt_filename(source.source_id), attempt.to_payload())
-        _atomic_write(run_dir / _source_failure_filename(source.source_id), {"source_id": source.source_id, "failure_reason": failure})
-        return {"attempt": attempt.to_payload(), "raw_items": [], "event_leads": [], "candidates": [], "exclusions": [], "failed_extractions": [], "manual_review": [], "failure": failure}
+        diagnostics = {**fetch_meta, "exception_type": "ParseError", "exception_message": str(exc), "body_snippet": _bounded_body_snippet(payload), "body_received": bool(payload)}
+        diagnostics["source_health_status"] = _classify_fetch_diagnostics(diagnostics)
+        return _fetch_failure_result(failure, diagnostics)
     except Exception as exc:  # noqa: BLE001
         failure = f"{type(exc).__name__}: {exc}"
-        attempt = CollectionAttempt(
-            source_id=source.source_id,
-            source_name=source.name,
-            readiness=source_readiness_status(source),
-            readiness_reason=source_readiness_reason(source),
-            collection_status="failed",
-            item_count=0,
-            raw_item_count=0,
-            event_lead_count=0,
-            qualified_candidate_count=0,
-            excluded_item_count=0,
-            failed_extraction_count=0,
+        diagnostics = _exception_diagnostics(
+            exc,
+            source_url=source.feed_url,
+            backend=str(fetch_meta.get("backend") or FETCH_BACKEND_URLLIB),
+            request_headers=fetch_meta.get("request_headers") or CARE_LINE_FETCH_HEADERS,
             started_at=started_at,
-            completed_at=utc_now(),
-            source_urls=(),
-            failure_reason=failure,
+            retry_count=int(fetch_meta.get("retry_count") or 0),
         )
-        _atomic_write(run_dir / _source_attempt_filename(source.source_id), attempt.to_payload())
-        _atomic_write(run_dir / _source_failure_filename(source.source_id), {"source_id": source.source_id, "failure_reason": failure})
-        return {"attempt": attempt.to_payload(), "raw_items": [], "event_leads": [], "candidates": [], "exclusions": [], "failed_extractions": [], "manual_review": [], "failure": failure}
+        return _fetch_failure_result(failure, diagnostics)
     raw_artifact_path = run_dir / _source_raw_items_filename(source.source_id)
     raw_items = [
         discovery_record_from_direct_item(
@@ -4671,6 +5034,7 @@ def run_national_pipeline(
         state_root=review_root,
     )
     collection_status_counts = Counter(str(attempt.get("collection_status") or "unknown") for attempt in attempts)
+    source_health_status_counts = Counter(str(attempt.get("source_health_status") or "unknown") for attempt in attempts)
     successful_attempt_count = sum(collection_status_counts.get(key, 0) for key in ("ok", "partial"))
     failed_source_count = collection_status_counts.get("failed", 0)
     skipped_source_count = collection_status_counts.get("skipped", 0)
@@ -4695,6 +5059,7 @@ def run_national_pipeline(
         "failed_source_count": failed_source_count,
         "skipped_source_count": skipped_source_count,
         "collection_status_counts": dict(sorted(collection_status_counts.items())),
+        "source_health_status_counts": dict(sorted(source_health_status_counts.items())),
         "smoke_test": smoke_test,
         "selected_source_ids": list(manifest["source_ids"]),
         "production_review_queue_mutation_disabled": smoke_test,

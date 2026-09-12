@@ -1,0 +1,37 @@
+{
+  "agent_run_id": "food-line-source-watch-20260910T145615Z-puerto-rico-water-food-access",
+  "archive_ref": "data/private-agent-handoff/archive/food-line/2026-09-10/food-line-source-watch-20260910T145615Z-puerto-rico-water-food-access.json",
+  "classification": "ACCEPTED",
+  "completed_at": "2026-09-10T14:56:15Z",
+  "deferred_count": 0,
+  "dispatch": "food-line",
+  "duplicate_count": 0,
+  "eligible_for_automatic_publication": false,
+  "exit_code": 0,
+  "import_result": "accepted",
+  "imported_artifact_ref": "data/dispatches/food-line/agent-intake/2026-09-10/food-line-source-watch-20260910T145615Z-puerto-rico-water-food-access.json",
+  "imported_count": 1,
+  "input_filename": "external-agent-envelope.json",
+  "input_sha256": "3565ac12a61d7831ce69b7e48e74184f11571d3537fde07c4c44935f254d5bad",
+  "invalid_count": 0,
+  "original_production_artifact_present": false,
+  "provenance_class": "operator_recovered_source_watch_evidence",
+  "public_side_effects": false,
+  "receipt_created_at": "2026-09-12T01:13:25Z",
+  "reconciliation": [
+    {
+      "candidate_id": "finding_4341336d9c9a9cb00b9543ca",
+      "duplicate_linkage": {},
+      "finding_id": "",
+      "reason": "preserve as secondary-domain food access consequence Review wording must remain limited to the traceable supporting evidence.",
+      "terminal_disposition": "retained_for_review",
+      "unaccounted": false
+    }
+  ],
+  "rejected_count": 0,
+  "schema_version": "bluefern.external_agent_handoff_receipt.v1",
+  "started_at": "2026-09-10T14:56:15Z",
+  "status": "SUCCESS",
+  "unaccounted": 0,
+  "validation_result": "passed"
+}

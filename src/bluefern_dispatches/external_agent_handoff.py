@@ -27,6 +27,7 @@ REQUIRED_FIELDS = (
 PRIVATE_ROOT = Path("data/private-agent-handoff")
 RECEIPT_SCHEMA = "bluefern.external_agent_handoff_receipt.v1"
 SAFE_RUN_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,180}$")
+OPERATOR_RECOVERY_CLASS = "operator_recovered_source_watch_evidence"
 
 
 def _utc_now() -> str:
@@ -170,7 +171,73 @@ def validate_envelope(payload: Any, *, dispatch: str) -> list[str]:
         errors.append("every finding must be an object")
     if not envelope_date(payload):
         errors.append("search_window must contain an ISO date")
+    if isinstance(payload, dict) and payload.get("provenance_class") == OPERATOR_RECOVERY_CLASS:
+        errors.extend(_validate_operator_recovery_payload(payload, dispatch=dispatch))
     return errors
+
+
+def _validate_operator_recovery_payload(payload: Mapping[str, Any], *, dispatch: str) -> list[str]:
+    errors: list[str] = []
+    if dispatch != "food-line":
+        errors.append("operator recovered source watch evidence is currently supported for food-line only")
+    run_id = str(payload.get("agent_run_id") or "")
+    if run_id.startswith("synthetic-") or str(payload.get("evidence_kind") or "").lower() in {"synthetic", "test"}:
+        errors.append("operator recovery cannot ingest synthetic/test evidence")
+    provenance = payload.get("recovery_provenance")
+    if not isinstance(provenance, Mapping):
+        errors.append("recovery_provenance must be an object")
+        provenance = {}
+    if provenance.get("provenance_class") != OPERATOR_RECOVERY_CLASS:
+        errors.append("recovery_provenance.provenance_class must be operator_recovered_source_watch_evidence")
+    if provenance.get("original_production_artifact_present") is not False:
+        errors.append("original_production_artifact_present must be false")
+    if provenance.get("production_collection_failed_before_discovery") is not True:
+        errors.append("production_collection_failed_before_discovery must be true")
+    if provenance.get("eligible_for_automatic_publication") is not False:
+        errors.append("eligible_for_automatic_publication must be false")
+    if not str(provenance.get("recovery_reason") or "").strip():
+        errors.append("recovery_reason must be present")
+    for index, finding in enumerate(payload.get("findings") if isinstance(payload.get("findings"), list) else []):
+        if not isinstance(finding, Mapping):
+            continue
+        url = str(finding.get("canonical_source_url") or finding.get("source_url") or finding.get("url") or "")
+        publisher = str(finding.get("publisher") or finding.get("discovered_publisher") or finding.get("source_name") or "")
+        evidence = str(finding.get("exact_supporting_passage") or finding.get("evidence_text") or finding.get("passage") or "")
+        source_role = str(finding.get("source_role") or "")
+        if not url.lower().startswith("https://"):
+            errors.append(f"findings[{index}] canonical source URL must be valid https")
+        if not publisher.strip():
+            errors.append(f"findings[{index}] publisher must be present")
+        if not evidence.strip():
+            errors.append(f"findings[{index}] supporting evidence must be present")
+        if not source_role.strip():
+            errors.append(f"findings[{index}] source_role must be documented")
+        if str(finding.get("review_status") or "pending_review") != "pending_review":
+            errors.append(f"findings[{index}] review_status must remain pending_review")
+        if finding.get("exclusion_reason") not in (None, ""):
+            errors.append(f"findings[{index}] exclusion_reason must be null/empty for accepted recovery")
+    return errors
+
+
+def _recovery_provenance_for(payload: Mapping[str, Any], row: Mapping[str, Any] | None = None) -> dict[str, Any] | None:
+    if payload.get("provenance_class") != OPERATOR_RECOVERY_CLASS:
+        return None
+    base = dict(payload.get("recovery_provenance") or {})
+    base.update(
+        {
+            "provenance_class": OPERATOR_RECOVERY_CLASS,
+            "original_agent_run_id": str(payload.get("agent_run_id") or ""),
+            "original_production_artifact_present": False,
+            "production_collection_failed_before_discovery": True,
+            "eligible_for_review": True,
+            "eligible_for_automatic_publication": False,
+        }
+    )
+    if row:
+        base["original_source_url"] = str(row.get("canonical_url") or row.get("canonical_source_url") or row.get("url") or row.get("source_url") or "")
+        raw = row.get("raw_agent_payload") if isinstance(row.get("raw_agent_payload"), Mapping) else {}
+        base["source_verification_status"] = str(raw.get("source_verification_status") or base.get("source_verification_status") or "")
+    return base
 
 
 def _food_importer():
@@ -210,8 +277,25 @@ def _food_dispatch(root: Path, archive: Path, payload: dict[str, Any], edition_d
             "unaccounted": False,
         })
     if isinstance(artifact, dict):
+        run_provenance = _recovery_provenance_for(payload)
+        if run_provenance:
+            artifact["recovery_provenance"] = run_provenance
+            artifact["lineage_class"] = OPERATOR_RECOVERY_CLASS
         artifact["candidate_rows"] = [
-            {**row, "review_status": "pending_review", "review_retention_disposition": ("duplicate_with_reason" if row.get("review_retention_disposition") == "duplicate" else row.get("review_retention_disposition"))}
+            {
+                **row,
+                "review_status": "pending_review",
+                "review_retention_disposition": ("duplicate_with_reason" if row.get("review_retention_disposition") == "duplicate" else row.get("review_retention_disposition")),
+                **(
+                    {
+                        "lineage_class": OPERATOR_RECOVERY_CLASS,
+                        "recovery_provenance": _recovery_provenance_for(payload, row),
+                        "eligible_for_automatic_publication": False,
+                    }
+                    if run_provenance
+                    else {}
+                ),
+            }
             for row in rows if isinstance(row, dict)
         ]
         artifact["counts"] = dict(__import__("collections").Counter(str(row.get("review_retention_disposition") or "rejected_with_reason") for row in artifact["candidate_rows"]))
@@ -318,6 +402,11 @@ def import_envelope(root: Path, input_path: Path, *, dispatch: str) -> tuple[int
         receipt = {
             "schema_version": RECEIPT_SCHEMA, "dispatch": dispatch, "agent_run_id": run_id, "input_filename": "external-agent-envelope.json", "input_sha256": digest, "validation_result": "passed", "import_result": "accepted", "imported_count": dispatch_result["imported"], "rejected_count": terminal_counts["rejected_with_reason"], "duplicate_count": terminal_counts["duplicate_with_reason"], "deferred_count": terminal_counts["deferred_with_reason"], "invalid_count": terminal_counts["invalid_source_with_reason"], "unaccounted": sum(1 for row in reconciliation if row.get("unaccounted")), "archive_ref": archive_ref, "imported_artifact_ref": dispatch_result["artifact_ref"], "started_at": payload["started_at"], "completed_at": payload["completed_at"], "receipt_created_at": _utc_now(), "exit_code": 0, "status": "SUCCESS", "classification": "ACCEPTED", "reconciliation": reconciliation,
         }
+        if payload.get("provenance_class") == OPERATOR_RECOVERY_CLASS:
+            receipt["provenance_class"] = OPERATOR_RECOVERY_CLASS
+            receipt["original_production_artifact_present"] = False
+            receipt["eligible_for_automatic_publication"] = False
+            receipt["public_side_effects"] = False
         receipt_path = root / PRIVATE_ROOT / "receipts" / dispatch / edition_date / f"{run_id}.json"
         _write_json(receipt_path, receipt, exclusive=True)
         return 0, receipt

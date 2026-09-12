@@ -43,6 +43,8 @@ def test_classify_path_covers_expected_categories():
         "data/private-agent-handoff/retired/care-line/synthetic-care-handoff-20260910-001/active-before-cleanup/a-C-current-review-queue-ab8d48a5.json",
         "data/private-agent-handoff/cleanup/food-line/synthetic-food-handoff-20260910-001-20260911T021713.130201Z.json",
         "data/private-agent-handoff/cleanup/food-line/proof-receipt-retirement-unknown-run-attempt-20260911T021435.418564Z-ded1b18eb6c0.json",
+        "data/private-agent-handoff/operator-recovery/food-line/2026-09-10/reconciliation.json",
+        "data/private-agent-handoff/operator-recovery/food-line/2026-09-10/source-payloads/food-line-source-watch-20260910T110306Z-hawaii-island-pantry-shortages.json",
     ],
 )
 def test_external_handoff_evidence_is_allowed(path):
@@ -80,6 +82,7 @@ def test_production_shaped_external_handoff_evidence_is_clean_but_nearby_dirt_is
                 "?? data/private-agent-handoff/cleanup/food-line/proof-receipt-retirement-unknown-run-attempt-20260911T021435.418564Z-ded1b18eb6c0.json",
                 "?? data/private-agent-handoff/retired/care-line/synthetic-care-handoff-20260910-001/audit/a-C-receipt.json",
                 "?? data/private-agent-handoff/receipts/food-line/unknown-date/unknown-run-attempt-20260911T021437.536828Z-6f4a05d22e47.json",
+                "?? data/private-agent-handoff/operator-recovery/food-line/2026-09-10/reconciliation.json",
                 "?? data/private-agent-handoff/cleanup/food-line/unrelated.json",
             ],
         ),
@@ -93,6 +96,7 @@ def test_production_shaped_external_handoff_evidence_is_clean_but_nearby_dirt_is
         "data/private-agent-handoff/cleanup/food-line/proof-receipt-retirement-unknown-run-attempt-20260911T021435.418564Z-ded1b18eb6c0.json",
         "data/private-agent-handoff/retired/care-line/synthetic-care-handoff-20260910-001/audit/a-C-receipt.json",
         "data/private-agent-handoff/receipts/food-line/unknown-date/unknown-run-attempt-20260911T021437.536828Z-6f4a05d22e47.json",
+        "data/private-agent-handoff/operator-recovery/food-line/2026-09-10/reconciliation.json",
     }
     assert [entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]] == [
         "data/private-agent-handoff/cleanup/food-line/unrelated.json"

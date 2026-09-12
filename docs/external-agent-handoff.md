@@ -39,3 +39,26 @@ The separate Windows Source Watch jobs remain the production collection path.
 ChatGPT-assisted Source Watch is a distinct manual producer and is not evidence
 of a Windows scheduler run. Missing prior payloads remain unavailable rather than
 being reconstructed by this bridge.
+
+## Operator-Recovered Source Watch Evidence
+
+When a scheduled production Food Line Source Watch run failed closed before
+discovery, a complete operator-preserved Source Watch payload may be ingested
+through `scripts/recover_food_line_operator_evidence.py`. This is a narrow
+recovery path for source-backed payloads that contain the original agent run ID,
+canonical source URL, publisher, supporting evidence, source role, confidence,
+review status, and recovery context.
+
+Operator recovery is explicitly labeled
+`operator_recovered_source_watch_evidence`. It must not be relabeled as
+`original_production_source_watch_artifact`, because the original production
+runner artifact is absent. The persisted provenance records
+`original_production_artifact_present: false`,
+`production_collection_failed_before_discovery: true`, the recovery reason, the
+original run ID, the source URL, source verification status, and
+`eligible_for_automatic_publication: false`.
+
+This path admits recovered evidence only to human review. It does not publish,
+modify Pages, change schedules, create public artifacts, or infer release
+authorization. Prose-only summaries and synthetic/test handoffs are rejected for
+operator recovery.

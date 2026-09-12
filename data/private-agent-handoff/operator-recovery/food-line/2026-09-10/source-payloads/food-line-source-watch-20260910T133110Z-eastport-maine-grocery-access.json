@@ -1,0 +1,58 @@
+{
+  "agent_name": "Food Line Source Watch",
+  "agent_run_id": "food-line-source-watch-20260910T133110Z-eastport-maine-grocery-access",
+  "completed_at": "2026-09-10T13:31:10Z",
+  "coverage_notes": "Operator-preserved complete Source Watch payload; not original production runner output.",
+  "findings": [
+    {
+      "affected_groups": [
+        "Eastport residents",
+        "Pleasant Point Reservation residents",
+        "households without easy transportation"
+      ],
+      "agent_query_context": {
+        "discovery_basis": "operator-preserved Source Watch result"
+      },
+      "canonical_source_url": "https://www.pressherald.com/2026/09/09/passamaquoddy-nation-will-not-buy-eastport-grocery-store/",
+      "concrete_strain_hint": true,
+      "confidence": "high",
+      "discovery_basis": "operator-preserved Source Watch payload",
+      "evidence_level": "source_backed_exact_passage",
+      "exact_supporting_passage": "The R&M IGA Foodliner, which closed last week after its owner retired, was the only full-size grocery store that serviced Eastport, a city of 1,300, and the tribal reservation of 600 also known as Pleasant Point.",
+      "exclusion_reason": null,
+      "location_name": "Eastport",
+      "location_scope": "local",
+      "newness_note": "September 9 article with current access consequence",
+      "pressure_type": "geographic access gap",
+      "publisher": "Portland Press Herald",
+      "qualification_reason": "documented loss of only full-size local grocer and longer travel to replacement access",
+      "review_status": "pending_review",
+      "source_published_at": "2026-09-09T12:27:00-04:00",
+      "source_role": "local_news",
+      "source_verification_status": "current_url_verified",
+      "state": "ME",
+      "summary": "Eastport and Pleasant Point lost the only full-size grocery store, with full-service grocery access requiring roughly 35 minutes or more to Calais and no reopening commitment.",
+      "title": "Passamaquoddy Nation will not buy Eastport grocery store",
+      "uncertainty_note": "do not describe closure as permanent"
+    }
+  ],
+  "provenance_class": "operator_recovered_source_watch_evidence",
+  "recovery_provenance": {
+    "eligible_for_automatic_publication": false,
+    "eligible_for_review": true,
+    "operator_preserved_at": null,
+    "original_production_artifact_present": false,
+    "production_collection_failed_before_discovery": true,
+    "provenance_class": "operator_recovered_source_watch_evidence",
+    "recovery_method": "complete externally preserved Source Watch payload",
+    "recovery_reason": "original production Source Watch artifact absent because scheduled collection failed closed before discovery",
+    "recovery_timestamp": "2026-09-11T00:00:00Z"
+  },
+  "schema_version": 1,
+  "search_window": {
+    "date_from": "2026-09-10",
+    "date_to": "2026-09-10",
+    "edition_date": "2026-09-10"
+  },
+  "started_at": "2026-09-10T13:31:10Z"
+}

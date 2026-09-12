@@ -1,0 +1,58 @@
+{
+  "agent_name": "Food Line Source Watch",
+  "agent_run_id": "food-line-source-watch-20260910T210515Z-texas-snap-redetermination",
+  "completed_at": "2026-09-10T21:05:15Z",
+  "coverage_notes": "Operator-preserved complete Source Watch payload; not original production runner output.",
+  "findings": [
+    {
+      "affected_groups": [
+        "SNAP households",
+        "East Texas household",
+        "food bank clients"
+      ],
+      "agent_query_context": {
+        "discovery_basis": "operator-preserved Source Watch result"
+      },
+      "canonical_source_url": "https://www.texastribune.org/2026/09/10/texas-medicaid-snap-food-stamps-approval-delay/",
+      "concrete_strain_hint": true,
+      "confidence": "high",
+      "discovery_basis": "operator-preserved Source Watch payload",
+      "evidence_level": "source_backed_exact_passage",
+      "exact_supporting_passage": "The benefits didn't arrive in May.",
+      "exclusion_reason": null,
+      "location_name": "Texas",
+      "location_scope": "statewide",
+      "newness_note": "September 10 publication with current benefit interruption consequence",
+      "pressure_type": "benefit access failure",
+      "publisher": "The Texas Tribune",
+      "qualification_reason": "documented SNAP benefit interruption and food-bank reliance",
+      "review_status": "pending_review",
+      "source_published_at": "2026-09-10T05:00:00-05:00",
+      "source_role": "state_news",
+      "source_verification_status": "current_url_verified",
+      "state": "TX",
+      "summary": "Texas SNAP redetermination timeliness fell from 83 percent in January to 28 percent in July, with a documented East Texas household losing benefits despite timely reapplication and relying on food banks that sometimes lacked enough food.",
+      "title": "More than 200,000 Texans are waiting for Medicaid approval",
+      "uncertainty_note": "statewide SNAP enrollment decline is not attributed solely to administrative delay"
+    }
+  ],
+  "provenance_class": "operator_recovered_source_watch_evidence",
+  "recovery_provenance": {
+    "eligible_for_automatic_publication": false,
+    "eligible_for_review": true,
+    "operator_preserved_at": null,
+    "original_production_artifact_present": false,
+    "production_collection_failed_before_discovery": true,
+    "provenance_class": "operator_recovered_source_watch_evidence",
+    "recovery_method": "complete externally preserved Source Watch payload",
+    "recovery_reason": "original production Source Watch artifact absent because scheduled collection failed closed before discovery",
+    "recovery_timestamp": "2026-09-11T00:00:00Z"
+  },
+  "schema_version": 1,
+  "search_window": {
+    "date_from": "2026-09-10",
+    "date_to": "2026-09-10",
+    "edition_date": "2026-09-10"
+  },
+  "started_at": "2026-09-10T21:05:15Z"
+}

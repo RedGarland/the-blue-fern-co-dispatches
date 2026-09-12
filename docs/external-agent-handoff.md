@@ -147,3 +147,23 @@ reviewed summary, editorial disposition, failed-runtime distinction, and all
 false publication flags. It grants no release, publication, public-generation,
 Pages, scheduler, social, audio, archive/RSS/homepage, or operational-health
 authority by itself.
+
+After a protected operator-recovery release authorization exists, publication
+authorization is a separate private governance owner managed by
+`scripts/authorize_food_line_operator_recovery_publication.py`. It consumes only
+a committed `bluefern.food_line.operator_recovery_release_authorization.v1`
+artifact, an outside-repository human request, exact release SHA-256 and
+fingerprint bindings, exact selected item IDs, explicit publication-placement
+decisions, source traceability confirmations, and the failed-production
+disclosure rule.
+
+The operator-recovery publication authorization writes durable private records
+under `publication-authorizations/food-line/operator-recovery/` using schema
+`bluefern.food_line.operator_recovery_publication_authorization.v1` and state
+`OPERATOR_RECOVERY_PUBLICATION_AUTHORIZED`. It may set
+`publication_authorized: true`, but it must keep `public_generation_authorized`,
+`pages_authorized`, `pages_push_authorized`, `social_authorized`,
+`audio_authorized`, `schedule_authorized`, `scheduled_task_change_authorized`,
+`public_artifacts_generated`, `publication_performed`, and
+`eligible_for_automatic_publication` false. Public generation and Pages remain
+separate later guarded steps.

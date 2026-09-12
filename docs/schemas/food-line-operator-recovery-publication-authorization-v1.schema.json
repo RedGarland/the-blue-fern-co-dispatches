@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "dispatch": {
+      "const": "food-line"
+    },
+    "eligible_for_automatic_publication": {
+      "const": false
+    },
+    "pages_authorized": {
+      "const": false
+    },
+    "pages_push_authorized": {
+      "const": false
+    },
+    "publication_performed": {
+      "const": false
+    },
+    "publication_authorization_state": {
+      "const": "OPERATOR_RECOVERY_PUBLICATION_AUTHORIZED"
+    },
+    "publication_authorized": {
+      "const": true
+    },
+    "publication_type": {
+      "const": "food_line_operator_recovery_publication_authorization"
+    },
+    "public_artifacts_generated": {
+      "const": false
+    },
+    "public_generation_authorized": {
+      "const": false
+    },
+    "schedule_authorized": {
+      "const": false
+    },
+    "scheduled_task_change_authorized": {
+      "const": false
+    },
+    "schema_version": {
+      "const": "bluefern.food_line.operator_recovery_publication_authorization.v1"
+    },
+    "social_authorized": {
+      "const": false
+    },
+    "audio_authorized": {
+      "const": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "publication_type",
+    "publication_authorization_state",
+    "publication_id",
+    "dispatch",
+    "authorized_by",
+    "authorized_at",
+    "source_base_commit",
+    "release_path",
+    "release_sha256",
+    "release_fingerprint",
+    "item_count",
+    "publication_items",
+    "publication_authorized",
+    "public_generation_authorized",
+    "pages_authorized",
+    "pages_push_authorized",
+    "social_authorized",
+    "audio_authorized",
+    "schedule_authorized",
+    "scheduled_task_change_authorized",
+    "public_artifacts_generated",
+    "publication_performed",
+    "eligible_for_automatic_publication"
+  ],
+  "title": "Food Line operator-recovery publication authorization v1",
+  "type": "object"
+}

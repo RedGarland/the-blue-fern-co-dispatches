@@ -1,0 +1,17 @@
+{
+  "approval_fingerprint": "sha256:c0be9ecbd9180242a1fbb6d46e27e84b6e94a97cdde631ecac59f42b665474b3",
+  "approval_id": "gaza-gz-01-package-audio-approval-20260906T062720Z",
+  "approved_at": "2026-09-06T06:27:20Z",
+  "approver": "William Patton / RedGarland",
+  "artifact_set_sha256": "sha256:4a98c0833fdd4c8684883ad0d19b596d70bd9410d8e57a9aa8c4a1281c373c0d",
+  "audio_authorized": true,
+  "audio_request_sha256": "b1f741dbf50868c71a582f098720dbb8265f546d88fd32c174cfb787d700b3dd",
+  "correction_id": "gaza-correction-v1-1de56d8f7011f865e68d",
+  "package_authorized": true,
+  "pages_head": "f6eef5e1d59c09dcf87ffbe1f1b7f05a56a0789b",
+  "proposal_sha256": "sha256:fd42ee71ebf810e9211d234f5c8ebc8f2bd7b5497165a388e7e2248a7f346cfc",
+  "publication_authorized": false,
+  "schema_version": "gaza_formal_historical_correction_release_approval_v1",
+  "scope": "formal_historical_correction",
+  "source_commit": "e441698cca7404274474d80a186bd54b9bbbfb3e"
+}

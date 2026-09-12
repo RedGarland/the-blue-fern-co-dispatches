@@ -1,0 +1,121 @@
+{
+  "protected_head": "232462f35b3b9f11d2a707a98bd1081f0e5862b2",
+  "recovery_provenance": "operator_recovered_source_watch_evidence",
+  "recovery_reconciliation_artifact": "data/private-agent-handoff/operator-recovery/food-line/2026-09-10/reconciliation.json",
+  "repository": "RedGarland/the-blue-fern-co-dispatches",
+  "review_id": "food-line-2026-09-10-operator-recovered-human-editorial-review",
+  "review_type": "human_editorial_review",
+  "reviewed_at": "2026-09-12T00:00:00-07:00",
+  "scope_boundaries": {
+    "eligible_for_automatic_publication_changed": false,
+    "food_line_operationally_recovered": false,
+    "not_original_production_source_watch_artifacts": true,
+    "original_production_lineage_rewritten_or_upgraded": false,
+    "pages_modified": false,
+    "publication_authority_granted": false,
+    "publication_performed": false,
+    "scheduled_tasks_modified": false,
+    "september_10_original_production_runtime_remains_failed": true
+  },
+  "items": [
+    {
+      "agent_run_id": "food-line-source-watch-20260910T110306Z-hawaii-island-pantry-shortages",
+      "assessments": {
+        "duplicate_status": "NO_DUPLICATE_FOUND",
+        "in_scope_geography": "APPROVED: Hawaii Island is in the Food Line United States and territories scope.",
+        "materiality": "APPROVED: multiple pantry sites serving recurring weekly distributions are affected, with new demand at Hilo.",
+        "supporting_evidence": "SUFFICIENT"
+      },
+      "bounded_source_backed_summary": "Big Island Now reported that Salvation Army food pantries in Hilo, Honokaa, and Kona needed donations because staple supplies were low after Lala-related pressure. The pantries normally distribute about 75 to 150 food bags during weekly distributions at each site, and the Hilo corps reported 20 new families seeking help.",
+      "candidate_id": "finding_0ca835b632814684d8f1f2ec",
+      "corrected_headline": "Hawaii Island Salvation Army pantries report staple shortages after Lala",
+      "editorial_disposition": "APPROVE_WITH_EDIT",
+      "eligible_for_automatic_publication": false,
+      "event_date_or_source_date": "2026-09-08",
+      "item": "Hawaii Island pantry shortages",
+      "original_failed_production_distinction_preserved": true,
+      "provenance_preserved": "operator_recovered_source_watch_evidence",
+      "retained_for_review": true,
+      "source_publisher": "Big Island Now",
+      "source_traceable_at_review": true,
+      "source_url": "https://bigislandnow.com/2026/09/08/community-donations-needed-to-replenish-food-pantries-across-hawai%CA%BBi-island-following-lala/"
+    },
+    {
+      "agent_run_id": "food-line-source-watch-20260910T133110Z-eastport-maine-grocery-access",
+      "assessments": {
+        "duplicate_status": "NO_DUPLICATE_FOUND",
+        "in_scope_geography": "APPROVED: Eastport, Maine and Pleasant Point are in the Food Line United States scope.",
+        "materiality": "APPROVED: source describes the only full-size grocery serving Eastport and Pleasant Point and an alternative full-service grocery trip of about 35 minutes or more to Calais.",
+        "supporting_evidence": "SUFFICIENT"
+      },
+      "bounded_source_backed_summary": "The Portland Press Herald reported that R&M IGA Foodliner closed after its owner retired and had been the only full-size grocery serving Eastport and the Pleasant Point reservation. Passamaquoddy voters rejected a purchase due-diligence proposal, and without a reopening commitment residents would need to drive about 35 minutes or more to Calais for full-service grocery access.",
+      "candidate_id": "finding_5a56d5dbd54a3ceca06f44d6",
+      "corrected_headline": "Eastport's only full-size grocery store remains without a committed reopening",
+      "editorial_disposition": "APPROVE_WITH_EDIT",
+      "eligible_for_automatic_publication": false,
+      "event_date_or_source_date": "2026-09-09",
+      "item": "Eastport, Maine grocery-access loss",
+      "original_failed_production_distinction_preserved": true,
+      "provenance_preserved": "operator_recovered_source_watch_evidence",
+      "retained_for_review": true,
+      "source_publisher": "Portland Press Herald",
+      "source_traceable_at_review": true,
+      "source_url": "https://www.pressherald.com/2026/09/09/passamaquoddy-nation-will-not-buy-eastport-grocery-store/"
+    },
+    {
+      "agent_run_id": "food-line-source-watch-20260910T145615Z-puerto-rico-water-food-access",
+      "assessments": {
+        "duplicate_status": "NO_DUPLICATE_FOUND",
+        "in_scope_geography": "APPROVED: Puerto Rico is in the Food Line United States and territories scope.",
+        "materiality": "APPROVED: source reports rotating shutoffs affecting more than 180,000 homes and broader resident burden.",
+        "supporting_evidence": "SUFFICIENT"
+      },
+      "bounded_source_backed_summary": "The Guardian reported unreliable water service and rotating shutoffs in Puerto Rico, including more than 180,000 homes without public access to potable water during 48-hour shutoff cycles. The Food Line relevance is the reported burden on cooking and household budgets, including residents spending more time and money on water and prepared food.",
+      "candidate_id": "finding_4341336d9c9a9cb00b9543ca",
+      "corrected_headline": "Puerto Rico water shutoffs add food-preparation and prepared-food costs",
+      "editorial_disposition": "APPROVE_WITH_EDIT",
+      "eligible_for_automatic_publication": false,
+      "event_date_or_source_date": "2026-09-10",
+      "item": "Puerto Rico water-related food-access burden",
+      "original_failed_production_distinction_preserved": true,
+      "provenance_preserved": "operator_recovered_source_watch_evidence",
+      "retained_for_review": true,
+      "source_publisher": "The Guardian",
+      "source_traceable_at_review": true,
+      "source_url": "https://www.theguardian.com/us-news/ng-interactive/2026/sep/10/puerto-rico-water-access"
+    },
+    {
+      "agent_run_id": "food-line-source-watch-20260910T210515Z-texas-snap-redetermination",
+      "assessments": {
+        "duplicate_status": "NO_DUPLICATE_FOUND",
+        "in_scope_geography": "APPROVED: Texas is in scope.",
+        "materiality": "APPROVED: statewide timeliness decline and case-level food-bank reliance support material benefit-access pressure.",
+        "supporting_evidence": "SUFFICIENT"
+      },
+      "bounded_source_backed_summary": "The Texas Tribune reported that Texas SNAP redetermination timeliness fell from 83 percent in January to 28 percent in July. The article also documented an East Texas household whose benefits did not arrive after a timely reapplication, leading the family to rely on food banks that sometimes did not have enough food.",
+      "candidate_id": "finding_ba095f74fbb914bc56aeb120",
+      "corrected_headline": "Texas SNAP redetermination delays interrupted benefits for an East Texas household",
+      "editorial_disposition": "APPROVE_WITH_EDIT",
+      "eligible_for_automatic_publication": false,
+      "event_date_or_source_date": "2026-09-10",
+      "item": "Texas SNAP redetermination breakdown",
+      "original_failed_production_distinction_preserved": true,
+      "provenance_preserved": "operator_recovered_source_watch_evidence",
+      "retained_for_review": true,
+      "source_publisher": "The Texas Tribune",
+      "source_traceable_at_review": true,
+      "source_url": "https://www.texastribune.org/2026/09/10/texas-medicaid-snap-food-stamps-approval-delay/"
+    },
+    {
+      "agent_run_id": "food-line-source-watch-20260910T113349Z-eastport-mobile-pantry-cancelled",
+      "candidate_id": "finding_1cae6cc95cacbe13fa5eb7f8",
+      "editorial_disposition": "HOLD",
+      "eligible_for_automatic_publication": false,
+      "hold_reason": "Replacement status, affected scale, or broader material food-access impact is not sufficiently established.",
+      "item": "Eastport-Annapolis Neck mobile pantry cancellation",
+      "provenance_preserved": "operator_recovered_source_watch_evidence",
+      "retained_for_review": true,
+      "source_url": "https://www.aacpl.net/event/mobile-food-pantry-despensa-movil-de-alimentos-240256"
+    }
+  ]
+}

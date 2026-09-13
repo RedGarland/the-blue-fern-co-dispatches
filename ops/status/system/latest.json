@@ -50,14 +50,14 @@
     },
     "food-line": {
       "agent_handoff": {
-        "last_attempt_at": null,
+        "last_attempt_at": "2026-09-12T01:13:25Z",
         "last_failure_at": null,
-        "last_success_at": null,
-        "latest_agent_run_id": null,
-        "latest_classification": null,
-        "latest_status": null,
+        "last_success_at": "2026-09-12T01:13:25Z",
+        "latest_agent_run_id": "food-line-source-watch-20260910T210515Z-texas-snap-redetermination",
+        "latest_classification": "ACCEPTED",
+        "latest_status": "SUCCESS",
         "stale": false,
-        "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
+        "state": "HANDOFF_RECEIVED_SUCCESS",
         "unaccounted_count": 0
       },
       "aggregate_status": "FAILED",
@@ -97,7 +97,7 @@
       "recovery_lifecycle": "HEALTHY"
     }
   },
-  "exported_at": "2026-09-11T18:07:41Z",
+  "exported_at": "2026-09-13T21:15:04.064354Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "FAILED"

@@ -16,6 +16,7 @@ src/bluefern_dispatches.egg-info/
 output/test-runs/
 output/local_worktree_cleanup_report.md
 output/smtp-debug*.log
+logs/operational-status-exporter/
 data/dispatches/*/cache/
 # Gaza generated per-run artifacts
 data/dispatches/gaza/raw/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/

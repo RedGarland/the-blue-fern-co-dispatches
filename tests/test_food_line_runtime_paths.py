@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import shutil
+import subprocess
 from pathlib import Path
 
 from scripts import food_line_daily_scheduler, preflight_repo_state
@@ -60,6 +62,49 @@ def test_unrelated_untracked_and_tracked_runtime_paths_fail_closed(monkeypatch, 
         "data/dispatches/food-line/agent-intake/2026-08-13/file.json",
         "data/dispatches/food-line/random/file.json",
     ]
+
+
+def test_operational_status_exporter_receipts_are_gitignored_but_other_logs_are_visible(tmp_path: Path) -> None:
+    root = Path(__file__).resolve().parents[1]
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    shutil.copyfile(root / ".gitignore", repo / ".gitignore")
+    subprocess.run(["git", "init"], cwd=repo, check=True, capture_output=True, text=True)
+    subprocess.run(["git", "config", "user.email", "status-test@example.invalid"], cwd=repo, check=True)
+    subprocess.run(["git", "config", "user.name", "Status Test"], cwd=repo, check=True)
+    subprocess.run(["git", "add", ".gitignore"], cwd=repo, check=True, capture_output=True, text=True)
+    subprocess.run(["git", "commit", "-m", "initial"], cwd=repo, check=True, capture_output=True, text=True)
+
+    receipt = repo / "logs" / "operational-status-exporter" / "run.json"
+    receipt.parent.mkdir(parents=True)
+    receipt.write_text("{}\n", encoding="utf-8")
+    unrelated = repo / "logs" / "unrelated" / "run.json"
+    unrelated.parent.mkdir(parents=True)
+    unrelated.write_text("{}\n", encoding="utf-8")
+
+    ignored = subprocess.run(
+        ["git", "check-ignore", "logs/operational-status-exporter/run.json"],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    status = subprocess.run(
+        ["git", "status", "--short", "--untracked-files=all"],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    assert ignored.stdout.strip() == "logs/operational-status-exporter/run.json"
+    assert "logs/operational-status-exporter/run.json" not in status.stdout
+    assert "?? logs/unrelated/run.json" in status.stdout
+
+
+def test_food_line_scheduler_still_fails_closed_for_unrelated_log_dirt() -> None:
+    unexpected = food_line_daily_scheduler._unexpected_dirty_paths("?? logs/unrelated/run.json\n")
+    assert unexpected == ["logs/unrelated/run.json"]
 
 
 def test_expected_food_runtime_roots_have_shared_categories():

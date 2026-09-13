@@ -695,13 +695,13 @@ def prepare_status_checkout(status_checkout: Path, *, branch: str, remote: str =
     validate_status_paths(existing)
     if existing:
         raise ExportError("status checkout must be clean before fast-forward")
-    fetched = _git(status_checkout, "fetch", remote, branch)
+    fetched = _git(status_checkout, "fetch", "--no-tags", remote, f"refs/heads/{branch}")
     if fetched.returncode:
         raise ExportError(fetched.stderr.strip() or "status checkout fetch failed")
-    ancestor = _git(status_checkout, "merge-base", "--is-ancestor", "HEAD", f"{remote}/{branch}")
+    ancestor = _git(status_checkout, "merge-base", "--is-ancestor", "HEAD", "FETCH_HEAD")
     if ancestor.returncode:
         raise ExportError("status checkout cannot fast-forward to its protected branch")
-    merged = _git(status_checkout, "merge", "--ff-only", f"{remote}/{branch}")
+    merged = _git(status_checkout, "merge", "--ff-only", "FETCH_HEAD")
     if merged.returncode:
         raise ExportError(merged.stderr.strip() or "status checkout fast-forward failed")
 

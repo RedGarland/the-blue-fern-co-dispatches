@@ -14,6 +14,7 @@ from bluefern_dispatches.operational_status_exporter import (
     commit_and_push_status,
     exporter_lock,
     export_status,
+    prepare_status_checkout,
     validate_status_paths,
 )
 
@@ -169,6 +170,136 @@ def _init_status_git_repo(path: Path) -> None:
     (path / ".gitignore").write_text("status/\nops/status/\n", encoding="utf-8")
     subprocess.run(["git", "add", ".gitignore"], cwd=path, check=True)
     subprocess.run(["git", "commit", "-m", "initial"], cwd=path, check=True, capture_output=True, text=True)
+
+
+def _commit_file(repo: Path, relative: str, content: str, message: str) -> str:
+    path = repo / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8")
+    subprocess.run(["git", "add", "--force", relative], cwd=repo, check=True, capture_output=True, text=True)
+    subprocess.run(["git", "commit", "-m", message], cwd=repo, check=True, capture_output=True, text=True)
+    return subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True).stdout.strip()
+
+
+def _init_status_checkout_with_remote(tmp_path: Path, branch: str = "ops/status/food-line-2026-09-10") -> tuple[Path, Path]:
+    remote = tmp_path / "remote.git"
+    subprocess.run(["git", "init", "--bare", remote], check=True, capture_output=True, text=True)
+    checkout = tmp_path / "status"
+    _init_status_git_repo(checkout)
+    subprocess.run(["git", "checkout", "-b", branch], cwd=checkout, check=True, capture_output=True, text=True)
+    subprocess.run(["git", "remote", "add", "origin", str(remote)], cwd=checkout, check=True, capture_output=True, text=True)
+    subprocess.run(["git", "push", "-u", "origin", branch], cwd=checkout, check=True, capture_output=True, text=True)
+    return checkout, remote
+
+
+def _clone_writer(tmp_path: Path, remote: Path) -> Path:
+    writer = tmp_path / "writer"
+    subprocess.run(["git", "clone", str(remote), str(writer)], check=True, capture_output=True, text=True)
+    subprocess.run(["git", "config", "user.email", "status-test@example.invalid"], cwd=writer, check=True)
+    subprocess.run(["git", "config", "user.name", "Status Test"], cwd=writer, check=True)
+    return writer
+
+
+def test_prepare_status_checkout_uses_fetch_head_when_remote_tracking_ref_is_stale(tmp_path: Path) -> None:
+    branch = "ops/status/food-line-2026-09-10"
+    checkout, remote = _init_status_checkout_with_remote(tmp_path, branch)
+    writer = _clone_writer(tmp_path, remote)
+    subprocess.run(["git", "checkout", branch], cwd=writer, check=True, capture_output=True, text=True)
+    remote_tip = _commit_file(writer, "ops/status/system/latest.json", "{}\n", "advance status")
+    subprocess.run(["git", "push", "origin", branch], cwd=writer, check=True, capture_output=True, text=True)
+
+    prepare_status_checkout(checkout, branch=branch)
+
+    assert subprocess.run(["git", "rev-parse", "HEAD"], cwd=checkout, check=True, capture_output=True, text=True).stdout.strip() == remote_tip
+    assert subprocess.run(["git", "rev-parse", "FETCH_HEAD"], cwd=checkout, check=True, capture_output=True, text=True).stdout.strip() == remote_tip
+
+
+def test_prepare_status_checkout_does_not_consult_stale_remote_tracking_ref(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    import bluefern_dispatches.operational_status_exporter as exporter
+
+    branch = "ops/status/food-line-2026-09-10"
+    calls: list[list[str]] = []
+
+    def fake_run(args: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        calls.append(args)
+        if args[1:] == ["branch", "--show-current"]:
+            return subprocess.CompletedProcess(args, 0, stdout=f"{branch}\n", stderr="")
+        if args[1:] == ["merge-base", "--is-ancestor", "HEAD", f"origin/{branch}"]:
+            return subprocess.CompletedProcess(args, 1, stdout="", stderr="")
+        return subprocess.CompletedProcess(args, 0, stdout="", stderr="")
+
+    monkeypatch.setattr(exporter.subprocess, "run", fake_run)
+
+    prepare_status_checkout(tmp_path, branch=branch)
+
+    assert ["git", "fetch", "--no-tags", "origin", f"refs/heads/{branch}"] in calls
+    assert ["git", "merge-base", "--is-ancestor", "HEAD", "FETCH_HEAD"] in calls
+    assert ["git", "merge", "--ff-only", "FETCH_HEAD"] in calls
+    assert ["git", "merge-base", "--is-ancestor", "HEAD", f"origin/{branch}"] not in calls
+
+
+def test_prepare_status_checkout_succeeds_when_head_already_equals_fetch_head(tmp_path: Path) -> None:
+    branch = "ops/status/food-line-2026-09-10"
+    checkout, _remote = _init_status_checkout_with_remote(tmp_path, branch)
+    head_before = subprocess.run(["git", "rev-parse", "HEAD"], cwd=checkout, check=True, capture_output=True, text=True).stdout.strip()
+
+    prepare_status_checkout(checkout, branch=branch)
+
+    assert subprocess.run(["git", "rev-parse", "HEAD"], cwd=checkout, check=True, capture_output=True, text=True).stdout.strip() == head_before
+
+
+def test_prepare_status_checkout_fails_closed_when_fetch_head_diverged(tmp_path: Path) -> None:
+    branch = "ops/status/food-line-2026-09-10"
+    checkout, remote = _init_status_checkout_with_remote(tmp_path, branch)
+    writer = _clone_writer(tmp_path, remote)
+    subprocess.run(["git", "checkout", branch], cwd=writer, check=True, capture_output=True, text=True)
+    _commit_file(writer, "ops/status/system/latest.json", "remote\n", "remote advance")
+    subprocess.run(["git", "push", "origin", branch], cwd=writer, check=True, capture_output=True, text=True)
+    _commit_file(checkout, "ops/status/food-line/latest.json", "local\n", "local advance")
+
+    with pytest.raises(ExportError, match="cannot fast-forward"):
+        prepare_status_checkout(checkout, branch=branch)
+
+
+def test_prepare_status_checkout_rejects_dirty_checkout_before_fetch(tmp_path: Path) -> None:
+    branch = "ops/status/food-line-2026-09-10"
+    checkout, _remote = _init_status_checkout_with_remote(tmp_path, branch)
+    _commit_file(checkout, "ops/status/food-line/latest.json", "{}\n", "track status")
+    (checkout / "ops" / "status" / "food-line" / "latest.json").write_text("{\"dirty\":true}\n", encoding="utf-8")
+
+    with pytest.raises(ExportError, match="clean before fast-forward"):
+        prepare_status_checkout(checkout, branch=branch)
+
+
+def test_prepare_status_checkout_rejects_wrong_local_branch(tmp_path: Path) -> None:
+    branch = "ops/status/food-line-2026-09-10"
+    checkout, _remote = _init_status_checkout_with_remote(tmp_path, branch)
+    subprocess.run(["git", "checkout", "-b", "other-status-branch"], cwd=checkout, check=True, capture_output=True, text=True)
+
+    with pytest.raises(ExportError, match="branch mismatch"):
+        prepare_status_checkout(checkout, branch=branch)
+
+
+def test_prepare_status_checkout_does_not_use_force_reset_or_rebase(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    import bluefern_dispatches.operational_status_exporter as exporter
+
+    calls: list[list[str]] = []
+
+    def fake_run(args: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        calls.append(args)
+        if args[1:] == ["branch", "--show-current"]:
+            return subprocess.CompletedProcess(args, 0, stdout="ops/status/food-line-2026-09-10\n", stderr="")
+        return subprocess.CompletedProcess(args, 0, stdout="", stderr="")
+
+    monkeypatch.setattr(exporter.subprocess, "run", fake_run)
+
+    prepare_status_checkout(tmp_path, branch="ops/status/food-line-2026-09-10")
+
+    flattened = [part for call in calls for part in call]
+    assert "--force" not in flattened
+    assert "reset" not in flattened
+    assert "rebase" not in flattened
+    assert ["git", "merge", "--ff-only", "FETCH_HEAD"] in calls
 
 
 def test_commit_and_push_force_stages_ignored_ops_status_artifact(tmp_path: Path) -> None:

@@ -8,10 +8,10 @@ These are the current non-negotiable operating rules for this project.
 - The diagnostic ladder is intake, canonicalization, dedupe, classification, scoring, rendering, publishing.
 - This wide-discovery, strict-vetting pattern must remain reusable across Gaza, Food Line, and Care Line.
 - Gaza is daily, public, and free.
-- Cascadia is weekly.
-- Cascadia edition date is the Sunday `coverage_end`.
-- Cascadia public labels use the coverage range.
-- Cascadia archive, recent editions, and RSS are weekly-only.
+- Cascadia is intentionally inactive and has no active scheduled production expectation.
+- Historical Cascadia edition date is the Sunday `coverage_end`.
+- Historical Cascadia public labels use the coverage range.
+- Existing Cascadia archive, recent editions, and RSS are weekly-only historical output.
 - `output/detail` and `output/paid` must never appear under `output/site`.
 - The GitHub Pages deploy branch is `gh-pages`.
 - The Pages repo is publish output only.

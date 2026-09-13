@@ -535,6 +535,9 @@ def summarize_gaza(root: Path, pages_root: Path) -> dict[str, Any]:
 
 def summarize_cascadia(root: Path, pages_root: Path) -> dict[str, Any]:
     result = summarize_dispatch(root, pages_root, "cascadia", "The Cascadia Briefing")
+    result["operational_state"] = "INTENTIONALLY_INACTIVE"
+    result["expected_active_schedule"] = False
+    result["scheduled_health_classification"] = "INTENTIONALLY_INACTIVE"
     archive = read_text(root / "output" / "site" / "cascadia" / "archive.html")
     weekly_only = "Daily" not in archive and "daily" not in archive
     transitional_dates = {"2026-05-04", "2026-05-05"}
@@ -650,10 +653,7 @@ def summarize_cascadia(root: Path, pages_root: Path) -> dict[str, Any]:
     result["weak_date_warnings_by_source_id"] = warning_counts_by_source
     result["latest_weekly_quality_report_path"] = str(quality_path) if quality_path else None
     result["latest_registry_source_report_path"] = str(registry_report_path) if registry_report_path else None
-    result["recommended_next_action"] = _recommended_overall_cascadia_action(
-        registry_fetch_error_count=registry_fetch_error_count,
-        repeated_failure_patterns=repeated_failure_patterns,
-    )
+    result["recommended_next_action"] = "No scheduled production action; Cascadia is intentionally inactive."
     return result
 
 

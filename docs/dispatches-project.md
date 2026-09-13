@@ -333,7 +333,7 @@ Exit codes: `0` means the pipeline succeeded and email was sent, or email was no
 
 ## Cascadia Dispatch Pipeline
 
-The Cascadia pipeline is standalone inside this repository. It is separate from the older FDA/Cascadia media pipeline and must not depend on that project structure.
+The Cascadia pipeline is standalone inside this repository. It is separate from the older FDA/Cascadia media pipeline and must not depend on that project structure. Cascadia is intentionally inactive: historical code, source configuration, public archive history, and reference commands are retained, but no production runner should be registered, enabled, or executed without explicit operator authorization.
 
 ## American Pressure Data Retention
 
@@ -374,13 +374,13 @@ data/dispatches/cascadia/historical_sources.yml
 data/dispatches/cascadia/source_registry.yml
 ```
 
-Full run:
+Full run, only with explicit operator authorization:
 
 ```powershell
 python scripts\run_cascadia_dispatch.py --date YYYY-MM-DD --all
 ```
 
-Operational cadence:
+Historical/operator-only commands:
 
 ```powershell
 python scripts\run_cascadia_dispatch.py --date YYYY-MM-DD --daily
@@ -392,7 +392,7 @@ powershell -ExecutionPolicy Bypass -File scripts\run_weekly_cascadia.ps1
 python scripts\publish_github_pages.py --pages-repo "C:\PythonProjects\Dispatches From The Blue Fern Co\bluefern-dispatches-pages" --remote-url "https://github.com/RedGarland/the-blue-fern-co-dispatches.git" --pages-branch gh-pages --commit --no-push
 ```
 
-The public Cascadia edition is weekly. Monday runs cover the previous completed Monday-Sunday window. The project uses the Sunday coverage-end as the public edition date for weekly archives, so a `2026-05-11` run covers `2026-05-04` through `2026-05-10` and writes `/cascadia/editions/2026-05-10/`.
+Cascadia has no active production cadence. Historical weekly mode covered the previous completed Monday-Sunday window. The project uses the Sunday coverage-end as the public edition date for weekly archives, so a historical `2026-05-11` run covers `2026-05-04` through `2026-05-10` and writes `/cascadia/editions/2026-05-10/`.
 
 Historical search is a retrieval feature, not a migration from earlier Cascadia/FDA project records. It searches public provider material for the exact coverage window, writes source records under `data/dispatches/cascadia/sources/YYYY-MM-DD_YYYY-MM-DD/`, merges optional `manual_sources.json` supplements, dedupes, normalizes, scores, curates, and renders only source-backed weekly public stories. Supported modes are `--historical-provider all`, `--historical-provider manual`, `--historical-provider registry`, `--historical-provider gdelt`, and comma-separated combinations such as `registry,manual` or `gdelt,registry,manual`. Sparse weeks are explained by `historical_search_report.json`, including provider counts, manual validation status, registry cache/fetch diagnostics, GDELT cache/rate-limit diagnostics, dedupe counts, final saved source count, and a recommendation. Unsupported stories are omitted.
 
@@ -409,7 +409,7 @@ The Cascadia source portfolio is intentionally layered and free:
 
 The model requires no paid APIs or paid API keys, has no old project dependency, and follows the project rule: no fact without a traceable source URL. Registry sources live in `data/dispatches/cascadia/source_registry.yml`; registry feed cache files live under `data/dispatches/cascadia/cache/registry/`. Page-only official sources are retained as curated source inventory and diagnostics, but the collector only fetches RSS, Atom, and alert feeds automatically.
 
-Run weekly with all free providers:
+Run weekly with all free providers only with explicit operator authorization:
 
 ```powershell
 .\.venv\Scripts\python.exe scripts\run_cascadia_dispatch.py --date 2026-05-11 --weekly-public --historical-search --historical-provider all
@@ -457,13 +457,13 @@ Validate without publishing:
 python scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --validate-manual-sources
 ```
 
-Generate with manual plus registry plus GDELT:
+Generate with manual plus registry plus GDELT only with explicit operator authorization:
 
 ```powershell
 python scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --weekly-public --historical-search --historical-provider all
 ```
 
-Generate manual-only:
+Generate manual-only, only with explicit operator authorization:
 
 ```powershell
 python scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --weekly-public --historical-search --historical-provider manual
@@ -486,21 +486,21 @@ Manual records should include `source_record_id`, `title`, `url`, `publisher`, `
 Daily jobs:
 
 - Gaza daily pipeline
-- Cascadia daily/internal collection, if used
+- No Cascadia daily/internal collection; Cascadia is intentionally inactive.
 
 Weekly jobs:
 
-- Cascadia weekly public briefing
+- No Cascadia weekly public briefing; Cascadia is intentionally inactive.
 
-Task Scheduler setup for Cascadia:
+Task Scheduler setup for Cascadia, historical/reference only:
 
 - Task name: `Cascadia Weekly Briefing`
-- Trigger: Weekly, Monday, 7:00 AM local time
+- Trigger: disabled; do not register or enable without explicit operator authorization.
 - Program/script: `powershell.exe`
 - Start in: `C:\PythonProjects\Dispatches From The Blue Fern Co`
 - Keep separate from Gaza Daily Pipeline
 
-Arguments for the weekly Cascadia run with confirmation email and without push:
+Historical arguments for the weekly Cascadia run with confirmation email and without push:
 
 ```text
 -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\PythonProjects\Dispatches From The Blue Fern Co'; $env:CASCADIA_ALLOW_CURL_NO_REVOKE='1'; $env:CASCADIA_FETCH_BACKEND='auto'; $env:SMTP_RELAX_X509_STRICT='1'; & '.\.venv\Scripts\python.exe' 'scripts\run_cascadia_and_notify.py' --date (Get-Date -Format 'yyyy-MM-dd')"

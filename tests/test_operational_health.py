@@ -154,6 +154,33 @@ def test_missed_and_stale_observability_are_not_healthy() -> None:
     assert stale["overall_health"] == "STALE_OBSERVABILITY"
 
 
+def test_intentionally_inactive_dispatch_has_no_missed_run_alert() -> None:
+    aggregate = evaluate_dispatch_health(
+        dispatch="cascadia",
+        receipts=[],
+        expectations=MIGRATION_TASK_EXPECTATIONS.get("cascadia", ()),
+        evaluated_at="2026-09-14T20:00:00Z",
+    )
+
+    assert aggregate["overall_health"] == "SUCCESS"
+    assert aggregate["expected_tasks"] == []
+    assert aggregate["missed_tasks"] == []
+
+
+def test_intentionally_inactive_does_not_degrade_system_health() -> None:
+    system = evaluate_system_health(
+        [
+            {"dispatch": "food-line", "overall_health": "SUCCESS", "recovery_state": "HEALTHY"},
+            {"dispatch": "cascadia", "overall_health": "INTENTIONALLY_INACTIVE", "recovery_state": "HEALTHY"},
+        ],
+        evaluated_at="2026-09-14T20:00:00Z",
+    )
+
+    assert system["system_health"] == "SUCCESS"
+    assert system["dispatch_states"]["cascadia"]["overall_health"] == "INTENTIONALLY_INACTIVE"
+    assert system["stale_observability"] == []
+
+
 def test_public_site_independence() -> None:
     context = public_site_ignored_context(public_edition_date="2026-09-10", pages_commit="deadbeef")
     aggregate = evaluate_dispatch_health(
@@ -263,9 +290,13 @@ def test_backward_compatibility_with_existing_food_line_artifact_refs(tmp_path: 
 
 
 def test_migration_contract_lists_expected_dispatches() -> None:
-    assert sorted(MIGRATION_TASK_EXPECTATIONS) == ["american-pressure", "care-line", "cascadia", "food-line", "gaza", "ice"]
+    assert sorted(MIGRATION_TASK_EXPECTATIONS) == ["american-pressure", "care-line", "food-line", "gaza", "ice"]
+    assert "cascadia" not in MIGRATION_TASK_EXPECTATIONS
+    assert [task.task_key for task in MIGRATION_TASK_EXPECTATIONS["gaza"]] == ["gaza_daily_dispatch"]
+    assert [task.task_key for task in MIGRATION_TASK_EXPECTATIONS["food-line"]] == [task.task_key for task in FOOD_LINE_TASK_EXPECTATIONS]
     assert [task.task_key for task in MIGRATION_TASK_EXPECTATIONS["care-line"]] == [
         "care_line_collection",
         "care_line_reviewed_event_queue",
         "care_line_approved_release_publication",
     ]
+    assert [task.task_key for task in MIGRATION_TASK_EXPECTATIONS["ice"]] == ["ice_monitor"]

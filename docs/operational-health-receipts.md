@@ -90,6 +90,7 @@ Common statuses:
 - `MISSED`
 - `UNKNOWN`
 - `STALE_OBSERVABILITY`
+- `INTENTIONALLY_INACTIVE`
 
 Task execution health is separate from editorial outcome. A task can complete successfully while producing no public edition. Public edition existence is not authoritative operational-health evidence.
 
@@ -192,14 +193,15 @@ Rules:
 
 ## System aggregation
 
-System aggregation combines expected dispatches:
+System aggregation combines active expected dispatches and explicitly marks intentionally inactive dispatches:
 
 - `gaza`
 - `food-line`
 - `care-line`
 - `ice`
-- `cascadia`
 - `american-pressure`
+
+Cascadia is intentionally inactive. Its absence from scheduled receipts must not produce `MISSED`, `FAILED`, `NOT_MIGRATED`, or `UNKNOWN`; status surfaces should report `INTENTIONALLY_INACTIVE` until a separate operator authorization reactivates it.
 
 It reports system health, dispatch states, open incidents, recovery-pending dispatches, and stale observability.
 
@@ -251,11 +253,7 @@ production migration or a public edition.
 
 ### Cascadia
 
-- Task key: `cascadia_weekly_dispatch`.
-- Emission point: weekly dispatch task wrapper after generation/publication decision.
-- Success/no-op: completed scheduled edition is `SUCCESS`; explicitly no qualifying edition is `SAFE_NO_OP`; failures are `FAILED`.
-- Dependencies: configured source and publication surfaces.
-- Likely grace window: 24 hours.
+Cascadia is intentionally inactive. There is no active expected scheduled task, and missing weekly receipts are not missed-run evidence. Historical task key `cascadia_weekly_dispatch` and archive/public content may remain for reference, but no runner should be registered, enabled, or executed without explicit operator authorization.
 
 ### American Pressure
 
@@ -332,8 +330,9 @@ supplementary until scheduled Care receipts are migrated.
 5. Read `publication_attempted`, `publication_status`, and `public_side_effects`
    independently. No public edition is not itself a task failure.
 
-The system artifact marks Food Line `MIGRATED` and all other dispatches
-`NOT_MIGRATED`; those entries are not synthesized failures. Migration order is:
+The system artifact marks Food Line `MIGRATED`, Cascadia
+`INTENTIONALLY_INACTIVE`, and other non-migrated dispatches `NOT_MIGRATED`;
+those entries are not synthesized failures. Migration order is:
 
 1. Food Line
 2. Care Line

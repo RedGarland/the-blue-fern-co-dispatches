@@ -26,6 +26,7 @@ class OperationalStatus(StrEnum):
     MISSED = "MISSED"
     UNKNOWN = "UNKNOWN"
     STALE_OBSERVABILITY = "STALE_OBSERVABILITY"
+    INTENTIONALLY_INACTIVE = "INTENTIONALLY_INACTIVE"
 
 
 class RecoveryState(StrEnum):
@@ -150,9 +151,6 @@ MIGRATION_TASK_EXPECTATIONS: dict[str, tuple[TaskExpectation, ...]] = {
     "care-line": CARE_LINE_TASK_EXPECTATIONS,
     "ice": (
         TaskExpectation("ice", "ice_monitor", "Daily - ICE Monitor", "America/Los_Angeles", "daily", "21:15", 180),
-    ),
-    "cascadia": (
-        TaskExpectation("cascadia", "cascadia_weekly_dispatch", "Weekly - Cascadia Briefing", "America/Los_Angeles", "weekly", "configured scheduler time", 24 * 60),
     ),
     "american-pressure": (
         TaskExpectation("american-pressure", "american_pressure_candidate_intake", "American Pressure Daily Candidate Intake", "America/Los_Angeles", "daily", "configured scheduler time", 180),

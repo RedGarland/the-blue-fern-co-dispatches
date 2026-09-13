@@ -720,9 +720,7 @@ def commit_and_push_status(
     validate_status_paths(actual)
     if set(actual) - set(paths):
         raise ExportError("status checkout contains an unapproved ops/status path")
-    if not actual:
-        return None
-    staged = _git(status_checkout, "add", "--", *paths)
+    staged = _git(status_checkout, "add", "--force", "--", *paths)
     if staged.returncode:
         raise ExportError(staged.stderr.strip() or "status artifact staging failed")
     staged_names = _git(status_checkout, "diff", "--cached", "--name-only")
@@ -730,6 +728,8 @@ def commit_and_push_status(
         raise ExportError(staged_names.stderr.strip() or "cannot inspect staged status artifacts")
     staged_paths = [line.strip().replace("\\", "/") for line in staged_names.stdout.splitlines() if line.strip()]
     validate_status_paths(staged_paths)
+    if not staged_paths:
+        return None
     commit = _git(status_checkout, "commit", "-m", message)
     if commit.returncode:
         raise ExportError(commit.stderr.strip() or "status artifact commit failed")

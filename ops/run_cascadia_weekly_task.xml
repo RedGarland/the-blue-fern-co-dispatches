@@ -3,12 +3,12 @@
   <RegistrationInfo>
     <Date>2026-05-10T00:00:00</Date>
     <Author>REPLACE_WITH_USER</Author>
-    <Description>Run Blue Fern Cascadia weekly public briefing and send a confirmation email without pushing.</Description>
+    <Description>Historical/reference only. Cascadia is intentionally inactive; do not register or enable this task without explicit operator authorization.</Description>
   </RegistrationInfo>
   <Triggers>
     <CalendarTrigger>
       <StartBoundary>2026-05-11T07:00:00</StartBoundary>
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <ScheduleByWeek>
         <DaysOfWeek>
           <Monday />
@@ -36,7 +36,7 @@
       <RestartOnIdle>false</RestartOnIdle>
     </IdleSettings>
     <AllowStartOnDemand>true</AllowStartOnDemand>
-    <Enabled>true</Enabled>
+    <Enabled>false</Enabled>
     <Hidden>false</Hidden>
     <RunOnlyIfIdle>false</RunOnlyIfIdle>
     <WakeToRun>false</WakeToRun>

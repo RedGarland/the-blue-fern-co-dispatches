@@ -34,7 +34,8 @@ SAFE_KEY_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 HEX_HEAD_RE = re.compile(r"^[0-9a-f]{7,64}$", re.IGNORECASE)
 PRIVATE_KEY_RE = re.compile(r"(?:path|body|excerpt|source|raw|secret|token|credential|password|environment|env)", re.IGNORECASE)
 
-NON_MIGRATED_DISPATCHES = ("gaza", "care-line", "ice", "cascadia", "american-pressure")
+NON_MIGRATED_DISPATCHES = ("gaza", "care-line", "ice", "american-pressure")
+INTENTIONALLY_INACTIVE_DISPATCHES = ("cascadia",)
 HANDOFF_STATES = {
     "NO_EXTERNAL_HANDOFF_EXPECTED",
     "HANDOFF_RECEIVED_SUCCESS",
@@ -499,6 +500,25 @@ def build_system_status(
             "agent_handoff": load_agent_handoff_status(source_root, dispatch)
             if dispatch in {"care-line", "food-line"}
             else {
+                "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
+                "last_attempt_at": None,
+                "last_success_at": None,
+                "last_failure_at": None,
+                "latest_agent_run_id": None,
+                "latest_status": None,
+                "latest_classification": None,
+                "unaccounted_count": 0,
+                "stale": False,
+            },
+        }
+    for dispatch in INTENTIONALLY_INACTIVE_DISPATCHES:
+        states[dispatch] = {
+            "migration_status": "INTENTIONALLY_INACTIVE",
+            "aggregate_status": OperationalStatus.INTENTIONALLY_INACTIVE.value,
+            "recovery_lifecycle": RecoveryState.HEALTHY.value,
+            "scheduled_health_available": False,
+            "expected_active_schedule": False,
+            "agent_handoff": {
                 "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
                 "last_attempt_at": None,
                 "last_success_at": None,

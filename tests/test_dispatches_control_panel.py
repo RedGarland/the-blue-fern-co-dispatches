@@ -172,6 +172,20 @@ def test_cascadia_wording_when_only_fetch_rate_is_issue():
     assert "do not disable sources unless failures are persistent" in cards["cascadia"]["next_action"]
 
 
+def test_cascadia_card_distinguishes_intentionally_inactive_state():
+    raw = _base_status()
+    raw["dispatches"]["cascadia"]["operational_state"] = "INTENTIONALLY_INACTIVE"
+    raw["dispatches"]["cascadia"]["expected_active_schedule"] = False
+
+    cards = cp.build_health_cards(raw)
+
+    assert cards["cascadia"]["status"] == "OK"
+    assert cards["cascadia"]["operational_state"] == "INTENTIONALLY_INACTIVE"
+    assert cards["cascadia"]["expected_active_schedule"] is False
+    assert cards["cascadia"]["main_issue"] == "Cascadia is intentionally inactive."
+    assert cards["cascadia"]["next_action"] == "Do not register, enable, or run Cascadia without explicit operator authorization."
+
+
 def test_cascadia_registry_persistent_failures_trigger_source_action_wording():
     raw = _base_status()
     raw["dispatches"]["cascadia"]["weak_date_warning_count"] = 0

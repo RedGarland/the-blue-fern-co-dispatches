@@ -146,6 +146,11 @@ def _resolve_title(slug: str, edition_dir: Path, manifest: dict[str, Any]) -> st
     index_path = edition_dir / "index.html"
     if index_path.exists():
         text = index_path.read_text(encoding="utf-8", errors="replace")
+        m = re.search(r"<h1(?:\s[^>]*)?>(.*?)</h1>", text, re.DOTALL | re.IGNORECASE)
+        if m:
+            title = html.unescape(re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", m.group(1)))).strip()
+            if title:
+                return title
         if slug == "american-pressure":
             m = re.search(r"<em>Source:\s*<a [^>]*>([^<]+)</a>", text, re.DOTALL)
             if m:

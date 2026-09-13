@@ -152,6 +152,74 @@ def test_export_is_idempotent_and_atomic(tmp_path: Path) -> None:
     assert not list(checkout.rglob("*.tmp"))
 
 
+def test_export_reuses_food_timestamp_but_advances_changed_system_timestamp(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    import bluefern_dispatches.operational_status_exporter as exporter
+
+    source = _write_day(tmp_path)
+    checkout = tmp_path / "status-checkout"
+    first = "2026-09-10T16:01:00Z"
+    second = "2026-09-10T17:01:00Z"
+    monkeypatch.setattr(exporter, "NON_MIGRATED_DISPATCHES", ("gaza", "care-line", "ice", "american-pressure", "cascadia"))
+    monkeypatch.setattr(exporter, "INTENTIONALLY_INACTIVE_DISPATCHES", ())
+    export_status(source_root=source, status_checkout=checkout, date=DATE, evaluated_at=EVALUATED, exported_at=first)
+
+    monkeypatch.setattr(exporter, "NON_MIGRATED_DISPATCHES", ("gaza", "care-line", "ice", "american-pressure"))
+    monkeypatch.setattr(exporter, "INTENTIONALLY_INACTIVE_DISPATCHES", ("cascadia",))
+    result = export_status(source_root=source, status_checkout=checkout, date=DATE, evaluated_at=EVALUATED, exported_at=second)
+
+    assert result["food_line"]["last_exported_at"] == first
+    assert result["system"]["exported_at"] == second
+    assert result["system"]["dispatches"]["cascadia"]["migration_status"] == "INTENTIONALLY_INACTIVE"
+
+
+def test_export_reuses_system_timestamp_when_payload_is_unchanged(tmp_path: Path) -> None:
+    source = _write_day(tmp_path)
+    checkout = tmp_path / "status-checkout"
+
+    first = export_status(source_root=source, status_checkout=checkout, date=DATE, evaluated_at=EVALUATED, exported_at="2026-09-10T16:01:00Z")
+    second = export_status(source_root=source, status_checkout=checkout, date=DATE, evaluated_at=EVALUATED, exported_at="2026-09-10T17:01:00Z")
+
+    assert second["food_line"]["last_exported_at"] == first["food_line"]["last_exported_at"]
+    assert second["system"]["exported_at"] == first["system"]["exported_at"]
+
+
+def test_export_advances_food_and_system_timestamps_when_food_changes(tmp_path: Path) -> None:
+    checkout = tmp_path / "status-checkout"
+    first_source = _write_day(tmp_path / "first")
+    success_statuses = {key: (action, "completed", 0) for key, (action, _, _) in TASKS.items()}
+    second_source = _write_day(tmp_path / "second", success_statuses)
+
+    export_status(source_root=first_source, status_checkout=checkout, date=DATE, evaluated_at=EVALUATED, exported_at="2026-09-10T16:01:00Z")
+    result = export_status(source_root=second_source, status_checkout=checkout, date=DATE, evaluated_at=EVALUATED, exported_at="2026-09-10T17:01:00Z")
+
+    assert result["food_line"]["last_exported_at"] == "2026-09-10T17:01:00Z"
+    assert result["system"]["exported_at"] == "2026-09-10T17:01:00Z"
+    assert result["food_line"]["aggregate_status"] == "SUCCESS"
+
+
+def test_export_advances_system_timestamp_for_care_style_system_only_change(tmp_path: Path) -> None:
+    source = _write_day(tmp_path)
+    care_source = tmp_path / "care-source"
+    checkout = tmp_path / "status-checkout"
+    first = "2026-09-10T16:01:00Z"
+    second = "2026-09-10T17:01:00Z"
+
+    export_status(source_root=source, status_checkout=checkout, date=DATE, evaluated_at=EVALUATED, exported_at=first)
+    result = export_status(
+        source_root=source,
+        status_checkout=checkout,
+        date=DATE,
+        evaluated_at=EVALUATED,
+        exported_at=second,
+        care_source_root=care_source,
+    )
+
+    assert result["food_line"]["last_exported_at"] == first
+    assert result["care_line"]["last_exported_at"] == second
+    assert result["system"]["exported_at"] == second
+    assert result["system"]["dispatches"]["care-line"]["scheduled_health_available"] is False
+
+
 def test_lock_prevents_overlap_and_status_scope_is_enforced(tmp_path: Path) -> None:
     with exporter_lock(tmp_path):
         with pytest.raises(ExportError):

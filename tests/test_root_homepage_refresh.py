@@ -102,6 +102,46 @@ def _write_release(
         path.write_text(existing.replace(suffix, linked + suffix), encoding="utf-8")
 
 
+def _write_recovery_shaped_food_release(root: Path, edition_date: str) -> None:
+    edition_dir = root / "food-line" / "editions" / edition_date
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    (edition_dir / "index.html").write_text(
+        """
+        <html><body>
+        <h1>Food Line recovery-disclosed publication</h1>
+        <article class="story">
+          <h2>Hawaii Island Salvation Army pantries report staple shortages after Lala</h2>
+        </article>
+        </body></html>
+        """,
+        encoding="utf-8",
+    )
+    (edition_dir / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "food-line",
+                "edition_date": edition_date,
+                "public_url": f"https://dispatches.thebluefernco.com/food-line/editions/{edition_date}/",
+                "source_count": 4,
+                "publication_status": "published_pending_live_verification",
+            }
+        ),
+        encoding="utf-8",
+    )
+    (edition_dir / "sources_manifest.json").write_text(json.dumps([{"title": f"Source {i}"} for i in range(4)]), encoding="utf-8")
+    dispatch_root = root / "food-line"
+    dispatch_root.mkdir(parents=True, exist_ok=True)
+    for filename, prefix, suffix in (
+        ("archive.html", "<html><body>", "</body></html>"),
+        ("index.html", "<html><body>", "</body></html>"),
+        ("rss.xml", "<rss>", "</rss>"),
+    ):
+        (dispatch_root / filename).write_text(
+            f'{prefix}<a href="editions/{edition_date}/">Recovery-disclosed Food Line publication</a>{suffix}',
+            encoding="utf-8",
+        )
+
+
 def test_homepage_refresh_discovers_all_active_products_and_fills_extra_slots(tmp_path):
     public_root = tmp_path / "pages"
     homepage = TEMPLATE_HTML
@@ -154,6 +194,78 @@ def test_homepage_refresh_excludes_future_unpublished_and_signal_wire_like_recor
     assert all(release.edition_date <= "2026-08-05" for release in releases)
     assert all(release.slug != "american-pressure" for release in releases)
     assert all("events/" not in release.relative_url for release in releases)
+
+
+def test_homepage_refresh_uses_edition_h1_for_recovery_shaped_food_release(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_release(
+        public_root,
+        "food-line",
+        "2026-08-31",
+        title="Phoenix food-box demand rose as Arizona SNAP access contracted",
+        source_count=3,
+        public_release_status="approved_pending_pages_publication",
+        pages_release_status="not_synced",
+    )
+    _write_recovery_shaped_food_release(public_root, "2026-09-12")
+
+    releases = discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 13), homepage_html=TEMPLATE_HTML)
+    latest = select_effective_latest(releases)
+
+    food = latest["food-line"]
+    assert food.edition_date == "2026-09-12"
+    assert food.title == "Food Line recovery-disclosed publication"
+    assert food.source_count == 4
+    assert "Hawaii Island Salvation Army pantries" not in food.title
+
+
+def test_homepage_refresh_manifest_title_precedence_over_h1(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_release(public_root, "food-line", "2026-09-12", title="Manifest title wins", source_count=4)
+    index_path = public_root / "food-line" / "editions" / "2026-09-12" / "index.html"
+    index_path.write_text("<html><body><h1>Rendered title loses</h1><article><h3>Fallback loses</h3></article></body></html>", encoding="utf-8")
+
+    releases = discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 13), homepage_html=TEMPLATE_HTML)
+
+    assert releases[0].title == "Manifest title wins"
+
+
+def test_homepage_refresh_keeps_existing_h3_and_list_fallbacks(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_release(public_root, "gaza", "2026-09-12", title="H3 fallback title", source_count=2)
+    food_dir = public_root / "food-line" / "editions" / "2026-09-12"
+    food_dir.mkdir(parents=True)
+    (food_dir / "index.html").write_text('<html><body><li><a href="story.html">List fallback title</a></li></body></html>', encoding="utf-8")
+    (food_dir / "edition_manifest.json").write_text(
+        json.dumps({"dispatch_slug": "food-line", "edition_date": "2026-09-12", "source_count": 1, "public_release_status": "published"}),
+        encoding="utf-8",
+    )
+    (food_dir / "sources_manifest.json").write_text(json.dumps([{"title": "Source"}]), encoding="utf-8")
+    (public_root / "food-line" / "archive.html").parent.mkdir(parents=True, exist_ok=True)
+    (public_root / "food-line" / "archive.html").write_text('<a href="editions/2026-09-12/">listed</a>', encoding="utf-8")
+
+    releases = discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 13), homepage_html=TEMPLATE_HTML)
+    by_slug = {release.slug: release for release in releases}
+
+    assert by_slug["gaza"].title == "H3 fallback title"
+    assert by_slug["food-line"].title == "List fallback title"
+
+
+def test_homepage_refresh_titleless_release_still_fails_closed(tmp_path):
+    public_root = tmp_path / "pages"
+    edition_dir = public_root / "food-line" / "editions" / "2026-09-12"
+    edition_dir.mkdir(parents=True)
+    (edition_dir / "index.html").write_text("<html><body><article><p>No title here</p></article></body></html>", encoding="utf-8")
+    (edition_dir / "edition_manifest.json").write_text(
+        json.dumps({"dispatch_slug": "food-line", "edition_date": "2026-09-12", "source_count": 4, "public_release_status": "published"}),
+        encoding="utf-8",
+    )
+    (edition_dir / "sources_manifest.json").write_text(json.dumps([{"title": "Source"}] * 4), encoding="utf-8")
+    dispatch_root = public_root / "food-line"
+    dispatch_root.mkdir(parents=True, exist_ok=True)
+    (dispatch_root / "archive.html").write_text('<a href="editions/2026-09-12/">listed</a>', encoding="utf-8")
+
+    assert discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 13), homepage_html=TEMPLATE_HTML) == []
 
 
 def test_homepage_refresh_supports_legacy_manifestless_release_when_listed_publicly(tmp_path):

@@ -1,0 +1,241 @@
+[
+  {
+    "story_id": "gaza-story-2026-09-13-003",
+    "title": "Israeli attack on Gaza kills two Palestinians",
+    "summary": "Israeli strikes on Palestinian territory persist despite a 'ceasefire' brokered by the United States.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 70,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-13-aljazeera-middle-east-7687f5f4e6c1"
+    ],
+    "source_ids": [
+      "gaza-2026-09-13-aljazeera-middle-east-7687f5f4e6c1"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/9/13/israeli-attack-on-gaza-kills-two-palestinians?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-13-aljazeera-middle-east-7687f5f4e6c1",
+        "title": "Israeli attack on Gaza kills two Palestinians",
+        "url": "https://www.aljazeera.com/news/2026/9/13/israeli-attack-on-gaza-kills-two-palestinians?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Israeli strikes on Palestinian territory persist despite a 'ceasefire' brokered by the United States.",
+        "event_date": "2026-09-13T10:22:01+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-13T13:00:52.248849+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 70,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-13T10:22:01+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-15-005",
+    "prior_edition_date": "2026-07-15",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-13-002",
+    "title": "IDF soldier filmed shooting Palestinian in leg amid West Bank settler standoff",
+    "summary": "Incident is latest to raise questions over. Israel's ability or willingness to stop violent settlers in occupied territory. An Israeli soldier has shot a Palestinian man, wounding him in the leg, as settlers confronted villagers by grazing livestock on Palestinian-owned land in the town of Faqqua in the occupied West Bank. Witnesses said a group of settlers had entered the area with their livestock, prompting residents to try to stop them. Israeli forces then intervened and, according to men at the scene, opened fire at residents. One of them shot Qassem Hussam, a Palestinian man in his mid-30s, wounding him in the leg.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 57,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-13-guardian-world-faa5324f052a"
+    ],
+    "source_ids": [
+      "gaza-2026-09-13-guardian-world-faa5324f052a"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/sep/12/idf-soldier-filmed-shooting-palestinian-in-leg-amid-west-bank-settler-standoff"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-13-guardian-world-faa5324f052a",
+        "title": "IDF soldier filmed shooting Palestinian in leg amid West Bank settler standoff",
+        "url": "https://www.theguardian.com/world/2026/sep/12/idf-soldier-filmed-shooting-palestinian-in-leg-amid-west-bank-settler-standoff",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Incident is latest to raise questions over Israel's ability or willingness to stop violent settlers in occupied territory An Israeli soldier has shot a Palestinian man, wounding him in the leg, as settlers confronted villagers by grazing livestock on Palestinian-owned land in the town of Faqqua in the occupied West Bank. Witnesses said a group of settlers had entered the area with their livestock, prompting residents to try to stop them. Israeli forces then intervened and, according to men at the scene, opened fire at residents. One of them shot Qassem Hussam, a Palestinian man in his mid-30s, wounding him in the leg.",
+        "event_date": "2026-09-12T13:44:10+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-13T13:00:52.248849+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 57,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-12T13:44:10+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-08-007",
+    "prior_edition_date": "2026-09-08",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-13-001",
+    "title": "Humanitarian Situation Report | 11 September 2026",
+    "summary": "Official OCHA humanitarian situation report.",
+    "category": "humanitarian",
+    "story_scope": "core_gaza",
+    "score": 48,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 20,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-13-ocha-opt-updates-4d6a1d8b9a02"
+    ],
+    "source_ids": [
+      "gaza-2026-09-13-ocha-opt-updates-4d6a1d8b9a02"
+    ],
+    "source_urls": [
+      "https://www.ochaopt.org/content/humanitarian-situation-report-11-september-2026"
+    ],
+    "publisher_names": [
+      "OCHA"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-13-ocha-opt-updates-4d6a1d8b9a02",
+        "title": "Humanitarian Situation Report | 11 September 2026",
+        "url": "https://www.ochaopt.org/content/humanitarian-situation-report-11-september-2026",
+        "canonical_url": "https://www.ochaopt.org/content/humanitarian-situation-report-11-september-2026",
+        "publisher": "OCHA",
+        "summary_or_snippet": "Official OCHA humanitarian situation report.",
+        "event_date": "2026-09-11T00:00:00+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "humanitarian",
+        "attribution": "OCHA",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-13T13:00:52.248849+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 48,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "official_humanitarian",
+    "claim_status": "official_humanitarian",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "humanitarian",
+    "location": "Gaza",
+    "event_date": "2026-09-11T00:00:00+00:00",
+    "attribution": "OCHA",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

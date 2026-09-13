@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -10,6 +11,7 @@ from bluefern_dispatches.operational_health import RecoveryContext, build_operat
 from bluefern_dispatches.operational_status_exporter import (
     ExportError,
     build_food_line_status,
+    commit_and_push_status,
     exporter_lock,
     export_status,
     validate_status_paths,
@@ -157,6 +159,95 @@ def test_lock_prevents_overlap_and_status_scope_is_enforced(tmp_path: Path) -> N
     validate_status_paths(["ops/status/food-line/latest.json"])
     with pytest.raises(ExportError):
         validate_status_paths(["output/site/index.html"])
+
+
+def _init_status_git_repo(path: Path) -> None:
+    path.mkdir()
+    subprocess.run(["git", "init"], cwd=path, check=True, capture_output=True, text=True)
+    subprocess.run(["git", "config", "user.email", "status-test@example.invalid"], cwd=path, check=True)
+    subprocess.run(["git", "config", "user.name", "Status Test"], cwd=path, check=True)
+    (path / ".gitignore").write_text("status/\nops/status/\n", encoding="utf-8")
+    subprocess.run(["git", "add", ".gitignore"], cwd=path, check=True)
+    subprocess.run(["git", "commit", "-m", "initial"], cwd=path, check=True, capture_output=True, text=True)
+
+
+def test_commit_and_push_force_stages_ignored_ops_status_artifact(tmp_path: Path) -> None:
+    checkout = tmp_path / "status"
+    _init_status_git_repo(checkout)
+    target = checkout / "ops" / "status" / "food-line" / "latest.json"
+    target.parent.mkdir(parents=True)
+    target.write_text("{}\n", encoding="utf-8")
+
+    commit = commit_and_push_status(
+        checkout,
+        paths=["ops/status/food-line/latest.json"],
+        message="export status",
+        remote=".",
+        branch="HEAD",
+    )
+
+    assert commit
+    staged = subprocess.run(
+        ["git", "show", "--name-only", "--format=", "HEAD"],
+        cwd=checkout,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    assert staged.stdout.strip() == "ops/status/food-line/latest.json"
+
+
+def test_commit_and_push_still_rejects_paths_outside_ops_status(tmp_path: Path) -> None:
+    checkout = tmp_path / "status"
+    _init_status_git_repo(checkout)
+    outside = checkout / "status" / "food-line" / "latest.json"
+    outside.parent.mkdir(parents=True)
+    outside.write_text("{}\n", encoding="utf-8")
+
+    with pytest.raises(ExportError, match="outside ops/status"):
+        commit_and_push_status(
+            checkout,
+            paths=["status/food-line/latest.json"],
+            message="bad status",
+            remote=".",
+            branch="HEAD",
+        )
+
+
+def test_commit_and_push_rejects_unapproved_dirty_production_or_pages_paths(tmp_path: Path) -> None:
+    checkout = tmp_path / "status"
+    _init_status_git_repo(checkout)
+    (checkout / "ops" / "status" / "food-line").mkdir(parents=True)
+    (checkout / "ops" / "status" / "food-line" / "latest.json").write_text("{}\n", encoding="utf-8")
+    (checkout / "bluefern-dispatches-pages").mkdir()
+    (checkout / "bluefern-dispatches-pages" / "index.html").write_text("public\n", encoding="utf-8")
+
+    with pytest.raises(ExportError, match="outside ops/status"):
+        commit_and_push_status(
+            checkout,
+            paths=["ops/status/food-line/latest.json"],
+            message="export status",
+            remote=".",
+            branch="HEAD",
+        )
+
+
+def test_local_runtime_status_remains_ignored_without_force_add(tmp_path: Path) -> None:
+    checkout = tmp_path / "status"
+    _init_status_git_repo(checkout)
+    runtime = checkout / "status" / "food-line" / "runtime" / "state.json"
+    runtime.parent.mkdir(parents=True)
+    runtime.write_text("{}\n", encoding="utf-8")
+
+    listed = subprocess.run(
+        ["git", "status", "--porcelain=v1", "--untracked-files=all"],
+        cwd=checkout,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    assert "status/food-line/runtime/state.json" not in listed.stdout
 
 
 def test_system_marks_non_migrated_dispatches_without_calling_them_failed(tmp_path: Path) -> None:

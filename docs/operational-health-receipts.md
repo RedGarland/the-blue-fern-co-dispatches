@@ -332,14 +332,19 @@ supplementary until scheduled Care receipts are migrated.
 
 The system artifact marks Food Line `MIGRATED`, Cascadia
 `INTENTIONALLY_INACTIVE`, and other non-migrated dispatches `NOT_MIGRATED`;
-those entries are not synthesized failures. Migration order is:
+those entries are not synthesized failures.
+
+Migration order for active dispatches:
 
 1. Food Line
 2. Care Line
 3. Gaza
 4. ICE
-5. Cascadia
-6. American Pressure
+5. American Pressure
+
+Cascadia is intentionally inactive and is not in the active migration queue. It
+may re-enter the migration plan only after separate explicit operator
+authorization to reactivate Cascadia.
 
 ## Git contention strategy
 

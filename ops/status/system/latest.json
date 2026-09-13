@@ -44,9 +44,11 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "UNKNOWN",
-      "migration_status": "NOT_MIGRATED",
-      "recovery_lifecycle": "HEALTHY"
+      "aggregate_status": "INTENTIONALLY_INACTIVE",
+      "expected_active_schedule": false,
+      "migration_status": "INTENTIONALLY_INACTIVE",
+      "recovery_lifecycle": "HEALTHY",
+      "scheduled_health_available": false
     },
     "food-line": {
       "agent_handoff": {

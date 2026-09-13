@@ -494,6 +494,30 @@ def test_cascadia_summary_includes_failure_counts_and_top_sources(tmp_path, monk
     assert cascadia["registry_fetch_errors_by_source_status"][0]["status_code"] == 404
     assert cascadia["repeated_registry_failures"][0]["source_id"] == "or-odot-news"
     assert cascadia["repeated_registry_failures"][0]["count"] == 2
+    assert cascadia["operational_state"] == "INTENTIONALLY_INACTIVE"
+    assert cascadia["expected_active_schedule"] is False
+    assert cascadia["recommended_next_action"] == "No scheduled production action; Cascadia is intentionally inactive."
+
+
+def test_cascadia_task_xml_is_disabled_and_reference_only() -> None:
+    text = (Path(__file__).resolve().parents[1] / "ops" / "run_cascadia_weekly_task.xml").read_text(encoding="utf-8")
+    assert "<Enabled>true</Enabled>" not in text
+    assert text.count("<Enabled>false</Enabled>") >= 2
+    assert "intentionally inactive" in text
+    assert "explicit operator authorization" in text
+
+
+def test_operator_docs_do_not_present_cascadia_as_active_schedule() -> None:
+    root = Path(__file__).resolve().parents[1]
+    readme = (root / "README.md").read_text(encoding="utf-8")
+    project = (root / "docs" / "dispatches-project.md").read_text(encoding="utf-8")
+    combined = readme + "\n" + project
+
+    assert "Cascadia is intentionally inactive" in combined
+    assert "No Cascadia daily/internal collection; Cascadia is intentionally inactive." in combined
+    assert "No Cascadia weekly public briefing; Cascadia is intentionally inactive." in combined
+    assert "Trigger: Weekly, Monday, 7:00 AM local time" not in combined
+    assert "Trigger: disabled; do not register or enable without explicit operator authorization." in combined
 
 
 def test_build_cascadia_source_reliability_audit_classifies_dead_and_diagnostics(tmp_path):
@@ -545,7 +569,7 @@ def test_cascadia_single_registry_error_recommendation_avoids_overreaction(tmp_p
     _stub_git(monkeypatch, root=root, pages=pages)
     status = dispatches_status.build_status(root, pages)
     cascadia = status["dispatches"]["cascadia"]
-    assert "Avoid overreacting to a single fetch error" in cascadia["recommended_next_action"]
+    assert cascadia["recommended_next_action"] == "No scheduled production action; Cascadia is intentionally inactive."
     assert cascadia["repeated_registry_failures"] == []
 
 

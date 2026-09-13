@@ -102,6 +102,9 @@ Read `docs/production-readiness-contract.md` before any production-change task.
 
 ### Cascadia
 
+- Cascadia is intentionally inactive. Do not register, enable, repair,
+  reprovision, or execute a Cascadia production runner without explicit
+  operator authorization.
 - Cascadia remains separate from Gaza, Food Line, Care Line, and American Pressure.
 - Keep weekly public output distinct from private detail packages.
 - Never copy detail-only records into public site output.

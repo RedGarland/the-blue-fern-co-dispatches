@@ -1036,7 +1036,9 @@ def build_health_cards(status_json: dict[str, Any]) -> dict[str, Any]:
             "latest_collection_report": gaza.get("latest_collection_report") or {},
         },
         "cascadia": {
-            "status": _severity_review() if (health["flags"]["cascadia_fetch_rate_low"] or health["flags"]["cascadia_weak_date_warnings"] or health["flags"]["cascadia_registry_errors_need_review"]) else _severity_ok(),
+            "status": _severity_ok() if cascadia.get("operational_state") == "INTENTIONALLY_INACTIVE" else _severity_review() if (health["flags"]["cascadia_fetch_rate_low"] or health["flags"]["cascadia_weak_date_warnings"] or health["flags"]["cascadia_registry_errors_need_review"]) else _severity_ok(),
+            "operational_state": cascadia.get("operational_state"),
+            "expected_active_schedule": cascadia.get("expected_active_schedule"),
             "latest_weekly_edition_date": cascadia.get("latest_weekly_edition_date"),
             "latest_public_edition_date": cascadia.get("latest_public_edition_date"),
             "latest_pages_edition_date": cascadia.get("latest_pages_edition_date"),
@@ -1058,6 +1060,9 @@ def build_health_cards(status_json: dict[str, Any]) -> dict[str, Any]:
             "repeated_registry_failures": health.get("repeated_registry_failures") or [],
             "persistent_failure_type_counts": health.get("persistent_failure_type_counts") or {},
             "main_issue": (
+                "Cascadia is intentionally inactive."
+                if cascadia.get("operational_state") == "INTENTIONALLY_INACTIVE"
+                else
                 "Fetch success rate is below target."
                 if health["flags"]["cascadia_fetch_rate_low"] and not health["flags"]["cascadia_weak_date_warnings"] and not health["flags"]["cascadia_registry_errors_need_review"]
                 else "Discovery works, but source reliability needs cleanup."
@@ -1065,6 +1070,9 @@ def build_health_cards(status_json: dict[str, Any]) -> dict[str, Any]:
                 else "No blocking Cascadia issue."
             ),
             "next_action": (
+                "Do not register, enable, or run Cascadia without explicit operator authorization."
+                if cascadia.get("operational_state") == "INTENTIONALLY_INACTIVE"
+                else
                 "Raise fetch success rate to target and monitor isolated registry errors; do not disable sources unless failures are persistent."
                 if health["flags"]["cascadia_fetch_rate_low"] and not health["flags"]["cascadia_weak_date_warnings"] and not health["flags"]["cascadia_registry_errors_need_review"]
                 else "Disable/deprioritize dead registry sources and reduce reliability warning noise."

@@ -387,6 +387,9 @@ def test_system_marks_non_migrated_dispatches_without_calling_them_failed(tmp_pa
     assert dispatches["food-line"]["migration_status"] == "MIGRATED"
     assert dispatches["gaza"]["migration_status"] == "NOT_MIGRATED"
     assert dispatches["gaza"]["aggregate_status"] == "UNKNOWN"
+    assert dispatches["cascadia"]["migration_status"] == "INTENTIONALLY_INACTIVE"
+    assert dispatches["cascadia"]["aggregate_status"] == "INTENTIONALLY_INACTIVE"
+    assert dispatches["cascadia"]["expected_active_schedule"] is False
 
 
 def test_sanitizer_excludes_local_paths_and_private_material(tmp_path: Path) -> None:

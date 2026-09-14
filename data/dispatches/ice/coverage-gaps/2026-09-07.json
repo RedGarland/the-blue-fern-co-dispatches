@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.ice.coverage_gap.v1",
+  "dispatch": "ice",
+  "observation_date": "2026-09-07",
+  "observation_status": "OBSERVED_WITH_FINDINGS",
+  "gap_reason": "successful_monitor_run_missed_source_backed_public_development_identified_by_operator_recall_audit",
+  "detected_at": "2026-09-14",
+  "backfill_status": "RECOVERED",
+  "recovered_at": "2026-09-14",
+  "recovered_event_ids": [
+    "ice-2026-09-07-camp-east-montana-detention-disturbance"
+  ],
+  "source_refs": [
+    "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/recovery-review-intake.json",
+    "https://kvia.com/news/el-paso/2026/09/08/ice-alleges-detainees-damaged-camp-east-montana/"
+  ],
+  "notes": "Backfill preserves September 7 event chronology and September 14 recovery date; original production discovery lineage is absent."
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": "bluefern.ice.historical_event.v1",
+  "dispatch": "ice",
+  "event_id": "ice-2026-09-07-camp-east-montana-detention-disturbance",
+  "canonical_event_id": "ice-2026-09-07-camp-east-montana-detention-disturbance",
+  "event_date": "2026-09-07",
+  "recovered_at": "2026-09-14",
+  "recovery_provenance": "operator_recovered_public_source_recall_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/recovery-review-intake.json",
+  "source_recovery_item_id": "ice-2026-09-14-camp-east-montana-disturbance",
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "facility": "Camp East Montana",
+    "city": "El Paso",
+    "state": "TX",
+    "category": "detention",
+    "event_type": "detention_facility_disturbance"
+  },
+  "headline": "ICE says 130 detainees damaged Camp East Montana facility",
+  "bounded_summary": "KVIA reported that ICE said about 130 detainees at Camp East Montana damaged the detention facility on September 7, 2026, including throwing items, flipping furniture, and disabling cameras; ICE said no injuries were reported and all detainees were accounted for.",
+  "source_sufficiency": "sufficient_single_traceable_source_with_official_ice_attribution",
+  "corroboration_status": "single_source_official_attribution",
+  "materiality": "material_detention_facility_disruption_involving_reported_mass_detainee_participation_and_facility_damage",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "KVIA",
+      "source_url": "https://kvia.com/news/el-paso/2026/09/08/ice-alleges-detainees-damaged-camp-east-montana/",
+      "source_publication_date": "2026-09-08",
+      "source_role": "local_reporting_with_official_ice_account"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

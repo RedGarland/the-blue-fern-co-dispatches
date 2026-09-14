@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts import refresh_root_homepage
 from bluefern_dispatches.root_homepage import (
     discover_public_releases,
     render_dispatch_directory_from_releases,
@@ -49,6 +50,22 @@ SHARED_ROOT_TEMPLATE = DIRECTORY_TEMPLATE.replace(
 )
 
 MOJIBAKE_SEPARATOR = "\u00c3\u201a\u00c2\u00b7"
+
+
+def _dispatch_card(html: str, product_name: str) -> str:
+    match = re.search(
+        rf'<article class="dispatch-card dispatch-card--featured">(?:(?!</article>).)*?<h2>{re.escape(product_name)}</h2>(?:(?!</article>).)*?</article>',
+        html,
+        re.DOTALL,
+    )
+    assert match is not None
+    return match.group(0)
+
+
+def _edition_card(html: str, slug: str) -> str:
+    match = re.search(rf'<article class="edition-card edition-card--{re.escape(slug)}">.*?</article>', html, re.DOTALL)
+    assert match is not None
+    return match.group(0)
 
 
 def _write_release(
@@ -440,6 +457,73 @@ def test_shared_release_refresh_reports_exact_changed_surfaces(tmp_path):
     assert "/gaza/editions/2026-09-04/" in directory
     assert "/food-line/editions/2026-08-31/" in directory
     assert "/care-line/editions/2026-08-20/" in directory
+
+
+def test_refresh_script_target_dispatch_updates_only_food_directory_and_root_cards(tmp_path):
+    public_root = tmp_path / "pages"
+    public_root.mkdir(parents=True)
+    _write_current_directory_inventory(public_root)
+    _write_recovery_shaped_food_release(public_root, "2026-09-12")
+    latest = select_effective_latest(
+        discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 13), homepage_html=TEMPLATE_HTML)
+    )
+    baseline_directory = render_dispatch_directory_from_releases(DIRECTORY_TEMPLATE, latest)
+    root_template = SHARED_ROOT_TEMPLATE.replace(MOJIBAKE_SEPARATOR, "&middot;").replace(
+        '</article></div></section><div class="directory-list">',
+        '</article><article class="edition-card edition-card--food-line"><h3><a href="/food-line/editions/2026-08-31/">Current Food</a></h3>'
+        '<p class="edition-source">Food Line Dispatch &middot; August 31, 2026</p>'
+        '<p class="edition-meta">3 public sources</p></article></div></section><div class="directory-list">',
+        1,
+    )
+    root_path = public_root / "index.html"
+    directory_path = public_root / "dispatches" / "index.html"
+    output_root = tmp_path / "out" / "index.html"
+    output_directory = tmp_path / "out" / "dispatches.html"
+    root_path.write_text(root_template, encoding="utf-8")
+    directory_path.parent.mkdir(parents=True)
+    directory_path.write_text(baseline_directory, encoding="utf-8")
+
+    baseline_gaza_root_card = _dispatch_card(root_template, "Dispatches From Gaza")
+    baseline_care_root_card = _dispatch_card(root_template, "The Care Line Dispatch")
+    baseline_gaza_edition = _edition_card(root_template, "gaza")
+    baseline_gaza_directory = _dispatch_card(baseline_directory, "Dispatches From Gaza")
+    baseline_care_directory = _dispatch_card(baseline_directory, "The Care Line Dispatch")
+    baseline_root_footer = root_template.split("<footer", 1)[1]
+    baseline_directory_footer = baseline_directory.split("<footer", 1)[1]
+
+    assert refresh_root_homepage.main(
+        [
+            "--public-inventory-root",
+            str(public_root),
+            "--template-html",
+            str(root_path),
+            "--output-html",
+            str(output_root),
+            "--target-dispatch",
+            "food-line",
+            "--directory-template-html",
+            str(directory_path),
+            "--directory-output-html",
+            str(output_directory),
+        ]
+    ) == 0
+
+    rendered_root = output_root.read_text(encoding="utf-8")
+    rendered_directory = output_directory.read_text(encoding="utf-8")
+    releases = discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 13), homepage_html=rendered_root)
+    food = select_effective_latest(releases)["food-line"]
+
+    assert food.edition_date == "2026-09-12"
+    assert food.source_count == 4
+    assert "/food-line/editions/2026-09-12/" in _dispatch_card(rendered_directory, "Food Line Dispatch")
+    assert "4 public sources" in _edition_card(rendered_root, "food-line")
+    assert _dispatch_card(rendered_directory, "Dispatches From Gaza") == baseline_gaza_directory
+    assert _dispatch_card(rendered_directory, "The Care Line Dispatch") == baseline_care_directory
+    assert _dispatch_card(rendered_root, "Dispatches From Gaza") == baseline_gaza_root_card
+    assert _dispatch_card(rendered_root, "The Care Line Dispatch") == baseline_care_root_card
+    assert _edition_card(rendered_root, "gaza") == baseline_gaza_edition
+    assert rendered_root.split("<footer", 1)[1] == baseline_root_footer
+    assert rendered_directory.split("<footer", 1)[1] == baseline_directory_footer
 
 
 @pytest.mark.parametrize(

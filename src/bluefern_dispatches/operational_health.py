@@ -172,6 +172,56 @@ def parse_timestamp(value: str | None) -> datetime | None:
         return None
 
 
+def _timestamp_date(value: str | None) -> str | None:
+    if not value:
+        return None
+    parsed = parse_timestamp(value)
+    if parsed is not None:
+        return parsed.astimezone(timezone.utc).date().isoformat()
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+        return value
+    return None
+
+
+def _receipt_instance_time(receipt: dict[str, Any]) -> datetime | None:
+    for key in ("scheduled_for", "started_at", "observed_at", "completed_at"):
+        if key == "scheduled_for" and re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(receipt.get(key) or "")):
+            continue
+        parsed = parse_timestamp(str(receipt.get(key) or ""))
+        if parsed is not None:
+            return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
+    return None
+
+
+def _receipt_matches_expected_instance(
+    receipt: dict[str, Any],
+    *,
+    scheduled_for: str,
+    scheduled: datetime | None,
+    grace_minutes: int,
+) -> bool:
+    receipt_scheduled_for = str(receipt.get("scheduled_for") or "")
+    if receipt_scheduled_for == scheduled_for:
+        return True
+    if scheduled is None:
+        return False
+    if scheduled.tzinfo is None:
+        scheduled = scheduled.replace(tzinfo=timezone.utc)
+    receipt_time = _receipt_instance_time(receipt)
+    if receipt_time is None:
+        return False
+    if receipt_time.tzinfo is None:
+        receipt_time = receipt_time.replace(tzinfo=timezone.utc)
+    lower = scheduled - timedelta(minutes=5)
+    upper = scheduled + timedelta(minutes=grace_minutes)
+    if lower <= receipt_time <= upper:
+        return True
+    return (
+        _timestamp_date(receipt_scheduled_for) == scheduled.astimezone(timezone.utc).date().isoformat()
+        and lower <= receipt_time <= upper
+    )
+
+
 def _safe_component(value: str) -> str:
     cleaned = re.sub(r"[^A-Za-z0-9_.-]+", "-", value.strip())
     return cleaned.strip("-") or "unknown"
@@ -526,35 +576,43 @@ def evaluate_dispatch_health(
             continue
         if task_instances:
             task_receipts = [receipt for receipt in receipts if str(receipt.get("task_key")) == expectation.task_key]
-            for instance in task_instances:
-                scheduled = parse_timestamp(str(instance.get("scheduled_for") or ""))
+            used_receipts: set[int] = set()
+            for instance in sorted(task_instances, key=lambda item: str(item.get("scheduled_for") or "")):
+                scheduled_for = str(instance.get("scheduled_for") or "")
+                scheduled = parse_timestamp(scheduled_for)
                 if scheduled is not None and scheduled.tzinfo is None:
                     scheduled = scheduled.replace(tzinfo=timezone.utc)
                 due = scheduled is None or evaluated_dt >= scheduled + timedelta(minutes=expectation.grace_minutes)
                 if not due:
                     continue
-                receipt = next(
+                match = next(
                     (
-                        candidate for candidate in task_receipts
-                        if str(candidate.get("scheduled_for") or "") == str(instance.get("scheduled_for") or "")
+                        (index, candidate) for index, candidate in enumerate(task_receipts)
+                        if index not in used_receipts
+                        and _receipt_matches_expected_instance(
+                            candidate,
+                            scheduled_for=scheduled_for,
+                            scheduled=scheduled,
+                            grace_minutes=expectation.grace_minutes,
+                        )
                     ),
                     None,
                 )
+                receipt = match[1] if match else None
                 if receipt is None:
                     if expectation.required:
-                        missed.append(f"{expectation.task_key}:{instance.get('scheduled_for')}")
+                        missed.append(f"{expectation.task_key}:{scheduled_for}")
                     continue
-                completed.append(f"{expectation.task_key}:{instance.get('scheduled_for')}")
+                used_receipts.add(match[0])
+                completed.append(f"{expectation.task_key}:{scheduled_for}")
                 status = str(receipt["status"])
                 observed = parse_timestamp(str(receipt.get("observed_at") or ""))
-                if observed and evaluated_dt - observed > timedelta(minutes=max(expectation.grace_minutes * 2, 1)):
-                    stale.append(f"{expectation.task_key}:{instance.get('scheduled_for')}")
                 if status == OperationalStatus.FAILED.value:
-                    failed.append(f"{expectation.task_key}:{instance.get('scheduled_for')}")
+                    failed.append(f"{expectation.task_key}:{scheduled_for}")
                 elif status == OperationalStatus.DEGRADED.value:
-                    degraded.append(f"{expectation.task_key}:{instance.get('scheduled_for')}")
+                    degraded.append(f"{expectation.task_key}:{scheduled_for}")
                 elif status == OperationalStatus.UPSTREAM_BLOCKED.value:
-                    upstream_blocked.append(f"{expectation.task_key}:{instance.get('scheduled_for')}")
+                    upstream_blocked.append(f"{expectation.task_key}:{scheduled_for}")
                 elif status in {OperationalStatus.SUCCESS.value, OperationalStatus.SAFE_NO_OP.value} and observed:
                     latest_success = max(latest_success, observed) if latest_success else observed
             continue

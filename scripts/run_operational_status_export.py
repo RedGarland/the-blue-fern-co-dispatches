@@ -2,12 +2,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import uuid
-from datetime import datetime, timezone
+import xml.etree.ElementTree as ET
+from datetime import date as date_cls, datetime, timezone
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT / "src") not in sys.path:
@@ -25,6 +28,12 @@ DEFAULT_SOURCE_ROOT = Path(r"C:\BlueFernRunner\FoodLineCurrent6")
 DEFAULT_STATUS_CHECKOUT = Path(r"C:\BlueFernRunner\OperationalStatusCurrent")
 DEFAULT_BRANCH = "ops/status/food-line-2026-09-10"
 LOG_ROOT = Path("logs/operational-status-exporter")
+CARE_SCHEDULED_TASKS: tuple[tuple[str, str], ...] = (
+    ("care_line_collection", r"\Blue Fern Co.\Blue Fern Care Line National Collection"),
+    ("care_line_reviewed_event_queue", r"\Blue Fern Co.\Blue Fern Care Line Reviewed Event Queue"),
+    ("care_line_approved_release_publication", r"\Blue Fern Co.\Blue Fern Care Line Approved Release Publication"),
+)
+CARE_SCHEDULER_TIMEZONE = ZoneInfo("America/Los_Angeles")
 
 
 def utc_now() -> str:
@@ -49,6 +58,83 @@ def _write_local_receipt(source_root: Path, run_id: str, payload: dict[str, Any]
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8")
     return path
+
+
+def _iso_utc(value: datetime) -> str:
+    return value.astimezone(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def _task_xml(task_name: str) -> ET.Element:
+    if os.name != "nt":
+        raise ExportError("Care scheduler metadata is available only from Windows Task Scheduler")
+    completed = subprocess.run(
+        ["schtasks.exe", "/Query", "/TN", task_name, "/XML"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if completed.returncode:
+        raise ExportError(completed.stderr.strip() or f"cannot read scheduled task: {task_name}")
+    try:
+        return ET.fromstring(completed.stdout)
+    except ET.ParseError as exc:
+        raise ExportError(f"cannot parse scheduled task XML for {task_name}: {exc}") from exc
+
+
+def _calendar_trigger_instances(root: ET.Element, *, task_key: str, task_name: str, run_date: date_cls) -> list[dict[str, str]]:
+    namespace = {"task": "http://schemas.microsoft.com/windows/2004/02/mit/task"}
+    instances: list[dict[str, str]] = []
+    for trigger in root.findall(".//task:CalendarTrigger", namespace):
+        enabled = trigger.findtext("task:Enabled", default="true", namespaces=namespace)
+        if str(enabled).lower() == "false":
+            continue
+        start_text = trigger.findtext("task:StartBoundary", namespaces=namespace)
+        if not start_text:
+            raise ExportError(f"scheduled task trigger missing StartBoundary: {task_name}")
+        try:
+            start = datetime.fromisoformat(start_text)
+        except ValueError as exc:
+            raise ExportError(f"scheduled task trigger has invalid StartBoundary: {task_name}") from exc
+        days_text = trigger.findtext("task:ScheduleByDay/task:DaysInterval", default="1", namespaces=namespace)
+        try:
+            days_interval = max(1, int(days_text))
+        except ValueError as exc:
+            raise ExportError(f"scheduled task trigger has invalid DaysInterval: {task_name}") from exc
+        start_local = start.astimezone(CARE_SCHEDULER_TIMEZONE) if start.tzinfo else start.replace(tzinfo=CARE_SCHEDULER_TIMEZONE)
+        if (run_date - start_local.date()).days < 0 or (run_date - start_local.date()).days % days_interval:
+            continue
+        local_instance = datetime(
+            run_date.year,
+            run_date.month,
+            run_date.day,
+            start_local.hour,
+            start_local.minute,
+            start_local.second,
+            tzinfo=CARE_SCHEDULER_TIMEZONE,
+        )
+        instances.append(
+            {
+                "task_key": task_key,
+                "task_name": task_name,
+                "scheduled_for": _iso_utc(local_instance),
+                "schedule_source": "windows_task_scheduler",
+            }
+        )
+    if not instances:
+        raise ExportError(f"scheduled task has no enabled calendar trigger for {run_date.isoformat()}: {task_name}")
+    return instances
+
+
+def care_expected_instances_from_task_scheduler(run_date: str) -> list[dict[str, str]]:
+    try:
+        parsed_date = date_cls.fromisoformat(run_date)
+    except ValueError as exc:
+        raise ExportError(f"invalid Care schedule date: {run_date}") from exc
+    instances: list[dict[str, str]] = []
+    for task_key, task_name in CARE_SCHEDULED_TASKS:
+        root = _task_xml(task_name)
+        instances.extend(_calendar_trigger_instances(root, task_key=task_key, task_name=task_name, run_date=parsed_date))
+    return sorted(instances, key=lambda item: (item["scheduled_for"], item["task_key"]))
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -96,6 +182,7 @@ def main(argv: list[str] | None = None) -> int:
             evaluated_at=args.evaluated_at or utc_now(),
             exported_at=args.exported_at,
             care_source_root=args.care_source_root,
+            care_expected_instances=care_expected_instances_from_task_scheduler(date) if args.care_source_root is not None else None,
             recovery=load_recovery_context(args.recovery_context),
         )
         record["paths"] = result["paths"]

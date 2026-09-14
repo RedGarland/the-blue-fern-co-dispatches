@@ -1548,12 +1548,10 @@ def test_food_line_2026_06_06_blocks_stale_prior_year_current_story_candidates(t
     assert "What the source says" in source_table_html
     assert "stale current-story candidate source" in source_table_html
     assert "food-line-auto-" in source_table_html
-    assert "2026-06-06 — No qualifying update" in index_html
+    _assert_food_line_recent_entry(index_html, "2026-06-06", "No qualifying update")
     assert "editions/2026-06-06/" in index_html
     assert 'href="/american-pressure/"' not in index_html
-    assert 'href="/gaza/"' in index_html
-    assert 'href="/cascadia/"' in index_html
-    assert 'href="/food-line/"' in index_html
+    _assert_food_line_primary_nav_contract(index_html)
     assert '<span class="edition-date">2026-06-06</span><a href="editions/2026-06-06/">No qualifying update</a>' in archive_html
     assert "Food Line Audio" in audio_index_html
     assert "Open the podcast feed" in audio_index_html
@@ -1963,16 +1961,14 @@ def test_food_line_homepage_omits_pressure_map_link_when_map_artifact_is_absent(
     index_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
     archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
 
-    assert "2026-06-07 — No qualifying update" in index_html
+    _assert_food_line_recent_entry(index_html, "2026-06-07", "No qualifying update")
     assert '<span class="edition-date">2026-06-07</span><a href="editions/2026-06-07/">No qualifying update</a>' in archive_html
     assert '<span class="edition-date">2026-06-06</span><a href="editions/2026-06-06/">No qualifying update</a>' in archive_html
     assert "2026-06-05" not in index_html
     assert "2026-06-05" not in archive_html
     assert 'href="map/"' not in index_html
     assert 'href="/american-pressure/"' not in index_html
-    assert 'href="/gaza/"' in index_html
-    assert 'href="/cascadia/"' in index_html
-    assert 'href="/food-line/"' in index_html
+    _assert_food_line_primary_nav_contract(index_html)
 
 
 def test_food_line_homepage_omits_pressure_map_link_when_marker_count_is_zero(tmp_path: Path):
@@ -2018,7 +2014,7 @@ def test_food_line_homepage_omits_pressure_map_link_when_marker_count_is_zero(tm
 
     index_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
 
-    assert "2026-06-07 — No qualifying update" in index_html
+    _assert_food_line_recent_entry(index_html, "2026-06-07", "No qualifying update")
     assert 'href="map/"' not in index_html
 
 
@@ -2065,7 +2061,7 @@ def test_food_line_homepage_shows_pressure_map_link_when_marker_count_is_positiv
 
     index_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
 
-    assert "2026-06-07 — No qualifying update" in index_html
+    _assert_food_line_recent_entry(index_html, "2026-06-07", "No qualifying update")
     assert 'href="map/"' in index_html
 
 
@@ -3780,9 +3776,9 @@ def test_food_line_june_11_with_kold_becomes_current_update_and_map_eligible(tmp
     assert "Source audit" not in edition_html
     home_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
     archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
-    assert '<h2>Current coverage</h2>' in home_html
+    assert '<h2>Latest Briefing</h2>' in home_html
     assert 'editions/2026-06-11/' in home_html
-    assert 'Browse the Food Line archive' in home_html
+    assert 'href="archive.html"' in home_html
     assert 'No current update' not in home_html
     assert '2026-06-11' in home_html
     assert '<span class="edition-date">2026-06-11</span><a href="editions/2026-06-11/">Tucson food bank sees surge in visitors as inflation rises</a>' in archive_html
@@ -3907,6 +3903,37 @@ def _copy_current_food_line_public_inventory(tmp_path: Path) -> Path:
     source = root / "output" / "site" / "food-line"
     shutil.copytree(source / "editions", target / "output" / "site" / "food-line" / "editions")
     return target
+
+
+def _food_line_recent_entry_titles(html_text: str) -> dict[str, str]:
+    soup = BeautifulSoup(html_text, "html.parser")
+    recent_heading = soup.find("h2", string="Recent Editions")
+    assert recent_heading is not None
+    recent = recent_heading.find_parent("section")
+    assert recent is not None
+    return {
+        entry.select_one(".food-line-edition-meta").get_text(strip=True): entry.select_one(".food-line-recent-title").get_text(strip=True)
+        for entry in recent.select(".food-line-recent-list li")
+    }
+
+
+def _assert_food_line_recent_entry(html_text: str, date: str, title: str) -> None:
+    assert _food_line_recent_entry_titles(html_text)[date] == title
+
+
+def _assert_food_line_primary_nav_contract(html_text: str) -> None:
+    soup = BeautifulSoup(html_text, "html.parser")
+    nav = soup.select_one("header.site-header nav")
+    assert nav is not None
+    nav_html = str(nav)
+    nav_text = " ".join(nav.stripped_strings)
+    assert 'href="/"' in nav_html
+    assert "Dispatches Home" in nav_text
+    assert "Food Line Dispatch" in nav_text
+    assert "Archive" in nav_text
+    assert "RSS" in nav_text
+    assert 'href="/gaza/"' not in nav_html
+    assert 'href="/cascadia/"' not in nav_html
 
 
 def test_food_line_landing_page_uses_clean_current_inventory_sections(tmp_path: Path):
@@ -7698,9 +7725,7 @@ def test_food_line_logo_is_copied_and_referenced_in_generated_output(tmp_path: P
     assert 'alt="The Food Line Dispatch"' in index_html
     assert 'src="assets/food-line-logo.png"' in index_html
     assert 'href="/american-pressure/"' not in index_html
-    assert 'href="/gaza/"' in index_html
-    assert 'href="/cascadia/"' in index_html
-    assert 'href="/food-line/"' in index_html
+    _assert_food_line_primary_nav_contract(index_html)
     assert 'src="../../assets/food-line-logo.png"' in edition_html
     assert 'href="/american-pressure/"' not in edition_html
     assert 'src="../../assets/food-line-logo.png"' in source_table_html

@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import builtins
+import io
 import json
 import sys
 import types
+import urllib.error
 from pathlib import Path
 
 import pytest
@@ -1000,6 +1002,218 @@ def test_care_line_fetch_url_uses_unverified_context_only_for_explicit_insecure_
     assert meta["insecure_ssl_used"] is True
 
 
+def test_care_line_fetch_failure_retains_bounded_sanitized_http_metadata(monkeypatch) -> None:
+    body = b"<html><title>Forbidden</title><script>ignored</script>" + (b"x" * 3000)
+    headers = {
+        "Content-Type": "text/html",
+        "Server": "cloudflare",
+        "Set-Cookie": "secret-cookie=1",
+        "Authorization": "Bearer secret",
+        "Retry-After": "120",
+    }
+
+    def fake_urlopen(request, timeout, context):  # noqa: ANN001
+        raise urllib.error.HTTPError(request.full_url, 403, "Forbidden", headers, io.BytesIO(body))
+
+    monkeypatch.setattr(pipeline.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(
+        pipeline,
+        "_secure_windows_http_fallback",
+        lambda *args, **kwargs: (_ for _ in ()).throw(
+            pipeline.ProviderFetchError("fallback denied", diagnostics={"source_health_status": "fallback_failed"})
+        ),
+    )
+
+    with pytest.raises(pipeline.ProviderFetchError) as excinfo:
+        pipeline.fetch_url("https://example.org/feed", sleep_func=lambda _seconds: None)
+
+    diagnostics = excinfo.value.diagnostics
+    assert diagnostics["http_status"] == 403
+    assert diagnostics["source_health_status"] == "fallback_failed"
+    assert diagnostics["content_type"] == "text/html"
+    assert diagnostics["body_received"] is True
+    assert diagnostics["body_snippet"].startswith("<html>")
+    assert len(diagnostics["body_snippet"]) <= pipeline.MAX_FETCH_FAILURE_SNIPPET_CHARS
+    assert "set-cookie" not in diagnostics["response_headers"]
+    assert "authorization" not in diagnostics["response_headers"]
+    assert diagnostics["response_headers"]["server"] == "cloudflare"
+
+
+def test_care_line_403_is_not_blindly_retried(monkeypatch) -> None:
+    calls = {"count": 0}
+
+    def fake_urlopen(request, timeout, context):  # noqa: ANN001
+        calls["count"] += 1
+        raise urllib.error.HTTPError(request.full_url, 403, "Forbidden", {"Content-Type": "text/html"}, io.BytesIO(b"blocked"))
+
+    monkeypatch.setattr(pipeline.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(
+        pipeline,
+        "_secure_windows_http_fallback",
+        lambda *args, **kwargs: (_ for _ in ()).throw(
+            pipeline.ProviderFetchError("fallback denied", diagnostics={"source_health_status": "fallback_failed"})
+        ),
+    )
+
+    with pytest.raises(pipeline.ProviderFetchError):
+        pipeline.fetch_url("https://example.org/feed", max_retries=3, sleep_func=lambda _seconds: None)
+
+    assert calls["count"] == 1
+
+
+def test_care_line_transient_retry_honors_retry_after(monkeypatch) -> None:
+    calls = {"count": 0}
+    sleeps: list[float] = []
+
+    def fake_urlopen(request, timeout, context):  # noqa: ANN001
+        calls["count"] += 1
+        if calls["count"] == 1:
+            raise urllib.error.HTTPError(request.full_url, 429, "Too Many Requests", {"Retry-After": "2"}, io.BytesIO(b"rate limited"))
+        return _FakeResponse(b"<rss><channel><item><title>ok</title></item></channel></rss>")
+
+    monkeypatch.setattr(pipeline.urllib.request, "urlopen", fake_urlopen)
+
+    payload, meta = pipeline.fetch_url("https://example.org/feed", max_retries=1, sleep_func=sleeps.append)
+
+    assert b"<rss" in payload
+    assert calls["count"] == 2
+    assert sleeps == [1.0]
+    assert meta["retry_count"] == 1
+
+
+def test_care_line_secure_fallback_success_records_backend(monkeypatch) -> None:
+    def fake_urlopen(request, timeout, context):  # noqa: ANN001
+        raise urllib.error.HTTPError(request.full_url, 403, "Forbidden", {"Content-Type": "text/html"}, io.BytesIO(b"blocked"))
+
+    def fake_fallback(url, *, timeout, headers):  # noqa: ANN001
+        return b"<rss><channel /></rss>", {
+            "http_status": 200,
+            "content_type": "application/rss+xml",
+            "final_url": url,
+            "backend": pipeline.FETCH_BACKEND_WINDOWS_POWERSHELL,
+            "client": "Invoke-WebRequest",
+            "fallback_used": True,
+            "source_health_status": "fallback_success",
+        }
+
+    monkeypatch.setattr(pipeline.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(pipeline, "_secure_windows_http_fallback", fake_fallback)
+
+    payload, meta = pipeline.fetch_url("https://example.org/feed")
+
+    assert payload == b"<rss><channel /></rss>"
+    assert meta["backend"] == pipeline.FETCH_BACKEND_WINDOWS_POWERSHELL
+    assert meta["fallback_used"] is True
+    assert meta["source_health_status"] == "fallback_success"
+
+
+def test_care_line_secure_fallback_failure_remains_visible(monkeypatch) -> None:
+    def fake_urlopen(request, timeout, context):  # noqa: ANN001
+        raise urllib.error.HTTPError(request.full_url, 403, "Forbidden", {"Content-Type": "text/html"}, io.BytesIO(b"blocked"))
+
+    monkeypatch.setattr(pipeline.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(
+        pipeline,
+        "_secure_windows_http_fallback",
+        lambda *args, **kwargs: (_ for _ in ()).throw(
+            pipeline.ProviderFetchError("fallback failed", diagnostics={"backend": pipeline.FETCH_BACKEND_WINDOWS_POWERSHELL})
+        ),
+    )
+
+    with pytest.raises(pipeline.ProviderFetchError) as excinfo:
+        pipeline.fetch_url("https://example.org/feed")
+
+    assert excinfo.value.diagnostics["http_status"] == 403
+    assert excinfo.value.diagnostics["source_health_status"] == "fallback_failed"
+    assert excinfo.value.diagnostics["fallback_diagnostics"]["backend"] == pipeline.FETCH_BACKEND_WINDOWS_POWERSHELL
+
+
+def test_care_line_html_instead_of_rss_is_classified() -> None:
+    source = _care_line_recovery_source()
+
+    with pytest.raises(pipeline.ProviderFeedFormatError) as excinfo:
+        pipeline.parse_source_items(
+            source,
+            b"<!doctype html><html><title>blocked</title></html>",
+            source_url=source.feed_url,
+            fetch_timeout=5,
+            allow_insecure_tls=False,
+            max_items_per_source=5,
+        )
+
+    assert excinfo.value.diagnostics["source_health_status"] == "html_instead_of_feed"
+    assert excinfo.value.diagnostics["body_received"] is True
+
+
+def test_care_line_malformed_xml_is_classified() -> None:
+    source = _care_line_recovery_source()
+
+    with pytest.raises(pipeline.ProviderFeedFormatError) as excinfo:
+        pipeline.parse_source_items(
+            source,
+            b"not xml",
+            source_url=source.feed_url,
+            fetch_timeout=5,
+            allow_insecure_tls=False,
+            max_items_per_source=5,
+        )
+
+    assert excinfo.value.diagnostics["source_health_status"] == "malformed_feed"
+
+
+def test_care_line_valid_rss_still_parses() -> None:
+    source = _care_line_recovery_source()
+
+    items = pipeline.parse_source_items(
+        source,
+        b"<rss><channel><item><title>Hospital closes</title><link>https://example.org/a</link></item></channel></rss>",
+        source_url=source.feed_url,
+        fetch_timeout=5,
+        allow_insecure_tls=False,
+        max_items_per_source=5,
+    )
+
+    assert items[0]["title"] == "Hospital closes"
+
+
+def test_care_line_failed_attempt_writes_fetch_diagnostics(tmp_path: Path, monkeypatch) -> None:
+    source = _care_line_recovery_source()
+    rows = [{"source_id": source.source_id, "source": source}]
+
+    def fake_fetch_source(*args, **kwargs):  # noqa: ANN001
+        raise pipeline.ProviderFetchError(
+            "HTTPError: HTTP Error 403: Forbidden",
+            diagnostics={
+                "http_status": 403,
+                "source_url": source.feed_url,
+                "final_url": source.feed_url,
+                "content_type": "text/html",
+                "response_headers": {"server": "test"},
+                "body_snippet": "<html>blocked</html>",
+                "backend": pipeline.FETCH_BACKEND_URLLIB,
+                "client": "urllib.request",
+                "retry_count": 0,
+                "exception_type": "HTTPError",
+                "source_health_status": "persistent_403",
+            },
+        )
+
+    monkeypatch.setattr(pipeline, "fetch_source", fake_fetch_source)
+
+    result = pipeline.run_collection_attempt(
+        tmp_path,
+        run_date="2026-09-09",
+        run_id="run",
+        source_row=rows[0],
+    )
+
+    assert result["attempt"]["collection_status"] == "failed"
+    assert result["attempt"]["source_health_status"] == "persistent_403"
+    assert result["attempt"]["fetch_diagnostics"]["http_status"] == 403
+    failure = json.loads((tmp_path / "data/dispatches/care-line/collection-runs/2026-09-09/run/care-line-recovery-source.failure.json").read_text())
+    assert failure["fetch_diagnostics"]["body_snippet"] == "<html>blocked</html>"
+
+
 def _care_line_recovery_source() -> CareLineSource:
     return CareLineSource.model_validate(
         {
@@ -1149,6 +1363,71 @@ def test_care_line_geography_rejects_unrelated_or_ambiguous_locations() -> None:
     assert ambiguous_geo["state"] == ""
     assert ambiguous_geo["city"] == ""
     assert ambiguous_provenance == {}
+
+
+def test_care_line_top_level_partial_success_semantics_are_preserved(tmp_path: Path, monkeypatch) -> None:
+    good_source = _care_line_recovery_source()
+    failed_source = CareLineSource.model_validate(
+        {
+            **good_source.model_dump(mode="json"),
+            "source_id": "blocked-source",
+            "name": "Blocked Source",
+            "feed_url": "https://blocked.example.org/feed",
+        }
+    )
+    registry = pipeline.CareLineSourceRegistry(schema_version="bluefern.care_line.source_registry.v1", sources=[good_source, failed_source])
+    monkeypatch.setattr(pipeline, "load_canonical_registry", lambda root, include_disabled=True: registry)
+    monkeypatch.setattr(pipeline, "adapt_pressure_registry", lambda root: {"source_count": 0, "sources": []})
+    monkeypatch.setattr(pipeline, "load_reviewed_records", lambda root: [])
+    monkeypatch.setattr(pipeline, "load_follow_up_state", lambda root, *, state_root=None: {"schema_version": "test", "items": []})
+    monkeypatch.setattr(pipeline, "build_follow_up_queries", lambda root, run_date, reviewed_records, state: [])
+    monkeypatch.setattr(
+        pipeline,
+        "update_follow_up_state",
+        lambda root, *, run_date, follow_up_queries, discovery_query_rows, state_root=None: {"items": [], "state_path": ""},
+    )
+
+    def fake_run_collection_attempt(root, *, source_row, **kwargs):  # noqa: ANN001
+        source = source_row["source"]
+        if source.source_id == "blocked-source":
+            return {
+                "attempt": {
+                    "source_id": source.source_id,
+                    "collection_status": "failed",
+                    "source_health_status": "persistent_403",
+                },
+                "raw_items": [],
+                "event_leads": [],
+                "candidates": [],
+                "exclusions": [],
+                "failed_extractions": [],
+                "manual_review": [],
+                "failure": "HTTPError: HTTP Error 403: Forbidden",
+            }
+        return {
+            "attempt": {
+                "source_id": source.source_id,
+                "collection_status": "ok",
+                "source_health_status": "success",
+            },
+            "raw_items": [],
+            "event_leads": [],
+            "candidates": [],
+            "exclusions": [],
+            "failed_extractions": [],
+            "manual_review": [],
+            "failure": "",
+        }
+
+    monkeypatch.setattr(pipeline, "run_collection_attempt", fake_run_collection_attempt)
+
+    result = pipeline.run_national_pipeline(tmp_path, run_date="2026-09-09", run_id="run")
+
+    manifest = result["run_manifest"]
+    assert manifest["status"] == pipeline.RUN_STATUS_PARTIAL_SUCCESS
+    assert manifest["successful_attempt_count"] == 1
+    assert manifest["failed_source_count"] == 1
+    assert manifest["source_health_status_counts"] == {"persistent_403": 1, "success": 1}
 
 
 def test_care_line_subject_recovers_from_structured_input_title_and_body() -> None:

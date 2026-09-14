@@ -1,0 +1,40 @@
+{
+  "schema_version": "bluefern.ice.historical_event.v1",
+  "dispatch": "ice",
+  "event_id": "ice-2026-09-09-houston-hpd-policy-fatal-ice-shooting",
+  "canonical_event_id": "ice-2026-09-09-houston-hpd-policy-fatal-ice-shooting",
+  "event_date": "2026-09-09",
+  "recovered_at": "2026-09-14",
+  "recovery_provenance": "operator_recovered_public_source_recall_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/recovery-review-intake.json",
+  "source_recovery_item_id": "ice-2026-09-14-houston-ice-shooting-hpd-policy-disclosure",
+  "relationship_to_existing_event": "follow_up_with_new_material_facts",
+  "related_underlying_event": "fatal_ice_shooting_lorenzo_salgado_araujo",
+  "canonical_event_identity": {
+    "city": "Houston",
+    "state": "TX",
+    "category": "legal_oversight_accountability",
+    "event_type": "local_policy_disclosure_affecting_federal_officer_involved_shooting_investigation"
+  },
+  "headline": "HPD policy change affected local response to fatal ICE shooting",
+  "bounded_summary": "The Houston Chronicle reported that HPD had changed its policy for federal officer-involved shootings before an ICE agent fatally shot Lorenzo Salgado Araujo, and that HPD did not respond to that scene, leaving local investigators to arrive later.",
+  "source_sufficiency": "sufficient_single_traceable_investigative_source_for_policy_disclosure",
+  "corroboration_status": "single_source_investigative_reporting",
+  "materiality": "material_follow_up_on_local_investigative_access_and_accountability_after_a_fatal_ice_shooting",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "Houston Chronicle",
+      "source_url": "https://www.houstonchronicle.com/news/investigations/article/hpd-ice-shooting-investigation-policy-change-22414278.php",
+      "source_publication_date": "2026-09-09",
+      "source_role": "local_investigative_reporting"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.ice.historical_event.v1",
+  "dispatch": "ice",
+  "event_id": "ice-2026-09-09-springfield-ice-officers-tro",
+  "canonical_event_id": "ice-2026-09-09-springfield-ice-officers-tro",
+  "event_date": "2026-09-09",
+  "recovered_at": "2026-09-14",
+  "recovery_provenance": "operator_recovered_public_source_recall_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/recovery-review-intake.json",
+  "source_recovery_item_id": "ice-2026-09-14-springfield-ice-officers-tro",
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "city": "Springfield",
+    "state": "OH",
+    "category": "legal_oversight_accountability",
+    "event_type": "temporary_restraining_order_against_ice_officers"
+  },
+  "headline": "Federal judge grants temporary restraining order against Springfield ICE officers",
+  "bounded_summary": "WYSO reported that a federal judge granted a temporary restraining order against seven ICE officers operating in Springfield after an ACLU of Ohio complaint by Sean Moorman, a volunteer ICE watcher; the order was reported to expire September 18.",
+  "source_sufficiency": "sufficient_traceable_local_reporting_with_corroborating_regional_account",
+  "corroboration_status": "corroborated_by_wyso_and_ideastream_reporting",
+  "materiality": "material_court_order_restricting_named_category_of_ice_operations_in_a_specific_city",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "WYSO",
+      "source_url": "https://www.wyso.org/news/2026-09-09/judge-issues-temporary-restraining-order-against-springfield-ice-agents-in-aclu-case",
+      "source_publication_date": "2026-09-09",
+      "source_role": "local_public_media_reporting"
+    },
+    {
+      "publisher": "Ideastream Public Media",
+      "source_url": "https://www.ideastream.org/show/sound-of-ideas/2026-09-09/aclu-of-ohio-files-lawsuit-against-ice-agents-in-springfield",
+      "source_publication_date": "2026-09-09",
+      "source_role": "corroborating_public_media_reporting"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

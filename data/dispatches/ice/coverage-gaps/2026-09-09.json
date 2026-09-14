@@ -1,0 +1,21 @@
+{
+  "schema_version": "bluefern.ice.coverage_gap.v1",
+  "dispatch": "ice",
+  "observation_date": "2026-09-09",
+  "observation_status": "OBSERVED_WITH_FINDINGS",
+  "gap_reason": "successful_monitor_run_missed_source_backed_public_developments_identified_by_operator_recall_audit",
+  "detected_at": "2026-09-14",
+  "backfill_status": "RECOVERED",
+  "recovered_at": "2026-09-14",
+  "recovered_event_ids": [
+    "ice-2026-09-09-houston-hpd-policy-fatal-ice-shooting",
+    "ice-2026-09-09-springfield-ice-officers-tro"
+  ],
+  "source_refs": [
+    "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/recovery-review-intake.json",
+    "https://www.houstonchronicle.com/news/investigations/article/hpd-ice-shooting-investigation-policy-change-22414278.php",
+    "https://www.wyso.org/news/2026-09-09/judge-issues-temporary-restraining-order-against-springfield-ice-agents-in-aclu-case",
+    "https://www.ideastream.org/show/sound-of-ideas/2026-09-09/aclu-of-ohio-files-lawsuit-against-ice-agents-in-springfield"
+  ],
+  "notes": "Backfill preserves September 9 event chronology and September 14 recovery date; original production discovery lineage is absent."
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": "bluefern.ice.historical_event.v1",
+  "dispatch": "ice",
+  "event_id": "ice-2026-09-13-otay-mesa-delayed-care-kidney-infection",
+  "canonical_event_id": "ice-2026-09-13-otay-mesa-delayed-care-kidney-infection",
+  "event_date": "2026-09-13",
+  "recovered_at": "2026-09-14",
+  "recovery_provenance": "operator_recovered_public_source_recall_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/recovery-review-intake.json",
+  "source_recovery_item_id": "ice-2026-09-14-otay-mesa-kidney-infection-delayed-care",
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "facility": "Otay Mesa Detention Center",
+    "city": "San Diego",
+    "state": "CA",
+    "category": "fatalities_injuries_medical_events",
+    "event_type": "detention_medical_care_delay_allegation"
+  },
+  "headline": "Otay Mesa detainee alleges delayed care for kidney infection",
+  "bounded_summary": "Times of San Diego / Capital & Main reported that an asylum seeker held at Otay Mesa Detention Center described months of delayed medical care for urinary and kidney symptoms, including hospitalization and a pyelonephritis diagnosis after an emergency-room visit.",
+  "source_sufficiency": "sufficient_single_traceable_source_for_retained_allegation_with_medical_detail",
+  "corroboration_status": "single_source_allegation_with_reported_medical_diagnosis",
+  "materiality": "material_detention_medical_care_allegation_involving_hospitalization_and_serious_infection",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "Times of San Diego / Capital & Main",
+      "source_url": "https://timesofsandiego.com/immigration/2026/09/13/mother-denied-care-in-ice-custody/",
+      "source_publication_date": "2026-09-13",
+      "source_role": "local_partner_reporting"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

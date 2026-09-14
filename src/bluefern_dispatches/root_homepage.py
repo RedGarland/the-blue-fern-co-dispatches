@@ -31,6 +31,7 @@ PRODUCT_META: dict[str, dict[str, str]] = {
     "cascadia": {"badge": "CASCADIA", "badge_class": "cascadia", "publication_name": "The Cascadia Briefing"},
     "american-pressure": {"badge": "AMERICAN PRESSURE", "badge_class": "american-pressure", "publication_name": "The American Pressure Dispatch"},
 }
+GENERIC_MANIFEST_TITLES = {"limited-source update"}
 
 
 @dataclass(frozen=True)
@@ -142,22 +143,25 @@ def _resolve_title(slug: str, edition_dir: Path, manifest: dict[str, Any]) -> st
     for key in ("public_archive_title", "headline", "lead_headline", "title"):
         value = str(manifest.get(key) or "").strip()
         if value:
+            normalized = re.sub(r"\s+", " ", value).strip().lower()
+            adequacy_label = re.sub(r"\s+", " ", str(manifest.get("source_adequacy_label") or "")).strip().lower()
+            if key == "public_archive_title" and normalized in GENERIC_MANIFEST_TITLES and normalized == adequacy_label:
+                continue
             return value
     index_path = edition_dir / "index.html"
     if index_path.exists():
         text = index_path.read_text(encoding="utf-8", errors="replace")
-        m = re.search(r"<h1(?:\s[^>]*)?>(.*?)</h1>", text, re.DOTALL | re.IGNORECASE)
-        if m:
-            title = html.unescape(re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", m.group(1)))).strip()
-            if title:
-                return title
         if slug == "american-pressure":
             m = re.search(r"<em>Source:\s*<a [^>]*>([^<]+)</a>", text, re.DOTALL)
             if m:
                 return html.unescape(re.sub(r"\s+", " ", m.group(1))).strip()
-        m = re.search(r"<article[^>]*>\s*<h3>([^<]+)</h3>", text, re.DOTALL) or re.search(r"<h3>([^<]+)</h3>", text, re.DOTALL) or re.search(r"<li><a [^>]*>([^<]+)</a>", text, re.DOTALL)
+        story_h3 = re.search(r"<article\b[^>]*>.*?<h3\b[^>]*>(.*?)</h3>", text, re.DOTALL | re.IGNORECASE)
+        general_h3 = re.search(r"<h3\b[^>]*>(.*?)</h3>", text, re.DOTALL | re.IGNORECASE)
+        h1 = re.search(r"<h1(?:\s[^>]*)?>(.*?)</h1>", text, re.DOTALL | re.IGNORECASE)
+        list_link = re.search(r"<li><a [^>]*>([^<]+)</a>", text, re.DOTALL | re.IGNORECASE)
+        m = story_h3 or general_h3 or h1 or list_link
         if m:
-            return html.unescape(re.sub(r"\s+", " ", m.group(1))).strip()
+            return html.unescape(re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", m.group(1)))).strip()
     return ""
 
 
@@ -307,6 +311,16 @@ def select_homepage_cards(releases: list[PublicRelease], *, limit: int = CARD_LI
             release = by_slug[slug][0]
             selected.append(release)
             chosen.add((release.slug, release.edition_date))
+    represented = [
+        release
+        for release in sorted(releases, key=lambda item: item.sort_key, reverse=True)
+        if release.represented_on_homepage and (release.slug, release.edition_date) not in chosen
+    ]
+    for release in represented:
+        if len(selected) >= limit:
+            break
+        selected.append(release)
+        chosen.add((release.slug, release.edition_date))
     remaining = [release for release in sorted(releases, key=lambda item: item.sort_key, reverse=True) if (release.slug, release.edition_date) not in chosen]
     for release in remaining:
         if len(selected) >= limit:

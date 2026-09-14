@@ -2,6 +2,7 @@
 param(
     [string]$SourceRoot = 'C:\BlueFernRunner\FoodLineCurrent6',
     [string]$StatusCheckout = 'C:\BlueFernRunner\OperationalStatusCurrent',
+    [string]$CareSourceRoot = '',
     [string]$Python = 'python.exe'
 )
 
@@ -13,5 +14,8 @@ $arguments = @(
     '--status-checkout', $StatusCheckout,
     '--prepare-branch', 'ops/status/food-line-2026-09-10'
 )
+if (-not [string]::IsNullOrWhiteSpace($CareSourceRoot)) {
+    $arguments += @('--care-source-root', $CareSourceRoot)
+}
 & $Python @arguments
 exit $LASTEXITCODE

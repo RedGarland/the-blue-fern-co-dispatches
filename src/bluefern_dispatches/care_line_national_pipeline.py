@@ -198,6 +198,9 @@ POSITIVE_EVENT_PATTERNS: list[tuple[str, str, re.Pattern[str]]] = [
     ("temporary_facility_suspension", "suspension", re.compile(r"\b(temp(?:orary|orarily)? (?:close|closure|shut(?:down)?|suspend)|temporarily halt)\b", re.I)),
     ("service_closure", "service", re.compile(r"\b(end(?:ing)?|stop(?:ping)?|discontinu(?:e|ing)|eliminat(?:e|ing)|cancel(?:ed|led|s|ling)?|phase(?:d|s|ing)?\s*out|remove(?:s|d|ing)?\s+(?:clinical care|clinical services|services?|care))\b", re.I)),
     ("service_suspension", "service", re.compile(r"\b(suspend(?:ed|ing|s)?|remain(?:s)? suspended|still suspended|halt(?:ed|ing|s)?|pause(?:d|s|ing)? services?|stop admissions|divert(?:ed|ing|s)?)\b", re.I)),
+    ("service_suspension", "service", re.compile(r"\b(?:clinic|walk-in|appointments?|clinical services?|services?)\b.{0,120}\b(?:cancel(?:ed|led|s|lation)|closed|unavailable|postponed)\b", re.I | re.S)),
+    ("service_suspension", "service", re.compile(r"\b(?:IT|information technology|cyber|systems?|technology|outage|incident)\b.{0,160}\b(?:clinic|walk-in|appointments?|communications?|cancel(?:ed|led|s|lation)|delayed?|unavailable)\b", re.I | re.S)),
+    ("service_suspension", "service", re.compile(r"\b(?:birth center|birthing center|deliveries|delivery options?)\b.{0,160}\b(?:pause(?:d|s|ing)?|end(?:ed|ing|s)?|stop(?:ped|ping|s)?|suspend(?:ed|s|ing)?|transition(?:ed|ing)?)\b", re.I | re.S)),
     ("hours_reduction", "hours", re.compile(r"\b(reduc(?:e|es|ed|ing) hours?|cut(?:s|ting)? hours?|shorter hours?)\b", re.I)),
     ("capacity_reduction", "capacity", re.compile(r"\b(reduc(?:e|es|ed|ing) beds?|cut(?:s|ting)? beds?|capacity reduction|fewer beds?|reduce capacity)\b", re.I)),
     ("service_reduction", "restriction", re.compile(r"\b(limit(?:ed|ing|s)? services?|staffing restriction|service unavailable|restricted access)\b", re.I)),
@@ -211,6 +214,7 @@ POSITIVE_EVENT_PATTERNS: list[tuple[str, str, re.Pattern[str]]] = [
 HEALTHCARE_CONTEXT_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("hospital", re.compile(r"\b(hospital|medical center|health system)\b", re.I)),
     ("clinic", re.compile(r"\b(clinic|health center|care center)\b", re.I)),
+    ("clinic", re.compile(r"\b(sexual health|STI|STD|HIV|walk-in clinic)\b", re.I)),
     ("emergency_care", re.compile(r"\b(emergency department|emergency room|ER|ED)\b", re.I)),
     ("labor_and_delivery", re.compile(r"\b(labor and delivery|labor & delivery|birth center|maternity)\b", re.I)),
     ("behavioral_health", re.compile(r"\b(behavioral health|mental health|psychiatric)\b", re.I)),
@@ -246,6 +250,9 @@ NEGATIVE_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
 ACCESS_CONSEQUENCE_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("LOSS_OF_LOCAL_ACCESS", re.compile(r"\b(no longer offer|will close|closed|ending services|service will end|patients will lose access)\b", re.I)),
     ("REDUCED_SERVICE_AVAILABILITY", re.compile(r"\b(suspended|halted|paused|service unavailable|limited service|reduced service)\b", re.I)),
+    ("REDUCED_SERVICE_AVAILABILITY", re.compile(r"\b(?:clinic|walk-in|appointments?|clinical services?|services?)\b.{0,120}\b(?:cancel(?:ed|led|s|lation)|closed|unavailable|postponed)\b", re.I | re.S)),
+    ("DELAYED_CARE_RISK", re.compile(r"\b(?:delayed?|delays?)\b.{0,100}\b(?:patient communications?|communications?|messages?|appointments?|notifications?)\b", re.I | re.S)),
+    ("REDUCED_SERVICE_AVAILABILITY", re.compile(r"\b(?:birth center|birthing center|deliveries|delivery options?)\b.{0,160}\b(?:pause(?:d|s|ing)?|end(?:ed|ing|s)?|stop(?:ped|ping|s)?|suspend(?:ed|s|ing)?|transition(?:ed|ing)?|alternate birth plans?)\b", re.I | re.S)),
     ("REDUCED_OPERATING_HOURS", re.compile(r"\b(reduced hours|shorter hours|hours cut)\b", re.I)),
     ("REDUCED_BED_OR_APPOINTMENT_CAPACITY", re.compile(r"\b(reduced beds|fewer beds|capacity reduction|fewer appointments|reduced capacity)\b", re.I)),
     ("EMERGENCY_DIVERSION", re.compile(r"\b(divert(?:ed|ing|s)? ambulances?|emergency diversion)\b", re.I)),
@@ -256,8 +263,9 @@ ACCESS_CONSEQUENCE_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
 ]
 
 SERVICE_LINE_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
-    ("labor_and_delivery", re.compile(r"\b(labor and delivery|labor & delivery|birth center)\b", re.I)),
+    ("labor_and_delivery", re.compile(r"\b(labor and delivery|labor & delivery|birth center|birthing center|deliveries|delivery options?)\b", re.I)),
     ("maternity", re.compile(r"\bmaternity\b", re.I)),
+    ("specialty_care", re.compile(r"\b(sexual health|STI|STD|HIV|walk-in clinic)\b", re.I)),
     ("emergency_care", re.compile(r"\b(emergency department|emergency room|ER|ED)\b", re.I)),
     ("behavioral_health", re.compile(r"\b(behavioral health|mental health)\b", re.I)),
     ("psychiatric_care", re.compile(r"\bpsychiatric\b", re.I)),
@@ -356,7 +364,7 @@ RETROSPECTIVE_MARKERS = (
 )
 ACTIONABLE_EVENT_PATTERN = re.compile(
     r"\b("
-    r"will close|will end|will suspend|will reduce|will reopen|will restore|plans? to close|set to close|scheduled to close|proposed closure|proposed closing|moving forward|vote to close|vote on closing|stop vote|closed|closing|"
+    r"will close|will end|will suspend|will reduce|will reopen|will restore|plans? to close|set to close|scheduled to close|proposed closure|proposed closing|moving forward|vote to close|vote on closing|stop vote|closed|closing|cancel(?:ed|led|s|lation)|pause(?:d|s|ing)?|transition(?:ed|ing)?|"
     r"remain(?:s)? closed|still closed|reopen(?:ed|ing|s)?|restore(?:d|s|ing)?|resume(?:d|s|ing)?|"
     r"suspend(?:ed|ing|s)?|remain(?:s)? suspended|still suspended|halt(?:ed|ing|s)?|"
     r"reduce(?:d|s|ing)? hours?|cut(?:s|ting)? beds?|shut(?:ting)? down|stop admissions|divert(?:ed|ing|s)?"
@@ -2098,7 +2106,7 @@ def _supports_review_without_full_article(
         return False
     lowered = supporting_passage.casefold()
     return bool(
-        re.search(r"\b(close|closing|closed|end|ending|suspend|suspended|halt|halted|cut|reducing|reduce|reopen|reopened|restore|restored|transfer|move)\b", lowered)
+        re.search(r"\b(close|closing|closed|end|ending|suspend|suspended|halt|halted|cut|reducing|reduce|reopen|reopened|restore|restored|transfer|move|cancel|canceled|cancelled|pause|paused|transition|delayed)\b", lowered)
         and (re.search(r"\b(hospital|clinic|center|ward|unit|department|service|services)\b", lowered) or service_line)
     )
 
@@ -4265,6 +4273,46 @@ class CollectionAttempt:
         }
 
 
+def _source_failure_class(failure: str) -> str:
+    for class_name in SOURCE_FAILURE_CLASSES:
+        if str(failure or "").startswith(f"{class_name}:"):
+            return class_name
+    return "Unknown"
+
+
+def _source_failure_transient(failure: str, failure_class: str) -> bool:
+    text = str(failure or "").casefold()
+    if failure_class in {"TimeoutError", "URLError"}:
+        return True
+    if failure_class == "HTTPError":
+        return any(code in text for code in (" 408", " 429", " 500", " 502", " 503", " 504"))
+    return False
+
+
+def _source_failure_payload(source: CareLineSource, failure: str) -> dict[str, Any]:
+    source_url = str(source.feed_url or source.homepage_url or "")
+    domain = urlparse(source_url).netloc.lower()
+    failure_class = _source_failure_class(failure)
+    return {
+        "schema_version": f"{PIPELINE_SCHEMA_VERSION}.source_failure",
+        "source_id": source.source_id,
+        "source_name": source.name,
+        "domain": domain,
+        "adapter_type": source.adapter_type,
+        "readiness": source_readiness_status(source),
+        "readiness_reason": source_readiness_reason(source),
+        "source_url": source_url,
+        "feed_url": str(source.feed_url or ""),
+        "homepage_url": str(source.homepage_url or ""),
+        "failure_class": failure_class,
+        "failure_reason": failure,
+        "transient": _source_failure_transient(failure, failure_class),
+        "retry_attempted": False,
+        "retry_count": 0,
+        "alternate_discovery_coverage": "not_evaluated_in_collection_attempt",
+    }
+
+
 def run_collection_attempt(
     root: Path,
     *,
@@ -4334,6 +4382,7 @@ def run_collection_attempt(
         )
     except ET.ParseError as exc:
         failure = f"ParseError: {exc}"
+        failure_payload = _source_failure_payload(source, failure)
         attempt = CollectionAttempt(
             source_id=source.source_id,
             source_name=source.name,
@@ -4352,10 +4401,11 @@ def run_collection_attempt(
             failure_reason=failure,
         )
         _atomic_write(run_dir / _source_attempt_filename(source.source_id), attempt.to_payload())
-        _atomic_write(run_dir / _source_failure_filename(source.source_id), {"source_id": source.source_id, "failure_reason": failure})
-        return {"attempt": attempt.to_payload(), "raw_items": [], "event_leads": [], "candidates": [], "exclusions": [], "failed_extractions": [], "manual_review": [], "failure": failure}
+        _atomic_write(run_dir / _source_failure_filename(source.source_id), failure_payload)
+        return {"attempt": attempt.to_payload(), "raw_items": [], "event_leads": [], "candidates": [], "exclusions": [], "failed_extractions": [], "manual_review": [], "failure": failure, "failure_diagnostic": failure_payload}
     except Exception as exc:  # noqa: BLE001
         failure = f"{type(exc).__name__}: {exc}"
+        failure_payload = _source_failure_payload(source, failure)
         attempt = CollectionAttempt(
             source_id=source.source_id,
             source_name=source.name,
@@ -4374,8 +4424,8 @@ def run_collection_attempt(
             failure_reason=failure,
         )
         _atomic_write(run_dir / _source_attempt_filename(source.source_id), attempt.to_payload())
-        _atomic_write(run_dir / _source_failure_filename(source.source_id), {"source_id": source.source_id, "failure_reason": failure})
-        return {"attempt": attempt.to_payload(), "raw_items": [], "event_leads": [], "candidates": [], "exclusions": [], "failed_extractions": [], "manual_review": [], "failure": failure}
+        _atomic_write(run_dir / _source_failure_filename(source.source_id), failure_payload)
+        return {"attempt": attempt.to_payload(), "raw_items": [], "event_leads": [], "candidates": [], "exclusions": [], "failed_extractions": [], "manual_review": [], "failure": failure, "failure_diagnostic": failure_payload}
     raw_artifact_path = run_dir / _source_raw_items_filename(source.source_id)
     raw_items = [
         discovery_record_from_direct_item(
@@ -4614,6 +4664,7 @@ def run_national_pipeline(
     manual_review: list[dict[str, Any]] = []
     prefilter_diagnostics: list[dict[str, Any]] = []
     prefilter_discarded: list[dict[str, Any]] = []
+    source_failure_diagnostics: list[dict[str, Any]] = []
     for source_row in source_rows:
         result = run_collection_attempt(
             root,
@@ -4635,6 +4686,9 @@ def run_national_pipeline(
         manual_review.extend(result.get("manual_review", []))
         prefilter_diagnostics.extend(result.get("prefilter_diagnostics", []))
         prefilter_discarded.extend(result.get("prefilter_discarded", []))
+        failure_diagnostic = result.get("failure_diagnostic")
+        if isinstance(failure_diagnostic, Mapping):
+            source_failure_diagnostics.append(dict(failure_diagnostic))
     candidate_registry = update_candidate_registry_at_path(root / review_paths["candidate_registry"], edition_date=run_date, candidates=candidates)
     queue_payload = build_review_queue(candidate_registry["candidates"], edition_date=run_date, active_queue_limit=active_queue_limit, low_priority_cap=low_priority_cap)
     _write_review_private_outputs(
@@ -4693,6 +4747,8 @@ def run_national_pipeline(
         "source_attempt_count": len(attempts),
         "successful_attempt_count": successful_attempt_count,
         "failed_source_count": failed_source_count,
+        "source_failure_diagnostics": source_failure_diagnostics,
+        "zero_findings_distinct_from_source_failures": bool(failed_source_count or candidates or raw_items),
         "skipped_source_count": skipped_source_count,
         "collection_status_counts": dict(sorted(collection_status_counts.items())),
         "smoke_test": smoke_test,

@@ -1,0 +1,1027 @@
+{
+  "edition_date": "2026-05-03",
+  "coverage_start": "2026-04-27",
+  "coverage_end": "2026-05-03",
+  "coverage_label": "Apr 27\u2013May 3, 2026",
+  "note": "Regional systems weather map built from source-backed public reporting across Washington, Oregon, and Idaho.",
+  "markers": [
+    {
+      "story_id": "story-c7a4b5528a8c",
+      "title": "Washington bridge inspection program flags transportation maintenance backlog",
+      "category": "Transportation",
+      "category_id": "transportation",
+      "category_label": "Transportation",
+      "pressure_type": "Transportation and access",
+      "place": "Olympia",
+      "state": "WA",
+      "state_or_region": "WA",
+      "region_label": "Puget Sound",
+      "regional_area": "Puget Sound",
+      "publisher": "Blue Fern Cascadia Manual Source File",
+      "published_at": "2026-05-03T08:00:00Z",
+      "source_url": "https://wsdot.wa.gov/travel/roads-bridges/bridge-structures",
+      "source_record_id": "src-63ceb40d9957a9da",
+      "what_we_found": "WSDOT bridge structure information is used here as a manual source record for a transportation maintenance signal.",
+      "why_it_matters": "Transportation disruptions can limit work, school, and emergency access across connected communities.",
+      "read_more": "/cascadia/editions/2026-05-03/",
+      "read_more_label": "Washington bridge inspection program flags transportation maintenance backlog",
+      "location_label": "WSDOT",
+      "address": null,
+      "location_precision": "facility",
+      "precision_note": "Mapped to reported address/facility.",
+      "marker_scope": "local",
+      "lat": 47.0379,
+      "lon": -122.9007,
+      "coordinate_basis": "place_lookup"
+    },
+    {
+      "story_id": "map-registry-f70320c790ebddab",
+      "title": "Tacoma housing activists push to strengthen renter protections",
+      "category": "housing",
+      "category_id": null,
+      "category_label": "housing",
+      "pressure_type": "Housing and utility pressure",
+      "place": "Tacoma",
+      "state": "WA",
+      "state_or_region": "WA",
+      "region_label": "Puget Sound",
+      "regional_area": "Puget Sound",
+      "publisher": "Washington State Standard",
+      "published_at": "2026-04-30T11:00:16Z",
+      "source_url": "https://washingtonstatestandard.com/2026/04/30/tacoma-housing-activists-push-to-strengthen-renter-protections/",
+      "source_record_id": "registry-f70320c790ebddab",
+      "what_we_found": "Housing activists in Tacoma are gathering signatures for a ballot initiative that could strengthen enforcement of renter protections. The initiative is a follow-up to the \u201cTenant\u2019s Bill of Rights,\u201d also known as the Landlord Fairness Code, passed by Tacoma voters in 2023.",
+      "why_it_matters": "In WA, this report signals pressure on local services, household stability, or public infrastructure.",
+      "read_more": "/cascadia/editions/2026-05-03/",
+      "read_more_label": "Tacoma housing activists push to strengthen renter protections",
+      "location_label": "Tacoma",
+      "address": null,
+      "location_precision": "city",
+      "precision_note": "Mapped to city level.",
+      "marker_scope": "local",
+      "lat": 47.2529,
+      "lon": -122.4443,
+      "coordinate_basis": "place_lookup",
+      "map_source": "backfill_record",
+      "coverage_start": "2026-04-27",
+      "coverage_end": "2026-05-03"
+    }
+  ],
+  "regional_reports": [
+    {
+      "story_id": "map-registry-85660de20903d9d8",
+      "title": "Two friends plan a 90-mile kindness walk in western Washington",
+      "category": "government",
+      "category_id": null,
+      "category_label": "government",
+      "pressure_type": "Schools and local government services",
+      "place": "WA",
+      "state": "WA",
+      "state_or_region": "WA",
+      "region_label": "Puget Sound",
+      "regional_area": "Puget Sound",
+      "publisher": "Washington State Standard",
+      "published_at": "2026-05-03T16:12:54Z",
+      "source_url": "https://washingtonstatestandard.com/2026/05/03/two-friends-plan-a-90-mile-kindness-walk-in-western-washington/",
+      "source_record_id": "registry-85660de20903d9d8",
+      "what_we_found": "This article was first published by F\u0101VS News. When Jim Hall and Bob Bruce, who have been best friends for over 50 years, heard about the Buddhist monks who walked for peace earlier this year, they had an idea: What if they did a walk of their own, one that focused on building bridges across faith and politics?",
+      "why_it_matters": "In WA, this report signals pressure on local services, household stability, or public infrastructure.",
+      "read_more": "/cascadia/editions/2026-05-03/",
+      "read_more_label": "Two friends plan a 90-mile kindness walk in western Washington",
+      "location_label": "WA",
+      "address": null,
+      "location_precision": "statewide",
+      "precision_note": "Statewide report.",
+      "marker_scope": "statewide",
+      "lat": 47.4009,
+      "lon": -120.4508,
+      "coordinate_basis": "state_centroid",
+      "map_source": "backfill_record",
+      "coverage_start": "2026-04-27",
+      "coverage_end": "2026-05-03"
+    },
+    {
+      "story_id": "map-registry-461a1c401df98665",
+      "title": "Trump\u2019s new conditions on DEI, immigration could cut off states\u2019 wildfire funding",
+      "category": "government",
+      "category_id": null,
+      "category_label": "government",
+      "pressure_type": "Schools and local government services",
+      "place": "WA",
+      "state": "WA",
+      "state_or_region": "WA",
+      "region_label": "Puget Sound",
+      "regional_area": "Puget Sound",
+      "publisher": "Washington State Standard",
+      "published_at": "2026-05-02T11:00:51Z",
+      "source_url": "https://washingtonstatestandard.com/2026/05/02/repub/trumps-new-conditions-on-dei-immigration-could-cut-off-states-wildfire-funding/",
+      "source_record_id": "registry-461a1c401df98665",
+      "what_we_found": "A new effort to force states to affirm the Trump administration\u2019s views on DEI, transgender athletes and immigration when signing contracts with the U.S. Forest Service is threatening millions of dollars in wildfire grant funding and fire reduction projects on federal lands.",
+      "why_it_matters": "In WA, this report signals pressure on local services, household stability, or public infrastructure.",
+      "read_more": "/cascadia/editions/2026-05-03/",
+      "read_more_label": "Trump\u2019s new conditions on DEI, immigration could cut off states\u2019 wildfire funding",
+      "location_label": "WA",
+      "address": null,
+      "location_precision": "statewide",
+      "precision_note": "Statewide report.",
+      "marker_scope": "statewide",
+      "lat": 47.4009,
+      "lon": -120.4508,
+      "coordinate_basis": "state_centroid",
+      "map_source": "backfill_record",
+      "coverage_start": "2026-04-27",
+      "coverage_end": "2026-05-03"
+    },
+    {
+      "story_id": "map-registry-0110630ac8e10c4d",
+      "title": "I served my country, but it\u2019s leaving me high and dry",
+      "category": "housing",
+      "category_id": null,
+      "category_label": "housing",
+      "pressure_type": "Housing and utility pressure",
+      "place": "WA",
+      "state": "WA",
+      "state_or_region": "WA",
+      "region_label": "Puget Sound",
+      "regional_area": "Puget Sound",
+      "publisher": "Washington State Standard",
+      "published_at": "2026-05-01T20:47:18Z",
+      "source_url": "https://washingtonstatestandard.com/2026/05/01/i-served-my-country-but-its-leaving-me-high-and-dry/",
+      "source_record_id": "registry-0110630ac8e10c4d",
+      "what_we_found": "Homeless veterans are a common sight in Washington, which ranks fourth in the country for the number of veterans without housing relative to population. Unfortunately, this leads to stereotypes and \u2014 worse \u2014 inaction.",
+      "why_it_matters": "In WA, this report signals pressure on local services, household stability, or public infrastructure.",
+      "read_more": "/cascadia/editions/2026-05-03/",
+      "read_more_label": "I served my country, but it\u2019s leaving me high and dry",
+      "location_label": "WA",
+      "address": null,
+      "location_precision": "statewide",
+      "precision_note": "Statewide report.",
+      "marker_scope": "statewide",
+      "lat": 47.4009,
+      "lon": -120.4508,
+      "coordinate_basis": "state_centroid",
+      "map_source": "backfill_record",
+      "coverage_start": "2026-04-27",
+      "coverage_end": "2026-05-03"
+    },
+    {
+      "story_id": "map-registry-3d7ffa8982422651",
+      "title": "Single-family housing starts in March at their highest since 2022",
+      "category": "housing",
+      "category_id": null,
+      "category_label": "housing",
+      "pressure_type": "Housing and utility pressure",
+      "place": "WA",
+      "state": "WA",
+      "state_or_region": "WA",
+      "region_label": "Puget Sound",
+      "regional_area": "Puget Sound",
+      "publisher": "Washington State Standard",
+      "published_at": "2026-05-01T18:48:23Z",
+      "source_url": "https://washingtonstatestandard.com/2026/05/01/repub/single-family-housing-starts-in-march-at-their-highest-since-2022/",
+      "source_record_id": "registry-3d7ffa8982422651",
+      "what_we_found": "Single-family housing starts in March were at their highest since 2022, a fast start to the construction year that could bring more supply to home markets that are still painfully expensive. The new data from surveys was released April 29 by the U.S.",
+      "why_it_matters": "In WA, this report signals pressure on local services, household stability, or public infrastructure.",
+      "read_more": "/cascadia/editions/2026-05-03/",
+      "read_more_label": "Single-family housing starts in March at their highest since 2022",
+      "location_label": "WA",
+      "address": null,
+      "location_precision": "statewide",
+      "precision_note": "Statewide report.",
+      "marker_scope": "statewide",
+      "lat": 47.4009,
+      "lon": -120.4508,
+      "coordinate_basis": "state_centroid",
+      "map_source": "backfill_record",
+      "coverage_start": "2026-04-27",
+      "coverage_end": "2026-05-03"
+    },
+    {
+      "story_id": "map-registry-0bb0df6966f59402",
+      "title": "US House passes \u2018skinny\u2019 farm bill that keeps big GOP cuts to food assistance",
+      "category": "government",
+      "category_id": null,
+      "category_label": "government",
+      "pressure_type": "Schools and local government services",
+      "place": "WA",
+      "state": "WA",
+      "state_or_region": "WA",
+      "region_label": "Puget Sound",
+      "regional_area": "Puget Sound",
+      "publisher": "Washington State Standard",
+      "published_at": "2026-04-30T19:59:49Z",
+      "source_url": "https://washingtonstatestandard.com/2026/04/30/repub/us-house-passes-skinny-farm-bill-that-keeps-big-gop-cuts-to-food-assistance/",
+      "source_record_id": "registry-0bb0df6966f59402",
+      "what_we_found": "The U.S. House approved, 224-200, a five-year farm bill Thursday as members of Congress attempt to update major agriculture and nutrition policy after three years of extensions.",
+      "why_it_matters": "In WA, this report signals pressure on local services, household stability, or public infrastructure.",
+      "read_more": "/cascadia/editions/2026-05-03/",
+      "read_more_label": "US House passes \u2018skinny\u2019 farm bill that keeps big GOP cuts to food assistance",
+      "location_label": "WA",
+      "address": null,
+      "location_precision": "statewide",
+      "precision_note": "Statewide report.",
+      "marker_scope": "statewide",
+      "lat": 47.4009,
+      "lon": -120.4508,
+      "coordinate_basis": "state_centroid",
+      "map_source": "backfill_record",
+      "coverage_start": "2026-04-27",
+      "coverage_end": "2026-05-03"
+    },
+    {
+      "story_id": "map-registry-db5caa843c3fb07f",
+      "title": "\u2018They\u2019re going to learn about Frank\u2019: UW psychiatric hospital dedicated to Chopp",
+      "category": "government",
+      "category_id": null,
+      "category_label": "government",
+      "pressure_type": "Schools and local government services",
+      "place": "WA",
+      "state": "WA",
+      "state_or_region": "WA",
+      "region_label": "Puget Sound",
+      "regional_area": "Puget Sound",
+      "publisher": "Washington State Standard",
+      "published_at": "2026-04-29T11:01:59Z",
+      "source_url": "https://washingtonstatestandard.com/2026/04/29/theyre-going-to-learn-about-frank-uw-psychiatric-hospital-dedicated-to-chopp/",
+      "source_record_id": "registry-db5caa843c3fb07f",
+      "what_we_found": "So when, in 2019, he brought forward a bill to create a new psychiatric teaching hospital at the University of Washington, his fellow lawmakers quipped that he might not understand the legislative process.",
+      "why_it_matters": "In WA, this report signals pressure on local services, household stability, or public infrastructure.",
+      "read_more": "/cascadia/editions/2026-05-03/",
+      "read_more_label": "\u2018They\u2019re going to learn about Frank\u2019: UW psychiatric hospital dedicated to Chopp",
+      "location_label": "WA",
+      "address": null,
+      "location_precision": "statewide",
+      "precision_note": "Statewide report.",
+      "marker_scope": "statewide",
+      "lat": 47.4009,
+      "lon": -120.4508,
+      "coordinate_basis": "state_centroid",
+      "map_source": "backfill_record",
+      "coverage_start": "2026-04-27",
+      "coverage_end": "2026-05-03"
+    },
+    {
+      "story_id": "map-registry-5f8a4c2faeba9d07",
+      "title": "Trump administration proposes rolling back gender identity protections in federal housing",
+      "category": "housing",
+      "category_id": null,
+      "category_label": "housing",
+      "pressure_type": "Housing and utility pressure",
+      "place": "WA",
+      "state": "WA",
+      "state_or_region": "WA",
+      "region_label": "Puget Sound",
+      "regional_area": "Puget Sound",
+      "publisher": "Washington State Standard",
+      "published_at": "2026-04-28T23:39:28Z",
+      "source_url": "https://washingtonstatestandard.com/2026/04/28/repub/trump-administration-proposes-rolling-back-gender-identity-protections-in-federal-housing/",
+      "source_record_id": "registry-5f8a4c2faeba9d07",
+      "what_we_found": "A Trump administration proposal would end gender identity protections for people in federally funded housing and shelters. The U.S.",
+      "why_it_matters": "In WA, this report signals pressure on local services, household stability, or public infrastructure.",
+      "read_more": "/cascadia/editions/2026-05-03/",
+      "read_more_label": "Trump administration proposes rolling back gender identity protections in federal housing",
+      "location_label": "WA",
+      "address": null,
+      "location_precision": "statewide",
+      "precision_note": "Statewide report.",
+      "marker_scope": "statewide",
+      "lat": 47.4009,
+      "lon": -120.4508,
+      "coordinate_basis": "state_centroid",
+      "map_source": "backfill_record",
+      "coverage_start": "2026-04-27",
+      "coverage_end": "2026-05-03"
+    },
+    {
+      "story_id": "map-registry-166d27746632aa3e",
+      "title": "Utah\u2019s heading into an \u2018especially dangerous\u2019 wildfire season",
+      "category": "government",
+      "category_id": null,
+      "category_label": "government",
+      "pressure_type": "Schools and local government services",
+      "place": "ID",
+      "state": "ID",
+      "state_or_region": "ID",
+      "region_label": "Idaho rural communities",
+      "regional_area": "Idaho rural communities",
+      "publisher": "Idaho Capital Sun",
+      "published_at": "2026-05-01T18:09:25Z",
+      "source_url": "https://idahocapitalsun.com/2026/05/01/repub/utahs-heading-into-an-especially-dangerous-wildfire-season/",
+      "source_record_id": "registry-166d27746632aa3e",
+      "what_we_found": "Conditions are ripe for an intense summer of wildfires, state leaders say, with blistering temperatures in the forecast and dry brush across the state. The last thing Utah needs is for people to let their guard down and send sparks and embers into the mix.",
+      "why_it_matters": "In ID, this report signals pressure on local services, household stability, or public infrastructure.",
+      "read_more": "/cascadia/editions/2026-05-03/",
+      "read_more_label": "Utah\u2019s heading into an \u2018especially dangerous\u2019 wildfire season",
+      "location_label": "ID",
+      "address": null,
+      "location_precision": "statewide",
+      "precision_note": "Statewide report.",
+      "marker_scope": "statewide",
+      "lat": 44.2405,
+      "lon": -114.4788,
+      "coordinate_basis": "state_centroid",
+      "map_source": "backfill_record",
+      "coverage_start": "2026-04-27",
+      "coverage_end": "2026-05-03"
+    }
+  ],
+  "grouped_regional_reports": [
+    {
+      "story_id": "map-registry-85660de20903d9d8",
+      "title": "Two friends plan a 90-mile kindness walk in western Washington",
+      "category": "government",
+      "category_id": null,
+      "category_label": "government",
+      "pressure_type": "Schools and local government services",
+      "place": "WA",
+      "state": "WA",
+      "state_or_region": "WA",
+      "region_label": "Puget Sound",
+      "regional_area": "Puget Sound",
+      "publisher": "Washington State Standard",
+      "published_at": "2026-05-03T16:12:54Z",
+      "source_url": "https://washingtonstatestandard.com/2026/05/03/two-friends-plan-a-90-mile-kindness-walk-in-western-washington/",
+      "source_record_id": "registry-85660de20903d9d8",
+      "what_we_found": "This article was first published by F\u0101VS News. When Jim Hall and Bob Bruce, who have been best friends for over 50 years, heard about the Buddhist monks who walked for peace earlier this year, they had an idea: What if they did a walk of their own, one that focused on building bridges across faith and politics?",
+      "why_it_matters": "In WA, this report signals pressure on local services, household stability, or public infrastructure.",
+      "read_more": "/cascadia/editions/2026-05-03/",
+      "read_more_label": "Two friends plan a 90-mile kindness walk in western Washington",
+      "location_label": "WA",
+      "address": null,
+      "location_precision": "statewide",
+      "precision_note": "Statewide report.",
+      "marker_scope": "statewide",
+      "lat": 47.4009,
+      "lon": -120.4508,
+      "coordinate_basis": "state_centroid",
+      "map_source": "backfill_record",
+      "coverage_start": "2026-04-27",
+      "coverage_end": "2026-05-03",
+      "group_count": 7,
+      "group_id": "puget-sound-474--1205",
+      "reports": [
+        {
+          "headline": "Two friends plan a 90-mile kindness walk in western Washington",
+          "summary": "This article was first published by F\u0101VS News. When Jim Hall and Bob Bruce, who have been best friends for over 50 years, heard about the Buddhist monks who walked for peace earlier this year, they had an idea: What if they did a walk of their own, one that focused on building bridges across faith and politics?",
+          "pressure_type": "Schools and local government services",
+          "publisher": "Washington State Standard",
+          "source_url": "https://washingtonstatestandard.com/2026/05/03/two-friends-plan-a-90-mile-kindness-walk-in-western-washington/",
+          "read_more": "/cascadia/editions/2026-05-03/",
+          "read_more_label": "Two friends plan a 90-mile kindness walk in western Washington"
+        },
+        {
+          "headline": "Trump\u2019s new conditions on DEI, immigration could cut off states\u2019 wildfire funding",
+          "summary": "A new effort to force states to affirm the Trump administration\u2019s views on DEI, transgender athletes and immigration when signing contracts with the U.S. Forest Service is threatening millions of dollars in wildfire grant funding and fire reduction projects on federal lands.",
+          "pressure_type": "Schools and local government services",
+          "publisher": "Washington State Standard",
+          "source_url": "https://washingtonstatestandard.com/2026/05/02/repub/trumps-new-conditions-on-dei-immigration-could-cut-off-states-wildfire-funding/",
+          "read_more": "/cascadia/editions/2026-05-03/",
+          "read_more_label": "Trump\u2019s new conditions on DEI, immigration could cut off states\u2019 wildfire funding"
+        },
+        {
+          "headline": "I served my country, but it\u2019s leaving me high and dry",
+          "summary": "Homeless veterans are a common sight in Washington, which ranks fourth in the country for the number of veterans without housing relative to population. Unfortunately, this leads to stereotypes and \u2014 worse \u2014 inaction.",
+          "pressure_type": "Housing and utility pressure",
+          "publisher": "Washington State Standard",
+          "source_url": "https://washingtonstatestandard.com/2026/05/01/i-served-my-country-but-its-leaving-me-high-and-dry/",
+          "read_more": "/cascadia/editions/2026-05-03/",
+          "read_more_label": "I served my country, but it\u2019s leaving me high and dry"
+        },
+        {
+          "headline": "Single-family housing starts in March at their highest since 2022",
+          "summary": "Single-family housing starts in March were at their highest since 2022, a fast start to the construction year that could bring more supply to home markets that are still painfully expensive. The new data from surveys was released April 29 by the U.S.",
+          "pressure_type": "Housing and utility pressure",
+          "publisher": "Washington State Standard",
+          "source_url": "https://washingtonstatestandard.com/2026/05/01/repub/single-family-housing-starts-in-march-at-their-highest-since-2022/",
+          "read_more": "/cascadia/editions/2026-05-03/",
+          "read_more_label": "Single-family housing starts in March at their highest since 2022"
+        },
+        {
+          "headline": "US House passes \u2018skinny\u2019 farm bill that keeps big GOP cuts to food assistance",
+          "summary": "The U.S. House approved, 224-200, a five-year farm bill Thursday as members of Congress attempt to update major agriculture and nutrition policy after three years of extensions.",
+          "pressure_type": "Schools and local government services",
+          "publisher": "Washington State Standard",
+          "source_url": "https://washingtonstatestandard.com/2026/04/30/repub/us-house-passes-skinny-farm-bill-that-keeps-big-gop-cuts-to-food-assistance/",
+          "read_more": "/cascadia/editions/2026-05-03/",
+          "read_more_label": "US House passes \u2018skinny\u2019 farm bill that keeps big GOP cuts to food assistance"
+        },
+        {
+          "headline": "\u2018They\u2019re going to learn about Frank\u2019: UW psychiatric hospital dedicated to Chopp",
+          "summary": "So when, in 2019, he brought forward a bill to create a new psychiatric teaching hospital at the University of Washington, his fellow lawmakers quipped that he might not understand the legislative process.",
+          "pressure_type": "Schools and local government services",
+          "publisher": "Washington State Standard",
+          "source_url": "https://washingtonstatestandard.com/2026/04/29/theyre-going-to-learn-about-frank-uw-psychiatric-hospital-dedicated-to-chopp/",
+          "read_more": "/cascadia/editions/2026-05-03/",
+          "read_more_label": "\u2018They\u2019re going to learn about Frank\u2019: UW psychiatric hospital dedicated to Chopp"
+        },
+        {
+          "headline": "Trump administration proposes rolling back gender identity protections in federal housing",
+          "summary": "A Trump administration proposal would end gender identity protections for people in federally funded housing and shelters. The U.S.",
+          "pressure_type": "Housing and utility pressure",
+          "publisher": "Washington State Standard",
+          "source_url": "https://washingtonstatestandard.com/2026/04/28/repub/trump-administration-proposes-rolling-back-gender-identity-protections-in-federal-housing/",
+          "read_more": "/cascadia/editions/2026-05-03/",
+          "read_more_label": "Trump administration proposes rolling back gender identity protections in federal housing"
+        }
+      ],
+      "pressure_areas": [
+        "Schools and local government services",
+        "Housing and utility pressure"
+      ]
+    },
+    {
+      "story_id": "map-registry-166d27746632aa3e",
+      "title": "Utah\u2019s heading into an \u2018especially dangerous\u2019 wildfire season",
+      "category": "government",
+      "category_id": null,
+      "category_label": "government",
+      "pressure_type": "Schools and local government services",
+      "place": "ID",
+      "state": "ID",
+      "state_or_region": "ID",
+      "region_label": "Idaho rural communities",
+      "regional_area": "Idaho rural communities",
+      "publisher": "Idaho Capital Sun",
+      "published_at": "2026-05-01T18:09:25Z",
+      "source_url": "https://idahocapitalsun.com/2026/05/01/repub/utahs-heading-into-an-especially-dangerous-wildfire-season/",
+      "source_record_id": "registry-166d27746632aa3e",
+      "what_we_found": "Conditions are ripe for an intense summer of wildfires, state leaders say, with blistering temperatures in the forecast and dry brush across the state. The last thing Utah needs is for people to let their guard down and send sparks and embers into the mix.",
+      "why_it_matters": "In ID, this report signals pressure on local services, household stability, or public infrastructure.",
+      "read_more": "/cascadia/editions/2026-05-03/",
+      "read_more_label": "Utah\u2019s heading into an \u2018especially dangerous\u2019 wildfire season",
+      "location_label": "ID",
+      "address": null,
+      "location_precision": "statewide",
+      "precision_note": "Statewide report.",
+      "marker_scope": "statewide",
+      "lat": 44.2405,
+      "lon": -114.4788,
+      "coordinate_basis": "state_centroid",
+      "map_source": "backfill_record",
+      "coverage_start": "2026-04-27",
+      "coverage_end": "2026-05-03",
+      "group_count": 1,
+      "group_id": "idaho-rural-communities-442--1145",
+      "reports": [
+        {
+          "headline": "Utah\u2019s heading into an \u2018especially dangerous\u2019 wildfire season",
+          "summary": "Conditions are ripe for an intense summer of wildfires, state leaders say, with blistering temperatures in the forecast and dry brush across the state. The last thing Utah needs is for people to let their guard down and send sparks and embers into the mix.",
+          "pressure_type": "Schools and local government services",
+          "publisher": "Idaho Capital Sun",
+          "source_url": "https://idahocapitalsun.com/2026/05/01/repub/utahs-heading-into-an-especially-dangerous-wildfire-season/",
+          "read_more": "/cascadia/editions/2026-05-03/",
+          "read_more_label": "Utah\u2019s heading into an \u2018especially dangerous\u2019 wildfire season"
+        }
+      ],
+      "pressure_areas": [
+        "Schools and local government services"
+      ]
+    }
+  ],
+  "show_regional_default": true,
+  "default_view_mode": "sparse_local_plus_regional",
+  "grouped_markers": [
+    {
+      "story_id": "story-c7a4b5528a8c",
+      "title": "Washington bridge inspection program flags transportation maintenance backlog",
+      "category": "Transportation",
+      "category_id": "transportation",
+      "category_label": "Transportation",
+      "pressure_type": "Transportation and access",
+      "place": "Olympia",
+      "state": "WA",
+      "state_or_region": "WA",
+      "region_label": "Puget Sound",
+      "regional_area": "Puget Sound",
+      "publisher": "Blue Fern Cascadia Manual Source File",
+      "published_at": "2026-05-03T08:00:00Z",
+      "source_url": "https://wsdot.wa.gov/travel/roads-bridges/bridge-structures",
+      "source_record_id": "src-63ceb40d9957a9da",
+      "what_we_found": "WSDOT bridge structure information is used here as a manual source record for a transportation maintenance signal.",
+      "why_it_matters": "Transportation disruptions can limit work, school, and emergency access across connected communities.",
+      "read_more": "/cascadia/editions/2026-05-03/",
+      "read_more_label": "Washington bridge inspection program flags transportation maintenance backlog",
+      "location_label": "WSDOT",
+      "address": null,
+      "location_precision": "facility",
+      "precision_note": "Mapped to reported address/facility.",
+      "marker_scope": "local",
+      "lat": 47.0379,
+      "lon": -122.9007,
+      "coordinate_basis": "place_lookup",
+      "group_count": 1,
+      "group_id": "puget-sound-470--1229",
+      "reports": [
+        {
+          "headline": "Washington bridge inspection program flags transportation maintenance backlog",
+          "summary": "WSDOT bridge structure information is used here as a manual source record for a transportation maintenance signal.",
+          "pressure_type": "Transportation and access",
+          "publisher": "Blue Fern Cascadia Manual Source File",
+          "source_url": "https://wsdot.wa.gov/travel/roads-bridges/bridge-structures",
+          "read_more": "/cascadia/editions/2026-05-03/",
+          "read_more_label": "Washington bridge inspection program flags transportation maintenance backlog"
+        }
+      ],
+      "pressure_areas": [
+        "Transportation and access"
+      ]
+    },
+    {
+      "story_id": "map-registry-f70320c790ebddab",
+      "title": "Tacoma housing activists push to strengthen renter protections",
+      "category": "housing",
+      "category_id": null,
+      "category_label": "housing",
+      "pressure_type": "Housing and utility pressure",
+      "place": "Tacoma",
+      "state": "WA",
+      "state_or_region": "WA",
+      "region_label": "Puget Sound",
+      "regional_area": "Puget Sound",
+      "publisher": "Washington State Standard",
+      "published_at": "2026-04-30T11:00:16Z",
+      "source_url": "https://washingtonstatestandard.com/2026/04/30/tacoma-housing-activists-push-to-strengthen-renter-protections/",
+      "source_record_id": "registry-f70320c790ebddab",
+      "what_we_found": "Housing activists in Tacoma are gathering signatures for a ballot initiative that could strengthen enforcement of renter protections. The initiative is a follow-up to the \u201cTenant\u2019s Bill of Rights,\u201d also known as the Landlord Fairness Code, passed by Tacoma voters in 2023.",
+      "why_it_matters": "In WA, this report signals pressure on local services, household stability, or public infrastructure.",
+      "read_more": "/cascadia/editions/2026-05-03/",
+      "read_more_label": "Tacoma housing activists push to strengthen renter protections",
+      "location_label": "Tacoma",
+      "address": null,
+      "location_precision": "city",
+      "precision_note": "Mapped to city level.",
+      "marker_scope": "local",
+      "lat": 47.2529,
+      "lon": -122.4443,
+      "coordinate_basis": "place_lookup",
+      "map_source": "backfill_record",
+      "coverage_start": "2026-04-27",
+      "coverage_end": "2026-05-03",
+      "group_count": 1,
+      "group_id": "puget-sound-473--1224",
+      "reports": [
+        {
+          "headline": "Tacoma housing activists push to strengthen renter protections",
+          "summary": "Housing activists in Tacoma are gathering signatures for a ballot initiative that could strengthen enforcement of renter protections. The initiative is a follow-up to the \u201cTenant\u2019s Bill of Rights,\u201d also known as the Landlord Fairness Code, passed by Tacoma voters in 2023.",
+          "pressure_type": "Housing and utility pressure",
+          "publisher": "Washington State Standard",
+          "source_url": "https://washingtonstatestandard.com/2026/04/30/tacoma-housing-activists-push-to-strengthen-renter-protections/",
+          "read_more": "/cascadia/editions/2026-05-03/",
+          "read_more_label": "Tacoma housing activists push to strengthen renter protections"
+        }
+      ],
+      "pressure_areas": [
+        "Housing and utility pressure"
+      ]
+    }
+  ],
+  "diagnostics": {
+    "raw_candidate_count": 23,
+    "accepted_local_marker_count": 2,
+    "regional_statewide_report_count": 8,
+    "excluded_count": 21,
+    "excluded_reasons": {
+      "generic_landing_page": 1,
+      "no_source_date": 12,
+      "statewide_not_default_layer": 8
+    },
+    "category_corrections_applied": 0,
+    "stale_records_removed": 0,
+    "state_only_place_excluded": 0,
+    "local_extraction_success_count": 14,
+    "local_extraction_failure_count": 9,
+    "local_extraction_success_rate": 0.6087,
+    "unresolved_category_count": 0,
+    "category_resolution_success_count": 2,
+    "extraction_fields_success": {
+      "entity_hint": 1,
+      "city_hint": 11,
+      "pattern": 2
+    },
+    "extraction_fields_failed": {
+      "none": 9
+    },
+    "place_extraction_attempted": 23,
+    "place_extraction_succeeded": 14,
+    "place_match_by_type": {
+      "entity_hint": 1,
+      "none": 9,
+      "city_hint": 11,
+      "pattern": 2
+    },
+    "candidate_diagnostics_rows": [
+      {
+        "title": "Washington bridge inspection program flags transportation maintenance backlog",
+        "source_url": "https://wsdot.wa.gov/travel/roads-bridges/bridge-structures",
+        "publisher": "Blue Fern Cascadia Manual Source File",
+        "detected_pressure_category": "Transportation and access",
+        "detected_place_candidates": [
+          "Olympia",
+          ""
+        ],
+        "selected_place": "Olympia",
+        "selected_precision": "facility",
+        "coordinate_basis": "place_lookup",
+        "inclusion_decision": "local_marker",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Oregon emergency management preparedness notice emphasizes public safety coordination",
+        "source_url": "https://www.oregon.gov/oem",
+        "publisher": "Blue Fern Cascadia Manual Source File",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "OR",
+          ""
+        ],
+        "selected_place": "OR",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "generic_landing_page"
+      },
+      {
+        "title": "Public Safety",
+        "source_url": "https://alert.seattle.gov/category/public-safety/",
+        "publisher": "City of Seattle",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "Seattle",
+          ""
+        ],
+        "selected_place": "Seattle",
+        "selected_precision": "",
+        "coordinate_basis": "place_lookup",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "OEM \u2013 Wildfire Smoke and Air Quality Guidance",
+        "source_url": "https://alert.seattle.gov/2023/08/19/oem-wildfire-smoke-and-air-quality-guidance-2/",
+        "publisher": "City of Seattle",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "Seattle",
+          ""
+        ],
+        "selected_place": "Seattle",
+        "selected_precision": "",
+        "coordinate_basis": "place_lookup",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Seattle City Light providing assistance as Sourdough wildfire continues to grow",
+        "source_url": "https://alert.seattle.gov/2023/08/05/seattle-city-light-providing-assistance-as-sourdough-wildfire-continues-to-grow/",
+        "publisher": "City of Seattle",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "Seattle",
+          ""
+        ],
+        "selected_place": "Seattle",
+        "selected_precision": "",
+        "coordinate_basis": "place_lookup",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Winter Storm: High Winds and Flooding due to King Tides and Rainfall",
+        "source_url": "https://alert.seattle.gov/2022/12/27/storms/",
+        "publisher": "City of Seattle",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "Seattle",
+          ""
+        ],
+        "selected_place": "Seattle",
+        "selected_precision": "",
+        "coordinate_basis": "place_lookup",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Wildfire Smoke Alert: Unhealthy Air Quality",
+        "source_url": "https://alert.seattle.gov/2022/10/18/wildfire-smoke-10-18-22/",
+        "publisher": "City of Seattle",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "Seattle",
+          ""
+        ],
+        "selected_place": "Seattle",
+        "selected_precision": "",
+        "coordinate_basis": "place_lookup",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Wildfire Smoke is Impacting Air Quality",
+        "source_url": "https://alert.seattle.gov/2022/09/09/wildfire-smoke-09-09-22/",
+        "publisher": "City of Seattle",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "Seattle",
+          ""
+        ],
+        "selected_place": "Seattle",
+        "selected_precision": "",
+        "coordinate_basis": "place_lookup",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Wildfire",
+        "source_url": "https://www.publicalerts.org/wildfire",
+        "publisher": "Portland PublicAlerts",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "Portland",
+          ""
+        ],
+        "selected_place": "Portland",
+        "selected_precision": "",
+        "coordinate_basis": "place_lookup",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Wildfire Smoke",
+        "source_url": "https://www.publicalerts.org/wildfire-smoke",
+        "publisher": "Portland PublicAlerts",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "Portland",
+          ""
+        ],
+        "selected_place": "Portland",
+        "selected_precision": "",
+        "coordinate_basis": "place_lookup",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Flooding and Land Movement",
+        "source_url": "https://www.publicalerts.org/flooding-and-land-movement",
+        "publisher": "Portland PublicAlerts",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "Portland",
+          ""
+        ],
+        "selected_place": "Portland",
+        "selected_precision": "",
+        "coordinate_basis": "place_lookup",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Wildfire Recovery",
+        "source_url": "https://www.publicalerts.org/wildfire-recovery",
+        "publisher": "Portland PublicAlerts",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "Portland",
+          ""
+        ],
+        "selected_place": "Portland",
+        "selected_precision": "",
+        "coordinate_basis": "place_lookup",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Affordable Housing Information",
+        "source_url": "https://www.co.marion.or.us/HA/Pages/default.aspx",
+        "publisher": "Marion County",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "Affordable Housing Information Marion County",
+          ""
+        ],
+        "selected_place": "Affordable Housing Information Marion County",
+        "selected_precision": "",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Alerts & Emergencies Currently selected",
+        "source_url": "https://www.co.marion.or.us/PW/EmergencyManagement/Pages/alerts.aspx",
+        "publisher": "Marion County",
+        "detected_pressure_category": "Public safety and emergency services",
+        "detected_place_candidates": [
+          "Marion County",
+          ""
+        ],
+        "selected_place": "Marion County",
+        "selected_precision": "",
+        "coordinate_basis": "place_lookup",
+        "inclusion_decision": "excluded",
+        "excluded_reason": "no_source_date"
+      },
+      {
+        "title": "Two friends plan a 90-mile kindness walk in western Washington",
+        "source_url": "https://washingtonstatestandard.com/2026/05/03/two-friends-plan-a-90-mile-kindness-walk-in-western-washington/",
+        "publisher": "Washington State Standard",
+        "detected_pressure_category": "Schools and local government services",
+        "detected_place_candidates": [
+          "WA",
+          ""
+        ],
+        "selected_place": "WA",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Trump\u2019s new conditions on DEI, immigration could cut off states\u2019 wildfire funding",
+        "source_url": "https://washingtonstatestandard.com/2026/05/02/repub/trumps-new-conditions-on-dei-immigration-could-cut-off-states-wildfire-funding/",
+        "publisher": "Washington State Standard",
+        "detected_pressure_category": "Schools and local government services",
+        "detected_place_candidates": [
+          "WA",
+          ""
+        ],
+        "selected_place": "WA",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "I served my country, but it\u2019s leaving me high and dry",
+        "source_url": "https://washingtonstatestandard.com/2026/05/01/i-served-my-country-but-its-leaving-me-high-and-dry/",
+        "publisher": "Washington State Standard",
+        "detected_pressure_category": "Housing and utility pressure",
+        "detected_place_candidates": [
+          "WA",
+          ""
+        ],
+        "selected_place": "WA",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Single-family housing starts in March at their highest since 2022",
+        "source_url": "https://washingtonstatestandard.com/2026/05/01/repub/single-family-housing-starts-in-march-at-their-highest-since-2022/",
+        "publisher": "Washington State Standard",
+        "detected_pressure_category": "Housing and utility pressure",
+        "detected_place_candidates": [
+          "WA",
+          ""
+        ],
+        "selected_place": "WA",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "US House passes \u2018skinny\u2019 farm bill that keeps big GOP cuts to food assistance",
+        "source_url": "https://washingtonstatestandard.com/2026/04/30/repub/us-house-passes-skinny-farm-bill-that-keeps-big-gop-cuts-to-food-assistance/",
+        "publisher": "Washington State Standard",
+        "detected_pressure_category": "Schools and local government services",
+        "detected_place_candidates": [
+          "WA",
+          ""
+        ],
+        "selected_place": "WA",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Tacoma housing activists push to strengthen renter protections",
+        "source_url": "https://washingtonstatestandard.com/2026/04/30/tacoma-housing-activists-push-to-strengthen-renter-protections/",
+        "publisher": "Washington State Standard",
+        "detected_pressure_category": "Housing and utility pressure",
+        "detected_place_candidates": [
+          "Tacoma",
+          ""
+        ],
+        "selected_place": "Tacoma",
+        "selected_precision": "city",
+        "coordinate_basis": "place_lookup",
+        "inclusion_decision": "local_marker",
+        "excluded_reason": ""
+      },
+      {
+        "title": "\u2018They\u2019re going to learn about Frank\u2019: UW psychiatric hospital dedicated to Chopp",
+        "source_url": "https://washingtonstatestandard.com/2026/04/29/theyre-going-to-learn-about-frank-uw-psychiatric-hospital-dedicated-to-chopp/",
+        "publisher": "Washington State Standard",
+        "detected_pressure_category": "Schools and local government services",
+        "detected_place_candidates": [
+          "WA",
+          ""
+        ],
+        "selected_place": "WA",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Trump administration proposes rolling back gender identity protections in federal housing",
+        "source_url": "https://washingtonstatestandard.com/2026/04/28/repub/trump-administration-proposes-rolling-back-gender-identity-protections-in-federal-housing/",
+        "publisher": "Washington State Standard",
+        "detected_pressure_category": "Housing and utility pressure",
+        "detected_place_candidates": [
+          "WA",
+          ""
+        ],
+        "selected_place": "WA",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      },
+      {
+        "title": "Utah\u2019s heading into an \u2018especially dangerous\u2019 wildfire season",
+        "source_url": "https://idahocapitalsun.com/2026/05/01/repub/utahs-heading-into-an-especially-dangerous-wildfire-season/",
+        "publisher": "Idaho Capital Sun",
+        "detected_pressure_category": "Schools and local government services",
+        "detected_place_candidates": [
+          "ID",
+          ""
+        ],
+        "selected_place": "ID",
+        "selected_precision": "statewide",
+        "coordinate_basis": "state_centroid",
+        "inclusion_decision": "regional_report",
+        "excluded_reason": ""
+      }
+    ],
+    "curated_story_marker_candidates": 1,
+    "backfill_record_candidates": 21,
+    "backfill_marker_candidates": 1,
+    "duplicates_removed": 0,
+    "included_markers": 2,
+    "regional_duplicates_removed": 0,
+    "excluded_backfill_records": 20,
+    "default_view_mode": "sparse_local_plus_regional",
+    "local_marker_count": 2,
+    "regional_report_count": 8,
+    "default_show_regional": true,
+    "initial_render_layer": "local_plus_regional",
+    "initial_visible_count": 4,
+    "top_sources_local_markers": [
+      {
+        "source": "Blue Fern Cascadia Manual Source File",
+        "local_markers": 1
+      },
+      {
+        "source": "Washington State Standard",
+        "local_markers": 1
+      }
+    ],
+    "sources_only_regional_reports": [
+      {
+        "source": "Idaho Capital Sun",
+        "regional_reports": 1
+      }
+    ],
+    "sources_with_no_local_mappable_reports": [
+      {
+        "source": "Washington State Standard",
+        "non_local_reports": 7
+      },
+      {
+        "source": "City of Seattle",
+        "non_local_reports": 6
+      },
+      {
+        "source": "Portland PublicAlerts",
+        "non_local_reports": 4
+      },
+      {
+        "source": "Marion County",
+        "non_local_reports": 2
+      },
+      {
+        "source": "Blue Fern Cascadia Manual Source File",
+        "non_local_reports": 1
+      },
+      {
+        "source": "Idaho Capital Sun",
+        "non_local_reports": 1
+      }
+    ],
+    "top_missing_place_reasons": [
+      {
+        "reason": "statewide_not_default_layer",
+        "count": 8
+      }
+    ],
+    "recommended_source_additions": [
+      "County emergency-management pages with dated updates",
+      "Transit and ferry alert/news feeds with service-area detail",
+      "Local public radio and metro newsroom operations updates",
+      "Utility outage and public health update pages with dated posts"
+    ]
+  }
+}

@@ -2337,7 +2337,12 @@ def render_dispatch_index_for_dates(
         gaza_audio_link = '\n    <p><a href="/gaza/audio/index.html">Gaza audio and transcript archive</a></p>'
     cascadia_intro = ""
     if dispatch.slug == "cascadia":
-        cascadia_intro = "<p>A weekly source-backed systems briefing for Washington, Oregon, and Idaho.</p>"
+        latest_link = (
+            f'<p><a href="editions/{latest}/">Read the most recent archived briefing</a></p>'
+            if latest
+            else "<p>No public edition is currently listed.</p>"
+        )
+        cascadia_intro = "<p>Historical Cascadia archive. Cascadia is currently inactive; previously published briefings remain available for reference, and no scheduled new briefings are currently being produced.</p>"
     care_line_intro = ""
     care_line_at_a_glance = ""
     care_line_archive_link = ""
@@ -2365,7 +2370,7 @@ def render_dispatch_index_for_dates(
     {cascadia_intro}
     <p class="lede">{html.escape(description)}</p>
     {care_line_archive_link}
-    <h2>Latest Briefing</h2>
+    <h2>{"Most recent archived briefing" if dispatch.slug == "cascadia" else "Latest Briefing"}</h2>
     {latest_link}
     {gaza_audio_link}
     <h2>Pressure Map</h2>

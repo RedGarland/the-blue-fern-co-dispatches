@@ -1664,6 +1664,37 @@ def test_render_writes_manifests_links_and_detail_only_outside_public(cascadia_w
     assert not any(path.startswith("detail/") or path.startswith("paid/") for path in public_paths)
 
 
+def test_cascadia_historical_archive_links_resolve_and_inactive_copy_is_durable():
+    repo = Path(__file__).resolve().parents[1]
+    site_root = repo / "output" / "site"
+    index_html = (site_root / "cascadia" / "index.html").read_text(encoding="utf-8")
+    archive_html = (site_root / "cascadia" / "archive.html").read_text(encoding="utf-8")
+    combined = index_html + "\n" + archive_html
+
+    assert "Historical Cascadia archive" in index_html
+    assert "Cascadia is currently inactive" in index_html
+    assert "no scheduled new briefings are currently being produced" in index_html
+    assert "A weekly source-backed systems briefing" not in index_html
+    assert "Latest Briefing" not in index_html
+    assert "Read the latest briefing" not in index_html
+    assert "Most recent archived briefing" in index_html
+    assert "Read the most recent archived briefing" in index_html
+    assert "Detention Watch" in index_html
+
+    edition_hrefs = sorted(set(re.findall(r'href="(editions/\d{4}-\d{2}-\d{2}/)"', combined)))
+    assert edition_hrefs
+    for href in edition_hrefs:
+        assert (site_root / "cascadia" / href / "index.html").exists(), href
+        map_path = site_root / "cascadia" / href / "map.html"
+        if map_path.exists():
+            assert f'href="{href}map.html"' in combined or map_path.exists()
+
+    for edition_date in ["2026-06-14", "2026-06-07", "2026-05-31", "2026-05-24", "2026-05-17", "2026-05-03"]:
+        edition_dir = site_root / "cascadia" / "editions" / edition_date
+        assert (edition_dir / "index.html").exists()
+        assert (edition_dir / "map.html").exists()
+
+
 def test_editorial_checklist_catches_public_score_missing_source_and_summary():
     stories = [
         {

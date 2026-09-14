@@ -1,0 +1,62 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-09-14",
+  "generated_at": "2026-09-14T13:02:57.944566Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-09-14.mp3",
+  "audio_url": "/gaza/audio/2026-09-14.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1103,
+  "tts_input_word_count": 168,
+  "tts_story_count": 3,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1095168,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-09-14T13:02:57.944539Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-09-14-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-09-14/",
+  "script_text": "This is the Gaza Dispatch audio briefing for September 14, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Pregnant woman among more than 10 killed in Israeli attacks on Gaza. Woman's family says she died of injuries after being shot in the head while sitting inside a tent near Khan Younis. This was reported by The Guardian.\n\n2. Israel accused of trying to 'eliminate' living conditions for Palestinians in West Bank. Report by Israeli human rights group says systematic and broad assault being waged on conditions required for Palestinians' existence. This was reported by The Guardian.\n\n3. Israeli minister threatens to strip Israeli film-makers of citizenship over Gaza documentary NAZA. Miki Zohar accuses Oscar-winning directors Yuval Abraham and Rachel Szor of 'treason against the state' 'They know the house they are bombing is full of children': NAZA's directors on their devastating film about Israeli intelligence. This was reported by The Guardian.\n\nFor the full source-backed dispatch, read the September 14, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 3,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-09-14-guardian-world-488da4240bcf",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/sep/13/pregnant-woman-killed-israeli-attacks-gaza",
+      "title": "Pregnant woman among more than 10 killed in Israeli attacks on Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-09-14-guardian-world-3b134d72965a",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/ng-interactive/2026/sep/14/israel-palestinian-living-conditions-eliminated-west-bank-human-rights-report",
+      "title": "Israel accused of trying to 'eliminate' living conditions for Palestinians in West Bank"
+    },
+    {
+      "source_record_id": "gaza-2026-09-14-guardian-world-f75ad83f5d0e",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/film/2026/sep/14/gaza-documentary-makers-naza-israel-citizenship-ntwnfb",
+      "title": "Israeli minister threatens to strip Israeli film-makers of citizenship over Gaza documentary NAZA"
+    }
+  ]
+}

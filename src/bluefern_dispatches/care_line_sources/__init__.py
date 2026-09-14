@@ -694,14 +694,35 @@ def public_archive_title_for_records(records: list[dict[str, Any]]) -> str:
 
 
 def care_line_public_card_copy(record: dict[str, Any]) -> dict[str, str]:
-    title = str(_record_value(record, "title") or "").strip()
+    title = str(_record_value(record, "title") or _record_value(record, "source_title") or "").strip()
     claim = str(_record_value(record, "claim_supported") or "").strip()
     limitation = str(_record_value(record, "limitations") or "").strip()
-    publisher = str(_record_value(record, "publisher") or "").strip()
+    publisher = str(_record_value(record, "publisher") or _record_value(record, "source_publisher") or "").strip()
     pressure_label = public_pressure_label(record)
-    location = str(_record_value(record, "location_name") or _record_value(record, "state") or "").strip()
-    published_at = str(_record_value(record, "published_at") or "").strip()
-    source_meta = " | ".join(part for part in (publisher, pressure_label, location, published_at[:10]) if part)
+    if pressure_label == "Signal":
+        event_type = str(_record_value(record, "event_type") or _record_value(record, "canonical_event_type") or "").strip()
+        if event_type:
+            pressure_label = event_type.replace("_", " ").strip().title()
+    location = str(_record_value(record, "location_name") or _record_value(record, "location_text") or _record_value(record, "state") or "").strip()
+    event_date = str(
+        _record_value(record, "effective_date")
+        or _record_value(record, "event_date")
+        or _record_value(record, "announcement_date")
+        or _record_value(record, "observed_date")
+        or ""
+    ).strip()
+    published_at = str(
+        _record_value(record, "source_publication_date")
+        or _record_value(record, "source_published_at")
+        or _record_value(record, "published_at")
+        or ""
+    ).strip()
+    date_parts = []
+    if event_date:
+        date_parts.append(f"Event/announcement: {event_date[:10]}")
+    if published_at:
+        date_parts.append(f"Source published: {published_at[:10]}")
+    source_meta = " | ".join(part for part in (publisher, pressure_label, location, *date_parts) if part)
     return {
         "pressure_label": pressure_label,
         "source_meta": source_meta,

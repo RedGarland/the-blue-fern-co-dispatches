@@ -7,6 +7,7 @@ from pathlib import Path
 
 from bluefern_dispatches.care_line_sources import (
     build_public_edition_report,
+    care_line_public_card_copy,
     load_manual_source_records,
     load_pressure_source_registry,
     public_claim_rows,
@@ -135,7 +136,7 @@ def test_care_line_build_renders_public_edition_and_excludes_stale_signals(monke
     assert "MATERNITY_CARE_LOSS" not in edition_html
     assert "Clinic access strain" in edition_html
     assert "Maternity care loss" in edition_html
-    assert "Herald-Standard | Hospital closure | Pennsylvania | 2026-05-07" in edition_html
+    assert "Herald-Standard | Hospital closure | Pennsylvania | Source published: 2026-05-07" in edition_html
     assert "What changed:</strong> A new report warned that Medicaid cuts could threaten hundreds of hospitals." in edition_html
     assert "Who may be affected:</strong> Clinic patients in and around Centerville." in edition_html
     assert "Who may be affected:</strong> Pregnant patients, families, and patients needing local maternity care near Los Alamos." in edition_html
@@ -173,6 +174,23 @@ def test_care_line_render_no_current_update_path_preserves_fallback_copy():
     assert "No current public signals were qualified for this edition." not in html
     assert "source_table.html" in html
     assert "claim_ledger.html" in html
+
+
+def test_care_line_historical_backfill_labels_event_and_source_dates():
+    repo = Path(__file__).resolve().parents[1]
+    record = json.loads((repo / "data/dispatches/care-line/reviewed/2026-08-20/reviewed_records.json").read_text(encoding="utf-8"))["records"][0]
+    record["public_inclusion_bucket"] = "Core Healthcare Access Signals"
+    record["pressure_signal"] = True
+
+    copy = care_line_public_card_copy(record)
+    body = render_care_line_edition_body([record], "2026-08-20")
+
+    assert (
+        copy["source_meta"]
+        == "Methodist Hospitals | Temporary Facility Suspension | Gary, IN | Event/announcement: 2026-08-20 | Source published: 2026-08-23"
+    )
+    assert "Event/announcement: 2026-08-20 | Source published: 2026-08-23" in body
+    assert "Gary, IN | 2026-08-23" not in body
 
 
 def test_care_line_build_renders_no_current_update_edition_and_lists_it(monkeypatch):

@@ -62,9 +62,9 @@
         "state": "HANDOFF_RECEIVED_SUCCESS",
         "unaccounted_count": 0
       },
-      "aggregate_status": "MISSED",
+      "aggregate_status": "STALE_OBSERVABILITY",
       "migration_status": "MIGRATED",
-      "recovery_lifecycle": "HEALTHY"
+      "recovery_lifecycle": "INCIDENT_OPEN"
     },
     "gaza": {
       "agent_handoff": {
@@ -99,8 +99,10 @@
       "recovery_lifecycle": "HEALTHY"
     }
   },
-  "exported_at": "2026-09-14T13:15:09.305693Z",
+  "exported_at": "2026-09-14T14:15:09.095967Z",
   "schema_version": "bluefern_external_system_status_v1",
-  "stale_observability": [],
-  "system_status": "MISSED"
+  "stale_observability": [
+    "food-line"
+  ],
+  "system_status": "STALE_OBSERVABILITY"
 }

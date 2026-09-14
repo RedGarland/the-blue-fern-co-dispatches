@@ -34,7 +34,7 @@ SAFE_KEY_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 HEX_HEAD_RE = re.compile(r"^[0-9a-f]{7,64}$", re.IGNORECASE)
 PRIVATE_KEY_RE = re.compile(r"(?:path|body|excerpt|source|raw|secret|token|credential|password|environment|env)", re.IGNORECASE)
 
-NON_MIGRATED_DISPATCHES = ("gaza", "care-line", "ice", "american-pressure")
+NON_MIGRATED_DISPATCHES = ("gaza", "ice", "american-pressure")
 INTENTIONALLY_INACTIVE_DISPATCHES = ("cascadia",)
 HANDOFF_STATES = {
     "NO_EXTERNAL_HANDOFF_EXPECTED",
@@ -128,6 +128,7 @@ def load_care_line_receipts(source_root: Path, date: str) -> list[dict[str, Any]
         if receipt.get("dispatch") != "care-line":
             raise ExportError(f"receipt dispatch mismatch: {path.name}")
         receipts.append(receipt)
+    receipts.sort(key=lambda item: _handoff_time(item) or datetime.min.replace(tzinfo=timezone.utc))
     return receipts
 
 
@@ -437,10 +438,7 @@ def build_care_line_status(
         receipts=receipts,
         expectations=CARE_LINE_TASK_EXPECTATIONS,
         evaluated_at=evaluated_at,
-        expected_instances=list(expected_instances) if expected_instances is not None else [
-            {"task_key": receipt.get("task_key"), "scheduled_for": receipt.get("scheduled_for")}
-            for receipt in receipts
-        ],
+        expected_instances=list(expected_instances) if expected_instances is not None else None,
         recovery=recovery,
     ) if receipts else {
         "overall_health": OperationalStatus.UNKNOWN.value,
@@ -458,11 +456,12 @@ def build_care_line_status(
     return {
         "schema_version": EXTERNAL_STATUS_SCHEMA_VERSION,
         "dispatch": "care-line",
-        "migration_status": "NOT_MIGRATED",
+        "migration_status": "MIGRATED",
         "observed_date": date,
         "aggregate_status": aggregate_status,
         "scheduled_health_authoritative": bool(receipts),
         "recovery_lifecycle": _recovery_state(aggregate_status, recovery),
+        "latest_runtime_proof_date": aggregate.get("latest_success_at"),
         "receipt_completeness": completeness if receipts else "NO_PROOF",
         "task_summaries": [_task_summary(receipt, linkage) for receipt in receipts],
         "runner_source_head": sorted(source_heads)[0] if len(source_heads) == 1 else None,
@@ -472,9 +471,28 @@ def build_care_line_status(
         "stale_observability": bool(aggregate.get("stale_observability")),
         "last_receipt_at": max((_handoff_time(item) for item in receipts), default=None).isoformat().replace("+00:00", "Z") if receipts else None,
         "last_exported_at": exported_at,
+        "next_expected_run": next((item.get("next_expected_run") for item in receipts if item.get("next_expected_run")), None),
         "agent_handoff": load_agent_handoff_status(source_root, "care-line"),
         "scheduled_task_keys": [item.task_key for item in CARE_LINE_TASK_EXPECTATIONS],
     }
+
+
+def _system_status(states: dict[str, dict[str, Any]]) -> str:
+    active = [
+        str(state.get("aggregate_status") or OperationalStatus.UNKNOWN.value)
+        for state in states.values()
+        if state.get("migration_status") == "MIGRATED"
+    ]
+    for status in (
+        OperationalStatus.FAILED.value,
+        OperationalStatus.MISSED.value,
+        OperationalStatus.STALE_OBSERVABILITY.value,
+        OperationalStatus.DEGRADED.value,
+        OperationalStatus.UNKNOWN.value,
+    ):
+        if status in active:
+            return status
+    return OperationalStatus.SUCCESS.value
 
 
 def build_system_status(
@@ -530,14 +548,31 @@ def build_system_status(
                 "stale": False,
             },
         }
-    if care_line_status is not None:
-        states["care-line"]["scheduled_health_available"] = bool(care_line_status.get("scheduled_health_authoritative"))
-        # Care remains NOT_MIGRATED until production deployment and real proof.
-        states["care-line"]["agent_handoff"] = care_line_status["agent_handoff"]
+    if care_line_status is not None and care_line_status.get("migration_status") == "MIGRATED":
+        states["care-line"] = {
+            "migration_status": "MIGRATED",
+            "aggregate_status": care_line_status["aggregate_status"],
+            "recovery_lifecycle": care_line_status["recovery_lifecycle"],
+            "scheduled_health_available": bool(care_line_status.get("scheduled_health_authoritative")),
+            "observed_date": care_line_status.get("observed_date"),
+            "latest_runtime_proof_date": care_line_status.get("latest_runtime_proof_date"),
+            "receipt_completeness": care_line_status.get("receipt_completeness"),
+            "stale_observability": care_line_status.get("stale_observability"),
+            "agent_handoff": care_line_status["agent_handoff"],
+        }
+    elif care_line_status is None:
+        states["care-line"] = {
+            "migration_status": "NOT_MIGRATED",
+            "aggregate_status": "UNKNOWN",
+            "recovery_lifecycle": RecoveryState.HEALTHY.value,
+            "scheduled_health_available": False,
+            "agent_handoff": load_agent_handoff_status(source_root, "care-line"),
+        }
+    system_status = _system_status(states)
     return {
         "schema_version": SYSTEM_STATUS_SCHEMA_VERSION,
         "exported_at": exported_at,
-        "system_status": food_line_status["aggregate_status"],
+        "system_status": system_status,
         "dispatches": states,
         "stale_observability": [
             dispatch for dispatch, state in states.items() if state["aggregate_status"] == OperationalStatus.STALE_OBSERVABILITY.value

@@ -2368,14 +2368,18 @@ def refresh_cascadia_archive_pages(root: Path, dry_run: bool, written: list[str]
     recent = "\n".join(render_edition_list_item(site_root, dispatch, date) for date in dates[:10])
     signal_pack_ready = (site_root / "cascadia" / "signal-pack").exists()
     signal_pack_label = "Open Signal Pack" if signal_pack_ready else "Coming soon"
-    latest_link = f'<p><a href="editions/{latest}/">Read the latest briefing</a></p>' if latest else "<p>No public edition is currently listed.</p>"
+    latest_link = (
+        f'<p><a href="editions/{latest}/">Read the most recent archived briefing</a></p>'
+        if latest
+        else "<p>No public edition is currently listed.</p>"
+    )
     landing_body = f"""{header(dispatch.name, "", "archive.html")}
   <main class="home">
     <section class="hero">
       <img class="hero-logo" src="assets/{dispatch.logo}" alt="{html.escape(dispatch.name)}">
     </section>
-    <p class="lede">A weekly source-backed systems briefing for Washington, Oregon, and Idaho.</p>
-    <section><h2>Latest Briefing</h2>{latest_link}</section>
+    <p class="lede">Historical Cascadia archive. Cascadia is currently inactive; previously published briefings remain available for reference, and no scheduled new briefings are currently being produced.</p>
+    <section><h2>Most recent archived briefing</h2>{latest_link}</section>
     <section><h2>Pressure Map</h2><p><a href="map/">Open latest Cascadia pressure map</a></p></section>
     <section><h2>Detention Watch</h2><p><a href="/cascadia/detention-watch/">Open Detention Watch</a></p></section>
     <section><h2>Signal Pack</h2><p>{signal_pack_label}</p></section>

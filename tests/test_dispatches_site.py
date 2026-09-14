@@ -441,11 +441,14 @@ def test_cascadia_page_and_dated_edition_url(built_site):
     assert "The Cascadia Briefing" in cascadia_index
     assert CASCADIA_PUBLIC_DESCRIPTION in cascadia_index
     assert "Signal Pack" in cascadia_index
-    assert "Latest Briefing" in cascadia_index
+    assert "Most recent archived briefing" in cascadia_index
     assert "Pressure Map" in cascadia_index
     assert "Detention Watch" in cascadia_index
     assert "Recent Editions" in cascadia_index
-    assert "A weekly source-backed systems briefing for Washington, Oregon, and Idaho." in cascadia_index
+    assert "Historical Cascadia archive" in cascadia_index
+    assert "Cascadia is currently inactive" in cascadia_index
+    assert "no scheduled new briefings are currently being produced" in cascadia_index
+    assert "A weekly source-backed systems briefing for Washington, Oregon, and Idaho." not in cascadia_index
     assert "Open latest Cascadia pressure map" in cascadia_index
     assert "Latest Detention Watch" not in cascadia_index
     assert 1 <= cascadia_index.count('href="/cascadia/detention-watch/"') <= 2

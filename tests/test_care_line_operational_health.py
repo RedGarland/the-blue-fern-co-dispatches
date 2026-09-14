@@ -62,7 +62,7 @@ def test_expected_future_collection_instance_is_not_missed() -> None:
     assert aggregate["completed_tasks"] == ["care_line_collection:2026-09-10T13:00:00Z"]
 
 
-def test_care_export_preserves_not_migrated_system_boundary_and_sanitizes(tmp_path: Path) -> None:
+def test_care_export_promotes_migrated_system_status_and_sanitizes(tmp_path: Path) -> None:
     source = tmp_path / "source"
     status = tmp_path / "status"
     source.mkdir()
@@ -74,7 +74,7 @@ def test_care_export_preserves_not_migrated_system_boundary_and_sanitizes(tmp_pa
         _receipt("care_line_reviewed_event_queue", "queue-1"),
         _receipt("care_line_approved_release_publication", "publication-1", "no_approved_release"),
     ):
-        (receipt_root / f"{receipt['task_key']}-{receipt['run_id']}.json").write_text(
+        (receipt_root / f"{receipt['run_id']}.json").write_text(
             json.dumps(receipt), encoding="utf-8"
         )
         artifact = source / str(receipt["artifact_refs"]["task_receipt"])
@@ -87,7 +87,7 @@ def test_care_export_preserves_not_migrated_system_boundary_and_sanitizes(tmp_pa
         evaluated_at="2026-09-10T16:00:00Z",
         exported_at="2026-09-10T16:01:00Z",
     )
-    assert payload["migration_status"] == "NOT_MIGRATED"
+    assert payload["migration_status"] == "MIGRATED"
     assert payload["receipt_completeness"] == "COMPLETE"
     assert len([row for row in payload["task_summaries"] if row["task_key"] == "care_line_collection"]) == 2
 
@@ -99,8 +99,11 @@ def test_care_export_preserves_not_migrated_system_boundary_and_sanitizes(tmp_pa
         evaluated_at="2026-09-10T16:00:00Z",
         exported_at="2026-09-10T16:01:00Z",
     )
-    assert result["system"]["dispatches"]["care-line"]["migration_status"] == "NOT_MIGRATED"
+    assert result["system"]["dispatches"]["care-line"]["migration_status"] == "MIGRATED"
+    assert result["system"]["dispatches"]["care-line"]["aggregate_status"] == payload["aggregate_status"]
+    assert result["system"]["dispatches"]["care-line"]["scheduled_health_available"] is True
     exported = json.dumps(result)
     assert "BlueFernRunner" not in exported
     assert "source_text" not in exported
     assert (status / "ops/status/care-line/latest.json").is_file()
+    assert (status / f"ops/status/care-line/history/{DATE}.json").is_file()

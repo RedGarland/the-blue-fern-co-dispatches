@@ -159,6 +159,87 @@ def _write_recovery_shaped_food_release(root: Path, edition_date: str) -> None:
         )
 
 
+def _write_html_backed_release(
+    root: Path,
+    slug: str,
+    edition_date: str,
+    *,
+    body: str,
+    source_count: int = 1,
+    manifest_title: str = "",
+) -> None:
+    edition_dir = root / slug / "editions" / edition_date
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    (edition_dir / "index.html").write_text(f"<html><body>{body}</body></html>", encoding="utf-8")
+    (edition_dir / "sources_manifest.json").write_text(json.dumps([{"title": f"Source {i}"} for i in range(source_count)]), encoding="utf-8")
+    (edition_dir / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": slug,
+                "edition_date": edition_date,
+                "public_url": f"https://dispatches.thebluefernco.com/{slug}/editions/{edition_date}/",
+                "source_count": source_count,
+                "public_archive_title": manifest_title,
+                "public_release_status": "published",
+                "pages_release_status": "synced",
+            }
+        ),
+        encoding="utf-8",
+    )
+    dispatch_root = root / slug
+    dispatch_root.mkdir(parents=True, exist_ok=True)
+    for filename, prefix, suffix in (
+        ("archive.html", "<html><body>", "</body></html>"),
+        ("index.html", "<html><body>", "</body></html>"),
+        ("rss.xml", "<rss>", "</rss>"),
+    ):
+        (dispatch_root / filename).write_text(f'{prefix}<a href="editions/{edition_date}/">listed</a>{suffix}', encoding="utf-8")
+
+
+def test_homepage_refresh_prefers_gaza_article_h3_over_generic_edition_h1(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_html_backed_release(
+        public_root,
+        "gaza",
+        "2026-09-14",
+        body=(
+            "<h1>Dispatches From Gaza</h1>"
+            "<article class=\"edition-story\"><h3>Pregnant woman among more than 10 killed in Israeli attacks on Gaza</h3></article>"
+        ),
+        source_count=2,
+    )
+
+    releases = discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 14), homepage_html=TEMPLATE_HTML)
+
+    assert releases[0].title == "Pregnant woman among more than 10 killed in Israeli attacks on Gaza"
+    assert releases[0].title != "Dispatches From Gaza"
+
+
+def test_homepage_refresh_prefers_care_signal_h3_over_generic_edition_h1(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_html_backed_release(
+        public_root,
+        "care-line",
+        "2026-08-20",
+        body=(
+            "<h1>The Care Line Dispatch</h1>"
+            "<article class=\"signal-card\"><h3><a href=\"https://example.com/care\">Methodist Hospitals Gary outage update</a></h3></article>"
+        ),
+        source_count=1,
+        manifest_title="Limited-source update",
+    )
+    manifest_path = public_root / "care-line" / "editions" / "2026-08-20" / "edition_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["source_adequacy_label"] = "Limited-source update"
+    manifest["source_adequacy_status"] = "LIMITED_SOURCE_UPDATE"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    releases = discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 14), homepage_html=TEMPLATE_HTML)
+
+    assert releases[0].title == "Methodist Hospitals Gary outage update"
+    assert releases[0].title not in {"The Care Line Dispatch", "Limited-source update"}
+
+
 def test_homepage_refresh_discovers_all_active_products_and_fills_extra_slots(tmp_path):
     public_root = tmp_path / "pages"
     homepage = TEMPLATE_HTML
@@ -247,6 +328,21 @@ def test_homepage_refresh_manifest_title_precedence_over_h1(tmp_path):
     assert releases[0].title == "Manifest title wins"
 
 
+def test_homepage_refresh_keeps_edition_h1_as_fallback_when_no_h3_exists(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_html_backed_release(
+        public_root,
+        "food-line",
+        "2026-09-12",
+        body="<h1>Food Line recovery-disclosed publication</h1><article class=\"story\"><h2>Story heading is not a resolver h3</h2></article>",
+        source_count=4,
+    )
+
+    releases = discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 13), homepage_html=TEMPLATE_HTML)
+
+    assert releases[0].title == "Food Line recovery-disclosed publication"
+
+
 def test_homepage_refresh_keeps_existing_h3_and_list_fallbacks(tmp_path):
     public_root = tmp_path / "pages"
     _write_release(public_root, "gaza", "2026-09-12", title="H3 fallback title", source_count=2)
@@ -268,6 +364,17 @@ def test_homepage_refresh_keeps_existing_h3_and_list_fallbacks(tmp_path):
     assert by_slug["food-line"].title == "List fallback title"
 
 
+def test_homepage_refresh_excludes_food_line_recovery_record_from_latest_selection() -> None:
+    public_root = Path(__file__).resolve().parents[1] / "output" / "site"
+
+    releases = discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 13), homepage_html=TEMPLATE_HTML)
+    latest = select_effective_latest(releases)
+
+    assert ("food-line", "2026-09-10") not in {(release.slug, release.edition_date) for release in releases}
+    assert latest["food-line"].edition_date == "2026-09-12"
+    assert latest["food-line"].title == "Food Line recovery-disclosed publication"
+
+
 def test_homepage_refresh_titleless_release_still_fails_closed(tmp_path):
     public_root = tmp_path / "pages"
     edition_dir = public_root / "food-line" / "editions" / "2026-09-12"
@@ -283,6 +390,74 @@ def test_homepage_refresh_titleless_release_still_fails_closed(tmp_path):
     (dispatch_root / "archive.html").write_text('<a href="editions/2026-09-12/">listed</a>', encoding="utf-8")
 
     assert discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 13), homepage_html=TEMPLATE_HTML) == []
+
+
+def test_homepage_card_rendering_uses_descriptive_story_titles_for_gaza_and_care(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_html_backed_release(
+        public_root,
+        "gaza",
+        "2026-09-14",
+        body="<h1>Dispatches From Gaza</h1><article><h3>Pregnant woman among more than 10 killed in Israeli attacks on Gaza</h3></article>",
+        source_count=2,
+    )
+    _write_html_backed_release(
+        public_root,
+        "food-line",
+        "2026-09-12",
+        body="<h1>Food Line recovery-disclosed publication</h1>",
+        source_count=4,
+    )
+    _write_html_backed_release(
+        public_root,
+        "care-line",
+        "2026-08-20",
+        body="<h1>The Care Line Dispatch</h1><article class=\"signal-card\"><h3>Methodist Hospitals Gary outage update</h3></article>",
+        source_count=1,
+    )
+
+    releases = discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 14), homepage_html=SHARED_ROOT_TEMPLATE)
+    latest = select_effective_latest(releases)
+    rendered_root = render_homepage_from_template(TEMPLATE_HTML, select_homepage_cards(releases))
+    rendered_directory = render_dispatch_directory_from_releases(DIRECTORY_TEMPLATE, latest)
+
+    assert "Pregnant woman among more than 10 killed in Israeli attacks on Gaza" in _edition_card(rendered_root, "gaza")
+    assert "Methodist Hospitals Gary outage update" in _edition_card(rendered_root, "care-line")
+    assert "Food Line recovery-disclosed publication" in _edition_card(rendered_root, "food-line")
+    assert "Pregnant woman among more than 10 killed in Israeli attacks on Gaza" in _dispatch_card(rendered_directory, "Dispatches From Gaza")
+    assert "Methodist Hospitals Gary outage update" in _dispatch_card(rendered_directory, "The Care Line Dispatch")
+
+
+def test_homepage_card_selection_preserves_represented_grid_slots_before_unrepresented_fillers(tmp_path):
+    public_root = tmp_path / "pages"
+    for edition_date in ("2026-09-14", "2026-09-13", "2026-09-12", "2026-09-11", "2026-09-10", "2026-09-09"):
+        _write_release(public_root, "gaza", edition_date, title=f"Gaza {edition_date}", source_count=2)
+    _write_recovery_shaped_food_release(public_root, "2026-09-12")
+    _write_release(public_root, "care-line", "2026-08-20", title="Methodist Hospitals Gary outage update", source_count=1)
+    homepage = (
+        '<article class="edition-card edition-card--gaza"><h3><a href="/gaza/editions/2026-09-14/">Old</a></h3></article>'
+        '<article class="edition-card edition-card--gaza"><h3><a href="/gaza/editions/2026-09-12/">Old</a></h3></article>'
+        '<article class="edition-card edition-card--food-line"><h3><a href="/food-line/editions/2026-09-12/">Old</a></h3></article>'
+        '<article class="edition-card edition-card--gaza"><h3><a href="/gaza/editions/2026-09-11/">Old</a></h3></article>'
+        '<article class="edition-card edition-card--gaza"><h3><a href="/gaza/editions/2026-09-10/">Old</a></h3></article>'
+        '<article class="edition-card edition-card--gaza"><h3><a href="/gaza/editions/2026-09-09/">Old</a></h3></article>'
+        '<article class="edition-card edition-card--care-line"><h3><a href="/care-line/editions/2026-08-20/">Old</a></h3></article>'
+    )
+
+    cards = select_homepage_cards(
+        discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 14), homepage_html=homepage)
+    )
+
+    assert [card.relative_url for card in cards] == [
+        "/gaza/editions/2026-09-14/",
+        "/gaza/editions/2026-09-12/",
+        "/food-line/editions/2026-09-12/",
+        "/gaza/editions/2026-09-11/",
+        "/gaza/editions/2026-09-10/",
+        "/gaza/editions/2026-09-09/",
+        "/care-line/editions/2026-08-20/",
+    ]
+    assert "/gaza/editions/2026-09-13/" not in [card.relative_url for card in cards]
 
 
 def test_homepage_refresh_supports_legacy_manifestless_release_when_listed_publicly(tmp_path):

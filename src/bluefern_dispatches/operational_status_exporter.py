@@ -639,24 +639,28 @@ def export_status(
             source_root=(care_source_root or source_root).resolve(),
             date=date,
             evaluated_at=evaluated_at,
-            exported_at=food_payload["last_exported_at"],
+            exported_at=exported_at,
         ) if care_source_root is not None else None
-        system_payload = build_system_status(
-            food_payload,
-            source_root=source_root,
-            exported_at=food_payload["last_exported_at"],
-            care_line_status=care_payload,
-        )
-        history_path = status_checkout / "ops" / "status" / "food-line" / "history" / f"{date}.json"
         care_path = status_checkout / "ops" / "status" / "care-line" / "latest.json"
-        care_history_path = status_checkout / "ops" / "status" / "care-line" / "history" / f"{date}.json"
-        system_path = status_checkout / "ops" / "status" / "system" / "latest.json"
-        atomic_write_json(food_path, food_payload)
-        atomic_write_json(history_path, food_payload)
         if care_payload is not None:
             care_reused = _reuse_exported_at(care_path, care_payload)
             if care_reused:
                 care_payload["last_exported_at"] = care_reused
+        system_payload = build_system_status(
+            food_payload,
+            source_root=source_root,
+            exported_at=exported_at,
+            care_line_status=care_payload,
+        )
+        system_path = status_checkout / "ops" / "status" / "system" / "latest.json"
+        system_reused = _reuse_exported_at(system_path, system_payload)
+        if system_reused:
+            system_payload["exported_at"] = system_reused
+        history_path = status_checkout / "ops" / "status" / "food-line" / "history" / f"{date}.json"
+        care_history_path = status_checkout / "ops" / "status" / "care-line" / "history" / f"{date}.json"
+        atomic_write_json(food_path, food_payload)
+        atomic_write_json(history_path, food_payload)
+        if care_payload is not None:
             atomic_write_json(care_path, care_payload)
             atomic_write_json(care_history_path, care_payload)
         atomic_write_json(system_path, system_payload)

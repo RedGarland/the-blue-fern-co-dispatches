@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts import refresh_root_homepage
 from bluefern_dispatches.root_homepage import (
     discover_public_releases,
     render_dispatch_directory_from_releases,
@@ -49,6 +50,22 @@ SHARED_ROOT_TEMPLATE = DIRECTORY_TEMPLATE.replace(
 )
 
 MOJIBAKE_SEPARATOR = "\u00c3\u201a\u00c2\u00b7"
+
+
+def _dispatch_card(html: str, product_name: str) -> str:
+    match = re.search(
+        rf'<article class="dispatch-card dispatch-card--featured">(?:(?!</article>).)*?<h2>{re.escape(product_name)}</h2>(?:(?!</article>).)*?</article>',
+        html,
+        re.DOTALL,
+    )
+    assert match is not None
+    return match.group(0)
+
+
+def _edition_card(html: str, slug: str) -> str:
+    match = re.search(rf'<article class="edition-card edition-card--{re.escape(slug)}">.*?</article>', html, re.DOTALL)
+    assert match is not None
+    return match.group(0)
 
 
 def _write_release(
@@ -100,6 +117,46 @@ def _write_release(
         path = dispatch_root / filename
         existing = path.read_text(encoding="utf-8") if path.exists() else prefix + suffix
         path.write_text(existing.replace(suffix, linked + suffix), encoding="utf-8")
+
+
+def _write_recovery_shaped_food_release(root: Path, edition_date: str) -> None:
+    edition_dir = root / "food-line" / "editions" / edition_date
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    (edition_dir / "index.html").write_text(
+        """
+        <html><body>
+        <h1>Food Line recovery-disclosed publication</h1>
+        <article class="story">
+          <h2>Hawaii Island Salvation Army pantries report staple shortages after Lala</h2>
+        </article>
+        </body></html>
+        """,
+        encoding="utf-8",
+    )
+    (edition_dir / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "food-line",
+                "edition_date": edition_date,
+                "public_url": f"https://dispatches.thebluefernco.com/food-line/editions/{edition_date}/",
+                "source_count": 4,
+                "publication_status": "published_pending_live_verification",
+            }
+        ),
+        encoding="utf-8",
+    )
+    (edition_dir / "sources_manifest.json").write_text(json.dumps([{"title": f"Source {i}"} for i in range(4)]), encoding="utf-8")
+    dispatch_root = root / "food-line"
+    dispatch_root.mkdir(parents=True, exist_ok=True)
+    for filename, prefix, suffix in (
+        ("archive.html", "<html><body>", "</body></html>"),
+        ("index.html", "<html><body>", "</body></html>"),
+        ("rss.xml", "<rss>", "</rss>"),
+    ):
+        (dispatch_root / filename).write_text(
+            f'{prefix}<a href="editions/{edition_date}/">Recovery-disclosed Food Line publication</a>{suffix}',
+            encoding="utf-8",
+        )
 
 
 def test_homepage_refresh_discovers_all_active_products_and_fills_extra_slots(tmp_path):
@@ -154,6 +211,78 @@ def test_homepage_refresh_excludes_future_unpublished_and_signal_wire_like_recor
     assert all(release.edition_date <= "2026-08-05" for release in releases)
     assert all(release.slug != "american-pressure" for release in releases)
     assert all("events/" not in release.relative_url for release in releases)
+
+
+def test_homepage_refresh_uses_edition_h1_for_recovery_shaped_food_release(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_release(
+        public_root,
+        "food-line",
+        "2026-08-31",
+        title="Phoenix food-box demand rose as Arizona SNAP access contracted",
+        source_count=3,
+        public_release_status="approved_pending_pages_publication",
+        pages_release_status="not_synced",
+    )
+    _write_recovery_shaped_food_release(public_root, "2026-09-12")
+
+    releases = discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 13), homepage_html=TEMPLATE_HTML)
+    latest = select_effective_latest(releases)
+
+    food = latest["food-line"]
+    assert food.edition_date == "2026-09-12"
+    assert food.title == "Food Line recovery-disclosed publication"
+    assert food.source_count == 4
+    assert "Hawaii Island Salvation Army pantries" not in food.title
+
+
+def test_homepage_refresh_manifest_title_precedence_over_h1(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_release(public_root, "food-line", "2026-09-12", title="Manifest title wins", source_count=4)
+    index_path = public_root / "food-line" / "editions" / "2026-09-12" / "index.html"
+    index_path.write_text("<html><body><h1>Rendered title loses</h1><article><h3>Fallback loses</h3></article></body></html>", encoding="utf-8")
+
+    releases = discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 13), homepage_html=TEMPLATE_HTML)
+
+    assert releases[0].title == "Manifest title wins"
+
+
+def test_homepage_refresh_keeps_existing_h3_and_list_fallbacks(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_release(public_root, "gaza", "2026-09-12", title="H3 fallback title", source_count=2)
+    food_dir = public_root / "food-line" / "editions" / "2026-09-12"
+    food_dir.mkdir(parents=True)
+    (food_dir / "index.html").write_text('<html><body><li><a href="story.html">List fallback title</a></li></body></html>', encoding="utf-8")
+    (food_dir / "edition_manifest.json").write_text(
+        json.dumps({"dispatch_slug": "food-line", "edition_date": "2026-09-12", "source_count": 1, "public_release_status": "published"}),
+        encoding="utf-8",
+    )
+    (food_dir / "sources_manifest.json").write_text(json.dumps([{"title": "Source"}]), encoding="utf-8")
+    (public_root / "food-line" / "archive.html").parent.mkdir(parents=True, exist_ok=True)
+    (public_root / "food-line" / "archive.html").write_text('<a href="editions/2026-09-12/">listed</a>', encoding="utf-8")
+
+    releases = discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 13), homepage_html=TEMPLATE_HTML)
+    by_slug = {release.slug: release for release in releases}
+
+    assert by_slug["gaza"].title == "H3 fallback title"
+    assert by_slug["food-line"].title == "List fallback title"
+
+
+def test_homepage_refresh_titleless_release_still_fails_closed(tmp_path):
+    public_root = tmp_path / "pages"
+    edition_dir = public_root / "food-line" / "editions" / "2026-09-12"
+    edition_dir.mkdir(parents=True)
+    (edition_dir / "index.html").write_text("<html><body><article><p>No title here</p></article></body></html>", encoding="utf-8")
+    (edition_dir / "edition_manifest.json").write_text(
+        json.dumps({"dispatch_slug": "food-line", "edition_date": "2026-09-12", "source_count": 4, "public_release_status": "published"}),
+        encoding="utf-8",
+    )
+    (edition_dir / "sources_manifest.json").write_text(json.dumps([{"title": "Source"}] * 4), encoding="utf-8")
+    dispatch_root = public_root / "food-line"
+    dispatch_root.mkdir(parents=True, exist_ok=True)
+    (dispatch_root / "archive.html").write_text('<a href="editions/2026-09-12/">listed</a>', encoding="utf-8")
+
+    assert discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 13), homepage_html=TEMPLATE_HTML) == []
 
 
 def test_homepage_refresh_supports_legacy_manifestless_release_when_listed_publicly(tmp_path):
@@ -328,6 +457,73 @@ def test_shared_release_refresh_reports_exact_changed_surfaces(tmp_path):
     assert "/gaza/editions/2026-09-04/" in directory
     assert "/food-line/editions/2026-08-31/" in directory
     assert "/care-line/editions/2026-08-20/" in directory
+
+
+def test_refresh_script_target_dispatch_updates_only_food_directory_and_root_cards(tmp_path):
+    public_root = tmp_path / "pages"
+    public_root.mkdir(parents=True)
+    _write_current_directory_inventory(public_root)
+    _write_recovery_shaped_food_release(public_root, "2026-09-12")
+    latest = select_effective_latest(
+        discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 13), homepage_html=TEMPLATE_HTML)
+    )
+    baseline_directory = render_dispatch_directory_from_releases(DIRECTORY_TEMPLATE, latest)
+    root_template = SHARED_ROOT_TEMPLATE.replace(MOJIBAKE_SEPARATOR, "&middot;").replace(
+        '</article></div></section><div class="directory-list">',
+        '</article><article class="edition-card edition-card--food-line"><h3><a href="/food-line/editions/2026-08-31/">Current Food</a></h3>'
+        '<p class="edition-source">Food Line Dispatch &middot; August 31, 2026</p>'
+        '<p class="edition-meta">3 public sources</p></article></div></section><div class="directory-list">',
+        1,
+    )
+    root_path = public_root / "index.html"
+    directory_path = public_root / "dispatches" / "index.html"
+    output_root = tmp_path / "out" / "index.html"
+    output_directory = tmp_path / "out" / "dispatches.html"
+    root_path.write_text(root_template, encoding="utf-8")
+    directory_path.parent.mkdir(parents=True)
+    directory_path.write_text(baseline_directory, encoding="utf-8")
+
+    baseline_gaza_root_card = _dispatch_card(root_template, "Dispatches From Gaza")
+    baseline_care_root_card = _dispatch_card(root_template, "The Care Line Dispatch")
+    baseline_gaza_edition = _edition_card(root_template, "gaza")
+    baseline_gaza_directory = _dispatch_card(baseline_directory, "Dispatches From Gaza")
+    baseline_care_directory = _dispatch_card(baseline_directory, "The Care Line Dispatch")
+    baseline_root_footer = root_template.split("<footer", 1)[1]
+    baseline_directory_footer = baseline_directory.split("<footer", 1)[1]
+
+    assert refresh_root_homepage.main(
+        [
+            "--public-inventory-root",
+            str(public_root),
+            "--template-html",
+            str(root_path),
+            "--output-html",
+            str(output_root),
+            "--target-dispatch",
+            "food-line",
+            "--directory-template-html",
+            str(directory_path),
+            "--directory-output-html",
+            str(output_directory),
+        ]
+    ) == 0
+
+    rendered_root = output_root.read_text(encoding="utf-8")
+    rendered_directory = output_directory.read_text(encoding="utf-8")
+    releases = discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 13), homepage_html=rendered_root)
+    food = select_effective_latest(releases)["food-line"]
+
+    assert food.edition_date == "2026-09-12"
+    assert food.source_count == 4
+    assert "/food-line/editions/2026-09-12/" in _dispatch_card(rendered_directory, "Food Line Dispatch")
+    assert "4 public sources" in _edition_card(rendered_root, "food-line")
+    assert _dispatch_card(rendered_directory, "Dispatches From Gaza") == baseline_gaza_directory
+    assert _dispatch_card(rendered_directory, "The Care Line Dispatch") == baseline_care_directory
+    assert _dispatch_card(rendered_root, "Dispatches From Gaza") == baseline_gaza_root_card
+    assert _dispatch_card(rendered_root, "The Care Line Dispatch") == baseline_care_root_card
+    assert _edition_card(rendered_root, "gaza") == baseline_gaza_edition
+    assert rendered_root.split("<footer", 1)[1] == baseline_root_footer
+    assert rendered_directory.split("<footer", 1)[1] == baseline_directory_footer
 
 
 @pytest.mark.parametrize(

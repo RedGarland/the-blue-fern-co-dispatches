@@ -78,6 +78,127 @@ def _write_direct_source_config(tmp_path: Path, direct_sources: list[dict[str, o
     (config_dir / "discovery_expansion_config.json").write_text(json.dumps(config, indent=2), encoding="utf-8")
 
 
+def test_food_line_query_plan_covers_grocery_fire_and_state_snap_demand() -> None:
+    plan = build_food_line_discovery_query_plan(Path("missing-root"), "2026-09-14", lookback_days=0, lookahead_days=0)
+    queries = [row["query_text"] for row in plan]
+
+    assert any("grocery store fire" in query and "New York" in query for query in queries)
+    assert any("only grocery store" in query and "New York" in query for query in queries)
+    assert any("SNAP losses" in query and "Arizona" in query and "food bank" in query for query in queries)
+    assert any("Food Bank Network" in query and "Arizona" in query and "SNAP" in query for query in queries)
+
+
+def test_google_news_selector_prioritizes_local_access_result_beyond_cap() -> None:
+    low_signal = [
+        {
+            "title": f"National food bank update {index}",
+            "description": "Food bank leaders discussed general demand.",
+            "link": f"https://news.google.com/rss/articles/LOW{index}?oc=5",
+            "source_url": f"https://example.org/low-{index}",
+            "source_name": "National Wire",
+            "published": "Mon, 14 Sep 2026 12:00:00 GMT",
+        }
+        for index in range(1, 11)
+    ]
+    local_access = {
+        "title": "Fire destroys Spencer's only full-service grocery store",
+        "description": "Residents said grocery access will be harder after Shurfine Food Mart burned.",
+        "link": "https://news.google.com/rss/articles/SPENCER?oc=5",
+        "source_url": "https://www.fingerlakes1.com/2026/09/13/fire-destroys-spencers-only-full-service-grocery-store/",
+        "source_name": "FingerLakes1",
+        "published": "Mon, 14 Sep 2026 12:00:00 GMT",
+    }
+
+    selected = expansion_module._select_google_news_items_for_fetch(low_signal + [local_access], limit=5)
+
+    assert local_access in selected
+    assert len(selected) == 5
+
+
+def test_google_news_query_rows_record_result_cap_dispositions(tmp_path: Path) -> None:
+    edition_date = "2026-09-14"
+    article_url = "https://example.org/spencer-grocery-fire"
+    config_dir = tmp_path / "data" / "dispatches" / "food-line"
+    config_dir.mkdir(parents=True, exist_ok=True)
+    (config_dir / "discovery_expansion_config.json").write_text(
+        json.dumps(
+            {
+                "search": {
+                    "provider": "google_news_rss",
+                    "rss_url_template": "https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en",
+                },
+                "direct_sources": [],
+                "query_families": [
+                    {
+                        "query_family": "pressure",
+                        "geographic_scope": "national",
+                        "source_family": "local_news",
+                        "templates": ['"food bank"'],
+                    }
+                ],
+                "metros": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    def fetcher(url: str, timeout: int = 15):
+        if url.startswith("https://news.google.com/rss/search?q="):
+            items = [
+                {
+                    "title": "General food bank update",
+                    "link": "https://news.google.com/rss/articles/GENERAL?oc=5",
+                    "source_url": "https://example.org/general",
+                    "publisher": "National Wire",
+                    "description": "Food bank demand is changing.",
+                    "pubDate": "Mon, 14 Sep 2026 12:00:00 GMT",
+                },
+                {
+                    "title": "Fire destroys Spencer's only full-service grocery store",
+                    "link": "https://news.google.com/rss/articles/SPENCER?oc=5",
+                    "source_url": article_url,
+                    "publisher": "Local News",
+                    "description": "The loss will make grocery shopping harder for people who cannot travel.",
+                    "pubDate": "Mon, 14 Sep 2026 12:00:00 GMT",
+                },
+                {
+                    "title": "Another general hunger story",
+                    "link": "https://news.google.com/rss/articles/GENERAL2?oc=5",
+                    "source_url": "https://example.org/general-2",
+                    "publisher": "National Wire",
+                    "description": "Food bank demand is changing.",
+                    "pubDate": "Mon, 14 Sep 2026 12:00:00 GMT",
+                },
+            ]
+            return _rss_payload(items)
+        if url == article_url:
+            return _html_article(
+                title="Fire destroys Spencer's only full-service grocery store",
+                canonical=article_url,
+                body="A fire destroyed Spencer's only full-service grocery store. Residents said grocery shopping will be harder.",
+            )
+        return _html_article(title="General food bank update", canonical=url, body="Food bank demand is changing.")
+
+    result = run_food_line_discovery_expansion(
+        tmp_path,
+        edition_date,
+        fetcher=fetcher,
+        max_queries=1,
+        max_results_per_query=2,
+        query_lookback_days=0,
+        query_lookahead_days=0,
+    )
+    audit = read_food_line_discovery_expansion_audit(tmp_path, edition_date)
+    query_row = audit["query_rows"][0]
+
+    assert query_row["result_count"] == 3
+    assert query_row["result_cap"] == 2
+    assert query_row["selected_result_count"] == 2
+    assert query_row["truncated_result_count"] == 1
+    assert query_row["result_disposition_counts"] == {"selected_for_fetch": 2, "not_selected_result_cap": 1}
+    assert any(row["title"] == "Fire destroys Spencer's only full-service grocery store" and row["selected_for_fetch"] for row in query_row["returned_result_sample"])
+
+
 def test_food_line_discovery_expansion_blocks_out_of_window_candidates_for_public_claims(tmp_path: Path):
     edition_date = "2026-06-21"
     article_url = "https://example.com/food-bank-demand"

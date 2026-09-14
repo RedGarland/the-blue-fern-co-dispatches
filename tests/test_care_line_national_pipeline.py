@@ -13,6 +13,33 @@ from bluefern_dispatches.care_line_source_registry import CareLineSource
 import bluefern_dispatches.care_line_national_pipeline as pipeline
 
 
+def _care_source(**overrides: object) -> CareLineSource:
+    payload: dict[str, object] = {
+        "source_id": "example-care-source",
+        "name": "Example Care Source",
+        "publisher": "Example News",
+        "source_type": "trade_publication",
+        "feed_url": "https://example.org/feed.xml",
+        "homepage_url": "https://example.org/",
+        "state": "MA",
+        "geographic_scope": "local",
+        "organization_type": "trade_publication",
+        "care_line_topics": ["clinic", "maternity"],
+        "authority_level": "secondary",
+        "expected_update_frequency": "daily",
+        "enabled": True,
+        "adapter_type": "rss",
+        "requires_html_followup": False,
+        "source_role": "healthcare_access_reporting",
+        "historical_depth": "current feed",
+        "item_permalink_available": True,
+        "created_at": "2026-09-14T00:00:00Z",
+        "updated_at": "2026-09-14T00:00:00Z",
+    }
+    payload.update(overrides)
+    return CareLineSource.model_validate(payload)
+
+
 class _FakeResponse:
     def __init__(self, body: bytes = b"<rss><channel /></rss>", *, status: int = 200, url: str = "https://example.org/feed") -> None:
         self._body = body
@@ -793,6 +820,199 @@ def test_care_line_access_blocked_item_can_use_feed_content_text_for_bounded_evi
     assert payload["qualification_result"]["extraction_outcome"] == "ACCESS_BLOCKED"
     assert payload["qualification_result"]["failed_gates"] == []
     assert "emergency department closure announced" in payload["normalized_record"]["supporting_passage"].lower()
+
+
+def test_care_line_qualifies_it_incident_with_sexual_health_walk_in_cancellation(tmp_path: Path, monkeypatch) -> None:
+    source = _care_source(
+        source_id="fenway-health",
+        name="Fenway Health",
+        feed_url="https://fenwayhealth.org/feed/",
+        homepage_url="https://fenwayhealth.org/",
+        care_line_topics=["clinic", "sexual health"],
+    )
+    raw_item = {
+        "raw_item_id": "fenway-it-incident-1",
+        "source_id": "fenway-health",
+        "source_name": "Fenway Health",
+        "item_url": "https://fenwayhealth.org/care/medical/std-testing-services/",
+        "title": "Fenway Health continues to respond to an IT incident",
+        "description": "Patient communications may be delayed and the Sexual Health Walk-In Clinic is cancelled Friday morning.",
+        "content_text": "Fenway Health continues to respond to an IT incident. Patient communications may be delayed and the Sexual Health Walk-In Clinic is cancelled Friday morning.",
+        "source_publication_date": "2026-09-13",
+        "facility_name": "Fenway Health",
+        "provider_name": "Fenway Health",
+        "city": "Boston",
+        "state": "MA",
+        "source_state": "MA",
+    }
+    lead = pipeline.event_lead_from_raw_item(raw_item)
+
+    monkeypatch.setattr(pipeline, "fetch_url", lambda *args, **kwargs: (_ for _ in ()).throw(TimeoutError("blocked in test")))
+
+    status, payload = pipeline.qualify_event_lead(
+        source,
+        raw_item,
+        lead,
+        artifact_path=str(tmp_path / "fenway.raw-items.json"),
+        run_id="run-fenway",
+        fetch_timeout=5,
+        allow_insecure_tls=False,
+    )
+
+    assert status == "qualified"
+    assert lead["event_type_hint"] == "service_suspension"
+    assert payload["normalized_record"]["review_status"] == "not_reviewed"
+    assert payload["normalized_record"]["service_line"] == "specialty_care"
+    assert "REDUCED_SERVICE_AVAILABILITY" in payload["normalized_record"]["access_consequences"]
+
+
+def test_care_line_qualifies_birth_center_future_delivery_pause_without_total_closure(tmp_path: Path, monkeypatch) -> None:
+    source = _care_source(
+        source_id="atlanta-birth-center",
+        name="Atlanta Birth Center",
+        feed_url="https://www.atlantabirthcenter.org/transition",
+        homepage_url="https://www.atlantabirthcenter.org/",
+        state="GA",
+        care_line_topics=["maternity", "birth center"],
+    )
+    raw_item = {
+        "raw_item_id": "atlanta-birth-center-transition-1",
+        "source_id": "atlanta-birth-center",
+        "source_name": "Atlanta Birth Center",
+        "item_url": "https://www.atlantabirthcenter.org/transition",
+        "title": "Atlanta Birth Center announces transition",
+        "description": "Atlanta Birth Center will pause birth center deliveries effective September 30, 2026, while prenatal and postpartum care continue.",
+        "content_text": "Atlanta Birth Center will pause birth center deliveries effective September 30, 2026. Clients will transition birth plans while prenatal and postpartum care continue without interruption.",
+        "source_publication_date": "2026-09-14",
+        "facility_name": "Atlanta Birth Center",
+        "provider_name": "Atlanta Birth Center",
+        "city": "Atlanta",
+        "state": "GA",
+        "source_state": "GA",
+    }
+    lead = pipeline.event_lead_from_raw_item(raw_item)
+
+    monkeypatch.setattr(pipeline, "fetch_url", lambda *args, **kwargs: (_ for _ in ()).throw(TimeoutError("blocked in test")))
+
+    status, payload = pipeline.qualify_event_lead(
+        source,
+        raw_item,
+        lead,
+        artifact_path=str(tmp_path / "atlanta.raw-items.json"),
+        run_id="run-atlanta",
+        fetch_timeout=5,
+        allow_insecure_tls=False,
+    )
+
+    assert status == "qualified"
+    assert lead["event_type_hint"] == "service_suspension"
+    assert payload["normalized_record"]["service_line"] == "labor_and_delivery"
+    assert payload["normalized_record"]["review_status"] == "not_reviewed"
+    assert "REDUCED_SERVICE_AVAILABILITY" in payload["normalized_record"]["access_consequences"]
+    assert "prenatal and postpartum care continue" in payload["normalized_record"]["supporting_passage"]
+
+
+def test_failed_care_source_writes_durable_failure_diagnostic(tmp_path: Path, monkeypatch) -> None:
+    source = _care_source(source_id="blocked-source", name="Blocked Source")
+
+    def fail_fetch(*args, **kwargs):  # noqa: ANN001
+        raise TimeoutError("connection timed out")
+
+    monkeypatch.setattr(pipeline, "fetch_source", fail_fetch)
+
+    result = pipeline.run_collection_attempt(
+        tmp_path,
+        run_date="2026-09-14",
+        run_id="run-failure",
+        source_row={"source": source},
+        fetch_timeout=1,
+    )
+
+    failure = result["failure_diagnostic"]
+    failure_path = tmp_path / "data" / "dispatches" / "care-line" / "collection-runs" / "2026-09-14" / "run-failure" / "blocked-source.failure.json"
+    stored = json.loads(failure_path.read_text(encoding="utf-8"))
+
+    assert result["attempt"]["collection_status"] == "failed"
+    assert failure["source_id"] == "blocked-source"
+    assert failure["source_name"] == "Blocked Source"
+    assert failure["domain"] == "example.org"
+    assert failure["failure_class"] == "TimeoutError"
+    assert failure["transient"] is True
+    assert failure["retry_attempted"] is False
+    assert failure["alternate_discovery_coverage"] == "not_evaluated_in_collection_attempt"
+    assert stored == failure
+
+
+def test_partial_success_manifest_separates_source_failures_from_zero_findings(tmp_path: Path, monkeypatch) -> None:
+    source = _care_source(source_id="failed-source", name="Failed Source")
+    failure_diagnostic = {
+        "source_id": "failed-source",
+        "source_name": "Failed Source",
+        "failure_class": "HTTPError",
+        "failure_reason": "HTTPError: HTTP Error 403: Forbidden",
+        "transient": False,
+        "retry_attempted": False,
+        "alternate_discovery_coverage": "not_evaluated_in_collection_attempt",
+    }
+
+    monkeypatch.setattr(pipeline, "load_canonical_registry", lambda root, include_disabled=True: object())
+    monkeypatch.setattr(pipeline, "collectable_sources", lambda registry, include_partial=True, include_manual_review=False: [{"source": source}])
+    monkeypatch.setattr(pipeline, "adapt_pressure_registry", lambda root: {})
+    monkeypatch.setattr(pipeline, "load_reviewed_records", lambda root: [])
+    monkeypatch.setattr(pipeline, "load_follow_up_state", lambda root, *, state_root=None: {"items": []})
+    monkeypatch.setattr(pipeline, "build_follow_up_queries", lambda root, run_date, reviewed_records, state: [])
+    monkeypatch.setattr(
+        pipeline,
+        "update_follow_up_state",
+        lambda root, *, run_date, follow_up_queries, discovery_query_rows, state_root=None: {"items": [], "state_path": ""},
+    )
+    monkeypatch.setattr(
+        pipeline,
+        "begin_collection_run",
+        lambda root, *, run_date, source_rows, settings, run_id=None, collection_runs_root=None: (
+            (root / collection_runs_root / run_date / "run-partial").mkdir(parents=True, exist_ok=True)
+            or {
+                "schema_version": "test",
+                "run_id": "run-partial",
+                "run_key": "run-partial",
+                "run_date": run_date,
+                "started_at": "2026-09-14T00:00:00Z",
+                "source_count": len(source_rows),
+                "source_ids": ["failed-source"],
+                "status": "running",
+                "settings": dict(settings),
+            }
+        ),
+    )
+    monkeypatch.setattr(
+        pipeline,
+        "run_collection_attempt",
+        lambda *args, **kwargs: {
+            "attempt": {
+                "source_id": "failed-source",
+                "source_name": "Failed Source",
+                "collection_status": "failed",
+                "failure_reason": failure_diagnostic["failure_reason"],
+            },
+            "raw_items": [],
+            "event_leads": [],
+            "candidates": [],
+            "exclusions": [],
+            "failed_extractions": [],
+            "manual_review": [],
+            "failure": failure_diagnostic["failure_reason"],
+            "failure_diagnostic": failure_diagnostic,
+        },
+    )
+
+    result = pipeline.run_national_pipeline(tmp_path, run_date="2026-09-14", run_id="run-partial")
+    manifest = result["run_manifest"]
+
+    assert manifest["status"] == pipeline.RUN_STATUS_FAILURE
+    assert manifest["failed_source_count"] == 1
+    assert manifest["qualified_candidates_created_this_run"] == 0
+    assert manifest["source_failure_diagnostics"] == [failure_diagnostic]
+    assert manifest["zero_findings_distinct_from_source_failures"] is True
 
 
 @pytest.mark.parametrize(

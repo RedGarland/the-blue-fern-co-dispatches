@@ -205,7 +205,9 @@ DISCOVERY_PRESSURE_TYPE_RULES: list[tuple[str, tuple[tuple[str, ...], ...]]] = [
     ),
     ("food bank demand pressure", (("food bank", "food pantry", "pantry"), ("demand", "surge", "rising", "rise", "strain", "need", "waitlist", "shortage"))),
     ("benefit access pressure", (("snap", "ebt", "wic", "benefit", "benefits"), ("access", "eligibility", "delay", "disruption", "application", "renewal", "recertification", "backlog"))),
+    ("benefit access pressure", (("snap", "food stamps"), ("loss", "losses", "reduced", "cuts", "participation"), ("food bank", "food pantry", "emergency food", "demand"))),
     ("food affordability pressure", (("grocery prices", "food costs", "food prices", "inflation", "rent and groceries"), tuple())),
+    ("grocery access pressure", (("grocery store", "supermarket", "food mart", "market"), ("only", "sole", "full-service", "last"), ("fire", "destroyed", "burned", "closed", "without"))),
     (
         "household food insecurity pressure",
         (
@@ -368,6 +370,8 @@ QUERY_FAMILY_DEFINITIONS: list[dict[str, Any]] = [
         "templates": [
             '("food bank" OR "food pantry") (demand OR strain OR shortage OR surge)',
             '("food bank" OR "food pantry") ("increased need" OR waitlist OR "funding gap")',
+            '("only grocery store" OR "sole grocery store" OR "full-service grocery store") (fire OR destroyed OR burned OR closed)',
+            '("grocery store fire" OR "food mart fire") ("only" OR "sole" OR "full-service" OR access)',
             '("summer food programs" OR "summer meals") "record demand"',
             '("food program" OR "food programs") "record demand"',
             '"pantry demand"',
@@ -381,6 +385,8 @@ QUERY_FAMILY_DEFINITIONS: list[dict[str, Any]] = [
         "templates": [
             '(SNAP OR EBT) (cuts OR changes OR benefits OR families)',
             '("food stamps" OR "SNAP cuts" OR "SNAP benefits" OR "SNAP rolls") ("food bank" OR pantry OR families)',
+            '("SNAP losses" OR "SNAP participation" OR "SNAP reductions") ("food bank" OR "food pantry" OR "emergency food demand")',
+            '("Food Bank Network" OR "food bank network") SNAP (losses OR demand OR participation)',
             '("summer meals" OR "school meals") (families OR children OR hunger)',
             '("school meal" OR "school meals" OR "school lunch") ("price increase" OR "higher prices" OR affordability)',
             '("school board" OR district) ("meal price increase" OR "school lunch price")',
@@ -412,6 +418,10 @@ QUERY_FAMILY_DEFINITIONS: list[dict[str, Any]] = [
             '"food pantries" {geo} after:{after} before:{before}',
             '"food stamps" {geo} after:{after} before:{before}',
             '"SNAP cuts" {geo} after:{after} before:{before}',
+            '("SNAP losses" OR "SNAP participation" OR "SNAP reductions") {geo} ("food bank" OR "food pantry" OR "emergency food demand") after:{after} before:{before}',
+            '("Food Bank Network" OR "food bank network") {geo} SNAP after:{after} before:{before}',
+            '("only grocery store" OR "sole grocery store" OR "full-service grocery store") {geo} (fire OR destroyed OR burned OR closed) after:{after} before:{before}',
+            '("grocery store fire" OR "food mart fire") {geo} after:{after} before:{before}',
             '"summer meals" {geo} families after:{after} before:{before}',
             '("meal price increase" OR "school lunch price") {geo} after:{after} before:{before}',
             '"emergency food assistance" {geo} after:{after} before:{before}',
@@ -430,6 +440,10 @@ QUERY_FAMILY_DEFINITIONS: list[dict[str, Any]] = [
             '"food pantries" {geo} after:{after} before:{before}',
             '"food stamps" {geo} after:{after} before:{before}',
             '"SNAP cuts" {geo} after:{after} before:{before}',
+            '("SNAP losses" OR "SNAP participation" OR "SNAP reductions") {geo} ("food bank" OR "food pantry" OR "emergency food demand") after:{after} before:{before}',
+            '("Food Bank Network" OR "food bank network") {geo} SNAP after:{after} before:{before}',
+            '("only grocery store" OR "sole grocery store" OR "full-service grocery store") {geo} (fire OR destroyed OR burned OR closed) after:{after} before:{before}',
+            '("grocery store fire" OR "food mart fire") {geo} after:{after} before:{before}',
             '"summer meals" {geo} families after:{after} before:{before}',
             '("meal price increase" OR "school lunch price") {geo} after:{after} before:{before}',
             '"emergency food assistance" {geo} after:{after} before:{before}',
@@ -3061,6 +3075,82 @@ def _candidate_preference_key(row: dict[str, Any]) -> tuple[int, int, int]:
     return (manual_preferred, direct_preferred, traceable_preferred)
 
 
+FOOD_LINE_RESULT_PRIORITY_PATTERNS: tuple[tuple[int, re.Pattern[str]], ...] = (
+    (
+        0,
+        re.compile(
+            r"\b(?:only|sole|full-service|last)\b.{0,80}\b(?:grocery store|supermarket|food mart|market)\b.{0,140}\b(?:fire|destroyed|burned|closed|without)\b",
+            re.I | re.S,
+        ),
+    ),
+    (
+        0,
+        re.compile(
+            r"\b(?:grocery store|supermarket|food mart|market)\b.{0,140}\b(?:fire|destroyed|burned|closed)\b.{0,100}\b(?:only|sole|full-service|last|access)\b",
+            re.I | re.S,
+        ),
+    ),
+    (
+        0,
+        re.compile(
+            r"\b(?:SNAP|food stamps?)\b.{0,160}\b(?:loss|losses|cut|cuts|reduced|participation)\b.{0,160}\b(?:food bank|food pantry|emergency food|demand|need)\b",
+            re.I | re.S,
+        ),
+    ),
+    (
+        0,
+        re.compile(
+            r"\b(?:food bank network|food bank|food pantry|emergency food|demand|need)\b.{0,160}\b(?:SNAP|food stamps?)\b.{0,160}\b(?:loss|losses|cut|cuts|reduced|participation)\b",
+            re.I | re.S,
+        ),
+    ),
+)
+
+
+def _google_news_result_priority(item: Mapping[str, Any]) -> tuple[int, int]:
+    text = " ".join(
+        _nonempty(item.get(key))
+        for key in ("title", "description", "source_name", "source_url", "link")
+        if _nonempty(item.get(key))
+    )
+    for priority, pattern in FOOD_LINE_RESULT_PRIORITY_PATTERNS:
+        if pattern.search(text):
+            return (priority, 0)
+    return (1, 0)
+
+
+def _select_google_news_items_for_fetch(items: list[dict[str, Any]], *, limit: int) -> list[dict[str, Any]]:
+    if limit <= 0:
+        return []
+    indexed = list(enumerate(items))
+    selected_indexed = sorted(indexed, key=lambda row: (_google_news_result_priority(row[1]), row[0]))[:limit]
+    return [item for _, item in sorted(selected_indexed, key=lambda row: row[0])]
+
+
+def _result_disposition_sample(
+    items: list[dict[str, Any]],
+    selected_items: list[dict[str, Any]],
+    *,
+    sample_limit: int = 20,
+) -> list[dict[str, Any]]:
+    selected_ids = {id(item) for item in selected_items}
+    sample = []
+    for index, item in enumerate(items[: max(sample_limit, 0)], start=1):
+        selected = id(item) in selected_ids
+        sample.append(
+            {
+                "position": index,
+                "title": _nonempty(item.get("title")),
+                "link": _normalize_url(_nonempty(item.get("link"))),
+                "source_name": _nonempty(item.get("source_name")),
+                "published": _nonempty(item.get("published")),
+                "selected_for_fetch": selected,
+                "disposition": "selected_for_fetch" if selected else "not_selected_result_cap",
+            }
+        )
+    return sample
+
+
 def _title_publisher_date_key(row: dict[str, Any]) -> str:
     title = re.sub(r"\s+", " ", _nonempty(row.get("discovered_title")).lower())
     publisher = re.sub(r"\s+", " ", _nonempty(row.get("discovered_publisher")).lower())
@@ -3848,7 +3938,8 @@ def run_food_line_discovery_expansion(
                 else:
                     direct_sources_with_no_in_window_items.add(source_name)
             broad_candidate_exists = any(not _nonempty(item.get("archive_url_used")) for item in rss_items)
-            for selected_item in rss_items[:max_results_per_query]:
+            selected_rss_items = rss_items[:max_results_per_query]
+            for selected_item in selected_rss_items:
                 selected_item["_selected_after_date_filter"] = True
                 if (
                     broad_candidate_exists
@@ -3856,7 +3947,19 @@ def run_food_line_discovery_expansion(
                     and _nonempty(selected_item.get("_date_match_status")) in {"exact_date", "within_query_window"}
                 ):
                     historical_archive_selected_before_broad_count += 1
-        for item in rss_items[:max_results_per_query]:
+        else:
+            selected_rss_items = _select_google_news_items_for_fetch(rss_items, limit=max_results_per_query)
+            result_count = len(rss_items)
+            selected_count = len(selected_rss_items)
+            result_row["result_cap"] = max_results_per_query
+            result_row["selected_result_count"] = selected_count
+            result_row["truncated_result_count"] = max(0, result_count - selected_count)
+            result_row["result_disposition_counts"] = {
+                "selected_for_fetch": selected_count,
+                "not_selected_result_cap": max(0, result_count - selected_count),
+            }
+            result_row["returned_result_sample"] = _result_disposition_sample(rss_items, selected_rss_items)
+        for item in selected_rss_items:
             discovered_url = _normalize_url(_nonempty(item.get("link")))
             direct_source_name = _nonempty(query_row.get("direct_source_name"))
             feed_url = _normalize_url(_nonempty(query_row.get("direct_source_feed_url")))

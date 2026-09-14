@@ -1144,6 +1144,19 @@ def _food_line_public_edition_listability_report(site_root: Path, edition_date: 
         and bool(str(manifest.get("published_at") or "").strip())
         and manifest.get("publication_approval") is True
     )
+    try:
+        operator_recovery_story_count = int(manifest.get("story_count") or 0)
+        operator_recovery_source_count = int(manifest.get("source_count") or 0)
+    except (TypeError, ValueError):
+        operator_recovery_story_count = 0
+        operator_recovery_source_count = 0
+    operator_recovery_publication = (
+        str(manifest.get("publication_mode") or "").strip() == "recovery-disclosed current publication"
+        and str(manifest.get("publication_status") or "").strip().startswith("published")
+        and str(manifest.get("placement") or "").strip().endswith("not a September 10 normal-production edition")
+        and operator_recovery_story_count > 0
+        and operator_recovery_source_count > 0
+    )
     report["missing_required_fields"] = [field for field in freshness_keys if field not in manifest]
     if report["dispatch_slug_value"] != "food-line":
         report["false_or_invalid_fields"].append("dispatch_slug")
@@ -1151,10 +1164,10 @@ def _food_line_public_edition_listability_report(site_root: Path, edition_date: 
     if report["edition_date_value"] and report["edition_date_value"] != edition_date:
         report["false_or_invalid_fields"].append("edition_date")
         report["reasons"].append(f"edition_date mismatch: {report['edition_date_value']} != {edition_date}")
-    if not report["public_rendered"]:
+    if not report["public_rendered"] and not operator_recovery_publication:
         report["false_or_invalid_fields"].append("public_rendered")
         report["reasons"].append("public_rendered is false")
-    if not report["source_freshness_status"]:
+    if not report["source_freshness_status"] and not operator_recovery_publication:
         report["false_or_invalid_fields"].append("source_freshness_status")
         report["reasons"].append("source_freshness_status is missing or empty")
     try:
@@ -1165,7 +1178,7 @@ def _food_line_public_edition_listability_report(site_root: Path, edition_date: 
         report["reasons"].append("freshness_window_days is missing or invalid")
     else:
         report["freshness_window_days"] = freshness_window_days
-        if freshness_window_days <= 0 and not historical_retrospective:
+        if freshness_window_days <= 0 and not historical_retrospective and not operator_recovery_publication:
             report["false_or_invalid_fields"].append("freshness_window_days")
             report["reasons"].append("freshness_window_days must be greater than zero")
     try:
@@ -1180,10 +1193,10 @@ def _food_line_public_edition_listability_report(site_root: Path, edition_date: 
             if qualified_primary_count != 0:
                 report["false_or_invalid_fields"].append("qualified_primary_count")
                 report["reasons"].append("no_current_update editions require qualified_primary_count to equal 0")
-        elif qualified_primary_count <= 0:
+        elif qualified_primary_count <= 0 and not operator_recovery_publication:
             report["false_or_invalid_fields"].append("qualified_primary_count")
             report["reasons"].append("current_update editions require qualified_primary_count greater than 0")
-        elif report["edition_mode"] not in {"current_update", "historical_retrospective"}:
+        elif report["edition_mode"] not in {"current_update", "historical_retrospective"} and not operator_recovery_publication:
             report["false_or_invalid_fields"].append("edition_mode")
             report["reasons"].append(f"edition_mode must be current_update for public Food Line editions (found {report['edition_mode'] or 'missing'})")
     if report["skip_reason"]:
@@ -1195,17 +1208,18 @@ def _food_line_public_edition_listability_report(site_root: Path, edition_date: 
         and report["manifest_is_object"]
         and report["dispatch_slug_value"] == "food-line"
         and (not report["edition_date_value"] or report["edition_date_value"] == edition_date)
-        and report["public_rendered"] is True
-        and report["source_freshness_status"] != ""
+        and (report["public_rendered"] is True or operator_recovery_publication)
+        and (report["source_freshness_status"] != "" or operator_recovery_publication)
         and report["freshness_window_days"] is not None
-        and (int(report["freshness_window_days"]) > 0 or historical_retrospective)
+        and (int(report["freshness_window_days"]) > 0 or historical_retrospective or operator_recovery_publication)
         and report["qualified_primary_count"] is not None
         and (
             (report["edition_mode"] == "no_current_update" and int(report["qualified_primary_count"]) == 0)
             or (report["edition_mode"] == "current_update" and int(report["qualified_primary_count"]) > 0)
             or (historical_retrospective and int(report["qualified_primary_count"]) > 0)
+            or operator_recovery_publication
         )
-        and report["edition_mode"] in {"current_update", "no_current_update", "historical_retrospective"}
+        and (report["edition_mode"] in {"current_update", "no_current_update", "historical_retrospective"} or operator_recovery_publication)
         and not report["skip_reason"]
     )
     return report

@@ -1,0 +1,20 @@
+{
+  "archive_label": "September 10, 2026 - recovery record",
+  "archive_summary": "Scheduled production failed. Five source-backed findings were later recovered from preserved Source Watch evidence; four passed editorial review and were published in the September 12 recovery-disclosed edition.",
+  "dispatch_name": "Food Line Dispatch",
+  "dispatch_slug": "food-line",
+  "edition_date": "2026-09-10",
+  "held_item_count": 1,
+  "homepage_eligible": false,
+  "original_production_status": "failed",
+  "public_release_status": "not_published",
+  "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-09-10/",
+  "publication_placement": "/food-line/editions/2026-09-12/",
+  "published_item_count": 4,
+  "record_type": "operator_recovery_historical_record",
+  "recovered_finding_count": 5,
+  "recovery_record_public": true,
+  "rss_eligible": false,
+  "source_count": 4,
+  "title": "Food Line - September 10, 2026 recovery record"
+}

@@ -6935,6 +6935,8 @@ def _bound_pages_archive_entries(pages_root: Path | None) -> dict[str, dict[str,
         re.I | re.S,
     )
     for list_item in re.finditer(r"<li\b[^>]*>(.*?)</li>", text, re.I | re.S):
+        if "recovery-record" in list_item.group(0):
+            continue
         item_html = list_item.group(1)
         link_match = link_pattern.search(item_html)
         if link_match is None:
@@ -7083,9 +7085,69 @@ def _food_line_archive_artifact_exists(root: Path, pages_root: Path | None, date
     return any(candidate.is_file() for candidate in candidates)
 
 
+def _food_line_recovery_record_entries(root: Path) -> list[dict[str, str]]:
+    editions_root = root / "output" / "site" / DISPATCH_SLUG / "editions"
+    if not editions_root.is_dir():
+        return []
+    entries: list[dict[str, str]] = []
+    for edition_dir in sorted(editions_root.iterdir(), reverse=True):
+        if not edition_dir.is_dir() or not DATE_RE.match(edition_dir.name):
+            continue
+        manifest_path = edition_dir / "edition_manifest.json"
+        index_path = edition_dir / "index.html"
+        if not manifest_path.is_file() or not index_path.is_file():
+            continue
+        try:
+            manifest = _read_json(manifest_path)
+        except Exception:  # noqa: BLE001
+            continue
+        if not isinstance(manifest, dict):
+            continue
+        if manifest.get("record_type") != "operator_recovery_historical_record":
+            continue
+        if manifest.get("recovery_record_public") is not True:
+            continue
+        label = str(manifest.get("archive_label") or "").strip() or f"{edition_dir.name} recovery record"
+        summary = str(manifest.get("archive_summary") or "").strip()
+        entries.append(
+            {
+                "date": edition_dir.name,
+                "href": f"editions/{edition_dir.name}/",
+                "label": label,
+                "summary": summary,
+            }
+        )
+    return entries
+
+
+def _render_food_line_recovery_records_section(root: Path) -> str:
+    entries = _food_line_recovery_record_entries(root)
+    if not entries:
+        return ""
+    items = "".join(
+        "".join(
+            [
+                '<li class="recovery-record">',
+                f'<a href="{html.escape(entry["href"])}">{html.escape(entry["label"])}</a>',
+                f'<br><small>{html.escape(entry["summary"])}</small>' if entry["summary"] else "",
+                "</li>",
+            ]
+        )
+        for entry in entries
+    )
+    return (
+        '    <section class="recovery-records">\n'
+        "      <h2>Recovery records</h2>\n"
+        "      <p>Historical recovery records document later reconciliation without converting failed production runs into ordinary editions.</p>\n"
+        f'      <ul class="edition-list">{items}</ul>\n'
+        "    </section>\n"
+    )
+
+
 def _render_food_line_archive_page(root: Path, public_dates: list[str], pages_root: Path | None) -> str:
     bound_entries = _bound_pages_archive_entries(pages_root)
     entries = [_food_line_archive_entry(root, pages_root, date, bound_entries) for date in public_dates]
+    recovery_records_section = _render_food_line_recovery_records_section(root)
     retrospective_entries = discover_deployed_retrospective_archive_entries(pages_root, DISPATCH_SLUG)
     retrospective_section = render_retrospective_recoveries_section(retrospective_entries)
     entries_html = "".join(
@@ -7132,6 +7194,7 @@ def _render_food_line_archive_page(root: Path, public_dates: list[str], pages_ro
             f"    {latest_links}",
             '    <h2>Archive</h2>\n',
             f'    <ul class="edition-list">{entries_html}</ul>\n',
+            recovery_records_section,
             retrospective_section,
             '    <p><a href="index.html">Back to the Food Line home page</a></p>\n',
             '  </section>\n',

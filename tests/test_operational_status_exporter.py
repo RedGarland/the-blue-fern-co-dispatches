@@ -7,7 +7,11 @@ from pathlib import Path
 
 import pytest
 
-from bluefern_dispatches.operational_health import RecoveryContext, build_operational_receipt
+from bluefern_dispatches.operational_health import (
+    RecoveryContext,
+    build_care_line_operational_receipt,
+    build_operational_receipt,
+)
 from bluefern_dispatches.operational_status_exporter import (
     ExportError,
     build_food_line_status,
@@ -63,7 +67,46 @@ def _write_day(tmp_path: Path, statuses: dict[str, tuple[str, str, int]] | None 
             public_side_effects={"absolute_path": r"C:\BlueFernRunner\private", "ok": True},
             details={"source_body": "private article body", "safe_detail": "kept local"},
         )
-        (receipt_root / f"{task_key}-run-{index}.json").write_text(json.dumps(receipt), encoding="utf-8")
+        (receipt_root / f"run-{index}.json").write_text(json.dumps(receipt), encoding="utf-8")
+    return source
+
+
+def _write_care_day(tmp_path: Path, *, include_older_collection: bool = False) -> Path:
+    source = tmp_path / "care-source"
+    receipt_root = source / "status" / "operational-health" / "care-line" / DATE / "runs"
+    receipt_root.mkdir(parents=True)
+    rows = [
+        ("care_line_collection", "collection", "partial_success", None, "2026-09-10T15:00:00Z"),
+        ("care_line_reviewed_event_queue", "queue", "nothing_to_publish", None),
+        ("care_line_approved_release_publication", "publication", "safe_no_op", "safe_no_op"),
+    ]
+    if include_older_collection:
+        rows.insert(0, ("care_line_collection", "old-collection", "partial_success", None, "2026-09-10T08:00:00Z"))
+    for index, row in enumerate(rows):
+        task_key, run_id, task_status, publication_status, *times = row
+        started_at = times[0] if times else f"2026-09-10T15:{index:02d}:00Z"
+        completed_at = started_at.replace(":00Z", ":30Z")
+        artifact = source / "status" / "care-line" / "scheduler-runs" / DATE / f"{run_id}.json"
+        artifact.parent.mkdir(parents=True, exist_ok=True)
+        artifact.write_text("{}\n", encoding="utf-8")
+        receipt = build_care_line_operational_receipt(
+            task_key=task_key,
+            scheduled_for=DATE,
+            started_at=started_at,
+            completed_at=completed_at,
+            exit_code=0,
+            task_status=task_status,
+            run_id=run_id,
+            runner_path=r"C:\BlueFernRunner\CareLineNationalCurrent8",
+            branch="add/pages-repo-default",
+            source_head="6dd7e79411c11078dca4272075058c80ac8d2198",
+            artifact_refs={"task_receipt": str(artifact)},
+            publication_attempted=False if task_key == "care_line_approved_release_publication" else None,
+            publication_status=publication_status,
+            public_side_effects={"pages_sync": False, "source_text": "private"},
+            details={"source_body": "private care body", "safe_detail": "kept local"},
+        )
+        (receipt_root / f"{run_id}.json").write_text(json.dumps(receipt), encoding="utf-8")
     return source
 
 
@@ -217,6 +260,123 @@ def test_export_advances_system_timestamp_for_care_style_system_only_change(tmp_
     assert result["food_line"]["last_exported_at"] == first
     assert result["care_line"]["last_exported_at"] == second
     assert result["system"]["exported_at"] == second
+    assert result["system"]["dispatches"]["care-line"]["scheduled_health_available"] is False
+    assert result["system"]["dispatches"]["care-line"]["migration_status"] == "MIGRATED"
+
+
+def test_care_export_with_care_source_root_creates_migrated_latest_and_history(tmp_path: Path) -> None:
+    source = _write_day(tmp_path / "food")
+    care_source = _write_care_day(tmp_path)
+    checkout = tmp_path / "status-checkout"
+
+    result = export_status(
+        source_root=source,
+        care_source_root=care_source,
+        status_checkout=checkout,
+        date=DATE,
+        evaluated_at=EVALUATED,
+        exported_at="2026-09-10T16:01:00Z",
+    )
+
+    care = result["care_line"]
+    system_care = result["system"]["dispatches"]["care-line"]
+    assert (checkout / "ops/status/care-line/latest.json").is_file()
+    assert (checkout / f"ops/status/care-line/history/{DATE}.json").is_file()
+    assert care["migration_status"] == "MIGRATED"
+    assert care["aggregate_status"] == "DEGRADED"
+    assert care["receipt_completeness"] == "COMPLETE"
+    assert care["latest_runtime_proof_date"] == "2026-09-10T15:02:30Z"
+    assert system_care["migration_status"] == "MIGRATED"
+    assert system_care["aggregate_status"] == "DEGRADED"
+    assert system_care["latest_runtime_proof_date"] == care["latest_runtime_proof_date"]
+    assert system_care["aggregate_status"] != "UNKNOWN"
+    assert system_care["scheduled_health_available"] is True
+
+
+def test_care_safe_no_op_queue_and_publication_do_not_become_failures(tmp_path: Path) -> None:
+    source = _write_day(tmp_path / "food")
+    care_source = _write_care_day(tmp_path)
+
+    result = export_status(
+        source_root=source,
+        care_source_root=care_source,
+        status_checkout=tmp_path / "status-checkout",
+        date=DATE,
+        evaluated_at=EVALUATED,
+        exported_at="2026-09-10T16:01:00Z",
+    )
+
+    summaries = {row["task_key"]: row for row in result["care_line"]["task_summaries"]}
+    assert summaries["care_line_reviewed_event_queue"]["status"] == "SAFE_NO_OP"
+    assert summaries["care_line_reviewed_event_queue"]["classification"] == "nothing_to_publish"
+    assert summaries["care_line_approved_release_publication"]["status"] == "SAFE_NO_OP"
+    assert summaries["care_line_approved_release_publication"]["publication_attempted"] is False
+    assert summaries["care_line_approved_release_publication"]["publication_status"] == "safe_no_op"
+    assert result["care_line"]["aggregate_status"] == "DEGRADED"
+
+
+def test_care_export_remains_sanitized_and_reuses_timestamp(tmp_path: Path) -> None:
+    source = _write_day(tmp_path / "food")
+    care_source = _write_care_day(tmp_path)
+    checkout = tmp_path / "status-checkout"
+
+    first = export_status(
+        source_root=source,
+        care_source_root=care_source,
+        status_checkout=checkout,
+        date=DATE,
+        evaluated_at=EVALUATED,
+        exported_at="2026-09-10T16:01:00Z",
+    )
+    second = export_status(
+        source_root=source,
+        care_source_root=care_source,
+        status_checkout=checkout,
+        date=DATE,
+        evaluated_at=EVALUATED,
+        exported_at="2026-09-10T17:01:00Z",
+    )
+
+    assert second["care_line"]["last_exported_at"] == first["care_line"]["last_exported_at"]
+    exported = json.dumps(second)
+    assert "C:\\BlueFernRunner" not in exported
+    assert "private care body" not in exported
+    assert "source_text" not in exported
+
+
+def test_older_same_day_care_collection_does_not_make_latest_chain_stale(tmp_path: Path) -> None:
+    source = _write_day(tmp_path / "food")
+    care_source = _write_care_day(tmp_path, include_older_collection=True)
+
+    result = export_status(
+        source_root=source,
+        care_source_root=care_source,
+        status_checkout=tmp_path / "status-checkout",
+        date=DATE,
+        evaluated_at="2026-09-10T16:01:00Z",
+        exported_at="2026-09-10T16:01:30Z",
+    )
+
+    assert result["care_line"]["aggregate_status"] == "DEGRADED"
+    assert result["care_line"]["stale_observability"] is False
+    assert result["system"]["dispatches"]["care-line"]["stale_observability"] is False
+
+
+def test_omitting_care_source_root_does_not_fabricate_authoritative_care_status(tmp_path: Path) -> None:
+    checkout = tmp_path / "status-checkout"
+
+    result = export_status(
+        source_root=_write_day(tmp_path),
+        status_checkout=checkout,
+        date=DATE,
+        evaluated_at=EVALUATED,
+        exported_at="2026-09-10T16:01:00Z",
+    )
+
+    assert "care_line" not in result
+    assert not (checkout / "ops/status/care-line/latest.json").exists()
+    assert result["system"]["dispatches"]["care-line"]["migration_status"] == "NOT_MIGRATED"
+    assert result["system"]["dispatches"]["care-line"]["aggregate_status"] == "UNKNOWN"
     assert result["system"]["dispatches"]["care-line"]["scheduled_health_available"] is False
 
 

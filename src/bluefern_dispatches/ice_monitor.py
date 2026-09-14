@@ -22,6 +22,11 @@ from bluefern_dispatches.ice_dispatch import (
     run_diagnostic,
     utc_now,
 )
+from bluefern_dispatches.operational_health import (
+    OperationalStatus,
+    build_operational_receipt,
+    write_operational_receipt,
+)
 
 MONITOR_MODE = "MONITOR_ONLY"
 DEFAULT_REGISTRY = Path("data/dispatches/ice/sources.yml")
@@ -213,6 +218,48 @@ def _summary(run_id: str, result: dict[str, Any], relationships: list[dict[str, 
     }
 
 
+def _terminal_reconciliation(result: dict[str, Any], relationships: list[dict[str, Any]]) -> dict[str, Any]:
+    raw_count = len(result.get("raw_candidates") or [])
+    normalized_count = len(result.get("normalized_events") or [])
+    canonical_count = len(result.get("canonical_events") or [])
+    collection_exclusions = [
+        item for item in result.get("exclusions") or []
+        if isinstance(item, dict) and "candidate" not in item
+    ]
+    normalization_exclusions = [
+        item for item in result.get("exclusions") or []
+        if isinstance(item, dict) and "candidate" in item
+    ]
+    unaccounted = max(0, raw_count - normalized_count - len(normalization_exclusions))
+    relationship_count = len(relationships)
+    return {
+        "schema_version": "bluefern.ice.monitor.terminal_reconciliation.v1",
+        "raw_candidates": raw_count,
+        "normalized_events": normalized_count,
+        "normalization_exclusions": len(normalization_exclusions),
+        "canonical_events": canonical_count,
+        "relationship_rows": relationship_count,
+        "collection_exclusions": len(collection_exclusions),
+        "unaccounted": unaccounted,
+        "terminal_accounting_status": "complete" if unaccounted == 0 and relationship_count == canonical_count else "incomplete",
+    }
+
+
+def _git_head(repo_root: Path) -> str | None:
+    head = _run(["git", "rev-parse", "HEAD"], cwd=repo_root)
+    if head.returncode != 0:
+        return None
+    return head.stdout.strip()
+
+
+def _operational_status_for_health(collection_health: str, canonical_events: int) -> OperationalStatus:
+    if collection_health == CollectionHealth.COLLECTION_FAILED.value:
+        return OperationalStatus.FAILED
+    if collection_health in {CollectionHealth.COLLECTION_DEGRADED.value, CollectionHealth.LIMITED_SOURCE_UPDATE.value}:
+        return OperationalStatus.DEGRADED
+    return OperationalStatus.SUCCESS if canonical_events else OperationalStatus.SAFE_NO_OP
+
+
 def run_monitor(
     repo_root: Path,
     *,
@@ -272,14 +319,58 @@ def run_monitor(
     _age_queue(queue, observed_at=observed_at, stale_after_days=stale_after_days)
     state.update({"schema_version": STATE_SCHEMA, "updated_at": observed_at, "events": previous_events})
     summary = _summary(run_id, result, relationships, queue["items"])
+    terminal_reconciliation = _terminal_reconciliation(result, relationships)
+    summary["terminal_reconciliation"] = terminal_reconciliation
+    summary["unaccounted"] = terminal_reconciliation["unaccounted"]
     for artifact in ("raw_candidates", "normalized_events", "canonical_events", "event_relationships", "map_readiness", "exclusions", "fetch_results"):
         _write_json(run_path / f"{artifact}.json", result.get(artifact, []))
+    _write_json(run_path / "result_cap_diagnostics.json", result.get("result_cap_diagnostics", []))
+    _write_json(run_path / "terminal_reconciliation.json", terminal_reconciliation)
     _write_json(run_path / "provider_health.json", result["run_manifest"]["provider_health"])
     _write_json(run_path / "collection_report.json", result["run_manifest"])
     _write_json(run_path / "monitor_relationships.json", relationships)
     _write_json(run_path / "operator_summary.json", summary)
     _write_json(state_path, state)
     _write_json(queue_path, queue)
+    run_manifest = result["run_manifest"]
+    operational_status = _operational_status_for_health(run_manifest["health"], len(result["canonical_events"]))
+    operational_receipt = build_operational_receipt(
+        dispatch="ice",
+        task_key="ice_monitor",
+        task_name="Daily - ICE Monitor",
+        scheduled_for=observed_at[:10],
+        started_at=run_manifest.get("started_at"),
+        completed_at=run_manifest.get("completed_at"),
+        exit_code=0 if run_manifest["health"] != CollectionHealth.COLLECTION_FAILED.value else 2,
+        status=operational_status,
+        classification=run_manifest["health"],
+        run_id=run_id,
+        failure_stage="collection" if operational_status in {OperationalStatus.FAILED, OperationalStatus.DEGRADED} else None,
+        runner_path=str(repo_root),
+        branch=branch,
+        source_head=source_commit or _git_head(repo_root),
+        public_side_effects={"pages": False, "publication": False, "rss": False, "audio": False, "social": False},
+        collection_health=run_manifest["health"],
+        publication_attempted=False,
+        publication_status="not_authorized_monitor_only",
+        artifact_refs={
+            "run_dir": str(run_path),
+            "monitor_receipt": str(run_path / "monitor_receipt.json"),
+            "operator_summary": str(run_path / "operator_summary.json"),
+            "terminal_reconciliation": str(run_path / "terminal_reconciliation.json"),
+            "result_cap_diagnostics": str(run_path / "result_cap_diagnostics.json"),
+        },
+        details={
+            "configured_providers": run_manifest.get("configured_providers"),
+            "attempted_providers": run_manifest.get("attempted_providers"),
+            "successful_providers": run_manifest.get("successful_providers"),
+            "failed_providers": run_manifest.get("failed_providers"),
+            "canonical_events": len(result["canonical_events"]),
+            "unaccounted": terminal_reconciliation["unaccounted"],
+        },
+        observed_at=observed_at,
+    )
+    receipt_write = write_operational_receipt(repo_root, operational_receipt)
     payload = {
         "ok": result["run_manifest"]["health"] != CollectionHealth.COLLECTION_FAILED.value,
         "status": "success" if result["run_manifest"]["health"] in {CollectionHealth.HEALTHY.value, CollectionHealth.LIMITED_SOURCE_UPDATE.value, CollectionHealth.COLLECTION_DEGRADED.value} else "collection_failed",
@@ -294,6 +385,9 @@ def run_monitor(
         "public_artifacts_written": False,
         "audio_requested": False,
         "bluesky_requested": False,
+        "operational_health_receipt": str(receipt_write.receipt_path),
+        "operational_health_latest": str(receipt_write.latest_path),
+        "terminal_reconciliation": terminal_reconciliation,
     }
     _write_json(run_path / "monitor_receipt.json", payload)
     return (0 if payload["ok"] else 2), payload

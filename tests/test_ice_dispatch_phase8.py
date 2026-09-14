@@ -103,10 +103,25 @@ def test_monitor_only_mode_writes_durable_queue_and_no_public_side_effects(tmp_p
     assert payload["audio_requested"] is False
     assert payload["bluesky_requested"] is False
     assert Path(payload["review_queue_path"]).is_file()
+    assert Path(payload["operational_health_receipt"]).is_file()
+    assert Path(payload["operational_health_latest"]).is_file()
+    assert payload["terminal_reconciliation"]["unaccounted"] == 0
     queue = json.loads(Path(payload["review_queue_path"]).read_text(encoding="utf-8"))
     assert len(queue["items"]) == 1
     assert queue["items"][0]["review_status"] == "NEW"
-    assert (Path(payload["run_dir"]) / "operator_summary.json").is_file()
+    run_dir = Path(payload["run_dir"])
+    assert (run_dir / "operator_summary.json").is_file()
+    assert (run_dir / "terminal_reconciliation.json").is_file()
+    receipt = json.loads(Path(payload["operational_health_receipt"]).read_text(encoding="utf-8"))
+    assert receipt["dispatch"] == "ice"
+    assert receipt["task_key"] == "ice_monitor"
+    assert receipt["status"] == "SUCCESS"
+    assert receipt["classification"] == "healthy"
+    assert receipt["collection_health"] == "healthy"
+    assert receipt["publication_attempted"] is False
+    assert receipt["publication_status"] == "not_authorized_monitor_only"
+    assert receipt["public_side_effects"] == {"audio": False, "pages": False, "publication": False, "rss": False, "social": False}
+    assert receipt["details"]["unaccounted"] == 0
 
 
 def test_no_new_events_is_successful_no_new_reviewable_events(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -120,6 +135,19 @@ def test_no_new_events_is_successful_no_new_reviewable_events(tmp_path: Path, mo
     assert payload["operator_summary"]["new_events_since_prior_run"] == 0
     assert payload["operator_summary"]["duplicates"] == 1
     assert json.loads(Path(payload["review_queue_path"]).read_text(encoding="utf-8"))["items"][0]["last_seen"] == "2026-09-10T16:00:00Z"
+
+
+def test_healthy_zero_event_run_writes_safe_no_op_operational_receipt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    install_diagnostic(monkeypatch, [diagnostic([])])
+
+    code, payload = ice_monitor.run_monitor(tmp_path, registry=Path("registry.yml"), run_id="zero", observed_at=NOW, live=False)
+
+    assert code == 0
+    assert payload["operator_summary"]["collection_health"] == "healthy"
+    assert payload["terminal_reconciliation"]["unaccounted"] == 0
+    receipt = json.loads(Path(payload["operational_health_receipt"]).read_text(encoding="utf-8"))
+    assert receipt["status"] == "SAFE_NO_OP"
+    assert receipt["classification"] == "healthy"
 
 
 def test_new_source_for_same_event_accumulates_and_does_not_reenter_new(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -193,8 +221,13 @@ def test_degraded_run_exits_zero_but_collection_failed_is_nonzero(tmp_path: Path
 
     assert degraded_code == 0
     assert degraded_payload["operator_summary"]["collection_health"] == "collection_degraded"
+    degraded_receipt = json.loads(Path(degraded_payload["operational_health_receipt"]).read_text(encoding="utf-8"))
+    assert degraded_receipt["status"] == "DEGRADED"
+    assert degraded_receipt["classification"] == "collection_degraded"
     assert failed_code == 2
     assert failed_payload["status"] == "collection_failed"
+    failed_receipt = json.loads(Path(failed_payload["operational_health_receipt"]).read_text(encoding="utf-8"))
+    assert failed_receipt["status"] == "FAILED"
 
 
 def test_runtime_state_preservation_across_code_sync_simulation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

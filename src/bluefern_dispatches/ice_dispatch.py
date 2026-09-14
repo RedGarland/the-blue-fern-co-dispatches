@@ -295,6 +295,18 @@ class ProviderHealth:
     retry_attempts: int = 0
     error: str | None = None
 
+
+@dataclass(frozen=True)
+class ResultCapDiagnostic:
+    source_id: str
+    returned_result_count: int
+    selected_result_count: int
+    truncated_result_count: int
+    result_cap: int
+    selection_strategy: str
+    selected_results: tuple[dict[str, Any], ...] = ()
+    non_selected_sample: tuple[dict[str, Any], ...] = ()
+
 @dataclass(frozen=True)
 class CollectionReport:
     run_id: str
@@ -1239,6 +1251,70 @@ def _is_fetchable_article_link(link: dict[str, str]) -> bool:
     return True
 
 
+HIGH_SEVERITY_LINK_PATTERNS = tuple(
+    re.compile(pattern, re.IGNORECASE)
+    for pattern in (
+        r"\bdeath\b|\bdied\b|\bpasses away\b|\bfatal(?:ity|ities)?\b",
+        r"\bhospital(?:ized|ization)?\b|\bmedical emergency\b|\bserious (?:infection|injury)\b",
+        r"\bshoot(?:ing|s)?\b|\bfirearm\b|\btaser\b|\buse of force\b",
+        r"\bdisturbance\b|\bunrest\b|\bovercrowd(?:ed|ing)?\b",
+        r"\binjunction\b|\bTRO\b|\btemporary restraining order\b|\bgrand jury\b|\bindict(?:ed|ment)?\b",
+    )
+)
+
+
+MEDIUM_SEVERITY_LINK_PATTERNS = tuple(
+    re.compile(pattern, re.IGNORECASE)
+    for pattern in (
+        r"\bworksite\b|\braid(?:s)?\b|\boperation\b|\barrest(?:s|ed)?\b",
+        r"\bdetention\b|\bfacility\b|\bcapacity\b|\bcontract\b|\btransfer(?:s|red)?\b",
+        r"\bremove(?:s|d)?\b|\bremoval\b|\bdeport(?:s|ed|ation)?\b",
+        r"\b287\(g\)\b|\bpolicy\b|\brule\b|\bnotice\b",
+    )
+)
+
+
+def _link_priority(link: dict[str, str]) -> int:
+    title = _clean(link.get("title"))
+    if any(pattern.search(title) for pattern in HIGH_SEVERITY_LINK_PATTERNS):
+        return 100
+    if any(pattern.search(title) for pattern in MEDIUM_SEVERITY_LINK_PATTERNS):
+        return 50
+    return 0
+
+
+def _select_links_for_fetch(source_id: str, links: list[dict[str, str]], *, max_per_source: int) -> tuple[list[dict[str, str]], ResultCapDiagnostic]:
+    rows = [{**link, "_source_order": index, "_priority": _link_priority(link)} for index, link in enumerate(links)]
+    ranked = sorted(rows, key=lambda row: (-int(row["_priority"]), int(row["_source_order"])))
+    selected = ranked[:max_per_source]
+    selected_canonicals = {row["canonical_url"] for row in selected}
+    non_selected = [row for row in rows if row["canonical_url"] not in selected_canonicals]
+
+    def diagnostic_row(row: dict[str, Any], disposition: str) -> dict[str, Any]:
+        return {
+            "title": row["title"],
+            "url": row["url"],
+            "canonical_url": row["canonical_url"],
+            "source_order": row["_source_order"],
+            "priority": row["_priority"],
+            "disposition": disposition,
+            "reason": "selected_by_priority_then_source_order" if disposition == "selected_for_fetch" else "not_selected_result_cap",
+        }
+
+    diagnostic = ResultCapDiagnostic(
+        source_id=source_id,
+        returned_result_count=len(rows),
+        selected_result_count=len(selected),
+        truncated_result_count=max(0, len(rows) - len(selected)),
+        result_cap=max_per_source,
+        selection_strategy="severity_priority_then_source_order",
+        selected_results=tuple(diagnostic_row(row, "selected_for_fetch") for row in selected),
+        non_selected_sample=tuple(diagnostic_row(row, "not_selected_result_cap") for row in non_selected[:10]),
+    )
+    selected_by_original_order = sorted(selected, key=lambda row: int(row["_source_order"]))
+    return [{key: value for key, value in row.items() if not key.startswith("_")} for row in selected_by_original_order], diagnostic
+
+
 def _extract_passage(html_text: str, title: str) -> str | None:
     plain = _strip_html(html_text)
     title_words = [w for w in re.findall(r"[A-Za-z0-9]+", title.lower()) if len(w) > 3]
@@ -1396,19 +1472,20 @@ def _candidate_from_link(source: dict[str, Any], link: dict[str, str], article: 
     return candidate, None
 
 
-def collect_live_candidates(
+def collect_live_candidates_with_diagnostics(
     sources: list[dict[str, Any]],
     *,
     max_per_source: int = 3,
     timeout: float = 15.0,
     window_hours: int | None = 72,
     observed_at: str | None = None,
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[ProviderHealth], list[dict[str, Any]]]:
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[ProviderHealth], list[dict[str, Any]], list[dict[str, Any]]]:
     retrieved_at = observed_at or utc_now()
     raw_candidates: list[dict[str, Any]] = []
     exclusions: list[dict[str, Any]] = []
     provider_health: list[ProviderHealth] = []
     fetch_results: list[dict[str, Any]] = []
+    result_cap_diagnostics: list[dict[str, Any]] = []
     for source in sources:
         attempted = bool(source.get("enabled")) and source.get("collection_mechanism") != "documented_manual" and bool(source.get("url"))
         if not attempted:
@@ -1420,9 +1497,11 @@ def collect_live_candidates(
             provider_health.append(ProviderHealth(source_id=source["source_id"], publisher=source["publisher"], tier=int(source["tier"]), attempted=True, success=False, http_status=index.status, error=index.error))
             continue
         links = [link for link in _anchor_candidates(source, index.content) if _source_link_allowed(source, link) and _keyword_hit(link["title"])]
+        selected_links, cap_diagnostic = _select_links_for_fetch(source["source_id"], links, max_per_source=max_per_source)
+        result_cap_diagnostics.append(_plain(cap_diagnostic))
         accepted = 0
         failed_records = 0
-        for link in links[:max_per_source]:
+        for link in selected_links:
             if not _is_fetchable_article_link(link):
                 exclusions.append({"source_id": source["source_id"], "source_url": link["url"], "title": link["title"], "reason": "non_article_or_static_link"})
                 continue
@@ -1439,6 +1518,24 @@ def collect_live_candidates(
             elif exclusion:
                 exclusions.append(exclusion)
         provider_health.append(ProviderHealth(source_id=source["source_id"], publisher=source["publisher"], tier=int(source["tier"]), attempted=True, success=True, accepted_records=accepted, failed_records=failed_records, http_status=index.status))
+    return raw_candidates, exclusions, provider_health, fetch_results, result_cap_diagnostics
+
+
+def collect_live_candidates(
+    sources: list[dict[str, Any]],
+    *,
+    max_per_source: int = 3,
+    timeout: float = 15.0,
+    window_hours: int | None = 72,
+    observed_at: str | None = None,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[ProviderHealth], list[dict[str, Any]]]:
+    raw_candidates, exclusions, provider_health, fetch_results, _ = collect_live_candidates_with_diagnostics(
+        sources,
+        max_per_source=max_per_source,
+        timeout=timeout,
+        window_hours=window_hours,
+        observed_at=observed_at,
+    )
     return raw_candidates, exclusions, provider_health, fetch_results
 
 def run_diagnostic(registry_path: Path, *, fixture_path: Path | None = None, output_dir: Path | None = None, validate_endpoints: bool = False, live: bool = False, max_per_source: int = 3, window_hours: int | None = 72) -> dict[str, Any]:
@@ -1449,8 +1546,9 @@ def run_diagnostic(registry_path: Path, *, fixture_path: Path | None = None, out
     provider_health: list[ProviderHealth] = []
     raw_candidates: list[dict[str, Any]] = []
     collection_exclusions: list[dict[str, Any]] = []
+    result_cap_diagnostics: list[dict[str, Any]] = []
     if live:
-        raw_candidates, collection_exclusions, provider_health, fetch_results = collect_live_candidates(sources, max_per_source=max_per_source, window_hours=window_hours)
+        raw_candidates, collection_exclusions, provider_health, fetch_results, result_cap_diagnostics = collect_live_candidates_with_diagnostics(sources, max_per_source=max_per_source, window_hours=window_hours)
     else:
         for source in sources:
             attempted = bool(source.get("enabled")) and source.get("collection_mechanism") != "documented_manual"
@@ -1506,6 +1604,7 @@ def run_diagnostic(registry_path: Path, *, fixture_path: Path | None = None, out
         "exclusions": exclusions,
         "endpoint_validation": endpoint_results,
         "fetch_results": fetch_results,
+        "result_cap_diagnostics": result_cap_diagnostics,
         "collection_window_hours": window_hours if live else None,
         "publication_decision": decision.value,
         "publication_decision_reason": reason,
@@ -1521,6 +1620,7 @@ def run_diagnostic(registry_path: Path, *, fixture_path: Path | None = None, out
         (output_dir / "map_readiness.json").write_text(json.dumps(result["map_readiness"], indent=2, sort_keys=True), encoding="utf-8")
         (output_dir / "exclusions.json").write_text(json.dumps(exclusions, indent=2, sort_keys=True), encoding="utf-8")
         (output_dir / "fetch_results.json").write_text(json.dumps(fetch_results, indent=2, sort_keys=True), encoding="utf-8")
+        (output_dir / "result_cap_diagnostics.json").write_text(json.dumps(result_cap_diagnostics, indent=2, sort_keys=True), encoding="utf-8")
     return result
 
 

@@ -8,6 +8,7 @@ from bluefern_dispatches.ice_dispatch import (
     FetchResult,
     ProviderHealth,
     collect_live_candidates,
+    collect_live_candidates_with_diagnostics,
     compare_event_observation,
     evaluate_collection_health,
     event_public_eligibility,
@@ -117,6 +118,55 @@ def test_source_path_and_title_filters_remove_shared_navigation_before_fetch(mon
     assert "detention-management" not in " ".join(fetched)
     assert exclusions == []
     assert health[0].accepted_records == 1
+
+
+def test_result_cap_selection_prioritizes_high_severity_event_and_records_diagnostics(monkeypatch):
+    index_links = "\n".join(
+        f'<a href="/news/releases/ice-routine-removal-{idx}">ICE routine removal operation {idx}</a>'
+        for idx in range(5)
+    ) + '\n<a href="/news/releases/ice-detainee-death-hospitalization">ICE detainee death after hospitalization</a>'
+
+    def fake_fetch(url: str, *, timeout: float = 15.0):
+        if "newsroom" in url:
+            return FetchResult(url, True, 200, index_links, None, "test")
+        if "death-hospitalization" in url:
+            return FetchResult(
+                url,
+                True,
+                200,
+                '<meta property="article:published_time" content="2026-09-08T12:00:00Z">'
+                "<p>ICE said a detainee death followed hospitalization after a medical emergency.</p>",
+                None,
+                "test",
+            )
+        return FetchResult(
+            url,
+            True,
+            200,
+            '<meta property="article:published_time" content="2026-09-08T12:00:00Z">'
+            "<p>ICE said a person was removed in a routine removal operation.</p>",
+            None,
+            "test",
+        )
+
+    monkeypatch.setattr("bluefern_dispatches.ice_dispatch.fetch_url_secure", fake_fetch)
+
+    raw, exclusions, health, _, diagnostics = collect_live_candidates_with_diagnostics(
+        [source(title_keywords=[])],
+        max_per_source=5,
+        window_hours=168,
+        observed_at="2026-09-09T00:00:00Z",
+    )
+
+    assert any("detainee death" in item["event_type"].lower() for item in raw)
+    assert health[0].accepted_records == 5
+    assert exclusions == []
+    assert diagnostics[0]["returned_result_count"] == 6
+    assert diagnostics[0]["selected_result_count"] == 5
+    assert diagnostics[0]["truncated_result_count"] == 1
+    assert diagnostics[0]["selection_strategy"] == "severity_priority_then_source_order"
+    assert any(row["source_order"] == 5 and row["disposition"] == "selected_for_fetch" for row in diagnostics[0]["selected_results"])
+    assert diagnostics[0]["non_selected_sample"][0]["disposition"] == "not_selected_result_cap"
 
 
 def test_targeted_source_preserves_date_evidence_and_currentness(monkeypatch):

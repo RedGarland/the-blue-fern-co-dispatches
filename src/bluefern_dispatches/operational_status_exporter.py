@@ -429,6 +429,7 @@ def build_care_line_status(
     recovery: RecoveryContext | None = None,
     expected_instances: Iterable[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
+    instance_rows = list(expected_instances) if expected_instances is not None else None
     receipts = load_care_line_receipts(source_root, date)
     completeness, linkage = receipt_completeness(
         receipts, source_root=source_root, expectations=CARE_LINE_TASK_EXPECTATIONS
@@ -438,7 +439,7 @@ def build_care_line_status(
         receipts=receipts,
         expectations=CARE_LINE_TASK_EXPECTATIONS,
         evaluated_at=evaluated_at,
-        expected_instances=list(expected_instances) if expected_instances is not None else None,
+        expected_instances=instance_rows,
         recovery=recovery,
     ) if receipts else {
         "overall_health": OperationalStatus.UNKNOWN.value,
@@ -474,6 +475,7 @@ def build_care_line_status(
         "next_expected_run": next((item.get("next_expected_run") for item in receipts if item.get("next_expected_run")), None),
         "agent_handoff": load_agent_handoff_status(source_root, "care-line"),
         "scheduled_task_keys": [item.task_key for item in CARE_LINE_TASK_EXPECTATIONS],
+        "expected_instances": instance_rows or [],
     }
 
 
@@ -652,6 +654,7 @@ def export_status(
     recovery: RecoveryContext | None = None,
     exported_at: str | None = None,
     care_source_root: Path | None = None,
+    care_expected_instances: Iterable[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     source_root = source_root.resolve()
     status_checkout = status_checkout.resolve()
@@ -670,11 +673,14 @@ def export_status(
         reused = _reuse_exported_at(food_path, food_payload)
         if reused:
             food_payload["last_exported_at"] = reused
+        if care_source_root is not None and care_expected_instances is None:
+            raise ExportError("Care scheduler expected_instances are required when care_source_root is configured")
         care_payload = build_care_line_status(
             source_root=(care_source_root or source_root).resolve(),
             date=date,
             evaluated_at=evaluated_at,
             exported_at=exported_at,
+            expected_instances=care_expected_instances,
         ) if care_source_root is not None else None
         care_path = status_checkout / "ops" / "status" / "care-line" / "latest.json"
         if care_payload is not None:

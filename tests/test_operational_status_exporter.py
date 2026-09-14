@@ -25,6 +25,15 @@ from bluefern_dispatches.operational_status_exporter import (
 
 DATE = "2026-09-10"
 EVALUATED = "2026-09-10T16:00:00Z"
+CARE_EXPECTED_INSTANCES = [
+    {"task_key": "care_line_collection", "scheduled_for": "2026-09-10T15:00:00Z"},
+    {"task_key": "care_line_reviewed_event_queue", "scheduled_for": "2026-09-10T15:01:00Z"},
+    {"task_key": "care_line_approved_release_publication", "scheduled_for": "2026-09-10T15:02:00Z"},
+]
+CARE_EXPECTED_WITH_OLDER_COLLECTION = [
+    {"task_key": "care_line_collection", "scheduled_for": "2026-09-10T08:00:00Z"},
+    *CARE_EXPECTED_INSTANCES,
+]
 TASKS = {
     "food_line_source_watch": ("source_watch", "failed", 10),
     "food_line_source_watch_resume": ("status_resume", "upstream_blocked", 0),
@@ -255,6 +264,7 @@ def test_export_advances_system_timestamp_for_care_style_system_only_change(tmp_
         evaluated_at=EVALUATED,
         exported_at=second,
         care_source_root=care_source,
+        care_expected_instances=CARE_EXPECTED_INSTANCES,
     )
 
     assert result["food_line"]["last_exported_at"] == first
@@ -274,8 +284,9 @@ def test_care_export_with_care_source_root_creates_migrated_latest_and_history(t
         care_source_root=care_source,
         status_checkout=checkout,
         date=DATE,
-        evaluated_at=EVALUATED,
+        evaluated_at="2026-09-10T18:00:00Z",
         exported_at="2026-09-10T16:01:00Z",
+        care_expected_instances=CARE_EXPECTED_INSTANCES,
     )
 
     care = result["care_line"]
@@ -302,8 +313,9 @@ def test_care_safe_no_op_queue_and_publication_do_not_become_failures(tmp_path: 
         care_source_root=care_source,
         status_checkout=tmp_path / "status-checkout",
         date=DATE,
-        evaluated_at=EVALUATED,
+        evaluated_at="2026-09-10T18:00:00Z",
         exported_at="2026-09-10T16:01:00Z",
+        care_expected_instances=CARE_EXPECTED_INSTANCES,
     )
 
     summaries = {row["task_key"]: row for row in result["care_line"]["task_summaries"]}
@@ -327,6 +339,7 @@ def test_care_export_remains_sanitized_and_reuses_timestamp(tmp_path: Path) -> N
         date=DATE,
         evaluated_at=EVALUATED,
         exported_at="2026-09-10T16:01:00Z",
+        care_expected_instances=CARE_EXPECTED_INSTANCES,
     )
     second = export_status(
         source_root=source,
@@ -335,6 +348,7 @@ def test_care_export_remains_sanitized_and_reuses_timestamp(tmp_path: Path) -> N
         date=DATE,
         evaluated_at=EVALUATED,
         exported_at="2026-09-10T17:01:00Z",
+        care_expected_instances=CARE_EXPECTED_INSTANCES,
     )
 
     assert second["care_line"]["last_exported_at"] == first["care_line"]["last_exported_at"]
@@ -355,6 +369,7 @@ def test_older_same_day_care_collection_does_not_make_latest_chain_stale(tmp_pat
         date=DATE,
         evaluated_at="2026-09-10T16:01:00Z",
         exported_at="2026-09-10T16:01:30Z",
+        care_expected_instances=CARE_EXPECTED_WITH_OLDER_COLLECTION,
     )
 
     assert result["care_line"]["aggregate_status"] == "DEGRADED"
@@ -378,6 +393,18 @@ def test_omitting_care_source_root_does_not_fabricate_authoritative_care_status(
     assert result["system"]["dispatches"]["care-line"]["migration_status"] == "NOT_MIGRATED"
     assert result["system"]["dispatches"]["care-line"]["aggregate_status"] == "UNKNOWN"
     assert result["system"]["dispatches"]["care-line"]["scheduled_health_available"] is False
+
+
+def test_care_source_root_without_expected_instances_fails_closed(tmp_path: Path) -> None:
+    with pytest.raises(ExportError, match="Care scheduler expected_instances are required"):
+        export_status(
+            source_root=_write_day(tmp_path / "food"),
+            care_source_root=tmp_path / "care-source",
+            status_checkout=tmp_path / "status-checkout",
+            date=DATE,
+            evaluated_at=EVALUATED,
+            exported_at="2026-09-10T16:01:00Z",
+        )
 
 
 def test_lock_prevents_overlap_and_status_scope_is_enforced(tmp_path: Path) -> None:

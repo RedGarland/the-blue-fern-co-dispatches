@@ -570,6 +570,61 @@ def _food_line_theme_styles() -> str:
 .food-line-panel h3:first-child {
   margin-top: 0;
 }
+.food-line-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 1rem;
+}
+.food-line-actions a {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.45rem 0.75rem;
+  background: #F3EBDD;
+  font-weight: 700;
+  text-decoration: none;
+}
+.food-line-briefing-meta,
+.food-line-note,
+.food-line-edition-meta {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.food-line-note {
+  border-left: 4px solid var(--fern-green);
+  margin: 0.9rem 0 1rem;
+  padding: 0.7rem 0 0.7rem 0.9rem;
+  background: #F6F0E6;
+}
+.food-line-story-list,
+.food-line-recent-list {
+  display: grid;
+  gap: 0.85rem;
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+.food-line-story-list li,
+.food-line-recent-list li {
+  border-top: 1px solid var(--border);
+  padding-top: 0.85rem;
+}
+.food-line-story-list li:first-child,
+.food-line-recent-list li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.food-line-story-list a,
+.food-line-recent-title {
+  font-weight: 700;
+}
+.food-line-recent-title {
+  display: block;
+  margin-top: 0.15rem;
+}
+.food-line-open-archive {
+  margin-top: 1rem;
+}
 .food-line-source-table {
   width: 100%;
   border-collapse: collapse;
@@ -3887,6 +3942,112 @@ def _food_line_public_edition_label(root: Path, date: str) -> str:
     if review_only_title:
         return review_only_title
     return title
+
+
+def _food_line_clean_landing_title(value: Any, date: str) -> str:
+    title = _food_line_archive_title_without_date(date, " ".join(str(value or "").split()).strip())
+    if not title:
+        return ""
+    generic_titles = {
+        DISPATCH_NAME.lower(),
+        f"{DISPATCH_NAME} - {date}".lower(),
+        f"{DISPATCH_NAME} — {date}".lower(),
+        date.lower(),
+    }
+    if title.lower() in generic_titles:
+        return ""
+    return title
+
+
+def _food_line_edition_h1(root: Path, date: str) -> str:
+    index_path = root / "output" / "site" / DISPATCH_SLUG / "editions" / date / "index.html"
+    if not index_path.is_file():
+        return ""
+    try:
+        text = index_path.read_text(encoding="utf-8")
+    except OSError:
+        return ""
+    match = re.search(r"<h1\b[^>]*>(.*?)</h1>", text, re.I | re.S)
+    if match is None:
+        return ""
+    return html.unescape(re.sub(r"<[^>]+>", "", match.group(1))).strip()
+
+
+def _food_line_landing_story_rows(root: Path, date: str) -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    source_rows = _food_line_public_edition_source_rows(root, date)
+    if not source_rows:
+        sources_path = root / "output" / "site" / DISPATCH_SLUG / "editions" / date / "sources_manifest.json"
+        try:
+            payload = _read_json(sources_path)
+        except Exception:  # noqa: BLE001
+            payload = []
+        source_rows = [
+            row
+            for row in payload
+            if isinstance(row, dict)
+            and str(row.get("public_inclusion") or row.get("public_inclusion_bucket") or "").startswith("included")
+        ] if isinstance(payload, list) else []
+    for row in source_rows:
+        title = _food_line_clean_landing_title(row.get("title"), date)
+        if not title:
+            continue
+        rows.append(
+            {
+                "title": title,
+                "event_date": str(row.get("event_date") or row.get("published_at") or row.get("source_published_date") or "").strip(),
+            }
+        )
+    return rows
+
+
+def _food_line_landing_display_title(root: Path, date: str) -> str:
+    manifest = _food_line_public_edition_manifest(root, date) or {}
+    if str(manifest.get("edition_mode") or manifest.get("render_mode") or "").strip() == "no_current_update":
+        return _food_line_no_current_update_public_label()
+    review_only_title = _food_line_clean_landing_title(_food_line_review_only_archive_label(root, date), date)
+    if review_only_title:
+        return review_only_title
+    candidates = [
+        manifest.get("public_title"),
+        manifest.get("edition_title"),
+        manifest.get("title"),
+        manifest.get("retrospective_title"),
+        manifest.get("headline"),
+        manifest.get("lead_headline"),
+        _food_line_edition_h1(root, date),
+    ]
+    rows = _food_line_landing_story_rows(root, date)
+    if rows:
+        candidates.append(rows[0]["title"])
+    for candidate in candidates:
+        title = _food_line_clean_landing_title(candidate, date)
+        if title:
+            return title
+    return "Food Line briefing"
+
+
+def _food_line_landing_story_count(root: Path, date: str) -> int:
+    manifest = _food_line_public_edition_manifest(root, date) or {}
+    if str(manifest.get("edition_mode") or manifest.get("render_mode") or "").strip() == "no_current_update":
+        return 0
+    for key in ("story_count", "public_signal_count", "source_count"):
+        try:
+            count = int(manifest.get(key) or 0)
+        except (TypeError, ValueError):
+            count = 0
+        if count > 0:
+            return count
+    return len(_food_line_landing_story_rows(root, date))
+
+
+def _food_line_landing_recovery_note(root: Path, date: str) -> str:
+    manifest = _food_line_public_edition_manifest(root, date) or {}
+    return " ".join(str(manifest.get("recovery_disclosure") or manifest.get("retrospective_disclosure") or "").split()).strip()
+
+
+def _food_line_audio_index_is_available(root: Path) -> bool:
+    return (root / "output" / "site" / DISPATCH_SLUG / "audio" / "index.html").is_file()
 
 
 def _food_line_home_archive_dates(root: Path, *, max_edition_date: str | None = None) -> list[str]:
@@ -7244,17 +7405,40 @@ def _update_index_archive(
     def public_label(public_date: str) -> str:
         return pages_labels.get(public_date) or _food_line_public_edition_label(root, public_date)
     latest_public_date = public_dates[0] if public_dates else ""
-    latest_public_label = public_label(latest_public_date) if latest_public_date else ""
-    recent_public_dates = public_dates[: min(len(public_dates), 11)]
+    latest_public_title = _food_line_landing_display_title(root, latest_public_date) if latest_public_date else ""
+    latest_story_rows = _food_line_landing_story_rows(root, latest_public_date) if latest_public_date else []
+    latest_story_list_html = "".join(
+        (
+            '<li>'
+            f'<a href="editions/{html.escape(latest_public_date)}/">{html.escape(row["title"])}</a>'
+            f'{f"<div class=\"food-line-edition-meta\">{html.escape(row["event_date"])}</div>" if row["event_date"] else ""}'
+            '</li>'
+        )
+        for row in latest_story_rows
+    )
+    latest_recovery_note = _food_line_landing_recovery_note(root, latest_public_date) if latest_public_date else ""
+    recent_public_dates = public_dates[: min(len(public_dates), 8)]
     recent_entries_html = "".join(
-        f'<li><a href="editions/{html.escape(public_date)}/">{html.escape(public_label(public_date))}</a></li>'
+        (
+            '<li>'
+            f'<div class="food-line-edition-meta">{html.escape(public_date)}</div>'
+            f'<a class="food-line-recent-title" href="editions/{html.escape(public_date)}/">{html.escape(_food_line_landing_display_title(root, public_date))}</a>'
+            f'<div class="food-line-edition-meta">{html.escape(str(_food_line_landing_story_count(root, public_date)))} source-backed {"development" if _food_line_landing_story_count(root, public_date) == 1 else "developments"}</div>'
+            '</li>'
+        )
         for public_date in recent_public_dates
     )
+    action_links = [
+        f'<a href="editions/{html.escape(latest_public_date)}/">Read briefing</a>' if latest_public_date else "",
+        '<a href="audio/index.html">Audio</a>' if _food_line_audio_index_is_available(root) else "",
+        '<a href="archive.html">Archive</a>',
+        '<a href="map/">Map</a>' if _food_line_map_is_available(root) else "",
+    ]
     page_footer = footer("")
     idx_body = "".join(
         [
             _food_line_theme_styles(),
-            header(DISPATCH_NAME, "", None, None),
+            header(DISPATCH_NAME, "", "archive.html", "/food-line/"),
             '<main class="home food-line-shell">\n',
             '  <section class="food-line-hero">\n',
             _food_line_logo_html("food-line-logo--home", "assets/"),
@@ -7263,19 +7447,26 @@ def _update_index_archive(
             f"    <p>{html.escape(mission)}</p>\n",
             '  </section>\n',
             '  <section class="food-line-panel">\n',
-            '    <h2>Current coverage</h2>\n',
-            f"{'<p><a href=\"editions/{0}/\">{1}</a></p>'.format(latest_public_date, html.escape(latest_public_label)) if latest_public_date else '<p>No public editions have been published yet.</p>'}\n",
-            '    <p><a href="audio/index.html">Audio and podcast feed</a></p>\n',
-            '    <p><a href="archive.html">Browse the Food Line archive</a></p>\n',
-            f"{'<p><a href=\"map/\">Pressure map</a></p>' if _food_line_map_is_available(root) else ''}\n",
+            '    <h2>Latest Briefing</h2>\n',
+            (
+                f'    <div class="food-line-briefing-meta">{html.escape(latest_public_date)}</div>\n'
+                f'    <h3><a href="editions/{html.escape(latest_public_date)}/">{html.escape(latest_public_title)}</a></h3>\n'
+                f'{f"    <p class=\"food-line-note\">{html.escape(latest_recovery_note)}</p>\n" if latest_recovery_note else ""}'
+                f'    <ul class="food-line-story-list">{latest_story_list_html}</ul>\n'
+                f'    <div class="food-line-actions">{"".join(link for link in action_links if link)}</div>\n'
+                if latest_public_date
+                else '    <p>No public editions have been published yet.</p>\n'
+            ),
+            '  </section>\n',
+            '  <section class="food-line-panel">\n',
+            '    <h2>About Food Line</h2>\n',
             '    <p>This dispatch is source-backed and uses verified pressure signals only.</p>\n',
             f"    <p>{html.escape(_food_line_reported_signal_limitation())}</p>\n",
             '  </section>\n',
             '  <section class="food-line-panel">\n',
             '    <h2>Recent Editions</h2>\n',
-            '    <p>Recent source-backed editions, newest first.</p>\n',
-            f"    <ul>{recent_entries_html}</ul>\n" if recent_entries_html else '    <p>No public editions have been published yet.</p>\n',
-            '    <p><a href="archive.html">Open the full archive</a></p>\n',
+            f"    <ul class=\"food-line-recent-list\">{recent_entries_html}</ul>\n" if recent_entries_html else '    <p>No public editions have been published yet.</p>\n',
+            '    <p class="food-line-open-archive"><a href="archive.html">Open the full archive</a></p>\n',
             '  </section>\n',
             '</main>\n',
             page_footer,

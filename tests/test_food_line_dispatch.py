@@ -3804,10 +3804,13 @@ def test_food_line_archive_titles_and_home_link_are_source_specific(tmp_path: Pa
     home_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
     archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
 
-    assert "Browse the Food Line archive" in home_html
+    assert "Latest Briefing" in home_html
+    assert "About Food Line" in home_html
+    assert 'href="archive.html">Archive</a>' in home_html
     assert "<h2>Recent Editions</h2>" in home_html
     assert "Open the full archive" in home_html
-    assert "2026-06-12 — Horry County pantry demand, Tulsa fuel costs, and Tennessee SNAP enrollment" in home_html
+    assert "2026-06-12" in home_html
+    assert "Grand Strand food providers say inflation is driving more families to pantries" in home_html
     archive_soup = BeautifulSoup(archive_html, "html.parser")
     archive_entries = {
         item.find("span", class_="edition-date").get_text(strip=True): item.find("a", recursive=False).get_text(strip=True)
@@ -3888,13 +3891,102 @@ def test_food_line_home_recent_editions_are_relative_and_date_descending(tmp_pat
     home_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
     recent_html = home_html.split("<h2>Recent Editions</h2>", 1)[1].split("</section>", 1)[0]
 
-    assert '<a href="editions/2026-06-12/">' in recent_html
-    assert '<a href="editions/2026-06-11/">' in recent_html
-    assert '<a href="editions/2026-06-10/">' in recent_html
+    assert 'href="editions/2026-06-12/"' in recent_html
+    assert 'href="editions/2026-06-11/"' in recent_html
+    assert 'href="editions/2026-06-10/"' in recent_html
     assert 'href="/food-line/editions/2026-06-12/"' not in recent_html
-    assert "2026-06-12 — FRAC warns SNAP eligibility proposal could increase hunger" in recent_html
+    assert "2026-06-12" in recent_html
+    assert "FRAC warns SNAP eligibility proposal could increase hunger" in recent_html
     assert recent_html.index("2026-06-12") < recent_html.index("2026-06-11")
     assert recent_html.index("2026-06-11") < recent_html.index("2026-06-10")
+
+
+def _copy_current_food_line_public_inventory(tmp_path: Path) -> Path:
+    root = Path(__file__).parent.parent
+    target = tmp_path / "food-home"
+    source = root / "output" / "site" / "food-line"
+    shutil.copytree(source / "editions", target / "output" / "site" / "food-line" / "editions")
+    return target
+
+
+def test_food_line_landing_page_uses_clean_current_inventory_sections(tmp_path: Path):
+    root = _copy_current_food_line_public_inventory(tmp_path)
+    mission = "The Food Line Dispatch tracks source-backed signs of food insecurity and food-access pressure across the United States, including benefit disruption, pantry strain, school-meal gaps, price pressure, and local access failures."
+
+    food_line._update_index_archive(root, "2026-09-12", mission, max_edition_date="2026-09-12")
+
+    html_text = (root / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
+    soup = BeautifulSoup(html_text, "html.parser")
+    nav_text = " ".join(soup.select_one("header.site-header nav").stripped_strings)
+    latest = soup.find("h2", string="Latest Briefing").find_parent("section")
+    recent = soup.find("h2", string="Recent Editions").find_parent("section")
+
+    assert "Current coverage" not in html_text
+    assert "Dispatches Home" in nav_text
+    assert "Food Line Dispatch" in nav_text
+    assert "Archive" in nav_text
+    assert "RSS" in nav_text
+    assert "Gaza" not in nav_text
+    assert "Cascadia" not in nav_text
+    assert latest.select_one(".food-line-briefing-meta").get_text(strip=True) == "2026-09-12"
+    assert latest.select_one("h3 a").get_text(strip=True) == "Food Line recovery-disclosed publication"
+    assert "Recovery note: These items were recovered after the September 10 Food Line collection failed." in latest.get_text(" ", strip=True)
+
+    story_titles = [a.get_text(strip=True) for a in latest.select(".food-line-story-list li a")]
+    assert story_titles == [
+        "Hawaii Island Salvation Army pantries report staple shortages after Lala",
+        "Eastport's only full-size grocery store remains without a committed reopening",
+        "Puerto Rico water shutoffs add food-preparation and prepared-food costs",
+        "Texas SNAP redetermination delays interrupted benefits for an East Texas household",
+    ]
+    assert all(a["href"] == "editions/2026-09-12/" for a in latest.select(".food-line-story-list li a"))
+    latest_link_text = latest.select_one("h3 a").get_text(" ", strip=True)
+    assert "Hawaii Island Salvation Army" not in latest_link_text
+    assert "Texas SNAP redetermination" not in latest_link_text
+
+    action_links = {a.get_text(strip=True): a["href"] for a in latest.select(".food-line-actions a")}
+    assert action_links == {"Read briefing": "editions/2026-09-12/", "Archive": "archive.html"}
+
+    recent_entries = recent.select(".food-line-recent-list li")
+    assert len(recent_entries) == 8
+    recent_titles = {
+        entry.select_one(".food-line-edition-meta").get_text(strip=True): entry.select_one(".food-line-recent-title").get_text(strip=True)
+        for entry in recent_entries
+    }
+    assert recent_titles["2026-09-12"] == "Food Line recovery-disclosed publication"
+    assert recent_titles["2026-08-31"] == "Food Line retrospective: benefit losses and rising demand"
+    assert recent_titles["2026-08-30"] == "Food Line retrospective: August service interruptions"
+    assert "Phoenix metropolitan area; Statewide" not in html_text
+    assert "provider states no residency restriction" not in html_text
+    assert "September 10, 2026 - recovery record" not in recent.get_text(" ", strip=True)
+    assert "editions/2026-09-10/" not in str(recent)
+    assert 'href="archive.html"' in html_text
+    assert 'href="rss.xml"' in html_text
+
+    food_line._update_index_archive(root, "2026-09-12", mission, max_edition_date="2026-09-12")
+    assert (root / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8") == html_text
+
+
+def test_food_line_landing_actions_include_audio_and_map_only_when_artifacts_exist(tmp_path: Path):
+    root = _copy_current_food_line_public_inventory(tmp_path)
+    food_root = root / "output" / "site" / "food-line"
+    (food_root / "audio").mkdir(parents=True)
+    (food_root / "audio" / "index.html").write_text("<html>audio</html>", encoding="utf-8")
+    (food_root / "map").mkdir(parents=True)
+    (food_root / "map" / "index.html").write_text('<div data-rendered-marker-count="1"></div>', encoding="utf-8")
+
+    food_line._update_index_archive(
+        root,
+        "2026-09-12",
+        "The Food Line Dispatch tracks source-backed signs of food insecurity.",
+        max_edition_date="2026-09-12",
+    )
+
+    soup = BeautifulSoup((food_root / "index.html").read_text(encoding="utf-8"), "html.parser")
+    latest = soup.find("h2", string="Latest Briefing").find_parent("section")
+    action_links = {a.get_text(strip=True): a["href"] for a in latest.select(".food-line-actions a")}
+    assert action_links["Audio"] == "audio/index.html"
+    assert action_links["Map"] == "map/"
 
 
 def test_food_line_june_11_audio_transcript_reuses_public_summary_without_regenerating_mp3(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):

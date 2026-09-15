@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.food_line.historical_event.v1",
+  "dispatch": "food-line",
+  "event_id": "food-line-2026-09-12-northern-illinois-food-bank-demand",
+  "canonical_event_id": "food-line-2026-09-12-northern-illinois-food-bank-demand",
+  "event_date": "2026-09-12",
+  "source_published_date": "2026-09-12",
+  "source_published_at": "2026-09-12T08:50:00Z",
+  "observation_date": "2026-09-12",
+  "recovered_at": "2026-09-15",
+  "recovery_provenance": "operator_recovered_public_source_recall_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/food-line/2026-09-15/recovery-review-intake.json",
+  "editorial_review_artifact": "data/private-agent-handoff/discovery-recovery/food-line/2026-09-15/editorial-review.json",
+  "source_recovery_item_id": "food-line-2026-09-12-northern-illinois-food-bank-demand",
+  "production_run_id": "food-line-scheduled-20260912-20260912T123002Z-ea4a0fe4",
+  "production_artifact_present": false,
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "category": "food_bank_demand_pressure",
+    "event_type": "regional_food_bank_demand_above_pandemic_levels",
+    "geography": "Northern Illinois",
+    "service": "Northern Illinois Food Bank network"
+  },
+  "headline": "Northern Illinois Food Bank says demand remains above pandemic levels",
+  "bounded_summary": "Rockford Register Star reporting republished by AOL said Northern Illinois Food Bank was serving about 570,000 neighbors monthly across 13 counties and that food-assistance demand continued to exceed pandemic-era levels.",
+  "source_sufficiency": "sufficient_traceable_local_news_source_with_current_provider_demand_metrics",
+  "materiality": "material regional food-bank demand pressure across a 13-county service area",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "Rockford Register Star via AOL",
+      "source_url": "https://www.aol.com/articles/northern-illinois-food-bank-seeks-085031000.html",
+      "source_publication_date": "2026-09-12",
+      "source_publication_at": "2026-09-12T08:50:00Z",
+      "source_role": "local_news_report_republished_by_aol"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

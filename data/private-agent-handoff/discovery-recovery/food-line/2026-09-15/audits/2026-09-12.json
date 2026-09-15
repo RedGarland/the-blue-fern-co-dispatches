@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.food_line.discovery_recovery_per_date_audit.v1",
+  "dispatch": "food-line",
+  "observation_date": "2026-09-12",
+  "protected_source_commit": "e3357f7139be8330ec4ef6e042ed4c1343429568",
+  "production_runtime_state": {
+    "natural_source_watch_evidence": "failed_before_source_access",
+    "controller_reason_code_before_recovery": "scheduled_run_failed",
+    "candidate_artifacts_found": 0,
+    "unaccounted_production_candidates": 0
+  },
+  "bounded_research_outcome": "recovered_with_findings",
+  "recovered_event_ids": [
+    "food-line-2026-09-11-onondaga-pantry-infrastructure-snap-loss",
+    "food-line-2026-09-12-northern-illinois-food-bank-demand"
+  ],
+  "duplicate_only_items": [],
+  "historical_records_created": [
+    "data/dispatches/food-line/historical-events/2026-09-11/food-line-2026-09-11-onondaga-pantry-infrastructure-snap-loss.json",
+    "data/dispatches/food-line/historical-events/2026-09-12/food-line-2026-09-12-northern-illinois-food-bank-demand.json"
+  ],
+  "publication_authorized": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false,
+  "publication_performed": false,
+  "manual_production_task_triggered": false
+}

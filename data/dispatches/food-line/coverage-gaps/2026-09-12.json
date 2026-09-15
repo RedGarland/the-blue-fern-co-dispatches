@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.coverage_gap.v1",
+  "dispatch": "food-line",
+  "observation_date": "2026-09-12",
+  "observation_status": "OBSERVED_WITH_FINDINGS",
+  "backfill_status": "RECOVERED",
+  "reason_codes": [
+    "scheduled_run_failed",
+    "historical_recovery_completed"
+  ],
+  "detected_at": "2026-09-15T02:24:31Z",
+  "recovered_at": "2026-09-15T02:45:00Z",
+  "observed_finding_count": 2,
+  "recovered_event_ids": [
+    "food-line-2026-09-11-onondaga-pantry-infrastructure-snap-loss",
+    "food-line-2026-09-12-northern-illinois-food-bank-demand"
+  ],
+  "source_refs": [
+    "data/private-agent-handoff/discovery-recovery/food-line/2026-09-15/audits/2026-09-12.json",
+    "data/private-agent-handoff/discovery-recovery/food-line/2026-09-15/recovery-review-intake.json",
+    "data/private-agent-handoff/discovery-recovery/food-line/2026-09-15/editorial-review.json",
+    "data/dispatches/food-line/historical-events/2026-09-11/food-line-2026-09-11-onondaga-pantry-infrastructure-snap-loss.json",
+    "data/dispatches/food-line/historical-events/2026-09-12/food-line-2026-09-12-northern-illinois-food-bank-demand.json"
+  ],
+  "notes": "September 12 Food Line observation is recovered with two non-public historical records. Original production discovery lineage remains absent and no publication authority is granted."
+}

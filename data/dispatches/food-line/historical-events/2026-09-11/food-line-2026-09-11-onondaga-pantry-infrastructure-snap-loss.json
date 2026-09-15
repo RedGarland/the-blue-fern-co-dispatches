@@ -1,0 +1,43 @@
+{
+  "schema_version": "bluefern.food_line.historical_event.v1",
+  "dispatch": "food-line",
+  "event_id": "food-line-2026-09-11-onondaga-pantry-infrastructure-snap-loss",
+  "canonical_event_id": "food-line-2026-09-11-onondaga-pantry-infrastructure-snap-loss",
+  "event_date": "2026-09-11",
+  "source_published_date": "2026-09-11",
+  "observation_date": "2026-09-12",
+  "recovered_at": "2026-09-15",
+  "recovery_provenance": "operator_recovered_public_source_recall_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/food-line/2026-09-15/recovery-review-intake.json",
+  "editorial_review_artifact": "data/private-agent-handoff/discovery-recovery/food-line/2026-09-15/editorial-review.json",
+  "source_recovery_item_id": "food-line-2026-09-11-onondaga-pantry-infrastructure-snap-loss",
+  "production_run_id": "food-line-scheduled-20260912-20260912T123002Z-ea4a0fe4",
+  "production_artifact_present": false,
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "category": "emergency_food_infrastructure_pressure",
+    "event_type": "pantry_refrigeration_capacity_gap",
+    "geography": "Onondaga County, New York",
+    "service": "food pantries and emergency food distribution"
+  },
+  "headline": "Onondaga County pantries seek refrigeration as refugee SNAP losses raise demand",
+  "bounded_summary": "Onondaga County announced a $500,000 investment for nearly 90 food pantries after about 9,000 refugees had lost or were expected to lose SNAP benefits and pantries identified refrigeration as a barrier to accepting more perishable food.",
+  "source_sufficiency": "sufficient_single_traceable_official_source_with_specific_food_access_capacity_pressure",
+  "materiality": "material countywide emergency-food capacity pressure tied to SNAP benefit losses and rising pantry demand",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "Onondaga County",
+      "source_url": "https://onondaga.gov/communications/2026/09/11/county-executive-mcmahon-announces-500000-investment-to-strengthen-food-pantry-infrastructure/",
+      "source_publication_date": "2026-09-11",
+      "source_role": "official_local_government_press_release"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

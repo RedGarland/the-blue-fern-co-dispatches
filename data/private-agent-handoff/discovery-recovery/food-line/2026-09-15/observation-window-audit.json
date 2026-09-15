@@ -1,0 +1,122 @@
+{
+  "schema_version": "bluefern.food_line.discovery_recovery_window_audit.v1",
+  "dispatch": "food-line",
+  "protected_source_commit": "e3357f7139be8330ec4ef6e042ed4c1343429568",
+  "recovery_scope": "bounded_non_public_historical_recovery",
+  "recovery_performed_at": "2026-09-15T02:30:00Z",
+  "publication_authorized": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false,
+  "publication_performed": false,
+  "scheduler_change_authorized": false,
+  "manual_production_task_triggered": false,
+  "excluded_observation_dates": [
+    {
+      "observation_date": "2026-09-10",
+      "reason": "already completed by the separate September 10 operator-recovery workflow"
+    },
+    {
+      "observation_date": "2026-09-14",
+      "reason": "known September 14 recovery candidates were already reviewed and historically reconciled"
+    }
+  ],
+  "food_line_contract": {
+    "natural_source_watch_time_local": "05:30 America/Los_Angeles",
+    "discovery_query_date_bounds": "after:<edition_date-1> before:<edition_date+1>",
+    "enabled_direct_sources": [
+      "NPR National Desk",
+      "Feeding America Blog",
+      "Central Texas Food Bank News",
+      "Second Harvest Silicon Valley Blog",
+      "LAist RSS",
+      "No Kid Hungry News",
+      "FRAC News"
+    ],
+    "enabled_direct_source_count": 7,
+    "google_news_query_families": [
+      "core_hunger",
+      "public_radio",
+      "food_bank_provider",
+      "feeding_america_affiliate",
+      "school_meals_child_nutrition",
+      "county_city_agenda",
+      "snap_state_notice",
+      "united_way_211",
+      "nonprofit_report",
+      "institutional_update",
+      "social_watchlist",
+      "pressure",
+      "policy_program",
+      "cost_pressure",
+      "state_territory",
+      "metro"
+    ]
+  },
+  "local_runtime_reconciliation": [
+    {
+      "observation_date": "2026-09-09",
+      "natural_source_watch_evidence": "missing",
+      "controller_reason_code_before_recovery": "scheduled_run_missed",
+      "candidate_artifacts_found": 0,
+      "recovery_outcome": "explicit_zero_after_bounded_research"
+    },
+    {
+      "observation_date": "2026-09-11",
+      "natural_source_watch_evidence": "failed_before_source_access",
+      "controller_reason_code_before_recovery": "scheduled_run_failed",
+      "candidate_artifacts_found": 0,
+      "recovery_outcome": "duplicate_only"
+    },
+    {
+      "observation_date": "2026-09-12",
+      "natural_source_watch_evidence": "failed_before_source_access",
+      "controller_reason_code_before_recovery": "scheduled_run_failed",
+      "candidate_artifacts_found": 0,
+      "recovery_outcome": "recovered_with_findings"
+    },
+    {
+      "observation_date": "2026-09-13",
+      "natural_source_watch_evidence": "failed_before_source_access",
+      "controller_reason_code_before_recovery": "scheduled_run_failed",
+      "candidate_artifacts_found": 0,
+      "recovery_outcome": "recovered_with_findings"
+    }
+  ],
+  "bounded_public_research": {
+    "search_queries": [
+      "food bank demand September 9 2026 SNAP",
+      "food pantry September 11 2026 shortage demand",
+      "SNAP food bank September 11 2026 families",
+      "food bank September 12 2026 demand SNAP",
+      "SNAP food bank September 12 2026 families",
+      "food bank September 13 2026 demand SNAP"
+    ],
+    "traceable_sources_reviewed": [
+      "https://www.kjzz.org/politics/2026-09-11/data-shows-des-failed-to-complete-most-snap-eligibility-interviews-resulting-in-massive-cuts",
+      "https://onondaga.gov/communications/2026/09/11/county-executive-mcmahon-announces-500000-investment-to-strengthen-food-pantry-infrastructure/",
+      "https://www.aol.com/articles/northern-illinois-food-bank-seeks-085031000.html",
+      "https://www.chilichili.net/393719/texas-snap-application-backlog-skyrockets-as-families-lose-benefits/"
+    ],
+    "sep09_zero_basis": "No qualifying nonduplicate source-backed development could be bound to the September 9 05:30 PT observation window after excluding September 10 operator-recovery items and already-accounted earlier Food Line coverage."
+  },
+  "spencer_assignment_guard": {
+    "event_id": "food-line-2026-09-11-spencer-shurfine-loss",
+    "event_date": "2026-09-11",
+    "source_published_date": "2026-09-13",
+    "observation_date": "2026-09-14",
+    "recovered_at": "2026-09-14",
+    "used_to_repair_sep11": false
+  },
+  "duplicate_only_reconciliation": {
+    "observation_date": "2026-09-11",
+    "item_id": "food-line-2026-09-11-arizona-snap-interview-call-failures",
+    "source_url": "https://www.kjzz.org/politics/2026-09-11/data-shows-des-failed-to-complete-most-snap-eligibility-interviews-resulting-in-massive-cuts",
+    "source_published_at": "2026-09-11T05:00:00-07:00",
+    "publisher": "KJZZ",
+    "headline": "Arizona SNAP interview failures cut access for eligible households",
+    "canonical_event_id": "food-line-event-d4fa8128a5e347bfad2bd4b9",
+    "duplicate_target": "data/agent-history/food-line/reviews/recovery-decisions/ca591d5e0fb79dc832a0fdee261b91c6/food-line-event-d4fa8128a5e347bfad2bd4b9.json",
+    "historical_record_created": null,
+    "reason": "Arizona SNAP access barriers and food-bank reliance were already represented by the existing Phoenix food-box demand and Arizona SNAP contraction event."
+  }
+}

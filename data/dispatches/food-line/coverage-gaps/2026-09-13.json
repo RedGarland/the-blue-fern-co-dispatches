@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.coverage_gap.v1",
+  "dispatch": "food-line",
+  "observation_date": "2026-09-13",
+  "observation_status": "OBSERVED_WITH_FINDINGS",
+  "backfill_status": "RECOVERED",
+  "reason_codes": [
+    "scheduled_run_failed",
+    "historical_recovery_completed"
+  ],
+  "detected_at": "2026-09-15T02:24:31Z",
+  "recovered_at": "2026-09-15T02:45:00Z",
+  "observed_finding_count": 1,
+  "recovered_event_ids": [
+    "food-line-2026-09-12-texas-snap-application-backlog"
+  ],
+  "source_refs": [
+    "data/private-agent-handoff/discovery-recovery/food-line/2026-09-15/audits/2026-09-13.json",
+    "data/private-agent-handoff/discovery-recovery/food-line/2026-09-15/recovery-review-intake.json",
+    "data/private-agent-handoff/discovery-recovery/food-line/2026-09-15/editorial-review.json",
+    "data/dispatches/food-line/historical-events/2026-09-12/food-line-2026-09-12-texas-snap-application-backlog.json"
+  ],
+  "notes": "September 13 Food Line observation is recovered with one non-public historical record from a September 12 source treated as observable by the next natural Food Line Source Watch. No public generation, Pages, or publication authority is granted."
+}

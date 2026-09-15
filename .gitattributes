@@ -1,0 +1,4 @@
+﻿# Do not render local environment files in diffs.
+.env -diff
+.env.* -diff
+.env.example diff

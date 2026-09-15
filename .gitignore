@@ -1,4 +1,4 @@
-__pycache__/
+﻿__pycache__/
 *.py[cod]
 .pytest_cache/
 .pytest_tmp/
@@ -62,3 +62,8 @@ data/state/*.sqlite-*
 
 # ICE monitor-only operational artifacts
 data/dispatches/ice/monitor/
+
+# Local environment configuration
+.env
+.env.*
+!.env.example

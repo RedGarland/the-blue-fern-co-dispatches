@@ -1,0 +1,52 @@
+{
+  "schema_version": "bluefern.coverage_gap.v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-09-08",
+  "observation_status": "OBSERVED_WITH_FINDINGS",
+  "reason_codes": [
+    "historical_evidence_incomplete",
+    "historical_recovery_completed"
+  ],
+  "gap_reason": "Surviving production artifacts were incomplete, but bounded recovery located three source-backed, nonduplicate Care Line developments observable on September 8.",
+  "detected_at": "2026-09-15",
+  "backfill_status": "RECOVERED",
+  "recovered_at": "2026-09-15",
+  "recovered_event_ids": [
+    "care-line-2026-09-08-wcchc-clinic-closure-lowell",
+    "care-line-2026-09-08-cecil-county-birthing-center-gap",
+    "care-line-2026-09-08-medstar-postpartum-bed-cuts"
+  ],
+  "observed_finding_count": 3,
+  "source_refs": [
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/recovery-review-intake.json",
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/editorial-review.json",
+    "data/dispatches/care-line/historical-events/2026-09-08/care-line-2026-09-08-wcchc-clinic-closure-lowell.json",
+    "data/dispatches/care-line/historical-events/2026-09-08/care-line-2026-09-08-cecil-county-birthing-center-gap.json",
+    "data/dispatches/care-line/historical-events/2026-09-08/care-line-2026-09-08-medstar-postpartum-bed-cuts.json"
+  ],
+  "transition_history": [
+    {
+      "previous_observation_status": null,
+      "previous_backfill_status": null,
+      "new_observation_status": "OBSERVATION_INCOMPLETE",
+      "new_backfill_status": "BACKFILL_REQUIRED",
+      "transition_at": "2026-09-15",
+      "reason_code": "historical_evidence_incomplete",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/audits/2026-09-08.json"
+      ]
+    },
+    {
+      "previous_observation_status": "OBSERVATION_INCOMPLETE",
+      "previous_backfill_status": "BACKFILL_REQUIRED",
+      "new_observation_status": "OBSERVED_WITH_FINDINGS",
+      "new_backfill_status": "RECOVERED",
+      "transition_at": "2026-09-15",
+      "reason_code": "historical_recovery_completed",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/editorial-review.json"
+      ]
+    }
+  ],
+  "notes": "Recovery preserves the absence of original production discovery lineage."
+}

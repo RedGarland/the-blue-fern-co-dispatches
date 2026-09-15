@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.coverage_gap.v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-09-12",
+  "observation_status": "OBSERVED_WITH_FINDINGS",
+  "reason_codes": [
+    "scheduled_run_failed",
+    "historical_recovery_completed"
+  ],
+  "gap_reason": "All surviving September 12 Care collection scheduler receipts failed, and bounded recovery located a source-backed CMS laboratory-access finding for the observation date.",
+  "detected_at": "2026-09-15",
+  "backfill_status": "RECOVERED",
+  "recovered_at": "2026-09-15",
+  "recovered_event_ids": [
+    "care-line-2026-09-12-cms-clia-lab-limitations"
+  ],
+  "observed_finding_count": 1,
+  "source_refs": [
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/recovery-review-intake.json",
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/editorial-review.json",
+    "data/dispatches/care-line/historical-events/2026-09-12/care-line-2026-09-12-cms-clia-lab-limitations.json"
+  ],
+  "transition_history": [
+    {
+      "previous_observation_status": null,
+      "previous_backfill_status": null,
+      "new_observation_status": "OBSERVATION_INCOMPLETE",
+      "new_backfill_status": "BACKFILL_REQUIRED",
+      "transition_at": "2026-09-15",
+      "reason_code": "scheduled_run_failed",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/audits/2026-09-12.json"
+      ]
+    },
+    {
+      "previous_observation_status": "OBSERVATION_INCOMPLETE",
+      "previous_backfill_status": "BACKFILL_REQUIRED",
+      "new_observation_status": "OBSERVED_WITH_FINDINGS",
+      "new_backfill_status": "RECOVERED",
+      "transition_at": "2026-09-15",
+      "reason_code": "historical_recovery_completed",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/editorial-review.json",
+        "data/dispatches/care-line/historical-events/2026-09-12/care-line-2026-09-12-cms-clia-lab-limitations.json"
+      ]
+    }
+  ],
+  "notes": "This record preserves the failed scheduled collection facts while restoring the bounded recovered access finding."
+}

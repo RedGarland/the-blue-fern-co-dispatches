@@ -1,0 +1,160 @@
+{
+  "schema_version": "bluefern.care_line.discovery_recovery.observation_window_audit.v1",
+  "dispatch": "care-line",
+  "audit_date": "2026-09-15",
+  "protected_base": "6761d13db1c5e2e1609e16075c2b9ba18c5b3925",
+  "runner": "C:\\BlueFernRunner\\CareLineNationalCurrent8",
+  "recovery_provenance": "operator_recovered_public_source_evidence",
+  "manual_production_task_triggered": false,
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false,
+  "source_lineage_policy": {
+    "original_production_discovery_lineage_fabricated": false,
+    "original_production_discovery_lineage_present_for_recovered_items": false,
+    "failed_or_partial_scheduler_evidence_preserved": true
+  },
+  "observation_dates": [
+    {
+      "observation_date": "2026-09-07",
+      "expected_collection_instances": 3,
+      "surviving_scheduler_receipts": 3,
+      "receipt_statuses": [
+        "partial_success",
+        "partial_success",
+        "partial_success"
+      ],
+      "surviving_collection_artifacts_complete": false,
+      "final_observation_status": "OBSERVATION_INCOMPLETE",
+      "final_backfill_status": "BACKFILL_REQUIRED",
+      "approved_recovered_event_ids": []
+    },
+    {
+      "observation_date": "2026-09-08",
+      "expected_collection_instances": 3,
+      "surviving_scheduler_receipts": 3,
+      "receipt_statuses": [
+        "partial_success",
+        "partial_success",
+        "partial_success"
+      ],
+      "surviving_collection_artifacts_complete": false,
+      "final_observation_status": "OBSERVED_WITH_FINDINGS",
+      "final_backfill_status": "RECOVERED",
+      "approved_recovered_event_ids": [
+        "care-line-2026-09-08-wcchc-clinic-closure-lowell",
+        "care-line-2026-09-08-cecil-county-birthing-center-gap",
+        "care-line-2026-09-08-medstar-postpartum-bed-cuts"
+      ]
+    },
+    {
+      "observation_date": "2026-09-09",
+      "expected_collection_instances": 3,
+      "surviving_scheduler_receipts": 3,
+      "receipt_statuses": [
+        "partial_success",
+        "partial_success",
+        "partial_success"
+      ],
+      "surviving_collection_artifacts_complete": false,
+      "final_observation_status": "OBSERVED_ZERO_QUALIFYING",
+      "final_backfill_status": "BACKFILL_NOT_REQUIRED",
+      "approved_recovered_event_ids": [],
+      "duplicate_only": true
+    },
+    {
+      "observation_date": "2026-09-10",
+      "expected_collection_instances": 3,
+      "surviving_scheduler_receipts": 3,
+      "receipt_statuses": [
+        "partial_success",
+        "partial_success",
+        "partial_success"
+      ],
+      "surviving_collection_artifacts_complete": false,
+      "sep10_terminal_accounting_claim_verified": false,
+      "final_observation_status": "OBSERVATION_INCOMPLETE",
+      "final_backfill_status": "BACKFILL_REQUIRED",
+      "approved_recovered_event_ids": []
+    },
+    {
+      "observation_date": "2026-09-11",
+      "expected_collection_instances": 3,
+      "surviving_scheduler_receipts": 3,
+      "receipt_statuses": [
+        "failure",
+        "failure",
+        "failure"
+      ],
+      "surviving_collection_artifacts_complete": false,
+      "fenway_reassigned": false,
+      "final_observation_status": "OBSERVED_WITH_FINDINGS",
+      "final_backfill_status": "RECOVERED",
+      "approved_recovered_event_ids": [
+        "care-line-2026-09-11-cms-michigan-home-health-hospice-terminations"
+      ]
+    },
+    {
+      "observation_date": "2026-09-12",
+      "expected_collection_instances": 3,
+      "surviving_scheduler_receipts": 3,
+      "receipt_statuses": [
+        "failure",
+        "failure",
+        "failure"
+      ],
+      "surviving_collection_artifacts_complete": false,
+      "final_observation_status": "OBSERVED_WITH_FINDINGS",
+      "final_backfill_status": "RECOVERED",
+      "approved_recovered_event_ids": [
+        "care-line-2026-09-12-cms-clia-lab-limitations"
+      ]
+    },
+    {
+      "observation_date": "2026-09-13",
+      "expected_collection_instances": 3,
+      "surviving_scheduler_receipts": 3,
+      "receipt_statuses": [
+        "failure",
+        "partial_success",
+        "partial_success"
+      ],
+      "surviving_collection_artifacts_complete": false,
+      "fenway_reassigned": false,
+      "final_observation_status": "OBSERVATION_INCOMPLETE",
+      "final_backfill_status": "BACKFILL_REQUIRED",
+      "approved_recovered_event_ids": []
+    }
+  ],
+  "excluded_existing_recoveries": [
+    {
+      "event_id": "care-line-2026-09-11-fenway-it-disruption",
+      "observation_date": "2026-09-14",
+      "reason": "Already recovered in the September 14 observation workflow; not reassigned to September 11 or September 13."
+    },
+    {
+      "event_id": "care-line-2026-09-14-atlanta-delivery-pause",
+      "observation_date": "2026-09-14",
+      "effective_date": "2026-09-30",
+      "reason": "Future effective date remains distinct from observation date and does not create a September 30 observation gap."
+    }
+  ],
+  "bounded_public_research_sources": [
+    "https://www.wcchc.com/News/Item/2026-09-08-Clinic-Closure",
+    "https://marylandmatters.org/2026/09/08/local-officials-look-to-fill-in-gaps-left-by-closure-of-birthing-center-in-cecil-county/",
+    "https://www.nationalnursesunited.org/press/medstar-washington-hospital-center-nurses-host-community-forum-on-maternal-health-care-cuts",
+    "https://www.fox5dc.com/news/meeting-planned-maternal-health-care-cuts-dc",
+    "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices"
+  ],
+  "private_audit_paths": [
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/audits/2026-09-07.json",
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/audits/2026-09-08.json",
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/audits/2026-09-09.json",
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/audits/2026-09-10.json",
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/audits/2026-09-11.json",
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/audits/2026-09-12.json",
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/audits/2026-09-13.json"
+  ]
+}

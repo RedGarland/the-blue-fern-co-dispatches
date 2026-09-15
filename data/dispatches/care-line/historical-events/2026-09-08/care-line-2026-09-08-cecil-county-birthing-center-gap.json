@@ -1,0 +1,44 @@
+{
+  "schema_version": "bluefern.care_line.historical_event.v1",
+  "dispatch": "care-line",
+  "event_id": "care-line-2026-09-08-cecil-county-birthing-center-gap",
+  "canonical_event_id": "care-line-2026-09-08-cecil-county-birthing-center-gap",
+  "event_date": "2026-09-08",
+  "source_published_date": "2026-09-08",
+  "observation_date": "2026-09-08",
+  "recovered_at": "2026-09-15",
+  "effective_date": "2026-09-08",
+  "recovery_provenance": "operator_recovered_public_source_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/recovery-review-intake.json",
+  "editorial_review_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/editorial-review.json",
+  "source_recovery_item_id": "care-line-2026-09-08-cecil-county-birthing-center-gap",
+  "production_run_id": null,
+  "production_artifact_present": false,
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "geography": "Cecil County, Maryland",
+    "facility": "ChristianaCare Union Hospital",
+    "category": "maternity_access_loss",
+    "event_type": "birthing_center_closure_gap_response"
+  },
+  "headline": "Cecil County officials weighed gaps left by the county's only birthing-center closure",
+  "bounded_summary": "Maryland Matters reported that Cecil County officials were looking for ways to fill maternity-care gaps after the summer closure of ChristianaCare Union Hospital's birthing center left the county without a local delivery unit.",
+  "source_sufficiency": "traceable_local_public_affairs_report",
+  "materiality": "county-level loss of local birth-center access and documented public response",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "Maryland Matters",
+      "source_url": "https://marylandmatters.org/2026/09/08/local-officials-look-to-fill-in-gaps-left-by-closure-of-birthing-center-in-cecil-county/",
+      "source_publication_date": "2026-09-08",
+      "source_role": "local_report"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

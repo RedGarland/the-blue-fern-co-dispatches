@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.care_line.discovery_recovery.daily_audit.v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-09-07",
+  "expected_collection_instances": 3,
+  "scheduler_receipts": [
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260907T130001Z-6928.json",
+      "status": "partial_success"
+    },
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260907T190001Z-34616.json",
+      "status": "partial_success"
+    },
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260908T010001Z-23420.json",
+      "status": "partial_success"
+    }
+  ],
+  "surviving_collection_artifacts": "empty_run_directories_only",
+  "complete_observation_proven": false,
+  "public_source_research_result": "no_approved_nonduplicate_recovery_item",
+  "final_observation_status": "OBSERVATION_INCOMPLETE",
+  "final_backfill_status": "BACKFILL_REQUIRED",
+  "publication_performed": false,
+  "manual_production_task_triggered": false
+}

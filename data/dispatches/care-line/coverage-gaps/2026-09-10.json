@@ -1,0 +1,33 @@
+{
+  "schema_version": "bluefern.coverage_gap.v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-09-10",
+  "observation_status": "OBSERVATION_INCOMPLETE",
+  "reason_codes": [
+    "historical_evidence_incomplete",
+    "terminal_accounting_incomplete"
+  ],
+  "gap_reason": "The requested September 10 terminal-accounting proof was not found; bounded recovery did not close the date because the special 909 raw / 673 deferred / 236 rejected / 0 qualified / 0 unaccounted proof remains missing.",
+  "detected_at": "2026-09-15",
+  "backfill_status": "BACKFILL_REQUIRED",
+  "recovered_at": null,
+  "recovered_event_ids": [],
+  "observed_finding_count": 1,
+  "source_refs": [
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/audits/2026-09-10.json"
+  ],
+  "transition_history": [
+    {
+      "previous_observation_status": null,
+      "previous_backfill_status": null,
+      "new_observation_status": "OBSERVATION_INCOMPLETE",
+      "new_backfill_status": "BACKFILL_REQUIRED",
+      "transition_at": "2026-09-15",
+      "reason_code": "historical_evidence_incomplete",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/audits/2026-09-10.json"
+      ]
+    }
+  ],
+  "notes": "No machine-readable proof of 909 raw rows, 673 deferred, 236 rejected, 0 qualified, and 0 unaccounted was found. Per the September 10 special requirement, the date remains unresolved."
+}

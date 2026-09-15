@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.ice.historical_event.v1",
+  "dispatch": "ice",
+  "event_id": "ice-2026-09-08-irs-taxpayer-data-sharing-injunction",
+  "canonical_event_id": "ice-2026-09-08-irs-taxpayer-data-sharing-injunction",
+  "event_date": "2026-09-08",
+  "source_published_date": "2026-09-08",
+  "observation_date": "2026-09-08",
+  "recovered_at": "2026-09-14",
+  "recovery_provenance": "operator_recovered_public_source_recall_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/sep08-sep10-recovery-review.json",
+  "source_recovery_item_id": "ice-recovery-2026-09-08-irs-taxpayer-data-sharing",
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "geography": "United States",
+    "category": "legal_policy_accountability",
+    "event_type": "appellate_injunction_irs_ice_taxpayer_data_sharing"
+  },
+  "headline": "D.C. Circuit blocks IRS procedure used to share taxpayer addresses with ICE",
+  "bounded_summary": "The D.C. Circuit upheld an injunction against the IRS data-exchange procedure used to provide taxpayer address information to ICE, finding that the procedure failed to satisfy federal tax-privacy requirements. Reuters reported that the IRS had disclosed roughly 47,000 taxpayer addresses after ICE sought information on approximately 1.28 million people.",
+  "source_sufficiency": "primary_appellate_opinion_with_reuters_reporting",
+  "corroboration_status": "corroborated",
+  "materiality": "material_appellate_constraint_on_interagency_immigration_enforcement_data_sharing",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "U.S. Court of Appeals for the D.C. Circuit",
+      "source_url": "https://media.cadc.uscourts.gov/opinions/docs/2026/09/26-5006-2191763.pdf",
+      "source_publication_date": "2026-09-08",
+      "source_role": "primary_appellate_opinion"
+    },
+    {
+      "publisher": "Reuters",
+      "source_url": "https://www.reuters.com/legal/government/irs-under-trump-unlawfully-shared-taxpayer-info-with-immigration-authorities-2026-09-08/",
+      "source_publication_date": "2026-09-08",
+      "source_role": "independent_national_reporting"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

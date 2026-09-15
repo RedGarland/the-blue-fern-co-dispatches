@@ -1,0 +1,41 @@
+{
+  "schema_version": "bluefern.ice.historical_event.v1",
+  "dispatch": "ice",
+  "event_id": "ice-2026-09-08-danville-workplace-arrests",
+  "canonical_event_id": "ice-2026-09-08-danville-workplace-arrests",
+  "event_date": "2026-09-08",
+  "source_published_date": "2026-09-08",
+  "observation_date": "2026-09-08",
+  "recovered_at": "2026-09-14",
+  "recovery_provenance": "operator_recovered_public_source_recall_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/sep08-sep10-recovery-review.json",
+  "source_recovery_item_id": "ice-recovery-2026-09-08-danville-workplace-arrests",
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "city": "Danville",
+    "state": "PA",
+    "category": "enforcement_operation",
+    "event_type": "workplace_related_construction_worker_arrests"
+  },
+  "headline": "Advocates report nearly 50 construction-worker arrests in Danville ICE operations",
+  "bounded_summary": "The Philadelphia Inquirer reported that immigration advocates said at least 49 construction workers were arrested in two operations near a Geisinger Medical Center construction project, including eight arrests on September 8 and 41 on September 2. Geisinger confirmed law-enforcement activity connected to the project on September 2; ICE and DHS did not provide comment by publication time, so the arrest count remains explicitly attributed to advocates.",
+  "source_sufficiency": "strong_local_reporting_with_attributed_advocacy_counts_and_partial_site_confirmation",
+  "corroboration_status": "official_ice_response_unavailable_at_publication",
+  "materiality": "large_workplace_related_enforcement_operation_with_material_local_community_impact",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "The Philadelphia Inquirer",
+      "source_url": "https://www.inquirer.com/news/ice-arrests-immigrants-danville-pennsylvania-20260908.html",
+      "source_publication_date": "2026-09-08",
+      "source_role": "regional_reporting_with_attributed_advocacy_counts"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

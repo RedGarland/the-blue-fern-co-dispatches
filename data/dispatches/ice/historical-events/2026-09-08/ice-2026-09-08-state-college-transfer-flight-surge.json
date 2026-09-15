@@ -1,0 +1,41 @@
+{
+  "schema_version": "bluefern.ice.historical_event.v1",
+  "dispatch": "ice",
+  "event_id": "ice-2026-09-08-state-college-transfer-flight-surge",
+  "canonical_event_id": "ice-2026-09-08-state-college-transfer-flight-surge",
+  "event_date": "2026-09-08",
+  "source_published_date": "2026-09-08",
+  "observation_date": "2026-09-08",
+  "recovered_at": "2026-09-14",
+  "recovery_provenance": "operator_recovered_public_source_recall_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/sep08-sep10-recovery-review.json",
+  "source_recovery_item_id": "ice-recovery-2026-09-08-state-college-transfer-flight-surge",
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "city": "State College",
+    "state": "PA",
+    "category": "detention_transfer_operations",
+    "event_type": "ice_charter_transfer_flight_surge"
+  },
+  "headline": "ICE transfer flights surge through State College Regional Airport",
+  "bounded_summary": "Spotlight PA documented a sharp expansion of ICE-chartered transfer flights through State College Regional Airport near Moshannon Valley Processing Center. Penn State confirmed an apparent increase in DHS/ICE-associated charter flights, while Human Rights First data cited by the outlet counted 107 ICE flights through July 2026 compared with two in all of 2025.",
+  "source_sufficiency": "investigative_local_reporting_with_airport_confirmation_and_attributed_flight_data",
+  "corroboration_status": "partially_corroborated",
+  "materiality": "material_growth_in_ice_domestic_transfer_infrastructure_and_detainee_movement",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "Spotlight PA",
+      "source_url": "https://www.spotlightpa.org/statecollege/2026/09/penn-state-state-college-airport-ice-detention-flights-moshannon-immigration/",
+      "source_publication_date": "2026-09-08",
+      "source_role": "investigative_regional_reporting"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

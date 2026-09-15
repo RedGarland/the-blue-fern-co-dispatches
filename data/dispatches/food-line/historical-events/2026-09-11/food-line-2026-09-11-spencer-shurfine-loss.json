@@ -1,0 +1,43 @@
+{
+  "schema_version": "bluefern.food_line.historical_event.v1",
+  "dispatch": "food-line",
+  "event_id": "food-line-2026-09-11-spencer-shurfine-loss",
+  "canonical_event_id": "food-line-2026-09-11-spencer-shurfine-loss",
+  "event_date": "2026-09-11",
+  "source_published_date": "2026-09-13",
+  "observation_date": "2026-09-14",
+  "recovered_at": "2026-09-14",
+  "recovery_provenance": "operator_recovered_external_source_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/food-care/2026-09-14/recovery-review-intake.json",
+  "editorial_review_artifact": "data/private-agent-handoff/discovery-recovery/food-care/2026-09-14/editorial-review.json",
+  "source_recovery_item_id": "food-line-2026-09-14-spencer-ny-shurfine-food-mart-fire",
+  "production_run_id": "food-line-scheduled-20260914-20260914T123001Z-cb36eb4e",
+  "production_artifact_present": false,
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "geography": "Spencer, New York",
+    "facility": "Shurfine Food Mart",
+    "category": "grocery_access_loss",
+    "event_type": "full_service_grocery_store_fire"
+  },
+  "headline": "Fire destroys Spencer's only full-service grocery store",
+  "bounded_summary": "A September 11 fire destroyed Spencer's only full-service grocery store, Shurfine Food Mart, and residents said the loss would make grocery shopping harder for people who cannot easily travel to other towns.",
+  "source_sufficiency": "sufficient_single_traceable_local_source_with_specific_grocery_access_consequence",
+  "materiality": "material local grocery-access loss affecting residents who cannot easily travel to other towns",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "FingerLakes1",
+      "source_url": "https://www.fingerlakes1.com/2026/09/13/fire-destroys-spencers-only-full-service-grocery-store/",
+      "source_publication_date": "2026-09-13",
+      "source_role": "local_news_report"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

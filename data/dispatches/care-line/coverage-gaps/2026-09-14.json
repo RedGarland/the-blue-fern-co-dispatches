@@ -1,0 +1,52 @@
+{
+  "schema_version": "bluefern.coverage_gap.v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-09-14",
+  "observation_status": "OBSERVED_WITH_FINDINGS",
+  "reason_codes": [
+    "recall_audit_miss",
+    "historical_recovery_completed"
+  ],
+  "gap_reason": "successful_care_line_run_missed_source_backed_developments_identified_by_operator_recall_audit",
+  "detected_at": "2026-09-14",
+  "backfill_status": "RECOVERED",
+  "recovered_at": "2026-09-15",
+  "recovered_event_ids": [
+    "care-line-2026-09-11-fenway-it-disruption",
+    "care-line-2026-09-14-atlanta-delivery-pause"
+  ],
+  "observed_finding_count": 2,
+  "source_refs": [
+    "data/private-agent-handoff/discovery-recovery/food-care/2026-09-14/recovery-review-intake.json",
+    "data/private-agent-handoff/discovery-recovery/food-care/2026-09-14/editorial-review.json",
+    "data/dispatches/care-line/historical-events/2026-09-11/care-line-2026-09-11-fenway-it-disruption.json",
+    "data/dispatches/care-line/historical-events/2026-09-14/care-line-2026-09-14-atlanta-delivery-pause.json"
+  ],
+  "transition_history": [
+    {
+      "previous_observation_status": null,
+      "previous_backfill_status": null,
+      "new_observation_status": "OBSERVATION_INCOMPLETE",
+      "new_backfill_status": "RECOVERY_IN_REVIEW",
+      "transition_at": "2026-09-14",
+      "reason_code": "recall_audit_miss",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/food-care/2026-09-14/recovery-review-intake.json"
+      ]
+    },
+    {
+      "previous_observation_status": "OBSERVATION_INCOMPLETE",
+      "previous_backfill_status": "RECOVERY_IN_REVIEW",
+      "new_observation_status": "OBSERVED_WITH_FINDINGS",
+      "new_backfill_status": "RECOVERED",
+      "transition_at": "2026-09-15",
+      "reason_code": "historical_recovery_completed",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/food-care/2026-09-14/editorial-review.json",
+        "data/dispatches/care-line/historical-events/2026-09-11/care-line-2026-09-11-fenway-it-disruption.json",
+        "data/dispatches/care-line/historical-events/2026-09-14/care-line-2026-09-14-atlanta-delivery-pause.json"
+      ]
+    }
+  ],
+  "notes": "Backfill preserves Fenway's September 11 event chronology, Atlanta Birth Center's September 14 announcement chronology, Atlanta's September 30 future effective date, and the September 14 recovery observation. Original production discovery lineage remains absent."
+}

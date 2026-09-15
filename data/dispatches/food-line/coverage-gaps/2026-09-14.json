@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.coverage_gap.v1",
+  "dispatch": "food-line",
+  "observation_date": "2026-09-14",
+  "observation_status": "OBSERVED_WITH_FINDINGS",
+  "reason_codes": [
+    "recall_audit_miss",
+    "historical_recovery_completed"
+  ],
+  "gap_reason": "successful_food_line_run_missed_source_backed_developments_identified_by_operator_recall_audit",
+  "detected_at": "2026-09-14",
+  "backfill_status": "RECOVERED",
+  "recovered_at": "2026-09-15",
+  "recovered_event_ids": [
+    "food-line-2026-09-11-spencer-shurfine-loss"
+  ],
+  "observed_finding_count": 1,
+  "source_refs": [
+    "data/private-agent-handoff/discovery-recovery/food-care/2026-09-14/recovery-review-intake.json",
+    "data/private-agent-handoff/discovery-recovery/food-care/2026-09-14/editorial-review.json",
+    "data/dispatches/food-line/historical-events/2026-09-11/food-line-2026-09-11-spencer-shurfine-loss.json",
+    "data/agent-history/food-line/reviews/recovery-decisions/ca591d5e0fb79dc832a0fdee261b91c6/food-line-event-d4fa8128a5e347bfad2bd4b9.json"
+  ],
+  "transition_history": [
+    {
+      "previous_observation_status": null,
+      "previous_backfill_status": null,
+      "new_observation_status": "OBSERVATION_INCOMPLETE",
+      "new_backfill_status": "RECOVERY_IN_REVIEW",
+      "transition_at": "2026-09-14",
+      "reason_code": "recall_audit_miss",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/food-care/2026-09-14/recovery-review-intake.json"
+      ]
+    },
+    {
+      "previous_observation_status": "OBSERVATION_INCOMPLETE",
+      "previous_backfill_status": "RECOVERY_IN_REVIEW",
+      "new_observation_status": "OBSERVED_WITH_FINDINGS",
+      "new_backfill_status": "RECOVERED",
+      "transition_at": "2026-09-15",
+      "reason_code": "historical_recovery_completed",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/food-care/2026-09-14/editorial-review.json",
+        "data/dispatches/food-line/historical-events/2026-09-11/food-line-2026-09-11-spencer-shurfine-loss.json"
+      ]
+    }
+  ],
+  "notes": "Backfill preserves September 11 Spencer event chronology and September 14 recovery observation. The Arizona SNAP/food-bank candidate was reviewed as duplicate coverage of existing event food-line-event-d4fa8128a5e347bfad2bd4b9, so no duplicate canonical historical record was created. Original production discovery lineage remains absent."
+}

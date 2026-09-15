@@ -747,7 +747,7 @@ def test_publication_page_alone_cannot_prove_food_operator_recovery(tmp_path: Pa
 
 
 def test_recovery_candidate_uses_observation_run_date_not_event_or_effective_date(tmp_path: Path) -> None:
-    source = tmp_path / "source"
+    source = tmp_path / "s"
     intake = source / "data/private-agent-handoff/discovery-recovery/food-care/2026-09-14/recovery-review-intake.json"
     intake.parent.mkdir(parents=True)
     intake.write_text(
@@ -858,14 +858,160 @@ def test_incomplete_care_collection_gets_precise_unresolved_reason(tmp_path: Pat
     assert result.reason_codes == (GapReasonCode.HISTORICAL_EVIDENCE_INCOMPLETE,)
 
 
-def test_food_and_care_sep14_recovery_candidates_remain_in_review() -> None:
+def test_food_and_care_sep14_recovery_candidates_are_recovered_after_historical_insertion() -> None:
     food = evaluate_dispatch_date(Path("."), "food-line", "2026-09-14", evaluated_at=EVALUATED)
     care = evaluate_dispatch_date(Path("."), "care-line", "2026-09-14", evaluated_at=EVALUATED)
 
-    assert food.backfill_status == BackfillStatus.RECOVERY_IN_REVIEW
-    assert care.backfill_status == BackfillStatus.RECOVERY_IN_REVIEW
-    assert food.recovered_event_ids == ()
-    assert care.recovered_event_ids == ()
+    assert food.observation_status == ObservationStatus.OBSERVED_WITH_FINDINGS
+    assert food.backfill_status == BackfillStatus.RECOVERED
+    assert food.recovered_event_ids == ("food-line-2026-09-11-spencer-shurfine-loss",)
+    assert food.observed_finding_count == 1
+    food_gap = json.loads(Path("data/dispatches/food-line/coverage-gaps/2026-09-14.json").read_text(encoding="utf-8"))
+    assert "Arizona SNAP/food-bank candidate was reviewed as duplicate coverage" in str(food_gap["notes"])
+    assert care.observation_status == ObservationStatus.OBSERVED_WITH_FINDINGS
+    assert care.backfill_status == BackfillStatus.RECOVERED
+    assert care.recovered_event_ids == (
+        "care-line-2026-09-11-fenway-it-disruption",
+        "care-line-2026-09-14-atlanta-delivery-pause",
+    )
+    assert care.observed_finding_count == 2
+
+
+def test_food_care_sep14_recovery_preserves_distinct_dates_and_no_public_authority() -> None:
+    spencer = json.loads(
+        Path(
+            "data/dispatches/food-line/historical-events/2026-09-11/"
+            "food-line-2026-09-11-spencer-shurfine-loss.json"
+        ).read_text(encoding="utf-8")
+    )
+    fenway = json.loads(
+        Path(
+            "data/dispatches/care-line/historical-events/2026-09-11/"
+            "care-line-2026-09-11-fenway-it-disruption.json"
+        ).read_text(encoding="utf-8")
+    )
+    atlanta = json.loads(
+        Path(
+            "data/dispatches/care-line/historical-events/2026-09-14/"
+            "care-line-2026-09-14-atlanta-delivery-pause.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert spencer["event_date"] == "2026-09-11"
+    assert spencer["source_published_date"] == "2026-09-13"
+    assert spencer["observation_date"] == "2026-09-14"
+    assert spencer["recovered_at"] == "2026-09-14"
+    assert fenway["event_date"] == "2026-09-11"
+    assert fenway["source_published_date"] == "2026-09-13"
+    assert fenway["observation_date"] == "2026-09-14"
+    assert fenway["recovered_at"] == "2026-09-14"
+    assert atlanta["event_date"] == "2026-09-14"
+    assert atlanta["source_published_date"] == "2026-09-14"
+    assert atlanta["observation_date"] == "2026-09-14"
+    assert atlanta["recovered_at"] == "2026-09-14"
+    assert atlanta["effective_date"] == "2026-09-30"
+    for payload in (spencer, fenway, atlanta):
+        assert payload["original_production_discovery_lineage_present"] is False
+        assert payload["publication_eligible"] is False
+        assert payload["publication_approval"] is False
+        assert payload["publication_performed"] is False
+        assert payload["public_generation_authorized"] is False
+        assert payload["pages_authorized"] is False
+
+
+def test_food_care_sep14_editorial_review_does_not_recreate_duplicate_arizona_event() -> None:
+    review = json.loads(
+        Path("data/private-agent-handoff/discovery-recovery/food-care/2026-09-14/editorial-review.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    by_id = {item["item_id"]: item for item in review["items"]}
+    arizona = by_id["food-line-2026-09-14-arizona-snap-food-bank-demand"]
+
+    assert arizona["disposition"] == "approved"
+    assert arizona["relationship_to_existing_event"] == "duplicate_coverage"
+    assert arizona["canonical_event_id"] == "food-line-event-d4fa8128a5e347bfad2bd4b9"
+    assert arizona["historical_record_created"] is None
+    assert arizona["event_date"] == "2026-08-08"
+    assert arizona["source_published_date"] == "2026-06-30"
+    assert not list(Path("data/dispatches/food-line/historical-events").glob("*/food-line-2026-09-14-arizona*.json"))
+
+
+def test_outstanding_deferred_recovery_candidate_keeps_observation_in_review(tmp_path: Path) -> None:
+    source = tmp_path / "s"
+    intake = source / "data/private-agent-handoff/discovery-recovery/food-care/2026-09-14/recovery-review-intake.json"
+    intake.parent.mkdir(parents=True)
+    intake.write_text(
+        json.dumps(
+            {
+                "provenance_class": "operator_recovered_external_source_evidence",
+                "items": [
+                    {
+                        "dispatch": "food-line",
+                        "item_id": "food-line-deferred",
+                        "observed_date": "2026-09-14",
+                        "review_retention_disposition": "retained_for_review",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    review = intake.with_name("editorial-review.json")
+    review.write_text(
+        json.dumps(
+            {
+                "items": [
+                    {
+                        "item_id": "food-line-deferred",
+                        "disposition": "deferred_for_corroboration",
+                        "historical_record_created": None,
+                    }
+                ],
+                "publication_eligible": False,
+                "publication_approval": False,
+                "publication_performed": False,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = evaluate_dispatch_date(source, "food-line", "2026-09-14", evaluated_at=EVALUATED)
+
+    assert result.observation_status == ObservationStatus.OBSERVATION_INCOMPLETE
+    assert result.backfill_status == BackfillStatus.RECOVERY_IN_REVIEW
+    assert result.recovered_event_ids == ()
+
+
+def test_rejected_recovery_candidate_without_historical_record_does_not_auto_recover(tmp_path: Path) -> None:
+    source = tmp_path / "s"
+    intake = source / "data/private-agent-handoff/discovery-recovery/food-care/2026-09-14/recovery-review-intake.json"
+    intake.parent.mkdir(parents=True)
+    intake.write_text(
+        json.dumps(
+            {
+                "provenance_class": "operator_recovered_external_source_evidence",
+                "items": [
+                    {
+                        "dispatch": "care-line",
+                        "item_id": "care-line-rejected",
+                        "observed_date": "2026-09-14",
+                        "review_retention_disposition": "retained_for_review",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    intake.with_name("editorial-review.json").write_text(
+        json.dumps({"items": [{"item_id": "care-line-rejected", "disposition": "rejected", "historical_record_created": None}]}),
+        encoding="utf-8",
+    )
+
+    result = evaluate_dispatch_date(source, "care-line", "2026-09-14", evaluated_at=EVALUATED)
+
+    assert result.backfill_status == BackfillStatus.RECOVERY_IN_REVIEW
+    assert result.recovered_event_ids == ()
 
 
 def test_ice_sep8_and_sep10_durable_gap_records_are_backfill_required_without_events() -> None:

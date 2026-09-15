@@ -692,14 +692,19 @@ def _candidate_reason_codes(item: dict[str, Any], payload: dict[str, Any]) -> tu
 
 
 def _load_recovered_event_ids(repo_root: Path, dispatch: str, observation_date: str) -> tuple[str, ...]:
-    root = repo_root / "data" / "dispatches" / dispatch / "historical-events" / observation_date
+    root = repo_root / "data" / "dispatches" / dispatch / "historical-events"
     if not root.exists():
         return ()
     ids = []
-    for path in sorted(root.glob("*.json")):
+    for path in sorted(root.glob("*/*.json")):
         try:
             payload = _read_json(path)
         except json.JSONDecodeError:
+            continue
+        repaired_observation = str(payload.get("observation_date") or payload.get("recovered_observation_date") or payload.get("recovery_observation_date") or "")
+        if not repaired_observation:
+            repaired_observation = str(payload.get("event_date") or path.parent.name)
+        if repaired_observation != observation_date:
             continue
         if payload.get("recovery_provenance") and payload.get("original_production_discovery_lineage_present") is False:
             ids.append(str(payload.get("event_id") or path.stem))

@@ -1,0 +1,41 @@
+{
+  "schema_version": "bluefern.ice.historical_event.v1",
+  "dispatch": "ice",
+  "event_id": "ice-2026-09-10-tacoma-mass-detainee-transfers",
+  "canonical_event_id": "ice-2026-09-10-tacoma-mass-detainee-transfers",
+  "event_date": "2026-09-10",
+  "source_published_date": "2026-09-10",
+  "observation_date": "2026-09-10",
+  "recovered_at": "2026-09-14",
+  "recovery_provenance": "operator_recovered_public_source_recall_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/sep08-sep10-recovery-review.json",
+  "source_recovery_item_id": "ice-recovery-2026-09-10-tacoma-transfer-wave",
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "city": "Tacoma",
+    "state": "WA",
+    "category": "detention_transfer_operations",
+    "event_type": "mass_interstate_detainee_transfer_wave"
+  },
+  "headline": "ICE moves hundreds out of Tacoma detention center in wave of interstate transfers",
+  "bounded_summary": "Seattle Times reporting republished by The Spokesman-Review documented an unprecedented wave of transfers from the Northwest ICE Processing Center in Tacoma, including roughly 95 people on one flight and about 400 people placed on ICE flights from Boeing Field during one week at the end of August according to county flight monitoring. Families and attorneys reported little advance notice about destinations.",
+  "source_sufficiency": "major_regional_reporting_with_county_flight_monitoring_and_family_accounts",
+  "corroboration_status": "corroborated_for_transfer_pattern_with_some_counts_from_local_monitoring",
+  "materiality": "large_scale_interstate_transfer_activity_affecting_detention_location_family_contact_and_legal_access",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "The Seattle Times / The Spokesman-Review",
+      "source_url": "https://www.spokesman.com/stories/2026/sep/10/ice-moves-hundreds-from-wa-detention-center-as-it-/",
+      "source_publication_date": "2026-09-10",
+      "source_role": "major_regional_reporting"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

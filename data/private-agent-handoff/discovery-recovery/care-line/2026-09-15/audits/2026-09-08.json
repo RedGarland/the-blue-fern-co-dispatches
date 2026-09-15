@@ -1,0 +1,31 @@
+{
+  "schema_version": "bluefern.care_line.discovery_recovery.daily_audit.v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-09-08",
+  "expected_collection_instances": 3,
+  "scheduler_receipts": [
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260908T130002Z-6664.json",
+      "status": "partial_success"
+    },
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260908T190001Z-35708.json",
+      "status": "partial_success"
+    },
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260909T010001Z-17416.json",
+      "status": "partial_success"
+    }
+  ],
+  "surviving_collection_artifacts": "empty_run_directories_only",
+  "complete_observation_proven_from_runtime": false,
+  "approved_recovered_event_ids": [
+    "care-line-2026-09-08-wcchc-clinic-closure-lowell",
+    "care-line-2026-09-08-cecil-county-birthing-center-gap",
+    "care-line-2026-09-08-medstar-postpartum-bed-cuts"
+  ],
+  "final_observation_status": "OBSERVED_WITH_FINDINGS",
+  "final_backfill_status": "RECOVERED",
+  "publication_performed": false,
+  "manual_production_task_triggered": false
+}

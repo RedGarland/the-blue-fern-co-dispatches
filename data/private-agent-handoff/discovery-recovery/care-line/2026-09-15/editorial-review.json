@@ -1,0 +1,75 @@
+{
+  "schema_version": "bluefern.care_line.discovery_recovery.editorial_review.v1",
+  "dispatch": "care-line",
+  "review_date": "2026-09-15",
+  "review_type": "human_editorial_recovery_review",
+  "provenance_class": "operator_recovered_public_source_evidence",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false,
+  "items": [
+    {
+      "item_id": "care-line-2026-09-08-wcchc-clinic-closure-lowell",
+      "disposition": "approved",
+      "duplicate_status": "nonduplicate",
+      "reason": "In-scope U.S. outpatient clinic access loss, traceable provider notice, material temporary disruption."
+    },
+    {
+      "item_id": "care-line-2026-09-08-cecil-county-birthing-center-gap",
+      "disposition": "approved",
+      "duplicate_status": "nonduplicate",
+      "reason": "In-scope local maternity-access loss and documented county response after the only local birthing center closed."
+    },
+    {
+      "item_id": "care-line-2026-09-08-medstar-postpartum-bed-cuts",
+      "disposition": "approved",
+      "duplicate_status": "nonduplicate",
+      "reason": "In-scope maternity capacity reduction with bounded access consequences and traceable source."
+    },
+    {
+      "item_id": "care-line-2026-09-09-fox5-medstar-followup",
+      "disposition": "rejected_duplicate",
+      "duplicate_status": "duplicate",
+      "duplicate_target": "care-line-2026-09-08-medstar-postpartum-bed-cuts",
+      "reason": "Same MedStar postpartum-capacity event as the September 8 approved recovery record."
+    },
+    {
+      "item_id": "care-line-2026-09-10-brattleboro-birth-center-reversal",
+      "disposition": "rejected",
+      "duplicate_status": "not_applicable",
+      "reason": "The source describes continued birth-center access, not a Care Line access loss."
+    },
+    {
+      "item_id": "care-line-2026-09-10-cms-public-notices",
+      "disposition": "deferred_for_corroboration",
+      "duplicate_status": "not_applicable",
+      "reason": "Traceable CMS notices exist, but they do not satisfy the special September 10 terminal-accounting requirement; the date remains open until authoritative machine-readable 909/673/236/0 proof is recovered."
+    },
+    {
+      "item_id": "care-line-2026-09-11-cms-michigan-home-health-hospice-terminations",
+      "disposition": "approved",
+      "duplicate_status": "nonduplicate",
+      "reason": "Official regulatory evidence of home-health and hospice provider participation changes."
+    },
+    {
+      "item_id": "care-line-2026-09-12-cms-clia-lab-limitations",
+      "disposition": "approved",
+      "duplicate_status": "nonduplicate",
+      "reason": "Official regulatory evidence of clinical-laboratory testing authority limits."
+    },
+    {
+      "item_id": "care-line-2026-09-13-fenway-health-it-incident",
+      "disposition": "excluded_existing_recovery",
+      "duplicate_status": "existing_recovery",
+      "duplicate_target": "care-line-2026-09-11-fenway-it-disruption",
+      "reason": "Already recovered under September 14 observation-date workflow; not reassigned."
+    }
+  ],
+  "approved_count": 5,
+  "rejected_count": 1,
+  "duplicate_count": 1,
+  "excluded_existing_recovery_count": 1,
+  "deferred_for_corroboration_count": 1
+}

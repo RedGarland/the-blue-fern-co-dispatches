@@ -1,0 +1,29 @@
+{
+  "schema_version": "bluefern.care_line.discovery_recovery.daily_audit.v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-09-12",
+  "expected_collection_instances": 3,
+  "scheduler_receipts": [
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260912T130001Z-14784.json",
+      "status": "failure"
+    },
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260912T190002Z-19172.json",
+      "status": "failure"
+    },
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260913T010001Z-23836.json",
+      "status": "failure"
+    }
+  ],
+  "surviving_collection_artifacts": "none",
+  "complete_observation_proven_from_runtime": false,
+  "approved_recovered_event_ids": [
+    "care-line-2026-09-12-cms-clia-lab-limitations"
+  ],
+  "final_observation_status": "OBSERVED_WITH_FINDINGS",
+  "final_backfill_status": "RECOVERED",
+  "publication_performed": false,
+  "manual_production_task_triggered": false
+}

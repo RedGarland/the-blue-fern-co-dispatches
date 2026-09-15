@@ -1,0 +1,34 @@
+{
+  "schema_version": "bluefern.coverage_gap.v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-09-13",
+  "observation_status": "OBSERVATION_INCOMPLETE",
+  "reason_codes": [
+    "scheduled_run_failed",
+    "material_collection_degradation",
+    "terminal_accounting_incomplete"
+  ],
+  "gap_reason": "The 06:00 PT collection failed and the two later partial-success collections left source failures; bounded recovery did not find a nonduplicate September 13 Care finding suitable to close the window.",
+  "detected_at": "2026-09-15",
+  "backfill_status": "BACKFILL_REQUIRED",
+  "recovered_at": null,
+  "recovered_event_ids": [],
+  "observed_finding_count": 0,
+  "source_refs": [
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/audits/2026-09-13.json"
+  ],
+  "transition_history": [
+    {
+      "previous_observation_status": null,
+      "previous_backfill_status": null,
+      "new_observation_status": "OBSERVATION_INCOMPLETE",
+      "new_backfill_status": "BACKFILL_REQUIRED",
+      "transition_at": "2026-09-15",
+      "reason_code": "scheduled_run_failed",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/audits/2026-09-13.json"
+      ]
+    }
+  ],
+  "notes": "Fenway Health was available September 13 but remains already recovered under the September 14 observation workflow; it is not reassigned to September 13."
+}

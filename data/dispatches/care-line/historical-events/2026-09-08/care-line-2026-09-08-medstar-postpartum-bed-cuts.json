@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.care_line.historical_event.v1",
+  "dispatch": "care-line",
+  "event_id": "care-line-2026-09-08-medstar-postpartum-bed-cuts",
+  "canonical_event_id": "care-line-2026-09-08-medstar-postpartum-bed-cuts",
+  "event_date": "2026-07-26",
+  "source_published_date": "2026-09-08",
+  "observation_date": "2026-09-08",
+  "recovered_at": "2026-09-15",
+  "effective_date": "2026-07-26",
+  "recovery_provenance": "operator_recovered_public_source_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/recovery-review-intake.json",
+  "editorial_review_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/editorial-review.json",
+  "source_recovery_item_id": "care-line-2026-09-08-medstar-postpartum-bed-cuts",
+  "production_run_id": null,
+  "production_artifact_present": false,
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "geography": "Washington, District of Columbia",
+    "facility": "MedStar Washington Hospital Center",
+    "category": "maternity_capacity_reduction",
+    "event_type": "postpartum_unit_closure_followup"
+  },
+  "headline": "MedStar Washington Hospital Center postpartum-unit closure prompted access warnings",
+  "bounded_summary": "National Nurses United reported that nurses planned a community forum after MedStar Washington Hospital Center closed postpartum unit 5F on July 26, eliminating more than one-third of postpartum beds and contributing to labor-and-delivery diversion concerns.",
+  "source_sufficiency": "traceable_labor_organization_notice_with_material_access_claims",
+  "materiality": "reported reduction in maternity capacity at a major D.C. birth hospital",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "National Nurses United",
+      "source_url": "https://www.nationalnursesunited.org/press/medstar-washington-hospital-center-nurses-host-community-forum-on-maternal-health-care-cuts",
+      "source_publication_date": "2026-09-08",
+      "source_role": "labor_organization_notice"
+    },
+    {
+      "publisher": "Fox 5 DC",
+      "source_url": "https://www.fox5dc.com/news/meeting-planned-maternal-health-care-cuts-dc",
+      "source_publication_date": "2026-09-09",
+      "source_role": "duplicate_local_followup"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

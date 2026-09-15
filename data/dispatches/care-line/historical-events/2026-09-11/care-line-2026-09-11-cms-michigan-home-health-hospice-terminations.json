@@ -1,0 +1,44 @@
+{
+  "schema_version": "bluefern.care_line.historical_event.v1",
+  "dispatch": "care-line",
+  "event_id": "care-line-2026-09-11-cms-michigan-home-health-hospice-terminations",
+  "canonical_event_id": "care-line-2026-09-11-cms-michigan-home-health-hospice-terminations",
+  "event_date": "2026-09-11",
+  "source_published_date": "2026-09-11",
+  "observation_date": "2026-09-11",
+  "recovered_at": "2026-09-15",
+  "effective_date": "2026-09-11",
+  "recovery_provenance": "operator_recovered_public_source_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/recovery-review-intake.json",
+  "editorial_review_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/editorial-review.json",
+  "source_recovery_item_id": "care-line-2026-09-11-cms-michigan-home-health-hospice-terminations",
+  "production_run_id": null,
+  "production_artifact_present": false,
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "geography": "Michigan",
+    "facility": "CMS-noticed home-health and hospice providers",
+    "category": "regulatory_service_availability",
+    "event_type": "medicare_termination_notices"
+  },
+  "headline": "CMS posted Michigan home-health and hospice termination notices",
+  "bounded_summary": "CMS public notices dated September 11 listed Michigan home-health and hospice Medicare terminations, preserving official evidence of provider-participation changes affecting service availability.",
+  "source_sufficiency": "traceable_federal_regulatory_notice",
+  "materiality": "termination notices can affect availability of Medicare-covered home-health or hospice services",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "Centers for Medicare & Medicaid Services",
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "source_publication_date": "2026-09-11",
+      "source_role": "federal_regulatory_notice"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": "bluefern.care_line.historical_event.v1",
+  "dispatch": "care-line",
+  "event_id": "care-line-2026-09-08-wcchc-clinic-closure-lowell",
+  "canonical_event_id": "care-line-2026-09-08-wcchc-clinic-closure-lowell",
+  "event_date": "2026-09-08",
+  "source_published_date": "2026-09-08",
+  "observation_date": "2026-09-08",
+  "recovered_at": "2026-09-15",
+  "effective_date": "2026-09-08",
+  "recovery_provenance": "operator_recovered_public_source_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/recovery-review-intake.json",
+  "editorial_review_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/editorial-review.json",
+  "source_recovery_item_id": "care-line-2026-09-08-wcchc-clinic-closure-lowell",
+  "production_run_id": null,
+  "production_artifact_present": false,
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "geography": "West Oahu, Hawaii",
+    "facility": "Waianae Coast Comprehensive Health Center",
+    "category": "clinic_service_disruption",
+    "event_type": "weather_clinic_closure"
+  },
+  "headline": "Waianae Coast clinics closed during Hurricane Lowell disruptions",
+  "bounded_summary": "Waianae Coast Comprehensive Health Center announced that all clinics and departments would close on September 8 because of severe weather, power outages, and hazardous roads tied to Hurricane Lowell, while emergency, imaging, and laboratory operations remained open.",
+  "source_sufficiency": "traceable_provider_notice",
+  "materiality": "temporary loss of outpatient clinic access across a community health center network",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "Waianae Coast Comprehensive Health Center",
+      "source_url": "https://www.wcchc.com/News/Item/2026-09-08-Clinic-Closure",
+      "source_publication_date": "2026-09-08",
+      "source_role": "provider_notice"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

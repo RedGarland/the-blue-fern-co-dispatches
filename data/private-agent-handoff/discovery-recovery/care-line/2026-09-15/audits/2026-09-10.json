@@ -1,0 +1,40 @@
+{
+  "schema_version": "bluefern.care_line.discovery_recovery.daily_audit.v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-09-10",
+  "expected_collection_instances": 3,
+  "scheduler_receipts": [
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260910T130002Z-14424.json",
+      "status": "partial_success"
+    },
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260910T190002Z-36144.json",
+      "status": "partial_success"
+    },
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260911T010002Z-15444.json",
+      "status": "partial_success"
+    }
+  ],
+  "surviving_collection_artifacts": "empty_run_directories_only",
+  "sep10_terminal_accounting_claim": {
+    "raw_rows": 909,
+    "deferred": 673,
+    "rejected": 236,
+    "qualified": 0,
+    "unaccounted": 0,
+    "authoritative_machine_readable_proof_found": false
+  },
+  "approved_recovered_event_ids": [],
+  "deferred_candidates": [
+    {
+      "item_id": "care-line-2026-09-10-cms-public-notices",
+      "reason": "Traceable public notices were found, but the authoritative terminal accounting proof required for September 10 was not recovered."
+    }
+  ],
+  "final_observation_status": "OBSERVATION_INCOMPLETE",
+  "final_backfill_status": "BACKFILL_REQUIRED",
+  "publication_performed": false,
+  "manual_production_task_triggered": false
+}

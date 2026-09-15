@@ -1,0 +1,33 @@
+{
+  "schema_version": "bluefern.care_line.discovery_recovery.daily_audit.v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-09-09",
+  "expected_collection_instances": 3,
+  "scheduler_receipts": [
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260909T130018Z-32112.json",
+      "status": "partial_success"
+    },
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260909T190002Z-8496.json",
+      "status": "partial_success"
+    },
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260910T010002Z-20980.json",
+      "status": "partial_success"
+    }
+  ],
+  "surviving_collection_artifacts": "empty_run_directories_only",
+  "complete_observation_proven_from_runtime": false,
+  "duplicate_only_items": [
+    {
+      "item_id": "care-line-2026-09-09-fox5-medstar-followup",
+      "duplicate_target": "care-line-2026-09-08-medstar-postpartum-bed-cuts"
+    }
+  ],
+  "approved_recovered_event_ids": [],
+  "final_observation_status": "OBSERVED_ZERO_QUALIFYING",
+  "final_backfill_status": "BACKFILL_NOT_REQUIRED",
+  "publication_performed": false,
+  "manual_production_task_triggered": false
+}

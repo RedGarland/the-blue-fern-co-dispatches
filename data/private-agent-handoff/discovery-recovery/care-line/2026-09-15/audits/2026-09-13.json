@@ -1,0 +1,51 @@
+{
+  "schema_version": "bluefern.care_line.discovery_recovery.daily_audit.v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-09-13",
+  "expected_collection_instances": 3,
+  "scheduler_receipts": [
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260913T130001Z-6104.json",
+      "status": "failure"
+    },
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260913T190002Z-18096.json",
+      "status": "partial_success"
+    },
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260914T010001Z-6180.json",
+      "status": "partial_success"
+    }
+  ],
+  "collection_run_manifests": [
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\data\\dispatches\\care-line\\collection-runs\\20260913-cce8fc43c113-01\\run-manifest.json",
+      "status": "partial_success",
+      "attempted_sources": 34,
+      "failed_sources": 11,
+      "raw_candidates": 328,
+      "qualified": 0,
+      "exclusions": 160,
+      "failed_extractions": 168
+    },
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\data\\dispatches\\care-line\\collection-runs\\20260913-cce8fc43c113-02\\run-manifest.json",
+      "status": "partial_success",
+      "attempted_sources": 34,
+      "failed_sources": 11,
+      "raw_candidates": 328,
+      "qualified": 0,
+      "exclusions": 160,
+      "failed_extractions": 168
+    }
+  ],
+  "complete_observation_proven_from_runtime": false,
+  "approved_recovered_event_ids": [],
+  "excluded_existing_recoveries": [
+    "care-line-2026-09-11-fenway-it-disruption"
+  ],
+  "final_observation_status": "OBSERVATION_INCOMPLETE",
+  "final_backfill_status": "BACKFILL_REQUIRED",
+  "publication_performed": false,
+  "manual_production_task_triggered": false
+}

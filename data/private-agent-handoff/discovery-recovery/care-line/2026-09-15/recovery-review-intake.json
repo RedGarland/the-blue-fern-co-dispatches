@@ -1,0 +1,99 @@
+{
+  "schema_version": "bluefern.care_line.discovery_recovery.review_intake.v1",
+  "dispatch": "care-line",
+  "recovery_date": "2026-09-15",
+  "protected_base": "6761d13db1c5e2e1609e16075c2b9ba18c5b3925",
+  "provenance_class": "operator_recovered_public_source_evidence",
+  "original_production_discovery_lineage_fabricated": false,
+  "manual_production_task_triggered": false,
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false,
+  "items": [
+    {
+      "item_id": "care-line-2026-09-08-wcchc-clinic-closure-lowell",
+      "observation_date": "2026-09-08",
+      "event_date": "2026-09-08",
+      "source_published_date": "2026-09-08",
+      "effective_date": "2026-09-08",
+      "source_url": "https://www.wcchc.com/News/Item/2026-09-08-Clinic-Closure",
+      "publisher": "Waianae Coast Comprehensive Health Center",
+      "headline": "Waianae Coast clinics closed during Hurricane Lowell disruptions",
+      "production_artifact_present": false,
+      "relationship_to_existing_event": "new_event"
+    },
+    {
+      "item_id": "care-line-2026-09-08-cecil-county-birthing-center-gap",
+      "observation_date": "2026-09-08",
+      "event_date": "2026-09-08",
+      "source_published_date": "2026-09-08",
+      "effective_date": "2026-09-08",
+      "source_url": "https://marylandmatters.org/2026/09/08/local-officials-look-to-fill-in-gaps-left-by-closure-of-birthing-center-in-cecil-county/",
+      "publisher": "Maryland Matters",
+      "headline": "Cecil County officials weighed gaps left by the county's only birthing-center closure",
+      "production_artifact_present": false,
+      "relationship_to_existing_event": "new_event"
+    },
+    {
+      "item_id": "care-line-2026-09-08-medstar-postpartum-bed-cuts",
+      "observation_date": "2026-09-08",
+      "event_date": "2026-07-26",
+      "source_published_date": "2026-09-08",
+      "effective_date": "2026-07-26",
+      "source_url": "https://www.nationalnursesunited.org/press/medstar-washington-hospital-center-nurses-host-community-forum-on-maternal-health-care-cuts",
+      "publisher": "National Nurses United",
+      "headline": "MedStar Washington Hospital Center postpartum-unit closure prompted access warnings",
+      "production_artifact_present": false,
+      "relationship_to_existing_event": "new_event"
+    },
+    {
+      "item_id": "care-line-2026-09-11-cms-michigan-home-health-hospice-terminations",
+      "observation_date": "2026-09-11",
+      "event_date": "2026-09-11",
+      "source_published_date": "2026-09-11",
+      "effective_date": "2026-09-11",
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "publisher": "Centers for Medicare & Medicaid Services",
+      "headline": "CMS posted Michigan home-health and hospice termination notices",
+      "production_artifact_present": false,
+      "relationship_to_existing_event": "new_event"
+    },
+    {
+      "item_id": "care-line-2026-09-12-cms-clia-lab-limitations",
+      "observation_date": "2026-09-12",
+      "event_date": "2026-09-12",
+      "source_published_date": "2026-09-12",
+      "effective_date": "2026-09-12",
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "publisher": "Centers for Medicare & Medicaid Services",
+      "headline": "CMS posted September 12 clinical-laboratory limitation notices",
+      "production_artifact_present": false,
+      "relationship_to_existing_event": "new_event"
+    }
+  ],
+  "duplicate_or_nonqualifying_items": [
+    {
+      "item_id": "care-line-2026-09-09-fox5-medstar-followup",
+      "observation_date": "2026-09-09",
+      "source_url": "https://www.fox5dc.com/news/meeting-planned-maternal-health-care-cuts-dc",
+      "disposition": "duplicate",
+      "duplicate_target": "care-line-2026-09-08-medstar-postpartum-bed-cuts"
+    },
+    {
+      "item_id": "care-line-2026-09-10-brattleboro-birth-center-reversal",
+      "observation_date": "2026-09-10",
+      "source_url": "https://www.vermontpublic.org/local-news/2026-09-10/in-reversal-brattleboro-memorial-hospital-will-keep-its-birth-center-open",
+      "disposition": "rejected",
+      "reason": "Not a service loss; the reported reversal preserved birth-center access."
+    },
+    {
+      "item_id": "care-line-2026-09-10-cms-public-notices",
+      "observation_date": "2026-09-10",
+      "source_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "disposition": "deferred_for_corroboration",
+      "reason": "CMS notices were identified, but the September 10 special reconciliation requires the missing authoritative 909/673/236/0 terminal accounting proof before closing the observation window."
+    }
+  ]
+}

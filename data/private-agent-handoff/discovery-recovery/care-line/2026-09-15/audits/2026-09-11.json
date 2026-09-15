@@ -1,0 +1,32 @@
+{
+  "schema_version": "bluefern.care_line.discovery_recovery.daily_audit.v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-09-11",
+  "expected_collection_instances": 3,
+  "scheduler_receipts": [
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260911T130002Z-6924.json",
+      "status": "failure"
+    },
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260911T190002Z-1860.json",
+      "status": "failure"
+    },
+    {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\logs\\care-line\\scheduler\\collection\\20260912T010001Z-19656.json",
+      "status": "failure"
+    }
+  ],
+  "surviving_collection_artifacts": "none",
+  "complete_observation_proven_from_runtime": false,
+  "approved_recovered_event_ids": [
+    "care-line-2026-09-11-cms-michigan-home-health-hospice-terminations"
+  ],
+  "excluded_existing_recoveries": [
+    "care-line-2026-09-11-fenway-it-disruption"
+  ],
+  "final_observation_status": "OBSERVED_WITH_FINDINGS",
+  "final_backfill_status": "RECOVERED",
+  "publication_performed": false,
+  "manual_production_task_triggered": false
+}

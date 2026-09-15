@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.coverage_gap.v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-09-09",
+  "observation_status": "OBSERVED_ZERO_QUALIFYING",
+  "reason_codes": [
+    "historical_evidence_incomplete",
+    "historical_recovery_completed"
+  ],
+  "gap_reason": "Bounded recovery found September 9 material only as duplicate or update coverage of September 8 events; no new nonduplicate Care finding was approved for the September 9 observation date.",
+  "detected_at": "2026-09-15",
+  "backfill_status": "BACKFILL_NOT_REQUIRED",
+  "recovered_at": "2026-09-15",
+  "recovered_event_ids": [],
+  "observed_finding_count": 0,
+  "source_refs": [
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/audits/2026-09-09.json",
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/editorial-review.json"
+  ],
+  "transition_history": [
+    {
+      "previous_observation_status": null,
+      "previous_backfill_status": null,
+      "new_observation_status": "OBSERVATION_INCOMPLETE",
+      "new_backfill_status": "BACKFILL_REQUIRED",
+      "transition_at": "2026-09-15",
+      "reason_code": "historical_evidence_incomplete",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/audits/2026-09-09.json"
+      ]
+    },
+    {
+      "previous_observation_status": "OBSERVATION_INCOMPLETE",
+      "previous_backfill_status": "BACKFILL_REQUIRED",
+      "new_observation_status": "OBSERVED_ZERO_QUALIFYING",
+      "new_backfill_status": "BACKFILL_NOT_REQUIRED",
+      "transition_at": "2026-09-15",
+      "reason_code": "historical_recovery_completed",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/care-line/2026-09-15/editorial-review.json"
+      ]
+    }
+  ],
+  "notes": "The Fox 5 DC September 9 report was treated as duplicate follow-up for the approved MedStar September 8 recovery record, not as a new historical event."
+}

@@ -48,6 +48,7 @@ class GapReasonCode(StrEnum):
     RECALL_AUDIT_MISS = "recall_audit_miss"
     LATE_SOURCE_DISCOVERY = "late_source_discovery"
     MISSING_ORIGINAL_ARTIFACT = "missing_original_artifact"
+    HISTORICAL_EVIDENCE_INCOMPLETE = "historical_evidence_incomplete"
     HISTORICAL_RECOVERY_PENDING_REVIEW = "historical_recovery_pending_review"
     HISTORICAL_RECOVERY_COMPLETED = "historical_recovery_completed"
 
@@ -652,8 +653,9 @@ def _load_recovery_candidate_evidence(repo_root: Path, dispatch: str, observatio
         for item in payload.get("items") or []:
             if item.get("dispatch") != dispatch:
                 continue
-            item_date = str(item.get("event_date") or item.get("observed_date") or item.get("event_effective_date") or observation_date)
-            if item_date == observation_date or str(item.get("production_run_id") or "").startswith(observation_date.replace("-", "")):
+            observed_date = str(item.get("observed_date") or "")
+            production_run_id = str(item.get("production_run_id") or "")
+            if observed_date == observation_date or production_run_id.startswith(observation_date.replace("-", "")):
                 refs.append(path.relative_to(repo_root).as_posix())
                 reasons.extend(_candidate_reason_codes(item, payload))
                 break
@@ -702,6 +704,250 @@ def _load_recovered_event_ids(repo_root: Path, dispatch: str, observation_date: 
         if payload.get("recovery_provenance") and payload.get("original_production_discovery_lineage_present") is False:
             ids.append(str(payload.get("event_id") or path.stem))
     return tuple(ids)
+
+
+def _as_repo_ref(repo_root: Path, path: Path) -> str:
+    try:
+        return path.relative_to(repo_root).as_posix()
+    except ValueError:
+        return str(path)
+
+
+def _food_legacy_intake_root(root: Path, observation_date: str) -> Path:
+    return root / "data" / "dispatches" / "food-line" / "agent-intake" / observation_date
+
+
+def _load_food_legacy_intake(root: Path, observation_date: str, *, repo_root: Path) -> tuple[tuple[dict[str, Any], ...], int | None, int | None, tuple[str, ...]]:
+    intake_root = _food_legacy_intake_root(root, observation_date)
+    if not intake_root.exists():
+        return (), None, None, ()
+    receipts: list[dict[str, Any]] = []
+    reviewable_counts: list[int] = []
+    unaccounted_counts: list[int] = []
+    refs: list[str] = []
+    for path in sorted(intake_root.glob("*.json")):
+        try:
+            payload = _read_json(path)
+        except json.JSONDecodeError:
+            continue
+        lifecycle = payload.get("lifecycle_reconciliation") if isinstance(payload.get("lifecycle_reconciliation"), dict) else {}
+        counts = payload.get("counts") if isinstance(payload.get("counts"), dict) else {}
+        if not isinstance(lifecycle.get("unaccounted"), int):
+            continue
+        discovered = lifecycle.get("discovered")
+        terminal = lifecycle.get("terminal_or_handoff")
+        if isinstance(discovered, int) and isinstance(terminal, int) and terminal != discovered:
+            continue
+        retained = 0
+        for key in ("retained_for_review", "eligible_for_review", "selected", "approved", "approve", "approve_with_edit"):
+            value = counts.get(key)
+            if isinstance(value, int):
+                retained = max(retained, value)
+        unaccounted = int(lifecycle["unaccounted"])
+        reviewable_counts.append(retained)
+        unaccounted_counts.append(unaccounted)
+        refs.append(_as_repo_ref(repo_root, path))
+        receipts.append(
+            {
+                "dispatch": "food-line",
+                "task_key": "food_line_source_watch",
+                "task_name": "Food Line legacy Source Watch intake",
+                "scheduled_for": observation_date,
+                "started_at": observation_date,
+                "completed_at": observation_date,
+                "observed_at": observation_date,
+                "receipt_created_at": observation_date,
+                "exit_code": 0,
+                "status": OperationalStatus.SUCCESS.value,
+                "classification": "legacy_intake_terminal_accounting",
+                "run_id": str(payload.get("agent_run_id") or payload.get("source_watch_run_id") or path.stem),
+                "artifact_refs": {"legacy_intake": _as_repo_ref(repo_root, path)},
+                "publication_attempted": False,
+                "publication_status": "safe_no_op",
+                "public_side_effects": {},
+                "details": {
+                    "legacy_evidence": True,
+                    "discovered": discovered,
+                    "terminal_or_handoff": terminal,
+                    "retained_for_review": retained,
+                    "unaccounted": unaccounted,
+                },
+            }
+        )
+    if not receipts:
+        return (), None, None, ()
+    return tuple(receipts), max(reviewable_counts) if reviewable_counts else 0, max(unaccounted_counts), tuple(refs)
+
+
+def _load_food_completed_operator_recovery(repo_root: Path, observation_date: str) -> tuple[tuple[str, ...], tuple[str, ...], str | None]:
+    publication_state_root = repo_root / "data" / "dispatches" / "food-line" / "publication-state"
+    for publication_state in sorted(publication_state_root.glob("*.json")):
+        try:
+            state = _read_json(publication_state)
+        except json.JSONDecodeError:
+            continue
+        if state.get("schema_version") != "food_line_operator_recovery_publication_state_v1":
+            continue
+        if state.get("publication_completed") is not True or state.get("successful_live_verification") is not True:
+            continue
+        if state.get("september_10_original_production_status") != "failed":
+            continue
+        if state.get("september_10_production_reclassified") is not False:
+            continue
+        item_ids: list[str] = []
+        matches_observation_date = False
+        for item in state.get("published_items") or []:
+            run_id = str(item.get("original_agent_run_id") or "")
+            if run_id.startswith(f"food-line-source-watch-{observation_date.replace('-', '')}"):
+                matches_observation_date = True
+            item_id = str(item.get("item_id") or "")
+            if item_id:
+                item_ids.append(item_id)
+        if not matches_observation_date or not item_ids:
+            continue
+        refs = [_as_repo_ref(repo_root, publication_state)]
+        publication_sha = state.get("publication_authorization_sha256")
+        release_ref = repo_root / "releases" / "food-line" / "operator-recovery" / "september-10-food-line-operator-recovery-release-v1.json"
+        publication_auth = repo_root / "publication-authorizations" / "food-line" / "operator-recovery" / "september-10-food-line-operator-recovery-publication-v1.json"
+        if release_ref.exists():
+            refs.append(_as_repo_ref(repo_root, release_ref))
+        if publication_auth.exists():
+            refs.append(_as_repo_ref(repo_root, publication_auth))
+        notes = (
+            "Food Line operator recovery completed with recovery-disclosed publication; "
+            "original production observation remains failed and original discovery lineage is absent."
+        )
+        if publication_sha:
+            notes = f"{notes} Publication authorization {publication_sha}."
+        return tuple(item_ids), tuple(refs), notes
+    return (), (), None
+
+
+def _load_care_scheduler_receipts(runtime_root: Path, observation_date: str) -> tuple[dict[str, Any], ...]:
+    root = runtime_root / "status" / "care-line" / "scheduler-runs" / observation_date
+    if not root.exists():
+        return ()
+    receipts: list[dict[str, Any]] = []
+    for path in sorted(root.glob("*.json")):
+        try:
+            payload = _read_json(path)
+        except json.JSONDecodeError:
+            continue
+        status_text = str(payload.get("status") or payload.get("pipeline_status") or "").lower()
+        if status_text == "failure":
+            status = OperationalStatus.FAILED.value
+        elif status_text == "partial_success":
+            status = OperationalStatus.DEGRADED.value
+        elif status_text == "success":
+            status = OperationalStatus.SUCCESS.value
+        else:
+            status = OperationalStatus.DEGRADED.value
+        receipts.append(
+            {
+                "dispatch": "care-line",
+                "task_key": "care_line_collection",
+                "task_name": "Care Line collection scheduler",
+                "scheduled_for": str(payload.get("started_at") or observation_date),
+                "started_at": str(payload.get("started_at") or observation_date),
+                "completed_at": str(payload.get("completed_at") or observation_date),
+                "observed_at": str(payload.get("completed_at") or observation_date),
+                "receipt_created_at": str(payload.get("completed_at") or observation_date),
+                "exit_code": payload.get("pipeline_exit_code"),
+                "status": status,
+                "classification": "historical_scheduler_receipt",
+                "run_id": str(payload.get("run_id") or path.stem),
+                "artifact_refs": {"scheduler_receipt": str(path)},
+                "publication_attempted": False,
+                "publication_status": "safe_no_op",
+                "public_side_effects": payload.get("publication_side_effects") or {},
+                "details": {
+                    "historical_scheduler_receipt": True,
+                    "run_manifest_path": payload.get("run_manifest_path"),
+                    "successful_attempt_count": payload.get("successful_attempt_count"),
+                    "failed_source_count": payload.get("failed_source_count"),
+                },
+            }
+        )
+    return tuple(receipts)
+
+
+def _load_care_authoritative_collection(runtime_root: Path, observation_date: str) -> tuple[tuple[dict[str, Any], ...], int | None, int | None, tuple[str, ...], MaterialDegradation | None]:
+    root = runtime_root / "data" / "dispatches" / "care-line" / "collection-runs" / observation_date
+    if not root.exists():
+        return (), None, None, (), None
+    receipts: list[dict[str, Any]] = []
+    refs: list[str] = []
+    reviewable_counts: list[int] = []
+    unaccounted_values: list[int] = []
+    incomplete = False
+    for path in sorted(root.glob("*/run-manifest.json")):
+        try:
+            payload = _read_json(path)
+        except json.JSONDecodeError:
+            incomplete = True
+            continue
+        raw_count = payload.get("raw_items_retrieved_this_run")
+        prefilter_count = payload.get("prefilter_decision_count")
+        failed_extraction_count = int(payload.get("failed_extraction_count") or 0)
+        reviewable = int(payload.get("qualified_candidates_created_this_run") or payload.get("active_review_queue_count") or 0)
+        terminal_complete = isinstance(raw_count, int) and isinstance(prefilter_count, int) and raw_count == prefilter_count and failed_extraction_count == 0
+        refs.append(str(path))
+        if not terminal_complete:
+            incomplete = True
+            continue
+        reviewable_counts.append(reviewable)
+        unaccounted_values.append(0)
+        receipts.append(
+            {
+                "dispatch": "care-line",
+                "task_key": "care_line_collection",
+                "task_name": "Care Line authoritative collection manifest",
+                "scheduled_for": observation_date,
+                "started_at": str(payload.get("started_at") or observation_date),
+                "completed_at": str(payload.get("completed_at") or observation_date),
+                "observed_at": str(payload.get("completed_at") or observation_date),
+                "receipt_created_at": str(payload.get("completed_at") or observation_date),
+                "exit_code": 0,
+                "status": OperationalStatus.SUCCESS.value,
+                "classification": "authoritative_collection_terminal_accounting",
+                "run_id": str(payload.get("run_id") or path.parent.name),
+                "artifact_refs": {"collection_manifest": str(path)},
+                "publication_attempted": False,
+                "publication_status": "safe_no_op",
+                "public_side_effects": {},
+                "details": {"reviewable_events": reviewable, "unaccounted": 0},
+            }
+        )
+    if incomplete and not receipts:
+        degradation = MaterialDegradation(
+            material=True,
+            reason_codes=(GapReasonCode.HISTORICAL_EVIDENCE_INCOMPLETE,),
+            explanation="Care surviving collection artifacts do not prove terminal candidate accounting.",
+        )
+        receipts = (
+            {
+                "dispatch": "care-line",
+                "task_key": "care_line_collection",
+                "task_name": "Care Line incomplete historical collection evidence",
+                "scheduled_for": observation_date,
+                "started_at": observation_date,
+                "completed_at": observation_date,
+                "observed_at": observation_date,
+                "receipt_created_at": observation_date,
+                "exit_code": 1,
+                "status": OperationalStatus.DEGRADED.value,
+                "classification": "historical_collection_evidence_incomplete",
+                "run_id": f"care-line-{observation_date}-historical-evidence-incomplete",
+                "artifact_refs": {"collection_manifest": refs[0] if refs else str(root)},
+                "publication_attempted": False,
+                "publication_status": "safe_no_op",
+                "public_side_effects": {},
+                "details": {"historical_evidence_incomplete": True},
+            },
+        )
+    else:
+        degradation = None
+    return tuple(receipts), max(reviewable_counts) if reviewable_counts else None, max(unaccounted_values) if unaccounted_values else None, tuple(refs), degradation
 
 
 class DispatchCoverageAdapter:
@@ -792,6 +1038,41 @@ class FoodLineCoverageAdapter(DispatchCoverageAdapter):
     dispatch = "food-line"
     expected_tasks = ("food_line_source_watch", "food_line_source_watch_resume", "food_line_current_intake", "food_line_daily_publish")
 
+    def build_input(self, repo_root: Path, observation_date: str, *, evaluated_at: str, runtime_root: Path | None = None) -> EvaluationInput:
+        base = super().build_input(repo_root, observation_date, evaluated_at=evaluated_at, runtime_root=runtime_root)
+        recovered_ids, recovery_refs, recovery_notes = _load_food_completed_operator_recovery(repo_root, observation_date)
+        if recovered_ids:
+            return EvaluationInput(
+                **{
+                    **base.__dict__,
+                    "receipts": (),
+                    "expected_tasks": (),
+                    "recovered_event_ids": recovered_ids,
+                    "source_refs": tuple(dict.fromkeys((*base.source_refs, *recovery_refs))),
+                    "notes": recovery_notes,
+                }
+            )
+
+        if base.receipts:
+            return base
+
+        legacy_receipts, reviewable_count, unaccounted, refs = _load_food_legacy_intake(repo_root, observation_date, repo_root=repo_root)
+        if not legacy_receipts and runtime_root is not None:
+            legacy_receipts, reviewable_count, unaccounted, refs = _load_food_legacy_intake(runtime_root, observation_date, repo_root=repo_root)
+        if legacy_receipts:
+            return EvaluationInput(
+                **{
+                    **base.__dict__,
+                    "receipts": legacy_receipts,
+                    "expected_tasks": (),
+                    "retained_or_reviewable_count": reviewable_count,
+                    "unaccounted": unaccounted,
+                    "source_refs": tuple(dict.fromkeys((*base.source_refs, *refs))),
+                    "notes": "Food Line legacy intake/reconciliation evidence certifies terminal accounting.",
+                }
+            )
+        return base
+
 
 class CareLineCoverageAdapter(DispatchCoverageAdapter):
     dispatch = "care-line"
@@ -800,6 +1081,39 @@ class CareLineCoverageAdapter(DispatchCoverageAdapter):
     def build_input(self, repo_root: Path, observation_date: str, *, evaluated_at: str, runtime_root: Path | None = None) -> EvaluationInput:
         base = super().build_input(repo_root, observation_date, evaluated_at=evaluated_at, runtime_root=runtime_root)
         runtime = runtime_root
+        if runtime is not None and not base.receipts:
+            collection_receipts, reviewable_count, unaccounted, collection_refs, collection_degradation = _load_care_authoritative_collection(runtime, observation_date)
+            if collection_receipts:
+                base = EvaluationInput(
+                    **{
+                        **base.__dict__,
+                        "receipts": collection_receipts,
+                        "expected_tasks": (),
+                        "retained_or_reviewable_count": reviewable_count,
+                        "unaccounted": unaccounted,
+                        "source_refs": tuple(dict.fromkeys((*base.source_refs, *collection_refs))),
+                        "material_degradation": collection_degradation,
+                        "notes": "Care Line authoritative collection manifest certifies terminal accounting.",
+                    }
+                )
+            else:
+                scheduler_receipts = _load_care_scheduler_receipts(runtime, observation_date)
+                if scheduler_receipts:
+                    degradation = collection_degradation or MaterialDegradation(
+                        material=True,
+                        reason_codes=(GapReasonCode.HISTORICAL_EVIDENCE_INCOMPLETE,),
+                        explanation="Care scheduler receipts exist, but authoritative collection/review evidence is unavailable.",
+                    )
+                    base = EvaluationInput(
+                        **{
+                            **base.__dict__,
+                            "receipts": scheduler_receipts,
+                            "expected_tasks": (),
+                            "source_refs": tuple(dict.fromkeys((*base.source_refs, *self._artifact_refs(scheduler_receipts), *collection_refs))),
+                            "material_degradation": degradation,
+                            "notes": degradation.explanation,
+                        }
+                    )
         status = _load_dispatch_status(runtime, self.dispatch, observation_date) if runtime is not None else None
         expected_instances = _elapsed_expected_instances(
             tuple(status.get("expected_instances") or ()) if status else (),

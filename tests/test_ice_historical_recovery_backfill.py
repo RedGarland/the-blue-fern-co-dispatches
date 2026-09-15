@@ -66,12 +66,18 @@ def test_duplicate_and_follow_up_relationships_are_explicit() -> None:
 
 def test_observation_gap_records_transition_to_recovered() -> None:
     gaps = [_load(path) for path in sorted(GAP_ROOT.glob("2026-09-*.json"))]
+    by_date = {gap["observation_date"]: gap for gap in gaps}
 
-    assert {gap["observation_date"] for gap in gaps} == {"2026-09-07", "2026-09-09", "2026-09-13"}
-    assert {gap["observation_status"] for gap in gaps} == {"OBSERVED_WITH_FINDINGS"}
-    assert {gap["backfill_status"] for gap in gaps} == {"RECOVERED"}
-    assert {gap["recovered_at"] for gap in gaps} == {"2026-09-14"}
-    assert all(gap["recovered_event_ids"] for gap in gaps)
+    assert set(by_date) == {"2026-09-07", "2026-09-08", "2026-09-09", "2026-09-10", "2026-09-13"}
+    recovered = [by_date[day] for day in ("2026-09-07", "2026-09-09", "2026-09-13")]
+    confirmed_gaps = [by_date[day] for day in ("2026-09-08", "2026-09-10")]
+    assert {gap["observation_status"] for gap in recovered} == {"OBSERVED_WITH_FINDINGS"}
+    assert {gap["backfill_status"] for gap in recovered} == {"RECOVERED"}
+    assert {gap["recovered_at"] for gap in recovered} == {"2026-09-14"}
+    assert all(gap["recovered_event_ids"] for gap in recovered)
+    assert {gap["observation_status"] for gap in confirmed_gaps} == {"OBSERVATION_INCOMPLETE"}
+    assert {gap["backfill_status"] for gap in confirmed_gaps} == {"BACKFILL_REQUIRED"}
+    assert all(not gap["recovered_event_ids"] for gap in confirmed_gaps)
 
 
 def test_zero_qualifying_state_remains_distinct_from_incomplete_and_recovered() -> None:

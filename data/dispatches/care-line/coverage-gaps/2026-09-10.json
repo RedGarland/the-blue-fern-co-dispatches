@@ -10,6 +10,8 @@
   "gap_reason": "The requested September 10 terminal-accounting proof was not found; bounded recovery did not close the date because the special 909 raw / 673 deferred / 236 rejected / 0 qualified / 0 unaccounted proof remains missing.",
   "detected_at": "2026-09-15",
   "backfill_status": "BACKFILL_REQUIRED",
+  "recovery_investigation_status": "EVIDENCE_EXHAUSTED",
+  "reason_code": "historical_evidence_exhausted",
   "recovered_at": null,
   "recovered_event_ids": [],
   "observed_finding_count": 1,
@@ -29,5 +31,5 @@
       ]
     }
   ],
-  "notes": "No machine-readable proof of 909 raw rows, 673 deferred, 236 rejected, 0 qualified, and 0 unaccounted was found. Per the September 10 special requirement, the date remains unresolved."
+  "notes": "Bounded historical investigation completed: three partial-success scheduler receipts, no surviving authoritative collection artifacts, and no independent proof of 909 raw rows, 673 deferred, 236 rejected, 0 qualified, and 0 unaccounted. CMS candidates remain deferred; presently available evidence is exhausted."
 }

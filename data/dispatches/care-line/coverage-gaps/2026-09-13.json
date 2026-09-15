@@ -11,6 +11,8 @@
   "gap_reason": "The 06:00 PT collection failed and the two later partial-success collections left source failures; bounded recovery did not find a nonduplicate September 13 Care finding suitable to close the window.",
   "detected_at": "2026-09-15",
   "backfill_status": "BACKFILL_REQUIRED",
+  "recovery_investigation_status": "EVIDENCE_EXHAUSTED",
+  "reason_code": "historical_evidence_exhausted",
   "recovered_at": null,
   "recovered_event_ids": [],
   "observed_finding_count": 0,
@@ -30,5 +32,5 @@
       ]
     }
   ],
-  "notes": "Fenway Health was available September 13 but remains already recovered under the September 14 observation workflow; it is not reassigned to September 13."
+  "notes": "Bounded historical investigation completed: one failed scheduler attempt, two partial-success runs with 34 attempted/23 successful/11 failed sources, 328 raw items, 160 exclusions, 168 failed extractions, and 0 qualified; the same 11 sources failed across both runs and targeted inspection found no new qualifying recovery event. Material failed-source coverage prevents zero certification; presently available evidence is exhausted. Fenway Health remains assigned to the September 14 workflow."
 }

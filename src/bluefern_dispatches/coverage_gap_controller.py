@@ -35,6 +35,11 @@ class BackfillStatus(StrEnum):
     BACKFILL_NOT_REQUIRED = "BACKFILL_NOT_REQUIRED"
 
 
+class RecoveryInvestigationStatus(StrEnum):
+    ACTIVE = "ACTIVE"
+    EVIDENCE_EXHAUSTED = "EVIDENCE_EXHAUSTED"
+
+
 class GapReasonCode(StrEnum):
     SCHEDULED_RUN_FAILED = "scheduled_run_failed"
     SCHEDULED_RUN_MISSED = "scheduled_run_missed"
@@ -125,6 +130,7 @@ class EvaluationInput:
     material_degradation: MaterialDegradation | None = None
     durable_gap_record: dict[str, Any] | None = None
     notes: str | None = None
+    reopen_recovery_investigation: bool = False
 
 
 @dataclass(frozen=True)
@@ -165,6 +171,7 @@ class CoverageEvaluation:
     transition_history: tuple[TransitionRecord, ...] = ()
     notes: str | None = None
     source: str = "controller"
+    recovery_investigation_status: RecoveryInvestigationStatus = RecoveryInvestigationStatus.ACTIVE
 
     @property
     def unresolved(self) -> bool:
@@ -180,6 +187,8 @@ class CoverageEvaluation:
             "gap_reason": "; ".join(reason.value for reason in self.reason_codes),
             "detected_at": detected_at,
             "backfill_status": self.backfill_status.value,
+            "recovery_investigation_status": self.recovery_investigation_status.value,
+            "reason_code": "historical_evidence_exhausted" if self.recovery_investigation_status == RecoveryInvestigationStatus.EVIDENCE_EXHAUSTED else None,
             "recovered_at": recovered_at,
             "recovered_event_ids": list(self.recovered_event_ids),
             "observed_finding_count": self.observed_finding_count,
@@ -199,6 +208,7 @@ class CoverageEvaluation:
             "observation_date": self.observation_date,
             "observation_status": self.observation_status.value,
             "backfill_status": self.backfill_status.value,
+            "recovery_investigation_status": self.recovery_investigation_status.value,
             "reason_codes": [reason.value for reason in self.reason_codes],
             "first_detected_at": first_detected or last_evaluated_at,
             "last_evaluated_at": last_evaluated_at,
@@ -228,6 +238,11 @@ def validate_gap_record(record: dict[str, Any]) -> None:
             raise CoverageGapError(f"unsupported reason code: {reason}")
     if record.get("schema_version") not in {COVERAGE_GAP_SCHEMA_VERSION, "bluefern.ice.coverage_gap.v1"}:
         raise CoverageGapError(f"unsupported coverage gap schema: {record.get('schema_version')}")
+    investigation_status = record.get("recovery_investigation_status", RecoveryInvestigationStatus.ACTIVE.value)
+    if investigation_status not in {status.value for status in RecoveryInvestigationStatus}:
+        raise CoverageGapError(f"unsupported recovery investigation status: {investigation_status}")
+    if investigation_status == RecoveryInvestigationStatus.EVIDENCE_EXHAUSTED.value and record["backfill_status"] != BackfillStatus.BACKFILL_REQUIRED.value:
+        raise CoverageGapError("evidence-exhausted gaps must remain BACKFILL_REQUIRED")
 
 
 def durable_gap_path(repo_root: Path, dispatch: str, observation_date: str) -> Path:
@@ -265,6 +280,7 @@ def _from_durable_gap(record: dict[str, Any]) -> CoverageEvaluation:
         transition_history=_transition_history_from_record(record),
         notes=record.get("notes"),
         source="durable_gap_record",
+        recovery_investigation_status=RecoveryInvestigationStatus(str(record.get("recovery_investigation_status", RecoveryInvestigationStatus.ACTIVE.value))),
     )
 
 
@@ -421,7 +437,16 @@ def _required(evidence: EvaluationInput, previous: CoverageEvaluation | None, re
             evidence_refs=evidence.source_refs,
         ),
         notes=evidence.notes,
+        recovery_investigation_status=_investigation_status(evidence, previous),
     )
+
+
+def _investigation_status(evidence: EvaluationInput, previous: CoverageEvaluation | None) -> RecoveryInvestigationStatus:
+    if previous and previous.recovery_investigation_status == RecoveryInvestigationStatus.EVIDENCE_EXHAUSTED:
+        if evidence.reopen_recovery_investigation or evidence.recovery_candidate_count or evidence.recovery_candidate_refs or evidence.recovered_event_ids:
+            return RecoveryInvestigationStatus.ACTIVE
+        return RecoveryInvestigationStatus.EVIDENCE_EXHAUSTED
+    return RecoveryInvestigationStatus.ACTIVE
 
 
 def _in_review(evidence: EvaluationInput, previous: CoverageEvaluation | None) -> CoverageEvaluation:
@@ -449,6 +474,7 @@ def _in_review(evidence: EvaluationInput, previous: CoverageEvaluation | None) -
             evidence_refs=evidence.source_refs,
         ),
         notes=evidence.notes,
+        recovery_investigation_status=_investigation_status(evidence, previous),
     )
 
 
@@ -473,6 +499,7 @@ def _recovered(evidence: EvaluationInput, previous: CoverageEvaluation | None) -
             evidence_refs=evidence.source_refs,
         ),
         notes=evidence.notes,
+        recovery_investigation_status=_investigation_status(evidence, previous),
     )
 
 
@@ -494,6 +521,7 @@ def _with_findings_no_backfill(evidence: EvaluationInput, previous: CoverageEval
             evidence_refs=evidence.source_refs,
         ) if previous else (),
         notes=notes or evidence.notes,
+        recovery_investigation_status=_investigation_status(evidence, previous),
     )
 
 
@@ -513,6 +541,7 @@ def _complete_zero(evidence: EvaluationInput, previous: CoverageEvaluation | Non
             evidence_refs=evidence.source_refs,
         ) if previous else (),
         notes=notes or evidence.notes,
+        recovery_investigation_status=_investigation_status(evidence, previous),
     )
 
 
@@ -1229,7 +1258,11 @@ def evaluate_range(
 
 
 def build_backfill_queue(evaluations: Iterable[CoverageEvaluation], *, evaluated_at: str) -> dict[str, Any]:
-    unresolved = [row.to_queue_row(last_evaluated_at=evaluated_at) for row in evaluations if row.unresolved]
+    unresolved = [
+        row.to_queue_row(last_evaluated_at=evaluated_at)
+        for row in evaluations
+        if row.unresolved and row.recovery_investigation_status != RecoveryInvestigationStatus.EVIDENCE_EXHAUSTED
+    ]
     unresolved.sort(key=lambda row: (row["criticality"], row["dispatch"], row["observation_date"]))
     return {
         "schema_version": BACKFILL_QUEUE_SCHEMA_VERSION,
@@ -1313,6 +1346,7 @@ def cli(argv: list[str] | None = None) -> int:
                 "observation_date": row.observation_date,
                 "observation_status": row.observation_status.value,
                 "backfill_status": row.backfill_status.value,
+                "recovery_investigation_status": row.recovery_investigation_status.value,
                 "reason_codes": [reason.value for reason in row.reason_codes],
                 "evidence_refs": list(row.evidence_refs),
                 "recovered_event_ids": list(row.recovered_event_ids),

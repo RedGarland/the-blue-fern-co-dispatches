@@ -87,6 +87,7 @@ def _durable_record(dispatch: str = "food-line", status: str = "BACKFILL_NOT_REQ
         "observation_date": DATE,
         "observation_status": observation,
         "backfill_status": status,
+        "recovered_at": "2026-09-14T18:00:00Z" if status in {"RECOVERED", "BACKFILL_NOT_REQUIRED"} else None,
         "reason_codes": ["historical_recovery_completed"] if status == "RECOVERED" else [],
         "source_refs": ["old-source"],
         "transition_history": [
@@ -191,7 +192,7 @@ def test_late_source_discovery_can_reopen_recovered_date() -> None:
     assert result.transition_history[-1].new_backfill_status == "RECOVERY_IN_REVIEW"
 
 
-def test_durable_complete_reopens_on_failed_runtime_evidence() -> None:
+def test_durable_complete_ignores_same_original_failed_runtime_evidence() -> None:
     result = evaluate_observation(
         EvaluationInput(
             "food-line",
@@ -202,12 +203,47 @@ def test_durable_complete_reopens_on_failed_runtime_evidence() -> None:
         )
     )
 
+    assert result.backfill_status == BackfillStatus.BACKFILL_NOT_REQUIRED
+    assert result.observation_status == ObservationStatus.OBSERVED_ZERO_QUALIFYING
+    assert result.transition_history[-1].new_backfill_status == "BACKFILL_NOT_REQUIRED"
+
+
+def test_durable_complete_reopens_on_new_runtime_evidence() -> None:
+    new_receipt = _receipt("new-food-run", "FAILED")
+    new_receipt["completed_at"] = "2026-09-14T19:00:00Z"
+    result = evaluate_observation(
+        EvaluationInput(
+            "food-line",
+            DATE,
+            EVALUATED,
+            receipts=(new_receipt,),
+            durable_gap_record=_durable_record("food-line", "BACKFILL_NOT_REQUIRED"),
+        )
+    )
+
     assert result.backfill_status == BackfillStatus.BACKFILL_REQUIRED
     assert result.reason_codes == (GapReasonCode.SCHEDULED_RUN_FAILED,)
     assert result.transition_history[-1].previous_backfill_status == "BACKFILL_NOT_REQUIRED"
 
 
-def test_durable_complete_reopens_on_terminal_accounting_defect() -> None:
+def test_durable_complete_ignores_already_reconciled_terminal_accounting_defect() -> None:
+    durable = _durable_record("food-line", "BACKFILL_NOT_REQUIRED")
+    durable["reason_codes"] = ["terminal_accounting_incomplete", "historical_recovery_completed"]
+    result = evaluate_observation(
+        EvaluationInput(
+            "food-line",
+            DATE,
+            EVALUATED,
+            receipts=(_receipt(),),
+            unaccounted=1,
+            durable_gap_record=durable,
+        )
+    )
+
+    assert result.backfill_status == BackfillStatus.BACKFILL_NOT_REQUIRED
+
+
+def test_durable_complete_reopens_on_new_terminal_accounting_defect() -> None:
     result = evaluate_observation(
         EvaluationInput(
             "food-line",

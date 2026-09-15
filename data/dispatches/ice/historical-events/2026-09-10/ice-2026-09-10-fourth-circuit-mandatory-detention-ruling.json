@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.ice.historical_event.v1",
+  "dispatch": "ice",
+  "event_id": "ice-2026-09-10-fourth-circuit-mandatory-detention-ruling",
+  "canonical_event_id": "ice-2026-09-10-fourth-circuit-mandatory-detention-ruling",
+  "event_date": "2026-09-10",
+  "source_published_date": "2026-09-10",
+  "observation_date": "2026-09-10",
+  "recovered_at": "2026-09-14",
+  "recovery_provenance": "operator_recovered_public_source_recall_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/sep08-sep10-recovery-review.json",
+  "source_recovery_item_id": "ice-recovery-2026-09-10-fourth-circuit-mandatory-detention",
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "geography": "Fourth Circuit",
+    "category": "legal_policy_accountability",
+    "event_type": "appellate_rejection_mandatory_detention_without_bond"
+  },
+  "headline": "Fourth Circuit rejects mandatory detention policy without bond hearings for covered noncitizens",
+  "bounded_summary": "The Fourth Circuit affirmed habeas relief in Lopez Garcia v. Guadian and rejected the government's newer interpretation that would subject covered noncitizens to mandatory detention without bond hearings. The ruling materially constrained ICE detention policy within the circuit.",
+  "source_sufficiency": "primary_published_appellate_opinion_with_legal_organization_summary",
+  "corroboration_status": "corroborated",
+  "materiality": "material_appellate_constraint_on_ice_detention_and_bond_policy",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "U.S. Court of Appeals for the Fourth Circuit",
+      "source_url": "https://www.ca4.uscourts.gov/opinions/257044.P.pdf",
+      "source_publication_date": "2026-09-10",
+      "source_role": "primary_appellate_opinion"
+    },
+    {
+      "publisher": "American Civil Liberties Union",
+      "source_url": "https://www.aclu.org/press-releases/federal-appeals-court-rules-against-trump-mandatory-detention-policy",
+      "source_publication_date": "2026-09-10",
+      "source_role": "litigant_legal_summary"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

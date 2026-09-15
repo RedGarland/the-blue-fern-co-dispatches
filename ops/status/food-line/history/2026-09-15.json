@@ -10,28 +10,26 @@
     "state": "HANDOFF_RECEIVED_SUCCESS",
     "unaccounted_count": 0
   },
-  "aggregate_status": "STALE_OBSERVABILITY",
+  "aggregate_status": "DEGRADED",
   "dispatch": "food-line",
-  "incident_reference": {
-    "date": "2026-09-15"
-  },
-  "last_exported_at": "2026-09-15T14:15:10.904681Z",
-  "last_receipt_at": "2026-09-15T13:10:09.465222Z",
-  "latest_runtime_proof_date": "2026-09-15T13:10:09.465222Z",
+  "incident_reference": null,
+  "last_exported_at": "2026-09-15T16:15:08.599225Z",
+  "last_receipt_at": "2026-09-15T15:30:01.773551Z",
+  "latest_runtime_proof_date": "2026-09-15T15:30:01.773551Z",
   "next_expected_run": null,
   "observed_date": "2026-09-15",
   "public_side_effects": {
     "publication_attempted": false,
-    "publication_status": null
+    "publication_status": "skipped_not_release_ready"
   },
   "publication_attempted": false,
-  "publication_status": null,
-  "receipt_completeness": "PARTIAL",
-  "recovery_lifecycle": "INCIDENT_OPEN",
+  "publication_status": "skipped_not_release_ready",
+  "receipt_completeness": "COMPLETE",
+  "recovery_lifecycle": "HEALTHY",
   "runner_source_head": "6761d13db1c5e2e1609e16075c2b9ba18c5b3925",
   "schema_version": "bluefern_external_operational_status_v1",
   "stale_after": "2026-09-15T14:00:00Z",
-  "stale_observability": true,
+  "stale_observability": false,
   "task_summaries": [
     {
       "artifact_id": "20260915T131009Z-current-intake.json",
@@ -54,6 +52,21 @@
       "started_at": "2026-09-15T13:10:03.166183Z",
       "status": "SUCCESS",
       "task_key": "food_line_current_intake"
+    },
+    {
+      "artifact_id": "164-ee51a9bf.json",
+      "classification": "skipped_not_release_ready",
+      "completed_at": "2026-09-15T15:30:01.7735510Z",
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {},
+      "publication_attempted": false,
+      "publication_status": "skipped_not_release_ready",
+      "run_id": "20260915T153001Z-164-a1d2bdb1",
+      "scheduled_for": "2026-09-15",
+      "started_at": "2026-09-15T15:30:01.7255494Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "food_line_daily_publish"
     },
     {
       "artifact_id": "20260915T123752Z-source-watch.json",

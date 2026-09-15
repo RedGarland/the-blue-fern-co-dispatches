@@ -13,6 +13,7 @@ from bluefern_dispatches.coverage_gap_controller import (
     GapReasonCode,
     MaterialDegradation,
     ObservationStatus,
+    RecoveryInvestigationStatus,
     build_backfill_queue,
     evaluate_dispatch_date,
     evaluate_observation,
@@ -646,6 +647,88 @@ def test_controller_queue_has_no_public_authority_and_writes_only_runtime_path(t
     assert queue["public_generation_authorized"] is False
     assert queue["pages_authorized"] is False
     assert queue["summary"]["unresolved_count"] == 1
+
+
+def test_evidence_exhausted_gap_remains_incomplete_but_is_suppressed_from_queue() -> None:
+    durable = _durable_record("care-line", "BACKFILL_REQUIRED")
+    durable.update(
+        {
+            "recovery_investigation_status": "EVIDENCE_EXHAUSTED",
+            "reason_code": "historical_evidence_exhausted",
+        }
+    )
+
+    result = evaluate_observation(
+        EvaluationInput(
+            "care-line",
+            "2026-09-10",
+            EVALUATED,
+            durable_gap_record=durable,
+        )
+    )
+
+    assert result.observation_status == ObservationStatus.OBSERVATION_INCOMPLETE
+    assert result.backfill_status == BackfillStatus.BACKFILL_REQUIRED
+    assert result.recovery_investigation_status == RecoveryInvestigationStatus.EVIDENCE_EXHAUSTED
+    queue = build_backfill_queue([result], evaluated_at=EVALUATED)
+    assert queue["rows"] == []
+
+
+def test_new_recovery_evidence_reopens_exhausted_investigation() -> None:
+    durable = _durable_record("care-line", "BACKFILL_REQUIRED")
+    durable["recovery_investigation_status"] = "EVIDENCE_EXHAUSTED"
+
+    result = evaluate_observation(
+        EvaluationInput(
+            "care-line",
+            "2026-09-10",
+            EVALUATED,
+            recovery_candidate_refs=("new-evidence.json",),
+            recovery_candidate_count=1,
+            durable_gap_record=durable,
+        )
+    )
+
+    assert result.backfill_status == BackfillStatus.RECOVERY_IN_REVIEW
+    assert result.recovery_investigation_status == RecoveryInvestigationStatus.ACTIVE
+    queue = build_backfill_queue([result], evaluated_at=EVALUATED)
+    assert len(queue["rows"]) == 1
+
+
+def test_exhausted_gap_record_validates_without_public_authority() -> None:
+    durable = _durable_record("care-line", "BACKFILL_REQUIRED")
+    durable.update(
+        {
+            "recovery_investigation_status": "EVIDENCE_EXHAUSTED",
+            "reason_code": "historical_evidence_exhausted",
+            "publication_authorized": False,
+            "public_generation_authorized": False,
+            "pages_authorized": False,
+        }
+    )
+    validate_gap_record(durable)
+
+
+def test_care_residual_gap_records_preserve_incomplete_truth_and_exhausted_lifecycle() -> None:
+    records = []
+    for observation_date in ("2026-09-07", "2026-09-10", "2026-09-13"):
+        path = Path("data/dispatches/care-line/coverage-gaps") / f"{observation_date}.json"
+        record = json.loads(path.read_text(encoding="utf-8"))
+        validate_gap_record(record)
+        records.append(record)
+
+    assert all(record["observation_status"] == "OBSERVATION_INCOMPLETE" for record in records)
+    assert all(record["backfill_status"] == "BACKFILL_REQUIRED" for record in records)
+    assert all(record["recovery_investigation_status"] == "EVIDENCE_EXHAUSTED" for record in records)
+    assert all(record["reason_code"] == "historical_evidence_exhausted" for record in records)
+    assert all(record["transition_history"] for record in records)
+
+    evaluations = [evaluate_dispatch_date(Path("."), "care-line", record["observation_date"], evaluated_at=EVALUATED) for record in records]
+    queue = build_backfill_queue(evaluations, evaluated_at=EVALUATED)
+    assert queue["rows"] == []
+    assert queue["publication_authorized"] is False
+    assert queue["public_generation_authorized"] is False
+    assert queue["pages_authorized"] is False
 
 
 def test_cli_dry_run_reports_without_writing_runtime_queue(tmp_path: Path) -> None:

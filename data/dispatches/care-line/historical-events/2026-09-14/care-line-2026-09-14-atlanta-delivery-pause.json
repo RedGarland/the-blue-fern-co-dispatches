@@ -1,0 +1,44 @@
+{
+  "schema_version": "bluefern.care_line.historical_event.v1",
+  "dispatch": "care-line",
+  "event_id": "care-line-2026-09-14-atlanta-delivery-pause",
+  "canonical_event_id": "care-line-2026-09-14-atlanta-delivery-pause",
+  "event_date": "2026-09-14",
+  "source_published_date": "2026-09-14",
+  "observation_date": "2026-09-14",
+  "recovered_at": "2026-09-14",
+  "effective_date": "2026-09-30",
+  "recovery_provenance": "operator_recovered_external_source_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/food-care/2026-09-14/recovery-review-intake.json",
+  "editorial_review_artifact": "data/private-agent-handoff/discovery-recovery/food-care/2026-09-14/editorial-review.json",
+  "source_recovery_item_id": "care-line-2026-09-14-atlanta-birth-center-transition",
+  "production_run_id": "20260914-1ea560ce58ab-02",
+  "production_artifact_present": false,
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "geography": "Atlanta, Georgia",
+    "facility": "Atlanta Birth Center",
+    "category": "maternity_service_transition",
+    "event_type": "birth_center_delivery_pause"
+  },
+  "headline": "Atlanta Birth Center will pause birth-center deliveries during transition",
+  "bounded_summary": "Atlanta Birth Center announced it will pause birth-center deliveries effective September 30 while transitioning facilities; prenatal, postpartum, gynecology, home-birth, and planned hospital-birth support continue.",
+  "source_sufficiency": "sufficient_single_traceable_provider_announcement_for_bounded_service_transition",
+  "materiality": "material planned delivery-service access change; not a total maternity-service closure",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "Atlanta Birth Center",
+      "source_url": "https://www.atlantabirthcenter.org/transition",
+      "source_publication_date": "2026-09-14",
+      "source_role": "provider_announcement"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

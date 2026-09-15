@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.care_line.historical_event.v1",
+  "dispatch": "care-line",
+  "event_id": "care-line-2026-09-11-fenway-it-disruption",
+  "canonical_event_id": "care-line-2026-09-11-fenway-it-disruption",
+  "event_date": "2026-09-11",
+  "source_published_date": "2026-09-13",
+  "observation_date": "2026-09-14",
+  "recovered_at": "2026-09-14",
+  "recovery_provenance": "operator_recovered_external_source_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/food-care/2026-09-14/recovery-review-intake.json",
+  "editorial_review_artifact": "data/private-agent-handoff/discovery-recovery/food-care/2026-09-14/editorial-review.json",
+  "source_recovery_item_id": "care-line-2026-09-14-fenway-health-it-incident",
+  "production_run_id": "20260914-1ea560ce58ab-02",
+  "production_artifact_present": false,
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "geography": "Boston, Massachusetts",
+    "facility": "Fenway Health",
+    "category": "clinic_service_disruption",
+    "event_type": "it_incident_walk_in_clinic_cancellation"
+  },
+  "headline": "Fenway Health IT incident disrupted communications and cancelled sexual-health walk-in clinic hours",
+  "bounded_summary": "Fenway Health posted that its Sexual Health Walk-In Clinic was cancelled for Friday morning and that patient communications could be delayed while the organization responded to an IT incident.",
+  "source_sufficiency": "traceable_provider_notice_with_corresponding local report",
+  "materiality": "material temporary care-access disruption involving clinic-hours cancellation and patient-communication delays",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "Fenway Health",
+      "source_url": "https://fenwayhealth.org/care/medical/std-testing-services/",
+      "source_publication_date": "2026-09-13",
+      "source_role": "provider_notice"
+    },
+    {
+      "publisher": "Axios Boston",
+      "source_url": "https://www.axios.com/local/boston/2026/09/13/fenway-health-it-incident",
+      "source_publication_date": "2026-09-13",
+      "source_role": "corroborating_local_report"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

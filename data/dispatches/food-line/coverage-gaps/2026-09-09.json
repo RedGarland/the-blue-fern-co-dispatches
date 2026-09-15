@@ -1,0 +1,20 @@
+{
+  "schema_version": "bluefern.coverage_gap.v1",
+  "dispatch": "food-line",
+  "observation_date": "2026-09-09",
+  "observation_status": "OBSERVED_ZERO_QUALIFYING",
+  "backfill_status": "BACKFILL_NOT_REQUIRED",
+  "reason_codes": [
+    "scheduled_run_missed",
+    "historical_recovery_completed"
+  ],
+  "detected_at": "2026-09-15T02:24:31Z",
+  "recovered_at": "2026-09-15T02:45:00Z",
+  "observed_finding_count": 0,
+  "recovered_event_ids": [],
+  "source_refs": [
+    "data/private-agent-handoff/discovery-recovery/food-line/2026-09-15/audits/2026-09-09.json",
+    "data/private-agent-handoff/discovery-recovery/food-line/2026-09-15/observation-window-audit.json"
+  ],
+  "notes": "Bounded reconciliation found no qualifying nonduplicate Food Line development that could be faithfully bound to the September 9 05:30 PT observation window. September 10 operator-recovery items were excluded from this repair."
+}

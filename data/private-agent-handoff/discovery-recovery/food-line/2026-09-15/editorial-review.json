@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.food_line.discovery_recovery_editorial_review.v1",
+  "dispatch": "food-line",
+  "protected_source_commit": "e3357f7139be8330ec4ef6e042ed4c1343429568",
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/food-line/2026-09-15/recovery-review-intake.json",
+  "observation_audit_artifact": "data/private-agent-handoff/discovery-recovery/food-line/2026-09-15/observation-window-audit.json",
+  "reviewed_at": "2026-09-15T02:45:00Z",
+  "review_scope": "bounded_historical_recovery_non_public",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false,
+  "items": [
+    {
+      "item_id": "food-line-2026-09-11-arizona-snap-interview-call-failures",
+      "observed_date": "2026-09-11",
+      "disposition": "approved_duplicate_only",
+      "relationship_to_existing_event": "duplicate_coverage",
+      "canonical_event_id": "food-line-event-d4fa8128a5e347bfad2bd4b9",
+      "duplicate_target": "data/agent-history/food-line/reviews/recovery-decisions/ca591d5e0fb79dc832a0fdee261b91c6/food-line-event-d4fa8128a5e347bfad2bd4b9.json",
+      "historical_record_created": null,
+      "reason": "Arizona SNAP access barriers and food-bank reliance are already represented by the existing Phoenix food-box demand and Arizona SNAP contraction event; this source adds corroboration, not a distinct Food Line historical event."
+    },
+    {
+      "item_id": "food-line-2026-09-11-onondaga-pantry-infrastructure-snap-loss",
+      "observed_date": "2026-09-12",
+      "disposition": "approved",
+      "relationship_to_existing_event": "new_event",
+      "canonical_event_id": "food-line-2026-09-11-onondaga-pantry-infrastructure-snap-loss",
+      "historical_record_created": "data/dispatches/food-line/historical-events/2026-09-11/food-line-2026-09-11-onondaga-pantry-infrastructure-snap-loss.json",
+      "reason": "The official county source identifies a concrete emergency-food infrastructure limit tied to SNAP benefit losses and rising pantry demand."
+    },
+    {
+      "item_id": "food-line-2026-09-12-northern-illinois-food-bank-demand",
+      "observed_date": "2026-09-12",
+      "disposition": "approved",
+      "relationship_to_existing_event": "new_event",
+      "canonical_event_id": "food-line-2026-09-12-northern-illinois-food-bank-demand",
+      "historical_record_created": "data/dispatches/food-line/historical-events/2026-09-12/food-line-2026-09-12-northern-illinois-food-bank-demand.json",
+      "reason": "The report gives a traceable 13-county service area, current service volume, and demand above pandemic levels."
+    },
+    {
+      "item_id": "food-line-2026-09-12-texas-snap-application-backlog",
+      "observed_date": "2026-09-13",
+      "disposition": "approved",
+      "relationship_to_existing_event": "new_event",
+      "canonical_event_id": "food-line-2026-09-12-texas-snap-application-backlog",
+      "historical_record_created": "data/dispatches/food-line/historical-events/2026-09-12/food-line-2026-09-12-texas-snap-application-backlog.json",
+      "reason": "The source documents a statewide new-application backlog and North Texas food-bank demand context distinct from the earlier September 10 redetermination-delay story."
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": "bluefern.food_line.historical_event.v1",
+  "dispatch": "food-line",
+  "event_id": "food-line-2026-09-12-texas-snap-application-backlog",
+  "canonical_event_id": "food-line-2026-09-12-texas-snap-application-backlog",
+  "event_date": "2026-09-12",
+  "source_published_date": "2026-09-12",
+  "observation_date": "2026-09-13",
+  "recovered_at": "2026-09-15",
+  "recovery_provenance": "operator_recovered_public_source_recall_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/food-line/2026-09-15/recovery-review-intake.json",
+  "editorial_review_artifact": "data/private-agent-handoff/discovery-recovery/food-line/2026-09-15/editorial-review.json",
+  "source_recovery_item_id": "food-line-2026-09-12-texas-snap-application-backlog",
+  "production_run_id": "food-line-scheduled-20260913-20260913T123001Z-3c6928ff",
+  "production_artifact_present": false,
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "category": "benefit_access_pressure",
+    "event_type": "snap_application_backlog",
+    "geography": "Texas",
+    "service": "SNAP and food-bank assistance"
+  },
+  "headline": "Texas SNAP application backlog exceeded 150,000 pending cases",
+  "bounded_summary": "Reporting carrying Dallas Morning News material said Texas' SNAP backlog for new applications exceeded 150,000 pending cases in August, while SNAP caseloads fell and North Texas food banks reported higher demand.",
+  "source_sufficiency": "single_traceable_public_source_with_explicit_dallas_morning_news_attribution",
+  "materiality": "material statewide benefit-access pressure with food-bank demand context",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "Chili Chili, carrying Dallas Morning News reporting",
+      "source_url": "https://www.chilichili.net/393719/texas-snap-application-backlog-skyrockets-as-families-lose-benefits/",
+      "source_publication_date": "2026-09-12",
+      "source_role": "public republication of local_news_reporting"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

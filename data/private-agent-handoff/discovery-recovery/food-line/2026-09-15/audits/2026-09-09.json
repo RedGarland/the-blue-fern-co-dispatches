@@ -1,0 +1,22 @@
+{
+  "schema_version": "bluefern.food_line.discovery_recovery_per_date_audit.v1",
+  "dispatch": "food-line",
+  "observation_date": "2026-09-09",
+  "protected_source_commit": "e3357f7139be8330ec4ef6e042ed4c1343429568",
+  "production_runtime_state": {
+    "natural_source_watch_evidence": "missing",
+    "controller_reason_code_before_recovery": "scheduled_run_missed",
+    "candidate_artifacts_found": 0,
+    "unaccounted_production_candidates": 0
+  },
+  "bounded_research_outcome": "explicit_zero_after_bounded_research",
+  "recovered_event_ids": [],
+  "duplicate_only_items": [],
+  "historical_records_created": [],
+  "publication_authorized": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false,
+  "publication_performed": false,
+  "manual_production_task_triggered": false,
+  "notes": "No qualifying nonduplicate Food Line development could be faithfully bound to the September 9 natural observation window after excluding September 10 operator-recovery items."
+}

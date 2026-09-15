@@ -12,8 +12,8 @@
   },
   "aggregate_status": "STALE_OBSERVABILITY",
   "dispatch": "care-line",
-  "last_exported_at": "2026-09-15T17:15:08.139598Z",
-  "last_receipt_at": "2026-09-15T15:30:10.937434Z",
+  "last_exported_at": "2026-09-15T19:15:07.079014Z",
+  "last_receipt_at": "2026-09-15T19:03:45.346326Z",
   "latest_runtime_proof_date": "2026-09-15T15:30:10Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
@@ -37,7 +37,7 @@
   "stale_observability": true,
   "task_summaries": [
     {
-      "artifact_id": "20260915T130001Z-32180.json",
+      "artifact_id": "20260915T190001Z-15672.json",
       "classification": "partial_success",
       "completed_at": "2026-09-15T01:02:19Z",
       "exit_code": 0,
@@ -65,7 +65,7 @@
       "task_key": "care_line_collection"
     },
     {
-      "artifact_id": "20260915T130001Z-32180.json",
+      "artifact_id": "20260915T190001Z-15672.json",
       "classification": "partial_success",
       "completed_at": "2026-09-15T13:02:26Z",
       "exit_code": 0,
@@ -131,6 +131,34 @@
       "started_at": "2026-09-15T15:30:02Z",
       "status": "SAFE_NO_OP",
       "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "20260915T190001Z-15672.json",
+      "classification": "partial_success",
+      "completed_at": "2026-09-15T19:03:45Z",
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "bluesky_publication": false,
+        "edition_generation": false,
+        "map": false,
+        "pages_sync": false,
+        "podcast": false,
+        "proposal_approval": false,
+        "public_site_updates": false,
+        "release_manifest_generation": false,
+        "rss_publication": false,
+        "signal_wire_publication": false,
+        "social_cards": false
+      },
+      "publication_attempted": null,
+      "publication_status": null,
+      "run_id": "20260915T190001Z-15672",
+      "scheduled_for": "2026-09-15T19:00:03Z",
+      "started_at": "2026-09-15T19:00:03Z",
+      "status": "DEGRADED",
+      "task_key": "care_line_collection"
     }
   ]
 }

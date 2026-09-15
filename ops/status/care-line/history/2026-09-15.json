@@ -12,9 +12,9 @@
   },
   "aggregate_status": "MISSED",
   "dispatch": "care-line",
-  "last_exported_at": "2026-09-15T13:15:13.554742Z",
-  "last_receipt_at": "2026-09-15T13:02:26.208291Z",
-  "latest_runtime_proof_date": null,
+  "last_exported_at": "2026-09-15T15:15:08.449640Z",
+  "last_receipt_at": "2026-09-15T15:00:04.440728Z",
+  "latest_runtime_proof_date": "2026-09-15T15:00:04.437841Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
   "observed_date": "2026-09-15",
@@ -91,6 +91,26 @@
       "started_at": "2026-09-15T13:00:02Z",
       "status": "DEGRADED",
       "task_key": "care_line_collection"
+    },
+    {
+      "artifact_id": "20260915T150004Z-cb10b5cf.json",
+      "classification": "nothing_to_publish",
+      "completed_at": "2026-09-15T15:00:04.437841Z",
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "bluesky_publication": false,
+        "pages_sync": false,
+        "publication": false,
+        "queue_mutation": true
+      },
+      "publication_attempted": null,
+      "publication_status": null,
+      "run_id": "20260915T150004Z-cb10b5cf",
+      "scheduled_for": "2026-09-15",
+      "started_at": "2026-09-15T15:00:04.432721Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_reviewed_event_queue"
     }
   ]
 }

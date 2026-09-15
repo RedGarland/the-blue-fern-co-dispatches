@@ -1,0 +1,35 @@
+{
+  "schema_version": "bluefern.ice.coverage_recovery_audit.v1",
+  "dispatch": "ice",
+  "observation_date": "2026-09-10",
+  "recovery_date": "2026-09-14",
+  "original_gap_reason": "missing_original_artifact",
+  "research_scope": "Bounded recovery of material ICE developments newly source-available by September 10, with overlap checks against the recovered September 9 record and adjacent successful observations.",
+  "source_categories_examined": [
+    "federal_appellate_detention_policy",
+    "detention_transfer_operations",
+    "detention_capacity",
+    "detention_conditions_and_oversight",
+    "legal_filings"
+  ],
+  "approved_item_ids": [
+    "ice-recovery-2026-09-10-fourth-circuit-mandatory-detention",
+    "ice-recovery-2026-09-10-tacoma-transfer-wave",
+    "ice-recovery-2026-09-10-leavenworth-capacity-expansion"
+  ],
+  "approved_count": 3,
+  "duplicate_count": 0,
+  "deferred_count": 0,
+  "outside_gap_attribution": [
+    "Phoenix ICE field-office conditions reporting was source-available September 9 and should first be reconciled against the September 9 observation rather than silently assigned to September 10."
+  ],
+  "reviewed_not_inserted": [
+    "September 10 polling-place and Maryland warrantless-arrest lawsuits were reviewed but not inserted because this bounded batch already captured the stronger appellate policy ruling and the filings had not yet produced a distinct operational consequence."
+  ],
+  "coverage_certification": "sufficient_for_bounded_recovery_with_findings",
+  "recommended_observation_status": "OBSERVED_WITH_FINDINGS",
+  "recommended_backfill_status": "RECOVERED",
+  "publication_authorized": false,
+  "pages_authorized": false,
+  "notes": "The bounded recovery distinguishes September 10 source availability from underlying event dates; the Leavenworth site visit occurred September 9 but became source-observable on September 10."
+}

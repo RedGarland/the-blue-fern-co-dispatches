@@ -1,0 +1,192 @@
+{
+  "schema_version": "bluefern.ice.discovery_recovery_editorial_review.v1",
+  "dispatch": "ice",
+  "recovery_date": "2026-09-14",
+  "recovery_provenance": "operator_recovered_public_source_recall_evidence",
+  "scope": "bounded_historical_recovery_for_missing_2026-09-08_and_2026-09-10_monitor_artifacts",
+  "original_production_discovery_lineage_present": false,
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false,
+  "items": [
+    {
+      "item_id": "ice-recovery-2026-09-08-irs-taxpayer-data-sharing",
+      "observation_date": "2026-09-08",
+      "event_date": "2026-09-08",
+      "source_publication_date": "2026-09-08",
+      "headline": "D.C. Circuit blocks IRS policy used to share taxpayer addresses with ICE",
+      "category": "legal_policy_accountability",
+      "severity": "high",
+      "relationship_to_existing_event": "new_event",
+      "review_disposition": "approved",
+      "source_sufficiency": "primary_appellate_opinion_with_reuters_reporting",
+      "corroboration_status": "corroborated",
+      "bounded_summary": "The D.C. Circuit upheld an injunction blocking the IRS data-exchange procedure used to provide taxpayer address information to ICE, finding that the procedure failed to satisfy federal tax-privacy requirements. Reuters reported that the IRS had disclosed roughly 47,000 taxpayer addresses after ICE sought information on approximately 1.28 million people.",
+      "sources": [
+        {
+          "publisher": "U.S. Court of Appeals for the D.C. Circuit",
+          "source_url": "https://media.cadc.uscourts.gov/opinions/docs/2026/09/26-5006-2191763.pdf",
+          "source_publication_date": "2026-09-08",
+          "source_tier": 1
+        },
+        {
+          "publisher": "Reuters",
+          "source_url": "https://www.reuters.com/legal/government/irs-under-trump-unlawfully-shared-taxpayer-info-with-immigration-authorities-2026-09-08/",
+          "source_publication_date": "2026-09-08",
+          "source_tier": 2
+        }
+      ]
+    },
+    {
+      "item_id": "ice-recovery-2026-09-08-state-college-transfer-flight-surge",
+      "observation_date": "2026-09-08",
+      "event_date": "2026-09-08",
+      "source_publication_date": "2026-09-08",
+      "headline": "ICE transfer flights surge through State College Regional Airport",
+      "category": "detention_transfer_operations",
+      "severity": "medium",
+      "relationship_to_existing_event": "new_event",
+      "review_disposition": "approved",
+      "source_sufficiency": "investigative_local_reporting_with_airport_confirmation_and_attributed_flight_data",
+      "corroboration_status": "partially_corroborated",
+      "bounded_summary": "Spotlight PA documented a sharp expansion of ICE-chartered transfer flights through State College Regional Airport near Moshannon Valley Processing Center. Penn State confirmed an apparent increase in DHS/ICE-associated charter flights, while Human Rights First data cited by the outlet counted 107 ICE flights through July 2026 compared with two in all of 2025.",
+      "sources": [
+        {
+          "publisher": "Spotlight PA",
+          "source_url": "https://www.spotlightpa.org/statecollege/2026/09/penn-state-state-college-airport-ice-detention-flights-moshannon-immigration/",
+          "source_publication_date": "2026-09-08",
+          "source_tier": 2
+        }
+      ]
+    },
+    {
+      "item_id": "ice-recovery-2026-09-08-danville-workplace-arrests",
+      "observation_date": "2026-09-08",
+      "event_date": "2026-09-08",
+      "source_publication_date": "2026-09-08",
+      "headline": "Advocates report nearly 50 construction-worker arrests in Danville ICE operations",
+      "category": "enforcement_operation",
+      "severity": "medium",
+      "relationship_to_existing_event": "new_event",
+      "review_disposition": "approved",
+      "source_sufficiency": "strong_local_reporting_with_attributed_advocacy_counts_and_partial_site_confirmation",
+      "corroboration_status": "official_ice_response_unavailable_at_publication",
+      "bounded_summary": "The Philadelphia Inquirer reported that immigration advocates said at least 49 construction workers were arrested in two operations near a Geisinger Medical Center construction project, including eight arrests on September 8 and 41 on September 2. Geisinger confirmed law-enforcement activity connected to the project on September 2; ICE and DHS did not provide comment by publication time, so the arrest count remains explicitly attributed to advocates.",
+      "sources": [
+        {
+          "publisher": "The Philadelphia Inquirer",
+          "source_url": "https://www.inquirer.com/news/ice-arrests-immigrants-danville-pennsylvania-20260908.html",
+          "source_publication_date": "2026-09-08",
+          "source_tier": 2
+        }
+      ]
+    },
+    {
+      "item_id": "ice-recovery-2026-09-10-fourth-circuit-mandatory-detention",
+      "observation_date": "2026-09-10",
+      "event_date": "2026-09-10",
+      "source_publication_date": "2026-09-10",
+      "headline": "Fourth Circuit rejects mandatory ICE detention without bond hearings for covered noncitizens",
+      "category": "legal_policy_accountability",
+      "severity": "high",
+      "relationship_to_existing_event": "new_event",
+      "review_disposition": "approved",
+      "source_sufficiency": "primary_published_appellate_opinion_with_legal_organization_summary",
+      "corroboration_status": "corroborated",
+      "bounded_summary": "The Fourth Circuit affirmed habeas relief in Lopez Garcia v. Guadian and rejected the government's newer interpretation that would subject covered noncitizens to mandatory detention without bond hearings. The ruling was a material appellate constraint on ICE detention policy within the circuit.",
+      "sources": [
+        {
+          "publisher": "U.S. Court of Appeals for the Fourth Circuit",
+          "source_url": "https://www.ca4.uscourts.gov/opinions/257044.P.pdf",
+          "source_publication_date": "2026-09-10",
+          "source_tier": 1
+        },
+        {
+          "publisher": "American Civil Liberties Union",
+          "source_url": "https://www.aclu.org/press-releases/federal-appeals-court-rules-against-trump-mandatory-detention-policy",
+          "source_publication_date": "2026-09-10",
+          "source_tier": 3
+        }
+      ]
+    },
+    {
+      "item_id": "ice-recovery-2026-09-10-tacoma-transfer-wave",
+      "observation_date": "2026-09-10",
+      "event_date": "2026-09-10",
+      "source_publication_date": "2026-09-10",
+      "headline": "ICE moves hundreds out of Tacoma detention center in wave of interstate transfers",
+      "category": "detention_transfer_operations",
+      "severity": "high",
+      "relationship_to_existing_event": "new_event",
+      "review_disposition": "approved",
+      "source_sufficiency": "major_regional_reporting_with_county_flight_monitoring_and_family_accounts",
+      "corroboration_status": "corroborated_for_transfer_pattern_with_some_counts_from_local_monitoring",
+      "bounded_summary": "Seattle Times reporting republished by The Spokesman-Review documented an unprecedented wave of transfers from the Northwest ICE Processing Center in Tacoma, including roughly 95 people on one flight and about 400 people placed on ICE flights from Boeing Field during one week at the end of August according to county flight monitoring. Families and attorneys reported little advance notice about destinations.",
+      "sources": [
+        {
+          "publisher": "The Seattle Times / The Spokesman-Review",
+          "source_url": "https://www.spokesman.com/stories/2026/sep/10/ice-moves-hundreds-from-wa-detention-center-as-it-/",
+          "source_publication_date": "2026-09-10",
+          "source_tier": 2
+        }
+      ]
+    },
+    {
+      "item_id": "ice-recovery-2026-09-10-leavenworth-capacity-expansion",
+      "observation_date": "2026-09-10",
+      "event_date": "2026-09-09",
+      "source_publication_date": "2026-09-10",
+      "headline": "Leavenworth ICE detention center population reaches about 450 amid capacity build-out",
+      "category": "detention_capacity_conditions",
+      "severity": "medium",
+      "relationship_to_existing_event": "new_event",
+      "review_disposition": "approved",
+      "source_sufficiency": "regional_public_media_reporting_with_congressional_site_visit_and_dhs_response",
+      "corroboration_status": "corroborated_for_visit_population_and_expansion_context",
+      "bounded_summary": "After a September 9 congressional site visit, Kansas public-media reporting said the Midwest Regional Reception Center in Leavenworth held about 450 detainees, up from roughly 250 in May, while construction was underway to expand usable capacity. DHS confirmed it had purchased the facility to add detention space, while not specifically confirming every construction detail described by Rep. Gwen Moore.",
+      "sources": [
+        {
+          "publisher": "KCUR / Kansas Public Radio",
+          "source_url": "https://www.kcur.org/2026-09-10/democratic-congresswoman-says-leavenworth-ice-facility-is-being-built-out-for-more-detainees",
+          "source_publication_date": "2026-09-10",
+          "source_tier": 2
+        },
+        {
+          "publisher": "Office of U.S. Rep. Gwen Moore",
+          "source_url": "https://gwenmoore.house.gov/news/documentsingle.aspx?DocumentID=5974",
+          "source_publication_date": "2026-09-10",
+          "source_tier": 1
+        }
+      ]
+    }
+  ],
+  "reviewed_not_inserted": [
+    {
+      "subject": "Christian Castro federal false-statement indictment related to January ICE shooting",
+      "source_url": "https://www.justice.gov/usao-mn/pr/christian-castro-indicted-grand-jury-making-false-statements",
+      "source_publication_date": "2026-09-04",
+      "disposition": "outside_gap_attribution_requires_separate_adjacent_run_recall_check",
+      "reason": "The source predates the missing September 8 observation and should have been observable to an earlier overlapping successful run. It is material but is not attributed to the September 8 missing-run recovery without separately checking the earlier run's canonical record."
+    },
+    {
+      "subject": "Phoenix ICE field-office temporary-hold conditions and congressional oversight",
+      "disposition": "outside_gap_attribution_requires_separate_adjacent_run_recall_check",
+      "reason": "The source was available September 9 and therefore belongs first to a September 9 recall-completeness check rather than being silently assigned to the September 10 missing observation."
+    },
+    {
+      "subject": "Polling-place and Maryland warrantless-arrest lawsuits filed September 10",
+      "disposition": "reviewed_not_inserted",
+      "reason": "Concrete legal filings were identified, but the bounded recovery prioritized the stronger appellate policy ruling and operational detention developments; the filings did not establish a separate operational consequence sufficient for this backfill batch."
+    }
+  ],
+  "summary": {
+    "approved": 6,
+    "rejected": 0,
+    "deferred_for_corroboration": 0,
+    "outside_gap_attribution": 2,
+    "reviewed_not_inserted": 1,
+    "public_side_effects": false
+  }
+}

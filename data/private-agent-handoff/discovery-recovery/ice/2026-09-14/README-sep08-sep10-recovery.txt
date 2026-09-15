@@ -1,0 +1,1 @@
+This bounded recovery batch repairs missing ICE observations for 2026-09-08 and 2026-09-10 only. It restores source-backed historical findings without granting publication authority or fabricating original production discovery lineage. See 2026-09-08-recovery-audit.json, 2026-09-10-recovery-audit.json, and sep08-sep10-recovery-review.json for the evidence and editorial record.

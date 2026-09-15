@@ -60,10 +60,10 @@ def _receipt(
 
 def _write_receipt(root: Path, dispatch: str, observation_date: str, receipt: dict) -> Path:
     run_id = str(receipt["run_id"])
-    path = root / "status" / "operational-health" / dispatch / observation_date / "runs" / f"{run_id}.json"
+    filename = f"r{abs(hash((run_id, str(receipt.get('scheduled_for') or '')))) % 100000000}.json"
+    path = root / "status" / "operational-health" / dispatch / observation_date / "runs" / filename
     if path.exists():
-        suffix = str(receipt.get("scheduled_for") or "").replace(":", "").replace("-", "").replace("T", "-").replace("Z", "")
-        path = path.with_name(f"{run_id}-{suffix}.json")
+        path = path.with_name(f"r{abs(hash((run_id, str(receipt.get('scheduled_for') or ''), path.stat().st_size))) % 100000000}.json")
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(receipt, indent=2, sort_keys=True), encoding="utf-8")
     return path
@@ -599,7 +599,7 @@ def test_ice_adapter_reads_monitor_receipt_runtime_root(tmp_path: Path) -> None:
     source = tmp_path / "source"
     ice = tmp_path / "ice-runner"
     source.mkdir()
-    receipt = ice / "data" / "dispatches" / "ice" / "monitor" / "runs" / DATE / "ice-monitor-20260914T041501Z-test" / "monitor_receipt.json"
+    receipt = ice / "data" / "dispatches" / "ice" / "monitor" / "runs" / DATE / "r" / "monitor_receipt.json"
     receipt.parent.mkdir(parents=True, exist_ok=True)
     receipt.write_text(
         json.dumps(
@@ -669,3 +669,225 @@ def test_cli_dry_run_reports_without_writing_runtime_queue(tmp_path: Path) -> No
     assert payload["publication_authorized"] is False
     assert payload["evaluations"][0]["backfill_status"] == "RECOVERED"
     assert not (tmp_path / "status/coverage-gap-controller/backfill-queue.json").exists()
+
+
+def test_food_legacy_intake_with_findings_and_zero_unaccounted_certifies_observed(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    intake = source / "data/dispatches/food-line/agent-intake/2026-09-07/legacy.json"
+    intake.parent.mkdir(parents=True)
+    intake.write_text(
+        json.dumps(
+            {
+                "agent_run_id": "food-line-scheduled-20260907-run",
+                "counts": {"retained_for_review": 2, "rejected_with_reason": 46},
+                "lifecycle_reconciliation": {"discovered": 51, "terminal_or_handoff": 51, "unaccounted": 0},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = evaluate_dispatch_date(source, "food-line", "2026-09-07", evaluated_at=EVALUATED)
+
+    assert result.observation_status == ObservationStatus.OBSERVED_WITH_FINDINGS
+    assert result.backfill_status == BackfillStatus.BACKFILL_NOT_REQUIRED
+    assert result.observed_finding_count == 2
+    assert result.evidence_refs == ("data/dispatches/food-line/agent-intake/2026-09-07/legacy.json",)
+
+
+def test_food_sep7_committed_legacy_evidence_shape_is_observed_with_findings() -> None:
+    result = evaluate_dispatch_date(Path("."), "food-line", "2026-09-07", evaluated_at=EVALUATED)
+
+    assert result.observation_status == ObservationStatus.OBSERVED_WITH_FINDINGS
+    assert result.backfill_status == BackfillStatus.BACKFILL_NOT_REQUIRED
+    assert result.observed_finding_count == 2
+    assert any("agent-intake/2026-09-07" in ref for ref in result.evidence_refs)
+
+
+def test_food_sep8_committed_legacy_evidence_shape_is_observed_with_findings() -> None:
+    result = evaluate_dispatch_date(Path("."), "food-line", "2026-09-08", evaluated_at=EVALUATED)
+
+    assert result.observation_status == ObservationStatus.OBSERVED_WITH_FINDINGS
+    assert result.backfill_status == BackfillStatus.BACKFILL_NOT_REQUIRED
+    assert result.observed_finding_count == 3
+    assert any("agent-intake/2026-09-08" in ref for ref in result.evidence_refs)
+
+
+def test_completed_food_operator_recovery_overrides_original_failed_observation_without_rewriting_lineage() -> None:
+    result = evaluate_dispatch_date(Path("."), "food-line", "2026-09-10", evaluated_at=EVALUATED)
+
+    assert result.observation_status == ObservationStatus.OBSERVED_WITH_FINDINGS
+    assert result.backfill_status == BackfillStatus.RECOVERED
+    assert result.observed_finding_count == 4
+    assert "original production observation remains failed" in str(result.notes)
+    assert any("publication-state/2026-09-12.json" in ref for ref in result.evidence_refs)
+
+
+def test_completed_food_operator_recovery_overrides_runtime_failure_receipts_without_rewriting_failure(tmp_path: Path) -> None:
+    runtime = tmp_path / "food-runtime"
+    _write_receipt(runtime, "food-line", "2026-09-10", _receipt("food_line_source_watch", "FAILED", dispatch="food-line", scheduled_for="2026-09-10"))
+
+    result = evaluate_dispatch_date(Path("."), "food-line", "2026-09-10", evaluated_at=EVALUATED, runtime_root=runtime)
+
+    assert result.observation_status == ObservationStatus.OBSERVED_WITH_FINDINGS
+    assert result.backfill_status == BackfillStatus.RECOVERED
+    assert "original production observation remains failed" in str(result.notes)
+
+
+def test_publication_page_alone_cannot_prove_food_operator_recovery(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    page = source / "output/site/food-line/editions/2026-09-12/index.html"
+    page.parent.mkdir(parents=True)
+    page.write_text("<html>Recovery-disclosed publication</html>", encoding="utf-8")
+
+    result = evaluate_dispatch_date(source, "food-line", "2026-09-10", evaluated_at=EVALUATED)
+
+    assert result.observation_status == ObservationStatus.OBSERVATION_INCOMPLETE
+    assert result.backfill_status == BackfillStatus.BACKFILL_REQUIRED
+
+
+def test_recovery_candidate_uses_observation_run_date_not_event_or_effective_date(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    intake = source / "data/private-agent-handoff/discovery-recovery/food-care/2026-09-14/recovery-review-intake.json"
+    intake.parent.mkdir(parents=True)
+    intake.write_text(
+        json.dumps(
+            {
+                "provenance_class": "operator_recovered_external_source_evidence",
+                "items": [
+                    {
+                        "dispatch": "care-line",
+                        "item_id": "care-line-fenway",
+                        "event_date": "2026-09-11",
+                        "source_published_date": "2026-09-13",
+                        "production_run_id": "20260914-run",
+                    },
+                    {
+                        "dispatch": "care-line",
+                        "item_id": "care-line-atlanta",
+                        "source_published_date": "2026-09-14",
+                        "event_effective_date": "2026-09-30",
+                        "production_run_id": "20260914-run",
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    sep11 = evaluate_dispatch_date(source, "care-line", "2026-09-11", evaluated_at=EVALUATED)
+    sep14 = evaluate_dispatch_date(source, "care-line", "2026-09-14", evaluated_at=EVALUATED)
+    sep30 = evaluate_dispatch_date(source, "care-line", "2026-09-30", evaluated_at=EVALUATED)
+
+    assert sep11.backfill_status == BackfillStatus.BACKFILL_REQUIRED
+    assert sep14.backfill_status == BackfillStatus.RECOVERY_IN_REVIEW
+    assert sep30.backfill_status == BackfillStatus.BACKFILL_REQUIRED
+
+
+def test_partial_success_care_scheduler_alone_is_historical_evidence_incomplete(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    care = tmp_path / "care"
+    source.mkdir()
+    receipt = care / "status/care-line/scheduler-runs/2026-09-10/receipt.json"
+    receipt.parent.mkdir(parents=True)
+    receipt.write_text(
+        json.dumps({"status": "partial_success", "run_id": "run-1", "started_at": "2026-09-10T13:00:00Z", "pipeline_exit_code": 0}),
+        encoding="utf-8",
+    )
+
+    result = evaluate_dispatch_date(source, "care-line", "2026-09-10", evaluated_at=EVALUATED, runtime_root=care)
+
+    assert result.observation_status == ObservationStatus.OBSERVATION_INCOMPLETE
+    assert result.backfill_status == BackfillStatus.BACKFILL_REQUIRED
+    assert result.reason_codes == (GapReasonCode.HISTORICAL_EVIDENCE_INCOMPLETE,)
+
+
+def test_authoritative_care_collection_reconciliation_can_certify_zero_without_review_queue(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    care = tmp_path / "care"
+    source.mkdir()
+    manifest = care / "data/dispatches/care-line/collection-runs/2026-09-10/run-1/run-manifest.json"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text(
+        json.dumps(
+            {
+                "run_id": "run-1",
+                "status": "success",
+                "started_at": "2026-09-10T13:00:00Z",
+                "completed_at": "2026-09-10T13:03:00Z",
+                "raw_items_retrieved_this_run": 909,
+                "prefilter_decision_count": 909,
+                "qualified_candidates_created_this_run": 0,
+                "failed_extraction_count": 0,
+                "active_review_queue_count": 0,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = evaluate_dispatch_date(source, "care-line", "2026-09-10", evaluated_at=EVALUATED, runtime_root=care)
+
+    assert result.observation_status == ObservationStatus.OBSERVED_ZERO_QUALIFYING
+    assert result.backfill_status == BackfillStatus.BACKFILL_NOT_REQUIRED
+    assert result.observed_finding_count is None
+
+
+def test_incomplete_care_collection_gets_precise_unresolved_reason(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    care = tmp_path / "care"
+    source.mkdir()
+    manifest = care / "data/dispatches/care-line/collection-runs/2026-09-13/run-1/run-manifest.json"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text(
+        json.dumps(
+            {
+                "run_id": "run-1",
+                "status": "partial_success",
+                "raw_items_retrieved_this_run": 328,
+                "prefilter_decision_count": 328,
+                "qualified_candidates_created_this_run": 0,
+                "failed_extraction_count": 12,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = evaluate_dispatch_date(source, "care-line", "2026-09-13", evaluated_at=EVALUATED, runtime_root=care)
+
+    assert result.backfill_status == BackfillStatus.BACKFILL_REQUIRED
+    assert result.reason_codes == (GapReasonCode.HISTORICAL_EVIDENCE_INCOMPLETE,)
+
+
+def test_food_and_care_sep14_recovery_candidates_remain_in_review() -> None:
+    food = evaluate_dispatch_date(Path("."), "food-line", "2026-09-14", evaluated_at=EVALUATED)
+    care = evaluate_dispatch_date(Path("."), "care-line", "2026-09-14", evaluated_at=EVALUATED)
+
+    assert food.backfill_status == BackfillStatus.RECOVERY_IN_REVIEW
+    assert care.backfill_status == BackfillStatus.RECOVERY_IN_REVIEW
+    assert food.recovered_event_ids == ()
+    assert care.recovered_event_ids == ()
+
+
+def test_ice_sep8_and_sep10_durable_gap_records_are_backfill_required_without_events() -> None:
+    for observation_date in ("2026-09-08", "2026-09-10"):
+        result = evaluate_dispatch_date(Path("."), "ice", observation_date, evaluated_at=EVALUATED)
+
+        assert result.observation_status == ObservationStatus.OBSERVATION_INCOMPLETE
+        assert result.backfill_status == BackfillStatus.BACKFILL_REQUIRED
+        assert result.reason_codes == (GapReasonCode.MISSING_ORIGINAL_ARTIFACT,)
+        assert result.recovered_event_ids == ()
+        assert "does not assert that a qualifying historical event" in str(result.notes)
+
+
+def test_existing_recovered_ice_records_remain_compatible_after_new_gap_records() -> None:
+    expected = {
+        "2026-09-07": 1,
+        "2026-09-09": 2,
+        "2026-09-13": 1,
+    }
+    for observation_date, count in expected.items():
+        result = evaluate_dispatch_date(Path("."), "ice", observation_date, evaluated_at=EVALUATED)
+
+        assert result.observation_status == ObservationStatus.OBSERVED_WITH_FINDINGS
+        assert result.backfill_status == BackfillStatus.RECOVERED
+        assert result.observed_finding_count == count

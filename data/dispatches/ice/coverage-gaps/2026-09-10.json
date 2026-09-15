@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.coverage_gap.v1",
+  "dispatch": "ice",
+  "observation_date": "2026-09-10",
+  "observation_status": "OBSERVATION_INCOMPLETE",
+  "reason_codes": [
+    "missing_original_artifact"
+  ],
+  "gap_reason": "missing_original_artifact",
+  "detected_at": "2026-09-14",
+  "backfill_status": "BACKFILL_REQUIRED",
+  "recovered_at": null,
+  "recovered_event_ids": [],
+  "observed_finding_count": null,
+  "source_refs": [],
+  "transition_history": [
+    {
+      "previous_observation_status": null,
+      "previous_backfill_status": null,
+      "new_observation_status": "OBSERVATION_INCOMPLETE",
+      "new_backfill_status": "BACKFILL_REQUIRED",
+      "transition_at": "2026-09-14",
+      "reason_code": "missing_original_artifact",
+      "evidence_refs": []
+    }
+  ],
+  "notes": "Confirmed ICE observation gap: no authoritative monitor artifact was found for September 10. BACKFILL_REQUIRED means bounded recovery research is required; it does not assert that a qualifying historical event has already been established."
+}

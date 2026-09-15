@@ -2,17 +2,30 @@
   "schema_version": "bluefern.coverage_gap.v1",
   "dispatch": "ice",
   "observation_date": "2026-09-10",
-  "observation_status": "OBSERVATION_INCOMPLETE",
+  "observation_status": "OBSERVED_WITH_FINDINGS",
   "reason_codes": [
-    "missing_original_artifact"
+    "missing_original_artifact",
+    "historical_recovery_completed"
   ],
-  "gap_reason": "missing_original_artifact",
+  "gap_reason": "missing_original_artifact; historical_recovery_completed",
   "detected_at": "2026-09-14",
-  "backfill_status": "BACKFILL_REQUIRED",
-  "recovered_at": null,
-  "recovered_event_ids": [],
-  "observed_finding_count": null,
-  "source_refs": [],
+  "backfill_status": "RECOVERED",
+  "recovered_at": "2026-09-14",
+  "recovered_event_ids": [
+    "ice-2026-09-10-fourth-circuit-mandatory-detention-ruling",
+    "ice-2026-09-10-tacoma-mass-detainee-transfers",
+    "ice-2026-09-09-leavenworth-capacity-expansion"
+  ],
+  "observed_finding_count": 3,
+  "source_refs": [
+    "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/2026-09-10-recovery-audit.json",
+    "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/sep08-sep10-recovery-review.json",
+    "https://www.ca4.uscourts.gov/opinions/257044.P.pdf",
+    "https://www.aclu.org/press-releases/federal-appeals-court-rules-against-trump-mandatory-detention-policy",
+    "https://www.spokesman.com/stories/2026/sep/10/ice-moves-hundreds-from-wa-detention-center-as-it-/",
+    "https://www.kcur.org/2026-09-10/democratic-congresswoman-says-leavenworth-ice-facility-is-being-built-out-for-more-detainees",
+    "https://gwenmoore.house.gov/news/documentsingle.aspx?DocumentID=5974"
+  ],
   "transition_history": [
     {
       "previous_observation_status": null,
@@ -22,7 +35,19 @@
       "transition_at": "2026-09-14",
       "reason_code": "missing_original_artifact",
       "evidence_refs": []
+    },
+    {
+      "previous_observation_status": "OBSERVATION_INCOMPLETE",
+      "previous_backfill_status": "BACKFILL_REQUIRED",
+      "new_observation_status": "OBSERVED_WITH_FINDINGS",
+      "new_backfill_status": "RECOVERED",
+      "transition_at": "2026-09-14",
+      "reason_code": "historical_recovery_completed",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/2026-09-10-recovery-audit.json",
+        "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/sep08-sep10-recovery-review.json"
+      ]
     }
   ],
-  "notes": "Confirmed ICE observation gap: no authoritative monitor artifact was found for September 10. BACKFILL_REQUIRED means bounded recovery research is required; it does not assert that a qualifying historical event has already been established."
+  "notes": "The original September 10 monitor artifact remains missing. Bounded recovery research identified three material, traceable developments observable by the missing run; each was editorially approved and inserted into the historical ledger without fabricating original production lineage. The Leavenworth event occurred September 9 but became source-observable on September 10."
 }

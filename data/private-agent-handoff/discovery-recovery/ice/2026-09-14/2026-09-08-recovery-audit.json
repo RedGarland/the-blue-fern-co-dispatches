@@ -1,0 +1,31 @@
+{
+  "schema_version": "bluefern.ice.coverage_recovery_audit.v1",
+  "dispatch": "ice",
+  "observation_date": "2026-09-08",
+  "recovery_date": "2026-09-14",
+  "original_gap_reason": "missing_original_artifact",
+  "research_scope": "Bounded recovery of material ICE developments first publicly available by September 8, with overlap checks against adjacent observations and existing historical records.",
+  "source_categories_examined": [
+    "federal_appellate_legal_policy",
+    "detention_transfer_operations",
+    "workplace_enforcement",
+    "use_of_force_accountability"
+  ],
+  "approved_item_ids": [
+    "ice-recovery-2026-09-08-irs-taxpayer-data-sharing",
+    "ice-recovery-2026-09-08-state-college-transfer-flight-surge",
+    "ice-recovery-2026-09-08-danville-workplace-arrests"
+  ],
+  "approved_count": 3,
+  "duplicate_count": 0,
+  "deferred_count": 0,
+  "outside_gap_attribution": [
+    "Christian Castro federal false-statement indictment related to January ICE shooting was source-available September 4 and requires a separate check against the earlier overlapping successful observation rather than being assigned to this missing run."
+  ],
+  "coverage_certification": "sufficient_for_bounded_recovery_with_findings",
+  "recommended_observation_status": "OBSERVED_WITH_FINDINGS",
+  "recommended_backfill_status": "RECOVERED",
+  "publication_authorized": false,
+  "pages_authorized": false,
+  "notes": "The missing September 8 monitor artifact does not itself prove findings existed. Closure is based on bounded source recovery, explicit editorial disposition, canonical comparison, and insertion of approved historical records."
+}

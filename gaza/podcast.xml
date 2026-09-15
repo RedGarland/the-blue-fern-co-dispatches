@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Mon, 14 Sep 2026 13:02:58 +0000</lastBuildDate>
+  <lastBuildDate>Tue, 15 Sep 2026 13:02:54 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for September 15, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-09-15-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-09-15-transcript.html</guid>
+    <pubDate>Tue, 15 Sep 2026 00:00:00 +0000</pubDate>
+    <description>UK sanctions on Israel 'fall far short' of its obligations, legal experts say. More than 130 sign letter to PM saying international law requires further measures to stop illegal settlements More than 130 legal experts, including 18 king's counsel (KCs), have written to Andy Burnham saying that sanctions on Israeli settlements "fall far short" of Britain's obligations under the international court of justice's (ICJ's) finding that the occupation is unlawful. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-09-15.mp3" length="813696" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for September 14, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-09-14-transcript.html</link>

@@ -1,0 +1,162 @@
+[
+  {
+    "story_id": "gaza-story-2026-09-15-002",
+    "title": "UK sanctions on Israel 'fall far short' of its obligations, legal experts say",
+    "summary": "More than 130 sign letter to PM saying international law requires further measures to stop illegal settlements More than 130 legal experts, including 18 king's counsel (KCs), have written to Andy Burnham saying that sanctions on Israeli settlements \"fall far short\" of Britain's obligations under the international court of justice's (ICJ's) finding that the occupation is unlawful. The foreign secretary, Ed Miliband last week announced an import ban on goods from illegal Israeli settlements in Palestine and other measures. Signatories to the letter to the prime minister, including the leading lawyers Michael Mansfield KC and Imran Khan KC, and the former lord justice of appeal Alan Moses, say it is not enough.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 52,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-15-guardian-world-e24e457f5aa6"
+    ],
+    "source_ids": [
+      "gaza-2026-09-15-guardian-world-e24e457f5aa6"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/politics/2026/sep/15/legal-experts-say-sanctions-israel-fall-far-short-uk-obligations"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-15-guardian-world-e24e457f5aa6",
+        "title": "UK sanctions on Israel 'fall far short' of its obligations, legal experts say",
+        "url": "https://www.theguardian.com/politics/2026/sep/15/legal-experts-say-sanctions-israel-fall-far-short-uk-obligations",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "More than 130 sign letter to PM saying international law requires further measures to stop illegal settlements More than 130 legal experts, including 18 king's counsel (KCs), have written to Andy Burnham saying that sanctions on Israeli settlements \"fall far short\" of Britain's obligations under the international court of justice's (ICJ's) finding that the occupation is unlawful. The foreign secretary, Ed Miliband last week announced an import ban on goods from illegal Israeli settlements in Palestine and other measures. Signatories to the letter to the prime minister, including the leading lawyers Michael Mansfield KC and Imran Khan KC, and the former lord justice of appeal Alan Moses, say it is not enough.",
+        "event_date": "2026-09-15T11:54:14+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-15T13:02:45.208752+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 52,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-15T11:54:14+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-08-007",
+    "prior_edition_date": "2026-09-08",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-15-003",
+    "title": "Israeli minister threatens to strip Israeli film-makers of citizenship over Gaza documentary NAZA",
+    "summary": "Miki Zohar accuses Oscar-winning directors Yuval Abraham and Rachel Szor of 'treason against the state' 'They know the house they are bombing is full of children': NAZA's directors on their devastating film about Israeli intelligence. Israel's culture minister has called for the Oscar-winning Israeli directors of NAZA , a documentary about the country's mass killing of civilians in Gaza, to be stripped of their citizenship, accusing them of \"treason against the state\". NAZA, which was produced by the Guardian, is named for an acronym used by Israel's intelligence service to indicate how many civilians it expects to die in an airstrike on Gaza.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-15-guardian-world-f75ad83f5d0e"
+    ],
+    "source_ids": [
+      "gaza-2026-09-15-guardian-world-f75ad83f5d0e"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/film/2026/sep/14/gaza-documentary-makers-naza-israel-citizenship-ntwnfb"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-15-guardian-world-f75ad83f5d0e",
+        "title": "Israeli minister threatens to strip Israeli film-makers of citizenship over Gaza documentary NAZA",
+        "url": "https://www.theguardian.com/film/2026/sep/14/gaza-documentary-makers-naza-israel-citizenship-ntwnfb",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Miki Zohar accuses Oscar-winning directors Yuval Abraham and Rachel Szor of 'treason against the state' 'They know the house they are bombing is full of children': NAZA's directors on their devastating film about Israeli intelligence Israel's culture minister has called for the Oscar-winning Israeli directors of NAZA , a documentary about the country's mass killing of civilians in Gaza, to be stripped of their citizenship, accusing them of \"treason against the state\". NAZA, which was produced by the Guardian, is named for an acronym used by Israel's intelligence service to indicate how many civilians it expects to die in an airstrike on Gaza.",
+        "event_date": "2026-09-14T15:38:35+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-15T13:02:45.208752+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-14T15:38:35+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "skip",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-09-14-001",
+    "prior_edition_date": "2026-09-14",
+    "dedupe_classification": "duplicate_skip",
+    "dedupe_reasons": [
+      "exact_or_normalized_source_url",
+      "no_new_summary_detail"
+    ]
+  }
+]

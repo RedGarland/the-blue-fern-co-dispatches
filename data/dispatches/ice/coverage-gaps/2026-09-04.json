@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.coverage_gap.v1",
+  "dispatch": "ice",
+  "observation_date": "2026-09-04",
+  "observation_status": "OBSERVED_WITH_FINDINGS",
+  "reason_codes": [
+    "recall_audit_miss",
+    "historical_recovery_completed"
+  ],
+  "gap_reason": "recall_audit_miss; historical_recovery_completed",
+  "detected_at": "2026-09-15",
+  "backfill_status": "RECOVERED",
+  "recovered_at": "2026-09-15",
+  "recovered_event_ids": [
+    "ice-2026-09-02-christian-castro-false-statements-indictment"
+  ],
+  "observed_finding_count": 1,
+  "source_refs": [
+    "data/private-agent-handoff/discovery-recovery/ice/2026-09-15/adjacent-window-reconciliation.json",
+    "https://www.justice.gov/usao-mn/pr/christian-castro-indicted-grand-jury-making-false-statements",
+    "https://www.mprnews.org/story/2026/09/04/ice-agent-indictment-includes-new-details-of-shooting-that-wounded-venezuelan-man"
+  ],
+  "transition_history": [
+    {
+      "previous_observation_status": null,
+      "previous_backfill_status": null,
+      "new_observation_status": "OBSERVATION_INCOMPLETE",
+      "new_backfill_status": "RECOVERY_IN_REVIEW",
+      "transition_at": "2026-09-15",
+      "reason_code": "recall_audit_miss",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/2026-09-08-recovery-audit.json",
+        "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/sep08-sep10-recovery-review.json"
+      ]
+    },
+    {
+      "previous_observation_status": "OBSERVATION_INCOMPLETE",
+      "previous_backfill_status": "RECOVERY_IN_REVIEW",
+      "new_observation_status": "OBSERVED_WITH_FINDINGS",
+      "new_backfill_status": "RECOVERED",
+      "transition_at": "2026-09-15",
+      "reason_code": "historical_recovery_completed",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/ice/2026-09-15/adjacent-window-reconciliation.json",
+        "data/dispatches/ice/historical-events/2026-09-02/ice-2026-09-02-christian-castro-false-statements-indictment.json"
+      ]
+    }
+  ],
+  "notes": "The Christian Castro indictment was not attributed to the missing September 8 observation because the DOJ source was available September 4. This record preserves the September 2 indictment date, the September 4 source/observation date, and September 15 recovery provenance without fabricating original monitor lineage."
+}

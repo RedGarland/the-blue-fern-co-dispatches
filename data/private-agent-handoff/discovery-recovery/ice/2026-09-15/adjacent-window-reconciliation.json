@@ -1,0 +1,79 @@
+{
+  "schema_version": "bluefern.ice.adjacent_window_reconciliation.v1",
+  "dispatch": "ice",
+  "created_at": "2026-09-15",
+  "protected_source_head": "d3f5bd30658800e72c8a6332086cdd83210dfc26",
+  "reconciliation_scope": "bounded_adjacent_window_completeness_check",
+  "triggering_artifacts": [
+    "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/2026-09-08-recovery-audit.json",
+    "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/2026-09-10-recovery-audit.json",
+    "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/sep08-sep10-recovery-review.json"
+  ],
+  "provenance_class": "operator_recovered_public_source_recall_evidence",
+  "original_production_discovery_lineage_fabricated": false,
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false,
+  "scheduler_authorized": false,
+  "public_side_effects": false,
+  "items": [
+    {
+      "item_id": "ice-adjacent-2026-09-04-christian-castro-false-statements-indictment",
+      "canonical_event_id": "ice-2026-09-02-christian-castro-false-statements-indictment",
+      "headline": "DOJ says ICE officer Christian Castro was indicted for false statements after January Minneapolis shooting",
+      "event_date": "2026-09-02",
+      "source_published_date": "2026-09-04",
+      "observation_date": "2026-09-04",
+      "source_url": "https://www.justice.gov/usao-mn/pr/christian-castro-indicted-grand-jury-making-false-statements",
+      "supporting_source_urls": [
+        "https://www.mprnews.org/story/2026/09/04/ice-agent-indictment-includes-new-details-of-shooting-that-wounded-venezuelan-man"
+      ],
+      "canonical_relationship": "follow_up_with_new_material_facts",
+      "related_underlying_event": "minneapolis_ice_shooting_january_2026",
+      "prior_recovery_review_disposition": "outside_gap_attribution_requires_separate_adjacent_run_recall_check",
+      "current_editorial_disposition": "approved",
+      "source_traceability": "primary_doj_release_with_local_follow_up_reporting",
+      "materiality": "material legal-accountability development involving an ICE officer indicted for alleged false statements after an ICE shooting that wounded a person in Minneapolis",
+      "dedupe_result": "not_represented_in_existing_ice_historical_events_or_recovery_records",
+      "historical_record_path": "data/dispatches/ice/historical-events/2026-09-02/ice-2026-09-02-christian-castro-false-statements-indictment.json",
+      "coverage_gap_path": "data/dispatches/ice/coverage-gaps/2026-09-04.json"
+    },
+    {
+      "item_id": "ice-adjacent-2026-09-09-phoenix-field-office-conditions-oversight",
+      "canonical_event_id": "ice-2026-09-09-phoenix-field-office-conditions-oversight",
+      "headline": "Rep. Ansari visits Phoenix ICE field office after reports of long holds and medical emergencies",
+      "event_date": "2026-09-09",
+      "source_published_date": "2026-09-09",
+      "observation_date": "2026-09-09",
+      "source_url": "https://www.kjzz.org/politics/2026-09-09/rep-ansari-pays-surprise-visit-to-phoenix-ice-field-office-following-reports-of-long-detentions",
+      "supporting_source_urls": [
+        "https://azmirror.com/2026/09/02/seizures-chest-pain-and-long-holds-at-a-phoenix-ice-facility-flying-under-the-radar/",
+        "https://azmirror.com/2026/09/09/ansari-makes-surprise-visit-to-phoenix-ice-facility-after-mirror-report/",
+        "https://ansari.house.gov/media/press-releases/ansari-conducts-surprise-oversight-visit-at-ice-phoenix-field-office"
+      ],
+      "canonical_relationship": "new_event",
+      "prior_recovery_review_disposition": "outside_gap_attribution_requires_separate_adjacent_run_recall_check",
+      "current_editorial_disposition": "approved",
+      "source_traceability": "local_reporting_with_congressional_office_confirmation_and_underlying_investigative_reporting",
+      "materiality": "material detention-conditions and oversight development involving reported prolonged temporary holding, medical-emergency calls, food and shower limitations, and a congressional inspection",
+      "dedupe_result": "not_represented_in_existing_ice_historical_events_or_recovery_records",
+      "historical_record_path": "data/dispatches/ice/historical-events/2026-09-09/ice-2026-09-09-phoenix-field-office-conditions-oversight.json",
+      "coverage_gap_path": "data/dispatches/ice/coverage-gaps/2026-09-09.json"
+    }
+  ],
+  "summary": {
+    "reviewed_lead_count": 2,
+    "already_represented_count": 0,
+    "nonqualifying_count": 0,
+    "approved_recovery_count": 2,
+    "dates_reopened": [
+      "2026-09-04",
+      "2026-09-09"
+    ],
+    "created_historical_record_count": 2,
+    "public_side_effects": false
+  },
+  "notes": "This bounded reconciliation addresses only the two adjacent-window leads deliberately excluded from the September 8 and September 10 recovery attribution. It does not reopen or alter the recovered states for September 8 or September 10 and does not fabricate original production discovery lineage."
+}

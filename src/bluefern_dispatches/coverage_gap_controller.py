@@ -172,6 +172,8 @@ class CoverageEvaluation:
     notes: str | None = None
     source: str = "controller"
     recovery_investigation_status: RecoveryInvestigationStatus = RecoveryInvestigationStatus.ACTIVE
+    recovery_investigation_reason_code: str | None = None
+    recovered_at: str | None = None
 
     @property
     def unresolved(self) -> bool:
@@ -188,7 +190,7 @@ class CoverageEvaluation:
             "detected_at": detected_at,
             "backfill_status": self.backfill_status.value,
             "recovery_investigation_status": self.recovery_investigation_status.value,
-            "reason_code": "historical_evidence_exhausted" if self.recovery_investigation_status == RecoveryInvestigationStatus.EVIDENCE_EXHAUSTED else None,
+            "reason_code": self.recovery_investigation_reason_code,
             "recovered_at": recovered_at,
             "recovered_event_ids": list(self.recovered_event_ids),
             "observed_finding_count": self.observed_finding_count,
@@ -209,6 +211,7 @@ class CoverageEvaluation:
             "observation_status": self.observation_status.value,
             "backfill_status": self.backfill_status.value,
             "recovery_investigation_status": self.recovery_investigation_status.value,
+            "recovery_investigation_reason_code": self.recovery_investigation_reason_code,
             "reason_codes": [reason.value for reason in self.reason_codes],
             "first_detected_at": first_detected or last_evaluated_at,
             "last_evaluated_at": last_evaluated_at,
@@ -243,6 +246,8 @@ def validate_gap_record(record: dict[str, Any]) -> None:
         raise CoverageGapError(f"unsupported recovery investigation status: {investigation_status}")
     if investigation_status == RecoveryInvestigationStatus.EVIDENCE_EXHAUSTED.value and record["backfill_status"] != BackfillStatus.BACKFILL_REQUIRED.value:
         raise CoverageGapError("evidence-exhausted gaps must remain BACKFILL_REQUIRED")
+    if investigation_status == RecoveryInvestigationStatus.EVIDENCE_EXHAUSTED.value and record.get("reason_code") != "historical_evidence_exhausted":
+        raise CoverageGapError("evidence-exhausted gaps require reason_code historical_evidence_exhausted")
 
 
 def durable_gap_path(repo_root: Path, dispatch: str, observation_date: str) -> Path:
@@ -275,12 +280,15 @@ def _from_durable_gap(record: dict[str, Any]) -> CoverageEvaluation:
         reason_codes=reason_codes,
         evidence_refs=tuple(_string_list(record.get("source_refs") or ())),
         recovered_event_ids=recovered_event_ids,
+        observed_finding_count=record.get("observed_finding_count", len(recovered_event_ids) if recovered_event_ids else None),
         criticality=Criticality.HIGH if unresolved else Criticality.NORMAL,
         operator_attention_required=unresolved,
         transition_history=_transition_history_from_record(record),
         notes=record.get("notes"),
         source="durable_gap_record",
         recovery_investigation_status=RecoveryInvestigationStatus(str(record.get("recovery_investigation_status", RecoveryInvestigationStatus.ACTIVE.value))),
+        recovery_investigation_reason_code=record.get("reason_code"),
+        recovered_at=record.get("recovered_at"),
     )
 
 
@@ -355,6 +363,9 @@ def evaluate_observation(evidence: EvaluationInput) -> CoverageEvaluation:
 
     previous = _from_durable_gap(evidence.durable_gap_record) if evidence.durable_gap_record else None
 
+    if _durable_resolution_remains_authoritative(evidence, previous):
+        return previous
+
     if evidence.unaccounted is not None and evidence.unaccounted > 0:
         return _required(evidence, previous, GapReasonCode.TERMINAL_ACCOUNTING_INCOMPLETE, Criticality.CRITICAL)
 
@@ -401,6 +412,52 @@ def evaluate_observation(evidence: EvaluationInput) -> CoverageEvaluation:
     return previous or _unknown_incomplete(evidence, previous, GapReasonCode.STALE_OBSERVABILITY)
 
 
+def _durable_resolution_remains_authoritative(
+    evidence: EvaluationInput,
+    previous: CoverageEvaluation | None,
+) -> bool:
+    if previous is None or previous.backfill_status not in {
+        BackfillStatus.RECOVERED,
+        BackfillStatus.BACKFILL_NOT_REQUIRED,
+    }:
+        return False
+    if evidence.reopen_recovery_investigation:
+        return False
+
+    durable_refs = set(previous.evidence_refs)
+    for transition in previous.transition_history:
+        durable_refs.update(transition.evidence_refs)
+    if any(ref not in durable_refs for ref in evidence.recovery_candidate_refs):
+        return False
+    if any(event_id not in previous.recovered_event_ids for event_id in evidence.recovered_event_ids):
+        return False
+
+    prior_reasons = set(previous.reason_codes)
+    prior_reasons.update(row.reason_code for row in previous.transition_history)
+    if evidence.unaccounted and GapReasonCode.TERMINAL_ACCOUNTING_INCOMPLETE.value not in prior_reasons:
+        return False
+
+    if previous.recovered_at:
+        completed_after_reconciliation = parse_timestamp(previous.recovered_at)
+        if completed_after_reconciliation is not None:
+            if completed_after_reconciliation.tzinfo is None:
+                completed_after_reconciliation = completed_after_reconciliation.replace(tzinfo=timezone.utc)
+            for receipt in evidence.receipts:
+                receipt_time = next(
+                    (
+                        parse_timestamp(str(receipt.get(field) or ""))
+                        for field in ("completed_at", "observed_at", "receipt_created_at", "started_at")
+                        if receipt.get(field)
+                    ),
+                    None,
+                )
+                if receipt_time is not None and receipt_time.tzinfo is None:
+                    receipt_time = receipt_time.replace(tzinfo=timezone.utc)
+                if receipt_time is not None and receipt_time > completed_after_reconciliation:
+                    return False
+    return True
+
+
 def _missed_required_run(evidence: EvaluationInput) -> bool:
     expected_instance_tasks: set[str] = set()
     if evidence.expected_instances:
@@ -438,6 +495,7 @@ def _required(evidence: EvaluationInput, previous: CoverageEvaluation | None, re
         ),
         notes=evidence.notes,
         recovery_investigation_status=_investigation_status(evidence, previous),
+        recovery_investigation_reason_code=_investigation_reason_code(evidence, previous),
     )
 
 
@@ -447,6 +505,12 @@ def _investigation_status(evidence: EvaluationInput, previous: CoverageEvaluatio
             return RecoveryInvestigationStatus.ACTIVE
         return RecoveryInvestigationStatus.EVIDENCE_EXHAUSTED
     return RecoveryInvestigationStatus.ACTIVE
+
+
+def _investigation_reason_code(evidence: EvaluationInput, previous: CoverageEvaluation | None) -> str | None:
+    if _investigation_status(evidence, previous) == RecoveryInvestigationStatus.EVIDENCE_EXHAUSTED:
+        return "historical_evidence_exhausted"
+    return None
 
 
 def _in_review(evidence: EvaluationInput, previous: CoverageEvaluation | None) -> CoverageEvaluation:
@@ -1347,6 +1411,7 @@ def cli(argv: list[str] | None = None) -> int:
                 "observation_status": row.observation_status.value,
                 "backfill_status": row.backfill_status.value,
                 "recovery_investigation_status": row.recovery_investigation_status.value,
+                "recovery_investigation_reason_code": row.recovery_investigation_reason_code,
                 "reason_codes": [reason.value for reason in row.reason_codes],
                 "evidence_refs": list(row.evidence_refs),
                 "recovered_event_ids": list(row.recovered_event_ids),

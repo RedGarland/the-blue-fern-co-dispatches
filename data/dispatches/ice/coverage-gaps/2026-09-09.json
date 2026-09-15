@@ -1,21 +1,81 @@
 {
-  "schema_version": "bluefern.ice.coverage_gap.v1",
+  "schema_version": "bluefern.coverage_gap.v1",
   "dispatch": "ice",
   "observation_date": "2026-09-09",
   "observation_status": "OBSERVED_WITH_FINDINGS",
-  "gap_reason": "successful_monitor_run_missed_source_backed_public_developments_identified_by_operator_recall_audit",
+  "reason_codes": [
+    "recall_audit_miss",
+    "historical_recovery_completed"
+  ],
+  "gap_reason": "recall_audit_miss; historical_recovery_completed",
   "detected_at": "2026-09-14",
   "backfill_status": "RECOVERED",
-  "recovered_at": "2026-09-14",
+  "recovered_at": "2026-09-15",
   "recovered_event_ids": [
     "ice-2026-09-09-houston-hpd-policy-fatal-ice-shooting",
-    "ice-2026-09-09-springfield-ice-officers-tro"
+    "ice-2026-09-09-springfield-ice-officers-tro",
+    "ice-2026-09-09-phoenix-field-office-conditions-oversight"
   ],
+  "observed_finding_count": 3,
   "source_refs": [
     "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/recovery-review-intake.json",
+    "data/private-agent-handoff/discovery-recovery/ice/2026-09-15/adjacent-window-reconciliation.json",
     "https://www.houstonchronicle.com/news/investigations/article/hpd-ice-shooting-investigation-policy-change-22414278.php",
     "https://www.wyso.org/news/2026-09-09/judge-issues-temporary-restraining-order-against-springfield-ice-agents-in-aclu-case",
-    "https://www.ideastream.org/show/sound-of-ideas/2026-09-09/aclu-of-ohio-files-lawsuit-against-ice-agents-in-springfield"
+    "https://www.ideastream.org/show/sound-of-ideas/2026-09-09/aclu-of-ohio-files-lawsuit-against-ice-agents-in-springfield",
+    "https://www.kjzz.org/politics/2026-09-09/rep-ansari-pays-surprise-visit-to-phoenix-ice-field-office-following-reports-of-long-detentions",
+    "https://azmirror.com/2026/09/09/ansari-makes-surprise-visit-to-phoenix-ice-facility-after-mirror-report/",
+    "https://ansari.house.gov/media/press-releases/ansari-conducts-surprise-oversight-visit-at-ice-phoenix-field-office"
   ],
-  "notes": "Backfill preserves September 9 event chronology and September 14 recovery date; original production discovery lineage is absent."
+  "transition_history": [
+    {
+      "previous_observation_status": null,
+      "previous_backfill_status": null,
+      "new_observation_status": "OBSERVATION_INCOMPLETE",
+      "new_backfill_status": "BACKFILL_REQUIRED",
+      "transition_at": "2026-09-14",
+      "reason_code": "recall_audit_miss",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/recovery-review-intake.json"
+      ]
+    },
+    {
+      "previous_observation_status": "OBSERVATION_INCOMPLETE",
+      "previous_backfill_status": "BACKFILL_REQUIRED",
+      "new_observation_status": "OBSERVED_WITH_FINDINGS",
+      "new_backfill_status": "RECOVERED",
+      "transition_at": "2026-09-14",
+      "reason_code": "historical_recovery_completed",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/recovery-review-intake.json",
+        "data/dispatches/ice/historical-events/2026-09-09/ice-2026-09-09-houston-hpd-policy-fatal-ice-shooting.json",
+        "data/dispatches/ice/historical-events/2026-09-09/ice-2026-09-09-springfield-ice-officers-tro.json"
+      ]
+    },
+    {
+      "previous_observation_status": "OBSERVED_WITH_FINDINGS",
+      "previous_backfill_status": "RECOVERED",
+      "new_observation_status": "OBSERVATION_INCOMPLETE",
+      "new_backfill_status": "RECOVERY_IN_REVIEW",
+      "transition_at": "2026-09-15",
+      "reason_code": "recall_audit_miss",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/2026-09-10-recovery-audit.json",
+        "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/sep08-sep10-recovery-review.json"
+      ]
+    },
+    {
+      "previous_observation_status": "OBSERVATION_INCOMPLETE",
+      "previous_backfill_status": "RECOVERY_IN_REVIEW",
+      "new_observation_status": "OBSERVED_WITH_FINDINGS",
+      "new_backfill_status": "RECOVERED",
+      "transition_at": "2026-09-15",
+      "reason_code": "historical_recovery_completed",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/ice/2026-09-15/adjacent-window-reconciliation.json",
+        "data/dispatches/ice/historical-events/2026-09-09/ice-2026-09-09-phoenix-field-office-conditions-oversight.json"
+      ]
+    }
+  ],
+  "notes": "Backfill preserves September 9 event chronology. The September 15 adjacent-window reconciliation reopened the recovered September 9 coverage state only long enough to add the Phoenix field-office conditions and oversight item that had been deliberately excluded from September 10 attribution; original production discovery lineage remains absent."
 }

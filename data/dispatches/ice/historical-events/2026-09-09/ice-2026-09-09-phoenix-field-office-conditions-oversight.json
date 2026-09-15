@@ -1,0 +1,59 @@
+{
+  "schema_version": "bluefern.ice.historical_event.v1",
+  "dispatch": "ice",
+  "event_id": "ice-2026-09-09-phoenix-field-office-conditions-oversight",
+  "canonical_event_id": "ice-2026-09-09-phoenix-field-office-conditions-oversight",
+  "event_date": "2026-09-09",
+  "source_published_date": "2026-09-09",
+  "observation_date": "2026-09-09",
+  "recovered_at": "2026-09-15",
+  "recovery_provenance": "operator_recovered_public_source_recall_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/ice/2026-09-15/adjacent-window-reconciliation.json",
+  "source_recovery_item_id": "ice-adjacent-2026-09-09-phoenix-field-office-conditions-oversight",
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "city": "Phoenix",
+    "state": "AZ",
+    "category": "detention_conditions_oversight",
+    "event_type": "congressional_oversight_visit_after_temporary_hold_conditions_reporting"
+  },
+  "headline": "Rep. Ansari visits Phoenix ICE field office after reports of long holds and medical emergencies",
+  "bounded_summary": "KJZZ reported that Rep. Yassamin Ansari made an unannounced oversight visit to ICE's Phoenix field office after Arizona Mirror reporting on prolonged temporary holding and medical-emergency calls. Ansari's office said the reporting described 11 emergency calls from December 2025 through March 2026 and a facility with no on-site medical services, limited food access, and no detainee showers; KJZZ also reported that Ansari said she was not allowed to speak with detainees during the visit.",
+  "source_sufficiency": "local_reporting_corrobated_by_congressional_office_release_and_underlying_investigative_reporting",
+  "corroboration_status": "corroborated",
+  "materiality": "material_detention_conditions_and_congressional_oversight_development_at_an_ice_temporary_hold_facility",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "KJZZ",
+      "source_url": "https://www.kjzz.org/politics/2026-09-09/rep-ansari-pays-surprise-visit-to-phoenix-ice-field-office-following-reports-of-long-detentions",
+      "source_publication_date": "2026-09-09",
+      "source_role": "local_reporting_on_oversight_visit"
+    },
+    {
+      "publisher": "Arizona Mirror",
+      "source_url": "https://azmirror.com/2026/09/09/ansari-makes-surprise-visit-to-phoenix-ice-facility-after-mirror-report/",
+      "source_publication_date": "2026-09-09",
+      "source_role": "local_reporting_on_oversight_visit"
+    },
+    {
+      "publisher": "Arizona Mirror",
+      "source_url": "https://azmirror.com/2026/09/02/seizures-chest-pain-and-long-holds-at-a-phoenix-ice-facility-flying-under-the-radar/",
+      "source_publication_date": "2026-09-02",
+      "source_role": "underlying_investigative_reporting"
+    },
+    {
+      "publisher": "Office of Rep. Yassamin Ansari",
+      "source_url": "https://ansari.house.gov/media/press-releases/ansari-conducts-surprise-oversight-visit-at-ice-phoenix-field-office",
+      "source_publication_date": "2026-09-10",
+      "source_role": "congressional_office_confirmation"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

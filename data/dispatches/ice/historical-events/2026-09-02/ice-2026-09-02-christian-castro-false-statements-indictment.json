@@ -1,0 +1,48 @@
+{
+  "schema_version": "bluefern.ice.historical_event.v1",
+  "dispatch": "ice",
+  "event_id": "ice-2026-09-02-christian-castro-false-statements-indictment",
+  "canonical_event_id": "ice-2026-09-02-christian-castro-false-statements-indictment",
+  "event_date": "2026-09-02",
+  "source_published_date": "2026-09-04",
+  "observation_date": "2026-09-04",
+  "recovered_at": "2026-09-15",
+  "recovery_provenance": "operator_recovered_public_source_recall_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/ice/2026-09-15/adjacent-window-reconciliation.json",
+  "source_recovery_item_id": "ice-adjacent-2026-09-04-christian-castro-false-statements-indictment",
+  "relationship_to_existing_event": "follow_up_with_new_material_facts",
+  "related_underlying_event": "minneapolis_ice_shooting_january_2026",
+  "canonical_event_identity": {
+    "city": "Minneapolis",
+    "state": "MN",
+    "category": "legal_oversight_accountability",
+    "event_type": "federal_false_statement_indictment_after_ice_officer_shooting"
+  },
+  "headline": "DOJ says ICE officer Christian Castro was indicted for false statements after January Minneapolis shooting",
+  "bounded_summary": "The Justice Department said a federal grand jury indicted ICE deportation officer Christian Jeremiah Castro on six false-statement counts tied to his FBI interview after a January 2026 Minneapolis shooting in which a Venezuelan resident was struck. The indictment is a material legal-accountability development after an ICE officer-involved shooting; the allegations remain unproven unless established in court.",
+  "source_sufficiency": "primary_doj_release_with_traceable_local_follow_up_reporting",
+  "corroboration_status": "primary_federal_release_with_local_context",
+  "materiality": "material_follow_up_on_criminal_accountability_after_an_ice_officer_involved_shooting",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "U.S. Attorney's Office, District of Minnesota",
+      "source_url": "https://www.justice.gov/usao-mn/pr/christian-castro-indicted-grand-jury-making-false-statements",
+      "source_publication_date": "2026-09-04",
+      "source_role": "primary_federal_release"
+    },
+    {
+      "publisher": "MPR News",
+      "source_url": "https://www.mprnews.org/story/2026/09/04/ice-agent-indictment-includes-new-details-of-shooting-that-wounded-venezuelan-man",
+      "source_publication_date": "2026-09-04",
+      "source_role": "local_context_reporting"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

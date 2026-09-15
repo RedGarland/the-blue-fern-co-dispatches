@@ -1014,21 +1014,20 @@ def test_rejected_recovery_candidate_without_historical_record_does_not_auto_rec
     assert result.recovered_event_ids == ()
 
 
-def test_ice_sep8_and_sep10_durable_gap_records_are_backfill_required_without_events() -> None:
+def test_ice_sep8_and_sep10_durable_gap_records_remain_recovered_after_historical_insertion() -> None:
     for observation_date in ("2026-09-08", "2026-09-10"):
         result = evaluate_dispatch_date(Path("."), "ice", observation_date, evaluated_at=EVALUATED)
 
-        assert result.observation_status == ObservationStatus.OBSERVATION_INCOMPLETE
-        assert result.backfill_status == BackfillStatus.BACKFILL_REQUIRED
-        assert result.reason_codes == (GapReasonCode.MISSING_ORIGINAL_ARTIFACT,)
-        assert result.recovered_event_ids == ()
-        assert "does not assert that a qualifying historical event" in str(result.notes)
+        assert result.observation_status == ObservationStatus.OBSERVED_WITH_FINDINGS
+        assert result.backfill_status == BackfillStatus.RECOVERED
+        assert GapReasonCode.HISTORICAL_RECOVERY_COMPLETED in result.reason_codes
+        assert len(result.recovered_event_ids) == 3
 
 
 def test_existing_recovered_ice_records_remain_compatible_after_new_gap_records() -> None:
     expected = {
         "2026-09-07": 1,
-        "2026-09-09": 2,
+        "2026-09-09": 3,
         "2026-09-13": 1,
     }
     for observation_date, count in expected.items():

@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.ice.historical_event.v1",
+  "dispatch": "ice",
+  "event_id": "ice-2026-09-09-leavenworth-capacity-expansion",
+  "canonical_event_id": "ice-2026-09-09-leavenworth-capacity-expansion",
+  "event_date": "2026-09-09",
+  "source_published_date": "2026-09-10",
+  "observation_date": "2026-09-10",
+  "recovered_at": "2026-09-14",
+  "recovery_provenance": "operator_recovered_public_source_recall_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/ice/2026-09-14/sep08-sep10-recovery-review.json",
+  "source_recovery_item_id": "ice-recovery-2026-09-10-leavenworth-capacity-expansion",
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "city": "Leavenworth",
+    "state": "KS",
+    "category": "detention_capacity_conditions",
+    "event_type": "detention_population_growth_and_capacity_buildout"
+  },
+  "headline": "Leavenworth ICE detention center population reaches about 450 amid capacity build-out",
+  "bounded_summary": "After a September 9 congressional site visit, Kansas public-media reporting said the Midwest Regional Reception Center in Leavenworth held about 450 detainees, up from roughly 250 in May, while construction was underway to expand usable capacity. DHS confirmed it had purchased the facility to add detention space, while not specifically confirming every construction detail described by Rep. Gwen Moore.",
+  "source_sufficiency": "regional_public_media_reporting_with_congressional_site_visit_and_dhs_response",
+  "corroboration_status": "corroborated_for_visit_population_and_expansion_context",
+  "materiality": "substantial_detention_population_growth_and_active_capacity_expansion",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "KCUR / Kansas Public Radio",
+      "source_url": "https://www.kcur.org/2026-09-10/democratic-congresswoman-says-leavenworth-ice-facility-is-being-built-out-for-more-detainees",
+      "source_publication_date": "2026-09-10",
+      "source_role": "regional_public_media_reporting"
+    },
+    {
+      "publisher": "Office of U.S. Rep. Gwen Moore",
+      "source_url": "https://gwenmoore.house.gov/news/documentsingle.aspx?DocumentID=5974",
+      "source_publication_date": "2026-09-10",
+      "source_role": "primary_congressional_site_visit_statement"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

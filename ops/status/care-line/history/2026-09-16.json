@@ -10,9 +10,41 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "STALE_OBSERVABILITY",
+  "aggregate_status": "DEGRADED",
   "dispatch": "care-line",
-  "last_exported_at": "2026-09-16T19:15:04.905633Z",
+  "expected_instances": [
+    {
+      "schedule_source": "windows_task_scheduler",
+      "scheduled_for": "2026-09-16T13:00:00Z",
+      "task_key": "care_line_collection",
+      "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
+    },
+    {
+      "schedule_source": "windows_task_scheduler",
+      "scheduled_for": "2026-09-16T15:00:00Z",
+      "task_key": "care_line_reviewed_event_queue",
+      "task_name": "\\Blue Fern Co.\\Blue Fern Care Line Reviewed Event Queue"
+    },
+    {
+      "schedule_source": "windows_task_scheduler",
+      "scheduled_for": "2026-09-16T15:30:00Z",
+      "task_key": "care_line_approved_release_publication",
+      "task_name": "\\Blue Fern Co.\\Blue Fern Care Line Approved Release Publication"
+    },
+    {
+      "schedule_source": "windows_task_scheduler",
+      "scheduled_for": "2026-09-16T19:00:00Z",
+      "task_key": "care_line_collection",
+      "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
+    },
+    {
+      "schedule_source": "windows_task_scheduler",
+      "scheduled_for": "2026-09-17T01:00:00Z",
+      "task_key": "care_line_collection",
+      "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
+    }
+  ],
+  "last_exported_at": "2026-09-16T22:15:04.690313Z",
   "last_receipt_at": "2026-09-16T19:02:43.370141Z",
   "latest_runtime_proof_date": "2026-09-16T15:30:09Z",
   "migration_status": "MIGRATED",
@@ -25,7 +57,7 @@
   "publication_attempted": false,
   "publication_status": "safe_no_op",
   "receipt_completeness": "COMPLETE",
-  "recovery_lifecycle": "INCIDENT_OPEN",
+  "recovery_lifecycle": "HEALTHY",
   "runner_source_head": "664ab3256164b216b8750fede5e90afb0d01e228",
   "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
@@ -34,7 +66,7 @@
     "care_line_approved_release_publication"
   ],
   "schema_version": "bluefern_external_operational_status_v1",
-  "stale_observability": true,
+  "stale_observability": false,
   "task_summaries": [
     {
       "artifact_id": "20260916T190001Z-25372.json",

@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Tue, 15 Sep 2026 13:02:54 +0000</lastBuildDate>
+  <lastBuildDate>Wed, 16 Sep 2026 13:02:59 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for September 16, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-09-16-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-09-16-transcript.html</guid>
+    <pubDate>Wed, 16 Sep 2026 00:00:00 +0000</pubDate>
+    <description>At least 20 killed after Israeli-hit building in Gaza City collapses. Rescue workers say search for dozens of people hampered by lack of heavy machinery. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-09-16.mp3" length="1519488" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for September 15, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-09-15-transcript.html</link>

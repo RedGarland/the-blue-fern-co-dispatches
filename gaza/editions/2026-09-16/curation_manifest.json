@@ -1,0 +1,636 @@
+[
+  {
+    "story_id": "gaza-story-2026-09-16-004",
+    "title": "At least 20 killed after Israeli-hit building in Gaza City collapses",
+    "summary": "Rescue workers say search for dozens of people hampered by lack of heavy machinery. A building housing about 100 displaced Palestinian families has collapsed in Gaza City, killing at least 20 people, as rescuers search the rubble for dozens of people believed to be trapped, including children. A rescue team from Gaza's civil defence said they had recovered the bodies of five children among the victims, while 25 injured people were taken to hospital. Medical sources said rescuers could hear the voices of people trapped beneath the rubble as they tried to reach them.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 92,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "displacement",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-16-guardian-world-6385ac84ceac"
+    ],
+    "source_ids": [
+      "gaza-2026-09-16-guardian-world-6385ac84ceac"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/sep/16/building-gaza-city-damaged-israeli-strikes-collapses-killed"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-16-guardian-world-6385ac84ceac",
+        "title": "At least 20 killed after Israeli-hit building in Gaza City collapses",
+        "url": "https://www.theguardian.com/world/2026/sep/16/building-gaza-city-damaged-israeli-strikes-collapses-killed",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Rescue workers say search for dozens of people hampered by lack of heavy machinery A building housing about 100 displaced Palestinian families has collapsed in Gaza City, killing at least 20 people, as rescuers search the rubble for dozens of people believed to be trapped, including children. A rescue team from Gaza's civil defence said they had recovered the bodies of five children among the victims, while 25 injured people were taken to hospital. Medical sources said rescuers could hear the voices of people trapped beneath the rubble as they tried to reach them.",
+        "event_date": "2026-09-16T11:34:31+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-16T13:02:42.290808+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 92,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-16T11:34:31+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-10-002",
+    "prior_edition_date": "2026-09-10",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-16-005",
+    "title": "The Palestinian school under siege - podcast",
+    "summary": "At least five pupils at a village school in the West Bank have been killed in the last year by settlers and soldiers. Emma Graham-Harrison reports on how the school found itself on the frontline, while a teacher explains what life is like for staff and students. Waheed Abu Naim is an English teacher at the Al Mughayyir boys' school in a village in the West Bank. He loves his job, he says. \"I am happy to be a teacher. Although we don't get lots of money, because my students, especially in the morning, wait for me when I enter the school to shake hands, to smile at me while going inside their classes. So it's a happy life.\" But the last year has been anything but happy for Waheed. His village is now surrounded by settlers, while the military has blocked off every road except one, which has a checkpoint on it. Teachers who live in neighbouring villages cannot always come to work. But worse are the attacks on the village by settlers. This episode was updated after publication. The specific description of bullets hitting the glass - as children and teachers are sheltering in a school stairwell - has been removed.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 75,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-16-guardian-world-e19d80312e0e"
+    ],
+    "source_ids": [
+      "gaza-2026-09-16-guardian-world-e19d80312e0e"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/news/audio/2026/sep/16/palestinian-school-al-mughayyir-under-siege-podcast"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-16-guardian-world-e19d80312e0e",
+        "title": "The Palestinian school under siege - podcast",
+        "url": "https://www.theguardian.com/news/audio/2026/sep/16/palestinian-school-al-mughayyir-under-siege-podcast",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "At least five pupils at a village school in the West Bank have been killed in the last year by settlers and soldiers. Emma Graham-Harrison reports on how the school found itself on the frontline, while a teacher explains what life is like for staff and students. Waheed Abu Naim is an English teacher at the Al Mughayyir boys' school in a village in the West Bank. He loves his job, he says. \"I am happy to be a teacher. Although we don't get lots of money, because my students, especially in the morning, wait for me when I enter the school to shake hands, to smile at me while going inside their classes. So it's a happy life.\" But the last year has been anything but happy for Waheed. His village is now surrounded by settlers, while the military has blocked off every road except one, which has a checkpoint on it. Teachers who live in neighbouring villages cannot always come to work. But worse are the attacks on the village by settlers. This episode was updated after publication. The specific description of bullets hitting the glass - as children and teachers are sheltering in a school stairwell - has been removed.",
+        "event_date": "2026-09-16T02:00:06+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-16T13:02:42.290808+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 75,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-16T02:00:06+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-29-001",
+    "prior_edition_date": "2026-07-29",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-16-008",
+    "title": "Israeli double-tap strike kills 15-year-old and paramedic in Gaza",
+    "summary": "A child has been killed in an Israeli double-tap strike as he rushed to help a paramedic wounded in an earlier attack.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 56,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-16-aljazeera-middle-east-1103b222a107"
+    ],
+    "source_ids": [
+      "gaza-2026-09-16-aljazeera-middle-east-1103b222a107"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/9/16/09-16-sv-gaza-double-tap-strike?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-16-aljazeera-middle-east-1103b222a107",
+        "title": "Israeli double-tap strike kills 15-year-old and paramedic in Gaza",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/9/16/09-16-sv-gaza-double-tap-strike?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "A child has been killed in an Israeli double-tap strike as he rushed to help a paramedic wounded in an earlier attack.",
+        "event_date": "2026-09-16T10:21:49+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-16T13:02:42.290808+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-16T10:21:49+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-30-001",
+    "prior_edition_date": "2026-06-30",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-16-001",
+    "title": "Eight children among 21 killed after war-damaged Gaza building collapses, rescuers say",
+    "summary": "Dozens of people are missing beneath the rubble of a building hit by an Israeli strike last year, where some 10 families had been living.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 56,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-16-bbc-middle-east-b3ee06074a0e"
+    ],
+    "source_ids": [
+      "gaza-2026-09-16-bbc-middle-east-b3ee06074a0e"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/cvp8d00j9gg5o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-16-bbc-middle-east-b3ee06074a0e",
+        "title": "Eight children among 21 killed after war-damaged Gaza building collapses, rescuers say",
+        "url": "https://www.bbc.co.uk/news/articles/cvp8d00j9gg5o?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Dozens of people are missing beneath the rubble of a building hit by an Israeli strike last year, where some 10 families had been living.",
+        "event_date": "2026-09-16T12:26:16+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-16T13:02:42.290808+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 56,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-16T12:26:16+00:00",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-06-30-001",
+    "prior_edition_date": "2026-06-30",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-16-006",
+    "title": "At least 20 killed as multi-storey building collapses in Gaza City",
+    "summary": "Rescuers are searching through the rubble for survivors after a damaged apartment building collapsed overnight in Gaza.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 53,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-16-aljazeera-middle-east-734bfae3102d"
+    ],
+    "source_ids": [
+      "gaza-2026-09-16-aljazeera-middle-east-734bfae3102d"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/9/16/at-least-20-killed-as-multi-storey-building-collapses-in-gaza-city?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-16-aljazeera-middle-east-734bfae3102d",
+        "title": "At least 20 killed as multi-storey building collapses in Gaza City",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/9/16/at-least-20-killed-as-multi-storey-building-collapses-in-gaza-city?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Rescuers are searching through the rubble for survivors after a damaged apartment building collapsed overnight in Gaza.",
+        "event_date": "2026-09-16T12:32:47+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-16T13:02:42.290808+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 53,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-16T12:32:47+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-16-009",
+    "title": "Human rights lawyer Noura Erakat arrested at hearing against Israel Bonds",
+    "summary": "Israel Bonds investment.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 52,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-16-aljazeera-middle-east-7fbe7eadf31e"
+    ],
+    "source_ids": [
+      "gaza-2026-09-16-aljazeera-middle-east-7fbe7eadf31e"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/9/16/human-rights-lawyer-noura-erakat-arrested-at-hearing-against-israel-bonds?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-16-aljazeera-middle-east-7fbe7eadf31e",
+        "title": "Human rights lawyer Noura Erakat arrested at hearing against Israel Bonds",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/9/16/human-rights-lawyer-noura-erakat-arrested-at-hearing-against-israel-bonds?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Palestinian human rights lawyer Noura Erakat was arrested in Florida after speaking against an Israel Bonds investment.",
+        "event_date": "2026-09-16T09:19:50+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-16T13:02:42.290808+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 52,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-16T09:19:50+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-16-007",
+    "title": "US set to approve 60,000 heavy bombs for Israel: What that means",
+    "summary": "The package of 2,000-pound bombs comes amid Israel's genocidal war on Gaza and its occupation of southern Lebanon.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 50,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-16-aljazeera-middle-east-409604bd7f9e"
+    ],
+    "source_ids": [
+      "gaza-2026-09-16-aljazeera-middle-east-409604bd7f9e"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/features/2026/9/16/us-set-to-approve-60000-heavy-bombs-for-israel-what-that-means?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-16-aljazeera-middle-east-409604bd7f9e",
+        "title": "US set to approve 60,000 heavy bombs for Israel: What that means",
+        "url": "https://www.aljazeera.com/features/2026/9/16/us-set-to-approve-60000-heavy-bombs-for-israel-what-that-means?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "The package of 2,000-pound bombs comes amid Israel's genocidal war on Gaza and its occupation of southern Lebanon.",
+        "event_date": "2026-09-16T12:09:45+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-16T13:02:42.290808+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 50,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-16T12:09:45+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-16-003",
+    "title": "Students in Gaza 'devastated' after plan for them to study in Belgium fails",
+    "summary": "Belgian government unable to agree on evacuation of 13 students to take up scholarships at universities Students who are unable to leave Gaza and take up scholarships at Belgian universities have said they are devastated after Belgium's government hit deadlock on a plan enabling them to leave the war-torn territory. Ahmed Abujami, a 28-year-old doctor in Gaza, said he was \"deeply disappointed\" after Belgium's five-party coalition government last Friday failed to agree on an evacuation plan for 13 students and researchers in the territory. Abujami has a scholarship to do a one-year master's degree in public health at the Institute of Tropical Medicine in Antwerp. He hopes to gain skills and experience to rebuild Gaza's shattered health system .",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-16-guardian-world-de8bb060a794"
+    ],
+    "source_ids": [
+      "gaza-2026-09-16-guardian-world-de8bb060a794"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/sep/16/gaza-students-devastated-belgium-university-scholarships"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-16-guardian-world-de8bb060a794",
+        "title": "Students in Gaza 'devastated' after plan for them to study in Belgium fails",
+        "url": "https://www.theguardian.com/world/2026/sep/16/gaza-students-devastated-belgium-university-scholarships",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Belgian government unable to agree on evacuation of 13 students to take up scholarships at universities Students who are unable to leave Gaza and take up scholarships at Belgian universities have said they are devastated after Belgium's government hit deadlock on a plan enabling them to leave the war-torn territory. Ahmed Abujami, a 28-year-old doctor in Gaza, said he was \"deeply disappointed\" after Belgium's five-party coalition government last Friday failed to agree on an evacuation plan for 13 students and researchers in the territory. Abujami has a scholarship to do a one-year master's degree in public health at the Institute of Tropical Medicine in Antwerp. He hopes to gain skills and experience to rebuild Gaza's shattered health system .",
+        "event_date": "2026-09-16T04:00:11+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-16T13:02:42.290808+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-16T04:00:11+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

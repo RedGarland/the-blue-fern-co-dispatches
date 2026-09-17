@@ -283,7 +283,15 @@ def receipt_completeness(
         grouped.setdefault(task_key, []).append(receipt)
         if task_key not in expected:
             inconsistent = True
-        artifact = receipt.get("artifact_refs", {}).get("task_receipt")
+        refs = receipt.get("artifact_refs", {}) if isinstance(receipt.get("artifact_refs"), dict) else {}
+        artifact = refs.get("task_receipt")
+        if (
+            not artifact
+            and expectations == ICE_TASK_EXPECTATIONS
+            and receipt.get("dispatch") == "ice"
+            and task_key == "ice_monitor"
+        ):
+            artifact = refs.get("monitor_receipt")
         if not isinstance(artifact, str) or not artifact:
             inconsistent = True
             continue
@@ -515,21 +523,23 @@ def build_ice_status(
     completeness, linkage = receipt_completeness(
         receipts, source_root=source_root, expectations=ICE_TASK_EXPECTATIONS
     )
+    expected_instances = None if receipts else [
+        {
+            "task_key": "ice_monitor",
+            "scheduled_for": _iso(_expected_run(date, "21:15", "America/Los_Angeles")),
+        }
+    ]
     aggregate = evaluate_dispatch_health(
         dispatch="ice",
         receipts=receipts,
         expectations=ICE_TASK_EXPECTATIONS,
         evaluated_at=evaluated_at,
         recovery=recovery,
-    ) if receipts else {
-        "overall_health": OperationalStatus.UNKNOWN.value,
-        "recovery_state": RecoveryState.HEALTHY.value,
-        "expected_tasks": [item.task_key for item in ICE_TASK_EXPECTATIONS],
-        "completed_tasks": [], "missed_tasks": [], "failed_tasks": [],
-        "degraded_tasks": [], "upstream_blocked_tasks": [],
-        "stale_observability": [], "latest_success_at": None,
-    }
-    aggregate_status = aggregate["overall_health"] if receipts else OperationalStatus.UNKNOWN.value
+        expected_instances=expected_instances,
+    )
+    aggregate_status = aggregate["overall_health"]
+    if not receipts and aggregate_status == OperationalStatus.SUCCESS.value:
+        aggregate_status = OperationalStatus.UNKNOWN.value
     if any(
         _positive_int((receipt.get("details") or {}).get("unaccounted")) > 0
         for receipt in receipts

@@ -232,8 +232,13 @@ def _write_care_fixture(root: Path, date: str, source_head: str | None) -> tuple
 
 def _write_ice_fixture(root: Path, date: str, source_head: str | None, *, status: OperationalStatus = OperationalStatus.SUCCESS, unaccounted: int = 0) -> Path:
     source = root / "ice-source"
-    artifact = source / "artifacts" / "ice-monitor.json"
-    _write_json(artifact, {"ok": True})
+    run_dir = source / "data" / "dispatches" / "ice" / "monitor" / "runs" / date / "cert-ice-monitor"
+    monitor_receipt = run_dir / "monitor_receipt.json"
+    operator_summary = run_dir / "operator_summary.json"
+    terminal_reconciliation = run_dir / "terminal_reconciliation.json"
+    _write_json(monitor_receipt, {"ok": True, "run_id": "cert-ice-monitor"})
+    _write_json(operator_summary, {"collection_health": "healthy"})
+    _write_json(terminal_reconciliation, {"unaccounted": unaccounted})
     started = datetime.fromisoformat(f"{date}T21:15:00").replace(tzinfo=ZoneInfo("America/Los_Angeles")).astimezone(timezone.utc)
     completed = started + timedelta(minutes=1)
     receipt = build_operational_receipt(
@@ -245,7 +250,13 @@ def _write_ice_fixture(root: Path, date: str, source_head: str | None, *, status
         classification="healthy" if status == OperationalStatus.SUCCESS else status.value.lower(),
         run_id="cert-ice-monitor", source_head=source_head, public_side_effects=_safe_side_effects(),
         publication_attempted=False, publication_status="not_authorized_monitor_only",
-        artifact_refs={"task_receipt": str(artifact)}, details={
+        artifact_refs={
+            "task_receipt": str(monitor_receipt),
+            "run_dir": str(run_dir),
+            "monitor_receipt": str(monitor_receipt),
+            "operator_summary": str(operator_summary),
+            "terminal_reconciliation": str(terminal_reconciliation),
+        }, details={
             "configured_providers": 16, "attempted_providers": 13,
             "successful_providers": 13 if status != OperationalStatus.FAILED else 0,
             "failed_providers": 0 if status != OperationalStatus.FAILED else 13,
@@ -266,7 +277,13 @@ def _simulate_status_export(options: CertificationOptions, source_head: str | No
         care, instances = _write_care_fixture(proof, date, source_head)
         kwargs.update(care_source_root=care, care_expected_instances=instances)
     if options.dispatch == "ice":
-        kwargs.update(ice_source_root=_write_ice_fixture(proof, date, source_head))
+        ice_source = _write_ice_fixture(proof, date, source_head)
+        ice_receipts = list((ice_source / "status" / "operational-health" / "ice" / date / "runs").glob("*.json"))
+        for path in ice_receipts:
+            receipt = json.loads(path.read_text(encoding="utf-8"))
+            if not (isinstance(receipt.get("artifact_refs"), dict) and receipt["artifact_refs"].get("task_receipt")):
+                return CertificationStatus.FAIL, "ICE certification fixture missing canonical task_receipt artifact linkage"
+        kwargs.update(ice_source_root=ice_source)
     evaluated_at = f"{date}T20:00:00Z"
     exported_at = f"{date}T20:01:00Z"
     if options.dispatch == "ice":

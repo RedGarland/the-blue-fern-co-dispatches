@@ -120,18 +120,33 @@ def _write_care_day(tmp_path: Path, *, include_older_collection: bool = False) -
     return source
 
 
-def _write_ice_day(tmp_path: Path, *, status: str = "SUCCESS", classification: str = "healthy", unaccounted: int = 0) -> Path:
+def _write_ice_day(
+    tmp_path: Path,
+    *,
+    status: str = "SUCCESS",
+    classification: str = "healthy",
+    unaccounted: int = 0,
+    date: str = DATE,
+    include_task_receipt: bool = True,
+) -> Path:
     source = tmp_path / "ice-source"
-    receipt_root = source / "status" / "operational-health" / "ice" / DATE / "runs"
+    receipt_root = source / "status" / "operational-health" / "ice" / date / "runs"
     receipt_root.mkdir(parents=True)
-    artifact = source / "status" / "ice" / "runs" / DATE / "monitor.json"
+    artifact = source / "data" / "dispatches" / "ice" / "monitor" / "runs" / date / "ice-monitor-1" / "monitor_receipt.json"
     artifact.parent.mkdir(parents=True, exist_ok=True)
     artifact.write_text("{}\n", encoding="utf-8")
+    artifact_refs = {
+        "monitor_receipt": str(artifact),
+        "operator_summary": str(artifact.with_name("operator_summary.json")),
+        "terminal_reconciliation": str(artifact.with_name("terminal_reconciliation.json")),
+    }
+    if include_task_receipt:
+        artifact_refs["task_receipt"] = str(artifact)
     receipt = build_operational_receipt(
         dispatch="ice",
         task_key="ice_monitor",
         task_name="Daily - ICE Monitor",
-        scheduled_for=DATE,
+        scheduled_for=date,
         started_at="2026-09-11T04:15:00Z",
         completed_at="2026-09-11T04:16:00Z",
         observed_at="2026-09-11T04:16:00Z",
@@ -142,10 +157,7 @@ def _write_ice_day(tmp_path: Path, *, status: str = "SUCCESS", classification: s
         runner_path=r"C:\BlueFernRunner\ICEMonitorCurrent",
         branch="add/pages-repo-default",
         source_head="26ab691dfeac1a2d94682d9205f76a245cbf92ad",
-        artifact_refs={
-            "task_receipt": str(artifact),
-            "raw_payload_path": r"C:\BlueFernRunner\private\source.json",
-        },
+        artifact_refs=artifact_refs,
         public_side_effects={"pages": False, "publication": False, "rss": False, "audio": False, "social": False, "source_text": "private"},
         publication_attempted=False,
         publication_status="not_authorized_monitor_only",
@@ -478,6 +490,7 @@ def test_ice_source_root_exports_migrated_status(tmp_path: Path, status: str, cl
     assert result["ice"]["migration_status"] == "MIGRATED"
     assert result["ice"]["aggregate_status"] == expected
     assert result["ice"]["receipt_completeness"] == "COMPLETE"
+    assert result["ice"]["task_summaries"][0]["artifact_id"] == "monitor_receipt.json"
     assert result["system"]["dispatches"]["ice"]["migration_status"] == "MIGRATED"
     assert result["system"]["dispatches"]["ice"]["aggregate_status"] == expected
     exported = json.dumps(result)
@@ -495,6 +508,59 @@ def test_ice_terminal_unaccounted_cannot_be_silently_healthy(tmp_path: Path) -> 
     )
 
     assert status["aggregate_status"] == "FAILED"
+
+
+def test_ice_legacy_monitor_receipt_linkage_is_complete_when_file_exists(tmp_path: Path) -> None:
+    status = build_ice_status(
+        source_root=_write_ice_day(tmp_path, include_task_receipt=False),
+        date=DATE,
+        evaluated_at="2026-09-11T05:00:00Z",
+        exported_at="2026-09-11T05:01:00Z",
+    )
+
+    assert status["receipt_completeness"] == "COMPLETE"
+    assert status["task_summaries"][0]["artifact_id"] == "monitor_receipt.json"
+
+
+def test_ice_status_before_due_does_not_reuse_yesterday_or_mark_stale(tmp_path: Path) -> None:
+    source = _write_ice_day(tmp_path, date="2026-09-09")
+    status = build_ice_status(
+        source_root=source,
+        date="2026-09-10",
+        evaluated_at="2026-09-11T03:00:00Z",
+        exported_at="2026-09-11T03:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "UNKNOWN"
+    assert status["receipt_completeness"] == "NO_PROOF"
+    assert status["stale_observability"] is False
+    assert status["task_summaries"] == []
+
+
+def test_ice_status_after_local_schedule_run_is_healthy_and_complete(tmp_path: Path) -> None:
+    status = build_ice_status(
+        source_root=_write_ice_day(tmp_path, date="2026-09-10"),
+        date="2026-09-10",
+        evaluated_at="2026-09-11T05:00:00Z",
+        exported_at="2026-09-11T05:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "SUCCESS"
+    assert status["receipt_completeness"] == "COMPLETE"
+    assert status["stale_observability"] is False
+    assert status["runner_source_head"] == "26ab691dfeac1a2d94682d9205f76a245cbf92ad"
+
+
+def test_ice_status_missing_after_grace_becomes_missed(tmp_path: Path) -> None:
+    status = build_ice_status(
+        source_root=tmp_path / "empty-ice-source",
+        date="2026-09-10",
+        evaluated_at="2026-09-11T08:30:00Z",
+        exported_at="2026-09-11T08:31:00Z",
+    )
+
+    assert status["aggregate_status"] == "MISSED"
+    assert status["stale_observability"] is False
 
 
 def test_care_source_root_without_expected_instances_fails_closed(tmp_path: Path) -> None:

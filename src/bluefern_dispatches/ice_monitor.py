@@ -9,6 +9,7 @@ from collections import Counter
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from bluefern_dispatches.ice_dispatch import (
     CollectionHealth,
@@ -37,6 +38,8 @@ PRODUCTION_BRANCH = "add/pages-repo-default"
 STATE_SCHEMA = "bluefern.ice.monitor.state.v1"
 QUEUE_SCHEMA = "bluefern.ice.monitor.review_queue.v1"
 RUN_SCHEMA = "bluefern.ice.monitor.run.v1"
+ICE_SCHEDULE_TIME = "21:15"
+ICE_SCHEDULE_TIMEZONE = "America/Los_Angeles"
 TERMINAL_REVIEW_STATES = {"REVIEWED", "REJECTED"}
 ACTIVE_REVIEW_STATES = {"NEW", "NEEDS_REVIEW", "NEEDS_CORROBORATION", "DUPLICATE_UPDATED"}
 
@@ -252,6 +255,18 @@ def _git_head(repo_root: Path) -> str | None:
     return head.stdout.strip()
 
 
+def scheduled_instance_date(observed_at: str) -> str:
+    observed = datetime.fromisoformat(observed_at.replace("Z", "+00:00"))
+    if observed.tzinfo is None:
+        observed = observed.replace(tzinfo=timezone.utc)
+    local = observed.astimezone(ZoneInfo(ICE_SCHEDULE_TIMEZONE))
+    hour, minute = map(int, ICE_SCHEDULE_TIME.split(":", 1))
+    scheduled = local.replace(hour=hour, minute=minute, second=0, microsecond=0)
+    if local < scheduled:
+        scheduled -= timedelta(days=1)
+    return scheduled.date().isoformat()
+
+
 def _operational_status_for_health(collection_health: str, canonical_events: int) -> OperationalStatus:
     if collection_health == CollectionHealth.COLLECTION_FAILED.value:
         return OperationalStatus.FAILED
@@ -278,9 +293,10 @@ def run_monitor(
     repo_root = repo_root.resolve()
     source_commit = verify_monitor_checkout(repo_root, branch=branch) if enforce_production_preflight else None
     observed_at = observed_at or utc_now()
+    scheduled_for = scheduled_instance_date(observed_at)
     run_id = run_id or f"ice-monitor-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}-{os.getpid()}"
     output_root = repo_root / output_root
-    run_path = output_root / "runs" / observed_at[:10] / run_id
+    run_path = output_root / "runs" / scheduled_for / run_id
     registry_path = (repo_root / registry).resolve() if not registry.is_absolute() else registry
     fixture_path = (repo_root / fixture).resolve() if fixture and not fixture.is_absolute() else fixture
     result = run_diagnostic(
@@ -338,7 +354,7 @@ def run_monitor(
         dispatch="ice",
         task_key="ice_monitor",
         task_name="Daily - ICE Monitor",
-        scheduled_for=observed_at[:10],
+        scheduled_for=scheduled_for,
         started_at=run_manifest.get("started_at"),
         completed_at=run_manifest.get("completed_at"),
         exit_code=0 if run_manifest["health"] != CollectionHealth.COLLECTION_FAILED.value else 2,
@@ -354,6 +370,7 @@ def run_monitor(
         publication_attempted=False,
         publication_status="not_authorized_monitor_only",
         artifact_refs={
+            "task_receipt": str(run_path / "monitor_receipt.json"),
             "run_dir": str(run_path),
             "monitor_receipt": str(run_path / "monitor_receipt.json"),
             "operator_summary": str(run_path / "operator_summary.json"),

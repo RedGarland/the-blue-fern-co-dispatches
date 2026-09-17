@@ -29,7 +29,7 @@
         "unaccounted_count": 0
       },
       "aggregate_status": "DEGRADED",
-      "latest_runtime_proof_date": "2026-09-17T15:00:02.787758Z",
+      "latest_runtime_proof_date": "2026-09-17T15:30:04Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-17",
       "receipt_completeness": "COMPLETE",
@@ -109,7 +109,7 @@
       "stale_observability": true
     }
   },
-  "exported_at": "2026-09-17T17:15:03.241556Z",
+  "exported_at": "2026-09-17T18:15:03.273201Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [
     "ice"

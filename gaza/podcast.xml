@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Wed, 16 Sep 2026 13:02:59 +0000</lastBuildDate>
+  <lastBuildDate>Thu, 17 Sep 2026 14:48:30 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for September 17, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-09-17-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-09-17-transcript.html</guid>
+    <pubDate>Thu, 17 Sep 2026 00:00:00 +0000</pubDate>
+    <description>Trump administration denies entry visas to Palestinian officials ahead of UN general assembly. It is the second year this administration has barred the Palestinian delegation from US travel ahead of the forum. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-09-17.mp3" length="1663488" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for September 16, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-09-16-transcript.html</link>

@@ -1,0 +1,74 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-09-17",
+  "generated_at": "2026-09-17T14:48:30.076767Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-09-17.mp3",
+  "audio_url": "/gaza/audio/2026-09-17.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1574,
+  "tts_input_word_count": 239,
+  "tts_story_count": 5,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1663488,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-09-17T14:48:30.076746Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-09-17-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-09-17/",
+  "script_text": "This is the Gaza Dispatch audio briefing for September 17, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Trump administration denies entry visas to Palestinian officials ahead of UN general assembly. It is the second year this administration has barred the Palestinian delegation from US travel ahead of the forum. This was reported by The Guardian.\n\n2. UK charities, protest groups condemn Israeli ban threat after sanctions. Having warned London of 'consequences' for sanctions, Israel targets UK charities, campaign groups and Palestine Action. This was reported by Al Jazeera.\n\n3. Eight children among 21 killed after war-damaged Gaza building collapses, rescuers say. Some 10 families had reportedly been living in the six-storey building in Gaza City that was hit by an Israeli strike last year. This was reported by BBC News.\n\n4. Ireland to boycott Eurovision again over Israeli participation and ongoing Gaza deaths. Ireland joins Netherlands in refusing to take part in 2027 song contest, in second consecutive year of protests Ireland is to boycott Eurovision for the second year running over the \"appalling\" ongoing killing in Gaza, the national broadcaster has said. This was reported by The Guardian.\n\n5. Gaza repairman helps journalists to keep documenting genocide. As journalists in Gaza continue documenting the war, camera repairman Mohammed Radwan keeps damaged equipment in use. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the September 17, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 5,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-09-17-guardian-world-e8f94815016b",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/us-news/2026/sep/17/trump-denies-visas-palestine-un",
+      "title": "Trump administration denies entry visas to Palestinian officials ahead of UN general assembly"
+    },
+    {
+      "source_record_id": "gaza-2026-09-17-aljazeera-middle-east-f3c2f95a273e",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/9/17/uk-charities-protest-groups-condemn-israeli-ban-threat-after-sanctions?traffic_source=rss",
+      "title": "UK charities, protest groups condemn Israeli ban threat after sanctions"
+    },
+    {
+      "source_record_id": "gaza-2026-09-17-bbc-middle-east-b3ee06074a0e",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/articles/cvp8d00j9gg5o?at_medium=RSS&at_campaign=rss",
+      "title": "Eight children among 21 killed after war-damaged Gaza building collapses, rescuers say"
+    },
+    {
+      "source_record_id": "gaza-2026-09-17-guardian-world-e720837f2cf6",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/tv-and-radio/2026/sep/17/ireland-to-boycott-eurovision-again-over-ongoing-deaths-in-gaza",
+      "title": "Ireland to boycott Eurovision again over Israeli participation and ongoing Gaza deaths"
+    },
+    {
+      "source_record_id": "gaza-2026-09-17-aljazeera-middle-east-9ecef4d2d194",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/9/17/gaza-repairman-helps-journalists-to-keep-documenting-genocide?traffic_source=rss",
+      "title": "Gaza repairman helps journalists to keep documenting genocide"
+    }
+  ]
+}

@@ -1,0 +1,482 @@
+[
+  {
+    "story_id": "gaza-story-2026-09-17-003",
+    "title": "At least 21 killed after Israeli-hit building in Gaza City collapses",
+    "summary": "Rescue workers say search for dozens of people hampered by lack of heavy machinery. A building housing about 100 displaced Palestinian families has collapsed in Gaza City, killing at least 21 people in their sleep, including 11 children, forcing rescuers to dig through the rubble with their bare hands as they search for dozens of people believed to be trapped. A rescue team from Gaza's civil defence said they had recovered the bodies of five children among the victims, while 25 injured people were taken to hospital. Medical sources said rescuers could hear the voices of people trapped beneath the rubble as they tried to reach them.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 84,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "displacement",
+      "health_infrastructure",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 8,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-17-guardian-world-e1dd62360497"
+    ],
+    "source_ids": [
+      "gaza-2026-09-17-guardian-world-e1dd62360497"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/sep/16/building-gaza-city-damaged-israeli-strikes-collapses-killed"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-17-guardian-world-e1dd62360497",
+        "title": "At least 21 killed after Israeli-hit building in Gaza City collapses",
+        "url": "https://www.theguardian.com/world/2026/sep/16/building-gaza-city-damaged-israeli-strikes-collapses-killed",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Rescue workers say search for dozens of people hampered by lack of heavy machinery A building housing about 100 displaced Palestinian families has collapsed in Gaza City, killing at least 21 people in their sleep, including 11 children, forcing rescuers to dig through the rubble with their bare hands as they search for dozens of people believed to be trapped. A rescue team from Gaza's civil defence said they had recovered the bodies of five children among the victims, while 25 injured people were taken to hospital. Medical sources said rescuers could hear the voices of people trapped beneath the rubble as they tried to reach them.",
+        "event_date": "2026-09-16T16:36:15+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-17T14:48:09.791274+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 84,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-16T16:36:15+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "skip",
+    "public_rendered": false,
+    "prior_story_matched": "gaza-story-2026-09-16-004",
+    "prior_edition_date": "2026-09-16",
+    "dedupe_classification": "duplicate_skip",
+    "dedupe_reasons": [
+      "same_topic",
+      "new_source_or_summary_detail",
+      "source_url_seen_before",
+      "non_material_continuation"
+    ]
+  },
+  {
+    "story_id": "gaza-story-2026-09-17-004",
+    "title": "Trump administration denies entry visas to Palestinian officials ahead of UN general assembly",
+    "summary": "It is the second year this administration has barred the Palestinian delegation from US travel ahead of the forum. The state department said in a statement that the Palestinian Authority (PA) and the Palestine Liberation Organization (PLO) had \"failed to live up to their commitments\", accusing the groups of \"taking actions to internationalize the Israeli-Palestinian Conflict including through the International Criminal Court (ICC) and International Court of Justice (ICJ)\" and of \"glorifying terrorism\" among other allegations. The US state department said on Wednesday that it had again denied entry visas to Palestinian officials ahead next week's United Nations general assembly gathering in New York .",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 79,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-17-guardian-world-e8f94815016b"
+    ],
+    "source_ids": [
+      "gaza-2026-09-17-guardian-world-e8f94815016b"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/us-news/2026/sep/17/trump-denies-visas-palestine-un"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-17-guardian-world-e8f94815016b",
+        "title": "Trump administration denies entry visas to Palestinian officials ahead of UN general assembly",
+        "url": "https://www.theguardian.com/us-news/2026/sep/17/trump-denies-visas-palestine-un",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "It is the second year this administration has barred the Palestinian delegation from US travel ahead of the forum The US state department said on Wednesday that it had again denied entry visas to Palestinian officials ahead next week's United Nations general assembly gathering in New York . The state department said in a statement that the Palestinian Authority (PA) and the Palestine Liberation Organization (PLO) had \"failed to live up to their commitments\", accusing the groups of \"taking actions to internationalize the Israeli-Palestinian Conflict including through the International Criminal Court (ICC) and International Court of Justice (ICJ)\" and of \"glorifying terrorism\" among other allegations.",
+        "event_date": "2026-09-17T13:36:15+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-17T14:48:09.791274+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 79,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-17T13:36:15+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-06-004",
+    "prior_edition_date": "2026-07-06",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-17-006",
+    "title": "UK charities, protest groups condemn Israeli ban threat after sanctions",
+    "summary": "Having warned London of 'consequences' for sanctions, Israel targets UK charities, campaign groups and Palestine Action.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 52,
+    "scoring_reasons": [
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-17-aljazeera-middle-east-f3c2f95a273e"
+    ],
+    "source_ids": [
+      "gaza-2026-09-17-aljazeera-middle-east-f3c2f95a273e"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/9/17/uk-charities-protest-groups-condemn-israeli-ban-threat-after-sanctions?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-17-aljazeera-middle-east-f3c2f95a273e",
+        "title": "UK charities, protest groups condemn Israeli ban threat after sanctions",
+        "url": "https://www.aljazeera.com/news/2026/9/17/uk-charities-protest-groups-condemn-israeli-ban-threat-after-sanctions?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Having warned London of 'consequences' for sanctions, Israel targets UK charities, campaign groups and Palestine Action.",
+        "event_date": "2026-09-17T10:19:24+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-17T14:48:09.791274+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 52,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-17T10:19:24+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-17-001",
+    "title": "Eight children among 21 killed after war-damaged Gaza building collapses, rescuers say",
+    "summary": "Some 10 families had reportedly been living in the six-storey building in Gaza City that was hit by an Israeli strike last year.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 48,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-17-bbc-middle-east-b3ee06074a0e"
+    ],
+    "source_ids": [
+      "gaza-2026-09-17-bbc-middle-east-b3ee06074a0e"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/cvp8d00j9gg5o?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-17-bbc-middle-east-b3ee06074a0e",
+        "title": "Eight children among 21 killed after war-damaged Gaza building collapses, rescuers say",
+        "url": "https://www.bbc.co.uk/news/articles/cvp8d00j9gg5o?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Some 10 families had reportedly been living in the six-storey building in Gaza City that was hit by an Israeli strike last year.",
+        "event_date": "2026-09-16T17:16:47+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-17T14:48:09.791274+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 48,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-16T17:16:47+00:00",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-16-004",
+    "prior_edition_date": "2026-09-16",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-17-002",
+    "title": "Ireland to boycott Eurovision again over Israeli participation and ongoing Gaza deaths",
+    "summary": "Ireland joins Netherlands in refusing to take part in 2027 song contest, in second consecutive year of protests Ireland is to boycott Eurovision for the second year running over the \"appalling\" ongoing killing in Gaza, the national broadcaster has said. Ireland was one of five countries , along with Iceland, Netherlands, Spain, and Slovenia, that refused to take part in the competition this year in protest against Israel's participation.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 53,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-17-guardian-world-e720837f2cf6"
+    ],
+    "source_ids": [
+      "gaza-2026-09-17-guardian-world-e720837f2cf6"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/tv-and-radio/2026/sep/17/ireland-to-boycott-eurovision-again-over-ongoing-deaths-in-gaza"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-17-guardian-world-e720837f2cf6",
+        "title": "Ireland to boycott Eurovision again over Israeli participation and ongoing Gaza deaths",
+        "url": "https://www.theguardian.com/tv-and-radio/2026/sep/17/ireland-to-boycott-eurovision-again-over-ongoing-deaths-in-gaza",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Ireland joins Netherlands in refusing to take part in 2027 song contest, in second consecutive year of protests Ireland is to boycott Eurovision for the second year running over the \"appalling\" ongoing killing in Gaza, the national broadcaster has said. Ireland was one of five countries , along with Iceland, Netherlands, Spain, and Slovenia, that refused to take part in the competition this year in protest against Israel's participation.",
+        "event_date": "2026-09-17T13:26:06+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-17T14:48:09.791274+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 53,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-17T13:26:06+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-17-005",
+    "title": "Gaza repairman helps journalists to keep documenting genocide",
+    "summary": "As journalists in Gaza continue documenting the war, camera repairman Mohammed Radwan keeps damaged equipment in use.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-17-aljazeera-middle-east-9ecef4d2d194"
+    ],
+    "source_ids": [
+      "gaza-2026-09-17-aljazeera-middle-east-9ecef4d2d194"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/9/17/gaza-repairman-helps-journalists-to-keep-documenting-genocide?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-17-aljazeera-middle-east-9ecef4d2d194",
+        "title": "Gaza repairman helps journalists to keep documenting genocide",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/9/17/gaza-repairman-helps-journalists-to-keep-documenting-genocide?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "As journalists in Gaza continue documenting the war, camera repairman Mohammed Radwan keeps damaged equipment in use.",
+        "event_date": "2026-09-17T11:01:03+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-17T14:48:09.791274+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-17T11:01:03+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

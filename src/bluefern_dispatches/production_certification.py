@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib
+import importlib.util
 import json
 import os
 import py_compile
@@ -80,15 +81,52 @@ def _git(root: Path, *args: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(["git", *args], cwd=root, capture_output=True, text=True, check=False)
 
 
-def _source_state(root: Path) -> tuple[CertificationStatus, str, str | None]:
+def _load_preflight_report_builder(root: Path) -> Any:
+    script = root / "scripts" / "preflight_repo_state.py"
+    if not script.is_file():
+        raise FileNotFoundError(script)
+    module_name = f"_bluefern_preflight_{uuid.uuid4().hex}"
+    spec = importlib.util.spec_from_file_location(module_name, script)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"cannot load preflight module from {script}")
+    module = importlib.util.module_from_spec(spec)
+    previous_path = list(sys.path)
+    try:
+        sys.path[:0] = [str(root), str(root / "src")]
+        spec.loader.exec_module(module)
+    finally:
+        sys.path[:] = previous_path
+        sys.modules.pop(module_name, None)
+    return module.build_preflight_report
+
+
+def _source_state(root: Path) -> tuple[CertificationStatus, str, str | None, dict[str, Any]]:
     head = _git(root, "rev-parse", "HEAD")
-    status = _git(root, "status", "--porcelain=v1", "--untracked-files=all")
-    if head.returncode or status.returncode:
-        return CertificationStatus.FAIL, "cannot inspect git source state", None
-    dirty = [line for line in status.stdout.splitlines() if line.strip()]
-    if dirty:
-        return CertificationStatus.FAIL, "source root has dirty tracked or untracked state", head.stdout.strip()
-    return CertificationStatus.PASS, "source root is inspectable and clean", head.stdout.strip()
+    if head.returncode:
+        return CertificationStatus.FAIL, "cannot inspect git source state", None, {"state": "unknown"}
+    source_head = head.stdout.strip()
+    try:
+        report = _load_preflight_report_builder(root)(root, None)
+    except Exception as exc:
+        return CertificationStatus.FAIL, f"cannot classify source state: {type(exc).__name__}: {exc}", source_head, {"state": "unknown"}
+    source_summary = report["source_repo"]["summary"]
+    pages_summary = (report.get("pages_repo") or {}).get("summary", {})
+    risky_count = len(source_summary["risky_entries"]) + len(pages_summary.get("risky_entries", []))
+    allowed_count = len(source_summary["allowed_entries"]) + len(pages_summary.get("allowed_entries", []))
+    entry_count = source_summary["entry_count"] + pages_summary.get("entry_count", 0)
+    details = {
+        "state": "risky-dirty" if risky_count else "allowed-runtime-dirty" if allowed_count else "clean",
+        "source_entry_count": source_summary["entry_count"],
+        "allowed_entry_count": allowed_count,
+        "risky_entry_count": risky_count,
+        "source_categories": source_summary["category_counts"],
+        "pages_repo_status": report.get("pages_repo_status"),
+    }
+    if risky_count:
+        return CertificationStatus.FAIL, "source root has risky dirty state", source_head, details
+    if entry_count:
+        return CertificationStatus.PASS, "source root has only sanctioned runtime/generated state", source_head, details
+    return CertificationStatus.PASS, "source root is inspectable and clean", source_head, details
 
 
 def _preflight(root: Path) -> tuple[CertificationStatus, str]:
@@ -263,8 +301,8 @@ def run_certification(options: CertificationOptions) -> dict[str, Any]:
     proof_root.mkdir(parents=True, exist_ok=True)
     started = _utc_now()
     stages: list[dict[str, Any]] = []
-    source_status, source_message, source_head = _source_state(source_root)
-    stages.append(_stage("SOURCE_STATE", source_status, source_message))
+    source_status, source_message, source_head, source_details = _source_state(source_root)
+    stages.append(_stage("SOURCE_STATE", source_status, source_message, details=source_details))
     preflight_status, preflight_message = _preflight(source_root)
     stages.append(_stage("PREFLIGHT", preflight_status, preflight_message))
     try:

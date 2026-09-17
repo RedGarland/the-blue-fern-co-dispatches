@@ -10,24 +10,35 @@ from bluefern_dispatches.scheduled_recovery import evaluate_recovery
 DATE = "2026-09-10"
 
 
-def _write_receipt(root: Path, *, task_key: str, status: OperationalStatus, classification: str, started: str = "2026-09-10T12:30:00Z") -> None:
+def _write_receipt(
+    root: Path,
+    *,
+    task_key: str,
+    status: OperationalStatus,
+    classification: str,
+    started: str = "2026-09-10T12:30:00Z",
+    dispatch: str = "food-line",
+    exit_code: int | None = None,
+    name: str | None = None,
+) -> None:
     artifact = root / "artifact.json"
+    artifact.parent.mkdir(parents=True, exist_ok=True)
     artifact.write_text("{}\n", encoding="utf-8")
     receipt = build_operational_receipt(
-        dispatch="food-line",
+        dispatch=dispatch,
         task_key=task_key,
         task_name=task_key,
         scheduled_for=DATE,
         started_at=started,
         completed_at=started,
-        exit_code=0 if status in {OperationalStatus.SUCCESS, OperationalStatus.SAFE_NO_OP} else 1,
+        exit_code=exit_code if exit_code is not None else 0 if status in {OperationalStatus.SUCCESS, OperationalStatus.SAFE_NO_OP} else 1,
         status=status,
         classification=classification,
-        run_id=f"{task_key}-run",
+        run_id=name or f"{task_key}-run",
         public_side_effects={},
         artifact_refs={"task_receipt": str(artifact)},
     )
-    path = root / "status" / "operational-health" / "food-line" / DATE / "runs" / f"{task_key}.json"
+    path = root / "status" / "operational-health" / dispatch / DATE / "runs" / f"{name or task_key}.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(receipt), encoding="utf-8")
 
@@ -62,6 +73,89 @@ def test_retryable_transient_failure_and_max_attempts(tmp_path: Path) -> None:
     assert capped["overall_recommendation"] == "MANUAL_ATTENTION"
 
 
+def test_terminal_degraded_food_source_watch_does_not_raise_recovery_attention(tmp_path: Path) -> None:
+    _write_receipt(
+        tmp_path,
+        task_key="food_line_source_watch",
+        status=OperationalStatus.DEGRADED,
+        classification="completed_with_exclusions",
+        exit_code=0,
+    )
+
+    report = evaluate_recovery(dispatch="food-line", source_root=tmp_path, date=DATE, evaluated_at="2026-09-10T15:00:00Z")
+    row = next(item for item in report["instances"] if item["task_key"] == "food_line_source_watch")
+
+    assert row["state"] == "DEGRADED_TERMINAL"
+    assert row["recommendation"] == "NO_ACTION"
+    assert row["receipt_status"] == "DEGRADED"
+    assert row["classification"] == "completed_with_exclusions"
+    assert row["retry_eligible"] is False
+    assert report["overall_recommendation"] != "MANUAL_ATTENTION"
+
+
+def test_terminal_degraded_care_collection_does_not_raise_recovery_attention(tmp_path: Path) -> None:
+    _write_receipt(
+        tmp_path,
+        dispatch="care-line",
+        task_key="care_line_collection",
+        status=OperationalStatus.DEGRADED,
+        classification="partial_success",
+        started="2026-09-10T13:00:00Z",
+        exit_code=0,
+    )
+
+    report = evaluate_recovery(dispatch="care-line", source_root=tmp_path, date=DATE, evaluated_at="2026-09-10T20:00:00Z")
+    row = next(item for item in report["instances"] if item["task_key"] == "care_line_collection")
+
+    assert row["state"] == "DEGRADED_TERMINAL"
+    assert row["recommendation"] == "NO_ACTION"
+    assert row["classification"] == "partial_success"
+    assert row["retry_eligible"] is False
+    assert report["overall_recommendation"] != "MANUAL_ATTENTION"
+
+
+def test_degraded_transient_classification_is_retry_eligible(tmp_path: Path) -> None:
+    _write_receipt(
+        tmp_path,
+        task_key="food_line_source_watch",
+        status=OperationalStatus.DEGRADED,
+        classification="provider_timeout",
+        exit_code=0,
+    )
+
+    report = evaluate_recovery(dispatch="food-line", source_root=tmp_path, date=DATE, evaluated_at="2026-09-10T15:00:00Z")
+    row = next(item for item in report["instances"] if item["task_key"] == "food_line_source_watch")
+
+    assert row["state"] == "FAILED_RETRYABLE"
+    assert row["recommendation"] == "RETRY_ELIGIBLE"
+    assert row["retry_eligible"] is True
+
+
+def test_failed_transient_and_nonretryable_classifications_are_distinct(tmp_path: Path) -> None:
+    _write_receipt(
+        tmp_path / "transient",
+        task_key="food_line_source_watch",
+        status=OperationalStatus.FAILED,
+        classification="provider_timeout",
+    )
+    _write_receipt(
+        tmp_path / "nonretryable",
+        task_key="food_line_source_watch",
+        status=OperationalStatus.FAILED,
+        classification="invalid_configuration",
+    )
+
+    transient = evaluate_recovery(
+        dispatch="food-line", source_root=tmp_path / "transient", date=DATE, evaluated_at="2026-09-10T15:00:00Z"
+    )
+    nonretryable = evaluate_recovery(
+        dispatch="food-line", source_root=tmp_path / "nonretryable", date=DATE, evaluated_at="2026-09-10T15:00:00Z"
+    )
+
+    assert transient["overall_recommendation"] == "RETRY_ELIGIBLE"
+    assert nonretryable["overall_recommendation"] == "MANUAL_ATTENTION"
+
+
 def test_publication_and_nonretryable_failures_require_manual_attention(tmp_path: Path) -> None:
     _write_receipt(
         tmp_path,
@@ -91,6 +185,48 @@ def test_successful_terminal_result_suppresses_retry(tmp_path: Path) -> None:
     first = next(row for row in report["instances"] if row["task_key"] == "food_line_source_watch")
     assert first["state"] == "RECOVERED"
     assert first["recommendation"] == "NO_ACTION"
+
+
+def test_safe_no_op_terminal_result_suppresses_retry(tmp_path: Path) -> None:
+    _write_receipt(
+        tmp_path,
+        task_key="food_line_daily_publish",
+        status=OperationalStatus.SAFE_NO_OP,
+        classification="nothing_to_publish",
+        started="2026-09-10T15:30:00Z",
+    )
+
+    report = evaluate_recovery(dispatch="food-line", source_root=tmp_path, date=DATE, evaluated_at="2026-09-10T18:00:00Z")
+    row = next(item for item in report["instances"] if item["task_key"] == "food_line_daily_publish")
+
+    assert row["state"] == "RECOVERED"
+    assert row["recommendation"] == "NO_ACTION"
+
+
+def test_later_success_after_earlier_failure_suppresses_retry(tmp_path: Path) -> None:
+    _write_receipt(
+        tmp_path,
+        task_key="food_line_source_watch",
+        status=OperationalStatus.FAILED,
+        classification="provider_timeout",
+        started="2026-09-10T12:30:00Z",
+        name="01-failed",
+    )
+    _write_receipt(
+        tmp_path,
+        task_key="food_line_source_watch",
+        status=OperationalStatus.SUCCESS,
+        classification="completed",
+        started="2026-09-10T12:45:00Z",
+        name="02-success",
+    )
+
+    report = evaluate_recovery(dispatch="food-line", source_root=tmp_path, date=DATE, evaluated_at="2026-09-10T15:00:00Z")
+    row = next(item for item in report["instances"] if item["task_key"] == "food_line_source_watch")
+
+    assert row["state"] == "RECOVERED"
+    assert row["recommendation"] == "NO_ACTION"
+    assert row["receipt_status"] == "SUCCESS"
 
 
 def test_missing_after_recovery_window_is_expired(tmp_path: Path) -> None:

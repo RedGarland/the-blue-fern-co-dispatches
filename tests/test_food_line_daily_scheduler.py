@@ -1758,3 +1758,140 @@ def test_current_intake_corrupt_source_watch_record_still_fails_closed(tmp_path:
         )
     )
     assert operational["status"] == "FAILED"
+
+
+def _write_terminal_source_receipt(
+    root: Path,
+    *,
+    edition_date: str = "2026-09-07",
+    run_id: str = "source-watch-test",
+    status: str = "completed_with_exclusions",
+    receipt_run_id: str | None = None,
+    receipt_date: str | None = None,
+    exit_code: int = 0,
+) -> Path:
+    path = root / "logs" / "food-line" / "source-watch" / edition_date / "20260907T123100Z-source-watch.json"
+    payload = {
+        "schema_version": scheduler.SOURCE_RECEIPT_SCHEMA,
+        "action": "source_watch",
+        "task_started_at": "2026-09-07T12:30:00Z",
+        "task_completed_at": "2026-09-07T12:31:00Z",
+        "edition_date": receipt_date or edition_date,
+        "source_commit": "test-source-commit",
+        "source_branch": scheduler.PRODUCTION_BRANCH,
+        "run_id": receipt_run_id or run_id,
+        "final_status": status,
+        "child_outcome_classification": "allowed_nonfatal_completed_with_exclusions" if status == "completed_with_exclusions" else "success",
+        "child_validation_error": "",
+        "command_exit_code": exit_code,
+        "exit_code": exit_code,
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return path
+
+
+def _install_terminal_source_watch_without_record(
+    root: Path,
+    *,
+    status: str = "completed_with_exclusions",
+    receipt_run_id: str | None = None,
+    receipt_date: str | None = None,
+    export_present: bool = True,
+    final_error: str = "",
+) -> None:
+    _write_source_watch_artifacts(
+        root,
+        edition_date="2026-09-07",
+        run_id="source-watch-test",
+        status=status,
+        export_present=export_present,
+        final_error=final_error,
+    )
+    _write_terminal_source_receipt(
+        root,
+        status=status,
+        receipt_run_id=receipt_run_id,
+        receipt_date=receipt_date,
+        exit_code=0,
+    )
+
+
+def test_completed_with_exclusions_missing_record_reconciles_for_resume(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _install_terminal_source_watch_without_record(tmp_path, status="completed_with_exclusions")
+    monkeypatch.setattr(scheduler, "verify_checkout", lambda *args, **kwargs: "test-source-commit")
+    monkeypatch.setattr(scheduler, "run_preflight", lambda *args, **kwargs: None)
+    monkeypatch.setattr(scheduler, "_invoke_python", lambda *args, **kwargs: subprocess.CompletedProcess([], 0, stdout="", stderr=""))
+    monkeypatch.setattr(scheduler, "surviving_worker_pids", lambda *args, **kwargs: [])
+
+    code = scheduler.run_resume(_resume_args(tmp_path))
+
+    assert code == 0
+    record = json.loads((tmp_path / "status" / "food-line" / "runs" / "2026-09-07.json").read_text(encoding="utf-8"))
+    assert record["source_watch_status"] == "completed_with_exclusions"
+    assert record["source_receipt_path"].endswith("-source-watch.json")
+    receipt = json.loads(next((tmp_path / "logs" / "food-line" / "source-watch" / "2026-09-07").glob("*-status-resume.json")).read_text(encoding="utf-8"))
+    assert receipt["resume_status"] == "resume_not_required"
+    assert receipt["exit_code"] == 0
+
+
+def test_completed_with_exclusions_missing_record_reconciles_for_current_intake(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _install_terminal_source_watch_without_record(tmp_path, status="completed_with_exclusions")
+    monkeypatch.setattr(scheduler, "verify_checkout", lambda *args, **kwargs: "test-source-commit")
+    monkeypatch.setattr(scheduler, "run_preflight", lambda *args, **kwargs: None)
+    monkeypatch.setattr(scheduler, "surviving_worker_pids", lambda *args, **kwargs: [])
+
+    def fake_invoke(python: Path, root: Path, arguments: list[str]) -> subprocess.CompletedProcess[str]:
+        report = root / "data" / "dispatches" / "food-line" / "review" / "reports" / "2026-09-07" / "current-intake.json"
+        report.parent.mkdir(parents=True, exist_ok=True)
+        report.write_text(
+            json.dumps(
+                {
+                    "schema_version": "food_line_current_intake_report_v1",
+                    "status": "success",
+                    "errors": [],
+                    "discovered_file_count": 1,
+                    "accepted_file_count": 1,
+                    "import_count": 1,
+                    "publication_side_effects": {},
+                    "queue": {"item_count": 1},
+                    "proposal": {"draft_status": "draft_pending_editorial_review", "markdown_path": str(root / "proposal.md")},
+                }
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        return subprocess.CompletedProcess([str(python), *arguments], 0, stdout="", stderr="")
+
+    monkeypatch.setattr(scheduler, "_invoke_python", fake_invoke)
+
+    code = scheduler.run_intake(_intake_args(tmp_path))
+
+    assert code == 0
+    receipt = json.loads(next((tmp_path / "logs" / "food-line" / "current-intake" / "2026-09-07").glob("*-current-intake.json")).read_text(encoding="utf-8"))
+    assert receipt["source_status"] == "completed_with_exclusions"
+    assert receipt.get("status") != scheduler.UPSTREAM_NOT_INITIALIZED_STATUS
+
+
+@pytest.mark.parametrize(
+    ("kwargs", "expected_status"),
+    [
+        ({"receipt_run_id": "other-run"}, scheduler.UPSTREAM_NOT_INITIALIZED_STATUS),
+        ({"receipt_date": "2026-09-06"}, scheduler.UPSTREAM_NOT_INITIALIZED_STATUS),
+        ({"status": "failed"}, scheduler.UPSTREAM_NOT_INITIALIZED_STATUS),
+        ({"export_present": False}, scheduler.UPSTREAM_NOT_INITIALIZED_STATUS),
+        ({"final_error": "fatal child result"}, scheduler.UPSTREAM_NOT_INITIALIZED_STATUS),
+    ],
+)
+def test_terminal_source_watch_reconciliation_fails_closed_for_mismatched_or_incomplete_evidence(
+    tmp_path: Path,
+    kwargs: dict[str, object],
+    expected_status: str,
+) -> None:
+    _install_terminal_source_watch_without_record(tmp_path, **kwargs)
+
+    code = scheduler.run_intake(_intake_args(tmp_path))
+
+    assert code == 0
+    receipt = json.loads(next((tmp_path / "logs" / "food-line" / "current-intake" / "2026-09-07").glob("*-current-intake.json")).read_text(encoding="utf-8"))
+    assert receipt["status"] == expected_status

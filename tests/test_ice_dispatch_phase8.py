@@ -118,10 +118,32 @@ def test_monitor_only_mode_writes_durable_queue_and_no_public_side_effects(tmp_p
     assert receipt["status"] == "SUCCESS"
     assert receipt["classification"] == "healthy"
     assert receipt["collection_health"] == "healthy"
+    assert receipt["artifact_refs"]["task_receipt"] == receipt["artifact_refs"]["monitor_receipt"]
+    assert Path(receipt["artifact_refs"]["task_receipt"]).name == "monitor_receipt.json"
     assert receipt["publication_attempted"] is False
     assert receipt["publication_status"] == "not_authorized_monitor_only"
     assert receipt["public_side_effects"] == {"audio": False, "pages": False, "publication": False, "rss": False, "social": False}
     assert receipt["details"]["unaccounted"] == 0
+
+
+def test_monitor_maps_utc_after_midnight_to_pacific_scheduled_instance_date(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    code, payload = run_once(
+        tmp_path,
+        monkeypatch,
+        [event()],
+        run_id="sep16-local",
+        observed_at="2026-09-17T04:15:00Z",
+    )
+
+    assert code == 0
+    assert Path(payload["run_dir"]).parts[-2:] == ("2026-09-16", "sep16-local")
+    receipt = json.loads(Path(payload["operational_health_receipt"]).read_text(encoding="utf-8"))
+    assert receipt["scheduled_for"] == "2026-09-16"
+    assert Path(payload["operational_health_receipt"]).as_posix().endswith(
+        "status/operational-health/ice/2026-09-16/runs/ice_monitor-sep16-local.json"
+    )
 
 
 def test_no_new_events_is_successful_no_new_reviewable_events(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

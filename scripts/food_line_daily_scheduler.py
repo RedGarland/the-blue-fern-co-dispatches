@@ -519,7 +519,11 @@ def _run_record_status(record: dict[str, Any] | None) -> str:
 
 
 def _existing_record_is_success(record: dict[str, Any] | None) -> bool:
-    return _run_record_status(record) in TERMINAL_SUCCESS_STATUSES and bool(record.get("source_receipt_path") if isinstance(record, dict) else False)
+    return (
+        _run_record_status(record) in TERMINAL_SUCCESS_STATUSES
+        and bool(record.get("source_receipt_path") if isinstance(record, dict) else False)
+        and bool(record.get("run_state_path") if isinstance(record, dict) else False)
+    )
 
 
 def write_run_record(layout: Layout, edition_date: str, record: dict[str, Any], *, preserve_success: bool = True) -> None:
@@ -535,6 +539,112 @@ def write_run_record(layout: Layout, edition_date: str, record: dict[str, Any], 
     payload.setdefault("edition_date", edition_date)
     payload["updated_at"] = utc_now()
     atomic_write_json(layout.run_record(edition_date), payload)
+
+
+def _source_receipt_matches_terminal_state(
+    receipt: dict[str, Any],
+    state: dict[str, Any],
+    *,
+    edition_date: str,
+    run_id: str,
+) -> bool:
+    status = _nonempty_text(state.get("status"))
+    if status not in TERMINAL_SUCCESS_STATUSES:
+        return False
+    if receipt.get("schema_version") != SOURCE_RECEIPT_SCHEMA or receipt.get("action") != "source_watch":
+        return False
+    if _nonempty_text(receipt.get("edition_date")) != edition_date or _nonempty_text(receipt.get("run_id")) != run_id:
+        return False
+    if _nonempty_text(receipt.get("final_status")) != status:
+        return False
+    if _nonempty_text(receipt.get("child_validation_error")):
+        return False
+    if _nonempty_text(receipt.get("child_outcome_classification")) not in {"success", "allowed_nonfatal_completed_with_exclusions"}:
+        return False
+    try:
+        exit_code = int(receipt.get("exit_code"))
+        command_exit_code = int(receipt.get("command_exit_code"))
+    except (TypeError, ValueError):
+        return False
+    if exit_code != 0 or command_exit_code != 0:
+        return False
+    if _nonempty_text(receipt.get("fatal_error") or receipt.get("final_error") or receipt.get("reason")):
+        return False
+    if _state_requires_export(state) and not _required_export_exists(state):
+        return False
+    return collection_qualifies(state)
+
+
+def _find_terminal_source_receipt(
+    layout: Layout,
+    edition_date: str,
+    state: dict[str, Any],
+    *,
+    run_id: str,
+) -> Path | None:
+    matches: list[Path] = []
+    for path in sorted(layout.source_log_dir(edition_date).glob("*-source-watch.json")):
+        try:
+            receipt = read_json(path)
+        except SchedulerError:
+            continue
+        if _source_receipt_matches_terminal_state(receipt, state, edition_date=edition_date, run_id=run_id):
+            matches.append(path)
+    return matches[0] if len(matches) == 1 else None
+
+
+def _reconcile_terminal_source_watch_record(layout: Layout, edition_date: str, record: dict[str, Any] | None = None) -> dict[str, Any] | None:
+    candidates: list[dict[str, Any]] = []
+    if record is not None:
+        run_id = _nonempty_text(record.get("run_id"))
+        state_path = layout.run_dir(edition_date, run_id) / "run-state.json" if run_id else None
+        state_paths = [state_path] if state_path is not None else []
+    else:
+        state_paths = sorted((layout.root / "data" / "dispatches" / "food-line" / "discovery-runs" / edition_date).glob("*/run-state.json"))
+    for state_path in state_paths:
+        try:
+            state = read_json(state_path)
+        except SchedulerError:
+            continue
+        run_id = _nonempty_text(state.get("run_id"))
+        if not run_id:
+            continue
+        try:
+            validate_run_state(state, edition_date, run_id)
+        except SchedulerError:
+            continue
+        receipt_path = _find_terminal_source_receipt(layout, edition_date, state, run_id=run_id)
+        if receipt_path is None:
+            continue
+        receipt = read_json(receipt_path)
+        if record is not None:
+            source_commit = _nonempty_text(record.get("source_commit") or receipt.get("source_commit"))
+            source_branch = _nonempty_text(record.get("source_branch") or receipt.get("source_branch"))
+        else:
+            source_commit = _nonempty_text(receipt.get("source_commit"))
+            source_branch = _nonempty_text(receipt.get("source_branch"))
+        candidates.append(
+            {
+                "schema_version": RUN_RECORD_SCHEMA,
+                "edition_date": edition_date,
+                "run_id": run_id,
+                "source_branch": source_branch,
+                "source_commit": source_commit,
+                "run_state_path": str(state_path),
+                "source_watch_status": state.get("status"),
+                "last_status": state.get("status"),
+                "source_receipt_path": str(receipt_path),
+                "resume_attempted": bool((record or {}).get("resume_attempted", False)),
+                "release_ready": bool((record or {}).get("release_ready", False)),
+                "reconciled_from_terminal_artifacts": True,
+                "reconciled_at": utc_now(),
+            }
+        )
+    if len(candidates) != 1:
+        return None
+    reconciled = candidates[0]
+    write_run_record(layout, edition_date, reconciled, preserve_success=False)
+    return reconciled
 
 
 def initial_run_record(
@@ -922,6 +1032,8 @@ def run_source_watch(args: argparse.Namespace) -> int:
             }
             receipt_path = _source_receipt_path(layout, edition_date, "source-watch")
             atomic_write_json(receipt_path, receipt)
+            record.update({"last_status": state.get("status"), "source_watch_status": state.get("status"), "source_receipt_path": str(receipt_path)})
+            write_run_record(layout, edition_date, record, preserve_success=False)
             operational_receipt_path = _write_food_line_operational_health_receipt(
                 layout,
                 edition_date,
@@ -932,8 +1044,6 @@ def run_source_watch(args: argparse.Namespace) -> int:
             )
             receipt["operational_health_receipt_path"] = str(operational_receipt_path)
             atomic_write_json(receipt_path, receipt)
-            record.update({"last_status": state.get("status"), "source_watch_status": state.get("status"), "source_receipt_path": str(receipt_path)})
-            write_run_record(layout, edition_date, record, preserve_success=False)
             print(terminal_json({"ok": scheduler_success, "receipt_path": str(receipt_path), **receipt}))
             if scheduler_success:
                 return 0
@@ -1039,9 +1149,13 @@ def _load_record_and_state(layout: Layout, edition_date: str) -> tuple[dict[str,
 def _load_run_record(layout: Layout, edition_date: str) -> dict[str, Any] | None:
     record = read_optional_json(layout.run_record(edition_date))
     if record is None:
-        return None
+        return _reconcile_terminal_source_watch_record(layout, edition_date)
     if record.get("schema_version") != RUN_RECORD_SCHEMA or record.get("edition_date") != edition_date:
         raise SchedulerError("scheduled Food Line run record is structurally invalid")
+    if not _existing_record_is_success(record):
+        reconciled = _reconcile_terminal_source_watch_record(layout, edition_date, record)
+        if reconciled is not None:
+            return reconciled
     return record
 
 

@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+import bluefern_dispatches.production_certification as production_certification
 from bluefern_dispatches.production_certification import (
     CertificationLevel,
     CertificationOptions,
@@ -150,3 +151,29 @@ def test_level_two_reports_unsupported_without_runtime_execution(tmp_path: Path)
     stages = {row["stage"]: row for row in receipt["stages"]}
     assert stages["ISOLATED_EXECUTION"]["status"] == "UNSUPPORTED"
     assert "UNSUPPORTED_ISOLATED_EXECUTION" in stages["ISOLATED_EXECUTION"]["message"]
+
+
+def test_ice_certification_fails_when_production_shape_lacks_canonical_task_receipt(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    _init_clean_source(source)
+    original = production_certification._write_ice_fixture
+
+    def legacy_fixture(root: Path, date: str, source_head: str | None, **kwargs: object) -> Path:
+        ice_source = original(root, date, source_head, **kwargs)
+        for path in (ice_source / "status" / "operational-health" / "ice" / date / "runs").glob("*.json"):
+            receipt = json.loads(path.read_text(encoding="utf-8"))
+            receipt["artifact_refs"].pop("task_receipt", None)
+            path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        return ice_source
+
+    monkeypatch.setattr(production_certification, "_write_ice_fixture", legacy_fixture)
+
+    receipt = run_certification(CertificationOptions(dispatch="ice", source_root=source, proof_root=tmp_path / "proof"))
+    stage = _stages(receipt)["STATUS_EXPORT_SIMULATION"]
+
+    assert receipt["overall_status"] == "FAIL"
+    assert stage["status"] == "FAIL"
+    assert "missing canonical task_receipt" in stage["message"]

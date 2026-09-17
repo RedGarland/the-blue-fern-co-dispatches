@@ -44,8 +44,8 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-09-17T18:15:03.273201Z",
-  "last_receipt_at": "2026-09-17T15:30:04.029762Z",
+  "last_exported_at": "2026-09-17T19:15:05.466736Z",
+  "last_receipt_at": "2026-09-17T19:03:12.895829Z",
   "latest_runtime_proof_date": "2026-09-17T15:30:04Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
@@ -69,7 +69,7 @@
   "stale_observability": false,
   "task_summaries": [
     {
-      "artifact_id": "20260917T144733Z-5884.json",
+      "artifact_id": "20260917T190001Z-14980.json",
       "classification": "partial_success",
       "completed_at": "2026-09-17T01:03:12Z",
       "exit_code": 0,
@@ -97,7 +97,7 @@
       "task_key": "care_line_collection"
     },
     {
-      "artifact_id": "20260917T144733Z-5884.json",
+      "artifact_id": "20260917T190001Z-14980.json",
       "classification": "partial_success",
       "completed_at": "2026-09-17T14:51:07Z",
       "exit_code": 0,
@@ -163,6 +163,34 @@
       "started_at": "2026-09-17T15:30:01Z",
       "status": "SAFE_NO_OP",
       "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "20260917T190001Z-14980.json",
+      "classification": "partial_success",
+      "completed_at": "2026-09-17T19:03:12Z",
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "bluesky_publication": false,
+        "edition_generation": false,
+        "map": false,
+        "pages_sync": false,
+        "podcast": false,
+        "proposal_approval": false,
+        "public_site_updates": false,
+        "release_manifest_generation": false,
+        "rss_publication": false,
+        "signal_wire_publication": false,
+        "social_cards": false
+      },
+      "publication_attempted": null,
+      "publication_status": null,
+      "run_id": "20260917T190001Z-14980",
+      "scheduled_for": "2026-09-17T19:00:02Z",
+      "started_at": "2026-09-17T19:00:02Z",
+      "status": "DEGRADED",
+      "task_key": "care_line_collection"
     }
   ]
 }

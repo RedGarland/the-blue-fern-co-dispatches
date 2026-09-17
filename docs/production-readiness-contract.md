@@ -64,6 +64,14 @@ Every filesystem path referenced by production configuration must be verified on
 
 No scheduled pipeline is production healthy until the task service itself has been proven to launch the current protected runtime.
 
+This readiness rule does not freeze unrelated source development after an
+immediate production-equivalent proof has passed. `PRODUCTION HEALTHY` remains
+the correct label only after the applicable runtime and scheduler boundaries are
+proven, but safe source work may continue from a `PRODUCTION_PROOF_PASSED` /
+`AWAITING_NATURAL_CERTIFICATION` state when the pending natural result is not a
+design dependency and further work will not mutate or compound uncertain
+production state.
+
 ## Simulation Does Not Substitute For The Boundary
 
 - Unit tests prove code behavior, not PowerShell behavior.

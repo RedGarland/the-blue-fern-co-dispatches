@@ -16,6 +16,10 @@ This workflow is the standard source-repo path for Codex implementation work in 
 - A PR classified `HUMAN_MERGE_REQUIRED` stops for human merge with the exact reason reported.
 - Codex must never merge a PR that expands its own authority or materially changes repository governance permissions.
 - No source merge authorizes Pages activity, publication, audio, social posting, candidate approval, or source-gate relaxation.
+- A task that explicitly instructs Codex to implement a change and open a PR
+  using this standard workflow authorizes the routine source feature-branch
+  push required to create or update that PR. That source-branch push is not
+  publication authority.
 
 ## Hard Prohibitions
 
@@ -25,7 +29,15 @@ This workflow is the standard source-repo path for Codex implementation work in 
 - Do not update Bluesky unless explicitly asked.
 - Do not generate or publish audio unless explicitly asked.
 - Do not commit generated artifacts.
+- Do not push Pages, release branches, unrelated branches, credentials, secrets,
+  social/audio publication artifacts, or public output unless explicitly asked.
+- Do not force-push unless explicitly asked and independently safe under the
+  current task.
 - Do not use `git add .`.
+
+If the execution environment requires explicit external-egress approval for a
+source Git push, respect that environment boundary. Project workflow should not
+confuse a routine PR branch push with publication.
 
 ## Keep Out Of Commits
 
@@ -244,6 +256,21 @@ gh pr merge <PR_NUMBER> --merge --match-head-commit <EXACT_PR_HEAD>
 ```
 
 If the protected base or PR head changed, do not merge. Re-inspect the diff, synchronize when needed, and rerun checks before taking another exact-head snapshot.
+
+For a PR classified `CODEX_AUTO_MERGE_ELIGIBLE`, `READY FOR MERGE` is not a
+terminal handoff state. Codex should watch required checks, synchronize and
+revalidate if the protected base moved, recheck the exact PR head, verify the
+changed-file inventory, merge with exact-head protection, verify the protected
+branch contains the reviewed head, and perform normal post-merge cleanup if
+authorized by this workflow.
+
+Do not stop and ask the operator to perform the merge merely because CI had been
+pending earlier. Once checks become green, continue mechanically through merge
+unless the PR becomes `HUMAN_MERGE_REQUIRED`, base or head changed and
+revalidation is needed, checks fail, a review blocker appears, or the user's
+authorization explicitly excluded merge. Do not require a second operator
+confirmation for the routine mechanical merge when the implementation task
+already authorized the standard Codex PR workflow.
 
 After merge, fetch the protected branch, verify the PR is merged, prove the protected result contains the exact reviewed PR head, verify source and Pages status, and only then clean up the feature branch.
 

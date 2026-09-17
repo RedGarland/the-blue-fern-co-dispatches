@@ -113,6 +113,9 @@ def test_retry_eligible_source_watch_plans_existing_status_resume_not_source_wat
     assert "resume" in plan["command_argv"]
     assert "source-watch" not in plan["command_argv"]
     assert plan["public_side_effect_expected"] is False
+    assert plan["grace_end"] == "2026-09-10T14:00:00Z"
+    assert plan["recovery_deadline"] == "2026-09-10T18:00:00Z"
+    assert plan["verification_task_keys"] == ["food_line_source_watch_resume"]
 
 
 def test_retryable_resume_stage_uses_status_resume_adapter(tmp_path: Path) -> None:
@@ -156,6 +159,7 @@ def test_publication_retry_eligible_is_hard_denied(monkeypatch: pytest.MonkeyPat
                 "supported_for_planning": True,
                 "supported_for_automatic_execution": True,
                 "deferred_candidates": [],
+                "verification_task_keys": [],
                 "command_argv": ["malformed"],
             },
             {"instances": []},
@@ -165,6 +169,105 @@ def test_publication_retry_eligible_is_hard_denied(monkeypatch: pytest.MonkeyPat
     result = _run(tmp_path, execute=True)
 
     assert result["decision"] == "EXECUTION_DENIED_PUBLICATION"
+
+
+def test_missing_evaluator_deadline_fails_closed_for_retry_eligible(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    from bluefern_dispatches import recovery_execution
+
+    monkeypatch.setattr(
+        recovery_execution,
+        "build_execution_plan",
+        lambda options: (
+            {
+                "schema_version": "bluefern_recovery_execution_plan_v1",
+                "plan_id": "missing-deadline",
+                "dispatch": "food-line",
+                "task_key": "food_line_source_watch",
+                "scheduled_instance": "2026-09-10:food_line_source_watch",
+                "scheduled_for": "2026-09-10T12:30:00Z",
+                "evaluated_at": EVALUATED,
+                "recommendation": "RETRY_ELIGIBLE",
+                "original_status": "FAILED",
+                "original_classification": "provider_timeout",
+                "recovery_adapter": "food_source_watch_status_resume",
+                "max_attempts": 2,
+                "prior_attempt_count": 0,
+                "earliest_allowed_retry": None,
+                "grace_end": "2026-09-10T14:00:00Z",
+                "recovery_deadline": None,
+                "execute_requested": True,
+                "executable": False,
+                "denial_reason": "",
+                "source_head": "HEAD",
+                "public_side_effect_expected": False,
+                "supported_for_planning": True,
+                "supported_for_automatic_execution": True,
+                "deferred_candidates": [],
+                "verification_task_keys": ["food_line_source_watch_resume"],
+                "command_argv": ["fixed"],
+            },
+            {"instances": []},
+        ),
+    )
+
+    result = _run(tmp_path, execute=True)
+
+    assert result["decision"] == "EXECUTION_DENIED_INVALID_RECOVERY_CONTRACT"
+
+
+def test_executor_uses_evaluator_deadline_without_shortening_by_grace(tmp_path: Path) -> None:
+    _write_receipt(tmp_path)
+
+    still_open = _run(tmp_path, evaluated_at="2026-09-10T16:31:00Z")
+    expired = _run(tmp_path, evaluated_at="2026-09-10T18:01:00Z")
+
+    assert still_open["decision"] == "DRY_RUN"
+    assert still_open["plan"]["recovery_deadline"] == "2026-09-10T18:00:00Z"
+    assert expired["decision"] == "NO_CANDIDATE"
+
+
+def test_executor_denies_retry_eligible_plan_after_evaluator_deadline(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    from bluefern_dispatches import recovery_execution
+
+    monkeypatch.setattr(
+        recovery_execution,
+        "build_execution_plan",
+        lambda options: (
+            {
+                "schema_version": "bluefern_recovery_execution_plan_v1",
+                "plan_id": "expired-deadline",
+                "dispatch": "food-line",
+                "task_key": "food_line_source_watch",
+                "scheduled_instance": "2026-09-10:food_line_source_watch",
+                "scheduled_for": "2026-09-10T12:30:00Z",
+                "evaluated_at": "2026-09-10T18:01:00Z",
+                "recommendation": "RETRY_ELIGIBLE",
+                "original_status": "FAILED",
+                "original_classification": "provider_timeout",
+                "recovery_adapter": "food_source_watch_status_resume",
+                "max_attempts": 2,
+                "prior_attempt_count": 0,
+                "earliest_allowed_retry": None,
+                "grace_end": "2026-09-10T14:00:00Z",
+                "recovery_deadline": "2026-09-10T18:00:00Z",
+                "execute_requested": True,
+                "executable": False,
+                "denial_reason": "",
+                "source_head": "HEAD",
+                "public_side_effect_expected": False,
+                "supported_for_planning": True,
+                "supported_for_automatic_execution": True,
+                "deferred_candidates": [],
+                "verification_task_keys": ["food_line_source_watch_resume"],
+                "command_argv": ["fixed"],
+            },
+            {"instances": []},
+        ),
+    )
+
+    result = _run(tmp_path, execute=True, evaluated_at="2026-09-10T18:01:00Z")
+
+    assert result["decision"] == "EXECUTION_DENIED_RECOVERY_WINDOW_EXPIRED"
 
 
 def test_attempt_count_persists_and_limits_after_two_attempts(tmp_path: Path) -> None:
@@ -272,26 +375,103 @@ def test_execute_exit_zero_without_new_receipt_is_unproven_and_writes_ledger(tmp
 
 
 @pytest.mark.parametrize(
-    ("status", "expected"),
+    ("status", "classification", "expected"),
     [
-        (OperationalStatus.SUCCESS, "RECOVERY_CONFIRMED"),
-        (OperationalStatus.SAFE_NO_OP, "RECOVERY_CONFIRMED"),
-        (OperationalStatus.DEGRADED, "RECOVERY_DEGRADED_TERMINAL"),
-        (OperationalStatus.UPSTREAM_BLOCKED, "RECOVERY_UPSTREAM_BLOCKED"),
-        (OperationalStatus.FAILED, "RECOVERY_FAILED"),
+        (OperationalStatus.SUCCESS, "resume_qualified", "RECOVERY_CONFIRMED"),
+        (OperationalStatus.SAFE_NO_OP, "resume_not_required", "RECOVERY_CONFIRMED"),
+        (OperationalStatus.DEGRADED, "completed_with_exclusions", "RECOVERY_DEGRADED_TERMINAL"),
+        (OperationalStatus.UPSTREAM_BLOCKED, "source_watch_not_initialized", "RECOVERY_UPSTREAM_BLOCKED"),
+        (OperationalStatus.FAILED, "provider_timeout", "RECOVERY_FAILED"),
     ],
 )
-def test_post_execution_classifies_from_new_receipt_even_when_exit_nonzero(tmp_path: Path, status: OperationalStatus, expected: str) -> None:
+def test_source_watch_recovery_classifies_from_new_resume_receipt_even_when_exit_nonzero(
+    tmp_path: Path,
+    status: OperationalStatus,
+    classification: str,
+    expected: str,
+) -> None:
     _write_receipt(tmp_path, status=OperationalStatus.FAILED, classification="provider_timeout", name="01-failed")
 
     def runner(_argv, _cwd):
-        _write_receipt(tmp_path, status=status, classification="completed", name="02-after", started="2026-09-10T12:45:00Z", exit_code=0 if status != OperationalStatus.FAILED else 1)
+        _write_receipt(
+            tmp_path,
+            task_key="food_line_source_watch_resume",
+            status=status,
+            classification=classification,
+            name="02-resume-after",
+            started="2026-09-10T13:00:00Z",
+            exit_code=0 if status != OperationalStatus.FAILED else 1,
+        )
         return CommandResult("child_process_completed", 1)
 
     result = _run(tmp_path, execute=True, runner=runner)
 
     assert result["decision"] == expected
     assert result["execution_receipt"]["post_execution_receipt_observation"] == expected
+
+
+def test_old_resume_receipt_alone_cannot_confirm_source_watch_recovery(tmp_path: Path) -> None:
+    _write_receipt(tmp_path, status=OperationalStatus.FAILED, classification="provider_timeout", name="01-failed")
+    _write_receipt(
+        tmp_path,
+        task_key="food_line_source_watch_resume",
+        status=OperationalStatus.SUCCESS,
+        classification="resume_qualified",
+        name="old-resume",
+        started="2026-09-10T13:00:00Z",
+        exit_code=0,
+    )
+
+    result = _run(tmp_path, execute=True, runner=lambda _argv, _cwd: CommandResult("child_process_completed", 0))
+
+    assert result["decision"] == "RECOVERY_UNPROVEN"
+
+
+def test_unrelated_new_task_receipt_cannot_confirm_source_watch_recovery(tmp_path: Path) -> None:
+    _write_receipt(tmp_path, status=OperationalStatus.FAILED, classification="provider_timeout", name="01-failed")
+
+    def runner(_argv, _cwd):
+        _write_receipt(
+            tmp_path,
+            task_key="food_line_current_intake",
+            status=OperationalStatus.SUCCESS,
+            classification="success",
+            name="unrelated-intake",
+            started="2026-09-10T13:10:00Z",
+            exit_code=0,
+        )
+        return CommandResult("child_process_completed", 0)
+
+    result = _run(tmp_path, execute=True, runner=runner)
+
+    assert result["decision"] == "RECOVERY_UNPROVEN"
+
+
+def test_resume_retry_itself_verifies_against_new_resume_receipt(tmp_path: Path) -> None:
+    _write_receipt(
+        tmp_path,
+        task_key="food_line_source_watch_resume",
+        status=OperationalStatus.FAILED,
+        classification="provider_timeout",
+        name="01-resume-failed",
+        started="2026-09-10T13:00:00Z",
+    )
+
+    def runner(_argv, _cwd):
+        _write_receipt(
+            tmp_path,
+            task_key="food_line_source_watch_resume",
+            status=OperationalStatus.SUCCESS,
+            classification="resume_qualified",
+            name="02-resume-success",
+            started="2026-09-10T13:05:00Z",
+            exit_code=0,
+        )
+        return CommandResult("child_process_completed", 0)
+
+    result = _run(tmp_path, execute=True, runner=runner)
+
+    assert result["decision"] == "RECOVERY_CONFIRMED"
 
 
 def test_care_and_ice_are_planning_only_unsupported(tmp_path: Path) -> None:

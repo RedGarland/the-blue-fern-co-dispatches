@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
+from datetime import datetime, timedelta
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from bluefern_dispatches.operational_health import OperationalStatus, build_operational_receipt
 from bluefern_dispatches.scheduled_recovery import evaluate_recovery
@@ -129,6 +131,53 @@ def test_degraded_transient_classification_is_retry_eligible(tmp_path: Path) -> 
     assert row["state"] == "FAILED_RETRYABLE"
     assert row["recommendation"] == "RETRY_ELIGIBLE"
     assert row["retry_eligible"] is True
+
+
+def test_food_source_watch_exposes_exact_grace_and_recovery_deadline(tmp_path: Path) -> None:
+    _write_receipt(
+        tmp_path,
+        task_key="food_line_source_watch",
+        status=OperationalStatus.FAILED,
+        classification="provider_timeout",
+    )
+
+    report = evaluate_recovery(dispatch="food-line", source_root=tmp_path, date=DATE, evaluated_at="2026-09-10T15:00:00Z")
+    row = next(item for item in report["instances"] if item["task_key"] == "food_line_source_watch")
+    scheduled = datetime.fromisoformat(f"{DATE}T05:30:00").replace(tzinfo=ZoneInfo("America/Los_Angeles")).astimezone(ZoneInfo("UTC"))
+    grace_end = scheduled + timedelta(minutes=90)
+    recovery_deadline = grace_end + timedelta(minutes=240)
+
+    assert row["scheduled_for"] == scheduled.isoformat().replace("+00:00", "Z")
+    assert row["grace_end"] == grace_end.isoformat().replace("+00:00", "Z")
+    assert row["recovery_deadline"] == recovery_deadline.isoformat().replace("+00:00", "Z")
+
+
+def test_food_source_watch_recovery_window_preserves_grace_interval(tmp_path: Path) -> None:
+    _write_receipt(
+        tmp_path,
+        task_key="food_line_source_watch",
+        status=OperationalStatus.FAILED,
+        classification="provider_timeout",
+    )
+    scheduled = datetime.fromisoformat(f"{DATE}T05:30:00").replace(tzinfo=ZoneInfo("America/Los_Angeles")).astimezone(ZoneInfo("UTC"))
+    after_scheduled_plus_window = (scheduled + timedelta(minutes=241)).isoformat().replace("+00:00", "Z")
+    after_grace_plus_window = (scheduled + timedelta(minutes=90 + 241)).isoformat().replace("+00:00", "Z")
+
+    still_open = evaluate_recovery(
+        dispatch="food-line",
+        source_root=tmp_path,
+        date=DATE,
+        evaluated_at=after_scheduled_plus_window,
+    )
+    expired = evaluate_recovery(
+        dispatch="food-line",
+        source_root=tmp_path,
+        date=DATE,
+        evaluated_at=after_grace_plus_window,
+    )
+
+    assert next(item for item in still_open["instances"] if item["task_key"] == "food_line_source_watch")["recommendation"] == "RETRY_ELIGIBLE"
+    assert next(item for item in expired["instances"] if item["task_key"] == "food_line_source_watch")["recommendation"] == "RECOVERY_WINDOW_EXPIRED"
 
 
 def test_failed_transient_and_nonretryable_classifications_are_distinct(tmp_path: Path) -> None:

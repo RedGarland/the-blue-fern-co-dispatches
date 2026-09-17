@@ -16,12 +16,18 @@ def test_export_wrapper_defaults_to_sanctioned_paths_and_status_branch() -> None
     assert args.status_checkout == DEFAULT_STATUS_CHECKOUT
     assert args.prepare_branch == DEFAULT_BRANCH
     assert args.care_source_root is None
+    assert args.ice_source_root is None
     assert args.no_push is False
 
 
 def test_export_wrapper_accepts_optional_care_source_root(tmp_path: Path) -> None:
     args = build_parser().parse_args(["--care-source-root", str(tmp_path / "care")])
     assert args.care_source_root == tmp_path / "care"
+
+
+def test_export_wrapper_accepts_optional_ice_source_root(tmp_path: Path) -> None:
+    args = build_parser().parse_args(["--ice-source-root", str(tmp_path / "ice")])
+    assert args.ice_source_root == tmp_path / "ice"
 
 
 def test_care_expected_instances_are_read_from_task_scheduler_xml(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -140,6 +146,45 @@ def test_python_wrapper_passes_care_source_root_to_export_status(monkeypatch: py
     assert '"care_source_configured": true' in receipt.read_text(encoding="utf-8")
 
 
+def test_python_wrapper_passes_ice_source_root_to_export_status(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    ice = tmp_path / "ice"
+    status = tmp_path / "status"
+    for path in (source, ice, status):
+        path.mkdir()
+    (source / "status" / "operational-health" / "food-line" / "2026-09-14").mkdir(parents=True)
+    received: dict[str, object] = {}
+
+    monkeypatch.setattr(task, "_git_head", lambda _root: "HEAD")
+    monkeypatch.setattr(task, "prepare_status_checkout", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(task, "load_recovery_context", lambda _path: None)
+
+    def fake_export_status(**kwargs: object) -> dict[str, object]:
+        received.update(kwargs)
+        return {"paths": []}
+
+    monkeypatch.setattr(task, "export_status", fake_export_status)
+
+    result = task.main(
+        [
+            "--source-root",
+            str(source),
+            "--status-checkout",
+            str(status),
+            "--ice-source-root",
+            str(ice),
+            "--date",
+            "2026-09-14",
+            "--no-push",
+        ]
+    )
+
+    assert result == 0
+    assert received["ice_source_root"] == ice
+    receipt = next((source / "logs" / "operational-status-exporter").glob("*.json"))
+    assert '"ice_source_configured": true' in receipt.read_text(encoding="utf-8")
+
+
 def test_python_wrapper_fails_closed_when_care_scheduler_metadata_is_unavailable(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
@@ -211,6 +256,7 @@ def test_python_wrapper_omits_care_source_root_as_none(monkeypatch: pytest.Monke
 
     assert result == 0
     assert received["care_source_root"] is None
+    assert received["ice_source_root"] is None
     receipt = next((source / "logs" / "operational-status-exporter").glob("*.json"))
     assert '"care_source_configured": false' in receipt.read_text(encoding="utf-8")
 
@@ -236,5 +282,8 @@ def test_powershell_wrapper_conditionally_plumbs_care_source_root() -> None:
     assert "[string]$SourceRoot = 'C:\\BlueFernRunner\\FoodLineCurrent6'" in text
     assert "[string]$StatusCheckout = 'C:\\BlueFernRunner\\OperationalStatusCurrent'" in text
     assert "[string]$CareSourceRoot = ''" in text
+    assert "[string]$IceSourceRoot = ''" in text
     assert "IsNullOrWhiteSpace($CareSourceRoot)" in text
+    assert "IsNullOrWhiteSpace($IceSourceRoot)" in text
     assert "$arguments += @('--care-source-root', $CareSourceRoot)" in text
+    assert "$arguments += @('--ice-source-root', $IceSourceRoot)" in text

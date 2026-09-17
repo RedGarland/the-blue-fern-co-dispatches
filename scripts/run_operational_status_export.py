@@ -146,6 +146,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--exported-at")
     parser.add_argument("--recovery-context", type=Path)
     parser.add_argument("--care-source-root", type=Path)
+    parser.add_argument("--ice-source-root", type=Path)
     parser.add_argument("--prepare-branch", default=DEFAULT_BRANCH)
     parser.add_argument("--remote", default="origin")
     parser.add_argument("--commit-message", default="Export operational status")
@@ -166,6 +167,7 @@ def main(argv: list[str] | None = None) -> int:
         "commit_created": False,
         "push_succeeded": False,
         "care_source_configured": args.care_source_root is not None,
+        "ice_source_configured": args.ice_source_root is not None,
         "source_head": _git_head(args.source_root),
         "status_checkout_head_before": _git_head(args.status_checkout),
         "status_checkout_head_after": None,
@@ -183,6 +185,7 @@ def main(argv: list[str] | None = None) -> int:
             exported_at=args.exported_at,
             care_source_root=args.care_source_root,
             care_expected_instances=care_expected_instances_from_task_scheduler(date) if args.care_source_root is not None else None,
+            ice_source_root=args.ice_source_root,
             recovery=load_recovery_context(args.recovery_context),
         )
         record["paths"] = result["paths"]

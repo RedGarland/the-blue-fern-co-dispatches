@@ -16,6 +16,7 @@ from .operational_health import (
     DISPATCH_AGGREGATE_SCHEMA_VERSION,
     CARE_LINE_TASK_EXPECTATIONS,
     FOOD_LINE_TASK_EXPECTATIONS,
+    MIGRATION_TASK_EXPECTATIONS,
     OperationalStatus,
     RecoveryContext,
     RecoveryState,
@@ -36,6 +37,7 @@ PRIVATE_KEY_RE = re.compile(r"(?:path|body|excerpt|source|raw|secret|token|crede
 
 NON_MIGRATED_DISPATCHES = ("gaza", "ice", "american-pressure")
 INTENTIONALLY_INACTIVE_DISPATCHES = ("cascadia",)
+ICE_TASK_EXPECTATIONS = MIGRATION_TASK_EXPECTATIONS["ice"]
 HANDOFF_STATES = {
     "NO_EXTERNAL_HANDOFF_EXPECTED",
     "HANDOFF_RECEIVED_SUCCESS",
@@ -127,6 +129,21 @@ def load_care_line_receipts(source_root: Path, date: str) -> list[dict[str, Any]
             raise ExportError(f"invalid operational receipt {path.name}: {exc}") from exc
         if receipt.get("dispatch") != "care-line":
             raise ExportError(f"receipt dispatch mismatch: {path.name}")
+        receipts.append(receipt)
+    receipts.sort(key=lambda item: _handoff_time(item) or datetime.min.replace(tzinfo=timezone.utc))
+    return receipts
+
+
+def load_ice_receipts(source_root: Path, date: str) -> list[dict[str, Any]]:
+    receipts = []
+    for path in _receipt_paths(source_root, "ice", date):
+        receipt = _parse_json(path)
+        try:
+            validate_operational_receipt(receipt)
+        except ValueError as exc:
+            raise ExportError(f"invalid operational receipt {path.name}: {exc}") from exc
+        if receipt.get("dispatch") != "ice" or receipt.get("task_key") != "ice_monitor":
+            raise ExportError(f"ICE receipt dispatch/task mismatch: {path.name}")
         receipts.append(receipt)
     receipts.sort(key=lambda item: _handoff_time(item) or datetime.min.replace(tzinfo=timezone.utc))
     return receipts
@@ -479,6 +496,86 @@ def build_care_line_status(
     }
 
 
+def _positive_int(value: Any) -> int:
+    try:
+        return max(0, int(value or 0))
+    except (TypeError, ValueError):
+        return 0
+
+
+def build_ice_status(
+    *,
+    source_root: Path,
+    date: str,
+    evaluated_at: str,
+    exported_at: str,
+    recovery: RecoveryContext | None = None,
+) -> dict[str, Any]:
+    receipts = load_ice_receipts(source_root, date)
+    completeness, linkage = receipt_completeness(
+        receipts, source_root=source_root, expectations=ICE_TASK_EXPECTATIONS
+    )
+    aggregate = evaluate_dispatch_health(
+        dispatch="ice",
+        receipts=receipts,
+        expectations=ICE_TASK_EXPECTATIONS,
+        evaluated_at=evaluated_at,
+        recovery=recovery,
+    ) if receipts else {
+        "overall_health": OperationalStatus.UNKNOWN.value,
+        "recovery_state": RecoveryState.HEALTHY.value,
+        "expected_tasks": [item.task_key for item in ICE_TASK_EXPECTATIONS],
+        "completed_tasks": [], "missed_tasks": [], "failed_tasks": [],
+        "degraded_tasks": [], "upstream_blocked_tasks": [],
+        "stale_observability": [], "latest_success_at": None,
+    }
+    aggregate_status = aggregate["overall_health"] if receipts else OperationalStatus.UNKNOWN.value
+    if any(
+        _positive_int((receipt.get("details") or {}).get("unaccounted")) > 0
+        for receipt in receipts
+    ):
+        aggregate_status = OperationalStatus.FAILED.value
+    source_heads = {_safe_head(receipt.get("source_head")) for receipt in receipts}
+    source_heads.discard(None)
+    publication_attempted = any(receipt.get("publication_attempted") is True for receipt in receipts)
+    publication_statuses = [receipt.get("publication_status") for receipt in receipts if receipt.get("publication_status")]
+    return {
+        "schema_version": EXTERNAL_STATUS_SCHEMA_VERSION,
+        "dispatch": "ice",
+        "migration_status": "MIGRATED",
+        "observed_date": date,
+        "aggregate_status": aggregate_status,
+        "scheduled_health_authoritative": bool(receipts),
+        "recovery_lifecycle": _recovery_state(aggregate_status, recovery),
+        "latest_runtime_proof_date": aggregate.get("latest_success_at"),
+        "receipt_completeness": completeness if receipts else "NO_PROOF",
+        "task_summaries": [_task_summary(receipt, linkage) for receipt in receipts],
+        "runner_source_head": sorted(source_heads)[0] if len(source_heads) == 1 else None,
+        "publication_attempted": publication_attempted,
+        "publication_status": publication_statuses[-1] if publication_statuses else None,
+        "public_side_effects": {
+            "publication_attempted": publication_attempted,
+            "publication_status": publication_statuses[-1] if publication_statuses else None,
+        },
+        "stale_observability": bool(aggregate.get("stale_observability")),
+        "last_receipt_at": max((_handoff_time(item) for item in receipts), default=None).isoformat().replace("+00:00", "Z") if receipts else None,
+        "last_exported_at": exported_at,
+        "next_expected_run": next((item.get("next_expected_run") for item in receipts if item.get("next_expected_run")), None),
+        "agent_handoff": {
+            "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
+            "last_attempt_at": None,
+            "last_success_at": None,
+            "last_failure_at": None,
+            "latest_agent_run_id": None,
+            "latest_status": None,
+            "latest_classification": None,
+            "unaccounted_count": 0,
+            "stale": False,
+        },
+        "scheduled_task_keys": [item.task_key for item in ICE_TASK_EXPECTATIONS],
+    }
+
+
 def _system_status(states: dict[str, dict[str, Any]]) -> str:
     active = [
         str(state.get("aggregate_status") or OperationalStatus.UNKNOWN.value)
@@ -503,6 +600,7 @@ def build_system_status(
     source_root: Path,
     exported_at: str,
     care_line_status: dict[str, Any] | None = None,
+    ice_status: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     states = {
         "food-line": {
@@ -569,6 +667,18 @@ def build_system_status(
             "recovery_lifecycle": RecoveryState.HEALTHY.value,
             "scheduled_health_available": False,
             "agent_handoff": load_agent_handoff_status(source_root, "care-line"),
+        }
+    if ice_status is not None and ice_status.get("migration_status") == "MIGRATED":
+        states["ice"] = {
+            "migration_status": "MIGRATED",
+            "aggregate_status": ice_status["aggregate_status"],
+            "recovery_lifecycle": ice_status["recovery_lifecycle"],
+            "scheduled_health_available": bool(ice_status.get("scheduled_health_authoritative")),
+            "observed_date": ice_status.get("observed_date"),
+            "latest_runtime_proof_date": ice_status.get("latest_runtime_proof_date"),
+            "receipt_completeness": ice_status.get("receipt_completeness"),
+            "stale_observability": ice_status.get("stale_observability"),
+            "agent_handoff": ice_status["agent_handoff"],
         }
     system_status = _system_status(states)
     return {
@@ -655,6 +765,7 @@ def export_status(
     exported_at: str | None = None,
     care_source_root: Path | None = None,
     care_expected_instances: Iterable[dict[str, Any]] | None = None,
+    ice_source_root: Path | None = None,
 ) -> dict[str, Any]:
     source_root = source_root.resolve()
     status_checkout = status_checkout.resolve()
@@ -687,11 +798,24 @@ def export_status(
             care_reused = _reuse_exported_at(care_path, care_payload)
             if care_reused:
                 care_payload["last_exported_at"] = care_reused
+        ice_payload = build_ice_status(
+            source_root=ice_source_root.resolve(),
+            date=date,
+            evaluated_at=evaluated_at,
+            exported_at=exported_at,
+            recovery=recovery,
+        ) if ice_source_root is not None else None
+        ice_path = status_checkout / "ops" / "status" / "ice" / "latest.json"
+        if ice_payload is not None:
+            ice_reused = _reuse_exported_at(ice_path, ice_payload)
+            if ice_reused:
+                ice_payload["last_exported_at"] = ice_reused
         system_payload = build_system_status(
             food_payload,
             source_root=source_root,
             exported_at=exported_at,
             care_line_status=care_payload,
+            ice_status=ice_payload,
         )
         system_path = status_checkout / "ops" / "status" / "system" / "latest.json"
         system_reused = _reuse_exported_at(system_path, system_payload)
@@ -699,11 +823,15 @@ def export_status(
             system_payload["exported_at"] = system_reused
         history_path = status_checkout / "ops" / "status" / "food-line" / "history" / f"{date}.json"
         care_history_path = status_checkout / "ops" / "status" / "care-line" / "history" / f"{date}.json"
+        ice_history_path = status_checkout / "ops" / "status" / "ice" / "history" / f"{date}.json"
         atomic_write_json(food_path, food_payload)
         atomic_write_json(history_path, food_payload)
         if care_payload is not None:
             atomic_write_json(care_path, care_payload)
             atomic_write_json(care_history_path, care_payload)
+        if ice_payload is not None:
+            atomic_write_json(ice_path, ice_payload)
+            atomic_write_json(ice_history_path, ice_payload)
         atomic_write_json(system_path, system_payload)
     paths = [
         "ops/status/food-line/latest.json",
@@ -712,9 +840,14 @@ def export_status(
     ]
     if care_payload is not None:
         paths[2:2] = ["ops/status/care-line/latest.json", f"ops/status/care-line/history/{date}.json"]
+    if ice_payload is not None:
+        insert_at = 2 + (2 if care_payload is not None else 0)
+        paths[insert_at:insert_at] = ["ops/status/ice/latest.json", f"ops/status/ice/history/{date}.json"]
     result = {"food_line": food_payload, "system": system_payload, "paths": paths}
     if care_payload is not None:
         result["care_line"] = care_payload
+    if ice_payload is not None:
+        result["ice"] = ice_payload
     return result
 
 

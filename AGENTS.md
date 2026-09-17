@@ -120,7 +120,10 @@ Read `docs/production-readiness-contract.md` before any production-change task.
 
 - Keep generated output reproducible and traceable.
 - Do not add `output/detail` or `output/paid` content to public site output.
-- Do not publish or push unless explicitly requested.
+- Do not publish or push public/generated output unless explicitly requested.
+- Routine source feature-branch pushes for an explicitly requested standard PR
+  workflow are governed by the Pull Request Merge Authority and Publishing And
+  Pushing sections below.
 - Do not assume a clean `git status` means the live site changed.
 - When public output changes, verify source output, Pages repo output, and live URL as applicable.
 
@@ -159,10 +162,16 @@ Read `docs/production-readiness-contract.md` before any production-change task.
 - Human merge is required when the PR creates or changes editorial, approval, publication, release, correction/withdrawal, governance, credential, external-egress, destructive-operation, or other human decision authority, or causes a consequential public side effect.
 - Codex must never use routine merge permission to expand its own authority or repository governance permissions.
 - A source PR merge does not authorize Pages sync, publication, audio, social posting, source-gate relaxation, or any other public release action; those remain separately authorized.
+- For `CODEX_AUTO_MERGE_ELIGIBLE`, do not hand routine merge work back to the operator after checks pass. Continue through exact-head merge and normal post-merge verification unless the PR becomes human-required, validation fails, the base or head changes, a review blocker appears, or the user's authorization excluded merge.
+- Human merge remains mandatory for the existing governance, editorial, approval, publication, release, correction/withdrawal, credential, destructive-operation, external-egress, and consequential public side-effect categories.
+- `AWAITING_NATURAL_CERTIFICATION` is not automatically a development stop. Natural runtime proof certifies the scheduler/runtime boundary; it does not replace immediate engineering proof.
+- Continue safe source work after immediate production proof unless the pending natural result is a necessary design dependency, immediate proof exposed an unresolved defect, further work would mutate uncertain production state, or the next task would activate behavior whose safety depends on the pending natural proof.
 
 ## Publishing And Pushing
 
-- Do not publish or push unless the user explicitly asks.
+- Do not publish unless the user explicitly asks.
+- A task that explicitly instructs Codex to implement a change and open a PR under the standard Codex PR workflow authorizes the routine source feature-branch push required to create or update that PR, subject to any external-egress approval required by the execution environment.
+- Routine source PR branch pushes do not authorize Pages pushes, release pushes, social/audio publication, public output publication, credentials or secrets export, unrelated branch pushes, or force-pushes.
 - Do not treat implementation validation as release authorization.
 - Keep source-repo generation separate from Pages-repo publishing.
 - Never push Pages content from the source repo.

@@ -14,6 +14,47 @@ Isolated certification is immediate engineering proof after a source change or
 runner sync. Natural scheduled execution remains the final production
 certification because it proves the operating-system scheduler boundary.
 
+`AWAITING_NATURAL_CERTIFICATION` is not a source-development freeze.
+
+Once source validation passes, deployment succeeds, immediate
+production-equivalent certification passes, and no unresolved production safety
+defect remains, unrelated or next-phase source development may continue. The
+natural scheduled run certifies the operating-system scheduler invocation, live
+environment and wrapper boundary, true scheduled timing, live runtime-state
+integration, and naturally ordered downstream or exporter behavior. It is not
+the first functional test and is not a reason to stop safe source work.
+
+Block further source work only when the pending natural result is necessary to
+decide the design of that same code path, immediate certification exposed an
+unresolved defect, proceeding would mutate or compound uncertain production
+state, or the next task would activate behavior whose safety depends on the
+pending natural proof.
+
+```text
+SOURCE DEVELOPMENT:
+NON-BLOCKING after PRODUCTION_PROOF_PASSED
+
+PRODUCTION ACTIVATION:
+may remain gated on NATURAL_RUNTIME_CERTIFIED where appropriate
+```
+
+Do not use this anti-pattern:
+
+```text
+fix -> deploy -> wait hours -> continue engineering only after natural run
+```
+
+Use:
+
+```text
+fix
+-> validate
+-> deploy
+-> immediate production proof
+-> continue safe source development
+-> natural run independently certifies scheduler/runtime boundary
+```
+
 ## Certification Harness
 
 Run source-level, non-public certification with an explicit isolated proof root:

@@ -12,7 +12,7 @@
   },
   "aggregate_status": "STALE_OBSERVABILITY",
   "dispatch": "ice",
-  "last_exported_at": "2026-09-17T15:15:06.412500Z",
+  "last_exported_at": "2026-09-17T20:15:05.074458Z",
   "last_receipt_at": "2026-09-17T04:16:35.171337Z",
   "latest_runtime_proof_date": "2026-09-17T04:15:03Z",
   "migration_status": "MIGRATED",
@@ -24,7 +24,7 @@
   },
   "publication_attempted": false,
   "publication_status": "not_authorized_monitor_only",
-  "receipt_completeness": "INCONSISTENT",
+  "receipt_completeness": "COMPLETE",
   "recovery_lifecycle": "INCIDENT_OPEN",
   "runner_source_head": "26ab691dfeac1a2d94682d9205f76a245cbf92ad",
   "scheduled_health_authoritative": true,
@@ -35,7 +35,7 @@
   "stale_observability": true,
   "task_summaries": [
     {
-      "artifact_id": null,
+      "artifact_id": "monitor_receipt.json",
       "classification": "healthy",
       "completed_at": "2026-09-17T04:16:35Z",
       "exit_code": 0,

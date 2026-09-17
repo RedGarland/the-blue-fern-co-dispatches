@@ -35,6 +35,7 @@ class InstanceState(StrEnum):
     GRACE_ACTIVE = "GRACE_ACTIVE"
     FAILED_RETRYABLE = "FAILED_RETRYABLE"
     FAILED_NONRETRYABLE = "FAILED_NONRETRYABLE"
+    DEGRADED_TERMINAL = "DEGRADED_TERMINAL"
     MISSED = "MISSED"
     RECOVERED = "RECOVERED"
 
@@ -123,6 +124,18 @@ def _matches(receipt: dict[str, Any], task_key: str, scheduled: datetime | None,
     return scheduled - timedelta(minutes=10) <= receipt_time <= scheduled + timedelta(hours=12)
 
 
+def _latest_matching_receipt(
+    receipts: list[dict[str, Any]],
+    task_key: str,
+    scheduled: datetime | None,
+    date: str,
+) -> dict[str, Any] | None:
+    matches = [item for item in receipts if _matches(item, task_key, scheduled, date)]
+    if not matches:
+        return None
+    return max(matches, key=lambda item: _receipt_time(item) or datetime.min.replace(tzinfo=timezone.utc))
+
+
 def _is_retryable(receipt: dict[str, Any]) -> bool:
     classification = str(receipt.get("classification") or "").lower()
     if receipt.get("task_key") in PUBLICATION_TASK_KEYS:
@@ -133,6 +146,14 @@ def _is_retryable(receipt: dict[str, Any]) -> bool:
         return True
     details = receipt.get("details") if isinstance(receipt.get("details"), dict) else {}
     return any(str(value).lower() in RETRYABLE_CLASSIFICATIONS for value in details.values())
+
+
+def _receipt_status(receipt: dict[str, Any] | None) -> str | None:
+    return str(receipt.get("status") or "") if receipt else None
+
+
+def _receipt_classification(receipt: dict[str, Any] | None) -> str | None:
+    return str(receipt.get("classification") or "") if receipt else None
 
 
 def evaluate_recovery(
@@ -165,7 +186,7 @@ def evaluate_recovery(
             instance_id = str(instance.get("scheduled_for") or f"{date}:{expectation.task_key}")
             grace_end = scheduled + timedelta(minutes=expectation.grace_minutes) if scheduled else None
             recovery_deadline = grace_end + timedelta(minutes=policy.recovery_window_minutes) if grace_end else None
-            receipt = next((item for item in receipts if _matches(item, expectation.task_key, scheduled, date)), None)
+            receipt = _latest_matching_receipt(receipts, expectation.task_key, scheduled, date)
             attempts = attempts_by_instance.get(instance_id, 0)
             if scheduled and evaluated < scheduled:
                 state = InstanceState.NOT_YET_DUE
@@ -181,7 +202,7 @@ def evaluate_recovery(
                     state = InstanceState.MISSED
                     recommendation = RecoveryRecommendation.MISSED
             else:
-                status = str(receipt.get("status") or "")
+                status = _receipt_status(receipt) or ""
                 if status in {OperationalStatus.SUCCESS.value, OperationalStatus.SAFE_NO_OP.value}:
                     state = InstanceState.RECOVERED
                     recommendation = RecoveryRecommendation.NO_ACTION
@@ -195,6 +216,9 @@ def evaluate_recovery(
                     else:
                         state = InstanceState.FAILED_RETRYABLE
                         recommendation = RecoveryRecommendation.RETRY_ELIGIBLE
+                elif status == OperationalStatus.DEGRADED.value:
+                    state = InstanceState.DEGRADED_TERMINAL
+                    recommendation = RecoveryRecommendation.NO_ACTION
                 else:
                     state = InstanceState.FAILED_NONRETRYABLE
                     recommendation = RecoveryRecommendation.MANUAL_ATTENTION
@@ -204,6 +228,9 @@ def evaluate_recovery(
                 "scheduled_for": scheduled.isoformat().replace("+00:00", "Z") if scheduled else None,
                 "state": state.value,
                 "recommendation": recommendation.value,
+                "receipt_status": _receipt_status(receipt),
+                "classification": _receipt_classification(receipt),
+                "retry_eligible": recommendation == RecoveryRecommendation.RETRY_ELIGIBLE,
                 "attempts": attempts,
                 "max_attempts": policy.max_attempts,
                 "publication_task": expectation.task_key in PUBLICATION_TASK_KEYS,

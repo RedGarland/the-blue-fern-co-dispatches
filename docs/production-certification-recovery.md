@@ -106,6 +106,60 @@ Implemented recommendation states:
 Publication tasks default to `MANUAL_ATTENTION`; publication retries require a
 separate operator-controlled idempotency and authorization model.
 
+## Bounded Same-Day Recovery Executor
+
+The recovery evaluator and executor are separate roles:
+
+- evaluator decides whether a scheduled instance is `RETRY_ELIGIBLE`
+- executor cannot widen eligibility
+- executor may consider only evaluator-selected `RETRY_ELIGIBLE` instances
+- executor is hard allowlisted by dispatch and task key
+
+The executor is intentionally narrow. It plans all dispatches from the evaluator
+report, but automatic execution is initially limited to Food Line Source Watch
+and Source Watch Resume recovery through the existing `status-resume` pathway.
+It must not launch a fresh Source Watch as recovery. Care collection and ICE
+monitor recovery remain planning-only until a separate source audit proves
+same-instance idempotency, duplicate protection, instance addressability, and no
+public side effects.
+
+Executor invariants:
+
+- dry-run is the default; `--execute` is required for a child process
+- publication task keys are hard-denied even if a malformed report says
+  `RETRY_ELIGIBLE`
+- maximum automatic attempts are two per exact scheduled instance
+- minimum backoff is 30 minutes between attempts
+- at most one recovery action may run per executor invocation
+- stale-plan suppression re-evaluates the same instance immediately before
+  execution and cancels if it is no longer `RETRY_ELIGIBLE`
+- executor locks are per exact recovery target
+- real execution requires the expected branch, safe repository preflight, known
+  source head, and an allowlisted fixed argv adapter
+- commands are argv vectors run with `shell=False`; no caller-supplied
+  executable or free-form shell command is accepted
+- recovery is confirmed only by a new normal operational-health receipt, not by
+  child exit code alone
+
+Execution attempts are recorded separately from task receipts under:
+
+```text
+status/operational-recovery/<dispatch>/<date>/<scheduled-instance>/
+```
+
+The attempt ledger stores only sanitized execution metadata: attempt identity,
+dispatch, original task key, scheduled instance, adapter, attempt number,
+timestamps, source head, evaluator recommendation, original status and
+classification, child exit category/code, post-execution receipt observation,
+`public_side_effects = false`, and execution mode. It must not store secrets,
+environment dumps, raw provider payloads, source article text, or private
+editorial material.
+
+Implemented does not mean activated. Merging or deploying executor source does
+not install an hourly watcher, register a Windows scheduled task, or enable
+automatic production recovery. Production activation is a separate production
+change requiring its own protected runtime proof and scheduler authorization.
+
 ## ICE Operational-Status Migration
 
 The serialized external status exporter remains the single exporter.

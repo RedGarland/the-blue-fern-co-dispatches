@@ -28,6 +28,7 @@ def test_classify_path_covers_expected_categories():
     assert preflight_repo_state.classify_path(".pytest-temp-gaza-wide/") == "cache"
     assert preflight_repo_state.classify_path(".venv/Scripts/python.exe") == "virtualenv"
     assert preflight_repo_state.classify_path("status/food-line/runtime/source_performance_history.json") == "local_run_state"
+    assert preflight_repo_state.classify_path("status/operational-recovery/food-line/2026-09-10/2026-09-10-food_line_source_watch/latest.json") == "local_run_state"
     assert preflight_repo_state.classify_path("data/dispatches/food-line/discovery/2026-06-25/discovery_candidates.json") == "local_run_state"
     assert preflight_repo_state.classify_path("some/unknown/path.txt") == "unknown"
 
@@ -128,6 +129,35 @@ def test_food_line_tracked_runtime_state_is_risky_but_sanctioned_runtime_path_is
         "data/dispatches/food-line/source_performance_history.json",
         "data/dispatches/food-line/source_registry.json",
     }
+
+
+def test_recovery_execution_ledger_path_is_allowed_but_unknown_sibling_is_risky(monkeypatch, tmp_path):
+    source_repo = tmp_path / "repo"
+    source_repo.mkdir()
+    monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: None)
+    monkeypatch.setattr(
+        preflight_repo_state,
+        "_run_git_status",
+        lambda _repo: (
+            0,
+            [
+                "?? status/operational-recovery/food-line/2026-09-10/2026-09-10-food_line_source_watch/latest.json",
+                "?? status/operational-recovery/food-line/2026-09-10/2026-09-10-food_line_source_watch/attempts/01-recovery-abc.json",
+                "?? status/operational-recovery/food-line/2026-09-10/2026-09-10-food_line_source_watch/raw-provider-dump.json",
+            ],
+        ),
+    )
+
+    report = preflight_repo_state.build_preflight_report(source_repo)
+
+    assert report["ok"] is False
+    assert {entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]} == {
+        "status/operational-recovery/food-line/2026-09-10/2026-09-10-food_line_source_watch/latest.json",
+        "status/operational-recovery/food-line/2026-09-10/2026-09-10-food_line_source_watch/attempts/01-recovery-abc.json",
+    }
+    assert [entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]] == [
+        "status/operational-recovery/food-line/2026-09-10/2026-09-10-food_line_source_watch/raw-provider-dump.json"
+    ]
 
 
 def test_food_line_current_review_tracked_state_is_risky(monkeypatch, tmp_path):

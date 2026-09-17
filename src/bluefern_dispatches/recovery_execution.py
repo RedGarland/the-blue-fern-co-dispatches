@@ -5,13 +5,13 @@ import os
 import subprocess
 import sys
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from enum import StrEnum
 from pathlib import Path
 from typing import Any, Callable
 
-from .operational_health import OperationalStatus, load_operational_receipts, parse_timestamp
+from .operational_health import OperationalStatus, parse_timestamp
 from .scheduled_recovery import PUBLICATION_TASK_KEYS, RecoveryRecommendation, RetryPolicy, evaluate_recovery
 
 
@@ -35,6 +35,7 @@ class ExecutionDecision(StrEnum):
     EXECUTION_DENIED_ATTEMPT_LIMIT = "EXECUTION_DENIED_ATTEMPT_LIMIT"
     EXECUTION_DEFERRED_BACKOFF = "EXECUTION_DEFERRED_BACKOFF"
     EXECUTION_DENIED_RECOVERY_WINDOW_EXPIRED = "EXECUTION_DENIED_RECOVERY_WINDOW_EXPIRED"
+    EXECUTION_DENIED_INVALID_RECOVERY_CONTRACT = "EXECUTION_DENIED_INVALID_RECOVERY_CONTRACT"
     EXECUTION_DENIED_ACTIVE_OR_AMBIGUOUS_LOCK = "EXECUTION_DENIED_ACTIVE_OR_AMBIGUOUS_LOCK"
     EXECUTION_DENIED_UNSAFE_RUNNER_STATE = "EXECUTION_DENIED_UNSAFE_RUNNER_STATE"
     STALE_PLAN_SUPPRESSED = "STALE_PLAN_SUPPRESSED"
@@ -75,6 +76,7 @@ class Adapter:
     supported_for_planning: bool
     supported_for_automatic_execution: bool
     unsupported_reason: str = ""
+    verification_task_keys: tuple[str, ...] = ()
 
     def argv(self, options: ExecutionOptions, plan: dict[str, Any]) -> list[str]:
         raise NotImplementedError
@@ -86,6 +88,7 @@ class FoodResumeAdapter(Adapter):
     supported_for_planning: bool = True
     supported_for_automatic_execution: bool = True
     unsupported_reason: str = ""
+    verification_task_keys: tuple[str, ...] = ("food_line_source_watch_resume",)
 
     def argv(self, options: ExecutionOptions, plan: dict[str, Any]) -> list[str]:
         script = options.source_root / "scripts" / "food_line_daily_scheduler.py"
@@ -244,16 +247,9 @@ def select_candidate(report: dict[str, Any]) -> tuple[dict[str, Any] | None, lis
     return selected, deferred
 
 
-def _recovery_deadline(row: dict[str, Any], policy: RetryPolicy) -> str | None:
-    if row.get("recovery_deadline"):
-        return str(row["recovery_deadline"])
-    scheduled = _parse_utc(str(row.get("scheduled_for") or ""))
-    if scheduled is None:
-        return None
-    # Evaluator deadlines are grace end + recovery window. The report does not
-    # expose per-task grace, so derive a conservative deadline from the already
-    # evaluated retry-eligible scheduled instance using the policy window only.
-    return (scheduled + timedelta(minutes=policy.recovery_window_minutes)).isoformat().replace("+00:00", "Z")
+def _evaluator_deadline(value: Any) -> str | None:
+    parsed = _parse_utc(str(value or ""))
+    return parsed.isoformat().replace("+00:00", "Z") if parsed else None
 
 
 def _plan_for_row(options: ExecutionOptions, report: dict[str, Any], row: dict[str, Any], deferred: list[dict[str, Any]]) -> dict[str, Any]:
@@ -279,7 +275,8 @@ def _plan_for_row(options: ExecutionOptions, report: dict[str, Any], row: dict[s
         "max_attempts": options.policy.max_attempts,
         "prior_attempt_count": len(attempts),
         "earliest_allowed_retry": earliest.isoformat().replace("+00:00", "Z") if earliest else None,
-        "recovery_deadline": _recovery_deadline(row, options.policy),
+        "grace_end": _evaluator_deadline(row.get("grace_end")),
+        "recovery_deadline": _evaluator_deadline(row.get("recovery_deadline")),
         "execute_requested": options.execute,
         "executable": False,
         "denial_reason": "",
@@ -291,6 +288,7 @@ def _plan_for_row(options: ExecutionOptions, report: dict[str, Any], row: dict[s
             {"task_key": item.get("task_key"), "scheduled_instance": item.get("instance_id")}
             for item in deferred
         ],
+        "verification_task_keys": list(adapter.verification_task_keys) if adapter else [],
         "command_argv": [],
     }
     if adapter and adapter.supported_for_automatic_execution:
@@ -323,6 +321,7 @@ def _denied_plan(options: ExecutionOptions, report: dict[str, Any], reason: Exec
         "supported_for_planning": False,
         "supported_for_automatic_execution": False,
         "deferred_candidates": [],
+        "verification_task_keys": [],
         "command_argv": [],
     }
 
@@ -344,6 +343,8 @@ def _decision(options: ExecutionOptions, plan: dict[str, Any], *, preflight_ok: 
         return ExecutionDecision.EXECUTION_DENIED_NOT_RETRY_ELIGIBLE
     if not plan.get("supported_for_planning") or not plan.get("supported_for_automatic_execution"):
         return ExecutionDecision.EXECUTION_UNSUPPORTED
+    if _parse_utc(plan.get("recovery_deadline")) is None:
+        return ExecutionDecision.EXECUTION_DENIED_INVALID_RECOVERY_CONTRACT
     if int(plan.get("prior_attempt_count") or 0) >= int(plan.get("max_attempts") or 0):
         return ExecutionDecision.EXECUTION_DENIED_ATTEMPT_LIMIT
     now = _parse_utc(options.evaluated_at)
@@ -388,12 +389,53 @@ def _stale_report(options: ExecutionOptions) -> dict[str, Any]:
     )
 
 
-def _classify_post_execution(options: ExecutionOptions, plan: dict[str, Any], before_count: int) -> tuple[PostExecutionStatus, dict[str, Any] | None]:
-    receipts = load_operational_receipts(options.source_root, options.dispatch, options.date)
-    relevant = [item for item in receipts if item.get("task_key") == plan.get("task_key")]
-    if len(relevant) <= before_count:
+def _receipt_fingerprint(path: Path, receipt: dict[str, Any]) -> str:
+    return "|".join(
+        [
+            path.name,
+            str(receipt.get("task_key") or ""),
+            str(receipt.get("scheduled_for") or ""),
+            str(receipt.get("run_id") or ""),
+            str(receipt.get("started_at") or ""),
+            str(receipt.get("completed_at") or ""),
+            str(receipt.get("observed_at") or ""),
+            str(receipt.get("status") or ""),
+        ]
+    )
+
+
+def _verification_receipts(options: ExecutionOptions, plan: dict[str, Any]) -> list[tuple[Path, dict[str, Any], str]]:
+    task_keys = set(str(item) for item in plan.get("verification_task_keys") or ())
+    if not task_keys:
+        task_keys = {str(plan.get("task_key") or "")}
+    root = options.source_root / "status" / "operational-health" / options.dispatch / options.date / "runs"
+    records: list[tuple[Path, dict[str, Any], str]] = []
+    for path in sorted(root.glob("*.json")):
+        try:
+            receipt = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if receipt.get("task_key") not in task_keys:
+            continue
+        scheduled_for = str(receipt.get("scheduled_for") or "")
+        if scheduled_for and not scheduled_for.startswith(options.date):
+            continue
+        records.append((path, receipt, _receipt_fingerprint(path, receipt)))
+    return records
+
+
+def _classify_post_execution(options: ExecutionOptions, plan: dict[str, Any], before_fingerprints: set[str]) -> tuple[PostExecutionStatus, dict[str, Any] | None]:
+    relevant = [
+        (path, receipt, fingerprint)
+        for path, receipt, fingerprint in _verification_receipts(options, plan)
+        if fingerprint not in before_fingerprints
+    ]
+    if not relevant:
         return PostExecutionStatus.RECOVERY_UNPROVEN, None
-    latest = max(relevant, key=lambda item: _parse_utc(str(item.get("completed_at") or item.get("observed_at") or "")) or datetime.min.replace(tzinfo=timezone.utc))
+    _path, latest, _fingerprint = max(
+        relevant,
+        key=lambda item: _parse_utc(str(item[1].get("completed_at") or item[1].get("observed_at") or "")) or datetime.min.replace(tzinfo=timezone.utc),
+    )
     status = latest.get("status")
     if status in {OperationalStatus.SUCCESS.value, OperationalStatus.SAFE_NO_OP.value}:
         return PostExecutionStatus.RECOVERY_CONFIRMED, latest
@@ -487,12 +529,12 @@ def run_executor(
         _write_proof(options, result)
         return result
 
-    before_count = len([item for item in load_operational_receipts(options.source_root, options.dispatch, options.date) if item.get("task_key") == plan.get("task_key")])
+    before_fingerprints = {fingerprint for _path, _receipt, fingerprint in _verification_receipts(options, plan)}
     started_at = utc_now()
     runner = command_runner or _subprocess_runner
     try:
         command_result = runner(list(plan["command_argv"]), options.source_root)
-        post_status, observed = _classify_post_execution(options, plan, before_count)
+        post_status, observed = _classify_post_execution(options, plan, before_fingerprints)
         completed_at = utc_now()
         result["execution_receipt"] = _write_attempt_receipt(
             options,

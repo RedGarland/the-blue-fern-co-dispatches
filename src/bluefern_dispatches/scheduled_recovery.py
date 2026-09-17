@@ -210,7 +210,10 @@ def evaluate_recovery(
                     state = InstanceState.FAILED_NONRETRYABLE
                     recommendation = RecoveryRecommendation.UPSTREAM_BLOCKED
                 elif status in {OperationalStatus.FAILED.value, OperationalStatus.DEGRADED.value} and _is_retryable(receipt):
-                    if attempts >= policy.max_attempts:
+                    if recovery_deadline and evaluated > recovery_deadline:
+                        state = InstanceState.FAILED_NONRETRYABLE
+                        recommendation = RecoveryRecommendation.RECOVERY_WINDOW_EXPIRED
+                    elif attempts >= policy.max_attempts:
                         state = InstanceState.FAILED_NONRETRYABLE
                         recommendation = RecoveryRecommendation.MANUAL_ATTENTION
                     else:
@@ -226,6 +229,7 @@ def evaluate_recovery(
                 "task_key": expectation.task_key,
                 "instance_id": instance_id,
                 "scheduled_for": scheduled.isoformat().replace("+00:00", "Z") if scheduled else None,
+                "grace_end": grace_end.isoformat().replace("+00:00", "Z") if grace_end else None,
                 "recovery_deadline": recovery_deadline.isoformat().replace("+00:00", "Z") if recovery_deadline else None,
                 "state": state.value,
                 "recommendation": recommendation.value,

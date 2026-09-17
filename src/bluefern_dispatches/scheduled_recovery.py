@@ -226,6 +226,7 @@ def evaluate_recovery(
                 "task_key": expectation.task_key,
                 "instance_id": instance_id,
                 "scheduled_for": scheduled.isoformat().replace("+00:00", "Z") if scheduled else None,
+                "recovery_deadline": recovery_deadline.isoformat().replace("+00:00", "Z") if recovery_deadline else None,
                 "state": state.value,
                 "recommendation": recommendation.value,
                 "receipt_status": _receipt_status(receipt),

@@ -14,6 +14,7 @@ from bluefern_dispatches.operational_health import (
 )
 from bluefern_dispatches.operational_status_exporter import (
     ExportError,
+    build_ice_status,
     build_food_line_status,
     commit_and_push_status,
     exporter_lock,
@@ -116,6 +117,49 @@ def _write_care_day(tmp_path: Path, *, include_older_collection: bool = False) -
             details={"source_body": "private care body", "safe_detail": "kept local"},
         )
         (receipt_root / f"{run_id}.json").write_text(json.dumps(receipt), encoding="utf-8")
+    return source
+
+
+def _write_ice_day(tmp_path: Path, *, status: str = "SUCCESS", classification: str = "healthy", unaccounted: int = 0) -> Path:
+    source = tmp_path / "ice-source"
+    receipt_root = source / "status" / "operational-health" / "ice" / DATE / "runs"
+    receipt_root.mkdir(parents=True)
+    artifact = source / "status" / "ice" / "runs" / DATE / "monitor.json"
+    artifact.parent.mkdir(parents=True, exist_ok=True)
+    artifact.write_text("{}\n", encoding="utf-8")
+    receipt = build_operational_receipt(
+        dispatch="ice",
+        task_key="ice_monitor",
+        task_name="Daily - ICE Monitor",
+        scheduled_for=DATE,
+        started_at="2026-09-11T04:15:00Z",
+        completed_at="2026-09-11T04:16:00Z",
+        observed_at="2026-09-11T04:16:00Z",
+        exit_code=0 if status != "FAILED" else 2,
+        status=status,
+        classification=classification,
+        run_id="ice-monitor-1",
+        runner_path=r"C:\BlueFernRunner\ICEMonitorCurrent",
+        branch="add/pages-repo-default",
+        source_head="26ab691dfeac1a2d94682d9205f76a245cbf92ad",
+        artifact_refs={
+            "task_receipt": str(artifact),
+            "raw_payload_path": r"C:\BlueFernRunner\private\source.json",
+        },
+        public_side_effects={"pages": False, "publication": False, "rss": False, "audio": False, "social": False, "source_text": "private"},
+        publication_attempted=False,
+        publication_status="not_authorized_monitor_only",
+        details={
+            "configured_providers": 16,
+            "attempted_providers": 13,
+            "successful_providers": 13 if status != "FAILED" else 0,
+            "failed_providers": 0 if status != "FAILED" else 13,
+            "canonical_events": 0 if status == "SAFE_NO_OP" else 8,
+            "unaccounted": unaccounted,
+            "source_body": "private source body",
+        },
+    )
+    (receipt_root / "ice-monitor-1.json").write_text(json.dumps(receipt), encoding="utf-8")
     return source
 
 
@@ -393,6 +437,64 @@ def test_omitting_care_source_root_does_not_fabricate_authoritative_care_status(
     assert result["system"]["dispatches"]["care-line"]["migration_status"] == "NOT_MIGRATED"
     assert result["system"]["dispatches"]["care-line"]["aggregate_status"] == "UNKNOWN"
     assert result["system"]["dispatches"]["care-line"]["scheduled_health_available"] is False
+
+
+def test_omitting_ice_source_root_preserves_not_migrated_status(tmp_path: Path) -> None:
+    result = export_status(
+        source_root=_write_day(tmp_path),
+        status_checkout=tmp_path / "status",
+        date=DATE,
+        evaluated_at=EVALUATED,
+        exported_at=EVALUATED,
+    )
+
+    assert "ice" not in result
+    assert result["system"]["dispatches"]["ice"]["migration_status"] == "NOT_MIGRATED"
+    assert result["system"]["dispatches"]["ice"]["aggregate_status"] == "UNKNOWN"
+
+
+@pytest.mark.parametrize(
+    ("status", "classification", "expected"),
+    [
+        ("SUCCESS", "healthy", "SUCCESS"),
+        ("DEGRADED", "provider_timeout", "DEGRADED"),
+        ("FAILED", "collection_failed", "FAILED"),
+        ("SAFE_NO_OP", "healthy_zero_new_events", "SUCCESS"),
+    ],
+)
+def test_ice_source_root_exports_migrated_status(tmp_path: Path, status: str, classification: str, expected: str) -> None:
+    checkout = tmp_path / "status"
+    result = export_status(
+        source_root=_write_day(tmp_path / "food"),
+        ice_source_root=_write_ice_day(tmp_path, status=status, classification=classification),
+        status_checkout=checkout,
+        date=DATE,
+        evaluated_at="2026-09-11T05:00:00Z",
+        exported_at="2026-09-11T05:01:00Z",
+    )
+
+    assert (checkout / "ops/status/ice/latest.json").is_file()
+    assert (checkout / f"ops/status/ice/history/{DATE}.json").is_file()
+    assert result["ice"]["migration_status"] == "MIGRATED"
+    assert result["ice"]["aggregate_status"] == expected
+    assert result["ice"]["receipt_completeness"] == "COMPLETE"
+    assert result["system"]["dispatches"]["ice"]["migration_status"] == "MIGRATED"
+    assert result["system"]["dispatches"]["ice"]["aggregate_status"] == expected
+    exported = json.dumps(result)
+    assert "private source body" not in exported
+    assert "source_text" not in exported
+    assert "BlueFernRunner" not in exported
+
+
+def test_ice_terminal_unaccounted_cannot_be_silently_healthy(tmp_path: Path) -> None:
+    status = build_ice_status(
+        source_root=_write_ice_day(tmp_path, unaccounted=1),
+        date=DATE,
+        evaluated_at="2026-09-11T05:00:00Z",
+        exported_at="2026-09-11T05:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "FAILED"
 
 
 def test_care_source_root_without_expected_instances_fails_closed(tmp_path: Path) -> None:

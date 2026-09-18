@@ -230,3 +230,7 @@ The batch ID is a deterministic hash of the domain and ordered raw-file hashes. 
 By default, one validation or sidecar failure blocks every import in the batch. `--allow-partial-import` explicitly permits valid files to import while invalid files remain unchanged and reported. Sidecars are matched by raw SHA-256 and checked against declared raw path, domain, and run or finding identity when present. Hash, path, domain, identity, and approval conflicts fail closed; filenames alone never establish a match, and multiple matches fail closed.
 
 Batch imports use the existing single-file domain protections. They do not enqueue Care Line events, insert Food Line current intake, create Gaza stories, expose ICE records, grant publication approval, generate editions, or write Pages, Bluesky, or scheduler state.
+
+## Food Line Date Reconciliation Front Door
+
+When an operator needs to audit or repair one Food Line date, start with [Food Line date reconciliation](food-line-date-reconciliation.md). It prefers retained historical agent evidence before nonoriginal historical reconstruction and keeps all recovered material private until separate review.

@@ -272,3 +272,7 @@ article text, review queue content, credentials, or local absolute paths.
 
 The dedicated ops branch remains the runtime-health authority. The source
 branch must not be treated as live operational status.
+
+## Food Line Date Reconciliation
+
+For one-date Food Line backfill and completeness control, use [Food Line date reconciliation](food-line-date-reconciliation.md). The controller is private by default, never publishes, and does not compete with the active same-day recovery scheduler.

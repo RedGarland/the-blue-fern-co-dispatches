@@ -170,6 +170,71 @@ not install an hourly watcher, register a Windows scheduled task, or enable
 automatic production recovery. Production activation is a separate production
 change requiring its own protected runtime proof and scheduler authorization.
 
+## Food Recovery Scheduler Plumbing
+
+Food recovery activation uses a dedicated Windows wrapper:
+
+```powershell
+scripts\windows\run_food_line_recovery_executor.ps1
+```
+
+The wrapper is fixed to Food Line recovery only. It derives the edition date in
+Pacific time, derives the evaluation timestamp in UTC, and invokes the bounded
+executor with:
+
+```text
+python scripts\run_scheduled_recovery_executor.py --dispatch food-line --execute --expected-branch add/pages-repo-default
+```
+
+The wrapper does not accept an arbitrary executable, task key, shell command,
+proof root, dispatch name, publication command, Pages path, or Care/ICE target.
+Routine production runs write a bounded UTF-8 terminal record under:
+
+```text
+logs/food-line/recovery-executor/<edition-date>/
+```
+
+The terminal record is operational evidence for the scheduler boundary only. It
+must not include credentials, provider payloads, source article text, private
+editorial material, environment dumps, or public publication receipts.
+
+The source registration script is:
+
+```powershell
+scripts\register_food_line_recovery_task.ps1
+```
+
+It registers or updates only `\Blue Fern Co\Blue Fern Food Line Recovery` for
+the Food runner root `C:\BlueFernRunner\FoodLineCurrent6`. The task runs as the
+current Windows user with `Interactive` logon and `Limited` run level, uses
+`MultipleInstances IgnoreNew`, and has bounded execution time. It schedules
+daily slots every 30 minutes from 05:45 through 11:45 Pacific time. Registration
+does not start the task and supports `-WhatIf`.
+
+The read-only inspection helper is:
+
+```powershell
+scripts\inspect_food_line_recovery_task.ps1
+```
+
+It reports task existence, enabled/state information, last and next scheduler
+timestamps, task result code, and the latest wrapper terminal decision/action
+state. It must not register, update, enable, disable, or start the task.
+
+Activation and execution remain distinct:
+
+- merging, deploying, or registering this plumbing does not itself recover Food
+- activation requires explicit production authorization to register or enable
+  the task
+- natural certification requires observing a scheduled invocation cross the
+  Windows Task Scheduler boundary
+- the wrapper may run only the executor's already audited Food recovery paths:
+  Source Watch status-resume, Source Watch Resume status-resume, and
+  dependency-recovered Current Intake
+- publication, Pages writes, approval consumption, public audio/social output,
+  Food manual triggers outside the executor, Care recovery, and ICE recovery
+  remain unsupported by this task
+
 ## ICE Operational-Status Migration
 
 The serialized external status exporter remains the single exporter.

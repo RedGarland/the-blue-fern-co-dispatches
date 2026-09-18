@@ -32,7 +32,7 @@
       "latest_runtime_proof_date": null,
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-18",
-      "receipt_completeness": "PARTIAL",
+      "receipt_completeness": "COMPLETE",
       "recovery_lifecycle": "HEALTHY",
       "scheduled_health_available": true,
       "stale_observability": false
@@ -67,9 +67,9 @@
         "state": "HANDOFF_RECEIVED_SUCCESS",
         "unaccounted_count": 0
       },
-      "aggregate_status": "STALE_OBSERVABILITY",
+      "aggregate_status": "DEGRADED",
       "migration_status": "MIGRATED",
-      "recovery_lifecycle": "INCIDENT_OPEN"
+      "recovery_lifecycle": "HEALTHY"
     },
     "gaza": {
       "agent_handoff": {
@@ -109,10 +109,8 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-09-18T15:15:03.147196Z",
+  "exported_at": "2026-09-18T16:15:03.406518Z",
   "schema_version": "bluefern_external_system_status_v1",
-  "stale_observability": [
-    "food-line"
-  ],
-  "system_status": "STALE_OBSERVABILITY"
+  "stale_observability": [],
+  "system_status": "DEGRADED"
 }

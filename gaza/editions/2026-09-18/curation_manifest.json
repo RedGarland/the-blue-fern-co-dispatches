@@ -1,0 +1,246 @@
+[
+  {
+    "story_id": "gaza-story-2026-09-18-004",
+    "title": "Crypto millionaires would gain \u00a3500m over five years from Reform policy, Labour analysis suggests - UK politics live",
+    "summary": "Support for the Palestinian cause is particularly strong in Ireland because of its historical experience of colonialism, and, in a reference to the sanctions on West Bank settlements imposed by Burnham's government, Martin said: I think for the United Kingdom under your leadership to take the stance that it's taken, I think, is important for \u2026 standing up for humanitarian values and justice and fulfilling the rights of all in the Middle East to security, to peace and to some decent future for their children and generations to come. Reform UK has proposed cutting capital gains tax on crypto investments to 10% Miche\u00e1l Martin , the taoiseach (Irish PM), thanked Andy Burnham for his stance on Israel as the two men met at No 10 North today. Formed in 1999, the UK Youth Parliament (UKYP) sees more than 300 children aged 11 to 18 democratically elected by their peers to represent young people in their area, who then debate and campaign on a variety of issues. Once a year, they hold a debate in the House of Commons chamber.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 81,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "displacement",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": false,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-18-guardian-world-1d56c1eae076"
+    ],
+    "source_ids": [
+      "gaza-2026-09-18-guardian-world-1d56c1eae076"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/politics/live/2026/sep/18/andy-burnham-ireland-john-healey-eu-made-in-europe-plan-uk-politics-latest-updates-news"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-18-guardian-world-1d56c1eae076",
+        "title": "Crypto millionaires would gain \u00a3500m over five years from Reform policy, Labour analysis suggests - UK politics live",
+        "url": "https://www.theguardian.com/politics/live/2026/sep/18/andy-burnham-ireland-john-healey-eu-made-in-europe-plan-uk-politics-latest-updates-news",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Reform UK has proposed cutting capital gains tax on crypto investments to 10% Miche\u00e1l Martin , the taoiseach (Irish PM), thanked Andy Burnham for his stance on Israel as the two men met at No 10 North today. Support for the Palestinian cause is particularly strong in Ireland because of its historical experience of colonialism, and, in a reference to the sanctions on West Bank settlements imposed by Burnham's government, Martin said: I think for the United Kingdom under your leadership to take the stance that it's taken, I think, is important for \u2026 standing up for humanitarian values and justice and fulfilling the rights of all in the Middle East to security, to peace and to some decent future for their children and generations to come. Formed in 1999, the UK Youth Parliament (UKYP) sees more than 300 children aged 11 to 18 democratically elected by their peers to represent young people in their area, who then debate and campaign on a variety of issues. Once a year, they hold a debate in the House of Commons chamber.",
+        "event_date": "2026-09-18T13:43:33+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-18T14:04:55.595768+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 81,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-18T13:43:33+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "exclude_written_public_edition",
+    "public_rendered": false,
+    "excluded_reason": "unrelated non-Gaza topic",
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": null,
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-18-003",
+    "title": "Trump administration again denies entry visas to Palestinian officials ahead of UN general assembly",
+    "summary": "For the second year in a row, the administration has barred the Palestinian delegation from US travel for the forum. The state department said in a statement the Palestinian Authority (PA) and the Palestine Liberation Organization (PLO) had \"failed to live up to their commitments\", accusing the groups of \"taking actions to internationalize the Israeli-Palestinian Conflict including through the International Criminal Court (ICC) and International Court of Justice (ICJ)\" and of \"glorifying terrorism\" among other allegations. The US state department said on Wednesday that it had again denied entry visas to Palestinian officials ahead next week's United Nations general assembly gathering in New York .",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 79,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-18-guardian-world-24a6e34ef89a"
+    ],
+    "source_ids": [
+      "gaza-2026-09-18-guardian-world-24a6e34ef89a"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/us-news/2026/sep/17/trump-denies-visas-palestine-un"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-18-guardian-world-24a6e34ef89a",
+        "title": "Trump administration again denies entry visas to Palestinian officials ahead of UN general assembly",
+        "url": "https://www.theguardian.com/us-news/2026/sep/17/trump-denies-visas-palestine-un",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "For the second year in a row, the administration has barred the Palestinian delegation from US travel for the forum The US state department said on Wednesday that it had again denied entry visas to Palestinian officials ahead next week's United Nations general assembly gathering in New York . The state department said in a statement the Palestinian Authority (PA) and the Palestine Liberation Organization (PLO) had \"failed to live up to their commitments\", accusing the groups of \"taking actions to internationalize the Israeli-Palestinian Conflict including through the International Criminal Court (ICC) and International Court of Justice (ICJ)\" and of \"glorifying terrorism\" among other allegations.",
+        "event_date": "2026-09-18T00:42:39+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-18T14:04:55.595768+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 79,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-18T00:42:39+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-17-004",
+    "prior_edition_date": "2026-09-17",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-18-002",
+    "title": "YouTube star Ms Rachel to match Macklemore's $1m Palestine aid donation",
+    "summary": "Educator talks of 'moral obligation' and urges 'every wealthy white celebrity' to make similar donation YouTube star Ms Rachel has said she is matching rapper Macklemore's $1m donation to organizations supporting Palestinians, calling on other public figures to follow suit. Macklemore, who was fired as the opening act on Ed Sheeran's tour after saying \"Free Palestine\" on stage at New Jersey's MetLife Stadium, pledged to donate the entirety of his earnings from Sheeran's tour to several organizations focused on the Palestinian people.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 57,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-18-guardian-world-55af12e6467f"
+    ],
+    "source_ids": [
+      "gaza-2026-09-18-guardian-world-55af12e6467f"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/culture/2026/sep/17/ms-rachel-macklemore-palestine-donation"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-18-guardian-world-55af12e6467f",
+        "title": "YouTube star Ms Rachel to match Macklemore's $1m Palestine aid donation",
+        "url": "https://www.theguardian.com/culture/2026/sep/17/ms-rachel-macklemore-palestine-donation",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Educator talks of 'moral obligation' and urges 'every wealthy white celebrity' to make similar donation YouTube star Ms Rachel has said she is matching rapper Macklemore's $1m donation to organizations supporting Palestinians, calling on other public figures to follow suit. Macklemore, who was fired as the opening act on Ed Sheeran's tour after saying \"Free Palestine\" on stage at New Jersey's MetLife Stadium, pledged to donate the entirety of his earnings from Sheeran's tour to several organizations focused on the Palestinian people.",
+        "event_date": "2026-09-18T01:00:45+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-18T14:04:55.595768+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 57,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-18T01:00:45+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

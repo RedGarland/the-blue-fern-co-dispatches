@@ -108,6 +108,39 @@ class RetryPolicy:
     recovery_window_minutes: int = 240
 
 
+@dataclass(frozen=True)
+class FoodDependencyObservation:
+    receipt: dict[str, Any]
+    state: str
+    observed_at: datetime
+    task_key: str
+    run_id: str
+    durable_state_verified: bool
+    reason: str
+
+
+@dataclass(frozen=True)
+class FoodDependencyResolution:
+    state: str
+    authoritative_task_key: str = ""
+    authoritative_receipt_time: str = ""
+    authoritative_run_id: str = ""
+    superseded_observation_count: int = 0
+    durable_state_verified: bool = False
+    reason: str = ""
+
+    def as_report(self) -> dict[str, Any]:
+        return {
+            "state": self.state,
+            "authoritative_task_key": self.authoritative_task_key,
+            "authoritative_receipt_time": self.authoritative_receipt_time,
+            "authoritative_run_id": self.authoritative_run_id,
+            "superseded_observation_count": self.superseded_observation_count,
+            "durable_state_verified": self.durable_state_verified,
+            "reason": self.reason,
+        }
+
+
 EXPECTATIONS_BY_DISPATCH = {
     "food-line": FOOD_LINE_TASK_EXPECTATIONS,
     "care-line": CARE_LINE_TASK_EXPECTATIONS,
@@ -250,6 +283,8 @@ def _source_state_agrees_with_record(
         return False
     if str(record.get("run_id") or "") != run_id or str(state.get("run_id") or "") != run_id:
         return False
+    if str(state.get("final_error") or "").strip():
+        return False
     state_status = str(state.get("status") or "")
     if state_status != source_status or state_status not in FOOD_SOURCE_QUALIFYING_STATUSES:
         return False
@@ -306,36 +341,152 @@ def _upstream_receipt_is_intake_ready(
     )
 
 
-def _current_intake_dependency_recovered(
+def _upstream_receipt_run_id(receipt: dict[str, Any], task_receipt: dict[str, Any]) -> str:
+    return _receipt_text(receipt, "run_id") or str(task_receipt.get("run_id") or "").strip()
+
+
+def _classify_food_dependency_observation(
+    receipt: dict[str, Any],
+    *,
+    source_root: Path,
+    date: str,
+    observed_at: datetime,
+) -> FoodDependencyObservation:
+    task_key = str(receipt.get("task_key") or "")
+    task_receipt = _task_receipt(receipt, source_root) or {}
+    run_id = _upstream_receipt_run_id(receipt, task_receipt)
+    status = str(receipt.get("status") or "")
+    classification = str(receipt.get("classification") or "").lower()
+    details = _details(receipt)
+    detail_statuses = {
+        str(details.get("source_status") or "").lower(),
+        str(details.get("source_watch_status") or "").lower(),
+        str(details.get("upstream_dependency_status") or "").lower(),
+        str(task_receipt.get("source_watch_status") or "").lower(),
+        str(task_receipt.get("resume_status") or "").lower(),
+        str(task_receipt.get("final_status") or "").lower(),
+    }
+    if _upstream_receipt_is_intake_ready(receipt, source_root=source_root, date=date):
+        return FoodDependencyObservation(
+            receipt=receipt,
+            state="READY",
+            observed_at=observed_at,
+            task_key=task_key,
+            run_id=run_id,
+            durable_state_verified=True,
+            reason="latest_upstream_observation_is_durable_ready",
+        )
+    if (
+        status == OperationalStatus.UPSTREAM_BLOCKED.value
+        or classification in CURRENT_INTAKE_DEPENDENCY_BLOCKED_CLASSIFICATIONS
+        or bool(detail_statuses & CURRENT_INTAKE_DEPENDENCY_BLOCKED_CLASSIFICATIONS)
+    ):
+        return FoodDependencyObservation(
+            receipt=receipt,
+            state="BLOCKED",
+            observed_at=observed_at,
+            task_key=task_key,
+            run_id=run_id,
+            durable_state_verified=False,
+            reason="latest_upstream_observation_is_blocked",
+        )
+    if status in {OperationalStatus.SUCCESS.value, OperationalStatus.SAFE_NO_OP.value, OperationalStatus.DEGRADED.value} and classification in FOOD_SOURCE_TERMINAL_CLASSIFICATIONS:
+        return FoodDependencyObservation(
+            receipt=receipt,
+            state="BLOCKED",
+            observed_at=observed_at,
+            task_key=task_key,
+            run_id=run_id,
+            durable_state_verified=False,
+            reason="ready_observation_failed_durable_state_verification",
+        )
+    if status in {OperationalStatus.FAILED.value, OperationalStatus.DEGRADED.value}:
+        return FoodDependencyObservation(
+            receipt=receipt,
+            state="FAILED",
+            observed_at=observed_at,
+            task_key=task_key,
+            run_id=run_id,
+            durable_state_verified=False,
+            reason="latest_upstream_observation_failed",
+        )
+    return FoodDependencyObservation(
+        receipt=receipt,
+        state="AMBIGUOUS",
+        observed_at=observed_at,
+        task_key=task_key,
+        run_id=run_id,
+        durable_state_verified=False,
+        reason="latest_upstream_observation_is_ambiguous",
+    )
+
+
+def resolve_food_source_dependency(
     *,
     source_root: Path,
     date: str,
     receipts: list[dict[str, Any]],
     receipt: dict[str, Any],
-) -> bool:
+) -> FoodDependencyResolution:
     classification = str(receipt.get("classification") or "").lower()
     detail_status = str(_details(receipt).get("intake_status") or "").lower()
     if classification not in CURRENT_INTAKE_DEPENDENCY_BLOCKED_CLASSIFICATIONS and detail_status not in CURRENT_INTAKE_DEPENDENCY_BLOCKED_CLASSIFICATIONS:
-        return False
+        return FoodDependencyResolution(state="BLOCKED", reason="current_intake_receipt_is_not_dependency_blocked")
     intake_time = _receipt_time(receipt)
     if intake_time is None:
-        return False
+        return FoodDependencyResolution(state="AMBIGUOUS", reason="current_intake_receipt_time_unusable")
     for later in _newer_receipts(receipts, task_key="food_line_current_intake", after=intake_time):
         later_status = str(later.get("status") or "")
         later_classification = str(later.get("classification") or "").lower()
         if later_status in {OperationalStatus.SUCCESS.value, OperationalStatus.SAFE_NO_OP.value}:
-            return False
+            return FoodDependencyResolution(state="BLOCKED", reason="newer_current_intake_terminal_receipt_exists")
         if later_status in {OperationalStatus.FAILED.value, OperationalStatus.DEGRADED.value} and later_classification not in CURRENT_INTAKE_DEPENDENCY_BLOCKED_CLASSIFICATIONS:
-            return False
-    upstream = [
-        item for item in receipts
-        if item.get("task_key") in FOOD_SOURCE_TERMINAL_TASK_KEYS
-        and (_receipt_time(item) is not None and _receipt_time(item) > intake_time)
-    ]
-    if not upstream:
-        return False
-    ready = [item for item in upstream if _upstream_receipt_is_intake_ready(item, source_root=source_root, date=date)]
-    return bool(ready) and len(ready) == len(upstream)
+            return FoodDependencyResolution(state="BLOCKED", reason="newer_current_intake_independent_failure_exists")
+    observations: list[FoodDependencyObservation] = []
+    for item in receipts:
+        if item.get("task_key") not in FOOD_SOURCE_TERMINAL_TASK_KEYS:
+            continue
+        observed = _receipt_time(item)
+        if observed is None:
+            return FoodDependencyResolution(
+                state="AMBIGUOUS",
+                reason="upstream_observation_timestamp_unusable",
+            )
+        if observed <= intake_time:
+            continue
+        observations.append(
+            _classify_food_dependency_observation(
+                item,
+                source_root=source_root,
+                date=date,
+                observed_at=observed,
+            )
+        )
+    if not observations:
+        return FoodDependencyResolution(state="BLOCKED", reason="no_newer_upstream_observation")
+    observations.sort(key=lambda item: item.observed_at)
+    latest_time = observations[-1].observed_at
+    latest = [item for item in observations if item.observed_at == latest_time]
+    latest_states = {item.state for item in latest}
+    latest_run_ids = {item.run_id for item in latest}
+    timestamp = latest_time.isoformat().replace("+00:00", "Z")
+    if len(latest_states) != 1 or (latest_states == {"READY"} and len(latest_run_ids) != 1):
+        return FoodDependencyResolution(
+            state="AMBIGUOUS",
+            authoritative_receipt_time=timestamp,
+            superseded_observation_count=len(observations) - len(latest),
+            reason="latest_upstream_observations_conflict",
+        )
+    authoritative = latest[-1]
+    return FoodDependencyResolution(
+        state=authoritative.state,
+        authoritative_task_key=authoritative.task_key,
+        authoritative_receipt_time=timestamp,
+        authoritative_run_id=authoritative.run_id,
+        superseded_observation_count=len(observations) - len(latest),
+        durable_state_verified=authoritative.durable_state_verified,
+        reason=authoritative.reason,
+    )
 
 
 def evaluate_recovery(
@@ -370,6 +521,7 @@ def evaluate_recovery(
             recovery_deadline = grace_end + timedelta(minutes=policy.recovery_window_minutes) if grace_end else None
             receipt = _latest_matching_receipt(receipts, expectation.task_key, scheduled, date)
             attempts = attempts_by_instance.get(instance_id, 0)
+            dependency_resolution: FoodDependencyResolution | None = None
             if scheduled and evaluated < scheduled:
                 state = InstanceState.NOT_YET_DUE
                 recommendation = RecoveryRecommendation.WAITING_FOR_SCHEDULE
@@ -389,15 +541,19 @@ def evaluate_recovery(
                     state = InstanceState.RECOVERED
                     recommendation = RecoveryRecommendation.NO_ACTION
                 elif status == OperationalStatus.UPSTREAM_BLOCKED.value:
-                    if (
-                        dispatch == "food-line"
-                        and expectation.task_key == "food_line_current_intake"
-                        and _current_intake_dependency_recovered(
+                    if dispatch == "food-line" and expectation.task_key == "food_line_current_intake":
+                        dependency_resolution = resolve_food_source_dependency(
                             source_root=source_root,
                             date=date,
                             receipts=receipts,
                             receipt=receipt,
                         )
+                    if (
+                        dispatch == "food-line"
+                        and expectation.task_key == "food_line_current_intake"
+                        and dependency_resolution is not None
+                        and dependency_resolution.state == "READY"
+                        and dependency_resolution.durable_state_verified
                     ):
                         if recovery_deadline and evaluated > recovery_deadline:
                             state = InstanceState.FAILED_NONRETRYABLE
@@ -428,7 +584,7 @@ def evaluate_recovery(
                     state = InstanceState.FAILED_NONRETRYABLE
                     recommendation = RecoveryRecommendation.MANUAL_ATTENTION
             receipt_status_value = _receipt_status(receipt)
-            evaluations.append({
+            row = {
                 "task_key": expectation.task_key,
                 "instance_id": instance_id,
                 "scheduled_for": scheduled.isoformat().replace("+00:00", "Z") if scheduled else None,
@@ -451,7 +607,10 @@ def evaluate_recovery(
                 "attempts": attempts,
                 "max_attempts": policy.max_attempts,
                 "publication_task": expectation.task_key in PUBLICATION_TASK_KEYS,
-            })
+            }
+            if dependency_resolution is not None:
+                row["dependency_resolution"] = dependency_resolution.as_report()
+            evaluations.append(row)
 
     priority = [
         RecoveryRecommendation.RETRY_ELIGIBLE.value,

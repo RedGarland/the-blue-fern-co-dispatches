@@ -152,6 +152,59 @@ def _write_recovered_resume(root: Path, *, started: str = "2026-09-10T13:20:00Z"
     )
 
 
+def _write_blocked_resume(root: Path, *, started: str = "2026-09-10T13:15:00Z", name: str = "02-resume-blocked") -> None:
+    _write_receipt(
+        root,
+        task_key="food_line_source_watch_resume",
+        status=OperationalStatus.UPSTREAM_BLOCKED,
+        classification="source_watch_not_initialized",
+        started=started,
+        name=name,
+        run_id="",
+        details={"edition_date": DATE, "source_watch_status": "source_watch_not_initialized"},
+        task_receipt={
+            "schema_version": "food_line_source_watch_receipt_v1",
+            "action": "status_resume",
+            "edition_date": DATE,
+            "run_id": None,
+            "final_status": "source_watch_not_initialized",
+            "resume_status": "source_watch_not_initialized",
+            "source_watch_status": "source_watch_not_initialized",
+            "exit_code": 0,
+        },
+    )
+
+
+def _write_recovered_source_watch(
+    root: Path,
+    *,
+    started: str = "2026-09-10T13:25:00Z",
+    run_id: str = RUN_ID,
+    name: str = "03-source-watch-ready",
+    edition_date: str = DATE,
+) -> None:
+    _write_receipt(
+        root,
+        task_key="food_line_source_watch",
+        status=OperationalStatus.DEGRADED,
+        classification="completed_with_exclusions",
+        started=started,
+        name=name,
+        run_id=run_id,
+        exit_code=0,
+        details={"edition_date": edition_date, "source_status": "completed_with_exclusions", "source_export_status": "success"},
+        task_receipt={
+            "schema_version": "food_line_source_watch_receipt_v1",
+            "action": "source_watch",
+            "edition_date": edition_date,
+            "run_id": run_id,
+            "final_status": "completed_with_exclusions",
+            "export_status": "success",
+            "exit_code": 0,
+        },
+    )
+
+
 def test_not_yet_due_and_grace_active_do_not_raise_false_alarm(tmp_path: Path) -> None:
     not_due = evaluate_recovery(dispatch="food-line", source_root=tmp_path, date=DATE, evaluated_at="2026-09-10T12:00:00Z")
     grace = evaluate_recovery(dispatch="food-line", source_root=tmp_path, date=DATE, evaluated_at="2026-09-10T13:00:00Z")
@@ -380,6 +433,9 @@ def test_current_intake_blocked_with_newer_qualifying_resume_is_retry_eligible(t
     assert row["recommendation"] == "RETRY_ELIGIBLE"
     assert row["classification"] == "dependency_recovered_current_intake"
     assert row["retry_eligible"] is True
+    assert row["dependency_resolution"]["state"] == "READY"
+    assert row["dependency_resolution"]["authoritative_task_key"] == "food_line_source_watch_resume"
+    assert row["dependency_resolution"]["durable_state_verified"] is True
 
 
 def test_current_intake_blocked_with_older_qualifying_resume_stays_blocked(tmp_path: Path) -> None:
@@ -394,6 +450,58 @@ def test_current_intake_blocked_with_older_qualifying_resume_stays_blocked(tmp_p
     assert row["retry_eligible"] is False
 
 
+def test_current_intake_blocked_resume_superseded_by_later_ready_source_watch(tmp_path: Path) -> None:
+    _write_blocked_intake(tmp_path)
+    _write_blocked_resume(tmp_path, started="2026-09-10T13:15:00Z")
+    _write_qualifying_source_state(tmp_path)
+    _write_recovered_source_watch(tmp_path, started="2026-09-10T13:25:00Z")
+
+    report = evaluate_recovery(dispatch="food-line", source_root=tmp_path, date=DATE, evaluated_at="2026-09-10T15:00:00Z")
+    row = next(item for item in report["instances"] if item["task_key"] == "food_line_current_intake")
+
+    assert row["recommendation"] == "RETRY_ELIGIBLE"
+    assert row["classification"] == "dependency_recovered_current_intake"
+    assert row["dependency_resolution"] == {
+        "state": "READY",
+        "authoritative_task_key": "food_line_source_watch",
+        "authoritative_receipt_time": "2026-09-10T13:25:00Z",
+        "authoritative_run_id": RUN_ID,
+        "superseded_observation_count": 1,
+        "durable_state_verified": True,
+        "reason": "latest_upstream_observation_is_durable_ready",
+    }
+
+
+def test_current_intake_latest_blocked_resume_vetoes_older_ready_source_watch(tmp_path: Path) -> None:
+    _write_blocked_intake(tmp_path)
+    _write_qualifying_source_state(tmp_path)
+    _write_recovered_source_watch(tmp_path, started="2026-09-10T13:20:00Z", name="02-source-watch-ready")
+    _write_blocked_resume(tmp_path, started="2026-09-10T13:25:00Z", name="03-resume-blocked")
+
+    report = evaluate_recovery(dispatch="food-line", source_root=tmp_path, date=DATE, evaluated_at="2026-09-10T15:00:00Z")
+    row = next(item for item in report["instances"] if item["task_key"] == "food_line_current_intake")
+
+    assert row["recommendation"] == "UPSTREAM_BLOCKED"
+    assert row["retry_eligible"] is False
+    assert row["dependency_resolution"]["state"] == "BLOCKED"
+    assert row["dependency_resolution"]["authoritative_task_key"] == "food_line_source_watch_resume"
+    assert row["dependency_resolution"]["superseded_observation_count"] == 1
+
+
+def test_current_intake_blocked_resume_superseded_by_later_ready_resume(tmp_path: Path) -> None:
+    _write_blocked_intake(tmp_path)
+    _write_blocked_resume(tmp_path, started="2026-09-10T13:15:00Z")
+    _write_qualifying_source_state(tmp_path)
+    _write_recovered_resume(tmp_path, started="2026-09-10T13:25:00Z")
+
+    report = evaluate_recovery(dispatch="food-line", source_root=tmp_path, date=DATE, evaluated_at="2026-09-10T15:00:00Z")
+    row = next(item for item in report["instances"] if item["task_key"] == "food_line_current_intake")
+
+    assert row["recommendation"] == "RETRY_ELIGIBLE"
+    assert row["dependency_resolution"]["authoritative_task_key"] == "food_line_source_watch_resume"
+    assert row["dependency_resolution"]["superseded_observation_count"] == 1
+
+
 def test_current_intake_dependency_recovery_fails_closed_on_run_id_mismatch(tmp_path: Path) -> None:
     _write_blocked_intake(tmp_path)
     _write_qualifying_source_state(tmp_path, state_run_id="different-run")
@@ -403,6 +511,20 @@ def test_current_intake_dependency_recovery_fails_closed_on_run_id_mismatch(tmp_
     row = next(item for item in report["instances"] if item["task_key"] == "food_line_current_intake")
 
     assert row["recommendation"] == "UPSTREAM_BLOCKED"
+
+
+def test_current_intake_dependency_recovery_fails_closed_on_ready_wrong_run_id(tmp_path: Path) -> None:
+    _write_blocked_intake(tmp_path)
+    _write_qualifying_source_state(tmp_path)
+    _write_recovered_source_watch(tmp_path, run_id="wrong-run")
+
+    report = evaluate_recovery(dispatch="food-line", source_root=tmp_path, date=DATE, evaluated_at="2026-09-10T15:00:00Z")
+    row = next(item for item in report["instances"] if item["task_key"] == "food_line_current_intake")
+
+    assert row["recommendation"] == "UPSTREAM_BLOCKED"
+    assert row["dependency_resolution"]["state"] == "BLOCKED"
+    assert row["dependency_resolution"]["authoritative_run_id"] == "wrong-run"
+    assert row["dependency_resolution"]["durable_state_verified"] is False
 
 
 def test_current_intake_dependency_recovery_fails_closed_on_edition_date_mismatch(tmp_path: Path) -> None:
@@ -416,6 +538,18 @@ def test_current_intake_dependency_recovery_fails_closed_on_edition_date_mismatc
     assert row["recommendation"] == "UPSTREAM_BLOCKED"
 
 
+def test_current_intake_ready_observation_with_edition_date_mismatch_is_blocked(tmp_path: Path) -> None:
+    _write_blocked_intake(tmp_path)
+    _write_qualifying_source_state(tmp_path)
+    _write_recovered_source_watch(tmp_path, edition_date="2026-09-09")
+
+    report = evaluate_recovery(dispatch="food-line", source_root=tmp_path, date=DATE, evaluated_at="2026-09-10T15:00:00Z")
+    row = next(item for item in report["instances"] if item["task_key"] == "food_line_current_intake")
+
+    assert row["recommendation"] == "UPSTREAM_BLOCKED"
+    assert row["dependency_resolution"]["state"] == "BLOCKED"
+
+
 def test_current_intake_dependency_recovery_fails_closed_on_missing_export_evidence(tmp_path: Path) -> None:
     _write_blocked_intake(tmp_path)
     _write_qualifying_source_state(tmp_path, export_present=False)
@@ -425,6 +559,27 @@ def test_current_intake_dependency_recovery_fails_closed_on_missing_export_evide
     row = next(item for item in report["instances"] if item["task_key"] == "food_line_current_intake")
 
     assert row["recommendation"] == "UPSTREAM_BLOCKED"
+
+
+def test_current_intake_latest_failed_upstream_observation_blocks_recovery(tmp_path: Path) -> None:
+    _write_blocked_intake(tmp_path)
+    _write_qualifying_source_state(tmp_path)
+    _write_recovered_resume(tmp_path)
+    _write_receipt(
+        tmp_path,
+        task_key="food_line_source_watch_resume",
+        status=OperationalStatus.FAILED,
+        classification="provider_timeout",
+        started="2026-09-10T13:25:00Z",
+        name="03-resume-failed",
+        run_id=RUN_ID,
+    )
+
+    report = evaluate_recovery(dispatch="food-line", source_root=tmp_path, date=DATE, evaluated_at="2026-09-10T15:00:00Z")
+    row = next(item for item in report["instances"] if item["task_key"] == "food_line_current_intake")
+
+    assert row["recommendation"] == "UPSTREAM_BLOCKED"
+    assert row["dependency_resolution"]["state"] == "FAILED"
 
 
 def test_current_intake_dependency_recovery_fails_closed_on_disagreeing_upstream_evidence(tmp_path: Path) -> None:
@@ -445,6 +600,43 @@ def test_current_intake_dependency_recovery_fails_closed_on_disagreeing_upstream
     row = next(item for item in report["instances"] if item["task_key"] == "food_line_current_intake")
 
     assert row["recommendation"] == "UPSTREAM_BLOCKED"
+
+
+def test_current_intake_equal_timestamp_conflict_fails_closed_as_ambiguous(tmp_path: Path) -> None:
+    _write_blocked_intake(tmp_path)
+    _write_qualifying_source_state(tmp_path)
+    _write_recovered_source_watch(tmp_path, started="2026-09-10T13:25:00Z", name="03-source-watch-ready")
+    _write_blocked_resume(tmp_path, started="2026-09-10T13:25:00Z", name="03-resume-blocked")
+
+    report = evaluate_recovery(dispatch="food-line", source_root=tmp_path, date=DATE, evaluated_at="2026-09-10T15:00:00Z")
+    row = next(item for item in report["instances"] if item["task_key"] == "food_line_current_intake")
+
+    assert row["recommendation"] == "UPSTREAM_BLOCKED"
+    assert row["dependency_resolution"]["state"] == "AMBIGUOUS"
+    assert row["dependency_resolution"]["reason"] == "latest_upstream_observations_conflict"
+
+
+def test_current_intake_malformed_upstream_timestamp_fails_closed(tmp_path: Path) -> None:
+    _write_blocked_intake(tmp_path)
+    _write_qualifying_source_state(tmp_path)
+    _write_recovered_resume(tmp_path)
+    _write_receipt(
+        tmp_path,
+        task_key="food_line_source_watch_resume",
+        status=OperationalStatus.SUCCESS,
+        classification="resume_qualified",
+        started="not-a-timestamp",
+        completed="not-a-timestamp",
+        name="03-malformed-resume",
+        run_id=RUN_ID,
+    )
+
+    report = evaluate_recovery(dispatch="food-line", source_root=tmp_path, date=DATE, evaluated_at="2026-09-10T15:00:00Z")
+    row = next(item for item in report["instances"] if item["task_key"] == "food_line_current_intake")
+
+    assert row["recommendation"] == "UPSTREAM_BLOCKED"
+    assert row["dependency_resolution"]["state"] == "AMBIGUOUS"
+    assert row["dependency_resolution"]["reason"] == "upstream_observation_timestamp_unusable"
 
 
 def test_current_intake_dependency_recovery_suppressed_by_newer_intake_success(tmp_path: Path) -> None:

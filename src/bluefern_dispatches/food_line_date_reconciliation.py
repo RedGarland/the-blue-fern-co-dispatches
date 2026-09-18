@@ -46,6 +46,9 @@ STAGE_ORDER = (SOURCE_WATCH, SOURCE_WATCH_RESUME, CURRENT_INTAKE, DAILY_PUBLISH_
 OK = {"SUCCESS", "SAFE_NO_OP"}
 BAD = {"FAILED", "MISSED", "STALE_OBSERVABILITY", "UPSTREAM_BLOCKED"}
 DISPOSITIONS = {"RETAINED_FOR_REVIEW", "DUPLICATE_EXISTING", "ALREADY_PUBLISHED", "EXCLUDED_RULE", "INSUFFICIENT_EVIDENCE", "OUTSIDE_DATE", "OUTSIDE_SCOPE"}
+EDITORIAL_DECISION_SCHEMA_VERSION = "food_line_historical_reconstruction_editorial_decision_v1"
+ALLOWED_RECONSTRUCTION_DECISIONS = {"APPROVE", "APPROVE_WITH_EDIT", "REJECT", "HOLD", "DUPLICATE", "ALREADY_PUBLISHED"}
+TERMINAL_RECONSTRUCTION_DECISIONS = {"APPROVE", "APPROVE_WITH_EDIT", "REJECT", "DUPLICATE", "ALREADY_PUBLISHED"}
 RESOLVED_EDITORIAL_STATUSES = {"approve", "approve_with_edit", "reject"}
 UNRESOLVED_EDITORIAL_STATUSES = {"hold", "pending_review", "retained_for_review", "review_required"}
 
@@ -514,6 +517,172 @@ def _reconstruction_record(root: Path, target_date: str) -> dict[str, Any] | Non
     return payload
 
 
+def _canonical_json_bytes(payload: Any) -> bytes:
+    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode("utf-8")
+
+
+def reconstruction_candidate_fingerprint(candidate: dict[str, Any]) -> str:
+    return hashlib.sha256(_canonical_json_bytes(candidate)).hexdigest()
+
+
+def _reconstruction_path(root: Path, target_date: str) -> Path:
+    return root / "data" / "dispatches" / "food-line" / "historical-reconstruction" / target_date / "reconstruction.json"
+
+
+def _reconstruction_decision_dir(root: Path, target_date: str) -> Path:
+    return root / "data" / "dispatches" / "food-line" / "historical-reconstruction" / target_date / "review" / "decisions"
+
+
+def _reconstruction_decision_path(root: Path, target_date: str, candidate_id: str) -> Path:
+    if any(part in candidate_id for part in ("/", "\\")) or candidate_id in {"", ".", ".."}:
+        raise DateReconciliationError(f"unsafe reconstruction candidate_id for decision path: {candidate_id!r}")
+    return _reconstruction_decision_dir(root, target_date) / f"{candidate_id}.json"
+
+
+def _retained_reconstruction_findings(reconstruction: dict[str, Any], candidate_id: str | None = None) -> list[dict[str, Any]]:
+    findings = [item for item in reconstruction.get("findings") or [] if isinstance(item, dict)]
+    if candidate_id is not None:
+        findings = [item for item in findings if str(item.get("candidate_id") or "") == candidate_id]
+    return findings
+
+
+def _research_input_sha(root: Path, reconstruction: dict[str, Any]) -> str:
+    research_input = reconstruction.get("research_input") or {}
+    expected = str(research_input.get("sha256") or "").strip()
+    if not expected:
+        raise DateReconciliationError("historical reconstruction missing research_input sha256")
+    archive_path_value = str(research_input.get("path") or "").strip()
+    archive_path = _resolve_repo_path(root, archive_path_value) if archive_path_value else None
+    if archive_path and archive_path.is_file() and _sha256(archive_path) != expected:
+        raise DateReconciliationError("archived historical research input hash mismatch")
+    return expected
+
+
+def _load_reconstruction_for_decision(root: Path, target_date: str, candidate_id: str) -> tuple[Path, dict[str, Any], dict[str, Any], str, str, str]:
+    path = _reconstruction_path(root, target_date)
+    if not path.is_file():
+        raise DateReconciliationError(f"missing historical reconstruction record for {target_date}")
+    reconstruction = _read_json(path)
+    if not isinstance(reconstruction, dict) or reconstruction.get("schema_version") != RECONSTRUCTION_SCHEMA_VERSION:
+        raise DateReconciliationError(f"invalid historical reconstruction record: {path}")
+    if reconstruction.get("target_date") != target_date:
+        raise DateReconciliationError(f"historical reconstruction target_date mismatch: {reconstruction.get('target_date')} != {target_date}")
+    matches = _retained_reconstruction_findings(reconstruction, candidate_id)
+    if len(matches) != 1:
+        raise DateReconciliationError(f"candidate_id {candidate_id!r} exists {len(matches)} times in reconstruction")
+    finding = matches[0]
+    if finding.get("disposition") != "RETAINED_FOR_REVIEW":
+        raise DateReconciliationError(f"candidate {candidate_id} is not RETAINED_FOR_REVIEW")
+    return path, reconstruction, finding, _sha256(path), _research_input_sha(root, reconstruction), reconstruction_candidate_fingerprint(finding)
+
+
+def build_reconstruction_editorial_decision(
+    root: Path,
+    target_date: str,
+    candidate_id: str,
+    *,
+    decision: str,
+    reviewer: str,
+    reason: str,
+    decided_at: str,
+    edited_headline: str | None = None,
+    edited_summary: str | None = None,
+    duplicate_of: str | None = None,
+    editorial_note: str | None = None,
+) -> dict[str, Any]:
+    _, _, _, reconstruction_sha, research_sha, fingerprint = _load_reconstruction_for_decision(root, target_date, candidate_id)
+    payload: dict[str, Any] = {
+        "schema_version": EDITORIAL_DECISION_SCHEMA_VERSION,
+        "target_date": target_date,
+        "candidate_id": candidate_id,
+        "candidate_fingerprint": fingerprint,
+        "research_input_sha256": research_sha,
+        "reconstruction_sha256": reconstruction_sha,
+        "decided_at": decided_at,
+        "reviewer": reviewer,
+        "decision": decision.upper(),
+        "reason": reason,
+        "publication_eligible": False,
+        "publication_approval": False,
+        "pages_authorized": False,
+    }
+    for key, value in {
+        "edited_headline": edited_headline,
+        "edited_summary": edited_summary,
+        "duplicate_of": duplicate_of,
+        "editorial_note": editorial_note,
+    }.items():
+        if value:
+            payload[key] = value
+    validate_reconstruction_editorial_decision(root, target_date, candidate_id, payload)
+    return payload
+
+
+def validate_reconstruction_editorial_decision(root: Path, target_date: str, candidate_id: str, payload: dict[str, Any]) -> dict[str, Any]:
+    if not isinstance(payload, dict):
+        raise DateReconciliationError("editorial decision payload must be an object")
+    _, _, finding, reconstruction_sha, research_sha, fingerprint = _load_reconstruction_for_decision(root, target_date, candidate_id)
+    if payload.get("schema_version") != EDITORIAL_DECISION_SCHEMA_VERSION:
+        raise DateReconciliationError(f"unsupported editorial decision schema: {payload.get('schema_version')}")
+    if payload.get("target_date") != target_date:
+        raise DateReconciliationError(f"editorial decision target_date mismatch: {payload.get('target_date')} != {target_date}")
+    if payload.get("candidate_id") != candidate_id:
+        raise DateReconciliationError(f"editorial decision candidate_id mismatch: {payload.get('candidate_id')} != {candidate_id}")
+    if payload.get("candidate_fingerprint") != fingerprint:
+        raise DateReconciliationError("editorial decision candidate_fingerprint mismatch")
+    if payload.get("research_input_sha256") != research_sha:
+        raise DateReconciliationError("editorial decision research_input_sha256 mismatch")
+    if payload.get("reconstruction_sha256") != reconstruction_sha:
+        raise DateReconciliationError("editorial decision reconstruction_sha256 mismatch")
+    decision = str(payload.get("decision") or "").strip().upper()
+    if decision not in ALLOWED_RECONSTRUCTION_DECISIONS:
+        raise DateReconciliationError(f"unsupported editorial decision: {decision or '<missing>'}")
+    reviewer = str(payload.get("reviewer") or "").strip()
+    if not reviewer:
+        raise DateReconciliationError("editorial decision reviewer is required")
+    reason = str(payload.get("reason") or "").strip()
+    if not reason:
+        raise DateReconciliationError("editorial decision reason is required")
+    decided_at = str(payload.get("decided_at") or "").strip()
+    if not decided_at:
+        raise DateReconciliationError("editorial decision decided_at is required")
+    if parse_timestamp(decided_at) is None:
+        raise DateReconciliationError("editorial decision decided_at is invalid")
+    for key in ("publication_eligible", "publication_approval", "pages_authorized"):
+        if payload.get(key) is not False:
+            raise DateReconciliationError(f"editorial decision must set {key}=false")
+    if decision == "APPROVE_WITH_EDIT" and not (str(payload.get("edited_headline") or "").strip() or str(payload.get("edited_summary") or "").strip()):
+        raise DateReconciliationError("APPROVE_WITH_EDIT requires edited_headline or edited_summary")
+    if decision == "DUPLICATE" and not str(payload.get("duplicate_of") or "").strip():
+        raise DateReconciliationError("DUPLICATE requires duplicate_of")
+    if decision == "ALREADY_PUBLISHED" and not str(payload.get("duplicate_of") or "").strip():
+        raise DateReconciliationError("ALREADY_PUBLISHED requires duplicate_of")
+    return {"candidate_id": candidate_id, "decision": decision, "terminal": decision in TERMINAL_RECONSTRUCTION_DECISIONS, "fingerprint": fingerprint, "finding": finding}
+
+
+def load_reconstruction_editorial_decision(root: Path, target_date: str, candidate_id: str) -> dict[str, Any] | None:
+    path = _reconstruction_decision_path(root, target_date, candidate_id)
+    if not path.is_file():
+        return None
+    payload = _read_json(path)
+    validate_reconstruction_editorial_decision(root, target_date, candidate_id, payload)
+    return payload
+
+
+def record_reconstruction_editorial_decision(root: Path, target_date: str, candidate_id: str, payload: dict[str, Any]) -> dict[str, Any]:
+    validation = validate_reconstruction_editorial_decision(root, target_date, candidate_id, payload)
+    path = _reconstruction_decision_path(root, target_date, candidate_id)
+    if path.exists():
+        existing = _read_json(path)
+        validate_reconstruction_editorial_decision(root, target_date, candidate_id, existing)
+        if existing == payload:
+            return {"status": "idempotent_noop", "path": _rel(root, path), **validation}
+        raise DateReconciliationError(f"conflicting editorial decision already exists for {candidate_id}")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    _write_json(path, payload)
+    return {"status": "recorded", "path": _rel(root, path), **validation}
+
+
 def _candidate_items(payload: Any) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     if isinstance(payload, list):
@@ -551,15 +720,34 @@ def _history_stage(root: Path, target_date: str) -> StageResult:
     refs = [_ref(root, path, "historical_evidence") for path in paths if path.is_file()]
     reconstruction = _reconstruction_record(root, target_date)
     if reconstruction:
-        retained = [item for item in reconstruction.get("findings", []) if _candidate_is_unresolved(item)]
-        status = StageStatus.REVIEW_REQUIRED if retained else StageStatus.RECONSTRUCTED if reconstruction.get("coverage_sufficient") else StageStatus.EVIDENCE_EXHAUSTED
+        retained = [item for item in reconstruction.get("findings", []) if isinstance(item, dict) and item.get("disposition") == "RETAINED_FOR_REVIEW"]
+        unresolved: list[dict[str, Any]] = []
+        terminal_decisions = 0
+        decision_refs: list[EvidenceRef] = []
+        for item in retained:
+            candidate_id = str(item.get("candidate_id") or "")
+            decision = load_reconstruction_editorial_decision(root, target_date, candidate_id) if candidate_id else None
+            if decision:
+                decision_refs.append(_ref(root, _reconstruction_decision_path(root, target_date, candidate_id), "historical_reconstruction_editorial_decision"))
+            if decision and str(decision.get("decision") or "").upper() in TERMINAL_RECONSTRUCTION_DECISIONS:
+                terminal_decisions += 1
+            else:
+                unresolved.append(item)
+        refs.extend(decision_refs)
+        status = StageStatus.REVIEW_REQUIRED if unresolved else StageStatus.RECONSTRUCTED if reconstruction.get("coverage_sufficient") else StageStatus.EVIDENCE_EXHAUSTED
         return StageResult(
             HISTORICAL_RECOVERY_STATE,
             status,
             refs,
             original_vs_reconstructed="reconstructed",
-            unresolved_reason="reconstructed candidates await review" if retained else None if status == StageStatus.RECONSTRUCTED else "historical reconstruction coverage is insufficient",
-            details={"candidate_count": len(retained), "coverage_sufficient": reconstruction.get("coverage_sufficient")},
+            unresolved_reason="reconstructed candidates await review" if unresolved else None if status == StageStatus.RECONSTRUCTED else "historical reconstruction coverage is insufficient",
+            details={
+                "candidate_count": len(unresolved),
+                "retained_candidate_count": len(retained),
+                "terminal_editorial_decision_count": terminal_decisions,
+                "coverage_sufficient": reconstruction.get("coverage_sufficient"),
+                "publication_approval": False,
+            },
         )
     pending: list[dict[str, Any]] = []
     for path in paths:

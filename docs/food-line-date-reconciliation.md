@@ -71,9 +71,20 @@ Reviewed recovered events and retained historical archive records are provenance
 
 Historical reconstruction is date-bounded. Today's page state, today's pantry status, or today's publication timestamp cannot substitute for evidence about the target date. A reconstructed zero-finding result is complete only when bounded coverage is sufficient and terminal accounting is explicit. Otherwise the date remains `EVIDENCE_EXHAUSTED`.
 
-## Editorial And Publication Boundary
+## Editorial Decisions And Publication Boundary
 
-The controller never publishes. Reconstructed candidates are written only to private review artifacts with publication and approval flags false. A date with pending reconstructed candidates remains `REVIEW_REQUIRED` until a separate human editorial workflow disposes of those candidates.
+The controller never publishes. Historical reconstruction uses four separate layers:
+
+1. `historical-reconstruction-inputs/<date>.json` is immutable research evidence.
+2. `historical-reconstruction/<date>/reconstruction.json` is immutable normalized reconstruction.
+3. `historical-reconstruction/<date>/review/decisions/<candidate_id>.json` is append-only private human editorial state.
+4. Publication or release authority is separate and is never created by reconstruction review.
+
+A reconstructed `RETAINED_FOR_REVIEW` candidate remains unresolved until a validated decision record exists for that exact candidate. Decision records use `food_line_historical_reconstruction_editorial_decision_v1` and bind to the candidate fingerprint, archived research-input SHA-256, and reconstruction SHA-256. The allowed item-level decisions are `APPROVE`, `APPROVE_WITH_EDIT`, `REJECT`, `HOLD`, `DUPLICATE`, and `ALREADY_PUBLISHED`. All except `HOLD` are terminal for completeness accounting.
+
+Item approval is not publication approval. `APPROVE` and `APPROVE_WITH_EDIT` only account for the private reconstructed candidate. They must keep `publication_eligible = false`, `publication_approval = false`, and `pages_authorized = false`; they do not insert anything into the normal current review queue and do not authorize Pages, release, audio, social, or public archive changes. Publication is not required for `COMPLETE_RECONSTRUCTED`.
+
+Decision records are append-only. An exact repeated record is an idempotent no-op; a different second record for the same candidate fails closed and requires a separately designed supersession mechanism.
 
 ## Reruns And Idempotency
 
@@ -90,11 +101,25 @@ The repository CLI is deterministic and is not a general-purpose web crawler. Fo
 5. The packet is checked for target-date fidelity, traceable URLs, supporting evidence, terminal disposition for every discovery, and coverage accounting.
 6. Run `python scripts/reconcile_food_line_date.py --date YYYY-MM-DD --apply`.
 7. The controller validates and archives the packet, writes private reconstruction/reconciliation evidence, and returns `COMPLETE_RECONSTRUCTED`, `REVIEW_REQUIRED`, or `EVIDENCE_EXHAUSTED`.
-8. Nothing is published automatically.
+8. If reconstructed candidates remain in review, run a separate explicitly authorized private review workflow before recording item-level decisions.
+9. Nothing is published automatically.
 
 The packet schema is `food_line_historical_reconstruction_input_v1`. It must include `target_date`, `researched_at`, `research_mode`, `network_access`, query/source attempts, coverage summaries, findings, and limitations. Codex web research packets use `research_mode = codex_bounded_historical_web_research` and set `network_access` to the actual research value. The controller rejects wrong dates, future dates, missing or malformed schemas, unsupported dispositions, contradictory source/event dates, and duplicate candidate IDs.
 
 Accepted packets are immutable provenance. Exact reruns are idempotent. A changed packet for the same date fails closed rather than silently replacing the archived research input.
+
+## Review Reconstructed Food Line Candidates
+
+For a request such as `Review reconstructed Food Line candidates for YYYY-MM-DD`, Codex may inspect the immutable reconstruction, derive candidate decision proposals, and present the needed decisions to the operator. Codex must not record those decisions unless the operator explicitly authorizes recording them.
+
+The sanctioned private command is:
+
+```powershell
+python scripts/review_food_line_reconstruction.py validate --date YYYY-MM-DD --candidate-id <candidate_id> --decision APPROVE --reviewer <name> --reason <reason>
+python scripts/review_food_line_reconstruction.py record --date YYYY-MM-DD --candidate-id <candidate_id> --decision APPROVE --reviewer <name> --reason <reason>
+```
+
+`APPROVE_WITH_EDIT` requires `--edited-headline` or `--edited-summary`. `DUPLICATE` and `ALREADY_PUBLISHED` require `--duplicate-of` with an exact reference. The command validates hash bindings before recording, writes only the candidate decision file under the private reconstruction review directory, and never modifies the research packet, `reconstruction.json`, Pages, publication state, scheduler state, or the current review queue.
 
 ## Archive Supplementation
 

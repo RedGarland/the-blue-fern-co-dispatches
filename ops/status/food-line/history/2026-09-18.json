@@ -15,8 +15,8 @@
   "incident_reference": {
     "date": "2026-09-18"
   },
-  "last_exported_at": "2026-09-18T14:04:33.497026Z",
-  "last_receipt_at": "2026-09-18T14:04:29.919781Z",
+  "last_exported_at": "2026-09-18T14:15:03.256828Z",
+  "last_receipt_at": "2026-09-18T14:15:03.193727Z",
   "latest_runtime_proof_date": null,
   "next_expected_run": null,
   "observed_date": "2026-09-18",
@@ -26,13 +26,35 @@
   },
   "publication_attempted": false,
   "publication_status": null,
-  "receipt_completeness": "PARTIAL",
+  "receipt_completeness": "INCONSISTENT",
   "recovery_lifecycle": "INCIDENT_OPEN",
-  "runner_source_head": null,
+  "runner_source_head": "d5c7f401c990911cd80817f567661b1271bb5161",
   "schema_version": "bluefern_external_operational_status_v1",
   "stale_after": "2026-09-18T14:00:00Z",
   "stale_observability": true,
   "task_summaries": [
+    {
+      "artifact_id": "20260918T140429Z-current-intake.json",
+      "classification": "success",
+      "completed_at": "2026-09-18T14:15:03.193727Z",
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "bluesky": false,
+        "maps": false,
+        "pages": false,
+        "public_output": false,
+        "schedule": false
+      },
+      "publication_attempted": null,
+      "publication_status": "",
+      "run_id": "food-line-scheduled-20260918-20260918T140427Z-4db5dbde",
+      "scheduled_for": "2026-09-18",
+      "started_at": "2026-09-18T14:15:02.223229Z",
+      "status": "SUCCESS",
+      "task_key": "food_line_current_intake"
+    },
     {
       "artifact_id": "20260918T140429Z-current-intake.json",
       "classification": "source_watch_not_initialized",
@@ -47,6 +69,21 @@
       "started_at": "2026-09-18T14:04:29.919204Z",
       "status": "UPSTREAM_BLOCKED",
       "task_key": "food_line_current_intake"
+    },
+    {
+      "artifact_id": "20260918T141140Z-source-watch.json",
+      "classification": "completed_with_exclusions",
+      "completed_at": "2026-09-18T14:11:40.751609Z",
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {},
+      "publication_attempted": null,
+      "publication_status": "",
+      "run_id": "food-line-scheduled-20260918-20260918T140427Z-4db5dbde",
+      "scheduled_for": "2026-09-18",
+      "started_at": "2026-09-18T14:04:29.919628Z",
+      "status": "DEGRADED",
+      "task_key": "food_line_source_watch"
     },
     {
       "artifact_id": "20260918T140429Z-status-resume.json",

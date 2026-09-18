@@ -108,6 +108,31 @@ class FoodResumeAdapter(Adapter):
 
 
 @dataclass(frozen=True)
+class FoodCurrentIntakeAdapter(Adapter):
+    name: str = "food_current_intake_dependency_recovered"
+    supported_for_planning: bool = True
+    supported_for_automatic_execution: bool = True
+    unsupported_reason: str = ""
+    verification_task_keys: tuple[str, ...] = ("food_line_current_intake",)
+
+    def argv(self, options: ExecutionOptions, plan: dict[str, Any]) -> list[str]:
+        script = options.source_root / "scripts" / "food_line_daily_scheduler.py"
+        return [
+            str(options.python),
+            str(script),
+            "intake",
+            "--repo-root",
+            str(options.source_root),
+            "--python",
+            str(options.python),
+            "--edition-date",
+            options.date,
+            "--branch",
+            options.expected_branch,
+        ]
+
+
+@dataclass(frozen=True)
 class UnsupportedAdapter(Adapter):
     pass
 
@@ -115,6 +140,7 @@ class UnsupportedAdapter(Adapter):
 ADAPTERS: dict[tuple[str, str], Adapter] = {
     ("food-line", "food_line_source_watch"): FoodResumeAdapter(),
     ("food-line", "food_line_source_watch_resume"): FoodResumeAdapter(),
+    ("food-line", "food_line_current_intake"): FoodCurrentIntakeAdapter(),
     (
         "care-line",
         "care_line_collection",
@@ -230,8 +256,9 @@ def _candidate_sort_key(row: dict[str, Any]) -> tuple[str, int, str]:
     dependency_order = {
         "food_line_source_watch": 0,
         "food_line_source_watch_resume": 1,
-        "care_line_collection": 2,
-        "ice_monitor": 3,
+        "food_line_current_intake": 2,
+        "care_line_collection": 3,
+        "ice_monitor": 4,
     }.get(str(row.get("task_key") or ""), 99)
     return scheduled, dependency_order, str(row.get("task_key") or "")
 

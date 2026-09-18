@@ -43,6 +43,11 @@ RECOVERY_EXECUTION_LEDGER_RE = re.compile(
     r"[A-Za-z0-9_.-]{1,180}/(?:latest\.json|attempts/[A-Za-z0-9_.-]{1,220}\.json)$",
     re.IGNORECASE,
 )
+OPERATIONAL_HEALTH_RECEIPT_RE = re.compile(
+    r"^status/operational-health/(?:food-line|care-line|ice)/\d{4}-\d{2}-\d{2}/"
+    r"(?:latest\.json|runs/[A-Za-z0-9_.-]{1,220}\.json)$",
+    re.IGNORECASE,
+)
 
 
 def _run_git_status(repo: Path) -> tuple[int, list[str]]:
@@ -79,7 +84,7 @@ def classify_path(path_text: str) -> str:
         return "virtualenv"
     if lower.startswith("logs/") or lower.endswith(".log") or "/logs/" in lower:
         return "logs"
-    if lower.startswith(".pytest_cache/") or lower.startswith(".pytest-temp") or lower.startswith(".pytest_tmp") or "/cache/" in lower or lower.startswith("cache/") or lower.startswith("tmp/") or lower.startswith(".tmp"):
+    if lower.startswith(".pytest_cache/") or lower.startswith(".pytest-temp") or lower.startswith(".pytest_tmp") or "/cache/" in lower or lower.startswith("cache/") or lower.startswith("tmp/") or lower.startswith(".tmp") or "__pycache__/" in lower:
         return "cache"
     if lower.startswith("tests/") or "/tests/" in lower:
         return "tests"
@@ -90,6 +95,8 @@ def classify_path(path_text: str) -> str:
     if EXTERNAL_HANDOFF_EVIDENCE_RE.fullmatch(lower):
         return "local_run_state"
     if RECOVERY_EXECUTION_LEDGER_RE.fullmatch(lower):
+        return "local_run_state"
+    if OPERATIONAL_HEALTH_RECEIPT_RE.fullmatch(lower):
         return "local_run_state"
     food_line_category = classify_food_line_runtime_path(path)
     if food_line_category:

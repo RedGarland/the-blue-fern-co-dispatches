@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import json
+import shutil
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -11,11 +14,13 @@ from bluefern_dispatches.recovery_execution import (
     ExecutionOptions,
     instance_ledger_dir,
     run_executor,
+    _subprocess_runner,
 )
 
 
 DATE = "2026-09-10"
 EVALUATED = "2026-09-10T15:00:00Z"
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def _ok_preflight(_root: Path, _branch: str) -> tuple[bool, str]:
@@ -37,10 +42,13 @@ def _write_receipt(
     dispatch: str = "food-line",
     name: str | None = None,
     exit_code: int | None = None,
+    run_id: str | None = None,
+    details: dict[str, object] | None = None,
+    task_receipt: dict[str, object] | None = None,
 ) -> None:
-    artifact = root / "artifact.json"
+    artifact = root / "logs" / "food-line" / "test-operational-artifacts" / f"{name or task_key}-artifact.json"
     artifact.parent.mkdir(parents=True, exist_ok=True)
-    artifact.write_text("{}\n", encoding="utf-8")
+    artifact.write_text(json.dumps(task_receipt or {}) + "\n", encoding="utf-8")
     receipt = build_operational_receipt(
         dispatch=dispatch,
         task_key=task_key,
@@ -51,13 +59,125 @@ def _write_receipt(
         exit_code=exit_code if exit_code is not None else 0 if status in {OperationalStatus.SUCCESS, OperationalStatus.SAFE_NO_OP} else 1,
         status=status,
         classification=classification,
-        run_id=name or f"{task_key}-run",
+        run_id=run_id or name or f"{task_key}-run",
         public_side_effects={},
         artifact_refs={"task_receipt": str(artifact)},
+        details=details or {},
     )
     path = root / "status" / "operational-health" / dispatch / DATE / "runs" / f"{name or task_key}.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(receipt), encoding="utf-8")
+
+
+def _write_qualifying_source_state(root: Path, *, date: str = DATE, run_id: str = "source-watch-run") -> None:
+    export_path = root / "data" / "dispatches" / "food-line" / "agent-inbox" / f"food-line-source-watch-{date}-{run_id}.json"
+    export_path.parent.mkdir(parents=True, exist_ok=True)
+    export_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "food_line_source_watch_agent_export_v1",
+                "agent_name": "Food Line Source Watch",
+                "agent_run_id": run_id,
+                "edition_date": date,
+                "findings": [
+                    {
+                        "title": "Pantry closes after supply loss",
+                        "publisher": "Example News",
+                        "source_url": "https://example.org/current-food-pressure",
+                        "canonical_source_url": "https://example.org/current-food-pressure",
+                        "exact_supporting_passage": "The pantry closed Friday after losing its remaining food supply.",
+                        "summary": "Example News reports that a local pantry closed after losing its food supply.",
+                        "location_name": "Example City",
+                        "state": "CA",
+                        "location_scope": "city",
+                        "pressure_type": "service_closure",
+                        "source_role": "local_signal",
+                        "evidence_level": "direct_reporting",
+                        "source_published_date": date,
+                        "source_published_at": f"{date}T08:00:00-07:00",
+                        "affected_groups": ["pantry clients"],
+                        "why_it_matters": "A food-access point is no longer operating.",
+                    }
+                ],
+            },
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    record = {
+        "schema_version": "food_line_scheduled_run_record_v1",
+        "edition_date": date,
+        "run_id": run_id,
+        "source_commit": "test-source-commit",
+        "source_branch": "add/pages-repo-default",
+        "source_watch_status": "completed_with_exclusions",
+        "last_status": "completed_with_exclusions",
+        "run_state_path": str(root / "data" / "dispatches" / "food-line" / "discovery-runs" / date / run_id / "run-state.json"),
+    }
+    state = {
+        "schema_version": "food_line_bounded_run_state_v1",
+        "edition_date": date,
+        "run_id": run_id,
+        "status": "completed_with_exclusions",
+        "partitions_total": 1,
+        "partitions_completed": 1,
+        "coverage": {"required_success_ratio": 1.0, "direct_success_ratio": 1.0},
+        "options": {"required_coverage_threshold": 0.9, "direct_source_coverage_threshold": 0.75},
+        "agent_export": {"status": "success", "path": str(export_path), "sha256": "export-sha"},
+        "final_error": "",
+    }
+    record_path = root / "status" / "food-line" / "runs" / f"{date}.json"
+    state_path = root / "data" / "dispatches" / "food-line" / "discovery-runs" / date / run_id / "run-state.json"
+    record_path.parent.mkdir(parents=True, exist_ok=True)
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    record_path.write_text(json.dumps(record), encoding="utf-8")
+    state_path.write_text(json.dumps(state), encoding="utf-8")
+
+
+def _write_dependency_recovered_intake_state(root: Path, *, date: str = DATE, run_id: str = "source-watch-run") -> None:
+    _write_receipt(
+        root,
+        task_key="food_line_current_intake",
+        status=OperationalStatus.UPSTREAM_BLOCKED,
+        classification="upstream_blocked",
+        started="2026-09-10T13:10:00Z",
+        name="01-intake-blocked",
+        run_id=run_id,
+        details={
+            "edition_date": date,
+            "qualifying_discovery_run_id": run_id,
+            "source_status": "blocked_overlapping_run",
+            "intake_status": "upstream_blocked",
+        },
+        task_receipt={
+            "schema_version": "food_line_current_intake_receipt_v1",
+            "edition_date": date,
+            "qualifying_discovery_run_id": run_id,
+            "status": "upstream_blocked",
+        },
+    )
+    _write_qualifying_source_state(root, date=date, run_id=run_id)
+    _write_receipt(
+        root,
+        task_key="food_line_source_watch_resume",
+        status=OperationalStatus.SUCCESS,
+        classification="resume_qualified",
+        started="2026-09-10T13:20:00Z",
+        name="02-resume-qualified",
+        run_id=run_id,
+        details={"edition_date": date, "source_status": "completed_with_exclusions", "source_export_status": "success"},
+        task_receipt={
+            "schema_version": "food_line_source_watch_receipt_v1",
+            "action": "status_resume",
+            "edition_date": date,
+            "run_id": run_id,
+            "final_status": "completed_with_exclusions",
+            "resume_status": "resume_qualified",
+            "export_status": "success",
+            "exit_code": 0,
+        },
+    )
 
 
 def _run(root: Path, *, execute: bool = False, dispatch: str = "food-line", evaluated_at: str = EVALUATED, runner=None, preflight=_ok_preflight, proof_root: Path | None = None):
@@ -126,6 +246,36 @@ def test_retryable_resume_stage_uses_status_resume_adapter(tmp_path: Path) -> No
     assert result["decision"] == "DRY_RUN"
     assert result["plan"]["task_key"] == "food_line_source_watch_resume"
     assert "resume" in result["plan"]["command_argv"]
+
+
+def test_dependency_recovered_current_intake_selects_intake_adapter(tmp_path: Path) -> None:
+    _write_dependency_recovered_intake_state(tmp_path)
+
+    result = _run(tmp_path)
+    plan = result["plan"]
+
+    assert result["decision"] == "DRY_RUN"
+    assert plan["task_key"] == "food_line_current_intake"
+    assert plan["recovery_adapter"] == "food_current_intake_dependency_recovered"
+    assert "intake" in plan["command_argv"]
+    assert "publish" not in plan["command_argv"]
+    assert plan["verification_task_keys"] == ["food_line_current_intake"]
+    assert plan["supported_for_automatic_execution"] is True
+
+
+def test_subprocess_runner_uses_argv_without_shell(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    calls: list[dict[str, object]] = []
+
+    def fake_run(argv, *, cwd, shell, check):
+        calls.append({"argv": argv, "cwd": cwd, "shell": shell, "check": check})
+        return subprocess.CompletedProcess(argv, 0)
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+
+    result = _subprocess_runner(["python", "script.py"], tmp_path)
+
+    assert result == CommandResult(category="child_process_completed", exit_code=0)
+    assert calls == [{"argv": ["python", "script.py"], "cwd": tmp_path, "shell": False, "check": False}]
 
 
 def test_publication_retry_eligible_is_hard_denied(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -344,12 +494,13 @@ def test_unsafe_runner_state_denies_real_execution(tmp_path: Path) -> None:
 def test_one_action_per_invocation_defers_other_candidates(tmp_path: Path) -> None:
     _write_receipt(tmp_path, task_key="food_line_source_watch")
     _write_receipt(tmp_path, task_key="food_line_source_watch_resume", started="2026-09-10T13:00:00Z")
+    _write_dependency_recovered_intake_state(tmp_path)
 
     result = _run(tmp_path)
 
     assert result["plan"]["task_key"] == "food_line_source_watch"
     assert result["plan"]["deferred_candidates"] == [
-        {"task_key": "food_line_source_watch_resume", "scheduled_instance": "2026-09-10:food_line_source_watch_resume"}
+        {"task_key": "food_line_current_intake", "scheduled_instance": "2026-09-10:food_line_current_intake"},
     ]
 
 
@@ -472,6 +623,70 @@ def test_resume_retry_itself_verifies_against_new_resume_receipt(tmp_path: Path)
     result = _run(tmp_path, execute=True, runner=runner)
 
     assert result["decision"] == "RECOVERY_CONFIRMED"
+
+
+def _copy_isolated_runner(destination: Path) -> None:
+    ignore = shutil.ignore_patterns("__pycache__", "*.pyc", ".git", ".pytest_cache")
+    shutil.copytree(ROOT / "scripts", destination / "scripts", ignore=ignore)
+    shutil.copytree(ROOT / "src", destination / "src", ignore=ignore)
+    shutil.copy2(ROOT / "pyproject.toml", destination / "pyproject.toml")
+    subprocess.run(["git", "init", "-b", "add/pages-repo-default"], cwd=destination, check=True, capture_output=True)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=destination, check=True)
+    subprocess.run(["git", "config", "user.name", "Test User"], cwd=destination, check=True)
+    subprocess.run(["git", "add", "scripts", "src", "pyproject.toml"], cwd=destination, check=True)
+    subprocess.run(["git", "commit", "-m", "fixture"], cwd=destination, check=True, capture_output=True)
+
+
+def test_isolated_real_current_intake_execution_rehearsal_is_idempotent(tmp_path: Path) -> None:
+    runner = tmp_path / "isolated-runner"
+    _copy_isolated_runner(runner)
+    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=runner, check=True, capture_output=True, text=True).stdout.strip()
+    _write_dependency_recovered_intake_state(runner)
+    record_path = runner / "status" / "food-line" / "runs" / f"{DATE}.json"
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    record["source_commit"] = head
+    record_path.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    first = run_executor(
+        ExecutionOptions(
+            dispatch="food-line",
+            source_root=runner,
+            date=DATE,
+            evaluated_at=EVALUATED,
+            execute=True,
+            python=Path(sys.executable),
+        )
+    )
+    assert first["decision"] == "RECOVERY_CONFIRMED", first
+    queue_path = runner / "status" / "food-line" / "runtime" / "current-signal-review.json"
+    proposal_path = runner / "data" / "dispatches" / "food-line" / "review" / "proposed-editions" / f"{DATE}.json"
+    queue_first = json.loads(queue_path.read_text(encoding="utf-8"))
+    proposal_first = json.loads(proposal_path.read_text(encoding="utf-8"))
+
+    second = run_executor(
+        ExecutionOptions(
+            dispatch="food-line",
+            source_root=runner,
+            date=DATE,
+            evaluated_at=EVALUATED,
+            execute=True,
+            python=Path(sys.executable),
+        )
+    )
+    queue_second = json.loads(queue_path.read_text(encoding="utf-8"))
+    proposal_second = json.loads(proposal_path.read_text(encoding="utf-8"))
+
+    assert first["decision"] == "RECOVERY_CONFIRMED"
+    assert first["plan"]["task_key"] == "food_line_current_intake"
+    assert first["execution_receipt"]["post_execution_receipt_observation"] == "RECOVERY_CONFIRMED"
+    assert second["decision"] == "NO_CANDIDATE"
+    assert queue_first["items"] == queue_second["items"]
+    assert proposal_first["items"] == proposal_second["items"]
+    assert len(queue_first["items"]) == 1
+    assert proposal_first["publication_eligible"] is False
+    assert not (runner / "output" / "site").exists()
+    assert not (runner / "bluefern-dispatches-pages").exists()
+    assert (instance_ledger_dir(runner, "food-line", DATE, f"{DATE}:food_line_current_intake") / "latest.json").is_file()
 
 
 def test_care_and_ice_are_planning_only_unsupported(tmp_path: Path) -> None:

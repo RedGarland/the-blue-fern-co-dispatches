@@ -357,3 +357,7 @@ Use:
 ```text
 Follow docs/workflows/codex_pr_workflow.md. Task: ...
 ```
+
+## Food Line Date Research Workflow
+
+For one-date Food Line reconciliation, Codex should run the repository controller first. If the controller requests bounded historical research and the task separately authorizes that research, Codex records the target-date research outside the controller as a validated `food_line_historical_reconstruction_input_v1` packet under `data/dispatches/food-line/historical-reconstruction-inputs/`. The controller then validates, archives, reconciles, and terminally accounts for that packet in `--apply` mode. This workflow does not authorize publication, Pages work, production `--apply`, production historical reconstruction, or scheduler changes.

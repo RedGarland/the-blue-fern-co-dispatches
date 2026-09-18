@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import argparse
 import hashlib
@@ -12,11 +12,14 @@ from typing import Any, Callable
 
 from bluefern_dispatches.coverage_gap_controller import (
     BackfillStatus,
-    EvaluationInput,
+    CoverageEvaluation,
+    Criticality,
     GapReasonCode,
+    ObservationStatus,
     RecoveryInvestigationStatus,
+    TransitionRecord,
     evaluate_dispatch_date,
-    evaluate_observation,
+    load_durable_gap,
     promote_durable_gap_record,
 )
 
@@ -27,6 +30,7 @@ except Exception:  # pragma: no cover
 
 SCHEMA_VERSION = "bluefern_food_line_date_completeness_v1"
 RECONSTRUCTION_SCHEMA_VERSION = "food_line_historical_reconstruction_v1"
+RECONSTRUCTION_INPUT_SCHEMA_VERSION = "food_line_historical_reconstruction_input_v1"
 DISPATCH = "food-line"
 SOURCE_WATCH = "source_watch"
 SOURCE_WATCH_RESUME = "source_watch_resume"
@@ -133,6 +137,11 @@ class ReconstructionResult:
     coverage_by_geography: dict[str, str] = field(default_factory=dict)
     coverage_sufficient: bool = False
     limitations: tuple[str, ...] = ()
+    research_mode: str | None = None
+    network_access: bool | None = None
+    researched_at: str | None = None
+    source_path: Path | None = None
+    source_sha256: str | None = None
 
 
 def utc_now() -> str:
@@ -501,13 +510,66 @@ def _replay_available(root: Path, target_date: str, stages: dict[str, StageResul
     return True, stages[SOURCE_WATCH].run_id
 
 
-def _default_reconstruction_provider(root: Path, target_date: str) -> ReconstructionResult:
-    fixture = root / "data" / "dispatches" / "food-line" / "historical-reconstruction-inputs" / f"{target_date}.json"
-    if not fixture.is_file():
-        return ReconstructionResult(limitations=("no retained archive or configured bounded historical reconstruction input was available",))
-    payload = _read_json(fixture)
+def _validate_reconstruction_findings(findings: tuple[ReconstructionFinding, ...], target_date: str) -> None:
+    seen: set[str] = set()
+    for finding in findings:
+        if finding.disposition not in DISPOSITIONS:
+            raise DateReconciliationError(f"unsupported reconstruction disposition: {finding.disposition}")
+        if not finding.candidate_id:
+            raise DateReconciliationError("reconstruction finding missing candidate_id")
+        if finding.candidate_id in seen:
+            raise DateReconciliationError(f"duplicate reconstruction candidate_id: {finding.candidate_id}")
+        seen.add(finding.candidate_id)
+        if finding.event_date and finding.event_date != target_date and finding.disposition not in {"OUTSIDE_DATE", "DUPLICATE_EXISTING", "ALREADY_PUBLISHED"}:
+            raise DateReconciliationError(f"candidate {finding.candidate_id} has contradictory event_date {finding.event_date}")
+        if finding.source_published_at:
+            parse_date(finding.source_published_at[:10])
+
+
+def _reconstruction_packet_path(root: Path, target_date: str) -> Path:
+    return root / "data" / "dispatches" / "food-line" / "historical-reconstruction-inputs" / f"{target_date}.json"
+
+
+def _default_reconstruction_provider(root: Path, target_date: str) -> ReconstructionResult | None:
+    packet = _reconstruction_packet_path(root, target_date)
+    if not packet.is_file():
+        return None
+    payload = _read_json(packet)
+    if not isinstance(payload, dict):
+        raise DateReconciliationError(f"historical reconstruction input is not an object: {packet}")
+    if payload.get("schema_version") != RECONSTRUCTION_INPUT_SCHEMA_VERSION:
+        raise DateReconciliationError(f"unsupported historical reconstruction input schema: {payload.get('schema_version')}")
+    if payload.get("target_date") != target_date:
+        raise DateReconciliationError(f"historical reconstruction input target_date mismatch: {payload.get('target_date')} != {target_date}")
+    parse_date(str(payload["target_date"]))
+    required = {
+        "researched_at",
+        "research_mode",
+        "network_access",
+        "queries_attempted",
+        "sources_attempted",
+        "sources_succeeded",
+        "sources_failed",
+        "coverage_by_source_family",
+        "coverage_by_pressure_type",
+        "coverage_by_geography",
+        "coverage_sufficient",
+        "findings",
+        "limitations",
+    }
+    missing = sorted(required - set(payload))
+    if missing:
+        raise DateReconciliationError(f"historical reconstruction input missing required fields: {missing}")
+    if payload["research_mode"] != "codex_bounded_historical_web_research":
+        raise DateReconciliationError(f"unsupported historical research_mode: {payload['research_mode']}")
+    if not isinstance(payload["network_access"], bool):
+        raise DateReconciliationError("historical reconstruction input network_access must be boolean")
+    if not isinstance(payload.get("findings"), list):
+        raise DateReconciliationError("historical reconstruction input findings must be a list")
+    findings = tuple(ReconstructionFinding(**item) for item in payload.get("findings", []))
+    _validate_reconstruction_findings(findings, target_date)
     return ReconstructionResult(
-        findings=tuple(ReconstructionFinding(**item) for item in payload.get("findings", [])),
+        findings=findings,
         queries_attempted=tuple(payload.get("queries_attempted") or ()),
         sources_attempted=tuple(payload.get("sources_attempted") or ()),
         sources_succeeded=tuple(payload.get("sources_succeeded") or ()),
@@ -517,8 +579,12 @@ def _default_reconstruction_provider(root: Path, target_date: str) -> Reconstruc
         coverage_by_geography=dict(payload.get("coverage_by_geography") or {}),
         coverage_sufficient=bool(payload.get("coverage_sufficient")),
         limitations=tuple(payload.get("limitations") or ()),
+        research_mode=str(payload.get("research_mode")),
+        network_access=bool(payload.get("network_access")),
+        researched_at=str(payload.get("researched_at")),
+        source_path=packet,
+        source_sha256=_sha256(packet),
     )
-
 
 def _source_registry(root: Path) -> dict[str, Any]:
     for path in (
@@ -531,31 +597,67 @@ def _source_registry(root: Path) -> dict[str, Any]:
     return {"status": "not_found"}
 
 
+def _archive_research_input(root: Path, target_date: str, result: ReconstructionResult) -> dict[str, Any] | None:
+    if result.source_path is None:
+        return None
+    source_sha = result.source_sha256 or _sha256(result.source_path)
+    target = root / "data" / "dispatches" / "food-line" / "historical-reconstruction" / target_date / "research-input.json"
+    source_bytes = result.source_path.read_bytes()
+    if target.exists():
+        existing_sha = _sha256(target)
+        if existing_sha == source_sha:
+            return {
+                "path": _rel(root, target),
+                "sha256": existing_sha,
+                "original_input_path": _rel(root, result.source_path),
+                "target_date": target_date,
+                "researched_at": result.researched_at,
+                "research_mode": result.research_mode,
+                "idempotent_noop": True,
+            }
+        raise DateReconciliationError(f"conflicting historical research packet for {target_date}; existing archive differs")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    tmp = target.with_suffix(target.suffix + ".tmp")
+    tmp.write_bytes(source_bytes)
+    tmp.replace(target)
+    return {
+        "path": _rel(root, target),
+        "sha256": _sha256(target),
+        "original_input_path": _rel(root, result.source_path),
+        "target_date": target_date,
+        "researched_at": result.researched_at,
+        "research_mode": result.research_mode,
+        "idempotent_noop": False,
+    }
+
+
 def _write_reconstruction(root: Path, target_date: str, result: ReconstructionResult, evaluated_at: str, source_head: str | None) -> Path:
+    _validate_reconstruction_findings(result.findings, target_date)
     seen: set[str] = set()
     findings = []
     counts = {key: 0 for key in sorted(DISPOSITIONS)}
     for finding in result.findings:
-        if finding.disposition not in DISPOSITIONS:
-            raise DateReconciliationError(f"unsupported reconstruction disposition: {finding.disposition}")
-        if finding.candidate_id in seen:
-            raise DateReconciliationError(f"duplicate reconstruction candidate_id: {finding.candidate_id}")
-        if finding.event_date and finding.event_date != target_date and finding.disposition not in {"OUTSIDE_DATE", "DUPLICATE_EXISTING", "ALREADY_PUBLISHED"}:
-            raise DateReconciliationError(f"candidate {finding.candidate_id} has contradictory event_date {finding.event_date}")
         seen.add(finding.candidate_id)
         counts[finding.disposition] += 1
         findings.append(finding.to_dict())
     if len(findings) != sum(counts.values()):
         raise DateReconciliationError("historical reconstruction terminal accounting mismatch")
     out = root / "data" / "dispatches" / "food-line" / "historical-reconstruction" / target_date / "reconstruction.json"
+    research_archive = _archive_research_input(root, target_date, result)
+    network_access = result.network_access if result.network_access is not None else False
+    research_mode = result.research_mode or "operator_supplied_reconstruction_result"
+    researched_at = result.researched_at
     payload = {
         "schema_version": RECONSTRUCTION_SCHEMA_VERSION,
         "target_date": target_date,
         "reconstructed_at": evaluated_at,
         "source_head": source_head,
         "reconstruction_mode": "nonoriginal_historical_research",
+        "research_mode": research_mode,
+        "researched_at": researched_at,
         "original_source_watch_present": False,
-        "network_access": True,
+        "network_access": network_access,
+        "research_input": research_archive,
         "source_registry": _source_registry(root),
         "query_plan": {"target_date": target_date, "date_bounded": True},
         "queries_attempted": list(result.queries_attempted),
@@ -576,6 +678,12 @@ def _write_reconstruction(root: Path, target_date: str, result: ReconstructionRe
         "publication_authorized": False,
         "pages_authorized": False,
     }
+    if out.exists():
+        existing = _read_json(out)
+        comparable = {key: existing.get(key) for key in payload}
+        if comparable != payload:
+            raise DateReconciliationError(f"conflicting historical reconstruction record for {target_date}")
+        return out
     _write_json(out, payload)
     retained = [item for item in findings if item.get("disposition") == "RETAINED_FOR_REVIEW"]
     if retained:
@@ -583,6 +691,11 @@ def _write_reconstruction(root: Path, target_date: str, result: ReconstructionRe
     return out
 
 
+def _verify_existing_research_packet(root: Path, target_date: str) -> None:
+    packet = _reconstruction_packet_path(root, target_date)
+    archived = root / "data" / "dispatches" / "food-line" / "historical-reconstruction" / target_date / "research-input.json"
+    if packet.is_file() and archived.is_file() and _sha256(packet) != _sha256(archived):
+        raise DateReconciliationError(f"conflicting historical research packet for {target_date}; existing archive differs")
 def _prior_record(root: Path, target_date: str) -> dict[str, Any] | None:
     path = root / "data" / "dispatches" / "food-line" / "date-reconciliation" / f"{target_date}.json"
     if not path.is_file():
@@ -610,24 +723,119 @@ def _coverage_metrics(root: Path, target_date: str) -> dict[str, Any]:
     }
 
 
+def _transition_history_from_gap(record: dict[str, Any] | None) -> tuple[TransitionRecord, ...]:
+    rows: list[TransitionRecord] = []
+    if not record:
+        return ()
+    for item in record.get("transition_history") or []:
+        if not isinstance(item, dict):
+            continue
+        rows.append(
+            TransitionRecord(
+                previous_observation_status=item.get("previous_observation_status"),
+                previous_backfill_status=item.get("previous_backfill_status"),
+                new_observation_status=str(item.get("new_observation_status") or record.get("observation_status") or ""),
+                new_backfill_status=str(item.get("new_backfill_status") or record.get("backfill_status") or ""),
+                transition_at=str(item.get("transition_at") or record.get("recovered_at") or record.get("detected_at") or ""),
+                reason_code=str(item.get("reason_code") or ""),
+                evidence_refs=tuple(str(ref) for ref in (item.get("evidence_refs") or ()) if ref),
+            )
+        )
+    return tuple(rows)
+
+
+def _with_gap_transition(
+    previous: dict[str, Any] | None,
+    *,
+    observation_status: ObservationStatus,
+    backfill_status: BackfillStatus,
+    evaluated_at: str,
+    reason_code: str,
+    evidence_refs: tuple[str, ...],
+) -> tuple[TransitionRecord, ...]:
+    history = _transition_history_from_gap(previous)
+    if previous and previous.get("observation_status") == observation_status.value and previous.get("backfill_status") == backfill_status.value:
+        return history
+    return history + (
+        TransitionRecord(
+            previous_observation_status=str(previous.get("observation_status")) if previous else None,
+            previous_backfill_status=str(previous.get("backfill_status")) if previous else None,
+            new_observation_status=observation_status.value,
+            new_backfill_status=backfill_status.value,
+            transition_at=evaluated_at,
+            reason_code=reason_code,
+            evidence_refs=evidence_refs,
+        ),
+    )
+
+
+def _reconstruction_discovered_count(root: Path, target_date: str) -> int:
+    reconstruction = _reconstruction_record(root, target_date)
+    if not reconstruction:
+        return 0
+    return int(reconstruction.get("discovered_count") or len(reconstruction.get("findings") or []))
+
+
 def _coverage_gap_promote(root: Path, target_date: str, state: DateState, stages: dict[str, StageResult], evaluated_at: str) -> str | None:
-    refs = tuple(ref.path for stage in stages.values() for ref in stage.evidence_refs)
-    if state == DateState.REVIEW_REQUIRED:
-        evidence = EvaluationInput(DISPATCH, target_date, evaluated_at, recovery_candidate_refs=refs, recovery_candidate_count=1, recovery_reason_codes=(GapReasonCode.HISTORICAL_RECOVERY_PENDING_REVIEW,), notes="Food Line date reconciliation found private material requiring review.")
+    refs = tuple(dict.fromkeys(ref.path for stage in stages.values() for ref in stage.evidence_refs))
+    previous = load_durable_gap(root, DISPATCH, target_date)
+    discovered = _reconstruction_discovered_count(root, target_date)
+    recovered_ids = tuple(str(item) for item in (stages[COVERAGE_GAP_STATE].details.get("recovered_event_ids") or ()) if item)
+    observed_count = discovered or (int(stages[COVERAGE_GAP_STATE].details.get("observed_finding_count") or 0) if stages[COVERAGE_GAP_STATE].details.get("observed_finding_count") is not None else None)
+    investigation = RecoveryInvestigationStatus.ACTIVE
+    investigation_reason = None
+    recovered_at = evaluated_at if state in {DateState.COMPLETE_ORIGINAL, DateState.COMPLETE_REPAIRED, DateState.COMPLETE_RECONSTRUCTED} else None
+
+    if state == DateState.COMPLETE_ORIGINAL:
+        observation = ObservationStatus.OBSERVED_WITH_FINDINGS if observed_count else ObservationStatus.OBSERVED_ZERO_QUALIFYING
+        backfill = BackfillStatus.BACKFILL_NOT_REQUIRED
+        reason_codes: tuple[GapReasonCode, ...] = ()
+        reason = "date_reconciliation_complete_original"
+    elif state == DateState.COMPLETE_REPAIRED:
+        observation = ObservationStatus.OBSERVED_WITH_FINDINGS if observed_count or recovered_ids else ObservationStatus.OBSERVED_ZERO_QUALIFYING
+        backfill = BackfillStatus.RECOVERED
+        reason_codes = (GapReasonCode.HISTORICAL_RECOVERY_COMPLETED,)
+        reason = GapReasonCode.HISTORICAL_RECOVERY_COMPLETED.value
+    elif state == DateState.COMPLETE_RECONSTRUCTED:
+        observation = ObservationStatus.OBSERVED_WITH_FINDINGS if discovered else ObservationStatus.OBSERVED_ZERO_QUALIFYING
+        backfill = BackfillStatus.RECOVERED if discovered else BackfillStatus.BACKFILL_NOT_REQUIRED
+        reason_codes = (GapReasonCode.HISTORICAL_RECOVERY_COMPLETED,) if discovered else ()
+        reason = GapReasonCode.HISTORICAL_RECOVERY_COMPLETED.value if discovered else "historical_reconstructed_zero_complete"
+    elif state == DateState.REVIEW_REQUIRED:
+        observation = ObservationStatus.OBSERVATION_INCOMPLETE
+        backfill = BackfillStatus.RECOVERY_IN_REVIEW
+        reason_codes = (GapReasonCode.HISTORICAL_RECOVERY_PENDING_REVIEW,)
+        reason = GapReasonCode.HISTORICAL_RECOVERY_PENDING_REVIEW.value
     elif state == DateState.EVIDENCE_EXHAUSTED:
-        evidence = EvaluationInput(DISPATCH, target_date, evaluated_at, receipts=(), expected_tasks=("food_line_source_watch",), recovery_reason_codes=(GapReasonCode.HISTORICAL_EVIDENCE_INCOMPLETE,), source_refs=refs, notes="Food Line date reconciliation exhausted bounded evidence.")
-    elif state in {DateState.COMPLETE_REPAIRED, DateState.COMPLETE_RECONSTRUCTED}:
-        evidence = EvaluationInput(DISPATCH, target_date, evaluated_at, recovered_event_ids=tuple(stages[COVERAGE_GAP_STATE].details.get("recovered_event_ids") or ()), source_refs=refs, notes=f"Food Line date reconciliation state {state.value}.")
-    elif state == DateState.COMPLETE_ORIGINAL:
-        evidence = EvaluationInput(DISPATCH, target_date, evaluated_at, receipts=(), source_refs=refs, notes="Food Line date reconciliation complete from original evidence.")
+        observation = ObservationStatus.OBSERVATION_INCOMPLETE
+        backfill = BackfillStatus.BACKFILL_REQUIRED
+        reason_codes = (GapReasonCode.HISTORICAL_EVIDENCE_INCOMPLETE,)
+        investigation = RecoveryInvestigationStatus.EVIDENCE_EXHAUSTED
+        investigation_reason = "historical_evidence_exhausted"
+        reason = investigation_reason
     else:
         return None
-    result = evaluate_observation(evidence)
-    if state == DateState.EVIDENCE_EXHAUSTED:
-        result = result.__class__(**{**result.__dict__, "recovery_investigation_status": RecoveryInvestigationStatus.EVIDENCE_EXHAUSTED, "recovery_investigation_reason_code": "historical_evidence_exhausted"})
-    path = promote_durable_gap_record(root, result, detected_at=evaluated_at, recovered_at=evaluated_at if state in {DateState.COMPLETE_REPAIRED, DateState.COMPLETE_RECONSTRUCTED, DateState.COMPLETE_ORIGINAL} else None)
-    return _rel(root, path)
 
+    evaluation = CoverageEvaluation(
+        dispatch=DISPATCH,
+        observation_date=target_date,
+        observation_status=observation,
+        backfill_status=backfill,
+        reason_codes=reason_codes,
+        evidence_refs=refs,
+        recovered_event_ids=recovered_ids,
+        observed_finding_count=observed_count,
+        criticality=Criticality.HIGH if backfill in {BackfillStatus.BACKFILL_REQUIRED, BackfillStatus.RECOVERY_IN_REVIEW} else Criticality.NORMAL,
+        operator_attention_required=backfill in {BackfillStatus.BACKFILL_REQUIRED, BackfillStatus.RECOVERY_IN_REVIEW},
+        transition_history=_with_gap_transition(previous, observation_status=observation, backfill_status=backfill, evaluated_at=evaluated_at, reason_code=reason, evidence_refs=refs),
+        notes=f"Food Line date reconciliation state {state.value}.",
+        source="food_line_date_reconciliation",
+        recovery_investigation_status=investigation,
+        recovery_investigation_reason_code=investigation_reason,
+        recovered_at=recovered_at,
+    )
+    path = promote_durable_gap_record(root, evaluation, detected_at=evaluated_at, recovered_at=recovered_at)
+    return _rel(root, path)
 
 def _next_action(state: DateState, repair_available: list[str], stages: dict[str, StageResult]) -> str:
     if state in {DateState.COMPLETE_ORIGINAL, DateState.COMPLETE_REPAIRED, DateState.COMPLETE_RECONSTRUCTED}:
@@ -637,7 +845,7 @@ def _next_action(state: DateState, repair_available: list[str], stages: dict[str
     if repair_available:
         return "rerun_with_apply"
     if state == DateState.EVIDENCE_EXHAUSTED:
-        return "supply_original_or_historical_evidence"
+        return "perform_bounded_historical_research"
     return next((stage.unresolved_reason for stage in stages.values() if stage.unresolved_reason), "resolve_blocked_error")
 
 
@@ -679,12 +887,14 @@ def _build_record(root: Path, target_date: str, *, mode: str, evaluated_at: str,
     }
 
 
-def reconcile_food_line_date(root: Path, target_date: str, *, apply: bool = False, evaluated_at: str | None = None, reconstruction_provider: Callable[[Path, str], ReconstructionResult] | None = None) -> dict[str, Any]:
+def reconcile_food_line_date(root: Path, target_date: str, *, apply: bool = False, evaluated_at: str | None = None, reconstruction_provider: Callable[[Path, str], ReconstructionResult | None] | None = None) -> dict[str, Any]:
     parse_date(target_date)
     root = root.resolve()
     evaluated_at = evaluated_at or utc_now()
     source_head = _source_head(root)
     prior = _prior_record(root, target_date)
+    if apply:
+        _verify_existing_research_packet(root, target_date)
     stages, _ = audit_food_line_date(root, target_date, evaluated_at=evaluated_at)
     repair_available: list[str] = []
     repair_performed: list[str] = []
@@ -703,16 +913,15 @@ def reconcile_food_line_date(root: Path, target_date: str, *, apply: bool = Fals
     state = _state(stages)
     if apply and state == DateState.EVIDENCE_EXHAUSTED and stages[SOURCE_WATCH].status in {StageStatus.MISSING, StageStatus.INCOMPLETE}:
         provider = reconstruction_provider or _default_reconstruction_provider
-        reconstruction_path = _write_reconstruction(root, target_date, provider(root, target_date), evaluated_at, source_head)
-        repair_performed.append("historical_reconstruction")
-        reconstruction_performed = True
-        stages, _ = audit_food_line_date(root, target_date, evaluated_at=evaluated_at)
-        stages[HISTORICAL_RECOVERY_STATE].evidence_refs.append(_ref(root, reconstruction_path, "historical_reconstruction"))
-        state = _state(stages)
+        reconstruction_result = provider(root, target_date)
+        if reconstruction_result is not None:
+            reconstruction_path = _write_reconstruction(root, target_date, reconstruction_result, evaluated_at, source_head)
+            repair_performed.append("historical_reconstruction")
+            reconstruction_performed = True
+            stages, _ = audit_food_line_date(root, target_date, evaluated_at=evaluated_at)
+            stages[HISTORICAL_RECOVERY_STATE].evidence_refs.append(_ref(root, reconstruction_path, "historical_reconstruction"))
+            state = _state(stages)
     coverage_gap_record = _coverage_gap_promote(root, target_date, state, stages, evaluated_at) if apply else None
-    if apply:
-        stages, _ = audit_food_line_date(root, target_date, evaluated_at=evaluated_at)
-        state = _state(stages)
     record = _build_record(root, target_date, mode="apply" if apply else "dry-run", evaluated_at=evaluated_at, stages=stages, state=state, repair_available=repair_available, repair_performed=repair_performed, reconstruction_performed=reconstruction_performed, prior=prior, source_head=source_head, coverage_gap_record=coverage_gap_record)
     if apply:
         _write_json(root / "data" / "dispatches" / "food-line" / "date-reconciliation" / f"{target_date}.json", record)

@@ -348,3 +348,7 @@ The sanctioned sequence is:
 The publish command refuses `--publish` without `--push`, any social flag, any
 audio flag, source/Pages drift, partial output, or a stale/different approval.
 No scheduler behavior is changed.
+
+## Date-Level Reconciliation
+
+The aggregate event-recovery workflow remains the owner for reviewed clustered recoveries. To determine whether one Food Line date is complete across original, repaired, reconstructed, and evidence-exhausted states, use [Food Line date reconciliation](food-line-date-reconciliation.md).

@@ -10,11 +10,11 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "STALE_OBSERVABILITY",
+  "aggregate_status": "SUCCESS",
   "dispatch": "ice",
-  "last_exported_at": "2026-09-17T20:15:05.074458Z",
-  "last_receipt_at": "2026-09-17T04:16:35.171337Z",
-  "latest_runtime_proof_date": "2026-09-17T04:15:03Z",
+  "last_exported_at": "2026-09-18T05:15:03.841128Z",
+  "last_receipt_at": "2026-09-18T04:16:30.622469Z",
+  "latest_runtime_proof_date": "2026-09-18T04:15:03Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
   "observed_date": "2026-09-17",
@@ -25,14 +25,14 @@
   "publication_attempted": false,
   "publication_status": "not_authorized_monitor_only",
   "receipt_completeness": "COMPLETE",
-  "recovery_lifecycle": "INCIDENT_OPEN",
-  "runner_source_head": "26ab691dfeac1a2d94682d9205f76a245cbf92ad",
+  "recovery_lifecycle": "HEALTHY",
+  "runner_source_head": null,
   "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
     "ice_monitor"
   ],
   "schema_version": "bluefern_external_operational_status_v1",
-  "stale_observability": true,
+  "stale_observability": false,
   "task_summaries": [
     {
       "artifact_id": "monitor_receipt.json",
@@ -52,6 +52,27 @@
       "run_id": "ice-monitor-20260917T041501Z-9a443763",
       "scheduled_for": "2026-09-17",
       "started_at": "2026-09-17T04:15:03Z",
+      "status": "SUCCESS",
+      "task_key": "ice_monitor"
+    },
+    {
+      "artifact_id": "monitor_receipt.json",
+      "classification": "healthy",
+      "completed_at": "2026-09-18T04:16:30Z",
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "pages": false,
+        "publication": false,
+        "rss": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "not_authorized_monitor_only",
+      "run_id": "ice-monitor-20260918T041501Z-3514f7aa",
+      "scheduled_for": "2026-09-17",
+      "started_at": "2026-09-18T04:15:03Z",
       "status": "SUCCESS",
       "task_key": "ice_monitor"
     }

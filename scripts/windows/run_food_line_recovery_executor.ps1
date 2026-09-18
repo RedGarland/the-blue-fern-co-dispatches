@@ -49,10 +49,12 @@ function Get-JsonFromOutput {
     param([string]$Text)
     if ([string]::IsNullOrWhiteSpace($Text)) { return $null }
     $trimmed = $Text.Trim()
-    $start = $trimmed.IndexOf("{")
-    $end = $trimmed.LastIndexOf("}")
-    if ($start -lt 0 -or $end -lt $start) { return $null }
-    return $trimmed.Substring($start, $end - $start + 1) | ConvertFrom-Json
+    try {
+        return $trimmed | ConvertFrom-Json -ErrorAction Stop
+    }
+    catch {
+        return $null
+    }
 }
 
 function Get-ExitCodeForReport {

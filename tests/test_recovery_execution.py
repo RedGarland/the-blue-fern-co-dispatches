@@ -266,8 +266,8 @@ def test_dependency_recovered_current_intake_selects_intake_adapter(tmp_path: Pa
 def test_subprocess_runner_uses_argv_without_shell(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     calls: list[dict[str, object]] = []
 
-    def fake_run(argv, *, cwd, shell, check):
-        calls.append({"argv": argv, "cwd": cwd, "shell": shell, "check": check})
+    def fake_run(argv, *, cwd, shell, check, capture_output, text):
+        calls.append({"argv": argv, "cwd": cwd, "shell": shell, "check": check, "capture_output": capture_output, "text": text})
         return subprocess.CompletedProcess(argv, 0)
 
     monkeypatch.setattr(subprocess, "run", fake_run)
@@ -275,7 +275,9 @@ def test_subprocess_runner_uses_argv_without_shell(monkeypatch: pytest.MonkeyPat
     result = _subprocess_runner(["python", "script.py"], tmp_path)
 
     assert result == CommandResult(category="child_process_completed", exit_code=0)
-    assert calls == [{"argv": ["python", "script.py"], "cwd": tmp_path, "shell": False, "check": False}]
+    assert calls == [
+        {"argv": ["python", "script.py"], "cwd": tmp_path, "shell": False, "check": False, "capture_output": True, "text": True}
+    ]
 
 
 def test_publication_retry_eligible_is_hard_denied(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -635,6 +637,119 @@ def _copy_isolated_runner(destination: Path) -> None:
     subprocess.run(["git", "config", "user.name", "Test User"], cwd=destination, check=True)
     subprocess.run(["git", "add", "scripts", "src", "pyproject.toml"], cwd=destination, check=True)
     subprocess.run(["git", "commit", "-m", "fixture"], cwd=destination, check=True, capture_output=True)
+
+
+def _install_noisy_current_intake_child(runner: Path) -> str:
+    scheduler = runner / "scripts" / "food_line_daily_scheduler.py"
+    scheduler.write_text(
+        r'''
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("command")
+    parser.add_argument("--repo-root", required=True)
+    parser.add_argument("--python")
+    parser.add_argument("--edition-date", required=True)
+    parser.add_argument("--branch")
+    args = parser.parse_args()
+    repo = Path(args.repo_root)
+    sys.path.insert(0, str(repo / "src"))
+    from bluefern_dispatches.operational_health import OperationalStatus, build_operational_receipt
+
+    print(json.dumps({"child": "terminal"}))
+    print("child diagnostic text", file=sys.stderr)
+    run_id = "source-watch-run"
+    artifact = repo / "logs" / "food-line" / "current-intake" / args.edition_date / "noisy-child-current-intake.json"
+    artifact.parent.mkdir(parents=True, exist_ok=True)
+    artifact.write_text(json.dumps({"status": "success", "publication_side_effects": {"pages": False, "public_output": False}}) + "\n", encoding="utf-8")
+    receipt = build_operational_receipt(
+        dispatch="food-line",
+        task_key="food_line_current_intake",
+        task_name="food_line_current_intake",
+        scheduled_for=args.edition_date,
+        started_at=f"{args.edition_date}T15:00:01Z",
+        completed_at=f"{args.edition_date}T15:00:02Z",
+        exit_code=0,
+        status=OperationalStatus.SUCCESS,
+        classification="success",
+        run_id=run_id,
+        public_side_effects={"pages": False, "public_output": False, "audio": False, "bluesky": False, "maps": False, "schedule": False},
+        artifact_refs={"task_receipt": str(artifact)},
+        details={"edition_date": args.edition_date},
+    )
+    out = repo / "status" / "operational-health" / "food-line" / args.edition_date / "runs" / f"food_line_current_intake-{run_id}.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(receipt, sort_keys=True) + "\n", encoding="utf-8")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+'''.lstrip(),
+        encoding="utf-8",
+    )
+    subprocess.run(["git", "add", "scripts/food_line_daily_scheduler.py"], cwd=runner, check=True)
+    subprocess.run(["git", "commit", "-m", "noisy child fixture"], cwd=runner, check=True, capture_output=True)
+    return subprocess.run(["git", "rev-parse", "HEAD"], cwd=runner, check=True, capture_output=True, text=True).stdout.strip()
+
+
+def _assert_single_json_object(text: str) -> dict[str, object]:
+    stripped = text.strip()
+    decoder = json.JSONDecoder()
+    value, end = decoder.raw_decode(stripped)
+    assert end == len(stripped)
+    assert isinstance(value, dict)
+    return value
+
+
+def test_executor_cli_captures_child_stdout_and_emits_single_recovery_report(tmp_path: Path) -> None:
+    runner = tmp_path / "isolated-runner"
+    _copy_isolated_runner(runner)
+    head = _install_noisy_current_intake_child(runner)
+    _write_dependency_recovered_intake_state(runner)
+    record_path = runner / "status" / "food-line" / "runs" / f"{DATE}.json"
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    record["source_commit"] = head
+    record_path.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(runner / "scripts" / "run_scheduled_recovery_executor.py"),
+            "--dispatch",
+            "food-line",
+            "--source-root",
+            str(runner),
+            "--date",
+            DATE,
+            "--evaluated-at",
+            EVALUATED,
+            "--execute",
+            "--expected-branch",
+            "add/pages-repo-default",
+        ],
+        cwd=runner,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    report = _assert_single_json_object(completed.stdout)
+    assert report["decision"] == "RECOVERY_CONFIRMED"
+    assert report["execution_receipt"]["recovery_attempt_id"].startswith("recovery-")
+    assert report["execution_receipt"]["post_execution_receipt_observation"] == "RECOVERY_CONFIRMED"
+    assert report["execution_receipt"]["public_side_effects"] is False
+    assert '{"child": "terminal"}' not in completed.stdout
+    assert "child diagnostic text" not in completed.stdout
+    assert "child diagnostic text" not in completed.stderr
 
 
 def test_isolated_real_current_intake_execution_rehearsal_is_idempotent(tmp_path: Path) -> None:

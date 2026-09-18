@@ -90,7 +90,7 @@ def test_wrapper_invokes_fixed_food_executor_arguments_and_writes_terminal_recor
             "scheduled_instance": "2026-09-17:food_line_current_intake",
         },
         "execution_receipt": {
-            "execution_id": "execution-1",
+            "recovery_attempt_id": "attempt-1",
             "post_execution_receipt_observation": "RECOVERY_CONFIRMED",
         },
     }
@@ -124,8 +124,78 @@ def test_wrapper_invokes_fixed_food_executor_arguments_and_writes_terminal_recor
     assert terminal["execute_requested"] is True
     assert terminal["executor_decision"] == "RECOVERY_CONFIRMED"
     assert terminal["selected_task_key"] == "food_line_current_intake"
-    assert terminal["execution_receipt_id"] == "execution-1"
+    assert terminal["recovery_attempt_id"] == "attempt-1"
+    assert terminal["execution_receipt_id"] == "attempt-1"
     assert terminal["exit_classification"] == "scheduler_success"
+
+
+def test_inspection_reports_recovery_attempt_id_when_action_executed(tmp_path: Path) -> None:
+    payload = {
+        "decision": "RECOVERY_CONFIRMED",
+        "plan": {
+            "task_key": "food_line_current_intake",
+            "recovery_adapter": "food_current_intake_dependency_recovered",
+            "scheduled_instance": "2026-09-17:food_line_current_intake",
+        },
+        "execution_receipt": {
+            "recovery_attempt_id": "attempt-42",
+            "post_execution_receipt_observation": "RECOVERY_CONFIRMED",
+        },
+    }
+    wrapper_result = _run_wrapper(tmp_path, payload=payload)
+    assert wrapper_result.returncode == 0, wrapper_result.stderr
+
+    inspection = subprocess.run(
+        [
+            _powershell(),
+            "-NoProfile",
+            "-NonInteractive",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            str(INSPECT),
+            "-RepositoryRoot",
+            str(tmp_path / "runner"),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    report = json.loads(inspection.stdout)
+    assert report["host_timezone_id"]
+    assert report["schedule_timezone_contract"] == "Pacific Standard Time"
+    assert report["recovery_action_executed"] is True
+    assert report["latest_terminal_result"]["recovery_action_executed"] is True
+    assert report["latest_terminal_result"]["recovery_attempt_id"] == "attempt-42"
+    assert report["latest_terminal_result"]["execution_receipt_id"] == "attempt-42"
+
+
+def test_inspection_reports_no_action_when_no_execution_receipt(tmp_path: Path) -> None:
+    wrapper_result = _run_wrapper(tmp_path, payload={"decision": "NO_CANDIDATE", "plan": None, "execution_receipt": None})
+    assert wrapper_result.returncode == 0, wrapper_result.stderr
+
+    inspection = subprocess.run(
+        [
+            _powershell(),
+            "-NoProfile",
+            "-NonInteractive",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            str(INSPECT),
+            "-RepositoryRoot",
+            str(tmp_path / "runner"),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    report = json.loads(inspection.stdout)
+    assert report["recovery_action_executed"] is False
+    assert report["latest_terminal_result"]["recovery_action_executed"] is False
+    assert report["latest_terminal_result"]["recovery_attempt_id"] is None
 
 
 @pytest.mark.parametrize(
@@ -238,6 +308,9 @@ def test_registration_script_defines_only_the_bounded_non_elevated_food_task() -
     assert "-MultipleInstances IgnoreNew" in text
     assert "-StartWhenAvailable" in text
     assert "New-TimeSpan -Minutes 20" in text
+    assert '$requiredTimezone = "Pacific Standard Time"' in text
+    assert "[System.TimeZoneInfo]::Local.Id" in text
+    assert "Food recovery schedule requires production host timezone" in text
     assert "Start-ScheduledTask" not in text
     for slot in ("05:45", "06:15", "06:45", "07:15", "07:45", "08:15", "08:45", "09:15", "09:45", "10:15", "10:45", "11:15", "11:45"):
         assert slot in text
@@ -250,5 +323,8 @@ def test_inspection_script_is_read_only_and_reports_latest_terminal_result() -> 
     assert "Get-ScheduledTaskInfo" in text
     assert "latest_terminal_result" in text
     assert "recovery_action_executed" in text
+    assert "host_timezone_id" in text
+    assert 'schedule_timezone_contract = "Pacific Standard Time"' in text
+    assert "recovery_attempt_id" in text
     for forbidden in ("Register-ScheduledTask", "Set-ScheduledTask", "Start-ScheduledTask", "Enable-ScheduledTask", "Disable-ScheduledTask"):
         assert forbidden not in text

@@ -17,14 +17,16 @@ function Read-LatestTerminalRecord {
     if (-not $latest) { return $null }
     try {
         $payload = Get-Content -Raw -LiteralPath $latest.FullName | ConvertFrom-Json
+        $recoveryAttemptId = if ($payload.recovery_attempt_id) { $payload.recovery_attempt_id } else { $payload.execution_receipt_id }
         return [ordered]@{
             path = $latest.FullName
             completed_at = $payload.completed_at
             executor_decision = $payload.executor_decision
             selected_task_key = $payload.selected_task_key
             recovery_adapter = $payload.recovery_adapter
-            recovery_action_executed = [bool]$payload.execution_receipt_id
-            execution_receipt_id = $payload.execution_receipt_id
+            recovery_action_executed = [bool]$recoveryAttemptId
+            recovery_attempt_id = $recoveryAttemptId
+            execution_receipt_id = $recoveryAttemptId
             exit_classification = $payload.exit_classification
         }
     }
@@ -46,6 +48,8 @@ $result = [ordered]@{
     task_name = $TaskName
     task_path = $TaskPath
     repository_root = $repoRoot
+    host_timezone_id = [System.TimeZoneInfo]::Local.Id
+    schedule_timezone_contract = "Pacific Standard Time"
     exists = [bool]$task
     enabled = if ($task) { $task.State -ne "Disabled" } else { $false }
     state = if ($task) { [string]$task.State } else { $null }

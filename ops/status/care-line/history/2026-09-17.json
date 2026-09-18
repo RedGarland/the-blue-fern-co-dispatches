@@ -10,7 +10,7 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "DEGRADED",
+  "aggregate_status": "MISSED",
   "dispatch": "care-line",
   "expected_instances": [
     {
@@ -44,7 +44,7 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-09-17T19:15:05.466736Z",
+  "last_exported_at": "2026-09-18T03:15:03.475069Z",
   "last_receipt_at": "2026-09-17T19:03:12.895829Z",
   "latest_runtime_proof_date": "2026-09-17T15:30:04Z",
   "migration_status": "MIGRATED",

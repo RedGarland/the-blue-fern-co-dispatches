@@ -26,9 +26,11 @@ def test_classify_path_covers_expected_categories():
     assert preflight_repo_state.classify_path("output/dispatches/american-pressure/review/report.md") == "review_output"
     assert preflight_repo_state.classify_path("logs/gaza-daily-2026-06-22.log") == "logs"
     assert preflight_repo_state.classify_path(".pytest-temp-gaza-wide/") == "cache"
+    assert preflight_repo_state.classify_path("scripts/__pycache__/food_line_daily_scheduler.cpython-313.pyc") == "cache"
     assert preflight_repo_state.classify_path(".venv/Scripts/python.exe") == "virtualenv"
     assert preflight_repo_state.classify_path("status/food-line/runtime/source_performance_history.json") == "local_run_state"
     assert preflight_repo_state.classify_path("status/operational-recovery/food-line/2026-09-10/2026-09-10-food_line_source_watch/latest.json") == "local_run_state"
+    assert preflight_repo_state.classify_path("status/operational-health/food-line/2026-09-10/runs/food_line_current_intake-run.json") == "local_run_state"
     assert preflight_repo_state.classify_path("data/dispatches/food-line/discovery/2026-06-25/discovery_candidates.json") == "local_run_state"
     assert preflight_repo_state.classify_path("some/unknown/path.txt") == "unknown"
 

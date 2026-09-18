@@ -116,12 +116,15 @@ The recovery evaluator and executor are separate roles:
 - executor is hard allowlisted by dispatch and task key
 
 The executor is intentionally narrow. It plans all dispatches from the evaluator
-report, but automatic execution is initially limited to Food Line Source Watch
-and Source Watch Resume recovery through the existing `status-resume` pathway.
-It must not launch a fresh Source Watch as recovery. Care collection and ICE
-monitor recovery remain planning-only until a separate source audit proves
-same-instance idempotency, duplicate protection, instance addressability, and no
-public side effects.
+report, but automatic execution is limited to audited Food Line recovery steps:
+Source Watch and Source Watch Resume recover through the existing
+`status-resume` pathway, and Current Intake may be retried only when a prior
+dependency-blocked intake receipt is followed by newer durable Source
+Watch/Resume evidence proving the same edition/run is now qualifying and
+intake-ready. The executor must not launch a fresh Source Watch as recovery.
+Care collection and ICE monitor recovery remain planning-only until a separate
+source audit proves same-instance idempotency, duplicate protection, instance
+addressability, and no public side effects.
 
 Executor invariants:
 
@@ -140,6 +143,13 @@ Executor invariants:
   executable or free-form shell command is accepted
 - recovery is confirmed only by a new normal operational-health receipt, not by
   child exit code alone
+
+Food Current Intake recovery remains dependency-aware and private. The adapter
+uses the scheduler `intake` command only after the evaluator emits the specific
+`dependency_recovered_current_intake` classification. A late successful intake
+may rebuild private review queue and proposed-edition artifacts, but it must not
+invoke publication, write Pages, consume approval, generate public output, or
+trigger social/audio side effects.
 
 Execution attempts are recorded separately from task receipts under:
 

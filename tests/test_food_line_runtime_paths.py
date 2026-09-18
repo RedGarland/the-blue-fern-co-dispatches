@@ -26,8 +26,11 @@ def test_food_runtime_roots_are_shared_between_scheduler_and_preflight(monkeypat
         "?? data/dispatches/food-line/review/signal-reviews/file.json",
         "?? data/dispatches/food-line/discovery/2026-08-19/discovery_candidates.json",
         "?? logs/food-line/file.json",
+        "?? src/bluefern_dispatches/__pycache__/operational_health.cpython-313.pyc",
         "?? output/review/food-line/2026-08-19/discovery_report.json",
         "?? status/food-line/file.json",
+        "?? status/operational-health/food-line/2026-09-10/runs/food_line_current_intake-source-watch-run.json",
+        "?? status/operational-recovery/food-line/2026-09-10/2026-09-10-food_line_current_intake/recovery.lock",
         "?? data/dispatches/food-line/discovery-runs/2026-08-13/file.json",
         "?? data/agent-history-staging/food-line/file.txt",
     ]
@@ -117,8 +120,11 @@ def test_expected_food_runtime_roots_have_shared_categories():
         "data/dispatches/food-line/review/signal-reviews/file.json": "review_output",
         "data/dispatches/food-line/discovery/2026-08-19/discovery_candidates.json": "local_run_state",
         "logs/food-line/file.json": "logs",
+        "src/bluefern_dispatches/__pycache__/operational_health.cpython-313.pyc": "cache",
         "output/review/food-line/2026-08-19/discovery_report.json": "review_output",
         "status/food-line/file.json": "local_run_state",
+        "status/operational-health/food-line/2026-09-10/runs/food_line_current_intake-source-watch-run.json": "local_run_state",
+        "status/operational-recovery/food-line/2026-09-10/2026-09-10-food_line_current_intake/recovery.lock": "local_run_state",
         "data/dispatches/food-line/discovery-runs/2026-08-13/file.json": "local_run_state",
         "data/agent-history-staging/food-line/file.txt": "local_run_state",
     }

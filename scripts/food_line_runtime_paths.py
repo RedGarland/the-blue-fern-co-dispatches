@@ -14,6 +14,14 @@ FOOD_LINE_REVIEW_RE = re.compile(r"^data/dispatches/food-line/review(?:/.*)?$")
 FOOD_LINE_OUTPUT_REVIEW_RE = re.compile(r"^output/review/food-line(?:/.*)?$")
 FOOD_LINE_DISCOVERY_RUNS_RE = re.compile(r"^data/dispatches/food-line/discovery-runs(?:/.*)?$")
 FOOD_LINE_STATUS_RE = re.compile(r"^status/food-line(?:/.*)?$")
+FOOD_LINE_OPERATIONAL_HEALTH_RE = re.compile(
+    r"^status/operational-health/food-line/\d{4}-\d{2}-\d{2}/"
+    r"(?:latest\.json|runs/[A-Za-z0-9_.-]{1,220}\.json)$"
+)
+FOOD_LINE_OPERATIONAL_RECOVERY_RE = re.compile(
+    r"^status/operational-recovery/food-line/\d{4}-\d{2}-\d{2}/"
+    r"[A-Za-z0-9_.-]{1,180}/(?:recovery\.lock|latest\.json|attempts/[A-Za-z0-9_.-]{1,220}\.json)$"
+)
 FOOD_LINE_LOGS_RE = re.compile(r"^logs/food-line(?:/.*)?$")
 FOOD_LINE_AGENT_HISTORY_RE = re.compile(r"^data/agent-history-staging/food-line(?:/.*)?$")
 FOOD_LINE_MUTABLE_TRACKED_RUNTIME_PATHS = frozenset()
@@ -47,6 +55,8 @@ def classify_food_line_runtime_path(path_text: str) -> str | None:
     lower = path.lower()
     if not path:
         return None
+    if "__pycache__/" in lower:
+        return "cache"
     if FOOD_LINE_AGENT_INBOX_RE.match(lower):
         return "local_run_state"
     if FOOD_LINE_SOURCE_PERFORMANCE_HISTORY_RE.match(lower):
@@ -62,6 +72,10 @@ def classify_food_line_runtime_path(path_text: str) -> str | None:
     if FOOD_LINE_DISCOVERY_RUNS_RE.match(lower):
         return "local_run_state"
     if FOOD_LINE_STATUS_RE.match(lower):
+        return "local_run_state"
+    if FOOD_LINE_OPERATIONAL_HEALTH_RE.match(lower):
+        return "local_run_state"
+    if FOOD_LINE_OPERATIONAL_RECOVERY_RE.match(lower):
         return "local_run_state"
     if FOOD_LINE_AGENT_HISTORY_RE.match(lower):
         return "local_run_state"
@@ -81,6 +95,8 @@ def is_food_line_mutable_tracked_runtime_path(path_text: str) -> bool:
 def food_line_runtime_paths() -> list[str]:
     return [
         "status/food-line/",
+        "status/operational-health/food-line/",
+        "status/operational-recovery/food-line/",
         "logs/food-line/",
         "data/dispatches/food-line/agent-inbox/",
         "data/dispatches/food-line/agent-intake/",

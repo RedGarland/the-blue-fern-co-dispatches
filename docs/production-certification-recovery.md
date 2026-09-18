@@ -194,8 +194,11 @@ Routine production runs write a bounded UTF-8 terminal record under:
 logs/food-line/recovery-executor/<edition-date>/
 ```
 
-The terminal record is operational evidence for the scheduler boundary only. It
-must not include credentials, provider payloads, source article text, private
+The terminal record is operational evidence for the scheduler boundary only. A
+real executed recovery action is identified by the executor receipt's
+`recovery_attempt_id`; inspection reports use the same canonical ID when
+deciding whether a recovery action actually executed. Terminal evidence must
+not include credentials, provider payloads, source article text, private
 editorial material, environment dumps, or public publication receipts.
 
 The source registration script is:
@@ -209,6 +212,10 @@ the Food runner root `C:\BlueFernRunner\FoodLineCurrent6`. The task runs as the
 current Windows user with `Interactive` logon and `Limited` run level, uses
 `MultipleInstances IgnoreNew`, and has bounded execution time. It schedules
 daily slots every 30 minutes from 05:45 through 11:45 Pacific time. Registration
+requires the production Windows host local timezone to be
+`Pacific Standard Time`; a non-Pacific host fails closed before registration or
+update, including during `-WhatIf`. The script must not change the Windows
+timezone or convert the daily trigger slots to another local clock. Registration
 does not start the task and supports `-WhatIf`.
 
 The read-only inspection helper is:
@@ -219,7 +226,9 @@ scripts\inspect_food_line_recovery_task.ps1
 
 It reports task existence, enabled/state information, last and next scheduler
 timestamps, task result code, and the latest wrapper terminal decision/action
-state. It must not register, update, enable, disable, or start the task.
+state, including `host_timezone_id`, the `Pacific Standard Time` scheduler
+contract, and `recovery_attempt_id` when a recovery action executed. It must not
+register, update, enable, disable, or start the task.
 
 Activation and execution remain distinct:
 
@@ -227,7 +236,10 @@ Activation and execution remain distinct:
 - activation requires explicit production authorization to register or enable
   the task
 - natural certification requires observing a scheduled invocation cross the
-  Windows Task Scheduler boundary
+  Windows Task Scheduler boundary on a host whose local timezone is
+  `Pacific Standard Time`
+- wrapper edition-date derivation still independently uses Pacific time rather
+  than assuming the local clock or UTC date
 - the wrapper may run only the executor's already audited Food recovery paths:
   Source Watch status-resume, Source Watch Resume status-resume, and
   dependency-recovered Current Intake

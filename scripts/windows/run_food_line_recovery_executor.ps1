@@ -153,6 +153,7 @@ $completedAt = Get-UtcTimestamp
 $decision = if ($report) { [string]$report.decision } else { $null }
 $plan = if ($report) { $report.plan } else { $null }
 $executionReceipt = if ($report) { $report.execution_receipt } else { $null }
+$recoveryAttemptId = if ($executionReceipt) { [string]$executionReceipt.recovery_attempt_id } else { $null }
 $exitCode = Get-ExitCodeForReport -Report $report -ChildExitCode $childExitCode -ParseStatus $parseStatus
 
 $terminal = [ordered]@{
@@ -174,7 +175,8 @@ $terminal = [ordered]@{
     selected_task_key = if ($plan) { [string]$plan.task_key } else { $null }
     recovery_adapter = if ($plan) { [string]$plan.recovery_adapter } else { $null }
     scheduled_instance = if ($plan) { [string]$plan.scheduled_instance } else { $null }
-    execution_receipt_id = if ($executionReceipt) { [string]$executionReceipt.execution_id } else { $null }
+    recovery_attempt_id = $recoveryAttemptId
+    execution_receipt_id = $recoveryAttemptId
     child_exit_code = $childExitCode
     post_execution_result = if ($executionReceipt) { [string]$executionReceipt.post_execution_receipt_observation } else { $null }
     parse_status = $parseStatus

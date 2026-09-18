@@ -7,6 +7,12 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+$requiredTimezone = "Pacific Standard Time"
+$actualTimezone = [System.TimeZoneInfo]::Local.Id
+if ($actualTimezone -ne $requiredTimezone) {
+    throw "Food recovery schedule requires production host timezone '$requiredTimezone'; found '$actualTimezone'."
+}
+
 $repoRoot = (Resolve-Path -LiteralPath $RepositoryRoot).Path
 $wrapper = Join-Path $repoRoot "scripts\windows\run_food_line_recovery_executor.ps1"
 if (-not (Test-Path -LiteralPath $wrapper -PathType Leaf)) {

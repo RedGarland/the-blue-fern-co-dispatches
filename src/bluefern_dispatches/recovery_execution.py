@@ -580,5 +580,5 @@ def run_executor(
 
 
 def _subprocess_runner(argv: list[str], cwd: Path) -> CommandResult:
-    result = subprocess.run(argv, cwd=cwd, shell=False, check=False)
+    result = subprocess.run(argv, cwd=cwd, shell=False, check=False, capture_output=True, text=True)
     return CommandResult(category="child_process_completed", exit_code=result.returncode)

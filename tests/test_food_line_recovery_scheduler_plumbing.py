@@ -75,6 +75,47 @@ def _run_wrapper(tmp_path: Path, *, payload: dict[str, object], exit_code: int =
     )
 
 
+def _run_wrapper_with_executor_output(tmp_path: Path, *, output: str, exit_code: int = 0) -> subprocess.CompletedProcess[str]:
+    repo = tmp_path / "runner"
+    (repo / "scripts").mkdir(parents=True)
+    (repo / "scripts" / "run_scheduled_recovery_executor.py").write_text("# fake executor\n", encoding="utf-8")
+    fake = tmp_path / "fake-python.ps1"
+    fake.write_text(
+        "\n".join(
+            [
+                "Write-Output @'",
+                output,
+                "'@",
+                f"exit {exit_code}",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    return subprocess.run(
+        [
+            _powershell(),
+            "-NoProfile",
+            "-NonInteractive",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            str(WRAPPER),
+            "-RepositoryRoot",
+            str(repo),
+            "-PythonExecutable",
+            str(fake),
+            "-EditionDate",
+            "2026-09-17",
+            "-EvaluatedAt",
+            "2026-09-18T02:16:52Z",
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+
 def _latest_terminal(repo: Path) -> dict[str, object]:
     files = sorted((repo / "logs" / "food-line" / "recovery-executor" / "2026-09-17").glob("*.json"))
     assert len(files) == 1
@@ -126,6 +167,7 @@ def test_wrapper_invokes_fixed_food_executor_arguments_and_writes_terminal_recor
     assert terminal["selected_task_key"] == "food_line_current_intake"
     assert terminal["recovery_attempt_id"] == "attempt-1"
     assert terminal["execution_receipt_id"] == "attempt-1"
+    assert terminal["parse_status"] == "parsed"
     assert terminal["exit_classification"] == "scheduler_success"
 
 
@@ -273,6 +315,26 @@ def test_wrapper_fails_nonzero_on_malformed_executor_json(tmp_path: Path) -> Non
     terminal = _latest_terminal(repo)
     assert terminal["parse_status"] == "malformed_executor_json"
     assert terminal["error_classification"] == "malformed_executor_json"
+
+
+@pytest.mark.parametrize(
+    "output",
+    [
+        'noise\n{"decision":"NO_CANDIDATE","plan":null,"execution_receipt":null}',
+        '{"child":"terminal"}\n{"decision":"RECOVERY_CONFIRMED","plan":null,"execution_receipt":{"recovery_attempt_id":"attempt-1"}}',
+        '{"decision":"NO_CANDIDATE","plan":null,"execution_receipt":null}\ntrailing noise',
+    ],
+)
+def test_wrapper_strict_parser_rejects_noise_or_adjacent_json_documents(tmp_path: Path, output: str) -> None:
+    result = _run_wrapper_with_executor_output(tmp_path, output=output)
+
+    assert result.returncode == 1
+    terminal = _latest_terminal(tmp_path / "runner")
+    assert terminal["parse_status"] == "malformed_executor_json"
+    assert terminal["error_classification"] == "malformed_executor_json"
+    assert terminal["executor_decision"] is None
+    assert terminal["recovery_attempt_id"] is None
+    assert terminal["exit_classification"] == "scheduler_failure"
 
 
 def test_wrapper_uses_windows_pacific_time_zone_for_edition_dates() -> None:

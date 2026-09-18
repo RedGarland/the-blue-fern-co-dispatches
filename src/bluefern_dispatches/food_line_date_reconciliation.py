@@ -22,6 +22,8 @@ from bluefern_dispatches.coverage_gap_controller import (
     load_durable_gap,
     promote_durable_gap_record,
 )
+from bluefern_dispatches.operational_health import OperationalStatus, parse_timestamp
+from bluefern_dispatches.scheduled_recovery import RecoveryRecommendation, evaluate_recovery, resolve_food_source_dependency
 
 try:
     from scripts.complete_food_line_historical_current_intake import run_replay as run_historical_current_intake_replay
@@ -31,6 +33,8 @@ except Exception:  # pragma: no cover
 SCHEMA_VERSION = "bluefern_food_line_date_completeness_v1"
 RECONSTRUCTION_SCHEMA_VERSION = "food_line_historical_reconstruction_v1"
 RECONSTRUCTION_INPUT_SCHEMA_VERSION = "food_line_historical_reconstruction_input_v1"
+HISTORICAL_REPLAY_SCHEMA_VERSION = "food_line_historical_current_intake_replay_v1"
+HISTORICAL_RECONCILIATION_SCHEMA_VERSION = "food_line_historical_reconciliation_v1"
 DISPATCH = "food-line"
 SOURCE_WATCH = "source_watch"
 SOURCE_WATCH_RESUME = "source_watch_resume"
@@ -42,6 +46,8 @@ STAGE_ORDER = (SOURCE_WATCH, SOURCE_WATCH_RESUME, CURRENT_INTAKE, DAILY_PUBLISH_
 OK = {"SUCCESS", "SAFE_NO_OP"}
 BAD = {"FAILED", "MISSED", "STALE_OBSERVABILITY", "UPSTREAM_BLOCKED"}
 DISPOSITIONS = {"RETAINED_FOR_REVIEW", "DUPLICATE_EXISTING", "ALREADY_PUBLISHED", "EXCLUDED_RULE", "INSUFFICIENT_EVIDENCE", "OUTSIDE_DATE", "OUTSIDE_SCOPE"}
+RESOLVED_EDITORIAL_STATUSES = {"approve", "approve_with_edit", "reject"}
+UNRESOLVED_EDITORIAL_STATUSES = {"hold", "pending_review", "retained_for_review", "review_required"}
 
 
 class DateReconciliationError(ValueError):
@@ -184,6 +190,35 @@ def _ref(root: Path, path: Path, kind: str | None = None) -> EvidenceRef:
     return EvidenceRef(_rel(root, path), _sha256(path) if path.is_file() else None, kind)
 
 
+def _resolve_repo_path(root: Path, value: str) -> Path:
+    path = Path(value)
+    if not path.is_absolute():
+        path = root / path
+    resolved = path.resolve()
+    root_resolved = root.resolve()
+    try:
+        resolved.relative_to(root_resolved)
+    except ValueError as exc:
+        raise DateReconciliationError(f"historical evidence escapes repository boundary: {value}") from exc
+    return resolved
+
+
+def _verified_boundary_ref(root: Path, item: Any, kind: str) -> EvidenceRef | None:
+    if not isinstance(item, dict):
+        return None
+    raw_path = str(item.get("path") or "").strip()
+    if not raw_path:
+        return None
+    path = _resolve_repo_path(root, raw_path)
+    if not path.is_file():
+        return None
+    expected_sha = str(item.get("sha256") or "").strip()
+    actual_sha = _sha256(path)
+    if expected_sha and expected_sha.lower() != actual_sha.lower():
+        return None
+    return EvidenceRef(_rel(root, path), actual_sha, kind)
+
+
 def _source_head(root: Path) -> str | None:
     try:
         out = subprocess.run(["git", "-C", str(root), "rev-parse", "HEAD"], check=True, capture_output=True, text=True)
@@ -211,6 +246,14 @@ def _latest(rows: list[tuple[Path, dict[str, Any]]], task_key: str) -> tuple[Pat
     if not filtered:
         return None
     return sorted(filtered, key=lambda row: str(row[1].get("completed_at") or row[1].get("receipt_created_at") or row[0].name))[-1]
+
+
+def _receipt_sort_key(payload: dict[str, Any]) -> datetime:
+    for key in ("completed_at", "observed_at", "started_at", "receipt_created_at"):
+        parsed = parse_timestamp(str(payload.get(key) or ""))
+        if parsed is not None:
+            return parsed.astimezone(timezone.utc) if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
+    return datetime.min.replace(tzinfo=timezone.utc)
 
 
 def _payload_date(payload: Any) -> str:
@@ -275,6 +318,95 @@ def _retained_source_run(root: Path, target_date: str) -> tuple[str | None, list
     except Exception:
         pass
     return run_id, refs, None
+
+
+def _historical_boundary_records(root: Path, target_date: str) -> list[tuple[Path, dict[str, Any]]]:
+    rows: list[tuple[Path, dict[str, Any]]] = []
+    for base in (
+        root / "data" / "dispatches" / "food-line" / "historical-intake" / target_date,
+        root / "data" / "dispatches" / "food-line" / "historical-reconstruction" / target_date,
+        root / "data" / "dispatches" / "food-line" / "review" / "reports" / target_date,
+    ):
+        for path in _json_files(base):
+            try:
+                payload = _read_json(path)
+            except Exception:
+                continue
+            if not isinstance(payload, dict):
+                continue
+            if payload.get("schema_version") in {HISTORICAL_REPLAY_SCHEMA_VERSION, HISTORICAL_RECONCILIATION_SCHEMA_VERSION} or isinstance(payload.get("historical_evidence_boundary"), dict):
+                rows.append((path, payload))
+    return rows
+
+
+def _verified_historical_boundary_refs(root: Path, target_date: str) -> dict[str, Any]:
+    result: dict[str, Any] = {
+        "records": [],
+        "source_refs": [],
+        "selected_input_refs": [],
+        "daily_publish_refs": [],
+        "source_watch_run_id": None,
+        "replay_present": False,
+        "reconciliation_present": False,
+    }
+    for path, payload in _historical_boundary_records(root, target_date):
+        boundary = payload.get("historical_evidence_boundary") if isinstance(payload.get("historical_evidence_boundary"), dict) else {}
+        schema = str(payload.get("schema_version") or "")
+        result["records"].append(_ref(root, path, "historical_boundary_record"))
+        if schema == HISTORICAL_REPLAY_SCHEMA_VERSION or payload.get("historical_replay") is True:
+            result["replay_present"] = True
+            result["source_watch_run_id"] = result["source_watch_run_id"] or payload.get("source_watch_run_id")
+            for key, kind in (
+                ("source_watch_run_state", "retained_source_watch_run_state"),
+                ("source_watch_query_plan", "retained_source_watch_query_plan"),
+                ("discovery_candidates", "retained_discovery_candidates"),
+            ):
+                ref = _verified_boundary_ref(root, boundary.get(key), kind)
+                if ref:
+                    result["source_refs"].append(ref)
+            for key in ("selected_inputs", "retained_input_copies"):
+                for item in boundary.get(key) or []:
+                    ref = _verified_boundary_ref(root, item, f"retained_{key[:-1]}")
+                    if ref:
+                        result["selected_input_refs"].append(ref)
+        if schema == HISTORICAL_RECONCILIATION_SCHEMA_VERSION:
+            result["reconciliation_present"] = True
+        for item in boundary.get("daily_publish_receipts") or []:
+            ref = _verified_boundary_ref(root, item, "retained_daily_publish_receipt")
+            if ref:
+                result["daily_publish_refs"].append(ref)
+    for key in ("source_refs", "selected_input_refs", "daily_publish_refs", "records"):
+        result[key] = list({ref.path: ref for ref in result[key]}.values())
+    return result
+
+
+def _retained_daily_publish_stage(root: Path, refs: list[EvidenceRef]) -> StageResult | None:
+    accepted: list[EvidenceRef] = []
+    details: dict[str, Any] = {"source": "historical_evidence_boundary"}
+    for ref in refs:
+        path = _resolve_repo_path(root, ref.path)
+        try:
+            payload = _read_json(path)
+        except Exception:
+            continue
+        if not isinstance(payload, dict):
+            continue
+        status = str(payload.get("status") or payload.get("terminal_status") or "").strip()
+        classification = str(payload.get("classification") or payload.get("terminal_status") or "").strip()
+        publication_attempted = payload.get("publication_attempted")
+        if publication_attempted is False and (status in {"SAFE_NO_OP", "skipped_not_release_ready"} or classification == "skipped_not_release_ready"):
+            accepted.append(ref)
+            details.update({"status": status, "classification": classification, "publication_attempted": publication_attempted})
+    if not accepted:
+        return None
+    return StageResult(
+        DAILY_PUBLISH_DECISION,
+        StageStatus.SAFE_NO_OP,
+        accepted,
+        original_vs_reconstructed="repaired",
+        repair_action="retained_historical_daily_publish_receipt",
+        details={**details, "publication_decision": "skipped_not_release_ready", "retained_evidence": True},
+    )
 
 
 def _receipt_stage(root: Path, stage: str, receipt: tuple[Path, dict[str, Any]] | None) -> StageResult:
@@ -382,12 +514,44 @@ def _reconstruction_record(root: Path, target_date: str) -> dict[str, Any] | Non
     return payload
 
 
+def _candidate_items(payload: Any) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    if isinstance(payload, list):
+        for item in payload:
+            rows.extend(_candidate_items(item))
+        return rows
+    if not isinstance(payload, dict):
+        return rows
+    if any(key in payload for key in ("candidate_id", "finding_id", "editorial_status", "review_status", "disposition", "decision")):
+        rows.append(payload)
+    for key in ("items", "candidates", "findings", "review_items", "queue"):
+        value = payload.get(key)
+        if isinstance(value, (list, dict)):
+            rows.extend(_candidate_items(value))
+    return rows
+
+
+def _candidate_is_unresolved(item: dict[str, Any]) -> bool:
+    editorial_status = str(item.get("editorial_status") or "").strip().lower()
+    if editorial_status in RESOLVED_EDITORIAL_STATUSES:
+        return False
+    if editorial_status in UNRESOLVED_EDITORIAL_STATUSES:
+        return True
+    disposition = str(item.get("disposition") or item.get("decision") or "").strip()
+    if disposition == "RETAINED_FOR_REVIEW":
+        return True
+    if disposition in DISPOSITIONS:
+        return False
+    review_status = str(item.get("review_status") or item.get("status") or "").strip().lower()
+    return review_status in UNRESOLVED_EDITORIAL_STATUSES
+
+
 def _history_stage(root: Path, target_date: str) -> StageResult:
     paths = _historical_paths(root, target_date)
     refs = [_ref(root, path, "historical_evidence") for path in paths if path.is_file()]
     reconstruction = _reconstruction_record(root, target_date)
     if reconstruction:
-        retained = [item for item in reconstruction.get("findings", []) if item.get("disposition") == "RETAINED_FOR_REVIEW"]
+        retained = [item for item in reconstruction.get("findings", []) if _candidate_is_unresolved(item)]
         status = StageStatus.REVIEW_REQUIRED if retained else StageStatus.RECONSTRUCTED if reconstruction.get("coverage_sufficient") else StageStatus.EVIDENCE_EXHAUSTED
         return StageResult(
             HISTORICAL_RECOVERY_STATE,
@@ -397,14 +561,13 @@ def _history_stage(root: Path, target_date: str) -> StageResult:
             unresolved_reason="reconstructed candidates await review" if retained else None if status == StageStatus.RECONSTRUCTED else "historical reconstruction coverage is insufficient",
             details={"candidate_count": len(retained), "coverage_sufficient": reconstruction.get("coverage_sufficient")},
         )
-    pending = []
+    pending: list[dict[str, Any]] = []
     for path in paths:
         try:
-            text = json.dumps(_read_json(path), sort_keys=True).lower()
+            payload = _read_json(path)
         except Exception:
             continue
-        if "pending_review" in text or "retained_for_review" in text or "review_required" in text:
-            pending.append(path)
+        pending.extend(item for item in _candidate_items(payload) if _candidate_is_unresolved(item))
     if pending:
         return StageResult(HISTORICAL_RECOVERY_STATE, StageStatus.REVIEW_REQUIRED, refs, original_vs_reconstructed="repaired", unresolved_reason="historical candidates await editorial disposition", details={"candidate_count": len(pending)})
     if refs:
@@ -443,23 +606,135 @@ def _coverage_stage(root: Path, target_date: str, evaluated_at: str) -> tuple[St
     ), evaluation
 
 
+def _receipt_ref_for_payload(root: Path, rows: list[tuple[Path, dict[str, Any]]], payload: dict[str, Any], kind: str) -> EvidenceRef | None:
+    for path, row in rows:
+        if row is payload or row == payload:
+            return _ref(root, path, kind)
+    return None
+
+
+def _apply_recovered_current_intake_chain(root: Path, target_date: str, rows: list[tuple[Path, dict[str, Any]]], stages: dict[str, StageResult]) -> None:
+    current = stages[CURRENT_INTAKE]
+    if current.status not in {StageStatus.PRESENT_VALID, StageStatus.SAFE_NO_OP}:
+        return
+    receipts = sorted([payload for _, payload in rows], key=_receipt_sort_key)
+    current_successes = [
+        receipt
+        for receipt in receipts
+        if receipt.get("task_key") == "food_line_current_intake" and receipt.get("status") in {OperationalStatus.SUCCESS.value, OperationalStatus.SAFE_NO_OP.value}
+    ]
+    blocked_receipts = [
+        receipt
+        for receipt in receipts
+        if receipt.get("task_key") == "food_line_current_intake" and receipt.get("status") == OperationalStatus.UPSTREAM_BLOCKED.value
+    ]
+    for success in current_successes:
+        success_time = _receipt_sort_key(success)
+        prior_blocked = [receipt for receipt in blocked_receipts if _receipt_sort_key(receipt) < success_time]
+        for blocked in reversed(prior_blocked):
+            subset = [receipt for receipt in receipts if _receipt_sort_key(receipt) < success_time or receipt is blocked]
+            resolution = resolve_food_source_dependency(source_root=root, date=target_date, receipts=subset, receipt=blocked)
+            if resolution.state != "READY" or not resolution.durable_state_verified:
+                continue
+            current.status = StageStatus.REPAIRED
+            current.original_vs_reconstructed = "repaired"
+            current.repair_action = "scheduled_dependency_recovered_current_intake"
+            current.unresolved_reason = None
+            current.details.update(
+                {
+                    "original_status": blocked.get("status"),
+                    "effective_status": success.get("status"),
+                    "superseded_by": "successful_current_intake_after_dependency_recovery",
+                    "authoritative_run_id": resolution.authoritative_run_id,
+                    "recovery_attempt_id": success.get("run_id"),
+                    "durable_state_verified": resolution.durable_state_verified,
+                    "dependency_resolution": resolution.as_report(),
+                }
+            )
+            blocked_ref = _receipt_ref_for_payload(root, rows, blocked, "superseded_current_intake_receipt")
+            if blocked_ref:
+                current.evidence_refs.append(blocked_ref)
+            for stage_key in (SOURCE_WATCH, SOURCE_WATCH_RESUME):
+                stage = stages[stage_key]
+                if stage.status in {StageStatus.MISSING, StageStatus.INCOMPLETE, StageStatus.CONTRADICTORY}:
+                    stage.details.update(
+                        {
+                            "original_status": stage.details.get("status"),
+                            "effective_status": "READY",
+                            "superseded_by": "scheduled_dependency_recovered_current_intake",
+                            "authoritative_run_id": resolution.authoritative_run_id,
+                            "durable_state_verified": resolution.durable_state_verified,
+                        }
+                    )
+                    if stage_key == SOURCE_WATCH or resolution.authoritative_task_key == "food_line_source_watch_resume":
+                        stage.status = StageStatus.REPAIRED
+                        stage.original_vs_reconstructed = "repaired"
+                        stage.repair_action = "scheduled_dependency_recovered_current_intake"
+                    else:
+                        stage.status = StageStatus.NOT_APPLICABLE
+                    stage.unresolved_reason = None
+            return
+
+
+def _same_day_recovery_action(root: Path, target_date: str, evaluated_at: str) -> str | None:
+    if parse_date(target_date) != date.today():
+        return None
+    try:
+        report = evaluate_recovery(dispatch=DISPATCH, source_root=root, date=target_date, evaluated_at=evaluated_at)
+    except Exception:
+        return None
+    if any(row.get("recommendation") == RecoveryRecommendation.RETRY_ELIGIBLE.value for row in report.get("instances") or []):
+        return "same_day_recovery_available"
+    return None
+
+
 def audit_food_line_date(root: Path, target_date: str, *, evaluated_at: str | None = None) -> tuple[dict[str, StageResult], Any | None]:
     parse_date(target_date)
     evaluated_at = evaluated_at or utc_now()
     rows = _receipt_rows(root, target_date)
+    historical = _verified_historical_boundary_refs(root, target_date)
     source_watch = _source_watch_stage(root, target_date, rows)
+    if historical["replay_present"] and historical["source_refs"] and source_watch.status in {StageStatus.MISSING, StageStatus.INCOMPLETE}:
+        source_watch.status = StageStatus.REPAIRED
+        source_watch.evidence_refs.extend(historical["records"] + historical["source_refs"] + historical["selected_input_refs"])
+        source_watch.run_id = str(historical["source_watch_run_id"] or source_watch.run_id or "") or None
+        source_watch.original_vs_reconstructed = "repaired"
+        source_watch.repair_action = "historical_current_intake_replay_boundary"
+        source_watch.unresolved_reason = None
+        source_watch.details.update(
+            {
+                "effective_status": "PRESENT_VALID_FROM_RETAINED_EVIDENCE",
+                "retained_evidence_verified": True,
+                "source_watch_run_id": historical["source_watch_run_id"],
+                "qualifying_handoff_present": True,
+            }
+        )
     resume = _receipt_stage(root, SOURCE_WATCH_RESUME, _latest(rows, "food_line_source_watch_resume"))
     if resume.status == StageStatus.MISSING:
         resume.status = StageStatus.NOT_APPLICABLE
         resume.unresolved_reason = None
         resume.details["basis"] = "resume not required unless Source Watch blocks or defers"
     publish = _receipt_stage(root, DAILY_PUBLISH_DECISION, _latest(rows, "food_line_daily_publish"))
+    retained_publish = _retained_daily_publish_stage(root, historical["daily_publish_refs"])
+    if retained_publish and publish.status in {StageStatus.MISSING, StageStatus.INCOMPLETE}:
+        publish = retained_publish
     if publish.status in {StageStatus.PRESENT_VALID, StageStatus.SAFE_NO_OP}:
         publish.details["publication_decision"] = publish.details.get("classification") or publish.details.get("status")
     coverage, evaluation = _coverage_stage(root, target_date, evaluated_at)
     current = _current_intake_stage(root, target_date, rows, source_watch)
+    stages = {
+        SOURCE_WATCH: source_watch,
+        SOURCE_WATCH_RESUME: resume,
+        CURRENT_INTAKE: current,
+        DAILY_PUBLISH_DECISION: publish,
+    }
+    _apply_recovered_current_intake_chain(root, target_date, rows, stages)
+    source_watch = stages[SOURCE_WATCH]
+    resume = stages[SOURCE_WATCH_RESUME]
+    current = stages[CURRENT_INTAKE]
+    publish = stages[DAILY_PUBLISH_DECISION]
     core = (source_watch, resume, current, publish)
-    if coverage.status == StageStatus.INCOMPLETE and all(stage.status in {StageStatus.PRESENT_VALID, StageStatus.SAFE_NO_OP, StageStatus.NOT_APPLICABLE, StageStatus.REPAIRED} for stage in core):
+    if coverage.status in {StageStatus.INCOMPLETE, StageStatus.EVIDENCE_EXHAUSTED, StageStatus.REVIEW_REQUIRED} and all(stage.status in {StageStatus.PRESENT_VALID, StageStatus.SAFE_NO_OP, StageStatus.NOT_APPLICABLE, StageStatus.REPAIRED} for stage in core):
         coverage.status = StageStatus.SAFE_NO_OP
         coverage.unresolved_reason = None
         coverage.details["backfill_status"] = "BACKFILL_NOT_REQUIRED"
@@ -499,7 +774,7 @@ def _state(stages: dict[str, StageResult]) -> DateState:
 
 
 def _replay_available(root: Path, target_date: str, stages: dict[str, StageResult]) -> tuple[bool, str | None]:
-    if stages[SOURCE_WATCH].status not in {StageStatus.PRESENT_VALID, StageStatus.SAFE_NO_OP}:
+    if stages[SOURCE_WATCH].status not in {StageStatus.PRESENT_VALID, StageStatus.SAFE_NO_OP, StageStatus.REPAIRED}:
         return False, None
     if stages[CURRENT_INTAKE].status not in {StageStatus.MISSING, StageStatus.INCOMPLETE}:
         return False, None
@@ -842,6 +1117,8 @@ def _next_action(state: DateState, repair_available: list[str], stages: dict[str
         return "none"
     if state == DateState.REVIEW_REQUIRED:
         return "review_reconstructed_candidates"
+    if "same_day_recovery_available" in repair_available:
+        return "scheduled_recovery_available"
     if repair_available:
         return "rerun_with_apply"
     if state == DateState.EVIDENCE_EXHAUSTED:
@@ -902,8 +1179,9 @@ def reconcile_food_line_date(root: Path, target_date: str, *, apply: bool = Fals
     replay_available, replay_run_id = _replay_available(root, target_date, stages)
     if replay_available:
         repair_available.append("historical_current_intake_replay")
-    if parse_date(target_date) == date.today() and stages[COVERAGE_GAP_STATE].status in {StageStatus.INCOMPLETE, StageStatus.REVIEW_REQUIRED}:
-        repair_available.append("same_day_recovery_available")
+    same_day_action = _same_day_recovery_action(root, target_date, evaluated_at)
+    if same_day_action:
+        repair_available.append(same_day_action)
     if apply and replay_available:
         if run_historical_current_intake_replay is None:
             raise DateReconciliationError("historical current-intake replay helper is unavailable")

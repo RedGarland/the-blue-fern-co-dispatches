@@ -3,6 +3,7 @@
 import json
 import subprocess
 import sys
+import hashlib
 from pathlib import Path
 
 import pytest
@@ -14,6 +15,7 @@ from bluefern_dispatches.food_line_date_reconciliation import (
     ReconstructionResult,
     reconcile_food_line_date,
 )
+from bluefern_dispatches.operational_health import OperationalStatus, build_operational_receipt
 
 DATE = "2026-09-09"
 EVALUATED = "2026-09-18T16:00:00Z"
@@ -23,6 +25,124 @@ def _write_json(path: Path, payload: dict) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
     return path
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _boundary_ref(root: Path, path: Path) -> dict[str, str]:
+    return {"path": path.relative_to(root).as_posix(), "sha256": _sha256(path)}
+
+
+def _write_operational_receipt(
+    root: Path,
+    *,
+    task_key: str,
+    status: str,
+    classification: str,
+    started_at: str,
+    name: str,
+    run_id: str = "source-watch-run",
+    task_receipt: dict | None = None,
+    details: dict | None = None,
+    target_date: str = DATE,
+) -> Path:
+    artifact = root / "logs" / "food-line" / "test-operational-artifacts" / f"{name}.json"
+    _write_json(artifact, task_receipt or {})
+    receipt = build_operational_receipt(
+        dispatch="food-line",
+        task_key=task_key,
+        task_name=task_key,
+        scheduled_for=target_date,
+        started_at=started_at,
+        completed_at=started_at,
+        exit_code=0 if status in {"SUCCESS", "SAFE_NO_OP", "DEGRADED"} else 1,
+        status=OperationalStatus(status),
+        classification=classification,
+        run_id=run_id,
+        public_side_effects={},
+        artifact_refs={"task_receipt": str(artifact)},
+        details=details or {},
+    )
+    return _write_json(root / "status" / "operational-health" / "food-line" / target_date / "runs" / f"{name}.json", receipt)
+
+
+def _write_recovery_ready_source_state(root: Path, *, target_date: str = DATE, run_id: str = "source-watch-run") -> None:
+    export = root / "data" / "dispatches" / "food-line" / "agent-inbox" / f"food-line-source-watch-{target_date}-{run_id}.json"
+    _write_json(export, {"schema_version": "food_line_source_watch_agent_export_v1", "edition_date": target_date, "agent_run_id": run_id, "findings": [{"title": "Food pressure"}]})
+    _write_json(
+        root / "status" / "food-line" / "runs" / f"{target_date}.json",
+        {
+            "schema_version": "food_line_scheduled_run_record_v1",
+            "edition_date": target_date,
+            "run_id": run_id,
+            "source_watch_status": "completed_with_exclusions",
+            "last_status": "completed_with_exclusions",
+            "run_state_path": str(root / "data" / "dispatches" / "food-line" / "discovery-runs" / target_date / run_id / "run-state.json"),
+        },
+    )
+    _write_json(
+        root / "data" / "dispatches" / "food-line" / "discovery-runs" / target_date / run_id / "run-state.json",
+        {
+            "schema_version": "food_line_bounded_run_state_v1",
+            "edition_date": target_date,
+            "run_id": run_id,
+            "status": "completed_with_exclusions",
+            "final_error": "",
+            "agent_export": {"status": "success", "path": str(export), "sha256": _sha256(export)},
+        },
+    )
+    _write_json(root / "data" / "dispatches" / "food-line" / "discovery-runs" / target_date / run_id / "query-plan.json", {"edition_date": target_date})
+    _write_json(root / "data" / "dispatches" / "food-line" / "discovery" / target_date / "discovery_candidates.json", {"edition_date": target_date, "candidates": []})
+
+
+def _write_retained_publish_receipt(root: Path, target_date: str) -> Path:
+    return _write_json(
+        root / "data" / "dispatches" / "food-line" / "historical-intake" / target_date / "daily-publish-receipt" / "publish.json",
+        {"publication_attempted": False, "status": "SAFE_NO_OP", "terminal_status": "skipped_not_release_ready"},
+    )
+
+
+def _write_historical_replay_boundary(root: Path, *, target_date: str = "2026-09-08", editorial_statuses: list[str] | None = None) -> None:
+    run_id = "historical-run"
+    run_state = _write_json(root / "data" / "dispatches" / "food-line" / "discovery-runs" / target_date / run_id / "run-state.json", {"run_id": run_id, "edition_date": target_date})
+    query_plan = _write_json(root / "data" / "dispatches" / "food-line" / "discovery-runs" / target_date / run_id / "query-plan.json", {"edition_date": target_date})
+    candidates = _write_json(root / "data" / "dispatches" / "food-line" / "discovery" / target_date / "discovery_candidates.json", {"edition_date": target_date, "candidates": []})
+    selected = _write_json(root / "data" / "dispatches" / "food-line" / "agent-inbox" / f"food-line-source-watch-{target_date}.json", {"edition_date": target_date, "findings": [{"title": "Food pressure"}]})
+    retained = _write_json(root / "data" / "dispatches" / "food-line" / "historical-intake" / target_date / "retained-inputs" / selected.name, json.loads(selected.read_text(encoding="utf-8")))
+    publish = _write_retained_publish_receipt(root, target_date)
+    statuses = editorial_statuses or ["reject", "approve_with_edit", "reject"]
+    _write_json(
+        root / "data" / "dispatches" / "food-line" / "historical-intake" / target_date / "current-signal-review.json",
+        {
+            "items": [
+                {"candidate_id": f"item-{index}", "review_status": "pending_review", "original_pending_status": "pending_review", "editorial_status": status}
+                for index, status in enumerate(statuses)
+            ]
+        },
+    )
+    boundary = {
+        "source_watch_run_state": _boundary_ref(root, run_state),
+        "source_watch_query_plan": _boundary_ref(root, query_plan),
+        "discovery_candidates": _boundary_ref(root, candidates),
+        "selected_inputs": [_boundary_ref(root, selected)],
+        "retained_input_copies": [_boundary_ref(root, retained)],
+        "daily_publish_receipts": [_boundary_ref(root, publish)],
+    }
+    _write_json(
+        root / "data" / "dispatches" / "food-line" / "historical-intake" / target_date / "replay-receipt.json",
+        {
+            "schema_version": "food_line_historical_current_intake_replay_v1",
+            "historical_date": target_date,
+            "source_watch_run_id": run_id,
+            "historical_evidence_boundary": boundary,
+        },
+    )
+    _write_json(
+        root / "data" / "dispatches" / "food-line" / "review" / "reports" / target_date / "current-intake.json",
+        {"historical_replay": True, "historical_date": target_date, "source_watch_run_id": run_id, "historical_evidence_boundary": boundary},
+    )
 
 
 def _receipt(task_key: str, status: str = "SUCCESS", *, run_id: str = "run-1", classification: str = "completed") -> dict:
@@ -98,6 +218,111 @@ def test_missing_original_source_watch_dry_run_is_explicit_evidence_exhausted(tm
     assert result["date_complete"] is False
     assert result["evidence_exhausted"] is True
     assert result["next_action"] == "perform_bounded_historical_research"
+
+
+def test_recovered_current_intake_supersedes_old_upstream_failures(tmp_path: Path) -> None:
+    run_id = "source-watch-run"
+    _write_operational_receipt(
+        tmp_path,
+        task_key="food_line_source_watch",
+        status="DEGRADED",
+        classification="completed_with_exclusions",
+        started_at="2026-09-09T13:00:00Z",
+        name="01-source-watch-degraded",
+        run_id=run_id,
+        task_receipt={"edition_date": DATE, "run_id": run_id, "final_status": "completed_with_exclusions", "export_status": "success"},
+        details={"edition_date": DATE, "source_status": "completed_with_exclusions", "source_export_status": "success"},
+    )
+    _write_operational_receipt(
+        tmp_path,
+        task_key="food_line_current_intake",
+        status="UPSTREAM_BLOCKED",
+        classification="upstream_blocked",
+        started_at="2026-09-09T13:10:00Z",
+        name="02-current-intake-blocked",
+        run_id=run_id,
+        task_receipt={"edition_date": DATE, "qualifying_discovery_run_id": run_id, "status": "upstream_blocked"},
+        details={"edition_date": DATE, "intake_status": "upstream_blocked"},
+    )
+    _write_operational_receipt(
+        tmp_path,
+        task_key="food_line_source_watch_resume",
+        status="UPSTREAM_BLOCKED",
+        classification="source_watch_not_initialized",
+        started_at="2026-09-09T13:15:00Z",
+        name="03-resume-blocked",
+        run_id=run_id,
+        task_receipt={"edition_date": DATE, "run_id": run_id, "resume_status": "source_watch_not_initialized"},
+    )
+    _write_recovery_ready_source_state(tmp_path, run_id=run_id)
+    _write_operational_receipt(
+        tmp_path,
+        task_key="food_line_source_watch",
+        status="DEGRADED",
+        classification="completed_with_exclusions",
+        started_at="2026-09-09T13:25:00Z",
+        name="04-source-watch-ready",
+        run_id=run_id,
+        task_receipt={"edition_date": DATE, "run_id": run_id, "final_status": "completed_with_exclusions", "export_status": "success"},
+        details={"edition_date": DATE, "source_status": "completed_with_exclusions", "source_export_status": "success"},
+    )
+    _write_operational_receipt(tmp_path, task_key="food_line_current_intake", status="SUCCESS", classification="success", started_at="2026-09-09T13:30:00Z", name="05-current-intake-success", run_id=run_id)
+    _write_json(tmp_path / "data" / "dispatches" / "food-line" / "review" / "reports" / DATE / "current-intake.json", {"lifecycle_reconciliation": {"unaccounted": 0}})
+    _write_receipt(tmp_path, "food_line_daily_publish", "SAFE_NO_OP", classification="skipped_not_release_ready")
+
+    result = reconcile_food_line_date(tmp_path, DATE, evaluated_at=EVALUATED)
+
+    assert result["state"] == DateState.COMPLETE_REPAIRED.value
+    assert result["date_complete"] is True
+    assert result["repair_actions_available"] == []
+    assert result["stages"]["source_watch"]["status"] == "REPAIRED"
+    assert result["stages"]["current_intake"]["status"] == "REPAIRED"
+    assert result["stages"]["current_intake"]["details"]["durable_state_verified"] is True
+    assert result["stages"]["source_watch"]["details"]["original_status"] == "DEGRADED"
+
+
+def test_historical_replay_boundary_closes_source_watch_and_publish_with_resolved_editorial_statuses(tmp_path: Path) -> None:
+    _write_historical_replay_boundary(tmp_path)
+
+    result = reconcile_food_line_date(tmp_path, "2026-09-08", evaluated_at=EVALUATED)
+
+    assert result["state"] == DateState.COMPLETE_REPAIRED.value
+    assert result["candidate_count"] == 0
+    assert result["stages"]["source_watch"]["status"] == "REPAIRED"
+    assert result["stages"]["source_watch"]["details"]["retained_evidence_verified"] is True
+    assert result["stages"]["daily_publish_decision"]["status"] == "SAFE_NO_OP"
+    assert result["stages"]["historical_recovery_state"]["status"] == "REPAIRED"
+
+
+def test_hold_editorial_status_remains_review_required(tmp_path: Path) -> None:
+    _write_historical_replay_boundary(tmp_path, editorial_statuses=["approve", "hold", "reject"])
+
+    result = reconcile_food_line_date(tmp_path, "2026-09-08", evaluated_at=EVALUATED)
+
+    assert result["state"] == DateState.REVIEW_REQUIRED.value
+    assert result["candidate_count"] == 1
+    assert result["stages"]["historical_recovery_state"]["status"] == "REVIEW_REQUIRED"
+
+
+def test_historical_reconciliation_publish_boundary_does_not_fabricate_source_watch_success(tmp_path: Path) -> None:
+    target_date = "2026-09-09"
+    publish = _write_retained_publish_receipt(tmp_path, target_date)
+    _write_json(
+        tmp_path / "data" / "dispatches" / "food-line" / "historical-reconstruction" / target_date / "reconciliation.json",
+        {
+            "schema_version": "food_line_historical_reconciliation_v1",
+            "target_date": target_date,
+            "original_sep9_failure_lineage": {"source_watch": "missing"},
+            "historical_evidence_boundary": {"daily_publish_receipts": [_boundary_ref(tmp_path, publish)]},
+        },
+    )
+
+    result = reconcile_food_line_date(tmp_path, target_date, evaluated_at=EVALUATED)
+
+    assert result["state"] == DateState.EVIDENCE_EXHAUSTED.value
+    assert result["next_action"] == "perform_bounded_historical_research"
+    assert result["stages"]["source_watch"]["status"] == "MISSING"
+    assert result["stages"]["daily_publish_decision"]["status"] == "SAFE_NO_OP"
 
 
 def test_apply_reconstruction_with_review_candidates_stops_for_review(tmp_path: Path) -> None:

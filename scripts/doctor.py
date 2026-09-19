@@ -53,13 +53,6 @@ class SchedulerTemplateSpec:
     require_existing_working_directory: bool = False
 
 
-SCHEDULER_SCRIPT_MARKERS = (
-    "run_and_notify.py",
-    "run_daily_gaza.py",
-    "run_cascadia_dispatch.py",
-    "run_cascadia_and_notify.py",
-    "run_american_pressure_and_notify.py",
-)
 SCHEDULER_REFERENCE_MARKERS = (
     "reference only",
     "reference-only",
@@ -108,7 +101,7 @@ def _repo_relative(path: Path, root: Path) -> str:
     return str(path.relative_to(root)).replace("\\", "/")
 
 
-def _task_xml_values(path: Path) -> dict[str, str]:
+def _task_xml_values(path: Path) -> dict[str, str | list[str]]:
     text = _read_text(path)
     try:
         xml_root = ET.fromstring(text)
@@ -118,11 +111,14 @@ def _task_xml_values(path: Path) -> dict[str, str]:
             "arguments": text,
             "working_directory": "",
             "settings_enabled": "",
-            "trigger_enabled": "",
+            "trigger_enabled_values": [],
         }
 
     def local_name(value: str) -> str:
         return value.rsplit("}", 1)[-1] if "}" in value else value
+
+    def children_named(parent: ET.Element, name: str) -> list[ET.Element]:
+        return [child for child in parent if local_name(child.tag) == name]
 
     def first_text(name: str) -> str:
         for child in xml_root.iter():
@@ -130,13 +126,27 @@ def _task_xml_values(path: Path) -> dict[str, str]:
                 return (child.text or "").strip()
         return ""
 
-    enabled_values = [(child.text or "").strip().lower() for child in xml_root.iter() if local_name(child.tag) == "Enabled"]
+    settings_enabled = ""
+    settings = children_named(xml_root, "Settings")
+    if settings:
+        enabled = children_named(settings[0], "Enabled")
+        if enabled:
+            settings_enabled = (enabled[0].text or "").strip().lower()
+
+    trigger_enabled_values: list[str] = []
+    triggers = children_named(xml_root, "Triggers")
+    if triggers:
+        for trigger in triggers[0]:
+            for child in trigger.iter():
+                if local_name(child.tag) == "Enabled":
+                    trigger_enabled_values.append((child.text or "").strip().lower())
+
     return {
         "description": first_text("Description"),
         "arguments": first_text("Arguments"),
         "working_directory": first_text("WorkingDirectory"),
-        "settings_enabled": enabled_values[-1] if enabled_values else "",
-        "trigger_enabled": enabled_values[0] if enabled_values else "",
+        "settings_enabled": settings_enabled,
+        "trigger_enabled_values": trigger_enabled_values,
     }
 
 
@@ -150,6 +160,10 @@ def _scheduler_spec_for(path: Path, root: Path) -> SchedulerTemplateSpec:
 
 def _path_equal(left: str, right: str) -> bool:
     return left.rstrip("\\/").lower() == right.rstrip("\\/").lower()
+
+
+def _enabled_value_is(value: object, expected: bool) -> bool:
+    return isinstance(value, str) and value.lower() == ("true" if expected else "false")
 
 
 def check_project_venv(root: Path) -> CheckResult:
@@ -204,16 +218,22 @@ def check_scheduled_tasks_use_project_venv(root: Path) -> CheckResult:
     for path in task_files:
         text = _read_text(path)
         lowered = text.lower()
-        if not any(marker in text for marker in SCHEDULER_SCRIPT_MARKERS):
-            continue
         rel = path.relative_to(root)
         rel_posix = _repo_relative(path, root)
         values = _task_xml_values(path)
         spec = _scheduler_spec_for(path, root)
+        settings_enabled = values["settings_enabled"]
+        trigger_enabled_values = values["trigger_enabled_values"]
         if spec.classification == "reference":
             if not any(marker in lowered for marker in SCHEDULER_REFERENCE_MARKERS):
                 problems.append(f"{rel} is classified reference-only but is not marked reference-only in the XML")
                 continue
+            if not _enabled_value_is(settings_enabled, False):
+                problems.append(f"{rel} is classified reference-only but Settings/Enabled is not false")
+            if isinstance(trigger_enabled_values, list):
+                enabled_triggers = [value for value in trigger_enabled_values if value != "false"]
+                if enabled_triggers:
+                    problems.append(f"{rel} is classified reference-only but a trigger Enabled value is not false")
             reason = f": {spec.reference_reason}" if spec.reference_reason else ""
             reference_notes.append(f"{rel_posix} reference-only{reason}")
             continue
@@ -222,9 +242,15 @@ def check_scheduled_tasks_use_project_venv(root: Path) -> CheckResult:
             problems.append(f"{rel} has unknown scheduler template classification {spec.classification!r}")
             continue
 
+        if not _enabled_value_is(settings_enabled, True):
+            problems.append(f"{rel} active scheduler template Settings/Enabled is not true")
+        if isinstance(trigger_enabled_values, list):
+            disabled_triggers = [value for value in trigger_enabled_values if value != "true"]
+            if disabled_triggers:
+                problems.append(f"{rel} active scheduler template has a trigger Enabled value that is not true")
         expected_root = spec.expected_working_directory or str(root)
         expected_venv = str(Path(expected_root) / ".venv" / "Scripts" / "python.exe")
-        working_directory = values["working_directory"]
+        working_directory = str(values["working_directory"])
         if not _path_equal(working_directory, expected_root):
             problems.append(f"{rel} does not set expected working directory {expected_root}")
         if spec.require_existing_working_directory and not Path(expected_root).exists():

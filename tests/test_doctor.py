@@ -15,24 +15,59 @@ def _write(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def _active_task_xml(root: str, python: str, script: str = "scripts\\run_and_notify.py") -> str:
+def _active_task_xml(
+    root: str,
+    python: str,
+    script: str = "scripts\\run_and_notify.py",
+    *,
+    settings_enabled: str = "true",
+    trigger_enabled: str = "true",
+) -> str:
     return (
         "<Task><RegistrationInfo><Description>Active scheduled task</Description></RegistrationInfo>"
-        "<Triggers><CalendarTrigger><Enabled>true</Enabled></CalendarTrigger></Triggers>"
-        "<Settings><Enabled>true</Enabled></Settings><Actions><Exec>"
+        f"<Triggers><CalendarTrigger><Enabled>{trigger_enabled}</Enabled></CalendarTrigger></Triggers>"
+        f"<Settings><Enabled>{settings_enabled}</Enabled></Settings><Actions><Exec>"
         f"<Arguments>Set-Location '{root}'; &amp; '{python}' '{script}'</Arguments>"
         f"<WorkingDirectory>{root}</WorkingDirectory>"
         "</Exec></Actions></Task>"
     )
 
 
-def _reference_task_xml(root: str, script: str = "scripts\\run_and_notify.py") -> str:
+def _reference_task_xml(
+    root: str,
+    script: str = "scripts\\run_and_notify.py",
+    *,
+    settings_enabled: str = "false",
+    trigger_enabled: str = "false",
+) -> str:
     return (
         "<Task><RegistrationInfo><Description>Reference only. Historical scheduler template.</Description></RegistrationInfo>"
-        "<Triggers><CalendarTrigger><Enabled>false</Enabled></CalendarTrigger></Triggers>"
-        "<Settings><Enabled>false</Enabled></Settings><Actions><Exec>"
+        f"<Triggers><CalendarTrigger><Enabled>{trigger_enabled}</Enabled></CalendarTrigger></Triggers>"
+        f"<Settings><Enabled>{settings_enabled}</Enabled></Settings><Actions><Exec>"
         f"<Arguments>Set-Location '{root}'; &amp; '.\\.venv\\Scripts\\python.exe' '{script}'</Arguments>"
         f"<WorkingDirectory>{root}</WorkingDirectory>"
+        "</Exec></Actions></Task>"
+    )
+
+
+def _wrapper_task_xml(
+    root: str,
+    python: str,
+    wrapper: str = "scripts\\windows\\run_food_line_daily_publish.ps1",
+    *,
+    working_directory: str | None = None,
+    settings_enabled: str = "true",
+    trigger_enabled: str = "true",
+) -> str:
+    working_directory = working_directory or root
+    return (
+        "<Task><RegistrationInfo><Description>Active wrapper scheduled task</Description></RegistrationInfo>"
+        f"<Triggers><CalendarTrigger><Enabled>{trigger_enabled}</Enabled></CalendarTrigger></Triggers>"
+        f"<Settings><Enabled>{settings_enabled}</Enabled></Settings><Actions><Exec>"
+        "<Command>powershell.exe</Command>"
+        f"<Arguments>-NoProfile -File '{root}\\{wrapper}' -RepositoryRoot '{root}' "
+        f"-PythonExecutable '{python}'</Arguments>"
+        f"<WorkingDirectory>{working_directory}</WorkingDirectory>"
         "</Exec></Actions></Task>"
     )
 
@@ -238,6 +273,79 @@ def test_doctor_flags_active_split_runner_wrong_python(monkeypatch):
         _cleanup_contract_root(root)
 
 
+def test_doctor_flags_active_template_disabled_in_settings(monkeypatch):
+    root = _make_contract_root()
+    try:
+        split_root = r"C:\BlueFernRunner\GazaDispatchesCurrent6"
+        monkeypatch.setitem(
+            doctor.SCHEDULED_TASK_TEMPLATE_REGISTRY,
+            "ops/gaza_split_task.xml",
+            doctor.SchedulerTemplateSpec(classification="active", expected_working_directory=split_root),
+        )
+        _write(
+            root / "ops" / "gaza_split_task.xml",
+            _active_task_xml(
+                split_root,
+                rf"{split_root}\.venv\Scripts\python.exe",
+                settings_enabled="false",
+            ),
+        )
+
+        result = _result_map(root)["scheduled task .venv"]
+
+        assert not result.ok
+        assert "Settings/Enabled is not true" in result.message
+    finally:
+        _cleanup_contract_root(root)
+
+
+def test_doctor_flags_active_template_disabled_trigger(monkeypatch):
+    root = _make_contract_root()
+    try:
+        split_root = r"C:\BlueFernRunner\GazaDispatchesCurrent6"
+        monkeypatch.setitem(
+            doctor.SCHEDULED_TASK_TEMPLATE_REGISTRY,
+            "ops/gaza_split_task.xml",
+            doctor.SchedulerTemplateSpec(classification="active", expected_working_directory=split_root),
+        )
+        _write(
+            root / "ops" / "gaza_split_task.xml",
+            _active_task_xml(
+                split_root,
+                rf"{split_root}\.venv\Scripts\python.exe",
+                trigger_enabled="false",
+            ),
+        )
+
+        result = _result_map(root)["scheduled task .venv"]
+
+        assert not result.ok
+        assert "trigger Enabled value" in result.message
+    finally:
+        _cleanup_contract_root(root)
+
+
+def test_doctor_discovers_unregistered_wrapper_scheduler_xml():
+    root = _make_contract_root()
+    try:
+        _write(
+            root / "ops" / "unregistered_wrapper_task.xml",
+            _wrapper_task_xml(
+                str(root),
+                str(root / ".venv" / "Scripts" / "python.exe"),
+                working_directory=r"C:\BlueFernRunner\OtherCheckout",
+            ),
+        )
+
+        result = _result_map(root)["scheduled task .venv"]
+
+        assert not result.ok
+        assert "unregistered_wrapper_task.xml" in result.message
+        assert "expected working directory" in result.message
+    finally:
+        _cleanup_contract_root(root)
+
+
 def test_doctor_allows_disabled_reference_only_template(monkeypatch):
     root = _make_contract_root()
     try:
@@ -256,6 +364,54 @@ def test_doctor_allows_disabled_reference_only_template(monkeypatch):
         assert result.ok
         assert "reference templates skipped" in result.message
         assert "reference_task.xml" in result.message
+    finally:
+        _cleanup_contract_root(root)
+
+
+def test_doctor_flags_reference_template_enabled_in_settings(monkeypatch):
+    root = _make_contract_root()
+    try:
+        monkeypatch.setitem(
+            doctor.SCHEDULED_TASK_TEMPLATE_REGISTRY,
+            "ops/reference_task.xml",
+            doctor.SchedulerTemplateSpec(classification="reference", reference_reason="test reference template"),
+        )
+        _write(
+            root / "ops" / "reference_task.xml",
+            _reference_task_xml(
+                r"C:\Legacy\Dispatches From The Blue Fern Co",
+                settings_enabled="true",
+            ),
+        )
+
+        result = _result_map(root)["scheduled task .venv"]
+
+        assert not result.ok
+        assert "Settings/Enabled is not false" in result.message
+    finally:
+        _cleanup_contract_root(root)
+
+
+def test_doctor_flags_reference_template_enabled_trigger(monkeypatch):
+    root = _make_contract_root()
+    try:
+        monkeypatch.setitem(
+            doctor.SCHEDULED_TASK_TEMPLATE_REGISTRY,
+            "ops/reference_task.xml",
+            doctor.SchedulerTemplateSpec(classification="reference", reference_reason="test reference template"),
+        )
+        _write(
+            root / "ops" / "reference_task.xml",
+            _reference_task_xml(
+                r"C:\Legacy\Dispatches From The Blue Fern Co",
+                trigger_enabled="true",
+            ),
+        )
+
+        result = _result_map(root)["scheduled task .venv"]
+
+        assert not result.ok
+        assert "trigger Enabled value is not false" in result.message
     finally:
         _cleanup_contract_root(root)
 

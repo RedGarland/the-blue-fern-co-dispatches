@@ -28,7 +28,7 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "DEGRADED",
+      "aggregate_status": "MISSED",
       "latest_runtime_proof_date": "2026-09-18T15:30:02Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-18",
@@ -109,8 +109,8 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-09-18T18:15:02.837393Z",
+  "exported_at": "2026-09-19T03:15:03.844914Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
-  "system_status": "DEGRADED"
+  "system_status": "MISSED"
 }

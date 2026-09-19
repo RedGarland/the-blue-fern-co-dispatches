@@ -3,7 +3,7 @@
   <RegistrationInfo>
     <Date>2026-05-13T00:00:00</Date>
     <Author>REPLACE_WITH_USER</Author>
-    <Description>Run Blue Fern American Pressure weekly manual-source briefing and send a confirmation email without pushing.</Description>
+    <Description>Reference only. American Pressure weekly publish is intentionally disabled while its split runner is absent.</Description>
   </RegistrationInfo>
   <Triggers>
     <CalendarTrigger>

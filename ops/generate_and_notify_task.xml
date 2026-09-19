@@ -3,7 +3,7 @@
   <RegistrationInfo>
     <Date>2026-05-04T09:00:00</Date>
     <Author>REPLACE_WITH_USER</Author>
-    <Description>Run Blue Fern Gaza pipeline and publish, then email notification.</Description>
+    <Description>Reference only. Legacy Gaza monorepo scheduler template; active Gaza scheduling runs from the split runner checkout.</Description>
   </RegistrationInfo>
   <Triggers>
     <CalendarTrigger>

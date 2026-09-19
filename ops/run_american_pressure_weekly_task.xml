@@ -3,12 +3,12 @@
   <RegistrationInfo>
     <Date>2026-05-13T00:00:00</Date>
     <Author>REPLACE_WITH_USER</Author>
-    <Description>Run Blue Fern American Pressure weekly manual-source briefing and send a confirmation email without pushing.</Description>
+    <Description>Reference only. American Pressure weekly publish is intentionally disabled while its split runner is absent.</Description>
   </RegistrationInfo>
   <Triggers>
     <CalendarTrigger>
       <StartBoundary>2026-05-18T08:00:00</StartBoundary>
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <ScheduleByWeek>
         <DaysOfWeek>
           <Monday />
@@ -36,7 +36,7 @@
       <RestartOnIdle>false</RestartOnIdle>
     </IdleSettings>
     <AllowStartOnDemand>true</AllowStartOnDemand>
-    <Enabled>true</Enabled>
+    <Enabled>false</Enabled>
     <Hidden>false</Hidden>
     <RunOnlyIfIdle>false</RunOnlyIfIdle>
     <WakeToRun>false</WakeToRun>

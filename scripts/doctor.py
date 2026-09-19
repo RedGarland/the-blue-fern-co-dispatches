@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import xml.etree.ElementTree as ET
 import json
 import re
 import subprocess
@@ -44,6 +45,39 @@ class CheckResult:
     message: str
 
 
+@dataclass(frozen=True)
+class SchedulerTemplateSpec:
+    classification: str
+    expected_working_directory: str | None = None
+    reference_reason: str = ""
+    require_existing_working_directory: bool = False
+
+
+SCHEDULER_REFERENCE_MARKERS = (
+    "reference only",
+    "reference-only",
+    "historical/reference only",
+    "intentionally disabled",
+)
+SCHEDULED_TASK_TEMPLATE_REGISTRY: dict[str, SchedulerTemplateSpec] = {
+    "ops/generate_and_notify_task.xml": SchedulerTemplateSpec(
+        classification="reference",
+        reference_reason=(
+            "legacy Gaza monorepo template; active Gaza scheduling runs from "
+            r"C:\BlueFernRunner\GazaDispatchesCurrent6"
+        ),
+    ),
+    "ops/run_american_pressure_weekly_task.xml": SchedulerTemplateSpec(
+        classification="reference",
+        reference_reason="American Pressure weekly publish is intentionally disabled while its split runner is absent",
+    ),
+    "ops/run_cascadia_weekly_task.xml": SchedulerTemplateSpec(
+        classification="reference",
+        reference_reason="historical/reference-only Cascadia scheduler template",
+    ),
+}
+
+
 def _read_text(path: Path) -> str:
     try:
         return path.read_text(encoding="utf-8")
@@ -61,6 +95,75 @@ def _load_json(path: Path) -> object:
 
 def _result(name: str, ok: bool, message: str) -> CheckResult:
     return CheckResult(name=name, ok=ok, message=message)
+
+
+def _repo_relative(path: Path, root: Path) -> str:
+    return str(path.relative_to(root)).replace("\\", "/")
+
+
+def _task_xml_values(path: Path) -> dict[str, str | list[str]]:
+    text = _read_text(path)
+    try:
+        xml_root = ET.fromstring(text)
+    except ET.ParseError:
+        return {
+            "description": "",
+            "arguments": text,
+            "working_directory": "",
+            "settings_enabled": "",
+            "trigger_enabled_values": [],
+        }
+
+    def local_name(value: str) -> str:
+        return value.rsplit("}", 1)[-1] if "}" in value else value
+
+    def children_named(parent: ET.Element, name: str) -> list[ET.Element]:
+        return [child for child in parent if local_name(child.tag) == name]
+
+    def first_text(name: str) -> str:
+        for child in xml_root.iter():
+            if local_name(child.tag) == name:
+                return (child.text or "").strip()
+        return ""
+
+    settings_enabled = ""
+    settings = children_named(xml_root, "Settings")
+    if settings:
+        enabled = children_named(settings[0], "Enabled")
+        if enabled:
+            settings_enabled = (enabled[0].text or "").strip().lower()
+
+    trigger_enabled_values: list[str] = []
+    triggers = children_named(xml_root, "Triggers")
+    if triggers:
+        for trigger in triggers[0]:
+            for child in trigger.iter():
+                if local_name(child.tag) == "Enabled":
+                    trigger_enabled_values.append((child.text or "").strip().lower())
+
+    return {
+        "description": first_text("Description"),
+        "arguments": first_text("Arguments"),
+        "working_directory": first_text("WorkingDirectory"),
+        "settings_enabled": settings_enabled,
+        "trigger_enabled_values": trigger_enabled_values,
+    }
+
+
+def _scheduler_spec_for(path: Path, root: Path) -> SchedulerTemplateSpec:
+    rel = _repo_relative(path, root)
+    return SCHEDULED_TASK_TEMPLATE_REGISTRY.get(
+        rel,
+        SchedulerTemplateSpec(classification="active", expected_working_directory=str(root)),
+    )
+
+
+def _path_equal(left: str, right: str) -> bool:
+    return left.rstrip("\\/").lower() == right.rstrip("\\/").lower()
+
+
+def _enabled_value_is(value: object, expected: bool) -> bool:
+    return isinstance(value, str) and value.lower() == ("true" if expected else "false")
 
 
 def check_project_venv(root: Path) -> CheckResult:
@@ -110,34 +213,69 @@ def check_scheduled_tasks_use_project_venv(root: Path) -> CheckResult:
         return _result("scheduled task .venv", True, "ops folder is absent; scheduled task check skipped")
     task_files = sorted(ops.glob("*.xml"))
     problems: list[str] = []
-    expected_root = str(root)
-    expected_venv = str(root / ".venv" / "Scripts" / "python.exe")
+    reference_notes: list[str] = []
     absolute_python_re = re.compile(r"[A-Za-z]:\\[^\"'<>]*?\\(?:\.venv|venv)\\Scripts\\python\.exe", re.IGNORECASE)
     for path in task_files:
         text = _read_text(path)
         lowered = text.lower()
-        if (
-            "run_and_notify.py" not in text
-            and "run_daily_gaza.py" not in text
-            and "run_cascadia_dispatch.py" not in text
-            and "run_cascadia_and_notify.py" not in text
-            and "run_american_pressure_and_notify.py" not in text
-        ):
+        rel = path.relative_to(root)
+        rel_posix = _repo_relative(path, root)
+        values = _task_xml_values(path)
+        spec = _scheduler_spec_for(path, root)
+        settings_enabled = values["settings_enabled"]
+        trigger_enabled_values = values["trigger_enabled_values"]
+        if spec.classification == "reference":
+            if not any(marker in lowered for marker in SCHEDULER_REFERENCE_MARKERS):
+                problems.append(f"{rel} is classified reference-only but is not marked reference-only in the XML")
+                continue
+            if not _enabled_value_is(settings_enabled, False):
+                problems.append(f"{rel} is classified reference-only but Settings/Enabled is not false")
+            if isinstance(trigger_enabled_values, list):
+                enabled_triggers = [value for value in trigger_enabled_values if value != "false"]
+                if enabled_triggers:
+                    problems.append(f"{rel} is classified reference-only but a trigger Enabled value is not false")
+            reason = f": {spec.reference_reason}" if spec.reference_reason else ""
+            reference_notes.append(f"{rel_posix} reference-only{reason}")
             continue
-        if expected_root not in text:
-            problems.append(f"{path.relative_to(root)} does not set the project root working directory")
+
+        if spec.classification != "active":
+            problems.append(f"{rel} has unknown scheduler template classification {spec.classification!r}")
+            continue
+
+        if not _enabled_value_is(settings_enabled, True):
+            problems.append(f"{rel} active scheduler template Settings/Enabled is not true")
+        if isinstance(trigger_enabled_values, list):
+            disabled_triggers = [value for value in trigger_enabled_values if value != "true"]
+            if disabled_triggers:
+                problems.append(f"{rel} active scheduler template has a trigger Enabled value that is not true")
+        expected_root = spec.expected_working_directory or str(root)
+        expected_venv = str(Path(expected_root) / ".venv" / "Scripts" / "python.exe")
+        working_directory = str(values["working_directory"])
+        if not _path_equal(working_directory, expected_root):
+            problems.append(f"{rel} does not set expected working directory {expected_root}")
+        if spec.require_existing_working_directory and not Path(expected_root).exists():
+            problems.append(f"{rel} expected working directory does not exist: {expected_root}")
         uses_relative_project_venv = ".\\.venv\\Scripts\\python.exe" in text or "./.venv/Scripts/python.exe" in text
         uses_absolute_project_venv = expected_venv in text
         if not uses_relative_project_venv and not uses_absolute_project_venv:
-            problems.append(f"{path.relative_to(root)} does not use project .venv Python")
+            problems.append(f"{rel} does not use expected .venv Python for {expected_root}")
         for match in absolute_python_re.findall(text):
-            if Path(match).resolve() != (root / ".venv" / "Scripts" / "python.exe").resolve():
-                problems.append(f"{path.relative_to(root)} contains non-project Python path {match}")
+            if not _path_equal(match, expected_venv):
+                problems.append(f"{rel} contains non-project Python path {match}")
         if "full_project" in lowered and ("run_daily_gaza.py" in lowered or "run_cascadia_and_notify.py" in lowered or "run_cascadia_dispatch.py" in lowered):
-            problems.append(f"{path.relative_to(root)} uses full_project validation profile for scheduled Gaza/Cascadia workflow")
+            problems.append(f"{rel} uses full_project validation profile for scheduled Gaza/Cascadia workflow")
     if not task_files:
         return _result("scheduled task .venv", True, "no scheduled task XML files found; scheduled task check skipped")
-    return _result("scheduled task .venv", not problems, "scheduled task templates use project .venv" if not problems else "; ".join(problems))
+    if problems:
+        return _result("scheduled task .venv", False, "; ".join(problems))
+    if reference_notes:
+        return _result(
+            "scheduled task .venv",
+            True,
+            "active scheduler templates use expected runner roots; reference templates skipped: "
+            + "; ".join(reference_notes),
+        )
+    return _result("scheduled task .venv", True, "active scheduler templates use expected runner roots")
 
 
 def check_no_public_detail_or_paid(root: Path) -> CheckResult:

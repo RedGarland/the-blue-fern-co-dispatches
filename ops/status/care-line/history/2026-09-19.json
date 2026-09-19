@@ -44,8 +44,8 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-09-19T17:15:07.400427Z",
-  "last_receipt_at": "2026-09-19T15:30:02.903339Z",
+  "last_exported_at": "2026-09-19T19:15:05.332341Z",
+  "last_receipt_at": "2026-09-19T19:00:02.177002Z",
   "latest_runtime_proof_date": "2026-09-19T15:00:04.004592Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
@@ -69,7 +69,7 @@
   "stale_observability": false,
   "task_summaries": [
     {
-      "artifact_id": "20260919T130001Z-30732.json",
+      "artifact_id": "20260919T190001Z-31612.json",
       "classification": "partial_success",
       "completed_at": "2026-09-19T01:03:09Z",
       "exit_code": 0,
@@ -97,7 +97,7 @@
       "task_key": "care_line_collection"
     },
     {
-      "artifact_id": "20260919T130001Z-30732.json",
+      "artifact_id": "20260919T190001Z-31612.json",
       "classification": "failure",
       "completed_at": "2026-09-19T13:00:03Z",
       "exit_code": 1,
@@ -163,6 +163,34 @@
       "started_at": "2026-09-19T15:30:02Z",
       "status": "FAILED",
       "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "20260919T190001Z-31612.json",
+      "classification": "failure",
+      "completed_at": "2026-09-19T19:00:02Z",
+      "exit_code": 1,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "bluesky_publication": false,
+        "edition_generation": false,
+        "map": false,
+        "pages_sync": false,
+        "podcast": false,
+        "proposal_approval": false,
+        "public_site_updates": false,
+        "release_manifest_generation": false,
+        "rss_publication": false,
+        "signal_wire_publication": false,
+        "social_cards": false
+      },
+      "publication_attempted": null,
+      "publication_status": null,
+      "run_id": "20260919T190001Z-31612",
+      "scheduled_for": "2026-09-19T19:00:02Z",
+      "started_at": "2026-09-19T19:00:02Z",
+      "status": "FAILED",
+      "task_key": "care_line_collection"
     }
   ]
 }

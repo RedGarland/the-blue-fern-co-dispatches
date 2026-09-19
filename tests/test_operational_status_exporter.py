@@ -14,6 +14,7 @@ from bluefern_dispatches.operational_health import (
 )
 from bluefern_dispatches.operational_status_exporter import (
     ExportError,
+    build_care_line_status,
     build_ice_status,
     build_food_line_status,
     commit_and_push_status,
@@ -118,6 +119,39 @@ def _write_care_day(tmp_path: Path, *, include_older_collection: bool = False) -
         )
         (receipt_root / f"{run_id}.json").write_text(json.dumps(receipt), encoding="utf-8")
     return source
+
+
+def _write_care_receipt(
+    source: Path,
+    *,
+    receipt_date: str,
+    task_key: str,
+    run_id: str,
+    task_status: str,
+    scheduled_for: str,
+    started_at: str,
+    completed_at: str,
+) -> None:
+    artifact = source / "status" / "care-line" / "scheduler-runs" / receipt_date / f"{run_id}.json"
+    artifact.parent.mkdir(parents=True, exist_ok=True)
+    artifact.write_text("{}\n", encoding="utf-8")
+    receipt = build_care_line_operational_receipt(
+        task_key=task_key,
+        scheduled_for=scheduled_for,
+        started_at=started_at,
+        completed_at=completed_at,
+        exit_code=0,
+        task_status=task_status,
+        run_id=run_id,
+        runner_path=r"C:\BlueFernRunner\CareLineNationalCurrent8",
+        branch="add/pages-repo-default",
+        source_head="6dd7e79411c11078dca4272075058c80ac8d2198",
+        artifact_refs={"task_receipt": str(artifact)},
+        public_side_effects={"pages_sync": False},
+    )
+    receipt_root = source / "status" / "operational-health" / "care-line" / receipt_date / "runs"
+    receipt_root.mkdir(parents=True, exist_ok=True)
+    (receipt_root / f"{run_id}.json").write_text(json.dumps(receipt), encoding="utf-8")
 
 
 def _write_ice_day(
@@ -431,6 +465,152 @@ def test_older_same_day_care_collection_does_not_make_latest_chain_stale(tmp_pat
     assert result["care_line"]["aggregate_status"] == "DEGRADED"
     assert result["care_line"]["stale_observability"] is False
     assert result["system"]["dispatches"]["care-line"]["stale_observability"] is False
+
+
+def test_care_local_evening_collection_finds_next_utc_date_receipt(tmp_path: Path) -> None:
+    care_source = tmp_path / "care-source"
+    _write_care_receipt(
+        care_source,
+        receipt_date="2026-09-19",
+        task_key="care_line_collection",
+        run_id="evening-collection",
+        task_status="partial_success",
+        scheduled_for="2026-09-19T01:00:01Z",
+        started_at="2026-09-19T01:00:01Z",
+        completed_at="2026-09-19T01:03:09Z",
+    )
+
+    status = build_care_line_status(
+        source_root=care_source,
+        date="2026-09-18",
+        evaluated_at="2026-09-19T04:00:00Z",
+        exported_at="2026-09-19T04:01:00Z",
+        expected_instances=[
+            {
+                "task_key": "care_line_collection",
+                "scheduled_for": "2026-09-19T01:00:00Z",
+                "schedule_source": "windows_task_scheduler",
+            }
+        ],
+    )
+
+    assert status["aggregate_status"] == "DEGRADED"
+    assert status["receipt_completeness"] == "PARTIAL"
+    assert status["task_summaries"][0]["run_id"] == "evening-collection"
+    assert status["task_summaries"][0]["scheduled_for"] == "2026-09-19T01:00:01Z"
+
+
+def test_care_morning_collection_same_utc_date_still_matches(tmp_path: Path) -> None:
+    care_source = tmp_path / "care-source"
+    _write_care_receipt(
+        care_source,
+        receipt_date="2026-09-18",
+        task_key="care_line_collection",
+        run_id="morning-collection",
+        task_status="partial_success",
+        scheduled_for="2026-09-18T13:00:02Z",
+        started_at="2026-09-18T13:00:02Z",
+        completed_at="2026-09-18T13:02:00Z",
+    )
+
+    status = build_care_line_status(
+        source_root=care_source,
+        date="2026-09-18",
+        evaluated_at="2026-09-18T16:00:00Z",
+        exported_at="2026-09-18T16:01:00Z",
+        expected_instances=[
+            {
+                "task_key": "care_line_collection",
+                "scheduled_for": "2026-09-18T13:00:00Z",
+                "schedule_source": "windows_task_scheduler",
+            }
+        ],
+    )
+
+    assert status["aggregate_status"] == "DEGRADED"
+    assert status["task_summaries"][0]["run_id"] == "morning-collection"
+
+
+def test_care_missing_due_instance_remains_missed(tmp_path: Path) -> None:
+    status = build_care_line_status(
+        source_root=tmp_path / "care-source",
+        date="2026-09-18",
+        evaluated_at="2026-09-19T04:00:00Z",
+        exported_at="2026-09-19T04:01:00Z",
+        expected_instances=[
+            {
+                "task_key": "care_line_collection",
+                "scheduled_for": "2026-09-19T01:00:00Z",
+                "schedule_source": "windows_task_scheduler",
+            }
+        ],
+    )
+
+    assert status["aggregate_status"] == "MISSED"
+    assert status["receipt_completeness"] == "NO_PROOF"
+    assert status["task_summaries"] == []
+
+
+def test_care_adjacent_collection_receipt_does_not_satisfy_wrong_instance(tmp_path: Path) -> None:
+    care_source = tmp_path / "care-source"
+    _write_care_receipt(
+        care_source,
+        receipt_date="2026-09-18",
+        task_key="care_line_collection",
+        run_id="noon-collection",
+        task_status="partial_success",
+        scheduled_for="2026-09-18T19:00:00Z",
+        started_at="2026-09-18T19:00:00Z",
+        completed_at="2026-09-18T19:03:00Z",
+    )
+
+    status = build_care_line_status(
+        source_root=care_source,
+        date="2026-09-18",
+        evaluated_at="2026-09-19T04:00:00Z",
+        exported_at="2026-09-19T04:01:00Z",
+        expected_instances=[
+            {
+                "task_key": "care_line_collection",
+                "scheduled_for": "2026-09-19T01:00:00Z",
+                "schedule_source": "windows_task_scheduler",
+            }
+        ],
+    )
+
+    assert status["aggregate_status"] == "MISSED"
+    assert status["task_summaries"][0]["run_id"] == "noon-collection"
+
+
+def test_care_dst_fall_back_evening_receipt_uses_absolute_instant(tmp_path: Path) -> None:
+    care_source = tmp_path / "care-source"
+    _write_care_receipt(
+        care_source,
+        receipt_date="2026-11-02",
+        task_key="care_line_collection",
+        run_id="dst-evening-collection",
+        task_status="partial_success",
+        scheduled_for="2026-11-02T02:00:01Z",
+        started_at="2026-11-02T02:00:01Z",
+        completed_at="2026-11-02T02:04:00Z",
+    )
+
+    status = build_care_line_status(
+        source_root=care_source,
+        date="2026-11-01",
+        evaluated_at="2026-11-02T05:00:00Z",
+        exported_at="2026-11-02T05:01:00Z",
+        expected_instances=[
+            {
+                "task_key": "care_line_collection",
+                "scheduled_for": "2026-11-02T02:00:00Z",
+                "schedule_source": "windows_task_scheduler",
+            }
+        ],
+    )
+
+    assert status["aggregate_status"] == "DEGRADED"
+    assert status["task_summaries"][0]["run_id"] == "dst-evening-collection"
 
 
 def test_omitting_care_source_root_does_not_fabricate_authoritative_care_status(tmp_path: Path) -> None:

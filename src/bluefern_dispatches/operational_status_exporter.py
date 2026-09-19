@@ -120,16 +120,50 @@ def load_food_line_receipts(source_root: Path, date: str) -> list[dict[str, Any]
 
 
 def load_care_line_receipts(source_root: Path, date: str) -> list[dict[str, Any]]:
+    return load_care_line_receipts_for_dates(source_root, [date])
+
+
+def _care_receipt_dates_for_expected_instances(
+    date: str,
+    expected_instances: Iterable[dict[str, Any]] | None,
+) -> list[str]:
+    dates = {date}
+    grace_by_task = {item.task_key: item.grace_minutes for item in CARE_LINE_TASK_EXPECTATIONS}
+    for instance in expected_instances or []:
+        scheduled = parse_timestamp(str(instance.get("scheduled_for") or ""))
+        if scheduled is None:
+            continue
+        if scheduled.tzinfo is None:
+            scheduled = scheduled.replace(tzinfo=timezone.utc)
+        task_key = str(instance.get("task_key") or "")
+        grace_minutes = grace_by_task.get(task_key, 0)
+        # Keep this coupled to the matching window used by
+        # _receipt_matches_expected_instance in operational_health.py.
+        lower = scheduled - timedelta(minutes=5)
+        upper = scheduled + timedelta(minutes=grace_minutes)
+        dates.add(lower.astimezone(timezone.utc).date().isoformat())
+        dates.add(scheduled.astimezone(timezone.utc).date().isoformat())
+        dates.add(upper.astimezone(timezone.utc).date().isoformat())
+    return sorted(dates)
+
+
+def load_care_line_receipts_for_dates(source_root: Path, dates: Iterable[str]) -> list[dict[str, Any]]:
     receipts = []
-    for path in _receipt_paths(source_root, "care-line", date):
-        receipt = _parse_json(path)
-        try:
-            validate_operational_receipt(receipt)
-        except ValueError as exc:
-            raise ExportError(f"invalid operational receipt {path.name}: {exc}") from exc
-        if receipt.get("dispatch") != "care-line":
-            raise ExportError(f"receipt dispatch mismatch: {path.name}")
-        receipts.append(receipt)
+    seen: set[Path] = set()
+    for date in sorted(set(dates)):
+        for path in _receipt_paths(source_root, "care-line", date):
+            resolved = path.resolve()
+            if resolved in seen:
+                continue
+            seen.add(resolved)
+            receipt = _parse_json(path)
+            try:
+                validate_operational_receipt(receipt)
+            except ValueError as exc:
+                raise ExportError(f"invalid operational receipt {path.name}: {exc}") from exc
+            if receipt.get("dispatch") != "care-line":
+                raise ExportError(f"receipt dispatch mismatch: {path.name}")
+            receipts.append(receipt)
     receipts.sort(key=lambda item: _handoff_time(item) or datetime.min.replace(tzinfo=timezone.utc))
     return receipts
 
@@ -455,7 +489,8 @@ def build_care_line_status(
     expected_instances: Iterable[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     instance_rows = list(expected_instances) if expected_instances is not None else None
-    receipts = load_care_line_receipts(source_root, date)
+    receipt_dates = _care_receipt_dates_for_expected_instances(date, instance_rows)
+    receipts = load_care_line_receipts_for_dates(source_root, receipt_dates)
     completeness, linkage = receipt_completeness(
         receipts, source_root=source_root, expectations=CARE_LINE_TASK_EXPECTATIONS
     )
@@ -466,7 +501,7 @@ def build_care_line_status(
         evaluated_at=evaluated_at,
         expected_instances=instance_rows,
         recovery=recovery,
-    ) if receipts else {
+    ) if receipts or instance_rows is not None else {
         "overall_health": OperationalStatus.UNKNOWN.value,
         "recovery_state": RecoveryState.HEALTHY.value,
         "expected_tasks": [item.task_key for item in CARE_LINE_TASK_EXPECTATIONS],
@@ -474,7 +509,11 @@ def build_care_line_status(
         "degraded_tasks": [], "upstream_blocked_tasks": [],
         "stale_observability": [], "latest_success_at": None,
     }
-    aggregate_status = aggregate["overall_health"] if receipts else OperationalStatus.UNKNOWN.value
+    aggregate_status = (
+        aggregate["overall_health"]
+        if receipts or aggregate.get("missed_tasks")
+        else OperationalStatus.UNKNOWN.value
+    )
     source_heads = {_safe_head(receipt.get("source_head")) for receipt in receipts}
     source_heads.discard(None)
     publication_attempted = any(receipt.get("publication_attempted") is True for receipt in receipts)

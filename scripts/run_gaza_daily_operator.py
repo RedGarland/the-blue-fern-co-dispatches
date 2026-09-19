@@ -482,6 +482,7 @@ def _daily_args(
 
 def _no_update_pages_publish_args(
     *,
+    edition_date: str,
     pages_repo: Path,
     pages_branch: str,
     remote_url: str,
@@ -497,6 +498,10 @@ def _no_update_pages_publish_args(
         pages_branch,
         "--only-dispatch",
         "gaza",
+        "--artifact-family",
+        "no-update",
+        "--expect-date",
+        edition_date,
     ]
     if dry_run:
         args.append("--dry-run")
@@ -870,6 +875,7 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
             result["next_action"] = "No dispatch was published because no new source-backed Gaza update qualified."
             if summary.get("no_update_status_written") is True:
                 publish_args = _no_update_pages_publish_args(
+                    edition_date=args.date,
                     pages_repo=pages_repo,
                     pages_branch=args.pages_branch,
                     remote_url=args.remote_url,

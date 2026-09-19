@@ -139,6 +139,65 @@ def test_bluesky_requires_explicit_allow_flag() -> None:
     assert any("--allow-bluesky" in error for error in errors)
 
 
+def test_gaza_no_update_scope_allows_only_status_landing_and_archive() -> None:
+    module = _load_validator_module()
+    errors = module.validate_publish_scope(
+        dispatch="gaza",
+        date_text="2026-09-19",
+        source_artifact_family="no-update",
+        source_changed_paths=[
+            "output/site/gaza/index.html",
+            "output/site/gaza/archive.html",
+            "output/site/gaza/status/no-updates/2026-09-19.json",
+        ],
+        pages_changed_paths=[
+            "gaza/index.html",
+            "gaza/archive.html",
+            "gaza/status/no-updates/2026-09-19.json",
+        ],
+    )
+    assert errors == []
+
+
+def test_gaza_no_update_scope_rejects_audio_rss_editions_and_other_dispatches() -> None:
+    module = _load_validator_module()
+    errors = module.validate_publish_scope(
+        dispatch="gaza",
+        date_text="2026-09-19",
+        source_artifact_family="no-update",
+        source_changed_paths=[
+            "output/site/gaza/audio/index.html",
+            "output/site/gaza/podcast.xml",
+            "output/site/gaza/rss.xml",
+            "output/site/gaza/editions/2026-09-19/index.html",
+            "output/site/food-line/index.html",
+        ],
+        pages_changed_paths=[
+            "gaza/audio/podcast.xml",
+            "gaza/podcast.xml",
+            "gaza/rss.xml",
+            "gaza/editions/2026-09-19/index.html",
+            "food-line/index.html",
+        ],
+    )
+    assert any("--allow-audio" in error for error in errors)
+    assert any("gaza/rss.xml" in error for error in errors)
+    assert any("gaza/editions/2026-09-19/index.html" in error for error in errors)
+    assert any("food-line/index.html" in error for error in errors)
+
+
+def test_gaza_no_update_scope_rejects_wrong_date_status() -> None:
+    module = _load_validator_module()
+    errors = module.validate_publish_scope(
+        dispatch="gaza",
+        date_text="2026-09-19",
+        source_artifact_family="no-update",
+        source_changed_paths=["output/site/gaza/status/no-updates/2026-09-18.json"],
+        pages_changed_paths=["gaza/status/no-updates/2026-09-18.json"],
+    )
+    assert any("2026-09-18.json" in error for error in errors)
+
+
 def test_invalid_date_argument_fails(capsys) -> None:
     module = _load_validator_module()
     exit_code = module.main(["--dispatch", "food-line", "--date", "2026-13-40"])

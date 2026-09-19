@@ -138,6 +138,254 @@ def release_repos(tmp_path: Path) -> tuple[Path, Path]:
     return source, pages
 
 
+def _write_gaza_no_update_site(source: Path, date_text: str = "2026-09-19") -> None:
+    site = source / "output" / "site"
+    gaza = site / "gaza"
+    status = gaza / "status" / "no-updates"
+    audio = gaza / "audio"
+    edition = gaza / "editions" / date_text
+    status.mkdir(parents=True, exist_ok=True)
+    audio.mkdir(parents=True, exist_ok=True)
+    edition.mkdir(parents=True, exist_ok=True)
+    (site / "index.html").write_text("<html>Site</html>", encoding="utf-8")
+    (gaza / "index.html").write_text(
+        '<html><ul class="edition-list"><li><a href="editions/2026-09-18/">Sep. 18</a></li><li><a href="editions/2026-09-17/">Sep. 17</a></li><li><a href="editions/2026-09-16/">Sep. 16</a></li></ul><p>September 19, 2026 - No new source-backed Gaza update met publication threshold today.</p></html>',
+        encoding="utf-8",
+    )
+    (gaza / "archive.html").write_text(
+        '<html><a href="editions/2026-09-18/">Sep. 18 edition</a><a href="editions/2026-09-17/">Sep. 17 edition</a><a href="editions/2026-09-16/">Sep. 16 edition</a><a href="status/no-updates/2026-09-19.json">Sep. 19 no update</a></html>',
+        encoding="utf-8",
+    )
+    (gaza / "rss.xml").write_text("<rss><channel></channel></rss>", encoding="utf-8")
+    (audio / "index.html").write_text('<span class="gaza-audio-index-date"><strong>2026-06-20</strong></span>', encoding="utf-8")
+    (audio / "podcast.xml").write_text('<rss><link>/gaza/audio/2026-06-20-transcript.html</link></rss>', encoding="utf-8")
+    (gaza / "podcast.xml").write_text('<rss><link>/gaza/audio/2026-06-20-transcript.html</link></rss>', encoding="utf-8")
+    (edition / "index.html").write_text("<html>must not copy</html>", encoding="utf-8")
+    (status / f"{date_text}.json").write_text(
+        json.dumps(
+            {
+                "date": date_text,
+                "classification": "no_publication_needed",
+                "message": "No new source-backed Gaza update met publication threshold today.",
+                "source_count": 4,
+                "public_story_count": 0,
+                "run_completed_successfully": True,
+                "run_manifest_path": f"data/dispatches/gaza/editions/{date_text}/run_manifest.json",
+                "collection_report_path": f"data/dispatches/gaza/editions/{date_text}/collection_report.json",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+
+def _write_gaza_pages_history(pages: Path) -> None:
+    gaza = pages / "gaza"
+    audio = gaza / "audio"
+    audio.mkdir(parents=True, exist_ok=True)
+    for date_text in ("2026-09-18", "2026-09-17", "2026-09-16"):
+        edition = gaza / "editions" / date_text
+        edition.mkdir(parents=True, exist_ok=True)
+        (edition / "index.html").write_text(f"<html>{date_text}</html>", encoding="utf-8")
+    (gaza / "index.html").write_text('<html><ul class="edition-list"><li><a href="editions/2026-09-18/">Sep. 18</a></li><li><a href="editions/2026-09-17/">Sep. 17</a></li><li><a href="editions/2026-09-16/">Sep. 16</a></li></ul></html>', encoding="utf-8")
+    (gaza / "archive.html").write_text('<html><a href="editions/2026-09-18/">Sep. 18</a><a href="editions/2026-09-17/">Sep. 17</a><a href="editions/2026-09-16/">Sep. 16</a></html>', encoding="utf-8")
+    (gaza / "rss.xml").write_text("<rss><channel></channel></rss>", encoding="utf-8")
+    (audio / "index.html").write_text('<span class="gaza-audio-index-date"><strong>2026-09-18</strong></span><span class="gaza-audio-index-date"><strong>2026-06-20</strong></span>', encoding="utf-8")
+    (audio / "podcast.xml").write_text('<rss><link>/gaza/audio/2026-09-18-transcript.html</link><link>/gaza/audio/2026-06-20-transcript.html</link></rss>', encoding="utf-8")
+    (gaza / "podcast.xml").write_text('<rss><link>/gaza/audio/2026-09-18-transcript.html</link><link>/gaza/audio/2026-06-20-transcript.html</link></rss>', encoding="utf-8")
+    _commit_repo(pages, "published gaza history")
+
+
+def _stub_gaza_build(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        generator,
+        "build_site",
+        lambda *_args, **_kwargs: {
+            "ok": True,
+            "errors": [],
+            "warnings": [],
+            "public_urls": [],
+            "gaza_editions_discovered": [],
+            "gaza_archive_entries_written": [],
+            "gaza_editions_skipped": [],
+            "backfilled_public_editions": [],
+        },
+    )
+
+
+def _rel_pages_paths(paths: list[str], pages: Path) -> list[str]:
+    return sorted(Path(path).relative_to(pages).as_posix() for path in paths)
+
+
+def test_gaza_no_update_scope_dry_run_copies_exact_status_files(release_repos: tuple[Path, Path], monkeypatch: pytest.MonkeyPatch) -> None:
+    source, pages = release_repos
+    _write_gaza_no_update_site(source)
+    _write_gaza_pages_history(pages)
+    _stub_gaza_build(monkeypatch)
+
+    report = generator.publish_pages(
+        source,
+        pages,
+        remote_url=None,
+        dry_run=True,
+        commit=True,
+        no_push=True,
+        only_dispatches=("gaza",),
+        artifact_family="no-update",
+        expect_date="2026-09-19",
+    )
+
+    assert report["ok"] is True
+    assert _rel_pages_paths(report["files_that_would_be_copied"], pages) == [
+        "gaza/archive.html",
+        "gaza/index.html",
+        "gaza/status/no-updates/2026-09-19.json",
+    ]
+    assert not (pages / "gaza/status/no-updates/2026-09-19.json").exists()
+    assert "2026-09-18" in (pages / "gaza/audio/index.html").read_text(encoding="utf-8")
+    assert all("gaza/rss.xml" not in path for path in report["files_that_would_be_copied"])
+    assert all("/audio/" not in path.replace("\\", "/") for path in report["files_that_would_be_copied"])
+    assert all("/editions/" not in path.replace("\\", "/") for path in report["files_that_would_be_copied"])
+
+
+def test_gaza_no_update_scope_local_commit_changes_only_intended_pages_files(release_repos: tuple[Path, Path], monkeypatch: pytest.MonkeyPatch) -> None:
+    source, pages = release_repos
+    _write_gaza_no_update_site(source)
+    _write_gaza_pages_history(pages)
+    _stub_gaza_build(monkeypatch)
+
+    report = generator.publish_pages(
+        source,
+        pages,
+        remote_url=None,
+        dry_run=False,
+        commit=True,
+        no_push=True,
+        only_dispatches=("gaza",),
+        artifact_family="no-update",
+        expect_date="2026-09-19",
+    )
+
+    assert report["ok"] is True
+    assert report["committed"] is True
+    assert report["would_push"] is False
+    assert _rel_pages_paths(report["files_copied"], pages) == [
+        "gaza/archive.html",
+        "gaza/index.html",
+        "gaza/status/no-updates/2026-09-19.json",
+    ]
+    assert not (pages / "gaza/editions/2026-09-19/index.html").exists()
+    assert "2026-09-18" in (pages / "gaza/audio/index.html").read_text(encoding="utf-8")
+    assert "2026-09-18" in (pages / "gaza/podcast.xml").read_text(encoding="utf-8")
+
+
+def test_gaza_no_update_scope_does_not_run_unrelated_pages_cleanup(release_repos: tuple[Path, Path], monkeypatch: pytest.MonkeyPatch) -> None:
+    source, pages = release_repos
+    _write_gaza_no_update_site(source)
+    _write_gaza_pages_history(pages)
+    nested_duplicate = pages / "gaza" / "gaza" / "index.html"
+    nested_duplicate.parent.mkdir(parents=True, exist_ok=True)
+    nested_duplicate.write_text("preexisting unrelated artifact", encoding="utf-8")
+    _commit_repo(pages, "preexisting nested duplicate")
+    _stub_gaza_build(monkeypatch)
+
+    report = generator.publish_pages(
+        source,
+        pages,
+        remote_url=None,
+        dry_run=False,
+        commit=True,
+        no_push=True,
+        only_dispatches=("gaza",),
+        artifact_family="no-update",
+        expect_date="2026-09-19",
+    )
+
+    assert report["ok"] is True
+    assert nested_duplicate.exists()
+    assert report["nested_duplicate_dispatch_paths_removed"] == []
+
+
+def test_gaza_no_update_scope_rejects_wrong_or_missing_status_json(release_repos: tuple[Path, Path], monkeypatch: pytest.MonkeyPatch) -> None:
+    source, pages = release_repos
+    _write_gaza_no_update_site(source)
+    _write_gaza_pages_history(pages)
+    _stub_gaza_build(monkeypatch)
+    status = source / "output/site/gaza/status/no-updates/2026-09-19.json"
+    payload = json.loads(status.read_text(encoding="utf-8"))
+    payload["date"] = "2026-09-18"
+    status.write_text(json.dumps(payload), encoding="utf-8")
+
+    wrong_date = generator.publish_pages(
+        source,
+        pages,
+        remote_url=None,
+        dry_run=True,
+        commit=False,
+        no_push=True,
+        only_dispatches=("gaza",),
+        artifact_family="no-update",
+        expect_date="2026-09-19",
+    )
+    assert wrong_date["ok"] is False
+    assert any("date mismatch" in error for error in wrong_date["errors"])
+
+    status.unlink()
+    missing = generator.publish_pages(
+        source,
+        pages,
+        remote_url=None,
+        dry_run=True,
+        commit=False,
+        no_push=True,
+        only_dispatches=("gaza",),
+        artifact_family="no-update",
+        expect_date="2026-09-19",
+    )
+    assert missing["ok"] is False
+    assert any("required Gaza no-update publish artifact is missing" in error for error in missing["errors"])
+
+
+def test_gaza_no_update_copy_scope_rejects_unrelated_files(release_repos: tuple[Path, Path]) -> None:
+    _source, pages = release_repos
+
+    errors = generator.validate_pages_repo_copy_scope(
+        pages,
+        ("gaza",),
+        changed_paths=[
+            "gaza/index.html",
+            "gaza/archive.html",
+            "gaza/status/no-updates/2026-09-19.json",
+            "gaza/rss.xml",
+            "food-line/index.html",
+        ],
+        artifact_family="no-update",
+        expect_date="2026-09-19",
+    )
+
+    assert any("gaza/rss.xml" in error for error in errors)
+    assert any("food-line/index.html" in error for error in errors)
+
+
+def test_normal_gaza_publish_still_enforces_audio_history_shrink(release_repos: tuple[Path, Path], monkeypatch: pytest.MonkeyPatch) -> None:
+    source, pages = release_repos
+    _write_gaza_no_update_site(source)
+    _write_gaza_pages_history(pages)
+    _stub_gaza_build(monkeypatch)
+
+    report = generator.publish_pages(
+        source,
+        pages,
+        remote_url=None,
+        dry_run=True,
+        commit=False,
+        no_push=True,
+        only_dispatches=("gaza",),
+    )
+
+    assert report["ok"] is False
+    assert any("gaza public history shrink detected for gaza/audio/index.html" in error for error in report["errors"])
+
+
 def test_dry_run_reports_planned_paths_for_food_line_dates(release_repos: tuple[Path, Path]) -> None:
     source, pages = release_repos
     _write_food_line_site(source, ["2026-06-19", "2026-06-20"])

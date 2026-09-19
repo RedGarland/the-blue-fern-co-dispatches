@@ -137,7 +137,7 @@ SITEWIDE_PAGES_PREFIXES = (
 
 DATE_DIR_RE = r"(?:editions|review|sources)/(?P<date>\d{4}-\d{2}-\d{2})(?:/|$)"
 AUDIO_DATE_RE = r"audio/(?P<date>\d{4}-\d{2}-\d{2})(?:-v\d+)?(?:-transcript)?\.(?:html|json|mp3)$"
-SOURCE_ARTIFACT_FAMILIES = ("source-based-retrospective", "dispatch-archive")
+SOURCE_ARTIFACT_FAMILIES = ("source-based-retrospective", "dispatch-archive", "no-update")
 
 
 def _sha256_bytes(data: bytes) -> str:
@@ -727,6 +727,47 @@ def _validate_dispatch_archive_scope(
     return errors
 
 
+def _validate_no_update_scope(
+    *,
+    paths: Sequence[str],
+    dispatch: str,
+    declared_date: dt.date | None,
+    context: str,
+    allow_audio: bool,
+    allow_map: bool,
+    allow_bluesky: bool,
+) -> list[str]:
+    errors: list[str] = []
+    if dispatch != "gaza":
+        return ["no-update publish scope is supported only for gaza"]
+    if declared_date is None:
+        return ["--date is required for no-update scope"]
+    date_text = declared_date.isoformat()
+    allowed = {
+        f"output/site/gaza/status/no-updates/{date_text}.json",
+        "output/site/gaza/index.html",
+        "output/site/gaza/archive.html",
+    }
+    if not context.startswith("source"):
+        allowed = {
+            f"gaza/status/no-updates/{date_text}.json",
+            "gaza/index.html",
+            "gaza/archive.html",
+        }
+    for raw_path in paths:
+        path = _normalize_path(raw_path)
+        audio, map_artifact, bluesky = _classify_path(path)
+        if audio and not allow_audio:
+            errors.append(f"{context} path uses audio/transcript/podcast artifacts without --allow-audio: {path}")
+        if map_artifact and not allow_map:
+            errors.append(f"{context} path uses map artifacts without --allow-map: {path}")
+        if bluesky and not allow_bluesky:
+            errors.append(f"{context} path uses Bluesky artifacts without --allow-bluesky: {path}")
+        if path not in allowed:
+            errors.append(f"{context} path is outside the exact Gaza no-update scope: {path}")
+    return errors
+
+
 def validate_publish_scope(
     *,
     dispatch: str,
@@ -760,6 +801,7 @@ def validate_publish_scope(
 
     is_source_based_retrospective = source_artifact_family == "source-based-retrospective"
     is_dispatch_archive = source_artifact_family == "dispatch-archive"
+    is_no_update = source_artifact_family == "no-update"
 
     if dispatch != "sitewide" and declared_date is None and not is_source_based_retrospective and not is_dispatch_archive:
         errors.append("--date is required for dated dispatch scopes unless --dispatch sitewide is used.")
@@ -826,6 +868,18 @@ def validate_publish_scope(
                 allow_bluesky=allow_bluesky,
             )
         )
+    elif is_no_update:
+        errors.extend(
+            _validate_no_update_scope(
+                paths=source_changed_paths,
+                dispatch=dispatch,
+                declared_date=declared_date,
+                context="source repo",
+                allow_audio=allow_audio,
+                allow_map=allow_map,
+                allow_bluesky=allow_bluesky,
+            )
+        )
     else:
         errors.extend(
             _validate_paths(
@@ -857,6 +911,18 @@ def validate_publish_scope(
                 _validate_dispatch_archive_scope(
                     paths=pages_changed_paths or (),
                     dispatch=dispatch,
+                    context="Pages repo",
+                    allow_audio=allow_audio,
+                    allow_map=allow_map,
+                    allow_bluesky=allow_bluesky,
+                )
+            )
+        elif is_no_update:
+            errors.extend(
+                _validate_no_update_scope(
+                    paths=pages_changed_paths or (),
+                    dispatch=dispatch,
+                    declared_date=declared_date,
                     context="Pages repo",
                     allow_audio=allow_audio,
                     allow_map=allow_map,

@@ -352,7 +352,8 @@ def test_no_substantive_ground_refusal_is_success_with_publication_flags_and_pre
     publish_command = publish_commands[0]
     assert "--only-dispatch" in publish_command
     assert "gaza" in publish_command
-    assert "--expect-date" not in publish_command
+    assert publish_command[publish_command.index("--artifact-family") + 1] == "no-update"
+    assert publish_command[publish_command.index("--expect-date") + 1] == "2026-08-31"
     assert "--expect-dispatch" not in publish_command
     assert "--commit" in publish_command
     assert "--no-push" in publish_command

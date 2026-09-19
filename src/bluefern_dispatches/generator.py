@@ -63,6 +63,7 @@ DETAIL_ROOT_NAMES = {"detail", "paid"}
 CNAME_VALUE = "dispatches.thebluefernco.com"
 PUBLISH_COMMIT_MESSAGE = "Publish Blue Fern dispatches site"
 DEFAULT_PAGES_BRANCH = "gh-pages"
+PUBLISH_ARTIFACT_FAMILIES = ("no-update",)
 ROOT_MASTHEAD_ASSET = "dispatches-from-blue-fern-co.png"
 CASCADIA_LOGO_ASSET = "cascadia-logo-placeholder.png"
 FAVICON_ASSETS = ["favicon.ico", "favicon-32x32.png", "favicon-16x16.png", "apple-touch-icon.png"]
@@ -103,6 +104,7 @@ GAZA_HISTORICAL_CATCHUP_ID_RE = re.compile(r"gaza-historical-catchup-[a-z0-9][a-
 GAZA_PUBLIC_HISTORY_CATCHUP_RE = re.compile(
     r"(?:(?:https://dispatches\.thebluefernco\.com)?/gaza/)?catchups/(gaza-historical-catchup-[a-z0-9][a-z0-9-]{2,80})/"
 )
+GAZA_NO_UPDATE_STATUS_RE = re.compile(r"gaza/status/no-updates/(\d{4}-\d{2}-\d{2})\.json$")
 GAZA_HISTORICAL_CATCHUP_REQUIRED_FILES = (
     "index.html",
     "edition_manifest.json",
@@ -3383,14 +3385,60 @@ def is_relative_to(path: Path, parent: Path) -> bool:
     return True
 
 
+def _gaza_no_update_publish_source_files(site_root: Path, expect_date: str | None) -> tuple[list[Path], list[str]]:
+    errors: list[str] = []
+    if not expect_date or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(expect_date)):
+        return [], ["--expect-date YYYY-MM-DD is required for Gaza no-update publishing"]
+    required_rel_paths = [
+        Path("gaza/index.html"),
+        Path("gaza/archive.html"),
+        Path("gaza/status/no-updates") / f"{expect_date}.json",
+    ]
+    source_paths = [site_root / rel_path for rel_path in required_rel_paths]
+    for source in source_paths:
+        if not source.exists() or not source.is_file():
+            errors.append(f"required Gaza no-update publish artifact is missing: {source}")
+    status_path = source_paths[-1]
+    if status_path.exists() and status_path.is_file():
+        try:
+            payload = json.loads(status_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            errors.append(f"Gaza no-update status JSON is unreadable: {status_path}: {exc}")
+        else:
+            if not isinstance(payload, dict):
+                errors.append(f"Gaza no-update status JSON must be an object: {status_path}")
+            else:
+                if payload.get("date") != expect_date:
+                    errors.append(
+                        f"Gaza no-update status date mismatch: expected {expect_date}; "
+                        f"found {payload.get('date')!r}"
+                    )
+                if payload.get("classification") != GAZA_NO_UPDATE_CLASSIFICATION:
+                    errors.append("Gaza no-update status classification is not a public no-update outcome")
+                if payload.get("public_story_count") not in (0, "0"):
+                    errors.append("Gaza no-update status must have public_story_count=0")
+                if payload.get("run_completed_successfully") is not True:
+                    errors.append("Gaza no-update status must prove the daily run completed successfully")
+                if not str(payload.get("run_manifest_path") or "").strip():
+                    errors.append("Gaza no-update status is missing run_manifest_path")
+                if not str(payload.get("collection_report_path") or "").strip():
+                    errors.append("Gaza no-update status is missing collection_report_path")
+    return source_paths if not errors else [], errors
+
+
 def collect_public_site_files(
     site_root: Path,
     only_dispatches: tuple[str, ...] = (),
     public_max_dates: dict[str, str] | None = None,
     skip_diagnostics: list[dict[str, Any]] | None = None,
+    artifact_family: str | None = None,
+    expect_date: str | None = None,
 ) -> list[Path]:
     if not site_root.exists():
         return []
+    if artifact_family == "no-update":
+        files, errors = _gaza_no_update_publish_source_files(site_root, expect_date)
+        return [] if errors else sorted(files)
     files = []
     food_line_reported: set[str] = set()
     gaza_only_publish = tuple(only_dispatches) == ("gaza",)
@@ -3426,6 +3474,7 @@ def validate_pages_publish(
     expect_date: str | None = None,
     expect_dispatches: tuple[str, ...] = (),
     only_dispatches: tuple[str, ...] = (),
+    artifact_family: str | None = None,
 ) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -3447,7 +3496,7 @@ def validate_pages_publish(
         errors.append("pages repo path must not be inside output/site")
     if not (site_root / "index.html").exists() and not planning_mode:
         errors.append(f"public site index does not exist: {site_root / 'index.html'}")
-    dispatches_to_check = _expected_dispatches_for_date_checks(expect_date, expect_dispatches, only_dispatches)
+    dispatches_to_check = () if artifact_family == "no-update" else _expected_dispatches_for_date_checks(expect_date, expect_dispatches, only_dispatches)
     if ((not only_dispatches) or ("gaza" in only_dispatches)) and not planning_mode:
         if not (site_root / "gaza" / "archive.html").exists():
             errors.append(f"Gaza archive does not exist: {site_root / 'gaza' / 'archive.html'}")
@@ -3498,6 +3547,7 @@ def copy_public_site_to_pages(
     skip_diagnostics: list[dict[str, Any]] | None = None,
     exclude_shared_release_surfaces: bool = False,
     expect_date: str | None = None,
+    artifact_family: str | None = None,
 ) -> tuple[list[str], list[str]]:
     copied: list[str] = []
     skipped = [
@@ -3518,6 +3568,8 @@ def copy_public_site_to_pages(
         only_dispatches=only_dispatches,
         public_max_dates=public_max_dates,
         skip_diagnostics=skip_diagnostics,
+        artifact_family=artifact_family,
+        expect_date=expect_date,
     ):
         target = pages_repo / source.relative_to(site_root)
         relative = source.relative_to(site_root).as_posix()
@@ -4165,6 +4217,8 @@ def validate_pages_repo_copy_scope(
     *,
     allowed_shared_surface_changes: Sequence[str | Path] = (),
     enforce_shared_surface_authorization: bool = True,
+    artifact_family: str | None = None,
+    expect_date: str | None = None,
 ) -> list[str]:
     errors: list[str] = []
     pages_repo = pages_repo.resolve()
@@ -4183,6 +4237,18 @@ def validate_pages_repo_copy_scope(
             "invalid shared release-surface authorization: " + ", ".join(sorted(invalid_shared_surfaces))
         )
     allowed_shared_surfaces = requested_shared_surfaces & sanctioned_shared_surfaces
+    no_update_allowed_paths: set[str] = set()
+    if artifact_family == "no-update":
+        if tuple(only_dispatches) != ("gaza",):
+            errors.append("Gaza no-update publish scope requires --only-dispatch gaza")
+        if not expect_date or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(expect_date)):
+            errors.append("Gaza no-update publish scope requires --expect-date YYYY-MM-DD")
+        else:
+            no_update_allowed_paths = {
+                "gaza/index.html",
+                "gaza/archive.html",
+                f"gaza/status/no-updates/{expect_date}.json",
+            }
     for raw_path in changed_paths:
         candidate = Path(raw_path)
         if candidate.is_absolute():
@@ -4193,6 +4259,10 @@ def validate_pages_repo_copy_scope(
         rel_path = Path(str(candidate).replace("\\", "/"))
         top_level = rel_path.parts[0] if rel_path.parts else ""
         rel_text = rel_path.as_posix()
+        if artifact_family == "no-update":
+            if rel_text not in no_update_allowed_paths:
+                errors.append(f"gaza_no_update_publish_scope_violation: unexpected publish changes in {rel_text}")
+            continue
         if rel_text in allowed_shared_surfaces:
             continue
         if top_level == "dispatches":
@@ -4376,11 +4446,28 @@ def publish_pages(
     only_dispatches: tuple[str, ...] = (),
     allow_listing_shrink: bool = False,
     shared_homepage_dispatch: str | None = None,
+    artifact_family: str | None = None,
 ) -> dict[str, Any]:
     pages_repo = pages_repo.resolve()
     lightweight_git = _pages_repo_is_fake_worktree(pages_repo)
     public_max_dates: dict[str, str] = {}
     dispatch_seed_dates: dict[str, str] = {}
+    no_update_publish = artifact_family == "no-update"
+    if artifact_family is not None and artifact_family not in PUBLISH_ARTIFACT_FAMILIES:
+        return {
+            "ok": False,
+            "errors": [f"unsupported artifact family: {artifact_family}"],
+            "warnings": [],
+            "artifact_family": artifact_family,
+        }
+    artifact_family_errors: list[str] = []
+    if no_update_publish:
+        if tuple(only_dispatches) != ("gaza",):
+            artifact_family_errors.append("Gaza no-update publishing requires --only-dispatch gaza")
+        if expect_dispatches:
+            artifact_family_errors.append("Gaza no-update publishing must not declare a normal expected edition")
+        if not expect_date:
+            artifact_family_errors.append("Gaza no-update publishing requires --expect-date")
     gaza_targeted = "gaza" in only_dispatches or "gaza" in expect_dispatches
     if expect_date and gaza_targeted:
         public_max_dates["gaza"] = expect_date
@@ -4403,7 +4490,7 @@ def publish_pages(
         existing_care_line_dates = discover_public_edition_dates(root / "output" / "site", CARE_LINE_DISPATCH_SLUG)
         if existing_care_line_dates:
             dispatch_seed_dates["care-line"] = max(existing_care_line_dates)
-    removed_nested_duplicate_paths = remove_nested_duplicate_dispatch_paths(root / "output" / "site", dry_run)
+    removed_nested_duplicate_paths = [] if no_update_publish else remove_nested_duplicate_dispatch_paths(root / "output" / "site", dry_run)
     build = build_site(
         root,
         dry_run=dry_run,
@@ -4416,6 +4503,7 @@ def publish_pages(
     root = root.resolve()
     site_root = root / "output" / "site"
     errors = list(build["errors"])
+    errors.extend(artifact_family_errors)
     validation_errors, validation_warnings = validate_pages_publish(
         root,
         site_root,
@@ -4424,18 +4512,23 @@ def publish_pages(
         expect_date=expect_date,
         expect_dispatches=expect_dispatches,
         only_dispatches=only_dispatches,
+        artifact_family=artifact_family,
     )
     errors.extend(validation_errors)
-    dispatches_to_check = _expected_dispatches_for_date_checks(expect_date, expect_dispatches, only_dispatches)
-    errors.extend(
-        _validate_build_public_urls_expected_date(
-            build,
-            expect_date,
-            dispatches_to_check,
-            only_dispatches,
-            site_root=site_root,
+    dispatches_to_check = () if no_update_publish else _expected_dispatches_for_date_checks(expect_date, expect_dispatches, only_dispatches)
+    if not no_update_publish:
+        errors.extend(
+            _validate_build_public_urls_expected_date(
+                build,
+                expect_date,
+                dispatches_to_check,
+                only_dispatches,
+                site_root=site_root,
+            )
         )
-    )
+    if no_update_publish:
+        _no_update_files, no_update_errors = _gaza_no_update_publish_source_files(site_root, expect_date)
+        errors.extend(no_update_errors)
     warnings = list(build["warnings"])
     warnings.extend(validation_warnings)
     gaza_homepage_guard: dict[str, Any] = {
@@ -4468,8 +4561,12 @@ def publish_pages(
         if not gaza_homepage_guard["ok"]:
             guard_reasons = "; ".join(str(item) for item in gaza_homepage_guard.get("reasons") or []) or "no specific reason recorded"
             errors.append(f"gaza homepage recent-editions guard blocked publish: {guard_reasons}")
+        if no_update_publish:
+            gaza_audio_root = pages_repo / "gaza"
         gaza_history_diagnostics = _gaza_public_surface_history_diagnostics(pages_repo, site_root, current_audio_root=gaza_audio_root)
         for report in gaza_history_diagnostics:
+            if no_update_publish and str(report.get("surface") or "") not in {"gaza/archive.html", "gaza/index.html"}:
+                continue
             if (report["dropped_dates"] or report["dropped_catchups"]) and not allow_listing_shrink:
                 surface = str(report.get("surface") or "gaza surface")
                 dropped = ", ".join(str(item) for item in report["dropped_dates"])
@@ -4547,6 +4644,8 @@ def publish_pages(
         shared_surface_refresh_planned = bool(shared_homepage_dispatch) or (
             not shared_homepage_dispatch and ((not only_dispatches) or ("gaza" in only_dispatches))
         )
+        if no_update_publish:
+            shared_surface_refresh_planned = bool(shared_homepage_dispatch)
         copied, skipped = copy_public_site_to_pages(
             site_root,
             pages_repo,
@@ -4556,6 +4655,7 @@ def publish_pages(
             skip_diagnostics=skip_diagnostics,
             exclude_shared_release_surfaces=shared_surface_refresh_planned,
             expect_date=expect_date,
+            artifact_family=artifact_family,
         )
         warnings.extend(_food_line_public_edition_skip_warning(report) for report in skip_diagnostics)
         allowed_shared_surface_changes: list[str] = []
@@ -4571,7 +4671,7 @@ def publish_pages(
                 errors.append(str(homepage_refresh["message"]))
             else:
                 allowed_shared_surface_changes = list(homepage_refresh.get("changed_surfaces") or [])
-        if not errors and not shared_homepage_dispatch and (not only_dispatches or "gaza" in only_dispatches):
+        if not errors and not no_update_publish and not shared_homepage_dispatch and (not only_dispatches or "gaza" in only_dispatches):
             homepage_refresh = refresh_shared_release_surfaces_from_pages_inventory(
                 pages_repo,
                 dry_run=dry_run,
@@ -4591,9 +4691,11 @@ def publish_pages(
                 changed_paths=changed_paths_for_scope,
                 allowed_shared_surface_changes=allowed_shared_surface_changes,
                 enforce_shared_surface_authorization=shared_surface_refresh_planned,
+                artifact_family=artifact_family,
+                expect_date=expect_date,
             )
         )
-        if not dry_run:
+        if not dry_run and not no_update_publish:
             errors.extend(validate_pages_copy_parity(root, pages_repo, expect_date, only_dispatches=only_dispatches))
             if expect_date and ((not only_dispatches) or ("cascadia" in only_dispatches)):
                 errors.extend(validate_cascadia_pages_copy_consistency(pages_repo, expect_date))
@@ -4606,9 +4708,9 @@ def publish_pages(
                     only_dispatches=only_dispatches,
                     previous_care_line_history=care_line_history_before,
                 )
-            )
+        )
         if not errors:
-            if not dry_run:
+            if not dry_run and not no_update_publish:
                 removed_nested_duplicate_paths = remove_nested_duplicate_dispatch_paths(pages_repo, dry_run=False)
             commit_result = maybe_commit_pages_repo(
                 pages_repo,
@@ -4676,6 +4778,7 @@ def publish_pages(
         "expect_date": expect_date,
         "expect_dispatches": list(expect_dispatches),
         "only_dispatches": list(only_dispatches),
+        "artifact_family": artifact_family,
         "paid_detail_excluded_from_public": not public_site_contains_detail_artifacts(site_root)
         and not public_site_contains_blocked_public_text(site_root),
         "warnings": warnings,
@@ -4746,6 +4849,11 @@ def main(argv: list[str] | None = None) -> int:
         choices=ONLY_DISPATCH_CHOICES,
         help="Refresh the shared root homepage from the Pages inventory for this explicit dispatch.",
     )
+    parser.add_argument(
+        "--artifact-family",
+        choices=PUBLISH_ARTIFACT_FAMILIES,
+        help="Publish a bounded artifact family instead of the dispatch's full public surface.",
+    )
     args = parser.parse_args(argv)
     try:
         expect_dispatches = normalize_expect_dispatches(tuple(args.expect_dispatch))
@@ -4767,8 +4875,11 @@ def main(argv: list[str] | None = None) -> int:
             expect_date=args.expect_date,
             expect_dispatches=expect_dispatches,
             only_dispatches=only_dispatches,
+            artifact_family=args.artifact_family,
         )
     else:
+        if args.artifact_family:
+            parser.error("--artifact-family requires --pages-repo")
         public_max_dates: dict[str, str] = {}
         dispatch_seed_dates: dict[str, str] = {}
         gaza_targeted = "gaza" in only_dispatches or "gaza" in expect_dispatches

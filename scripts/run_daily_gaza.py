@@ -127,6 +127,8 @@ REQUIRED_PUBLIC_SUMMARY_FIELDS = (
     "post_edition_date_update_source_count",
     "post_edition_date_retrieval_batches",
     "retrieval_batches",
+    "no_update_status_written",
+    "no_update_status_path",
 )
 COLLECTION_CONTEXT_NAME = "source_collection_context.json"
 
@@ -824,6 +826,8 @@ def initial_summary(args: argparse.Namespace) -> dict[str, Any]:
         "post_edition_date_update_source_count": 0,
         "post_edition_date_retrieval_batches": [],
         "retrieval_batches": [],
+        "no_update_status_written": False,
+        "no_update_status_path": None,
         "planned_actions": [],
         "public_story_count": 0,
         "pages_dry_run_ok": False,
@@ -1159,6 +1163,14 @@ def main(argv: list[str] | None = None) -> int:
     except Exception:
         generation_payload = {}
     if generation.returncode != 0:
+        if generation_payload.get("no_update_status_written") is True:
+            summary["no_update_status_written"] = True
+            summary["no_update_status_path"] = generation_payload.get("no_update_status_path")
+            summary["source_count"] = int(generation_payload.get("source_count") or summary.get("source_count") or 0)
+            summary["publisher_count"] = int(generation_payload.get("publisher_count") or summary.get("publisher_count") or 0)
+            summary["publishers"] = list(generation_payload.get("publishers") or [])
+            summary["public_story_count"] = int(generation_payload.get("story_count") or summary.get("public_story_count") or 0)
+            summary["source_adequacy_status"] = generation_payload.get("source_adequacy_status")
         summary["errors"].append(generation.stderr.strip() or generation.stdout.strip() or "Gaza generation failed")
         return finish(1)
     for warning in generation_payload.get("warnings") or []:

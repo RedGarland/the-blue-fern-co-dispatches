@@ -265,6 +265,8 @@ def test_no_substantive_ground_refusal_is_success_with_publication_flags_and_pre
                 "validation_ok": False,
                 "tests_ok": True,
                 "pages_commit_sha": None,
+                "no_update_status_written": True,
+                "no_update_status_path": str(isolated / "output" / "site" / "gaza" / "status" / "no-updates" / "2026-08-31.json"),
                 "errors": [
                     "No substantive Gaza/Palestinian ground-development story cleared threshold; "
                     "publication blocked (use --allow-thin-edition to override)."
@@ -274,12 +276,34 @@ def test_no_substantive_ground_refusal_is_success_with_publication_flags_and_pre
         )
 
     emails: list[tuple[str, str]] = []
+    publish_commands: list[list[str]] = []
+
+    class Completed:
+        def __init__(self, stdout: str = "", stderr: str = "", returncode: int = 0) -> None:
+            self.returncode = returncode
+            self.stdout = stdout
+            self.stderr = stderr
+
+    def fake_run(args: list[str], **_kwargs):
+        publish_commands.append(args)
+        if any(str(arg).endswith("publish_github_pages.py") for arg in args):
+            assert "push" not in args
+            return Completed(
+                json.dumps(
+                    {
+                        "local_pages_copy_ok": True,
+                        "pages_commit_ok": True,
+                        "commit_sha": "no-update-commit",
+                        "errors": [],
+                    }
+                )
+            )
+        assert args[-2:] == ["origin", "gh-pages"]
+        assert "push" in args
+        return Completed()
+
     monkeypatch.setattr(operator, "_capture_daily_run", fake_daily)
-    monkeypatch.setattr(
-        operator,
-        "_run_command",
-        lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("publication command must not run")),
-    )
+    monkeypatch.setattr(operator, "_run_command", fake_run)
     monkeypatch.setattr(
         operator,
         "_verify_requested_audio_artifacts",
@@ -316,18 +340,28 @@ def test_no_substantive_ground_refusal_is_success_with_publication_flags_and_pre
     result = json.loads(output[output.find("{") :])
     assert code == 0
     assert result["ok"] is True
-    assert result["operator_status"] == "NO_PUBLICATION_NEEDED"
+    assert result["operator_status"] == "NO_UPDATE_PUBLISHED"
     assert result["source_count"] == 5
     assert result["publisher_count"] == 3
     assert result["public_story_count"] == 0
-    assert result["pages_commit_sha"] is None
-    assert result["pages_push_ok"] is None
+    assert result["pages_commit_sha"] == "no-update-commit"
+    assert result["pages_push_ok"] is True
     assert result["remote_tree_verify_ok"] is None
+    assert result["local_pages_copy_ok"] is True
+    assert len(publish_commands) == 2
+    publish_command = publish_commands[0]
+    assert "--only-dispatch" in publish_command
+    assert "gaza" in publish_command
+    assert "--expect-date" not in publish_command
+    assert "--expect-dispatch" not in publish_command
+    assert "--commit" in publish_command
+    assert "--no-push" in publish_command
+    assert "push" in publish_commands[1]
     assert result["audio_status"] == "audio_skipped"
     assert result["bluesky_status"] == "skipped"
     assert "--generate-audio" in daily_args_seen
     assert emails
-    assert "NO_PUBLICATION_NEEDED" in emails[0][0]
+    assert "NO_UPDATE_PUBLISHED" in emails[0][0]
     assert "FAILED" not in emails[0][0]
     assert "source_count: 5" in emails[0][1]
     assert "publisher_count: 3" in emails[0][1]

@@ -23,6 +23,8 @@ LOS_ANGELES_TZ = ZoneInfo("America/Los_Angeles")
 from bluefern_dispatches.generator import (
     BASE_URL,
     DispatchConfig,
+    GAZA_NO_UPDATE_CLASSIFICATION,
+    GAZA_NO_UPDATE_MESSAGE,
     discover_public_edition_dates,
     footer,
     header,
@@ -2008,6 +2010,92 @@ def render_archive_index_rss(root: Path, edition_date: str, dry_run: bool, wrote
     write_text(gaza_root / "rss.xml", render_rss_for_dates(dispatch, dates, site_root), dry_run, wrote)
 
 
+def _no_update_record_path(root: Path, edition_date: str) -> Path:
+    return root / "output" / "site" / DISPATCH_SLUG / "status" / "no-updates" / f"{edition_date}.json"
+
+
+def _no_update_evidence_is_clear(
+    *,
+    edition_date: str,
+    run_manifest: dict[str, Any],
+    collection_report: dict[str, Any],
+) -> bool:
+    if run_manifest.get("edition_date") != edition_date and run_manifest.get("date") != edition_date:
+        return False
+    if collection_report.get("edition_date") != edition_date:
+        return False
+    source_count = int(run_manifest.get("source_count") or collection_report.get("normalized_candidate_count") or 0)
+    public_story_count = int(run_manifest.get("public_story_count") or 0)
+    story_count = int(run_manifest.get("story_count") or collection_report.get("final_story_count") or 0)
+    errors = [str(item) for item in run_manifest.get("errors") or []]
+    clear_no_publication_error = any(
+        "No substantive Gaza/Palestinian ground-development story cleared threshold" in item
+        or "No source-backed Gaza stories survived curation/dedupe" in item
+        or "No new source-backed Gaza developments after cross-edition dedupe" in item
+        for item in errors
+    )
+    return (
+        source_count > 0
+        and public_story_count == 0
+        and story_count >= 0
+        and collection_report.get("blocked_for_thin_or_off_topic") is True
+        and str(collection_report.get("thin_edition_reason") or "") == "no_substantive_ground_story"
+        and clear_no_publication_error
+    )
+
+
+def write_gaza_no_update_status(
+    root: Path,
+    edition_date: str,
+    *,
+    run_manifest: dict[str, Any],
+    collection_report: dict[str, Any],
+    dry_run: bool,
+    wrote: list[str],
+) -> bool:
+    if not _no_update_evidence_is_clear(
+        edition_date=edition_date,
+        run_manifest=run_manifest,
+        collection_report=collection_report,
+    ):
+        return False
+    source_count = int(run_manifest.get("source_count") or collection_report.get("normalized_candidate_count") or 0)
+    record = {
+        "schema_version": "gaza-no-update-status-v1",
+        "date": edition_date,
+        "classification": GAZA_NO_UPDATE_CLASSIFICATION,
+        "message": GAZA_NO_UPDATE_MESSAGE,
+        "run_completed_successfully": True,
+        "source_count": source_count,
+        "public_story_count": 0,
+        "run_manifest_path": str(root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "run_manifest.json"),
+        "collection_report_path": str(root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "collection_report.json"),
+        "normal_edition_generated": False,
+    }
+    write_json(_no_update_record_path(root, edition_date), record, dry_run, wrote)
+    render_archive_index_rss(root, edition_date, dry_run, wrote, include_current=False)
+    return True
+
+
+def render_gaza_no_update_from_preserved_artifacts(root: Path, edition_date: str, dry_run: bool, wrote: list[str]) -> bool:
+    run_manifest_path = root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "run_manifest.json"
+    collection_report_path = root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "collection_report.json"
+    if not run_manifest_path.exists() or not collection_report_path.exists():
+        return False
+    run_manifest = read_json(run_manifest_path)
+    collection_report = read_json(collection_report_path)
+    if not isinstance(run_manifest, dict) or not isinstance(collection_report, dict):
+        return False
+    return write_gaza_no_update_status(
+        root,
+        edition_date,
+        run_manifest=run_manifest,
+        collection_report=collection_report,
+        dry_run=dry_run,
+        wrote=wrote,
+    )
+
+
 def build_manifests(
     root: Path,
     edition_date: str,
@@ -2586,6 +2674,8 @@ def run_gaza_dispatch(
         errors.append("No source-backed Gaza stories survived curation/dedupe; refusing public edition generation.")
     write_json(curated_dir / "curation_manifest.json", curation_manifest_full, dry_run, wrote)
     should_render = render or all_steps
+    no_update_written = False
+    no_update_status_path = _no_update_record_path(root, edition_date)
     if should_render and not errors:
         html_content = render_gaza_edition(edition_date, stories, normalized, adequacy, root=root)
         edition_manifest, sources_manifest, curation_manifest, run_manifest = build_manifests(
@@ -2677,12 +2767,36 @@ def run_gaza_dispatch(
         write_json(dispatch_dir / "edition_manifest.json", failed_manifest, dry_run, wrote)
         write_json(dispatch_dir / "sources_manifest.json", normalized, dry_run, wrote)
         write_json(dispatch_dir / "curation_manifest.json", curation_manifest_full, dry_run, wrote)
+        write_json(
+            root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "run_manifest.json",
+            failed_manifest,
+            dry_run,
+            wrote,
+        )
         site_dir = root / "output" / "site" / DISPATCH_SLUG / "editions" / edition_date
         if site_dir.exists():
             wrote.append(str(site_dir))
             if not dry_run:
                 shutil.rmtree(site_dir)
-        render_archive_index_rss(root, edition_date, dry_run, wrote, include_current=False)
+        no_update_written = write_gaza_no_update_status(
+            root,
+            edition_date,
+            run_manifest=failed_manifest,
+            collection_report=collection_report,
+            dry_run=dry_run,
+            wrote=wrote,
+        )
+        if no_update_written:
+            failed_manifest["no_update_status_written"] = True
+            write_json(dispatch_dir / "edition_manifest.json", failed_manifest, dry_run, wrote)
+            write_json(
+                root / "data" / "dispatches" / DISPATCH_SLUG / "editions" / edition_date / "run_manifest.json",
+                failed_manifest,
+                dry_run,
+                wrote,
+            )
+        else:
+            render_archive_index_rss(root, edition_date, dry_run, wrote, include_current=False)
     return {
         "ok": not errors,
         "dispatch_slug": DISPATCH_SLUG,
@@ -2706,6 +2820,8 @@ def run_gaza_dispatch(
         "allow_post_edition_date_sources": bool(allow_post_edition_date_sources),
         "post_edition_date_sources_included": bool(post_edition_date_source_count > 0),
         "post_edition_date_source_count": int(post_edition_date_source_count),
+        "no_update_status_written": bool(no_update_written),
+        "no_update_status_path": str(no_update_status_path) if no_update_written else None,
     }
 
 

@@ -7,7 +7,14 @@ import pytest
 
 from bluefern_dispatches.generator import build_site
 from bluefern_dispatches.gaza_audio import write_gaza_audio_outputs
-from scripts.run_gaza_dispatch import build_source_diversity_report, curate_stories, normalize_sources, render_gaza_edition, run_gaza_dispatch
+from scripts.run_gaza_dispatch import (
+    build_source_diversity_report,
+    curate_stories,
+    normalize_sources,
+    render_gaza_edition,
+    render_gaza_no_update_from_preserved_artifacts,
+    run_gaza_dispatch,
+)
 
 
 def make_work_root(repo: Path) -> Path:
@@ -384,6 +391,163 @@ def test_gaza_adjacent_context_source_does_not_satisfy_core_ground_threshold(mon
     result = run_gaza_dispatch(work, "2026-05-31", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
     assert result["ok"] is False
     assert any("No substantive Gaza/Palestinian ground-development story cleared threshold" in err for err in result["errors"])
+    assert not (work / "output" / "site" / "gaza" / "editions" / "2026-05-31" / "index.html").exists()
+    status_path = work / "output" / "site" / "gaza" / "status" / "no-updates" / "2026-05-31.json"
+    assert status_path.exists()
+    status = json.loads(status_path.read_text(encoding="utf-8"))
+    assert status["classification"] == "no_publication_needed"
+    assert status["public_story_count"] == 0
+    assert status["normal_edition_generated"] is False
+    index_html = read(work / "output" / "site" / "gaza" / "index.html")
+    archive_html = read(work / "output" / "site" / "gaza" / "archive.html")
+    rss_xml = read(work / "output" / "site" / "gaza" / "rss.xml")
+    assert "May 31, 2026" in index_html
+    assert "No new source-backed Gaza update met publication threshold today." in index_html
+    assert 'class="no-update"' in archive_html
+    assert "2026-05-31" in archive_html
+    assert "editions/2026-05-31/" not in archive_html
+    assert "2026-05-31" not in rss_xml
+
+
+def test_gaza_no_update_keeps_latest_actual_edition_and_is_idempotent(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    edition_dir = work / "output" / "site" / "gaza" / "editions" / "2026-05-30"
+    edition_dir.mkdir(parents=True)
+    (edition_dir / "index.html").write_text("<html>Actual Gaza edition 2026-05-30</html>", encoding="utf-8")
+    (edition_dir / "edition_manifest.json").write_text(json.dumps({"source_count": 1, "story_count": 1}), encoding="utf-8")
+    (edition_dir / "sources_manifest.json").write_text(json.dumps([{"url": "https://example.com"}]), encoding="utf-8")
+    (edition_dir / "curation_manifest.json").write_text(json.dumps([{"story_id": "story"}]), encoding="utf-8")
+    rows = [
+        {
+            "source_record_id": "gaza-adjacent-001",
+            "title": "Gaza-bound convoy hearing continues outside Gaza",
+            "url": "https://example.com/gaza-bound-convoy",
+            "publisher": "Example News",
+            "published_at": "2026-05-31",
+            "retrieved_at": "2026-05-31T18:45:00+00:00",
+            "summary_or_snippet": "A Gaza-bound convoy court process continued outside Gaza.",
+            "source_type": "manual",
+            "region_scope": "Gaza-bound convoy context",
+            "category_hint": "humanitarian_access_context",
+            "reliability_tier": "reported-public-source",
+            "attribution_mode": "gaza_adjacent_context",
+            "claim_status": "gaza_adjacent_context",
+        }
+    ]
+    write_manual_sources(work, "2026-05-31", rows)
+
+    first = run_gaza_dispatch(work, "2026-05-31", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    second = run_gaza_dispatch(work, "2026-05-31", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+
+    assert first["ok"] is False
+    assert second["ok"] is False
+    index_html = read(work / "output" / "site" / "gaza" / "index.html")
+    archive_html = read(work / "output" / "site" / "gaza" / "archive.html")
+    assert 'href="editions/2026-05-30/">Read the latest briefing</a>' in index_html
+    assert "May 31, 2026 — No new source-backed Gaza update met publication threshold today." in index_html
+    assert archive_html.count('class="no-update"') == 1
+
+
+def test_gaza_later_actual_edition_supersedes_no_update_status(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    for edition_date in ("2026-05-30", "2026-06-01"):
+        edition_dir = work / "output" / "site" / "gaza" / "editions" / edition_date
+        edition_dir.mkdir(parents=True)
+        (edition_dir / "index.html").write_text(f"<html>Actual Gaza edition {edition_date}</html>", encoding="utf-8")
+        (edition_dir / "edition_manifest.json").write_text(json.dumps({"source_count": 1, "story_count": 1}), encoding="utf-8")
+        (edition_dir / "sources_manifest.json").write_text(json.dumps([{"url": "https://example.com"}]), encoding="utf-8")
+        (edition_dir / "curation_manifest.json").write_text(json.dumps([{"story_id": "story"}]), encoding="utf-8")
+    rows = [
+        {
+            "source_record_id": "gaza-adjacent-001",
+            "title": "Gaza-bound convoy hearing continues outside Gaza",
+            "url": "https://example.com/gaza-bound-convoy",
+            "publisher": "Example News",
+            "published_at": "2026-05-31",
+            "retrieved_at": "2026-05-31T18:45:00+00:00",
+            "summary_or_snippet": "A Gaza-bound convoy court process continued outside Gaza.",
+            "source_type": "manual",
+            "region_scope": "Gaza-bound convoy context",
+            "category_hint": "humanitarian_access_context",
+            "reliability_tier": "reported-public-source",
+            "attribution_mode": "gaza_adjacent_context",
+            "claim_status": "gaza_adjacent_context",
+        }
+    ]
+    write_manual_sources(work, "2026-05-31", rows)
+
+    result = run_gaza_dispatch(work, "2026-05-31", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+
+    assert result["ok"] is False
+    index_html = read(work / "output" / "site" / "gaza" / "index.html")
+    archive_html = read(work / "output" / "site" / "gaza" / "archive.html")
+    assert 'href="editions/2026-06-01/">Read the latest briefing</a>' in index_html
+    assert "May 31, 2026 — No new source-backed Gaza update met publication threshold today." not in index_html
+    assert archive_html.count('class="no-update"') == 1
+
+
+def test_gaza_no_update_not_written_for_zero_source_failure(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    write_manual_sources(work, "2026-05-31", [])
+
+    result = run_gaza_dispatch(work, "2026-05-31", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+
+    assert result["ok"] is False
+    assert not (work / "output" / "site" / "gaza" / "status" / "no-updates" / "2026-05-31.json").exists()
+
+
+def test_gaza_no_update_not_written_for_validation_failure_without_no_publication_evidence(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    wrote: list[str] = []
+    ok = render_gaza_no_update_from_preserved_artifacts(work, "2026-05-31", dry_run=False, wrote=wrote)
+    assert ok is False
+    assert wrote == []
+
+
+def test_gaza_no_update_can_render_from_preserved_artifacts(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    rows = [
+        {
+            "source_record_id": "gaza-adjacent-001",
+            "title": "Gaza-bound aid convoy dissolved in Libya after arrests",
+            "url": "https://www.jpost.com/middle-east/article-855919",
+            "publisher": "Jerusalem Post",
+            "published_at": "2026-05-31",
+            "retrieved_at": "2026-05-31T18:45:00+00:00",
+            "summary_or_snippet": "Jerusalem Post reported a Gaza-bound aid convoy in Libya was dissolved after arrests.",
+            "source_type": "manual",
+            "region_scope": "Libya / Gaza-bound convoy context",
+            "category_hint": "humanitarian_access_context",
+            "reliability_tier": "reported-public-source",
+            "attribution_mode": "gaza_adjacent_context",
+            "claim_status": "gaza_adjacent_context",
+        }
+    ]
+    write_manual_sources(work, "2026-05-31", rows)
+    run_gaza_dispatch(work, "2026-05-31", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
+    status_path = work / "output" / "site" / "gaza" / "status" / "no-updates" / "2026-05-31.json"
+    status_path.unlink()
+    (work / "output" / "site" / "gaza" / "index.html").unlink()
+    (work / "output" / "site" / "gaza" / "archive.html").unlink()
+    (work / "output" / "site" / "gaza" / "rss.xml").unlink()
+    wrote: list[str] = []
+
+    ok = render_gaza_no_update_from_preserved_artifacts(work, "2026-05-31", dry_run=False, wrote=wrote)
+
+    assert ok is True
+    assert status_path.exists()
+    assert (work / "output" / "site" / "gaza" / "index.html").exists()
+    assert not (work / "output" / "site" / "gaza" / "editions" / "2026-05-31" / "index.html").exists()
 
 
 def test_source_manifest_carries_attribution_mode_and_claim_status(monkeypatch):

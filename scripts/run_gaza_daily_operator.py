@@ -421,11 +421,15 @@ def _capture_daily_run(args: list[str]) -> tuple[int, dict[str, Any], str]:
     with redirect_stdout(buffer):
         code = daily.main(args)
     output = buffer.getvalue()
+    return code, _json_summary_from_stdout(output), output
+
+
+def _json_summary_from_stdout(output: str) -> dict[str, Any]:
     summary: dict[str, Any] = {}
     match = re.search(r"(\{[\s\S]*\})\s*$", output)
     if match:
         summary = json.loads(match.group(1))
-    return code, summary, output
+    return summary
 
 
 def _daily_args(
@@ -473,6 +477,33 @@ def _daily_args(
                 audio_format,
             ]
         )
+    return args
+
+
+def _no_update_pages_publish_args(
+    *,
+    pages_repo: Path,
+    pages_branch: str,
+    remote_url: str,
+    dry_run: bool,
+    allow_listing_shrink: bool,
+) -> list[str]:
+    args = [
+        sys.executable,
+        "scripts\\publish_github_pages.py",
+        "--pages-repo",
+        str(pages_repo),
+        "--pages-branch",
+        pages_branch,
+        "--only-dispatch",
+        "gaza",
+    ]
+    if dry_run:
+        args.append("--dry-run")
+    else:
+        args.extend(["--remote-url", remote_url, "--commit", "--no-push"])
+    if allow_listing_shrink:
+        args.append("--allow-listing-shrink")
     return args
 
 
@@ -837,6 +868,48 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
             result["generation_ok"] = True
             result["validation_ok"] = True
             result["next_action"] = "No dispatch was published because no new source-backed Gaza update qualified."
+            if summary.get("no_update_status_written") is True:
+                publish_args = _no_update_pages_publish_args(
+                    pages_repo=pages_repo,
+                    pages_branch=args.pages_branch,
+                    remote_url=args.remote_url,
+                    dry_run=bool(args.dry_run),
+                    allow_listing_shrink=bool(args.allow_listing_shrink),
+                )
+                publish = _run_command(publish_args)
+                result["commands_run"].append(" ".join(publish_args))
+                publish_summary = _json_summary_from_stdout(publish.stdout)
+                result["local_pages_copy_ok"] = publish_summary.get("local_pages_copy_ok")
+                result["pages_commit_sha"] = publish_summary.get("commit_sha")
+                result["pages_commit_ok"] = publish_summary.get("pages_commit_ok")
+                if publish.returncode != 0:
+                    result["ok"] = False
+                    result["operator_status"] = "NO_UPDATE_PAGES_UPDATE_FAILED"
+                    publish_errors = [str(item) for item in publish_summary.get("errors") or []]
+                    result["next_action"] = (
+                        "; ".join(publish_errors)
+                        or publish.stderr.strip()
+                        or publish.stdout.strip()
+                        or "No-update Pages update failed."
+                    )
+                elif args.dry_run:
+                    result["operator_status"] = "NO_UPDATE_DRY_RUN_READY"
+                    result["next_action"] = "Review the no-update dry-run summary; rerun with --push to publish the status notice."
+                elif not args.push:
+                    result["operator_status"] = "NO_UPDATE_LOCAL_PUBLISH_READY"
+                    result["next_action"] = f'Push from the Pages repo or rerun with --push. Pages repo: "{pages_repo}"'
+                else:
+                    push = _run_command(["git", "-C", str(pages_repo), "push", "origin", args.pages_branch], cwd=ROOT)
+                    result["commands_run"].append(f'git -C "{pages_repo}" push origin {args.pages_branch}')
+                    if push.returncode != 0:
+                        result["ok"] = False
+                        result["operator_status"] = "NO_UPDATE_PUSH_FAILED"
+                        result["pages_push_ok"] = False
+                        result["next_action"] = push.stderr.strip() or push.stdout.strip() or "No-update Pages push failed."
+                    else:
+                        result["pages_push_ok"] = True
+                        result["operator_status"] = "NO_UPDATE_PUBLISHED"
+                        result["next_action"] = "No-update status notice published."
         else:
             result["operator_status"] = "AUDIO_FAILED" if any("audio generation failed" in item for item in errors) else "FAILED"
             result["next_action"] = errors[0] if errors else "Daily Gaza run failed."

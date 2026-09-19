@@ -96,6 +96,8 @@ CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_SURFACED = "Reviewed week | No qualifying so
 CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE = CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_SURFACED
 GAZA_HOME_RECENT_EDITION_LIMIT = 10
 GAZA_HOME_RECENT_EDITION_MIN = 3
+GAZA_NO_UPDATE_MESSAGE = "No new source-backed Gaza update met publication threshold today."
+GAZA_NO_UPDATE_CLASSIFICATION = "no_publication_needed"
 GAZA_PUBLIC_HISTORY_DATE_RE = re.compile(r"(?:/gaza/)?editions/(\d{4}-\d{2}-\d{2})/")
 GAZA_HISTORICAL_CATCHUP_ID_RE = re.compile(r"gaza-historical-catchup-[a-z0-9][a-z0-9-]{2,80}")
 GAZA_PUBLIC_HISTORY_CATCHUP_RE = re.compile(
@@ -182,6 +184,16 @@ class GazaHistoricalCatchupEntry:
     public_url: str
     title: str
     description: str
+
+
+@dataclass(frozen=True)
+class GazaNoUpdateEntry:
+    date: str
+    message: str
+    source_count: int | None
+    classification: str
+    run_manifest_path: str
+    collection_report_path: str
 
 
 GAZA_BODY_HTML = """<p><strong>Dispatches From Gaza</strong></p>
@@ -1870,16 +1882,74 @@ def render_gaza_historical_catchup_list_item(entry: GazaHistoricalCatchupEntry) 
     )
 
 
+def discover_gaza_no_update_entries(site_root: Path) -> list[GazaNoUpdateEntry]:
+    status_root = site_root / "gaza" / "status" / "no-updates"
+    if not status_root.exists():
+        return []
+    entries: dict[str, GazaNoUpdateEntry] = {}
+    for path in sorted(status_root.glob("*.json")):
+        date = path.stem
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date):
+            continue
+        payload = _load_json_file(path)
+        if not isinstance(payload, dict):
+            continue
+        if payload.get("date") != date:
+            continue
+        if payload.get("classification") != GAZA_NO_UPDATE_CLASSIFICATION:
+            continue
+        if payload.get("public_story_count") not in (0, "0"):
+            continue
+        if payload.get("run_completed_successfully") is not True:
+            continue
+        message = str(payload.get("message") or GAZA_NO_UPDATE_MESSAGE).strip()
+        run_manifest_path = str(payload.get("run_manifest_path") or "").strip()
+        collection_report_path = str(payload.get("collection_report_path") or "").strip()
+        if not message or not run_manifest_path or not collection_report_path:
+            continue
+        source_count_value = payload.get("source_count")
+        try:
+            source_count = int(source_count_value) if source_count_value is not None else None
+        except (TypeError, ValueError):
+            source_count = None
+        entries[date] = GazaNoUpdateEntry(
+            date=date,
+            message=message,
+            source_count=source_count,
+            classification=GAZA_NO_UPDATE_CLASSIFICATION,
+            run_manifest_path=run_manifest_path,
+            collection_report_path=collection_report_path,
+        )
+    return [entries[date] for date in sorted(entries, reverse=True)]
+
+
+def render_gaza_no_update_list_item(entry: GazaNoUpdateEntry) -> str:
+    source_note = (
+        f' <span class="edition-subtitle">{entry.source_count} source records checked.</span>'
+        if entry.source_count is not None
+        else ""
+    )
+    return (
+        f'      <li class="no-update"><span class="edition-date">{html.escape(entry.date)}</span>'
+        f'<span class="no-update-label">No update</span> '
+        f'<span>{html.escape(entry.message)}</span>{source_note}</li>'
+    )
+
+
 def _gaza_public_history_rows(
     edition_dates: list[str],
     catchups: list[GazaHistoricalCatchupEntry],
-) -> list[tuple[str, str | GazaHistoricalCatchupEntry]]:
+) -> list[tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry]]:
     rows: list[tuple[str, str | GazaHistoricalCatchupEntry]] = [("daily", date) for date in dict.fromkeys(edition_dates)]
     rows.extend(("catchup", entry) for entry in {entry.catchup_id: entry for entry in catchups}.values())
     return sorted(
         rows,
         key=lambda row: (
-            row[1].publication_date if isinstance(row[1], GazaHistoricalCatchupEntry) else row[1],
+            row[1].publication_date
+            if isinstance(row[1], GazaHistoricalCatchupEntry)
+            else row[1].date
+            if isinstance(row[1], GazaNoUpdateEntry)
+            else row[1],
             1 if row[0] == "catchup" else 0,
             row[1].published_at if isinstance(row[1], GazaHistoricalCatchupEntry) else "",
             row[1].catchup_id if isinstance(row[1], GazaHistoricalCatchupEntry) else "",
@@ -1897,11 +1967,30 @@ def _render_gaza_public_history_list(
     limit: int | None = None,
 ) -> str:
     rows = _gaza_public_history_rows(edition_dates, catchups)
+    no_updates_by_date = {entry.date: entry for entry in discover_gaza_no_update_entries(site_root)}
+    existing_dates = {str(date) for date in edition_dates}
+    rows.extend(("no-update", entry) for date, entry in no_updates_by_date.items() if date not in existing_dates)
+    rows = sorted(
+        rows,
+        key=lambda row: (
+            row[1].publication_date
+            if isinstance(row[1], GazaHistoricalCatchupEntry)
+            else row[1].date
+            if isinstance(row[1], GazaNoUpdateEntry)
+            else row[1],
+            1 if row[0] == "catchup" else 0,
+            row[1].published_at if isinstance(row[1], GazaHistoricalCatchupEntry) else "",
+            row[1].catchup_id if isinstance(row[1], GazaHistoricalCatchupEntry) else "",
+        ),
+        reverse=True,
+    )
     if limit is not None:
         rows = rows[:limit]
     return "\n".join(
         render_gaza_historical_catchup_list_item(value)
         if kind == "catchup" and isinstance(value, GazaHistoricalCatchupEntry)
+        else render_gaza_no_update_list_item(value)
+        if kind == "no-update" and isinstance(value, GazaNoUpdateEntry)
         else render_edition_list_item(site_root, dispatch, str(value))
         for kind, value in rows
     )
@@ -2215,6 +2304,14 @@ def _display_date_range_for_week(edition_date: str) -> str:
     return f"{start.strftime('%B')} {start.day}\u2013{end.strftime('%B')} {end.day}, {end.year}"
 
 
+def _display_date(iso_date: str) -> str:
+    try:
+        parsed = datetime.strptime(iso_date, "%Y-%m-%d").date()
+    except ValueError:
+        return iso_date
+    return f"{parsed.strftime('%B')} {parsed.day}, {parsed.year}"
+
+
 def _refresh_american_pressure_map_route(site_root: Path, edition_date: str, dry_run: bool, wrote: list[str]) -> None:
     map_dir = site_root / "american-pressure" / "map"
     map_data_path = map_dir / "map_data.json"
@@ -2313,9 +2410,20 @@ def render_dispatch_index_for_dates(
         else "Structured briefings compiled from traceable source records."
     )
     site_root = site_root or Path("output") / "site"
+    gaza_status_line = ""
     if dispatch.slug == "gaza":
         if gaza_catchups is None:
             gaza_catchups = discover_gaza_historical_catchups(site_root)
+        no_updates = discover_gaza_no_update_entries(site_root)
+        if no_updates:
+            latest_check = no_updates[0]
+            latest_actual_edition = max(edition_dates) if edition_dates else ""
+            if latest_check.date > latest_actual_edition:
+                gaza_status_line = (
+                    '\n    <p class="dispatch-status">'
+                    f"{html.escape(_display_date(latest_check.date))} — {html.escape(latest_check.message)}"
+                    "</p>"
+                )
         recent = _render_gaza_public_history_list(
             site_root,
             dispatch,
@@ -2386,6 +2494,7 @@ def render_dispatch_index_for_dates(
     {care_line_archive_link}
     <h2>{"Most recent archived briefing" if dispatch.slug == "cascadia" else "Latest Briefing"}</h2>
     {latest_link}
+    {gaza_status_line}
     {gaza_audio_link}
     <h2>Pressure Map</h2>
     {map_link}

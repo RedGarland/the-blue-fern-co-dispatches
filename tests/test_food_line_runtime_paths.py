@@ -33,6 +33,12 @@ def test_food_runtime_roots_are_shared_between_scheduler_and_preflight(monkeypat
         "?? status/operational-recovery/food-line/2026-09-10/2026-09-10-food_line_current_intake/recovery.lock",
         "?? data/dispatches/food-line/discovery-runs/2026-08-13/file.json",
         "?? data/agent-history-staging/food-line/file.txt",
+        " M data/dispatches/food-line/coverage-gaps/2026-09-09.json",
+        "?? data/dispatches/food-line/date-reconciliation/2026-09-09.json",
+        "?? data/dispatches/food-line/historical-reconstruction/2026-09-09/reconstruction.json",
+        "?? data/dispatches/food-line/historical-reconstruction/2026-09-09/research-input.json",
+        "?? data/dispatches/food-line/historical-reconstruction/2026-09-09/review/candidates.json",
+        "?? data/dispatches/food-line/historical-reconstruction/2026-09-09/review/decisions/food-recon-20260909-002-lansingburgh-pantry.json",
     ]
 
     report = _preflight_report(lines, monkeypatch, tmp_path)
@@ -49,6 +55,10 @@ def test_unrelated_untracked_and_tracked_runtime_paths_fail_closed(monkeypatch, 
         "?? data/dispatches/food-line/random/file.json",
         "?? data/dispatches/food-line/agent-intake-notes/file.json",
         " M data/dispatches/food-line/agent-intake/2026-08-13/file.json",
+        "?? data/dispatches/food-line/historical-reconstruction/2026-09-09/review/notes.json",
+        "?? data/dispatches/food-line/historical-reconstruction/not-a-date/reconstruction.json",
+        "?? data/dispatches/food-line/date-reconciliation/latest.json",
+        "?? data/dispatches/food-line/coverage-gaps/readme.json",
     ]
 
     report = _preflight_report(lines, monkeypatch, tmp_path)
@@ -57,12 +67,20 @@ def test_unrelated_untracked_and_tracked_runtime_paths_fail_closed(monkeypatch, 
         "data/dispatches/food-line/random/file.json",
         "data/dispatches/food-line/agent-intake-notes/file.json",
         "data/dispatches/food-line/agent-intake/2026-08-13/file.json",
+        "data/dispatches/food-line/historical-reconstruction/2026-09-09/review/notes.json",
+        "data/dispatches/food-line/historical-reconstruction/not-a-date/reconstruction.json",
+        "data/dispatches/food-line/date-reconciliation/latest.json",
+        "data/dispatches/food-line/coverage-gaps/readme.json",
     }
 
     unexpected = food_line_daily_scheduler._unexpected_dirty_paths("\n".join(lines))
     assert unexpected == [
         "data/dispatches/food-line/agent-intake-notes/file.json",
         "data/dispatches/food-line/agent-intake/2026-08-13/file.json",
+        "data/dispatches/food-line/coverage-gaps/readme.json",
+        "data/dispatches/food-line/date-reconciliation/latest.json",
+        "data/dispatches/food-line/historical-reconstruction/2026-09-09/review/notes.json",
+        "data/dispatches/food-line/historical-reconstruction/not-a-date/reconstruction.json",
         "data/dispatches/food-line/random/file.json",
     ]
 
@@ -127,6 +145,12 @@ def test_expected_food_runtime_roots_have_shared_categories():
         "status/operational-recovery/food-line/2026-09-10/2026-09-10-food_line_current_intake/recovery.lock": "local_run_state",
         "data/dispatches/food-line/discovery-runs/2026-08-13/file.json": "local_run_state",
         "data/agent-history-staging/food-line/file.txt": "local_run_state",
+        "data/dispatches/food-line/coverage-gaps/2026-09-09.json": "local_run_state",
+        "data/dispatches/food-line/date-reconciliation/2026-09-09.json": "local_run_state",
+        "data/dispatches/food-line/historical-reconstruction/2026-09-09/reconstruction.json": "review_output",
+        "data/dispatches/food-line/historical-reconstruction/2026-09-09/research-input.json": "review_output",
+        "data/dispatches/food-line/historical-reconstruction/2026-09-09/review/candidates.json": "review_output",
+        "data/dispatches/food-line/historical-reconstruction/2026-09-09/review/decisions/food-recon-20260909-002-lansingburgh-pantry.json": "review_output",
     }
 
     for path, expected in cases.items():

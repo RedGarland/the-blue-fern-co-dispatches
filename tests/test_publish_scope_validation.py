@@ -159,6 +159,159 @@ def test_gaza_no_update_scope_allows_only_status_landing_and_archive() -> None:
     assert errors == []
 
 
+def _no_update_roots(tmp_path: Path, *, rss_matches: bool = True) -> tuple[Path, Path]:
+    source = tmp_path / "source"
+    pages = tmp_path / "bluefern-dispatches-pages"
+    (source / "output/site/gaza/status/no-updates").mkdir(parents=True)
+    (source / "output/site/gaza").mkdir(parents=True, exist_ok=True)
+    (source / "logs").mkdir(parents=True)
+    (pages / "gaza").mkdir(parents=True)
+    (source / "output/site/gaza/index.html").write_text("index", encoding="utf-8")
+    (source / "output/site/gaza/archive.html").write_text("archive", encoding="utf-8")
+    (source / "output/site/gaza/status/no-updates/2026-09-19.json").write_text("status", encoding="utf-8")
+    source_rss = "<rss><channel><title>same</title></channel></rss>"
+    pages_rss = source_rss if rss_matches else "<rss><channel><title>different</title></channel></rss>"
+    (source / "output/site/gaza/rss.xml").write_text(source_rss, encoding="utf-8")
+    (pages / "gaza/rss.xml").write_text(pages_rss, encoding="utf-8")
+    (source / "logs/runner-gaza-20260919-060034.log").write_text("runner log", encoding="utf-8")
+    return source, pages
+
+
+def test_gaza_no_update_source_scope_allows_matching_runner_log_and_identical_rss(tmp_path: Path) -> None:
+    module = _load_validator_module()
+    source, pages = _no_update_roots(tmp_path)
+    errors = module.validate_publish_scope(
+        dispatch="gaza",
+        date_text="2026-09-19",
+        source_artifact_family="no-update",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        source_changed_paths=[
+            "output/site/gaza/index.html",
+            "output/site/gaza/archive.html",
+            "output/site/gaza/status/no-updates/2026-09-19.json",
+            "output/site/gaza/rss.xml",
+            "logs/runner-gaza-20260919-060034.log",
+        ],
+        pages_changed_paths=[
+            "gaza/index.html",
+            "gaza/archive.html",
+            "gaza/status/no-updates/2026-09-19.json",
+        ],
+    )
+    assert errors == []
+
+
+def test_gaza_no_update_source_scope_rejects_wrong_date_runner_log(tmp_path: Path) -> None:
+    module = _load_validator_module()
+    source, pages = _no_update_roots(tmp_path)
+    (source / "logs/runner-gaza-20260918-060034.log").write_text("old runner log", encoding="utf-8")
+    errors = module.validate_publish_scope(
+        dispatch="gaza",
+        date_text="2026-09-19",
+        source_artifact_family="no-update",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        source_changed_paths=["logs/runner-gaza-20260918-060034.log"],
+        pages_changed_paths=[],
+    )
+    assert any("outside declared 2026-09-19" in error for error in errors)
+
+
+def test_gaza_no_update_source_scope_rejects_missing_runner_log(tmp_path: Path) -> None:
+    module = _load_validator_module()
+    source, pages = _no_update_roots(tmp_path)
+    errors = module.validate_publish_scope(
+        dispatch="gaza",
+        date_text="2026-09-19",
+        source_artifact_family="no-update",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        source_changed_paths=["logs/runner-gaza-20260919-070000.log"],
+        pages_changed_paths=[],
+    )
+    assert any("does not exist" in error for error in errors)
+
+
+def test_gaza_no_update_source_scope_rejects_arbitrary_log(tmp_path: Path) -> None:
+    module = _load_validator_module()
+    source, pages = _no_update_roots(tmp_path)
+    (source / "logs/gaza-daily-2026-09-19.log").write_text("arbitrary log", encoding="utf-8")
+    errors = module.validate_publish_scope(
+        dispatch="gaza",
+        date_text="2026-09-19",
+        source_artifact_family="no-update",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        source_changed_paths=["logs/gaza-daily-2026-09-19.log"],
+        pages_changed_paths=[],
+    )
+    assert any("logs/gaza-daily-2026-09-19.log" in error for error in errors)
+
+
+def test_gaza_no_update_source_scope_rejects_modified_rss(tmp_path: Path) -> None:
+    module = _load_validator_module()
+    source, pages = _no_update_roots(tmp_path, rss_matches=False)
+    errors = module.validate_publish_scope(
+        dispatch="gaza",
+        date_text="2026-09-19",
+        source_artifact_family="no-update",
+        source_repo_root=source,
+        pages_repo_root=pages,
+        allow_pages=True,
+        source_changed_paths=["output/site/gaza/rss.xml"],
+        pages_changed_paths=[],
+    )
+    assert any("generated Gaza RSS differs from Pages" in error for error in errors)
+
+
+def test_gaza_no_update_cli_allows_runtime_log_and_identical_rss(tmp_path: Path, monkeypatch, capsys) -> None:
+    module = _load_validator_module()
+    source, pages = _no_update_roots(tmp_path)
+
+    def fake_status(root: Path) -> list[str]:
+        if Path(root) == source:
+            return [
+                "output/site/gaza/index.html",
+                "output/site/gaza/archive.html",
+                "output/site/gaza/status/no-updates/2026-09-19.json",
+                "output/site/gaza/rss.xml",
+                "logs/runner-gaza-20260919-060034.log",
+            ]
+        if Path(root) == pages:
+            return [
+                "gaza/index.html",
+                "gaza/archive.html",
+                "gaza/status/no-updates/2026-09-19.json",
+            ]
+        return []
+
+    monkeypatch.setattr(module, "_git_status_porcelain", fake_status)
+    exit_code = module.main(
+        [
+            "--dispatch",
+            "gaza",
+            "--date",
+            "2026-09-19",
+            "--source-repo-root",
+            str(source),
+            "--pages-repo-root",
+            str(pages),
+            "--allow-pages",
+            "--source-artifact-family",
+            "no-update",
+        ]
+    )
+
+    captured = capsys.readouterr()
+    assert exit_code == 0
+    assert "Publish scope validation passed." in captured.out
+
+
 def test_gaza_no_update_scope_rejects_audio_rss_editions_and_other_dispatches() -> None:
     module = _load_validator_module()
     errors = module.validate_publish_scope(

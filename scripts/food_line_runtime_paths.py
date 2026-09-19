@@ -13,6 +13,20 @@ FOOD_LINE_AGENT_INTAKE_RE = re.compile(r"^data/dispatches/food-line/agent-intake
 FOOD_LINE_REVIEW_RE = re.compile(r"^data/dispatches/food-line/review(?:/.*)?$")
 FOOD_LINE_OUTPUT_REVIEW_RE = re.compile(r"^output/review/food-line(?:/.*)?$")
 FOOD_LINE_DISCOVERY_RUNS_RE = re.compile(r"^data/dispatches/food-line/discovery-runs(?:/.*)?$")
+FOOD_LINE_DATE_RECONCILIATION_RE = re.compile(
+    r"^data/dispatches/food-line/date-reconciliation/\d{4}-\d{2}-\d{2}\.json$"
+)
+FOOD_LINE_COVERAGE_GAP_RE = re.compile(
+    r"^data/dispatches/food-line/coverage-gaps/\d{4}-\d{2}-\d{2}\.json$"
+)
+FOOD_LINE_HISTORICAL_RECONSTRUCTION_RE = re.compile(
+    r"^data/dispatches/food-line/historical-reconstruction/\d{4}-\d{2}-\d{2}/"
+    r"(?:reconstruction\.json|research-input\.json|review/candidates\.json|"
+    r"review/decisions/food-recon-\d{8}-[a-z0-9-]{1,160}\.json)$"
+)
+FOOD_LINE_HISTORICAL_RECONSTRUCTION_ROOT_RE = re.compile(
+    r"^data/dispatches/food-line/historical-reconstruction(?:/.*)?$"
+)
 FOOD_LINE_STATUS_RE = re.compile(r"^status/food-line(?:/.*)?$")
 FOOD_LINE_OPERATIONAL_HEALTH_RE = re.compile(
     r"^status/operational-health/food-line/\d{4}-\d{2}-\d{2}/"
@@ -71,6 +85,14 @@ def classify_food_line_runtime_path(path_text: str) -> str | None:
         return "local_run_state"
     if FOOD_LINE_DISCOVERY_RUNS_RE.match(lower):
         return "local_run_state"
+    if FOOD_LINE_DATE_RECONCILIATION_RE.match(lower):
+        return "local_run_state"
+    if FOOD_LINE_COVERAGE_GAP_RE.match(lower):
+        return "local_run_state"
+    if FOOD_LINE_HISTORICAL_RECONSTRUCTION_RE.match(lower):
+        return "review_output"
+    if FOOD_LINE_HISTORICAL_RECONSTRUCTION_ROOT_RE.match(lower):
+        return "unknown"
     if FOOD_LINE_STATUS_RE.match(lower):
         return "local_run_state"
     if FOOD_LINE_OPERATIONAL_HEALTH_RE.match(lower):
@@ -89,7 +111,8 @@ def classify_food_line_runtime_path(path_text: str) -> str | None:
 
 
 def is_food_line_mutable_tracked_runtime_path(path_text: str) -> bool:
-    return _normalize_path(path_text).lower() in FOOD_LINE_MUTABLE_TRACKED_RUNTIME_PATHS
+    path = _normalize_path(path_text).lower()
+    return path in FOOD_LINE_MUTABLE_TRACKED_RUNTIME_PATHS or bool(FOOD_LINE_COVERAGE_GAP_RE.match(path))
 
 
 def food_line_runtime_paths() -> list[str]:
@@ -103,6 +126,9 @@ def food_line_runtime_paths() -> list[str]:
         "data/dispatches/food-line/review/",
         "data/dispatches/food-line/discovery/",
         "data/dispatches/food-line/discovery-runs/",
+        "data/dispatches/food-line/date-reconciliation/",
+        "data/dispatches/food-line/coverage-gaps/",
+        "data/dispatches/food-line/historical-reconstruction/",
         "output/review/food-line/",
         "data/agent-history-staging/food-line/",
     ]

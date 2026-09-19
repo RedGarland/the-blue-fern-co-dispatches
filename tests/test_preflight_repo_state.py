@@ -248,6 +248,51 @@ def test_food_line_discovery_candidates_path_is_allowed_but_nearby_paths_stay_ri
     }
 
 
+def test_food_line_historical_recovery_paths_are_allowed_but_siblings_stay_risky(monkeypatch, tmp_path):
+    source_repo = tmp_path / "repo"
+    source_repo.mkdir()
+    monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: None)
+
+    def fake_run_git_status(_repo: Path):
+        return 0, [
+            "## add/food-line-recovery",
+            " M data/dispatches/food-line/coverage-gaps/2026-09-09.json",
+            "?? data/dispatches/food-line/date-reconciliation/2026-09-09.json",
+            "?? data/dispatches/food-line/historical-reconstruction/2026-09-09/reconstruction.json",
+            "?? data/dispatches/food-line/historical-reconstruction/2026-09-09/research-input.json",
+            "?? data/dispatches/food-line/historical-reconstruction/2026-09-09/review/candidates.json",
+            "?? data/dispatches/food-line/historical-reconstruction/2026-09-09/review/decisions/food-recon-20260909-002-lansingburgh-pantry.json",
+            "?? data/dispatches/food-line/historical-reconstruction/2026-09-09/review/notes.json",
+            "?? data/dispatches/food-line/historical-reconstruction/not-a-date/reconstruction.json",
+            "?? data/dispatches/food-line/date-reconciliation/latest.json",
+            "?? data/dispatches/food-line/coverage-gaps/readme.json",
+            "?? data/dispatches/food-line/random/file.json",
+            " M scripts/doctor.py",
+        ]
+
+    monkeypatch.setattr(preflight_repo_state, "_run_git_status", fake_run_git_status)
+
+    report = preflight_repo_state.build_preflight_report(source_repo)
+
+    assert report["ok"] is False
+    assert {entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]} == {
+        "data/dispatches/food-line/coverage-gaps/2026-09-09.json",
+        "data/dispatches/food-line/date-reconciliation/2026-09-09.json",
+        "data/dispatches/food-line/historical-reconstruction/2026-09-09/reconstruction.json",
+        "data/dispatches/food-line/historical-reconstruction/2026-09-09/research-input.json",
+        "data/dispatches/food-line/historical-reconstruction/2026-09-09/review/candidates.json",
+        "data/dispatches/food-line/historical-reconstruction/2026-09-09/review/decisions/food-recon-20260909-002-lansingburgh-pantry.json",
+    }
+    assert {entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]} == {
+        "data/dispatches/food-line/historical-reconstruction/2026-09-09/review/notes.json",
+        "data/dispatches/food-line/historical-reconstruction/not-a-date/reconstruction.json",
+        "data/dispatches/food-line/date-reconciliation/latest.json",
+        "data/dispatches/food-line/coverage-gaps/readme.json",
+        "data/dispatches/food-line/random/file.json",
+        "scripts/doctor.py",
+    }
+
+
 def test_allowed_local_generated_entries_do_not_fail_preflight(monkeypatch, tmp_path):
     source_repo = tmp_path / "repo"
     source_repo.mkdir()

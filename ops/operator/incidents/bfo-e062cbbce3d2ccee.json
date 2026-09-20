@@ -1,0 +1,20 @@
+{
+  "affected_date": "2026-09-19",
+  "classification": "STALE_OBSERVABILITY",
+  "detected_at": "2026-09-20T20:19:43Z",
+  "dispatch": "ice",
+  "evidence": [
+    "ops/status/ice/latest.json missing",
+    "status/operational-health/ice/2026-09-19/runs/ice_monitor-ice-monitor-20260920T041501Z-b2f01e14.json"
+  ],
+  "incident_id": "bfo-e062cbbce3d2ccee",
+  "incident_key": "ice|STALE_OBSERVABILITY|2026-09-19|ice_monitor",
+  "production_state_mutated": false,
+  "recommended_action": "INVESTIGATE_STATUS_EXPORT",
+  "recovery_action": "NONE",
+  "recovery_disposition": "NO_ACTION",
+  "schema_version": "blue_fern_operator_incident_v1",
+  "state": "OPEN",
+  "status_state": "COMPLETE",
+  "updated_at": "2026-09-20T20:19:43Z"
+}

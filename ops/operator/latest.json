@@ -1,0 +1,207 @@
+{
+  "checked_at": "2026-09-20T20:19:43Z",
+  "dispatches": [
+    {
+      "classification": "STALE_OBSERVABILITY",
+      "dispatch": "food-line",
+      "evidence": [
+        "exported_at=2026-09-11T18:07:41Z",
+        "observed_date=2026-09-11",
+        "ops/status/food-line/latest.json",
+        "status/operational-health/food-line/2026-09-20/runs/food_line_current_intake-food-line-scheduled-20260920-20260920T123001Z-aaf26682.json",
+        "status/operational-health/food-line/2026-09-20/runs/food_line_daily_publish-20260920T153001Z-12100-bd9dccad.json",
+        "status/operational-health/food-line/2026-09-20/runs/food_line_source_watch-food-line-scheduled-20260920-20260920T123001Z-aaf26682.json",
+        "status/operational-health/food-line/2026-09-20/runs/food_line_source_watch_resume-food-line-scheduled-20260920-20260920T123001Z-aaf26682.json"
+      ],
+      "exported_status": {
+        "age_minutes": 13092.033333333333,
+        "evidence": [
+          "ops/status/food-line/latest.json",
+          "exported_at=2026-09-11T18:07:41Z",
+          "observed_date=2026-09-11"
+        ],
+        "exported_at": "2026-09-11T18:07:41Z",
+        "is_fresh": false,
+        "observed_date": "2026-09-11",
+        "path": "ops/status/food-line/latest.json"
+      },
+      "incident_id": "bfo-362ab50f557b212c",
+      "observed_date": "2026-09-20",
+      "recommended_action": "INVESTIGATE_FAILED_SOURCES",
+      "recovery_action": "INVESTIGATE_FAILED_SOURCES",
+      "recovery_disposition": "OPERATOR_REVIEW_REQUIRED",
+      "state": "STALE_OBSERVABILITY",
+      "status_state": "DEGRADED"
+    },
+    {
+      "classification": "STALE_OBSERVABILITY",
+      "dispatch": "care-line",
+      "evidence": [
+        "ops/status/care-line/latest.json missing",
+        "status/operational-health/care-line/2026-09-20/runs/care_line_approved_release_publication-20260920T153001Z-28056.json",
+        "status/operational-health/care-line/2026-09-20/runs/care_line_collection-20260920T010001Z-31040.json",
+        "status/operational-health/care-line/2026-09-20/runs/care_line_collection-20260920T130001Z-7676.json",
+        "status/operational-health/care-line/2026-09-20/runs/care_line_collection-20260920T190001Z-28056.json",
+        "status/operational-health/care-line/2026-09-20/runs/care_line_reviewed_event_queue-20260920T150003Z-cdcd165d.json"
+      ],
+      "exported_status": {
+        "age_minutes": null,
+        "evidence": [
+          "ops/status/care-line/latest.json missing"
+        ],
+        "exported_at": null,
+        "is_fresh": false,
+        "observed_date": null,
+        "path": "ops/status/care-line/latest.json"
+      },
+      "incident_id": "bfo-830fc79c0af5b4d3",
+      "observed_date": "2026-09-20",
+      "recommended_action": "INVESTIGATE_COLLECTION",
+      "recovery_action": "INVESTIGATE_COLLECTION",
+      "recovery_disposition": "PLAN_AVAILABLE",
+      "state": "STALE_OBSERVABILITY",
+      "status_state": "FAILED"
+    },
+    {
+      "classification": "STALE_OBSERVABILITY",
+      "dispatch": "gaza",
+      "evidence": [
+        "ops/status/gaza/latest.json missing"
+      ],
+      "exported_status": {
+        "age_minutes": null,
+        "evidence": [
+          "ops/status/gaza/latest.json missing"
+        ],
+        "exported_at": null,
+        "is_fresh": false,
+        "observed_date": null,
+        "path": "ops/status/gaza/latest.json"
+      },
+      "incident_id": "bfo-aa546dc3bc954a41",
+      "observed_date": "2026-09-20",
+      "recommended_action": "INVESTIGATE_STATUS_EXPORT",
+      "recovery_action": "INVESTIGATE_STATUS_EXPORT",
+      "recovery_disposition": "UNKNOWN",
+      "state": "STALE_OBSERVABILITY",
+      "status_state": "UNKNOWN"
+    },
+    {
+      "classification": "STALE_OBSERVABILITY",
+      "dispatch": "ice",
+      "evidence": [
+        "ops/status/ice/latest.json missing",
+        "status/operational-health/ice/2026-09-19/runs/ice_monitor-ice-monitor-20260920T041501Z-b2f01e14.json"
+      ],
+      "exported_status": {
+        "age_minutes": null,
+        "evidence": [
+          "ops/status/ice/latest.json missing"
+        ],
+        "exported_at": null,
+        "is_fresh": false,
+        "observed_date": null,
+        "path": "ops/status/ice/latest.json"
+      },
+      "incident_id": "bfo-e062cbbce3d2ccee",
+      "observed_date": "2026-09-19",
+      "recommended_action": "INVESTIGATE_STATUS_EXPORT",
+      "recovery_action": "NONE",
+      "recovery_disposition": "NO_ACTION",
+      "state": "STALE_OBSERVABILITY",
+      "status_state": "COMPLETE"
+    }
+  ],
+  "incidents": [
+    {
+      "affected_date": "2026-09-20",
+      "classification": "STALE_OBSERVABILITY",
+      "detected_at": "2026-09-20T20:19:43Z",
+      "dispatch": "food-line",
+      "evidence": [
+        "exported_at=2026-09-11T18:07:41Z",
+        "observed_date=2026-09-11",
+        "ops/status/food-line/latest.json",
+        "status/operational-health/food-line/2026-09-20/runs/food_line_current_intake-food-line-scheduled-20260920-20260920T123001Z-aaf26682.json",
+        "status/operational-health/food-line/2026-09-20/runs/food_line_daily_publish-20260920T153001Z-12100-bd9dccad.json",
+        "status/operational-health/food-line/2026-09-20/runs/food_line_source_watch-food-line-scheduled-20260920-20260920T123001Z-aaf26682.json",
+        "status/operational-health/food-line/2026-09-20/runs/food_line_source_watch_resume-food-line-scheduled-20260920-20260920T123001Z-aaf26682.json"
+      ],
+      "incident_id": "bfo-362ab50f557b212c",
+      "incident_key": "food-line|STALE_OBSERVABILITY|2026-09-20|food_line_current_intake,food_line_daily_publish,food_line_source_watch,food_line_source_watch_resume",
+      "production_state_mutated": false,
+      "recommended_action": "INVESTIGATE_FAILED_SOURCES",
+      "recovery_action": "INVESTIGATE_FAILED_SOURCES",
+      "recovery_disposition": "OPERATOR_REVIEW_REQUIRED",
+      "schema_version": "blue_fern_operator_incident_v1",
+      "state": "OPEN",
+      "status_state": "DEGRADED",
+      "updated_at": "2026-09-20T20:19:43Z"
+    },
+    {
+      "affected_date": "2026-09-20",
+      "classification": "STALE_OBSERVABILITY",
+      "detected_at": "2026-09-20T20:19:43Z",
+      "dispatch": "care-line",
+      "evidence": [
+        "ops/status/care-line/latest.json missing",
+        "status/operational-health/care-line/2026-09-20/runs/care_line_approved_release_publication-20260920T153001Z-28056.json",
+        "status/operational-health/care-line/2026-09-20/runs/care_line_collection-20260920T010001Z-31040.json",
+        "status/operational-health/care-line/2026-09-20/runs/care_line_collection-20260920T130001Z-7676.json",
+        "status/operational-health/care-line/2026-09-20/runs/care_line_collection-20260920T190001Z-28056.json",
+        "status/operational-health/care-line/2026-09-20/runs/care_line_reviewed_event_queue-20260920T150003Z-cdcd165d.json"
+      ],
+      "incident_id": "bfo-830fc79c0af5b4d3",
+      "incident_key": "care-line|STALE_OBSERVABILITY|2026-09-20|",
+      "production_state_mutated": false,
+      "recommended_action": "INVESTIGATE_COLLECTION",
+      "recovery_action": "INVESTIGATE_COLLECTION",
+      "recovery_disposition": "PLAN_AVAILABLE",
+      "schema_version": "blue_fern_operator_incident_v1",
+      "state": "OPEN",
+      "status_state": "FAILED",
+      "updated_at": "2026-09-20T20:19:43Z"
+    },
+    {
+      "affected_date": "2026-09-20",
+      "classification": "STALE_OBSERVABILITY",
+      "detected_at": "2026-09-20T20:19:43Z",
+      "dispatch": "gaza",
+      "evidence": [
+        "ops/status/gaza/latest.json missing"
+      ],
+      "incident_id": "bfo-aa546dc3bc954a41",
+      "incident_key": "gaza|STALE_OBSERVABILITY|2026-09-20|",
+      "production_state_mutated": false,
+      "recommended_action": "INVESTIGATE_STATUS_EXPORT",
+      "recovery_action": "INVESTIGATE_STATUS_EXPORT",
+      "recovery_disposition": "UNKNOWN",
+      "schema_version": "blue_fern_operator_incident_v1",
+      "state": "OPEN",
+      "status_state": "UNKNOWN",
+      "updated_at": "2026-09-20T20:19:43Z"
+    },
+    {
+      "affected_date": "2026-09-19",
+      "classification": "STALE_OBSERVABILITY",
+      "detected_at": "2026-09-20T20:19:43Z",
+      "dispatch": "ice",
+      "evidence": [
+        "ops/status/ice/latest.json missing",
+        "status/operational-health/ice/2026-09-19/runs/ice_monitor-ice-monitor-20260920T041501Z-b2f01e14.json"
+      ],
+      "incident_id": "bfo-e062cbbce3d2ccee",
+      "incident_key": "ice|STALE_OBSERVABILITY|2026-09-19|ice_monitor",
+      "production_state_mutated": false,
+      "recommended_action": "INVESTIGATE_STATUS_EXPORT",
+      "recovery_action": "NONE",
+      "recovery_disposition": "NO_ACTION",
+      "schema_version": "blue_fern_operator_incident_v1",
+      "state": "OPEN",
+      "status_state": "COMPLETE",
+      "updated_at": "2026-09-20T20:19:43Z"
+    }
+  ],
+  "production_state_mutated": false,
+  "schema_version": "blue_fern_operator_result_v1"
+}

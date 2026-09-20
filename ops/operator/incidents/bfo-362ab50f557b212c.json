@@ -1,0 +1,25 @@
+{
+  "affected_date": "2026-09-20",
+  "classification": "STALE_OBSERVABILITY",
+  "detected_at": "2026-09-20T20:19:43Z",
+  "dispatch": "food-line",
+  "evidence": [
+    "exported_at=2026-09-11T18:07:41Z",
+    "observed_date=2026-09-11",
+    "ops/status/food-line/latest.json",
+    "status/operational-health/food-line/2026-09-20/runs/food_line_current_intake-food-line-scheduled-20260920-20260920T123001Z-aaf26682.json",
+    "status/operational-health/food-line/2026-09-20/runs/food_line_daily_publish-20260920T153001Z-12100-bd9dccad.json",
+    "status/operational-health/food-line/2026-09-20/runs/food_line_source_watch-food-line-scheduled-20260920-20260920T123001Z-aaf26682.json",
+    "status/operational-health/food-line/2026-09-20/runs/food_line_source_watch_resume-food-line-scheduled-20260920-20260920T123001Z-aaf26682.json"
+  ],
+  "incident_id": "bfo-362ab50f557b212c",
+  "incident_key": "food-line|STALE_OBSERVABILITY|2026-09-20|food_line_current_intake,food_line_daily_publish,food_line_source_watch,food_line_source_watch_resume",
+  "production_state_mutated": false,
+  "recommended_action": "INVESTIGATE_FAILED_SOURCES",
+  "recovery_action": "INVESTIGATE_FAILED_SOURCES",
+  "recovery_disposition": "OPERATOR_REVIEW_REQUIRED",
+  "schema_version": "blue_fern_operator_incident_v1",
+  "state": "OPEN",
+  "status_state": "DEGRADED",
+  "updated_at": "2026-09-20T20:19:43Z"
+}

@@ -1,0 +1,24 @@
+{
+  "affected_date": "2026-09-20",
+  "classification": "STALE_OBSERVABILITY",
+  "detected_at": "2026-09-20T20:19:43Z",
+  "dispatch": "care-line",
+  "evidence": [
+    "ops/status/care-line/latest.json missing",
+    "status/operational-health/care-line/2026-09-20/runs/care_line_approved_release_publication-20260920T153001Z-28056.json",
+    "status/operational-health/care-line/2026-09-20/runs/care_line_collection-20260920T010001Z-31040.json",
+    "status/operational-health/care-line/2026-09-20/runs/care_line_collection-20260920T130001Z-7676.json",
+    "status/operational-health/care-line/2026-09-20/runs/care_line_collection-20260920T190001Z-28056.json",
+    "status/operational-health/care-line/2026-09-20/runs/care_line_reviewed_event_queue-20260920T150003Z-cdcd165d.json"
+  ],
+  "incident_id": "bfo-830fc79c0af5b4d3",
+  "incident_key": "care-line|STALE_OBSERVABILITY|2026-09-20|",
+  "production_state_mutated": false,
+  "recommended_action": "INVESTIGATE_COLLECTION",
+  "recovery_action": "INVESTIGATE_COLLECTION",
+  "recovery_disposition": "PLAN_AVAILABLE",
+  "schema_version": "blue_fern_operator_incident_v1",
+  "state": "OPEN",
+  "status_state": "FAILED",
+  "updated_at": "2026-09-20T20:19:43Z"
+}

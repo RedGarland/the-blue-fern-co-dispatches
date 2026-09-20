@@ -1,0 +1,23 @@
+{
+  "dispatches": {
+    "care-line": {
+      "enabled": true,
+      "runner_root": "C:\\BlueFernRunner\\CareLineNationalCurrent8"
+    },
+    "food-line": {
+      "enabled": true,
+      "runner_root": "C:\\BlueFernRunner\\FoodLineCurrent6"
+    },
+    "gaza": {
+      "enabled": true,
+      "runner_root": "C:\\BlueFernRunner\\GazaDispatchesCurrent6"
+    },
+    "ice": {
+      "enabled": true,
+      "runner_root": "C:\\BlueFernRunner\\ICEMonitorCurrent"
+    }
+  },
+  "operator": {
+    "status_freshness_threshold_minutes": 120
+  }
+}

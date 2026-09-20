@@ -6,7 +6,7 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 
-from scripts.dispatch_ops import DispatchStatus, RecoveryPlan
+from scripts.dispatch_ops import ApplyResult, DispatchStatus, RecoveryPlan
 from scripts import blue_fern_operator as operator
 
 
@@ -24,6 +24,14 @@ def _config(runner: Path, dispatch: str = "food-line") -> operator.OperatorConfi
         for name in operator.DISPATCH_ORDER
     }
     return operator.OperatorConfig(status_freshness_threshold_minutes=120, dispatches=dispatches)
+
+
+def _policy(repo: Path, mode: str = "automatic") -> None:
+    _write_json(repo / "ops/operator/placeholder.json", {"ok": True})
+    (repo / "ops/operator/remediation-policy.yaml").write_text(
+        f"REBUILD_STATUS:\n  mode: {mode}\nREPLAY_COLLECTION:\n  mode: forbidden\nPUBLISH_NO_UPDATE:\n  mode: forbidden\n",
+        encoding="utf-8",
+    )
 
 
 def _export(repo: Path, dispatch: str, date: str, exported_at: str = "2026-09-20T11:30:00Z") -> None:
@@ -76,6 +84,37 @@ def _plan(status: DispatchStatus, action: str = "NONE", disposition: str = "NO_A
         collection_rerun=False,
         reason="test plan",
         evidence=status.evidence,
+    )
+
+
+def _apply_result(
+    status: DispatchStatus,
+    *,
+    outcome: str = "REBUILT",
+    changed: bool = True,
+    unexpected: list[str] | None = None,
+) -> ApplyResult:
+    return ApplyResult(
+        dispatch=status.dispatch,
+        date=status.date,
+        planned_action="REBUILD_STATUS",
+        outcome=outcome,
+        changed=changed,
+        public_side_effects=False,
+        scheduler_changes=False,
+        collection_rerun=False,
+        editorial_mutation=False,
+        publication_attempted=False,
+        status_artifacts_changed=[
+            f"ops/status/{status.dispatch}/history/{status.date}.json",
+            f"ops/status/{status.dispatch}/latest.json",
+        ]
+        if changed
+        else [],
+        unexpected_changes=unexpected or [],
+        evidence=status.evidence,
+        status_before=status.to_json_payload(),
+        status_after=status.to_json_payload(),
     )
 
 
@@ -136,6 +175,150 @@ def test_stale_export_with_local_rebuild_plan_recommends_rebuild_status(monkeypa
 
     assert result.incidents[0].recommended_action == "REBUILD_STATUS"
     assert result.incidents[0].recovery_action == "REBUILD_STATUS"
+
+
+def test_stale_status_with_automatic_policy_auto_applies_rebuild(monkeypatch, tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    runner = tmp_path / "runner"
+    _policy(repo, "automatic")
+    _export(repo, "food-line", "2026-09-11", "2026-09-11T18:07:41Z")
+    before = _status(date="2026-09-20", state="SAFE_NO_OP", next_action="INVESTIGATE_STATUS_EXPORT")
+    after = _status(date="2026-09-20", state="SAFE_NO_OP", next_action="NONE")
+    statuses = iter([before, after])
+    monkeypatch.setattr(operator, "build_status", lambda *_args, **_kwargs: next(statuses))
+    monkeypatch.setattr(
+        operator,
+        "build_recovery_plan_from_status",
+        lambda status: _plan(status, action="REBUILD_STATUS", disposition="PLAN_AVAILABLE")
+        if status.next_action == "INVESTIGATE_STATUS_EXPORT"
+        else _plan(status),
+    )
+    calls: list[Path] = []
+
+    def apply(dispatch, date, *, root, confirm):
+        calls.append(root)
+        return _apply_result(before)
+
+    monkeypatch.setattr(operator, "apply_recovery_plan", apply)
+
+    result = _run(repo, runner)
+
+    assert calls == [runner / "food-line"]
+    assert result.dispatches[0].notification_state == "AUTO_RECOVERED_FULLY"
+    assert result.incidents[0].state == "RECOVERED"
+    assert result.incidents[0].remediation["attempted"] is True
+    assert result.incidents[0].remediation["outcome"] == "REBUILT"
+
+
+def test_successful_rebuild_with_underlying_degraded_opens_underlying_incident(monkeypatch, tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    runner = tmp_path / "runner"
+    _policy(repo, "automatic")
+    _export(repo, "food-line", "2026-09-11", "2026-09-11T18:07:41Z")
+    before = _status(date="2026-09-20", state="SAFE_NO_OP", next_action="INVESTIGATE_STATUS_EXPORT")
+    degraded = _status(date="2026-09-20", state="DEGRADED", next_action="INVESTIGATE_FAILED_SOURCES")
+    statuses = iter([before, degraded])
+    monkeypatch.setattr(operator, "build_status", lambda *_args, **_kwargs: next(statuses))
+    monkeypatch.setattr(
+        operator,
+        "build_recovery_plan_from_status",
+        lambda status: _plan(status, action="REBUILD_STATUS", disposition="PLAN_AVAILABLE")
+        if status.next_action == "INVESTIGATE_STATUS_EXPORT"
+        else _plan(status, action="INVESTIGATE_FAILED_SOURCES", disposition="OPERATOR_REVIEW_REQUIRED"),
+    )
+    monkeypatch.setattr(operator, "apply_recovery_plan", lambda *_args, **_kwargs: _apply_result(before))
+
+    result = _run(repo, runner)
+
+    by_class = {incident.classification: incident for incident in result.incidents}
+    assert by_class["STALE_OBSERVABILITY"].state == "RECOVERED"
+    assert by_class["DEGRADED_RUN"].state == "OPEN"
+    assert by_class["DEGRADED_RUN"].recommended_action == "INVESTIGATE_FAILED_SOURCES"
+    assert result.dispatches[0].notification_state == "AUTO_RECOVERED"
+
+
+def test_second_run_does_not_rebuild_after_fresh_runner_export(monkeypatch, tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    runner = tmp_path / "runner"
+    _policy(repo, "automatic")
+    _export(repo, "food-line", "2026-09-11", "2026-09-11T18:07:41Z")
+    before = _status(date="2026-09-20", state="SAFE_NO_OP", next_action="INVESTIGATE_STATUS_EXPORT")
+    after = _status(date="2026-09-20", state="SAFE_NO_OP", next_action="NONE")
+    statuses = iter([before, after, after])
+    monkeypatch.setattr(operator, "build_status", lambda *_args, **_kwargs: next(statuses))
+    monkeypatch.setattr(
+        operator,
+        "build_recovery_plan_from_status",
+        lambda status: _plan(status, action="REBUILD_STATUS", disposition="PLAN_AVAILABLE")
+        if status.next_action == "INVESTIGATE_STATUS_EXPORT"
+        else _plan(status),
+    )
+    calls = 0
+
+    def apply(*_args, **_kwargs):
+        nonlocal calls
+        calls += 1
+        _export(runner / "food-line", "food-line", "2026-09-20", "2026-09-20T11:30:00Z")
+        return _apply_result(before)
+
+    monkeypatch.setattr(operator, "apply_recovery_plan", apply)
+
+    first = _run(repo, runner)
+    second = _run(repo, runner)
+
+    assert calls == 1
+    assert first.dispatches[0].notification_state == "AUTO_RECOVERED_FULLY"
+    assert second.dispatches[0].state == "NO_ACTION"
+
+
+def test_recommend_policy_does_not_auto_apply(monkeypatch, tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    runner = tmp_path / "runner"
+    _policy(repo, "recommend")
+    _export(repo, "food-line", "2026-09-11", "2026-09-11T18:07:41Z")
+    status = _status(next_action="INVESTIGATE_STATUS_EXPORT")
+    _patch_status(monkeypatch, status, _plan(status, action="REBUILD_STATUS", disposition="PLAN_AVAILABLE"))
+    monkeypatch.setattr(operator, "apply_recovery_plan", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("should not apply")))
+
+    result = _run(repo, runner)
+
+    assert result.incidents[0].state == "OPEN"
+    assert result.incidents[0].remediation["attempted"] is False
+    assert result.incidents[0].recommended_action == "REBUILD_STATUS"
+
+
+def test_forbidden_policy_does_not_auto_apply(monkeypatch, tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    runner = tmp_path / "runner"
+    _policy(repo, "forbidden")
+    _export(repo, "food-line", "2026-09-11", "2026-09-11T18:07:41Z")
+    status = _status(next_action="INVESTIGATE_STATUS_EXPORT")
+    _patch_status(monkeypatch, status, _plan(status, action="REBUILD_STATUS", disposition="PLAN_AVAILABLE"))
+    monkeypatch.setattr(operator, "apply_recovery_plan", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("should not apply")))
+
+    result = _run(repo, runner)
+
+    assert result.incidents[0].state == "OPEN"
+    assert result.incidents[0].remediation["reason"] == "policy mode is forbidden"
+
+
+def test_unexpected_rebuild_mutation_keeps_incident_open(monkeypatch, tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    runner = tmp_path / "runner"
+    _policy(repo, "automatic")
+    _export(repo, "ice", "2026-09-11", "2026-09-11T18:07:41Z")
+    before = _status(dispatch="ice", date="2026-09-19", state="COMPLETE", next_action="INVESTIGATE_STATUS_EXPORT")
+    after = _status(dispatch="ice", date="2026-09-19", state="COMPLETE", next_action="INVESTIGATE_STATUS_EXPORT")
+    statuses = iter([before, after])
+    monkeypatch.setattr(operator, "build_status", lambda *_args, **_kwargs: next(statuses))
+    monkeypatch.setattr(operator, "build_recovery_plan_from_status", lambda status: _plan(status, action="REBUILD_STATUS", disposition="PLAN_AVAILABLE"))
+    monkeypatch.setattr(operator, "apply_recovery_plan", lambda *_args, **_kwargs: _apply_result(before, outcome="FAILED", unexpected=["data/unexpected.txt"]))
+
+    result = _run(repo, runner, "ice")
+
+    assert result.dispatches[0].notification_state == "REMEDIATION_FAILED"
+    assert result.incidents[0].state == "OPEN"
+    assert result.incidents[0].remediation["unexpected_changes"] == ["data/unexpected.txt"]
 
 
 def test_care_degraded_classifies_failed_sources(monkeypatch, tmp_path: Path) -> None:

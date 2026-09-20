@@ -5,6 +5,8 @@ import json
 import os
 from pathlib import Path
 
+import pytest
+
 from bluefern_dispatches.operational_health import build_care_line_operational_receipt, build_operational_receipt
 from scripts.dispatch_ops import DispatchStatus, apply_recovery_plan, build_recovery_plan, build_status, main
 
@@ -160,6 +162,35 @@ def _food_status_export(root: Path, date: str, aggregate: str, *, task_status: s
             ],
         },
     )
+
+
+def _food_safe_no_op_receipts(root: Path, date: str = "2026-09-20") -> None:
+    rows = [
+        ("food_line_source_watch", "source-watch"),
+        ("food_line_source_watch_resume", "source-watch-resume"),
+        ("food_line_current_intake", "current-intake"),
+        ("food_line_daily_publish", "daily-publish"),
+    ]
+    receipt_root = root / "status/operational-health/food-line" / date / "runs"
+    for index, (task_key, run_id) in enumerate(rows):
+        artifact = _artifact(root, f"status/food-line/scheduler-runs/{date}/{run_id}.json")
+        receipt = build_operational_receipt(
+            dispatch="food-line",
+            task_key=task_key,
+            task_name=task_key,
+            scheduled_for=f"{date}T12:{index:02d}:00Z",
+            started_at=f"{date}T12:{index:02d}:01Z",
+            completed_at=f"{date}T12:{index:02d}:30Z",
+            observed_at=f"{date}T12:{index:02d}:30Z",
+            exit_code=0,
+            status="SAFE_NO_OP",
+            classification="no_qualifying_edition",
+            run_id=run_id,
+            artifact_refs={"task_receipt": str(artifact)},
+            publication_attempted=False if task_key == "food_line_daily_publish" else None,
+            publication_status="skipped_not_release_ready" if task_key == "food_line_daily_publish" else None,
+        )
+        _write_json(receipt_root / f"{run_id}.json", receipt)
 
 
 def _care_status_export(root: Path, date: str, aggregate: str) -> None:
@@ -605,6 +636,46 @@ def test_recover_unverified_public_state_verifies_public_state(tmp_path: Path) -
     assert plan.public_side_effects is False
 
 
+def test_recover_complete_receipts_missing_status_export_plans_rebuild_status(tmp_path: Path) -> None:
+    _food_safe_no_op_receipts(tmp_path)
+
+    plan = build_recovery_plan("food-line", "2026-09-20", root=tmp_path)
+
+    assert plan.status_state == "SAFE_NO_OP"
+    assert plan.disposition == "PLAN_AVAILABLE"
+    assert plan.action == "REBUILD_STATUS"
+    assert plan.public_side_effects is False
+    assert plan.collection_rerun is False
+    assert plan.scheduler_changes is False
+    assert plan.safe_to_apply is False
+    assert plan.preconditions == [
+        "AUTHORITATIVE_RECEIPTS_PRESENT",
+        "NO_COLLECTION_REPLAY_REQUIRED",
+        "NO_EDITORIAL_ACTION_REQUIRED",
+        "NO_PUBLICATION_REQUIRED",
+        "SOURCE_EVIDENCE_COMPLETE",
+        "STATUS_EXPORTER_AVAILABLE",
+        "STATUS_EXPORT_MISSING_OR_STALE",
+    ]
+
+
+def test_recover_complete_receipts_stale_status_export_plans_rebuild_status(tmp_path: Path) -> None:
+    _food_safe_no_op_receipts(tmp_path)
+    _food_status_export(
+        tmp_path,
+        "2026-09-20",
+        "SUCCESS",
+        task_status="SAFE_NO_OP",
+        classification="no_qualifying_edition",
+    )
+
+    plan = build_recovery_plan("food-line", "2026-09-20", root=tmp_path)
+
+    assert plan.status_state == "SAFE_NO_OP"
+    assert plan.disposition == "PLAN_AVAILABLE"
+    assert plan.action == "REBUILD_STATUS"
+
+
 def test_recover_failed_collection_investigates_collection(tmp_path: Path) -> None:
     _food_status_export(tmp_path, "2026-09-11", "FAILED", task_status="FAILED", classification="source_watch_failed")
 
@@ -692,6 +763,123 @@ def test_apply_wrong_confirmation_is_refused(tmp_path: Path) -> None:
     assert "Missing required confirmation token" in result.warnings[0]
 
 
+def test_apply_rebuild_status_without_confirmation_is_refused(tmp_path: Path) -> None:
+    _food_safe_no_op_receipts(tmp_path)
+
+    result = apply_recovery_plan("food-line", "2026-09-20", root=tmp_path)
+
+    assert result.outcome == "REFUSED"
+    assert result.planned_action == "REBUILD_STATUS"
+    assert "Missing required confirmation token" in result.warnings[0]
+
+
+def test_apply_rebuild_status_wrong_confirmation_is_refused(tmp_path: Path) -> None:
+    _food_safe_no_op_receipts(tmp_path)
+
+    result = apply_recovery_plan("food-line", "2026-09-20", root=tmp_path, confirm="VERIFY_PUBLIC_STATE")
+
+    assert result.outcome == "REFUSED"
+    assert result.planned_action == "REBUILD_STATUS"
+    assert result.changed is False
+
+
+def test_apply_rebuild_status_rebuilds_only_operational_status_artifacts(tmp_path: Path) -> None:
+    _food_safe_no_op_receipts(tmp_path)
+    paths, before = _snapshot_files(tmp_path)
+
+    result = apply_recovery_plan("food-line", "2026-09-20", root=tmp_path, confirm="REBUILD_STATUS")
+    after_paths, after = _snapshot_files(tmp_path)
+
+    assert result.outcome == "REBUILT"
+    assert result.changed is True
+    assert result.public_side_effects is False
+    assert result.scheduler_changes is False
+    assert result.collection_rerun is False
+    assert result.editorial_mutation is False
+    assert result.publication_attempted is False
+    assert result.status_artifacts_changed == [
+        "ops/status/food-line/history/2026-09-20.json",
+        "ops/status/food-line/latest.json",
+    ]
+    assert result.unexpected_changes == []
+    assert result.status_after["state"] == "SAFE_NO_OP"
+    new_paths = {path.relative_to(tmp_path).as_posix() for path in after_paths} - {
+        path.relative_to(tmp_path).as_posix() for path in paths
+    }
+    assert new_paths == set(result.status_artifacts_changed)
+    for path, fingerprint in before.items():
+        rel = path.relative_to(tmp_path).as_posix()
+        if rel not in result.status_artifacts_changed:
+            assert after[path] == fingerprint
+
+
+def test_apply_rebuild_status_second_run_is_deterministic_no_change(tmp_path: Path) -> None:
+    _food_safe_no_op_receipts(tmp_path)
+
+    first = apply_recovery_plan("food-line", "2026-09-20", root=tmp_path, confirm="REBUILD_STATUS")
+    paths, before = _snapshot_files(tmp_path)
+    second = apply_recovery_plan("food-line", "2026-09-20", root=tmp_path, confirm="REBUILD_STATUS")
+    after_paths, after = _snapshot_files(tmp_path)
+
+    assert first.outcome == "REBUILT"
+    assert second.outcome == "NO_ACTION"
+    assert second.changed is False
+    assert after_paths == paths
+    assert after == before
+
+
+def test_apply_rebuild_status_refuses_incomplete_receipts_without_mutation(tmp_path: Path) -> None:
+    artifact = _artifact(tmp_path, "status/food-line/scheduler-runs/2026-09-20/source-watch.json")
+    receipt = build_operational_receipt(
+        dispatch="food-line",
+        task_key="food_line_source_watch",
+        task_name="food_line_source_watch",
+        scheduled_for="2026-09-20T12:00:00Z",
+        started_at="2026-09-20T12:00:01Z",
+        completed_at="2026-09-20T12:00:30Z",
+        observed_at="2026-09-20T12:00:30Z",
+        exit_code=0,
+        status="SUCCESS",
+        classification="completed",
+        run_id="source-watch",
+        artifact_refs={"task_receipt": str(artifact)},
+    )
+    _write_json(tmp_path / "status/operational-health/food-line/2026-09-20/runs/source-watch.json", receipt)
+    paths, before = _snapshot_files(tmp_path)
+
+    result = apply_recovery_plan("food-line", "2026-09-20", root=tmp_path, confirm="REBUILD_STATUS")
+    after_paths, after = _snapshot_files(tmp_path)
+
+    assert result.outcome == "REFUSED"
+    assert result.planned_action != "REBUILD_STATUS"
+    assert after_paths == paths
+    assert after == before
+
+
+def test_apply_rebuild_status_detects_unrelated_mutation(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    from scripts import dispatch_ops
+
+    _food_safe_no_op_receipts(tmp_path)
+    real_rebuild = dispatch_ops.rebuild_dispatch_status_artifacts
+
+    def mutate_extra_file(**kwargs):
+        result = real_rebuild(**kwargs)
+        (tmp_path / "data/unexpected.txt").parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / "data/unexpected.txt").write_text("unexpected\n", encoding="utf-8")
+        return result
+
+    monkeypatch.setattr(dispatch_ops, "rebuild_dispatch_status_artifacts", mutate_extra_file)
+
+    result = dispatch_ops.apply_recovery_plan("food-line", "2026-09-20", root=tmp_path, confirm="REBUILD_STATUS")
+
+    assert result.outcome == "FAILED"
+    assert result.unexpected_changes == ["data/unexpected.txt"]
+    assert result.status_artifacts_changed == [
+        "ops/status/food-line/history/2026-09-20.json",
+        "ops/status/food-line/latest.json",
+    ]
+
+
 def test_apply_verify_public_state_with_confirmation_and_pages_proof_is_verified(monkeypatch, tmp_path: Path) -> None:
     from scripts import dispatch_ops
 
@@ -768,6 +956,16 @@ def test_apply_care_failed_sources_is_refused(tmp_path: Path) -> None:
     assert result.planned_action == "INVESTIGATE_FAILED_SOURCES"
 
 
+def test_apply_care_failed_sources_is_refused_with_rebuild_status_confirmation(tmp_path: Path) -> None:
+    _care_partial_success(tmp_path)
+
+    result = apply_recovery_plan("care-line", "2026-09-18", root=tmp_path, confirm="REBUILD_STATUS")
+
+    assert result.outcome == "REFUSED"
+    assert result.planned_action == "INVESTIGATE_FAILED_SOURCES"
+    assert result.changed is False
+
+
 def test_apply_failed_collection_is_refused(tmp_path: Path) -> None:
     _food_status_export(tmp_path, "2026-09-11", "FAILED", task_status="FAILED", classification="source_watch_failed")
 
@@ -821,7 +1019,7 @@ def test_apply_terminal_no_action_is_no_action_and_read_only(tmp_path: Path) -> 
     _gaza_no_update(tmp_path, pages=True)
     paths, before = _snapshot_files(tmp_path)
 
-    result = apply_recovery_plan("gaza", "2026-09-19", root=tmp_path, confirm="VERIFY_PUBLIC_STATE")
+    result = apply_recovery_plan("gaza", "2026-09-19", root=tmp_path, confirm="REBUILD_STATUS")
 
     after_paths, after = _snapshot_files(tmp_path)
     assert result.outcome == "NO_ACTION"
@@ -851,6 +1049,8 @@ def test_apply_json_payload_is_deterministic(tmp_path: Path) -> None:
 
     assert json.dumps(first, indent=2, sort_keys=True) == json.dumps(second, indent=2, sort_keys=True)
     assert first["schema_version"] == "dispatch_ops_apply_v1"
+    assert "status_artifacts_changed" in first
+    assert "unexpected_changes" in first
 
 
 def test_apply_exit_codes_are_controlled(tmp_path: Path, capsys) -> None:
@@ -888,6 +1088,25 @@ def test_apply_exit_codes_are_controlled(tmp_path: Path, capsys) -> None:
                 "--apply",
                 "--confirm",
                 "VERIFY_PUBLIC_STATE",
+                "--json",
+            ]
+        )
+        == 0
+    )
+    capsys.readouterr()
+    _food_safe_no_op_receipts(tmp_path, date="2026-09-20")
+    assert (
+        main(
+            [
+                "recover",
+                "food-line",
+                "--date",
+                "2026-09-20",
+                "--root",
+                str(tmp_path),
+                "--apply",
+                "--confirm",
+                "REBUILD_STATUS",
                 "--json",
             ]
         )

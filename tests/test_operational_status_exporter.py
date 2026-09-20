@@ -21,6 +21,7 @@ from bluefern_dispatches.operational_status_exporter import (
     exporter_lock,
     export_status,
     prepare_status_checkout,
+    rebuild_dispatch_status_artifacts,
     validate_status_paths,
 )
 
@@ -292,6 +293,28 @@ def test_export_is_idempotent_and_atomic(tmp_path: Path) -> None:
     export_status(source_root=source, status_checkout=checkout, date=DATE, evaluated_at=EVALUATED, exported_at="2026-09-10T17:00:00Z")
     assert before == [path.read_bytes() for path in paths]
     assert not list(checkout.rglob("*.tmp"))
+
+
+def test_rebuild_dispatch_status_artifacts_writes_only_local_dispatch_status(tmp_path: Path) -> None:
+    success_statuses = {key: (action, "completed", 0) for key, (action, _, _) in TASKS.items()}
+    source = _write_day(tmp_path, success_statuses)
+
+    result = rebuild_dispatch_status_artifacts(
+        source_root=source,
+        dispatch="food-line",
+        date=DATE,
+        evaluated_at=EVALUATED,
+        exported_at=EVALUATED,
+    )
+
+    assert result["paths"] == [
+        "ops/status/food-line/latest.json",
+        f"ops/status/food-line/history/{DATE}.json",
+    ]
+    assert (source / "ops/status/food-line/latest.json").is_file()
+    assert (source / "ops/status/food-line/history" / f"{DATE}.json").is_file()
+    assert not (source / "ops/status/system/latest.json").exists()
+    assert result["status"]["dispatch"] == "food-line"
 
 
 def test_export_reuses_food_timestamp_but_advances_changed_system_timestamp(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:

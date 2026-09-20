@@ -2,10 +2,13 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import fnmatch
 import hashlib
 import json
+import shutil
+import subprocess
 import sys
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime, timezone
 from enum import StrEnum
 from pathlib import Path
@@ -225,11 +228,28 @@ class EngineeringWorkItem:
     repair_generation: int = 1
     repair_attempts: int = 0
     merge_allowed: bool = False
+    diagnosis_path: str | None = None
+    codex_prompt_path: str | None = None
+    pr_url: str | None = None
+    unexpected_paths: list[str] = field(default_factory=list)
+    validation_results: list[dict[str, Any]] = field(default_factory=list)
+    blocked_reason: str | None = None
     schema_version: str = ENGINEERING_SCHEMA_VERSION
 
     def to_payload(self) -> dict[str, Any]:
         payload = asdict(self)
         return {key: payload[key] for key in sorted(payload)}
+
+
+@dataclass(frozen=True)
+class EngineeringCommandResult:
+    exit_code: int
+    stdout: str = ""
+    stderr: str = ""
+
+    @property
+    def ok(self) -> bool:
+        return self.exit_code == 0
 
 
 @dataclass(frozen=True)
@@ -1115,6 +1135,27 @@ def _write_engineering_work_item(operator_root: Path, item: EngineeringWorkItem,
     _write_json(active_root / "diagnosis.json", diagnosis)
 
 
+def _engineering_work_root(operator_root: Path, work_id: str) -> Path:
+    return _engineering_root(operator_root) / "active" / work_id
+
+
+def _engineering_work_item_path(operator_root: Path, work_id: str) -> Path:
+    return _engineering_work_root(operator_root, work_id) / "work-item.json"
+
+
+def _save_engineering_work_item(operator_root: Path, item: EngineeringWorkItem) -> EngineeringWorkItem:
+    _write_json(_engineering_work_item_path(operator_root, item.work_id), item.to_payload())
+    return item
+
+
+def _load_engineering_work_item(operator_root: Path, work_id: str) -> EngineeringWorkItem:
+    path = _engineering_work_item_path(operator_root, work_id)
+    payload = _read_json(path)
+    if not payload:
+        raise FileNotFoundError(path)
+    return EngineeringWorkItem(**{key: payload[key] for key in EngineeringWorkItem.__dataclass_fields__ if key in payload})
+
+
 def prepare_engineering_work(
     result: OperatorResult,
     *,
@@ -1159,6 +1200,10 @@ def prepare_engineering_work(
                 "merge_pr",
             ],
         }
+        item = replace(
+            item,
+            diagnosis_path=str(_engineering_work_root(operator_root, item.work_id) / "diagnosis.json"),
+        )
         _write_engineering_work_item(operator_root, item, diagnosis)
         items.append(item)
     return items
@@ -1195,6 +1240,364 @@ def update_engineering_validation(
     )
     _write_json(path, item.to_payload())
     return item
+
+
+def _run_command(args: list[str], *, cwd: Path) -> EngineeringCommandResult:
+    completed = subprocess.run(args, cwd=cwd, text=True, capture_output=True, check=False)
+    return EngineeringCommandResult(completed.returncode, completed.stdout, completed.stderr)
+
+
+def _block_engineering_work(
+    operator_root: Path,
+    item: EngineeringWorkItem,
+    reason: str,
+    *,
+    unexpected_paths: list[str] | None = None,
+    validation_results: list[dict[str, Any]] | None = None,
+) -> EngineeringWorkItem:
+    return _save_engineering_work_item(
+        operator_root,
+        replace(
+            item,
+            state=EngineeringState.BLOCKED.value,
+            blocked_reason=reason,
+            unexpected_paths=sorted(unexpected_paths or item.unexpected_paths),
+            validation_results=validation_results or item.validation_results,
+            merge_allowed=False,
+        ),
+    )
+
+
+def _create_or_reuse_engineering_worktree(
+    operator_root: Path,
+    item: EngineeringWorkItem,
+    *,
+    repo_root: Path = ROOT,
+    base_ref: str = "origin/add/pages-repo-default",
+    runner: Any = _run_command,
+) -> EngineeringWorkItem:
+    worktree = Path(item.worktree)
+    if _is_forbidden_engineering_worktree(worktree):
+        return _block_engineering_work(operator_root, item, f"forbidden worktree root: {worktree}")
+
+    fetch = runner(["git", "fetch", "origin"], cwd=repo_root)
+    if not fetch.ok:
+        return _block_engineering_work(operator_root, item, "git fetch failed")
+    base = runner(["git", "rev-parse", base_ref], cwd=repo_root)
+    if not base.ok or not base.stdout.strip():
+        return _block_engineering_work(operator_root, item, f"could not resolve {base_ref}")
+    base_sha = base.stdout.strip().splitlines()[0]
+
+    if worktree.exists():
+        if not (worktree / ".git").exists():
+            contents = list(worktree.iterdir()) if worktree.is_dir() else [worktree]
+            if contents:
+                return _block_engineering_work(operator_root, item, f"worktree destination has unrelated content: {worktree}")
+        item = replace(
+            item,
+            state=EngineeringState.WORKTREE_CREATED.value,
+            base_sha=base_sha,
+            merge_allowed=False,
+        )
+        return _save_engineering_work_item(operator_root, item)
+
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    branch_exists = runner(["git", "show-ref", "--verify", f"refs/heads/{item.branch}"], cwd=repo_root)
+    if branch_exists.ok:
+        add = runner(["git", "worktree", "add", str(worktree), item.branch], cwd=repo_root)
+    else:
+        add = runner(["git", "worktree", "add", str(worktree), "-b", item.branch, base_ref], cwd=repo_root)
+    if not add.ok:
+        return _block_engineering_work(operator_root, item, "git worktree add failed")
+    item = replace(
+        item,
+        state=EngineeringState.WORKTREE_CREATED.value,
+        base_sha=base_sha,
+        merge_allowed=False,
+    )
+    return _save_engineering_work_item(operator_root, item)
+
+
+def _engineering_prompt(item: EngineeringWorkItem, diagnosis_path: Path) -> str:
+    diagnosis_text = diagnosis_path.read_text(encoding="utf-8") if diagnosis_path.is_file() else "{}"
+    return "\n".join(
+        [
+            "Blue Fern Operator Engineer Mode repair request.",
+            f"Work item: {item.work_id}",
+            f"Incident: {item.incident_id}",
+            f"Dispatch: {item.dispatch}",
+            f"Classification: {item.classification}",
+            f"Worktree: {item.worktree}",
+            f"Diagnosis packet: {diagnosis_path}",
+            "",
+            "Allowed patch paths:",
+            *[f"- {pattern}" for pattern in item.allowed_paths],
+            "",
+            "Forbidden actions:",
+            "- modify production runner checkouts",
+            "- publish or sync Pages",
+            "- replay collection or generate editions",
+            "- modify Task Scheduler",
+            "- modify editorial or review state",
+            "- merge PRs or mark this approved",
+            "",
+            "Required validation commands:",
+            *[f"- {command}" for command in item.tests_required],
+            "",
+            "Use production evidence as read-only input. Stop and report BLOCKED if evidence is insufficient.",
+            "Diagnosis packet content:",
+            diagnosis_text,
+        ]
+    )
+
+
+def _invoke_codex_for_engineering(
+    operator_root: Path,
+    item: EngineeringWorkItem,
+    *,
+    runner: Any = _run_command,
+    codex_runner: Any | None = None,
+    codex_executable: str = "codex",
+) -> EngineeringWorkItem:
+    diagnosis_path = Path(item.diagnosis_path or (_engineering_work_root(operator_root, item.work_id) / "diagnosis.json"))
+    prompt = _engineering_prompt(item, diagnosis_path)
+    prompt_path = _engineering_work_root(operator_root, item.work_id) / "codex-prompt.txt"
+    prompt_path.write_text(prompt, encoding="utf-8")
+    item = _save_engineering_work_item(
+        operator_root,
+        replace(item, state=EngineeringState.DIAGNOSING.value, codex_prompt_path=str(prompt_path), merge_allowed=False),
+    )
+    if codex_runner is not None:
+        result = codex_runner(prompt=prompt, cwd=Path(item.worktree), item=item)
+    else:
+        executable = shutil.which(codex_executable)
+        if not executable:
+            return _block_engineering_work(operator_root, item, f"{codex_executable} executable is unavailable")
+        result = runner([executable, "exec", "--ask-for-approval", "never", prompt], cwd=Path(item.worktree))
+    if not result.ok:
+        return _block_engineering_work(operator_root, item, "codex execution failed")
+    return _save_engineering_work_item(operator_root, replace(item, state=EngineeringState.PATCHED.value, merge_allowed=False))
+
+
+def _changed_paths(worktree: Path, *, runner: Any = _run_command) -> list[str]:
+    paths: set[str] = set()
+    for args in (
+        ["git", "diff", "--name-only", "HEAD"],
+        ["git", "diff", "--name-only", "--cached"],
+        ["git", "ls-files", "--others", "--exclude-standard"],
+    ):
+        result = runner(args, cwd=worktree)
+        if result.ok:
+            paths.update(line.strip().replace("\\", "/") for line in result.stdout.splitlines() if line.strip())
+    return sorted(paths)
+
+
+def _unexpected_patch_paths(changed_paths: Iterable[str], allowed_paths: Iterable[str]) -> list[str]:
+    patterns = [pattern.replace("\\", "/") for pattern in allowed_paths]
+    unexpected: list[str] = []
+    for path in changed_paths:
+        normalized = path.replace("\\", "/")
+        if not any(fnmatch.fnmatch(normalized, pattern) for pattern in patterns):
+            unexpected.append(normalized)
+    return sorted(unexpected)
+
+
+def _run_engineering_validation(
+    operator_root: Path,
+    item: EngineeringWorkItem,
+    *,
+    runner: Any = _run_command,
+) -> tuple[EngineeringWorkItem, bool]:
+    worktree = Path(item.worktree)
+    results: list[dict[str, Any]] = []
+    item = _save_engineering_work_item(operator_root, replace(item, state=EngineeringState.VALIDATING.value, merge_allowed=False))
+    for command in item.tests_required:
+        result = runner(["powershell.exe", "-NoProfile", "-Command", command], cwd=worktree)
+        row = {
+            "command": command,
+            "exit_code": result.exit_code,
+            "stdout": result.stdout[-4000:],
+            "stderr": result.stderr[-4000:],
+        }
+        results.append(row)
+        if not result.ok:
+            item = replace(item, repair_attempts=item.repair_attempts + 1, validation_results=results, merge_allowed=False)
+            item = _save_engineering_work_item(operator_root, item)
+            return item, False
+    item = replace(item, validation_results=results, merge_allowed=False)
+    return _save_engineering_work_item(operator_root, item), True
+
+
+def _commit_engineering_patch(
+    operator_root: Path,
+    item: EngineeringWorkItem,
+    changed_paths: list[str],
+    *,
+    runner: Any = _run_command,
+) -> EngineeringWorkItem:
+    worktree = Path(item.worktree)
+    if not changed_paths:
+        return _block_engineering_work(operator_root, item, "no patch was produced")
+    add = runner(["git", "add", "--", *changed_paths], cwd=worktree)
+    if not add.ok:
+        return _block_engineering_work(operator_root, item, "git add failed")
+    message = f"Operator: Fix {item.dispatch} {item.classification}"
+    commit = runner(["git", "commit", "-m", message], cwd=worktree)
+    if not commit.ok:
+        return _block_engineering_work(operator_root, item, "git commit failed")
+    head = runner(["git", "rev-parse", "HEAD"], cwd=worktree)
+    head_sha = head.stdout.strip().splitlines()[0] if head.ok and head.stdout.strip() else item.head_sha
+    return _save_engineering_work_item(
+        operator_root,
+        replace(item, state=EngineeringState.PR_READY.value, head_sha=head_sha, merge_allowed=False),
+    )
+
+
+def _push_engineering_branch(
+    operator_root: Path,
+    item: EngineeringWorkItem,
+    *,
+    runner: Any = _run_command,
+) -> EngineeringWorkItem:
+    worktree = Path(item.worktree)
+    remote = runner(["git", "ls-remote", "--heads", "origin", item.branch], cwd=worktree)
+    if remote.ok and remote.stdout.strip() and item.pr_number is None:
+        return _block_engineering_work(operator_root, item, f"remote branch already exists without recorded PR: {item.branch}")
+    push = runner(["git", "push", "-u", "origin", item.branch], cwd=worktree)
+    if not push.ok:
+        return _block_engineering_work(operator_root, item, "git push failed")
+    return _save_engineering_work_item(operator_root, replace(item, state=EngineeringState.PR_READY.value, merge_allowed=False))
+
+
+def _repair_pr_title(item: EngineeringWorkItem) -> str:
+    return f"Operator: Fix {item.dispatch} {item.classification}"
+
+
+def _repair_pr_body(item: EngineeringWorkItem) -> str:
+    sections = [
+        "## Incident",
+        f"- Dispatch: {item.dispatch}",
+        f"- Incident: {item.incident_id}",
+        f"- Classification: {item.classification}",
+        "",
+        "## Root Cause Evidence",
+        *[f"- {entry}" for entry in item.evidence],
+        "",
+        "## Fix Scope",
+        *[f"- {entry}" for entry in item.allowed_paths],
+        "",
+        "## Validation",
+        *[f"- {row.get('command')} => {row.get('exit_code')}" for row in item.validation_results],
+        "",
+        "## Recommended Action",
+        "REVIEW_PR",
+        "",
+        "Merge is approval-required and not automatic.",
+    ]
+    return "\n".join(sections).rstrip() + "\n"
+
+
+def _open_engineering_pr(
+    operator_root: Path,
+    item: EngineeringWorkItem,
+    *,
+    runner: Any = _run_command,
+    pr_creator: Any | None = None,
+    base_branch: str = "add/pages-repo-default",
+) -> EngineeringWorkItem:
+    if item.pr_number is not None:
+        return _save_engineering_work_item(
+            operator_root,
+            replace(item, state=EngineeringState.PR_OPEN.value, pr_state="OPEN", merge_allowed=False),
+        )
+    title = _repair_pr_title(item)
+    body = _repair_pr_body(item)
+    if pr_creator is not None:
+        created = pr_creator(title=title, body=body, head=item.branch, base=base_branch, item=item)
+        pr_number = int(created["number"])
+        pr_url = str(created.get("url") or "")
+    else:
+        result = runner(
+            ["gh", "pr", "create", "--base", base_branch, "--head", item.branch, "--title", title, "--body", body],
+            cwd=Path(item.worktree),
+        )
+        if not result.ok:
+            return _block_engineering_work(operator_root, item, "gh pr create failed")
+        pr_url = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else ""
+        pr_number = int(pr_url.rstrip("/").split("/")[-1]) if pr_url.rstrip("/").split("/")[-1].isdigit() else 0
+    return _save_engineering_work_item(
+        operator_root,
+        replace(
+            item,
+            state=EngineeringState.PR_OPEN.value,
+            pr_number=pr_number,
+            pr_state="OPEN",
+            pr_url=pr_url or None,
+            merge_allowed=False,
+        ),
+    )
+
+
+def build_engineering_approval_notification(item: EngineeringWorkItem) -> NotificationEvent:
+    if item.state != EngineeringState.PR_OPEN.value or item.pr_number is None:
+        return NotificationEvent(notification_required=False)
+    return NotificationEvent(
+        notification_required=True,
+        reasons=[NotificationReason.APPROVAL_REQUIRED.value],
+        dispatches=[item.dispatch],
+        incident_ids=[item.incident_id],
+        summary=[
+            {
+                "dispatch": item.dispatch,
+                "incident_id": item.incident_id,
+                "classification": item.classification,
+                "state": item.state,
+                "recommended_action": "REVIEW_PR",
+                "pr_number": item.pr_number,
+                "pr_url": item.pr_url,
+                "merge_allowed": False,
+            }
+        ],
+    )
+
+
+def execute_engineering_work_item(
+    item: EngineeringWorkItem,
+    *,
+    operator_root: Path = DEFAULT_OPERATOR_ROOT,
+    repo_root: Path = ROOT,
+    runner: Any = _run_command,
+    codex_runner: Any | None = None,
+    pr_creator: Any | None = None,
+    max_attempts: int = 2,
+) -> EngineeringWorkItem:
+    item = _create_or_reuse_engineering_worktree(operator_root, item, repo_root=repo_root, runner=runner)
+    if item.state == EngineeringState.BLOCKED.value or item.state == EngineeringState.PR_OPEN.value:
+        return item
+    attempt = item.repair_attempts
+    while attempt < max_attempts:
+        item = _invoke_codex_for_engineering(operator_root, item, runner=runner, codex_runner=codex_runner)
+        if item.state == EngineeringState.BLOCKED.value:
+            return item
+        changed = _changed_paths(Path(item.worktree), runner=runner)
+        unexpected = _unexpected_patch_paths(changed, item.allowed_paths)
+        if unexpected:
+            return _block_engineering_work(operator_root, item, "patch changed paths outside allowed scope", unexpected_paths=unexpected)
+        item, passed = _run_engineering_validation(operator_root, item, runner=runner)
+        if passed:
+            changed = _changed_paths(Path(item.worktree), runner=runner)
+            unexpected = _unexpected_patch_paths(changed, item.allowed_paths)
+            if unexpected:
+                return _block_engineering_work(operator_root, item, "patch changed paths outside allowed scope", unexpected_paths=unexpected)
+            item = _commit_engineering_patch(operator_root, item, changed, runner=runner)
+            if item.state == EngineeringState.BLOCKED.value:
+                return item
+            item = _push_engineering_branch(operator_root, item, runner=runner)
+            if item.state == EngineeringState.BLOCKED.value:
+                return item
+            return _open_engineering_pr(operator_root, item, runner=runner, pr_creator=pr_creator)
+        attempt = item.repair_attempts
+    return _block_engineering_work(operator_root, item, "validation failed after bounded repair attempts")
 
 
 def _write_ledger(operator_root: Path, result: OperatorResult) -> None:
@@ -1339,6 +1742,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     engineer.add_argument("--repo-root", type=Path, default=ROOT, help=argparse.SUPPRESS)
     engineer.add_argument("--worktree-root", type=Path, default=Path(r"C:\BlueFernRunner\OperatorWorktrees"), help=argparse.SUPPRESS)
     engineer.add_argument("--now", help=argparse.SUPPRESS)
+    engineer.add_argument("--execute", action="store_true", help=argparse.SUPPRESS)
     return parser.parse_args(argv)
 
 
@@ -1361,10 +1765,20 @@ def main(argv: list[str] | None = None) -> int:
             worktree_root=args.worktree_root,
             base_sha=_git_head(args.repo_root),
         )
+        if args.execute:
+            items = [
+                execute_engineering_work_item(item, operator_root=args.operator_root, repo_root=args.repo_root)
+                for item in items
+            ]
         payload = {
             "schema_version": "blue_fern_operator_engineering_queue_v1",
             "work_items": [item.to_payload() for item in items],
             "work_item_count": len(items),
+            "approval_notifications": [
+                build_engineering_approval_notification(item).to_payload()
+                for item in items
+                if build_engineering_approval_notification(item).notification_required
+            ],
         }
         if args.json:
             print(json.dumps(payload, indent=2, sort_keys=True))

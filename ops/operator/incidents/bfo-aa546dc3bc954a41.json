@@ -1,0 +1,19 @@
+{
+  "affected_date": "2026-09-20",
+  "classification": "STALE_OBSERVABILITY",
+  "detected_at": "2026-09-20T20:19:43Z",
+  "dispatch": "gaza",
+  "evidence": [
+    "ops/status/gaza/latest.json missing"
+  ],
+  "incident_id": "bfo-aa546dc3bc954a41",
+  "incident_key": "gaza|STALE_OBSERVABILITY|2026-09-20|",
+  "production_state_mutated": false,
+  "recommended_action": "INVESTIGATE_STATUS_EXPORT",
+  "recovery_action": "INVESTIGATE_STATUS_EXPORT",
+  "recovery_disposition": "UNKNOWN",
+  "schema_version": "blue_fern_operator_incident_v1",
+  "state": "OPEN",
+  "status_state": "UNKNOWN",
+  "updated_at": "2026-09-20T20:19:43Z"
+}

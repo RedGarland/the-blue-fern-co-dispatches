@@ -1,0 +1,20 @@
+REBUILD_STATUS:
+  mode: recommend
+VERIFY_PUBLIC_STATE:
+  mode: recommend
+INVESTIGATE_FAILED_SOURCES:
+  mode: recommend
+INVESTIGATE_COLLECTION:
+  mode: recommend
+INVESTIGATE_STATUS_EXPORT:
+  mode: recommend
+REVIEW_CANDIDATES:
+  mode: recommend
+UNKNOWN_REQUIRES_OPERATOR:
+  mode: recommend
+REPLAY_COLLECTION:
+  mode: forbidden
+PUBLISH_NO_UPDATE:
+  mode: forbidden
+PUBLISH_APPROVED_RELEASE:
+  mode: forbidden

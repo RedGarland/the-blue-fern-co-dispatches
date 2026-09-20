@@ -1,5 +1,5 @@
 REBUILD_STATUS:
-  mode: recommend
+  mode: automatic
 VERIFY_PUBLIC_STATE:
   mode: recommend
 INVESTIGATE_FAILED_SOURCES:

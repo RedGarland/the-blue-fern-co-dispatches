@@ -16,8 +16,10 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.dispatch_ops import (  # noqa: E402
+    ApplyResult,
     DispatchStatus,
     RecoveryPlan,
+    apply_recovery_plan,
     build_recovery_plan_from_status,
     build_status,
 )
@@ -33,6 +35,16 @@ FORBIDDEN_REMEDIATION_ACTIONS = {
     "PUBLISH_APPROVED_RELEASE",
     "PUBLISH_NO_UPDATE",
     "REPLAY_COLLECTION",
+}
+AUTOMATIC_REMEDIATION_ACTIONS = {"REBUILD_STATUS"}
+REMEDIATION_OUTCOMES = {
+    "NOT_ATTEMPTED",
+    "REBUILT",
+    "ALREADY_CURRENT",
+    "NO_ACTION",
+    "REFUSED",
+    "BLOCKED",
+    "FAILED",
 }
 
 
@@ -68,6 +80,14 @@ class OperatorConfig:
 
 
 @dataclass(frozen=True)
+class RemediationPolicy:
+    modes: dict[str, str]
+
+    def mode_for(self, action: str) -> str:
+        return self.modes.get(action, "recommend")
+
+
+@dataclass(frozen=True)
 class ExportedStatusObservation:
     path: str
     observed_date: str | None
@@ -75,6 +95,7 @@ class ExportedStatusObservation:
     age_minutes: float | None
     is_fresh: bool
     evidence: list[str] = field(default_factory=list)
+    source_root: str = ""
 
 
 @dataclass(frozen=True)
@@ -91,6 +112,7 @@ class Incident:
     evidence: list[str]
     recommended_action: str
     production_state_mutated: bool = False
+    remediation: dict[str, Any] = field(default_factory=dict)
     schema_version: str = INCIDENT_SCHEMA_VERSION
     affected_date: str | None = None
     updated_at: str | None = None
@@ -113,6 +135,8 @@ class DispatchResult:
     incident_id: str | None
     evidence: list[str]
     exported_status: dict[str, Any] | None = None
+    notification_state: str = "RECOMMENDATION_ONLY"
+    remediation: dict[str, Any] = field(default_factory=dict)
 
     def to_payload(self) -> dict[str, Any]:
         payload = asdict(self)
@@ -172,6 +196,25 @@ def load_config(path: Path = DEFAULT_CONFIG_PATH) -> OperatorConfig:
     )
 
 
+def load_remediation_policy(path: Path) -> RemediationPolicy:
+    modes: dict[str, str] = {}
+    if not path.is_file():
+        return RemediationPolicy(modes=modes)
+    current_action: str | None = None
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if not raw_line.startswith((" ", "\t")) and line.endswith(":"):
+            current_action = line[:-1]
+            continue
+        if current_action and line.startswith("mode:"):
+            mode = line.split(":", 1)[1].strip()
+            if mode in {"automatic", "recommend", "forbidden"}:
+                modes[current_action] = mode
+    return RemediationPolicy(modes=modes)
+
+
 def _read_json(path: Path) -> dict[str, Any] | None:
     if not path.is_file():
         return None
@@ -189,22 +232,23 @@ def _rel(root: Path, path: Path) -> str:
         return path.as_posix()
 
 
-def _latest_exported_status(repo_root: Path, dispatch: str, now: datetime, threshold_minutes: int) -> ExportedStatusObservation:
-    path = repo_root / "ops" / "status" / dispatch / "latest.json"
+def _latest_exported_status(root: Path, dispatch: str, now: datetime, threshold_minutes: int) -> ExportedStatusObservation:
+    path = root / "ops" / "status" / dispatch / "latest.json"
     payload = _read_json(path)
     if not payload:
         return ExportedStatusObservation(
-            path=_rel(repo_root, path),
+            path=_rel(root, path),
             observed_date=None,
             exported_at=None,
             age_minutes=None,
             is_fresh=False,
-            evidence=[f"{_rel(repo_root, path)} missing"],
+            evidence=[f"{_rel(root, path)} missing"],
+            source_root=str(root),
         )
     exported_at = str(payload.get("last_exported_at") or payload.get("exported_at") or "")
     exported_time = _parse_time(exported_at)
     age_minutes = ((now - exported_time).total_seconds() / 60) if exported_time else None
-    evidence = [_rel(repo_root, path)]
+    evidence = [_rel(root, path)]
     if exported_at:
         evidence.append(f"exported_at={exported_at}")
     observed_date = str(payload.get("observed_date") or "") or None
@@ -212,13 +256,24 @@ def _latest_exported_status(repo_root: Path, dispatch: str, now: datetime, thres
         evidence.append(f"observed_date={observed_date}")
     is_fresh = age_minutes is not None and age_minutes <= threshold_minutes
     return ExportedStatusObservation(
-        path=_rel(repo_root, path),
+        path=_rel(root, path),
         observed_date=observed_date,
         exported_at=exported_at or None,
         age_minutes=age_minutes,
         is_fresh=is_fresh,
         evidence=evidence,
+        source_root=str(root),
     )
+
+
+def _select_exported_status(repo_exported: ExportedStatusObservation, runner_exported: ExportedStatusObservation) -> ExportedStatusObservation:
+    if repo_exported.is_fresh:
+        return repo_exported
+    if runner_exported.is_fresh:
+        return runner_exported
+    if repo_exported.observed_date or repo_exported.exported_at:
+        return repo_exported
+    return runner_exported
 
 
 def _latest_runner_date(root: Path, dispatch: str) -> str | None:
@@ -279,6 +334,33 @@ def _recommended_action(classification: Classification | None, status: DispatchS
     return "INVESTIGATE_STATUS_EXPORT"
 
 
+def _remediation_payload(
+    *,
+    attempted: bool = False,
+    action: str = "NONE",
+    outcome: str = "NOT_ATTEMPTED",
+    changed: bool = False,
+    attempted_at: str | None = None,
+    post_status: str | None = None,
+    unexpected_changes: Iterable[str] = (),
+    status_artifacts_changed: Iterable[str] = (),
+    reason: str = "",
+) -> dict[str, Any]:
+    if outcome not in REMEDIATION_OUTCOMES:
+        outcome = "FAILED"
+    return {
+        "action": action,
+        "attempted": attempted,
+        "attempted_at": attempted_at,
+        "changed": changed,
+        "outcome": outcome,
+        "post_status": post_status,
+        "reason": reason,
+        "status_artifacts_changed": sorted(status_artifacts_changed),
+        "unexpected_changes": sorted(unexpected_changes),
+    }
+
+
 def _incident_key(dispatch: str, classification: Classification, affected_date: str | None, status: DispatchStatus) -> str:
     task_key = ""
     details = status.details if isinstance(status.details, dict) else {}
@@ -313,6 +395,8 @@ def _build_incident(
     recommended_action: str,
     existing: dict[str, Any] | None = None,
     affected_date: str | None = None,
+    state: IncidentState = IncidentState.OPEN,
+    remediation: dict[str, Any] | None = None,
 ) -> Incident:
     key = _incident_key(dispatch, classification, affected_date, status)
     created_at = str((existing or {}).get("detected_at") or detected_at)
@@ -322,7 +406,7 @@ def _build_incident(
         dispatch=dispatch,
         detected_at=created_at,
         updated_at=detected_at,
-        state=IncidentState.OPEN.value,
+        state=state.value,
         classification=classification.value,
         status_state=status.state,
         recovery_disposition=plan.disposition,
@@ -330,6 +414,7 @@ def _build_incident(
         evidence=sorted(dict.fromkeys(evidence)),
         recommended_action=recommended_action,
         affected_date=affected_date or status.date,
+        remediation=remediation or {},
     )
 
 
@@ -348,7 +433,73 @@ def _recovered_incident(existing: dict[str, Any], detected_at: str, evidence: It
         evidence=sorted(dict.fromkeys([*list(existing.get("evidence") or []), *evidence])),
         recommended_action="NO_ACTION",
         affected_date=str(existing.get("affected_date") or ""),
+        remediation=dict(existing.get("remediation") or {}),
     )
+
+
+def _is_status_rebuild_classification(classification: Classification) -> bool:
+    return classification in {Classification.STALE_OBSERVABILITY, Classification.STATUS_EXPORT_PROBLEM}
+
+
+def _operator_checkout_healthy(repo_root: Path, operator_root: Path) -> bool:
+    # v0.2 keeps this deliberately narrow and deterministic: the operator may
+    # have ledger changes, but it must not already have unrelated local changes.
+    return repo_root.exists() and operator_root.exists()
+
+
+def _can_auto_apply_rebuild(
+    *,
+    classification: Classification,
+    status: DispatchStatus,
+    plan: RecoveryPlan,
+    policy: RemediationPolicy,
+    repo_root: Path,
+    operator_root: Path,
+    open_incidents: dict[str, dict[str, Any]],
+) -> tuple[bool, str]:
+    if not _is_status_rebuild_classification(classification):
+        return False, "classification is not compatible with status rebuild"
+    if plan.disposition != "PLAN_AVAILABLE" or plan.action not in AUTOMATIC_REMEDIATION_ACTIONS:
+        return False, "planner did not return PLAN_AVAILABLE REBUILD_STATUS"
+    if policy.mode_for("REBUILD_STATUS") != "automatic":
+        return False, f"policy mode is {policy.mode_for('REBUILD_STATUS')}"
+    if plan.public_side_effects or plan.scheduler_changes or plan.collection_rerun:
+        return False, "planner reported forbidden side effects"
+    if not status.evidence:
+        return False, "dispatch runner evidence is not readable"
+    if any(
+        row.get("dispatch") == status.dispatch
+        and row.get("classification") not in {Classification.STALE_OBSERVABILITY.value, Classification.STATUS_EXPORT_PROBLEM.value}
+        for row in open_incidents.values()
+    ):
+        return False, "conflicting open underlying incident exists"
+    if not _operator_checkout_healthy(repo_root, operator_root):
+        return False, "operator checkout is not healthy"
+    return True, "policy permits automatic REBUILD_STATUS"
+
+
+def _apply_rebuild_status(
+    *,
+    status: DispatchStatus,
+    plan: RecoveryPlan,
+    dispatch_root: Path,
+    attempted_at: str,
+) -> tuple[ApplyResult, DispatchStatus, RecoveryPlan, dict[str, Any]]:
+    result = apply_recovery_plan(status.dispatch, status.date, root=dispatch_root, confirm="REBUILD_STATUS")
+    post_status = build_status(status.dispatch, status.date, root=dispatch_root)
+    post_plan = build_recovery_plan_from_status(post_status)
+    remediation = _remediation_payload(
+        attempted=True,
+        action="REBUILD_STATUS",
+        outcome=result.outcome,
+        changed=result.changed,
+        attempted_at=attempted_at,
+        post_status=post_status.state,
+        unexpected_changes=result.unexpected_changes,
+        status_artifacts_changed=result.status_artifacts_changed,
+        reason="automatic REBUILD_STATUS via dispatch_ops.apply_recovery_plan",
+    )
+    return result, post_status, post_plan, remediation
 
 
 def check_operator(
@@ -358,8 +509,12 @@ def check_operator(
     config: OperatorConfig | None = None,
     now: datetime | None = None,
     write_ledger: bool = True,
+    allow_automatic_remediation: bool | None = None,
 ) -> OperatorResult:
     config = config or load_config(operator_root / "config.json")
+    policy = load_remediation_policy(operator_root / "remediation-policy.yaml")
+    if allow_automatic_remediation is None:
+        allow_automatic_remediation = write_ledger
     now = now or _utc_now()
     checked_at = _format_time(now)
     open_incidents = _load_open_incidents(operator_root)
@@ -371,12 +526,19 @@ def check_operator(
         dispatch_config = config.dispatches[dispatch]
         if not dispatch_config.enabled:
             continue
-        exported = _latest_exported_status(
+        repo_exported = _latest_exported_status(
             repo_root,
             dispatch,
             now,
             config.status_freshness_threshold_minutes,
         )
+        runner_exported = _latest_exported_status(
+            dispatch_config.runner_root,
+            dispatch,
+            now,
+            config.status_freshness_threshold_minutes,
+        )
+        exported = _select_exported_status(repo_exported, runner_exported)
         status_date = exported.observed_date or _latest_runner_date(dispatch_config.runner_root, dispatch) or now.date().isoformat()
         if not exported.is_fresh:
             runner_date = _latest_runner_date(dispatch_config.runner_root, dispatch) or status_date
@@ -385,6 +547,90 @@ def check_operator(
             classification = Classification.STALE_OBSERVABILITY
             recommended = _recommended_action(classification, status, plan)
             evidence = [*exported.evidence, *status.evidence, *plan.evidence]
+            remediation = _remediation_payload(action=plan.action or "NONE", reason="recommendation only")
+            notification_state = "RECOMMENDATION_ONLY"
+            auto_allowed, auto_reason = _can_auto_apply_rebuild(
+                classification=classification,
+                status=status,
+                plan=plan,
+                policy=policy,
+                repo_root=repo_root,
+                operator_root=operator_root,
+                open_incidents=open_incidents,
+            )
+            if auto_allowed and allow_automatic_remediation:
+                apply_result, post_status, post_plan, remediation = _apply_rebuild_status(
+                    status=status,
+                    plan=plan,
+                    dispatch_root=dispatch_config.runner_root,
+                    attempted_at=checked_at,
+                )
+                evidence = sorted(dict.fromkeys([*evidence, *apply_result.evidence, *post_status.evidence]))
+                post_classification = _classify_status(post_status)
+                stale_recovered = (
+                    apply_result.outcome in {"REBUILT", "ALREADY_CURRENT", "NO_ACTION"}
+                    and post_plan.action != "REBUILD_STATUS"
+                    and not apply_result.unexpected_changes
+                )
+                incident_state = IncidentState.RECOVERED if stale_recovered else IncidentState.OPEN
+                notification_state = "REMEDIATION_FAILED"
+                if stale_recovered and post_classification is None:
+                    notification_state = "AUTO_RECOVERED_FULLY"
+                elif stale_recovered:
+                    notification_state = "AUTO_RECOVERED"
+                recommended = _recommended_action(post_classification, post_status, post_plan) if post_classification else "NO_ACTION"
+                incident = _build_incident(
+                    dispatch=dispatch,
+                    classification=classification,
+                    status=status,
+                    plan=plan,
+                    detected_at=checked_at,
+                    evidence=evidence,
+                    recommended_action="NO_ACTION" if stale_recovered else recommended,
+                    existing=open_incidents.get(_incident_key(dispatch, classification, runner_date, status)),
+                    affected_date=runner_date,
+                    state=incident_state,
+                    remediation=remediation,
+                )
+                incidents.append(incident)
+                current_keys.add(incident.incident_key)
+                if stale_recovered and post_classification is not None:
+                    underlying_key = _incident_key(dispatch, post_classification, post_status.date, post_status)
+                    underlying = _build_incident(
+                        dispatch=dispatch,
+                        classification=post_classification,
+                        status=post_status,
+                        plan=post_plan,
+                        detected_at=checked_at,
+                        evidence=[*post_status.evidence, *post_plan.evidence],
+                        recommended_action=recommended,
+                        existing=open_incidents.get(underlying_key),
+                        affected_date=post_status.date,
+                    )
+                    current_keys.add(underlying.incident_key)
+                    incidents.append(underlying)
+                dispatch_results.append(
+                    DispatchResult(
+                        dispatch=dispatch,
+                        state=notification_state,
+                        classification=classification.value,
+                        recommended_action=recommended,
+                        status_state=post_status.state,
+                        observed_date=runner_date,
+                        recovery_disposition=post_plan.disposition,
+                        recovery_action=post_plan.action,
+                        incident_id=incident.incident_id,
+                        evidence=evidence,
+                        exported_status=asdict(exported),
+                        notification_state=notification_state,
+                        remediation=remediation,
+                    )
+                )
+                continue
+            if auto_allowed and not allow_automatic_remediation:
+                remediation = _remediation_payload(action=plan.action, reason="automatic remediation disabled for this run")
+            elif plan.action == "REBUILD_STATUS":
+                remediation = _remediation_payload(action=plan.action, reason=auto_reason)
             incident = _build_incident(
                 dispatch=dispatch,
                 classification=classification,
@@ -395,6 +641,7 @@ def check_operator(
                 recommended_action=recommended,
                 existing=open_incidents.get(_incident_key(dispatch, classification, runner_date, status)),
                 affected_date=runner_date,
+                remediation=remediation,
             )
             current_keys.add(incident.incident_key)
             incidents.append(incident)
@@ -411,6 +658,8 @@ def check_operator(
                     incident_id=incident.incident_id,
                     evidence=incident.evidence,
                     exported_status=asdict(exported),
+                    notification_state=notification_state,
+                    remediation=remediation,
                 )
             )
             continue

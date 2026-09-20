@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -17,8 +18,10 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from bluefern_dispatches.operational_status_exporter import (  # noqa: E402
+    ExportError,
     build_food_line_status,
     build_ice_status,
+    rebuild_dispatch_status_artifacts,
 )
 
 
@@ -80,6 +83,8 @@ class RecoveryAction(StrEnum):
 class ApplyOutcome(StrEnum):
     VERIFIED = "VERIFIED"
     NOT_VERIFIED = "NOT_VERIFIED"
+    REBUILT = "REBUILT"
+    ALREADY_CURRENT = "ALREADY_CURRENT"
     NO_ACTION = "NO_ACTION"
     REFUSED = "REFUSED"
     BLOCKED = "BLOCKED"
@@ -120,6 +125,8 @@ class ApplyResult:
     collection_rerun: bool
     editorial_mutation: bool
     publication_attempted: bool
+    status_artifacts_changed: list[str] = field(default_factory=list)
+    unexpected_changes: list[str] = field(default_factory=list)
     evidence: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     status_before: dict[str, Any] = field(default_factory=dict)
@@ -324,13 +331,69 @@ def _normalize_from_exported(adapter: DispatchAdapter, payload: dict[str, Any], 
     )
 
 
+def _mark_status_rebuild_candidate(status: DispatchStatus, *, exporter: str) -> DispatchStatus:
+    if status.next_action != NextAction.NONE.value:
+        return status
+    if status.state not in TERMINAL_NO_ACTION_STATES:
+        return status
+    if status.state in {Lifecycle.COMPLETE.value, Lifecycle.PUBLISHED.value} and status.public_state == "NOT_VERIFIED":
+        return status
+    details = dict(status.details)
+    details.update(
+        {
+            "status_export_state": "MISSING_OR_STALE",
+            "status_rebuild_supported": True,
+            "status_exporter": exporter,
+        }
+    )
+    return DispatchStatus(
+        **{
+            **asdict(status),
+            "next_action": NextAction.INVESTIGATE_STATUS_EXPORT.value,
+            "details": details,
+        }
+    )
+
+
+def _status_payload_without_export_time(payload: dict[str, Any]) -> dict[str, Any]:
+    comparable = dict(payload)
+    comparable.pop("last_exported_at", None)
+    comparable.pop("exported_at", None)
+    return comparable
+
+
+def _status_export_is_stale(exported: dict[str, Any], rebuilt: dict[str, Any]) -> bool:
+    return _status_payload_without_export_time(exported) != _status_payload_without_export_time(rebuilt)
+
+
 class FoodLineAdapter(DispatchAdapter):
     dispatch = "food-line"
 
     def status(self, date: str) -> DispatchStatus:
         exported, evidence = _load_exported_status(self, date)
         if exported:
-            return _normalize_from_exported(self, exported, date, evidence)
+            status = _normalize_from_exported(self, exported, date, evidence)
+            try:
+                built = build_food_line_status(
+                    source_root=self.root,
+                    date=date,
+                    evaluated_at=_evaluated_after(date),
+                    exported_at=_evaluated_after(date),
+                )
+            except Exception:  # noqa: BLE001
+                return status
+            if built.get("task_summaries") and _status_export_is_stale(exported, built):
+                status = DispatchStatus(
+                    **{
+                        **asdict(status),
+                        "evidence": sorted(dict.fromkeys([*status.evidence, *self.existing(_receipts_root(self.root, self.dispatch, date).glob("*.json"))])),
+                    }
+                )
+                return _mark_status_rebuild_candidate(
+                    status,
+                    exporter="operational_status_exporter.build_food_line_status",
+                )
+            return status
 
         gap_path = self.root / "data" / "dispatches" / "food-line" / "coverage-gaps" / f"{date}.json"
         receipt_path = self.root / "data" / "dispatches" / "food-line" / "historical-intake" / date / "reconciliation-receipt.json"
@@ -392,7 +455,10 @@ class FoodLineAdapter(DispatchAdapter):
             return self.unknown(date, self.existing([gap_path, receipt_path]), f"Could not evaluate Food Line receipts: {exc}")
         evidence.extend(self.existing(_receipts_root(self.root, self.dispatch, date).glob("*.json")))
         if built.get("task_summaries"):
-            return _normalize_from_exported(self, built, date, evidence)
+            return _mark_status_rebuild_candidate(
+                _normalize_from_exported(self, built, date, evidence),
+                exporter="operational_status_exporter.build_food_line_status",
+            )
         return self.unknown(date, evidence)
 
     def _is_reconstructed_recovered(self, date: str, gap: dict[str, Any], receipt: dict[str, Any]) -> bool:
@@ -423,7 +489,28 @@ class CareLineAdapter(DispatchAdapter):
     def status(self, date: str) -> DispatchStatus:
         exported, evidence = _load_exported_status(self, date)
         if exported:
-            return _normalize_from_exported(self, exported, date, evidence)
+            status = _normalize_from_exported(self, exported, date, evidence)
+            try:
+                built = build_ice_status(
+                    source_root=self.root,
+                    date=date,
+                    evaluated_at=_evaluated_next_morning(date),
+                    exported_at=_evaluated_next_morning(date),
+                )
+            except Exception:  # noqa: BLE001
+                return status
+            if (built.get("task_summaries") or built.get("aggregate_status") == "MISSED") and _status_export_is_stale(exported, built):
+                status = DispatchStatus(
+                    **{
+                        **asdict(status),
+                        "evidence": sorted(dict.fromkeys([*status.evidence, *self.existing(_receipts_root(self.root, self.dispatch, date).glob("*.json"))])),
+                    }
+                )
+                return _mark_status_rebuild_candidate(
+                    status,
+                    exporter="operational_status_exporter.build_ice_status",
+                )
+            return status
         receipts = self._available_receipts(date)
         if not receipts:
             return self.unknown(date, evidence)
@@ -519,8 +606,11 @@ class IceAdapter(DispatchAdapter):
         if built.get("task_summaries") or built.get("aggregate_status") == "MISSED":
             status = _normalize_from_exported(self, built, date, evidence)
             if status.collection == "COMPLETE" and status.state == Lifecycle.COMPLETE.value:
-                return DispatchStatus(**{**asdict(status), "state": Lifecycle.COMPLETE.value, "editorial": "NO_QUALIFYING_MATERIAL" if self._no_update(built) else status.editorial})
-            return status
+                status = DispatchStatus(**{**asdict(status), "state": Lifecycle.COMPLETE.value, "editorial": "NO_QUALIFYING_MATERIAL" if self._no_update(built) else status.editorial})
+            return _mark_status_rebuild_candidate(
+                status,
+                exporter="operational_status_exporter.build_ice_status",
+            )
         return self.unknown(date, evidence)
 
     def _no_update(self, payload: dict[str, Any]) -> bool:
@@ -718,6 +808,24 @@ def build_recovery_plan(dispatch: str, date: str, *, root: Path = ROOT) -> Recov
 
 
 def build_recovery_plan_from_status(status: DispatchStatus) -> RecoveryPlan:
+    if _can_rebuild_status(status):
+        return _base_plan(
+            status,
+            disposition=RecoveryDisposition.PLAN_AVAILABLE,
+            action=RecoveryAction.REBUILD_STATUS,
+            reason="Durable runtime receipts are sufficient and the derived operational-status export is missing or stale.",
+            preconditions=(
+                "AUTHORITATIVE_RECEIPTS_PRESENT",
+                "STATUS_EXPORT_MISSING_OR_STALE",
+                "SOURCE_EVIDENCE_COMPLETE",
+                "NO_COLLECTION_REPLAY_REQUIRED",
+                "NO_EDITORIAL_ACTION_REQUIRED",
+                "NO_PUBLICATION_REQUIRED",
+                "STATUS_EXPORTER_AVAILABLE",
+            ),
+            requires_operator_confirmation=False,
+        )
+
     if status.state in TERMINAL_NO_ACTION_STATES and status.next_action == NextAction.NONE.value:
         return _base_plan(
             status,
@@ -822,14 +930,17 @@ def apply_recovery_plan(dispatch: str, date: str, *, root: Path = ROOT, confirm:
             evidence=plan.evidence,
             warnings=("No executable recovery action is pending.",),
         )
-    if plan.action != RecoveryAction.VERIFY_PUBLIC_STATE.value:
+    if plan.action not in {RecoveryAction.VERIFY_PUBLIC_STATE.value, RecoveryAction.REBUILD_STATUS.value}:
         return _apply_result(
             plan,
             outcome=ApplyOutcome.REFUSED,
             status_before=status_before,
             status_after=status_before,
             evidence=plan.evidence,
-            warnings=(f"Phase 2B only allows {RecoveryAction.VERIFY_PUBLIC_STATE.value}; refused {plan.action}.",),
+            warnings=(
+                "Phase 2C only allows VERIFY_PUBLIC_STATE and REBUILD_STATUS; "
+                f"refused {plan.action}.",
+            ),
         )
     if plan.disposition != RecoveryDisposition.PLAN_AVAILABLE.value:
         return _apply_result(
@@ -840,6 +951,18 @@ def apply_recovery_plan(dispatch: str, date: str, *, root: Path = ROOT, confirm:
             evidence=plan.evidence,
             warnings=("Recovery plan is not available for execution.",),
         )
+    if plan.action == RecoveryAction.REBUILD_STATUS.value:
+        if confirm != RecoveryAction.REBUILD_STATUS.value:
+            return _apply_result(
+                plan,
+                outcome=ApplyOutcome.REFUSED,
+                status_before=status_before,
+                status_after=status_before,
+                evidence=plan.evidence,
+                warnings=("Missing required confirmation token: --confirm REBUILD_STATUS.",),
+            )
+        return _apply_rebuild_status(root, plan, status_before)
+
     if confirm != RecoveryAction.VERIFY_PUBLIC_STATE.value:
         return _apply_result(
             plan,
@@ -869,23 +992,137 @@ def _apply_result(
     status_after: DispatchStatus,
     evidence: Iterable[str],
     warnings: Iterable[str] = (),
+    changed: bool = False,
+    status_artifacts_changed: Iterable[str] = (),
+    unexpected_changes: Iterable[str] = (),
 ) -> ApplyResult:
     return ApplyResult(
         dispatch=plan.dispatch,
         date=plan.date,
         planned_action=plan.action,
         outcome=outcome.value,
-        changed=False,
+        changed=changed,
         public_side_effects=False,
         scheduler_changes=False,
         collection_rerun=False,
         editorial_mutation=False,
         publication_attempted=False,
+        status_artifacts_changed=sorted(status_artifacts_changed),
+        unexpected_changes=sorted(unexpected_changes),
         evidence=sorted(evidence),
         warnings=sorted(warnings),
         status_before=status_before.to_json_payload(),
         status_after=status_after.to_json_payload(),
     )
+
+
+def _apply_rebuild_status(root: Path, plan: RecoveryPlan, status_before: DispatchStatus) -> ApplyResult:
+    allowed_paths = _allowed_status_rebuild_paths(plan.dispatch, plan.date)
+    if not _can_rebuild_status(status_before):
+        return _apply_result(
+            plan,
+            outcome=ApplyOutcome.BLOCKED,
+            status_before=status_before,
+            status_after=status_before,
+            evidence=plan.evidence,
+            warnings=("Required REBUILD_STATUS preconditions were not proven.",),
+        )
+    before_files = _snapshot_tree(root)
+    try:
+        result = rebuild_dispatch_status_artifacts(
+            source_root=root,
+            dispatch=plan.dispatch,
+            date=plan.date,
+            evaluated_at=_rebuild_evaluated_at(plan.dispatch, plan.date),
+            exported_at=_rebuild_evaluated_at(plan.dispatch, plan.date),
+        )
+    except ExportError as exc:
+        status_after = build_status(plan.dispatch, plan.date, root=root)
+        return _apply_result(
+            plan,
+            outcome=ApplyOutcome.BLOCKED,
+            status_before=status_before,
+            status_after=status_after,
+            evidence=plan.evidence,
+            warnings=(f"Status exporter refused rebuild: {exc}",),
+        )
+    except Exception as exc:  # noqa: BLE001
+        status_after = build_status(plan.dispatch, plan.date, root=root)
+        return _apply_result(
+            plan,
+            outcome=ApplyOutcome.FAILED,
+            status_before=status_before,
+            status_after=status_after,
+            evidence=plan.evidence,
+            warnings=(f"Status rebuild failed unexpectedly: {exc}",),
+        )
+
+    after_files = _snapshot_tree(root)
+    changed_paths = _changed_paths(before_files, after_files)
+    unexpected = sorted(path for path in changed_paths if path not in allowed_paths)
+    status_artifacts_changed = sorted(path for path in changed_paths if path in allowed_paths)
+    status_after = build_status(plan.dispatch, plan.date, root=root)
+    evidence = sorted(dict.fromkeys([*plan.evidence, *result.get("paths", [])]))
+    if unexpected:
+        return _apply_result(
+            plan,
+            outcome=ApplyOutcome.FAILED,
+            status_before=status_before,
+            status_after=status_after,
+            evidence=evidence,
+            changed=bool(changed_paths),
+            status_artifacts_changed=status_artifacts_changed,
+            unexpected_changes=unexpected,
+            warnings=("Unexpected non-status mutation detected; no automatic cleanup was attempted.",),
+        )
+    return _apply_result(
+        plan,
+        outcome=ApplyOutcome.REBUILT if status_artifacts_changed else ApplyOutcome.ALREADY_CURRENT,
+        status_before=status_before,
+        status_after=status_after,
+        evidence=evidence,
+        changed=bool(status_artifacts_changed),
+        status_artifacts_changed=status_artifacts_changed,
+    )
+
+
+def _allowed_status_rebuild_paths(dispatch: str, date: str) -> set[str]:
+    return {
+        f"ops/status/{dispatch}/latest.json",
+        f"ops/status/{dispatch}/history/{date}.json",
+    }
+
+
+def _rebuild_evaluated_at(dispatch: str, date: str) -> str:
+    if dispatch == "ice":
+        return _evaluated_next_morning(date)
+    return _evaluated_after(date)
+
+
+def _snapshot_tree(root: Path) -> dict[str, tuple[str, int]]:
+    snapshot: dict[str, tuple[str, int]] = {}
+    for path in sorted(root.rglob("*")):
+        if not path.is_file() or _is_ignored_snapshot_path(root, path):
+            continue
+        rel = path.relative_to(root).as_posix()
+        snapshot[rel] = (hashlib.sha256(path.read_bytes()).hexdigest(), path.stat().st_mtime_ns)
+    return snapshot
+
+
+def _is_ignored_snapshot_path(root: Path, path: Path) -> bool:
+    try:
+        parts = path.relative_to(root).parts
+    except ValueError:
+        return True
+    return bool(parts and parts[0] in {".git", ".venv", "__pycache__", ".pytest_cache"})
+
+
+def _changed_paths(
+    before: dict[str, tuple[str, int]],
+    after: dict[str, tuple[str, int]],
+) -> list[str]:
+    paths = set(before) | set(after)
+    return sorted(path for path in paths if before.get(path) != after.get(path))
 
 
 def _verify_public_state(root: Path, status: DispatchStatus) -> tuple[bool, list[str]]:
@@ -897,7 +1134,12 @@ def _verify_public_state(root: Path, status: DispatchStatus) -> tuple[bool, list
 
 
 def _apply_exit_code(result: ApplyResult) -> int:
-    if result.outcome in {ApplyOutcome.VERIFIED.value, ApplyOutcome.NO_ACTION.value}:
+    if result.outcome in {
+        ApplyOutcome.VERIFIED.value,
+        ApplyOutcome.REBUILT.value,
+        ApplyOutcome.ALREADY_CURRENT.value,
+        ApplyOutcome.NO_ACTION.value,
+    }:
         return 0
     if result.outcome == ApplyOutcome.NOT_VERIFIED.value:
         return 2
@@ -914,6 +1156,24 @@ def _can_plan_collection_replay(status: DispatchStatus) -> bool:
         and bool(details.get("existing_replay_tool_available"))
         and bool(details.get("no_later_terminal_run"))
         and bool(details.get("replay_has_no_public_side_effect"))
+    )
+
+
+def _can_rebuild_status(status: DispatchStatus) -> bool:
+    details = status.details if isinstance(status.details, dict) else {}
+    return (
+        status.dispatch in {"food-line", "ice"}
+        and status.next_action == NextAction.INVESTIGATE_STATUS_EXPORT.value
+        and status.state in TERMINAL_NO_ACTION_STATES
+        and status.collection == "COMPLETE"
+        and (
+            status.state not in {Lifecycle.COMPLETE.value, Lifecycle.PUBLISHED.value}
+            or status.public_state != "NOT_VERIFIED"
+        )
+        and status.receipts == "COMPLETE"
+        and bool(status.evidence)
+        and details.get("status_export_state") == "MISSING_OR_STALE"
+        and details.get("status_rebuild_supported") is True
     )
 
 

@@ -900,6 +900,49 @@ def export_status(
     return result
 
 
+def rebuild_dispatch_status_artifacts(
+    *,
+    source_root: Path,
+    dispatch: str,
+    date: str,
+    evaluated_at: str,
+    exported_at: str,
+) -> dict[str, Any]:
+    """Rebuild one dispatch's local operational-status artifacts without git or remote effects."""
+    source_root = source_root.resolve()
+    if dispatch == "food-line":
+        payload = build_food_line_status(
+            source_root=source_root,
+            date=date,
+            evaluated_at=evaluated_at,
+            exported_at=exported_at,
+        )
+    elif dispatch == "ice":
+        payload = build_ice_status(
+            source_root=source_root,
+            date=date,
+            evaluated_at=evaluated_at,
+            exported_at=exported_at,
+        )
+    else:
+        raise ExportError(f"local status rebuild is not supported for dispatch: {dispatch}")
+
+    latest_path = source_root / "ops" / "status" / dispatch / "latest.json"
+    history_path = source_root / "ops" / "status" / dispatch / "history" / f"{date}.json"
+    reused = _reuse_exported_at(history_path, payload) or _reuse_exported_at(latest_path, payload)
+    if reused:
+        payload["last_exported_at"] = reused
+    atomic_write_json(latest_path, payload)
+    atomic_write_json(history_path, payload)
+    return {
+        "status": payload,
+        "paths": [
+            f"ops/status/{dispatch}/latest.json",
+            f"ops/status/{dispatch}/history/{date}.json",
+        ],
+    }
+
+
 def validate_status_paths(paths: list[str]) -> None:
     if any(not (path == "ops/status" or path.startswith("ops/status/")) for path in paths):
         raise ExportError("operational status export touched a path outside ops/status/")

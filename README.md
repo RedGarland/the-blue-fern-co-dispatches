@@ -33,6 +33,20 @@ Check the project contract and publish safety assumptions:
 python scripts\doctor.py
 ```
 
+## Dispatch Operations Status
+
+Read-only unified lifecycle status for a dispatch/date:
+
+```powershell
+python scripts\dispatch_ops.py status food-line --date YYYY-MM-DD
+python scripts\dispatch_ops.py status care-line --date YYYY-MM-DD
+python scripts\dispatch_ops.py status gaza --date YYYY-MM-DD
+python scripts\dispatch_ops.py status ice --date YYYY-MM-DD
+python scripts\dispatch_ops.py status gaza --date YYYY-MM-DD --json
+```
+
+The command reads existing operational-status artifacts, runtime receipts, review/reconstruction state, and public evidence where applicable. It does not collect sources, generate editions, publish, update Pages, alter Task Scheduler, repair state, or write receipts.
+
 ## New Machine Setup
 
 Clone the source project branch into the new project root, then clone the GitHub Pages deploy branch into `bluefern-dispatches-pages` beside the source files:

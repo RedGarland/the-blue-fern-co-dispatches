@@ -24,6 +24,7 @@ from bluefern_dispatches.operational_status_exporter import (  # noqa: E402
 
 SCHEMA_VERSION = "dispatch_ops_status_v1"
 RECOVERY_PLAN_SCHEMA_VERSION = "dispatch_ops_recovery_plan_v1"
+APPLY_SCHEMA_VERSION = "dispatch_ops_apply_v1"
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 SUPPORTED_DISPATCHES = ("food-line", "care-line", "gaza", "ice")
 
@@ -76,6 +77,15 @@ class RecoveryAction(StrEnum):
     INVESTIGATE_STATUS_EXPORT = "INVESTIGATE_STATUS_EXPORT"
 
 
+class ApplyOutcome(StrEnum):
+    VERIFIED = "VERIFIED"
+    NOT_VERIFIED = "NOT_VERIFIED"
+    NO_ACTION = "NO_ACTION"
+    REFUSED = "REFUSED"
+    BLOCKED = "BLOCKED"
+    FAILED = "FAILED"
+
+
 @dataclass(frozen=True)
 class DispatchStatus:
     dispatch: str
@@ -94,6 +104,29 @@ class DispatchStatus:
 
     def to_json_payload(self) -> dict[str, Any]:
         payload = {"schema_version": SCHEMA_VERSION}
+        payload.update(asdict(self))
+        return payload
+
+
+@dataclass(frozen=True)
+class ApplyResult:
+    dispatch: str
+    date: str
+    planned_action: str
+    outcome: str
+    changed: bool
+    public_side_effects: bool
+    scheduler_changes: bool
+    collection_rerun: bool
+    editorial_mutation: bool
+    publication_attempted: bool
+    evidence: list[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+    status_before: dict[str, Any] = field(default_factory=dict)
+    status_after: dict[str, Any] = field(default_factory=dict)
+
+    def to_json_payload(self) -> dict[str, Any]:
+        payload = {"schema_version": APPLY_SCHEMA_VERSION}
         payload.update(asdict(self))
         return payload
 
@@ -681,6 +714,10 @@ def _base_plan(
 
 def build_recovery_plan(dispatch: str, date: str, *, root: Path = ROOT) -> RecoveryPlan:
     status = build_status(dispatch, date, root=root)
+    return build_recovery_plan_from_status(status)
+
+
+def build_recovery_plan_from_status(status: DispatchStatus) -> RecoveryPlan:
     if status.state in TERMINAL_NO_ACTION_STATES and status.next_action == NextAction.NONE.value:
         return _base_plan(
             status,
@@ -772,6 +809,103 @@ def build_recovery_plan(dispatch: str, date: str, *, root: Path = ROOT) -> Recov
     )
 
 
+def apply_recovery_plan(dispatch: str, date: str, *, root: Path = ROOT, confirm: str | None = None) -> ApplyResult:
+    root = root.resolve()
+    status_before = build_status(dispatch, date, root=root)
+    plan = build_recovery_plan_from_status(status_before)
+    if plan.disposition == RecoveryDisposition.NO_ACTION.value and plan.action == RecoveryAction.NONE.value:
+        return _apply_result(
+            plan,
+            outcome=ApplyOutcome.NO_ACTION,
+            status_before=status_before,
+            status_after=status_before,
+            evidence=plan.evidence,
+            warnings=("No executable recovery action is pending.",),
+        )
+    if plan.action != RecoveryAction.VERIFY_PUBLIC_STATE.value:
+        return _apply_result(
+            plan,
+            outcome=ApplyOutcome.REFUSED,
+            status_before=status_before,
+            status_after=status_before,
+            evidence=plan.evidence,
+            warnings=(f"Phase 2B only allows {RecoveryAction.VERIFY_PUBLIC_STATE.value}; refused {plan.action}.",),
+        )
+    if plan.disposition != RecoveryDisposition.PLAN_AVAILABLE.value:
+        return _apply_result(
+            plan,
+            outcome=ApplyOutcome.REFUSED,
+            status_before=status_before,
+            status_after=status_before,
+            evidence=plan.evidence,
+            warnings=("Recovery plan is not available for execution.",),
+        )
+    if confirm != RecoveryAction.VERIFY_PUBLIC_STATE.value:
+        return _apply_result(
+            plan,
+            outcome=ApplyOutcome.REFUSED,
+            status_before=status_before,
+            status_after=status_before,
+            evidence=plan.evidence,
+            warnings=("Missing required confirmation token: --confirm VERIFY_PUBLIC_STATE.",),
+        )
+    verified, verification_evidence = _verify_public_state(root, status_before)
+    status_after = build_status(dispatch, date, root=root)
+    return _apply_result(
+        plan,
+        outcome=ApplyOutcome.VERIFIED if verified else ApplyOutcome.NOT_VERIFIED,
+        status_before=status_before,
+        status_after=status_after,
+        evidence=sorted(dict.fromkeys([*plan.evidence, *verification_evidence])),
+        warnings=() if verified else ("Durable public-state proof was not found.",),
+    )
+
+
+def _apply_result(
+    plan: RecoveryPlan,
+    *,
+    outcome: ApplyOutcome,
+    status_before: DispatchStatus,
+    status_after: DispatchStatus,
+    evidence: Iterable[str],
+    warnings: Iterable[str] = (),
+) -> ApplyResult:
+    return ApplyResult(
+        dispatch=plan.dispatch,
+        date=plan.date,
+        planned_action=plan.action,
+        outcome=outcome.value,
+        changed=False,
+        public_side_effects=False,
+        scheduler_changes=False,
+        collection_rerun=False,
+        editorial_mutation=False,
+        publication_attempted=False,
+        evidence=sorted(evidence),
+        warnings=sorted(warnings),
+        status_before=status_before.to_json_payload(),
+        status_after=status_after.to_json_payload(),
+    )
+
+
+def _verify_public_state(root: Path, status: DispatchStatus) -> tuple[bool, list[str]]:
+    if status.dispatch == "gaza" and status.state == Lifecycle.NO_UPDATE.value:
+        path = root / "bluefern-dispatches-pages" / "gaza" / "status" / "no-updates" / f"{status.date}.json"
+    else:
+        path = root / "bluefern-dispatches-pages" / status.dispatch / "editions" / status.date / "index.html"
+    return path.is_file(), [path.relative_to(root).as_posix()] if path.is_file() else []
+
+
+def _apply_exit_code(result: ApplyResult) -> int:
+    if result.outcome in {ApplyOutcome.VERIFIED.value, ApplyOutcome.NO_ACTION.value}:
+        return 0
+    if result.outcome == ApplyOutcome.NOT_VERIFIED.value:
+        return 2
+    if result.outcome in {ApplyOutcome.REFUSED.value, ApplyOutcome.BLOCKED.value}:
+        return 3
+    return 1
+
+
 def _can_plan_collection_replay(status: DispatchStatus) -> bool:
     details = status.details if isinstance(status.details, dict) else {}
     return (
@@ -838,6 +972,31 @@ def render_recovery_text(plan: RecoveryPlan) -> str:
     return "\n".join(lines)
 
 
+def render_apply_text(result: ApplyResult) -> str:
+    label = result.dispatch.replace("-", " ").title().replace("Gaza", "Gaza").replace("Ice", "ICE")
+    lines = [
+        f"Dispatch: {label}",
+        f"Date: {result.date}",
+        f"Planned action: {result.planned_action}",
+        "",
+        f"Apply outcome: {result.outcome}",
+        f"Changed: {str(result.changed).lower()}",
+        "",
+        f"Public side effects: {str(result.public_side_effects).lower()}",
+        f"Scheduler changes: {str(result.scheduler_changes).lower()}",
+        f"Collection rerun: {str(result.collection_rerun).lower()}",
+        f"Editorial mutation: {str(result.editorial_mutation).lower()}",
+        f"Publication attempted: {str(result.publication_attempted).lower()}",
+    ]
+    if result.evidence:
+        lines.extend(["", "Evidence:"])
+        lines.extend(f"- {path}" for path in result.evidence)
+    if result.warnings:
+        lines.extend(["", "Warnings:"])
+        lines.extend(f"- {warning}" for warning in result.warnings)
+    return "\n".join(lines)
+
+
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Read-only unified dispatch operations status.")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -850,6 +1009,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     recover.add_argument("dispatch", choices=SUPPORTED_DISPATCHES)
     recover.add_argument("--date", required=True, help="Date in YYYY-MM-DD format.")
     recover.add_argument("--json", action="store_true", help="Emit deterministic JSON.")
+    recover.add_argument("--apply", action="store_true", help="Execute a supported recovery action.")
+    recover.add_argument("--confirm", help="Required confirmation token for --apply.")
     recover.add_argument("--root", default=str(ROOT), help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
     if not DATE_RE.fullmatch(args.date):
@@ -865,6 +1026,16 @@ def build_status(dispatch: str, date: str, *, root: Path = ROOT) -> DispatchStat
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     if args.command == "recover":
+        if args.confirm and not args.apply:
+            print("--confirm is only valid with --apply", file=sys.stderr)
+            return 3
+        if args.apply:
+            result = apply_recovery_plan(args.dispatch, args.date, root=Path(args.root), confirm=args.confirm)
+            if args.json:
+                print(json.dumps(result.to_json_payload(), indent=2, sort_keys=True))
+            else:
+                print(render_apply_text(result))
+            return _apply_exit_code(result)
         plan = build_recovery_plan(args.dispatch, args.date, root=Path(args.root))
         if args.json:
             print(json.dumps(plan.to_json_payload(), indent=2, sort_keys=True))

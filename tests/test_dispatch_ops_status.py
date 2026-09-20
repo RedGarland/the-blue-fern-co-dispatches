@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 
 from bluefern_dispatches.operational_health import build_care_line_operational_receipt, build_operational_receipt
-from scripts.dispatch_ops import DispatchStatus, build_recovery_plan, build_status
+from scripts.dispatch_ops import DispatchStatus, apply_recovery_plan, build_recovery_plan, build_status, main
 
 
 DATE = "2026-09-18"
@@ -189,6 +189,14 @@ def _local_output_edition(root: Path, dispatch: str, date: str) -> None:
     path = root / "output" / "site" / dispatch / "editions" / date / "index.html"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("local generated\n", encoding="utf-8")
+
+
+def _snapshot_files(root: Path) -> tuple[list[Path], dict[Path, tuple[str, int]]]:
+    paths = sorted(path for path in root.rglob("*") if path.is_file())
+    return paths, {
+        path: (hashlib.sha256(path.read_bytes()).hexdigest(), os.stat(path).st_mtime_ns)
+        for path in paths
+    }
 
 
 def _ice_receipt(root: Path, date: str = "2026-09-10", status: str = "SUCCESS", classification: str = "healthy") -> None:
@@ -649,3 +657,239 @@ def test_recover_json_payload_is_deterministic(tmp_path: Path) -> None:
 
     assert json.dumps(first, indent=2, sort_keys=True) == json.dumps(second, indent=2, sort_keys=True)
     assert first["schema_version"] == "dispatch_ops_recovery_plan_v1"
+
+
+def test_recover_without_apply_keeps_phase2a_planner_behavior(tmp_path: Path, capsys) -> None:
+    _gaza_no_update(tmp_path, pages=False)
+
+    rc = main(["recover", "gaza", "--date", "2026-09-19", "--root", str(tmp_path), "--json"])
+
+    payload = json.loads(capsys.readouterr().out)
+    assert rc == 0
+    assert payload["schema_version"] == "dispatch_ops_recovery_plan_v1"
+    assert payload["disposition"] == "PLAN_AVAILABLE"
+    assert payload["action"] == "VERIFY_PUBLIC_STATE"
+    assert "outcome" not in payload
+
+
+def test_apply_without_confirmation_is_refused(tmp_path: Path) -> None:
+    _gaza_no_update(tmp_path, pages=False)
+
+    result = apply_recovery_plan("gaza", "2026-09-19", root=tmp_path)
+
+    assert result.outcome == "REFUSED"
+    assert result.planned_action == "VERIFY_PUBLIC_STATE"
+    assert result.changed is False
+    assert result.public_side_effects is False
+
+
+def test_apply_wrong_confirmation_is_refused(tmp_path: Path) -> None:
+    _gaza_no_update(tmp_path, pages=False)
+
+    result = apply_recovery_plan("gaza", "2026-09-19", root=tmp_path, confirm="PUBLISH_NO_UPDATE")
+
+    assert result.outcome == "REFUSED"
+    assert "Missing required confirmation token" in result.warnings[0]
+
+
+def test_apply_verify_public_state_with_confirmation_and_pages_proof_is_verified(monkeypatch, tmp_path: Path) -> None:
+    from scripts import dispatch_ops
+
+    before = DispatchStatus(
+        dispatch="food-line",
+        date="2026-09-12",
+        state="COMPLETE",
+        collection="COMPLETE",
+        editorial="COMPLETE",
+        publication="COMPLETE",
+        public_state="NOT_VERIFIED",
+        receipts="COMPLETE",
+        recovery="HEALTHY",
+        next_action="VERIFY_PUBLIC_STATE",
+        evidence=["output/site/food-line/editions/2026-09-12/index.html"],
+    )
+    after = DispatchStatus(**{**before.__dict__, "state": "PUBLISHED", "public_state": "VERIFIED", "next_action": "NONE"})
+    statuses = iter([before, after])
+    monkeypatch.setattr(dispatch_ops, "build_status", lambda *_args, **_kwargs: next(statuses))
+    monkeypatch.setattr(
+        dispatch_ops,
+        "_verify_public_state",
+        lambda *_args, **_kwargs: (True, ["bluefern-dispatches-pages/food-line/editions/2026-09-12/index.html"]),
+    )
+
+    result = dispatch_ops.apply_recovery_plan(
+        "food-line",
+        "2026-09-12",
+        root=tmp_path,
+        confirm="VERIFY_PUBLIC_STATE",
+    )
+
+    assert result.outcome == "VERIFIED"
+    assert result.changed is False
+    assert result.status_before["public_state"] == "NOT_VERIFIED"
+    assert result.status_after["public_state"] == "VERIFIED"
+    assert result.public_side_effects is False
+    assert result.publication_attempted is False
+
+
+def test_apply_verify_public_state_with_missing_pages_proof_is_not_verified(tmp_path: Path) -> None:
+    _gaza_no_update(tmp_path, pages=False)
+
+    result = apply_recovery_plan("gaza", "2026-09-19", root=tmp_path, confirm="VERIFY_PUBLIC_STATE")
+
+    assert result.outcome == "NOT_VERIFIED"
+    assert result.changed is False
+    assert result.status_before["public_state"] == "NOT_VERIFIED"
+    assert result.status_after["public_state"] == "NOT_VERIFIED"
+    assert result.scheduler_changes is False
+    assert result.collection_rerun is False
+
+
+def test_apply_verify_public_state_repeated_is_deterministic_and_read_only(tmp_path: Path) -> None:
+    _gaza_no_update(tmp_path, pages=False)
+    paths, before = _snapshot_files(tmp_path)
+
+    first = apply_recovery_plan("gaza", "2026-09-19", root=tmp_path, confirm="VERIFY_PUBLIC_STATE")
+    second = apply_recovery_plan("gaza", "2026-09-19", root=tmp_path, confirm="VERIFY_PUBLIC_STATE")
+    after_paths, after = _snapshot_files(tmp_path)
+
+    assert json.dumps(first.to_json_payload(), indent=2, sort_keys=True) == json.dumps(second.to_json_payload(), indent=2, sort_keys=True)
+    assert first.outcome == "NOT_VERIFIED"
+    assert after_paths == paths
+    assert after == before
+
+
+def test_apply_care_failed_sources_is_refused(tmp_path: Path) -> None:
+    _care_partial_success(tmp_path)
+
+    result = apply_recovery_plan("care-line", "2026-09-18", root=tmp_path, confirm="VERIFY_PUBLIC_STATE")
+
+    assert result.outcome == "REFUSED"
+    assert result.planned_action == "INVESTIGATE_FAILED_SOURCES"
+
+
+def test_apply_failed_collection_is_refused(tmp_path: Path) -> None:
+    _food_status_export(tmp_path, "2026-09-11", "FAILED", task_status="FAILED", classification="source_watch_failed")
+
+    result = apply_recovery_plan("food-line", "2026-09-11", root=tmp_path, confirm="VERIFY_PUBLIC_STATE")
+
+    assert result.outcome == "REFUSED"
+    assert result.planned_action == "INVESTIGATE_COLLECTION"
+
+
+def test_apply_missed_replay_collection_is_refused(monkeypatch, tmp_path: Path) -> None:
+    from scripts import dispatch_ops
+
+    status = DispatchStatus(
+        dispatch="ice",
+        date="2026-09-10",
+        state="MISSED",
+        collection="MISSING",
+        editorial="COMPLETE",
+        publication="NOT_APPLICABLE",
+        public_state="NOT_APPLICABLE",
+        receipts="NO_PROOF",
+        recovery="HEALTHY",
+        next_action="RECOVER_MISSING_RUN",
+        evidence=["ops/status/ice/history/2026-09-10.json"],
+        details={
+            "authoritative_expected_instance": True,
+            "existing_replay_tool_available": True,
+            "no_later_terminal_run": True,
+            "replay_has_no_public_side_effect": True,
+        },
+    )
+    monkeypatch.setattr(dispatch_ops, "build_status", lambda *_args, **_kwargs: status)
+
+    result = dispatch_ops.apply_recovery_plan("ice", "2026-09-10", root=tmp_path, confirm="VERIFY_PUBLIC_STATE")
+
+    assert result.outcome == "REFUSED"
+    assert result.planned_action == "REPLAY_COLLECTION"
+    assert result.collection_rerun is False
+
+
+def test_apply_review_candidates_is_refused(tmp_path: Path) -> None:
+    _food_reconstructed(tmp_path, unresolved=2)
+
+    result = apply_recovery_plan("food-line", "2026-09-09", root=tmp_path, confirm="VERIFY_PUBLIC_STATE")
+
+    assert result.outcome == "REFUSED"
+    assert result.planned_action == "REVIEW_CANDIDATES"
+
+
+def test_apply_terminal_no_action_is_no_action_and_read_only(tmp_path: Path) -> None:
+    _gaza_no_update(tmp_path, pages=True)
+    paths, before = _snapshot_files(tmp_path)
+
+    result = apply_recovery_plan("gaza", "2026-09-19", root=tmp_path, confirm="VERIFY_PUBLIC_STATE")
+
+    after_paths, after = _snapshot_files(tmp_path)
+    assert result.outcome == "NO_ACTION"
+    assert result.planned_action == "NONE"
+    assert result.changed is False
+    assert after_paths == paths
+    assert after == before
+
+
+def test_status_command_output_is_unchanged_by_apply_support(tmp_path: Path, capsys) -> None:
+    _gaza_no_update(tmp_path, pages=True)
+
+    rc = main(["status", "gaza", "--date", "2026-09-19", "--root", str(tmp_path), "--json"])
+
+    payload = json.loads(capsys.readouterr().out)
+    assert rc == 0
+    assert payload["schema_version"] == "dispatch_ops_status_v1"
+    assert payload["state"] == "NO_UPDATE"
+    assert "outcome" not in payload
+
+
+def test_apply_json_payload_is_deterministic(tmp_path: Path) -> None:
+    _gaza_no_update(tmp_path, pages=False)
+
+    first = apply_recovery_plan("gaza", "2026-09-19", root=tmp_path, confirm="VERIFY_PUBLIC_STATE").to_json_payload()
+    second = apply_recovery_plan("gaza", "2026-09-19", root=tmp_path, confirm="VERIFY_PUBLIC_STATE").to_json_payload()
+
+    assert json.dumps(first, indent=2, sort_keys=True) == json.dumps(second, indent=2, sort_keys=True)
+    assert first["schema_version"] == "dispatch_ops_apply_v1"
+
+
+def test_apply_exit_codes_are_controlled(tmp_path: Path, capsys) -> None:
+    _gaza_no_update(tmp_path, pages=False)
+    assert main(["recover", "gaza", "--date", "2026-09-19", "--root", str(tmp_path), "--apply", "--json"]) == 3
+    capsys.readouterr()
+    assert (
+        main(
+            [
+                "recover",
+                "gaza",
+                "--date",
+                "2026-09-19",
+                "--root",
+                str(tmp_path),
+                "--apply",
+                "--confirm",
+                "VERIFY_PUBLIC_STATE",
+                "--json",
+            ]
+        )
+        == 2
+    )
+    capsys.readouterr()
+    _write_json(tmp_path / "bluefern-dispatches-pages/gaza/status/no-updates/2026-09-19.json", json.loads((tmp_path / "output/site/gaza/status/no-updates/2026-09-19.json").read_text(encoding="utf-8")))
+    assert (
+        main(
+            [
+                "recover",
+                "gaza",
+                "--date",
+                "2026-09-19",
+                "--root",
+                str(tmp_path),
+                "--apply",
+                "--confirm",
+                "VERIFY_PUBLIC_STATE",
+                "--json",
+            ]
+        )
+        == 0
+    )

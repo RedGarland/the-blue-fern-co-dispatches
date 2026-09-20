@@ -231,6 +231,7 @@ class EngineeringWorkItem:
     diagnosis_path: str | None = None
     codex_prompt_path: str | None = None
     pr_url: str | None = None
+    root_cause: str | None = None
     unexpected_paths: list[str] = field(default_factory=list)
     validation_results: list[dict[str, Any]] = field(default_factory=list)
     blocked_reason: str | None = None
@@ -1268,6 +1269,41 @@ def _block_engineering_work(
     )
 
 
+def _first_output_line(result: EngineeringCommandResult) -> str:
+    return result.stdout.strip().splitlines()[0] if result.ok and result.stdout.strip() else ""
+
+
+def _verify_existing_engineering_worktree(
+    item: EngineeringWorkItem,
+    *,
+    repo_root: Path,
+    expected_base_sha: str,
+    runner: Any = _run_command,
+) -> tuple[bool, str]:
+    worktree = Path(item.worktree)
+    expected_path = str(worktree.resolve()).lower()
+    top = _first_output_line(runner(["git", "rev-parse", "--show-toplevel"], cwd=worktree))
+    if not top or str(Path(top).resolve()).lower() != expected_path:
+        return False, "existing worktree path identity does not match work item"
+
+    branch = _first_output_line(runner(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=worktree))
+    if branch != item.branch:
+        return False, f"existing worktree branch mismatch: {branch}"
+
+    source_common = _first_output_line(runner(["git", "rev-parse", "--git-common-dir"], cwd=repo_root))
+    worktree_common = _first_output_line(runner(["git", "rev-parse", "--git-common-dir"], cwd=worktree))
+    if not source_common or not worktree_common:
+        return False, "could not verify existing worktree repository identity"
+    if str(Path(source_common).resolve()).lower() != str(Path(worktree_common).resolve()).lower():
+        return False, "existing worktree belongs to a different source repository"
+
+    ancestry = runner(["git", "merge-base", "--is-ancestor", expected_base_sha, "HEAD"], cwd=worktree)
+    if not ancestry.ok:
+        return False, "existing worktree HEAD is not compatible with recorded base"
+
+    return True, "existing worktree identity verified"
+
+
 def _create_or_reuse_engineering_worktree(
     operator_root: Path,
     item: EngineeringWorkItem,
@@ -1293,6 +1329,14 @@ def _create_or_reuse_engineering_worktree(
             contents = list(worktree.iterdir()) if worktree.is_dir() else [worktree]
             if contents:
                 return _block_engineering_work(operator_root, item, f"worktree destination has unrelated content: {worktree}")
+        verified, reason = _verify_existing_engineering_worktree(
+            item,
+            repo_root=repo_root,
+            expected_base_sha=item.base_sha or base_sha,
+            runner=runner,
+        )
+        if not verified:
+            return _block_engineering_work(operator_root, item, reason)
         item = replace(
             item,
             state=EngineeringState.WORKTREE_CREATED.value,
@@ -1351,6 +1395,39 @@ def _engineering_prompt(item: EngineeringWorkItem, diagnosis_path: Path) -> str:
     )
 
 
+def _codex_sandbox_invocation(executable: str, worktree: Path, prompt: str) -> list[str]:
+    return [
+        executable,
+        "exec",
+        "--sandbox",
+        "workspace-write",
+        "--ask-for-approval",
+        "never",
+        "--cd",
+        str(worktree),
+        "--ignore-user-config",
+        prompt,
+    ]
+
+
+def _codex_cli_supports_workspace_sandbox(executable: str, *, runner: Any = _run_command, cwd: Path) -> bool:
+    result = runner([executable, "exec", "--help"], cwd=cwd)
+    if not result.ok:
+        return False
+    help_text = result.stdout
+    return "--sandbox" in help_text and "workspace-write" in help_text and "--cd" in help_text
+
+
+def _bounded_root_cause(text: str) -> str:
+    for line in text.splitlines():
+        normalized = line.strip()
+        if normalized.lower().startswith("root cause:"):
+            value = normalized.split(":", 1)[1].strip()
+            if value:
+                return value[:300]
+    return "INSUFFICIENT_EVIDENCE"
+
+
 def _invoke_codex_for_engineering(
     operator_root: Path,
     item: EngineeringWorkItem,
@@ -1373,10 +1450,20 @@ def _invoke_codex_for_engineering(
         executable = shutil.which(codex_executable)
         if not executable:
             return _block_engineering_work(operator_root, item, f"{codex_executable} executable is unavailable")
-        result = runner([executable, "exec", "--ask-for-approval", "never", prompt], cwd=Path(item.worktree))
+        if not _codex_cli_supports_workspace_sandbox(executable, runner=runner, cwd=Path(item.worktree)):
+            return _block_engineering_work(operator_root, item, "codex CLI cannot enforce workspace-write sandbox non-interactively")
+        result = runner(_codex_sandbox_invocation(executable, Path(item.worktree), prompt), cwd=Path(item.worktree))
     if not result.ok:
         return _block_engineering_work(operator_root, item, "codex execution failed")
-    return _save_engineering_work_item(operator_root, replace(item, state=EngineeringState.PATCHED.value, merge_allowed=False))
+    return _save_engineering_work_item(
+        operator_root,
+        replace(
+            item,
+            state=EngineeringState.PATCHED.value,
+            root_cause=_bounded_root_cause(result.stdout),
+            merge_allowed=False,
+        ),
+    )
 
 
 def _changed_paths(worktree: Path, *, runner: Any = _run_command) -> list[str]:
@@ -1474,11 +1561,15 @@ def _repair_pr_title(item: EngineeringWorkItem) -> str:
 
 
 def _repair_pr_body(item: EngineeringWorkItem) -> str:
+    root_cause = item.root_cause or "INSUFFICIENT_EVIDENCE"
     sections = [
         "## Incident",
         f"- Dispatch: {item.dispatch}",
         f"- Incident: {item.incident_id}",
         f"- Classification: {item.classification}",
+        "",
+        "## Root Cause",
+        f"Root cause: {root_cause}",
         "",
         "## Root Cause Evidence",
         *[f"- {entry}" for entry in item.evidence],
@@ -1488,6 +1579,15 @@ def _repair_pr_body(item: EngineeringWorkItem) -> str:
         "",
         "## Validation",
         *[f"- {row.get('command')} => {row.get('exit_code')}" for row in item.validation_results],
+        "",
+        "## Safety",
+        "- production_state_mutated=false",
+        "- publication_attempted=false",
+        "- pages_synced=false",
+        "- scheduler_changed=false",
+        "- editorial_policy_changed=false",
+        "- collection_replayed=false",
+        "- merge_allowed=false",
         "",
         "## Recommended Action",
         "REVIEW_PR",

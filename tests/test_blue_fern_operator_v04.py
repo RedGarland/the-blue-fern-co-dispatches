@@ -62,11 +62,17 @@ class FakeEngineeringRunner:
         changed_paths: list[str] | None = None,
         validation_exit_codes: list[int] | None = None,
         remote_branch_exists: bool = False,
+        current_branch: str = "operator/care-line/bfo-test-failed",
+        unrelated_common_dir: bool = False,
+        codex_help_supports_sandbox: bool = True,
     ) -> None:
         self.commands: list[tuple[list[str], Path]] = []
         self.changed_paths = changed_paths or ["src/bluefern_dispatches/care_line_repair.py", "tests/test_care_line_repair.py"]
         self.validation_exit_codes = validation_exit_codes or [0]
         self.remote_branch_exists = remote_branch_exists
+        self.current_branch = current_branch
+        self.unrelated_common_dir = unrelated_common_dir
+        self.codex_help_supports_sandbox = codex_help_supports_sandbox
 
     def __call__(self, args: list[str], *, cwd: Path) -> operator.EngineeringCommandResult:
         self.commands.append((args, cwd))
@@ -78,8 +84,22 @@ class FakeEngineeringRunner:
             return operator.EngineeringCommandResult(1)
         if args[:3] == ["git", "worktree", "add"]:
             return operator.EngineeringCommandResult(0)
+        if args == ["git", "rev-parse", "--show-toplevel"]:
+            return operator.EngineeringCommandResult(0, f"{cwd}\n")
+        if args == ["git", "rev-parse", "--abbrev-ref", "HEAD"]:
+            return operator.EngineeringCommandResult(0, f"{self.current_branch}\n")
+        if args == ["git", "rev-parse", "--git-common-dir"]:
+            common = cwd / ".git" if self.unrelated_common_dir else Path("C:/repo/.git")
+            return operator.EngineeringCommandResult(0, f"{common}\n")
+        if args[:3] == ["git", "merge-base", "--is-ancestor"]:
+            return operator.EngineeringCommandResult(0)
         if args[:3] in (["git", "diff", "--name-only"], ["git", "ls-files", "--others"]):
             return operator.EngineeringCommandResult(0, "\n".join(self.changed_paths) + "\n")
+        if args[-2:] == ["exec", "--help"] or args[1:3] == ["exec", "--help"]:
+            help_text = "codex exec --sandbox workspace-write --cd <DIR>\n" if self.codex_help_supports_sandbox else "codex exec\n"
+            return operator.EngineeringCommandResult(0, help_text)
+        if len(args) > 2 and args[1] == "exec" and "--sandbox" in args:
+            return operator.EngineeringCommandResult(0, "Root cause: deterministic collection bug\npatched\n")
         if args[:3] == ["powershell.exe", "-NoProfile", "-Command"]:
             code = self.validation_exit_codes.pop(0) if self.validation_exit_codes else 0
             return operator.EngineeringCommandResult(code, "validation output\n", "validation error\n" if code else "")
@@ -103,7 +123,7 @@ class FakeCodexRunner:
 
     def __call__(self, *, prompt: str, cwd: Path, item: operator.EngineeringWorkItem) -> operator.EngineeringCommandResult:
         self.calls.append({"prompt": prompt, "cwd": cwd, "item": item})
-        return operator.EngineeringCommandResult(0, "patched\n")
+        return operator.EngineeringCommandResult(0, "Root cause: deterministic collection bug\npatched\n")
 
 
 class FakePrCreator:
@@ -288,6 +308,41 @@ def test_engineering_execution_reuses_matching_existing_worktree(tmp_path: Path)
 
     assert reused.state == "WORKTREE_CREATED"
     assert not any(command[:3] == ["git", "worktree", "add"] for command, _cwd in runner.commands)
+    assert (["git", "rev-parse", "--show-toplevel"], Path(item.worktree)) in runner.commands
+    assert (["git", "rev-parse", "--abbrev-ref", "HEAD"], Path(item.worktree)) in runner.commands
+    assert any(command[:3] == ["git", "merge-base", "--is-ancestor"] for command, _cwd in runner.commands)
+
+
+def test_engineering_execution_blocks_existing_worktree_wrong_branch(tmp_path: Path) -> None:
+    root = tmp_path / "ops/operator"
+    item = operator.prepare_engineering_work(_result(_incident()), operator_root=root, worktree_root=tmp_path / "OperatorWorktrees", policy=_policy(tmp_path))[0]
+    (Path(item.worktree) / ".git").mkdir(parents=True)
+
+    blocked = operator._create_or_reuse_engineering_worktree(
+        root,
+        item,
+        repo_root=tmp_path / "repo",
+        runner=FakeEngineeringRunner(current_branch="operator/care-line/other-incident"),
+    )
+
+    assert blocked.state == "BLOCKED"
+    assert "branch mismatch" in (blocked.blocked_reason or "")
+
+
+def test_engineering_execution_blocks_existing_worktree_unrelated_repo(tmp_path: Path) -> None:
+    root = tmp_path / "ops/operator"
+    item = operator.prepare_engineering_work(_result(_incident()), operator_root=root, worktree_root=tmp_path / "OperatorWorktrees", policy=_policy(tmp_path))[0]
+    (Path(item.worktree) / ".git").mkdir(parents=True)
+
+    blocked = operator._create_or_reuse_engineering_worktree(
+        root,
+        item,
+        repo_root=tmp_path / "repo",
+        runner=FakeEngineeringRunner(unrelated_common_dir=True),
+    )
+
+    assert blocked.state == "BLOCKED"
+    assert "different source repository" in (blocked.blocked_reason or "")
 
 
 def test_engineering_execution_refuses_unrelated_worktree_content(tmp_path: Path) -> None:
@@ -315,6 +370,36 @@ def test_codex_invocation_is_bounded_to_worktree_and_prompt_scope(tmp_path: Path
     assert "src/bluefern_dispatches/care_line_*.py" in prompt
     assert "modify production runner checkouts" in prompt
     assert "Stop and report BLOCKED" in prompt
+
+
+def test_codex_process_invocation_enforces_workspace_sandbox(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    root = tmp_path / "ops/operator"
+    item = operator.prepare_engineering_work(_result(_incident()), operator_root=root, worktree_root=tmp_path / "OperatorWorktrees", policy=_policy(tmp_path))[0]
+    runner = FakeEngineeringRunner()
+    monkeypatch.setattr(operator.shutil, "which", lambda _name: "codex.cmd")
+
+    patched = operator._invoke_codex_for_engineering(root, item, runner=runner)
+
+    assert patched.state == "PATCHED"
+    codex_commands = [command for command, _cwd in runner.commands if command[:2] == ["codex.cmd", "exec"] and "--help" not in command]
+    assert len(codex_commands) == 1
+    command = codex_commands[0]
+    assert command[command.index("--sandbox") + 1] == "workspace-write"
+    assert command[command.index("--cd") + 1] == item.worktree
+    assert "--add-dir" not in command
+    assert "danger-full-access" not in command
+    assert "--ignore-user-config" in command
+
+
+def test_codex_process_blocks_when_workspace_sandbox_unavailable(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    root = tmp_path / "ops/operator"
+    item = operator.prepare_engineering_work(_result(_incident()), operator_root=root, worktree_root=tmp_path / "OperatorWorktrees", policy=_policy(tmp_path))[0]
+    monkeypatch.setattr(operator.shutil, "which", lambda _name: "codex.cmd")
+
+    blocked = operator._invoke_codex_for_engineering(root, item, runner=FakeEngineeringRunner(codex_help_supports_sandbox=False))
+
+    assert blocked.state == "BLOCKED"
+    assert "cannot enforce workspace-write sandbox" in (blocked.blocked_reason or "")
 
 
 def test_out_of_scope_patch_blocks_without_commit_push_or_pr(tmp_path: Path) -> None:
@@ -357,6 +442,28 @@ def test_validation_pass_commits_pushes_opens_pr_and_requires_approval(tmp_path:
     assert pr_creator.calls[0]["head"] == "operator/care-line/bfo-test-failed"
     assert pr_creator.calls[0]["base"] == "add/pages-repo-default"
     assert "Recommended Action\nREVIEW_PR" in str(pr_creator.calls[0]["body"])
+    assert "## Root Cause\nRoot cause: deterministic collection bug" in str(pr_creator.calls[0]["body"])
+    assert "## Safety" in str(pr_creator.calls[0]["body"])
+    assert "- production_state_mutated=false" in str(pr_creator.calls[0]["body"])
+    assert "- publication_attempted=false" in str(pr_creator.calls[0]["body"])
+    assert "- pages_synced=false" in str(pr_creator.calls[0]["body"])
+    assert "- scheduler_changed=false" in str(pr_creator.calls[0]["body"])
+    assert "- editorial_policy_changed=false" in str(pr_creator.calls[0]["body"])
+    assert "- collection_replayed=false" in str(pr_creator.calls[0]["body"])
+    assert "- merge_allowed=false" in str(pr_creator.calls[0]["body"])
+
+
+def test_repair_pr_body_uses_insufficient_evidence_when_root_cause_missing(tmp_path: Path) -> None:
+    item = operator.prepare_engineering_work(_result(_incident()), operator_root=tmp_path / "ops/operator", worktree_root=tmp_path / "wt", policy=_policy(tmp_path))[0]
+    body = operator._repair_pr_body(
+        operator.replace(
+            item,
+            validation_results=[{"command": "python -m pytest tests/test_blue_fern_operator_v04.py -q", "exit_code": 0}],
+        )
+    )
+
+    assert "## Root Cause\nRoot cause: INSUFFICIENT_EVIDENCE" in body
+    assert "## Safety" in body
 
 
 def test_validation_failure_retries_once_then_opens_pr_on_success(tmp_path: Path) -> None:

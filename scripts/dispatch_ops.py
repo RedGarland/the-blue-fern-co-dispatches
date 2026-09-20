@@ -23,6 +23,7 @@ from bluefern_dispatches.operational_status_exporter import (  # noqa: E402
 
 
 SCHEMA_VERSION = "dispatch_ops_status_v1"
+RECOVERY_PLAN_SCHEMA_VERSION = "dispatch_ops_recovery_plan_v1"
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 SUPPORTED_DISPATCHES = ("food-line", "care-line", "gaza", "ice")
 
@@ -52,6 +53,29 @@ class NextAction(StrEnum):
     UNKNOWN_REQUIRES_OPERATOR = "UNKNOWN_REQUIRES_OPERATOR"
 
 
+class RecoveryDisposition(StrEnum):
+    NO_ACTION = "NO_ACTION"
+    PLAN_AVAILABLE = "PLAN_AVAILABLE"
+    OPERATOR_REVIEW_REQUIRED = "OPERATOR_REVIEW_REQUIRED"
+    UNSUPPORTED = "UNSUPPORTED"
+    BLOCKED = "BLOCKED"
+    UNKNOWN = "UNKNOWN"
+
+
+class RecoveryAction(StrEnum):
+    NONE = "NONE"
+    REPLAY_COLLECTION = "REPLAY_COLLECTION"
+    REBUILD_STATUS = "REBUILD_STATUS"
+    REVIEW_CANDIDATES = "REVIEW_CANDIDATES"
+    PUBLISH_APPROVED_RELEASE = "PUBLISH_APPROVED_RELEASE"
+    PUBLISH_NO_UPDATE = "PUBLISH_NO_UPDATE"
+    VERIFY_PUBLIC_STATE = "VERIFY_PUBLIC_STATE"
+    RECONSTRUCT_DATE = "RECONSTRUCT_DATE"
+    INVESTIGATE_FAILED_SOURCES = "INVESTIGATE_FAILED_SOURCES"
+    INVESTIGATE_COLLECTION = "INVESTIGATE_COLLECTION"
+    INVESTIGATE_STATUS_EXPORT = "INVESTIGATE_STATUS_EXPORT"
+
+
 @dataclass(frozen=True)
 class DispatchStatus:
     dispatch: str
@@ -70,6 +94,29 @@ class DispatchStatus:
 
     def to_json_payload(self) -> dict[str, Any]:
         payload = {"schema_version": SCHEMA_VERSION}
+        payload.update(asdict(self))
+        return payload
+
+
+@dataclass(frozen=True)
+class RecoveryPlan:
+    dispatch: str
+    date: str
+    status_state: str
+    disposition: str
+    action: str
+    safe_to_apply: bool
+    requires_operator_confirmation: bool
+    public_side_effects: bool
+    scheduler_changes: bool
+    collection_rerun: bool
+    reason: str
+    evidence: list[str] = field(default_factory=list)
+    preconditions: list[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+
+    def to_json_payload(self) -> dict[str, Any]:
+        payload = {"schema_version": RECOVERY_PLAN_SCHEMA_VERSION}
         payload.update(asdict(self))
         return payload
 
@@ -278,6 +325,28 @@ class FoodLineAdapter(DispatchAdapter):
                     "replay_result": replay,
                 },
             )
+        if gap and receipt and self._has_unresolved_reconstructed_candidates(date, gap, receipt):
+            replay = receipt.get("replay_result") if isinstance(receipt.get("replay_result"), dict) else {}
+            unresolved = int(replay.get("unresolved") or 0)
+            return DispatchStatus(
+                dispatch=self.dispatch,
+                date=date,
+                state=Lifecycle.NEEDS_REVIEW.value,
+                collection="RECONSTRUCTED",
+                editorial="NEEDS_REVIEW",
+                publication="NOT_REQUIRED",
+                public_state="NOT_APPLICABLE",
+                receipts="RECONSTRUCTED",
+                recovery="REVIEW_REQUIRED",
+                next_action=NextAction.REVIEW_CANDIDATES.value,
+                evidence=sorted(self.existing([gap_path, receipt_path])),
+                details={
+                    "coverage_gap_status": gap.get("observation_status"),
+                    "backfill_status": gap.get("backfill_status"),
+                    "unresolved_reconstructed_candidates": unresolved,
+                    "replay_result": replay,
+                },
+            )
 
         try:
             built = build_food_line_status(
@@ -303,6 +372,15 @@ class FoodLineAdapter(DispatchAdapter):
             and backfill_status in {"BACKFILL_NOT_REQUIRED", "RECOVERED", "COMPLETE_RECONSTRUCTED"}
             and bool(gap.get("recovered_at"))
             and int(replay.get("unresolved") or 0) == 0
+        )
+
+    def _has_unresolved_reconstructed_candidates(self, date: str, gap: dict[str, Any], receipt: dict[str, Any]) -> bool:
+        replay = receipt.get("replay_result") if isinstance(receipt.get("replay_result"), dict) else {}
+        return (
+            str(gap.get("dispatch") or "") == self.dispatch
+            and str(gap.get("observation_date") or "") == date
+            and str(receipt.get("historical_date") or "") == date
+            and int(replay.get("unresolved") or 0) > 0
         )
 
 
@@ -560,6 +638,151 @@ ADAPTERS = {
 }
 
 
+TERMINAL_NO_ACTION_STATES = {
+    Lifecycle.COMPLETE.value,
+    Lifecycle.PUBLISHED.value,
+    Lifecycle.NO_UPDATE.value,
+    Lifecycle.SAFE_NO_OP.value,
+}
+
+
+def _base_plan(
+    status: DispatchStatus,
+    *,
+    disposition: RecoveryDisposition,
+    action: RecoveryAction,
+    reason: str,
+    preconditions: Iterable[str] = (),
+    warnings: Iterable[str] = (),
+    requires_operator_confirmation: bool | None = None,
+    public_side_effects: bool = False,
+    scheduler_changes: bool = False,
+    collection_rerun: bool = False,
+) -> RecoveryPlan:
+    if requires_operator_confirmation is None:
+        requires_operator_confirmation = disposition == RecoveryDisposition.OPERATOR_REVIEW_REQUIRED
+    return RecoveryPlan(
+        dispatch=status.dispatch,
+        date=status.date,
+        status_state=status.state,
+        disposition=disposition.value,
+        action=action.value,
+        safe_to_apply=False,
+        requires_operator_confirmation=requires_operator_confirmation,
+        public_side_effects=public_side_effects,
+        scheduler_changes=scheduler_changes,
+        collection_rerun=collection_rerun,
+        reason=reason,
+        evidence=sorted(status.evidence),
+        preconditions=sorted(preconditions),
+        warnings=sorted(warnings),
+    )
+
+
+def build_recovery_plan(dispatch: str, date: str, *, root: Path = ROOT) -> RecoveryPlan:
+    status = build_status(dispatch, date, root=root)
+    if status.state in TERMINAL_NO_ACTION_STATES and status.next_action == NextAction.NONE.value:
+        return _base_plan(
+            status,
+            disposition=RecoveryDisposition.NO_ACTION,
+            action=RecoveryAction.NONE,
+            reason="Current state is already terminal and has no pending operational action.",
+            preconditions=("SOURCE_EVIDENCE_PRESENT",) if status.evidence else (),
+            requires_operator_confirmation=False,
+        )
+
+    if status.next_action == NextAction.VERIFY_PUBLIC_STATE.value:
+        return _base_plan(
+            status,
+            disposition=RecoveryDisposition.PLAN_AVAILABLE,
+            action=RecoveryAction.VERIFY_PUBLIC_STATE,
+            reason="Operational state is complete, but durable public-state proof is not verified.",
+            preconditions=("PUBLIC_STATE_NOT_VERIFIED",),
+            requires_operator_confirmation=False,
+        )
+
+    if status.next_action == NextAction.REVIEW_CANDIDATES.value or status.state == Lifecycle.NEEDS_REVIEW.value:
+        return _base_plan(
+            status,
+            disposition=RecoveryDisposition.OPERATOR_REVIEW_REQUIRED,
+            action=RecoveryAction.REVIEW_CANDIDATES,
+            reason="Editorial or validation evidence requires operator review before any recovery can proceed.",
+            preconditions=("SOURCE_EVIDENCE_PRESENT",) if status.evidence else (),
+        )
+
+    if status.state == Lifecycle.DEGRADED.value and status.next_action == NextAction.INVESTIGATE_FAILED_SOURCES.value:
+        return _base_plan(
+            status,
+            disposition=RecoveryDisposition.OPERATOR_REVIEW_REQUIRED,
+            action=RecoveryAction.INVESTIGATE_FAILED_SOURCES,
+            reason="Partial-success receipts require investigation of failed sources, not a full cycle replay.",
+            preconditions=("SOURCE_EVIDENCE_PRESENT", "NO_PUBLIC_SIDE_EFFECT"),
+        )
+
+    if status.state == Lifecycle.FAILED.value and status.next_action == NextAction.INVESTIGATE_COLLECTION.value:
+        return _base_plan(
+            status,
+            disposition=RecoveryDisposition.PLAN_AVAILABLE,
+            action=RecoveryAction.INVESTIGATE_COLLECTION,
+            reason="Failure evidence identifies collection investigation as the next read-only recovery step.",
+            preconditions=("SOURCE_EVIDENCE_PRESENT", "NO_PUBLIC_SIDE_EFFECT"),
+        )
+
+    if status.state == Lifecycle.MISSED.value:
+        if _can_plan_collection_replay(status):
+            return _base_plan(
+                status,
+                disposition=RecoveryDisposition.PLAN_AVAILABLE,
+                action=RecoveryAction.REPLAY_COLLECTION,
+                reason="Authoritative scheduler expectation and replay preconditions identify a non-public collection replay target.",
+                preconditions=(
+                    "AUTHORITATIVE_EXPECTATION_PRESENT",
+                    "EXISTING_REPLAY_TOOL_AVAILABLE",
+                    "NO_LATER_TERMINAL_RUN",
+                    "NO_PUBLIC_SIDE_EFFECT",
+                ),
+                collection_rerun=True,
+            )
+        return _base_plan(
+            status,
+            disposition=RecoveryDisposition.OPERATOR_REVIEW_REQUIRED,
+            action=RecoveryAction.INVESTIGATE_STATUS_EXPORT,
+            reason="A missed run is authoritative, but this status does not prove an exact safe replay target.",
+            preconditions=("AUTHORITATIVE_EXPECTATION_PRESENT",) if status.evidence else (),
+            warnings=("Replay was not proposed without authoritative instance and tooling evidence.",),
+        )
+
+    if status.state == Lifecycle.UNKNOWN.value:
+        return _base_plan(
+            status,
+            disposition=RecoveryDisposition.UNKNOWN,
+            action=RecoveryAction.INVESTIGATE_STATUS_EXPORT
+            if status.next_action == NextAction.UNKNOWN_REQUIRES_OPERATOR.value
+            else RecoveryAction.NONE,
+            reason="Evidence is ambiguous or incomplete; no recovery plan was fabricated.",
+            warnings=status.warnings,
+        )
+
+    return _base_plan(
+        status,
+        disposition=RecoveryDisposition.UNSUPPORTED,
+        action=RecoveryAction.NONE,
+        reason="No supported Phase 2A recovery plan exists for the current normalized status.",
+        warnings=("Phase 2A is read-only and does not apply recovery.",),
+    )
+
+
+def _can_plan_collection_replay(status: DispatchStatus) -> bool:
+    details = status.details if isinstance(status.details, dict) else {}
+    return (
+        status.state == Lifecycle.MISSED.value
+        and bool(details.get("authoritative_expected_instance"))
+        and bool(details.get("existing_replay_tool_available"))
+        and bool(details.get("no_later_terminal_run"))
+        and bool(details.get("replay_has_no_public_side_effect"))
+    )
+
+
 def render_text(status: DispatchStatus) -> str:
     label = status.dispatch.replace("-", " ").title().replace("Gaza", "Gaza").replace("Ice", "ICE")
     lines = [
@@ -585,6 +808,36 @@ def render_text(status: DispatchStatus) -> str:
     return "\n".join(lines)
 
 
+def render_recovery_text(plan: RecoveryPlan) -> str:
+    label = plan.dispatch.replace("-", " ").title().replace("Gaza", "Gaza").replace("Ice", "ICE")
+    lines = [
+        f"Dispatch: {label}",
+        f"Date: {plan.date}",
+        f"Current state: {plan.status_state}",
+        "",
+        f"Recovery disposition: {plan.disposition}",
+        f"Action: {plan.action}",
+        "",
+        "Reason:",
+        plan.reason,
+        "",
+        f"Public side effects: {str(plan.public_side_effects).lower()}",
+        f"Scheduler changes: {str(plan.scheduler_changes).lower()}",
+        f"Collection rerun: {str(plan.collection_rerun).lower()}",
+        f"Operator confirmation required: {str(plan.requires_operator_confirmation).lower()}",
+    ]
+    if plan.preconditions:
+        lines.extend(["", "Preconditions:"])
+        lines.extend(f"- {precondition}" for precondition in plan.preconditions)
+    if plan.evidence:
+        lines.extend(["", "Evidence:"])
+        lines.extend(f"- {path}" for path in plan.evidence)
+    if plan.warnings:
+        lines.extend(["", "Warnings:"])
+        lines.extend(f"- {warning}" for warning in plan.warnings)
+    return "\n".join(lines)
+
+
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Read-only unified dispatch operations status.")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -593,6 +846,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     status.add_argument("--date", required=True, help="Date in YYYY-MM-DD format.")
     status.add_argument("--json", action="store_true", help="Emit deterministic JSON.")
     status.add_argument("--root", default=str(ROOT), help=argparse.SUPPRESS)
+    recover = sub.add_parser("recover", help="Plan read-only recovery for one dispatch/date.")
+    recover.add_argument("dispatch", choices=SUPPORTED_DISPATCHES)
+    recover.add_argument("--date", required=True, help="Date in YYYY-MM-DD format.")
+    recover.add_argument("--json", action="store_true", help="Emit deterministic JSON.")
+    recover.add_argument("--root", default=str(ROOT), help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
     if not DATE_RE.fullmatch(args.date):
         parser.error("--date must use YYYY-MM-DD")
@@ -606,6 +864,13 @@ def build_status(dispatch: str, date: str, *, root: Path = ROOT) -> DispatchStat
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
+    if args.command == "recover":
+        plan = build_recovery_plan(args.dispatch, args.date, root=Path(args.root))
+        if args.json:
+            print(json.dumps(plan.to_json_payload(), indent=2, sort_keys=True))
+        else:
+            print(render_recovery_text(plan))
+        return 0
     status = build_status(args.dispatch, args.date, root=Path(args.root))
     if args.json:
         print(json.dumps(status.to_json_payload(), indent=2, sort_keys=True))

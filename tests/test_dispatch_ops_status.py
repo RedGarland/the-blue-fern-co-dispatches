@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 
 from bluefern_dispatches.operational_health import build_care_line_operational_receipt, build_operational_receipt
-from scripts.dispatch_ops import build_status
+from scripts.dispatch_ops import DispatchStatus, build_recovery_plan, build_status
 
 
 DATE = "2026-09-18"
@@ -53,7 +53,7 @@ def _gaza_no_update(
     (root / "output/site/gaza/editions/2026-09-18/index.html").write_text("latest real edition", encoding="utf-8")
 
 
-def _food_reconstructed(root: Path) -> None:
+def _food_reconstructed(root: Path, *, unresolved: int = 0) -> None:
     _write_json(
         root / "data/dispatches/food-line/coverage-gaps/2026-09-09.json",
         {
@@ -85,7 +85,7 @@ def _food_reconstructed(root: Path) -> None:
                 "pending": 0,
                 "rejected": 0,
                 "selected": 0,
-                "unresolved": 0,
+                "unresolved": unresolved,
             },
         },
     )
@@ -490,3 +490,162 @@ def test_ice_successful_monitor_run(tmp_path: Path) -> None:
     assert status.collection == "COMPLETE"
     assert status.publication == "NOT_APPLICABLE"
     assert status.next_action == "NONE"
+
+
+def test_recover_food_sep_9_reconstructed_recovered_has_no_action(tmp_path: Path) -> None:
+    _food_reconstructed(tmp_path)
+
+    plan = build_recovery_plan("food-line", "2026-09-09", root=tmp_path)
+
+    assert plan.status_state == "COMPLETE"
+    assert plan.disposition == "NO_ACTION"
+    assert plan.action == "NONE"
+    assert plan.safe_to_apply is False
+    assert plan.public_side_effects is False
+    assert plan.collection_rerun is False
+
+
+def test_recover_care_sep_18_partial_success_investigates_failed_sources(tmp_path: Path) -> None:
+    _care_partial_success(tmp_path)
+
+    plan = build_recovery_plan("care-line", "2026-09-18", root=tmp_path)
+
+    assert plan.status_state == "DEGRADED"
+    assert plan.disposition == "OPERATOR_REVIEW_REQUIRED"
+    assert plan.action == "INVESTIGATE_FAILED_SOURCES"
+    assert plan.requires_operator_confirmation is True
+    assert plan.collection_rerun is False
+
+
+def test_recover_gaza_sep_19_published_no_update_has_no_action(tmp_path: Path) -> None:
+    _gaza_no_update(tmp_path, pages=True)
+
+    plan = build_recovery_plan("gaza", "2026-09-19", root=tmp_path)
+
+    assert plan.status_state == "NO_UPDATE"
+    assert plan.disposition == "NO_ACTION"
+    assert plan.action == "NONE"
+    assert plan.public_side_effects is False
+
+
+def test_recover_ice_successful_monitor_has_no_action(tmp_path: Path) -> None:
+    _ice_receipt(tmp_path)
+
+    plan = build_recovery_plan("ice", "2026-09-10", root=tmp_path)
+
+    assert plan.status_state == "COMPLETE"
+    assert plan.disposition == "NO_ACTION"
+    assert plan.action == "NONE"
+
+
+def test_recover_proven_missed_fails_closed_without_replay_target(tmp_path: Path) -> None:
+    _care_status_export(tmp_path, "2026-09-18", "MISSED")
+
+    plan = build_recovery_plan("care-line", "2026-09-18", root=tmp_path)
+
+    assert plan.status_state == "MISSED"
+    assert plan.disposition == "OPERATOR_REVIEW_REQUIRED"
+    assert plan.action == "INVESTIGATE_STATUS_EXPORT"
+    assert plan.collection_rerun is False
+    assert "AUTHORITATIVE_EXPECTATION_PRESENT" in plan.preconditions
+
+
+def test_recover_unknown_fails_closed(tmp_path: Path) -> None:
+    plan = build_recovery_plan("gaza", "2026-09-19", root=tmp_path)
+
+    assert plan.status_state == "UNKNOWN"
+    assert plan.disposition == "UNKNOWN"
+    assert plan.action == "INVESTIGATE_STATUS_EXPORT"
+    assert plan.collection_rerun is False
+    assert plan.public_side_effects is False
+
+
+def test_recover_needs_review_requires_candidate_review(monkeypatch, tmp_path: Path) -> None:
+    from scripts import dispatch_ops
+
+    status = DispatchStatus(
+        dispatch="food-line",
+        date="2026-09-12",
+        state="NEEDS_REVIEW",
+        collection="COMPLETE",
+        editorial="NEEDS_REVIEW",
+        publication="NOT_ATTEMPTED",
+        public_state="NOT_VERIFIED",
+        receipts="COMPLETE",
+        recovery="NONE",
+        next_action="REVIEW_CANDIDATES",
+        evidence=["data/dispatches/food-line/review/proposed-editions/2026-09-12.json"],
+    )
+    monkeypatch.setattr(dispatch_ops, "build_status", lambda *_args, **_kwargs: status)
+
+    plan = dispatch_ops.build_recovery_plan("food-line", "2026-09-12", root=tmp_path)
+
+    assert plan.disposition == "OPERATOR_REVIEW_REQUIRED"
+    assert plan.action == "REVIEW_CANDIDATES"
+    assert plan.requires_operator_confirmation is True
+
+
+def test_recover_unverified_public_state_verifies_public_state(tmp_path: Path) -> None:
+    _gaza_no_update(tmp_path, pages=False)
+
+    plan = build_recovery_plan("gaza", "2026-09-19", root=tmp_path)
+
+    assert plan.status_state == "NO_UPDATE"
+    assert plan.disposition == "PLAN_AVAILABLE"
+    assert plan.action == "VERIFY_PUBLIC_STATE"
+    assert "PUBLIC_STATE_NOT_VERIFIED" in plan.preconditions
+    assert plan.public_side_effects is False
+
+
+def test_recover_failed_collection_investigates_collection(tmp_path: Path) -> None:
+    _food_status_export(tmp_path, "2026-09-11", "FAILED", task_status="FAILED", classification="source_watch_failed")
+
+    plan = build_recovery_plan("food-line", "2026-09-11", root=tmp_path)
+
+    assert plan.status_state == "FAILED"
+    assert plan.disposition == "PLAN_AVAILABLE"
+    assert plan.action == "INVESTIGATE_COLLECTION"
+    assert plan.collection_rerun is False
+
+
+def test_recover_unresolved_reconstructed_candidates_requires_review(tmp_path: Path) -> None:
+    _food_reconstructed(tmp_path, unresolved=2)
+
+    status = build_status("food-line", "2026-09-09", root=tmp_path)
+    plan = build_recovery_plan("food-line", "2026-09-09", root=tmp_path)
+
+    assert status.state == "NEEDS_REVIEW"
+    assert status.details["unresolved_reconstructed_candidates"] == 2
+    assert plan.disposition == "OPERATOR_REVIEW_REQUIRED"
+    assert plan.action == "REVIEW_CANDIDATES"
+    assert plan.collection_rerun is False
+
+
+def test_recover_planning_is_read_only_for_fixture_artifacts(tmp_path: Path) -> None:
+    _gaza_no_update(tmp_path, pages=True)
+    paths = sorted(path for path in tmp_path.rglob("*") if path.is_file())
+    before = {
+        path: (hashlib.sha256(path.read_bytes()).hexdigest(), os.stat(path).st_mtime_ns)
+        for path in paths
+    }
+
+    plan = build_recovery_plan("gaza", "2026-09-19", root=tmp_path)
+
+    after_paths = sorted(path for path in tmp_path.rglob("*") if path.is_file())
+    after = {
+        path: (hashlib.sha256(path.read_bytes()).hexdigest(), os.stat(path).st_mtime_ns)
+        for path in after_paths
+    }
+    assert plan.action == "NONE"
+    assert after_paths == paths
+    assert after == before
+
+
+def test_recover_json_payload_is_deterministic(tmp_path: Path) -> None:
+    _gaza_no_update(tmp_path, pages=True)
+
+    first = build_recovery_plan("gaza", "2026-09-19", root=tmp_path).to_json_payload()
+    second = build_recovery_plan("gaza", "2026-09-19", root=tmp_path).to_json_payload()
+
+    assert json.dumps(first, indent=2, sort_keys=True) == json.dumps(second, indent=2, sort_keys=True)
+    assert first["schema_version"] == "dispatch_ops_recovery_plan_v1"

@@ -256,28 +256,28 @@ class FoodLineAdapter(DispatchAdapter):
         receipt_path = self.root / "data" / "dispatches" / "food-line" / "historical-intake" / date / "reconciliation-receipt.json"
         gap = self.read_json(gap_path)
         receipt = self.read_json(receipt_path)
-        if gap and receipt and str(gap.get("backfill_status")) == "BACKFILL_NOT_REQUIRED" and gap.get("recovered_at"):
+        if gap and receipt and self._is_reconstructed_recovered(date, gap, receipt):
             replay = receipt.get("replay_result") if isinstance(receipt.get("replay_result"), dict) else {}
             unresolved = int(replay.get("unresolved") or 0)
-            if unresolved == 0:
-                return DispatchStatus(
-                    dispatch=self.dispatch,
-                    date=date,
-                    state=Lifecycle.COMPLETE.value,
-                    collection="RECONSTRUCTED",
-                    editorial="COMPLETE",
-                    publication="NOT_REQUIRED",
-                    public_state="NOT_APPLICABLE",
-                    receipts="RECONSTRUCTED",
-                    recovery="RECOVERED",
-                    next_action=NextAction.NONE.value,
-                    evidence=sorted(self.existing([gap_path, receipt_path])),
-                    details={
-                        "coverage_gap_status": gap.get("observation_status"),
-                        "unresolved_reconstructed_candidates": unresolved,
-                        "replay_result": replay,
-                    },
-                )
+            return DispatchStatus(
+                dispatch=self.dispatch,
+                date=date,
+                state=Lifecycle.COMPLETE.value,
+                collection="RECONSTRUCTED",
+                editorial="COMPLETE",
+                publication="NOT_REQUIRED",
+                public_state="NOT_APPLICABLE",
+                receipts="RECONSTRUCTED",
+                recovery="RECOVERED",
+                next_action=NextAction.NONE.value,
+                evidence=sorted(self.existing([gap_path, receipt_path])),
+                details={
+                    "coverage_gap_status": gap.get("observation_status"),
+                    "backfill_status": gap.get("backfill_status"),
+                    "unresolved_reconstructed_candidates": unresolved,
+                    "replay_result": replay,
+                },
+            )
 
         try:
             built = build_food_line_status(
@@ -292,6 +292,18 @@ class FoodLineAdapter(DispatchAdapter):
         if built.get("task_summaries"):
             return _normalize_from_exported(self, built, date, evidence)
         return self.unknown(date, evidence)
+
+    def _is_reconstructed_recovered(self, date: str, gap: dict[str, Any], receipt: dict[str, Any]) -> bool:
+        replay = receipt.get("replay_result") if isinstance(receipt.get("replay_result"), dict) else {}
+        backfill_status = str(gap.get("backfill_status") or "")
+        return (
+            str(gap.get("dispatch") or "") == self.dispatch
+            and str(gap.get("observation_date") or "") == date
+            and str(receipt.get("historical_date") or "") == date
+            and backfill_status in {"BACKFILL_NOT_REQUIRED", "RECOVERED", "COMPLETE_RECONSTRUCTED"}
+            and bool(gap.get("recovered_at"))
+            and int(replay.get("unresolved") or 0) == 0
+        )
 
 
 class CareLineAdapter(DispatchAdapter):
@@ -313,9 +325,19 @@ class CareLineAdapter(DispatchAdapter):
         for receipt_date in sorted(receipt_dates):
             for path in sorted(_receipts_root(self.root, self.dispatch, receipt_date).glob("*.json")):
                 payload = self.read_json(path)
-                if payload and payload.get("dispatch") == self.dispatch:
+                if payload and payload.get("dispatch") == self.dispatch and self._receipt_belongs_to_local_date(date, receipt_date, payload):
                     receipts.append((self.rel(path), payload))
         return receipts
+
+    def _receipt_belongs_to_local_date(self, date: str, receipt_date: str, receipt: dict[str, Any]) -> bool:
+        if receipt_date == date:
+            return True
+        observed_at = str(receipt.get("started_at") or receipt.get("scheduled_for") or "")
+        try:
+            observed = datetime.fromisoformat(observed_at.replace("Z", "+00:00"))
+        except ValueError:
+            return False
+        return observed.date().isoformat() == receipt_date and observed.hour < 5
 
     def _from_available_receipts(
         self,
@@ -405,14 +427,13 @@ class GazaAdapter(DispatchAdapter):
 
         no_update_path = self.root / "output" / "site" / "gaza" / "status" / "no-updates" / f"{date}.json"
         pages_no_update_path = self.root / "bluefern-dispatches-pages" / "gaza" / "status" / "no-updates" / f"{date}.json"
-        no_update = self.read_json(no_update_path) or self.read_json(pages_no_update_path)
-        if no_update and self._is_public_no_update(no_update, date):
-            public_state = _public_state(self.root, self.dispatch, date, no_update=True)
+        pages_no_update = self.read_json(pages_no_update_path)
+        if pages_no_update and self._is_public_no_update(pages_no_update, date):
             ev = self.existing([
                 no_update_path,
                 pages_no_update_path,
-                self.root / str(no_update.get("run_manifest_path") or ""),
-                self.root / str(no_update.get("collection_report_path") or ""),
+                self.root / str(pages_no_update.get("run_manifest_path") or ""),
+                self.root / str(pages_no_update.get("collection_report_path") or ""),
             ])
             return DispatchStatus(
                 dispatch=self.dispatch,
@@ -421,10 +442,10 @@ class GazaAdapter(DispatchAdapter):
                 collection="COMPLETE",
                 editorial="NO_QUALIFYING_MATERIAL",
                 publication="COMPLETE",
-                public_state=public_state,
+                public_state="VERIFIED",
                 receipts="COMPLETE",
                 recovery="NONE",
-                next_action=NextAction.NONE.value if public_state == "VERIFIED" else NextAction.VERIFY_PUBLIC_STATE.value,
+                next_action=NextAction.NONE.value,
                 evidence=sorted(dict.fromkeys(ev)),
                 details={"latest_real_edition_date": self._latest_real_edition_before(date)},
             )
@@ -462,16 +483,46 @@ class GazaAdapter(DispatchAdapter):
                 evidence=sorted(self.existing([local_edition, manifest])),
             )
         if run_manifest:
+            manifest_status = str(run_manifest.get("status") or run_manifest.get("operator_status") or "").lower()
+            if run_manifest.get("ok") is False or manifest_status in {"failed", "failure"}:
+                return self._from_run_manifest(date, run_manifest, manifest)
+        local_no_update = self.read_json(no_update_path)
+        if local_no_update and self._is_public_no_update(local_no_update, date):
+            ev = self.existing([
+                no_update_path,
+                self.root / str(local_no_update.get("run_manifest_path") or ""),
+                self.root / str(local_no_update.get("collection_report_path") or ""),
+            ])
+            return DispatchStatus(
+                dispatch=self.dispatch,
+                date=date,
+                state=Lifecycle.NO_UPDATE.value,
+                collection="COMPLETE",
+                editorial="NO_QUALIFYING_MATERIAL",
+                publication="COMPLETE",
+                public_state="NOT_VERIFIED",
+                receipts="COMPLETE",
+                recovery="NONE",
+                next_action=NextAction.VERIFY_PUBLIC_STATE.value,
+                evidence=sorted(dict.fromkeys(ev)),
+                details={"latest_real_edition_date": self._latest_real_edition_before(date)},
+            )
+        if run_manifest:
             return self._from_run_manifest(date, run_manifest, manifest)
         return self.unknown(date, self.existing([no_update_path, pages_no_update_path, edition, manifest]))
 
     def _is_public_no_update(self, payload: dict[str, Any], date: str) -> bool:
         classification = str(payload.get("classification") or payload.get("status") or payload.get("outcome") or "").lower()
+        completed = payload.get("daily_run_completed", payload.get("run_completed_successfully", True))
         return (
             str(payload.get("date") or payload.get("edition_date") or "") == date
             and int(payload.get("public_story_count") or 0) == 0
-            and ("no_update" in classification or "no-update" in classification)
-            and payload.get("daily_run_completed") is not False
+            and (
+                "no_update" in classification
+                or "no-update" in classification
+                or classification in {"no_publication_needed", "no_publication_required"}
+            )
+            and completed is not False
         )
 
     def _from_run_manifest(self, date: str, payload: dict[str, Any], path: Path) -> DispatchStatus:

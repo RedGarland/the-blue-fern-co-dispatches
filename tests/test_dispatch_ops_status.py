@@ -24,21 +24,21 @@ def _artifact(root: Path, rel: str) -> Path:
     return path
 
 
-def _gaza_no_update(root: Path, date: str = "2026-09-19") -> None:
+def _gaza_no_update(root: Path, date: str = "2026-09-19", *, pages: bool = False) -> None:
     _write_json(root / "data/dispatches/gaza/editions" / date / "run_manifest.json", {"ok": True})
     _write_json(root / "data/dispatches/gaza/editions" / date / "collection_report.json", {"public_story_count": 0})
-    _write_json(
-        root / "output/site/gaza/status/no-updates" / f"{date}.json",
-        {
-            "schema_version": "gaza-no-update-status-v1",
-            "date": date,
-            "classification": "no_update",
-            "public_story_count": 0,
-            "daily_run_completed": True,
-            "run_manifest_path": f"data/dispatches/gaza/editions/{date}/run_manifest.json",
-            "collection_report_path": f"data/dispatches/gaza/editions/{date}/collection_report.json",
-        },
-    )
+    payload = {
+        "schema_version": "gaza-no-update-status-v1",
+        "date": date,
+        "classification": "no_update",
+        "public_story_count": 0,
+        "daily_run_completed": True,
+        "run_manifest_path": f"data/dispatches/gaza/editions/{date}/run_manifest.json",
+        "collection_report_path": f"data/dispatches/gaza/editions/{date}/collection_report.json",
+    }
+    _write_json(root / "output/site/gaza/status/no-updates" / f"{date}.json", payload)
+    if pages:
+        _write_json(root / "bluefern-dispatches-pages/gaza/status/no-updates" / f"{date}.json", payload)
     (root / "output/site/gaza/editions/2026-09-18").mkdir(parents=True)
     (root / "output/site/gaza/editions/2026-09-18/index.html").write_text("latest real edition", encoding="utf-8")
 
@@ -112,6 +112,35 @@ def _food_status_export(root: Path, date: str, aggregate: str, *, task_status: s
     )
 
 
+def _care_status_export(root: Path, date: str, aggregate: str) -> None:
+    _write_json(
+        root / "ops/status/care-line/history" / f"{date}.json",
+        {
+            "schema_version": "bluefern_external_operational_status_v1",
+            "dispatch": "care-line",
+            "observed_date": date,
+            "aggregate_status": aggregate,
+            "receipt_completeness": "NO_PROOF" if aggregate == "MISSED" else "COMPLETE",
+            "recovery_lifecycle": "HEALTHY",
+            "publication_status": None,
+            "publication_attempted": False,
+            "task_summaries": [],
+        },
+    )
+
+
+def _pages_edition(root: Path, dispatch: str, date: str) -> None:
+    path = root / "bluefern-dispatches-pages" / dispatch / "editions" / date / "index.html"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("published\n", encoding="utf-8")
+
+
+def _local_output_edition(root: Path, dispatch: str, date: str) -> None:
+    path = root / "output" / "site" / dispatch / "editions" / date / "index.html"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("local generated\n", encoding="utf-8")
+
+
 def _ice_receipt(root: Path, date: str = "2026-09-10", status: str = "SUCCESS", classification: str = "healthy") -> None:
     artifact = _artifact(root, f"data/dispatches/ice/monitor/runs/{date}/ice-monitor-1/monitor_receipt.json")
     receipt = build_operational_receipt(
@@ -134,7 +163,7 @@ def _ice_receipt(root: Path, date: str = "2026-09-10", status: str = "SUCCESS", 
 
 
 def test_gaza_sep_19_no_update_is_terminal_no_action(tmp_path: Path) -> None:
-    _gaza_no_update(tmp_path)
+    _gaza_no_update(tmp_path, pages=True)
 
     status = build_status("gaza", "2026-09-19", root=tmp_path)
 
@@ -168,6 +197,43 @@ def test_care_sep_18_partial_success_is_degraded_not_missed(tmp_path: Path) -> N
     assert status.collection == "PARTIAL_SUCCESS"
     assert status.receipts == "COMPLETE"
     assert status.next_action == "INVESTIGATE_FAILED_SOURCES"
+
+
+def test_exported_care_missed_is_authoritative(tmp_path: Path) -> None:
+    _care_status_export(tmp_path, "2026-09-18", "MISSED")
+
+    status = build_status("care-line", "2026-09-18", root=tmp_path)
+
+    assert status.state == "MISSED"
+    assert status.next_action == "RECOVER_MISSING_RUN"
+
+
+def test_no_care_receipts_without_exported_status_is_unknown(tmp_path: Path) -> None:
+    status = build_status("care-line", "2026-09-18", root=tmp_path)
+
+    assert status.state == "UNKNOWN"
+    assert status.next_action == "UNKNOWN_REQUIRES_OPERATOR"
+
+
+def test_one_care_receipt_does_not_imply_all_expected_runs_were_satisfied(tmp_path: Path) -> None:
+    artifact = _artifact(tmp_path, "status/care-line/scheduler-runs/2026-09-19/collection.json")
+    receipt = build_care_line_operational_receipt(
+        task_key="care_line_collection",
+        scheduled_for="2026-09-19T01:00:00Z",
+        started_at="2026-09-19T01:00:01Z",
+        completed_at="2026-09-19T01:01:00Z",
+        exit_code=0,
+        task_status="success",
+        run_id="collection",
+        artifact_refs={"task_receipt": str(artifact)},
+    )
+    _write_json(tmp_path / "status/operational-health/care-line/2026-09-19/runs/collection.json", receipt)
+
+    status = build_status("care-line", "2026-09-18", root=tmp_path)
+
+    assert status.state == "UNKNOWN"
+    assert status.receipts == "PARTIAL"
+    assert status.next_action == "INVESTIGATE_STATUS_EXPORT"
 
 
 def test_food_source_watch_failure_identifies_collection_investigation(tmp_path: Path) -> None:
@@ -208,6 +274,55 @@ def test_successful_safe_no_op_has_no_next_action(tmp_path: Path) -> None:
     assert status.next_action == "NONE"
 
 
+def test_success_with_pages_public_edition_is_verified_and_no_action(tmp_path: Path) -> None:
+    _food_status_export(tmp_path, "2026-09-12", "SUCCESS", task_status="SUCCESS", classification="completed")
+    _pages_edition(tmp_path, "food-line", "2026-09-12")
+
+    status = build_status("food-line", "2026-09-12", root=tmp_path)
+
+    assert status.public_state == "VERIFIED"
+    assert status.next_action == "NONE"
+
+
+def test_success_without_public_proof_requires_verification(tmp_path: Path) -> None:
+    _food_status_export(tmp_path, "2026-09-12", "SUCCESS", task_status="SUCCESS", classification="completed")
+
+    status = build_status("food-line", "2026-09-12", root=tmp_path)
+
+    assert status.public_state == "NOT_VERIFIED"
+    assert status.next_action == "VERIFY_PUBLIC_STATE"
+
+
+def test_local_output_site_edition_only_is_not_public_proof(tmp_path: Path) -> None:
+    _food_status_export(tmp_path, "2026-09-12", "SUCCESS", task_status="SUCCESS", classification="completed")
+    _local_output_edition(tmp_path, "food-line", "2026-09-12")
+
+    status = build_status("food-line", "2026-09-12", root=tmp_path)
+
+    assert status.public_state == "NOT_VERIFIED"
+    assert status.next_action == "VERIFY_PUBLIC_STATE"
+
+
+def test_gaza_local_no_update_only_requires_public_verification(tmp_path: Path) -> None:
+    _gaza_no_update(tmp_path, pages=False)
+
+    status = build_status("gaza", "2026-09-19", root=tmp_path)
+
+    assert status.state == "NO_UPDATE"
+    assert status.public_state == "NOT_VERIFIED"
+    assert status.next_action == "VERIFY_PUBLIC_STATE"
+
+
+def test_gaza_pages_no_update_is_verified_no_action(tmp_path: Path) -> None:
+    _gaza_no_update(tmp_path, pages=True)
+
+    status = build_status("gaza", "2026-09-19", root=tmp_path)
+
+    assert status.state == "NO_UPDATE"
+    assert status.public_state == "VERIFIED"
+    assert status.next_action == "NONE"
+
+
 def test_ambiguous_incomplete_evidence_fails_closed_unknown(tmp_path: Path) -> None:
     status = build_status("gaza", "2026-09-19", root=tmp_path)
 
@@ -216,7 +331,7 @@ def test_ambiguous_incomplete_evidence_fails_closed_unknown(tmp_path: Path) -> N
 
 
 def test_status_command_is_read_only_for_fixture_artifacts(tmp_path: Path) -> None:
-    _gaza_no_update(tmp_path)
+    _gaza_no_update(tmp_path, pages=True)
     paths = sorted(path for path in tmp_path.rglob("*") if path.is_file())
     before = {
         path: (hashlib.sha256(path.read_bytes()).hexdigest(), os.stat(path).st_mtime_ns)

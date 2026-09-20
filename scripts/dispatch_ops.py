@@ -17,7 +17,6 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from bluefern_dispatches.operational_status_exporter import (  # noqa: E402
-    build_care_line_status,
     build_food_line_status,
     build_ice_status,
 )
@@ -154,17 +153,17 @@ def _receipts_root(root: Path, dispatch: str, date: str) -> Path:
 
 
 def _has_public_edition(root: Path, dispatch: str, date: str) -> bool:
-    return (root / "output" / "site" / dispatch / "editions" / date / "index.html").is_file()
+    return (root / "bluefern-dispatches-pages" / dispatch / "editions" / date / "index.html").is_file()
+
+
+def _has_public_no_update(root: Path, dispatch: str, date: str) -> bool:
+    return (root / "bluefern-dispatches-pages" / dispatch / "status" / "no-updates" / f"{date}.json").is_file()
 
 
 def _public_state(root: Path, dispatch: str, date: str, *, no_update: bool = False) -> str:
     if no_update:
-        candidates = [
-            root / "output" / "site" / dispatch / "status" / "no-updates" / f"{date}.json",
-            root / "bluefern-dispatches-pages" / dispatch / "status" / "no-updates" / f"{date}.json",
-        ]
-        return "VERIFIED" if any(path.is_file() for path in candidates) else "UNKNOWN"
-    return "VERIFIED" if _has_public_edition(root, dispatch, date) else "CURRENT"
+        return "VERIFIED" if _has_public_no_update(root, dispatch, date) else "NOT_VERIFIED"
+    return "VERIFIED" if _has_public_edition(root, dispatch, date) else "NOT_VERIFIED"
 
 
 def _normalize_from_exported(adapter: DispatchAdapter, payload: dict[str, Any], date: str, evidence: list[str]) -> DispatchStatus:
@@ -221,6 +220,12 @@ def _normalize_from_exported(adapter: DispatchAdapter, payload: dict[str, Any], 
     if adapter.dispatch == "ice":
         publication = "NOT_APPLICABLE" if not payload.get("publication_attempted") else publication
     public_state = _public_state(adapter.root, adapter.dispatch, date)
+    if (
+        state in {Lifecycle.COMPLETE.value, Lifecycle.PUBLISHED.value}
+        and publication != "NOT_APPLICABLE"
+        and public_state != "VERIFIED"
+    ):
+        next_action = NextAction.VERIFY_PUBLIC_STATE.value
 
     return DispatchStatus(
         dispatch=adapter.dispatch,
@@ -296,39 +301,74 @@ class CareLineAdapter(DispatchAdapter):
         exported, evidence = _load_exported_status(self, date)
         if exported:
             return _normalize_from_exported(self, exported, date, evidence)
-        expected = self._expected_instances_from_receipts(date)
-        try:
-            built = build_care_line_status(
-                source_root=self.root,
-                date=date,
-                evaluated_at=_evaluated_next_morning(date),
-                exported_at=_evaluated_next_morning(date),
-                expected_instances=expected if expected else None,
-            )
-        except Exception as exc:  # noqa: BLE001
-            return self.unknown(date, evidence, f"Could not evaluate Care Line receipts: {exc}")
-        evidence.extend(self.existing(_receipts_root(self.root, self.dispatch, date).glob("*.json")))
-        if built.get("task_summaries") or built.get("aggregate_status") == "MISSED":
-            return _normalize_from_exported(self, built, date, evidence)
-        return self.unknown(date, evidence)
+        receipts = self._available_receipts(date)
+        if not receipts:
+            return self.unknown(date, evidence)
+        evidence.extend(path for path, _receipt in receipts)
+        return self._from_available_receipts(date, receipts, evidence)
 
-    def _expected_instances_from_receipts(self, date: str) -> list[dict[str, str]]:
-        instances: list[dict[str, str]] = []
-        receipt_dates = [
-            date,
-            (datetime.fromisoformat(date) + timedelta(days=1)).date().isoformat(),
-        ]
-        for receipt_date in receipt_dates:
-            paths = sorted(_receipts_root(self.root, self.dispatch, receipt_date).glob("*.json"))
-            for path in paths:
+    def _available_receipts(self, date: str) -> list[tuple[str, dict[str, Any]]]:
+        receipt_dates = {date, (datetime.fromisoformat(date) + timedelta(days=1)).date().isoformat()}
+        receipts: list[tuple[str, dict[str, Any]]] = []
+        for receipt_date in sorted(receipt_dates):
+            for path in sorted(_receipts_root(self.root, self.dispatch, receipt_date).glob("*.json")):
                 payload = self.read_json(path)
-                if not payload:
-                    continue
-                task_key = str(payload.get("task_key") or "")
-                scheduled_for = str(payload.get("scheduled_for") or "")
-                if task_key and scheduled_for and scheduled_for != date:
-                    instances.append({"task_key": task_key, "scheduled_for": scheduled_for})
-        return instances
+                if payload and payload.get("dispatch") == self.dispatch:
+                    receipts.append((self.rel(path), payload))
+        return receipts
+
+    def _from_available_receipts(
+        self,
+        date: str,
+        receipts: list[tuple[str, dict[str, Any]]],
+        evidence: list[str],
+    ) -> DispatchStatus:
+        statuses = [str(receipt.get("status") or "UNKNOWN") for _path, receipt in receipts]
+        classifications = [str(receipt.get("classification") or "") for _path, receipt in receipts]
+        task_keys = {str(receipt.get("task_key") or "") for _path, receipt in receipts}
+        has_partial = "partial_success" in classifications or "DEGRADED" in statuses
+        has_failed = "FAILED" in statuses
+        all_safe_noop = all(status == "SAFE_NO_OP" for status in statuses)
+        expected_task_count = 3
+        receipts_state = "COMPLETE" if len(task_keys) >= expected_task_count else "PARTIAL"
+        if has_failed:
+            state = Lifecycle.FAILED.value
+            collection = "FAILED"
+            next_action = NextAction.INVESTIGATE_COLLECTION.value
+        elif has_partial:
+            state = Lifecycle.DEGRADED.value
+            collection = "PARTIAL_SUCCESS"
+            next_action = NextAction.INVESTIGATE_FAILED_SOURCES.value
+        elif all_safe_noop:
+            state = Lifecycle.SAFE_NO_OP.value
+            collection = "COMPLETE"
+            next_action = NextAction.NONE.value
+        elif receipts_state == "PARTIAL":
+            state = Lifecycle.UNKNOWN.value
+            collection = "COMPLETE" if "SUCCESS" in statuses else "UNKNOWN"
+            next_action = NextAction.INVESTIGATE_STATUS_EXPORT.value
+        else:
+            state = Lifecycle.COMPLETE.value
+            collection = "COMPLETE"
+            next_action = NextAction.VERIFY_PUBLIC_STATE.value
+        return DispatchStatus(
+            dispatch=self.dispatch,
+            date=date,
+            state=state,
+            collection=collection,
+            editorial="READY" if state == Lifecycle.DEGRADED.value else "COMPLETE",
+            publication="SAFE_NO_OP" if any(str(receipt.get("publication_status") or "") == "safe_no_op" for _path, receipt in receipts) else "UNKNOWN",
+            public_state="CURRENT" if state in {Lifecycle.DEGRADED.value, Lifecycle.SAFE_NO_OP.value} else "NOT_VERIFIED",
+            receipts=receipts_state,
+            recovery="HEALTHY",
+            next_action=next_action,
+            evidence=sorted(evidence),
+            details={
+                "observed_task_keys": sorted(task_keys),
+                "receipt_statuses": statuses,
+                "receipt_classifications": classifications,
+            },
+        )
 
 
 class IceAdapter(DispatchAdapter):
@@ -372,6 +412,7 @@ class GazaAdapter(DispatchAdapter):
         pages_no_update_path = self.root / "bluefern-dispatches-pages" / "gaza" / "status" / "no-updates" / f"{date}.json"
         no_update = self.read_json(no_update_path) or self.read_json(pages_no_update_path)
         if no_update and self._is_public_no_update(no_update, date):
+            public_state = _public_state(self.root, self.dispatch, date, no_update=True)
             ev = self.existing([
                 no_update_path,
                 pages_no_update_path,
@@ -385,15 +426,16 @@ class GazaAdapter(DispatchAdapter):
                 collection="COMPLETE",
                 editorial="NO_QUALIFYING_MATERIAL",
                 publication="COMPLETE",
-                public_state="VERIFIED",
+                public_state=public_state,
                 receipts="COMPLETE",
                 recovery="NONE",
-                next_action=NextAction.NONE.value,
+                next_action=NextAction.NONE.value if public_state == "VERIFIED" else NextAction.VERIFY_PUBLIC_STATE.value,
                 evidence=sorted(dict.fromkeys(ev)),
                 details={"latest_real_edition_date": self._latest_real_edition_before(date)},
             )
 
-        edition = self.root / "output" / "site" / "gaza" / "editions" / date / "index.html"
+        edition = self.root / "bluefern-dispatches-pages" / "gaza" / "editions" / date / "index.html"
+        local_edition = self.root / "output" / "site" / "gaza" / "editions" / date / "index.html"
         manifest = self.root / "data" / "dispatches" / "gaza" / "editions" / date / "run_manifest.json"
         run_manifest = self.read_json(manifest)
         if edition.exists():
@@ -409,6 +451,20 @@ class GazaAdapter(DispatchAdapter):
                 recovery="NONE",
                 next_action=NextAction.NONE.value if run_manifest else NextAction.INVESTIGATE_STATUS_EXPORT.value,
                 evidence=sorted(self.existing([edition, manifest])),
+            )
+        if local_edition.exists():
+            return DispatchStatus(
+                dispatch=self.dispatch,
+                date=date,
+                state=Lifecycle.COMPLETE.value,
+                collection="COMPLETE",
+                editorial="COMPLETE",
+                publication="COMPLETE",
+                public_state="NOT_VERIFIED",
+                receipts="COMPLETE" if run_manifest else "UNKNOWN",
+                recovery="NONE",
+                next_action=NextAction.VERIFY_PUBLIC_STATE.value,
+                evidence=sorted(self.existing([local_edition, manifest])),
             )
         if run_manifest:
             return self._from_run_manifest(date, run_manifest, manifest)

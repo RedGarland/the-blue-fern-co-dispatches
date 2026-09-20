@@ -75,6 +75,10 @@ SCHEDULED_TASK_TEMPLATE_REGISTRY: dict[str, SchedulerTemplateSpec] = {
         classification="reference",
         reference_reason="historical/reference-only Cascadia scheduler template",
     ),
+    "ops/blue_fern_operator_task.xml": SchedulerTemplateSpec(
+        classification="reference",
+        reference_reason="Blue Fern Operator scheduled supervisor template; install only after explicit production rollout verification",
+    ),
 }
 
 

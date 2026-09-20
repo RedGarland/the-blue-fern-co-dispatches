@@ -1,5 +1,9 @@
 REBUILD_STATUS:
   mode: automatic
+ENGINEER_PREPARE_FIX:
+  mode: automatic_prepare_pr
+MERGE_PR:
+  mode: approval_required
 VERIFY_PUBLIC_STATE:
   mode: recommend
 INVESTIGATE_FAILED_SOURCES:

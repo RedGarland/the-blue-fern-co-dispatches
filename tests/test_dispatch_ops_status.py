@@ -24,18 +24,28 @@ def _artifact(root: Path, rel: str) -> Path:
     return path
 
 
-def _gaza_no_update(root: Path, date: str = "2026-09-19", *, pages: bool = False) -> None:
-    _write_json(root / "data/dispatches/gaza/editions" / date / "run_manifest.json", {"ok": True})
+def _gaza_no_update(
+    root: Path,
+    date: str = "2026-09-19",
+    *,
+    pages: bool = False,
+    classification: str = "no_update",
+    include_daily_run_completed: bool = True,
+    manifest: dict | None = None,
+) -> None:
+    _write_json(root / "data/dispatches/gaza/editions" / date / "run_manifest.json", manifest or {"ok": True})
     _write_json(root / "data/dispatches/gaza/editions" / date / "collection_report.json", {"public_story_count": 0})
     payload = {
         "schema_version": "gaza-no-update-status-v1",
         "date": date,
-        "classification": "no_update",
+        "classification": classification,
         "public_story_count": 0,
-        "daily_run_completed": True,
         "run_manifest_path": f"data/dispatches/gaza/editions/{date}/run_manifest.json",
         "collection_report_path": f"data/dispatches/gaza/editions/{date}/collection_report.json",
+        "normal_edition_generated": False,
     }
+    if include_daily_run_completed:
+        payload["daily_run_completed"] = True
     _write_json(root / "output/site/gaza/status/no-updates" / f"{date}.json", payload)
     if pages:
         _write_json(root / "bluefern-dispatches-pages/gaza/status/no-updates" / f"{date}.json", payload)
@@ -50,9 +60,11 @@ def _food_reconstructed(root: Path) -> None:
             "schema_version": "bluefern.coverage_gap.v1",
             "dispatch": "food-line",
             "observation_date": "2026-09-09",
-            "observation_status": "OBSERVED_ZERO_QUALIFYING",
-            "backfill_status": "BACKFILL_NOT_REQUIRED",
-            "recovered_at": "2026-09-15T02:45:00Z",
+            "observation_status": "OBSERVED_WITH_FINDINGS",
+            "backfill_status": "RECOVERED",
+            "gap_reason": "historical_recovery_completed",
+            "notes": "Food Line date reconciliation state COMPLETE_RECONSTRUCTED.",
+            "recovered_at": "2026-09-18T23:51:56Z",
         },
     )
     _write_json(
@@ -60,7 +72,21 @@ def _food_reconstructed(root: Path) -> None:
         {
             "schema_version": "food_line_historical_reconciliation_v1",
             "historical_date": "2026-09-09",
-            "replay_result": {"approved": 0, "pending": 0, "rejected": 0, "unresolved": 0},
+            "final_classification": "FOOD LINE SEP 9 - HISTORICAL REPLAY BLOCKED / INSUFFICIENT EVIDENCE",
+            "operational_health_handling": {
+                "historical_reconciliation_status": "BLOCKED",
+                "original_runtime_classification": "FAILED_UPSTREAM_BLOCKED",
+            },
+            "replay_result": {
+                "approved": 0,
+                "considered": 0,
+                "duplicate": 0,
+                "imported": 0,
+                "pending": 0,
+                "rejected": 0,
+                "selected": 0,
+                "unresolved": 0,
+            },
         },
     )
 
@@ -223,6 +249,28 @@ def test_care_sep_18_partial_success_is_degraded_not_missed(tmp_path: Path) -> N
     assert status.next_action == "INVESTIGATE_FAILED_SOURCES"
 
 
+def test_care_sep_18_fallback_ignores_next_day_daytime_failures(tmp_path: Path) -> None:
+    _care_partial_success(tmp_path)
+    artifact = _artifact(tmp_path, "status/care-line/scheduler-runs/2026-09-19/daytime-failure.json")
+    receipt = build_care_line_operational_receipt(
+        task_key="care_line_collection",
+        scheduled_for="2026-09-19T13:00:00Z",
+        started_at="2026-09-19T13:00:02Z",
+        completed_at="2026-09-19T13:01:00Z",
+        exit_code=1,
+        task_status="failure",
+        run_id="daytime-failure",
+        artifact_refs={"task_receipt": str(artifact)},
+    )
+    _write_json(tmp_path / "status/operational-health/care-line/2026-09-19/runs/daytime-failure.json", receipt)
+
+    status = build_status("care-line", "2026-09-18", root=tmp_path)
+
+    assert status.state == "DEGRADED"
+    assert status.collection == "PARTIAL_SUCCESS"
+    assert "care_line_collection" in status.details["observed_task_keys"]
+
+
 def test_exported_care_missed_is_authoritative(tmp_path: Path) -> None:
     _care_status_export(tmp_path, "2026-09-18", "MISSED")
 
@@ -368,6 +416,44 @@ def test_gaza_pages_no_update_is_verified_no_action(tmp_path: Path) -> None:
     assert status.state == "NO_UPDATE"
     assert status.public_state == "VERIFIED"
     assert status.next_action == "NONE"
+
+
+def test_gaza_pages_no_publication_needed_no_update_overrides_failed_manifest(tmp_path: Path) -> None:
+    _gaza_no_update(
+        tmp_path,
+        pages=True,
+        classification="no_publication_needed",
+        include_daily_run_completed=False,
+        manifest={"ok": False, "errors": ["normal edition generation blocked"]},
+    )
+
+    status = build_status("gaza", "2026-09-19", root=tmp_path)
+
+    assert status.state == "NO_UPDATE"
+    assert status.collection == "COMPLETE"
+    assert status.editorial == "NO_QUALIFYING_MATERIAL"
+    assert status.publication == "COMPLETE"
+    assert status.public_state == "VERIFIED"
+    assert status.receipts == "COMPLETE"
+    assert status.next_action == "NONE"
+    assert "bluefern-dispatches-pages/gaza/status/no-updates/2026-09-19.json" in status.evidence
+
+
+def test_gaza_failed_manifest_still_fails_without_published_no_update(tmp_path: Path) -> None:
+    _gaza_no_update(
+        tmp_path,
+        pages=False,
+        classification="no_publication_needed",
+        include_daily_run_completed=False,
+        manifest={"ok": False, "errors": ["normal edition generation blocked"]},
+    )
+
+    status = build_status("gaza", "2026-09-19", root=tmp_path)
+
+    assert status.state == "FAILED"
+    assert status.collection == "FAILED"
+    assert status.public_state == "NOT_VERIFIED"
+    assert status.next_action == "INVESTIGATE_COLLECTION"
 
 
 def test_ambiguous_incomplete_evidence_fails_closed_unknown(tmp_path: Path) -> None:

@@ -47,6 +47,43 @@ python scripts\dispatch_ops.py status gaza --date YYYY-MM-DD --json
 
 The command reads existing operational-status artifacts, runtime receipts, review/reconstruction state, and public evidence where applicable. It does not collect sources, generate editions, publish, update Pages, alter Task Scheduler, repair state, or write receipts.
 
+## Dispatch Operations Recovery Verification
+
+Phase 2 recovery planning is exposed through `scripts\dispatch_ops.py recover`. Planning mode is read-only:
+
+```powershell
+python scripts\dispatch_ops.py recover food-line --date 2026-09-09
+python scripts\dispatch_ops.py recover care-line --date 2026-09-18 --json
+python scripts\dispatch_ops.py recover gaza --date 2026-09-19
+python scripts\dispatch_ops.py recover ice --date 2026-09-17 --json
+```
+
+Phase 2B permits only the `VERIFY_PUBLIC_STATE` apply action, and requires an explicit confirmation token. Concrete examples:
+
+```powershell
+python scripts\dispatch_ops.py recover gaza --date 2026-09-19 --apply --confirm VERIFY_PUBLIC_STATE --json
+python scripts\dispatch_ops.py recover food-line --date 2026-09-09 --apply --confirm VERIFY_PUBLIC_STATE --json
+```
+
+For the approved production Phase 2B verification cases, use the fixed helper:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\verify_dispatch_ops_phase2b.ps1
+```
+
+The helper runs only these production runner checks:
+
+```text
+C:\BlueFernRunner\FoodLineCurrent6        food-line  2026-09-09  expected NO_ACTION
+C:\BlueFernRunner\CareLineNationalCurrent8 care-line 2026-09-18  expected REFUSED
+C:\BlueFernRunner\GazaDispatchesCurrent6  gaza       2026-09-19  expected NO_ACTION
+C:\BlueFernRunner\ICEMonitorCurrent       ice        2026-09-17  expected NO_ACTION
+```
+
+It compares git HEAD, git status, representative evidence hashes and mtimes, and watched file counts before and after each command. It exits nonzero if any result differs from the expected outcome or if any read-only check changes.
+
+PowerShell interprets `<` and `>` as shell syntax, so angle-bracket placeholders should not be copied literally. Use concrete commands like the examples above, or write placeholders in non-executable prose as `DISPATCH_NAME` and `YYYY-MM-DD`.
+
 ## New Machine Setup
 
 Clone the source project branch into the new project root, then clone the GitHub Pages deploy branch into `bluefern-dispatches-pages` beside the source files:

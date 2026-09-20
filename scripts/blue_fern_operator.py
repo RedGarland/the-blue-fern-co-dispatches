@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
 import sys
@@ -27,6 +28,8 @@ from scripts.dispatch_ops import (  # noqa: E402
 
 SCHEMA_VERSION = "blue_fern_operator_result_v1"
 INCIDENT_SCHEMA_VERSION = "blue_fern_operator_incident_v1"
+NOTIFICATION_SCHEMA_VERSION = "blue_fern_operator_notification_v1"
+RUN_RECEIPT_SCHEMA_VERSION = "blue_fern_operator_run_receipt_v1"
 DEFAULT_CONFIG_PATH = ROOT / "ops" / "operator" / "config.json"
 DEFAULT_OPERATOR_ROOT = ROOT / "ops" / "operator"
 DISPATCH_ORDER = ("food-line", "care-line", "gaza", "ice")
@@ -46,6 +49,36 @@ REMEDIATION_OUTCOMES = {
     "BLOCKED",
     "FAILED",
 }
+NOTIFICATION_REASONS = {
+    "NEW_INCIDENT",
+    "INCIDENT_WORSENED",
+    "REMEDIATION_FAILED",
+    "MATERIAL_RECOVERY",
+    "APPROVAL_REQUIRED",
+    "OPERATOR_FAILURE",
+}
+STATUS_SEVERITY = {
+    "RECOVERED": 0,
+    "COMPLETE": 0,
+    "PUBLISHED": 0,
+    "NO_UPDATE": 0,
+    "SAFE_NO_OP": 0,
+    "NEEDS_REVIEW": 20,
+    "DEGRADED": 30,
+    "UNKNOWN": 40,
+    "MISSED": 50,
+    "FAILED": 60,
+}
+CLASSIFICATION_SEVERITY = {
+    "STALE_OBSERVABILITY": 10,
+    "NEEDS_REVIEW": 20,
+    "DEGRADED_RUN": 30,
+    "STATUS_EXPORT_PROBLEM": 35,
+    "UNKNOWN_OPERATIONAL_STATE": 40,
+    "PUBLIC_STATE_UNVERIFIED": 45,
+    "MISSED_RUN": 50,
+    "FAILED_RUN": 60,
+}
 
 
 class IncidentState(StrEnum):
@@ -64,6 +97,15 @@ class Classification(StrEnum):
     PUBLIC_STATE_UNVERIFIED = "PUBLIC_STATE_UNVERIFIED"
     STATUS_EXPORT_PROBLEM = "STATUS_EXPORT_PROBLEM"
     UNKNOWN_OPERATIONAL_STATE = "UNKNOWN_OPERATIONAL_STATE"
+
+
+class NotificationReason(StrEnum):
+    NEW_INCIDENT = "NEW_INCIDENT"
+    INCIDENT_WORSENED = "INCIDENT_WORSENED"
+    REMEDIATION_FAILED = "REMEDIATION_FAILED"
+    MATERIAL_RECOVERY = "MATERIAL_RECOVERY"
+    APPROVAL_REQUIRED = "APPROVAL_REQUIRED"
+    OPERATOR_FAILURE = "OPERATOR_FAILURE"
 
 
 @dataclass(frozen=True)
@@ -123,6 +165,20 @@ class Incident:
 
 
 @dataclass(frozen=True)
+class NotificationEvent:
+    notification_required: bool
+    reasons: list[str] = field(default_factory=list)
+    dispatches: list[str] = field(default_factory=list)
+    incident_ids: list[str] = field(default_factory=list)
+    summary: list[dict[str, Any]] = field(default_factory=list)
+    schema_version: str = NOTIFICATION_SCHEMA_VERSION
+
+    def to_payload(self) -> dict[str, Any]:
+        payload = asdict(self)
+        return {key: payload[key] for key in sorted(payload)}
+
+
+@dataclass(frozen=True)
 class DispatchResult:
     dispatch: str
     state: str
@@ -148,6 +204,7 @@ class OperatorResult:
     checked_at: str
     dispatches: list[DispatchResult]
     incidents: list[Incident]
+    notification: NotificationEvent = field(default_factory=lambda: NotificationEvent(notification_required=False))
     production_state_mutated: bool = False
     schema_version: str = SCHEMA_VERSION
 
@@ -156,6 +213,7 @@ class OperatorResult:
             "checked_at": self.checked_at,
             "dispatches": [result.to_payload() for result in self.dispatches],
             "incidents": [incident.to_payload() for incident in self.incidents],
+            "notification": self.notification.to_payload(),
             "production_state_mutated": self.production_state_mutated,
             "schema_version": self.schema_version,
         }
@@ -384,6 +442,116 @@ def _load_open_incidents(operator_root: Path) -> dict[str, dict[str, Any]]:
     return incidents
 
 
+def _load_incidents_by_id(operator_root: Path) -> dict[str, dict[str, Any]]:
+    incidents: dict[str, dict[str, Any]] = {}
+    incident_root = operator_root / "incidents"
+    for path in sorted(incident_root.glob("*.json")):
+        payload = _read_json(path)
+        if payload and payload.get("incident_id"):
+            incidents[str(payload["incident_id"])] = payload
+    return incidents
+
+
+def _fingerprint_evidence(values: Iterable[str]) -> str:
+    normalized = json.dumps(sorted(dict.fromkeys(str(value) for value in values)), sort_keys=True)
+    return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
+
+
+def _severity(payload: dict[str, Any]) -> int:
+    return max(
+        STATUS_SEVERITY.get(str(payload.get("status_state") or ""), 0),
+        CLASSIFICATION_SEVERITY.get(str(payload.get("classification") or ""), 0),
+    )
+
+
+def _policy_requires_operator(policy: RemediationPolicy, action: str) -> bool:
+    if not action or action == "NONE":
+        return False
+    return policy.mode_for(action) != "automatic"
+
+
+def _material_change_reasons(
+    incident: Incident,
+    previous: dict[str, Any] | None,
+    policy: RemediationPolicy,
+) -> set[str]:
+    reasons: set[str] = set()
+    remediation = incident.remediation if isinstance(incident.remediation, dict) else {}
+    failed_remediation = remediation.get("attempted") is True and (
+        remediation.get("outcome") == "FAILED" or bool(remediation.get("unexpected_changes"))
+    )
+    if failed_remediation:
+        reasons.add(NotificationReason.REMEDIATION_FAILED.value)
+
+    if previous is None:
+        if incident.state == IncidentState.OPEN.value:
+            reasons.add(NotificationReason.NEW_INCIDENT.value)
+            if _policy_requires_operator(policy, incident.recovery_action):
+                reasons.add(NotificationReason.APPROVAL_REQUIRED.value)
+        elif incident.state == IncidentState.RECOVERED.value:
+            reasons.add(NotificationReason.MATERIAL_RECOVERY.value)
+        return reasons
+
+    previous_state = str(previous.get("state") or "")
+    if incident.state == IncidentState.RECOVERED.value and previous_state == IncidentState.OPEN.value:
+        reasons.add(NotificationReason.MATERIAL_RECOVERY.value)
+        return reasons
+
+    if incident.state != IncidentState.OPEN.value:
+        return reasons
+
+    action_changed = str(previous.get("recovery_action") or "") != incident.recovery_action
+    recommendation_changed = str(previous.get("recommended_action") or "") != incident.recommended_action
+    evidence_changed = _fingerprint_evidence(previous.get("evidence") or []) != _fingerprint_evidence(incident.evidence)
+    severity_worsened = _severity(incident.to_payload()) > _severity(previous)
+
+    if severity_worsened or action_changed or recommendation_changed:
+        reasons.add(NotificationReason.INCIDENT_WORSENED.value)
+    elif evidence_changed and incident.classification != Classification.STALE_OBSERVABILITY.value:
+        reasons.add(NotificationReason.INCIDENT_WORSENED.value)
+
+    if (previous is None or action_changed or recommendation_changed) and _policy_requires_operator(policy, incident.recovery_action):
+        reasons.add(NotificationReason.APPROVAL_REQUIRED.value)
+    return reasons
+
+
+def _build_notification_event(
+    result: "OperatorResult",
+    previous_incidents: dict[str, dict[str, Any]],
+    policy: RemediationPolicy,
+) -> NotificationEvent:
+    rows: list[dict[str, Any]] = []
+    reasons: set[str] = set()
+    dispatches: set[str] = set()
+    incident_ids: set[str] = set()
+    for incident in result.incidents:
+        incident_reasons = _material_change_reasons(incident, previous_incidents.get(incident.incident_id), policy)
+        incident_reasons = {reason for reason in incident_reasons if reason in NOTIFICATION_REASONS}
+        if not incident_reasons:
+            continue
+        reasons.update(incident_reasons)
+        dispatches.add(incident.dispatch)
+        incident_ids.add(incident.incident_id)
+        rows.append(
+            {
+                "dispatch": incident.dispatch,
+                "incident_id": incident.incident_id,
+                "classification": incident.classification,
+                "state": incident.state,
+                "status_state": incident.status_state,
+                "recovery_action": incident.recovery_action,
+                "reasons": sorted(incident_reasons),
+            }
+        )
+    return NotificationEvent(
+        notification_required=bool(rows),
+        reasons=sorted(reasons),
+        dispatches=sorted(dispatches),
+        incident_ids=sorted(incident_ids),
+        summary=sorted(rows, key=lambda row: (row["dispatch"], row["incident_id"])),
+    )
+
+
 def _build_incident(
     *,
     dispatch: str,
@@ -515,9 +683,22 @@ def check_operator(
     policy = load_remediation_policy(operator_root / "remediation-policy.yaml")
     if allow_automatic_remediation is None:
         allow_automatic_remediation = write_ledger
+    if write_ledger:
+        with _operator_lock(operator_root):
+            result = check_operator(
+                repo_root=repo_root,
+                operator_root=operator_root,
+                config=config,
+                now=now,
+                write_ledger=False,
+                allow_automatic_remediation=allow_automatic_remediation,
+            )
+            _write_ledger(operator_root, result)
+            return result
     now = now or _utc_now()
     checked_at = _format_time(now)
     open_incidents = _load_open_incidents(operator_root)
+    previous_incidents = _load_incidents_by_id(operator_root)
     current_keys: set[str] = set()
     dispatch_results: list[DispatchResult] = []
     incidents: list[Incident] = []
@@ -721,8 +902,16 @@ def check_operator(
             incidents.append(recovered)
 
     result = OperatorResult(checked_at=checked_at, dispatches=dispatch_results, incidents=incidents)
-    if write_ledger:
-        _write_ledger(operator_root, result)
+    result = OperatorResult(
+        checked_at=result.checked_at,
+        dispatches=result.dispatches,
+        incidents=result.incidents,
+        notification=_build_notification_event(result, previous_incidents, policy),
+        production_state_mutated=any(
+            bool((incident.remediation or {}).get("changed"))
+            for incident in result.incidents
+        ),
+    )
     return result
 
 
@@ -734,11 +923,107 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
 def _write_ledger(operator_root: Path, result: OperatorResult) -> None:
     operator_root.mkdir(parents=True, exist_ok=True)
     _write_json(operator_root / "latest.json", result.to_payload())
+    _write_json(operator_root / "notification-latest.json", result.notification.to_payload())
     history = operator_root / "history.jsonl"
     with history.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(result.to_payload(), sort_keys=True) + "\n")
     for incident in result.incidents:
         _write_json(operator_root / "incidents" / f"{incident.incident_id}.json", incident.to_payload())
+    _write_run_receipt(operator_root, result, 0, "OK")
+
+
+def _run_id(result: OperatorResult) -> str:
+    digest = hashlib.sha256(json.dumps(result.to_payload(), sort_keys=True).encode("utf-8")).hexdigest()[:12]
+    return f"operator-{result.checked_at.replace(':', '').replace('-', '').replace('Z', 'Z')}-{digest}"
+
+
+def _write_run_receipt(operator_root: Path, result: OperatorResult, exit_code: int, outcome: str) -> Path:
+    run_id = _run_id(result)
+    date = result.checked_at[:10]
+    remediation_failures = [
+        incident.incident_id
+        for incident in result.incidents
+        if (incident.remediation or {}).get("attempted") is True
+        and ((incident.remediation or {}).get("outcome") == "FAILED" or (incident.remediation or {}).get("unexpected_changes"))
+    ]
+    payload = {
+        "schema_version": RUN_RECEIPT_SCHEMA_VERSION,
+        "run_id": run_id,
+        "started_at": result.checked_at,
+        "completed_at": result.checked_at,
+        "exit_code": exit_code,
+        "outcome": outcome,
+        "operator_head": _git_head(ROOT),
+        "dispatch_summary": [
+            {
+                "dispatch": row.dispatch,
+                "classification": row.classification,
+                "status_state": row.status_state,
+                "recovery_action": row.recovery_action,
+                "remediation_outcome": (row.remediation or {}).get("outcome"),
+            }
+            for row in result.dispatches
+        ],
+        "incident_count": len(result.incidents),
+        "new_incidents": [
+            row["incident_id"]
+            for row in result.notification.summary
+            if NotificationReason.NEW_INCIDENT.value in row.get("reasons", [])
+        ],
+        "changed_incidents": result.notification.incident_ids,
+        "recoveries": [
+            row["incident_id"]
+            for row in result.notification.summary
+            if NotificationReason.MATERIAL_RECOVERY.value in row.get("reasons", [])
+        ],
+        "automatic_remediations": [
+            incident.incident_id
+            for incident in result.incidents
+            if (incident.remediation or {}).get("attempted") is True
+        ],
+        "remediation_failures": remediation_failures,
+        "notification_required": result.notification.notification_required,
+        "notification_reasons": result.notification.reasons,
+    }
+    path = operator_root / "runs" / date / f"{run_id}.json"
+    _write_json(path, payload)
+    return path
+
+
+def _git_head(repo_root: Path) -> str | None:
+    git_entry = repo_root / ".git"
+    git_dir = git_entry
+    if git_entry.is_file():
+        raw_gitdir = git_entry.read_text(encoding="utf-8", errors="replace").strip()
+        if raw_gitdir.startswith("gitdir:"):
+            value = raw_gitdir.split(":", 1)[1].strip()
+            git_dir = (repo_root / value).resolve() if not Path(value).is_absolute() else Path(value)
+    head = git_dir / "HEAD"
+    if not head.is_file():
+        return None
+    raw = head.read_text(encoding="utf-8", errors="replace").strip()
+    if not raw.startswith("ref: "):
+        return raw
+    ref_path = repo_root / ".git" / raw.split(" ", 1)[1]
+    if ref_path.is_file():
+        return ref_path.read_text(encoding="utf-8", errors="replace").strip()
+    return None
+
+
+@contextlib.contextmanager
+def _operator_lock(operator_root: Path):
+    lock_dir = operator_root / ".lock"
+    try:
+        lock_dir.mkdir(parents=True)
+    except FileExistsError as exc:
+        raise RuntimeError(f"Operator lock already held: {lock_dir}") from exc
+    try:
+        yield
+    finally:
+        try:
+            lock_dir.rmdir()
+        except OSError:
+            pass
 
 
 def render_text(result: OperatorResult) -> str:

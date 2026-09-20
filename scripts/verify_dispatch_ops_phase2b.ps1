@@ -203,7 +203,7 @@ function Invoke-Phase2BCase {
         $result = "FAIL"
     }
 
-    return [ordered]@{
+    return [pscustomobject][ordered]@{
         Dispatch = [string]$Case.Label
         Date = [string]$Case.Date
         Expected = $expected
@@ -221,7 +221,7 @@ foreach ($case in $Phase2BCases) {
         $rows += Invoke-Phase2BCase -Case $case
     }
     catch {
-        $rows += [ordered]@{
+        $rows += [pscustomobject][ordered]@{
             Dispatch = [string]$case.Label
             Date = [string]$case.Date
             Expected = [string]$case.ExpectedOutcome

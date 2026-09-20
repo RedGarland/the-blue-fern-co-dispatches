@@ -89,6 +89,30 @@ def _care_partial_success(root: Path, date: str = DATE) -> None:
         _write_json(receipt_root / f"{run_id}.json", receipt)
 
 
+def _care_success_receipts_for_each_task_key(root: Path, date: str = DATE) -> None:
+    rows = [
+        ("care_line_collection", "collection", "success", "2026-09-19T01:00:01Z"),
+        ("care_line_reviewed_event_queue", "queue", "ready_for_operator_release", "2026-09-19T01:01:01Z"),
+        ("care_line_approved_release_publication", "publication", "publication_success", "2026-09-19T01:02:01Z"),
+    ]
+    receipt_root = root / "status/operational-health/care-line/2026-09-19/runs"
+    for task_key, run_id, task_status, started_at in rows:
+        artifact = _artifact(root, f"status/care-line/scheduler-runs/2026-09-19/{run_id}.json")
+        receipt = build_care_line_operational_receipt(
+            task_key=task_key,
+            scheduled_for=started_at.replace(":01Z", ":00Z"),
+            started_at=started_at,
+            completed_at=started_at.replace(":01Z", ":30Z"),
+            exit_code=0,
+            task_status=task_status,
+            run_id=run_id,
+            artifact_refs={"task_receipt": str(artifact)},
+            publication_attempted=True if task_key == "care_line_approved_release_publication" else None,
+            publication_status="publication_success" if task_key == "care_line_approved_release_publication" else None,
+        )
+        _write_json(receipt_root / f"{run_id}.json", receipt)
+
+
 def _food_status_export(root: Path, date: str, aggregate: str, *, task_status: str, classification: str = "") -> None:
     _write_json(
         root / "ops/status/food-line/history" / f"{date}.json",
@@ -195,7 +219,7 @@ def test_care_sep_18_partial_success_is_degraded_not_missed(tmp_path: Path) -> N
 
     assert status.state == "DEGRADED"
     assert status.collection == "PARTIAL_SUCCESS"
-    assert status.receipts == "COMPLETE"
+    assert status.receipts == "OBSERVED"
     assert status.next_action == "INVESTIGATE_FAILED_SOURCES"
 
 
@@ -206,6 +230,14 @@ def test_exported_care_missed_is_authoritative(tmp_path: Path) -> None:
 
     assert status.state == "MISSED"
     assert status.next_action == "RECOVER_MISSING_RUN"
+
+
+def test_exported_care_complete_receipts_are_preserved(tmp_path: Path) -> None:
+    _care_status_export(tmp_path, "2026-09-18", "SUCCESS")
+
+    status = build_status("care-line", "2026-09-18", root=tmp_path)
+
+    assert status.receipts == "COMPLETE"
 
 
 def test_no_care_receipts_without_exported_status_is_unknown(tmp_path: Path) -> None:
@@ -232,8 +264,23 @@ def test_one_care_receipt_does_not_imply_all_expected_runs_were_satisfied(tmp_pa
     status = build_status("care-line", "2026-09-18", root=tmp_path)
 
     assert status.state == "UNKNOWN"
-    assert status.receipts == "PARTIAL"
+    assert status.receipts == "OBSERVED"
     assert status.next_action == "INVESTIGATE_STATUS_EXPORT"
+
+
+def test_one_care_receipt_for_each_task_key_still_has_only_observed_completeness(tmp_path: Path) -> None:
+    _care_success_receipts_for_each_task_key(tmp_path)
+
+    status = build_status("care-line", "2026-09-18", root=tmp_path)
+
+    assert status.state == "UNKNOWN"
+    assert status.receipts == "OBSERVED"
+    assert status.next_action == "INVESTIGATE_STATUS_EXPORT"
+    assert status.details["observed_task_keys"] == [
+        "care_line_approved_release_publication",
+        "care_line_collection",
+        "care_line_reviewed_event_queue",
+    ]
 
 
 def test_food_source_watch_failure_identifies_collection_investigation(tmp_path: Path) -> None:

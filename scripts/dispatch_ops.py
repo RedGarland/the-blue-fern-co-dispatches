@@ -329,8 +329,7 @@ class CareLineAdapter(DispatchAdapter):
         has_partial = "partial_success" in classifications or "DEGRADED" in statuses
         has_failed = "FAILED" in statuses
         all_safe_noop = all(status == "SAFE_NO_OP" for status in statuses)
-        expected_task_count = 3
-        receipts_state = "COMPLETE" if len(task_keys) >= expected_task_count else "PARTIAL"
+        receipts_state = "OBSERVED"
         if has_failed:
             state = Lifecycle.FAILED.value
             collection = "FAILED"
@@ -343,14 +342,10 @@ class CareLineAdapter(DispatchAdapter):
             state = Lifecycle.SAFE_NO_OP.value
             collection = "COMPLETE"
             next_action = NextAction.NONE.value
-        elif receipts_state == "PARTIAL":
+        else:
             state = Lifecycle.UNKNOWN.value
             collection = "COMPLETE" if "SUCCESS" in statuses else "UNKNOWN"
             next_action = NextAction.INVESTIGATE_STATUS_EXPORT.value
-        else:
-            state = Lifecycle.COMPLETE.value
-            collection = "COMPLETE"
-            next_action = NextAction.VERIFY_PUBLIC_STATE.value
         return DispatchStatus(
             dispatch=self.dispatch,
             date=date,

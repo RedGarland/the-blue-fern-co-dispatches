@@ -62,6 +62,7 @@ NOTIFICATION_REASONS = {
     "OPERATOR_FAILURE",
 }
 ENGINEERING_ELIGIBLE_CLASSES = {"FAILED_RUN", "STATUS_EXPORT_PROBLEM"}
+APPROVED_ENGINEERING_WORKTREE_ROOT = Path(r"C:\BlueFernRunner\OperatorWorktrees")
 ENGINEERING_BLOCKED_ACTIONS = {
     "NONE",
     "REBUILD_STATUS",
@@ -69,13 +70,6 @@ ENGINEERING_BLOCKED_ACTIONS = {
     "VERIFY_PUBLIC_STATE",
     "PUBLISH_APPROVED_RELEASE",
     "PUBLISH_NO_UPDATE",
-}
-ENGINEERING_FORBIDDEN_ROOT_NAMES = {
-    "FoodLineCurrent6",
-    "CareLineNationalCurrent8",
-    "GazaDispatchesCurrent6",
-    "ICEMonitorCurrent",
-    "BlueFernOperatorCurrent",
 }
 ENGINEERING_STATES = {
     "DETECTED",
@@ -1022,9 +1016,32 @@ def _engineering_branch(dispatch: str, incident_id: str) -> str:
     return f"operator/{dispatch}/{incident_id}"
 
 
-def _is_forbidden_engineering_worktree(path: Path) -> bool:
-    parts = {part.lower() for part in path.parts}
-    return any(name.lower() in parts for name in ENGINEERING_FORBIDDEN_ROOT_NAMES)
+def _canonical_path(path: Path) -> Path:
+    return path.expanduser().resolve(strict=False)
+
+
+def _same_canonical_path(left: Path, right: Path) -> bool:
+    return str(_canonical_path(left)).lower() == str(_canonical_path(right)).lower()
+
+
+def _canonical_relative_to(child: Path, parent: Path) -> bool:
+    canonical_child = _canonical_path(child)
+    canonical_parent = _canonical_path(parent)
+    try:
+        canonical_child.relative_to(canonical_parent)
+    except ValueError:
+        return False
+    return True
+
+
+def _engineering_worktree_violation(path: Path) -> str | None:
+    approved_root = _canonical_path(APPROVED_ENGINEERING_WORKTREE_ROOT)
+    requested = _canonical_path(path)
+    if str(requested).lower() == str(approved_root).lower():
+        return f"engineering worktree must be below approved root, not equal to it: {approved_root}"
+    if not _canonical_relative_to(requested, approved_root):
+        return f"engineering worktree must be inside approved root {approved_root}: {requested}"
+    return None
 
 
 def _allowed_patch_scope(dispatch: str, classification: str, recovery_action: str) -> list[str]:
@@ -1112,14 +1129,13 @@ def _build_engineering_work_item(
 ) -> EngineeringWorkItem:
     work_id = _work_id(incident.incident_id, repair_generation)
     worktree = worktree_root / work_id
-    if _is_forbidden_engineering_worktree(worktree):
-        raise ValueError(f"Refusing forbidden engineering worktree: {worktree}")
+    blocked_reason = _engineering_worktree_violation(worktree)
     return EngineeringWorkItem(
         work_id=work_id,
         incident_id=incident.incident_id,
         dispatch=incident.dispatch,
         classification=incident.classification,
-        state=EngineeringState.DETECTED.value,
+        state=EngineeringState.BLOCKED.value if blocked_reason else EngineeringState.DETECTED.value,
         branch=_engineering_branch(incident.dispatch, incident.incident_id),
         worktree=str(worktree),
         evidence=sorted(incident.evidence),
@@ -1127,6 +1143,7 @@ def _build_engineering_work_item(
         tests_required=_tests_required(incident.dispatch, incident.classification),
         base_sha=base_sha,
         repair_generation=repair_generation,
+        blocked_reason=blocked_reason,
     )
 
 
@@ -1273,6 +1290,13 @@ def _first_output_line(result: EngineeringCommandResult) -> str:
     return result.stdout.strip().splitlines()[0] if result.ok and result.stdout.strip() else ""
 
 
+def _resolve_git_common_dir(value: str, *, cwd: Path) -> Path:
+    common = Path(value)
+    if not common.is_absolute():
+        common = cwd / common
+    return _canonical_path(common)
+
+
 def _verify_existing_engineering_worktree(
     item: EngineeringWorkItem,
     *,
@@ -1281,9 +1305,8 @@ def _verify_existing_engineering_worktree(
     runner: Any = _run_command,
 ) -> tuple[bool, str]:
     worktree = Path(item.worktree)
-    expected_path = str(worktree.resolve()).lower()
     top = _first_output_line(runner(["git", "rev-parse", "--show-toplevel"], cwd=worktree))
-    if not top or str(Path(top).resolve()).lower() != expected_path:
+    if not top or not _same_canonical_path(Path(top), worktree):
         return False, "existing worktree path identity does not match work item"
 
     branch = _first_output_line(runner(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=worktree))
@@ -1294,7 +1317,9 @@ def _verify_existing_engineering_worktree(
     worktree_common = _first_output_line(runner(["git", "rev-parse", "--git-common-dir"], cwd=worktree))
     if not source_common or not worktree_common:
         return False, "could not verify existing worktree repository identity"
-    if str(Path(source_common).resolve()).lower() != str(Path(worktree_common).resolve()).lower():
+    source_common_path = _resolve_git_common_dir(source_common, cwd=repo_root)
+    worktree_common_path = _resolve_git_common_dir(worktree_common, cwd=worktree)
+    if str(source_common_path).lower() != str(worktree_common_path).lower():
         return False, "existing worktree belongs to a different source repository"
 
     ancestry = runner(["git", "merge-base", "--is-ancestor", expected_base_sha, "HEAD"], cwd=worktree)
@@ -1313,8 +1338,9 @@ def _create_or_reuse_engineering_worktree(
     runner: Any = _run_command,
 ) -> EngineeringWorkItem:
     worktree = Path(item.worktree)
-    if _is_forbidden_engineering_worktree(worktree):
-        return _block_engineering_work(operator_root, item, f"forbidden worktree root: {worktree}")
+    violation = _engineering_worktree_violation(worktree)
+    if violation:
+        return _block_engineering_work(operator_root, item, violation)
 
     fetch = runner(["git", "fetch", "origin"], cwd=repo_root)
     if not fetch.ok:

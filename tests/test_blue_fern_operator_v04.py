@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -11,6 +12,13 @@ from scripts.dispatch_ops import DispatchStatus, RecoveryPlan
 
 
 NOW = datetime(2026, 9, 20, 12, 0, tzinfo=timezone.utc)
+
+
+@pytest.fixture(autouse=True)
+def approved_engineering_root(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
+    root = tmp_path / "OperatorWorktrees"
+    monkeypatch.setattr(operator, "APPROVED_ENGINEERING_WORKTREE_ROOT", root)
+    return root
 
 
 def _write_json(path: Path, payload: dict) -> None:
@@ -64,6 +72,8 @@ class FakeEngineeringRunner:
         remote_branch_exists: bool = False,
         current_branch: str = "operator/care-line/bfo-test-failed",
         unrelated_common_dir: bool = False,
+        source_common_dir: str | None = None,
+        worktree_common_dir: str | None = None,
         codex_help_supports_sandbox: bool = True,
     ) -> None:
         self.commands: list[tuple[list[str], Path]] = []
@@ -72,6 +82,9 @@ class FakeEngineeringRunner:
         self.remote_branch_exists = remote_branch_exists
         self.current_branch = current_branch
         self.unrelated_common_dir = unrelated_common_dir
+        self.source_common_dir = source_common_dir
+        self.worktree_common_dir = worktree_common_dir
+        self.common_dir_calls = 0
         self.codex_help_supports_sandbox = codex_help_supports_sandbox
 
     def __call__(self, args: list[str], *, cwd: Path) -> operator.EngineeringCommandResult:
@@ -89,6 +102,11 @@ class FakeEngineeringRunner:
         if args == ["git", "rev-parse", "--abbrev-ref", "HEAD"]:
             return operator.EngineeringCommandResult(0, f"{self.current_branch}\n")
         if args == ["git", "rev-parse", "--git-common-dir"]:
+            self.common_dir_calls += 1
+            if self.source_common_dir is not None and self.common_dir_calls == 1:
+                return operator.EngineeringCommandResult(0, f"{self.source_common_dir}\n")
+            if self.worktree_common_dir is not None and self.common_dir_calls == 2:
+                return operator.EngineeringCommandResult(0, f"{self.worktree_common_dir}\n")
             common = cwd / ".git" if self.unrelated_common_dir else Path("C:/repo/.git")
             return operator.EngineeringCommandResult(0, f"{common}\n")
         if args[:3] == ["git", "merge-base", "--is-ancestor"]:
@@ -158,7 +176,7 @@ def test_eligible_failed_run_creates_work_item(tmp_path: Path) -> None:
 def test_safe_rebuild_status_does_not_create_engineering_work(tmp_path: Path) -> None:
     incident = _incident(classification="STATUS_EXPORT_PROBLEM", recovery_action="REBUILD_STATUS")
 
-    items = operator.prepare_engineering_work(_result(incident), operator_root=tmp_path / "ops/operator", worktree_root=tmp_path / "wt", policy=_policy(tmp_path))
+    items = operator.prepare_engineering_work(_result(incident), operator_root=tmp_path / "ops/operator", worktree_root=operator.APPROVED_ENGINEERING_WORKTREE_ROOT, policy=_policy(tmp_path))
 
     assert items == []
 
@@ -175,7 +193,7 @@ def test_safe_rebuild_status_does_not_create_engineering_work(tmp_path: Path) ->
 def test_non_engineering_incident_classes_are_not_eligible(tmp_path: Path, classification: str, status_state: str, action: str) -> None:
     incident = _incident(classification=classification, status_state=status_state, recovery_action=action)
 
-    items = operator.prepare_engineering_work(_result(incident), operator_root=tmp_path / "ops/operator", worktree_root=tmp_path / "wt", policy=_policy(tmp_path))
+    items = operator.prepare_engineering_work(_result(incident), operator_root=tmp_path / "ops/operator", worktree_root=operator.APPROVED_ENGINEERING_WORKTREE_ROOT, policy=_policy(tmp_path))
 
     assert items == []
 
@@ -198,19 +216,84 @@ def test_work_id_and_branch_are_deterministic() -> None:
     assert operator._engineering_branch("care-line", "bfo-test-failed") == "operator/care-line/bfo-test-failed"
 
 
-def test_forbidden_production_worktree_root_is_rejected(tmp_path: Path) -> None:
-    with pytest.raises(ValueError, match="Refusing forbidden engineering worktree"):
-        operator._build_engineering_work_item(
-            _incident(),
-            operator_root=tmp_path / "ops/operator",
-            worktree_root=Path(r"C:\BlueFernRunner\CareLineNationalCurrent8"),
-            base_sha="base",
-        )
+def test_approved_engineering_root_descendant_is_allowed(tmp_path: Path) -> None:
+    item = operator.prepare_engineering_work(
+        _result(_incident()),
+        operator_root=tmp_path / "ops/operator",
+        worktree_root=operator.APPROVED_ENGINEERING_WORKTREE_ROOT,
+        policy=_policy(tmp_path),
+    )[0]
+
+    assert item.state == "DETECTED"
+    assert operator._engineering_worktree_violation(Path(item.worktree)) is None
+
+
+def test_exact_approved_engineering_root_as_worktree_is_blocked(tmp_path: Path) -> None:
+    item = operator.prepare_engineering_work(
+        _result(_incident()),
+        operator_root=tmp_path / "ops/operator",
+        worktree_root=operator.APPROVED_ENGINEERING_WORKTREE_ROOT,
+        policy=_policy(tmp_path),
+    )[0]
+    item = operator.replace(item, worktree=str(operator.APPROVED_ENGINEERING_WORKTREE_ROOT))
+
+    blocked = operator._create_or_reuse_engineering_worktree(tmp_path / "ops/operator", item, repo_root=tmp_path / "repo", runner=FakeEngineeringRunner())
+
+    assert blocked.state == "BLOCKED"
+    assert "not equal" in (blocked.blocked_reason or "")
+
+
+def test_outside_engineering_root_is_blocked(tmp_path: Path) -> None:
+    item = operator.prepare_engineering_work(
+        _result(_incident()),
+        operator_root=tmp_path / "ops/operator",
+        worktree_root=tmp_path / "TempOperatorWorktrees",
+        policy=_policy(tmp_path),
+    )[0]
+
+    assert item.state == "BLOCKED"
+    assert "inside approved root" in (item.blocked_reason or "")
+
+
+def test_dotdot_escape_from_engineering_root_is_blocked(tmp_path: Path) -> None:
+    item = operator.prepare_engineering_work(
+        _result(_incident()),
+        operator_root=tmp_path / "ops/operator",
+        worktree_root=operator.APPROVED_ENGINEERING_WORKTREE_ROOT / "..",
+        policy=_policy(tmp_path),
+    )[0]
+
+    assert item.state == "BLOCKED"
+    assert "inside approved root" in (item.blocked_reason or "")
+
+
+def test_production_runner_worktree_path_is_blocked(tmp_path: Path) -> None:
+    item = operator.prepare_engineering_work(
+        _result(_incident()),
+        operator_root=tmp_path / "ops/operator",
+        worktree_root=Path(r"C:\BlueFernRunner\FoodLineCurrent6"),
+        policy=_policy(tmp_path),
+    )[0]
+
+    assert item.state == "BLOCKED"
+    assert "inside approved root" in (item.blocked_reason or "")
+
+
+def test_alternate_arbitrary_worktree_root_is_blocked(tmp_path: Path) -> None:
+    item = operator.prepare_engineering_work(
+        _result(_incident()),
+        operator_root=tmp_path / "ops/operator",
+        worktree_root=Path(r"C:\Users\willb\OperatorWorktrees"),
+        policy=_policy(tmp_path),
+    )[0]
+
+    assert item.state == "BLOCKED"
+    assert "inside approved root" in (item.blocked_reason or "")
 
 
 def test_validation_failure_retry_then_blocked(tmp_path: Path) -> None:
     root = tmp_path / "ops/operator"
-    item = operator.prepare_engineering_work(_result(_incident()), operator_root=root, worktree_root=tmp_path / "wt", policy=_policy(tmp_path))[0]
+    item = operator.prepare_engineering_work(_result(_incident()), operator_root=root, worktree_root=operator.APPROVED_ENGINEERING_WORKTREE_ROOT, policy=_policy(tmp_path))[0]
 
     retry = operator.update_engineering_validation(root, item.work_id, validation_passed=False, repair_attempts=1)
     blocked = operator.update_engineering_validation(root, item.work_id, validation_passed=False, repair_attempts=2)
@@ -222,7 +305,7 @@ def test_validation_failure_retry_then_blocked(tmp_path: Path) -> None:
 
 def test_passing_validation_can_mark_pr_ready_or_open_without_merge(tmp_path: Path) -> None:
     root = tmp_path / "ops/operator"
-    item = operator.prepare_engineering_work(_result(_incident()), operator_root=root, worktree_root=tmp_path / "wt", policy=_policy(tmp_path))[0]
+    item = operator.prepare_engineering_work(_result(_incident()), operator_root=root, worktree_root=operator.APPROVED_ENGINEERING_WORKTREE_ROOT, policy=_policy(tmp_path))[0]
 
     ready = operator.update_engineering_validation(root, item.work_id, validation_passed=True, repair_attempts=1)
     opened = operator.update_engineering_validation(root, item.work_id, validation_passed=True, repair_attempts=1, pr_number=431, head_sha="head")
@@ -235,13 +318,13 @@ def test_passing_validation_can_mark_pr_ready_or_open_without_merge(tmp_path: Pa
 
 
 def test_engineering_policy_must_explicitly_allow_prepare_pr(tmp_path: Path) -> None:
-    items = operator.prepare_engineering_work(_result(_incident()), operator_root=tmp_path / "ops/operator", worktree_root=tmp_path / "wt", policy=_policy(tmp_path, enabled=False))
+    items = operator.prepare_engineering_work(_result(_incident()), operator_root=tmp_path / "ops/operator", worktree_root=operator.APPROVED_ENGINEERING_WORKTREE_ROOT, policy=_policy(tmp_path, enabled=False))
 
     assert items == []
 
 
 def test_source_runner_pages_scheduler_remain_outside_allowed_scope(tmp_path: Path) -> None:
-    item = operator.prepare_engineering_work(_result(_incident()), operator_root=tmp_path / "ops/operator", worktree_root=tmp_path / "wt", policy=_policy(tmp_path))[0]
+    item = operator.prepare_engineering_work(_result(_incident()), operator_root=tmp_path / "ops/operator", worktree_root=operator.APPROVED_ENGINEERING_WORKTREE_ROOT, policy=_policy(tmp_path))[0]
     joined = "\n".join(item.allowed_paths)
 
     assert "bluefern-dispatches-pages" not in joined
@@ -257,7 +340,7 @@ def test_engineer_command_outputs_work_item_without_llm_or_pr(monkeypatch: pytes
     incident = _incident()
     monkeypatch.setattr(operator, "check_operator", lambda **_kwargs: _result(incident))
 
-    rc = operator.main(["engineer", "--json", "--operator-root", str(root), "--worktree-root", str(tmp_path / "wt")])
+    rc = operator.main(["engineer", "--json", "--operator-root", str(root), "--worktree-root", str(operator.APPROVED_ENGINEERING_WORKTREE_ROOT)])
     payload = json.loads(capsys.readouterr().out)
 
     assert rc == 0
@@ -339,6 +422,41 @@ def test_engineering_execution_blocks_existing_worktree_unrelated_repo(tmp_path:
         item,
         repo_root=tmp_path / "repo",
         runner=FakeEngineeringRunner(unrelated_common_dir=True),
+    )
+
+    assert blocked.state == "BLOCKED"
+    assert "different source repository" in (blocked.blocked_reason or "")
+
+
+def test_git_common_dir_relative_values_resolve_from_command_cwd(tmp_path: Path) -> None:
+    root = tmp_path / "ops/operator"
+    repo = tmp_path / "repo"
+    common = repo / ".git"
+    item = operator.prepare_engineering_work(_result(_incident()), operator_root=root, worktree_root=tmp_path / "OperatorWorktrees", policy=_policy(tmp_path))[0]
+    (Path(item.worktree) / ".git").mkdir(parents=True)
+    relative_from_worktree = os.path.relpath(common, Path(item.worktree))
+
+    reused = operator._create_or_reuse_engineering_worktree(
+        root,
+        item,
+        repo_root=repo,
+        runner=FakeEngineeringRunner(source_common_dir=".git", worktree_common_dir=relative_from_worktree),
+    )
+
+    assert reused.state == "WORKTREE_CREATED"
+
+
+def test_git_common_dir_truly_different_repo_blocks(tmp_path: Path) -> None:
+    root = tmp_path / "ops/operator"
+    repo = tmp_path / "repo"
+    item = operator.prepare_engineering_work(_result(_incident()), operator_root=root, worktree_root=tmp_path / "OperatorWorktrees", policy=_policy(tmp_path))[0]
+    (Path(item.worktree) / ".git").mkdir(parents=True)
+
+    blocked = operator._create_or_reuse_engineering_worktree(
+        root,
+        item,
+        repo_root=repo,
+        runner=FakeEngineeringRunner(source_common_dir=".git", worktree_common_dir=str(tmp_path / "other-repo" / ".git")),
     )
 
     assert blocked.state == "BLOCKED"
@@ -454,7 +572,7 @@ def test_validation_pass_commits_pushes_opens_pr_and_requires_approval(tmp_path:
 
 
 def test_repair_pr_body_uses_insufficient_evidence_when_root_cause_missing(tmp_path: Path) -> None:
-    item = operator.prepare_engineering_work(_result(_incident()), operator_root=tmp_path / "ops/operator", worktree_root=tmp_path / "wt", policy=_policy(tmp_path))[0]
+    item = operator.prepare_engineering_work(_result(_incident()), operator_root=tmp_path / "ops/operator", worktree_root=operator.APPROVED_ENGINEERING_WORKTREE_ROOT, policy=_policy(tmp_path))[0]
     body = operator._repair_pr_body(
         operator.replace(
             item,
@@ -506,7 +624,7 @@ def test_remote_branch_without_recorded_pr_blocks_duplicate_prevention(tmp_path:
 
 
 def test_approval_notification_waits_until_pr_exists(tmp_path: Path) -> None:
-    item = operator.prepare_engineering_work(_result(_incident()), operator_root=tmp_path / "ops/operator", worktree_root=tmp_path / "wt", policy=_policy(tmp_path))[0]
+    item = operator.prepare_engineering_work(_result(_incident()), operator_root=tmp_path / "ops/operator", worktree_root=operator.APPROVED_ENGINEERING_WORKTREE_ROOT, policy=_policy(tmp_path))[0]
 
     event = operator.build_engineering_approval_notification(item)
 

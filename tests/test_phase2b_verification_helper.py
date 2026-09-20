@@ -99,6 +99,31 @@ def test_phase2b_helper_has_no_angle_placeholder_commands() -> None:
     assert "--date <" not in text
 
 
+def test_phase2b_helper_result_rows_are_table_renderable_objects() -> None:
+    text = _read_script()
+
+    assert "return [pscustomobject][ordered]@{" in text
+    assert "$rows += [pscustomobject][ordered]@{" in text
+    assert "return [ordered]@{\n        Dispatch" not in text
+    assert "$rows += [ordered]@{\n            Dispatch" not in text
+
+    display_properties = ["Dispatch", "Date", "Expected", "Actual", "ReadOnly", "Result"]
+    assert (
+        "$rows | Select-Object Dispatch, Date, Expected, Actual, ReadOnly, Result | "
+        "Format-Table -AutoSize"
+    ) in text
+
+    result_row_blocks = re.findall(
+        r"(?:return|\$rows \+=) \[pscustomobject\]\[ordered\]@\{(?P<body>.*?)\n\s*\}",
+        text,
+        flags=re.DOTALL,
+    )
+    assert len(result_row_blocks) == 2
+    for block in result_row_blocks:
+        for property_name in display_properties:
+            assert re.search(rf"^\s*{property_name}\s*=", block, flags=re.MULTILINE)
+
+
 def test_phase2b_docs_warn_against_powershell_angle_placeholders() -> None:
     readme = README.read_text(encoding="utf-8")
 

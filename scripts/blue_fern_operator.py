@@ -30,6 +30,13 @@ from scripts.dispatch_ops import (  # noqa: E402
     build_recovery_plan_from_status,
     build_status,
 )
+from bluefern_dispatches.operational_status_exporter import (  # noqa: E402
+    ExportError,
+    build_care_line_status,
+    build_food_line_status,
+    build_ice_status,
+    exporter_lock,
+)
 
 
 SCHEMA_VERSION = "blue_fern_operator_result_v1"
@@ -56,6 +63,7 @@ AUTOMATIC_REMEDIATION_ACTIONS = {"REBUILD_STATUS"}
 REMEDIATION_OUTCOMES = {
     "NOT_ATTEMPTED",
     "REBUILT",
+    "REFRESHED",
     "ALREADY_CURRENT",
     "NO_ACTION",
     "REFUSED",
@@ -98,6 +106,7 @@ ENGINEERING_CLOSEABLE_STATES = {
 REMEDIATION_ACTIONS = {
     "RUNNER_ROLL_FORWARD",
     "REBUILD_STATUS",
+    "REFRESH_STATUS_EXPORT",
     "VERIFY_PUBLIC_STATE",
     "INVESTIGATE_SOURCE_FAILURES",
     "WAIT_FOR_NEXT_SCHEDULED_RUN",
@@ -108,6 +117,7 @@ REMEDIATION_ACTIONS = {
 EXECUTABLE_REMEDIATION_ACTIONS = {
     "RUNNER_ROLL_FORWARD",
     "REBUILD_STATUS",
+    "REFRESH_STATUS_EXPORT",
     "VERIFY_PUBLIC_STATE",
 }
 ENGINEERING_STATES = {
@@ -1969,6 +1979,39 @@ def _current_condition_for(incident: Incident, current_status: DispatchStatus | 
     return incident.status_state
 
 
+def _status_destination_root(operator_root: Path) -> Path:
+    operator_root = operator_root.resolve()
+    if operator_root.name == "operator" and operator_root.parent.name == "ops":
+        return operator_root.parent.parent
+    return operator_root
+
+
+def _refresh_status_supported(dispatch: str, current_status: DispatchStatus | None) -> tuple[bool, str]:
+    if dispatch == "gaza":
+        return False, "no compatible Gaza external-status builder is available"
+    if dispatch in {"food-line", "ice"}:
+        return True, "existing external-status builder is available"
+    if dispatch == "care-line":
+        if current_status is not None and current_status.evidence:
+            return True, "Care external-status builder can use current operational-health receipts"
+        return False, "Care refresh requires authoritative scheduler receipt evidence"
+    return False, "dispatch does not support status export refresh"
+
+
+def _current_dispatch_ops_rebuild_available(current_status: DispatchStatus | None) -> tuple[bool, RecoveryPlan | None]:
+    if current_status is None:
+        return False, None
+    plan = build_recovery_plan_from_status(current_status)
+    return plan.disposition == "PLAN_AVAILABLE" and plan.action == "REBUILD_STATUS", plan
+
+
+def _status_export_scope(dispatch: str, date: str | None) -> list[str]:
+    return [
+        f"ops/status/{dispatch}/latest.json",
+        f"ops/status/{dispatch}/history/{date or '<date>'}.json",
+    ]
+
+
 def build_remediation_action_plan(
     incident: Incident,
     *,
@@ -1988,13 +2031,53 @@ def build_remediation_action_plan(
     mutation_scope: list[str] = []
 
     if incident.classification in {Classification.STALE_OBSERVABILITY.value, Classification.STATUS_EXPORT_PROBLEM.value} or incident.recovery_action == "REBUILD_STATUS":
-        action = "REBUILD_STATUS"
-        reason = "status export surface is stale, missing, or rebuildable through dispatch_ops"
-        executable = True
-        mutation_scope = [
-            f"ops/status/{incident.dispatch}/latest.json",
-            f"ops/status/{incident.dispatch}/history/{incident.affected_date or '<date>'}.json",
-        ]
+        rebuild_available, dispatch_ops_plan = _current_dispatch_ops_rebuild_available(current_status)
+        if rebuild_available:
+            action = "REBUILD_STATUS"
+            reason = "dispatch_ops currently proves REBUILD_STATUS is available"
+            executable = True
+            mutation_scope = _status_export_scope(incident.dispatch, incident.affected_date)
+        elif incident.classification == Classification.STALE_OBSERVABILITY.value:
+            supported, support_reason = _refresh_status_supported(incident.dispatch, current_status)
+            if supported:
+                action = "REFRESH_STATUS_EXPORT"
+                reason = "status export surface is stale and can be refreshed from current durable runner evidence"
+                executable = True
+                mutation_scope = _status_export_scope(incident.dispatch, incident.affected_date)
+                safety_checks = {
+                    "source_runner_root": str(runner_root.resolve()),
+                    "status_destination_root": str(_status_destination_root(operator_root)),
+                    "refresh_supported": True,
+                    "refresh_support_reason": support_reason,
+                    "dispatch_ops_action": dispatch_ops_plan.action if dispatch_ops_plan else None,
+                    "structured_evidence": context.to_payload(),
+                    "public_side_effects": False,
+                    "scheduler_changes": False,
+                    "collection_rerun": False,
+                    "editorial_mutation": False,
+                    "merge_pr": False,
+                }
+            else:
+                action = "INVESTIGATE_STATUS_EXPORT"
+                reason = support_reason
+                executable = False
+                safety_checks = {
+                    "source_runner_root": str(runner_root.resolve()),
+                    "status_destination_root": str(_status_destination_root(operator_root)),
+                    "refresh_supported": False,
+                    "refresh_support_reason": support_reason,
+                    "dispatch_ops_action": dispatch_ops_plan.action if dispatch_ops_plan else None,
+                    "structured_evidence": context.to_payload(),
+                    "public_side_effects": False,
+                    "scheduler_changes": False,
+                    "collection_rerun": False,
+                    "editorial_mutation": False,
+                    "merge_pr": False,
+                }
+        else:
+            action = "INVESTIGATE_STATUS_EXPORT"
+            reason = "dispatch_ops does not currently prove REBUILD_STATUS and this is not stale observability"
+            executable = False
     elif incident.recovery_action == "VERIFY_PUBLIC_STATE" or incident.classification == Classification.PUBLIC_STATE_UNVERIFIED.value:
         action = "VERIFY_PUBLIC_STATE"
         reason = "public state requires durable verification"
@@ -2252,6 +2335,179 @@ def _apply_runner_roll_forward(
     return _write_remediation_receipt(operator_root, receipt)
 
 
+def _file_hash(path: Path) -> str | None:
+    if not path.is_file():
+        return None
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _snapshot_status_destination(root: Path) -> dict[str, str | None]:
+    status_root = root / "ops" / "status"
+    if not status_root.exists():
+        return {}
+    snapshot: dict[str, str | None] = {}
+    for path in sorted(status_root.rglob("*")):
+        if path.is_file():
+            snapshot[_rel(root, path)] = _file_hash(path)
+    return snapshot
+
+
+def _status_path_hashes(root: Path, paths: Iterable[str]) -> dict[str, str | None]:
+    return {path: _file_hash(root / path) for path in sorted(paths)}
+
+
+def _build_refresh_status_payload(dispatch: str, *, source_root: Path, date: str, exported_at: str) -> dict[str, Any]:
+    if dispatch == "food-line":
+        return build_food_line_status(
+            source_root=source_root,
+            date=date,
+            evaluated_at=exported_at,
+            exported_at=exported_at,
+        )
+    if dispatch == "care-line":
+        return build_care_line_status(
+            source_root=source_root,
+            date=date,
+            evaluated_at=exported_at,
+            exported_at=exported_at,
+        )
+    if dispatch == "ice":
+        return build_ice_status(
+            source_root=source_root,
+            date=date,
+            evaluated_at=exported_at,
+            exported_at=exported_at,
+        )
+    raise ExportError(f"status export refresh is not supported for dispatch: {dispatch}")
+
+
+def _write_refresh_status_payload(destination_root: Path, dispatch: str, date: str, payload: dict[str, Any]) -> None:
+    _write_json(destination_root / "ops" / "status" / dispatch / "latest.json", payload)
+    _write_json(destination_root / "ops" / "status" / dispatch / "history" / f"{date}.json", payload)
+
+
+def _apply_refresh_status_export(
+    plan: RemediationActionPlan,
+    *,
+    runner_root: Path,
+    operator_root: Path,
+    current_status: DispatchStatus,
+    now: datetime | None = None,
+) -> RemediationReceipt:
+    started_time = now or _utc_now()
+    started = _format_time(started_time)
+    date = plan.affected_date or current_status.date
+    destination_root = _status_destination_root(operator_root)
+    allowed_paths = _status_export_scope(plan.dispatch, date)
+    supported, support_reason = _refresh_status_supported(plan.dispatch, current_status)
+    if not supported:
+        receipt = RemediationReceipt(
+            plan.dispatch,
+            plan.incident_id,
+            plan.proposed_action,
+            False,
+            "REFUSED",
+            support_reason,
+            started,
+            _format_time(_utc_now()),
+            expected_mutation_scope=allowed_paths,
+            validation={
+                "source_runner_root": str(runner_root.resolve()),
+                "status_destination_root": str(destination_root),
+                "refresh_supported": False,
+                "underlying_status_before": current_status.to_json_payload(),
+                "underlying_status_after": current_status.to_json_payload(),
+            },
+        )
+        return _write_remediation_receipt(operator_root, receipt)
+
+    before_tree = _snapshot_status_destination(destination_root)
+    before_hashes = _status_path_hashes(destination_root, allowed_paths)
+    try:
+        with exporter_lock(destination_root):
+            payload = _build_refresh_status_payload(
+                plan.dispatch,
+                source_root=runner_root.resolve(),
+                date=date,
+                exported_at=started,
+            )
+            _write_refresh_status_payload(destination_root, plan.dispatch, date, payload)
+    except Exception as exc:  # noqa: BLE001
+        receipt = RemediationReceipt(
+            plan.dispatch,
+            plan.incident_id,
+            plan.proposed_action,
+            False,
+            "FAILED",
+            f"status export refresh failed: {exc}",
+            started,
+            _format_time(_utc_now()),
+            expected_mutation_scope=allowed_paths,
+            validation={
+                "source_runner_root": str(runner_root.resolve()),
+                "status_destination_root": str(destination_root),
+                "before_status_export_hashes": before_hashes,
+                "underlying_status_before": current_status.to_json_payload(),
+            },
+        )
+        return _write_remediation_receipt(operator_root, receipt)
+
+    after_tree = _snapshot_status_destination(destination_root)
+    after_hashes = _status_path_hashes(destination_root, allowed_paths)
+    changed_paths = sorted(path for path in set(before_tree) | set(after_tree) if before_tree.get(path) != after_tree.get(path))
+    unexpected = sorted(path for path in changed_paths if path not in allowed_paths)
+    status_after = build_status(plan.dispatch, date, root=runner_root)
+    stale_after = not _latest_exported_status(destination_root, plan.dispatch, _utc_now(), 120).is_fresh
+    validation = {
+        "source_runner_root": str(runner_root.resolve()),
+        "status_destination_root": str(destination_root),
+        "observed_date": date,
+        "before_status_export_hashes": before_hashes,
+        "after_status_export_hashes": after_hashes,
+        "underlying_status_before": current_status.to_json_payload(),
+        "underlying_status_after": status_after.to_json_payload(),
+        "underlying_incident_preserved": status_after.state == current_status.state and status_after.next_action == current_status.next_action,
+        "stale_observability_after": stale_after,
+        "refresh_support_reason": support_reason,
+        "public_side_effects": False,
+        "scheduler_changes": False,
+        "collection_rerun": False,
+        "editorial_mutation": False,
+        "publication_attempted": False,
+    }
+    if unexpected:
+        receipt = RemediationReceipt(
+            plan.dispatch,
+            plan.incident_id,
+            plan.proposed_action,
+            False,
+            "FAILED",
+            "unexpected status-path mutation detected; no automatic cleanup was attempted",
+            started,
+            _format_time(_utc_now()),
+            expected_mutation_scope=allowed_paths,
+            changed_paths=changed_paths,
+            validation=validation,
+            warnings=unexpected,
+        )
+        return _write_remediation_receipt(operator_root, receipt)
+    outcome = "REFRESHED" if changed_paths else "ALREADY_CURRENT"
+    receipt = RemediationReceipt(
+        plan.dispatch,
+        plan.incident_id,
+        plan.proposed_action,
+        True,
+        outcome,
+        "status export refreshed from durable runner evidence",
+        started,
+        _format_time(_utc_now()),
+        expected_mutation_scope=allowed_paths,
+        changed_paths=changed_paths,
+        validation=validation,
+    )
+    return _write_remediation_receipt(operator_root, receipt)
+
+
 def apply_remediation(
     *,
     dispatch: str,
@@ -2292,6 +2548,8 @@ def apply_remediation(
         return _refused_remediation_receipt(dispatch=dispatch, incident_id=incident_id, action=action, reason="current plan is not executable", now=now)
     if action == "RUNNER_ROLL_FORWARD":
         return _apply_runner_roll_forward(plan, runner_root=runner_root, operator_root=operator_root, runner=runner, now=now)
+    if action == "REFRESH_STATUS_EXPORT":
+        return _apply_refresh_status_export(plan, runner_root=runner_root, operator_root=operator_root, current_status=current_status, now=now)
 
     started = _format_time(now or _utc_now())
     apply_result = apply_recovery_plan(dispatch, incident.affected_date or current_status.date, root=runner_root, confirm=action)

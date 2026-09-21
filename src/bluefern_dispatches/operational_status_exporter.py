@@ -1059,6 +1059,18 @@ def _incoming_paths(status_checkout: Path) -> list[str]:
     return sorted(line.strip().replace("\\", "/") for line in incoming.stdout.splitlines() if line.strip())
 
 
+def _status_file_hashes(status_checkout: Path, paths: Iterable[str]) -> dict[str, str | None]:
+    hashes: dict[str, str | None] = {}
+    for path in sorted(dict.fromkeys(paths)):
+        target = status_checkout / path
+        hashes[path] = hashlib.sha256(target.read_bytes()).hexdigest() if target.is_file() else None
+    return hashes
+
+
+def _dirty_status_paths(state: StatusCheckoutGitState) -> list[str]:
+    return sorted(dict.fromkeys([*state.tracked_status_paths, *state.untracked_status_paths]))
+
+
 def prepare_status_checkout(
     status_checkout: Path,
     *,
@@ -1099,14 +1111,24 @@ def commit_and_push_status(
     message: str,
     remote: str = "origin",
     branch: str | None = None,
-) -> str | None:
+    allowed_unstaged_status_paths: list[str] | None = None,
+    return_details: bool = False,
+) -> str | dict[str, Any] | None:
     """Commit and push only sanitized status artifacts from the status checkout."""
-    validate_status_paths(paths)
-    actual = git_status_paths(status_checkout)
-    validate_status_paths(actual)
-    if set(actual) - set(paths):
+    approved_paths = sorted(dict.fromkeys(paths))
+    carryover_paths = sorted(dict.fromkeys(allowed_unstaged_status_paths or []))
+    validate_status_paths(approved_paths)
+    validate_status_paths(carryover_paths)
+    state_before = classify_status_checkout_state(status_checkout)
+    if state_before.unexpected_paths:
+        raise ExportError("status checkout contains dirty paths outside ops/status/")
+    actual = _dirty_status_paths(state_before)
+    allowed_dirty = set(approved_paths) | set(carryover_paths)
+    if set(actual) - allowed_dirty:
         raise ExportError("status checkout contains an unapproved ops/status path")
-    staged = _git(status_checkout, "add", "--force", "--", *paths)
+    preserved_carryover = sorted(set(carryover_paths) - set(approved_paths))
+    carryover_hashes_before = _status_file_hashes(status_checkout, preserved_carryover)
+    staged = _git(status_checkout, "add", "--force", "--", *approved_paths)
     if staged.returncode:
         raise ExportError(staged.stderr.strip() or "status artifact staging failed")
     staged_names = _git(status_checkout, "diff", "--cached", "--name-only")
@@ -1114,18 +1136,47 @@ def commit_and_push_status(
         raise ExportError(staged_names.stderr.strip() or "cannot inspect staged status artifacts")
     staged_paths = [line.strip().replace("\\", "/") for line in staged_names.stdout.splitlines() if line.strip()]
     validate_status_paths(staged_paths)
+    if set(staged_paths) - set(approved_paths):
+        raise ExportError("status artifact staging included an unapproved path")
     if not staged_paths:
+        if return_details:
+            return {
+                "commit": None,
+                "staged_paths": [],
+                "committed_paths": [],
+                "preserved_carryover_paths": preserved_carryover,
+                "carryover_hashes_before": carryover_hashes_before,
+                "carryover_hashes_after": _status_file_hashes(status_checkout, preserved_carryover),
+            }
         return None
     commit = _git(status_checkout, "commit", "-m", message)
     if commit.returncode:
         raise ExportError(commit.stderr.strip() or "status artifact commit failed")
+    carryover_hashes_after = _status_file_hashes(status_checkout, preserved_carryover)
+    if carryover_hashes_after != carryover_hashes_before:
+        raise ExportError("preserved status carryover changed during commit")
+    state_after_commit = classify_status_checkout_state(status_checkout)
+    dirty_after_commit = set(_dirty_status_paths(state_after_commit))
+    missing_carryover = sorted(path for path in preserved_carryover if path not in dirty_after_commit)
+    if missing_carryover:
+        raise ExportError(f"preserved status carryover was unexpectedly staged or cleaned: {', '.join(missing_carryover)}")
     target_branch = branch or _git(status_checkout, "branch", "--show-current").stdout.strip()
     if not target_branch:
         raise ExportError("status checkout is detached")
     pushed = _git(status_checkout, "push", remote, target_branch)
     if pushed.returncode:
         raise ExportError(pushed.stderr.strip() or "status artifact push failed")
-    return _git(status_checkout, "rev-parse", "HEAD").stdout.strip()
+    commit_sha = _git(status_checkout, "rev-parse", "HEAD").stdout.strip()
+    if return_details:
+        return {
+            "commit": commit_sha,
+            "staged_paths": staged_paths,
+            "committed_paths": staged_paths,
+            "preserved_carryover_paths": preserved_carryover,
+            "carryover_hashes_before": carryover_hashes_before,
+            "carryover_hashes_after": carryover_hashes_after,
+        }
+    return commit_sha
 
 
 def load_recovery_context(path: Path | None) -> RecoveryContext | None:

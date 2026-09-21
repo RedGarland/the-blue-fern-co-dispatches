@@ -1,5 +1,6 @@
 from pathlib import Path
 import subprocess
+from types import SimpleNamespace
 
 import pytest
 
@@ -8,6 +9,19 @@ from scripts.run_operational_status_export import DEFAULT_BRANCH, DEFAULT_SOURCE
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def _patch_clean_status_state(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        task,
+        "classify_status_checkout_state",
+        lambda _root: SimpleNamespace(
+            state="CLEAN",
+            tracked_status_paths=[],
+            untracked_status_paths=[],
+            unexpected_paths=[],
+        ),
+    )
 
 
 def test_export_wrapper_defaults_to_sanctioned_paths_and_status_branch() -> None:
@@ -108,6 +122,7 @@ def test_python_wrapper_passes_care_source_root_to_export_status(monkeypatch: py
 
     monkeypatch.setattr(task, "_git_head", lambda _root: "HEAD")
     monkeypatch.setattr(task, "prepare_status_checkout", lambda *_args, **_kwargs: None)
+    _patch_clean_status_state(monkeypatch)
     monkeypatch.setattr(task, "load_recovery_context", lambda _path: None)
     monkeypatch.setattr(
         task,
@@ -165,14 +180,32 @@ def test_python_wrapper_prepares_with_sanctioned_status_changes_and_retains_comm
         prepare_kwargs.update(kwargs)
 
     def fake_export_status(**_kwargs: object) -> dict[str, object]:
-        return {"paths": ["ops/status/food-line/latest.json"]}
+        return {"paths": ["ops/status/food-line/latest.json", "ops/status/system/latest.json"]}
 
     def fake_commit_and_push_status(*args: object, **kwargs: object) -> str:
         commit_kwargs["args"] = args
         commit_kwargs.update(kwargs)
-        return "commit-sha"
+        return {
+            "commit": "commit-sha",
+            "staged_paths": ["ops/status/food-line/latest.json", "ops/status/system/latest.json"],
+            "committed_paths": ["ops/status/food-line/latest.json", "ops/status/system/latest.json"],
+            "preserved_carryover_paths": ["ops/status/care-line/latest.json"],
+            "carryover_hashes_before": {"ops/status/care-line/latest.json": "before"},
+            "carryover_hashes_after": {"ops/status/care-line/latest.json": "before"},
+        }
 
     monkeypatch.setattr(task, "prepare_status_checkout", fake_prepare_status_checkout)
+    monkeypatch.setattr(
+        task,
+        "classify_status_checkout_state",
+        lambda _root: SimpleNamespace(
+            state="SANCTIONED_STATUS_ONLY",
+            tracked_status_paths=["ops/status/care-line/latest.json"],
+            untracked_status_paths=[],
+            unexpected_paths=[],
+        ),
+    )
+    monkeypatch.setattr(task, "_file_hashes", lambda _root, paths: {path: "before" for path in paths})
     monkeypatch.setattr(task, "export_status", fake_export_status)
     monkeypatch.setattr(task, "commit_and_push_status", fake_commit_and_push_status)
 
@@ -189,10 +222,16 @@ def test_python_wrapper_prepares_with_sanctioned_status_changes_and_retains_comm
 
     assert result == 0
     assert prepare_kwargs["allow_local_status_changes"] is True
-    assert commit_kwargs["paths"] == ["ops/status/food-line/latest.json"]
+    assert commit_kwargs["paths"] == ["ops/status/food-line/latest.json", "ops/status/system/latest.json"]
+    assert commit_kwargs["allowed_unstaged_status_paths"] == ["ops/status/care-line/latest.json"]
+    assert commit_kwargs["return_details"] is True
     assert commit_kwargs["branch"] == DEFAULT_BRANCH
     receipt = next((source / "logs" / "operational-status-exporter").glob("*.json"))
     text = receipt.read_text(encoding="utf-8")
+    assert '"preexisting_sanctioned_status_paths": [\n    "ops/status/care-line/latest.json"\n  ]' in text
+    assert '"current_export_paths": [\n    "ops/status/food-line/latest.json",\n    "ops/status/system/latest.json"\n  ]' in text
+    assert '"preserved_carryover_paths": [\n    "ops/status/care-line/latest.json"\n  ]' in text
+    assert '"staged_paths": [\n    "ops/status/food-line/latest.json",\n    "ops/status/system/latest.json"\n  ]' in text
     assert '"commit_created": true' in text
     assert '"push_succeeded": true' in text
 
@@ -208,6 +247,7 @@ def test_python_wrapper_passes_ice_source_root_to_export_status(monkeypatch: pyt
 
     monkeypatch.setattr(task, "_git_head", lambda _root: "HEAD")
     monkeypatch.setattr(task, "prepare_status_checkout", lambda *_args, **_kwargs: None)
+    _patch_clean_status_state(monkeypatch)
     monkeypatch.setattr(task, "load_recovery_context", lambda _path: None)
 
     def fake_export_status(**kwargs: object) -> dict[str, object]:
@@ -248,6 +288,7 @@ def test_python_wrapper_fails_closed_when_care_scheduler_metadata_is_unavailable
 
     monkeypatch.setattr(task, "_git_head", lambda _root: "HEAD")
     monkeypatch.setattr(task, "prepare_status_checkout", lambda *_args, **_kwargs: None)
+    _patch_clean_status_state(monkeypatch)
 
     def fail_scheduler(_date: str) -> list[dict[str, str]]:
         raise task.ExportError("scheduler unavailable")
@@ -285,6 +326,7 @@ def test_python_wrapper_omits_care_source_root_as_none(monkeypatch: pytest.Monke
 
     monkeypatch.setattr(task, "_git_head", lambda _root: "HEAD")
     monkeypatch.setattr(task, "prepare_status_checkout", lambda *_args, **_kwargs: None)
+    _patch_clean_status_state(monkeypatch)
     monkeypatch.setattr(task, "load_recovery_context", lambda _path: None)
 
     def fake_export_status(**kwargs: object) -> dict[str, object]:

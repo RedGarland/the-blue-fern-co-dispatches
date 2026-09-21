@@ -18,6 +18,7 @@ if str(ROOT / "src") not in sys.path:
 
 from bluefern_dispatches.operational_status_exporter import (  # noqa: E402
     ExportError,
+    classify_status_checkout_state,
     commit_and_push_status,
     export_status,
     load_recovery_context,
@@ -43,6 +44,16 @@ def utc_now() -> str:
 def _git_head(root: Path) -> str | None:
     result = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, text=True, check=False)
     return result.stdout.strip() if result.returncode == 0 else None
+
+
+def _file_hashes(root: Path, paths: list[str]) -> dict[str, str | None]:
+    import hashlib
+
+    result: dict[str, str | None] = {}
+    for path in sorted(dict.fromkeys(paths)):
+        target = root / path
+        result[path] = hashlib.sha256(target.read_bytes()).hexdigest() if target.is_file() else None
+    return result
 
 
 def _default_date(source_root: Path) -> str:
@@ -173,6 +184,14 @@ def main(argv: list[str] | None = None) -> int:
         "status_checkout_head_after": None,
         "classification": "exporter_failure",
         "paths": [],
+        "preexisting_sanctioned_status_paths": [],
+        "current_export_paths": [],
+        "preserved_carryover_paths": [],
+        "staged_paths": [],
+        "committed_paths": [],
+        "carryover_hashes_before": {},
+        "carryover_hashes_after": {},
+        "unexpected_dirty_paths": [],
     }
     try:
         date = args.date or _default_date(args.source_root)
@@ -182,6 +201,14 @@ def main(argv: list[str] | None = None) -> int:
             remote=args.remote,
             allow_local_status_changes=True,
         )
+        preexisting_state = classify_status_checkout_state(args.status_checkout)
+        record["unexpected_dirty_paths"] = preexisting_state.unexpected_paths
+        if preexisting_state.unexpected_paths:
+            raise ExportError("status checkout contains dirty paths outside ops/status/")
+        preexisting_sanctioned = sorted(
+            dict.fromkeys([*preexisting_state.tracked_status_paths, *preexisting_state.untracked_status_paths])
+        )
+        record["preexisting_sanctioned_status_paths"] = preexisting_sanctioned
         result = export_status(
             source_root=args.source_root,
             status_checkout=args.status_checkout,
@@ -194,17 +221,32 @@ def main(argv: list[str] | None = None) -> int:
             recovery=load_recovery_context(args.recovery_context),
         )
         record["paths"] = result["paths"]
+        current_export_paths = sorted(dict.fromkeys(result["paths"]))
+        record["current_export_paths"] = current_export_paths
+        preserved_carryover = sorted(set(preexisting_sanctioned) - set(current_export_paths))
+        record["preserved_carryover_paths"] = preserved_carryover
+        record["carryover_hashes_before"] = _file_hashes(args.status_checkout, preserved_carryover)
         record["status_changed"] = True
         if not args.no_push:
             commit = commit_and_push_status(
                 args.status_checkout,
-                paths=result["paths"],
+                paths=current_export_paths,
                 message=args.commit_message,
                 remote=args.remote,
                 branch=args.prepare_branch,
+                allowed_unstaged_status_paths=preserved_carryover,
+                return_details=True,
             )
-            record["commit_created"] = commit is not None
+            details = commit if isinstance(commit, dict) else {"commit": commit}
+            record["staged_paths"] = details.get("staged_paths", [])
+            record["committed_paths"] = details.get("committed_paths", [])
+            record["preserved_carryover_paths"] = details.get("preserved_carryover_paths", preserved_carryover)
+            record["carryover_hashes_before"] = details.get("carryover_hashes_before", record["carryover_hashes_before"])
+            record["carryover_hashes_after"] = details.get("carryover_hashes_after", _file_hashes(args.status_checkout, preserved_carryover))
+            record["commit_created"] = details.get("commit") is not None
             record["push_succeeded"] = True
+        else:
+            record["carryover_hashes_after"] = _file_hashes(args.status_checkout, preserved_carryover)
         record["classification"] = "exported"
         record["exit_code"] = 0
         return_code = 0

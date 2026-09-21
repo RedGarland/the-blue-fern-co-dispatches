@@ -102,6 +102,47 @@ def _is_safe_cleanup_path(path: str) -> bool:
     )
 
 
+def _is_pre_sync_cleanup_entry_safe(entry: dict[str, Any]) -> bool:
+    status = str(entry.get("status") or "")
+    path = str(entry.get("path") or "")
+    return status in {" M", "??"} and _is_safe_cleanup_path(path)
+
+
+def _build_pre_sync_cleanup_result(source_repo: Path) -> dict[str, Any]:
+    entries = _git_status_entries(source_repo)
+    result: dict[str, Any] = {
+        "attempted": False,
+        "entries": entries,
+        "plan": {"restore_paths": [], "clean_paths": [], "skipped_paths": []},
+        "result": {"ok": True, "commands": [], "messages": []},
+        "blocked_entries": [],
+    }
+    if not entries:
+        return result
+    blocked_entries = [entry for entry in entries if not _is_pre_sync_cleanup_entry_safe(entry)]
+    result["blocked_entries"] = blocked_entries
+    if blocked_entries:
+        result["result"] = {
+            "ok": False,
+            "commands": [],
+            "messages": ["source repo has dirty paths outside bounded pre-sync cleanup scope"],
+        }
+        return result
+
+    cleanup_plan = build_cleanup_plan(entries, repo=source_repo)
+    result["attempted"] = True
+    result["plan"] = cleanup_plan
+    if cleanup_plan.get("skipped_paths"):
+        result["result"] = {
+            "ok": False,
+            "commands": [],
+            "messages": ["pre-sync cleanup plan skipped one or more dirty paths"],
+        }
+        return result
+    result["result"] = apply_cleanup_plan(source_repo, cleanup_plan)
+    return result
+
+
 def build_cleanup_plan(
     entries: list[dict[str, Any]],
     protected_paths: list[str] | None = None,
@@ -191,18 +232,29 @@ def sync_runner_repos(
     source_branch: str = DEFAULT_SOURCE_BRANCH,
     pages_branch: str = DEFAULT_PAGES_BRANCH,
 ) -> dict[str, Any]:
-    report_before = _preflight_summary(source_repo, pages_repo)
+    report_initial = _preflight_summary(source_repo, pages_repo)
     result: dict[str, Any] = {
         "ok": False,
         "source_repo": str(source_repo),
         "pages_repo": str(pages_repo),
         "source_branch": source_branch,
         "pages_branch": pages_branch,
-        "preflight_before": report_before,
+        "preflight_initial": report_initial,
+        "pre_sync_cleanup": None,
+        "preflight_before": None,
         "preflight_after": None,
         "commands_run": [],
         "errors": [],
     }
+
+    pre_sync_cleanup = _build_pre_sync_cleanup_result(source_repo)
+    result["pre_sync_cleanup"] = pre_sync_cleanup
+    if not pre_sync_cleanup.get("result", {}).get("ok"):
+        result["errors"].append("runner repo state is outside bounded pre-sync cleanup scope")
+        return result
+
+    report_before = _preflight_summary(source_repo, pages_repo)
+    result["preflight_before"] = report_before
     if not report_before.get("ok"):
         result["errors"].append("runner repo state is dirty before sync")
         return result

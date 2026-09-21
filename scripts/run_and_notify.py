@@ -215,6 +215,13 @@ def _smtp_debug_file_only() -> object:
 
 
 def _smtp_error_message(exc: BaseException) -> str:
+    if isinstance(exc, smtplib.SMTPAuthenticationError):
+        code = getattr(exc, "smtp_code", None)
+        suffix = f" (SMTP code {code})" if code is not None else ""
+        return (
+            "SMTPAuthenticationError: SMTP authentication rejected"
+            f"{suffix}; verify SMTP_USER/SMTP_USERNAME and SMTP_PASSWORD/app-password."
+        )
     return f"{exc.__class__.__name__}: {exc}"
 
 

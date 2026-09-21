@@ -4,13 +4,52 @@ import subprocess
 
 import pytest
 
+import scripts.runner_repo_maintenance as maintenance
 from scripts.runner_repo_maintenance import build_cleanup_plan
 from scripts.runner_repo_maintenance import postflight_runner_repos
+from scripts.runner_repo_maintenance import sync_runner_repos
 
 
 def _git(repo, *args: str) -> None:
     result = subprocess.run(["git", *args], cwd=repo, check=False, capture_output=True, text=True)
     assert result.returncode == 0, result.stderr
+
+
+def _git_output(repo, *args: str) -> str:
+    result = subprocess.run(["git", *args], cwd=repo, check=False, capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+    return result.stdout
+
+
+def _init_repo(repo, branch: str) -> None:
+    repo.mkdir()
+    _git(repo, "init", "-b", branch)
+    _git(repo, "config", "user.email", "tests@example.com")
+    _git(repo, "config", "user.name", "Tests")
+
+
+def _write(path, text: str = "fixture\n") -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+def _commit_all(repo, message: str = "fixture") -> None:
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-m", message)
+
+
+def _fake_sync_commands(monkeypatch):
+    real_run_command = maintenance._run_command
+    sync_commands: list[list[str]] = []
+
+    def fake_run_command(args, *, cwd):
+        if args[:2] == ["git", "fetch"] or args[:2] == ["git", "reset"]:
+            sync_commands.append(list(args))
+            return subprocess.CompletedProcess(args, 0, "", "")
+        return real_run_command(args, cwd=cwd)
+
+    monkeypatch.setattr(maintenance, "_run_command", fake_run_command)
+    return sync_commands
 
 
 def test_cleanup_plan_limits_cleanup_to_approved_generated_and_temp_paths() -> None:
@@ -174,3 +213,158 @@ def test_cleanup_plan_cleans_only_date_scoped_food_line_discovery_candidates() -
         "data/dispatches/food-line/discovery/foo/discovery_candidates.json",
         "data/dispatches/gaza/discovery/2026-06-25/discovery_candidates.json",
     ]
+
+
+def test_sync_precleans_production_shaped_generated_residue_before_strict_preflight(monkeypatch, tmp_path) -> None:
+    source_repo = tmp_path / "source"
+    pages_repo = tmp_path / "pages"
+    _init_repo(source_repo, "add/pages-repo-default")
+    _init_repo(pages_repo, "gh-pages")
+
+    tracked_gaza = source_repo / "output" / "site" / "gaza" / "index.html"
+    tracked_asset = source_repo / "output" / "site" / "assets" / "site.css"
+    _write(tracked_gaza, "committed gaza\n")
+    _write(tracked_asset, "committed css\n")
+    _commit_all(source_repo)
+    _write(pages_repo / "index.html", "pages\n")
+    _commit_all(pages_repo)
+
+    _write(tracked_gaza, "generated gaza drift\n")
+    _write(tracked_asset, "generated css drift\n")
+    stale_site = source_repo / "output" / "site" / "gaza" / "editions" / "2026-09-21" / "index.html"
+    stale_dispatch = source_repo / "output" / "dispatches" / "gaza" / "editions" / "2026-09-21" / "index.html"
+    _write(stale_site, "stale site\n")
+    _write(stale_dispatch, "stale dispatch\n")
+
+    sync_commands = _fake_sync_commands(monkeypatch)
+
+    result = sync_runner_repos(source_repo, pages_repo)
+
+    assert result["ok"] is True
+    assert result["preflight_initial"]["ok"] is False
+    assert result["pre_sync_cleanup"]["attempted"] is True
+    assert result["pre_sync_cleanup"]["plan"]["restore_paths"] == [
+        "output/site/assets/site.css",
+        "output/site/gaza/index.html",
+    ]
+    assert result["pre_sync_cleanup"]["plan"]["clean_paths"] == [
+        "output/dispatches/gaza/editions/2026-09-21/index.html",
+        "output/site/gaza/editions/2026-09-21/index.html",
+    ]
+    assert result["preflight_before"]["ok"] is True
+    assert tracked_gaza.read_text(encoding="utf-8") == "committed gaza\n"
+    assert tracked_asset.read_text(encoding="utf-8") == "committed css\n"
+    assert not stale_site.exists()
+    assert not stale_dispatch.exists()
+    assert "output/site/gaza/editions/2026-09-21/index.html" not in _git_output(source_repo, "status", "--short", "--untracked-files=all")
+    assert sync_commands == [
+        ["git", "fetch", "origin", "add/pages-repo-default"],
+        ["git", "reset", "--hard", "origin/add/pages-repo-default"],
+        ["git", "fetch", "origin", "gh-pages"],
+        ["git", "reset", "--hard", "origin/gh-pages"],
+    ]
+    assert result["pre_sync_cleanup"]["result"]["commands"] == [
+        "git restore --source=HEAD --staged --worktree -- output/site/assets/site.css output/site/gaza/index.html",
+        "git clean -fd -- output/dispatches/gaza/editions/2026-09-21/index.html output/site/gaza/editions/2026-09-21/index.html",
+    ]
+
+
+@pytest.mark.parametrize(
+    ("dirty_paths", "expected_blocked"),
+    [
+        (
+            [
+                ("output/site/gaza/index.html", "modified"),
+                ("scripts/run_daily_gaza.py", "modified"),
+            ],
+            {"scripts/run_daily_gaza.py"},
+        ),
+        (
+            [
+                ("output/dispatches/gaza/editions/2026-09-21/index.html", "untracked"),
+                ("notes.txt", "untracked"),
+            ],
+            {"notes.txt"},
+        ),
+        (
+            [
+                ("output/site/gaza/index.html", "staged"),
+            ],
+            {"output/site/gaza/index.html"},
+        ),
+        (
+            [
+                ("output/site/gaza/index.html", "deleted"),
+            ],
+            {"output/site/gaza/index.html"},
+        ),
+    ],
+)
+def test_sync_blocks_mixed_or_ambiguous_dirty_state_without_cleanup_or_sync(
+    monkeypatch, tmp_path, dirty_paths, expected_blocked
+) -> None:
+    source_repo = tmp_path / "source"
+    pages_repo = tmp_path / "pages"
+    _init_repo(source_repo, "add/pages-repo-default")
+    _init_repo(pages_repo, "gh-pages")
+    _write(source_repo / "README.md", "source fixture\n")
+
+    for path, mode in dirty_paths:
+        if mode in {"modified", "staged", "deleted"}:
+            _write(source_repo / path, "committed\n")
+    _write(pages_repo / "index.html", "pages\n")
+    _commit_all(source_repo)
+    _commit_all(pages_repo)
+
+    for path, mode in dirty_paths:
+        file_path = source_repo / path
+        if mode == "modified":
+            _write(file_path, "modified\n")
+        elif mode == "untracked":
+            _write(file_path, "untracked\n")
+        elif mode == "staged":
+            _write(file_path, "staged\n")
+            _git(source_repo, "add", path)
+        elif mode == "deleted":
+            file_path.unlink()
+
+    sync_commands = _fake_sync_commands(monkeypatch)
+
+    result = sync_runner_repos(source_repo, pages_repo)
+
+    assert result["ok"] is False
+    assert result["pre_sync_cleanup"]["attempted"] is False
+    assert {entry["path"] for entry in result["pre_sync_cleanup"]["blocked_entries"]} == expected_blocked
+    assert sync_commands == []
+    assert result["commands_run"] == []
+    assert result["errors"] == ["runner repo state is outside bounded pre-sync cleanup scope"]
+
+
+def test_sync_blocks_when_bounded_cleanup_fails(monkeypatch, tmp_path) -> None:
+    source_repo = tmp_path / "source"
+    pages_repo = tmp_path / "pages"
+    _init_repo(source_repo, "add/pages-repo-default")
+    _init_repo(pages_repo, "gh-pages")
+    tracked_gaza = source_repo / "output" / "site" / "gaza" / "index.html"
+    _write(tracked_gaza, "committed\n")
+    _write(pages_repo / "index.html", "pages\n")
+    _commit_all(source_repo)
+    _commit_all(pages_repo)
+    _write(tracked_gaza, "generated drift\n")
+
+    sync_commands = _fake_sync_commands(monkeypatch)
+
+    def fake_apply_cleanup_plan(_repo, _plan):
+        return {"ok": False, "commands": ["git restore --source=HEAD --staged --worktree -- output/site/gaza/index.html"], "messages": ["restore failed"]}
+
+    monkeypatch.setattr(maintenance, "apply_cleanup_plan", fake_apply_cleanup_plan)
+
+    result = sync_runner_repos(source_repo, pages_repo)
+
+    assert result["ok"] is False
+    assert result["pre_sync_cleanup"]["attempted"] is True
+    assert result["pre_sync_cleanup"]["result"]["ok"] is False
+    assert result["preflight_before"] is None
+    assert sync_commands == []
+    assert result["commands_run"] == []
+    assert result["errors"] == ["runner repo state is outside bounded pre-sync cleanup scope"]

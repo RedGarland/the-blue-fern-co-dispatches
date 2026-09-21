@@ -106,7 +106,11 @@ def classify_path(path_text: str) -> str:
         return care_line_category
     if lower.startswith("output/review/") or "/review/" in lower or lower.startswith("output/dispatches/") and "/review/" in lower:
         return "review_output"
-    if lower.startswith("output/site/") or lower.startswith("bluefern-dispatches-pages/"):
+    if (
+        lower.startswith("output/site/")
+        or lower.startswith("output/dispatches/")
+        or lower.startswith("bluefern-dispatches-pages/")
+    ):
         return "generated_public_output"
     if lower.startswith("data/dispatches/") and ("/raw/" in lower or "/normalized/" in lower or "/curated/" in lower or "/editions/" in lower):
         return "generated_public_output"
@@ -148,6 +152,9 @@ def summarize_entries(entries: list[dict[str, Any]]) -> dict[str, Any]:
     if any(entry["category"] == "review_output" for entry in entries):
         ignored_recommendations.append("output/review/")
         ignored_recommendations.append("output/dispatches/*/review/")
+    if any(entry["category"] == "generated_public_output" for entry in entries):
+        ignored_recommendations.append("output/site/")
+        ignored_recommendations.append("output/dispatches/")
     if any(entry["category"] == "cache" for entry in entries):
         ignored_recommendations.append(".pytest-temp*/")
     return {

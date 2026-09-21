@@ -326,6 +326,70 @@ def test_allowed_local_generated_entries_do_not_fail_preflight(monkeypatch, tmp_
     assert report["pages_repo_status"] == "clean"
 
 
+def test_generated_public_output_drift_remains_risky_in_normal_preflight(monkeypatch, tmp_path):
+    source_repo = tmp_path / "repo"
+    source_repo.mkdir()
+    pages_repo = tmp_path / "bluefern-dispatches-pages"
+    pages_repo.mkdir()
+    monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: pages_repo)
+
+    def fake_run_git_status(repo: Path):
+        if repo.resolve() == source_repo.resolve():
+            return 0, [
+                "## add/pages-repo-default",
+                " M output/site/assets/site.css",
+                " M output/site/gaza/index.html",
+                "?? output/site/gaza/editions/2026-09-20/index.html",
+                "?? output/dispatches/gaza/editions/2026-09-20/index.html",
+            ]
+        return 0, [
+            "## gh-pages...origin/gh-pages",
+            " M output/site/gaza/index.html",
+        ]
+
+    monkeypatch.setattr(preflight_repo_state, "_run_git_status", fake_run_git_status)
+
+    report = preflight_repo_state.build_preflight_report(source_repo)
+
+    assert report["ok"] is False
+    assert {
+        entry["path"]
+        for entry in report["source_repo"]["summary"]["risky_entries"]
+    } == {
+        "output/site/assets/site.css",
+        "output/site/gaza/index.html",
+        "output/site/gaza/editions/2026-09-20/index.html",
+        "output/dispatches/gaza/editions/2026-09-20/index.html",
+    }
+    assert [entry["path"] for entry in report["pages_repo"]["summary"]["risky_entries"]] == [
+        "output/site/gaza/index.html",
+    ]
+    assert report["pages_repo_status"] == "dirty"
+
+
+def test_staged_or_deleted_generated_public_output_remains_risky(monkeypatch, tmp_path):
+    source_repo = tmp_path / "repo"
+    source_repo.mkdir()
+    monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: None)
+
+    def fake_run_git_status(_repo: Path):
+        return 0, [
+            "## add/pages-repo-default",
+            "M  output/site/gaza/index.html",
+            " D output/site/gaza/old.html",
+        ]
+
+    monkeypatch.setattr(preflight_repo_state, "_run_git_status", fake_run_git_status)
+
+    report = preflight_repo_state.build_preflight_report(source_repo)
+
+    assert report["ok"] is False
+    assert [entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]] == [
+        "output/site/gaza/index.html",
+        "output/site/gaza/old.html",
+    ]
+
+
 def test_risky_dirty_files_fail_preflight_and_report_pages_repo(monkeypatch, tmp_path):
     source_repo = tmp_path / "repo"
     source_repo.mkdir()

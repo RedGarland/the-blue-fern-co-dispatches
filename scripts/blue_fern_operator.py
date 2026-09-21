@@ -452,6 +452,8 @@ def _classify_status(status: DispatchStatus) -> Classification | None:
         return Classification.DEGRADED_RUN
     if status.state == "NEEDS_REVIEW" or status.next_action == "REVIEW_CANDIDATES":
         return Classification.NEEDS_REVIEW
+    if status.state == "UNKNOWN":
+        return Classification.UNKNOWN_OPERATIONAL_STATE
     if status.next_action == "VERIFY_PUBLIC_STATE":
         return Classification.PUBLIC_STATE_UNVERIFIED
     if status.next_action == "INVESTIGATE_STATUS_EXPORT":
@@ -473,6 +475,29 @@ def _recommended_action(classification: Classification | None, status: DispatchS
     if status.next_action and status.next_action != "NONE":
         return status.next_action
     return "INVESTIGATE_STATUS_EXPORT"
+
+
+def _observability_recovery_action(status: DispatchStatus, plan: RecoveryPlan) -> str:
+    if plan.action == "REBUILD_STATUS":
+        return "REBUILD_STATUS"
+    if status.next_action == "REBUILD_STATUS":
+        return "REBUILD_STATUS"
+    return "INVESTIGATE_STATUS_EXPORT"
+
+
+def _observability_plan(status: DispatchStatus, plan: RecoveryPlan) -> RecoveryPlan:
+    action = _observability_recovery_action(status, plan)
+    disposition = plan.disposition if action == "REBUILD_STATUS" else "OPERATOR_REVIEW_REQUIRED"
+    return replace(
+        plan,
+        disposition=disposition,
+        action=action,
+        safe_to_apply=plan.safe_to_apply if action == "REBUILD_STATUS" else False,
+        public_side_effects=False,
+        scheduler_changes=False,
+        collection_rerun=False,
+        reason="exported status surface is stale or missing",
+    )
 
 
 def _remediation_payload(
@@ -607,25 +632,53 @@ def _build_notification_event(
     reasons: set[str] = set()
     dispatches: set[str] = set()
     incident_ids: set[str] = set()
+    simultaneous_observability = {
+        incident.dispatch: incident
+        for incident in result.incidents
+        if incident.classification == Classification.STALE_OBSERVABILITY.value
+        and incident.state == IncidentState.OPEN.value
+        and previous_incidents.get(incident.incident_id) is None
+    }
+    simultaneous_underlying = {
+        incident.dispatch
+        for incident in result.incidents
+        if incident.classification != Classification.STALE_OBSERVABILITY.value
+        and incident.state == IncidentState.OPEN.value
+        and previous_incidents.get(incident.incident_id) is None
+        and CLASSIFICATION_SEVERITY.get(incident.classification, 0) > CLASSIFICATION_SEVERITY[Classification.STALE_OBSERVABILITY.value]
+    }
     for incident in result.incidents:
         incident_reasons = _material_change_reasons(incident, previous_incidents.get(incident.incident_id), policy)
         incident_reasons = {reason for reason in incident_reasons if reason in NOTIFICATION_REASONS}
+        if (
+            incident.classification == Classification.STALE_OBSERVABILITY.value
+            and incident.dispatch in simultaneous_underlying
+            and NotificationReason.NEW_INCIDENT.value in incident_reasons
+        ):
+            incident_reasons.discard(NotificationReason.NEW_INCIDENT.value)
+            incident_reasons.discard(NotificationReason.APPROVAL_REQUIRED.value)
         if not incident_reasons:
             continue
         reasons.update(incident_reasons)
         dispatches.add(incident.dispatch)
         incident_ids.add(incident.incident_id)
-        rows.append(
-            {
-                "dispatch": incident.dispatch,
-                "incident_id": incident.incident_id,
-                "classification": incident.classification,
-                "state": incident.state,
-                "status_state": incident.status_state,
-                "recovery_action": incident.recovery_action,
-                "reasons": sorted(incident_reasons),
+        row = {
+            "dispatch": incident.dispatch,
+            "incident_id": incident.incident_id,
+            "classification": incident.classification,
+            "state": incident.state,
+            "status_state": incident.status_state,
+            "recovery_action": incident.recovery_action,
+            "reasons": sorted(incident_reasons),
+        }
+        if incident.classification != Classification.STALE_OBSERVABILITY.value and incident.dispatch in simultaneous_observability:
+            observed = simultaneous_observability[incident.dispatch]
+            row["observability_context"] = {
+                "incident_id": observed.incident_id,
+                "classification": observed.classification,
+                "state": observed.state,
             }
-        )
+        rows.append(row)
     return NotificationEvent(
         notification_required=bool(rows),
         reasons=sorted(reasons),
@@ -809,14 +862,16 @@ def check_operator(
             status = build_status(dispatch, runner_date, root=dispatch_config.runner_root)
             plan = build_recovery_plan_from_status(status)
             classification = Classification.STALE_OBSERVABILITY
-            recommended = _recommended_action(classification, status, plan)
-            evidence = [*exported.evidence, *status.evidence, *plan.evidence]
-            remediation = _remediation_payload(action=plan.action or "NONE", reason="recommendation only")
+            observability_plan = _observability_plan(status, plan)
+            recommended = _recommended_action(classification, status, observability_plan)
+            evidence = [*exported.evidence, *observability_plan.evidence]
+            underlying_classification = _classify_status(status)
+            remediation = _remediation_payload(action=observability_plan.action or "NONE", reason="recommendation only")
             notification_state = "RECOMMENDATION_ONLY"
             auto_allowed, auto_reason = _can_auto_apply_rebuild(
                 classification=classification,
                 status=status,
-                plan=plan,
+                plan=observability_plan,
                 policy=policy,
                 repo_root=repo_root,
                 operator_root=operator_root,
@@ -847,7 +902,7 @@ def check_operator(
                     dispatch=dispatch,
                     classification=classification,
                     status=status,
-                    plan=plan,
+                    plan=observability_plan,
                     detected_at=checked_at,
                     evidence=evidence,
                     recommended_action="NO_ACTION" if stale_recovered else recommended,
@@ -892,14 +947,14 @@ def check_operator(
                 )
                 continue
             if auto_allowed and not allow_automatic_remediation:
-                remediation = _remediation_payload(action=plan.action, reason="automatic remediation disabled for this run")
-            elif plan.action == "REBUILD_STATUS":
-                remediation = _remediation_payload(action=plan.action, reason=auto_reason)
+                remediation = _remediation_payload(action=observability_plan.action, reason="automatic remediation disabled for this run")
+            elif observability_plan.action == "REBUILD_STATUS":
+                remediation = _remediation_payload(action=observability_plan.action, reason=auto_reason)
             incident = _build_incident(
                 dispatch=dispatch,
                 classification=classification,
                 status=status,
-                plan=plan,
+                plan=observability_plan,
                 detected_at=checked_at,
                 evidence=evidence,
                 recommended_action=recommended,
@@ -909,6 +964,22 @@ def check_operator(
             )
             current_keys.add(incident.incident_key)
             incidents.append(incident)
+            if underlying_classification is not None:
+                underlying_key = _incident_key(dispatch, underlying_classification, status.date, status)
+                underlying_recommended = _recommended_action(underlying_classification, status, plan)
+                underlying = _build_incident(
+                    dispatch=dispatch,
+                    classification=underlying_classification,
+                    status=status,
+                    plan=plan,
+                    detected_at=checked_at,
+                    evidence=[*status.evidence, *plan.evidence],
+                    recommended_action=underlying_recommended,
+                    existing=open_incidents.get(underlying_key),
+                    affected_date=status.date,
+                )
+                current_keys.add(underlying.incident_key)
+                incidents.append(underlying)
             dispatch_results.append(
                 DispatchResult(
                     dispatch=dispatch,
@@ -917,8 +988,8 @@ def check_operator(
                     recommended_action=recommended,
                     status_state=status.state,
                     observed_date=runner_date,
-                    recovery_disposition=plan.disposition,
-                    recovery_action=plan.action,
+                    recovery_disposition=observability_plan.disposition,
+                    recovery_action=observability_plan.action,
                     incident_id=incident.incident_id,
                     evidence=incident.evidence,
                     exported_status=asdict(exported),

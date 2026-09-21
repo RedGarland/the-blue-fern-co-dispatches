@@ -827,11 +827,16 @@ def export_status(
     care_source_root: Path | None = None,
     care_expected_instances: Iterable[dict[str, Any]] | None = None,
     ice_source_root: Path | None = None,
+    force_refresh_dispatches: Iterable[str] | None = None,
 ) -> dict[str, Any]:
     source_root = source_root.resolve()
     status_checkout = status_checkout.resolve()
     if source_root == status_checkout:
         raise ExportError("status checkout must be separate from the production source root")
+    forced_dispatches = set(force_refresh_dispatches or ())
+    unsupported_forced = sorted(forced_dispatches - {"food-line", "care-line", "ice"})
+    if unsupported_forced:
+        raise ExportError(f"unsupported force_refresh_dispatches: {', '.join(unsupported_forced)}")
     exported_at = exported_at or datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     with exporter_lock(status_checkout):
         food_path = status_checkout / "ops" / "status" / "food-line" / "latest.json"
@@ -842,9 +847,10 @@ def export_status(
             exported_at=exported_at,
             recovery=recovery,
         )
-        reused = _reuse_exported_at(food_path, food_payload)
-        if reused:
-            food_payload["last_exported_at"] = reused
+        if "food-line" not in forced_dispatches:
+            reused = _reuse_exported_at(food_path, food_payload)
+            if reused:
+                food_payload["last_exported_at"] = reused
         if care_source_root is not None and care_expected_instances is None:
             raise ExportError("Care scheduler expected_instances are required when care_source_root is configured")
         care_payload = build_care_line_status(
@@ -856,9 +862,10 @@ def export_status(
         ) if care_source_root is not None else None
         care_path = status_checkout / "ops" / "status" / "care-line" / "latest.json"
         if care_payload is not None:
-            care_reused = _reuse_exported_at(care_path, care_payload)
-            if care_reused:
-                care_payload["last_exported_at"] = care_reused
+            if "care-line" not in forced_dispatches:
+                care_reused = _reuse_exported_at(care_path, care_payload)
+                if care_reused:
+                    care_payload["last_exported_at"] = care_reused
         ice_payload = build_ice_status(
             source_root=ice_source_root.resolve(),
             date=date,
@@ -868,9 +875,10 @@ def export_status(
         ) if ice_source_root is not None else None
         ice_path = status_checkout / "ops" / "status" / "ice" / "latest.json"
         if ice_payload is not None:
-            ice_reused = _reuse_exported_at(ice_path, ice_payload)
-            if ice_reused:
-                ice_payload["last_exported_at"] = ice_reused
+            if "ice" not in forced_dispatches:
+                ice_reused = _reuse_exported_at(ice_path, ice_payload)
+                if ice_reused:
+                    ice_payload["last_exported_at"] = ice_reused
         system_payload = build_system_status(
             food_payload,
             source_root=source_root,

@@ -350,6 +350,97 @@ def test_export_reuses_system_timestamp_when_payload_is_unchanged(tmp_path: Path
     assert second["system"]["exported_at"] == first["system"]["exported_at"]
 
 
+def test_forced_food_refresh_advances_unchanged_food_timestamp(tmp_path: Path) -> None:
+    source = _write_day(tmp_path)
+    checkout = tmp_path / "status-checkout"
+
+    first = export_status(source_root=source, status_checkout=checkout, date=DATE, evaluated_at=EVALUATED, exported_at="2026-09-10T16:01:00Z")
+    second = export_status(
+        source_root=source,
+        status_checkout=checkout,
+        date=DATE,
+        evaluated_at=EVALUATED,
+        exported_at="2026-09-10T17:01:00Z",
+        force_refresh_dispatches={"food-line"},
+    )
+
+    assert second["food_line"]["last_exported_at"] == "2026-09-10T17:01:00Z"
+    assert second["food_line"]["last_exported_at"] != first["food_line"]["last_exported_at"]
+    assert json.loads((checkout / f"ops/status/food-line/history/{DATE}.json").read_text(encoding="utf-8"))["last_exported_at"] == "2026-09-10T17:01:00Z"
+
+
+def test_forced_care_refresh_advances_care_without_forcing_food(tmp_path: Path) -> None:
+    source = _write_day(tmp_path / "food")
+    care_source = _write_care_day(tmp_path)
+    checkout = tmp_path / "status-checkout"
+
+    first = export_status(
+        source_root=source,
+        care_source_root=care_source,
+        status_checkout=checkout,
+        date=DATE,
+        evaluated_at=EVALUATED,
+        exported_at="2026-09-10T16:01:00Z",
+        care_expected_instances=CARE_EXPECTED_INSTANCES,
+    )
+    second = export_status(
+        source_root=source,
+        care_source_root=care_source,
+        status_checkout=checkout,
+        date=DATE,
+        evaluated_at=EVALUATED,
+        exported_at="2026-09-10T17:01:00Z",
+        care_expected_instances=CARE_EXPECTED_INSTANCES,
+        force_refresh_dispatches={"care-line"},
+    )
+
+    assert second["care_line"]["last_exported_at"] == "2026-09-10T17:01:00Z"
+    assert second["care_line"]["last_exported_at"] != first["care_line"]["last_exported_at"]
+    assert second["food_line"]["last_exported_at"] == first["food_line"]["last_exported_at"]
+    assert json.loads((checkout / f"ops/status/care-line/history/{DATE}.json").read_text(encoding="utf-8"))["last_exported_at"] == "2026-09-10T17:01:00Z"
+
+
+def test_forced_ice_refresh_advances_ice_without_forcing_food(tmp_path: Path) -> None:
+    source = _write_day(tmp_path / "food")
+    ice_source = _write_ice_day(tmp_path)
+    checkout = tmp_path / "status-checkout"
+
+    first = export_status(
+        source_root=source,
+        ice_source_root=ice_source,
+        status_checkout=checkout,
+        date=DATE,
+        evaluated_at="2026-09-11T05:00:00Z",
+        exported_at="2026-09-11T05:01:00Z",
+    )
+    second = export_status(
+        source_root=source,
+        ice_source_root=ice_source,
+        status_checkout=checkout,
+        date=DATE,
+        evaluated_at="2026-09-11T05:00:00Z",
+        exported_at="2026-09-11T06:01:00Z",
+        force_refresh_dispatches={"ice"},
+    )
+
+    assert second["ice"]["last_exported_at"] == "2026-09-11T06:01:00Z"
+    assert second["ice"]["last_exported_at"] != first["ice"]["last_exported_at"]
+    assert second["food_line"]["last_exported_at"] == first["food_line"]["last_exported_at"]
+    assert json.loads((checkout / f"ops/status/ice/history/{DATE}.json").read_text(encoding="utf-8"))["last_exported_at"] == "2026-09-11T06:01:00Z"
+
+
+def test_force_refresh_rejects_unsupported_dispatch(tmp_path: Path) -> None:
+    with pytest.raises(ExportError, match="unsupported force_refresh_dispatches: gaza"):
+        export_status(
+            source_root=_write_day(tmp_path),
+            status_checkout=tmp_path / "status-checkout",
+            date=DATE,
+            evaluated_at=EVALUATED,
+            exported_at="2026-09-10T16:01:00Z",
+            force_refresh_dispatches={"gaza"},
+        )
+
+
 def test_export_advances_food_and_system_timestamps_when_food_changes(tmp_path: Path) -> None:
     checkout = tmp_path / "status-checkout"
     first_source = _write_day(tmp_path / "first")

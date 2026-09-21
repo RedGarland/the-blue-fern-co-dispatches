@@ -2389,6 +2389,18 @@ def _status_path_hashes(root: Path, paths: Iterable[str]) -> dict[str, str | Non
     return {path: _file_hash(root / path) for path in sorted(paths)}
 
 
+def _status_latest_path(status_root: Path, dispatch: str) -> Path:
+    return status_root / "ops" / "status" / dispatch / "latest.json"
+
+
+def _status_last_exported_at(status_root: Path, dispatch: str) -> str | None:
+    payload = _read_json(_status_latest_path(status_root, dispatch))
+    if not payload:
+        return None
+    value = payload.get("last_exported_at", payload.get("exported_at"))
+    return str(value) if value else None
+
+
 def _apply_refresh_status_export(
     plan: RemediationActionPlan,
     *,
@@ -2515,6 +2527,7 @@ def _apply_refresh_status_export(
 
     before_tree = _snapshot_status_destination(destination_root)
     before_hashes = _status_path_hashes(destination_root, allowed_paths)
+    target_exported_at_before = _status_last_exported_at(destination_root, plan.dispatch)
     remote_overlap_paths: list[str] = []
     try:
         prepare_status_checkout(destination_root, branch=config.status_branch, allow_local_status_changes=True)
@@ -2525,6 +2538,7 @@ def _apply_refresh_status_export(
             "date": date,
             "evaluated_at": started,
             "exported_at": started,
+            "force_refresh_dispatches": {plan.dispatch},
         }
         if plan.dispatch == "care-line":
             export_kwargs["care_source_root"] = runner_root.resolve()
@@ -2558,6 +2572,10 @@ def _apply_refresh_status_export(
                 "status_checkout_head_after": status_head_after,
                 "status_checkout_state_before": checkout_state_before,
                 "status_checkout_state_after": checkout_state_after,
+                "force_refresh_dispatches": [plan.dispatch],
+                "target_exported_at_before": target_exported_at_before,
+                "target_exported_at_after": _status_last_exported_at(destination_root, plan.dispatch),
+                "target_timestamp_advanced": False,
                 "sanctioned_dirty_paths_before": sorted(
                     (checkout_state_before or {}).get("tracked_status_paths", [])
                     + (checkout_state_before or {}).get("untracked_status_paths", [])
@@ -2583,7 +2601,12 @@ def _apply_refresh_status_export(
     changed_paths = sorted(path for path in set(before_tree) | set(after_tree) if before_tree.get(path) != after_tree.get(path))
     unexpected = sorted(path for path in changed_paths if path not in allowed_paths)
     status_after = build_status(plan.dispatch, date, root=runner_root)
-    stale_after = not _latest_exported_status(destination_root, plan.dispatch, _utc_now(), config.status_freshness_threshold_minutes).is_fresh
+    stale_after = not _latest_exported_status(destination_root, plan.dispatch, started_time, config.status_freshness_threshold_minutes).is_fresh
+    target_exported_at_after = _status_last_exported_at(destination_root, plan.dispatch)
+    target_timestamp_advanced = (
+        target_exported_at_after is not None
+        and target_exported_at_after != target_exported_at_before
+    )
     validation = {
         "operator_root": str(operator_root.resolve()),
         "operator_code_root": str(operator_code_root.resolve()),
@@ -2598,6 +2621,10 @@ def _apply_refresh_status_export(
         "underlying_status_after": status_after.to_json_payload(),
         "underlying_incident_preserved": status_after.state == current_status.state and status_after.next_action == current_status.next_action,
         "stale_observability_after": stale_after,
+        "force_refresh_dispatches": [plan.dispatch],
+        "target_exported_at_before": target_exported_at_before,
+        "target_exported_at_after": target_exported_at_after,
+        "target_timestamp_advanced": target_timestamp_advanced,
         "refresh_support_reason": support_reason,
         "status_checkout_head_before": status_head_before,
         "status_checkout_head_after": status_head_after,
@@ -2635,6 +2662,24 @@ def _apply_refresh_status_export(
             changed_paths=changed_paths,
             validation=validation,
             warnings=unexpected,
+        )
+        return _write_remediation_receipt(operator_root, receipt)
+    if plan.classification == "STALE_OBSERVABILITY" and (stale_after or not target_timestamp_advanced):
+        reason = "status export completed but target stale observability was not repaired"
+        if not target_timestamp_advanced:
+            reason = "status export completed but target last_exported_at did not advance"
+        receipt = RemediationReceipt(
+            plan.dispatch,
+            plan.incident_id,
+            plan.proposed_action,
+            False,
+            "FAILED",
+            reason,
+            started,
+            _format_time(_utc_now()),
+            expected_mutation_scope=allowed_paths,
+            changed_paths=changed_paths,
+            validation=validation,
         )
         return _write_remediation_receipt(operator_root, receipt)
     outcome = "REFRESHED" if changed_paths else "ALREADY_CURRENT"

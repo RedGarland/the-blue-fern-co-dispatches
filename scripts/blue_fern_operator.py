@@ -40,6 +40,7 @@ ENGINEERING_SCHEMA_VERSION = "blue_fern_operator_engineering_v1"
 CODEX_ATTEMPT_SCHEMA_VERSION = "blue_fern_operator_codex_attempt_v1"
 DIAGNOSIS_EVIDENCE_EXCERPT_BYTES = 4096
 DIAGNOSIS_EVIDENCE_FILE_LIMIT = 12
+ENGINEERING_CLOSE_SCHEMA_VERSION = "blue_fern_operator_engineering_close_v1"
 DEFAULT_CONFIG_PATH = ROOT / "ops" / "operator" / "config.json"
 DEFAULT_OPERATOR_ROOT = ROOT / "ops" / "operator"
 DISPATCH_ORDER = ("food-line", "care-line", "gaza", "ice")
@@ -76,6 +77,21 @@ ENGINEERING_BLOCKED_ACTIONS = {
     "VERIFY_PUBLIC_STATE",
     "PUBLISH_APPROVED_RELEASE",
     "PUBLISH_NO_UPDATE",
+}
+ENGINEERING_CLOSE_CONFIRMATION = "CLOSE_ENGINEERING_WORK"
+ENGINEERING_CLOSE_DISPOSITIONS = {
+    "NON_CODE_INCIDENT",
+    "INCIDENT_RECOVERED",
+    "SUPERSEDED",
+}
+ENGINEERING_CLOSEABLE_STATES = {
+    "BLOCKED",
+    "DETECTED",
+    "WORKTREE_CREATED",
+    "DIAGNOSING",
+    "PATCHED",
+    "VALIDATING",
+    "FAILED",
 }
 ENGINEERING_STATES = {
     "DETECTED",
@@ -237,6 +253,7 @@ class EngineeringWorkItem:
     retry_authorization: dict[str, Any] | None = None
     unexpected_paths: list[str] = field(default_factory=list)
     validation_results: list[dict[str, Any]] = field(default_factory=list)
+    closure: dict[str, Any] | None = None
     blocked_reason: str | None = None
     schema_version: str = ENGINEERING_SCHEMA_VERSION
 
@@ -1087,6 +1104,14 @@ def _engineering_root(operator_root: Path) -> Path:
     return operator_root / "engineering"
 
 
+def _engineering_active_root(operator_root: Path) -> Path:
+    return _engineering_root(operator_root) / "active"
+
+
+def _engineering_history_root(operator_root: Path) -> Path:
+    return _engineering_root(operator_root) / "history"
+
+
 def _work_id(incident_id: str, repair_generation: int = 1) -> str:
     digest = hashlib.sha256(f"{incident_id}|{repair_generation}".encode("utf-8")).hexdigest()[:16]
     return f"bfoe-{digest}"
@@ -1355,7 +1380,7 @@ def _has_existing_engineering_work(operator_root: Path, incident_id: str) -> dic
     root = _engineering_root(operator_root)
     for path in [*sorted((root / "active").glob("*/work-item.json")), *sorted((root / "history").glob("*/work-item.json"))]:
         payload = _read_json(path)
-        if payload and payload.get("incident_id") == incident_id and payload.get("state") not in {"CLOSED", "FAILED"}:
+        if payload and payload.get("incident_id") == incident_id and payload.get("state") != "FAILED":
             return payload
     return None
 
@@ -1407,13 +1432,17 @@ def _build_engineering_work_item(
 
 
 def _write_engineering_work_item(operator_root: Path, item: EngineeringWorkItem, diagnosis: dict[str, Any]) -> None:
-    active_root = _engineering_root(operator_root) / "active" / item.work_id
+    active_root = _engineering_work_root(operator_root, item.work_id)
     _write_json(active_root / "work-item.json", item.to_payload())
     _write_json(active_root / "diagnosis.json", diagnosis)
 
 
 def _engineering_work_root(operator_root: Path, work_id: str) -> Path:
-    return _engineering_root(operator_root) / "active" / work_id
+    return _engineering_active_root(operator_root) / work_id
+
+
+def _engineering_history_work_root(operator_root: Path, work_id: str) -> Path:
+    return _engineering_history_root(operator_root) / work_id
 
 
 def _engineering_work_item_path(operator_root: Path, work_id: str) -> Path:
@@ -1433,6 +1462,15 @@ def _load_engineering_work_item(operator_root: Path, work_id: str) -> Engineerin
     return EngineeringWorkItem(**{key: payload[key] for key in EngineeringWorkItem.__dataclass_fields__ if key in payload})
 
 
+def _load_engineering_work_item_anywhere(operator_root: Path, work_id: str) -> EngineeringWorkItem:
+    for root in (_engineering_active_root(operator_root), _engineering_history_root(operator_root)):
+        path = root / work_id / "work-item.json"
+        payload = _read_json(path)
+        if payload:
+            return EngineeringWorkItem(**{key: payload[key] for key in EngineeringWorkItem.__dataclass_fields__ if key in payload})
+    raise FileNotFoundError(_engineering_work_item_path(operator_root, work_id))
+
+
 def prepare_engineering_work(
     result: OperatorResult,
     *,
@@ -1450,6 +1488,8 @@ def prepare_engineering_work(
             continue
         existing = _has_existing_engineering_work(operator_root, incident.incident_id)
         if existing:
+            if existing.get("state") == EngineeringState.CLOSED.value:
+                continue
             items.append(EngineeringWorkItem(**{key: existing[key] for key in EngineeringWorkItem.__dataclass_fields__ if key in existing}))
             continue
         item = _build_engineering_work_item(
@@ -2319,6 +2359,158 @@ def _refused_retry_payload(work_id: str, reason: str, item: EngineeringWorkItem 
     }
 
 
+def _refused_close_payload(work_id: str, reason: str, item: EngineeringWorkItem | None = None) -> dict[str, Any]:
+    return {
+        "schema_version": ENGINEERING_CLOSE_SCHEMA_VERSION,
+        "event": "ENGINEERING_WORK_CLOSE_REFUSED",
+        "work_id": work_id,
+        "accepted": False,
+        "reason": reason,
+        "work_item": item.to_payload() if item else None,
+    }
+
+
+def _bounded_close_text(value: str, *, limit: int, label: str) -> tuple[str | None, str | None]:
+    text = value.strip()
+    if not text:
+        return None, f"{label} is required"
+    if len(text) > limit:
+        return None, f"{label} exceeds {limit} characters"
+    if _redact_diagnostic_text(text) != text:
+        return None, f"{label} contains secret-like text"
+    return text, None
+
+
+def _tree_file_hashes(root: Path) -> dict[str, str]:
+    hashes: dict[str, str] = {}
+    if not root.is_dir():
+        return hashes
+    for path in sorted(candidate for candidate in root.rglob("*") if candidate.is_file()):
+        hashes[path.relative_to(root).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest().upper()
+    return hashes
+
+
+def _write_engineering_close_audit(operator_root: Path, payload: dict[str, Any]) -> Path:
+    date = str(payload.get("closed_at") or _format_time(_utc_now()))[:10]
+    path = operator_root / "engineering" / "audit" / date / f"{payload['work_id']}-closed.json"
+    _write_json(path, payload)
+    return path
+
+
+def close_engineering_work_item(
+    work_id: str,
+    *,
+    disposition: str,
+    confirm: str,
+    reason: str,
+    facts: list[str] | None = None,
+    operator_root: Path = DEFAULT_OPERATOR_ROOT,
+    runner: Any = _run_command,
+) -> dict[str, Any]:
+    if confirm != ENGINEERING_CLOSE_CONFIRMATION:
+        return _refused_close_payload(work_id, "confirmation token required")
+    if disposition not in ENGINEERING_CLOSE_DISPOSITIONS:
+        return _refused_close_payload(work_id, "unsupported disposition")
+    bounded_reason, reason_error = _bounded_close_text(reason, limit=1000, label="reason")
+    if reason_error:
+        return _refused_close_payload(work_id, reason_error)
+    facts = facts or []
+    if len(facts) > 10:
+        return _refused_close_payload(work_id, "too many supporting facts")
+    bounded_facts: list[str] = []
+    for fact in facts:
+        bounded_fact, fact_error = _bounded_close_text(fact, limit=500, label="fact")
+        if fact_error:
+            return _refused_close_payload(work_id, fact_error)
+        bounded_facts.append(bounded_fact or "")
+
+    try:
+        item = _load_engineering_work_item(operator_root, work_id)
+    except FileNotFoundError:
+        return _refused_close_payload(work_id, "work item not found")
+    if item.state == EngineeringState.PR_OPEN.value:
+        return _refused_close_payload(work_id, "work item has an open repair PR", item)
+    if item.state not in ENGINEERING_CLOSEABLE_STATES:
+        return _refused_close_payload(work_id, f"work item state is not closeable: {item.state}", item)
+    if item.merge_allowed:
+        return _refused_close_payload(work_id, "merge_allowed must be false", item)
+    if operator_root.joinpath(".lock").exists():
+        return _refused_close_payload(work_id, "Operator lock is active", item)
+
+    worktree = Path(item.worktree)
+    if not worktree.exists() or not (worktree / ".git").exists():
+        return _refused_close_payload(work_id, "worktree is missing", item)
+    clean, clean_reason = _worktree_status_clean(item, runner=runner)
+    if not clean:
+        return _refused_close_payload(work_id, clean_reason, item)
+    if _remote_engineering_branch_exists(item, runner=runner):
+        return _refused_close_payload(work_id, "remote repair branch already exists", item)
+    if _open_engineering_pr_exists(item, runner=runner):
+        return _refused_close_payload(work_id, "repair PR already exists", item)
+
+    active_root = _engineering_work_root(operator_root, work_id)
+    history_root = _engineering_history_work_root(operator_root, work_id)
+    if not active_root.is_dir():
+        return _refused_close_payload(work_id, "active work item metadata is missing", item)
+    if history_root.exists():
+        return _refused_close_payload(work_id, "history work item already exists", item)
+
+    prior_state = item.state
+    closed_at = _format_time(_utc_now())
+    artifact_names = sorted(path.name for path in active_root.iterdir() if path.is_file())
+    closure = {
+        "schema_version": ENGINEERING_CLOSE_SCHEMA_VERSION,
+        "disposition": disposition,
+        "closed_at": closed_at,
+        "prior_state": prior_state,
+        "reason": bounded_reason,
+        "supporting_facts": bounded_facts,
+        "related_incident_id": item.incident_id,
+        "artifacts_preserved": artifact_names,
+        "merge_allowed": False,
+    }
+    closed_item = replace(item, state=EngineeringState.CLOSED.value, closure=closure, merge_allowed=False)
+    _save_engineering_work_item(operator_root, closed_item)
+    audit_payload = {
+        "schema_version": ENGINEERING_CLOSE_SCHEMA_VERSION,
+        "event": "ENGINEERING_WORK_CLOSED",
+        "work_id": work_id,
+        "incident_id": item.incident_id,
+        "disposition": disposition,
+        "prior_state": prior_state,
+        "reason": bounded_reason,
+        "supporting_facts": bounded_facts,
+        "closed_at": closed_at,
+        "merge_allowed": False,
+    }
+    _write_json(active_root / "closure.json", audit_payload)
+
+    before_hashes = _tree_file_hashes(active_root)
+    shutil.copytree(active_root, history_root)
+    after_hashes = _tree_file_hashes(history_root)
+    if before_hashes != after_hashes:
+        return _refused_close_payload(work_id, "history archive verification failed", closed_item)
+    audit_path = _write_engineering_close_audit(operator_root, audit_payload)
+    shutil.rmtree(active_root)
+
+    history_item = _load_engineering_work_item_anywhere(operator_root, work_id)
+    return {
+        "schema_version": ENGINEERING_CLOSE_SCHEMA_VERSION,
+        "event": "ENGINEERING_WORK_CLOSED",
+        "accepted": True,
+        "work_id": work_id,
+        "incident_id": item.incident_id,
+        "disposition": disposition,
+        "prior_state": prior_state,
+        "reason": bounded_reason,
+        "closed_at": closed_at,
+        "audit_path": str(audit_path),
+        "active_path_removed": not active_root.exists(),
+        "history_path": str(history_root),
+        "work_item": history_item.to_payload(),
+    }
+
+
 def _codex_retry_related(item: EngineeringWorkItem) -> bool:
     reason = (item.blocked_reason or "").lower()
     classification = item.failure_classification
@@ -2657,6 +2849,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     retry.add_argument("--json", action="store_true", help="Emit deterministic JSON.")
     retry.add_argument("--operator-root", type=Path, default=DEFAULT_OPERATOR_ROOT, help=argparse.SUPPRESS)
     retry.add_argument("--repo-root", type=Path, default=ROOT, help=argparse.SUPPRESS)
+    close = sub.add_parser("engineer-close", help="Close an engineering work item without repair execution.")
+    close.add_argument("--work-id", required=True, help=argparse.SUPPRESS)
+    close.add_argument("--disposition", required=True, choices=sorted(ENGINEERING_CLOSE_DISPOSITIONS), help=argparse.SUPPRESS)
+    close.add_argument("--confirm", required=True, help=argparse.SUPPRESS)
+    close.add_argument("--reason", required=True, help=argparse.SUPPRESS)
+    close.add_argument("--fact", action="append", default=[], help=argparse.SUPPRESS)
+    close.add_argument("--json", action="store_true", help="Emit deterministic JSON.")
+    close.add_argument("--operator-root", type=Path, default=DEFAULT_OPERATOR_ROOT, help=argparse.SUPPRESS)
     return parser.parse_args(argv)
 
 
@@ -2677,6 +2877,23 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(payload, indent=2, sort_keys=True))
         else:
             print(f"{payload['work_id']} accepted={payload['accepted']} {payload['reason']}")
+        return 0 if payload["accepted"] else 2
+    if args.command == "engineer-close":
+        payload = close_engineering_work_item(
+            args.work_id,
+            disposition=args.disposition,
+            confirm=args.confirm,
+            reason=args.reason,
+            facts=args.fact,
+            operator_root=args.operator_root,
+        )
+        if args.json:
+            print(json.dumps(payload, indent=2, sort_keys=True))
+        else:
+            if payload["accepted"]:
+                print(f"{payload['work_id']} closed {payload['disposition']}")
+            else:
+                print(f"{payload['work_id']} accepted=false {payload['reason']}")
         return 0 if payload["accepted"] else 2
     now = _parse_time(args.now) if args.now else None
     config = load_config(args.config)

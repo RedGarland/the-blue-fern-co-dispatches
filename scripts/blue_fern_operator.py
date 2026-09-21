@@ -38,6 +38,8 @@ NOTIFICATION_SCHEMA_VERSION = "blue_fern_operator_notification_v1"
 RUN_RECEIPT_SCHEMA_VERSION = "blue_fern_operator_run_receipt_v1"
 ENGINEERING_SCHEMA_VERSION = "blue_fern_operator_engineering_v1"
 CODEX_ATTEMPT_SCHEMA_VERSION = "blue_fern_operator_codex_attempt_v1"
+REMEDIATION_PLAN_SCHEMA_VERSION = "blue_fern_operator_remediation_plan_v1"
+REMEDIATION_RECEIPT_SCHEMA_VERSION = "blue_fern_operator_remediation_receipt_v1"
 DIAGNOSIS_EVIDENCE_EXCERPT_BYTES = 4096
 DIAGNOSIS_EVIDENCE_FILE_LIMIT = 12
 ENGINEERING_CLOSE_SCHEMA_VERSION = "blue_fern_operator_engineering_close_v1"
@@ -92,6 +94,21 @@ ENGINEERING_CLOSEABLE_STATES = {
     "PATCHED",
     "VALIDATING",
     "FAILED",
+}
+REMEDIATION_ACTIONS = {
+    "RUNNER_ROLL_FORWARD",
+    "REBUILD_STATUS",
+    "VERIFY_PUBLIC_STATE",
+    "INVESTIGATE_SOURCE_FAILURES",
+    "WAIT_FOR_NEXT_SCHEDULED_RUN",
+    "ENGINEER_PREPARE_FIX",
+    "CLOSE_NON_CODE_INCIDENT",
+    "NO_ACTION",
+}
+EXECUTABLE_REMEDIATION_ACTIONS = {
+    "RUNNER_ROLL_FORWARD",
+    "REBUILD_STATUS",
+    "VERIFY_PUBLIC_STATE",
 }
 ENGINEERING_STATES = {
     "DETECTED",
@@ -326,6 +343,51 @@ class OperatorResult:
             "production_state_mutated": self.production_state_mutated,
             "schema_version": self.schema_version,
         }
+
+
+@dataclass(frozen=True)
+class RemediationActionPlan:
+    dispatch: str
+    incident_id: str
+    classification: str
+    affected_date: str | None
+    current_condition: str
+    proposed_action: str
+    reason: str
+    evidence: list[str]
+    safety_checks: dict[str, Any]
+    approval_required: bool
+    executable: bool
+    expected_mutation_scope: list[str]
+    schema_version: str = REMEDIATION_PLAN_SCHEMA_VERSION
+
+    def to_payload(self) -> dict[str, Any]:
+        payload = asdict(self)
+        return {key: payload[key] for key in sorted(payload)}
+
+
+@dataclass(frozen=True)
+class RemediationReceipt:
+    dispatch: str
+    incident_id: str
+    action: str
+    accepted: bool
+    outcome: str
+    reason: str
+    started_at: str
+    completed_at: str
+    before_head: str | None = None
+    after_head: str | None = None
+    expected_mutation_scope: list[str] = field(default_factory=list)
+    changed_paths: list[str] = field(default_factory=list)
+    validation: dict[str, Any] = field(default_factory=dict)
+    warnings: list[str] = field(default_factory=list)
+    receipt_path: str | None = None
+    schema_version: str = REMEDIATION_RECEIPT_SCHEMA_VERSION
+
+    def to_payload(self) -> dict[str, Any]:
+        payload = asdict(self)
+        return {key: payload[key] for key in sorted(payload)}
 
 
 def _utc_now() -> datetime:
@@ -1556,6 +1618,475 @@ def _run_command(args: list[str], *, cwd: Path, env: dict[str, str] | None = Non
         run_env.update(env)
     completed = subprocess.run(args, cwd=cwd, env=run_env, text=True, capture_output=True, check=False)
     return EngineeringCommandResult(completed.returncode, completed.stdout, completed.stderr)
+
+
+def _git_stdout(runner: Any, args: list[str], *, cwd: Path) -> str | None:
+    result = runner(["git", *args], cwd=cwd)
+    if not result.ok:
+        return None
+    return result.stdout.strip()
+
+
+def _git_ok(runner: Any, args: list[str], *, cwd: Path) -> bool:
+    return runner(["git", *args], cwd=cwd).ok
+
+
+def _normalize_git_path(path: str) -> str:
+    return path.strip().replace("\\", "/").rstrip("/")
+
+
+def _runner_status_paths(status_text: str) -> tuple[list[str], list[str]]:
+    tracked: list[str] = []
+    untracked: list[str] = []
+    for raw_line in status_text.splitlines():
+        if not raw_line.strip():
+            continue
+        code = raw_line[:2]
+        path = _normalize_git_path(raw_line[3:] if len(raw_line) > 3 else raw_line)
+        if code == "??":
+            untracked.append(path)
+        else:
+            tracked.append(path)
+    return sorted(tracked), sorted(untracked)
+
+
+def _sanctioned_untracked_patterns(dispatch: str) -> list[str]:
+    return [
+        ".venv",
+        ".pytest_cache",
+        "__pycache__",
+        f"data/dispatches/{dispatch}/collection-runs",
+        f"data/dispatches/{dispatch}/queue-runs",
+        f"data/dispatches/{dispatch}/review/candidate-registry.json",
+        f"data/dispatches/{dispatch}/review/current-duplicates.json",
+        f"data/dispatches/{dispatch}/review/current-exclusions.json",
+        f"data/dispatches/{dispatch}/review/current-failed-extractions.json",
+        f"data/dispatches/{dispatch}/review/current-manual-review.json",
+        f"data/dispatches/{dispatch}/review/current-review-backlog.json",
+        f"data/dispatches/{dispatch}/review/current-review-queue.json",
+        f"data/dispatches/{dispatch}/review/effective-date-follow-up-state.json",
+        f"logs/{dispatch}",
+    ]
+
+
+def _path_matches_prefix(path: str, prefix: str) -> bool:
+    normalized = _normalize_git_path(path)
+    normalized_prefix = _normalize_git_path(prefix)
+    return normalized == normalized_prefix or normalized.startswith(normalized_prefix + "/")
+
+
+def _unsanctioned_untracked(dispatch: str, untracked: Iterable[str]) -> list[str]:
+    patterns = _sanctioned_untracked_patterns(dispatch)
+    return sorted(
+        path
+        for path in untracked
+        if not any(_path_matches_prefix(path, pattern) for pattern in patterns)
+    )
+
+
+def _untracked_incoming_overlap(untracked: Iterable[str], incoming: Iterable[str]) -> list[str]:
+    incoming_paths = [_normalize_git_path(path) for path in incoming if path]
+    overlaps: set[str] = set()
+    for raw_untracked in untracked:
+        untracked_path = _normalize_git_path(raw_untracked)
+        for incoming_path in incoming_paths:
+            if incoming_path == untracked_path or incoming_path.startswith(untracked_path + "/"):
+                overlaps.add(incoming_path)
+    return sorted(overlaps)
+
+
+def _runner_roll_forward_safety(
+    dispatch: str,
+    runner_root: Path,
+    *,
+    target_ref: str = "origin/add/pages-repo-default",
+    runner: Any = _run_command,
+) -> dict[str, Any]:
+    status = runner(["git", "status", "--porcelain=v1", "--untracked-files=all"], cwd=runner_root)
+    tracked_dirty, untracked = _runner_status_paths(status.stdout if status.ok else "")
+    unsanctioned = _unsanctioned_untracked(dispatch, untracked)
+    branch = _git_stdout(runner, ["branch", "--show-current"], cwd=runner_root)
+    before_head = _git_stdout(runner, ["rev-parse", "HEAD"], cwd=runner_root)
+    target_head = _git_stdout(runner, ["rev-parse", target_ref], cwd=runner_root)
+    ancestor = bool(target_head and _git_ok(runner, ["merge-base", "--is-ancestor", "HEAD", target_ref], cwd=runner_root))
+    up_to_date = bool(before_head and target_head and before_head == target_head)
+    incoming_text = _git_stdout(runner, ["diff", "--name-only", f"HEAD..{target_ref}"], cwd=runner_root) or ""
+    incoming_paths = sorted(_normalize_git_path(line) for line in incoming_text.splitlines() if line.strip())
+    overlaps = _untracked_incoming_overlap(untracked, incoming_paths)
+    safe = (
+        status.ok
+        and branch == "add/pages-repo-default"
+        and bool(before_head)
+        and bool(target_head)
+        and not up_to_date
+        and not tracked_dirty
+        and not unsanctioned
+        and ancestor
+        and not overlaps
+    )
+    return {
+        "safe": safe,
+        "runner_root": str(runner_root),
+        "branch": branch,
+        "before_head": before_head,
+        "target_ref": target_ref,
+        "target_head": target_head,
+        "runner_is_behind": bool(before_head and target_head and before_head != target_head),
+        "current_head_is_ancestor": ancestor,
+        "tracked_dirty_paths": tracked_dirty,
+        "untracked_paths": sorted(untracked),
+        "unsanctioned_untracked_paths": unsanctioned,
+        "incoming_tracked_paths": incoming_paths,
+        "untracked_incoming_overlaps": overlaps,
+        "sanctioned_runtime_untracked_preserved": not unsanctioned,
+    }
+
+
+def _incident_text(incident: Incident) -> str:
+    values = [
+        incident.classification,
+        incident.status_state,
+        incident.recovery_action,
+        incident.recovery_disposition,
+        incident.recommended_action,
+        *incident.evidence,
+    ]
+    return "\n".join(str(value).lower() for value in values if value)
+
+
+def _looks_like_checkout_hygiene(incident: Incident) -> bool:
+    text = _incident_text(incident)
+    return "verify_checkout" in text or "checkout" in text and "dirty" in text
+
+
+def _looks_like_source_failure(incident: Incident) -> bool:
+    text = _incident_text(incident)
+    markers = ("failed source", "failed-extractions", "source failure", "tls", "timeout", "http", "rss", "feed")
+    return incident.recovery_action == "INVESTIGATE_FAILED_SOURCES" or any(marker in text for marker in markers)
+
+
+def _looks_like_code_defect(incident: Incident) -> bool:
+    text = _incident_text(incident)
+    markers = ("traceback", "exception", "typeerror", "valueerror", "assertionerror", "module not found", "nameerror")
+    return any(marker in text for marker in markers) and not _looks_like_checkout_hygiene(incident) and not _looks_like_source_failure(incident)
+
+
+def _current_condition_for(incident: Incident, current_status: DispatchStatus | None) -> str:
+    if current_status is not None:
+        return current_status.state
+    return incident.status_state
+
+
+def build_remediation_action_plan(
+    incident: Incident,
+    *,
+    runner_root: Path,
+    operator_root: Path = DEFAULT_OPERATOR_ROOT,
+    current_status: DispatchStatus | None = None,
+    policy: RemediationPolicy | None = None,
+    runner: Any = _run_command,
+) -> RemediationActionPlan:
+    condition = _current_condition_for(incident, current_status)
+    evidence = sorted(dict.fromkeys(incident.evidence))
+    safety_checks: dict[str, Any] = {}
+    action = "NO_ACTION"
+    reason = "no remediation route matched"
+    executable = False
+    mutation_scope: list[str] = []
+
+    if incident.classification in {Classification.STALE_OBSERVABILITY.value, Classification.STATUS_EXPORT_PROBLEM.value} or incident.recovery_action == "REBUILD_STATUS":
+        action = "REBUILD_STATUS"
+        reason = "status export surface is stale, missing, or rebuildable through dispatch_ops"
+        executable = True
+        mutation_scope = [
+            f"ops/status/{incident.dispatch}/latest.json",
+            f"ops/status/{incident.dispatch}/history/{incident.affected_date or '<date>'}.json",
+        ]
+    elif incident.recovery_action == "VERIFY_PUBLIC_STATE" or incident.classification == Classification.PUBLIC_STATE_UNVERIFIED.value:
+        action = "VERIFY_PUBLIC_STATE"
+        reason = "public state requires durable verification"
+        executable = True
+        mutation_scope = []
+    elif _has_existing_engineering_work(operator_root, incident.incident_id) and _looks_like_checkout_hygiene(incident):
+        action = "CLOSE_NON_CODE_INCIDENT"
+        reason = "existing engineering item is tied to operational checkout hygiene rather than code repair"
+        mutation_scope = ["ops/operator/engineering/active/<work-id>", "ops/operator/engineering/history/<work-id>", "ops/operator/engineering/audit/<date>/<work-id>-closed.json"]
+    elif _looks_like_checkout_hygiene(incident):
+        safety_checks = _runner_roll_forward_safety(incident.dispatch, runner_root, runner=runner)
+        if safety_checks.get("safe"):
+            action = "RUNNER_ROLL_FORWARD"
+            reason = "runner is behind approved base and checkout hygiene can be remediated by fast-forward rollout"
+            executable = True
+            mutation_scope = ["production runner Git HEAD only", "Python __pycache__ from validation if needed"]
+        else:
+            action = "RUNNER_ROLL_FORWARD"
+            reason = "runner rollout is the bounded operational remedy, but safety checks must pass before execution"
+            executable = False
+            mutation_scope = ["production runner Git HEAD only"]
+    elif _looks_like_source_failure(incident):
+        action = "INVESTIGATE_SOURCE_FAILURES"
+        reason = "evidence points to source/feed failures rather than a code defect"
+    elif (
+        current_status is not None
+        and incident.affected_date
+        and current_status.date > incident.affected_date
+        and current_status.state in TERMINAL_NO_ACTION_STATES
+        and current_status.next_action == "NONE"
+    ):
+        action = "WAIT_FOR_NEXT_SCHEDULED_RUN"
+        reason = "incident appears historical or transient and current runner state is healthy"
+    elif _looks_like_code_defect(incident):
+        action = "ENGINEER_PREPARE_FIX"
+        reason = "evidence supports a plausible code defect within isolated Engineer Mode scope"
+        mutation_scope = ["C:\\BlueFernRunner\\OperatorWorktrees\\<work-id>", "operator repair branch", "approval-ready repair PR"]
+    else:
+        action = "INVESTIGATE_SOURCE_FAILURES" if incident.recovery_action == "INVESTIGATE_FAILED_SOURCES" else "WAIT_FOR_NEXT_SCHEDULED_RUN"
+        reason = "no safe automatic production mutation is indicated"
+
+    approval_required = action in EXECUTABLE_REMEDIATION_ACTIONS or action in {"ENGINEER_PREPARE_FIX", "CLOSE_NON_CODE_INCIDENT"}
+    if not safety_checks:
+        safety_checks = {
+            "public_side_effects": False,
+            "scheduler_changes": False,
+            "collection_rerun": False,
+            "editorial_mutation": False,
+            "merge_pr": False,
+        }
+    return RemediationActionPlan(
+        dispatch=incident.dispatch,
+        incident_id=incident.incident_id,
+        classification=incident.classification,
+        affected_date=incident.affected_date,
+        current_condition=condition,
+        proposed_action=action,
+        reason=reason,
+        evidence=evidence,
+        safety_checks=safety_checks,
+        approval_required=approval_required,
+        executable=executable,
+        expected_mutation_scope=mutation_scope,
+    )
+
+
+def _find_incidents_for_plan(
+    dispatch: str,
+    date: str,
+    *,
+    repo_root: Path,
+    operator_root: Path,
+    config: OperatorConfig,
+    now: datetime | None,
+) -> tuple[OperatorResult, list[Incident], DispatchStatus | None]:
+    result = check_operator(
+        repo_root=repo_root,
+        operator_root=operator_root,
+        config=config,
+        now=now,
+        write_ledger=False,
+        allow_automatic_remediation=False,
+    )
+    incidents = [
+        incident
+        for incident in result.incidents
+        if incident.dispatch == dispatch and (incident.affected_date == date or not incident.affected_date)
+    ]
+    runner_root = config.dispatches[dispatch].runner_root
+    try:
+        current_status = build_status(dispatch, date, root=runner_root)
+    except Exception:  # noqa: BLE001
+        current_status = None
+    return result, incidents, current_status
+
+
+def build_remediation_plan(
+    dispatch: str,
+    date: str,
+    *,
+    repo_root: Path = ROOT,
+    operator_root: Path = DEFAULT_OPERATOR_ROOT,
+    config: OperatorConfig | None = None,
+    now: datetime | None = None,
+    runner: Any = _run_command,
+) -> dict[str, Any]:
+    config = config or load_config(operator_root / "config.json")
+    if dispatch not in config.dispatches:
+        raise ValueError(f"unknown dispatch: {dispatch}")
+    result, incidents, current_status = _find_incidents_for_plan(
+        dispatch,
+        date,
+        repo_root=repo_root,
+        operator_root=operator_root,
+        config=config,
+        now=now,
+    )
+    runner_root = config.dispatches[dispatch].runner_root
+    policy = load_remediation_policy(operator_root / "remediation-policy.yaml")
+    plans = [
+        build_remediation_action_plan(
+            incident,
+            runner_root=runner_root,
+            current_status=current_status,
+            policy=policy,
+            operator_root=operator_root,
+            runner=runner,
+        )
+        for incident in incidents
+    ]
+    return {
+        "schema_version": REMEDIATION_PLAN_SCHEMA_VERSION,
+        "dispatch": dispatch,
+        "date": date,
+        "checked_at": result.checked_at,
+        "plan_count": len(plans),
+        "plans": [plan.to_payload() for plan in plans],
+        "production_state_mutated": False,
+    }
+
+
+def _write_remediation_receipt(operator_root: Path, receipt: RemediationReceipt) -> RemediationReceipt:
+    receipt_id = hashlib.sha256(json.dumps(receipt.to_payload(), sort_keys=True).encode("utf-8")).hexdigest()[:12]
+    date = receipt.started_at[:10]
+    path = operator_root / "remediation" / "receipts" / date / f"{receipt.dispatch}-{receipt.incident_id}-{receipt.action}-{receipt_id}.json"
+    payload = receipt.to_payload()
+    payload["receipt_path"] = str(path)
+    _write_json(path, payload)
+    return replace(receipt, receipt_path=str(path))
+
+
+def _refused_remediation_receipt(
+    *,
+    dispatch: str,
+    incident_id: str,
+    action: str,
+    reason: str,
+    now: datetime | None = None,
+) -> RemediationReceipt:
+    timestamp = _format_time(now or _utc_now())
+    return RemediationReceipt(
+        dispatch=dispatch,
+        incident_id=incident_id,
+        action=action,
+        accepted=False,
+        outcome="REFUSED",
+        reason=reason,
+        started_at=timestamp,
+        completed_at=timestamp,
+    )
+
+
+def _run_validation_command(command: list[str], *, cwd: Path, runner: Any) -> dict[str, Any]:
+    result = runner(command, cwd=cwd)
+    return {"command": command, "exit_code": result.exit_code, "stdout_tail": result.stdout[-1000:], "stderr_tail": result.stderr[-1000:]}
+
+
+def _apply_runner_roll_forward(
+    plan: RemediationActionPlan,
+    *,
+    runner_root: Path,
+    operator_root: Path,
+    runner: Any = _run_command,
+    now: datetime | None = None,
+) -> RemediationReceipt:
+    started = _format_time(now or _utc_now())
+    before_head = _git_stdout(runner, ["rev-parse", "HEAD"], cwd=runner_root)
+    fetch = runner(["git", "fetch", "origin"], cwd=runner_root)
+    if not fetch.ok:
+        receipt = RemediationReceipt(plan.dispatch, plan.incident_id, plan.proposed_action, False, "FAILED", "git fetch failed", started, _format_time(_utc_now()), before_head=before_head, expected_mutation_scope=plan.expected_mutation_scope, warnings=[fetch.stderr.strip() or fetch.stdout.strip()])
+        return _write_remediation_receipt(operator_root, receipt)
+    safety = _runner_roll_forward_safety(plan.dispatch, runner_root, runner=runner)
+    if not safety.get("safe"):
+        receipt = RemediationReceipt(plan.dispatch, plan.incident_id, plan.proposed_action, False, "REFUSED", "runner roll-forward safety checks failed", started, _format_time(_utc_now()), before_head=before_head, expected_mutation_scope=plan.expected_mutation_scope, validation={"safety_checks": safety})
+        return _write_remediation_receipt(operator_root, receipt)
+    merge = runner(["git", "merge", "--ff-only", "origin/add/pages-repo-default"], cwd=runner_root)
+    after_head = _git_stdout(runner, ["rev-parse", "HEAD"], cwd=runner_root)
+    if not merge.ok:
+        receipt = RemediationReceipt(plan.dispatch, plan.incident_id, plan.proposed_action, False, "FAILED", "git merge --ff-only failed", started, _format_time(_utc_now()), before_head=before_head, after_head=after_head, expected_mutation_scope=plan.expected_mutation_scope, warnings=[merge.stderr.strip() or merge.stdout.strip()])
+        return _write_remediation_receipt(operator_root, receipt)
+    validation = {
+        "preflight": _run_validation_command([sys.executable, "scripts/preflight_repo_state.py", "--source-repo", "."], cwd=runner_root, runner=runner),
+        "doctor": _run_validation_command([sys.executable, "scripts/doctor.py"], cwd=runner_root, runner=runner),
+        "tracked_dirty_after": _runner_roll_forward_safety(plan.dispatch, runner_root, runner=runner).get("tracked_dirty_paths", []),
+    }
+    status_after = _runner_roll_forward_safety(plan.dispatch, runner_root, runner=runner)
+    accepted = not validation["tracked_dirty_after"] and validation["preflight"]["exit_code"] == 0 and validation["doctor"]["exit_code"] == 0
+    receipt = RemediationReceipt(
+        dispatch=plan.dispatch,
+        incident_id=plan.incident_id,
+        action=plan.proposed_action,
+        accepted=accepted,
+        outcome="APPLIED" if accepted else "FAILED",
+        reason="runner fast-forwarded with preserved runtime state" if accepted else "post-rollout validation failed",
+        started_at=started,
+        completed_at=_format_time(_utc_now()),
+        before_head=before_head,
+        after_head=after_head,
+        expected_mutation_scope=plan.expected_mutation_scope,
+        changed_paths=[] if before_head == after_head else ["HEAD"],
+        validation={**validation, "post_safety_checks": status_after},
+    )
+    return _write_remediation_receipt(operator_root, receipt)
+
+
+def apply_remediation(
+    *,
+    dispatch: str,
+    incident_id: str,
+    action: str,
+    confirm: str,
+    repo_root: Path = ROOT,
+    operator_root: Path = DEFAULT_OPERATOR_ROOT,
+    config: OperatorConfig | None = None,
+    runner: Any = _run_command,
+    now: datetime | None = None,
+) -> RemediationReceipt:
+    if action not in REMEDIATION_ACTIONS:
+        return _refused_remediation_receipt(dispatch=dispatch, incident_id=incident_id, action=action, reason="unsupported remediation action", now=now)
+    if confirm != action:
+        return _refused_remediation_receipt(dispatch=dispatch, incident_id=incident_id, action=action, reason=f"missing required confirmation token: {action}", now=now)
+    if action not in EXECUTABLE_REMEDIATION_ACTIONS:
+        return _refused_remediation_receipt(dispatch=dispatch, incident_id=incident_id, action=action, reason="action is not executable by remediate-apply", now=now)
+
+    config = config or load_config(operator_root / "config.json")
+    result = check_operator(
+        repo_root=repo_root,
+        operator_root=operator_root,
+        config=config,
+        now=now,
+        write_ledger=False,
+        allow_automatic_remediation=False,
+    )
+    incident = next((row for row in result.incidents if row.incident_id == incident_id and row.dispatch == dispatch), None)
+    if incident is None:
+        return _refused_remediation_receipt(dispatch=dispatch, incident_id=incident_id, action=action, reason="incident is not present in current read-only check", now=now)
+    runner_root = config.dispatches[dispatch].runner_root
+    current_status = build_status(dispatch, incident.affected_date or _latest_runner_date(runner_root, dispatch) or _utc_now().date().isoformat(), root=runner_root)
+    plan = build_remediation_action_plan(incident, runner_root=runner_root, operator_root=operator_root, current_status=current_status, runner=runner)
+    if plan.proposed_action != action:
+        return _refused_remediation_receipt(dispatch=dispatch, incident_id=incident_id, action=action, reason=f"current plan proposes {plan.proposed_action}", now=now)
+    if not plan.executable:
+        return _refused_remediation_receipt(dispatch=dispatch, incident_id=incident_id, action=action, reason="current plan is not executable", now=now)
+    if action == "RUNNER_ROLL_FORWARD":
+        return _apply_runner_roll_forward(plan, runner_root=runner_root, operator_root=operator_root, runner=runner, now=now)
+
+    started = _format_time(now or _utc_now())
+    apply_result = apply_recovery_plan(dispatch, incident.affected_date or current_status.date, root=runner_root, confirm=action)
+    receipt = RemediationReceipt(
+        dispatch=dispatch,
+        incident_id=incident_id,
+        action=action,
+        accepted=apply_result.outcome not in {"REFUSED", "FAILED", "BLOCKED"},
+        outcome=apply_result.outcome,
+        reason=f"dispatch_ops.apply_recovery_plan executed {action}",
+        started_at=started,
+        completed_at=_format_time(_utc_now()),
+        before_head=_git_stdout(runner, ["rev-parse", "HEAD"], cwd=runner_root),
+        after_head=_git_stdout(runner, ["rev-parse", "HEAD"], cwd=runner_root),
+        expected_mutation_scope=plan.expected_mutation_scope,
+        changed_paths=apply_result.status_artifacts_changed,
+        validation={"apply_result": asdict(apply_result)},
+        warnings=apply_result.warnings,
+    )
+    return _write_remediation_receipt(operator_root, receipt)
 
 
 def _block_engineering_work(
@@ -2857,6 +3388,23 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     close.add_argument("--fact", action="append", default=[], help=argparse.SUPPRESS)
     close.add_argument("--json", action="store_true", help="Emit deterministic JSON.")
     close.add_argument("--operator-root", type=Path, default=DEFAULT_OPERATOR_ROOT, help=argparse.SUPPRESS)
+    plan = sub.add_parser("remediate-plan", help="Build read-only approval-gated remediation plans.")
+    plan.add_argument("dispatch", choices=DISPATCH_ORDER)
+    plan.add_argument("--date", required=True, help=argparse.SUPPRESS)
+    plan.add_argument("--json", action="store_true", help="Emit deterministic JSON.")
+    plan.add_argument("--config", type=Path, default=DEFAULT_CONFIG_PATH, help=argparse.SUPPRESS)
+    plan.add_argument("--operator-root", type=Path, default=DEFAULT_OPERATOR_ROOT, help=argparse.SUPPRESS)
+    plan.add_argument("--repo-root", type=Path, default=ROOT, help=argparse.SUPPRESS)
+    plan.add_argument("--now", help=argparse.SUPPRESS)
+    apply = sub.add_parser("remediate-apply", help="Apply one approved bounded remediation after replanning.")
+    apply.add_argument("--dispatch", required=True, choices=DISPATCH_ORDER, help=argparse.SUPPRESS)
+    apply.add_argument("--incident-id", required=True, help=argparse.SUPPRESS)
+    apply.add_argument("--action", required=True, choices=sorted(REMEDIATION_ACTIONS), help=argparse.SUPPRESS)
+    apply.add_argument("--confirm", required=True, help=argparse.SUPPRESS)
+    apply.add_argument("--json", action="store_true", help="Emit deterministic JSON.")
+    apply.add_argument("--config", type=Path, default=DEFAULT_CONFIG_PATH, help=argparse.SUPPRESS)
+    apply.add_argument("--operator-root", type=Path, default=DEFAULT_OPERATOR_ROOT, help=argparse.SUPPRESS)
+    apply.add_argument("--repo-root", type=Path, default=ROOT, help=argparse.SUPPRESS)
     return parser.parse_args(argv)
 
 
@@ -2895,6 +3443,38 @@ def main(argv: list[str] | None = None) -> int:
             else:
                 print(f"{payload['work_id']} accepted=false {payload['reason']}")
         return 0 if payload["accepted"] else 2
+    if args.command == "remediate-plan":
+        now = _parse_time(args.now) if args.now else None
+        payload = build_remediation_plan(
+            args.dispatch,
+            args.date,
+            repo_root=args.repo_root,
+            operator_root=args.operator_root,
+            config=load_config(args.config),
+            now=now,
+        )
+        if args.json:
+            print(json.dumps(payload, indent=2, sort_keys=True))
+        else:
+            for row in payload["plans"]:
+                print(f"{row['incident_id']} {row['proposed_action']} executable={row['executable']}")
+        return 0
+    if args.command == "remediate-apply":
+        receipt = apply_remediation(
+            dispatch=args.dispatch,
+            incident_id=args.incident_id,
+            action=args.action,
+            confirm=args.confirm,
+            repo_root=args.repo_root,
+            operator_root=args.operator_root,
+            config=load_config(args.config),
+        )
+        payload = receipt.to_payload()
+        if args.json:
+            print(json.dumps(payload, indent=2, sort_keys=True))
+        else:
+            print(f"{receipt.incident_id} {receipt.action} accepted={receipt.accepted} {receipt.outcome}")
+        return 0 if receipt.accepted else 2
     now = _parse_time(args.now) if args.now else None
     config = load_config(args.config)
     if args.command == "engineer":

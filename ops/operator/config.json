@@ -18,6 +18,8 @@
     }
   },
   "operator": {
+    "status_branch": "ops/status/food-line-2026-09-10",
+    "status_root": "C:\\BlueFernRunner\\OperationalStatusCurrent",
     "status_freshness_threshold_minutes": 120
   }
 }

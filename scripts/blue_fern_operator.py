@@ -31,11 +31,13 @@ from scripts.dispatch_ops import (  # noqa: E402
     build_status,
 )
 from bluefern_dispatches.operational_status_exporter import (  # noqa: E402
-    ExportError,
-    build_care_line_status,
-    build_food_line_status,
-    build_ice_status,
-    exporter_lock,
+    classify_status_checkout_state,
+    export_status,
+    prepare_status_checkout,
+)
+from scripts.run_operational_status_export import (  # noqa: E402
+    DEFAULT_BRANCH as DEFAULT_STATUS_BRANCH,
+    care_expected_instances_from_task_scheduler,
 )
 
 
@@ -207,6 +209,8 @@ class DispatchConfig:
 class OperatorConfig:
     status_freshness_threshold_minutes: int
     dispatches: dict[str, DispatchConfig]
+    status_root: Path | None = None
+    status_branch: str = DEFAULT_STATUS_BRANCH
 
 
 @dataclass(frozen=True)
@@ -453,6 +457,8 @@ def load_config(path: Path = DEFAULT_CONFIG_PATH) -> OperatorConfig:
     return OperatorConfig(
         status_freshness_threshold_minutes=int(operator.get("status_freshness_threshold_minutes") or 120),
         dispatches=dispatches,
+        status_root=Path(str(operator["status_root"])) if operator.get("status_root") else None,
+        status_branch=str(operator.get("status_branch") or DEFAULT_STATUS_BRANCH),
     )
 
 
@@ -534,6 +540,17 @@ def _select_exported_status(repo_exported: ExportedStatusObservation, runner_exp
     if repo_exported.observed_date or repo_exported.exported_at:
         return repo_exported
     return runner_exported
+
+
+def _configured_status_root(config: OperatorConfig, repo_root: Path) -> Path:
+    return (config.status_root or repo_root).resolve()
+
+
+def _operator_code_root(operator_root: Path) -> Path:
+    operator_root = operator_root.resolve()
+    if operator_root.name == "operator" and operator_root.parent.name == "ops":
+        return operator_root.parent.parent
+    return operator_root
 
 
 def _latest_runner_date(root: Path, dispatch: str) -> str | None:
@@ -957,24 +974,18 @@ def check_operator(
     current_keys: set[str] = set()
     dispatch_results: list[DispatchResult] = []
     incidents: list[Incident] = []
+    status_export_root = _configured_status_root(config, repo_root)
 
     for dispatch in DISPATCH_ORDER:
         dispatch_config = config.dispatches[dispatch]
         if not dispatch_config.enabled:
             continue
-        repo_exported = _latest_exported_status(
-            repo_root,
+        exported = _latest_exported_status(
+            status_export_root,
             dispatch,
             now,
             config.status_freshness_threshold_minutes,
         )
-        runner_exported = _latest_exported_status(
-            dispatch_config.runner_root,
-            dispatch,
-            now,
-            config.status_freshness_threshold_minutes,
-        )
-        exported = _select_exported_status(repo_exported, runner_exported)
         status_date = exported.observed_date or _latest_runner_date(dispatch_config.runner_root, dispatch) or now.date().isoformat()
         if not exported.is_fresh:
             runner_date = _latest_runner_date(dispatch_config.runner_root, dispatch) or status_date
@@ -1979,13 +1990,6 @@ def _current_condition_for(incident: Incident, current_status: DispatchStatus | 
     return incident.status_state
 
 
-def _status_destination_root(operator_root: Path) -> Path:
-    operator_root = operator_root.resolve()
-    if operator_root.name == "operator" and operator_root.parent.name == "ops":
-        return operator_root.parent.parent
-    return operator_root
-
-
 def _refresh_status_supported(dispatch: str, current_status: DispatchStatus | None) -> tuple[bool, str]:
     if dispatch == "gaza":
         return False, "no compatible Gaza external-status builder is available"
@@ -2012,12 +2016,27 @@ def _status_export_scope(dispatch: str, date: str | None) -> list[str]:
     ]
 
 
+def _refresh_status_export_scope(dispatch: str, date: str | None) -> list[str]:
+    day = date or "<date>"
+    paths = [
+        "ops/status/food-line/latest.json",
+        f"ops/status/food-line/history/{day}.json",
+    ]
+    if dispatch == "care-line":
+        paths.extend(["ops/status/care-line/latest.json", f"ops/status/care-line/history/{day}.json"])
+    if dispatch == "ice":
+        paths.extend(["ops/status/ice/latest.json", f"ops/status/ice/history/{day}.json"])
+    paths.append("ops/status/system/latest.json")
+    return sorted(dict.fromkeys(paths))
+
+
 def build_remediation_action_plan(
     incident: Incident,
     *,
     runner_root: Path,
     operator_root: Path = DEFAULT_OPERATOR_ROOT,
     current_status: DispatchStatus | None = None,
+    status_root: Path | None = None,
     policy: RemediationPolicy | None = None,
     runner: Any = _run_command,
 ) -> RemediationActionPlan:
@@ -2040,13 +2059,21 @@ def build_remediation_action_plan(
         elif incident.classification == Classification.STALE_OBSERVABILITY.value:
             supported, support_reason = _refresh_status_supported(incident.dispatch, current_status)
             if supported:
+                destination_root = (status_root or _operator_code_root(operator_root)).resolve()
+                roots_distinct = destination_root not in {_operator_code_root(operator_root), runner_root.resolve()}
                 action = "REFRESH_STATUS_EXPORT"
-                reason = "status export surface is stale and can be refreshed from current durable runner evidence"
-                executable = True
-                mutation_scope = _status_export_scope(incident.dispatch, incident.affected_date)
+                reason = (
+                    "status export surface is stale and can be refreshed from current durable runner evidence"
+                    if roots_distinct
+                    else "status destination root must be distinct from Operator source and production runner roots"
+                )
+                executable = roots_distinct
+                mutation_scope = _refresh_status_export_scope(incident.dispatch, incident.affected_date) if roots_distinct else []
                 safety_checks = {
+                    "operator_root": str(operator_root.resolve()),
                     "source_runner_root": str(runner_root.resolve()),
-                    "status_destination_root": str(_status_destination_root(operator_root)),
+                    "status_destination_root": str(destination_root),
+                    "roots_distinct": roots_distinct,
                     "refresh_supported": True,
                     "refresh_support_reason": support_reason,
                     "dispatch_ops_action": dispatch_ops_plan.action if dispatch_ops_plan else None,
@@ -2061,9 +2088,12 @@ def build_remediation_action_plan(
                 action = "INVESTIGATE_STATUS_EXPORT"
                 reason = support_reason
                 executable = False
+                destination_root = (status_root or _operator_code_root(operator_root)).resolve()
                 safety_checks = {
+                    "operator_root": str(operator_root.resolve()),
                     "source_runner_root": str(runner_root.resolve()),
-                    "status_destination_root": str(_status_destination_root(operator_root)),
+                    "status_destination_root": str(destination_root),
+                    "roots_distinct": destination_root not in {_operator_code_root(operator_root), runner_root.resolve()},
                     "refresh_supported": False,
                     "refresh_support_reason": support_reason,
                     "dispatch_ops_action": dispatch_ops_plan.action if dispatch_ops_plan else None,
@@ -2167,7 +2197,9 @@ def _find_incidents_for_plan(
     incidents = [
         incident
         for incident in result.incidents
-        if incident.dispatch == dispatch and (incident.affected_date == date or not incident.affected_date)
+        if incident.dispatch == dispatch
+        and incident.state == IncidentState.OPEN.value
+        and (incident.affected_date == date or not incident.affected_date)
     ]
     runner_root = config.dispatches[dispatch].runner_root
     try:
@@ -2205,6 +2237,7 @@ def build_remediation_plan(
             incident,
             runner_root=runner_root,
             current_status=current_status,
+            status_root=_configured_status_root(config, repo_root),
             policy=policy,
             operator_root=operator_root,
             runner=runner,
@@ -2356,50 +2389,92 @@ def _status_path_hashes(root: Path, paths: Iterable[str]) -> dict[str, str | Non
     return {path: _file_hash(root / path) for path in sorted(paths)}
 
 
-def _build_refresh_status_payload(dispatch: str, *, source_root: Path, date: str, exported_at: str) -> dict[str, Any]:
-    if dispatch == "food-line":
-        return build_food_line_status(
-            source_root=source_root,
-            date=date,
-            evaluated_at=exported_at,
-            exported_at=exported_at,
-        )
-    if dispatch == "care-line":
-        return build_care_line_status(
-            source_root=source_root,
-            date=date,
-            evaluated_at=exported_at,
-            exported_at=exported_at,
-        )
-    if dispatch == "ice":
-        return build_ice_status(
-            source_root=source_root,
-            date=date,
-            evaluated_at=exported_at,
-            exported_at=exported_at,
-        )
-    raise ExportError(f"status export refresh is not supported for dispatch: {dispatch}")
-
-
-def _write_refresh_status_payload(destination_root: Path, dispatch: str, date: str, payload: dict[str, Any]) -> None:
-    _write_json(destination_root / "ops" / "status" / dispatch / "latest.json", payload)
-    _write_json(destination_root / "ops" / "status" / dispatch / "history" / f"{date}.json", payload)
-
-
 def _apply_refresh_status_export(
     plan: RemediationActionPlan,
     *,
+    repo_root: Path,
     runner_root: Path,
     operator_root: Path,
+    config: OperatorConfig,
     current_status: DispatchStatus,
     now: datetime | None = None,
 ) -> RemediationReceipt:
     started_time = now or _utc_now()
     started = _format_time(started_time)
     date = plan.affected_date or current_status.date
-    destination_root = _status_destination_root(operator_root)
-    allowed_paths = _status_export_scope(plan.dispatch, date)
+    destination_root = _configured_status_root(config, repo_root)
+    operator_code_root = _operator_code_root(operator_root)
+    allowed_paths = _refresh_status_export_scope(plan.dispatch, date)
     supported, support_reason = _refresh_status_supported(plan.dispatch, current_status)
+    status_head_before = _git_stdout(_run_command, ["rev-parse", "HEAD"], cwd=destination_root) if destination_root.is_dir() else None
+    checkout_state_before = classify_status_checkout_state(destination_root).to_payload() if destination_root.is_dir() else None
+    roots_distinct = destination_root.resolve() not in {operator_code_root.resolve(), runner_root.resolve()}
+    if not roots_distinct:
+        receipt = RemediationReceipt(
+            plan.dispatch,
+            plan.incident_id,
+            plan.proposed_action,
+            False,
+            "REFUSED",
+            "status destination root must be distinct from Operator source and production runner roots",
+            started,
+            _format_time(_utc_now()),
+            expected_mutation_scope=[],
+            validation={
+                "operator_root": str(operator_root.resolve()),
+                "operator_code_root": str(operator_code_root.resolve()),
+                "source_runner_root": str(runner_root.resolve()),
+                "status_destination_root": str(destination_root.resolve()),
+                "roots_distinct": False,
+                "underlying_status_before": current_status.to_json_payload(),
+                "underlying_status_after": current_status.to_json_payload(),
+                "status_checkout_head_before": status_head_before,
+                "status_checkout_head_after": status_head_before,
+                "status_checkout_state_before": checkout_state_before,
+                "status_checkout_state_after": checkout_state_before,
+                "sanctioned_dirty_paths_before": sorted(
+                    (checkout_state_before or {}).get("tracked_status_paths", [])
+                    + (checkout_state_before or {}).get("untracked_status_paths", [])
+                ),
+                "sanctioned_dirty_paths_after": sorted(
+                    (checkout_state_before or {}).get("tracked_status_paths", [])
+                    + (checkout_state_before or {}).get("untracked_status_paths", [])
+                ),
+                "unexpected_dirty_paths": (checkout_state_before or {}).get("unexpected_paths", []),
+                "remote_overlap_paths": [],
+                "commit_created": False,
+                "push_attempted": False,
+            },
+        )
+        return _write_remediation_receipt(operator_root, receipt)
+    if not destination_root.is_dir():
+        receipt = RemediationReceipt(
+            plan.dispatch,
+            plan.incident_id,
+            plan.proposed_action,
+            False,
+            "REFUSED",
+            "status checkout does not exist",
+            started,
+            _format_time(_utc_now()),
+            expected_mutation_scope=[],
+            validation={
+                "operator_root": str(operator_root.resolve()),
+                "source_runner_root": str(runner_root.resolve()),
+                "status_destination_root": str(destination_root.resolve()),
+                "status_checkout_head_before": status_head_before,
+                "status_checkout_head_after": status_head_before,
+                "status_checkout_state_before": checkout_state_before,
+                "status_checkout_state_after": checkout_state_before,
+                "sanctioned_dirty_paths_before": [],
+                "sanctioned_dirty_paths_after": [],
+                "unexpected_dirty_paths": [],
+                "remote_overlap_paths": [],
+                "commit_created": False,
+                "push_attempted": False,
+            },
+        )
+        return _write_remediation_receipt(operator_root, receipt)
     if not supported:
         receipt = RemediationReceipt(
             plan.dispatch,
@@ -2412,27 +2487,57 @@ def _apply_refresh_status_export(
             _format_time(_utc_now()),
             expected_mutation_scope=allowed_paths,
             validation={
+                "operator_root": str(operator_root.resolve()),
                 "source_runner_root": str(runner_root.resolve()),
-                "status_destination_root": str(destination_root),
+                "status_destination_root": str(destination_root.resolve()),
                 "refresh_supported": False,
                 "underlying_status_before": current_status.to_json_payload(),
                 "underlying_status_after": current_status.to_json_payload(),
+                "status_checkout_head_before": status_head_before,
+                "status_checkout_head_after": status_head_before,
+                "status_checkout_state_before": checkout_state_before,
+                "status_checkout_state_after": checkout_state_before,
+                "sanctioned_dirty_paths_before": sorted(
+                    (checkout_state_before or {}).get("tracked_status_paths", [])
+                    + (checkout_state_before or {}).get("untracked_status_paths", [])
+                ),
+                "sanctioned_dirty_paths_after": sorted(
+                    (checkout_state_before or {}).get("tracked_status_paths", [])
+                    + (checkout_state_before or {}).get("untracked_status_paths", [])
+                ),
+                "unexpected_dirty_paths": (checkout_state_before or {}).get("unexpected_paths", []),
+                "remote_overlap_paths": [],
+                "commit_created": False,
+                "push_attempted": False,
             },
         )
         return _write_remediation_receipt(operator_root, receipt)
 
     before_tree = _snapshot_status_destination(destination_root)
     before_hashes = _status_path_hashes(destination_root, allowed_paths)
+    remote_overlap_paths: list[str] = []
     try:
-        with exporter_lock(destination_root):
-            payload = _build_refresh_status_payload(
-                plan.dispatch,
-                source_root=runner_root.resolve(),
-                date=date,
-                exported_at=started,
-            )
-            _write_refresh_status_payload(destination_root, plan.dispatch, date, payload)
+        prepare_status_checkout(destination_root, branch=config.status_branch, allow_local_status_changes=True)
+        food_root = config.dispatches["food-line"].runner_root.resolve()
+        export_kwargs: dict[str, Any] = {
+            "source_root": runner_root.resolve() if plan.dispatch == "food-line" else food_root,
+            "status_checkout": destination_root.resolve(),
+            "date": date,
+            "evaluated_at": started,
+            "exported_at": started,
+        }
+        if plan.dispatch == "care-line":
+            export_kwargs["care_source_root"] = runner_root.resolve()
+            export_kwargs["care_expected_instances"] = care_expected_instances_from_task_scheduler(date)
+        elif plan.dispatch == "ice":
+            export_kwargs["ice_source_root"] = runner_root.resolve()
+        result = export_status(**export_kwargs)
     except Exception as exc:  # noqa: BLE001
+        message = str(exc)
+        if "overlap local ops/status changes:" in message:
+            remote_overlap_paths = [part.strip() for part in message.rsplit(":", 1)[-1].split(",") if part.strip()]
+        checkout_state_after = classify_status_checkout_state(destination_root).to_payload() if destination_root.is_dir() else None
+        status_head_after = _git_stdout(_run_command, ["rev-parse", "HEAD"], cwd=destination_root) if destination_root.is_dir() else None
         receipt = RemediationReceipt(
             plan.dispatch,
             plan.incident_id,
@@ -2444,31 +2549,72 @@ def _apply_refresh_status_export(
             _format_time(_utc_now()),
             expected_mutation_scope=allowed_paths,
             validation={
+                "operator_root": str(operator_root.resolve()),
                 "source_runner_root": str(runner_root.resolve()),
-                "status_destination_root": str(destination_root),
+                "status_destination_root": str(destination_root.resolve()),
                 "before_status_export_hashes": before_hashes,
                 "underlying_status_before": current_status.to_json_payload(),
+                "status_checkout_head_before": status_head_before,
+                "status_checkout_head_after": status_head_after,
+                "status_checkout_state_before": checkout_state_before,
+                "status_checkout_state_after": checkout_state_after,
+                "sanctioned_dirty_paths_before": sorted(
+                    (checkout_state_before or {}).get("tracked_status_paths", [])
+                    + (checkout_state_before or {}).get("untracked_status_paths", [])
+                ),
+                "sanctioned_dirty_paths_after": sorted(
+                    (checkout_state_after or {}).get("tracked_status_paths", [])
+                    + (checkout_state_after or {}).get("untracked_status_paths", [])
+                ),
+                "unexpected_dirty_paths": (checkout_state_after or {}).get("unexpected_paths", []),
+                "remote_overlap_paths": remote_overlap_paths,
+                "commit_created": False,
+                "push_attempted": False,
             },
         )
         return _write_remediation_receipt(operator_root, receipt)
 
+    allowed_paths = sorted(str(path).replace("\\", "/") for path in result.get("paths", []))
     after_tree = _snapshot_status_destination(destination_root)
+    checkout_state_after = classify_status_checkout_state(destination_root).to_payload()
+    status_head_after = _git_stdout(_run_command, ["rev-parse", "HEAD"], cwd=destination_root)
+    before_hashes = {path: before_tree.get(path) for path in allowed_paths}
     after_hashes = _status_path_hashes(destination_root, allowed_paths)
     changed_paths = sorted(path for path in set(before_tree) | set(after_tree) if before_tree.get(path) != after_tree.get(path))
     unexpected = sorted(path for path in changed_paths if path not in allowed_paths)
     status_after = build_status(plan.dispatch, date, root=runner_root)
-    stale_after = not _latest_exported_status(destination_root, plan.dispatch, _utc_now(), 120).is_fresh
+    stale_after = not _latest_exported_status(destination_root, plan.dispatch, _utc_now(), config.status_freshness_threshold_minutes).is_fresh
     validation = {
+        "operator_root": str(operator_root.resolve()),
+        "operator_code_root": str(operator_code_root.resolve()),
         "source_runner_root": str(runner_root.resolve()),
-        "status_destination_root": str(destination_root),
+        "status_destination_root": str(destination_root.resolve()),
         "observed_date": date,
         "before_status_export_hashes": before_hashes,
         "after_status_export_hashes": after_hashes,
+        "exporter_paths": allowed_paths,
+        "status_branch": config.status_branch,
         "underlying_status_before": current_status.to_json_payload(),
         "underlying_status_after": status_after.to_json_payload(),
         "underlying_incident_preserved": status_after.state == current_status.state and status_after.next_action == current_status.next_action,
         "stale_observability_after": stale_after,
         "refresh_support_reason": support_reason,
+        "status_checkout_head_before": status_head_before,
+        "status_checkout_head_after": status_head_after,
+        "status_checkout_state_before": checkout_state_before,
+        "status_checkout_state_after": checkout_state_after,
+        "sanctioned_dirty_paths_before": sorted(
+            (checkout_state_before or {}).get("tracked_status_paths", [])
+            + (checkout_state_before or {}).get("untracked_status_paths", [])
+        ),
+        "sanctioned_dirty_paths_after": sorted(
+            (checkout_state_after or {}).get("tracked_status_paths", [])
+            + (checkout_state_after or {}).get("untracked_status_paths", [])
+        ),
+        "unexpected_dirty_paths": (checkout_state_after or {}).get("unexpected_paths", []),
+        "remote_overlap_paths": remote_overlap_paths,
+        "commit_created": False,
+        "push_attempted": False,
         "public_side_effects": False,
         "scheduler_changes": False,
         "collection_rerun": False,
@@ -2539,9 +2685,18 @@ def apply_remediation(
     incident = next((row for row in result.incidents if row.incident_id == incident_id and row.dispatch == dispatch), None)
     if incident is None:
         return _refused_remediation_receipt(dispatch=dispatch, incident_id=incident_id, action=action, reason="incident is not present in current read-only check", now=now)
+    if incident.state != IncidentState.OPEN.value:
+        return _refused_remediation_receipt(dispatch=dispatch, incident_id=incident_id, action=action, reason="incident is no longer open", now=now)
     runner_root = config.dispatches[dispatch].runner_root
     current_status = build_status(dispatch, incident.affected_date or _latest_runner_date(runner_root, dispatch) or _utc_now().date().isoformat(), root=runner_root)
-    plan = build_remediation_action_plan(incident, runner_root=runner_root, operator_root=operator_root, current_status=current_status, runner=runner)
+    plan = build_remediation_action_plan(
+        incident,
+        runner_root=runner_root,
+        operator_root=operator_root,
+        current_status=current_status,
+        status_root=_configured_status_root(config, repo_root),
+        runner=runner,
+    )
     if plan.proposed_action != action:
         return _refused_remediation_receipt(dispatch=dispatch, incident_id=incident_id, action=action, reason=f"current plan proposes {plan.proposed_action}", now=now)
     if not plan.executable:
@@ -2549,7 +2704,15 @@ def apply_remediation(
     if action == "RUNNER_ROLL_FORWARD":
         return _apply_runner_roll_forward(plan, runner_root=runner_root, operator_root=operator_root, runner=runner, now=now)
     if action == "REFRESH_STATUS_EXPORT":
-        return _apply_refresh_status_export(plan, runner_root=runner_root, operator_root=operator_root, current_status=current_status, now=now)
+        return _apply_refresh_status_export(
+            plan,
+            repo_root=repo_root,
+            runner_root=runner_root,
+            operator_root=operator_root,
+            config=config,
+            current_status=current_status,
+            now=now,
+        )
 
     started = _format_time(now or _utc_now())
     apply_result = apply_recovery_plan(dispatch, incident.affected_date or current_status.date, root=runner_root, confirm=action)

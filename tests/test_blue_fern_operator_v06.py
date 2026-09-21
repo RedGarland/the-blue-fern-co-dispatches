@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from scripts import blue_fern_operator as operator
@@ -60,6 +61,8 @@ class FakeRollForwardRunner:
         target: str = "new-sha",
         ancestor: bool = True,
         incoming: str = "scripts/blue_fern_operator.py\n",
+        preflight_exit_code: int = 0,
+        doctor_exit_code: int = 0,
     ) -> None:
         self.status = status
         self.branch = branch
@@ -67,10 +70,14 @@ class FakeRollForwardRunner:
         self.target = target
         self.ancestor = ancestor
         self.incoming = incoming
+        self.preflight_exit_code = preflight_exit_code
+        self.doctor_exit_code = doctor_exit_code
         self.commands: list[list[str]] = []
+        self.envs: list[dict[str, str] | None] = []
 
-    def __call__(self, args: list[str], *, cwd: Path) -> operator.EngineeringCommandResult:
+    def __call__(self, args: list[str], *, cwd: Path, env: dict[str, str] | None = None) -> operator.EngineeringCommandResult:
         self.commands.append(args)
+        self.envs.append(env)
         if args == ["git", "status", "--porcelain=v1", "--untracked-files=all"]:
             return operator.EngineeringCommandResult(0, self.status)
         if args == ["git", "branch", "--show-current"]:
@@ -88,18 +95,48 @@ class FakeRollForwardRunner:
         if args == ["git", "merge", "--ff-only", "origin/add/pages-repo-default"]:
             self.head = self.target
             return operator.EngineeringCommandResult(0)
-        if args[:2] == ["python", "scripts/preflight_repo_state.py"] or args[:1] == ["python"]:
-            return operator.EngineeringCommandResult(0, "ok\n")
         if args[:1] and args[0].endswith("python.exe"):
+            if len(args) > 1 and args[1] == "scripts/preflight_repo_state.py":
+                return operator.EngineeringCommandResult(self.preflight_exit_code, "ok\n", "preflight failed\n" if self.preflight_exit_code else "")
+            if len(args) > 1 and args[1] == "scripts/doctor.py":
+                return operator.EngineeringCommandResult(self.doctor_exit_code, "ok\n", "doctor failed\n" if self.doctor_exit_code else "")
             return operator.EngineeringCommandResult(0, "ok\n")
         return operator.EngineeringCommandResult(0)
 
 
-def test_care_checkout_incident_routes_to_runner_roll_forward(tmp_path: Path) -> None:
-    runner = FakeRollForwardRunner()
-    incident = _incident(evidence=["failure_stage=verify_checkout", "dirty checkout"])
+def _make_runner_checkout(root: Path) -> Path:
+    (root / ".venv" / "Scripts").mkdir(parents=True)
+    (root / ".venv" / "Scripts" / "python.exe").write_text("python\n", encoding="utf-8")
+    (root / "scripts").mkdir()
+    (root / "scripts" / "preflight_repo_state.py").write_text("# preflight\n", encoding="utf-8")
+    (root / "scripts" / "doctor.py").write_text("# doctor\n", encoding="utf-8")
+    return root
 
-    plan = operator.build_remediation_action_plan(incident, runner_root=tmp_path, runner=runner)
+
+def _write_receipt(root: Path, relative: str, payload: dict) -> str:
+    path = root / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    return relative
+
+
+def test_care_checkout_incident_routes_to_runner_roll_forward(tmp_path: Path) -> None:
+    runner_root = _make_runner_checkout(tmp_path / "runner")
+    evidence = _write_receipt(
+        runner_root,
+        "status/operational-health/care-line/2026-09-20/runs/care_line_collection.json",
+        {
+            "task_key": "care_line_collection",
+            "status": "FAILED",
+            "exit_code": 1,
+            "failure_stage": "verify_checkout",
+            "wrapper_exception_message": "collection runner checkout is dirty",
+        },
+    )
+    runner = FakeRollForwardRunner()
+    incident = _incident(evidence=[evidence])
+
+    plan = operator.build_remediation_action_plan(incident, runner_root=runner_root, runner=runner)
 
     assert plan.proposed_action == "RUNNER_ROLL_FORWARD"
     assert plan.executable is True
@@ -109,9 +146,15 @@ def test_care_checkout_incident_routes_to_runner_roll_forward(tmp_path: Path) ->
 
 
 def test_code_defect_routes_to_engineer_prepare_fix(tmp_path: Path) -> None:
-    incident = _incident(evidence=["Traceback: TypeError in care_line_collection parser"])
+    runner_root = _make_runner_checkout(tmp_path / "runner")
+    evidence = _write_receipt(
+        runner_root,
+        "status/operational-health/care-line/2026-09-20/runs/care_line_collection.json",
+        {"task_key": "care_line_collection", "status": "FAILED", "error": "Traceback: TypeError in parser"},
+    )
+    incident = _incident(evidence=[evidence])
 
-    plan = operator.build_remediation_action_plan(incident, runner_root=tmp_path, runner=FakeRollForwardRunner())
+    plan = operator.build_remediation_action_plan(incident, runner_root=runner_root, runner=FakeRollForwardRunner())
 
     assert plan.proposed_action == "ENGINEER_PREPARE_FIX"
     assert plan.executable is False
@@ -119,17 +162,42 @@ def test_code_defect_routes_to_engineer_prepare_fix(tmp_path: Path) -> None:
 
 
 def test_source_failures_do_not_route_to_engineer_mode(tmp_path: Path) -> None:
+    runner_root = _make_runner_checkout(tmp_path / "runner")
+    evidence = _write_receipt(
+        runner_root,
+        "status/operational-health/care-line/2026-09-20/runs/care_line_collection.json",
+        {"task_key": "care_line_collection", "status": "DEGRADED", "classification": "partial_success", "failed_source_count": 12},
+    )
     incident = _incident(
         classification="DEGRADED_RUN",
         status_state="DEGRADED",
         recovery_action="INVESTIGATE_FAILED_SOURCES",
-        evidence=["failed-extractions.json", "source timeout"],
+        evidence=[evidence],
     )
 
-    plan = operator.build_remediation_action_plan(incident, runner_root=tmp_path, runner=FakeRollForwardRunner())
+    plan = operator.build_remediation_action_plan(incident, runner_root=runner_root, runner=FakeRollForwardRunner())
 
     assert plan.proposed_action == "INVESTIGATE_SOURCE_FAILURES"
     assert plan.executable is False
+
+
+def test_path_only_evidence_does_not_imply_checkout_source_or_code_defect(tmp_path: Path) -> None:
+    runner_root = _make_runner_checkout(tmp_path / "runner")
+    incident = _incident(evidence=["status/operational-health/care-line/2026-09-20/runs/care_line_collection.json"])
+
+    plan = operator.build_remediation_action_plan(incident, runner_root=runner_root, runner=FakeRollForwardRunner())
+
+    assert plan.proposed_action == "WAIT_FOR_NEXT_SCHEDULED_RUN"
+    assert plan.proposed_action not in {"RUNNER_ROLL_FORWARD", "INVESTIGATE_SOURCE_FAILURES", "ENGINEER_PREPARE_FIX"}
+
+
+def test_path_words_do_not_imply_cause_without_bounded_contents(tmp_path: Path) -> None:
+    runner_root = _make_runner_checkout(tmp_path / "runner")
+    incident = _incident(evidence=["status/timeout/http/feed/exception/checkout.json"])
+
+    plan = operator.build_remediation_action_plan(incident, runner_root=runner_root, runner=FakeRollForwardRunner())
+
+    assert plan.proposed_action == "WAIT_FOR_NEXT_SCHEDULED_RUN"
 
 
 def test_stale_status_routes_to_rebuild_status(tmp_path: Path) -> None:
@@ -160,10 +228,12 @@ def test_historical_failure_with_healthy_current_runner_waits(tmp_path: Path) ->
 
 
 def test_dirty_tracked_runner_refuses_rollout(tmp_path: Path) -> None:
-    incident = _incident(evidence=["failure_stage verify_checkout"])
+    runner_root = _make_runner_checkout(tmp_path / "runner")
+    evidence = _write_receipt(runner_root, "receipt.json", {"failure_stage": "verify_checkout"})
+    incident = _incident(evidence=[evidence])
     runner = FakeRollForwardRunner(status=" M src/bluefern_dispatches/care_line.py\n")
 
-    plan = operator.build_remediation_action_plan(incident, runner_root=tmp_path, runner=runner)
+    plan = operator.build_remediation_action_plan(incident, runner_root=runner_root, runner=runner)
 
     assert plan.proposed_action == "RUNNER_ROLL_FORWARD"
     assert plan.executable is False
@@ -171,10 +241,12 @@ def test_dirty_tracked_runner_refuses_rollout(tmp_path: Path) -> None:
 
 
 def test_divergent_branch_refuses_rollout(tmp_path: Path) -> None:
-    incident = _incident(evidence=["failure_stage verify_checkout"])
+    runner_root = _make_runner_checkout(tmp_path / "runner")
+    evidence = _write_receipt(runner_root, "receipt.json", {"failure_stage": "verify_checkout"})
+    incident = _incident(evidence=[evidence])
     runner = FakeRollForwardRunner(ancestor=False)
 
-    plan = operator.build_remediation_action_plan(incident, runner_root=tmp_path, runner=runner)
+    plan = operator.build_remediation_action_plan(incident, runner_root=runner_root, runner=runner)
 
     assert plan.proposed_action == "RUNNER_ROLL_FORWARD"
     assert plan.executable is False
@@ -182,10 +254,12 @@ def test_divergent_branch_refuses_rollout(tmp_path: Path) -> None:
 
 
 def test_untracked_collision_refuses_rollout(tmp_path: Path) -> None:
-    incident = _incident(evidence=["failure_stage verify_checkout"])
+    runner_root = _make_runner_checkout(tmp_path / "runner")
+    evidence = _write_receipt(runner_root, "receipt.json", {"failure_stage": "verify_checkout"})
+    incident = _incident(evidence=[evidence])
     runner = FakeRollForwardRunner(status="?? scripts/\n", incoming="scripts/blue_fern_operator.py\n")
 
-    plan = operator.build_remediation_action_plan(incident, runner_root=tmp_path, runner=runner)
+    plan = operator.build_remediation_action_plan(incident, runner_root=runner_root, runner=runner)
 
     assert plan.proposed_action == "RUNNER_ROLL_FORWARD"
     assert plan.executable is False
@@ -195,9 +269,9 @@ def test_untracked_collision_refuses_rollout(tmp_path: Path) -> None:
 def test_apply_runner_roll_forward_mutation_scope_is_exact(tmp_path: Path) -> None:
     runner_root = tmp_path / "runner"
     operator_root = tmp_path / "ops/operator"
-    runner_root.mkdir()
+    _make_runner_checkout(runner_root)
     plan = operator.build_remediation_action_plan(
-        _incident(evidence=["failure_stage verify_checkout"]),
+        _incident(evidence=[_write_receipt(runner_root, "receipt.json", {"failure_stage": "verify_checkout"})]),
         runner_root=runner_root,
         runner=FakeRollForwardRunner(),
     )
@@ -212,6 +286,64 @@ def test_apply_runner_roll_forward_mutation_scope_is_exact(tmp_path: Path) -> No
     assert receipt.expected_mutation_scope == ["production runner Git HEAD only", "Python __pycache__ from validation if needed"]
     assert receipt.receipt_path
     assert Path(receipt.receipt_path).is_file()
+    commands = [" ".join(command) for command in fake.commands]
+    assert any(str(runner_root / ".venv" / "Scripts" / "python.exe") in command for command in commands)
+    assert not any(" ".join(command).startswith("python ") for command in fake.commands)
+    doctor_index = next(index for index, command in enumerate(fake.commands) if len(command) > 1 and command[1] == "scripts/doctor.py")
+    assert fake.envs[doctor_index] == {"PYTHONPATH": "src"}
+
+
+def test_missing_runner_python_refuses_before_merge(tmp_path: Path) -> None:
+    runner_root = tmp_path / "runner"
+    runner_root.mkdir()
+    (runner_root / "scripts").mkdir()
+    (runner_root / "scripts" / "preflight_repo_state.py").write_text("# preflight\n", encoding="utf-8")
+    (runner_root / "scripts" / "doctor.py").write_text("# doctor\n", encoding="utf-8")
+    operator_root = tmp_path / "ops/operator"
+    fake = FakeRollForwardRunner()
+    plan = operator.RemediationActionPlan(
+        dispatch="care-line",
+        incident_id="bfo-v06",
+        classification="FAILED_RUN",
+        affected_date="2026-09-20",
+        current_condition="FAILED",
+        proposed_action="RUNNER_ROLL_FORWARD",
+        reason="test",
+        evidence=[],
+        safety_checks={},
+        approval_required=True,
+        executable=True,
+        expected_mutation_scope=["production runner Git HEAD only"],
+    )
+
+    receipt = operator._apply_runner_roll_forward(plan, runner_root=runner_root, operator_root=operator_root, runner=fake)
+
+    assert receipt.accepted is False
+    assert receipt.outcome == "REFUSED"
+    assert receipt.validation["validation_capability"]["python_exists"] is False
+    assert ["git", "merge", "--ff-only", "origin/add/pages-repo-default"] not in fake.commands
+
+
+def test_post_rollout_validation_failure_records_applied_failure_without_rollback(tmp_path: Path) -> None:
+    runner_root = _make_runner_checkout(tmp_path / "runner")
+    operator_root = tmp_path / "ops/operator"
+    fake = FakeRollForwardRunner(doctor_exit_code=1)
+    plan = operator.build_remediation_action_plan(
+        _incident(evidence=[_write_receipt(runner_root, "receipt.json", {"failure_stage": "verify_checkout"})]),
+        runner_root=runner_root,
+        runner=FakeRollForwardRunner(),
+    )
+
+    receipt = operator._apply_runner_roll_forward(plan, runner_root=runner_root, operator_root=operator_root, runner=fake)
+
+    assert receipt.accepted is False
+    assert receipt.outcome == "ROLLOUT_APPLIED_VALIDATION_FAILED"
+    assert receipt.before_head == "old-sha"
+    assert receipt.after_head == "new-sha"
+    assert receipt.validation["merge_applied"] is True
+    assert receipt.validation["validation_passed"] is False
+    flattened = [" ".join(command) for command in fake.commands]
+    assert not any("reset" in command or "rebase" in command or "clean" in command for command in flattened)
 
 
 def test_approval_token_required_before_apply(monkeypatch, tmp_path: Path) -> None:
@@ -238,6 +370,8 @@ def test_approval_token_required_before_apply(monkeypatch, tmp_path: Path) -> No
 
 
 def test_close_non_code_incident_route_for_existing_checkout_work_item(tmp_path: Path) -> None:
+    runner_root = _make_runner_checkout(tmp_path / "runner")
+    evidence = _write_receipt(runner_root, "receipt.json", {"failure_stage": "verify_checkout"})
     operator_root = tmp_path / "ops/operator"
     item = operator.EngineeringWorkItem(
         work_id="bfoe-v06",
@@ -255,8 +389,8 @@ def test_close_non_code_incident_route_for_existing_checkout_work_item(tmp_path:
     operator._save_engineering_work_item(operator_root, item)
 
     plan = operator.build_remediation_action_plan(
-        _incident(evidence=["failure_stage verify_checkout"]),
-        runner_root=tmp_path,
+        _incident(evidence=[evidence]),
+        runner_root=runner_root,
         operator_root=operator_root,
         runner=FakeRollForwardRunner(),
     )
@@ -268,18 +402,18 @@ def test_close_non_code_incident_route_for_existing_checkout_work_item(tmp_path:
 def test_apply_does_not_publish_replay_scheduler_or_editorial_mutate(tmp_path: Path) -> None:
     runner_root = tmp_path / "runner"
     operator_root = tmp_path / "ops/operator"
-    runner_root.mkdir()
+    _make_runner_checkout(runner_root)
     fake = FakeRollForwardRunner()
     plan = operator.build_remediation_action_plan(
-        _incident(evidence=["failure_stage verify_checkout"]),
+        _incident(evidence=[_write_receipt(runner_root, "receipt.json", {"failure_stage": "verify_checkout"})]),
         runner_root=runner_root,
         runner=fake,
     )
 
     operator._apply_runner_roll_forward(plan, runner_root=runner_root, operator_root=operator_root, runner=fake)
 
-    flattened = [" ".join(command).lower() for command in fake.commands]
-    assert not any("publish" in command for command in flattened)
-    assert not any("collection" in command and "run" in command for command in flattened)
-    assert not any("scheduledtask" in command for command in flattened)
-    assert not any("review" in command and "write" in command for command in flattened)
+    command_text = [" ".join(Path(token).name.lower() if "\\" in token or "/" in token else token.lower() for token in command) for command in fake.commands]
+    assert not any("publish" in command for command in command_text)
+    assert not any("collection" in command and "run" in command for command in command_text)
+    assert not any("scheduledtask" in command for command in command_text)
+    assert not any("review" in command and "write" in command for command in command_text)

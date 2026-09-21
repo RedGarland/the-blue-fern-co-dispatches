@@ -390,6 +390,27 @@ class RemediationReceipt:
         return {key: payload[key] for key in sorted(payload)}
 
 
+@dataclass(frozen=True)
+class RemediationEvidenceContext:
+    dispatch: str
+    affected_date: str | None
+    status_state: str
+    next_action: str
+    recovery_action: str
+    task_failures: list[dict[str, Any]] = field(default_factory=list)
+    failure_stages: list[str] = field(default_factory=list)
+    exit_codes: list[int] = field(default_factory=list)
+    checkout_failures: list[str] = field(default_factory=list)
+    source_failures: list[str] = field(default_factory=list)
+    code_exception_markers: list[str] = field(default_factory=list)
+    evidence_entries: list[dict[str, Any]] = field(default_factory=list)
+    evidence_complete: bool = True
+
+    def to_payload(self) -> dict[str, Any]:
+        payload = asdict(self)
+        return {key: payload[key] for key in sorted(payload)}
+
+
 def _utc_now() -> datetime:
     return datetime.now(timezone.utc).replace(microsecond=0)
 
@@ -1713,6 +1734,7 @@ def _runner_roll_forward_safety(
     incoming_text = _git_stdout(runner, ["diff", "--name-only", f"HEAD..{target_ref}"], cwd=runner_root) or ""
     incoming_paths = sorted(_normalize_git_path(line) for line in incoming_text.splitlines() if line.strip())
     overlaps = _untracked_incoming_overlap(untracked, incoming_paths)
+    validation_capability = _runner_validation_capability(runner_root)
     safe = (
         status.ok
         and branch == "add/pages-repo-default"
@@ -1723,6 +1745,7 @@ def _runner_roll_forward_safety(
         and not unsanctioned
         and ancestor
         and not overlaps
+        and validation_capability["ok"]
     )
     return {
         "safe": safe,
@@ -1739,36 +1762,205 @@ def _runner_roll_forward_safety(
         "incoming_tracked_paths": incoming_paths,
         "untracked_incoming_overlaps": overlaps,
         "sanctioned_runtime_untracked_preserved": not unsanctioned,
+        "validation_capability": validation_capability,
     }
 
 
-def _incident_text(incident: Incident) -> str:
-    values = [
-        incident.classification,
-        incident.status_state,
-        incident.recovery_action,
-        incident.recovery_disposition,
-        incident.recommended_action,
-        *incident.evidence,
-    ]
-    return "\n".join(str(value).lower() for value in values if value)
+def _runner_python(runner_root: Path) -> Path:
+    return runner_root / ".venv" / "Scripts" / "python.exe"
 
 
-def _looks_like_checkout_hygiene(incident: Incident) -> bool:
-    text = _incident_text(incident)
-    return "verify_checkout" in text or "checkout" in text and "dirty" in text
+def _runner_validation_capability(runner_root: Path) -> dict[str, Any]:
+    python_executable = _runner_python(runner_root)
+    preflight = runner_root / "scripts" / "preflight_repo_state.py"
+    doctor = runner_root / "scripts" / "doctor.py"
+    preflight_argv = [str(python_executable), "scripts/preflight_repo_state.py", "--source-repo", "."]
+    doctor_argv = [str(python_executable), "scripts/doctor.py"]
+    ok = python_executable.is_file() and preflight.is_file() and doctor.is_file()
+    return {
+        "ok": ok,
+        "python_executable": str(python_executable),
+        "python_exists": python_executable.is_file(),
+        "preflight_exists": preflight.is_file(),
+        "doctor_exists": doctor.is_file(),
+        "preflight_argv": preflight_argv,
+        "doctor_argv": doctor_argv,
+        "doctor_environment_overrides": {"PYTHONPATH": "src"},
+    }
 
 
-def _looks_like_source_failure(incident: Incident) -> bool:
-    text = _incident_text(incident)
-    markers = ("failed source", "failed-extractions", "source failure", "tls", "timeout", "http", "rss", "feed")
-    return incident.recovery_action == "INVESTIGATE_FAILED_SOURCES" or any(marker in text for marker in markers)
+def _lower_values(value: Any) -> str:
+    if isinstance(value, dict):
+        return "\n".join(f"{key}={_lower_values(row)}" for key, row in sorted(value.items()))
+    if isinstance(value, list):
+        return "\n".join(_lower_values(row) for row in value)
+    return str(value).lower()
 
 
-def _looks_like_code_defect(incident: Incident) -> bool:
-    text = _incident_text(incident)
-    markers = ("traceback", "exception", "typeerror", "valueerror", "assertionerror", "module not found", "nameerror")
-    return any(marker in text for marker in markers) and not _looks_like_checkout_hygiene(incident) and not _looks_like_source_failure(incident)
+def _int_value(value: Any) -> int | None:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _append_context_from_mapping(
+    payload: dict[str, Any],
+    *,
+    task_failures: list[dict[str, Any]],
+    failure_stages: set[str],
+    exit_codes: set[int],
+    checkout_failures: set[str],
+    source_failures: set[str],
+    code_exception_markers: set[str],
+) -> None:
+    text = _lower_values(payload)
+    task_key = str(payload.get("task_key") or payload.get("task_name") or "")
+    status = str(payload.get("status") or payload.get("aggregate_status") or "")
+    classification = str(payload.get("classification") or "")
+    if status in {"FAILED", "DEGRADED"} or classification in {"failure", "partial_success"}:
+        task_failures.append({key: payload.get(key) for key in ("task_key", "task_name", "status", "classification") if payload.get(key) is not None})
+    for container in (payload, payload.get("details") if isinstance(payload.get("details"), dict) else {}):
+        stage = container.get("failure_stage") if isinstance(container, dict) else None
+        if stage:
+            failure_stages.add(str(stage))
+        exit_code = _int_value(container.get("exit_code")) if isinstance(container, dict) else None
+        if exit_code is not None:
+            exit_codes.add(exit_code)
+    failed_source_count = _int_value(payload.get("failed_source_count"))
+    if failed_source_count and failed_source_count > 0:
+        source_failures.add(f"failed_source_count={failed_source_count}")
+    task_statuses = payload.get("task_statuses")
+    if isinstance(task_statuses, dict):
+        for key, value in task_statuses.items():
+            if str(value).upper() in {"FAILED", "DEGRADED", "PARTIAL_SUCCESS"}:
+                task_failures.append({"task_key": str(key), "status": str(value)})
+    if "verify_checkout" in text or ("dirty" in text and "checkout" in text):
+        checkout_failures.add(task_key or "checkout failure")
+    source_markers = ("failed source", "failed_source", "failed-extractions", "source failure", "feed", "rss", "network", "timeout", "tls")
+    if any(marker in text for marker in source_markers):
+        source_failures.add(task_key or "source failure")
+    code_markers = ("traceback", "exception", "typeerror", "valueerror", "assertionerror", "modulenotfounderror", "nameerror")
+    for marker in code_markers:
+        if marker in text:
+            code_exception_markers.add(marker)
+
+
+def build_remediation_evidence_context(
+    incident: Incident,
+    *,
+    runner_root: Path,
+    current_status: DispatchStatus | None = None,
+    evidence_limit: int = 8,
+) -> RemediationEvidenceContext:
+    task_failures: list[dict[str, Any]] = []
+    failure_stages: set[str] = set()
+    exit_codes: set[int] = set()
+    checkout_failures: set[str] = set()
+    source_failures: set[str] = set()
+    code_exception_markers: set[str] = set()
+    evidence_entries: list[dict[str, Any]] = []
+    evidence_complete = True
+    if current_status is not None:
+        _append_context_from_mapping(
+            current_status.to_json_payload(),
+            task_failures=task_failures,
+            failure_stages=failure_stages,
+            exit_codes=exit_codes,
+            checkout_failures=checkout_failures,
+            source_failures=source_failures,
+            code_exception_markers=code_exception_markers,
+        )
+        if isinstance(current_status.details, dict):
+            _append_context_from_mapping(
+                current_status.details,
+                task_failures=task_failures,
+                failure_stages=failure_stages,
+                exit_codes=exit_codes,
+                checkout_failures=checkout_failures,
+                source_failures=source_failures,
+                code_exception_markers=code_exception_markers,
+            )
+    if len(incident.evidence) > evidence_limit:
+        evidence_complete = False
+    for reference in incident.evidence[:evidence_limit]:
+        full_path = _resolve_evidence_reference(reference, evidence_root=runner_root)
+        entry: dict[str, Any] = {"path": reference}
+        if full_path and full_path.is_file():
+            raw = full_path.read_bytes()
+            entry["sha256"] = hashlib.sha256(raw).hexdigest().upper()
+            entry["excerpt"] = _bounded_text_excerpt(full_path)
+            if full_path.suffix.lower() == ".json":
+                try:
+                    payload = json.loads(raw.decode("utf-8", errors="replace"))
+                except json.JSONDecodeError:
+                    payload = {}
+                    evidence_complete = False
+                if isinstance(payload, dict):
+                    summary = _summarize_evidence_payload(payload)
+                    entry["summary"] = summary
+                    _append_context_from_mapping(
+                        payload,
+                        task_failures=task_failures,
+                        failure_stages=failure_stages,
+                        exit_codes=exit_codes,
+                        checkout_failures=checkout_failures,
+                        source_failures=source_failures,
+                        code_exception_markers=code_exception_markers,
+                    )
+                    _append_context_from_mapping(
+                        summary,
+                        task_failures=task_failures,
+                        failure_stages=failure_stages,
+                        exit_codes=exit_codes,
+                        checkout_failures=checkout_failures,
+                        source_failures=source_failures,
+                        code_exception_markers=code_exception_markers,
+                    )
+            else:
+                _append_context_from_mapping(
+                    {"excerpt": entry["excerpt"]},
+                    task_failures=task_failures,
+                    failure_stages=failure_stages,
+                    exit_codes=exit_codes,
+                    checkout_failures=checkout_failures,
+                    source_failures=source_failures,
+                    code_exception_markers=code_exception_markers,
+                )
+        elif full_path is None:
+            entry["error"] = "evidence reference outside runner root or unsafe"
+            evidence_complete = False
+        else:
+            entry["error"] = "evidence file not available"
+            evidence_complete = False
+        evidence_entries.append(entry)
+    return RemediationEvidenceContext(
+        dispatch=incident.dispatch,
+        affected_date=incident.affected_date,
+        status_state=current_status.state if current_status else incident.status_state,
+        next_action=current_status.next_action if current_status else incident.recommended_action,
+        recovery_action=incident.recovery_action,
+        task_failures=task_failures,
+        failure_stages=sorted(failure_stages),
+        exit_codes=sorted(exit_codes),
+        checkout_failures=sorted(checkout_failures),
+        source_failures=sorted(source_failures),
+        code_exception_markers=sorted(code_exception_markers),
+        evidence_entries=evidence_entries,
+        evidence_complete=evidence_complete,
+    )
+
+
+def _context_supports_checkout_hygiene(context: RemediationEvidenceContext) -> bool:
+    return bool(context.checkout_failures or "verify_checkout" in context.failure_stages)
+
+
+def _context_supports_source_failure(incident: Incident, context: RemediationEvidenceContext) -> bool:
+    return incident.recovery_action == "INVESTIGATE_FAILED_SOURCES" or bool(context.source_failures)
+
+
+def _context_supports_code_defect(context: RemediationEvidenceContext) -> bool:
+    return bool(context.code_exception_markers) and not _context_supports_checkout_hygiene(context) and not context.source_failures
 
 
 def _current_condition_for(incident: Incident, current_status: DispatchStatus | None) -> str:
@@ -1788,6 +1980,7 @@ def build_remediation_action_plan(
 ) -> RemediationActionPlan:
     condition = _current_condition_for(incident, current_status)
     evidence = sorted(dict.fromkeys(incident.evidence))
+    context = build_remediation_evidence_context(incident, runner_root=runner_root, current_status=current_status)
     safety_checks: dict[str, Any] = {}
     action = "NO_ACTION"
     reason = "no remediation route matched"
@@ -1807,11 +2000,11 @@ def build_remediation_action_plan(
         reason = "public state requires durable verification"
         executable = True
         mutation_scope = []
-    elif _has_existing_engineering_work(operator_root, incident.incident_id) and _looks_like_checkout_hygiene(incident):
+    elif _has_existing_engineering_work(operator_root, incident.incident_id) and _context_supports_checkout_hygiene(context):
         action = "CLOSE_NON_CODE_INCIDENT"
         reason = "existing engineering item is tied to operational checkout hygiene rather than code repair"
         mutation_scope = ["ops/operator/engineering/active/<work-id>", "ops/operator/engineering/history/<work-id>", "ops/operator/engineering/audit/<date>/<work-id>-closed.json"]
-    elif _looks_like_checkout_hygiene(incident):
+    elif _context_supports_checkout_hygiene(context):
         safety_checks = _runner_roll_forward_safety(incident.dispatch, runner_root, runner=runner)
         if safety_checks.get("safe"):
             action = "RUNNER_ROLL_FORWARD"
@@ -1823,7 +2016,7 @@ def build_remediation_action_plan(
             reason = "runner rollout is the bounded operational remedy, but safety checks must pass before execution"
             executable = False
             mutation_scope = ["production runner Git HEAD only"]
-    elif _looks_like_source_failure(incident):
+    elif _context_supports_source_failure(incident, context):
         action = "INVESTIGATE_SOURCE_FAILURES"
         reason = "evidence points to source/feed failures rather than a code defect"
     elif (
@@ -1835,7 +2028,7 @@ def build_remediation_action_plan(
     ):
         action = "WAIT_FOR_NEXT_SCHEDULED_RUN"
         reason = "incident appears historical or transient and current runner state is healthy"
-    elif _looks_like_code_defect(incident):
+    elif _context_supports_code_defect(context):
         action = "ENGINEER_PREPARE_FIX"
         reason = "evidence supports a plausible code defect within isolated Engineer Mode scope"
         mutation_scope = ["C:\\BlueFernRunner\\OperatorWorktrees\\<work-id>", "operator repair branch", "approval-ready repair PR"]
@@ -1846,12 +2039,15 @@ def build_remediation_action_plan(
     approval_required = action in EXECUTABLE_REMEDIATION_ACTIONS or action in {"ENGINEER_PREPARE_FIX", "CLOSE_NON_CODE_INCIDENT"}
     if not safety_checks:
         safety_checks = {
+            "structured_evidence": context.to_payload(),
             "public_side_effects": False,
             "scheduler_changes": False,
             "collection_rerun": False,
             "editorial_mutation": False,
             "merge_pr": False,
         }
+    elif "structured_evidence" not in safety_checks:
+        safety_checks = {**safety_checks, "structured_evidence": context.to_payload()}
     return RemediationActionPlan(
         dispatch=incident.dispatch,
         incident_id=incident.incident_id,
@@ -1974,9 +2170,18 @@ def _refused_remediation_receipt(
     )
 
 
-def _run_validation_command(command: list[str], *, cwd: Path, runner: Any) -> dict[str, Any]:
-    result = runner(command, cwd=cwd)
-    return {"command": command, "exit_code": result.exit_code, "stdout_tail": result.stdout[-1000:], "stderr_tail": result.stderr[-1000:]}
+def _run_validation_command(command: list[str], *, cwd: Path, runner: Any, env: dict[str, str] | None = None) -> dict[str, Any]:
+    try:
+        result = runner(command, cwd=cwd, env=env)
+    except TypeError:
+        result = runner(command, cwd=cwd)
+    return {
+        "command_argv": command,
+        "environment_overrides": env or {},
+        "exit_code": result.exit_code,
+        "stdout_tail": result.stdout[-1000:],
+        "stderr_tail": result.stderr[-1000:],
+    }
 
 
 def _apply_runner_roll_forward(
@@ -1989,6 +2194,22 @@ def _apply_runner_roll_forward(
 ) -> RemediationReceipt:
     started = _format_time(now or _utc_now())
     before_head = _git_stdout(runner, ["rev-parse", "HEAD"], cwd=runner_root)
+    validation_capability = _runner_validation_capability(runner_root)
+    if not validation_capability["ok"]:
+        receipt = RemediationReceipt(
+            plan.dispatch,
+            plan.incident_id,
+            plan.proposed_action,
+            False,
+            "REFUSED",
+            "runner-local validation capability is unavailable",
+            started,
+            _format_time(_utc_now()),
+            before_head=before_head,
+            expected_mutation_scope=plan.expected_mutation_scope,
+            validation={"validation_capability": validation_capability, "merge_applied": False, "validation_passed": False},
+        )
+        return _write_remediation_receipt(operator_root, receipt)
     fetch = runner(["git", "fetch", "origin"], cwd=runner_root)
     if not fetch.ok:
         receipt = RemediationReceipt(plan.dispatch, plan.incident_id, plan.proposed_action, False, "FAILED", "git fetch failed", started, _format_time(_utc_now()), before_head=before_head, expected_mutation_scope=plan.expected_mutation_scope, warnings=[fetch.stderr.strip() or fetch.stdout.strip()])
@@ -2002,19 +2223,23 @@ def _apply_runner_roll_forward(
     if not merge.ok:
         receipt = RemediationReceipt(plan.dispatch, plan.incident_id, plan.proposed_action, False, "FAILED", "git merge --ff-only failed", started, _format_time(_utc_now()), before_head=before_head, after_head=after_head, expected_mutation_scope=plan.expected_mutation_scope, warnings=[merge.stderr.strip() or merge.stdout.strip()])
         return _write_remediation_receipt(operator_root, receipt)
+    validation_capability = _runner_validation_capability(runner_root)
     validation = {
-        "preflight": _run_validation_command([sys.executable, "scripts/preflight_repo_state.py", "--source-repo", "."], cwd=runner_root, runner=runner),
-        "doctor": _run_validation_command([sys.executable, "scripts/doctor.py"], cwd=runner_root, runner=runner),
+        "python_executable": validation_capability["python_executable"],
+        "preflight": _run_validation_command(validation_capability["preflight_argv"], cwd=runner_root, runner=runner),
+        "doctor": _run_validation_command(validation_capability["doctor_argv"], cwd=runner_root, runner=runner, env={"PYTHONPATH": "src"}),
         "tracked_dirty_after": _runner_roll_forward_safety(plan.dispatch, runner_root, runner=runner).get("tracked_dirty_paths", []),
+        "merge_applied": True,
     }
     status_after = _runner_roll_forward_safety(plan.dispatch, runner_root, runner=runner)
     accepted = not validation["tracked_dirty_after"] and validation["preflight"]["exit_code"] == 0 and validation["doctor"]["exit_code"] == 0
+    validation["validation_passed"] = accepted
     receipt = RemediationReceipt(
         dispatch=plan.dispatch,
         incident_id=plan.incident_id,
         action=plan.proposed_action,
         accepted=accepted,
-        outcome="APPLIED" if accepted else "FAILED",
+        outcome="APPLIED" if accepted else "ROLLOUT_APPLIED_VALIDATION_FAILED",
         reason="runner fast-forwarded with preserved runtime state" if accepted else "post-rollout validation failed",
         started_at=started,
         completed_at=_format_time(_utc_now()),

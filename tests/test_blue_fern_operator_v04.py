@@ -114,7 +114,7 @@ class FakeEngineeringRunner:
         if args[:3] in (["git", "diff", "--name-only"], ["git", "ls-files", "--others"]):
             return operator.EngineeringCommandResult(0, "\n".join(self.changed_paths) + "\n")
         if args[-2:] == ["exec", "--help"] or args[1:3] == ["exec", "--help"]:
-            help_text = "codex exec --sandbox workspace-write --cd <DIR>\n" if self.codex_help_supports_sandbox else "codex exec\n"
+            help_text = "codex exec --sandbox workspace-write --cd <DIR> --ignore-user-config\n" if self.codex_help_supports_sandbox else "codex exec\n"
             return operator.EngineeringCommandResult(0, help_text)
         if len(args) > 2 and args[1] == "exec" and "--sandbox" in args:
             return operator.EngineeringCommandResult(0, "Root cause: deterministic collection bug\npatched\n")

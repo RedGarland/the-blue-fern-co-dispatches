@@ -1501,19 +1501,35 @@ def _engineering_prompt(item: EngineeringWorkItem, diagnosis_path: Path) -> str:
     )
 
 
-def _codex_sandbox_invocation(executable: str, worktree: Path, prompt: str) -> list[str]:
-    return [
-        executable,
-        "exec",
-        "--sandbox",
-        "workspace-write",
-        "--ask-for-approval",
-        "never",
-        "--cd",
-        str(worktree),
-        "--ignore-user-config",
-        prompt,
-    ]
+def _codex_supported_exec_flags(help_text: str) -> dict[str, bool]:
+    return {
+        "sandbox": "--sandbox" in help_text,
+        "cd": "--cd" in help_text,
+        "ignore_user_config": "--ignore-user-config" in help_text,
+        "ask_for_approval": "--ask-for-approval" in help_text,
+    }
+
+
+def _codex_effective_exec_command_shape(flags: dict[str, bool]) -> list[str]:
+    shape = ["<codex>", "exec", "--sandbox", "workspace-write"]
+    if flags.get("ask_for_approval"):
+        shape.extend(["--ask-for-approval", "never"])
+    shape.extend(["--cd", "<worktree>"])
+    if flags.get("ignore_user_config"):
+        shape.append("--ignore-user-config")
+    shape.append("<prompt>")
+    return shape
+
+
+def _codex_sandbox_invocation(executable: str, worktree: Path, prompt: str, flags: dict[str, bool]) -> list[str]:
+    command = [executable, "exec", "--sandbox", "workspace-write"]
+    if flags.get("ask_for_approval"):
+        command.extend(["--ask-for-approval", "never"])
+    command.extend(["--cd", str(worktree)])
+    if flags.get("ignore_user_config"):
+        command.append("--ignore-user-config")
+    command.append(prompt)
+    return command
 
 
 def _redact_diagnostic_text(text: str) -> str:
@@ -1598,7 +1614,13 @@ def _codex_readiness_probe(executable: str, *, runner: Any = _run_command, cwd: 
     version = runner([executable, "--version"], cwd=cwd)
     help_result = runner([executable, "exec", "--help"], cwd=cwd)
     login = runner([executable, "login", "status"], cwd=cwd)
-    supports = help_result.ok and "--sandbox" in help_result.stdout and "workspace-write" in help_result.stdout and "--cd" in help_result.stdout
+    supported_flags = _codex_supported_exec_flags(help_result.stdout if help_result.ok else "")
+    supports = (
+        help_result.ok
+        and supported_flags["sandbox"]
+        and "workspace-write" in help_result.stdout
+        and supported_flags["cd"]
+    )
     result = {
         "executable": executable,
         "version": {
@@ -1612,6 +1634,8 @@ def _codex_readiness_probe(executable: str, *, runner: Any = _run_command, cwd: 
             "stderr_tail": _tail_text(help_result.stderr),
             "supports_workspace_write": supports,
         },
+        "supported_exec_flags": supported_flags,
+        "effective_exec_command_shape": _codex_effective_exec_command_shape(supported_flags) if supports else [],
         "login_status": {
             "exit_code": login.exit_code,
             "stdout_tail": _tail_text(login.stdout),
@@ -1640,8 +1664,8 @@ def _codex_cli_supports_workspace_sandbox(executable: str, *, runner: Any = _run
     result = runner([executable, "exec", "--help"], cwd=cwd)
     if not result.ok:
         return False
-    help_text = result.stdout
-    return "--sandbox" in help_text and "workspace-write" in help_text and "--cd" in help_text
+    flags = _codex_supported_exec_flags(result.stdout)
+    return flags["sandbox"] and "workspace-write" in result.stdout and flags["cd"]
 
 
 def _bounded_root_cause(text: str) -> str:
@@ -1723,7 +1747,10 @@ def _invoke_codex_for_engineering(
                 diagnostic_artifact=str(artifact_path),
             )
         started_at = _utc_now()
-        result = runner(_codex_sandbox_invocation(executable, Path(item.worktree), prompt), cwd=Path(item.worktree))
+        result = runner(
+            _codex_sandbox_invocation(executable, Path(item.worktree), prompt, probe["supported_exec_flags"]),
+            cwd=Path(item.worktree),
+        )
         completed_at = _utc_now()
         classification = None if result.ok else _classify_codex_failure(result)
         artifact_path = _write_codex_attempt_artifact(

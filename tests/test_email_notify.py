@@ -280,6 +280,32 @@ def test_send_email_retries_after_send_failure(monkeypatch):
     assert FakeSMTP.instances[1].sent_messages
 
 
+def test_send_email_reports_smtp_auth_failure_without_secret_payload(monkeypatch):
+    _set_email_env(monkeypatch)
+
+    class AuthFailureSMTP(FakeSMTP):
+        def login(self, user, password):
+            super().login(user, password)
+            raise smtplib.SMTPAuthenticationError(
+                535,
+                b"5.7.8 Username and Password not accepted: secret-app-password alerts@example.test",
+            )
+
+    FakeSMTP.instances = []
+    monkeypatch.setenv("SMTP_RETRIES", "0")
+    monkeypatch.setattr(run_and_notify.smtplib, "SMTP", AuthFailureSMTP)
+
+    with pytest.raises(RuntimeError) as excinfo:
+        run_and_notify.send_email("subject", "body", "2026-05-04")
+
+    message = str(excinfo.value)
+    assert "SMTPAuthenticationError: SMTP authentication rejected (SMTP code 535)" in message
+    assert "SMTP_PASSWORD/app-password" in message
+    assert "secret-app-password" not in message
+    assert "alerts@example.test" not in message
+    assert "Username and Password not accepted" not in message
+
+
 def test_smtp_debug_file_tees_debug_output(monkeypatch, capsys):
     FakeSMTP.instances = []
     _set_email_env(monkeypatch)

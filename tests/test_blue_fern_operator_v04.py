@@ -96,6 +96,16 @@ class FakeEngineeringRunner:
         if args == ["git", "show-ref", "--verify", "refs/heads/operator/care-line/bfo-test-failed"]:
             return operator.EngineeringCommandResult(1)
         if args[:3] == ["git", "worktree", "add"]:
+            worktree = Path(args[3])
+            (worktree / "tests").mkdir(parents=True, exist_ok=True)
+            for name in (
+                "test_blue_fern_operator.py",
+                "test_blue_fern_operator_v03.py",
+                "test_blue_fern_operator_v04.py",
+                "test_care_line_collection.py",
+                "test_dispatch_ops_status.py",
+            ):
+                (worktree / "tests" / name).write_text("# fake\n", encoding="utf-8")
             return operator.EngineeringCommandResult(0)
         if args == ["git", "rev-parse", "--show-toplevel"]:
             return operator.EngineeringCommandResult(0, f"{cwd}\n")
@@ -118,7 +128,7 @@ class FakeEngineeringRunner:
             return operator.EngineeringCommandResult(0, help_text)
         if len(args) > 2 and args[1] == "exec" and "--sandbox" in args:
             return operator.EngineeringCommandResult(0, "Root cause: deterministic collection bug\npatched\n")
-        if args[:3] == ["powershell.exe", "-NoProfile", "-Command"]:
+        if args[:2] == ["python", "-m"] or args[:1] == ["python"]:
             code = self.validation_exit_codes.pop(0) if self.validation_exit_codes else 0
             return operator.EngineeringCommandResult(code, "validation output\n", "validation error\n" if code else "")
         if args[:3] == ["git", "add", "--"]:

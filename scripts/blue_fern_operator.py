@@ -5,7 +5,9 @@ import contextlib
 import fnmatch
 import hashlib
 import json
+import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -36,6 +38,8 @@ NOTIFICATION_SCHEMA_VERSION = "blue_fern_operator_notification_v1"
 RUN_RECEIPT_SCHEMA_VERSION = "blue_fern_operator_run_receipt_v1"
 ENGINEERING_SCHEMA_VERSION = "blue_fern_operator_engineering_v1"
 CODEX_ATTEMPT_SCHEMA_VERSION = "blue_fern_operator_codex_attempt_v1"
+DIAGNOSIS_EVIDENCE_EXCERPT_BYTES = 4096
+DIAGNOSIS_EVIDENCE_FILE_LIMIT = 12
 DEFAULT_CONFIG_PATH = ROOT / "ops" / "operator" / "config.json"
 DEFAULT_OPERATOR_ROOT = ROOT / "ops" / "operator"
 DISPATCH_ORDER = ("food-line", "care-line", "gaza", "ice")
@@ -1168,6 +1172,185 @@ def _tests_required(dispatch: str, classification: str) -> list[str]:
     return tests
 
 
+def _safe_relative_path(path: str) -> bool:
+    candidate = Path(path.replace("\\", "/"))
+    return not candidate.is_absolute() and ".." not in candidate.parts
+
+
+def _bounded_text_excerpt(path: Path, limit: int = DIAGNOSIS_EVIDENCE_EXCERPT_BYTES) -> str:
+    data = path.read_bytes()[:limit]
+    return _redact_diagnostic_text(data.decode("utf-8", errors="replace"))
+
+
+def _evidence_type(path: Path) -> str:
+    if path.suffix.lower() == ".json":
+        return "json"
+    if path.suffix.lower() in {".log", ".txt"}:
+        return "text"
+    return "artifact"
+
+
+def _summarize_evidence_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    summary = {
+        key: payload.get(key)
+        for key in (
+            "task_key",
+            "task_name",
+            "status",
+            "classification",
+            "exit_code",
+            "failure_stage",
+            "scheduled_for",
+            "started_at",
+            "completed_at",
+            "collection_health",
+        )
+        if key in payload
+    }
+    details = payload.get("details")
+    if isinstance(details, dict):
+        summary["details"] = {
+            key: details.get(key)
+            for key in ("failure_stage", "pipeline_run_id", "no_op_reason", "selected_event_count")
+            if key in details
+        }
+    return summary
+
+
+def _evidence_failure(summary: dict[str, Any]) -> bool:
+    return summary.get("status") not in {None, "COMPLETE", "SUCCESS", "SAFE_NO_OP"} or summary.get("exit_code") not in {None, 0}
+
+
+def _resolve_evidence_reference(reference: str, *, evidence_root: Path | None) -> Path | None:
+    if not reference:
+        return None
+    candidate = Path(reference)
+    if candidate.is_absolute():
+        if evidence_root and _inside_path(candidate, evidence_root):
+            return candidate
+        return None
+    if not _safe_relative_path(reference) or evidence_root is None:
+        return None
+    return evidence_root / candidate
+
+
+def _append_evidence_entry(
+    entries: list[dict[str, Any]],
+    failures: list[dict[str, Any]],
+    *,
+    reference: str,
+    full_path: Path | None,
+    entry_type: str | None = None,
+    evidence_root: Path | None = None,
+) -> None:
+    entry: dict[str, Any] = {"path": reference}
+    if entry_type:
+        entry["type"] = entry_type
+    if full_path and full_path.is_file():
+        raw = full_path.read_bytes()
+        entry.update(
+            {
+                "type": entry_type or _evidence_type(full_path),
+                "sha256": hashlib.sha256(raw).hexdigest().upper(),
+                "excerpt": _bounded_text_excerpt(full_path),
+            }
+        )
+        if full_path.suffix.lower() == ".json":
+            try:
+                payload = json.loads(raw.decode("utf-8", errors="replace"))
+            except json.JSONDecodeError:
+                payload = {}
+            if isinstance(payload, dict):
+                artifact_refs = payload.get("artifact_refs")
+                if isinstance(artifact_refs, dict):
+                    for value in artifact_refs.values():
+                        if isinstance(value, str) and _resolve_evidence_reference(value, evidence_root=evidence_root) is None:
+                            entry["excerpt"] = entry["excerpt"].replace(value, "[REDACTED_UNSAFE_PATH]")
+                            entry["excerpt"] = entry["excerpt"].replace(json.dumps(value)[1:-1], "[REDACTED_UNSAFE_PATH]")
+                summary = _summarize_evidence_payload(payload)
+                entry["summary"] = summary
+                if _evidence_failure(summary):
+                    failures.append({"path": reference, **summary})
+    else:
+        entry["error"] = "evidence file not available to Operator"
+    entries.append(entry)
+
+
+def _build_diagnosis_packet(
+    incident: Incident,
+    item: EngineeringWorkItem,
+    *,
+    eligibility_reason: str,
+    evidence_root: Path | None = None,
+) -> dict[str, Any]:
+    evidence_entries: list[dict[str, Any]] = []
+    failures: list[dict[str, Any]] = []
+    for evidence_path in item.evidence[:DIAGNOSIS_EVIDENCE_FILE_LIMIT]:
+        if not _safe_relative_path(evidence_path):
+            evidence_entries.append({"path": evidence_path, "error": "unsafe evidence path"})
+            continue
+        if len(evidence_entries) >= DIAGNOSIS_EVIDENCE_FILE_LIMIT:
+            break
+        full_path = _resolve_evidence_reference(evidence_path, evidence_root=evidence_root)
+        _append_evidence_entry(evidence_entries, failures, reference=evidence_path, full_path=full_path, evidence_root=evidence_root)
+        if not full_path or not full_path.is_file() or full_path.suffix.lower() != ".json":
+            continue
+        try:
+            payload = json.loads(full_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        artifact_refs = payload.get("artifact_refs")
+        if not isinstance(artifact_refs, dict):
+            continue
+        for key, value in sorted(artifact_refs.items()):
+            if len(evidence_entries) >= DIAGNOSIS_EVIDENCE_FILE_LIMIT:
+                break
+            if not isinstance(value, str):
+                continue
+            referenced_path = _resolve_evidence_reference(value, evidence_root=evidence_root)
+            if referenced_path is None:
+                continue
+            _append_evidence_entry(
+                evidence_entries,
+                failures,
+                reference=value,
+                full_path=referenced_path,
+                entry_type=f"artifact_ref:{key}",
+                evidence_root=evidence_root,
+            )
+    return {
+        "schema_version": "blue_fern_operator_diagnosis_v2",
+        "work_id": item.work_id,
+        "incident_id": incident.incident_id,
+        "dispatch": incident.dispatch,
+        "classification": incident.classification,
+        "affected_date": incident.affected_date,
+        "status": {
+            "state": incident.status_state,
+            "classification": incident.classification,
+            "recommended_action": incident.recommended_action,
+        },
+        "recovery_plan": {
+            "disposition": incident.recovery_disposition,
+            "action": incident.recovery_action,
+        },
+        "eligibility_reason": eligibility_reason,
+        "failures": failures,
+        "evidence": evidence_entries,
+        "source_artifact_paths": item.evidence,
+        "allowed_paths": item.allowed_paths,
+        "validation_targets": item.tests_required,
+        "forbidden_actions": [
+            "publish",
+            "sync_pages",
+            "collection_replay",
+            "scheduler_mutation",
+            "production_runner_patch",
+            "merge_pr",
+        ],
+    }
+
+
 def _has_existing_engineering_work(operator_root: Path, incident_id: str) -> dict[str, Any] | None:
     root = _engineering_root(operator_root)
     for path in [*sorted((root / "active").glob("*/work-item.json")), *sorted((root / "history").glob("*/work-item.json"))]:
@@ -1260,6 +1443,7 @@ def prepare_engineering_work(
 ) -> list[EngineeringWorkItem]:
     policy = policy or load_remediation_policy(operator_root / "remediation-policy.yaml")
     items: list[EngineeringWorkItem] = []
+    dispatch_results = {row.dispatch: row for row in result.dispatches}
     for incident in result.incidents:
         eligible, reason = _is_engineering_eligible(incident, policy)
         if not eligible:
@@ -1274,26 +1458,16 @@ def prepare_engineering_work(
             worktree_root=worktree_root,
             base_sha=base_sha or _git_head(ROOT),
         )
-        diagnosis = {
-            "schema_version": "blue_fern_operator_diagnosis_v1",
-            "work_id": item.work_id,
-            "incident_id": incident.incident_id,
-            "dispatch": incident.dispatch,
-            "classification": incident.classification,
-            "status_state": incident.status_state,
-            "recovery_action": incident.recovery_action,
-            "eligibility_reason": reason,
-            "evidence": item.evidence,
-            "allowed_paths": item.allowed_paths,
-            "forbidden_actions": [
-                "publish",
-                "sync_pages",
-                "collection_replay",
-                "scheduler_mutation",
-                "production_runner_patch",
-                "merge_pr",
-            ],
-        }
+        dispatch_result = dispatch_results.get(incident.dispatch)
+        exported_status = dispatch_result.exported_status if dispatch_result else {}
+        exported_status = exported_status or {}
+        evidence_root = Path(exported_status.get("source_root", "")) if exported_status.get("source_root") else None
+        diagnosis = _build_diagnosis_packet(
+            incident,
+            item,
+            eligibility_reason=reason,
+            evidence_root=evidence_root,
+        )
         item = replace(
             item,
             diagnosis_path=str(_engineering_work_root(operator_root, item.work_id) / "diagnosis.json"),
@@ -1336,8 +1510,11 @@ def update_engineering_validation(
     return item
 
 
-def _run_command(args: list[str], *, cwd: Path) -> EngineeringCommandResult:
-    completed = subprocess.run(args, cwd=cwd, text=True, capture_output=True, check=False)
+def _run_command(args: list[str], *, cwd: Path, env: dict[str, str] | None = None) -> EngineeringCommandResult:
+    run_env = os.environ.copy()
+    if env:
+        run_env.update(env)
+    completed = subprocess.run(args, cwd=cwd, env=run_env, text=True, capture_output=True, check=False)
     return EngineeringCommandResult(completed.returncode, completed.stdout, completed.stderr)
 
 
@@ -1809,6 +1986,82 @@ def _unexpected_patch_paths(changed_paths: Iterable[str], allowed_paths: Iterabl
     return sorted(unexpected)
 
 
+def _inside_path(child: Path, parent: Path) -> bool:
+    try:
+        child.resolve().relative_to(parent.resolve())
+        return True
+    except ValueError:
+        return False
+
+
+def _resolve_pytest_target(pattern: str, *, worktree: Path) -> tuple[list[str], str | None]:
+    normalized = pattern.replace("\\", "/")
+    candidate = Path(normalized)
+    if candidate.is_absolute() or ".." in candidate.parts:
+        return [], "VALIDATION_TARGET_UNSAFE"
+    if not normalized.startswith("tests/"):
+        return [], "VALIDATION_TARGET_UNSAFE"
+    matches = sorted(worktree.glob(normalized)) if any(char in normalized for char in "*?[") else [worktree / normalized]
+    resolved: list[str] = []
+    for match in matches:
+        if not match.is_file():
+            continue
+        if not _inside_path(match, worktree / "tests"):
+            return [], "VALIDATION_TARGET_UNSAFE"
+        rel = match.relative_to(worktree).as_posix()
+        resolved.append(rel)
+    if not resolved:
+        return [], "VALIDATION_TARGET_NOT_FOUND"
+    return sorted(set(resolved)), None
+
+
+def _validation_invocation(command: str, *, worktree: Path) -> dict[str, Any]:
+    if command.startswith("$env:PYTHONPATH='src'; python "):
+        rest = command.removeprefix("$env:PYTHONPATH='src'; ")
+        argv = shlex.split(rest, posix=False)
+        return {"command_argv": argv, "env": {"PYTHONPATH": "src"}, "requested_pattern": None, "resolved_paths": [], "outcome": "READY"}
+    argv = shlex.split(command, posix=False)
+    if len(argv) >= 4 and argv[:3] == ["python", "-m", "pytest"]:
+        resolved_argv = argv[:3]
+        resolved_paths: list[str] = []
+        requested_patterns: list[str] = []
+        options: list[str] = []
+        for arg in argv[3:]:
+            if arg.startswith("-"):
+                options.append(arg)
+                continue
+            if arg.startswith("tests/"):
+                requested_patterns.append(arg)
+                paths, error = _resolve_pytest_target(arg, worktree=worktree)
+                if error:
+                    return {
+                        "command_argv": [],
+                        "requested_pattern": arg,
+                        "resolved_paths": [],
+                        "outcome": error,
+                    }
+                resolved_paths.extend(paths)
+            else:
+                candidate = Path(arg.replace("\\", "/"))
+                if candidate.is_absolute() or ".." in candidate.parts:
+                    return {
+                        "command_argv": [],
+                        "requested_pattern": arg,
+                        "resolved_paths": [],
+                        "outcome": "VALIDATION_TARGET_UNSAFE",
+                    }
+                resolved_argv.append(arg)
+        resolved_argv.extend(sorted(set(resolved_paths)))
+        resolved_argv.extend(options)
+        return {
+            "command_argv": resolved_argv,
+            "requested_pattern": " ".join(requested_patterns) if requested_patterns else None,
+            "resolved_paths": sorted(set(resolved_paths)),
+            "outcome": "READY",
+        }
+    return {"command_argv": argv, "requested_pattern": None, "resolved_paths": [], "outcome": "READY"}
+
+
 def _run_engineering_validation(
     operator_root: Path,
     item: EngineeringWorkItem,
@@ -1819,12 +2072,37 @@ def _run_engineering_validation(
     results: list[dict[str, Any]] = []
     item = _save_engineering_work_item(operator_root, replace(item, state=EngineeringState.VALIDATING.value, merge_allowed=False))
     for command in item.tests_required:
-        result = runner(["powershell.exe", "-NoProfile", "-Command", command], cwd=worktree)
+        invocation = _validation_invocation(command, worktree=worktree)
+        if invocation["outcome"] != "READY":
+            row = {
+                "command": command,
+                "requested_pattern": invocation.get("requested_pattern"),
+                "resolved_paths": invocation.get("resolved_paths", []),
+                "command_argv": invocation.get("command_argv", []),
+                "exit_code": None,
+                "stdout": "",
+                "stderr": "",
+                "outcome": invocation["outcome"],
+            }
+            results.append(row)
+            item = replace(item, validation_results=results, merge_allowed=False)
+            item = _save_engineering_work_item(operator_root, item)
+            return item, False
+        env = invocation.get("env")
+        try:
+            result = runner(invocation["command_argv"], cwd=worktree, env=env) if env else runner(invocation["command_argv"], cwd=worktree)
+        except TypeError:
+            result = runner(invocation["command_argv"], cwd=worktree)
         row = {
             "command": command,
+            "requested_pattern": invocation.get("requested_pattern"),
+            "resolved_paths": invocation.get("resolved_paths", []),
+            "command_argv": invocation["command_argv"],
+            "env": env or {},
             "exit_code": result.exit_code,
             "stdout": result.stdout[-4000:],
             "stderr": result.stderr[-4000:],
+            "outcome": "PASSED" if result.ok else "FAILED",
         }
         results.append(row)
         if not result.ok:
@@ -2203,6 +2481,9 @@ def execute_engineering_work_item(
         if item.state == EngineeringState.BLOCKED.value:
             return item
         changed = _changed_paths(Path(item.worktree), runner=runner)
+        if not changed:
+            reason = "insufficient engineering evidence" if item.root_cause == "INSUFFICIENT_EVIDENCE" else "codex produced no patch"
+            return _block_engineering_work(operator_root, item, reason)
         unexpected = _unexpected_patch_paths(changed, item.allowed_paths)
         if unexpected:
             return _block_engineering_work(operator_root, item, "patch changed paths outside allowed scope", unexpected_paths=unexpected)

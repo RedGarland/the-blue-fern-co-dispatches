@@ -5,6 +5,7 @@ import contextlib
 import fnmatch
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -34,6 +35,7 @@ INCIDENT_SCHEMA_VERSION = "blue_fern_operator_incident_v1"
 NOTIFICATION_SCHEMA_VERSION = "blue_fern_operator_notification_v1"
 RUN_RECEIPT_SCHEMA_VERSION = "blue_fern_operator_run_receipt_v1"
 ENGINEERING_SCHEMA_VERSION = "blue_fern_operator_engineering_v1"
+CODEX_ATTEMPT_SCHEMA_VERSION = "blue_fern_operator_codex_attempt_v1"
 DEFAULT_CONFIG_PATH = ROOT / "ops" / "operator" / "config.json"
 DEFAULT_OPERATOR_ROOT = ROOT / "ops" / "operator"
 DISPATCH_ORDER = ("food-line", "care-line", "gaza", "ice")
@@ -224,6 +226,8 @@ class EngineeringWorkItem:
     merge_allowed: bool = False
     diagnosis_path: str | None = None
     codex_prompt_path: str | None = None
+    diagnostic_artifact: str | None = None
+    failure_classification: str | None = None
     pr_url: str | None = None
     root_cause: str | None = None
     unexpected_paths: list[str] = field(default_factory=list)
@@ -1343,6 +1347,8 @@ def _block_engineering_work(
     *,
     unexpected_paths: list[str] | None = None,
     validation_results: list[dict[str, Any]] | None = None,
+    failure_classification: str | None = None,
+    diagnostic_artifact: str | None = None,
 ) -> EngineeringWorkItem:
     return _save_engineering_work_item(
         operator_root,
@@ -1350,6 +1356,8 @@ def _block_engineering_work(
             item,
             state=EngineeringState.BLOCKED.value,
             blocked_reason=reason,
+            failure_classification=failure_classification or item.failure_classification,
+            diagnostic_artifact=diagnostic_artifact or item.diagnostic_artifact,
             unexpected_paths=sorted(unexpected_paths or item.unexpected_paths),
             validation_results=validation_results or item.validation_results,
             merge_allowed=False,
@@ -1507,6 +1515,115 @@ def _codex_sandbox_invocation(executable: str, worktree: Path, prompt: str) -> l
     ]
 
 
+def _redact_diagnostic_text(text: str) -> str:
+    text = re.sub(r"(?i)\b(api[_-]?key|token|password|secret)\s*[:=]\s*\S+", r"\1=[REDACTED]", text)
+    text = re.sub(r"\bsk-[A-Za-z0-9_-]{12,}\b", "sk-[REDACTED]", text)
+    return text
+
+
+def _tail_text(text: str, limit: int = 8192) -> str:
+    return _redact_diagnostic_text(text[-limit:])
+
+
+def _classify_codex_failure(result: EngineeringCommandResult) -> str:
+    evidence = f"{result.stdout}\n{result.stderr}".lower()
+    if result.exit_code in {124, 137} or "timed out" in evidence or "timeout" in evidence:
+        return "CODEX_TIMEOUT"
+    if any(token in evidence for token in ("not logged in", "login required", "authentication", "unauthorized", "api key", "auth")):
+        return "CODEX_AUTH_FAILURE"
+    if any(token in evidence for token in ("unknown option", "unexpected argument", "unrecognized option", "invalid argument", "unsupported option")):
+        return "CODEX_CLI_ARGUMENT_ERROR"
+    if "sandbox" in evidence or "workspace-write" in evidence or "permission denied" in evidence:
+        return "CODEX_SANDBOX_FAILURE"
+    if any(token in evidence for token in ("network", "dns", "connection refused", "connection reset", "could not resolve", "tls")):
+        return "CODEX_NETWORK_FAILURE"
+    if "model" in evidence:
+        return "CODEX_MODEL_FAILURE"
+    if result.stdout.strip() or result.stderr.strip():
+        return "CODEX_PROCESS_FAILURE"
+    return "CODEX_UNKNOWN_FAILURE"
+
+
+def _codex_attempt_path(operator_root: Path, work_id: str, attempt: int) -> Path:
+    return _engineering_work_root(operator_root, work_id) / f"codex-attempt-{attempt}.json"
+
+
+def _write_codex_attempt_artifact(
+    operator_root: Path,
+    item: EngineeringWorkItem,
+    *,
+    attempt: int,
+    started_at: str,
+    completed_at: str,
+    executable: str,
+    cwd: Path,
+    result: EngineeringCommandResult,
+    failure_classification: str | None = None,
+) -> Path:
+    artifact = {
+        "schema_version": CODEX_ATTEMPT_SCHEMA_VERSION,
+        "work_id": item.work_id,
+        "incident_id": item.incident_id,
+        "attempt": attempt,
+        "started_at": _format_time(started_at) if isinstance(started_at, datetime) else started_at,
+        "completed_at": _format_time(completed_at) if isinstance(completed_at, datetime) else completed_at,
+        "executable": executable,
+        "cwd": str(cwd),
+        "sandbox": "workspace-write",
+        "approval_policy": "never",
+        "ignore_user_config": True,
+        "exit_code": result.exit_code,
+        "stdout_tail": _tail_text(result.stdout),
+        "stderr_tail": _tail_text(result.stderr),
+        "failure_classification": failure_classification,
+    }
+    path = _codex_attempt_path(operator_root, item.work_id, attempt)
+    _write_json(path, artifact)
+    return path
+
+
+def _codex_readiness_probe(executable: str, *, runner: Any = _run_command, cwd: Path) -> dict[str, Any]:
+    version = runner([executable, "--version"], cwd=cwd)
+    help_result = runner([executable, "exec", "--help"], cwd=cwd)
+    login = runner([executable, "login", "status"], cwd=cwd)
+    supports = help_result.ok and "--sandbox" in help_result.stdout and "workspace-write" in help_result.stdout and "--cd" in help_result.stdout
+    result = {
+        "executable": executable,
+        "version": {
+            "exit_code": version.exit_code,
+            "stdout_tail": _tail_text(version.stdout),
+            "stderr_tail": _tail_text(version.stderr),
+        },
+        "exec_help": {
+            "exit_code": help_result.exit_code,
+            "stdout_tail": _tail_text(help_result.stdout),
+            "stderr_tail": _tail_text(help_result.stderr),
+            "supports_workspace_write": supports,
+        },
+        "login_status": {
+            "exit_code": login.exit_code,
+            "stdout_tail": _tail_text(login.stdout),
+            "stderr_tail": _tail_text(login.stderr),
+        },
+        "ok": version.ok and help_result.ok and supports and login.ok,
+    }
+    if not version.ok:
+        result["failure_classification"] = _classify_codex_failure(version)
+        result["failure_result"] = version
+    elif not help_result.ok or not supports:
+        result["failure_classification"] = _classify_codex_failure(help_result)
+        if supports is False and help_result.ok:
+            result["failure_classification"] = "CODEX_CLI_ARGUMENT_ERROR"
+        result["failure_result"] = help_result
+    elif not login.ok:
+        result["failure_classification"] = "CODEX_AUTH_FAILURE"
+        result["failure_result"] = login
+    else:
+        result["failure_classification"] = None
+        result["failure_result"] = EngineeringCommandResult(0, "", "")
+    return result
+
+
 def _codex_cli_supports_workspace_sandbox(executable: str, *, runner: Any = _run_command, cwd: Path) -> bool:
     result = runner([executable, "exec", "--help"], cwd=cwd)
     if not result.ok:
@@ -1542,22 +1659,88 @@ def _invoke_codex_for_engineering(
         replace(item, state=EngineeringState.DIAGNOSING.value, codex_prompt_path=str(prompt_path), merge_allowed=False),
     )
     if codex_runner is not None:
+        started_at = _utc_now()
         result = codex_runner(prompt=prompt, cwd=Path(item.worktree), item=item)
+        completed_at = _utc_now()
+        classification = None if result.ok else _classify_codex_failure(result)
+        artifact_path = _write_codex_attempt_artifact(
+            operator_root,
+            item,
+            attempt=item.repair_attempts + 1,
+            started_at=started_at,
+            completed_at=completed_at,
+            executable="codex_runner",
+            cwd=Path(item.worktree),
+            result=result,
+            failure_classification=classification,
+        )
     else:
         executable = shutil.which(codex_executable)
         if not executable:
-            return _block_engineering_work(operator_root, item, f"{codex_executable} executable is unavailable")
-        if not _codex_cli_supports_workspace_sandbox(executable, runner=runner, cwd=Path(item.worktree)):
-            return _block_engineering_work(operator_root, item, "codex CLI cannot enforce workspace-write sandbox non-interactively")
+            classification = "CODEX_CLI_ARGUMENT_ERROR"
+            return _block_engineering_work(
+                operator_root,
+                item,
+                f"{codex_executable} executable is unavailable: {classification}",
+                failure_classification=classification,
+            )
+        probe = _codex_readiness_probe(executable, runner=runner, cwd=Path(item.worktree))
+        if not probe["ok"]:
+            classification = str(probe["failure_classification"] or "CODEX_UNKNOWN_FAILURE")
+            result = probe["failure_result"]
+            artifact_path = _write_codex_attempt_artifact(
+                operator_root,
+                item,
+                attempt=item.repair_attempts + 1,
+                started_at=_utc_now(),
+                completed_at=_utc_now(),
+                executable=executable,
+                cwd=Path(item.worktree),
+                result=result,
+                failure_classification=classification,
+            )
+            reason = "codex readiness probe failed"
+            if classification == "CODEX_CLI_ARGUMENT_ERROR":
+                reason = "codex CLI cannot enforce workspace-write sandbox non-interactively"
+            return _block_engineering_work(
+                operator_root,
+                item,
+                f"{reason}: {classification}",
+                failure_classification=classification,
+                diagnostic_artifact=str(artifact_path),
+            )
+        started_at = _utc_now()
         result = runner(_codex_sandbox_invocation(executable, Path(item.worktree), prompt), cwd=Path(item.worktree))
+        completed_at = _utc_now()
+        classification = None if result.ok else _classify_codex_failure(result)
+        artifact_path = _write_codex_attempt_artifact(
+            operator_root,
+            item,
+            attempt=item.repair_attempts + 1,
+            started_at=started_at,
+            completed_at=completed_at,
+            executable=executable,
+            cwd=Path(item.worktree),
+            result=result,
+            failure_classification=classification,
+        )
     if not result.ok:
-        return _block_engineering_work(operator_root, item, "codex execution failed")
+        classification = classification or "CODEX_UNKNOWN_FAILURE"
+        return _block_engineering_work(
+            operator_root,
+            item,
+            f"codex execution failed: {classification}",
+            failure_classification=classification,
+            diagnostic_artifact=str(artifact_path),
+        )
     return _save_engineering_work_item(
         operator_root,
         replace(
             item,
             state=EngineeringState.PATCHED.value,
             root_cause=_bounded_root_cause(result.stdout),
+            diagnostic_artifact=str(artifact_path),
+            failure_classification=None,
             merge_allowed=False,
         ),
     )
@@ -1758,6 +1941,56 @@ def build_engineering_approval_notification(item: EngineeringWorkItem) -> Notifi
     )
 
 
+def _latest_codex_attempt_artifact(operator_root: Path, work_id: str) -> dict[str, Any] | None:
+    root = _engineering_work_root(operator_root, work_id)
+    attempts = sorted(root.glob("codex-attempt-*.json"))
+    if not attempts:
+        return None
+    path = attempts[-1]
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["path"] = str(path)
+    return payload
+
+
+def diagnose_engineering_work_item(
+    work_id: str,
+    *,
+    operator_root: Path = DEFAULT_OPERATOR_ROOT,
+    codex_executable: str = "codex",
+    runner: Any = _run_command,
+) -> dict[str, Any]:
+    item = _load_engineering_work_item(operator_root, work_id)
+    worktree = Path(item.worktree)
+    executable = shutil.which(codex_executable)
+    if executable:
+        probe = _codex_readiness_probe(executable, runner=runner, cwd=worktree if worktree.exists() else operator_root)
+        probe.pop("failure_result", None)
+    else:
+        probe = {
+            "executable": None,
+            "ok": False,
+            "failure_classification": "CODEX_CLI_ARGUMENT_ERROR",
+            "reason": f"{codex_executable} executable is unavailable",
+        }
+    status = runner(["git", "status", "--short", "--branch"], cwd=worktree) if worktree.exists() else EngineeringCommandResult(1, "", "worktree missing")
+    branch = runner(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=worktree) if worktree.exists() else EngineeringCommandResult(1, "", "worktree missing")
+    return {
+        "schema_version": "blue_fern_operator_engineering_diagnosis_v1",
+        "work_item": item.to_payload(),
+        "codex_readiness": probe,
+        "worktree": {
+            "path": str(worktree),
+            "exists": worktree.exists(),
+            "status_exit_code": status.exit_code,
+            "status_stdout_tail": _tail_text(status.stdout),
+            "status_stderr_tail": _tail_text(status.stderr),
+            "branch_exit_code": branch.exit_code,
+            "branch": branch.stdout.strip().splitlines()[0] if branch.ok and branch.stdout.strip() else None,
+        },
+        "latest_codex_attempt": _latest_codex_attempt_artifact(operator_root, work_id),
+    }
+
+
 def execute_engineering_work_item(
     item: EngineeringWorkItem,
     *,
@@ -1940,11 +2173,24 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     engineer.add_argument("--worktree-root", type=Path, default=Path(r"C:\BlueFernRunner\OperatorWorktrees"), help=argparse.SUPPRESS)
     engineer.add_argument("--now", help=argparse.SUPPRESS)
     engineer.add_argument("--execute", action="store_true", help=argparse.SUPPRESS)
+    diagnose = sub.add_parser("engineer-diagnose", help="Read-only diagnostics for a prepared engineering work item.")
+    diagnose.add_argument("--work-id", required=True, help=argparse.SUPPRESS)
+    diagnose.add_argument("--json", action="store_true", help="Emit deterministic JSON.")
+    diagnose.add_argument("--operator-root", type=Path, default=DEFAULT_OPERATOR_ROOT, help=argparse.SUPPRESS)
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
+    if args.command == "engineer-diagnose":
+        payload = diagnose_engineering_work_item(args.work_id, operator_root=args.operator_root)
+        if args.json:
+            print(json.dumps(payload, indent=2, sort_keys=True))
+        else:
+            item = payload["work_item"]
+            readiness = payload["codex_readiness"]
+            print(f"{item['work_id']} {item['state']} codex_ready={readiness.get('ok')}")
+        return 0
     now = _parse_time(args.now) if args.now else None
     config = load_config(args.config)
     if args.command == "engineer":

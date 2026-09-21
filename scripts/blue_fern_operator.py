@@ -230,6 +230,7 @@ class EngineeringWorkItem:
     failure_classification: str | None = None
     pr_url: str | None = None
     root_cause: str | None = None
+    retry_authorization: dict[str, Any] | None = None
     unexpected_paths: list[str] = field(default_factory=list)
     validation_results: list[dict[str, Any]] = field(default_factory=list)
     blocked_reason: str | None = None
@@ -1548,6 +1549,15 @@ def _codex_attempt_path(operator_root: Path, work_id: str, attempt: int) -> Path
     return _engineering_work_root(operator_root, work_id) / f"codex-attempt-{attempt}.json"
 
 
+def _next_codex_attempt_number(operator_root: Path, work_id: str) -> int:
+    attempts: list[int] = []
+    for path in _engineering_work_root(operator_root, work_id).glob("codex-attempt-*.json"):
+        suffix = path.stem.removeprefix("codex-attempt-")
+        if suffix.isdigit():
+            attempts.append(int(suffix))
+    return (max(attempts) + 1) if attempts else 1
+
+
 def _write_codex_attempt_artifact(
     operator_root: Path,
     item: EngineeringWorkItem,
@@ -1578,6 +1588,8 @@ def _write_codex_attempt_artifact(
         "failure_classification": failure_classification,
     }
     path = _codex_attempt_path(operator_root, item.work_id, attempt)
+    if path.exists():
+        raise FileExistsError(f"refusing to overwrite Codex attempt artifact: {path}")
     _write_json(path, artifact)
     return path
 
@@ -1658,6 +1670,7 @@ def _invoke_codex_for_engineering(
         operator_root,
         replace(item, state=EngineeringState.DIAGNOSING.value, codex_prompt_path=str(prompt_path), merge_allowed=False),
     )
+    codex_attempt = _next_codex_attempt_number(operator_root, item.work_id)
     if codex_runner is not None:
         started_at = _utc_now()
         result = codex_runner(prompt=prompt, cwd=Path(item.worktree), item=item)
@@ -1666,7 +1679,7 @@ def _invoke_codex_for_engineering(
         artifact_path = _write_codex_attempt_artifact(
             operator_root,
             item,
-            attempt=item.repair_attempts + 1,
+            attempt=codex_attempt,
             started_at=started_at,
             completed_at=completed_at,
             executable="codex_runner",
@@ -1691,7 +1704,7 @@ def _invoke_codex_for_engineering(
             artifact_path = _write_codex_attempt_artifact(
                 operator_root,
                 item,
-                attempt=item.repair_attempts + 1,
+                attempt=codex_attempt,
                 started_at=_utc_now(),
                 completed_at=_utc_now(),
                 executable=executable,
@@ -1716,7 +1729,7 @@ def _invoke_codex_for_engineering(
         artifact_path = _write_codex_attempt_artifact(
             operator_root,
             item,
-            attempt=item.repair_attempts + 1,
+            attempt=codex_attempt,
             started_at=started_at,
             completed_at=completed_at,
             executable=executable,
@@ -1991,6 +2004,159 @@ def diagnose_engineering_work_item(
     }
 
 
+def _refused_retry_payload(work_id: str, reason: str, item: EngineeringWorkItem | None = None) -> dict[str, Any]:
+    return {
+        "schema_version": "blue_fern_operator_engineering_retry_v1",
+        "work_id": work_id,
+        "accepted": False,
+        "reason": reason,
+        "work_item": item.to_payload() if item else None,
+    }
+
+
+def _codex_retry_related(item: EngineeringWorkItem) -> bool:
+    reason = (item.blocked_reason or "").lower()
+    classification = item.failure_classification
+    if classification and classification.startswith("CODEX_"):
+        return True
+    if classification is None and reason == "codex execution failed":
+        return True
+    return "codex" in reason
+
+
+def _remote_engineering_branch_exists(item: EngineeringWorkItem, *, runner: Any = _run_command) -> bool:
+    result = runner(["git", "ls-remote", "--heads", "origin", item.branch], cwd=Path(item.worktree))
+    return result.ok and bool(result.stdout.strip())
+
+
+def _open_engineering_pr_exists(item: EngineeringWorkItem, *, runner: Any = _run_command) -> bool:
+    if item.pr_number is not None or item.pr_url:
+        return True
+    result = runner(["gh", "pr", "list", "--head", item.branch, "--json", "number,state,url"], cwd=Path(item.worktree))
+    if not result.ok:
+        return True
+    return result.ok and result.stdout.strip() not in {"", "[]"}
+
+
+def _worktree_status_clean(item: EngineeringWorkItem, *, runner: Any = _run_command) -> tuple[bool, str]:
+    result = runner(["git", "status", "--short"], cwd=Path(item.worktree))
+    if not result.ok:
+        return False, "could not inspect worktree status"
+    if result.stdout.strip():
+        return False, "worktree is not clean"
+    return True, "worktree clean"
+
+
+def _refresh_retry_worktree_base(
+    operator_root: Path,
+    item: EngineeringWorkItem,
+    *,
+    repo_root: Path = ROOT,
+    base_ref: str = "origin/add/pages-repo-default",
+    runner: Any = _run_command,
+) -> tuple[EngineeringWorkItem, dict[str, Any] | None, str | None]:
+    fetch = runner(["git", "fetch", "origin"], cwd=repo_root)
+    if not fetch.ok:
+        return item, None, "git fetch failed"
+    base_before = runner(["git", "rev-parse", base_ref], cwd=repo_root)
+    head_before = runner(["git", "rev-parse", "HEAD"], cwd=Path(item.worktree))
+    if not base_before.ok or not base_before.stdout.strip() or not head_before.ok or not head_before.stdout.strip():
+        return item, None, "could not resolve retry base/head"
+    merge = runner(["git", "merge", "--ff-only", base_ref], cwd=Path(item.worktree))
+    if not merge.ok:
+        return item, None, "worktree fast-forward failed"
+    base_after = runner(["git", "rev-parse", base_ref], cwd=repo_root)
+    head_after = runner(["git", "rev-parse", "HEAD"], cwd=Path(item.worktree))
+    if not base_after.ok or not base_after.stdout.strip() or not head_after.ok or not head_after.stdout.strip():
+        return item, None, "could not verify refreshed retry base/head"
+    refresh = {
+        "base_sha_before": base_before.stdout.strip().splitlines()[0],
+        "base_sha_after": base_after.stdout.strip().splitlines()[0],
+        "worktree_head_before": head_before.stdout.strip().splitlines()[0],
+        "worktree_head_after": head_after.stdout.strip().splitlines()[0],
+    }
+    item = replace(item, base_sha=refresh["base_sha_after"], merge_allowed=False)
+    _save_engineering_work_item(operator_root, item)
+    return item, refresh, None
+
+
+def retry_engineering_work_item(
+    work_id: str,
+    *,
+    confirm: str,
+    operator_root: Path = DEFAULT_OPERATOR_ROOT,
+    repo_root: Path = ROOT,
+    runner: Any = _run_command,
+    codex_executable: str = "codex",
+    executor: Any = execute_engineering_work_item if "execute_engineering_work_item" in globals() else None,
+) -> dict[str, Any]:
+    if confirm != "RETRY_CODEX":
+        return _refused_retry_payload(work_id, "confirmation token required")
+    item = _load_engineering_work_item(operator_root, work_id)
+    if item.state != EngineeringState.BLOCKED.value:
+        return _refused_retry_payload(work_id, "work item is not BLOCKED", item)
+    if item.merge_allowed:
+        return _refused_retry_payload(work_id, "merge_allowed must be false", item)
+    if not _codex_retry_related(item):
+        return _refused_retry_payload(work_id, "blocked reason is not Codex retry eligible", item)
+    worktree = Path(item.worktree)
+    if _engineering_worktree_violation(worktree):
+        return _refused_retry_payload(work_id, "worktree is outside approved engineering root", item)
+    if not worktree.exists() or not (worktree / ".git").exists():
+        return _refused_retry_payload(work_id, "worktree is missing", item)
+    expected_base = item.base_sha or _first_output_line(runner(["git", "rev-parse", "origin/add/pages-repo-default"], cwd=repo_root))
+    verified, identity_reason = _verify_existing_engineering_worktree(item, repo_root=repo_root, expected_base_sha=expected_base, runner=runner)
+    if not verified:
+        return _refused_retry_payload(work_id, identity_reason, item)
+    clean, clean_reason = _worktree_status_clean(item, runner=runner)
+    if not clean:
+        return _refused_retry_payload(work_id, clean_reason, item)
+    if _remote_engineering_branch_exists(item, runner=runner):
+        return _refused_retry_payload(work_id, "remote repair branch already exists", item)
+    if _open_engineering_pr_exists(item, runner=runner):
+        return _refused_retry_payload(work_id, "repair PR already exists", item)
+    executable = shutil.which(codex_executable)
+    if not executable:
+        return _refused_retry_payload(work_id, f"{codex_executable} executable is unavailable", item)
+    readiness = _codex_readiness_probe(executable, runner=runner, cwd=worktree)
+    if not readiness["ok"]:
+        return _refused_retry_payload(work_id, f"codex readiness failed: {readiness.get('failure_classification')}", item)
+    item, refresh, refresh_error = _refresh_retry_worktree_base(operator_root, item, repo_root=repo_root, runner=runner)
+    if refresh_error:
+        return _refused_retry_payload(work_id, refresh_error, item)
+    retry_authorization = {
+        "confirmed": True,
+        "reason": "CODEX_RETRY",
+        "prior_state": EngineeringState.BLOCKED.value,
+        "prior_blocked_reason": item.blocked_reason,
+        "prior_failure_classification": item.failure_classification,
+        "readiness_passed": True,
+        "base_refreshed": True,
+        **(refresh or {}),
+    }
+    item = _save_engineering_work_item(
+        operator_root,
+        replace(
+            item,
+            state=EngineeringState.WORKTREE_CREATED.value,
+            blocked_reason=None,
+            failure_classification=None,
+            retry_authorization=retry_authorization,
+            merge_allowed=False,
+        ),
+    )
+    executor = executor or execute_engineering_work_item
+    retried = executor(item, operator_root=operator_root, repo_root=repo_root, runner=runner)
+    return {
+        "schema_version": "blue_fern_operator_engineering_retry_v1",
+        "work_id": work_id,
+        "accepted": True,
+        "reason": "RETRY_CODEX",
+        "retry_authorization": retry_authorization,
+        "work_item": retried.to_payload(),
+    }
+
+
 def execute_engineering_work_item(
     item: EngineeringWorkItem,
     *,
@@ -2177,6 +2343,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     diagnose.add_argument("--work-id", required=True, help=argparse.SUPPRESS)
     diagnose.add_argument("--json", action="store_true", help="Emit deterministic JSON.")
     diagnose.add_argument("--operator-root", type=Path, default=DEFAULT_OPERATOR_ROOT, help=argparse.SUPPRESS)
+    retry = sub.add_parser("engineer-retry", help="Retry a blocked engineering work item with explicit authorization.")
+    retry.add_argument("--work-id", required=True, help=argparse.SUPPRESS)
+    retry.add_argument("--confirm", required=True, help=argparse.SUPPRESS)
+    retry.add_argument("--json", action="store_true", help="Emit deterministic JSON.")
+    retry.add_argument("--operator-root", type=Path, default=DEFAULT_OPERATOR_ROOT, help=argparse.SUPPRESS)
+    retry.add_argument("--repo-root", type=Path, default=ROOT, help=argparse.SUPPRESS)
     return parser.parse_args(argv)
 
 
@@ -2191,6 +2363,13 @@ def main(argv: list[str] | None = None) -> int:
             readiness = payload["codex_readiness"]
             print(f"{item['work_id']} {item['state']} codex_ready={readiness.get('ok')}")
         return 0
+    if args.command == "engineer-retry":
+        payload = retry_engineering_work_item(args.work_id, confirm=args.confirm, operator_root=args.operator_root, repo_root=args.repo_root)
+        if args.json:
+            print(json.dumps(payload, indent=2, sort_keys=True))
+        else:
+            print(f"{payload['work_id']} accepted={payload['accepted']} {payload['reason']}")
+        return 0 if payload["accepted"] else 2
     now = _parse_time(args.now) if args.now else None
     config = load_config(args.config)
     if args.command == "engineer":

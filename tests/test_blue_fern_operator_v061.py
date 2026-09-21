@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from bluefern_dispatches.operational_status_exporter import StatusCheckoutGitState
 from scripts import blue_fern_operator as operator
 from scripts.dispatch_ops import DispatchStatus
 
@@ -116,6 +117,19 @@ def _fake_export_status(*, aggregate_status: str = "FAILED", extra_paths: list[s
         return {"paths": paths}
 
     return fake_export_status
+
+
+def _patch_clean_status_checkout(monkeypatch) -> None:
+    monkeypatch.setattr(
+        operator,
+        "classify_status_checkout_state",
+        lambda _root: StatusCheckoutGitState(
+            state="CLEAN",
+            tracked_status_paths=[],
+            untracked_status_paths=[],
+            unexpected_paths=[],
+        ),
+    )
 
 
 def test_food_degraded_stale_routes_to_refresh_not_rebuild(tmp_path: Path) -> None:
@@ -232,6 +246,7 @@ def test_executable_refresh_plan_can_be_immediately_applied(monkeypatch, tmp_pat
     )
     monkeypatch.setattr(operator, "check_operator", lambda **_kwargs: result)
     monkeypatch.setattr(operator, "build_status", lambda *_args, **_kwargs: status)
+    _patch_clean_status_checkout(monkeypatch)
     monkeypatch.setattr(operator, "prepare_status_checkout", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(operator, "care_expected_instances_from_task_scheduler", lambda _date: [])
     monkeypatch.setattr(operator, "export_status", _fake_export_status(aggregate_status="FAILED"))
@@ -274,6 +289,7 @@ def test_refresh_does_not_mutate_runner_source(monkeypatch, tmp_path: Path) -> N
     status = _status(dispatch="food-line")
     monkeypatch.setattr(operator, "check_operator", lambda **_kwargs: operator.OperatorResult("2026-09-21T12:00:00Z", [], [incident]))
     monkeypatch.setattr(operator, "build_status", lambda *_args, **_kwargs: status)
+    _patch_clean_status_checkout(monkeypatch)
     monkeypatch.setattr(operator, "prepare_status_checkout", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(operator, "export_status", _fake_export_status())
 
@@ -302,6 +318,7 @@ def test_unexpected_status_path_mutation_fails_closed(monkeypatch, tmp_path: Pat
     status = _status(dispatch="ice", date="2026-09-20", state="COMPLETE", next_action="NONE")
     monkeypatch.setattr(operator, "check_operator", lambda **_kwargs: operator.OperatorResult("2026-09-21T12:00:00Z", [], [incident]))
     monkeypatch.setattr(operator, "build_status", lambda *_args, **_kwargs: status)
+    _patch_clean_status_checkout(monkeypatch)
     monkeypatch.setattr(operator, "prepare_status_checkout", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(
         operator,
@@ -348,6 +365,7 @@ def test_refresh_plan_and_receipt_prohibit_publication_replay_scheduler_and_edit
     assert plan.safety_checks["editorial_mutation"] is False
     monkeypatch.setattr(operator, "check_operator", lambda **_kwargs: operator.OperatorResult("2026-09-21T12:00:00Z", [], [incident]))
     monkeypatch.setattr(operator, "build_status", lambda *_args, **_kwargs: status)
+    _patch_clean_status_checkout(monkeypatch)
     monkeypatch.setattr(operator, "prepare_status_checkout", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(operator, "export_status", _fake_export_status())
 

@@ -146,6 +146,57 @@ def test_python_wrapper_passes_care_source_root_to_export_status(monkeypatch: py
     assert '"care_source_configured": true' in receipt.read_text(encoding="utf-8")
 
 
+def test_python_wrapper_prepares_with_sanctioned_status_changes_and_retains_commit_push(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    source = tmp_path / "source"
+    status = tmp_path / "status"
+    source.mkdir()
+    status.mkdir()
+    (source / "status" / "operational-health" / "food-line" / "2026-09-14").mkdir(parents=True)
+    prepare_kwargs: dict[str, object] = {}
+    commit_kwargs: dict[str, object] = {}
+
+    monkeypatch.setattr(task, "_git_head", lambda _root: "HEAD")
+    monkeypatch.setattr(task, "load_recovery_context", lambda _path: None)
+
+    def fake_prepare_status_checkout(*args: object, **kwargs: object) -> None:
+        prepare_kwargs["args"] = args
+        prepare_kwargs.update(kwargs)
+
+    def fake_export_status(**_kwargs: object) -> dict[str, object]:
+        return {"paths": ["ops/status/food-line/latest.json"]}
+
+    def fake_commit_and_push_status(*args: object, **kwargs: object) -> str:
+        commit_kwargs["args"] = args
+        commit_kwargs.update(kwargs)
+        return "commit-sha"
+
+    monkeypatch.setattr(task, "prepare_status_checkout", fake_prepare_status_checkout)
+    monkeypatch.setattr(task, "export_status", fake_export_status)
+    monkeypatch.setattr(task, "commit_and_push_status", fake_commit_and_push_status)
+
+    result = task.main(
+        [
+            "--source-root",
+            str(source),
+            "--status-checkout",
+            str(status),
+            "--date",
+            "2026-09-14",
+        ]
+    )
+
+    assert result == 0
+    assert prepare_kwargs["allow_local_status_changes"] is True
+    assert commit_kwargs["paths"] == ["ops/status/food-line/latest.json"]
+    assert commit_kwargs["branch"] == DEFAULT_BRANCH
+    receipt = next((source / "logs" / "operational-status-exporter").glob("*.json"))
+    text = receipt.read_text(encoding="utf-8")
+    assert '"commit_created": true' in text
+    assert '"push_succeeded": true' in text
+
+
 def test_python_wrapper_passes_ice_source_root_to_export_status(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     source = tmp_path / "source"
     ice = tmp_path / "ice"

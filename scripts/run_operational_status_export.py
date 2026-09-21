@@ -176,7 +176,12 @@ def main(argv: list[str] | None = None) -> int:
     }
     try:
         date = args.date or _default_date(args.source_root)
-        prepare_status_checkout(args.status_checkout, branch=args.prepare_branch, remote=args.remote)
+        prepare_status_checkout(
+            args.status_checkout,
+            branch=args.prepare_branch,
+            remote=args.remote,
+            allow_local_status_changes=True,
+        )
         result = export_status(
             source_root=args.source_root,
             status_checkout=args.status_checkout,

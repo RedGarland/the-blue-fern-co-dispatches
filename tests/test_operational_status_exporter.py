@@ -17,6 +17,7 @@ from bluefern_dispatches.operational_status_exporter import (
     build_care_line_status,
     build_ice_status,
     build_food_line_status,
+    classify_status_checkout_state,
     commit_and_push_status,
     exporter_lock,
     export_status,
@@ -897,6 +898,96 @@ def test_prepare_status_checkout_rejects_dirty_checkout_before_fetch(tmp_path: P
         prepare_status_checkout(checkout, branch=branch)
 
 
+def test_status_checkout_state_classifies_clean_checkout(tmp_path: Path) -> None:
+    checkout, _remote = _init_status_checkout_with_remote(tmp_path)
+
+    state = classify_status_checkout_state(checkout)
+
+    assert state.state == "CLEAN"
+    assert state.tracked_status_paths == []
+    assert state.untracked_status_paths == []
+    assert state.unexpected_paths == []
+
+
+def test_prepare_status_checkout_allows_sanctioned_tracked_status_changes_when_opted_in(tmp_path: Path) -> None:
+    branch = "ops/status/food-line-2026-09-10"
+    checkout, _remote = _init_status_checkout_with_remote(tmp_path, branch)
+    _commit_file(checkout, "ops/status/food-line/latest.json", "{}\n", "track status")
+    subprocess.run(["git", "push", "origin", branch], cwd=checkout, check=True, capture_output=True, text=True)
+    (checkout / "ops/status/food-line/latest.json").write_text("{\"local\":true}\n", encoding="utf-8")
+
+    prepare_status_checkout(checkout, branch=branch, allow_local_status_changes=True)
+
+    state = classify_status_checkout_state(checkout)
+    assert state.state == "SANCTIONED_STATUS_ONLY"
+    assert state.tracked_status_paths == ["ops/status/food-line/latest.json"]
+
+
+def test_prepare_status_checkout_allows_sanctioned_untracked_status_changes_when_opted_in(tmp_path: Path) -> None:
+    branch = "ops/status/food-line-2026-09-10"
+    checkout, _remote = _init_status_checkout_with_remote(tmp_path, branch)
+    path = checkout / "ops/status/care-line/latest.json"
+    path.parent.mkdir(parents=True)
+    path.write_text("{}\n", encoding="utf-8")
+
+    prepare_status_checkout(checkout, branch=branch, allow_local_status_changes=True)
+
+    state = classify_status_checkout_state(checkout)
+    assert state.state == "SANCTIONED_STATUS_ONLY"
+    assert state.untracked_status_paths == ["ops/status/care-line/latest.json"]
+
+
+def test_prepare_status_checkout_refuses_unrelated_tracked_dirty_path_even_when_opted_in(tmp_path: Path) -> None:
+    branch = "ops/status/food-line-2026-09-10"
+    checkout, _remote = _init_status_checkout_with_remote(tmp_path, branch)
+    _commit_file(checkout, "README.md", "clean\n", "track readme")
+    (checkout / "README.md").write_text("dirty\n", encoding="utf-8")
+
+    with pytest.raises(ExportError, match="outside ops/status"):
+        prepare_status_checkout(checkout, branch=branch, allow_local_status_changes=True)
+
+
+def test_prepare_status_checkout_refuses_unrelated_untracked_path_even_when_opted_in(tmp_path: Path) -> None:
+    branch = "ops/status/food-line-2026-09-10"
+    checkout, _remote = _init_status_checkout_with_remote(tmp_path, branch)
+    (checkout / "notes.txt").write_text("dirty\n", encoding="utf-8")
+
+    with pytest.raises(ExportError, match="outside ops/status"):
+        prepare_status_checkout(checkout, branch=branch, allow_local_status_changes=True)
+
+
+def test_prepare_status_checkout_refuses_remote_overlap_with_local_status_changes(tmp_path: Path) -> None:
+    branch = "ops/status/food-line-2026-09-10"
+    checkout, remote = _init_status_checkout_with_remote(tmp_path, branch)
+    _commit_file(checkout, "ops/status/food-line/latest.json", "{}\n", "track local status")
+    subprocess.run(["git", "push", "origin", branch], cwd=checkout, check=True, capture_output=True, text=True)
+    writer = _clone_writer(tmp_path, remote)
+    subprocess.run(["git", "checkout", branch], cwd=writer, check=True, capture_output=True, text=True)
+    _commit_file(writer, "ops/status/food-line/latest.json", "{\"remote\":true}\n", "remote status")
+    subprocess.run(["git", "push", "origin", branch], cwd=writer, check=True, capture_output=True, text=True)
+    (checkout / "ops/status/food-line/latest.json").write_text("{\"local\":true}\n", encoding="utf-8")
+
+    with pytest.raises(ExportError, match="overlap local ops/status changes"):
+        prepare_status_checkout(checkout, branch=branch, allow_local_status_changes=True)
+
+
+def test_prepare_status_checkout_allows_non_overlapping_fast_forward_with_local_status_changes(tmp_path: Path) -> None:
+    branch = "ops/status/food-line-2026-09-10"
+    checkout, remote = _init_status_checkout_with_remote(tmp_path, branch)
+    _commit_file(checkout, "ops/status/food-line/latest.json", "{}\n", "track local status")
+    subprocess.run(["git", "push", "origin", branch], cwd=checkout, check=True, capture_output=True, text=True)
+    writer = _clone_writer(tmp_path, remote)
+    subprocess.run(["git", "checkout", branch], cwd=writer, check=True, capture_output=True, text=True)
+    remote_tip = _commit_file(writer, "ops/status/system/latest.json", "{}\n", "remote system")
+    subprocess.run(["git", "push", "origin", branch], cwd=writer, check=True, capture_output=True, text=True)
+    (checkout / "ops/status/food-line/latest.json").write_text("{\"local\":true}\n", encoding="utf-8")
+
+    prepare_status_checkout(checkout, branch=branch, allow_local_status_changes=True)
+
+    assert subprocess.run(["git", "rev-parse", "HEAD"], cwd=checkout, check=True, capture_output=True, text=True).stdout.strip() == remote_tip
+    assert (checkout / "ops/status/food-line/latest.json").read_text(encoding="utf-8") == "{\"local\":true}\n"
+
+
 def test_prepare_status_checkout_rejects_wrong_local_branch(tmp_path: Path) -> None:
     branch = "ops/status/food-line-2026-09-10"
     checkout, _remote = _init_status_checkout_with_remote(tmp_path, branch)
@@ -924,6 +1015,9 @@ def test_prepare_status_checkout_does_not_use_force_reset_or_rebase(monkeypatch:
     flattened = [part for call in calls for part in call]
     assert "--force" not in flattened
     assert "reset" not in flattened
+    assert "restore" not in flattened
+    assert "clean" not in flattened
+    assert "stash" not in flattened
     assert "rebase" not in flattened
     assert ["git", "merge", "--ff-only", "FETCH_HEAD"] in calls
 

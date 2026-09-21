@@ -31,6 +31,7 @@ from scripts.dispatch_ops import (  # noqa: E402
     build_status,
 )
 from bluefern_dispatches.operational_status_exporter import (  # noqa: E402
+    classify_status_checkout_state,
     export_status,
     prepare_status_checkout,
 )
@@ -2405,6 +2406,8 @@ def _apply_refresh_status_export(
     operator_code_root = _operator_code_root(operator_root)
     allowed_paths = _refresh_status_export_scope(plan.dispatch, date)
     supported, support_reason = _refresh_status_supported(plan.dispatch, current_status)
+    status_head_before = _git_stdout(_run_command, ["rev-parse", "HEAD"], cwd=destination_root) if destination_root.is_dir() else None
+    checkout_state_before = classify_status_checkout_state(destination_root).to_payload() if destination_root.is_dir() else None
     roots_distinct = destination_root.resolve() not in {operator_code_root.resolve(), runner_root.resolve()}
     if not roots_distinct:
         receipt = RemediationReceipt(
@@ -2425,6 +2428,22 @@ def _apply_refresh_status_export(
                 "roots_distinct": False,
                 "underlying_status_before": current_status.to_json_payload(),
                 "underlying_status_after": current_status.to_json_payload(),
+                "status_checkout_head_before": status_head_before,
+                "status_checkout_head_after": status_head_before,
+                "status_checkout_state_before": checkout_state_before,
+                "status_checkout_state_after": checkout_state_before,
+                "sanctioned_dirty_paths_before": sorted(
+                    (checkout_state_before or {}).get("tracked_status_paths", [])
+                    + (checkout_state_before or {}).get("untracked_status_paths", [])
+                ),
+                "sanctioned_dirty_paths_after": sorted(
+                    (checkout_state_before or {}).get("tracked_status_paths", [])
+                    + (checkout_state_before or {}).get("untracked_status_paths", [])
+                ),
+                "unexpected_dirty_paths": (checkout_state_before or {}).get("unexpected_paths", []),
+                "remote_overlap_paths": [],
+                "commit_created": False,
+                "push_attempted": False,
             },
         )
         return _write_remediation_receipt(operator_root, receipt)
@@ -2443,6 +2462,16 @@ def _apply_refresh_status_export(
                 "operator_root": str(operator_root.resolve()),
                 "source_runner_root": str(runner_root.resolve()),
                 "status_destination_root": str(destination_root.resolve()),
+                "status_checkout_head_before": status_head_before,
+                "status_checkout_head_after": status_head_before,
+                "status_checkout_state_before": checkout_state_before,
+                "status_checkout_state_after": checkout_state_before,
+                "sanctioned_dirty_paths_before": [],
+                "sanctioned_dirty_paths_after": [],
+                "unexpected_dirty_paths": [],
+                "remote_overlap_paths": [],
+                "commit_created": False,
+                "push_attempted": False,
             },
         )
         return _write_remediation_receipt(operator_root, receipt)
@@ -2464,14 +2493,31 @@ def _apply_refresh_status_export(
                 "refresh_supported": False,
                 "underlying_status_before": current_status.to_json_payload(),
                 "underlying_status_after": current_status.to_json_payload(),
+                "status_checkout_head_before": status_head_before,
+                "status_checkout_head_after": status_head_before,
+                "status_checkout_state_before": checkout_state_before,
+                "status_checkout_state_after": checkout_state_before,
+                "sanctioned_dirty_paths_before": sorted(
+                    (checkout_state_before or {}).get("tracked_status_paths", [])
+                    + (checkout_state_before or {}).get("untracked_status_paths", [])
+                ),
+                "sanctioned_dirty_paths_after": sorted(
+                    (checkout_state_before or {}).get("tracked_status_paths", [])
+                    + (checkout_state_before or {}).get("untracked_status_paths", [])
+                ),
+                "unexpected_dirty_paths": (checkout_state_before or {}).get("unexpected_paths", []),
+                "remote_overlap_paths": [],
+                "commit_created": False,
+                "push_attempted": False,
             },
         )
         return _write_remediation_receipt(operator_root, receipt)
 
     before_tree = _snapshot_status_destination(destination_root)
     before_hashes = _status_path_hashes(destination_root, allowed_paths)
+    remote_overlap_paths: list[str] = []
     try:
-        prepare_status_checkout(destination_root, branch=config.status_branch)
+        prepare_status_checkout(destination_root, branch=config.status_branch, allow_local_status_changes=True)
         food_root = config.dispatches["food-line"].runner_root.resolve()
         export_kwargs: dict[str, Any] = {
             "source_root": runner_root.resolve() if plan.dispatch == "food-line" else food_root,
@@ -2487,6 +2533,11 @@ def _apply_refresh_status_export(
             export_kwargs["ice_source_root"] = runner_root.resolve()
         result = export_status(**export_kwargs)
     except Exception as exc:  # noqa: BLE001
+        message = str(exc)
+        if "overlap local ops/status changes:" in message:
+            remote_overlap_paths = [part.strip() for part in message.rsplit(":", 1)[-1].split(",") if part.strip()]
+        checkout_state_after = classify_status_checkout_state(destination_root).to_payload() if destination_root.is_dir() else None
+        status_head_after = _git_stdout(_run_command, ["rev-parse", "HEAD"], cwd=destination_root) if destination_root.is_dir() else None
         receipt = RemediationReceipt(
             plan.dispatch,
             plan.incident_id,
@@ -2503,12 +2554,30 @@ def _apply_refresh_status_export(
                 "status_destination_root": str(destination_root.resolve()),
                 "before_status_export_hashes": before_hashes,
                 "underlying_status_before": current_status.to_json_payload(),
+                "status_checkout_head_before": status_head_before,
+                "status_checkout_head_after": status_head_after,
+                "status_checkout_state_before": checkout_state_before,
+                "status_checkout_state_after": checkout_state_after,
+                "sanctioned_dirty_paths_before": sorted(
+                    (checkout_state_before or {}).get("tracked_status_paths", [])
+                    + (checkout_state_before or {}).get("untracked_status_paths", [])
+                ),
+                "sanctioned_dirty_paths_after": sorted(
+                    (checkout_state_after or {}).get("tracked_status_paths", [])
+                    + (checkout_state_after or {}).get("untracked_status_paths", [])
+                ),
+                "unexpected_dirty_paths": (checkout_state_after or {}).get("unexpected_paths", []),
+                "remote_overlap_paths": remote_overlap_paths,
+                "commit_created": False,
+                "push_attempted": False,
             },
         )
         return _write_remediation_receipt(operator_root, receipt)
 
     allowed_paths = sorted(str(path).replace("\\", "/") for path in result.get("paths", []))
     after_tree = _snapshot_status_destination(destination_root)
+    checkout_state_after = classify_status_checkout_state(destination_root).to_payload()
+    status_head_after = _git_stdout(_run_command, ["rev-parse", "HEAD"], cwd=destination_root)
     before_hashes = {path: before_tree.get(path) for path in allowed_paths}
     after_hashes = _status_path_hashes(destination_root, allowed_paths)
     changed_paths = sorted(path for path in set(before_tree) | set(after_tree) if before_tree.get(path) != after_tree.get(path))
@@ -2530,6 +2599,22 @@ def _apply_refresh_status_export(
         "underlying_incident_preserved": status_after.state == current_status.state and status_after.next_action == current_status.next_action,
         "stale_observability_after": stale_after,
         "refresh_support_reason": support_reason,
+        "status_checkout_head_before": status_head_before,
+        "status_checkout_head_after": status_head_after,
+        "status_checkout_state_before": checkout_state_before,
+        "status_checkout_state_after": checkout_state_after,
+        "sanctioned_dirty_paths_before": sorted(
+            (checkout_state_before or {}).get("tracked_status_paths", [])
+            + (checkout_state_before or {}).get("untracked_status_paths", [])
+        ),
+        "sanctioned_dirty_paths_after": sorted(
+            (checkout_state_after or {}).get("tracked_status_paths", [])
+            + (checkout_state_after or {}).get("untracked_status_paths", [])
+        ),
+        "unexpected_dirty_paths": (checkout_state_after or {}).get("unexpected_paths", []),
+        "remote_overlap_paths": remote_overlap_paths,
+        "commit_created": False,
+        "push_attempted": False,
         "public_side_effects": False,
         "scheduler_changes": False,
         "collection_rerun": False,

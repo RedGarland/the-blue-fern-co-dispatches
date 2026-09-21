@@ -10,7 +10,7 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "DEGRADED",
+  "aggregate_status": "FAILED",
   "dispatch": "care-line",
   "expected_instances": [
     {
@@ -44,7 +44,7 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-09-21T17:15:14.270999Z",
+  "last_exported_at": "2026-09-21T18:15:06.660190Z",
   "last_receipt_at": "2026-09-21T15:30:03.943067Z",
   "latest_runtime_proof_date": "2026-09-21T15:00:03.799094Z",
   "migration_status": "MIGRATED",
@@ -57,7 +57,7 @@
   "publication_attempted": false,
   "publication_status": "failure",
   "receipt_completeness": "COMPLETE",
-  "recovery_lifecycle": "HEALTHY",
+  "recovery_lifecycle": "INCIDENT_OPEN",
   "runner_source_head": "7c923a43bac25d38871a4c2ec97ad29e09ee5738",
   "scheduled_health_authoritative": true,
   "scheduled_task_keys": [

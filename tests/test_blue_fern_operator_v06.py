@@ -35,19 +35,30 @@ def _incident(
     )
 
 
-def _status(*, date: str = "2026-09-21", state: str = "COMPLETE", next_action: str = "NONE") -> DispatchStatus:
+def _status(
+    *,
+    dispatch: str = "care-line",
+    date: str = "2026-09-21",
+    state: str = "COMPLETE",
+    collection: str = "COMPLETE",
+    public_state: str = "VERIFIED",
+    receipts: str = "COMPLETE",
+    next_action: str = "NONE",
+    details: dict | None = None,
+) -> DispatchStatus:
     return DispatchStatus(
-        dispatch="care-line",
+        dispatch=dispatch,
         date=date,
         state=state,
-        collection="COMPLETE",
+        collection=collection,
         editorial="COMPLETE",
         publication="COMPLETE",
-        public_state="VERIFIED",
-        receipts="COMPLETE",
+        public_state=public_state,
+        receipts=receipts,
         recovery="HEALTHY",
         next_action=next_action,
         evidence=["status proof"],
+        details=details or {},
     )
 
 
@@ -201,15 +212,33 @@ def test_path_words_do_not_imply_cause_without_bounded_contents(tmp_path: Path) 
 
 
 def test_stale_status_routes_to_rebuild_status(tmp_path: Path) -> None:
-    incident = _incident(classification="STALE_OBSERVABILITY", recovery_action="REBUILD_STATUS", status_state="COMPLETE")
+    incident = _incident(
+        dispatch="food-line",
+        classification="STALE_OBSERVABILITY",
+        recovery_action="REBUILD_STATUS",
+        status_state="COMPLETE",
+    )
 
-    plan = operator.build_remediation_action_plan(incident, runner_root=tmp_path, runner=FakeRollForwardRunner())
+    plan = operator.build_remediation_action_plan(
+        incident,
+        runner_root=tmp_path,
+        current_status=_status(
+            dispatch="food-line",
+            state="COMPLETE",
+            collection="COMPLETE",
+            public_state="VERIFIED",
+            receipts="COMPLETE",
+            next_action="INVESTIGATE_STATUS_EXPORT",
+            details={"status_export_state": "MISSING_OR_STALE", "status_rebuild_supported": True},
+        ),
+        runner=FakeRollForwardRunner(),
+    )
 
     assert plan.proposed_action == "REBUILD_STATUS"
     assert plan.executable is True
     assert plan.expected_mutation_scope == [
-        "ops/status/care-line/latest.json",
-        "ops/status/care-line/history/2026-09-20.json",
+        "ops/status/food-line/latest.json",
+        "ops/status/food-line/history/2026-09-20.json",
     ]
 
 

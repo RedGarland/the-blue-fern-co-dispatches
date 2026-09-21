@@ -237,7 +237,7 @@ def test_successful_rebuild_with_underlying_degraded_opens_underlying_incident(m
     assert result.dispatches[0].notification_state == "AUTO_RECOVERED"
 
 
-def test_second_run_does_not_rebuild_after_fresh_runner_export(monkeypatch, tmp_path: Path) -> None:
+def test_second_run_does_not_rebuild_after_fresh_configured_status_export(monkeypatch, tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     runner = tmp_path / "runner"
     _policy(repo, "automatic")
@@ -258,7 +258,7 @@ def test_second_run_does_not_rebuild_after_fresh_runner_export(monkeypatch, tmp_
     def apply(*_args, **_kwargs):
         nonlocal calls
         calls += 1
-        _export(runner / "food-line", "food-line", "2026-09-20", "2026-09-20T11:30:00Z")
+        _export(repo, "food-line", "2026-09-20", "2026-09-20T11:30:00Z")
         return _apply_result(before)
 
     monkeypatch.setattr(operator, "apply_recovery_plan", apply)

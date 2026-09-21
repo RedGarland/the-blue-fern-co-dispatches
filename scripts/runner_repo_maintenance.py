@@ -19,6 +19,9 @@ from scripts.preflight_repo_state import build_preflight_report, classify_status
 
 DEFAULT_SOURCE_BRANCH = "add/pages-repo-default"
 DEFAULT_PAGES_BRANCH = "gh-pages"
+# Keep cleanup commands well below Windows' process creation limits while still
+# using exact path-specific git restore/clean invocations.
+MAX_GIT_CLEANUP_COMMAND_CHARS = 7000
 SAFE_CLEANUP_PREFIXES = (
     "logs/",
     ".pytest_cache/",
@@ -44,6 +47,43 @@ def _run_command(args: list[str], *, cwd: Path) -> subprocess.CompletedProcess[s
         encoding="utf-8",
         errors="replace",
     )
+
+
+def _render_command(args: list[str]) -> str:
+    return " ".join(args)
+
+
+def _command_length(args: list[str]) -> int:
+    return len(subprocess.list2cmdline(args))
+
+
+def _batch_git_paths(
+    base_args: list[str],
+    paths: list[str],
+    *,
+    max_command_chars: int | None = None,
+) -> list[list[str]]:
+    limit = max_command_chars or MAX_GIT_CLEANUP_COMMAND_CHARS
+    batches: list[list[str]] = []
+    current: list[str] = []
+    for path in paths:
+        candidate = current + [path]
+        if _command_length(base_args + candidate) <= limit:
+            current = candidate
+            continue
+        if not current:
+            raise ValueError(
+                f"cleanup path exceeds {limit} character command limit: {path}"
+            )
+        batches.append(current)
+        current = [path]
+        if _command_length(base_args + current) > limit:
+            raise ValueError(
+                f"cleanup path exceeds {limit} character command limit: {path}"
+            )
+    if current:
+        batches.append(current)
+    return batches
 
 
 def _git_output(repo: Path, *args: str) -> str:
@@ -180,42 +220,67 @@ def build_cleanup_plan(
     }
 
 
-def _run_git_restore(repo: Path, restore_paths: list[str]) -> tuple[bool, str | None, str | None]:
-    if not restore_paths:
-        return True, None, None
-    result = _run_command(
-        ["git", "restore", "--source=HEAD", "--staged", "--worktree", "--", *restore_paths],
-        cwd=repo,
+def _run_batched_git_cleanup(
+    repo: Path,
+    base_args: list[str],
+    paths: list[str],
+) -> dict[str, Any]:
+    commands: list[str] = []
+    messages: list[str] = []
+    if not paths:
+        return {"ok": True, "commands": commands, "messages": messages}
+    try:
+        batches = _batch_git_paths(base_args, paths)
+    except ValueError as exc:
+        return {"ok": False, "commands": commands, "messages": [str(exc)]}
+
+    for index, batch in enumerate(batches, start=1):
+        args = base_args + batch
+        command = _render_command(args)
+        commands.append(command)
+        try:
+            result = _run_command(args, cwd=repo)
+        except OSError as exc:
+            messages.append(
+                f"cleanup batch {index}/{len(batches)} failed to start: "
+                f"{exc.__class__.__name__}: {exc}"
+            )
+            return {"ok": False, "commands": commands, "messages": messages}
+        message = result.stderr.strip() or result.stdout.strip()
+        if result.returncode != 0:
+            detail = message or f"exit code {result.returncode}"
+            messages.append(f"cleanup batch {index}/{len(batches)} failed: {detail}")
+            return {"ok": False, "commands": commands, "messages": messages}
+        if message:
+            messages.append(message)
+    return {"ok": True, "commands": commands, "messages": messages}
+
+
+def _run_git_restore(repo: Path, restore_paths: list[str]) -> dict[str, Any]:
+    return _run_batched_git_cleanup(
+        repo,
+        ["git", "restore", "--source=HEAD", "--staged", "--worktree", "--"],
+        restore_paths,
     )
-    command = "git restore --source=HEAD --staged --worktree -- " + " ".join(restore_paths)
-    message = result.stderr.strip() or result.stdout.strip() or None
-    return result.returncode == 0, command, message
 
 
-def _run_git_clean(repo: Path, clean_paths: list[str]) -> tuple[bool, str | None, str | None]:
-    if not clean_paths:
-        return True, None, None
-    result = _run_command(["git", "clean", "-fd", "--", *clean_paths], cwd=repo)
-    command = "git clean -fd -- " + " ".join(clean_paths)
-    message = result.stderr.strip() or result.stdout.strip() or None
-    return result.returncode == 0, command, message
+def _run_git_clean(repo: Path, clean_paths: list[str]) -> dict[str, Any]:
+    return _run_batched_git_cleanup(repo, ["git", "clean", "-fd", "--"], clean_paths)
 
 
 def apply_cleanup_plan(repo: Path, plan: dict[str, list[str]]) -> dict[str, Any]:
     commands: list[str] = []
     messages: list[str] = []
-    restore_ok, restore_command, restore_message = _run_git_restore(repo, plan.get("restore_paths", []))
-    if restore_command:
-        commands.append(restore_command)
-    if restore_message:
-        messages.append(restore_message)
-    clean_ok, clean_command, clean_message = _run_git_clean(repo, plan.get("clean_paths", []))
-    if clean_command:
-        commands.append(clean_command)
-    if clean_message:
-        messages.append(clean_message)
+    restore_result = _run_git_restore(repo, plan.get("restore_paths", []))
+    commands.extend(restore_result.get("commands", []))
+    messages.extend(restore_result.get("messages", []))
+    if not restore_result.get("ok"):
+        return {"ok": False, "commands": commands, "messages": messages}
+    clean_result = _run_git_clean(repo, plan.get("clean_paths", []))
+    commands.extend(clean_result.get("commands", []))
+    messages.extend(clean_result.get("messages", []))
     return {
-        "ok": restore_ok and clean_ok,
+        "ok": bool(clean_result.get("ok")),
         "commands": commands,
         "messages": messages,
     }

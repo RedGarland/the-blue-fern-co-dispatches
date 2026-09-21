@@ -52,6 +52,28 @@ def _fake_sync_commands(monkeypatch):
     return sync_commands
 
 
+def _fake_sync_and_record_cleanup(monkeypatch):
+    real_run_command = maintenance._run_command
+    sync_commands: list[list[str]] = []
+    cleanup_commands: list[list[str]] = []
+
+    def fake_run_command(args, *, cwd):
+        if args[:2] == ["git", "fetch"] or args[:2] == ["git", "reset"]:
+            sync_commands.append(list(args))
+            return subprocess.CompletedProcess(args, 0, "", "")
+        if args[:2] == ["git", "clean"] or args[:2] == ["git", "restore"]:
+            cleanup_commands.append(list(args))
+        return real_run_command(args, cwd=cwd)
+
+    monkeypatch.setattr(maintenance, "_run_command", fake_run_command)
+    return sync_commands, cleanup_commands
+
+
+def _command_path_args(args: list[str]) -> list[str]:
+    separator = args.index("--")
+    return args[separator + 1 :]
+
+
 def test_cleanup_plan_limits_cleanup_to_approved_generated_and_temp_paths() -> None:
     entries = [
         {"path": "logs/runner-gaza.log", "is_untracked": True},
@@ -368,3 +390,133 @@ def test_sync_blocks_when_bounded_cleanup_fails(monkeypatch, tmp_path) -> None:
     assert sync_commands == []
     assert result["commands_run"] == []
     assert result["errors"] == ["runner repo state is outside bounded pre-sync cleanup scope"]
+
+
+def test_sync_batches_production_scale_untracked_generated_cleanup(monkeypatch, tmp_path) -> None:
+    source_repo = tmp_path / "source"
+    pages_repo = tmp_path / "pages"
+    _init_repo(source_repo, "add/pages-repo-default")
+    _init_repo(pages_repo, "gh-pages")
+    _write(source_repo / "README.md", "source fixture\n")
+    _write(pages_repo / "index.html", "pages\n")
+    _commit_all(source_repo)
+    _commit_all(pages_repo)
+
+    approved_paths = [
+        f"output/site/gaza/editions/2026-09-{day:02d}/residue-{index:04d}.json"
+        for index in range(700)
+        for day in [(index % 28) + 1]
+    ]
+    for path in approved_paths:
+        _write(source_repo / path, "generated\n")
+
+    sync_commands, cleanup_commands = _fake_sync_and_record_cleanup(monkeypatch)
+
+    result = sync_runner_repos(source_repo, pages_repo)
+
+    clean_commands = [args for args in cleanup_commands if args[:2] == ["git", "clean"]]
+    cleaned_paths = [path for args in clean_commands for path in _command_path_args(args)]
+    assert result["ok"] is True
+    assert len(clean_commands) > 1
+    assert all(maintenance._command_length(args) <= maintenance.MAX_GIT_CLEANUP_COMMAND_CHARS for args in clean_commands)
+    assert sorted(cleaned_paths) == sorted(approved_paths)
+    assert len(cleaned_paths) == len(set(cleaned_paths))
+    assert all(path in approved_paths for path in cleaned_paths)
+    assert result["preflight_before"]["ok"] is True
+    assert _git_output(source_repo, "status", "--short", "--untracked-files=all") == ""
+    assert sync_commands
+
+
+def test_sync_batches_production_scale_tracked_generated_restore(monkeypatch, tmp_path) -> None:
+    source_repo = tmp_path / "source"
+    pages_repo = tmp_path / "pages"
+    _init_repo(source_repo, "add/pages-repo-default")
+    _init_repo(pages_repo, "gh-pages")
+    tracked_paths = [
+        f"output/site/gaza/editions/2026-09-{(index % 28) + 1:02d}/tracked-{index:04d}.html"
+        for index in range(700)
+    ]
+    for path in tracked_paths:
+        _write(source_repo / path, "committed\n")
+    _write(pages_repo / "index.html", "pages\n")
+    _commit_all(source_repo)
+    _commit_all(pages_repo)
+    for path in tracked_paths:
+        _write(source_repo / path, "generated drift\n")
+
+    _sync_commands, cleanup_commands = _fake_sync_and_record_cleanup(monkeypatch)
+
+    result = sync_runner_repos(source_repo, pages_repo)
+
+    restore_commands = [args for args in cleanup_commands if args[:2] == ["git", "restore"]]
+    restored_paths = [path for args in restore_commands for path in _command_path_args(args)]
+    assert result["ok"] is True
+    assert len(restore_commands) > 1
+    assert all(maintenance._command_length(args) <= maintenance.MAX_GIT_CLEANUP_COMMAND_CHARS for args in restore_commands)
+    assert sorted(restored_paths) == sorted(tracked_paths)
+    assert len(restored_paths) == len(set(restored_paths))
+    assert all(path in tracked_paths for path in restored_paths)
+    assert _git_output(source_repo, "status", "--short", "--untracked-files=all") == ""
+
+
+def test_cleanup_stops_after_first_failed_batch(monkeypatch, tmp_path) -> None:
+    repo = tmp_path / "repo"
+    _init_repo(repo, "main")
+    paths = [
+        f"output/site/gaza/editions/2026-09-21/long-cleanup-path-{index:02d}.json"
+        for index in range(6)
+    ]
+    calls: list[list[str]] = []
+    monkeypatch.setattr(maintenance, "MAX_GIT_CLEANUP_COMMAND_CHARS", 120)
+
+    def fake_run_command(args, *, cwd):
+        _ = cwd
+        calls.append(list(args))
+        if len(calls) == 2:
+            return subprocess.CompletedProcess(args, 1, "", "batch two failed")
+        return subprocess.CompletedProcess(args, 0, "", "")
+
+    monkeypatch.setattr(maintenance, "_run_command", fake_run_command)
+
+    result = maintenance._run_git_clean(repo, paths)
+
+    assert result["ok"] is False
+    assert len(calls) == 2
+    assert "cleanup batch 2/" in result["messages"][-1]
+    assert "batch two failed" in result["messages"][-1]
+    assert result["commands"] == [maintenance._render_command(args) for args in calls]
+
+
+def test_sync_returns_structured_failure_when_cleanup_process_creation_fails(monkeypatch, tmp_path) -> None:
+    source_repo = tmp_path / "source"
+    pages_repo = tmp_path / "pages"
+    _init_repo(source_repo, "add/pages-repo-default")
+    _init_repo(pages_repo, "gh-pages")
+    _write(source_repo / "README.md", "source fixture\n")
+    _write(pages_repo / "index.html", "pages\n")
+    _commit_all(source_repo)
+    _commit_all(pages_repo)
+    _write(source_repo / "output" / "site" / "gaza" / "editions" / "2026-09-21" / "index.html", "generated\n")
+    sync_commands: list[list[str]] = []
+    real_run_command = maintenance._run_command
+
+    def fake_run_command(args, *, cwd):
+        if args[:2] == ["git", "clean"]:
+            raise OSError(206, "The filename or extension is too long")
+        if args[:2] == ["git", "fetch"] or args[:2] == ["git", "reset"]:
+            sync_commands.append(list(args))
+            return subprocess.CompletedProcess(args, 0, "", "")
+        return real_run_command(args, cwd=cwd)
+
+    monkeypatch.setattr(maintenance, "_run_command", fake_run_command)
+
+    result = sync_runner_repos(source_repo, pages_repo)
+
+    assert result["ok"] is False
+    assert result["pre_sync_cleanup"]["result"]["ok"] is False
+    assert any("OSError" in message and "206" in message for message in result["pre_sync_cleanup"]["result"]["messages"])
+    assert result["preflight_before"] is None
+    assert sync_commands == []
+    assert result["commands_run"] == []
+    assert result["errors"] == ["runner repo state is outside bounded pre-sync cleanup scope"]
+    assert isinstance(result, dict)

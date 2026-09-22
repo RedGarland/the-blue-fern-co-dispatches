@@ -364,6 +364,10 @@ def _set_gmail_api_env(monkeypatch):
 
 def test_send_email_uses_gmail_api_transport_and_preserves_message(monkeypatch):
     _set_gmail_api_env(monkeypatch)
+    monkeypatch.setenv("SMTP_HOST", "smtp.example.test")
+    monkeypatch.setenv("SMTP_PORT", "587")
+    monkeypatch.setenv("SMTP_USER", "smtp-user@example.test")
+    monkeypatch.setenv("SMTP_PASSWORD", "smtp-password")
     calls = []
 
     def fake_urlopen(request, timeout):
@@ -614,6 +618,11 @@ def test_send_test_email_does_not_run_pipeline_or_publish(monkeypatch):
 
 
 def test_send_test_email_missing_smtp_env_returns_clear_failure(monkeypatch, capsys):
+    monkeypatch.setenv("EMAIL_TRANSPORT", "smtp")
+    monkeypatch.setenv("GMAIL_API_CLIENT_ID", "ambient-client-id")
+    monkeypatch.setenv("GMAIL_API_CLIENT_SECRET", "ambient-client-secret")
+    monkeypatch.setenv("GMAIL_API_REFRESH_TOKEN", "ambient-refresh-token")
+    monkeypatch.setenv("SMTP_FROM", "alerts@example.test")
     monkeypatch.delenv("SMTP_HOST", raising=False)
     monkeypatch.delenv("EMAIL_TO", raising=False)
     monkeypatch.delenv("SMTP_USER", raising=False)

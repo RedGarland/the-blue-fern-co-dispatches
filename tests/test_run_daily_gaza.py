@@ -1184,6 +1184,11 @@ def test_email_report_sends_on_failure_with_warnings_and_errors(isolated, monkey
 
 def test_email_report_missing_smtp_config_returns_2(isolated, monkeypatch, capsys):
     root = isolated
+    monkeypatch.setenv("EMAIL_TRANSPORT", "smtp")
+    monkeypatch.setenv("GMAIL_API_CLIENT_ID", "ambient-client-id")
+    monkeypatch.setenv("GMAIL_API_CLIENT_SECRET", "ambient-client-secret")
+    monkeypatch.setenv("GMAIL_API_REFRESH_TOKEN", "ambient-refresh-token")
+    monkeypatch.setenv("SMTP_FROM", "alerts@example.test")
     monkeypatch.delenv("SMTP_HOST", raising=False)
     monkeypatch.delenv("SMTP_PORT", raising=False)
     monkeypatch.delenv("SMTP_USE_SSL", raising=False)

@@ -584,7 +584,7 @@ Historical wrapper:
 powershell -ExecutionPolicy Bypass -File scripts\run_weekly_cascadia.ps1
 ```
 
-Use `scripts/run_and_notify.py` for the scheduled Gaza daily workflow and SMTP diagnostics. Normal mode delegates to `scripts/run_daily_gaza.py --email-report`; `--publish` performs the local Pages publish behavior, while omitting `--publish` runs the Gaza workflow in dry-run mode. `--send-test-email` sends only the SMTP diagnostic message and does not run Gaza, tests, publish, push, or touch the Pages repo.
+Use `scripts/run_and_notify.py` for the scheduled Gaza daily workflow and notification diagnostics. Normal mode delegates to `scripts/run_daily_gaza.py --email-report`; `--publish` performs the local Pages publish behavior, while omitting `--publish` runs the Gaza workflow in dry-run mode. `--send-test-email` sends only the diagnostic message and does not run Gaza, tests, publish, push, or touch the Pages repo.
 
 ## Dedicated Runner Clone
 
@@ -596,7 +596,28 @@ Scheduled Gaza and Food Line jobs should run from a dedicated clean runner clone
 - the safe Gaza smoke test
 - dirty-runner recovery
 
-Required environment variables:
+Notification transport:
+
+- `EMAIL_TRANSPORT` or `NOTIFICATION_TRANSPORT` selects the sender. Use `gmail_api` for Gmail OAuth2/Gmail API delivery. Omit it or set `smtp` for the legacy SMTP path.
+- `EMAIL_TO` remains the required comma-separated recipient list.
+- `EMAIL_FROM` or `SMTP_FROM` remains the sender address contract. In Gmail API mode, this must be the authenticated Gmail account or a configured Gmail send-as alias.
+- `EMAIL_RETRIES` and `EMAIL_RETRY_DELAY` optionally override retry count and delay for either transport; otherwise the existing `SMTP_RETRIES` and `SMTP_RETRY_DELAY` values are used.
+
+Gmail API environment variables:
+
+- `GMAIL_API_CLIENT_ID` (required)
+- `GMAIL_API_CLIENT_SECRET` (required)
+- `GMAIL_API_REFRESH_TOKEN` (required)
+- `GMAIL_API_USER` (optional, defaults to `me`)
+- `GMAIL_API_TIMEOUT` (optional seconds, defaults to `SMTP_TIMEOUT` or `30`)
+
+Authorize the OAuth client with the narrow Gmail send-only scope:
+
+```text
+https://www.googleapis.com/auth/gmail.send
+```
+
+Legacy SMTP environment variables:
 
 - `SMTP_HOST` (required)
 - `SMTP_PORT` (optional, defaults to `587`)
@@ -610,10 +631,19 @@ Required environment variables:
 - `SMTP_DEBUG_FILE` (optional path that receives SMTP debug traces when `--smtp-debug` is used)
 - `SMTP_USER` or `SMTP_USERNAME` (optional)
 - `SMTP_PASSWORD` (required when `SMTP_USER` or `SMTP_USERNAME` is set)
-- `EMAIL_TO` (required, comma-separated recipients)
-- `EMAIL_FROM` or `SMTP_FROM` (optional, defaults to SMTP username or `noreply@<hostname>`)
 
-Example PowerShell environment setup:
+Example Gmail API PowerShell environment setup:
+
+```powershell
+$env:EMAIL_TRANSPORT = "gmail_api"
+$env:GMAIL_API_CLIENT_ID = "replace-with-oauth-client-id"
+$env:GMAIL_API_CLIENT_SECRET = "replace-with-oauth-client-secret"
+$env:GMAIL_API_REFRESH_TOKEN = "replace-with-refresh-token"
+$env:EMAIL_TO = "ops@example.com,owner@example.com"
+$env:EMAIL_FROM = "dispatches-bot@example.com"
+```
+
+Example legacy SMTP PowerShell environment setup:
 
 ```powershell
 $env:SMTP_HOST = "smtp.example.com"
@@ -642,7 +672,7 @@ SMTP troubleshooting:
 - Keep `SMTP_TLS_VERIFY` unset or `true` for normal runs. If a corporate proxy or local security product inserts a private CA, export that CA as a PEM bundle and set `SMTP_CA_FILE` or `SMTP_CA_BUNDLE` to that path.
 - `certificate verify failed: self-signed certificate in certificate chain` usually means local TLS inspection is replacing Gmail's certificate, or the inspecting CA is not trusted by Python. Keep verification enabled and set `SMTP_CA_FILE` to the trusted local CA bundle if inspection is intentional.
 - `SMTP_TLS_VERIFY=false`, `SMTP_SKIP_VERIFY=true`, or `SMTP_RELAX_X509_STRICT=1` disables certificate verification; use only as a short-lived diagnostic.
-- SMTP passwords are read from `SMTP_PASSWORD` but are not written to SMTP debug logs.
+- SMTP passwords are read from `SMTP_PASSWORD` but are not written to SMTP debug logs. Gmail API OAuth client secrets, refresh tokens, access tokens, sender addresses, and recipient addresses are also redacted from notification errors.
 
 Real SMTP integration tests are skipped by default. To enable them locally or in CI, set all required SMTP variables plus `INTEGRATION_SMTP=1`:
 

@@ -11,6 +11,10 @@ import subprocess
 import sys
 import time
 import base64
+import json
+import urllib.error
+import urllib.parse
+import urllib.request
 from datetime import datetime, timezone
 from email.message import EmailMessage
 from pathlib import Path
@@ -157,9 +161,29 @@ def _smtp_sensitive_values() -> list[str]:
     return values
 
 
+def _gmail_sensitive_values() -> list[str]:
+    values = [
+        os.getenv("GMAIL_API_CLIENT_ID") or "",
+        os.getenv("GMAIL_API_CLIENT_SECRET") or "",
+        os.getenv("GMAIL_API_REFRESH_TOKEN") or "",
+        os.getenv("GMAIL_API_USER") or "",
+        os.getenv("EMAIL_TO") or "",
+        os.getenv("EMAIL_FROM") or "",
+        os.getenv("SMTP_FROM") or "",
+    ]
+    for value in list(values):
+        if value:
+            values.append(base64.b64encode(value.encode()).decode())
+    return values
+
+
+def _notification_sensitive_values() -> list[str]:
+    return _smtp_sensitive_values() + _gmail_sensitive_values()
+
+
 def _redact_text(text: str, sensitive_values: list[str] | None = None) -> str:
     redacted = text
-    for value in sensitive_values or _smtp_sensitive_values():
+    for value in sensitive_values or _notification_sensitive_values():
         if value:
             redacted = redacted.replace(value, "[REDACTED]")
     return redacted
@@ -222,7 +246,22 @@ def _smtp_error_message(exc: BaseException) -> str:
             "SMTPAuthenticationError: SMTP authentication rejected"
             f"{suffix}; verify SMTP_USER/SMTP_USERNAME and SMTP_PASSWORD/app-password."
         )
-    return f"{exc.__class__.__name__}: {exc}"
+    return _notification_error_message(exc)
+
+
+def _notification_error_message(exc: BaseException) -> str:
+    return _redact_text(f"{exc.__class__.__name__}: {exc}")
+
+
+def _gmail_error_message(exc: BaseException, access_token: str | None = None) -> str:
+    sensitive = _notification_sensitive_values()
+    if access_token:
+        sensitive.extend([access_token, f"Bearer {access_token}", base64.b64encode(access_token.encode()).decode()])
+    return _redact_text(f"{exc.__class__.__name__}: {exc}", sensitive)
+
+
+class GmailApiError(RuntimeError):
+    pass
 
 
 def notification_error_message(exc: BaseException) -> str:
@@ -366,7 +405,183 @@ def _smtp_ehlo(smtp: smtplib.SMTP, local_hostname: str) -> None:
         raise smtplib.SMTPHeloError(code, response)
 
 
-def send_email(subject: str, body: str, date_str: str, smtp_debug: bool = False) -> None:
+def _notification_transport() -> str:
+    transport = (os.getenv("EMAIL_TRANSPORT") or os.getenv("NOTIFICATION_TRANSPORT") or "smtp").strip().lower()
+    aliases = {
+        "gmail": "gmail_api",
+        "gmail-api": "gmail_api",
+        "gmail_api": "gmail_api",
+        "smtp": "smtp",
+    }
+    if transport not in aliases:
+        raise RuntimeError(f"EMAIL_TRANSPORT must be smtp or gmail_api, got {transport!r}")
+    return aliases[transport]
+
+
+def _email_retries() -> int:
+    return _env_int("EMAIL_RETRIES", _env_int("SMTP_RETRIES", 2))
+
+
+def _email_retry_delay() -> float:
+    return _env_float("EMAIL_RETRY_DELAY", _env_float("SMTP_RETRY_DELAY", 1.0))
+
+
+def _build_message(subject: str, body: str, email_from: str, email_to: str) -> EmailMessage:
+    recipients = [addr.strip() for addr in email_to.split(",") if addr.strip()]
+    if not recipients:
+        raise RuntimeError("EMAIL_TO did not contain any valid recipient addresses")
+
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = email_from
+    msg["To"] = ", ".join(recipients)
+    msg["Date"] = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    msg.set_content(body)
+    return msg
+
+
+def _gmail_http_json(
+    url: str,
+    payload: dict[str, object],
+    headers: dict[str, str] | None = None,
+    timeout: float = 30.0,
+    sensitive_values: list[str] | None = None,
+) -> dict[str, object]:
+    data = json.dumps(payload).encode("utf-8")
+    request = urllib.request.Request(
+        url,
+        data=data,
+        headers={"Content-Type": "application/json", "Accept": "application/json", **(headers or {})},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            response_body = response.read().decode("utf-8", errors="replace")
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", errors="replace")
+        raise GmailApiError(f"Gmail API HTTP {exc.code}: {_redact_text(body, sensitive_values)}") from exc
+    if not response_body.strip():
+        return {}
+    try:
+        decoded = json.loads(response_body)
+    except json.JSONDecodeError as exc:
+        raise GmailApiError("Gmail API returned invalid JSON") from exc
+    if not isinstance(decoded, dict):
+        raise GmailApiError("Gmail API returned an unexpected response shape")
+    return decoded
+
+
+def _gmail_token_request(timeout: float) -> str:
+    client_id = os.getenv("GMAIL_API_CLIENT_ID")
+    client_secret = os.getenv("GMAIL_API_CLIENT_SECRET")
+    refresh_token = os.getenv("GMAIL_API_REFRESH_TOKEN")
+    token_uri = "https://oauth2.googleapis.com/token"
+    missing = [
+        name
+        for name, value in (
+            ("GMAIL_API_CLIENT_ID", client_id),
+            ("GMAIL_API_CLIENT_SECRET", client_secret),
+            ("GMAIL_API_REFRESH_TOKEN", refresh_token),
+        )
+        if not value or not value.strip()
+    ]
+    if missing:
+        raise RuntimeError(f"Missing required env vars for Gmail API transport: {', '.join(missing)}")
+
+    payload = urllib.parse.urlencode(
+        {
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "refresh_token": refresh_token,
+            "grant_type": "refresh_token",
+        }
+    ).encode("utf-8")
+    request = urllib.request.Request(
+        token_uri,
+        data=payload,
+        headers={"Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            response_body = response.read().decode("utf-8", errors="replace")
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", errors="replace")
+        raise GmailApiError(f"Gmail OAuth token refresh failed with HTTP {exc.code}: {_redact_text(body)}") from exc
+    try:
+        decoded = json.loads(response_body)
+    except json.JSONDecodeError as exc:
+        raise GmailApiError("Gmail OAuth token refresh returned invalid JSON") from exc
+    if not isinstance(decoded, dict) or not decoded.get("access_token"):
+        raise GmailApiError("Gmail OAuth token refresh did not return an access token")
+    return str(decoded["access_token"])
+
+
+def _is_retryable_gmail_error(exc: BaseException) -> bool:
+    if isinstance(exc, urllib.error.HTTPError):
+        return exc.code in {429, 500, 502, 503, 504}
+    if isinstance(exc, GmailApiError):
+        text = str(exc)
+        return any(f"HTTP {code}" in text for code in (429, 500, 502, 503, 504))
+    return isinstance(exc, (OSError, socket.timeout, TimeoutError))
+
+
+def _send_email_gmail_api(subject: str, body: str, date_str: str, smtp_debug: bool = False) -> None:
+    del date_str, smtp_debug
+    timeout = _env_float("GMAIL_API_TIMEOUT", _env_float("SMTP_TIMEOUT", 30.0))
+    retries = _email_retries()
+    retry_delay = _email_retry_delay()
+    email_to = os.getenv("EMAIL_TO", "")
+    gmail_user = os.getenv("GMAIL_API_USER", "me")
+    email_from = _env_first("EMAIL_FROM", "SMTP_FROM") or os.getenv("GMAIL_API_USER") or _env_first("SMTP_USER", "SMTP_USERNAME")
+
+    missing: list[str] = []
+    if not email_from:
+        missing.append("EMAIL_FROM or SMTP_FROM")
+    if not email_to.strip():
+        missing.append("EMAIL_TO")
+    if missing:
+        raise RuntimeError(f"Missing required env vars: {', '.join(missing)}")
+
+    msg = _build_message(subject, body, email_from, email_to)
+    raw = base64.urlsafe_b64encode(msg.as_bytes()).decode("ascii")
+    send_url = f"https://gmail.googleapis.com/gmail/v1/users/{urllib.parse.quote(gmail_user, safe='')}/messages/send"
+    last_error: BaseException | None = None
+
+    for attempt in range(1, retries + 2):
+        access_token = None
+        try:
+            access_token = _gmail_token_request(timeout)
+            sensitive = _notification_sensitive_values() + [
+                access_token,
+                f"Bearer {access_token}",
+                base64.b64encode(access_token.encode()).decode(),
+            ]
+            _gmail_http_json(
+                send_url,
+                {"raw": raw},
+                headers={"Authorization": f"Bearer {access_token}"},
+                timeout=timeout,
+                sensitive_values=sensitive,
+            )
+            print("Email sent with Gmail API.")
+            return
+        except (GmailApiError, OSError, socket.timeout, TimeoutError) as exc:
+            last_error = exc
+            if attempt > retries or not _is_retryable_gmail_error(exc):
+                break
+            print(
+                f"Gmail API attempt {attempt} failed ({_gmail_error_message(exc, access_token)}); retrying in {retry_delay:g}s.",
+                file=sys.stderr,
+            )
+            if retry_delay:
+                time.sleep(retry_delay)
+
+    if last_error is not None:
+        raise RuntimeError(f"Gmail API send failed after {retries + 1} attempt(s): {_gmail_error_message(last_error, access_token)}") from last_error
+
+
+def _send_email_smtp(subject: str, body: str, date_str: str, smtp_debug: bool = False) -> None:
     # Recommended normal configuration (for example Gmail):
     # SMTP_HOST=smtp.gmail.com
     # SMTP_PORT=587
@@ -378,8 +593,8 @@ def send_email(subject: str, body: str, date_str: str, smtp_debug: bool = False)
     smtp_port = int(os.getenv("SMTP_PORT", "587"))
     smtp_use_ssl = _env_bool("SMTP_USE_SSL")
     smtp_timeout = _env_float("SMTP_TIMEOUT", 30.0)
-    smtp_retries = _env_int("SMTP_RETRIES", 2)
-    smtp_retry_delay = _env_float("SMTP_RETRY_DELAY", 1.0)
+    smtp_retries = _email_retries()
+    smtp_retry_delay = _email_retry_delay()
     smtp_user = _env_first("SMTP_USER", "SMTP_USERNAME")
     smtp_password = os.getenv("SMTP_PASSWORD")
     email_to = os.getenv("EMAIL_TO", "")
@@ -395,16 +610,7 @@ def send_email(subject: str, body: str, date_str: str, smtp_debug: bool = False)
     if missing:
         raise RuntimeError(f"Missing required env vars: {', '.join(missing)}")
 
-    recipients = [addr.strip() for addr in email_to.split(",") if addr.strip()]
-    if not recipients:
-        raise RuntimeError("EMAIL_TO did not contain any valid recipient addresses")
-
-    msg = EmailMessage()
-    msg["Subject"] = subject
-    msg["From"] = email_from
-    msg["To"] = ", ".join(recipients)
-    msg["Date"] = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
-    msg.set_content(body)
+    msg = _build_message(subject, body, email_from, email_to)
 
     mode = _smtp_mode(smtp_port, smtp_use_ssl)
     use_smtps = mode == "ssl"
@@ -508,6 +714,13 @@ def send_email(subject: str, body: str, date_str: str, smtp_debug: bool = False)
         raise RuntimeError(f"SMTP send failed after {smtp_retries + 1} attempt(s): {_smtp_error_message(last_error)}") from last_error
 
 
+def send_email(subject: str, body: str, date_str: str, smtp_debug: bool = False) -> None:
+    if _notification_transport() == "gmail_api":
+        _send_email_gmail_api(subject, body, date_str, smtp_debug=smtp_debug)
+        return
+    _send_email_smtp(subject, body, date_str, smtp_debug=smtp_debug)
+
+
 def build_body(date_str: str, results: list[dict[str, object]], publish_requested: bool) -> str:
     ok = all(int(item["exit_code"]) == 0 for item in results)
     gaza_url = f"https://dispatches.thebluefernco.com/gaza/editions/{date_str}/"
@@ -552,6 +765,22 @@ def build_test_email_body(date_str: str) -> str:
 
 
 def print_smtp_config_debug() -> None:
+    transport = _notification_transport()
+    if transport == "gmail_api":
+        email_from = _env_first("EMAIL_FROM", "SMTP_FROM") or os.getenv("GMAIL_API_USER") or _env_first("SMTP_USER", "SMTP_USERNAME")
+        lines = [
+            "Notification diagnostic config:",
+            "- Transport: gmail_api",
+            f"- Gmail API user: {_mask_email(os.getenv('GMAIL_API_USER') or 'me')}",
+            f"- Email from: {_mask_email(email_from)}",
+            f"- Email to: {_mask_recipients(os.getenv('EMAIL_TO'))}",
+            f"- OAuth client configured: {str(bool(os.getenv('GMAIL_API_CLIENT_ID'))).lower()}",
+            f"- OAuth refresh token configured: {str(bool(os.getenv('GMAIL_API_REFRESH_TOKEN'))).lower()}",
+            f"- Retries: {_email_retries()}",
+        ]
+        print("\n".join(lines), file=sys.stderr)
+        return
+
     smtp_user = _env_first("SMTP_USER", "SMTP_USERNAME")
     email_from = _env_first("EMAIL_FROM", "SMTP_FROM") or smtp_user or f"noreply@{socket.gethostname()}"
     smtp_port = os.getenv("SMTP_PORT", "587")
@@ -560,7 +789,8 @@ def print_smtp_config_debug() -> None:
     mode = _smtp_mode(smtp_port_int, smtp_use_ssl)
     _tls_context, tls_meta = _build_tls_context()
     lines = [
-        "SMTP diagnostic config:",
+        "Notification diagnostic config:",
+        "- Transport: smtp",
         f"- SMTP host: {os.getenv('SMTP_HOST') or '<unset>'}",
         f"- SMTP port: {smtp_port}",
         f"- SMTP username: {_mask_email(smtp_user)}",

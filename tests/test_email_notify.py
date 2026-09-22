@@ -4,6 +4,8 @@ import time
 import threading
 import asyncio
 import base64
+import io
+import json
 from pathlib import Path
 import importlib.util
 import pytest
@@ -16,8 +18,27 @@ spec.loader.exec_module(run_and_notify)
 @pytest.fixture(autouse=True)
 def _disable_env_file_loading(monkeypatch):
     monkeypatch.setattr(run_and_notify, "load_env_file", lambda path=None: None)
-    monkeypatch.delenv("SMTP_USERNAME", raising=False)
-    monkeypatch.delenv("SMTP_FROM", raising=False)
+    for name in (
+        "EMAIL_TRANSPORT",
+        "NOTIFICATION_TRANSPORT",
+        "EMAIL_FROM",
+        "EMAIL_TO",
+        "EMAIL_RETRIES",
+        "EMAIL_RETRY_DELAY",
+        "SMTP_HOST",
+        "SMTP_PORT",
+        "SMTP_USER",
+        "SMTP_USERNAME",
+        "SMTP_PASSWORD",
+        "SMTP_FROM",
+        "SMTP_RETRIES",
+        "SMTP_RETRY_DELAY",
+        "GMAIL_API_CLIENT_ID",
+        "GMAIL_API_CLIENT_SECRET",
+        "GMAIL_API_REFRESH_TOKEN",
+        "GMAIL_API_USER",
+    ):
+        monkeypatch.delenv(name, raising=False)
 
 
 async def _smtp_handler(reader: asyncio.StreamReader, writer: asyncio.StreamWriter, out_list: list):
@@ -180,6 +201,7 @@ class FakeSMTP:
 
 
 def _set_email_env(monkeypatch):
+    monkeypatch.setenv("EMAIL_TRANSPORT", "smtp")
     monkeypatch.setenv("SMTP_HOST", "smtp.example.test")
     monkeypatch.setenv("SMTP_PORT", "587")
     monkeypatch.setenv("SMTP_USER", "alerts@example.test")
@@ -304,6 +326,236 @@ def test_send_email_reports_smtp_auth_failure_without_secret_payload(monkeypatch
     assert "secret-app-password" not in message
     assert "alerts@example.test" not in message
     assert "Username and Password not accepted" not in message
+
+
+class FakeUrlopenResponse:
+    def __init__(self, payload):
+        self.payload = payload
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        return False
+
+    def read(self):
+        return json.dumps(self.payload).encode("utf-8")
+
+
+def _http_error(url, code, payload):
+    return run_and_notify.urllib.error.HTTPError(
+        url=url,
+        code=code,
+        msg="error",
+        hdrs={},
+        fp=io.BytesIO(json.dumps(payload).encode("utf-8")),
+    )
+
+
+def _set_gmail_api_env(monkeypatch):
+    monkeypatch.setenv("EMAIL_TRANSPORT", "gmail_api")
+    monkeypatch.setenv("EMAIL_FROM", "alerts@example.test")
+    monkeypatch.setenv("EMAIL_TO", "ops@example.test")
+    monkeypatch.setenv("GMAIL_API_CLIENT_ID", "client-id")
+    monkeypatch.setenv("GMAIL_API_CLIENT_SECRET", "client-secret")
+    monkeypatch.setenv("GMAIL_API_REFRESH_TOKEN", "refresh-token")
+    monkeypatch.setenv("EMAIL_RETRY_DELAY", "0")
+
+
+def test_send_email_uses_gmail_api_transport_and_preserves_message(monkeypatch):
+    _set_gmail_api_env(monkeypatch)
+    calls = []
+
+    def fake_urlopen(request, timeout):
+        calls.append((request, timeout))
+        if request.full_url == "https://oauth2.googleapis.com/token":
+            return FakeUrlopenResponse({"access_token": "access-token"})
+        return FakeUrlopenResponse({"id": "gmail-message-id"})
+
+    monkeypatch.setattr(run_and_notify.urllib.request, "urlopen", fake_urlopen)
+
+    run_and_notify.send_email("subject", "body", "2026-05-04")
+
+    assert len(calls) == 2
+    token_request, send_request = [item[0] for item in calls]
+    assert b"client_secret=client-secret" in token_request.data
+    payload = json.loads(send_request.data.decode("utf-8"))
+    raw_message = base64.urlsafe_b64decode(payload["raw"].encode("ascii")).decode("utf-8")
+    assert "Subject: subject" in raw_message
+    assert "From: alerts@example.test" in raw_message
+    assert "To: ops@example.test" in raw_message
+    assert "\nbody\n" in raw_message
+    assert send_request.get_header("Authorization") == "Bearer access-token"
+
+
+def test_notification_transport_alias_selects_gmail_api(monkeypatch):
+    _set_gmail_api_env(monkeypatch)
+    monkeypatch.delenv("EMAIL_TRANSPORT", raising=False)
+    monkeypatch.setenv("NOTIFICATION_TRANSPORT", "gmail_api")
+    calls = []
+
+    def fake_urlopen(request, timeout):
+        calls.append(request.full_url)
+        if request.full_url == "https://oauth2.googleapis.com/token":
+            return FakeUrlopenResponse({"access_token": "access-token"})
+        return FakeUrlopenResponse({"id": "gmail-message-id"})
+
+    monkeypatch.setattr(run_and_notify.urllib.request, "urlopen", fake_urlopen)
+
+    run_and_notify.send_email("subject", "body", "2026-05-04")
+
+    assert calls == [
+        "https://oauth2.googleapis.com/token",
+        "https://gmail.googleapis.com/gmail/v1/users/me/messages/send",
+    ]
+
+
+def test_invalid_notification_transport_fails_clearly(monkeypatch):
+    monkeypatch.setenv("EMAIL_TRANSPORT", "sendmail")
+
+    with pytest.raises(RuntimeError, match="EMAIL_TRANSPORT must be smtp or gmail_api"):
+        run_and_notify.send_email("subject", "body", "2026-05-04")
+
+
+def test_gmail_api_requires_refresh_token_grant_credentials(monkeypatch):
+    _set_gmail_api_env(monkeypatch)
+    monkeypatch.delenv("GMAIL_API_CLIENT_ID", raising=False)
+    monkeypatch.delenv("GMAIL_API_CLIENT_SECRET", raising=False)
+    monkeypatch.delenv("GMAIL_API_REFRESH_TOKEN", raising=False)
+    monkeypatch.setenv("GMAIL_API_ACCESS_TOKEN", "direct-access-token-is-ignored")
+
+    with pytest.raises(RuntimeError) as excinfo:
+        run_and_notify.send_email("subject", "body", "2026-05-04")
+
+    message = str(excinfo.value)
+    assert "GMAIL_API_CLIENT_ID" in message
+    assert "GMAIL_API_CLIENT_SECRET" in message
+    assert "GMAIL_API_REFRESH_TOKEN" in message
+
+
+def test_gmail_api_transport_retries_send_failure(monkeypatch):
+    _set_gmail_api_env(monkeypatch)
+    monkeypatch.setenv("EMAIL_RETRIES", "1")
+    calls = {"send": 0}
+
+    def fake_urlopen(request, timeout):
+        if request.full_url == "https://oauth2.googleapis.com/token":
+            return FakeUrlopenResponse({"access_token": "access-token"})
+        calls["send"] += 1
+        if calls["send"] == 1:
+            raise OSError("temporary network drop")
+        return FakeUrlopenResponse({"id": "gmail-message-id"})
+
+    monkeypatch.setattr(run_and_notify.urllib.request, "urlopen", fake_urlopen)
+
+    run_and_notify.send_email("subject", "body", "2026-05-04")
+
+    assert calls["send"] == 2
+
+
+def test_gmail_api_retries_transient_token_endpoint_failure(monkeypatch):
+    _set_gmail_api_env(monkeypatch)
+    monkeypatch.setenv("EMAIL_RETRIES", "1")
+    calls = {"token": 0}
+
+    def fake_urlopen(request, timeout):
+        if request.full_url == "https://oauth2.googleapis.com/token":
+            calls["token"] += 1
+            if calls["token"] == 1:
+                raise _http_error(request.full_url, 500, {"error": "server_error"})
+            return FakeUrlopenResponse({"access_token": "access-token"})
+        return FakeUrlopenResponse({"id": "gmail-message-id"})
+
+    monkeypatch.setattr(run_and_notify.urllib.request, "urlopen", fake_urlopen)
+
+    run_and_notify.send_email("subject", "body", "2026-05-04")
+
+    assert calls["token"] == 2
+
+
+def test_gmail_api_does_not_retry_invalid_grant(monkeypatch):
+    _set_gmail_api_env(monkeypatch)
+    monkeypatch.setenv("EMAIL_RETRIES", "3")
+    calls = {"token": 0}
+
+    def fake_urlopen(request, timeout):
+        calls["token"] += 1
+        raise _http_error(request.full_url, 400, {"error": "invalid_grant"})
+
+    monkeypatch.setattr(run_and_notify.urllib.request, "urlopen", fake_urlopen)
+
+    with pytest.raises(RuntimeError) as excinfo:
+        run_and_notify.send_email("subject", "body", "2026-05-04")
+
+    assert calls["token"] == 1
+    assert "invalid_grant" in str(excinfo.value)
+
+
+def test_gmail_api_permanent_send_4xx_surfaces_without_retry(monkeypatch):
+    _set_gmail_api_env(monkeypatch)
+    monkeypatch.setenv("EMAIL_RETRIES", "3")
+    calls = {"send": 0}
+
+    def fake_urlopen(request, timeout):
+        if request.full_url == "https://oauth2.googleapis.com/token":
+            return FakeUrlopenResponse({"access_token": "access-token"})
+        calls["send"] += 1
+        raise _http_error(request.full_url, 403, {"error": {"status": "PERMISSION_DENIED"}})
+
+    monkeypatch.setattr(run_and_notify.urllib.request, "urlopen", fake_urlopen)
+
+    with pytest.raises(RuntimeError) as excinfo:
+        run_and_notify.send_email("subject", "body", "2026-05-04")
+
+    assert calls["send"] == 1
+    assert "Gmail API HTTP 403" in str(excinfo.value)
+    assert "PERMISSION_DENIED" in str(excinfo.value)
+
+
+def test_gmail_api_transport_redacts_oauth_values(monkeypatch, capsys):
+    _set_gmail_api_env(monkeypatch)
+    secret = "client-secret"
+    refresh = "refresh-token"
+    monkeypatch.setenv("EMAIL_RETRIES", "0")
+
+    def fake_urlopen(request, timeout):
+        raise OSError(f"failure using {secret} and {refresh}")
+
+    monkeypatch.setattr(run_and_notify.urllib.request, "urlopen", fake_urlopen)
+
+    with pytest.raises(RuntimeError) as excinfo:
+        run_and_notify.send_email("subject", "body", "2026-05-04")
+
+    captured = capsys.readouterr()
+    message = str(excinfo.value)
+    assert secret not in captured.err
+    assert refresh not in captured.err
+    assert secret not in message
+    assert refresh not in message
+
+
+def test_gmail_api_transport_redacts_access_token_and_authorization_header(monkeypatch, capsys):
+    _set_gmail_api_env(monkeypatch)
+    token = "ya29.generated-access-token"
+    authorization = f"Bearer {token}"
+    monkeypatch.setenv("EMAIL_RETRIES", "0")
+
+    def fake_urlopen(request, timeout):
+        if request.full_url == "https://oauth2.googleapis.com/token":
+            return FakeUrlopenResponse({"access_token": token})
+        raise OSError(f"Authorization: {request.get_header('Authorization')}")
+
+    monkeypatch.setattr(run_and_notify.urllib.request, "urlopen", fake_urlopen)
+
+    with pytest.raises(RuntimeError) as excinfo:
+        run_and_notify.send_email("subject", "body", "2026-05-04")
+
+    captured = capsys.readouterr()
+    message = str(excinfo.value)
+    assert token not in captured.err
+    assert authorization not in captured.err
+    assert token not in message
+    assert authorization not in message
 
 
 def test_smtp_debug_file_tees_debug_output(monkeypatch, capsys):

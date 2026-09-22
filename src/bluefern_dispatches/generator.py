@@ -1642,6 +1642,10 @@ def _extract_gaza_public_history_dates(text: str) -> set[str]:
     return set(GAZA_PUBLIC_HISTORY_DATE_RE.findall(text))
 
 
+def _extract_gaza_no_update_history_dates(public_root: Path) -> set[str]:
+    return {entry.date for entry in discover_gaza_no_update_entries(public_root)}
+
+
 def _extract_gaza_public_history_catchups(text: str) -> set[str]:
     return set(GAZA_PUBLIC_HISTORY_CATCHUP_RE.findall(text))
 
@@ -1657,6 +1661,7 @@ def _extract_gaza_audio_feed_dates(text: str) -> set[str]:
 def _gaza_public_surface_date_sets(public_root: Path, *, audio_root: Path | None = None) -> dict[str, set[str]]:
     gaza_root = public_root / "gaza"
     audio_source_root = audio_root if audio_root is not None else gaza_root
+    no_update_dates = _extract_gaza_no_update_history_dates(public_root)
     surface_paths: dict[str, tuple[Path, Any]] = {
         "gaza/archive.html": (gaza_root / "archive.html", _extract_gaza_public_history_dates),
         "gaza/rss.xml": (gaza_root / "rss.xml", _extract_gaza_public_history_dates),
@@ -1667,6 +1672,7 @@ def _gaza_public_surface_date_sets(public_root: Path, *, audio_root: Path | None
     result: dict[str, set[str]] = {}
     for surface, (path, extractor) in surface_paths.items():
         result[surface] = extractor(_read_text_if_exists(path))
+    result["gaza/archive.html"] |= no_update_dates
     return result
 
 

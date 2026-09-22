@@ -386,6 +386,173 @@ def test_normal_gaza_publish_still_enforces_audio_history_shrink(release_repos: 
     assert any("gaza public history shrink detected for gaza/audio/index.html" in error for error in report["errors"])
 
 
+def _write_gaza_history_guard_fixture(
+    root: Path,
+    *,
+    archive_edition_dates: tuple[str, ...] = (),
+    rss_edition_dates: tuple[str, ...] = (),
+    audio_dates: tuple[str, ...] = (),
+    no_update_dates: tuple[str, ...] = (),
+) -> None:
+    gaza = root / "gaza"
+    audio = gaza / "audio"
+    status = gaza / "status" / "no-updates"
+    audio.mkdir(parents=True, exist_ok=True)
+    archive_links = "".join(
+        f'<a href="editions/{date_text}/">{date_text}</a>' for date_text in archive_edition_dates
+    )
+    no_update_rows = "".join(
+        f'<li class="no-update"><span class="edition-date">{date_text}</span><span>No update</span></li>'
+        for date_text in no_update_dates
+    )
+    (gaza / "archive.html").write_text(f"<html><body>{archive_links}{no_update_rows}</body></html>", encoding="utf-8")
+    rss_items = "".join(
+        f"<item><link>https://dispatches.thebluefernco.com/gaza/editions/{date_text}/</link></item>"
+        for date_text in rss_edition_dates
+    )
+    (gaza / "rss.xml").write_text(f"<rss><channel>{rss_items}</channel></rss>", encoding="utf-8")
+    audio_rows = "".join(
+        f'<span class="gaza-audio-index-date"><strong>{date_text}</strong></span>' for date_text in audio_dates
+    )
+    (audio / "index.html").write_text(f"<html>{audio_rows}</html>", encoding="utf-8")
+    audio_items = "".join(
+        f"<item><link>https://dispatches.thebluefernco.com/gaza/audio/{date_text}-transcript.html</link></item>"
+        for date_text in audio_dates
+    )
+    podcast = f"<rss><channel>{audio_items}</channel></rss>"
+    (audio / "podcast.xml").write_text(podcast, encoding="utf-8")
+    (gaza / "podcast.xml").write_text(podcast, encoding="utf-8")
+    for date_text in archive_edition_dates:
+        edition = gaza / "editions" / date_text
+        edition.mkdir(parents=True, exist_ok=True)
+        (edition / "index.html").write_text(f"<html>{date_text}</html>", encoding="utf-8")
+    if no_update_dates:
+        status.mkdir(parents=True, exist_ok=True)
+    for date_text in no_update_dates:
+        (status / f"{date_text}.json").write_text(
+            json.dumps(
+                {
+                    "date": date_text,
+                    "classification": "no_publication_needed",
+                    "message": "No new source-backed Gaza update met publication threshold today.",
+                    "source_count": 2,
+                    "public_story_count": 0,
+                    "run_completed_successfully": True,
+                    "run_manifest_path": f"data/dispatches/gaza/editions/{date_text}/run_manifest.json",
+                    "collection_report_path": f"data/dispatches/gaza/editions/{date_text}/collection_report.json",
+                }
+            ),
+            encoding="utf-8",
+        )
+
+
+def _gaza_history_report(reports: list[dict[str, object]], surface: str) -> dict[str, object]:
+    for report in reports:
+        if report["surface"] == surface:
+            return report
+    raise AssertionError(f"missing Gaza history report for {surface}")
+
+
+def test_gaza_archive_history_guard_treats_authoritative_no_update_as_preserved_history(tmp_path: Path) -> None:
+    previous = tmp_path / "pages"
+    current = tmp_path / "site"
+    _write_gaza_history_guard_fixture(
+        previous,
+        archive_edition_dates=("2026-09-21",),
+        no_update_dates=("2026-09-21",),
+    )
+    _write_gaza_history_guard_fixture(current, no_update_dates=("2026-09-21",))
+
+    reports = generator._gaza_public_surface_history_diagnostics(previous, current)
+    archive = _gaza_history_report(reports, "gaza/archive.html")
+
+    assert "2026-09-21" in archive["preserved_dates"]
+    assert archive["dropped_dates"] == []
+    assert archive["ok"] is True
+
+
+def test_gaza_archive_history_guard_still_blocks_actual_edition_deletion(tmp_path: Path) -> None:
+    previous = tmp_path / "pages"
+    current = tmp_path / "site"
+    _write_gaza_history_guard_fixture(previous, archive_edition_dates=("2026-09-21",))
+    _write_gaza_history_guard_fixture(current)
+
+    archive = _gaza_history_report(
+        generator._gaza_public_surface_history_diagnostics(previous, current),
+        "gaza/archive.html",
+    )
+
+    assert archive["dropped_dates"] == ["2026-09-21"]
+    assert archive["ok"] is False
+
+
+def test_gaza_archive_history_guard_preserves_no_update_to_no_update(tmp_path: Path) -> None:
+    previous = tmp_path / "pages"
+    current = tmp_path / "site"
+    _write_gaza_history_guard_fixture(previous, no_update_dates=("2026-09-21",))
+    _write_gaza_history_guard_fixture(current, no_update_dates=("2026-09-21",))
+
+    archive = _gaza_history_report(
+        generator._gaza_public_surface_history_diagnostics(previous, current),
+        "gaza/archive.html",
+    )
+
+    assert archive["preserved_dates"] == ["2026-09-21"]
+    assert archive["dropped_dates"] == []
+    assert archive["ok"] is True
+
+
+def test_gaza_archive_history_guard_allows_no_update_to_normal_edition(tmp_path: Path) -> None:
+    previous = tmp_path / "pages"
+    current = tmp_path / "site"
+    _write_gaza_history_guard_fixture(previous, no_update_dates=("2026-09-21",))
+    _write_gaza_history_guard_fixture(current, archive_edition_dates=("2026-09-21",))
+
+    archive = _gaza_history_report(
+        generator._gaza_public_surface_history_diagnostics(previous, current),
+        "gaza/archive.html",
+    )
+
+    assert archive["preserved_dates"] == ["2026-09-21"]
+    assert archive["dropped_dates"] == []
+    assert archive["ok"] is True
+
+
+def test_gaza_archive_history_guard_blocks_no_update_deletion(tmp_path: Path) -> None:
+    previous = tmp_path / "pages"
+    current = tmp_path / "site"
+    _write_gaza_history_guard_fixture(previous, no_update_dates=("2026-09-21",))
+    _write_gaza_history_guard_fixture(current)
+
+    archive = _gaza_history_report(
+        generator._gaza_public_surface_history_diagnostics(previous, current),
+        "gaza/archive.html",
+    )
+
+    assert archive["dropped_dates"] == ["2026-09-21"]
+    assert archive["ok"] is False
+
+
+def test_gaza_no_update_history_does_not_change_rss_or_audio_guards(tmp_path: Path) -> None:
+    previous = tmp_path / "pages"
+    current = tmp_path / "site"
+    _write_gaza_history_guard_fixture(
+        previous,
+        rss_edition_dates=("2026-09-20",),
+        audio_dates=("2026-09-18",),
+        no_update_dates=("2026-09-21",),
+    )
+    _write_gaza_history_guard_fixture(current, no_update_dates=("2026-09-21",))
+
+    reports = generator._gaza_public_surface_history_diagnostics(previous, current)
+
+    assert _gaza_history_report(reports, "gaza/archive.html")["dropped_dates"] == []
+    assert _gaza_history_report(reports, "gaza/rss.xml")["dropped_dates"] == ["2026-09-20"]
+    assert _gaza_history_report(reports, "gaza/audio/index.html")["dropped_dates"] == ["2026-09-18"]
+    assert _gaza_history_report(reports, "gaza/audio/podcast.xml")["dropped_dates"] == ["2026-09-18"]
+    assert _gaza_history_report(reports, "gaza/podcast.xml")["dropped_dates"] == ["2026-09-18"]
+
+
 def test_dry_run_reports_planned_paths_for_food_line_dates(release_repos: tuple[Path, Path]) -> None:
     source, pages = release_repos
     _write_food_line_site(source, ["2026-06-19", "2026-06-20"])

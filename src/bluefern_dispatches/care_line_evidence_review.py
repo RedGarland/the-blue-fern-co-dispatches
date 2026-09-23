@@ -321,6 +321,57 @@ def _existing_access_consequences(row: Mapping[str, Any]) -> list[str]:
     return _list_values(value)
 
 
+RECOVERABLE_FAILED_EXTRACTION_REASONS = {
+    "needs_full_article",
+    "needs_date",
+    "missing_source_date",
+    "needs_geography",
+    "missing_geography",
+    "needs_access_consequence",
+    "missing_subject",
+    "missing_event_type",
+    "missing_service_line_or_facility_scope",
+    "insufficient_bounded_evidence",
+    "private_or_inaccessible_evidence",
+}
+
+
+def _recoverable_reason(exclusion_reason: str, failed_gates: set[str]) -> str:
+    if exclusion_reason in RECOVERABLE_FAILED_EXTRACTION_REASONS:
+        return exclusion_reason
+    for reason in RECOVERABLE_FAILED_EXTRACTION_REASONS:
+        if reason in failed_gates:
+            return reason
+    return ""
+
+
+def _recoverable_semantic_result(
+    *,
+    authority: str,
+    reason: str,
+    event_type: str = "",
+    service_line: str = "",
+    access_consequences: list[str] | None = None,
+    source_text: str = "",
+    lead: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    payload: dict[str, Any] = {
+        "authority": authority,
+        "qualification_status": "recoverable_failed_extraction",
+        "exclusion_reason": reason,
+        "event_type": event_type,
+        "service_line": service_line,
+        "access_consequences": [
+            {"value": value, "matched_text": value}
+            for value in (access_consequences or [])
+        ],
+        "source_text": source_text,
+    }
+    if lead is not None:
+        payload["lead"] = dict(lead)
+    return payload
+
+
 def _packet_semantic_triage(
     row: Mapping[str, Any],
     *,
@@ -338,6 +389,7 @@ def _packet_semantic_triage(
     existing_service_line = _existing_service_line(row)
     existing_access = _existing_access_consequences(row)
     has_existing_care_evidence = bool(existing_event_type or existing_service_line or existing_access)
+    recoverable_reason = _recoverable_reason(exclusion_reason, failed_gates)
 
     if exclusion_reason in NEGATIVE_EXCLUSION_REASONS or normalized_classification in NEGATIVE_EXCLUSION_REASONS:
         return {
@@ -365,6 +417,15 @@ def _packet_semantic_triage(
         access = existing_access
         if not access and existing_event_type and supporting_text:
             access, _access_exception = _access_consequences_from_text(supporting_text, existing_event_type)
+        if recoverable_reason:
+            return _recoverable_semantic_result(
+                authority="existing_pipeline_fields",
+                reason=recoverable_reason,
+                event_type=existing_event_type,
+                service_line=existing_service_line,
+                access_consequences=access,
+                source_text=supporting_text,
+            )
         return {
             "authority": "existing_pipeline_fields",
             "qualification_status": "event_lead",
@@ -375,48 +436,39 @@ def _packet_semantic_triage(
             "source_text": supporting_text,
         }
 
-    fail_closed_gates = [
-        "non_healthcare_passage",
-        "missing_event_type",
-        "needs_access_consequence",
-        "insufficient_bounded_evidence",
-        "missing_subject",
-        "missing_geography",
-    ]
-    if extraction_outcome not in {"ACCESS_BLOCKED", "PAYWALLED", "SCRIPT_RENDERED", "PDF_REQUIRED"}:
-        for gate in fail_closed_gates:
-            if gate in failed_gates:
-                reason = "non_care_line" if gate == "non_healthcare_passage" else gate
-                return {
-                    "authority": "existing_pipeline_failed_gates",
-                    "qualification_status": "excluded",
-                    "exclusion_reason": reason,
-                    "event_type": "",
-                    "service_line": "",
-                    "access_consequences": [],
-                    "source_text": ", ".join(sorted(failed_gates)),
-                }
-
     lead = event_lead_from_raw_item(
         _raw_item_for_semantic_triage(row, title=title, supporting_text=supporting_text, canonical_url=canonical_url)
     )
     if _text(lead, "qualification_status") == "event_lead":
         event_type = _text(lead, "event_type_hint")
         service_line = _text(lead, "service_line_hint")
+        if _weak_fallback_event_phrase(f"{title} {supporting_text}", event_type):
+            return _recoverable_semantic_result(
+                authority="care_line_event_lead_helper",
+                reason=recoverable_reason or "insufficient_bounded_evidence",
+                source_text=recoverable_reason or "weak_fallback_event_phrase",
+                lead=lead,
+            )
         access, _access_exception = _access_consequences_from_text(supporting_text, event_type)
         facility, _facility_match = _strict_provider_candidate(supporting_text, title)
         if not access or not facility:
-            reason = "needs_access_consequence" if not access else "missing_subject"
-            return {
-                "authority": "care_line_event_lead_helper",
-                "qualification_status": "excluded",
-                "exclusion_reason": reason,
-                "event_type": "",
-                "service_line": "",
-                "access_consequences": [],
-                "source_text": reason,
-                "lead": lead,
-            }
+            reason = recoverable_reason or ("needs_access_consequence" if not access else "missing_subject")
+            return _recoverable_semantic_result(
+                authority="care_line_event_lead_helper",
+                reason=reason,
+                source_text=reason,
+                lead=lead,
+            )
+        if recoverable_reason:
+            return _recoverable_semantic_result(
+                authority="care_line_event_lead_helper",
+                reason=recoverable_reason,
+                event_type=event_type,
+                service_line=service_line,
+                access_consequences=access,
+                source_text=supporting_text,
+                lead=lead,
+            )
         return {
             "authority": "care_line_event_lead_helper",
             "qualification_status": "event_lead",
@@ -429,6 +481,13 @@ def _packet_semantic_triage(
         }
 
     reason = _normalized_reason(_text(lead, "exclusion_reason")) or exclusion_reason or "non_care_line"
+    if reason in RECOVERABLE_FAILED_EXTRACTION_REASONS:
+        return _recoverable_semantic_result(
+            authority="existing_pipeline_failed_gates",
+            reason=reason,
+            source_text=", ".join(sorted(failed_gates)),
+            lead=lead,
+        )
     source_text = " | ".join(
         part
         for part in (
@@ -473,6 +532,15 @@ def _strict_provider_candidate(text: str, title: str) -> tuple[str, str]:
         if match:
             return match.group(1).strip(), match.group(0)
     return "", ""
+
+
+def _weak_fallback_event_phrase(text: str, event_type: str) -> bool:
+    if event_type not in {"facility_closure", "planned_facility_closure", "service_closure"}:
+        return False
+    return bool(
+        re.search(r"\bclos(?:e|ing) (?:the )?[^.]{0,80}\bgap\b", text, re.I)
+        or re.search(r"\bat the end of the power grid\b", text, re.I)
+    )
 
 
 def _geography_candidate(text: str, title: str) -> tuple[dict[str, str], str]:
@@ -538,14 +606,24 @@ def _resolution_bucket(row: Mapping[str, Any], validation: Mapping[str, Any], *,
     outcome = _text(row, "extraction_outcome")
     classification = _text(row, "classification", "editorial_outcome")
     unresolved = set(validation.get("unresolved_fields") or [])
+    semantic_status = _text(semantic, "qualification_status")
+    semantic_reason = _text(semantic, "exclusion_reason")
     if duplicate_of:
         return "duplicate"
-    if _text(semantic, "qualification_status") == "excluded":
+    if semantic_status == "excluded":
         return "exclusion"
     if classification in {"NON_CARE_LINE", "GENERAL_HEALTHCARE_NEWS"} or _text(row, "exclusion_reason") in {"non_care_line", "general_healthcare_news"}:
         return "exclusion"
     if outcome in {"ACCESS_BLOCKED", "PAYWALLED", "SCRIPT_RENDERED", "PDF_REQUIRED"}:
         return "additional_fetch_needed"
+    if semantic_status == "recoverable_failed_extraction":
+        if semantic_reason in {"needs_full_article", "insufficient_bounded_evidence", "private_or_inaccessible_evidence"}:
+            return "additional_fetch_needed"
+        if not _text(semantic, "event_type"):
+            return "additional_fetch_needed"
+        if "source_publication_date" in unresolved or "missing_source_date" in unresolved:
+            return "deterministic_resolution"
+        return "human_evidence_judgment"
     if "canonical_https_url" in unresolved:
         return "canonical_source_lookup"
     if {"supporting_passage", "insufficient_bounded_evidence"} & unresolved:

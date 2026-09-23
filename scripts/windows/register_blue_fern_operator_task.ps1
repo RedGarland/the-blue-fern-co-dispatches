@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
-    [string]$RepositoryRoot = "C:\\BlueFernRunner\\BlueFernOperatorCurrent",
-    [string]$TaskPath = "\\Blue Fern Co.\\",
+    [string]$RepositoryRoot = "C:\BlueFernRunner\BlueFernOperatorCurrent",
+    [string]$TaskPath = "\Blue Fern Co.\",
     [string]$TaskName = "Blue Fern Operator",
     [ValidateRange(5, 1440)]
     [int]$EveryMinutes = 30,
@@ -12,10 +12,10 @@ param(
 Set-StrictMode -Version 3.0
 $ErrorActionPreference = "Stop"
 
-$Wrapper = Join-Path $RepositoryRoot "scripts\\run_blue_fern_operator.ps1"
-$Python = Join-Path $RepositoryRoot ".venv\\Scripts\\python.exe"
-$OperatorScript = Join-Path $RepositoryRoot "scripts\\blue_fern_operator.py"
-$PowerShell = "$env:SystemRoot\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+$Wrapper = Join-Path $RepositoryRoot "scripts\run_blue_fern_operator.ps1"
+$Python = Join-Path $RepositoryRoot ".venv\Scripts\python.exe"
+$OperatorScript = Join-Path $RepositoryRoot "scripts\blue_fern_operator.py"
+$PowerShell = "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe"
 $Arguments = "-NoProfile -NonInteractive -ExecutionPolicy Bypass -File `"$Wrapper`""
 $StartAt = (Get-Date).AddMinutes(1)
 

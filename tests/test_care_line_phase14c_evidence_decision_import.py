@@ -545,6 +545,36 @@ def _write_current_review_state(root: Path) -> None:
     _write_json(review_root / "candidate-registry.json", {"schema_version": "registry", "candidates": []})
 
 
+def _write_packet_precision_state(root: Path, rows: list[dict]) -> None:
+    review_root = root / "data" / "dispatches" / "care-line" / "review"
+    dated_rows = [{"source_publication_date": "2026-09-23", **row} for row in rows]
+    _write_json(
+        root / "data" / "dispatches" / "care-line" / "source_registry.json",
+        {
+            "schema_version": "bluefern.care_line.source_registry.v1",
+            "sources": [
+                {
+                    "source_id": "care-news",
+                    "name": "Care News",
+                    "publisher": "Care News",
+                    "source_type": "local_news",
+                    "authority_level": "secondary",
+                    "source_role": "healthcare_access_reporting",
+                    "geographic_scope": "local",
+                }
+            ],
+        },
+    )
+    _write_json(
+        review_root / "current-manual-review.json",
+        {"schema_version": "bluefern.care_line.exclusion_record.v1", "manual_review_count": len(dated_rows), "items": dated_rows},
+    )
+    _write_json(review_root / "current-failed-extractions.json", {"schema_version": "bluefern.care_line.exclusion_record.v1", "items": []})
+    _write_json(review_root / "current-review-queue.json", {"schema_version": "queue", "items": [], "duplicates": [], "backlog": []})
+    _write_json(review_root / "current-review-backlog.json", {"schema_version": "queue", "items": []})
+    _write_json(review_root / "candidate-registry.json", {"schema_version": "registry", "candidates": []})
+
+
 def _write_decision_pair(json_path: Path, csv_path: Path, row: dict) -> None:
     payload = {"schema_version": DECISION_SCHEMA_VERSION, "decisions": [row]}
     _write_json(json_path, payload)
@@ -562,7 +592,7 @@ def test_08_current_review_artifacts_generate_traceable_phase14b_packet(tmp_path
     first = packet["records"][0]
     assert first["canonical_source_url"] == "https://county.example.org/clinic-closing"
     assert first["source_metadata"]["authority_level"] == "primary"
-    assert first["proposed_fields"]["event_type_candidate"]["value"] == "planned_facility_closure"
+    assert first["proposed_fields"]["event_type_candidate"]["value"] == "facility_closure"
     assert first["proposed_fields"]["access_consequence_candidate"]["value"]
     assert first["supporting_passage"] in first["proposed_fields"]["event_type_candidate"]["provenance"]["source_text"] or first["supporting_passage"]
     assert first["automation_limits"] == {
@@ -592,6 +622,248 @@ def test_09_packet_generation_deduplicates_and_keeps_unresolved_fields(tmp_path:
     assert blocked_rows[0]["resolution_bucket"] == "additional_fetch_needed"
     assert report["records_automatically_deduplicated"] == 1
     assert report["records_requiring_full_source_research"] == 1
+
+
+def test_09b_packet_triage_excludes_production_false_positive_shapes(tmp_path: Path):
+    repo = tmp_path / "repo"
+    rows = [
+        {
+            "raw_item_id": "education-events",
+            "source_id": "care-news",
+            "source_url": "https://care.example.org/events",
+            "title": "Education & Events",
+            "classification": "NEEDS_GEOGRAPHY",
+            "exclusion_reason": "needs_geography",
+            "missing_fields": ["missing_geography", "missing_subject", "non_healthcare_passage"],
+            "supporting_text": "Real-World Challenges: Securing Medical Devices With a Closed-Loop Process.",
+        },
+        {
+            "raw_item_id": "medpac-agenda",
+            "source_id": "care-news",
+            "source_url": "https://care.example.org/medpac-agenda",
+            "title": "MedPAC's Analytic Agenda for the 2026-2027 Meeting Cycle",
+            "classification": "NEEDS_FULL_ARTICLE",
+            "exclusion_reason": "needs_full_article",
+            "missing_fields": ["event_type", "insufficient_bounded_evidence"],
+            "supporting_text": "The meeting agenda includes rural emergency hospital payment analysis and policy discussion.",
+        },
+        {
+            "raw_item_id": "precision-health-vc",
+            "source_id": "care-news",
+            "source_url": "https://care.example.org/precision-health-vc",
+            "title": "How a Cancer Diagnosis Shaped This VC's Precision Health Thesis",
+            "classification": "NEEDS_GEOGRAPHY",
+            "exclusion_reason": "needs_geography",
+            "missing_fields": ["missing_geography"],
+            "supporting_text": "Sponsored insight: Closing the quality-affordability gap in mental health care.",
+        },
+        {
+            "raw_item_id": "clinical-ai",
+            "source_id": "care-news",
+            "source_url": "https://care.example.org/clinical-ai",
+            "title": "How AI Is Transforming Clinical Documentation at Intermountain Health",
+            "classification": "NEEDS_GEOGRAPHY",
+            "exclusion_reason": "needs_geography",
+            "missing_fields": ["missing_geography", "missing_subject"],
+            "supporting_text": "The article describes clinical documentation technology and health system workflow.",
+        },
+        {
+            "raw_item_id": "policy-commentary",
+            "source_id": "care-news",
+            "source_url": "https://care.example.org/aca-commentary",
+            "title": "ACA Refunds Should Not Be Confused With a Healthcare Affordability Strategy",
+            "classification": "NEEDS_GEOGRAPHY",
+            "exclusion_reason": "needs_geography",
+            "missing_fields": ["missing_geography", "missing_subject"],
+            "supporting_text": "The commentary discusses federal policy but no facility or clinical service access change.",
+        },
+    ]
+    _write_packet_precision_state(repo, rows)
+    packet = build_review_packet_from_current_state(repo)
+
+    by_id = {row["producer_record_id"]: row for row in packet["records"]}
+    for raw_item_id in {row["raw_item_id"] for row in rows}:
+        packet_row = by_id[raw_item_id]
+        assert packet_row["resolution_bucket"] in {"exclusion", "additional_fetch_needed", "deterministic_resolution"}
+        assert packet_row["proposed_fields"]["event_type_candidate"]["value"] == ""
+        assert packet_row["proposed_fields"]["service_line_candidate"]["value"] == ""
+        assert packet_row["packet_semantic_triage"]["qualification_status"] in {"excluded", "recoverable_failed_extraction"}
+
+
+@pytest.mark.parametrize(
+    ("raw_item_id", "title", "supporting_text", "expected_event"),
+    [
+        (
+            "hospital-closure",
+            "Mercy Hospital will close in Austin, TX",
+            "Mercy Hospital will close on 2026-10-01 and patients will travel farther for emergency care.",
+            "facility_closure",
+        ),
+        (
+            "labor-delivery",
+            "Mercy Hospital will end labor and delivery in Austin, TX",
+            "Mercy Hospital will end labor and delivery services and patients will travel farther for maternity care.",
+            "service_closure",
+        ),
+        (
+            "emergency-suspension",
+            "Emergency department services at Memorial Hospital are suspended in Austin, TX",
+            "Emergency department services at Memorial Hospital are suspended and ambulances will be diverted.",
+            "service_suspension",
+        ),
+        (
+            "capacity-reduction",
+            "Memorial Hospital will reduce beds in Austin, TX",
+            "Memorial Hospital will reduce beds by 20, limiting inpatient capacity.",
+            "capacity_reduction",
+        ),
+        (
+            "clinic-closure",
+            "County Clinic will close in Austin, TX",
+            "County Clinic will close and patients will lose access to primary care.",
+            "facility_closure",
+        ),
+        (
+            "service-restoration",
+            "County Clinic will reopen in Austin, TX",
+            "County Clinic will reopen after its closure, restoring primary care access for patients.",
+            "facility_reopening",
+        ),
+    ],
+)
+def test_09c_packet_triage_preserves_genuine_care_access_events(
+    tmp_path: Path,
+    raw_item_id: str,
+    title: str,
+    supporting_text: str,
+    expected_event: str,
+):
+    repo = tmp_path / "repo"
+    _write_packet_precision_state(
+        repo,
+        [
+            {
+                "raw_item_id": raw_item_id,
+                "source_id": "care-news",
+                "source_url": f"https://care.example.org/{raw_item_id}",
+                "title": title,
+                "classification": "NEEDS_HUMAN_REVIEW",
+                "extraction_outcome": "BODY_EXTRACTED",
+                "missing_fields": ["reviewer_decision"],
+                "supporting_text": supporting_text,
+            }
+        ],
+    )
+
+    packet = build_review_packet_from_current_state(repo)
+    packet_row = packet["records"][0]
+
+    assert packet_row["resolution_bucket"] in {"human_evidence_judgment", "bounded_human_judgment"}
+    assert packet_row["proposed_fields"]["event_type_candidate"]["value"] == expected_event
+    assert packet_row["proposed_fields"]["access_consequence_candidate"]["value"]
+    assert packet_row["packet_semantic_triage"]["qualification_status"] == "event_lead"
+
+
+@pytest.mark.parametrize(
+    ("raw_item_id", "title", "supporting_text", "missing_fields", "expected_bucket"),
+    [
+        (
+            "hospital-closure-missing-geo",
+            "Mercy Hospital will close",
+            "Mercy Hospital will close on 2026-10-01 and patients will travel farther for emergency care.",
+            ["missing_geography"],
+            "human_evidence_judgment",
+        ),
+        (
+            "clinic-closure-missing-subject",
+            "County Clinic will close in Austin, TX",
+            "County Clinic will close and patients will lose access to primary care.",
+            ["missing_subject"],
+            "human_evidence_judgment",
+        ),
+        (
+            "emergency-suspension-missing-access",
+            "Emergency department services at Memorial Hospital are suspended in Austin, TX",
+            "Emergency department services at Memorial Hospital are suspended pending further notice.",
+            ["needs_access_consequence"],
+            "human_evidence_judgment",
+        ),
+        (
+            "closure-missing-source-date",
+            "Mercy Hospital will close in Austin, TX",
+            "Mercy Hospital will close and patients will travel farther for emergency care.",
+            ["missing_source_date"],
+            "deterministic_resolution",
+        ),
+        (
+            "labor-delivery-unresolved",
+            "Mercy Hospital will end labor and delivery in Austin, TX",
+            "Mercy Hospital will end labor and delivery services and patients will travel farther for maternity care.",
+            ["missing_service_line_or_facility_scope"],
+            "human_evidence_judgment",
+        ),
+    ],
+)
+def test_09d_recoverable_care_failed_gates_do_not_become_exclusions(
+    tmp_path: Path,
+    raw_item_id: str,
+    title: str,
+    supporting_text: str,
+    missing_fields: list[str],
+    expected_bucket: str,
+):
+    repo = tmp_path / "repo"
+    row = {
+        "raw_item_id": raw_item_id,
+        "source_id": "care-news",
+        "source_url": f"https://care.example.org/{raw_item_id}",
+        "title": title,
+        "classification": "NEEDS_HUMAN_REVIEW",
+        "extraction_outcome": "BODY_EXTRACTED",
+        "missing_fields": missing_fields,
+        "supporting_text": supporting_text,
+    }
+    if "missing_source_date" in missing_fields:
+        row["source_publication_date"] = ""
+    _write_packet_precision_state(repo, [row])
+
+    packet = build_review_packet_from_current_state(repo)
+    packet_row = packet["records"][0]
+
+    assert packet_row["resolution_bucket"] == expected_bucket
+    assert packet_row["resolution_bucket"] != "exclusion"
+    assert packet_row["packet_semantic_triage"]["qualification_status"] == "recoverable_failed_extraction"
+    assert packet_row["automation_limits"] == {
+        "review_status_set": False,
+        "universal_event_ready_set": False,
+        "publication_invoked": False,
+    }
+
+
+def test_09e_access_blocked_credible_care_case_remains_additional_fetch(tmp_path: Path):
+    repo = tmp_path / "repo"
+    _write_packet_precision_state(
+        repo,
+        [
+            {
+                "raw_item_id": "access-blocked-care",
+                "source_id": "care-news",
+                "source_url": "https://care.example.org/access-blocked-care",
+                "title": "Mercy Hospital will close in Austin, TX",
+                "classification": "NEEDS_HUMAN_REVIEW",
+                "extraction_outcome": "ACCESS_BLOCKED",
+                "missing_fields": ["insufficient_bounded_evidence"],
+                "supporting_text": "Mercy Hospital will close and patients will travel farther for emergency care.",
+            }
+        ],
+    )
+
+    packet = build_review_packet_from_current_state(repo)
+    packet_row = packet["records"][0]
+
+    assert packet_row["resolution_bucket"] == "additional_fetch_needed"
+    assert packet_row["resolution_bucket"] != "exclusion"
+    assert packet_row["packet_semantic_triage"]["qualification_status"] == "recoverable_failed_extraction"
 
 
 def test_10_packet_generation_is_idempotent_and_check_only_writes_nothing(tmp_path: Path):

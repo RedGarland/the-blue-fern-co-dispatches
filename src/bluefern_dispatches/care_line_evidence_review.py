@@ -12,6 +12,11 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping
 from urllib.parse import urlparse
 
+from bluefern_dispatches.care_line_national_pipeline import (
+    NEGATIVE_EXCLUSION_REASONS,
+    _access_consequences_from_text,
+    event_lead_from_raw_item,
+)
 from bluefern_dispatches.care_line_record import CareLineReviewedRecord, FieldProvenance, deterministic_records_json, stable_json_hash
 
 
@@ -76,35 +81,6 @@ EVENT_SEVERITY_SCORE = {
     "service_restoration": 1,
     "facility_reopening": 1,
 }
-
-EVENT_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
-    ("planned_facility_closure", re.compile(r"\b(will close|plans? to close|set to close|scheduled to close)\b", re.I)),
-    ("facility_closure", re.compile(r"\b(close|closed|closing|closure|shut(?:ting)? down|cease(?:s|d)? operations?)\b", re.I)),
-    ("service_suspension", re.compile(r"\b(suspend(?:ed|s|ing)?|pause(?:d|s)?|temporarily unavailable)\b", re.I)),
-    ("hours_reduction", re.compile(r"\b(reduc(?:e|ed|ing|tion) hours?|limited hours?)\b", re.I)),
-    ("capacity_reduction", re.compile(r"\b(reduc(?:e|ed|ing|tion) capacity|bed cuts?|fewer beds?)\b", re.I)),
-    ("service_reduction", re.compile(r"\b(limit(?:ed|ing|s)? services?|service unavailable|restricted access)\b", re.I)),
-    ("facility_reopening", re.compile(r"\b(reopen(?:ed|s|ing)?|resume(?:d|s)? operations?)\b", re.I)),
-    ("service_restoration", re.compile(r"\b(restor(?:e|ed|es|ing)|remain(?:s)? in network|extend(?:ed|s)? in-network)\b", re.I)),
-)
-
-ACCESS_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
-    ("LOSS_OF_LOCAL_ACCESS", re.compile(r"\b(no longer offer|will close|closed|ending services|service will end|patients will lose access)\b", re.I)),
-    ("LONGER_TRAVEL_DISTANCE", re.compile(r"\b(travel farther|longer travel|nearest|redirected|rerouted|diverted)\b", re.I)),
-    ("REDUCED_BED_OR_APPOINTMENT_CAPACITY", re.compile(r"\b(reduced capacity|fewer beds|limited appointments|staffing shortage)\b", re.I)),
-    ("REDUCED_OPERATING_HOURS", re.compile(r"\b(reduced hours|limited hours)\b", re.I)),
-    ("DELAYED_CARE_RISK", re.compile(r"\b(wait(?:ing)? list|delays?|postpone(?:d)?|backlog)\b", re.I)),
-)
-
-SERVICE_LINE_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
-    ("emergency_care", re.compile(r"\b(emergency|ER|ED)\b", re.I)),
-    ("urgent_care", re.compile(r"\b(urgent care)\b", re.I)),
-    ("maternity", re.compile(r"\b(obstetric|labor and delivery|maternity|birth center)\b", re.I)),
-    ("behavioral_health", re.compile(r"\b(behavioral health|mental health|psychiatr)\b", re.I)),
-    ("pediatrics", re.compile(r"\b(pediatric|children'?s)\b", re.I)),
-    ("oncology", re.compile(r"\b(cancer|oncology|chemotherapy)\b", re.I)),
-    ("primary_care", re.compile(r"\b(primary care|family medicine|clinic)\b", re.I)),
-)
 
 STATE_PATTERN = re.compile(
     r"\b(AL|AK|AZ|AR|CA|CO|CT|DE|DC|FL|GA|HI|IA|ID|IL|IN|KS|KY|LA|MA|MD|ME|MI|MN|MO|MS|MT|NC|ND|NE|NH|NJ|NM|NV|NY|OH|OK|OR|PA|PR|RI|SC|SD|TN|TX|UT|VA|VI|VT|WA|WI|WV|WY)\b"
@@ -296,21 +272,240 @@ def _proposed_with_provenance(value: Any, *, source_field: str, method: str, sou
     }
 
 
-def _first_pattern(text: str, patterns: Iterable[tuple[str, re.Pattern[str]]]) -> tuple[str, str]:
-    for value, pattern in patterns:
-        match = pattern.search(text)
-        if match:
-            return value, match.group(0)
-    return "", ""
+def _list_values(value: Any) -> list[str]:
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+    if value not in (None, "", {}, []):
+        return [str(value).strip()]
+    return []
 
 
-def _all_pattern_values(text: str, patterns: Iterable[tuple[str, re.Pattern[str]]]) -> list[dict[str, str]]:
-    values: list[dict[str, str]] = []
-    for value, pattern in patterns:
-        match = pattern.search(text)
-        if match:
-            values.append({"value": value, "matched_text": match.group(0)})
-    return values
+def _normalized_reason(value: str) -> str:
+    return str(value or "").strip().casefold()
+
+
+def _raw_item_for_semantic_triage(row: Mapping[str, Any], *, title: str, supporting_text: str, canonical_url: str) -> dict[str, Any]:
+    return {
+        "raw_item_id": _text(row, "raw_item_id", "source_record_id", "producer_record_id", "care_line_record_id"),
+        "source_id": _text(row, "source_id"),
+        "source_name": _text(row, "source_name", "source", "publisher", "source_publisher"),
+        "item_url": canonical_url,
+        "title": title,
+        "description": supporting_text or _text(row, "description", "summary", "excerpt"),
+        "source_publication_date": _text(row, "source_publication_date", "publication_date", "published_at", "source_published_date"),
+        "source_date_state": _text(row, "source_date_state"),
+        "requires_html_followup": bool(row.get("requires_html_followup")),
+    }
+
+
+def _existing_event_type(row: Mapping[str, Any]) -> str:
+    return _text(row, "event_type", "event_type_hint", "event_type_candidate")
+
+
+def _existing_service_line(row: Mapping[str, Any]) -> str:
+    return _text(row, "service_line", "service_line_hint", "service_line_candidate")
+
+
+def _existing_access_consequences(row: Mapping[str, Any]) -> list[str]:
+    value = row.get("access_consequences") or row.get("access_consequence") or row.get("access_consequence_candidate")
+    if isinstance(value, list):
+        results: list[str] = []
+        for item in value:
+            if isinstance(item, Mapping):
+                text = _text(item, "value", "label", "type")
+            else:
+                text = str(item).strip()
+            if text:
+                results.append(text)
+        return results
+    return _list_values(value)
+
+
+RECOVERABLE_FAILED_EXTRACTION_REASONS = {
+    "needs_full_article",
+    "needs_date",
+    "missing_source_date",
+    "needs_geography",
+    "missing_geography",
+    "needs_access_consequence",
+    "missing_subject",
+    "missing_event_type",
+    "missing_service_line_or_facility_scope",
+    "insufficient_bounded_evidence",
+    "private_or_inaccessible_evidence",
+}
+
+
+def _recoverable_reason(exclusion_reason: str, failed_gates: set[str]) -> str:
+    if exclusion_reason in RECOVERABLE_FAILED_EXTRACTION_REASONS:
+        return exclusion_reason
+    for reason in RECOVERABLE_FAILED_EXTRACTION_REASONS:
+        if reason in failed_gates:
+            return reason
+    return ""
+
+
+def _recoverable_semantic_result(
+    *,
+    authority: str,
+    reason: str,
+    event_type: str = "",
+    service_line: str = "",
+    access_consequences: list[str] | None = None,
+    source_text: str = "",
+    lead: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    payload: dict[str, Any] = {
+        "authority": authority,
+        "qualification_status": "recoverable_failed_extraction",
+        "exclusion_reason": reason,
+        "event_type": event_type,
+        "service_line": service_line,
+        "access_consequences": [
+            {"value": value, "matched_text": value}
+            for value in (access_consequences or [])
+        ],
+        "source_text": source_text,
+    }
+    if lead is not None:
+        payload["lead"] = dict(lead)
+    return payload
+
+
+def _packet_semantic_triage(
+    row: Mapping[str, Any],
+    *,
+    title: str,
+    supporting_text: str,
+    canonical_url: str,
+) -> dict[str, Any]:
+    classification = _text(row, "classification", "editorial_outcome")
+    normalized_classification = _normalized_reason(classification)
+    exclusion_reason = _normalized_reason(_text(row, "exclusion_reason", "normalized_reason"))
+    extraction_outcome = _text(row, "extraction_outcome")
+    failed_gates = set(_list_values(row.get("missing_fields")) + _list_values(row.get("failed_gates")))
+
+    existing_event_type = _existing_event_type(row)
+    existing_service_line = _existing_service_line(row)
+    existing_access = _existing_access_consequences(row)
+    has_existing_care_evidence = bool(existing_event_type or existing_service_line or existing_access)
+    recoverable_reason = _recoverable_reason(exclusion_reason, failed_gates)
+
+    if exclusion_reason in NEGATIVE_EXCLUSION_REASONS or normalized_classification in NEGATIVE_EXCLUSION_REASONS:
+        return {
+            "authority": "existing_pipeline_exclusion",
+            "qualification_status": "excluded",
+            "exclusion_reason": exclusion_reason or normalized_classification,
+            "event_type": "",
+            "service_line": "",
+            "access_consequences": [],
+            "source_text": _text(row, "exclusion_reason", "classification", "editorial_outcome"),
+        }
+
+    if _text(row, "prefilter_decision") == "discard":
+        return {
+            "authority": "existing_prefilter_discard",
+            "qualification_status": "excluded",
+            "exclusion_reason": exclusion_reason or "non_care_line",
+            "event_type": "",
+            "service_line": "",
+            "access_consequences": [],
+            "source_text": _text(row, "normalized_reason", "exclusion_reason", "prefilter_decision"),
+        }
+
+    if has_existing_care_evidence:
+        access = existing_access
+        if not access and existing_event_type and supporting_text:
+            access, _access_exception = _access_consequences_from_text(supporting_text, existing_event_type)
+        if recoverable_reason:
+            return _recoverable_semantic_result(
+                authority="existing_pipeline_fields",
+                reason=recoverable_reason,
+                event_type=existing_event_type,
+                service_line=existing_service_line,
+                access_consequences=access,
+                source_text=supporting_text,
+            )
+        return {
+            "authority": "existing_pipeline_fields",
+            "qualification_status": "event_lead",
+            "exclusion_reason": "",
+            "event_type": existing_event_type,
+            "service_line": existing_service_line,
+            "access_consequences": [{"value": value, "matched_text": value} for value in access],
+            "source_text": supporting_text,
+        }
+
+    lead = event_lead_from_raw_item(
+        _raw_item_for_semantic_triage(row, title=title, supporting_text=supporting_text, canonical_url=canonical_url)
+    )
+    if _text(lead, "qualification_status") == "event_lead":
+        event_type = _text(lead, "event_type_hint")
+        service_line = _text(lead, "service_line_hint")
+        if _weak_fallback_event_phrase(f"{title} {supporting_text}", event_type):
+            return _recoverable_semantic_result(
+                authority="care_line_event_lead_helper",
+                reason=recoverable_reason or "insufficient_bounded_evidence",
+                source_text=recoverable_reason or "weak_fallback_event_phrase",
+                lead=lead,
+            )
+        access, _access_exception = _access_consequences_from_text(supporting_text, event_type)
+        facility, _facility_match = _strict_provider_candidate(supporting_text, title)
+        if not access or not facility:
+            reason = recoverable_reason or ("needs_access_consequence" if not access else "missing_subject")
+            return _recoverable_semantic_result(
+                authority="care_line_event_lead_helper",
+                reason=reason,
+                source_text=reason,
+                lead=lead,
+            )
+        if recoverable_reason:
+            return _recoverable_semantic_result(
+                authority="care_line_event_lead_helper",
+                reason=recoverable_reason,
+                event_type=event_type,
+                service_line=service_line,
+                access_consequences=access,
+                source_text=supporting_text,
+                lead=lead,
+            )
+        return {
+            "authority": "care_line_event_lead_helper",
+            "qualification_status": "event_lead",
+            "exclusion_reason": "",
+            "event_type": event_type,
+            "service_line": service_line,
+            "access_consequences": [{"value": value, "matched_text": value} for value in access],
+            "source_text": supporting_text,
+            "lead": lead,
+        }
+
+    reason = _normalized_reason(_text(lead, "exclusion_reason")) or exclusion_reason or "non_care_line"
+    if reason in RECOVERABLE_FAILED_EXTRACTION_REASONS:
+        return _recoverable_semantic_result(
+            authority="existing_pipeline_failed_gates",
+            reason=reason,
+            source_text=", ".join(sorted(failed_gates)),
+            lead=lead,
+        )
+    source_text = " | ".join(
+        part
+        for part in (
+            _text(lead, "exclusion_reason"),
+            ", ".join(sorted(failed_gates)),
+        )
+        if part
+    )
+    return {
+        "authority": "care_line_event_lead_helper",
+        "qualification_status": "excluded",
+        "exclusion_reason": reason,
+        "event_type": "",
+        "service_line": "",
+        "access_consequences": [],
+        "source_text": source_text,
+        "lead": lead,
+    }
 
 
 def _facility_candidate(text: str, title: str) -> tuple[str, str]:
@@ -324,6 +519,28 @@ def _facility_candidate(text: str, title: str) -> tuple[str, str]:
         if match:
             return match.group(1).strip(), match.group(0)
     return "", ""
+
+
+def _strict_provider_candidate(text: str, title: str) -> tuple[str, str]:
+    combined = " ".join(part for part in (title, text) if part)
+    patterns = (
+        re.compile(r"\b([A-Z][A-Za-z&.' -]+(?:Hospital|Medical Center|Clinic|Health Center|Health System|ER|Urgent Care))\b"),
+        re.compile(r"\b((?:emergency department|emergency room|labor and delivery|birth center|maternity unit) services? at [A-Z][A-Za-z&.' -]+)\b", re.I),
+    )
+    for pattern in patterns:
+        match = pattern.search(combined)
+        if match:
+            return match.group(1).strip(), match.group(0)
+    return "", ""
+
+
+def _weak_fallback_event_phrase(text: str, event_type: str) -> bool:
+    if event_type not in {"facility_closure", "planned_facility_closure", "service_closure"}:
+        return False
+    return bool(
+        re.search(r"\bclos(?:e|ing) (?:the )?[^.]{0,80}\bgap\b", text, re.I)
+        or re.search(r"\bat the end of the power grid\b", text, re.I)
+    )
 
 
 def _geography_candidate(text: str, title: str) -> tuple[dict[str, str], str]:
@@ -385,16 +602,28 @@ def _validation_results(row: Mapping[str, Any], *, canonical_url: str, supportin
     }
 
 
-def _resolution_bucket(row: Mapping[str, Any], validation: Mapping[str, Any], *, duplicate_of: str = "") -> str:
+def _resolution_bucket(row: Mapping[str, Any], validation: Mapping[str, Any], *, semantic: Mapping[str, Any], duplicate_of: str = "") -> str:
     outcome = _text(row, "extraction_outcome")
     classification = _text(row, "classification", "editorial_outcome")
     unresolved = set(validation.get("unresolved_fields") or [])
+    semantic_status = _text(semantic, "qualification_status")
+    semantic_reason = _text(semantic, "exclusion_reason")
     if duplicate_of:
         return "duplicate"
+    if semantic_status == "excluded":
+        return "exclusion"
     if classification in {"NON_CARE_LINE", "GENERAL_HEALTHCARE_NEWS"} or _text(row, "exclusion_reason") in {"non_care_line", "general_healthcare_news"}:
         return "exclusion"
     if outcome in {"ACCESS_BLOCKED", "PAYWALLED", "SCRIPT_RENDERED", "PDF_REQUIRED"}:
         return "additional_fetch_needed"
+    if semantic_status == "recoverable_failed_extraction":
+        if semantic_reason in {"needs_full_article", "insufficient_bounded_evidence", "private_or_inaccessible_evidence"}:
+            return "additional_fetch_needed"
+        if not _text(semantic, "event_type"):
+            return "additional_fetch_needed"
+        if "source_publication_date" in unresolved or "missing_source_date" in unresolved:
+            return "deterministic_resolution"
+        return "human_evidence_judgment"
     if "canonical_https_url" in unresolved:
         return "canonical_source_lookup"
     if {"supporting_passage", "insufficient_bounded_evidence"} & unresolved:
@@ -425,26 +654,29 @@ def _packet_record(row: Mapping[str, Any], *, record_family: str, registry: Mapp
     title = _text(row, "title", "source_title")
     supporting_text = _text(row, "supporting_text", "supporting_passage", "effective_evidence_text")
     date_value, date_source = _date_candidate(row)
-    event_type, event_match = _first_pattern(" ".join([title, supporting_text]), EVENT_PATTERNS)
-    service_line, service_match = _first_pattern(" ".join([title, supporting_text]), SERVICE_LINE_PATTERNS)
+    semantic = _packet_semantic_triage(row, title=title, supporting_text=supporting_text, canonical_url=canonical_url)
+    event_type = _text(semantic, "event_type")
+    service_line = _text(semantic, "service_line")
     facility, facility_match = _facility_candidate(supporting_text, title)
     geography, geography_match = _geography_candidate(supporting_text, title)
-    access_hits = _all_pattern_values(" ".join([title, supporting_text]), ACCESS_PATTERNS)
+    access_hits = [dict(hit) for hit in semantic.get("access_consequences") or [] if isinstance(hit, Mapping)]
     source_metadata = _source_metadata(row, registry)
     source_artifact_paths = []
     lineage = row.get("lineage") if isinstance(row.get("lineage"), Mapping) else {}
     if _text(lineage, "source_artifact_path"):
         source_artifact_paths.append(_text(lineage, "source_artifact_path"))
+    semantic_source = _text(semantic, "source_text") or supporting_text
+    semantic_method = _text(semantic, "authority") or "care_line_event_lead_helper"
     proposed_fields = {
         "publication_date": _proposed_with_provenance(date_value, source_field=date_source, method="copied_or_text_date", source_text=date_value),
-        "event_type_candidate": _proposed_with_provenance(event_type, source_field="title/supporting_text", method="pattern_match", source_text=event_match),
-        "service_line_candidate": _proposed_with_provenance(service_line, source_field="title/supporting_text", method="pattern_match", source_text=service_match),
+        "event_type_candidate": _proposed_with_provenance(event_type, source_field="care_line_national_pipeline", method=semantic_method, source_text=semantic_source),
+        "service_line_candidate": _proposed_with_provenance(service_line, source_field="care_line_national_pipeline", method=semantic_method, source_text=semantic_source),
         "facility_provider_candidate": _proposed_with_provenance(facility, source_field="title/supporting_text", method="source_explicit_pattern", source_text=facility_match),
         "geography_candidate": _proposed_with_provenance(geography, source_field="title/supporting_text", method="state_city_pattern", source_text=geography_match),
-        "access_consequence_candidate": _proposed_with_provenance(access_hits, source_field="title/supporting_text", method="pattern_match", source_text=" | ".join(hit["matched_text"] for hit in access_hits)),
+        "access_consequence_candidate": _proposed_with_provenance(access_hits, source_field="care_line_national_pipeline", method=semantic_method, source_text=" | ".join(str(hit.get("matched_text") or hit.get("value") or "") for hit in access_hits)),
     }
     validation = _validation_results(row, canonical_url=canonical_url, supporting_text=supporting_text, proposed_fields=proposed_fields)
-    bucket = _resolution_bucket(row, validation, duplicate_of=duplicate_of)
+    bucket = _resolution_bucket(row, validation, semantic=semantic, duplicate_of=duplicate_of)
     record_fingerprint = _fingerprint(
         {
             "record_id": _record_identity(row),
@@ -454,6 +686,11 @@ def _packet_record(row: Mapping[str, Any], *, record_family: str, registry: Mapp
             "supporting_text": supporting_text,
             "proposed_fields": proposed_fields,
             "missing_requirements": validation["unresolved_fields"],
+            "packet_semantic_triage": {
+                "authority": _text(semantic, "authority"),
+                "qualification_status": _text(semantic, "qualification_status"),
+                "exclusion_reason": _text(semantic, "exclusion_reason"),
+            },
         }
     )
     completeness_score = sum(1 for value in proposed_fields.values() if value.get("value") not in ("", [], {}))
@@ -480,7 +717,15 @@ def _packet_record(row: Mapping[str, Any], *, record_family: str, registry: Mapp
         "objective_validation_results": validation,
         "unresolved_fields": validation["unresolved_fields"],
         "exact_missing_requirements": validation["unresolved_fields"],
-        "exclusion_reason": _text(row, "exclusion_reason"),
+        "exclusion_reason": _text(semantic, "exclusion_reason") or _text(row, "exclusion_reason"),
+        "packet_semantic_triage": {
+            "authority": _text(semantic, "authority"),
+            "qualification_status": _text(semantic, "qualification_status"),
+            "exclusion_reason": _text(semantic, "exclusion_reason"),
+            "lead_qualification_status": _nested_text(semantic, ("lead", "qualification_status")),
+            "lead_exclusion_reason": _nested_text(semantic, ("lead", "exclusion_reason")),
+            "copied_existing_pipeline_fields": _text(semantic, "authority") == "existing_pipeline_fields",
+        },
         "duplicate_of_producer_record_id": duplicate_of,
         "duplicate_identity": _duplicate_key(row),
         "resolution_bucket": bucket,

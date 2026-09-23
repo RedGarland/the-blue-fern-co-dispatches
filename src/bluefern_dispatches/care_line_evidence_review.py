@@ -3,21 +3,25 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import re
 import sys
 from collections import Counter
 from dataclasses import dataclass
 from hashlib import sha256
 from pathlib import Path
 from typing import Any, Iterable, Mapping
+from urllib.parse import urlparse
 
 from bluefern_dispatches.care_line_record import CareLineReviewedRecord, deterministic_records_json, stable_json_hash
 
 
 DECISION_SCHEMA_VERSION = "bluefern.care_line.evidence_review.v1"
 REVIEW_PACKET_SCHEMA_VERSION = "bluefern.care_line.phase14b_evidence_review.v1"
+REVIEW_PACKET_GENERATION_REPORT_SCHEMA_VERSION = "bluefern.care_line.evidence_review_packet_generation_report.v1"
 LEDGER_SCHEMA_VERSION = "bluefern.care_line.evidence_decisions_ledger.v1"
 REPORT_SCHEMA_VERSION = "bluefern.care_line.evidence_review_import_report.v1"
 IMPORTER_VERSION = "care-line-evidence-review-import-v1"
+PACKET_GENERATOR_VERSION = "care-line-evidence-review-packet-generator-v1"
 
 ALLOWED_DECISIONS = {"approved", "rejected", "deferred", "care_line_only", "excluded", "corrected"}
 DECISION_COLUMNS = [
@@ -35,6 +39,72 @@ DECISION_COLUMNS = [
     "reviewed_at",
     "supersedes_decision_id",
 ]
+
+DEFAULT_REVIEW_ROOT = Path("data") / "dispatches" / "care-line" / "review"
+DEFAULT_REVIEW_PACKET_OUTPUT = Path("data") / "universal_events" / "shadow" / "care-line" / "phase14b-evidence-review" / "current-care-line-evidence-review.json"
+DEFAULT_REVIEW_PACKET_REPORT = Path("data") / "universal_events" / "shadow" / "care-line" / "phase14b-evidence-review" / "current-care-line-evidence-review-report.json"
+SOURCE_REGISTRY_PATH = Path("data") / "dispatches" / "care-line" / "source_registry.json"
+
+REVIEW_PACKET_INPUT_FILES = {
+    "manual_review": "current-manual-review.json",
+    "failed_extractions": "current-failed-extractions.json",
+    "review_queue": "current-review-queue.json",
+    "review_backlog": "current-review-backlog.json",
+    "candidate_registry": "candidate-registry.json",
+}
+
+SOURCE_AUTHORITY_SCORE = {
+    "primary": 4,
+    "regulator": 3,
+    "sector": 2,
+    "secondary": 1,
+}
+
+EVENT_SEVERITY_SCORE = {
+    "facility_closure": 5,
+    "planned_facility_closure": 5,
+    "service_closure": 4,
+    "service_suspension": 4,
+    "temporary_facility_suspension": 4,
+    "hours_reduction": 3,
+    "capacity_reduction": 3,
+    "service_reduction": 3,
+    "facility_relocation": 2,
+    "facility_conversion": 2,
+    "service_restoration": 1,
+    "facility_reopening": 1,
+}
+
+EVENT_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
+    ("planned_facility_closure", re.compile(r"\b(will close|plans? to close|set to close|scheduled to close)\b", re.I)),
+    ("facility_closure", re.compile(r"\b(close|closed|closing|closure|shut(?:ting)? down|cease(?:s|d)? operations?)\b", re.I)),
+    ("service_suspension", re.compile(r"\b(suspend(?:ed|s|ing)?|pause(?:d|s)?|temporarily unavailable)\b", re.I)),
+    ("hours_reduction", re.compile(r"\b(reduc(?:e|ed|ing|tion) hours?|limited hours?)\b", re.I)),
+    ("capacity_reduction", re.compile(r"\b(reduc(?:e|ed|ing|tion) capacity|bed cuts?|fewer beds?)\b", re.I)),
+    ("service_reduction", re.compile(r"\b(limit(?:ed|ing|s)? services?|service unavailable|restricted access)\b", re.I)),
+    ("facility_reopening", re.compile(r"\b(reopen(?:ed|s|ing)?|resume(?:d|s)? operations?)\b", re.I)),
+    ("service_restoration", re.compile(r"\b(restor(?:e|ed|es|ing)|remain(?:s)? in network|extend(?:ed|s)? in-network)\b", re.I)),
+)
+
+ACCESS_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
+    ("LOSS_OF_LOCAL_ACCESS", re.compile(r"\b(no longer offer|will close|closed|ending services|service will end|patients will lose access)\b", re.I)),
+    ("LONGER_TRAVEL_DISTANCE", re.compile(r"\b(travel farther|longer travel|nearest|redirected|rerouted|diverted)\b", re.I)),
+    ("REDUCED_CAPACITY", re.compile(r"\b(reduced capacity|fewer beds|limited appointments|reduced hours|staffing shortage)\b", re.I)),
+    ("DELAYED_CARE", re.compile(r"\b(wait(?:ing)? list|delays?|postpone(?:d)?|backlog)\b", re.I)),
+)
+
+SERVICE_LINE_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
+    ("emergency", re.compile(r"\b(emergency|ER|ED|urgent care)\b", re.I)),
+    ("obstetrics", re.compile(r"\b(obstetric|labor and delivery|maternity|birth center)\b", re.I)),
+    ("behavioral_health", re.compile(r"\b(behavioral health|mental health|psychiatr)\b", re.I)),
+    ("pediatrics", re.compile(r"\b(pediatric|children'?s)\b", re.I)),
+    ("oncology", re.compile(r"\b(cancer|oncology|chemotherapy)\b", re.I)),
+    ("primary_care", re.compile(r"\b(primary care|family medicine|clinic)\b", re.I)),
+)
+
+STATE_PATTERN = re.compile(
+    r"\b(AL|AK|AZ|AR|CA|CO|CT|DE|DC|FL|GA|HI|IA|ID|IL|IN|KS|KY|LA|MA|MD|ME|MI|MN|MO|MS|MT|NC|ND|NE|NH|NJ|NM|NV|NY|OH|OK|OR|PA|PR|RI|SC|SD|TN|TX|UT|VA|VI|VT|WA|WI|WV|WY)\b"
+)
 
 
 @dataclass(frozen=True)
@@ -130,6 +200,425 @@ def refuse_public_or_pages_path(path: Path, repo_root: Path) -> None:
 
 def _fingerprint(payload: Any) -> str:
     return sha256(json.dumps(payload, sort_keys=True, ensure_ascii=False, default=str).encode("utf-8")).hexdigest()
+
+
+def _load_json_object(path: Path, *, default: dict[str, Any] | None = None) -> dict[str, Any]:
+    if not path.exists():
+        return dict(default or {})
+    payload = _json(path)
+    if not isinstance(payload, dict):
+        raise ValueError(f"expected JSON object: {path}")
+    return payload
+
+
+def _load_registry(repo_root: Path) -> dict[str, dict[str, Any]]:
+    path = repo_root / SOURCE_REGISTRY_PATH
+    if not path.exists():
+        return {}
+    payload = _json(path)
+    rows = payload.get("sources") if isinstance(payload, dict) else payload
+    if not isinstance(rows, list):
+        return {}
+    return {
+        _text(row, "source_id"): dict(row)
+        for row in rows
+        if isinstance(row, Mapping) and _text(row, "source_id")
+    }
+
+
+def _items(payload: Mapping[str, Any], *keys: str) -> list[dict[str, Any]]:
+    for key in keys:
+        rows = payload.get(key)
+        if isinstance(rows, list):
+            return [dict(row) for row in rows if isinstance(row, Mapping)]
+    return []
+
+
+def _canonical_url(row: Mapping[str, Any]) -> str:
+    return _text(row, "source_url", "item_url", "canonical_url", "url")
+
+
+def _record_identity(row: Mapping[str, Any]) -> str:
+    explicit = _text(row, "source_record_id", "producer_record_id", "care_line_record_id", "raw_item_id", "exclusion_id", "lead_id")
+    if explicit:
+        return explicit
+    return "care-line-review-input-" + _fingerprint(
+        {
+            "url": _canonical_url(row),
+            "title": _text(row, "title", "source_title"),
+            "supporting_text": _text(row, "supporting_text", "supporting_passage"),
+        }
+    )[:16]
+
+
+def _source_id(row: Mapping[str, Any], registry: Mapping[str, Mapping[str, Any]]) -> str:
+    explicit = _text(row, "source_id")
+    if explicit:
+        return explicit
+    source_name = _text(row, "source", "source_name")
+    for source_id, source in registry.items():
+        if source_name and source_name in {_text(source, "name"), _text(source, "publisher")}:
+            return source_id
+    return ""
+
+
+def _source_metadata(row: Mapping[str, Any], registry: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
+    source_id = _source_id(row, registry)
+    source = dict(registry.get(source_id, {}))
+    return {
+        "source_id": source_id,
+        "source_name": _text(row, "source", "source_name") or _text(source, "name"),
+        "publisher": _text(row, "publisher", "source_publisher") or _text(source, "publisher") or _text(row, "source", "source_name"),
+        "source_type": _text(source, "source_type"),
+        "authority_level": _text(source, "authority_level"),
+        "source_role": _text(source, "source_role"),
+        "geographic_scope": _text(source, "geographic_scope"),
+        "registry_entry_found": bool(source),
+    }
+
+
+def _proposed_with_provenance(value: Any, *, source_field: str, method: str, source_text: str = "") -> dict[str, Any]:
+    return {
+        "value": value,
+        "provenance": {
+            "source_field": source_field,
+            "method": method,
+            "source_text": source_text,
+        },
+    }
+
+
+def _first_pattern(text: str, patterns: Iterable[tuple[str, re.Pattern[str]]]) -> tuple[str, str]:
+    for value, pattern in patterns:
+        match = pattern.search(text)
+        if match:
+            return value, match.group(0)
+    return "", ""
+
+
+def _all_pattern_values(text: str, patterns: Iterable[tuple[str, re.Pattern[str]]]) -> list[dict[str, str]]:
+    values: list[dict[str, str]] = []
+    for value, pattern in patterns:
+        match = pattern.search(text)
+        if match:
+            values.append({"value": value, "matched_text": match.group(0)})
+    return values
+
+
+def _facility_candidate(text: str, title: str) -> tuple[str, str]:
+    combined = " ".join(part for part in (title, text) if part)
+    patterns = (
+        re.compile(r"\b([A-Z][A-Za-z&.' -]+(?:Hospital|Medical Center|Clinic|Health Center|Health System|ER|Urgent Care))\b"),
+        re.compile(r"\b([A-Z][A-Za-z&.' -]+(?:Health|Healthcare))\b"),
+    )
+    for pattern in patterns:
+        match = pattern.search(combined)
+        if match:
+            return match.group(1).strip(), match.group(0)
+    return "", ""
+
+
+def _geography_candidate(text: str, title: str) -> tuple[dict[str, str], str]:
+    combined = " ".join(part for part in (title, text) if part)
+    state_match = STATE_PATTERN.search(combined)
+    if not state_match:
+        return {}, ""
+    city_match = re.search(r"\b([A-Z][A-Za-z.' -]+),\s*" + re.escape(state_match.group(1)) + r"\b", combined)
+    geo = {"state": state_match.group(1)}
+    if city_match:
+        geo["city"] = city_match.group(1).strip()
+    return geo, city_match.group(0) if city_match else state_match.group(0)
+
+
+def _date_candidate(row: Mapping[str, Any]) -> tuple[str, str]:
+    for key in ("publication_date", "source_publication_date", "published_at", "source_published_date", "operative_event_date"):
+        value = _text(row, key)
+        if value:
+            return value[:10], key
+    text = " ".join(
+        _text(row, key)
+        for key in ("title", "supporting_text", "source_title", "supporting_passage")
+        if _text(row, key)
+    )
+    match = re.search(r"\b(20\d{2}-\d{2}-\d{2})\b", text)
+    if match:
+        return match.group(1), "source_text"
+    return "", ""
+
+
+def _validation_results(row: Mapping[str, Any], *, canonical_url: str, supporting_text: str, proposed_fields: Mapping[str, Any]) -> dict[str, Any]:
+    parsed = urlparse(canonical_url)
+    unresolved: list[str] = []
+    checks = {
+        "canonical_https_url": bool(canonical_url and parsed.scheme == "https" and parsed.netloc),
+        "supporting_passage_present": bool(supporting_text),
+        "source_date_present": bool((proposed_fields.get("publication_date") or {}).get("value")),
+        "event_type_candidate_present": bool((proposed_fields.get("event_type_candidate") or {}).get("value")),
+        "source_record_id_present": bool(_record_identity(row)),
+    }
+    if not checks["canonical_https_url"]:
+        unresolved.append("canonical_https_url")
+    if not checks["supporting_passage_present"]:
+        unresolved.append("supporting_passage")
+    if not checks["source_date_present"]:
+        unresolved.append("source_publication_date")
+    if not checks["event_type_candidate_present"]:
+        unresolved.append("event_type")
+    if not checks["source_record_id_present"]:
+        unresolved.append("stable_record_id")
+    for missing in row.get("missing_fields") or row.get("failed_gates") or []:
+        if isinstance(missing, str) and missing not in unresolved:
+            unresolved.append(missing)
+    return {
+        "checks": checks,
+        "unresolved_fields": sorted(unresolved),
+        "lineage_complete_for_review": checks["canonical_https_url"] and checks["source_record_id_present"],
+        "lineage_complete_for_universal_event": all(checks.values()),
+    }
+
+
+def _resolution_bucket(row: Mapping[str, Any], validation: Mapping[str, Any], *, duplicate_of: str = "") -> str:
+    outcome = _text(row, "extraction_outcome")
+    classification = _text(row, "classification", "editorial_outcome")
+    unresolved = set(validation.get("unresolved_fields") or [])
+    if duplicate_of:
+        return "duplicate"
+    if classification in {"NON_CARE_LINE", "GENERAL_HEALTHCARE_NEWS"} or _text(row, "exclusion_reason") in {"non_care_line", "general_healthcare_news"}:
+        return "exclusion"
+    if outcome in {"ACCESS_BLOCKED", "PAYWALLED", "SCRIPT_RENDERED", "PDF_REQUIRED"}:
+        return "additional_fetch_needed"
+    if "canonical_https_url" in unresolved:
+        return "canonical_source_lookup"
+    if {"supporting_passage", "insufficient_bounded_evidence"} & unresolved:
+        return "human_evidence_judgment"
+    if "source_publication_date" in unresolved or "missing_source_date" in unresolved:
+        return "deterministic_resolution"
+    if _text(row, "failed_gates") or unresolved:
+        return "human_evidence_judgment"
+    return "bounded_human_judgment"
+
+
+def _review_action(bucket: str) -> str:
+    return {
+        "deterministic_resolution": "Resolve objective missing fields from source-collected evidence before reviewer decision.",
+        "additional_fetch_needed": "Fetch canonical source text, then decide whether quoted evidence supports a Care Line event.",
+        "canonical_source_lookup": "Locate a canonical HTTPS publisher URL before evidence review.",
+        "human_evidence_judgment": "Human must decide whether bounded source evidence supports the proposed structured event.",
+        "editorial_judgment": "Human must decide editorial significance after evidence is complete.",
+        "exclusion": "Confirm deterministic exclusion or leave excluded.",
+        "duplicate": "Review representative packet only; duplicate suppressed by deterministic identity.",
+        "unrecoverable": "Record source/access blocker; do not promote without new source evidence.",
+        "bounded_human_judgment": "Review proposed fields and choose approve, correct, defer, care-line-only, or reject.",
+    }.get(bucket, "Review unresolved fields.")
+
+
+def _packet_record(row: Mapping[str, Any], *, record_family: str, registry: Mapping[str, Mapping[str, Any]], duplicate_of: str = "") -> dict[str, Any]:
+    canonical_url = _canonical_url(row)
+    title = _text(row, "title", "source_title")
+    supporting_text = _text(row, "supporting_text", "supporting_passage", "effective_evidence_text")
+    date_value, date_source = _date_candidate(row)
+    event_type, event_match = _first_pattern(" ".join([title, supporting_text]), EVENT_PATTERNS)
+    service_line, service_match = _first_pattern(" ".join([title, supporting_text]), SERVICE_LINE_PATTERNS)
+    facility, facility_match = _facility_candidate(supporting_text, title)
+    geography, geography_match = _geography_candidate(supporting_text, title)
+    access_hits = _all_pattern_values(" ".join([title, supporting_text]), ACCESS_PATTERNS)
+    source_metadata = _source_metadata(row, registry)
+    source_artifact_paths = []
+    lineage = row.get("lineage") if isinstance(row.get("lineage"), Mapping) else {}
+    if _text(lineage, "source_artifact_path"):
+        source_artifact_paths.append(_text(lineage, "source_artifact_path"))
+    proposed_fields = {
+        "publication_date": _proposed_with_provenance(date_value, source_field=date_source, method="copied_or_text_date", source_text=date_value),
+        "event_type_candidate": _proposed_with_provenance(event_type, source_field="title/supporting_text", method="pattern_match", source_text=event_match),
+        "service_line_candidate": _proposed_with_provenance(service_line, source_field="title/supporting_text", method="pattern_match", source_text=service_match),
+        "facility_provider_candidate": _proposed_with_provenance(facility, source_field="title/supporting_text", method="source_explicit_pattern", source_text=facility_match),
+        "geography_candidate": _proposed_with_provenance(geography, source_field="title/supporting_text", method="state_city_pattern", source_text=geography_match),
+        "access_consequence_candidate": _proposed_with_provenance(access_hits, source_field="title/supporting_text", method="pattern_match", source_text=" | ".join(hit["matched_text"] for hit in access_hits)),
+    }
+    validation = _validation_results(row, canonical_url=canonical_url, supporting_text=supporting_text, proposed_fields=proposed_fields)
+    bucket = _resolution_bucket(row, validation, duplicate_of=duplicate_of)
+    record_fingerprint = _fingerprint(
+        {
+            "record_id": _record_identity(row),
+            "record_family": record_family,
+            "canonical_url": canonical_url,
+            "title": title,
+            "supporting_text": supporting_text,
+            "proposed_fields": proposed_fields,
+            "missing_requirements": validation["unresolved_fields"],
+        }
+    )
+    completeness_score = sum(1 for value in proposed_fields.values() if value.get("value") not in ("", [], {}))
+    severity_score = EVENT_SEVERITY_SCORE.get(str(proposed_fields["event_type_candidate"].get("value") or ""), 0)
+    authority_score = SOURCE_AUTHORITY_SCORE.get(str(source_metadata.get("authority_level") or ""), 0)
+    access_score = min(len(access_hits), 3)
+    return {
+        "producer_record_id": _record_identity(row),
+        "record_family": record_family,
+        "record_fingerprint": record_fingerprint,
+        "canonical_source_url": canonical_url,
+        "source_title": title,
+        "source_publisher": source_metadata["publisher"],
+        "source_metadata": source_metadata,
+        "source_artifact_paths": source_artifact_paths,
+        "event_lead_id": _text(row, "lead_id"),
+        "raw_item_id": _text(row, "raw_item_id"),
+        "extraction_outcome": _text(row, "extraction_outcome"),
+        "current_qualification_state": _text(row, "classification", "editorial_outcome") or record_family,
+        "supporting_passage": supporting_text,
+        "supporting_passage_available": bool(supporting_text),
+        "proposed_fields": proposed_fields,
+        "objective_validation_results": validation,
+        "unresolved_fields": validation["unresolved_fields"],
+        "exact_missing_requirements": validation["unresolved_fields"],
+        "exclusion_reason": _text(row, "exclusion_reason"),
+        "duplicate_of_producer_record_id": duplicate_of,
+        "duplicate_identity": _duplicate_key(row),
+        "resolution_bucket": bucket,
+        "human_review_required_reason": _review_action(bucket),
+        "recommended_next_review_action": _review_action(bucket),
+        "priority": {
+            "completeness_score": completeness_score,
+            "source_authority_score": authority_score,
+            "access_consequence_score": access_score,
+            "event_severity_score": severity_score,
+            "source_date": date_value,
+        },
+        "automation_limits": {
+            "review_status_set": False,
+            "universal_event_ready_set": False,
+            "publication_invoked": False,
+        },
+    }
+
+
+def _duplicate_key(row: Mapping[str, Any]) -> str:
+    url = _canonical_url(row).rstrip("/").casefold()
+    if url:
+        return "url:" + url
+    return "title:" + _fingerprint({"title": _text(row, "title", "source_title").casefold(), "supporting_text": _text(row, "supporting_text", "supporting_passage").casefold()})[:16]
+
+
+def build_review_packet_from_current_state(
+    repo_root: Path,
+    *,
+    review_root: Path | None = None,
+) -> dict[str, Any]:
+    repo_root = Path(repo_root).resolve()
+    root = review_root or DEFAULT_REVIEW_ROOT
+    root = root if root.is_absolute() else repo_root / root
+    registry = _load_registry(repo_root)
+    manual_payload = _load_json_object(root / REVIEW_PACKET_INPUT_FILES["manual_review"], default={"items": []})
+    failed_payload = _load_json_object(root / REVIEW_PACKET_INPUT_FILES["failed_extractions"], default={"items": []})
+    queue_payload = _load_json_object(root / REVIEW_PACKET_INPUT_FILES["review_queue"], default={"items": [], "duplicates": [], "backlog": []})
+    backlog_payload = _load_json_object(root / REVIEW_PACKET_INPUT_FILES["review_backlog"], default={"items": []})
+    candidate_payload = _load_json_object(root / REVIEW_PACKET_INPUT_FILES["candidate_registry"], default={"candidates": []})
+
+    raw_inputs: list[tuple[str, dict[str, Any]]] = []
+    raw_inputs.extend(("manual_review", row) for row in _items(manual_payload, "items"))
+    raw_inputs.extend(("failed_extraction", row) for row in _items(failed_payload, "items"))
+    raw_inputs.extend(("review_queue", row) for row in _items(queue_payload, "items"))
+    raw_inputs.extend(("review_backlog", row) for row in _items(backlog_payload, "items", "backlog"))
+    raw_inputs.extend(("candidate_registry", row) for row in _items(candidate_payload, "candidates"))
+
+    representative_by_key: dict[str, str] = {}
+    records: list[dict[str, Any]] = []
+    for family, row in raw_inputs:
+        key = _duplicate_key(row)
+        duplicate_of = representative_by_key.get(key, "")
+        packet_row = _packet_record(row, record_family=family, registry=registry, duplicate_of=duplicate_of)
+        if not duplicate_of:
+            representative_by_key[key] = packet_row["producer_record_id"]
+        records.append(packet_row)
+
+    records.sort(
+        key=lambda row: (
+            1 if row.get("duplicate_of_producer_record_id") else 0,
+            -int(row["priority"]["completeness_score"]),
+            -int(row["priority"]["source_authority_score"]),
+            -int(row["priority"]["access_consequence_score"]),
+            -int(row["priority"]["event_severity_score"]),
+            str(row["priority"].get("source_date") or ""),
+            row["producer_record_id"],
+        )
+    )
+    return {
+        "schema_version": REVIEW_PACKET_SCHEMA_VERSION,
+        "packet_type": "current_care_line_evidence_review",
+        "generator_version": PACKET_GENERATOR_VERSION,
+        "source_review_root": root.relative_to(repo_root).as_posix() if _is_under(root, repo_root) else root.as_posix(),
+        "records": records,
+        "decision_policy": {
+            "automated_review_status_changes": False,
+            "automated_universal_event_ready": False,
+            "publication_invoked": False,
+            "human_decision_required_for_approval": True,
+        },
+    }
+
+
+def review_packet_generation_report(packet: Mapping[str, Any]) -> dict[str, Any]:
+    records = [row for row in packet.get("records") or [] if isinstance(row, Mapping)]
+    bucket_counts = Counter(_text(row, "resolution_bucket") for row in records)
+    family_counts = Counter(_text(row, "record_family") for row in records)
+    unique_representatives = [row for row in records if not _text(row, "duplicate_of_producer_record_id")]
+    bounded = [
+        row
+        for row in unique_representatives
+        if _text(row, "resolution_bucket") in {"human_evidence_judgment", "bounded_human_judgment"}
+    ]
+    return {
+        "schema_version": REVIEW_PACKET_GENERATION_REPORT_SCHEMA_VERSION,
+        "generator_version": PACKET_GENERATOR_VERSION,
+        "review_packet_schema_version": packet.get("schema_version"),
+        "review_packet_fingerprint": review_packet_fingerprint(packet),
+        "records_examined": len(records),
+        "unique_review_packet_count": len(unique_representatives),
+        "records_automatically_deduplicated": bucket_counts.get("duplicate", 0),
+        "records_automatically_excluded": bucket_counts.get("exclusion", 0),
+        "records_automatically_completed_objectively": bucket_counts.get("deterministic_resolution", 0),
+        "records_reduced_to_bounded_human_decision": len(bounded),
+        "records_requiring_full_source_research": bucket_counts.get("additional_fetch_needed", 0) + bucket_counts.get("canonical_source_lookup", 0) + bucket_counts.get("unrecoverable", 0),
+        "blocker_counts": {
+            "deterministic_resolution": bucket_counts.get("deterministic_resolution", 0),
+            "additional_fetch_needed": bucket_counts.get("additional_fetch_needed", 0),
+            "canonical_source_lookup": bucket_counts.get("canonical_source_lookup", 0),
+            "human_evidence_judgment": bucket_counts.get("human_evidence_judgment", 0),
+            "editorial_judgment": bucket_counts.get("editorial_judgment", 0),
+            "exclusion": bucket_counts.get("exclusion", 0),
+            "duplicate": bucket_counts.get("duplicate", 0),
+            "unrecoverable": bucket_counts.get("unrecoverable", 0),
+            "bounded_human_judgment": bucket_counts.get("bounded_human_judgment", 0),
+        },
+        "record_family_counts": dict(sorted(family_counts.items())),
+        "source_evidence_deleted": False,
+        "records_approved": 0,
+        "records_published": 0,
+        "queue_release_state_changed": False,
+    }
+
+
+def write_review_packet_from_current_state(
+    repo_root: Path,
+    *,
+    packet_path: Path,
+    report_path: Path,
+    review_root: Path | None = None,
+    check_only: bool = False,
+) -> dict[str, Any]:
+    repo_root = Path(repo_root).resolve()
+    for path in (packet_path, report_path):
+        refuse_public_or_pages_path(path if path.is_absolute() else repo_root / path, repo_root)
+    packet = build_review_packet_from_current_state(repo_root, review_root=review_root)
+    report = review_packet_generation_report(packet)
+    if not check_only:
+        packet_target = packet_path if packet_path.is_absolute() else repo_root / packet_path
+        report_target = report_path if report_path.is_absolute() else repo_root / report_path
+        packet_target.parent.mkdir(parents=True, exist_ok=True)
+        report_target.parent.mkdir(parents=True, exist_ok=True)
+        _atomic_write(packet_target, _stable_json(packet))
+        _atomic_write(report_target, _stable_json(report))
+    return {"packet": packet, "report": report}
 
 
 def load_review_packet(path: Path) -> dict[str, Any]:
@@ -672,14 +1161,16 @@ def import_evidence_decisions(
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Import Care Line Phase 14C evidence decisions into reviewed records and an append-only ledger.")
+    parser = argparse.ArgumentParser(description="Prepare or import Care Line evidence-review packets.")
     parser.add_argument("--repo-root", default=".")
-    parser.add_argument("--review-packet", required=True)
-    parser.add_argument("--decisions-json", required=True)
-    parser.add_argument("--decisions-csv", required=True)
-    parser.add_argument("--reviewed-records", required=True)
-    parser.add_argument("--decision-ledger", required=True)
-    parser.add_argument("--report", required=True)
+    parser.add_argument("--generate-review-packet", action="store_true", help="Build a deterministic review packet from current Care Line review artifacts.")
+    parser.add_argument("--review-root", default=str(DEFAULT_REVIEW_ROOT))
+    parser.add_argument("--review-packet", default="")
+    parser.add_argument("--decisions-json", default="")
+    parser.add_argument("--decisions-csv", default="")
+    parser.add_argument("--reviewed-records", default="")
+    parser.add_argument("--decision-ledger", default="")
+    parser.add_argument("--report", default="")
     parser.add_argument("--check-only", action="store_true")
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--strict", action="store_true")
@@ -687,12 +1178,38 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.check_only and args.apply:
             raise ValueError("--check-only and --apply are mutually exclusive")
-        if not args.check_only and not args.apply:
-            raise ValueError("one of --check-only or --apply is required")
         repo_root = Path(args.repo_root).resolve()
+
         def resolve_repo_path(value: str) -> Path:
             path = Path(value)
             return path if path.is_absolute() else repo_root / path
+
+        if args.generate_review_packet:
+            packet_path = Path(args.review_packet) if args.review_packet else DEFAULT_REVIEW_PACKET_OUTPUT
+            report_path = Path(args.report) if args.report else DEFAULT_REVIEW_PACKET_REPORT
+            result = write_review_packet_from_current_state(
+                repo_root=repo_root,
+                packet_path=packet_path,
+                report_path=report_path,
+                review_root=Path(args.review_root),
+                check_only=args.check_only,
+            )
+            print(_stable_json(result["report"]))
+            return 0
+
+        required = {
+            "--review-packet": args.review_packet,
+            "--decisions-json": args.decisions_json,
+            "--decisions-csv": args.decisions_csv,
+            "--reviewed-records": args.reviewed_records,
+            "--decision-ledger": args.decision_ledger,
+            "--report": args.report,
+        }
+        missing = [flag for flag, value in required.items() if not value]
+        if missing:
+            raise ValueError("missing required import argument(s): " + ", ".join(missing))
+        if not args.check_only and not args.apply:
+            raise ValueError("one of --check-only or --apply is required")
         report = import_evidence_decisions(
             repo_root=repo_root,
             review_packet_path=resolve_repo_path(args.review_packet),

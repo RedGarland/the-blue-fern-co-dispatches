@@ -85,7 +85,12 @@ def _write_day(tmp_path: Path, statuses: dict[str, tuple[str, str, int]] | None 
     return source
 
 
-def _write_food_sep23_recovery_sequence(tmp_path: Path, *, durable_source_watch: bool = True) -> Path:
+def _write_food_sep23_recovery_sequence(
+    tmp_path: Path,
+    *,
+    durable_source_watch: bool = True,
+    include_resume: bool = True,
+) -> Path:
     source = tmp_path / "source"
     date = "2026-09-23"
     run_id = "food-line-scheduled-sep23"
@@ -130,17 +135,21 @@ def _write_food_sep23_recovery_sequence(tmp_path: Path, *, durable_source_watch:
             encoding="utf-8",
         )
 
-    rows = [
-        (
-            "z-resume-blocked.json",
-            "food_line_source_watch_resume",
-            "Blue Fern Food Line Source Watch Resume",
-            "UPSTREAM_BLOCKED",
-            "source_watch_not_initialized",
-            "",
-            "2026-09-23T15:07:37Z",
-            {"final_status": "source_watch_not_initialized", "resume_status": "source_watch_not_initialized", "run_id": None},
-        ),
+    rows = []
+    if include_resume:
+        rows.append(
+            (
+                "z-resume-blocked.json",
+                "food_line_source_watch_resume",
+                "Blue Fern Food Line Source Watch Resume",
+                "UPSTREAM_BLOCKED",
+                "source_watch_not_initialized",
+                "",
+                "2026-09-23T15:07:37Z",
+                {"final_status": "source_watch_not_initialized", "resume_status": "source_watch_not_initialized", "run_id": None},
+            )
+        )
+    rows.extend([
         (
             "y-intake-blocked.json",
             "food_line_current_intake",
@@ -187,7 +196,7 @@ def _write_food_sep23_recovery_sequence(tmp_path: Path, *, durable_source_watch:
             "2026-09-23T15:30:02Z",
             {"status": "skipped_not_release_ready", "publication_attempted": False},
         ),
-    ]
+    ])
     for filename, task_key, task_name, status, classification, receipt_run_id, completed_at, task_payload in rows:
         artifact = source / "legacy" / filename
         artifact.parent.mkdir(parents=True, exist_ok=True)
@@ -420,6 +429,47 @@ def test_food_line_resume_remains_effective_when_later_source_watch_is_not_durab
     assert effective["food_line_source_watch_resume"]["status"] == "UPSTREAM_BLOCKED"
     assert effective["food_line_source_watch_resume"]["classification"] == "source_watch_not_initialized"
     assert any(row["classification"] == "source_watch_not_initialized" for row in status["task_summaries"])
+
+
+def test_food_line_missing_resume_is_nonactionable_only_with_durable_source_watch(tmp_path: Path) -> None:
+    source = _write_food_sep23_recovery_sequence(tmp_path, durable_source_watch=True, include_resume=False)
+
+    status = build_food_line_status(
+        source_root=source,
+        date="2026-09-23",
+        evaluated_at="2026-09-23T16:00:00Z",
+        exported_at="2026-09-23T16:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "DEGRADED"
+    assert {row["task_key"] for row in status["effective_task_summaries"]} == {
+        "food_line_source_watch",
+        "food_line_current_intake",
+        "food_line_daily_publish",
+    }
+    effective = {row["task_key"]: row for row in status["effective_task_summaries"]}
+    assert effective["food_line_source_watch"]["classification"] == "completed_with_exclusions"
+    assert effective["food_line_current_intake"]["status"] == "SUCCESS"
+    assert effective["food_line_daily_publish"]["status"] == "SAFE_NO_OP"
+
+
+def test_food_line_missing_resume_remains_missed_without_durable_source_watch(tmp_path: Path) -> None:
+    source = _write_food_sep23_recovery_sequence(tmp_path, durable_source_watch=False, include_resume=False)
+
+    status = build_food_line_status(
+        source_root=source,
+        date="2026-09-23",
+        evaluated_at="2026-09-23T16:00:00Z",
+        exported_at="2026-09-23T16:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "MISSED"
+    assert {row["task_key"] for row in status["effective_task_summaries"]} == {
+        "food_line_source_watch",
+        "food_line_current_intake",
+        "food_line_daily_publish",
+    }
+    assert all(row["task_key"] != "food_line_source_watch_resume" for row in status["task_summaries"])
 
 
 def test_missing_task_is_partial_and_missing_file_linkage_is_inconsistent(tmp_path: Path) -> None:

@@ -371,14 +371,29 @@ def _latest_receipts_by_task(receipts: list[dict[str, Any]]) -> list[dict[str, A
     return [latest[key] for key in sorted(latest)]
 
 
+def _food_source_watch_durably_ready(
+    latest_by_task: dict[str, dict[str, Any]],
+    *,
+    source_root: Path,
+    date: str,
+) -> bool:
+    return food_source_receipt_is_durably_ready(
+        latest_by_task.get("food_line_source_watch", {}),
+        source_root=source_root,
+        date=date,
+    )
+
+
 def _food_effective_receipts(
     *,
     source_root: Path,
     date: str,
     receipts: list[dict[str, Any]],
+    latest_receipts: list[dict[str, Any]],
+    source_watch_durably_ready: bool,
     evaluated_at: str,
 ) -> list[dict[str, Any]]:
-    effective = _latest_receipts_by_task(receipts)
+    effective = latest_receipts
     try:
         recovery = evaluate_recovery(
             dispatch="food-line",
@@ -389,21 +404,15 @@ def _food_effective_receipts(
     except Exception:
         return effective
     instances = recovery.get("instances") if isinstance(recovery.get("instances"), list) else []
-    latest_by_task = {str(receipt.get("task_key") or ""): receipt for receipt in effective}
     filtered: list[dict[str, Any]] = []
     for receipt in effective:
         task_key = str(receipt.get("task_key") or "")
         row = next((item for item in instances if isinstance(item, dict) and item.get("task_key") == task_key), None)
-        latest_source = latest_by_task.get("food_line_source_watch", {})
         if (
             task_key == "food_line_source_watch_resume"
             and row
             and row.get("recommendation") == "UPSTREAM_BLOCKED"
-            and food_source_receipt_is_durably_ready(
-                latest_source,
-                source_root=source_root,
-                date=date,
-            )
+            and source_watch_durably_ready
         ):
             continue
         filtered.append(receipt)
@@ -443,6 +452,11 @@ def _staleness(
 def _safe_head(value: Any) -> str | None:
     text = str(value or "")
     return text if HEX_HEAD_RE.fullmatch(text) else None
+
+
+def _same_utc_date(value: str | None, date: str) -> bool:
+    parsed = parse_timestamp(str(value or ""))
+    return bool(parsed and parsed.astimezone(timezone.utc).date().isoformat() == date)
 
 
 def _receipt_artifact_id(receipt: dict[str, Any], linkage: dict[str, str]) -> str | None:
@@ -503,13 +517,24 @@ def build_food_line_status(
 ) -> dict[str, Any]:
     receipts = load_food_line_receipts(source_root, date)
     completeness, linkage = receipt_completeness(receipts, source_root=source_root)
+    latest_receipts = _latest_receipts_by_task(receipts)
+    latest_by_task = {str(receipt.get("task_key") or ""): receipt for receipt in latest_receipts}
+    source_watch_durably_ready = _food_source_watch_durably_ready(
+        latest_by_task,
+        source_root=source_root,
+        date=date,
+    )
     effective_receipts = _food_effective_receipts(
         source_root=source_root,
         date=date,
         receipts=receipts,
+        latest_receipts=latest_receipts,
+        source_watch_durably_ready=source_watch_durably_ready,
         evaluated_at=evaluated_at,
     )
     stale, last_receipt_at, stale_after = _staleness(receipts, date=date, evaluated_at=evaluated_at)
+    same_day_evidence = _same_utc_date(last_receipt_at, date) and _same_utc_date(evaluated_at, date)
+    stale_observability = stale and not same_day_evidence
     aggregate = evaluate_dispatch_health(
         dispatch="food-line",
         receipts=effective_receipts,
@@ -517,17 +542,11 @@ def build_food_line_status(
         evaluated_at=evaluated_at,
         recovery=recovery,
     )
-    effective_by_task = {str(receipt.get("task_key") or ""): receipt for receipt in effective_receipts}
-    source_terminal = str(effective_by_task.get("food_line_source_watch", {}).get("status") or "") in {
-        OperationalStatus.SUCCESS.value,
-        OperationalStatus.DEGRADED.value,
-        OperationalStatus.SAFE_NO_OP.value,
-    }
     actionable_missed = [
         task for task in aggregate["missed_tasks"]
-        if not (source_terminal and task == "food_line_source_watch_resume")
+        if not (source_watch_durably_ready and task == "food_line_source_watch_resume")
     ]
-    if stale:
+    if stale_observability:
         aggregate_status = OperationalStatus.STALE_OBSERVABILITY.value
     elif aggregate["failed_tasks"]:
         aggregate_status = OperationalStatus.FAILED.value
@@ -560,7 +579,7 @@ def build_food_line_status(
             "publication_attempted": publication_attempted,
             "publication_status": publication_statuses[-1] if publication_statuses else None,
         },
-        "stale_observability": stale,
+        "stale_observability": stale_observability,
         "last_receipt_at": last_receipt_at,
         "last_exported_at": exported_at,
         "next_expected_run": next((item.get("next_expected_run") for item in receipts if item.get("next_expected_run")), None),

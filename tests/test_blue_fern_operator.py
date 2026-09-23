@@ -165,6 +165,24 @@ def test_terminal_food_degraded_status_has_no_failed_sources_incident(monkeypatc
     assert result.dispatches[0].state == "NO_ACTION"
 
 
+def test_food_missing_resume_without_durable_source_watch_is_not_no_action(monkeypatch, tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    runner = tmp_path / "runner"
+    _export(repo, "food-line", "2026-09-20")
+    status = _status(state="MISSED", next_action="RECOVER_MISSING_RUN")
+    _patch_status(
+        monkeypatch,
+        status,
+        _plan(status, action="RECOVER_MISSING_RUN", disposition="PLAN_AVAILABLE"),
+    )
+
+    result = _run(repo, runner)
+
+    assert result.dispatches[0].state != "NO_ACTION"
+    assert result.incidents
+    assert result.incidents[0].recommended_action == "RECOVER_MISSING_RUN"
+
+
 def test_stale_exported_status_is_stale_observability(monkeypatch, tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     runner = tmp_path / "runner"

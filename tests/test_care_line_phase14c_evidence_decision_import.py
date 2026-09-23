@@ -10,15 +10,22 @@ import pytest
 from bluefern_dispatches.care_line_evidence_review import (
     EvidenceDecision,
     DECISION_SCHEMA_VERSION,
+    DEFAULT_PRE_REVIEW_RECORDS_OUTPUT,
+    DEFAULT_REVIEW_PACKET_OUTPUT,
+    DEFAULT_REVIEW_PACKET_REPORT,
     _decision_id,
     _recommendation_for_status,
     _status_for_decision,
+    build_pre_review_records_from_packet,
+    build_review_packet_from_current_state,
     import_evidence_decisions,
     load_decisions_payloads,
     main as evidence_review_main,
     review_packet_fingerprint,
+    review_packet_generation_report,
+    write_review_packet_from_current_state,
 )
-from bluefern_dispatches.care_line_normalize import source_payload_fingerprint
+from bluefern_dispatches.care_line_record import stable_json_hash
 
 
 REPO_DECISIONS = Path("data/universal_events/shadow/care-line/phase14b-evidence-review/phase14b-evidence-decisions-template.json")
@@ -41,14 +48,17 @@ EXPECTED_DECISIONS = {
 
 def _copy_repo_subset(root: Path) -> Path:
     repo = root / "repo"
+    phase14b = Path.cwd() / "data" / "universal_events" / "shadow" / "care-line" / "phase14b-evidence-review"
+    if not phase14b.exists():
+        pytest.skip("Phase 14B fixture artifacts are not present on this branch")
     shutil.copytree(
-        Path.cwd() / "data" / "dispatches" / "care-line",
-        repo / "data" / "dispatches" / "care-line",
+        Path.cwd() / "data" / "dispatches" / "care-line" / "reviewed",
+        repo / "data" / "dispatches" / "care-line" / "reviewed",
         dirs_exist_ok=True,
     )
     shutil.rmtree(repo / "data" / "dispatches" / "care-line" / "evidence-reviews", ignore_errors=True)
     shutil.copytree(
-        Path.cwd() / "data" / "universal_events" / "shadow" / "care-line" / "phase14b-evidence-review",
+        phase14b,
         repo / "data" / "universal_events" / "shadow" / "care-line" / "phase14b-evidence-review",
         dirs_exist_ok=True,
     )
@@ -76,6 +86,7 @@ def _read_json(path: Path) -> dict:
 
 
 def _write_json(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
@@ -418,7 +429,7 @@ def test_06c_substantive_source_content_changes_fingerprint():
         "state": "CA",
     }
     changed = dict(source, evidence_text="Changed substantive evidence")
-    assert source_payload_fingerprint(source) != source_payload_fingerprint(changed)
+    assert stable_json_hash(source) != stable_json_hash(changed)
 
 
 def test_07_cli_smoke_check_only_and_apply(repo_root: Path):
@@ -443,3 +454,341 @@ def test_07_cli_smoke_check_only_and_apply(repo_root: Path):
     assert evidence_review_main(args) == 0
     args[args.index("--check-only")] = "--apply"
     assert evidence_review_main(args) == 0
+
+
+def _write_current_review_state(root: Path) -> None:
+    review_root = root / "data" / "dispatches" / "care-line" / "review"
+    _write_json(
+        root / "data" / "dispatches" / "care-line" / "source_registry.json",
+        {
+            "schema_version": "bluefern.care_line.source_registry.v1",
+            "sources": [
+                {
+                    "source_id": "county-health",
+                    "name": "County Health News",
+                    "publisher": "County Health",
+                    "source_type": "government_health_department",
+                    "authority_level": "primary",
+                    "source_role": "health_department",
+                    "geographic_scope": "local",
+                }
+            ],
+        },
+    )
+    manual = {
+        "schema_version": "bluefern.care_line.exclusion_record.v1",
+        "manual_review_count": 2,
+        "items": [
+            {
+                "raw_item_id": "raw-1",
+                "lead_id": "lead-1",
+                "source_id": "county-health",
+                "source": "County Health News",
+                "source_url": "https://county.example.org/clinic-closing",
+                "title": "County Clinic will close in Austin, TX",
+                "classification": "NEEDS_HUMAN_REVIEW",
+                "extraction_outcome": "BODY_EXTRACTED",
+                "missing_fields": ["reviewer_decision"],
+                "supporting_text": "County Clinic will close on 2026-10-01 and patients will travel farther for primary care.",
+            },
+            {
+                "raw_item_id": "raw-dup",
+                "lead_id": "lead-dup",
+                "source_id": "county-health",
+                "source": "County Health News",
+                "source_url": "https://county.example.org/clinic-closing",
+                "title": "County Clinic will close in Austin, TX",
+                "classification": "NEEDS_HUMAN_REVIEW",
+                "extraction_outcome": "BODY_EXTRACTED",
+                "missing_fields": ["reviewer_decision"],
+                "supporting_text": "County Clinic will close on 2026-10-01 and patients will travel farther for primary care.",
+            },
+        ],
+    }
+    failed = {
+        "schema_version": "bluefern.care_line.exclusion_record.v1",
+        "failed_extraction_count": 2,
+        "items": [
+            {
+                "exclusion_id": "failed-date",
+                "raw_item_id": "raw-date",
+                "lead_id": "lead-date",
+                "source_id": "county-health",
+                "source_name": "County Health News",
+                "item_url": "https://county.example.org/no-date",
+                "title": "County Clinic closing notice",
+                "classification": "NEEDS_DATE",
+                "extraction_outcome": "BODY_EXTRACTED",
+                "failed_gates": ["missing_source_date"],
+                "supporting_text": "County Clinic closing notice",
+                "lineage": {"collection_run_id": "run-1", "source_artifact_path": "data/dispatches/care-line/collection-runs/run-1/county.raw-items.json"},
+            },
+            {
+                "exclusion_id": "blocked",
+                "raw_item_id": "raw-blocked",
+                "lead_id": "lead-blocked",
+                "source_id": "county-health",
+                "source_name": "County Health News",
+                "item_url": "https://county.example.org/access-blocked",
+                "title": "County Clinic service unavailable",
+                "classification": "NEEDS_HUMAN_REVIEW",
+                "extraction_outcome": "ACCESS_BLOCKED",
+                "failed_gates": ["insufficient_bounded_evidence"],
+                "supporting_text": "",
+            },
+        ],
+    }
+    _write_json(review_root / "current-manual-review.json", manual)
+    _write_json(review_root / "current-failed-extractions.json", failed)
+    _write_json(review_root / "current-review-queue.json", {"schema_version": "queue", "items": [], "duplicates": [], "backlog": []})
+    _write_json(review_root / "current-review-backlog.json", {"schema_version": "queue", "items": []})
+    _write_json(review_root / "candidate-registry.json", {"schema_version": "registry", "candidates": []})
+
+
+def _write_decision_pair(json_path: Path, csv_path: Path, row: dict) -> None:
+    payload = {"schema_version": DECISION_SCHEMA_VERSION, "decisions": [row]}
+    _write_json(json_path, payload)
+    _write_csv(csv_path, payload)
+
+
+def test_08_current_review_artifacts_generate_traceable_phase14b_packet(tmp_path: Path):
+    repo = tmp_path / "repo"
+    _write_current_review_state(repo)
+    packet = build_review_packet_from_current_state(repo)
+    report = review_packet_generation_report(packet)
+
+    assert packet["schema_version"] == "bluefern.care_line.phase14b_evidence_review.v1"
+    assert len(packet["records"]) == 4
+    first = packet["records"][0]
+    assert first["canonical_source_url"] == "https://county.example.org/clinic-closing"
+    assert first["source_metadata"]["authority_level"] == "primary"
+    assert first["proposed_fields"]["event_type_candidate"]["value"] == "planned_facility_closure"
+    assert first["proposed_fields"]["access_consequence_candidate"]["value"]
+    assert first["supporting_passage"] in first["proposed_fields"]["event_type_candidate"]["provenance"]["source_text"] or first["supporting_passage"]
+    assert first["automation_limits"] == {
+        "review_status_set": False,
+        "universal_event_ready_set": False,
+        "publication_invoked": False,
+    }
+    assert report["records_examined"] == 4
+    assert report["records_approved"] == 0
+    assert report["records_published"] == 0
+    assert report["queue_release_state_changed"] is False
+
+
+def test_09_packet_generation_deduplicates_and_keeps_unresolved_fields(tmp_path: Path):
+    repo = tmp_path / "repo"
+    _write_current_review_state(repo)
+    packet = build_review_packet_from_current_state(repo)
+    report = review_packet_generation_report(packet)
+    duplicates = [row for row in packet["records"] if row["resolution_bucket"] == "duplicate"]
+    date_rows = [row for row in packet["records"] if row["producer_record_id"] == "raw-date"]
+    blocked_rows = [row for row in packet["records"] if row["producer_record_id"] == "raw-blocked"]
+
+    assert len(duplicates) == 1
+    assert duplicates[0]["duplicate_of_producer_record_id"] == "raw-1"
+    assert "missing_source_date" in date_rows[0]["unresolved_fields"]
+    assert date_rows[0]["resolution_bucket"] == "deterministic_resolution"
+    assert blocked_rows[0]["resolution_bucket"] == "additional_fetch_needed"
+    assert report["records_automatically_deduplicated"] == 1
+    assert report["records_requiring_full_source_research"] == 1
+
+
+def test_10_packet_generation_is_idempotent_and_check_only_writes_nothing(tmp_path: Path):
+    repo = tmp_path / "repo"
+    _write_current_review_state(repo)
+    first = build_review_packet_from_current_state(repo)
+    second = build_review_packet_from_current_state(repo)
+    assert review_packet_fingerprint(first) == review_packet_fingerprint(second)
+
+    packet_path = repo / DEFAULT_REVIEW_PACKET_OUTPUT
+    report_path = packet_path.with_name("current-report.json")
+    reviewed_path = repo / DEFAULT_PRE_REVIEW_RECORDS_OUTPUT
+    result = write_review_packet_from_current_state(
+        repo,
+        packet_path=packet_path,
+        report_path=report_path,
+        pre_review_records_path=reviewed_path,
+        check_only=True,
+    )
+    assert result["report"]["records_examined"] == 4
+    assert not packet_path.exists()
+    assert not report_path.exists()
+    assert not reviewed_path.exists()
+
+
+def test_11_packet_generation_cli_writes_private_packet_without_publication():
+    repo = Path("t") / "care-line-packet-cli-test"
+    shutil.rmtree(repo, ignore_errors=True)
+    try:
+        _write_current_review_state(repo)
+        packet_rel = DEFAULT_REVIEW_PACKET_OUTPUT
+        report_rel = packet_rel.with_name("current-report.json")
+        reviewed_rel = DEFAULT_PRE_REVIEW_RECORDS_OUTPUT
+        packet_path = repo / packet_rel
+        report_path = repo / report_rel
+        reviewed_path = repo / reviewed_rel
+        assert evidence_review_main(
+            [
+                "--repo-root",
+                str(repo),
+                "--generate-review-packet",
+                "--apply",
+                "--review-packet",
+                str(packet_rel),
+                "--report",
+                str(report_rel),
+                "--pre-review-records",
+                str(reviewed_rel),
+            ]
+        ) == 0
+        packet = _read_json(packet_path)
+        report = _read_json(report_path)
+        reviewed = _read_json(reviewed_path)
+        assert len(packet["records"]) == 4
+        assert reviewed["metadata"]["automated_review_status_changes"] is False
+        assert report["records_approved"] == 0
+        assert report["records_published"] == 0
+    finally:
+        shutil.rmtree(repo, ignore_errors=True)
+
+
+def test_12_generate_review_packet_requires_explicit_apply_or_check_only(tmp_path: Path):
+    repo = tmp_path / "repo"
+    _write_current_review_state(repo)
+    assert evidence_review_main(["--repo-root", str(repo), "--generate-review-packet"]) == 2
+    assert not (repo / DEFAULT_REVIEW_PACKET_OUTPUT).exists()
+    assert not (repo / DEFAULT_REVIEW_PACKET_REPORT).exists()
+    assert not (repo / DEFAULT_PRE_REVIEW_RECORDS_OUTPUT).exists()
+
+
+def test_13_pre_review_bridge_feeds_existing_phase14c_check_only(tmp_path: Path):
+    repo = tmp_path / "repo"
+    _write_current_review_state(repo)
+    result = write_review_packet_from_current_state(
+        repo,
+        packet_path=DEFAULT_REVIEW_PACKET_OUTPUT,
+        report_path=DEFAULT_REVIEW_PACKET_REPORT,
+        pre_review_records_path=DEFAULT_PRE_REVIEW_RECORDS_OUTPUT,
+        check_only=False,
+    )
+    packet = result["packet"]
+    pre_review = result["pre_review_records"]
+    representative = next(row for row in packet["records"] if not row["duplicate_of_producer_record_id"])
+    record = next(row for row in pre_review["records"] if row["producer_record_id"] == representative["producer_record_id"])
+
+    assert record["review_status"] == "not_reviewed"
+    assert record["universal_event_status"] == "needs_evidence_review"
+    assert record["evidence_valid_for_universal_event"] is False
+    assert record["care_line_public_eligible"] is False
+    assert record["raw_payload_hash"] == representative["record_fingerprint"]
+    assert record["metadata"]["packet_fingerprint"] == review_packet_fingerprint(packet)
+    assert record["metadata"]["raw_item_id"] == representative["raw_item_id"]
+    assert record["metadata"]["event_lead_id"] == representative["event_lead_id"]
+
+    decision = {
+        "producer_record_id": record["producer_record_id"],
+        "record_fingerprint": record["raw_payload_hash"],
+        "evidence_decision": "deferred",
+        "evidence_text": "",
+        "evidence_provenance_type": "missing",
+        "evidence_source_url": representative["canonical_source_url"],
+        "evidence_source_field": "supporting_passage",
+        "evidence_source_artifact": "",
+        "reviewer": "Test Reviewer",
+        "review_reason": "bounded evidence still requires human judgment",
+        "reviewed_at": "2026-09-23T19:30:00Z",
+        "supersedes_evidence_decision_id": "",
+    }
+    decisions_json = repo / "data" / "dispatches" / "care-line" / "review" / "evidence-review-packets" / "decision.json"
+    decisions_csv = decisions_json.with_suffix(".csv")
+    report_path = decisions_json.with_name("phase14c-check-only-report.json")
+    ledger_path = decisions_json.with_name("phase14c-ledger.json")
+    _write_decision_pair(decisions_json, decisions_csv, decision)
+
+    report = import_evidence_decisions(
+        repo_root=repo,
+        review_packet_path=repo / DEFAULT_REVIEW_PACKET_OUTPUT,
+        decisions_json_path=decisions_json,
+        decisions_csv_path=decisions_csv,
+        reviewed_records_path=repo / DEFAULT_PRE_REVIEW_RECORDS_OUTPUT,
+        decision_ledger_path=ledger_path,
+        report_path=report_path,
+        check_only=True,
+        strict=True,
+    )
+    assert report["decisions_examined"] == 1
+    assert report["deferred_count"] == 1
+    assert report["approved_count"] == 0
+    assert report["universal_event_ready_count"] == 0
+    assert report["records"][0]["producer_record_id"] == record["producer_record_id"]
+    assert not ledger_path.exists()
+
+    second = write_review_packet_from_current_state(
+        repo,
+        packet_path=DEFAULT_REVIEW_PACKET_OUTPUT,
+        report_path=DEFAULT_REVIEW_PACKET_REPORT,
+        pre_review_records_path=DEFAULT_PRE_REVIEW_RECORDS_OUTPUT,
+        check_only=True,
+    )
+    assert review_packet_fingerprint(second["packet"]) == review_packet_fingerprint(packet)
+    assert stable_json_hash(second["pre_review_records"]["records"]) == stable_json_hash(pre_review["records"])
+
+    stale = _read_json(repo / DEFAULT_PRE_REVIEW_RECORDS_OUTPUT)
+    stale["records"][0]["raw_payload_hash"] = "stale"
+    stale_path = repo / "data" / "dispatches" / "care-line" / "review" / "evidence-review-packets" / "stale-reviewed.json"
+    _write_json(stale_path, stale)
+    with pytest.raises(ValueError, match="stale reviewed record fingerprint"):
+        import_evidence_decisions(
+            repo_root=repo,
+            review_packet_path=repo / DEFAULT_REVIEW_PACKET_OUTPUT,
+            decisions_json_path=decisions_json,
+            decisions_csv_path=decisions_csv,
+            reviewed_records_path=stale_path,
+            decision_ledger_path=ledger_path,
+            report_path=report_path,
+            check_only=True,
+            strict=True,
+        )
+
+
+def test_14_same_url_distinct_events_are_not_deduplicated(tmp_path: Path):
+    repo = tmp_path / "repo"
+    _write_current_review_state(repo)
+    review_root = repo / "data" / "dispatches" / "care-line" / "review"
+    manual = _read_json(review_root / "current-manual-review.json")
+    manual["items"] = [
+        {
+            "raw_item_id": "raw-a",
+            "source_id": "county-health",
+            "source_url": "https://county.example.org/board-agenda",
+            "title": "County health board agenda",
+            "classification": "NEEDS_HUMAN_REVIEW",
+            "supporting_text": "County Clinic will close on 2026-10-01 and patients will travel farther for primary care.",
+        },
+        {
+            "raw_item_id": "raw-b",
+            "source_id": "county-health",
+            "source_url": "https://county.example.org/board-agenda",
+            "title": "County health board agenda",
+            "classification": "NEEDS_HUMAN_REVIEW",
+            "supporting_text": "County Hospital will suspend emergency care on 2026-11-01 and patients will be redirected.",
+        },
+        {
+            "raw_item_id": "raw-c",
+            "source_id": "county-health",
+            "source_url": "https://county.example.org/board-agenda",
+            "title": "County health board agenda",
+            "classification": "NEEDS_HUMAN_REVIEW",
+            "supporting_text": "County Clinic will close on 2026-10-01 and patients will travel farther for primary care.",
+        },
+    ]
+    _write_json(review_root / "current-manual-review.json", manual)
+    _write_json(review_root / "current-failed-extractions.json", {"items": []})
+
+    packet = build_review_packet_from_current_state(repo)
+    unique = [row for row in packet["records"] if not row["duplicate_of_producer_record_id"]]
+    duplicates = [row for row in packet["records"] if row["duplicate_of_producer_record_id"]]
+    assert len(unique) == 2
+    assert len(duplicates) == 1
+    assert {row["raw_item_id"] for row in unique} == {"raw-a", "raw-b"}

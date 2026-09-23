@@ -85,49 +85,50 @@ def _write_day(tmp_path: Path, statuses: dict[str, tuple[str, str, int]] | None 
     return source
 
 
-def _write_food_sep23_recovery_sequence(tmp_path: Path) -> Path:
+def _write_food_sep23_recovery_sequence(tmp_path: Path, *, durable_source_watch: bool = True) -> Path:
     source = tmp_path / "source"
     date = "2026-09-23"
     run_id = "food-line-scheduled-sep23"
     receipt_root = source / "status" / "operational-health" / "food-line" / date / "runs"
     receipt_root.mkdir(parents=True)
 
-    export_path = source / "data" / "dispatches" / "food-line" / "agent-inbox" / "food-line-source-watch-2026-09-23-107adc7ac7.json"
-    export_path.parent.mkdir(parents=True, exist_ok=True)
-    export_path.write_text('{"schema_version":"food_line_source_watch_agent_export_v1","findings":[1,2,3]}\n', encoding="utf-8")
-    state_path = source / "data" / "dispatches" / "food-line" / "discovery-runs" / date / run_id / "run-state.json"
-    state_path.parent.mkdir(parents=True, exist_ok=True)
-    state_path.write_text(
-        json.dumps(
-            {
-                "schema_version": "food_line_bounded_run_state_v1",
-                "edition_date": date,
-                "run_id": run_id,
-                "status": "completed_with_exclusions",
-                "final_error": "",
-                "agent_export": {
-                    "status": "success_with_exclusions",
-                    "path": str(export_path),
-                },
-            }
-        ),
-        encoding="utf-8",
-    )
-    record_path = source / "status" / "food-line" / "runs" / f"{date}.json"
-    record_path.parent.mkdir(parents=True, exist_ok=True)
-    record_path.write_text(
-        json.dumps(
-            {
-                "schema_version": "food_line_scheduled_run_record_v1",
-                "edition_date": date,
-                "run_id": run_id,
-                "source_watch_status": "completed_with_exclusions",
-                "last_status": "completed_with_exclusions",
-                "run_state_path": str(state_path),
-            }
-        ),
-        encoding="utf-8",
-    )
+    if durable_source_watch:
+        export_path = source / "data" / "dispatches" / "food-line" / "agent-inbox" / "food-line-source-watch-2026-09-23-107adc7ac7.json"
+        export_path.parent.mkdir(parents=True, exist_ok=True)
+        export_path.write_text('{"schema_version":"food_line_source_watch_agent_export_v1","findings":[1,2,3]}\n', encoding="utf-8")
+        state_path = source / "data" / "dispatches" / "food-line" / "discovery-runs" / date / run_id / "run-state.json"
+        state_path.parent.mkdir(parents=True, exist_ok=True)
+        state_path.write_text(
+            json.dumps(
+                {
+                    "schema_version": "food_line_bounded_run_state_v1",
+                    "edition_date": date,
+                    "run_id": run_id,
+                    "status": "completed_with_exclusions",
+                    "final_error": "",
+                    "agent_export": {
+                        "status": "success_with_exclusions",
+                        "path": str(export_path),
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+        record_path = source / "status" / "food-line" / "runs" / f"{date}.json"
+        record_path.parent.mkdir(parents=True, exist_ok=True)
+        record_path.write_text(
+            json.dumps(
+                {
+                    "schema_version": "food_line_scheduled_run_record_v1",
+                    "edition_date": date,
+                    "run_id": run_id,
+                    "source_watch_status": "completed_with_exclusions",
+                    "last_status": "completed_with_exclusions",
+                    "run_state_path": str(state_path),
+                }
+            ),
+            encoding="utf-8",
+        )
 
     rows = [
         (
@@ -392,6 +393,33 @@ def test_food_line_recovered_source_watch_sequence_uses_effective_timestamp_stat
     assert effective["food_line_current_intake"]["status"] == "SUCCESS"
     assert effective["food_line_daily_publish"]["status"] == "SAFE_NO_OP"
     assert "food_line_source_watch_resume" not in effective
+    intake_artifacts = {
+        row["classification"]: row["artifact_id"]
+        for row in status["task_summaries"]
+        if row["task_key"] == "food_line_current_intake"
+    }
+    assert intake_artifacts == {
+        "source_watch_not_initialized": "y-intake-blocked.json",
+        "success": "b-current-intake-recovered.json",
+    }
+
+
+def test_food_line_resume_remains_effective_when_later_source_watch_is_not_durable(tmp_path: Path) -> None:
+    source = _write_food_sep23_recovery_sequence(tmp_path, durable_source_watch=False)
+
+    status = build_food_line_status(
+        source_root=source,
+        date="2026-09-23",
+        evaluated_at="2026-09-23T16:00:00Z",
+        exported_at="2026-09-23T16:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "DEGRADED"
+    effective = {row["task_key"]: row for row in status["effective_task_summaries"]}
+    assert effective["food_line_source_watch"]["classification"] == "completed_with_exclusions"
+    assert effective["food_line_source_watch_resume"]["status"] == "UPSTREAM_BLOCKED"
+    assert effective["food_line_source_watch_resume"]["classification"] == "source_watch_not_initialized"
+    assert any(row["classification"] == "source_watch_not_initialized" for row in status["task_summaries"])
 
 
 def test_missing_task_is_partial_and_missing_file_linkage_is_inconsistent(tmp_path: Path) -> None:

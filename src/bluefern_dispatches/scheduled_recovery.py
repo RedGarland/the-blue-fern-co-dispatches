@@ -341,6 +341,15 @@ def _upstream_receipt_is_intake_ready(
     )
 
 
+def food_source_receipt_is_durably_ready(
+    receipt: dict[str, Any],
+    *,
+    source_root: Path,
+    date: str,
+) -> bool:
+    return _upstream_receipt_is_intake_ready(receipt, source_root=source_root, date=date)
+
+
 def _upstream_receipt_run_id(receipt: dict[str, Any], task_receipt: dict[str, Any]) -> str:
     return _receipt_text(receipt, "run_id") or str(task_receipt.get("run_id") or "").strip()
 

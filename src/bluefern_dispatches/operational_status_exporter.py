@@ -27,7 +27,7 @@ from .operational_health import (
     parse_timestamp,
     validate_operational_receipt,
 )
-from .scheduled_recovery import evaluate_recovery
+from .scheduled_recovery import evaluate_recovery, food_source_receipt_is_durably_ready
 
 
 EXTERNAL_STATUS_SCHEMA_VERSION = "bluefern_external_operational_status_v1"
@@ -394,12 +394,16 @@ def _food_effective_receipts(
     for receipt in effective:
         task_key = str(receipt.get("task_key") or "")
         row = next((item for item in instances if isinstance(item, dict) and item.get("task_key") == task_key), None)
+        latest_source = latest_by_task.get("food_line_source_watch", {})
         if (
             task_key == "food_line_source_watch_resume"
             and row
             and row.get("recommendation") == "UPSTREAM_BLOCKED"
-            and latest_by_task.get("food_line_source_watch", {}).get("status")
-            in {OperationalStatus.SUCCESS.value, OperationalStatus.DEGRADED.value, OperationalStatus.SAFE_NO_OP.value}
+            and food_source_receipt_is_durably_ready(
+                latest_source,
+                source_root=source_root,
+                date=date,
+            )
         ):
             continue
         filtered.append(receipt)
@@ -441,6 +445,18 @@ def _safe_head(value: Any) -> str | None:
     return text if HEX_HEAD_RE.fullmatch(text) else None
 
 
+def _receipt_artifact_id(receipt: dict[str, Any], linkage: dict[str, str]) -> str | None:
+    refs = receipt.get("artifact_refs", {}) if isinstance(receipt.get("artifact_refs"), dict) else {}
+    artifact = refs.get("task_receipt")
+    if (
+        not artifact
+        and receipt.get("dispatch") == "ice"
+        and receipt.get("task_key") == "ice_monitor"
+    ):
+        artifact = refs.get("monitor_receipt")
+    return _symbolic_artifact(artifact) or linkage.get(str(receipt.get("task_key")))
+
+
 def _task_summary(receipt: dict[str, Any], linkage: dict[str, str]) -> dict[str, Any]:
     return {
         "task_key": receipt.get("task_key"),
@@ -455,7 +471,7 @@ def _task_summary(receipt: dict[str, Any], linkage: dict[str, str]) -> dict[str,
         "publication_attempted": receipt.get("publication_attempted"),
         "publication_status": receipt.get("publication_status"),
         "public_side_effects": _sanitized_public_side_effects(receipt.get("public_side_effects")),
-        "artifact_id": linkage.get(str(receipt.get("task_key"))),
+        "artifact_id": _receipt_artifact_id(receipt, linkage),
     }
 
 

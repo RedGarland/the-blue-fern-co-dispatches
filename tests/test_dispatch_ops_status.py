@@ -164,6 +164,46 @@ def _food_status_export(root: Path, date: str, aggregate: str, *, task_status: s
     )
 
 
+def _food_terminal_degraded_export(root: Path, date: str = "2026-09-23") -> None:
+    blocked = {
+        "task_key": "food_line_current_intake",
+        "status": "UPSTREAM_BLOCKED",
+        "classification": "source_watch_not_initialized",
+    }
+    effective = [
+        {
+            "task_key": "food_line_source_watch",
+            "status": "DEGRADED",
+            "classification": "completed_with_exclusions",
+        },
+        {
+            "task_key": "food_line_current_intake",
+            "status": "SUCCESS",
+            "classification": "success",
+        },
+        {
+            "task_key": "food_line_daily_publish",
+            "status": "SAFE_NO_OP",
+            "classification": "skipped_not_release_ready",
+        },
+    ]
+    _write_json(
+        root / "ops/status/food-line/history" / f"{date}.json",
+        {
+            "schema_version": "bluefern_external_operational_status_v1",
+            "dispatch": "food-line",
+            "observed_date": date,
+            "aggregate_status": "DEGRADED",
+            "receipt_completeness": "COMPLETE",
+            "recovery_lifecycle": "HEALTHY",
+            "publication_status": "skipped_not_release_ready",
+            "publication_attempted": False,
+            "task_summaries": [blocked, *effective],
+            "effective_task_summaries": effective,
+        },
+    )
+
+
 def _food_safe_no_op_receipts(root: Path, date: str = "2026-09-20") -> None:
     rows = [
         ("food_line_source_watch", "source-watch"),
@@ -275,6 +315,42 @@ def test_food_line_sep_9_reconstructed_recovered_state(tmp_path: Path) -> None:
     assert status.recovery == "RECOVERED"
     assert status.details["unresolved_reconstructed_candidates"] == 0
     assert status.next_action == "NONE"
+
+
+def test_food_line_terminal_source_exclusions_are_degraded_no_action(tmp_path: Path) -> None:
+    _food_terminal_degraded_export(tmp_path)
+
+    status = build_status("food-line", "2026-09-23", root=tmp_path)
+    plan = build_recovery_plan("food-line", "2026-09-23", root=tmp_path)
+
+    assert status.state == "DEGRADED"
+    assert status.collection == "DEGRADED"
+    assert status.next_action == "NONE"
+    assert status.details["terminal_food_source_degradation"] is True
+    assert status.details["task_statuses"] == {
+        "food_line_current_intake": "SUCCESS",
+        "food_line_daily_publish": "SAFE_NO_OP",
+        "food_line_source_watch": "DEGRADED",
+    }
+    assert plan.disposition == "NO_ACTION"
+    assert plan.action == "NONE"
+
+
+def test_food_line_genuine_failed_source_still_requires_attention(tmp_path: Path) -> None:
+    _food_status_export(
+        tmp_path,
+        "2026-09-23",
+        "FAILED",
+        task_status="FAILED",
+        classification="source_watch_failed",
+    )
+
+    status = build_status("food-line", "2026-09-23", root=tmp_path)
+    plan = build_recovery_plan("food-line", "2026-09-23", root=tmp_path)
+
+    assert status.state == "FAILED"
+    assert status.next_action == "INVESTIGATE_COLLECTION"
+    assert plan.action == "INVESTIGATE_COLLECTION"
 
 
 def test_care_sep_18_partial_success_is_degraded_not_missed(tmp_path: Path) -> None:

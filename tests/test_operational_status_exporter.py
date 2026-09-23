@@ -85,6 +85,140 @@ def _write_day(tmp_path: Path, statuses: dict[str, tuple[str, str, int]] | None 
     return source
 
 
+def _write_food_sep23_recovery_sequence(tmp_path: Path) -> Path:
+    source = tmp_path / "source"
+    date = "2026-09-23"
+    run_id = "food-line-scheduled-sep23"
+    receipt_root = source / "status" / "operational-health" / "food-line" / date / "runs"
+    receipt_root.mkdir(parents=True)
+
+    export_path = source / "data" / "dispatches" / "food-line" / "agent-inbox" / "food-line-source-watch-2026-09-23-107adc7ac7.json"
+    export_path.parent.mkdir(parents=True, exist_ok=True)
+    export_path.write_text('{"schema_version":"food_line_source_watch_agent_export_v1","findings":[1,2,3]}\n', encoding="utf-8")
+    state_path = source / "data" / "dispatches" / "food-line" / "discovery-runs" / date / run_id / "run-state.json"
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    state_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "food_line_bounded_run_state_v1",
+                "edition_date": date,
+                "run_id": run_id,
+                "status": "completed_with_exclusions",
+                "final_error": "",
+                "agent_export": {
+                    "status": "success_with_exclusions",
+                    "path": str(export_path),
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    record_path = source / "status" / "food-line" / "runs" / f"{date}.json"
+    record_path.parent.mkdir(parents=True, exist_ok=True)
+    record_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "food_line_scheduled_run_record_v1",
+                "edition_date": date,
+                "run_id": run_id,
+                "source_watch_status": "completed_with_exclusions",
+                "last_status": "completed_with_exclusions",
+                "run_state_path": str(state_path),
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    rows = [
+        (
+            "z-resume-blocked.json",
+            "food_line_source_watch_resume",
+            "Blue Fern Food Line Source Watch Resume",
+            "UPSTREAM_BLOCKED",
+            "source_watch_not_initialized",
+            "",
+            "2026-09-23T15:07:37Z",
+            {"final_status": "source_watch_not_initialized", "resume_status": "source_watch_not_initialized", "run_id": None},
+        ),
+        (
+            "y-intake-blocked.json",
+            "food_line_current_intake",
+            "Blue Fern Food Line Current Intake",
+            "UPSTREAM_BLOCKED",
+            "source_watch_not_initialized",
+            "",
+            "2026-09-23T15:07:38Z",
+            {"status": "source_watch_not_initialized", "qualifying_discovery_run_id": None},
+        ),
+        (
+            "a-source-watch-ready.json",
+            "food_line_source_watch",
+            "Blue Fern Food Line Daily Source Watch",
+            "DEGRADED",
+            "completed_with_exclusions",
+            run_id,
+            "2026-09-23T15:16:02Z",
+            {
+                "action": "source_watch",
+                "edition_date": date,
+                "run_id": run_id,
+                "final_status": "completed_with_exclusions",
+                "export_status": "success_with_exclusions",
+            },
+        ),
+        (
+            "b-current-intake-recovered.json",
+            "food_line_current_intake",
+            "Blue Fern Food Line Current Intake",
+            "SUCCESS",
+            "success",
+            run_id,
+            "2026-09-23T15:45:18Z",
+            {"status": "draft_pending_editorial_review", "qualifying_discovery_run_id": run_id},
+        ),
+        (
+            "c-daily-publish-noop.json",
+            "food_line_daily_publish",
+            "Blue Fern Food Line Daily Publish",
+            "SAFE_NO_OP",
+            "skipped_not_release_ready",
+            "20260923T153002Z-32396-2295029d",
+            "2026-09-23T15:30:02Z",
+            {"status": "skipped_not_release_ready", "publication_attempted": False},
+        ),
+    ]
+    for filename, task_key, task_name, status, classification, receipt_run_id, completed_at, task_payload in rows:
+        artifact = source / "legacy" / filename
+        artifact.parent.mkdir(parents=True, exist_ok=True)
+        artifact.write_text(json.dumps(task_payload), encoding="utf-8")
+        receipt = build_operational_receipt(
+            dispatch="food-line",
+            task_key=task_key,
+            task_name=task_name,
+            scheduled_for=date,
+            started_at=completed_at,
+            completed_at=completed_at,
+            observed_at=completed_at,
+            exit_code=0,
+            status=status,
+            classification=classification,
+            run_id=receipt_run_id,
+            runner_path=r"C:\BlueFernRunner\FoodLineCurrent6",
+            source_head="50599cc68e613a4a286896fc2247b9492e1e8262",
+            artifact_refs={"task_receipt": str(artifact)},
+            publication_attempted=False if task_key == "food_line_daily_publish" else None,
+            publication_status="skipped_not_release_ready" if task_key == "food_line_daily_publish" else None,
+            public_side_effects={"public_output": False},
+            details={
+                "edition_date": date,
+                "source_status": "completed_with_exclusions" if task_key == "food_line_source_watch" else classification,
+                "source_export_status": "success_with_exclusions" if task_key == "food_line_source_watch" else "",
+            },
+        )
+        (receipt_root / filename).write_text(json.dumps(receipt), encoding="utf-8")
+    return source
+
+
 def _write_care_day(tmp_path: Path, *, include_older_collection: bool = False) -> Path:
     source = tmp_path / "care-source"
     receipt_root = source / "status" / "operational-health" / "care-line" / DATE / "runs"
@@ -237,6 +371,27 @@ def test_complete_success_day_is_healthy(tmp_path: Path) -> None:
     status = build_food_line_status(source_root=source, date=DATE, evaluated_at=EVALUATED, exported_at=EVALUATED)
     assert status["aggregate_status"] == "SUCCESS"
     assert status["receipt_completeness"] == "COMPLETE"
+
+
+def test_food_line_recovered_source_watch_sequence_uses_effective_timestamp_state(tmp_path: Path) -> None:
+    source = _write_food_sep23_recovery_sequence(tmp_path)
+
+    status = build_food_line_status(
+        source_root=source,
+        date="2026-09-23",
+        evaluated_at="2026-09-23T16:00:00Z",
+        exported_at="2026-09-23T16:01:00Z",
+    )
+
+    assert status["receipt_completeness"] == "COMPLETE"
+    assert status["aggregate_status"] == "DEGRADED"
+    assert len(status["task_summaries"]) == 5
+    assert any(row["classification"] == "source_watch_not_initialized" for row in status["task_summaries"])
+    effective = {row["task_key"]: row for row in status["effective_task_summaries"]}
+    assert effective["food_line_source_watch"]["classification"] == "completed_with_exclusions"
+    assert effective["food_line_current_intake"]["status"] == "SUCCESS"
+    assert effective["food_line_daily_publish"]["status"] == "SAFE_NO_OP"
+    assert "food_line_source_watch_resume" not in effective
 
 
 def test_missing_task_is_partial_and_missing_file_linkage_is_inconsistent(tmp_path: Path) -> None:

@@ -255,12 +255,26 @@ def _public_state(root: Path, dispatch: str, date: str, *, no_update: bool = Fal
 
 def _normalize_from_exported(adapter: DispatchAdapter, payload: dict[str, Any], date: str, evidence: list[str]) -> DispatchStatus:
     aggregate = str(payload.get("aggregate_status") or "UNKNOWN")
-    tasks = payload.get("task_summaries") if isinstance(payload.get("task_summaries"), list) else []
+    effective_tasks = payload.get("effective_task_summaries")
+    if not isinstance(effective_tasks, list):
+        effective_tasks = payload.get("task_summaries")
+    tasks = effective_tasks if isinstance(effective_tasks, list) else []
     task_statuses = {str(row.get("task_key") or ""): str(row.get("status") or "") for row in tasks if isinstance(row, dict)}
     classifications = {str(row.get("task_key") or ""): str(row.get("classification") or "") for row in tasks if isinstance(row, dict)}
     publication_status = str(payload.get("publication_status") or "")
     receipt_state = str(payload.get("receipt_completeness") or "UNKNOWN")
     recovery = str(payload.get("recovery_lifecycle") or "UNKNOWN")
+    terminal_food_source_degradation = (
+        adapter.dispatch == "food-line"
+        and aggregate == "DEGRADED"
+        and any(
+            key in {"food_line_source_watch", "food_line_source_watch_resume"}
+            and status == "DEGRADED"
+            and classifications.get(key) == "completed_with_exclusions"
+            for key, status in task_statuses.items()
+        )
+        and not any(status in {"FAILED", "UPSTREAM_BLOCKED"} for status in task_statuses.values())
+    )
 
     if aggregate == "MISSED":
         state = Lifecycle.MISSED.value
@@ -270,7 +284,7 @@ def _normalize_from_exported(adapter: DispatchAdapter, payload: dict[str, Any], 
         next_action = NextAction.INVESTIGATE_COLLECTION.value
     elif aggregate == "DEGRADED":
         state = Lifecycle.DEGRADED.value
-        next_action = NextAction.INVESTIGATE_FAILED_SOURCES.value
+        next_action = NextAction.NONE.value if terminal_food_source_degradation else NextAction.INVESTIGATE_FAILED_SOURCES.value
     elif aggregate == "SUCCESS":
         state = Lifecycle.PUBLISHED.value if _has_public_edition(adapter.root, adapter.dispatch, date) else Lifecycle.COMPLETE.value
         next_action = NextAction.NONE.value
@@ -327,7 +341,11 @@ def _normalize_from_exported(adapter: DispatchAdapter, payload: dict[str, Any], 
         next_action=next_action,
         evidence=sorted(evidence),
         warnings=[],
-        details={"aggregate_status": aggregate, "task_statuses": task_statuses},
+        details={
+            "aggregate_status": aggregate,
+            "task_statuses": task_statuses,
+            "terminal_food_source_degradation": terminal_food_source_degradation,
+        },
     )
 
 
@@ -766,6 +784,7 @@ TERMINAL_NO_ACTION_STATES = {
     Lifecycle.PUBLISHED.value,
     Lifecycle.NO_UPDATE.value,
     Lifecycle.SAFE_NO_OP.value,
+    Lifecycle.DEGRADED.value,
 }
 
 

@@ -27,6 +27,7 @@ from .operational_health import (
     parse_timestamp,
     validate_operational_receipt,
 )
+from .scheduled_recovery import evaluate_recovery
 
 
 EXTERNAL_STATUS_SCHEMA_VERSION = "bluefern_external_operational_status_v1"
@@ -209,6 +210,10 @@ def _handoff_time(receipt: dict[str, Any] | None) -> datetime | None:
     return None
 
 
+def _receipt_sort_time(receipt: dict[str, Any]) -> datetime:
+    return _handoff_time(receipt) or datetime.min.replace(tzinfo=timezone.utc)
+
+
 def _handoff_count(value: Any) -> int:
     if isinstance(value, bool):
         return int(value)
@@ -351,14 +356,54 @@ def receipt_completeness(
             inconsistent = True
         else:
             linkage[task_key] = symbolic
-    if expectations == FOOD_LINE_TASK_EXPECTATIONS and any(len(grouped.get(task_key, [])) != 1 for task_key in expected):
-        inconsistent = inconsistent or any(len(grouped.get(task_key, [])) > 1 for task_key in expected)
     missing = expected - set(grouped)
     if inconsistent:
         return "INCONSISTENT", linkage
     if missing:
         return ("MISSING" if not grouped else "PARTIAL"), linkage
     return "COMPLETE", linkage
+
+
+def _latest_receipts_by_task(receipts: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    latest: dict[str, dict[str, Any]] = {}
+    for receipt in sorted(receipts, key=_receipt_sort_time):
+        latest[str(receipt.get("task_key") or "")] = receipt
+    return [latest[key] for key in sorted(latest)]
+
+
+def _food_effective_receipts(
+    *,
+    source_root: Path,
+    date: str,
+    receipts: list[dict[str, Any]],
+    evaluated_at: str,
+) -> list[dict[str, Any]]:
+    effective = _latest_receipts_by_task(receipts)
+    try:
+        recovery = evaluate_recovery(
+            dispatch="food-line",
+            source_root=source_root,
+            date=date,
+            evaluated_at=evaluated_at,
+        )
+    except Exception:
+        return effective
+    instances = recovery.get("instances") if isinstance(recovery.get("instances"), list) else []
+    latest_by_task = {str(receipt.get("task_key") or ""): receipt for receipt in effective}
+    filtered: list[dict[str, Any]] = []
+    for receipt in effective:
+        task_key = str(receipt.get("task_key") or "")
+        row = next((item for item in instances if isinstance(item, dict) and item.get("task_key") == task_key), None)
+        if (
+            task_key == "food_line_source_watch_resume"
+            and row
+            and row.get("recommendation") == "UPSTREAM_BLOCKED"
+            and latest_by_task.get("food_line_source_watch", {}).get("status")
+            in {OperationalStatus.SUCCESS.value, OperationalStatus.DEGRADED.value, OperationalStatus.SAFE_NO_OP.value}
+        ):
+            continue
+        filtered.append(receipt)
+    return filtered
 
 
 def _expected_run(date: str, expected_time: str, timezone_name: str) -> datetime:
@@ -442,19 +487,35 @@ def build_food_line_status(
 ) -> dict[str, Any]:
     receipts = load_food_line_receipts(source_root, date)
     completeness, linkage = receipt_completeness(receipts, source_root=source_root)
+    effective_receipts = _food_effective_receipts(
+        source_root=source_root,
+        date=date,
+        receipts=receipts,
+        evaluated_at=evaluated_at,
+    )
     stale, last_receipt_at, stale_after = _staleness(receipts, date=date, evaluated_at=evaluated_at)
     aggregate = evaluate_dispatch_health(
         dispatch="food-line",
-        receipts=receipts,
+        receipts=effective_receipts,
         expectations=FOOD_LINE_TASK_EXPECTATIONS,
         evaluated_at=evaluated_at,
         recovery=recovery,
     )
+    effective_by_task = {str(receipt.get("task_key") or ""): receipt for receipt in effective_receipts}
+    source_terminal = str(effective_by_task.get("food_line_source_watch", {}).get("status") or "") in {
+        OperationalStatus.SUCCESS.value,
+        OperationalStatus.DEGRADED.value,
+        OperationalStatus.SAFE_NO_OP.value,
+    }
+    actionable_missed = [
+        task for task in aggregate["missed_tasks"]
+        if not (source_terminal and task == "food_line_source_watch_resume")
+    ]
     if stale:
         aggregate_status = OperationalStatus.STALE_OBSERVABILITY.value
     elif aggregate["failed_tasks"]:
         aggregate_status = OperationalStatus.FAILED.value
-    elif aggregate["missed_tasks"]:
+    elif actionable_missed:
         aggregate_status = OperationalStatus.MISSED.value
     elif aggregate["degraded_tasks"] or aggregate["upstream_blocked_tasks"]:
         aggregate_status = OperationalStatus.DEGRADED.value
@@ -475,6 +536,7 @@ def build_food_line_status(
         "latest_runtime_proof_date": aggregate.get("latest_success_at"),
         "receipt_completeness": completeness,
         "task_summaries": [_task_summary(receipt, linkage) for receipt in receipts],
+        "effective_task_summaries": [_task_summary(receipt, linkage) for receipt in effective_receipts],
         "runner_source_head": sorted(source_heads)[0] if len(source_heads) == 1 else None,
         "publication_attempted": publication_attempted,
         "publication_status": publication_statuses[-1] if publication_statuses else None,

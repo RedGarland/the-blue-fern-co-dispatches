@@ -77,6 +77,39 @@ def _write_status(root: Path, dispatch: str, payload: dict) -> Path:
     return path
 
 
+def _write_care_manifest(
+    root: Path,
+    observation_date: str,
+    run_id: str = "run-1",
+    *,
+    status: str = "success",
+    started_at: str = "2026-09-14T13:00:00Z",
+    raw_count: int = 10,
+    prefilter_count: int = 10,
+    failed_extraction_count: int = 0,
+    reviewable_count: int = 0,
+) -> Path:
+    manifest = root / "data/dispatches/care-line/collection-runs" / observation_date / run_id / "run-manifest.json"
+    manifest.parent.mkdir(parents=True, exist_ok=True)
+    manifest.write_text(
+        json.dumps(
+            {
+                "run_id": run_id,
+                "status": status,
+                "started_at": started_at,
+                "completed_at": started_at.replace(":00Z", ":03Z"),
+                "raw_items_retrieved_this_run": raw_count,
+                "prefilter_decision_count": prefilter_count,
+                "qualified_candidates_created_this_run": reviewable_count,
+                "failed_extraction_count": failed_extraction_count,
+                "active_review_queue_count": reviewable_count,
+            }
+        ),
+        encoding="utf-8",
+    )
+    return manifest
+
+
 def _durable_record(dispatch: str = "food-line", status: str = "BACKFILL_NOT_REQUIRED") -> dict:
     observation = "OBSERVED_WITH_FINDINGS" if status == "RECOVERED" else "OBSERVED_ZERO_QUALIFYING"
     if status in {"BACKFILL_REQUIRED", "RECOVERY_IN_REVIEW"}:
@@ -480,8 +513,10 @@ def test_separate_runtime_roots_feed_each_dispatch(tmp_path: Path) -> None:
     )
 
     assert {row.dispatch for row in rows} == {"food-line", "care-line", "ice"}
-    assert all(row.reason_codes == (GapReasonCode.SCHEDULED_RUN_MISSED,) for row in rows[:2])
-    assert rows[2].backfill_status == BackfillStatus.BACKFILL_NOT_REQUIRED
+    by_dispatch = {row.dispatch: row for row in rows}
+    assert by_dispatch["food-line"].reason_codes == (GapReasonCode.SCHEDULED_RUN_MISSED,)
+    assert by_dispatch["care-line"].backfill_status == BackfillStatus.BACKFILL_NOT_REQUIRED
+    assert by_dispatch["ice"].backfill_status == BackfillStatus.BACKFILL_NOT_REQUIRED
 
 
 def test_absent_runtime_root_affects_only_that_dispatch(tmp_path: Path) -> None:
@@ -919,6 +954,289 @@ def test_partial_success_care_scheduler_alone_is_historical_evidence_incomplete(
     assert result.observation_status == ObservationStatus.OBSERVATION_INCOMPLETE
     assert result.backfill_status == BackfillStatus.BACKFILL_REQUIRED
     assert result.reason_codes == (GapReasonCode.HISTORICAL_EVIDENCE_INCOMPLETE,)
+
+
+def test_care_publication_failure_does_not_create_collection_backfill_when_collection_is_complete(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    care = tmp_path / "care"
+    source.mkdir()
+    _write_receipt(care, "care-line", "2026-09-10", _receipt("care_line_approved_release_publication", "FAILED", dispatch="care-line"))
+    _write_care_manifest(care, "2026-09-10", started_at="2026-09-10T13:00:00Z")
+
+    result = evaluate_dispatch_date(source, "care-line", "2026-09-10", evaluated_at=EVALUATED, runtime_root=care)
+
+    assert result.observation_status == ObservationStatus.OBSERVED_ZERO_QUALIFYING
+    assert result.backfill_status == BackfillStatus.BACKFILL_NOT_REQUIRED
+    assert result.reason_codes == ()
+    assert "downstream_failures=1" in str(result.notes)
+
+
+def test_care_queue_failure_does_not_create_collection_backfill_when_collection_is_complete(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    care = tmp_path / "care"
+    source.mkdir()
+    _write_receipt(care, "care-line", "2026-09-10", _receipt("care_line_reviewed_event_queue", "FAILED", dispatch="care-line"))
+    _write_care_manifest(care, "2026-09-10", started_at="2026-09-10T13:00:00Z")
+
+    result = evaluate_dispatch_date(source, "care-line", "2026-09-10", evaluated_at=EVALUATED, runtime_root=care)
+
+    assert result.observation_status == ObservationStatus.OBSERVED_ZERO_QUALIFYING
+    assert result.backfill_status == BackfillStatus.BACKFILL_NOT_REQUIRED
+    assert result.reason_codes == ()
+    assert "downstream_failures=1" in str(result.notes)
+
+
+def test_care_downstream_only_failure_reports_missing_collection_not_downstream_failure(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    care = tmp_path / "care"
+    source.mkdir()
+    _write_receipt(care, "care-line", "2026-09-10", _receipt("care_line_approved_release_publication", "FAILED", dispatch="care-line"))
+
+    result = evaluate_dispatch_date(source, "care-line", "2026-09-10", evaluated_at=EVALUATED, runtime_root=care)
+
+    assert result.observation_status == ObservationStatus.OBSERVATION_INCOMPLETE
+    assert result.backfill_status == BackfillStatus.BACKFILL_REQUIRED
+    assert result.reason_codes == (GapReasonCode.SCHEDULED_RUN_MISSED,)
+    assert "downstream_failures=1" in str(result.notes)
+
+
+def test_care_failed_collection_receipt_still_requires_backfill(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    care = tmp_path / "care"
+    source.mkdir()
+    _write_receipt(care, "care-line", "2026-09-10", _receipt("care_line_collection", "FAILED", dispatch="care-line"))
+
+    result = evaluate_dispatch_date(source, "care-line", "2026-09-10", evaluated_at=EVALUATED, runtime_root=care)
+
+    assert result.observation_status == ObservationStatus.OBSERVATION_INCOMPLETE
+    assert result.backfill_status == BackfillStatus.BACKFILL_REQUIRED
+    assert result.reason_codes == (GapReasonCode.SCHEDULED_RUN_FAILED,)
+
+
+def test_care_operational_receipts_do_not_prevent_authoritative_manifest_reconciliation(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    care = tmp_path / "care"
+    source.mkdir()
+    _write_receipt(care, "care-line", "2026-09-10", _receipt("care_line_collection", "DEGRADED", dispatch="care-line"))
+    _write_receipt(care, "care-line", "2026-09-10", _receipt("care_line_reviewed_event_queue", "SAFE_NO_OP", dispatch="care-line"))
+    _write_care_manifest(care, "2026-09-10", started_at="2026-09-10T13:00:00Z")
+
+    result = evaluate_dispatch_date(source, "care-line", "2026-09-10", evaluated_at=EVALUATED, runtime_root=care)
+
+    assert result.observation_status == ObservationStatus.OBSERVED_ZERO_QUALIFYING
+    assert result.backfill_status == BackfillStatus.BACKFILL_NOT_REQUIRED
+    assert "authoritative collection manifest certifies terminal accounting" in str(result.notes)
+
+
+def test_care_partial_success_with_complete_manifest_is_not_backfill_required(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    care = tmp_path / "care"
+    source.mkdir()
+    receipt = care / "status/care-line/scheduler-runs/2026-09-10/receipt.json"
+    receipt.parent.mkdir(parents=True)
+    receipt.write_text(
+        json.dumps({"status": "partial_success", "run_id": "run-1", "started_at": "2026-09-10T13:00:00Z", "pipeline_exit_code": 0}),
+        encoding="utf-8",
+    )
+    _write_care_manifest(care, "2026-09-10", run_id="run-1", started_at="2026-09-10T13:00:00Z")
+
+    result = evaluate_dispatch_date(source, "care-line", "2026-09-10", evaluated_at=EVALUATED, runtime_root=care)
+
+    assert result.observation_status == ObservationStatus.OBSERVED_ZERO_QUALIFYING
+    assert result.backfill_status == BackfillStatus.BACKFILL_NOT_REQUIRED
+
+
+def test_care_partial_success_with_incomplete_manifest_is_backfill_required(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    care = tmp_path / "care"
+    source.mkdir()
+    receipt = care / "status/care-line/scheduler-runs/2026-09-10/receipt.json"
+    receipt.parent.mkdir(parents=True)
+    receipt.write_text(
+        json.dumps({"status": "partial_success", "run_id": "run-1", "started_at": "2026-09-10T13:00:00Z", "pipeline_exit_code": 0}),
+        encoding="utf-8",
+    )
+    _write_care_manifest(care, "2026-09-10", run_id="run-1", started_at="2026-09-10T13:00:00Z", failed_extraction_count=1)
+
+    result = evaluate_dispatch_date(source, "care-line", "2026-09-10", evaluated_at=EVALUATED, runtime_root=care)
+
+    assert result.observation_status == ObservationStatus.OBSERVATION_INCOMPLETE
+    assert result.backfill_status == BackfillStatus.BACKFILL_REQUIRED
+    assert result.reason_codes == (GapReasonCode.HISTORICAL_EVIDENCE_INCOMPLETE,)
+
+
+
+def test_care_mixed_terminal_and_incomplete_manifests_remain_backfill_required_without_expected_instances(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    care = tmp_path / "care"
+    source.mkdir()
+    _write_care_manifest(care, "2026-09-10", run_id="run-1", started_at="2026-09-10T13:00:00Z")
+    _write_care_manifest(care, "2026-09-10", run_id="run-2", started_at="2026-09-10T19:00:00Z")
+    _write_care_manifest(
+        care,
+        "2026-09-10",
+        run_id="run-3",
+        started_at="2026-09-11T01:00:00Z",
+        failed_extraction_count=1,
+    )
+
+    result = evaluate_dispatch_date(source, "care-line", "2026-09-10", evaluated_at="2026-09-11T04:00:00Z", runtime_root=care)
+
+    assert result.observation_status == ObservationStatus.OBSERVATION_INCOMPLETE
+    assert result.backfill_status == BackfillStatus.BACKFILL_REQUIRED
+    assert result.reason_codes == (GapReasonCode.HISTORICAL_EVIDENCE_INCOMPLETE,)
+    assert "1 of 3 manifests" in str(result.notes)
+    assert "2 terminal" in str(result.notes)
+
+
+def test_care_mixed_terminal_and_incomplete_manifests_remain_backfill_required_with_expected_instances(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    care = tmp_path / "care"
+    source.mkdir()
+    _write_care_manifest(care, "2026-09-10", run_id="run-1", started_at="2026-09-10T13:00:00Z")
+    _write_care_manifest(care, "2026-09-10", run_id="run-2", started_at="2026-09-10T19:00:00Z")
+    _write_care_manifest(
+        care,
+        "2026-09-10",
+        run_id="run-3",
+        started_at="2026-09-11T01:00:00Z",
+        failed_extraction_count=1,
+    )
+    _write_status(
+        care,
+        "care-line",
+        {
+            "dispatch": "care-line",
+            "observed_date": "2026-09-10",
+            "expected_instances": [
+                {"task_key": "care_line_collection", "scheduled_for": "2026-09-10T13:00:00Z"},
+                {"task_key": "care_line_collection", "scheduled_for": "2026-09-10T19:00:00Z"},
+                {"task_key": "care_line_collection", "scheduled_for": "2026-09-11T01:00:00Z"},
+            ],
+        },
+    )
+
+    result = evaluate_dispatch_date(source, "care-line", "2026-09-10", evaluated_at="2026-09-11T04:00:00Z", runtime_root=care)
+
+    assert result.backfill_status == BackfillStatus.BACKFILL_REQUIRED
+    assert result.reason_codes == (GapReasonCode.HISTORICAL_EVIDENCE_INCOMPLETE,)
+
+
+def test_care_all_terminal_manifests_can_certify_no_backfill(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    care = tmp_path / "care"
+    source.mkdir()
+    _write_care_manifest(care, "2026-09-10", run_id="run-1", started_at="2026-09-10T13:00:00Z")
+    _write_care_manifest(care, "2026-09-10", run_id="run-2", started_at="2026-09-10T19:00:00Z")
+    _write_care_manifest(care, "2026-09-10", run_id="run-3", started_at="2026-09-11T01:00:00Z")
+
+    result = evaluate_dispatch_date(source, "care-line", "2026-09-10", evaluated_at="2026-09-11T04:00:00Z", runtime_root=care)
+
+    assert result.observation_status == ObservationStatus.OBSERVED_ZERO_QUALIFYING
+    assert result.backfill_status == BackfillStatus.BACKFILL_NOT_REQUIRED
+    assert result.reason_codes == ()
+
+
+def test_care_one_terminal_two_incomplete_manifests_require_backfill(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    care = tmp_path / "care"
+    source.mkdir()
+    _write_care_manifest(care, "2026-09-10", run_id="run-1", started_at="2026-09-10T13:00:00Z")
+    _write_care_manifest(
+        care,
+        "2026-09-10",
+        run_id="run-2",
+        started_at="2026-09-10T19:00:00Z",
+        failed_extraction_count=1,
+    )
+    _write_care_manifest(
+        care,
+        "2026-09-10",
+        run_id="run-3",
+        started_at="2026-09-11T01:00:00Z",
+        failed_extraction_count=2,
+    )
+
+    result = evaluate_dispatch_date(source, "care-line", "2026-09-10", evaluated_at="2026-09-11T04:00:00Z", runtime_root=care)
+
+    assert result.backfill_status == BackfillStatus.BACKFILL_REQUIRED
+    assert result.reason_codes == (GapReasonCode.HISTORICAL_EVIDENCE_INCOMPLETE,)
+    assert "2 of 3 manifests" in str(result.notes)
+    assert "1 terminal" in str(result.notes)
+
+
+def test_care_mixed_manifests_with_publication_failure_keep_collection_incomplete_reason(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    care = tmp_path / "care"
+    source.mkdir()
+    _write_receipt(
+        care,
+        "care-line",
+        "2026-09-10",
+        _receipt("care_line_approved_release_publication", "FAILED", dispatch="care-line"),
+    )
+    _write_care_manifest(care, "2026-09-10", run_id="run-1", started_at="2026-09-10T13:00:00Z")
+    _write_care_manifest(care, "2026-09-10", run_id="run-2", started_at="2026-09-10T19:00:00Z")
+    _write_care_manifest(
+        care,
+        "2026-09-10",
+        run_id="run-3",
+        started_at="2026-09-11T01:00:00Z",
+        failed_extraction_count=1,
+    )
+
+    result = evaluate_dispatch_date(source, "care-line", "2026-09-10", evaluated_at="2026-09-11T04:00:00Z", runtime_root=care)
+
+    assert result.backfill_status == BackfillStatus.BACKFILL_REQUIRED
+    assert result.reason_codes == (GapReasonCode.HISTORICAL_EVIDENCE_INCOMPLETE,)
+    assert "downstream_failures=1" in str(result.notes)
+
+def test_care_single_manifest_does_not_certify_multiple_elapsed_collection_instances(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    care = tmp_path / "care"
+    source.mkdir()
+    _write_care_manifest(care, "2026-09-10", run_id="run-1", started_at="2026-09-10T13:00:00Z")
+    _write_status(
+        care,
+        "care-line",
+        {
+            "dispatch": "care-line",
+            "observed_date": "2026-09-10",
+            "expected_instances": [
+                {"task_key": "care_line_collection", "scheduled_for": "2026-09-10T13:00:00Z"},
+                {"task_key": "care_line_collection", "scheduled_for": "2026-09-10T19:00:00Z"},
+            ],
+        },
+    )
+
+    result = evaluate_dispatch_date(source, "care-line", "2026-09-10", evaluated_at="2026-09-10T22:00:00Z", runtime_root=care)
+
+    assert result.observation_status == ObservationStatus.OBSERVATION_INCOMPLETE
+    assert result.backfill_status == BackfillStatus.BACKFILL_REQUIRED
+    assert result.reason_codes == (GapReasonCode.SCHEDULED_RUN_MISSED,)
+
+
+def test_care_material_collection_loss_remains_backfill_required(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    care = tmp_path / "care"
+    source.mkdir()
+    _write_receipt(
+        care,
+        "care-line",
+        "2026-09-10",
+        _receipt(
+            "care_line_collection",
+            "DEGRADED",
+            dispatch="care-line",
+            details={"critical_source_failure": True, "coverage_loss_reason": "state feed unavailable"},
+        ),
+    )
+
+    result = evaluate_dispatch_date(source, "care-line", "2026-09-10", evaluated_at=EVALUATED, runtime_root=care)
+
+    assert result.observation_status == ObservationStatus.OBSERVATION_INCOMPLETE
+    assert result.backfill_status == BackfillStatus.BACKFILL_REQUIRED
+    assert result.reason_codes == (GapReasonCode.CRITICAL_SOURCE_FAILURE,)
 
 
 def test_authoritative_care_collection_reconciliation_can_certify_zero_without_review_queue(tmp_path: Path) -> None:

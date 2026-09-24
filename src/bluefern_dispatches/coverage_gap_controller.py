@@ -977,22 +977,77 @@ def _load_care_authoritative_collection(runtime_root: Path, observation_date: st
     refs: list[str] = []
     reviewable_counts: list[int] = []
     unaccounted_values: list[int] = []
-    incomplete = False
+    terminal_manifest_count = 0
+    incomplete_manifest_count = 0
     for path in sorted(root.glob("*/run-manifest.json")):
+        refs.append(str(path))
         try:
             payload = _read_json(path)
         except json.JSONDecodeError:
-            incomplete = True
+            incomplete_manifest_count += 1
+            receipts.append(
+                {
+                    "dispatch": "care-line",
+                    "task_key": "care_line_collection",
+                    "task_name": "Care Line incomplete historical collection evidence",
+                    "scheduled_for": observation_date,
+                    "started_at": observation_date,
+                    "completed_at": observation_date,
+                    "observed_at": observation_date,
+                    "receipt_created_at": observation_date,
+                    "exit_code": 1,
+                    "status": OperationalStatus.DEGRADED.value,
+                    "classification": "historical_collection_evidence_incomplete",
+                    "run_id": path.parent.name,
+                    "artifact_refs": {"collection_manifest": str(path)},
+                    "publication_attempted": False,
+                    "publication_status": "safe_no_op",
+                    "public_side_effects": {},
+                    "details": {
+                        "historical_evidence_incomplete": True,
+                        "manifest_parse_error": True,
+                    },
+                }
+            )
             continue
         raw_count = payload.get("raw_items_retrieved_this_run")
         prefilter_count = payload.get("prefilter_decision_count")
         failed_extraction_count = int(payload.get("failed_extraction_count") or 0)
         reviewable = int(payload.get("qualified_candidates_created_this_run") or payload.get("active_review_queue_count") or 0)
         terminal_complete = isinstance(raw_count, int) and isinstance(prefilter_count, int) and raw_count == prefilter_count and failed_extraction_count == 0
-        refs.append(str(path))
+        scheduled_for = str(payload.get("started_at") or observation_date)
+        completed_at = str(payload.get("completed_at") or scheduled_for)
+        run_id = str(payload.get("run_id") or path.parent.name)
         if not terminal_complete:
-            incomplete = True
+            incomplete_manifest_count += 1
+            receipts.append(
+                {
+                    "dispatch": "care-line",
+                    "task_key": "care_line_collection",
+                    "task_name": "Care Line incomplete historical collection evidence",
+                    "scheduled_for": scheduled_for,
+                    "started_at": scheduled_for,
+                    "completed_at": completed_at,
+                    "observed_at": completed_at,
+                    "receipt_created_at": completed_at,
+                    "exit_code": 0,
+                    "status": OperationalStatus.DEGRADED.value,
+                    "classification": "historical_collection_evidence_incomplete",
+                    "run_id": run_id,
+                    "artifact_refs": {"collection_manifest": str(path)},
+                    "publication_attempted": False,
+                    "publication_status": "safe_no_op",
+                    "public_side_effects": {},
+                    "details": {
+                        "historical_evidence_incomplete": True,
+                        "raw_items_retrieved_this_run": raw_count,
+                        "prefilter_decision_count": prefilter_count,
+                        "failed_extraction_count": failed_extraction_count,
+                    },
+                }
+            )
             continue
+        terminal_manifest_count += 1
         reviewable_counts.append(reviewable)
         unaccounted_values.append(0)
         receipts.append(
@@ -1000,15 +1055,15 @@ def _load_care_authoritative_collection(runtime_root: Path, observation_date: st
                 "dispatch": "care-line",
                 "task_key": "care_line_collection",
                 "task_name": "Care Line authoritative collection manifest",
-                "scheduled_for": observation_date,
-                "started_at": str(payload.get("started_at") or observation_date),
-                "completed_at": str(payload.get("completed_at") or observation_date),
-                "observed_at": str(payload.get("completed_at") or observation_date),
-                "receipt_created_at": str(payload.get("completed_at") or observation_date),
+                "scheduled_for": scheduled_for,
+                "started_at": scheduled_for,
+                "completed_at": completed_at,
+                "observed_at": completed_at,
+                "receipt_created_at": completed_at,
                 "exit_code": 0,
                 "status": OperationalStatus.SUCCESS.value,
                 "classification": "authoritative_collection_terminal_accounting",
-                "run_id": str(payload.get("run_id") or path.parent.name),
+                "run_id": run_id,
                 "artifact_refs": {"collection_manifest": str(path)},
                 "publication_attempted": False,
                 "publication_status": "safe_no_op",
@@ -1016,36 +1071,43 @@ def _load_care_authoritative_collection(runtime_root: Path, observation_date: st
                 "details": {"reviewable_events": reviewable, "unaccounted": 0},
             }
         )
-    if incomplete and not receipts:
+    degradation = None
+    if incomplete_manifest_count > 0:
         degradation = MaterialDegradation(
             material=True,
             reason_codes=(GapReasonCode.HISTORICAL_EVIDENCE_INCOMPLETE,),
-            explanation="Care surviving collection artifacts do not prove terminal candidate accounting.",
+            explanation=(
+                "Care surviving collection artifacts do not prove terminal candidate accounting "
+                f"for {incomplete_manifest_count} of {len(refs)} manifests "
+                f"({terminal_manifest_count} terminal)."
+            ),
         )
-        receipts = (
-            {
-                "dispatch": "care-line",
-                "task_key": "care_line_collection",
-                "task_name": "Care Line incomplete historical collection evidence",
-                "scheduled_for": observation_date,
-                "started_at": observation_date,
-                "completed_at": observation_date,
-                "observed_at": observation_date,
-                "receipt_created_at": observation_date,
-                "exit_code": 1,
-                "status": OperationalStatus.DEGRADED.value,
-                "classification": "historical_collection_evidence_incomplete",
-                "run_id": f"care-line-{observation_date}-historical-evidence-incomplete",
-                "artifact_refs": {"collection_manifest": refs[0] if refs else str(root)},
-                "publication_attempted": False,
-                "publication_status": "safe_no_op",
-                "public_side_effects": {},
-                "details": {"historical_evidence_incomplete": True},
-            },
-        )
-    else:
-        degradation = None
     return tuple(receipts), max(reviewable_counts) if reviewable_counts else None, max(unaccounted_values) if unaccounted_values else None, tuple(refs), degradation
+
+def _care_coverage_notes(
+    prefix: str | None,
+    *,
+    expected_collection_instances: int,
+    observed_collection_instances: int,
+    terminal_collection_instances: int,
+    unproven_collection_instances: int,
+    failed_collection_instances: int,
+    downstream_failure_count: int,
+    manifest_count: int,
+) -> str:
+    diagnostics = (
+        "Care coverage diagnostics: "
+        f"expected_collection_instances={expected_collection_instances}; "
+        f"observed_collection_instances={observed_collection_instances}; "
+        f"terminal_collection_instances={terminal_collection_instances}; "
+        f"unproven_collection_instances={unproven_collection_instances}; "
+        f"failed_collection_instances={failed_collection_instances}; "
+        f"downstream_failures={downstream_failure_count}; "
+        f"authoritative_manifest_count={manifest_count}"
+    )
+    if prefix:
+        return f"{prefix} {diagnostics}"
+    return diagnostics
 
 
 class DispatchCoverageAdapter:
@@ -1175,43 +1237,108 @@ class FoodLineCoverageAdapter(DispatchCoverageAdapter):
 class CareLineCoverageAdapter(DispatchCoverageAdapter):
     dispatch = "care-line"
     expected_tasks = ("care_line_collection", "care_line_reviewed_event_queue", "care_line_approved_release_publication")
+    observation_task = "care_line_collection"
+    downstream_tasks = ("care_line_reviewed_event_queue", "care_line_approved_release_publication")
 
     def build_input(self, repo_root: Path, observation_date: str, *, evaluated_at: str, runtime_root: Path | None = None) -> EvaluationInput:
         base = super().build_input(repo_root, observation_date, evaluated_at=evaluated_at, runtime_root=runtime_root)
         runtime = runtime_root
-        if runtime is not None and not base.receipts:
-            collection_receipts, reviewable_count, unaccounted, collection_refs, collection_degradation = _load_care_authoritative_collection(runtime, observation_date)
-            if collection_receipts:
-                base = EvaluationInput(
-                    **{
-                        **base.__dict__,
-                        "receipts": collection_receipts,
-                        "expected_tasks": (),
-                        "retained_or_reviewable_count": reviewable_count,
-                        "unaccounted": unaccounted,
-                        "source_refs": tuple(dict.fromkeys((*base.source_refs, *collection_refs))),
-                        "material_degradation": collection_degradation,
-                        "notes": "Care Line authoritative collection manifest certifies terminal accounting.",
-                    }
-                )
-            else:
-                scheduler_receipts = _load_care_scheduler_receipts(runtime, observation_date)
-                if scheduler_receipts:
-                    degradation = collection_degradation or MaterialDegradation(
+        downstream_receipts = tuple(receipt for receipt in base.receipts if receipt.get("task_key") in self.downstream_tasks)
+        collection_receipts = tuple(receipt for receipt in base.receipts if receipt.get("task_key") == self.observation_task)
+        manifest_count = 0
+        terminal_collection_count = 0
+        failed_collection_count = sum(1 for receipt in collection_receipts if receipt.get("status") == OperationalStatus.FAILED.value)
+        if runtime is not None:
+            authoritative_receipts, reviewable_count, unaccounted, collection_refs, collection_degradation = _load_care_authoritative_collection(runtime, observation_date)
+            manifest_count = len(collection_refs)
+            terminal_collection_count = sum(
+                1
+                for receipt in authoritative_receipts
+                if receipt.get("classification") == "authoritative_collection_terminal_accounting"
+            )
+            scheduler_receipts = _load_care_scheduler_receipts(runtime, observation_date) if not collection_receipts else ()
+            if not collection_receipts and scheduler_receipts:
+                collection_receipts = scheduler_receipts
+                failed_collection_count = sum(1 for receipt in collection_receipts if receipt.get("status") == OperationalStatus.FAILED.value)
+                if not authoritative_receipts and not collection_refs:
+                    collection_degradation = MaterialDegradation(
                         material=True,
                         reason_codes=(GapReasonCode.HISTORICAL_EVIDENCE_INCOMPLETE,),
                         explanation="Care scheduler receipts exist, but authoritative collection/review evidence is unavailable.",
                     )
-                    base = EvaluationInput(
-                        **{
-                            **base.__dict__,
-                            "receipts": scheduler_receipts,
-                            "expected_tasks": (),
-                            "source_refs": tuple(dict.fromkeys((*base.source_refs, *self._artifact_refs(scheduler_receipts), *collection_refs))),
-                            "material_degradation": degradation,
-                            "notes": degradation.explanation,
-                        }
-                    )
+
+            failed_receipts = tuple(receipt for receipt in collection_receipts if receipt.get("status") == OperationalStatus.FAILED.value)
+            if authoritative_receipts:
+                effective_collection_receipts = (*failed_receipts, *authoritative_receipts)
+                notes = (
+                    collection_degradation.explanation
+                    if collection_degradation is not None
+                    else "Care Line authoritative collection manifest certifies terminal accounting."
+                )
+            elif collection_degradation is not None:
+                effective_collection_receipts = (*failed_receipts, *authoritative_receipts)
+                if not effective_collection_receipts:
+                    effective_collection_receipts = authoritative_receipts or collection_receipts
+                notes = collection_degradation.explanation
+            else:
+                effective_collection_receipts = collection_receipts
+                notes = base.notes
+
+            if collection_receipts or authoritative_receipts or collection_refs or scheduler_receipts:
+                material_degradation = collection_degradation or self._material_degradation(effective_collection_receipts)
+                base = EvaluationInput(
+                    **{
+                        **base.__dict__,
+                        "receipts": effective_collection_receipts,
+                        "expected_tasks": (self.observation_task,),
+                        "retained_or_reviewable_count": reviewable_count if reviewable_count is not None else self._reviewable_count(effective_collection_receipts),
+                        "unaccounted": unaccounted if unaccounted is not None else self._unaccounted(effective_collection_receipts),
+                        "source_refs": tuple(
+                            dict.fromkeys(
+                                (
+                                    *base.source_refs,
+                                    *self._artifact_refs(collection_receipts),
+                                    *self._artifact_refs(downstream_receipts),
+                                    *self._artifact_refs(scheduler_receipts),
+                                    *collection_refs,
+                                )
+                            )
+                        ),
+                        "material_degradation": material_degradation,
+                        "notes": _care_coverage_notes(
+                            notes,
+                            expected_collection_instances=0,
+                            observed_collection_instances=len(collection_receipts) or len(scheduler_receipts),
+                            terminal_collection_instances=terminal_collection_count,
+                            unproven_collection_instances=max(manifest_count - terminal_collection_count, 0),
+                            failed_collection_instances=failed_collection_count,
+                            downstream_failure_count=sum(1 for receipt in downstream_receipts if receipt.get("status") in TERMINAL_BAD_STATUSES),
+                            manifest_count=manifest_count,
+                        ),
+                    }
+                )
+            elif downstream_receipts:
+                base = EvaluationInput(
+                    **{
+                        **base.__dict__,
+                        "receipts": (),
+                        "expected_tasks": (self.observation_task,),
+                        "source_refs": tuple(dict.fromkeys((*base.source_refs, *self._artifact_refs(downstream_receipts)))),
+                        "material_degradation": None,
+                        "retained_or_reviewable_count": None,
+                        "unaccounted": None,
+                        "notes": _care_coverage_notes(
+                            base.notes,
+                            expected_collection_instances=0,
+                            observed_collection_instances=0,
+                            terminal_collection_instances=0,
+                            unproven_collection_instances=0,
+                            failed_collection_instances=0,
+                            downstream_failure_count=sum(1 for receipt in downstream_receipts if receipt.get("status") in TERMINAL_BAD_STATUSES),
+                            manifest_count=0,
+                        ),
+                    }
+                )
         status = _load_dispatch_status(runtime, self.dispatch, observation_date) if runtime is not None else None
         expected_instances = _elapsed_expected_instances(
             tuple(status.get("expected_instances") or ()) if status else (),
@@ -1220,8 +1347,9 @@ class CareLineCoverageAdapter(DispatchCoverageAdapter):
         )
         if not expected_instances:
             return base
+        expected_instances = tuple(item for item in expected_instances if item.get("task_key") == self.observation_task)
         expected_instance_tasks = {str(item.get("task_key") or "") for item in expected_instances}
-        expected_tasks = tuple(task for task in base.expected_tasks if task not in expected_instance_tasks)
+        expected_tasks = tuple(task for task in (self.observation_task,) if task not in expected_instance_tasks)
         notes = base.notes
         collection_receipts = [receipt for receipt in base.receipts if receipt.get("task_key") == "care_line_collection"]
         collection_instances = [item for item in expected_instances if item.get("task_key") == "care_line_collection"]

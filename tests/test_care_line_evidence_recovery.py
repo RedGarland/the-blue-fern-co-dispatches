@@ -52,8 +52,9 @@ def _packet_record(
     outcome: str = "PARTIAL_BODY",
     failed_gates: list[str] | None = None,
     source_id: str = "test-source",
+    source_evidence_fingerprint: str = "",
 ) -> dict:
-    return {
+    row = {
         "producer_record_id": producer_record_id,
         "raw_item_id": producer_record_id,
         "record_fingerprint": f"{producer_record_id}_fingerprint",
@@ -69,6 +70,9 @@ def _packet_record(
         "source_artifact_paths": ["data/dispatches/care-line/collection-runs/test/test-source.raw-items.json"],
         "event_lead_id": "lead-1",
     }
+    if source_evidence_fingerprint:
+        row["source_evidence_fingerprint"] = source_evidence_fingerprint
+    return row
 
 
 def _repo(tmp_path: Path, *, records: list[dict] | None = None, sources: list[dict] | None = None) -> Path:
@@ -97,11 +101,20 @@ def _packet_fp(root: Path) -> str:
     return recovery.review_packet_fingerprint(_packet(root))
 
 
-def _attempt(root: Path, *, packet_fingerprint: str | None = None, record_fingerprint: str = "care-line-raw-item_1_fingerprint", status: str = "QUALIFIED_PRIVATE_CANDIDATE", candidate: dict | None = None) -> dict:
+def _attempt(
+    root: Path,
+    *,
+    packet_fingerprint: str | None = None,
+    record_fingerprint: str = "care-line-raw-item_1_fingerprint",
+    source_evidence_fingerprint: str = "",
+    status: str = "QUALIFIED_PRIVATE_CANDIDATE",
+    candidate: dict | None = None,
+) -> dict:
     return {
         "schema_version": recovery.RECOVERY_SCHEMA_VERSION,
         "packet_fingerprint": packet_fingerprint or _packet_fp(root),
         "record_fingerprint": record_fingerprint,
+        "source_evidence_fingerprint": source_evidence_fingerprint,
         "producer_record_id": "care-line-raw-item_1",
         "result_status": status,
         "candidate": candidate or (_candidate() if status == "QUALIFIED_PRIVATE_CANDIDATE" else {}),
@@ -276,6 +289,91 @@ def test_regenerated_packet_carries_forward_same_day_attempt_without_refetch(tmp
     assert attempt["packet_fingerprint"] == _packet_fp(root)
     assert attempt["carried_forward_from_packet_fingerprint"] == old_packet
     assert attempt["network_refetch"] is False
+
+
+def test_recollected_same_source_evidence_carries_forward_without_refetch(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    stable = "stable-source-evidence-1"
+    current = _packet_record(
+        producer_record_id="care-line-raw-item_current",
+        source_evidence_fingerprint=stable,
+    )
+    root = _repo(tmp_path, records=[current])
+    old_packet = "old-packet-fingerprint"
+    old_record_fp = "old-record-fingerprint"
+    old_attempt_id = recovery._attempt_id(old_packet, old_record_fp)
+    _write_json(
+        root / recovery.DEFAULT_RECOVERY_ROOT / "2026-09-24" / f"{old_attempt_id}.json",
+        {
+            **_attempt(
+                root,
+                packet_fingerprint=old_packet,
+                record_fingerprint=old_record_fp,
+                source_evidence_fingerprint=stable,
+                status="DETERMINISTIC_EXCLUSION",
+            ),
+            "attempt_id": old_attempt_id,
+            "producer_record_id": "care-line-raw-item_prior",
+            "raw_item_id": "care-line-raw-item_prior",
+            "attempted_at": "2026-09-24T00:00:00Z",
+            "attempted_url": "https://example.org/story",
+            "source_id": "test-source",
+            "route": "parser_extraction_retry",
+        },
+    )
+    monkeypatch.setattr(recovery, "utc_now", lambda: "2026-09-24T01:00:00Z")
+    monkeypatch.setattr(recovery, "fetch_url", lambda *args, **kwargs: pytest.fail("stable source evidence should carry forward without refetch"))
+
+    result = recovery.recover_records(repo_root=root)
+
+    assert result["result_counts"] == {"carried_forward_existing_attempt": 1}
+    attempt = result["attempts"][0]
+    assert attempt["packet_fingerprint"] == _packet_fp(root)
+    assert attempt["record_fingerprint"] == "care-line-raw-item_current_fingerprint"
+    assert attempt["producer_record_id"] == "care-line-raw-item_current"
+    assert attempt["source_evidence_fingerprint"] == stable
+    assert attempt["carried_forward_from_attempt_id"] == old_attempt_id
+    assert attempt["carried_forward_from_producer_record_id"] == "care-line-raw-item_prior"
+    assert attempt["network_refetch"] is False
+
+
+def test_changed_source_evidence_identity_allows_new_attempt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    root = _repo(
+        tmp_path,
+        records=[_packet_record(producer_record_id="care-line-raw-item_current", source_evidence_fingerprint="new-evidence")],
+    )
+    old_packet = "old-packet-fingerprint"
+    old_record_fp = "old-record-fingerprint"
+    _write_json(
+        root / recovery.DEFAULT_RECOVERY_ROOT / "2026-09-24" / f"{recovery._attempt_id(old_packet, old_record_fp)}.json",
+        {
+            **_attempt(
+                root,
+                packet_fingerprint=old_packet,
+                record_fingerprint=old_record_fp,
+                source_evidence_fingerprint="old-evidence",
+                status="DETERMINISTIC_EXCLUSION",
+            ),
+            "attempt_id": recovery._attempt_id(old_packet, old_record_fp),
+            "attempted_at": "2026-09-24T00:00:00Z",
+            "attempted_url": "https://example.org/story",
+            "source_id": "test-source",
+            "route": "parser_extraction_retry",
+        },
+    )
+    calls = {"count": 0}
+
+    def fetch_once(*args, **kwargs):
+        calls["count"] += 1
+        return b"<article>Hospital will close emergency department in Erie, Pennsylvania.</article>", {"http_status": 200, "content_type": "text/html"}
+
+    _stub_success(monkeypatch)
+    monkeypatch.setattr(recovery, "utc_now", lambda: "2026-09-24T01:00:00Z")
+    monkeypatch.setattr(recovery, "fetch_url", fetch_once)
+
+    result = recovery.recover_records(repo_root=root, write_attempts=False)
+
+    assert result["result_counts"] == {"QUALIFIED_PRIVATE_CANDIDATE": 1}
+    assert calls["count"] == 1
 
 
 def test_carried_forward_attempt_still_passes_current_packet_apply_validation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):

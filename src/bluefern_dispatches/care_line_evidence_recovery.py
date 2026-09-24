@@ -93,6 +93,45 @@ def _canonical_url(row: Mapping[str, Any]) -> str:
     return _text(row, "canonical_source_url", "source_url", "item_url", "url")
 
 
+def _normalize_identity_url(value: str) -> str:
+    parsed = urlparse(str(value or "").strip())
+    if not parsed.scheme or not parsed.netloc:
+        return str(value or "").strip()
+    path = parsed.path.rstrip("/") or "/"
+    query = f"?{parsed.query}" if parsed.query else ""
+    return f"{parsed.scheme.casefold()}://{parsed.netloc.casefold()}{path}{query}"
+
+
+def _normalize_identity_text(value: str) -> str:
+    return " ".join(str(value or "").strip().casefold().split())
+
+
+def _source_publication_date(row: Mapping[str, Any]) -> str:
+    proposed = row.get("proposed_fields") if isinstance(row.get("proposed_fields"), Mapping) else {}
+    publication = proposed.get("publication_date") if isinstance(proposed.get("publication_date"), Mapping) else {}
+    priority = row.get("priority") if isinstance(row.get("priority"), Mapping) else {}
+    return _text(row, "source_publication_date") or _text(publication, "value") or _text(priority, "source_date")
+
+
+def _source_evidence_fingerprint(row: Mapping[str, Any]) -> str:
+    explicit = _text(row, "source_evidence_fingerprint")
+    if explicit:
+        return explicit
+    source_id = _source_id(row)
+    canonical_url = _canonical_url(row)
+    title = _text(row, "source_title", "title")
+    if not (source_id and canonical_url and title):
+        return ""
+    return stable_json_hash(
+        {
+            "source_id": source_id,
+            "canonical_url": _normalize_identity_url(canonical_url),
+            "normalized_title": _normalize_identity_text(title),
+            "source_publication_date": _source_publication_date(row),
+        }
+    )
+
+
 def _packet_records(packet: Mapping[str, Any]) -> list[dict[str, Any]]:
     return [
         dict(row)
@@ -136,6 +175,7 @@ def _packet_raw_item(row: Mapping[str, Any], source: CareLineSource) -> dict[str
         "schema_version": "bluefern.care_line.raw_item.v1",
         "raw_item_id": _text(row, "raw_item_id", "producer_record_id"),
         "record_fingerprint": _record_fingerprint(row),
+        "source_evidence_fingerprint": _source_evidence_fingerprint(row),
         "source_id": source.source_id,
         "source_name": source.name,
         "source_publisher": source.publisher,
@@ -146,8 +186,8 @@ def _packet_raw_item(row: Mapping[str, Any], source: CareLineSource) -> dict[str
         "title": _text(row, "source_title", "title"),
         "description": description,
         "content_text": description,
-        "source_publication_date": _text(row, "source_publication_date") or _text(publication, "value") or _text(row.get("priority", {}) if isinstance(row.get("priority"), Mapping) else {}, "source_date"),
-        "source_date_state": "source_dated" if (_text(row, "source_publication_date") or _text(publication, "value") or _text(row.get("priority", {}) if isinstance(row.get("priority"), Mapping) else {}, "source_date")) else "",
+        "source_publication_date": _source_publication_date(row),
+        "source_date_state": "source_dated" if _source_publication_date(row) else "",
         "requires_html_followup": True,
         "discovery_date": utc_now().split("T", 1)[0],
         "source_artifact_path": next(iter(row.get("source_artifact_paths") or []), ""),
@@ -200,6 +240,28 @@ def _same_day_attempts_for_record(recovery_root: Path, record_fp: str, *, today:
     return matches
 
 
+def _same_day_attempts_for_source_evidence(
+    recovery_root: Path,
+    source_evidence_fp: str,
+    *,
+    today: str,
+) -> list[tuple[Path, dict[str, Any]]]:
+    if not source_evidence_fp:
+        return []
+    day_root = recovery_root / today
+    if not day_root.exists():
+        return []
+    matches: list[tuple[Path, dict[str, Any]]] = []
+    for path in sorted(day_root.glob("*.json"), key=lambda item: item.as_posix()):
+        try:
+            attempt = _json(path)
+        except Exception:  # noqa: BLE001
+            continue
+        if isinstance(attempt, Mapping) and _text(attempt, "source_evidence_fingerprint") == source_evidence_fp:
+            matches.append((path, dict(attempt)))
+    return matches
+
+
 def _materially_same_attempt(attempt: Mapping[str, Any], *, row: Mapping[str, Any], route: str) -> bool:
     if _text(attempt, "route") != route:
         return False
@@ -207,7 +269,9 @@ def _materially_same_attempt(attempt: Mapping[str, Any], *, row: Mapping[str, An
         return False
     if _text(attempt, "attempted_url") and _text(attempt, "attempted_url") != _canonical_url(row):
         return False
-    if _text(attempt, "producer_record_id") and _text(attempt, "producer_record_id") != _text(row, "producer_record_id"):
+    attempt_evidence_fp = _text(attempt, "source_evidence_fingerprint")
+    row_evidence_fp = _source_evidence_fingerprint(row)
+    if attempt_evidence_fp and row_evidence_fp and attempt_evidence_fp != row_evidence_fp:
         return False
     return True
 
@@ -226,6 +290,7 @@ def _carry_forward_attempt(
             "attempt_id": _attempt_id(packet_fp, record_fp),
             "packet_fingerprint": packet_fp,
             "record_fingerprint": record_fp,
+            "source_evidence_fingerprint": _source_evidence_fingerprint(row),
             "producer_record_id": _text(row, "producer_record_id"),
             "raw_item_id": _text(row, "raw_item_id"),
             "source_id": _source_id(row),
@@ -234,6 +299,7 @@ def _carry_forward_attempt(
             "route": route,
             "carried_forward_from_attempt_id": _text(prior, "attempt_id"),
             "carried_forward_from_packet_fingerprint": _text(prior, "packet_fingerprint"),
+            "carried_forward_from_producer_record_id": _text(prior, "producer_record_id"),
             "network_refetch": False,
             "no_publication": True,
         }
@@ -302,6 +368,7 @@ def plan_recovery(
                 "producer_record_id": _text(row, "producer_record_id"),
                 "raw_item_id": _text(row, "raw_item_id"),
                 "record_fingerprint": _record_fingerprint(row),
+                "source_evidence_fingerprint": _source_evidence_fingerprint(row),
                 "source_id": _source_id(row),
                 "registry_entry_present": source is not None,
                 "canonical_url": _canonical_url(row),
@@ -367,6 +434,7 @@ def recover_records(
     for row in records:
         source = sources.get(_source_id(row))
         record_fp = _record_fingerprint(row)
+        source_evidence_fp = _source_evidence_fingerprint(row)
         path = _attempt_path(recovery_root_abs, packet_fp, record_fp, today=today)
         route = _route_for_record(row, source)
         if path.exists() and not force:
@@ -380,6 +448,12 @@ def recover_records(
                 for prior_path, prior in _same_day_attempts_for_record(recovery_root_abs, record_fp, today=today)
                 if _text(prior, "packet_fingerprint") != packet_fp and _materially_same_attempt(prior, row=row, route=route)
             ]
+            if not carried_from:
+                carried_from = [
+                    (prior_path, prior)
+                    for prior_path, prior in _same_day_attempts_for_source_evidence(recovery_root_abs, source_evidence_fp, today=today)
+                    if _text(prior, "packet_fingerprint") != packet_fp and _materially_same_attempt(prior, row=row, route=route)
+                ]
             if carried_from:
                 _prior_path, prior = carried_from[-1]
                 attempt = _carry_forward_attempt(prior, packet_fp=packet_fp, record_fp=record_fp, row=row, route=route)
@@ -396,6 +470,7 @@ def recover_records(
             "attempt_id": _attempt_id(packet_fp, record_fp),
             "packet_fingerprint": packet_fp,
             "record_fingerprint": record_fp,
+            "source_evidence_fingerprint": source_evidence_fp,
             "producer_record_id": _text(row, "producer_record_id"),
             "raw_item_id": _text(row, "raw_item_id"),
             "source_id": _source_id(row),

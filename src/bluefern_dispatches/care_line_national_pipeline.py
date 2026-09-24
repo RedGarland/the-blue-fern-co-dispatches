@@ -1183,6 +1183,7 @@ def discovery_record_from_direct_item(
     title = _text(item, "title")
     publication_date_raw = _text(item, "published_at", "published", "updated", "date_published", "date_modified", "date", "pubDate")
     publication_date, source_date_state = parse_source_date(publication_date_raw)
+    source_evidence_fingerprint = stable_json_hash({"source_id": source.source_id, "url": raw_url, "title": title, "published_at": publication_date or publication_date_raw})
     return {
         "schema_version": RAW_ITEM_SCHEMA_VERSION,
         "raw_item_id": _stable_id("care-line-raw-item", source.source_id, raw_url, title, publication_date or publication_date_raw, rank),
@@ -1222,7 +1223,8 @@ def discovery_record_from_direct_item(
         "item_permalink_available": source.item_permalink_available,
         "requires_html_followup": source.requires_html_followup,
         "archives_distinguishable_from_current": source.archives_distinguishable_from_current,
-        "record_fingerprint": stable_json_hash({"source_id": source.source_id, "url": raw_url, "title": title, "published_at": publication_date or publication_date_raw}),
+        "record_fingerprint": source_evidence_fingerprint,
+        "source_evidence_fingerprint": source_evidence_fingerprint,
     }
 
 
@@ -3174,6 +3176,7 @@ def normalize_candidate_record(
                 "full_article_required": full_article_required,
                 "extraction_confidence": extraction_confidence,
                 "source_record_id": _text(raw_item, "raw_item_id"),
+                "source_evidence_fingerprint": _text(raw_item, "source_evidence_fingerprint", "record_fingerprint"),
                 "currentness": dict(currentness),
             },
         }

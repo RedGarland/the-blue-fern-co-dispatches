@@ -565,28 +565,116 @@ def test_current_packet_attempts_apply_normally(tmp_path: Path):
 
     assert result["active_review_state_mutated"] is True
     assert result["candidate_count"] == 1
+    assert result["attempts_examined"] == 1
+    assert result["current_packet_attempts_selected"] == 1
+    assert result["prior_packet_attempts_ignored"] == 0
+    assert result["qualified_candidates_selected"] == 1
 
 
-def test_old_packet_attempt_cannot_apply(tmp_path: Path):
+def test_old_packet_attempts_are_safe_noop(tmp_path: Path):
     root = _repo(tmp_path)
 
-    with pytest.raises(ValueError, match="mixed or stale"):
-        recovery.apply_recovery(
-            repo_root=root,
-            recovery_result={"attempts": [_attempt(root, packet_fingerprint="old-packet")]},
-            expected_packet_fingerprint=_packet_fp(root),
-        )
+    result = recovery.apply_recovery(
+        repo_root=root,
+        recovery_result={"attempts": [_attempt(root, packet_fingerprint="old-packet")]},
+        expected_packet_fingerprint=_packet_fp(root),
+    )
+
+    assert result["active_review_state_mutated"] is False
+    assert result["candidate_count"] == 0
+    assert result["attempts_examined"] == 1
+    assert result["current_packet_attempts_selected"] == 0
+    assert result["prior_packet_attempts_ignored"] == 1
 
 
-def test_mixed_current_and_old_attempts_fail_closed(tmp_path: Path):
+def test_mixed_current_and_old_attempts_select_only_current(tmp_path: Path):
     root = _repo(tmp_path)
 
-    with pytest.raises(ValueError, match="mixed or stale"):
-        recovery.apply_recovery(
-            repo_root=root,
-            recovery_result={"attempts": [_attempt(root), _attempt(root, packet_fingerprint="old-packet")]},
-            expected_packet_fingerprint=_packet_fp(root),
-        )
+    result = recovery.apply_recovery(
+        repo_root=root,
+        recovery_result={"attempts": [_attempt(root), _attempt(root, packet_fingerprint="old-packet")]},
+        expected_packet_fingerprint=_packet_fp(root),
+        edition_date="2026-09-23",
+    )
+
+    registry = json.loads((root / recovery.DEFAULT_CANDIDATE_REGISTRY).read_text(encoding="utf-8"))
+    assert result["active_review_state_mutated"] is True
+    assert result["candidate_count"] == 1
+    assert result["attempts_examined"] == 2
+    assert result["current_packet_attempts_selected"] == 1
+    assert result["prior_packet_attempts_ignored"] == 1
+    assert [row["candidate_id"] for row in registry["candidates"]] == ["candidate-1"]
+
+
+def test_multiple_old_packet_generations_plus_current_select_only_current(tmp_path: Path):
+    root = _repo(tmp_path)
+
+    result = recovery.apply_recovery(
+        repo_root=root,
+        recovery_result={
+            "attempts": [
+                _attempt(root, packet_fingerprint="old-packet-1"),
+                _attempt(root, packet_fingerprint="old-packet-2"),
+                _attempt(root, packet_fingerprint="old-packet-3"),
+                _attempt(root),
+            ]
+        },
+        expected_packet_fingerprint=_packet_fp(root),
+        edition_date="2026-09-23",
+    )
+
+    assert result["candidate_count"] == 1
+    assert result["current_packet_attempts_selected"] == 1
+    assert result["prior_packet_attempts_ignored"] == 3
+
+
+def test_prior_qualified_candidate_is_never_applied_to_current_packet(tmp_path: Path):
+    root = _repo(tmp_path)
+
+    result = recovery.apply_recovery(
+        repo_root=root,
+        recovery_result={"attempts": [_attempt(root, packet_fingerprint="old-packet", candidate=_candidate("old-candidate"))]},
+        expected_packet_fingerprint=_packet_fp(root),
+        edition_date="2026-09-23",
+    )
+
+    assert result["active_review_state_mutated"] is False
+    assert result["candidate_count"] == 0
+    assert not (root / recovery.DEFAULT_CANDIDATE_REGISTRY).exists()
+
+
+def test_malformed_attempt_entries_are_reported_and_ignored(tmp_path: Path):
+    root = _repo(tmp_path)
+
+    result = recovery.apply_recovery(
+        repo_root=root,
+        recovery_result={"attempts": ["not-an-attempt", _attempt(root, status="DETERMINISTIC_EXCLUSION")]},
+        expected_packet_fingerprint=_packet_fp(root),
+    )
+
+    assert result["attempts_examined"] == 2
+    assert result["malformed_attempts_ignored"] == 1
+    assert result["current_packet_attempts_selected"] == 1
+    assert result["active_review_state_mutated"] is False
+
+
+def test_default_apply_ignores_old_same_day_attempts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    root = _repo(tmp_path)
+    monkeypatch.setattr(recovery, "utc_now", lambda: "2026-09-24T12:00:00Z")
+    recovery_dir = root / recovery.DEFAULT_RECOVERY_ROOT / "2026-09-24"
+    _write_json(recovery_dir / "old.json", _attempt(root, packet_fingerprint="old-packet"))
+    _write_json(recovery_dir / "current.json", _attempt(root))
+
+    result = recovery.apply_recovery(
+        repo_root=root,
+        expected_packet_fingerprint=_packet_fp(root),
+        edition_date="2026-09-23",
+    )
+
+    assert result["candidate_count"] == 1
+    assert result["attempts_examined"] == 2
+    assert result["current_packet_attempts_selected"] == 1
+    assert result["prior_packet_attempts_ignored"] == 1
 
 
 def test_stale_record_fingerprint_cannot_apply(tmp_path: Path):
@@ -600,11 +688,47 @@ def test_stale_record_fingerprint_cannot_apply(tmp_path: Path):
         )
 
 
+def test_old_packet_stale_record_fingerprint_is_ignored(tmp_path: Path):
+    root = _repo(tmp_path)
+
+    result = recovery.apply_recovery(
+        repo_root=root,
+        recovery_result={"attempts": [_attempt(root, packet_fingerprint="old-packet", record_fingerprint="old-record")]},
+        expected_packet_fingerprint=_packet_fp(root),
+    )
+
+    assert result["active_review_state_mutated"] is False
+    assert result["prior_packet_attempts_ignored"] == 1
+    assert result["stale_current_record_failures"] == 0
+
+
+def test_malformed_current_qualified_candidate_fails_closed(tmp_path: Path):
+    root = _repo(tmp_path)
+
+    with pytest.raises(ValueError, match="malformed qualified recovery candidate"):
+        recovery.apply_recovery(
+            repo_root=root,
+            recovery_result={"attempts": [_attempt(root, candidate={"candidate_id": "missing-normalized"})]},
+            expected_packet_fingerprint=_packet_fp(root),
+        )
+
+
 def test_apply_without_expected_current_packet_fingerprint_fails_closed(tmp_path: Path):
     root = _repo(tmp_path)
 
     with pytest.raises(ValueError, match="expected current packet fingerprint is required"):
         recovery.apply_recovery(repo_root=root, recovery_result={"attempts": [_attempt(root)]})
+
+
+def test_stale_expected_packet_fingerprint_fails_closed_on_apply(tmp_path: Path):
+    root = _repo(tmp_path)
+
+    with pytest.raises(ValueError, match="stale packet fingerprint"):
+        recovery.apply_recovery(
+            repo_root=root,
+            recovery_result={"attempts": [_attempt(root)]},
+            expected_packet_fingerprint="not-current",
+        )
 
 
 def test_cli_check_only_apply_fails_without_mutation(tmp_path: Path):
@@ -640,6 +764,8 @@ def test_zero_qualified_apply_leaves_active_review_state_unchanged(tmp_path: Pat
     )
 
     assert result["candidate_count"] == 0
+    assert result["current_packet_attempts_selected"] == 1
+    assert result["qualified_candidates_selected"] == 0
     assert result["active_review_state_mutated"] is False
     assert {path: path.read_bytes() for path in paths} == before
 

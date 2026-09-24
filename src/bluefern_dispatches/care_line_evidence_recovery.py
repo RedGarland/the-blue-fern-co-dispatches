@@ -616,22 +616,50 @@ def apply_recovery(
         root = repo_root / recovery_root if not recovery_root.is_absolute() else recovery_root
         attempts = [_json(path) for path in sorted((root / utc_now().split("T", 1)[0]).glob("*.json"))]
         recovery_result = {"attempts": attempts}
-    attempts = [dict(attempt) for attempt in recovery_result.get("attempts", []) if isinstance(attempt, Mapping)]
+    raw_attempts = list(recovery_result.get("attempts", [])) if isinstance(recovery_result.get("attempts", []), list) else []
+    malformed_attempts_ignored = 0
+    attempts: list[dict[str, Any]] = []
+    for attempt in raw_attempts:
+        if isinstance(attempt, Mapping):
+            attempts.append(dict(attempt))
+        else:
+            malformed_attempts_ignored += 1
+    current_attempts: list[dict[str, Any]] = []
+    prior_attempts_ignored = 0
     for attempt in attempts:
-        if _text(attempt, "packet_fingerprint") != expected_packet_fingerprint:
-            raise ValueError("mixed or stale recovery attempt packet fingerprint")
+        if _text(attempt, "packet_fingerprint") == expected_packet_fingerprint:
+            current_attempts.append(attempt)
+        else:
+            prior_attempts_ignored += 1
+    stale_current_record_failures = 0
+    for attempt in current_attempts:
         if _text(attempt, "record_fingerprint") not in current_record_fingerprints:
+            stale_current_record_failures += 1
             raise ValueError("stale recovery attempt record fingerprint")
-    candidates = [
-        dict(attempt.get("candidate"))
-        for attempt in attempts
-        if attempt.get("result_status") == "QUALIFIED_PRIVATE_CANDIDATE"
-        and isinstance(attempt.get("candidate"), Mapping)
-        and attempt.get("candidate")
-    ]
+    candidates = []
+    for attempt in current_attempts:
+        if attempt.get("result_status") != "QUALIFIED_PRIVATE_CANDIDATE":
+            continue
+        candidate = attempt.get("candidate")
+        if not isinstance(candidate, Mapping) or not candidate:
+            raise ValueError("malformed qualified recovery candidate")
+        candidate_id = _text(candidate, "candidate_id")
+        normalized = candidate.get("normalized_record")
+        if not candidate_id or not isinstance(normalized, Mapping) or not normalized:
+            raise ValueError("malformed qualified recovery candidate")
+        candidates.append(dict(candidate))
+    selection_report = {
+        "attempts_examined": len(raw_attempts),
+        "current_packet_attempts_selected": len(current_attempts),
+        "prior_packet_attempts_ignored": prior_attempts_ignored,
+        "malformed_attempts_ignored": malformed_attempts_ignored,
+        "qualified_candidates_selected": len(candidates),
+        "stale_current_record_failures": stale_current_record_failures,
+    }
     if not candidates:
         return {
             "schema_version": RECOVERY_SCHEMA_VERSION,
+            **selection_report,
             "candidate_count": 0,
             "registry_candidate_count": 0,
             "created_this_run": 0,
@@ -681,6 +709,7 @@ def apply_recovery(
         universal_ready += 1 if normalized.get("universal_event_status") == "universal_event_ready" else 0
     return {
         "schema_version": RECOVERY_SCHEMA_VERSION,
+        **selection_report,
         "candidate_count": len(candidates),
         "registry_candidate_count": len(registry.get("candidates", [])),
         "created_this_run": registry.get("created_this_run", 0),

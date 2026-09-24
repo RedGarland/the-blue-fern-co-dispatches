@@ -219,8 +219,40 @@ def _canonical_url(row: Mapping[str, Any]) -> str:
     return _text(row, "source_url", "item_url", "canonical_url", "url")
 
 
+def _normalize_identity_url(value: str) -> str:
+    parsed = urlparse(str(value or "").strip())
+    if not parsed.scheme or not parsed.netloc:
+        return str(value or "").strip()
+    path = parsed.path.rstrip("/") or "/"
+    query = f"?{parsed.query}" if parsed.query else ""
+    return f"{parsed.scheme.casefold()}://{parsed.netloc.casefold()}{path}{query}"
+
+
 def _normalize_identity_text(value: str) -> str:
     return " ".join(str(value or "").strip().casefold().split())
+
+
+def _source_evidence_fingerprint(row: Mapping[str, Any], *, source_id: str = "") -> str:
+    explicit = _text(row, "source_evidence_fingerprint")
+    if explicit:
+        return explicit
+    raw_record_fingerprint = _text(row, "record_fingerprint")
+    if raw_record_fingerprint and not _text(row, "record_family", "resolution_bucket"):
+        return raw_record_fingerprint
+    canonical_url = _canonical_url(row) or _canonical_packet_url(row)
+    title = _text(row, "title", "source_title")
+    source_date, _source = _date_candidate(row)
+    stable_source_id = source_id or _text(row, "source_id")
+    if not (stable_source_id and canonical_url and title):
+        return ""
+    return _fingerprint(
+        {
+            "source_id": stable_source_id,
+            "canonical_url": _normalize_identity_url(canonical_url),
+            "normalized_title": _normalize_identity_text(title),
+            "source_publication_date": source_date,
+        }
+    )
 
 
 def _record_identity(row: Mapping[str, Any]) -> str:
@@ -300,7 +332,8 @@ def _iter_recovery_attempts(recovery_root: Path) -> Iterable[tuple[Path, dict[st
 
 
 def _attempt_sort_key(item: tuple[Path, Mapping[str, Any]]) -> tuple[str, str]:
-    path, attempt = item
+    path = item[0]
+    attempt = item[1]
     return (_text(attempt, "attempted_at"), path.as_posix())
 
 
@@ -308,22 +341,38 @@ def _matching_recovery_attempts(
     *,
     row: Mapping[str, Any],
     recovery_root: Path,
-) -> list[tuple[Path, dict[str, Any]]]:
+) -> list[tuple[Path, dict[str, Any], str]]:
     record_fp = _text(row, "record_fingerprint")
     producer_id = _text(row, "producer_record_id")
     source_id = _text(row.get("source_metadata", {}) if isinstance(row.get("source_metadata"), Mapping) else {}, "source_id") or _text(row, "source_id")
     canonical_url = _canonical_packet_url(row)
-    matches: list[tuple[Path, dict[str, Any]]] = []
+    source_evidence_fp = _source_evidence_fingerprint(row, source_id=source_id)
+    matches: list[tuple[Path, dict[str, Any], str]] = []
     for path, attempt in _iter_recovery_attempts(recovery_root):
-        if _text(attempt, "record_fingerprint") != record_fp:
-            continue
-        if producer_id and _text(attempt, "producer_record_id") and _text(attempt, "producer_record_id") != producer_id:
-            continue
+        match_basis = ""
+        if _text(attempt, "record_fingerprint") == record_fp:
+            if producer_id and _text(attempt, "producer_record_id") and _text(attempt, "producer_record_id") != producer_id:
+                continue
+            match_basis = "exact_record_fingerprint"
+        else:
+            attempt_evidence_fp = _text(attempt, "source_evidence_fingerprint")
+            if attempt_evidence_fp and source_evidence_fp and attempt_evidence_fp == source_evidence_fp:
+                match_basis = "exact_evidence_identity"
+            elif (
+                source_id
+                and _text(attempt, "source_id") == source_id
+                and canonical_url
+                and _text(attempt, "attempted_url")
+                and _normalize_identity_url(_text(attempt, "attempted_url")) == _normalize_identity_url(canonical_url)
+            ):
+                match_basis = "legacy_identity_match"
+            else:
+                continue
         if source_id and _text(attempt, "source_id") and _text(attempt, "source_id") != source_id:
             continue
-        if canonical_url and _text(attempt, "attempted_url") and _text(attempt, "attempted_url") != canonical_url:
+        if canonical_url and _text(attempt, "attempted_url") and _normalize_identity_url(_text(attempt, "attempted_url")) != _normalize_identity_url(canonical_url):
             continue
-        matches.append((path, attempt))
+        matches.append((path, attempt, match_basis))
     return sorted(matches, key=_attempt_sort_key)
 
 
@@ -337,6 +386,9 @@ def _recovery_feedback_payload(path: Path, attempt: Mapping[str, Any], *, dispos
         "attempted_at": _text(attempt, "attempted_at"),
         "prior_packet_fingerprint": _text(attempt, "packet_fingerprint"),
         "record_fingerprint": _text(attempt, "record_fingerprint"),
+        "producer_record_id": _text(attempt, "producer_record_id"),
+        "raw_item_id": _text(attempt, "raw_item_id"),
+        "source_evidence_fingerprint": _text(attempt, "source_evidence_fingerprint"),
         "recovered_evidence_fingerprint": _text(attempt, "recovered_evidence_fingerprint"),
         "care_qualification_status": _text(attempt, "care_qualification_status"),
         "result_status": _text(attempt, "result_status"),
@@ -348,6 +400,8 @@ def _recovery_feedback_payload(path: Path, attempt: Mapping[str, Any], *, dispos
             payload["exclusion_reason"] = _text(qualification, "exclusion_reason")
     if _text(attempt, "carried_forward_from_attempt_id"):
         payload["carried_forward_from_attempt_id"] = _text(attempt, "carried_forward_from_attempt_id")
+    if _text(attempt, "recovery_feedback_match_basis"):
+        payload["match_basis"] = _text(attempt, "recovery_feedback_match_basis")
     return payload
 
 
@@ -381,7 +435,8 @@ def _overlay_recovery_feedback(
     matches = _matching_recovery_attempts(row=packet_row, recovery_root=recovery_root)
     if not matches:
         return packet_row
-    path, attempt = matches[-1]
+    path, attempt, match_basis = matches[-1]
+    attempt = {**attempt, "recovery_feedback_match_basis": match_basis}
     status = _text(attempt, "result_status")
     if status == "DETERMINISTIC_EXCLUSION":
         feedback = _recovery_feedback_payload(path, attempt, disposition="DETERMINISTIC_EXCLUSION")
@@ -820,6 +875,7 @@ def _packet_record(row: Mapping[str, Any], *, record_family: str, registry: Mapp
     geography, geography_match = _geography_candidate(supporting_text, title)
     access_hits = [dict(hit) for hit in semantic.get("access_consequences") or [] if isinstance(hit, Mapping)]
     source_metadata = _source_metadata(row, registry)
+    source_evidence_fingerprint = _source_evidence_fingerprint(row, source_id=_text(source_metadata, "source_id"))
     source_artifact_paths = []
     lineage = row.get("lineage") if isinstance(row.get("lineage"), Mapping) else {}
     if _text(lineage, "source_artifact_path"):
@@ -860,6 +916,7 @@ def _packet_record(row: Mapping[str, Any], *, record_family: str, registry: Mapp
         "producer_record_id": _record_identity(row),
         "record_family": record_family,
         "record_fingerprint": record_fingerprint,
+        "source_evidence_fingerprint": source_evidence_fingerprint,
         "canonical_source_url": canonical_url,
         "source_title": title,
         "source_publisher": source_metadata["publisher"],
@@ -1010,6 +1067,7 @@ def pre_review_record_from_packet_row(packet_row: Mapping[str, Any], *, packet_f
             "pre_review_intake_bridge": True,
             "packet_fingerprint": packet_fingerprint,
             "packet_record_fingerprint": raw_payload_hash,
+            "source_evidence_fingerprint": _text(packet_row, "source_evidence_fingerprint"),
             "record_family": _text(packet_row, "record_family"),
             "source_id": _text(source_metadata, "source_id") if isinstance(source_metadata, Mapping) else "",
             "source_record_id": _text(packet_row, "source_record_id"),
@@ -1144,6 +1202,11 @@ def review_packet_generation_report(packet: Mapping[str, Any]) -> dict[str, Any]
             feedback_counts["recovery_resolved_private_candidate"] += 1
         elif disposition == "IGNORED_STALE":
             feedback_counts["recovery_feedback_ignored_stale"] += 1
+        match_basis = _text(feedback, "match_basis")
+        if match_basis in {"exact_record_fingerprint", "exact_evidence_identity"}:
+            feedback_counts["recovery_feedback_exact_evidence_identity"] += 1
+        elif match_basis == "legacy_identity_match":
+            feedback_counts["recovery_feedback_legacy_identity_match"] += 1
     unique_representatives = [row for row in records if not _text(row, "duplicate_of_producer_record_id")]
     bounded = [
         row
@@ -1182,6 +1245,10 @@ def review_packet_generation_report(packet: Mapping[str, Any]) -> dict[str, Any]
             "recovery_qualified_pending_apply": feedback_counts.get("recovery_qualified_pending_apply", 0),
             "recovery_resolved_private_candidate": feedback_counts.get("recovery_resolved_private_candidate", 0),
             "recovery_feedback_ignored_stale": feedback_counts.get("recovery_feedback_ignored_stale", 0),
+            "recovery_feedback_exact_evidence_identity": feedback_counts.get("recovery_feedback_exact_evidence_identity", 0),
+            "recovery_feedback_legacy_identity_match": feedback_counts.get("recovery_feedback_legacy_identity_match", 0),
+            "recovery_feedback_ambiguous_ignored": feedback_counts.get("recovery_feedback_ambiguous_ignored", 0),
+            "recovery_feedback_identity_mismatch": feedback_counts.get("recovery_feedback_identity_mismatch", 0),
         },
         "record_family_counts": dict(sorted(family_counts.items())),
         "source_evidence_deleted": False,

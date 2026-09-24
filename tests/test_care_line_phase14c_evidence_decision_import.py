@@ -16,6 +16,7 @@ from bluefern_dispatches.care_line_evidence_review import (
     DEFAULT_REVIEW_PACKET_REPORT,
     _decision_id,
     _recommendation_for_status,
+    _source_evidence_fingerprint,
     _status_for_decision,
     build_pre_review_records_from_packet,
     build_review_packet_from_current_state,
@@ -589,6 +590,7 @@ def _recovery_attempt_for_row(packet_row: dict, **overrides: object) -> dict:
         "attempt_id": "attempt-1",
         "packet_fingerprint": "historical-packet",
         "record_fingerprint": packet_row["record_fingerprint"],
+        "source_evidence_fingerprint": packet_row.get("source_evidence_fingerprint", ""),
         "producer_record_id": packet_row["producer_record_id"],
         "raw_item_id": packet_row["raw_item_id"],
         "source_id": packet_row["source_metadata"]["source_id"],
@@ -929,6 +931,104 @@ def test_09f_matching_recovery_deterministic_exclusion_overlays_packet_without_c
     assert review_packet_fingerprint(after) != review_packet_fingerprint(before)
     assert report["recovery_feedback_counts"]["recovery_deterministic_exclusion"] == 1
     assert after_row["recovery_feedback"]["prior_packet_fingerprint"] == "historical-packet"
+
+
+def test_09f_source_evidence_identity_survives_feed_rank_and_raw_id_drift(tmp_path: Path):
+    repo = tmp_path / "repo"
+    base = {
+        "source_id": "care-news",
+        "source_url": "https://care.example.org/same-article",
+        "title": "Hospital-insurer network threats cluster in a Goldilocks zone",
+        "source_publication_date": "2026-09-23",
+        "classification": "NEEDS_FULL_ARTICLE",
+        "extraction_outcome": "PARTIAL_BODY",
+        "missing_fields": ["insufficient_bounded_evidence"],
+        "supporting_text": "A healthcare article with incomplete evidence.",
+    }
+    _write_packet_precision_state(repo, [{**base, "raw_item_id": "raw-rank-1", "rank": 1}])
+    first = build_review_packet_from_current_state(repo)["records"][0]
+    _write_recovery_attempt(repo, _recovery_attempt_for_row(first, result_status="DETERMINISTIC_EXCLUSION"), name="first.json")
+
+    _write_packet_precision_state(repo, [{**base, "raw_item_id": "raw-rank-9", "rank": 9}])
+    second = build_review_packet_from_current_state(repo)["records"][0]
+
+    assert first["producer_record_id"] == "raw-rank-1"
+    assert second["producer_record_id"] == "raw-rank-9"
+    assert first["record_fingerprint"] != second["record_fingerprint"]
+    assert first["source_evidence_fingerprint"] == second["source_evidence_fingerprint"]
+    assert second["resolution_bucket"] == "exclusion"
+    assert second["recovery_feedback"]["disposition"] == "DETERMINISTIC_EXCLUSION"
+    assert second["recovery_feedback"]["match_basis"] == "exact_evidence_identity"
+
+
+def test_09f_same_url_different_title_date_does_not_share_stable_identity(tmp_path: Path):
+    left = {
+        "source_id": "care-news",
+        "source_url": "https://care.example.org/story",
+        "title": "First hospital article",
+        "source_publication_date": "2026-09-23",
+    }
+    right = {
+        "source_id": "care-news",
+        "source_url": "https://care.example.org/story",
+        "title": "Updated different hospital article",
+        "source_publication_date": "2026-09-24",
+    }
+
+    assert _source_evidence_fingerprint(left) != _source_evidence_fingerprint(right)
+
+
+def test_09f_same_title_different_url_does_not_match_legacy_recovery(tmp_path: Path):
+    repo = tmp_path / "repo"
+    base = {
+        "raw_item_id": "raw-old",
+        "source_id": "care-news",
+        "source_url": "https://care.example.org/old",
+        "title": "Hospital article with identical title",
+        "classification": "NEEDS_FULL_ARTICLE",
+        "extraction_outcome": "PARTIAL_BODY",
+        "missing_fields": ["insufficient_bounded_evidence"],
+        "supporting_text": "A healthcare article with incomplete evidence.",
+    }
+    _write_packet_precision_state(repo, [base])
+    old = build_review_packet_from_current_state(repo)["records"][0]
+    legacy_attempt = _recovery_attempt_for_row(old, source_evidence_fingerprint="", record_fingerprint="legacy-old-fingerprint")
+    _write_recovery_attempt(repo, legacy_attempt, name="legacy.json")
+
+    _write_packet_precision_state(repo, [{**base, "raw_item_id": "raw-new", "source_url": "https://care.example.org/new"}])
+    new = build_review_packet_from_current_state(repo)["records"][0]
+
+    assert "recovery_feedback" not in new
+
+
+def test_09f_legacy_recovery_attempt_matches_only_guarded_source_url_identity(tmp_path: Path):
+    repo = tmp_path / "repo"
+    base = {
+        "raw_item_id": "raw-old",
+        "source_id": "care-news",
+        "source_url": "https://care.example.org/legacy",
+        "title": "Legacy article requiring refetch",
+        "classification": "NEEDS_FULL_ARTICLE",
+        "extraction_outcome": "PARTIAL_BODY",
+        "missing_fields": ["insufficient_bounded_evidence"],
+        "supporting_text": "A healthcare article with incomplete evidence.",
+    }
+    _write_packet_precision_state(repo, [base])
+    old = build_review_packet_from_current_state(repo)["records"][0]
+    _write_recovery_attempt(
+        repo,
+        _recovery_attempt_for_row(old, source_evidence_fingerprint="", record_fingerprint="legacy-old-fingerprint"),
+        name="legacy.json",
+    )
+
+    _write_packet_precision_state(repo, [{**base, "raw_item_id": "raw-new"}])
+    new = build_review_packet_from_current_state(repo)["records"][0]
+    report = review_packet_generation_report(build_review_packet_from_current_state(repo))
+
+    assert new["record_fingerprint"] != old["record_fingerprint"]
+    assert new["resolution_bucket"] == "exclusion"
+    assert new["recovery_feedback"]["match_basis"] == "legacy_identity_match"
+    assert report["recovery_feedback_counts"]["recovery_feedback_legacy_identity_match"] == 1
 
 
 def test_09g_recovery_feedback_requires_exact_record_fingerprint_and_uses_latest_match(tmp_path: Path):

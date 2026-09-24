@@ -977,22 +977,77 @@ def _load_care_authoritative_collection(runtime_root: Path, observation_date: st
     refs: list[str] = []
     reviewable_counts: list[int] = []
     unaccounted_values: list[int] = []
-    incomplete = False
+    terminal_manifest_count = 0
+    incomplete_manifest_count = 0
     for path in sorted(root.glob("*/run-manifest.json")):
+        refs.append(str(path))
         try:
             payload = _read_json(path)
         except json.JSONDecodeError:
-            incomplete = True
+            incomplete_manifest_count += 1
+            receipts.append(
+                {
+                    "dispatch": "care-line",
+                    "task_key": "care_line_collection",
+                    "task_name": "Care Line incomplete historical collection evidence",
+                    "scheduled_for": observation_date,
+                    "started_at": observation_date,
+                    "completed_at": observation_date,
+                    "observed_at": observation_date,
+                    "receipt_created_at": observation_date,
+                    "exit_code": 1,
+                    "status": OperationalStatus.DEGRADED.value,
+                    "classification": "historical_collection_evidence_incomplete",
+                    "run_id": path.parent.name,
+                    "artifact_refs": {"collection_manifest": str(path)},
+                    "publication_attempted": False,
+                    "publication_status": "safe_no_op",
+                    "public_side_effects": {},
+                    "details": {
+                        "historical_evidence_incomplete": True,
+                        "manifest_parse_error": True,
+                    },
+                }
+            )
             continue
         raw_count = payload.get("raw_items_retrieved_this_run")
         prefilter_count = payload.get("prefilter_decision_count")
         failed_extraction_count = int(payload.get("failed_extraction_count") or 0)
         reviewable = int(payload.get("qualified_candidates_created_this_run") or payload.get("active_review_queue_count") or 0)
         terminal_complete = isinstance(raw_count, int) and isinstance(prefilter_count, int) and raw_count == prefilter_count and failed_extraction_count == 0
-        refs.append(str(path))
+        scheduled_for = str(payload.get("started_at") or observation_date)
+        completed_at = str(payload.get("completed_at") or scheduled_for)
+        run_id = str(payload.get("run_id") or path.parent.name)
         if not terminal_complete:
-            incomplete = True
+            incomplete_manifest_count += 1
+            receipts.append(
+                {
+                    "dispatch": "care-line",
+                    "task_key": "care_line_collection",
+                    "task_name": "Care Line incomplete historical collection evidence",
+                    "scheduled_for": scheduled_for,
+                    "started_at": scheduled_for,
+                    "completed_at": completed_at,
+                    "observed_at": completed_at,
+                    "receipt_created_at": completed_at,
+                    "exit_code": 0,
+                    "status": OperationalStatus.DEGRADED.value,
+                    "classification": "historical_collection_evidence_incomplete",
+                    "run_id": run_id,
+                    "artifact_refs": {"collection_manifest": str(path)},
+                    "publication_attempted": False,
+                    "publication_status": "safe_no_op",
+                    "public_side_effects": {},
+                    "details": {
+                        "historical_evidence_incomplete": True,
+                        "raw_items_retrieved_this_run": raw_count,
+                        "prefilter_decision_count": prefilter_count,
+                        "failed_extraction_count": failed_extraction_count,
+                    },
+                }
+            )
             continue
+        terminal_manifest_count += 1
         reviewable_counts.append(reviewable)
         unaccounted_values.append(0)
         receipts.append(
@@ -1000,15 +1055,15 @@ def _load_care_authoritative_collection(runtime_root: Path, observation_date: st
                 "dispatch": "care-line",
                 "task_key": "care_line_collection",
                 "task_name": "Care Line authoritative collection manifest",
-                "scheduled_for": str(payload.get("started_at") or observation_date),
-                "started_at": str(payload.get("started_at") or observation_date),
-                "completed_at": str(payload.get("completed_at") or observation_date),
-                "observed_at": str(payload.get("completed_at") or observation_date),
-                "receipt_created_at": str(payload.get("completed_at") or observation_date),
+                "scheduled_for": scheduled_for,
+                "started_at": scheduled_for,
+                "completed_at": completed_at,
+                "observed_at": completed_at,
+                "receipt_created_at": completed_at,
                 "exit_code": 0,
                 "status": OperationalStatus.SUCCESS.value,
                 "classification": "authoritative_collection_terminal_accounting",
-                "run_id": str(payload.get("run_id") or path.parent.name),
+                "run_id": run_id,
                 "artifact_refs": {"collection_manifest": str(path)},
                 "publication_attempted": False,
                 "publication_status": "safe_no_op",
@@ -1016,37 +1071,18 @@ def _load_care_authoritative_collection(runtime_root: Path, observation_date: st
                 "details": {"reviewable_events": reviewable, "unaccounted": 0},
             }
         )
-    if incomplete and not receipts:
+    degradation = None
+    if incomplete_manifest_count > 0:
         degradation = MaterialDegradation(
             material=True,
             reason_codes=(GapReasonCode.HISTORICAL_EVIDENCE_INCOMPLETE,),
-            explanation="Care surviving collection artifacts do not prove terminal candidate accounting.",
+            explanation=(
+                "Care surviving collection artifacts do not prove terminal candidate accounting "
+                f"for {incomplete_manifest_count} of {len(refs)} manifests "
+                f"({terminal_manifest_count} terminal)."
+            ),
         )
-        receipts = (
-            {
-                "dispatch": "care-line",
-                "task_key": "care_line_collection",
-                "task_name": "Care Line incomplete historical collection evidence",
-                "scheduled_for": observation_date,
-                "started_at": observation_date,
-                "completed_at": observation_date,
-                "observed_at": observation_date,
-                "receipt_created_at": observation_date,
-                "exit_code": 1,
-                "status": OperationalStatus.DEGRADED.value,
-                "classification": "historical_collection_evidence_incomplete",
-                "run_id": f"care-line-{observation_date}-historical-evidence-incomplete",
-                "artifact_refs": {"collection_manifest": refs[0] if refs else str(root)},
-                "publication_attempted": False,
-                "publication_status": "safe_no_op",
-                "public_side_effects": {},
-                "details": {"historical_evidence_incomplete": True},
-            },
-        )
-    else:
-        degradation = None
     return tuple(receipts), max(reviewable_counts) if reviewable_counts else None, max(unaccounted_values) if unaccounted_values else None, tuple(refs), degradation
-
 
 def _care_coverage_notes(
     prefix: str | None,

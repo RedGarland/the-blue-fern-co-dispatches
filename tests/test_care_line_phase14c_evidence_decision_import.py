@@ -11,6 +11,7 @@ from bluefern_dispatches.care_line_evidence_review import (
     EvidenceDecision,
     DECISION_SCHEMA_VERSION,
     DEFAULT_PRE_REVIEW_RECORDS_OUTPUT,
+    DEFAULT_RECOVERY_ROOT,
     DEFAULT_REVIEW_PACKET_OUTPUT,
     DEFAULT_REVIEW_PACKET_REPORT,
     _decision_id,
@@ -575,6 +576,36 @@ def _write_packet_precision_state(root: Path, rows: list[dict]) -> None:
     _write_json(review_root / "candidate-registry.json", {"schema_version": "registry", "candidates": []})
 
 
+def _write_recovery_attempt(root: Path, attempt: dict, *, name: str = "attempt.json") -> Path:
+    path = root / DEFAULT_RECOVERY_ROOT / "2026-09-24" / name
+    _write_json(path, attempt)
+    return path
+
+
+def _recovery_attempt_for_row(packet_row: dict, **overrides: object) -> dict:
+    payload = {
+        "schema_version": "bluefern.care_line.evidence_recovery.v1",
+        "tool_version": "care-line-evidence-recovery-v1",
+        "attempt_id": "attempt-1",
+        "packet_fingerprint": "historical-packet",
+        "record_fingerprint": packet_row["record_fingerprint"],
+        "producer_record_id": packet_row["producer_record_id"],
+        "raw_item_id": packet_row["raw_item_id"],
+        "source_id": packet_row["source_metadata"]["source_id"],
+        "attempted_url": packet_row["canonical_source_url"],
+        "attempted_at": "2026-09-24T00:00:00Z",
+        "route": "direct_item_refetch",
+        "result_status": "DETERMINISTIC_EXCLUSION",
+        "recovered_evidence_fingerprint": "evidence-1",
+        "care_qualification_status": "excluded",
+        "qualification_result": {"exclusion_reason": "non_care_line", "editorial_outcome": "EXCLUDED"},
+        "candidate": {},
+        "no_publication": True,
+    }
+    payload.update(overrides)
+    return payload
+
+
 def _write_decision_pair(json_path: Path, csv_path: Path, row: dict) -> None:
     payload = {"schema_version": DECISION_SCHEMA_VERSION, "decisions": [row]}
     _write_json(json_path, payload)
@@ -864,6 +895,168 @@ def test_09e_access_blocked_credible_care_case_remains_additional_fetch(tmp_path
     assert packet_row["resolution_bucket"] == "additional_fetch_needed"
     assert packet_row["resolution_bucket"] != "exclusion"
     assert packet_row["packet_semantic_triage"]["qualification_status"] == "recoverable_failed_extraction"
+
+
+def test_09f_matching_recovery_deterministic_exclusion_overlays_packet_without_changing_record_fingerprint(tmp_path: Path):
+    repo = tmp_path / "repo"
+    _write_packet_precision_state(
+        repo,
+        [
+            {
+                "raw_item_id": "non-care-refetch",
+                "source_id": "care-news",
+                "source_url": "https://care.example.org/non-care-refetch",
+                "title": "Mercy Hospital will close in Austin, TX",
+                "classification": "NEEDS_FULL_ARTICLE",
+                "extraction_outcome": "ACCESS_BLOCKED",
+                "missing_fields": ["insufficient_bounded_evidence"],
+                "supporting_text": "Mercy Hospital will close and patients will travel farther for emergency care.",
+            }
+        ],
+    )
+    before = build_review_packet_from_current_state(repo)
+    before_row = before["records"][0]
+    _write_recovery_attempt(repo, _recovery_attempt_for_row(before_row))
+
+    after = build_review_packet_from_current_state(repo)
+    after_row = after["records"][0]
+    report = review_packet_generation_report(after)
+
+    assert before_row["resolution_bucket"] == "additional_fetch_needed"
+    assert after_row["resolution_bucket"] == "exclusion"
+    assert after_row["exclusion_reason"] == "non_care_line"
+    assert after_row["record_fingerprint"] == before_row["record_fingerprint"]
+    assert review_packet_fingerprint(after) != review_packet_fingerprint(before)
+    assert report["recovery_feedback_counts"]["recovery_deterministic_exclusion"] == 1
+    assert after_row["recovery_feedback"]["prior_packet_fingerprint"] == "historical-packet"
+
+
+def test_09g_recovery_feedback_requires_exact_record_fingerprint_and_uses_latest_match(tmp_path: Path):
+    repo = tmp_path / "repo"
+    _write_packet_precision_state(
+        repo,
+        [
+            {
+                "raw_item_id": "latest-match",
+                "source_id": "care-news",
+                "source_url": "https://care.example.org/latest-match",
+                "title": "Healthcare article needs source",
+                "classification": "NEEDS_FULL_ARTICLE",
+                "extraction_outcome": "PARTIAL_BODY",
+                "missing_fields": ["insufficient_bounded_evidence"],
+                "supporting_text": "A healthcare item with incomplete evidence.",
+            }
+        ],
+    )
+    row = build_review_packet_from_current_state(repo)["records"][0]
+    _write_recovery_attempt(repo, _recovery_attempt_for_row(row, record_fingerprint="stale"), name="a-stale.json")
+    _write_recovery_attempt(repo, _recovery_attempt_for_row(row, attempted_at="2026-09-24T01:00:00Z", qualification_result={"exclusion_reason": "general_healthcare_news"}), name="b-old.json")
+    _write_recovery_attempt(repo, _recovery_attempt_for_row(row, attempted_at="2026-09-24T02:00:00Z", qualification_result={"exclusion_reason": "non_care_line"}), name="c-new.json")
+
+    packet_row = build_review_packet_from_current_state(repo)["records"][0]
+
+    assert packet_row["resolution_bucket"] == "exclusion"
+    assert packet_row["exclusion_reason"] == "non_care_line"
+    assert packet_row["recovery_feedback"]["attempt_path"].endswith("c-new.json")
+
+
+def test_09h_unrecoverable_feedback_applies_only_while_route_condition_remains_current(tmp_path: Path):
+    repo = tmp_path / "repo"
+    base_row = {
+        "raw_item_id": "blocked-care",
+        "source_id": "care-news",
+        "source_url": "https://care.example.org/blocked-care",
+        "title": "Mercy Hospital will close in Austin, TX",
+        "classification": "NEEDS_HUMAN_REVIEW",
+        "extraction_outcome": "ACCESS_BLOCKED",
+        "missing_fields": ["insufficient_bounded_evidence"],
+        "supporting_text": "Mercy Hospital will close and patients will travel farther for emergency care.",
+    }
+    _write_packet_precision_state(repo, [base_row])
+    row = build_review_packet_from_current_state(repo)["records"][0]
+    _write_recovery_attempt(
+        repo,
+        _recovery_attempt_for_row(
+            row,
+            route="repeated_blocked_no_route",
+            result_status="NOT_RECOVERABLE_WITH_CURRENT_SOURCE",
+            http_failure_class="route_not_fetchable",
+        ),
+    )
+
+    blocked = build_review_packet_from_current_state(repo)["records"][0]
+    assert blocked["resolution_bucket"] == "unrecoverable"
+    assert blocked["recovery_feedback"]["disposition"] == "NOT_RECOVERABLE_WITH_CURRENT_SOURCE"
+
+    _write_packet_precision_state(repo, [{**base_row, "extraction_outcome": "BODY_EXTRACTED"}])
+    reopened = build_review_packet_from_current_state(repo)["records"][0]
+    assert reopened["resolution_bucket"] != "unrecoverable"
+    assert reopened["recovery_feedback"]["disposition"] == "IGNORED_STALE"
+
+
+def test_09i_transient_recovery_results_remain_actionable(tmp_path: Path):
+    repo = tmp_path / "repo"
+    _write_packet_precision_state(
+        repo,
+        [
+            {
+                "raw_item_id": "still-fetch",
+                "source_id": "care-news",
+                "source_url": "https://care.example.org/still-fetch",
+                "title": "Mercy Hospital will close in Austin, TX",
+                "classification": "NEEDS_FULL_ARTICLE",
+                "extraction_outcome": "ACCESS_BLOCKED",
+                "missing_fields": ["insufficient_bounded_evidence"],
+                "supporting_text": "Mercy Hospital will close and patients will travel farther for emergency care.",
+            }
+        ],
+    )
+    row = build_review_packet_from_current_state(repo)["records"][0]
+    _write_recovery_attempt(repo, _recovery_attempt_for_row(row, result_status="FETCH_FAILED", http_failure_class="HTTP_403"), name="fetch.json")
+
+    packet_row = build_review_packet_from_current_state(repo)["records"][0]
+    report = review_packet_generation_report(build_review_packet_from_current_state(repo))
+
+    assert packet_row["resolution_bucket"] == "additional_fetch_needed"
+    assert packet_row["recovery_feedback"]["disposition"] == "FETCH_FAILED"
+    assert report["recovery_feedback_counts"]["recovery_fetch_failed"] == 1
+
+
+def test_09j_recovery_qualified_candidate_is_pending_until_applied_then_resolved(tmp_path: Path):
+    repo = tmp_path / "repo"
+    _write_packet_precision_state(
+        repo,
+        [
+            {
+                "raw_item_id": "qualified-recovery",
+                "source_id": "care-news",
+                "source_url": "https://care.example.org/qualified-recovery",
+                "title": "Mercy Hospital will close in Austin, TX",
+                "classification": "NEEDS_FULL_ARTICLE",
+                "extraction_outcome": "PARTIAL_BODY",
+                "missing_fields": ["insufficient_bounded_evidence"],
+                "supporting_text": "Mercy Hospital will close and patients will travel farther for emergency care.",
+            }
+        ],
+    )
+    row = build_review_packet_from_current_state(repo)["records"][0]
+    candidate = {"candidate_id": "candidate-1", "normalized_record": {"producer_record_id": row["producer_record_id"]}}
+    _write_recovery_attempt(
+        repo,
+        _recovery_attempt_for_row(row, result_status="QUALIFIED_PRIVATE_CANDIDATE", candidate=candidate, care_qualification_status="qualified"),
+    )
+
+    pending = build_review_packet_from_current_state(repo)["records"][0]
+    assert pending["resolution_bucket"] == "additional_fetch_needed"
+    assert pending["recovery_feedback"]["disposition"] == "QUALIFIED_PENDING_APPLY"
+
+    review_root = repo / "data" / "dispatches" / "care-line" / "review"
+    _write_json(review_root / "candidate-registry.json", {"schema_version": "registry", "candidates": [candidate]})
+    resolved = build_review_packet_from_current_state(repo)["records"][0]
+    report = review_packet_generation_report(build_review_packet_from_current_state(repo))
+    assert resolved["resolution_bucket"] == "recovered_private_candidate"
+    assert resolved["recovery_feedback"]["disposition"] == "RESOLVED_PRIVATE_CANDIDATE"
+    assert report["recovery_feedback_counts"]["recovery_resolved_private_candidate"] == 1
 
 
 def test_10_packet_generation_is_idempotent_and_check_only_writes_nothing(tmp_path: Path):

@@ -50,6 +50,7 @@ DEFAULT_REVIEW_PACKET_DIR = DEFAULT_REVIEW_ROOT / "evidence-review-packets"
 DEFAULT_REVIEW_PACKET_OUTPUT = DEFAULT_REVIEW_PACKET_DIR / "current-care-line-evidence-review.json"
 DEFAULT_REVIEW_PACKET_REPORT = DEFAULT_REVIEW_PACKET_DIR / "current-care-line-evidence-review-report.json"
 DEFAULT_PRE_REVIEW_RECORDS_OUTPUT = DEFAULT_REVIEW_PACKET_DIR / "current-care-line-pre-review-records.json"
+DEFAULT_RECOVERY_ROOT = DEFAULT_REVIEW_ROOT / "evidence-recovery"
 SOURCE_REGISTRY_PATH = Path("data") / "dispatches" / "care-line" / "source_registry.json"
 
 REVIEW_PACKET_INPUT_FILES = {
@@ -259,6 +260,163 @@ def _source_metadata(row: Mapping[str, Any], registry: Mapping[str, Mapping[str,
         "geographic_scope": _text(source, "geographic_scope"),
         "registry_entry_found": bool(source),
     }
+
+
+def _canonical_packet_url(row: Mapping[str, Any]) -> str:
+    return _text(row, "canonical_source_url", "source_url", "item_url", "canonical_url", "url")
+
+
+def _source_enabled(source: Mapping[str, Any]) -> bool:
+    return bool(source) and bool(source.get("enabled", True))
+
+
+def _source_allows_url(source: Mapping[str, Any], canonical_url: str) -> bool:
+    parsed = urlparse(canonical_url)
+    if parsed.scheme != "https" or not parsed.netloc:
+        return False
+    if not _source_enabled(source):
+        return False
+    if source.get("item_permalink_available") is False:
+        return False
+    allowed = source.get("allowed_hosts")
+    if isinstance(allowed, list) and allowed:
+        return parsed.netloc.casefold() in {str(host).strip().casefold() for host in allowed if str(host).strip()}
+    homepage = _text(source, "homepage_url")
+    feed = _text(source, "feed_url")
+    permitted_hosts = {urlparse(value).netloc.casefold() for value in (homepage, feed) if urlparse(value).netloc}
+    return not permitted_hosts or parsed.netloc.casefold() in permitted_hosts
+
+
+def _iter_recovery_attempts(recovery_root: Path) -> Iterable[tuple[Path, dict[str, Any]]]:
+    if not recovery_root.exists():
+        return
+    for path in sorted(recovery_root.glob("*/*.json"), key=lambda item: item.as_posix()):
+        try:
+            payload = _load_json_object(path)
+        except Exception:  # noqa: BLE001
+            continue
+        if isinstance(payload, Mapping):
+            yield path, dict(payload)
+
+
+def _attempt_sort_key(item: tuple[Path, Mapping[str, Any]]) -> tuple[str, str]:
+    path, attempt = item
+    return (_text(attempt, "attempted_at"), path.as_posix())
+
+
+def _matching_recovery_attempts(
+    *,
+    row: Mapping[str, Any],
+    recovery_root: Path,
+) -> list[tuple[Path, dict[str, Any]]]:
+    record_fp = _text(row, "record_fingerprint")
+    producer_id = _text(row, "producer_record_id")
+    source_id = _text(row.get("source_metadata", {}) if isinstance(row.get("source_metadata"), Mapping) else {}, "source_id") or _text(row, "source_id")
+    canonical_url = _canonical_packet_url(row)
+    matches: list[tuple[Path, dict[str, Any]]] = []
+    for path, attempt in _iter_recovery_attempts(recovery_root):
+        if _text(attempt, "record_fingerprint") != record_fp:
+            continue
+        if producer_id and _text(attempt, "producer_record_id") and _text(attempt, "producer_record_id") != producer_id:
+            continue
+        if source_id and _text(attempt, "source_id") and _text(attempt, "source_id") != source_id:
+            continue
+        if canonical_url and _text(attempt, "attempted_url") and _text(attempt, "attempted_url") != canonical_url:
+            continue
+        matches.append((path, attempt))
+    return sorted(matches, key=_attempt_sort_key)
+
+
+def _recovery_feedback_payload(path: Path, attempt: Mapping[str, Any], *, disposition: str) -> dict[str, Any]:
+    qualification = attempt.get("qualification_result") if isinstance(attempt.get("qualification_result"), Mapping) else {}
+    payload = {
+        "disposition": disposition,
+        "authority": "care_line_evidence_recovery",
+        "attempt_id": _text(attempt, "attempt_id"),
+        "attempt_path": path.as_posix(),
+        "attempted_at": _text(attempt, "attempted_at"),
+        "prior_packet_fingerprint": _text(attempt, "packet_fingerprint"),
+        "record_fingerprint": _text(attempt, "record_fingerprint"),
+        "recovered_evidence_fingerprint": _text(attempt, "recovered_evidence_fingerprint"),
+        "care_qualification_status": _text(attempt, "care_qualification_status"),
+        "result_status": _text(attempt, "result_status"),
+        "route": _text(attempt, "route"),
+    }
+    if qualification:
+        payload["qualification_result"] = qualification
+        if _text(qualification, "exclusion_reason"):
+            payload["exclusion_reason"] = _text(qualification, "exclusion_reason")
+    if _text(attempt, "carried_forward_from_attempt_id"):
+        payload["carried_forward_from_attempt_id"] = _text(attempt, "carried_forward_from_attempt_id")
+    return payload
+
+
+def _unrecoverable_still_current(row: Mapping[str, Any], attempt: Mapping[str, Any], registry: Mapping[str, Mapping[str, Any]]) -> bool:
+    route = _text(attempt, "route")
+    outcome = _text(row, "extraction_outcome")
+    canonical_url = _canonical_packet_url(row)
+    source_id = _text(row.get("source_metadata", {}) if isinstance(row.get("source_metadata"), Mapping) else {}, "source_id") or _text(row, "source_id")
+    source = registry.get(source_id, {})
+    if route == "repeated_blocked_no_route":
+        return outcome in {"ACCESS_BLOCKED", "PAYWALLED"}
+    if route == "stale_or_invalid_url":
+        return not _source_allows_url(source, canonical_url)
+    if route == "not_recoverable_with_current_source":
+        return not _source_enabled(source)
+    return False
+
+
+def _candidate_id_from_attempt(attempt: Mapping[str, Any]) -> str:
+    candidate = attempt.get("candidate") if isinstance(attempt.get("candidate"), Mapping) else {}
+    return _text(candidate, "candidate_id")
+
+
+def _overlay_recovery_feedback(
+    packet_row: dict[str, Any],
+    *,
+    recovery_root: Path,
+    registry: Mapping[str, Mapping[str, Any]],
+    applied_candidate_ids: set[str],
+) -> dict[str, Any]:
+    matches = _matching_recovery_attempts(row=packet_row, recovery_root=recovery_root)
+    if not matches:
+        return packet_row
+    path, attempt = matches[-1]
+    status = _text(attempt, "result_status")
+    if status == "DETERMINISTIC_EXCLUSION":
+        feedback = _recovery_feedback_payload(path, attempt, disposition="DETERMINISTIC_EXCLUSION")
+        packet_row["resolution_bucket"] = "exclusion"
+        packet_row["human_review_required_reason"] = _review_action("exclusion")
+        packet_row["recommended_next_review_action"] = _review_action("exclusion")
+        if feedback.get("exclusion_reason"):
+            packet_row["exclusion_reason"] = feedback["exclusion_reason"]
+        packet_row["recovery_feedback"] = feedback
+        return packet_row
+    if status == "NOT_RECOVERABLE_WITH_CURRENT_SOURCE":
+        if _unrecoverable_still_current(packet_row, attempt, registry):
+            packet_row["resolution_bucket"] = "unrecoverable"
+            packet_row["human_review_required_reason"] = _review_action("unrecoverable")
+            packet_row["recommended_next_review_action"] = _review_action("unrecoverable")
+            packet_row["recovery_feedback"] = _recovery_feedback_payload(path, attempt, disposition="NOT_RECOVERABLE_WITH_CURRENT_SOURCE")
+        else:
+            packet_row["recovery_feedback"] = _recovery_feedback_payload(path, attempt, disposition="IGNORED_STALE")
+        return packet_row
+    if status in {"FETCH_FAILED", "STILL_ADDITIONAL_FETCH_NEEDED", "UNRESOLVED_EVIDENCE"}:
+        disposition = "FETCH_FAILED" if status == "FETCH_FAILED" else "STILL_UNRESOLVED"
+        packet_row["recovery_feedback"] = _recovery_feedback_payload(path, attempt, disposition=disposition)
+        return packet_row
+    if status == "QUALIFIED_PRIVATE_CANDIDATE":
+        candidate_id = _candidate_id_from_attempt(attempt)
+        if candidate_id and candidate_id in applied_candidate_ids:
+            packet_row["resolution_bucket"] = "recovered_private_candidate"
+            packet_row["human_review_required_reason"] = "Recovered private candidate is present in the current private candidate registry."
+            packet_row["recommended_next_review_action"] = packet_row["human_review_required_reason"]
+            packet_row["recovery_feedback"] = _recovery_feedback_payload(path, attempt, disposition="RESOLVED_PRIVATE_CANDIDATE")
+        else:
+            packet_row["recovery_feedback"] = _recovery_feedback_payload(path, attempt, disposition="QUALIFIED_PENDING_APPLY")
+        return packet_row
+    packet_row["recovery_feedback"] = _recovery_feedback_payload(path, attempt, disposition="IGNORED_STALE")
+    return packet_row
 
 
 def _proposed_with_provenance(value: Any, *, source_field: str, method: str, source_text: str = "") -> dict[str, Any]:
@@ -645,6 +803,7 @@ def _review_action(bucket: str) -> str:
         "exclusion": "Confirm deterministic exclusion or leave excluded.",
         "duplicate": "Review representative packet only; duplicate suppressed by deterministic identity.",
         "unrecoverable": "Record source/access blocker; do not promote without new source evidence.",
+        "recovered_private_candidate": "Recovered private candidate is already present in private review state.",
         "bounded_human_judgment": "Review proposed fields and choose approve, correct, defer, care-line-only, or reject.",
     }.get(bucket, "Review unresolved fields.")
 
@@ -891,16 +1050,24 @@ def build_review_packet_from_current_state(
     repo_root: Path,
     *,
     review_root: Path | None = None,
+    recovery_root: Path | None = None,
 ) -> dict[str, Any]:
     repo_root = Path(repo_root).resolve()
     root = review_root or DEFAULT_REVIEW_ROOT
     root = root if root.is_absolute() else repo_root / root
+    recovery = recovery_root or DEFAULT_RECOVERY_ROOT
+    recovery = recovery if recovery.is_absolute() else repo_root / recovery
     registry = _load_registry(repo_root)
     manual_payload = _load_json_object(root / REVIEW_PACKET_INPUT_FILES["manual_review"], default={"items": []})
     failed_payload = _load_json_object(root / REVIEW_PACKET_INPUT_FILES["failed_extractions"], default={"items": []})
     queue_payload = _load_json_object(root / REVIEW_PACKET_INPUT_FILES["review_queue"], default={"items": [], "duplicates": [], "backlog": []})
     backlog_payload = _load_json_object(root / REVIEW_PACKET_INPUT_FILES["review_backlog"], default={"items": []})
     candidate_payload = _load_json_object(root / REVIEW_PACKET_INPUT_FILES["candidate_registry"], default={"candidates": []})
+    applied_candidate_ids = {
+        _text(row, "candidate_id")
+        for row in _items(candidate_payload, "candidates")
+        if _text(row, "candidate_id")
+    }
 
     raw_inputs: list[tuple[str, dict[str, Any]]] = []
     raw_inputs.extend(("manual_review", row) for row in _items(manual_payload, "items"))
@@ -915,6 +1082,13 @@ def build_review_packet_from_current_state(
         key = _duplicate_key(row)
         duplicate_of = representative_by_key.get(key, "")
         packet_row = _packet_record(row, record_family=family, registry=registry, duplicate_of=duplicate_of)
+        if not duplicate_of:
+            packet_row = _overlay_recovery_feedback(
+                packet_row,
+                recovery_root=recovery,
+                registry=registry,
+                applied_candidate_ids=applied_candidate_ids,
+            )
         if not duplicate_of:
             representative_by_key[key] = packet_row["producer_record_id"]
         records.append(packet_row)
@@ -935,6 +1109,7 @@ def build_review_packet_from_current_state(
         "packet_type": "current_care_line_evidence_review",
         "generator_version": PACKET_GENERATOR_VERSION,
         "source_review_root": root.relative_to(repo_root).as_posix() if _is_under(root, repo_root) else root.as_posix(),
+        "recovery_feedback_root": recovery.relative_to(repo_root).as_posix() if _is_under(recovery, repo_root) else recovery.as_posix(),
         "records": records,
         "decision_policy": {
             "automated_review_status_changes": False,
@@ -949,6 +1124,26 @@ def review_packet_generation_report(packet: Mapping[str, Any]) -> dict[str, Any]
     records = [row for row in packet.get("records") or [] if isinstance(row, Mapping)]
     bucket_counts = Counter(_text(row, "resolution_bucket") for row in records)
     family_counts = Counter(_text(row, "record_family") for row in records)
+    feedback_counts = Counter()
+    for row in records:
+        feedback = row.get("recovery_feedback")
+        if not isinstance(feedback, Mapping):
+            continue
+        disposition = _text(feedback, "disposition")
+        if disposition == "DETERMINISTIC_EXCLUSION":
+            feedback_counts["recovery_deterministic_exclusion"] += 1
+        elif disposition == "NOT_RECOVERABLE_WITH_CURRENT_SOURCE":
+            feedback_counts["recovery_unrecoverable"] += 1
+        elif disposition == "FETCH_FAILED":
+            feedback_counts["recovery_fetch_failed"] += 1
+        elif disposition == "STILL_UNRESOLVED":
+            feedback_counts["recovery_still_unresolved"] += 1
+        elif disposition == "QUALIFIED_PENDING_APPLY":
+            feedback_counts["recovery_qualified_pending_apply"] += 1
+        elif disposition == "RESOLVED_PRIVATE_CANDIDATE":
+            feedback_counts["recovery_resolved_private_candidate"] += 1
+        elif disposition == "IGNORED_STALE":
+            feedback_counts["recovery_feedback_ignored_stale"] += 1
     unique_representatives = [row for row in records if not _text(row, "duplicate_of_producer_record_id")]
     bounded = [
         row
@@ -977,6 +1172,16 @@ def review_packet_generation_report(packet: Mapping[str, Any]) -> dict[str, Any]
             "duplicate": bucket_counts.get("duplicate", 0),
             "unrecoverable": bucket_counts.get("unrecoverable", 0),
             "bounded_human_judgment": bucket_counts.get("bounded_human_judgment", 0),
+            "recovered_private_candidate": bucket_counts.get("recovered_private_candidate", 0),
+        },
+        "recovery_feedback_counts": {
+            "recovery_deterministic_exclusion": feedback_counts.get("recovery_deterministic_exclusion", 0),
+            "recovery_unrecoverable": feedback_counts.get("recovery_unrecoverable", 0),
+            "recovery_fetch_failed": feedback_counts.get("recovery_fetch_failed", 0),
+            "recovery_still_unresolved": feedback_counts.get("recovery_still_unresolved", 0),
+            "recovery_qualified_pending_apply": feedback_counts.get("recovery_qualified_pending_apply", 0),
+            "recovery_resolved_private_candidate": feedback_counts.get("recovery_resolved_private_candidate", 0),
+            "recovery_feedback_ignored_stale": feedback_counts.get("recovery_feedback_ignored_stale", 0),
         },
         "record_family_counts": dict(sorted(family_counts.items())),
         "source_evidence_deleted": False,
@@ -993,6 +1198,7 @@ def write_review_packet_from_current_state(
     report_path: Path,
     pre_review_records_path: Path | None = None,
     review_root: Path | None = None,
+    recovery_root: Path | None = None,
     check_only: bool = False,
 ) -> dict[str, Any]:
     repo_root = Path(repo_root).resolve()
@@ -1001,7 +1207,7 @@ def write_review_packet_from_current_state(
         write_paths.append(pre_review_records_path)
     for path in write_paths:
         refuse_public_or_pages_path(path if path.is_absolute() else repo_root / path, repo_root)
-    packet = build_review_packet_from_current_state(repo_root, review_root=review_root)
+    packet = build_review_packet_from_current_state(repo_root, review_root=review_root, recovery_root=recovery_root)
     report = review_packet_generation_report(packet)
     pre_review_records = build_pre_review_records_from_packet(packet)
     if not check_only:

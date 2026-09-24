@@ -10,28 +10,50 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "UNKNOWN",
+  "aggregate_status": "SUCCESS",
   "dispatch": "ice",
-  "last_exported_at": "2026-09-23T15:08:00.301486Z",
-  "last_receipt_at": null,
-  "latest_runtime_proof_date": null,
+  "last_exported_at": "2026-09-24T05:15:05.546003Z",
+  "last_receipt_at": "2026-09-24T04:16:16.040763Z",
+  "latest_runtime_proof_date": "2026-09-24T04:15:04Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
   "observed_date": "2026-09-23",
   "public_side_effects": {
     "publication_attempted": false,
-    "publication_status": null
+    "publication_status": "not_authorized_monitor_only"
   },
   "publication_attempted": false,
-  "publication_status": null,
-  "receipt_completeness": "NO_PROOF",
+  "publication_status": "not_authorized_monitor_only",
+  "receipt_completeness": "COMPLETE",
   "recovery_lifecycle": "HEALTHY",
-  "runner_source_head": null,
-  "scheduled_health_authoritative": false,
+  "runner_source_head": "7c923a43bac25d38871a4c2ec97ad29e09ee5738",
+  "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
     "ice_monitor"
   ],
   "schema_version": "bluefern_external_operational_status_v1",
   "stale_observability": false,
-  "task_summaries": []
+  "task_summaries": [
+    {
+      "artifact_id": "monitor_receipt.json",
+      "classification": "healthy",
+      "completed_at": "2026-09-24T04:16:16Z",
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "pages": false,
+        "publication": false,
+        "rss": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "not_authorized_monitor_only",
+      "run_id": "ice-monitor-20260924T041502Z-282bae47",
+      "scheduled_for": "2026-09-23",
+      "started_at": "2026-09-24T04:15:04Z",
+      "status": "SUCCESS",
+      "task_key": "ice_monitor"
+    }
+  ]
 }

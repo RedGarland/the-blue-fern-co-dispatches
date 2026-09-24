@@ -232,6 +232,21 @@ def _normalize_identity_text(value: str) -> str:
     return " ".join(str(value or "").strip().casefold().split())
 
 
+def _normalize_legacy_title(value: str, *, source_name: str = "") -> str:
+    normalized = _normalize_identity_text(value)
+    source_normalized = _normalize_identity_text(source_name)
+    if source_normalized:
+        for separator in (" - ", " | ", " – ", " — "):
+            suffix = _normalize_identity_text(separator + source_name)
+            if normalized.endswith(suffix):
+                normalized = normalized[: -len(suffix)].strip()
+    return normalized
+
+
+def _date_prefix(value: str) -> str:
+    return str(value or "").strip()[:10]
+
+
 def _source_evidence_fingerprint(row: Mapping[str, Any], *, source_id: str = "") -> str:
     explicit = _text(row, "source_evidence_fingerprint")
     if explicit:
@@ -337,19 +352,46 @@ def _attempt_sort_key(item: tuple[Path, Mapping[str, Any]]) -> tuple[str, str]:
     return (_text(attempt, "attempted_at"), path.as_posix())
 
 
+def _legacy_deterministic_exclusion_identity(
+    row: Mapping[str, Any],
+    attempt: Mapping[str, Any],
+) -> tuple[str, str]:
+    qualification = attempt.get("qualification_result") if isinstance(attempt.get("qualification_result"), Mapping) else {}
+    current_metadata = row.get("source_metadata") if isinstance(row.get("source_metadata"), Mapping) else {}
+    current_source_name = _text(current_metadata, "source_name", "publisher")
+    prior_source_name = _text(qualification, "source_name", "publisher") or current_source_name
+    current_title = _text(row, "source_title", "title")
+    prior_title = _text(qualification, "title", "source_title")
+    if not prior_title or not current_title:
+        return "ambiguous_legacy_ignored", "missing_prior_or_current_title"
+    if _normalize_legacy_title(prior_title, source_name=prior_source_name) != _normalize_legacy_title(current_title, source_name=current_source_name):
+        return "legacy_identity_mismatch", "title_mismatch"
+
+    prior_date = _date_prefix(_text(qualification, "source_publication_date", "published_at", "publication_date"))
+    current_date = _date_prefix(str(_packet_value(row, "publication_date") or ""))
+    if not current_date:
+        current_date, _date_source = _date_candidate(row)
+        current_date = _date_prefix(current_date)
+    if prior_date and current_date and prior_date != current_date:
+        return "legacy_identity_mismatch", "source_publication_date_mismatch"
+    return "guarded_legacy_identity", "title_match_date_match" if prior_date and current_date else "title_match_date_unavailable"
+
+
 def _matching_recovery_attempts(
     *,
     row: Mapping[str, Any],
     recovery_root: Path,
-) -> list[tuple[Path, dict[str, Any], str]]:
+) -> tuple[list[tuple[Path, dict[str, Any], str]], Counter[str]]:
     record_fp = _text(row, "record_fingerprint")
     producer_id = _text(row, "producer_record_id")
     source_id = _text(row.get("source_metadata", {}) if isinstance(row.get("source_metadata"), Mapping) else {}, "source_id") or _text(row, "source_id")
     canonical_url = _canonical_packet_url(row)
     source_evidence_fp = _source_evidence_fingerprint(row, source_id=source_id)
     matches: list[tuple[Path, dict[str, Any], str]] = []
+    ignored: Counter[str] = Counter()
     for path, attempt in _iter_recovery_attempts(recovery_root):
         match_basis = ""
+        legacy_guard = ""
         if _text(attempt, "record_fingerprint") == record_fp:
             if producer_id and _text(attempt, "producer_record_id") and _text(attempt, "producer_record_id") != producer_id:
                 continue
@@ -365,15 +407,24 @@ def _matching_recovery_attempts(
                 and _text(attempt, "attempted_url")
                 and _normalize_identity_url(_text(attempt, "attempted_url")) == _normalize_identity_url(canonical_url)
             ):
-                match_basis = "legacy_identity_match"
+                if _text(attempt, "result_status") == "DETERMINISTIC_EXCLUSION":
+                    match_basis, legacy_guard = _legacy_deterministic_exclusion_identity(row, attempt)
+                    if match_basis != "guarded_legacy_identity":
+                        ignored[match_basis] += 1
+                        continue
+                else:
+                    match_basis = "guarded_legacy_identity"
+                    legacy_guard = "source_url_match_current_route_revalidated"
             else:
                 continue
         if source_id and _text(attempt, "source_id") and _text(attempt, "source_id") != source_id:
             continue
         if canonical_url and _text(attempt, "attempted_url") and _normalize_identity_url(_text(attempt, "attempted_url")) != _normalize_identity_url(canonical_url):
             continue
+        if legacy_guard:
+            attempt = {**attempt, "legacy_identity_guard": legacy_guard}
         matches.append((path, attempt, match_basis))
-    return sorted(matches, key=_attempt_sort_key)
+    return sorted(matches, key=_attempt_sort_key), ignored
 
 
 def _recovery_feedback_payload(path: Path, attempt: Mapping[str, Any], *, disposition: str) -> dict[str, Any]:
@@ -402,6 +453,8 @@ def _recovery_feedback_payload(path: Path, attempt: Mapping[str, Any], *, dispos
         payload["carried_forward_from_attempt_id"] = _text(attempt, "carried_forward_from_attempt_id")
     if _text(attempt, "recovery_feedback_match_basis"):
         payload["match_basis"] = _text(attempt, "recovery_feedback_match_basis")
+    if _text(attempt, "legacy_identity_guard"):
+        payload["legacy_identity_guard"] = _text(attempt, "legacy_identity_guard")
     return payload
 
 
@@ -432,7 +485,9 @@ def _overlay_recovery_feedback(
     registry: Mapping[str, Mapping[str, Any]],
     applied_candidate_ids: set[str],
 ) -> dict[str, Any]:
-    matches = _matching_recovery_attempts(row=packet_row, recovery_root=recovery_root)
+    matches, ignored = _matching_recovery_attempts(row=packet_row, recovery_root=recovery_root)
+    if ignored:
+        packet_row["recovery_feedback_ignored_counts"] = dict(sorted(ignored.items()))
     if not matches:
         return packet_row
     path, attempt, match_basis = matches[-1]
@@ -1184,6 +1239,10 @@ def review_packet_generation_report(packet: Mapping[str, Any]) -> dict[str, Any]
     family_counts = Counter(_text(row, "record_family") for row in records)
     feedback_counts = Counter()
     for row in records:
+        ignored_counts = row.get("recovery_feedback_ignored_counts")
+        if isinstance(ignored_counts, Mapping):
+            feedback_counts["recovery_feedback_ambiguous_ignored"] += int(ignored_counts.get("ambiguous_legacy_ignored") or 0)
+            feedback_counts["recovery_feedback_identity_mismatch"] += int(ignored_counts.get("legacy_identity_mismatch") or 0)
         feedback = row.get("recovery_feedback")
         if not isinstance(feedback, Mapping):
             continue
@@ -1205,7 +1264,7 @@ def review_packet_generation_report(packet: Mapping[str, Any]) -> dict[str, Any]
         match_basis = _text(feedback, "match_basis")
         if match_basis in {"exact_record_fingerprint", "exact_evidence_identity"}:
             feedback_counts["recovery_feedback_exact_evidence_identity"] += 1
-        elif match_basis == "legacy_identity_match":
+        elif match_basis == "guarded_legacy_identity":
             feedback_counts["recovery_feedback_legacy_identity_match"] += 1
     unique_representatives = [row for row in records if not _text(row, "duplicate_of_producer_record_id")]
     bounded = [

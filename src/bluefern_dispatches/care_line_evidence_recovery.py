@@ -116,6 +116,8 @@ def _route_for_record(row: Mapping[str, Any], source: CareLineSource | None) -> 
         return "stale_or_invalid_url"
     if source is None:
         return "not_recoverable_with_current_source"
+    if not source.enabled:
+        return "not_recoverable_with_current_source"
     if not _can_fetch_item_url(source, url):
         return "stale_or_invalid_url"
     outcome = _text(row, "extraction_outcome")
@@ -278,11 +280,14 @@ def recover_records(
     recovery_root: Path = DEFAULT_RECOVERY_ROOT,
     max_records: int | None = None,
     force: bool = False,
+    test_context_force: bool = False,
     write_attempts: bool = True,
     fetch_timeout: int = 20,
     expected_packet_fingerprint: str = "",
     expected_record_fingerprints: Iterable[str] = (),
 ) -> dict[str, Any]:
+    if force and not test_context_force:
+        raise ValueError("forced retry is unavailable outside explicit test context")
     _packet, packet_fp, sources, records = load_recovery_inputs(
         repo_root=repo_root,
         packet_path=packet_path,
@@ -446,24 +451,54 @@ def apply_recovery(
     *,
     repo_root: Path,
     recovery_result: Mapping[str, Any] | None = None,
+    packet_path: Path = DEFAULT_REVIEW_PACKET_OUTPUT,
     recovery_root: Path = DEFAULT_RECOVERY_ROOT,
     candidate_registry_path: Path = DEFAULT_CANDIDATE_REGISTRY,
     review_queue_path: Path = DEFAULT_REVIEW_QUEUE,
     review_backlog_path: Path = DEFAULT_REVIEW_BACKLOG,
     review_duplicates_path: Path = DEFAULT_REVIEW_DUPLICATES,
     edition_date: str | None = None,
+    expected_packet_fingerprint: str = "",
 ) -> dict[str, Any]:
+    if not expected_packet_fingerprint:
+        raise ValueError("expected current packet fingerprint is required for apply")
+    packet = _json(repo_root / packet_path if not packet_path.is_absolute() else packet_path)
+    current_packet_fingerprint = review_packet_fingerprint(packet)
+    if expected_packet_fingerprint != current_packet_fingerprint:
+        raise ValueError("stale packet fingerprint")
+    current_record_fingerprints = {_record_fingerprint(row) for row in _packet_records(packet)}
     if recovery_result is None:
         root = repo_root / recovery_root if not recovery_root.is_absolute() else recovery_root
-        attempts = [_json(path) for path in sorted(root.glob("*/*.json"))]
+        attempts = [_json(path) for path in sorted((root / utc_now().split("T", 1)[0]).glob("*.json"))]
         recovery_result = {"attempts": attempts}
+    attempts = [dict(attempt) for attempt in recovery_result.get("attempts", []) if isinstance(attempt, Mapping)]
+    for attempt in attempts:
+        if _text(attempt, "packet_fingerprint") != expected_packet_fingerprint:
+            raise ValueError("mixed or stale recovery attempt packet fingerprint")
+        if _text(attempt, "record_fingerprint") not in current_record_fingerprints:
+            raise ValueError("stale recovery attempt record fingerprint")
     candidates = [
         dict(attempt.get("candidate"))
-        for attempt in recovery_result.get("attempts", [])
-        if isinstance(attempt, Mapping)
-        and attempt.get("result_status") == "QUALIFIED_PRIVATE_CANDIDATE"
+        for attempt in attempts
+        if attempt.get("result_status") == "QUALIFIED_PRIVATE_CANDIDATE"
         and isinstance(attempt.get("candidate"), Mapping)
+        and attempt.get("candidate")
     ]
+    if not candidates:
+        return {
+            "schema_version": RECOVERY_SCHEMA_VERSION,
+            "candidate_count": 0,
+            "registry_candidate_count": 0,
+            "created_this_run": 0,
+            "updated_this_run": 0,
+            "queue_item_count": 0,
+            "backlog_item_count": 0,
+            "duplicate_item_count": 0,
+            "approved_count": 0,
+            "universal_event_ready_count": 0,
+            "publication_state_mutated": False,
+            "active_review_state_mutated": False,
+        }
     registry_path = repo_root / candidate_registry_path if not candidate_registry_path.is_absolute() else candidate_registry_path
     queue_path = repo_root / review_queue_path if not review_queue_path.is_absolute() else review_queue_path
     backlog_path = repo_root / review_backlog_path if not review_backlog_path.is_absolute() else review_backlog_path
@@ -511,6 +546,7 @@ def apply_recovery(
         "approved_count": approved,
         "universal_event_ready_count": universal_ready,
         "publication_state_mutated": False,
+        "active_review_state_mutated": True,
     }
 
 
@@ -524,7 +560,6 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--recover", action="store_true")
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--max-records", type=int, default=None)
-    parser.add_argument("--force", action="store_true")
     parser.add_argument("--expected-packet-fingerprint", default="")
     parser.add_argument("--expected-record-fingerprint", action="append", default=[])
     args = parser.parse_args(argv)
@@ -533,8 +568,19 @@ def main(argv: list[str] | None = None) -> int:
         packet = Path(args.packet)
         registry = Path(args.registry)
         recovery_root = Path(args.recovery_root)
+        if args.check_only and args.apply:
+            raise ValueError("--check-only and --apply are mutually exclusive")
+        if args.recover and args.apply:
+            raise ValueError("--recover and --apply are mutually exclusive")
+        if args.apply and not args.expected_packet_fingerprint:
+            raise ValueError("--apply requires --expected-packet-fingerprint")
         if args.apply:
-            result = apply_recovery(repo_root=repo_root, recovery_root=recovery_root)
+            result = apply_recovery(
+                repo_root=repo_root,
+                packet_path=packet,
+                recovery_root=recovery_root,
+                expected_packet_fingerprint=args.expected_packet_fingerprint,
+            )
         elif args.recover:
             result = recover_records(
                 repo_root=repo_root,
@@ -542,7 +588,6 @@ def main(argv: list[str] | None = None) -> int:
                 registry_path=registry,
                 recovery_root=recovery_root,
                 max_records=args.max_records,
-                force=args.force,
                 write_attempts=not args.check_only,
                 expected_packet_fingerprint=args.expected_packet_fingerprint,
                 expected_record_fingerprints=args.expected_record_fingerprint,

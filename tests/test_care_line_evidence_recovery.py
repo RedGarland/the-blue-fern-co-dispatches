@@ -89,6 +89,26 @@ def _repo(tmp_path: Path, *, records: list[dict] | None = None, sources: list[di
     return root
 
 
+def _packet(root: Path) -> dict:
+    return json.loads((root / recovery.DEFAULT_REVIEW_PACKET_OUTPUT).read_text(encoding="utf-8"))
+
+
+def _packet_fp(root: Path) -> str:
+    return recovery.review_packet_fingerprint(_packet(root))
+
+
+def _attempt(root: Path, *, packet_fingerprint: str | None = None, record_fingerprint: str = "care-line-raw-item_1_fingerprint", status: str = "QUALIFIED_PRIVATE_CANDIDATE", candidate: dict | None = None) -> dict:
+    return {
+        "schema_version": recovery.RECOVERY_SCHEMA_VERSION,
+        "packet_fingerprint": packet_fingerprint or _packet_fp(root),
+        "record_fingerprint": record_fingerprint,
+        "producer_record_id": "care-line-raw-item_1",
+        "result_status": status,
+        "candidate": candidate or (_candidate() if status == "QUALIFIED_PRIVATE_CANDIDATE" else {}),
+        "no_publication": True,
+    }
+
+
 def _candidate(candidate_id: str = "candidate-1") -> dict:
     return {
         "schema_version": "bluefern.care_line.national_pipeline.v2",
@@ -183,10 +203,10 @@ def test_additional_fetch_item_refetches_and_qualifies(tmp_path: Path, monkeypat
 
 def test_qualified_recovery_enters_candidate_registry_once(tmp_path: Path):
     root = _repo(tmp_path)
-    result = {"attempts": [{"result_status": "QUALIFIED_PRIVATE_CANDIDATE", "candidate": _candidate()}]}
+    result = {"attempts": [_attempt(root)]}
 
-    first = recovery.apply_recovery(repo_root=root, recovery_result=result, edition_date="2026-09-23")
-    second = recovery.apply_recovery(repo_root=root, recovery_result=result, edition_date="2026-09-23")
+    first = recovery.apply_recovery(repo_root=root, recovery_result=result, edition_date="2026-09-23", expected_packet_fingerprint=_packet_fp(root))
+    second = recovery.apply_recovery(repo_root=root, recovery_result=result, edition_date="2026-09-23", expected_packet_fingerprint=_packet_fp(root))
 
     registry = json.loads((root / recovery.DEFAULT_CANDIDATE_REGISTRY).read_text(encoding="utf-8"))
     assert first["created_this_run"] == 1
@@ -199,8 +219,9 @@ def test_review_queue_rebuild_includes_recovered_candidate_once(tmp_path: Path):
 
     applied = recovery.apply_recovery(
         repo_root=root,
-        recovery_result={"attempts": [{"result_status": "QUALIFIED_PRIVATE_CANDIDATE", "candidate": _candidate()}]},
+        recovery_result={"attempts": [_attempt(root)]},
         edition_date="2026-09-23",
+        expected_packet_fingerprint=_packet_fp(root),
     )
 
     queue = json.loads((root / recovery.DEFAULT_REVIEW_QUEUE).read_text(encoding="utf-8"))
@@ -210,13 +231,21 @@ def test_review_queue_rebuild_includes_recovered_candidate_once(tmp_path: Path):
 
 def test_repeated_recovery_is_idempotent_for_same_day_fingerprint(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     root = _repo(tmp_path)
+    calls = {"count": 0}
+
+    def fetch_once(*args, **kwargs):
+        calls["count"] += 1
+        return b"<article>Hospital will close emergency department in Erie, Pennsylvania.</article>", {"http_status": 200, "content_type": "text/html"}
+
     _stub_success(monkeypatch)
+    monkeypatch.setattr(recovery, "fetch_url", fetch_once)
 
     first = recovery.recover_records(repo_root=root, force=False)
     second = recovery.recover_records(repo_root=root, force=False)
 
     assert first["attempt_count"] == 1
     assert second["result_counts"] == {"skipped_existing_attempt": 1}
+    assert calls["count"] == 1
 
 
 def test_403_remains_unresolved_and_is_not_promoted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -316,8 +345,9 @@ def test_no_publication_state_mutation(tmp_path: Path):
 
     applied = recovery.apply_recovery(
         repo_root=root,
-        recovery_result={"attempts": [{"result_status": "QUALIFIED_PRIVATE_CANDIDATE", "candidate": _candidate()}]},
+        recovery_result={"attempts": [_attempt(root)]},
         edition_date="2026-09-23",
+        expected_packet_fingerprint=_packet_fp(root),
     )
 
     assert applied["publication_state_mutated"] is False
@@ -329,9 +359,123 @@ def test_no_approval_or_universal_event_ready_mutation(tmp_path: Path):
 
     applied = recovery.apply_recovery(
         repo_root=root,
-        recovery_result={"attempts": [{"result_status": "QUALIFIED_PRIVATE_CANDIDATE", "candidate": _candidate()}]},
+        recovery_result={"attempts": [_attempt(root)]},
         edition_date="2026-09-23",
+        expected_packet_fingerprint=_packet_fp(root),
     )
 
     assert applied["approved_count"] == 0
     assert applied["universal_event_ready_count"] == 0
+
+
+def test_current_packet_attempts_apply_normally(tmp_path: Path):
+    root = _repo(tmp_path)
+
+    result = recovery.apply_recovery(
+        repo_root=root,
+        recovery_result={"attempts": [_attempt(root)]},
+        expected_packet_fingerprint=_packet_fp(root),
+        edition_date="2026-09-23",
+    )
+
+    assert result["active_review_state_mutated"] is True
+    assert result["candidate_count"] == 1
+
+
+def test_old_packet_attempt_cannot_apply(tmp_path: Path):
+    root = _repo(tmp_path)
+
+    with pytest.raises(ValueError, match="mixed or stale"):
+        recovery.apply_recovery(
+            repo_root=root,
+            recovery_result={"attempts": [_attempt(root, packet_fingerprint="old-packet")]},
+            expected_packet_fingerprint=_packet_fp(root),
+        )
+
+
+def test_mixed_current_and_old_attempts_fail_closed(tmp_path: Path):
+    root = _repo(tmp_path)
+
+    with pytest.raises(ValueError, match="mixed or stale"):
+        recovery.apply_recovery(
+            repo_root=root,
+            recovery_result={"attempts": [_attempt(root), _attempt(root, packet_fingerprint="old-packet")]},
+            expected_packet_fingerprint=_packet_fp(root),
+        )
+
+
+def test_stale_record_fingerprint_cannot_apply(tmp_path: Path):
+    root = _repo(tmp_path)
+
+    with pytest.raises(ValueError, match="stale recovery attempt record fingerprint"):
+        recovery.apply_recovery(
+            repo_root=root,
+            recovery_result={"attempts": [_attempt(root, record_fingerprint="old-record")]},
+            expected_packet_fingerprint=_packet_fp(root),
+        )
+
+
+def test_apply_without_expected_current_packet_fingerprint_fails_closed(tmp_path: Path):
+    root = _repo(tmp_path)
+
+    with pytest.raises(ValueError, match="expected current packet fingerprint is required"):
+        recovery.apply_recovery(repo_root=root, recovery_result={"attempts": [_attempt(root)]})
+
+
+def test_cli_check_only_apply_fails_without_mutation(tmp_path: Path):
+    root = _repo(tmp_path)
+
+    assert recovery.main(["--repo-root", str(root), "--check-only", "--apply", "--expected-packet-fingerprint", _packet_fp(root)]) == 2
+    assert not (root / recovery.DEFAULT_CANDIDATE_REGISTRY).exists()
+
+
+def test_cli_recover_apply_fails_without_mutation(tmp_path: Path):
+    root = _repo(tmp_path)
+
+    assert recovery.main(["--repo-root", str(root), "--recover", "--apply", "--expected-packet-fingerprint", _packet_fp(root)]) == 2
+    assert not (root / recovery.DEFAULT_CANDIDATE_REGISTRY).exists()
+
+
+def test_zero_qualified_apply_leaves_active_review_state_unchanged(tmp_path: Path):
+    root = _repo(tmp_path)
+    paths = [
+        root / recovery.DEFAULT_CANDIDATE_REGISTRY,
+        root / recovery.DEFAULT_REVIEW_QUEUE,
+        root / recovery.DEFAULT_REVIEW_BACKLOG,
+        root / recovery.DEFAULT_REVIEW_DUPLICATES,
+    ]
+    for index, path in enumerate(paths):
+        _write_json(path, {"sentinel": index})
+    before = {path: path.read_bytes() for path in paths}
+
+    result = recovery.apply_recovery(
+        repo_root=root,
+        recovery_result={"attempts": [_attempt(root, status="DETERMINISTIC_EXCLUSION")]},
+        expected_packet_fingerprint=_packet_fp(root),
+    )
+
+    assert result["candidate_count"] == 0
+    assert result["active_review_state_mutated"] is False
+    assert {path: path.read_bytes() for path in paths} == before
+
+
+def test_production_force_override_unavailable(tmp_path: Path):
+    root = _repo(tmp_path)
+
+    with pytest.raises(ValueError, match="forced retry is unavailable"):
+        recovery.recover_records(repo_root=root, force=True)
+    with pytest.raises(SystemExit) as excinfo:
+        recovery.main(["--repo-root", str(root), "--recover", "--force"])
+    assert excinfo.value.code == 2
+
+
+def test_disabled_source_does_not_fetch(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    source = _source()
+    source["enabled"] = False
+    root = _repo(tmp_path, sources=[source])
+    monkeypatch.setattr(recovery, "fetch_url", lambda *args, **kwargs: pytest.fail("disabled source must not fetch"))
+
+    result = recovery.recover_records(repo_root=root, write_attempts=False)
+
+    assert result["attempts"][0]["route"] == "not_recoverable_with_current_source"
+    assert result["attempts"][0]["result_status"] == "NOT_RECOVERABLE_WITH_CURRENT_SOURCE"

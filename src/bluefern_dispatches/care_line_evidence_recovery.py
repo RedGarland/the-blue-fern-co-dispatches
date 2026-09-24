@@ -185,6 +185,62 @@ def _attempt_path(recovery_root: Path, packet_fp: str, record_fp: str, *, today:
     return recovery_root / (today or utc_now().split("T", 1)[0]) / f"{_attempt_id(packet_fp, record_fp)}.json"
 
 
+def _same_day_attempts_for_record(recovery_root: Path, record_fp: str, *, today: str) -> list[tuple[Path, dict[str, Any]]]:
+    day_root = recovery_root / today
+    if not day_root.exists():
+        return []
+    matches: list[tuple[Path, dict[str, Any]]] = []
+    for path in sorted(day_root.glob("*.json"), key=lambda item: item.as_posix()):
+        try:
+            attempt = _json(path)
+        except Exception:  # noqa: BLE001
+            continue
+        if isinstance(attempt, Mapping) and _text(attempt, "record_fingerprint") == record_fp:
+            matches.append((path, dict(attempt)))
+    return matches
+
+
+def _materially_same_attempt(attempt: Mapping[str, Any], *, row: Mapping[str, Any], route: str) -> bool:
+    if _text(attempt, "route") != route:
+        return False
+    if _text(attempt, "source_id") and _text(attempt, "source_id") != _source_id(row):
+        return False
+    if _text(attempt, "attempted_url") and _text(attempt, "attempted_url") != _canonical_url(row):
+        return False
+    if _text(attempt, "producer_record_id") and _text(attempt, "producer_record_id") != _text(row, "producer_record_id"):
+        return False
+    return True
+
+
+def _carry_forward_attempt(
+    prior: Mapping[str, Any],
+    *,
+    packet_fp: str,
+    record_fp: str,
+    row: Mapping[str, Any],
+    route: str,
+) -> dict[str, Any]:
+    carried = dict(prior)
+    carried.update(
+        {
+            "attempt_id": _attempt_id(packet_fp, record_fp),
+            "packet_fingerprint": packet_fp,
+            "record_fingerprint": record_fp,
+            "producer_record_id": _text(row, "producer_record_id"),
+            "raw_item_id": _text(row, "raw_item_id"),
+            "source_id": _source_id(row),
+            "attempted_url": _canonical_url(row),
+            "attempted_at": utc_now(),
+            "route": route,
+            "carried_forward_from_attempt_id": _text(prior, "attempt_id"),
+            "carried_forward_from_packet_fingerprint": _text(prior, "packet_fingerprint"),
+            "network_refetch": False,
+            "no_publication": True,
+        }
+    )
+    return carried
+
+
 def _source_without_item_fetch(source: CareLineSource) -> CareLineSource:
     return source.model_copy(update={"item_permalink_available": False})
 
@@ -312,12 +368,26 @@ def recover_records(
         source = sources.get(_source_id(row))
         record_fp = _record_fingerprint(row)
         path = _attempt_path(recovery_root_abs, packet_fp, record_fp, today=today)
+        route = _route_for_record(row, source)
         if path.exists() and not force:
             attempt = _json(path)
             attempts.append(attempt)
             counters["skipped_existing_attempt"] += 1
             continue
-        route = _route_for_record(row, source)
+        if not force:
+            carried_from = [
+                (prior_path, prior)
+                for prior_path, prior in _same_day_attempts_for_record(recovery_root_abs, record_fp, today=today)
+                if _text(prior, "packet_fingerprint") != packet_fp and _materially_same_attempt(prior, row=row, route=route)
+            ]
+            if carried_from:
+                _prior_path, prior = carried_from[-1]
+                attempt = _carry_forward_attempt(prior, packet_fp=packet_fp, record_fp=record_fp, row=row, route=route)
+                attempts.append(attempt)
+                counters["carried_forward_existing_attempt"] += 1
+                if write_attempts:
+                    _write_json(path, attempt)
+                continue
         raw_item = _packet_raw_item(row, source) if source else {}
         attempted_url = _canonical_url(row)
         attempt: dict[str, Any] = {

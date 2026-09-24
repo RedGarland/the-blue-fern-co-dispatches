@@ -248,6 +248,93 @@ def test_repeated_recovery_is_idempotent_for_same_day_fingerprint(tmp_path: Path
     assert calls["count"] == 1
 
 
+def test_regenerated_packet_carries_forward_same_day_attempt_without_refetch(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    root = _repo(tmp_path)
+    old_packet = "old-packet-fingerprint"
+    record_fp = "care-line-raw-item_1_fingerprint"
+    old_path = root / recovery.DEFAULT_RECOVERY_ROOT / "2026-09-24" / f"{recovery._attempt_id(old_packet, record_fp)}.json"
+    _write_json(
+        old_path,
+        {
+            **_attempt(root, packet_fingerprint=old_packet, status="DETERMINISTIC_EXCLUSION"),
+            "attempt_id": recovery._attempt_id(old_packet, record_fp),
+            "attempted_at": "2026-09-24T00:00:00Z",
+            "attempted_url": "https://example.org/story",
+            "source_id": "test-source",
+            "route": "parser_extraction_retry",
+            "network_refetch": True,
+        },
+    )
+    monkeypatch.setattr(recovery, "utc_now", lambda: "2026-09-24T01:00:00Z")
+    monkeypatch.setattr(recovery, "fetch_url", lambda *args, **kwargs: pytest.fail("same-day cross-packet recovery must not refetch"))
+
+    result = recovery.recover_records(repo_root=root)
+
+    assert result["result_counts"] == {"carried_forward_existing_attempt": 1}
+    assert result["shadow_counts"]["fetch_attempted"] == 0
+    attempt = result["attempts"][0]
+    assert attempt["packet_fingerprint"] == _packet_fp(root)
+    assert attempt["carried_forward_from_packet_fingerprint"] == old_packet
+    assert attempt["network_refetch"] is False
+
+
+def test_carried_forward_attempt_still_passes_current_packet_apply_validation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    root = _repo(tmp_path)
+    old_packet = "old-packet-fingerprint"
+    record_fp = "care-line-raw-item_1_fingerprint"
+    _write_json(
+        root / recovery.DEFAULT_RECOVERY_ROOT / "2026-09-24" / f"{recovery._attempt_id(old_packet, record_fp)}.json",
+        {
+            **_attempt(root, packet_fingerprint=old_packet, status="DETERMINISTIC_EXCLUSION"),
+            "attempt_id": recovery._attempt_id(old_packet, record_fp),
+            "attempted_at": "2026-09-24T00:00:00Z",
+            "attempted_url": "https://example.org/story",
+            "source_id": "test-source",
+            "route": "parser_extraction_retry",
+        },
+    )
+    monkeypatch.setattr(recovery, "utc_now", lambda: "2026-09-24T01:00:00Z")
+    monkeypatch.setattr(recovery, "fetch_url", lambda *args, **kwargs: pytest.fail("carried-forward apply validation must not refetch"))
+
+    result = recovery.recover_records(repo_root=root)
+    applied = recovery.apply_recovery(repo_root=root, recovery_result=result, expected_packet_fingerprint=_packet_fp(root))
+
+    assert result["attempts"][0]["packet_fingerprint"] == _packet_fp(root)
+    assert applied["active_review_state_mutated"] is False
+
+
+def test_changed_recovery_route_may_retry_instead_of_carrying_forward(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    root = _repo(tmp_path, records=[_packet_record(outcome="PARTIAL_BODY")])
+    old_packet = "old-packet-fingerprint"
+    record_fp = "care-line-raw-item_1_fingerprint"
+    _write_json(
+        root / recovery.DEFAULT_RECOVERY_ROOT / "2026-09-24" / f"{recovery._attempt_id(old_packet, record_fp)}.json",
+        {
+            **_attempt(root, packet_fingerprint=old_packet, status="NOT_RECOVERABLE_WITH_CURRENT_SOURCE"),
+            "attempt_id": recovery._attempt_id(old_packet, record_fp),
+            "attempted_at": "2026-09-24T00:00:00Z",
+            "attempted_url": "https://example.org/story",
+            "source_id": "test-source",
+            "route": "repeated_blocked_no_route",
+        },
+    )
+    calls = {"count": 0}
+
+    def fetch_once(*args, **kwargs):
+        calls["count"] += 1
+        return b"<article>Hospital will close emergency department in Erie, Pennsylvania.</article>", {"http_status": 200, "content_type": "text/html"}
+
+    _stub_success(monkeypatch)
+    monkeypatch.setattr(recovery, "utc_now", lambda: "2026-09-24T01:00:00Z")
+    monkeypatch.setattr(recovery, "fetch_url", fetch_once)
+
+    result = recovery.recover_records(repo_root=root, write_attempts=False)
+
+    assert result["result_counts"] == {"QUALIFIED_PRIVATE_CANDIDATE": 1}
+    assert result["shadow_counts"]["fetch_attempted"] == 1
+    assert calls["count"] == 1
+
+
 def test_403_remains_unresolved_and_is_not_promoted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     root = _repo(tmp_path, records=[_packet_record(outcome="PARTIAL_BODY")])
 

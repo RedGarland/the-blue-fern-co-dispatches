@@ -1,0 +1,105 @@
+{
+  "schema_version": "care_sep19_observation_window_audit_v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-09-19",
+  "observation_timezone": "America/Los_Angeles",
+  "created_at": "2026-09-25T15:51:21.412728Z",
+  "expected_collection_instances": [
+    "2026-09-19T13:00:02Z",
+    "2026-09-19T19:00:02Z",
+    "2026-09-20T01:00:02Z"
+  ],
+  "scheduler_instances": [
+    {
+      "expected_instance": "2026-09-19T13:00:02Z",
+      "observed": true,
+      "run_id": "20260919T130001Z-30732",
+      "status": "failure",
+      "failure_stage": "verify_checkout",
+      "pipeline_run_id": null,
+      "run_manifest_path": "",
+      "source_commit": null,
+      "artifact": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\status\\care-line\\scheduler-runs\\2026-09-19\\20260919T130001Z-30732.json",
+      "wrapper_exception_type": "SchedulerError",
+      "wrapper_exception_message": "collection runner checkout is dirty; run failed closed: src/bluefern_dispatches/operational_status_exporter.py, tests/test_operational_status_exporter.py"
+    },
+    {
+      "expected_instance": "2026-09-19T19:00:02Z",
+      "observed": true,
+      "run_id": "20260919T190001Z-31612",
+      "status": "failure",
+      "failure_stage": "verify_checkout",
+      "pipeline_run_id": null,
+      "run_manifest_path": "",
+      "source_commit": null,
+      "artifact": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\status\\care-line\\scheduler-runs\\2026-09-19\\20260919T190001Z-31612.json",
+      "wrapper_exception_type": "SchedulerError",
+      "wrapper_exception_message": "collection runner checkout is dirty; run failed closed: src/bluefern_dispatches/operational_status_exporter.py, tests/test_operational_status_exporter.py"
+    },
+    {
+      "expected_instance": "2026-09-20T01:00:02Z",
+      "observed": true,
+      "run_id": "20260920T010001Z-31040",
+      "status": "failure",
+      "failure_stage": "verify_checkout",
+      "pipeline_run_id": null,
+      "run_manifest_path": "",
+      "source_commit": null,
+      "artifact": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\status\\care-line\\scheduler-runs\\2026-09-19\\20260920T010001Z-31040.json",
+      "wrapper_exception_type": "SchedulerError",
+      "wrapper_exception_message": "collection runner checkout is dirty; run failed closed: src/bluefern_dispatches/operational_status_exporter.py, tests/test_operational_status_exporter.py"
+    }
+  ],
+  "sep19_collection_files": [],
+  "authoritative_terminal_accounting": false,
+  "terminal_accounting_reason": "All three Sep. 19 Pacific observation-date scheduler receipts failed at verify_checkout before launching the child collection process; no Sep. 19 run manifests or raw-item artifacts exist.",
+  "reviewed_queue": {
+    "status": "SAFE_NO_OP",
+    "classification": "nothing_to_publish",
+    "selected_event_count": 0,
+    "publication": false,
+    "artifact": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\data\\dispatches\\care-line\\queue-runs\\2026-09-19\\20260919T150004Z-d3dd4700.json"
+  },
+  "approved_release_publication": {
+    "status": "FAILED",
+    "failure_stage": "source_state",
+    "release_ready": false,
+    "publication": false,
+    "artifact": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\status\\care-line\\publication-scheduler-runs\\2026-09-19\\20260919T153001Z-15380.json"
+  },
+  "later_collection_reconciliation": {
+    "sep20_items_examined": 974,
+    "sep21_items_examined": 974,
+    "classification_counts": {
+      "ALREADY_ACCOUNTED": 324,
+      "NONQUALIFYING": 6,
+      "OUTSIDE_SEP19_WINDOW": 113
+    },
+    "remaining_for_research": 0
+  },
+  "terminal_dispositions": {
+    "historical_exclusion_confirmed": 3,
+    "historical_candidate_confirmed": 0,
+    "historical_duplicate_confirmed": 0,
+    "conflicting_evidence": 0,
+    "evidence_exhausted": 1
+  },
+  "scratch_sha256_lineage": {
+    "alternate_source_research": "ee090c15584fcfb86404eff5705b6079006c25ac1cfec7c079c6198c61d3104b",
+    "evidence_exhausted": "d73925576016e0b48bc637126e4b96b60bb7e0d6a757b943330792dc4502cbd7",
+    "final_reconstruction_report": "33ae5488114f41ddf7bb9afb548809476fb90734f7e85a9b123c40fb51715219",
+    "later_collection_reconciliation": "7d5fc069451d488cfc2cd61c65d50b7ed19f61d759e5d08fc0440000240ebdb6",
+    "recovered_candidates": "881f6b2a98b0380741c72efc73cad351b4f10234196f7d7c9bc5e6cd64258ce4",
+    "runtime_evidence_audit": "5f3d8bbc52e12b972c404c9932cf51162529cf5b8c0cddcdbfce6b1a9c05dde9",
+    "sep19_discovery_input": "0cc92c60d1a31f1417dbd31974baa9e69f68e4cfdb28c7c246a84e421a8d69d36",
+    "terminal_dispositions": "889c1601e7583977eb1f940c0f519dcda2fcccc4f91885b20b09605c974ec6a9"
+  },
+  "safety": {
+    "production_mutation": "none",
+    "scheduler_trigger": "none",
+    "collection_replay": "none",
+    "publication": "none",
+    "pages": "none",
+    "live_review_mutation": "none"
+  }
+}

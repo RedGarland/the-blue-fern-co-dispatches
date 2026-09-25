@@ -4,7 +4,14 @@ import json
 import re
 from pathlib import Path
 
-from bluefern_dispatches.coverage_gap_controller import BackfillStatus, GapReasonCode, evaluate_dispatch_date
+from bluefern_dispatches.coverage_gap_controller import (
+    BackfillStatus,
+    GapReasonCode,
+    RecoveryInvestigationStatus,
+    build_backfill_queue,
+    evaluate_dispatch_date,
+    validate_gap_record,
+)
 
 
 RECOVERY_ROOT = Path("data/private-agent-handoff/discovery-recovery/care-line/2026-09-24")
@@ -268,7 +275,25 @@ def test_care_sep15_sep24_editorial_records_preserve_key_date_distinctions() -> 
 
 def test_care_sep15_sep24_sep19_remains_untouched() -> None:
     assert not Path("data/dispatches/care-line/historical-events/2026-09-19").exists()
-    assert not Path("data/dispatches/care-line/coverage-gaps/2026-09-19.json").exists()
+    gap_path = Path("data/dispatches/care-line/coverage-gaps/2026-09-19.json")
+    gap = _load(gap_path)
+    validate_gap_record(gap)
+
+    assert gap["observation_status"] == "OBSERVATION_INCOMPLETE"
+    assert gap["backfill_status"] == "BACKFILL_REQUIRED"
+    assert gap["recovery_investigation_status"] == "EVIDENCE_EXHAUSTED"
+    assert gap["reason_code"] == "historical_evidence_exhausted"
+    assert gap["recovered_event_ids"] == []
+    assert gap["observed_finding_count"] == 0
+
+    result = evaluate_dispatch_date(Path("."), "care-line", "2026-09-19", evaluated_at="2026-09-25T09:00:00Z")
+    assert result.backfill_status == BackfillStatus.BACKFILL_REQUIRED
+    assert result.recovery_investigation_status == RecoveryInvestigationStatus.EVIDENCE_EXHAUSTED
+    assert result.recovered_event_ids == ()
+    assert result.observed_finding_count == 0
+    assert GapReasonCode.HISTORICAL_EVIDENCE_INCOMPLETE in result.reason_codes
+    queue = build_backfill_queue([result], evaluated_at="2026-09-25T09:00:00Z")
+    assert queue["rows"] == []
 
 
 def _write_json(path: Path, payload: dict) -> None:

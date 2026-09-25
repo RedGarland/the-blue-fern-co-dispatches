@@ -782,7 +782,7 @@ def test_exhausted_gap_record_validates_without_public_authority() -> None:
 
 def test_care_residual_gap_records_preserve_incomplete_truth_and_exhausted_lifecycle() -> None:
     records = []
-    for observation_date in ("2026-09-07", "2026-09-10", "2026-09-13"):
+    for observation_date in ("2026-09-07", "2026-09-10", "2026-09-13", "2026-09-19"):
         path = Path("data/dispatches/care-line/coverage-gaps") / f"{observation_date}.json"
         record = json.loads(path.read_text(encoding="utf-8"))
         validate_gap_record(record)

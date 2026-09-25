@@ -1,6 +1,6 @@
 {
   "bounded_summary": "Local reporting confirms Pearl Youth Residence in Tacoma will close and lay off staff; the facility provided long-term inpatient youth behavioral health treatment.",
-  "canonical_event_id": "care-line-2026-11-21-pearl-youth-residence-closure",
+  "canonical_event_id": "care-line-2026-09-23-pearl-youth-residence-scheduled-closure",
   "canonical_event_identity": {
     "category": "youth_behavioral_health_access",
     "event_type": "scheduled_residential_psychiatric_facility_closure",
@@ -9,11 +9,12 @@
   },
   "dispatch": "care-line",
   "editorial_review_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-24/editorial-review.json",
-  "effective_date": "2026-11-21",
+  "effective_date": null,
+  "effective_date_uncertainty": "Pearl Youth Residence is scheduled to close in November 2026; the WARN notice lists Nov. 21 for layoffs, but the reviewed evidence does not establish that date as the exact facility closure date.",
   "event_date": "2026-09-23",
-  "event_id": "care-line-2026-11-21-pearl-youth-residence-closure",
-  "headline": "Pearl Youth Residence scheduled closure will reduce long-term youth psychiatric beds",
-  "materiality": "material future youth residential psychiatric capacity loss; closure was scheduled, not yet complete at observation",
+  "event_id": "care-line-2026-09-23-pearl-youth-residence-scheduled-closure",
+  "headline": "Pearl Youth Residence scheduled November closure will reduce long-term youth psychiatric beds",
+  "materiality": "material future youth residential psychiatric capacity loss; closure was scheduled for November 2026 and had not occurred at observation, but the exact facility closure date is not established by the reviewed evidence",
   "observation_date": "2026-09-24",
   "observation_dates": [
     "2026-09-24"
@@ -34,7 +35,7 @@
   "source_published_date": "2026-09-23",
   "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-24/recovery-review-intake.json",
   "source_recovery_item_id": "care-line-2026-09-24-pearl-youth-residence-closure",
-  "source_sufficiency": "sufficient_local_reporting_for_scheduled_closure_and_layoffs",
+  "source_sufficiency": "sufficient_local_reporting_for_scheduled_closure_and_layoffs; exact facility closure date not established",
   "sources": [
     {
       "publisher": "KIRO 7 Seattle",

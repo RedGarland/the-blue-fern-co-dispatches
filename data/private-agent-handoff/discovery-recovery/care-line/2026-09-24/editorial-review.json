@@ -5,11 +5,13 @@
   "excluded_existing_recovery_count": 0,
   "items": [
     {
+      "date_supporting_source_url": "https://www.thelundreport.org/content/asante-withdraws-request-buy-surgery-center-medford",
       "disposition": "approved",
       "duplicate_status": "nonduplicate",
       "duplicate_target": null,
       "effective_date": "2026-06-30",
       "event_date": "2026-06-30",
+      "event_date_basis": "Official provider page proves the Surgery Center of Southern Oregon is permanently closed; The Lund Report contemporaneous May 11, 2026 report establishes the June 30, 2026 closure date.",
       "item_id": "care-line-2026-09-16-southern-oregon-surgery-center-closure",
       "observation_date": "2026-09-16",
       "observation_dates": [
@@ -74,14 +76,15 @@
       "disposition": "approved",
       "duplicate_status": "nonduplicate",
       "duplicate_target": null,
-      "effective_date": "2026-11-21",
+      "effective_date": null,
+      "effective_date_uncertainty": "Pearl Youth Residence is scheduled to close in November 2026; the WARN notice lists Nov. 21 for layoffs, but the reviewed evidence does not establish that date as the exact facility closure date.",
       "event_date": "2026-09-23",
       "item_id": "care-line-2026-09-24-pearl-youth-residence-closure",
       "observation_date": "2026-09-24",
       "observation_dates": [
         "2026-09-24"
       ],
-      "reason": "Approved as a scheduled future closure of a long-term youth behavioral health facility; effective date distinction is preserved.",
+      "reason": "Approved as a scheduled November 2026 closure of a long-term youth behavioral health facility; the exact facility closure date is not inferred from the WARN layoff date.",
       "source_evidence_fingerprint": "ac68935380bf1a3226a0ba84ed0d46f8be47d1e357d008079261db6f89563dd5",
       "source_published_date": "2026-09-23"
     },

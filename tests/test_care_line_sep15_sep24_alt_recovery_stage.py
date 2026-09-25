@@ -19,7 +19,7 @@ APPROVED_EVENT_IDS = {
     "care-line-2026-09-14-phi-red-bluff-air-medical-base-suspension",
     "care-line-2026-09-15-minnesota-hotel-crisis-respite-placement-end",
     "care-line-2026-09-17-choate-psychiatric-bed-elimination-plan-challenged",
-    "care-line-2026-11-21-pearl-youth-residence-closure",
+    "care-line-2026-09-23-pearl-youth-residence-scheduled-closure",
     "care-line-2026-09-30-fitzgibbon-inpatient-labor-delivery-closure",
 }
 REJECTED_ITEM_IDS = {
@@ -234,7 +234,7 @@ def test_care_sep15_sep24_editorial_records_preserve_key_date_distinctions() -> 
     pearl = _load(
         Path(
             "data/dispatches/care-line/historical-events/2026-09-23/"
-            "care-line-2026-11-21-pearl-youth-residence-closure.json"
+            "care-line-2026-09-23-pearl-youth-residence-scheduled-closure.json"
         )
     )
     fitzgibbon = _load(
@@ -246,10 +246,21 @@ def test_care_sep15_sep24_editorial_records_preserve_key_date_distinctions() -> 
 
     assert southern["source_published_date"] is None
     assert southern["source_publication_date_uncertainty"]
+    assert "The Lund Report" in southern["event_date_basis"]
+    assert any(source.get("supports_event_date") is True for source in southern["sources"])
+    assert any(source.get("supports_closure_status") is True for source in southern["sources"])
+    assert not all(source.get("source_url") == "https://www.sosurgi.com/" for source in southern["sources"])
     assert choate["effective_date"] is None
     assert "not proven completed" in choate["materiality"]
     assert pearl["event_date"] == "2026-09-23"
-    assert pearl["effective_date"] == "2026-11-21"
+    assert pearl["event_id"] == "care-line-2026-09-23-pearl-youth-residence-scheduled-closure"
+    assert pearl["effective_date"] is None
+    assert "WARN notice lists Nov. 21 for layoffs" in pearl["effective_date_uncertainty"]
+    assert "exact facility closure date is not established" in pearl["materiality"]
+    assert not Path(
+        "data/dispatches/care-line/historical-events/2026-09-23/"
+        "care-line-2026-11-21-pearl-youth-residence-closure.json"
+    ).exists()
     assert fitzgibbon["event_date"] == "2026-09-18"
     assert fitzgibbon["effective_date"] == "2026-09-30"
     assert "prenatal/postpartum" in fitzgibbon["materiality"]

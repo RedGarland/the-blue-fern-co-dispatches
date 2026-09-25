@@ -11,9 +11,10 @@
   "editorial_review_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-24/editorial-review.json",
   "effective_date": "2026-06-30",
   "event_date": "2026-06-30",
+  "event_date_basis": "Official provider page proves the Surgery Center of Southern Oregon is permanently closed; The Lund Report contemporaneous May 11, 2026 report establishes the June 30, 2026 closure date.",
   "event_id": "care-line-2026-06-30-southern-oregon-surgery-center-closure",
   "headline": "Surgery Center of Southern Oregon permanently closed",
-  "materiality": "material ambulatory surgery capacity loss; source publication date is unknown",
+  "materiality": "material ambulatory surgery capacity loss; exact June 30 closure date is supported by dated corroborating reporting while provider page proves current closure",
   "observation_date": "2026-09-16",
   "observation_dates": [
     "2026-09-16",
@@ -36,15 +37,26 @@
   "source_published_date": null,
   "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-24/recovery-review-intake.json",
   "source_recovery_item_id": "care-line-2026-09-16-southern-oregon-surgery-center-closure",
-  "source_sufficiency": "sufficient_single_traceable_provider_notice_with_source_date_uncertainty_preserved",
+  "source_sufficiency": "provider_page_proves_permanent_closure_and_dated_lund_report_establishes_june_30_closure_date; provider page source-publication date remains unknown",
   "sources": [
     {
       "publisher": "Surgery Center of Southern Oregon",
       "source_publication_date": null,
       "source_publication_date_uncertainty": "official provider page confirms closure but does not expose a provable publication date",
-      "source_role": "provider/official",
+      "source_role": "provider/official closure proof",
       "source_url": "https://www.sosurgi.com/",
-      "supporting_passage": "The Surgery Center of Southern Oregon is now permanently closed"
+      "supporting_passage": "The Surgery Center of Southern Oregon is now permanently closed",
+      "supports_closure_status": true,
+      "supports_event_date": false
+    },
+    {
+      "publisher": "The Lund Report",
+      "source_publication_date": "2026-05-11",
+      "source_role": "contemporaneous local health reporting / exact date corroboration",
+      "source_url": "https://www.thelundreport.org/content/asante-withdraws-request-buy-surgery-center-medford",
+      "supporting_passage": "The Surgery Center of Southern Oregon is closing by June 30.",
+      "supports_closure_status": false,
+      "supports_event_date": true
     }
   ],
   "uncertainty_preserved": true

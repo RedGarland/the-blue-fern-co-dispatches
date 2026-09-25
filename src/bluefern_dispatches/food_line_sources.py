@@ -1878,6 +1878,26 @@ def _registry_role_allowed(pressure_required: bool, source_family: str) -> str:
     return "pressure_evidence" if pressure_required else "context_only"
 
 
+def _food_line_map_eligible(
+    *,
+    pressure_signal: bool,
+    pressure_required: bool,
+    promotable: bool,
+    source_role_allowed: str,
+    source_role: str,
+    supported_geography: bool,
+    state: str,
+) -> bool:
+    return bool(
+        pressure_signal
+        and pressure_required
+        and promotable
+        and source_role_allowed != "context_only"
+        and source_role not in {"data_anchor_signal", "institutional_context_signal", "resource_context", "rejected_context"}
+        and (source_role != "research_signal" or (supported_geography and state not in {"", "US"}))
+    )
+
+
 def _is_generic_pressure_summary(summary: str) -> bool:
     text = re.sub(r"\s+", " ", str(summary or "").strip().lower()).strip(" .:")
     if not text:
@@ -2578,9 +2598,15 @@ def evaluate_food_line_pressure(
         source_role = "rejected_context"
     location_scope = "outside_product_geography" if not supported_geography else ("state_local" if str(row.get("state") or "").strip().upper() not in {"", "US"} else "national")
     state = str(row.get("state") or "").strip().upper()
-    map_eligible = bool(pressure_signal) and (
-        source_role not in {"data_anchor_signal", "institutional_context_signal"}
-        and (source_role != "research_signal" or (supported_geography and state not in {"", "US"}))
+    source_role_allowed = _registry_role_allowed(bool(pressure_required), family)
+    map_eligible = _food_line_map_eligible(
+        pressure_signal=bool(pressure_signal),
+        pressure_required=bool(pressure_required),
+        promotable=bool(promotable),
+        source_role_allowed=source_role_allowed,
+        source_role=source_role,
+        supported_geography=bool(supported_geography),
+        state=state,
     )
     rejection_reason = _food_line_negative_filter_rejection_reason(
         source_purpose=source_purpose,
@@ -2610,7 +2636,7 @@ def evaluate_food_line_pressure(
         "source_role": source_role,
         "location_scope": location_scope,
         "supported_product_geography": supported_geography,
-        "source_role_allowed": _registry_role_allowed(bool(pressure_required), family),
+        "source_role_allowed": source_role_allowed,
         "pressure_required": bool(pressure_required),
         "positive_keywords": positives,
         "negative_keywords": negatives,

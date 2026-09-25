@@ -400,6 +400,111 @@ def _replace_latest_edition_card(template_html: str, release: PublicRelease) -> 
     return template_html[: match.start()] + updated + template_html[match.end() :]
 
 
+MONITORING_NOTE = (
+    "Monitoring continues between public releases; a new edition appears only when "
+    "source-backed material clears the publication threshold."
+)
+
+
+def _latest_support_date(path: Path, *, map_page: bool = False) -> str | None:
+    if not path.exists():
+        return None
+    text = path.read_text(encoding="utf-8", errors="replace")
+    if map_page:
+        match = re.search(r"Latest dispatch date:\\s*(\\d{4}-\\d{2}-\\d{2})", text)
+        if match:
+            return match.group(1)
+    dates = re.findall(r"\\b20\\d{2}-\\d{2}-\\d{2}\\b", text)
+    return max(dates) if dates else None
+
+
+def _replace_support_link_label(card_html: str, href: str, label: str) -> str:
+    pattern = re.compile(
+        rf'(<a class="support-link" href="{re.escape(href)}">).*?(</a>)',
+        re.DOTALL,
+    )
+    return pattern.sub(lambda match: f"{match.group(1)}{html.escape(label)}{match.group(2)}", card_html, count=1)
+
+
+def _annotate_dispatch_card_public_state(card_html: str, slug: str, public_root: Path) -> str:
+    updated = re.sub(
+        r'<p class="latest-label">.*?</p>',
+        '<p class="latest-label">Latest public release</p>',
+        card_html,
+        count=1,
+        flags=re.DOTALL,
+    )
+    updated = re.sub(r'<p class="monitoring-status">.*?</p>', "", updated, flags=re.DOTALL)
+    if slug in {"food-line", "care-line"} and '<p class="cadence">' in updated:
+        updated = re.sub(
+            r'(<p class="cadence">.*?</p>)',
+            rf'\\1<p class="monitoring-status">{html.escape(MONITORING_NOTE)}</p>',
+            updated,
+            count=1,
+            flags=re.DOTALL,
+        )
+    if slug == "gaza":
+        audio_date = _latest_support_date(public_root / "gaza" / "audio" / "index.html")
+        if audio_date:
+            updated = _replace_support_link_label(
+                updated,
+                "/gaza/audio/index.html",
+                f"Audio archive through {_format_long_date(audio_date)}",
+            )
+    elif slug == "food-line":
+        audio_date = _latest_support_date(public_root / "food-line" / "audio" / "index.html")
+        map_date = _latest_support_date(public_root / "food-line" / "map" / "index.html", map_page=True)
+        if audio_date:
+            updated = _replace_support_link_label(
+                updated,
+                "/food-line/audio/index.html",
+                f"Audio archive through {_format_long_date(audio_date)}",
+            )
+        if map_date:
+            updated = _replace_support_link_label(
+                updated,
+                "/food-line/map/index.html",
+                f"Map snapshot through {_format_long_date(map_date)}",
+            )
+    return updated
+
+
+def annotate_shared_public_state(template_html: str, public_root: Path) -> str:
+    refreshed = template_html
+    for slug in ACTIVE_PRODUCTS:
+        product_name = PRODUCT_META[slug]["publication_name"]
+        if slug == "care-line":
+            product_name = "The Care Line Dispatch"
+        pattern = re.compile(
+            rf'<article class="dispatch-card dispatch-card--featured">(?:(?!</article>).)*?<h2>{re.escape(product_name)}</h2>(?:(?!</article>).)*?</article>',
+            re.DOTALL,
+        )
+        match = pattern.search(refreshed)
+        if match is None:
+            continue
+        updated = _annotate_dispatch_card_public_state(match.group(0), slug, public_root)
+        refreshed = refreshed[: match.start()] + updated + refreshed[match.end() :]
+    return refreshed
+
+
+def render_about_from_public_inventory(template_html: str, public_root: Path) -> str:
+    archive_path = public_root / "cascadia" / "archive.html"
+    if not archive_path.exists():
+        return template_html
+    archive_html = archive_path.read_text(encoding="utf-8", errors="replace")
+    dates = re.findall(r"editions/(\\d{4}-\\d{2}-\\d{2})/", archive_html)
+    if not dates:
+        return template_html
+    latest = max(dates)
+    replacement = (
+        "<p>Gaza, Food Line, and Care Line are active public products. "
+        "Cascadia is currently paused; its most recent archived public briefing is "
+        f"{html.escape(_format_long_date(latest))}, and the public archive remains available for reference.</p>"
+    )
+    pattern = re.compile(r'<p>[^<]*Cascadia is currently paused\\.[^<]*</p>', re.DOTALL)
+    return pattern.sub(replacement, template_html, count=1)
+
+
 def _replace_active_dispatch_card(template_html: str, release: PublicRelease) -> str:
     product_name = PRODUCT_META[release.slug]["publication_name"]
     if release.slug == "care-line":

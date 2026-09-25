@@ -1,0 +1,150 @@
+{
+  "approved_count": 6,
+  "deferred_for_corroboration_count": 0,
+  "dispatch": "care-line",
+  "excluded_existing_recovery_count": 0,
+  "items": [
+    {
+      "date_supporting_source_url": "https://www.thelundreport.org/content/asante-withdraws-request-buy-surgery-center-medford",
+      "disposition": "approved",
+      "duplicate_status": "nonduplicate",
+      "duplicate_target": null,
+      "effective_date": "2026-06-30",
+      "event_date": "2026-06-30",
+      "event_date_basis": "Official provider page proves the Surgery Center of Southern Oregon is permanently closed; The Lund Report contemporaneous May 11, 2026 report establishes the June 30, 2026 closure date.",
+      "item_id": "care-line-2026-09-16-southern-oregon-surgery-center-closure",
+      "observation_date": "2026-09-16",
+      "observation_dates": [
+        "2026-09-16",
+        "2026-09-17"
+      ],
+      "reason": "Approved as an in-scope permanent ambulatory surgery center closure; official provider evidence is traceable and source-date uncertainty is preserved.",
+      "source_evidence_fingerprint": "a8d715c3c8be9fbe4f9c25605a5f84293c0aeab29513c2bd3b6aacc3c4b487fe",
+      "source_published_date": null
+    },
+    {
+      "disposition": "approved",
+      "duplicate_status": "nonduplicate",
+      "duplicate_target": null,
+      "effective_date": "2026-09-14",
+      "event_date": "2026-09-14",
+      "item_id": "care-line-2026-09-17-phi-red-bluff-air-medical-suspension",
+      "observation_date": "2026-09-17",
+      "observation_dates": [
+        "2026-09-17",
+        "2026-09-18"
+      ],
+      "reason": "Approved as a bounded suspension of one air-medical base with traceable local/trade evidence; impact is not overstated beyond Red Bluff base operations.",
+      "source_evidence_fingerprint": "eafcef9d85dcbebed55336d587172caad778f4915a8a3c5d96fe72ec9820001c",
+      "source_published_date": "2026-09-15"
+    },
+    {
+      "disposition": "approved",
+      "duplicate_status": "nonduplicate",
+      "duplicate_target": null,
+      "effective_date": "2026-09-15",
+      "event_date": "2026-09-15",
+      "item_id": "care-line-2026-09-15-minnesota-crisis-respite-hotel-placement-end",
+      "observation_date": "2026-09-15",
+      "observation_dates": [
+        "2026-09-15",
+        "2026-09-16",
+        "2026-09-17"
+      ],
+      "reason": "Approved as a bounded end/restriction of hotel-based crisis respite placements, preserving that other crisis-respite services are not shown to disappear.",
+      "source_evidence_fingerprint": "7779310a385668170281a7fd223539316afe5b2aa41e12d44920335f1740c028",
+      "source_published_date": "2026-09-14"
+    },
+    {
+      "disposition": "approved",
+      "duplicate_status": "nonduplicate",
+      "duplicate_target": null,
+      "effective_date": null,
+      "event_date": "2026-09-17",
+      "item_id": "care-line-2026-09-21-choate-psychiatric-bed-elimination",
+      "observation_date": "2026-09-21",
+      "observation_dates": [
+        "2026-09-21",
+        "2026-09-22",
+        "2026-09-23"
+      ],
+      "reason": "Approved only as an announced/challenged psychiatric-bed elimination plan, not as completed bed elimination; the legal challenge and implementation uncertainty are preserved.",
+      "source_evidence_fingerprint": "c2de68fd1e50a9fab4413ddb88077c450b8edeb0e4f3504e421a014eb7731ef4",
+      "source_published_date": "2026-09-17"
+    },
+    {
+      "disposition": "approved",
+      "duplicate_status": "nonduplicate",
+      "duplicate_target": null,
+      "effective_date": null,
+      "effective_date_uncertainty": "Pearl Youth Residence is scheduled to close in November 2026; the WARN notice lists Nov. 21 for layoffs, but the reviewed evidence does not establish that date as the exact facility closure date.",
+      "event_date": "2026-09-23",
+      "item_id": "care-line-2026-09-24-pearl-youth-residence-closure",
+      "observation_date": "2026-09-24",
+      "observation_dates": [
+        "2026-09-24"
+      ],
+      "reason": "Approved as a scheduled November 2026 closure of a long-term youth behavioral health facility; the exact facility closure date is not inferred from the WARN layoff date.",
+      "source_evidence_fingerprint": "ac68935380bf1a3226a0ba84ed0d46f8be47d1e357d008079261db6f89563dd5",
+      "source_published_date": "2026-09-23"
+    },
+    {
+      "disposition": "rejected",
+      "duplicate_status": "not_applicable",
+      "duplicate_target": null,
+      "effective_date": null,
+      "event_date": "2026-09-17",
+      "item_id": "care-line-2026-09-17-west-suburban-weiss-reopening-path",
+      "observation_date": "2026-09-17",
+      "observation_dates": [
+        "2026-09-17"
+      ],
+      "reason": "Rejected because the evidence documents ownership transfer/reopening pathway while both hospitals remain closed; it does not establish an actual or sufficiently concrete service-access restoration or new care-capacity change.",
+      "source_evidence_fingerprint": "610b2d9e3b6903582b4acdd045328e751f9aadd3ed50a88fc609f434e8dc26f1",
+      "source_published_date": "2026-09-18"
+    },
+    {
+      "disposition": "approved",
+      "duplicate_status": "nonduplicate",
+      "duplicate_target": null,
+      "effective_date": "2026-09-30",
+      "event_date": "2026-09-18",
+      "item_id": "care-line-2026-09-22-fitzgibbon-labor-delivery-end",
+      "observation_date": "2026-09-22",
+      "observation_dates": [
+        "2026-09-22"
+      ],
+      "reason": "Approved as a bounded inpatient labor-and-delivery closure, preserving announcement date, Sept. 30 effective date, and remaining prenatal/postpartum transition services.",
+      "source_evidence_fingerprint": "6496f3042592afdb069d5ce593a829a6cf3b88dcf3b9d44581f520f82d826b1b",
+      "source_published_date": "2026-09-18"
+    },
+    {
+      "disposition": "rejected",
+      "duplicate_status": "not_applicable",
+      "duplicate_target": null,
+      "effective_date": null,
+      "event_date": "2026-09-01",
+      "item_id": "care-line-2026-09-15-burdett-birth-center-closure-challenge",
+      "observation_date": "2026-09-15",
+      "observation_dates": [
+        "2026-09-15"
+      ],
+      "reason": "Rejected because the evidence describes a closure fight/access-preservation story rather than a current qualifying access/capacity/service loss; no new historical event is created from closure risk alone.",
+      "source_evidence_fingerprint": "3b8d25912aa7a17ee7f3d824b77cafd7ef943e303cfdeba1fc76be6711fab3ab",
+      "source_published_date": "2026-09-01"
+    }
+  ],
+  "pages_authorized": false,
+  "provenance_class": "operator_recovered_external_source_evidence",
+  "public_generation_authorized": false,
+  "publication_approval": false,
+  "publication_eligible": false,
+  "publication_performed": false,
+  "rejected_count": 2,
+  "rejected_duplicate_count": 0,
+  "review_date": "2026-09-25",
+  "review_type": "human_editorial_recovery_review",
+  "schema_version": "bluefern.care_line.discovery_recovery.editorial_review.v1",
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-24/recovery-review-intake.json",
+  "total_count": 8
+}

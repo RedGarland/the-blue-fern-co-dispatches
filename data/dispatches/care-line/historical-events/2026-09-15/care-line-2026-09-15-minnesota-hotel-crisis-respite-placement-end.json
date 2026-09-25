@@ -1,0 +1,51 @@
+{
+  "bounded_summary": "MPR confirms Minnesota ended hotel-based crisis respite placements, a Medicaid-funded crisis support setting, with all existing hotel placements ending Sept. 15.",
+  "canonical_event_id": "care-line-2026-09-15-minnesota-hotel-crisis-respite-placement-end",
+  "canonical_event_identity": {
+    "category": "behavioral_health_crisis_access",
+    "event_type": "hotel_based_crisis_respite_restriction",
+    "facility": "Minnesota Medicaid crisis respite placement system",
+    "geography": "Minnesota"
+  },
+  "dispatch": "care-line",
+  "editorial_review_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-24/editorial-review.json",
+  "effective_date": "2026-09-15",
+  "event_date": "2026-09-15",
+  "event_id": "care-line-2026-09-15-minnesota-hotel-crisis-respite-placement-end",
+  "headline": "Minnesota ended hotel-based crisis respite placements",
+  "materiality": "material restriction of hotel-based crisis respite placement option; not disappearance of all crisis-respite services",
+  "observation_date": "2026-09-15",
+  "observation_dates": [
+    "2026-09-15",
+    "2026-09-16",
+    "2026-09-17"
+  ],
+  "original_production_discovery_lineage_present": false,
+  "pages_authorized": false,
+  "production_artifact_present": false,
+  "public_generation_authorized": false,
+  "publication_approval": false,
+  "publication_eligible": false,
+  "publication_performed": false,
+  "recovered_at": "2026-09-24",
+  "recovery_provenance": "operator_recovered_external_source_evidence",
+  "relationship_to_existing_event": "new_event",
+  "review_disposition": "approved",
+  "schema_version": "bluefern.care_line.historical_event.v1",
+  "source_evidence_fingerprint": "7779310a385668170281a7fd223539316afe5b2aa41e12d44920335f1740c028",
+  "source_published_date": "2026-09-14",
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-24/recovery-review-intake.json",
+  "source_recovery_item_id": "care-line-2026-09-15-minnesota-crisis-respite-hotel-placement-end",
+  "source_sufficiency": "sufficient_public_media_reporting_of_state_program_restriction",
+  "sources": [
+    {
+      "publisher": "MPR News",
+      "source_publication_date": "2026-09-14",
+      "source_publication_date_uncertainty": null,
+      "source_role": "public media",
+      "source_url": "https://www.mprnews.org/episode/2026/09/14/minnesota-to-end-use-of-hotel-rooms-to-house-people-experiencing-mental-health-crises",
+      "supporting_passage": "will no longer allow the use of hotel rooms to provide crisis respite"
+    }
+  ],
+  "uncertainty_preserved": true
+}

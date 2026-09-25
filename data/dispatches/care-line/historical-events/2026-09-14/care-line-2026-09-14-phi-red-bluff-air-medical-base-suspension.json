@@ -1,0 +1,58 @@
+{
+  "bounded_summary": "Local/trade evidence confirms PHI Air Medical suspended Red Bluff air ambulance base operations, affecting emergency air transport access.",
+  "canonical_event_id": "care-line-2026-09-14-phi-red-bluff-air-medical-base-suspension",
+  "canonical_event_identity": {
+    "category": "emergency_transport_access",
+    "event_type": "air_medical_base_suspension",
+    "facility": "PHI Air Medical Red Bluff base",
+    "geography": "Red Bluff, California"
+  },
+  "dispatch": "care-line",
+  "editorial_review_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-24/editorial-review.json",
+  "effective_date": "2026-09-14",
+  "event_date": "2026-09-14",
+  "event_id": "care-line-2026-09-14-phi-red-bluff-air-medical-base-suspension",
+  "headline": "PHI Air Medical suspended Red Bluff base operations",
+  "materiality": "material local air-medical base access reduction; not represented as total regional emergency-transport loss",
+  "observation_date": "2026-09-17",
+  "observation_dates": [
+    "2026-09-17",
+    "2026-09-18"
+  ],
+  "original_production_discovery_lineage_present": false,
+  "pages_authorized": false,
+  "production_artifact_present": false,
+  "public_generation_authorized": false,
+  "publication_approval": false,
+  "publication_eligible": false,
+  "publication_performed": false,
+  "recovered_at": "2026-09-24",
+  "recovery_provenance": "operator_recovered_external_source_evidence",
+  "relationship_to_existing_event": "new_event",
+  "review_disposition": "approved",
+  "schema_version": "bluefern.care_line.historical_event.v1",
+  "source_evidence_fingerprint": "eafcef9d85dcbebed55336d587172caad778f4915a8a3c5d96fe72ec9820001c",
+  "source_published_date": "2026-09-15",
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-24/recovery-review-intake.json",
+  "source_recovery_item_id": "care-line-2026-09-17-phi-red-bluff-air-medical-suspension",
+  "source_sufficiency": "sufficient_traceable_local_and_trade_reporting",
+  "sources": [
+    {
+      "publisher": "EMS1 / Red Bluff Daily News",
+      "source_publication_date": "2026-09-15",
+      "source_publication_date_uncertainty": null,
+      "source_role": "trade/local reporting",
+      "source_url": "https://www.ems1.com/air-medical-transport/phi-air-medical-suspends-operations-in-calif-city-over-payment-issues",
+      "supporting_passage": "suspending its Red Bluff operations at the Red Bluff Municipal Airport"
+    },
+    {
+      "publisher": "Redding Record Searchlight via AOL",
+      "source_publication_date": "2026-09-16",
+      "source_publication_date_uncertainty": null,
+      "source_role": "local reporting",
+      "source_url": "https://www.aol.com/articles/north-state-air-ambulance-closes-110300000.html",
+      "supporting_passage": "stopped flying out of its air medical base at Red Bluff Municipal Airport"
+    }
+  ],
+  "uncertainty_preserved": true
+}

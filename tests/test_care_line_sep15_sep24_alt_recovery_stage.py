@@ -14,6 +14,18 @@ ACTIVE_REVIEW_PATHS = (
     Path("data/dispatches/care-line/review/current-review-backlog.json"),
     Path("data/dispatches/care-line/review/current-failed-extractions.json"),
 )
+APPROVED_EVENT_IDS = {
+    "care-line-2026-06-30-southern-oregon-surgery-center-closure",
+    "care-line-2026-09-14-phi-red-bluff-air-medical-base-suspension",
+    "care-line-2026-09-15-minnesota-hotel-crisis-respite-placement-end",
+    "care-line-2026-09-17-choate-psychiatric-bed-elimination-plan-challenged",
+    "care-line-2026-09-23-pearl-youth-residence-scheduled-closure",
+    "care-line-2026-09-30-fitzgibbon-inpatient-labor-delivery-closure",
+}
+REJECTED_ITEM_IDS = {
+    "care-line-2026-09-17-west-suburban-weiss-reopening-path",
+    "care-line-2026-09-15-burdett-birth-center-closure-challenge",
+}
 
 
 def _load(path: Path) -> dict:
@@ -132,11 +144,8 @@ def test_care_sep15_sep24_exhaustion_keeps_dates_backfill_required() -> None:
         assert exhausted_by_date[observation_date] > 0
 
 
-def test_care_sep15_sep24_package_does_not_create_active_review_or_event_state() -> None:
+def test_care_sep15_sep24_package_does_not_create_active_review_state() -> None:
     assert all(not path.exists() for path in ACTIVE_REVIEW_PATHS)
-    assert not (RECOVERY_ROOT / "editorial-review.json").exists()
-    assert not Path("data/dispatches/care-line/historical-events/2026-09-15").exists()
-    assert not Path("data/dispatches/care-line/historical-events/2026-09-24").exists()
 
 
 def test_care_sep15_sep24_candidate_dates_are_precise_or_explicitly_unknown() -> None:
@@ -159,6 +168,107 @@ def test_care_sep15_sep24_candidate_dates_are_precise_or_explicitly_unknown() ->
             value = item.get(key)
             assert value is None or exact_date.match(value)
             assert value != "2026"
+
+
+def test_care_sep15_sep24_editorial_review_disposes_exactly_eight_candidates() -> None:
+    intake = _load(RECOVERY_ROOT / "recovery-review-intake.json")
+    review = _load(RECOVERY_ROOT / "editorial-review.json")
+
+    assert len(review["items"]) == 8
+    assert {item["item_id"] for item in review["items"]} == {item["item_id"] for item in intake["items"]}
+    assert review["approved_count"] == 6
+    assert review["rejected_count"] == 2
+    assert review["rejected_duplicate_count"] == 0
+    assert review["excluded_existing_recovery_count"] == 0
+    assert review["deferred_for_corroboration_count"] == 0
+    assert review["total_count"] == 8
+    assert {item["item_id"] for item in review["items"] if item["disposition"] == "rejected"} == REJECTED_ITEM_IDS
+    assert all(review[flag] is False for flag in (
+        "publication_eligible",
+        "publication_approval",
+        "publication_performed",
+        "public_generation_authorized",
+        "pages_authorized",
+    ))
+
+
+def test_care_sep15_sep24_approved_nonduplicates_have_private_historical_events_only() -> None:
+    event_root = Path("data/dispatches/care-line/historical-events")
+    event_paths = sorted(event_root.glob("*/care-line-2026-*-*.json"))
+    package_records = [
+        _load(path)
+        for path in event_paths
+        if _load(path).get("source_recovery_artifact")
+        == "data/private-agent-handoff/discovery-recovery/care-line/2026-09-24/recovery-review-intake.json"
+    ]
+
+    assert {record["event_id"] for record in package_records} == APPROVED_EVENT_IDS
+    assert {record["source_recovery_item_id"] for record in package_records}.isdisjoint(REJECTED_ITEM_IDS)
+    assert all(record["review_disposition"] == "approved" for record in package_records)
+    assert all(record["original_production_discovery_lineage_present"] is False for record in package_records)
+    assert all(record["production_artifact_present"] is False for record in package_records)
+    assert all(record["uncertainty_preserved"] is True for record in package_records)
+    assert all(
+        record["publication_eligible"] is False
+        and record["publication_approval"] is False
+        and record["publication_performed"] is False
+        and record["public_generation_authorized"] is False
+        and record["pages_authorized"] is False
+        for record in package_records
+    )
+
+
+def test_care_sep15_sep24_editorial_records_preserve_key_date_distinctions() -> None:
+    southern = _load(
+        Path(
+            "data/dispatches/care-line/historical-events/2026-06-30/"
+            "care-line-2026-06-30-southern-oregon-surgery-center-closure.json"
+        )
+    )
+    choate = _load(
+        Path(
+            "data/dispatches/care-line/historical-events/2026-09-17/"
+            "care-line-2026-09-17-choate-psychiatric-bed-elimination-plan-challenged.json"
+        )
+    )
+    pearl = _load(
+        Path(
+            "data/dispatches/care-line/historical-events/2026-09-23/"
+            "care-line-2026-09-23-pearl-youth-residence-scheduled-closure.json"
+        )
+    )
+    fitzgibbon = _load(
+        Path(
+            "data/dispatches/care-line/historical-events/2026-09-18/"
+            "care-line-2026-09-30-fitzgibbon-inpatient-labor-delivery-closure.json"
+        )
+    )
+
+    assert southern["source_published_date"] is None
+    assert southern["source_publication_date_uncertainty"]
+    assert "Periop Leader Network" in southern["event_date_basis"]
+    assert any(source.get("supports_event_date") is True for source in southern["sources"])
+    assert any(source.get("supports_closure_status") is True for source in southern["sources"])
+    assert not all(source.get("source_url") == "https://www.sosurgi.com/" for source in southern["sources"])
+    assert choate["effective_date"] is None
+    assert "not proven completed" in choate["materiality"]
+    assert pearl["event_date"] == "2026-09-23"
+    assert pearl["event_id"] == "care-line-2026-09-23-pearl-youth-residence-scheduled-closure"
+    assert pearl["effective_date"] is None
+    assert "WARN notice lists Nov. 21 for layoffs" in pearl["effective_date_uncertainty"]
+    assert "exact facility closure date is not established" in pearl["materiality"]
+    assert not Path(
+        "data/dispatches/care-line/historical-events/2026-09-23/"
+        "care-line-2026-11-21-pearl-youth-residence-closure.json"
+    ).exists()
+    assert fitzgibbon["event_date"] == "2026-09-18"
+    assert fitzgibbon["effective_date"] == "2026-09-30"
+    assert "prenatal/postpartum" in fitzgibbon["materiality"]
+
+
+def test_care_sep15_sep24_sep19_remains_untouched() -> None:
+    assert not Path("data/dispatches/care-line/historical-events/2026-09-19").exists()
+    assert not Path("data/dispatches/care-line/coverage-gaps/2026-09-19.json").exists()
 
 
 def _write_json(path: Path, payload: dict) -> None:

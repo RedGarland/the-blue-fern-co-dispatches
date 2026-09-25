@@ -1,0 +1,57 @@
+{
+  "bounded_summary": "Provider and local reporting confirm Fitzgibbon Hospital in Marshall, Missouri will end inpatient labor and delivery Sept. 30, while retaining prenatal/postpartum clinic support and arranging delivery transitions.",
+  "canonical_event_id": "care-line-2026-09-30-fitzgibbon-inpatient-labor-delivery-closure",
+  "canonical_event_identity": {
+    "category": "maternity_access",
+    "event_type": "inpatient_labor_delivery_service_closure",
+    "facility": "Fitzgibbon Hospital",
+    "geography": "Marshall, Missouri"
+  },
+  "dispatch": "care-line",
+  "editorial_review_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-24/editorial-review.json",
+  "effective_date": "2026-09-30",
+  "event_date": "2026-09-18",
+  "event_id": "care-line-2026-09-30-fitzgibbon-inpatient-labor-delivery-closure",
+  "headline": "Fitzgibbon Hospital will end inpatient labor and delivery services",
+  "materiality": "material inpatient labor and delivery access loss; prenatal/postpartum and transition services remain available",
+  "observation_date": "2026-09-22",
+  "observation_dates": [
+    "2026-09-22"
+  ],
+  "original_production_discovery_lineage_present": false,
+  "pages_authorized": false,
+  "production_artifact_present": false,
+  "public_generation_authorized": false,
+  "publication_approval": false,
+  "publication_eligible": false,
+  "publication_performed": false,
+  "recovered_at": "2026-09-24",
+  "recovery_provenance": "operator_recovered_external_source_evidence",
+  "relationship_to_existing_event": "new_event",
+  "review_disposition": "approved",
+  "schema_version": "bluefern.care_line.historical_event.v1",
+  "source_evidence_fingerprint": "6496f3042592afdb069d5ce593a829a6cf3b88dcf3b9d44581f520f82d826b1b",
+  "source_published_date": "2026-09-18",
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-24/recovery-review-intake.json",
+  "source_recovery_item_id": "care-line-2026-09-22-fitzgibbon-labor-delivery-end",
+  "source_sufficiency": "sufficient_provider_announcement_with_local_reporting_corroboration",
+  "sources": [
+    {
+      "publisher": "Fitzgibbon Hospital",
+      "source_publication_date": "2026-09-18",
+      "source_publication_date_uncertainty": null,
+      "source_role": "provider/official",
+      "source_url": "https://www.fitzgibbon.org/news/fitzgibbon-hospital-to-transition-inpatient-labor-delivery-services",
+      "supporting_passage": "discontinue inpatient labor and delivery services effective Sept. 30, 2026"
+    },
+    {
+      "publisher": "ABC17/KMIZ",
+      "source_publication_date": "2026-09-21",
+      "source_publication_date_uncertainty": null,
+      "source_role": "local reporting",
+      "source_url": "https://abc17news.com/news/saline/2026/09/21/fitzgibbon-hospital-to-end-inpatient-labor-and-delivery-services/",
+      "supporting_passage": "stop having inpatient labor and delivery services on Sept. 30"
+    }
+  ],
+  "uncertainty_preserved": true
+}

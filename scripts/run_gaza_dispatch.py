@@ -2014,16 +2014,6 @@ def _no_update_record_path(root: Path, edition_date: str) -> Path:
     return root / "output" / "site" / DISPATCH_SLUG / "status" / "no-updates" / f"{edition_date}.json"
 
 
-def clear_gaza_no_update_status_for_normal_edition(root: Path, edition_date: str, dry_run: bool, wrote: list[str]) -> bool:
-    status_path = _no_update_record_path(root, edition_date)
-    if not status_path.exists():
-        return False
-    wrote.append(str(status_path))
-    if not dry_run:
-        status_path.unlink()
-    return True
-
-
 def _no_update_evidence_is_clear(
     *,
     edition_date: str,
@@ -2734,7 +2724,6 @@ def run_gaza_dispatch(
             write_json(base / "curation_manifest.json", curation_manifest, dry_run, wrote)
         for asset in ("site.css", "gaza-logo.png", "bluefern.png"):
             copy_file(root / "assets" / asset, root / "output" / "site" / DISPATCH_SLUG / "assets" / asset, dry_run, wrote, warnings)
-        clear_gaza_no_update_status_for_normal_edition(root, edition_date, dry_run, wrote)
         render_archive_index_rss(root, edition_date, dry_run, wrote, include_current=True)
         backup_dir = BACKUP_ROOT / edition_date
         write_text(backup_dir / "index.html", html_content, dry_run, wrote)

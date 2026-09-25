@@ -1206,6 +1206,11 @@ def init_real_git_repo(path: Path) -> None:
     subprocess.run(["git", "commit", "-m", "init"], cwd=path, check=True, capture_output=True, text=True)
 
 
+def mark_pages_origin_gh_pages(path: Path) -> None:
+    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=path, check=True, capture_output=True, text=True).stdout.strip()
+    subprocess.run(["git", "update-ref", "refs/remotes/origin/gh-pages", head], cwd=path, check=True)
+
+
 def add_gaza_historical_catchup_publication(
     public_root: Path,
     *,
@@ -3598,6 +3603,7 @@ def test_gaza_committed_pages_edition_may_supersede_same_day_no_update(tmp_path:
     add_gaza_site_edition(pages_root, "2026-09-25")
     subprocess.run(["git", "add", "gaza"], cwd=pages_root, check=True)
     subprocess.run(["git", "commit", "-m", "publish gaza 2026-09-25"], cwd=pages_root, check=True, capture_output=True, text=True)
+    mark_pages_origin_gh_pages(pages_root)
 
     dates = generator.discover_public_edition_dates(site_root, "gaza", pages_repo=pages_root)
     dispatch = DispatchConfig(
@@ -3615,6 +3621,29 @@ def test_gaza_committed_pages_edition_may_supersede_same_day_no_update(tmp_path:
     assert dates == ["2026-09-25", "2026-09-24"]
     assert 'href="editions/2026-09-25/">Read the latest briefing</a>' in index_html
     assert "No update" not in index_html
+
+
+def test_gaza_unpushed_pages_commit_cannot_supersede_same_day_no_update(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    pages_root = tmp_path / "bluefern-dispatches-pages"
+    add_gaza_public_history_surface(site_root, ["2026-09-24"])
+    add_gaza_site_edition(site_root, "2026-09-24")
+    add_gaza_no_update_status(site_root, "2026-09-25", source_count=5)
+    init_real_git_repo(pages_root)
+    add_gaza_public_history_surface(pages_root, [])
+    add_gaza_no_update_status(pages_root, "2026-09-25", source_count=5)
+    subprocess.run(["git", "add", "gaza"], cwd=pages_root, check=True)
+    subprocess.run(["git", "commit", "-m", "publish no-update"], cwd=pages_root, check=True, capture_output=True, text=True)
+    mark_pages_origin_gh_pages(pages_root)
+    add_gaza_public_history_surface(pages_root, ["2026-09-25"])
+    add_gaza_site_edition(pages_root, "2026-09-25")
+    (pages_root / "gaza/status/no-updates/2026-09-25.json").unlink()
+    subprocess.run(["git", "add", "-A"], cwd=pages_root, check=True)
+    subprocess.run(["git", "commit", "-m", "local unpushed normal edition"], cwd=pages_root, check=True, capture_output=True, text=True)
+
+    dates = generator.discover_public_edition_dates(site_root, "gaza", pages_repo=pages_root)
+
+    assert dates == ["2026-09-24"]
 
 
 def test_gaza_public_link_consistency_blocks_dead_no_update_edition_link(tmp_path: Path):

@@ -58,6 +58,10 @@ def _commit_repo(repo: Path, message: str = "update") -> None:
     _run_git(repo, "commit", "-m", message)
 
 
+def _mark_origin_gh_pages(repo: Path) -> None:
+    _run_git(repo, "update-ref", "refs/remotes/origin/gh-pages", _git_output(repo, "rev-parse", "HEAD"))
+
+
 def _release_manifest(source: Path, pages: Path, date_text: str) -> Path:
     site = source / "output/site/food-line"
     edition = site / "editions" / date_text
@@ -182,6 +186,7 @@ def _write_gaza_pages_history(pages: Path) -> None:
     gaza = pages / "gaza"
     audio = gaza / "audio"
     audio.mkdir(parents=True, exist_ok=True)
+    (pages / "index.html").write_text("<html>Blue Fern</html>", encoding="utf-8")
     for date_text in ("2026-09-18", "2026-09-17", "2026-09-16"):
         edition = gaza / "editions" / date_text
         edition.mkdir(parents=True, exist_ok=True)
@@ -199,6 +204,75 @@ def _write_gaza_pages_history(pages: Path) -> None:
     (audio / "podcast.xml").write_text('<rss><link>/gaza/audio/2026-09-18-transcript.html</link><link>/gaza/audio/2026-06-20-transcript.html</link></rss>', encoding="utf-8")
     (gaza / "podcast.xml").write_text('<rss><link>/gaza/audio/2026-09-18-transcript.html</link><link>/gaza/audio/2026-06-20-transcript.html</link></rss>', encoding="utf-8")
     _commit_repo(pages, "published gaza history")
+
+
+def _write_gaza_normal_site(source: Path, date_text: str = "2026-09-19", *, valid: bool = True) -> None:
+    site = source / "output" / "site"
+    gaza = site / "gaza"
+    audio = gaza / "audio"
+    edition = gaza / "editions" / date_text
+    status = gaza / "status" / "no-updates"
+    audio.mkdir(parents=True, exist_ok=True)
+    edition.mkdir(parents=True, exist_ok=True)
+    status.mkdir(parents=True, exist_ok=True)
+    (site / "index.html").write_text("<html>Site</html>", encoding="utf-8")
+    (gaza / "index.html").write_text(
+        f'<html><ul class="edition-list"><li><a href="editions/{date_text}/">Sep. 19</a></li><li><a href="editions/2026-09-18/">Sep. 18</a></li><li><a href="editions/2026-09-17/">Sep. 17</a></li><li><a href="editions/2026-09-16/">Sep. 16</a></li></ul></html>',
+        encoding="utf-8",
+    )
+    (gaza / "archive.html").write_text(
+        f'<html><a href="editions/{date_text}/">Sep. 19 edition</a><a href="editions/2026-09-18/">Sep. 18 edition</a><a href="editions/2026-09-17/">Sep. 17 edition</a><a href="editions/2026-09-16/">Sep. 16 edition</a></html>',
+        encoding="utf-8",
+    )
+    (gaza / "rss.xml").write_text(
+        f"<rss><channel><item><link>https://dispatches.thebluefernco.com/gaza/editions/{date_text}/</link></item></channel></rss>",
+        encoding="utf-8",
+    )
+    (audio / "index.html").write_text('<span class="gaza-audio-index-date"><strong>2026-09-18</strong></span><span class="gaza-audio-index-date"><strong>2026-06-20</strong></span>', encoding="utf-8")
+    (audio / "podcast.xml").write_text('<rss><link>/gaza/audio/2026-09-18-transcript.html</link><link>/gaza/audio/2026-06-20-transcript.html</link></rss>', encoding="utf-8")
+    (gaza / "podcast.xml").write_text('<rss><link>/gaza/audio/2026-09-18-transcript.html</link><link>/gaza/audio/2026-06-20-transcript.html</link></rss>', encoding="utf-8")
+    (edition / "index.html").write_text(f"<html>Gaza normal {date_text}</html>", encoding="utf-8")
+    (edition / "edition_manifest.json").write_text(
+        json.dumps({"dispatch_slug": "gaza", "edition_date": date_text, "source_count": 1, "story_count": 1 if valid else 0}),
+        encoding="utf-8",
+    )
+    (edition / "sources_manifest.json").write_text(json.dumps([{"source_id": "source"}] if valid else []), encoding="utf-8")
+    (edition / "curation_manifest.json").write_text(json.dumps([{"story_id": "story"}] if valid else []), encoding="utf-8")
+    (status / f"{date_text}.json").write_text(
+        json.dumps(
+            {
+                "date": date_text,
+                "classification": "no_publication_needed",
+                "message": "No new source-backed Gaza update met publication threshold today.",
+                "source_count": 4,
+                "public_story_count": 0,
+                "run_completed_successfully": True,
+                "run_manifest_path": f"data/dispatches/gaza/editions/{date_text}/run_manifest.json",
+                "collection_report_path": f"data/dispatches/gaza/editions/{date_text}/collection_report.json",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+
+def _seed_pages_no_update(pages: Path, date_text: str = "2026-09-19") -> None:
+    status = pages / "gaza" / "status" / "no-updates"
+    status.mkdir(parents=True, exist_ok=True)
+    (status / f"{date_text}.json").write_text(
+        json.dumps(
+            {
+                "date": date_text,
+                "classification": "no_publication_needed",
+                "message": "No new source-backed Gaza update met publication threshold today.",
+                "source_count": 4,
+                "public_story_count": 0,
+                "run_completed_successfully": True,
+                "run_manifest_path": f"data/dispatches/gaza/editions/{date_text}/run_manifest.json",
+                "collection_report_path": f"data/dispatches/gaza/editions/{date_text}/collection_report.json",
+            }
+        ),
+        encoding="utf-8",
+    )
 
 
 def _stub_gaza_build(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -390,6 +464,184 @@ def test_normal_gaza_publish_still_enforces_audio_history_shrink(release_repos: 
 
     assert report["ok"] is False
     assert any("gaza public history shrink detected for gaza/audio/index.html" in error for error in report["errors"])
+
+
+def test_gaza_generation_succeeds_pages_publish_fails_no_update_wins_next_rebuild(
+    release_repos: tuple[Path, Path],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source, pages = release_repos
+    _write_gaza_normal_site(source)
+    _write_gaza_pages_history(pages)
+    (pages / "CNAME").write_text("wrong.example\n", encoding="utf-8")
+    _seed_pages_no_update(pages)
+    _commit_repo(pages, "published no-update")
+    _stub_gaza_build(monkeypatch)
+
+    report = generator.publish_pages(
+        source,
+        pages,
+        remote_url=None,
+        dry_run=False,
+        commit=True,
+        no_push=True,
+        only_dispatches=("gaza",),
+        expect_dispatches=("gaza",),
+        expect_date="2026-09-19",
+    )
+
+    assert report["ok"] is False
+    assert (source / "output/site/gaza/status/no-updates/2026-09-19.json").exists()
+    assert generator.discover_public_edition_dates(source / "output/site", "gaza", pages_repo=pages) == [
+        "2026-09-18",
+        "2026-09-17",
+        "2026-09-16",
+    ]
+    assert (pages / "gaza/status/no-updates/2026-09-19.json").exists()
+
+
+def test_gaza_local_pages_commit_failed_push_origin_no_update_remains_authoritative(
+    release_repos: tuple[Path, Path],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source, pages = release_repos
+    _write_gaza_normal_site(source)
+    _write_gaza_pages_history(pages)
+    (pages / "CNAME").write_text(f"{generator.CNAME_VALUE}\n", encoding="utf-8")
+    _seed_pages_no_update(pages)
+    _commit_repo(pages, "published no-update")
+    _mark_origin_gh_pages(pages)
+    _stub_gaza_build(monkeypatch)
+
+    report = generator.publish_pages(
+        source,
+        pages,
+        remote_url=None,
+        dry_run=False,
+        commit=True,
+        no_push=True,
+        only_dispatches=("gaza",),
+        expect_dispatches=("gaza",),
+        expect_date="2026-09-19",
+    )
+
+    assert report["ok"] is True
+    assert report["committed"] is True
+    assert not (pages / "gaza/status/no-updates/2026-09-19.json").exists()
+    assert generator.discover_public_edition_dates(source / "output/site", "gaza", pages_repo=pages) == [
+        "2026-09-18",
+        "2026-09-17",
+        "2026-09-16",
+    ]
+
+
+def test_gaza_normal_publish_supersession_commit_adds_edition_and_deletes_same_day_no_update(
+    release_repos: tuple[Path, Path],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source, pages = release_repos
+    _write_gaza_normal_site(source)
+    _write_gaza_pages_history(pages)
+    (pages / "CNAME").write_text(f"{generator.CNAME_VALUE}\n", encoding="utf-8")
+    _seed_pages_no_update(pages, "2026-09-19")
+    _seed_pages_no_update(pages, "2026-09-18")
+    _commit_repo(pages, "published no-updates")
+    _stub_gaza_build(monkeypatch)
+
+    report = generator.publish_pages(
+        source,
+        pages,
+        remote_url=None,
+        dry_run=False,
+        commit=True,
+        no_push=True,
+        only_dispatches=("gaza",),
+        expect_dispatches=("gaza",),
+        expect_date="2026-09-19",
+    )
+    changed = _git_output(pages, "show", "--name-status", "--format=", "HEAD").splitlines()
+
+    assert report["ok"] is True
+    assert report["committed"] is True
+    assert any(line.startswith("A\tgaza/editions/2026-09-19/") for line in changed)
+    assert "D\tgaza/status/no-updates/2026-09-19.json" in changed
+    assert any(line in {"M\tgaza/index.html", "A\tgaza/index.html"} for line in changed)
+    assert any(line in {"M\tgaza/archive.html", "A\tgaza/archive.html"} for line in changed)
+    assert any(line in {"M\tgaza/rss.xml", "A\tgaza/rss.xml"} for line in changed)
+    assert (pages / "gaza/status/no-updates/2026-09-18.json").exists()
+
+
+def test_gaza_invalid_normal_edition_cannot_retire_no_update(
+    release_repos: tuple[Path, Path],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source, pages = release_repos
+    _write_gaza_normal_site(source, valid=False)
+    _write_gaza_pages_history(pages)
+    (pages / "CNAME").write_text(f"{generator.CNAME_VALUE}\n", encoding="utf-8")
+    _seed_pages_no_update(pages)
+    _commit_repo(pages, "published no-update")
+    _stub_gaza_build(monkeypatch)
+
+    report = generator.publish_pages(
+        source,
+        pages,
+        remote_url=None,
+        dry_run=False,
+        commit=True,
+        no_push=True,
+        only_dispatches=("gaza",),
+        expect_dispatches=("gaza",),
+        expect_date="2026-09-19",
+    )
+
+    assert report["ok"] is False
+    assert any("gaza public dead edition link blocked" in error for error in report["errors"])
+    assert (pages / "gaza/status/no-updates/2026-09-19.json").exists()
+
+
+def test_gaza_repeated_successful_normal_publication_is_idempotent(
+    release_repos: tuple[Path, Path],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source, pages = release_repos
+    _write_gaza_normal_site(source)
+    _write_gaza_pages_history(pages)
+    (pages / "CNAME").write_text(f"{generator.CNAME_VALUE}\n", encoding="utf-8")
+    _seed_pages_no_update(pages)
+    _commit_repo(pages, "published no-update")
+    _stub_gaza_build(monkeypatch)
+
+    first = generator.publish_pages(
+        source,
+        pages,
+        remote_url=None,
+        dry_run=False,
+        commit=True,
+        no_push=True,
+        only_dispatches=("gaza",),
+        expect_dispatches=("gaza",),
+        expect_date="2026-09-19",
+    )
+    second = generator.publish_pages(
+        source,
+        pages,
+        remote_url=None,
+        dry_run=False,
+        commit=True,
+        no_push=True,
+        only_dispatches=("gaza",),
+        expect_dispatches=("gaza",),
+        expect_date="2026-09-19",
+    )
+
+    assert first["ok"] is True
+    assert first["committed"] is True
+    assert second["ok"] is True
+    assert second["committed"] is False
+    assert second["message"] == "no changes to commit"
+    assert second["gaza_no_update_markers_removed"] == []
+    assert not (pages / "gaza/status/no-updates/2026-09-19.json").exists()
 
 
 def _write_gaza_history_guard_fixture(

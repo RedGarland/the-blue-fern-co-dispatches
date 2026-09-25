@@ -9,7 +9,6 @@ from bluefern_dispatches.generator import build_site
 from bluefern_dispatches.gaza_audio import write_gaza_audio_outputs
 from scripts.run_gaza_dispatch import (
     build_source_diversity_report,
-    clear_gaza_no_update_status_for_normal_edition,
     curate_stories,
     normalize_sources,
     render_gaza_edition,
@@ -551,7 +550,7 @@ def test_gaza_no_update_can_render_from_preserved_artifacts(monkeypatch):
     assert not (work / "output" / "site" / "gaza" / "editions" / "2026-05-31" / "index.html").exists()
 
 
-def test_gaza_normal_edition_supersedes_stale_same_day_no_update_marker(monkeypatch):
+def test_gaza_normal_edition_generation_preserves_same_day_no_update_marker(monkeypatch):
     repo = Path(__file__).resolve().parents[1]
     work = make_work_root(repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
@@ -574,13 +573,13 @@ def test_gaza_normal_edition_supersedes_stale_same_day_no_update_marker(monkeypa
         ),
         encoding="utf-8",
     )
-    wrote: list[str] = []
+    write_manual_sources(work, "2026-05-31")
 
-    removed = clear_gaza_no_update_status_for_normal_edition(work, "2026-05-31", dry_run=False, wrote=wrote)
+    result = run_gaza_dispatch(work, "2026-05-31", from_manual_sources=True, dry_run=False, render=False, all_steps=True)
 
-    assert removed is True
-    assert str(status_path) in wrote
-    assert not status_path.exists()
+    assert result["ok"] is True
+    assert status_path.exists()
+    assert (work / "output" / "site" / "gaza" / "editions" / "2026-05-31" / "index.html").exists()
 
 
 def test_source_manifest_carries_attribution_mode_and_claim_status(monkeypatch):

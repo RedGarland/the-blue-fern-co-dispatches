@@ -1,0 +1,30 @@
+{
+  "schema_version": "care_sep19_evidence_exhausted_v1",
+  "created_at": "2026-09-25T15:51:21.412725Z",
+  "observation_date": "2026-09-19",
+  "classification": "EVIDENCE_EXHAUSTED_REMAINS",
+  "can_coverage_be_fully_accounted": false,
+  "recovered_candidates": [],
+  "recovered_event_ids": [],
+  "reason": "All three expected Sep. 19 Pacific observation-date collections failed at checkout verification before discovery; no Sep. 19 raw items or run manifests survived. Later Sep. 20/21 repository artifacts did not reveal plausible Sep. 19 carryforward candidates, but they cannot prove complete source coverage for the failed observation window.",
+  "evidence_limits": [
+    "No authoritative Sep. 19 collection manifest exists.",
+    "No Sep. 19 raw item artifacts exist.",
+    "Later collections provide useful reconciliation but are not equivalent to complete Sep. 19 source-universe accounting.",
+    "Legacy collection artifacts do not contain source_evidence_fingerprint."
+  ],
+  "terminal_disposition_refs": [
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-25-sep19/terminal-dispositions.json"
+  ],
+  "runtime_evidence_refs": [
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-25-sep19/observation-window-audit.json"
+  ],
+  "safety": {
+    "production_mutation": "none",
+    "scheduler_trigger": "none",
+    "collection_replay": "none",
+    "publication": "none",
+    "pages": "none",
+    "historical_event_records_created": false
+  }
+}

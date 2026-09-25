@@ -1,0 +1,39 @@
+{
+  "schema_version": "bluefern.coverage_gap.v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-09-19",
+  "observation_status": "OBSERVATION_INCOMPLETE",
+  "reason_codes": [
+    "scheduled_run_failed",
+    "terminal_accounting_incomplete",
+    "historical_evidence_incomplete"
+  ],
+  "gap_reason": "All three expected Sep. 19 Pacific collection opportunities failed at checkout verification before child collection launched; no Sep. 19 discovery artifacts, run manifest, raw universe, or collection source HEAD were captured.",
+  "detected_at": "2026-09-25",
+  "backfill_status": "BACKFILL_REQUIRED",
+  "recovery_investigation_status": "EVIDENCE_EXHAUSTED",
+  "reason_code": "historical_evidence_exhausted",
+  "recovered_at": null,
+  "recovered_event_ids": [],
+  "observed_finding_count": 0,
+  "source_refs": [
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-25-sep19/observation-window-audit.json",
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-25-sep19/terminal-dispositions.json",
+    "data/private-agent-handoff/discovery-recovery/care-line/2026-09-25-sep19/evidence-exhausted.json"
+  ],
+  "transition_history": [
+    {
+      "previous_observation_status": null,
+      "previous_backfill_status": null,
+      "new_observation_status": "OBSERVATION_INCOMPLETE",
+      "new_backfill_status": "BACKFILL_REQUIRED",
+      "transition_at": "2026-09-25",
+      "reason_code": "historical_evidence_exhausted",
+      "evidence_refs": [
+        "data/private-agent-handoff/discovery-recovery/care-line/2026-09-25-sep19/observation-window-audit.json",
+        "data/private-agent-handoff/discovery-recovery/care-line/2026-09-25-sep19/evidence-exhausted.json"
+      ]
+    }
+  ],
+  "notes": "Bounded historical reconstruction found zero recovered candidates. Later Sep. 20/21 repository artifacts confirmed three Sep. 19-dated items as historical exclusions/nonqualifying, but later collections are not equivalent to complete Sep. 19 source-universe accounting. The reviewed queue was SAFE_NO_OP/nothing_to_publish, approved release publication failed with no release, and no replay, production mutation, publication, or Pages mutation was performed."
+}

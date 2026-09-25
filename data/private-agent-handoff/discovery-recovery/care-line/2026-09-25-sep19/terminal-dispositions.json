@@ -1,0 +1,43 @@
+{
+  "schema_version": "care_sep19_terminal_dispositions_v1",
+  "created_at": "2026-09-25T15:51:21.412690Z",
+  "observation_date": "2026-09-19",
+  "counts": {
+    "HISTORICAL_EXCLUSION_CONFIRMED": 3
+  },
+  "dispositions": [
+    {
+      "disposition": "HISTORICAL_EXCLUSION_CONFIRMED",
+      "source_id": "kff-health-news",
+      "title": "Health Journalists Visit Conservative Georgia District and Weigh AI Bioweapon Threat",
+      "canonical_url": "https://kffhealthnews.org/on-air/on-air-september-19-2026-cancer-ai-biological-weapons-georgia-14th/",
+      "source_publication_date": "2026-09-19",
+      "record_fingerprint": "b6a8555a5337536870107c193959cad508eddc520613b0f10302266ad05a046d",
+      "first_observed_run": "20260920-145effdedbd7-01",
+      "artifact": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\data\\dispatches\\care-line\\collection-runs\\2026-09-20\\20260920-145effdedbd7-01\\kff-health-news.raw-items.json",
+      "basis": "Later collection captured this Sep. 19-dated identity and the pipeline classified it as excluded/nonqualifying; title/content do not describe a concrete health-care access/capacity/service change."
+    },
+    {
+      "disposition": "HISTORICAL_EXCLUSION_CONFIRMED",
+      "source_id": "npr-health",
+      "title": "Betel nuts are a top mind-affecting substance. Now there's evidence of ancient use",
+      "canonical_url": "https://www.npr.org/2026/09/19/g-s1-144054/ancient-teeth-betel-nuts-mind-altering-drugs",
+      "source_publication_date": "2026-09-19",
+      "record_fingerprint": "8ad3da7e0561a6a78e91bc68d8d90ba872651bdd34d532fa33ba77a7b42b1f19",
+      "first_observed_run": "20260920-145effdedbd7-01",
+      "artifact": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\data\\dispatches\\care-line\\collection-runs\\2026-09-20\\20260920-145effdedbd7-01\\npr-health.raw-items.json",
+      "basis": "Later collection captured this Sep. 19-dated identity and the pipeline classified it as excluded/nonqualifying; title/content do not describe a concrete health-care access/capacity/service change."
+    },
+    {
+      "disposition": "HISTORICAL_EXCLUSION_CONFIRMED",
+      "source_id": "stat-health",
+      "title": "Jehovah\u2019s Witnesses allow blood-derived products but keep ban on whole-blood transfusions",
+      "canonical_url": "https://www.statnews.com/2026/09/19/jehovahs-witnesses-blood-derived-products-transfusions/?utm_campaign=rss",
+      "source_publication_date": "2026-09-19",
+      "record_fingerprint": "ff944bec4ac899923608da5d78528ebb633494eda0ab02ff8cb305ff7daccfab",
+      "first_observed_run": "20260920-145effdedbd7-01",
+      "artifact": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\data\\dispatches\\care-line\\collection-runs\\2026-09-20\\20260920-145effdedbd7-01\\stat-health.raw-items.json",
+      "basis": "Later collection captured this Sep. 19-dated identity and the pipeline classified it as excluded/nonqualifying; title/content do not describe a concrete health-care access/capacity/service change."
+    }
+  ]
+}

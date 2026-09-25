@@ -1,0 +1,12 @@
+{
+  "schema_version": "gaza-no-update-status-v1",
+  "date": "2026-09-25",
+  "classification": "no_publication_needed",
+  "message": "No new source-backed Gaza update met publication threshold today.",
+  "run_completed_successfully": true,
+  "source_count": 5,
+  "public_story_count": 0,
+  "run_manifest_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\data\\dispatches\\gaza\\editions\\2026-09-25\\run_manifest.json",
+  "collection_report_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\data\\dispatches\\gaza\\editions\\2026-09-25\\collection_report.json",
+  "normal_edition_generated": false
+}

@@ -1314,6 +1314,73 @@ def test_food_and_care_sep14_recovery_candidates_are_recovered_after_historical_
     assert care.observed_finding_count == 2
 
 
+def test_food_sep24_historical_recovery_record_resolves_controller_state() -> None:
+    result = evaluate_dispatch_date(Path("."), "food-line", "2026-09-24", evaluated_at=EVALUATED)
+
+    assert result.observation_status == ObservationStatus.OBSERVED_WITH_FINDINGS
+    assert result.backfill_status == BackfillStatus.RECOVERED
+    assert result.recovered_event_ids == ("food-line-2026-09-22-el-pasoans-fighting-hunger-storm-disruption",)
+    assert result.observed_finding_count == 1
+    assert result.operator_attention_required is False
+    assert result.reason_codes == (
+        GapReasonCode.SCHEDULED_RUN_FAILED,
+        GapReasonCode.HISTORICAL_RECOVERY_COMPLETED,
+    )
+
+
+def test_food_sep24_historical_recovery_preserves_lineage_rejection_and_publication_bounds() -> None:
+    event = json.loads(
+        Path(
+            "data/dispatches/food-line/historical-events/2026-09-22/"
+            "food-line-2026-09-22-el-pasoans-fighting-hunger-storm-disruption.json"
+        ).read_text(encoding="utf-8")
+    )
+    review = json.loads(
+        Path("data/private-agent-handoff/discovery-recovery/food-line/2026-09-25/editorial-review.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    intake = json.loads(
+        Path("data/private-agent-handoff/discovery-recovery/food-line/2026-09-25/recovery-review-intake.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    audit = json.loads(
+        Path("data/private-agent-handoff/discovery-recovery/food-line/2026-09-25/observation-window-audit.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    by_id = {item["item_id"]: item for item in review["items"]}
+    approved = [item for item in review["items"] if item["disposition"] == "approved"]
+
+    assert len(approved) == 1
+    assert by_id["food-line-2026-09-22-el-pasoans-fighting-hunger-storm-disruption"]["relationship_to_existing_event"] == "new_event"
+    assert by_id["food-line-2026-09-24-damiens-food-pantry-recurring-hours"]["disposition"] == "rejected"
+    assert by_id["food-line-2026-09-24-damiens-food-pantry-recurring-hours"]["historical_record_created"] is None
+    assert event["event_date"] == "2026-09-22"
+    assert event["observation_date"] == "2026-09-24"
+    assert event["recovered_at"] == "2026-09-25"
+    assert event["original_production_discovery_lineage_present"] is False
+    assert event["production_artifact_present"] is False
+    for payload in (event, review, intake, audit):
+        assert payload["publication_eligible"] is False if "publication_eligible" in payload else True
+        assert payload["publication_approval"] is False if "publication_approval" in payload else True
+        assert payload["publication_performed"] is False
+        assert payload["public_generation_authorized"] is False
+        assert payload["pages_authorized"] is False
+    assert audit["scratch_sha256_lineage"] == {
+        "runtime_evidence_audit": "bb7f01d1c659886c642eb16cb3640671f2c2b23dea1a01f85bf2d6644cd6172e",
+        "later_collection_reconciliation": "e4d6136c6fb1254da70a9fab4189438ae8fda1500dc8e233c4fca0d38d3b11c1",
+        "frozen_discovery_manifest": "c9da04bc2c87283087425846e942d4dd3316776e5d463ddc2e7ebee3c7adbc17",
+    }
+    assert not Path("data/dispatches/food-line/agent-intake/2026-09-24").exists()
+    assert not Path("data/dispatches/food-line/review/proposed-editions/2026-09-24.json").exists()
+    assert not Path("data/dispatches/food-line/review/reports/2026-09-24").exists()
+    assert not list(Path("output/site").glob("**/*el-pasoans-fighting-hunger-storm-disruption*"))
+    assert not list(Path("bluefern-dispatches-pages").glob("**/*el-pasoans-fighting-hunger-storm-disruption*"))
+
+
 def test_food_care_sep14_recovery_preserves_distinct_dates_and_no_public_authority() -> None:
     spencer = json.loads(
         Path(

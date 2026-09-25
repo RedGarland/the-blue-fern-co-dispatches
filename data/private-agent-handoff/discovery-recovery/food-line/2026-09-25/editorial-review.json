@@ -1,0 +1,36 @@
+{
+  "schema_version": "bluefern.food_line.discovery_recovery_editorial_review.v1",
+  "dispatch": "food-line",
+  "protected_source_commit": "e6c736b785cae4682603aa85fbde92f6580b560a",
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/food-line/2026-09-25/recovery-review-intake.json",
+  "observation_audit_artifact": "data/private-agent-handoff/discovery-recovery/food-line/2026-09-25/observation-window-audit.json",
+  "reviewed_at": "2026-09-25T20:45:00Z",
+  "review_scope": "bounded_historical_recovery_non_public",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false,
+  "items": [
+    {
+      "item_id": "food-line-2026-09-22-el-pasoans-fighting-hunger-storm-disruption",
+      "observed_date": "2026-09-24",
+      "event_date": "2026-09-22",
+      "source_published_date": "2026-09-22",
+      "disposition": "approved",
+      "relationship_to_existing_event": "new_event",
+      "canonical_event_id": "food-line-2026-09-22-el-pasoans-fighting-hunger-storm-disruption",
+      "historical_record_created": "data/dispatches/food-line/historical-events/2026-09-22/food-line-2026-09-22-el-pasoans-fighting-hunger-storm-disruption.json",
+      "reason": "The source documents a concrete food-distribution interruption: storm damage forced early Mercado closure and neighbors waiting for food were sent home without assistance."
+    },
+    {
+      "item_id": "food-line-2026-09-24-damiens-food-pantry-recurring-hours",
+      "observed_date": "2026-09-24",
+      "disposition": "rejected",
+      "relationship_to_existing_event": "non_event",
+      "canonical_event_id": null,
+      "historical_record_created": null,
+      "reason": "Recurring routine service-hours listing; no new disruption, expansion, policy change, or material Food Line access event."
+    }
+  ]
+}

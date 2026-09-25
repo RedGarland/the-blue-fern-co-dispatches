@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.food_line.historical_event.v1",
+  "dispatch": "food-line",
+  "event_id": "food-line-2026-09-22-el-pasoans-fighting-hunger-storm-disruption",
+  "canonical_event_id": "food-line-2026-09-22-el-pasoans-fighting-hunger-storm-disruption",
+  "event_date": "2026-09-22",
+  "source_published_date": "2026-09-22",
+  "observation_date": "2026-09-24",
+  "recovered_at": "2026-09-25",
+  "recovery_provenance": "operator_recovered_public_source_recall_evidence",
+  "original_production_discovery_lineage_present": false,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/food-line/2026-09-25/recovery-review-intake.json",
+  "editorial_review_artifact": "data/private-agent-handoff/discovery-recovery/food-line/2026-09-25/editorial-review.json",
+  "source_recovery_item_id": "food-line-2026-09-22-el-pasoans-fighting-hunger-storm-disruption",
+  "production_run_id": "food-line-scheduled-20260924-20260924T123001Z-0dfe74ce",
+  "production_artifact_present": false,
+  "relationship_to_existing_event": "new_event",
+  "canonical_event_identity": {
+    "category": "food_access_disruption",
+    "event_type": "food_bank_storm_damage_distribution_disruption",
+    "geography": "El Paso, Texas",
+    "service": "El Pasoans Fighting Hunger Food Bank / Mercado distribution"
+  },
+  "headline": "Storm damage forced early food-bank distribution closure in El Paso",
+  "bounded_summary": "Spotlight EP News reported that September 22 rain damaged two El Pasoans Fighting Hunger Mercado canopies and forced the food bank to close distribution early, sending neighbors still waiting in line home without the food they came for. KVIA reporting published September 23 and updated September 24 corroborated the storm damage and later closure escalation.",
+  "source_sufficiency": "traceable_public_local_sources_with_specific_food_distribution_interruption",
+  "materiality": "storm damage caused actual food-distribution interruption, including neighbors being unable to receive expected food assistance",
+  "uncertainty_preserved": true,
+  "sources": [
+    {
+      "publisher": "Spotlight EP News",
+      "source_url": "https://spotlightepnews.com/rain-damages-canopies-at-el-pasoans-fighting-hunger-forces-early-mercado-closure/",
+      "source_publication_date": "2026-09-22",
+      "source_role": "principal_local_news_report"
+    },
+    {
+      "publisher": "KVIA",
+      "source_url": "https://kvia.com/news/top-stories/2026/09/23/el-paso-food-bank-asks-for-help-with-rain-damaged-canopies-sign/",
+      "source_publication_date": "2026-09-23",
+      "source_update_date": "2026-09-24",
+      "source_role": "corroborating_local_news_report_and_later_closure_escalation"
+    }
+  ],
+  "review_disposition": "approved",
+  "publication_eligible": false,
+  "publication_approval": false,
+  "publication_performed": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false
+}

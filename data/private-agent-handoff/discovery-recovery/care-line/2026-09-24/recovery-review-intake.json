@@ -1,0 +1,645 @@
+{
+  "candidate_identity_count": 8,
+  "conflicting_evidence_identity_count": 0,
+  "dispatch": "care-line",
+  "duplicate_identity_count": 2,
+  "evidence_exhausted_identity_count": 39,
+  "excluded_identity_count": 4,
+  "generated_at": "2026-09-25T09:00:00Z",
+  "items": [
+    {
+      "access_consequence": "Permanent closure removes a local ambulatory surgery center from service availability.",
+      "bounded_summary": "Official provider notice confirms Surgery Center of Southern Oregon is permanently closed; this resolves the ASC-closure roundup identity to a specific facility closure represented in the frozen row.",
+      "corroborating_source_url": "",
+      "coverage_gap_reason_code": "recall_audit_miss",
+      "dispatch": "care-line",
+      "eligible_for_automatic_publication": false,
+      "event_date": "2026-06-30",
+      "event_date_basis": "official provider closure notice independently confirms permanent closure date",
+      "event_type": "ambulatory surgery center closure",
+      "facility_or_provider": "Surgery Center of Southern Oregon",
+      "facility_provider": "Surgery Center of Southern Oregon",
+      "geography": "Southern Oregon",
+      "item_id": "care-line-2026-09-16-southern-oregon-surgery-center-closure",
+      "observation_date": "2026-09-16",
+      "observation_dates": [
+        "2026-09-16",
+        "2026-09-17"
+      ],
+      "observed_date": "2026-09-16",
+      "observed_dates": [
+        "2026-09-16",
+        "2026-09-17"
+      ],
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-asc",
+      "original_title": "Why 5 ASCs closed in 2026",
+      "original_url": "https://www.beckersasc.com/asc-transactions-and-valuation-issues/why-5-ascs-closed-in-2026/",
+      "pages_authorized": false,
+      "primary_alternate_source_url": "https://www.sosurgi.com/",
+      "production_artifact_present": false,
+      "production_run_id": "20260916-alternate-source-recovery",
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_eligible": false,
+      "publication_performed": false,
+      "publisher": "Surgery Center of Southern Oregon",
+      "recovery_method": "operator_recovered_external_source_evidence",
+      "recovery_provenance": "operator_recovered_external_source_evidence",
+      "review_retention_disposition": "retained_for_review",
+      "review_status": "pending_review",
+      "review_transition_owner": "human_editorial_review",
+      "source_evidence_fingerprint": "a8d715c3c8be9fbe4f9c25605a5f84293c0aeab29513c2bd3b6aacc3c4b487fe",
+      "source_publication_date": null,
+      "source_publication_date_uncertainty": "official provider page confirms closure but does not expose a provable publication date",
+      "source_published_date": null,
+      "source_traceability": {
+        "alternate_sources": [
+          {
+            "date": null,
+            "date_uncertainty": "official provider page confirms closure but does not expose a provable publication date",
+            "passage": "The Surgery Center of Southern Oregon is now permanently closed",
+            "publisher": "Surgery Center of Southern Oregon",
+            "type": "provider/official",
+            "url": "https://www.sosurgi.com/"
+          }
+        ],
+        "corroborating_alternate_source": null,
+        "network_pages_inspected": 1,
+        "primary_alternate_source": {
+          "date": null,
+          "date_uncertainty": "official provider page confirms closure but does not expose a provable publication date",
+          "passage": "The Surgery Center of Southern Oregon is now permanently closed",
+          "publisher": "Surgery Center of Southern Oregon",
+          "type": "provider/official",
+          "url": "https://www.sosurgi.com/"
+        },
+        "search_queries_used": [
+          "Why 5 ASCs closed in 2026",
+          "provider/facility + event/date",
+          "provider/facility + access terms"
+        ]
+      },
+      "source_url": "https://www.sosurgi.com/",
+      "supporting_passage": "The Surgery Center of Southern Oregon is now permanently closed"
+    },
+    {
+      "access_consequence": "Suspension reduces local emergency air-medical transport availability.",
+      "bounded_summary": "Local/trade evidence confirms PHI Air Medical suspended Red Bluff air ambulance base operations, affecting emergency air transport access.",
+      "corroborating_source_url": "https://www.aol.com/articles/north-state-air-ambulance-closes-110300000.html",
+      "coverage_gap_reason_code": "recall_audit_miss",
+      "dispatch": "care-line",
+      "eligible_for_automatic_publication": false,
+      "event_date": "2026-09-14",
+      "event_type": "air ambulance base suspension",
+      "facility_or_provider": "PHI Air Medical Red Bluff base",
+      "facility_provider": "PHI Air Medical Red Bluff base",
+      "geography": "Red Bluff, California",
+      "item_id": "care-line-2026-09-17-phi-red-bluff-air-medical-suspension",
+      "observation_date": "2026-09-17",
+      "observation_dates": [
+        "2026-09-17",
+        "2026-09-18"
+      ],
+      "observed_date": "2026-09-17",
+      "observed_dates": [
+        "2026-09-17",
+        "2026-09-18"
+      ],
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-asc",
+      "original_title": "Air ambulance company suspends base operations amid BCBS reimbursement dispute",
+      "original_url": "https://www.beckersasc.com/asc-coding-billing-and-collections/air-ambulance-company-suspends-base-operations-amid-bcbs-reimbursement-dispute/",
+      "pages_authorized": false,
+      "primary_alternate_source_url": "https://www.ems1.com/air-medical-transport/phi-air-medical-suspends-operations-in-calif-city-over-payment-issues",
+      "production_artifact_present": false,
+      "production_run_id": "20260917-alternate-source-recovery",
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_eligible": false,
+      "publication_performed": false,
+      "publisher": "EMS1 / Red Bluff Daily News",
+      "recovery_method": "operator_recovered_external_source_evidence",
+      "recovery_provenance": "operator_recovered_external_source_evidence",
+      "review_retention_disposition": "retained_for_review",
+      "review_status": "pending_review",
+      "review_transition_owner": "human_editorial_review",
+      "source_evidence_fingerprint": "eafcef9d85dcbebed55336d587172caad778f4915a8a3c5d96fe72ec9820001c",
+      "source_publication_date": "2026-09-15",
+      "source_published_date": "2026-09-15",
+      "source_traceability": {
+        "alternate_sources": [
+          {
+            "date": "2026-09-15",
+            "passage": "suspending its Red Bluff operations at the Red Bluff Municipal Airport",
+            "publisher": "EMS1 / Red Bluff Daily News",
+            "type": "trade/local reporting",
+            "url": "https://www.ems1.com/air-medical-transport/phi-air-medical-suspends-operations-in-calif-city-over-payment-issues"
+          },
+          {
+            "date": "2026-09-16",
+            "passage": "stopped flying out of its air medical base at Red Bluff Municipal Airport",
+            "publisher": "Redding Record Searchlight via AOL",
+            "type": "local reporting",
+            "url": "https://www.aol.com/articles/north-state-air-ambulance-closes-110300000.html"
+          }
+        ],
+        "corroborating_alternate_source": {
+          "date": "2026-09-16",
+          "passage": "stopped flying out of its air medical base at Red Bluff Municipal Airport",
+          "publisher": "Redding Record Searchlight via AOL",
+          "type": "local reporting",
+          "url": "https://www.aol.com/articles/north-state-air-ambulance-closes-110300000.html"
+        },
+        "network_pages_inspected": 2,
+        "primary_alternate_source": {
+          "date": "2026-09-15",
+          "passage": "suspending its Red Bluff operations at the Red Bluff Municipal Airport",
+          "publisher": "EMS1 / Red Bluff Daily News",
+          "type": "trade/local reporting",
+          "url": "https://www.ems1.com/air-medical-transport/phi-air-medical-suspends-operations-in-calif-city-over-payment-issues"
+        },
+        "search_queries_used": [
+          "Air ambulance company suspends base operations amid BCBS reimbursement dispute",
+          "provider/facility + event/date",
+          "provider/facility + access terms"
+        ]
+      },
+      "source_url": "https://www.ems1.com/air-medical-transport/phi-air-medical-suspends-operations-in-calif-city-over-payment-issues",
+      "supporting_passage": "suspending its Red Bluff operations at the Red Bluff Municipal Airport"
+    },
+    {
+      "access_consequence": "Existing hotel-based crisis respite placements end and new hotel placements are no longer allowed.",
+      "bounded_summary": "MPR confirms Minnesota ended hotel-based crisis respite placements, a Medicaid-funded crisis support setting, with all existing hotel placements ending Sept. 15.",
+      "corroborating_source_url": "",
+      "coverage_gap_reason_code": "recall_audit_miss",
+      "dispatch": "care-line",
+      "eligible_for_automatic_publication": false,
+      "event_date": "2026-09-15",
+      "event_type": "mental health crisis respite placement restriction",
+      "facility_or_provider": "Minnesota Medicaid crisis respite placement system",
+      "facility_provider": "Minnesota Medicaid crisis respite placement system",
+      "geography": "Minnesota",
+      "item_id": "care-line-2026-09-15-minnesota-crisis-respite-hotel-placement-end",
+      "observation_date": "2026-09-15",
+      "observation_dates": [
+        "2026-09-15",
+        "2026-09-16",
+        "2026-09-17"
+      ],
+      "observed_date": "2026-09-15",
+      "observed_dates": [
+        "2026-09-15",
+        "2026-09-16",
+        "2026-09-17"
+      ],
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-behavioral",
+      "original_title": "Minnesota ends hotel placements for mental health crisis respite program",
+      "original_url": "https://www.beckersbehavioralhealth.com/payer/medicaid/minnesota-ends-hotel-placements-for-mental-health-crisis-respite-program/",
+      "pages_authorized": false,
+      "primary_alternate_source_url": "https://www.mprnews.org/episode/2026/09/14/minnesota-to-end-use-of-hotel-rooms-to-house-people-experiencing-mental-health-crises",
+      "production_artifact_present": false,
+      "production_run_id": "20260915-alternate-source-recovery",
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_eligible": false,
+      "publication_performed": false,
+      "publisher": "MPR News",
+      "recovery_method": "operator_recovered_external_source_evidence",
+      "recovery_provenance": "operator_recovered_external_source_evidence",
+      "review_retention_disposition": "retained_for_review",
+      "review_status": "pending_review",
+      "review_transition_owner": "human_editorial_review",
+      "source_evidence_fingerprint": "7779310a385668170281a7fd223539316afe5b2aa41e12d44920335f1740c028",
+      "source_publication_date": "2026-09-14",
+      "source_published_date": "2026-09-14",
+      "source_traceability": {
+        "alternate_sources": [
+          {
+            "date": "2026-09-14",
+            "passage": "will no longer allow the use of hotel rooms to provide crisis respite",
+            "publisher": "MPR News",
+            "type": "public media",
+            "url": "https://www.mprnews.org/episode/2026/09/14/minnesota-to-end-use-of-hotel-rooms-to-house-people-experiencing-mental-health-crises"
+          }
+        ],
+        "corroborating_alternate_source": null,
+        "network_pages_inspected": 1,
+        "primary_alternate_source": {
+          "date": "2026-09-14",
+          "passage": "will no longer allow the use of hotel rooms to provide crisis respite",
+          "publisher": "MPR News",
+          "type": "public media",
+          "url": "https://www.mprnews.org/episode/2026/09/14/minnesota-to-end-use-of-hotel-rooms-to-house-people-experiencing-mental-health-crises"
+        },
+        "search_queries_used": [
+          "Minnesota ends hotel placements for mental health crisis respite program",
+          "provider/facility + event/date",
+          "provider/facility + access terms"
+        ]
+      },
+      "source_url": "https://www.mprnews.org/episode/2026/09/14/minnesota-to-end-use-of-hotel-rooms-to-house-people-experiencing-mental-health-crises",
+      "supporting_passage": "will no longer allow the use of hotel rooms to provide crisis respite"
+    },
+    {
+      "access_consequence": "The downsizing plan would eliminate civil psychiatric beds and reduce inpatient psychiatric access.",
+      "bounded_summary": "Local public reporting confirms Choate Mental Health and Developmental Center downsizing would eliminate 75 civil psychiatric beds, affecting southern Illinois inpatient psychiatric access.",
+      "corroborating_source_url": "",
+      "coverage_gap_reason_code": "recall_audit_miss",
+      "dispatch": "care-line",
+      "eligible_for_automatic_publication": false,
+      "event_date": "2026-09-17",
+      "event_type": "inpatient psychiatric bed elimination",
+      "facility_or_provider": "Choate Mental Health and Developmental Center",
+      "facility_provider": "Choate Mental Health and Developmental Center",
+      "geography": "Anna, Illinois / southern Illinois",
+      "item_id": "care-line-2026-09-21-choate-psychiatric-bed-elimination",
+      "observation_date": "2026-09-21",
+      "observation_dates": [
+        "2026-09-21",
+        "2026-09-22",
+        "2026-09-23"
+      ],
+      "observed_date": "2026-09-21",
+      "observed_dates": [
+        "2026-09-21",
+        "2026-09-22",
+        "2026-09-23"
+      ],
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-behavioral",
+      "original_title": "Illinois union sues state over mental health facility downsizing",
+      "original_url": "https://www.beckersbehavioralhealth.com/legal/illinois-union-sues-state-over-mental-health-facility-downsizing/",
+      "pages_authorized": false,
+      "primary_alternate_source_url": "https://www.nprillinois.org/southern-il-area/2026-09-17/choate-workers-union-files-lawsuit-to-block-state-from-gutting-mental-health-facility",
+      "production_artifact_present": false,
+      "production_run_id": "20260921-alternate-source-recovery",
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_eligible": false,
+      "publication_performed": false,
+      "publisher": "NPR Illinois / Capitol News Illinois",
+      "recovery_method": "operator_recovered_external_source_evidence",
+      "recovery_provenance": "operator_recovered_external_source_evidence",
+      "review_retention_disposition": "retained_for_review",
+      "review_status": "pending_review",
+      "review_transition_owner": "human_editorial_review",
+      "source_evidence_fingerprint": "c2de68fd1e50a9fab4413ddb88077c450b8edeb0e4f3504e421a014eb7731ef4",
+      "source_publication_date": "2026-09-17",
+      "source_published_date": "2026-09-17",
+      "source_traceability": {
+        "alternate_sources": [
+          {
+            "date": "2026-09-17",
+            "passage": "plan calls for eliminating all psychiatric beds",
+            "publisher": "NPR Illinois / Capitol News Illinois",
+            "type": "local public reporting",
+            "url": "https://www.nprillinois.org/southern-il-area/2026-09-17/choate-workers-union-files-lawsuit-to-block-state-from-gutting-mental-health-facility"
+          }
+        ],
+        "corroborating_alternate_source": null,
+        "network_pages_inspected": 1,
+        "primary_alternate_source": {
+          "date": "2026-09-17",
+          "passage": "plan calls for eliminating all psychiatric beds",
+          "publisher": "NPR Illinois / Capitol News Illinois",
+          "type": "local public reporting",
+          "url": "https://www.nprillinois.org/southern-il-area/2026-09-17/choate-workers-union-files-lawsuit-to-block-state-from-gutting-mental-health-facility"
+        },
+        "search_queries_used": [
+          "Illinois union sues state over mental health facility downsizing",
+          "provider/facility + event/date",
+          "provider/facility + access terms"
+        ]
+      },
+      "source_url": "https://www.nprillinois.org/southern-il-area/2026-09-17/choate-workers-union-files-lawsuit-to-block-state-from-gutting-mental-health-facility",
+      "supporting_passage": "plan calls for eliminating all psychiatric beds"
+    },
+    {
+      "access_consequence": "Closure removes long-term inpatient behavioral health treatment capacity for youth.",
+      "bounded_summary": "Local reporting confirms Pearl Youth Residence in Tacoma will close and lay off staff; the facility provided long-term inpatient youth behavioral health treatment.",
+      "corroborating_source_url": "",
+      "coverage_gap_reason_code": "recall_audit_miss",
+      "dispatch": "care-line",
+      "eligible_for_automatic_publication": false,
+      "event_date": "2026-11-21",
+      "event_type": "youth residential psychiatric facility closure",
+      "facility_or_provider": "Pearl Youth Residence",
+      "facility_provider": "Pearl Youth Residence",
+      "geography": "Tacoma, Washington",
+      "item_id": "care-line-2026-09-24-pearl-youth-residence-closure",
+      "observation_date": "2026-09-24",
+      "observation_dates": [
+        "2026-09-24"
+      ],
+      "observed_date": "2026-09-24",
+      "observed_dates": [
+        "2026-09-24"
+      ],
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-behavioral",
+      "original_title": "\u2018Death by a thousand paper cuts\u2019: Washington to lose 25% of long-term youth psychiatric beds",
+      "original_url": "https://www.beckersbehavioralhealth.com/behavioral-health-news/death-by-a-thousand-paper-cuts-washington-to-lose-25-of-long-term-youth-psychiatric-beds/",
+      "pages_authorized": false,
+      "primary_alternate_source_url": "https://www.kiro7.com/news/local/tacoma-youth-facility-closing-after-3-million-losses-laying-off-92-employees/APDVBBEZAFBKNHVI2FX6INUOF4/?outputType=amp",
+      "production_artifact_present": false,
+      "production_run_id": "20260924-alternate-source-recovery",
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_eligible": false,
+      "publication_performed": false,
+      "publisher": "KIRO 7 Seattle",
+      "recovery_method": "operator_recovered_external_source_evidence",
+      "recovery_provenance": "operator_recovered_external_source_evidence",
+      "review_retention_disposition": "retained_for_review",
+      "review_status": "pending_review",
+      "review_transition_owner": "human_editorial_review",
+      "source_evidence_fingerprint": "ac68935380bf1a3226a0ba84ed0d46f8be47d1e357d008079261db6f89563dd5",
+      "source_publication_date": "2026-09-23",
+      "source_published_date": "2026-09-23",
+      "source_traceability": {
+        "alternate_sources": [
+          {
+            "date": "2026-09-23",
+            "passage": "youth residential facility in Tacoma will close later this year",
+            "publisher": "KIRO 7 Seattle",
+            "type": "local reporting",
+            "url": "https://www.kiro7.com/news/local/tacoma-youth-facility-closing-after-3-million-losses-laying-off-92-employees/APDVBBEZAFBKNHVI2FX6INUOF4/?outputType=amp"
+          }
+        ],
+        "corroborating_alternate_source": null,
+        "network_pages_inspected": 1,
+        "primary_alternate_source": {
+          "date": "2026-09-23",
+          "passage": "youth residential facility in Tacoma will close later this year",
+          "publisher": "KIRO 7 Seattle",
+          "type": "local reporting",
+          "url": "https://www.kiro7.com/news/local/tacoma-youth-facility-closing-after-3-million-losses-laying-off-92-employees/APDVBBEZAFBKNHVI2FX6INUOF4/?outputType=amp"
+        },
+        "search_queries_used": [
+          "\u2018Death by a thousand paper cuts\u2019: Washington to lose 25% of long-term youth psychiatric beds",
+          "provider/facility + event/date",
+          "provider/facility + access terms"
+        ]
+      },
+      "source_url": "https://www.kiro7.com/news/local/tacoma-youth-facility-closing-after-3-million-losses-laying-off-92-employees/APDVBBEZAFBKNHVI2FX6INUOF4/?outputType=amp",
+      "supporting_passage": "youth residential facility in Tacoma will close later this year"
+    },
+    {
+      "access_consequence": "Two closed hospitals remain unavailable while new ownership pursues licensing, accreditation, and funding.",
+      "bounded_summary": "Two independent local sources confirm West Suburban Medical Center and Weiss Memorial Hospital are closed/shuttered safety-net hospitals moving toward Insight control with reopening still pending.",
+      "corroborating_source_url": "https://www.cbsnews.com/chicago/news/west-suburban-medical-center-weiss-memorial-insight-health-systems/?ftag=CNM-00-10aag7e",
+      "coverage_gap_reason_code": "recall_audit_miss",
+      "dispatch": "care-line",
+      "eligible_for_automatic_publication": false,
+      "event_date": "2026-09-17",
+      "event_type": "closed hospital ownership transfer / reopening pathway",
+      "facility_or_provider": "West Suburban Medical Center and Weiss Memorial Hospital",
+      "facility_provider": "West Suburban Medical Center and Weiss Memorial Hospital",
+      "geography": "Chicago area, Illinois",
+      "item_id": "care-line-2026-09-17-west-suburban-weiss-reopening-path",
+      "observation_date": "2026-09-17",
+      "observation_dates": [
+        "2026-09-17"
+      ],
+      "observed_date": "2026-09-17",
+      "observed_dates": [
+        "2026-09-17"
+      ],
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-hospital-review",
+      "original_title": "Insight to take over 2 closed Illinois hospitals",
+      "original_url": "https://www.beckershospitalreview.com/hospital-transactions-and-valuation/insight-to-take-over-2-closed-illinois-hospitals/",
+      "pages_authorized": false,
+      "primary_alternate_source_url": "https://www.wbez.org/health-medicine/2026/09/18/west-suburban-weiss-sold-insight-health-systems",
+      "production_artifact_present": false,
+      "production_run_id": "20260917-alternate-source-recovery",
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_eligible": false,
+      "publication_performed": false,
+      "publisher": "WBEZ Chicago",
+      "recovery_method": "operator_recovered_external_source_evidence",
+      "recovery_provenance": "operator_recovered_external_source_evidence",
+      "review_retention_disposition": "retained_for_review",
+      "review_status": "pending_review",
+      "review_transition_owner": "human_editorial_review",
+      "source_evidence_fingerprint": "610b2d9e3b6903582b4acdd045328e751f9aadd3ed50a88fc609f434e8dc26f1",
+      "source_publication_date": "2026-09-18",
+      "source_published_date": "2026-09-18",
+      "source_traceability": {
+        "alternate_sources": [
+          {
+            "date": "2026-09-18",
+            "passage": "West Suburban Medical Center and Weiss Memorial Hospital are expected to be sold to Insight Health Systems",
+            "publisher": "WBEZ Chicago",
+            "type": "local public radio",
+            "url": "https://www.wbez.org/health-medicine/2026/09/18/west-suburban-weiss-sold-insight-health-systems"
+          },
+          {
+            "date": "2026-09-17",
+            "passage": "Two shuttered Chicago-area hospitals are under new control",
+            "publisher": "CBS Chicago",
+            "type": "local reporting",
+            "url": "https://www.cbsnews.com/chicago/news/west-suburban-medical-center-weiss-memorial-insight-health-systems/?ftag=CNM-00-10aag7e"
+          }
+        ],
+        "corroborating_alternate_source": {
+          "date": "2026-09-17",
+          "passage": "Two shuttered Chicago-area hospitals are under new control",
+          "publisher": "CBS Chicago",
+          "type": "local reporting",
+          "url": "https://www.cbsnews.com/chicago/news/west-suburban-medical-center-weiss-memorial-insight-health-systems/?ftag=CNM-00-10aag7e"
+        },
+        "network_pages_inspected": 2,
+        "primary_alternate_source": {
+          "date": "2026-09-18",
+          "passage": "West Suburban Medical Center and Weiss Memorial Hospital are expected to be sold to Insight Health Systems",
+          "publisher": "WBEZ Chicago",
+          "type": "local public radio",
+          "url": "https://www.wbez.org/health-medicine/2026/09/18/west-suburban-weiss-sold-insight-health-systems"
+        },
+        "search_queries_used": [
+          "Insight to take over 2 closed Illinois hospitals",
+          "provider/facility + event/date",
+          "provider/facility + access terms"
+        ]
+      },
+      "source_url": "https://www.wbez.org/health-medicine/2026/09/18/west-suburban-weiss-sold-insight-health-systems",
+      "supporting_passage": "West Suburban Medical Center and Weiss Memorial Hospital are expected to be sold to Insight Health Systems"
+    },
+    {
+      "access_consequence": "Patients must transition deliveries elsewhere while prenatal and postpartum clinic support remains.",
+      "bounded_summary": "Provider and local reporting confirm Fitzgibbon Hospital in Marshall, Missouri will end inpatient labor and delivery Sept. 30, while retaining prenatal/postpartum clinic support and arranging delivery transitions.",
+      "corroborating_source_url": "https://abc17news.com/news/saline/2026/09/21/fitzgibbon-hospital-to-end-inpatient-labor-and-delivery-services/",
+      "coverage_gap_reason_code": "recall_audit_miss",
+      "dispatch": "care-line",
+      "eligible_for_automatic_publication": false,
+      "event_date": "2026-09-30",
+      "event_type": "inpatient labor and delivery service closure",
+      "facility_or_provider": "Fitzgibbon Hospital",
+      "facility_provider": "Fitzgibbon Hospital",
+      "geography": "Marshall, Missouri",
+      "item_id": "care-line-2026-09-22-fitzgibbon-labor-delivery-end",
+      "observation_date": "2026-09-22",
+      "observation_dates": [
+        "2026-09-22"
+      ],
+      "observed_date": "2026-09-22",
+      "observed_dates": [
+        "2026-09-22"
+      ],
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-hospital-review",
+      "original_title": "Newly acquired Missouri hospital to end labor and delivery services due to \u2018ongoing financial losses\u2019",
+      "original_url": "https://www.beckershospitalreview.com/finance/newly-acquired-missouri-hospital-to-end-labor-and-delivery-services-due-to-ongoing-financial-losses/",
+      "pages_authorized": false,
+      "primary_alternate_source_url": "https://www.fitzgibbon.org/news/fitzgibbon-hospital-to-transition-inpatient-labor-delivery-services",
+      "production_artifact_present": false,
+      "production_run_id": "20260922-alternate-source-recovery",
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_eligible": false,
+      "publication_performed": false,
+      "publisher": "Fitzgibbon Hospital",
+      "recovery_method": "operator_recovered_external_source_evidence",
+      "recovery_provenance": "operator_recovered_external_source_evidence",
+      "review_retention_disposition": "retained_for_review",
+      "review_status": "pending_review",
+      "review_transition_owner": "human_editorial_review",
+      "source_evidence_fingerprint": "6496f3042592afdb069d5ce593a829a6cf3b88dcf3b9d44581f520f82d826b1b",
+      "source_publication_date": "2026-09-18",
+      "source_published_date": "2026-09-18",
+      "source_traceability": {
+        "alternate_sources": [
+          {
+            "date": "2026-09-18",
+            "passage": "discontinue inpatient labor and delivery services effective Sept. 30, 2026",
+            "publisher": "Fitzgibbon Hospital",
+            "type": "provider/official",
+            "url": "https://www.fitzgibbon.org/news/fitzgibbon-hospital-to-transition-inpatient-labor-delivery-services"
+          },
+          {
+            "date": "2026-09-21",
+            "passage": "stop having inpatient labor and delivery services on Sept. 30",
+            "publisher": "ABC17/KMIZ",
+            "type": "local reporting",
+            "url": "https://abc17news.com/news/saline/2026/09/21/fitzgibbon-hospital-to-end-inpatient-labor-and-delivery-services/"
+          }
+        ],
+        "corroborating_alternate_source": {
+          "date": "2026-09-21",
+          "passage": "stop having inpatient labor and delivery services on Sept. 30",
+          "publisher": "ABC17/KMIZ",
+          "type": "local reporting",
+          "url": "https://abc17news.com/news/saline/2026/09/21/fitzgibbon-hospital-to-end-inpatient-labor-and-delivery-services/"
+        },
+        "network_pages_inspected": 2,
+        "primary_alternate_source": {
+          "date": "2026-09-18",
+          "passage": "discontinue inpatient labor and delivery services effective Sept. 30, 2026",
+          "publisher": "Fitzgibbon Hospital",
+          "type": "provider/official",
+          "url": "https://www.fitzgibbon.org/news/fitzgibbon-hospital-to-transition-inpatient-labor-delivery-services"
+        },
+        "search_queries_used": [
+          "Newly acquired Missouri hospital to end labor and delivery services due to \u2018ongoing financial losses\u2019",
+          "provider/facility + event/date",
+          "provider/facility + access terms"
+        ]
+      },
+      "source_url": "https://www.fitzgibbon.org/news/fitzgibbon-hospital-to-transition-inpatient-labor-delivery-services",
+      "supporting_passage": "discontinue inpatient labor and delivery services effective Sept. 30, 2026"
+    },
+    {
+      "access_consequence": "The planned closure would have removed local maternity access; community challenge preserved review-worthy access evidence.",
+      "bounded_summary": "Syndicated KFF/public-radio evidence confirms Troy, N.Y. residents fought a planned closure of Samaritan/Burdett birth center, preserving local maternity access.",
+      "corroborating_source_url": "",
+      "coverage_gap_reason_code": "recall_audit_miss",
+      "dispatch": "care-line",
+      "eligible_for_automatic_publication": false,
+      "event_date": "2026-09-01",
+      "event_type": "birth center closure challenge",
+      "facility_or_provider": "Burdett Birth Center / Samaritan Hospital",
+      "facility_provider": "Burdett Birth Center / Samaritan Hospital",
+      "geography": "Troy, New York",
+      "item_id": "care-line-2026-09-15-burdett-birth-center-closure-challenge",
+      "observation_date": "2026-09-15",
+      "observation_dates": [
+        "2026-09-15"
+      ],
+      "observed_date": "2026-09-15",
+      "observed_dates": [
+        "2026-09-15"
+      ],
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "kff-health-news",
+      "original_title": "A NY Hospital Tried To Close Its Birthing Center. This City United To Fight Back.",
+      "original_url": "https://kffhealthnews.org/courts/troy-new-york-hospital-birthing-center-bipartisan-fight/",
+      "pages_authorized": false,
+      "primary_alternate_source_url": "https://www.upr.org/npr-news/2026-09-01/a-n-y-hospital-tried-to-close-its-birthing-center-this-city-united-to-fight-back",
+      "production_artifact_present": false,
+      "production_run_id": "20260915-alternate-source-recovery",
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_eligible": false,
+      "publication_performed": false,
+      "publisher": "Utah Public Radio / KFF Health News",
+      "recovery_method": "operator_recovered_external_source_evidence",
+      "recovery_provenance": "operator_recovered_external_source_evidence",
+      "review_retention_disposition": "retained_for_review",
+      "review_status": "pending_review",
+      "review_transition_owner": "human_editorial_review",
+      "source_evidence_fingerprint": "3b8d25912aa7a17ee7f3d824b77cafd7ef943e303cfdeba1fc76be6711fab3ab",
+      "source_publication_date": "2026-09-01",
+      "source_published_date": "2026-09-01",
+      "source_traceability": {
+        "alternate_sources": [
+          {
+            "date": "2026-09-01",
+            "passage": "Troy?s last remaining hospital planned to close its birthing center",
+            "publisher": "Utah Public Radio / KFF Health News",
+            "type": "syndicated public media",
+            "url": "https://www.upr.org/npr-news/2026-09-01/a-n-y-hospital-tried-to-close-its-birthing-center-this-city-united-to-fight-back"
+          }
+        ],
+        "corroborating_alternate_source": null,
+        "network_pages_inspected": 1,
+        "primary_alternate_source": {
+          "date": "2026-09-01",
+          "passage": "Troy?s last remaining hospital planned to close its birthing center",
+          "publisher": "Utah Public Radio / KFF Health News",
+          "type": "syndicated public media",
+          "url": "https://www.upr.org/npr-news/2026-09-01/a-n-y-hospital-tried-to-close-its-birthing-center-this-city-united-to-fight-back"
+        },
+        "search_queries_used": [
+          "A NY Hospital Tried To Close Its Birthing Center. This City United To Fight Back.",
+          "provider/facility + event/date",
+          "provider/facility + access terms"
+        ]
+      },
+      "source_url": "https://www.upr.org/npr-news/2026-09-01/a-n-y-hospital-tried-to-close-its-birthing-center-this-city-united-to-fight-back",
+      "supporting_passage": "Troy?s last remaining hospital planned to close its birthing center"
+    }
+  ],
+  "manual_production_task_triggered": false,
+  "original_production_discovery_lineage_fabricated": false,
+  "pages_authorized": false,
+  "protected_base": "d269e1479ee7c7c4adea3b6ff3ba40945c324c11",
+  "provenance_class": "operator_recovered_external_source_evidence",
+  "public_generation_authorized": false,
+  "publication_approval": false,
+  "publication_eligible": false,
+  "publication_performed": false,
+  "recovery_date": "2026-09-24",
+  "recovery_scope": "bounded_non_public_human_review_intake",
+  "schema_version": "bluefern.care_line.discovery_recovery.review_intake.v1",
+  "source_artifact_sha256": {
+    "alternate_source_recovery_report": "408b844a5d1c2247cfe7cd9f88e37e4e767cbff47da3a95afcae4b0d0f17b277",
+    "conflicting_evidence": "c45d86d816490cdc59236afa1a2f36891f8fb73f83d858b2135272ed9f07485c",
+    "evidence_exhausted": "d52a729f41681228fd96821fefbd57f8899744190b4a758141f49fa5a65a6700",
+    "frozen_input_manifest": "0f628e2e1898a5f754b31e842a097cc05c89bd639a0a563f05a2566a02aa5e1f",
+    "private_recovered_candidates": "b1c4443999fc3d8f32f29de9a1f5e9599caf8e165d17e3aa13427733702e9248"
+  }
+}

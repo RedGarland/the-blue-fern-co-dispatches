@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.food_line.discovery_recovery_window_audit.v1",
+  "dispatch": "food-line",
+  "protected_source_commit": "e6c736b785cae4682603aa85fbde92f6580b560a",
+  "recovery_scope": "bounded_non_public_historical_recovery",
+  "recovery_performed_at": "2026-09-25T20:37:31Z",
+  "observation_date": "2026-09-24",
+  "publication_authorized": false,
+  "public_generation_authorized": false,
+  "pages_authorized": false,
+  "publication_performed": false,
+  "scheduler_change_authorized": false,
+  "manual_production_task_triggered": false,
+  "collection_replay_performed": false,
+  "original_production_discovery_lineage_present": false,
+  "production_artifact_present": false,
+  "source_scratch_package": ".codex-scratch/food-sep24-backfill-2026-09-25/",
+  "scratch_sha256_lineage": {
+    "runtime_evidence_audit": "bb7f01d1c659886c642eb16cb3640671f2c2b23dea1a01f85bf2d6644cd6172e",
+    "later_collection_reconciliation": "e4d6136c6fb1254da70a9fab4189438ae8fda1500dc8e233c4fca0d38d3b11c1",
+    "frozen_discovery_manifest": "c9da04bc2c87283087425846e942d4dd3316776e5d463ddc2e7ebee3c7adbc17"
+  },
+  "production_failure": {
+    "run_id": "food-line-scheduled-20260924-20260924T123001Z-0dfe74ce",
+    "source_watch_receipt": "logs/food-line/source-watch/2026-09-24/20260924T123002Z-source-watch.json",
+    "source_watch_status": "failed",
+    "exit_code": 10,
+    "failure_reason": "runner checkout is dirty; scheduled operation failed closed",
+    "failure_stage": "checkout_hygiene_before_discovery",
+    "resume_status": "upstream_blocked",
+    "current_intake_status": "upstream_blocked",
+    "daily_publish_status": "SAFE_NO_OP/skipped_not_release_ready"
+  },
+  "bounded_public_research": {
+    "scope": "Only identities unresolved after local Sep. 25 carry-forward reconciliation were researched.",
+    "traceable_sources_reviewed": [
+      "https://spotlightepnews.com/rain-damages-canopies-at-el-pasoans-fighting-hunger-forces-early-mercado-closure/",
+      "https://kvia.com/news/top-stories/2026/09/23/el-paso-food-bank-asks-for-help-with-rain-damaged-canopies-sign/",
+      "https://newbedfordlight.org/event/damiens-food-pantry-open-thursdays-saturdays/2026-01-17/"
+    ],
+    "resolved_identities": [
+      {
+        "item_id": "food-line-2026-09-22-el-pasoans-fighting-hunger-storm-disruption",
+        "outcome": "approved_historical_event",
+        "basis": "Public reporting documents storm damage that forced early Mercado distribution closure on September 22, 2026, with neighbors still waiting for food sent home without receiving assistance."
+      },
+      {
+        "item_id": "food-line-2026-09-24-damiens-food-pantry-recurring-hours",
+        "outcome": "rejected_non_event",
+        "basis": "Recurring service-hours listing; no new disruption, expansion, policy change, or material Food Line access event."
+      }
+    ]
+  }
+}

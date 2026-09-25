@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.coverage_gap.v1",
+  "dispatch": "food-line",
+  "observation_date": "2026-09-24",
+  "observation_status": "OBSERVED_WITH_FINDINGS",
+  "backfill_status": "RECOVERED",
+  "reason_codes": [
+    "scheduled_run_failed",
+    "historical_recovery_completed"
+  ],
+  "detected_at": "2026-09-24T12:30:02Z",
+  "recovered_at": "2026-09-25T20:45:00Z",
+  "observed_finding_count": 1,
+  "recovered_event_ids": [
+    "food-line-2026-09-22-el-pasoans-fighting-hunger-storm-disruption"
+  ],
+  "source_refs": [
+    "data/private-agent-handoff/discovery-recovery/food-line/2026-09-25/observation-window-audit.json",
+    "data/private-agent-handoff/discovery-recovery/food-line/2026-09-25/recovery-review-intake.json",
+    "data/private-agent-handoff/discovery-recovery/food-line/2026-09-25/editorial-review.json",
+    "data/dispatches/food-line/historical-events/2026-09-22/food-line-2026-09-22-el-pasoans-fighting-hunger-storm-disruption.json"
+  ],
+  "notes": "The September 24 Food Line Source Watch failed before discovery because the production runner checkout was dirty. Bounded historical reconstruction recovered one non-public Food event, food-line-2026-09-22-el-pasoans-fighting-hunger-storm-disruption. Original production discovery lineage remains absent; this is a historical reconstruction, not faithful replay evidence, and it must not imply the original scheduled collection observed the event. No publication authority is granted."
+}

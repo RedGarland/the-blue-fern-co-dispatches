@@ -492,7 +492,7 @@ def render_about_from_public_inventory(template_html: str, public_root: Path) ->
     if not archive_path.exists():
         return template_html
     archive_html = archive_path.read_text(encoding="utf-8", errors="replace")
-    dates = re.findall(r"editions/(\\d{4}-\\d{2}-\\d{2})/", archive_html)
+    dates = re.findall(r"editions/(\d{4}-\d{2}-\d{2})/", archive_html)
     if not dates:
         return template_html
     latest = max(dates)

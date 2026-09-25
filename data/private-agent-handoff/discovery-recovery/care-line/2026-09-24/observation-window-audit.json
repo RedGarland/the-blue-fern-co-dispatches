@@ -1,0 +1,2304 @@
+{
+  "accounting": {
+    "accounting_delta": 0,
+    "candidates": 8,
+    "conflicts": 0,
+    "duplicates": 2,
+    "evidence_exhausted": 39,
+    "exclusions": 4,
+    "frozen_identities": 53,
+    "resolution_occurrences": {
+      "ALT_CANDIDATE_CONFIRMED": 23,
+      "ALT_DUPLICATE_CONFIRMED": 4,
+      "ALT_EXCLUSION_CONFIRMED": 23,
+      "EVIDENCE_EXHAUSTED": 108
+    },
+    "total": 53
+  },
+  "affected_observation_dates": [
+    "2026-09-15",
+    "2026-09-16",
+    "2026-09-17",
+    "2026-09-18",
+    "2026-09-20",
+    "2026-09-21",
+    "2026-09-22",
+    "2026-09-23",
+    "2026-09-24"
+  ],
+  "audit_date": "2026-09-24",
+  "authority_flags": {
+    "editorial_review_created": false,
+    "historical_event_records_created": false,
+    "manual_production_task_triggered": false,
+    "original_production_discovery_lineage_fabricated": false,
+    "pages_authorized": false,
+    "production_lineage_was_not_fabricated": true,
+    "public_generation_authorized": false,
+    "publication_approval": false,
+    "publication_eligible": false,
+    "publication_performed": false
+  },
+  "candidate_identities": [
+    {
+      "alternate_sources": [
+        {
+          "date": "2026",
+          "passage": "The Surgery Center of Southern Oregon is now permanently closed",
+          "publisher": "Surgery Center of Southern Oregon",
+          "type": "provider/official",
+          "url": "https://www.sosurgi.com/"
+        }
+      ],
+      "disposition": "ALT_CANDIDATE_CONFIRMED",
+      "duplicate_of": "",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "network_pages_inspected": 1,
+      "observation_dates": [
+        "2026-09-16",
+        "2026-09-17"
+      ],
+      "occurrence_count": 2,
+      "original_article_title": "Why 5 ASCs closed in 2026",
+      "original_article_url": "https://www.beckersasc.com/asc-transactions-and-valuation-issues/why-5-ascs-closed-in-2026/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-asc",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-16",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Official provider notice confirms Surgery Center of Southern Oregon is permanently closed; this resolves the ASC-closure roundup identity to a specific facility closure represented in the frozen row.",
+      "resolved_event": "Surgery Center of Southern Oregon permanent closure",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Why 5 ASCs closed in 2026",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "a8d715c3c8be9fbe4f9c25605a5f84293c0aeab29513c2bd3b6aacc3c4b487fe"
+    },
+    {
+      "alternate_sources": [
+        {
+          "date": "2026-09-15",
+          "passage": "suspending its Red Bluff operations at the Red Bluff Municipal Airport",
+          "publisher": "EMS1 / Red Bluff Daily News",
+          "type": "trade/local reporting",
+          "url": "https://www.ems1.com/air-medical-transport/phi-air-medical-suspends-operations-in-calif-city-over-payment-issues"
+        },
+        {
+          "date": "2026-09-16",
+          "passage": "stopped flying out of its air medical base at Red Bluff Municipal Airport",
+          "publisher": "Redding Record Searchlight via AOL",
+          "type": "local reporting",
+          "url": "https://www.aol.com/articles/north-state-air-ambulance-closes-110300000.html"
+        }
+      ],
+      "disposition": "ALT_CANDIDATE_CONFIRMED",
+      "duplicate_of": "",
+      "failed_gates": [
+        "missing_geography"
+      ],
+      "network_pages_inspected": 2,
+      "observation_dates": [
+        "2026-09-17",
+        "2026-09-18"
+      ],
+      "occurrence_count": 3,
+      "original_article_title": "Air ambulance company suspends base operations amid BCBS reimbursement dispute",
+      "original_article_url": "https://www.beckersasc.com/asc-coding-billing-and-collections/air-ambulance-company-suspends-base-operations-amid-bcbs-reimbursement-dispute/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-asc",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-17",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Local/trade evidence confirms PHI Air Medical suspended Red Bluff air ambulance base operations, affecting emergency air transport access.",
+      "resolved_event": "PHI Air Medical Red Bluff base suspension",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Air ambulance company suspends base operations amid BCBS reimbursement dispute",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "eafcef9d85dcbebed55336d587172caad778f4915a8a3c5d96fe72ec9820001c"
+    },
+    {
+      "alternate_sources": [
+        {
+          "date": "2026-09-14",
+          "passage": "will no longer allow the use of hotel rooms to provide crisis respite",
+          "publisher": "MPR News",
+          "type": "public media",
+          "url": "https://www.mprnews.org/episode/2026/09/14/minnesota-to-end-use-of-hotel-rooms-to-house-people-experiencing-mental-health-crises"
+        }
+      ],
+      "disposition": "ALT_CANDIDATE_CONFIRMED",
+      "duplicate_of": "",
+      "failed_gates": [
+        "missing_geography"
+      ],
+      "network_pages_inspected": 1,
+      "observation_dates": [
+        "2026-09-15",
+        "2026-09-16",
+        "2026-09-17"
+      ],
+      "occurrence_count": 6,
+      "original_article_title": "Minnesota ends hotel placements for mental health crisis respite program",
+      "original_article_url": "https://www.beckersbehavioralhealth.com/payer/medicaid/minnesota-ends-hotel-placements-for-mental-health-crisis-respite-program/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-behavioral",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-15",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "MPR confirms Minnesota ended hotel-based crisis respite placements, a Medicaid-funded crisis support setting, with all existing hotel placements ending Sept. 15.",
+      "resolved_event": "Minnesota ends hotel-based mental health crisis respite placements",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Minnesota ends hotel placements for mental health crisis respite program",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "7779310a385668170281a7fd223539316afe5b2aa41e12d44920335f1740c028"
+    },
+    {
+      "alternate_sources": [
+        {
+          "date": "2026-09-17",
+          "passage": "plan calls for eliminating all psychiatric beds",
+          "publisher": "NPR Illinois / Capitol News Illinois",
+          "type": "local public reporting",
+          "url": "https://www.nprillinois.org/southern-il-area/2026-09-17/choate-workers-union-files-lawsuit-to-block-state-from-gutting-mental-health-facility"
+        }
+      ],
+      "disposition": "ALT_CANDIDATE_CONFIRMED",
+      "duplicate_of": "",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "network_pages_inspected": 1,
+      "observation_dates": [
+        "2026-09-21",
+        "2026-09-22",
+        "2026-09-23"
+      ],
+      "occurrence_count": 5,
+      "original_article_title": "Illinois union sues state over mental health facility downsizing",
+      "original_article_url": "https://www.beckersbehavioralhealth.com/legal/illinois-union-sues-state-over-mental-health-facility-downsizing/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-behavioral",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-21",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Local public reporting confirms Choate Mental Health and Developmental Center downsizing would eliminate 75 civil psychiatric beds, affecting southern Illinois inpatient psychiatric access.",
+      "resolved_event": "Choate Mental Health downsizing / psychiatric bed elimination",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Illinois union sues state over mental health facility downsizing",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "c2de68fd1e50a9fab4413ddb88077c450b8edeb0e4f3504e421a014eb7731ef4"
+    },
+    {
+      "alternate_sources": [
+        {
+          "date": "2026-09-23",
+          "passage": "youth residential facility in Tacoma will close later this year",
+          "publisher": "KIRO 7 Seattle",
+          "type": "local reporting",
+          "url": "https://www.kiro7.com/news/local/tacoma-youth-facility-closing-after-3-million-losses-laying-off-92-employees/APDVBBEZAFBKNHVI2FX6INUOF4/?outputType=amp"
+        }
+      ],
+      "disposition": "ALT_CANDIDATE_CONFIRMED",
+      "duplicate_of": "",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "network_pages_inspected": 1,
+      "observation_dates": [
+        "2026-09-24"
+      ],
+      "occurrence_count": 2,
+      "original_article_title": "\u2018Death by a thousand paper cuts\u2019: Washington to lose 25% of long-term youth psychiatric beds",
+      "original_article_url": "https://www.beckersbehavioralhealth.com/behavioral-health-news/death-by-a-thousand-paper-cuts-washington-to-lose-25-of-long-term-youth-psychiatric-beds/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-behavioral",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-24",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Local reporting confirms Pearl Youth Residence in Tacoma will close and lay off staff; the facility provided long-term inpatient youth behavioral health treatment.",
+      "resolved_event": "Pearl Youth Residence closure",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "\u2018Death by a thousand paper cuts\u2019: Washington to lose 25% of long-term youth psychiatric beds",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "ac68935380bf1a3226a0ba84ed0d46f8be47d1e357d008079261db6f89563dd5"
+    },
+    {
+      "alternate_sources": [
+        {
+          "date": "2026-09-18",
+          "passage": "West Suburban Medical Center and Weiss Memorial Hospital are expected to be sold to Insight Health Systems",
+          "publisher": "WBEZ Chicago",
+          "type": "local public radio",
+          "url": "https://www.wbez.org/health-medicine/2026/09/18/west-suburban-weiss-sold-insight-health-systems"
+        },
+        {
+          "date": "2026-09-17",
+          "passage": "Two shuttered Chicago-area hospitals are under new control",
+          "publisher": "CBS Chicago",
+          "type": "local reporting",
+          "url": "https://www.cbsnews.com/chicago/news/west-suburban-medical-center-weiss-memorial-insight-health-systems/?ftag=CNM-00-10aag7e"
+        }
+      ],
+      "disposition": "ALT_CANDIDATE_CONFIRMED",
+      "duplicate_of": "",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "network_pages_inspected": 2,
+      "observation_dates": [
+        "2026-09-17"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "Insight to take over 2 closed Illinois hospitals",
+      "original_article_url": "https://www.beckershospitalreview.com/hospital-transactions-and-valuation/insight-to-take-over-2-closed-illinois-hospitals/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-hospital-review",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-17",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Two independent local sources confirm West Suburban Medical Center and Weiss Memorial Hospital are closed/shuttered safety-net hospitals moving toward Insight control with reopening still pending.",
+      "resolved_event": "West Suburban and Weiss Memorial closed hospitals move toward Insight control",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Insight to take over 2 closed Illinois hospitals",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "610b2d9e3b6903582b4acdd045328e751f9aadd3ed50a88fc609f434e8dc26f1"
+    },
+    {
+      "alternate_sources": [
+        {
+          "date": "2026-09-18",
+          "passage": "discontinue inpatient labor and delivery services effective Sept. 30, 2026",
+          "publisher": "Fitzgibbon Hospital",
+          "type": "provider/official",
+          "url": "https://www.fitzgibbon.org/news/fitzgibbon-hospital-to-transition-inpatient-labor-delivery-services"
+        },
+        {
+          "date": "2026-09-21",
+          "passage": "stop having inpatient labor and delivery services on Sept. 30",
+          "publisher": "ABC17/KMIZ",
+          "type": "local reporting",
+          "url": "https://abc17news.com/news/saline/2026/09/21/fitzgibbon-hospital-to-end-inpatient-labor-and-delivery-services/"
+        }
+      ],
+      "disposition": "ALT_CANDIDATE_CONFIRMED",
+      "duplicate_of": "",
+      "failed_gates": [
+        "missing_geography"
+      ],
+      "network_pages_inspected": 2,
+      "observation_dates": [
+        "2026-09-22"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "Newly acquired Missouri hospital to end labor and delivery services due to \u2018ongoing financial losses\u2019",
+      "original_article_url": "https://www.beckershospitalreview.com/finance/newly-acquired-missouri-hospital-to-end-labor-and-delivery-services-due-to-ongoing-financial-losses/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-hospital-review",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-22",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Provider and local reporting confirm Fitzgibbon Hospital in Marshall, Missouri will end inpatient labor and delivery Sept. 30, while retaining prenatal/postpartum clinic support and arranging delivery transitions.",
+      "resolved_event": "Fitzgibbon Hospital ends inpatient labor and delivery services",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Newly acquired Missouri hospital to end labor and delivery services due to \u2018ongoing financial losses\u2019",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "6496f3042592afdb069d5ce593a829a6cf3b88dcf3b9d44581f520f82d826b1b"
+    },
+    {
+      "alternate_sources": [
+        {
+          "date": "2026-09-01",
+          "passage": "Troy?s last remaining hospital planned to close its birthing center",
+          "publisher": "Utah Public Radio / KFF Health News",
+          "type": "syndicated public media",
+          "url": "https://www.upr.org/npr-news/2026-09-01/a-n-y-hospital-tried-to-close-its-birthing-center-this-city-united-to-fight-back"
+        }
+      ],
+      "disposition": "ALT_CANDIDATE_CONFIRMED",
+      "duplicate_of": "",
+      "failed_gates": [
+        "missing_geography"
+      ],
+      "network_pages_inspected": 1,
+      "observation_dates": [
+        "2026-09-15"
+      ],
+      "occurrence_count": 3,
+      "original_article_title": "A NY Hospital Tried To Close Its Birthing Center. This City United To Fight Back.",
+      "original_article_url": "https://kffhealthnews.org/courts/troy-new-york-hospital-birthing-center-bipartisan-fight/",
+      "original_extraction_outcome": "BODY_EXTRACTED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "kff-health-news",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-09",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Syndicated KFF/public-radio evidence confirms Troy, N.Y. residents fought a planned closure of Samaritan/Burdett birth center, preserving local maternity access.",
+      "resolved_event": "Troy Burdett Birth Center closure challenge",
+      "route_class": "ALTERNATE_SOURCE_REQUIRED",
+      "search_queries_used": [
+        "A NY Hospital Tried To Close Its Birthing Center. This City United To Fight Back.",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "3b8d25912aa7a17ee7f3d824b77cafd7ef943e303cfdeba1fc76be6711fab3ab"
+    }
+  ],
+  "conflicting_evidence_identities": [],
+  "dispatch": "care-line",
+  "evidence_exhausted_identities": [
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-15"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "AGA updates surveillance guidance: What ASC leaders need to know",
+      "original_article_url": "https://www.beckersasc.com/gastroenterology-and-endoscopy/aga-updates-surveillance-guidance-what-asc-leaders-need-to-know/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-asc",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-14",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "AGA updates surveillance guidance: What ASC leaders need to know",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "dcd8083318f5e1f1b1a824d0cb263ba507827fef0568804dba8fdfbd5fefaf2b"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "non_healthcare_passage"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-15"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "Oregon physician practice closes after 21 years",
+      "original_article_url": "https://www.beckersasc.com/asc-transactions-and-valuation-issues/oregon-physician-practice-closes-after-21-years/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-asc",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-14",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Oregon physician practice closes after 21 years",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "6d54defeedfa021e410345bdc38edd695809fb124ee3ca7532bb2756a3d61d82"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-15"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "What SCA Health\u2019s ASC looks like in 2035",
+      "original_article_url": "https://www.beckersasc.com/leadership/what-sca-healths-asc-looks-like-in-2035/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-asc",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-14",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "What SCA Health\u2019s ASC looks like in 2035",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "a1a002c8a88bbc48b224fa6dbe478724ee750f22db0a63def1614c6cdf5fbb63"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-15"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "Arizona physician practice to close",
+      "original_article_url": "https://www.beckersasc.com/asc-transactions-and-valuation-issues/arizona-physician-practice-to-close/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-asc",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-15",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Arizona physician practice to close",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "9d04fb5b4552056c454bda52f82e1237bed22d9b247646fb2331e8059a2d5137"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-15"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "The physicians most likely to look for a job out-of-state",
+      "original_article_url": "https://www.beckersasc.com/leadership/the-physicians-most-likely-to-look-for-a-job-out-of-state/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-asc",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-15",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "The physicians most likely to look for a job out-of-state",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "f7dc21c6637f0bb65394e6e113bf8e9c9191fe1a978f941171aea0dff3d9c3de"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject",
+        "missing_service_line_or_facility_scope"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-17"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "Ban on facility fees pushed in Iowa after hospital acquisition spikes patient bills",
+      "original_article_url": "https://www.beckersasc.com/legal-regulatory-issues/ban-on-facility-fees-pushed-in-iowa-after-hospital-acquisition-spikes-patient-bills/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-asc",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-17",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Ban on facility fees pushed in Iowa after hospital acquisition spikes patient bills",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "e87eebf7f596179522b539104d1be5b88936f3600ab4b32d42b476fb12bc589a"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-17",
+        "2026-09-18"
+      ],
+      "occurrence_count": 2,
+      "original_article_title": "HCA: Coverage losses, Medicare IPO changes hit spine, orthopedics",
+      "original_article_url": "https://www.beckersasc.com/asc-news/hca-sees-elective-surgery-slowdown-as-coverage-erodes/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-asc",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-17",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "HCA: Coverage losses, Medicare IPO changes hit spine, orthopedics",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "e02d3a32b16dbd4959e8fc2606adece852b69137ab0102f4c159f3ce45731add"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-18"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "ASC leaders reveal their costliest mistake",
+      "original_article_url": "https://www.beckersasc.com/asc-news/asc-leaders-reveal-their-costliest-mistake/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-asc",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-18",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "ASC leaders reveal their costliest mistake",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "20cfe6fe55d272ca7fc29ee887b6bbf07f3b250e46a2ede7e43491b20aae331b"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-18",
+        "2026-09-20",
+        "2026-09-21"
+      ],
+      "occurrence_count": 6,
+      "original_article_title": "Inside Surgery Partners\u2019 $797M bet on an ASC future",
+      "original_article_url": "https://www.beckersasc.com/asc-transactions-and-valuation-issues/inside-surgery-partners-797m-bet-on-an-asc-future/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-asc",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-18",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Inside Surgery Partners\u2019 $797M bet on an ASC future",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "c5395bd198fb0cae370a25319dd4abc07a6f60467839e02c26010071b3d0e1cf"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-21",
+        "2026-09-22"
+      ],
+      "occurrence_count": 2,
+      "original_article_title": "Cardinal Health eyes more independent GI practices",
+      "original_article_url": "https://www.beckersasc.com/gastroenterology-and-endoscopy/cardinal-health-eyes-more-independent-gi-practices/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-asc",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-21",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Cardinal Health eyes more independent GI practices",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "ede6783f40dbd722a7ced06aee281fefbecab1f0e22f9d9200d39add8998b975"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-21"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "Washington physician practice closes clinic, consolidates operations",
+      "original_article_url": "https://www.beckersasc.com/hospital-transactions-and-valuation/washington-physician-practice-closes-clinic-consolidates-operations/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-asc",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-21",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Washington physician practice closes clinic, consolidates operations",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "5bea880ab37348acff6d23a6cf94251e45e2413b6aea88b8082642fc27ababff"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-22"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "Stark law\u2019s underused margin lever",
+      "original_article_url": "https://www.beckersasc.com/asc-coding-billing-and-collections/stark-laws-underused-margin-lever/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-asc",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-22",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Stark law\u2019s underused margin lever",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "a1cd4abf487afd6c89d16f41035eaa0e3116baeb1bab78654fcbfcfd2f53d8aa"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject",
+        "missing_service_line_or_facility_scope"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-24"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "Why 30% of endoscopies are canceled at Cleveland Clinic",
+      "original_article_url": "https://www.beckersasc.com/gastroenterology-and-endoscopy/why-30-of-endoscopies-are-canceled-at-cleveland-clinic/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-asc",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-24",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Why 30% of endoscopies are canceled at Cleveland Clinic",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "ac5479586b58709dea905e0879e941f2dcd8485ca1dabb77ce6ad6ee103f847d"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-16"
+      ],
+      "occurrence_count": 2,
+      "original_article_title": "Is rural dental care headed for a perfect storm?",
+      "original_article_url": "https://www.beckersdental.com/dentists/is-rural-dental-care-headed-for-a-perfect-storm/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-dental",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-16",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Is rural dental care headed for a perfect storm?",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "ea02307a01932e0756ae191bc5ca00111259763d537ce6456a5eae60402ed322"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-15"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "10 trends shaping health IT and revenue cycle in 2026",
+      "original_article_url": "https://www.beckershospitalreview.com/healthcare-information-technology/10-trends-shaping-health-it-and-revenue-cycle-in-2026/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-hospital-review",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-14",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "10 trends shaping health IT and revenue cycle in 2026",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "cc62750da4199e8122f47daddd4736c4a9926474620059eb98eba941e0b0fe16"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject",
+        "missing_service_line_or_facility_scope",
+        "non_healthcare_passage"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-16"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "Health system CIOs say bigger budgets won\u2019t fix their real problem",
+      "original_article_url": "https://www.beckershospitalreview.com/healthcare-information-technology/health-system-cios-say-bigger-budgets-wont-fix-their-real-problem/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-hospital-review",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-16",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Health system CIOs say bigger budgets won\u2019t fix their real problem",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "796399ac65a4a660055a178f8b346087d9c88f8c6542a1ecb31040b2d48a57e0"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-16"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "What will transform health system tech and revenue cycle? 10 notes",
+      "original_article_url": "https://www.beckershospitalreview.com/healthcare-information-technology/innovation/what-will-transform-health-system-tech-and-revenue-cycle-10-notes/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-hospital-review",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-16",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "What will transform health system tech and revenue cycle? 10 notes",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "ae4f0b938c3c90705e7b32a71d783ae32f77dfe1176dc8e7e313239def03424a"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject",
+        "missing_service_line_or_facility_scope"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-17"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "9 health system RCM partnerships in 2026",
+      "original_article_url": "https://www.beckershospitalreview.com/finance/revenue-cycle-management/9-health-system-rcm-partnerships-in-2026/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-hospital-review",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-17",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "9 health system RCM partnerships in 2026",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "6a015a52776d0ad53db38f70c525e649482fd0ba1e4d5c58baf79c1aa333c55b"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-17"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "Inside the nation\u2019s first age-friendly pharmacy",
+      "original_article_url": "https://www.beckershospitalreview.com/pharmacy/inside-the-nations-first-age-friendly-pharmacy/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-hospital-review",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-17",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Inside the nation\u2019s first age-friendly pharmacy",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "d20b4e3e0848727bb2c32ddd0407b99357aac76de70a4278afa1c77251ac3bbe"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-18"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "7 called-off hospital deals",
+      "original_article_url": "https://www.beckershospitalreview.com/hospital-transactions-and-valuation/6-called-off-hospital-deals-2/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-hospital-review",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-18",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "7 called-off hospital deals",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "7280204dbee3140e2bde1300fb1d97f41cb1244b3e4142022f296f4ae1ecbb0a"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-18"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "HCA CFO: Patients owe more, pay less amid economic strain",
+      "original_article_url": "https://www.beckershospitalreview.com/finance/hca-cfo-patients-owe-more-pay-less-amid-economic-strain/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-hospital-review",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-18",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "HCA CFO: Patients owe more, pay less amid economic strain",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "09426462dd28d7d1c7a183b173bad6277924eb5949eb99d8d6521d8401ecda78"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-18"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "Preparing patients earlier: How OHSU reduced targeted late surgical cancellations by 50%",
+      "original_article_url": "https://www.beckershospitalreview.com/leadership/preparing-patients-earlier-how-ohsu-reduced-targeted-late-surgical-cancellations-by-50/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-hospital-review",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-18",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Preparing patients earlier: How OHSU reduced targeted late surgical cancellations by 50%",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "583ae5fc8a7bdf10d3bbb78d7ad7675baba58f71c22d8774d3cd0d933c06b688"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-18"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "The Other Side of the Claim Is Already Using AI: What Payer Adoption Means for Hospital Revenue Cycle Strategy",
+      "original_article_url": "https://www.beckershospitalreview.com/finance/revenue-cycle-management/the-other-side-of-the-claim-is-already-using-ai-what-payer-adoption-means-for-hospital-revenue-cycle-strategy/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-hospital-review",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-18",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "The Other Side of the Claim Is Already Using AI: What Payer Adoption Means for Hospital Revenue Cycle Strategy",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "dad74b25d3acc72261fd942c5008786bdff22f1cde9fe9c328043fba65ae1734"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-22"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "33 health systems dropping Medicare Advantage plans | 2026",
+      "original_article_url": "https://www.beckershospitalreview.com/finance/16-health-systems-dropping-medicare-advantage-plans-2026/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-hospital-review",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-22",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "33 health systems dropping Medicare Advantage plans | 2026",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "9025dfe798efffab439f83c2ceeb4c3c07c18c38efd381f533e9983c1f615682"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject",
+        "missing_service_line_or_facility_scope",
+        "non_healthcare_passage"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-22"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "CMS cancels ACA policies for 760,000 people, freezes broker registrations",
+      "original_article_url": "https://www.beckershospitalreview.com/finance/cms-cancels-aca-policies-for-760000-people-freezes-broker-registrations/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-hospital-review",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-22",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "CMS cancels ACA policies for 760,000 people, freezes broker registrations",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "e89dc4b2e811ceb10a35878de730396b62aa80a5469ddc12a7450739519a4c27"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-24"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "California hospital weighs service changes amid $85K daily cash shortfall",
+      "original_article_url": "https://www.beckershospitalreview.com/finance/california-hospital-weighs-service-changes-amid-85k-daily-cash-shortfall/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-hospital-review",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-24",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "California hospital weighs service changes amid $85K daily cash shortfall",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "3ef6eb812e4ab76adf9208ac3966d5a81433c4566bf523763cbb1fda52dcefa5"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-24"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "Why surgical safety is a leadership problem, not a nursing metric \u2014 4 takeaways",
+      "original_article_url": "https://www.beckershospitalreview.com/quality/patient-safety-outcomes/why-surgical-safety-is-a-leadership-problem-not-a-nursing-metric-4-takeaways/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-hospital-review",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-24",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Why surgical safety is a leadership problem, not a nursing metric \u2014 4 takeaways",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "f436e88e1545fc3296099d3dfc17905b18b8c30dbaffd63c2083edd1eccc982f"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-17"
+      ],
+      "occurrence_count": 2,
+      "original_article_title": "Medicare Advantage is making billions. Taxpayers deserve to know what they are buying",
+      "original_article_url": "https://www.beckerspayer.com/payer/medicare-advantage/medicare-advantage-is-making-billions-taxpayers-deserve-to-know-what-they-are-buying/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-payer",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-17",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Medicare Advantage is making billions. Taxpayers deserve to know what they are buying",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "e448a4baec847529934d27ec7bade42a271cf64253a1cd0c1e9ec56cfb67511b"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "non_healthcare_passage"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-15"
+      ],
+      "occurrence_count": 1,
+      "original_article_title": "Oregon orthopedic practice closes after 21 years",
+      "original_article_url": "https://www.beckersspine.com/orthopedic-spine-practices-improving-profits/oregon-physician-practice-closes-after-21-years/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-spine",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-14",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Oregon orthopedic practice closes after 21 years",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "08c82229be08898024993d99191eefa55a6cac1c0eb88d2b2ffe4e6b3a6a6bae"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-15"
+      ],
+      "occurrence_count": 2,
+      "original_article_title": "Spine, orthopedic surgeons are walking away from the old business model",
+      "original_article_url": "https://www.beckersspine.com/spine/spine-orthopedic-surgeons-are-walking-away-from-the-old-business-model/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-spine",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-15",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Spine, orthopedic surgeons are walking away from the old business model",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "2224c502ddca3db36e0e815b36e0d8d535a35a3638f9abad4a4e9b6b5e748693"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-18",
+        "2026-09-20",
+        "2026-09-21"
+      ],
+      "occurrence_count": 6,
+      "original_article_title": "The race to shrink knee replacement\u2019s hardest 6 weeks",
+      "original_article_url": "https://www.beckersspine.com/orthopedic/the-race-to-shrink-knee-replacements-hardest-6-weeks/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-spine",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-18",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "The race to shrink knee replacement\u2019s hardest 6 weeks",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "2646c822f99a9b16b1bded59a74b6a012fd1a9910e662d6da774ca5cca64c226"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-21",
+        "2026-09-22"
+      ],
+      "occurrence_count": 3,
+      "original_article_title": "The case against hyperspecialization in orthopedics",
+      "original_article_url": "https://www.beckersspine.com/orthopedic/the-case-against-hyperspecialization-in-orthopedics/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "beckers-spine",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-21",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "The case against hyperspecialization in orthopedics",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "a3b329b05e2e068d3af119f844d29fbdce1560eec8e2c7444a4d5896d349017a"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "BODY_EXTRACTED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-15",
+        "2026-09-16"
+      ],
+      "occurrence_count": 4,
+      "original_article_title": "Why hospital network segmentation projects stall and what that means for patient safety",
+      "original_article_url": "https://www.healthcaredive.com/spons/why-hospital-network-segmentation-projects-stall-and-what-that-means-for-pa/830111/",
+      "original_extraction_outcome": "BODY_EXTRACTED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "healthcare-dive",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-14",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "ALTERNATE_SOURCE_REQUIRED",
+      "search_queries_used": [
+        "Why hospital network segmentation projects stall and what that means for patient safety",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "b6267b2839f8a6bff7e69040925f5814c240407ed578b887c7a5ae432110ad72"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "BODY_EXTRACTED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-21",
+        "2026-09-22",
+        "2026-09-23"
+      ],
+      "occurrence_count": 7,
+      "original_article_title": "The hidden cost of disconnected care",
+      "original_article_url": "https://www.healthcaredive.com/spons/the-hidden-cost-of-disconnected-care/829877/",
+      "original_extraction_outcome": "BODY_EXTRACTED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "healthcare-dive",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-21",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "ALTERNATE_SOURCE_REQUIRED",
+      "search_queries_used": [
+        "The hidden cost of disconnected care",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "ef0234a23a61aa947f947d61b9e04a8cbcba4ebebf828743d904d0b95b65d519"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography"
+      ],
+      "latest_original_recovery_access_state": "PARTIAL_BODY",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-15",
+        "2026-09-16"
+      ],
+      "occurrence_count": 4,
+      "original_article_title": "This Startup Wants to Make Glaucoma Surgery Recovery Easier",
+      "original_article_url": "https://medcitynews.com/2026/09/startup-glaucoma-surgery-recovery-startup/",
+      "original_extraction_outcome": "PARTIAL_BODY",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "medcity-news",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-08",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "ALTERNATE_SOURCE_REQUIRED",
+      "search_queries_used": [
+        "This Startup Wants to Make Glaucoma Surgery Recovery Easier",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "fb3c8b663637fe31f5d168f562cd3b386b6d9b2929504da5ac76952a6897755a"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "PARTIAL_BODY",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-15",
+        "2026-09-16",
+        "2026-09-17",
+        "2026-09-18"
+      ],
+      "occurrence_count": 10,
+      "original_article_title": "3 Strategies to Improve Health Insurance, Per Georgetown Report",
+      "original_article_url": "https://medcitynews.com/2026/09/3-strategies-to-improve-health-insurance-per-georgetown-report/",
+      "original_extraction_outcome": "PARTIAL_BODY",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "medcity-news",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-10",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "ALTERNATE_SOURCE_REQUIRED",
+      "search_queries_used": [
+        "3 Strategies to Improve Health Insurance, Per Georgetown Report",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "68629fa802c91af3b058306c34e35ac65892d9def4e4641ec2dffa776f3b741e"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "PARTIAL_BODY",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-15",
+        "2026-09-16",
+        "2026-09-17"
+      ],
+      "occurrence_count": 9,
+      "original_article_title": "Imprivata CEO: AI Agents Need the Same Scrutiny as an Unvetted Contract Nurse",
+      "original_article_url": "https://medcitynews.com/2026/09/imprivata-ai-agents/",
+      "original_extraction_outcome": "PARTIAL_BODY",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "medcity-news",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-10",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "ALTERNATE_SOURCE_REQUIRED",
+      "search_queries_used": [
+        "Imprivata CEO: AI Agents Need the Same Scrutiny as an Unvetted Contract Nurse",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "800a2e2bd2e441808af66b65be00812bfa5537d775b2c14cd831a66ddd54f74e"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography"
+      ],
+      "latest_original_recovery_access_state": "PARTIAL_BODY",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-15",
+        "2026-09-16",
+        "2026-09-17",
+        "2026-09-18",
+        "2026-09-20"
+      ],
+      "occurrence_count": 14,
+      "original_article_title": "Interra Health Adds GLP-1 Bridge Program Support",
+      "original_article_url": "https://medcitynews.com/2026/09/interra-health-adds-glp-1-bridge-program-support/",
+      "original_extraction_outcome": "PARTIAL_BODY",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "medcity-news",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-09-13",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "ALTERNATE_SOURCE_REQUIRED",
+      "search_queries_used": [
+        "Interra Health Adds GLP-1 Bridge Program Support",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "932480f85d6a8141b973343422b4dbee30eb949ed1bd4bec4e3858d41c41cf01"
+    },
+    {
+      "alternate_sources": [],
+      "disposition": "EVIDENCE_EXHAUSTED",
+      "duplicate_of": "",
+      "exhaustion_reason": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "failed_gates": [
+        "missing_geography",
+        "missing_subject"
+      ],
+      "latest_original_recovery_access_state": "ACCESS_BLOCKED",
+      "network_pages_inspected": 0,
+      "observation_dates": [
+        "2026-09-15",
+        "2026-09-16",
+        "2026-09-17",
+        "2026-09-18"
+      ],
+      "occurrence_count": 11,
+      "original_article_title": "Crisis pregnancy centers fight for ultrasound use in clinics without government oversight",
+      "original_article_url": "https://penncapital-star.com/2026/07/30/repub/crisis-pregnancy-centers-fight-for-ultrasound-use-in-clinics-without-government-oversight/",
+      "original_extraction_outcome": "ACCESS_BLOCKED",
+      "original_production_discovery_lineage_present": false,
+      "original_source_id": "penn-capital-star-health",
+      "pages_authorized": false,
+      "public_generation_authorized": false,
+      "publication_approval": false,
+      "publication_date": "2026-07-30",
+      "publication_eligible": false,
+      "publication_performed": false,
+      "reasoning": "Bounded alternate-source search did not locate accessible non-original evidence sufficient to confirm candidate, exclusion, or duplicate. Search was stopped under the per-identity bounds.",
+      "resolved_event": "",
+      "route_class": "KNOWN_ACCESS_BLOCKED",
+      "search_queries_used": [
+        "Crisis pregnancy centers fight for ultrasound use in clinics without government oversight",
+        "provider/facility + event/date",
+        "provider/facility + access terms"
+      ],
+      "source_evidence_fingerprint": "e6cfbcd5eec9cfd017310b3de151dfd83a681b6d30f1b564da1fdce24cb37c57"
+    }
+  ],
+  "evidence_sources": {
+    "abc17_fitzgibbon": {
+      "date": "2026-09-21",
+      "passage": "stop having inpatient labor and delivery services on Sept. 30",
+      "publisher": "ABC17/KMIZ",
+      "type": "local reporting",
+      "url": "https://abc17news.com/news/saline/2026/09/21/fitzgibbon-hospital-to-end-inpatient-labor-and-delivery-services/"
+    },
+    "cbs_insight": {
+      "date": "2026-09-17",
+      "passage": "Two shuttered Chicago-area hospitals are under new control",
+      "publisher": "CBS Chicago",
+      "type": "local reporting",
+      "url": "https://www.cbsnews.com/chicago/news/west-suburban-medical-center-weiss-memorial-insight-health-systems/?ftag=CNM-00-10aag7e"
+    },
+    "fitzgibbon_primary": {
+      "date": "2026-09-18",
+      "passage": "discontinue inpatient labor and delivery services effective Sept. 30, 2026",
+      "publisher": "Fitzgibbon Hospital",
+      "type": "provider/official",
+      "url": "https://www.fitzgibbon.org/news/fitzgibbon-hospital-to-transition-inpatient-labor-delivery-services"
+    },
+    "hackensack_pr": {
+      "date": "2026-09-21",
+      "passage": "CEO Robert C. Garrett plans to retire effective June 30, 2027",
+      "publisher": "Hackensack Meridian Health / PR Newswire",
+      "type": "provider press release",
+      "url": "https://www.prnewswire.com/news-releases/hackensack-meridian-health-ceo-robert-c-garrett-to-retire-after-leading-njs-largest-and-national-award-winning-health-system-302884931.html"
+    },
+    "healthcare_dive_boston": {
+      "date": "2026-09-11",
+      "passage": "fully restored manufacturing, order fulfillment and shipping operations",
+      "publisher": "Healthcare Dive",
+      "type": "trade reporting",
+      "url": "https://www.healthcaredive.com/news/boston-scientific-fully-restores-operations-after-cyberattack/830261/"
+    },
+    "kiro_pearl": {
+      "date": "2026-09-23",
+      "passage": "youth residential facility in Tacoma will close later this year",
+      "publisher": "KIRO 7 Seattle",
+      "type": "local reporting",
+      "url": "https://www.kiro7.com/news/local/tacoma-youth-facility-closing-after-3-million-losses-laying-off-92-employees/APDVBBEZAFBKNHVI2FX6INUOF4/?outputType=amp"
+    },
+    "kpbs_hiv": {
+      "date": "2026-09-12",
+      "passage": "Fighting the stigma of HIV",
+      "publisher": "KPBS / NPR",
+      "type": "public media",
+      "url": "https://www.kpbs.org/news/health/2026/09/12/people-are-still-afraid-of-those-three-letters-fighting-the-stigma-of-hiv"
+    },
+    "mpr_crisis_respite": {
+      "date": "2026-09-14",
+      "passage": "will no longer allow the use of hotel rooms to provide crisis respite",
+      "publisher": "MPR News",
+      "type": "public media",
+      "url": "https://www.mprnews.org/episode/2026/09/14/minnesota-to-end-use-of-hotel-rooms-to-house-people-experiencing-mental-health-crises"
+    },
+    "npr_illinois_choate": {
+      "date": "2026-09-17",
+      "passage": "plan calls for eliminating all psychiatric beds",
+      "publisher": "NPR Illinois / Capitol News Illinois",
+      "type": "local public reporting",
+      "url": "https://www.nprillinois.org/southern-il-area/2026-09-17/choate-workers-union-files-lawsuit-to-block-state-from-gutting-mental-health-facility"
+    },
+    "opb_birth_control": {
+      "date": "2026-09-16",
+      "passage": "new analysis of contraception access",
+      "publisher": "OPB / NPR",
+      "type": "public media",
+      "url": "https://www.opb.org/article/2026/09/16/new-maps-reveal-birth-control-access-gaps-in-the-u-s/"
+    },
+    "phi_aol": {
+      "date": "2026-09-16",
+      "passage": "stopped flying out of its air medical base at Red Bluff Municipal Airport",
+      "publisher": "Redding Record Searchlight via AOL",
+      "type": "local reporting",
+      "url": "https://www.aol.com/articles/north-state-air-ambulance-closes-110300000.html"
+    },
+    "phi_ems1": {
+      "date": "2026-09-15",
+      "passage": "suspending its Red Bluff operations at the Red Bluff Municipal Airport",
+      "publisher": "EMS1 / Red Bluff Daily News",
+      "type": "trade/local reporting",
+      "url": "https://www.ems1.com/air-medical-transport/phi-air-medical-suspends-operations-in-calif-city-over-payment-issues"
+    },
+    "surgery_center_s_oregon": {
+      "date": "2026",
+      "passage": "The Surgery Center of Southern Oregon is now permanently closed",
+      "publisher": "Surgery Center of Southern Oregon",
+      "type": "provider/official",
+      "url": "https://www.sosurgi.com/"
+    },
+    "upr_burdett": {
+      "date": "2026-09-01",
+      "passage": "Troy?s last remaining hospital planned to close its birthing center",
+      "publisher": "Utah Public Radio / KFF Health News",
+      "type": "syndicated public media",
+      "url": "https://www.upr.org/npr-news/2026-09-01/a-n-y-hospital-tried-to-close-its-birthing-center-this-city-united-to-fight-back"
+    },
+    "wbez_insight": {
+      "date": "2026-09-18",
+      "passage": "West Suburban Medical Center and Weiss Memorial Hospital are expected to be sold to Insight Health Systems",
+      "publisher": "WBEZ Chicago",
+      "type": "local public radio",
+      "url": "https://www.wbez.org/health-medicine/2026/09/18/west-suburban-weiss-sold-insight-health-systems"
+    }
+  },
+  "generated_at": "2026-09-25T09:00:00Z",
+  "methodology": {
+    "alternate_source_methodology": "Used bounded public alternate-source searches against the frozen manifest only. Original blocked publisher routes were not retried. Each identity was assigned exactly one terminal research disposition.",
+    "blocked_original_route_rule": "Do not request blocked original publisher URLs or bypass publisher access controls; use accessible alternate public evidence only.",
+    "evidence_exhausted_meaning": "EVIDENCE_EXHAUSTED does not mean the event did not occur. It means the bounded available evidence did not permit a reliable candidate, exclusion, or duplicate determination.",
+    "future_research": "Do not schedule further research automatically for exhausted identities."
+  },
+  "per_date": [
+    {
+      "closed": 4,
+      "coverage_result": "EVIDENCE_EXHAUSTED_REMAINS",
+      "date": "2026-09-15",
+      "exhausted_or_conflicting": 14,
+      "frozen_unresolved": 18
+    },
+    {
+      "closed": 5,
+      "coverage_result": "EVIDENCE_EXHAUSTED_REMAINS",
+      "date": "2026-09-16",
+      "exhausted_or_conflicting": 9,
+      "frozen_unresolved": 14
+    },
+    {
+      "closed": 6,
+      "coverage_result": "EVIDENCE_EXHAUSTED_REMAINS",
+      "date": "2026-09-17",
+      "exhausted_or_conflicting": 9,
+      "frozen_unresolved": 15
+    },
+    {
+      "closed": 3,
+      "coverage_result": "EVIDENCE_EXHAUSTED_REMAINS",
+      "date": "2026-09-18",
+      "exhausted_or_conflicting": 11,
+      "frozen_unresolved": 14
+    },
+    {
+      "closed": 0,
+      "coverage_result": "EVIDENCE_EXHAUSTED_REMAINS",
+      "date": "2026-09-20",
+      "exhausted_or_conflicting": 3,
+      "frozen_unresolved": 3
+    },
+    {
+      "closed": 1,
+      "coverage_result": "EVIDENCE_EXHAUSTED_REMAINS",
+      "date": "2026-09-21",
+      "exhausted_or_conflicting": 6,
+      "frozen_unresolved": 7
+    },
+    {
+      "closed": 3,
+      "coverage_result": "EVIDENCE_EXHAUSTED_REMAINS",
+      "date": "2026-09-22",
+      "exhausted_or_conflicting": 6,
+      "frozen_unresolved": 9
+    },
+    {
+      "closed": 2,
+      "coverage_result": "EVIDENCE_EXHAUSTED_REMAINS",
+      "date": "2026-09-23",
+      "exhausted_or_conflicting": 1,
+      "frozen_unresolved": 3
+    },
+    {
+      "closed": 3,
+      "coverage_result": "EVIDENCE_EXHAUSTED_REMAINS",
+      "date": "2026-09-24",
+      "exhausted_or_conflicting": 3,
+      "frozen_unresolved": 6
+    }
+  ],
+  "protected_base": "d269e1479ee7c7c4adea3b6ff3ba40945c324c11",
+  "recovery_provenance": "operator_recovered_external_source_evidence",
+  "research_scope": "Bounded alternate-source recovery for frozen Care Line unresolved identities observed 2026-09-15 through 2026-09-24, excluding 2026-09-19.",
+  "runner": "C:\\BlueFernRunner\\CareLineNationalCurrent8",
+  "schema_version": "bluefern.care_line.discovery_recovery.observation_window_audit.v1",
+  "source_artifact_sha256": {
+    "alternate_source_recovery_report": "408b844a5d1c2247cfe7cd9f88e37e4e767cbff47da3a95afcae4b0d0f17b277",
+    "conflicting_evidence": "c45d86d816490cdc59236afa1a2f36891f8fb73f83d858b2135272ed9f07485c",
+    "evidence_exhausted": "d52a729f41681228fd96821fefbd57f8899744190b4a758141f49fa5a65a6700",
+    "frozen_input_manifest": "0f628e2e1898a5f754b31e842a097cc05c89bd639a0a563f05a2566a02aa5e1f",
+    "private_recovered_candidates": "b1c4443999fc3d8f32f29de9a1f5e9599caf8e165d17e3aa13427733702e9248"
+  },
+  "source_scratch_paths": {
+    "alternate_source_recovery_report": ".codex-scratch/care-alt-recovery-2026-09-24/research-v1/alternate-source-recovery-report-v1.json",
+    "conflicting_evidence": ".codex-scratch/care-alt-recovery-2026-09-24/research-v1/conflicting-evidence-v1.json",
+    "evidence_exhausted": ".codex-scratch/care-alt-recovery-2026-09-24/research-v1/evidence-exhausted-v1.json",
+    "frozen_input_manifest": ".codex-scratch/care-alt-recovery-2026-09-24/alt-recovery-input-v1.json",
+    "private_recovered_candidates": ".codex-scratch/care-alt-recovery-2026-09-24/research-v1/private-recovered-candidates-v1.json"
+  },
+  "terminal_noncandidate_dispositions": {
+    "duplicates": [
+      {
+        "alternate_sources": [
+          {
+            "date": "2026-09-17",
+            "passage": "plan calls for eliminating all psychiatric beds",
+            "publisher": "NPR Illinois / Capitol News Illinois",
+            "type": "local public reporting",
+            "url": "https://www.nprillinois.org/southern-il-area/2026-09-17/choate-workers-union-files-lawsuit-to-block-state-from-gutting-mental-health-facility"
+          }
+        ],
+        "canonical_or_representative_identity": "c2de68fd1e50a9fab4413ddb88077c450b8edeb0e4f3504e421a014eb7731ef4",
+        "deterministic_relationship_proof": "Same Choate facility, bed-elimination/closure-plan controversy, geography and timing as the Choate candidate identity.",
+        "disposition": "ALT_DUPLICATE_CONFIRMED",
+        "duplicate_of": "c2de68fd1e50a9fab4413ddb88077c450b8edeb0e4f3504e421a014eb7731ef4",
+        "failed_gates": [
+          "missing_geography"
+        ],
+        "network_pages_inspected": 1,
+        "observation_dates": [
+          "2026-09-24"
+        ],
+        "occurrence_count": 1,
+        "original_article_title": "Illinois delays state facility\u2019s psychiatric bed closure plans after legal challenges",
+        "original_article_url": "https://www.beckersbehavioralhealth.com/behavioral-health-news/illinois-delays-state-facilitys-psychiatric-bed-closure-plans-after-legal-challenges/",
+        "original_extraction_outcome": "ACCESS_BLOCKED",
+        "original_production_discovery_lineage_present": false,
+        "original_source_id": "beckers-behavioral",
+        "pages_authorized": false,
+        "public_generation_authorized": false,
+        "publication_approval": false,
+        "publication_date": "2026-09-24",
+        "publication_eligible": false,
+        "publication_performed": false,
+        "reasoning": "Same Choate facility, bed-elimination/closure-plan controversy, geography and timing as the Choate candidate identity.",
+        "resolved_event": "Choate Mental Health downsizing duplicate",
+        "route_class": "KNOWN_ACCESS_BLOCKED",
+        "search_queries_used": [
+          "Illinois delays state facility\u2019s psychiatric bed closure plans after legal challenges",
+          "provider/facility + event/date",
+          "provider/facility + access terms"
+        ],
+        "source_evidence_fingerprint": "dabd1e5ea7a59cc743f3c3086ee002b844788634c22edd6a1ec2997018c6af86"
+      },
+      {
+        "alternate_sources": [
+          {
+            "date": "2026-09-15",
+            "passage": "suspending its Red Bluff operations at the Red Bluff Municipal Airport",
+            "publisher": "EMS1 / Red Bluff Daily News",
+            "type": "trade/local reporting",
+            "url": "https://www.ems1.com/air-medical-transport/phi-air-medical-suspends-operations-in-calif-city-over-payment-issues"
+          }
+        ],
+        "canonical_or_representative_identity": "eafcef9d85dcbebed55336d587172caad778f4915a8a3c5d96fe72ec9820001c",
+        "deterministic_relationship_proof": "Same PHI Air Medical Red Bluff base suspension as the Becker ASC identity, same title/event/date under Becker Payer source family.",
+        "disposition": "ALT_DUPLICATE_CONFIRMED",
+        "duplicate_of": "eafcef9d85dcbebed55336d587172caad778f4915a8a3c5d96fe72ec9820001c",
+        "failed_gates": [
+          "missing_geography"
+        ],
+        "network_pages_inspected": 1,
+        "observation_dates": [
+          "2026-09-17",
+          "2026-09-18"
+        ],
+        "occurrence_count": 3,
+        "original_article_title": "Air ambulance company suspends base operations amid BCBS reimbursement dispute",
+        "original_article_url": "https://www.beckerspayer.com/payer/air-ambulance-company-suspends-base-operations-amid-bcbs-reimbursement-dispute-2/",
+        "original_extraction_outcome": "ACCESS_BLOCKED",
+        "original_production_discovery_lineage_present": false,
+        "original_source_id": "beckers-payer",
+        "pages_authorized": false,
+        "public_generation_authorized": false,
+        "publication_approval": false,
+        "publication_date": "2026-09-17",
+        "publication_eligible": false,
+        "publication_performed": false,
+        "reasoning": "Same PHI Air Medical Red Bluff base suspension as the Becker ASC identity, same title/event/date under Becker Payer source family.",
+        "resolved_event": "PHI Red Bluff air ambulance duplicate",
+        "route_class": "KNOWN_ACCESS_BLOCKED",
+        "search_queries_used": [
+          "Air ambulance company suspends base operations amid BCBS reimbursement dispute",
+          "provider/facility + event/date",
+          "provider/facility + access terms"
+        ],
+        "source_evidence_fingerprint": "233af5bfe68b04653c59f37d8ca57d2e781a852798bb8ea8ff35bf72f2ec7823"
+      }
+    ],
+    "exclusions": [
+      {
+        "alternate_sources": [
+          {
+            "date": "2026-09-11",
+            "passage": "fully restored manufacturing, order fulfillment and shipping operations",
+            "publisher": "Healthcare Dive",
+            "type": "trade reporting",
+            "url": "https://www.healthcaredive.com/news/boston-scientific-fully-restores-operations-after-cyberattack/830261/"
+          }
+        ],
+        "disposition": "ALT_EXCLUSION_CONFIRMED",
+        "duplicate_of": "",
+        "exclusion_basis": "Healthcare Dive describes restored medical-device company operations after a cyberattack; no facility/service closure or local care-access event is established.",
+        "failed_gates": [
+          "missing_geography",
+          "non_healthcare_passage"
+        ],
+        "network_pages_inspected": 1,
+        "observation_dates": [
+          "2026-09-15",
+          "2026-09-16"
+        ],
+        "occurrence_count": 4,
+        "original_article_title": "Boston Scientific fully restores operations after cyberattack",
+        "original_article_url": "https://www.healthcaredive.com/news/boston-scientific-fully-restores-operations-after-cyberattack/830261/",
+        "original_extraction_outcome": "BODY_EXTRACTED",
+        "original_production_discovery_lineage_present": false,
+        "original_source_id": "healthcare-dive",
+        "pages_authorized": false,
+        "public_generation_authorized": false,
+        "publication_approval": false,
+        "publication_date": "2026-09-11",
+        "publication_eligible": false,
+        "publication_performed": false,
+        "reasoning": "Healthcare Dive describes restored medical-device company operations after a cyberattack; no facility/service closure or local care-access event is established.",
+        "resolved_event": "Boston Scientific cyber recovery business/operations story",
+        "route_class": "ALTERNATE_SOURCE_REQUIRED",
+        "search_queries_used": [
+          "Boston Scientific fully restores operations after cyberattack",
+          "provider/facility + event/date",
+          "provider/facility + access terms"
+        ],
+        "source_evidence_fingerprint": "608bf8988e9aefc49afc35db8d4c6feb9daf85ce3238c734854e5dd98ba37360"
+      },
+      {
+        "alternate_sources": [
+          {
+            "date": "2026-09-21",
+            "passage": "CEO Robert C. Garrett plans to retire effective June 30, 2027",
+            "publisher": "Hackensack Meridian Health / PR Newswire",
+            "type": "provider press release",
+            "url": "https://www.prnewswire.com/news-releases/hackensack-meridian-health-ceo-robert-c-garrett-to-retire-after-leading-njs-largest-and-national-award-winning-health-system-302884931.html"
+          }
+        ],
+        "disposition": "ALT_EXCLUSION_CONFIRMED",
+        "duplicate_of": "",
+        "exclusion_basis": "Provider press release confirms this is a CEO retirement/succession item, not a service-access event.",
+        "failed_gates": [
+          "missing_geography",
+          "missing_subject"
+        ],
+        "network_pages_inspected": 1,
+        "observation_dates": [
+          "2026-09-22",
+          "2026-09-23",
+          "2026-09-24"
+        ],
+        "occurrence_count": 8,
+        "original_article_title": "Hackensack Meridian Health CEO to retire next year",
+        "original_article_url": "https://www.healthcaredive.com/news/hackensack-meridian-health-ceo-to-retire-next-year/831025/",
+        "original_extraction_outcome": "BODY_EXTRACTED",
+        "original_production_discovery_lineage_present": false,
+        "original_source_id": "healthcare-dive",
+        "pages_authorized": false,
+        "public_generation_authorized": false,
+        "publication_approval": false,
+        "publication_date": "2026-09-22",
+        "publication_eligible": false,
+        "publication_performed": false,
+        "reasoning": "Provider press release confirms this is a CEO retirement/succession item, not a service-access event.",
+        "resolved_event": "Hackensack CEO retirement",
+        "route_class": "ALTERNATE_SOURCE_REQUIRED",
+        "search_queries_used": [
+          "Hackensack Meridian Health CEO to retire next year",
+          "provider/facility + event/date",
+          "provider/facility + access terms"
+        ],
+        "source_evidence_fingerprint": "6370994449304a4208aad4383258941b974b3cbbc6dd13d49484fce47ef9231d"
+      },
+      {
+        "alternate_sources": [
+          {
+            "date": "2026-09-12",
+            "passage": "Fighting the stigma of HIV",
+            "publisher": "KPBS / NPR",
+            "type": "public media",
+            "url": "https://www.kpbs.org/news/health/2026/09/12/people-are-still-afraid-of-those-three-letters-fighting-the-stigma-of-hiv"
+          }
+        ],
+        "disposition": "ALT_EXCLUSION_CONFIRMED",
+        "duplicate_of": "",
+        "exclusion_basis": "Public-media evidence shows this is international HIV stigma/advocacy reporting, not a U.S. care-availability event.",
+        "failed_gates": [
+          "missing_geography",
+          "missing_subject"
+        ],
+        "network_pages_inspected": 1,
+        "observation_dates": [
+          "2026-09-15",
+          "2026-09-16"
+        ],
+        "occurrence_count": 4,
+        "original_article_title": "'People are still afraid of those three letters': Fighting the stigma of HIV",
+        "original_article_url": "https://www.npr.org/2026/09/12/g-s1-142404/hiv-aids-brazil-stigma",
+        "original_extraction_outcome": "BODY_EXTRACTED",
+        "original_production_discovery_lineage_present": false,
+        "original_source_id": "npr-health",
+        "pages_authorized": false,
+        "public_generation_authorized": false,
+        "publication_approval": false,
+        "publication_date": "2026-09-12",
+        "publication_eligible": false,
+        "publication_performed": false,
+        "reasoning": "Public-media evidence shows this is international HIV stigma/advocacy reporting, not a U.S. care-availability event.",
+        "resolved_event": "HIV stigma advocacy story",
+        "route_class": "ALTERNATE_SOURCE_REQUIRED",
+        "search_queries_used": [
+          "'People are still afraid of those three letters': Fighting the stigma of HIV",
+          "provider/facility + event/date",
+          "provider/facility + access terms"
+        ],
+        "source_evidence_fingerprint": "c84c7d32c3078a76dc32d0e99851b1ee336865070c544caa9d68c419c8b6ff30"
+      },
+      {
+        "alternate_sources": [
+          {
+            "date": "2026-09-16",
+            "passage": "new analysis of contraception access",
+            "publisher": "OPB / NPR",
+            "type": "public media",
+            "url": "https://www.opb.org/article/2026/09/16/new-maps-reveal-birth-control-access-gaps-in-the-u-s/"
+          }
+        ],
+        "disposition": "ALT_EXCLUSION_CONFIRMED",
+        "duplicate_of": "",
+        "exclusion_basis": "Public-media evidence shows this is national/research mapping of contraceptive access gaps, not a discrete provider/facility service event.",
+        "failed_gates": [
+          "missing_geography",
+          "missing_subject"
+        ],
+        "network_pages_inspected": 1,
+        "observation_dates": [
+          "2026-09-16",
+          "2026-09-17",
+          "2026-09-18"
+        ],
+        "occurrence_count": 7,
+        "original_article_title": "New maps reveal massive gaps in access to affordable birth control across the U.S",
+        "original_article_url": "https://www.npr.org/2026/09/16/nx-s1-5956869/birth-control-contraception-access-clinic",
+        "original_extraction_outcome": "BODY_EXTRACTED",
+        "original_production_discovery_lineage_present": false,
+        "original_source_id": "npr-health",
+        "pages_authorized": false,
+        "public_generation_authorized": false,
+        "publication_approval": false,
+        "publication_date": "2026-09-16",
+        "publication_eligible": false,
+        "publication_performed": false,
+        "reasoning": "Public-media evidence shows this is national/research mapping of contraceptive access gaps, not a discrete provider/facility service event.",
+        "resolved_event": "National birth-control access map story",
+        "route_class": "ALTERNATE_SOURCE_REQUIRED",
+        "search_queries_used": [
+          "New maps reveal massive gaps in access to affordable birth control across the U.S",
+          "provider/facility + event/date",
+          "provider/facility + access terms"
+        ],
+        "source_evidence_fingerprint": "1ac89b6830a2abe8520e6e282e6cf0e94ba3a6da3923db3410311eac15f441c8"
+      }
+    ]
+  }
+}

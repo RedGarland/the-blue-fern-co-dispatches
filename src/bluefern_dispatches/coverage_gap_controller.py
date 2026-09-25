@@ -747,8 +747,15 @@ def _load_recovery_candidate_evidence(repo_root: Path, dispatch: str, observatio
             if item.get("dispatch") != dispatch:
                 continue
             observed_date = str(item.get("observed_date") or "")
+            observed_dates = item.get("observed_dates") or item.get("observation_dates") or ()
+            if not isinstance(observed_dates, list):
+                observed_dates = ()
             production_run_id = str(item.get("production_run_id") or "")
-            if observed_date == observation_date or production_run_id.startswith(observation_date.replace("-", "")):
+            if (
+                observed_date == observation_date
+                or observation_date in {str(date) for date in observed_dates}
+                or production_run_id.startswith(observation_date.replace("-", ""))
+            ):
                 refs.append(path.relative_to(repo_root).as_posix())
                 reasons.extend(_candidate_reason_codes(item, payload))
                 break

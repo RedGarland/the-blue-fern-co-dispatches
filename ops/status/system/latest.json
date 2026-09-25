@@ -32,7 +32,7 @@
       "latest_runtime_proof_date": null,
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-25",
-      "receipt_completeness": "PARTIAL",
+      "receipt_completeness": "COMPLETE",
       "recovery_lifecycle": "HEALTHY",
       "scheduled_health_available": true,
       "stale_observability": false
@@ -67,7 +67,7 @@
         "state": "HANDOFF_RECEIVED_SUCCESS",
         "unaccounted_count": 0
       },
-      "aggregate_status": "MISSED",
+      "aggregate_status": "DEGRADED",
       "migration_status": "MIGRATED",
       "recovery_lifecycle": "HEALTHY"
     },
@@ -109,8 +109,8 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-09-25T15:15:09.068992Z",
+  "exported_at": "2026-09-25T16:15:10.604112Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
-  "system_status": "MISSED"
+  "system_status": "DEGRADED"
 }

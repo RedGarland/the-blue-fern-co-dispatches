@@ -1418,8 +1418,121 @@ def _gaza_public_edition_dirs(site_root: Path, pages_repo: Path | None = None) -
     return [root for root in roots if root.exists()]
 
 
-def _gaza_public_edition_is_listable(site_root: Path, edition_date: str, pages_repo: Path | None = None) -> bool:
+def _pages_repo_head_contains_path(pages_repo: Path, rel_path: Path) -> bool:
+    if _pages_repo_is_fake_worktree(pages_repo):
+        return (pages_repo / rel_path).exists()
+    if not (pages_repo / ".git").exists():
+        return True
+    return run_git(["cat-file", "-e", f"HEAD:{rel_path.as_posix()}"], pages_repo).returncode == 0
+
+
+def _gaza_public_edition_dir_is_valid(
+    site_root: Path,
+    edition_date: str,
+    edition_dir: Path,
+    *,
+    local_edition_dir: Path,
+) -> bool:
     repo_root = site_root.parents[1]
+    manifest_path = edition_dir / "edition_manifest.json"
+    if not manifest_path.exists():
+        return False
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    if not isinstance(manifest, dict):
+        return False
+    errors = manifest.get("errors")
+    if isinstance(errors, list) and any(
+        "No new source-backed Gaza developments after cross-edition dedupe" in str(item)
+        for item in errors
+    ):
+        return False
+    sources_manifest_path = edition_dir / "sources_manifest.json"
+    curation_manifest_path = edition_dir / "curation_manifest.json"
+    sources_payload: list[dict[str, Any]] | None = None
+    curation_payload: list[dict[str, Any]] | None = None
+    if sources_manifest_path.exists():
+        try:
+            loaded = json.loads(sources_manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return False
+        if isinstance(loaded, list):
+            sources_payload = loaded
+    if curation_manifest_path.exists():
+        try:
+            loaded = json.loads(curation_manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return False
+        if isinstance(loaded, list):
+            curation_payload = loaded
+    source_count = len(sources_payload) if sources_payload is not None else int(manifest.get("source_count", 0) or 0)
+    story_count = len(curation_payload) if curation_payload is not None else int(manifest.get("story_count", 0) or 0)
+    if source_count <= 0 or story_count <= 0:
+        return False
+    # A Pages edition is an immutable publication record. Do not let a later
+    # same-date runner attempt's mutable dedupe report invalidate it.
+    dedupe_path = (
+        repo_root / "data" / "dispatches" / "gaza" / "editions" / edition_date / "dedupe_report.json"
+        if edition_dir == local_edition_dir
+        else None
+    )
+    if dedupe_path is not None and dedupe_path.exists():
+        try:
+            dedupe_payload = json.loads(dedupe_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return False
+        input_count = int(dedupe_payload.get("input_candidate_count", 0) or 0)
+        kept_count = int(dedupe_payload.get("kept_candidate_count", 0) or 0)
+        if input_count > 0 and kept_count == 0:
+            return False
+    return True
+
+
+def _gaza_no_update_entry_for_date(site_root: Path, edition_date: str) -> GazaNoUpdateEntry | None:
+    for entry in discover_gaza_no_update_entries(site_root):
+        if entry.date == edition_date:
+            return entry
+    return None
+
+
+def _gaza_pages_repo_has_committed_public_edition(
+    site_root: Path,
+    edition_date: str,
+    pages_repo: Path | None = None,
+) -> bool:
+    pages_repo = _pages_repo_root_for_site_root(site_root, pages_repo)
+    if pages_repo is None:
+        return False
+    local_edition_dir = site_root / "gaza" / "editions" / edition_date
+    pages_edition_dir = pages_repo / "gaza" / "editions" / edition_date
+    if not pages_edition_dir.exists():
+        return False
+    rel_index = Path("gaza") / "editions" / edition_date / "index.html"
+    if not _pages_repo_head_contains_path(pages_repo, rel_index):
+        return False
+    return _gaza_public_edition_dir_is_valid(
+        site_root,
+        edition_date,
+        pages_edition_dir,
+        local_edition_dir=local_edition_dir,
+    )
+
+
+def _gaza_no_update_supersedes_edition(
+    site_root: Path,
+    edition_date: str,
+    pages_repo: Path | None = None,
+) -> bool:
+    if _gaza_no_update_entry_for_date(site_root, edition_date) is None:
+        return False
+    return not _gaza_pages_repo_has_committed_public_edition(site_root, edition_date, pages_repo)
+
+
+def _gaza_public_edition_is_listable(site_root: Path, edition_date: str, pages_repo: Path | None = None) -> bool:
+    if _gaza_no_update_supersedes_edition(site_root, edition_date, pages_repo):
+        return False
     pages_repo = _pages_repo_root_for_site_root(site_root, pages_repo)
     local_edition_dir = site_root / "gaza" / "editions" / edition_date
     candidate_dirs = [local_edition_dir]
@@ -1428,60 +1541,13 @@ def _gaza_public_edition_is_listable(site_root: Path, edition_date: str, pages_r
     for edition_dir in candidate_dirs:
         if not edition_dir.exists():
             continue
-        manifest_path = edition_dir / "edition_manifest.json"
-        if not manifest_path.exists():
-            continue
-        try:
-            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            continue
-        if not isinstance(manifest, dict):
-            continue
-        errors = manifest.get("errors")
-        if isinstance(errors, list) and any(
-            "No new source-backed Gaza developments after cross-edition dedupe" in str(item)
-            for item in errors
+        if _gaza_public_edition_dir_is_valid(
+            site_root,
+            edition_date,
+            edition_dir,
+            local_edition_dir=local_edition_dir,
         ):
-            continue
-        sources_manifest_path = edition_dir / "sources_manifest.json"
-        curation_manifest_path = edition_dir / "curation_manifest.json"
-        sources_payload: list[dict[str, Any]] | None = None
-        curation_payload: list[dict[str, Any]] | None = None
-        if sources_manifest_path.exists():
-            try:
-                loaded = json.loads(sources_manifest_path.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError):
-                continue
-            if isinstance(loaded, list):
-                sources_payload = loaded
-        if curation_manifest_path.exists():
-            try:
-                loaded = json.loads(curation_manifest_path.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError):
-                continue
-            if isinstance(loaded, list):
-                curation_payload = loaded
-        source_count = len(sources_payload) if sources_payload is not None else int(manifest.get("source_count", 0) or 0)
-        story_count = len(curation_payload) if curation_payload is not None else int(manifest.get("story_count", 0) or 0)
-        if source_count <= 0 or story_count <= 0:
-            continue
-        # A Pages edition is an immutable publication record. Do not let a later
-        # same-date runner attempt's mutable dedupe report invalidate it.
-        dedupe_path = (
-            repo_root / "data" / "dispatches" / "gaza" / "editions" / edition_date / "dedupe_report.json"
-            if edition_dir == local_edition_dir
-            else None
-        )
-        if dedupe_path is not None and dedupe_path.exists():
-            try:
-                dedupe_payload = json.loads(dedupe_path.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError):
-                continue
-            input_count = int(dedupe_payload.get("input_candidate_count", 0) or 0)
-            kept_count = int(dedupe_payload.get("kept_candidate_count", 0) or 0)
-            if input_count > 0 and kept_count == 0:
-                continue
-        return True
+            return True
     return False
 
 
@@ -1974,6 +2040,11 @@ def _render_gaza_public_history_list(
     *,
     limit: int | None = None,
 ) -> str:
+    edition_dates = [
+        date
+        for date in edition_dates
+        if not _gaza_no_update_supersedes_edition(site_root, date)
+    ]
     rows = _gaza_public_history_rows(edition_dates, catchups)
     no_updates_by_date = {entry.date: entry for entry in discover_gaza_no_update_entries(site_root)}
     existing_dates = {str(date) for date in edition_dates}
@@ -2420,6 +2491,12 @@ def render_dispatch_index_for_dates(
     site_root = site_root or Path("output") / "site"
     gaza_status_line = ""
     if dispatch.slug == "gaza":
+        edition_dates = [
+            date
+            for date in edition_dates
+            if not _gaza_no_update_supersedes_edition(site_root, date)
+        ]
+        latest = edition_dates[0] if edition_dates else ""
         if gaza_catchups is None:
             gaza_catchups = discover_gaza_historical_catchups(site_root)
         no_updates = discover_gaza_no_update_entries(site_root)
@@ -2624,6 +2701,11 @@ def render_archive_for_dates(
 {footer("")}"""
         return page(f"{dispatch.name} Archive", f"{BASE_URL}/{dispatch.slug}/archive.html", "assets/site.css", body, dispatch.name)
     if dispatch.slug == "gaza":
+        edition_dates = [
+            date
+            for date in edition_dates
+            if not _gaza_no_update_supersedes_edition(site_root, date)
+        ]
         if gaza_catchups is None:
             gaza_catchups = discover_gaza_historical_catchups(site_root)
         items = _render_gaza_public_history_list(site_root, dispatch, edition_dates, gaza_catchups)
@@ -2758,6 +2840,11 @@ def render_rss_for_dates(
 ) -> str:
     site_root = site_root or Path("output") / "site"
     if dispatch.slug == "gaza":
+        edition_dates = [
+            date
+            for date in edition_dates
+            if not _gaza_no_update_supersedes_edition(site_root, date)
+        ]
         if gaza_catchups is None:
             gaza_catchups = discover_gaza_historical_catchups(site_root)
         rendered_items: list[str] = []
@@ -3506,6 +3593,7 @@ def validate_pages_publish(
     if ((not only_dispatches) or ("gaza" in only_dispatches)) and not planning_mode:
         if not (site_root / "gaza" / "archive.html").exists():
             errors.append(f"Gaza archive does not exist: {site_root / 'gaza' / 'archive.html'}")
+        errors.extend(validate_gaza_public_link_consistency(site_root, pages_repo))
     if ((not only_dispatches) or (CARE_LINE_DISPATCH_SLUG in only_dispatches)) and not planning_mode:
         if not (site_root / CARE_LINE_DISPATCH_SLUG / "archive.html").exists():
             errors.append(f"Care Line archive does not exist: {site_root / CARE_LINE_DISPATCH_SLUG / 'archive.html'}")
@@ -4329,6 +4417,49 @@ def validate_pages_copy_parity(root: Path, pages_repo: Path, expect_date: str | 
                     continue
                 if target.exists() and source.read_bytes() != target.read_bytes():
                     errors.append(f"pages copy mismatch: {rel_path.as_posix()} differs from source output")
+    return sorted(set(errors))
+
+
+def validate_gaza_public_link_consistency(
+    site_root: Path,
+    pages_repo: Path | None = None,
+) -> list[str]:
+    errors: list[str] = []
+    gaza_root = site_root / "gaza"
+    surfaces = {
+        "gaza/index.html": gaza_root / "index.html",
+        "gaza/archive.html": gaza_root / "archive.html",
+        "gaza/rss.xml": gaza_root / "rss.xml",
+    }
+    linked_dates_by_surface: dict[str, set[str]] = {}
+    for surface, path in surfaces.items():
+        text = _read_text_if_exists(path)
+        linked_dates = set(GAZA_PUBLIC_HISTORY_DATE_RE.findall(text))
+        linked_dates_by_surface[surface] = linked_dates
+        for edition_date in sorted(linked_dates):
+            if not _gaza_public_edition_is_listable(site_root, edition_date, pages_repo):
+                errors.append(
+                    f"gaza public dead edition link blocked: {surface} links editions/{edition_date}/ "
+                    "without a valid public edition directory"
+                )
+    no_update_entries = discover_gaza_no_update_entries(site_root)
+    for entry in no_update_entries:
+        if _gaza_pages_repo_has_committed_public_edition(site_root, entry.date, pages_repo):
+            continue
+        linked_surfaces = sorted(
+            surface
+            for surface, linked_dates in linked_dates_by_surface.items()
+            if entry.date in linked_dates
+        )
+        if linked_surfaces:
+            errors.append(
+                f"gaza no-update date rendered as clickable edition: {entry.date}; "
+                f"surfaces={', '.join(linked_surfaces)}"
+            )
+        index_text = _read_text_if_exists(gaza_root / "index.html")
+        archive_text = _read_text_if_exists(gaza_root / "archive.html")
+        if entry.date not in index_text or entry.date not in archive_text or "No update" not in index_text + archive_text:
+            errors.append(f"gaza no-update date missing rendered no-update row: {entry.date}")
     return sorted(set(errors))
 
 

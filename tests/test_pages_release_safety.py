@@ -149,11 +149,11 @@ def _write_gaza_no_update_site(source: Path, date_text: str = "2026-09-19") -> N
     edition.mkdir(parents=True, exist_ok=True)
     (site / "index.html").write_text("<html>Site</html>", encoding="utf-8")
     (gaza / "index.html").write_text(
-        '<html><ul class="edition-list"><li><a href="editions/2026-09-18/">Sep. 18</a></li><li><a href="editions/2026-09-17/">Sep. 17</a></li><li><a href="editions/2026-09-16/">Sep. 16</a></li></ul><p>September 19, 2026 - No new source-backed Gaza update met publication threshold today.</p></html>',
+        '<html><ul class="edition-list"><li><a href="editions/2026-09-18/">Sep. 18</a></li><li><a href="editions/2026-09-17/">Sep. 17</a></li><li><a href="editions/2026-09-16/">Sep. 16</a></li><li class="no-update"><span class="edition-date">2026-09-19</span><span class="no-update-label">No update</span> <span>No new source-backed Gaza update met publication threshold today.</span></li></ul></html>',
         encoding="utf-8",
     )
     (gaza / "archive.html").write_text(
-        '<html><a href="editions/2026-09-18/">Sep. 18 edition</a><a href="editions/2026-09-17/">Sep. 17 edition</a><a href="editions/2026-09-16/">Sep. 16 edition</a><a href="status/no-updates/2026-09-19.json">Sep. 19 no update</a></html>',
+        '<html><a href="editions/2026-09-18/">Sep. 18 edition</a><a href="editions/2026-09-17/">Sep. 17 edition</a><a href="editions/2026-09-16/">Sep. 16 edition</a><li class="no-update"><span class="edition-date">2026-09-19</span><span class="no-update-label">No update</span> <span>No new source-backed Gaza update met publication threshold today.</span></li></html>',
         encoding="utf-8",
     )
     (gaza / "rss.xml").write_text("<rss><channel></channel></rss>", encoding="utf-8")
@@ -186,6 +186,12 @@ def _write_gaza_pages_history(pages: Path) -> None:
         edition = gaza / "editions" / date_text
         edition.mkdir(parents=True, exist_ok=True)
         (edition / "index.html").write_text(f"<html>{date_text}</html>", encoding="utf-8")
+        (edition / "edition_manifest.json").write_text(
+            json.dumps({"dispatch_slug": "gaza", "edition_date": date_text, "source_count": 1, "story_count": 1}),
+            encoding="utf-8",
+        )
+        (edition / "sources_manifest.json").write_text(json.dumps([{"source_id": "source"}]), encoding="utf-8")
+        (edition / "curation_manifest.json").write_text(json.dumps([{"story_id": "story"}]), encoding="utf-8")
     (gaza / "index.html").write_text('<html><ul class="edition-list"><li><a href="editions/2026-09-18/">Sep. 18</a></li><li><a href="editions/2026-09-17/">Sep. 17</a></li><li><a href="editions/2026-09-16/">Sep. 16</a></li></ul></html>', encoding="utf-8")
     (gaza / "archive.html").write_text('<html><a href="editions/2026-09-18/">Sep. 18</a><a href="editions/2026-09-17/">Sep. 17</a><a href="editions/2026-09-16/">Sep. 16</a></html>', encoding="utf-8")
     (gaza / "rss.xml").write_text("<rss><channel></channel></rss>", encoding="utf-8")

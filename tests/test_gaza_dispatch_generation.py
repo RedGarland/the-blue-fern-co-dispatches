@@ -9,6 +9,7 @@ from bluefern_dispatches.generator import build_site
 from bluefern_dispatches.gaza_audio import write_gaza_audio_outputs
 from scripts.run_gaza_dispatch import (
     build_source_diversity_report,
+    clear_gaza_no_update_status_for_normal_edition,
     curate_stories,
     normalize_sources,
     render_gaza_edition,
@@ -548,6 +549,38 @@ def test_gaza_no_update_can_render_from_preserved_artifacts(monkeypatch):
     assert status_path.exists()
     assert (work / "output" / "site" / "gaza" / "index.html").exists()
     assert not (work / "output" / "site" / "gaza" / "editions" / "2026-05-31" / "index.html").exists()
+
+
+def test_gaza_normal_edition_supersedes_stale_same_day_no_update_marker(monkeypatch):
+    repo = Path(__file__).resolve().parents[1]
+    work = make_work_root(repo)
+    monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
+    status_path = work / "output" / "site" / "gaza" / "status" / "no-updates" / "2026-05-31.json"
+    status_path.parent.mkdir(parents=True, exist_ok=True)
+    status_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "gaza-no-update-status-v1",
+                "date": "2026-05-31",
+                "classification": "no_publication_needed",
+                "message": "No new source-backed Gaza update met publication threshold today.",
+                "run_completed_successfully": True,
+                "source_count": 5,
+                "public_story_count": 0,
+                "run_manifest_path": "data/dispatches/gaza/editions/2026-05-31/run_manifest.json",
+                "collection_report_path": "data/dispatches/gaza/editions/2026-05-31/collection_report.json",
+                "normal_edition_generated": False,
+            }
+        ),
+        encoding="utf-8",
+    )
+    wrote: list[str] = []
+
+    removed = clear_gaza_no_update_status_for_normal_edition(work, "2026-05-31", dry_run=False, wrote=wrote)
+
+    assert removed is True
+    assert str(status_path) in wrote
+    assert not status_path.exists()
 
 
 def test_source_manifest_carries_attribution_mode_and_claim_status(monkeypatch):

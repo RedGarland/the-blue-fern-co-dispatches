@@ -1173,6 +1173,39 @@ def add_gaza_site_edition(site_root: Path, edition_date: str) -> None:
     archive.write_text(archive.read_text(encoding="utf-8") + f"\n{edition_date}\n", encoding="utf-8")
 
 
+def add_gaza_no_update_status(site_root: Path, edition_date: str, source_count: int = 5) -> None:
+    status_dir = site_root / "gaza" / "status" / "no-updates"
+    status_dir.mkdir(parents=True, exist_ok=True)
+    (status_dir / f"{edition_date}.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "gaza-no-update-status-v1",
+                "date": edition_date,
+                "classification": "no_publication_needed",
+                "message": "No new source-backed Gaza update met publication threshold today.",
+                "run_completed_successfully": True,
+                "source_count": source_count,
+                "public_story_count": 0,
+                "run_manifest_path": f"data/dispatches/gaza/editions/{edition_date}/run_manifest.json",
+                "collection_report_path": f"data/dispatches/gaza/editions/{edition_date}/collection_report.json",
+                "normal_edition_generated": False,
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+
+
+def init_real_git_repo(path: Path) -> None:
+    path.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "init"], cwd=path, check=True, capture_output=True, text=True)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=path, check=True)
+    subprocess.run(["git", "config", "user.name", "Test User"], cwd=path, check=True)
+    (path / ".keep").write_text("keep\n", encoding="utf-8")
+    subprocess.run(["git", "add", ".keep"], cwd=path, check=True)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=path, check=True, capture_output=True, text=True)
+
+
 def add_gaza_historical_catchup_publication(
     public_root: Path,
     *,
@@ -1328,6 +1361,22 @@ def add_gaza_public_history_surface(
     podcast_xml = f"<rss><channel>{podcast_items}</channel></rss>"
     (audio_root / "podcast.xml").write_text(podcast_xml, encoding="utf-8")
     (gaza_root / "podcast.xml").write_text(podcast_xml, encoding="utf-8")
+    for date_text in sorted(set(dates) | set(archive_source_dates)):
+        edition = gaza_root / "editions" / date_text
+        edition.mkdir(parents=True, exist_ok=True)
+        (edition / "index.html").write_text(f"<html><body>Gaza daily {date_text}</body></html>", encoding="utf-8")
+        (edition / "edition_manifest.json").write_text(
+            json.dumps({"dispatch_slug": "gaza", "edition_date": date_text, "source_count": 1, "story_count": 1}),
+            encoding="utf-8",
+        )
+        (edition / "sources_manifest.json").write_text(
+            json.dumps([{"source_id": "gaza-src-001", "url": "https://example.com/gaza"}]),
+            encoding="utf-8",
+        )
+        (edition / "curation_manifest.json").write_text(
+            json.dumps([{"story_id": "gaza-story-001", "source_ids": ["gaza-src-001"]}]),
+            encoding="utf-8",
+        )
     for date_text in edition_dates:
         (audio_root / f"{date_text}-transcript.html").write_text(f"<html>{date_text}</html>", encoding="utf-8")
 
@@ -3490,6 +3539,108 @@ def test_gaza_local_edition_with_failed_dedupe_remains_unlistable(tmp_path: Path
 
     assert generator._gaza_public_edition_is_listable(site_root, "2026-09-02") is False
     assert generator.discover_public_edition_dates(site_root, "gaza") == []
+
+
+def test_gaza_no_update_beats_stale_local_same_day_edition_residue(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    add_gaza_public_history_surface(site_root, ["2026-09-24"])
+    add_gaza_site_edition(site_root, "2026-09-24")
+    add_gaza_site_edition(site_root, "2026-09-25")
+    add_gaza_no_update_status(site_root, "2026-09-25", source_count=5)
+
+    dates = generator.discover_public_edition_dates(site_root, "gaza")
+    dispatch = DispatchConfig(
+        slug="gaza",
+        name="Dispatches From Gaza",
+        edition_date="2026-09-25",
+        tagline="Daily briefing",
+        logo="gaza-logo.png",
+        sources=[],
+        stories=[],
+        detail_artifacts=[],
+    )
+    index_html = generator.render_dispatch_index_for_dates(dispatch, dates, site_root)
+    archive_html = generator.render_archive_for_dates(dispatch, dates, site_root)
+    rss_xml = generator.render_rss_for_dates(dispatch, dates, site_root)
+
+    assert dates == ["2026-09-24"]
+    assert 'href="editions/2026-09-24/">Read the latest briefing</a>' in index_html
+    assert "2026-09-25" in index_html
+    assert "No update" in index_html
+    assert "5 source records checked." in index_html
+    assert 'href="editions/2026-09-25/"' not in index_html
+    assert 'href="editions/2026-09-25/"' not in archive_html
+    assert "editions/2026-09-25/" not in rss_xml
+
+
+def test_gaza_untracked_pages_residue_cannot_supersede_no_update(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    pages_root = tmp_path / "bluefern-dispatches-pages"
+    add_gaza_public_history_surface(site_root, ["2026-09-24"])
+    add_gaza_site_edition(site_root, "2026-09-24")
+    add_gaza_no_update_status(site_root, "2026-09-25", source_count=5)
+    init_real_git_repo(pages_root)
+    add_gaza_public_history_surface(pages_root, [])
+    add_gaza_site_edition(pages_root, "2026-09-25")
+
+    assert generator._gaza_public_edition_is_listable(site_root, "2026-09-25", pages_root) is False
+    assert generator.discover_public_edition_dates(site_root, "gaza", pages_repo=pages_root) == ["2026-09-24"]
+
+
+def test_gaza_committed_pages_edition_may_supersede_same_day_no_update(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    pages_root = tmp_path / "bluefern-dispatches-pages"
+    add_gaza_public_history_surface(site_root, ["2026-09-24"])
+    add_gaza_site_edition(site_root, "2026-09-24")
+    add_gaza_no_update_status(site_root, "2026-09-25", source_count=5)
+    init_real_git_repo(pages_root)
+    add_gaza_public_history_surface(pages_root, ["2026-09-25"])
+    add_gaza_site_edition(pages_root, "2026-09-25")
+    subprocess.run(["git", "add", "gaza"], cwd=pages_root, check=True)
+    subprocess.run(["git", "commit", "-m", "publish gaza 2026-09-25"], cwd=pages_root, check=True, capture_output=True, text=True)
+
+    dates = generator.discover_public_edition_dates(site_root, "gaza", pages_repo=pages_root)
+    dispatch = DispatchConfig(
+        slug="gaza",
+        name="Dispatches From Gaza",
+        edition_date="2026-09-25",
+        tagline="Daily briefing",
+        logo="gaza-logo.png",
+        sources=[],
+        stories=[],
+        detail_artifacts=[],
+    )
+    index_html = generator.render_dispatch_index_for_dates(dispatch, dates, site_root)
+
+    assert dates == ["2026-09-25", "2026-09-24"]
+    assert 'href="editions/2026-09-25/">Read the latest briefing</a>' in index_html
+    assert "No update" not in index_html
+
+
+def test_gaza_public_link_consistency_blocks_dead_no_update_edition_link(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    gaza_root = site_root / "gaza"
+    gaza_root.mkdir(parents=True)
+    (site_root / "index.html").write_text("<html>site</html>", encoding="utf-8")
+    (gaza_root / "index.html").write_text('<a href="editions/2026-09-25/">Read the latest briefing</a>', encoding="utf-8")
+    (gaza_root / "archive.html").write_text('<a href="editions/2026-09-25/">2026-09-25</a>', encoding="utf-8")
+    (gaza_root / "rss.xml").write_text("<rss><channel><item><link>https://dispatches.thebluefernco.com/gaza/editions/2026-09-25/</link></item></channel></rss>", encoding="utf-8")
+    add_gaza_no_update_status(site_root, "2026-09-25", source_count=5)
+    pages_root = tmp_path / "bluefern-dispatches-pages"
+    init_real_git_repo(pages_root)
+
+    errors, _warnings = validate_pages_publish(
+        tmp_path,
+        site_root,
+        pages_root,
+        require_git=True,
+        only_dispatches=("gaza",),
+        artifact_family="no-update",
+        expect_date="2026-09-25",
+    )
+
+    assert any("gaza public dead edition link blocked" in error for error in errors)
+    assert any("gaza no-update date rendered as clickable edition" in error for error in errors)
 
 
 def test_only_dispatch_cascadia_bypasses_gaza_fallback_failure(monkeypatch):

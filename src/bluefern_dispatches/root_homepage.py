@@ -411,10 +411,10 @@ def _latest_support_date(path: Path, *, map_page: bool = False) -> str | None:
         return None
     text = path.read_text(encoding="utf-8", errors="replace")
     if map_page:
-        match = re.search(r"Latest dispatch date:\\s*(\\d{4}-\\d{2}-\\d{2})", text)
+        match = re.search(r"Latest dispatch date:\s*(\d{4}-\d{2}-\d{2})", text)
         if match:
             return match.group(1)
-    dates = re.findall(r"\\b20\\d{2}-\\d{2}-\\d{2}\\b", text)
+    dates = re.findall(r"\b20\d{2}-\d{2}-\d{2}\b", text)
     return max(dates) if dates else None
 
 
@@ -438,7 +438,7 @@ def _annotate_dispatch_card_public_state(card_html: str, slug: str, public_root:
     if slug in {"food-line", "care-line"} and '<p class="cadence">' in updated:
         updated = re.sub(
             r'(<p class="cadence">.*?</p>)',
-            rf'\\1<p class="monitoring-status">{html.escape(MONITORING_NOTE)}</p>',
+            rf'\1<p class="monitoring-status">{html.escape(MONITORING_NOTE)}</p>',
             updated,
             count=1,
             flags=re.DOTALL,
@@ -501,7 +501,7 @@ def render_about_from_public_inventory(template_html: str, public_root: Path) ->
         "Cascadia is currently paused; its most recent archived public briefing is "
         f"{html.escape(_format_long_date(latest))}, and the public archive remains available for reference.</p>"
     )
-    pattern = re.compile(r'<p>[^<]*Cascadia is currently paused\\.[^<]*</p>', re.DOTALL)
+    pattern = re.compile(r'<p>[^<]*Cascadia is currently paused\.[^<]*</p>', re.DOTALL)
     return pattern.sub(replacement, template_html, count=1)
 
 

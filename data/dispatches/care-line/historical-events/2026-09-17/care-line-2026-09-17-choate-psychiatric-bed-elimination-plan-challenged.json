@@ -1,0 +1,51 @@
+{
+  "bounded_summary": "Local public reporting confirms Choate Mental Health and Developmental Center downsizing would eliminate 75 civil psychiatric beds, affecting southern Illinois inpatient psychiatric access.",
+  "canonical_event_id": "care-line-2026-09-17-choate-psychiatric-bed-elimination-plan-challenged",
+  "canonical_event_identity": {
+    "category": "inpatient_psychiatric_access",
+    "event_type": "proposed_psychiatric_bed_elimination_challenged",
+    "facility": "Choate Mental Health and Developmental Center",
+    "geography": "Anna, Illinois / southern Illinois"
+  },
+  "dispatch": "care-line",
+  "editorial_review_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-24/editorial-review.json",
+  "effective_date": null,
+  "event_date": "2026-09-17",
+  "event_id": "care-line-2026-09-17-choate-psychiatric-bed-elimination-plan-challenged",
+  "headline": "Choate psychiatric-bed elimination plan faced legal challenge",
+  "materiality": "material proposed inpatient psychiatric capacity loss; record preserves that elimination was challenged and not proven completed",
+  "observation_date": "2026-09-21",
+  "observation_dates": [
+    "2026-09-21",
+    "2026-09-22",
+    "2026-09-23"
+  ],
+  "original_production_discovery_lineage_present": false,
+  "pages_authorized": false,
+  "production_artifact_present": false,
+  "public_generation_authorized": false,
+  "publication_approval": false,
+  "publication_eligible": false,
+  "publication_performed": false,
+  "recovered_at": "2026-09-24",
+  "recovery_provenance": "operator_recovered_external_source_evidence",
+  "relationship_to_existing_event": "new_event",
+  "review_disposition": "approved",
+  "schema_version": "bluefern.care_line.historical_event.v1",
+  "source_evidence_fingerprint": "c2de68fd1e50a9fab4413ddb88077c450b8edeb0e4f3504e421a014eb7731ef4",
+  "source_published_date": "2026-09-17",
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-24/recovery-review-intake.json",
+  "source_recovery_item_id": "care-line-2026-09-21-choate-psychiatric-bed-elimination",
+  "source_sufficiency": "sufficient_local_public_reporting_for_announced_plan_and_lawsuit; implementation not proven",
+  "sources": [
+    {
+      "publisher": "NPR Illinois / Capitol News Illinois",
+      "source_publication_date": "2026-09-17",
+      "source_publication_date_uncertainty": null,
+      "source_role": "local public reporting",
+      "source_url": "https://www.nprillinois.org/southern-il-area/2026-09-17/choate-workers-union-files-lawsuit-to-block-state-from-gutting-mental-health-facility",
+      "supporting_passage": "plan calls for eliminating all psychiatric beds"
+    }
+  ],
+  "uncertainty_preserved": true
+}

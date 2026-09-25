@@ -1,0 +1,51 @@
+{
+  "bounded_summary": "Official provider notice confirms Surgery Center of Southern Oregon is permanently closed; this resolves the ASC-closure roundup identity to a specific facility closure represented in the frozen row.",
+  "canonical_event_id": "care-line-2026-06-30-southern-oregon-surgery-center-closure",
+  "canonical_event_identity": {
+    "category": "ambulatory_surgery_access",
+    "event_type": "ambulatory_surgery_center_closure",
+    "facility": "Surgery Center of Southern Oregon",
+    "geography": "Southern Oregon"
+  },
+  "dispatch": "care-line",
+  "editorial_review_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-24/editorial-review.json",
+  "effective_date": "2026-06-30",
+  "event_date": "2026-06-30",
+  "event_id": "care-line-2026-06-30-southern-oregon-surgery-center-closure",
+  "headline": "Surgery Center of Southern Oregon permanently closed",
+  "materiality": "material ambulatory surgery capacity loss; source publication date is unknown",
+  "observation_date": "2026-09-16",
+  "observation_dates": [
+    "2026-09-16",
+    "2026-09-17"
+  ],
+  "original_production_discovery_lineage_present": false,
+  "pages_authorized": false,
+  "production_artifact_present": false,
+  "public_generation_authorized": false,
+  "publication_approval": false,
+  "publication_eligible": false,
+  "publication_performed": false,
+  "recovered_at": "2026-09-24",
+  "recovery_provenance": "operator_recovered_external_source_evidence",
+  "relationship_to_existing_event": "new_event",
+  "review_disposition": "approved",
+  "schema_version": "bluefern.care_line.historical_event.v1",
+  "source_evidence_fingerprint": "a8d715c3c8be9fbe4f9c25605a5f84293c0aeab29513c2bd3b6aacc3c4b487fe",
+  "source_publication_date_uncertainty": "official provider page confirms closure but does not expose a provable publication date",
+  "source_published_date": null,
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-24/recovery-review-intake.json",
+  "source_recovery_item_id": "care-line-2026-09-16-southern-oregon-surgery-center-closure",
+  "source_sufficiency": "sufficient_single_traceable_provider_notice_with_source_date_uncertainty_preserved",
+  "sources": [
+    {
+      "publisher": "Surgery Center of Southern Oregon",
+      "source_publication_date": null,
+      "source_publication_date_uncertainty": "official provider page confirms closure but does not expose a provable publication date",
+      "source_role": "provider/official",
+      "source_url": "https://www.sosurgi.com/",
+      "supporting_passage": "The Surgery Center of Southern Oregon is now permanently closed"
+    }
+  ],
+  "uncertainty_preserved": true
+}

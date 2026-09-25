@@ -1,0 +1,49 @@
+{
+  "bounded_summary": "Local reporting confirms Pearl Youth Residence in Tacoma will close and lay off staff; the facility provided long-term inpatient youth behavioral health treatment.",
+  "canonical_event_id": "care-line-2026-11-21-pearl-youth-residence-closure",
+  "canonical_event_identity": {
+    "category": "youth_behavioral_health_access",
+    "event_type": "scheduled_residential_psychiatric_facility_closure",
+    "facility": "Pearl Youth Residence",
+    "geography": "Tacoma, Washington"
+  },
+  "dispatch": "care-line",
+  "editorial_review_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-24/editorial-review.json",
+  "effective_date": "2026-11-21",
+  "event_date": "2026-09-23",
+  "event_id": "care-line-2026-11-21-pearl-youth-residence-closure",
+  "headline": "Pearl Youth Residence scheduled closure will reduce long-term youth psychiatric beds",
+  "materiality": "material future youth residential psychiatric capacity loss; closure was scheduled, not yet complete at observation",
+  "observation_date": "2026-09-24",
+  "observation_dates": [
+    "2026-09-24"
+  ],
+  "original_production_discovery_lineage_present": false,
+  "pages_authorized": false,
+  "production_artifact_present": false,
+  "public_generation_authorized": false,
+  "publication_approval": false,
+  "publication_eligible": false,
+  "publication_performed": false,
+  "recovered_at": "2026-09-24",
+  "recovery_provenance": "operator_recovered_external_source_evidence",
+  "relationship_to_existing_event": "new_event",
+  "review_disposition": "approved",
+  "schema_version": "bluefern.care_line.historical_event.v1",
+  "source_evidence_fingerprint": "ac68935380bf1a3226a0ba84ed0d46f8be47d1e357d008079261db6f89563dd5",
+  "source_published_date": "2026-09-23",
+  "source_recovery_artifact": "data/private-agent-handoff/discovery-recovery/care-line/2026-09-24/recovery-review-intake.json",
+  "source_recovery_item_id": "care-line-2026-09-24-pearl-youth-residence-closure",
+  "source_sufficiency": "sufficient_local_reporting_for_scheduled_closure_and_layoffs",
+  "sources": [
+    {
+      "publisher": "KIRO 7 Seattle",
+      "source_publication_date": "2026-09-23",
+      "source_publication_date_uncertainty": null,
+      "source_role": "local reporting",
+      "source_url": "https://www.kiro7.com/news/local/tacoma-youth-facility-closing-after-3-million-losses-laying-off-92-employees/APDVBBEZAFBKNHVI2FX6INUOF4/?outputType=amp",
+      "supporting_passage": "youth residential facility in Tacoma will close later this year"
+    }
+  ],
+  "uncertainty_preserved": true
+}

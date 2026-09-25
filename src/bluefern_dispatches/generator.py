@@ -22,7 +22,9 @@ from bluefern_dispatches.care_line_render import (
 )
 from bluefern_dispatches.root_homepage import (
     ACTIVE_PRODUCTS,
+    annotate_shared_public_state,
     discover_public_releases,
+    render_about_from_public_inventory,
     render_dispatch_directory_from_releases,
     render_sitewide_homepage_from_template,
     select_effective_latest,
@@ -3875,19 +3877,32 @@ def refresh_shared_release_surfaces_from_pages_inventory(
             "changed_surfaces": [],
             "message": f"shared release-surface refresh blocked; missing dispatch directory template: {directory_path}",
         }
-    refreshed_html = render_sitewide_homepage_from_template(template_html, release)
+    refreshed_html = annotate_shared_public_state(
+        render_sitewide_homepage_from_template(template_html, release),
+        pages_repo,
+    )
     directory_html = directory_path.read_text(encoding="utf-8")
-    refreshed_directory_html = render_dispatch_directory_from_releases(directory_html, latest)
+    refreshed_directory_html = annotate_shared_public_state(
+        render_dispatch_directory_from_releases(directory_html, latest),
+        pages_repo,
+    )
+    about_path = pages_repo / "about" / "index.html"
+    about_html = about_path.read_text(encoding="utf-8") if about_path.exists() else ""
+    refreshed_about_html = render_about_from_public_inventory(about_html, pages_repo) if about_html else ""
     changed_surfaces: list[str] = []
     if refreshed_html != template_html:
         changed_surfaces.append("index.html")
     if refreshed_directory_html != directory_html:
         changed_surfaces.append("dispatches/index.html")
+    if about_html and refreshed_about_html != about_html:
+        changed_surfaces.append("about/index.html")
     if not dry_run:
         if "index.html" in changed_surfaces:
             homepage_path.write_text(refreshed_html, encoding="utf-8")
         if "dispatches/index.html" in changed_surfaces:
             directory_path.write_text(refreshed_directory_html, encoding="utf-8")
+        if "about/index.html" in changed_surfaces:
+            about_path.write_text(refreshed_about_html, encoding="utf-8")
     return {
         "ok": True,
         "refreshed": bool(changed_surfaces),
@@ -4442,7 +4457,7 @@ def validate_pages_repo_copy_scope(
         except RuntimeError as exc:
             return [str(exc)]
     requested_shared_surfaces = {Path(str(path).replace("\\", "/")).as_posix() for path in allowed_shared_surface_changes}
-    sanctioned_shared_surfaces = {"index.html", "dispatches/index.html"}
+    sanctioned_shared_surfaces = {"index.html", "dispatches/index.html", "about/index.html"}
     invalid_shared_surfaces = requested_shared_surfaces - sanctioned_shared_surfaces
     if invalid_shared_surfaces:
         errors.append(

@@ -7,7 +7,9 @@ import pytest
 
 from scripts import refresh_root_homepage
 from bluefern_dispatches.root_homepage import (
+    annotate_shared_public_state,
     discover_public_releases,
+    render_about_from_public_inventory,
     render_dispatch_directory_from_releases,
     render_homepage_from_template,
     render_sitewide_homepage_from_template,
@@ -723,6 +725,63 @@ def test_targeted_release_refresh_does_not_regress_other_directory_cards(tmp_pat
     expected[slug] = new_date
     for product, edition_date in expected.items():
         assert f"/{product}/editions/{edition_date}/" in refreshed
+
+
+def test_public_state_annotation_labels_monitoring_and_stale_support_coverage(tmp_path) -> None:
+    public_root = tmp_path / "pages"
+    for path, text in (
+        (public_root / "gaza" / "audio" / "index.html", "<p>2026-07-06</p>"),
+        (public_root / "food-line" / "audio" / "index.html", "<p>2026-07-27</p>"),
+        (public_root / "food-line" / "map" / "index.html", "<p>Latest dispatch date: 2026-07-27</p>"),
+    ):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+    template = (
+        '<article class="dispatch-card dispatch-card--featured">'
+        '<p class="latest-label">Latest public development</p><h3 class="latest-headline"><a href="/gaza/editions/2026-09-24/">Gaza</a></h3>'
+        '<p class="date-line">Dispatches From Gaza &middot; September 24, 2026</p><h2>Dispatches From Gaza</h2><p class="cadence">Daily</p>'
+        '<a class="button" href="/gaza/editions/2026-09-24/">Read latest</a><a class="support-link" href="/gaza/audio/index.html">Audio</a></article>'
+        '<article class="dispatch-card dispatch-card--featured">'
+        '<p class="latest-label">Latest public development</p><h3 class="latest-headline"><a href="/food-line/editions/2026-09-12/">Food</a></h3>'
+        '<p class="date-line">Food Line Dispatch &middot; September 12, 2026</p><h2>Food Line Dispatch</h2><p class="cadence">Daily</p>'
+        '<a class="button" href="/food-line/editions/2026-09-12/">Read latest</a><a class="support-link" href="/food-line/audio/index.html">Audio</a>'
+        '<a class="support-link" href="/food-line/map/index.html">Map</a></article>'
+        '<article class="dispatch-card dispatch-card--featured">'
+        '<p class="latest-label">Latest public development</p><h3 class="latest-headline"><a href="/care-line/editions/2026-08-20/">Care</a></h3>'
+        '<p class="date-line">Care Line &middot; August 20, 2026</p><h2>The Care Line Dispatch</h2><p class="cadence">Current public updates</p>'
+        '<a class="button" href="/care-line/editions/2026-08-20/">Read latest</a></article>'
+    )
+
+    rendered = annotate_shared_public_state(template, public_root)
+
+    assert rendered.count("Latest public release") == 3
+    assert rendered.count("Monitoring continues between public releases") == 2
+    assert "Audio archive through July 6, 2026" in rendered
+    assert "Audio archive through July 27, 2026" in rendered
+    assert "Map snapshot through July 27, 2026" in rendered
+    assert annotate_shared_public_state(rendered, public_root) == rendered
+
+
+def test_about_cascadia_status_is_derived_from_public_archive(tmp_path) -> None:
+    public_root = tmp_path / "pages"
+    archive = public_root / "cascadia" / "archive.html"
+    archive.parent.mkdir(parents=True, exist_ok=True)
+    archive.write_text(
+        '<a href="editions/2026-05-31/">May</a><a href="editions/2026-06-14/">June</a>',
+        encoding="utf-8",
+    )
+    template = (
+        "<html><body><p>Gaza and Food Line are Active. Care Line is a Pilot. "
+        "Cascadia is currently paused. Its latest public edition is May 5, 2026; "
+        "its latest substantive development was published May 3, 2026, and its public archive remains available through May 31, 2026.</p></body></html>"
+    )
+
+    rendered = render_about_from_public_inventory(template, public_root)
+
+    assert "Gaza, Food Line, and Care Line are active public products." in rendered
+    assert "June 14, 2026" in rendered
+    assert "May 5, 2026" not in rendered
+    assert render_about_from_public_inventory(rendered, public_root) == rendered
 
 
 def test_homepage_refresh_is_deterministic_and_does_not_invent_time(tmp_path):

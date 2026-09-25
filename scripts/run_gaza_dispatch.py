@@ -1705,7 +1705,7 @@ def compute_gaza_source_adequacy(sources: list[dict[str, Any]], stories: list[di
             f"This is a limited-source update generated from {source_count} saved {_pluralize(source_count, 'source record')} from {publisher_count} {_pluralize(publisher_count, 'publisher')}. It should be read as a partial update, not a full daily briefing."
         )
     if one_publisher_only and rendered_unique_publishers:
-        warnings.append(f"All saved source records for this edition came from {rendered_unique_publishers[0]}.")
+        warnings.append(f"All rendered public stories in this edition rely on sources from {rendered_unique_publishers[0]}.")
     if core_ground_source_count == 0 and source_count > 0:
         warnings.append("No core in-Gaza ground-development source was identified; context-only coverage cannot carry the edition.")
     return {
@@ -1927,7 +1927,7 @@ def render_gaza_edition(
         )
         if bool(adequacy.get("all_stories_one_publisher")) and (adequacy.get("publishers") or []):
             chunks.append(
-                f"<p><strong>All saved source records for this edition came from {html.escape(str((adequacy.get('publishers') or [''])[0]))}.</strong></p>"
+                f"<p><strong>All rendered public stories in this edition rely on sources from {html.escape(str((adequacy.get('publishers') or [''])[0]))}.</strong></p>"
             )
     if stories:
         if today_read_lines:

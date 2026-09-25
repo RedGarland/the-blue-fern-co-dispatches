@@ -9,6 +9,7 @@ from bluefern_dispatches.generator import build_site
 from bluefern_dispatches.gaza_audio import write_gaza_audio_outputs
 from scripts.run_gaza_dispatch import (
     build_source_diversity_report,
+    compute_gaza_source_adequacy,
     curate_stories,
     normalize_sources,
     render_gaza_edition,
@@ -105,7 +106,7 @@ def test_four_sources_one_publisher_renders_limited_source_update_with_top_note(
     assert result["source_adequacy_status"] == "limited_source_update"
     assert "Limited-source update / May 26, 2026" in html
     assert "This is a limited-source update generated from 4 saved source records from 1 publisher." in html
-    assert "All saved source records for this edition came from Al Jazeera." in html
+    assert "All rendered public stories in this edition rely on sources from Al Jazeera." in html
     assert html.index("This is a limited-source update") < html.index("<h2>At A Glance</h2>")
     assert '<strong>Sources</strong>' in html
     assert 'href="https://example.com/gaza-aid-1"' in html
@@ -139,6 +140,35 @@ def test_limited_source_warning_uses_plural_publishers_for_two_publishers(monkey
     assert result["ok"] is True
     assert "This is a limited-source update generated from 4 saved source records from 2 publishers." in html
     assert "This is a limited-source update generated from 4 saved source records from 2 publisher." not in html
+
+
+def test_source_adequacy_does_not_claim_all_saved_sources_are_one_publisher_when_only_rendered_stories_are() -> None:
+    sources = [
+        {
+            "source_record_id": "alj-1",
+            "publisher": "Al Jazeera",
+            "title": "Gaza aid access update",
+            "summary_or_snippet": "Aid access constraints were reported in Gaza.",
+            "source_type": "news",
+            "category_hint": "humanitarian",
+        },
+        {
+            "source_record_id": "guardian-1",
+            "publisher": "The Guardian",
+            "title": "Gaza context update",
+            "summary_or_snippet": "Additional context on Gaza.",
+            "source_type": "news",
+            "category_hint": "context",
+        },
+    ]
+    stories = [{"source_record_ids": ["alj-1"]}]
+
+    adequacy = compute_gaza_source_adequacy(sources, stories)
+
+    assert adequacy["publisher_count"] == 2
+    assert adequacy["all_stories_one_publisher"] is True
+    assert "All rendered public stories in this edition rely on sources from Al Jazeera." in adequacy["warnings"]
+    assert not any("All saved source records" in warning for warning in adequacy["warnings"])
 
 
 def test_aljazeera_sources_produce_non_empty_source_family_classification(monkeypatch):

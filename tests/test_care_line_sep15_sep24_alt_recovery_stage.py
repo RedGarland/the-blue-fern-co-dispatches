@@ -246,7 +246,7 @@ def test_care_sep15_sep24_editorial_records_preserve_key_date_distinctions() -> 
 
     assert southern["source_published_date"] is None
     assert southern["source_publication_date_uncertainty"]
-    assert "The Lund Report" in southern["event_date_basis"]
+    assert "Periop Leader Network" in southern["event_date_basis"]
     assert any(source.get("supports_event_date") is True for source in southern["sources"])
     assert any(source.get("supports_closure_status") is True for source in southern["sources"])
     assert not all(source.get("source_url") == "https://www.sosurgi.com/" for source in southern["sources"])

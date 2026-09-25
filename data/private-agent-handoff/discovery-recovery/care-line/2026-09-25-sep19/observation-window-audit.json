@@ -67,6 +67,15 @@
     "publication": false,
     "artifact": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\status\\care-line\\publication-scheduler-runs\\2026-09-19\\20260919T153001Z-15380.json"
   },
+  "authority_flags": {
+    "manual_production_task_triggered": false,
+    "collection_replay_performed": false,
+    "publication_eligible": false,
+    "publication_approval": false,
+    "publication_performed": false,
+    "public_generation_authorized": false,
+    "pages_authorized": false
+  },
   "later_collection_reconciliation": {
     "sep20_items_examined": 974,
     "sep21_items_examined": 974,
@@ -91,7 +100,7 @@
     "later_collection_reconciliation": "7d5fc069451d488cfc2cd61c65d50b7ed19f61d759e5d08fc0440000240ebdb6",
     "recovered_candidates": "881f6b2a98b0380741c72efc73cad351b4f10234196f7d7c9bc5e6cd64258ce4",
     "runtime_evidence_audit": "5f3d8bbc52e12b972c404c9932cf51162529cf5b8c0cddcdbfce6b1a9c05dde9",
-    "sep19_discovery_input": "0cc92c60d1a31f1417dbd31974baa9e69f68e4cfdb28c7c246a84e421a8d69d36",
+    "sep19_discovery_input": "0cc92c60d1a31f1417dbd31974ba9e69f68e4cfdb28c7c246a84e421a8d69d36",
     "terminal_dispositions": "889c1601e7583977eb1f940c0f519dcda2fcccc4f91885b20b09605c974ec6a9"
   },
   "safety": {

@@ -277,6 +277,9 @@ def test_care_sep15_sep24_sep19_remains_untouched() -> None:
     assert not Path("data/dispatches/care-line/historical-events/2026-09-19").exists()
     gap_path = Path("data/dispatches/care-line/coverage-gaps/2026-09-19.json")
     gap = _load(gap_path)
+    audit = _load(
+        Path("data/private-agent-handoff/discovery-recovery/care-line/2026-09-25-sep19/observation-window-audit.json")
+    )
     validate_gap_record(gap)
 
     assert gap["observation_status"] == "OBSERVATION_INCOMPLETE"
@@ -294,6 +297,22 @@ def test_care_sep15_sep24_sep19_remains_untouched() -> None:
     assert GapReasonCode.HISTORICAL_EVIDENCE_INCOMPLETE in result.reason_codes
     queue = build_backfill_queue([result], evaluated_at="2026-09-25T09:00:00Z")
     assert queue["rows"] == []
+
+    expected_discovery_sha = "0cc92c60d1a31f1417dbd31974ba9e69f68e4cfdb28c7c246a84e421a8d69d36"
+    assert audit["scratch_sha256_lineage"]["sep19_discovery_input"] == expected_discovery_sha
+    assert all(
+        re.fullmatch(r"[0-9a-f]{64}", value)
+        for value in audit["scratch_sha256_lineage"].values()
+    )
+    assert audit["authority_flags"] == {
+        "manual_production_task_triggered": False,
+        "collection_replay_performed": False,
+        "publication_eligible": False,
+        "publication_approval": False,
+        "publication_performed": False,
+        "public_generation_authorized": False,
+        "pages_authorized": False,
+    }
 
 
 def _write_json(path: Path, payload: dict) -> None:

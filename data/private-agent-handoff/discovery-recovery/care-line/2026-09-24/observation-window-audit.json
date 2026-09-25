@@ -43,7 +43,8 @@
     {
       "alternate_sources": [
         {
-          "date": "2026",
+          "date": null,
+          "date_uncertainty": "official provider page confirms closure but does not expose a provable publication date",
           "passage": "The Surgery Center of Southern Oregon is now permanently closed",
           "publisher": "Surgery Center of Southern Oregon",
           "type": "provider/official",
@@ -52,6 +53,8 @@
       ],
       "disposition": "ALT_CANDIDATE_CONFIRMED",
       "duplicate_of": "",
+      "event_date": "2026-06-30",
+      "event_date_basis": "official provider closure notice independently confirms permanent closure date",
       "failed_gates": [
         "missing_geography",
         "missing_subject"
@@ -81,7 +84,9 @@
         "provider/facility + event/date",
         "provider/facility + access terms"
       ],
-      "source_evidence_fingerprint": "a8d715c3c8be9fbe4f9c25605a5f84293c0aeab29513c2bd3b6aacc3c4b487fe"
+      "source_evidence_fingerprint": "a8d715c3c8be9fbe4f9c25605a5f84293c0aeab29513c2bd3b6aacc3c4b487fe",
+      "source_publication_date": null,
+      "source_publication_date_uncertainty": "official provider page confirms closure but does not expose a provable publication date"
     },
     {
       "alternate_sources": [
@@ -1918,7 +1923,8 @@
       "url": "https://www.ems1.com/air-medical-transport/phi-air-medical-suspends-operations-in-calif-city-over-payment-issues"
     },
     "surgery_center_s_oregon": {
-      "date": "2026",
+      "date": null,
+      "date_uncertainty": "official provider page confirms closure but does not expose a provable publication date",
       "passage": "The Surgery Center of Southern Oregon is now permanently closed",
       "publisher": "Surgery Center of Southern Oregon",
       "type": "provider/official",

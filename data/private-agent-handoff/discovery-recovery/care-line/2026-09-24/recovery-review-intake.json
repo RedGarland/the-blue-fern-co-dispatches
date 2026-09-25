@@ -14,7 +14,8 @@
       "coverage_gap_reason_code": "recall_audit_miss",
       "dispatch": "care-line",
       "eligible_for_automatic_publication": false,
-      "event_date": "2026",
+      "event_date": "2026-06-30",
+      "event_date_basis": "official provider closure notice independently confirms permanent closure date",
       "event_type": "ambulatory surgery center closure",
       "facility_or_provider": "Surgery Center of Southern Oregon",
       "facility_provider": "Surgery Center of Southern Oregon",
@@ -49,12 +50,14 @@
       "review_status": "pending_review",
       "review_transition_owner": "human_editorial_review",
       "source_evidence_fingerprint": "a8d715c3c8be9fbe4f9c25605a5f84293c0aeab29513c2bd3b6aacc3c4b487fe",
-      "source_publication_date": "2026",
-      "source_published_date": "2026",
+      "source_publication_date": null,
+      "source_publication_date_uncertainty": "official provider page confirms closure but does not expose a provable publication date",
+      "source_published_date": null,
       "source_traceability": {
         "alternate_sources": [
           {
-            "date": "2026",
+            "date": null,
+            "date_uncertainty": "official provider page confirms closure but does not expose a provable publication date",
             "passage": "The Surgery Center of Southern Oregon is now permanently closed",
             "publisher": "Surgery Center of Southern Oregon",
             "type": "provider/official",
@@ -64,7 +67,8 @@
         "corroborating_alternate_source": null,
         "network_pages_inspected": 1,
         "primary_alternate_source": {
-          "date": "2026",
+          "date": null,
+          "date_uncertainty": "official provider page confirms closure but does not expose a provable publication date",
           "passage": "The Surgery Center of Southern Oregon is now permanently closed",
           "publisher": "Surgery Center of Southern Oregon",
           "type": "provider/official",

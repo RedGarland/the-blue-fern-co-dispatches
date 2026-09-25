@@ -734,15 +734,41 @@ def _elapsed_expected_instances(
     return tuple(rows)
 
 
-def _load_recovery_candidate_evidence(repo_root: Path, dispatch: str, observation_date: str) -> tuple[tuple[str, ...], tuple[GapReasonCode, ...]]:
-    refs: list[str] = []
+def _recovery_audit_has_unresolved_exhaustion(intake_path: Path, observation_date: str) -> bool:
+    audit_path = intake_path.with_name("observation-window-audit.json")
+    if not audit_path.exists():
+        return False
+    try:
+        audit = _read_json(audit_path)
+    except json.JSONDecodeError:
+        return False
+    for row in audit.get("per_date") or audit.get("observation_dates") or []:
+        if str(row.get("date") or row.get("observation_date") or "") != observation_date:
+            continue
+        if str(row.get("coverage_result") or "") == "EVIDENCE_EXHAUSTED_REMAINS":
+            return True
+        exhausted = row.get("exhausted_or_conflicting")
+        if isinstance(exhausted, int) and exhausted > 0:
+            return True
+    return False
+
+
+def _load_recovery_candidate_evidence(
+    repo_root: Path,
+    dispatch: str,
+    observation_date: str,
+) -> tuple[tuple[str, ...], tuple[str, ...], tuple[GapReasonCode, ...], MaterialDegradation | None]:
+    candidate_refs: list[str] = []
+    evidence_refs: list[str] = []
     reasons: list[GapReasonCode] = []
+    unresolved_exhaustion = False
     recovery_root = repo_root / "data" / "private-agent-handoff" / "discovery-recovery"
     for path in sorted(recovery_root.glob("*/*/recovery-review-intake.json")):
         try:
             payload = _read_json(path)
         except json.JSONDecodeError:
             continue
+        matched_item = False
         for item in payload.get("items") or []:
             if item.get("dispatch") != dispatch:
                 continue
@@ -756,14 +782,38 @@ def _load_recovery_candidate_evidence(repo_root: Path, dispatch: str, observatio
                 or observation_date in {str(date) for date in observed_dates}
                 or production_run_id.startswith(observation_date.replace("-", ""))
             ):
-                refs.append(path.relative_to(repo_root).as_posix())
-                reasons.extend(_candidate_reason_codes(item, payload))
+                matched_item = True
+                intake_ref = path.relative_to(repo_root).as_posix()
+                evidence_refs.append(intake_ref)
+                audit_path = path.with_name("observation-window-audit.json")
+                if audit_path.exists():
+                    evidence_refs.append(audit_path.relative_to(repo_root).as_posix())
+                if _recovery_audit_has_unresolved_exhaustion(path, observation_date):
+                    unresolved_exhaustion = True
+                else:
+                    candidate_refs.append(intake_ref)
+                    reasons.extend(_candidate_reason_codes(item, payload))
                 break
-    return tuple(sorted(set(refs))), tuple(dict.fromkeys(reasons))
+        audit_path = path.with_name("observation-window-audit.json")
+        if not matched_item and path.parent.parent.name == dispatch and _recovery_audit_has_unresolved_exhaustion(path, observation_date):
+            if audit_path.exists():
+                evidence_refs.append(audit_path.relative_to(repo_root).as_posix())
+            unresolved_exhaustion = True
+    material = None
+    if unresolved_exhaustion:
+        material = MaterialDegradation(
+            material=True,
+            reason_codes=(GapReasonCode.HISTORICAL_EVIDENCE_INCOMPLETE,),
+            explanation=(
+                "Private recovery package includes pending candidates, but sibling observation-window audit "
+                "shows exhausted/conflicting identities remain unresolved for this observation date."
+            ),
+        )
+    return tuple(sorted(set(candidate_refs))), tuple(sorted(set(evidence_refs))), tuple(dict.fromkeys(reasons)), material
 
 
 def _load_recovery_candidates(repo_root: Path, dispatch: str, observation_date: str) -> tuple[str, ...]:
-    refs, _reasons = _load_recovery_candidate_evidence(repo_root, dispatch, observation_date)
+    refs, _evidence_refs, _reasons, _material = _load_recovery_candidate_evidence(repo_root, dispatch, observation_date)
     return refs
 
 
@@ -1125,12 +1175,17 @@ class DispatchCoverageAdapter:
         durable = load_durable_gap(repo_root, self.dispatch, observation_date)
         runtime = runtime_root
         receipts = _load_receipts(runtime, self.dispatch, observation_date) if runtime is not None else ()
-        candidates, recovery_reasons = _load_recovery_candidate_evidence(repo_root, self.dispatch, observation_date)
+        candidates, recovery_evidence_refs, recovery_reasons, recovery_material = _load_recovery_candidate_evidence(
+            repo_root,
+            self.dispatch,
+            observation_date,
+        )
         recovered = _load_recovered_event_ids(repo_root, self.dispatch, observation_date)
         unaccounted = self._unaccounted(receipts)
         runtime_evidence_root = runtime / "status" / "operational-health" / self.dispatch if runtime is not None else None
         expected_tasks = self.expected_tasks if receipts or (runtime_evidence_root is not None and runtime_evidence_root.exists()) else ()
         source_refs = tuple(filter(None, (
+            *(path for path in recovery_evidence_refs),
             *(path for path in candidates),
             *self._artifact_refs(receipts),
         )))
@@ -1150,7 +1205,7 @@ class DispatchCoverageAdapter:
             recovered_event_ids=recovered,
             source_refs=source_refs,
             durable_gap_record=durable,
-            material_degradation=self._material_degradation(receipts),
+            material_degradation=recovery_material or self._material_degradation(receipts),
             retained_or_reviewable_count=self._reviewable_count(receipts),
             notes=notes,
         )

@@ -12,6 +12,7 @@ def _text() -> str:
 def test_sync_helper_targets_all_active_dispatch_runners() -> None:
     text = _text()
     for path in (
+        r"C:\BlueFernRunner\BlueFernOperatorCurrent",
         r"C:\BlueFernRunner\FoodLineCurrent6",
         r"C:\BlueFernRunner\CareLineNationalCurrent8",
         r"C:\BlueFernRunner\GazaDispatchesCurrent6",
@@ -92,3 +93,30 @@ def test_sync_helper_does_not_trigger_production_or_scheduler_mutation() -> None
     assert "Register-ScheduledTask" not in text
     assert "Set-ScheduledTask" not in text
     assert "Start-ScheduledTask" not in text
+
+
+def test_sync_helper_includes_operator_control_plane_checkout() -> None:
+    text = _text()
+    assert 'Dispatch = "operator"' in text
+    assert r'C:\BlueFernRunner\BlueFernOperatorCurrent' in text
+
+
+def test_sync_helper_can_prove_nonpublic_status_export_after_apply() -> None:
+    text = _text()
+    assert "[switch]$ProveStatusExport" in text
+    assert '"-ProveStatusExport requires -Apply' in text
+    assert 'scripts\\run_operational_status_export.ps1' in text
+    assert 'ops\\status\\system\\latest.json' in text
+    assert 'ops\\status\\gaza\\latest.json' in text
+    assert '"MIGRATED"' in text
+    assert 'current_runner_head' in text
+    assert 'current_runner_branch' in text
+    assert 'OperationalStatusMutation = [bool]$statusExportProof.Attempted' in text
+    assert 'Production runners were synchronized but the non-public status exporter proof did not pass.' in text
+
+
+def test_status_export_proof_does_not_trigger_collection_or_publication() -> None:
+    text = _text()
+    assert 'CollectionTriggered = $false' in text
+    assert 'PublicationTriggered = $false' in text
+    assert 'PagesMutation = $false' in text

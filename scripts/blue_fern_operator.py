@@ -1991,9 +1991,7 @@ def _current_condition_for(incident: Incident, current_status: DispatchStatus | 
 
 
 def _refresh_status_supported(dispatch: str, current_status: DispatchStatus | None) -> tuple[bool, str]:
-    if dispatch == "gaza":
-        return False, "no compatible Gaza external-status builder is available"
-    if dispatch in {"food-line", "ice"}:
+    if dispatch in {"gaza", "food-line", "ice"}:
         return True, "existing external-status builder is available"
     if dispatch == "care-line":
         if current_status is not None and current_status.evidence:
@@ -2024,6 +2022,8 @@ def _refresh_status_export_scope(dispatch: str, date: str | None) -> list[str]:
     ]
     if dispatch == "care-line":
         paths.extend(["ops/status/care-line/latest.json", f"ops/status/care-line/history/{day}.json"])
+    if dispatch == "gaza":
+        paths.extend(["ops/status/gaza/latest.json", f"ops/status/gaza/history/{day}.json"])
     if dispatch == "ice":
         paths.extend(["ops/status/ice/latest.json", f"ops/status/ice/history/{day}.json"])
     paths.append("ops/status/system/latest.json")
@@ -2543,6 +2543,8 @@ def _apply_refresh_status_export(
         if plan.dispatch == "care-line":
             export_kwargs["care_source_root"] = runner_root.resolve()
             export_kwargs["care_expected_instances"] = care_expected_instances_from_task_scheduler(date)
+        elif plan.dispatch == "gaza":
+            export_kwargs["gaza_source_root"] = runner_root.resolve()
         elif plan.dispatch == "ice":
             export_kwargs["ice_source_root"] = runner_root.resolve()
         result = export_status(**export_kwargs)

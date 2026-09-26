@@ -391,9 +391,9 @@ def test_powershell_wrapper_conditionally_plumbs_care_source_root() -> None:
     text = (ROOT / "scripts" / "run_operational_status_export.ps1").read_text(encoding="utf-8")
     assert "[string]$SourceRoot = 'C:\\BlueFernRunner\\FoodLineCurrent6'" in text
     assert "[string]$StatusCheckout = 'C:\\BlueFernRunner\\OperationalStatusCurrent'" in text
-    assert "[string]$CareSourceRoot = ''" in text
-    assert "[string]$GazaSourceRoot = ''" in text
-    assert "[string]$IceSourceRoot = ''" in text
+    assert "[string]$CareSourceRoot = 'C:\\BlueFernRunner\\CareLineNationalCurrent8'" in text
+    assert "[string]$GazaSourceRoot = 'C:\\BlueFernRunner\\GazaDispatchesCurrent6'" in text
+    assert "[string]$IceSourceRoot = 'C:\\BlueFernRunner\\ICEMonitorCurrent'" in text
     assert "IsNullOrWhiteSpace($CareSourceRoot)" in text
     assert "IsNullOrWhiteSpace($GazaSourceRoot)" in text
     assert "IsNullOrWhiteSpace($IceSourceRoot)" in text

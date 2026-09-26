@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260926T084403-0700-r11",
+  "scheduled_for": "2026-09-26T08:44:03-07:00",
+  "started_at": "2026-09-26T08:44:03-07:00",
+  "completed_at": "2026-09-26T08:44:03-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-26T07:50:00-07:00",
+    "date_to": "2026-09-26T08:44:03-07:00",
+    "edition_date": "2026-09-26"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall watch completed with 12 targeted web searches. No new qualifying U.S. food-access disruption was found since the prior hourly check. Fresh results included ongoing Hurricane Nolo/Lowell recovery coverage, Martha's Vineyard storm-related pantry closure reporting already retained in a prior watch, and El Paso food-bank storm damage already known from earlier Food Line monitoring; these were excluded as duplicates or without a new qualifying development. Searches for only/sole/last/full-service grocery-store loss surfaced older closures rather than a new event. SNAP/WIC searches did not identify a new official interruption with immediate access consequences. Donation drives, resource information, routine program promotion, historical closures, generic policy material, and unsupported claims were excluded."
+}

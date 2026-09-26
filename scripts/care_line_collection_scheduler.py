@@ -356,6 +356,26 @@ def _write_scheduler_log(
     return path
 
 
+def _bounded_failure_diagnostics(manifest: dict[str, Any] | None, *, limit: int = 20) -> list[dict[str, Any]]:
+    rows = (manifest or {}).get("source_failure_diagnostics")
+    if not isinstance(rows, list):
+        return []
+    result: list[dict[str, Any]] = []
+    for row in rows[:limit]:
+        if not isinstance(row, dict):
+            continue
+        result.append(
+            {
+                "source_id": str(row.get("source_id") or "")[:160],
+                "source_name": str(row.get("source_name") or "")[:200],
+                "adapter_type": str(row.get("adapter_type") or "")[:80],
+                "failure_class": str(row.get("failure_class") or "Unknown")[:80],
+                "transient": bool(row.get("transient")),
+            }
+        )
+    return result
+
+
 def _write_operational_health_receipt(root: Path, record: dict[str, Any]) -> None:
     status = str(record.get("status") or "failure")
     receipt = build_care_line_operational_receipt(
@@ -380,6 +400,12 @@ def _write_operational_health_receipt(root: Path, record: dict[str, Any]) -> Non
             "smoke_test": bool(record.get("smoke_test")),
             "pipeline_run_id": record.get("pipeline_run_id"),
             "failure_stage": record.get("failure_stage"),
+            "successful_attempt_count": record.get("successful_attempt_count"),
+            "failed_source_count": record.get("failed_source_count"),
+            "skipped_source_count": record.get("skipped_source_count"),
+            "active_review_queue_count": record.get("active_review_queue_count"),
+            "manual_review_count": record.get("manual_review_count"),
+            "failed_source_diagnostics": record.get("failed_source_diagnostics") or [],
         },
     )
     write_operational_receipt(root, receipt)
@@ -425,6 +451,7 @@ def _finalize_success(
             "successful_attempt_count": (pipeline_manifest or {}).get("successful_attempt_count"),
             "failed_source_count": (pipeline_manifest or {}).get("failed_source_count"),
             "skipped_source_count": (pipeline_manifest or {}).get("skipped_source_count"),
+            "failed_source_diagnostics": _bounded_failure_diagnostics(pipeline_manifest),
             "active_review_queue_count": (pipeline_manifest or {}).get("active_review_queue_count"),
             "manual_review_count": (pipeline_manifest or {}).get("manual_review_count"),
             "production_review_queue_mutation_disabled": bool((pipeline_manifest or {}).get("production_review_queue_mutation_disabled")),

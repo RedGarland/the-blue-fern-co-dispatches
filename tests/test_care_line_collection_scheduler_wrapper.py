@@ -68,6 +68,17 @@ def test_care_line_windows_wrapper_and_helper_are_present_and_bound_to_collectio
                 "run_id": "run-1",
                 "successful_attempt_count": 100,
                 "failed_source_count": 4,
+                "source_failure_diagnostics": [
+                    {
+                        "source_id": "cms-public-notices",
+                        "source_name": "CMS Public Notices",
+                        "adapter_type": "structured_index",
+                        "failure_class": "HTTPError",
+                        "failure_reason": "HTTPError: 503 temporary",
+                        "source_url": "https://example.invalid/private-proof",
+                        "transient": True,
+                    }
+                ],
                 "skipped_source_count": 2,
                 "active_review_queue_count": 0,
                 "manual_review_count": 0,
@@ -118,6 +129,23 @@ def test_care_line_windows_wrapper_and_helper_are_present_and_bound_to_collectio
     assert receipt["publication_side_effects"]["pages_sync"] is False
     assert receipt["publication_side_effects"]["bluesky_publication"] is False
     assert receipt["pipeline_status"] == "success"
+    assert receipt["failed_source_diagnostics"] == [
+        {
+            "source_id": "cms-public-notices",
+            "source_name": "CMS Public Notices",
+            "adapter_type": "structured_index",
+            "failure_class": "HTTPError",
+            "transient": True,
+        }
+    ]
+    health_receipt = next(
+        (tmp_path / "status" / "operational-health" / "care-line" / "2026-08-16" / "runs").glob("*.json")
+    )
+    health = json.loads(health_receipt.read_text(encoding="utf-8"))
+    assert health["details"]["failed_source_count"] == 4
+    assert health["details"]["failed_source_diagnostics"][0]["source_id"] == "cms-public-notices"
+    assert "failure_reason" not in health["details"]["failed_source_diagnostics"][0]
+    assert "source_url" not in health["details"]["failed_source_diagnostics"][0]
     assert len(captured) == 1
 
     command, cwd = captured[0]

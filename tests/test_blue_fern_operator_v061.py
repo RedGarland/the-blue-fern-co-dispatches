@@ -182,7 +182,7 @@ def test_ice_complete_stale_routes_to_refresh_not_rebuild(tmp_path: Path) -> Non
     assert plan.expected_mutation_scope == _status_paths("ice", "2026-09-20")
 
 
-def test_unsupported_gaza_refresh_is_non_executable_investigation(tmp_path: Path) -> None:
+def test_gaza_refresh_is_supported_by_external_status_builder(tmp_path: Path) -> None:
     status_root = tmp_path / "status"
     plan = operator.build_remediation_action_plan(
         _incident(dispatch="gaza", status_state="UNKNOWN"),
@@ -192,9 +192,9 @@ def test_unsupported_gaza_refresh_is_non_executable_investigation(tmp_path: Path
         status_root=status_root,
     )
 
-    assert plan.proposed_action == "INVESTIGATE_STATUS_EXPORT"
-    assert plan.executable is False
-    assert plan.safety_checks["refresh_supported"] is False
+    assert plan.proposed_action == "REFRESH_STATUS_EXPORT"
+    assert plan.executable is True
+    assert plan.safety_checks["refresh_supported"] is True
 
 
 def test_rebuild_status_only_when_dispatch_ops_plan_available(tmp_path: Path) -> None:

@@ -25,7 +25,7 @@ def _cascadia_payload() -> dict[str, object]:
         "coverage_end": "2026-05-10",
         "public_story_count": 5,
         "output_paths": {
-            "public_site_output": r"C:\PythonProjects\Dispatches From The Blue Fern Co\output\site\cascadia\editions\2026-05-10"
+            "public_site_output": r"C:\BlueFernDev\the-blue-fern-co-dispatches\output\site\cascadia\editions\2026-05-10"
         },
         "warnings": ["sparse week warning"],
         "errors": [],

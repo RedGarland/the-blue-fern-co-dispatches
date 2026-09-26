@@ -98,7 +98,7 @@ def test_10_registry_file_summary_counts_enabled_sources(tmp_path: Path):
     assert summary["enabled_source_count"] == 1
 
 
-def test_11_registry_loader_normalizes_known_source_urls(tmp_path: Path):
+def test_11_registry_loader_preserves_persisted_source_configuration(tmp_path: Path):
     path = tmp_path / "registry.json"
     payload = registry(
         source(
@@ -129,16 +129,16 @@ def test_11_registry_loader_normalizes_known_source_urls(tmp_path: Path):
     rural = next(row for row in loaded.sources if row.source_id == "rural-health-info-hub")
     cleveland = next(row for row in loaded.sources if row.source_id == "cleveland-clinic-newsroom")
 
-    assert cal.feed_url == "https://calmatters.org/category/health/"
+    assert cal.feed_url == "https://calmatters.org/category/health/feed/"
     assert cal.homepage_url == "https://calmatters.org/category/health/"
-    assert cal.adapter_type == "structured_index"
-    assert cal.collection_method == "structured_index_polling"
-    assert rural.feed_url == "https://www.ruralhealthinfo.org/rss/news.xml"
+    assert cal.adapter_type == "rss"
+    assert cal.collection_method == "feed_polling"
+    assert rural.feed_url == "https://www.ruralhealthinfo.org/rss/news"
     assert rural.homepage_url == "https://www.ruralhealthinfo.org/news"
-    assert cleveland.feed_url == "https://newsroom.clevelandclinic.org/news-releases"
-    assert cleveland.homepage_url == "https://newsroom.clevelandclinic.org/news-releases"
-    assert cleveland.adapter_type == "structured_index"
-    assert cleveland.collection_method == "structured_index_polling"
+    assert cleveland.feed_url == "https://newsroom.clevelandclinic.org/feed"
+    assert cleveland.homepage_url == "https://newsroom.clevelandclinic.org/"
+    assert cleveland.adapter_type == "rss"
+    assert cleveland.collection_method == "feed_polling"
 
 
 def test_12_project_registry_meets_phase13_size_targets():

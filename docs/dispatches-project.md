@@ -27,19 +27,19 @@ Safety defaults:
 Pages repo dry-run:
 
 ```powershell
-python scripts\publish_github_pages.py --dry-run --pages-repo "C:\PythonProjects\Dispatches From The Blue Fern Co\bluefern-dispatches-pages" --pages-branch gh-pages
+python scripts\publish_github_pages.py --dry-run --pages-repo "C:\BlueFernDev\the-blue-fern-co-dispatches\bluefern-dispatches-pages" --pages-branch gh-pages
 ```
 
 Copy + commit locally, no push:
 
 ```powershell
-python scripts\publish_github_pages.py --pages-repo "C:\PythonProjects\Dispatches From The Blue Fern Co\bluefern-dispatches-pages" --remote-url "https://github.com/RedGarland/the-blue-fern-co-dispatches.git" --pages-branch gh-pages --commit --no-push
+python scripts\publish_github_pages.py --pages-repo "C:\BlueFernDev\the-blue-fern-co-dispatches\bluefern-dispatches-pages" --remote-url "https://github.com/RedGarland/the-blue-fern-co-dispatches.git" --pages-branch gh-pages --commit --no-push
 ```
 
 Manual push after inspection:
 
 ```powershell
-cd "C:\PythonProjects\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
+cd "C:\BlueFernDev\the-blue-fern-co-dispatches\bluefern-dispatches-pages"
 git status
 git push origin gh-pages
 ```
@@ -124,22 +124,22 @@ Program/script:
 powershell.exe
 
 Arguments:
--NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\PythonProjects\Dispatches From The Blue Fern Co'; & '.\.venv\Scripts\python.exe' 'scripts\run_daily_gaza.py' --date (Get-Date -Format 'yyyy-MM-dd') --email-report"
+-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\BlueFernDev\the-blue-fern-co-dispatches'; & '.\.venv\Scripts\python.exe' 'scripts\run_daily_gaza.py' --date (Get-Date -Format 'yyyy-MM-dd') --email-report"
 
 Start in:
-C:\PythonProjects\Dispatches From The Blue Fern Co
+C:\BlueFernDev\the-blue-fern-co-dispatches
 ```
 
 Optional scheduled publish with push:
 
 ```text
--NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\PythonProjects\Dispatches From The Blue Fern Co'; & '.\.venv\Scripts\python.exe' 'scripts\run_daily_gaza.py' --date (Get-Date -Format 'yyyy-MM-dd') --email-report --push"
+-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\BlueFernDev\the-blue-fern-co-dispatches'; & '.\.venv\Scripts\python.exe' 'scripts\run_daily_gaza.py' --date (Get-Date -Format 'yyyy-MM-dd') --email-report --push"
 ```
 
 Manual push after inspection:
 
 ```powershell
-cd "C:\PythonProjects\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
+cd "C:\BlueFernDev\the-blue-fern-co-dispatches\bluefern-dispatches-pages"
 git status
 git push origin gh-pages
 ```
@@ -233,7 +233,7 @@ python scripts\run_cascadia_dispatch.py --weekly-public --backfill-weeks 4 --dat
 python scripts\run_cascadia_dispatch.py --archive-week 2026-04-21 --weekly-public --historical-search
 python scripts\run_cascadia_dispatch.py --week-start 2026-04-20 --week-end 2026-04-26 --weekly-public --historical-search
 powershell -ExecutionPolicy Bypass -File scripts\run_weekly_cascadia.ps1
-python scripts\publish_github_pages.py --pages-repo "C:\PythonProjects\Dispatches From The Blue Fern Co\bluefern-dispatches-pages" --remote-url "https://github.com/RedGarland/the-blue-fern-co-dispatches.git" --pages-branch gh-pages --commit --no-push
+python scripts\publish_github_pages.py --pages-repo "C:\BlueFernDev\the-blue-fern-co-dispatches\bluefern-dispatches-pages" --remote-url "https://github.com/RedGarland/the-blue-fern-co-dispatches.git" --pages-branch gh-pages --commit --no-push
 ```
 
 Cascadia has no active production cadence. Historical weekly mode covered the previous completed Monday-Sunday window. The project uses the Sunday coverage-end as the public edition date for weekly archives, so a historical `2026-05-11` run covers `2026-05-04` through `2026-05-10` and writes `/cascadia/editions/2026-05-10/`.
@@ -336,27 +336,7 @@ Weekly jobs:
 
 - No Cascadia weekly public briefing; Cascadia is intentionally inactive.
 
-Task Scheduler setup for Cascadia, historical/reference only:
-
-- Task name: `Cascadia Weekly Briefing`
-- Trigger: disabled; do not register or enable without explicit operator authorization.
-- Program/script: `powershell.exe`
-- Start in: `C:\PythonProjects\Dispatches From The Blue Fern Co`
-- Keep separate from Gaza Daily Pipeline
-
-Historical arguments for the weekly Cascadia run with confirmation email and without push:
-
-```text
--NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\PythonProjects\Dispatches From The Blue Fern Co'; $env:CASCADIA_ALLOW_CURL_NO_REVOKE='1'; $env:CASCADIA_FETCH_BACKEND='auto'; $env:SMTP_RELAX_X509_STRICT='1'; & '.\.venv\Scripts\python.exe' 'scripts\run_cascadia_and_notify.py' --date (Get-Date -Format 'yyyy-MM-dd')"
-```
-
-Manual push after inspection:
-
-```powershell
-cd "C:\PythonProjects\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
-git status
-git push origin gh-pages
-```
+Cascadia scheduler artifacts are retained for historical/reference purposes only. Do not register, enable, reprovision, or execute a Cascadia production task from these project notes. Any future reactivation must follow `AGENTS.md`, the project contract, and explicit operator authorization.
 
 Stage outputs:
 
@@ -485,7 +465,7 @@ Program/script:
 `powershell.exe`
 
 Arguments:
-`-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\PythonProjects\Dispatches From The Blue Fern Co'; & '.\.venv\Scripts\python.exe' 'scripts\run_weekly_american_pressure.py' --week-ending previous-saturday --source-mode both --include-approved-candidates --publish --push"`
+`-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\BlueFernDev\the-blue-fern-co-dispatches'; & '.\.venv\Scripts\python.exe' 'scripts\run_weekly_american_pressure.py' --week-ending previous-saturday --source-mode both --include-approved-candidates --publish --push"`
 
 - `--publish` updates the local Pages repo.
 - `--push` pushes live from `bluefern-dispatches-pages` on `gh-pages`.

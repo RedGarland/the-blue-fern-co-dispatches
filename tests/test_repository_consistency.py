@@ -125,3 +125,73 @@ def test_operator_runner_roots_match_status_export_wrapper_defaults() -> None:
         assert runner_root in ps1, f"{dispatch} runner root drifted from {parameter}"
 
     assert config["operator"]["status_root"] in ps1
+
+
+def test_current_docs_do_not_embed_personal_workstation_paths() -> None:
+    files = [
+        ROOT / "README.md",
+        ROOT / "docs" / "dispatches-project.md",
+    ]
+    forbidden = (
+        r"C:\\Users\\Admin\\Desktop\\Python",
+        r"C:\\Users\\willb\\OneDrive\\Desktop\\Python",
+        r"C:\\PythonProjects\\Dispatches From The Blue Fern Co",
+    )
+    for path in files:
+        text = path.read_text(encoding="utf-8")
+        for marker in forbidden:
+            assert marker not in text, f"{path.relative_to(ROOT)} still contains {marker}"
+
+
+def test_readme_lists_current_public_products_and_marks_cascadia_historical() -> None:
+    text = (ROOT / "README.md").read_text(encoding="utf-8")
+
+    assert "https://dispatches.thebluefernco.com/gaza/" in text
+    assert "https://dispatches.thebluefernco.com/food-line/" in text
+    assert "https://dispatches.thebluefernco.com/care-line/" in text
+    assert "https://dispatches.thebluefernco.com/cascadia/" in text
+    assert "historical/inactive archive" in text
+
+
+def test_required_runtime_dependencies_are_declared() -> None:
+    requirements = (ROOT / "requirements.txt").read_text(encoding="utf-8").casefold()
+
+    for package in ("pyyaml", "pydantic", "pillow", "certifi", "beautifulsoup4", "tzdata"):
+        assert package in requirements
+
+
+def test_validation_workflow_targets_protected_source_branch() -> None:
+    text = (ROOT / ".github" / "workflows" / "dispatch-validation.yml").read_text(encoding="utf-8")
+
+    assert "      - add/pages-repo-default" in text
+    assert "      - main" not in text
+
+
+def test_readme_does_not_require_undefined_editable_package_install() -> None:
+    text = (ROOT / "README.md").read_text(encoding="utf-8")
+
+    assert "pip install -e ." not in text
+    assert "pip install -r requirements.txt" in text
+
+
+def test_validation_status_is_bound_to_tested_event_head() -> None:
+    text = (ROOT / ".github" / "workflows" / "dispatch-validation.yml").read_text(encoding="utf-8")
+
+    assert "context.payload.pull_request?.head?.sha" in text
+    assert "github.rest.pulls.get" not in text
+    assert "event pull_request.head.sha is unavailable" in text
+
+
+def test_validation_cancels_superseded_pr_runs() -> None:
+    text = (ROOT / ".github" / "workflows" / "dispatch-validation.yml").read_text(encoding="utf-8")
+
+    assert "concurrency:" in text
+    assert "github.event.pull_request.number || github.ref" in text
+    assert "cancel-in-progress: true" in text
+
+
+def test_readme_names_current_protected_source_branch() -> None:
+    text = (ROOT / "README.md").read_text(encoding="utf-8")
+
+    assert "The protected source branch is `add/pages-repo-default`" in text
+    assert "source project branch (`master` or `main`)" not in text

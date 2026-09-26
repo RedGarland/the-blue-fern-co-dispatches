@@ -2,17 +2,16 @@
 
 This project is intentionally separate from the existing Gaza and FDA/Cascadia pipeline folders. It borrows the Gaza GitHub Pages visual theme and the Cascadia source/curation philosophy, but writes its own outputs, records, manifests, and backups.
 
-Current dispatch slugs:
+Current operational families:
 
-- `gaza`
-- `american-pressure`
-- `cascadia`
+- `gaza` — active daily public/free dispatch.
+- `food-line` — active food-pressure monitor/dispatch workflow.
+- `care-line` — active national healthcare-access monitor/dispatch workflow.
+- `ice` — active monitor/staging workflow.
+- `american-pressure` — weekly pressure workflow with reviewed public output.
+- `cascadia` — intentionally inactive; historical archive only unless explicitly reactivated.
 
-Current generated edition dates:
-
-- `gaza`: `2026-05-19`
-- `american-pressure`: `2026-05-19`
-- `cascadia`: `2026-05-10`
+Do not hard-code a "current generated edition date" in this document. Currentness comes from protected-branch runtime receipts, exported operational status, and public publication evidence.
 
 Safety defaults:
 
@@ -45,7 +44,7 @@ git status
 git push origin gh-pages
 ```
 
-GitHub Pages and DNS must be configured separately. Do not force-push. The source project branch (`master` or `main`) is separate from the Pages repo deploy branch; the public site deploys from `gh-pages`, and the local Pages repo should be checked and committed on `gh-pages` before publishing.
+GitHub Pages and DNS must be configured separately. Do not force-push. The protected source branch is `add/pages-repo-default` and is separate from the Pages deploy branch. The public site deploys from `gh-pages`; Pages preparation and public push remain separate guarded actions.
 
 ## Gaza Historical Generation
 

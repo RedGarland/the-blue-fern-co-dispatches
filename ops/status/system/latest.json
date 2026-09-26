@@ -28,15 +28,48 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "FAILED",
+      "aggregate_status": "DEGRADED",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "26aadaebf61d83a442fb6900c74274b2f438bb07",
+      "current_runner_head": "84723d45e7ee2dbd7762db7e422ddb4b8261aff7",
       "latest_runtime_proof_date": "2026-09-26T15:30:06Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-26",
       "receipt_completeness": "COMPLETE",
-      "recovery_lifecycle": "INCIDENT_OPEN",
+      "recovery_lifecycle": "HEALTHY",
       "scheduled_health_available": true,
+      "source_failure_summary": {
+        "all_current_failures_external": true,
+        "external_access_restriction_count": 4,
+        "external_restriction_sources": [
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "hhs-news"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "hrsa-news"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "fierce-healthcare"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "mayo-clinic-news"
+          }
+        ],
+        "failed_source_count": 4,
+        "successful_attempt_count": 31,
+        "unclassified_source_failure_count": 0
+      },
       "stale_observability": false
     },
     "cascadia": {
@@ -71,7 +104,7 @@
       },
       "aggregate_status": "DEGRADED",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "26aadaebf61d83a442fb6900c74274b2f438bb07",
+      "current_runner_head": "84723d45e7ee2dbd7762db7e422ddb4b8261aff7",
       "migration_status": "MIGRATED",
       "recovery_lifecycle": "HEALTHY"
     },
@@ -89,7 +122,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "26aadaebf61d83a442fb6900c74274b2f438bb07",
+      "current_runner_head": "84723d45e7ee2dbd7762db7e422ddb4b8261aff7",
       "latest_runtime_proof_date": "2026-09-26T16:18:04.665528Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-26",
@@ -112,7 +145,7 @@
       },
       "aggregate_status": "DEGRADED",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "26aadaebf61d83a442fb6900c74274b2f438bb07",
+      "current_runner_head": "84723d45e7ee2dbd7762db7e422ddb4b8261aff7",
       "latest_runtime_proof_date": null,
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-26",
@@ -122,8 +155,8 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-09-26T17:31:46.321631Z",
+  "exported_at": "2026-09-26T18:34:02.496411Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
-  "system_status": "FAILED"
+  "system_status": "DEGRADED"
 }

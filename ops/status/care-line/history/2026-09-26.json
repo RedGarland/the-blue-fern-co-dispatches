@@ -10,9 +10,9 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "FAILED",
+  "aggregate_status": "DEGRADED",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "26aadaebf61d83a442fb6900c74274b2f438bb07",
+  "current_runner_head": "84723d45e7ee2dbd7762db7e422ddb4b8261aff7",
   "dispatch": "care-line",
   "expected_instances": [
     {
@@ -46,7 +46,7 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-09-26T17:31:46.321631Z",
+  "last_exported_at": "2026-09-26T18:34:02.496411Z",
   "last_receipt_at": "2026-09-26T17:31:31.376346Z",
   "latest_runtime_proof_date": "2026-09-26T15:30:06Z",
   "migration_status": "MIGRATED",
@@ -59,7 +59,7 @@
   "publication_attempted": false,
   "publication_status": "safe_no_op",
   "receipt_completeness": "COMPLETE",
-  "recovery_lifecycle": "INCIDENT_OPEN",
+  "recovery_lifecycle": "HEALTHY",
   "runner_source_head": null,
   "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
@@ -68,6 +68,39 @@
     "care_line_approved_release_publication"
   ],
   "schema_version": "bluefern_external_operational_status_v1",
+  "source_failure_summary": {
+    "all_current_failures_external": true,
+    "external_access_restriction_count": 4,
+    "external_restriction_sources": [
+      {
+        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "coverage_reduced": true,
+        "remediation_available": false,
+        "source_id": "hhs-news"
+      },
+      {
+        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "coverage_reduced": true,
+        "remediation_available": false,
+        "source_id": "hrsa-news"
+      },
+      {
+        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "coverage_reduced": true,
+        "remediation_available": false,
+        "source_id": "fierce-healthcare"
+      },
+      {
+        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "coverage_reduced": true,
+        "remediation_available": false,
+        "source_id": "mayo-clinic-news"
+      }
+    ],
+    "failed_source_count": 4,
+    "successful_attempt_count": 31,
+    "unclassified_source_failure_count": 0
+  },
   "stale_observability": false,
   "task_summaries": [
     {
@@ -116,7 +149,10 @@
         "failed_sources": [
           {
             "adapter_type": "structured_index",
+            "coverage_reduced": true,
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "URLError",
+            "remediation_available": false,
             "source_id": "hhs-news",
             "source_name": "U.S. Department of Health and Human Services News",
             "transient": true
@@ -137,7 +173,10 @@
           },
           {
             "adapter_type": "structured_index",
+            "coverage_reduced": true,
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "URLError",
+            "remediation_available": false,
             "source_id": "hrsa-news",
             "source_name": "Health Resources and Services Administration News",
             "transient": true
@@ -172,7 +211,10 @@
           },
           {
             "adapter_type": "rss",
+            "coverage_reduced": true,
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "URLError",
+            "remediation_available": false,
             "source_id": "fierce-healthcare",
             "source_name": "Fierce Healthcare",
             "transient": true
@@ -335,21 +377,30 @@
         "failed_sources": [
           {
             "adapter_type": "structured_index",
+            "coverage_reduced": true,
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
+            "remediation_available": false,
             "source_id": "hhs-news",
             "source_name": "U.S. Department of Health and Human Services News",
             "transient": false
           },
           {
             "adapter_type": "structured_index",
+            "coverage_reduced": true,
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
+            "remediation_available": false,
             "source_id": "hrsa-news",
             "source_name": "Health Resources and Services Administration News",
             "transient": false
           },
           {
             "adapter_type": "rss",
+            "coverage_reduced": true,
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
+            "remediation_available": false,
             "source_id": "fierce-healthcare",
             "source_name": "Fierce Healthcare",
             "transient": false
@@ -391,7 +442,10 @@
           },
           {
             "adapter_type": "rss",
+            "coverage_reduced": true,
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
+            "remediation_available": false,
             "source_id": "mayo-clinic-news",
             "source_name": "Mayo Clinic News Network",
             "transient": false
@@ -442,28 +496,40 @@
         "failed_sources": [
           {
             "adapter_type": "structured_index",
+            "coverage_reduced": true,
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
+            "remediation_available": false,
             "source_id": "hhs-news",
             "source_name": "U.S. Department of Health and Human Services News",
             "transient": false
           },
           {
             "adapter_type": "structured_index",
+            "coverage_reduced": true,
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
+            "remediation_available": false,
             "source_id": "hrsa-news",
             "source_name": "Health Resources and Services Administration News",
             "transient": false
           },
           {
             "adapter_type": "rss",
+            "coverage_reduced": true,
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
+            "remediation_available": false,
             "source_id": "fierce-healthcare",
             "source_name": "Fierce Healthcare",
             "transient": false
           },
           {
             "adapter_type": "rss",
+            "coverage_reduced": true,
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
+            "remediation_available": false,
             "source_id": "mayo-clinic-news",
             "source_name": "Mayo Clinic News Network",
             "transient": false

@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-stability-proof-20260926T023830Z-r1",
+  "scheduled_for": "2026-09-25T19:37:05-07:00",
+  "started_at": "2026-09-25T19:38:30-07:00",
+  "completed_at": "2026-09-25T19:40:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-25",
+    "date_to": "2026-09-25",
+    "edition_date": "2026-09-25"
+  },
+  "findings": [],
+  "coverage_notes": "Isolated bounded stability proof. Eight targeted fresh-web searches covered: sole/last/full-service grocery loss, disaster-related food-distribution cancellation, abrupt pantry/food-bank service reduction, and immediate SNAP/WIC interruption. No new qualifying U.S. food-access disruption was verified in the observation window. Returned candidates were older events, general policy/background items, or otherwise outside the bounded freshness/qualification criteria. No editorial approval or publication action was taken."
+}

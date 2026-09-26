@@ -43,18 +43,14 @@ def test_cascadia_notify_script_exists():
     assert (ROOT / "scripts" / "run_cascadia_and_notify.py").is_file()
 
 
-def test_cascadia_schedule_docs_use_clean_runtime_fields_without_push():
+def test_cascadia_schedule_docs_keep_production_inactive():
     text = _read(ROOT / "docs" / "dispatches-project.md")
-    section = text.split("Task Scheduler setup for Cascadia, historical/reference only:", 1)[1].split("Stage outputs:", 1)[0]
+    section = text.split("Weekly jobs:", 1)[1].split("Stage outputs:", 1)[0]
 
     assert OLD_ADMIN_ROOT not in section
     assert OLD_ONEDRIVE_ROOT not in section
-    assert "Program/script: `powershell.exe`" in section
-    assert f"Start in: `{PROJECT_ROOT}`" in section
-    assert "Trigger: disabled; do not register or enable without explicit operator authorization." in section
-    assert f"Set-Location '{PROJECT_ROOT}'" in section
-    assert r"& '.\.venv\Scripts\python.exe' 'scripts\run_cascadia_and_notify.py'" in section
-    assert "CASCADIA_ALLOW_CURL_NO_REVOKE='1'" in section
-    assert "CASCADIA_FETCH_BACKEND='auto'" in section
-    assert "SMTP_RELAX_X509_STRICT='1'" in section
+    assert "No Cascadia weekly public briefing; Cascadia is intentionally inactive." in section
+    assert "Do not register, enable, reprovision, or execute a Cascadia production task" in section
+    assert "Program/script:" not in section
+    assert "Set-Location" not in section
     assert "--push" not in section

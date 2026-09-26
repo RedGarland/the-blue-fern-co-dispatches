@@ -8,7 +8,7 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from datetime import date
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
 from bluefern_dispatches.public_prose import html_contains_public_prose_violations, summarize_violations
 
@@ -253,7 +253,8 @@ def check_scheduled_tasks_use_project_venv(root: Path) -> CheckResult:
             if disabled_triggers:
                 problems.append(f"{rel} active scheduler template has a trigger Enabled value that is not true")
         expected_root = spec.expected_working_directory or str(root)
-        expected_venv = str(Path(expected_root) / ".venv" / "Scripts" / "python.exe")
+        root_path = PureWindowsPath(expected_root) if re.match(r"^[A-Za-z]:\\", expected_root) else Path(expected_root)
+        expected_venv = str(root_path / ".venv" / "Scripts" / "python.exe")
         working_directory = str(values["working_directory"])
         if not _path_equal(working_directory, expected_root):
             problems.append(f"{rel} does not set expected working directory {expected_root}")

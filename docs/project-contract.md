@@ -22,94 +22,11 @@ These are the current non-negotiable operating rules for this project.
 
 ## Codex Safe Execution Scope
 
-Mechanical source merge authority is distinct from editorial, publication, Pages, and release authority. Codex may prepare and merge a bounded routine source PR after proving the current-base, exact-head, scope, mergeability, and required-check conditions below. Codex is never permitted to infer or create human decision authority from that mechanical merge.
+Repository-wide Codex / implementation-agent authority is defined by `AGENTS.md`. This document does not independently expand or narrow that authority.
 
-Codex may:
+For the reusable mechanical PR procedure, use `docs/workflows/codex_pr_workflow.md`. Routine source-repository engineering may proceed through the bounded workflow permitted by `AGENTS.md`; public publication, Pages/public release, editorial decisions, credentials/security changes, destructive operations, and other explicit human authority boundaries remain separately controlled.
 
-- create a feature branch from the approved base branch
-- stage only explicitly named source, config, test, or documentation files
-- run `git diff --cached --stat`
-- run `git diff --cached --check`
-- run `git diff --cached --name-only`
-- verify the staged file list matches the intended files only
-- commit with a scoped commit message
-- push the feature branch
-- create a PR against the approved base branch
-- run or watch PR checks
-- open the PR in the browser with `gh pr view --web`
-- classify the PR as `CODEX_AUTO_MERGE_ELIGIBLE` or `HUMAN_MERGE_REQUIRED`
-- merge a `CODEX_AUTO_MERGE_ELIGIBLE` PR with exact-head protection only after synchronizing it with the current protected base, recording the exact PR head, and proving all required checks succeeded on that head
-- after any merge, fetch the protected branch, prove the reviewed PR head is contained in the protected result, and verify source and Pages status
-- delete local and remote feature branches only after merge confirmation
-
-Codex must not:
-
-- publish a public edition
-- sync, commit, or push the Pages repo
-- post to Bluesky or other social platforms
-- create or replace podcast, audio, or other public publication artifacts for release
-- decide that a candidate is source-backed enough for public publication
-- relax source eligibility gates
-- alter editorial standards
-- commit generated public output unless explicitly instructed
-- use `git add .`
-- delete broad generated folders without explicit instruction
-
-`HUMAN_MERGE_REQUIRED` applies when the PR itself:
-
-- introduces or changes `approvals/**` or other editorial, approval, publication, release, correction, or withdrawal authority
-- records a substantive human editorial decision or publication-state/story-memory release handoff
-- commits or pushes Pages/public generated release content as a release action
-- changes branch protection, repository rulesets, credentials, secrets, destructive-operation authority, or consequential external-egress policy
-- expands or materially changes Codex/AI authority or any repository governance boundary
-- exceeds the task's existing authorization or has an unresolved review issue or blocker
-
-Codex must never use routine merge permission to merge a change that expands its own permissions. Publication remains a separately authorized boundary: a successful source PR merge does not authorize Pages sync, public release, audio, social posting, editorial approval, candidate approval, or source-gate relaxation.
-
-Codex may do the following only with explicit instruction:
-
-- run discovery or backfill jobs that create candidate or review artifacts
-- clean specific generated artifacts
-- run dry-run publish validation
-- update discovery or source configuration
-- create commits and PRs
-- delete feature branches after merge confirmation
-
-Required staging rule before every commit:
-
-- run `git diff --cached --stat`
-- run `git diff --cached --check`
-- run `git diff --cached --name-only`
-- verify the staged file list contains only the intended files
-- if unrelated files are staged, stop and unstage them before committing
-
-Default safe PR command pattern:
-
-```powershell
-git switch -c feature/<scoped-branch-name>
-
-git add `
-  <explicit-file-1> `
-  <explicit-file-2> `
-  <explicit-file-3>
-
-git diff --cached --stat
-git diff --cached --check
-git diff --cached --name-only
-
-git commit -m "<scoped commit message>"
-git push -u origin feature/<scoped-branch-name>
-
-gh pr create `
-  --base add/pages-repo-default `
-  --head feature/<scoped-branch-name> `
-  --title "<PR title>" `
-  --body "<PR body with validation results and no publish/no Pages sync statement>"
-
-gh pr checks --watch
-gh pr view --web
-```
-
+The autonomous Blue Fern Operator is governed independently by `ops/operator/remediation-policy.yaml`; Codex routine PR authority must not be inferred as Operator merge or publication authority.
 ## American Pressure Operating Model
 
 1. Public cadence:

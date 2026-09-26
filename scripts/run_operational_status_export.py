@@ -27,7 +27,7 @@ from bluefern_dispatches.operational_status_exporter import (  # noqa: E402
 
 DEFAULT_SOURCE_ROOT = Path(r"C:\BlueFernRunner\FoodLineCurrent6")
 DEFAULT_STATUS_CHECKOUT = Path(r"C:\BlueFernRunner\OperationalStatusCurrent")
-DEFAULT_BRANCH = "ops/status/food-line-2026-09-10"
+DEFAULT_BRANCH = "ops/status/current"
 LOG_ROOT = Path("logs/operational-status-exporter")
 CARE_SCHEDULED_TASKS: tuple[tuple[str, str], ...] = (
     ("care_line_collection", r"\Blue Fern Co.\Blue Fern Care Line National Collection"),

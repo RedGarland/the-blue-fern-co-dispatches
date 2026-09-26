@@ -59,8 +59,8 @@
 - [ ] AI reviewer used
 - [ ] AI review findings summarized
 - [ ] AI-suggested changes were committed intentionally
-- [ ] No AI-suggested publish/sync action was taken without explicit approval
-- [ ] Human release approval still required
+- [ ] No AI-suggested Pages/publication sync action was taken without explicit approval
+- [ ] Human release/publication approval remains required where `AGENTS.md` and project contracts require it
 
 ## Dirty Worktree Check
 

@@ -166,6 +166,30 @@ tiers:
       region_scope: Gaza
       source_group: major_ground_development
       discovery_role: strong_ground_development
+    - source_id: ocha-gaza-health-access-query
+      name: OCHA Gaza Health Access Query
+      query: site:ochaopt.org Gaza (hospital OR ambulance OR health) (fuel OR access OR transport OR evacuation OR shortage OR disruption)
+      type: google_news_rss
+      enabled: true
+      source_state: enabled
+      publisher: OCHA
+      reliability_tier: official-humanitarian-source
+      category_hint: medical_evacuation_health_system
+      region_scope: Gaza
+      source_group: institutional
+      discovery_role: strong_ground_development
+    - source_id: who-gaza-health-capacity-query
+      name: WHO Gaza Health Capacity Query
+      query: site:who.int Gaza (hospital OR health system OR ambulance) (functioning OR fuel OR shortage OR access OR evacuation OR disruption)
+      type: google_news_rss
+      enabled: true
+      source_state: enabled
+      publisher: WHO
+      reliability_tier: official-humanitarian-source
+      category_hint: medical_evacuation_health_system
+      region_scope: Gaza
+      source_group: institutional
+      discovery_role: strong_ground_development
     - source_id: who-gaza-evacuation-query
       name: WHO Gaza Evacuation Query
       query: site:who.int Gaza patients evacuated children companions medical evacuation

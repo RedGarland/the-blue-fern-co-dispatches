@@ -11,7 +11,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "federal_agency",
-      "care_line_topics": ["health center", "hospital", "behavioral health", "access"],
+      "care_line_topics": [
+        "health center",
+        "hospital",
+        "behavioral health",
+        "access"
+      ],
       "authority_level": "primary",
       "expected_update_frequency": "weekly",
       "enabled": true,
@@ -22,7 +27,10 @@
       "notes": "Federal health access announcements; direct RSS feed.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["hhs.gov", "www.hhs.gov"]
+      "allowed_hosts": [
+        "hhs.gov",
+        "www.hhs.gov"
+      ]
     },
     {
       "source_id": "cms-newsroom",
@@ -34,7 +42,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "federal_agency",
-      "care_line_topics": ["Medicaid", "hospital", "health center", "access"],
+      "care_line_topics": [
+        "Medicaid",
+        "hospital",
+        "health center",
+        "access"
+      ],
       "authority_level": "primary",
       "expected_update_frequency": "weekly",
       "enabled": true,
@@ -45,7 +58,47 @@
       "notes": "CMS announcements that may affect provider access and coverage.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["cms.gov", "www.cms.gov"]
+      "allowed_hosts": [
+        "cms.gov",
+        "www.cms.gov"
+      ]
+    },
+    {
+      "source_id": "cms-public-notices",
+      "name": "CMS Public Notices",
+      "publisher": "Centers for Medicare & Medicaid Services",
+      "source_type": "federal_source",
+      "feed_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "homepage_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+      "state": "",
+      "geographic_scope": "national",
+      "organization_type": "federal_agency",
+      "care_line_topics": [
+        "Medicare termination",
+        "provider termination",
+        "CLIA limitation",
+        "CLIA suspension",
+        "nursing home",
+        "hospital",
+        "home health",
+        "hospice",
+        "dialysis",
+        "rural health clinic"
+      ],
+      "authority_level": "primary",
+      "expected_update_frequency": "daily",
+      "enabled": true,
+      "adapter_type": "structured_index",
+      "requires_html_followup": true,
+      "source_role": "federal_provider_access_enforcement_source",
+      "historical_depth": "14 months",
+      "notes": "Primary CMS legal-notice surface for Medicare provider terminations and CLIA limitations/suspensions; reviewed as access-risk candidates, never auto-approved.",
+      "created_at": "2026-09-25T00:00:00Z",
+      "updated_at": "2026-09-25T00:00:00Z",
+      "allowed_hosts": [
+        "cms.gov",
+        "www.cms.gov"
+      ]
     },
     {
       "source_id": "hrsa-news",
@@ -57,7 +110,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "federal_agency",
-      "care_line_topics": ["health center", "clinic", "rural health", "access"],
+      "care_line_topics": [
+        "health center",
+        "clinic",
+        "rural health",
+        "access"
+      ],
       "authority_level": "primary",
       "expected_update_frequency": "monthly",
       "enabled": true,
@@ -68,7 +126,10 @@
       "notes": "Federal source for health center and workforce announcements.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["hrsa.gov", "www.hrsa.gov"]
+      "allowed_hosts": [
+        "hrsa.gov",
+        "www.hrsa.gov"
+      ]
     },
     {
       "source_id": "samhsa-newsroom",
@@ -80,7 +141,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "federal_agency",
-      "care_line_topics": ["behavioral health", "psychiatric", "clinic", "access"],
+      "care_line_topics": [
+        "behavioral health",
+        "psychiatric",
+        "clinic",
+        "access"
+      ],
       "authority_level": "primary",
       "expected_update_frequency": "monthly",
       "enabled": true,
@@ -91,7 +157,10 @@
       "notes": "Federal behavioral-health source relevant to service access.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["samhsa.gov", "www.samhsa.gov"]
+      "allowed_hosts": [
+        "samhsa.gov",
+        "www.samhsa.gov"
+      ]
     },
     {
       "source_id": "cdc-newsroom",
@@ -103,7 +172,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "federal_agency",
-      "care_line_topics": ["hospital", "clinic", "public health", "access"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "public health",
+        "access"
+      ],
       "authority_level": "primary",
       "expected_update_frequency": "weekly",
       "enabled": true,
@@ -114,7 +188,11 @@
       "notes": "Federal public-health source; included for access-impacting notices.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["cdc.gov", "www.cdc.gov", "tools.cdc.gov"]
+      "allowed_hosts": [
+        "cdc.gov",
+        "www.cdc.gov",
+        "tools.cdc.gov"
+      ]
     },
     {
       "source_id": "kff-health-news",
@@ -126,7 +204,13 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "nonprofit_newsroom",
-      "care_line_topics": ["hospital", "clinic", "Medicaid", "nursing home", "rural health"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "Medicaid",
+        "nursing home",
+        "rural health"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -137,7 +221,9 @@
       "notes": "National healthcare-access reporting with direct article URLs.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["kffhealthnews.org"]
+      "allowed_hosts": [
+        "kffhealthnews.org"
+      ]
     },
     {
       "source_id": "healthcare-dive",
@@ -149,7 +235,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "trade_publication",
-      "care_line_topics": ["hospital", "health system", "clinic", "Medicaid"],
+      "care_line_topics": [
+        "hospital",
+        "health system",
+        "clinic",
+        "Medicaid"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -160,7 +251,10 @@
       "notes": "Healthcare industry reporting with feed article URLs.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["healthcaredive.com", "www.healthcaredive.com"]
+      "allowed_hosts": [
+        "healthcaredive.com",
+        "www.healthcaredive.com"
+      ]
     },
     {
       "source_id": "fierce-healthcare",
@@ -172,7 +266,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "trade_publication",
-      "care_line_topics": ["hospital", "clinic", "health system", "Medicaid"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "health system",
+        "Medicaid"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -183,7 +282,10 @@
       "notes": "Healthcare industry reporting with direct RSS.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["fiercehealthcare.com", "www.fiercehealthcare.com"]
+      "allowed_hosts": [
+        "fiercehealthcare.com",
+        "www.fiercehealthcare.com"
+      ]
     },
     {
       "source_id": "medcity-news",
@@ -195,7 +297,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "trade_publication",
-      "care_line_topics": ["hospital", "health system", "clinic", "care access"],
+      "care_line_topics": [
+        "hospital",
+        "health system",
+        "clinic",
+        "care access"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -206,7 +313,9 @@
       "notes": "Healthcare sector reporting.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["medcitynews.com"]
+      "allowed_hosts": [
+        "medcitynews.com"
+      ]
     },
     {
       "source_id": "npr-health",
@@ -218,7 +327,13 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "public_radio",
-      "care_line_topics": ["hospital", "clinic", "Medicaid", "pharmacy", "access"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "Medicaid",
+        "pharmacy",
+        "access"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -229,7 +344,10 @@
       "notes": "National public radio health coverage.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["npr.org", "www.npr.org"]
+      "allowed_hosts": [
+        "npr.org",
+        "www.npr.org"
+      ]
     },
     {
       "source_id": "nc-health-news",
@@ -241,7 +359,13 @@
       "state": "NC",
       "geographic_scope": "state",
       "organization_type": "nonprofit_newsroom",
-      "care_line_topics": ["hospital", "clinic", "rural health", "Medicaid", "behavioral health"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "rural health",
+        "Medicaid",
+        "behavioral health"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -252,7 +376,10 @@
       "notes": "State-focused healthcare access reporting.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["northcarolinahealthnews.org", "www.northcarolinahealthnews.org"]
+      "allowed_hosts": [
+        "northcarolinahealthnews.org",
+        "www.northcarolinahealthnews.org"
+      ]
     },
     {
       "source_id": "calmatters-health",
@@ -264,7 +391,12 @@
       "state": "CA",
       "geographic_scope": "state",
       "organization_type": "nonprofit_newsroom",
-      "care_line_topics": ["hospital", "clinic", "Medicaid", "health access"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "Medicaid",
+        "health access"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -275,7 +407,9 @@
       "notes": "California health policy and access reporting.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["calmatters.org"]
+      "allowed_hosts": [
+        "calmatters.org"
+      ]
     },
     {
       "source_id": "ct-mirror-health",
@@ -287,7 +421,12 @@
       "state": "CT",
       "geographic_scope": "state",
       "organization_type": "nonprofit_newsroom",
-      "care_line_topics": ["hospital", "clinic", "Medicaid", "health access"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "Medicaid",
+        "health access"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -298,7 +437,9 @@
       "notes": "Connecticut health coverage.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["ctmirror.org"]
+      "allowed_hosts": [
+        "ctmirror.org"
+      ]
     },
     {
       "source_id": "virginia-mercury-health",
@@ -310,7 +451,12 @@
       "state": "VA",
       "geographic_scope": "state",
       "organization_type": "nonprofit_newsroom",
-      "care_line_topics": ["hospital", "clinic", "health access", "Medicaid"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "health access",
+        "Medicaid"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -321,7 +467,10 @@
       "notes": "Virginia state health policy and provider-access coverage.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["virginiamercury.com", "www.virginiamercury.com"]
+      "allowed_hosts": [
+        "virginiamercury.com",
+        "www.virginiamercury.com"
+      ]
     },
     {
       "source_id": "ohio-capital-journal-health",
@@ -333,7 +482,12 @@
       "state": "OH",
       "geographic_scope": "state",
       "organization_type": "nonprofit_newsroom",
-      "care_line_topics": ["hospital", "clinic", "health access", "Medicaid"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "health access",
+        "Medicaid"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -344,7 +498,9 @@
       "notes": "Ohio health policy coverage.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["ohiocapitaljournal.com"]
+      "allowed_hosts": [
+        "ohiocapitaljournal.com"
+      ]
     },
     {
       "source_id": "missouri-independent-health",
@@ -356,7 +512,12 @@
       "state": "MO",
       "geographic_scope": "state",
       "organization_type": "nonprofit_newsroom",
-      "care_line_topics": ["hospital", "clinic", "health access", "Medicaid"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "health access",
+        "Medicaid"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -367,7 +528,9 @@
       "notes": "Missouri health coverage.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["missouriindependent.com"]
+      "allowed_hosts": [
+        "missouriindependent.com"
+      ]
     },
     {
       "source_id": "florida-phoenix-health",
@@ -379,7 +542,12 @@
       "state": "FL",
       "geographic_scope": "state",
       "organization_type": "nonprofit_newsroom",
-      "care_line_topics": ["hospital", "clinic", "Medicaid", "health access"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "Medicaid",
+        "health access"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -390,7 +558,9 @@
       "notes": "Florida health policy coverage.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["floridaphoenix.com"]
+      "allowed_hosts": [
+        "floridaphoenix.com"
+      ]
     },
     {
       "source_id": "texas-tribune-health",
@@ -402,7 +572,12 @@
       "state": "TX",
       "geographic_scope": "state",
       "organization_type": "nonprofit_newsroom",
-      "care_line_topics": ["hospital", "clinic", "Medicaid", "health access"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "Medicaid",
+        "health access"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "weekly",
       "enabled": true,
@@ -413,7 +588,10 @@
       "notes": "Texas health coverage.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["texastribune.org", "www.texastribune.org"]
+      "allowed_hosts": [
+        "texastribune.org",
+        "www.texastribune.org"
+      ]
     },
     {
       "source_id": "penn-capital-star-health",
@@ -425,7 +603,12 @@
       "state": "PA",
       "geographic_scope": "state",
       "organization_type": "nonprofit_newsroom",
-      "care_line_topics": ["hospital", "clinic", "Medicaid", "health access"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "Medicaid",
+        "health access"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -436,7 +619,9 @@
       "notes": "Pennsylvania health policy coverage.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["penncapital-star.com"]
+      "allowed_hosts": [
+        "penncapital-star.com"
+      ]
     },
     {
       "source_id": "michigan-advance-health",
@@ -448,7 +633,12 @@
       "state": "MI",
       "geographic_scope": "state",
       "organization_type": "nonprofit_newsroom",
-      "care_line_topics": ["hospital", "clinic", "Medicaid", "health access"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "Medicaid",
+        "health access"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -459,7 +649,9 @@
       "notes": "Michigan health policy coverage.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["michiganadvance.com"]
+      "allowed_hosts": [
+        "michiganadvance.com"
+      ]
     },
     {
       "source_id": "kaiser-permanente-news",
@@ -471,7 +663,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "health_system",
-      "care_line_topics": ["hospital", "clinic", "health access", "care delivery"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "health access",
+        "care delivery"
+      ],
       "authority_level": "primary",
       "expected_update_frequency": "weekly",
       "enabled": true,
@@ -482,7 +679,9 @@
       "notes": "Health-system newsroom feed.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["about.kaiserpermanente.org"]
+      "allowed_hosts": [
+        "about.kaiserpermanente.org"
+      ]
     },
     {
       "source_id": "mayo-clinic-news",
@@ -494,7 +693,12 @@
       "state": "MN",
       "geographic_scope": "national",
       "organization_type": "health_system",
-      "care_line_topics": ["hospital", "clinic", "care delivery", "patient access"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "care delivery",
+        "patient access"
+      ],
       "authority_level": "primary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -505,7 +709,9 @@
       "notes": "Health-system newsroom feed.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["newsnetwork.mayoclinic.org"]
+      "allowed_hosts": [
+        "newsnetwork.mayoclinic.org"
+      ]
     },
     {
       "source_id": "cleveland-clinic-newsroom",
@@ -517,7 +723,12 @@
       "state": "OH",
       "geographic_scope": "regional",
       "organization_type": "health_system",
-      "care_line_topics": ["hospital", "clinic", "care delivery", "patient access"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "care delivery",
+        "patient access"
+      ],
       "authority_level": "primary",
       "expected_update_frequency": "weekly",
       "enabled": true,
@@ -528,7 +739,9 @@
       "notes": "Health-system newsroom feed.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["newsroom.clevelandclinic.org"]
+      "allowed_hosts": [
+        "newsroom.clevelandclinic.org"
+      ]
     },
     {
       "source_id": "aha-news",
@@ -540,7 +753,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "hospital_association",
-      "care_line_topics": ["hospital", "rural health", "Medicaid", "emergency department"],
+      "care_line_topics": [
+        "hospital",
+        "rural health",
+        "Medicaid",
+        "emergency department"
+      ],
       "authority_level": "sector",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -551,7 +769,10 @@
       "notes": "Hospital association news page treated as a structured HTML index.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["aha.org", "www.aha.org"]
+      "allowed_hosts": [
+        "aha.org",
+        "www.aha.org"
+      ]
     },
     {
       "source_id": "nachc-news",
@@ -563,7 +784,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "community_health_center_association",
-      "care_line_topics": ["health center", "clinic", "Medicaid", "patient access"],
+      "care_line_topics": [
+        "health center",
+        "clinic",
+        "Medicaid",
+        "patient access"
+      ],
       "authority_level": "sector",
       "expected_update_frequency": "weekly",
       "enabled": true,
@@ -574,7 +800,10 @@
       "notes": "Community health center association source.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["nachc.org", "www.nachc.org"]
+      "allowed_hosts": [
+        "nachc.org",
+        "www.nachc.org"
+      ]
     },
     {
       "source_id": "stat-health",
@@ -586,7 +815,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "trade_publication",
-      "care_line_topics": ["hospital", "clinic", "health insurance", "Medicaid"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "health insurance",
+        "Medicaid"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -597,7 +831,10 @@
       "notes": "STAT health feed with direct article URLs.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["statnews.com", "www.statnews.com"]
+      "allowed_hosts": [
+        "statnews.com",
+        "www.statnews.com"
+      ]
     },
     {
       "source_id": "acp-news",
@@ -609,7 +846,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "healthcare_organization",
-      "care_line_topics": ["hospital", "clinic", "health policy", "Medicaid"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "health policy",
+        "Medicaid"
+      ],
       "authority_level": "sector",
       "expected_update_frequency": "weekly",
       "enabled": true,
@@ -620,7 +862,10 @@
       "notes": "ACP news feed for health-policy and access items.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["acponline.org", "www.acponline.org"]
+      "allowed_hosts": [
+        "acponline.org",
+        "www.acponline.org"
+      ]
     },
     {
       "source_id": "beckers-hospital-review",
@@ -632,7 +877,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "trade_publication",
-      "care_line_topics": ["hospital", "health system", "Medicaid", "care access"],
+      "care_line_topics": [
+        "hospital",
+        "health system",
+        "Medicaid",
+        "care access"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -643,7 +893,10 @@
       "notes": "Becker's Hospital Review RSS feed.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["beckershospitalreview.com", "www.beckershospitalreview.com"]
+      "allowed_hosts": [
+        "beckershospitalreview.com",
+        "www.beckershospitalreview.com"
+      ]
     },
     {
       "source_id": "beckers-behavioral",
@@ -655,7 +908,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "trade_publication",
-      "care_line_topics": ["behavioral health", "clinic", "mental health", "access"],
+      "care_line_topics": [
+        "behavioral health",
+        "clinic",
+        "mental health",
+        "access"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -666,7 +924,10 @@
       "notes": "Becker's Behavioral Health RSS feed.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["beckersbehavioralhealth.com", "www.beckersbehavioralhealth.com"]
+      "allowed_hosts": [
+        "beckersbehavioralhealth.com",
+        "www.beckersbehavioralhealth.com"
+      ]
     },
     {
       "source_id": "beckers-dental",
@@ -678,7 +939,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "trade_publication",
-      "care_line_topics": ["hospital", "clinic", "care access", "patient access"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "care access",
+        "patient access"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -689,7 +955,10 @@
       "notes": "Becker's Dental Review RSS feed.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["beckersdental.com", "www.beckersdental.com"]
+      "allowed_hosts": [
+        "beckersdental.com",
+        "www.beckersdental.com"
+      ]
     },
     {
       "source_id": "beckers-asc",
@@ -701,7 +970,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "trade_publication",
-      "care_line_topics": ["ambulatory surgery", "clinic", "hospital", "access"],
+      "care_line_topics": [
+        "ambulatory surgery",
+        "clinic",
+        "hospital",
+        "access"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -712,7 +986,10 @@
       "notes": "Becker's ASC Review RSS feed.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["beckersasc.com", "www.beckersasc.com"]
+      "allowed_hosts": [
+        "beckersasc.com",
+        "www.beckersasc.com"
+      ]
     },
     {
       "source_id": "beckers-spine",
@@ -724,7 +1001,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "trade_publication",
-      "care_line_topics": ["hospital", "clinic", "care access", "orthopedics"],
+      "care_line_topics": [
+        "hospital",
+        "clinic",
+        "care access",
+        "orthopedics"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -735,7 +1017,10 @@
       "notes": "Becker's Spine Review RSS feed.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["beckersspine.com", "www.beckersspine.com"]
+      "allowed_hosts": [
+        "beckersspine.com",
+        "www.beckersspine.com"
+      ]
     },
     {
       "source_id": "beckers-payer",
@@ -747,7 +1032,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "trade_publication",
-      "care_line_topics": ["Medicaid", "health insurance", "hospital", "access"],
+      "care_line_topics": [
+        "Medicaid",
+        "health insurance",
+        "hospital",
+        "access"
+      ],
       "authority_level": "secondary",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -758,7 +1048,10 @@
       "notes": "Becker's Payer Issues RSS feed.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["beckerspayer.com", "www.beckerspayer.com"]
+      "allowed_hosts": [
+        "beckerspayer.com",
+        "www.beckerspayer.com"
+      ]
     },
     {
       "source_id": "rural-health-info-hub",
@@ -770,7 +1063,12 @@
       "state": "",
       "geographic_scope": "national",
       "organization_type": "rural_health_resource",
-      "care_line_topics": ["rural health", "hospital", "clinic", "access"],
+      "care_line_topics": [
+        "rural health",
+        "hospital",
+        "clinic",
+        "access"
+      ],
       "authority_level": "sector",
       "expected_update_frequency": "daily",
       "enabled": true,
@@ -781,7 +1079,10 @@
       "notes": "Rural-health feed with direct news URLs.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["ruralhealthinfo.org", "www.ruralhealthinfo.org"]
+      "allowed_hosts": [
+        "ruralhealthinfo.org",
+        "www.ruralhealthinfo.org"
+      ]
     }
   ]
 }

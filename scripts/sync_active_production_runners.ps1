@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
     [switch]$Apply,
+    [switch]$ProveStatusExport,
     [string]$TargetBranch = "add/pages-repo-default",
     [string]$ExpectedProtectedHead = "",
     [string]$ReportPath = ""
@@ -185,6 +186,10 @@ function Get-StatusExporterTaskEvidence {
     }
 }
 
+if ($ProveStatusExport -and -not $Apply) {
+    throw "-ProveStatusExport requires -Apply because proof must run against the synchronized production checkouts."
+}
+
 $startedAt = (Get-Date).ToUniversalTime().ToString("o")
 $results = @()
 $targetHeads = @()
@@ -341,6 +346,82 @@ if ($Apply -and $targetHeadConsistent -and $frozenTargetHead) {
     }
 }
 
+$statusExportProof = [ordered]@{
+    Requested = [bool]$ProveStatusExport
+    Attempted = $false
+    Passed = $false
+    ExitCode = $null
+    StatusCheckout = "C:\BlueFernRunner\OperationalStatusCurrent"
+    SystemStatusPath = "ops/status/system/latest.json"
+    GazaStatusPath = "ops/status/gaza/latest.json"
+    Error = $null
+    Dispatches = @{}
+}
+
+if ($Apply -and $ProveStatusExport) {
+    $unsafeRows = @($results | Where-Object {
+        $_.Result -notin @("FAST_FORWARDED", "ALREADY_CURRENT")
+    })
+    if ($unsafeRows.Count -eq 0 -and $targetHeadConsistent -and $frozenTargetHead) {
+        $statusExportProof.Attempted = $true
+        try {
+            $foodRoot = "C:\BlueFernRunner\FoodLineCurrent6"
+            $statusScript = Join-Path $foodRoot "scripts\run_operational_status_export.ps1"
+            if (-not (Test-Path -LiteralPath $statusScript -PathType Leaf)) {
+                throw "status exporter wrapper is missing: $statusScript"
+            }
+
+            $proofOutput = @(& $statusScript 2>&1)
+            $proofCode = $LASTEXITCODE
+            $statusExportProof.ExitCode = $proofCode
+            if ($proofCode -ne 0) {
+                throw "status exporter proof failed ($proofCode): $($proofOutput -join ' ')"
+            }
+
+            $statusRoot = [string]$statusExportProof.StatusCheckout
+            $systemPath = Join-Path $statusRoot "ops\status\system\latest.json"
+            $gazaPath = Join-Path $statusRoot "ops\status\gaza\latest.json"
+            if (-not (Test-Path -LiteralPath $systemPath -PathType Leaf)) {
+                throw "status exporter proof did not create system latest status"
+            }
+            if (-not (Test-Path -LiteralPath $gazaPath -PathType Leaf)) {
+                throw "status exporter proof did not create Gaza latest status"
+            }
+
+            $system = Get-Content -LiteralPath $systemPath -Raw | ConvertFrom-Json
+            $gaza = Get-Content -LiteralPath $gazaPath -Raw | ConvertFrom-Json
+            foreach ($dispatch in @("food-line", "care-line", "gaza", "ice")) {
+                $state = $system.dispatches.$dispatch
+                if ($null -eq $state) {
+                    throw "system status is missing dispatch: $dispatch"
+                }
+                $statusExportProof.Dispatches[$dispatch] = [ordered]@{
+                    MigrationStatus = [string]$state.migration_status
+                    AggregateStatus = [string]$state.aggregate_status
+                    CurrentRunnerHead = [string]$state.current_runner_head
+                    CurrentRunnerBranch = [string]$state.current_runner_branch
+                }
+                if ([string]$state.current_runner_head -ne $frozenTargetHead) {
+                    throw "$dispatch current_runner_head does not match frozen target"
+                }
+                if ([string]$state.current_runner_branch -ne $TargetBranch) {
+                    throw "$dispatch current_runner_branch does not match $TargetBranch"
+                }
+            }
+            if ([string]$gaza.migration_status -ne "MIGRATED") {
+                throw "Gaza status did not transition to MIGRATED"
+            }
+            $statusExportProof.Passed = $true
+        }
+        catch {
+            $statusExportProof.Error = $_.Exception.Message
+        }
+    }
+    else {
+        $statusExportProof.Error = "status export proof skipped because one or more production checkouts were not safely synchronized"
+    }
+}
+
 $report = [ordered]@{
     SchemaVersion = "bluefern.production_runner_sync.v1"
     StartedAt = $startedAt
@@ -353,11 +434,13 @@ $report = [ordered]@{
     FrozenTargetHead = $frozenTargetHead
     Runners = $results
     StatusExporterTask = Get-StatusExporterTaskEvidence
+    StatusExportProof = $statusExportProof
     PublicSideEffects = $false
     SchedulerMutation = $false
     CollectionTriggered = $false
     PublicationTriggered = $false
     PagesMutation = $false
+    OperationalStatusMutation = [bool]$statusExportProof.Attempted
 }
 
 if (-not $ReportPath) {
@@ -381,5 +464,9 @@ if ($blocked.Count -gt 0) {
 }
 if (-not $Apply -and $ready.Count -gt 0) {
     exit 10
+}
+if ($ProveStatusExport -and -not $statusExportProof.Passed) {
+    Write-Error "Production runners were synchronized but the non-public status exporter proof did not pass."
+    exit 4
 }
 exit 0

@@ -401,6 +401,46 @@ def test_care_line_feed_parsers_preserve_inline_content_fallbacks() -> None:
     assert json_items[0]["content_html"] == "<p>Replacement service still lacks emergency care.</p>"
 
 
+def test_structured_index_source_parses_html_listing_without_rss_xml() -> None:
+    source = _care_source(
+        adapter_type="structured_index",
+        collection_method="structured_index_polling",
+        feed_url="https://example.org/news-releases",
+        homepage_url="https://example.org/news-releases",
+    )
+    payload = b"""
+    <html>
+      <body>
+        <main>
+          <a href="https://example.org/2026/09/25/hospital-emergency-department-closes">
+            Hospital emergency department closes next month
+          </a>
+        </main>
+      </body>
+    </html>
+    """
+
+    items = pipeline.parse_source_items(
+        source,
+        payload,
+        source_url="https://example.org/news-releases",
+        fetch_timeout=20,
+        allow_insecure_tls=False,
+        max_items_per_source=5,
+    )
+
+    assert items == [
+        {
+            "title": "Hospital emergency department closes next month",
+            "url": "https://example.org/2026/09/25/hospital-emergency-department-closes",
+            "published_at": "",
+            "description": "",
+            "source": "Example News",
+            "id": "https://example.org/2026/09/25/hospital-emergency-department-closes",
+        }
+    ]
+
+
 def test_care_line_article_content_recovers_page_metadata_date_without_json_ld_date() -> None:
     source = CareLineSource.model_validate(
         {

@@ -29,7 +29,7 @@ SOURCE_TYPES = {
 GEOGRAPHIC_SCOPES = {"national", "state", "regional", "local"}
 AUTHORITY_LEVELS = {"primary", "regulator", "sector", "secondary"}
 
-_CARE_LINE_SOURCE_URL_OVERRIDES: dict[str, dict[str, str]] = {
+_CARE_LINE_SOURCE_URL_OVERRIDES: dict[str, dict[str, Any]] = {
     "hhs-news": {
         "feed_url": "https://www.hhs.gov/press-room/index.html?page=0",
         "homepage_url": "https://www.hhs.gov/press-room/index.html?page=0",
@@ -41,22 +41,32 @@ _CARE_LINE_SOURCE_URL_OVERRIDES: dict[str, dict[str, str]] = {
     "calmatters-health": {
         "feed_url": "https://calmatters.org/category/health/",
         "homepage_url": "https://calmatters.org/category/health/",
+        "adapter_type": "structured_index",
+        "collection_method": "structured_index_polling",
     },
     "ct-mirror-health": {
         "feed_url": "https://ctmirror.org/health/",
         "homepage_url": "https://ctmirror.org/health/",
+        "adapter_type": "structured_index",
+        "collection_method": "structured_index_polling",
     },
     "ohio-capital-journal-health": {
         "feed_url": "https://ohiocapitaljournal.com/category/health-care/",
         "homepage_url": "https://ohiocapitaljournal.com/category/health-care/",
+        "adapter_type": "structured_index",
+        "collection_method": "structured_index_polling",
     },
     "missouri-independent-health": {
         "feed_url": "https://missouriindependent.com/category/health-care/",
         "homepage_url": "https://missouriindependent.com/category/health-care/",
+        "adapter_type": "structured_index",
+        "collection_method": "structured_index_polling",
     },
     "michigan-advance-health": {
         "feed_url": "https://michiganadvance.com/category/health-care/",
         "homepage_url": "https://michiganadvance.com/category/health-care/",
+        "adapter_type": "structured_index",
+        "collection_method": "structured_index_polling",
     },
     "kaiser-permanente-news": {
         "feed_url": "https://about.kaiserpermanente.org/rss-feeds/main-rss",
@@ -69,6 +79,8 @@ _CARE_LINE_SOURCE_URL_OVERRIDES: dict[str, dict[str, str]] = {
     "cleveland-clinic-newsroom": {
         "feed_url": "https://newsroom.clevelandclinic.org/news-releases",
         "homepage_url": "https://newsroom.clevelandclinic.org/news-releases",
+        "adapter_type": "structured_index",
+        "collection_method": "structured_index_polling",
     },
     "aha-news": {
         "feed_url": "https://www.aha.org/news",
@@ -305,17 +317,18 @@ def load_registry(path: Path, *, include_disabled: bool = False) -> CareLineSour
         "sitemap": "sitemap_polling",
         "structured_index": "structured_index_polling",
     }
-    payload["sources"] = [
-        {
+    normalized_payload_sources: list[dict[str, Any]] = []
+    for source in payload.get("sources", []):
+        merged_source = {
             **source,
             **_CARE_LINE_SOURCE_URL_OVERRIDES.get(str(source.get("source_id") or ""), {}),
-            "collection_method": str(
-                source.get("collection_method")
-                or collection_method_by_adapter.get(str(source.get("adapter_type") or ""), "")
-            ),
         }
-        for source in payload.get("sources", [])
-    ]
+        merged_source["collection_method"] = str(
+            merged_source.get("collection_method")
+            or collection_method_by_adapter.get(str(merged_source.get("adapter_type") or ""), "")
+        )
+        normalized_payload_sources.append(merged_source)
+    payload["sources"] = normalized_payload_sources
     registry = CareLineSourceRegistry.model_validate(payload)
     normalized_sources = [
         source.model_copy(update=_CARE_LINE_SOURCE_URL_OVERRIDES.get(source.source_id, {}))

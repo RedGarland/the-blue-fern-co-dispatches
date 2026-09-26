@@ -1,0 +1,42 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260926T004451Z",
+  "scheduled_for": "2026-09-26T00:44:51Z",
+  "started_at": "2026-09-26T00:58:58Z",
+  "completed_at": "2026-09-26T01:01:00Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-25T16:58:58-07:00",
+    "date_to": "2026-09-25T17:58:58-07:00",
+    "edition_date": "2026-09-25"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "observation_timezone": "America/Los_Angeles",
+    "primary_sources_checked": [
+      {
+        "source": "OCHA OPT",
+        "url": "https://www.ochaopt.org/",
+        "result": "Checked Gaza humanitarian situation reporting and targeted health/access terms. The latest retrievable relevant OCHA situation report remained 18 September 2026; no newly published OCHA Gaza report or new health-system, hospital, ambulance/transport, fuel, medical-evacuation, functioning-capacity, or access disruption was found in this run's observation window."
+      },
+      {
+        "source": "WHO",
+        "url": "https://www.who.int/emergencies/situations/conflict-in-Israel-and-oPt",
+        "result": "Checked the WHO Israel/oPt emergency page and WHO Gaza/occupied Palestinian territory health reporting. The newest relevant official item found was the Director-General's 24 September 2026 UNGA remarks, which predated this observation window; no new WHO health-system, hospital, ambulance/transport, fuel, medical-evacuation, functioning-capacity, or access disruption was found in the window."
+      }
+    ],
+    "additional_sources_checked": [
+      "Reuters",
+      "Associated Press",
+      "WAFA",
+      "Anadolu Agency",
+      "ReliefWeb"
+    ],
+    "deduplication": "Same-day reports located during this run concerned incidents already surfaced earlier: the Wijdan Camp/Al-Mawasi vehicle strike, Batn al-Sameen artillery injuries, Al-Zawaida displacement-tent injuries, the Al-Sawarha Cemetery fatal strike, and previously available WHO/UNRWA policy-health statements. These were excluded as duplicates or pre-window follow-ups without a material new fact.",
+    "limitations": "WHO EMRO's news-index endpoint returned a transient 502, but official WHO search results and the WHO emergency page were accessible and checked. A guessed OCHA 25 September situation-report URL was not accessible, while OCHA domain search returned no such new report. These access issues did not materially prevent coverage because alternative official WHO/OCHA surfaces were successfully queried.",
+    "ledger_context": "No pre-existing Gaza watch-ledger path was present on ops/watch-ledger at run start, so deduplication for this run also used developments already surfaced in the active watch conversation."
+  }
+}

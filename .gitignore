@@ -67,3 +67,8 @@ data/dispatches/ice/monitor/
 .env
 .env.*
 !.env.example
+logs/*.log
+publish.log
+publish-dryrun.log
+run-output.json
+run-stderr.log

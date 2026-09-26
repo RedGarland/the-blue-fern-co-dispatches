@@ -11,8 +11,8 @@
     "unaccounted_count": 0
   },
   "aggregate_status": "FAILED",
-  "current_runner_branch": "operator/canonical-source-replay",
-  "current_runner_head": "4b0aa499aebc3e581ccbee3c24f924fbabe05937",
+  "current_runner_branch": "add/pages-repo-default",
+  "current_runner_head": "c4742f1d0d78dc8be492b8104f6d93fbe7ce10d8",
   "dispatch": "care-line",
   "expected_instances": [
     {
@@ -46,7 +46,7 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-09-26T21:15:04.992541Z",
+  "last_exported_at": "2026-09-26T21:22:41.737459Z",
   "last_receipt_at": "2026-09-26T19:00:03.379379Z",
   "latest_runtime_proof_date": "2026-09-26T15:30:06Z",
   "migration_status": "MIGRATED",
@@ -73,6 +73,9 @@
     "external_access_restriction_count": 0,
     "external_restriction_sources": [],
     "failed_source_count": 0,
+    "original_failed_source_count": 0,
+    "recovered_source_count": 0,
+    "recovered_sources": [],
     "successful_attempt_count": null,
     "unclassified_source_failure_count": 0
   },
@@ -125,6 +128,7 @@
           {
             "adapter_type": "structured_index",
             "coverage_reduced": true,
+            "effective_source_state": "failed",
             "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "URLError",
             "remediation_available": false,
@@ -134,6 +138,7 @@
           },
           {
             "adapter_type": "structured_index",
+            "effective_source_state": "failed",
             "failure_class": "URLError",
             "source_id": "cms-newsroom",
             "source_name": "CMS Newsroom",
@@ -141,6 +146,7 @@
           },
           {
             "adapter_type": "structured_index",
+            "effective_source_state": "failed",
             "failure_class": "URLError",
             "source_id": "cms-public-notices",
             "source_name": "CMS Public Notices",
@@ -149,6 +155,7 @@
           {
             "adapter_type": "structured_index",
             "coverage_reduced": true,
+            "effective_source_state": "failed",
             "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "URLError",
             "remediation_available": false,
@@ -158,6 +165,7 @@
           },
           {
             "adapter_type": "structured_index",
+            "effective_source_state": "failed",
             "failure_class": "URLError",
             "source_id": "samhsa-newsroom",
             "source_name": "SAMHSA Newsroom",
@@ -165,6 +173,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "URLError",
             "source_id": "cdc-newsroom",
             "source_name": "CDC Newsroom",
@@ -172,6 +181,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "URLError",
             "source_id": "kff-health-news",
             "source_name": "KFF Health News",
@@ -179,6 +189,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "URLError",
             "source_id": "healthcare-dive",
             "source_name": "Healthcare Dive",
@@ -187,6 +198,7 @@
           {
             "adapter_type": "rss",
             "coverage_reduced": true,
+            "effective_source_state": "failed",
             "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "URLError",
             "remediation_available": false,
@@ -196,6 +208,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "URLError",
             "source_id": "medcity-news",
             "source_name": "MedCity News",
@@ -203,6 +216,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "URLError",
             "source_id": "npr-health",
             "source_name": "NPR Health",
@@ -210,6 +224,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "URLError",
             "source_id": "nc-health-news",
             "source_name": "North Carolina Health News",
@@ -217,6 +232,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "URLError",
             "source_id": "calmatters-health",
             "source_name": "CalMatters Health",
@@ -224,6 +240,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "URLError",
             "source_id": "ct-mirror-health",
             "source_name": "The Connecticut Mirror Health",
@@ -231,6 +248,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "URLError",
             "source_id": "virginia-mercury-health",
             "source_name": "Virginia Mercury Health",
@@ -238,6 +256,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "URLError",
             "source_id": "ohio-capital-journal-health",
             "source_name": "Ohio Capital Journal Health",
@@ -245,6 +264,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "URLError",
             "source_id": "missouri-independent-health",
             "source_name": "Missouri Independent Health",
@@ -252,6 +272,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "URLError",
             "source_id": "florida-phoenix-health",
             "source_name": "Florida Phoenix Health",
@@ -259,6 +280,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "URLError",
             "source_id": "texas-tribune-health",
             "source_name": "Texas Tribune Health Care",
@@ -266,6 +288,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "URLError",
             "source_id": "penn-capital-star-health",
             "source_name": "Pennsylvania Capital-Star Health",
@@ -353,6 +376,7 @@
           {
             "adapter_type": "structured_index",
             "coverage_reduced": true,
+            "effective_source_state": "failed",
             "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
             "remediation_available": false,
@@ -363,6 +387,7 @@
           {
             "adapter_type": "structured_index",
             "coverage_reduced": true,
+            "effective_source_state": "failed",
             "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
             "remediation_available": false,
@@ -373,6 +398,7 @@
           {
             "adapter_type": "rss",
             "coverage_reduced": true,
+            "effective_source_state": "failed",
             "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
             "remediation_available": false,
@@ -382,6 +408,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "ParseError",
             "source_id": "calmatters-health",
             "source_name": "CalMatters Health",
@@ -389,6 +416,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "ParseError",
             "source_id": "ct-mirror-health",
             "source_name": "The Connecticut Mirror Health",
@@ -396,6 +424,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "ParseError",
             "source_id": "ohio-capital-journal-health",
             "source_name": "Ohio Capital Journal Health",
@@ -403,6 +432,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "ParseError",
             "source_id": "missouri-independent-health",
             "source_name": "Missouri Independent Health",
@@ -410,6 +440,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "ParseError",
             "source_id": "michigan-advance-health",
             "source_name": "Michigan Advance Health",
@@ -418,6 +449,7 @@
           {
             "adapter_type": "rss",
             "coverage_reduced": true,
+            "effective_source_state": "failed",
             "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
             "remediation_available": false,
@@ -427,6 +459,7 @@
           },
           {
             "adapter_type": "rss",
+            "effective_source_state": "failed",
             "failure_class": "ParseError",
             "source_id": "cleveland-clinic-newsroom",
             "source_name": "Cleveland Clinic Newsroom",
@@ -472,6 +505,7 @@
           {
             "adapter_type": "structured_index",
             "coverage_reduced": true,
+            "effective_source_state": "failed",
             "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
             "remediation_available": false,
@@ -482,6 +516,7 @@
           {
             "adapter_type": "structured_index",
             "coverage_reduced": true,
+            "effective_source_state": "failed",
             "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
             "remediation_available": false,
@@ -492,6 +527,7 @@
           {
             "adapter_type": "rss",
             "coverage_reduced": true,
+            "effective_source_state": "failed",
             "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
             "remediation_available": false,
@@ -502,6 +538,7 @@
           {
             "adapter_type": "rss",
             "coverage_reduced": true,
+            "effective_source_state": "failed",
             "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
             "failure_class": "HTTPError",
             "remediation_available": false,

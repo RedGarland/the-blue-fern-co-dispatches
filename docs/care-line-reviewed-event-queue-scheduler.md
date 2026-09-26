@@ -16,7 +16,7 @@ for registration or update. It looks up, updates, and verifies the task with
 to create a same-name task in another folder.
 
 ```powershell
-$RepositoryRoot = 'C:\PythonProjects\Dispatches From The Blue Fern Co'
+$RepositoryRoot = 'C:\BlueFernRunner\CareLineNationalCurrent8'
 $Action = New-ScheduledTaskAction -Execute 'PowerShell.exe' -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$RepositoryRoot\scripts\run_care_line_reviewed_event_queue.ps1`" -RepositoryRoot `"$RepositoryRoot`""
 $Trigger = New-ScheduledTaskTrigger -Once -At '<START_TIME>' # choose cadence separately
 $Principal = New-ScheduledTaskPrincipal -UserId '<USER_OR_SERVICE_ACCOUNT>' -LogonType Password -RunLevel LeastPrivilege

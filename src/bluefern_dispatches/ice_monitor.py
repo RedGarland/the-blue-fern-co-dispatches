@@ -131,6 +131,12 @@ def _relationship(previous: dict[str, Any] | None, current: dict[str, Any]) -> t
 
 def _queue_state(event: dict[str, Any], relationship: str, existing: dict[str, Any] | None) -> str:
     if existing and existing.get("review_status") in TERMINAL_REVIEW_STATES:
+        if relationship in {
+            EventRelationship.UPDATE_TO_EXISTING_EVENT.value,
+            EventRelationship.FOLLOW_UP_WITH_NEW_FACTS.value,
+            EventRelationship.CORRECTION.value,
+        }:
+            return "NEEDS_REVIEW"
         return str(existing["review_status"])
     editorial = event.get("editorial") or {}
     source_tiers = _source_tiers(event)
@@ -141,12 +147,19 @@ def _queue_state(event: dict[str, Any], relationship: str, existing: dict[str, A
     return "NEW" if not existing else "NEEDS_REVIEW"
 
 
+def _monitor_reference(path: Path) -> str:
+    text = path.as_posix()
+    marker = "data/dispatches/ice/monitor/"
+    index = text.find(marker)
+    return text[index:] if index >= 0 else text
+
+
 def _queue_item(event: dict[str, Any], *, relationship: str, reasons: list[str], run_id: str, run_path: Path, existing: dict[str, Any] | None, observed_at: str) -> dict[str, Any]:
     mapped = map_ready_event(_event_from_dict(event))
     state = _queue_state(event, relationship, existing)
     first_seen = (existing or {}).get("first_seen") or event.get("first_seen") or observed_at
     source_urls = sorted(_source_urls(event))
-    return {
+    row = {
         "canonical_event_id": event.get("event_id"),
         "event_fingerprint": _event_key(event),
         "first_seen": first_seen,
@@ -166,14 +179,26 @@ def _queue_item(event: dict[str, Any], *, relationship: str, reasons: list[str],
         "review_status": state,
         "editorial_eligibility_candidate": bool((event.get("editorial") or {}).get("public_eligibility")),
         "evidence_references": {
-            "run_dir": str(run_path.as_posix()),
-            "canonical_events": str((run_path / "canonical_events.json").as_posix()),
-            "raw_candidates": str((run_path / "raw_candidates.json").as_posix()),
-            "provider_health": str((run_path / "provider_health.json").as_posix()),
+            "run_dir": _monitor_reference(run_path),
+            "canonical_events": _monitor_reference(run_path / "canonical_events.json"),
+            "raw_candidates": _monitor_reference(run_path / "raw_candidates.json"),
+            "provider_health": _monitor_reference(run_path / "provider_health.json"),
         },
         "relationship_to_previous": relationship,
         "relationship_reasons": reasons,
     }
+    if existing and state in TERMINAL_REVIEW_STATES:
+        for key in (
+            "review_decision",
+            "reviewed_by",
+            "reviewed_at",
+            "review_rationale",
+            "review_decision_id",
+            "release_candidate_ref",
+        ):
+            if key in existing:
+                row[key] = existing.get(key)
+    return row
 
 
 def _age_queue(queue: dict[str, Any], *, observed_at: str, stale_after_days: int) -> None:

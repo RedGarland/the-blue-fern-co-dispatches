@@ -40,7 +40,7 @@ jobs:
         run: python -m compileall src tests scripts
 
       - name: Run focused validation tests
-        run: python -m pytest -q -p no:cacheprovider --basetemp ./.pytest-temp-validation tests/test_repo_governance.py tests/test_publish_scope_validation.py tests/test_food_line_dispatch.py tests/test_dispatches_site.py tests/test_watch_ledger.py tests/test_watch_source_targets.py
+        run: python -m pytest -q -p no:cacheprovider --basetemp ./.pytest-temp-validation tests/test_repo_governance.py tests/test_publish_scope_validation.py tests/test_food_line_dispatch.py tests/test_dispatches_site.py tests/test_watch_ledger.py tests/test_watch_source_targets.py tests/test_ice_current_review.py tests/test_ice_dispatch_phase8.py
 
       - name: Publish validate commit status for head SHA
         if: always() && github.event_name == 'pull_request'

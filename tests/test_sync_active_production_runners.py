@@ -24,7 +24,8 @@ def test_sync_helper_targets_all_active_dispatch_runners() -> None:
 def test_sync_helper_is_plan_only_by_default_and_requires_apply_for_merge() -> None:
     text = _text()
     assert "[switch]$Apply" in text
-    assert 'if (-not $Apply)' in text
+    assert 'if ($Apply -and $targetHeadConsistent -and $frozenTargetHead)' in text
+    assert 'if (-not $Apply -and $ready.Count -gt 0)' in text
     assert '"READY_TO_FAST_FORWARD"' in text
     assert '@("merge", "--ff-only", $frozenTargetHead)' in text
 
@@ -50,7 +51,7 @@ def test_sync_helper_has_fail_closed_checkout_guards() -> None:
         'current HEAD is not an ancestor',
         'untracked runtime paths overlap incoming tracked paths',
         'target head mismatch:',
-        'Production runners fetched inconsistent protected heads.',
+        'Production runners fetched inconsistent protected heads; no fast-forward was attempted.',
     ):
         assert fragment in text
 

@@ -11,6 +11,8 @@
     "unaccounted_count": 0
   },
   "aggregate_status": "DEGRADED",
+  "current_runner_branch": "add/pages-repo-default",
+  "current_runner_head": "eaeec04d77a68a64d76d106ee5ed4d8a464d45d7",
   "dispatch": "care-line",
   "expected_instances": [
     {
@@ -44,7 +46,7 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-09-26T01:15:08.368112Z",
+  "last_exported_at": "2026-09-26T05:15:06.009944Z",
   "last_receipt_at": "2026-09-26T01:01:31.711123Z",
   "latest_runtime_proof_date": "2026-09-25T15:30:05Z",
   "migration_status": "MIGRATED",
@@ -72,6 +74,14 @@
       "artifact_id": "20260925T010001Z-36628.json",
       "classification": "partial_success",
       "completed_at": "2026-09-25T01:02:40Z",
+      "diagnostics": {
+        "active_review_queue_count": null,
+        "failed_source_count": null,
+        "failed_sources": [],
+        "manual_review_count": null,
+        "skipped_source_count": null,
+        "successful_attempt_count": null
+      },
       "exit_code": 0,
       "next_expected_run": null,
       "public_side_effects": {
@@ -100,6 +110,14 @@
       "artifact_id": "20260925T130001Z-21104.json",
       "classification": "partial_success",
       "completed_at": "2026-09-25T13:02:36Z",
+      "diagnostics": {
+        "active_review_queue_count": null,
+        "failed_source_count": null,
+        "failed_sources": [],
+        "manual_review_count": null,
+        "skipped_source_count": null,
+        "successful_attempt_count": null
+      },
       "exit_code": 0,
       "next_expected_run": null,
       "public_side_effects": {
@@ -128,6 +146,7 @@
       "artifact_id": "20260925T150003Z-a118c97a.json",
       "classification": "nothing_to_publish",
       "completed_at": "2026-09-25T15:00:03.224894Z",
+      "diagnostics": null,
       "exit_code": 0,
       "next_expected_run": null,
       "public_side_effects": {
@@ -148,6 +167,7 @@
       "artifact_id": "20260925T153001Z-37260.json",
       "classification": "safe_no_op",
       "completed_at": "2026-09-25T15:30:05Z",
+      "diagnostics": null,
       "exit_code": 0,
       "next_expected_run": null,
       "public_side_effects": {
@@ -168,6 +188,14 @@
       "artifact_id": "20260925T190001Z-35408.json",
       "classification": "partial_success",
       "completed_at": "2026-09-25T19:03:11Z",
+      "diagnostics": {
+        "active_review_queue_count": null,
+        "failed_source_count": null,
+        "failed_sources": [],
+        "manual_review_count": null,
+        "skipped_source_count": null,
+        "successful_attempt_count": null
+      },
       "exit_code": 0,
       "next_expected_run": null,
       "public_side_effects": {
@@ -196,6 +224,14 @@
       "artifact_id": "20260926T010001Z-16868.json",
       "classification": "partial_success",
       "completed_at": "2026-09-26T01:01:31Z",
+      "diagnostics": {
+        "active_review_queue_count": null,
+        "failed_source_count": null,
+        "failed_sources": [],
+        "manual_review_count": null,
+        "skipped_source_count": null,
+        "successful_attempt_count": null
+      },
       "exit_code": 0,
       "next_expected_run": null,
       "public_side_effects": {

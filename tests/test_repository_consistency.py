@@ -188,3 +188,10 @@ def test_validation_cancels_superseded_pr_runs() -> None:
     assert "concurrency:" in text
     assert "github.event.pull_request.number || github.ref" in text
     assert "cancel-in-progress: true" in text
+
+
+def test_readme_names_current_protected_source_branch() -> None:
+    text = (ROOT / "README.md").read_text(encoding="utf-8")
+
+    assert "The protected source branch is `add/pages-repo-default`" in text
+    assert "source project branch (`master` or `main`)" not in text

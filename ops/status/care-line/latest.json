@@ -10,9 +10,9 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "DEGRADED",
-  "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "84723d45e7ee2dbd7762db7e422ddb4b8261aff7",
+  "aggregate_status": "FAILED",
+  "current_runner_branch": "operator/autonomous-remediation-state-machine",
+  "current_runner_head": "e1cd298591d702a2762250c534efa7c6a7133d33",
   "dispatch": "care-line",
   "expected_instances": [
     {
@@ -46,8 +46,8 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-09-26T18:34:02.496411Z",
-  "last_receipt_at": "2026-09-26T17:31:31.376346Z",
+  "last_exported_at": "2026-09-26T19:15:04.219344Z",
+  "last_receipt_at": "2026-09-26T19:00:03.379379Z",
   "latest_runtime_proof_date": "2026-09-26T15:30:06Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
@@ -59,7 +59,7 @@
   "publication_attempted": false,
   "publication_status": "safe_no_op",
   "receipt_completeness": "COMPLETE",
-  "recovery_lifecycle": "HEALTHY",
+  "recovery_lifecycle": "INCIDENT_OPEN",
   "runner_source_head": null,
   "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
@@ -69,36 +69,11 @@
   ],
   "schema_version": "bluefern_external_operational_status_v1",
   "source_failure_summary": {
-    "all_current_failures_external": true,
-    "external_access_restriction_count": 4,
-    "external_restriction_sources": [
-      {
-        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
-        "coverage_reduced": true,
-        "remediation_available": false,
-        "source_id": "hhs-news"
-      },
-      {
-        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
-        "coverage_reduced": true,
-        "remediation_available": false,
-        "source_id": "hrsa-news"
-      },
-      {
-        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
-        "coverage_reduced": true,
-        "remediation_available": false,
-        "source_id": "fierce-healthcare"
-      },
-      {
-        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
-        "coverage_reduced": true,
-        "remediation_available": false,
-        "source_id": "mayo-clinic-news"
-      }
-    ],
-    "failed_source_count": 4,
-    "successful_attempt_count": 31,
+    "all_current_failures_external": false,
+    "external_access_restriction_count": 0,
+    "external_restriction_sources": [],
+    "failed_source_count": 0,
+    "successful_attempt_count": null,
     "unclassified_source_failure_count": 0
   },
   "stale_observability": false,
@@ -561,6 +536,42 @@
       "scheduled_for": "2026-09-26T17:28:27Z",
       "started_at": "2026-09-26T17:28:27Z",
       "status": "DEGRADED",
+      "task_key": "care_line_collection"
+    },
+    {
+      "artifact_id": "20260926T190002Z-25064.json",
+      "classification": "failure",
+      "completed_at": "2026-09-26T19:00:03Z",
+      "diagnostics": {
+        "active_review_queue_count": null,
+        "failed_source_count": null,
+        "failed_sources": [],
+        "manual_review_count": null,
+        "skipped_source_count": null,
+        "successful_attempt_count": null
+      },
+      "exit_code": 1,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "bluesky_publication": false,
+        "edition_generation": false,
+        "map": false,
+        "pages_sync": false,
+        "podcast": false,
+        "proposal_approval": false,
+        "public_site_updates": false,
+        "release_manifest_generation": false,
+        "rss_publication": false,
+        "signal_wire_publication": false,
+        "social_cards": false
+      },
+      "publication_attempted": null,
+      "publication_status": null,
+      "run_id": "20260926T190002Z-25064",
+      "scheduled_for": "2026-09-26T19:00:02Z",
+      "started_at": "2026-09-26T19:00:02Z",
+      "status": "FAILED",
       "task_key": "care_line_collection"
     }
   ]

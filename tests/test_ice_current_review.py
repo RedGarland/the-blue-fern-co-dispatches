@@ -100,6 +100,29 @@ def test_review_approval_creates_private_release_candidate_without_public_author
     assert audit["release_candidate_created"] is True
 
 
+def test_review_accepts_legacy_absolute_evidence_path_inside_repo(tmp_path: Path) -> None:
+    queue_path, _ = _fixture(tmp_path)
+    queue = load_queue(queue_path)
+    absolute = (tmp_path / queue["items"][0]["evidence_references"]["canonical_events"]).resolve()
+    queue["items"][0]["evidence_references"]["canonical_events"] = str(absolute)
+    queue_path.write_text(json.dumps(queue), encoding="utf-8")
+    queue_sha = payload_sha256(queue)
+
+    result = apply_decision(
+        tmp_path,
+        queue_path,
+        event_fingerprint="fp-1",
+        decision="REJECT",
+        decided_by="reviewer",
+        rationale="Legacy path compatibility test.",
+        expected_queue_sha256=queue_sha,
+        decided_at="2026-09-25T21:00:00Z",
+    )
+
+    assert result["status"] == "decision_recorded"
+    assert result["review_status"] == "REJECTED"
+
+
 def test_stale_queue_hash_fails_closed(tmp_path: Path) -> None:
     queue_path, _ = _fixture(tmp_path)
     with pytest.raises(IceReviewError, match="changed since inspection"):

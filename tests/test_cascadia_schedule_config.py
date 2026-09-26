@@ -2,7 +2,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PROJECT_ROOT = r"C:\PythonProjects\Dispatches From The Blue Fern Co"
+PROJECT_ROOT = r"C:\BlueFernDev\the-blue-fern-co-dispatches"
 OLD_ADMIN_ROOT = r"C:\Users\Admin"
 OLD_ONEDRIVE_ROOT = r"C:\Users\willb\OneDrive"
 

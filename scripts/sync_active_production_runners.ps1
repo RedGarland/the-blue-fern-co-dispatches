@@ -222,6 +222,8 @@ foreach ($target in $Targets) {
         UntrackedPaths = @()
         IncomingPaths = @()
         UntrackedIncomingCollisions = @()
+        TrackedIncomingCollisions = @()
+        SanctionedTrackedStatePreserved = $false
         PreValidation = $null
         MergeAttempted = $false
         PostValidation = $null
@@ -260,10 +262,6 @@ foreach ($target in $Targets) {
         $row.TrackedDirtyPaths = @($status.Tracked)
         $row.UntrackedPaths = @($status.Untracked)
 
-        if (@($row.TrackedDirtyPaths).Count -gt 0) {
-            throw "tracked working-tree changes are present"
-        }
-
         $ancestor = Invoke-Git -Root $root -Arguments @("merge-base", "--is-ancestor", "HEAD", $targetRef) -AllowFailure
         if ($ancestor.ExitCode -ne 0) {
             throw "current HEAD is not an ancestor of $targetRef"
@@ -277,10 +275,20 @@ foreach ($target in $Targets) {
             throw "untracked runtime paths overlap incoming tracked paths: $($collisions -join ', ')"
         }
 
+        $trackedCollisions = @(Get-UntrackedCollisions -Untracked @($row.TrackedDirtyPaths) -Incoming $incoming)
+        $row.TrackedIncomingCollisions = @($trackedCollisions)
+        if (@($trackedCollisions).Count -gt 0) {
+            throw "tracked runtime paths overlap incoming tracked paths: $($trackedCollisions -join ', ')"
+        }
+
         $pre = Invoke-RunnerValidation -Root $root
         $row.PreValidation = $pre
         if (-not $pre.Ok) {
             throw "pre-rollout validation failed at $($pre.Stage): $($pre.Message)"
+        }
+
+        if (@($row.TrackedDirtyPaths).Count -gt 0) {
+            $row.SanctionedTrackedStatePreserved = $true
         }
 
         if ($row.BeforeHead -eq $row.TargetHead) {
@@ -316,8 +324,14 @@ if ($Apply -and $targetHeadConsistent -and $frozenTargetHead) {
                 throw "runner HEAD changed after discovery: expected $($row.BeforeHead), found $currentHead"
             }
             $currentStatus = Get-StatusPaths -Root $root
-            if (@($currentStatus.Tracked).Count -gt 0) {
-                throw "tracked working-tree changes appeared after discovery"
+            $initialTracked = @($row.TrackedDirtyPaths | Sort-Object -Unique)
+            $currentTracked = @($currentStatus.Tracked | Sort-Object -Unique)
+            if (($initialTracked -join "`n") -ne ($currentTracked -join "`n")) {
+                throw "tracked working-tree state changed after discovery"
+            }
+            $lateTrackedCollisions = @(Get-UntrackedCollisions -Untracked $currentTracked -Incoming @($row.IncomingPaths))
+            if (@($lateTrackedCollisions).Count -gt 0) {
+                throw "tracked runtime collision appeared after discovery: $($lateTrackedCollisions -join ', ')"
             }
             $lateCollisions = @(Get-UntrackedCollisions -Untracked @($currentStatus.Untracked) -Incoming @($row.IncomingPaths))
             if (@($lateCollisions).Count -gt 0) {

@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260926T104451-0700",
+  "scheduled_for": "2026-09-26T10:44:51-07:00",
+  "started_at": "2026-09-26T10:46:36-07:00",
+  "completed_at": "2026-09-26T10:47:36-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-26T09:44:51-07:00",
+    "end": "2026-09-26T10:47:36-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first: newest surfaced Gaza humanitarian situation report remains Humanitarian Situation Report | 18 September 2026; no new qualifying development in the bounded hourly window.",
+    "WHO checked second: no new Gaza health update surfaced in the bounded hourly window.",
+    "Twelve additional targeted searches were executed across UN News, UNICEF, WFP, UNRWA, ICRC, Reuters, AP, BBC, Al Jazeera, WAFA, Anadolu Agency, and Times of Israel.",
+    "BBC and UN News targeted searches were blocked by robots.txt; remaining coverage was usable, so status is DEGRADED rather than FAILED.",
+    "WAFA's latest Gaza casualty item was the Nuseirat drone-strike report published 26 September 2026 at 18:26 Palestine time (08:26 America/Los_Angeles), already captured by the prior watch and excluded as a duplicate.",
+    "Al Jazeera current-day Gaza items reviewed were feature/newsfeed material without a verified new qualifying development inside the bounded hourly window.",
+    "No opinion, unsupported social claims, recycled items, duplicates, or unsourced claims were included."
+  ]
+}

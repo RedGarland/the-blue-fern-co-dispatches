@@ -101,7 +101,7 @@ git clone <source-repo-url> "C:\BlueFernDev\the-blue-fern-co-dispatches"
 cd "C:\BlueFernDev\the-blue-fern-co-dispatches"
 git clone --branch gh-pages <pages-repo-url> bluefern-dispatches-pages
 py -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -e .
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
 Recreate `.env` manually on the new machine. Do not copy secrets into docs, logs, task XML, or command history.

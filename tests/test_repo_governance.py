@@ -139,6 +139,5 @@ def test_dispatch_validation_workflow_bridges_validate_to_head_sha() -> None:
     assert "Publish validate commit status for head SHA" in workflow
     assert "if: always() && github.event_name == 'pull_request'" in workflow
     assert "actions/github-script@v7" in workflow
-    assert "pulls.get" in workflow
-    assert "pull.head?.sha" in workflow
+    assert "context.payload.pull_request?.head?.sha" in workflow
     assert "merge_commit_sha" not in workflow

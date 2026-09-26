@@ -1,0 +1,14 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260925T194554-0700",
+  "scheduled_for": "2026-09-25T19:45:54-07:00",
+  "started_at": "2026-09-25T19:46:49-07:00",
+  "completed_at": "2026-09-25T19:47:32-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {"date_from": "2026-09-25T18:45:54-07:00", "date_to": "2026-09-25T19:46:49-07:00", "edition_date": "2026-09-25"},
+  "findings": [],
+  "coverage_notes": "Completed 12 targeted supplementary searches. No new qualifying signal was verified within the hourly observation window. Connecticut SNAP enrollment reporting was earlier than the window and reflected accumulated losses, El Paso storm-related closure was already retained, nor'easter results did not establish a new emergency-food service loss, and older only-grocery-store closures were outside the window."
+}

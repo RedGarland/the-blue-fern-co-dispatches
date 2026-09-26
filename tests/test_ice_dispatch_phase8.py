@@ -261,6 +261,48 @@ def test_terminal_review_metadata_survives_future_monitor_updates(tmp_path: Path
     assert updated["release_candidate_ref"].endswith("ice-event.json")
 
 
+def test_material_update_reopens_terminal_review_for_fresh_review(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    first = event(impact={"arrests_count": 10})
+    updated = event(impact={"arrests_count": 12})
+    install_diagnostic(monkeypatch, [diagnostic([first]), diagnostic([updated])])
+
+    _, first_payload = ice_monitor.run_monitor(
+        tmp_path,
+        registry=Path("registry.yml"),
+        run_id="run-1",
+        observed_at="2026-09-09T16:00:00Z",
+        live=False,
+    )
+    queue_path = Path(first_payload["review_queue_path"])
+    queue = json.loads(queue_path.read_text(encoding="utf-8"))
+    queue["items"][0].update(
+        {
+            "review_status": "REVIEWED",
+            "review_decision": "APPROVE_FOR_RELEASE_REVIEW",
+            "reviewed_by": "reviewer",
+            "reviewed_at": "2026-09-09T17:00:00Z",
+            "review_rationale": "Verified original facts.",
+            "review_decision_id": "decision-1",
+            "release_candidate_ref": "data/dispatches/ice/monitor/release-candidates/original.json",
+        }
+    )
+    queue_path.write_text(json.dumps(queue), encoding="utf-8")
+
+    _, second_payload = ice_monitor.run_monitor(
+        tmp_path,
+        registry=Path("registry.yml"),
+        run_id="run-2",
+        observed_at="2026-09-10T16:00:00Z",
+        live=False,
+    )
+
+    reopened = json.loads(Path(second_payload["review_queue_path"]).read_text(encoding="utf-8"))["items"][0]
+    assert reopened["review_status"] == "NEEDS_REVIEW"
+    assert reopened["relationship_to_previous"] == "update_to_existing_event"
+    assert "review_decision" not in reopened
+    assert "release_candidate_ref" not in reopened
+
+
 def test_stale_event_ages_out(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     code, payload = run_once(tmp_path, monkeypatch, [event()], observed_at="2026-09-01T16:00:00Z")
     assert code == 0

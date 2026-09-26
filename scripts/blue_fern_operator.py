@@ -12,7 +12,7 @@ import shutil
 import subprocess
 import sys
 from dataclasses import asdict, dataclass, field, replace
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from enum import StrEnum
 from pathlib import Path
 from typing import Any, Iterable
@@ -63,6 +63,7 @@ FORBIDDEN_REMEDIATION_ACTIONS = {
     "REPLAY_COLLECTION",
 }
 AUTOMATIC_REMEDIATION_ACTIONS = {"REBUILD_STATUS"}
+TRANSIENT_NETWORK_RETRY_ACTION = "TRANSIENT_NETWORK_TASK_RETRY"
 REMEDIATION_OUTCOMES = {
     "NOT_ATTEMPTED",
     "REBUILT",
@@ -110,6 +111,7 @@ REMEDIATION_ACTIONS = {
     "RUNNER_ROLL_FORWARD",
     "REBUILD_STATUS",
     "REFRESH_STATUS_EXPORT",
+    TRANSIENT_NETWORK_RETRY_ACTION,
     "VERIFY_PUBLIC_STATE",
     "INVESTIGATE_SOURCE_FAILURES",
     "WAIT_FOR_NEXT_SCHEDULED_RUN",
@@ -121,6 +123,7 @@ EXECUTABLE_REMEDIATION_ACTIONS = {
     "RUNNER_ROLL_FORWARD",
     "REBUILD_STATUS",
     "REFRESH_STATUS_EXPORT",
+    TRANSIENT_NETWORK_RETRY_ACTION,
     "VERIFY_PUBLIC_STATE",
 }
 ENGINEERING_STATES = {
@@ -160,9 +163,37 @@ CLASSIFICATION_SEVERITY = {
 AUTONOMOUS_RETRY_LIMITS = {
     "REBUILD_STATUS": 2,
     "REFRESH_STATUS_EXPORT": 2,
+    TRANSIENT_NETWORK_RETRY_ACTION: 2,
     "RUNNER_ROLL_FORWARD": 1,
     "VERIFY_PUBLIC_STATE": 1,
     "ENGINEER_PREPARE_FIX": 1,
+}
+TRANSIENT_NETWORK_BACKOFF_MINUTES = 30
+TRANSIENT_NETWORK_DEPENDENCIES = {
+    "github": {
+        "host": "github.com",
+        "read_only_probe": ["git", "ls-remote", "--heads", "https://github.com/RedGarland/the-blue-fern-co-dispatches.git", "add/pages-repo-default"],
+    }
+}
+TRANSIENT_RETRY_TASKS = {
+    "food-line": {
+        "task_keys": {"food_line_source_watch", "food_line_source_watch_resume", "food_line_current_intake"},
+        "wrapper": "scripts/windows/run_food_line_current_intake.ps1",
+        "date_argument": "-EditionDate",
+        "public_side_effects": False,
+    },
+    "care-line": {
+        "task_keys": {"care_line_collection"},
+        "wrapper": "scripts/windows/run_care_line_national_collection.ps1",
+        "date_argument": "-RunDate",
+        "public_side_effects": False,
+    },
+    "ice": {
+        "task_keys": {"ice_monitor"},
+        "wrapper": "scripts/windows/run_ice_monitor.ps1",
+        "date_argument": None,
+        "public_side_effects": False,
+    },
 }
 APPROVAL_REQUIRED_ACTIONS = {
     "PUBLISH_APPROVED_RELEASE",
@@ -233,6 +264,10 @@ class AutonomyLifecycle(StrEnum):
 
 
 class RootCauseClassification(StrEnum):
+    TRANSIENT_NETWORK = "TRANSIENT_NETWORK"
+    SOURCE_EXTERNAL_RESTRICTION = "SOURCE_EXTERNAL_RESTRICTION"
+    SOURCE_TRANSIENT = "SOURCE_TRANSIENT"
+    INTERNAL_FAILURE = "INTERNAL_FAILURE"
     RUNNER_SYNC_FAILURE = "RUNNER_SYNC_FAILURE"
     REPOSITORY_DIRTY_STATE_FAILURE = "REPOSITORY_DIRTY_STATE_FAILURE"
     DNS_NETWORK_FAILURE = "DNS_NETWORK_FAILURE"
@@ -894,6 +929,54 @@ def _dispatch_result_for(result: OperatorResult, dispatch: str) -> DispatchResul
     return next((row for row in result.dispatches if row.dispatch == dispatch), None)
 
 
+def _summary_int(row: dict[str, Any], *keys: str) -> int:
+    for key in keys:
+        value = _int_value(row.get(key))
+        if value is not None:
+            return value
+    return 0
+
+
+def _transient_network_markers(blob: str) -> bool:
+    return any(
+        token in blob
+        for token in (
+            "dns",
+            "name resolution",
+            "temporary failure in name resolution",
+            "getaddrinfo",
+            "could not resolve host",
+            "failed to resolve",
+            "network is unreachable",
+            "temporary network",
+            "github.com",
+            "connection timed out",
+            "connect timeout",
+        )
+    )
+
+
+def _source_external_restriction_markers(blob: str) -> bool:
+    return any(
+        token in blob
+        for token in (
+            "403",
+            "401",
+            "forbidden",
+            "unauthorized",
+            "cloudflare",
+            "captcha",
+            "access denied",
+            "publisher restriction",
+            "external access restriction",
+        )
+    )
+
+
+def _source_transient_markers(blob: str) -> bool:
+    return any(token in blob for token in ("timeout", "timed out", "tls", "connection reset", "503", "502", "504", "429"))
+
+
 def classify_incident_root_cause(
     incident: Incident,
     dispatch_result: DispatchResult | None = None,
@@ -901,14 +984,27 @@ def classify_incident_root_cause(
     exported = dispatch_result.exported_status if dispatch_result else {}
     exported = exported if isinstance(exported, dict) else {}
     source_summary = exported.get("source_failure_summary") if isinstance(exported.get("source_failure_summary"), dict) else {}
+    blob = _string_blob(incident.to_payload(), dispatch_result.to_payload() if dispatch_result else None)
     if (
         source_summary.get("all_current_failures_external") is True
         or (
             int(source_summary.get("external_access_restriction_count") or 0) > 0
             and int(source_summary.get("unclassified_source_failure_count") or 0) == 0
         )
+        or _source_external_restriction_markers(blob)
     ):
-        return RootCauseClassification.PERSISTENT_EXTERNAL_ACCESS_RESTRICTION.value
+        return RootCauseClassification.SOURCE_EXTERNAL_RESTRICTION.value
+    failed_source_count = _summary_int(
+        source_summary,
+        "current_source_failure_count",
+        "failed_source_count",
+        "source_failure_count",
+        "total_source_failure_count",
+    )
+    if _transient_network_markers(blob):
+        if failed_source_count == 1 and _source_transient_markers(blob):
+            return RootCauseClassification.SOURCE_TRANSIENT.value
+        return RootCauseClassification.TRANSIENT_NETWORK.value
     if incident.classification == Classification.STALE_OBSERVABILITY.value:
         return RootCauseClassification.STALE_OBSERVABILITY.value
     if incident.classification == Classification.STATUS_EXPORT_PROBLEM.value or incident.recovery_action == "INVESTIGATE_STATUS_EXPORT":
@@ -917,23 +1013,16 @@ def classify_incident_root_cause(
         return RootCauseClassification.MISSING_RECEIPT_PROOF.value
     if incident.recovery_action in {"PUBLISH_APPROVED_RELEASE", "PUBLISH_NO_UPDATE"}:
         return RootCauseClassification.EDITORIAL_POLICY_BOUNDARY.value
-    blob = _string_blob(incident.to_payload(), dispatch_result.to_payload() if dispatch_result else None)
     if "runner_roll_forward" in blob or "fast-forward" in blob or "runner is behind" in blob:
         return RootCauseClassification.RUNNER_SYNC_FAILURE.value
     if "verify_checkout" in blob or ("dirty" in blob and "checkout" in blob):
         return RootCauseClassification.REPOSITORY_DIRTY_STATE_FAILURE.value
-    if any(token in blob for token in ("dns", "name resolution", "temporary failure in name resolution", "getaddrinfo")):
-        return RootCauseClassification.DNS_NETWORK_FAILURE.value
     if "task scheduler" in blob or "scheduled task" in blob:
         return RootCauseClassification.SCHEDULER_FAILURE.value
-    if any(token in blob for token in ("403", "401", "http", "httperror", "forbidden")) and (
-        "failed_source" in blob or "source failure" in blob or "feed" in blob
-    ):
-        return RootCauseClassification.SOURCE_SPECIFIC_HTTP_FAILURE.value
-    if any(token in blob for token in ("timeout", "tls", "connection reset", "503", "502", "429")):
-        return RootCauseClassification.EXTERNAL_TRANSIENT_DEPENDENCY_FAILURE.value
+    if _source_transient_markers(blob):
+        return RootCauseClassification.SOURCE_TRANSIENT.value
     if any(token in blob for token in ("traceback", "typeerror", "valueerror", "assertionerror", "nameerror", "modulenotfounderror")):
-        return RootCauseClassification.PARSER_CONFIGURATION_DEFECT.value
+        return RootCauseClassification.INTERNAL_FAILURE.value
     if "validation failed" in blob or "doctor" in blob or "preflight" in blob:
         return RootCauseClassification.VALIDATION_FAILURE.value
     if "publication" in blob and ("failed" in blob or "incident_open" in blob):
@@ -962,12 +1051,22 @@ def _attempt_count(remediation: dict[str, Any], action: str) -> int:
 
 
 def _retry_state_for(incident: Incident, action: str) -> dict[str, Any]:
-    attempts = _attempt_count(incident.remediation if isinstance(incident.remediation, dict) else {}, action)
+    remediation = incident.remediation if isinstance(incident.remediation, dict) else {}
+    attempts = _attempt_count(remediation, action)
     limit = _retry_limit(action)
     eligible = bool(action and action != "NONE" and attempts < limit)
+    attempted_at = remediation.get("attempted_at")
+    parsed_attempted_at = _parse_time(str(attempted_at)) if attempted_at else None
+    next_eligible_at = None
+    if action == TRANSIENT_NETWORK_RETRY_ACTION and eligible and parsed_attempted_at is not None:
+        next_eligible_at = _format_time(parsed_attempted_at + timedelta(minutes=TRANSIENT_NETWORK_BACKOFF_MINUTES))
     return {
         "attempt_count": attempts,
+        "last_attempted_at": attempted_at,
+        "last_result": remediation.get("outcome"),
         "max_attempts": limit,
+        "minimum_backoff_minutes": TRANSIENT_NETWORK_BACKOFF_MINUTES if action == TRANSIENT_NETWORK_RETRY_ACTION else None,
+        "next_eligible_at": next_eligible_at,
         "next_eligible_action": action if eligible else None,
         "terminal_reason": None if eligible else ("retry_limit_reached" if limit else "no_autonomous_retry_policy"),
     }
@@ -989,7 +1088,10 @@ def lifecycle_for_incident(incident: Incident, policy: RemediationPolicy) -> str
     if incident.state != IncidentState.OPEN.value:
         return AutonomyLifecycle.HEALTHY.value
     root_cause = incident.root_cause_classification or classify_incident_root_cause(incident)
-    if root_cause == RootCauseClassification.PERSISTENT_EXTERNAL_ACCESS_RESTRICTION.value:
+    if root_cause in {
+        RootCauseClassification.PERSISTENT_EXTERNAL_ACCESS_RESTRICTION.value,
+        RootCauseClassification.SOURCE_EXTERNAL_RESTRICTION.value,
+    }:
         return AutonomyLifecycle.WAITING_EXTERNAL.value
     if _incident_approval_required(incident, policy):
         return AutonomyLifecycle.APPROVAL_REQUIRED.value
@@ -1025,7 +1127,10 @@ def enrich_incident_for_autonomy(
     root_cause = classify_incident_root_cause(incident, dispatch_result)
     action = incident.recovery_action or incident.recommended_action
     approval_required = _incident_approval_required(incident, policy)
-    if root_cause == RootCauseClassification.PERSISTENT_EXTERNAL_ACCESS_RESTRICTION.value:
+    if root_cause in {
+        RootCauseClassification.PERSISTENT_EXTERNAL_ACCESS_RESTRICTION.value,
+        RootCauseClassification.SOURCE_EXTERNAL_RESTRICTION.value,
+    }:
         approval_required = False
     enriched = replace(
         incident,
@@ -1113,7 +1218,7 @@ def _build_incident(
         evidence=sorted(dict.fromkeys(evidence)),
         recommended_action=recommended_action,
         affected_date=affected_date or status.date,
-        remediation=remediation or {},
+        remediation=remediation if remediation is not None else dict((existing or {}).get("remediation") or {}),
     )
 
 
@@ -1291,6 +1396,95 @@ def _auto_refresh_status_export_if_allowed(
         post_plan,
         remediation,
         stale_recovered,
+    )
+
+
+def _remediation_payload_from_transient_receipt(
+    receipt: RemediationReceipt,
+    *,
+    attempted_at: str,
+    attempt_count: int,
+) -> dict[str, Any]:
+    status_after = receipt.validation.get("underlying_status_after") if isinstance(receipt.validation, dict) else None
+    return _remediation_payload(
+        attempted=True,
+        action=receipt.action,
+        outcome=receipt.outcome if receipt.accepted else "FAILED",
+        changed=receipt.accepted and receipt.outcome != "NO_ACTION",
+        attempted_at=attempted_at,
+        post_status=status_after.get("state") if isinstance(status_after, dict) else None,
+        unexpected_changes=receipt.warnings if not receipt.accepted else [],
+        status_artifacts_changed=receipt.changed_paths,
+        reason=receipt.reason,
+        attempt_count=attempt_count,
+    )
+
+
+def _auto_transient_network_retry_if_allowed(
+    *,
+    incident: Incident,
+    status: DispatchStatus,
+    dispatch_root: Path,
+    repo_root: Path,
+    operator_root: Path,
+    config: OperatorConfig,
+    policy: RemediationPolicy,
+    checked_at: str,
+    allow_automatic_remediation: bool,
+) -> tuple[Incident, DispatchStatus, RecoveryPlan, dict[str, Any], bool]:
+    plan = build_remediation_action_plan(
+        incident,
+        runner_root=dispatch_root,
+        operator_root=operator_root,
+        current_status=status,
+        status_root=_configured_status_root(config, repo_root),
+        policy=policy,
+        runner=_run_command,
+    )
+    if plan.proposed_action != TRANSIENT_NETWORK_RETRY_ACTION:
+        return incident, status, build_recovery_plan_from_status(status), incident.remediation, False
+    attempts = _attempt_count(incident.remediation if isinstance(incident.remediation, dict) else {}, plan.proposed_action)
+    if not allow_automatic_remediation:
+        remediation = _remediation_payload(action=plan.proposed_action, reason="automatic remediation disabled for this run", attempt_count=attempts)
+        return replace(incident, remediation=remediation), status, build_recovery_plan_from_status(status), remediation, False
+    if policy.mode_for(TRANSIENT_NETWORK_RETRY_ACTION) != "automatic":
+        remediation = _remediation_payload(action=plan.proposed_action, reason=f"policy mode is {policy.mode_for(TRANSIENT_NETWORK_RETRY_ACTION)}", attempt_count=attempts)
+        return replace(incident, remediation=remediation), status, build_recovery_plan_from_status(status), remediation, False
+    retry_state = _transient_retry_backoff_state(incident, now=_parse_time(checked_at) or _utc_now())
+    if attempts >= _retry_limit(plan.proposed_action) or not retry_state["retry_budget_remaining"]:
+        remediation = _remediation_payload(action=plan.proposed_action, reason="bounded retry limit reached", attempt_count=attempts)
+        return replace(incident, remediation=remediation), status, build_recovery_plan_from_status(status), remediation, False
+    if not retry_state["backoff_elapsed"]:
+        remediation = _remediation_payload(action=plan.proposed_action, reason=f"minimum backoff active until {retry_state['next_eligible_at']}", attempt_count=attempts)
+        return replace(incident, remediation=remediation), status, build_recovery_plan_from_status(status), remediation, False
+    if not plan.executable:
+        remediation = _remediation_payload(action=plan.proposed_action, reason=plan.reason, attempt_count=attempts)
+        return replace(incident, remediation=remediation), status, build_recovery_plan_from_status(status), remediation, False
+    receipt = _apply_transient_network_task_retry(
+        plan,
+        repo_root=repo_root,
+        runner_root=dispatch_root,
+        operator_root=operator_root,
+        config=config,
+        current_status=status,
+        runner=_run_command,
+        now=_parse_time(checked_at),
+    )
+    remediation = _remediation_payload_from_transient_receipt(receipt, attempted_at=checked_at, attempt_count=attempts + 1)
+    post_status = build_status(status.dispatch, status.date, root=dispatch_root)
+    post_plan = build_recovery_plan_from_status(post_status)
+    recovered = receipt.accepted and _terminal_retry_proof(post_status)
+    return (
+        replace(
+            incident,
+            state=IncidentState.RECOVERED.value if recovered else IncidentState.OPEN.value,
+            remediation=remediation,
+            recommended_action="NO_ACTION" if recovered else incident.recommended_action,
+        ),
+        post_status,
+        post_plan,
+        remediation,
+        recovered,
     )
 
 
@@ -1535,12 +1729,31 @@ def check_operator(
             existing=open_incidents.get(key),
             affected_date=status.date,
         )
+        incident, retried_status, retried_plan, remediation, retry_recovered = _auto_transient_network_retry_if_allowed(
+            incident=incident,
+            status=status,
+            dispatch_root=dispatch_config.runner_root,
+            repo_root=repo_root,
+            operator_root=operator_root,
+            config=config,
+            policy=policy,
+            checked_at=checked_at,
+            allow_automatic_remediation=allow_automatic_remediation,
+        )
+        if remediation.get("attempted") is True:
+            status = retried_status
+            plan = retried_plan
+            if retry_recovered:
+                recommended = "NO_ACTION"
+            else:
+                classification = _classify_status(status) or classification
+                recommended = _recommended_action(classification, status, plan)
         current_keys.add(key)
         incidents.append(incident)
         dispatch_results.append(
             DispatchResult(
                 dispatch=dispatch,
-                state=status.state,
+                state="AUTO_RECOVERED" if retry_recovered else status.state,
                 classification=classification.value,
                 recommended_action=recommended,
                 status_state=status.state,
@@ -1550,6 +1763,8 @@ def check_operator(
                 incident_id=incident.incident_id,
                 evidence=incident.evidence,
                 exported_status=asdict(exported),
+                notification_state="AUTO_RECOVERED" if retry_recovered else "RECOMMENDATION_ONLY",
+                remediation=remediation,
             )
         )
 
@@ -2254,7 +2469,7 @@ def _append_context_from_mapping(
     source_markers = ("failed source", "failed_source", "failed-extractions", "source failure", "feed", "rss", "network", "timeout", "tls")
     if any(marker in text for marker in source_markers):
         source_failures.add(task_key or "source failure")
-    code_markers = ("traceback", "exception", "typeerror", "valueerror", "assertionerror", "modulenotfounderror", "nameerror")
+    code_markers = ("traceback", "typeerror", "valueerror", "assertionerror", "modulenotfounderror", "nameerror")
     for marker in code_markers:
         if marker in text:
             code_exception_markers.add(marker)
@@ -2375,6 +2590,201 @@ def _context_supports_source_failure(incident: Incident, context: RemediationEvi
 
 def _context_supports_code_defect(context: RemediationEvidenceContext) -> bool:
     return bool(context.code_exception_markers) and not _context_supports_checkout_hygiene(context) and not context.source_failures
+
+
+def _context_blob(context: RemediationEvidenceContext) -> str:
+    evidence_diagnostics = [
+        {
+            key: entry.get(key)
+            for key in ("summary", "excerpt", "error")
+            if entry.get(key) is not None
+        }
+        for entry in context.evidence_entries
+    ]
+    return _lower_values(
+        {
+            "task_failures": context.task_failures,
+            "failure_stages": context.failure_stages,
+            "exit_codes": context.exit_codes,
+            "checkout_failures": context.checkout_failures,
+            "source_failures": context.source_failures,
+            "code_exception_markers": context.code_exception_markers,
+            "evidence_diagnostics": evidence_diagnostics,
+            "evidence_complete": context.evidence_complete,
+        }
+    )
+
+
+def _root_cause_from_context(incident: Incident, context: RemediationEvidenceContext) -> str:
+    blob = _context_blob(context)
+    if _source_external_restriction_markers(blob):
+        return RootCauseClassification.SOURCE_EXTERNAL_RESTRICTION.value
+    if context.code_exception_markers:
+        return RootCauseClassification.INTERNAL_FAILURE.value
+    if _transient_network_markers(blob):
+        if len(context.source_failures) <= 1 and _source_transient_markers(blob) and "github" not in blob:
+            return RootCauseClassification.SOURCE_TRANSIENT.value
+        return RootCauseClassification.TRANSIENT_NETWORK.value
+    if _source_transient_markers(blob):
+        return RootCauseClassification.SOURCE_TRANSIENT.value
+    return RootCauseClassification.UNKNOWN.value
+
+
+def _task_keys_from_context(context: RemediationEvidenceContext) -> set[str]:
+    keys: set[str] = set()
+    for row in context.task_failures:
+        for key in ("task_key", "task_name"):
+            value = str(row.get(key) or "").strip()
+            if value:
+                keys.add(value)
+    return keys
+
+
+def _transient_retry_handler(incident: Incident, context: RemediationEvidenceContext) -> dict[str, Any] | None:
+    row = TRANSIENT_RETRY_TASKS.get(incident.dispatch)
+    if not row:
+        return None
+    task_keys = _task_keys_from_context(context)
+    allowed = set(row["task_keys"])
+    if task_keys and not task_keys.intersection(allowed):
+        return None
+    if incident.dispatch == "gaza":
+        return None
+    return {
+        "dispatch": incident.dispatch,
+        "task_keys": sorted(task_keys.intersection(allowed) or allowed),
+        "wrapper": str(row["wrapper"]),
+        "date_argument": row.get("date_argument"),
+        "public_side_effects": bool(row.get("public_side_effects")),
+    }
+
+
+def _transient_retry_command(handler: dict[str, Any], *, runner_root: Path, date: str, incident_id: str, attempt_count: int) -> list[str]:
+    wrapper = runner_root / str(handler["wrapper"])
+    python_executable = _runner_python(runner_root)
+    run_id = f"operator-retry-{incident_id}-{attempt_count + 1}"
+    command = [
+        "powershell",
+        "-NoProfile",
+        "-NonInteractive",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        str(wrapper),
+        "-RepositoryRoot",
+        str(runner_root),
+        "-PythonExecutable",
+        str(python_executable),
+        "-SourceBranch",
+        "add/pages-repo-default",
+    ]
+    date_argument = handler.get("date_argument")
+    if date_argument:
+        command.extend([str(date_argument), date])
+    if handler["dispatch"] in {"care-line", "ice"}:
+        command.extend(["-RunId", run_id])
+    return command
+
+
+def _runner_transient_retry_safety(
+    dispatch: str,
+    runner_root: Path,
+    *,
+    protected_head: str | None,
+    runner: Any = _run_command,
+) -> dict[str, Any]:
+    status = runner(["git", "status", "--porcelain=v1", "--untracked-files=all"], cwd=runner_root)
+    tracked_dirty, untracked = _runner_status_paths(status.stdout if status.ok else "")
+    unsanctioned = _unsanctioned_untracked(dispatch, untracked)
+    branch = _git_stdout(runner, ["branch", "--show-current"], cwd=runner_root)
+    head = _git_stdout(runner, ["rev-parse", "HEAD"], cwd=runner_root)
+    validation_capability = _runner_validation_capability(runner_root)
+    preflight: dict[str, Any] = {"attempted": False, "ok": False}
+    if validation_capability["ok"]:
+        preflight_result = runner(validation_capability["preflight_argv"], cwd=runner_root)
+        preflight = {
+            "attempted": True,
+            "ok": preflight_result.ok,
+            "exit_code": preflight_result.exit_code,
+            "stdout_tail": preflight_result.stdout[-1000:],
+            "stderr_tail": preflight_result.stderr[-1000:],
+        }
+    safe = (
+        status.ok
+        and branch == "add/pages-repo-default"
+        and bool(head)
+        and bool(protected_head)
+        and head == protected_head
+        and not tracked_dirty
+        and not unsanctioned
+        and validation_capability["ok"]
+        and preflight.get("ok") is True
+    )
+    return {
+        "safe": safe,
+        "runner_root": str(runner_root),
+        "branch": branch,
+        "head": head,
+        "protected_head": protected_head,
+        "tracked_dirty_paths": tracked_dirty,
+        "untracked_paths": sorted(untracked),
+        "unsanctioned_untracked_paths": unsanctioned,
+        "validation_capability": validation_capability,
+        "preflight": preflight,
+    }
+
+
+def _connectivity_recovered_proof(runner_root: Path, *, runner: Any = _run_command) -> dict[str, Any]:
+    dns = runner(
+        ["powershell", "-NoProfile", "-NonInteractive", "-Command", "[System.Net.Dns]::GetHostEntry('github.com') | Out-Null"],
+        cwd=runner_root,
+    )
+    git_probe = runner(TRANSIENT_NETWORK_DEPENDENCIES["github"]["read_only_probe"], cwd=runner_root)
+    return {
+        "attempted": True,
+        "dependency": "github",
+        "host": TRANSIENT_NETWORK_DEPENDENCIES["github"]["host"],
+        "dns_resolution": {
+            "ok": dns.ok,
+            "exit_code": dns.exit_code,
+            "stdout_tail": dns.stdout[-500:],
+            "stderr_tail": dns.stderr[-500:],
+        },
+        "read_only_git_probe": {
+            "ok": git_probe.ok,
+            "exit_code": git_probe.exit_code,
+            "stdout_tail": git_probe.stdout[-500:],
+            "stderr_tail": git_probe.stderr[-500:],
+        },
+        "ok": dns.ok and git_probe.ok,
+    }
+
+
+def _transient_retry_backoff_state(incident: Incident, *, now: datetime | None = None) -> dict[str, Any]:
+    now = now or _utc_now()
+    remediation = incident.remediation if isinstance(incident.remediation, dict) else {}
+    attempts = _attempt_count(remediation, TRANSIENT_NETWORK_RETRY_ACTION)
+    attempted_at = remediation.get("attempted_at")
+    parsed_attempted_at = _parse_time(str(attempted_at)) if attempted_at else None
+    next_eligible_at = parsed_attempted_at + timedelta(minutes=TRANSIENT_NETWORK_BACKOFF_MINUTES) if parsed_attempted_at else None
+    eligible = next_eligible_at is None or now >= next_eligible_at
+    return {
+        "attempt_count": attempts,
+        "max_attempts": _retry_limit(TRANSIENT_NETWORK_RETRY_ACTION),
+        "last_attempted_at": attempted_at,
+        "minimum_backoff_minutes": TRANSIENT_NETWORK_BACKOFF_MINUTES,
+        "next_eligible_at": _format_time(next_eligible_at) if next_eligible_at else None,
+        "backoff_elapsed": eligible,
+        "retry_budget_remaining": attempts < _retry_limit(TRANSIENT_NETWORK_RETRY_ACTION),
+    }
+
+
+def _terminal_retry_proof(status: DispatchStatus) -> bool:
+    if status.next_action in {"PUBLISH_APPROVED_RELEASE", "PUBLISH_NO_UPDATE", "REPLAY_COLLECTION"}:
+        return False
+    if status.public_state not in {"VERIFIED", "NOT_VERIFIED", "UNKNOWN"}:
+        return False
+    return status.state in TERMINAL_NO_ACTION_STATES and status.next_action not in {"INVESTIGATE_COLLECTION", "UNKNOWN_REQUIRES_OPERATOR"}
 
 
 def _current_condition_for(incident: Incident, current_status: DispatchStatus | None) -> str:
@@ -2522,9 +2932,62 @@ def build_remediation_action_plan(
             reason = "runner rollout is the bounded operational remedy, but safety checks must pass before execution"
             executable = False
             mutation_scope = ["production runner Git HEAD only"]
-    elif _context_supports_source_failure(incident, context):
-        action = "INVESTIGATE_SOURCE_FAILURES"
-        reason = "evidence points to source/feed failures rather than a code defect"
+    elif _context_supports_source_failure(incident, context) or _root_cause_from_context(incident, context) in {
+        RootCauseClassification.TRANSIENT_NETWORK.value,
+        RootCauseClassification.SOURCE_EXTERNAL_RESTRICTION.value,
+        RootCauseClassification.SOURCE_TRANSIENT.value,
+        RootCauseClassification.INTERNAL_FAILURE.value,
+    }:
+        root_cause = _root_cause_from_context(incident, context)
+        handler = _transient_retry_handler(incident, context)
+        if root_cause == RootCauseClassification.TRANSIENT_NETWORK.value and handler:
+            protected_head = _git_head(_operator_code_root(operator_root))
+            retry_state = _transient_retry_backoff_state(incident)
+            runner_safety = _runner_transient_retry_safety(incident.dispatch, runner_root, protected_head=protected_head, runner=runner)
+            connectivity = _connectivity_recovered_proof(runner_root, runner=runner)
+            action = TRANSIENT_NETWORK_RETRY_ACTION
+            reason = "transient network failure is eligible for canonical non-public task retry"
+            executable = (
+                policy is not None
+                and policy.mode_for(TRANSIENT_NETWORK_RETRY_ACTION) == "automatic"
+                and runner_safety["safe"]
+                and connectivity["ok"]
+                and retry_state["retry_budget_remaining"]
+                and retry_state["backoff_elapsed"]
+            )
+            mutation_scope = [
+                "non-public collection or monitor runtime receipts",
+                "ops/status/<dispatch>/latest.json after status refresh",
+                "ops/operator/remediation/receipts/<date>/<receipt>.json",
+            ]
+            safety_checks = {
+                "structured_evidence": context.to_payload(),
+                "root_cause_classification": root_cause,
+                "handler": handler,
+                "runner_safety": runner_safety,
+                "connectivity_proof": connectivity,
+                "retry_state": retry_state,
+                "policy_mode": policy.mode_for(TRANSIENT_NETWORK_RETRY_ACTION) if policy else "recommend",
+                "public_side_effects": False,
+                "scheduler_changes": False,
+                "collection_rerun": True,
+                "editorial_mutation": False,
+                "publication_attempted": False,
+                "merge_pr": False,
+            }
+        elif root_cause == RootCauseClassification.SOURCE_EXTERNAL_RESTRICTION.value:
+            action = "WAIT_FOR_NEXT_SCHEDULED_RUN"
+            reason = "source evidence is an external access restriction and is not eligible for transient-network retry"
+        elif root_cause == RootCauseClassification.SOURCE_TRANSIENT.value:
+            action = "INVESTIGATE_SOURCE_FAILURES"
+            reason = "single-source transient failure requires source-specific bounded policy before retry"
+        elif root_cause == RootCauseClassification.INTERNAL_FAILURE.value:
+            action = "ENGINEER_PREPARE_FIX"
+            reason = "evidence supports an internal parser/configuration failure, not network retry"
+            mutation_scope = ["C:\\BlueFernRunner\\OperatorWorktrees\\<work-id>", "operator repair branch", "approval-ready repair PR"]
+        else:
+            action = "INVESTIGATE_SOURCE_FAILURES"
+            reason = "evidence points to source/feed failures rather than a code defect"
     elif (
         current_status is not None
         and incident.affected_date
@@ -3094,6 +3557,133 @@ def _apply_refresh_status_export(
     return _write_remediation_receipt(operator_root, receipt)
 
 
+def _apply_transient_network_task_retry(
+    plan: RemediationActionPlan,
+    *,
+    repo_root: Path,
+    runner_root: Path,
+    operator_root: Path,
+    config: OperatorConfig,
+    current_status: DispatchStatus,
+    runner: Any = _run_command,
+    now: datetime | None = None,
+) -> RemediationReceipt:
+    started_time = now or _utc_now()
+    started = _format_time(started_time)
+    safety = plan.safety_checks if isinstance(plan.safety_checks, dict) else {}
+    handler = safety.get("handler") if isinstance(safety.get("handler"), dict) else None
+    if not handler:
+        return _write_remediation_receipt(
+            operator_root,
+            RemediationReceipt(
+                plan.dispatch,
+                plan.incident_id,
+                plan.proposed_action,
+                False,
+                "REFUSED",
+                "no registered transient retry handler",
+                started,
+                _format_time(_utc_now()),
+                validation={"plan_safety_checks": safety},
+            ),
+        )
+    protected_head = _git_head(repo_root)
+    runner_safety = _runner_transient_retry_safety(plan.dispatch, runner_root, protected_head=protected_head, runner=runner)
+    connectivity = _connectivity_recovered_proof(runner_root, runner=runner)
+    retry_state = {
+        key: safety.get("retry_state", {}).get(key)
+        for key in ("attempt_count", "max_attempts", "last_attempted_at", "minimum_backoff_minutes", "next_eligible_at")
+        if isinstance(safety.get("retry_state"), dict)
+    }
+    validation: dict[str, Any] = {
+        "handler": handler,
+        "runner_safety": runner_safety,
+        "connectivity_proof": connectivity,
+        "retry_state": retry_state,
+        "underlying_status_before": current_status.to_json_payload(),
+        "public_side_effects": False,
+        "scheduler_changes": False,
+        "publication_attempted": False,
+    }
+    if not runner_safety["safe"]:
+        receipt = RemediationReceipt(plan.dispatch, plan.incident_id, plan.proposed_action, False, "REFUSED", "runner preconditions failed", started, _format_time(_utc_now()), expected_mutation_scope=plan.expected_mutation_scope, validation=validation)
+        return _write_remediation_receipt(operator_root, receipt)
+    if not connectivity["ok"]:
+        receipt = RemediationReceipt(plan.dispatch, plan.incident_id, plan.proposed_action, False, "BLOCKED", "connectivity proof did not recover", started, _format_time(_utc_now()), expected_mutation_scope=plan.expected_mutation_scope, validation=validation)
+        return _write_remediation_receipt(operator_root, receipt)
+    if _terminal_retry_proof(current_status):
+        validation["underlying_status_after"] = current_status.to_json_payload()
+        receipt = RemediationReceipt(plan.dispatch, plan.incident_id, plan.proposed_action, True, "NO_ACTION", "terminal receipt already exists; retry not duplicated", started, _format_time(_utc_now()), before_head=runner_safety.get("head"), after_head=runner_safety.get("head"), expected_mutation_scope=plan.expected_mutation_scope, validation=validation)
+        return _write_remediation_receipt(operator_root, receipt)
+
+    command = _transient_retry_command(handler, runner_root=runner_root, date=plan.affected_date or current_status.date, incident_id=plan.incident_id, attempt_count=int((retry_state or {}).get("attempt_count") or 0))
+    retry_result = runner(command, cwd=runner_root)
+    status_after = build_status(plan.dispatch, plan.affected_date or current_status.date, root=runner_root)
+    validation.update(
+        {
+            "command_shape": command[:6] + ["<wrapper>", *command[7:]],
+            "retry_exit_code": retry_result.exit_code,
+            "retry_stdout_tail": retry_result.stdout[-2000:],
+            "retry_stderr_tail": retry_result.stderr[-2000:],
+            "underlying_status_after": status_after.to_json_payload(),
+            "terminal_proof": _terminal_retry_proof(status_after),
+        }
+    )
+    status_refresh_receipt: RemediationReceipt | None = None
+    if retry_result.ok and _terminal_retry_proof(status_after):
+        refresh_plan = RemediationActionPlan(
+            dispatch=plan.dispatch,
+            incident_id=plan.incident_id,
+            classification=Classification.STALE_OBSERVABILITY.value,
+            affected_date=plan.affected_date or status_after.date,
+            current_condition=status_after.state,
+            proposed_action="REFRESH_STATUS_EXPORT",
+            reason="refresh operational status after successful transient network retry",
+            evidence=plan.evidence,
+            safety_checks={
+                "handler": "post_transient_retry_status_refresh",
+                "public_side_effects": False,
+                "scheduler_changes": False,
+                "collection_rerun": False,
+                "editorial_mutation": False,
+                "merge_pr": False,
+            },
+            approval_required=False,
+            executable=True,
+            expected_mutation_scope=_refresh_status_export_scope(plan.dispatch, plan.affected_date or status_after.date),
+        )
+        status_refresh_receipt = _apply_refresh_status_export(
+            refresh_plan,
+            repo_root=repo_root,
+            runner_root=runner_root,
+            operator_root=operator_root,
+            config=config,
+            current_status=status_after,
+            now=started_time,
+        )
+        validation["status_refresh_receipt"] = status_refresh_receipt.to_payload()
+    accepted = retry_result.ok and _terminal_retry_proof(status_after) and (status_refresh_receipt is None or status_refresh_receipt.accepted)
+    outcome = "REFRESHED" if accepted else "FAILED"
+    reason = "canonical non-public task retry produced terminal evidence and refreshed status" if accepted else "canonical retry did not produce accepted terminal proof"
+    receipt = RemediationReceipt(
+        plan.dispatch,
+        plan.incident_id,
+        plan.proposed_action,
+        accepted,
+        outcome,
+        reason,
+        started,
+        _format_time(_utc_now()),
+        before_head=runner_safety.get("head"),
+        after_head=_git_stdout(runner, ["rev-parse", "HEAD"], cwd=runner_root),
+        expected_mutation_scope=plan.expected_mutation_scope,
+        changed_paths=[],
+        validation=validation,
+        warnings=[] if accepted else ["transient network retry failed-safe; no publication was attempted"],
+    )
+    return _write_remediation_receipt(operator_root, receipt)
+
+
 def apply_remediation(
     *,
     dispatch: str,
@@ -3151,6 +3741,17 @@ def apply_remediation(
             operator_root=operator_root,
             config=config,
             current_status=current_status,
+            now=now,
+        )
+    if action == TRANSIENT_NETWORK_RETRY_ACTION:
+        return _apply_transient_network_task_retry(
+            plan,
+            repo_root=repo_root,
+            runner_root=runner_root,
+            operator_root=operator_root,
+            config=config,
+            current_status=current_status,
+            runner=runner,
             now=now,
         )
 

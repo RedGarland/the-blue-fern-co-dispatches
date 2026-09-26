@@ -380,10 +380,9 @@ def _write_operational_health_receipt(root: Path, record: dict[str, Any]) -> Non
     status = str(record.get("status") or "failure")
     receipt = build_care_line_operational_receipt(
         task_key="care_line_collection",
-        # The wrapper receives the edition date, while each installed trigger
-        # supplies its own run instance. Preserve the instance timestamp until
-        # the scheduler can pass an explicit scheduled trigger timestamp.
-        scheduled_for=str(record.get("scheduled_for") or record.get("started_at") or record.get("edition_date") or "unknown"),
+        # Collection recovery and status evaluation are keyed by the logical
+        # run date, not by the wall-clock time of a delayed retry.
+        scheduled_for=str(record.get("scheduled_for") or record.get("edition_date") or record.get("started_at") or "unknown"),
         started_at=record.get("started_at"),
         completed_at=record.get("completed_at"),
         exit_code=record.get("pipeline_exit_code") if record.get("pipeline_exit_code") is not None else (0 if record.get("ok") else 1),

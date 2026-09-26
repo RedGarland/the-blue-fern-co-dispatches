@@ -4,6 +4,8 @@ ENGINEER_PREPARE_FIX:
   mode: automatic_prepare_pr
 REFRESH_STATUS_EXPORT:
   mode: automatic
+TRANSIENT_NETWORK_TASK_RETRY:
+  mode: automatic
 MERGE_PR:
   mode: approval_required
 VERIFY_PUBLIC_STATE:

@@ -38,7 +38,8 @@ function Normalize-GitPath {
     if (-not $Line) { return "" }
     $text = $Line.Replace("\\", "/").Trim()
     if ($text.Contains(" -> ")) {
-        $text = $text.Split(@(" -> "), 2, [System.StringSplitOptions]::None)[1]
+        $parts = $text -split " -> ", 2
+        $text = $parts[-1]
     }
     return $text.Trim()
 }
@@ -213,11 +214,12 @@ foreach ($target in $Targets) {
             throw "runner root is missing"
         }
         if (-not (Test-Path -LiteralPath (Join-Path $root ".git"))) {
-            throw "runner root is not a Git checkout"
+            throw "runner root is not a Git checkout or worktree"
         }
 
-        $fetch = Invoke-Git -Root $root -Arguments @("fetch", "--no-tags", "origin", $TargetBranch)
         $targetRef = "origin/$TargetBranch"
+        $remoteRefSpec = "+refs/heads/$TargetBranch:refs/remotes/origin/$TargetBranch"
+        $fetch = Invoke-Git -Root $root -Arguments @("fetch", "--no-tags", "origin", $remoteRefSpec)
         $branchResult = Invoke-Git -Root $root -Arguments @("branch", "--show-current")
         $before = Invoke-Git -Root $root -Arguments @("rev-parse", "HEAD")
         $targetHeadResult = Invoke-Git -Root $root -Arguments @("rev-parse", $targetRef)

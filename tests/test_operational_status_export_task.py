@@ -370,6 +370,17 @@ def test_registration_uses_one_hour_offset_task_and_safe_overlap_settings() -> N
     assert "run_operational_status_export.ps1" in text
 
 
+def test_registration_wires_all_active_runner_roots() -> None:
+    text = (ROOT / "scripts" / "register_operational_status_export_task.ps1").read_text(encoding="utf-8")
+    assert "[string]$SourceRoot = 'C:\\BlueFernRunner\\FoodLineCurrent6'" in text
+    assert "[string]$CareSourceRoot = 'C:\\BlueFernRunner\\CareLineNationalCurrent8'" in text
+    assert "[string]$GazaSourceRoot = 'C:\\BlueFernRunner\\GazaDispatchesCurrent6'" in text
+    assert "[string]$IceSourceRoot = 'C:\\BlueFernRunner\\ICEMonitorCurrent'" in text
+    assert "-CareSourceRoot" in text
+    assert "-GazaSourceRoot" in text
+    assert "-IceSourceRoot" in text
+    assert "Required operational status path does not exist" in text
+
 def test_wrapper_never_names_a_production_execution_stage() -> None:
     text = (ROOT / "scripts" / "run_operational_status_export.ps1").read_text(encoding="utf-8").lower()
     for forbidden in ("source watch", "current intake", "daily publish", "resume"):
@@ -380,9 +391,12 @@ def test_powershell_wrapper_conditionally_plumbs_care_source_root() -> None:
     text = (ROOT / "scripts" / "run_operational_status_export.ps1").read_text(encoding="utf-8")
     assert "[string]$SourceRoot = 'C:\\BlueFernRunner\\FoodLineCurrent6'" in text
     assert "[string]$StatusCheckout = 'C:\\BlueFernRunner\\OperationalStatusCurrent'" in text
-    assert "[string]$CareSourceRoot = ''" in text
-    assert "[string]$IceSourceRoot = ''" in text
+    assert "[string]$CareSourceRoot = 'C:\\BlueFernRunner\\CareLineNationalCurrent8'" in text
+    assert "[string]$GazaSourceRoot = 'C:\\BlueFernRunner\\GazaDispatchesCurrent6'" in text
+    assert "[string]$IceSourceRoot = 'C:\\BlueFernRunner\\ICEMonitorCurrent'" in text
     assert "IsNullOrWhiteSpace($CareSourceRoot)" in text
+    assert "IsNullOrWhiteSpace($GazaSourceRoot)" in text
     assert "IsNullOrWhiteSpace($IceSourceRoot)" in text
     assert "$arguments += @('--care-source-root', $CareSourceRoot)" in text
+    assert "$arguments += @('--gaza-source-root', $GazaSourceRoot)" in text
     assert "$arguments += @('--ice-source-root', $IceSourceRoot)" in text

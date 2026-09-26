@@ -3,6 +3,9 @@ param(
     [string]$RepositoryRoot = "",
     [string]$SourceRoot = 'C:\BlueFernRunner\FoodLineCurrent6',
     [string]$StatusCheckout = 'C:\BlueFernRunner\OperationalStatusCurrent',
+    [string]$CareSourceRoot = 'C:\BlueFernRunner\CareLineNationalCurrent8',
+    [string]$GazaSourceRoot = 'C:\BlueFernRunner\GazaDispatchesCurrent6',
+    [string]$IceSourceRoot = 'C:\BlueFernRunner\ICEMonitorCurrent',
     [string]$UserId = ""
 )
 
@@ -14,6 +17,9 @@ $derivedRoot = (Resolve-Path (Join-Path $scriptRoot "..")).Path
 $repoRoot = if ($RepositoryRoot) { (Resolve-Path -LiteralPath $RepositoryRoot).Path } else { $derivedRoot }
 $runner = Join-Path $repoRoot "scripts\run_operational_status_export.ps1"
 if (-not (Test-Path -LiteralPath $runner)) { throw "Repository root does not contain the operational status runner: $repoRoot" }
+foreach ($requiredRoot in @($SourceRoot, $StatusCheckout, $CareSourceRoot, $GazaSourceRoot, $IceSourceRoot)) {
+    if (-not (Test-Path -LiteralPath $requiredRoot)) { throw "Required operational status path does not exist: $requiredRoot" }
+}
 
 $effectiveUserId = if ($UserId) { $UserId } else { [System.Security.Principal.WindowsIdentity]::GetCurrent().Name }
 $sameNameElsewhere = @(Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue | Where-Object { $_.TaskPath -ne $TaskPath })
@@ -21,7 +27,7 @@ if ($sameNameElsewhere) { throw "An operational status task with the same name e
 
 $start = (Get-Date).Date.AddMinutes(15)
 if ($start -le (Get-Date)) { $start = $start.AddHours(1) }
-$actionArguments = "-NoProfile -NonInteractive -ExecutionPolicy Bypass -File `"$runner`" -SourceRoot `"$SourceRoot`" -StatusCheckout `"$StatusCheckout`""
+$actionArguments = "-NoProfile -NonInteractive -ExecutionPolicy Bypass -File `"$runner`" -SourceRoot `"$SourceRoot`" -StatusCheckout `"$StatusCheckout`" -CareSourceRoot `"$CareSourceRoot`" -GazaSourceRoot `"$GazaSourceRoot`" -IceSourceRoot `"$IceSourceRoot`""
 $action = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument $actionArguments -WorkingDirectory $repoRoot
 $trigger = New-ScheduledTaskTrigger -Once -At $start -RepetitionInterval (New-TimeSpan -Hours 1) -RepetitionDuration (New-TimeSpan -Days 3650)
 $principal = New-ScheduledTaskPrincipal -UserId $effectiveUserId -LogonType Interactive -RunLevel Limited

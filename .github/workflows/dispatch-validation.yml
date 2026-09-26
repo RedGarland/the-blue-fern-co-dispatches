@@ -62,14 +62,9 @@ jobs:
         with:
           script: |
             const state = '${{ job.status }}' === 'success' ? 'success' : 'failure';
-            const { data: pull } = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.payload.pull_request.number,
-            });
-            const sha = pull.head?.sha;
+            const sha = context.payload.pull_request?.head?.sha;
             if (!sha) {
-              throw new Error('pull_request.head.sha is unavailable');
+              throw new Error('event pull_request.head.sha is unavailable');
             }
             await github.rest.repos.createCommitStatus({
               owner: context.repo.owner,

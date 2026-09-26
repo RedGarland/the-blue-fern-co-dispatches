@@ -260,7 +260,7 @@ foreach ($target in $Targets) {
         $row.TrackedDirtyPaths = @($status.Tracked)
         $row.UntrackedPaths = @($status.Untracked)
 
-        if ($row.TrackedDirtyPaths.Count -gt 0) {
+        if (@($row.TrackedDirtyPaths).Count -gt 0) {
             throw "tracked working-tree changes are present"
         }
 
@@ -271,9 +271,9 @@ foreach ($target in $Targets) {
 
         $incoming = Get-IncomingPaths -Root $root -TargetRef $targetRef
         $row.IncomingPaths = @($incoming)
-        $collisions = Get-UntrackedCollisions -Untracked $row.UntrackedPaths -Incoming $incoming
+        $collisions = @(Get-UntrackedCollisions -Untracked $row.UntrackedPaths -Incoming $incoming)
         $row.UntrackedIncomingCollisions = @($collisions)
-        if ($collisions.Count -gt 0) {
+        if (@($collisions).Count -gt 0) {
             throw "untracked runtime paths overlap incoming tracked paths: $($collisions -join ', ')"
         }
 
@@ -316,11 +316,11 @@ if ($Apply -and $targetHeadConsistent -and $frozenTargetHead) {
                 throw "runner HEAD changed after discovery: expected $($row.BeforeHead), found $currentHead"
             }
             $currentStatus = Get-StatusPaths -Root $root
-            if ($currentStatus.Tracked.Count -gt 0) {
+            if (@($currentStatus.Tracked).Count -gt 0) {
                 throw "tracked working-tree changes appeared after discovery"
             }
-            $lateCollisions = Get-UntrackedCollisions -Untracked @($currentStatus.Untracked) -Incoming @($row.IncomingPaths)
-            if ($lateCollisions.Count -gt 0) {
+            $lateCollisions = @(Get-UntrackedCollisions -Untracked @($currentStatus.Untracked) -Incoming @($row.IncomingPaths))
+            if (@($lateCollisions).Count -gt 0) {
                 throw "untracked runtime collision appeared after discovery: $($lateCollisions -join ', ')"
             }
 

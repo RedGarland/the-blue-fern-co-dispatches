@@ -2,9 +2,9 @@
 param(
     [string]$SourceRoot = 'C:\BlueFernRunner\FoodLineCurrent6',
     [string]$StatusCheckout = 'C:\BlueFernRunner\OperationalStatusCurrent',
-    [string]$CareSourceRoot = '',
-    [string]$GazaSourceRoot = '',
-    [string]$IceSourceRoot = '',
+    [string]$CareSourceRoot = 'C:\BlueFernRunner\CareLineNationalCurrent8',
+    [string]$GazaSourceRoot = 'C:\BlueFernRunner\GazaDispatchesCurrent6',
+    [string]$IceSourceRoot = 'C:\BlueFernRunner\ICEMonitorCurrent',
     [string]$Python = 'python.exe'
 )
 

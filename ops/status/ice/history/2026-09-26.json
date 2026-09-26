@@ -10,30 +10,75 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "UNKNOWN",
+  "aggregate_status": "DEGRADED",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "dcde4a99aee6ebf44436878df820de93571dcbb9",
+  "current_runner_head": "ab8d34e4e1b27c40720b2f4a5c25ee5a0779d6d1",
   "dispatch": "ice",
-  "last_exported_at": "2026-09-26T16:15:07.531190Z",
-  "last_receipt_at": null,
+  "last_exported_at": "2026-09-26T17:10:08.176737Z",
+  "last_receipt_at": "2026-09-26T16:51:12.003256Z",
   "latest_runtime_proof_date": null,
   "migration_status": "MIGRATED",
   "next_expected_run": null,
   "observed_date": "2026-09-26",
   "public_side_effects": {
     "publication_attempted": false,
-    "publication_status": null
+    "publication_status": "not_authorized_monitor_only"
   },
   "publication_attempted": false,
-  "publication_status": null,
-  "receipt_completeness": "NO_PROOF",
+  "publication_status": "not_authorized_monitor_only",
+  "receipt_completeness": "COMPLETE",
   "recovery_lifecycle": "HEALTHY",
   "runner_source_head": null,
-  "scheduled_health_authoritative": false,
+  "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
     "ice_monitor"
   ],
   "schema_version": "bluefern_external_operational_status_v1",
   "stale_observability": false,
-  "task_summaries": []
+  "task_summaries": [
+    {
+      "artifact_id": "monitor_receipt.json",
+      "classification": "healthy",
+      "completed_at": "2026-09-26T04:17:43Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "pages": false,
+        "publication": false,
+        "rss": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "not_authorized_monitor_only",
+      "run_id": "ice-monitor-20260926T041501Z-8eb2b2f1",
+      "scheduled_for": "2026-09-25",
+      "started_at": "2026-09-26T04:15:05Z",
+      "status": "SUCCESS",
+      "task_key": "ice_monitor"
+    },
+    {
+      "artifact_id": "monitor_receipt.json",
+      "classification": "limited_source_update",
+      "completed_at": "2026-09-26T16:51:11Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "pages": false,
+        "publication": false,
+        "rss": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "not_authorized_monitor_only",
+      "run_id": "ice-monitor-20260926T164952Z-47f81410",
+      "scheduled_for": "2026-09-25",
+      "started_at": "2026-09-26T16:49:54Z",
+      "status": "DEGRADED",
+      "task_key": "ice_monitor"
+    }
+  ]
 }

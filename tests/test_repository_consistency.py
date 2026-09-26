@@ -125,3 +125,29 @@ def test_operator_runner_roots_match_status_export_wrapper_defaults() -> None:
         assert runner_root in ps1, f"{dispatch} runner root drifted from {parameter}"
 
     assert config["operator"]["status_root"] in ps1
+
+
+def test_current_docs_do_not_embed_personal_workstation_paths() -> None:
+    files = [
+        ROOT / "README.md",
+        ROOT / "docs" / "dispatches-project.md",
+    ]
+    forbidden = (
+        r"C:\\Users\\Admin\\Desktop\\Python",
+        r"C:\\Users\\willb\\OneDrive\\Desktop\\Python",
+        r"C:\\PythonProjects\\Dispatches From The Blue Fern Co",
+    )
+    for path in files:
+        text = path.read_text(encoding="utf-8")
+        for marker in forbidden:
+            assert marker not in text, f"{path.relative_to(ROOT)} still contains {marker}"
+
+
+def test_readme_lists_current_public_products_and_marks_cascadia_historical() -> None:
+    text = (ROOT / "README.md").read_text(encoding="utf-8")
+
+    assert "https://dispatches.thebluefernco.com/gaza/" in text
+    assert "https://dispatches.thebluefernco.com/food-line/" in text
+    assert "https://dispatches.thebluefernco.com/care-line/" in text
+    assert "https://dispatches.thebluefernco.com/cascadia/" in text
+    assert "historical/inactive archive" in text

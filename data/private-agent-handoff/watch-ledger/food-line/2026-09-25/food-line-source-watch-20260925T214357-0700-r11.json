@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260925T214357-0700-r11",
+  "scheduled_for": "2026-09-25T21:45:54-07:00",
+  "started_at": "2026-09-25T21:43:57-07:00",
+  "completed_at": "2026-09-25T21:45:48.260574-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-25T20:45:54-07:00",
+    "date_to": "2026-09-25T21:45:48.260574-07:00",
+    "edition_date": "2026-09-25"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 12 targeted supplementary web searches focused on only/sole/last/full-service grocery-store loss, disaster-related emergency-food distribution interruption, abrupt pantry/food-bank service reduction, and official SNAP/WIC access interruption. No new qualifying signal was verified within the observation window. Matthew's Hope service constraints in Central Florida were published earlier in the day and predated this window; Wildwood Soup Kitchen reporting described avoided closure and continued service; Hawai'i Food Basket hurricane-related closures were already retained in prior Food Line findings. Older grocery-store closures, routine promotions, donation appeals, resource notices, and generic food-insecurity coverage were excluded."
+}

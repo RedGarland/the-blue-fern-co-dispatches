@@ -1,0 +1,14 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260926T014451Z",
+  "scheduled_for": "2026-09-26T01:44:51Z",
+  "started_at": "2026-09-26T02:04:39Z",
+  "completed_at": "2026-09-26T02:05:57Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {"date_from": "2026-09-25T18:01:00-07:00", "date_to": "2026-09-25T19:05:57-07:00", "edition_date": "2026-09-25"},
+  "findings": [],
+  "coverage_notes": {"observation_timezone": "America/Los_Angeles", "summary": "OCHA OPT and WHO were explicitly checked for Gaza health-system, hospital, ambulance/transport, fuel, medical-evacuation, functioning-capacity and access disruptions; Reuters, AP, WAFA, Anadolu and UN sources were also checked. No new qualifying development was found after the prior run. Same-day casualty and aid items returned by search predated the window or duplicated already-surfaced developments."}
+}

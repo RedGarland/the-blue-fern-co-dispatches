@@ -1,0 +1,21 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260926T034451Z",
+  "scheduled_for": "2026-09-26T03:44:51Z",
+  "started_at": "2026-09-26T03:42:28Z",
+  "completed_at": "2026-09-26T03:44:52Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-25T19:05:57-07:00",
+    "date_to": "2026-09-25T20:44:52-07:00",
+    "edition_date": "2026-09-25"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "observation_timezone": "America/Los_Angeles",
+    "summary": "OCHA OPT and WHO were checked first. The bounded supplementary pass then used exactly 12 targeted searches covering Reuters, AP, WAFA, Anadolu, UNICEF, UNRWA, Israeli/COGAT crossing information, ICRC detention/hostage access, ceasefire/mediator developments, Gaza hospital/ambulance/fuel/medical-evacuation capacity, and a final UTC-date rollover check for September 26. No search/source materially failed. No new qualifying development was verified after the prior Gaza Source Watch completion at 19:05:57 PDT. Same-day results were either outside the window, stale, unrelated, or duplicates of already surfaced developments including the Wijdan Camp/Al-Mawasi strike, the Al-Zawaida cemetery strike, Board of Peace-UNRWA contacts, and continuing ICRC denial of detainee access."
+  }
+}

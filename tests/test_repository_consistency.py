@@ -151,3 +151,10 @@ def test_readme_lists_current_public_products_and_marks_cascadia_historical() ->
     assert "https://dispatches.thebluefernco.com/care-line/" in text
     assert "https://dispatches.thebluefernco.com/cascadia/" in text
     assert "historical/inactive archive" in text
+
+
+def test_required_runtime_dependencies_are_declared() -> None:
+    requirements = (ROOT / "requirements.txt").read_text(encoding="utf-8").casefold()
+
+    for package in ("pyyaml", "pydantic", "pillow", "certifi", "beautifulsoup4", "tzdata"):
+        assert package in requirements

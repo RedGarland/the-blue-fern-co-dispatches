@@ -390,6 +390,16 @@
       ]
     },
     {
+      "query_family": "essential_food_access_disruption",
+      "geographic_scope": "national",
+      "source_family": "local_news",
+      "templates": [
+        "(\"only grocery store\" OR \"sole grocery store\" OR \"last grocery store\" OR \"full-service grocery store\") (closed OR closure OR fire OR burned OR destroyed OR flood OR storm OR outage)",
+        "(\"food distribution\" OR \"food pantry\" OR \"meal distribution\") (canceled OR cancelled OR suspended OR closed) (storm OR flood OR fire OR outage OR damage)",
+        "(\"grocery access\" OR \"food access\") (disaster OR storm OR flood OR fire) (closed OR disrupted OR destroyed)"
+      ]
+    },
+    {
       "query_family": "pressure",
       "geographic_scope": "national",
       "source_family": "local_news",

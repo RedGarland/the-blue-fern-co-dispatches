@@ -1,9 +1,15 @@
 # Dispatches From The Blue Fern Co.
 
-Unified static dispatch site for:
+Source-backed dispatch, monitoring, and operational-recovery system.
 
-- `gaza` - Dispatches From Gaza, always free/public.
-- `cascadia` - The Cascadia Briefing, powered internally by the Cascadia Signal data product.
+Current operational families:
+
+- `gaza` — daily public/free Gaza dispatch.
+- `food-line` — U.S. food-pressure monitoring and dispatch workflow.
+- `care-line` — U.S. and territories healthcare-access monitoring and dispatch workflow.
+- `ice` — ICE activity/consequences monitor; current production behavior is monitor/staging oriented.
+- `american-pressure` — weekly household/system-pressure workflow with separately reviewed intake.
+- `cascadia` — intentionally inactive; historical public archives remain available, but there is no active Cascadia production schedule.
 
 Public site output is generated under `output/site/` with URLs rooted at:
 
@@ -119,26 +125,9 @@ Full Gaza daily run with local Pages publish and email report:
 .\.venv\Scripts\python.exe scripts\run_and_notify.py --date 2026-05-09 --publish --smtp-debug
 ```
 
-If doctor reports stale Cascadia weekly public links, regenerate the affected weekly public output:
+Cascadia is intentionally inactive. Do not regenerate, register, enable, repair, reprovision, or execute Cascadia production scheduling from README examples. Historical archive maintenance must follow the current Cascadia rules in `AGENTS.md` and `docs/project-contract.md`.
 
-```powershell
-$env:CASCADIA_ALLOW_CURL_NO_REVOKE = "1"
-$env:CASCADIA_FETCH_BACKEND = "auto"
-.\.venv\Scripts\python.exe scripts\run_cascadia_dispatch.py --archive-week 2026-04-28 --weekly-public --historical-search --quality-weekly
-```
-
-Task Scheduler fields for this machine:
-
-```text
-Program/script:
-powershell.exe
-
-Add arguments:
--NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\Users\willb\OneDrive\Desktop\Python\Dispatches From The Blue Fern Co'; $env:SMTP_RELAX_X509_STRICT='1'; & '.\.venv\Scripts\python.exe' 'scripts\run_and_notify.py' --date (Get-Date -Format 'yyyy-MM-dd') --publish"
-
-Start in:
-C:\Users\willb\OneDrive\Desktop\Python\Dispatches From The Blue Fern Co
-```
+Production Task Scheduler definitions and runner paths are maintained by the checked-in `ops/` and `scripts/` contracts. Do not copy historical machine-specific scheduler commands from old documentation into production.
 
 ## GitHub Pages Repo Publishing
 

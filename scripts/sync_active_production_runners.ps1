@@ -188,6 +188,8 @@ $startedAt = (Get-Date).ToUniversalTime().ToString("o")
 $results = @()
 $targetHeads = @()
 
+# Phase 1: inspect every runner and freeze one common protected target before
+# any production Git HEAD is allowed to move.
 foreach ($target in $Targets) {
     $dispatch = [string]$target.Dispatch
     $root = [string]$target.Root
@@ -219,7 +221,7 @@ foreach ($target in $Targets) {
 
         $targetRef = "origin/$TargetBranch"
         $remoteRefSpec = "+refs/heads/$TargetBranch:refs/remotes/origin/$TargetBranch"
-        $fetch = Invoke-Git -Root $root -Arguments @("fetch", "--no-tags", "origin", $remoteRefSpec)
+        $null = Invoke-Git -Root $root -Arguments @("fetch", "--no-tags", "origin", $remoteRefSpec)
         $branchResult = Invoke-Git -Root $root -Arguments @("branch", "--show-current")
         $before = Invoke-Git -Root $root -Arguments @("rev-parse", "HEAD")
         $targetHeadResult = Invoke-Git -Root $root -Arguments @("rev-parse", $targetRef)
@@ -227,6 +229,7 @@ foreach ($target in $Targets) {
         $row.Branch = $branchResult.Output
         $row.BeforeHead = $before.Output
         $row.TargetHead = $targetHeadResult.Output
+        $row.AfterHead = $before.Output
         $targetHeads += $targetHeadResult.Output
 
         if ($row.Branch -ne $TargetBranch) {
@@ -265,46 +268,13 @@ foreach ($target in $Targets) {
 
         if ($row.BeforeHead -eq $row.TargetHead) {
             $row.Result = "ALREADY_CURRENT"
-            $row.AfterHead = $row.BeforeHead
             $row.PostValidation = $pre
-            $results += [pscustomobject]$row
-            continue
         }
-
-        if (-not $Apply) {
+        else {
             $row.Result = "READY_TO_FAST_FORWARD"
-            $row.AfterHead = $row.BeforeHead
-            $results += [pscustomobject]$row
-            continue
         }
-
-        $row.MergeAttempted = $true
-        $merge = Invoke-Git -Root $root -Arguments @("merge", "--ff-only", $targetRef)
-        $after = Invoke-Git -Root $root -Arguments @("rev-parse", "HEAD")
-        $row.AfterHead = $after.Output
-
-        if ($row.AfterHead -ne $row.TargetHead) {
-            throw "fast-forward completed but HEAD does not match target"
-        }
-
-        $post = Invoke-RunnerValidation -Root $root
-        $row.PostValidation = $post
-        if (-not $post.Ok) {
-            $row.Result = "FAST_FORWARDED_VALIDATION_FAILED"
-            throw "post-rollout validation failed at $($post.Stage): $($post.Message)"
-        }
-
-        $row.Result = "FAST_FORWARDED"
     }
     catch {
-        if (-not $row.AfterHead) {
-            try {
-                $row.AfterHead = (Invoke-Git -Root $root -Arguments @("rev-parse", "HEAD") -AllowFailure).Output
-            }
-            catch {
-                $row.AfterHead = $null
-            }
-        }
         $row.Error = $_.Exception.Message
     }
 
@@ -312,6 +282,64 @@ foreach ($target in $Targets) {
 }
 
 $uniqueTargets = @($targetHeads | Where-Object { $_ } | Sort-Object -Unique)
+$targetHeadConsistent = ($uniqueTargets.Count -le 1)
+$frozenTargetHead = if ($uniqueTargets.Count -eq 1) { [string]$uniqueTargets[0] } else { $null }
+
+# Phase 2: apply only after all runner discovery has completed and the target
+# SHA is frozen. A newer remote commit that appears after this point is left
+# for the next synchronization rather than creating mixed production heads.
+if ($Apply -and $targetHeadConsistent -and $frozenTargetHead) {
+    foreach ($row in $results) {
+        if ($row.Result -ne "READY_TO_FAST_FORWARD") { continue }
+        $root = [string]$row.Root
+        try {
+            # Reconfirm the runner itself did not change between discovery and apply.
+            $currentHead = (Invoke-Git -Root $root -Arguments @("rev-parse", "HEAD")).Output
+            if ($currentHead -ne $row.BeforeHead) {
+                throw "runner HEAD changed after discovery: expected $($row.BeforeHead), found $currentHead"
+            }
+            $currentStatus = Get-StatusPaths -Root $root
+            if ($currentStatus.Tracked.Count -gt 0) {
+                throw "tracked working-tree changes appeared after discovery"
+            }
+            $lateCollisions = Get-UntrackedCollisions -Untracked @($currentStatus.Untracked) -Incoming @($row.IncomingPaths)
+            if ($lateCollisions.Count -gt 0) {
+                throw "untracked runtime collision appeared after discovery: $($lateCollisions -join ', ')"
+            }
+
+            $row.MergeAttempted = $true
+            $null = Invoke-Git -Root $root -Arguments @("merge", "--ff-only", $frozenTargetHead)
+            $after = (Invoke-Git -Root $root -Arguments @("rev-parse", "HEAD")).Output
+            $row.AfterHead = $after
+
+            if ($row.AfterHead -ne $frozenTargetHead) {
+                throw "fast-forward completed but HEAD does not match frozen target"
+            }
+
+            $post = Invoke-RunnerValidation -Root $root
+            $row.PostValidation = $post
+            if (-not $post.Ok) {
+                $row.Result = "FAST_FORWARDED_VALIDATION_FAILED"
+                throw "post-rollout validation failed at $($post.Stage): $($post.Message)"
+            }
+
+            $row.Result = "FAST_FORWARDED"
+        }
+        catch {
+            if ($row.Result -ne "FAST_FORWARDED_VALIDATION_FAILED") {
+                $row.Result = "BLOCKED"
+            }
+            $row.Error = $_.Exception.Message
+            try {
+                $row.AfterHead = (Invoke-Git -Root $root -Arguments @("rev-parse", "HEAD") -AllowFailure).Output
+            }
+            catch {
+                $row.AfterHead = $null
+            }
+        }
+    }
+}
+
 $report = [ordered]@{
     SchemaVersion = "bluefern.production_runner_sync.v1"
     StartedAt = $startedAt
@@ -320,7 +348,8 @@ $report = [ordered]@{
     TargetBranch = $TargetBranch
     ExpectedProtectedHead = $(if ($ExpectedProtectedHead) { $ExpectedProtectedHead } else { $null })
     FetchedTargetHeads = $uniqueTargets
-    TargetHeadConsistent = ($uniqueTargets.Count -le 1)
+    TargetHeadConsistent = $targetHeadConsistent
+    FrozenTargetHead = $frozenTargetHead
     Runners = $results
     StatusExporterTask = Get-StatusExporterTaskEvidence
     PublicSideEffects = $false
@@ -341,8 +370,8 @@ Write-Host "Report: $ReportPath"
 $blocked = @($results | Where-Object { $_.Result -eq "BLOCKED" -or $_.Result -eq "FAST_FORWARDED_VALIDATION_FAILED" })
 $ready = @($results | Where-Object { $_.Result -eq "READY_TO_FAST_FORWARD" })
 
-if (-not $report.TargetHeadConsistent) {
-    Write-Error "Production runners fetched inconsistent protected heads."
+if (-not $targetHeadConsistent) {
+    Write-Error "Production runners fetched inconsistent protected heads; no fast-forward was attempted."
     exit 3
 }
 if ($blocked.Count -gt 0) {

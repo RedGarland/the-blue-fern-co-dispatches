@@ -22,7 +22,12 @@
       "notes": "Federal health access announcements; direct RSS feed.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["hhs.gov", "www.hhs.gov"]
+      "allowed_hosts": ["hhs.gov", "www.hhs.gov"],
+      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+      "operational_failure_classified_at": "2026-09-26",
+      "operational_failure_evidence": ["vpn_on_403", "vpn_off_403", "official_alternatives_inaccessible", "no_safe_migration"],
+      "coverage_reduced": true,
+      "remediation_available": false
     },
     {
       "source_id": "cms-newsroom",
@@ -91,7 +96,12 @@
       "notes": "Federal source for health center and workforce announcements.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["hrsa.gov", "www.hrsa.gov"]
+      "allowed_hosts": ["hrsa.gov", "www.hrsa.gov"],
+      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+      "operational_failure_classified_at": "2026-09-26",
+      "operational_failure_evidence": ["vpn_on_403", "vpn_off_403", "official_alternatives_inaccessible", "no_safe_migration"],
+      "coverage_reduced": true,
+      "remediation_available": false
     },
     {
       "source_id": "samhsa-newsroom",
@@ -206,7 +216,12 @@
       "notes": "Healthcare industry reporting with direct RSS.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["fiercehealthcare.com", "www.fiercehealthcare.com"]
+      "allowed_hosts": ["fiercehealthcare.com", "www.fiercehealthcare.com"],
+      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+      "operational_failure_classified_at": "2026-09-26",
+      "operational_failure_evidence": ["vpn_on_403", "vpn_off_403", "official_alternatives_inaccessible", "no_safe_migration"],
+      "coverage_reduced": true,
+      "remediation_available": false
     },
     {
       "source_id": "medcity-news",
@@ -528,7 +543,12 @@
       "notes": "Health-system newsroom feed.",
       "created_at": "2026-07-22T00:00:00Z",
       "updated_at": "2026-07-22T00:00:00Z",
-      "allowed_hosts": ["newsnetwork.mayoclinic.org"]
+      "allowed_hosts": ["newsnetwork.mayoclinic.org"],
+      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+      "operational_failure_classified_at": "2026-09-26",
+      "operational_failure_evidence": ["vpn_on_403", "vpn_off_403", "official_alternatives_inaccessible", "no_safe_migration"],
+      "coverage_reduced": true,
+      "remediation_available": false
     },
     {
       "source_id": "cleveland-clinic-newsroom",

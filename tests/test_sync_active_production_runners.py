@@ -40,7 +40,7 @@ def test_sync_helper_freezes_one_common_target_before_any_merge() -> None:
     assert discovery < frozen < apply_phase < merge
     assert "Production runners fetched inconsistent protected heads; no fast-forward was attempted." in text
     assert "runner HEAD changed after discovery" in text
-    assert "tracked working-tree changes appeared after discovery" in text
+    assert "tracked working-tree state changed after discovery" in text
     assert "untracked runtime collision appeared after discovery" in text
 
 
@@ -48,7 +48,8 @@ def test_sync_helper_has_fail_closed_checkout_guards() -> None:
     text = _text()
     for fragment in (
         'branch mismatch:',
-        'tracked working-tree changes are present',
+        'pre-rollout validation failed at',
+        'tracked runtime paths overlap incoming tracked paths',
         'current HEAD is not an ancestor',
         'untracked runtime paths overlap incoming tracked paths',
         'target head mismatch:',
@@ -144,7 +145,8 @@ def test_sync_helper_wraps_empty_collections_under_strict_mode() -> None:
     assert '$lateCollisions = @(Get-UntrackedCollisions' in text
     assert 'if (@($lateCollisions).Count -gt 0)' in text
     assert 'if (@($row.TrackedDirtyPaths).Count -gt 0)' in text
-    assert 'if (@($currentStatus.Tracked).Count -gt 0)' in text
+    assert '$currentTracked = @($currentStatus.Tracked | Sort-Object -Unique)' in text
+    assert 'tracked working-tree state changed after discovery' in text
 
 
 def test_sync_helper_preserves_only_preflight_sanctioned_tracked_runtime_state() -> None:

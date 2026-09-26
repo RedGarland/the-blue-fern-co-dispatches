@@ -126,3 +126,12 @@ def test_sync_helper_uses_unambiguous_powershell_refspec_interpolation() -> None
     text = _text()
     assert '$remoteRefSpec = "+refs/heads/${TargetBranch}:refs/remotes/origin/${TargetBranch}"'.replace("\\$", "$") in text
     assert '$remoteRefSpec = "+refs/heads/$TargetBranch:refs/remotes/origin/$TargetBranch"' not in text
+
+
+def test_sync_helper_temporarily_relaxes_error_action_for_native_git_stderr() -> None:
+    text = _text()
+    assert '$previousErrorActionPreference = $ErrorActionPreference' in text
+    assert '$ErrorActionPreference = "Continue"' in text
+    assert '$ErrorActionPreference = $previousErrorActionPreference' in text
+    assert '$code = $LASTEXITCODE' in text
+    assert 'if (-not $AllowFailure -and $code -ne 0)' in text

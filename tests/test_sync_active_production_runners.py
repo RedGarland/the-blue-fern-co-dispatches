@@ -12,6 +12,7 @@ def _text() -> str:
 def test_sync_helper_targets_all_active_dispatch_runners() -> None:
     text = _text()
     for path in (
+        r"C:\BlueFernRunner\BlueFernOperatorCurrent",
         r"C:\BlueFernRunner\FoodLineCurrent6",
         r"C:\BlueFernRunner\CareLineNationalCurrent8",
         r"C:\BlueFernRunner\GazaDispatchesCurrent6",
@@ -92,3 +93,9 @@ def test_sync_helper_does_not_trigger_production_or_scheduler_mutation() -> None
     assert "Register-ScheduledTask" not in text
     assert "Set-ScheduledTask" not in text
     assert "Start-ScheduledTask" not in text
+
+
+def test_sync_helper_includes_operator_control_plane_checkout() -> None:
+    text = _text()
+    assert 'Dispatch = "operator"' in text
+    assert r'C:\BlueFernRunner\BlueFernOperatorCurrent' in text

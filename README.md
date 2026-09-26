@@ -15,7 +15,9 @@ Public site output is generated under `output/site/` with URLs rooted at:
 
 - `https://dispatches.thebluefernco.com/`
 - `https://dispatches.thebluefernco.com/gaza/`
-- `https://dispatches.thebluefernco.com/cascadia/`
+- `https://dispatches.thebluefernco.com/food-line/`
+- `https://dispatches.thebluefernco.com/care-line/`
+- `https://dispatches.thebluefernco.com/cascadia/` — historical/inactive archive
 
 ## Build
 
@@ -95,8 +97,8 @@ PowerShell interprets `<` and `>` as shell syntax, so angle-bracket placeholders
 Clone the source project branch into the new project root, then clone the GitHub Pages deploy branch into `bluefern-dispatches-pages` beside the source files:
 
 ```powershell
-git clone <source-repo-url> "C:\Users\willb\OneDrive\Desktop\Python\Dispatches From The Blue Fern Co"
-cd "C:\Users\willb\OneDrive\Desktop\Python\Dispatches From The Blue Fern Co"
+git clone <source-repo-url> "C:\BlueFernDev\the-blue-fern-co-dispatches"
+cd "C:\BlueFernDev\the-blue-fern-co-dispatches"
 git clone --branch gh-pages <pages-repo-url> bluefern-dispatches-pages
 py -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -e .
@@ -138,19 +140,19 @@ The source project branch (`master` or `main`) is separate from the Pages deploy
 Dry-run:
 
 ```powershell
-python scripts\publish_github_pages.py --dry-run --pages-repo "C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\bluefern-dispatches-pages" --pages-branch gh-pages
+python scripts\publish_github_pages.py --dry-run --pages-repo "C:\BlueFernDev\the-blue-fern-co-dispatches\bluefern-dispatches-pages" --pages-branch gh-pages
 ```
 
 Copy + commit locally, no push:
 
 ```powershell
-python scripts\publish_github_pages.py --pages-repo "C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\bluefern-dispatches-pages" --remote-url "https://github.com/RedGarland/the-blue-fern-co-dispatches.git" --pages-branch gh-pages --commit --no-push
+python scripts\publish_github_pages.py --pages-repo "C:\BlueFernDev\the-blue-fern-co-dispatches\bluefern-dispatches-pages" --remote-url "https://github.com/RedGarland/the-blue-fern-co-dispatches.git" --pages-branch gh-pages --commit --no-push
 ```
 
 Manual push after inspection:
 
 ```powershell
-cd "C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
+cd "C:\BlueFernDev\the-blue-fern-co-dispatches\bluefern-dispatches-pages"
 git status
 git push origin gh-pages
 ```
@@ -172,14 +174,14 @@ The publisher switches the local Pages repo to `gh-pages`, copies only `output/s
 Edition backups default to:
 
 ```text
-C:\Users\Admin\Desktop\Python\dispatches-bluefern-backups
+C:\BlueFernBackups
 ```
 
 Each edition receives a per-dispatch folder such as:
 
 ```text
-C:\Users\Admin\Desktop\Python\dispatches-bluefern-backups\gaza\2026-05-03\
-C:\Users\Admin\Desktop\Python\dispatches-bluefern-backups\cascadia\2026-05-03\
+C:\BlueFernBackups\gaza\2026-05-03\
+C:\BlueFernBackups\cascadia\2026-05-03\
 ```
 
 Backups include rendered HTML, source manifest, curation manifest, edition manifest, and a run manifest.
@@ -238,7 +240,7 @@ bluefern-dispatches-pages/gaza/editions/YYYY-MM-DD/index.html
 4. Push when ready:
 
 ```powershell
-cd "C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
+cd "C:\BlueFernDev\the-blue-fern-co-dispatches\bluefern-dispatches-pages"
 git status
 git push origin gh-pages
 ```
@@ -266,19 +268,19 @@ output/site/gaza/editions/YYYY-MM-DD/index.html
 Then dry-run Pages publishing:
 
 ```powershell
-python scripts\publish_github_pages.py --dry-run --pages-repo "C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\bluefern-dispatches-pages" --pages-branch gh-pages --expect-date YYYY-MM-DD
+python scripts\publish_github_pages.py --dry-run --pages-repo "C:\BlueFernDev\the-blue-fern-co-dispatches\bluefern-dispatches-pages" --pages-branch gh-pages --expect-date YYYY-MM-DD
 ```
 
 Copy + commit locally, no push:
 
 ```powershell
-python scripts\publish_github_pages.py --pages-repo "C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\bluefern-dispatches-pages" --remote-url "https://github.com/RedGarland/the-blue-fern-co-dispatches.git" --pages-branch gh-pages --expect-date YYYY-MM-DD --commit --no-push
+python scripts\publish_github_pages.py --pages-repo "C:\BlueFernDev\the-blue-fern-co-dispatches\bluefern-dispatches-pages" --remote-url "https://github.com/RedGarland/the-blue-fern-co-dispatches.git" --pages-branch gh-pages --expect-date YYYY-MM-DD --commit --no-push
 ```
 
 Manually push after inspection:
 
 ```powershell
-cd "C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
+cd "C:\BlueFernDev\the-blue-fern-co-dispatches\bluefern-dispatches-pages"
 git status
 git push origin gh-pages
 ```
@@ -286,7 +288,7 @@ git push origin gh-pages
 Gaza remains fully free/public. The script writes public artifacts only under `output/site/`, mirrors edition artifacts under `output/dispatches/gaza/editions/YYYY-MM-DD/`, writes source stage files under `data/dispatches/gaza/`, updates shared records under `data/records/`, refreshes `/gaza/archive.html` and `/gaza/rss.xml`, and writes backups outside the repo under:
 
 ```text
-C:\Users\Admin\Desktop\Python\dispatches-bluefern-backups\gaza\YYYY-MM-DD\
+C:\BlueFernBackups\gaza\YYYY-MM-DD\
 ```
 
 ## Daily Gaza Workflow
@@ -306,16 +308,16 @@ Program/script:
 powershell.exe
 
 Arguments:
--NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co'; & '.\.venv\Scripts\python.exe' 'scripts\run_daily_gaza.py' --date (Get-Date -Format 'yyyy-MM-dd') --email-report"
+-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\BlueFernDev\the-blue-fern-co-dispatches'; & '.\.venv\Scripts\python.exe' 'scripts\run_daily_gaza.py' --date (Get-Date -Format 'yyyy-MM-dd') --email-report"
 
 Start in:
-C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co
+C:\BlueFernDev\the-blue-fern-co-dispatches
 ```
 
 Manual push after inspection:
 
 ```powershell
-cd "C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
+cd "C:\BlueFernDev\the-blue-fern-co-dispatches\bluefern-dispatches-pages"
 git status
 git push origin gh-pages
 ```
@@ -329,7 +331,7 @@ python scripts\run_daily_gaza.py --date YYYY-MM-DD --push
 Task Scheduler arguments with push:
 
 ```text
--NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co'; & '.\.venv\Scripts\python.exe' 'scripts\run_daily_gaza.py' --date (Get-Date -Format 'yyyy-MM-dd') --email-report --push"
+-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\BlueFernDev\the-blue-fern-co-dispatches'; & '.\.venv\Scripts\python.exe' 'scripts\run_daily_gaza.py' --date (Get-Date -Format 'yyyy-MM-dd') --email-report --push"
 ```
 
 The daily runner fails before publishing if sources are missing or invalid, source count is below `--min-sources`, public stories lack source IDs, manifests are empty, rendered HTML has no visible source links, tests fail without `--skip-tests`, Pages dry-run fails, or paid/detail leak checks fail. Logs are written to `logs/gaza-daily-YYYY-MM-DD.log`, and the run manifest is written to `data/dispatches/gaza/editions/YYYY-MM-DD/run_manifest.json`.
@@ -546,38 +548,13 @@ Weekly jobs:
 
 - No Cascadia weekly public briefing; Cascadia is intentionally inactive.
 
-Cascadia weekly public schedule, historical/reference only:
-
-- Task name: `Cascadia Weekly Briefing`
-- Trigger: disabled; do not register or enable without explicit operator authorization.
-- Coverage: previous Monday through Sunday
-- Start in: `C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co`
-- Keep separate from the Gaza Daily Pipeline
-- Does not auto-push unless explicitly configured
-
-Task Scheduler program:
-
-```text
-powershell.exe
-```
-
-Historical arguments for a weekly Cascadia run without push:
-
-```text
--NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co'; & '.\.venv\Scripts\python.exe' 'scripts\run_cascadia_dispatch.py' --date (Get-Date -Format 'yyyy-MM-dd') --weekly-public --historical-search"
-```
-
-Historical wrapper:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\run_weekly_cascadia.ps1
-```
+Cascadia scheduler artifacts are historical/reference only. Do not copy or execute a Cascadia Task Scheduler command from this README. The checked-in inactive-state contract and `AGENTS.md` govern any future reactivation, which requires explicit operator authorization.
 
 Use `scripts/run_and_notify.py` for the scheduled Gaza daily workflow and notification diagnostics. Normal mode delegates to `scripts/run_daily_gaza.py --email-report`; `--publish` performs the local Pages publish behavior, while omitting `--publish` runs the Gaza workflow in dry-run mode. `--send-test-email` sends only the diagnostic message and does not run Gaza, tests, publish, push, or touch the Pages repo.
 
 ## Dedicated Runner Clone
 
-Scheduled Gaza and Food Line jobs should run from a dedicated clean runner clone, not from an active development worktree. See [docs/runner-operations.md](/c:/PythonProjects/Dispatches%20From%20The%20Blue%20Fern%20Co/docs/runner-operations.md) for:
+Scheduled Gaza and Food Line jobs should run from a dedicated clean runner clone, not from an active development worktree. See [docs/runner-operations.md](docs/runner-operations.md) for:
 
 - runner folder layout
 - clean-runner setup commands
@@ -694,7 +671,7 @@ powershell.exe
 Action arguments:
 
 ```text
--NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\Users\Admin\Desktop\Python\Dispatches From The Blue Fern Co\scripts\run_dispatches.ps1" -Publish -PagesRepo "C:\path\to\pages\repo"
+-NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\BlueFernDev\the-blue-fern-co-dispatches\scripts\run_dispatches.ps1" -Publish -PagesRepo "C:\path\to\pages\repo"
 ```
 
 Manual test run:

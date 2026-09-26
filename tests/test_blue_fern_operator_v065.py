@@ -205,7 +205,9 @@ def test_persistent_403_never_routes_to_network_retry(tmp_path: Path, monkeypatc
 def test_single_source_timeout_requires_source_specific_policy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     payload = {"task_key": "food_line_source_watch", "status": "FAILED", "failed_source_count": 1, "error": "one feed timeout 503"}
     plan, _runner, _root, _incident_row, _status_row = _plan(tmp_path, monkeypatch, payload=payload)
-    assert plan.proposed_action == "INVESTIGATE_SOURCE_FAILURES"
+    assert plan.proposed_action == operator.SOURCE_TRANSIENT_RETRY_ACTION
+    assert plan.executable is False
+    assert plan.safety_checks["handler"]["enabled"] is False
 
 
 def test_internal_failure_does_not_route_to_network_retry(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

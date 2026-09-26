@@ -64,6 +64,11 @@ FORBIDDEN_REMEDIATION_ACTIONS = {
 }
 AUTOMATIC_REMEDIATION_ACTIONS = {"REBUILD_STATUS"}
 TRANSIENT_NETWORK_RETRY_ACTION = "TRANSIENT_NETWORK_TASK_RETRY"
+SOURCE_TRANSIENT_RETRY_ACTION = "SOURCE_TRANSIENT_FETCH_RETRY"
+SOURCE_TRANSIENT_BACKOFF_MINUTES = 30
+SOURCE_TRANSIENT_MAX_RETRY_AFTER_MINUTES = 360
+SOURCE_TRANSIENT_HTTP_STATUS_CODES = {408, 429, 500, 502, 503, 504}
+SOURCE_NON_TRANSIENT_HTTP_STATUS_CODES = {400, 401, 403, 404, 410, 451}
 REMEDIATION_OUTCOMES = {
     "NOT_ATTEMPTED",
     "REBUILT",
@@ -112,6 +117,7 @@ REMEDIATION_ACTIONS = {
     "REBUILD_STATUS",
     "REFRESH_STATUS_EXPORT",
     TRANSIENT_NETWORK_RETRY_ACTION,
+    SOURCE_TRANSIENT_RETRY_ACTION,
     "VERIFY_PUBLIC_STATE",
     "INVESTIGATE_SOURCE_FAILURES",
     "WAIT_FOR_NEXT_SCHEDULED_RUN",
@@ -124,6 +130,7 @@ EXECUTABLE_REMEDIATION_ACTIONS = {
     "REBUILD_STATUS",
     "REFRESH_STATUS_EXPORT",
     TRANSIENT_NETWORK_RETRY_ACTION,
+    SOURCE_TRANSIENT_RETRY_ACTION,
     "VERIFY_PUBLIC_STATE",
 }
 ENGINEERING_STATES = {
@@ -164,6 +171,7 @@ AUTONOMOUS_RETRY_LIMITS = {
     "REBUILD_STATUS": 2,
     "REFRESH_STATUS_EXPORT": 2,
     TRANSIENT_NETWORK_RETRY_ACTION: 2,
+    SOURCE_TRANSIENT_RETRY_ACTION: 2,
     "RUNNER_ROLL_FORWARD": 1,
     "VERIFY_PUBLIC_STATE": 1,
     "ENGINEER_PREPARE_FIX": 1,
@@ -193,6 +201,29 @@ TRANSIENT_RETRY_TASKS = {
         "wrapper": "scripts/windows/run_ice_monitor.ps1",
         "date_argument": None,
         "public_side_effects": False,
+    },
+}
+SOURCE_TRANSIENT_RETRY_HANDLERS = {
+    "food-line": {
+        "enabled": False,
+        "reason": "Food Line has durable source-watch recovery receipts but no canonical one-source replay handler.",
+        "public_side_effects": False,
+    },
+    "care-line": {
+        "enabled": False,
+        "reason": "Care Line has per-source collection internals, but the production scheduler wrapper lacks a source-id replay contract.",
+        "public_side_effects": False,
+    },
+    "ice": {
+        "enabled": False,
+        "reason": "ICE monitor does not expose a source-isolated replay handler.",
+        "public_side_effects": False,
+    },
+    "gaza": {
+        "enabled": False,
+        "excluded": True,
+        "reason": "Gaza source collection remains excluded from automatic replay because of publication/editorial coupling.",
+        "public_side_effects": True,
     },
 }
 APPROVAL_REQUIRED_ACTIONS = {
@@ -511,6 +542,7 @@ class RemediationEvidenceContext:
     exit_codes: list[int] = field(default_factory=list)
     checkout_failures: list[str] = field(default_factory=list)
     source_failures: list[str] = field(default_factory=list)
+    source_failure_records: list[dict[str, Any]] = field(default_factory=list)
     code_exception_markers: list[str] = field(default_factory=list)
     evidence_entries: list[dict[str, Any]] = field(default_factory=list)
     evidence_complete: bool = True
@@ -823,8 +855,16 @@ def _material_change_reasons(
     )
     if failed_remediation:
         reasons.add(NotificationReason.REMEDIATION_FAILED.value)
+    source_retry_state = remediation.get("source_retry_state") if isinstance(remediation.get("source_retry_state"), dict) else {}
+    isolated_source_retry_tracking = (
+        remediation.get("action") == SOURCE_TRANSIENT_RETRY_ACTION
+        and remediation.get("attempted") is not True
+        and not source_retry_state.get("terminal_classification")
+    )
 
     if previous is None:
+        if isolated_source_retry_tracking:
+            return reasons
         if incident.state == IncidentState.OPEN.value:
             reasons.add(NotificationReason.NEW_INCIDENT.value)
             if _policy_requires_operator(policy, incident.recovery_action):
@@ -839,6 +879,8 @@ def _material_change_reasons(
         return reasons
 
     if incident.state != IncidentState.OPEN.value:
+        return reasons
+    if isolated_source_retry_tracking:
         return reasons
 
     action_changed = str(previous.get("recovery_action") or "") != incident.recovery_action
@@ -977,6 +1019,162 @@ def _source_transient_markers(blob: str) -> bool:
     return any(token in blob for token in ("timeout", "timed out", "tls", "connection reset", "503", "502", "504", "429"))
 
 
+def _source_parser_or_content_markers(blob: str) -> bool:
+    return any(
+        token in blob
+        for token in (
+            "parseerror",
+            "parser",
+            "schema mismatch",
+            "invalid content",
+            "non-xml",
+            "jsondecodeerror",
+            "valueerror",
+            "typeerror",
+        )
+    )
+
+
+def _source_http_status(value: Any) -> int | None:
+    if isinstance(value, int):
+        return value
+    text = str(value or "")
+    match = re.search(r"\b(?:http(?:error)?[:\s]*)?([45][0-9]{2})\b", text, re.IGNORECASE)
+    if not match:
+        return None
+    try:
+        return int(match.group(1))
+    except ValueError:
+        return None
+
+
+def _source_retry_after_minutes(value: Any, *, now: datetime | None = None) -> int | None:
+    if value in {None, ""}:
+        return None
+    if isinstance(value, (int, float)):
+        seconds = max(0, int(value))
+        return min(SOURCE_TRANSIENT_MAX_RETRY_AFTER_MINUTES, (seconds + 59) // 60)
+    text = str(value).strip()
+    if not text:
+        return None
+    if text.isdigit():
+        seconds = max(0, int(text))
+        return min(SOURCE_TRANSIENT_MAX_RETRY_AFTER_MINUTES, (seconds + 59) // 60)
+    parsed = _parse_time(text)
+    if parsed is None:
+        for fmt in ("%a, %d %b %Y %H:%M:%S GMT", "%A, %d-%b-%y %H:%M:%S GMT"):
+            try:
+                parsed = datetime.strptime(text, fmt).replace(tzinfo=timezone.utc)
+                break
+            except ValueError:
+                continue
+    if parsed is None:
+        return None
+    base = now or _utc_now()
+    seconds = max(0, int((parsed - base).total_seconds()))
+    return min(SOURCE_TRANSIENT_MAX_RETRY_AFTER_MINUTES, (seconds + 59) // 60)
+
+
+def classify_source_failure_record(record: dict[str, Any]) -> str:
+    blob = _lower_values(record)
+    status = _source_http_status(record.get("status_code") or record.get("http_status") or record.get("failure_reason") or record.get("error") or blob)
+    if _source_external_restriction_markers(blob) or status in {401, 403, 451}:
+        return RootCauseClassification.SOURCE_EXTERNAL_RESTRICTION.value
+    if _source_parser_or_content_markers(blob):
+        return RootCauseClassification.INTERNAL_FAILURE.value
+    if status in SOURCE_TRANSIENT_HTTP_STATUS_CODES:
+        if status == 429 and any(token in blob for token in ("no retry", "do not retry", "quota exceeded", "rate limit policy denied")):
+            return RootCauseClassification.SOURCE_EXTERNAL_RESTRICTION.value
+        return RootCauseClassification.SOURCE_TRANSIENT.value
+    if status in SOURCE_NON_TRANSIENT_HTTP_STATUS_CODES:
+        return RootCauseClassification.SOURCE_EXTERNAL_RESTRICTION.value
+    if any(token in blob for token in ("timeout", "timed out", "connection reset", "temporary failure in name resolution", "getaddrinfo", "temporarily unavailable")):
+        return RootCauseClassification.SOURCE_TRANSIENT.value
+    if any(token in blob for token in ("redirect loop", "source retired", "robots", "auth", "unauthorized")):
+        return RootCauseClassification.SOURCE_EXTERNAL_RESTRICTION.value
+    return RootCauseClassification.UNKNOWN.value
+
+
+def _bounded_source_failure_record(row: Any, *, payload: dict[str, Any] | None = None) -> dict[str, Any] | None:
+    payload = payload or {}
+    if isinstance(row, str):
+        record: dict[str, Any] = {"failure_reason": row}
+    elif isinstance(row, dict):
+        record = {
+            key: row.get(key)
+            for key in (
+                "source_id",
+                "source_name",
+                "domain",
+                "failure_class",
+                "failure_reason",
+                "error",
+                "status_code",
+                "http_status",
+                "transient",
+                "retry_after",
+                "last_successful_fetch",
+                "run_id",
+                "pipeline_run_id",
+                "logical_run_id",
+            )
+            if row.get(key) not in {None, ""}
+        }
+    else:
+        return None
+    if not str(record.get("source_id") or "").strip():
+        source_id = payload.get("source_id") or payload.get("failed_source_id")
+        if source_id:
+            record["source_id"] = str(source_id)
+    if not str(record.get("source_id") or "").strip():
+        match = re.search(r"\bsource[_ -]?id[:=]\s*([A-Za-z0-9_.:-]+)", str(record.get("failure_reason") or record.get("error") or ""))
+        if match:
+            record["source_id"] = match.group(1)
+    if not str(record.get("source_id") or "").strip():
+        return None
+    for key in ("run_id", "pipeline_run_id", "logical_run_id"):
+        if not record.get(key) and payload.get(key):
+            record[key] = payload.get(key)
+    if payload.get("edition_date") and not record.get("logical_date"):
+        record["logical_date"] = payload.get("edition_date")
+    if payload.get("scheduled_for") and not record.get("logical_date"):
+        record["logical_date"] = payload.get("scheduled_for")
+    record["source_id"] = str(record["source_id"])[:160]
+    record["failure_classification"] = classify_source_failure_record(record)
+    return record
+
+
+def _source_failure_records_from_payload(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for key in ("source_failure_diagnostics", "failed_source_diagnostics", "failed_source_ids", "source_failures"):
+        value = payload.get(key)
+        if isinstance(value, list):
+            for row in value[:25]:
+                record = _bounded_source_failure_record(row, payload=payload)
+                if record:
+                    records.append(record)
+        elif isinstance(value, dict):
+            for row_key, row_value in list(value.items())[:25]:
+                record = _bounded_source_failure_record(row_value, payload={**payload, "source_id": row_key})
+                if record:
+                    records.append(record)
+    details = payload.get("details")
+    if isinstance(details, dict):
+        records.extend(_source_failure_records_from_payload(details))
+    deduped: dict[str, dict[str, Any]] = {}
+    for record in records:
+        deduped[_source_retry_key_from_record(record, fallback_date=str(payload.get("edition_date") or payload.get("scheduled_for") or ""))] = record
+    return list(deduped.values())[:25]
+
+
+def _source_retry_key_from_record(record: dict[str, Any], *, fallback_date: str = "") -> str:
+    source_id = str(record.get("source_id") or "unknown-source")
+    logical_date = str(record.get("logical_date") or fallback_date or "")
+    logical_run_id = str(record.get("logical_run_id") or record.get("run_id") or record.get("pipeline_run_id") or "")
+    failure_class = str(record.get("failure_class") or record.get("failure_classification") or "UNKNOWN")
+    return "|".join((logical_date, source_id, logical_run_id, failure_class))
+
+
 def classify_incident_root_cause(
     incident: Incident,
     dispatch_result: DispatchResult | None = None,
@@ -1052,6 +1250,8 @@ def _attempt_count(remediation: dict[str, Any], action: str) -> int:
 
 def _retry_state_for(incident: Incident, action: str) -> dict[str, Any]:
     remediation = incident.remediation if isinstance(incident.remediation, dict) else {}
+    if action == SOURCE_TRANSIENT_RETRY_ACTION and isinstance(remediation.get("source_retry_state"), dict):
+        return dict(remediation["source_retry_state"])
     attempts = _attempt_count(remediation, action)
     limit = _retry_limit(action)
     eligible = bool(action and action != "NONE" and attempts < limit)
@@ -1060,12 +1260,18 @@ def _retry_state_for(incident: Incident, action: str) -> dict[str, Any]:
     next_eligible_at = None
     if action == TRANSIENT_NETWORK_RETRY_ACTION and eligible and parsed_attempted_at is not None:
         next_eligible_at = _format_time(parsed_attempted_at + timedelta(minutes=TRANSIENT_NETWORK_BACKOFF_MINUTES))
+    if action == SOURCE_TRANSIENT_RETRY_ACTION and eligible and parsed_attempted_at is not None:
+        next_eligible_at = _format_time(parsed_attempted_at + timedelta(minutes=SOURCE_TRANSIENT_BACKOFF_MINUTES))
     return {
         "attempt_count": attempts,
         "last_attempted_at": attempted_at,
         "last_result": remediation.get("outcome"),
         "max_attempts": limit,
-        "minimum_backoff_minutes": TRANSIENT_NETWORK_BACKOFF_MINUTES if action == TRANSIENT_NETWORK_RETRY_ACTION else None,
+        "minimum_backoff_minutes": TRANSIENT_NETWORK_BACKOFF_MINUTES
+        if action == TRANSIENT_NETWORK_RETRY_ACTION
+        else SOURCE_TRANSIENT_BACKOFF_MINUTES
+        if action == SOURCE_TRANSIENT_RETRY_ACTION
+        else None,
         "next_eligible_at": next_eligible_at,
         "next_eligible_action": action if eligible else None,
         "terminal_reason": None if eligible else ("retry_limit_reached" if limit else "no_autonomous_retry_policy"),
@@ -1488,6 +1694,57 @@ def _auto_transient_network_retry_if_allowed(
     )
 
 
+def _auto_source_transient_retry_if_allowed(
+    *,
+    incident: Incident,
+    status: DispatchStatus,
+    dispatch_root: Path,
+    repo_root: Path,
+    operator_root: Path,
+    config: OperatorConfig,
+    policy: RemediationPolicy,
+    checked_at: str,
+    allow_automatic_remediation: bool,
+) -> tuple[Incident, DispatchStatus, RecoveryPlan, dict[str, Any], bool]:
+    plan = build_remediation_action_plan(
+        incident,
+        runner_root=dispatch_root,
+        operator_root=operator_root,
+        current_status=status,
+        status_root=_configured_status_root(config, repo_root),
+        policy=policy,
+        runner=_run_command,
+    )
+    if plan.proposed_action != SOURCE_TRANSIENT_RETRY_ACTION:
+        return incident, status, build_recovery_plan_from_status(status), incident.remediation, False
+    source_state = dict(plan.safety_checks.get("source_retry_state") or {})
+    attempts = int(source_state.get("attempt_count") or 0)
+    if not allow_automatic_remediation:
+        remediation = _source_retry_remediation_payload(state=source_state, reason="automatic remediation disabled for this run")
+        return replace(incident, remediation=remediation), status, build_recovery_plan_from_status(status), remediation, False
+    if policy.mode_for(SOURCE_TRANSIENT_RETRY_ACTION) != "automatic":
+        remediation = _source_retry_remediation_payload(state=source_state, reason=f"policy mode is {policy.mode_for(SOURCE_TRANSIENT_RETRY_ACTION)}")
+        return replace(incident, remediation=remediation), status, build_recovery_plan_from_status(status), remediation, False
+    if attempts >= _retry_limit(SOURCE_TRANSIENT_RETRY_ACTION) or not source_state.get("retry_budget_remaining", False):
+        source_state["terminal_classification"] = source_state.get("terminal_classification") or "retry_limit_reached"
+        remediation = _source_retry_remediation_payload(state=source_state, reason="bounded source retry limit reached")
+        return replace(incident, remediation=remediation), status, build_recovery_plan_from_status(status), remediation, False
+    if not source_state.get("backoff_elapsed", False):
+        remediation = _source_retry_remediation_payload(state=source_state, reason=f"minimum source backoff active until {source_state.get('next_eligible_at')}")
+        return replace(incident, remediation=remediation), status, build_recovery_plan_from_status(status), remediation, False
+    if not plan.executable:
+        remediation = _source_retry_remediation_payload(state=source_state, reason=plan.reason)
+        return replace(incident, remediation=remediation), status, build_recovery_plan_from_status(status), remediation, False
+    remediation = _source_retry_remediation_payload(
+        state={**source_state, "attempt_count": attempts + 1, "last_attempted_at": checked_at},
+        reason="source-specific retry handler executed",
+        attempted=True,
+        outcome="NO_ACTION",
+        attempted_at=checked_at,
+    )
+    return replace(incident, remediation=remediation), status, build_recovery_plan_from_status(status), remediation, False
+
+
 def check_operator(
     *,
     repo_root: Path = ROOT,
@@ -1740,6 +1997,24 @@ def check_operator(
             checked_at=checked_at,
             allow_automatic_remediation=allow_automatic_remediation,
         )
+        if remediation.get("attempted") is not True and not retry_recovered:
+            incident, source_status, source_plan, source_remediation, source_recovered = _auto_source_transient_retry_if_allowed(
+                incident=incident,
+                status=status,
+                dispatch_root=dispatch_config.runner_root,
+                repo_root=repo_root,
+                operator_root=operator_root,
+                config=config,
+                policy=policy,
+                checked_at=checked_at,
+                allow_automatic_remediation=allow_automatic_remediation,
+            )
+            if source_remediation:
+                remediation = source_remediation
+            if source_recovered:
+                status = source_status
+                plan = source_plan
+                retry_recovered = True
         if remediation.get("attempted") is True:
             status = retried_status
             plan = retried_plan
@@ -1941,14 +2216,20 @@ def _summarize_evidence_payload(payload: dict[str, Any]) -> dict[str, Any]:
             "started_at",
             "completed_at",
             "collection_health",
+            "failed_source_count",
+            "source_failure_summary",
+            "selected_source_ids",
         )
         if key in payload
     }
+    source_records = _source_failure_records_from_payload(payload)
+    if source_records:
+        summary["source_failure_records"] = source_records
     details = payload.get("details")
     if isinstance(details, dict):
         summary["details"] = {
             key: details.get(key)
-            for key in ("failure_stage", "pipeline_run_id", "no_op_reason", "selected_event_count")
+            for key in ("failure_stage", "pipeline_run_id", "no_op_reason", "selected_event_count", "failed_source_count")
             if key in details
         }
     return summary
@@ -2442,6 +2723,7 @@ def _append_context_from_mapping(
     checkout_failures: set[str],
     source_failures: set[str],
     code_exception_markers: set[str],
+    source_failure_records: list[dict[str, Any]] | None = None,
 ) -> None:
     text = _lower_values(payload)
     task_key = str(payload.get("task_key") or payload.get("task_name") or "")
@@ -2459,6 +2741,10 @@ def _append_context_from_mapping(
     failed_source_count = _int_value(payload.get("failed_source_count"))
     if failed_source_count and failed_source_count > 0:
         source_failures.add(f"failed_source_count={failed_source_count}")
+    for record in _source_failure_records_from_payload(payload):
+        if source_failure_records is not None:
+            source_failure_records.append(record)
+        source_failures.add(str(record.get("source_id") or "source failure"))
     task_statuses = payload.get("task_statuses")
     if isinstance(task_statuses, dict):
         for key, value in task_statuses.items():
@@ -2487,6 +2773,7 @@ def build_remediation_evidence_context(
     exit_codes: set[int] = set()
     checkout_failures: set[str] = set()
     source_failures: set[str] = set()
+    source_failure_records: list[dict[str, Any]] = []
     code_exception_markers: set[str] = set()
     evidence_entries: list[dict[str, Any]] = []
     evidence_complete = True
@@ -2499,6 +2786,7 @@ def build_remediation_evidence_context(
             checkout_failures=checkout_failures,
             source_failures=source_failures,
             code_exception_markers=code_exception_markers,
+            source_failure_records=source_failure_records,
         )
         if isinstance(current_status.details, dict):
             _append_context_from_mapping(
@@ -2509,6 +2797,7 @@ def build_remediation_evidence_context(
                 checkout_failures=checkout_failures,
                 source_failures=source_failures,
                 code_exception_markers=code_exception_markers,
+                source_failure_records=source_failure_records,
             )
     if len(incident.evidence) > evidence_limit:
         evidence_complete = False
@@ -2536,6 +2825,7 @@ def build_remediation_evidence_context(
                         checkout_failures=checkout_failures,
                         source_failures=source_failures,
                         code_exception_markers=code_exception_markers,
+                        source_failure_records=source_failure_records,
                     )
                     _append_context_from_mapping(
                         summary,
@@ -2545,6 +2835,7 @@ def build_remediation_evidence_context(
                         checkout_failures=checkout_failures,
                         source_failures=source_failures,
                         code_exception_markers=code_exception_markers,
+                        source_failure_records=source_failure_records,
                     )
             else:
                 _append_context_from_mapping(
@@ -2555,6 +2846,7 @@ def build_remediation_evidence_context(
                     checkout_failures=checkout_failures,
                     source_failures=source_failures,
                     code_exception_markers=code_exception_markers,
+                    source_failure_records=source_failure_records,
                 )
         elif full_path is None:
             entry["error"] = "evidence reference outside runner root or unsafe"
@@ -2574,6 +2866,7 @@ def build_remediation_evidence_context(
         exit_codes=sorted(exit_codes),
         checkout_failures=sorted(checkout_failures),
         source_failures=sorted(source_failures),
+        source_failure_records=list({json.dumps(record, sort_keys=True): record for record in source_failure_records}.values())[:25],
         code_exception_markers=sorted(code_exception_markers),
         evidence_entries=evidence_entries,
         evidence_complete=evidence_complete,
@@ -2617,6 +2910,13 @@ def _context_blob(context: RemediationEvidenceContext) -> str:
 
 def _root_cause_from_context(incident: Incident, context: RemediationEvidenceContext) -> str:
     blob = _context_blob(context)
+    record_classes = {str(record.get("failure_classification") or "") for record in context.source_failure_records}
+    if record_classes and record_classes <= {RootCauseClassification.SOURCE_EXTERNAL_RESTRICTION.value}:
+        return RootCauseClassification.SOURCE_EXTERNAL_RESTRICTION.value
+    if RootCauseClassification.INTERNAL_FAILURE.value in record_classes and RootCauseClassification.SOURCE_TRANSIENT.value not in record_classes:
+        return RootCauseClassification.INTERNAL_FAILURE.value
+    if RootCauseClassification.SOURCE_TRANSIENT.value in record_classes:
+        return RootCauseClassification.SOURCE_TRANSIENT.value
     if _source_external_restriction_markers(blob):
         return RootCauseClassification.SOURCE_EXTERNAL_RESTRICTION.value
     if context.code_exception_markers:
@@ -2777,6 +3077,109 @@ def _transient_retry_backoff_state(incident: Incident, *, now: datetime | None =
         "backoff_elapsed": eligible,
         "retry_budget_remaining": attempts < _retry_limit(TRANSIENT_NETWORK_RETRY_ACTION),
     }
+
+
+def _source_retry_candidates(context: RemediationEvidenceContext) -> list[dict[str, Any]]:
+    candidates = [
+        record
+        for record in context.source_failure_records
+        if record.get("failure_classification") == RootCauseClassification.SOURCE_TRANSIENT.value
+    ]
+    return sorted(candidates, key=lambda row: str(row.get("source_id") or ""))[:10]
+
+
+def _source_retry_handler(dispatch: str) -> dict[str, Any]:
+    row = dict(SOURCE_TRANSIENT_RETRY_HANDLERS.get(dispatch) or {})
+    row.setdefault("enabled", False)
+    row.setdefault("reason", "dispatch has no registered source-isolated retry handler")
+    row.setdefault("public_side_effects", False)
+    row["dispatch"] = dispatch
+    return row
+
+
+def _source_retry_state(
+    incident: Incident,
+    context: RemediationEvidenceContext,
+    *,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    now = now or _utc_now()
+    candidates = _source_retry_candidates(context)
+    existing = {}
+    remediation = incident.remediation if isinstance(incident.remediation, dict) else {}
+    if isinstance(remediation.get("source_retry_state"), dict):
+        existing = dict(remediation["source_retry_state"])
+    if not candidates:
+        return {
+            "source_retry_key": existing.get("source_retry_key"),
+            "attempt_count": _attempt_count(remediation, SOURCE_TRANSIENT_RETRY_ACTION),
+            "max_attempts": _retry_limit(SOURCE_TRANSIENT_RETRY_ACTION),
+            "eligible": False,
+            "terminal_classification": "no_source_transient_candidate",
+        }
+    record = candidates[0]
+    logical_date = str(record.get("logical_date") or incident.affected_date or "")
+    source_retry_key = _source_retry_key_from_record(record, fallback_date=logical_date)
+    attempt_count = int(existing.get("attempt_count") or _attempt_count(remediation, SOURCE_TRANSIENT_RETRY_ACTION) or 0)
+    retry_after_minutes = _source_retry_after_minutes(record.get("retry_after"), now=now)
+    minimum_backoff = retry_after_minutes or SOURCE_TRANSIENT_BACKOFF_MINUTES
+    last_attempted_at = existing.get("last_attempted_at") or remediation.get("attempted_at")
+    parsed_attempted_at = _parse_time(str(last_attempted_at)) if last_attempted_at else None
+    next_eligible = parsed_attempted_at + timedelta(minutes=minimum_backoff) if parsed_attempted_at else now
+    terminal = None
+    if attempt_count >= _retry_limit(SOURCE_TRANSIENT_RETRY_ACTION):
+        terminal = "retry_limit_reached"
+    elif record.get("failure_classification") != RootCauseClassification.SOURCE_TRANSIENT.value:
+        terminal = str(record.get("failure_classification") or "not_source_transient")
+    return {
+        "source_retry_key": source_retry_key,
+        "dispatch": incident.dispatch,
+        "source_id": str(record.get("source_id") or ""),
+        "logical_date": logical_date,
+        "logical_run_id": str(record.get("logical_run_id") or record.get("run_id") or record.get("pipeline_run_id") or ""),
+        "failure_class": str(record.get("failure_class") or record.get("failure_classification") or ""),
+        "failure_classification": str(record.get("failure_classification") or ""),
+        "first_failure_at": existing.get("first_failure_at") or incident.detected_at,
+        "latest_failure_at": incident.updated_at or incident.detected_at,
+        "attempt_count": attempt_count,
+        "max_attempts": _retry_limit(SOURCE_TRANSIENT_RETRY_ACTION),
+        "last_attempted_at": last_attempted_at,
+        "next_eligible_at": _format_time(next_eligible) if next_eligible else None,
+        "minimum_backoff_minutes": minimum_backoff,
+        "retry_after_minutes": retry_after_minutes,
+        "backoff_elapsed": next_eligible is None or now >= next_eligible,
+        "retry_budget_remaining": attempt_count < _retry_limit(SOURCE_TRANSIENT_RETRY_ACTION),
+        "terminal_classification": terminal,
+        "last_successful_fetch": existing.get("last_successful_fetch") or record.get("last_successful_fetch"),
+        "logical_run_identity": {
+            "dispatch": incident.dispatch,
+            "date": logical_date,
+            "source_id": str(record.get("source_id") or ""),
+            "run_id": str(record.get("logical_run_id") or record.get("run_id") or record.get("pipeline_run_id") or ""),
+            "failure_class": str(record.get("failure_class") or record.get("failure_classification") or ""),
+        },
+    }
+
+
+def _source_retry_remediation_payload(
+    *,
+    state: dict[str, Any],
+    reason: str,
+    attempted: bool = False,
+    outcome: str = "NOT_ATTEMPTED",
+    attempted_at: str | None = None,
+) -> dict[str, Any]:
+    payload = _remediation_payload(
+        attempted=attempted,
+        action=SOURCE_TRANSIENT_RETRY_ACTION,
+        outcome=outcome,
+        attempted_at=attempted_at,
+        reason=reason,
+        attempt_count=int(state.get("attempt_count") or 0),
+    )
+    payload["source_retry_state"] = state
+    payload["notification_suppressed"] = outcome == "NOT_ATTEMPTED" and not state.get("terminal_classification")
+    return payload
 
 
 def _terminal_retry_proof(status: DispatchStatus) -> bool:
@@ -2979,8 +3382,46 @@ def build_remediation_action_plan(
             action = "WAIT_FOR_NEXT_SCHEDULED_RUN"
             reason = "source evidence is an external access restriction and is not eligible for transient-network retry"
         elif root_cause == RootCauseClassification.SOURCE_TRANSIENT.value:
-            action = "INVESTIGATE_SOURCE_FAILURES"
-            reason = "single-source transient failure requires source-specific bounded policy before retry"
+            source_state = _source_retry_state(incident, context)
+            handler = _source_retry_handler(incident.dispatch)
+            if incident.dispatch == "gaza" or handler.get("excluded") is True:
+                action = "WAIT_FOR_NEXT_SCHEDULED_RUN"
+                reason = "Gaza source replay is excluded from automatic remediation"
+                executable = False
+                mutation_scope = []
+            else:
+                action = SOURCE_TRANSIENT_RETRY_ACTION
+                reason = (
+                    "single-source transient failure is tracked for bounded source retry; "
+                    + (handler.get("reason") or "source-safe handler unavailable")
+                )
+                executable = (
+                    policy is not None
+                    and policy.mode_for(SOURCE_TRANSIENT_RETRY_ACTION) == "automatic"
+                    and bool(handler.get("enabled"))
+                    and source_state.get("retry_budget_remaining") is True
+                    and source_state.get("backoff_elapsed") is True
+                    and not source_state.get("terminal_classification")
+                )
+                mutation_scope = [
+                    "source-specific collection artifacts only when a registered source-safe handler exists",
+                    "ops/operator/remediation/receipts/<date>/<receipt>.json",
+                ]
+            safety_checks = {
+                "structured_evidence": context.to_payload(),
+                "root_cause_classification": root_cause,
+                "source_retry_state": source_state,
+                "source_retry_candidates": _source_retry_candidates(context),
+                "handler": handler,
+                "policy_mode": policy.mode_for(SOURCE_TRANSIENT_RETRY_ACTION) if policy else "recommend",
+                "public_side_effects": False,
+                "scheduler_changes": False,
+                "collection_rerun": False,
+                "source_only_retry": bool(handler.get("enabled")),
+                "editorial_mutation": False,
+                "publication_attempted": False,
+                "merge_pr": False,
+            }
         elif root_cause == RootCauseClassification.INTERNAL_FAILURE.value:
             action = "ENGINEER_PREPARE_FIX"
             reason = "evidence supports an internal parser/configuration failure, not network retry"
@@ -3684,6 +4125,38 @@ def _apply_transient_network_task_retry(
     return _write_remediation_receipt(operator_root, receipt)
 
 
+def _apply_source_transient_fetch_retry(
+    plan: RemediationActionPlan,
+    *,
+    operator_root: Path,
+    now: datetime | None = None,
+) -> RemediationReceipt:
+    started = _format_time(now or _utc_now())
+    safety = plan.safety_checks if isinstance(plan.safety_checks, dict) else {}
+    handler = safety.get("handler") if isinstance(safety.get("handler"), dict) else {}
+    state = safety.get("source_retry_state") if isinstance(safety.get("source_retry_state"), dict) else {}
+    receipt = RemediationReceipt(
+        plan.dispatch,
+        plan.incident_id,
+        plan.proposed_action,
+        False,
+        "REFUSED",
+        str(handler.get("reason") or "no registered source-safe retry handler"),
+        started,
+        _format_time(_utc_now()),
+        expected_mutation_scope=plan.expected_mutation_scope,
+        validation={
+            "source_retry_state": state,
+            "handler": handler,
+            "public_side_effects": False,
+            "scheduler_changes": False,
+            "collection_rerun": False,
+            "publication_attempted": False,
+        },
+    )
+    return _write_remediation_receipt(operator_root, receipt)
+
+
 def apply_remediation(
     *,
     dispatch: str,
@@ -3754,6 +4227,8 @@ def apply_remediation(
             runner=runner,
             now=now,
         )
+    if action == SOURCE_TRANSIENT_RETRY_ACTION:
+        return _apply_source_transient_fetch_retry(plan, operator_root=operator_root, now=now)
 
     started = _format_time(now or _utc_now())
     apply_result = apply_recovery_plan(dispatch, incident.affected_date or current_status.date, root=runner_root, confirm=action)

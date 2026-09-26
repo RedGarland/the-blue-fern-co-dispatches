@@ -146,7 +146,7 @@ def _queue_item(event: dict[str, Any], *, relationship: str, reasons: list[str],
     state = _queue_state(event, relationship, existing)
     first_seen = (existing or {}).get("first_seen") or event.get("first_seen") or observed_at
     source_urls = sorted(_source_urls(event))
-    return {
+    row = {
         "canonical_event_id": event.get("event_id"),
         "event_fingerprint": _event_key(event),
         "first_seen": first_seen,
@@ -174,6 +174,18 @@ def _queue_item(event: dict[str, Any], *, relationship: str, reasons: list[str],
         "relationship_to_previous": relationship,
         "relationship_reasons": reasons,
     }
+    if existing and existing.get("review_status") in TERMINAL_REVIEW_STATES:
+        for key in (
+            "review_decision",
+            "reviewed_by",
+            "reviewed_at",
+            "review_rationale",
+            "review_decision_id",
+            "release_candidate_ref",
+        ):
+            if key in existing:
+                row[key] = existing.get(key)
+    return row
 
 
 def _age_queue(queue: dict[str, Any], *, observed_at: str, stale_after_days: int) -> None:

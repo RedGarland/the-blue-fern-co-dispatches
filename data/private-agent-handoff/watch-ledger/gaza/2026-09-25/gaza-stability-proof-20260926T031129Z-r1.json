@@ -1,0 +1,22 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-stability-proof-20260926T031129Z-r1",
+  "scheduled_for": "2026-09-26T03:11:29Z",
+  "started_at": "2026-09-26T03:10:50Z",
+  "completed_at": "2026-09-26T03:11:29Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-26T02:05:57Z",
+    "date_to": "2026-09-26T03:11:29Z",
+    "edition_date": "2026-09-25"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "observation_timezone": "America/Los_Angeles",
+    "proof_type": "isolated_stability_proof",
+    "summary": "OCHA OPT and WHO were checked first. Eight additional targeted fresh searches covered Reuters, AP, UN, UNRWA, WAFA, Al Jazeera, The Guardian, and Middle East Eye. No new qualifying Gaza development was verified after the latest durable watch heartbeat window; returned items were older, background/continuing coverage without a new concrete development, or outside bounded criteria. No editorial approval, publication, schedule mutation, or task disablement was performed."
+  }
+}

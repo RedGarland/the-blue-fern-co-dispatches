@@ -49,6 +49,7 @@ ENGINEERING_SCHEMA_VERSION = "blue_fern_operator_engineering_v1"
 CODEX_ATTEMPT_SCHEMA_VERSION = "blue_fern_operator_codex_attempt_v1"
 REMEDIATION_PLAN_SCHEMA_VERSION = "blue_fern_operator_remediation_plan_v1"
 REMEDIATION_RECEIPT_SCHEMA_VERSION = "blue_fern_operator_remediation_receipt_v1"
+AUTONOMY_STATE_SCHEMA_VERSION = "blue_fern_operator_autonomy_state_v1"
 DIAGNOSIS_EVIDENCE_EXCERPT_BYTES = 4096
 DIAGNOSIS_EVIDENCE_FILE_LIMIT = 12
 ENGINEERING_CLOSE_SCHEMA_VERSION = "blue_fern_operator_engineering_close_v1"
@@ -156,6 +157,20 @@ CLASSIFICATION_SEVERITY = {
     "MISSED_RUN": 50,
     "FAILED_RUN": 60,
 }
+AUTONOMOUS_RETRY_LIMITS = {
+    "REBUILD_STATUS": 2,
+    "REFRESH_STATUS_EXPORT": 2,
+    "RUNNER_ROLL_FORWARD": 1,
+    "VERIFY_PUBLIC_STATE": 1,
+    "ENGINEER_PREPARE_FIX": 1,
+}
+APPROVAL_REQUIRED_ACTIONS = {
+    "PUBLISH_APPROVED_RELEASE",
+    "PUBLISH_NO_UPDATE",
+    "REPLAY_COLLECTION",
+    "MERGE_PR",
+    "CLOSE_NON_CODE_INCIDENT",
+}
 
 
 class IncidentState(StrEnum):
@@ -196,6 +211,44 @@ class EngineeringState(StrEnum):
     BLOCKED = "BLOCKED"
     FAILED = "FAILED"
     CLOSED = "CLOSED"
+
+
+class AutonomyLifecycle(StrEnum):
+    DETECTED = "DETECTED"
+    CLASSIFIED = "CLASSIFIED"
+    DIAGNOSING = "DIAGNOSING"
+    REMEDIATION_PLANNED = "REMEDIATION_PLANNED"
+    REMEDIATING = "REMEDIATING"
+    VALIDATING = "VALIDATING"
+    PROMOTING = "PROMOTING"
+    SYNCING = "SYNCING"
+    PROVING = "PROVING"
+    STATUS_REFRESH = "STATUS_REFRESH"
+    RECOVERED = "RECOVERED"
+    HEALTHY = "HEALTHY"
+    WAITING_EXTERNAL = "WAITING_EXTERNAL"
+    APPROVAL_REQUIRED = "APPROVAL_REQUIRED"
+    BLOCKED = "BLOCKED"
+    FAILED_SAFE = "FAILED_SAFE"
+
+
+class RootCauseClassification(StrEnum):
+    RUNNER_SYNC_FAILURE = "RUNNER_SYNC_FAILURE"
+    REPOSITORY_DIRTY_STATE_FAILURE = "REPOSITORY_DIRTY_STATE_FAILURE"
+    DNS_NETWORK_FAILURE = "DNS_NETWORK_FAILURE"
+    SCHEDULER_FAILURE = "SCHEDULER_FAILURE"
+    COLLECTION_FAILURE = "COLLECTION_FAILURE"
+    SOURCE_SPECIFIC_HTTP_FAILURE = "SOURCE_SPECIFIC_HTTP_FAILURE"
+    PARSER_CONFIGURATION_DEFECT = "PARSER_CONFIGURATION_DEFECT"
+    VALIDATION_FAILURE = "VALIDATION_FAILURE"
+    PUBLICATION_FAILURE = "PUBLICATION_FAILURE"
+    OPERATIONAL_STATUS_EXPORTER_FAILURE = "OPERATIONAL_STATUS_EXPORTER_FAILURE"
+    STALE_OBSERVABILITY = "STALE_OBSERVABILITY"
+    MISSING_RECEIPT_PROOF = "MISSING_RECEIPT_PROOF"
+    PERSISTENT_EXTERNAL_ACCESS_RESTRICTION = "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION"
+    EXTERNAL_TRANSIENT_DEPENDENCY_FAILURE = "EXTERNAL_TRANSIENT_DEPENDENCY_FAILURE"
+    EDITORIAL_POLICY_BOUNDARY = "EDITORIAL_POLICY_BOUNDARY"
+    UNKNOWN = "UNKNOWN"
 
 
 @dataclass(frozen=True)
@@ -250,6 +303,11 @@ class Incident:
     schema_version: str = INCIDENT_SCHEMA_VERSION
     affected_date: str | None = None
     updated_at: str | None = None
+    lifecycle_state: str | None = None
+    root_cause_classification: str | None = None
+    approval_required: bool = False
+    next_action: str | None = None
+    retry_state: dict[str, Any] = field(default_factory=dict)
 
     def to_payload(self) -> dict[str, Any]:
         payload = asdict(self)
@@ -345,11 +403,13 @@ class OperatorResult:
     dispatches: list[DispatchResult]
     incidents: list[Incident]
     notification: NotificationEvent = field(default_factory=lambda: NotificationEvent(notification_required=False))
+    autonomy_state: dict[str, Any] = field(default_factory=dict)
     production_state_mutated: bool = False
     schema_version: str = SCHEMA_VERSION
 
     def to_payload(self) -> dict[str, Any]:
         return {
+            "autonomy_state": self.autonomy_state,
             "checked_at": self.checked_at,
             "dispatches": [result.to_payload() for result in self.dispatches],
             "incidents": [incident.to_payload() for incident in self.incidents],
@@ -647,12 +707,14 @@ def _remediation_payload(
     unexpected_changes: Iterable[str] = (),
     status_artifacts_changed: Iterable[str] = (),
     reason: str = "",
+    attempt_count: int = 0,
 ) -> dict[str, Any]:
     if outcome not in REMEDIATION_OUTCOMES:
         outcome = "FAILED"
     return {
         "action": action,
         "attempted": attempted,
+        "attempt_count": attempt_count or (1 if attempted else 0),
         "attempted_at": attempted_at,
         "changed": changed,
         "outcome": outcome,
@@ -824,6 +886,203 @@ def _build_notification_event(
     )
 
 
+def _string_blob(*values: Any) -> str:
+    return "\n".join(_lower_values(value) for value in values if value is not None)
+
+
+def _dispatch_result_for(result: OperatorResult, dispatch: str) -> DispatchResult | None:
+    return next((row for row in result.dispatches if row.dispatch == dispatch), None)
+
+
+def classify_incident_root_cause(
+    incident: Incident,
+    dispatch_result: DispatchResult | None = None,
+) -> str:
+    exported = dispatch_result.exported_status if dispatch_result else {}
+    exported = exported if isinstance(exported, dict) else {}
+    source_summary = exported.get("source_failure_summary") if isinstance(exported.get("source_failure_summary"), dict) else {}
+    if (
+        source_summary.get("all_current_failures_external") is True
+        or (
+            int(source_summary.get("external_access_restriction_count") or 0) > 0
+            and int(source_summary.get("unclassified_source_failure_count") or 0) == 0
+        )
+    ):
+        return RootCauseClassification.PERSISTENT_EXTERNAL_ACCESS_RESTRICTION.value
+    if incident.classification == Classification.STALE_OBSERVABILITY.value:
+        return RootCauseClassification.STALE_OBSERVABILITY.value
+    if incident.classification == Classification.STATUS_EXPORT_PROBLEM.value or incident.recovery_action == "INVESTIGATE_STATUS_EXPORT":
+        return RootCauseClassification.OPERATIONAL_STATUS_EXPORTER_FAILURE.value
+    if incident.classification == Classification.MISSED_RUN.value or incident.status_state == "MISSED":
+        return RootCauseClassification.MISSING_RECEIPT_PROOF.value
+    if incident.recovery_action in {"PUBLISH_APPROVED_RELEASE", "PUBLISH_NO_UPDATE"}:
+        return RootCauseClassification.EDITORIAL_POLICY_BOUNDARY.value
+    blob = _string_blob(incident.to_payload(), dispatch_result.to_payload() if dispatch_result else None)
+    if "runner_roll_forward" in blob or "fast-forward" in blob or "runner is behind" in blob:
+        return RootCauseClassification.RUNNER_SYNC_FAILURE.value
+    if "verify_checkout" in blob or ("dirty" in blob and "checkout" in blob):
+        return RootCauseClassification.REPOSITORY_DIRTY_STATE_FAILURE.value
+    if any(token in blob for token in ("dns", "name resolution", "temporary failure in name resolution", "getaddrinfo")):
+        return RootCauseClassification.DNS_NETWORK_FAILURE.value
+    if "task scheduler" in blob or "scheduled task" in blob:
+        return RootCauseClassification.SCHEDULER_FAILURE.value
+    if any(token in blob for token in ("403", "401", "http", "httperror", "forbidden")) and (
+        "failed_source" in blob or "source failure" in blob or "feed" in blob
+    ):
+        return RootCauseClassification.SOURCE_SPECIFIC_HTTP_FAILURE.value
+    if any(token in blob for token in ("timeout", "tls", "connection reset", "503", "502", "429")):
+        return RootCauseClassification.EXTERNAL_TRANSIENT_DEPENDENCY_FAILURE.value
+    if any(token in blob for token in ("traceback", "typeerror", "valueerror", "assertionerror", "nameerror", "modulenotfounderror")):
+        return RootCauseClassification.PARSER_CONFIGURATION_DEFECT.value
+    if "validation failed" in blob or "doctor" in blob or "preflight" in blob:
+        return RootCauseClassification.VALIDATION_FAILURE.value
+    if "publication" in blob and ("failed" in blob or "incident_open" in blob):
+        return RootCauseClassification.PUBLICATION_FAILURE.value
+    if incident.classification == Classification.FAILED_RUN.value:
+        return RootCauseClassification.COLLECTION_FAILURE.value
+    return RootCauseClassification.UNKNOWN.value
+
+
+def _retry_limit(action: str) -> int:
+    return AUTONOMOUS_RETRY_LIMITS.get(action, 0)
+
+
+def _attempt_count(remediation: dict[str, Any], action: str) -> int:
+    if not remediation:
+        return 0
+    try:
+        explicit = int(remediation.get("attempt_count") or 0)
+    except (TypeError, ValueError):
+        explicit = 0
+    if explicit:
+        return explicit
+    if remediation.get("attempted") is True and remediation.get("action") == action:
+        return 1
+    return 0
+
+
+def _retry_state_for(incident: Incident, action: str) -> dict[str, Any]:
+    attempts = _attempt_count(incident.remediation if isinstance(incident.remediation, dict) else {}, action)
+    limit = _retry_limit(action)
+    eligible = bool(action and action != "NONE" and attempts < limit)
+    return {
+        "attempt_count": attempts,
+        "max_attempts": limit,
+        "next_eligible_action": action if eligible else None,
+        "terminal_reason": None if eligible else ("retry_limit_reached" if limit else "no_autonomous_retry_policy"),
+    }
+
+
+def _incident_approval_required(incident: Incident, policy: RemediationPolicy) -> bool:
+    action = incident.recovery_action or incident.recommended_action
+    if action in APPROVAL_REQUIRED_ACTIONS:
+        return True
+    mode = policy.mode_for(action)
+    if action == "ENGINEER_PREPARE_FIX" and mode == "automatic_prepare_pr":
+        return False
+    return bool(action and action != "NONE" and mode not in {"automatic", "automatic_prepare_pr"})
+
+
+def lifecycle_for_incident(incident: Incident, policy: RemediationPolicy) -> str:
+    if incident.state == IncidentState.RECOVERED.value:
+        return AutonomyLifecycle.RECOVERED.value
+    if incident.state != IncidentState.OPEN.value:
+        return AutonomyLifecycle.HEALTHY.value
+    root_cause = incident.root_cause_classification or classify_incident_root_cause(incident)
+    if root_cause == RootCauseClassification.PERSISTENT_EXTERNAL_ACCESS_RESTRICTION.value:
+        return AutonomyLifecycle.WAITING_EXTERNAL.value
+    if _incident_approval_required(incident, policy):
+        return AutonomyLifecycle.APPROVAL_REQUIRED.value
+    remediation = incident.remediation if isinstance(incident.remediation, dict) else {}
+    action = str(remediation.get("action") or incident.recovery_action or incident.recommended_action or "")
+    if remediation.get("attempted") is True:
+        if remediation.get("outcome") in {"FAILED", "ROLLOUT_APPLIED_VALIDATION_FAILED"} or remediation.get("unexpected_changes"):
+            return AutonomyLifecycle.FAILED_SAFE.value
+        if action == "REFRESH_STATUS_EXPORT":
+            return AutonomyLifecycle.STATUS_REFRESH.value
+        if action == "RUNNER_ROLL_FORWARD":
+            return AutonomyLifecycle.SYNCING.value
+        return AutonomyLifecycle.VALIDATING.value
+    if action == "RUNNER_ROLL_FORWARD":
+        return AutonomyLifecycle.SYNCING.value
+    if action == "REFRESH_STATUS_EXPORT":
+        return AutonomyLifecycle.STATUS_REFRESH.value
+    if action == "ENGINEER_PREPARE_FIX":
+        return AutonomyLifecycle.REMEDIATION_PLANNED.value
+    if action.startswith("INVESTIGATE"):
+        return AutonomyLifecycle.DIAGNOSING.value
+    if action == "WAIT_FOR_NEXT_SCHEDULED_RUN":
+        return AutonomyLifecycle.WAITING_EXTERNAL.value
+    return AutonomyLifecycle.CLASSIFIED.value
+
+
+def enrich_incident_for_autonomy(
+    incident: Incident,
+    *,
+    dispatch_result: DispatchResult | None,
+    policy: RemediationPolicy,
+) -> Incident:
+    root_cause = classify_incident_root_cause(incident, dispatch_result)
+    action = incident.recovery_action or incident.recommended_action
+    approval_required = _incident_approval_required(incident, policy)
+    if root_cause == RootCauseClassification.PERSISTENT_EXTERNAL_ACCESS_RESTRICTION.value:
+        approval_required = False
+    enriched = replace(
+        incident,
+        root_cause_classification=root_cause,
+        approval_required=approval_required,
+        next_action=action,
+    )
+    return replace(
+        enriched,
+        lifecycle_state=lifecycle_for_incident(enriched, policy),
+        retry_state=_retry_state_for(enriched, action),
+    )
+
+
+def build_autonomy_state(
+    result: OperatorResult,
+    *,
+    config: OperatorConfig,
+    policy: RemediationPolicy,
+    protected_source_head: str | None,
+) -> dict[str, Any]:
+    active = [incident for incident in result.incidents if incident.state == IncidentState.OPEN.value]
+    approval_required = [incident for incident in active if incident.approval_required]
+    recovered = [incident for incident in result.incidents if incident.state == IncidentState.RECOVERED.value]
+    runner_deployment = {
+        dispatch: {
+            "runner_root": str(row.runner_root),
+            "enabled": row.enabled,
+        }
+        for dispatch, row in sorted(config.dispatches.items())
+    }
+    return {
+        "schema_version": AUTONOMY_STATE_SCHEMA_VERSION,
+        "current_system_health": "HEALTHY" if not active else "DEGRADED",
+        "active_incident_count": len(active),
+        "active_incidents": [
+            {
+                "incident_id": incident.incident_id,
+                "dispatch": incident.dispatch,
+                "lifecycle_state": incident.lifecycle_state,
+                "root_cause_classification": incident.root_cause_classification,
+                "remediation_state": incident.remediation,
+                "current_blocker": "APPROVAL_REQUIRED" if incident.approval_required else None,
+                "next_action": incident.next_action,
+                "approval_required": incident.approval_required,
+                "retry_state": incident.retry_state,
+            }
+            for incident in active
+        ],
+        "recovered_incidents": [incident.incident_id for incident in recovered],
+        "protected_source_head": protected_source_head,
+        "runner_deployment_state": runner_deployment,
+        "last_proof_timestamp": result.checked_at,
+        "public_side_effects": False,
+    }
+
+
 def _build_incident(
     *,
     dispatch: str,
@@ -940,6 +1199,99 @@ def _apply_rebuild_status(
         reason="automatic REBUILD_STATUS via dispatch_ops.apply_recovery_plan",
     )
     return result, post_status, post_plan, remediation
+
+
+def _remediation_payload_from_receipt(
+    receipt: RemediationReceipt,
+    *,
+    attempted_at: str,
+    attempt_count: int,
+) -> dict[str, Any]:
+    return _remediation_payload(
+        attempted=True,
+        action=receipt.action,
+        outcome=receipt.outcome if receipt.accepted else "FAILED",
+        changed=bool(receipt.changed_paths),
+        attempted_at=attempted_at,
+        post_status=receipt.validation.get("underlying_status_after", {}).get("state")
+        if isinstance(receipt.validation.get("underlying_status_after"), dict)
+        else None,
+        unexpected_changes=receipt.warnings if not receipt.accepted else [],
+        status_artifacts_changed=receipt.changed_paths,
+        reason=receipt.reason,
+        attempt_count=attempt_count,
+    )
+
+
+def _auto_refresh_status_export_if_allowed(
+    *,
+    incident: Incident,
+    status: DispatchStatus,
+    dispatch_root: Path,
+    repo_root: Path,
+    operator_root: Path,
+    config: OperatorConfig,
+    policy: RemediationPolicy,
+    checked_at: str,
+    open_incidents: dict[str, dict[str, Any]],
+    allow_automatic_remediation: bool,
+) -> tuple[Incident, DispatchStatus, RecoveryPlan, dict[str, Any], bool]:
+    plan = build_remediation_action_plan(
+        incident,
+        runner_root=dispatch_root,
+        operator_root=operator_root,
+        current_status=status,
+        status_root=_configured_status_root(config, repo_root),
+        policy=policy,
+    )
+    if plan.proposed_action != "REFRESH_STATUS_EXPORT":
+        return incident, status, build_recovery_plan_from_status(status), incident.remediation, False
+    attempts = _attempt_count(incident.remediation if isinstance(incident.remediation, dict) else {}, plan.proposed_action)
+    if not allow_automatic_remediation:
+        remediation = _remediation_payload(action=plan.proposed_action, reason="automatic remediation disabled for this run", attempt_count=attempts)
+        return replace(incident, remediation=remediation), status, build_recovery_plan_from_status(status), remediation, False
+    if policy.mode_for("REFRESH_STATUS_EXPORT") != "automatic":
+        remediation = _remediation_payload(action=plan.proposed_action, reason=f"policy mode is {policy.mode_for('REFRESH_STATUS_EXPORT')}", attempt_count=attempts)
+        return replace(incident, remediation=remediation), status, build_recovery_plan_from_status(status), remediation, False
+    if not plan.executable:
+        remediation = _remediation_payload(action=plan.proposed_action, reason=plan.reason, attempt_count=attempts)
+        return replace(incident, remediation=remediation), status, build_recovery_plan_from_status(status), remediation, False
+    if attempts >= _retry_limit(plan.proposed_action):
+        remediation = _remediation_payload(action=plan.proposed_action, reason="bounded retry limit reached", attempt_count=attempts)
+        return replace(incident, remediation=remediation), status, build_recovery_plan_from_status(status), remediation, False
+    if any(
+        row.get("dispatch") == status.dispatch
+        and row.get("classification") not in {Classification.STALE_OBSERVABILITY.value, Classification.STATUS_EXPORT_PROBLEM.value}
+        for row in open_incidents.values()
+    ):
+        remediation = _remediation_payload(action=plan.proposed_action, reason="conflicting open underlying incident exists", attempt_count=attempts)
+        return replace(incident, remediation=remediation), status, build_recovery_plan_from_status(status), remediation, False
+    receipt = _apply_refresh_status_export(
+        plan,
+        repo_root=repo_root,
+        runner_root=dispatch_root,
+        operator_root=operator_root,
+        config=config,
+        current_status=status,
+        now=_parse_time(checked_at),
+    )
+    remediation = _remediation_payload_from_receipt(receipt, attempted_at=checked_at, attempt_count=attempts + 1)
+    post_status = build_status(status.dispatch, status.date, root=dispatch_root)
+    post_plan = build_recovery_plan_from_status(post_status)
+    stale_recovered = receipt.accepted and not receipt.validation.get("stale_observability_after")
+    incident_state = IncidentState.RECOVERED if stale_recovered else IncidentState.OPEN
+    return (
+        replace(
+            incident,
+            state=incident_state.value,
+            remediation=remediation,
+            recommended_action="NO_ACTION" if stale_recovered else incident.recommended_action,
+        ),
+        post_status,
+        post_plan,
+        remediation,
+        stale_recovered,
+    )
 
 
 def check_operator(
@@ -1092,6 +1444,27 @@ def check_operator(
                 affected_date=runner_date,
                 remediation=remediation,
             )
+            if observability_plan.action != "REBUILD_STATUS":
+                incident, refreshed_status, refreshed_plan, remediation, stale_recovered = _auto_refresh_status_export_if_allowed(
+                    incident=incident,
+                    status=status,
+                    dispatch_root=dispatch_config.runner_root,
+                    repo_root=repo_root,
+                    operator_root=operator_root,
+                    config=config,
+                    policy=policy,
+                    checked_at=checked_at,
+                    open_incidents=open_incidents,
+                    allow_automatic_remediation=allow_automatic_remediation,
+                )
+                if remediation.get("attempted") is True:
+                    status = refreshed_status
+                    plan = refreshed_plan
+                    underlying_classification = _classify_status(status)
+                    if stale_recovered:
+                        recommended = "NO_ACTION"
+                    else:
+                        recommended = _recommended_action(underlying_classification, status, plan) if underlying_classification else "NO_ACTION"
             current_keys.add(incident.incident_key)
             incidents.append(incident)
             if underlying_classification is not None:
@@ -1118,8 +1491,8 @@ def check_operator(
                     recommended_action=recommended,
                     status_state=status.state,
                     observed_date=runner_date,
-                    recovery_disposition=observability_plan.disposition,
-                    recovery_action=observability_plan.action,
+                    recovery_disposition=plan.disposition if remediation.get("attempted") is True else observability_plan.disposition,
+                    recovery_action=plan.action if remediation.get("attempted") is True else observability_plan.action,
                     incident_id=incident.incident_id,
                     evidence=incident.evidence,
                     exported_status=asdict(exported),
@@ -1186,11 +1559,31 @@ def check_operator(
             incidents.append(recovered)
 
     result = OperatorResult(checked_at=checked_at, dispatches=dispatch_results, incidents=incidents)
+    enriched_incidents = [
+        enrich_incident_for_autonomy(
+            incident,
+            dispatch_result=_dispatch_result_for(result, incident.dispatch),
+            policy=policy,
+        )
+        for incident in result.incidents
+    ]
+    result = OperatorResult(
+        checked_at=result.checked_at,
+        dispatches=result.dispatches,
+        incidents=enriched_incidents,
+        autonomy_state=build_autonomy_state(
+            OperatorResult(checked_at=result.checked_at, dispatches=result.dispatches, incidents=enriched_incidents),
+            config=config,
+            policy=policy,
+            protected_source_head=_git_head(repo_root),
+        ),
+    )
     result = OperatorResult(
         checked_at=result.checked_at,
         dispatches=result.dispatches,
         incidents=result.incidents,
         notification=_build_notification_event(result, previous_incidents, policy),
+        autonomy_state=result.autonomy_state,
         production_state_mutated=any(
             bool((incident.remediation or {}).get("changed"))
             for incident in result.incidents
@@ -3980,6 +4373,12 @@ def _write_run_receipt(operator_root: Path, result: OperatorResult, exit_code: i
             incident.incident_id
             for incident in result.incidents
             if (incident.remediation or {}).get("attempted") is True
+        ],
+        "autonomy_state": result.autonomy_state,
+        "approval_required_incidents": [
+            incident.incident_id
+            for incident in result.incidents
+            if incident.approval_required
         ],
         "remediation_failures": remediation_failures,
         "notification_required": result.notification.notification_required,

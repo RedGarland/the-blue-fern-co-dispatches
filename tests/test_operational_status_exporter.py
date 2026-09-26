@@ -326,6 +326,88 @@ def _write_care_receipt(
     (receipt_root / f"{run_id}.json").write_text(json.dumps(receipt), encoding="utf-8")
 
 
+def _write_care_source_registry(
+    source: Path,
+    *,
+    classified_sources: tuple[str, ...],
+    disabled_sources: tuple[str, ...] = (),
+) -> None:
+    rows = []
+    for source_id in (*classified_sources, *disabled_sources):
+        rows.append(
+            {
+                "source_id": source_id,
+                "enabled": source_id not in disabled_sources,
+                "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+                "coverage_reduced": True,
+                "remediation_available": False,
+            }
+        )
+    path = source / "data" / "dispatches" / "care-line" / "source_registry.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"sources": rows}), encoding="utf-8")
+
+
+def _write_care_custom_receipt(
+    source: Path,
+    *,
+    task_key: str,
+    run_id: str,
+    task_status: str,
+    scheduled_for: str,
+    started_at: str,
+    completed_at: str,
+    details: dict[str, object] | None = None,
+    exit_code: int = 0,
+    publication_status: str | None = None,
+) -> None:
+    artifact = source / "status" / "care-line" / "scheduler-runs" / DATE / f"{run_id}.json"
+    artifact.parent.mkdir(parents=True, exist_ok=True)
+    artifact.write_text("{}\n", encoding="utf-8")
+    receipt = build_care_line_operational_receipt(
+        task_key=task_key,
+        scheduled_for=scheduled_for,
+        started_at=started_at,
+        completed_at=completed_at,
+        exit_code=exit_code,
+        task_status=task_status,
+        run_id=run_id,
+        runner_path=r"C:\BlueFernRunner\CareLineNationalCurrent8",
+        branch="add/pages-repo-default",
+        source_head="6dd7e79411c11078dca4272075058c80ac8d2198",
+        artifact_refs={"task_receipt": str(artifact)},
+        publication_attempted=False if task_key == "care_line_approved_release_publication" else None,
+        publication_status=publication_status,
+        public_side_effects={"pages_sync": False, "source_text": "private"},
+        details=details,
+    )
+    receipt_root = source / "status" / "operational-health" / "care-line" / DATE / "runs"
+    receipt_root.mkdir(parents=True, exist_ok=True)
+    (receipt_root / f"{run_id}.json").write_text(json.dumps(receipt), encoding="utf-8")
+
+
+def _external_failure_details(source_ids: tuple[str, ...], *, successful: int = 31) -> dict[str, object]:
+    return {
+        "successful_attempt_count": successful,
+        "failed_source_count": len(source_ids),
+        "skipped_source_count": 0,
+        "active_review_queue_count": 0,
+        "manual_review_count": 49,
+        "failed_source_diagnostics": [
+            {
+                "source_id": source_id,
+                "source_name": source_id,
+                "adapter_type": "rss",
+                "failure_class": "HTTPError",
+                "transient": False,
+                "failure_reason": "private failure detail",
+                "source_url": "https://example.invalid/private",
+            }
+            for source_id in source_ids
+        ],
+    }
+
+
 def _write_gaza_day(
     tmp_path: Path,
     *,
@@ -898,6 +980,155 @@ def test_care_export_exposes_bounded_collection_diagnostics_without_private_deta
     assert "private failure detail" not in rendered
     assert "example.invalid/private" not in rendered
     assert "private care body" not in rendered
+
+
+def test_care_external_access_restriction_proof_degrades_without_open_incident(tmp_path: Path) -> None:
+    food_statuses = {
+        task_key: (action, "completed", 0)
+        for task_key, (action, _status, _exit_code) in TASKS.items()
+    }
+    source = _write_day(tmp_path / "food", food_statuses)
+    care_source = tmp_path / "care-source"
+    _write_care_source_registry(care_source, classified_sources=("hhs-news", "hrsa-news"))
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_collection",
+        run_id="a-scheduled-failed",
+        task_status="failed",
+        scheduled_for="2026-09-10T15:00:00Z",
+        started_at="2026-09-10T15:00:00Z",
+        completed_at="2026-09-10T15:02:00Z",
+        exit_code=2,
+        details={"successful_attempt_count": 0, "failed_source_count": 35},
+    )
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_reviewed_event_queue",
+        run_id="queue",
+        task_status="nothing_to_publish",
+        scheduled_for="2026-09-10T15:01:00Z",
+        started_at="2026-09-10T15:01:00Z",
+        completed_at="2026-09-10T15:01:30Z",
+    )
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_approved_release_publication",
+        run_id="publication",
+        task_status="safe_no_op",
+        publication_status="safe_no_op",
+        scheduled_for="2026-09-10T15:02:00Z",
+        started_at="2026-09-10T15:02:00Z",
+        completed_at="2026-09-10T15:02:30Z",
+    )
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_collection",
+        run_id="z-external-proof",
+        task_status="partial_success",
+        scheduled_for="2026-09-10T16:00:00Z",
+        started_at="2026-09-10T16:00:00Z",
+        completed_at="2026-09-10T16:03:00Z",
+        details=_external_failure_details(("hhs-news", "hrsa-news")),
+    )
+
+    result = export_status(
+        source_root=source,
+        care_source_root=care_source,
+        status_checkout=tmp_path / "status-checkout",
+        date=DATE,
+        evaluated_at="2026-09-10T18:00:00Z",
+        exported_at="2026-09-10T18:01:00Z",
+        care_expected_instances=CARE_EXPECTED_INSTANCES,
+    )
+
+    care = result["care_line"]
+    system_care = result["system"]["dispatches"]["care-line"]
+    assert care["aggregate_status"] == "DEGRADED"
+    assert care["recovery_lifecycle"] == "HEALTHY"
+    assert care["receipt_completeness"] == "COMPLETE"
+    assert care["stale_observability"] is False
+    assert care["source_failure_summary"]["external_access_restriction_count"] == 2
+    assert care["source_failure_summary"]["unclassified_source_failure_count"] == 0
+    proof = next(row for row in care["task_summaries"] if row["run_id"] == "z-external-proof")
+    assert proof["diagnostics"]["failed_source_count"] == 2
+    assert proof["diagnostics"]["failed_sources"][0]["external_classification"] == "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION"
+    assert result["system"]["system_status"] == "DEGRADED"
+    assert system_care["aggregate_status"] == "DEGRADED"
+    assert system_care["source_failure_summary"]["external_access_restriction_count"] == 2
+    assert "private failure detail" not in json.dumps(result)
+
+
+def test_care_mixed_external_and_unclassified_source_failure_reopens_incident(tmp_path: Path) -> None:
+    care_source = tmp_path / "care-source"
+    _write_care_source_registry(care_source, classified_sources=("hhs-news",))
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_collection",
+        run_id="mixed-proof",
+        task_status="partial_success",
+        scheduled_for="2026-09-10T15:00:00Z",
+        started_at="2026-09-10T15:00:00Z",
+        completed_at="2026-09-10T15:03:00Z",
+        details=_external_failure_details(("hhs-news", "parser-defect-source")),
+    )
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_reviewed_event_queue",
+        run_id="queue",
+        task_status="nothing_to_publish",
+        scheduled_for="2026-09-10T15:01:00Z",
+        started_at="2026-09-10T15:01:00Z",
+        completed_at="2026-09-10T15:01:30Z",
+    )
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_approved_release_publication",
+        run_id="publication",
+        task_status="safe_no_op",
+        publication_status="safe_no_op",
+        scheduled_for="2026-09-10T15:02:00Z",
+        started_at="2026-09-10T15:02:00Z",
+        completed_at="2026-09-10T15:02:30Z",
+    )
+
+    status = build_care_line_status(
+        source_root=care_source,
+        date=DATE,
+        evaluated_at="2026-09-10T18:00:00Z",
+        exported_at="2026-09-10T18:01:00Z",
+        expected_instances=CARE_EXPECTED_INSTANCES,
+    )
+
+    assert status["aggregate_status"] == "FAILED"
+    assert status["recovery_lifecycle"] == "INCIDENT_OPEN"
+    assert status["source_failure_summary"]["external_access_restriction_count"] == 1
+    assert status["source_failure_summary"]["unclassified_source_failure_count"] == 1
+
+
+def test_care_external_restriction_classification_does_not_mask_missing_receipts(tmp_path: Path) -> None:
+    care_source = tmp_path / "care-source"
+    _write_care_source_registry(care_source, classified_sources=("hhs-news", "hrsa-news"))
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_collection",
+        run_id="external-proof",
+        task_status="partial_success",
+        scheduled_for="2026-09-10T15:00:00Z",
+        started_at="2026-09-10T15:00:00Z",
+        completed_at="2026-09-10T15:03:00Z",
+        details=_external_failure_details(("hhs-news", "hrsa-news")),
+    )
+
+    status = build_care_line_status(
+        source_root=care_source,
+        date=DATE,
+        evaluated_at="2026-09-10T18:00:00Z",
+        exported_at="2026-09-10T18:01:00Z",
+        expected_instances=CARE_EXPECTED_INSTANCES,
+    )
+
+    assert status["aggregate_status"] == "MISSED"
+    assert status["source_failure_summary"]["all_current_failures_external"] is True
 
 
 def test_care_safe_no_op_queue_and_publication_do_not_become_failures(tmp_path: Path) -> None:

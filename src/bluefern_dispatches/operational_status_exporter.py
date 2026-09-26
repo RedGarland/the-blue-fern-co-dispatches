@@ -50,6 +50,8 @@ HANDOFF_STATES = {
 }
 HANDOFF_TERMINAL_STATUSES = {"SUCCESS", "SAFE_NO_OP", "FAILED"}
 RETIREMENT_SHA_RE = re.compile(r"^[0-9a-f]{64}$", re.IGNORECASE)
+CARE_LINE_SOURCE_REGISTRY_RELATIVE = Path("data") / "dispatches" / "care-line" / "source_registry.json"
+CARE_LINE_EXTERNAL_RESTRICTION_CLASSIFICATION = "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION"
 
 
 class ExportError(RuntimeError):
@@ -546,24 +548,118 @@ def _receipt_artifact_id(receipt: dict[str, Any], linkage: dict[str, str]) -> st
     return _symbolic_artifact(artifact) or linkage.get(str(receipt.get("task_key")))
 
 
-def _care_collection_diagnostics(receipt: dict[str, Any]) -> dict[str, Any] | None:
+def _load_care_line_source_failure_policies(source_root: Path) -> dict[str, dict[str, Any]]:
+    path = source_root / CARE_LINE_SOURCE_REGISTRY_RELATIVE
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    sources = payload.get("sources") if isinstance(payload, dict) else None
+    if not isinstance(sources, list):
+        return {}
+    policies: dict[str, dict[str, Any]] = {}
+    for source in sources:
+        if not isinstance(source, dict) or source.get("enabled") is not True:
+            continue
+        source_id = _safe_identifier(source.get("source_id"))
+        classification = _safe_identifier(source.get("operational_failure_classification"))
+        if not source_id or classification != CARE_LINE_EXTERNAL_RESTRICTION_CLASSIFICATION:
+            continue
+        policies[source_id] = {
+            "classification": classification,
+            "coverage_reduced": bool(source.get("coverage_reduced")),
+            "remediation_available": bool(source.get("remediation_available")),
+        }
+    return policies
+
+
+def _care_failed_source_rows(receipt: dict[str, Any]) -> list[dict[str, Any]]:
+    details = receipt.get("details") if isinstance(receipt.get("details"), dict) else {}
+    rows = details.get("failed_source_diagnostics") if isinstance(details.get("failed_source_diagnostics"), list) else []
+    return [row for row in rows if isinstance(row, dict)]
+
+
+def _care_detail_count(receipt: dict[str, Any], key: str) -> int | None:
+    details = receipt.get("details") if isinstance(receipt.get("details"), dict) else {}
+    value = details.get(key)
+    try:
+        return int(value) if value is not None else None
+    except (TypeError, ValueError):
+        return None
+
+
+def _care_source_failure_summary(
+    receipt: dict[str, Any] | None,
+    source_failure_policies: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    if not receipt or receipt.get("dispatch") != "care-line" or receipt.get("task_key") != "care_line_collection":
+        return {
+            "failed_source_count": 0,
+            "external_access_restriction_count": 0,
+            "unclassified_source_failure_count": 0,
+            "external_restriction_sources": [],
+            "all_current_failures_external": False,
+            "successful_attempt_count": None,
+        }
+    failed_rows = _care_failed_source_rows(receipt)
+    failed_count = _care_detail_count(receipt, "failed_source_count")
+    if failed_count is None:
+        failed_count = len(failed_rows)
+    external_sources: list[dict[str, Any]] = []
+    unclassified_count = 0
+    for row in failed_rows:
+        source_id = _safe_identifier(row.get("source_id"))
+        policy = source_failure_policies.get(source_id or "")
+        if policy:
+            external_sources.append(
+                {
+                    "source_id": source_id,
+                    "classification": policy["classification"],
+                    "coverage_reduced": policy["coverage_reduced"],
+                    "remediation_available": policy["remediation_available"],
+                }
+            )
+        else:
+            unclassified_count += 1
+    unreported_count = max(0, failed_count - len(failed_rows))
+    unclassified_count += unreported_count
+    return {
+        "failed_source_count": failed_count,
+        "external_access_restriction_count": len(external_sources),
+        "unclassified_source_failure_count": unclassified_count,
+        "external_restriction_sources": external_sources,
+        "all_current_failures_external": failed_count > 0
+        and len(external_sources) == failed_count
+        and unclassified_count == 0,
+        "successful_attempt_count": _care_detail_count(receipt, "successful_attempt_count"),
+    }
+
+
+def _care_collection_diagnostics(
+    receipt: dict[str, Any],
+    source_failure_policies: dict[str, dict[str, Any]] | None = None,
+) -> dict[str, Any] | None:
     if receipt.get("dispatch") != "care-line" or receipt.get("task_key") != "care_line_collection":
         return None
     details = receipt.get("details") if isinstance(receipt.get("details"), dict) else {}
-    rows = details.get("failed_source_diagnostics") if isinstance(details.get("failed_source_diagnostics"), list) else []
+    rows = _care_failed_source_rows(receipt)
     failures: list[dict[str, Any]] = []
+    policies = source_failure_policies or {}
     for row in rows[:20]:
-        if not isinstance(row, dict):
-            continue
-        failures.append(
-            {
-                "source_id": _safe_identifier(row.get("source_id")),
-                "source_name": str(row.get("source_name") or "")[:200] or None,
-                "adapter_type": _safe_identifier(row.get("adapter_type")),
-                "failure_class": _safe_identifier(row.get("failure_class")),
-                "transient": bool(row.get("transient")),
-            }
-        )
+        source_id = _safe_identifier(row.get("source_id"))
+        failure = {
+            "source_id": source_id,
+            "source_name": str(row.get("source_name") or "")[:200] or None,
+            "adapter_type": _safe_identifier(row.get("adapter_type")),
+            "failure_class": _safe_identifier(row.get("failure_class")),
+            "transient": bool(row.get("transient")),
+        }
+        policy = policies.get(source_id or "")
+        if policy:
+            failure["external_classification"] = policy["classification"]
+            failure["coverage_reduced"] = policy["coverage_reduced"]
+            failure["remediation_available"] = policy["remediation_available"]
+        failures.append(failure)
     def _count(key: str) -> int | None:
         value = details.get(key)
         try:
@@ -580,7 +676,11 @@ def _care_collection_diagnostics(receipt: dict[str, Any]) -> dict[str, Any] | No
     }
 
 
-def _task_summary(receipt: dict[str, Any], linkage: dict[str, str]) -> dict[str, Any]:
+def _task_summary(
+    receipt: dict[str, Any],
+    linkage: dict[str, str],
+    source_failure_policies: dict[str, dict[str, Any]] | None = None,
+) -> dict[str, Any]:
     return {
         "task_key": receipt.get("task_key"),
         "status": receipt.get("status") if receipt.get("status") in SUPPORTED_TASK_STATUSES else "UNKNOWN",
@@ -595,8 +695,45 @@ def _task_summary(receipt: dict[str, Any], linkage: dict[str, str]) -> dict[str,
         "publication_status": receipt.get("publication_status"),
         "public_side_effects": _sanitized_public_side_effects(receipt.get("public_side_effects")),
         "artifact_id": _receipt_artifact_id(receipt, linkage),
-        "diagnostics": _care_collection_diagnostics(receipt),
+        "diagnostics": _care_collection_diagnostics(receipt, source_failure_policies),
     }
+
+
+def _care_adjusted_aggregate_status(
+    *,
+    aggregate_status: str,
+    aggregate: dict[str, Any],
+    completeness: str,
+    latest_collection: dict[str, Any] | None,
+    source_failure_summary: dict[str, Any],
+) -> str:
+    if aggregate.get("stale_observability") or aggregate_status == OperationalStatus.STALE_OBSERVABILITY.value:
+        return aggregate_status
+    if aggregate.get("missed_tasks") or completeness != "COMPLETE":
+        return aggregate_status
+    if not latest_collection or source_failure_summary["failed_source_count"] <= 0:
+        return aggregate_status
+    current_mixed_failure = (
+        source_failure_summary["external_access_restriction_count"] > 0
+        and source_failure_summary["unclassified_source_failure_count"] > 0
+    )
+    if current_mixed_failure:
+        return OperationalStatus.FAILED.value
+    latest_status = str(latest_collection.get("status") or "")
+    successful_attempts = source_failure_summary.get("successful_attempt_count")
+    external_only_current_failure = (
+        latest_status == OperationalStatus.DEGRADED.value
+        and isinstance(successful_attempts, int)
+        and successful_attempts > 0
+        and source_failure_summary["all_current_failures_external"]
+    )
+    if not external_only_current_failure:
+        return aggregate_status
+    failed_tasks = [str(task) for task in aggregate.get("failed_tasks", [])]
+    has_non_collection_failure = any(not task.startswith("care_line_collection") for task in failed_tasks)
+    if has_non_collection_failure:
+        return aggregate_status
+    return OperationalStatus.DEGRADED.value
 
 
 def _recovery_state(
@@ -716,6 +853,10 @@ def build_care_line_status(
     completeness, linkage = receipt_completeness(
         receipts, source_root=source_root, expectations=CARE_LINE_TASK_EXPECTATIONS
     )
+    source_failure_policies = _load_care_line_source_failure_policies(source_root)
+    collection_receipts = [receipt for receipt in receipts if receipt.get("task_key") == "care_line_collection"]
+    latest_collection = max(collection_receipts, key=_receipt_sort_time, default=None)
+    source_failure_summary = _care_source_failure_summary(latest_collection, source_failure_policies)
     aggregate = evaluate_dispatch_health(
         dispatch="care-line",
         receipts=receipts,
@@ -736,6 +877,13 @@ def build_care_line_status(
         if receipts or aggregate.get("missed_tasks")
         else OperationalStatus.UNKNOWN.value
     )
+    aggregate_status = _care_adjusted_aggregate_status(
+        aggregate_status=aggregate_status,
+        aggregate=aggregate,
+        completeness=completeness if receipts else "NO_PROOF",
+        latest_collection=latest_collection,
+        source_failure_summary=source_failure_summary,
+    )
     source_heads = {_safe_head(receipt.get("source_head")) for receipt in receipts}
     source_heads.discard(None)
     publication_attempted = any(receipt.get("publication_attempted") is True for receipt in receipts)
@@ -750,7 +898,8 @@ def build_care_line_status(
         "recovery_lifecycle": _recovery_state(aggregate_status, recovery),
         "latest_runtime_proof_date": aggregate.get("latest_success_at"),
         "receipt_completeness": completeness if receipts else "NO_PROOF",
-        "task_summaries": [_task_summary(receipt, linkage) for receipt in receipts],
+        "task_summaries": [_task_summary(receipt, linkage, source_failure_policies) for receipt in receipts],
+        "source_failure_summary": source_failure_summary,
         "runner_source_head": sorted(source_heads)[0] if len(source_heads) == 1 else None,
         **runner_identity,
         "publication_attempted": publication_attempted,
@@ -1008,6 +1157,7 @@ def build_system_status(
             "latest_runtime_proof_date": care_line_status.get("latest_runtime_proof_date"),
             "receipt_completeness": care_line_status.get("receipt_completeness"),
             "stale_observability": care_line_status.get("stale_observability"),
+            "source_failure_summary": care_line_status.get("source_failure_summary"),
             "current_runner_head": care_line_status.get("current_runner_head"),
             "current_runner_branch": care_line_status.get("current_runner_branch"),
             "agent_handoff": care_line_status["agent_handoff"],

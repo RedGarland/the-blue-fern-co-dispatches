@@ -124,8 +124,5 @@ def test_status_export_proof_does_not_trigger_collection_or_publication() -> Non
 
 def test_sync_helper_uses_unambiguous_powershell_refspec_interpolation() -> None:
     text = _text()
-    assert '"+refs/heads/${TargetBranch}:refs/remotes/origin/${TargetBranch}"' not in text
-    assert '"+refs/heads/${TargetBranch}:refs/remotes/origin/${TargetBranch}"'.replace("\\", "") not in text
-    assert '"+refs/heads/${TargetBranch}:refs/remotes/origin/${TargetBranch}"' not in text
-    assert '$remoteRefSpec = "+refs/heads/${TargetBranch}:refs/remotes/origin/${TargetBranch}"'.replace("\\", "") in text
+    assert '$remoteRefSpec = "+refs/heads/${TargetBranch}:refs/remotes/origin/${TargetBranch}"'.replace("\\$", "$") in text
     assert '$remoteRefSpec = "+refs/heads/$TargetBranch:refs/remotes/origin/$TargetBranch"' not in text

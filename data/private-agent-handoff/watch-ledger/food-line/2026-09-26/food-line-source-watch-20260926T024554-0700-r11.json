@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260926T024554-0700-r11",
+  "scheduled_for": "2026-09-26T02:45:54-07:00",
+  "started_at": "2026-09-26T02:44:16-07:00",
+  "completed_at": "2026-09-26T02:46:05-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-26T01:49:09-07:00",
+    "date_to": "2026-09-26T02:46:05-07:00",
+    "edition_date": "2026-09-26"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall watch completed with 12 targeted web searches across four high-value miss classes: only/sole/last/full-service grocery-store loss; disaster-related emergency food distribution cancellation or suspension; abrupt pantry/food-bank closure or major access reduction; and immediate official SNAP/WIC/food-assistance interruption. No new qualifying signal was found in the observation window. Spencer, New York Shurfine loss and El Pasoans Fighting Hunger storm disruption surfaced but are already represented in authoritative Food Line production/recovery artifacts and were excluded as duplicates. Older WIC/SNAP outage material, donation/resource items, and non-access-impact results were excluded."
+}

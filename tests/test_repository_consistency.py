@@ -108,3 +108,20 @@ def test_pr_template_distinguishes_pages_sync_from_guarded_runner_sync() -> None
     assert "Pages/publication sync" in text
     assert "publish/sync action" not in text
     assert "Human release/publication approval remains required" in text
+
+
+def test_operator_runner_roots_match_status_export_wrapper_defaults() -> None:
+    config = json.loads((ROOT / "ops" / "operator" / "config.json").read_text(encoding="utf-8"))
+    ps1 = (ROOT / "scripts" / "run_operational_status_export.ps1").read_text(encoding="utf-8")
+
+    expected = {
+        "food-line": "$SourceRoot",
+        "care-line": "$CareSourceRoot",
+        "gaza": "$GazaSourceRoot",
+        "ice": "$IceSourceRoot",
+    }
+    for dispatch, parameter in expected.items():
+        runner_root = config["dispatches"][dispatch]["runner_root"]
+        assert runner_root in ps1, f"{dispatch} runner root drifted from {parameter}"
+
+    assert config["operator"]["status_root"] in ps1

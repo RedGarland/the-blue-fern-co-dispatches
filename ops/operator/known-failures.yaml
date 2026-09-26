@@ -1,3 +1,0 @@
-known_failures:
-  - id: stale_operational_status
-    classification: STALE_OBSERVABILITY

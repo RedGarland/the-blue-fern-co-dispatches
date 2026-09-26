@@ -135,7 +135,7 @@ Production Task Scheduler definitions and runner paths are maintained by the che
 
 GitHub Pages and DNS must be configured separately. This project only prepares a deployable static site root in the local Pages repo.
 
-The source project branch (`master` or `main`) is separate from the Pages deploy branch. The live public site deploys from the Pages repo `gh-pages` branch, so Pages repo publishing targets `gh-pages` by default.
+The protected source branch is `add/pages-repo-default`; it is separate from the Pages deploy branch. The live public site deploys from the Pages repo `gh-pages` branch, so Pages repo publishing targets `gh-pages` by default.
 
 Dry-run:
 

@@ -79,14 +79,13 @@ def queue_summary(queue: dict[str, Any]) -> dict[str, Any]:
 
 def _safe_evidence_path(root: Path, value: Any) -> Path:
     text = str(value or "").replace("\\", "/").strip()
-    if not text or text.startswith("/") or ".." in Path(text).parts:
+    if not text or ".." in Path(text).parts:
         raise IceReviewError("unsafe ICE evidence reference")
-    if not text.startswith("data/dispatches/ice/monitor/runs/"):
-        raise IceReviewError("ICE evidence reference is outside monitor runs")
-    path = (root / text).resolve()
     monitor_root = (root / "data/dispatches/ice/monitor/runs").resolve()
+    candidate = Path(text)
+    path = candidate.resolve() if candidate.is_absolute() else (root / candidate).resolve()
     if monitor_root not in path.parents:
-        raise IceReviewError("ICE evidence reference escapes monitor runs")
+        raise IceReviewError("ICE evidence reference is outside monitor runs")
     if not path.is_file():
         raise IceReviewError(f"ICE evidence reference does not exist: {text}")
     return path

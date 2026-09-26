@@ -464,7 +464,7 @@ def test_doctor_allows_registered_cascadia_historical_reference_template():
         _write(
             root / "ops" / "run_cascadia_weekly_task.xml",
             _reference_task_xml(
-                r"C:\PythonProjects\Dispatches From The Blue Fern Co",
+                r"C:\BlueFernDev\the-blue-fern-co-dispatches",
                 script="scripts\\run_cascadia_and_notify.py",
             ),
         )

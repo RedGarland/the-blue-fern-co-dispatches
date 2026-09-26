@@ -35,6 +35,7 @@ EXTERNAL_STATUS_SCHEMA_VERSION = "bluefern_external_operational_status_v1"
 SYSTEM_STATUS_SCHEMA_VERSION = "bluefern_external_system_status_v1"
 SUPPORTED_TASK_STATUSES = {status.value for status in OperationalStatus}
 SAFE_KEY_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
+SAFE_BRANCH_RE = re.compile(r"^[A-Za-z0-9_./-]+$")
 HEX_HEAD_RE = re.compile(r"^[0-9a-f]{7,64}$", re.IGNORECASE)
 PRIVATE_KEY_RE = re.compile(r"(?:path|body|excerpt|source|raw|secret|token|credential|password|environment|env)", re.IGNORECASE)
 
@@ -489,7 +490,7 @@ def _runner_git_identity(source_root: Path) -> dict[str, str | None]:
     branch_value = branch.stdout.strip() if branch.returncode == 0 else ""
     return {
         "current_runner_head": head_value,
-        "current_runner_branch": branch_value if SAFE_KEY_RE.fullmatch(branch_value) else None,
+        "current_runner_branch": branch_value if SAFE_BRANCH_RE.fullmatch(branch_value) else None,
     }
 
 

@@ -30,6 +30,7 @@ def test_export_wrapper_defaults_to_sanctioned_paths_and_status_branch() -> None
     assert args.status_checkout == DEFAULT_STATUS_CHECKOUT
     assert args.prepare_branch == DEFAULT_BRANCH
     assert args.care_source_root is None
+    assert args.gaza_source_root is None
     assert args.ice_source_root is None
     assert args.no_push is False
 
@@ -37,6 +38,11 @@ def test_export_wrapper_defaults_to_sanctioned_paths_and_status_branch() -> None
 def test_export_wrapper_accepts_optional_care_source_root(tmp_path: Path) -> None:
     args = build_parser().parse_args(["--care-source-root", str(tmp_path / "care")])
     assert args.care_source_root == tmp_path / "care"
+
+
+def test_export_wrapper_accepts_optional_gaza_source_root(tmp_path: Path) -> None:
+    args = build_parser().parse_args(["--gaza-source-root", str(tmp_path / "gaza")])
+    assert args.gaza_source_root == tmp_path / "gaza"
 
 
 def test_export_wrapper_accepts_optional_ice_source_root(tmp_path: Path) -> None:

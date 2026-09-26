@@ -1,0 +1,52 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260925T224743-0700",
+  "scheduled_for": "2026-09-25T22:47:43-07:00",
+  "started_at": "2026-09-25T22:47:43-07:00",
+  "completed_at": "2026-09-25T22:48:34-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-25T21:47:43-07:00",
+    "end": "2026-09-25T22:47:43-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      {
+        "source": "OCHA OPT",
+        "result": "checked",
+        "note": "Latest indexed Gaza humanitarian situation material was older than the hourly window; no new qualifying development identified."
+      },
+      {
+        "source": "WHO",
+        "result": "checked",
+        "note": "No new Gaza health update in the hourly window identified."
+      }
+    ],
+    "supplementary_searches_used": 12,
+    "supplementary_scope": [
+      "UN official Gaza humanitarian/ceasefire updates",
+      "UNICEF Gaza water/health/displacement",
+      "ICRC Gaza detention/health/aid",
+      "WFP Gaza food/aid",
+      "Reuters civilian casualties",
+      "Reuters aid/crossings",
+      "Reuters hospital/ambulance/medical evacuation",
+      "Reuters/AP ceasefire negotiations",
+      "Reuters hostages/detainees",
+      "AP water/food/aid",
+      "WAFA latest Gaza reporting",
+      "Anadolu latest Gaza reporting"
+    ],
+    "degraded_reason": "The UN daily briefing page dated 2026-09-25 was returned by search but timed out when fetched. Remaining coverage was sufficient to complete the bounded watch.",
+    "duplicate_or_nonqualifying_notes": [
+      "ICRC Palestinian-detainee access reporting was already surfaced in a prior watch.",
+      "Recent Reuters Gaza casualty and reconstruction-plan results were outside the hourly window or previously known.",
+      "No verified new qualifying development was identified in the bounded interval."
+    ]
+  }
+}

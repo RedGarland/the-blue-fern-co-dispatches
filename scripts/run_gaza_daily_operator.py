@@ -8,6 +8,7 @@ import ssl
 import subprocess
 import sys
 import time
+from datetime import datetime, timezone
 from contextlib import redirect_stdout
 from pathlib import Path
 from typing import Any
@@ -24,6 +25,7 @@ if str(SRC) not in sys.path:
 
 from bluefern_dispatches.bluesky_post import maybe_post_gaza_dispatch_to_bluesky
 from bluefern_dispatches.gaza_sources import validate_source_records as validate_collected_source_records
+from bluefern_dispatches.operational_health import build_gaza_operational_receipt, write_operational_receipt
 from scripts.run_and_notify import notification_error_message, send_email
 from scripts.run_daily_gaza import DEFAULT_PAGES_REPO, DEFAULT_PAGES_BRANCH, DEFAULT_REMOTE_URL
 import scripts.run_daily_gaza as daily
@@ -1094,6 +1096,50 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     return args
 
 
+def _utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def _emit_operational_receipt(args: argparse.Namespace, result: dict[str, Any], *, started_at: str, completed_at: str) -> str | None:
+    if args.dry_run or args.manual_source_check_only or args.post_bluesky_only:
+        return None
+    run_stamp = started_at.replace("-", "").replace(":", "").replace("+00:00", "Z").replace(".", "")
+    run_id = f"gaza-daily-{args.date}-{run_stamp}"
+    predicted = ROOT / "status" / "operational-health" / "gaza" / args.date / "runs" / f"gaza_daily_dispatch-{run_id}.json"
+    publication_status = str(result.get("operator_status") or "UNKNOWN").lower()
+    receipt = build_gaza_operational_receipt(
+        scheduled_for=args.date,
+        started_at=started_at,
+        completed_at=completed_at,
+        exit_code=0 if result.get("ok") else 1,
+        operator_status=str(result.get("operator_status") or "FAILED"),
+        ok=bool(result.get("ok")),
+        run_id=run_id,
+        runner_path=str(ROOT),
+        branch=_git_branch(ROOT),
+        source_head=_git_output(ROOT, "rev-parse", "HEAD"),
+        public_side_effects={
+            "pages": result.get("pages_push_ok") is True,
+            "bluesky": result.get("bluesky_status") == "success",
+            "audio": result.get("audio_status") in {"audio_generated", "audio_reused_existing"},
+            "public_output": result.get("pages_push_ok") is True,
+        },
+        publication_attempted=result.get("pages_push_ok") is not None,
+        publication_status=publication_status,
+        artifact_refs={"task_receipt": str(predicted)},
+        details={
+            "source_count": int(result.get("source_count") or 0),
+            "publisher_count": int(result.get("publisher_count") or 0),
+            "public_story_count": int(result.get("public_story_count") or 0),
+            "generation_ok": bool(result.get("generation_ok")),
+            "validation_ok": result.get("validation_ok"),
+            "live_verify_status": result.get("live_verify_status"),
+        },
+    )
+    write_result = write_operational_receipt(ROOT, receipt)
+    return str(write_result.receipt_path)
+
+
 def _print_human_summary(result: dict[str, Any]) -> None:
     print(f"Gaza operator status: {result['operator_status']}")
     print(f"Date: {result['date']}")
@@ -1102,7 +1148,15 @@ def _print_human_summary(result: dict[str, Any]) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
+    started_at = _utc_now()
     result = run_operator(args)
+    completed_at = _utc_now()
+    try:
+        receipt_path = _emit_operational_receipt(args, result, started_at=started_at, completed_at=completed_at)
+        if receipt_path:
+            result["operational_receipt"] = receipt_path
+    except Exception as exc:  # noqa: BLE001
+        result.setdefault("warnings", []).append(f"operational receipt emission failed: {type(exc).__name__}: {exc}")
     if args.email_report:
         try:
             result["email_status"] = _maybe_send_email(result, smtp_debug=bool(args.smtp_debug))

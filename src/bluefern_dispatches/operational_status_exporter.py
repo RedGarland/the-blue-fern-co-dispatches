@@ -17,6 +17,7 @@ from .operational_health import (
     DISPATCH_AGGREGATE_SCHEMA_VERSION,
     CARE_LINE_TASK_EXPECTATIONS,
     FOOD_LINE_TASK_EXPECTATIONS,
+    GAZA_TASK_EXPECTATIONS,
     MIGRATION_TASK_EXPECTATIONS,
     OperationalStatus,
     RecoveryContext,
@@ -177,6 +178,21 @@ def load_care_line_receipts_for_dates(source_root: Path, dates: Iterable[str]) -
             if receipt.get("dispatch") != "care-line":
                 raise ExportError(f"receipt dispatch mismatch: {path.name}")
             receipts.append(receipt)
+    receipts.sort(key=lambda item: _handoff_time(item) or datetime.min.replace(tzinfo=timezone.utc))
+    return receipts
+
+
+def load_gaza_receipts(source_root: Path, date: str) -> list[dict[str, Any]]:
+    receipts = []
+    for path in _receipt_paths(source_root, "gaza", date):
+        receipt = _parse_json(path)
+        try:
+            validate_operational_receipt(receipt)
+        except ValueError as exc:
+            raise ExportError(f"invalid operational receipt {path.name}: {exc}") from exc
+        if receipt.get("dispatch") != "gaza" or receipt.get("task_key") != "gaza_daily_dispatch":
+            raise ExportError(f"Gaza receipt dispatch/task mismatch: {path.name}")
+        receipts.append(receipt)
     receipts.sort(key=lambda item: _handoff_time(item) or datetime.min.replace(tzinfo=timezone.utc))
     return receipts
 
@@ -659,6 +675,76 @@ def _positive_int(value: Any) -> int:
         return 0
 
 
+def build_gaza_status(
+    *,
+    source_root: Path,
+    date: str,
+    evaluated_at: str,
+    exported_at: str,
+    recovery: RecoveryContext | None = None,
+) -> dict[str, Any]:
+    receipts = load_gaza_receipts(source_root, date)
+    completeness, linkage = receipt_completeness(
+        receipts, source_root=source_root, expectations=GAZA_TASK_EXPECTATIONS
+    )
+    expected_instances = None if receipts else [
+        {
+            "task_key": "gaza_daily_dispatch",
+            "scheduled_for": _iso(_expected_run(date, "06:00", "America/Los_Angeles")),
+        }
+    ]
+    aggregate = evaluate_dispatch_health(
+        dispatch="gaza",
+        receipts=receipts,
+        expectations=GAZA_TASK_EXPECTATIONS,
+        evaluated_at=evaluated_at,
+        recovery=recovery,
+        expected_instances=expected_instances,
+    )
+    aggregate_status = aggregate["overall_health"]
+    if not receipts and aggregate_status == OperationalStatus.SUCCESS.value:
+        aggregate_status = OperationalStatus.UNKNOWN.value
+    source_heads = {_safe_head(receipt.get("source_head")) for receipt in receipts}
+    source_heads.discard(None)
+    publication_attempted = any(receipt.get("publication_attempted") is True for receipt in receipts)
+    publication_statuses = [receipt.get("publication_status") for receipt in receipts if receipt.get("publication_status")]
+    return {
+        "schema_version": EXTERNAL_STATUS_SCHEMA_VERSION,
+        "dispatch": "gaza",
+        "migration_status": "MIGRATED",
+        "observed_date": date,
+        "aggregate_status": aggregate_status,
+        "scheduled_health_authoritative": bool(receipts),
+        "recovery_lifecycle": _recovery_state(aggregate_status, recovery),
+        "latest_runtime_proof_date": aggregate.get("latest_success_at"),
+        "receipt_completeness": completeness if receipts else "NO_PROOF",
+        "task_summaries": [_task_summary(receipt, linkage) for receipt in receipts],
+        "runner_source_head": sorted(source_heads)[0] if len(source_heads) == 1 else None,
+        "publication_attempted": publication_attempted,
+        "publication_status": publication_statuses[-1] if publication_statuses else None,
+        "public_side_effects": {
+            "publication_attempted": publication_attempted,
+            "publication_status": publication_statuses[-1] if publication_statuses else None,
+        },
+        "stale_observability": bool(aggregate.get("stale_observability")),
+        "last_receipt_at": max((_handoff_time(item) for item in receipts), default=None).isoformat().replace("+00:00", "Z") if receipts else None,
+        "last_exported_at": exported_at,
+        "next_expected_run": next((item.get("next_expected_run") for item in receipts if item.get("next_expected_run")), None),
+        "agent_handoff": {
+            "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
+            "last_attempt_at": None,
+            "last_success_at": None,
+            "last_failure_at": None,
+            "latest_agent_run_id": None,
+            "latest_status": None,
+            "latest_classification": None,
+            "unaccounted_count": 0,
+            "stale": False,
+        },
+        "scheduled_task_keys": [item.task_key for item in GAZA_TASK_EXPECTATIONS],
+    }
+
+
 def build_ice_status(
     *,
     source_root: Path,
@@ -758,6 +844,7 @@ def build_system_status(
     source_root: Path,
     exported_at: str,
     care_line_status: dict[str, Any] | None = None,
+    gaza_status: dict[str, Any] | None = None,
     ice_status: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     states = {
@@ -825,6 +912,18 @@ def build_system_status(
             "recovery_lifecycle": RecoveryState.HEALTHY.value,
             "scheduled_health_available": False,
             "agent_handoff": load_agent_handoff_status(source_root, "care-line"),
+        }
+    if gaza_status is not None and gaza_status.get("migration_status") == "MIGRATED":
+        states["gaza"] = {
+            "migration_status": "MIGRATED",
+            "aggregate_status": gaza_status["aggregate_status"],
+            "recovery_lifecycle": gaza_status["recovery_lifecycle"],
+            "scheduled_health_available": bool(gaza_status.get("scheduled_health_authoritative")),
+            "observed_date": gaza_status.get("observed_date"),
+            "latest_runtime_proof_date": gaza_status.get("latest_runtime_proof_date"),
+            "receipt_completeness": gaza_status.get("receipt_completeness"),
+            "stale_observability": gaza_status.get("stale_observability"),
+            "agent_handoff": gaza_status["agent_handoff"],
         }
     if ice_status is not None and ice_status.get("migration_status") == "MIGRATED":
         states["ice"] = {
@@ -923,6 +1022,7 @@ def export_status(
     exported_at: str | None = None,
     care_source_root: Path | None = None,
     care_expected_instances: Iterable[dict[str, Any]] | None = None,
+    gaza_source_root: Path | None = None,
     ice_source_root: Path | None = None,
     force_refresh_dispatches: Iterable[str] | None = None,
 ) -> dict[str, Any]:
@@ -931,7 +1031,7 @@ def export_status(
     if source_root == status_checkout:
         raise ExportError("status checkout must be separate from the production source root")
     forced_dispatches = set(force_refresh_dispatches or ())
-    unsupported_forced = sorted(forced_dispatches - {"food-line", "care-line", "ice"})
+    unsupported_forced = sorted(forced_dispatches - {"food-line", "care-line", "gaza", "ice"})
     if unsupported_forced:
         raise ExportError(f"unsupported force_refresh_dispatches: {', '.join(unsupported_forced)}")
     exported_at = exported_at or datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
@@ -963,6 +1063,19 @@ def export_status(
                 care_reused = _reuse_exported_at(care_path, care_payload)
                 if care_reused:
                     care_payload["last_exported_at"] = care_reused
+        gaza_payload = build_gaza_status(
+            source_root=gaza_source_root.resolve(),
+            date=date,
+            evaluated_at=evaluated_at,
+            exported_at=exported_at,
+            recovery=recovery,
+        ) if gaza_source_root is not None else None
+        gaza_path = status_checkout / "ops" / "status" / "gaza" / "latest.json"
+        if gaza_payload is not None:
+            if "gaza" not in forced_dispatches:
+                gaza_reused = _reuse_exported_at(gaza_path, gaza_payload)
+                if gaza_reused:
+                    gaza_payload["last_exported_at"] = gaza_reused
         ice_payload = build_ice_status(
             source_root=ice_source_root.resolve(),
             date=date,
@@ -981,6 +1094,7 @@ def export_status(
             source_root=source_root,
             exported_at=exported_at,
             care_line_status=care_payload,
+            gaza_status=gaza_payload,
             ice_status=ice_payload,
         )
         system_path = status_checkout / "ops" / "status" / "system" / "latest.json"
@@ -989,12 +1103,16 @@ def export_status(
             system_payload["exported_at"] = system_reused
         history_path = status_checkout / "ops" / "status" / "food-line" / "history" / f"{date}.json"
         care_history_path = status_checkout / "ops" / "status" / "care-line" / "history" / f"{date}.json"
+        gaza_history_path = status_checkout / "ops" / "status" / "gaza" / "history" / f"{date}.json"
         ice_history_path = status_checkout / "ops" / "status" / "ice" / "history" / f"{date}.json"
         atomic_write_json(food_path, food_payload)
         atomic_write_json(history_path, food_payload)
         if care_payload is not None:
             atomic_write_json(care_path, care_payload)
             atomic_write_json(care_history_path, care_payload)
+        if gaza_payload is not None:
+            atomic_write_json(gaza_path, gaza_payload)
+            atomic_write_json(gaza_history_path, gaza_payload)
         if ice_payload is not None:
             atomic_write_json(ice_path, ice_payload)
             atomic_write_json(ice_history_path, ice_payload)
@@ -1006,12 +1124,17 @@ def export_status(
     ]
     if care_payload is not None:
         paths[2:2] = ["ops/status/care-line/latest.json", f"ops/status/care-line/history/{date}.json"]
-    if ice_payload is not None:
+    if gaza_payload is not None:
         insert_at = 2 + (2 if care_payload is not None else 0)
+        paths[insert_at:insert_at] = ["ops/status/gaza/latest.json", f"ops/status/gaza/history/{date}.json"]
+    if ice_payload is not None:
+        insert_at = 2 + (2 if care_payload is not None else 0) + (2 if gaza_payload is not None else 0)
         paths[insert_at:insert_at] = ["ops/status/ice/latest.json", f"ops/status/ice/history/{date}.json"]
     result = {"food_line": food_payload, "system": system_payload, "paths": paths}
     if care_payload is not None:
         result["care_line"] = care_payload
+    if gaza_payload is not None:
+        result["gaza"] = gaza_payload
     if ice_payload is not None:
         result["ice"] = ice_payload
     return result
@@ -1029,6 +1152,13 @@ def rebuild_dispatch_status_artifacts(
     source_root = source_root.resolve()
     if dispatch == "food-line":
         payload = build_food_line_status(
+            source_root=source_root,
+            date=date,
+            evaluated_at=evaluated_at,
+            exported_at=exported_at,
+        )
+    elif dispatch == "gaza":
+        payload = build_gaza_status(
             source_root=source_root,
             date=date,
             evaluated_at=evaluated_at,

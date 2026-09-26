@@ -143,10 +143,13 @@ CARE_LINE_TASK_EXPECTATIONS: tuple[TaskExpectation, ...] = (
 )
 
 
+GAZA_TASK_EXPECTATIONS: tuple[TaskExpectation, ...] = (
+    TaskExpectation("gaza", "gaza_daily_dispatch", "Daily - Dispatches From Gaza", "America/Los_Angeles", "daily", "configured scheduler time", 120),
+)
+
+
 MIGRATION_TASK_EXPECTATIONS: dict[str, tuple[TaskExpectation, ...]] = {
-    "gaza": (
-        TaskExpectation("gaza", "gaza_daily_dispatch", "Daily - Dispatches From Gaza", "America/Los_Angeles", "daily", "configured scheduler time", 120),
-    ),
+    "gaza": GAZA_TASK_EXPECTATIONS,
     "food-line": FOOD_LINE_TASK_EXPECTATIONS,
     "care-line": CARE_LINE_TASK_EXPECTATIONS,
     "ice": (
@@ -352,6 +355,68 @@ def load_operational_receipts(root: Path, dispatch: str, date: str) -> list[dict
         validate_operational_receipt(value)
         receipts.append(value)
     return receipts
+
+
+def map_gaza_status(operator_status: str, *, ok: bool, exit_code: int | None = None) -> OperationalStatus:
+    status = str(operator_status or "").upper()
+    if status in {"NO_PUBLICATION_NEEDED", "NO_UPDATE_PUBLISHED"} and ok:
+        return OperationalStatus.SAFE_NO_OP
+    if status in {
+        "PUBLISHED",
+        "PUBLISHED_AND_POSTED",
+        "ALREADY_POSTED",
+        "LIVE_OK",
+    } and ok:
+        return OperationalStatus.SUCCESS
+    if status in {"PAGES_PROPAGATION_PENDING"} and ok:
+        return OperationalStatus.DEGRADED
+    if status in {"DRY_RUN_READY", "NO_UPDATE_DRY_RUN_READY", "LOCAL_PUBLISH_READY", "NO_UPDATE_LOCAL_PUBLISH_READY", "MANUAL_SOURCE_VALID", "BLUESKY_PREVIEW_READY"} and ok:
+        return OperationalStatus.SAFE_NO_OP
+    if exit_code not in (None, 0) or not ok:
+        return OperationalStatus.FAILED
+    return OperationalStatus.UNKNOWN
+
+
+def build_gaza_operational_receipt(
+    *,
+    scheduled_for: str,
+    started_at: str | None,
+    completed_at: str | None,
+    exit_code: int | None,
+    operator_status: str,
+    ok: bool,
+    run_id: str | None = None,
+    runner_path: str | None = None,
+    branch: str | None = None,
+    source_head: str | None = None,
+    public_side_effects: dict[str, Any] | None = None,
+    publication_attempted: bool | None = None,
+    publication_status: str | None = None,
+    artifact_refs: dict[str, str] | None = None,
+    details: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    status = map_gaza_status(operator_status, ok=ok, exit_code=exit_code)
+    return build_operational_receipt(
+        dispatch="gaza",
+        task_key="gaza_daily_dispatch",
+        task_name="Daily - Dispatches From Gaza",
+        scheduled_for=scheduled_for,
+        started_at=started_at,
+        completed_at=completed_at,
+        exit_code=exit_code,
+        status=status,
+        classification=str(operator_status or "unknown").lower(),
+        run_id=run_id,
+        failure_stage="gaza_daily_dispatch" if status in {OperationalStatus.FAILED, OperationalStatus.DEGRADED} else None,
+        runner_path=runner_path,
+        branch=branch,
+        source_head=source_head,
+        public_side_effects=public_side_effects or {},
+        publication_attempted=publication_attempted,
+        publication_status=publication_status,
+        artifact_refs=artifact_refs,
+        details=details,
+    )
 
 
 def map_food_line_status(task_key: str, task_status: str, *, exit_code: int | None = None) -> OperationalStatus:

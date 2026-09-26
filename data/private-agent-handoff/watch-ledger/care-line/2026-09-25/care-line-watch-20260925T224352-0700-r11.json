@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260925T224352-0700-r11",
+  "scheduled_for": "2026-09-25T22:43:52-07:00",
+  "started_at": "2026-09-25T22:43:52-07:00",
+  "completed_at": "2026-09-25T22:44:33-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-25",
+    "date_to": "2026-09-25",
+    "edition_date": "2026-09-25"
+  },
+  "findings": [],
+  "coverage_notes": "CMS Public Notices was checked first; its newest entries remain the six September 25 hospice terminations already reported by this watch. Twelve additional bounded targeted searches covered hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, ambulance/EMS, air medical, rural service loss, and concrete service restorations. No new qualifying U.S. or territory healthcare-access development was verified since the prior hourly check. Proposals, revival discussions without restored service, non-U.S. items, and duplicates were excluded."
+}

@@ -18,27 +18,14 @@
       "discovery_channel": "direct_rss",
       "feed_url": "https://feeds.npr.org/1001/rss.xml",
       "source_url": "https://www.npr.org/sections/national/",
-      "allowed_domains": [
-        "npr.org"
-      ],
+      "allowed_domains": ["npr.org"],
       "geographic_scope": "national",
       "enabled": true,
       "sampling_priority": 10,
       "direct_source_candidate_cap": 1,
       "max_age_days": 7,
-      "pressure_terms": [
-        "food bank",
-        "food pantry",
-        "food insecurity",
-        "summer meals",
-        "SNAP",
-        "EBT"
-      ],
-      "exclusion_terms": [
-        "recipe",
-        "restaurant",
-        "opinion"
-      ],
+      "pressure_terms": ["food bank", "food pantry", "food insecurity", "summer meals", "SNAP", "EBT"],
+      "exclusion_terms": ["recipe", "restaurant", "opinion"],
       "notes": "Direct NPR feed for article URLs without Google News wrappers."
     },
     {
@@ -47,9 +34,7 @@
       "discovery_lane": "nonprofit_report",
       "discovery_channel": "direct_page",
       "source_url": "https://www.feedingamerica.org/hunger-blog",
-      "allowed_domains": [
-        "feedingamerica.org"
-      ],
+      "allowed_domains": ["feedingamerica.org"],
       "geographic_scope": "national",
       "enabled": true,
       "sampling_priority": 20,
@@ -63,18 +48,8 @@
       "archive_page_increment": 1,
       "archive_pagination_notes": "Verified broad pagination pattern via ?page={page}; use for historical discovery only.",
       "max_age_days": 14,
-      "pressure_terms": [
-        "food insecurity",
-        "meal gap",
-        "child hunger",
-        "food bank",
-        "SNAP"
-      ],
-      "exclusion_terms": [
-        "fundraiser",
-        "donation form",
-        "about us"
-      ],
+      "pressure_terms": ["food insecurity", "meal gap", "child hunger", "food bank", "SNAP"],
+      "exclusion_terms": ["fundraiser", "donation form", "about us"],
       "notes": "National nonprofit reporting with archive listings that expose article dates for older backfill windows."
     },
     {
@@ -83,9 +58,7 @@
       "discovery_lane": "food_bank_provider",
       "discovery_channel": "direct_page",
       "source_url": "https://www.centraltexasfoodbank.org/news/archive",
-      "allowed_domains": [
-        "centraltexasfoodbank.org"
-      ],
+      "allowed_domains": ["centraltexasfoodbank.org"],
       "geographic_scope": "state_local",
       "state_or_territory": "Texas",
       "enabled": true,
@@ -100,19 +73,8 @@
       "archive_page_increment": 1,
       "archive_pagination_notes": "Verified broad archive pagination via ?page={page}; use for historical discovery only.",
       "max_age_days": 14,
-      "pressure_terms": [
-        "food bank",
-        "food pantry",
-        "demand",
-        "summer meals",
-        "distribution",
-        "SNAP"
-      ],
-      "exclusion_terms": [
-        "volunteer",
-        "gala",
-        "recipe"
-      ],
+      "pressure_terms": ["food bank", "food pantry", "demand", "summer meals", "distribution", "SNAP"],
+      "exclusion_terms": ["volunteer", "gala", "recipe"],
       "notes": "Provider-operated dated archive page that exposes historical article links for backfills."
     },
     {
@@ -122,28 +84,15 @@
       "discovery_channel": "direct_rss",
       "feed_url": "https://www.shfb.org/feed/",
       "source_url": "https://www.shfb.org/impact/blog/",
-      "allowed_domains": [
-        "shfb.org"
-      ],
+      "allowed_domains": ["shfb.org"],
       "geographic_scope": "state_local",
       "state_or_territory": "California",
       "enabled": true,
       "sampling_priority": 40,
       "direct_source_candidate_cap": 1,
       "max_age_days": 14,
-      "pressure_terms": [
-        "food bank",
-        "hunger",
-        "families",
-        "children",
-        "distribution",
-        "school meals"
-      ],
-      "exclusion_terms": [
-        "event",
-        "fundraiser",
-        "volunteer"
-      ],
+      "pressure_terms": ["food bank", "hunger", "families", "children", "distribution", "school meals"],
+      "exclusion_terms": ["event", "fundraiser", "volunteer"],
       "notes": "Affiliate-operated feed for direct article URLs."
     },
     {
@@ -153,25 +102,14 @@
       "discovery_channel": "direct_rss",
       "feed_url": "https://schoolnutrition.org/news-publications/news/feed/",
       "source_url": "https://schoolnutrition.org/news-publications/news/",
-      "allowed_domains": [
-        "schoolnutrition.org"
-      ],
+      "allowed_domains": ["schoolnutrition.org"],
       "geographic_scope": "national",
       "enabled": false,
       "sampling_priority": 50,
       "direct_source_candidate_cap": 1,
       "max_age_days": 14,
-      "pressure_terms": [
-        "school meals",
-        "summer meals",
-        "child nutrition",
-        "meal sites",
-        "families"
-      ],
-      "exclusion_terms": [
-        "conference",
-        "membership"
-      ],
+      "pressure_terms": ["school meals", "summer meals", "child nutrition", "meal sites", "families"],
+      "exclusion_terms": ["conference", "membership"],
       "notes": "Direct child-nutrition and summer-meals reporting."
     },
     {
@@ -180,26 +118,15 @@
       "discovery_lane": "county_city_agenda",
       "discovery_channel": "direct_page",
       "source_url": "https://cook-county.legistar.com/Calendar.aspx",
-      "allowed_domains": [
-        "cook-county.legistar.com"
-      ],
+      "allowed_domains": ["cook-county.legistar.com"],
       "geographic_scope": "state_local",
       "state_or_territory": "Illinois",
       "enabled": false,
       "sampling_priority": 500,
       "direct_source_candidate_cap": 1,
       "max_age_days": 7,
-      "pressure_terms": [
-        "food assistance",
-        "meals",
-        "nutrition",
-        "food pantry",
-        "contract"
-      ],
-      "exclusion_terms": [
-        "minutes",
-        "archive"
-      ],
+      "pressure_terms": ["food assistance", "meals", "nutrition", "food pantry", "contract"],
+      "exclusion_terms": ["minutes", "archive"],
       "notes": "Agenda surface kept as direct-page discovery; non-article/listing URLs must remain blocked from public eligibility."
     },
     {
@@ -208,26 +135,15 @@
       "discovery_lane": "snap_state_notice",
       "discovery_channel": "direct_page",
       "source_url": "https://www.mass.gov/info-details/dta-news",
-      "allowed_domains": [
-        "mass.gov"
-      ],
+      "allowed_domains": ["mass.gov"],
       "geographic_scope": "state_or_territory",
       "state_or_territory": "Massachusetts",
       "enabled": false,
       "sampling_priority": 300,
       "direct_source_candidate_cap": 1,
       "max_age_days": 14,
-      "pressure_terms": [
-        "SNAP",
-        "EBT",
-        "benefits",
-        "food assistance",
-        "DTA"
-      ],
-      "exclusion_terms": [
-        "application form",
-        "evergreen"
-      ],
+      "pressure_terms": ["SNAP", "EBT", "benefits", "food assistance", "DTA"],
+      "exclusion_terms": ["application form", "evergreen"],
       "notes": "State benefits updates may require manual review and should not become public-supporting unless article-specific."
     },
     {
@@ -237,26 +153,15 @@
       "discovery_channel": "direct_rss",
       "feed_url": "https://www.211colorado.org/feed/",
       "source_url": "https://www.211colorado.org/news/",
-      "allowed_domains": [
-        "211colorado.org"
-      ],
+      "allowed_domains": ["211colorado.org"],
       "geographic_scope": "state_or_territory",
       "state_or_territory": "Colorado",
       "enabled": false,
       "sampling_priority": 60,
       "direct_source_candidate_cap": 1,
       "max_age_days": 14,
-      "pressure_terms": [
-        "211",
-        "food assistance",
-        "calls",
-        "food pantry",
-        "families"
-      ],
-      "exclusion_terms": [
-        "event",
-        "donate"
-      ],
+      "pressure_terms": ["211", "food assistance", "calls", "food pantry", "families"],
+      "exclusion_terms": ["event", "donate"],
       "notes": "United Way / 211 direct updates."
     },
     {
@@ -265,26 +170,14 @@
       "discovery_lane": "institutional_update",
       "discovery_channel": "direct_page",
       "source_url": "https://www.fns.usda.gov/newsroom",
-      "allowed_domains": [
-        "fns.usda.gov",
-        "usda.gov"
-      ],
+      "allowed_domains": ["fns.usda.gov", "usda.gov"],
       "geographic_scope": "national",
       "enabled": false,
       "sampling_priority": 400,
       "direct_source_candidate_cap": 1,
       "max_age_days": 14,
-      "pressure_terms": [
-        "SNAP",
-        "WIC",
-        "TEFAP",
-        "summer meals",
-        "food assistance"
-      ],
-      "exclusion_terms": [
-        "speech",
-        "transcript"
-      ],
+      "pressure_terms": ["SNAP", "WIC", "TEFAP", "summer meals", "food assistance"],
+      "exclusion_terms": ["speech", "transcript"],
       "notes": "Institutional newsroom listing page; must stay blocked unless article/document-specific URLs are available."
     },
     {
@@ -294,26 +187,14 @@
       "discovery_channel": "direct_rss",
       "feed_url": "https://laist.com/index.atom",
       "source_url": "https://laist.com/",
-      "allowed_domains": [
-        "laist.com"
-      ],
+      "allowed_domains": ["laist.com"],
       "geographic_scope": "metro",
       "enabled": true,
       "sampling_priority": 70,
       "direct_source_candidate_cap": 1,
       "max_age_days": 7,
-      "pressure_terms": [
-        "food bank",
-        "food pantry",
-        "hunger",
-        "SNAP",
-        "school meals",
-        "families"
-      ],
-      "exclusion_terms": [
-        "podcast",
-        "events"
-      ],
+      "pressure_terms": ["food bank", "food pantry", "hunger", "SNAP", "school meals", "families"],
+      "exclusion_terms": ["podcast", "events"],
       "notes": "Representative direct local-news RSS lane."
     },
     {
@@ -322,9 +203,7 @@
       "discovery_lane": "school_meals_child_nutrition",
       "discovery_channel": "direct_page",
       "source_url": "https://www.nokidhungry.org/blog",
-      "allowed_domains": [
-        "nokidhungry.org"
-      ],
+      "allowed_domains": ["nokidhungry.org"],
       "geographic_scope": "national",
       "enabled": true,
       "sampling_priority": 55,
@@ -338,17 +217,8 @@
       "archive_page_increment": 1,
       "archive_pagination_notes": "Verified broad blog pagination via ?page={page}; use for historical discovery only.",
       "max_age_days": 14,
-      "pressure_terms": [
-        "school meals",
-        "summer meals",
-        "child hunger",
-        "meal sites",
-        "families"
-      ],
-      "exclusion_terms": [
-        "fundraiser",
-        "event"
-      ],
+      "pressure_terms": ["school meals", "summer meals", "child hunger", "meal sites", "families"],
+      "exclusion_terms": ["fundraiser", "event"],
       "notes": "Child-nutrition archive listing with visible article dates that can support historical backfills."
     },
     {
@@ -358,9 +228,7 @@
       "discovery_channel": "direct_rss",
       "feed_url": "https://frac.org/feed",
       "source_url": "https://frac.org/blog",
-      "allowed_domains": [
-        "frac.org"
-      ],
+      "allowed_domains": ["frac.org"],
       "geographic_scope": "national",
       "enabled": true,
       "sampling_priority": 65,
@@ -373,17 +241,8 @@
       "archive_page_increment": 1,
       "archive_pagination_notes": "Verified WordPress-style broad pagination via /blog/page/{page}; feed remains configured for current direct fetches.",
       "max_age_days": 14,
-      "pressure_terms": [
-        "food insecurity",
-        "SNAP",
-        "school meals",
-        "summer meals",
-        "food assistance"
-      ],
-      "exclusion_terms": [
-        "webinar",
-        "event"
-      ],
+      "pressure_terms": ["food insecurity", "SNAP", "school meals", "summer meals", "food assistance"],
+      "exclusion_terms": ["webinar", "event"],
       "notes": "Nonprofit policy and program reporting with direct article URLs."
     }
   ],
@@ -637,92 +496,34 @@
     }
   ],
   "metros": [
-    {
-      "name": "Charlotte"
-    },
-    {
-      "name": "Phoenix"
-    },
-    {
-      "name": "Seattle"
-    },
-    {
-      "name": "Portland"
-    },
-    {
-      "name": "Boise"
-    },
-    {
-      "name": "Spokane"
-    },
-    {
-      "name": "Los Angeles"
-    },
-    {
-      "name": "San Francisco Bay Area"
-    },
-    {
-      "name": "Denver"
-    },
-    {
-      "name": "Dallas"
-    },
-    {
-      "name": "Houston"
-    },
-    {
-      "name": "San Antonio"
-    },
-    {
-      "name": "Chicago"
-    },
-    {
-      "name": "Detroit"
-    },
-    {
-      "name": "Cleveland"
-    },
-    {
-      "name": "Pittsburgh"
-    },
-    {
-      "name": "Philadelphia"
-    },
-    {
-      "name": "New York"
-    },
-    {
-      "name": "Boston"
-    },
-    {
-      "name": "Atlanta"
-    },
-    {
-      "name": "Miami"
-    },
-    {
-      "name": "Tampa"
-    },
-    {
-      "name": "St. Louis"
-    },
-    {
-      "name": "Kansas City"
-    },
-    {
-      "name": "Minneapolis"
-    },
-    {
-      "name": "Nashville"
-    },
-    {
-      "name": "New Orleans"
-    },
-    {
-      "name": "Baltimore"
-    },
-    {
-      "name": "Washington DC"
-    }
+    {"name": "Charlotte"},
+    {"name": "Phoenix"},
+    {"name": "Seattle"},
+    {"name": "Portland"},
+    {"name": "Boise"},
+    {"name": "Spokane"},
+    {"name": "Los Angeles"},
+    {"name": "San Francisco Bay Area"},
+    {"name": "Denver"},
+    {"name": "Dallas"},
+    {"name": "Houston"},
+    {"name": "San Antonio"},
+    {"name": "Chicago"},
+    {"name": "Detroit"},
+    {"name": "Cleveland"},
+    {"name": "Pittsburgh"},
+    {"name": "Philadelphia"},
+    {"name": "New York"},
+    {"name": "Boston"},
+    {"name": "Atlanta"},
+    {"name": "Miami"},
+    {"name": "Tampa"},
+    {"name": "St. Louis"},
+    {"name": "Kansas City"},
+    {"name": "Minneapolis"},
+    {"name": "Nashville"},
+    {"name": "New Orleans"},
+    {"name": "Baltimore"},
+    {"name": "Washington DC"}
   ]
 }

@@ -10,6 +10,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 $Targets = @(
+    [ordered]@{ Dispatch = "operator"; Root = "C:\BlueFernRunner\BlueFernOperatorCurrent" },
     [ordered]@{ Dispatch = "food-line"; Root = "C:\BlueFernRunner\FoodLineCurrent6" },
     [ordered]@{ Dispatch = "care-line"; Root = "C:\BlueFernRunner\CareLineNationalCurrent8" },
     [ordered]@{ Dispatch = "gaza"; Root = "C:\BlueFernRunner\GazaDispatchesCurrent6" },

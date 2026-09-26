@@ -1,0 +1,51 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260926T004658-0700",
+  "scheduled_for": "2026-09-26T00:44:51-07:00",
+  "started_at": "2026-09-26T00:46:58-07:00",
+  "completed_at": "2026-09-26T00:50:12-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-25T23:42:00-07:00",
+    "end": "2026-09-26T00:50:12-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      {
+        "source": "OCHA OPT",
+        "result": "checked",
+        "note": "No new OCHA OPT Gaza humanitarian update published within the bounded search window was identified; the latest indexed situation report remained dated 18 September 2026."
+      },
+      {
+        "source": "WHO",
+        "result": "checked",
+        "note": "No new WHO Gaza health update published within the bounded search window was identified."
+      }
+    ],
+    "supplementary_searches_used": 12,
+    "supplementary_scope": [
+      "UNICEF Gaza water/health/displacement/casualties",
+      "WFP Gaza food/aid access/crossings",
+      "UNRWA Gaza aid/displacement/health",
+      "ICRC Gaza detainees/hostages/medical aid",
+      "UN official Gaza daily briefing/crossings/aid/health/casualties",
+      "Reuters Gaza casualties/aid/ceasefire/hostages/crossings",
+      "AP Gaza casualties/aid/ceasefire/hostages/crossings",
+      "BBC Gaza casualties/aid/ceasefire/hospital/crossing/hostages",
+      "Guardian Gaza casualties/aid/ceasefire/hospital/crossing/hostages",
+      "Al Jazeera Gaza casualties/aid/ceasefire/hospital/crossing/hostages",
+      "Anadolu Gaza casualties/aid/ceasefire/hospital/crossing/hostages",
+      "WAFA Gaza casualties/aid/hospital/water/crossing"
+    ],
+    "degraded_reason": "The BBC-targeted search was blocked by robots.txt. The other primary and supplementary searches completed with enough coverage to finish the bounded watch.",
+    "duplicate_or_nonqualifying_notes": [
+      "Search results were older than the bounded hourly window, previously surfaced, or did not establish a new traceable development.",
+      "No verified new qualifying development was identified in the bounded interval."
+    ]
+  }
+}

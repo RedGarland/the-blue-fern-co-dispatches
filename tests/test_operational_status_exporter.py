@@ -633,6 +633,35 @@ def test_export_reuses_food_timestamp_but_advances_changed_system_timestamp(monk
     assert result["system"]["dispatches"]["cascadia"]["migration_status"] == "INTENTIONALLY_INACTIVE"
 
 
+def test_export_includes_current_runner_git_identity(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    import bluefern_dispatches.operational_status_exporter as exporter
+
+    source = _write_day(tmp_path)
+    original_run = exporter.subprocess.run
+
+    def fake_run(args, **kwargs):  # noqa: ANN001
+        if args[:3] == ["git", "rev-parse", "HEAD"]:
+            return subprocess.CompletedProcess(args, 0, stdout="2eb5f44b4227dcf9300e12a48f35a7a367946cf9\n", stderr="")
+        if args[:3] == ["git", "branch", "--show-current"]:
+            return subprocess.CompletedProcess(args, 0, stdout="add/pages-repo-default\n", stderr="")
+        return original_run(args, **kwargs)
+
+    monkeypatch.setattr(exporter.subprocess, "run", fake_run)
+
+    result = export_status(
+        source_root=source,
+        status_checkout=tmp_path / "status-checkout",
+        date=DATE,
+        evaluated_at=EVALUATED,
+        exported_at=EVALUATED,
+    )
+
+    assert result["food_line"]["current_runner_head"] == "2eb5f44b4227dcf9300e12a48f35a7a367946cf9"
+    assert result["food_line"]["current_runner_branch"] == "add/pages-repo-default"
+    assert result["system"]["dispatches"]["food-line"]["current_runner_head"] == "2eb5f44b4227dcf9300e12a48f35a7a367946cf9"
+    assert result["system"]["dispatches"]["food-line"]["current_runner_branch"] == "add/pages-repo-default"
+
+
 def test_export_reuses_system_timestamp_when_payload_is_unchanged(tmp_path: Path) -> None:
     source = _write_day(tmp_path)
     checkout = tmp_path / "status-checkout"

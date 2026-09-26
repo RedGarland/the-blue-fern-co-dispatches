@@ -35,6 +35,7 @@ EXTERNAL_STATUS_SCHEMA_VERSION = "bluefern_external_operational_status_v1"
 SYSTEM_STATUS_SCHEMA_VERSION = "bluefern_external_system_status_v1"
 SUPPORTED_TASK_STATUSES = {status.value for status in OperationalStatus}
 SAFE_KEY_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
+SAFE_BRANCH_RE = re.compile(r"^[A-Za-z0-9_./-]+$")
 HEX_HEAD_RE = re.compile(r"^[0-9a-f]{7,64}$", re.IGNORECASE)
 PRIVATE_KEY_RE = re.compile(r"(?:path|body|excerpt|source|raw|secret|token|credential|password|environment|env)", re.IGNORECASE)
 
@@ -470,6 +471,29 @@ def _safe_head(value: Any) -> str | None:
     return text if HEX_HEAD_RE.fullmatch(text) else None
 
 
+def _runner_git_identity(source_root: Path) -> dict[str, str | None]:
+    head = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=source_root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    branch = subprocess.run(
+        ["git", "branch", "--show-current"],
+        cwd=source_root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    head_value = _safe_head(head.stdout.strip()) if head.returncode == 0 else None
+    branch_value = branch.stdout.strip() if branch.returncode == 0 else ""
+    return {
+        "current_runner_head": head_value,
+        "current_runner_branch": branch_value if SAFE_BRANCH_RE.fullmatch(branch_value) else None,
+    }
+
+
 def _same_utc_date(value: str | None, date: str) -> bool:
     parsed = parse_timestamp(str(value or ""))
     return bool(parsed and parsed.astimezone(timezone.utc).date().isoformat() == date)
@@ -567,6 +591,7 @@ def build_food_line_status(
     recovery: RecoveryContext | None = None,
 ) -> dict[str, Any]:
     receipts = load_food_line_receipts(source_root, date)
+    runner_identity = _runner_git_identity(source_root)
     completeness, linkage = receipt_completeness(receipts, source_root=source_root)
     latest_receipts = _latest_receipts_by_task(receipts)
     latest_by_task = {str(receipt.get("task_key") or ""): receipt for receipt in latest_receipts}
@@ -624,6 +649,7 @@ def build_food_line_status(
         "task_summaries": [_task_summary(receipt, linkage) for receipt in receipts],
         "effective_task_summaries": [_task_summary(receipt, linkage) for receipt in effective_receipts],
         "runner_source_head": sorted(source_heads)[0] if len(source_heads) == 1 else None,
+        **runner_identity,
         "publication_attempted": publication_attempted,
         "publication_status": publication_statuses[-1] if publication_statuses else None,
         "public_side_effects": {
@@ -649,6 +675,7 @@ def build_care_line_status(
     expected_instances: Iterable[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     instance_rows = list(expected_instances) if expected_instances is not None else None
+    runner_identity = _runner_git_identity(source_root)
     receipt_dates = _care_receipt_dates_for_expected_instances(date, instance_rows)
     receipts = load_care_line_receipts_for_dates(source_root, receipt_dates)
     completeness, linkage = receipt_completeness(
@@ -690,6 +717,7 @@ def build_care_line_status(
         "receipt_completeness": completeness if receipts else "NO_PROOF",
         "task_summaries": [_task_summary(receipt, linkage) for receipt in receipts],
         "runner_source_head": sorted(source_heads)[0] if len(source_heads) == 1 else None,
+        **runner_identity,
         "publication_attempted": publication_attempted,
         "publication_status": publication_statuses[-1] if publication_statuses else None,
         "public_side_effects": {"publication_attempted": publication_attempted, "publication_status": publication_statuses[-1] if publication_statuses else None},
@@ -719,6 +747,7 @@ def build_gaza_status(
     recovery: RecoveryContext | None = None,
 ) -> dict[str, Any]:
     receipts = load_gaza_receipts(source_root, date)
+    runner_identity = _runner_git_identity(source_root)
     completeness, linkage = receipt_completeness(
         receipts, source_root=source_root, expectations=GAZA_TASK_EXPECTATIONS
     )
@@ -755,6 +784,7 @@ def build_gaza_status(
         "receipt_completeness": completeness if receipts else "NO_PROOF",
         "task_summaries": [_task_summary(receipt, linkage) for receipt in receipts],
         "runner_source_head": sorted(source_heads)[0] if len(source_heads) == 1 else None,
+        **runner_identity,
         "publication_attempted": publication_attempted,
         "publication_status": publication_statuses[-1] if publication_statuses else None,
         "public_side_effects": {
@@ -789,6 +819,7 @@ def build_ice_status(
     recovery: RecoveryContext | None = None,
 ) -> dict[str, Any]:
     receipts = load_ice_receipts(source_root, date)
+    runner_identity = _runner_git_identity(source_root)
     completeness, linkage = receipt_completeness(
         receipts, source_root=source_root, expectations=ICE_TASK_EXPECTATIONS
     )
@@ -830,6 +861,7 @@ def build_ice_status(
         "receipt_completeness": completeness if receipts else "NO_PROOF",
         "task_summaries": [_task_summary(receipt, linkage) for receipt in receipts],
         "runner_source_head": sorted(source_heads)[0] if len(source_heads) == 1 else None,
+        **runner_identity,
         "publication_attempted": publication_attempted,
         "publication_status": publication_statuses[-1] if publication_statuses else None,
         "public_side_effects": {
@@ -887,6 +919,8 @@ def build_system_status(
             "migration_status": "MIGRATED",
             "aggregate_status": food_line_status["aggregate_status"],
             "recovery_lifecycle": food_line_status["recovery_lifecycle"],
+            "current_runner_head": food_line_status.get("current_runner_head"),
+            "current_runner_branch": food_line_status.get("current_runner_branch"),
             "agent_handoff": food_line_status["agent_handoff"],
         }
     }
@@ -938,6 +972,8 @@ def build_system_status(
             "latest_runtime_proof_date": care_line_status.get("latest_runtime_proof_date"),
             "receipt_completeness": care_line_status.get("receipt_completeness"),
             "stale_observability": care_line_status.get("stale_observability"),
+            "current_runner_head": care_line_status.get("current_runner_head"),
+            "current_runner_branch": care_line_status.get("current_runner_branch"),
             "agent_handoff": care_line_status["agent_handoff"],
         }
     elif care_line_status is None:
@@ -958,6 +994,8 @@ def build_system_status(
             "latest_runtime_proof_date": gaza_status.get("latest_runtime_proof_date"),
             "receipt_completeness": gaza_status.get("receipt_completeness"),
             "stale_observability": gaza_status.get("stale_observability"),
+            "current_runner_head": gaza_status.get("current_runner_head"),
+            "current_runner_branch": gaza_status.get("current_runner_branch"),
             "agent_handoff": gaza_status["agent_handoff"],
         }
     if ice_status is not None and ice_status.get("migration_status") == "MIGRATED":
@@ -970,6 +1008,8 @@ def build_system_status(
             "latest_runtime_proof_date": ice_status.get("latest_runtime_proof_date"),
             "receipt_completeness": ice_status.get("receipt_completeness"),
             "stale_observability": ice_status.get("stale_observability"),
+            "current_runner_head": ice_status.get("current_runner_head"),
+            "current_runner_branch": ice_status.get("current_runner_branch"),
             "agent_handoff": ice_status["agent_handoff"],
         }
     system_status = _system_status(states)

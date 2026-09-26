@@ -187,7 +187,7 @@ def _queue_item(event: dict[str, Any], *, relationship: str, reasons: list[str],
         "relationship_to_previous": relationship,
         "relationship_reasons": reasons,
     }
-    if existing and existing.get("review_status") in TERMINAL_REVIEW_STATES:
+    if existing and state in TERMINAL_REVIEW_STATES:
         for key in (
             "review_decision",
             "reviewed_by",

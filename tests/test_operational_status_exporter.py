@@ -301,6 +301,42 @@ def _write_care_receipt(
     (receipt_root / f"{run_id}.json").write_text(json.dumps(receipt), encoding="utf-8")
 
 
+def _write_gaza_day(
+    tmp_path: Path,
+    *,
+    status: str = "SAFE_NO_OP",
+    classification: str = "no_publication_needed",
+    date: str = DATE,
+) -> Path:
+    source = tmp_path / "gaza-source"
+    receipt_root = source / "status" / "operational-health" / "gaza" / date / "runs"
+    receipt_root.mkdir(parents=True)
+    artifact = receipt_root / "gaza_daily_dispatch-gaza-run-1.json"
+    receipt = build_operational_receipt(
+        dispatch="gaza",
+        task_key="gaza_daily_dispatch",
+        task_name="Daily - Dispatches From Gaza",
+        scheduled_for=date,
+        started_at=f"{date}T13:00:00Z",
+        completed_at=f"{date}T13:05:00Z",
+        observed_at=f"{date}T13:05:00Z",
+        exit_code=0 if status != "FAILED" else 1,
+        status=status,
+        classification=classification,
+        run_id="gaza-run-1",
+        runner_path=r"C:\BlueFernRunner\GazaDispatchesCurrent6",
+        branch="add/pages-repo-default",
+        source_head="500c2115919bfa8273c56ef3c3fd59532cfe8efe",
+        artifact_refs={"task_receipt": str(artifact)},
+        public_side_effects={"pages": status == "SUCCESS"},
+        publication_attempted=status == "SUCCESS",
+        publication_status=classification,
+        details={"source_count": 5, "public_story_count": 0},
+    )
+    artifact.write_text(json.dumps(receipt), encoding="utf-8")
+    return source
+
+
 def _write_ice_day(
     tmp_path: Path,
     *,
@@ -662,16 +698,37 @@ def test_forced_ice_refresh_advances_ice_without_forcing_food(tmp_path: Path) ->
     assert json.loads((checkout / f"ops/status/ice/history/{DATE}.json").read_text(encoding="utf-8"))["last_exported_at"] == "2026-09-11T06:01:00Z"
 
 
-def test_force_refresh_rejects_unsupported_dispatch(tmp_path: Path) -> None:
-    with pytest.raises(ExportError, match="unsupported force_refresh_dispatches: gaza"):
-        export_status(
-            source_root=_write_day(tmp_path),
-            status_checkout=tmp_path / "status-checkout",
-            date=DATE,
-            evaluated_at=EVALUATED,
-            exported_at="2026-09-10T16:01:00Z",
-            force_refresh_dispatches={"gaza"},
-        )
+def test_forced_gaza_refresh_advances_gaza_without_forcing_food(tmp_path: Path) -> None:
+    source = _write_day(tmp_path / "food")
+    gaza_source = _write_gaza_day(tmp_path)
+    checkout = tmp_path / "status-checkout"
+
+    first = export_status(
+        source_root=source,
+        gaza_source_root=gaza_source,
+        status_checkout=checkout,
+        date=DATE,
+        evaluated_at="2026-09-10T16:00:00Z",
+        exported_at="2026-09-10T16:01:00Z",
+    )
+    second = export_status(
+        source_root=source,
+        gaza_source_root=gaza_source,
+        status_checkout=checkout,
+        date=DATE,
+        evaluated_at="2026-09-10T16:00:00Z",
+        exported_at="2026-09-10T17:01:00Z",
+        force_refresh_dispatches={"gaza"},
+    )
+
+    assert second["gaza"]["last_exported_at"] == "2026-09-10T17:01:00Z"
+    assert second["gaza"]["last_exported_at"] != first["gaza"]["last_exported_at"]
+    assert second["food_line"]["last_exported_at"] == first["food_line"]["last_exported_at"]
+    assert second["gaza"]["migration_status"] == "MIGRATED"
+    assert second["gaza"]["aggregate_status"] == "SUCCESS"
+    assert second["gaza"]["receipt_completeness"] == "COMPLETE"
+    assert second["system"]["dispatches"]["gaza"]["migration_status"] == "MIGRATED"
+    assert (checkout / f"ops/status/gaza/history/{DATE}.json").is_file()
 
 
 def test_export_advances_food_and_system_timestamps_when_food_changes(tmp_path: Path) -> None:

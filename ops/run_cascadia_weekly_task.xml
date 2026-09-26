@@ -46,8 +46,8 @@
   <Actions Context="Author">
     <Exec>
       <Command>powershell.exe</Command>
-      <Arguments>-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\PythonProjects\Dispatches From The Blue Fern Co'; $env:CASCADIA_ALLOW_CURL_NO_REVOKE='1'; $env:CASCADIA_FETCH_BACKEND='auto'; $env:SMTP_RELAX_X509_STRICT='1'; &amp; '.\.venv\Scripts\python.exe' 'scripts\run_cascadia_and_notify.py' --date (Get-Date -Format 'yyyy-MM-dd')"</Arguments>
-      <WorkingDirectory>C:\PythonProjects\Dispatches From The Blue Fern Co</WorkingDirectory>
+      <Arguments>-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Set-Location 'C:\BlueFernDev\the-blue-fern-co-dispatches'; $env:CASCADIA_ALLOW_CURL_NO_REVOKE='1'; $env:CASCADIA_FETCH_BACKEND='auto'; $env:SMTP_RELAX_X509_STRICT='1'; &amp; '.\.venv\Scripts\python.exe' 'scripts\run_cascadia_and_notify.py' --date (Get-Date -Format 'yyyy-MM-dd')"</Arguments>
+      <WorkingDirectory>C:\BlueFernDev\the-blue-fern-co-dispatches</WorkingDirectory>
     </Exec>
   </Actions>
 </Task>

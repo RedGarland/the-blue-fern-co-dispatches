@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260926T164300-0700-r11",
+  "scheduled_for": "2026-09-26T16:43:00-07:00",
+  "started_at": "2026-09-26T16:43:00-07:00",
+  "completed_at": "2026-09-26T16:43:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-26T15:43:00-07:00",
+    "date_to": "2026-09-26T16:43:00-07:00",
+    "edition_date": "2026-09-26"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall watch completed with 12 targeted web searches focused on sole/only/last/full-service grocery loss, disaster-related food-distribution cancellation, abrupt pantry or food-bank service reduction, and official SNAP/WIC/food-assistance interruption. No new qualifying signal was identified within the hourly observation window. Search results included older or already-known events, routine recovery/resource information, and non-qualifying material; these were excluded."
+}

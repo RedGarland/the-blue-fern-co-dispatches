@@ -262,7 +262,32 @@ def _write_care_day(tmp_path: Path, *, include_older_collection: bool = False) -
             publication_attempted=False if task_key == "care_line_approved_release_publication" else None,
             publication_status=publication_status,
             public_side_effects={"pages_sync": False, "source_text": "private"},
-            details={"source_body": "private care body", "safe_detail": "kept local"},
+            details={
+                "source_body": "private care body",
+                "safe_detail": "kept local",
+                **(
+                    {
+                        "successful_attempt_count": 22,
+                        "failed_source_count": 2,
+                        "skipped_source_count": 1,
+                        "active_review_queue_count": 3,
+                        "manual_review_count": 1,
+                        "failed_source_diagnostics": [
+                            {
+                                "source_id": "cms-public-notices",
+                                "source_name": "CMS Public Notices",
+                                "adapter_type": "structured_index",
+                                "failure_class": "HTTPError",
+                                "transient": True,
+                                "failure_reason": "private failure detail",
+                                "source_url": "https://example.invalid/private",
+                            }
+                        ],
+                    }
+                    if task_key == "care_line_collection"
+                    else {}
+                ),
+            },
         )
         (receipt_root / f"{run_id}.json").write_text(json.dumps(receipt), encoding="utf-8")
     return source
@@ -798,6 +823,45 @@ def test_care_export_with_care_source_root_creates_migrated_latest_and_history(t
     assert system_care["latest_runtime_proof_date"] == care["latest_runtime_proof_date"]
     assert system_care["aggregate_status"] != "UNKNOWN"
     assert system_care["scheduled_health_available"] is True
+
+
+def test_care_export_exposes_bounded_collection_diagnostics_without_private_details(tmp_path: Path) -> None:
+    source = _write_day(tmp_path / "food")
+    care_source = _write_care_day(tmp_path)
+
+    result = export_status(
+        source_root=source,
+        care_source_root=care_source,
+        status_checkout=tmp_path / "status-checkout",
+        date=DATE,
+        evaluated_at="2026-09-10T18:00:00Z",
+        exported_at="2026-09-10T18:01:00Z",
+        care_expected_instances=CARE_EXPECTED_INSTANCES,
+    )
+
+    collection = next(
+        row for row in result["care_line"]["task_summaries"]
+        if row["task_key"] == "care_line_collection"
+    )
+    diagnostics = collection["diagnostics"]
+    assert diagnostics["successful_attempt_count"] == 22
+    assert diagnostics["failed_source_count"] == 2
+    assert diagnostics["skipped_source_count"] == 1
+    assert diagnostics["active_review_queue_count"] == 3
+    assert diagnostics["manual_review_count"] == 1
+    assert diagnostics["failed_sources"] == [
+        {
+            "source_id": "cms-public-notices",
+            "source_name": "CMS Public Notices",
+            "adapter_type": "structured_index",
+            "failure_class": "HTTPError",
+            "transient": True,
+        }
+    ]
+    rendered = json.dumps(result)
+    assert "private failure detail" not in rendered
+    assert "example.invalid/private" not in rendered
+    assert "private care body" not in rendered
 
 
 def test_care_safe_no_op_queue_and_publication_do_not_become_failures(tmp_path: Path) -> None:

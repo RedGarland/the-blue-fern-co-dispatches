@@ -487,6 +487,40 @@ def _receipt_artifact_id(receipt: dict[str, Any], linkage: dict[str, str]) -> st
     return _symbolic_artifact(artifact) or linkage.get(str(receipt.get("task_key")))
 
 
+def _care_collection_diagnostics(receipt: dict[str, Any]) -> dict[str, Any] | None:
+    if receipt.get("dispatch") != "care-line" or receipt.get("task_key") != "care_line_collection":
+        return None
+    details = receipt.get("details") if isinstance(receipt.get("details"), dict) else {}
+    rows = details.get("failed_source_diagnostics") if isinstance(details.get("failed_source_diagnostics"), list) else []
+    failures: list[dict[str, Any]] = []
+    for row in rows[:20]:
+        if not isinstance(row, dict):
+            continue
+        failures.append(
+            {
+                "source_id": _safe_identifier(row.get("source_id")),
+                "source_name": str(row.get("source_name") or "")[:200] or None,
+                "adapter_type": _safe_identifier(row.get("adapter_type")),
+                "failure_class": _safe_identifier(row.get("failure_class")),
+                "transient": bool(row.get("transient")),
+            }
+        )
+    def _count(key: str) -> int | None:
+        value = details.get(key)
+        try:
+            return int(value) if value is not None else None
+        except (TypeError, ValueError):
+            return None
+    return {
+        "successful_attempt_count": _count("successful_attempt_count"),
+        "failed_source_count": _count("failed_source_count"),
+        "skipped_source_count": _count("skipped_source_count"),
+        "active_review_queue_count": _count("active_review_queue_count"),
+        "manual_review_count": _count("manual_review_count"),
+        "failed_sources": failures,
+    }
+
+
 def _task_summary(receipt: dict[str, Any], linkage: dict[str, str]) -> dict[str, Any]:
     return {
         "task_key": receipt.get("task_key"),
@@ -502,6 +536,7 @@ def _task_summary(receipt: dict[str, Any], linkage: dict[str, str]) -> dict[str,
         "publication_status": receipt.get("publication_status"),
         "public_side_effects": _sanitized_public_side_effects(receipt.get("public_side_effects")),
         "artifact_id": _receipt_artifact_id(receipt, linkage),
+        "diagnostics": _care_collection_diagnostics(receipt),
     }
 
 

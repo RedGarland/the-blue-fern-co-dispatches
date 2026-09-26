@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260925T192121-0700-r11",
+  "scheduled_for": "2026-09-25T19:21:21-07:00",
+  "started_at": "2026-09-25T19:21:21-07:00",
+  "completed_at": "2026-09-25T19:23:17.185397-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-25",
+    "date_to": "2026-09-25",
+    "edition_date": "2026-09-25"
+  },
+  "findings": [],
+  "coverage_notes": "Fresh nationwide and territory-targeted healthcare-access searches were checked against the immediately prior Care Line Watch output. CMS Public Notices were explicitly reviewed; the six September 25 hospice termination notices for Orange Coast Hospice, Arizona Loving Hands Hospice, California Needles Hospice, California Reliant Hospice, California Cherry Blossom Healthcare Palliative & Hospice, and California Heart of Gold Hospice were already reported by the prior run, and no newer CMS termination, rescission, CLIA limitation/suspension, or related qualifying notice was identified. No additional confirmed hospital, clinic, ED, maternity, behavioral-health, pharmacy, dialysis, oncology, primary/specialty-care, ambulance, telehealth, home-health, hospice, public-health, ownership, staffing, insurance-network, bankruptcy, or funding/policy development with a concrete new access effect was verified in the observation window."
+}

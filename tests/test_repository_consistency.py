@@ -195,3 +195,61 @@ def test_readme_names_current_protected_source_branch() -> None:
 
     assert "The protected source branch is `add/pages-repo-default`" in text
     assert "source project branch (`master` or `main`)" not in text
+
+
+def test_live_operational_docs_and_helpers_do_not_depend_on_legacy_workstation_root() -> None:
+    legacy_root = r"C:\\PythonProjects\\Dispatches From The Blue Fern Co"
+    current_files = [
+        ROOT / "docs" / "workflows" / "codex_pr_workflow.md",
+        ROOT / "docs" / "runner-operations.md",
+        ROOT / "docs" / "pages-publish-safety.md",
+        ROOT / "docs" / "dispatch-archive-pages-preparation.md",
+        ROOT / "docs" / "care-line-reviewed-event-queue-scheduler.md",
+        ROOT / "scripts" / "status_pages_repo.py",
+        ROOT / "run_food_line_daily.ps1",
+        ROOT / "ops" / "generate_and_notify_task.xml",
+        ROOT / "ops" / "run_american_pressure_weekly_task.xml",
+        ROOT / "ops" / "run_cascadia_weekly_task.xml",
+    ]
+
+    for path in current_files:
+        text = path.read_text(encoding="utf-8-sig")
+        assert legacy_root not in text, f"{path.relative_to(ROOT)} still depends on the legacy workstation root"
+
+
+def test_pages_status_helper_is_repo_relative_and_read_only() -> None:
+    text = (ROOT / "scripts" / "status_pages_repo.py").read_text(encoding="utf-8")
+
+    assert 'ROOT = Path(__file__).resolve().parents[1]' in text
+    assert 'default=str(ROOT)' in text
+    assert 'default=str(ROOT / "bluefern-dispatches-pages")' in text
+    assert "git add american-pressure/" not in text
+    assert "git commit -m" not in text
+    assert "git push origin" not in text
+    assert "does not stage, commit, or push any files" in text
+
+
+def test_food_line_legacy_wrapper_derives_default_root_from_its_location() -> None:
+    text = (ROOT / "run_food_line_daily.ps1").read_text(encoding="utf-8")
+
+    assert "else { $PSScriptRoot }" in text
+    assert "BLUEFERN_PROJECT_ROOT" in text
+    assert r"C:\\PythonProjects\\Dispatches From The Blue Fern Co" not in text
+
+
+def test_runner_operations_uses_current_topology_and_declared_dependencies() -> None:
+    text = (ROOT / "docs" / "runner-operations.md").read_text(encoding="utf-8")
+
+    for runner in (
+        "BlueFernOperatorCurrent",
+        "FoodLineCurrent6",
+        "CareLineNationalCurrent8",
+        "GazaDispatchesCurrent6",
+        "ICEMonitorCurrent",
+        "OperationalStatusCurrent",
+    ):
+        assert runner in text
+
+    assert "pip install -r requirements.txt" in text
+    assert "pip install -e ." not in text
+    assert "Cascadia is intentionally inactive" in text

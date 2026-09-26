@@ -25,7 +25,7 @@ function Invoke-Git {
     $output = @(& git -C $Root @Arguments 2>&1)
     $code = $LASTEXITCODE
     if (-not $AllowFailure -and $code -ne 0) {
-        throw "git -C \"$Root\" $($Arguments -join ' ') failed ($code): $($output -join ' ')"
+        throw ('git -C "{0}" {1} failed ({2}): {3}' -f $Root, ($Arguments -join ' '), $code, ($output -join ' '))
     }
     return [pscustomobject]@{
         ExitCode = $code

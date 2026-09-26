@@ -293,6 +293,46 @@ def test_food_line_historical_recovery_paths_are_allowed_but_siblings_stay_risky
     }
 
 
+
+
+def test_operator_runtime_ledger_paths_are_sanctioned_but_operator_config_remains_risky(monkeypatch, tmp_path):
+    source_repo = tmp_path / "repo"
+    source_repo.mkdir()
+    monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: None)
+    monkeypatch.setattr(
+        preflight_repo_state,
+        "_run_git_status",
+        lambda _repo: (
+            0,
+            [
+                " M ops/operator/latest.json",
+                " M ops/operator/history.jsonl",
+                " M ops/operator/incidents/bfo-123.json",
+                "?? ops/operator/notification-latest.json",
+                "?? ops/operator/runs/2026-09-25/operator-run.json",
+                " M ops/operator/config.json",
+                " M ops/operator/remediation-policy.yaml",
+                " M scripts/blue_fern_operator.py",
+            ],
+        ),
+    )
+
+    report = preflight_repo_state.build_preflight_report(source_repo)
+
+    assert report["ok"] is False
+    assert {entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]} == {
+        "ops/operator/latest.json",
+        "ops/operator/history.jsonl",
+        "ops/operator/incidents/bfo-123.json",
+        "ops/operator/notification-latest.json",
+        "ops/operator/runs/2026-09-25/operator-run.json",
+    }
+    assert {entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]} == {
+        "ops/operator/config.json",
+        "ops/operator/remediation-policy.yaml",
+        "scripts/blue_fern_operator.py",
+    }
+
 def test_allowed_local_generated_entries_do_not_fail_preflight(monkeypatch, tmp_path):
     source_repo = tmp_path / "repo"
     source_repo.mkdir()

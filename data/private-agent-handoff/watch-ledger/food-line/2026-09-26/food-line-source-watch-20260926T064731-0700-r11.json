@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260926T064731-0700-r11",
+  "scheduled_for": "2026-09-26T06:45:54-07:00",
+  "started_at": "2026-09-26T06:47:31-07:00",
+  "completed_at": "2026-09-26T06:48:07-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-26T05:47:31-07:00",
+    "date_to": "2026-09-26T06:48:07-07:00",
+    "edition_date": "2026-09-26"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall watch completed with 12 targeted fresh web searches. Coverage focused on loss/fire/closure of only, sole, last, or full-service grocery stores; canceled or suspended emergency food distributions caused by storm, flood, fire, outage, or facility damage; abrupt pantry/food-bank service closure or major access reduction; and official SNAP/WIC interruptions with immediate access consequences. No new qualifying signal was identified since the prior hourly check. Older/recycled items, routine pantry operations, donation/resource content, and unrelated closures were excluded. California WIC app maintenance scheduled for September 26 was excluded because participants can still use benefits at stores and alternative benefit-balance methods remain available."
+}

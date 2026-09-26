@@ -158,3 +158,10 @@ def test_required_runtime_dependencies_are_declared() -> None:
 
     for package in ("pyyaml", "pydantic", "pillow", "certifi", "beautifulsoup4", "tzdata"):
         assert package in requirements
+
+
+def test_validation_workflow_targets_protected_source_branch() -> None:
+    text = (ROOT / ".github" / "workflows" / "dispatch-validation.yml").read_text(encoding="utf-8")
+
+    assert "      - add/pages-repo-default" in text
+    assert "      - main" not in text

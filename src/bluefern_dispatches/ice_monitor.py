@@ -131,6 +131,12 @@ def _relationship(previous: dict[str, Any] | None, current: dict[str, Any]) -> t
 
 def _queue_state(event: dict[str, Any], relationship: str, existing: dict[str, Any] | None) -> str:
     if existing and existing.get("review_status") in TERMINAL_REVIEW_STATES:
+        if relationship in {
+            EventRelationship.UPDATE_TO_EXISTING_EVENT.value,
+            EventRelationship.FOLLOW_UP_WITH_NEW_FACTS.value,
+            EventRelationship.CORRECTION.value,
+        }:
+            return "NEEDS_REVIEW"
         return str(existing["review_status"])
     editorial = event.get("editorial") or {}
     source_tiers = _source_tiers(event)

@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260926T134403-0700-r11",
+  "scheduled_for": "2026-09-26T13:45:22-07:00",
+  "started_at": "2026-09-26T13:44:03-07:00",
+  "completed_at": "2026-09-26T13:46:23-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-26",
+    "date_to": "2026-09-26",
+    "edition_date": "2026-09-26"
+  },
+  "findings": [],
+  "coverage_notes": "Supplementary recall watch covered changes since the prior completed heartbeat at 2026-09-26T12:47:18-07:00. CMS Public Notices was checked first; the newest notices remained the six hospice terminations dated 2026-09-25 already reported by this watch, with no 2026-09-26 notice present. Twelve additional targeted searches were run, covering hospital/ED/maternity, behavioral health, dialysis, oncology, primary care, ambulance, air medical, rural emergency services, essential-service restorations, tribal care, and U.S. territories. No qualifying development was verified within the hourly observation window. A secondary DocumentCloud source linked from an out-of-window Nevada behavioral-health closure article returned HTTP 403; core search coverage and the primary article remained available, so the run is DEGRADED rather than failed. Production collection remains authoritative."
+}

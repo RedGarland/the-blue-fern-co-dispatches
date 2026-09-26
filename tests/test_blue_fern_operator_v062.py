@@ -461,18 +461,27 @@ def test_refresh_scope_includes_system_latest_and_food_context_for_care_and_ice(
     assert ice.expected_mutation_scope == _refresh_paths("ice", "2026-09-20")
 
 
-def test_gaza_refresh_remains_non_executable_until_exporter_exists(tmp_path: Path) -> None:
+def test_gaza_refresh_uses_external_status_builder(tmp_path: Path) -> None:
+    operator_root = tmp_path / "repo" / "ops" / "operator"
+    status_root = tmp_path / "status"
+    runner_root = tmp_path / "gaza"
+    operator_root.mkdir(parents=True)
+    status_root.mkdir()
+    runner_root.mkdir()
+
     plan = operator.build_remediation_action_plan(
         _incident(dispatch="gaza", status_state="UNKNOWN"),
-        runner_root=tmp_path / "gaza",
-        operator_root=tmp_path / "repo" / "ops" / "operator",
-        status_root=tmp_path / "status",
+        runner_root=runner_root,
+        operator_root=operator_root,
+        status_root=status_root,
         current_status=_status(dispatch="gaza", state="UNKNOWN", next_action="UNKNOWN_REQUIRES_OPERATOR"),
     )
 
-    assert plan.proposed_action == "INVESTIGATE_STATUS_EXPORT"
-    assert plan.executable is False
-    assert plan.safety_checks["refresh_supported"] is False
+    assert plan.proposed_action == "REFRESH_STATUS_EXPORT"
+    assert plan.executable is True
+    assert plan.safety_checks["refresh_supported"] is True
+    assert "ops/status/gaza/latest.json" in plan.expected_mutation_scope
+    assert "ops/status/system/latest.json" in plan.expected_mutation_scope
 
 
 def test_replanned_recovered_incident_does_not_offer_second_refresh(monkeypatch, tmp_path: Path) -> None:

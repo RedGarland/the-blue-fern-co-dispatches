@@ -172,3 +172,11 @@ def test_readme_does_not_require_undefined_editable_package_install() -> None:
 
     assert "pip install -e ." not in text
     assert "pip install -r requirements.txt" in text
+
+
+def test_validation_status_is_bound_to_tested_event_head() -> None:
+    text = (ROOT / ".github" / "workflows" / "dispatch-validation.yml").read_text(encoding="utf-8")
+
+    assert "context.payload.pull_request?.head?.sha" in text
+    assert "github.rest.pulls.get" not in text
+    assert "event pull_request.head.sha is unavailable" in text

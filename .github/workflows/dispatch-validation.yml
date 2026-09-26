@@ -9,7 +9,7 @@ on:
       - ready_for_review
   push:
     branches:
-      - main
+      - add/pages-repo-default
   workflow_dispatch:
 
 permissions:

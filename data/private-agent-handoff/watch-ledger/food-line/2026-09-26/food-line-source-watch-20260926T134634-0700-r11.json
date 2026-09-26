@@ -1,0 +1,19 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260926T134634-0700-r11",
+  "scheduled_for": "2026-09-26T13:45:54-07:00",
+  "started_at": "2026-09-26T13:46:34-07:00",
+  "completed_at": "2026-09-26T13:46:34-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-26T12:45:54-07:00",
+    "date_to": "2026-09-26T13:46:34-07:00",
+    "edition_date": "2026-09-26",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall watch completed with 12 targeted web searches across four audited miss classes: only/sole/last/full-service grocery-store loss; disaster-related food-distribution cancellation or suspension; abrupt pantry/food-bank closure or major access reduction; and official SNAP/WIC/food-assistance interruption with immediate access consequences. No new qualifying disruption was identified within the hourly observation window. Fresh Hawaii storm coverage repeated previously known Food Basket warehouse closures and was excluded as duplicate/recycled reporting. Donation drives, resource guides, routine promotion, generic inflation, opinion, and unsupported social claims were excluded."
+}

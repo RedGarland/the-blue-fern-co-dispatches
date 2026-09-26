@@ -26,7 +26,20 @@ def test_sync_helper_is_plan_only_by_default_and_requires_apply_for_merge() -> N
     assert "[switch]$Apply" in text
     assert 'if (-not $Apply)' in text
     assert '"READY_TO_FAST_FORWARD"' in text
-    assert '@("merge", "--ff-only", $targetRef)' in text
+    assert '@("merge", "--ff-only", $frozenTargetHead)' in text
+
+
+def test_sync_helper_freezes_one_common_target_before_any_merge() -> None:
+    text = _text()
+    discovery = text.index("# Phase 1: inspect every runner")
+    frozen = text.index("$frozenTargetHead")
+    apply_phase = text.index("# Phase 2: apply only after all runner discovery")
+    merge = text.index('@("merge", "--ff-only", $frozenTargetHead)')
+    assert discovery < frozen < apply_phase < merge
+    assert "Production runners fetched inconsistent protected heads; no fast-forward was attempted." in text
+    assert "runner HEAD changed after discovery" in text
+    assert "tracked working-tree changes appeared after discovery" in text
+    assert "untracked runtime collision appeared after discovery" in text
 
 
 def test_sync_helper_has_fail_closed_checkout_guards() -> None:

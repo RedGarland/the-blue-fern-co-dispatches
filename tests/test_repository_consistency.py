@@ -165,3 +165,10 @@ def test_validation_workflow_targets_protected_source_branch() -> None:
 
     assert "      - add/pages-repo-default" in text
     assert "      - main" not in text
+
+
+def test_readme_does_not_require_undefined_editable_package_install() -> None:
+    text = (ROOT / "README.md").read_text(encoding="utf-8")
+
+    assert "pip install -e ." not in text
+    assert "pip install -r requirements.txt" in text

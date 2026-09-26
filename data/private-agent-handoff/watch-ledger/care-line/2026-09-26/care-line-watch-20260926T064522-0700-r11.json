@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260926T064522-0700-r11",
+  "scheduled_for": "2026-09-26T06:45:22-07:00",
+  "started_at": "2026-09-26T06:48:14-07:00",
+  "completed_at": "2026-09-26T06:51:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-26",
+    "date_to": "2026-09-26",
+    "edition_date": "2026-09-26"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall watch completed. CMS Public Notices was checked first; the newest notices remain the six hospice termination notices dated 2026-09-25 that were already reported in the prior watch. Twelve additional targeted searches were used across hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency services, ambulance, air-medical, essential-service restoration, and U.S. territory access-loss classes. No new qualifying development since the prior hourly check was verified. Production collection remains authoritative."
+}

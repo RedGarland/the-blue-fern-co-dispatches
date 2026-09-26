@@ -1103,12 +1103,16 @@ def export_status(
             system_payload["exported_at"] = system_reused
         history_path = status_checkout / "ops" / "status" / "food-line" / "history" / f"{date}.json"
         care_history_path = status_checkout / "ops" / "status" / "care-line" / "history" / f"{date}.json"
+        gaza_history_path = status_checkout / "ops" / "status" / "gaza" / "history" / f"{date}.json"
         ice_history_path = status_checkout / "ops" / "status" / "ice" / "history" / f"{date}.json"
         atomic_write_json(food_path, food_payload)
         atomic_write_json(history_path, food_payload)
         if care_payload is not None:
             atomic_write_json(care_path, care_payload)
             atomic_write_json(care_history_path, care_payload)
+        if gaza_payload is not None:
+            atomic_write_json(gaza_path, gaza_payload)
+            atomic_write_json(gaza_history_path, gaza_payload)
         if ice_payload is not None:
             atomic_write_json(ice_path, ice_payload)
             atomic_write_json(ice_history_path, ice_payload)
@@ -1120,12 +1124,17 @@ def export_status(
     ]
     if care_payload is not None:
         paths[2:2] = ["ops/status/care-line/latest.json", f"ops/status/care-line/history/{date}.json"]
-    if ice_payload is not None:
+    if gaza_payload is not None:
         insert_at = 2 + (2 if care_payload is not None else 0)
+        paths[insert_at:insert_at] = ["ops/status/gaza/latest.json", f"ops/status/gaza/history/{date}.json"]
+    if ice_payload is not None:
+        insert_at = 2 + (2 if care_payload is not None else 0) + (2 if gaza_payload is not None else 0)
         paths[insert_at:insert_at] = ["ops/status/ice/latest.json", f"ops/status/ice/history/{date}.json"]
     result = {"food_line": food_payload, "system": system_payload, "paths": paths}
     if care_payload is not None:
         result["care_line"] = care_payload
+    if gaza_payload is not None:
+        result["gaza"] = gaza_payload
     if ice_payload is not None:
         result["ice"] = ice_payload
     return result

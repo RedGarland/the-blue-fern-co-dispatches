@@ -253,3 +253,29 @@ def test_runner_operations_uses_current_topology_and_declared_dependencies() -> 
     assert "pip install -r requirements.txt" in text
     assert "pip install -e ." not in text
     assert "Cascadia is intentionally inactive" in text
+
+
+def test_dispatch_runner_roots_match_all_live_operational_helpers() -> None:
+    config = json.loads((ROOT / "ops" / "operator" / "config.json").read_text(encoding="utf-8"))
+    helper_paths = [
+        ROOT / "scripts" / "sync_active_production_runners.ps1",
+        ROOT / "scripts" / "run_operational_status_export.ps1",
+        ROOT / "scripts" / "register_operational_status_export_task.ps1",
+        ROOT / "scripts" / "verify_dispatch_ops_phase2b.ps1",
+    ]
+    helper_text = {
+        path.name: path.read_text(encoding="utf-8-sig")
+        for path in helper_paths
+    }
+
+    for dispatch in ("food-line", "care-line", "gaza", "ice"):
+        runner_root = config["dispatches"][dispatch]["runner_root"]
+        for helper_name, text in helper_text.items():
+            assert runner_root in text, f"{dispatch} runner root drifted from {helper_name}"
+
+    status_root = config["operator"]["status_root"]
+    for helper_name in (
+        "run_operational_status_export.ps1",
+        "register_operational_status_export_task.ps1",
+    ):
+        assert status_root in helper_text[helper_name], f"status root drifted from {helper_name}"

@@ -199,18 +199,47 @@ def load_gaza_receipts(source_root: Path, date: str) -> list[dict[str, Any]]:
 
 
 def load_ice_receipts(source_root: Path, date: str) -> list[dict[str, Any]]:
+    return load_ice_receipts_for_dates(source_root, [date])
+
+
+def load_ice_receipts_for_dates(source_root: Path, dates: Iterable[str]) -> list[dict[str, Any]]:
     receipts = []
-    for path in _receipt_paths(source_root, "ice", date):
-        receipt = _parse_json(path)
-        try:
-            validate_operational_receipt(receipt)
-        except ValueError as exc:
-            raise ExportError(f"invalid operational receipt {path.name}: {exc}") from exc
-        if receipt.get("dispatch") != "ice" or receipt.get("task_key") != "ice_monitor":
-            raise ExportError(f"ICE receipt dispatch/task mismatch: {path.name}")
-        receipts.append(receipt)
+    seen: set[Path] = set()
+    for date in sorted(set(dates)):
+        for path in _receipt_paths(source_root, "ice", date):
+            resolved = path.resolve()
+            if resolved in seen:
+                continue
+            seen.add(resolved)
+            receipt = _parse_json(path)
+            try:
+                validate_operational_receipt(receipt)
+            except ValueError as exc:
+                raise ExportError(f"invalid operational receipt {path.name}: {exc}") from exc
+            if receipt.get("dispatch") != "ice" or receipt.get("task_key") != "ice_monitor":
+                raise ExportError(f"ICE receipt dispatch/task mismatch: {path.name}")
+            receipts.append(receipt)
     receipts.sort(key=lambda item: _handoff_time(item) or datetime.min.replace(tzinfo=timezone.utc))
     return receipts
+
+
+def _ice_receipt_dates_for_export_date(date: str, evaluated_at: str) -> list[str]:
+    dates = {date}
+    evaluated = parse_timestamp(evaluated_at)
+    try:
+        export_day = datetime.fromisoformat(date).date()
+    except ValueError:
+        return sorted(dates)
+    current_expected = _expected_run(date, "21:15", "America/Los_Angeles")
+    expectation = ICE_TASK_EXPECTATIONS[0]
+    if evaluated is not None and current_expected is not None:
+        if current_expected.tzinfo is None:
+            current_expected = current_expected.replace(tzinfo=timezone.utc)
+        if evaluated.tzinfo is None:
+            evaluated = evaluated.replace(tzinfo=timezone.utc)
+        if evaluated < current_expected + timedelta(minutes=expectation.grace_minutes):
+            dates.add((export_day - timedelta(days=1)).isoformat())
+    return sorted(dates)
 
 
 def _handoff_timestamp(value: Any) -> datetime | None:
@@ -472,20 +501,26 @@ def _safe_head(value: Any) -> str | None:
 
 
 def _runner_git_identity(source_root: Path) -> dict[str, str | None]:
-    head = subprocess.run(
-        ["git", "rev-parse", "HEAD"],
-        cwd=source_root,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    branch = subprocess.run(
-        ["git", "branch", "--show-current"],
-        cwd=source_root,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    try:
+        head = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=source_root,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        branch = subprocess.run(
+            ["git", "branch", "--show-current"],
+            cwd=source_root,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except (FileNotFoundError, NotADirectoryError):
+        return {
+            "current_runner_head": None,
+            "current_runner_branch": None,
+        }
     head_value = _safe_head(head.stdout.strip()) if head.returncode == 0 else None
     branch_value = branch.stdout.strip() if branch.returncode == 0 else ""
     return {
@@ -818,7 +853,8 @@ def build_ice_status(
     exported_at: str,
     recovery: RecoveryContext | None = None,
 ) -> dict[str, Any]:
-    receipts = load_ice_receipts(source_root, date)
+    receipt_dates = _ice_receipt_dates_for_export_date(date, evaluated_at)
+    receipts = load_ice_receipts_for_dates(source_root, receipt_dates)
     runner_identity = _runner_git_identity(source_root)
     completeness, linkage = receipt_completeness(
         receipts, source_root=source_root, expectations=ICE_TASK_EXPECTATIONS

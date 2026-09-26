@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import subprocess
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
@@ -376,6 +376,13 @@ def _write_ice_day(
     receipt_root.mkdir(parents=True)
     artifact = source / "data" / "dispatches" / "ice" / "monitor" / "runs" / date / "ice-monitor-1" / "monitor_receipt.json"
     artifact.parent.mkdir(parents=True, exist_ok=True)
+    scheduled_day = datetime.fromisoformat(date).date()
+    started_at = datetime.combine(
+        scheduled_day + timedelta(days=1),
+        datetime.min.time(),
+        tzinfo=timezone.utc,
+    ).replace(hour=4, minute=15)
+    completed_at = started_at + timedelta(minutes=1)
     artifact.write_text("{}\n", encoding="utf-8")
     artifact_refs = {
         "monitor_receipt": str(artifact),
@@ -389,9 +396,9 @@ def _write_ice_day(
         task_key="ice_monitor",
         task_name="Daily - ICE Monitor",
         scheduled_for=date,
-        started_at="2026-09-11T04:15:00Z",
-        completed_at="2026-09-11T04:16:00Z",
-        observed_at="2026-09-11T04:16:00Z",
+        started_at=started_at.isoformat().replace("+00:00", "Z"),
+        completed_at=completed_at.isoformat().replace("+00:00", "Z"),
+        observed_at=completed_at.isoformat().replace("+00:00", "Z"),
         exit_code=0 if status != "FAILED" else 2,
         status=status,
         classification=classification,
@@ -1201,19 +1208,19 @@ def test_ice_legacy_monitor_receipt_linkage_is_complete_when_file_exists(tmp_pat
     assert status["task_summaries"][0]["artifact_id"] == "monitor_receipt.json"
 
 
-def test_ice_status_before_due_does_not_reuse_yesterday_or_mark_stale(tmp_path: Path) -> None:
+def test_ice_status_before_due_uses_latest_completed_monitor_proof(tmp_path: Path) -> None:
     source = _write_ice_day(tmp_path, date="2026-09-09")
     status = build_ice_status(
         source_root=source,
         date="2026-09-10",
-        evaluated_at="2026-09-11T03:00:00Z",
-        exported_at="2026-09-11T03:01:00Z",
+        evaluated_at="2026-09-10T05:00:00Z",
+        exported_at="2026-09-10T05:01:00Z",
     )
 
-    assert status["aggregate_status"] == "UNKNOWN"
-    assert status["receipt_completeness"] == "NO_PROOF"
+    assert status["aggregate_status"] == "SUCCESS"
+    assert status["receipt_completeness"] == "COMPLETE"
     assert status["stale_observability"] is False
-    assert status["task_summaries"] == []
+    assert status["task_summaries"][0]["run_id"] == "ice-monitor-1"
 
 
 def test_ice_status_after_local_schedule_run_is_healthy_and_complete(tmp_path: Path) -> None:

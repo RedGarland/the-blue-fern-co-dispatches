@@ -31,7 +31,7 @@
       "aggregate_status": "FAILED",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "26aadaebf61d83a442fb6900c74274b2f438bb07",
-      "latest_runtime_proof_date": "2026-09-26T15:00:03.620973Z",
+      "latest_runtime_proof_date": "2026-09-26T15:30:06Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-26",
       "receipt_completeness": "COMPLETE",
@@ -122,7 +122,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-09-26T17:28:02.504421Z",
+  "exported_at": "2026-09-26T17:31:46.321631Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "FAILED"

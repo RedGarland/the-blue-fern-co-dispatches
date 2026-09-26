@@ -1,189 +1,205 @@
 # Runner Operations
 
-Use a dedicated clean runner clone for scheduled Gaza and Food Line jobs. Do not point scheduled tasks at an active development worktree.
+Production dispatches run from dedicated Windows checkouts under `C:\BlueFernRunner`.
+Do not point scheduled production tasks at an active development worktree.
 
-For the day-to-day Gaza operator sequence, see [docs/gaza-daily-operator-guide.md](./gaza-daily-operator-guide.md).
+The checked-in runner configuration and guarded synchronization scripts are the
+source of truth. Do not infer current production paths from historical docs,
+old task XML, or archived receipts.
 
-## Layout
+## Current production topology
 
-Recommended Windows layout:
+The dispatch runner roots are defined in `ops/operator/config.json`. The
+guarded synchronization set is defined by
+`scripts/sync_active_production_runners.ps1`.
+
+Current topology:
 
 ```text
 C:\BlueFernRunner\
-  Dispatches From The Blue Fern Co\            # runner source repo
-  Dispatches From The Blue Fern Co\bluefern-dispatches-pages\  # runner Pages repo
+  BlueFernOperatorCurrent\
+  FoodLineCurrent6\
+  CareLineNationalCurrent8\
+  GazaDispatchesCurrent6\
+  ICEMonitorCurrent\
+  OperationalStatusCurrent\
 ```
 
-Development layout stays separate, for example:
+The source runners track protected branch `add/pages-repo-default`.
+`OperationalStatusCurrent` tracks the configured operational-status branch.
+Pages/publication state is separate from source-runner synchronization.
+
+If these paths change, update the canonical configuration/scripts and their
+consistency tests together rather than adding another hard-coded path elsewhere.
+
+## Development worktrees
+
+Development work must stay separate from production runners. A local development
+checkout may live anywhere; examples use:
 
 ```text
-C:\PythonProjects\Dispatches From The Blue Fern Co\            # dev source repo
-C:\PythonProjects\Dispatches From The Blue Fern Co\bluefern-dispatches-pages\  # dev Pages repo
+C:\BlueFernDev\the-blue-fern-co-dispatches\
+C:\BlueFernDev\the-blue-fern-co-dispatches\bluefern-dispatches-pages\
 ```
 
-Rules:
+No production script should depend on that example path.
 
-- The runner source repo tracks `add/pages-repo-default`.
-- The runner Pages repo tracks `gh-pages`.
-- Scheduled jobs run only from the runner clone.
-- Development artifacts in the dev repo must never block the runner job.
-- `REPO_DIRTY_BLOCKED` remains enforced in the runner clone.
+## Environment setup
 
-## Setup
-
-Example setup commands for a dedicated runner clone:
+For a newly provisioned checkout, install the checked-in runtime dependencies:
 
 ```powershell
-New-Item -ItemType Directory -Force -Path C:\BlueFernRunner | Out-Null
-git clone --branch add/pages-repo-default <SOURCE_REPO_URL> "C:\BlueFernRunner\Dispatches From The Blue Fern Co"
-git clone --branch gh-pages <PAGES_REPO_URL> "C:\BlueFernRunner\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
-Set-Location "C:\BlueFernRunner\Dispatches From The Blue Fern Co"
 py -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -U pip
-.\.venv\Scripts\python.exe -m pip install -e .
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-Verify tracking:
+Do not copy `.env`, credentials, or private runtime state from another
+worktree into source control.
+
+## Guarded synchronization
+
+Use the canonical synchronization helper rather than ad hoc pull/reset commands.
+
+Plan first:
 
 ```powershell
-git -C "C:\BlueFernRunner\Dispatches From The Blue Fern Co" branch --show-current
-git -C "C:\BlueFernRunner\Dispatches From The Blue Fern Co\bluefern-dispatches-pages" branch --show-current
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\sync_active_production_runners.ps1
 ```
 
-Expected output:
+Apply only through the helper's supported guarded apply mode after the plan is
+safe. The helper must preserve sanctioned runtime evidence and fail closed on
+unexpected tracked source drift.
 
-- source repo: `add/pages-repo-default`
-- Pages repo: `gh-pages`
+Expected active set:
 
-## Scheduled Commands
+- Operator
+- Food Line
+- Care Line
+- Gaza
+- ICE
 
-Recommended Task Scheduler action for Gaza:
+Cascadia is intentionally inactive and must not be provisioned or synchronized
+as an active production runner without explicit operator authorization.
 
-```text
-Program/script:
-powershell.exe
-```
+## Dispatch entry points
 
-```text
-Arguments:
--NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\BlueFernRunner\Dispatches From The Blue Fern Co\scripts\run_runner_dispatch.ps1" -Dispatch gaza -Push -PostBluesky -GenerateAudio
-```
+Use canonical wrappers from the appropriate synchronized runner.
 
-The wrapper now derives `RepoRoot` from the wrapper location by default, so the scheduled task does not need to hard-code the development path. If you need to override that behavior for a one-off run, `-RepoRoot` is still available and takes precedence.
+### Gaza
 
-The recommended Gaza command above is the live runner form used on the dedicated runner clone. The wrapper still sends the email report by default and now only pushes Pages, posts to Bluesky, or generates Gaza audio when those switches are explicitly added.
+Runner root:
 
-Gaza audio generation uses the supported `openai` TTS provider. The scheduled account must have `OPENAI_API_KEY` available in its environment, and any direct `scripts\run_daily_gaza.py` invocation must pass `--tts-provider openai` alongside `--generate-audio`. Do not place the API key in Task Scheduler arguments or logs.
+`C:\BlueFernRunner\GazaDispatchesCurrent6`
 
-If `--generate-audio` is requested while the provider remains `none`, the daily runner now fails closed with `audio-generation-failed` instead of silently continuing.
-
-Gaza publishes also preserve existing public-history dates on the archive, RSS, and audio listing/feed surfaces by default. If a reviewed archival pruning is intentional, add `--allow-listing-shrink` explicitly and inspect the resulting diff before any push.
-
-Explicit live Gaza command:
-
-```text
--NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\BlueFernRunner\Dispatches From The Blue Fern Co\scripts\run_runner_dispatch.ps1" -Dispatch gaza -Push -PostBluesky
-```
-
-Add `-GenerateAudio` only when the scheduled Gaza run should also create dated audio artifacts.
-
-Recommended Task Scheduler action for Food Line:
-
-```text
-Program/script:
-powershell.exe
-```
-
-```text
-Arguments:
--NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\BlueFernRunner\Dispatches From The Blue Fern Co\scripts\run_runner_dispatch.ps1" -Dispatch food-line -RepoRoot "C:\BlueFernRunner\Dispatches From The Blue Fern Co"
-```
-
-Wrapper behavior:
-
-1. Sync source repo to `origin/add/pages-repo-default`.
-2. Sync Pages repo to `origin/gh-pages`.
-3. Run `python scripts\preflight_repo_state.py` logic through `scripts\runner_repo_maintenance.py sync`.
-4. Fail early if either repo is dirty or on the wrong branch.
-5. Run the dispatch command from the clean runner clone.
-6. Re-check both repos after the run.
-7. Clean only approved generated/temp paths in the source repo.
-8. Fail if risky drift remains.
-
-## Smoke Test
-
-Use this to verify tomorrow's Gaza runner state without publish, email, audio, Pages updates, or Bluesky:
+The general runner wrapper supports Gaza and derives its repository root from
+its own location when `-RepoRoot` is omitted:
 
 ```powershell
-python scripts\smoke_gaza_operator.py --date YYYY-MM-DD
+powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\BlueFernRunner\GazaDispatchesCurrent6\scripts\run_runner_dispatch.ps1" -Dispatch gaza
 ```
 
-Example:
+Public push, Bluesky, and audio flags remain separate publication-side-effect
+choices. Do not add them merely for health or readiness proof.
 
-```powershell
-python scripts\smoke_gaza_operator.py --date 2026-07-02
-```
+### Food Line
 
-Smoke-test scope:
+Runner root:
 
-- syncs the runner source repo and runner Pages repo
-- runs repo preflight after sync
-- checks branch expectations
-- resolves the requested date
-- runs `run_gaza_daily_operator.py --manual-source-check-only`
-- runs postflight drift classification and approved cleanup
+`C:\BlueFernRunner\FoodLineCurrent6`
 
-The smoke test intentionally does not run the full Gaza dry-run path because the current daily/operator dry-run path still writes dated artifacts.
+For normal production scheduling use the current checked-in Food Line wrappers.
+The legacy root `run_food_line_daily.ps1` now derives its project root from its
+own file location unless `BLUEFERN_PROJECT_ROOT` explicitly overrides it.
 
-## Recovery
+### Care Line
 
-If the runner clone is dirty before a scheduled run:
+Runner root:
 
-1. Inspect both repos:
+`C:\BlueFernRunner\CareLineNationalCurrent8`
 
-```powershell
-git -C "C:\BlueFernRunner\Dispatches From The Blue Fern Co" status --short --branch
-git -C "C:\BlueFernRunner\Dispatches From The Blue Fern Co\bluefern-dispatches-pages" status --short --branch
-python "C:\BlueFernRunner\Dispatches From The Blue Fern Co\scripts\preflight_repo_state.py" --source-repo "C:\BlueFernRunner\Dispatches From The Blue Fern Co" --pages-repo "C:\BlueFernRunner\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
-```
+Canonical collection-only recovery uses:
 
-2. If drift is limited to approved generated/temp paths, run:
+`scripts/run_care_line_national_collection.ps1`
 
-```powershell
-python "C:\BlueFernRunner\Dispatches From The Blue Fern Co\scripts\runner_repo_maintenance.py" postflight --source-repo "C:\BlueFernRunner\Dispatches From The Blue Fern Co" --pages-repo "C:\BlueFernRunner\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
-```
+Collection proof is separate from reviewed-event queue and publication work.
 
-3. If source or data drift remains under `src/`, `scripts/`, `docs/`, `data/`, or other non-approved paths, stop and inspect manually. Do not add new ignore rules to silence it.
+### ICE
 
-4. If the runner clone is confused or repeatedly dirty, rebuild it:
+Runner root:
 
-```powershell
-Remove-Item -LiteralPath "C:\BlueFernRunner\Dispatches From The Blue Fern Co" -Recurse -Force
-git clone --branch add/pages-repo-default <SOURCE_REPO_URL> "C:\BlueFernRunner\Dispatches From The Blue Fern Co"
-git clone --branch gh-pages <PAGES_REPO_URL> "C:\BlueFernRunner\Dispatches From The Blue Fern Co\bluefern-dispatches-pages"
-```
+`C:\BlueFernRunner\ICEMonitorCurrent`
 
-## Cleanup Policy
+Canonical monitor-only execution uses:
 
-The runner postflight cleanup is intentionally narrow.
+`scripts/run_ice_monitor.ps1`
 
-It may restore or delete only these source-repo path families:
+Monitor proof must not be interpreted as public publication.
 
-- `logs/`
-- `.pytest_cache/`
-- `.pytest-temp*`
-- `.pytest_tmp*`
-- `output/review/`
-- `output/site/`
-- `output/dispatches/`
-- `output/tmp-backups-pages/`
+## Operational status
 
-It does not auto-clean:
+Operational-status checkout:
 
-- `src/`
-- `scripts/`
-- `docs/`
-- `data/`
-- `bluefern-dispatches-pages/`
+`C:\BlueFernRunner\OperationalStatusCurrent`
 
-That keeps normal temp/generated noise out of the runner clone without masking real source or data drift.
+The configured status branch is defined in `ops/operator/config.json` and the
+status export wrappers. The branch name must remain dispatch-neutral.
+
+Use exported operational status and canonical runtime receipts as runtime-health
+truth. Do not infer health from Git commits or Pages activity alone.
+
+## Preflight and recovery
+
+Before any production recovery:
+
+1. inspect the relevant checkout;
+2. run the canonical repository preflight;
+3. use guarded synchronization if the runner is behind;
+4. preserve sanctioned runtime evidence;
+5. stop on unexplained tracked source drift;
+6. prove the task-specific terminal receipt after remediation.
+
+Do not use:
+
+- `git reset --hard`
+- `git clean`
+- force checkout
+- broad deletion of runtime evidence
+- manual file replacement merely to obtain a clean status
+
+If a runner cannot be safely reconciled through existing guarded tooling, report
+the exact blocked state rather than bypassing the guard.
+
+## Scheduler configuration
+
+Task Scheduler definitions and registration helpers under `ops/` and
+`scripts/` are the authoritative scheduler contracts.
+
+Do not copy scheduler command lines from historical documentation. Registration
+or mutation of scheduled tasks must use the dispatch-specific checked-in helper
+and the currently configured production runner root.
+
+## Cleanup policy
+
+Generated/runtime cleanup must remain narrow. Never use cleanup to hide source
+drift.
+
+Allowed runtime evidence should be classified through the existing preflight and
+runtime-path policy. Unexpected changes under source/config/test/documentation
+paths remain blocking until explained.
+
+## Proof standard
+
+A runner is not considered recovered merely because code merged or a command
+returned exit code 0.
+
+Require the strongest applicable proof:
+
+- protected source HEAD deployed;
+- preflight/doctor passes;
+- task-specific terminal receipt exists;
+- operational status is fresh and complete;
+- public side effects match the authorized scope.
+
+For public workflows, publication proof is a separate boundary from runner
+health proof.

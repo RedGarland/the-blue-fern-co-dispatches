@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260926T074554-0700-r11",
+  "scheduled_for": "2026-09-26T07:45:54-07:00",
+  "started_at": "2026-09-26T07:47:57-07:00",
+  "completed_at": "2026-09-26T07:50:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-26T06:45:54-07:00",
+    "date_to": "2026-09-26T07:50:00-07:00",
+    "edition_date": "2026-09-26"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall watch completed with 10 targeted web searches, below the 12-search cap. No new qualifying U.S. food-access disruption was found since the prior hourly check. Current Big Island reporting still lists The Food Basket Hilo and Kailua-Kona warehouses closed because of Hurricane Nolo, but that storm-related closure was already known from prior Food Line watch runs and was excluded as a duplicate. California WIC announced app maintenance from 8:00 a.m. to 1:00 p.m. on September 26, but benefits remain usable in stores and balance alternatives are available, so it did not meet the immediate-access-consequence threshold. Search results for sole/only grocery-store loss surfaced older events, including the September 11 Spencer, New York grocery-store fire, not new developments in this window."
+}

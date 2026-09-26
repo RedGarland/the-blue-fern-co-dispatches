@@ -1,121 +1,72 @@
 # Dispatches From The Blue Fern Co — Project Summary
 
-## What this project does
+## Purpose
 
-This project builds a static dispatch website for source-backed briefing products.
-It currently supports:
+Dispatches From The Blue Fern Co. is a source-backed reporting and monitoring system. Public factual output must remain traceable to durable source records and publication is separated from collection, review, operational recovery, and source-repository deployment.
 
-- `gaza` — a daily public dispatch that is free and built from project-local Gaza source records.
-- `cascadia` — a weekly public briefing for Washington, Oregon, and Idaho coverage.
-- `american-pressure` — a weekly dispatch workflow for household pressure reporting, with public rendering and internal source validation.
+## Current operational families
 
-The project generates public static output under `output/site/` and publishes it into a separate local GitHub Pages repository at `bluefern-dispatches-pages`.
-Publishing is intentionally split into two steps: local copy/commit, then manual or explicit push from the Pages repo.
+- `gaza` — daily public Gaza dispatch. Public/free. Publication has explicit release safeguards.
+- `food-line` — U.S. food-pressure monitoring and dispatch workflow with source watch, intake, review, and guarded publication.
+- `care-line` — U.S. and territories healthcare-access monitoring and dispatch workflow with source-specific collection evidence, review, and guarded publication.
+- `ice` — ICE activity/consequences monitor. Current production design is monitor/staging-oriented; absence of public publication is not by itself a failure.
+- `american-pressure` — weekly household/system-pressure workflow with daily intake and separately reviewed weekly public output.
+- `cascadia` — intentionally inactive. Historical public archive remains available, but there is no active Cascadia production schedule and no runner should be enabled without explicit operator authorization.
 
-## Core workflows
+## Operations and autonomy
 
-### Build and publish
+The Blue Fern Operator coordinates operational health, incidents, bounded remediation, receipts, and engineering handoffs.
 
-- `scripts/publish_github_pages.py`
-  - Main build entrypoint for packaging `output/site/` into the Pages repo.
-  - Supports `--dry-run`, `--commit`, `--no-push`, and branch/remote options.
+Current project authority is intentionally split:
 
-### Gaza daily workflow
+- `AGENTS.md` governs Codex / implementation-agent behavior.
+- `ops/operator/remediation-policy.yaml` governs actions the autonomous Blue Fern Operator may execute.
+- `docs/project-contract.md`, production-readiness, operational-health, and publication-safety documents define system, editorial, traceability, and public-release invariants.
 
-- `scripts/run_daily_gaza.py`
-  - Runs the one-command Gaza workflow for today's date by default.
-  - Loads or generates Gaza source records, validates them, builds the edition, and updates the local Pages repo.
-  - Does not push remotely unless `--push` is specified.
+Routine source-repository engineering can proceed through normal PR validation and guarded deployment under `AGENTS.md`. Public publication, editorial decisions, credentials/security changes, destructive operations, and other explicit authority boundaries remain separately controlled.
 
-- `scripts/gaza_command_center.py`
-  - CLI command center for Gaza date or date-range operations.
-  - Runs checks, dry-run emulation, audio actions, publish planning, production publish, Bluesky, email, and live verification in one place.
-  - Defaults to `--test`, which plans public actions instead of executing them.
+## Runtime health sources
 
-### Gaza historical editions
+For migrated dispatches, prefer exported operational-status artifacts and canonical runtime receipts over inference from recent commits or Pages activity.
 
-- `scripts/publish_gaza_historical.py`
-  - Generates and publishes a historical Gaza edition from existing manual source records.
-  - Validates traceability, runs tests, dry-runs Pages publishing, and writes commit metadata.
+Key exported status roots include:
 
-### Cascadia workflow
+- `ops/status/food-line/latest.json`
+- `ops/status/system/latest.json`
 
-- `scripts/run_cascadia_dispatch.py`
-  - Generates Cascadia editions, including weekly public output and archive support.
-  - Supports historical search, weekly public publishing, and quality controls.
+Dispatch-specific receipts live under the production runners' `status/operational-health/` trees and are consumed by the operational-status exporter.
 
-### American Pressure workflow
+## Repository structure
 
-- `scripts/run_weekly_american_pressure.py`
-  - Generates the weekly American Pressure dispatch.
-  - Includes options for source-mode, approved candidates, publish, and push.
+- `src/bluefern_dispatches/` — core collection, normalization, status, rendering, and replay modules.
+- `scripts/` — production wrappers, operator, guarded sync, diagnostics, publishing, and workflow entry points.
+- `data/dispatches/` — source registries and durable dispatch-specific records.
+- `ops/operator/` — Operator configuration/policy plus sanctioned runtime state in production checkouts.
+- `ops/status/` — exported operational-status artifacts.
+- `output/site/` — generated public site source output.
+- `bluefern-dispatches-pages/` — separate local Pages checkout when present; not the source repository.
+- `docs/` — current operating contracts and workflow documentation.
 
-### Notification wrapper
+## Core invariants
 
-- `scripts/run_and_notify.py`
-  - Wraps generation runs with email report delivery using SMTP settings from `.env`.
+- No public factual claim without a traceable source.
+- Missing proof is not success.
+- Collection/review/recovery and publication are separate stages.
+- `output/detail/` and `output/paid/` must never leak into `output/site/`.
+- Production runners must use guarded synchronization and preserve sanctioned runtime evidence.
+- A merged source PR is not proof of production deployment or public publication.
+- Cascadia remains inactive unless explicitly reactivated by the operator.
+- Persistent external source restrictions remain visible rather than being hidden to create a green status.
 
-## Important code
+## Start here
 
-- `src/bluefern_dispatches/generator.py`
-  - Static site generation logic, public site validation, and Pages repo publishing safety checks.
-  - Enforces the rule that public stories must trace back to source records.
+Agents and maintainers should read:
 
-- `src/bluefern_dispatches/gaza_sources.py`
-  - Gaza source collection and validation logic used by the Gaza workflows.
+1. `AGENTS.md`
+2. `README.md`
+3. `docs/project-contract.md`
+4. `docs/production-readiness-contract.md`
+5. `docs/operational-health-receipts.md`
+6. `docs/pages-publish-safety.md`
 
-## Important directories
-
-- `output/site/`
-  - The public static site output generated by the project.
-
-- `bluefern-dispatches-pages/`
-  - Local GitHub Pages repository root for deployable site content.
-
-- `data/dispatches/`
-  - Source records, edition manifests, and collection artifacts for each dispatch.
-
-- `assets/`
-  - Shared visual assets used by the static site.
-
-- `docs/`
-  - Project operating docs, publish safety guidance, and workflow descriptions.
-
-## Publish safety and conventions
-
-- The source repo and Pages repo are separate. The Pages repo deploys from `gh-pages`.
-- The publisher copies only `output/site/` into `bluefern-dispatches-pages`.
-- `output/detail/` and `output/paid/` are reserved non-public roots and must never appear under the public site output.
-- The project avoids pushing live site changes automatically by default.
-
-## Notes on repository config
-
-- `pyproject.toml` currently contains project test configuration only.
-- `README.md` contains quick start commands, publish guidance, and the new-machine setup sequence.
-
-## Recommended agent-chat file set
-
-The files below are the best starting point to include in an agent chat for understanding this repository:
-
-- `README.md`
-- `PROJECT_SUMMARY.md`
-- `docs/dispatches-project.md`
-- `docs/project-contract.md`
-- `docs/pages-publish-safety.md`
-- `scripts/publish_github_pages.py`
-- `scripts/run_daily_gaza.py`
-- `scripts/publish_gaza_historical.py`
-- `scripts/run_cascadia_dispatch.py`
-- `scripts/run_weekly_american_pressure.py`
-- `scripts/run_and_notify.py`
-- `src/bluefern_dispatches/generator.py`
-
-Additional useful context files:
-
-- `scripts/doctor.py`
-- `scripts/status_pages_repo.py`
-- `docs/gaza-daily-operator-guide.md`
-- `src/bluefern_dispatches/gaza_sources.py`
-- `data/dispatches/gaza/` (source and edition artifacts)
-- `output/site/` (sample generated public output)
-- `bluefern-dispatches-pages/` (local Pages repo state)
+For current implementation details, prefer source code, tests, protected-branch state, and current operational receipts over historical bootstrap prompts or old generated logs.

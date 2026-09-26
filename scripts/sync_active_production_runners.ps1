@@ -226,7 +226,7 @@ foreach ($target in $Targets) {
         }
 
         $targetRef = "origin/$TargetBranch"
-        $remoteRefSpec = "+refs/heads/$TargetBranch:refs/remotes/origin/$TargetBranch"
+        $remoteRefSpec = "+refs/heads/${TargetBranch}:refs/remotes/origin/${TargetBranch}"
         $null = Invoke-Git -Root $root -Arguments @("fetch", "--no-tags", "origin", $remoteRefSpec)
         $branchResult = Invoke-Git -Root $root -Arguments @("branch", "--show-current")
         $before = Invoke-Git -Root $root -Arguments @("rev-parse", "HEAD")

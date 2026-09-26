@@ -120,3 +120,9 @@ def test_status_export_proof_does_not_trigger_collection_or_publication() -> Non
     assert 'CollectionTriggered = $false' in text
     assert 'PublicationTriggered = $false' in text
     assert 'PagesMutation = $false' in text
+
+
+def test_sync_helper_uses_unambiguous_powershell_refspec_interpolation() -> None:
+    text = _text()
+    assert '$remoteRefSpec = "+refs/heads/${TargetBranch}:refs/remotes/origin/${TargetBranch}"'.replace("\\$", "$") in text
+    assert '$remoteRefSpec = "+refs/heads/$TargetBranch:refs/remotes/origin/$TargetBranch"' not in text

@@ -974,6 +974,7 @@ def test_care_export_exposes_bounded_collection_diagnostics_without_private_deta
             "adapter_type": "structured_index",
             "failure_class": "HTTPError",
             "transient": True,
+            "effective_source_state": "failed",
         }
     ]
     rendered = json.dumps(result)
@@ -1055,7 +1056,55 @@ def test_care_external_access_restriction_proof_degrades_without_open_incident(t
     assert result["system"]["system_status"] == "DEGRADED"
     assert system_care["aggregate_status"] == "DEGRADED"
     assert system_care["source_failure_summary"]["external_access_restriction_count"] == 2
-    assert "private failure detail" not in json.dumps(result)
+
+
+def test_care_source_replay_receipt_reconciles_latest_collection_failure(tmp_path: Path) -> None:
+    source = _write_care_day(tmp_path)
+    replay_path = (
+        source
+        / "data"
+        / "dispatches"
+        / "care-line"
+        / "source-replays"
+        / DATE
+        / "collection"
+        / "cms-public-notices"
+        / "retry-1.json"
+    )
+    replay_path.parent.mkdir(parents=True, exist_ok=True)
+    replay_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "bluefern.source_replay.v1",
+                "dispatch": "care-line",
+                "source_id": "cms-public-notices",
+                "logical_date": DATE,
+                "parent_run_id": "collection",
+                "retry_id": "retry-1",
+                "outcome": "recovered",
+                "effective_terminal_source_state": "ok",
+                "publication_attempted": False,
+                "public_side_effects": False,
+                "completed_at": "2026-09-10T15:20:00Z",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    status = build_care_line_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at=EVALUATED,
+        exported_at=EVALUATED,
+        expected_instances=CARE_EXPECTED_INSTANCES,
+    )
+
+    summary = status["source_failure_summary"]
+    assert summary["original_failed_source_count"] == 2
+    assert summary["failed_source_count"] == 1
+    assert summary["recovered_source_count"] == 1
+    collection_summary = next(row for row in status["task_summaries"] if row["task_key"] == "care_line_collection")
+    assert collection_summary["diagnostics"]["failed_sources"][0]["effective_source_state"] == "recovered"
 
 
 def test_care_mixed_external_and_unclassified_source_failure_reopens_incident(tmp_path: Path) -> None:

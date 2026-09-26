@@ -4130,7 +4130,13 @@ def update_candidate_registry(root: Path, *, edition_date: str, candidates: Iter
     return update_candidate_registry_at_path(path, edition_date=edition_date, candidates=candidates)
 
 
-def update_candidate_registry_at_path(path: Path, *, edition_date: str, candidates: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
+def update_candidate_registry_at_path(
+    path: Path,
+    *,
+    edition_date: str,
+    candidates: Iterable[Mapping[str, Any]],
+    mark_absent_stale: bool = True,
+) -> dict[str, Any]:
     existing = _load_json(path, {"schema_version": CANDIDATE_REGISTRY_SCHEMA_VERSION, "candidates": []})
     existing_by_id = {
         str(row.get("candidate_id") or ""): dict(row)
@@ -4165,9 +4171,10 @@ def update_candidate_registry_at_path(path: Path, *, edition_date: str, candidat
             continue
         persistent_prior += 1
         persisted = dict(row)
-        persisted["candidate_status"] = "stale"
+        if mark_absent_stale:
+            persisted["candidate_status"] = "stale"
+            stale_count += 1
         merged_by_id[candidate_id] = persisted
-        stale_count += 1
     for row in merged_by_id.values():
         normalized = row.get("normalized_record") if isinstance(row.get("normalized_record"), Mapping) else {}
         if str(normalized.get("workflow_state") or "") == "SUPERSEDED":

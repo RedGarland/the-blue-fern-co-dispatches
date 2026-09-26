@@ -24,8 +24,19 @@ function Invoke-Git {
         [Parameter(Mandatory = $true)][string[]]$Arguments,
         [switch]$AllowFailure
     )
-    $output = @(& git -C $Root @Arguments 2>&1)
-    $code = $LASTEXITCODE
+    $previousErrorActionPreference = $ErrorActionPreference
+    try {
+        # Windows PowerShell promotes native-process stderr to ErrorRecord objects.
+        # With the script-wide preference set to Stop, benign Git progress such as
+        # "From https://..." can otherwise terminate a successful fetch before
+        # $LASTEXITCODE is inspected.
+        $ErrorActionPreference = "Continue"
+        $output = @(& git -C $Root @Arguments 2>&1)
+        $code = $LASTEXITCODE
+    }
+    finally {
+        $ErrorActionPreference = $previousErrorActionPreference
+    }
     if (-not $AllowFailure -and $code -ne 0) {
         throw ('git -C "{0}" {1} failed ({2}): {3}' -f $Root, ($Arguments -join ' '), $code, ($output -join ' '))
     }

@@ -1,0 +1,19 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260925T224526-0700-supplementary",
+  "scheduled_for": "2026-09-25T22:45:26-07:00",
+  "started_at": "2026-09-25T22:45:26-07:00",
+  "completed_at": "2026-09-25T22:47:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-25T21:45:26-07:00",
+    "date_to": "2026-09-25T22:45:26-07:00",
+    "edition_date": "2026-09-25",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "12 targeted searches completed. No new qualifying high-value recall signal was found. Previously known El Paso storm-related food distribution closure and Hawaii hurricane recovery items were not repeated; older grocery closures and nonqualifying resource or donation items were excluded."
+}

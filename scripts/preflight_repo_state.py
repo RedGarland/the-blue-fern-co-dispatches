@@ -21,8 +21,17 @@ from scripts.food_line_runtime_paths import (
     classify_food_line_runtime_path,
     is_food_line_mutable_tracked_runtime_path,
 )
+from scripts.operator_runtime_paths import (
+    OPERATOR_ALLOWED_DIRTY_CATEGORIES,
+    classify_operator_runtime_path,
+    is_operator_mutable_tracked_runtime_path,
+)
 
-ALLOWED_DIRTY_CATEGORIES = FOOD_LINE_ALLOWED_DIRTY_CATEGORIES | CARE_LINE_ALLOWED_DIRTY_CATEGORIES
+ALLOWED_DIRTY_CATEGORIES = (
+    FOOD_LINE_ALLOWED_DIRTY_CATEGORIES
+    | CARE_LINE_ALLOWED_DIRTY_CATEGORIES
+    | OPERATOR_ALLOWED_DIRTY_CATEGORIES
+)
 
 _HANDOFF_FILE = r"[A-Za-z0-9][A-Za-z0-9._-]{0,180}\.json"
 _HANDOFF_DISPATCH = r"(?:food-line|care-line)"
@@ -104,6 +113,9 @@ def classify_path(path_text: str) -> str:
     care_line_category = classify_care_line_runtime_path(path)
     if care_line_category:
         return care_line_category
+    operator_category = classify_operator_runtime_path(path)
+    if operator_category:
+        return operator_category
     if lower.startswith("output/review/") or "/review/" in lower or lower.startswith("output/dispatches/") and "/review/" in lower:
         return "review_output"
     if (
@@ -132,7 +144,10 @@ def classify_status_line(line: str) -> dict[str, Any] | None:
     if not path:
         return None
     category = classify_path(path)
-    allowed_tracked_runtime = status == " M" and is_food_line_mutable_tracked_runtime_path(path)
+    allowed_tracked_runtime = status == " M" and (
+        is_food_line_mutable_tracked_runtime_path(path)
+        or is_operator_mutable_tracked_runtime_path(path)
+    )
     return {
         "status": status,
         "path": path,

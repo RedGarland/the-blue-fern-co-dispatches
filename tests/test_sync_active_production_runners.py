@@ -135,3 +135,13 @@ def test_sync_helper_temporarily_relaxes_error_action_for_native_git_stderr() ->
     assert '$ErrorActionPreference = $previousErrorActionPreference' in text
     assert '$code = $LASTEXITCODE' in text
     assert 'if (-not $AllowFailure -and $code -ne 0)' in text
+
+
+def test_sync_helper_wraps_empty_collections_under_strict_mode() -> None:
+    text = _text()
+    assert '$collisions = @(Get-UntrackedCollisions' in text
+    assert 'if (@($collisions).Count -gt 0)' in text
+    assert '$lateCollisions = @(Get-UntrackedCollisions' in text
+    assert 'if (@($lateCollisions).Count -gt 0)' in text
+    assert 'if (@($row.TrackedDirtyPaths).Count -gt 0)' in text
+    assert 'if (@($currentStatus.Tracked).Count -gt 0)' in text

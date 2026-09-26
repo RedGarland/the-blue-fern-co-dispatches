@@ -161,11 +161,13 @@ def test_http_400_is_not_retried() -> None:
     assert operator.classify_source_failure_record(row) == operator.RootCauseClassification.SOURCE_EXTERNAL_RESTRICTION.value
 
 
-def test_care_source_transient_plans_fail_closed_source_retry(tmp_path: Path) -> None:
+def test_care_source_transient_plans_registered_retry_but_requires_runner_safety(tmp_path: Path) -> None:
     plan = _plan(tmp_path)
     assert plan.proposed_action == operator.SOURCE_TRANSIENT_RETRY_ACTION
     assert plan.executable is False
-    assert plan.safety_checks["handler"]["enabled"] is False
+    assert plan.safety_checks["handler"]["enabled"] is True
+    assert plan.safety_checks["handler"]["wrapper"] == "scripts/source_replay.py"
+    assert plan.safety_checks["runner_safety"]["safe"] is False
     assert plan.safety_checks["public_side_effects"] is False
 
 
@@ -290,12 +292,39 @@ def test_evidence_summary_bounds_source_records() -> None:
     assert summary["failed_source_count"] == 30
 
 
-def test_apply_source_retry_receipt_refuses_without_handler(tmp_path: Path) -> None:
+def test_apply_source_retry_receipt_refuses_when_runner_safety_fails(tmp_path: Path) -> None:
     plan = _plan(tmp_path)
-    receipt = operator._apply_source_transient_fetch_retry(plan, operator_root=tmp_path / "ops" / "operator", now=NOW)
+    root = tmp_path / "runner" / "care-line"
+    receipt = operator._apply_source_transient_fetch_retry(
+        plan,
+        repo_root=tmp_path,
+        runner_root=root,
+        operator_root=tmp_path / "ops" / "operator",
+        config=operator.OperatorConfig(120, {"care-line": operator.DispatchConfig("care-line", root)}, status_root=tmp_path / "status"),
+        current_status=_status(),
+        now=NOW,
+    )
     assert receipt.accepted is False
     assert receipt.outcome == "REFUSED"
     assert receipt.validation["publication_attempted"] is False
+    assert "runner safety" in receipt.reason
+
+
+def test_source_retry_command_uses_canonical_wrapper_and_source_identity(tmp_path: Path) -> None:
+    command = operator._source_retry_command(
+        {"dispatch": "care-line", "wrapper": "scripts/source_replay.py"},
+        runner_root=tmp_path,
+        state={"dispatch": "care-line", "source_id": "feed-a", "logical_date": "2026-09-26", "logical_run_id": "run-1"},
+        incident_id="bfo-care-line",
+        attempt_count=0,
+        expected_head="abc1234",
+    )
+    assert command[0].endswith("python.exe")
+    assert command[1].endswith("scripts\\source_replay.py") or command[1].endswith("scripts/source_replay.py")
+    assert "--source-id" in command
+    assert command[command.index("--source-id") + 1] == "feed-a"
+    assert command[command.index("--parent-run-id") + 1] == "run-1"
+    assert command[command.index("--expected-head") + 1] == "abc1234"
 
 
 def test_mixed_external_and_transient_tracks_transient_candidate(tmp_path: Path) -> None:

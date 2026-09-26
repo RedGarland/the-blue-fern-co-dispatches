@@ -29,6 +29,7 @@ from .operational_health import (
     validate_operational_receipt,
 )
 from .scheduled_recovery import evaluate_recovery, food_source_receipt_is_durably_ready
+from .source_replay import load_care_line_source_replay_receipts
 
 
 EXTERNAL_STATUS_SCHEMA_VERSION = "bluefern_external_operational_status_v1"
@@ -591,23 +592,48 @@ def _care_detail_count(receipt: dict[str, Any], key: str) -> int | None:
 def _care_source_failure_summary(
     receipt: dict[str, Any] | None,
     source_failure_policies: dict[str, dict[str, Any]],
+    replay_receipts: Iterable[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     if not receipt or receipt.get("dispatch") != "care-line" or receipt.get("task_key") != "care_line_collection":
         return {
             "failed_source_count": 0,
+            "original_failed_source_count": 0,
+            "recovered_source_count": 0,
             "external_access_restriction_count": 0,
             "unclassified_source_failure_count": 0,
             "external_restriction_sources": [],
+            "recovered_sources": [],
             "all_current_failures_external": False,
             "successful_attempt_count": None,
         }
     failed_rows = _care_failed_source_rows(receipt)
-    failed_count = _care_detail_count(receipt, "failed_source_count")
-    if failed_count is None:
-        failed_count = len(failed_rows)
+    original_failed_count = _care_detail_count(receipt, "failed_source_count")
+    if original_failed_count is None:
+        original_failed_count = len(failed_rows)
+    parent_run_id = str(receipt.get("run_id") or "")
+    recovered_by_source: dict[str, dict[str, Any]] = {}
+    for replay in replay_receipts or []:
+        if replay.get("dispatch") != "care-line" or replay.get("parent_run_id") != parent_run_id:
+            continue
+        if replay.get("effective_terminal_source_state") not in {"ok", "partial"}:
+            continue
+        if replay.get("publication_attempted") is not False or replay.get("public_side_effects") is not False:
+            continue
+        source_id = _safe_identifier(replay.get("source_id"))
+        if source_id:
+            recovered_by_source[source_id] = replay
+    recovered_failed_rows: list[dict[str, Any]] = []
+    unresolved_failed_rows: list[dict[str, Any]] = []
+    for row in failed_rows:
+        source_id = _safe_identifier(row.get("source_id"))
+        if source_id and source_id in recovered_by_source:
+            recovered_failed_rows.append(row)
+        else:
+            unresolved_failed_rows.append(row)
+    failed_count = max(0, original_failed_count - len(recovered_failed_rows))
     external_sources: list[dict[str, Any]] = []
     unclassified_count = 0
-    for row in failed_rows:
+    for row in unresolved_failed_rows:
         source_id = _safe_identifier(row.get("source_id"))
         policy = source_failure_policies.get(source_id or "")
         if policy:
@@ -621,13 +647,22 @@ def _care_source_failure_summary(
             )
         else:
             unclassified_count += 1
-    unreported_count = max(0, failed_count - len(failed_rows))
+    unreported_count = max(0, failed_count - len(unresolved_failed_rows))
     unclassified_count += unreported_count
     return {
         "failed_source_count": failed_count,
+        "original_failed_source_count": original_failed_count,
+        "recovered_source_count": len(recovered_failed_rows),
         "external_access_restriction_count": len(external_sources),
         "unclassified_source_failure_count": unclassified_count,
         "external_restriction_sources": external_sources,
+        "recovered_sources": [
+            {
+                "source_id": _safe_identifier(row.get("source_id")),
+                "receipt": _symbolic_artifact(recovered_by_source.get(str(row.get("source_id") or ""), {}).get("receipt_path")),
+            }
+            for row in recovered_failed_rows
+        ],
         "all_current_failures_external": failed_count > 0
         and len(external_sources) == failed_count
         and unclassified_count == 0,
@@ -638,6 +673,7 @@ def _care_source_failure_summary(
 def _care_collection_diagnostics(
     receipt: dict[str, Any],
     source_failure_policies: dict[str, dict[str, Any]] | None = None,
+    replay_receipts: Iterable[dict[str, Any]] | None = None,
 ) -> dict[str, Any] | None:
     if receipt.get("dispatch") != "care-line" or receipt.get("task_key") != "care_line_collection":
         return None
@@ -645,6 +681,15 @@ def _care_collection_diagnostics(
     rows = _care_failed_source_rows(receipt)
     failures: list[dict[str, Any]] = []
     policies = source_failure_policies or {}
+    parent_run_id = str(receipt.get("run_id") or "")
+    recovered = {
+        str(replay.get("source_id") or "")
+        for replay in replay_receipts or []
+        if replay.get("parent_run_id") == parent_run_id
+        and replay.get("effective_terminal_source_state") in {"ok", "partial"}
+        and replay.get("publication_attempted") is False
+        and replay.get("public_side_effects") is False
+    }
     for row in rows[:20]:
         source_id = _safe_identifier(row.get("source_id"))
         failure = {
@@ -653,6 +698,7 @@ def _care_collection_diagnostics(
             "adapter_type": _safe_identifier(row.get("adapter_type")),
             "failure_class": _safe_identifier(row.get("failure_class")),
             "transient": bool(row.get("transient")),
+            "effective_source_state": "recovered" if source_id in recovered else "failed",
         }
         policy = policies.get(source_id or "")
         if policy:
@@ -680,6 +726,7 @@ def _task_summary(
     receipt: dict[str, Any],
     linkage: dict[str, str],
     source_failure_policies: dict[str, dict[str, Any]] | None = None,
+    replay_receipts: Iterable[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     return {
         "task_key": receipt.get("task_key"),
@@ -695,7 +742,7 @@ def _task_summary(
         "publication_status": receipt.get("publication_status"),
         "public_side_effects": _sanitized_public_side_effects(receipt.get("public_side_effects")),
         "artifact_id": _receipt_artifact_id(receipt, linkage),
-        "diagnostics": _care_collection_diagnostics(receipt, source_failure_policies),
+        "diagnostics": _care_collection_diagnostics(receipt, source_failure_policies, replay_receipts),
     }
 
 
@@ -711,6 +758,20 @@ def _care_adjusted_aggregate_status(
         return aggregate_status
     if aggregate.get("missed_tasks") or completeness != "COMPLETE":
         return aggregate_status
+    if (
+        latest_collection
+        and source_failure_summary["failed_source_count"] <= 0
+        and source_failure_summary.get("recovered_source_count", 0) > 0
+    ):
+        failed_tasks = [str(task) for task in aggregate.get("failed_tasks", [])]
+        degraded_tasks = [str(task) for task in aggregate.get("degraded_tasks", [])]
+        non_collection_problems = [
+            task
+            for task in failed_tasks + degraded_tasks
+            if not task.startswith("care_line_collection")
+        ]
+        if not non_collection_problems:
+            return OperationalStatus.SUCCESS.value
     if not latest_collection or source_failure_summary["failed_source_count"] <= 0:
         return aggregate_status
     current_mixed_failure = (
@@ -856,7 +917,8 @@ def build_care_line_status(
     source_failure_policies = _load_care_line_source_failure_policies(source_root)
     collection_receipts = [receipt for receipt in receipts if receipt.get("task_key") == "care_line_collection"]
     latest_collection = max(collection_receipts, key=_receipt_sort_time, default=None)
-    source_failure_summary = _care_source_failure_summary(latest_collection, source_failure_policies)
+    replay_receipts = load_care_line_source_replay_receipts(source_root, receipt_dates)
+    source_failure_summary = _care_source_failure_summary(latest_collection, source_failure_policies, replay_receipts)
     aggregate = evaluate_dispatch_health(
         dispatch="care-line",
         receipts=receipts,
@@ -898,7 +960,7 @@ def build_care_line_status(
         "recovery_lifecycle": _recovery_state(aggregate_status, recovery),
         "latest_runtime_proof_date": aggregate.get("latest_success_at"),
         "receipt_completeness": completeness if receipts else "NO_PROOF",
-        "task_summaries": [_task_summary(receipt, linkage, source_failure_policies) for receipt in receipts],
+        "task_summaries": [_task_summary(receipt, linkage, source_failure_policies, replay_receipts) for receipt in receipts],
         "source_failure_summary": source_failure_summary,
         "runner_source_head": sorted(source_heads)[0] if len(source_heads) == 1 else None,
         **runner_identity,

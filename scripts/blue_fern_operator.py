@@ -210,8 +210,9 @@ SOURCE_TRANSIENT_RETRY_HANDLERS = {
         "public_side_effects": False,
     },
     "care-line": {
-        "enabled": False,
-        "reason": "Care Line has per-source collection internals, but the production scheduler wrapper lacks a source-id replay contract.",
+        "enabled": True,
+        "reason": "Care Line exposes the canonical source-id replay wrapper for isolated transient source recovery.",
+        "wrapper": "scripts/source_replay.py",
         "public_side_effects": False,
     },
     "ice": {
@@ -1735,14 +1736,50 @@ def _auto_source_transient_retry_if_allowed(
     if not plan.executable:
         remediation = _source_retry_remediation_payload(state=source_state, reason=plan.reason)
         return replace(incident, remediation=remediation), status, build_recovery_plan_from_status(status), remediation, False
+    receipt = _apply_source_transient_fetch_retry(
+        plan,
+        repo_root=repo_root,
+        runner_root=dispatch_root,
+        operator_root=operator_root,
+        config=config,
+        current_status=status,
+        runner=_run_command,
+        now=_parse_time(checked_at) or _utc_now(),
+    )
+    replay_payload = {}
+    if isinstance(receipt.validation, dict) and isinstance(receipt.validation.get("source_replay_receipt"), dict):
+        replay_payload = dict(receipt.validation["source_replay_receipt"])
+    refreshed_status = build_status(status.dispatch, status.date, root=dispatch_root)
+    recovered = receipt.accepted and _terminal_retry_proof(refreshed_status)
+    updated_state = {
+        **source_state,
+        "attempt_count": attempts + 1,
+        "last_attempted_at": checked_at,
+        "last_receipt_path": receipt.receipt_path,
+        "last_source_replay_outcome": replay_payload.get("outcome") or receipt.outcome,
+    }
+    if recovered:
+        updated_state["last_successful_fetch"] = replay_payload.get("completed_at") or checked_at
+        updated_state["terminal_classification"] = "recovered"
     remediation = _source_retry_remediation_payload(
-        state={**source_state, "attempt_count": attempts + 1, "last_attempted_at": checked_at},
-        reason="source-specific retry handler executed",
+        state=updated_state,
+        reason=receipt.reason,
         attempted=True,
-        outcome="NO_ACTION",
+        outcome=receipt.outcome,
         attempted_at=checked_at,
     )
-    return replace(incident, remediation=remediation), status, build_recovery_plan_from_status(status), remediation, False
+    return (
+        replace(
+            incident,
+            state=IncidentState.RECOVERED.value if recovered else IncidentState.OPEN.value,
+            remediation=remediation,
+            recommended_action="NO_ACTION" if recovered else incident.recommended_action,
+        ),
+        refreshed_status,
+        build_recovery_plan_from_status(refreshed_status),
+        remediation,
+        recovered,
+    )
 
 
 def check_operator(
@@ -2588,6 +2625,7 @@ def _sanctioned_untracked_patterns(dispatch: str) -> list[str]:
         "__pycache__",
         f"data/dispatches/{dispatch}/collection-runs",
         f"data/dispatches/{dispatch}/queue-runs",
+        f"data/dispatches/{dispatch}/source-replays",
         f"data/dispatches/{dispatch}/review/candidate-registry.json",
         f"data/dispatches/{dispatch}/review/current-duplicates.json",
         f"data/dispatches/{dispatch}/review/current-exclusions.json",
@@ -2983,6 +3021,38 @@ def _transient_retry_command(handler: dict[str, Any], *, runner_root: Path, date
         command.extend([str(date_argument), date])
     if handler["dispatch"] in {"care-line", "ice"}:
         command.extend(["-RunId", run_id])
+    return command
+
+
+def _source_retry_command(
+    handler: dict[str, Any],
+    *,
+    runner_root: Path,
+    state: dict[str, Any],
+    incident_id: str,
+    attempt_count: int,
+    expected_head: str | None,
+) -> list[str]:
+    wrapper = runner_root / str(handler["wrapper"])
+    retry_id = f"operator-{incident_id}-{attempt_count + 1}"
+    command = [
+        str(_runner_python(runner_root)),
+        str(wrapper),
+        "--repo-root",
+        str(runner_root),
+        "--dispatch",
+        str(state.get("dispatch") or handler.get("dispatch") or ""),
+        "--source-id",
+        str(state.get("source_id") or ""),
+        "--logical-date",
+        str(state.get("logical_date") or ""),
+        "--parent-run-id",
+        str(state.get("logical_run_id") or ""),
+        "--retry-id",
+        retry_id,
+    ]
+    if expected_head:
+        command.extend(["--expected-head", expected_head])
     return command
 
 
@@ -3384,6 +3454,8 @@ def build_remediation_action_plan(
         elif root_cause == RootCauseClassification.SOURCE_TRANSIENT.value:
             source_state = _source_retry_state(incident, context)
             handler = _source_retry_handler(incident.dispatch)
+            protected_head = _git_head(_operator_code_root(operator_root))
+            runner_safety = _runner_transient_retry_safety(incident.dispatch, runner_root, protected_head=protected_head, runner=runner)
             if incident.dispatch == "gaza" or handler.get("excluded") is True:
                 action = "WAIT_FOR_NEXT_SCHEDULED_RUN"
                 reason = "Gaza source replay is excluded from automatic remediation"
@@ -3402,9 +3474,13 @@ def build_remediation_action_plan(
                     and source_state.get("retry_budget_remaining") is True
                     and source_state.get("backoff_elapsed") is True
                     and not source_state.get("terminal_classification")
+                    and runner_safety["safe"]
                 )
                 mutation_scope = [
-                    "source-specific collection artifacts only when a registered source-safe handler exists",
+                    "source-specific Care Line collection replay artifacts",
+                    "Care Line source replay reconciliation receipt",
+                    "Care Line private review queue/candidate registry when recovered candidates exist",
+                    "ops/status/<dispatch>/latest.json after status refresh",
                     "ops/operator/remediation/receipts/<date>/<receipt>.json",
                 ]
             safety_checks = {
@@ -3413,6 +3489,8 @@ def build_remediation_action_plan(
                 "source_retry_state": source_state,
                 "source_retry_candidates": _source_retry_candidates(context),
                 "handler": handler,
+                "runner_safety": runner_safety,
+                "protected_head": protected_head,
                 "policy_mode": policy.mode_for(SOURCE_TRANSIENT_RETRY_ACTION) if policy else "recommend",
                 "public_side_effects": False,
                 "scheduler_changes": False,
@@ -4128,31 +4206,136 @@ def _apply_transient_network_task_retry(
 def _apply_source_transient_fetch_retry(
     plan: RemediationActionPlan,
     *,
+    repo_root: Path,
+    runner_root: Path,
     operator_root: Path,
+    config: OperatorConfig,
+    current_status: DispatchStatus,
+    runner: Any = _run_command,
     now: datetime | None = None,
 ) -> RemediationReceipt:
-    started = _format_time(now or _utc_now())
+    started_time = now or _utc_now()
+    started = _format_time(started_time)
     safety = plan.safety_checks if isinstance(plan.safety_checks, dict) else {}
     handler = safety.get("handler") if isinstance(safety.get("handler"), dict) else {}
     state = safety.get("source_retry_state") if isinstance(safety.get("source_retry_state"), dict) else {}
+    runner_safety = safety.get("runner_safety") if isinstance(safety.get("runner_safety"), dict) else {}
+    before_head = _git_stdout(runner, ["rev-parse", "HEAD"], cwd=runner_root)
+    validation: dict[str, Any] = {
+        "source_retry_state": state,
+        "handler": handler,
+        "runner_safety": runner_safety,
+        "public_side_effects": False,
+        "scheduler_changes": False,
+        "collection_rerun": False,
+        "publication_attempted": False,
+    }
+    if not handler.get("enabled") or not handler.get("wrapper"):
+        receipt = RemediationReceipt(
+            plan.dispatch,
+            plan.incident_id,
+            plan.proposed_action,
+            False,
+            "REFUSED",
+            str(handler.get("reason") or "no registered source-safe retry handler"),
+            started,
+            _format_time(_utc_now()),
+            before_head=before_head,
+            expected_mutation_scope=plan.expected_mutation_scope,
+            validation=validation,
+        )
+        return _write_remediation_receipt(operator_root, receipt)
+    if runner_safety.get("safe") is not True:
+        receipt = RemediationReceipt(
+            plan.dispatch,
+            plan.incident_id,
+            plan.proposed_action,
+            False,
+            "REFUSED",
+            "source replay runner safety checks failed",
+            started,
+            _format_time(_utc_now()),
+            before_head=before_head,
+            expected_mutation_scope=plan.expected_mutation_scope,
+            validation=validation,
+        )
+        return _write_remediation_receipt(operator_root, receipt)
+    required_state = ("dispatch", "source_id", "logical_date", "logical_run_id")
+    missing_state = [key for key in required_state if not state.get(key)]
+    if missing_state:
+        receipt = RemediationReceipt(
+            plan.dispatch,
+            plan.incident_id,
+            plan.proposed_action,
+            False,
+            "REFUSED",
+            "source retry state is missing required identity fields",
+            started,
+            _format_time(_utc_now()),
+            before_head=before_head,
+            expected_mutation_scope=plan.expected_mutation_scope,
+            validation={**validation, "missing_state_fields": missing_state},
+        )
+        return _write_remediation_receipt(operator_root, receipt)
+    attempt_count = int(state.get("attempt_count") or 0)
+    command = _source_retry_command(
+        handler,
+        runner_root=runner_root,
+        state=state,
+        incident_id=plan.incident_id,
+        attempt_count=attempt_count,
+        expected_head=str(safety.get("protected_head") or before_head or ""),
+    )
+    retry_result = runner(command, cwd=runner_root)
+    replay_payload: dict[str, Any] = {}
+    try:
+        replay_payload = json.loads(retry_result.stdout or "{}")
+    except json.JSONDecodeError:
+        replay_payload = {}
+    validation["command_argv"] = command
+    validation["command_exit_code"] = retry_result.exit_code
+    validation["stdout_tail"] = retry_result.stdout[-1000:]
+    validation["stderr_tail"] = retry_result.stderr[-1000:]
+    validation["source_replay_receipt"] = replay_payload
+    replay_safe = (
+        retry_result.ok
+        and replay_payload.get("publication_attempted") is False
+        and replay_payload.get("public_side_effects") is False
+        and replay_payload.get("outcome") in {"recovered", "already_recovered", "already_completed"}
+        and replay_payload.get("effective_terminal_source_state") in {"ok", "partial"}
+    )
+    status_after = build_status(plan.dispatch, plan.affected_date or current_status.date, root=runner_root)
+    status_refresh_receipt: RemediationReceipt | None = None
+    if replay_safe:
+        status_refresh_receipt = _apply_refresh_status_export(
+            plan,
+            repo_root=repo_root,
+            runner_root=runner_root,
+            operator_root=operator_root,
+            config=config,
+            current_status=status_after,
+            now=started_time,
+        )
+        validation["status_refresh_receipt"] = status_refresh_receipt.to_payload()
+    terminal = _terminal_retry_proof(status_after)
+    accepted = replay_safe and (status_refresh_receipt is None or status_refresh_receipt.accepted) and terminal
+    outcome = "REFRESHED" if accepted else "FAILED"
+    reason = "source replay recovered the failed source and refreshed status" if accepted else "source replay failed-safe or did not produce terminal status proof"
     receipt = RemediationReceipt(
         plan.dispatch,
         plan.incident_id,
         plan.proposed_action,
-        False,
-        "REFUSED",
-        str(handler.get("reason") or "no registered source-safe retry handler"),
+        accepted,
+        outcome,
+        reason,
         started,
         _format_time(_utc_now()),
+        before_head=before_head,
+        after_head=_git_stdout(runner, ["rev-parse", "HEAD"], cwd=runner_root),
         expected_mutation_scope=plan.expected_mutation_scope,
-        validation={
-            "source_retry_state": state,
-            "handler": handler,
-            "public_side_effects": False,
-            "scheduler_changes": False,
-            "collection_rerun": False,
-            "publication_attempted": False,
-        },
+        changed_paths=list(replay_payload.get("changed_paths", [])) if isinstance(replay_payload.get("changed_paths"), list) else [],
+        validation={**validation, "terminal_proof": terminal, "status_after": status_after.to_json_payload()},
+        warnings=[] if accepted else ["source replay did not trigger publication and was not accepted as recovered"],
     )
     return _write_remediation_receipt(operator_root, receipt)
 
@@ -4177,6 +4360,7 @@ def apply_remediation(
         return _refused_remediation_receipt(dispatch=dispatch, incident_id=incident_id, action=action, reason="action is not executable by remediate-apply", now=now)
 
     config = config or load_config(operator_root / "config.json")
+    policy = load_remediation_policy(operator_root / "remediation-policy.yaml")
     result = check_operator(
         repo_root=repo_root,
         operator_root=operator_root,
@@ -4198,6 +4382,7 @@ def apply_remediation(
         operator_root=operator_root,
         current_status=current_status,
         status_root=_configured_status_root(config, repo_root),
+        policy=policy,
         runner=runner,
     )
     if plan.proposed_action != action:
@@ -4228,7 +4413,16 @@ def apply_remediation(
             now=now,
         )
     if action == SOURCE_TRANSIENT_RETRY_ACTION:
-        return _apply_source_transient_fetch_retry(plan, operator_root=operator_root, now=now)
+        return _apply_source_transient_fetch_retry(
+            plan,
+            repo_root=repo_root,
+            runner_root=runner_root,
+            operator_root=operator_root,
+            config=config,
+            current_status=current_status,
+            runner=runner,
+            now=now,
+        )
 
     started = _format_time(now or _utc_now())
     apply_result = apply_recovery_plan(dispatch, incident.affected_date or current_status.date, root=runner_root, confirm=action)

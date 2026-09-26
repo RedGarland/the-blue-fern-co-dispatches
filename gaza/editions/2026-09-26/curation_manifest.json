@@ -1,0 +1,240 @@
+[
+  {
+    "story_id": "gaza-story-2026-09-26-002",
+    "title": "WHO Director-General's remarks at the UNGA side event: Humanitarian access and Health in Gaza - Ministerial Roundtable - 24 September 2026 - World Health Organization (WHO)",
+    "summary": "WHO Director-General's remarks at the UNGA side event: Humanitarian access and Health in Gaza - Ministerial Roundtable - 24 September 2026 World Health Organization (WHO).",
+    "category": "medical_evacuation_health_system",
+    "story_scope": "core_gaza",
+    "score": 61,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "aid_access",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 12,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 20,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-26-who-gaza-health-capacity-query-6c3b06c7cf8e"
+    ],
+    "source_ids": [
+      "gaza-2026-09-26-who-gaza-health-capacity-query-6c3b06c7cf8e"
+    ],
+    "source_urls": [
+      "https://news.google.com/rss/articles/CBMijwJBVV95cUxNLVNXTHJUMXZjcnpUclBtdFJTODNVbjZxQWR4eWdSQlZGTkxyUnFUSTZPVVd5X01fVUt6d2dxak9uRFhyeTk3VktlUG1tOVE0NFJfbTRfQ05Nb21WZTNwdHEtZVpzUktlcmRjem1fdjVDMDJYckRwdGQ0b3ktajN3blA4MU5Dbmw5Yl95QzJuVGV2Zmk0cFVHMTFXVmI2Wk1QTXA1TXJNVkhfQU1LSGJXZTM3c2stY0lyV21zaGxTT0VyUmVEcjBtWTVIc01aMXR1TmxoTVF0Qm5RMHpRYWFvVHFKZ3B0UnQ2Mm10UHlwUjVTcTZsZGtHcHN2TTNNamxQZnFnX3FYWTYtX3hLcGlj?oc=5"
+    ],
+    "publisher_names": [
+      "WHO"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-26-who-gaza-health-capacity-query-6c3b06c7cf8e",
+        "title": "WHO Director-General's remarks at the UNGA side event: Humanitarian access and Health in Gaza - Ministerial Roundtable - 24 September 2026 - World Health Organization (WHO)",
+        "url": "https://news.google.com/rss/articles/CBMijwJBVV95cUxNLVNXTHJUMXZjcnpUclBtdFJTODNVbjZxQWR4eWdSQlZGTkxyUnFUSTZPVVd5X01fVUt6d2dxak9uRFhyeTk3VktlUG1tOVE0NFJfbTRfQ05Nb21WZTNwdHEtZVpzUktlcmRjem1fdjVDMDJYckRwdGQ0b3ktajN3blA4MU5Dbmw5Yl95QzJuVGV2Zmk0cFVHMTFXVmI2Wk1QTXA1TXJNVkhfQU1LSGJXZTM3c2stY0lyV21zaGxTT0VyUmVEcjBtWTVIc01aMXR1TmxoTVF0Qm5RMHpRYWFvVHFKZ3B0UnQ2Mm10UHlwUjVTcTZsZGtHcHN2TTNNamxQZnFnX3FYWTYtX3hLcGlj?oc=5",
+        "publisher": "WHO",
+        "summary_or_snippet": "WHO Director-General's remarks at the UNGA side event: Humanitarian access and Health in Gaza - Ministerial Roundtable - 24 September 2026 World Health Organization (WHO)",
+        "event_date": "2026-09-24T17:50:32+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "medical_evacuation_health_system",
+        "attribution": "WHO",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-26T16:16:14.829216+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 61,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "official_humanitarian",
+    "claim_status": "official_humanitarian",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "medical_evacuation_health_system",
+    "location": "Gaza",
+    "event_date": "2026-09-24T17:50:32+00:00",
+    "attribution": "WHO",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-10-003",
+    "prior_edition_date": "2026-07-10",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-26-003",
+    "title": "UN adds 61 firms to settlements blacklist over alleged human rights violations against Palestinians",
+    "summary": "Israel 'categorically rejects' publication and says businesses on database have committed no wrongdoing. The UN human rights office has added 61 more companies to a blacklist of firms that it says are involved in violating Palestinian human rights through business ties to Israeli settlements in the occupied West Bank. The vast majority of the total 214 companies, which are based in 11 countries, are Israeli. Five of the 158 companies listed last year were removed in the latest update.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 58,
+    "scoring_reasons": [
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-26-guardian-world-e24f98d785f3"
+    ],
+    "source_ids": [
+      "gaza-2026-09-26-guardian-world-e24f98d785f3"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/sep/26/un-companies-israeli-settlements-blacklist-alleged-palestinian-rights-violations"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-26-guardian-world-e24f98d785f3",
+        "title": "UN adds 61 firms to settlements blacklist over alleged human rights violations against Palestinians",
+        "url": "https://www.theguardian.com/world/2026/sep/26/un-companies-israeli-settlements-blacklist-alleged-palestinian-rights-violations",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Israel 'categorically rejects' publication and says businesses on database have committed no wrongdoing The UN human rights office has added 61 more companies to a blacklist of firms that it says are involved in violating Palestinian human rights through business ties to Israeli settlements in the occupied West Bank. The vast majority of the total 214 companies, which are based in 11 countries, are Israeli. Five of the 158 companies listed last year were removed in the latest update.",
+        "event_date": "2026-09-26T11:10:09+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-26T16:16:14.829216+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 58,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-26T11:10:09+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-08-007",
+    "prior_edition_date": "2026-09-08",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-26-005",
+    "title": "Girl disabled by Israeli strike urges wheelchairs be let into Gaza",
+    "summary": "Disabled and amputee children in Gaza are unable to get new wheelchairs as. Israel refuses to allow them in.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 53,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-26-aljazeera-middle-east-c78fad184e86"
+    ],
+    "source_ids": [
+      "gaza-2026-09-26-aljazeera-middle-east-c78fad184e86"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/9/26/girl-disabled-by-israeli-strike-urges-wheelchairs-be-let-into-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-26-aljazeera-middle-east-c78fad184e86",
+        "title": "Girl disabled by Israeli strike urges wheelchairs be let into Gaza",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/9/26/girl-disabled-by-israeli-strike-urges-wheelchairs-be-let-into-gaza?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Disabled and amputee children in Gaza are unable to get new wheelchairs as Israel refuses to allow them in",
+        "event_date": "2026-09-26T13:22:33+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-26T16:16:14.829216+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 53,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-26T13:22:33+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  }
+]

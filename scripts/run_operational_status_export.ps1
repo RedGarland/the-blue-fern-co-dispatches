@@ -14,7 +14,7 @@ $arguments = @(
     (Join-Path $scriptRoot 'run_operational_status_export.py'),
     '--source-root', $SourceRoot,
     '--status-checkout', $StatusCheckout,
-    '--prepare-branch', 'ops/status/food-line-2026-09-10'
+    '--prepare-branch', 'ops/status/current'
 )
 if (-not [string]::IsNullOrWhiteSpace($CareSourceRoot)) {
     $arguments += @('--care-source-root', $CareSourceRoot)

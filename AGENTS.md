@@ -18,6 +18,70 @@ Dispatches From The Blue Fern Co. is a source-based public dispatch system with 
 
 All dispatch outputs must be source-traceable, date-safe, and publication-safe.
 
+## Autonomous Working Authority
+
+For this repository, absence of additional operator input is permission to continue through all safe, reversible, non-destructive work required to complete the current authorized objective. Do not stop merely because an intermediate step is complete.
+
+Proceed autonomously through routine work including:
+
+- diagnosis and root-cause analysis
+- implementation and refactoring
+- tests and validation
+- correction of routine test and CI failures
+- documentation
+- branch creation and commits
+- normal source feature-branch pushes required for authorized PR work
+- pull-request creation and ordinary PR remediation
+- bounded routine protected-branch merge when the merge rules below permit it
+- guarded production-runner synchronization
+- non-public production proof
+- operational-status refresh
+- evidence and receipt generation
+- directly related follow-on remediation needed to complete the objective
+
+When a technically stronger safe approach becomes evident, take it rather than asking the operator to choose among routine implementation options.
+
+### Stop Only At Genuine Authority Boundaries
+
+Require operator input only for:
+
+- destructive or irreversible actions
+- force push, destructive reset/clean, or evidence loss
+- credentials, secrets, or security changes
+- persistent host/network configuration changes
+- material infrastructure cost
+- public-content publication when explicit approval is required
+- editorial-policy changes
+- source removal or substitution that materially changes coverage
+- materially ambiguous evidence where available choices have materially different consequences
+
+Do not request approval for routine code changes, testing, CI corrections, documentation, authorized PR mechanics, permitted routine merges, guarded synchronization, reversible remediation, or non-public validation.
+
+### Completion Rule
+
+Continue until either:
+
+1. the objective is implemented, deployed where applicable, and proven at the strongest safe level available; or
+2. a genuine authority boundary above is reached.
+
+A locally working change or merged PR alone is not completion when deployment or production proof is part of the objective. If one part is blocked by an authority boundary, complete every independent safe step before escalating.
+
+When escalation is genuinely required, report:
+
+- what has been completed
+- current evidence
+- exact blocker
+- why it crosses an authority boundary
+- smallest decision or authorization required
+
+### Authority Sources
+
+- `AGENTS.md` governs Codex and implementation-agent behavior.
+- `ops/operator/remediation-policy.yaml` governs the autonomous Blue Fern Operator's machine-executable remediation actions.
+- Existing project contracts govern detailed production, editorial, source-traceability, and publishing invariants.
+
+Codex routine PR merge authority is not Operator merge authority. The Operator must keep `MERGE_PR` approval-gated unless its own architecture, policy, and tests explicitly prove a narrower safe machine-merge path. Codex must not use routine merge permission to expand its own authority or to expand Operator authority.
+
 ## Production Readiness
 
 Read `docs/production-readiness-contract.md` before any production-change task.

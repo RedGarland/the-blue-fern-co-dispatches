@@ -141,6 +141,13 @@ def _queue_state(event: dict[str, Any], relationship: str, existing: dict[str, A
     return "NEW" if not existing else "NEEDS_REVIEW"
 
 
+def _monitor_reference(path: Path) -> str:
+    text = path.as_posix()
+    marker = "data/dispatches/ice/monitor/"
+    index = text.find(marker)
+    return text[index:] if index >= 0 else text
+
+
 def _queue_item(event: dict[str, Any], *, relationship: str, reasons: list[str], run_id: str, run_path: Path, existing: dict[str, Any] | None, observed_at: str) -> dict[str, Any]:
     mapped = map_ready_event(_event_from_dict(event))
     state = _queue_state(event, relationship, existing)
@@ -166,10 +173,10 @@ def _queue_item(event: dict[str, Any], *, relationship: str, reasons: list[str],
         "review_status": state,
         "editorial_eligibility_candidate": bool((event.get("editorial") or {}).get("public_eligibility")),
         "evidence_references": {
-            "run_dir": str(run_path.as_posix()),
-            "canonical_events": str((run_path / "canonical_events.json").as_posix()),
-            "raw_candidates": str((run_path / "raw_candidates.json").as_posix()),
-            "provider_health": str((run_path / "provider_health.json").as_posix()),
+            "run_dir": _monitor_reference(run_path),
+            "canonical_events": _monitor_reference(run_path / "canonical_events.json"),
+            "raw_candidates": _monitor_reference(run_path / "raw_candidates.json"),
+            "provider_health": _monitor_reference(run_path / "provider_health.json"),
         },
         "relationship_to_previous": relationship,
         "relationship_reasons": reasons,

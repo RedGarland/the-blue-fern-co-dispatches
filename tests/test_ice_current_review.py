@@ -30,7 +30,7 @@ def _fixture(tmp_path: Path, *, corroborated: bool = True, eligible: bool = True
     (run_dir / "provider_health.json").write_text("{}\n", encoding="utf-8")
 
     queue_path = root / "data/dispatches/ice/monitor/review_queue.json"
-    queue_path.parent.mkdir(parents=True)
+    queue_path.parent.mkdir(parents=True, exist_ok=True)
     queue = {
         "schema_version": "bluefern.ice.monitor.review_queue.v1",
         "items": [

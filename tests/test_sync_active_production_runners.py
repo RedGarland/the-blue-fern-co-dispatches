@@ -145,3 +145,16 @@ def test_sync_helper_wraps_empty_collections_under_strict_mode() -> None:
     assert 'if (@($lateCollisions).Count -gt 0)' in text
     assert 'if (@($row.TrackedDirtyPaths).Count -gt 0)' in text
     assert 'if (@($currentStatus.Tracked).Count -gt 0)' in text
+
+
+def test_sync_helper_preserves_only_preflight_sanctioned_tracked_runtime_state() -> None:
+    text = _text()
+    assert 'SanctionedTrackedStatePreserved = $false' in text
+    assert '$row.SanctionedTrackedStatePreserved = $true' in text
+    assert 'tracked runtime paths overlap incoming tracked paths' in text
+    assert 'tracked working-tree state changed after discovery' in text
+    assert 'tracked runtime collision appeared after discovery' in text
+    assert 'tracked working-tree changes are present' not in text
+    preflight = text.index('$pre = Invoke-RunnerValidation -Root $root')
+    sanction = text.index('$row.SanctionedTrackedStatePreserved = $true')
+    assert preflight < sanction

@@ -1,0 +1,30 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Immediate Proof",
+  "run_id": "proof-food-positive",
+  "scheduled_for": "2026-09-25T18:30:00-07:00",
+  "started_at": "2026-09-25T18:30:01-07:00",
+  "completed_at": "2026-09-25T18:30:02-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "date_from": "2026-09-25",
+    "date_to": "2026-09-25",
+    "edition_date": "2026-09-25"
+  },
+  "findings": [
+    {
+      "finding_id": "proof-food-1",
+      "canonical_source_url": "https://example.invalid/food-proof",
+      "title": "Synthetic proof finding",
+      "publisher": "Proof fixture",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": "Synthetic isolated proof; not production evidence; no publication authority.",
+  "proof_only": true,
+  "publication_authorized": false,
+  "automatic_approval": false
+}

@@ -134,7 +134,7 @@ def test_persistent_external_restriction_waits_without_human_approval() -> None:
         policy=_policy(INVESTIGATE_FAILED_SOURCES="recommend"),
     )
 
-    assert enriched.root_cause_classification == operator.RootCauseClassification.PERSISTENT_EXTERNAL_ACCESS_RESTRICTION.value
+    assert enriched.root_cause_classification == operator.RootCauseClassification.SOURCE_EXTERNAL_RESTRICTION.value
     assert enriched.lifecycle_state == operator.AutonomyLifecycle.WAITING_EXTERNAL.value
     assert enriched.approval_required is False
     assert enriched.next_action == "INVESTIGATE_FAILED_SOURCES"

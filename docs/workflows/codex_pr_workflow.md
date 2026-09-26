@@ -4,9 +4,9 @@ This workflow is the standard source-repo path for Codex implementation work in 
 
 ## Scope
 
-- Source repo: `C:\PythonProjects\Dispatches From The Blue Fern Co`
+- Source repo: the current checked-out source worktree; do not depend on a fixed workstation path
 - Base branch: `add/pages-repo-default`
-- Pages repo: `C:\PythonProjects\Dispatches From The Blue Fern Co\bluefern-dispatches-pages`
+- Pages repo: `./bluefern-dispatches-pages` when present beside the source files
 - Pages branch: `gh-pages`
 
 ## Authority Boundary

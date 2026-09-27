@@ -1,11 +1,11 @@
 {
   "schema": "bluefern.ops.current_state.v1",
-  "as_of_utc": "2026-09-27T03:10:47Z",
+  "as_of_utc": "2026-09-27T03:52:18Z",
   "source_of_truth": "protected source branch plus production-runner handoff receipts",
   "protected_source": {
     "repository": "RedGarland/the-blue-fern-co-dispatches",
     "branch": "add/pages-repo-default",
-    "observed_head": "d6189fffc394a4a7bd51324740c5273022ad7028",
+    "observed_head": "cd3c26ba8d1e5c7008cc0b78571b7abc351d5fbd",
     "status": "protected",
     "resume_policy": "re-read this branch before acting; do not rely on the observed head if the branch has advanced"
   },
@@ -69,34 +69,46 @@
       "purpose": "guarded synchronizer controller-preflight fix",
       "merged_head": "d6189fffc394a4a7bd51324740c5273022ad7028",
       "status": "merged"
+    },
+    {
+      "number": 499,
+      "purpose": "post-PR498 operational current-state checkpoint",
+      "merged_head": "d006f0eb6e55a86c2cba5bd743e2b0e43c9e37d4",
+      "status": "merged"
+    },
+    {
+      "number": 500,
+      "purpose": "local Operator guarded runner sync command and receipt-writing wrapper handoff",
+      "merged_head": "cd3c26ba8d1e5c7008cc0b78571b7abc351d5fbd",
+      "status": "merged"
     }
   ],
   "runner_state": {
     "operator": {
       "path": "C:\\BlueFernRunner\\BlueFernOperatorCurrent",
       "synced_to": "3b9632060ee8fb7713fd7a83e560f8479da7e3e2",
-      "status": "blocked_unsynced_after_pr498",
-      "blocker": "guarded sync must be rerun from a current protected sync-controller checkout after PR #498"
+      "status": "blocked_unsynced_after_pr500",
+      "blocker": "guarded sync must bring Operator from the PR #489 protected head to current protected source before the new local sync-runners command can run from the Operator checkout"
     },
     "food": {
       "path": "C:\\BlueFernRunner\\FoodLineCurrent6",
       "synced_to": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
-      "status": "scheduler_proven_at_pr491_behind_protected_source"
+      "status": "scheduler_proven_at_pr491_behind_protected_source_after_pr500"
     },
     "care": {
       "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8",
       "synced_to": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
-      "status": "runner_synced_at_pr491_behind_protected_source"
+      "status": "runner_synced_at_pr491_behind_protected_source_after_pr500"
     },
     "gaza": {
       "path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6",
       "synced_to": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
-      "status": "runner_synced_at_pr491_behind_protected_source"
+      "status": "runner_synced_at_pr491_behind_protected_source_after_pr500"
     },
     "ice": {
       "path": "C:\\BlueFernRunner\\ICEMonitorCurrent",
       "synced_to": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
-      "status": "runner_synced_at_pr491_behind_protected_source"
+      "status": "runner_synced_at_pr491_behind_protected_source_after_pr500"
     },
     "operational_status": {
       "path": "C:\\BlueFernRunner\\OperationalStatusCurrent",
@@ -117,17 +129,18 @@
   },
   "known_blockers": [
     {
-      "id": "operator-runner-unsynced-after-pr498",
+      "id": "operator-runner-unsynced-after-pr500",
       "classification": "WINDOWS_GUARDED_SYNC_RERUN_REQUIRED",
-      "summary": "Operator checkout remains on the PR #489 protected head while protected source has advanced through PR #498. PR #496 fixed nested Operator run-evidence classification and PR #498 lets a current sync controller apply that classifier before stale runners receive the fix.",
-      "next_safe_action": "On the Windows runner host, run the guarded synchronizer from a current protected checkout, re-read protected HEAD, plan against the current protected head, and apply only if preflight and doctor pass without unexpected source/config/test/doc drift.",
-      "authority_boundary": "Do not delete or rewrite preserved evidence to obtain a clean sync."
+      "summary": "Operator checkout remains on the PR #489 protected head while protected source has advanced through PR #500. PR #496 fixed nested Operator run-evidence classification, PR #498 lets a current sync controller preflight with current policy before stale runners receive the fix, and PR #500 adds a local Operator sync-runners command for durable plan/apply/proof receipts once deployed.",
+      "next_safe_action": "On the Windows runner host, run guarded sync from a current protected checkout against the current protected HEAD. After Operator is on PR #500 or later, use scripts/run_blue_fern_operator.ps1 -SyncRunners for plan-only proof, then -SyncRunners -ApplyRunnerSync -ProveStatusExport -ExpectedProtectedHead <protected-sha> only if the plan is safe.",
+      "authority_boundary": "Do not delete or rewrite preserved evidence to obtain a clean sync. Do not trigger collection, publication, Pages sync, Cascadia activation, or scheduled task mutation."
     }
   ],
   "next_action": {
-    "status": "awaiting_windows_guarded_sync_rerun_after_pr498",
+    "status": "awaiting_windows_guarded_sync_rerun_after_pr500",
     "target_head_policy": "re-read add/pages-repo-default immediately before sync; use the then-current protected HEAD",
-    "summary": "From a current protected checkout, re-read protected HEAD, rerun guarded sync plan on the Windows runner host, and if safe apply sync to the current protected head; stop with the exact blocker if any unexpected drift remains.",
+    "summary": "From a current protected checkout, re-read protected HEAD, rerun guarded sync plan on the Windows runner host, and if safe apply sync to the current protected head. After Operator reaches PR #500 or later, use the local sync-runners wrapper to leave runner-sync receipts and operational-status proof.",
+    "preferred_operator_command_after_operator_sync": "powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"C:\\\\BlueFernRunner\\\\BlueFernOperatorCurrent\\\\scripts\\\\run_blue_fern_operator.ps1\" -SyncRunners -ApplyRunnerSync -ProveStatusExport -ExpectedProtectedHead <protected-sha>",
     "must_not_trigger": [
       "collection",
       "publication",

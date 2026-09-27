@@ -131,6 +131,32 @@ This wrapper does not publish, collect, mutate Pages, activate Cascadia, or
 change scheduled task definitions. It may fast-forward production runner source
 checkouts only when `-ApplyRunnerSync` is explicitly present.
 
+## Food/Care proof continuation
+
+Food and Care recovery should not depend on a chat session staying open. The
+checked-in continuation wrapper can run on the Windows host as a bounded local
+task:
+
+```powershell
+powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\BlueFernRunner\BlueFernOperatorCurrent\scripts\windows\run_food_care_proof_continuation.ps1"
+```
+
+The wrapper re-reads the protected head when no expected SHA is supplied, runs
+guarded runner sync, then runs only non-public proof steps: Food source-watch,
+Food resume/current-intake, Care approved-release `-ProofOnly`, and final
+operational-status export. It writes a
+`blue_fern_food_care_proof_continuation_v1` receipt under
+`ops/operator/runs/<date>/food-care-continuation-*/`.
+
+To register a repeating local continuation task after reviewing the command:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File "C:\BlueFernRunner\BlueFernOperatorCurrent\scripts\windows\register_food_care_proof_continuation_task.ps1" -IntervalMinutes 10
+```
+
+The registration helper uses `MultipleInstances IgnoreNew` and a 45-minute
+execution limit. It is a scheduled-task mutation and must be authorized as such.
+
 ## Dispatch entry points
 
 Use canonical wrappers from the appropriate synchronized runner.

@@ -175,6 +175,12 @@ def _failure_diagnostics(receipt: dict[str, Any]) -> dict[str, Any] | None:
     }:
         return None
     diagnostics: dict[str, Any] = {}
+    fallback_failure_stage = receipt.get("task_key") if status in {
+        OperationalStatus.FAILED.value,
+        OperationalStatus.DEGRADED.value,
+    } else None
+    if fallback_failure_stage:
+        diagnostics["failure_stage"] = str(fallback_failure_stage)
     for key in ("failure_stage", "collection_health", "upstream_dependency_status"):
         value = receipt.get(key)
         if value not in (None, ""):

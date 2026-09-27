@@ -39,6 +39,37 @@ SAFE_KEY_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 SAFE_BRANCH_RE = re.compile(r"^[A-Za-z0-9_./-]+$")
 HEX_HEAD_RE = re.compile(r"^[0-9a-f]{7,64}$", re.IGNORECASE)
 PRIVATE_KEY_RE = re.compile(r"(?:path|body|excerpt|source|raw|secret|token|credential|password|environment|env)", re.IGNORECASE)
+FAILURE_DIAGNOSTIC_KEYS = {
+    "child_error_message",
+    "child_error_type",
+    "child_exit_code",
+    "child_stderr_tail",
+    "child_stdout_tail",
+    "child_terminal_status",
+    "child_validation_error",
+    "collection_health",
+    "error",
+    "error_message",
+    "error_type",
+    "export_status",
+    "failed_source_count",
+    "failure_stage",
+    "fatal_error",
+    "final_error",
+    "final_status",
+    "manual_review_count",
+    "pipeline_exit_code",
+    "pipeline_run_id",
+    "pipeline_status",
+    "resume_status",
+    "selected_event_count",
+    "skipped_source_count",
+    "status",
+    "successful_attempt_count",
+    "wrapper_exception_message",
+    "wrapper_exception_type",
+}
+FAILURE_DIAGNOSTIC_TEXT_LIMIT = 1000
 
 NON_MIGRATED_DISPATCHES = ("gaza", "ice", "american-pressure")
 INTENTIONALLY_INACTIVE_DISPATCHES = ("cascadia",)
@@ -118,6 +149,52 @@ def _sanitized_public_side_effects(value: Any) -> dict[str, Any]:
         return {}
     result = _sanitize_value(value)
     return result if isinstance(result, dict) else {}
+
+
+def _bounded_diagnostic_value(value: Any) -> Any:
+    if isinstance(value, bool) or value is None:
+        return value
+    if isinstance(value, (int, float)):
+        return value
+    if isinstance(value, str):
+        text = value.replace("\r\n", "\n").replace("\r", "\n")
+        if len(text) > FAILURE_DIAGNOSTIC_TEXT_LIMIT:
+            return text[-FAILURE_DIAGNOSTIC_TEXT_LIMIT:]
+        return text
+    if isinstance(value, list):
+        return [_bounded_diagnostic_value(item) for item in value[:10]]
+    return None
+
+
+def _failure_diagnostics(receipt: dict[str, Any]) -> dict[str, Any] | None:
+    status = str(receipt.get("status") or "")
+    if status not in {
+        OperationalStatus.FAILED.value,
+        OperationalStatus.DEGRADED.value,
+        OperationalStatus.UPSTREAM_BLOCKED.value,
+    }:
+        return None
+    diagnostics: dict[str, Any] = {}
+    fallback_failure_stage = receipt.get("task_key") if status in {
+        OperationalStatus.FAILED.value,
+        OperationalStatus.DEGRADED.value,
+    } else None
+    if fallback_failure_stage:
+        diagnostics["failure_stage"] = str(fallback_failure_stage)
+    for key in ("failure_stage", "collection_health", "upstream_dependency_status"):
+        value = receipt.get(key)
+        if value not in (None, ""):
+            bounded = _bounded_diagnostic_value(value)
+            if bounded is not None:
+                diagnostics[key] = bounded
+    details = receipt.get("details") if isinstance(receipt.get("details"), dict) else {}
+    for key in sorted(FAILURE_DIAGNOSTIC_KEYS):
+        if key not in details:
+            continue
+        value = _bounded_diagnostic_value(details.get(key))
+        if value not in (None, "", [], {}):
+            diagnostics[key] = value
+    return diagnostics or None
 
 
 def _receipt_paths(source_root: Path, dispatch: str, date: str) -> list[Path]:
@@ -728,6 +805,10 @@ def _task_summary(
     source_failure_policies: dict[str, dict[str, Any]] | None = None,
     replay_receipts: Iterable[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
+    diagnostics = _care_collection_diagnostics(receipt, source_failure_policies, replay_receipts)
+    failure_diagnostics = _failure_diagnostics(receipt)
+    if failure_diagnostics:
+        diagnostics = {**(diagnostics or {}), "failure": failure_diagnostics}
     return {
         "task_key": receipt.get("task_key"),
         "status": receipt.get("status") if receipt.get("status") in SUPPORTED_TASK_STATUSES else "UNKNOWN",
@@ -742,7 +823,7 @@ def _task_summary(
         "publication_status": receipt.get("publication_status"),
         "public_side_effects": _sanitized_public_side_effects(receipt.get("public_side_effects")),
         "artifact_id": _receipt_artifact_id(receipt, linkage),
-        "diagnostics": _care_collection_diagnostics(receipt, source_failure_policies, replay_receipts),
+        "diagnostics": diagnostics,
     }
 
 

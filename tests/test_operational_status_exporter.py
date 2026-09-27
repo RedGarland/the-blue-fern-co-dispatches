@@ -983,6 +983,110 @@ def test_care_export_exposes_bounded_collection_diagnostics_without_private_deta
     assert "private care body" not in rendered
 
 
+def test_food_export_exposes_sanitized_failure_diagnostics(tmp_path: Path) -> None:
+    source = _write_day(tmp_path)
+    receipt_path = next((source / "status" / "operational-health" / "food-line" / DATE / "runs").glob("run-0.json"))
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt["details"].update(
+        {
+            "error_type": "RuntimeError",
+            "error_message": "provider returned malformed payload",
+            "child_exit_code": 10,
+            "child_stderr_tail": "Traceback tail without private material",
+            "source_body": "private article body",
+            "source_url": "https://example.invalid/private",
+            "local_path": r"C:\BlueFernRunner\private\receipt.json",
+        }
+    )
+    receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
+
+    result = export_status(
+        source_root=source,
+        status_checkout=tmp_path / "status-checkout",
+        date=DATE,
+        evaluated_at=EVALUATED,
+        exported_at=EVALUATED,
+    )
+
+    source_watch = next(
+        row for row in result["food_line"]["task_summaries"]
+        if row["task_key"] == "food_line_source_watch"
+    )
+    assert source_watch["diagnostics"]["failure"] == {
+        "failure_stage": "food_line_source_watch",
+        "child_exit_code": 10,
+        "child_stderr_tail": "Traceback tail without private material",
+        "error_message": "provider returned malformed payload",
+        "error_type": "RuntimeError",
+    }
+    rendered = json.dumps(result)
+    assert "private article body" not in rendered
+    assert "source_body" not in rendered
+    assert "example.invalid/private" not in rendered
+    assert "C:\\BlueFernRunner" not in rendered
+
+
+def test_care_export_exposes_wrapper_failure_without_private_details(tmp_path: Path) -> None:
+    source = _write_day(tmp_path / "food")
+    care_source = tmp_path / "care-source"
+    receipt_root = care_source / "status" / "operational-health" / "care-line" / DATE / "runs"
+    receipt_root.mkdir(parents=True)
+    artifact = care_source / "status" / "care-line" / "scheduler-runs" / DATE / "failed-wrapper.json"
+    artifact.parent.mkdir(parents=True, exist_ok=True)
+    artifact.write_text("{}\n", encoding="utf-8")
+    receipt = build_care_line_operational_receipt(
+        task_key="care_line_collection",
+        scheduled_for=DATE,
+        started_at="2026-09-10T15:00:00Z",
+        completed_at="2026-09-10T15:00:30Z",
+        exit_code=1,
+        task_status="failure",
+        run_id="failed-wrapper",
+        runner_path=r"C:\BlueFernRunner\CareLineNationalCurrent8",
+        branch="add/pages-repo-default",
+        source_head="6dd7e79411c11078dca4272075058c80ac8d2198",
+        artifact_refs={"task_receipt": str(artifact)},
+        public_side_effects={"pages_sync": False, "source_text": "private"},
+        details={
+            "wrapper_exception_type": "SchedulerError",
+            "wrapper_exception_message": "collection runner checkout is dirty",
+            "child_exit_code": 1,
+            "child_stdout_tail": "safe stdout tail",
+            "child_stderr_tail": "safe stderr tail",
+            "source_body": "private care body",
+            "repo_path": r"C:\BlueFernRunner\CareLineNationalCurrent8",
+        },
+    )
+    (receipt_root / "failed-wrapper.json").write_text(json.dumps(receipt), encoding="utf-8")
+
+    result = export_status(
+        source_root=source,
+        care_source_root=care_source,
+        status_checkout=tmp_path / "status-checkout",
+        date=DATE,
+        evaluated_at="2026-09-10T18:00:00Z",
+        exported_at="2026-09-10T18:01:00Z",
+        care_expected_instances=CARE_EXPECTED_INSTANCES,
+    )
+
+    collection = next(
+        row for row in result["care_line"]["task_summaries"]
+        if row["task_key"] == "care_line_collection"
+    )
+    assert collection["diagnostics"]["failure"] == {
+        "failure_stage": "care_line_collection",
+        "child_exit_code": 1,
+        "child_stderr_tail": "safe stderr tail",
+        "child_stdout_tail": "safe stdout tail",
+        "wrapper_exception_message": "collection runner checkout is dirty",
+        "wrapper_exception_type": "SchedulerError",
+    }
+    rendered = json.dumps(result)
+    assert "private care body" not in rendered
+    assert "source_body" not in rendered
+    assert "C:\\BlueFernRunner" not in rendered
+
+
 def test_care_external_access_restriction_proof_degrades_without_open_incident(tmp_path: Path) -> None:
     food_statuses = {
         task_key: (action, "completed", 0)

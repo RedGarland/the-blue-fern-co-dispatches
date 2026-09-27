@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260927T034727-0700-r11",
+  "scheduled_for": "2026-09-27T03:45:54-07:00",
+  "started_at": "2026-09-27T03:47:27-07:00",
+  "completed_at": "2026-09-27T03:48:15-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-27T02:45:54-07:00",
+    "date_to": "2026-09-27T03:48:15-07:00",
+    "edition_date": "2026-09-27",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Completed 12 targeted web searches, bounded to high-value recall classes: only/sole/last/full-service grocery-store loss; disaster-related distribution cancellation; abrupt pantry/food-bank closure or major service reduction; and immediate SNAP/WIC interruption.",
+    "No new qualifying U.S. food-access disruption was identified in the search window.",
+    "Fresh Kauai hurricane-recovery reporting was reviewed; emergency food distributions remain scheduled and North Shore Food Pantry distribution was explicitly reported as proceeding as scheduled, so it was excluded as non-disruption.",
+    "Older or previously known items, including the Spencer, New York Shur Fine fire, were excluded as outside the bounded hourly window or duplicates."
+  ]
+}

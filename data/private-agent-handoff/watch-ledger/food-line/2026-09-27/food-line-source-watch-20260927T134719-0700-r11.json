@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260927T134719-0700-r11",
+  "scheduled_for": "2026-09-27T13:45:54-07:00",
+  "started_at": "2026-09-27T13:47:19-07:00",
+  "completed_at": "2026-09-27T13:49:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-27T12:47:19-07:00",
+    "end": "2026-09-27T13:47:19-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Completed 12 targeted web searches across the four bounded high-value miss classes.",
+    "No new qualifying U.S. food-access disruption was found in the bounded prior-hour window.",
+    "Fresh Kauaʻi hurricane-recovery reporting stated North Shore Food Pantry distribution would proceed as scheduled; this was excluded as non-disruptive.",
+    "No new official SNAP/WIC/food-assistance interruption with immediate access consequences was identified.",
+    "Production collection remains authoritative; this run is supplementary only."
+  ]
+}

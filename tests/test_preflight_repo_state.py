@@ -518,3 +518,7 @@ def test_preflight_script_imports_without_pythonpath_injection(tmp_path: Path) -
         capture_output=True,
         text=True,
         check=False,
+    )
+
+    assert completed.returncode in {0, 1}, completed.stdout + completed.stderr
+    assert "ModuleNotFoundError" not in completed.stdout + completed.stderr

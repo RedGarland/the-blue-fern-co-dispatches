@@ -31,7 +31,7 @@
       "aggregate_status": "FAILED",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "8d09028d9ada6b8a2b19c86483abd855360e7402",
-      "latest_runtime_proof_date": null,
+      "latest_runtime_proof_date": "2026-09-27T15:00:03.000851Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-27",
       "receipt_completeness": "COMPLETE",
@@ -98,16 +98,16 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "SUCCESS",
+      "aggregate_status": "STALE_OBSERVABILITY",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "e30d7da61a75a31e8b2661cd39ff408723d9d3ed",
       "latest_runtime_proof_date": "2026-09-27T13:02:53.765182Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-27",
       "receipt_completeness": "COMPLETE",
-      "recovery_lifecycle": "HEALTHY",
+      "recovery_lifecycle": "INCIDENT_OPEN",
       "scheduled_health_available": true,
-      "stale_observability": false
+      "stale_observability": true
     },
     "ice": {
       "agent_handoff": {
@@ -133,9 +133,10 @@
       "stale_observability": true
     }
   },
-  "exported_at": "2026-09-27T16:15:05.236258Z",
+  "exported_at": "2026-09-27T17:15:06.946178Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [
+    "gaza",
     "ice"
   ],
   "system_status": "FAILED"

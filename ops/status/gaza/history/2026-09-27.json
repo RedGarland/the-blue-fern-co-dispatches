@@ -10,11 +10,11 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "SUCCESS",
+  "aggregate_status": "STALE_OBSERVABILITY",
   "current_runner_branch": "add/pages-repo-default",
   "current_runner_head": "e30d7da61a75a31e8b2661cd39ff408723d9d3ed",
   "dispatch": "gaza",
-  "last_exported_at": "2026-09-27T15:17:19Z",
+  "last_exported_at": "2026-09-27T17:15:06.946178Z",
   "last_receipt_at": "2026-09-27T13:02:54.189021Z",
   "latest_runtime_proof_date": "2026-09-27T13:02:53.765182Z",
   "migration_status": "MIGRATED",
@@ -27,14 +27,14 @@
   "publication_attempted": true,
   "publication_status": "published_and_posted",
   "receipt_completeness": "COMPLETE",
-  "recovery_lifecycle": "HEALTHY",
+  "recovery_lifecycle": "INCIDENT_OPEN",
   "runner_source_head": "e30d7da61a75a31e8b2661cd39ff408723d9d3ed",
   "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
     "gaza_daily_dispatch"
   ],
   "schema_version": "bluefern_external_operational_status_v1",
-  "stale_observability": false,
+  "stale_observability": true,
   "task_summaries": [
     {
       "artifact_id": "gaza_daily_dispatch-gaza-daily-2026-09-27-20260927T130040374996Z.json",

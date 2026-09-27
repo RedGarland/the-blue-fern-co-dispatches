@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260927T114348-0700-r11",
+  "scheduled_for": "2026-09-27T11:43:48-07:00",
+  "started_at": "2026-09-27T11:43:48-07:00",
+  "completed_at": "2026-09-27T11:44:47-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-27T10:45:25-07:00",
+    "end": "2026-09-27T11:43:48-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices_checked_first": true,
+    "cms_latest_notice_date_seen": "2026-09-25",
+    "targeted_searches_used": 12,
+    "targeted_search_limit": 12,
+    "summary": "No new qualifying U.S. or territory healthcare-access development was identified since the prior hourly check. CMS Public Notices was checked first; its newest entries remained dated 2026-09-25. Targeted searches covered hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency service loss, ambulance/EMS, air-medical bases, concrete service restorations, U.S. territories, and official state/public-health notices. Older, proposed, non-service-change, unsupported, and duplicate items were excluded."
+  }
+}

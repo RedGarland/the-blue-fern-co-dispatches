@@ -12,6 +12,9 @@ CARE_LINE_STATUS_LOCKS_RE = re.compile(r"^status/care-line/locks(?:/.*)?$")
 CARE_LINE_STATUS_SCHEDULER_RUNS_RE = re.compile(r"^status/care-line/scheduler-runs(?:/.*)?$")
 CARE_LINE_STATUS_PUBLICATION_SCHEDULER_RUNS_RE = re.compile(r"^status/care-line/publication-scheduler-runs(?:/.*)?$")
 CARE_LINE_STATUS_FOLLOW_UP_STATE_RE = re.compile(r"^status/care-line/effective-date-follow-up-state\.json$")
+CARE_LINE_OPERATOR_RUN_EVIDENCE_RE = re.compile(
+    r"^ops/operator/runs/\d{4}-\d{2}-\d{2}/[A-Za-z0-9][A-Za-z0-9_.-]{0,239}(?:/[A-Za-z0-9][A-Za-z0-9_.-]{0,239})*$"
+)
 
 CARE_LINE_RUNTIME_CATEGORIES = {
     "logs",
@@ -54,6 +57,8 @@ def classify_care_line_runtime_path(path_text: str) -> str | None:
         return "local_run_state"
     if CARE_LINE_STATUS_FOLLOW_UP_STATE_RE.match(lower):
         return "local_run_state"
+    if CARE_LINE_OPERATOR_RUN_EVIDENCE_RE.match(lower):
+        return "local_run_state"
     if CARE_LINE_LOGS_RE.match(lower):
         return "logs"
     return None
@@ -71,4 +76,5 @@ def care_line_runtime_paths() -> list[str]:
         "status/care-line/scheduler-runs/",
         "status/care-line/publication-scheduler-runs/",
         "status/care-line/effective-date-follow-up-state.json",
+        "ops/operator/runs/",
     ]

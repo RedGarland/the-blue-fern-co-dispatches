@@ -292,6 +292,63 @@ def test_care_line_scheduler_real_child_uses_utf8_decoding(tmp_path: Path) -> No
     assert "diagnostic: café" in child.stderr
 
 
+def test_care_line_scheduler_operational_health_includes_verify_checkout_exception(tmp_path: Path) -> None:
+    repo = Path(__file__).resolve().parents[1]
+    scheduler = _load_scheduler_module(repo)
+
+    class DummyLock:
+        def __init__(self, path: Path) -> None:
+            self.path = path
+            self.stale_recovered = False
+            self.acquired = False
+
+        def acquire(self, *, now=None):  # noqa: ANN001
+            self.acquired = True
+            return "acquired"
+
+        def release(self) -> None:
+            self.acquired = False
+
+    scheduler.verify_checkout = lambda root, branch: (_ for _ in ()).throw(  # type: ignore[assignment]
+        scheduler.SchedulerError(
+            "collection runner checkout is dirty; run failed closed: "
+            "ops/operator/runs/2026-09-26/runner-sync-apply.json"
+        )
+    )
+    scheduler.SchedulerLock = DummyLock  # type: ignore[assignment]
+
+    exit_code, receipt = scheduler.run_collection_once(
+        tmp_path,
+        run_date="2026-08-16",
+        branch=scheduler.PRODUCTION_BRANCH,
+        run_id="verify-checkout-failure-1",
+        smoke_test=False,
+        include_partial=True,
+        include_manual_review=False,
+        allow_insecure_tls=False,
+        max_sources=None,
+        fetch_timeout=17,
+        max_items_per_source=None,
+        active_queue_limit=111,
+        low_priority_cap=9,
+    )
+
+    assert exit_code == 1
+    assert receipt["failure_stage"] == "verify_checkout"
+    assert receipt["wrapper_exception_type"] == "SchedulerError"
+    assert "ops/operator/runs/2026-09-26/runner-sync-apply.json" in receipt["wrapper_exception_message"]
+
+    health_receipt = next(
+        (tmp_path / "status" / "operational-health" / "care-line" / "2026-08-16" / "runs").glob("*.json")
+    )
+    health = json.loads(health_receipt.read_text(encoding="utf-8"))
+    assert health["status"] == "failed"
+    assert health["details"]["failure_stage"] == "verify_checkout"
+    assert health["details"]["wrapper_exception_type"] == "SchedulerError"
+    assert "ops/operator/runs/2026-09-26/runner-sync-apply.json" in health["details"]["wrapper_exception_message"]
+    assert health["details"]["failed_source_diagnostics"] == []
+
+
 def test_care_line_windows_wrapper_writes_diagnostic_receipt_on_python_launch_failure(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     (repo / "scripts" / "windows").mkdir(parents=True, exist_ok=True)

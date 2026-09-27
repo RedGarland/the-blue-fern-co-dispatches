@@ -57,6 +57,33 @@ Require operator input only for:
 
 Do not request approval for routine code changes, testing, CI corrections, documentation, authorized PR mechanics, permitted routine merges, guarded synchronization, reversible remediation, or non-public validation.
 
+
+### Local Runner Boundary Protocol
+
+If an authorized Dispatches task cannot continue because the current chat or
+execution session lacks direct access to the required local Windows runner,
+Task Scheduler, or `C:\\BlueFernRunner` filesystem, do not end with raw
+commands as the primary handoff.
+
+Instead, produce a ready-to-run Codex/Work draft for the Windows host. The draft
+must include:
+
+- exact protected branch and protected SHA, or instructions to re-read it first;
+- exact local machine/path context;
+- allowed actions;
+- forbidden actions;
+- stop conditions;
+- expected receipts, reports, and proof artifacts;
+- final checkpoint format.
+
+Raw commands may appear inside the draft, but the handoff itself must be the
+executor-ready draft. This rule is mandatory whenever the remaining work is
+host-local execution rather than a source/GitHub change.
+
+Before ending at this boundary, complete every independent safe source-side step
+available from the current environment, including bounded PRs, CI fixes,
+checkpoint updates, documentation, and exact-head merge where permitted.
+
 ### Completion Rule
 
 Continue until either:

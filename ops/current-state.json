@@ -1,0 +1,96 @@
+{
+  "schema": "bluefern.ops.current_state.v1",
+  "as_of_utc": "2026-09-27T01:17:58Z",
+  "source_of_truth": "protected source branch plus production-runner handoff receipts",
+  "protected_source": {
+    "repository": "RedGarland/the-blue-fern-co-dispatches",
+    "branch": "add/pages-repo-default",
+    "head": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
+    "status": "protected"
+  },
+  "operational_prs": [
+    {
+      "number": 489,
+      "purpose": "portable scheduler and production-readiness consistency fixes",
+      "merged_head": "3b9632060ee8fb7713fd7a83e560f8479da7e3e2",
+      "status": "merged"
+    },
+    {
+      "number": 490,
+      "purpose": "operational status PowerShell wrapper receipt support",
+      "merged_head": "2788dbd93b900208c61fe81381359aa7f1e8e1b5",
+      "status": "merged"
+    },
+    {
+      "number": 491,
+      "purpose": "operational status wrapper child stdout and stderr capture",
+      "merged_head": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
+      "status": "merged"
+    }
+  ],
+  "runner_state": {
+    "operator": {
+      "path": "C:\\BlueFernRunner\\BlueFernOperatorCurrent",
+      "synced_to": "3b9632060ee8fb7713fd7a83e560f8479da7e3e2",
+      "status": "blocked_unsynced_after_pr491",
+      "blocker": "preserved runtime/evidence state must be classified before sync"
+    },
+    "food": {
+      "path": "C:\\BlueFernRunner\\FoodLineCurrent6",
+      "synced_to": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
+      "status": "scheduler_proven"
+    },
+    "care": {
+      "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8",
+      "synced_to": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
+      "status": "runner_synced"
+    },
+    "gaza": {
+      "path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6",
+      "synced_to": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
+      "status": "runner_synced"
+    },
+    "ice": {
+      "path": "C:\\BlueFernRunner\\ICEMonitorCurrent",
+      "synced_to": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
+      "status": "runner_synced"
+    },
+    "operational_status": {
+      "path": "C:\\BlueFernRunner\\OperationalStatusCurrent",
+      "branch": "ops/status/current",
+      "latest_commit": "211bd2611a9444a84963da76084ef50e73f5a41a"
+    }
+  },
+  "proofs": {
+    "operational_status_export": {
+      "highest_proven_layer": "SCHEDULER_PROVEN_AND_STATUS_HANDOFF_PROVEN",
+      "task_name": "\\Blue Fern Co\\Blue Fern Operational Status Export",
+      "last_task_result": 0,
+      "wrapper_receipt": "C:\\BlueFernRunner\\FoodLineCurrent6\\logs\\operational-status-exporter-wrapper\\wrapper-20260927T011246Z-74c3da2e.json",
+      "exporter_receipt": "C:\\BlueFernRunner\\FoodLineCurrent6\\logs\\operational-status-exporter\\20260927T011247Z-9bc498fb.json",
+      "final_checkpoint": "C:\\BlueFernRunner\\BlueFernOperatorCurrent\\ops\\operator\\runs\\2026-09-26\\pr489-production-handoff\\scheduler-diagnostics\\pr491-final-production-proof-checkpoint.json",
+      "public_side_effects": false
+    }
+  },
+  "known_blockers": [
+    {
+      "id": "operator-runner-unsynced-after-pr491",
+      "classification": "RUNTIME_STATE_CONTRACT_REVIEW_REQUIRED",
+      "summary": "Operator checkout remains on the PR #489 protected head because preserved runtime/evidence state blocked guarded sync after PR #491.",
+      "next_safe_action": "Classify Operator runtime/evidence state against the allowlist, preserve receipts, then run guarded sync plan before any apply.",
+      "authority_boundary": "Do not delete or rewrite preserved evidence to obtain a clean sync."
+    }
+  ],
+  "next_action": {
+    "status": "awaiting_operator_runner_state_classification",
+    "summary": "Re-read protected HEAD, inspect Operator checkout status and preserved evidence, then either sync Operator to 2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3 through the guarded synchronizer or stop with the exact evidence blocker.",
+    "must_not_trigger": [
+      "collection",
+      "publication",
+      "Pages sync or push",
+      "Cascadia activation",
+      "scheduled task definition mutation",
+      "evidence deletion"
+    ]
+  }
+}

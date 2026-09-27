@@ -37,6 +37,12 @@ FOOD_LINE_OPERATIONAL_RECOVERY_RE = re.compile(
     r"[A-Za-z0-9_.-]{1,180}/(?:recovery\.lock|latest\.json|attempts/[A-Za-z0-9_.-]{1,220}\.json)$"
 )
 FOOD_LINE_LOGS_RE = re.compile(r"^logs/food-line(?:/.*)?$")
+FOOD_LINE_OPERATIONAL_STATUS_LOGS_RE = re.compile(
+    r"^logs/operational-status-exporter(?:/.*)?$"
+)
+FOOD_LINE_OPERATIONAL_STATUS_WRAPPER_LOGS_RE = re.compile(
+    r"^logs/operational-status-exporter-wrapper(?:/.*)?$"
+)
 FOOD_LINE_AGENT_HISTORY_RE = re.compile(r"^data/agent-history-staging/food-line(?:/.*)?$")
 FOOD_LINE_MUTABLE_TRACKED_RUNTIME_PATHS = frozenset()
 
@@ -107,6 +113,10 @@ def classify_food_line_runtime_path(path_text: str) -> str | None:
         return "review_output"
     if FOOD_LINE_LOGS_RE.match(lower):
         return "logs"
+    if FOOD_LINE_OPERATIONAL_STATUS_LOGS_RE.match(lower):
+        return "logs"
+    if FOOD_LINE_OPERATIONAL_STATUS_WRAPPER_LOGS_RE.match(lower):
+        return "logs"
     return None
 
 
@@ -121,6 +131,8 @@ def food_line_runtime_paths() -> list[str]:
         "status/operational-health/food-line/",
         "status/operational-recovery/food-line/",
         "logs/food-line/",
+        "logs/operational-status-exporter/",
+        "logs/operational-status-exporter-wrapper/",
         "data/dispatches/food-line/agent-inbox/",
         "data/dispatches/food-line/agent-intake/",
         "data/dispatches/food-line/review/",

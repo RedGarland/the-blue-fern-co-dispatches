@@ -78,7 +78,8 @@ def test_sync_helper_validates_before_and_after_rollout() -> None:
     text = _text()
     assert 'scripts\\preflight_repo_state.py' in text
     assert 'scripts\\doctor.py' in text
-    assert '$pre = Invoke-RunnerValidation -Root $root' in text
+    assert '$SyncControllerRoot = Split-Path -Parent $PSScriptRoot' in text
+    assert '$pre = Invoke-RunnerValidation -Root $root -PreflightRoot $SyncControllerRoot' in text
     assert '$post = Invoke-RunnerValidation -Root $root' in text
     assert '"FAST_FORWARDED_VALIDATION_FAILED"' in text
 
@@ -157,6 +158,15 @@ def test_sync_helper_preserves_only_preflight_sanctioned_tracked_runtime_state()
     assert 'tracked working-tree state changed after discovery' in text
     assert 'tracked runtime collision appeared after discovery' in text
     assert 'tracked working-tree changes are present' not in text
-    preflight = text.index('$pre = Invoke-RunnerValidation -Root $root')
+    preflight = text.index('$pre = Invoke-RunnerValidation -Root $root -PreflightRoot $SyncControllerRoot')
     sanction = text.index('$row.SanctionedTrackedStatePreserved = $true')
     assert preflight < sanction
+
+
+def test_sync_helper_uses_controller_preflight_before_runner_receives_source_fix() -> None:
+    text = _text()
+    assert '$SyncControllerRoot = Split-Path -Parent $PSScriptRoot' in text
+    assert '$validationRoot = if ($PreflightRoot) { $PreflightRoot } else { $Root }' in text
+    assert '$pre = Invoke-RunnerValidation -Root $root -PreflightRoot $SyncControllerRoot' in text
+    assert '$post = Invoke-RunnerValidation -Root $root' in text
+    assert 'ValidationControllerRoot = $SyncControllerRoot' in text

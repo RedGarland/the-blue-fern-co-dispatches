@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_reconciliation.v1",
+  "dispatch": "food-line",
+  "observation_date": "2026-09-26",
+  "generated_at": "2026-09-27T06:46:38Z",
+  "run_count": 19,
+  "success_run_count": 19,
+  "degraded_run_count": 0,
+  "successful_run_count": 19,
+  "failed_run_count": 0,
+  "zero_finding_run_count": 19,
+  "finding_count": 0,
+  "accounted_count": 0,
+  "unreconciled_count": 0,
+  "findings": [],
+  "heartbeat_integrity": {
+    "cadence": "hourly",
+    "missing_past_due_hour_slots_local": [
+      "05",
+      "09",
+      "10",
+      "12"
+    ],
+    "material_absence": true
+  },
+  "publication_authorized": false,
+  "automatic_approval": false
+}

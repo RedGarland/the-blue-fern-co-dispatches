@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260927T144237-0700-0029c37c24",
+  "scheduled_for": "2026-09-27T14:42:37-07:00",
+  "started_at": "2026-09-27T14:42:37-07:00",
+  "completed_at": "2026-09-27T14:44:19-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "start": "2026-09-27T13:42:37-07:00",
+    "end": "2026-09-27T14:42:37-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [
+    {
+      "finding_id": "care-66e7d1f766aba35a",
+      "canonical_source_url": "https://healthcareindustrytoday.com/article/945621117-governor-jenniffer-gonz-lez-col-n-and-hhs-secretary-robert-f-kennedy-jr-inaugurate-new-vieques-health-center-restoring-essential-healthcare",
+      "title": "Governor Jenniffer González-Colón and HHS Secretary Robert F. Kennedy Jr. Inaugurate New Vieques Health Center, Restoring Essential Healthcare Services to the Island",
+      "publisher": "EIN Presswire",
+      "exact_supporting_passage": "Today, Vieques once again has a healthcare facility worthy of its people.",
+      "source_published_date": "2026-09-27",
+      "state": null,
+      "city": "Vieques",
+      "county": null,
+      "territory": "Puerto Rico",
+      "event_type": "essential_service_restoration_reopening",
+      "service_line": "hospital-level services",
+      "access_consequences": "Restores on-island hospital-level access and reduces the need for residents to travel off-island before receiving initial care.",
+      "affected_population": "Nearly 8,000 residents of Vieques.",
+      "effective_date": "2026-09-27",
+      "announcement_date": "2026-09-27",
+      "confidence": "high",
+      "source_role": "government_press_release_republished",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": [
+    "CMS Public Notices was checked first; the newest listed notices were six hospice termination notices dated 2026-09-25.",
+    "Twelve additional targeted searches covered the bounded high-value miss classes.",
+    "One qualifying restoration was found in Vieques, Puerto Rico.",
+    "The source provides a publication date but no visible publication timestamp, so exact within-hour publication timing remains unverified.",
+    "Production collection remains authoritative; this run is supplementary only."
+  ]
+}

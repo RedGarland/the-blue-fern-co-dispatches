@@ -16,6 +16,8 @@ $wrapperRunId = "wrapper-{0}-{1}" -f $startedAt.ToString("yyyyMMddTHHmmssZ"), ([
 $wrapperExitCode = 1
 $wrapperError = $null
 $childLaunchAttempted = $false
+$childStdoutPath = $null
+$childStderrPath = $null
 
 function Test-ExecutablePath {
     param([string]$Executable)
@@ -55,11 +57,26 @@ function Write-WrapperReceipt {
         exporter_script_exists = Test-Path -LiteralPath $exporterScript -PathType Leaf
         child_launch_attempted = $childLaunchAttempted
         child_command = @($Python) + $arguments
+        child_stdout_path = $childStdoutPath
+        child_stderr_path = $childStderrPath
+        child_stdout_tail = Read-TextTail -Path $childStdoutPath
+        child_stderr_tail = Read-TextTail -Path $childStderrPath
+        child_exit_code = $wrapperExitCode
         wrapper_exit_code = $wrapperExitCode
         error = $wrapperError
         public_side_effects = $false
     }
     $receipt | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $receiptPath -Encoding UTF8
+}
+
+function Read-TextTail {
+    param([string]$Path)
+
+    if ([string]::IsNullOrWhiteSpace($Path) -or -not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        return $null
+    }
+    $lines = @(Get-Content -LiteralPath $Path -Tail 40 -ErrorAction SilentlyContinue)
+    return ($lines -join "`n")
 }
 
 $arguments = @(
@@ -84,8 +101,13 @@ try {
     if (-not (Test-ExecutablePath -Executable $Python)) {
         throw "Operational status Python executable does not resolve: $Python"
     }
+    $receiptRoot = if (Test-Path -LiteralPath $SourceRoot -PathType Container) { $SourceRoot } else { $scriptRoot }
+    $childOutputDir = Join-Path $receiptRoot 'logs\operational-status-exporter-wrapper'
+    New-Item -ItemType Directory -Path $childOutputDir -Force | Out-Null
+    $childStdoutPath = Join-Path $childOutputDir "$wrapperRunId.stdout.log"
+    $childStderrPath = Join-Path $childOutputDir "$wrapperRunId.stderr.log"
     $childLaunchAttempted = $true
-    & $Python @arguments
+    & $Python @arguments > $childStdoutPath 2> $childStderrPath
     $wrapperExitCode = if ($null -eq $LASTEXITCODE) { 0 } else { [int]$LASTEXITCODE }
 } catch {
     $wrapperError = $_.Exception.Message

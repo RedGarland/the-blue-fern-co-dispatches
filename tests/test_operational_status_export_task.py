@@ -407,8 +407,11 @@ def test_powershell_wrapper_records_scheduler_boundary_receipt() -> None:
     assert "operational-status-exporter-wrapper" in text
     assert "bluefern.operational_status.wrapper.v1" in text
     assert "wrapper_exit_code" in text
+    assert "child_exit_code" in text
     assert "child_launch_attempted" in text
     assert "child_command" in text
+    assert "child_stdout_tail" in text
+    assert "child_stderr_tail" in text
     assert "public_side_effects = $false" in text
     assert "finally" in text
 
@@ -418,5 +421,7 @@ def test_powershell_wrapper_classifies_pre_python_failures() -> None:
     assert "Operational status exporter script does not exist" in text
     assert "Operational status Python executable does not resolve" in text
     assert "Test-ExecutablePath" in text
+    assert "Read-TextTail" in text
     assert "Get-Command $Executable" in text
     assert "Test-Path -LiteralPath $exporterScript" in text
+    assert "> $childStdoutPath 2> $childStderrPath" in text

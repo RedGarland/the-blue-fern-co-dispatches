@@ -1664,6 +1664,31 @@ def test_active_lock_is_not_reclaimed_even_after_stale_threshold(
     assert record["source_watch_status"] == scheduler.BLOCKED_OVERLAPPING_STATUS
 
 
+def test_dead_lock_owner_is_reclaimed_before_stale_threshold(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    lock_dir = tmp_path / "status" / "food-line" / "locks" / "source-watch.lock"
+    lock_dir.mkdir(parents=True)
+    (lock_dir / "owner.json").write_text(
+        json.dumps({"pid": 999999, "task": "source-watch", "run_id": "interrupted-proof"}),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(scheduler, "process_is_running", lambda pid: False)
+
+    code, receipt = _run_source_watch_with_child(
+        tmp_path,
+        monkeypatch,
+        child_exit=0,
+        child_stdout=_child_payload(status="completed", ok=True),
+    )
+
+    assert code == 0
+    assert receipt["exit_code"] == 0
+    assert not lock_dir.exists()
+    attention = sorted((tmp_path / "logs" / "food-line" / "operator-attention" / "2026-09-07").glob("*.json"))
+    assert any(json.loads(path.read_text(encoding="utf-8"))["category"] == "stale_lock_reclaimed" for path in attention)
+
+
 def test_proven_stale_lock_is_reclaimed_before_source_watch_runs(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

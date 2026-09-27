@@ -197,12 +197,12 @@ def _lock_owner_pid(owner: dict[str, Any]) -> int | None:
 
 
 def _lock_is_proven_stale(owner: dict[str, Any], *, age_seconds: float, stale_seconds: float) -> bool:
-    if age_seconds < stale_seconds:
-        return False
     pid = _lock_owner_pid(owner)
     if pid is None:
         return False
-    return not process_is_running(pid)
+    if not process_is_running(pid):
+        return True
+    return False
 
 
 def _reclaim_stale_lock(layout: Layout, edition_date: str, lock_dir: Path, owner: dict[str, Any], age_seconds: float) -> bool:

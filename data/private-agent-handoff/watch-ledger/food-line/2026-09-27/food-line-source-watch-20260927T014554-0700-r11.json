@@ -1,0 +1,36 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260927T014554-0700-r11",
+  "scheduled_for": "2026-09-27T01:45:54-07:00",
+  "started_at": "2026-09-27T01:44:49-07:00",
+  "completed_at": "2026-09-27T01:45:57-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-27T00:48:32-07:00",
+    "date_to": "2026-09-27T01:45:57-07:00",
+    "edition_date": "2026-09-27"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches_executed": 12,
+    "search_scope": [
+      "only/sole/last/full-service grocery store closure, fire, or disaster",
+      "storm/flood/fire/outage-related food distribution cancellation or suspension",
+      "abrupt pantry or food-bank closure/service reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "source_priority": "fresh local news, official agency/provider notices, direct source pages",
+    "observations": [
+      "No new qualifying U.S. food-access disruption was identified within the bounded hourly window.",
+      "Fresh West Maui brush-fire reporting documented evacuation, road closure, and contraflow near Olowalu General Store, but no structure impact and no evidence that the community's only/sole/last/full-service grocery access was lost.",
+      "Hurricane Nolo closure/cancellation reporting did not identify a new qualifying food-distribution, pantry/food-bank, grocery-access, SNAP, or WIC interruption in the window.",
+      "Older, duplicate, non-U.S., generic storm, donation-drive, and non-access-impact items were excluded."
+    ],
+    "degraded_reasons": [
+      "One fresh Hurricane Nolo article returned HTTP 402 when opened; useful redundant Hawaii coverage remained available from local sources, so the run continued."
+    ]
+  }
+}

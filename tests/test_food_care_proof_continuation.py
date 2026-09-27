@@ -30,3 +30,10 @@ def test_food_care_continuation_registration_is_bounded() -> None:
     assert "ExecutionTimeLimit" in text
     assert "run_food_care_proof_continuation.ps1" in text
     assert "IntervalMinutes must be at least 5" in text
+
+
+def test_food_care_continuation_startup_receipt_accepts_null_completed_at() -> None:
+    text = CONTINUATION.read_text(encoding="utf-8")
+
+    assert "param([AllowNull()][object]$CompletedAt)" in text
+    assert "Write-Receipt -CompletedAt $null" in text

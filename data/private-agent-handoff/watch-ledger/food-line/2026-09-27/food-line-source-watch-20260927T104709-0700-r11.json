@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260927T104709-0700-r11",
+  "scheduled_for": "2026-09-27T10:45:54-07:00",
+  "started_at": "2026-09-27T10:47:09-07:00",
+  "completed_at": "2026-09-27T10:47:50-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-27T09:47:09-07:00",
+    "end": "2026-09-27T10:47:09-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 12 bounded targeted web searches across the four audited miss classes: only/sole/last/full-service grocery loss or closure; emergency food-distribution cancellations or suspensions from storm/flood/fire/outage/facility damage; abrupt pantry/food-bank service closures or major access reductions; and official SNAP/WIC interruptions with immediate access consequences. Fresh Hawaii recovery coverage was reviewed: Kauai North Shore Food Pantry distribution remained scheduled, and Big Island reporting repeated the already-known Food Basket warehouse storm closure rather than establishing a new disruption in this hourly window. No qualifying new signal was found. Routine promotions, donation drives, generic policy/economic stories, older items, and duplicates were excluded."
+}

@@ -35,7 +35,7 @@ $ExitCode = 1
 $ErrorMessage = $null
 
 function Write-Receipt {
-    param([string]$CompletedAt)
+    param([AllowNull()][object]$CompletedAt)
     New-Item -ItemType Directory -Force -Path $ReceiptDir | Out-Null
     $payload = [ordered]@{
         schema_version = "blue_fern_food_care_proof_continuation_v1"

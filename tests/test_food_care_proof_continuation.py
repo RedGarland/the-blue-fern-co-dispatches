@@ -36,4 +36,7 @@ def test_food_care_continuation_startup_receipt_accepts_null_completed_at() -> N
     text = CONTINUATION.read_text(encoding="utf-8")
 
     assert "param([AllowNull()][object]$CompletedAt)" in text
+    assert "$completedValue = $null" in text
+    assert "if ($null -ne $CompletedAt)" in text
+    assert "completed_at = $completedValue" in text
     assert "Write-Receipt -CompletedAt $null" in text

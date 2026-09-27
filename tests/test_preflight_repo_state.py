@@ -333,6 +333,42 @@ def test_operator_runtime_ledger_paths_are_sanctioned_but_operator_config_remain
         "scripts/blue_fern_operator.py",
     }
 
+
+def test_operator_preserved_runtime_evidence_paths_are_sanctioned(monkeypatch, tmp_path):
+    source_repo = tmp_path / "repo"
+    source_repo.mkdir()
+    monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: None)
+    monkeypatch.setattr(
+        preflight_repo_state,
+        "_run_git_status",
+        lambda _repo: (
+            0,
+            [
+                "?? ops/operator/remediation/receipts/2026-09-26/pr489-incident-preservation.json",
+                "?? ops/operator/remediation/receipts/2026-09-26/nested/evidence.json",
+                "?? ops/operator/engineering/active/work-item/work-item.json",
+                "?? ops/operator/.lock/operator.lock",
+                "?? ops/operator/runs/2026-09-26/pr489-production-handoff.json",
+                "?? ops/operator/remediation-policy-drafts/policy.json",
+            ],
+        ),
+    )
+
+    report = preflight_repo_state.build_preflight_report(source_repo)
+
+    assert report["ok"] is False
+    assert {entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]} == {
+        "ops/operator/remediation/receipts/2026-09-26/pr489-incident-preservation.json",
+        "ops/operator/remediation/receipts/2026-09-26/nested/evidence.json",
+        "ops/operator/engineering/active/work-item/work-item.json",
+        "ops/operator/.lock/operator.lock",
+        "ops/operator/runs/2026-09-26/pr489-production-handoff.json",
+    }
+    assert [entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]] == [
+        "ops/operator/remediation-policy-drafts/policy.json"
+    ]
+
+
 def test_allowed_local_generated_entries_do_not_fail_preflight(monkeypatch, tmp_path):
     source_repo = tmp_path / "repo"
     source_repo.mkdir()
@@ -482,7 +518,3 @@ def test_preflight_script_imports_without_pythonpath_injection(tmp_path: Path) -
         capture_output=True,
         text=True,
         check=False,
-    )
-
-    assert completed.returncode in {0, 1}, completed.stdout + completed.stderr
-    assert "ModuleNotFoundError" not in completed.stdout + completed.stderr

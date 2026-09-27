@@ -106,6 +106,66 @@ def test_production_shaped_external_handoff_evidence_is_clean_but_nearby_dirt_is
     ]
 
 
+
+def test_operator_tracked_runtime_state_is_allowed_but_source_changes_remain_risky(monkeypatch, tmp_path):
+    source_repo = tmp_path / "repo"
+    source_repo.mkdir()
+    monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: None)
+    monkeypatch.setattr(
+        preflight_repo_state,
+        "_run_git_status",
+        lambda _repo: (
+            0,
+            [
+                " M ops/operator/latest.json",
+                " M ops/operator/notification-latest.json",
+                " M ops/operator/history.jsonl",
+                " M ops/operator/incidents/bfo-example.json",
+                " M ops/operator/runs/2026-09-26/pr489-production-handoff/scheduler-attempt.json",
+                " M ops/operator/remediation/receipts/2026-09-26/proof.json",
+                " M ops/operator/engineering/work-item.json",
+                "?? ops/operator/runs/2026-09-26/pr489-production-handoff/new-proof.json",
+                " M scripts/blue_fern_operator.py",
+            ],
+        ),
+    )
+
+    report = preflight_repo_state.build_preflight_report(source_repo)
+
+    assert report["ok"] is False
+    assert {entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]} == {
+        "ops/operator/latest.json",
+        "ops/operator/notification-latest.json",
+        "ops/operator/history.jsonl",
+        "ops/operator/incidents/bfo-example.json",
+        "ops/operator/runs/2026-09-26/pr489-production-handoff/scheduler-attempt.json",
+        "ops/operator/remediation/receipts/2026-09-26/proof.json",
+        "ops/operator/engineering/work-item.json",
+        "ops/operator/runs/2026-09-26/pr489-production-handoff/new-proof.json",
+    }
+    assert [entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]] == [
+        "scripts/blue_fern_operator.py"
+    ]
+
+
+@pytest.mark.parametrize("status", ["M ", "MM", " D", "D "])
+def test_operator_runtime_staged_or_deleted_state_remains_risky(monkeypatch, tmp_path, status):
+    source_repo = tmp_path / "repo"
+    source_repo.mkdir()
+    monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: None)
+    monkeypatch.setattr(
+        preflight_repo_state,
+        "_run_git_status",
+        lambda _repo: (0, [f"{status} ops/operator/notification-latest.json"]),
+    )
+
+    report = preflight_repo_state.build_preflight_report(source_repo)
+
+    assert report["ok"] is False
+    assert [entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]] == [
+        "ops/operator/notification-latest.json"
+    ]
+
 def test_food_line_tracked_runtime_state_is_risky_but_sanctioned_runtime_path_is_allowed(monkeypatch, tmp_path):
     source_repo = tmp_path / "repo"
     source_repo.mkdir()

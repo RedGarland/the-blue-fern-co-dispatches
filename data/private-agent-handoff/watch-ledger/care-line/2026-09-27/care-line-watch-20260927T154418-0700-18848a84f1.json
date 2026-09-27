@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260927T154418-0700-18848a84f1",
+  "scheduled_for": "2026-09-27T15:44:18-07:00",
+  "started_at": "2026-09-27T15:44:18-07:00",
+  "completed_at": "2026-09-27T15:45:42-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-27T14:44:19-07:00",
+    "end": "2026-09-27T15:44:18-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices was checked first; the newest listed notices remain six hospice termination notices dated 2026-09-25.",
+    "Twelve additional targeted searches covered the bounded high-value miss classes.",
+    "No new qualifying healthcare-access development was identified within the bounded hourly window.",
+    "A California provider suspended/ineligible dataset showed a 2026-09-27 dataset update, but no concrete newly effective essential-service access loss could be established from the surfaced record, so it was excluded.",
+    "Production collection remains authoritative; this run is supplementary only."
+  ]
+}

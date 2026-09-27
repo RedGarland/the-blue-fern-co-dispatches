@@ -32,6 +32,10 @@ PRODUCT_META: dict[str, dict[str, str]] = {
     "american-pressure": {"badge": "AMERICAN PRESSURE", "badge_class": "american-pressure", "publication_name": "The American Pressure Dispatch"},
 }
 GENERIC_MANIFEST_TITLES = {"limited-source update"}
+OLDER_PUBLIC_RELEASE_DAYS = 14
+OLDER_PUBLIC_RELEASE_NOTE = (
+    "Older public release; monitoring continues between editions."
+)
 
 
 @dataclass(frozen=True)
@@ -336,20 +340,40 @@ def select_effective_latest(releases: list[PublicRelease]) -> dict[str, PublicRe
     return latest
 
 
-def render_latest_developments_section(cards: list[PublicRelease]) -> str:
-    card_html = "".join(
+def _release_age_note(release: PublicRelease) -> str:
+    if release.age_days < OLDER_PUBLIC_RELEASE_DAYS:
+        return ""
+    return OLDER_PUBLIC_RELEASE_NOTE
+
+
+def _render_latest_development_card(card: PublicRelease) -> str:
+    freshness = _release_age_note(card)
+    freshness_html = (
+        f'<p class="edition-freshness">{html.escape(freshness)}</p>'
+        if freshness
+        else ""
+    )
+    publication_time = (
+        f" &middot; {html.escape(card.publication_time_text)}"
+        if card.publication_time_text
+        else ""
+    )
+    return (
         f'<article class="edition-card edition-card--{html.escape(card.badge_class)}">'
         f'<p class="topic-badge topic-badge--{html.escape(card.badge_class)}">{html.escape(card.badge_label)}</p>'
         f'<h3><a href="{html.escape(card.relative_url)}">{html.escape(card.title)}</a></h3>'
         f'<p class="edition-source">{html.escape(card.publication_name)} &middot; {html.escape(_format_long_date(card.edition_date))}'
-        f'{f" &middot; {html.escape(card.publication_time_text)}" if card.publication_time_text else ""}</p>'
+        f'{publication_time}</p>'
+        f'{freshness_html}'
         f'<p class="edition-provenance">Based on public source reporting</p>'
         f'<p class="edition-meta">{html.escape(_format_source_count(card.source_count))}</p>'
         f"</article>"
-        for card in cards
     )
-    return f'<section class="section-block"><div class="section-heading"><p class="eyebrow">The current edition desk</p><h2>{LATEST_DEVELOPMENTS_HEADING}</h2></div><div class="edition-grid">{card_html}</div></section>'
 
+
+def render_latest_developments_section(cards: list[PublicRelease]) -> str:
+    card_html = "".join(_render_latest_development_card(card) for card in cards)
+    return f'<section class="section-block"><div class="section-heading"><p class="eyebrow">The current edition desk</p><h2>{LATEST_DEVELOPMENTS_HEADING}</h2></div><div class="edition-grid">{card_html}</div></section>'
 
 def render_homepage_from_template(template_html: str, cards: list[PublicRelease]) -> str:
     replacement = render_latest_developments_section(cards)
@@ -364,11 +388,20 @@ def _release_date_line(release: PublicRelease) -> str:
 
 
 def _replace_release_fields(card_html: str, release: PublicRelease, *, include_source_count: bool) -> str:
+    card_html = re.sub(r'<p class="latest-context">.*?</p>', "", card_html, flags=re.DOTALL)
     headline = f'<h3 class="latest-headline"><a href="{html.escape(release.relative_url)}">{html.escape(release.title)}</a></h3>'
     updated, headline_count = re.subn(r'<h3 class="latest-headline"><a href="[^"]+">.*?</a></h3>', headline, card_html, count=1, flags=re.DOTALL)
     if headline_count != 1:
         raise ValueError(f"Latest headline field not found for {release.slug}")
-    updated, date_count = re.subn(r'<p class="date-line">.*?</p>', f'<p class="date-line">{_release_date_line(release)}</p>', updated, count=1, flags=re.DOTALL)
+    context_note = _release_age_note(release)
+    context_html = f'<p class="latest-context">{html.escape(context_note)}</p>' if context_note else ""
+    updated, date_count = re.subn(
+        r'<p class="date-line">.*?</p>',
+        f'<p class="date-line">{_release_date_line(release)}</p>{context_html}',
+        updated,
+        count=1,
+        flags=re.DOTALL,
+    )
     if date_count != 1:
         raise ValueError(f"Latest date field not found for {release.slug}")
     updated, button_count = re.subn(r'(<a class="button" href=")[^"]+(">Read latest</a>)', rf'\g<1>{html.escape(release.relative_url)}\g<2>', updated, count=1)
@@ -458,13 +491,13 @@ def _annotate_dispatch_card_public_state(card_html: str, slug: str, public_root:
             updated = _replace_support_link_label(
                 updated,
                 "/food-line/audio/index.html",
-                f"Audio archive through {_format_long_date(audio_date)}",
+                f"Historical audio archive through {_format_long_date(audio_date)}",
             )
         if map_date:
             updated = _replace_support_link_label(
                 updated,
                 "/food-line/map/index.html",
-                f"Map snapshot through {_format_long_date(map_date)}",
+                f"Historical map snapshot through {_format_long_date(map_date)}",
             )
     return updated
 
@@ -540,5 +573,6 @@ def render_dispatch_directory_from_releases(template_html: str, latest: dict[str
         raise ValueError(f"No eligible public release found for active dispatches: {', '.join(missing)}")
     refreshed = template_html
     for slug in ACTIVE_PRODUCTS:
+        refreshed = _replace_latest_edition_card(refreshed, latest[slug])
         refreshed = render_dispatch_directory_from_template(refreshed, latest[slug])
     return _normalize_shared_footer_separator(refreshed)

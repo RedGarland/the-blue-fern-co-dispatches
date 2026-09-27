@@ -1,11 +1,11 @@
 {
   "schema": "bluefern.ops.current_state.v1",
-  "as_of_utc": "2026-09-27T04:43:19Z",
+  "as_of_utc": "2026-09-27T05:16:14Z",
   "source_of_truth": "protected source branch plus production-runner handoff receipts",
   "protected_source": {
     "repository": "RedGarland/the-blue-fern-co-dispatches",
     "branch": "add/pages-repo-default",
-    "observed_head": "9254f16a7672cdfdd3974bca41ac1b1ad86625de",
+    "observed_head": "8d09028d9ada6b8a2b19c86483abd855360e7402",
     "status": "protected",
     "resume_policy": "re-read this branch before acting; do not rely on the observed head if the branch has advanced"
   },
@@ -99,34 +99,39 @@
       "purpose": "Operator tracked runtime evidence preflight allowance",
       "merged_head": "9254f16a7672cdfdd3974bca41ac1b1ad86625de",
       "status": "merged"
+    },
+    {
+      "number": 504,
+      "purpose": "post-PR503 operational current-state checkpoint",
+      "merged_head": "8d09028d9ada6b8a2b19c86483abd855360e7402",
+      "status": "merged"
     }
   ],
   "runner_state": {
     "operator": {
       "path": "C:\\BlueFernRunner\\BlueFernOperatorCurrent",
-      "synced_to": "3b9632060ee8fb7713fd7a83e560f8479da7e3e2",
-      "status": "blocked_unsynced_after_pr503",
-      "blocker": "guarded sync must rerun from a current protected checkout after PR #503 because the prior plan used pre-PR503 classification and blocked Operator runtime evidence"
+      "synced_to": "8d09028d9ada6b8a2b19c86483abd855360e7402",
+      "status": "synced_and_operator_proof_complete"
     },
     "food": {
       "path": "C:\\BlueFernRunner\\FoodLineCurrent6",
-      "synced_to": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
-      "status": "scheduler_proven_at_pr491_behind_protected_source_after_pr503_after_pr503"
+      "synced_to": "8d09028d9ada6b8a2b19c86483abd855360e7402",
+      "status": "synced_and_status_export_proven"
     },
     "care": {
       "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8",
-      "synced_to": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
-      "status": "runner_synced_at_pr491_behind_protected_source_after_pr503_after_pr503"
+      "synced_to": "8d09028d9ada6b8a2b19c86483abd855360e7402",
+      "status": "synced_and_status_export_proven"
     },
     "gaza": {
       "path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6",
-      "synced_to": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
-      "status": "runner_synced_at_pr491_behind_protected_source_after_pr503_after_pr503"
+      "synced_to": "8d09028d9ada6b8a2b19c86483abd855360e7402",
+      "status": "synced_and_status_export_proven"
     },
     "ice": {
       "path": "C:\\BlueFernRunner\\ICEMonitorCurrent",
-      "synced_to": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
-      "status": "runner_synced_at_pr491_behind_protected_source_after_pr503_after_pr503"
+      "synced_to": "8d09028d9ada6b8a2b19c86483abd855360e7402",
+      "status": "synced_and_status_export_proven"
     },
     "operational_status": {
       "path": "C:\\BlueFernRunner\\OperationalStatusCurrent",
@@ -136,30 +141,46 @@
   },
   "proofs": {
     "operational_status_export": {
-      "highest_proven_layer": "SCHEDULER_PROVEN_AND_STATUS_HANDOFF_PROVEN",
-      "task_name": "\\Blue Fern Co\\Blue Fern Operational Status Export",
-      "last_task_result": 0,
-      "wrapper_receipt": "C:\\BlueFernRunner\\FoodLineCurrent6\\logs\\operational-status-exporter-wrapper\\wrapper-20260927T011246Z-74c3da2e.json",
-      "exporter_receipt": "C:\\BlueFernRunner\\FoodLineCurrent6\\logs\\operational-status-exporter\\20260927T011247Z-9bc498fb.json",
-      "final_checkpoint": "C:\\BlueFernRunner\\BlueFernOperatorCurrent\\ops\\operator\\runs\\2026-09-26\\pr489-production-handoff\\scheduler-diagnostics\\pr491-final-production-proof-checkpoint.json",
+      "highest_proven_layer": "NONPUBLIC_STATUS_EXPORT_PROOF_PASSED",
+      "wrapper_receipt": "C:\\\\BlueFernRunner\\\\FoodLineCurrent6\\\\logs\\\\operational-status-exporter-wrapper\\\\wrapper-20260927T050504Z-ef1b4691.json",
+      "exporter_receipt": "C:\\\\BlueFernRunner\\\\FoodLineCurrent6\\\\logs\\\\operational-status-exporter\\\\20260927T050504Z-18c89479.json",
+      "exporter_classification": "exported",
+      "exit_code": 0,
+      "status_export_proof_passed": true,
+      "public_side_effects": false
+    },
+    "production_runner_sync": {
+      "highest_proven_layer": "PRODUCTION_RUNNER_SYNC_AND_NONPUBLIC_STATUS_PROOF_COMPLETE",
+      "protected_head_used": "8d09028d9ada6b8a2b19c86483abd855360e7402",
+      "runner_heads_before": {
+        "operator": "3b9632060ee8fb7713fd7a83e560f8479da7e3e2",
+        "food-line": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
+        "care-line": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
+        "gaza": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
+        "ice": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3"
+      },
+      "runner_heads_after": {
+        "operator": "8d09028d9ada6b8a2b19c86483abd855360e7402",
+        "food-line": "8d09028d9ada6b8a2b19c86483abd855360e7402",
+        "care-line": "8d09028d9ada6b8a2b19c86483abd855360e7402",
+        "gaza": "8d09028d9ada6b8a2b19c86483abd855360e7402",
+        "ice": "8d09028d9ada6b8a2b19c86483abd855360e7402"
+      },
+      "plan_report": "C:\\\\BlueFernRunner\\\\ProductionProof\\\\pr504-sync-plan-8d09028.json",
+      "apply_report": "C:\\\\BlueFernRunner\\\\ProductionProof\\\\pr504-sync-apply-8d09028.json",
+      "operator_proof_report": "C:\\\\BlueFernRunner\\\\BlueFernOperatorCurrent\\\\ops\\\\operator\\\\runs\\\\2026-09-27\\\\runner-sync-apply-20260927T050430Z-1b01d7504368\\\\guarded-runner-sync-report.json",
+      "operator_runner_sync_receipt": "C:\\\\BlueFernRunner\\\\BlueFernOperatorCurrent\\\\ops\\\\operator\\\\runs\\\\2026-09-27\\\\runner-sync-apply-20260927T050430Z-1b01d7504368\\\\guarded-runner-sync-receipt.json",
+      "operator_runner_sync_outcome": "APPLY_COMPLETE",
+      "operator_runner_sync_exit_code": 0,
       "public_side_effects": false
     }
   },
-  "known_blockers": [
-    {
-      "id": "operator-runner-unsynced-after-pr503",
-      "classification": "WINDOWS_GUARDED_SYNC_RERUN_REQUIRED",
-      "summary": "Prior guarded plan blocked on dirty Operator checkout runtime evidence while targeting pre-PR503 protected source. PR #503 extended Operator preflight to allow tracked modified runtime evidence under ops/operator/* while keeping staged/deleted runtime state and source changes risky.",
-      "next_safe_action": "On the Windows runner host, re-read protected HEAD and rerun guarded sync from a current protected checkout against 9254f16a7672cdfdd3974bca41ac1b1ad86625de or newer. Apply only if preflight and doctor pass without unexpected source/config/test/doc drift, staged/deleted runtime state, or incoming-path collisions. After Operator is synced, run scripts/run_blue_fern_operator.ps1 -SyncRunners -ApplyRunnerSync -ProveStatusExport -ExpectedProtectedHead <protected-sha>.",
-      "authority_boundary": "Do not delete or rewrite preserved evidence to obtain a clean sync. Do not trigger collection, publication, Pages sync, Cascadia activation, or scheduled task mutation."
-    }
-  ],
+  "known_blockers": [],
   "next_action": {
-    "status": "awaiting_windows_guarded_sync_rerun_after_pr503",
-    "target_head_policy": "re-read add/pages-repo-default immediately before sync; use the then-current protected HEAD",
-    "summary": "Rerun guarded sync on the Windows runner host using PR #503 or later classification. If safe, apply sync and run local Operator sync-runners proof to leave runner-sync and operational-status receipts.",
-    "preferred_operator_command_after_operator_sync": "powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"C:\\\\BlueFernRunner\\\\BlueFernOperatorCurrent\\\\scripts\\\\run_blue_fern_operator.ps1\" -SyncRunners -ApplyRunnerSync -ProveStatusExport -ExpectedProtectedHead <protected-sha>",
-    "must_not_trigger": [
+    "status": "production_runner_sync_and_nonpublic_status_proof_complete",
+    "target_head_policy": "re-read add/pages-repo-default before any future production sync; use the then-current protected HEAD",
+    "summary": "All five active production runners were synced to protected HEAD 8d09028d9ada6b8a2b19c86483abd855360e7402 and non-public operational-status proof passed. Resume normal watchdog monitoring; do not infer public publication from this proof.",
+    "must_not_trigger_without_explicit_authorization": [
       "collection",
       "publication",
       "Pages sync or push",

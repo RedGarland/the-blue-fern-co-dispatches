@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260926T234210-0700",
+  "scheduled_for": "2026-09-26T23:41:55-07:00",
+  "started_at": "2026-09-26T23:42:10-07:00",
+  "completed_at": "2026-09-26T23:43:09-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-26T22:42:45-07:00",
+    "end": "2026-09-26T23:43:09-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Checked OCHA OPT and WHO first, then exactly 12 additional targeted searches covering Reuters, AP, Al Jazeera, WAFA, UN News, UNICEF, WFP, ICRC, Palestine Red Crescent, COGAT/crossings, medical evacuation/hospital/ambulance/fuel, and ceasefire/hostages/military operations with documented civilian impact. No new qualifying development was verified since the prior completed hourly check at 2026-09-26T22:42:45-07:00. OCHA's newest surfaced Gaza Humanitarian Situation Report remains the 18 September 2026 report published 21 September 2026. No newer WHO Gaza update surfaced. UN News retrieval was blocked by robots.txt; useful coverage remained from the other sources, so the run is DEGRADED rather than FAILED. Recycled, pre-window, opinion, unsupported, duplicate, and unsourced items were excluded."
+}

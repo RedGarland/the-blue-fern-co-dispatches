@@ -52,8 +52,12 @@ def is_operator_mutable_tracked_runtime_path(path_text: str) -> bool:
     path = _normalize_path(path_text).lower()
     return bool(
         OPERATOR_LATEST_RE.match(path)
+        or OPERATOR_NOTIFICATION_LATEST_RE.match(path)
         or OPERATOR_HISTORY_RE.match(path)
         or OPERATOR_INCIDENT_RE.match(path)
+        or OPERATOR_RUN_RE.match(path)
+        or OPERATOR_REMEDIATION_RE.match(path)
+        or OPERATOR_ENGINEERING_RE.match(path)
     )
 
 

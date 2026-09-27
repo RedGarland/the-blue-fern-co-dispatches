@@ -1,0 +1,33 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260927T004554-0700-r11",
+  "scheduled_for": "2026-09-27T00:45:54-07:00",
+  "started_at": "2026-09-27T00:47:40-07:00",
+  "completed_at": "2026-09-27T00:48:32-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-26T23:45:54-07:00",
+    "date_to": "2026-09-27T00:48:32-07:00",
+    "edition_date": "2026-09-27"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches_executed": 12,
+    "search_scope": [
+      "only/sole/last/full-service grocery store closure, fire, or disaster",
+      "storm/flood/fire/outage-related food distribution cancellation or suspension",
+      "abrupt pantry or food-bank closure/service reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "source_priority": "fresh local news, official agency/provider notices, direct source pages",
+    "observations": [
+      "Fresh Maui wildfire coverage documented evacuation, highway disruption, and power shutoff, but no qualifying grocery-store loss, pantry closure, food-distribution cancellation, or benefit interruption.",
+      "Fresh Hudson Valley nor'easter coverage documented outages and flooding, but no qualifying food-access disruption.",
+      "Kauaʻi recovery reporting stated emergency food distributions remained scheduled; no new cancellation or suspension identified.",
+      "Older or previously known grocery-store and food-assistance items were excluded as outside the hourly window or duplicate/background material."
+    ]
+  }
+}

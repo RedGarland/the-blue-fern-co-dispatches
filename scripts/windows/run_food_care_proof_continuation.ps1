@@ -37,24 +37,38 @@ $ErrorMessage = $null
 function Write-Receipt {
     param([AllowNull()][object]$CompletedAt)
     New-Item -ItemType Directory -Force -Path $ReceiptDir | Out-Null
-    $payload = [ordered]@{
+
+    $completedValue = $null
+    if ($null -ne $CompletedAt) {
+        $completedValue = [string]$CompletedAt
+    }
+    $errorValue = $null
+    if ($null -ne $ErrorMessage) {
+        $errorValue = [string]$ErrorMessage
+    }
+    $stepValues = @()
+    foreach ($step in $Steps) {
+        $stepValues += $step
+    }
+
+    $payload = [PSCustomObject]@{
         schema_version = "blue_fern_food_care_proof_continuation_v1"
-        run_id = $RunId
+        run_id = [string]$RunId
         started_at = $StartedAt.ToString("yyyy-MM-ddTHH:mm:ssZ")
-        completed_at = $CompletedAt
-        edition_date = $EditionDate
-        expected_protected_head = $ExpectedProtectedHead
-        outcome = $Outcome
-        exit_code = $ExitCode
-        error = $ErrorMessage
-        operator_root = $OperatorRoot
-        food_root = $FoodRoot
-        care_root = $CareRoot
-        status_checkout = $StatusCheckout
-        source_branch = $SourceBranch
-        pages_branch = $PagesBranch
-        steps = @($Steps)
-        public_side_effects = [ordered]@{
+        completed_at = $completedValue
+        edition_date = [string]$EditionDate
+        expected_protected_head = [string]$ExpectedProtectedHead
+        outcome = [string]$Outcome
+        exit_code = [int]$ExitCode
+        error = $errorValue
+        operator_root = [string]$OperatorRoot
+        food_root = [string]$FoodRoot
+        care_root = [string]$CareRoot
+        status_checkout = [string]$StatusCheckout
+        source_branch = [string]$SourceBranch
+        pages_branch = [string]$PagesBranch
+        steps = $stepValues
+        public_side_effects = [PSCustomObject]@{
             collection_triggered = $false
             publication_triggered = $false
             pages_mutation = $false

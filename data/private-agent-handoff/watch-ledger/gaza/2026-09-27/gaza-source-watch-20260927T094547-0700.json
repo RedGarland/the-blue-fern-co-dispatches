@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260927T094547-0700",
+  "scheduled_for": "2026-09-27T09:44:51-07:00",
+  "started_at": "2026-09-27T09:45:47-07:00",
+  "completed_at": "2026-09-27T09:47:05-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-27T08:45:47-07:00",
+    "end": "2026-09-27T09:47:05-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "OCHA OPT and WHO were checked first. Exactly 12 additional targeted searches followed across WAFA, Reuters, AP, Al Jazeera, UNRWA, ICRC, UNICEF, MSF, ReliefWeb, BBC, The Guardian, and Middle East Eye. OCHA's newest surfaced Gaza humanitarian situation report remained the 18 September 2026 report; no newer WHO Gaza update surfaced. A September 27 Al Jazeera explainer on UNRWA exclusion traced the underlying Board of Peace position to Friday, 25 September, and was excluded as recycled/outside the bounded hourly window rather than treated as a new development. The BBC targeted search was blocked by robots.txt; useful coverage remained from the other searches, so status is DEGRADED rather than FAILED. No new qualifying development was verified in the bounded window."
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260926T224729-0700-r11",
+  "scheduled_for": "2026-09-26T22:45:54-07:00",
+  "started_at": "2026-09-26T22:47:29-07:00",
+  "completed_at": "2026-09-26T22:48:21-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-26T21:45:54-07:00",
+    "date_to": "2026-09-26T22:48:21-07:00",
+    "edition_date": "2026-09-26"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall watch completed with 12 targeted web searches across four audit miss classes: only/sole/last/full-service grocery-store loss; disaster-related emergency-food distribution cancellation; abrupt pantry/food-bank closure or major service reduction; and official SNAP/WIC interruption with immediate access consequences. No new qualifying U.S. signal was identified since the prior hourly check. Fresh results included California WIC app maintenance on September 26, but benefits remained usable and therefore did not qualify. Hurricane-related Hawaiʻi food-access material returned in search was previously known/recycled rather than a new qualifying development. Routine pantry schedules, donation/promotion content, generic price stories, and unrelated closures were excluded."
+}

@@ -1,11 +1,11 @@
 {
   "schema": "bluefern.ops.current_state.v1",
-  "as_of_utc": "2026-09-27T02:38:00Z",
+  "as_of_utc": "2026-09-27T03:10:47Z",
   "source_of_truth": "protected source branch plus production-runner handoff receipts",
   "protected_source": {
     "repository": "RedGarland/the-blue-fern-co-dispatches",
     "branch": "add/pages-repo-default",
-    "observed_head": "1f9b42cc11c5917642137f1c966f3057bc8f19ee",
+    "observed_head": "d6189fffc394a4a7bd51324740c5273022ad7028",
     "status": "protected",
     "resume_policy": "re-read this branch before acting; do not rely on the observed head if the branch has advanced"
   },
@@ -57,14 +57,26 @@
       "purpose": "nested Operator run evidence preflight allowlist fix",
       "merged_head": "1f9b42cc11c5917642137f1c966f3057bc8f19ee",
       "status": "merged"
+    },
+    {
+      "number": 497,
+      "purpose": "post-PR496 operational current-state checkpoint",
+      "merged_head": "318bf1b94291ad04c665e0ed20d6809349a736c5",
+      "status": "merged"
+    },
+    {
+      "number": 498,
+      "purpose": "guarded synchronizer controller-preflight fix",
+      "merged_head": "d6189fffc394a4a7bd51324740c5273022ad7028",
+      "status": "merged"
     }
   ],
   "runner_state": {
     "operator": {
       "path": "C:\\BlueFernRunner\\BlueFernOperatorCurrent",
       "synced_to": "3b9632060ee8fb7713fd7a83e560f8479da7e3e2",
-      "status": "blocked_unsynced_after_pr496",
-      "blocker": "guarded sync must be rerun from Windows after the PR #496 runtime-state contract fix"
+      "status": "blocked_unsynced_after_pr498",
+      "blocker": "guarded sync must be rerun from a current protected sync-controller checkout after PR #498"
     },
     "food": {
       "path": "C:\\BlueFernRunner\\FoodLineCurrent6",
@@ -105,17 +117,17 @@
   },
   "known_blockers": [
     {
-      "id": "operator-runner-unsynced-after-pr496",
+      "id": "operator-runner-unsynced-after-pr498",
       "classification": "WINDOWS_GUARDED_SYNC_RERUN_REQUIRED",
-      "summary": "Operator checkout remains on the PR #489 protected head while protected source has advanced through PR #496. PR #496 fixed the nested Operator run-evidence classification defect; Windows must rerun guarded sync planning before any apply.",
-      "next_safe_action": "On the Windows runner host, re-read protected HEAD, rerun guarded sync plan against the current protected head, and apply only if preflight and doctor pass without unexpected source/config/test/doc drift.",
+      "summary": "Operator checkout remains on the PR #489 protected head while protected source has advanced through PR #498. PR #496 fixed nested Operator run-evidence classification and PR #498 lets a current sync controller apply that classifier before stale runners receive the fix.",
+      "next_safe_action": "On the Windows runner host, run the guarded synchronizer from a current protected checkout, re-read protected HEAD, plan against the current protected head, and apply only if preflight and doctor pass without unexpected source/config/test/doc drift.",
       "authority_boundary": "Do not delete or rewrite preserved evidence to obtain a clean sync."
     }
   ],
   "next_action": {
-    "status": "awaiting_windows_guarded_sync_rerun_after_pr496",
+    "status": "awaiting_windows_guarded_sync_rerun_after_pr498",
     "target_head_policy": "re-read add/pages-repo-default immediately before sync; use the then-current protected HEAD",
-    "summary": "Re-read protected HEAD, rerun guarded sync plan on the Windows runner host, and if safe apply sync to the current protected head; stop with the exact blocker if any unexpected drift remains.",
+    "summary": "From a current protected checkout, re-read protected HEAD, rerun guarded sync plan on the Windows runner host, and if safe apply sync to the current protected head; stop with the exact blocker if any unexpected drift remains.",
     "must_not_trigger": [
       "collection",
       "publication",

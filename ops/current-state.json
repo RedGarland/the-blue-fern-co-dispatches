@@ -1,12 +1,13 @@
 {
   "schema": "bluefern.ops.current_state.v1",
-  "as_of_utc": "2026-09-27T01:17:58Z",
+  "as_of_utc": "2026-09-27T01:27:20Z",
   "source_of_truth": "protected source branch plus production-runner handoff receipts",
   "protected_source": {
     "repository": "RedGarland/the-blue-fern-co-dispatches",
     "branch": "add/pages-repo-default",
-    "head": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
-    "status": "protected"
+    "observed_head": "7ddfd0d5dd7744b9a0c3b97306d80bb7b39a4337",
+    "status": "protected",
+    "resume_policy": "re-read this branch before acting; do not rely on the observed head if the branch has advanced"
   },
   "operational_prs": [
     {
@@ -25,6 +26,12 @@
       "number": 491,
       "purpose": "operational status wrapper child stdout and stderr capture",
       "merged_head": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
+      "status": "merged"
+    },
+    {
+      "number": 492,
+      "purpose": "machine-readable operational current-state checkpoint",
+      "merged_head": "7ddfd0d5dd7744b9a0c3b97306d80bb7b39a4337",
       "status": "merged"
     }
   ],
@@ -83,7 +90,8 @@
   ],
   "next_action": {
     "status": "awaiting_operator_runner_state_classification",
-    "summary": "Re-read protected HEAD, inspect Operator checkout status and preserved evidence, then either sync Operator to 2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3 through the guarded synchronizer or stop with the exact evidence blocker.",
+    "target_head_policy": "re-read add/pages-repo-default immediately before sync; use the then-current protected HEAD",
+    "summary": "Re-read protected HEAD, inspect Operator checkout status and preserved evidence, then either sync Operator to the current protected head through the guarded synchronizer or stop with the exact evidence blocker.",
     "must_not_trigger": [
       "collection",
       "publication",

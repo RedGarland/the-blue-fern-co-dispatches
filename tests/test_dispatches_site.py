@@ -3863,10 +3863,15 @@ def test_pages_publish_refreshes_shared_homepage_before_commit(tmp_path, monkeyp
     refreshed_home = (pages_repo / "index.html").read_text(encoding="utf-8")
     assert result["ok"] is True
     assert result["build"]["shared_homepage_refresh"]["ok"] is True
+    refreshed_directory = (pages_repo / "dispatches" / "index.html").read_text(encoding="utf-8")
     assert "/gaza/editions/2026-08-15/" in refreshed_home
+    assert "/gaza/editions/2026-08-15/" in refreshed_directory
     assert "Stale Gaza headline" not in refreshed_home
+    assert "Stale Gaza headline" not in refreshed_directory
     assert "2026-08-05" in refreshed_home
     assert "2026-08-15" in refreshed_home
+    assert "Older public release; monitoring continues between editions." in refreshed_home
+    assert "Older public release; monitoring continues between editions." in refreshed_directory
 
 
 def test_care_line_scoped_publish_does_not_scan_gaza_history(monkeypatch, built_site):

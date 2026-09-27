@@ -40,3 +40,19 @@ def test_food_care_continuation_startup_receipt_accepts_null_completed_at() -> N
     assert "if ($null -ne $CompletedAt)" in text
     assert "completed_at = $completedValue" in text
     assert "Write-Receipt -CompletedAt $null" in text
+
+
+def test_food_care_continuation_sync_defers_status_export_to_final_step() -> None:
+    text = CONTINUATION.read_text(encoding="utf-8")
+
+    sync_line = next(
+        line for line in text.splitlines()
+        if 'Invoke-ContinuationStep -Name "guarded_runner_sync"' in line
+    )
+    final_export_line = next(
+        line for line in text.splitlines()
+        if 'Invoke-ContinuationStep -Name "final_operational_status_export"' in line
+    )
+
+    assert "-ProveStatusExport" not in sync_line
+    assert "run_operational_status_export.ps1" in final_export_line

@@ -85,6 +85,35 @@ def test_food_line_daily_scheduler_defaults_to_production_branch() -> None:
     assert args.branch == "add/pages-repo-default"
 
 
+def test_child_result_audit_accepts_success_terminal_status_for_completed_state(tmp_path: Path) -> None:
+    export_path = tmp_path / "agent-inbox.json"
+    export_path.write_text('{"ok": true}\n', encoding="utf-8")
+    payload = {
+        "ok": True,
+        "status": "success",
+        "run_id": "run-1",
+        "edition_date": "2026-09-27",
+        "agent_export": {"status": "success"},
+    }
+    state = {
+        "status": "completed",
+        "run_id": "run-1",
+        "edition_date": "2026-09-27",
+        "partitions_completed": 1,
+        "partitions_total": 1,
+        "coverage": {"required_success_ratio": 1.0, "direct_success_ratio": 1.0},
+        "options": {"required_coverage_threshold": 0.9, "direct_source_coverage_threshold": 0.75},
+        "agent_export": {"status": "success", "path": str(export_path)},
+    }
+    result = subprocess.CompletedProcess(["child"], 0, json.dumps(payload), "")
+
+    audit = scheduler.child_result_audit(result, state)
+
+    assert audit["child_outcome_classification"] == "success"
+    assert audit["child_validation_error"] == ""
+    assert scheduler.child_result_allows_scheduler_success(result, state, audit)
+
+
 def test_scheduler_accepts_successful_source_watch_runtime_state_for_the_next_run() -> None:
     status = "\n".join(
         [

@@ -298,7 +298,12 @@ def _required_export_exists(state: dict[str, Any]) -> bool:
 def _child_state_contradiction(payload: dict[str, Any], state: dict[str, Any]) -> str:
     child_status = _nonempty_text(payload.get("status"))
     durable_status = _nonempty_text(state.get("status"))
-    if child_status and durable_status and child_status != durable_status:
+    if (
+        child_status
+        and durable_status
+        and child_status != durable_status
+        and {child_status, durable_status} != {"success", "completed"}
+    ):
         return f"child status {child_status!r} does not match durable status {durable_status!r}"
     child_run_id = _nonempty_text(payload.get("run_id"))
     durable_run_id = _nonempty_text(state.get("run_id"))

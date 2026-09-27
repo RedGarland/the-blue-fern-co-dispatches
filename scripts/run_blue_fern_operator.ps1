@@ -1,3 +1,10 @@
+param(
+    [switch]$SyncRunners,
+    [switch]$ApplyRunnerSync,
+    [switch]$ProveStatusExport,
+    [string]$ExpectedProtectedHead
+)
+
 Set-StrictMode -Version 3.0
 $ErrorActionPreference = "Stop"
 
@@ -74,7 +81,20 @@ if (-not (Test-Path -LiteralPath $OperatorScript -PathType Leaf)) {
 }
 
 Set-Location -LiteralPath $OperatorRoot
-$process = Start-Process -FilePath $Python -ArgumentList @($OperatorScript, "check", "--json") -Wait -PassThru -NoNewWindow -RedirectStandardOutput $StdoutPath -RedirectStandardError $StderrPath
+$OperatorArgs = @($OperatorScript, "check", "--json")
+if ($SyncRunners) {
+    $OperatorArgs = @($OperatorScript, "sync-runners", "--json")
+    if ($ExpectedProtectedHead) {
+        $OperatorArgs += @("--expected-protected-head", $ExpectedProtectedHead)
+    }
+    if ($ApplyRunnerSync) {
+        $OperatorArgs += "--apply"
+    }
+    if ($ProveStatusExport) {
+        $OperatorArgs += "--prove-status-export"
+    }
+}
+$process = Start-Process -FilePath $Python -ArgumentList $OperatorArgs -Wait -PassThru -NoNewWindow -RedirectStandardOutput $StdoutPath -RedirectStandardError $StderrPath
 if (Test-Path -LiteralPath $StdoutPath) {
     Get-Content -LiteralPath $StdoutPath | ForEach-Object { [Console]::Out.WriteLine($_) }
 }

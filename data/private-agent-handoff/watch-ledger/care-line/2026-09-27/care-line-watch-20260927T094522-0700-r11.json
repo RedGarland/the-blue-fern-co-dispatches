@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260927T094522-0700-r11",
+  "scheduled_for": "2026-09-27T09:45:22-07:00",
+  "started_at": "2026-09-27T09:47:45-07:00",
+  "completed_at": "2026-09-27T09:48:24-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-27T08:45:22-07:00",
+    "end": "2026-09-27T09:45:22-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices_checked_first": true,
+    "cms_latest_notice_date": "2026-09-25",
+    "additional_targeted_searches": 12,
+    "qualifying_developments_found": 0,
+    "notes": "Bounded supplementary recall watch only; production collection remains authoritative. CMS Public Notices showed no notice newer than 2026-09-25. Twelve targeted searches covering hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closures or suspensions, rural/emergency service loss, ambulance/air-medical/base closures or suspensions, essential-service restorations, and U.S. territories found no new qualifying development in the bounded hourly window. Older, already-announced, proposed, non-U.S., business-only, and duplicate items were excluded."
+  }
+}

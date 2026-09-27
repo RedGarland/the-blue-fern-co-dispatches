@@ -10,7 +10,7 @@
     "state": "HANDOFF_RECEIVED_SUCCESS",
     "unaccounted_count": 0
   },
-  "aggregate_status": "FAILED",
+  "aggregate_status": "DEGRADED",
   "current_runner_branch": "add/pages-repo-default",
   "current_runner_head": "487515120ef004b4a604524872691217963d1c23",
   "dispatch": "food-line",
@@ -53,34 +53,13 @@
       "task_key": "food_line_daily_publish"
     },
     {
-      "artifact_id": "20260927T123002Z-source-watch.json",
-      "classification": "failed",
-      "completed_at": "2026-09-27T12:30:02.248886Z",
+      "artifact_id": "20260927T191818Z-source-watch.json",
+      "classification": "completed_with_exclusions",
+      "completed_at": "2026-09-27T19:18:18.614781Z",
       "diagnostics": {
         "failure": {
-          "collection_health": "failed",
+          "collection_health": "completed_with_exclusions",
           "failure_stage": "source_watch"
-        }
-      },
-      "exit_code": 10,
-      "next_expected_run": null,
-      "public_side_effects": {},
-      "publication_attempted": null,
-      "publication_status": "",
-      "run_id": "food-line-scheduled-20260927-20260927T123001Z-62183774",
-      "scheduled_for": "2026-09-27",
-      "started_at": "2026-09-27T12:30:02.074670Z",
-      "status": "FAILED",
-      "task_key": "food_line_source_watch"
-    },
-    {
-      "artifact_id": "20260927T130002Z-status-resume.json",
-      "classification": "upstream_blocked",
-      "completed_at": "2026-09-27T13:00:02.199337Z",
-      "diagnostics": {
-        "failure": {
-          "collection_health": "upstream_blocked",
-          "upstream_dependency_status": "failed"
         }
       },
       "exit_code": 0,
@@ -88,18 +67,16 @@
       "public_side_effects": {},
       "publication_attempted": null,
       "publication_status": "",
-      "run_id": "food-line-scheduled-20260927-20260927T123001Z-62183774",
+      "run_id": "food-line-proof-20260927T1915Z-pr512",
       "scheduled_for": "2026-09-27",
-      "started_at": "2026-09-27T13:00:02.198072Z",
-      "status": "UPSTREAM_BLOCKED",
-      "task_key": "food_line_source_watch_resume"
+      "started_at": "2026-09-27T19:12:44.568844Z",
+      "status": "DEGRADED",
+      "task_key": "food_line_source_watch"
     }
   ],
-  "incident_reference": {
-    "date": "2026-09-27"
-  },
-  "last_exported_at": "2026-09-27T19:09:53.971960Z",
-  "last_receipt_at": "2026-09-27T15:30:01.767834Z",
+  "incident_reference": null,
+  "last_exported_at": "2026-09-27T19:18:30.778637Z",
+  "last_receipt_at": "2026-09-27T19:18:18.614781Z",
   "latest_runtime_proof_date": "2026-09-27T15:30:01.767834Z",
   "next_expected_run": null,
   "observed_date": "2026-09-27",
@@ -110,8 +87,8 @@
   "publication_attempted": false,
   "publication_status": "skipped_not_release_ready",
   "receipt_completeness": "COMPLETE",
-  "recovery_lifecycle": "INCIDENT_OPEN",
-  "runner_source_head": "8d09028d9ada6b8a2b19c86483abd855360e7402",
+  "recovery_lifecycle": "HEALTHY",
+  "runner_source_head": null,
   "schema_version": "bluefern_external_operational_status_v1",
   "stale_after": "2026-09-27T14:00:00Z",
   "stale_observability": false,
@@ -152,6 +129,27 @@
       "started_at": "2026-09-27T15:30:01.6841350Z",
       "status": "SAFE_NO_OP",
       "task_key": "food_line_daily_publish"
+    },
+    {
+      "artifact_id": "20260927T191818Z-source-watch.json",
+      "classification": "completed_with_exclusions",
+      "completed_at": "2026-09-27T19:18:18.614781Z",
+      "diagnostics": {
+        "failure": {
+          "collection_health": "completed_with_exclusions",
+          "failure_stage": "source_watch"
+        }
+      },
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {},
+      "publication_attempted": null,
+      "publication_status": "",
+      "run_id": "food-line-proof-20260927T1915Z-pr512",
+      "scheduled_for": "2026-09-27",
+      "started_at": "2026-09-27T19:12:44.568844Z",
+      "status": "DEGRADED",
+      "task_key": "food_line_source_watch"
     },
     {
       "artifact_id": "20260927T123002Z-source-watch.json",

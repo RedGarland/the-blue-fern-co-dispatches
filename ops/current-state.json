@@ -1,11 +1,11 @@
 {
   "schema": "bluefern.ops.current_state.v1",
-  "as_of_utc": "2026-09-27T20:20:00Z",
+  "as_of_utc": "2026-09-27T20:29:00Z",
   "source_of_truth": "protected source branch plus production-runner handoff receipts",
   "protected_source": {
     "repository": "RedGarland/the-blue-fern-co-dispatches",
     "branch": "add/pages-repo-default",
-    "observed_head": "102660310695fe46b3c50b74acd60e2a6c20f42e",
+    "observed_head": "6446cb1b94a2a22bfeddf64554317acfe1dd0131",
     "status": "protected",
     "resume_policy": "re-read this branch before acting; do not rely on the observed head if the branch has advanced"
   },
@@ -146,6 +146,12 @@
       "number": 515,
       "purpose": "Food source-watch dead lock owner recovery",
       "merged_head": "102660310695fe46b3c50b74acd60e2a6c20f42e",
+      "status": "merged"
+    },
+    {
+      "number": 517,
+      "purpose": "Care approved-release proof-only scheduler mode",
+      "merged_head": "6446cb1b94a2a22bfeddf64554317acfe1dd0131",
       "status": "merged"
     }
   ],
@@ -315,22 +321,30 @@
       "summary": "PR #515 fixes Food source-watch proof recovery for preserved locks whose recorded owner PID is no longer running. Runners have not yet been synced to the PR #515 protected head.",
       "next_safe_action": "Guarded sync all active runners to protected head 102660310695fe46b3c50b74acd60e2a6c20f42e, rerun Food source-watch proof so it reclaims the dead lock and writes a terminal receipt, then rerun Food resume/current-intake and export non-public operational status.",
       "authority_boundary": "Do not delete lock evidence manually; do not publish, push Pages, activate Cascadia, mutate scheduler definitions, git clean, or git reset --hard."
+    },
+    {
+      "id": "care-approved-release-proof-mode",
+      "classification": "SOURCE_FIX_MERGED_RUNNER_PROOF_PENDING",
+      "summary": "PR #517 adds Care approved-release publication proof-only mode so release-ready artifacts can be verified without invoking publication or pushing Pages.",
+      "next_safe_action": "After guarded sync to protected head, run the Care approved-release publication wrapper with -ProofOnly and verify a safe_no_op receipt with no publication_attempted, no pages_changed, and no public side effects.",
+      "authority_boundary": "Do not run the normal publication path unless public publication/Pages push is explicitly authorized."
     }
   ],
   "next_action": {
-    "status": "pending_pr515_runner_sync_and_food_proof",
+    "status": "pending_runner_sync_food_recovery_and_care_proof_only",
     "target_head_policy": "re-read add/pages-repo-default immediately before runner action; use the then-current protected HEAD",
-    "expected_protected_head": "102660310695fe46b3c50b74acd60e2a6c20f42e",
-    "summary": "Sync runners to PR #515 and prove Food source-watch can reclaim the preserved dead-owner lock without manual evidence deletion, then continue Food downstream proof.",
+    "expected_protected_head": "6446cb1b94a2a22bfeddf64554317acfe1dd0131",
+    "summary": "Sync runners to PR #517, then prove Food lock recovery and Care approved-release proof-only behavior without publication.",
     "focus": [
       "food-line",
       "care-line"
     ],
     "steps": [
-      "Guarded sync active runners to the current protected HEAD.",
-      "Run Food source-watch proof at the synced head; expected behavior is stale_lock_reclaimed attention plus a terminal source-watch receipt.",
-      "Run Food source-watch resume/current-intake after the new terminal source-watch receipt.",
-      "Do not run Food or Care publication unless the wrapper proves a no-public-side-effect safe no-op before publish/push.",
+      "Guarded sync all active runners to the current protected HEAD.",
+      "Run Food source-watch proof; expected result is reclamation of the preserved dead-owner lock and a terminal source-watch receipt.",
+      "Run Food resume/current-intake after the new terminal source-watch receipt.",
+      "Run Care reviewed-event queue if needed, then run Care approved-release publication wrapper with -ProofOnly.",
+      "Verify Care proof-only receipt is safe_no_op/proof_only_release_ready with publication_attempted=false and pages_changed=false.",
       "Export non-public operational status and report Food/Care aggregate statuses and receipts."
     ],
     "must_not_trigger": [

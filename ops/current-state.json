@@ -1,11 +1,11 @@
 {
   "schema": "bluefern.ops.current_state.v1",
-  "as_of_utc": "2026-09-27T20:29:00Z",
+  "as_of_utc": "2026-09-27T20:31:00Z",
   "source_of_truth": "protected source branch plus production-runner handoff receipts",
   "protected_source": {
     "repository": "RedGarland/the-blue-fern-co-dispatches",
     "branch": "add/pages-repo-default",
-    "observed_head": "6446cb1b94a2a22bfeddf64554317acfe1dd0131",
+    "observed_head": "73854a5c2d4c017a9dc76394f6020e00624a3f8c",
     "status": "protected",
     "resume_policy": "re-read this branch before acting; do not rely on the observed head if the branch has advanced"
   },
@@ -152,6 +152,12 @@
       "number": 517,
       "purpose": "Care approved-release proof-only scheduler mode",
       "merged_head": "6446cb1b94a2a22bfeddf64554317acfe1dd0131",
+      "status": "merged"
+    },
+    {
+      "number": 518,
+      "purpose": "checkpoint Care proof-only runner target",
+      "merged_head": "73854a5c2d4c017a9dc76394f6020e00624a3f8c",
       "status": "merged"
     }
   ],
@@ -319,22 +325,22 @@
       "id": "food-source-watch-dead-lock",
       "classification": "SOURCE_FIX_MERGED_RUNNER_PROOF_PENDING",
       "summary": "PR #515 fixes Food source-watch proof recovery for preserved locks whose recorded owner PID is no longer running. Runners have not yet been synced to the PR #515 protected head.",
-      "next_safe_action": "Guarded sync all active runners to protected head 102660310695fe46b3c50b74acd60e2a6c20f42e, rerun Food source-watch proof so it reclaims the dead lock and writes a terminal receipt, then rerun Food resume/current-intake and export non-public operational status.",
+      "next_safe_action": "Guarded sync all active runners to protected head 73854a5c2d4c017a9dc76394f6020e00624a3f8c, rerun Food source-watch proof so it reclaims the dead lock and writes a terminal receipt, then rerun Food resume/current-intake and export non-public operational status.",
       "authority_boundary": "Do not delete lock evidence manually; do not publish, push Pages, activate Cascadia, mutate scheduler definitions, git clean, or git reset --hard."
     },
     {
       "id": "care-approved-release-proof-mode",
       "classification": "SOURCE_FIX_MERGED_RUNNER_PROOF_PENDING",
       "summary": "PR #517 adds Care approved-release publication proof-only mode so release-ready artifacts can be verified without invoking publication or pushing Pages.",
-      "next_safe_action": "After guarded sync to protected head, run the Care approved-release publication wrapper with -ProofOnly and verify a safe_no_op receipt with no publication_attempted, no pages_changed, and no public side effects.",
+      "next_safe_action": "After guarded sync to protected head 73854a5c2d4c017a9dc76394f6020e00624a3f8c, run the Care approved-release publication wrapper with -ProofOnly and verify a safe_no_op receipt with no publication_attempted, no pages_changed, and no public side effects.",
       "authority_boundary": "Do not run the normal publication path unless public publication/Pages push is explicitly authorized."
     }
   ],
   "next_action": {
     "status": "pending_runner_sync_food_recovery_and_care_proof_only",
     "target_head_policy": "re-read add/pages-repo-default immediately before runner action; use the then-current protected HEAD",
-    "expected_protected_head": "6446cb1b94a2a22bfeddf64554317acfe1dd0131",
-    "summary": "Sync runners to PR #517, then prove Food lock recovery and Care approved-release proof-only behavior without publication.",
+    "expected_protected_head": "73854a5c2d4c017a9dc76394f6020e00624a3f8c",
+    "summary": "Sync runners to PR #518, then prove Food lock recovery and Care approved-release proof-only behavior without publication.",
     "focus": [
       "food-line",
       "care-line"

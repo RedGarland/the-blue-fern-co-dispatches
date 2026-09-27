@@ -82,6 +82,34 @@ Expected active set:
 Cascadia is intentionally inactive and must not be provisioned or synchronized
 as an active production runner without explicit operator authorization.
 
+## Local Operator runner sync
+
+The Operator exposes a receipt-writing wrapper around the guarded runner sync
+helper so long runner reconciliation can happen on the Windows host rather than
+inside a browser chat turn.
+
+Plan-only checkpoint:
+
+```powershell
+powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\BlueFernRunner\BlueFernOperatorCurrent\scripts\run_blue_fern_operator.ps1" -SyncRunners
+```
+
+Guarded apply with operational-status proof, pinned to the protected head already
+recorded by the handoff:
+
+```powershell
+powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "C:\BlueFernRunner\BlueFernOperatorCurrent\scripts\run_blue_fern_operator.ps1" -SyncRunners -ApplyRunnerSync -ProveStatusExport -ExpectedProtectedHead <protected-sha>
+```
+
+The command writes a `blue_fern_operator_runner_sync_receipt_v1` receipt under
+`ops/operator/runs/<date>/runner-sync-.../`. A plan that finds safe fast-forward
+work exits successfully as `PLAN_READY_TO_FAST_FORWARD`; blocked plans and failed
+applies keep their exact PowerShell report path in the receipt.
+
+This wrapper does not publish, collect, mutate Pages, activate Cascadia, or
+change scheduled task definitions. It may fast-forward production runner source
+checkouts only when `-ApplyRunnerSync` is explicitly present.
+
 ## Dispatch entry points
 
 Use canonical wrappers from the appropriate synchronized runner.

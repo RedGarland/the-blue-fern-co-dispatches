@@ -400,3 +400,23 @@ def test_powershell_wrapper_conditionally_plumbs_care_source_root() -> None:
     assert "$arguments += @('--care-source-root', $CareSourceRoot)" in text
     assert "$arguments += @('--gaza-source-root', $GazaSourceRoot)" in text
     assert "$arguments += @('--ice-source-root', $IceSourceRoot)" in text
+
+
+def test_powershell_wrapper_records_scheduler_boundary_receipt() -> None:
+    text = (ROOT / "scripts" / "run_operational_status_export.ps1").read_text(encoding="utf-8")
+    assert "operational-status-exporter-wrapper" in text
+    assert "bluefern.operational_status.wrapper.v1" in text
+    assert "wrapper_exit_code" in text
+    assert "child_launch_attempted" in text
+    assert "child_command" in text
+    assert "public_side_effects = $false" in text
+    assert "finally" in text
+
+
+def test_powershell_wrapper_classifies_pre_python_failures() -> None:
+    text = (ROOT / "scripts" / "run_operational_status_export.ps1").read_text(encoding="utf-8")
+    assert "Operational status exporter script does not exist" in text
+    assert "Operational status Python executable does not resolve" in text
+    assert "Test-ExecutablePath" in text
+    assert "Get-Command $Executable" in text
+    assert "Test-Path -LiteralPath $exporterScript" in text

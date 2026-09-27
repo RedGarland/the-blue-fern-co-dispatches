@@ -365,6 +365,15 @@ The exporter records a bounded local receipt under
 status-change and commit/push results, source/status heads, and a failure
 classification. These local receipts are not exported as public status data.
 
+The PowerShell wrapper also records a bounded local scheduler-boundary receipt
+under `logs/operational-status-exporter-wrapper/`. That parent receipt captures
+the wrapper path, working directory, Python executable resolution, child command,
+child-launch attempt state, wrapper exit code, and any pre-exporter error so a
+Task Scheduler launch cannot return nonzero without leaving local diagnostic
+evidence. These wrapper receipts are local operational evidence only; they are
+not exported as public status data and do not run collection, intake, Pages, or
+publication steps.
+
 ## History retention
 
 Recommended externally surfaced retention:

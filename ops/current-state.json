@@ -1,13 +1,13 @@
 {
   "schema": "bluefern.ops.current_state.v1",
-  "as_of_utc": "2026-09-27T20:31:00Z",
+  "as_of_utc": "2026-09-27T21:34:00Z",
   "source_of_truth": "protected source branch plus production-runner handoff receipts",
   "protected_source": {
     "repository": "RedGarland/the-blue-fern-co-dispatches",
     "branch": "add/pages-repo-default",
-    "observed_head": "73854a5c2d4c017a9dc76394f6020e00624a3f8c",
+    "observed_head": "6a4e5ba3a665a630a4c6537d88e90389a1e3b787",
     "status": "protected",
-    "resume_policy": "re-read this branch before acting; do not rely on the observed head if the branch has advanced"
+    "resume_policy": "re-read this branch before acting; use this observed head only as the latest checkpointed target"
   },
   "operational_prs": [
     {
@@ -159,33 +159,50 @@
       "purpose": "checkpoint Care proof-only runner target",
       "merged_head": "73854a5c2d4c017a9dc76394f6020e00624a3f8c",
       "status": "merged"
+    },
+    {
+      "number": 520,
+      "purpose": "automated Windows Food/Care proof continuation wrapper and registration task",
+      "merged_head": "703a376692d9d07e6ad57a73139570af27faee80",
+      "status": "merged"
+    },
+    {
+      "number": 521,
+      "purpose": "Food/Care proof continuation startup receipt null completed_at fix",
+      "merged_head": "6a4e5ba3a665a630a4c6537d88e90389a1e3b787",
+      "status": "merged"
     }
   ],
   "runner_state": {
     "operator": {
       "path": "C:\\BlueFernRunner\\BlueFernOperatorCurrent",
       "synced_to": "fa7d62fa60ae991b18570bb567c98140bc8ca139",
-      "status": "runner_synced_to_pre_pr515_head"
+      "status": "pending_guarded_sync_to_pr521",
+      "target": "6a4e5ba3a665a630a4c6537d88e90389a1e3b787"
     },
     "food": {
       "path": "C:\\BlueFernRunner\\FoodLineCurrent6",
       "synced_to": "fa7d62fa60ae991b18570bb567c98140bc8ca139",
-      "status": "runner_synced_to_pre_pr515_head"
+      "status": "pending_guarded_sync_to_pr521",
+      "target": "6a4e5ba3a665a630a4c6537d88e90389a1e3b787"
     },
     "care": {
       "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8",
       "synced_to": "fa7d62fa60ae991b18570bb567c98140bc8ca139",
-      "status": "runner_synced_to_pre_pr515_head"
+      "status": "pending_guarded_sync_to_pr521",
+      "target": "6a4e5ba3a665a630a4c6537d88e90389a1e3b787"
     },
     "gaza": {
       "path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6",
       "synced_to": "fa7d62fa60ae991b18570bb567c98140bc8ca139",
-      "status": "runner_synced_to_pre_pr515_head"
+      "status": "pending_guarded_sync_to_pr521",
+      "target": "6a4e5ba3a665a630a4c6537d88e90389a1e3b787"
     },
     "ice": {
       "path": "C:\\BlueFernRunner\\ICEMonitorCurrent",
       "synced_to": "fa7d62fa60ae991b18570bb567c98140bc8ca139",
-      "status": "runner_synced_to_pre_pr515_head"
+      "status": "pending_guarded_sync_to_pr521",
+      "target": "6a4e5ba3a665a630a4c6537d88e90389a1e3b787"
     },
     "operational_status": {
       "path": "C:\\BlueFernRunner\\OperationalStatusCurrent",
@@ -334,24 +351,30 @@
       "summary": "PR #517 adds Care approved-release publication proof-only mode so release-ready artifacts can be verified without invoking publication or pushing Pages.",
       "next_safe_action": "After guarded sync to protected head 73854a5c2d4c017a9dc76394f6020e00624a3f8c, run the Care approved-release publication wrapper with -ProofOnly and verify a safe_no_op receipt with no publication_attempted, no pages_changed, and no public side effects.",
       "authority_boundary": "Do not run the normal publication path unless public publication/Pages push is explicitly authorized."
+    },
+    {
+      "id": "food-care-continuation-installed-task-local-script-stale",
+      "classification": "SOURCE_FIX_MERGED_RUNNER_SYNC_PENDING",
+      "summary": "The installed Food/Care proof continuation task is registered, but the local runner still has the pre-PR521 script that fails at startup receipt creation with Argument types do not match. PR #521 fixed the source-side startup receipt bug; runners must be guarded-synced before the installed task can self-run successfully.",
+      "next_safe_action": "Guarded sync all active runners to protected head 6a4e5ba3a665a630a4c6537d88e90389a1e3b787, then run scripts/windows/run_food_care_proof_continuation.ps1 once or wait for the 10-minute scheduled task. Verify a food-care-proof-continuation-receipt.json is written and final operational status export runs.",
+      "authority_boundary": "No publication, Pages sync or push, Cascadia activation, evidence deletion, git clean, git reset --hard, or scheduled-task definition mutation."
     }
   ],
   "next_action": {
-    "status": "pending_runner_sync_food_recovery_and_care_proof_only",
+    "status": "pending_runner_sync_then_food_care_continuation",
     "target_head_policy": "re-read add/pages-repo-default immediately before runner action; use the then-current protected HEAD",
-    "expected_protected_head": "73854a5c2d4c017a9dc76394f6020e00624a3f8c",
-    "summary": "Sync runners to PR #518, then prove Food lock recovery and Care approved-release proof-only behavior without publication.",
+    "expected_protected_head": "6a4e5ba3a665a630a4c6537d88e90389a1e3b787",
+    "summary": "Sync runners to PR #521, then run/prove the installed Food/Care continuation path without publication.",
     "focus": [
       "food-line",
       "care-line"
     ],
     "steps": [
       "Guarded sync all active runners to the current protected HEAD.",
-      "Run Food source-watch proof; expected result is reclamation of the preserved dead-owner lock and a terminal source-watch receipt.",
-      "Run Food resume/current-intake after the new terminal source-watch receipt.",
-      "Run Care reviewed-event queue if needed, then run Care approved-release publication wrapper with -ProofOnly.",
-      "Verify Care proof-only receipt is safe_no_op/proof_only_release_ready with publication_attempted=false and pages_changed=false.",
-      "Export non-public operational status and report Food/Care aggregate statuses and receipts."
+      "Run the Food/Care proof continuation once manually, or wait for the registered task after sync.",
+      "Verify startup receipt creation no longer fails and a food-care-proof-continuation-receipt.json is written.",
+      "Verify Food source-watch lock recovery, Food resume/current-intake, Care approved-release -ProofOnly, and final non-public operational-status export.",
+      "Report Food/Care aggregate statuses and receipts."
     ],
     "must_not_trigger": [
       "public publication",

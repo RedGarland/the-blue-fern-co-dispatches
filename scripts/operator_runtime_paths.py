@@ -7,8 +7,9 @@ OPERATOR_LATEST_RE = re.compile(r"^ops/operator/latest\.json$")
 OPERATOR_NOTIFICATION_LATEST_RE = re.compile(r"^ops/operator/notification-latest\.json$")
 OPERATOR_HISTORY_RE = re.compile(r"^ops/operator/history\.jsonl$")
 OPERATOR_INCIDENT_RE = re.compile(r"^ops/operator/incidents/[A-Za-z0-9_.-]{1,220}\.json$")
+_OPERATOR_RUN_SEGMENT = r"[A-Za-z0-9][A-Za-z0-9_.-]{0,239}"
 OPERATOR_RUN_RE = re.compile(
-    r"^ops/operator/runs/\d{4}-\d{2}-\d{2}/[A-Za-z0-9_.-]{1,240}\.json$"
+    rf"^ops/operator/runs/\d{{4}}-\d{{2}}-\d{{2}}/{_OPERATOR_RUN_SEGMENT}(?:/{_OPERATOR_RUN_SEGMENT})*$"
 )
 OPERATOR_REMEDIATION_RE = re.compile(r"^ops/operator/remediation(?:/.*)?$")
 OPERATOR_ENGINEERING_RE = re.compile(r"^ops/operator/engineering(?:/.*)?$")

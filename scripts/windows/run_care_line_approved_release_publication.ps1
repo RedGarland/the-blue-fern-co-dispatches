@@ -6,7 +6,8 @@ param(
     [string]$SourceBranch = "add/pages-repo-default",
     [string]$PagesBranch = "gh-pages",
     [string]$RunDate = "",
-    [string]$RunId = ""
+    [string]$RunId = "",
+    [switch]$ProofOnly
 )
 
 $ErrorActionPreference = "Stop"
@@ -91,6 +92,9 @@ $arguments = @(
     "--run-date", $RunDate,
     "--run-id", $RunId
 )
+if ($ProofOnly) {
+    $arguments += "--proof-only"
+}
 
 Push-Location -LiteralPath $RepositoryRoot
 try {

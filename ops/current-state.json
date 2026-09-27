@@ -1,12 +1,12 @@
 {
   "schema": "bluefern.ops.current_state.v1",
-  "as_of_utc": "2026-09-27T05:16:14Z",
+  "as_of_utc": "2026-09-27T17:12:30Z",
   "source_of_truth": "protected source branch plus production-runner handoff receipts",
   "protected_source": {
     "repository": "RedGarland/the-blue-fern-co-dispatches",
     "branch": "add/pages-repo-default",
-    "observed_head": "8d09028d9ada6b8a2b19c86483abd855360e7402",
-    "status": "protected",
+    "observed_head": "6b27013e67a21e1f68f8cc1d3a1d06e79218793e",
+    "status": "protected_source_advanced_after_pr506",
     "resume_policy": "re-read this branch before acting; do not rely on the observed head if the branch has advanced"
   },
   "operational_prs": [
@@ -105,33 +105,44 @@
       "purpose": "post-PR503 operational current-state checkpoint",
       "merged_head": "8d09028d9ada6b8a2b19c86483abd855360e7402",
       "status": "merged"
+    },
+    {
+      "number": 506,
+      "purpose": "Care Line scheduler guard failure observability and sanctioned Operator run evidence allowance",
+      "merged_head": "6b27013e67a21e1f68f8cc1d3a1d06e79218793e",
+      "status": "merged"
     }
   ],
   "runner_state": {
     "operator": {
       "path": "C:\\BlueFernRunner\\BlueFernOperatorCurrent",
       "synced_to": "8d09028d9ada6b8a2b19c86483abd855360e7402",
-      "status": "synced_and_operator_proof_complete"
+      "status": "sync_required_after_pr506",
+      "target_head": "6b27013e67a21e1f68f8cc1d3a1d06e79218793e"
     },
     "food": {
       "path": "C:\\BlueFernRunner\\FoodLineCurrent6",
       "synced_to": "8d09028d9ada6b8a2b19c86483abd855360e7402",
-      "status": "synced_and_status_export_proven"
+      "status": "sync_required_after_pr506",
+      "target_head": "6b27013e67a21e1f68f8cc1d3a1d06e79218793e"
     },
     "care": {
       "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8",
       "synced_to": "8d09028d9ada6b8a2b19c86483abd855360e7402",
-      "status": "synced_and_status_export_proven"
+      "status": "sync_required_after_pr506",
+      "target_head": "6b27013e67a21e1f68f8cc1d3a1d06e79218793e"
     },
     "gaza": {
       "path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6",
       "synced_to": "8d09028d9ada6b8a2b19c86483abd855360e7402",
-      "status": "synced_and_status_export_proven"
+      "status": "sync_required_after_pr506",
+      "target_head": "6b27013e67a21e1f68f8cc1d3a1d06e79218793e"
     },
     "ice": {
       "path": "C:\\BlueFernRunner\\ICEMonitorCurrent",
       "synced_to": "8d09028d9ada6b8a2b19c86483abd855360e7402",
-      "status": "synced_and_status_export_proven"
+      "status": "sync_required_after_pr506",
+      "target_head": "6b27013e67a21e1f68f8cc1d3a1d06e79218793e"
     },
     "operational_status": {
       "path": "C:\\BlueFernRunner\\OperationalStatusCurrent",
@@ -175,11 +186,19 @@
       "public_side_effects": false
     }
   },
-  "known_blockers": [],
+  "known_blockers": [
+    {
+      "id": "runner-sync-pending-pr506",
+      "classification": "RUNNER_SYNC_PENDING",
+      "summary": "Protected source advanced to 6b27013e67a21e1f68f8cc1d3a1d06e79218793e after PR #506; production runners remain last proven at 8d09028d9ada6b8a2b19c86483abd855360e7402 until Windows guarded sync/proof runs.",
+      "public_side_effects": false
+    }
+  ],
   "next_action": {
-    "status": "production_runner_sync_and_nonpublic_status_proof_complete",
-    "target_head_policy": "re-read add/pages-repo-default before any future production sync; use the then-current protected HEAD",
-    "summary": "All five active production runners were synced to protected HEAD 8d09028d9ada6b8a2b19c86483abd855360e7402 and non-public operational-status proof passed. Resume normal watchdog monitoring; do not infer public publication from this proof.",
+    "status": "windows_runner_sync_and_nonpublic_status_proof_required",
+    "target_head": "6b27013e67a21e1f68f8cc1d3a1d06e79218793e",
+    "target_head_policy": "re-read add/pages-repo-default before runner sync; proceed only if the protected HEAD is still this value or update this checkpoint first",
+    "summary": "Run guarded production runner sync to PR #506 protected head, then run non-public operational-status proof. This validates the Care Line scheduler observability and checkout-guard fix without triggering collection or publication.",
     "must_not_trigger_without_explicit_authorization": [
       "collection",
       "publication",

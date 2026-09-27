@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260927T034435-0700",
+  "scheduled_for": "2026-09-27T03:44:51-07:00",
+  "started_at": "2026-09-27T03:44:35-07:00",
+  "completed_at": "2026-09-27T03:45:56-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-27T02:53:30-07:00",
+    "end": "2026-09-27T03:45:56-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Prior heartbeat on ops/watch-ledger completed at 2026-09-27T02:53:30-07:00. OCHA OPT and WHO were checked first. Exactly 12 additional targeted searches followed across casualties, aid/food/water, health and medical evacuation, crossings, displacement, infrastructure, ceasefire/hostages, detention, and civilian-impact military operations. BBC and UN News retrievals were blocked by robots.txt; useful coverage remained from OCHA, WHO search, WAFA, Reuters/AP-targeted search, ICRC/UN agency-targeted search, and other established-source searches. No new qualifying development within the bounded window was verified; pre-window, duplicate, recycled, opinion, unsupported, and unsourced material was excluded."
+}

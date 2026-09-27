@@ -1,0 +1,30 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260927T074646-0700",
+  "scheduled_for": "2026-09-27T07:46:46-07:00",
+  "started_at": "2026-09-27T07:46:46-07:00",
+  "completed_at": "2026-09-27T07:48:17.110328-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-27T06:46:46-07:00",
+    "date_to": "2026-09-27T07:46:46-07:00",
+    "edition_date": "2026-09-27"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "scope": "Bounded supplementary recall watch; production collection remains authoritative.",
+    "cms_public_notices": "Checked first. Newest listed notices remained dated 2026-09-25.",
+    "targeted_miss_classes": [
+      "hospital/ED/maternity/behavioral-health/dialysis/oncology/primary-care closure or suspension",
+      "emergency or rural service loss",
+      "ambulance/air-medical/base closure or suspension",
+      "official CMS provider termination, rescission, CLIA limitation/suspension, or similar access-risk notice",
+      "abrupt restoration/reopening of a previously lost essential service"
+    ],
+    "result": "No new qualifying U.S. or territory healthcare-access development identified in the bounded hourly window."
+  }
+}

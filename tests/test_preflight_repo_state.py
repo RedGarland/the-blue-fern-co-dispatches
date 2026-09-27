@@ -349,7 +349,11 @@ def test_operator_preserved_runtime_evidence_paths_are_sanctioned(monkeypatch, t
                 "?? ops/operator/engineering/active/work-item/work-item.json",
                 "?? ops/operator/.lock/operator.lock",
                 "?? ops/operator/runs/2026-09-26/pr489-production-handoff.json",
+                "?? ops/operator/runs/2026-09-26/pr489-production-handoff/scheduler-diagnostics/scheduler-attempt.json",
+                "?? ops/operator/runs/2026-09-26/pr489-production-handoff/proofs/operator-sync-plan.json",
                 "?? ops/operator/remediation-policy-drafts/policy.json",
+                "?? ops/operator/runs/2026-09-26/pr489-production-handoff/../secret.json",
+                "?? ops/operator/runs/not-a-date/pr489-production-handoff/evidence.json",
             ],
         ),
     )
@@ -363,9 +367,13 @@ def test_operator_preserved_runtime_evidence_paths_are_sanctioned(monkeypatch, t
         "ops/operator/engineering/active/work-item/work-item.json",
         "ops/operator/.lock/operator.lock",
         "ops/operator/runs/2026-09-26/pr489-production-handoff.json",
+        "ops/operator/runs/2026-09-26/pr489-production-handoff/scheduler-diagnostics/scheduler-attempt.json",
+        "ops/operator/runs/2026-09-26/pr489-production-handoff/proofs/operator-sync-plan.json",
     }
     assert [entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]] == [
-        "ops/operator/remediation-policy-drafts/policy.json"
+        "ops/operator/remediation-policy-drafts/policy.json",
+        "ops/operator/runs/2026-09-26/pr489-production-handoff/../secret.json",
+        "ops/operator/runs/not-a-date/pr489-production-handoff/evidence.json",
     ]
 
 

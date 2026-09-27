@@ -416,6 +416,7 @@ def run_publication_once(
     pages_branch: str,
     run_date: str,
     run_id: str | None,
+    proof_only: bool = False,
 ) -> tuple[int, dict[str, Any]]:
     root = root.resolve()
     pages_root = pages_root.resolve()
@@ -435,6 +436,7 @@ def run_publication_once(
         log_path=log_path,
         receipt_path=receipt_path,
     )
+    receipt["proof_only"] = proof_only
     atomic_write_json(receipt_path, receipt)
     _write_log(log_path, receipt)
     lock = SchedulerLock(root / LOCK_PATH)
@@ -508,6 +510,24 @@ def run_publication_once(
                 "release_ready": True,
             }
         )
+        if proof_only:
+            receipt.update(
+                {
+                    "ok": True,
+                    "status": "safe_no_op",
+                    "no_op_reason": "proof_only_release_ready",
+                    "publication_runner_status": "safe_no_op",
+                    "publication_attempted": False,
+                    "source_head_after": source_before["head"],
+                    "pages_head_after": pages_before["head"],
+                    "completed_at": utc_now(),
+                }
+            )
+            atomic_write_json(receipt_path, receipt)
+            _write_log(log_path, receipt)
+            _write_operational_health_receipt(root, receipt)
+            return 0, receipt
+
         command = [
             sys.executable,
             str(root / "scripts" / "run_care_line_publication_runner.py"),
@@ -615,6 +635,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--pages-branch", default=PAGES_BRANCH)
     parser.add_argument("--run-date", required=True)
     parser.add_argument("--run-id", default=None)
+    parser.add_argument("--proof-only", action="store_true", help="verify approved-release readiness without publishing or pushing")
     return parser
 
 
@@ -628,6 +649,7 @@ def main(argv: list[str] | None = None) -> int:
             pages_branch=args.pages_branch,
             run_date=args.run_date,
             run_id=args.run_id,
+            proof_only=args.proof_only,
         )
     except Exception as exc:  # only argument/date failures before receipt path resolution
         receipt = {"schema_version": SCHEDULER_SCHEMA, "ok": False, "status": "failure", "error": str(exc)}

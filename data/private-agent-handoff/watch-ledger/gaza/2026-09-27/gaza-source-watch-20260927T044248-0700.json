@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260927T044248-0700",
+  "scheduled_for": "2026-09-27T04:44:51-07:00",
+  "started_at": "2026-09-27T04:42:48-07:00",
+  "completed_at": "2026-09-27T04:43:56-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-27T03:45:56-07:00",
+    "end": "2026-09-27T04:43:56-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Prior heartbeat on ops/watch-ledger completed at 2026-09-27T03:45:56-07:00. OCHA OPT and WHO were checked first. Exactly 12 additional targeted searches followed across UNRWA, WFP, ICRC, UNICEF, MSF, Reuters, AP, Al Jazeera, WAFA, IDF, a bounded general latest-news query, and a WAFA/Health-Ministry casualty query. OCHA's newest surfaced Gaza humanitarian situation report remained the 18 September 2026 report published 21 September; no newer WHO Gaza update surfaced. Items surfaced from WAFA/AP and secondary republication reflected pre-window or previously available September 26 casualty figures and were excluded as recycled or outside the bounded window. No source/search materially failed, and no new qualifying development was verified."
+}

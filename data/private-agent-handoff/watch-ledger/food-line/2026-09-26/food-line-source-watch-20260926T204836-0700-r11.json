@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260926T204836-0700-r11",
+  "scheduled_for": "2026-09-26T20:45:54-07:00",
+  "started_at": "2026-09-26T20:48:36-07:00",
+  "completed_at": "2026-09-26T20:49:44-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-26T19:46:32-07:00",
+    "date_to": "2026-09-26T20:49:44-07:00",
+    "edition_date": "2026-09-26"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Bounded supplementary recall watch completed with 12 targeted web searches.",
+    "Covered only/sole/last/full-service grocery loss, disaster-related food-distribution cancellation or suspension, abrupt pantry/food-bank service reduction, and immediate SNAP/WIC/food-assistance interruption.",
+    "No new qualifying signal was verified within the hourly search window.",
+    "Hatteras Island reporting was reviewed because N.C. 12 remained closed and local stores reported some fresh produce and meat becoming limited while Dare County coordinated food-supply trucks; the underlying access disruption was documented earlier on September 26 and was not retained as a new signal for this hourly window.",
+    "Fresh Hawaii storm coverage was reviewed; emergency distributions remained scheduled on Kauai and Hawaii Island Food Basket warehouse closures were already-known storm impacts rather than new signals in this window.",
+    "Routine promotions, donation/resource items, generic inflation, recycled reports, and unsupported claims were excluded."
+  ]
+}

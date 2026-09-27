@@ -1,0 +1,33 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260927T044446-0700-r11",
+  "scheduled_for": "2026-09-27T04:44:46-07:00",
+  "started_at": "2026-09-27T04:44:46-07:00",
+  "completed_at": "2026-09-27T04:45:59-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-27T03:44:46-07:00",
+    "date_to": "2026-09-27T04:44:46-07:00",
+    "edition_date": "2026-09-27"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "scope": "Bounded supplementary recall watch; production collection remains authoritative.",
+    "targeted_miss_classes": [
+      "only/sole/last/full-service grocery-store loss, closure, fire, or disaster",
+      "storm/flood/fire/outage/facility-damage cancellation or suspension of emergency food distribution",
+      "abrupt pantry or food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "result": "No new qualifying U.S. food-access disruption was identified in the bounded hourly window.",
+    "notable_nonqualifying_checks": [
+      "Kauaʻi hurricane-recovery update showed emergency food distributions scheduled and North Shore Food Pantry distribution proceeding as scheduled.",
+      "Big Island Hurricane Nolo update showed county services resuming; no new qualifying food-assistance interruption identified.",
+      "Maui Olowalu brush-fire update documented evacuation, road closure and power loss but no qualifying pantry/distribution/SNAP/WIC interruption."
+    ]
+  }
+}

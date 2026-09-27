@@ -57,6 +57,21 @@ py -m venv .venv
 Do not copy `.env`, credentials, or private runtime state from another
 worktree into source control.
 
+
+## Local runner boundary handoff
+
+When a chat or remote execution session cannot access the Windows runner host,
+`C:\\BlueFernRunner`, or Task Scheduler, the handoff must be a ready-to-run
+Codex/Work draft rather than loose operator commands.
+
+The draft must carry the exact protected SHA or require a protected HEAD re-read,
+the Windows paths, allowed work, forbidden work, stop conditions, expected
+receipts, and final checkpoint format. Include commands only as part of that
+executor-ready draft.
+
+This prevents the human operator from becoming the integration layer between
+GitHub/source work and Windows-local runner proof.
+
 ## Guarded synchronization
 
 Use the canonical synchronization helper rather than ad hoc pull/reset commands.

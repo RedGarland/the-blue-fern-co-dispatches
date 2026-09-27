@@ -1,12 +1,12 @@
 {
   "schema": "bluefern.ops.current_state.v1",
-  "as_of_utc": "2026-09-27T17:12:30Z",
+  "as_of_utc": "2026-09-27T17:30:01Z",
   "source_of_truth": "protected source branch plus production-runner handoff receipts",
   "protected_source": {
     "repository": "RedGarland/the-blue-fern-co-dispatches",
     "branch": "add/pages-repo-default",
-    "observed_head": "6b27013e67a21e1f68f8cc1d3a1d06e79218793e",
-    "status": "protected_source_advanced_after_pr506",
+    "observed_head": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
+    "status": "protected_and_runner_synced",
     "resume_policy": "re-read this branch before acting; do not rely on the observed head if the branch has advanced"
   },
   "operational_prs": [
@@ -111,94 +111,104 @@
       "purpose": "Care Line scheduler guard failure observability and sanctioned Operator run evidence allowance",
       "merged_head": "6b27013e67a21e1f68f8cc1d3a1d06e79218793e",
       "status": "merged"
+    },
+    {
+      "number": 507,
+      "purpose": "post-PR506 runner sync target checkpoint",
+      "merged_head": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
+      "status": "merged"
     }
   ],
   "runner_state": {
     "operator": {
       "path": "C:\\BlueFernRunner\\BlueFernOperatorCurrent",
-      "synced_to": "8d09028d9ada6b8a2b19c86483abd855360e7402",
-      "status": "sync_required_after_pr506",
-      "target_head": "6b27013e67a21e1f68f8cc1d3a1d06e79218793e"
+      "synced_to": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
+      "status": "synced_and_nonpublic_status_proof_passed"
     },
     "food": {
       "path": "C:\\BlueFernRunner\\FoodLineCurrent6",
-      "synced_to": "8d09028d9ada6b8a2b19c86483abd855360e7402",
-      "status": "sync_required_after_pr506",
-      "target_head": "6b27013e67a21e1f68f8cc1d3a1d06e79218793e"
+      "synced_to": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
+      "status": "synced_and_nonpublic_status_proof_passed"
     },
     "care": {
       "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8",
-      "synced_to": "8d09028d9ada6b8a2b19c86483abd855360e7402",
-      "status": "sync_required_after_pr506",
-      "target_head": "6b27013e67a21e1f68f8cc1d3a1d06e79218793e"
+      "synced_to": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
+      "status": "synced_and_nonpublic_status_proof_passed"
     },
     "gaza": {
       "path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6",
-      "synced_to": "8d09028d9ada6b8a2b19c86483abd855360e7402",
-      "status": "sync_required_after_pr506",
-      "target_head": "6b27013e67a21e1f68f8cc1d3a1d06e79218793e"
+      "synced_to": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
+      "status": "synced_and_nonpublic_status_proof_passed"
     },
     "ice": {
       "path": "C:\\BlueFernRunner\\ICEMonitorCurrent",
-      "synced_to": "8d09028d9ada6b8a2b19c86483abd855360e7402",
-      "status": "sync_required_after_pr506",
-      "target_head": "6b27013e67a21e1f68f8cc1d3a1d06e79218793e"
+      "synced_to": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
+      "status": "synced_and_nonpublic_status_proof_passed"
     },
     "operational_status": {
       "path": "C:\\BlueFernRunner\\OperationalStatusCurrent",
       "branch": "ops/status/current",
-      "latest_commit": "211bd2611a9444a84963da76084ef50e73f5a41a"
+      "latest_commit": "unknown_status_commit_from_20260927T172547Z_export"
     }
   },
   "proofs": {
     "operational_status_export": {
       "highest_proven_layer": "NONPUBLIC_STATUS_EXPORT_PROOF_PASSED",
-      "wrapper_receipt": "C:\\\\BlueFernRunner\\\\FoodLineCurrent6\\\\logs\\\\operational-status-exporter-wrapper\\\\wrapper-20260927T050504Z-ef1b4691.json",
-      "exporter_receipt": "C:\\\\BlueFernRunner\\\\FoodLineCurrent6\\\\logs\\\\operational-status-exporter\\\\20260927T050504Z-18c89479.json",
+      "wrapper_receipt": "C:\\\\BlueFernRunner\\\\FoodLineCurrent6\\\\logs\\\\operational-status-exporter-wrapper\\\\wrapper-20260927T172546Z-5e0516b6.json",
+      "exporter_receipt": "C:\\\\BlueFernRunner\\\\FoodLineCurrent6\\\\logs\\\\operational-status-exporter\\\\20260927T172547Z-09b6d186.json",
       "exporter_classification": "exported",
       "exit_code": 0,
       "status_export_proof_passed": true,
       "public_side_effects": false
     },
     "production_runner_sync": {
-      "highest_proven_layer": "PRODUCTION_RUNNER_SYNC_AND_NONPUBLIC_STATUS_PROOF_COMPLETE",
-      "protected_head_used": "8d09028d9ada6b8a2b19c86483abd855360e7402",
+      "highest_proven_layer": "RUNNER_SYNCED_AND_NON_PUBLIC_STATUS_PROOF_PASSED",
+      "protected_head_used": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
       "runner_heads_before": {
-        "operator": "3b9632060ee8fb7713fd7a83e560f8479da7e3e2",
-        "food-line": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
-        "care-line": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
-        "gaza": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3",
-        "ice": "2ca614ba7a7d4edf5c9693281f2eae2f534ca4c3"
-      },
-      "runner_heads_after": {
         "operator": "8d09028d9ada6b8a2b19c86483abd855360e7402",
-        "food-line": "8d09028d9ada6b8a2b19c86483abd855360e7402",
-        "care-line": "8d09028d9ada6b8a2b19c86483abd855360e7402",
-        "gaza": "8d09028d9ada6b8a2b19c86483abd855360e7402",
+        "food": "8d09028d9ada6b8a2b19c86483abd855360e7402",
+        "care": "8d09028d9ada6b8a2b19c86483abd855360e7402",
+        "gaza": "e30d7da61a75a31e8b2661cd39ff408723d9d3ed",
         "ice": "8d09028d9ada6b8a2b19c86483abd855360e7402"
       },
-      "plan_report": "C:\\\\BlueFernRunner\\\\ProductionProof\\\\pr504-sync-plan-8d09028.json",
-      "apply_report": "C:\\\\BlueFernRunner\\\\ProductionProof\\\\pr504-sync-apply-8d09028.json",
-      "operator_proof_report": "C:\\\\BlueFernRunner\\\\BlueFernOperatorCurrent\\\\ops\\\\operator\\\\runs\\\\2026-09-27\\\\runner-sync-apply-20260927T050430Z-1b01d7504368\\\\guarded-runner-sync-report.json",
-      "operator_runner_sync_receipt": "C:\\\\BlueFernRunner\\\\BlueFernOperatorCurrent\\\\ops\\\\operator\\\\runs\\\\2026-09-27\\\\runner-sync-apply-20260927T050430Z-1b01d7504368\\\\guarded-runner-sync-receipt.json",
-      "operator_runner_sync_outcome": "APPLY_COMPLETE",
-      "operator_runner_sync_exit_code": 0,
-      "public_side_effects": false
+      "runner_heads_after": {
+        "operator": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
+        "food-line": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
+        "care-line": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
+        "gaza": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
+        "ice": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8"
+      },
+      "plan_receipt": "C:\\\\BlueFernRunner\\\\BlueFernOperatorCurrent\\\\ops\\\\operator\\\\runs\\\\2026-09-27\\\\runner-sync-plan-20260927T172412Z-ff15499a9859\\\\guarded-runner-sync-receipt.json",
+      "plan_report": "C:\\\\BlueFernRunner\\\\BlueFernOperatorCurrent\\\\ops\\\\operator\\\\runs\\\\2026-09-27\\\\runner-sync-plan-20260927T172412Z-ff15499a9859\\\\guarded-runner-sync-report.json",
+      "apply_receipt": "C:\\\\BlueFernRunner\\\\BlueFernOperatorCurrent\\\\ops\\\\operator\\\\runs\\\\2026-09-27\\\\runner-sync-apply-20260927T172455Z-34052c072264\\\\guarded-runner-sync-receipt.json",
+      "apply_report": "C:\\\\BlueFernRunner\\\\BlueFernOperatorCurrent\\\\ops\\\\operator\\\\runs\\\\2026-09-27\\\\runner-sync-apply-20260927T172455Z-34052c072264\\\\guarded-runner-sync-report.json",
+      "guarded_plan_outcome": "PLAN_READY_TO_FAST_FORWARD",
+      "guarded_apply_outcome": "APPLY_COMPLETE",
+      "guarded_apply_exit_code": 0,
+      "preflight_and_doctor": "passed_before_and_after_apply_for_all_five_runners",
+      "public_side_effects": false,
+      "flags": {
+        "CollectionTriggered": false,
+        "PublicationTriggered": false,
+        "PagesMutation": false,
+        "SchedulerMutation": false,
+        "PublicSideEffects": false
+      }
     }
   },
   "known_blockers": [
     {
-      "id": "runner-sync-pending-pr506",
-      "classification": "RUNNER_SYNC_PENDING",
-      "summary": "Protected source advanced to 6b27013e67a21e1f68f8cc1d3a1d06e79218793e after PR #506; production runners remain last proven at 8d09028d9ada6b8a2b19c86483abd855360e7402 until Windows guarded sync/proof runs.",
+      "id": "runtime-aggregate-statuses-after-sync",
+      "classification": "RUNTIME_STATUS_REMEDIATION_PENDING",
+      "summary": "Operational aggregate statuses after non-public export remain Food Line FAILED, Care Line FAILED, Gaza STALE_OBSERVABILITY, ICE STALE_OBSERVABILITY. Runner sync/proof completed but did not attempt runtime remediation.",
       "public_side_effects": false
     }
   ],
   "next_action": {
-    "status": "windows_runner_sync_and_nonpublic_status_proof_required",
-    "target_head": "6b27013e67a21e1f68f8cc1d3a1d06e79218793e",
-    "target_head_policy": "re-read add/pages-repo-default before runner sync; proceed only if the protected HEAD is still this value or update this checkpoint first",
-    "summary": "Run guarded production runner sync to PR #506 protected head, then run non-public operational-status proof. This validates the Care Line scheduler observability and checkout-guard fix without triggering collection or publication.",
+    "status": "runner_sync_and_nonpublic_status_proof_complete_runtime_statuses_pending",
+    "target_head": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
+    "target_head_policy": "re-read add/pages-repo-default before future production work; runners were proven at this protected HEAD on 2026-09-27",
+    "summary": "All five active production runners are synced to protected HEAD and non-public operational-status proof passed. Next work should address runtime aggregate statuses without triggering publication unless explicitly authorized.",
     "must_not_trigger_without_explicit_authorization": [
       "collection",
       "publication",

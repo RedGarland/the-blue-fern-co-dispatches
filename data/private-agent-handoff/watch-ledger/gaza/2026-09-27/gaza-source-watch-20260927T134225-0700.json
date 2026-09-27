@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260927T134225-0700",
+  "scheduled_for": "2026-09-27T13:44:51-07:00",
+  "started_at": "2026-09-27T13:42:25-07:00",
+  "completed_at": "2026-09-27T13:44:53-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-27T12:48:26-07:00",
+    "end": "2026-09-27T13:44:53-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "OCHA OPT and WHO were checked first, followed by exactly 12 additional targeted searches across Reuters, AP, WAFA, UN News, WFP, UNICEF, ICRC, health/medical evacuation/fuel, crossings, ceasefire/hostages, displacement/infrastructure, and humanitarian transport. No new qualifying development was verified within the strict window. UN News retrieval was blocked by robots.txt; useful coverage remained, so status is DEGRADED rather than FAILED. Direct WAFA source-page inspection surfaced a Gaza casualty item published at 22:28 Palestine time (12:28 PDT), before the prior heartbeat completed at 12:48:26 PDT, so it was excluded as pre-window. AP rolling coverage lacked item-level timestamps sufficient to establish in-window novelty; other same-day material was pre-window or not provably new."
+}

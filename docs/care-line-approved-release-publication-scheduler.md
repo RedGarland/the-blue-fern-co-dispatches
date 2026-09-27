@@ -23,7 +23,15 @@ An eligible release is handed to the existing publication runner with
 `--publish --push --isolated-source`. The isolated source checkout prevents
 generated publication output from dirtying the long-lived runner. The command
 does not request Bluesky, audio, collection, queue mutation, approval creation,
-or promotion. Normal and failed runs write a JSON receipt under
+or promotion.
+
+For non-public production proof, pass `--proof-only` to the Python scheduler
+or `-ProofOnly` to the PowerShell wrapper. Proof-only mode verifies the source
+checkout, Pages checkout, preflight, protected approved-release artifacts, and
+release readiness, then writes a `safe_no_op` receipt without invoking the
+publication runner, publishing, or pushing Pages.
+
+Normal and failed runs write a JSON receipt under
 `status/care-line/publication-scheduler-runs/YYYY-MM-DD/` and a log under
 `logs/care-line/publication-scheduler/YYYY-MM-DD/`.
 

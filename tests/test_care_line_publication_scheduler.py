@@ -141,6 +141,43 @@ def test_release_ready_handoff_invokes_only_guarded_isolated_publication(
     assert not any(receipt["unauthorized_side_effects"].values())
 
 
+def test_release_ready_proof_only_verifies_without_publication(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source = tmp_path / "source"
+    pages = tmp_path / "pages"
+    source.mkdir()
+    pages.mkdir()
+    _install_healthy_checks(monkeypatch, pages_after="pages-old")
+    monkeypatch.setattr(scheduler, "discover_release_candidates", lambda *args: [_candidate()])
+    monkeypatch.setattr(
+        scheduler,
+        "_run_child",
+        lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("proof-only run must not launch publication")),
+    )
+
+    exit_code, receipt = scheduler.run_publication_once(
+        source,
+        pages,
+        source_branch=scheduler.PRODUCTION_BRANCH,
+        pages_branch=scheduler.PAGES_BRANCH,
+        run_date=DATE,
+        run_id="release-ready-proof",
+        proof_only=True,
+    )
+
+    assert exit_code == 0
+    assert receipt["status"] == "safe_no_op"
+    assert receipt["no_op_reason"] == "proof_only_release_ready"
+    assert receipt["release_ready"] is True
+    assert receipt["proof_only"] is True
+    assert receipt["publication_attempted"] is False
+    assert receipt["pages_changed"] is False
+    assert receipt["source_changed"] is False
+    assert receipt["pages_head_after"] == "pages-old"
+    assert not any(receipt["unauthorized_side_effects"].values())
+
+
 @pytest.mark.parametrize("dirty_label", ["source repo", "Pages repo"])
 def test_dirty_source_or_pages_fails_closed_with_receipt(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, dirty_label: str

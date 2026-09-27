@@ -573,5 +573,6 @@ def render_dispatch_directory_from_releases(template_html: str, latest: dict[str
         raise ValueError(f"No eligible public release found for active dispatches: {', '.join(missing)}")
     refreshed = template_html
     for slug in ACTIVE_PRODUCTS:
+        refreshed = _replace_latest_edition_card(refreshed, latest[slug])
         refreshed = render_dispatch_directory_from_template(refreshed, latest[slug])
     return _normalize_shared_footer_separator(refreshed)

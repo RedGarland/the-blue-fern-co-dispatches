@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260927T154333-0700-r11",
+  "scheduled_for": "2026-09-27T15:45:54-07:00",
+  "started_at": "2026-09-27T15:43:33-07:00",
+  "completed_at": "2026-09-27T15:45:32-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "since": "2026-09-27T14:45:49-07:00",
+    "until": "2026-09-27T15:45:32-07:00",
+    "basis": "since prior hourly check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "scope": [
+      "only/sole/last/full-service grocery-store loss or closure",
+      "emergency food-distribution cancellation/suspension from storm/flood/fire/outage/facility damage",
+      "abrupt pantry/food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "result": "No new qualifying signal found in the bounded window. Fresh search results resurfaced previously known Hawaii hurricane-related Food Basket warehouse closures and confirmed North Shore Food Pantry distribution was proceeding as scheduled; no new SNAP/WIC interruption with immediate access consequences was identified. Production collection remains authoritative; this run is supplementary only."
+  }
+}

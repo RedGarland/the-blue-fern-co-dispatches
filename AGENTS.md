@@ -41,6 +41,19 @@ Proceed autonomously through routine work including:
 
 When a technically stronger safe approach becomes evident, take it rather than asking the operator to choose among routine implementation options.
 
+### Dispatches Autopilot Rule
+
+For Dispatches work, checkpoints are durable state, not tollbooths. When the next action is already authorized by this file and does not cross a genuine authority boundary, continue without asking the operator to type "proceed".
+
+Default safe chains are:
+
+- `diagnose -> source fix -> PR -> CI check/remediation -> exact-head merge -> checkpoint -> Windows Codex draft` when host-local runner access is the only remaining boundary.
+- `Windows proof returned -> record proof -> PR -> CI check/remediation -> exact-head merge -> next operational diagnosis` when the proof shows no public side effects and no unsafe runner state.
+
+Do not stop at a clean PR, completed CI run, merged checkpoint, or returned non-public proof merely because it is a convenient reporting point. Report progress, but keep moving through the safe chain until completion or a boundary below is reached.
+
+If a Windows runner handoff is required, produce the executor-ready Codex/Work draft and complete all independent source/GitHub work available from the current environment. After Windows Codex returns proof, consume that proof directly; do not ask the operator to relay routine next steps or approve routine checkpointing.
+
 ### Stop Only At Genuine Authority Boundaries
 
 Require operator input only for:

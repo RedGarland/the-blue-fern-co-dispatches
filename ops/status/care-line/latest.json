@@ -12,7 +12,7 @@
   },
   "aggregate_status": "FAILED",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "fa9c76abdee22c4030cc9219e6d32c5390160f19",
+  "current_runner_head": "487515120ef004b4a604524872691217963d1c23",
   "dispatch": "care-line",
   "expected_instances": [
     {
@@ -46,8 +46,8 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-09-27T18:04:51.749499Z",
-  "last_receipt_at": "2026-09-27T15:30:02.146988Z",
+  "last_exported_at": "2026-09-27T19:09:53.971960Z",
+  "last_receipt_at": "2026-09-27T19:03:40.117607Z",
   "latest_runtime_proof_date": "2026-09-27T15:00:03.000851Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
@@ -60,7 +60,7 @@
   "publication_status": "failure",
   "receipt_completeness": "COMPLETE",
   "recovery_lifecycle": "INCIDENT_OPEN",
-  "runner_source_head": null,
+  "runner_source_head": "fa9c76abdee22c4030cc9219e6d32c5390160f19",
   "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
     "care_line_collection",
@@ -70,14 +70,39 @@
   "schema_version": "bluefern_external_operational_status_v1",
   "source_failure_summary": {
     "all_current_failures_external": false,
-    "external_access_restriction_count": 0,
-    "external_restriction_sources": [],
-    "failed_source_count": 0,
-    "original_failed_source_count": 0,
+    "external_access_restriction_count": 4,
+    "external_restriction_sources": [
+      {
+        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "coverage_reduced": true,
+        "remediation_available": false,
+        "source_id": "hhs-news"
+      },
+      {
+        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "coverage_reduced": true,
+        "remediation_available": false,
+        "source_id": "hrsa-news"
+      },
+      {
+        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "coverage_reduced": true,
+        "remediation_available": false,
+        "source_id": "fierce-healthcare"
+      },
+      {
+        "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+        "coverage_reduced": true,
+        "remediation_available": false,
+        "source_id": "mayo-clinic-news"
+      }
+    ],
+    "failed_source_count": 9,
+    "original_failed_source_count": 9,
     "recovered_source_count": 0,
     "recovered_sources": [],
-    "successful_attempt_count": null,
-    "unclassified_source_failure_count": 0
+    "successful_attempt_count": 26,
+    "unclassified_source_failure_count": 5
   },
   "stale_observability": false,
   "task_summaries": [
@@ -165,6 +190,148 @@
       "started_at": "2026-09-27T15:30:02Z",
       "status": "FAILED",
       "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "20260927T190001Z-28080.json",
+      "classification": "partial_success",
+      "completed_at": "2026-09-27T19:03:40Z",
+      "diagnostics": {
+        "active_review_queue_count": 0,
+        "failed_source_count": 9,
+        "failed_sources": [
+          {
+            "adapter_type": "structured_index",
+            "coverage_reduced": true,
+            "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "failure_class": "HTTPError",
+            "remediation_available": false,
+            "source_id": "hhs-news",
+            "source_name": "U.S. Department of Health and Human Services News",
+            "transient": false
+          },
+          {
+            "adapter_type": "structured_index",
+            "coverage_reduced": true,
+            "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "failure_class": "HTTPError",
+            "remediation_available": false,
+            "source_id": "hrsa-news",
+            "source_name": "Health Resources and Services Administration News",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "coverage_reduced": true,
+            "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "failure_class": "HTTPError",
+            "remediation_available": false,
+            "source_id": "fierce-healthcare",
+            "source_name": "Fierce Healthcare",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "effective_source_state": "failed",
+            "failure_class": "HTTPError",
+            "source_id": "virginia-mercury-health",
+            "source_name": "Virginia Mercury Health",
+            "transient": false
+          },
+          {
+            "adapter_type": "structured_index",
+            "effective_source_state": "failed",
+            "failure_class": "HTTPError",
+            "source_id": "ohio-capital-journal-health",
+            "source_name": "Ohio Capital Journal Health",
+            "transient": false
+          },
+          {
+            "adapter_type": "structured_index",
+            "effective_source_state": "failed",
+            "failure_class": "HTTPError",
+            "source_id": "missouri-independent-health",
+            "source_name": "Missouri Independent Health",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "effective_source_state": "failed",
+            "failure_class": "HTTPError",
+            "source_id": "florida-phoenix-health",
+            "source_name": "Florida Phoenix Health",
+            "transient": false
+          },
+          {
+            "adapter_type": "structured_index",
+            "effective_source_state": "failed",
+            "failure_class": "HTTPError",
+            "source_id": "michigan-advance-health",
+            "source_name": "Michigan Advance Health",
+            "transient": false
+          },
+          {
+            "adapter_type": "rss",
+            "coverage_reduced": true,
+            "effective_source_state": "failed",
+            "external_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "failure_class": "HTTPError",
+            "remediation_available": false,
+            "source_id": "mayo-clinic-news",
+            "source_name": "Mayo Clinic News Network",
+            "transient": false
+          }
+        ],
+        "failure": {
+          "child_stdout_tail": [
+            "    ],",
+            "    \"stale_candidate_count\": 0,",
+            "    \"started_at\": \"2026-09-27T19:00:04Z\",",
+            "    \"status\": \"partial_success\",",
+            "    \"successful_attempt_count\": 26,",
+            "    \"superseded_candidate_count\": 0,",
+            "    \"zero_findings_distinct_from_source_failures\": true",
+            "  },",
+            "  \"schema_version\": \"bluefern.care_line.national_pipeline.v2\"",
+            "}"
+          ],
+          "collection_health": "partial_success",
+          "failed_source_count": 9,
+          "failure_stage": "care_line_collection",
+          "manual_review_count": 25,
+          "pipeline_run_id": "20260927-08394eb9bbb5-01",
+          "skipped_source_count": 0,
+          "successful_attempt_count": 26
+        },
+        "manual_review_count": 25,
+        "skipped_source_count": 0,
+        "successful_attempt_count": 26
+      },
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "bluesky_publication": false,
+        "edition_generation": false,
+        "map": false,
+        "pages_sync": false,
+        "podcast": false,
+        "proposal_approval": false,
+        "public_site_updates": false,
+        "release_manifest_generation": false,
+        "rss_publication": false,
+        "signal_wire_publication": false,
+        "social_cards": false
+      },
+      "publication_attempted": null,
+      "publication_status": null,
+      "run_id": "20260927T190001Z-28080",
+      "scheduled_for": "2026-09-27",
+      "started_at": "2026-09-27T19:00:02Z",
+      "status": "DEGRADED",
+      "task_key": "care_line_collection"
     }
   ]
 }

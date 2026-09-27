@@ -1,11 +1,11 @@
 {
   "schema": "bluefern.ops.current_state.v1",
-  "as_of_utc": "2026-09-27T19:25:00Z",
+  "as_of_utc": "2026-09-27T20:20:00Z",
   "source_of_truth": "protected source branch plus production-runner handoff receipts",
   "protected_source": {
     "repository": "RedGarland/the-blue-fern-co-dispatches",
     "branch": "add/pages-repo-default",
-    "observed_head": "487515120ef004b4a604524872691217963d1c23",
+    "observed_head": "102660310695fe46b3c50b74acd60e2a6c20f42e",
     "status": "protected",
     "resume_policy": "re-read this branch before acting; do not rely on the observed head if the branch has advanced"
   },
@@ -135,33 +135,45 @@
       "purpose": "checkpoint PR512 Food allowlist target",
       "merged_head": "487515120ef004b4a604524872691217963d1c23",
       "status": "merged"
+    },
+    {
+      "number": 514,
+      "purpose": "checkpoint Food/Care PR512 runtime proof",
+      "merged_head": "fa7d62fa60ae991b18570bb567c98140bc8ca139",
+      "status": "merged"
+    },
+    {
+      "number": 515,
+      "purpose": "Food source-watch dead lock owner recovery",
+      "merged_head": "102660310695fe46b3c50b74acd60e2a6c20f42e",
+      "status": "merged"
     }
   ],
   "runner_state": {
     "operator": {
       "path": "C:\\BlueFernRunner\\BlueFernOperatorCurrent",
-      "synced_to": "487515120ef004b4a604524872691217963d1c23",
-      "status": "runner_synced"
+      "synced_to": "fa7d62fa60ae991b18570bb567c98140bc8ca139",
+      "status": "runner_synced_to_pre_pr515_head"
     },
     "food": {
       "path": "C:\\BlueFernRunner\\FoodLineCurrent6",
-      "synced_to": "487515120ef004b4a604524872691217963d1c23",
-      "status": "runner_synced"
+      "synced_to": "fa7d62fa60ae991b18570bb567c98140bc8ca139",
+      "status": "runner_synced_to_pre_pr515_head"
     },
     "care": {
       "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8",
-      "synced_to": "487515120ef004b4a604524872691217963d1c23",
-      "status": "runner_synced"
+      "synced_to": "fa7d62fa60ae991b18570bb567c98140bc8ca139",
+      "status": "runner_synced_to_pre_pr515_head"
     },
     "gaza": {
       "path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6",
-      "synced_to": "487515120ef004b4a604524872691217963d1c23",
-      "status": "runner_synced"
+      "synced_to": "fa7d62fa60ae991b18570bb567c98140bc8ca139",
+      "status": "runner_synced_to_pre_pr515_head"
     },
     "ice": {
       "path": "C:\\BlueFernRunner\\ICEMonitorCurrent",
-      "synced_to": "487515120ef004b4a604524872691217963d1c23",
-      "status": "runner_synced"
+      "synced_to": "fa7d62fa60ae991b18570bb567c98140bc8ca139",
+      "status": "runner_synced_to_pre_pr515_head"
     },
     "operational_status": {
       "path": "C:\\BlueFernRunner\\OperationalStatusCurrent",
@@ -248,6 +260,39 @@
         "remaining_gap": "reviewed queue and approved-release publication have not rerun after the 19:00 collection, and earlier same-day failures still affect aggregate status"
       },
       "forbidden_actions_observed": false
+    },
+    "food_care_pr514_downstream": {
+      "protected_head": "fa7d62fa60ae991b18570bb567c98140bc8ca139",
+      "runner_sync": {
+        "result": "APPLY_COMPLETE",
+        "all_active_runners_synced": true,
+        "plan_receipt": "C:\\BlueFernRunner\\BlueFernOperatorCurrent\\ops\\operator\\runs\\2026-09-27\\runner-sync-plan-20260927T193153Z-2c8958009577\\guarded-runner-sync-receipt.json",
+        "apply_receipt": "C:\\BlueFernRunner\\BlueFernOperatorCurrent\\ops\\operator\\runs\\2026-09-27\\runner-sync-apply-20260927T193231Z-ffbf00d6fe35\\guarded-runner-sync-receipt.json",
+        "apply_report": "C:\\BlueFernRunner\\BlueFernOperatorCurrent\\ops\\operator\\runs\\2026-09-27\\runner-sync-apply-20260927T193231Z-ffbf00d6fe35\\guarded-runner-sync-report.json"
+      },
+      "operational_status_export": {
+        "result": "passed",
+        "wrapper_receipt": "C:\\BlueFernRunner\\FoodLineCurrent6\\logs\\operational-status-exporter-wrapper\\wrapper-20260927T195307Z-243ba310.json",
+        "exporter_receipt": "C:\\BlueFernRunner\\FoodLineCurrent6\\logs\\operational-status-exporter\\20260927T195308Z-95469fad.json",
+        "public_side_effects": false
+      },
+      "food_line": {
+        "aggregate_status": "FAILED",
+        "source_watch_resume_status": "failed",
+        "source_watch_resume_receipt": "C:\\BlueFernRunner\\FoodLineCurrent6\\logs\\food-line\\source-watch\\2026-09-27\\20260927T193400Z-status-resume.json",
+        "blocker": "latest successful source-watch receipt was produced at 487515120ef004b4a604524872691217963d1c23 before runner sync to fa7d62fa60ae991b18570bb567c98140bc8ca139",
+        "followup_source_watch_attempt": "left preserved source-watch lock owner with run id food-line-proof-20260927T1935Z-fa7d62 and dead pid 3540; no terminal source-watch receipt",
+        "source_fix_pr": 515
+      },
+      "care_line": {
+        "aggregate_status": "FAILED",
+        "reviewed_event_queue_status": "SAFE_NO_OP",
+        "reviewed_event_queue_receipt": "C:\\BlueFernRunner\\CareLineNationalCurrent8\\status\\operational-health\\care-line\\2026-09-27\\runs\\care_line_reviewed_event_queue-20260927T195139Z-198b435c.json",
+        "approved_release_publication_status": "not_run_due_publication_boundary",
+        "blocker": "real release_ready=true artifact for 2026-08-19 means existing wrapper could publish/push under mismatch conditions"
+      },
+      "final_classification": "PARTIAL_PROOF_BLOCKED",
+      "forbidden_actions_observed": false
     }
   },
   "known_blockers": [
@@ -265,30 +310,28 @@
       "authority_boundary": "Do not trigger public publication, Pages sync, scheduler definition mutation, evidence deletion, git reset --hard, or git clean."
     },
     {
-      "id": "food-care-downstream-proof-pending",
-      "classification": "DOWNSTREAM_PROOF_PENDING",
-      "summary": "Food source-watch and Care checkout/collection are now proven at protected head 487515120ef004b4a604524872691217963d1c23, but Food current-intake/resume and Care post-collection queue/publication-safe-no-op have not been rerun after recovery.",
-      "next_safe_action": "Run Food source-watch resume/current-intake and Food daily publish safe no-op if release-not-ready; run Care reviewed-event queue and approved-release publication in the existing no-public-side-effect/safe-no-op path; export operational status; verify Food/Care aggregate statuses.",
-      "authority_boundary": "Do not trigger public publication, Pages sync, scheduler definition mutation, evidence deletion, git reset --hard, or git clean."
+      "id": "food-source-watch-dead-lock",
+      "classification": "SOURCE_FIX_MERGED_RUNNER_PROOF_PENDING",
+      "summary": "PR #515 fixes Food source-watch proof recovery for preserved locks whose recorded owner PID is no longer running. Runners have not yet been synced to the PR #515 protected head.",
+      "next_safe_action": "Guarded sync all active runners to protected head 102660310695fe46b3c50b74acd60e2a6c20f42e, rerun Food source-watch proof so it reclaims the dead lock and writes a terminal receipt, then rerun Food resume/current-intake and export non-public operational status.",
+      "authority_boundary": "Do not delete lock evidence manually; do not publish, push Pages, activate Cascadia, mutate scheduler definitions, git clean, or git reset --hard."
     }
   ],
   "next_action": {
-    "status": "pending_food_care_downstream_same_day_proof",
-    "target_head_policy": "re-read add/pages-repo-default immediately before any runner action; use the then-current protected HEAD",
-    "summary": "Complete Food/Care automation proof by rerunning downstream safe tasks after the fixed source-watch and Care collection proofs, then export non-public status and classify final health.",
+    "status": "pending_pr515_runner_sync_and_food_proof",
+    "target_head_policy": "re-read add/pages-repo-default immediately before runner action; use the then-current protected HEAD",
+    "expected_protected_head": "102660310695fe46b3c50b74acd60e2a6c20f42e",
+    "summary": "Sync runners to PR #515 and prove Food source-watch can reclaim the preserved dead-owner lock without manual evidence deletion, then continue Food downstream proof.",
     "focus": [
       "food-line",
       "care-line"
     ],
-    "expected_protected_head": "487515120ef004b4a604524872691217963d1c23",
     "steps": [
-      "Verify active runners remain synced to current protected HEAD.",
-      "Run Food source-watch resume/current-intake through canonical scheduler-equivalent wrappers without public side effects.",
-      "Run Food daily publish only in its release-not-ready safe-no-op path; do not publish.",
-      "Run Care reviewed-event queue after the 19:00 collection proof.",
-      "Run Care approved-release publication only in its no-approved-release/safe-no-op path; do not publish.",
-      "Export non-public operational status.",
-      "Report Food/Care aggregate status, failed tasks, source-failure classifications, receipts, and public-side-effect flags."
+      "Guarded sync active runners to the current protected HEAD.",
+      "Run Food source-watch proof at the synced head; expected behavior is stale_lock_reclaimed attention plus a terminal source-watch receipt.",
+      "Run Food source-watch resume/current-intake after the new terminal source-watch receipt.",
+      "Do not run Food or Care publication unless the wrapper proves a no-public-side-effect safe no-op before publish/push.",
+      "Export non-public operational status and report Food/Care aggregate statuses and receipts."
     ],
     "must_not_trigger": [
       "public publication",

@@ -12,7 +12,7 @@
   },
   "aggregate_status": "FAILED",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "3b9632060ee8fb7713fd7a83e560f8479da7e3e2",
+  "current_runner_head": "2788dbd93b900208c61fe81381359aa7f1e8e1b5",
   "dispatch": "care-line",
   "expected_instances": [
     {
@@ -46,8 +46,8 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-09-27T00:22:38.851912Z",
-  "last_receipt_at": "2026-09-26T19:00:03.379379Z",
+  "last_exported_at": "2026-09-27T01:04:25.754169Z",
+  "last_receipt_at": "2026-09-27T01:00:03.358051Z",
   "latest_runtime_proof_date": "2026-09-26T15:30:06Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
@@ -608,6 +608,42 @@
       "run_id": "20260926T190002Z-25064",
       "scheduled_for": "2026-09-26T19:00:02Z",
       "started_at": "2026-09-26T19:00:02Z",
+      "status": "FAILED",
+      "task_key": "care_line_collection"
+    },
+    {
+      "artifact_id": "20260927T010002Z-23284.json",
+      "classification": "failure",
+      "completed_at": "2026-09-27T01:00:03Z",
+      "diagnostics": {
+        "active_review_queue_count": null,
+        "failed_source_count": null,
+        "failed_sources": [],
+        "manual_review_count": null,
+        "skipped_source_count": null,
+        "successful_attempt_count": null
+      },
+      "exit_code": 1,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "bluesky_publication": false,
+        "edition_generation": false,
+        "map": false,
+        "pages_sync": false,
+        "podcast": false,
+        "proposal_approval": false,
+        "public_site_updates": false,
+        "release_manifest_generation": false,
+        "rss_publication": false,
+        "signal_wire_publication": false,
+        "social_cards": false
+      },
+      "publication_attempted": null,
+      "publication_status": null,
+      "run_id": "20260927T010002Z-23284",
+      "scheduled_for": "2026-09-26",
+      "started_at": "2026-09-27T01:00:03Z",
       "status": "FAILED",
       "task_key": "care_line_collection"
     }

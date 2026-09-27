@@ -29,9 +29,13 @@ def test_current_state_preserves_operator_blocker_and_no_go_boundaries() -> None
     next_action = state["next_action"]
     known_blockers = state["known_blockers"]
 
-    assert runner_state["operator"]["status"] == "blocked_unsynced_after_pr491"
-    assert any(blocker["id"] == "operator-runner-unsynced-after-pr491" for blocker in known_blockers)
-    assert next_action["status"] == "awaiting_operator_runner_state_classification"
+    assert runner_state["operator"]["status"] == "blocked_unsynced_after_pr496"
+    assert any(blocker["id"] == "operator-runner-unsynced-after-pr496" for blocker in known_blockers)
+    assert next_action["status"] == "awaiting_windows_guarded_sync_rerun_after_pr496"
+    assert runner_state["food"]["status"] == "scheduler_proven_at_pr491_behind_protected_source"
+    assert runner_state["care"]["status"] == "runner_synced_at_pr491_behind_protected_source"
+    assert runner_state["gaza"]["status"] == "runner_synced_at_pr491_behind_protected_source"
+    assert runner_state["ice"]["status"] == "runner_synced_at_pr491_behind_protected_source"
     assert set(next_action["must_not_trigger"]) >= {
         "collection",
         "publication",

@@ -6,7 +6,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $TaskName = "Blue Fern Care Line Reviewed Event Queue"
-$TaskPath = "\"
+$TaskPath = "\Blue Fern Co.\"
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $derivedRoot = (Resolve-Path (Join-Path $scriptRoot "..")).Path
 $repoRoot = if ($RepositoryRoot) { (Resolve-Path -LiteralPath $RepositoryRoot).Path } else { $derivedRoot }

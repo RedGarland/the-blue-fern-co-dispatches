@@ -1,8 +1,8 @@
 # Pages Publish Safety
 
-Source repo: `C:\PythonProjects\Dispatches From The Blue Fern Co`
+Source repo: the current checked-out source worktree; do not depend on a fixed workstation path.
 
-Pages repo: `C:\PythonProjects\Dispatches From The Blue Fern Co\bluefern-dispatches-pages`
+Pages repo: `./bluefern-dispatches-pages` when using the standard sibling checkout.
 
 Rules:
 

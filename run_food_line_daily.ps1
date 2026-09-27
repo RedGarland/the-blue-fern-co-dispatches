@@ -5,7 +5,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$ProjectRoot = if ($env:BLUEFERN_PROJECT_ROOT) { $env:BLUEFERN_PROJECT_ROOT } else { "C:\PythonProjects\Dispatches From The Blue Fern Co" }
+$ProjectRoot = if ($env:BLUEFERN_PROJECT_ROOT) { $env:BLUEFERN_PROJECT_ROOT } else { $PSScriptRoot }
 $LogRoot = if ($env:BLUEFERN_FOOD_LINE_LOG_ROOT) { $env:BLUEFERN_FOOD_LINE_LOG_ROOT } else { Join-Path $ProjectRoot "logs\food-line\daily_ops" }
 $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding($false)
 

@@ -115,7 +115,7 @@ Regenerate the current protected source archives from deployed Pages state:
 ```powershell
 python scripts\update_source_based_retrospective_archive_links.py `
   --repo-root . `
-  --pages-root "C:\PythonProjects\Dispatches From The Blue Fern Co\bluefern-dispatches-pages" `
+  --pages-root ".\bluefern-dispatches-pages" `
   --dispatch both
 ```
 
@@ -125,7 +125,7 @@ Prepare and locally commit exactly the Food and Care archive pages:
 python scripts\prepare_dispatch_archive_pages.py `
   --repo-root . `
   --dispatch both `
-  --pages-repo "C:\PythonProjects\Dispatches From The Blue Fern Co\bluefern-dispatches-pages" `
+  --pages-repo ".\bluefern-dispatches-pages" `
   --commit
 ```
 
@@ -142,7 +142,7 @@ care-line/archive.html
 Live deployment remains a separate explicit operator action:
 
 ```powershell
-git -C "C:\PythonProjects\Dispatches From The Blue Fern Co\bluefern-dispatches-pages" push origin gh-pages
+git -C ".\bluefern-dispatches-pages" push origin gh-pages
 ```
 
 Never run that push from the source repository.

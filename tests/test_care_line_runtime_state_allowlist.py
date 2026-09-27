@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from scripts import preflight_repo_state
 
 
@@ -117,6 +119,7 @@ def test_care_line_scheduler_verify_checkout_allows_runtime_state_but_blocks_sou
                         "?? status/care-line/effective-date-follow-up-state.json",
                         "?? status/care-line/locks/national-collection.lock",
                         "?? status/care-line/scheduler-runs/2026-08-22/receipt.json",
+                        "?? ops/operator/runs/2026-09-26/runner-sync-apply-20260927T050430Z-1b01d7504368/guarded-runner-sync-receipt.json",
                     ]
                 )
                 + "\n",
@@ -152,6 +155,53 @@ def test_care_line_scheduler_verify_checkout_allows_runtime_state_but_blocks_sou
         assert "src/bluefern_dispatches/care_line_national_pipeline.py" in str(exc)
     else:  # pragma: no cover
         raise AssertionError("expected dirty checkout to fail closed")
+
+
+def test_care_line_scheduler_allows_sanctioned_operator_run_evidence_but_not_nearby_paths(monkeypatch, tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    scheduler = _load_scheduler_module(Path(__file__).resolve().parents[1])
+
+    def fake_run_operator_evidence(command: list[str], *, cwd: Path):  # noqa: ANN001
+        if command[:2] == ["git", "status"]:
+            return subprocess.CompletedProcess(
+                command,
+                0,
+                stdout="\n".join(
+                    [
+                        "## add/pages-repo-default",
+                        "?? ops/operator/runs/2026-09-26/runner-sync-apply-20260927T050430Z-1b01d7504368/guarded-runner-sync-report.json",
+                    ]
+                )
+                + "\n",
+                stderr="",
+            )
+        if command[:2] == ["git", "branch"]:
+            return subprocess.CompletedProcess(command, 0, stdout="add/pages-repo-default\n", stderr="")
+        if command[:2] == ["git", "rev-parse"]:
+            return subprocess.CompletedProcess(command, 0, stdout="abc123\n", stderr="")
+        raise AssertionError(command)
+
+    monkeypatch.setattr(scheduler, "_run", fake_run_operator_evidence)
+    assert scheduler.verify_checkout(repo, "add/pages-repo-default") == "abc123"
+
+    def fake_run_nearby_operator_path(command: list[str], *, cwd: Path):  # noqa: ANN001
+        if command[:2] == ["git", "status"]:
+            return subprocess.CompletedProcess(
+                command,
+                0,
+                stdout="## add/pages-repo-default\n?? ops/operator/runs/not-a-date/runner-sync.json\n",
+                stderr="",
+            )
+        if command[:2] == ["git", "branch"]:
+            return subprocess.CompletedProcess(command, 0, stdout="add/pages-repo-default\n", stderr="")
+        if command[:2] == ["git", "rev-parse"]:
+            return subprocess.CompletedProcess(command, 0, stdout="abc123\n", stderr="")
+        raise AssertionError(command)
+
+    monkeypatch.setattr(scheduler, "_run", fake_run_nearby_operator_path)
+    with pytest.raises(scheduler.SchedulerError, match="ops/operator/runs/not-a-date/runner-sync.json"):  # type: ignore[attr-defined]
+        scheduler.verify_checkout(repo, "add/pages-repo-default")
 
 
 def test_care_line_collection_scheduler_help_executes_from_other_cwd(tmp_path: Path) -> None:

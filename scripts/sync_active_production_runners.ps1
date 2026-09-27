@@ -10,6 +10,11 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
+# Use the checked-out copy that launched this helper for pre-rollout
+# cleanliness classification. This lets a current sync controller safely
+# classify stale runners before they receive the latest preflight allowlist.
+$SyncControllerRoot = Split-Path -Parent $PSScriptRoot
+
 $Targets = @(
     [ordered]@{ Dispatch = "operator"; Root = "C:\BlueFernRunner\BlueFernOperatorCurrent" },
     [ordered]@{ Dispatch = "food-line"; Root = "C:\BlueFernRunner\FoodLineCurrent6" },
@@ -111,10 +116,14 @@ function Get-UntrackedCollisions {
 }
 
 function Invoke-RunnerValidation {
-    param([Parameter(Mandatory = $true)][string]$Root)
+    param(
+        [Parameter(Mandatory = $true)][string]$Root,
+        [string]$PreflightRoot = ""
+    )
 
     $python = Join-Path $Root ".venv\Scripts\python.exe"
-    $preflight = Join-Path $Root "scripts\preflight_repo_state.py"
+    $validationRoot = if ($PreflightRoot) { $PreflightRoot } else { $Root }
+    $preflight = Join-Path $validationRoot "scripts\preflight_repo_state.py"
     $doctor = Join-Path $Root "scripts\doctor.py"
 
     if (-not (Test-Path -LiteralPath $python -PathType Leaf)) {
@@ -281,7 +290,7 @@ foreach ($target in $Targets) {
             throw "tracked runtime paths overlap incoming tracked paths: $($trackedCollisions -join ', ')"
         }
 
-        $pre = Invoke-RunnerValidation -Root $root
+        $pre = Invoke-RunnerValidation -Root $root -PreflightRoot $SyncControllerRoot
         $row.PreValidation = $pre
         if (-not $pre.Ok) {
             throw "pre-rollout validation failed at $($pre.Stage): $($pre.Message)"
@@ -458,6 +467,7 @@ $report = [ordered]@{
     TargetHeadConsistent = $targetHeadConsistent
     FrozenTargetHead = $frozenTargetHead
     Runners = $results
+    ValidationControllerRoot = $SyncControllerRoot
     StatusExporterTask = Get-StatusExporterTaskEvidence
     StatusExportProof = $statusExportProof
     PublicSideEffects = $false

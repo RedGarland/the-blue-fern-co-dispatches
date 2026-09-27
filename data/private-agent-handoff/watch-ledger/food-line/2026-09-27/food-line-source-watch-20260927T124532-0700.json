@@ -1,0 +1,41 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260927T124532-0700",
+  "scheduled_for": "2026-09-27T12:45:54-07:00",
+  "started_at": "2026-09-27T12:45:32-07:00",
+  "completed_at": "2026-09-27T12:46:13-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-27T11:45:32-07:00",
+    "end": "2026-09-27T12:46:13-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "scope": [
+      "only/sole/last/full-service grocery store loss, closure, fire, or disaster",
+      "storm/flood/fire/outage cancellation or suspension of emergency food distribution",
+      "abrupt pantry or food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "sources_prioritized": [
+      "fresh local news",
+      "official agency/provider notices",
+      "direct source pages"
+    ],
+    "exclusions_applied": [
+      "donation drives",
+      "resource guides",
+      "recipes",
+      "opinion",
+      "routine program promotion",
+      "generic inflation stories",
+      "duplicates"
+    ],
+    "result": "No new qualifying U.S. food-access disruption identified in the bounded window. Fresh storm coverage surfaced ongoing power/road impacts but no qualifying food-access interruption. Older grocery-store closure/fire items and previously known Hawai'i storm-related food-access items were excluded as outside-window or duplicate."
+  }
+}

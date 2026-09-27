@@ -12,7 +12,7 @@
   },
   "aggregate_status": "FAILED",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
+  "current_runner_head": "fa9c76abdee22c4030cc9219e6d32c5390160f19",
   "dispatch": "care-line",
   "expected_instances": [
     {
@@ -46,7 +46,7 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-09-27T17:25:48.935219Z",
+  "last_exported_at": "2026-09-27T18:04:51.749499Z",
   "last_receipt_at": "2026-09-27T15:30:02.146988Z",
   "latest_runtime_proof_date": "2026-09-27T15:00:03.000851Z",
   "migration_status": "MIGRATED",
@@ -89,6 +89,9 @@
         "active_review_queue_count": null,
         "failed_source_count": null,
         "failed_sources": [],
+        "failure": {
+          "failure_stage": "verify_checkout"
+        },
         "manual_review_count": null,
         "skipped_source_count": null,
         "successful_attempt_count": null
@@ -142,7 +145,11 @@
       "artifact_id": "20260927T153001Z-22616.json",
       "classification": "failure",
       "completed_at": "2026-09-27T15:30:02Z",
-      "diagnostics": null,
+      "diagnostics": {
+        "failure": {
+          "failure_stage": "source_state"
+        }
+      },
       "exit_code": 1,
       "next_expected_run": null,
       "public_side_effects": {

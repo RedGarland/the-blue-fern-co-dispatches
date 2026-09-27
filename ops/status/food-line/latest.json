@@ -12,14 +12,19 @@
   },
   "aggregate_status": "FAILED",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
+  "current_runner_head": "fa9c76abdee22c4030cc9219e6d32c5390160f19",
   "dispatch": "food-line",
   "effective_task_summaries": [
     {
       "artifact_id": "20260927T131002Z-current-intake.json",
       "classification": "upstream_blocked",
       "completed_at": "2026-09-27T13:10:02.476910Z",
-      "diagnostics": null,
+      "diagnostics": {
+        "failure": {
+          "collection_health": "failed",
+          "upstream_dependency_status": "failed"
+        }
+      },
       "exit_code": 0,
       "next_expected_run": null,
       "public_side_effects": {},
@@ -51,7 +56,12 @@
       "artifact_id": "20260927T123002Z-source-watch.json",
       "classification": "failed",
       "completed_at": "2026-09-27T12:30:02.248886Z",
-      "diagnostics": null,
+      "diagnostics": {
+        "failure": {
+          "collection_health": "failed",
+          "failure_stage": "source_watch"
+        }
+      },
       "exit_code": 10,
       "next_expected_run": null,
       "public_side_effects": {},
@@ -67,7 +77,12 @@
       "artifact_id": "20260927T130002Z-status-resume.json",
       "classification": "upstream_blocked",
       "completed_at": "2026-09-27T13:00:02.199337Z",
-      "diagnostics": null,
+      "diagnostics": {
+        "failure": {
+          "collection_health": "upstream_blocked",
+          "upstream_dependency_status": "failed"
+        }
+      },
       "exit_code": 0,
       "next_expected_run": null,
       "public_side_effects": {},
@@ -83,7 +98,7 @@
   "incident_reference": {
     "date": "2026-09-27"
   },
-  "last_exported_at": "2026-09-27T17:25:48.935219Z",
+  "last_exported_at": "2026-09-27T18:04:51.749499Z",
   "last_receipt_at": "2026-09-27T15:30:01.767834Z",
   "latest_runtime_proof_date": "2026-09-27T15:30:01.767834Z",
   "next_expected_run": null,
@@ -105,7 +120,12 @@
       "artifact_id": "20260927T131002Z-current-intake.json",
       "classification": "upstream_blocked",
       "completed_at": "2026-09-27T13:10:02.476910Z",
-      "diagnostics": null,
+      "diagnostics": {
+        "failure": {
+          "collection_health": "failed",
+          "upstream_dependency_status": "failed"
+        }
+      },
       "exit_code": 0,
       "next_expected_run": null,
       "public_side_effects": {},
@@ -137,7 +157,12 @@
       "artifact_id": "20260927T123002Z-source-watch.json",
       "classification": "failed",
       "completed_at": "2026-09-27T12:30:02.248886Z",
-      "diagnostics": null,
+      "diagnostics": {
+        "failure": {
+          "collection_health": "failed",
+          "failure_stage": "source_watch"
+        }
+      },
       "exit_code": 10,
       "next_expected_run": null,
       "public_side_effects": {},
@@ -153,7 +178,12 @@
       "artifact_id": "20260927T130002Z-status-resume.json",
       "classification": "upstream_blocked",
       "completed_at": "2026-09-27T13:00:02.199337Z",
-      "diagnostics": null,
+      "diagnostics": {
+        "failure": {
+          "collection_health": "upstream_blocked",
+          "upstream_dependency_status": "failed"
+        }
+      },
       "exit_code": 0,
       "next_expected_run": null,
       "public_side_effects": {},

@@ -72,6 +72,12 @@ executor-ready draft.
 This prevents the human operator from becoming the integration layer between
 GitHub/source work and Windows-local runner proof.
 
+## Autopilot handoff continuity
+
+Runner handoff is an execution boundary, not an approval boundary. Once Windows Codex returns proof that stayed within the allowed actions and reports no public side effects, source-side Codex must continue through routine proof recording, PR creation/update, bounded CI remediation, exact-head merge when permitted, and the next operational diagnosis.
+
+Do not ask the operator to type "proceed" for routine post-proof checkpointing or safe status updates. Stop only when the proof exposes unsafe runner state, unexplained source drift, a public/scheduler/evidence/credential/destructive boundary, or materially ambiguous operational risk.
+
 ## Guarded synchronization
 
 Use the canonical synchronization helper rather than ad hoc pull/reset commands.

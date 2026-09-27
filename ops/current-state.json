@@ -1,11 +1,11 @@
 {
   "schema": "bluefern.ops.current_state.v1",
-  "as_of_utc": "2026-09-27T17:56:00Z",
+  "as_of_utc": "2026-09-27T18:23:00Z",
   "source_of_truth": "protected source branch plus production-runner handoff receipts",
   "protected_source": {
     "repository": "RedGarland/the-blue-fern-co-dispatches",
     "branch": "add/pages-repo-default",
-    "observed_head": "922a269b89d3f23f61b50b3609601490149dbc7c",
+    "observed_head": "22bb640f56989bc48934aa331efb8e7857deaea6",
     "status": "protected",
     "resume_policy": "re-read this branch before acting; do not rely on the observed head if the branch has advanced"
   },
@@ -123,33 +123,39 @@
       "purpose": "sanitized Food Line and Care Line failure diagnostics in exported operational status",
       "merged_head": "922a269b89d3f23f61b50b3609601490149dbc7c",
       "status": "merged"
+    },
+    {
+      "number": 512,
+      "purpose": "Food scheduler runtime allowlist for operational-status exporter logs",
+      "merged_head": "22bb640f56989bc48934aa331efb8e7857deaea6",
+      "status": "merged"
     }
   ],
   "runner_state": {
     "operator": {
       "path": "C:\\BlueFernRunner\\BlueFernOperatorCurrent",
       "synced_to": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
-      "status": "pending_runner_sync_after_pr510"
+      "status": "pending_runner_sync_after_pr512"
     },
     "food": {
       "path": "C:\\BlueFernRunner\\FoodLineCurrent6",
       "synced_to": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
-      "status": "pending_runner_sync_after_pr510"
+      "status": "pending_runner_sync_after_pr512"
     },
     "care": {
       "path": "C:\\BlueFernRunner\\CareLineNationalCurrent8",
       "synced_to": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
-      "status": "pending_runner_sync_after_pr510"
+      "status": "pending_runner_sync_after_pr512"
     },
     "gaza": {
       "path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6",
       "synced_to": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
-      "status": "pending_runner_sync_after_pr510"
+      "status": "pending_runner_sync_after_pr512"
     },
     "ice": {
       "path": "C:\\BlueFernRunner\\ICEMonitorCurrent",
       "synced_to": "2bb591c19c8ec7ad7ad59f0a01b95661cac9d6e8",
-      "status": "pending_runner_sync_after_pr510"
+      "status": "pending_runner_sync_after_pr512"
     },
     "operational_status": {
       "path": "C:\\BlueFernRunner\\OperationalStatusCurrent",
@@ -215,18 +221,26 @@
       "summary": "Food Line and Care Line exported status showed FAILED before PR #510; PR #510 adds sanitized failure diagnostics but has not yet been runner-synced or proven by a fresh status export.",
       "next_safe_action": "Guarded sync active runners to protected head 922a269b89d3f23f61b50b3609601490149dbc7c, run non-public operational-status export, then inspect Food/Care latest diagnostics and repair runtime failures without publication.",
       "authority_boundary": "Do not trigger public publication, Pages sync, scheduler definition mutation, evidence deletion, git reset --hard, or git clean."
+    },
+    {
+      "id": "food-source-watch-operational-status-log-allowlist",
+      "classification": "SOURCE_FIX_PROTECTED_RUNTIME_PROOF_PENDING",
+      "summary": "PR #512 merged the Food scheduler allowlist fix for operational-status exporter logs; Food source-watch proof remains pending until runners sync to protected head 22bb640f56989bc48934aa331efb8e7857deaea6 and Food is rerun non-publicly.",
+      "next_safe_action": "Guarded sync active runners to protected head 22bb640f56989bc48934aa331efb8e7857deaea6, then run Food source-watch scheduler-equivalent proof without publication, export non-public operational status, and verify Food/Care latest status.",
+      "authority_boundary": "Do not trigger public publication, Pages sync, scheduler definition mutation, evidence deletion, git reset --hard, or git clean."
     }
   ],
   "next_action": {
-    "status": "pending_food_care_runner_sync_and_diagnostic_export",
+    "status": "pending_pr512_runner_sync_food_care_proof",
     "target_head_policy": "re-read add/pages-repo-default immediately before sync; use the then-current protected HEAD",
-    "summary": "Sync protected PR #510 to production runners, run non-public operational-status export, inspect Food/Care diagnostics from ops/status/current, then repair Food source-watch and Care collection automation failures.",
+    "summary": "Sync PR #512 to active production runners, run Food source-watch scheduler-equivalent proof and Care verification without public side effects, export non-public operational status, then classify Food/Care automation health.",
     "focus": [
       "food-line",
       "care-line"
     ],
+    "expected_protected_head": "22bb640f56989bc48934aa331efb8e7857deaea6",
     "must_not_trigger": [
-      "public collection publication",
+      "public publication",
       "Pages sync or push",
       "Cascadia activation",
       "scheduled task definition mutation",

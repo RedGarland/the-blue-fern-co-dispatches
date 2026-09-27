@@ -45,6 +45,7 @@ SCHEMA_VERSION = "blue_fern_operator_result_v1"
 INCIDENT_SCHEMA_VERSION = "blue_fern_operator_incident_v1"
 NOTIFICATION_SCHEMA_VERSION = "blue_fern_operator_notification_v1"
 RUN_RECEIPT_SCHEMA_VERSION = "blue_fern_operator_run_receipt_v1"
+RUNNER_SYNC_RECEIPT_SCHEMA_VERSION = "blue_fern_operator_runner_sync_receipt_v1"
 ENGINEERING_SCHEMA_VERSION = "blue_fern_operator_engineering_v1"
 CODEX_ATTEMPT_SCHEMA_VERSION = "blue_fern_operator_codex_attempt_v1"
 REMEDIATION_PLAN_SCHEMA_VERSION = "blue_fern_operator_remediation_plan_v1"
@@ -5583,6 +5584,138 @@ def execute_engineering_work_item(
     return _block_engineering_work(operator_root, item, "validation failed after bounded repair attempts")
 
 
+
+def _runner_sync_run_id(started_at: str, expected_head: str | None, apply: bool) -> str:
+    token = expected_head or "no-head"
+    digest = hashlib.sha256(f"{started_at}|{token}|{apply}".encode("utf-8")).hexdigest()[:12]
+    mode = "apply" if apply else "plan"
+    return f"runner-sync-{mode}-{started_at.replace('-', '').replace(':', '').replace('Z', 'Z')}-{digest}"
+
+
+def _resolve_protected_head(repo_root: Path, branch: str, *, runner: Any = _run_command) -> tuple[str | None, dict[str, Any]]:
+    ref = f"refs/heads/{branch}"
+    result = runner(["git", "ls-remote", "origin", ref], cwd=repo_root)
+    evidence = {
+        "command_argv": ["git", "ls-remote", "origin", ref],
+        "exit_code": result.exit_code,
+        "stdout_tail": _tail_text(result.stdout),
+        "stderr_tail": _tail_text(result.stderr),
+    }
+    if not result.ok:
+        return None, evidence
+    first = result.stdout.strip().splitlines()[0] if result.stdout.strip() else ""
+    head = first.split()[0] if first else None
+    return head, evidence
+
+
+def _load_runner_sync_report(path: Path) -> dict[str, Any] | None:
+    payload = _read_json(path)
+    return payload if isinstance(payload, dict) else None
+
+
+def run_guarded_runner_sync(
+    *,
+    repo_root: Path = ROOT,
+    operator_root: Path = DEFAULT_OPERATOR_ROOT,
+    expected_protected_head: str | None = None,
+    protected_branch: str = "add/pages-repo-default",
+    apply: bool = False,
+    prove_status_export: bool = False,
+    now: datetime | None = None,
+    runner: Any = _run_command,
+) -> dict[str, Any]:
+    started = _format_time(now or _utc_now())
+    script = repo_root / "scripts" / "sync_active_production_runners.ps1"
+    resolved_head = expected_protected_head
+    head_probe: dict[str, Any] | None = None
+    if not resolved_head:
+        resolved_head, head_probe = _resolve_protected_head(repo_root, protected_branch, runner=runner)
+
+    run_id = _runner_sync_run_id(started, resolved_head, apply)
+    run_dir = operator_root / "runs" / started[:10] / run_id
+    report_path = run_dir / "guarded-runner-sync-report.json"
+    receipt_path = run_dir / "guarded-runner-sync-receipt.json"
+    run_dir.mkdir(parents=True, exist_ok=True)
+
+    command = [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        str(script),
+        "-ReportPath",
+        str(report_path),
+    ]
+    if resolved_head:
+        command.extend(["-ExpectedProtectedHead", resolved_head])
+    if apply:
+        command.append("-Apply")
+    if prove_status_export:
+        command.append("-ProveStatusExport")
+
+    refusal_reason: str | None = None
+    result = EngineeringCommandResult(2, "", "")
+    if not script.is_file():
+        refusal_reason = f"guarded sync script is missing: {script}"
+    elif not resolved_head:
+        refusal_reason = "could not resolve protected source head"
+    elif prove_status_export and not apply:
+        refusal_reason = "--prove-status-export requires --apply"
+    else:
+        result = runner(command, cwd=repo_root)
+
+    completed = _format_time(_utc_now())
+    report = _load_runner_sync_report(report_path)
+    plan_ready = (not apply) and result.exit_code == 10
+    accepted = refusal_reason is None and (result.ok or plan_ready)
+    if refusal_reason:
+        outcome = "REFUSED"
+    elif apply and result.ok:
+        outcome = "APPLY_COMPLETE"
+    elif plan_ready:
+        outcome = "PLAN_READY_TO_FAST_FORWARD"
+    elif result.ok:
+        outcome = "PLAN_COMPLETE"
+    else:
+        outcome = "BLOCKED"
+
+    report_flags = report if isinstance(report, dict) else {}
+    receipt = {
+        "schema_version": RUNNER_SYNC_RECEIPT_SCHEMA_VERSION,
+        "run_id": run_id,
+        "started_at": started,
+        "completed_at": completed,
+        "accepted": accepted,
+        "outcome": outcome,
+        "refusal_reason": refusal_reason,
+        "apply_requested": apply,
+        "prove_status_export_requested": prove_status_export,
+        "protected_branch": protected_branch,
+        "expected_protected_head": resolved_head,
+        "operator_head": _git_head(repo_root),
+        "command_argv": command,
+        "exit_code": result.exit_code,
+        "stdout_tail": _tail_text(result.stdout),
+        "stderr_tail": _tail_text(result.stderr),
+        "head_probe": head_probe,
+        "report_path": str(report_path),
+        "report_exists": report_path.is_file(),
+        "report_outcome": report_flags.get("Status") or report_flags.get("status") or report_flags.get("Outcome") or report_flags.get("outcome"),
+        "report": report,
+        "production_state_mutated": bool(apply and accepted),
+        "public_side_effects": False,
+        "pages_mutation": False,
+        "publication_triggered": False,
+        "collection_triggered": False,
+        "scheduler_mutation": False,
+    }
+    _write_json(receipt_path, receipt)
+    receipt["receipt_path"] = str(receipt_path)
+    _write_json(receipt_path, receipt)
+    return receipt
+
+
 def _write_ledger(operator_root: Path, result: OperatorResult) -> None:
     operator_root.mkdir(parents=True, exist_ok=True)
     _write_json(operator_root / "latest.json", result.to_payload())
@@ -5750,6 +5883,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     close.add_argument("--fact", action="append", default=[], help=argparse.SUPPRESS)
     close.add_argument("--json", action="store_true", help="Emit deterministic JSON.")
     close.add_argument("--operator-root", type=Path, default=DEFAULT_OPERATOR_ROOT, help=argparse.SUPPRESS)
+    sync = sub.add_parser("sync-runners", help="Run guarded production runner synchronization locally.")
+    sync.add_argument("--json", action="store_true", help="Emit deterministic JSON.")
+    sync.add_argument("--repo-root", type=Path, default=ROOT, help=argparse.SUPPRESS)
+    sync.add_argument("--operator-root", type=Path, default=DEFAULT_OPERATOR_ROOT, help=argparse.SUPPRESS)
+    sync.add_argument("--expected-protected-head", help=argparse.SUPPRESS)
+    sync.add_argument("--protected-branch", default="add/pages-repo-default", help=argparse.SUPPRESS)
+    sync.add_argument("--apply", action="store_true", help=argparse.SUPPRESS)
+    sync.add_argument("--prove-status-export", action="store_true", help=argparse.SUPPRESS)
     plan = sub.add_parser("remediate-plan", help="Build read-only approval-gated remediation plans.")
     plan.add_argument("dispatch", choices=DISPATCH_ORDER)
     plan.add_argument("--date", required=True, help=argparse.SUPPRESS)
@@ -5804,6 +5945,21 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"{payload['work_id']} closed {payload['disposition']}")
             else:
                 print(f"{payload['work_id']} accepted=false {payload['reason']}")
+        return 0 if payload["accepted"] else 2
+    if args.command == "sync-runners":
+        payload = run_guarded_runner_sync(
+            repo_root=args.repo_root,
+            operator_root=args.operator_root,
+            expected_protected_head=args.expected_protected_head,
+            protected_branch=args.protected_branch,
+            apply=args.apply,
+            prove_status_export=args.prove_status_export,
+        )
+        if args.json:
+            print(json.dumps(payload, indent=2, sort_keys=True))
+        else:
+            print(f"{payload['run_id']} {payload['outcome']} accepted={payload['accepted']}")
+            print(payload["receipt_path"])
         return 0 if payload["accepted"] else 2
     if args.command == "remediate-plan":
         now = _parse_time(args.now) if args.now else None

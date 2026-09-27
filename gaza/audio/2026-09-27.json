@@ -1,0 +1,62 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-09-27",
+  "generated_at": "2026-09-27T13:01:03.302913Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-09-27.mp3",
+  "audio_url": "/gaza/audio/2026-09-27.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 907,
+  "tts_input_word_count": 140,
+  "tts_story_count": 3,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 964224,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-09-27T13:01:03.302893Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-09-27-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-09-27/",
+  "script_text": "This is the Gaza Dispatch audio briefing for September 27, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. 'No role for UNRWA in Gaza': Does the Board of Peace toe Israeli lines? Board of Peace excludes UNRWA from Gaza, aligning with repeated Israeli calls to sideline the refugee aid agency. This was reported by Al Jazeera.\n\n2. 'My hands are empty': Displaced Palestinians struggle to survive. In Tulkarem and other West Bank cities, displaced Palestinians are being forced deeper into debt and poverty. This was reported by Al Jazeera.\n\n3. Israeli minister Bezalel Smotrich calls for war in occupied West Bank. Comments come as Israeli authorities announce military closure across occupied West Bank, citing Jewish holiday Sukkot. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the September 27, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 3,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-09-27-aljazeera-middle-east-c3efc188b1fb",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/9/27/no-role-for-unrwa-in-gaza-does-the-board-of-peace-toe-israeli-lines?traffic_source=rss",
+      "title": "'No role for UNRWA in Gaza': Does the Board of Peace toe Israeli lines?"
+    },
+    {
+      "source_record_id": "gaza-2026-09-27-aljazeera-middle-east-c09f38a871ec",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/features/2026/9/27/my-hands-are-empty-displaced-palestinians-struggle-to-survive?traffic_source=rss",
+      "title": "'My hands are empty': Displaced Palestinians struggle to survive"
+    },
+    {
+      "source_record_id": "gaza-2026-09-27-aljazeera-middle-east-a965eecb3bdd",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/9/27/israeli-minister-bezalel-smotrich-calls-for-war-in-occupied-west-bank?traffic_source=rss",
+      "title": "Israeli minister Bezalel Smotrich calls for war in occupied West Bank"
+    }
+  ]
+}

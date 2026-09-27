@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Sat, 26 Sep 2026 16:16:26 +0000</lastBuildDate>
+  <lastBuildDate>Sun, 27 Sep 2026 13:01:03 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for September 27, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-09-27-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-09-27-transcript.html</guid>
+    <pubDate>Sun, 27 Sep 2026 00:00:00 +0000</pubDate>
+    <description>'No role for UNRWA in Gaza': Does the Board of Peace toe Israeli lines? Board of Peace excludes UNRWA from Gaza, aligning with repeated Israeli calls to sideline the refugee aid agency. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-09-27.mp3" length="964224" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for September 26, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-09-26-transcript.html</link>

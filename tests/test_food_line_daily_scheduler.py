@@ -528,6 +528,60 @@ def test_current_intake_no_current_handoff_writes_empty_private_noop(tmp_path: P
     assert report["proposal"]["draft_status"] == "blocked_no_reviewable_current_signals"
 
 
+def test_current_intake_empty_current_handoff_writes_private_noop(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    inbox = tmp_path / "data" / "dispatches" / "food-line" / "agent-inbox"
+    inbox.mkdir(parents=True, exist_ok=True)
+    (inbox / "food-line-source-watch-2026-08-17-empty-run.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "food_line_source_watch_agent_export_v1",
+                "agent_name": "Food Line Source Watch",
+                "agent_run_id": "empty-run",
+                "edition_date": "2026-08-17",
+                "findings": [],
+                "coverage_notes": "No retained candidates were discovered.",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    code = current_intake_compat.main(
+        [
+            "--edition-date",
+            "2026-08-17",
+            "--inbox",
+            str(inbox),
+            "--build-review-queue",
+            "--build-proposed-edition",
+        ]
+    )
+
+    assert code == 0
+    queue = json.loads((tmp_path / "status/food-line/runtime/current-signal-review.json").read_text(encoding="utf-8"))
+    intake = json.loads(
+        (tmp_path / "data/dispatches/food-line/agent-intake/2026-08-17/empty-run.json").read_text(encoding="utf-8")
+    )
+    report = json.loads(
+        (tmp_path / "data/dispatches/food-line/review/reports/2026-08-17/current-intake.json").read_text(encoding="utf-8")
+    )
+    assert queue["items"] == []
+    assert queue["source_inputs"][0]["path"].endswith("food-line-source-watch-2026-08-17-empty-run.json")
+    assert intake["lifecycle_reconciliation"] == {"discovered": 0, "terminal_or_handoff": 0, "unaccounted": 0}
+    assert report["status"] == "success"
+    assert report["selected_input_count"] == 1
+    assert report["queue"]["item_count"] == 0
+    assert report["proposal"]["draft_status"] == "blocked_no_reviewable_current_signals"
+    assert report["publication_side_effects"] == {
+        "audio": False,
+        "bluesky": False,
+        "maps": False,
+        "pages": False,
+        "public_output": False,
+        "schedule": False,
+    }
+
+
 def test_legacy_current_intake_wrapper_records_duplicate_source_watch_findings_explicitly(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.chdir(tmp_path)
     inbox = tmp_path / "data" / "dispatches" / "food-line" / "agent-inbox"
@@ -1812,6 +1866,67 @@ def test_current_intake_corrupt_source_watch_record_still_fails_closed(tmp_path:
         )
     )
     assert operational["status"] == "FAILED"
+
+
+def test_current_intake_accepts_empty_same_run_source_watch_handoff(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    edition_date = "2026-09-07"
+    run_id = "source-watch-empty"
+    inbox = tmp_path / "data" / "dispatches" / "food-line" / "agent-inbox"
+    export_path = _write_source_watch_artifacts(
+        tmp_path,
+        edition_date=edition_date,
+        run_id=run_id,
+        status="completed_with_exclusions",
+        export_status="success_with_exclusions",
+    )
+    export_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "food_line_source_watch_agent_export_v1",
+                "agent_name": "Food Line Source Watch",
+                "agent_run_id": run_id,
+                "edition_date": edition_date,
+                "findings": [],
+                "coverage_notes": "No retained candidates were discovered.",
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    _write_run_record(tmp_path, edition_date=edition_date, run_id=run_id, status="completed_with_exclusions")
+    monkeypatch.setattr(scheduler, "PRIVATE_AGENT_INBOX_ROOT", inbox)
+    monkeypatch.setattr(scheduler, "verify_checkout", lambda *args, **kwargs: "test-source-commit")
+    monkeypatch.setattr(scheduler, "run_preflight", lambda *args, **kwargs: None)
+    monkeypatch.setattr(scheduler, "surviving_worker_pids", lambda *args, **kwargs: [])
+
+    def fake_invoke(python: Path, root: Path, arguments: list[str]) -> subprocess.CompletedProcess[str]:
+        monkeypatch.chdir(root)
+        code = current_intake_compat.main(arguments[1:])
+        return subprocess.CompletedProcess([str(python), *arguments], code, stdout="", stderr="")
+
+    monkeypatch.setattr(scheduler, "_invoke_python", fake_invoke)
+
+    code = scheduler.run_intake(_intake_args(tmp_path, edition_date=edition_date))
+
+    assert code == 0
+    receipt = json.loads(
+        next((tmp_path / "logs" / "food-line" / "current-intake" / edition_date).glob("*-current-intake.json")).read_text(
+            encoding="utf-8"
+        )
+    )
+    assert receipt["qualifying_discovery_run_id"] == run_id
+    assert receipt["source_status"] == "completed_with_exclusions"
+    assert receipt["source_export_status"] == "success_with_exclusions"
+    assert receipt["accepted_files"] == 0
+    assert receipt["imported_findings"] == 0
+    assert receipt["queue_item_count"] == 0
+    assert receipt["proposal_status"] == "blocked_no_reviewable_current_signals"
+    assert receipt["operator_review_required"] is False
+    assert not any(receipt["publication_side_effects"].values())
 
 
 def _write_terminal_source_receipt(

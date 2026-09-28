@@ -1460,6 +1460,7 @@ def run_intake(args: argparse.Namespace) -> int:
             raise SchedulerError("current-intake reported an unexpected publication side effect")
         proposal = report.get("proposal") if isinstance(report.get("proposal"), dict) else {}
         queue = report.get("queue") if isinstance(report.get("queue"), dict) else {}
+        queue_item_count = int(queue.get("item_count") or 0)
         receipt = {
             "schema_version": INTAKE_RECEIPT_SCHEMA,
             "task_started_at": started_at,
@@ -1473,10 +1474,10 @@ def run_intake(args: argparse.Namespace) -> int:
             "accepted_files": report.get("accepted_file_count"),
             "imported_findings": report.get("import_count"),
             "exclusions": report.get("errors"),
-            "queue_item_count": queue.get("item_count"),
+            "queue_item_count": queue_item_count,
             "proposal_status": proposal.get("draft_status"),
             "proposal_path": proposal.get("markdown_path"),
-            "operator_review_required": True,
+            "operator_review_required": queue_item_count > 0,
             "publication_side_effects": side_effects,
             "command_exit_code": command_exit,
             "exit_code": 0,

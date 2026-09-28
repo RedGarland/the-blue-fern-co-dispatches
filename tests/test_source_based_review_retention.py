@@ -169,6 +169,18 @@ def test_source_watch_shape_survives_normalization_without_inventing_publication
     assert candidate["freshness_check"]["basis"] == "current_first_party_status"
 
 
+def test_source_watch_empty_findings_handoff_is_valid() -> None:
+    payload = {
+        "schema_version": "food_line_source_watch_agent_export_v1",
+        "agent_name": "Food Line Source Watch",
+        "agent_run_id": "source-watch-empty",
+        "edition_date": EDITION,
+        "findings": [],
+    }
+
+    assert adapt_food_line_agent_output(payload, agent_name="Food Line Source Watch", agent_run_id="source-watch-empty") == []
+
+
 def test_missing_secondary_details_constrain_wording_without_erasing_the_signal() -> None:
     result = assess_review_retention(
         _source(

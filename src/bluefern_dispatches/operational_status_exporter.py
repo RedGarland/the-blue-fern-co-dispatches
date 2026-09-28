@@ -827,6 +827,22 @@ def _task_summary(
     }
 
 
+def _care_downstream_failure_still_current(task_name: str, receipts: Iterable[dict[str, Any]]) -> bool:
+    task_key = task_name.split(":", 1)[0]
+    if not task_key or task_key == "care_line_collection":
+        return False
+    relevant = [receipt for receipt in receipts if str(receipt.get("task_key") or "") == task_key]
+    if not relevant:
+        return True
+    latest = max(relevant, key=_receipt_sort_time)
+    latest_status = str(latest.get("status") or "")
+    if latest_status not in {OperationalStatus.SUCCESS.value, OperationalStatus.SAFE_NO_OP.value}:
+        return True
+    if latest.get("publication_attempted") is True:
+        return True
+    return False
+
+
 def _care_adjusted_aggregate_status(
     *,
     aggregate_status: str,
@@ -834,6 +850,7 @@ def _care_adjusted_aggregate_status(
     completeness: str,
     latest_collection: dict[str, Any] | None,
     source_failure_summary: dict[str, Any],
+    receipts: Iterable[dict[str, Any]] = (),
 ) -> str:
     if aggregate.get("stale_observability") or aggregate_status == OperationalStatus.STALE_OBSERVABILITY.value:
         return aggregate_status
@@ -872,7 +889,11 @@ def _care_adjusted_aggregate_status(
     if not external_only_current_failure:
         return aggregate_status
     failed_tasks = [str(task) for task in aggregate.get("failed_tasks", [])]
-    has_non_collection_failure = any(not task.startswith("care_line_collection") for task in failed_tasks)
+    has_non_collection_failure = any(
+        not task.startswith("care_line_collection")
+        and _care_downstream_failure_still_current(task, receipts)
+        for task in failed_tasks
+    )
     if has_non_collection_failure:
         return aggregate_status
     return OperationalStatus.DEGRADED.value
@@ -1026,6 +1047,7 @@ def build_care_line_status(
         completeness=completeness if receipts else "NO_PROOF",
         latest_collection=latest_collection,
         source_failure_summary=source_failure_summary,
+        receipts=receipts,
     )
     source_heads = {_safe_head(receipt.get("source_head")) for receipt in receipts}
     source_heads.discard(None)

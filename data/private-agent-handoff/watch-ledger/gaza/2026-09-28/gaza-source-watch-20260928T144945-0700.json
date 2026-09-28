@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260928T144945-0700",
+  "scheduled_for": "2026-09-28T14:44:51-07:00",
+  "started_at": "2026-09-28T14:49:45-07:00",
+  "completed_at": "2026-09-28T14:52:20-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T13:53:05-07:00",
+    "end": "2026-09-28T14:52:20-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first; no new qualifying in-window Gaza development verified. The surfaced current situation report was outside the hourly event window.",
+    "WHO checked second; no new qualifying in-window Gaza health-system development verified.",
+    "Exactly 12 additional targeted searches were completed across UNRWA, WFP, UNICEF, ICRC, PRCS, MSF, Reuters, AP, Al Jazeera, The Guardian, UN/ReliefWeb, BBC/Middle East Eye coverage.",
+    "BBC retrieval was blocked by robots.txt; remaining source coverage was usable, so the run is DEGRADED rather than FAILED.",
+    "No new qualifying development was verified; recycled, older, unsupported, duplicate, and out-of-window items were excluded."
+  ]
+}

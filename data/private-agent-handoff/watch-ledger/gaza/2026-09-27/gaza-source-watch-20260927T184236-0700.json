@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260927T184236-0700",
+  "scheduled_for": "2026-09-27T18:44:51-07:00",
+  "started_at": "2026-09-27T18:42:36-07:00",
+  "completed_at": "2026-09-27T18:43:42-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-27T17:46:53-07:00",
+    "end": "2026-09-27T18:43:42-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first; newest surfaced Gaza humanitarian situation report remained dated 18 September 2026, with no new qualifying in-window development.",
+    "WHO checked second; no new qualifying in-window Gaza health-system development surfaced.",
+    "Exactly 12 additional targeted searches were completed across UNRWA, WFP, UNICEF, MSF, Reuters, AP, BBC, The Guardian, Al Jazeera, WAFA, UN News, and Palestinian Red Crescent Society.",
+    "BBC and UN News retrievals were blocked by robots.txt; useful coverage remained, so status is DEGRADED rather than FAILED.",
+    "WAFA's latest visible Gaza casualty items were timestamped before the prior completed watch boundary after converting from Palestine local time and were excluded as out of window.",
+    "AP's rolling September 27 Middle East report contained Gaza casualty material but exposed no item-level update time sufficient to establish that a qualifying Gaza development entered after the prior completed check, so it was conservatively excluded.",
+    "No qualifying new civilian-casualty, displacement, aid-access, food/water, health-system, infrastructure, crossing, detention/hostage, ceasefire/negotiation, or civilian-impact military-operation development was verified within the bounded window.",
+    "Older, duplicate, recycled, unsupported, opinion-only, and insufficiently timestamped items were excluded."
+  ]
+}

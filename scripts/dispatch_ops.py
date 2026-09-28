@@ -142,6 +142,27 @@ def _system_status_path(root: Path) -> Path:
     return root / "ops" / "status" / "system" / "latest.json"
 
 
+def _configured_operator_status_root(repo_root: Path = ROOT) -> Path | None:
+    config_path = repo_root / "ops" / "operator" / "config.json"
+    try:
+        payload = json.loads(config_path.read_text(encoding="utf-8-sig"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(payload, dict):
+        return None
+    operator = payload.get("operator") if isinstance(payload.get("operator"), dict) else {}
+    status_root = operator.get("status_root")
+    if not isinstance(status_root, str) or not status_root.strip():
+        return None
+    path = Path(status_root)
+    return path if path.exists() else None
+
+
+def _default_system_status_root() -> Path:
+    configured = _configured_operator_status_root(ROOT)
+    return configured if configured is not None else ROOT
+
+
 def build_system_snapshot(*, root: Path = ROOT) -> dict[str, Any]:
     path = _system_status_path(root.resolve())
     try:
@@ -1394,7 +1415,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     status.add_argument("--root", default=str(ROOT), help=argparse.SUPPRESS)
     system = sub.add_parser("system", help="Show the exported system status and dispatch debug summaries.")
     system.add_argument("--json", action="store_true", help="Emit deterministic JSON.")
-    system.add_argument("--root", default=str(ROOT), help=argparse.SUPPRESS)
+    system.add_argument(
+        "--root",
+        default=None,
+        help="Status checkout root. Defaults to ops/operator/config.json operator.status_root when that path exists.",
+    )
     recover = sub.add_parser("recover", help="Plan read-only recovery for one dispatch/date.")
     recover.add_argument("dispatch", choices=SUPPORTED_DISPATCHES)
     recover.add_argument("--date", required=True, help="Date in YYYY-MM-DD format.")
@@ -1416,7 +1441,7 @@ def build_status(dispatch: str, date: str, *, root: Path = ROOT) -> DispatchStat
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     if args.command == "system":
-        snapshot = build_system_snapshot(root=Path(args.root))
+        snapshot = build_system_snapshot(root=Path(args.root) if args.root else _default_system_status_root())
         if args.json:
             print(json.dumps(snapshot, indent=2, sort_keys=True))
         else:

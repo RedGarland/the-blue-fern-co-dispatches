@@ -1,0 +1,19 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260928T094105-0700-r11",
+  "scheduled_for": "2026-09-28T09:41:05-07:00",
+  "started_at": "2026-09-28T09:41:05-07:00",
+  "completed_at": "2026-09-28T09:43:03-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-28T08:48:23-07:00",
+    "end": "2026-09-28T09:41:05-07:00",
+    "basis": "since prior hourly check"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 12 bounded targeted web searches across the four high-value Food Line miss classes. No new qualifying U.S. food-access disruption was identified in the search window. A Big Island Now hurricane-recovery item reports The Food Basket warehouses in Hilo and Kailua-Kona closed with post-storm distributions pending, but it was published at 3:00 AM HST (6:00 AM PDT), before this search window, so it was excluded as not new. Kauai recovery coverage continued to show emergency food distributions proceeding rather than being canceled or suspended. Other results were stale, non-U.S., routine promotion/policy coverage, or unrelated to immediate food access. GitHub contents-API file creation was blocked by runtime safety controls; durable persistence was recovered through Git data objects and a non-force fast-forward ref update."
+}

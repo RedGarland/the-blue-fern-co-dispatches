@@ -28,6 +28,7 @@ from .operational_health import (
     parse_timestamp,
     validate_operational_receipt,
 )
+from .operational_debug import build_debug_summary
 from .scheduled_recovery import evaluate_recovery, food_source_receipt_is_durably_ready
 from .source_replay import load_care_line_source_replay_receipts
 
@@ -827,6 +828,11 @@ def _task_summary(
     }
 
 
+def _with_debug_summary(payload: dict[str, Any]) -> dict[str, Any]:
+    payload["debug_summary"] = build_debug_summary(payload)
+    return payload
+
+
 def _care_downstream_failure_still_current(task_name: str, receipts: Iterable[dict[str, Any]]) -> bool:
     task_key = task_name.split(":", 1)[0]
     if not task_key or task_key == "care_line_collection":
@@ -972,7 +978,7 @@ def build_food_line_status(
     publication_attempted = any(receipt.get("publication_attempted") is True for receipt in receipts)
     publication_statuses = [receipt.get("publication_status") for receipt in receipts if receipt.get("publication_status")]
     agent_handoff = load_agent_handoff_status(source_root, "food-line")
-    return {
+    return _with_debug_summary({
         "schema_version": EXTERNAL_STATUS_SCHEMA_VERSION,
         "dispatch": "food-line",
         "observed_date": date,
@@ -997,7 +1003,7 @@ def build_food_line_status(
         "next_expected_run": next((item.get("next_expected_run") for item in receipts if item.get("next_expected_run")), None),
         "stale_after": stale_after,
         "agent_handoff": agent_handoff,
-    }
+    })
 
 
 def build_care_line_status(
@@ -1053,7 +1059,7 @@ def build_care_line_status(
     source_heads.discard(None)
     publication_attempted = any(receipt.get("publication_attempted") is True for receipt in receipts)
     publication_statuses = [receipt.get("publication_status") for receipt in receipts if receipt.get("publication_status")]
-    return {
+    return _with_debug_summary({
         "schema_version": EXTERNAL_STATUS_SCHEMA_VERSION,
         "dispatch": "care-line",
         "migration_status": "MIGRATED",
@@ -1077,7 +1083,7 @@ def build_care_line_status(
         "agent_handoff": load_agent_handoff_status(source_root, "care-line"),
         "scheduled_task_keys": [item.task_key for item in CARE_LINE_TASK_EXPECTATIONS],
         "expected_instances": instance_rows or [],
-    }
+    })
 
 
 def _positive_int(value: Any) -> int:
@@ -1121,7 +1127,7 @@ def build_gaza_status(
     source_heads.discard(None)
     publication_attempted = any(receipt.get("publication_attempted") is True for receipt in receipts)
     publication_statuses = [receipt.get("publication_status") for receipt in receipts if receipt.get("publication_status")]
-    return {
+    return _with_debug_summary({
         "schema_version": EXTERNAL_STATUS_SCHEMA_VERSION,
         "dispatch": "gaza",
         "migration_status": "MIGRATED",
@@ -1156,7 +1162,7 @@ def build_gaza_status(
             "stale": False,
         },
         "scheduled_task_keys": [item.task_key for item in GAZA_TASK_EXPECTATIONS],
-    }
+    })
 
 
 def build_ice_status(
@@ -1190,16 +1196,17 @@ def build_ice_status(
     aggregate_status = aggregate["overall_health"]
     if not receipts and aggregate_status == OperationalStatus.SUCCESS.value:
         aggregate_status = OperationalStatus.UNKNOWN.value
-    if any(
-        _positive_int((receipt.get("details") or {}).get("unaccounted")) > 0
+    unaccounted_event_count = sum(
+        _positive_int((receipt.get("details") or {}).get("unaccounted"))
         for receipt in receipts
-    ):
+    )
+    if unaccounted_event_count > 0:
         aggregate_status = OperationalStatus.FAILED.value
     source_heads = {_safe_head(receipt.get("source_head")) for receipt in receipts}
     source_heads.discard(None)
     publication_attempted = any(receipt.get("publication_attempted") is True for receipt in receipts)
     publication_statuses = [receipt.get("publication_status") for receipt in receipts if receipt.get("publication_status")]
-    return {
+    return _with_debug_summary({
         "schema_version": EXTERNAL_STATUS_SCHEMA_VERSION,
         "dispatch": "ice",
         "migration_status": "MIGRATED",
@@ -1214,6 +1221,7 @@ def build_ice_status(
         **runner_identity,
         "publication_attempted": publication_attempted,
         "publication_status": publication_statuses[-1] if publication_statuses else None,
+        "unaccounted_event_count": unaccounted_event_count,
         "public_side_effects": {
             "publication_attempted": publication_attempted,
             "publication_status": publication_statuses[-1] if publication_statuses else None,
@@ -1234,7 +1242,7 @@ def build_ice_status(
             "stale": False,
         },
         "scheduled_task_keys": [item.task_key for item in ICE_TASK_EXPECTATIONS],
-    }
+    })
 
 
 def _system_status(states: dict[str, dict[str, Any]]) -> str:
@@ -1271,6 +1279,7 @@ def build_system_status(
             "recovery_lifecycle": food_line_status["recovery_lifecycle"],
             "current_runner_head": food_line_status.get("current_runner_head"),
             "current_runner_branch": food_line_status.get("current_runner_branch"),
+            "debug_summary": food_line_status.get("debug_summary"),
             "agent_handoff": food_line_status["agent_handoff"],
         }
     }
@@ -1325,6 +1334,7 @@ def build_system_status(
             "source_failure_summary": care_line_status.get("source_failure_summary"),
             "current_runner_head": care_line_status.get("current_runner_head"),
             "current_runner_branch": care_line_status.get("current_runner_branch"),
+            "debug_summary": care_line_status.get("debug_summary"),
             "agent_handoff": care_line_status["agent_handoff"],
         }
     elif care_line_status is None:
@@ -1347,6 +1357,7 @@ def build_system_status(
             "stale_observability": gaza_status.get("stale_observability"),
             "current_runner_head": gaza_status.get("current_runner_head"),
             "current_runner_branch": gaza_status.get("current_runner_branch"),
+            "debug_summary": gaza_status.get("debug_summary"),
             "agent_handoff": gaza_status["agent_handoff"],
         }
     if ice_status is not None and ice_status.get("migration_status") == "MIGRATED":
@@ -1361,6 +1372,7 @@ def build_system_status(
             "stale_observability": ice_status.get("stale_observability"),
             "current_runner_head": ice_status.get("current_runner_head"),
             "current_runner_branch": ice_status.get("current_runner_branch"),
+            "debug_summary": ice_status.get("debug_summary"),
             "agent_handoff": ice_status["agent_handoff"],
         }
     system_status = _system_status(states)

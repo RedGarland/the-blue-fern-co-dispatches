@@ -523,6 +523,10 @@ def test_failed_day_is_complete_and_publish_noop_does_not_mask_failure(tmp_path:
     assert status["receipt_completeness"] == "COMPLETE"
     assert status["recovery_lifecycle"] == "RECOVERY_PENDING_RUNTIME_PROOF"
     assert status["publication_attempted"] is False
+    assert status["debug_summary"]["primary_layer"] == "SOURCE"
+    assert status["debug_summary"]["primary_task_key"] == "food_line_source_watch"
+    assert status["debug_summary"]["primary_task_status"] == "FAILED"
+    assert status["debug_summary"]["attention_task_count"] == 3
 
 
 def test_complete_success_day_is_healthy(tmp_path: Path) -> None:
@@ -1217,6 +1221,9 @@ def test_care_external_access_restriction_proof_clears_stale_publication_failure
     assert status["aggregate_status"] == "DEGRADED"
     assert status["recovery_lifecycle"] == "HEALTHY"
     assert status["source_failure_summary"]["all_current_failures_external"] is True
+    assert status["debug_summary"]["primary_layer"] == "EXTERNAL_DEPENDENCY"
+    assert status["debug_summary"]["failed_source_count"] == 2
+    assert status["debug_summary"]["all_current_failures_external"] is True
 
 
 def test_care_source_replay_receipt_reconciles_latest_collection_failure(tmp_path: Path) -> None:
@@ -1313,6 +1320,9 @@ def test_care_mixed_external_and_unclassified_source_failure_reopens_incident(tm
     assert status["recovery_lifecycle"] == "INCIDENT_OPEN"
     assert status["source_failure_summary"]["external_access_restriction_count"] == 1
     assert status["source_failure_summary"]["unclassified_source_failure_count"] == 1
+    assert status["debug_summary"]["primary_layer"] == "SOURCE_CLASSIFICATION"
+    assert status["debug_summary"]["failed_source_count"] == 2
+    assert status["debug_summary"]["unclassified_source_failure_count"] == 1
 
 
 def test_care_external_restriction_classification_does_not_mask_missing_receipts(tmp_path: Path) -> None:
@@ -1635,6 +1645,10 @@ def test_ice_terminal_unaccounted_cannot_be_silently_healthy(tmp_path: Path) -> 
     )
 
     assert status["aggregate_status"] == "FAILED"
+    assert status["unaccounted_event_count"] == 1
+    assert status["debug_summary"]["aggregate_status"] == "FAILED"
+    assert status["debug_summary"]["primary_layer"] == "HANDOFF"
+    assert status["debug_summary"]["unaccounted_event_count"] == 1
 
 
 def test_ice_legacy_monitor_receipt_linkage_is_complete_when_file_exists(tmp_path: Path) -> None:

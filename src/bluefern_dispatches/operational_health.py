@@ -8,6 +8,7 @@ from datetime import datetime, timedelta, timezone
 from enum import StrEnum
 from pathlib import Path
 from typing import Any, Iterable
+from zoneinfo import ZoneInfo
 
 
 RECEIPT_SCHEMA_VERSION = "bluefern_operational_health_receipt_v1"
@@ -685,7 +686,16 @@ def evaluate_dispatch_health(
         receipt = receipt_by_task.get(expectation.task_key)
         if receipt is None:
             if expectation.required:
-                missed.append(expectation.task_key)
+                # A daily task without a receipt is only missed after its
+                # scheduled local time and grace period have elapsed.
+                if expectation.cadence == "daily" and re.fullmatch(r"\d{2}:\d{2}", expectation.expected_time):
+                    local_now = evaluated_dt.astimezone(ZoneInfo(expectation.timezone))
+                    hour, minute = map(int, expectation.expected_time.split(":"))
+                    due = local_now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+                    if local_now >= due + timedelta(minutes=expectation.grace_minutes):
+                        missed.append(expectation.task_key)
+                else:
+                    missed.append(expectation.task_key)
             continue
         completed.append(expectation.task_key)
         status = str(receipt["status"])

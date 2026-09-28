@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260928T164205-0700-r11",
+  "scheduled_for": "2026-09-28T16:45:54-07:00",
+  "started_at": "2026-09-28T16:42:05-07:00",
+  "completed_at": "2026-09-28T16:43:12-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T15:52:30-07:00",
+    "end": "2026-09-28T16:42:05-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 12 targeted web searches across the four audited miss classes. No new qualifying U.S. food-access disruption was identified in the bounded window. A fresh Kauaʻi recovery update confirmed emergency food distributions and North Shore Food Pantry distribution were proceeding rather than canceled or suspended. A Forsyth, Missouri grocery-closure article was published well before this window and described pantry expansion, not a new disruption. Older, non-U.S., routine-program, and otherwise non-qualifying results were excluded."
+}

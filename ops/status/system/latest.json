@@ -30,7 +30,7 @@
       },
       "aggregate_status": "DEGRADED",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "cbb70de107fc2b3bee1cd744b6d4c5ef12a350ba",
+      "current_runner_head": "b7f35478b48ae25dcceba6d87758b4f23f8284f3",
       "debug_summary": {
         "aggregate_status": "DEGRADED",
         "all_current_failures_external": true,
@@ -174,7 +174,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "cbb70de107fc2b3bee1cd744b6d4c5ef12a350ba",
+      "current_runner_head": "b7f35478b48ae25dcceba6d87758b4f23f8284f3",
       "debug_summary": {
         "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
@@ -210,11 +210,11 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "STALE_OBSERVABILITY",
+      "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "cbb70de107fc2b3bee1cd744b6d4c5ef12a350ba",
+      "current_runner_head": "b7f35478b48ae25dcceba6d87758b4f23f8284f3",
       "debug_summary": {
-        "aggregate_status": "STALE_OBSERVABILITY",
+        "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
         "attention_task_count": 0,
         "attention_tasks": [],
@@ -222,14 +222,14 @@
         "failed_source_count": null,
         "primary_classification": null,
         "primary_failure_stage": null,
-        "primary_layer": "OBSERVABILITY",
+        "primary_layer": "NONE",
         "primary_task_key": null,
         "primary_task_status": null,
         "publication_attempted": true,
         "publication_status": "no_update_published",
         "receipt_completeness": "COMPLETE",
-        "recovery_lifecycle": "INCIDENT_OPEN",
-        "stale_observability": true,
+        "recovery_lifecycle": "HEALTHY",
+        "stale_observability": false,
         "unaccounted_event_count": null,
         "unclassified_source_failure_count": null
       },
@@ -237,9 +237,9 @@
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-28",
       "receipt_completeness": "COMPLETE",
-      "recovery_lifecycle": "INCIDENT_OPEN",
+      "recovery_lifecycle": "HEALTHY",
       "scheduled_health_available": true,
-      "stale_observability": true
+      "stale_observability": false
     },
     "ice": {
       "agent_handoff": {
@@ -253,11 +253,11 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "STALE_OBSERVABILITY",
+      "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "cbb70de107fc2b3bee1cd744b6d4c5ef12a350ba",
+      "current_runner_head": "b7f35478b48ae25dcceba6d87758b4f23f8284f3",
       "debug_summary": {
-        "aggregate_status": "STALE_OBSERVABILITY",
+        "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
         "attention_task_count": 0,
         "attention_tasks": [],
@@ -265,14 +265,14 @@
         "failed_source_count": null,
         "primary_classification": null,
         "primary_failure_stage": null,
-        "primary_layer": "OBSERVABILITY",
+        "primary_layer": "NONE",
         "primary_task_key": null,
         "primary_task_status": null,
         "publication_attempted": false,
         "publication_status": "not_authorized_monitor_only",
         "receipt_completeness": "COMPLETE",
-        "recovery_lifecycle": "INCIDENT_OPEN",
-        "stale_observability": true,
+        "recovery_lifecycle": "HEALTHY",
+        "stale_observability": false,
         "unaccounted_event_count": 0,
         "unclassified_source_failure_count": null
       },
@@ -280,16 +280,13 @@
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-28",
       "receipt_completeness": "COMPLETE",
-      "recovery_lifecycle": "INCIDENT_OPEN",
+      "recovery_lifecycle": "HEALTHY",
       "scheduled_health_available": true,
-      "stale_observability": true
+      "stale_observability": false
     }
   },
-  "exported_at": "2026-09-28T19:15:06.843223Z",
+  "exported_at": "2026-09-28T19:16:35.430464Z",
   "schema_version": "bluefern_external_system_status_v1",
-  "stale_observability": [
-    "gaza",
-    "ice"
-  ],
-  "system_status": "STALE_OBSERVABILITY"
+  "stale_observability": [],
+  "system_status": "DEGRADED"
 }

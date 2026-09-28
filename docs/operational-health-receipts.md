@@ -357,6 +357,11 @@ supplementary until scheduled Care receipts are migrated.
 5. Read `publication_attempted`, `publication_status`, and `public_side_effects`
    independently. No public edition is not itself a task failure.
 
+The read-only `scripts/dispatch_ops.py status DISPATCH --date YYYY-MM-DD`
+command also surfaces `debug_summary` in its text and JSON output when the
+exported status artifact contains it. Use that command for a quick operator
+view before opening raw status JSON.
+
 The system artifact marks migrated active dispatches as `MIGRATED`, Cascadia as
 `INTENTIONALLY_INACTIVE`, and unavailable source roots as `NOT_MIGRATED`. Those
 entries are not synthesized failures.

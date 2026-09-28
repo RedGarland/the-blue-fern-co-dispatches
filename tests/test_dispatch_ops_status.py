@@ -141,7 +141,15 @@ def _care_success_receipts_for_each_task_key(root: Path, date: str = DATE) -> No
         _write_json(receipt_root / f"{run_id}.json", receipt)
 
 
-def _food_status_export(root: Path, date: str, aggregate: str, *, task_status: str, classification: str = "") -> None:
+def _food_status_export(
+    root: Path,
+    date: str,
+    aggregate: str,
+    *,
+    task_status: str,
+    classification: str = "",
+    debug_summary: dict | None = None,
+) -> None:
     _write_json(
         root / "ops/status/food-line/history" / f"{date}.json",
         {
@@ -160,6 +168,7 @@ def _food_status_export(root: Path, date: str, aggregate: str, *, task_status: s
                     "classification": classification or task_status.lower(),
                 }
             ],
+            **({"debug_summary": debug_summary} if debug_summary is not None else {}),
         },
     )
 
@@ -502,6 +511,43 @@ def test_food_source_watch_failure_identifies_collection_investigation(tmp_path:
 
     assert status.state == "FAILED"
     assert status.next_action == "INVESTIGATE_COLLECTION"
+
+
+def test_exported_debug_summary_surfaces_in_status_details_and_text(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    debug_summary = {
+        "aggregate_status": "FAILED",
+        "recovery_lifecycle": "INCIDENT_OPEN",
+        "primary_layer": "SOURCE",
+        "primary_task_key": "food_line_source_watch",
+        "primary_task_status": "FAILED",
+        "primary_classification": "source_watch_failed",
+        "primary_failure_stage": "source_watch",
+        "failed_source_count": 3,
+        "external_access_restriction_count": 1,
+        "unclassified_source_failure_count": 2,
+        "receipt_completeness": "COMPLETE",
+    }
+    _food_status_export(
+        tmp_path,
+        "2026-09-11",
+        "FAILED",
+        task_status="FAILED",
+        classification="source_watch_failed",
+        debug_summary=debug_summary,
+    )
+
+    status = build_status("food-line", "2026-09-11", root=tmp_path)
+    assert status.details["debug_summary"] == debug_summary
+
+    result = main(["status", "food-line", "--date", "2026-09-11", "--root", str(tmp_path)])
+    output = capsys.readouterr().out
+
+    assert result == 1
+    assert "Debug summary:" in output
+    assert "- Primary layer: SOURCE" in output
+    assert "- Primary task: food_line_source_watch" in output
+    assert "- Failed sources: 3" in output
+    assert "- Unclassified source failures: 2" in output
 
 
 def test_truly_missing_scheduled_receipt_is_missed(tmp_path: Path) -> None:

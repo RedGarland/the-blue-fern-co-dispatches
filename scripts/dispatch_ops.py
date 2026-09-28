@@ -264,6 +264,7 @@ def _normalize_from_exported(adapter: DispatchAdapter, payload: dict[str, Any], 
     publication_status = str(payload.get("publication_status") or "")
     receipt_state = str(payload.get("receipt_completeness") or "UNKNOWN")
     recovery = str(payload.get("recovery_lifecycle") or "UNKNOWN")
+    debug_summary = payload.get("debug_summary") if isinstance(payload.get("debug_summary"), dict) else {}
     terminal_food_source_degradation = (
         adapter.dispatch == "food-line"
         and aggregate == "DEGRADED"
@@ -345,6 +346,7 @@ def _normalize_from_exported(adapter: DispatchAdapter, payload: dict[str, Any], 
             "aggregate_status": aggregate,
             "task_statuses": task_statuses,
             "terminal_food_source_degradation": terminal_food_source_degradation,
+            "debug_summary": debug_summary,
         },
     )
 
@@ -1212,6 +1214,28 @@ def render_text(status: DispatchStatus) -> str:
         "",
         f"Next action: {status.next_action}",
     ]
+    debug_summary = status.details.get("debug_summary") if isinstance(status.details, dict) else None
+    if isinstance(debug_summary, dict) and debug_summary:
+        lines.extend(
+            [
+                "",
+                "Debug summary:",
+                f"- Primary layer: {debug_summary.get('primary_layer') or 'UNKNOWN'}",
+                f"- Primary task: {debug_summary.get('primary_task_key') or 'none'}",
+                f"- Primary status: {debug_summary.get('primary_task_status') or 'none'}",
+                f"- Classification: {debug_summary.get('primary_classification') or 'none'}",
+                f"- Failure stage: {debug_summary.get('primary_failure_stage') or 'none'}",
+            ]
+        )
+        for key, label in (
+            ("failed_source_count", "Failed sources"),
+            ("external_access_restriction_count", "External restrictions"),
+            ("unclassified_source_failure_count", "Unclassified source failures"),
+            ("unaccounted_event_count", "Unaccounted events"),
+        ):
+            value = debug_summary.get(key)
+            if value is not None:
+                lines.append(f"- {label}: {value}")
     if status.evidence:
         lines.extend(["", "Evidence:"])
         lines.extend(f"- {path}" for path in status.evidence)

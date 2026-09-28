@@ -1093,6 +1093,25 @@ def _positive_int(value: Any) -> int:
         return 0
 
 
+
+def _monitor_success_overrides_stale(
+    aggregate: dict[str, Any],
+    receipts: list[dict[str, Any]],
+    *,
+    task_key: str,
+) -> bool:
+    if aggregate.get("overall_health") != OperationalStatus.STALE_OBSERVABILITY.value:
+        return False
+    stale_tasks = aggregate.get("stale_observability")
+    if stale_tasks not in ([task_key], (task_key,)):
+        return False
+    return any(
+        str(receipt.get("task_key") or "") == task_key
+        and str(receipt.get("status") or "") in {OperationalStatus.SUCCESS.value, OperationalStatus.SAFE_NO_OP.value}
+        for receipt in receipts
+    )
+
+
 def build_gaza_status(
     *,
     source_root: Path,
@@ -1121,6 +1140,10 @@ def build_gaza_status(
         expected_instances=expected_instances,
     )
     aggregate_status = aggregate["overall_health"]
+    stale_observability = bool(aggregate.get("stale_observability"))
+    if _monitor_success_overrides_stale(aggregate, receipts, task_key="gaza_daily_dispatch"):
+        aggregate_status = OperationalStatus.SUCCESS.value
+        stale_observability = False
     if not receipts and aggregate_status == OperationalStatus.SUCCESS.value:
         aggregate_status = OperationalStatus.UNKNOWN.value
     source_heads = {_safe_head(receipt.get("source_head")) for receipt in receipts}
@@ -1146,7 +1169,7 @@ def build_gaza_status(
             "publication_attempted": publication_attempted,
             "publication_status": publication_statuses[-1] if publication_statuses else None,
         },
-        "stale_observability": bool(aggregate.get("stale_observability")),
+        "stale_observability": stale_observability,
         "last_receipt_at": max((_handoff_time(item) for item in receipts), default=None).isoformat().replace("+00:00", "Z") if receipts else None,
         "last_exported_at": exported_at,
         "next_expected_run": next((item.get("next_expected_run") for item in receipts if item.get("next_expected_run")), None),
@@ -1194,6 +1217,10 @@ def build_ice_status(
         expected_instances=expected_instances,
     )
     aggregate_status = aggregate["overall_health"]
+    stale_observability = bool(aggregate.get("stale_observability"))
+    if _monitor_success_overrides_stale(aggregate, receipts, task_key="ice_monitor"):
+        aggregate_status = OperationalStatus.SUCCESS.value
+        stale_observability = False
     if not receipts and aggregate_status == OperationalStatus.SUCCESS.value:
         aggregate_status = OperationalStatus.UNKNOWN.value
     unaccounted_event_count = sum(
@@ -1226,7 +1253,7 @@ def build_ice_status(
             "publication_attempted": publication_attempted,
             "publication_status": publication_statuses[-1] if publication_statuses else None,
         },
-        "stale_observability": bool(aggregate.get("stale_observability")),
+        "stale_observability": stale_observability,
         "last_receipt_at": max((_handoff_time(item) for item in receipts), default=None).isoformat().replace("+00:00", "Z") if receipts else None,
         "last_exported_at": exported_at,
         "next_expected_run": next((item.get("next_expected_run") for item in receipts if item.get("next_expected_run")), None),

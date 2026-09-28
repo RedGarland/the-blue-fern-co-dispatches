@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260928T144522-0700-r11",
+  "scheduled_for": "2026-09-28T14:45:22-07:00",
+  "started_at": "2026-09-28T14:48:44-07:00",
+  "completed_at": "2026-09-28T14:49:38-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T13:45:22-07:00",
+    "end": "2026-09-28T14:48:44-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "CMS Public Notices was checked first. A targeted CMS-domain search did not surface a newer qualifying notice, but the CMS Public Notices page itself was not retrievable through the available web fetch, so the official-notice leg is partially degraded. Exactly 12 additional targeted searches were completed across hospital/ED/maternity, behavioral health, dialysis, oncology, primary care, rural/emergency service loss, ambulance/air-medical, CLIA/provider-action risk, restoration/reopening, and U.S. territories. No new qualifying U.S. or territory healthcare-access change was identified in the bounded window. September 28 maternity-access coverage in Minnesota and Maine described previously established closures or decisions rather than a newly effective in-window access change. Non-U.S., proposal-only, ownership-only, historical, unsupported, and duplicate items were excluded."
+}

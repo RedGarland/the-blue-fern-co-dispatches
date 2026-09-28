@@ -974,11 +974,20 @@ def _apply_written_public_story_filter(stories: list[dict[str, Any]]) -> tuple[l
                 str(story.get("category") or ""),
             ]
         )
+        editorial_text = " ".join([str(story.get("title") or ""), str(story.get("summary") or "")])
         reason_text = str(reason or "")
         written_context_ok = (
             not eligible
-            and reason_text == "not clearly Gaza-focused or Palestinian-context audio material"
             and WRITTEN_PALESTINIAN_CONTEXT_RE.search(text) is not None
+            and (
+                reason_text == "not clearly Gaza-focused or Palestinian-context audio material"
+                or (
+                    reason_text == "unrelated non-Gaza topic"
+                    and story.get("core_ground_development") is True
+                    and story.get("story_scope") == "palestinian_development"
+                    and WRITTEN_PALESTINIAN_CONTEXT_RE.search(editorial_text) is not None
+                )
+            )
         )
         if eligible or written_context_ok:
             kept.append(story)

@@ -135,11 +135,11 @@
         "state": "HANDOFF_RECEIVED_SUCCESS",
         "unaccounted_count": 0
       },
-      "aggregate_status": "FAILED",
+      "aggregate_status": "MISSED",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "eca3d8b064e1527952c3ba40a0278fab8342a4ac",
       "migration_status": "MIGRATED",
-      "recovery_lifecycle": "INCIDENT_OPEN"
+      "recovery_lifecycle": "HEALTHY"
     },
     "gaza": {
       "agent_handoff": {
@@ -188,10 +188,10 @@
       "stale_observability": true
     }
   },
-  "exported_at": "2026-09-28T13:15:14.734299Z",
+  "exported_at": "2026-09-28T13:25:20.739565Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [
     "ice"
   ],
-  "system_status": "FAILED"
+  "system_status": "MISSED"
 }

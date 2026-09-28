@@ -24,12 +24,12 @@ from bluefern_dispatches.operational_health import (
 )
 
 
-def _receipt(task_key: str, status: OperationalStatus, *, observed_at: str = "2026-09-10T13:00:00Z") -> dict[str, object]:
+def _receipt(task_key: str, status: OperationalStatus, *, observed_at: str = "2026-09-10T13:00:00Z", scheduled_for: str = "2026-09-10") -> dict[str, object]:
     return build_operational_receipt(
         dispatch="food-line",
         task_key=task_key,
         task_name=next(task.task_name for task in FOOD_LINE_TASK_EXPECTATIONS if task.task_key == task_key),
-        scheduled_for="2026-09-10",
+        scheduled_for=scheduled_for,
         started_at=observed_at,
         completed_at=observed_at,
         observed_at=observed_at,
@@ -152,6 +152,36 @@ def test_missed_and_stale_observability_are_not_healthy() -> None:
 
     assert missed["overall_health"] == "MISSED"
     assert stale["overall_health"] == "STALE_OBSERVABILITY"
+
+
+def test_food_publish_is_not_missed_before_its_local_deadline() -> None:
+    receipts = [
+        _receipt(task.task_key, OperationalStatus.SUCCESS, observed_at="2026-09-28T13:30:00Z", scheduled_for="2026-09-28")
+        for task in FOOD_LINE_TASK_EXPECTATIONS
+        if task.task_key != "food_line_daily_publish"
+    ]
+    before = evaluate_dispatch_health(
+        dispatch="food-line",
+        receipts=receipts,
+        expectations=FOOD_LINE_TASK_EXPECTATIONS,
+        evaluated_at="2026-09-28T14:06:00Z",  # 07:06 Pacific, before 08:30 publish
+    )
+    fresh_receipts = [
+        _receipt(task.task_key, OperationalStatus.SUCCESS, observed_at="2026-09-28T16:45:00Z", scheduled_for="2026-09-28")
+        for task in FOOD_LINE_TASK_EXPECTATIONS
+        if task.task_key != "food_line_daily_publish"
+    ]
+    after = evaluate_dispatch_health(
+        dispatch="food-line",
+        receipts=fresh_receipts,
+        expectations=FOOD_LINE_TASK_EXPECTATIONS,
+        evaluated_at="2026-09-28T17:01:00Z",  # 10:01 Pacific, after 90-minute grace
+    )
+
+    assert before["missed_tasks"] == []
+    assert before["overall_health"] == "SUCCESS"
+    assert after["missed_tasks"] == ["food_line_daily_publish"]
+    assert after["overall_health"] == "MISSED"
 
 
 def test_intentionally_inactive_dispatch_has_no_missed_run_alert() -> None:

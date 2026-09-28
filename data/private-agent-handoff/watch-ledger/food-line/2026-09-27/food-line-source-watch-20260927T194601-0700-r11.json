@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260927T194601-0700-r11",
+  "scheduled_for": "2026-09-27T19:45:54-07:00",
+  "started_at": "2026-09-27T19:46:01-07:00",
+  "completed_at": "2026-09-27T19:47:19.208400-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-27T18:47:49.181861-07:00",
+    "end": "2026-09-27T19:47:19.208400-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Ran exactly 12 targeted web searches covering only/sole/last/full-service grocery loss, disaster-related emergency food distribution cancellation or suspension, abrupt pantry/food-bank service closure or major access reduction, and immediate SNAP/WIC/EBT interruption.",
+    "No new qualifying U.S. food-access disruption was established in the bounded window.",
+    "Fresh results chiefly surfaced older or already-known grocery-store closures/fires, including Spencer, New York, plus older pantry disruption reporting outside the search window.",
+    "A September 27 SNAP article reported broad participation declines tied to prior eligibility changes; it did not establish a new abrupt official interruption with immediate access consequences in this hourly window and was excluded.",
+    "No new official SNAP, WIC, EBT, or comparable food-assistance interruption with immediate access consequences surfaced.",
+    "Production collection remains authoritative; this run is supplementary recall coverage only."
+  ]
+}

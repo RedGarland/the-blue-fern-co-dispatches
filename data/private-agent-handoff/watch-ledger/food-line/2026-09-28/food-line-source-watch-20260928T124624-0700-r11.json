@@ -1,0 +1,19 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260928T124624-0700-r11",
+  "scheduled_for": "2026-09-28T12:45:54-07:00",
+  "started_at": "2026-09-28T12:46:24-07:00",
+  "completed_at": "2026-09-28T12:47:57-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-28T09:41:05-07:00",
+    "end": "2026-09-28T12:46:24-07:00",
+    "basis": "since prior hourly check"
+  },
+  "findings": [],
+  "coverage_notes": "Completed exactly 12 bounded targeted web searches across the four high-value Food Line miss classes, prioritizing fresh local reporting and direct/official-source discovery. No new qualifying U.S. food-access disruption was identified in the search window. A Forsyth, Missouri article about a former Save A Lot becoming a food pantry was published before the window and did not establish a new sole/only full-service grocery loss. Forest Park Fridge closure was announced September 16 and is therefore not new; the community center pantry remains open. Kauai hurricane-recovery coverage showed emergency food distributions proceeding rather than being canceled or suspended. Massachusetts SNAP access litigation describes longstanding call-center failures rather than a new official interruption in this window. California food-assistance veto coverage concerned an earlier policy decision rather than an immediate new service interruption. Other results were stale, non-U.S., routine promotion/resource information, or unrelated to immediate food access."
+}

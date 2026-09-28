@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260927T174618-0700",
+  "scheduled_for": "2026-09-27T17:44:51-07:00",
+  "started_at": "2026-09-27T17:46:18-07:00",
+  "completed_at": "2026-09-27T17:46:53-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-27T16:45:58-07:00",
+    "end": "2026-09-27T17:46:53-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first; newest surfaced Gaza humanitarian situation report remained dated 18 September 2026, with no new qualifying in-window development.",
+    "WHO checked second; no new qualifying in-window Gaza health-system development surfaced.",
+    "Exactly 12 additional targeted searches were completed across UNRWA, WFP, UNICEF, MSF, Reuters, AP, BBC, The Guardian, Al Jazeera, WAFA, UN News, and Palestinian Red Crescent Society.",
+    "BBC and UN News retrievals were blocked by robots.txt; useful coverage remained, so status is DEGRADED rather than FAILED.",
+    "A WAFA result surfaced with internally inconsistent future-dated metadata relative to the observation date and was excluded.",
+    "Older, duplicate, recycled, unsupported, and insufficiently timestamped items were excluded."
+  ]
+}

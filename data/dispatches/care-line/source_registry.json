@@ -498,11 +498,20 @@
       "historical_depth": "current feed",
       "notes": "Virginia state health policy and provider-access coverage.",
       "created_at": "2026-07-22T00:00:00Z",
-      "updated_at": "2026-07-22T00:00:00Z",
+      "updated_at": "2026-09-27T00:00:00Z",
       "allowed_hosts": [
         "virginiamercury.com",
         "www.virginiamercury.com"
-      ]
+      ],
+      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+      "operational_failure_classified_at": "2026-09-27",
+      "operational_failure_evidence": [
+        "production_scheduler_http_error",
+        "repeat_non_transient_http_error",
+        "no_safe_migration"
+      ],
+      "coverage_reduced": true,
+      "remediation_available": false
     },
     {
       "source_id": "ohio-capital-journal-health",
@@ -533,7 +542,16 @@
       "allowed_hosts": [
         "ohiocapitaljournal.com"
       ],
-      "collection_method": "structured_index_polling"
+      "collection_method": "structured_index_polling",
+      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+      "operational_failure_classified_at": "2026-09-27",
+      "operational_failure_evidence": [
+        "production_scheduler_http_error",
+        "repeat_non_transient_http_error",
+        "no_safe_migration"
+      ],
+      "coverage_reduced": true,
+      "remediation_available": false
     },
     {
       "source_id": "missouri-independent-health",
@@ -564,7 +582,16 @@
       "allowed_hosts": [
         "missouriindependent.com"
       ],
-      "collection_method": "structured_index_polling"
+      "collection_method": "structured_index_polling",
+      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+      "operational_failure_classified_at": "2026-09-27",
+      "operational_failure_evidence": [
+        "production_scheduler_http_error",
+        "repeat_non_transient_http_error",
+        "no_safe_migration"
+      ],
+      "coverage_reduced": true,
+      "remediation_available": false
     },
     {
       "source_id": "florida-phoenix-health",
@@ -591,10 +618,19 @@
       "historical_depth": "current feed",
       "notes": "Florida health policy coverage.",
       "created_at": "2026-07-22T00:00:00Z",
-      "updated_at": "2026-07-22T00:00:00Z",
+      "updated_at": "2026-09-27T00:00:00Z",
       "allowed_hosts": [
         "floridaphoenix.com"
-      ]
+      ],
+      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+      "operational_failure_classified_at": "2026-09-27",
+      "operational_failure_evidence": [
+        "production_scheduler_http_error",
+        "repeat_non_transient_http_error",
+        "no_safe_migration"
+      ],
+      "coverage_reduced": true,
+      "remediation_available": false
     },
     {
       "source_id": "texas-tribune-health",
@@ -686,7 +722,16 @@
       "allowed_hosts": [
         "michiganadvance.com"
       ],
-      "collection_method": "structured_index_polling"
+      "collection_method": "structured_index_polling",
+      "operational_failure_classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+      "operational_failure_classified_at": "2026-09-27",
+      "operational_failure_evidence": [
+        "production_scheduler_http_error",
+        "repeat_non_transient_http_error",
+        "no_safe_migration"
+      ],
+      "coverage_reduced": true,
+      "remediation_available": false
     },
     {
       "source_id": "kaiser-permanente-news",

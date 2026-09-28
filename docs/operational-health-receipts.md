@@ -74,9 +74,9 @@ tokens, and retired/quarantined payloads are excluded. A handoff failure may be
 alertable at system level, but it does not rewrite scheduled task receipts;
 `SAFE_NO_OP` does not mask a scheduled failure.
 
-Care Line remains `NOT_MIGRATED` for scheduled operational-health aggregation.
-Its system status may expose the supplementary `agent_handoff` section, but
-handoff receipts do not constitute a Care daily aggregate or full migration.
+External handoff receipts do not constitute a scheduled daily aggregate on
+their own. A dispatch is `MIGRATED` only when its scheduled operational-health
+receipts are exported from the relevant production runner.
 
 ## Common status model
 
@@ -205,7 +205,7 @@ Cascadia is intentionally inactive. Its absence from scheduled receipts must not
 
 It reports system health, dispatch states, open incidents, recovery-pending dispatches, and stale observability.
 
-## Future migration contracts
+## Migrated dispatch contracts
 
 ### Gaza
 
@@ -239,9 +239,9 @@ It reports system health, dispatch states, open incidents, recovery-pending disp
 The Care exporter accepts explicit local Care receipts and writes
 `ops/status/care-line/latest.json` plus date history. It permits repeated
 collection instances and ignores future expected instances until their
-scheduled time plus grace has elapsed. The system export still reports Care as
-`NOT_MIGRATED`; a Care artifact or external handoff receipt is not proof of a
-production migration or a public edition.
+scheduled time plus grace has elapsed. A Care artifact or external handoff
+receipt alone is not proof of scheduled production migration or a public
+edition.
 
 ### ICE
 
@@ -302,17 +302,44 @@ contending process exits nonzero. Repeated exports reuse the previous export
 timestamp when the sanitized payload is byte-equivalent, and atomic replacement
 prevents partial JSON artifacts.
 
-The Food Line status payload reports aggregate dispatch health, receipt
-completeness, task summaries, recovery lifecycle, publication state, and bounded
-staleness fields. It never exports raw source content, editorial notes, private
-queue data, credentials, environment variables, or local filesystem paths.
+Migrated dispatch status payloads report aggregate dispatch health, receipt
+completeness, task summaries, recovery lifecycle, publication state, bounded
+staleness fields, and a shared `debug_summary`. They never export raw source
+content, editorial notes, private queue data, credentials, environment
+variables, or local filesystem paths.
+
+`debug_summary` is the first field to inspect when a line is not healthy. It
+contains a small, dispatch-neutral diagnosis pointer:
+
+- `aggregate_status`
+- `recovery_lifecycle`
+- `primary_layer`
+- `primary_task_key`
+- `primary_task_status`
+- `primary_classification`
+- `primary_failure_stage`
+- `attention_task_count`
+- `attention_tasks`
+- source failure counts where available
+- unaccounted event counts where available
+- publication flags
+- `stale_observability`
+- `receipt_completeness`
+
+`primary_layer` identifies the first likely operational layer to inspect, such
+as source dependency, source classification, upstream handoff, wrapper,
+publication, scheduler/observability, or task-level failure. Dispatch-specific
+details remain in task summaries and receipt artifacts; the summary exists to
+prevent each incident from requiring a fresh code walk before the right receipt
+is known.
 
 The Scheduled Dispatch Watch should consume `food-line/latest.json` as follows:
 
 1. Read `aggregate_status` for dispatch health. `FAILED` is a real task failure;
    `STALE_OBSERVABILITY` means the status surface cannot establish a current
    result and must not be treated as yesterday's health.
-2. Read `task_summaries` to identify failed, upstream-blocked, degraded, or
+2. Read `debug_summary` for the first failing layer and task, then read
+   `task_summaries` to identify failed, upstream-blocked, degraded, or
    safe-no-op tasks. `SAFE_NO_OP` from Daily Publish never masks an upstream
    failure.
 3. Require `receipt_completeness == COMPLETE` before treating a day as fully
@@ -330,17 +357,9 @@ supplementary until scheduled Care receipts are migrated.
 5. Read `publication_attempted`, `publication_status`, and `public_side_effects`
    independently. No public edition is not itself a task failure.
 
-The system artifact marks Food Line `MIGRATED`, Cascadia
-`INTENTIONALLY_INACTIVE`, and other non-migrated dispatches `NOT_MIGRATED`;
-those entries are not synthesized failures.
-
-Migration order for active dispatches:
-
-1. Food Line
-2. Care Line
-3. Gaza
-4. ICE
-5. American Pressure
+The system artifact marks migrated active dispatches as `MIGRATED`, Cascadia as
+`INTENTIONALLY_INACTIVE`, and unavailable source roots as `NOT_MIGRATED`. Those
+entries are not synthesized failures.
 
 Cascadia is intentionally inactive and is not in the active migration queue. It
 may re-enter the migration plan only after separate explicit operator

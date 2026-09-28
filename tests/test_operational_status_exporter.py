@@ -1162,6 +1162,63 @@ def test_care_external_access_restriction_proof_degrades_without_open_incident(t
     assert system_care["source_failure_summary"]["external_access_restriction_count"] == 2
 
 
+def test_care_external_access_restriction_proof_clears_stale_publication_failure(tmp_path: Path) -> None:
+    care_source = tmp_path / "care-source"
+    _write_care_source_registry(care_source, classified_sources=("hhs-news", "hrsa-news"))
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_collection",
+        run_id="external-proof",
+        task_status="partial_success",
+        scheduled_for="2026-09-10T15:00:00Z",
+        started_at="2026-09-10T15:00:00Z",
+        completed_at="2026-09-10T15:03:00Z",
+        details=_external_failure_details(("hhs-news", "hrsa-news")),
+    )
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_reviewed_event_queue",
+        run_id="queue",
+        task_status="nothing_to_publish",
+        scheduled_for="2026-09-10T15:01:00Z",
+        started_at="2026-09-10T15:01:00Z",
+        completed_at="2026-09-10T15:01:30Z",
+    )
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_approved_release_publication",
+        run_id="old-publication-failed",
+        task_status="failed",
+        scheduled_for="2026-09-10T15:02:00Z",
+        started_at="2026-09-10T15:02:00Z",
+        completed_at="2026-09-10T15:02:30Z",
+        exit_code=1,
+        publication_status="failure",
+    )
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_approved_release_publication",
+        run_id="proof-only-safe-no-op",
+        task_status="safe_no_op",
+        publication_status="safe_no_op",
+        scheduled_for=DATE,
+        started_at="2026-09-10T17:00:00Z",
+        completed_at="2026-09-10T17:00:30Z",
+    )
+
+    status = build_care_line_status(
+        source_root=care_source,
+        date=DATE,
+        evaluated_at="2026-09-10T18:00:00Z",
+        exported_at="2026-09-10T18:01:00Z",
+        expected_instances=CARE_EXPECTED_INSTANCES,
+    )
+
+    assert status["aggregate_status"] == "DEGRADED"
+    assert status["recovery_lifecycle"] == "HEALTHY"
+    assert status["source_failure_summary"]["all_current_failures_external"] is True
+
+
 def test_care_source_replay_receipt_reconciles_latest_collection_failure(tmp_path: Path) -> None:
     source = _write_care_day(tmp_path)
     replay_path = (

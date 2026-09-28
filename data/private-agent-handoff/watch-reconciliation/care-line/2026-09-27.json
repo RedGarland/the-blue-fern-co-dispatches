@@ -1,0 +1,11 @@
+{
+  "schema_version": "bluefern.watch_reconciliation.v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-09-27",
+  "run_count": 10,
+  "success_run_count": 10,
+  "degraded_run_count": 0,
+  "failed_run_count": 0,
+  "zero_finding_run_count": 9,
+  "finding_count": 1
+}

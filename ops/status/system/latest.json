@@ -34,10 +34,18 @@
       "debug_summary": {
         "aggregate_status": "DEGRADED",
         "all_current_failures_external": true,
-        "attention_task_count": 1,
+        "attention_task_count": 2,
         "attention_tasks": [
           {
             "artifact_id": "20260928T130002Z-7700.json",
+            "classification": "partial_success",
+            "exit_code": 0,
+            "failure_stage": "care_line_collection",
+            "status": "DEGRADED",
+            "task_key": "care_line_collection"
+          },
+          {
+            "artifact_id": "20260928T190002Z-34920.json",
             "classification": "partial_success",
             "exit_code": 0,
             "failure_stage": "care_line_collection",
@@ -277,7 +285,7 @@
       "stale_observability": true
     }
   },
-  "exported_at": "2026-09-28T19:01:18.029654Z",
+  "exported_at": "2026-09-28T19:15:06.843223Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [
     "gaza",

@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260928T154134-0700",
+  "scheduled_for": "2026-09-28T15:44:51-07:00",
+  "started_at": "2026-09-28T15:41:34-07:00",
+  "completed_at": "2026-09-28T15:42:48-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T14:52:20-07:00",
+    "end": "2026-09-28T15:42:48-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first; no new qualifying in-window development verified.",
+    "WHO checked second; no new qualifying in-window development verified.",
+    "Exactly 12 additional targeted searches were completed across the requested high-value miss classes.",
+    "One direct source retrieval failed while alternate coverage remained usable; the run is DEGRADED.",
+    "No new qualifying development was verified; older, duplicate, unsupported, and temporally unverified items were excluded."
+  ]
+}

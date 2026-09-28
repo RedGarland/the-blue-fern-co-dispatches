@@ -15,6 +15,7 @@ from bluefern_dispatches.operational_health import (
 from bluefern_dispatches.operational_status_exporter import (
     ExportError,
     build_care_line_status,
+    build_gaza_status,
     build_ice_status,
     build_food_line_status,
     classify_status_checkout_state,
@@ -878,6 +879,20 @@ def test_forced_gaza_refresh_advances_gaza_without_forcing_food(tmp_path: Path) 
     assert (checkout / f"ops/status/gaza/history/{DATE}.json").is_file()
 
 
+def test_gaza_same_day_no_update_receipt_remains_current_after_grace_window(tmp_path: Path) -> None:
+    status = build_gaza_status(
+        source_root=_write_gaza_day(tmp_path, status="SAFE_NO_OP", classification="no_update_published"),
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "SUCCESS"
+    assert status["stale_observability"] is False
+    assert status["debug_summary"]["primary_layer"] == "NONE"
+    assert status["publication_status"] == "no_update_published"
+
+
 def test_export_advances_food_and_system_timestamps_when_food_changes(tmp_path: Path) -> None:
     checkout = tmp_path / "status-checkout"
     first_source = _write_day(tmp_path / "first")
@@ -1676,6 +1691,21 @@ def test_ice_status_before_due_uses_latest_completed_monitor_proof(tmp_path: Pat
     assert status["receipt_completeness"] == "COMPLETE"
     assert status["stale_observability"] is False
     assert status["task_summaries"][0]["run_id"] == "ice-monitor-1"
+
+
+def test_ice_previous_monitor_proof_remains_current_until_next_run_is_due(tmp_path: Path) -> None:
+    source = _write_ice_day(tmp_path, date="2026-09-09")
+    status = build_ice_status(
+        source_root=source,
+        date="2026-09-10",
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "SUCCESS"
+    assert status["receipt_completeness"] == "COMPLETE"
+    assert status["stale_observability"] is False
+    assert status["debug_summary"]["primary_layer"] == "NONE"
 
 
 def test_ice_status_after_local_schedule_run_is_healthy_and_complete(tmp_path: Path) -> None:

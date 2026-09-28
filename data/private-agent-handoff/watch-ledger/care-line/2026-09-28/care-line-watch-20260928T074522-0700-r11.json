@@ -1,0 +1,17 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260928T074522-0700-r11",
+  "scheduled_for": "2026-09-28T07:45:22-07:00",
+  "started_at": "2026-09-28T07:48:06-07:00",
+  "completed_at": "2026-09-28T07:50:05-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T06:45:22-07:00",
+    "end": "2026-09-28T07:50:05-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "CMS Public Notices checked first; newest listed notices remained six hospice termination notices dated 2026-09-25. Twelve additional targeted searches covered hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural/emergency service loss, ambulance/air-medical, restorations/reopenings, and U.S. territories. No new qualifying development was identified in the bounded window. A The Centers (Ohio) BHUC transition effective 2026-09-28 surfaced but was excluded because services were transitioning to the Glick Recovery Campus with broader 24/7 adult crisis access rather than a newly observed abrupt net service loss; the source page did not establish publication within this hourly window. Retrospective reporting on older Minnesota obstetric closures was also excluded."
+}

@@ -12,7 +12,7 @@
   },
   "aggregate_status": "SUCCESS",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "e2427a670824467024b6495fa01d40fc5978f671",
+  "current_runner_head": "1871e64a91bba257087efad7a445cd98bf63ac23",
   "debug_summary": {
     "aggregate_status": "SUCCESS",
     "all_current_failures_external": null,
@@ -20,6 +20,7 @@
     "attention_tasks": [],
     "external_access_restriction_count": null,
     "failed_source_count": null,
+    "operator_assessment": "HEALTHY",
     "primary_classification": null,
     "primary_failure_stage": null,
     "primary_layer": "NONE",
@@ -34,7 +35,7 @@
     "unclassified_source_failure_count": null
   },
   "dispatch": "ice",
-  "last_exported_at": "2026-09-28T21:04:24.601770Z",
+  "last_exported_at": "2026-09-28T22:56:52.454557Z",
   "last_receipt_at": "2026-09-28T04:16:25.407356Z",
   "latest_runtime_proof_date": "2026-09-28T04:15:03Z",
   "migration_status": "MIGRATED",

@@ -28,14 +28,14 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "FAILED",
+      "aggregate_status": "DEGRADED",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "56a871c0d8e10ed013f8fb70f9eaf1ac3f2b6fd8",
+      "current_runner_head": "eca3d8b064e1527952c3ba40a0278fab8342a4ac",
       "latest_runtime_proof_date": "2026-09-27T15:00:03.000851Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-27",
       "receipt_completeness": "COMPLETE",
-      "recovery_lifecycle": "INCIDENT_OPEN",
+      "recovery_lifecycle": "HEALTHY",
       "scheduled_health_available": true,
       "source_failure_summary": {
         "all_current_failures_external": true,
@@ -137,7 +137,7 @@
       },
       "aggregate_status": "DEGRADED",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "56a871c0d8e10ed013f8fb70f9eaf1ac3f2b6fd8",
+      "current_runner_head": "eca3d8b064e1527952c3ba40a0278fab8342a4ac",
       "migration_status": "MIGRATED",
       "recovery_lifecycle": "HEALTHY"
     },
@@ -155,7 +155,7 @@
       },
       "aggregate_status": "STALE_OBSERVABILITY",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "56a871c0d8e10ed013f8fb70f9eaf1ac3f2b6fd8",
+      "current_runner_head": "eca3d8b064e1527952c3ba40a0278fab8342a4ac",
       "latest_runtime_proof_date": "2026-09-27T13:02:53.765182Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-27",
@@ -178,7 +178,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "56a871c0d8e10ed013f8fb70f9eaf1ac3f2b6fd8",
+      "current_runner_head": "eca3d8b064e1527952c3ba40a0278fab8342a4ac",
       "latest_runtime_proof_date": "2026-09-28T04:15:03Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-27",
@@ -188,10 +188,10 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-09-28T04:53:39.911507Z",
+  "exported_at": "2026-09-28T04:57:40.834862Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [
     "gaza"
   ],
-  "system_status": "FAILED"
+  "system_status": "STALE_OBSERVABILITY"
 }

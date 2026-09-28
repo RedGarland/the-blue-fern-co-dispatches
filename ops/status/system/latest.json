@@ -30,7 +30,7 @@
       },
       "aggregate_status": "FAILED",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "6e7624ee21cfabe5210c277d2a6652c123f0c740",
+      "current_runner_head": "9408a8937286b4931420300d4dd3b442109c34b3",
       "latest_runtime_proof_date": "2026-09-27T15:00:03.000851Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-27",
@@ -107,7 +107,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "6e7624ee21cfabe5210c277d2a6652c123f0c740",
+      "current_runner_head": "9408a8937286b4931420300d4dd3b442109c34b3",
       "migration_status": "MIGRATED",
       "recovery_lifecycle": "HEALTHY"
     },
@@ -125,7 +125,7 @@
       },
       "aggregate_status": "STALE_OBSERVABILITY",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "6e7624ee21cfabe5210c277d2a6652c123f0c740",
+      "current_runner_head": "9408a8937286b4931420300d4dd3b442109c34b3",
       "latest_runtime_proof_date": "2026-09-27T13:02:53.765182Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-27",
@@ -148,7 +148,7 @@
       },
       "aggregate_status": "STALE_OBSERVABILITY",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "6e7624ee21cfabe5210c277d2a6652c123f0c740",
+      "current_runner_head": "9408a8937286b4931420300d4dd3b442109c34b3",
       "latest_runtime_proof_date": "2026-09-27T04:15:05Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-27",
@@ -158,7 +158,7 @@
       "stale_observability": true
     }
   },
-  "exported_at": "2026-09-27T23:57:16.562974Z",
+  "exported_at": "2026-09-28T00:15:04.438812Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [
     "gaza",

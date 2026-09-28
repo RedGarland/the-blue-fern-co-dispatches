@@ -7,7 +7,9 @@ import pytest
 
 from bluefern_dispatches.generator import build_site
 from bluefern_dispatches.gaza_audio import write_gaza_audio_outputs
+from bluefern_dispatches.gaza_audio import _audio_story_eligibility
 from scripts.run_gaza_dispatch import (
+    _apply_written_public_story_filter,
     build_source_diversity_report,
     compute_gaza_source_adequacy,
     curate_stories,
@@ -16,6 +18,39 @@ from scripts.run_gaza_dispatch import (
     render_gaza_no_update_from_preserved_artifacts,
     run_gaza_dispatch,
 )
+
+
+def test_written_palestinian_development_survives_unrelated_audio_sidebar() -> None:
+    palestinian_development = {
+        "story_id": "jerusalem-consulate",
+        "title": "Israel does not have right to close UK consulate in Jerusalem",
+        "summary": "The consulate serves Palestinians in occupied East Jerusalem. UK politics sidebar.",
+        "story_scope": "palestinian_development",
+        "core_ground_development": True,
+    }
+    unrelated = {
+        "story_id": "uk-newsletter",
+        "title": "UK politics weekly briefing",
+        "summary": "A sidebar mentions Palestinian refugees.",
+        "story_scope": "other",
+        "core_ground_development": False,
+    }
+    unconfirmed = {
+        **palestinian_development,
+        "story_id": "unconfirmed-consulate",
+        "core_ground_development": False,
+    }
+    sidebar_only = {
+        **palestinian_development,
+        "story_id": "sidebar-only",
+        "title": "UK consulate policy briefing",
+        "summary": "UK politics sidebar unrelated to the main story.",
+    }
+
+    assert _audio_story_eligibility(palestinian_development) == (False, "unrelated non-Gaza topic")
+    kept, excluded = _apply_written_public_story_filter([palestinian_development, unrelated, unconfirmed, sidebar_only])
+    assert [story["story_id"] for story in kept] == ["jerusalem-consulate"]
+    assert [story["story_id"] for story in excluded] == ["uk-newsletter", "unconfirmed-consulate", "sidebar-only"]
 
 
 def make_work_root(repo: Path) -> Path:

@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260928T114134-0700",
+  "scheduled_for": "2026-09-28T11:44:51-07:00",
+  "started_at": "2026-09-28T11:41:34-07:00",
+  "completed_at": "2026-09-28T11:42:59-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T10:49:08-07:00",
+    "end": "2026-09-28T11:42:59-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT was checked first. OCHA's publications page showed a 28 September publication date for Humanitarian Situation Report | 25 September 2026 and Reported impact snapshot | Gaza Strip (23 September 2026), but neither represented a verified new in-window development since the prior hourly check.",
+    "WHO was checked second. No qualifying in-window Gaza health-system, hospital, ambulance, fuel, transport, or medical-evacuation development surfaced.",
+    "Exactly 12 additional targeted searches were completed across civilian casualties; displacement; aid access; food and water access; health-care disruption; ambulance, fuel, transport and medical evacuation; water/sanitation infrastructure; crossings; hostages/detention; ceasefire/negotiations; military operations with documented civilian impact; and broader UNRWA/UN humanitarian updates.",
+    "No source/search materially failed in this bounded run. Search results were dominated by older or previously surfaced material, including UNRWA Situation Report #235, standing WFP Palestine emergency information, and older Reuters/UNICEF items.",
+    "No new qualifying development was verified within the search window. Opinion, unsupported social claims, recycled items, duplicates, unsourced claims, and items lacking verifiable in-window publication or event timing were excluded."
+  ]
+}

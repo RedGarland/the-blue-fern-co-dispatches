@@ -40,6 +40,7 @@ def _system_status_export(root: Path) -> None:
                     "recovery_lifecycle": "HEALTHY",
                     "debug_summary": {
                         "aggregate_status": "SUCCESS",
+                        "operator_assessment": "HEALTHY",
                         "primary_layer": "NONE",
                         "primary_task_key": None,
                         "receipt_completeness": "COMPLETE",
@@ -51,6 +52,7 @@ def _system_status_export(root: Path) -> None:
                     "recovery_lifecycle": "HEALTHY",
                     "debug_summary": {
                         "aggregate_status": "DEGRADED",
+                        "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
                         "primary_layer": "EXTERNAL_DEPENDENCY",
                         "primary_task_key": "care_line_collection",
                         "failed_source_count": 9,
@@ -63,6 +65,7 @@ def _system_status_export(root: Path) -> None:
                     "recovery_lifecycle": "INCIDENT_OPEN",
                     "debug_summary": {
                         "aggregate_status": "STALE_OBSERVABILITY",
+                        "operator_assessment": "ACTION_REQUIRED_OBSERVABILITY",
                         "primary_layer": "OBSERVABILITY",
                         "primary_task_key": "gaza_daily_dispatch",
                     },
@@ -413,9 +416,15 @@ def test_system_command_renders_dispatch_debug_summary(tmp_path: Path, capsys: p
 
     assert result == 1
     assert "System status: STALE_OBSERVABILITY" in output
-    assert "Care Line: DEGRADED / HEALTHY; layer=EXTERNAL_DEPENDENCY; task=care_line_collection" in output
+    assert (
+        "Care Line: DEGRADED / HEALTHY; assessment=HEALTHY_WITH_EXTERNAL_RESTRICTIONS; "
+        "layer=EXTERNAL_DEPENDENCY; task=care_line_collection"
+    ) in output
     assert "failed_sources=9" in output
-    assert "Gaza: STALE_OBSERVABILITY / INCIDENT_OPEN; layer=OBSERVABILITY; task=gaza_daily_dispatch" in output
+    assert (
+        "Gaza: STALE_OBSERVABILITY / INCIDENT_OPEN; assessment=ACTION_REQUIRED_OBSERVABILITY; "
+        "layer=OBSERVABILITY; task=gaza_daily_dispatch"
+    ) in output
 
 
 def test_system_command_json_is_deterministic(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:

@@ -1,0 +1,19 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260928T104456-0700-r11",
+  "scheduled_for": "2026-09-28T10:44:56-07:00",
+  "started_at": "2026-09-28T10:44:56-07:00",
+  "completed_at": "2026-09-28T10:45:52-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-28T09:41:05-07:00",
+    "end": "2026-09-28T10:44:56-07:00",
+    "basis": "since prior hourly check"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 12 bounded targeted web searches across the four high-value Food Line miss classes. No new qualifying U.S. food-access disruption was identified in the search window. Fresh/recent results included Hawaii storm-recovery coverage, but the Big Island food-bank warehouse closure was published before the window and Kauai recovery coverage showed emergency food distributions proceeding rather than being canceled or suspended. Other results were stale, non-U.S., unrelated to immediate food access, routine promotion/policy coverage, or otherwise excluded by scope. No material search/source failure was observed."
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260928T124859-0700",
+  "scheduled_for": "2026-09-28T12:44:51-07:00",
+  "started_at": "2026-09-28T12:48:59-07:00",
+  "completed_at": "2026-09-28T12:52:18-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T11:42:59-07:00",
+    "end": "2026-09-28T12:52:18-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT was checked first. The current Humanitarian Situation Report | 25 September 2026 is dated 28 September on the OCHA page, but it was already surfaced in the prior durable watch and its Gaza reporting period is 14-20 September, so it was excluded as not new to this watch window.",
+    "WHO was checked second. No qualifying in-window Gaza health-system, hospital, ambulance, fuel, transport, functioning-capacity, or medical-evacuation development surfaced.",
+    "Exactly 12 additional targeted searches were completed across civilian casualties and military operations; displacement; aid access; food and water; health/ambulance/fuel/medical evacuation; infrastructure; crossings; hostages/detention; ceasefire/negotiations; UNRWA; and broader UN humanitarian updates.",
+    "A Haaretz result published on 28 September reported at least two Palestinians killed in separate Israeli airstrikes in Gaza. Direct retrieval returned HTTP 403, so the exact publication time, event timing, and full supporting passage could not be verified against the hourly window; it was excluded rather than promoted as a finding.",
+    "BBC retrieval was blocked by robots.txt. Useful coverage remained from accessible OCHA, WHO-indexed material, WFP, UNICEF, ICRC and established-reporting search results, so this run is DEGRADED rather than FAILED.",
+    "No new qualifying development was verified within the bounded search window. Opinion, unsupported social claims, recycled items, duplicates, unsourced claims, and items lacking verifiable in-window timing were excluded."
+  ]
+}

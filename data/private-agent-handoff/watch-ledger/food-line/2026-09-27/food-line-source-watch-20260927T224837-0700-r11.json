@@ -1,0 +1,22 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260927T224837-0700-r11",
+  "scheduled_for": "2026-09-27T22:45:54-07:00",
+  "started_at": "2026-09-27T22:48:37-07:00",
+  "completed_at": "2026-09-27T22:49:21-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-27T21:48:37-07:00",
+    "end": "2026-09-27T22:49:21-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Completed 12 targeted web searches covering sole/only/last/full-service grocery loss or closure, emergency food distribution cancellations or suspensions, abrupt pantry/food-bank service reductions, and official SNAP/WIC interruption signals.",
+    "No new qualifying U.S. food-access disruption was identified within the prior-hour window.",
+    "A current Big Island storm-recovery page reports The Food Basket warehouses in Hilo and Kailua-Kona closed with post-storm distributions pending, but the page was published at 2026-09-27T10:25:00-10:00 and updated at 2026-09-27T12:35:00-10:00 (15:35 PDT), outside this watch window, so it was excluded as not new."
+  ]
+}

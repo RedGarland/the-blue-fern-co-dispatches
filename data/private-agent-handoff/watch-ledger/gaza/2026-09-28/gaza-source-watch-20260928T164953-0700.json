@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260928T164953-0700",
+  "scheduled_for": "2026-09-28T16:44:51-07:00",
+  "started_at": "2026-09-28T16:49:53-07:00",
+  "completed_at": "2026-09-28T16:50:58-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T15:42:48-07:00",
+    "end": "2026-09-28T16:50:58-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first; no new qualifying development was verified within the search window.",
+    "WHO checked second; no new qualifying Gaza health-system development was verified within the search window.",
+    "Exactly 12 additional targeted searches were completed across civilian casualties, displacement, aid and food/water access, healthcare and medical evacuation, infrastructure and fuel, crossings, detention/hostages, ceasefire/negotiations, and military operations with documented civilian impact.",
+    "A Reuters Connect item sourced to Anadolu Agency documented more than 50 victims retrieved from rubble in central Gaza on 28 September 2026, but no publication time was available to establish that the development occurred or was first reported after the prior completed check; it was excluded as temporally unverified for this hourly window.",
+    "Older, duplicate, unsupported, opinion, and non-traceable items were excluded."
+  ]
+}

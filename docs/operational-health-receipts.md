@@ -363,7 +363,10 @@ exported status artifact contains it. Use that command for a quick operator
 view before opening raw status JSON.
 
 Use `scripts/dispatch_ops.py system` for the same first-look view across all
-dispatches in `ops/status/system/latest.json`.
+dispatches in `ops/status/system/latest.json`. When run from the Operator
+checkout, the command defaults to `ops/operator/config.json` `operator.status_root`
+if that configured status checkout exists. Use `--root` to inspect another
+status checkout explicitly.
 
 The system artifact marks migrated active dispatches as `MIGRATED`, Cascadia as
 `INTENTIONALLY_INACTIVE`, and unavailable source roots as `NOT_MIGRATED`. Those

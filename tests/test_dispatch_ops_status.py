@@ -429,6 +429,75 @@ def test_system_command_json_is_deterministic(tmp_path: Path, capsys: pytest.Cap
     assert payload["dispatches"]["food-line"]["debug_summary"]["primary_layer"] == "NONE"
 
 
+def test_system_command_defaults_to_configured_status_root(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    from scripts import dispatch_ops
+
+    repo_root = tmp_path / "operator"
+    status_root = tmp_path / "status"
+    stale_root = repo_root
+    _system_status_export(status_root)
+    _write_json(
+        stale_root / "ops/status/system/latest.json",
+        {
+            "schema_version": "bluefern_external_system_status_v1",
+            "exported_at": "2026-09-11T18:07:41Z",
+            "system_status": "FAILED",
+            "dispatches": {},
+        },
+    )
+    _write_json(repo_root / "ops/operator/config.json", {"operator": {"status_root": str(status_root)}})
+    monkeypatch.setattr(dispatch_ops, "ROOT", repo_root)
+
+    result = dispatch_ops.main(["system", "--json"])
+    payload = json.loads(capsys.readouterr().out)
+
+    assert result == 1
+    assert payload["exported_at"] == "2026-09-28T17:35:22Z"
+    assert payload["dispatches"]["care-line"]["debug_summary"]["primary_layer"] == "EXTERNAL_DEPENDENCY"
+    assert payload["evidence"] == ["ops/status/system/latest.json"]
+
+
+def test_system_command_root_override_wins_over_configured_status_root(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    from scripts import dispatch_ops
+
+    repo_root = tmp_path / "operator"
+    configured_root = tmp_path / "configured-status"
+    override_root = tmp_path / "override-status"
+    _system_status_export(configured_root)
+    _write_json(
+        override_root / "ops/status/system/latest.json",
+        {
+            "schema_version": "bluefern_external_system_status_v1",
+            "exported_at": "2026-09-28T18:00:00Z",
+            "system_status": "SUCCESS",
+            "dispatches": {
+                "food-line": {
+                    "aggregate_status": "SUCCESS",
+                    "recovery_lifecycle": "HEALTHY",
+                    "debug_summary": {"primary_layer": "NONE"},
+                }
+            },
+        },
+    )
+    _write_json(repo_root / "ops/operator/config.json", {"operator": {"status_root": str(configured_root)}})
+    monkeypatch.setattr(dispatch_ops, "ROOT", repo_root)
+
+    result = dispatch_ops.main(["system", "--json", "--root", str(override_root)])
+    payload = json.loads(capsys.readouterr().out)
+
+    assert result == 0
+    assert payload["exported_at"] == "2026-09-28T18:00:00Z"
+    assert list(payload["dispatches"]) == ["food-line"]
+
+
 def test_system_snapshot_missing_artifact_is_unknown(tmp_path: Path) -> None:
     snapshot = build_system_snapshot(root=tmp_path)
 

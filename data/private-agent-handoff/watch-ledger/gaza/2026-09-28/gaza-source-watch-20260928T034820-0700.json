@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260928T034820-0700",
+  "scheduled_for": "2026-09-28T03:44:51-07:00",
+  "started_at": "2026-09-28T03:48:20-07:00",
+  "completed_at": "2026-09-28T03:51:11-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T00:47:06-07:00",
+    "end": "2026-09-28T03:51:11-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT was checked first; no qualifying in-window development surfaced.",
+    "WHO was checked second; no qualifying in-window development surfaced.",
+    "Exactly 12 additional targeted searches were completed.",
+    "One supplemental source could not be retrieved due to robots.txt; remaining coverage was sufficient.",
+    "No new qualifying development was verified.",
+    "Older, duplicate, recycled, unsupported, opinion-only, and insufficiently timestamped items were excluded."
+  ]
+}

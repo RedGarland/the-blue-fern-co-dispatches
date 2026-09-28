@@ -10,30 +10,52 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "UNKNOWN",
+  "aggregate_status": "SUCCESS",
   "current_runner_branch": "add/pages-repo-default",
   "current_runner_head": "eca3d8b064e1527952c3ba40a0278fab8342a4ac",
   "dispatch": "gaza",
-  "last_exported_at": "2026-09-28T10:44:04.442026Z",
-  "last_receipt_at": null,
-  "latest_runtime_proof_date": null,
+  "last_exported_at": "2026-09-28T13:15:14.734299Z",
+  "last_receipt_at": "2026-09-28T13:03:18.997214Z",
+  "latest_runtime_proof_date": "2026-09-28T13:03:17.998213Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
   "observed_date": "2026-09-28",
   "public_side_effects": {
-    "publication_attempted": false,
-    "publication_status": null
+    "publication_attempted": true,
+    "publication_status": "no_update_published"
   },
-  "publication_attempted": false,
-  "publication_status": null,
-  "receipt_completeness": "NO_PROOF",
+  "publication_attempted": true,
+  "publication_status": "no_update_published",
+  "receipt_completeness": "COMPLETE",
   "recovery_lifecycle": "HEALTHY",
-  "runner_source_head": null,
-  "scheduled_health_authoritative": false,
+  "runner_source_head": "eca3d8b064e1527952c3ba40a0278fab8342a4ac",
+  "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
     "gaza_daily_dispatch"
   ],
   "schema_version": "bluefern_external_operational_status_v1",
   "stale_observability": false,
-  "task_summaries": []
+  "task_summaries": [
+    {
+      "artifact_id": "gaza_daily_dispatch-gaza-daily-2026-09-28-20260928T130045172932Z.json",
+      "classification": "no_update_published",
+      "completed_at": "2026-09-28T13:03:17.998213Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "bluesky": false,
+        "pages": true,
+        "public_output": true
+      },
+      "publication_attempted": true,
+      "publication_status": "no_update_published",
+      "run_id": "gaza-daily-2026-09-28-20260928T130045172932Z",
+      "scheduled_for": "2026-09-28",
+      "started_at": "2026-09-28T13:00:45.172932Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "gaza_daily_dispatch"
+    }
+  ]
 }

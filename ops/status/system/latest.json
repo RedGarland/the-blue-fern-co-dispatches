@@ -38,14 +38,69 @@
       "recovery_lifecycle": "HEALTHY",
       "scheduled_health_available": true,
       "source_failure_summary": {
-        "all_current_failures_external": false,
-        "external_access_restriction_count": 0,
-        "external_restriction_sources": [],
-        "failed_source_count": 0,
-        "original_failed_source_count": 0,
+        "all_current_failures_external": true,
+        "external_access_restriction_count": 9,
+        "external_restriction_sources": [
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "hhs-news"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "hrsa-news"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "fierce-healthcare"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "virginia-mercury-health"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "ohio-capital-journal-health"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "missouri-independent-health"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "florida-phoenix-health"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "michigan-advance-health"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "mayo-clinic-news"
+          }
+        ],
+        "failed_source_count": 9,
+        "original_failed_source_count": 9,
         "recovered_source_count": 0,
         "recovered_sources": [],
-        "successful_attempt_count": null,
+        "successful_attempt_count": 26,
         "unclassified_source_failure_count": 0
       },
       "stale_observability": false
@@ -80,11 +135,11 @@
         "state": "HANDOFF_RECEIVED_SUCCESS",
         "unaccounted_count": 0
       },
-      "aggregate_status": "MISSED",
+      "aggregate_status": "FAILED",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "eca3d8b064e1527952c3ba40a0278fab8342a4ac",
       "migration_status": "MIGRATED",
-      "recovery_lifecycle": "HEALTHY"
+      "recovery_lifecycle": "INCIDENT_OPEN"
     },
     "gaza": {
       "agent_handoff": {
@@ -98,15 +153,15 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "UNKNOWN",
+      "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "eca3d8b064e1527952c3ba40a0278fab8342a4ac",
-      "latest_runtime_proof_date": null,
+      "latest_runtime_proof_date": "2026-09-28T13:03:17.998213Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-28",
-      "receipt_completeness": "NO_PROOF",
+      "receipt_completeness": "COMPLETE",
       "recovery_lifecycle": "HEALTHY",
-      "scheduled_health_available": false,
+      "scheduled_health_available": true,
       "stale_observability": false
     },
     "ice": {
@@ -133,10 +188,10 @@
       "stale_observability": true
     }
   },
-  "exported_at": "2026-09-28T12:54:32.320024Z",
+  "exported_at": "2026-09-28T13:15:14.734299Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [
     "ice"
   ],
-  "system_status": "MISSED"
+  "system_status": "FAILED"
 }

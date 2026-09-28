@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260928T134419-0700-r11",
+  "scheduled_for": "2026-09-28T13:44:19-07:00",
+  "started_at": "2026-09-28T13:44:19-07:00",
+  "completed_at": "2026-09-28T13:45:22-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T12:44:19-07:00",
+    "end": "2026-09-28T13:44:19-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "CMS Public Notices was checked first via a targeted CMS-domain query, but the CMS Public Notices page itself was not retrievable in this run, leaving the official-notice leg partially degraded. Exactly 12 additional targeted searches were then completed across hospital/ED/maternity, behavioral health, dialysis, oncology, primary care, rural/emergency service loss, ambulance/air-medical, CMS CLIA risk, restoration/reopening, and U.S. territories. No new qualifying U.S. or territory healthcare-access change was identified in the bounded hourly window. A Maine maternity-access feature published during the window described a Lincoln Hospital labor-and-delivery closure effective 2026-12-18 that had already been announced and debated previously, so it was excluded as not a new development. A Brattleboro birthing-center story described a prior decision to keep the service open rather than a newly effective restoration in this window. Historical, non-U.S., proposal-only, ownership-only, unsupported, and duplicate items were excluded."
+}

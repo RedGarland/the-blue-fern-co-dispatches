@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260927T204649-0700",
+  "scheduled_for": "2026-09-27T20:44:51-07:00",
+  "started_at": "2026-09-27T20:46:49-07:00",
+  "completed_at": "2026-09-27T20:47:55-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-27T19:46:49-07:00",
+    "end": "2026-09-27T20:47:55-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT and WHO were checked first.",
+    "Exactly 12 supplemental targeted search operations were completed.",
+    "BBC and UN News retrievals were blocked by robots.txt; remaining coverage was usable, so this run is DEGRADED rather than FAILED.",
+    "No qualifying new in-window development was verified.",
+    "WAFA items surfaced before the prior completed watch boundary and were excluded as out of window.",
+    "A same-day Al Jazeera explainer described a policy announced on Friday and did not establish a new in-window development.",
+    "Older, duplicate, recycled, unsupported, and insufficiently timestamped items were excluded."
+  ]
+}

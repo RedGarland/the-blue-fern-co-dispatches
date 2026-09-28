@@ -1,0 +1,29 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260928T004538-0700",
+  "scheduled_for": "2026-09-28T00:44:51-07:00",
+  "started_at": "2026-09-28T00:45:38-07:00",
+  "completed_at": "2026-09-28T00:47:06-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-27T23:45:05-07:00",
+    "end": "2026-09-28T00:47:06-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT was checked first and WHO second.",
+    "Exactly 12 supplemental targeted searches were completed after the OCHA OPT and WHO checks.",
+    "OCHA OPT surfaced no qualifying development newer than its 18 September 2026 humanitarian situation report.",
+    "WHO surfaced no newer qualifying in-window Gaza health-system development.",
+    "Supplemental searches covered UNRWA, WFP, UNICEF, ICRC, MSF, UN News, Reuters, AP, Al Jazeera, The Guardian, WAFA, and Israeli government sources.",
+    "UN News retrieval was blocked by robots.txt; useful coverage remained from other sources, so the run is DEGRADED rather than FAILED.",
+    "An Anadolu report dated 27 September and marked updated 28 September described four Palestinians killed and at least nine injured in Gaza, but the page exposed no item-level publication/update time sufficient to establish that the development became new after the prior completed heartbeat; it was excluded conservatively.",
+    "A Saudi Press Agency item dated 28 September reported 500,000 liters of water pumped in Gaza on Sunday, but the page exposed no publication time sufficient to establish that the reporting became new after the prior completed heartbeat in America/Los_Angeles; it was excluded conservatively.",
+    "No new qualifying development was verified within the bounded window from the prior completed heartbeat through this run.",
+    "Older, duplicate, recycled, unsupported, opinion-only, and insufficiently timestamped items were excluded."
+  ]
+}

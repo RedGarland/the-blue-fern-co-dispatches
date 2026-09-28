@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260928T094243-0700-20943aeb77",
+  "scheduled_for": "2026-09-28T09:42:43-07:00",
+  "started_at": "2026-09-28T09:42:43-07:00",
+  "completed_at": "2026-09-28T09:43:51-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T08:42:43-07:00",
+    "end": "2026-09-28T09:42:43-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices was checked first; the newest listed notices were six hospice termination notices dated 2026-09-25, with no newer qualifying CMS access-risk notice identified.",
+    "Exactly twelve additional targeted searches covered hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural/emergency services, ambulance, air-medical, restoration/reopening, U.S. territories, and broad local healthcare-service disruption.",
+    "No new qualifying U.S. or territory healthcare-access development was identified in the bounded hourly window.",
+    "The previously identified Vieques, Puerto Rico restoration was treated as a prior finding and not duplicated.",
+    "Production collection remains authoritative; this run is supplementary only."
+  ]
+}

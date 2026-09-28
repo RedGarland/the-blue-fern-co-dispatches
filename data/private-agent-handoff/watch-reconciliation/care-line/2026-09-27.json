@@ -1,0 +1,37 @@
+{
+  "schema_version": "bluefern.watch_reconciliation.v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-09-27",
+  "run_count": 10,
+  "success_run_count": 10,
+  "degraded_run_count": 0,
+  "failed_run_count": 0,
+  "zero_finding_run_count": 9,
+  "finding_count": 1,
+  "accounted_count": 0,
+  "unreconciled_count": 1,
+  "findings": [
+    {
+      "run_id": "care-line-watch-20260927T144237-0700-0029c37c24",
+      "finding_id": "care-66e7d1f766aba35a",
+      "status": "UNRECONCILED"
+    }
+  ],
+  "missing_hour_slots": [
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "15",
+    "16",
+    "20",
+    "21",
+    "22"
+  ],
+  "material_heartbeat_absence": true
+}

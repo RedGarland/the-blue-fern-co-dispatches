@@ -12,7 +12,7 @@
   },
   "aggregate_status": "SUCCESS",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "633861df5cafac281bbcbebadbefd7246d67ecec",
+  "current_runner_head": "56a871c0d8e10ed013f8fb70f9eaf1ac3f2b6fd8",
   "dispatch": "food-line",
   "effective_task_summaries": [
     {
@@ -88,7 +88,7 @@
     }
   ],
   "incident_reference": null,
-  "last_exported_at": "2026-09-28T03:15:14.452980Z",
+  "last_exported_at": "2026-09-28T03:25:57.782271Z",
   "last_receipt_at": "2026-09-28T03:15:12.073070Z",
   "latest_runtime_proof_date": "2026-09-28T03:15:12.073070Z",
   "next_expected_run": null,

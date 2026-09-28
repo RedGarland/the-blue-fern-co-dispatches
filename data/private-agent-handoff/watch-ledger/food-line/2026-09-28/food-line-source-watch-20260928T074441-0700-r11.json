@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260928T074441-0700-r11",
+  "scheduled_for": "2026-09-28T07:44:41-07:00",
+  "started_at": "2026-09-28T07:44:41-07:00",
+  "completed_at": "2026-09-28T07:45:51-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-28T06:44:41-07:00",
+    "end": "2026-09-28T07:44:41-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 12 bounded targeted web searches covering only/sole/last/full-service grocery-store loss or closure; canceled/suspended emergency food distributions from storm, flood, fire, outage, or facility damage; abrupt pantry/food-bank closure or major access reduction; and official SNAP/WIC/EBT interruptions with immediate access consequences. No new qualifying U.S. signal was identified in the prior-hour window. A fresh Kauai hurricane-recovery update was reviewed and excluded because North Shore Food Pantry distribution was explicitly proceeding as scheduled. Routine program promotion, generic SNAP policy coverage, stale events, non-U.S. results, resource guides, and unrelated closures were excluded."
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260928T084203-0700-r11",
+  "scheduled_for": "2026-09-28T08:42:03-07:00",
+  "started_at": "2026-09-28T08:42:03-07:00",
+  "completed_at": "2026-09-28T08:45:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T07:42:03-07:00",
+    "end": "2026-09-28T08:42:03-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "CMS Public Notices checked first; newest listed notices were six hospice termination notices dated 2026-09-25, with no newer qualifying CMS provider termination, rescission, CLIA limitation/suspension, or similar access-risk notice found. Exactly 12 additional targeted web searches were run across hospital/ED/maternity, behavioral health, dialysis, oncology, primary care, rural/emergency service loss, ambulance/air-medical, restoration/reopening, and U.S. territories. No new qualifying development was identified in the bounded hourly window. Search results included a Minnesota maternity-access feature published 2026-09-28 but did not establish a new closure/suspension/restoration event within the window; non-U.S., proposal-only, historical, unsupported, and duplicate items were excluded."
+}

@@ -1,0 +1,32 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260927T214416-0700-r11",
+  "scheduled_for": "2026-09-27T21:44:16-07:00",
+  "started_at": "2026-09-27T21:44:16-07:00",
+  "completed_at": "2026-09-27T21:45:15.882231-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-27T20:44:16-07:00",
+    "end": "2026-09-27T21:44:16-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches_used": 12,
+    "searches_limit": 12,
+    "scope": [
+      "only/sole/last/full-service grocery store loss, closure, fire, or disaster",
+      "canceled/suspended emergency food distributions due to storm, flood, fire, outage, or facility damage",
+      "abrupt pantry/food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "result": "No new qualifying signal was identified in the bounded prior-hour window.",
+    "notable_exclusions": [
+      "Hawaiʻi Island Food Basket warehouse closures tied to Hurricane Nolo were already in effect before this search window and were not a new prior-hour disruption.",
+      "Kauaʻi and North Carolina storm-recovery items surfaced, but no new qualifying food-access interruption was established within the search window."
+    ]
+  }
+}

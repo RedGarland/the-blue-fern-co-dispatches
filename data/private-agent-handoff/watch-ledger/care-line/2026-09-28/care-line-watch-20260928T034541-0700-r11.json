@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260928T034541-0700-r11",
+  "scheduled_for": "2026-09-28T03:45:22-07:00",
+  "started_at": "2026-09-28T03:45:41-07:00",
+  "completed_at": "2026-09-28T03:46:23-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T02:45:22-07:00",
+    "end": "2026-09-28T03:45:41-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices_checked_first": true,
+    "cms_latest_notice_date": "2026-09-25",
+    "additional_targeted_searches": 12,
+    "result": "No new qualifying U.S. or territory healthcare-access development found in the bounded window. A Minnesota maternity-access article published 2026-09-28 was reviewed and excluded because it summarized prior closures rather than a new concrete access change."
+  }
+}

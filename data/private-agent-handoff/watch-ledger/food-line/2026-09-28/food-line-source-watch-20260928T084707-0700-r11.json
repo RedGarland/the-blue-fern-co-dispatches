@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260928T084707-0700-r11",
+  "scheduled_for": "2026-09-28T08:47:07-07:00",
+  "started_at": "2026-09-28T08:47:07-07:00",
+  "completed_at": "2026-09-28T08:48:23-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-28T07:44:41-07:00",
+    "end": "2026-09-28T08:47:07-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 12 bounded targeted web searches for the four high-value miss classes. No new qualifying U.S. food-access disruption was identified in the search window. Fresh KY3 coverage of the former Save A Lot in Forsyth, Missouri was excluded because the grocery closure predates this window and the story reports a pantry opening/expansion rather than a new access loss. Kauai recovery coverage continued to indicate North Shore Food Pantry distribution was proceeding as scheduled. One potentially relevant Hatteras Island local-news source failed to open with HTTP 403 after search discovery; useful coverage remained from other results, so this run is DEGRADED rather than FAILED. Routine promotions, donation items, generic SNAP policy coverage, stale events, non-U.S. results, and unrelated closures were excluded."
+}

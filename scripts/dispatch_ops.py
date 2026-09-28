@@ -220,9 +220,13 @@ def render_system_text(snapshot: dict[str, Any]) -> str:
             label = dispatch.replace("-", " ").title().replace("Ice", "ICE")
             aggregate = state.get("aggregate_status") or "UNKNOWN"
             lifecycle = state.get("recovery_lifecycle") or "UNKNOWN"
+            assessment = debug.get("operator_assessment") or "UNKNOWN"
             layer = debug.get("primary_layer") or "UNKNOWN"
             task = debug.get("primary_task_key") or "none"
-            lines.append(f"- {label}: {aggregate} / {lifecycle}; layer={layer}; task={task}")
+            lines.append(
+                f"- {label}: {aggregate} / {lifecycle}; assessment={assessment}; "
+                f"layer={layer}; task={task}"
+            )
             for key, text_label in (
                 ("failed_source_count", "failed_sources"),
                 ("external_access_restriction_count", "external_restrictions"),
@@ -1325,6 +1329,7 @@ def render_text(status: DispatchStatus) -> str:
             [
                 "",
                 "Debug summary:",
+                f"- Assessment: {debug_summary.get('operator_assessment') or 'UNKNOWN'}",
                 f"- Primary layer: {debug_summary.get('primary_layer') or 'UNKNOWN'}",
                 f"- Primary task: {debug_summary.get('primary_task_key') or 'none'}",
                 f"- Primary status: {debug_summary.get('primary_task_status') or 'none'}",

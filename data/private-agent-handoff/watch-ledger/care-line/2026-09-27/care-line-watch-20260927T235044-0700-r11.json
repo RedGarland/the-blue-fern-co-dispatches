@@ -1,0 +1,31 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260927T235044-0700-r11",
+  "scheduled_for": "2026-09-27T23:45:22-07:00",
+  "started_at": "2026-09-27T23:50:44-07:00",
+  "completed_at": "2026-09-27T23:52:09-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-27T22:45:22-07:00",
+    "end": "2026-09-27T23:52:09-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices_checked_first": true,
+    "cms_latest_notice_date": "2026-09-25",
+    "cms_result": "No newer qualifying CMS provider termination, rescission, CLIA limitation/suspension, or similar access-risk notice identified.",
+    "additional_targeted_searches": 12,
+    "additional_search_result": "No new qualifying U.S. or territory healthcare-access development identified in the bounded window.",
+    "exclusions_applied": [
+      "proposals without concrete access effect",
+      "ownership/business stories without service change",
+      "opinion",
+      "unsupported social claims",
+      "duplicates"
+    ]
+  }
+}

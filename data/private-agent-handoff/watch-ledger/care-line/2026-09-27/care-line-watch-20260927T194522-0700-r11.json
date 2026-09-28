@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260927T194522-0700-r11",
+  "scheduled_for": "2026-09-27T19:45:22-07:00",
+  "started_at": "2026-09-27T19:44:57-07:00",
+  "completed_at": "2026-09-27T19:45:55-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-27T18:47:54-07:00",
+    "end": "2026-09-27T19:45:55-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first; no qualifying notice newer than the September 25, 2026 hospice termination notices was identified.",
+    "Exactly 12 additional targeted searches covered hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural/emergency service loss, ambulance, air-medical, restoration/reopening, and U.S. territories.",
+    "The September 27 Vieques Health Center restoration surfaced again but was excluded as a duplicate of the finding already recorded earlier on 2026-09-27.",
+    "No new qualifying U.S. or territory healthcare-access development was identified in the bounded window.",
+    "Production collection remains authoritative."
+  ]
+}

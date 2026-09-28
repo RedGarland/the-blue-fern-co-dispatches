@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from bluefern_dispatches.operational_health import build_care_line_operational_receipt, build_operational_receipt
-from scripts.dispatch_ops import DispatchStatus, apply_recovery_plan, build_recovery_plan, build_status, main
+from scripts.dispatch_ops import DispatchStatus, apply_recovery_plan, build_recovery_plan, build_status, build_system_snapshot, main
 
 
 DATE = "2026-09-18"
@@ -24,6 +24,52 @@ def _artifact(root: Path, rel: str) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("{}\n", encoding="utf-8")
     return path
+
+
+def _system_status_export(root: Path) -> None:
+    _write_json(
+        root / "ops/status/system/latest.json",
+        {
+            "schema_version": "bluefern_external_system_status_v1",
+            "exported_at": "2026-09-28T17:35:22Z",
+            "system_status": "STALE_OBSERVABILITY",
+            "dispatches": {
+                "food-line": {
+                    "migration_status": "MIGRATED",
+                    "aggregate_status": "SUCCESS",
+                    "recovery_lifecycle": "HEALTHY",
+                    "debug_summary": {
+                        "aggregate_status": "SUCCESS",
+                        "primary_layer": "NONE",
+                        "primary_task_key": None,
+                        "receipt_completeness": "COMPLETE",
+                    },
+                },
+                "care-line": {
+                    "migration_status": "MIGRATED",
+                    "aggregate_status": "DEGRADED",
+                    "recovery_lifecycle": "HEALTHY",
+                    "debug_summary": {
+                        "aggregate_status": "DEGRADED",
+                        "primary_layer": "EXTERNAL_DEPENDENCY",
+                        "primary_task_key": "care_line_collection",
+                        "failed_source_count": 9,
+                        "external_access_restriction_count": 9,
+                    },
+                },
+                "gaza": {
+                    "migration_status": "MIGRATED",
+                    "aggregate_status": "STALE_OBSERVABILITY",
+                    "recovery_lifecycle": "INCIDENT_OPEN",
+                    "debug_summary": {
+                        "aggregate_status": "STALE_OBSERVABILITY",
+                        "primary_layer": "OBSERVABILITY",
+                        "primary_task_key": "gaza_daily_dispatch",
+                    },
+                },
+            },
+        },
+    )
 
 
 def _gaza_no_update(
@@ -346,6 +392,49 @@ def test_gaza_sep_19_no_update_is_terminal_no_action(tmp_path: Path) -> None:
     assert status.public_state == "VERIFIED"
     assert status.next_action == "NONE"
     assert status.details["latest_real_edition_date"] == "2026-09-18"
+
+
+def test_system_snapshot_reads_dispatch_debug_summaries(tmp_path: Path) -> None:
+    _system_status_export(tmp_path)
+
+    snapshot = build_system_snapshot(root=tmp_path)
+
+    assert snapshot["system_status"] == "STALE_OBSERVABILITY"
+    assert snapshot["dispatches"]["care-line"]["debug_summary"]["primary_layer"] == "EXTERNAL_DEPENDENCY"
+    assert snapshot["dispatches"]["care-line"]["debug_summary"]["failed_source_count"] == 9
+    assert snapshot["evidence"] == ["ops/status/system/latest.json"]
+
+
+def test_system_command_renders_dispatch_debug_summary(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    _system_status_export(tmp_path)
+
+    result = main(["system", "--root", str(tmp_path)])
+    output = capsys.readouterr().out
+
+    assert result == 1
+    assert "System status: STALE_OBSERVABILITY" in output
+    assert "Care Line: DEGRADED / HEALTHY; layer=EXTERNAL_DEPENDENCY; task=care_line_collection" in output
+    assert "failed_sources=9" in output
+    assert "Gaza: STALE_OBSERVABILITY / INCIDENT_OPEN; layer=OBSERVABILITY; task=gaza_daily_dispatch" in output
+
+
+def test_system_command_json_is_deterministic(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    _system_status_export(tmp_path)
+
+    result = main(["system", "--json", "--root", str(tmp_path)])
+    payload = json.loads(capsys.readouterr().out)
+
+    assert result == 1
+    assert payload["schema_version"] == "dispatch_ops_system_status_v1"
+    assert payload["dispatches"]["food-line"]["debug_summary"]["primary_layer"] == "NONE"
+
+
+def test_system_snapshot_missing_artifact_is_unknown(tmp_path: Path) -> None:
+    snapshot = build_system_snapshot(root=tmp_path)
+
+    assert snapshot["system_status"] == "UNKNOWN"
+    assert snapshot["dispatches"] == {}
+    assert snapshot["warnings"]
 
 
 def test_food_line_sep_9_reconstructed_recovered_state(tmp_path: Path) -> None:

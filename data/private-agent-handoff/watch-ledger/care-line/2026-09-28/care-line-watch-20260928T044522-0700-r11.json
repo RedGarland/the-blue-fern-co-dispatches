@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260928T044522-0700-r11",
+  "scheduled_for": "2026-09-28T04:45:22-07:00",
+  "started_at": "2026-09-28T04:44:00-07:00",
+  "completed_at": "2026-09-28T04:45:32-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T03:45:22-07:00",
+    "end": "2026-09-28T04:45:32-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first. No qualifying CMS provider termination, rescission, CLIA limitation/suspension, or similar access-risk notice newer than the September 25, 2026 notices was identified.",
+    "Exactly 12 additional targeted searches were run across hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, ambulance, air-medical, rural emergency services, reopening/restoration, U.S. territories, and temporary emergency-service interruption classes.",
+    "No new qualifying U.S. or territory healthcare-access development was identified in the bounded hourly window.",
+    "Search hits that were outside the United States/territories, proposals without concrete access effect, background/retrospective reporting, or duplicates were excluded. The previously identified Vieques service restoration was treated as a duplicate."
+  ]
+}

@@ -362,6 +362,9 @@ command also surfaces `debug_summary` in its text and JSON output when the
 exported status artifact contains it. Use that command for a quick operator
 view before opening raw status JSON.
 
+Use `scripts/dispatch_ops.py system` for the same first-look view across all
+dispatches in `ops/status/system/latest.json`.
+
 The system artifact marks migrated active dispatches as `MIGRATED`, Cascadia as
 `INTENTIONALLY_INACTIVE`, and unavailable source roots as `NOT_MIGRATED`. Those
 entries are not synthesized failures.

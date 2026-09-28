@@ -138,6 +138,90 @@ class ApplyResult:
         return payload
 
 
+def _system_status_path(root: Path) -> Path:
+    return root / "ops" / "status" / "system" / "latest.json"
+
+
+def build_system_snapshot(*, root: Path = ROOT) -> dict[str, Any]:
+    path = _system_status_path(root.resolve())
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8-sig"))
+    except FileNotFoundError:
+        return {
+            "schema_version": "dispatch_ops_system_status_v1",
+            "system_status": "UNKNOWN",
+            "exported_at": None,
+            "dispatches": {},
+            "evidence": [],
+            "warnings": [f"Missing system status artifact: {path}"],
+        }
+    except (OSError, json.JSONDecodeError) as exc:
+        return {
+            "schema_version": "dispatch_ops_system_status_v1",
+            "system_status": "UNKNOWN",
+            "exported_at": None,
+            "dispatches": {},
+            "evidence": [path.as_posix()],
+            "warnings": [f"Could not read system status artifact: {exc}"],
+        }
+    if not isinstance(payload, dict):
+        return {
+            "schema_version": "dispatch_ops_system_status_v1",
+            "system_status": "UNKNOWN",
+            "exported_at": None,
+            "dispatches": {},
+            "evidence": [path.as_posix()],
+            "warnings": ["System status artifact was not a JSON object."],
+        }
+    dispatches = payload.get("dispatches") if isinstance(payload.get("dispatches"), dict) else {}
+    return {
+        "schema_version": "dispatch_ops_system_status_v1",
+        "system_status": str(payload.get("system_status") or "UNKNOWN"),
+        "exported_at": payload.get("exported_at"),
+        "dispatches": dispatches,
+        "evidence": [path.relative_to(root.resolve()).as_posix()] if path.is_relative_to(root.resolve()) else [path.as_posix()],
+        "warnings": [],
+    }
+
+
+def render_system_text(snapshot: dict[str, Any]) -> str:
+    lines = [
+        "Dispatch System",
+        f"System status: {snapshot.get('system_status') or 'UNKNOWN'}",
+        f"Exported at: {snapshot.get('exported_at') or 'unknown'}",
+    ]
+    dispatches = snapshot.get("dispatches") if isinstance(snapshot.get("dispatches"), dict) else {}
+    if dispatches:
+        lines.extend(["", "Dispatches:"])
+        for dispatch in sorted(dispatches):
+            state = dispatches[dispatch] if isinstance(dispatches[dispatch], dict) else {}
+            debug = state.get("debug_summary") if isinstance(state.get("debug_summary"), dict) else {}
+            label = dispatch.replace("-", " ").title().replace("Ice", "ICE")
+            aggregate = state.get("aggregate_status") or "UNKNOWN"
+            lifecycle = state.get("recovery_lifecycle") or "UNKNOWN"
+            layer = debug.get("primary_layer") or "UNKNOWN"
+            task = debug.get("primary_task_key") or "none"
+            lines.append(f"- {label}: {aggregate} / {lifecycle}; layer={layer}; task={task}")
+            for key, text_label in (
+                ("failed_source_count", "failed_sources"),
+                ("external_access_restriction_count", "external_restrictions"),
+                ("unclassified_source_failure_count", "unclassified_source_failures"),
+                ("unaccounted_event_count", "unaccounted_events"),
+            ):
+                value = debug.get(key)
+                if value is not None:
+                    lines.append(f"  {text_label}={value}")
+    warnings = snapshot.get("warnings") if isinstance(snapshot.get("warnings"), list) else []
+    if warnings:
+        lines.extend(["", "Warnings:"])
+        lines.extend(f"- {warning}" for warning in warnings)
+    evidence = snapshot.get("evidence") if isinstance(snapshot.get("evidence"), list) else []
+    if evidence:
+        lines.extend(["", "Evidence:"])
+        lines.extend(f"- {path}" for path in evidence)
+    return "\n".join(lines)
+
+
 @dataclass(frozen=True)
 class RecoveryPlan:
     dispatch: str
@@ -1308,6 +1392,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     status.add_argument("--date", required=True, help="Date in YYYY-MM-DD format.")
     status.add_argument("--json", action="store_true", help="Emit deterministic JSON.")
     status.add_argument("--root", default=str(ROOT), help=argparse.SUPPRESS)
+    system = sub.add_parser("system", help="Show the exported system status and dispatch debug summaries.")
+    system.add_argument("--json", action="store_true", help="Emit deterministic JSON.")
+    system.add_argument("--root", default=str(ROOT), help=argparse.SUPPRESS)
     recover = sub.add_parser("recover", help="Plan read-only recovery for one dispatch/date.")
     recover.add_argument("dispatch", choices=SUPPORTED_DISPATCHES)
     recover.add_argument("--date", required=True, help="Date in YYYY-MM-DD format.")
@@ -1316,7 +1403,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     recover.add_argument("--confirm", help="Required confirmation token for --apply.")
     recover.add_argument("--root", default=str(ROOT), help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
-    if not DATE_RE.fullmatch(args.date):
+    if getattr(args, "date", None) and not DATE_RE.fullmatch(args.date):
         parser.error("--date must use YYYY-MM-DD")
     return args
 
@@ -1328,6 +1415,13 @@ def build_status(dispatch: str, date: str, *, root: Path = ROOT) -> DispatchStat
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
+    if args.command == "system":
+        snapshot = build_system_snapshot(root=Path(args.root))
+        if args.json:
+            print(json.dumps(snapshot, indent=2, sort_keys=True))
+        else:
+            print(render_system_text(snapshot))
+        return 0 if snapshot.get("system_status") == "SUCCESS" else 1
     if args.command == "recover":
         if args.confirm and not args.apply:
             print("--confirm is only valid with --apply", file=sys.stderr)

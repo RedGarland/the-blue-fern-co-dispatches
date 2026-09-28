@@ -58,8 +58,14 @@ def test_care_registry_is_the_persisted_runtime_source_of_truth() -> None:
     expected = {
         "hhs-news": ("https://www.hhs.gov/press-room/index.html?page=0", "structured_index"),
         "hrsa-news": ("https://www.hrsa.gov/about/news/press-releases?page=1", "structured_index"),
+        "federal-register-hhs": (
+            "https://www.federalregister.gov/api/v1/documents.rss?conditions%5Bagencies%5D%5B%5D=health-and-human-services-department",
+            "rss",
+        ),
         "calmatters-health": ("https://calmatters.org/category/health/", "structured_index"),
         "ct-mirror-health": ("https://ctmirror.org/health/", "structured_index"),
+        "georgia-health-news": ("https://www.georgiahealthnews.com/feed/", "rss"),
+        "colorado-sun-health": ("https://coloradosun.com/category/news/health/feed/", "rss"),
         "ohio-capital-journal-health": ("https://ohiocapitaljournal.com/category/health-care/", "structured_index"),
         "missouri-independent-health": ("https://missouriindependent.com/category/health-care/", "structured_index"),
         "michigan-advance-health": ("https://michiganadvance.com/category/health-care/", "structured_index"),

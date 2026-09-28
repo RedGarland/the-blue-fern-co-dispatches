@@ -313,6 +313,7 @@ contains a small, dispatch-neutral diagnosis pointer:
 
 - `aggregate_status`
 - `recovery_lifecycle`
+- `operator_assessment`
 - `primary_layer`
 - `primary_task_key`
 - `primary_task_status`
@@ -333,12 +334,21 @@ details remain in task summaries and receipt artifacts; the summary exists to
 prevent each incident from requiring a fresh code walk before the right receipt
 is known.
 
+`operator_assessment` is a human-facing triage label layered on top of the
+aggregate status. It does not replace `aggregate_status` for automation. It
+distinguishes healthy degraded states such as
+`HEALTHY_WITH_SOURCE_EXCLUSIONS` and `HEALTHY_WITH_EXTERNAL_RESTRICTIONS`
+from `FAILED_ACTION_REQUIRED` or `DEGRADED_ACTION_RECOMMENDED`, so source
+imperfections do not look like fresh infrastructure incidents.
+
 The Scheduled Dispatch Watch should consume `food-line/latest.json` as follows:
 
 1. Read `aggregate_status` for dispatch health. `FAILED` is a real task failure;
    `STALE_OBSERVABILITY` means the status surface cannot establish a current
    result and must not be treated as yesterday's health.
-2. Read `debug_summary` for the first failing layer and task, then read
+2. Read `debug_summary.operator_assessment` to decide whether this is an
+   action-required failure or a healthy degraded state. Then read
+   `debug_summary` for the first failing layer and task, and read
    `task_summaries` to identify failed, upstream-blocked, degraded, or
    safe-no-op tasks. `SAFE_NO_OP` from Daily Publish never masks an upstream
    failure.

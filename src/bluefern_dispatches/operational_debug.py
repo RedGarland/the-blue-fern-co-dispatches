@@ -95,10 +95,38 @@ def _failure_layer(*, aggregate_status: str, primary: dict[str, Any] | None, sou
     return "TASK"
 
 
+def _operator_assessment(
+    *,
+    aggregate_status: str,
+    recovery_lifecycle: str | None,
+    primary: dict[str, Any] | None,
+    source_summary: dict[str, Any],
+    stale_observability: bool,
+) -> str:
+    if stale_observability or aggregate_status == "STALE_OBSERVABILITY":
+        return "ACTION_REQUIRED_OBSERVABILITY"
+    if aggregate_status in {"FAILED", "MISSED", "UNKNOWN"}:
+        return "FAILED_ACTION_REQUIRED"
+    if aggregate_status in {"SUCCESS", "SAFE_NO_OP"}:
+        return "HEALTHY"
+    if aggregate_status != "DEGRADED":
+        return "ACTION_REQUIRED"
+
+    if recovery_lifecycle == "HEALTHY":
+        if source_summary.get("all_current_failures_external") is True:
+            return "HEALTHY_WITH_EXTERNAL_RESTRICTIONS"
+        if primary and primary.get("task_key") == "food_line_source_watch":
+            classification = (_text(primary.get("classification")) or "").lower()
+            if classification in {"completed_with_exclusions", "success_with_exclusions"}:
+                return "HEALTHY_WITH_SOURCE_EXCLUSIONS"
+    return "DEGRADED_ACTION_RECOMMENDED"
+
+
 def build_debug_summary(status: dict[str, Any]) -> dict[str, Any]:
     """Build a small, dispatch-neutral explanation of current operational state."""
 
     aggregate_status = _text(status.get("aggregate_status")) or "UNKNOWN"
+    recovery_lifecycle = _text(status.get("recovery_lifecycle"))
     tasks_value = status.get("effective_task_summaries")
     if not isinstance(tasks_value, list):
         tasks_value = status.get("task_summaries")
@@ -117,9 +145,17 @@ def build_debug_summary(status: dict[str, Any]) -> dict[str, Any]:
     if aggregate_status == "FAILED" and primary is None and unaccounted_count:
         primary_layer = "HANDOFF"
     publication_attempted = status.get("publication_attempted")
+    stale_observability = bool(status.get("stale_observability"))
     return {
         "aggregate_status": aggregate_status,
-        "recovery_lifecycle": _text(status.get("recovery_lifecycle")),
+        "recovery_lifecycle": recovery_lifecycle,
+        "operator_assessment": _operator_assessment(
+            aggregate_status=aggregate_status,
+            recovery_lifecycle=recovery_lifecycle,
+            primary=primary,
+            source_summary=source_summary,
+            stale_observability=stale_observability,
+        ),
         "primary_layer": primary_layer,
         "primary_task_key": primary.get("task_key") if primary else None,
         "primary_task_status": primary.get("status") if primary else None,
@@ -136,6 +172,6 @@ def build_debug_summary(status: dict[str, Any]) -> dict[str, Any]:
         else None,
         "publication_attempted": publication_attempted if isinstance(publication_attempted, bool) else None,
         "publication_status": _text(status.get("publication_status")),
-        "stale_observability": bool(status.get("stale_observability")),
+        "stale_observability": stale_observability,
         "receipt_completeness": _text(status.get("receipt_completeness")),
     }

@@ -524,6 +524,7 @@ def test_failed_day_is_complete_and_publish_noop_does_not_mask_failure(tmp_path:
     assert status["receipt_completeness"] == "COMPLETE"
     assert status["recovery_lifecycle"] == "RECOVERY_PENDING_RUNTIME_PROOF"
     assert status["publication_attempted"] is False
+    assert status["debug_summary"]["operator_assessment"] == "FAILED_ACTION_REQUIRED"
     assert status["debug_summary"]["primary_layer"] == "SOURCE"
     assert status["debug_summary"]["primary_task_key"] == "food_line_source_watch"
     assert status["debug_summary"]["primary_task_status"] == "FAILED"
@@ -550,6 +551,7 @@ def test_food_line_recovered_source_watch_sequence_uses_effective_timestamp_stat
 
     assert status["receipt_completeness"] == "COMPLETE"
     assert status["aggregate_status"] == "DEGRADED"
+    assert status["debug_summary"]["operator_assessment"] == "HEALTHY_WITH_SOURCE_EXCLUSIONS"
     assert len(status["task_summaries"]) == 5
     assert any(row["classification"] == "source_watch_not_initialized" for row in status["task_summaries"])
     effective = {row["task_key"]: row for row in status["effective_task_summaries"]}
@@ -1236,6 +1238,7 @@ def test_care_external_access_restriction_proof_clears_stale_publication_failure
     assert status["aggregate_status"] == "DEGRADED"
     assert status["recovery_lifecycle"] == "HEALTHY"
     assert status["source_failure_summary"]["all_current_failures_external"] is True
+    assert status["debug_summary"]["operator_assessment"] == "HEALTHY_WITH_EXTERNAL_RESTRICTIONS"
     assert status["debug_summary"]["primary_layer"] == "EXTERNAL_DEPENDENCY"
     assert status["debug_summary"]["failed_source_count"] == 2
     assert status["debug_summary"]["all_current_failures_external"] is True
@@ -1333,6 +1336,7 @@ def test_care_mixed_external_and_unclassified_source_failure_reopens_incident(tm
 
     assert status["aggregate_status"] == "FAILED"
     assert status["recovery_lifecycle"] == "INCIDENT_OPEN"
+    assert status["debug_summary"]["operator_assessment"] == "FAILED_ACTION_REQUIRED"
     assert status["source_failure_summary"]["external_access_restriction_count"] == 1
     assert status["source_failure_summary"]["unclassified_source_failure_count"] == 1
     assert status["debug_summary"]["primary_layer"] == "SOURCE_CLASSIFICATION"

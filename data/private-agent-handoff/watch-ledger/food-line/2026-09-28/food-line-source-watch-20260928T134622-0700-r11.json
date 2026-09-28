@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260928T134622-0700-r11",
+  "scheduled_for": "2026-09-28T13:46:22-07:00",
+  "started_at": "2026-09-28T13:46:22-07:00",
+  "completed_at": "2026-09-28T13:48:01-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T12:46:22-07:00",
+    "end": "2026-09-28T13:48:01-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Completed exactly 12 targeted searches across sole/only/last/full-service grocery loss, emergency food-distribution cancellation or suspension, pantry/food-bank closure or major access reduction, and SNAP/WIC interruption. No qualifying new U.S. food-access disruption was identified in the bounded hourly window. A fresh Kauaʻi hurricane-recovery update listed emergency food distributions as proceeding and SNAP support/replacement-benefit assistance as available, so it was excluded. An Oregon SNAP notice concerned income-verification requests and possible future benefit loss, not a new immediate service interruption, so it was excluded. A Big Island food-bank warehouse closure was published hours before this window and was not treated as a new hourly signal. No search leg materially failed."
+}

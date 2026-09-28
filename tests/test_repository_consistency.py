@@ -81,6 +81,31 @@ def test_care_registry_is_the_persisted_runtime_source_of_truth() -> None:
     assert '"gu-dphss"' not in source_code
 
 
+def test_care_registry_classifies_runtime_external_access_restrictions() -> None:
+    registry_path = ROOT / "data" / "dispatches" / "care-line" / "source_registry.json"
+    raw = json.loads(registry_path.read_text(encoding="utf-8"))
+    raw_by_id = {row["source_id"]: row for row in raw["sources"]}
+
+    restricted_sources = {
+        "hhs-news",
+        "hrsa-news",
+        "fierce-healthcare",
+        "virginia-mercury-health",
+        "ohio-capital-journal-health",
+        "missouri-independent-health",
+        "florida-phoenix-health",
+        "michigan-advance-health",
+        "mayo-clinic-news",
+    }
+
+    for source_id in restricted_sources:
+        row = raw_by_id[source_id]
+        assert row["enabled"] is True
+        assert row["operational_failure_classification"] == "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION"
+        assert row["coverage_reduced"] is True
+        assert row["remediation_available"] is False
+
+
 def test_operational_status_branch_has_dispatch_neutral_name_everywhere() -> None:
     config = json.loads((ROOT / "ops" / "operator" / "config.json").read_text(encoding="utf-8"))
     py = (ROOT / "scripts" / "run_operational_status_export.py").read_text(encoding="utf-8")

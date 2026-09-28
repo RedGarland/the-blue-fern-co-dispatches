@@ -346,7 +346,6 @@ def _current_intake_report(root: Path, edition_date: str, inbox: Path) -> dict[s
     json_path = markdown_path = None
     if proposed.get("selected_item_count") is not None:
         json_path, markdown_path, proposed = write_proposed_edition(root, queue)
-    inbox_count = len([path for path in inbox.rglob("*") if path.is_file()]) if inbox.exists() else 0
     queue_item_count = len(queue.get("items") or [])
     source_inputs = queue.get("source_inputs") if isinstance(queue.get("source_inputs"), list) else []
     approved_count = int(proposed.get("approved_item_count") or 0)
@@ -358,7 +357,7 @@ def _current_intake_report(root: Path, edition_date: str, inbox: Path) -> dict[s
         "created_at": _utc_now(),
         "edition_date": edition_date,
         "inbox": str(inbox),
-        "discovered_file_count": inbox_count or queue_item_count,
+        "discovered_file_count": len(source_inputs),
         "accepted_file_count": queue_item_count,
         "import_count": queue_item_count,
         "dry_run_count": 0,

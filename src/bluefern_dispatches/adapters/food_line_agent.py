@@ -67,7 +67,16 @@ def _normalize_food_line_geography(finding: FoodLineAgentFinding) -> tuple[str, 
 
 def adapt_food_line_agent_output(payload: Any, *, agent_name: str, agent_run_id: str, discovered_at: str | None = None) -> list[FoodLineAgentFinding]:
     envelope = payload if isinstance(payload, dict) and "findings" in payload else {}
-    rows = payload if isinstance(payload, list) else (envelope.get("findings") or payload.get("items") or payload.get("results") or payload.get("records") if isinstance(payload, dict) else None)
+    if isinstance(payload, list):
+        rows = payload
+    elif isinstance(payload, dict):
+        rows = None
+        for key in ("findings", "items", "results", "records"):
+            if key in payload:
+                rows = payload.get(key)
+                break
+    else:
+        rows = None
     if not isinstance(rows, list) or not all(isinstance(row, dict) for row in rows):
         raise ValueError("agent output must be a list or an object containing findings/items/results/records")
     stamp = discovered_at or envelope.get("completed_at") or datetime.now(timezone.utc).isoformat()

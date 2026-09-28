@@ -164,48 +164,31 @@
         "state": "HANDOFF_RECEIVED_SUCCESS",
         "unaccounted_count": 0
       },
-      "aggregate_status": "FAILED",
+      "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "696c98d2ece3c6a06286f6b5a95ede8483533289",
       "debug_summary": {
-        "aggregate_status": "FAILED",
+        "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
-        "attention_task_count": 2,
-        "attention_tasks": [
-          {
-            "artifact_id": "20260928T175343Z-status-resume.json",
-            "classification": "status_resume_failed",
-            "exit_code": 10,
-            "failure_stage": "status_resume",
-            "status": "FAILED",
-            "task_key": "food_line_source_watch_resume"
-          },
-          {
-            "artifact_id": "20260928T175337Z-source-watch.json",
-            "classification": "completed_with_exclusions",
-            "exit_code": 0,
-            "failure_stage": "source_watch",
-            "status": "DEGRADED",
-            "task_key": "food_line_source_watch"
-          }
-        ],
+        "attention_task_count": 0,
+        "attention_tasks": [],
         "external_access_restriction_count": null,
         "failed_source_count": null,
-        "primary_classification": "status_resume_failed",
-        "primary_failure_stage": "status_resume",
-        "primary_layer": "TASK",
-        "primary_task_key": "food_line_source_watch_resume",
-        "primary_task_status": "FAILED",
+        "primary_classification": null,
+        "primary_failure_stage": null,
+        "primary_layer": "NONE",
+        "primary_task_key": null,
+        "primary_task_status": null,
         "publication_attempted": false,
         "publication_status": "skipped_not_release_ready",
         "receipt_completeness": "COMPLETE",
-        "recovery_lifecycle": "INCIDENT_OPEN",
+        "recovery_lifecycle": "HEALTHY",
         "stale_observability": false,
         "unaccounted_event_count": null,
         "unclassified_source_failure_count": null
       },
       "migration_status": "MIGRATED",
-      "recovery_lifecycle": "INCIDENT_OPEN"
+      "recovery_lifecycle": "HEALTHY"
     },
     "gaza": {
       "agent_handoff": {
@@ -294,11 +277,11 @@
       "stale_observability": true
     }
   },
-  "exported_at": "2026-09-28T18:15:07.643634Z",
+  "exported_at": "2026-09-28T18:24:42.133807Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [
     "gaza",
     "ice"
   ],
-  "system_status": "FAILED"
+  "system_status": "STALE_OBSERVABILITY"
 }

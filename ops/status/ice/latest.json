@@ -12,9 +12,29 @@
   },
   "aggregate_status": "STALE_OBSERVABILITY",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "952463cf5fe5a17fc34132a0a75f50752c1f9db6",
+  "current_runner_head": "a2595cd665a54e54a158c944e17ea4069903c2c7",
+  "debug_summary": {
+    "aggregate_status": "STALE_OBSERVABILITY",
+    "all_current_failures_external": null,
+    "attention_task_count": 0,
+    "attention_tasks": [],
+    "external_access_restriction_count": null,
+    "failed_source_count": null,
+    "primary_classification": null,
+    "primary_failure_stage": null,
+    "primary_layer": "OBSERVABILITY",
+    "primary_task_key": null,
+    "primary_task_status": null,
+    "publication_attempted": false,
+    "publication_status": "not_authorized_monitor_only",
+    "receipt_completeness": "COMPLETE",
+    "recovery_lifecycle": "INCIDENT_OPEN",
+    "stale_observability": true,
+    "unaccounted_event_count": 0,
+    "unclassified_source_failure_count": null
+  },
   "dispatch": "ice",
-  "last_exported_at": "2026-09-28T15:06:40.734728Z",
+  "last_exported_at": "2026-09-28T17:33:58.325914Z",
   "last_receipt_at": "2026-09-28T04:16:25.407356Z",
   "latest_runtime_proof_date": "2026-09-28T04:15:03Z",
   "migration_status": "MIGRATED",
@@ -58,5 +78,6 @@
       "status": "SUCCESS",
       "task_key": "ice_monitor"
     }
-  ]
+  ],
+  "unaccounted_event_count": 0
 }

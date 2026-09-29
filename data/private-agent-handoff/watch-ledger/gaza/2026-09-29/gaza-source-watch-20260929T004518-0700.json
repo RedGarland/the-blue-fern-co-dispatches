@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260929T004518-0700",
+  "scheduled_for": "2026-09-29T00:44:51-07:00",
+  "started_at": "2026-09-29T00:45:18-07:00",
+  "completed_at": "2026-09-29T00:46:27-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T23:47:36-07:00",
+    "end": "2026-09-29T00:46:27-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "prior_completed_hourly_check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "checked first; no new qualifying development verified in-window",
+    "who": "checked second; no new qualifying in-window Gaza health-system development surfaced",
+    "additional_targeted_searches": 12,
+    "qualifying_developments": 0,
+    "source_failures": 1,
+    "source_failure_detail": ["BBC targeted search was blocked by robots.txt"],
+    "excluded_items": "older, recycled, duplicate, unsupported, irrelevant, or insufficiently time-bounded items were excluded",
+    "authority": "supplementary_only; production remains authoritative"
+  }
+}

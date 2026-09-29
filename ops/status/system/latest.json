@@ -121,7 +121,7 @@
         "primary_layer": "EDITORIAL_HANDOFF",
         "primary_task_key": null,
         "primary_task_status": null,
-        "private_review_max_age_hours": 371,
+        "private_review_max_age_hours": 372,
         "private_review_oldest_pending_date": "2026-09-14",
         "private_review_pending_date_count": 14,
         "private_review_pending_item_count": 56,
@@ -137,91 +137,91 @@
       "private_review_backlog": {
         "dates": [
           {
-            "age_hours": 371,
+            "age_hours": 372,
             "date": "2026-09-14",
             "pending_item_count": 2,
             "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-14.json"
           },
           {
-            "age_hours": 347,
+            "age_hours": 348,
             "date": "2026-09-15",
             "pending_item_count": 6,
             "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-15.json"
           },
           {
-            "age_hours": 323,
+            "age_hours": 324,
             "date": "2026-09-16",
             "pending_item_count": 1,
             "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-16.json"
           },
           {
-            "age_hours": 275,
+            "age_hours": 276,
             "date": "2026-09-18",
             "pending_item_count": 4,
             "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-18.json"
           },
           {
-            "age_hours": 251,
+            "age_hours": 252,
             "date": "2026-09-19",
             "pending_item_count": 2,
             "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-19.json"
           },
           {
-            "age_hours": 227,
+            "age_hours": 228,
             "date": "2026-09-20",
             "pending_item_count": 2,
             "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-20.json"
           },
           {
-            "age_hours": 203,
+            "age_hours": 204,
             "date": "2026-09-21",
             "pending_item_count": 3,
             "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-21.json"
           },
           {
-            "age_hours": 179,
+            "age_hours": 180,
             "date": "2026-09-22",
             "pending_item_count": 3,
             "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-22.json"
           },
           {
-            "age_hours": 155,
+            "age_hours": 156,
             "date": "2026-09-23",
             "pending_item_count": 3,
             "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-23.json"
           },
           {
-            "age_hours": 107,
+            "age_hours": 108,
             "date": "2026-09-25",
             "pending_item_count": 2,
             "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-25.json"
           },
           {
-            "age_hours": 83,
+            "age_hours": 84,
             "date": "2026-09-26",
             "pending_item_count": 2,
             "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-26.json"
           },
           {
-            "age_hours": 59,
+            "age_hours": 60,
             "date": "2026-09-27",
             "pending_item_count": 15,
             "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-27.json"
           },
           {
-            "age_hours": 35,
+            "age_hours": 36,
             "date": "2026-09-28",
             "pending_item_count": 9,
             "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-28.json"
           },
           {
-            "age_hours": 11,
+            "age_hours": 12,
             "date": "2026-09-29",
             "pending_item_count": 2,
             "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-29.json"
           }
         ],
-        "max_age_hours": 371,
+        "max_age_hours": 372,
         "oldest_pending_date": "2026-09-14",
         "pending_date_count": 14,
         "pending_item_count": 56
@@ -325,7 +325,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-09-29T11:54:45.073289Z",
+  "exported_at": "2026-09-29T12:15:07.368468Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "UNKNOWN"

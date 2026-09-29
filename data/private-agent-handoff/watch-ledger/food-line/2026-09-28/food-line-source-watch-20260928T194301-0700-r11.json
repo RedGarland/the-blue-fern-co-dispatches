@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260928T194301-0700-r11",
+  "scheduled_for": "2026-09-28T19:45:54-07:00",
+  "started_at": "2026-09-28T19:43:01-07:00",
+  "completed_at": "2026-09-28T19:43:52-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T18:43:01-07:00",
+    "end": "2026-09-28T19:43:01-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 12 targeted web searches across the four audited miss classes. No new qualifying U.S. food-access disruption was identified in the bounded prior-hour window. Fresh search results included ongoing Kauaʻi emergency-food distributions that were proceeding as scheduled; an El Paso food-bank closure and Hawaiʻi Island food-bank warehouse closures were already established before this window. Older, non-U.S., routine-program, donation/promotion, opinion, generic food-cost, and duplicate results were excluded."
+}

@@ -309,11 +309,64 @@ content, editorial notes, private queue data, credentials, environment
 variables, or local filesystem paths.
 
 Food Line status also exports a sanitized `private_review_backlog` summary from
-`data/dispatches/food-line/review/proposed-editions/*.json`. It reports only
-pending date counts, pending item counts, oldest pending date, max age in hours,
-and proposal artifact paths. A proposal date is actionable only when it has
-pending private items, lacks a matching release-readiness approval, and is not
-already published or dispositioned.
+`data/dispatches/food-line/review/proposed-editions/*.json`. It reports
+pending date counts, alertable unresolved item counts, dispositioned item
+counts, count-only gaps, oldest pending date, max age in hours, and proposal
+artifact paths. A proposal date is actionable only when it has pending private
+items, lacks a matching release-readiness approval, and is not already published
+or dispositioned.
+
+Food Line may also carry additive, non-destructive item-level disposition
+sidecars under:
+
+`data/dispatches/food-line/review/private-review-dispositions/*.json`
+
+These sidecars do not rewrite proposed-edition evidence or historical receipts.
+They are consumed only to subtract specifically identified private-review items
+from the actionable backlog after an editorial/publication disposition has been
+recorded. Entries are matched by `item_id` first and `source_url` second, scoped
+to the proposal `date`. Missing/count-only proposal gaps are never cleared by a
+sidecar unless a future source change provides item evidence for them.
+
+Recommended sidecar schema:
+
+```json
+{
+  "schema_version": "food_line_private_review_dispositions_v1",
+  "disposition_id": "food-line-recovery-brief-sept14-28-2026",
+  "created_at": "2026-09-29T00:00:00Z",
+  "created_by": "operator-or-editor-id",
+  "recovery_manifest_path": "output/site/food-line/recovery/.../publication_manifest.json",
+  "triage_packet_path": "recovery-review-packets/...json",
+  "items": [
+    {
+      "date": "2026-09-28",
+      "item_id": "optional-stable-item-id",
+      "source_url": "https://publisher.example/story",
+      "disposition": "published_in_recovery_brief",
+      "reason": "included in the approved recovery brief",
+      "evidence_paths": ["data/dispatches/food-line/review/proposed-editions/2026-09-28.json"],
+      "public_url": "https://dispatches.thebluefernco.com/food-line/recovery/..."
+    }
+  ]
+}
+```
+
+Supported dispositions are:
+
+- `published_in_recovery_brief`
+- `rejected_or_weak`
+- `duplicate_or_stale`
+- `needs_source_check`
+- `hold`
+- `unresolved`
+
+Only `published_in_recovery_brief`, `rejected_or_weak`, and
+`duplicate_or_stale` subtract from the actionable backlog. `needs_source_check`,
+`hold`, `unresolved`, malformed entries, unknown dispositions, and unmatched
+entries fail safe: they do not clear the alert. Exported backlog diagnostics
+include sanitized `disposition_sources[]` rows plus malformed, unknown, and
+duplicate entry counts so a bad sidecar cannot silently turn a backlog green.
 
 `debug_summary` is the first field to inspect when a line is not healthy. It
 contains a small, dispatch-neutral diagnosis pointer:

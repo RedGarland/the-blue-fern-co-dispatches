@@ -115,6 +115,13 @@ def _write_food_release_readiness(source: Path, proposal_date: str, payload: dic
     )
 
 
+def _write_food_private_review_disposition(source: Path, name: str, payload: dict) -> None:
+    _write_json(
+        source / "data" / "dispatches" / "food-line" / "review" / "private-review-dispositions" / name,
+        payload,
+    )
+
+
 def _write_food_sep23_recovery_sequence(
     tmp_path: Path,
     *,
@@ -594,27 +601,45 @@ def test_food_line_private_review_backlog_surfaces_pending_proposals(tmp_path: P
     assert status["private_review_backlog"] == {
         "pending_date_count": 2,
         "pending_item_count": 4,
+        "dispositioned_item_count": 0,
+        "unresolved_item_count": 4,
+        "count_only_gap_count": 2,
         "oldest_pending_date": "2026-09-09",
         "max_age_hours": 40,
         "dates": [
             {
                 "date": "2026-09-09",
                 "pending_item_count": 2,
+                "unresolved_item_count": 2,
+                "dispositioned_item_count": 0,
+                "count_only_gap_count": 2,
                 "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-09.json",
                 "age_hours": 40,
             },
             {
                 "date": "2026-09-10",
                 "pending_item_count": 2,
+                "unresolved_item_count": 2,
+                "dispositioned_item_count": 0,
+                "count_only_gap_count": 0,
                 "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-10.json",
                 "age_hours": 16,
             },
         ],
+        "disposition_sources": [],
+        "disposition_diagnostics": {
+            "malformed_entry_count": 0,
+            "unknown_disposition_count": 0,
+            "duplicate_entry_count": 0,
+        },
     }
     assert status["debug_summary"]["operator_assessment"] == "ACTION_REQUIRED_PENDING_REVIEW"
     assert status["debug_summary"]["primary_layer"] == "EDITORIAL_HANDOFF"
     assert status["debug_summary"]["private_review_pending_date_count"] == 2
     assert status["debug_summary"]["private_review_pending_item_count"] == 4
+    assert status["debug_summary"]["private_review_dispositioned_item_count"] == 0
+    assert status["debug_summary"]["private_review_unresolved_item_count"] == 4
+    assert status["debug_summary"]["private_review_count_only_gap_count"] == 2
     assert status["debug_summary"]["private_review_oldest_pending_date"] == "2026-09-09"
 
     system = build_system_status(status, source_root=source, exported_at=EVALUATED)
@@ -623,6 +648,249 @@ def test_food_line_private_review_backlog_surfaces_pending_proposals(tmp_path: P
         system["dispatches"]["food-line"]["debug_summary"]["operator_assessment"]
         == "ACTION_REQUIRED_PENDING_REVIEW"
     )
+
+
+def test_food_line_private_review_backlog_subtracts_published_sidecar_by_item_id(tmp_path: Path) -> None:
+    statuses = {key: (action, "completed", 0) for key, (action, _, _) in TASKS.items()}
+    source = _write_day(tmp_path, statuses)
+    _write_food_proposal(
+        source,
+        "2026-09-10",
+        {
+            "items": [
+                {
+                    "item_id": "food-1",
+                    "headline": "Recovered school meals pressure",
+                    "source_url": "https://example.test/school-meals",
+                    "review_status": "pending_editorial_review",
+                }
+            ],
+            "published": False,
+        },
+    )
+    _write_food_private_review_disposition(
+        source,
+        "recovery-brief.json",
+        {
+            "schema_version": "food_line_private_review_dispositions_v1",
+            "disposition_id": "food-line-recovery-brief-sept14-28-2026",
+            "created_at": EVALUATED,
+            "created_by": "test",
+            "items": [
+                {
+                    "date": "2026-09-10",
+                    "item_id": "food-1",
+                    "source_url": "https://example.test/school-meals",
+                    "disposition": "published_in_recovery_brief",
+                    "public_url": "https://dispatches.thebluefernco.com/food-line/recovery/test/",
+                }
+            ],
+        },
+    )
+
+    status = build_food_line_status(source_root=source, date=DATE, evaluated_at=EVALUATED, exported_at=EVALUATED)
+
+    assert status["private_review_backlog"]["pending_item_count"] == 0
+    assert status["private_review_backlog"]["dispositioned_item_count"] == 1
+    assert status["private_review_backlog"]["unresolved_item_count"] == 0
+    assert status["private_review_backlog"]["count_only_gap_count"] == 0
+    assert status["private_review_backlog"]["dates"] == []
+    assert status["private_review_backlog"]["disposition_sources"] == [
+        {
+            "disposition_artifact": "data/dispatches/food-line/review/private-review-dispositions/recovery-brief.json",
+            "entry_count": 1,
+            "subtracting_entry_count": 1,
+            "applied_item_count": 1,
+            "ignored_entry_count": 0,
+            "malformed_entry_count": 0,
+            "unknown_disposition_count": 0,
+        }
+    ]
+    assert status["debug_summary"]["operator_assessment"] == "HEALTHY"
+
+
+def test_food_line_private_review_backlog_subtracts_rejected_sidecar_by_source_url(tmp_path: Path) -> None:
+    statuses = {key: (action, "completed", 0) for key, (action, _, _) in TASKS.items()}
+    source = _write_day(tmp_path, statuses)
+    _write_food_proposal(
+        source,
+        "2026-09-10",
+        {
+            "items": [
+                {
+                    "headline": "Weak pantry fundraiser",
+                    "source_url": "https://example.test/fundraiser",
+                    "review_status": "pending_editorial_review",
+                }
+            ],
+            "published": False,
+        },
+    )
+    _write_food_private_review_disposition(
+        source,
+        "2026-09-10.json",
+        {
+            "schema_version": "food_line_private_review_dispositions_v1",
+            "items": [
+                {
+                    "source_url": "https://example.test/fundraiser",
+                    "disposition": "rejected_or_weak",
+                    "reason": "resource-only fundraiser, not a current pressure signal",
+                }
+            ],
+        },
+    )
+
+    status = build_food_line_status(source_root=source, date=DATE, evaluated_at=EVALUATED, exported_at=EVALUATED)
+
+    assert status["private_review_backlog"]["pending_item_count"] == 0
+    assert status["private_review_backlog"]["dispositioned_item_count"] == 1
+    assert status["private_review_backlog"]["dates"] == []
+
+
+def test_food_line_private_review_backlog_keeps_needs_source_check_and_missing_disposition_alertable(tmp_path: Path) -> None:
+    statuses = {key: (action, "completed", 0) for key, (action, _, _) in TASKS.items()}
+    source = _write_day(tmp_path, statuses)
+    _write_food_proposal(
+        source,
+        "2026-09-10",
+        {
+            "items": [
+                {
+                    "item_id": "needs-source-check",
+                    "headline": "Needs source check",
+                    "source_url": "https://example.test/check",
+                    "review_status": "pending_editorial_review",
+                },
+                {
+                    "item_id": "missing-disposition",
+                    "headline": "Still pending",
+                    "source_url": "https://example.test/pending",
+                    "review_status": "pending_editorial_review",
+                },
+            ],
+            "published": False,
+        },
+    )
+    _write_food_private_review_disposition(
+        source,
+        "review-triage.json",
+        {
+            "schema_version": "food_line_private_review_dispositions_v1",
+            "items": [
+                {
+                    "date": "2026-09-10",
+                    "item_id": "needs-source-check",
+                    "source_url": "https://example.test/check",
+                    "disposition": "needs_source_check",
+                }
+            ],
+        },
+    )
+
+    status = build_food_line_status(source_root=source, date=DATE, evaluated_at=EVALUATED, exported_at=EVALUATED)
+
+    assert status["private_review_backlog"]["pending_item_count"] == 2
+    assert status["private_review_backlog"]["dispositioned_item_count"] == 0
+    assert status["private_review_backlog"]["unresolved_item_count"] == 2
+    assert status["private_review_backlog"]["dates"][0]["pending_item_count"] == 2
+    assert status["debug_summary"]["operator_assessment"] == "ACTION_REQUIRED_PENDING_REVIEW"
+
+
+def test_food_line_private_review_backlog_keeps_count_only_gap_visible(tmp_path: Path) -> None:
+    statuses = {key: (action, "completed", 0) for key, (action, _, _) in TASKS.items()}
+    source = _write_day(tmp_path, statuses)
+    _write_food_proposal(
+        source,
+        "2026-09-10",
+        {
+            "pending_item_count": 3,
+            "items": [
+                {
+                    "item_id": "recovered-visible",
+                    "headline": "Recovered visible item",
+                    "source_url": "https://example.test/recovered",
+                    "review_status": "pending_editorial_review",
+                }
+            ],
+            "published": False,
+        },
+    )
+    _write_food_private_review_disposition(
+        source,
+        "recovery-brief.json",
+        {
+            "schema_version": "food_line_private_review_dispositions_v1",
+            "items": [
+                {
+                    "date": "2026-09-10",
+                    "item_id": "recovered-visible",
+                    "disposition": "published_in_recovery_brief",
+                }
+            ],
+        },
+    )
+
+    status = build_food_line_status(source_root=source, date=DATE, evaluated_at=EVALUATED, exported_at=EVALUATED)
+
+    assert status["private_review_backlog"]["pending_item_count"] == 2
+    assert status["private_review_backlog"]["dispositioned_item_count"] == 1
+    assert status["private_review_backlog"]["unresolved_item_count"] == 2
+    assert status["private_review_backlog"]["count_only_gap_count"] == 2
+    assert status["private_review_backlog"]["dates"][0]["count_only_gap_count"] == 2
+    assert status["debug_summary"]["operator_assessment"] == "ACTION_REQUIRED_PENDING_REVIEW"
+
+
+def test_food_line_private_review_backlog_ignores_malformed_unknown_sidecar_entries_fail_safe(tmp_path: Path) -> None:
+    statuses = {key: (action, "completed", 0) for key, (action, _, _) in TASKS.items()}
+    source = _write_day(tmp_path, statuses)
+    _write_food_proposal(
+        source,
+        "2026-09-10",
+        {
+            "items": [
+                {
+                    "item_id": "pending-1",
+                    "headline": "Still pending",
+                    "source_url": "https://example.test/still-pending",
+                    "review_status": "pending_editorial_review",
+                }
+            ],
+            "published": False,
+        },
+    )
+    _write_food_private_review_disposition(
+        source,
+        "bad-sidecar.json",
+        {
+            "schema_version": "food_line_private_review_dispositions_v1",
+            "items": [
+                {
+                    "date": "2026-09-10",
+                    "item_id": "pending-1",
+                    "disposition": "invented_disposition",
+                },
+                {
+                    "date": "not-a-date",
+                    "item_id": "pending-1",
+                    "disposition": "published_in_recovery_brief",
+                },
+            ],
+        },
+    )
+
+    status = build_food_line_status(source_root=source, date=DATE, evaluated_at=EVALUATED, exported_at=EVALUATED)
+
+    backlog = status["private_review_backlog"]
+    assert backlog["pending_item_count"] == 1
+    assert backlog["dispositioned_item_count"] == 0
+    assert backlog["disposition_diagnostics"] == {
+        "malformed_entry_count": 1,
+        "unknown_disposition_count": 1,
+        "duplicate_entry_count": 0,
+    }
+    assert backlog["disposition_sources"][0]["applied_item_count"] == 0
+    assert status["debug_summary"]["operator_assessment"] == "ACTION_REQUIRED_PENDING_REVIEW"
 
 
 def test_food_line_private_review_backlog_ignores_approved_and_release_ready_proposals(tmp_path: Path) -> None:
@@ -656,9 +924,18 @@ def test_food_line_private_review_backlog_ignores_approved_and_release_ready_pro
     assert status["private_review_backlog"] == {
         "pending_date_count": 0,
         "pending_item_count": 0,
+        "dispositioned_item_count": 0,
+        "unresolved_item_count": 0,
+        "count_only_gap_count": 0,
         "oldest_pending_date": None,
         "max_age_hours": 0,
         "dates": [],
+        "disposition_sources": [],
+        "disposition_diagnostics": {
+            "malformed_entry_count": 0,
+            "unknown_disposition_count": 0,
+            "duplicate_entry_count": 0,
+        },
     }
     assert status["debug_summary"]["operator_assessment"] == "HEALTHY"
     assert status["debug_summary"]["primary_layer"] == "NONE"

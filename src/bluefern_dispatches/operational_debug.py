@@ -198,6 +198,9 @@ def build_debug_summary(status: dict[str, Any]) -> dict[str, Any]:
         "receipt_completeness": _text(status.get("receipt_completeness")),
         "private_review_pending_date_count": _int(private_review_backlog.get("pending_date_count")),
         "private_review_pending_item_count": _int(private_review_backlog.get("pending_item_count")),
+        "private_review_dispositioned_item_count": _int(private_review_backlog.get("dispositioned_item_count")),
+        "private_review_unresolved_item_count": _int(private_review_backlog.get("unresolved_item_count")),
+        "private_review_count_only_gap_count": _int(private_review_backlog.get("count_only_gap_count")),
         "private_review_oldest_pending_date": _text(private_review_backlog.get("oldest_pending_date")),
         "private_review_max_age_hours": _int(private_review_backlog.get("max_age_hours")),
     }

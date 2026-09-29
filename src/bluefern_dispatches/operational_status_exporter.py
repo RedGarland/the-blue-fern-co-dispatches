@@ -92,6 +92,9 @@ FOOD_LINE_PROPOSED_EDITIONS_RELATIVE = (
 FOOD_LINE_RELEASE_READINESS_RELATIVE = (
     Path("data") / "dispatches" / "food-line" / "review" / "release-readiness"
 )
+FOOD_LINE_PRIVATE_REVIEW_DISPOSITIONS_RELATIVE = (
+    Path("data") / "dispatches" / "food-line" / "review" / "private-review-dispositions"
+)
 FOOD_LINE_RELEASE_READY_STATUSES = {
     "approved_current_review_ready_for_source_generation",
     "approved",
@@ -134,6 +137,19 @@ FOOD_LINE_DISPOSITIONED_ITEM_STATUSES = {
     "needs_source_check",
     "held",
     "hold",
+}
+FOOD_LINE_PRIVATE_REVIEW_DISPOSITIONS = {
+    "published_in_recovery_brief",
+    "rejected_or_weak",
+    "duplicate_or_stale",
+    "needs_source_check",
+    "hold",
+    "unresolved",
+}
+FOOD_LINE_PRIVATE_REVIEW_SUBTRACTING_DISPOSITIONS = {
+    "published_in_recovery_brief",
+    "rejected_or_weak",
+    "duplicate_or_stale",
 }
 
 
@@ -979,6 +995,168 @@ def _food_line_equivalent_pending_item_count(payload: dict[str, Any]) -> int:
     return 0
 
 
+def _food_line_pending_items(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    items = payload.get("items")
+    if not isinstance(items, list):
+        return []
+    return [item for item in items if isinstance(item, dict) and _food_line_item_pending(item)]
+
+
+def _food_line_item_id(value: dict[str, Any]) -> str | None:
+    for key in ("item_id", "id", "source_record_id", "candidate_id", "record_id"):
+        item_id = str(value.get(key) or "").strip()
+        if item_id:
+            return item_id
+    return None
+
+
+def _food_line_item_source_url(value: dict[str, Any]) -> str | None:
+    for key in ("source_url", "url", "canonical_url", "publisher_url", "original_url", "link"):
+        source_url = str(value.get(key) or "").strip()
+        if source_url:
+            return source_url
+    source = value.get("source")
+    if isinstance(source, dict):
+        for key in ("source_url", "url", "canonical_url", "publisher_url"):
+            source_url = str(source.get(key) or "").strip()
+            if source_url:
+                return source_url
+    return None
+
+
+def _food_line_disposition_entries(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    for key in ("items", "dispositions", "entries", "item_dispositions"):
+        value = payload.get(key)
+        if isinstance(value, list):
+            return [item for item in value if isinstance(item, dict)]
+        if isinstance(value, dict):
+            rows: list[dict[str, Any]] = []
+            for item_key, item_value in value.items():
+                if not isinstance(item_value, dict):
+                    continue
+                row = dict(item_value)
+                row.setdefault("item_id", item_key)
+                rows.append(row)
+            return rows
+    if isinstance(payload.get("disposition"), str):
+        return [payload]
+    return []
+
+
+def _food_line_sidecar_default_date(path: Path, payload: dict[str, Any]) -> str | None:
+    for key in ("date", "proposal_date", "edition_date", "observed_date"):
+        value = str(payload.get(key) or "").strip()
+        if DATE_RE.fullmatch(value):
+            return value
+    return path.stem if DATE_RE.fullmatch(path.stem) else None
+
+
+def _food_line_load_private_review_dispositions(source_root: Path) -> dict[str, Any]:
+    disposition_root = source_root / FOOD_LINE_PRIVATE_REVIEW_DISPOSITIONS_RELATIVE
+    result: dict[str, Any] = {
+        "by_item_id": {},
+        "by_source_url": {},
+        "sources": {},
+        "diagnostics": {
+            "malformed_entry_count": 0,
+            "unknown_disposition_count": 0,
+            "duplicate_entry_count": 0,
+        },
+    }
+    if not disposition_root.is_dir():
+        return result
+    for path in sorted(disposition_root.glob("*.json")):
+        relative = (FOOD_LINE_PRIVATE_REVIEW_DISPOSITIONS_RELATIVE / path.name).as_posix()
+        payload = _load_json_object(path)
+        source_summary = {
+            "disposition_artifact": relative,
+            "entry_count": 0,
+            "subtracting_entry_count": 0,
+            "applied_item_count": 0,
+            "ignored_entry_count": 0,
+            "malformed_entry_count": 0,
+            "unknown_disposition_count": 0,
+        }
+        result["sources"][relative] = source_summary
+        if payload is None:
+            source_summary["malformed_entry_count"] += 1
+            result["diagnostics"]["malformed_entry_count"] += 1
+            continue
+        default_date = _food_line_sidecar_default_date(path, payload)
+        for entry in _food_line_disposition_entries(payload):
+            source_summary["entry_count"] += 1
+            disposition = str(entry.get("disposition") or "").strip().lower()
+            if disposition not in FOOD_LINE_PRIVATE_REVIEW_DISPOSITIONS:
+                source_summary["unknown_disposition_count"] += 1
+                result["diagnostics"]["unknown_disposition_count"] += 1
+                continue
+            entry_date = str(entry.get("date") or entry.get("proposal_date") or default_date or "").strip()
+            if not DATE_RE.fullmatch(entry_date):
+                source_summary["malformed_entry_count"] += 1
+                result["diagnostics"]["malformed_entry_count"] += 1
+                continue
+            item_id = _food_line_item_id(entry)
+            source_url = _food_line_item_source_url(entry)
+            if not item_id and not source_url:
+                source_summary["malformed_entry_count"] += 1
+                result["diagnostics"]["malformed_entry_count"] += 1
+                continue
+            normalized = {
+                "disposition": disposition,
+                "source_artifact": relative,
+                "subtracts": disposition in FOOD_LINE_PRIVATE_REVIEW_SUBTRACTING_DISPOSITIONS,
+            }
+            if normalized["subtracts"]:
+                source_summary["subtracting_entry_count"] += 1
+            if item_id:
+                key = (entry_date, item_id)
+                bucket = result["by_item_id"].setdefault(key, [])
+                if bucket:
+                    source_summary["ignored_entry_count"] += 1
+                    result["diagnostics"]["duplicate_entry_count"] += 1
+                bucket.append(normalized)
+            if source_url:
+                key = (entry_date, source_url)
+                bucket = result["by_source_url"].setdefault(key, [])
+                if bucket:
+                    source_summary["ignored_entry_count"] += 1
+                    result["diagnostics"]["duplicate_entry_count"] += 1
+                bucket.append(normalized)
+    return result
+
+
+def _food_line_matching_disposition(
+    item: dict[str, Any],
+    *,
+    proposal_date: str,
+    disposition_index: dict[str, Any],
+) -> dict[str, Any] | None:
+    item_id = _food_line_item_id(item)
+    if item_id:
+        matches = disposition_index["by_item_id"].get((proposal_date, item_id), [])
+        if matches:
+            return _food_line_resolve_disposition_match(matches, disposition_index)
+    source_url = _food_line_item_source_url(item)
+    if source_url:
+        matches = disposition_index["by_source_url"].get((proposal_date, source_url), [])
+        if matches:
+            return _food_line_resolve_disposition_match(matches, disposition_index)
+    return None
+
+
+def _food_line_resolve_disposition_match(
+    matches: list[dict[str, Any]],
+    disposition_index: dict[str, Any],
+) -> dict[str, Any]:
+    non_subtracting = [item for item in matches if not item.get("subtracts")]
+    selected = non_subtracting[0] if non_subtracting else matches[0]
+    if selected.get("subtracts"):
+        source = disposition_index["sources"].get(selected["source_artifact"])
+        if isinstance(source, dict):
+            source["applied_item_count"] += 1
+    return selected
+
+
 def _food_line_private_review_backlog_age_hours(proposal_date: str, evaluated_at: str) -> int | None:
     evaluated = parse_timestamp(evaluated_at)
     if evaluated is None:
@@ -993,7 +1171,10 @@ def _food_line_private_review_backlog_age_hours(proposal_date: str, evaluated_at
 
 def food_line_private_review_backlog(*, source_root: Path, evaluated_at: str) -> dict[str, Any]:
     proposal_root = source_root / FOOD_LINE_PROPOSED_EDITIONS_RELATIVE
+    disposition_index = _food_line_load_private_review_dispositions(source_root)
     rows: list[dict[str, Any]] = []
+    total_dispositioned = 0
+    total_count_only_gap = 0
     if proposal_root.is_dir():
         for path in sorted(proposal_root.glob("*.json")):
             payload = _load_json_object(path)
@@ -1009,9 +1190,33 @@ def food_line_private_review_backlog(*, source_root: Path, evaluated_at: str) ->
                 continue
             if _food_line_release_readiness_approved(source_root, proposal_date):
                 continue
+            pending_items = _food_line_pending_items(payload)
+            pending_count = max(pending_count, len(pending_items))
+            dispositioned_count = 0
+            unresolved_visible_count = 0
+            for item in pending_items:
+                disposition = _food_line_matching_disposition(
+                    item,
+                    proposal_date=proposal_date,
+                    disposition_index=disposition_index,
+                )
+                if disposition and disposition.get("subtracts"):
+                    dispositioned_count += 1
+                    continue
+                unresolved_visible_count += 1
+            count_only_gap = max(0, pending_count - len(pending_items))
+            unresolved_count = unresolved_visible_count + count_only_gap
+            if unresolved_count <= 0:
+                total_dispositioned += dispositioned_count
+                continue
+            total_dispositioned += dispositioned_count
+            total_count_only_gap += count_only_gap
             row = {
                 "date": proposal_date,
-                "pending_item_count": pending_count,
+                "pending_item_count": unresolved_count,
+                "unresolved_item_count": unresolved_count,
+                "dispositioned_item_count": dispositioned_count,
+                "count_only_gap_count": count_only_gap,
                 "proposal_artifact": (FOOD_LINE_PROPOSED_EDITIONS_RELATIVE / path.name).as_posix(),
             }
             age_hours = _food_line_private_review_backlog_age_hours(proposal_date, evaluated_at)
@@ -1023,9 +1228,14 @@ def food_line_private_review_backlog(*, source_root: Path, evaluated_at: str) ->
     return {
         "pending_date_count": len(rows),
         "pending_item_count": sum(int(item["pending_item_count"]) for item in rows),
+        "dispositioned_item_count": total_dispositioned,
+        "unresolved_item_count": sum(int(item["unresolved_item_count"]) for item in rows),
+        "count_only_gap_count": total_count_only_gap,
         "oldest_pending_date": rows[0]["date"] if rows else None,
         "max_age_hours": max(max_age_values) if max_age_values else 0,
         "dates": rows,
+        "disposition_sources": list(disposition_index["sources"].values()),
+        "disposition_diagnostics": disposition_index["diagnostics"],
     }
 
 

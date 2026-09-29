@@ -1,0 +1,31 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260929T033957-0700",
+  "scheduled_for": "2026-09-29T03:44:51-07:00",
+  "started_at": "2026-09-29T03:39:57-07:00",
+  "completed_at": "2026-09-29T03:41:16-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-29T02:45:01-07:00",
+    "end": "2026-09-29T03:41:16-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "prior_completed_hourly_check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "checked first; latest surfaced Gaza materials were outside the search window, including the 28 Sep reported-impact snapshot and 25 Sep humanitarian situation report",
+    "who": "checked second; no qualifying in-window Gaza health-system update surfaced; latest relevant WHO material surfaced was older than the search window",
+    "additional_targeted_searches": 12,
+    "qualifying_developments": 0,
+    "source_failures": 0,
+    "source_failure_detail": [],
+    "excluded_items": [
+      "Older, recycled, duplicate, unsupported, irrelevant, or insufficiently time-bounded material was excluded",
+      "No item surfaced with a verified publication/event time after the prior completed check that met the watch's qualifying-development criteria"
+    ],
+    "authority": "supplementary_only; production remains authoritative"
+  }
+}

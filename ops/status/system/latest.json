@@ -296,7 +296,7 @@
         "unaccounted_event_count": 0,
         "unclassified_source_failure_count": null
       },
-      "latest_runtime_proof_date": "2026-09-28T04:15:03Z",
+      "latest_runtime_proof_date": "2026-09-29T04:15:04Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-28",
       "receipt_completeness": "COMPLETE",
@@ -305,7 +305,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-09-29T03:34:35.531376Z",
+  "exported_at": "2026-09-29T04:34:37.098319Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "DEGRADED"

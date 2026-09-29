@@ -3604,6 +3604,50 @@ def _copy_missing_gaza_pages_public_records(
                 shutil.copy2(source_file, target_file)
 
 
+def _gaza_audio_publication_staged(
+    candidate_site_root: Path,
+    pages_repo: Path,
+    *,
+    gaza_publication_dates: tuple[str, ...] = (),
+) -> bool:
+    candidate_dates = _gaza_public_surface_date_sets(candidate_site_root)
+    pages_dates = _gaza_public_surface_date_sets(pages_repo)
+    audio_surfaces = ("gaza/audio/index.html", "gaza/audio/podcast.xml", "gaza/podcast.xml")
+    candidate_audio_dates = set().union(*(candidate_dates.get(surface, set()) for surface in audio_surfaces))
+    if any(date_text in candidate_audio_dates for date_text in gaza_publication_dates):
+        return True
+    pages_audio_dates = set().union(*(pages_dates.get(surface, set()) for surface in audio_surfaces))
+    return bool(candidate_audio_dates - pages_audio_dates)
+
+
+def _preserve_gaza_pages_audio_history_for_candidate(
+    candidate_site_root: Path,
+    pages_repo: Path,
+    *,
+    gaza_publication_dates: tuple[str, ...] = (),
+) -> None:
+    pages_gaza_root = pages_repo / "gaza"
+    pages_audio_root = pages_gaza_root / "audio"
+    if not pages_audio_root.exists():
+        return
+    if _gaza_audio_publication_staged(
+        candidate_site_root,
+        pages_repo,
+        gaza_publication_dates=gaza_publication_dates,
+    ):
+        return
+    candidate_audio_root = candidate_site_root / "gaza" / "audio"
+    for source in sorted(path for path in pages_audio_root.rglob("*") if path.is_file()):
+        target = candidate_audio_root / source.relative_to(pages_audio_root)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
+    pages_root_podcast = pages_gaza_root / "podcast.xml"
+    if pages_root_podcast.exists() and pages_root_podcast.is_file():
+        candidate_root_podcast = candidate_site_root / "gaza" / "podcast.xml"
+        candidate_root_podcast.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(pages_root_podcast, candidate_root_podcast)
+
+
 def _render_gaza_public_history_surfaces_for_candidate(
     candidate_site_root: Path,
     pages_repo: Path,
@@ -3685,6 +3729,11 @@ def _materialize_gaza_dry_run_validation_site(
         candidate_site_root,
         pages_repo,
         max_public_date=max_public_date,
+    )
+    _preserve_gaza_pages_audio_history_for_candidate(
+        candidate_site_root,
+        pages_repo,
+        gaza_publication_dates=gaza_publication_dates,
     )
     _render_gaza_public_history_surfaces_for_candidate(
         candidate_site_root,

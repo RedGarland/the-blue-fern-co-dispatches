@@ -1,0 +1,35 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260929T134910-0700-r11",
+  "scheduled_for": "2026-09-29T13:45:54-07:00",
+  "started_at": "2026-09-29T13:49:10-07:00",
+  "completed_at": "2026-09-29T13:52:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-29T12:46:42-07:00",
+    "end": "2026-09-29T13:52:00-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches_attempted": 12,
+    "searches_completed": 12,
+    "scope": [
+      "only/sole/last/full-service grocery-store loss, closure, fire, or disaster",
+      "canceled or suspended emergency food distributions due to storm, flood, fire, outage, or facility damage",
+      "abrupt pantry or food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "result": "No new qualifying U.S. food-access disruption was identified since the prior hourly check.",
+    "notable_exclusions": [
+      "Kaua'i Hurricane Lowell recovery coverage published September 29 continued to list emergency food distributions as scheduled; no new cancellation, suspension, or benefits interruption was identified.",
+      "Town of Spencer, New York coverage documented loss of its only grocery store after a fire, but the report was published September 14, well outside this hourly window.",
+      "An Asia Lane Grocery firebombing in Deer Park, Victoria, Australia was non-U.S. and outside scope.",
+      "Fresh results also included Canadian holiday closures, donation/fundraising items, routine program promotion, older SNAP policy coverage, and non-U.S. stories; all were excluded by watch scope."
+    ],
+    "search_failures": []
+  }
+}

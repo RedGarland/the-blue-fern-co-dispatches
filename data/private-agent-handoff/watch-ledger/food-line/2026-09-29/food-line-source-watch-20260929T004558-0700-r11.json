@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260929T004558-0700-r11",
+  "scheduled_for": "2026-09-29T00:45:54-07:00",
+  "started_at": "2026-09-29T00:45:58-07:00",
+  "completed_at": "2026-09-29T00:46:57-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T23:41:27-07:00",
+    "end": "2026-09-29T00:46:57-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "scope": "Bounded supplementary recall watch only; production collection remains authoritative.",
+    "result": "No new qualifying U.S. food-access disruption identified in the search window.",
+    "notes": [
+      "Targeted searches covered sole/only/last/full-service grocery loss, disaster-canceled food distributions, abrupt pantry/food-bank access reductions, and official SNAP/WIC interruptions.",
+      "Fresh search results did not surface an event first reported within the window that met the watch criteria.",
+      "El Pasoans Fighting Hunger Food Bank storm-damage coverage was published September 28 at 1:30 PM CDT and described a closure that began the prior Thursday, so it predates this window and was excluded.",
+      "Older grocery-store and pantry disruption results were excluded as outside the window or duplicates."
+    ]
+  }
+}

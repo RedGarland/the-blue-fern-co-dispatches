@@ -245,25 +245,11 @@ def _pages_git_action_in_progress(pages_repo: Path) -> str | None:
 
 
 def _clean_source_generated_artifacts() -> dict[str, Any]:
-    restore = _run_command(["git", "restore", "--source=HEAD", "--", "data/records", "output/site"], cwd=ROOT)
-    clean = _run_command(["git", "clean", "-fd", "--", "output", "logs"], cwd=ROOT)
-    commands = [
-        "git restore --source=HEAD -- data/records output/site",
-        "git clean -fd -- output logs",
-    ]
-    ok = restore.returncode == 0 and clean.returncode == 0
     return {
-        "ok": ok,
-        "status": "cleaned" if ok else "cleanup_failed",
-        "commands": commands,
-        "errors": [
-            text
-            for text in (
-                restore.stderr.strip() or restore.stdout.strip(),
-                clean.stderr.strip() or clean.stdout.strip(),
-            )
-            if text
-        ],
+        "ok": True,
+        "status": "skipped_evidence_preserved",
+        "commands": [],
+        "errors": [],
     }
 
 
@@ -288,10 +274,10 @@ def _sync_pages_repo(pages_repo: Path, pages_branch: str) -> dict[str, Any]:
     commands.append(f'git -C "{pages_repo}" fetch origin')
     if fetch.returncode != 0:
         return {"ok": False, "commands": commands, "error": fetch.stderr.strip() or fetch.stdout.strip()}
-    reset = _run_command(["git", "-C", str(pages_repo), "reset", "--hard", f"origin/{pages_branch}"], cwd=ROOT)
-    commands.append(f'git -C "{pages_repo}" reset --hard origin/{pages_branch}')
-    if reset.returncode != 0:
-        return {"ok": False, "commands": commands, "error": reset.stderr.strip() or reset.stdout.strip()}
+    merge = _run_command(["git", "-C", str(pages_repo), "merge", "--ff-only", f"origin/{pages_branch}"], cwd=ROOT)
+    commands.append(f'git -C "{pages_repo}" merge --ff-only origin/{pages_branch}')
+    if merge.returncode != 0:
+        return {"ok": False, "commands": commands, "error": merge.stderr.strip() or merge.stdout.strip()}
     return {"ok": True, "commands": commands}
 
 
@@ -465,7 +451,7 @@ def _daily_args(
         args.append("--skip-tests")
     if allow_listing_shrink:
         args.append("--allow-listing-shrink")
-    if generate_audio:
+    if generate_audio and tts_provider != "none":
         args.extend(
             [
                 "--generate-audio",
@@ -832,7 +818,7 @@ def run_operator(args: argparse.Namespace) -> dict[str, Any]:
         return result
     result["pages_synced_before_publish"] = True
 
-    audio_requested_for_run = bool((args.generate_audio or not args.dry_run) and not args.skip_audio)
+    audio_requested_for_run = bool(args.generate_audio and args.tts_provider != "none" and not args.skip_audio)
     generate_audio = audio_requested_for_run
     if generate_audio and audio_file_path(args.date, args.audio_format).exists() and not args.force_audio:
         generate_audio = False
@@ -1077,7 +1063,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--push", action="store_true", help="Push the Pages repo after local publish succeeds.")
     parser.add_argument("--skip-audio", action="store_true", help="Skip audio generation even when audio artifacts exist or generation is requested.")
     parser.add_argument("--skip-bluesky", action="store_true", help="Disable Bluesky posting for this run.")
-    parser.add_argument("--force-pages-rebuild", action="store_true", help="Reserved compatibility flag; the operator already fetches and hard-resets Pages safely.")
+    parser.add_argument("--force-pages-rebuild", action="store_true", help="Reserved compatibility flag; the operator already fetches Pages and fast-forwards safely.")
     parser.add_argument("--manual-source-check-only", action="store_true", help="Validate and safely normalize Gaza manual_sources.json, then exit.")
     parser.add_argument("--post-bluesky-only", action="store_true", help="Skip generation/publish and only finish the Bluesky post after live verification.")
     parser.add_argument("--force-bluesky-post", action="store_true", help="Ignore an existing Bluesky receipt and post again.")
@@ -1087,7 +1073,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--pages-branch", default=DEFAULT_PAGES_BRANCH, help="Pages branch.")
     parser.add_argument("--remote-url", default=DEFAULT_REMOTE_URL, help="Pages repo remote URL.")
     parser.add_argument("--expected-source-branch", default=DEFAULT_SOURCE_BRANCH, help="Required source repo branch for safety checks.")
-    parser.add_argument("--tts-provider", choices=("none", "openai"), default="none", help="TTS provider used with --generate-audio.")
+    parser.add_argument("--tts-provider", choices=("none", "openai"), default="openai", help="TTS provider used with --generate-audio.")
     parser.add_argument("--audio-model", default="gpt-4o-mini-tts", help="TTS model used with --generate-audio.")
     parser.add_argument("--audio-voice", default="alloy", help="TTS voice used with --generate-audio.")
     parser.add_argument("--audio-format", choices=("mp3", "wav"), default="mp3", help="Audio format.")

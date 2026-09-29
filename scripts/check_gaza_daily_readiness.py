@@ -164,43 +164,14 @@ def _credentials_status(*, generate_audio: bool, tts_provider: str) -> dict[str,
     }
 
 
-def _cleanup_generated_artifacts(edition_date: str) -> None:
-    restore_paths = [
-        "data/records",
-        "output/site",
-        "output/dispatches",
-        "data/dispatches/gaza/editions",
-        "data/dispatches/gaza/sources",
-    ]
-    restore = _run_command(
-        ["git", "restore", "--source=HEAD", "--staged", "--worktree", "--", *restore_paths],
-        cwd=ROOT,
-    )
-    if restore.returncode != 0:
-        raise RuntimeError(restore.stderr.strip() or restore.stdout.strip() or "git restore cleanup failed")
-    log_path = ROOT / "logs" / f"gaza-daily-{edition_date}.log"
-    if log_path.exists():
-        try:
-            log_path.unlink()
-        except Exception:  # noqa: BLE001
-            pass
-    clean = _run_command(
-        [
-            "git",
-            "clean",
-            "-fd",
-            "--",
-            "data/records",
-            "output/site",
-            "output/dispatches",
-            "data/dispatches/gaza/editions",
-            "data/dispatches/gaza/sources",
-            "logs",
-        ],
-        cwd=ROOT,
-    )
-    if clean.returncode != 0:
-        raise RuntimeError(clean.stderr.strip() or clean.stdout.strip() or "git clean cleanup failed")
+def _cleanup_generated_artifacts(edition_date: str) -> dict[str, Any]:
+    _ = edition_date
+    return {
+        "ok": True,
+        "status": "skipped_evidence_preserved",
+        "commands": [],
+        "errors": [],
+    }
 
 
 def _run_gaza_dry_run(
@@ -388,13 +359,11 @@ def build_readiness_report(
             blockers.extend(str(item) for item in dry_run_payload.get("errors") or [])
             if dry_run_result["returncode"] != 0:
                 blockers.append("Gaza dry-run command failed")
-        try:
-            _cleanup_generated_artifacts(edition_date)
-        except Exception as exc:  # noqa: BLE001
-            dry_run_status["cleanup_ok"] = False
-            dry_run_status["cleanup_error"] = str(exc)
-        else:
-            dry_run_status["cleanup_ok"] = True
+        cleanup = _cleanup_generated_artifacts(edition_date)
+        dry_run_status["cleanup_ok"] = bool(cleanup.get("ok"))
+        dry_run_status["cleanup_status"] = str(cleanup.get("status") or "unknown")
+        if cleanup.get("errors"):
+            dry_run_status["cleanup_error"] = "; ".join(str(item) for item in cleanup.get("errors") or [])
         history_guard_status = _history_guard_status(dry_run_payload)
         history_guard_status.update(
             {

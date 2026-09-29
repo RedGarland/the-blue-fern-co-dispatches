@@ -756,9 +756,10 @@ def test_wrapper_gaza_dry_run_full_uses_isolated_output_root_and_skips_live_acti
     log_text = _latest_log(repo)
     assert "Dry-run full: True" in log_text
     assert "Isolated Gaza dry-run workspace:" in log_text
-    assert "--generate-audio" in log_text
+    assert "--skip-audio" in log_text
     assert "--allow-listing-shrink" in log_text
-    assert "--tts-provider none" in log_text
+    assert "--generate-audio" not in log_text
+    assert "--tts-provider none" not in log_text
     assert "--push" not in log_text
     assert "--post-bluesky" not in log_text
     assert "--email-report" not in log_text

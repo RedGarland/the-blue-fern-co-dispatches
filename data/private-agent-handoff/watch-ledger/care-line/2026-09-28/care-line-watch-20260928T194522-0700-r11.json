@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260928T194522-0700-r11",
+  "scheduled_for": "2026-09-28T19:45:22-07:00",
+  "started_at": "2026-09-28T19:43:56-07:00",
+  "completed_at": "2026-09-28T19:45:04-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T18:46:31-07:00",
+    "end": "2026-09-28T19:43:56-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "CMS Public Notices was checked first. The CMS-domain search completed, but the current Public Notices/Termination Notices page itself was not retrievable through the web tool, so the official-notice leg is incomplete and this run is DEGRADED. Exactly 12 additional targeted searches were completed across hospital/ED, maternity, behavioral health, dialysis/oncology, primary care, rural/emergency service loss, ambulance, air-medical, restoration/reopening, U.S. territories, official state notices, and provider/CLIA actions. No new qualifying U.S. or territory healthcare-access change was identified in the bounded window. An Illinois notice concerning proposed discontinuation of Choate Mental Health and Developmental Center's 75-bed inpatient psychiatric unit was excluded because it is a proposal with no concrete access effect yet. Providence St. Joseph Rural Health Clinic and Loma Linda's EmPATH unit were excluded because they are planned/new service expansions rather than restorations of previously lost essential service. Historical, non-U.S., proposal-only, ownership-only, unsupported, and duplicate items were excluded."
+}

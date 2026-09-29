@@ -1,0 +1,35 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260929T114701-0700-r11",
+  "scheduled_for": "2026-09-29T11:45:54-07:00",
+  "started_at": "2026-09-29T11:47:01-07:00",
+  "completed_at": "2026-09-29T11:49:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-29T10:45:54-07:00",
+    "end": "2026-09-29T11:45:54-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches_attempted": 12,
+    "searches_completed": 12,
+    "scope": [
+      "only/sole/last/full-service grocery-store loss or closure",
+      "canceled/suspended emergency food distributions from storm/flood/fire/outage/facility damage",
+      "abrupt pantry/food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "result": "No new qualifying U.S. food-access disruption was identified inside the bounded hourly window.",
+    "notable_exclusions": [
+      "Kaua'i County hurricane recovery notice listed emergency food distributions proceeding as scheduled; no cancellation or suspension.",
+      "Beaumont, Texas neighborhood grocery closure was published five days earlier and was outside the hourly window.",
+      "Spencer, New York only-grocery-store fire occurred September 11 and was outside the hourly window.",
+      "Pottstown, Pennsylvania pantry building fire was older and services continued next door without an access interruption.",
+      "Smooth Rock Falls pantry closure was in Ontario, Canada, and outside U.S. scope."
+    ]
+  }
+}

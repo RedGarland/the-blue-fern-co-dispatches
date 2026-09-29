@@ -12,7 +12,7 @@
   },
   "aggregate_status": "DEGRADED",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "5e606eb70b64fd4a398e40f70f89c77631d593e8",
+  "current_runner_head": "a357040add84deea1d7e1fae73ea44171c9f6d0f",
   "debug_summary": {
     "aggregate_status": "DEGRADED",
     "all_current_failures_external": true,
@@ -92,7 +92,7 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-09-29T00:54:27.708161Z",
+  "last_exported_at": "2026-09-29T00:58:42.528448Z",
   "last_receipt_at": "2026-09-29T00:54:22.430831Z",
   "latest_runtime_proof_date": "2026-09-28T15:30:11Z",
   "migration_status": "MIGRATED",

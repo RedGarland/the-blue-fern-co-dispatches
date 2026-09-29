@@ -1,0 +1,31 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260928T204301-0700-r11",
+  "scheduled_for": "2026-09-28T20:45:22-07:00",
+  "started_at": "2026-09-28T20:43:01-07:00",
+  "completed_at": "2026-09-29T03:44:05.765Z",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-28T19:45:22-07:00",
+    "end": "2026-09-29T03:44:05.765Z"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices_first": true,
+    "cms_public_notices_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "cms_latest_notice_date_observed": "2026-09-25",
+    "cms_result": "No newer qualifying CMS termination, rescission, CLIA limitation/suspension, or similar access-risk notice observed.",
+    "additional_targeted_searches": 12,
+    "additional_search_result": "No new qualifying U.S. or territory healthcare-access change found in the bounded window.",
+    "exclusions": [
+      "Previously established maternity-service closures described in current retrospective reporting were excluded as not new.",
+      "Proposals without a concrete access effect were excluded.",
+      "Ownership/business stories without service change, opinion, unsupported social claims, and duplicates were excluded."
+    ],
+    "authority_note": "Supplementary recall watch only; production Care Line collection remains authoritative."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260929T154856-0700",
+  "scheduled_for": "2026-09-29T15:41:00-07:00",
+  "started_at": "2026-09-29T15:48:56-07:00",
+  "completed_at": "2026-09-29T15:50:14-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-29T14:46:16-07:00",
+    "end": "2026-09-29T15:50:14-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "priority_checks": [
+      "OCHA OPT checked first. Its latest surfaced Gaza-relevant publication remained the Humanitarian Situation Report dated 25 September and posted 28 September; no new qualifying development was verified in the bounded interval.",
+      "WHO checked second. Its latest surfaced Gaza-specific health update remained the 24 September humanitarian-access and health remarks; no new qualifying health-system development was verified in the bounded interval."
+    ],
+    "additional_targeted_searches": 12,
+    "discovery_scope": "Bounded recall searched Reuters, AP, WAFA, UNRWA, WFP, UNICEF, ICRC, MSF, crossings/aid/fuel, ceasefire/hostages/detention, displacement/infrastructure, and hospital/ambulance/medical-evacuation/fuel developments. Results were screened against the latest durable Gaza watch boundary at 2026-09-29T14:46:16-07:00 and prior surfaced findings.",
+    "result": "No new qualifying development was verified since the prior hourly check.",
+    "exclusions": [
+      "WAFA's 29 September 18:10 local report on two Palestinians killed and others injured in Gaza was excluded as a previously surfaced duplicate and predates the bounded interval.",
+      "Reuters Connect's Al-Rantisi fuel-shortage asset was excluded as stale: the underlying event occurred on 24 September 2026 even though the asset carried a 29 September original date.",
+      "Older Reuters/AP/humanitarian results and unrelated West Bank or regional items were excluded as stale, duplicate, or outside Gaza recall scope."
+    ],
+    "search_failures": [
+      "Direct retrieval of one Reuters Connect daily-life asset returned a DisabledError after discovery. Other Reuters/established-source and humanitarian coverage remained available, so the run is DEGRADED rather than FAILED."
+    ],
+    "continuity_note": "The latest durable Gaza watch heartbeat on ops/watch-ledger completed at 2026-09-29T14:46:16-07:00 and is used as the recall boundary. Production remains authoritative."
+  }
+}

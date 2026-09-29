@@ -1,0 +1,33 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260929T114856-0700",
+  "scheduled_for": "2026-09-29T11:41:00-07:00",
+  "started_at": "2026-09-29T11:48:56-07:00",
+  "completed_at": "2026-09-29T11:50:08-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-29T10:41:00-07:00",
+    "end": "2026-09-29T11:50:08-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "priority_checks": [
+      "OCHA OPT checked first; no new qualifying Gaza development was verified in the bounded window.",
+      "WHO checked second; no new Gaza-specific health-system development was verified in the bounded window."
+    ],
+    "additional_targeted_searches": 12,
+    "result": "No new qualifying development was verified since the prior hourly check.",
+    "exclusions": [
+      "Previously surfaced 29 September satellite-imagery analysis was excluded as a synthesis of older assessments rather than a new bounded-window event.",
+      "Older AP, Reuters, WAFA, UNRWA and humanitarian-source results were excluded as stale, duplicate, or outside the bounded window."
+    ],
+    "search_failures": [
+      "BBC targeted retrieval was blocked by robots.txt.",
+      "UN News targeted retrieval was blocked by robots.txt."
+    ]
+  }
+}

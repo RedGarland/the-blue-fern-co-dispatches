@@ -433,6 +433,70 @@ def _replace_latest_edition_card(template_html: str, release: PublicRelease) -> 
     return template_html[: match.start()] + updated + template_html[match.end() :]
 
 
+def _has_latest_edition_card(template_html: str, release: PublicRelease) -> bool:
+    pattern = re.compile(
+        rf'<article class="edition-card edition-card--{re.escape(release.badge_class)}">',
+        re.DOTALL,
+    )
+    return pattern.search(template_html) is not None
+
+
+def _has_active_dispatch_card(template_html: str, release: PublicRelease) -> bool:
+    product_name = PRODUCT_META[release.slug]["publication_name"]
+    if release.slug == "care-line":
+        product_name = "The Care Line Dispatch"
+    pattern = re.compile(
+        rf'<article class="dispatch-card dispatch-card--featured">(?:(?!</article>).)*?<h2>{re.escape(product_name)}</h2>(?:(?!</article>).)*?</article>',
+        re.DOTALL,
+    )
+    return pattern.search(template_html) is not None
+
+
+def _is_legacy_target_dispatch_directory(template_html: str, release: PublicRelease) -> bool:
+    return (
+        "Latest Briefing" in template_html
+        and re.search(r'<ul class="edition-list"(?:\s|>)', template_html) is not None
+        and PRODUCT_META[release.slug]["publication_name"] in template_html
+    )
+
+
+def _legacy_latest_briefing_href(template_html: str, release: PublicRelease) -> str:
+    if re.search(r'href="editions/\d{4}-\d{2}-\d{2}/"', template_html):
+        return f"editions/{html.escape(release.edition_date)}/"
+    return html.escape(release.relative_url)
+
+
+def _insert_legacy_latest_edition_card(template_html: str, release: PublicRelease) -> str:
+    if not _is_legacy_target_dispatch_directory(template_html, release):
+        raise ValueError(f"Latest edition card not found for {release.slug}")
+    href = _legacy_latest_briefing_href(template_html, release)
+    updated, link_count = re.subn(
+        r'(<h2>Latest Briefing</h2>\s*<p><a href=")[^"]+(">).*?(</a></p>)',
+        rf'\g<1>{href}\g<2>Read the latest briefing\g<3>',
+        template_html,
+        count=1,
+        flags=re.DOTALL,
+    )
+    if link_count != 1:
+        raise ValueError(f"Legacy latest briefing link not found for {release.slug}")
+    card_section = (
+        '<section class="section-block section-block--latest-release">'
+        '<div class="section-heading"><p class="eyebrow">Latest public release</p>'
+        f'<h2>{LATEST_DEVELOPMENTS_HEADING}</h2></div>'
+        f'<div class="edition-grid">{_render_latest_development_card(release)}</div>'
+        '</section>'
+    )
+    updated, heading_count = re.subn(
+        r'(?=<h2>Recent Editions</h2>)',
+        card_section,
+        updated,
+        count=1,
+    )
+    if heading_count != 1:
+        raise ValueError(f"Legacy recent editions anchor not found for {release.slug}")
+    return updated
+
+
 MONITORING_NOTE = (
     "Monitoring continues between public releases; a new edition appears only when "
     "source-backed material clears the publication threshold."
@@ -491,13 +555,13 @@ def _annotate_dispatch_card_public_state(card_html: str, slug: str, public_root:
             updated = _replace_support_link_label(
                 updated,
                 "/food-line/audio/index.html",
-                f"Historical audio archive through {_format_long_date(audio_date)}",
+                f"Audio archive through {_format_long_date(audio_date)}",
             )
         if map_date:
             updated = _replace_support_link_label(
                 updated,
                 "/food-line/map/index.html",
-                f"Historical map snapshot through {_format_long_date(map_date)}",
+                f"Map snapshot through {_format_long_date(map_date)}",
             )
     return updated
 
@@ -567,12 +631,39 @@ def render_dispatch_directory_from_template(template_html: str, release: PublicR
     return _normalize_shared_footer_separator(_replace_active_dispatch_card(template_html, release))
 
 
-def render_dispatch_directory_from_releases(template_html: str, latest: dict[str, PublicRelease]) -> str:
-    missing = [slug for slug in ACTIVE_PRODUCTS if slug not in latest]
+def render_dispatch_directory_from_releases(
+    template_html: str,
+    latest: dict[str, PublicRelease],
+    *,
+    target_dispatch: str | None = None,
+) -> str:
+    target_release = latest.get(target_dispatch or "") if target_dispatch else None
+    legacy_target_only = (
+        target_release is not None
+        and not _has_active_dispatch_card(template_html, target_release)
+        and _is_legacy_target_dispatch_directory(template_html, target_release)
+    )
+    slugs = (target_dispatch,) if target_dispatch and legacy_target_only else ACTIVE_PRODUCTS
+    missing = [slug for slug in slugs if slug not in latest]
     if missing:
         raise ValueError(f"No eligible public release found for active dispatches: {', '.join(missing)}")
     refreshed = template_html
-    for slug in ACTIVE_PRODUCTS:
-        refreshed = _replace_latest_edition_card(refreshed, latest[slug])
-        refreshed = render_dispatch_directory_from_template(refreshed, latest[slug])
+    refresh_latest_cards = (
+        legacy_target_only
+        or re.search(r'<article class="edition-card\b', refreshed) is not None
+        or '<div class="edition-grid">' in refreshed
+    )
+    for slug in slugs:
+        release = latest[slug]
+        if refresh_latest_cards:
+            if not _has_latest_edition_card(refreshed, release):
+                if target_dispatch == slug and legacy_target_only:
+                    refreshed = _insert_legacy_latest_edition_card(refreshed, release)
+                else:
+                    raise ValueError(f"Latest edition card not found for {release.slug}")
+            refreshed = _replace_latest_edition_card(refreshed, release)
+        if _has_active_dispatch_card(refreshed, release):
+            refreshed = render_dispatch_directory_from_template(refreshed, release)
+        elif not (target_dispatch == slug and legacy_target_only):
+            raise ValueError(f"Active dispatch card not found for {release.slug}")
     return _normalize_shared_footer_separator(refreshed)

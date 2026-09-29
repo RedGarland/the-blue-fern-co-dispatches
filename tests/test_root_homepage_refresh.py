@@ -636,6 +636,66 @@ def test_shared_release_refresh_reports_exact_changed_surfaces(tmp_path):
     assert "/care-line/editions/2026-08-20/" in directory
 
 
+def test_shared_release_refresh_rebuilds_legacy_gaza_directory_surface(tmp_path):
+    public_root = tmp_path / "pages"
+    public_root.mkdir(parents=True)
+    (public_root / "index.html").write_text(SHARED_ROOT_TEMPLATE, encoding="utf-8")
+    (public_root / "dispatches").mkdir()
+    (public_root / "dispatches" / "index.html").write_text(
+        """<!doctype html>
+<html lang="en">
+<head><title>Dispatches From Gaza</title></head>
+<body>
+  <main class="home">
+    <h1>Dispatches From Gaza</h1>
+    <p class="eyebrow">Daily briefing</p>
+    <h2>Latest Briefing</h2>
+    <p><a href="editions/2026-09-04/">Read the latest briefing</a></p>
+    <h2>Recent Editions</h2>
+    <ul class="edition-list">
+      <li><span class="edition-date">2026-09-04</span><a href="editions/2026-09-04/">2026-09-04</a></li>
+    </ul>
+  </main>
+  <footer><a href="/methodology/">How we work</a> Ãƒâ€šÃ‚Â· <a href="/about/">About this project</a></footer>
+</body>
+</html>""",
+        encoding="utf-8",
+    )
+    _write_current_directory_inventory(public_root)
+    _write_release(public_root, "gaza", "2026-09-05", title="New Gaza", source_count=4)
+
+    result = refresh_shared_release_surfaces_from_pages_inventory(
+        public_root,
+        dry_run=False,
+        target_dispatch="gaza",
+    )
+
+    assert result["ok"] is True
+    assert "dispatches/index.html" in result["changed_surfaces"]
+    directory = (public_root / "dispatches" / "index.html").read_text(encoding="utf-8")
+    assert '<article class="edition-card edition-card--gaza">' in directory
+    assert "/gaza/editions/2026-09-05/" in _edition_card(directory, "gaza")
+    assert '<a href="editions/2026-09-05/">Read the latest briefing</a>' in directory
+    assert '<ul class="edition-list">' in directory
+
+
+def test_legacy_dispatch_directory_refresh_fails_closed_without_recent_editions_anchor(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_current_directory_inventory(public_root)
+    latest = select_effective_latest(
+        discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 9, 4), homepage_html=TEMPLATE_HTML)
+    )
+    malformed = (
+        "<html><body><main><h1>Dispatches From Gaza</h1><h2>Latest Briefing</h2>"
+        '<p><a href="editions/2026-09-04/">Read the latest briefing</a></p>'
+        '<ul class="edition-list"><li><a href="editions/2026-09-04/">2026-09-04</a></li></ul>'
+        "</main></body></html>"
+    )
+
+    with pytest.raises(ValueError, match="Legacy recent editions anchor not found for gaza"):
+        render_dispatch_directory_from_releases(malformed, latest, target_dispatch="gaza")
+
+
 def test_refresh_script_target_dispatch_updates_only_food_directory_and_root_cards(tmp_path):
     public_root = tmp_path / "pages"
     public_root.mkdir(parents=True)

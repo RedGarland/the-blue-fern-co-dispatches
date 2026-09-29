@@ -30,6 +30,7 @@ RECOVERY_PLAN_SCHEMA_VERSION = "dispatch_ops_recovery_plan_v1"
 APPLY_SCHEMA_VERSION = "dispatch_ops_apply_v1"
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 SUPPORTED_DISPATCHES = ("food-line", "care-line", "gaza", "ice")
+ACTIVE_ALERT_DISPATCHES = frozenset(SUPPORTED_DISPATCHES)
 ALERTABLE_OPERATOR_ASSESSMENTS = {
     "FAILED_ACTION_REQUIRED",
     "DEGRADED_ACTION_RECOMMENDED",
@@ -281,12 +282,13 @@ def evaluate_system_alerts(snapshot: dict[str, Any]) -> dict[str, Any]:
             "external_access_restriction_count": debug.get("external_access_restriction_count"),
             "unclassified_source_failure_count": debug.get("unclassified_source_failure_count"),
         }
-        if assessment in ALERTABLE_OPERATOR_ASSESSMENTS:
+        if dispatch not in ACTIVE_ALERT_DISPATCHES:
+            row["ignored_reason"] = "outside_active_alert_scope"
+            ignored_dispatches.append(row)
+        elif assessment in ALERTABLE_OPERATOR_ASSESSMENTS:
             alert_dispatches.append(row)
         elif assessment in NON_FAILURE_OPERATOR_ASSESSMENTS:
             suppressed_dispatches.append(row)
-        elif dispatch not in SUPPORTED_DISPATCHES and assessment == "UNKNOWN":
-            ignored_dispatches.append(row)
         else:
             unknown_dispatches.append(row)
 
@@ -304,6 +306,7 @@ def evaluate_system_alerts(snapshot: dict[str, Any]) -> dict[str, Any]:
         "warnings": warnings,
         "evidence": snapshot.get("evidence") if isinstance(snapshot.get("evidence"), list) else [],
         "policy": {
+            "active_alert_dispatches": sorted(ACTIVE_ALERT_DISPATCHES),
             "alertable_operator_assessments": sorted(ALERTABLE_OPERATOR_ASSESSMENTS),
             "non_failure_operator_assessments": sorted(NON_FAILURE_OPERATOR_ASSESSMENTS),
         },

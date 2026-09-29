@@ -12,7 +12,7 @@
   },
   "aggregate_status": "DEGRADED",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "3210747ba8e4c2e706c3da4099a78646d23c2854",
+  "current_runner_head": "12dce374cb0d4d0d4c377edf935eff079ed7bdd6",
   "debug_summary": {
     "aggregate_status": "DEGRADED",
     "all_current_failures_external": null,
@@ -130,7 +130,7 @@
     }
   ],
   "incident_reference": null,
-  "last_exported_at": "2026-09-29T16:15:35.694853Z",
+  "last_exported_at": "2026-09-29T16:17:09.591591Z",
   "last_receipt_at": "2026-09-29T15:48:24.157622Z",
   "latest_runtime_proof_date": "2026-09-29T15:48:24.157622Z",
   "next_expected_run": null,

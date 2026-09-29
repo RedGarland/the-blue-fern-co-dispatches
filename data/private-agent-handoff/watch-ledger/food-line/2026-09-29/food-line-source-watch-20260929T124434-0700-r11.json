@@ -1,0 +1,34 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260929T124434-0700-r11",
+  "scheduled_for": "2026-09-29T12:45:54-07:00",
+  "started_at": "2026-09-29T12:44:34-07:00",
+  "completed_at": "2026-09-29T12:46:42-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-29T11:45:54-07:00",
+    "end": "2026-09-29T12:46:42-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches_attempted": 12,
+    "searches_completed": 12,
+    "scope": [
+      "only/sole/last/full-service grocery-store loss, closure, fire, or disaster",
+      "canceled or suspended emergency food distributions due to storm, flood, fire, outage, or facility damage",
+      "abrupt pantry or food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "result": "No new qualifying U.S. food-access disruption was identified since the prior hourly check.",
+    "notable_exclusions": [
+      "Kaua'i hurricane-recovery coverage continued to list emergency food distributions as scheduled and SNAP replacement assistance as available; no new cancellation, suspension, or benefits interruption was identified.",
+      "A Jamaica, Queens fire began around 4:30 a.m. local time in a corner grocery store and spread to neighboring businesses; it occurred well before the bounded hourly window and available reporting did not establish that the store was the community's only, sole, last, or full-service grocery store.",
+      "Fresh search results also contained donation/fundraising items, routine program promotion, non-U.S. food-distribution stories, and older SNAP disruption coverage; all were excluded by watch scope."
+    ],
+    "search_failures": []
+  }
+}

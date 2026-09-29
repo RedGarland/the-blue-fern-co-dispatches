@@ -49,7 +49,7 @@ def _stub_operator_success(monkeypatch: pytest.MonkeyPatch, *, pages_repo: Path)
     monkeypatch.setattr(operator, "_validate_pages_repo", lambda pages_repo_arg, pages_branch: (True, None))
     monkeypatch.setattr(operator, "_sync_pages_repo", lambda pages_repo_arg, pages_branch: {"ok": True, "commands": []})
     monkeypatch.setattr(operator, "validate_or_repair_manual_sources", lambda edition_date: {"ok": True, "status": "not_present", "errors": []})
-    monkeypatch.setattr(operator, "_clean_source_generated_artifacts", lambda: {"ok": True, "status": "cleaned", "commands": []})
+    monkeypatch.setattr(operator, "_clean_source_generated_artifacts", lambda: {"ok": True, "status": "skipped_evidence_preserved", "commands": []})
     monkeypatch.setattr(operator, "_git_status_branch", lambda repo: "## clean")
     monkeypatch.setattr(
         operator,
@@ -348,8 +348,9 @@ def test_no_substantive_ground_refusal_is_success_with_publication_flags_and_pre
     assert result["pages_push_ok"] is True
     assert result["remote_tree_verify_ok"] is None
     assert result["local_pages_copy_ok"] is True
-    assert len(publish_commands) == 2
-    publish_command = publish_commands[0]
+    page_commands = [command for command in publish_commands if any(str(arg).endswith("publish_github_pages.py") for arg in command) or "push" in command]
+    assert len(page_commands) == 2
+    publish_command = page_commands[0]
     assert "--only-dispatch" in publish_command
     assert "gaza" in publish_command
     assert publish_command[publish_command.index("--artifact-family") + 1] == "no-update"
@@ -357,7 +358,7 @@ def test_no_substantive_ground_refusal_is_success_with_publication_flags_and_pre
     assert "--expect-dispatch" not in publish_command
     assert "--commit" in publish_command
     assert "--no-push" in publish_command
-    assert "push" in publish_commands[1]
+    assert "push" in page_commands[1]
     assert result["audio_status"] == "audio_skipped"
     assert result["bluesky_status"] == "skipped"
     assert "--generate-audio" in daily_args_seen
@@ -399,7 +400,7 @@ def test_unknown_zero_story_curation_error_remains_failed(isolated: Path, monkey
     assert result["next_action"] == "No source-backed Gaza stories survived curation because the runtime crashed."
 
 
-def test_pages_sync_uses_fetch_and_reset_safely(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_pages_sync_uses_fetch_and_fast_forward_merge(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[list[str]] = []
 
     class Completed:
@@ -417,7 +418,8 @@ def test_pages_sync_uses_fetch_and_reset_safely(isolated: Path, monkeypatch: pyt
     result = operator._sync_pages_repo(isolated / "bluefern-dispatches-pages", "gh-pages")
     assert result["ok"] is True
     assert any("fetch" in " ".join(call) for call in calls)
-    assert any("reset --hard origin/gh-pages" in " ".join(call) for call in calls)
+    assert any("merge --ff-only origin/gh-pages" in " ".join(call) for call in calls)
+    assert all("reset --hard" not in " ".join(call) for call in calls)
     assert all("pull" not in " ".join(call) for call in calls)
 
 
@@ -527,7 +529,7 @@ def test_email_failure_after_successful_publish_is_nonfatal(isolated: Path, monk
             "bluesky_status": "skipped",
             "audio_status": "audio_generated",
             "email_status": "not_requested",
-            "cleanup_status": "cleaned",
+            "cleanup_status": "skipped_evidence_preserved",
             "public_url": f"https://dispatches.thebluefernco.com/gaza/editions/{parsed_args.date}/",
             "next_action": "Publication completed.",
             "source_repo_status_after": "## clean",
@@ -561,7 +563,7 @@ def test_email_failure_remains_fatal_on_dry_run(isolated: Path, monkeypatch: pyt
             "bluesky_status": "skipped",
             "audio_status": "audio_skipped",
             "email_status": "not_requested",
-            "cleanup_status": "cleaned",
+            "cleanup_status": "skipped_evidence_preserved",
             "public_url": f"https://dispatches.thebluefernco.com/gaza/editions/{parsed_args.date}/",
             "next_action": "Review the dry-run summary; rerun with --push for live publication.",
             "source_repo_status_after": "## clean",
@@ -597,6 +599,56 @@ def test_audio_retry_reuses_existing_audio(isolated: Path, monkeypatch: pytest.M
     assert result["operator_status"] == "LOCAL_PUBLISH_READY"
     assert result["audio_status"] == "audio_reused_existing"
     assert "--generate-audio" not in captured["args"]
+
+
+def test_non_dry_run_does_not_implicitly_authorize_audio(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    args = operator.parse_args(["--date", "2026-06-26", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
+    _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
+    captured: dict[str, list[str]] = {}
+
+    def fake_daily(run_args: list[str]):
+        captured["args"] = run_args
+        return 0, {"generation_ok": True, "validation_ok": True, "tests_ok": True, "source_count": 1, "publisher_count": 1, "public_story_count": 1}, "{}"
+
+    monkeypatch.setattr(operator, "_capture_daily_run", fake_daily)
+
+    result = operator.run_operator(args)
+
+    assert result["ok"] is True
+    assert result["operator_status"] == "LOCAL_PUBLISH_READY"
+    assert result["audio_status"] == "audio_skipped"
+    assert "--generate-audio" not in captured["args"]
+    assert "--tts-provider" not in captured["args"]
+
+
+def test_generate_audio_with_none_provider_is_treated_as_skipped(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    args = operator.parse_args(
+        [
+            "--date",
+            "2026-06-26",
+            "--generate-audio",
+            "--tts-provider",
+            "none",
+            "--pages-repo",
+            str(isolated / "bluefern-dispatches-pages"),
+        ]
+    )
+    _stub_operator_success(monkeypatch, pages_repo=isolated / "bluefern-dispatches-pages")
+    captured: dict[str, list[str]] = {}
+
+    def fake_daily(run_args: list[str]):
+        captured["args"] = run_args
+        return 0, {"generation_ok": True, "validation_ok": True, "tests_ok": True, "source_count": 1, "publisher_count": 1, "public_story_count": 1}, "{}"
+
+    monkeypatch.setattr(operator, "_capture_daily_run", fake_daily)
+
+    result = operator.run_operator(args)
+
+    assert result["ok"] is True
+    assert result["operator_status"] == "LOCAL_PUBLISH_READY"
+    assert result["audio_status"] == "audio_skipped"
+    assert "--generate-audio" not in captured["args"]
+    assert "--tts-provider" not in captured["args"]
 
 
 def test_non_audio_upstream_failure_remains_failed(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -797,11 +849,11 @@ def test_cleanup_preserves_manual_sources_file(isolated: Path, monkeypatch: pyte
 
     def fake_cleanup():
         assert path.exists()
-        return {"ok": True, "status": "cleaned", "commands": []}
+        return {"ok": True, "status": "skipped_evidence_preserved", "commands": []}
 
     monkeypatch.setattr(operator, "_clean_source_generated_artifacts", fake_cleanup)
     result = operator.run_operator(args)
-    assert result["cleanup_status"] == "cleaned"
+    assert result["cleanup_status"] == "skipped_evidence_preserved"
     assert path.exists()
 
 

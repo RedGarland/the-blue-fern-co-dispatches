@@ -399,12 +399,11 @@ function Invoke-IsolatedGazaDryRun {
             $tempOperatorScript,
             "--date", $Date,
             "--dry-run",
-            "--generate-audio",
+            "--skip-audio",
             "--allow-listing-shrink",
             "--pages-repo", $tempPagesRepo,
             "--pages-branch", $PagesBranch,
-            "--expected-source-branch", $SourceBranch,
-            "--tts-provider", "none"
+            "--expected-source-branch", $SourceBranch
         )
 
         Write-Log "Isolated Gaza dry-run workspace: $tempWorkspace"

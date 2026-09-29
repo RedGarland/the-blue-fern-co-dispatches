@@ -118,6 +118,7 @@ def test_build_readiness_report_green_path(tmp_path: Path, monkeypatch: pytest.M
     assert report["assets_status"]["ok"] is True
     assert report["dry_run_status"]["ok"] is True
     assert report["dry_run_status"]["cleanup_ok"] is True
+    assert report["dry_run_status"]["cleanup_status"] == "skipped_evidence_preserved"
     assert report["history_guard_status"]["ok"] is True
     assert report["blockers"] == []
     assert report["next_action"] == "Schedule the Gaza daily run."
@@ -290,7 +291,7 @@ def test_build_readiness_report_blocks_when_pages_dry_run_is_false_without_surfa
     assert report["next_action"].startswith("Fix the first blocker")
 
 
-def test_build_readiness_report_ignores_cleanup_failure_after_safe_dry_run(
+def test_build_readiness_report_preserves_dry_run_proof_evidence(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     pages_repo = tmp_path / "bluefern-dispatches-pages"
@@ -300,14 +301,14 @@ def test_build_readiness_report_ignores_cleanup_failure_after_safe_dry_run(
     (tmp_path / "assets" / "gaza-logo.png").write_bytes(b"png")
     _write_manual_sources(tmp_path, "2026-07-06")
     _configure_repo_mocks(monkeypatch, tmp_path, pages_repo)
-    monkeypatch.setattr(readiness, "_cleanup_generated_artifacts", lambda edition_date: (_ for _ in ()).throw(RuntimeError("fatal: Unable to create .git/index.lock: Permission denied")))
 
     report = readiness.build_readiness_report(edition_date="2026-07-06", pages_repo=pages_repo)
 
     assert report["ok"] is True
     assert report["dry_run_status"]["ok"] is True
-    assert report["dry_run_status"]["cleanup_ok"] is False
-    assert "index.lock" in report["dry_run_status"]["cleanup_error"]
+    assert report["dry_run_status"]["cleanup_ok"] is True
+    assert report["dry_run_status"]["cleanup_status"] == "skipped_evidence_preserved"
+    assert "cleanup_error" not in report["dry_run_status"]
     assert report["history_guard_status"]["ok"] is True
     assert report["blockers"] == []
     assert report["next_action"] == "Schedule the Gaza daily run."

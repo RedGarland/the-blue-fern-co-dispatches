@@ -10,13 +10,13 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "STALE_OBSERVABILITY",
+  "aggregate_status": "FAILED",
   "current_runner_branch": "add/pages-repo-default",
   "current_runner_head": "8b1ae8f1d225acc9c2903c1c632bf12dc6a32656",
   "debug_summary": {
-    "aggregate_status": "STALE_OBSERVABILITY",
+    "aggregate_status": "FAILED",
     "all_current_failures_external": null,
-    "attention_task_count": 1,
+    "attention_task_count": 2,
     "attention_tasks": [
       {
         "artifact_id": "gaza_daily_dispatch-gaza-daily-2026-09-29-20260929T130051642563Z.json",
@@ -25,14 +25,22 @@
         "failure_stage": "gaza_daily_dispatch",
         "status": "FAILED",
         "task_key": "gaza_daily_dispatch"
+      },
+      {
+        "artifact_id": "gaza_daily_dispatch-gaza-daily-2026-09-29-20260929T173813898635Z.json",
+        "classification": "audio_failed",
+        "exit_code": 1,
+        "failure_stage": "gaza_daily_dispatch",
+        "status": "FAILED",
+        "task_key": "gaza_daily_dispatch"
       }
     ],
     "external_access_restriction_count": null,
     "failed_source_count": null,
-    "operator_assessment": "ACTION_REQUIRED_OBSERVABILITY",
+    "operator_assessment": "FAILED_ACTION_REQUIRED",
     "primary_classification": "failed",
     "primary_failure_stage": "gaza_daily_dispatch",
-    "primary_layer": "OBSERVABILITY",
+    "primary_layer": "TASK",
     "primary_task_key": "gaza_daily_dispatch",
     "primary_task_status": "FAILED",
     "private_review_count_only_gap_count": null,
@@ -43,35 +51,35 @@
     "private_review_pending_item_count": null,
     "private_review_unresolved_item_count": null,
     "publication_attempted": false,
-    "publication_status": "failed",
+    "publication_status": "audio_failed",
     "receipt_completeness": "COMPLETE",
     "recovery_lifecycle": "INCIDENT_OPEN",
-    "stale_observability": true,
+    "stale_observability": false,
     "unaccounted_event_count": null,
     "unclassified_source_failure_count": null
   },
   "dispatch": "gaza",
-  "last_exported_at": "2026-09-29T17:31:46.923937Z",
-  "last_receipt_at": "2026-09-29T13:05:54.339920Z",
+  "last_exported_at": "2026-09-29T17:41:58.642345Z",
+  "last_receipt_at": "2026-09-29T17:38:29.757660Z",
   "latest_runtime_proof_date": null,
   "migration_status": "MIGRATED",
   "next_expected_run": null,
   "observed_date": "2026-09-29",
   "public_side_effects": {
     "publication_attempted": false,
-    "publication_status": "failed"
+    "publication_status": "audio_failed"
   },
   "publication_attempted": false,
-  "publication_status": "failed",
+  "publication_status": "audio_failed",
   "receipt_completeness": "COMPLETE",
   "recovery_lifecycle": "INCIDENT_OPEN",
-  "runner_source_head": "8e10180c6b29bc960c3ca0d48b3c3e45d97debc8",
+  "runner_source_head": null,
   "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
     "gaza_daily_dispatch"
   ],
   "schema_version": "bluefern_external_operational_status_v1",
-  "stale_observability": true,
+  "stale_observability": false,
   "task_summaries": [
     {
       "artifact_id": "gaza_daily_dispatch-gaza-daily-2026-09-29-20260929T130051642563Z.json",
@@ -95,6 +103,31 @@
       "run_id": "gaza-daily-2026-09-29-20260929T130051642563Z",
       "scheduled_for": "2026-09-29",
       "started_at": "2026-09-29T13:00:51.642563Z",
+      "status": "FAILED",
+      "task_key": "gaza_daily_dispatch"
+    },
+    {
+      "artifact_id": "gaza_daily_dispatch-gaza-daily-2026-09-29-20260929T173813898635Z.json",
+      "classification": "audio_failed",
+      "completed_at": "2026-09-29T17:38:29.681768Z",
+      "diagnostics": {
+        "failure": {
+          "failure_stage": "gaza_daily_dispatch"
+        }
+      },
+      "exit_code": 1,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "bluesky": false,
+        "pages": false,
+        "public_output": false
+      },
+      "publication_attempted": false,
+      "publication_status": "audio_failed",
+      "run_id": "gaza-daily-2026-09-29-20260929T173813898635Z",
+      "scheduled_for": "2026-09-29",
+      "started_at": "2026-09-29T17:38:13.898635Z",
       "status": "FAILED",
       "task_key": "gaza_daily_dispatch"
     }

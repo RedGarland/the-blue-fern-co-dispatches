@@ -1,0 +1,36 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260929T014549-0700",
+  "scheduled_for": "2026-09-29T01:44:51-07:00",
+  "started_at": "2026-09-29T01:45:49-07:00",
+  "completed_at": "2026-09-29T01:46:55-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-29T00:46:27-07:00",
+    "end": "2026-09-29T01:46:55-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "prior_completed_hourly_check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "checked first; latest surfaced Gaza material was outside the hourly window and no new qualifying development was verified",
+    "who": "checked second; no qualifying in-window Gaza health-system development surfaced",
+    "additional_targeted_searches": 12,
+    "qualifying_developments": 0,
+    "source_failures": 3,
+    "source_failure_detail": [
+      "BBC targeted search was blocked by robots.txt",
+      "UN News targeted search was blocked by robots.txt",
+      "New York Times targeted search was blocked by robots.txt"
+    ],
+    "excluded_items": [
+      "Al Jazeera satellite-imagery feature published 29 September was retrospective and did not establish a new in-window event; direct retrieval was disabled",
+      "Al Jazeera ceasefire tracker was updated about 19 hours before this run and was outside the hourly window",
+      "older, recycled, duplicate, unsupported, irrelevant, or insufficiently time-bounded items were excluded"
+    ],
+    "authority": "supplementary_only; production remains authoritative"
+  }
+}

@@ -190,8 +190,8 @@
         "private_review_pending_date_count": 14,
         "private_review_pending_item_count": 59,
         "publication_attempted": false,
-        "publication_status": null,
-        "receipt_completeness": "PARTIAL",
+        "publication_status": "skipped_not_release_ready",
+        "receipt_completeness": "COMPLETE",
         "recovery_lifecycle": "HEALTHY",
         "stale_observability": false,
         "unaccounted_event_count": null,
@@ -398,7 +398,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-09-29T15:06:32.726421Z",
+  "exported_at": "2026-09-29T15:36:54.495176Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "FAILED"

@@ -1,0 +1,33 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260929T074353-0700",
+  "scheduled_for": "2026-09-29T07:44:51-07:00",
+  "started_at": "2026-09-29T07:43:53-07:00",
+  "completed_at": "2026-09-29T07:45:17-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-29T06:50:13-07:00",
+    "end": "2026-09-29T07:45:17-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "priority_checks": [
+      "OCHA OPT checked first; the latest surfaced Gaza-relevant humanitarian situation report remained the 25 September report, posted 28 September, with no new in-window Gaza development.",
+      "WHO checked second; no new Gaza-specific health-system development was verified in the bounded window."
+    ],
+    "additional_targeted_searches": 12,
+    "result": "No new qualifying development was verified within the bounded window.",
+    "exclusions": [
+      "Al Jazeera's 29 September satellite-imagery explainer was excluded as a synthesis of previously available UNOSAT, UNRWA and Google imagery rather than a new in-window event.",
+      "Al Jazeera's standing ceasefire tracker surfaced current cumulative figures but its latest visible update preceded the bounded hourly window; excluded as not new."
+    ],
+    "search_failures": [
+      "BBC targeted retrieval was blocked by robots.txt.",
+      "UN News targeted retrieval was blocked by robots.txt."
+    ]
+  }
+}

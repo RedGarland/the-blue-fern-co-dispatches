@@ -12,7 +12,7 @@
   },
   "aggregate_status": "STALE_OBSERVABILITY",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "8b1ae8f1d225acc9c2903c1c632bf12dc6a32656",
+  "current_runner_head": "c2217f5d4e3b3d9711e6b5273f98aee8ed691da9",
   "debug_summary": {
     "aggregate_status": "STALE_OBSERVABILITY",
     "all_current_failures_external": null,
@@ -59,7 +59,7 @@
     "unclassified_source_failure_count": null
   },
   "dispatch": "gaza",
-  "last_exported_at": "2026-09-29T22:15:06.430112Z",
+  "last_exported_at": "2026-09-29T23:23:08.855465Z",
   "last_receipt_at": "2026-09-29T17:38:29.757660Z",
   "latest_runtime_proof_date": null,
   "migration_status": "MIGRATED",

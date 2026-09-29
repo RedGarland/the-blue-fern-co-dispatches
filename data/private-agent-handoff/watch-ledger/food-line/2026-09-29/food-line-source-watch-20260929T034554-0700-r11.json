@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260929T034554-0700-r11",
+  "scheduled_for": "2026-09-29T03:45:54-07:00",
+  "started_at": "2026-09-29T03:45:54-07:00",
+  "completed_at": "2026-09-29T03:47:13-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-29T02:45:54-07:00",
+    "end": "2026-09-29T03:45:54-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Exactly 12 bounded targeted web searches were completed across sole/only/last/full-service grocery loss, canceled or suspended emergency food distributions, abrupt pantry/food-bank service reductions, and SNAP/WIC/food-assistance interruptions. No new qualifying U.S. disruption was identified in the hourly window. Fresh relevant results were non-qualifying or outside the window, including Kaua'i recovery distributions proceeding as scheduled and older grocery/pantry closure stories. Donation drives, resource guides, routine program promotion, generic inflation coverage, opinion, non-U.S. items, and duplicates were excluded."
+}

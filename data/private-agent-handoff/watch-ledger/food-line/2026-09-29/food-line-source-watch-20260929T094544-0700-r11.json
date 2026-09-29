@@ -1,0 +1,34 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260929T094544-0700-r11",
+  "scheduled_for": "2026-09-29T09:45:44-07:00",
+  "started_at": "2026-09-29T09:45:44-07:00",
+  "completed_at": "2026-09-29T09:47:20-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-29T08:49:39-07:00",
+    "end": "2026-09-29T09:47:20-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "scope": [
+      "only/sole/last/full-service grocery closure, fire, or disaster",
+      "canceled or suspended emergency food distributions from storm, flood, fire, outage, or facility damage",
+      "abrupt pantry or food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "result": "No new qualifying U.S. food-access disruption was identified since the prior hourly check.",
+    "exclusions": [
+      "A September 29 Queens fire damaged a building containing a grocery store, but available reporting did not establish that it was the community's only, sole, last, or full-service grocery store, and the fire began well before this watch window.",
+      "A September 29 vehicle crash into an El Monte Food 4 Less surfaced in fresh local coverage, but available reporting did not establish a qualifying sole/last/full-service access loss or sustained closure.",
+      "Kauaʻi hurricane-recovery coverage showed emergency food distributions continuing as scheduled rather than being canceled or suspended.",
+      "No new official SNAP, WIC, or other food-assistance interruption with immediate access consequences surfaced in the bounded searches."
+    ],
+    "search_failures": []
+  }
+}

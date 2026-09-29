@@ -8,7 +8,15 @@ from pathlib import Path
 import pytest
 
 from bluefern_dispatches.operational_health import build_care_line_operational_receipt, build_operational_receipt
-from scripts.dispatch_ops import DispatchStatus, apply_recovery_plan, build_recovery_plan, build_status, build_system_snapshot, main
+from scripts.dispatch_ops import (
+    DispatchStatus,
+    apply_recovery_plan,
+    build_recovery_plan,
+    build_status,
+    build_system_snapshot,
+    evaluate_system_alerts,
+    main,
+)
 
 
 DATE = "2026-09-18"
@@ -436,6 +444,73 @@ def test_system_command_json_is_deterministic(tmp_path: Path, capsys: pytest.Cap
     assert result == 1
     assert payload["schema_version"] == "dispatch_ops_system_status_v1"
     assert payload["dispatches"]["food-line"]["debug_summary"]["primary_layer"] == "NONE"
+
+
+def test_system_alerts_gate_on_operator_assessment(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    _system_status_export(tmp_path)
+
+    result = main(["system", "--alerts-json", "--root", str(tmp_path)])
+    payload = json.loads(capsys.readouterr().out)
+
+    assert result == 1
+    assert payload["schema_version"] == "dispatch_ops_system_alerts_v1"
+    assert payload["alert_required"] is True
+    assert [row["dispatch"] for row in payload["alert_dispatches"]] == ["gaza"]
+    assert payload["alert_dispatches"][0]["operator_assessment"] == "ACTION_REQUIRED_OBSERVABILITY"
+    assert [row["dispatch"] for row in payload["suppressed_dispatches"]] == ["care-line", "food-line"]
+    assert {
+        row["operator_assessment"] for row in payload["suppressed_dispatches"]
+    } == {"HEALTHY", "HEALTHY_WITH_EXTERNAL_RESTRICTIONS"}
+
+
+def test_system_alerts_do_not_notify_for_external_only_degradation(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    _write_json(
+        tmp_path / "ops/status/system/latest.json",
+        {
+            "schema_version": "bluefern_external_system_status_v1",
+            "exported_at": "2026-09-28T22:19:13Z",
+            "system_status": "DEGRADED",
+            "dispatches": {
+                "care-line": {
+                    "aggregate_status": "DEGRADED",
+                    "recovery_lifecycle": "HEALTHY",
+                    "debug_summary": {
+                        "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
+                        "primary_layer": "EXTERNAL_DEPENDENCY",
+                        "primary_task_key": "care_line_collection",
+                        "failed_source_count": 4,
+                        "external_access_restriction_count": 4,
+                        "unclassified_source_failure_count": 0,
+                    },
+                },
+            },
+        },
+    )
+
+    result = main(["system", "--alerts-json", "--root", str(tmp_path)])
+    payload = json.loads(capsys.readouterr().out)
+
+    assert result == 0
+    assert payload["alert_required"] is False
+    assert payload["alert_dispatches"] == []
+    assert payload["suppressed_dispatches"][0]["dispatch"] == "care-line"
+
+
+def test_evaluate_system_alerts_treats_missing_assessment_as_alertable() -> None:
+    payload = evaluate_system_alerts(
+        {
+            "system_status": "FAILED",
+            "exported_at": "2026-09-28T22:19:13Z",
+            "dispatches": {"food-line": {"aggregate_status": "FAILED"}},
+            "evidence": ["ops/status/system/latest.json"],
+            "warnings": [],
+        }
+    )
+
+    assert payload["alert_required"] is True
+    assert payload["alert_dispatches"] == []
+    assert payload["unknown_dispatches"][0]["dispatch"] == "food-line"
+    assert payload["unknown_dispatches"][0]["operator_assessment"] == "UNKNOWN"
 
 
 def test_system_command_defaults_to_configured_status_root(

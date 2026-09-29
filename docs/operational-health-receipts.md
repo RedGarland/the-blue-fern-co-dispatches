@@ -344,6 +344,9 @@ imperfections do not look like fresh infrastructure incidents.
 Watch and operator notification policy should use `operator_assessment` as the
 alert gate:
 
+- The current active alert scope is `food-line`, `care-line`, `gaza`, and
+  `ice`. `american-pressure` and `cascadia` are outside current alert health
+  scope and should not make `alert_required` true.
 - Alert on `FAILED_ACTION_REQUIRED`, `DEGRADED_ACTION_RECOMMENDED`, and
   `ACTION_REQUIRED_OBSERVABILITY`.
 - Do not alert as a failure on `HEALTHY`, `HEALTHY_WITH_SOURCE_EXCLUSIONS`, or

@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260929T024522-0700-r11",
+  "scheduled_for": "2026-09-29T02:45:22-07:00",
+  "started_at": "2026-09-29T02:46:58-07:00",
+  "completed_at": "2026-09-29T02:48:51-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-29T01:44:18-07:00",
+    "end": "2026-09-29T02:46:58-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "CMS Public Notices was checked first. Direct retrieval of the current CMS Public Notices page failed in this execution; a CMS-domain fallback search did not surface a newer qualifying provider termination, rescission, CLIA limitation/suspension, or similar access-risk notice, so the CMS leg is incomplete and the run is DEGRADED. Exactly 12 additional targeted searches were run across hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural/emergency service loss, ambulance/EMS, air-medical, essential-service restoration/reopening, U.S. territories, and broad local healthcare-access terms. No new qualifying U.S. or territory healthcare-access development was identified in the bounded window. A 211info listing showed short planned primary-care clinic closures in Multnomah County on 2026-09-29, but no evidence established that the notice itself became new within this hourly window, and it was not promoted. Other surfaced items were older, outside the U.S./territories, previously known, proposals without concrete access effect, or otherwise outside scope."
+}

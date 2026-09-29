@@ -263,6 +263,7 @@ def evaluate_system_alerts(snapshot: dict[str, Any]) -> dict[str, Any]:
     alert_dispatches: list[dict[str, Any]] = []
     suppressed_dispatches: list[dict[str, Any]] = []
     unknown_dispatches: list[dict[str, Any]] = []
+    ignored_dispatches: list[dict[str, Any]] = []
 
     for dispatch in sorted(dispatches):
         state = dispatches[dispatch] if isinstance(dispatches[dispatch], dict) else {}
@@ -270,6 +271,7 @@ def evaluate_system_alerts(snapshot: dict[str, Any]) -> dict[str, Any]:
         assessment = str(debug.get("operator_assessment") or "UNKNOWN")
         row = {
             "dispatch": dispatch,
+            "migration_status": state.get("migration_status") or "UNKNOWN",
             "aggregate_status": state.get("aggregate_status") or "UNKNOWN",
             "recovery_lifecycle": state.get("recovery_lifecycle") or "UNKNOWN",
             "operator_assessment": assessment,
@@ -283,6 +285,8 @@ def evaluate_system_alerts(snapshot: dict[str, Any]) -> dict[str, Any]:
             alert_dispatches.append(row)
         elif assessment in NON_FAILURE_OPERATOR_ASSESSMENTS:
             suppressed_dispatches.append(row)
+        elif dispatch not in SUPPORTED_DISPATCHES and assessment == "UNKNOWN":
+            ignored_dispatches.append(row)
         else:
             unknown_dispatches.append(row)
 
@@ -296,6 +300,7 @@ def evaluate_system_alerts(snapshot: dict[str, Any]) -> dict[str, Any]:
         "alert_dispatches": alert_dispatches,
         "suppressed_dispatches": suppressed_dispatches,
         "unknown_dispatches": unknown_dispatches,
+        "ignored_dispatches": ignored_dispatches,
         "warnings": warnings,
         "evidence": snapshot.get("evidence") if isinstance(snapshot.get("evidence"), list) else [],
         "policy": {

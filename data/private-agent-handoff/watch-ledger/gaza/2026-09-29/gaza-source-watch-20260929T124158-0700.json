@@ -1,0 +1,34 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260929T124158-0700",
+  "scheduled_for": "2026-09-29T12:41:00-07:00",
+  "started_at": "2026-09-29T12:41:58-07:00",
+  "completed_at": "2026-09-29T12:43:45-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-29T11:50:08-07:00",
+    "end": "2026-09-29T12:43:45-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "priority_checks": [
+      "OCHA OPT checked first; no new qualifying Gaza development was verified since the prior hourly check. Latest surfaced Gaza report remained the 25 September 2026 situation report, posted 28 September.",
+      "WHO checked second; no new Gaza-specific health-system development was verified since the prior hourly check."
+    ],
+    "additional_targeted_searches": 12,
+    "discovery_method": "Used a broader recent-discovery window to avoid missing late-indexed or rolling-page updates, then required event-level newness since the prior completed check and deduplicated against repository evidence.",
+    "result": "No new qualifying development remained after source review and deduplication.",
+    "exclusions": [
+      "A 29 September AFP report republished by Arab News added a later Gaza City drone-strike casualty, but exact event language was already present in current repository story_memory.json and normalized Gaza agent-history, so it was excluded as already captured by production.",
+      "Earlier 29 September Gaza City/Jabalia casualties, the Hamas commander strike, recovered-body reporting, and older humanitarian updates were excluded as already captured, duplicate, recycled, or outside the bounded event-newness window."
+    ],
+    "search_failures": [
+      "BBC targeted retrieval was blocked by robots.txt.",
+      "UN News targeted retrieval was blocked by robots.txt."
+    ]
+  }
+}

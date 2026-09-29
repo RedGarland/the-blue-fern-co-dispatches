@@ -341,6 +341,20 @@ distinguishes healthy degraded states such as
 from `FAILED_ACTION_REQUIRED` or `DEGRADED_ACTION_RECOMMENDED`, so source
 imperfections do not look like fresh infrastructure incidents.
 
+Watch and operator notification policy should use `operator_assessment` as the
+alert gate:
+
+- Alert on `FAILED_ACTION_REQUIRED`, `DEGRADED_ACTION_RECOMMENDED`, and
+  `ACTION_REQUIRED_OBSERVABILITY`.
+- Do not alert as a failure on `HEALTHY`, `HEALTHY_WITH_SOURCE_EXCLUSIONS`, or
+  `HEALTHY_WITH_EXTERNAL_RESTRICTIONS`.
+- For `HEALTHY_WITH_EXTERNAL_RESTRICTIONS`, notify only when the count of
+  failed external sources rises, a required source family loses all current
+  coverage, or `unclassified_source_failure_count` becomes nonzero.
+- For `HEALTHY_WITH_SOURCE_EXCLUSIONS`, notify only when downstream handoff
+  fails, receipt completeness is no longer `COMPLETE`, or the source-watch
+  exclusion pattern changes into a nonterminal failure.
+
 The Scheduled Dispatch Watch should consume `food-line/latest.json` as follows:
 
 1. Read `aggregate_status` for dispatch health. `FAILED` is a real task failure;

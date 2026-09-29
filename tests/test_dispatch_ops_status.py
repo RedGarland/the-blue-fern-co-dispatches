@@ -542,6 +542,8 @@ def test_system_alerts_ignore_unsupported_unknown_dispatches(tmp_path: Path, cap
     assert payload["alert_dispatches"] == []
     assert payload["unknown_dispatches"] == []
     assert [row["dispatch"] for row in payload["ignored_dispatches"]] == ["american-pressure", "cascadia"]
+    assert {row["ignored_reason"] for row in payload["ignored_dispatches"]} == {"outside_active_alert_scope"}
+    assert payload["policy"]["active_alert_dispatches"] == ["care-line", "food-line", "gaza", "ice"]
 
 
 def test_evaluate_system_alerts_treats_missing_assessment_as_alertable() -> None:

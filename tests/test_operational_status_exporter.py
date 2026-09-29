@@ -15,6 +15,7 @@ from bluefern_dispatches.operational_health import (
 from bluefern_dispatches.operational_status_exporter import (
     ExportError,
     build_care_line_status,
+    build_system_status,
     build_gaza_status,
     build_ice_status,
     build_food_line_status,
@@ -46,6 +47,11 @@ TASKS = {
     "food_line_current_intake": ("current_intake", "upstream_blocked", 0),
     "food_line_daily_publish": ("daily_publish", "skipped_not_release_ready", 0),
 }
+
+
+def _write_json(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def _write_day(tmp_path: Path, statuses: dict[str, tuple[str, str, int]] | None = None) -> Path:
@@ -84,6 +90,29 @@ def _write_day(tmp_path: Path, statuses: dict[str, tuple[str, str, int]] | None 
         )
         (receipt_root / f"run-{index}.json").write_text(json.dumps(receipt), encoding="utf-8")
     return source
+
+
+def _write_food_proposal(source: Path, proposal_date: str, payload: dict) -> None:
+    _write_json(
+        source / "data" / "dispatches" / "food-line" / "review" / "proposed-editions" / f"{proposal_date}.json",
+        {
+            "schema_version": "food_line_proposed_edition_v1",
+            "edition_date": proposal_date,
+            **payload,
+        },
+    )
+
+
+def _write_food_release_readiness(source: Path, proposal_date: str, payload: dict | None = None) -> None:
+    _write_json(
+        source / "data" / "dispatches" / "food-line" / "review" / "release-readiness" / f"{proposal_date}.json",
+        {
+            "schema_version": "food_line_release_readiness_v1",
+            "date": proposal_date,
+            "status": "approved_current_review_ready_for_source_generation",
+            **(payload or {}),
+        },
+    )
 
 
 def _write_food_sep23_recovery_sequence(
@@ -537,6 +566,102 @@ def test_complete_success_day_is_healthy(tmp_path: Path) -> None:
     status = build_food_line_status(source_root=source, date=DATE, evaluated_at=EVALUATED, exported_at=EVALUATED)
     assert status["aggregate_status"] == "SUCCESS"
     assert status["receipt_completeness"] == "COMPLETE"
+
+
+def test_food_line_private_review_backlog_surfaces_pending_proposals(tmp_path: Path) -> None:
+    statuses = {key: (action, "completed", 0) for key, (action, _, _) in TASKS.items()}
+    source = _write_day(tmp_path, statuses)
+    _write_food_proposal(source, "2026-09-09", {"pending_item_count": 2, "published": False})
+    _write_food_proposal(
+        source,
+        "2026-09-10",
+        {
+            "items": [
+                {"headline": "Pending pantry closure", "review_status": "pending_editorial_review"},
+                {"headline": "Approved school meals story", "review_status": "approved"},
+                {"headline": "Pending SNAP strain", "review_status": "review_required"},
+            ],
+            "published": False,
+        },
+    )
+    _write_food_proposal(source, "2026-09-08", {"pending_item_count": 4, "published": True})
+    _write_food_proposal(source, "2026-09-07", {"pending_item_count": 3})
+    _write_food_release_readiness(source, "2026-09-07")
+
+    status = build_food_line_status(source_root=source, date=DATE, evaluated_at=EVALUATED, exported_at=EVALUATED)
+
+    assert status["aggregate_status"] == "SUCCESS"
+    assert status["private_review_backlog"] == {
+        "pending_date_count": 2,
+        "pending_item_count": 4,
+        "oldest_pending_date": "2026-09-09",
+        "max_age_hours": 40,
+        "dates": [
+            {
+                "date": "2026-09-09",
+                "pending_item_count": 2,
+                "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-09.json",
+                "age_hours": 40,
+            },
+            {
+                "date": "2026-09-10",
+                "pending_item_count": 2,
+                "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-10.json",
+                "age_hours": 16,
+            },
+        ],
+    }
+    assert status["debug_summary"]["operator_assessment"] == "ACTION_REQUIRED_PENDING_REVIEW"
+    assert status["debug_summary"]["primary_layer"] == "EDITORIAL_HANDOFF"
+    assert status["debug_summary"]["private_review_pending_date_count"] == 2
+    assert status["debug_summary"]["private_review_pending_item_count"] == 4
+    assert status["debug_summary"]["private_review_oldest_pending_date"] == "2026-09-09"
+
+    system = build_system_status(status, source_root=source, exported_at=EVALUATED)
+    assert system["dispatches"]["food-line"]["private_review_backlog"]["pending_item_count"] == 4
+    assert (
+        system["dispatches"]["food-line"]["debug_summary"]["operator_assessment"]
+        == "ACTION_REQUIRED_PENDING_REVIEW"
+    )
+
+
+def test_food_line_private_review_backlog_ignores_approved_and_release_ready_proposals(tmp_path: Path) -> None:
+    statuses = {key: (action, "completed", 0) for key, (action, _, _) in TASKS.items()}
+    source = _write_day(tmp_path, statuses)
+    _write_food_proposal(
+        source,
+        "2026-09-08",
+        {
+            "pending_item_count": 0,
+            "approved_item_count": 1,
+            "draft_status": "draft_approved_pending_publication",
+            "items": [{"headline": "Approved school meals story", "review_status": "approved"}],
+            "published": False,
+        },
+    )
+    _write_food_proposal(source, "2026-09-09", {"pending_item_count": 2, "published": False})
+    _write_food_release_readiness(source, "2026-09-09")
+    _write_food_proposal(
+        source,
+        "2026-09-06",
+        {
+            "pending_item_count": 2,
+            "draft_status": "draft_approved_pending_publication",
+            "published": False,
+        },
+    )
+
+    status = build_food_line_status(source_root=source, date=DATE, evaluated_at=EVALUATED, exported_at=EVALUATED)
+
+    assert status["private_review_backlog"] == {
+        "pending_date_count": 0,
+        "pending_item_count": 0,
+        "oldest_pending_date": None,
+        "max_age_hours": 0,
+        "dates": [],
+    }
+    assert status["debug_summary"]["operator_assessment"] == "HEALTHY"
+    assert status["debug_summary"]["primary_layer"] == "NONE"
 
 
 def test_food_line_recovered_source_watch_sequence_uses_effective_timestamp_state(tmp_path: Path) -> None:

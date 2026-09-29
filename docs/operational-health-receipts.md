@@ -308,6 +308,13 @@ staleness fields, and a shared `debug_summary`. They never export raw source
 content, editorial notes, private queue data, credentials, environment
 variables, or local filesystem paths.
 
+Food Line status also exports a sanitized `private_review_backlog` summary from
+`data/dispatches/food-line/review/proposed-editions/*.json`. It reports only
+pending date counts, pending item counts, oldest pending date, max age in hours,
+and proposal artifact paths. A proposal date is actionable only when it has
+pending private items, lacks a matching release-readiness approval, and is not
+already published or dispositioned.
+
 `debug_summary` is the first field to inspect when a line is not healthy. It
 contains a small, dispatch-neutral diagnosis pointer:
 
@@ -326,6 +333,7 @@ contains a small, dispatch-neutral diagnosis pointer:
 - publication flags
 - `stale_observability`
 - `receipt_completeness`
+- Food Line private review backlog counts where available
 
 `primary_layer` identifies the first likely operational layer to inspect, such
 as source dependency, source classification, upstream handoff, wrapper,
@@ -349,6 +357,8 @@ alert gate:
   scope and should not make `alert_required` true.
 - Alert on `FAILED_ACTION_REQUIRED`, `DEGRADED_ACTION_RECOMMENDED`, and
   `ACTION_REQUIRED_OBSERVABILITY`.
+- Alert on `ACTION_REQUIRED_PENDING_REVIEW` because valid private Food Line
+  items are waiting for editorial or publication disposition.
 - Do not alert as a failure on `HEALTHY`, `HEALTHY_WITH_SOURCE_EXCLUSIONS`, or
   `HEALTHY_WITH_EXTERNAL_RESTRICTIONS`.
 - For `HEALTHY_WITH_EXTERNAL_RESTRICTIONS`, notify only when the count of

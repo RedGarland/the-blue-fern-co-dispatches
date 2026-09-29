@@ -39,6 +39,7 @@ SUPPORTED_TASK_STATUSES = {status.value for status in OperationalStatus}
 SAFE_KEY_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 SAFE_BRANCH_RE = re.compile(r"^[A-Za-z0-9_./-]+$")
 HEX_HEAD_RE = re.compile(r"^[0-9a-f]{7,64}$", re.IGNORECASE)
+DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 PRIVATE_KEY_RE = re.compile(r"(?:path|body|excerpt|source|raw|secret|token|credential|password|environment|env)", re.IGNORECASE)
 FAILURE_DIAGNOSTIC_KEYS = {
     "child_error_message",
@@ -85,6 +86,55 @@ HANDOFF_TERMINAL_STATUSES = {"SUCCESS", "SAFE_NO_OP", "FAILED"}
 RETIREMENT_SHA_RE = re.compile(r"^[0-9a-f]{64}$", re.IGNORECASE)
 CARE_LINE_SOURCE_REGISTRY_RELATIVE = Path("data") / "dispatches" / "care-line" / "source_registry.json"
 CARE_LINE_EXTERNAL_RESTRICTION_CLASSIFICATION = "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION"
+FOOD_LINE_PROPOSED_EDITIONS_RELATIVE = (
+    Path("data") / "dispatches" / "food-line" / "review" / "proposed-editions"
+)
+FOOD_LINE_RELEASE_READINESS_RELATIVE = (
+    Path("data") / "dispatches" / "food-line" / "review" / "release-readiness"
+)
+FOOD_LINE_RELEASE_READY_STATUSES = {
+    "approved_current_review_ready_for_source_generation",
+    "approved",
+    "release_ready",
+    "ready_for_publication",
+}
+FOOD_LINE_PUBLISHED_STATUSES = {
+    "published",
+    "publication_success",
+    "released",
+}
+FOOD_LINE_APPROVED_PROPOSAL_STATUSES = {
+    "approved",
+    "approved_pending_publication",
+    "draft_approved_pending_publication",
+    "ready_for_publication",
+}
+FOOD_LINE_PENDING_ITEM_STATUSES = {
+    "",
+    "pending",
+    "pending_review",
+    "pending_editorial_review",
+    "review_required",
+    "needs_review",
+    "retained_for_review",
+    "draft_pending_editorial_review",
+}
+FOOD_LINE_DISPOSITIONED_ITEM_STATUSES = {
+    "approved",
+    "approved_for_publication",
+    "publish_candidate",
+    "published",
+    "publication_success",
+    "rejected",
+    "reject",
+    "duplicate",
+    "duplicate_or_stale",
+    "stale",
+    "weak_food_pressure",
+    "needs_source_check",
+    "held",
+    "hold",
+}
 
 
 class ExportError(RuntimeError):
@@ -110,6 +160,14 @@ def _parse_json(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ExportError(f"receipt must be an object: {path.name}")
     return value
+
+
+def _load_json_object(path: Path) -> dict[str, Any] | None:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8-sig"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    return value if isinstance(value, dict) else None
 
 
 def _iso(value: datetime) -> str:
@@ -828,6 +886,149 @@ def _task_summary(
     }
 
 
+def _safe_nonnegative_int(value: Any) -> int | None:
+    try:
+        parsed = int(value)
+    except (TypeError, ValueError):
+        return None
+    return parsed if parsed >= 0 else None
+
+
+def _food_line_proposal_date(path: Path, payload: dict[str, Any]) -> str | None:
+    for key in ("proposal_date", "edition_date", "observed_date", "date"):
+        value = payload.get(key)
+        if isinstance(value, str) and DATE_RE.fullmatch(value.strip()):
+            return value.strip()
+    return path.stem if DATE_RE.fullmatch(path.stem) else None
+
+
+def _food_line_release_readiness_approved(source_root: Path, proposal_date: str) -> bool:
+    path = source_root / FOOD_LINE_RELEASE_READINESS_RELATIVE / f"{proposal_date}.json"
+    payload = _load_json_object(path)
+    if not payload:
+        return False
+    status = str(
+        payload.get("status")
+        or payload.get("release_readiness_status")
+        or payload.get("approval_status")
+        or payload.get("publication_status")
+        or ""
+    ).strip().lower()
+    if status in FOOD_LINE_RELEASE_READY_STATUSES:
+        return True
+    for key in ("release_ready", "approved", "publication_approved", "publication_approval"):
+        if payload.get(key) is True:
+            return True
+    return False
+
+
+def _food_line_proposal_published_or_dispositioned(payload: dict[str, Any]) -> bool:
+    if (
+        payload.get("published") is True
+        or payload.get("publication_completed") is True
+        or payload.get("approved") is True
+        or payload.get("publication_approval") is True
+    ):
+        return True
+    status = str(
+        payload.get("publication_status")
+        or payload.get("public_status")
+        or payload.get("draft_status")
+        or payload.get("approval_status")
+        or payload.get("status")
+        or ""
+    ).strip().lower()
+    return status in FOOD_LINE_PUBLISHED_STATUSES or status in FOOD_LINE_APPROVED_PROPOSAL_STATUSES
+
+
+def _food_line_item_pending(item: Any) -> bool:
+    if not isinstance(item, dict):
+        return False
+    status_values = [
+        item.get("status"),
+        item.get("review_status"),
+        item.get("editorial_status"),
+        item.get("disposition"),
+        item.get("classification"),
+    ]
+    normalized = [
+        str(value or "").strip().lower()
+        for value in status_values
+        if value is not None and str(value).strip()
+    ]
+    if not normalized:
+        return True
+    if any(value in FOOD_LINE_DISPOSITIONED_ITEM_STATUSES for value in normalized):
+        return False
+    return any(value in FOOD_LINE_PENDING_ITEM_STATUSES for value in normalized)
+
+
+def _food_line_equivalent_pending_item_count(payload: dict[str, Any]) -> int:
+    pending = _safe_nonnegative_int(payload.get("pending_item_count"))
+    if pending is not None:
+        return pending
+    for key in ("historical_editorial_disposition", "editorial_disposition", "review_disposition"):
+        disposition = payload.get(key)
+        if isinstance(disposition, dict):
+            pending = _safe_nonnegative_int(disposition.get("pending"))
+            if pending is not None:
+                return pending
+    items = payload.get("items")
+    if isinstance(items, list):
+        return sum(1 for item in items if _food_line_item_pending(item))
+    return 0
+
+
+def _food_line_private_review_backlog_age_hours(proposal_date: str, evaluated_at: str) -> int | None:
+    evaluated = parse_timestamp(evaluated_at)
+    if evaluated is None:
+        return None
+    try:
+        start = datetime.fromisoformat(proposal_date).replace(tzinfo=timezone.utc)
+    except ValueError:
+        return None
+    delta = evaluated.astimezone(timezone.utc) - start
+    return max(0, int(delta.total_seconds() // 3600))
+
+
+def food_line_private_review_backlog(*, source_root: Path, evaluated_at: str) -> dict[str, Any]:
+    proposal_root = source_root / FOOD_LINE_PROPOSED_EDITIONS_RELATIVE
+    rows: list[dict[str, Any]] = []
+    if proposal_root.is_dir():
+        for path in sorted(proposal_root.glob("*.json")):
+            payload = _load_json_object(path)
+            if payload is None:
+                continue
+            proposal_date = _food_line_proposal_date(path, payload)
+            if not proposal_date:
+                continue
+            pending_count = _food_line_equivalent_pending_item_count(payload)
+            if pending_count <= 0:
+                continue
+            if _food_line_proposal_published_or_dispositioned(payload):
+                continue
+            if _food_line_release_readiness_approved(source_root, proposal_date):
+                continue
+            row = {
+                "date": proposal_date,
+                "pending_item_count": pending_count,
+                "proposal_artifact": (FOOD_LINE_PROPOSED_EDITIONS_RELATIVE / path.name).as_posix(),
+            }
+            age_hours = _food_line_private_review_backlog_age_hours(proposal_date, evaluated_at)
+            if age_hours is not None:
+                row["age_hours"] = age_hours
+            rows.append(row)
+    rows.sort(key=lambda item: str(item["date"]))
+    max_age_values = [item["age_hours"] for item in rows if isinstance(item.get("age_hours"), int)]
+    return {
+        "pending_date_count": len(rows),
+        "pending_item_count": sum(int(item["pending_item_count"]) for item in rows),
+        "oldest_pending_date": rows[0]["date"] if rows else None,
+        "max_age_hours": max(max_age_values) if max_age_values else 0,
+        "dates": rows,
+    }
+
+
 def _with_debug_summary(payload: dict[str, Any]) -> dict[str, Any]:
     payload["debug_summary"] = build_debug_summary(payload)
     return payload
@@ -978,6 +1179,7 @@ def build_food_line_status(
     publication_attempted = any(receipt.get("publication_attempted") is True for receipt in receipts)
     publication_statuses = [receipt.get("publication_status") for receipt in receipts if receipt.get("publication_status")]
     agent_handoff = load_agent_handoff_status(source_root, "food-line")
+    private_review_backlog = food_line_private_review_backlog(source_root=source_root, evaluated_at=evaluated_at)
     return _with_debug_summary({
         "schema_version": EXTERNAL_STATUS_SCHEMA_VERSION,
         "dispatch": "food-line",
@@ -1003,6 +1205,7 @@ def build_food_line_status(
         "next_expected_run": next((item.get("next_expected_run") for item in receipts if item.get("next_expected_run")), None),
         "stale_after": stale_after,
         "agent_handoff": agent_handoff,
+        "private_review_backlog": private_review_backlog,
     })
 
 
@@ -1308,6 +1511,7 @@ def build_system_status(
             "current_runner_branch": food_line_status.get("current_runner_branch"),
             "debug_summary": food_line_status.get("debug_summary"),
             "agent_handoff": food_line_status["agent_handoff"],
+            "private_review_backlog": food_line_status.get("private_review_backlog"),
         }
     }
     for dispatch in NON_MIGRATED_DISPATCHES:

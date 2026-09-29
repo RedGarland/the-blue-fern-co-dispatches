@@ -496,6 +496,70 @@ def test_system_alerts_do_not_notify_for_external_only_degradation(tmp_path: Pat
     assert payload["suppressed_dispatches"][0]["dispatch"] == "care-line"
 
 
+def test_system_alerts_notify_for_food_private_review_backlog(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    _write_json(
+        tmp_path / "ops/status/system/latest.json",
+        {
+            "schema_version": "bluefern_external_system_status_v1",
+            "exported_at": "2026-09-29T18:00:00Z",
+            "system_status": "SUCCESS",
+            "dispatches": {
+                "food-line": {
+                    "migration_status": "MIGRATED",
+                    "aggregate_status": "SUCCESS",
+                    "recovery_lifecycle": "HEALTHY",
+                    "private_review_backlog": {
+                        "pending_date_count": 2,
+                        "pending_item_count": 4,
+                        "oldest_pending_date": "2026-09-14",
+                        "max_age_hours": 368,
+                        "dates": [],
+                    },
+                    "debug_summary": {
+                        "operator_assessment": "ACTION_REQUIRED_PENDING_REVIEW",
+                        "primary_layer": "EDITORIAL_HANDOFF",
+                        "primary_task_key": None,
+                    },
+                },
+                "care-line": {
+                    "migration_status": "MIGRATED",
+                    "aggregate_status": "DEGRADED",
+                    "recovery_lifecycle": "HEALTHY",
+                    "debug_summary": {
+                        "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
+                        "primary_layer": "EXTERNAL_DEPENDENCY",
+                    },
+                },
+            },
+        },
+    )
+
+    result = main(["system", "--alerts-json", "--root", str(tmp_path)])
+    payload = json.loads(capsys.readouterr().out)
+
+    assert result == 1
+    assert payload["alert_required"] is True
+    assert payload["alert_dispatches"] == [
+        {
+            "dispatch": "food-line",
+            "migration_status": "MIGRATED",
+            "aggregate_status": "SUCCESS",
+            "recovery_lifecycle": "HEALTHY",
+            "operator_assessment": "ACTION_REQUIRED_PENDING_REVIEW",
+            "primary_layer": "EDITORIAL_HANDOFF",
+            "primary_task_key": None,
+            "failed_source_count": None,
+            "external_access_restriction_count": None,
+            "unclassified_source_failure_count": None,
+            "private_review_pending_date_count": 2,
+            "private_review_pending_item_count": 4,
+            "private_review_oldest_pending_date": "2026-09-14",
+        }
+    ]
+    assert [row["dispatch"] for row in payload["suppressed_dispatches"]] == ["care-line"]
+    assert "ACTION_REQUIRED_PENDING_REVIEW" in payload["policy"]["alertable_operator_assessments"]
+
+
 def test_system_alerts_ignore_unsupported_unknown_dispatches(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     _write_json(
         tmp_path / "ops/status/system/latest.json",

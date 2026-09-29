@@ -178,28 +178,36 @@
       "debug_summary": {
         "aggregate_status": "FAILED",
         "all_current_failures_external": null,
-        "attention_task_count": 1,
+        "attention_task_count": 2,
         "attention_tasks": [
           {
-            "artifact_id": "20260929T173541Z-status-resume.json",
-            "classification": "status_resume_failed",
-            "exit_code": 10,
-            "failure_stage": "status_resume",
+            "artifact_id": "20260929T175406Z-current-intake.json",
+            "classification": "current_intake_failed",
+            "exit_code": 1,
+            "failure_stage": "current_intake",
             "status": "FAILED",
-            "task_key": "food_line_source_watch_resume"
+            "task_key": "food_line_current_intake"
+          },
+          {
+            "artifact_id": "20260929T175335Z-source-watch.json",
+            "classification": "completed_with_exclusions",
+            "exit_code": 0,
+            "failure_stage": "source_watch",
+            "status": "DEGRADED",
+            "task_key": "food_line_source_watch"
           }
         ],
         "external_access_restriction_count": null,
         "failed_source_count": null,
         "operator_assessment": "FAILED_ACTION_REQUIRED",
-        "primary_classification": "status_resume_failed",
-        "primary_failure_stage": "status_resume",
-        "primary_layer": "TASK",
-        "primary_task_key": "food_line_source_watch_resume",
+        "primary_classification": "current_intake_failed",
+        "primary_failure_stage": "current_intake",
+        "primary_layer": "HANDOFF",
+        "primary_task_key": "food_line_current_intake",
         "primary_task_status": "FAILED",
         "private_review_count_only_gap_count": 12,
         "private_review_dispositioned_item_count": 0,
-        "private_review_max_age_hours": 377,
+        "private_review_max_age_hours": 378,
         "private_review_oldest_pending_date": "2026-09-14",
         "private_review_pending_date_count": 14,
         "private_review_pending_item_count": 60,
@@ -217,7 +225,7 @@
         "count_only_gap_count": 12,
         "dates": [
           {
-            "age_hours": 377,
+            "age_hours": 378,
             "count_only_gap_count": 0,
             "date": "2026-09-14",
             "dispositioned_item_count": 0,
@@ -226,7 +234,7 @@
             "unresolved_item_count": 2
           },
           {
-            "age_hours": 353,
+            "age_hours": 354,
             "count_only_gap_count": 0,
             "date": "2026-09-15",
             "dispositioned_item_count": 0,
@@ -235,7 +243,7 @@
             "unresolved_item_count": 6
           },
           {
-            "age_hours": 329,
+            "age_hours": 330,
             "count_only_gap_count": 0,
             "date": "2026-09-16",
             "dispositioned_item_count": 0,
@@ -244,7 +252,7 @@
             "unresolved_item_count": 1
           },
           {
-            "age_hours": 281,
+            "age_hours": 282,
             "count_only_gap_count": 0,
             "date": "2026-09-18",
             "dispositioned_item_count": 0,
@@ -253,7 +261,7 @@
             "unresolved_item_count": 4
           },
           {
-            "age_hours": 257,
+            "age_hours": 258,
             "count_only_gap_count": 0,
             "date": "2026-09-19",
             "dispositioned_item_count": 0,
@@ -262,7 +270,7 @@
             "unresolved_item_count": 2
           },
           {
-            "age_hours": 233,
+            "age_hours": 234,
             "count_only_gap_count": 0,
             "date": "2026-09-20",
             "dispositioned_item_count": 0,
@@ -271,7 +279,7 @@
             "unresolved_item_count": 2
           },
           {
-            "age_hours": 209,
+            "age_hours": 210,
             "count_only_gap_count": 0,
             "date": "2026-09-21",
             "dispositioned_item_count": 0,
@@ -280,7 +288,7 @@
             "unresolved_item_count": 3
           },
           {
-            "age_hours": 185,
+            "age_hours": 186,
             "count_only_gap_count": 0,
             "date": "2026-09-22",
             "dispositioned_item_count": 0,
@@ -289,7 +297,7 @@
             "unresolved_item_count": 3
           },
           {
-            "age_hours": 161,
+            "age_hours": 162,
             "count_only_gap_count": 0,
             "date": "2026-09-23",
             "dispositioned_item_count": 0,
@@ -298,7 +306,7 @@
             "unresolved_item_count": 3
           },
           {
-            "age_hours": 113,
+            "age_hours": 114,
             "count_only_gap_count": 0,
             "date": "2026-09-25",
             "dispositioned_item_count": 0,
@@ -307,7 +315,7 @@
             "unresolved_item_count": 2
           },
           {
-            "age_hours": 89,
+            "age_hours": 90,
             "count_only_gap_count": 0,
             "date": "2026-09-26",
             "dispositioned_item_count": 0,
@@ -316,7 +324,7 @@
             "unresolved_item_count": 2
           },
           {
-            "age_hours": 65,
+            "age_hours": 66,
             "count_only_gap_count": 9,
             "date": "2026-09-27",
             "dispositioned_item_count": 0,
@@ -325,7 +333,7 @@
             "unresolved_item_count": 15
           },
           {
-            "age_hours": 41,
+            "age_hours": 42,
             "count_only_gap_count": 3,
             "date": "2026-09-28",
             "dispositioned_item_count": 0,
@@ -334,7 +342,7 @@
             "unresolved_item_count": 9
           },
           {
-            "age_hours": 17,
+            "age_hours": 18,
             "count_only_gap_count": 0,
             "date": "2026-09-29",
             "dispositioned_item_count": 0,
@@ -350,7 +358,7 @@
         },
         "disposition_sources": [],
         "dispositioned_item_count": 0,
-        "max_age_hours": 377,
+        "max_age_hours": 378,
         "oldest_pending_date": "2026-09-14",
         "pending_date_count": 14,
         "pending_item_count": 60,
@@ -478,7 +486,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-09-29T17:41:58.642345Z",
+  "exported_at": "2026-09-29T18:15:21.621627Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "FAILED"

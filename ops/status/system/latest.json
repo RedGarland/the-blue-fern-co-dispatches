@@ -361,11 +361,11 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "FAILED",
+      "aggregate_status": "STALE_OBSERVABILITY",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "d390d0f71d656056bdc7cbfa5885216646b8b223",
       "debug_summary": {
-        "aggregate_status": "FAILED",
+        "aggregate_status": "STALE_OBSERVABILITY",
         "all_current_failures_external": null,
         "attention_task_count": 1,
         "attention_tasks": [
@@ -380,10 +380,10 @@
         ],
         "external_access_restriction_count": null,
         "failed_source_count": null,
-        "operator_assessment": "FAILED_ACTION_REQUIRED",
+        "operator_assessment": "ACTION_REQUIRED_OBSERVABILITY",
         "primary_classification": "failed",
         "primary_failure_stage": "gaza_daily_dispatch",
-        "primary_layer": "TASK",
+        "primary_layer": "OBSERVABILITY",
         "primary_task_key": "gaza_daily_dispatch",
         "primary_task_status": "FAILED",
         "private_review_count_only_gap_count": null,
@@ -397,7 +397,7 @@
         "publication_status": "failed",
         "receipt_completeness": "COMPLETE",
         "recovery_lifecycle": "INCIDENT_OPEN",
-        "stale_observability": false,
+        "stale_observability": true,
         "unaccounted_event_count": null,
         "unclassified_source_failure_count": null
       },
@@ -407,7 +407,7 @@
       "receipt_completeness": "COMPLETE",
       "recovery_lifecycle": "INCIDENT_OPEN",
       "scheduled_health_available": true,
-      "stale_observability": false
+      "stale_observability": true
     },
     "ice": {
       "agent_handoff": {
@@ -461,8 +461,10 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-09-29T17:01:25.344714Z",
+  "exported_at": "2026-09-29T17:15:54.722403Z",
   "schema_version": "bluefern_external_system_status_v1",
-  "stale_observability": [],
-  "system_status": "FAILED"
+  "stale_observability": [
+    "gaza"
+  ],
+  "system_status": "STALE_OBSERVABILITY"
 }

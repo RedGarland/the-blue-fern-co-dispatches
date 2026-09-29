@@ -30,6 +30,17 @@ RECOVERY_PLAN_SCHEMA_VERSION = "dispatch_ops_recovery_plan_v1"
 APPLY_SCHEMA_VERSION = "dispatch_ops_apply_v1"
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 SUPPORTED_DISPATCHES = ("food-line", "care-line", "gaza", "ice")
+ALERTABLE_OPERATOR_ASSESSMENTS = {
+    "FAILED_ACTION_REQUIRED",
+    "DEGRADED_ACTION_RECOMMENDED",
+    "ACTION_REQUIRED_OBSERVABILITY",
+}
+NON_FAILURE_OPERATOR_ASSESSMENTS = {
+    "HEALTHY",
+    "HEALTHY_WITH_SOURCE_EXCLUSIONS",
+    "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
+}
+
 
 
 class Lifecycle(StrEnum):
@@ -245,6 +256,53 @@ def render_system_text(snapshot: dict[str, Any]) -> str:
         lines.extend(["", "Evidence:"])
         lines.extend(f"- {path}" for path in evidence)
     return "\n".join(lines)
+
+
+def evaluate_system_alerts(snapshot: dict[str, Any]) -> dict[str, Any]:
+    dispatches = snapshot.get("dispatches") if isinstance(snapshot.get("dispatches"), dict) else {}
+    alert_dispatches: list[dict[str, Any]] = []
+    suppressed_dispatches: list[dict[str, Any]] = []
+    unknown_dispatches: list[dict[str, Any]] = []
+
+    for dispatch in sorted(dispatches):
+        state = dispatches[dispatch] if isinstance(dispatches[dispatch], dict) else {}
+        debug = state.get("debug_summary") if isinstance(state.get("debug_summary"), dict) else {}
+        assessment = str(debug.get("operator_assessment") or "UNKNOWN")
+        row = {
+            "dispatch": dispatch,
+            "aggregate_status": state.get("aggregate_status") or "UNKNOWN",
+            "recovery_lifecycle": state.get("recovery_lifecycle") or "UNKNOWN",
+            "operator_assessment": assessment,
+            "primary_layer": debug.get("primary_layer") or "UNKNOWN",
+            "primary_task_key": debug.get("primary_task_key"),
+            "failed_source_count": debug.get("failed_source_count"),
+            "external_access_restriction_count": debug.get("external_access_restriction_count"),
+            "unclassified_source_failure_count": debug.get("unclassified_source_failure_count"),
+        }
+        if assessment in ALERTABLE_OPERATOR_ASSESSMENTS:
+            alert_dispatches.append(row)
+        elif assessment in NON_FAILURE_OPERATOR_ASSESSMENTS:
+            suppressed_dispatches.append(row)
+        else:
+            unknown_dispatches.append(row)
+
+    warnings = snapshot.get("warnings") if isinstance(snapshot.get("warnings"), list) else []
+    alert_required = bool(alert_dispatches or unknown_dispatches or warnings)
+    return {
+        "schema_version": "dispatch_ops_system_alerts_v1",
+        "alert_required": alert_required,
+        "system_status": snapshot.get("system_status") or "UNKNOWN",
+        "exported_at": snapshot.get("exported_at"),
+        "alert_dispatches": alert_dispatches,
+        "suppressed_dispatches": suppressed_dispatches,
+        "unknown_dispatches": unknown_dispatches,
+        "warnings": warnings,
+        "evidence": snapshot.get("evidence") if isinstance(snapshot.get("evidence"), list) else [],
+        "policy": {
+            "alertable_operator_assessments": sorted(ALERTABLE_OPERATOR_ASSESSMENTS),
+            "non_failure_operator_assessments": sorted(NON_FAILURE_OPERATOR_ASSESSMENTS),
+        },
+    }
 
 
 @dataclass(frozen=True)
@@ -1421,6 +1479,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     system = sub.add_parser("system", help="Show the exported system status and dispatch debug summaries.")
     system.add_argument("--json", action="store_true", help="Emit deterministic JSON.")
     system.add_argument(
+        "--alerts-json",
+        action="store_true",
+        help="Emit deterministic watch alert-gate JSON keyed by operator_assessment.",
+    )
+    system.add_argument(
         "--root",
         default=None,
         help="Status checkout root. Defaults to ops/operator/config.json operator.status_root when that path exists.",
@@ -1447,6 +1510,10 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     if args.command == "system":
         snapshot = build_system_snapshot(root=Path(args.root) if args.root else _default_system_status_root())
+        if args.alerts_json:
+            alerts = evaluate_system_alerts(snapshot)
+            print(json.dumps(alerts, indent=2, sort_keys=True))
+            return 1 if alerts["alert_required"] else 0
         if args.json:
             print(json.dumps(snapshot, indent=2, sort_keys=True))
         else:

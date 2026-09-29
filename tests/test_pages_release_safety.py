@@ -206,6 +206,27 @@ def _write_gaza_pages_history(pages: Path) -> None:
     _commit_repo(pages, "published gaza history")
 
 
+def _write_gaza_audio_surfaces(root: Path, dates: tuple[str, ...]) -> None:
+    gaza = root / "gaza"
+    audio = gaza / "audio"
+    audio.mkdir(parents=True, exist_ok=True)
+    audio_rows = "".join(
+        f'<span class="gaza-audio-index-date"><strong>{date_text}</strong></span>'
+        f'<a href="/gaza/audio/{date_text}-transcript.html">Transcript</a>'
+        for date_text in dates
+    )
+    (audio / "index.html").write_text(f"<html><body>{audio_rows}</body></html>", encoding="utf-8")
+    podcast_items = "".join(
+        f"<item><link>https://dispatches.thebluefernco.com/gaza/audio/{date_text}-transcript.html</link></item>"
+        for date_text in dates
+    )
+    podcast_xml = f"<rss><channel>{podcast_items}</channel></rss>"
+    (audio / "podcast.xml").write_text(podcast_xml, encoding="utf-8")
+    (gaza / "podcast.xml").write_text(podcast_xml, encoding="utf-8")
+    for date_text in dates:
+        (audio / f"{date_text}-transcript.html").write_text(f"<html>{date_text} transcript</html>", encoding="utf-8")
+
+
 def _write_gaza_normal_site(source: Path, date_text: str = "2026-09-19", *, valid: bool = True) -> None:
     site = source / "output" / "site"
     gaza = site / "gaza"
@@ -448,7 +469,8 @@ def test_gaza_no_update_copy_scope_rejects_unrelated_files(release_repos: tuple[
 
 def test_normal_gaza_publish_still_enforces_audio_history_shrink(release_repos: tuple[Path, Path], monkeypatch: pytest.MonkeyPatch) -> None:
     source, pages = release_repos
-    _write_gaza_no_update_site(source)
+    _write_gaza_normal_site(source)
+    _write_gaza_audio_surfaces(source / "output" / "site", ("2026-09-19",))
     _write_gaza_pages_history(pages)
     _stub_gaza_build(monkeypatch)
 
@@ -460,10 +482,84 @@ def test_normal_gaza_publish_still_enforces_audio_history_shrink(release_repos: 
         commit=False,
         no_push=True,
         only_dispatches=("gaza",),
+        expect_dispatches=("gaza",),
+        expect_date="2026-09-19",
     )
 
     assert report["ok"] is False
     assert any("gaza public history shrink detected for gaza/audio/index.html" in error for error in report["errors"])
+
+
+def test_gaza_dry_run_preserves_committed_audio_history_when_no_fresh_audio_staged(
+    release_repos: tuple[Path, Path],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source, pages = release_repos
+    _write_gaza_normal_site(source, date_text="2026-09-29")
+    _write_gaza_pages_history(pages)
+    pages_audio_dates = (
+        "2026-09-27",
+        "2026-09-26",
+        "2026-09-25",
+        "2026-09-18",
+        "2026-06-20",
+    )
+    _write_gaza_audio_surfaces(pages, pages_audio_dates)
+    _commit_repo(pages, "expanded gaza audio history")
+    _stub_gaza_build(monkeypatch)
+
+    report = generator.publish_pages(
+        source,
+        pages,
+        remote_url=None,
+        dry_run=True,
+        commit=False,
+        no_push=True,
+        only_dispatches=("gaza",),
+        expect_dispatches=("gaza",),
+        expect_date="2026-09-29",
+    )
+
+    assert report["ok"] is True
+    assert report["gaza_homepage_recent_edition_guard"]["decision"] == "allowed"
+    for surface in ("gaza/audio/index.html", "gaza/audio/podcast.xml", "gaza/podcast.xml"):
+        audio_report = next(item for item in report["gaza_public_surface_history"] if item["surface"] == surface)
+        assert audio_report["previous_count"] == len(pages_audio_dates)
+        assert audio_report["current_count"] == len(pages_audio_dates)
+        assert audio_report["dropped_dates"] == []
+        assert audio_report["ok"] is True
+    source_audio_index = source / "output" / "site" / "gaza" / "audio" / "index.html"
+    assert "2026-09-27" not in source_audio_index.read_text(encoding="utf-8")
+
+
+def test_gaza_dry_run_still_blocks_fresh_audio_history_shrink(
+    release_repos: tuple[Path, Path],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source, pages = release_repos
+    _write_gaza_normal_site(source, date_text="2026-09-29")
+    _write_gaza_audio_surfaces(source / "output" / "site", ("2026-09-29",))
+    _write_gaza_pages_history(pages)
+    _write_gaza_audio_surfaces(pages, ("2026-09-27", "2026-09-26", "2026-09-18", "2026-06-20"))
+    _commit_repo(pages, "expanded gaza audio history")
+    _stub_gaza_build(monkeypatch)
+
+    report = generator.publish_pages(
+        source,
+        pages,
+        remote_url=None,
+        dry_run=True,
+        commit=False,
+        no_push=True,
+        only_dispatches=("gaza",),
+        expect_dispatches=("gaza",),
+        expect_date="2026-09-29",
+    )
+
+    assert report["ok"] is False
+    assert any("gaza public history shrink detected for gaza/audio/index.html" in error for error in report["errors"])
+    audio_report = next(item for item in report["gaza_public_surface_history"] if item["surface"] == "gaza/audio/index.html")
+    assert audio_report["dropped_dates"] == ["2026-09-27", "2026-09-26", "2026-09-18", "2026-06-20"]
 
 
 def test_gaza_generation_succeeds_pages_publish_fails_no_update_wins_next_rebuild(

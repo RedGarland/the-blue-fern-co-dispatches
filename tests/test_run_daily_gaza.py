@@ -1728,7 +1728,7 @@ def test_publish_without_audio_refreshes_public_audio_surfaces_before_pages_dry_
     assert summary["pages_repo_updated"] is True
 
 
-def test_gaza_daily_operator_defaults_to_audio_generation_on_publish(isolated, monkeypatch):
+def test_gaza_daily_operator_does_not_default_to_audio_generation_on_publish(isolated, monkeypatch):
     monkeypatch.setattr(operator, "ROOT", isolated)
     args = operator.parse_args(["--date", "2026-05-07", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
     captured: dict[str, list[str]] = {}
@@ -1787,10 +1787,9 @@ def test_gaza_daily_operator_defaults_to_audio_generation_on_publish(isolated, m
     result = operator.run_operator(args)
 
     assert result["ok"] is True
-    assert result["audio_status"] == "audio_generated"
-    assert "--generate-audio" in captured["daily_args"]
-    assert "--tts-provider" in captured["daily_args"]
-    assert "none" in captured["daily_args"]
+    assert result["audio_status"] == "audio_skipped"
+    assert "--generate-audio" not in captured["daily_args"]
+    assert "--tts-provider" not in captured["daily_args"]
 
 
 def test_daily_audio_flags_are_forwarded_to_gaza_audio_writer(isolated, monkeypatch, capsys):

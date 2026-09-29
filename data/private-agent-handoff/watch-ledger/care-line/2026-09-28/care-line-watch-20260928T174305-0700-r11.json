@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260928T174305-0700-r11",
+  "scheduled_for": "2026-09-28T17:43:05-07:00",
+  "started_at": "2026-09-28T17:43:05-07:00",
+  "completed_at": "2026-09-28T17:43:59-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "since": "2026-09-28T16:43:05-07:00",
+    "through": "2026-09-28T17:43:59-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first. Newest listed notices remain dated 2026-09-25; no newer qualifying CMS termination, rescission, CLIA limitation/suspension, or similar access-risk notice identified.",
+    "Exactly 12 additional targeted searches were run across hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural/emergency service loss, ambulance/EMS, air-medical, service restoration/reopening, U.S. territories, and state-health-department service-change signals.",
+    "No development newly announced or newly effective within the bounded hourly window met the qualifying access-change criteria.",
+    "Searches surfaced older or previously established maternity/service-loss stories, including Minnesota obstetrics closures, which were excluded as not new in-window."
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260928T174106-0700",
+  "scheduled_for": "2026-09-28T17:41:06-07:00",
+  "started_at": "2026-09-28T17:41:06-07:00",
+  "completed_at": "2026-09-28T17:41:57-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-28T16:49:53-07:00",
+    "end": "2026-09-28T17:41:57-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since prior hourly Gaza supplementary recall check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      {
+        "source": "OCHA OPT",
+        "result": "checked",
+        "note": "Latest surfaced OCHA OPT humanitarian situation report is dated 25 September 2026 (page surfaced 28 September) and Gaza reporting period is primarily 14-20 September; no development was verified as new within this hourly window."
+      },
+      {
+        "source": "WHO",
+        "result": "checked",
+        "note": "No qualifying Gaza health-system development was surfaced and verified as new within this hourly window."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "degraded_sources": [
+      {
+        "source": "BBC",
+        "reason": "robots.txt blocked retrieval"
+      },
+      {
+        "source": "UN News",
+        "reason": "robots.txt blocked retrieval"
+      }
+    ],
+    "exclusions": "Excluded recycled/out-of-window items, opinion, unsupported claims, duplicate material, and items whose publication/event timing could not be verified as new since the prior check.",
+    "authority_note": "Supplementary recall watch only; production collector/publisher remains authoritative. No approval, publication, schedule change, or task disablement performed."
+  }
+}

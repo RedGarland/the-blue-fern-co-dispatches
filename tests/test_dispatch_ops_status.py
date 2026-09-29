@@ -496,6 +496,54 @@ def test_system_alerts_do_not_notify_for_external_only_degradation(tmp_path: Pat
     assert payload["suppressed_dispatches"][0]["dispatch"] == "care-line"
 
 
+def test_system_alerts_ignore_unsupported_unknown_dispatches(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    _write_json(
+        tmp_path / "ops/status/system/latest.json",
+        {
+            "schema_version": "bluefern_external_system_status_v1",
+            "exported_at": "2026-09-29T00:58:42Z",
+            "system_status": "DEGRADED",
+            "dispatches": {
+                "food-line": {
+                    "migration_status": "MIGRATED",
+                    "aggregate_status": "SUCCESS",
+                    "recovery_lifecycle": "HEALTHY",
+                    "debug_summary": {"operator_assessment": "HEALTHY", "primary_layer": "NONE"},
+                },
+                "care-line": {
+                    "migration_status": "MIGRATED",
+                    "aggregate_status": "DEGRADED",
+                    "recovery_lifecycle": "HEALTHY",
+                    "debug_summary": {
+                        "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
+                        "primary_layer": "EXTERNAL_DEPENDENCY",
+                        "failed_source_count": 4,
+                        "external_access_restriction_count": 4,
+                        "unclassified_source_failure_count": 0,
+                    },
+                },
+                "american-pressure": {
+                    "migration_status": "NOT_MIGRATED",
+                    "aggregate_status": "UNKNOWN",
+                },
+                "cascadia": {
+                    "migration_status": "INTENTIONALLY_INACTIVE",
+                    "aggregate_status": "INTENTIONALLY_INACTIVE",
+                },
+            },
+        },
+    )
+
+    result = main(["system", "--alerts-json", "--root", str(tmp_path)])
+    payload = json.loads(capsys.readouterr().out)
+
+    assert result == 0
+    assert payload["alert_required"] is False
+    assert payload["alert_dispatches"] == []
+    assert payload["unknown_dispatches"] == []
+    assert [row["dispatch"] for row in payload["ignored_dispatches"]] == ["american-pressure", "cascadia"]
+
+
 def test_evaluate_system_alerts_treats_missing_assessment_as_alertable() -> None:
     payload = evaluate_system_alerts(
         {

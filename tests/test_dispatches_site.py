@@ -2451,6 +2451,77 @@ def test_pages_publish_rejects_gaza_homepage_missing_latest_expected_date(tmp_pa
     assert any("latest expected edition date" in reason for reason in result["gaza_homepage_recent_edition_guard"]["reasons"])
 
 
+def test_pages_dry_run_preserves_gaza_pages_recent_editions_when_source_homepage_is_stale(tmp_path, monkeypatch):
+    work = tmp_path / "repo"
+    work.mkdir()
+    copy_repo_assets(Path(__file__).parent.parent, work)
+    pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
+    (pages_repo / "CNAME").write_text("dispatches.thebluefernco.com\n", encoding="utf-8")
+    (pages_repo / "index.html").write_text("<html>Root</html>", encoding="utf-8")
+    site_root = work / "output" / "site"
+    site_root.mkdir(parents=True, exist_ok=True)
+    (site_root / "index.html").write_text("<html>Home</html>", encoding="utf-8")
+    add_gaza_public_history_surface(
+        site_root,
+        [
+            "2026-09-05",
+            "2026-09-04",
+            "2026-09-03",
+        ],
+        archive_dates=["2026-09-05", "2026-09-04", "2026-09-03"],
+        audio_dates=["2026-09-05", "2026-09-04", "2026-09-03"],
+    )
+    add_gaza_public_history_surface(
+        pages_repo,
+        [
+            "2026-09-27",
+            "2026-09-26",
+            "2026-09-25",
+        ],
+        archive_dates=["2026-09-27", "2026-09-26", "2026-09-25"],
+        audio_dates=["2026-09-05", "2026-09-04", "2026-09-03"],
+    )
+    add_gaza_site_edition(site_root, "2026-09-05")
+    add_gaza_site_edition(pages_repo, "2026-09-27")
+    add_gaza_site_edition(pages_repo, "2026-09-26")
+    add_gaza_site_edition(pages_repo, "2026-09-25")
+
+    monkeypatch.setattr(
+        generator,
+        "build_site",
+        lambda *args, **kwargs: {
+            "ok": True,
+            "warnings": [],
+            "errors": [],
+            "backfilled_public_editions": [],
+            "gaza_editions_discovered": [],
+            "gaza_editions_backfilled": [],
+            "gaza_editions_skipped": [],
+            "gaza_archive_entries_written": [{"edition_date": "2026-09-27"}],
+        },
+    )
+
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=True,
+        commit=False,
+        no_push=True,
+        backup_root=work / "backups",
+        only_dispatches=("gaza",),
+    )
+
+    assert result["ok"] is True
+    assert result["gaza_homepage_recent_edition_guard"]["decision"] == "allowed"
+    assert "2026-09-27" in result["gaza_homepage_recent_edition_guard"]["new_dates"]
+    assert not any(
+        item["surface"] in {"gaza/archive.html", "gaza/rss.xml"} and item["dropped_dates"]
+        for item in result["gaza_public_surface_history"]
+    )
+    assert "2026-09-27" not in (site_root / "gaza" / "index.html").read_text(encoding="utf-8")
+
+
 def test_pages_publish_uses_explicit_pages_repo_for_gaza_homepage_history(tmp_path, monkeypatch):
     work = tmp_path / "repo"
     work.mkdir()

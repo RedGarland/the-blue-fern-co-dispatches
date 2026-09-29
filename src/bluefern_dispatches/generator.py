@@ -8,6 +8,7 @@ import os
 import re
 import subprocess
 import shutil
+import tempfile
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from email.utils import format_datetime
@@ -3573,6 +3574,127 @@ def is_relative_to(path: Path, parent: Path) -> bool:
     return True
 
 
+def _copy_missing_gaza_pages_public_records(
+    candidate_site_root: Path,
+    pages_repo: Path,
+    *,
+    max_public_date: str | None = None,
+) -> None:
+    pages_editions_root = pages_repo / "gaza" / "editions"
+    candidate_editions_root = candidate_site_root / "gaza" / "editions"
+    if pages_editions_root.exists():
+        for source_dir in sorted(path for path in pages_editions_root.iterdir() if path.is_dir() and len(path.name) == 10):
+            if max_public_date and source_dir.name > max_public_date:
+                continue
+            if not _edition_has_required_public_artifacts(source_dir):
+                continue
+            target_dir = candidate_editions_root / source_dir.name
+            if not target_dir.exists():
+                target_dir.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copytree(source_dir, target_dir)
+    pages_status_root = pages_repo / "gaza" / "status" / "no-updates"
+    if pages_status_root.exists():
+        candidate_status_root = candidate_site_root / "gaza" / "status" / "no-updates"
+        candidate_status_root.mkdir(parents=True, exist_ok=True)
+        for source_file in sorted(path for path in pages_status_root.glob("*.json") if path.is_file()):
+            if max_public_date and source_file.stem > max_public_date:
+                continue
+            target_file = candidate_status_root / source_file.name
+            if not target_file.exists():
+                shutil.copy2(source_file, target_file)
+
+
+def _render_gaza_public_history_surfaces_for_candidate(
+    candidate_site_root: Path,
+    pages_repo: Path,
+    *,
+    max_public_date: str | None = None,
+    gaza_publication_dates: tuple[str, ...] = (),
+) -> None:
+    gaza_root = candidate_site_root / "gaza"
+    gaza_root.mkdir(parents=True, exist_ok=True)
+    edition_dates = discover_public_edition_dates(
+        candidate_site_root,
+        "gaza",
+        max_edition_date=max_public_date,
+        pages_repo=pages_repo,
+        gaza_publication_dates=gaza_publication_dates,
+    )
+    latest = edition_dates[0] if edition_dates else (max_public_date or "")
+    dispatch = DispatchConfig(
+        slug="gaza",
+        name="Dispatches From Gaza",
+        edition_date=latest,
+        tagline="Daily briefing",
+        logo="gaza-logo.png",
+        sources=[],
+        stories=[],
+        detail_artifacts=[],
+    )
+    gaza_catchups = discover_gaza_historical_catchups(
+        candidate_site_root,
+        pages_repo=pages_repo,
+        max_public_date=max_public_date,
+    )
+    (gaza_root / "index.html").write_text(
+        render_dispatch_index_for_dates(
+            dispatch,
+            edition_dates,
+            candidate_site_root,
+            gaza_catchups=gaza_catchups,
+            gaza_publication_dates=gaza_publication_dates,
+        ),
+        encoding="utf-8",
+    )
+    (gaza_root / "archive.html").write_text(
+        render_archive_for_dates(
+            dispatch,
+            edition_dates,
+            candidate_site_root,
+            gaza_catchups=gaza_catchups,
+            gaza_publication_dates=gaza_publication_dates,
+        ),
+        encoding="utf-8",
+    )
+    (gaza_root / "rss.xml").write_text(
+        render_rss_for_dates(
+            dispatch,
+            edition_dates,
+            candidate_site_root,
+            gaza_catchups=gaza_catchups,
+            gaza_publication_dates=gaza_publication_dates,
+        ),
+        encoding="utf-8",
+    )
+
+
+def _materialize_gaza_dry_run_validation_site(
+    site_root: Path,
+    pages_repo: Path,
+    temp_root: Path,
+    *,
+    max_public_date: str | None = None,
+    gaza_publication_dates: tuple[str, ...] = (),
+) -> Path:
+    candidate_site_root = temp_root / "output" / "site"
+    if site_root.exists():
+        shutil.copytree(site_root, candidate_site_root, dirs_exist_ok=True)
+    else:
+        candidate_site_root.mkdir(parents=True, exist_ok=True)
+    _copy_missing_gaza_pages_public_records(
+        candidate_site_root,
+        pages_repo,
+        max_public_date=max_public_date,
+    )
+    _render_gaza_public_history_surfaces_for_candidate(
+        candidate_site_root,
+        pages_repo,
+        max_public_date=max_public_date,
+        gaza_publication_dates=gaza_publication_dates,
+    )
+    return candidate_site_root
+
+
 def _gaza_no_update_publish_source_files(site_root: Path, expect_date: str | None) -> tuple[list[Path], list[str]]:
     errors: list[str] = []
     if not expect_date or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(expect_date)):
@@ -4877,10 +4999,27 @@ def publish_pages(
         pages_gaza_audio_root = pages_repo / "gaza" / "audio"
         if not site_gaza_audio_root.exists() and pages_gaza_audio_root.exists():
             gaza_audio_root = pages_repo / "gaza"
+        gaza_validation_site_root = site_root
+        dry_run_validation_temp: tempfile.TemporaryDirectory[str] | None = None
+        if dry_run and not no_update_publish and pages_repo.exists():
+            dry_run_validation_temp = tempfile.TemporaryDirectory(prefix="bluefern-gaza-pages-dry-run-")
+            gaza_validation_site_root = _materialize_gaza_dry_run_validation_site(
+                site_root,
+                pages_repo,
+                Path(dry_run_validation_temp.name),
+                max_public_date=public_max_dates.get("gaza"),
+                gaza_publication_dates=gaza_publication_dates,
+            )
         gaza_homepage_guard = _gaza_homepage_recent_edition_guard(
             _read_text_if_exists(pages_repo / "gaza" / "index.html"),
-            _read_text_if_exists(site_root / "gaza" / "index.html"),
-            discover_public_edition_dates(site_root, "gaza", pages_repo=pages_repo),
+            _read_text_if_exists(gaza_validation_site_root / "gaza" / "index.html"),
+            discover_public_edition_dates(
+                gaza_validation_site_root,
+                "gaza",
+                max_edition_date=public_max_dates.get("gaza"),
+                pages_repo=pages_repo,
+                gaza_publication_dates=gaza_publication_dates,
+            ),
             allow_listing_shrink=allow_listing_shrink,
         )
         if not gaza_homepage_guard["ok"]:
@@ -4888,7 +5027,9 @@ def publish_pages(
             errors.append(f"gaza homepage recent-editions guard blocked publish: {guard_reasons}")
         if no_update_publish:
             gaza_audio_root = pages_repo / "gaza"
-        gaza_history_diagnostics = _gaza_public_surface_history_diagnostics(pages_repo, site_root, current_audio_root=gaza_audio_root)
+        gaza_history_diagnostics = _gaza_public_surface_history_diagnostics(pages_repo, gaza_validation_site_root, current_audio_root=gaza_audio_root)
+        if dry_run_validation_temp is not None:
+            dry_run_validation_temp.cleanup()
         for report in gaza_history_diagnostics:
             if no_update_publish and str(report.get("surface") or "") not in {"gaza/archive.html", "gaza/index.html"}:
                 continue

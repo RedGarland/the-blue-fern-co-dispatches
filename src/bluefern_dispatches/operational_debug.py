@@ -66,6 +66,16 @@ def _attention_tasks(tasks: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return sorted(rows, key=_task_sort_key)
 
 
+def _private_review_backlog(status: dict[str, Any]) -> dict[str, Any]:
+    value = status.get("private_review_backlog")
+    return value if isinstance(value, dict) else {}
+
+
+def _private_review_pending_item_count(backlog: dict[str, Any]) -> int:
+    pending = _int(backlog.get("pending_item_count"))
+    return pending if pending and pending > 0 else 0
+
+
 def _failure_layer(*, aggregate_status: str, primary: dict[str, Any] | None, source_summary: dict[str, Any]) -> str:
     if aggregate_status == "MISSED":
         return "SCHEDULER_OR_OBSERVABILITY"
@@ -101,12 +111,15 @@ def _operator_assessment(
     recovery_lifecycle: str | None,
     primary: dict[str, Any] | None,
     source_summary: dict[str, Any],
+    private_review_backlog: dict[str, Any],
     stale_observability: bool,
 ) -> str:
     if stale_observability or aggregate_status == "STALE_OBSERVABILITY":
         return "ACTION_REQUIRED_OBSERVABILITY"
     if aggregate_status in {"FAILED", "MISSED", "UNKNOWN"}:
         return "FAILED_ACTION_REQUIRED"
+    if _private_review_pending_item_count(private_review_backlog):
+        return "ACTION_REQUIRED_PENDING_REVIEW"
     if aggregate_status in {"SUCCESS", "SAFE_NO_OP"}:
         return "HEALTHY"
     if aggregate_status != "DEGRADED":
@@ -136,12 +149,20 @@ def build_debug_summary(status: dict[str, Any]) -> dict[str, Any]:
     source_summary = status.get("source_failure_summary")
     if not isinstance(source_summary, dict):
         source_summary = {}
+    private_review_backlog = _private_review_backlog(status)
     unaccounted_count = _int(status.get("unaccounted_event_count"))
     primary_layer = _failure_layer(
         aggregate_status=aggregate_status,
         primary=primary,
         source_summary=source_summary,
     )
+    if _private_review_pending_item_count(private_review_backlog) and aggregate_status not in {
+        "FAILED",
+        "MISSED",
+        "STALE_OBSERVABILITY",
+        "UNKNOWN",
+    }:
+        primary_layer = "EDITORIAL_HANDOFF"
     if aggregate_status == "FAILED" and primary is None and unaccounted_count:
         primary_layer = "HANDOFF"
     publication_attempted = status.get("publication_attempted")
@@ -154,6 +175,7 @@ def build_debug_summary(status: dict[str, Any]) -> dict[str, Any]:
             recovery_lifecycle=recovery_lifecycle,
             primary=primary,
             source_summary=source_summary,
+            private_review_backlog=private_review_backlog,
             stale_observability=stale_observability,
         ),
         "primary_layer": primary_layer,
@@ -174,4 +196,8 @@ def build_debug_summary(status: dict[str, Any]) -> dict[str, Any]:
         "publication_status": _text(status.get("publication_status")),
         "stale_observability": stale_observability,
         "receipt_completeness": _text(status.get("receipt_completeness")),
+        "private_review_pending_date_count": _int(private_review_backlog.get("pending_date_count")),
+        "private_review_pending_item_count": _int(private_review_backlog.get("pending_item_count")),
+        "private_review_oldest_pending_date": _text(private_review_backlog.get("oldest_pending_date")),
+        "private_review_max_age_hours": _int(private_review_backlog.get("max_age_hours")),
     }

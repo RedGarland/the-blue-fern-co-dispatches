@@ -35,6 +35,7 @@ ALERTABLE_OPERATOR_ASSESSMENTS = {
     "FAILED_ACTION_REQUIRED",
     "DEGRADED_ACTION_RECOMMENDED",
     "ACTION_REQUIRED_OBSERVABILITY",
+    "ACTION_REQUIRED_PENDING_REVIEW",
 }
 NON_FAILURE_OPERATOR_ASSESSMENTS = {
     "HEALTHY",
@@ -235,10 +236,18 @@ def render_system_text(snapshot: dict[str, Any]) -> str:
             assessment = debug.get("operator_assessment") or "UNKNOWN"
             layer = debug.get("primary_layer") or "UNKNOWN"
             task = debug.get("primary_task_key") or "none"
+            backlog = state.get("private_review_backlog") if isinstance(state.get("private_review_backlog"), dict) else {}
             lines.append(
                 f"- {label}: {aggregate} / {lifecycle}; assessment={assessment}; "
                 f"layer={layer}; task={task}"
             )
+            if backlog.get("pending_item_count"):
+                lines.append(
+                    "  private_review_backlog="
+                    f"{backlog.get('pending_item_count')} items across "
+                    f"{backlog.get('pending_date_count')} dates; "
+                    f"oldest={backlog.get('oldest_pending_date') or 'unknown'}"
+                )
             for key, text_label in (
                 ("failed_source_count", "failed_sources"),
                 ("external_access_restriction_count", "external_restrictions"),
@@ -269,6 +278,7 @@ def evaluate_system_alerts(snapshot: dict[str, Any]) -> dict[str, Any]:
     for dispatch in sorted(dispatches):
         state = dispatches[dispatch] if isinstance(dispatches[dispatch], dict) else {}
         debug = state.get("debug_summary") if isinstance(state.get("debug_summary"), dict) else {}
+        backlog = state.get("private_review_backlog") if isinstance(state.get("private_review_backlog"), dict) else {}
         assessment = str(debug.get("operator_assessment") or "UNKNOWN")
         row = {
             "dispatch": dispatch,
@@ -281,6 +291,9 @@ def evaluate_system_alerts(snapshot: dict[str, Any]) -> dict[str, Any]:
             "failed_source_count": debug.get("failed_source_count"),
             "external_access_restriction_count": debug.get("external_access_restriction_count"),
             "unclassified_source_failure_count": debug.get("unclassified_source_failure_count"),
+            "private_review_pending_date_count": backlog.get("pending_date_count"),
+            "private_review_pending_item_count": backlog.get("pending_item_count"),
+            "private_review_oldest_pending_date": backlog.get("oldest_pending_date"),
         }
         if dispatch not in ACTIVE_ALERT_DISPATCHES:
             row["ignored_reason"] = "outside_active_alert_scope"

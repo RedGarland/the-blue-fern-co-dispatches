@@ -3883,7 +3883,11 @@ def refresh_shared_release_surfaces_from_pages_inventory(
     )
     directory_html = directory_path.read_text(encoding="utf-8")
     refreshed_directory_html = annotate_shared_public_state(
-        render_dispatch_directory_from_releases(directory_html, latest),
+        render_dispatch_directory_from_releases(
+            directory_html,
+            latest,
+            target_dispatch=target_dispatch,
+        ),
         pages_repo,
     )
     about_path = pages_repo / "about" / "index.html"

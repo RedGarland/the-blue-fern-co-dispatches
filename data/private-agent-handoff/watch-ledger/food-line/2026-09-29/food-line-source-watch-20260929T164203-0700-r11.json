@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260929T164203-0700-r11",
+  "scheduled_for": "2026-09-29T16:42:03-07:00",
+  "started_at": "2026-09-29T16:42:20.291032-07:00",
+  "completed_at": "2026-09-29T16:43:08.592345-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-29T15:45:54-07:00",
+    "end": "2026-09-29T16:43:08.592345-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Completed 12 targeted web searches covering only/sole/last/full-service grocery-store loss or closure; emergency food-distribution cancellations/suspensions due to storm, flood, fire, outage, or facility damage; abrupt pantry/food-bank closure or major access reduction; and official SNAP/WIC/food-assistance interruptions.",
+    "Searches prioritized same-day local news and official/provider material and excluded donation drives, resource guides, routine promotion, generic inflation coverage, recipes, opinion, and stale/duplicate disruptions.",
+    "No qualifying signal was newly published or surfaced within the bounded window. Hurricane recovery pages reviewed showed ongoing or previously known service impacts rather than a new qualifying disruption in this interval; older examples such as Spencer, NY and El Paso, TX were outside the window.",
+    "All 12 search calls returned usable coverage; no search failure required degradation."
+  ]
+}

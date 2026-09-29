@@ -511,6 +511,9 @@ def test_system_alerts_notify_for_food_private_review_backlog(tmp_path: Path, ca
                     "private_review_backlog": {
                         "pending_date_count": 2,
                         "pending_item_count": 4,
+                        "dispositioned_item_count": 25,
+                        "unresolved_item_count": 4,
+                        "count_only_gap_count": 1,
                         "oldest_pending_date": "2026-09-14",
                         "max_age_hours": 368,
                         "dates": [],
@@ -553,6 +556,9 @@ def test_system_alerts_notify_for_food_private_review_backlog(tmp_path: Path, ca
             "unclassified_source_failure_count": None,
             "private_review_pending_date_count": 2,
             "private_review_pending_item_count": 4,
+            "private_review_dispositioned_item_count": 25,
+            "private_review_unresolved_item_count": 4,
+            "private_review_count_only_gap_count": 1,
             "private_review_oldest_pending_date": "2026-09-14",
         }
     ]

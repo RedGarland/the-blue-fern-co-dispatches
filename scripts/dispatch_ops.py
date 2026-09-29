@@ -246,7 +246,9 @@ def render_system_text(snapshot: dict[str, Any]) -> str:
                     "  private_review_backlog="
                     f"{backlog.get('pending_item_count')} items across "
                     f"{backlog.get('pending_date_count')} dates; "
-                    f"oldest={backlog.get('oldest_pending_date') or 'unknown'}"
+                    f"oldest={backlog.get('oldest_pending_date') or 'unknown'}; "
+                    f"dispositioned={backlog.get('dispositioned_item_count', 0)}; "
+                    f"count_only_gap={backlog.get('count_only_gap_count', 0)}"
                 )
             for key, text_label in (
                 ("failed_source_count", "failed_sources"),
@@ -293,6 +295,9 @@ def evaluate_system_alerts(snapshot: dict[str, Any]) -> dict[str, Any]:
             "unclassified_source_failure_count": debug.get("unclassified_source_failure_count"),
             "private_review_pending_date_count": backlog.get("pending_date_count"),
             "private_review_pending_item_count": backlog.get("pending_item_count"),
+            "private_review_dispositioned_item_count": backlog.get("dispositioned_item_count"),
+            "private_review_unresolved_item_count": backlog.get("unresolved_item_count"),
+            "private_review_count_only_gap_count": backlog.get("count_only_gap_count"),
             "private_review_oldest_pending_date": backlog.get("oldest_pending_date"),
         }
         if dispatch not in ACTIVE_ALERT_DISPATCHES:

@@ -1,0 +1,755 @@
+{
+  "schema_version": "food_line_recovery_publication_manifest_v1",
+  "title": "Food Line Recovery Brief: Sept. 14-28, 2026",
+  "canonical_url": "https://dispatches.thebluefernco.com/food-line/recovery/food-line-recovery-brief-sept14-28-2026/",
+  "published_at": "2026-09-29T03:31:54Z",
+  "publication_type": "recovery_backfill_brief",
+  "coverage_start": "2026-09-14",
+  "coverage_end": "2026-09-28",
+  "story_group_count": 24,
+  "source_link_count": 25,
+  "source_urls": [
+    "https://www.newsobserver.com/news/politics-government/article317210289.html",
+    "https://midhudsonnews.com/2026/09/15/gillibrand-food-bank-leaders-blast-trump-administration-for-cutting-snap-funding",
+    "https://www.nbcrightnow.com/news/oregon-food-pantries-report-rising-need-after-snap-cuts/article_d37d7469-0ebb-4cf2-819a-6dc24208a0f5.html",
+    "https://www.thecrimson.com/article/2026/9/15/cambridge-snap-appropriations",
+    "https://fresnoland.org/2026/09/15/food-distribution",
+    "https://dailytarheel.com/es_es/480556/city-state/over-500000-n-c-children-qualify-for-free-or-reduced-school-meals-federal-snap-cuts-could-cause-decrease",
+    "https://cardinalnews.org/2026/09/18/a-st-paul-food-pantry-gets-creative-to-weather-snap-cuts-loss-of-usda-food",
+    "https://thelensnola.org/2026/09/18/snap-cuts-free-school-meals-new-orleans",
+    "https://www.eaglecountryonline.com/news/local-news/gov-braun-to-replace-snap-benefits-for-residents-in-disaster-area-counties",
+    "https://www.wpsdlocal6.com/news/carbondale-food-pantry-sees-growing-need-amid-rising-costs/article_f374c951-9488-4aa4-b003-bdf751267287.html",
+    "https://fox17.com/news/local/tn-snap-advocates-push-delay-in-error-rate-state-payment-to-feds-circa-170m",
+    "https://www.abc15.com/news/region-west-valley/glendale/glendale-food-bank-sees-40-surge-in-families-seeking-help-amid-job-loss-and-snap-benefit-cuts",
+    "https://www.wpr.org/news/farm-bill-advances-snap-cuts-worry-wisconsin-farmers-market",
+    "https://wnyt.com/top-stories/1-in-6-warren-county-children-face-hunger-food-bank-reports",
+    "https://kutv.com/news/local/rising-fuel-costs-limit-food-deliveries-to-washington-county-pantry",
+    "https://wwmt.com/news/local/allegan-county-food-pantry-to-close-permanently-next-week-211-assistance-board-directors",
+    "https://spectrumlocalnews.com/tx/austin/news/2026/09/28/el-paso-braces-for-another-round-of-rain-after-already-shutting-down-a-food-bank-",
+    "https://kfoxtv.com/news/local/el-paso-food-bank-damage-forces-early-closures-after-severe-storms",
+    "https://royalexaminer.com/federal-judge-strikes-down-snap-deadline-that-put-virginia-at-risk-of-added-costs",
+    "https://hayspost.com/posts/d72bb288-075e-4a12-90c6-a274b604805a",
+    "https://www.usatoday.com/story/money/personal-finance/2026/09/27/snap-changes-october-cola-cuts/91938378007",
+    "https://www.nwaonline.com/news/2026/sep/26/centerton-food-pantry-shuts-down-after-serving",
+    "https://www.bignewsnetwork.com/news/279336314/facing-hunger-in-oregon-part-4-pantries-call-for-more-support",
+    "https://michiganadvance.com/2026/09/28/michigan-school-districts-food-pantries-feel-ripple-effects-of-snap-cuts-ahead-of-cost-shift-to-states",
+    "https://www.commondreams.org/news/food-banks-snap-diesel"
+  ],
+  "source_stage_json": "C:\\Users\\willb\\OneDrive\\Desktop\\Python\\Dispatches From The Blue Fern Co\\output\\review\\food-line\\recovery\\food-line-recovery-brief-sept14-28-2026-publication-stage.json",
+  "collection_rerun_performed": false,
+  "evidence_paths_preserved": true,
+  "cards": [
+    {
+      "story_id": "food-line-recovery-2026-09-14-nc-food-banks-snap",
+      "headline": "NC food banks report record need as SNAP cuts loom",
+      "date_group": "2026-09-14",
+      "status": "recovered_backfill_material",
+      "bucket": "Food banks and emergency aid",
+      "labels": [
+        "Food bank demand",
+        "Benefits pressure"
+      ],
+      "rationale": "Current, source-backed food bank demand/SNAP pressure affecting households.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-14-nc-food-banks-snap.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-14#1",
+          "run_id": "food-line-scheduled-20260914-20260914T123001Z-cb36eb4e",
+          "observed_date": "2026-09-14",
+          "source_title": "NC food banks see record need as more people face insecurity, and SNAP cuts loom - News & Observer",
+          "source_url": "https://www.newsobserver.com/news/politics-government/article317210289.html",
+          "rationale": "Current, source-backed food bank demand/SNAP pressure affecting households.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-14.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-14\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-14\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-15-mid-hudson-snap-funding",
+      "headline": "SNAP funding fight tightens benefit-access pressure in New York",
+      "date_group": "2026-09-15",
+      "status": "recovered_backfill_material",
+      "bucket": "SNAP / benefits pressure",
+      "labels": [
+        "Benefits pressure",
+        "Policy signal"
+      ],
+      "rationale": "Current SNAP funding/eligibility pressure with direct benefit-access stakes.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-15-mid-hudson-snap-funding.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-15#1",
+          "run_id": "food-line-scheduled-20260915-20260915T123001Z-c22d2612",
+          "observed_date": "2026-09-15",
+          "source_title": "Gillibrand, food bank leaders blast Trump administration for cutting SNAP funding",
+          "source_url": "https://midhudsonnews.com/2026/09/15/gillibrand-food-bank-leaders-blast-trump-administration-for-cutting-snap-funding",
+          "rationale": "Current SNAP funding/eligibility pressure with direct benefit-access stakes.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-15.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-15\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-15\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-15-oregon-pantries-snap",
+      "headline": "Oregon pantries report rising need after SNAP cuts",
+      "date_group": "2026-09-15",
+      "status": "recovered_backfill_material",
+      "bucket": "Food banks and emergency aid",
+      "labels": [
+        "Food bank demand",
+        "High local impact"
+      ],
+      "rationale": "Current pantry demand increase after SNAP cuts.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-15-oregon-pantries-snap.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-15#2",
+          "run_id": "food-line-scheduled-20260915-20260915T123001Z-c22d2612",
+          "observed_date": "2026-09-15",
+          "source_title": "Oregon food pantries report rising need after SNAP cuts",
+          "source_url": "https://www.nbcrightnow.com/news/oregon-food-pantries-report-rising-need-after-snap-cuts/article_d37d7469-0ebb-4cf2-819a-6dc24208a0f5.html",
+          "rationale": "Current pantry demand increase after SNAP cuts.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-15.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-15\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-15\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-15-cambridge-benefits",
+      "headline": "Cambridge funds benefit-assistance response after SNAP and MassHealth cuts",
+      "date_group": "2026-09-15",
+      "status": "recovered_backfill_material",
+      "bucket": "Local government and policy strain",
+      "labels": [
+        "Benefits pressure",
+        "Policy signal"
+      ],
+      "rationale": "City benefit-assistance response to SNAP and benefit cuts is a clear pressure response.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-15-cambridge-benefits.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-15#3",
+          "run_id": "food-line-scheduled-20260915-20260915T123001Z-c22d2612",
+          "observed_date": "2026-09-15",
+          "source_title": "Cambridge Allocates $500,000 for Benefits Assistance to Combat Cuts to SNAP, MassHealth",
+          "source_url": "https://www.thecrimson.com/article/2026/9/15/cambridge-snap-appropriations",
+          "rationale": "City benefit-assistance response to SNAP and benefit cuts is a clear pressure response.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-15.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-15\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-15\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-15-fresno-distribution",
+      "headline": "Fresno food distribution shifts as CalFresh and SNAP cuts hit residents",
+      "date_group": "2026-09-15",
+      "status": "recovered_backfill_material",
+      "bucket": "Rural and regional access",
+      "labels": [
+        "High local impact",
+        "Benefits pressure"
+      ],
+      "rationale": "Local food distribution response to CalFresh/SNAP cuts.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-15-fresno-distribution.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-15#5",
+          "run_id": "food-line-scheduled-20260915-20260915T123001Z-c22d2612",
+          "observed_date": "2026-09-15",
+          "source_title": "Food distribution becomes more personal in Fresno amid cuts",
+          "source_url": "https://fresnoland.org/2026/09/15/food-distribution",
+          "rationale": "Local food distribution response to CalFresh/SNAP cuts.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-15.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-15\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-15\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-16-nc-school-meals",
+      "headline": "Federal SNAP cuts could reduce school-meal access for North Carolina children",
+      "date_group": "2026-09-16",
+      "status": "recovered_backfill_material",
+      "bucket": "School meals and students",
+      "labels": [
+        "School food",
+        "Benefits pressure"
+      ],
+      "rationale": "Current SNAP/school-meal pressure affecting children and SNAP households.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-16-nc-school-meals.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-16#1",
+          "run_id": "food-line-scheduled-20260916-20260916T123001Z-64d1642a",
+          "observed_date": "2026-09-16",
+          "source_title": "Over 500,000 N.C. children qualify for free or reduced school meals. Federal SNAP cuts could cause decrease",
+          "source_url": "https://dailytarheel.com/es_es/480556/city-state/over-500000-n-c-children-qualify-for-free-or-reduced-school-meals-federal-snap-cuts-could-cause-decrease",
+          "rationale": "Current SNAP/school-meal pressure affecting children and SNAP households.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-16.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-16\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-16\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-18-cardinal-snap-usda-loss",
+      "headline": "St. Paul pantry adapts after SNAP cuts and USDA food loss",
+      "date_group": "2026-09-18",
+      "status": "recovered_backfill_material",
+      "bucket": "Food banks and emergency aid",
+      "labels": [
+        "Food bank demand",
+        "Benefits pressure"
+      ],
+      "rationale": "Pantry adapts to SNAP cuts and USDA food loss; clear current pressure.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-18-cardinal-snap-usda-loss.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-18#1",
+          "run_id": "food-line-scheduled-20260918-20260918T140427Z-4db5dbde",
+          "observed_date": "2026-09-18",
+          "source_title": "A St. Paul food pantry gets creative to weather SNAP cuts, loss of USDA food",
+          "source_url": "https://cardinalnews.org/2026/09/18/a-st-paul-food-pantry-gets-creative-to-weather-snap-cuts-loss-of-usda-food",
+          "rationale": "Pantry adapts to SNAP cuts and USDA food loss; clear current pressure.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-18.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-18\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-18\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-18-lens-school-meals",
+      "headline": "SNAP cuts could threaten New Orleans free school meals",
+      "date_group": "2026-09-18",
+      "status": "recovered_backfill_material",
+      "bucket": "School meals and students",
+      "labels": [
+        "School food",
+        "Benefits pressure"
+      ],
+      "rationale": "SNAP cuts threatening school meals; direct child/household access pressure.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-18-lens-school-meals.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-18#2",
+          "run_id": "food-line-scheduled-20260918-20260918T140427Z-4db5dbde",
+          "observed_date": "2026-09-18",
+          "source_title": "SNAP cuts could threaten free school meals as New Orleans marks Black Education History week",
+          "source_url": "https://thelensnola.org/2026/09/18/snap-cuts-free-school-meals-new-orleans",
+          "rationale": "SNAP cuts threatening school meals; direct child/household access pressure.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-18.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-18\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-18\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-18-indiana-snap-disaster",
+      "headline": "Indiana replaces SNAP benefits for disaster-area counties",
+      "date_group": "2026-09-18",
+      "status": "recovered_backfill_material",
+      "bucket": "Local government and policy strain",
+      "labels": [
+        "Benefits pressure",
+        "Policy signal"
+      ],
+      "rationale": "Replacement SNAP benefits for disaster counties is benefit-access pressure.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-18-indiana-snap-disaster.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-18#3",
+          "run_id": "food-line-scheduled-20260918-20260918T140427Z-4db5dbde",
+          "observed_date": "2026-09-18",
+          "source_title": "Gov. Braun to Replace SNAP Benefits for Residents in Disaster Area Counties",
+          "source_url": "https://www.eaglecountryonline.com/news/local-news/gov-braun-to-replace-snap-benefits-for-residents-in-disaster-area-counties",
+          "rationale": "Replacement SNAP benefits for disaster counties is benefit-access pressure.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-18.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-18\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-18\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-19-carbondale-demand",
+      "headline": "Carbondale pantry sees growing need amid rising costs",
+      "date_group": "2026-09-19",
+      "status": "recovered_backfill_material",
+      "bucket": "Food banks and emergency aid",
+      "labels": [
+        "Food bank demand",
+        "High local impact"
+      ],
+      "rationale": "Rising pantry need amid costs is current pressure.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-19-carbondale-demand.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-19#2",
+          "run_id": "food-line-scheduled-20260919-20260919T123001Z-7473c03a",
+          "observed_date": "2026-09-19",
+          "source_title": "Carbondale food pantry sees growing need amid rising costs",
+          "source_url": "https://www.wpsdlocal6.com/news/carbondale-food-pantry-sees-growing-need-amid-rising-costs/article_f374c951-9488-4aa4-b003-bdf751267287.html",
+          "rationale": "Rising pantry need amid costs is current pressure.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-19.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-19\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-19\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-20-tennessee-snap-error-rate",
+      "headline": "Tennessee SNAP advocates seek delay in federal error-rate payment",
+      "date_group": "2026-09-20",
+      "status": "recovered_backfill_material",
+      "bucket": "Local government and policy strain",
+      "labels": [
+        "Benefits pressure",
+        "Policy signal"
+      ],
+      "rationale": "SNAP administrative payment/error-rate story has clear benefit-access risk.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-20-tennessee-snap-error-rate.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-20#2",
+          "run_id": "food-line-scheduled-20260920-20260920T123001Z-aaf26682",
+          "observed_date": "2026-09-20",
+          "source_title": "TN SNAP advocates push delay in error rate state payment to feds, circa $170M",
+          "source_url": "https://fox17.com/news/local/tn-snap-advocates-push-delay-in-error-rate-state-payment-to-feds-circa-170m",
+          "rationale": "SNAP administrative payment/error-rate story has clear benefit-access risk.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-20.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-20\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-20\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-21-glendale-surge",
+      "headline": "Glendale food bank reports 40 percent surge tied to job loss and SNAP cuts",
+      "date_group": "2026-09-21",
+      "status": "recovered_backfill_material",
+      "bucket": "Food banks and emergency aid",
+      "labels": [
+        "Food bank demand",
+        "High local impact"
+      ],
+      "rationale": "Food bank reports 40 percent surge tied to job loss and SNAP cuts.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-21-glendale-surge.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-21#1",
+          "run_id": "food-line-scheduled-20260921-20260921T123001Z-1121e44c",
+          "observed_date": "2026-09-21",
+          "source_title": "Glendale food bank sees 40 percent surge in families seeking help amid job loss and SNAP benefit cuts",
+          "source_url": "https://www.abc15.com/news/region-west-valley/glendale/glendale-food-bank-sees-40-surge-in-families-seeking-help-amid-job-loss-and-snap-benefit-cuts",
+          "rationale": "Food bank reports 40 percent surge tied to job loss and SNAP cuts.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-21.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-21\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-21\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-22-wpr-snap-market",
+      "headline": "SNAP cuts worry Wisconsin farmers' market vendor",
+      "date_group": "2026-09-22",
+      "status": "recovered_backfill_material",
+      "bucket": "SNAP / benefits pressure",
+      "labels": [
+        "Benefits pressure",
+        "Rural access"
+      ],
+      "rationale": "SNAP cuts affecting farmers market/vendor access is current benefit pressure.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-22-wpr-snap-market.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-22#1",
+          "run_id": "food-line-scheduled-20260922-20260922T123001Z-e58f483e",
+          "observed_date": "2026-09-22",
+          "source_title": "As farm bill advances, SNAP cuts worry Wisconsin farmers' market vendor",
+          "source_url": "https://www.wpr.org/news/farm-bill-advances-snap-cuts-worry-wisconsin-farmers-market",
+          "rationale": "SNAP cuts affecting farmers market/vendor access is current benefit pressure.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-22.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-22\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-22\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-22-warren-child-hunger",
+      "headline": "Warren County child hunger report shows household food hardship",
+      "date_group": "2026-09-22",
+      "status": "recovered_backfill_material",
+      "bucket": "Household affordability / closures / disruptions",
+      "labels": [
+        "High local impact",
+        "Food bank demand"
+      ],
+      "rationale": "Child hunger report is a direct household food hardship signal.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-22-warren-child-hunger.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-22#3",
+          "run_id": "food-line-scheduled-20260922-20260922T123001Z-e58f483e",
+          "observed_date": "2026-09-22",
+          "source_title": "1 in 6 Warren County children face hunger, food bank reports",
+          "source_url": "https://wnyt.com/top-stories/1-in-6-warren-county-children-face-hunger-food-bank-reports",
+          "rationale": "Child hunger report is a direct household food hardship signal.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-22.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-22\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-22\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-23-washington-county-fuel",
+      "headline": "Fuel costs limit food deliveries to Washington County pantry",
+      "date_group": "2026-09-23",
+      "status": "recovered_backfill_material",
+      "bucket": "Rural and regional access",
+      "labels": [
+        "Rural access",
+        "High local impact"
+      ],
+      "rationale": "Fuel costs limiting pantry food deliveries is concrete provider-capacity pressure.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-23-washington-county-fuel.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-23#1",
+          "run_id": "food-line-scheduled-20260923-20260923T150735Z-9db38473",
+          "observed_date": "2026-09-23",
+          "source_title": "Rising fuel costs limit food deliveries to Washington County pantry",
+          "source_url": "https://kutv.com/news/local/rising-fuel-costs-limit-food-deliveries-to-washington-county-pantry",
+          "rationale": "Fuel costs limiting pantry food deliveries is concrete provider-capacity pressure.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-23.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-23\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-23\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-23-allegan-closure",
+      "headline": "Allegan County Food Pantry announces permanent closure",
+      "date_group": "2026-09-23",
+      "status": "recovered_backfill_material",
+      "bucket": "Household affordability / closures / disruptions",
+      "labels": [
+        "High local impact",
+        "Food bank demand"
+      ],
+      "rationale": "Pantry closure is a clear access-loss development.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-23-allegan-closure.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-23#2",
+          "run_id": "food-line-scheduled-20260923-20260923T150735Z-9db38473",
+          "observed_date": "2026-09-23",
+          "source_title": "Allegan County Food Pantry to close permanently next week",
+          "source_url": "https://wwmt.com/news/local/allegan-county-food-pantry-to-close-permanently-next-week-211-assistance-board-directors",
+          "rationale": "Pantry closure is a clear access-loss development.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-23.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-23\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-23\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-el-paso-storm-damage",
+      "headline": "El Paso food bank storm damage disrupts emergency food access",
+      "date_group": "2026-09-25",
+      "status": "recovered_backfill_material",
+      "bucket": "Household affordability / closures / disruptions",
+      "labels": [
+        "High local impact",
+        "Food bank demand",
+        "Follow-up needed"
+      ],
+      "rationale": "El Paso food bank remained closed after storm damage; current access disruption update.",
+      "read_brief_placeholder": "briefs/food-line-recovery-el-paso-storm-damage.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-28#5",
+          "run_id": "food-line-proof-food-care-continuation-20260929T005826Z-b6df6347",
+          "observed_date": "2026-09-28",
+          "source_title": "El Paso braces for another round of rain after storms damaged food bank",
+          "source_url": "https://spectrumlocalnews.com/tx/austin/news/2026/09/28/el-paso-braces-for-another-round-of-rain-after-already-shutting-down-a-food-bank-",
+          "rationale": "El Paso food bank remained closed after storm damage; current access disruption update.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-28.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-28\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-28\\discovery_audit.json"
+          ]
+        },
+        {
+          "item_id": "2026-09-25#1",
+          "run_id": "food-line-scheduled-20260925-20260925T123001Z-705531b9",
+          "observed_date": "2026-09-25",
+          "source_title": "El Paso food bank damage forces early closures after severe storms",
+          "source_url": "https://kfoxtv.com/news/local/el-paso-food-bank-damage-forces-early-closures-after-severe-storms",
+          "rationale": "Storm damage forced food bank early closures; direct emergency-food access disruption.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-25.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-25\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-25\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": "The 2026-09-25 KFOX source is preserved as supporting evidence for the 2026-09-28 Spectrum News update rather than packaged as a separate story."
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-26-virginia-snap-deadline",
+      "headline": "Federal judge blocks SNAP deadline that put Virginia at added-cost risk",
+      "date_group": "2026-09-26",
+      "status": "recovered_backfill_material",
+      "bucket": "Local government and policy strain",
+      "labels": [
+        "Benefits pressure",
+        "Policy signal"
+      ],
+      "rationale": "SNAP deadline ruling tied to eligibility/admin cost pressure.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-26-virginia-snap-deadline.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-26#1",
+          "run_id": "food-line-scheduled-20260926-20260926T163510Z-0060ad9b",
+          "observed_date": "2026-09-26",
+          "source_title": "Federal Judge Strikes Down SNAP Deadline That Put Virginia at Risk of Added Costs",
+          "source_url": "https://royalexaminer.com/federal-judge-strikes-down-snap-deadline-that-put-virginia-at-risk-of-added-costs",
+          "rationale": "SNAP deadline ruling tied to eligibility/admin cost pressure.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-26.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-26\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-26\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-27-hays-post-snap-loss",
+      "headline": "Americans lose SNAP as Congress weighs food-stamp future",
+      "date_group": "2026-09-27",
+      "status": "recovered_backfill_material",
+      "bucket": "SNAP / benefits pressure",
+      "labels": [
+        "Benefits pressure",
+        "Policy signal"
+      ],
+      "rationale": "SNAP loss/future-benefit uncertainty is direct assistance pressure.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-27-hays-post-snap-loss.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-27#2",
+          "run_id": "multiple_food_care_continuation_inputs",
+          "observed_date": "2026-09-27",
+          "source_title": "More Americans lose SNAP as Congress weighs food stamps future",
+          "source_url": "https://hayspost.com/posts/d72bb288-075e-4a12-90c6-a274b604805a",
+          "rationale": "SNAP loss/future-benefit uncertainty is direct assistance pressure.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-27.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-27\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-27\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-27-usa-today-snap-rules",
+      "headline": "SNAP checks rise Oct. 1, but new rules may cut benefits ahead",
+      "date_group": "2026-09-27",
+      "status": "recovered_backfill_material",
+      "bucket": "SNAP / benefits pressure",
+      "labels": [
+        "Benefits pressure",
+        "Policy signal",
+        "Follow-up needed"
+      ],
+      "rationale": "SNAP COLA/rule-change item has current benefit-access consequences.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-27-usa-today-snap-rules.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-27#5",
+          "run_id": "multiple_food_care_continuation_inputs",
+          "observed_date": "2026-09-27",
+          "source_title": "SNAP checks rise Oct. 1, but new rules may mean benefit cuts ahead",
+          "source_url": "https://www.usatoday.com/story/money/personal-finance/2026/09/27/snap-changes-october-cola-cuts/91938378007",
+          "rationale": "SNAP COLA/rule-change item has current benefit-access consequences.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-27.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-27\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-27\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-27-centerton-closure",
+      "headline": "Centerton food pantry shuts down after 15 years",
+      "date_group": "2026-09-27",
+      "status": "recovered_backfill_material",
+      "bucket": "Household affordability / closures / disruptions",
+      "labels": [
+        "High local impact",
+        "Food bank demand"
+      ],
+      "rationale": "Food pantry closure after long service is a clear access-loss development.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-27-centerton-closure.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-27#6",
+          "run_id": "multiple_food_care_continuation_inputs",
+          "observed_date": "2026-09-27",
+          "source_title": "Centerton food pantry shuts down after serving community for 15 years",
+          "source_url": "https://www.nwaonline.com/news/2026/sep/26/centerton-food-pantry-shuts-down-after-serving",
+          "rationale": "Food pantry closure after long service is a clear access-loss development.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-27.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-27\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-27\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-28-oregon-pantries-support",
+      "headline": "Oregon pantries call for more support amid rising demand",
+      "date_group": "2026-09-28",
+      "status": "recovered_backfill_material",
+      "bucket": "Food banks and emergency aid",
+      "labels": [
+        "Food bank demand",
+        "Follow-up needed"
+      ],
+      "rationale": "Oregon pantries call for more support; private summary reports rising demand.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-28-oregon-pantries-support.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-28#2",
+          "run_id": "food-line-proof-food-care-continuation-20260929T005826Z-b6df6347",
+          "observed_date": "2026-09-28",
+          "source_title": "Facing hunger in Oregon, Part 4: Pantries call for more support",
+          "source_url": "https://www.bignewsnetwork.com/news/279336314/facing-hunger-in-oregon-part-4-pantries-call-for-more-support",
+          "rationale": "Oregon pantries call for more support; private summary reports rising demand.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-28.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-28\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-28\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-28-michigan-snap-ripple",
+      "headline": "Michigan schools and pantries feel SNAP-cut ripple effects",
+      "date_group": "2026-09-28",
+      "status": "recovered_backfill_material",
+      "bucket": "School meals and students",
+      "labels": [
+        "School food",
+        "Benefits pressure"
+      ],
+      "rationale": "SNAP cuts ripple through schools and food pantries; strong current pressure item.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-28-michigan-snap-ripple.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-28#4",
+          "run_id": "food-line-proof-food-care-continuation-20260929T005826Z-b6df6347",
+          "observed_date": "2026-09-28",
+          "source_title": "Michigan school districts, food pantries feel SNAP cut ripple effect ahead of cost shift to states",
+          "source_url": "https://michiganadvance.com/2026/09/28/michigan-school-districts-food-pantries-feel-ripple-effects-of-snap-cuts-ahead-of-cost-shift-to-states",
+          "rationale": "SNAP cuts ripple through schools and food pantries; strong current pressure item.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-28.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-28\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-28\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    },
+    {
+      "story_id": "food-line-recovery-2026-09-28-common-dreams-food-banks",
+      "headline": "US food banks strain under policy and cost pressure",
+      "date_group": "2026-09-28",
+      "status": "recovered_backfill_material",
+      "bucket": "Food banks and emergency aid",
+      "labels": [
+        "Food bank demand",
+        "Policy signal"
+      ],
+      "rationale": "Food banks under strain from policy/cost pressure; strong national pressure item.",
+      "read_brief_placeholder": "briefs/food-line-recovery-2026-09-28-common-dreams-food-banks.html",
+      "source_records": [
+        {
+          "item_id": "2026-09-28#6",
+          "run_id": "food-line-proof-food-care-continuation-20260929T005826Z-b6df6347",
+          "observed_date": "2026-09-28",
+          "source_title": "US Food Banks Under Strain as Trump Policies Drive Up Costs",
+          "source_url": "https://www.commondreams.org/news/food-banks-snap-diesel",
+          "rationale": "Food banks under strain from policy/cost pressure; strong national pressure item.",
+          "evidence_paths": [
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\proposed-editions\\2026-09-28.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\data\\dispatches\\food-line\\review\\reports\\2026-09-28\\current-intake.json",
+            "C:\\BlueFernRunner\\FoodLineCurrent6\\output\\review\\food-line\\2026-09-28\\discovery_audit.json"
+          ]
+        }
+      ],
+      "dedupe_note": null
+    }
+  ],
+  "pages_publication_mode": "targeted_food_line_recovery_publish"
+}

@@ -1,0 +1,33 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260929T054422-0700",
+  "scheduled_for": "2026-09-29T05:44:51-07:00",
+  "started_at": "2026-09-29T05:44:22-07:00",
+  "completed_at": "2026-09-29T05:45:30-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-29T04:41:08-07:00",
+    "end": "2026-09-29T05:45:30-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "prior_completed_hourly_check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "checked first; no qualifying in-window update surfaced; latest relevant situation report was dated 25 September 2026 and covered Gaza mainly through 20 September",
+    "who": "checked second; no qualifying in-window Gaza health-system update surfaced; latest relevant Gaza-specific WHO item found was dated 24 September 2026",
+    "additional_targeted_searches": 12,
+    "source_failures": 1,
+    "source_failure_detail": [
+      "UN News targeted search blocked by robots.txt"
+    ],
+    "exclusions": [
+      "items outside the hourly window",
+      "recycled/background material",
+      "non-qualifying September 29 education feature without a new high-value miss-class development"
+    ],
+    "authority": "supplementary_only; production remains authoritative"
+  }
+}

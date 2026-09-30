@@ -26,6 +26,7 @@ if str(SRC) not in sys.path:
 from bluefern_dispatches.bluesky_post import maybe_post_gaza_dispatch_to_bluesky
 from bluefern_dispatches.gaza_sources import validate_source_records as validate_collected_source_records
 from bluefern_dispatches.operational_health import build_gaza_operational_receipt, write_operational_receipt
+from scripts.preflight_repo_state import is_shared_dispatch_record_path
 from scripts.run_and_notify import notification_error_message, send_email
 from scripts.run_daily_gaza import DEFAULT_PAGES_REPO, DEFAULT_PAGES_BRANCH, DEFAULT_REMOTE_URL
 import scripts.run_daily_gaza as daily
@@ -34,7 +35,6 @@ import scripts.run_daily_gaza as daily
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 DEFAULT_SOURCE_BRANCH = "add/pages-repo-default"
 SAFE_SOURCE_CLEAN_PREFIXES = (
-    "data/records/",
     "output/site/",
     "output/dispatches/",
     "output/review/",
@@ -212,6 +212,10 @@ def _git_dirty_path(line: str) -> str:
     return _normalize_repo_path(text.strip())
 
 
+def _is_preserved_tracked_shared_record(line: str, path: str) -> bool:
+    return line[:2] == " M" and is_shared_dispatch_record_path(path)
+
+
 def _split_source_dirty_state(edition_date: str, status_lines: list[str]) -> tuple[list[str], list[str], list[str]]:
     manual_path = _normalize_repo_path(str(manual_source_path(edition_date).relative_to(ROOT)))
     allowed_manual = {manual_path}
@@ -221,6 +225,9 @@ def _split_source_dirty_state(edition_date: str, status_lines: list[str]) -> tup
     for line in status_lines:
         path = _git_dirty_path(line)
         if path in allowed_manual:
+            keep.append(line)
+            continue
+        if _is_preserved_tracked_shared_record(line, path):
             keep.append(line)
             continue
         if any(path == prefix.rstrip("/") or path.startswith(prefix) for prefix in SAFE_SOURCE_CLEAN_PREFIXES):

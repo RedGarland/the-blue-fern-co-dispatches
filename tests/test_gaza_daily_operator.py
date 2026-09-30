@@ -423,6 +423,80 @@ def test_pages_sync_uses_fetch_and_fast_forward_merge(isolated: Path, monkeypatc
     assert all("pull" not in " ".join(call) for call in calls)
 
 
+def test_operator_dirty_split_preserves_modified_tracked_shared_dispatch_records() -> None:
+    status_lines = [
+        " M data/records/curation_decisions.json",
+        " M data/records/dispatches.json",
+        " M data/records/editions.json",
+        " M data/records/records.json",
+        " M data/records/sources.json",
+        " M data/records/story_memory.json",
+    ]
+
+    kept, cleanable, risky = operator._split_source_dirty_state("2026-09-30", status_lines)
+
+    assert kept == status_lines
+    assert cleanable == []
+    assert risky == []
+
+
+@pytest.mark.parametrize(
+    "status_line",
+    [
+        "M  data/records/dispatches.json",
+        " D data/records/dispatches.json",
+        "?? data/records/dispatches.json",
+        " M data/records/not_a_shared_record.json",
+    ],
+)
+def test_operator_dirty_split_blocks_unsafe_shared_dispatch_record_states(status_line: str) -> None:
+    kept, cleanable, risky = operator._split_source_dirty_state("2026-09-30", [status_line])
+
+    assert kept == []
+    assert cleanable == []
+    assert risky == [status_line]
+
+
+def test_manual_gate_allows_sanctioned_shared_records_without_cleanup(
+    isolated: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pages_repo = isolated / "bluefern-dispatches-pages"
+    args = operator.parse_args(
+        [
+            "--date",
+            "2026-09-30",
+            "--manual-source-check-only",
+            "--pages-repo",
+            str(pages_repo),
+        ]
+    )
+    _stub_operator_success(monkeypatch, pages_repo=pages_repo)
+    monkeypatch.setattr(
+        operator,
+        "_git_status_lines",
+        lambda repo: [
+            " M data/records/curation_decisions.json",
+            " M data/records/dispatches.json",
+            " M data/records/editions.json",
+            " M data/records/records.json",
+            " M data/records/sources.json",
+            " M data/records/story_memory.json",
+        ]
+        if repo == operator.ROOT
+        else [],
+    )
+    monkeypatch.setattr(
+        operator,
+        "_clean_source_generated_artifacts",
+        lambda: (_ for _ in ()).throw(AssertionError("sanctioned records must not be cleaned")),
+    )
+
+    result = operator.run_operator(args)
+
+    assert result["ok"] is True
+    assert result["operator_status"] == "MANUAL_SOURCE_VALID"
+
+
 def test_run_operator_blocks_when_pages_repo_is_already_ahead(isolated: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     args = operator.parse_args(["--date", "2026-06-26", "--pages-repo", str(isolated / "bluefern-dispatches-pages")])
     monkeypatch.setattr(operator, "_git_status_lines", lambda repo: [])

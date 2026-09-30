@@ -12,7 +12,7 @@
   },
   "aggregate_status": "SUCCESS",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "648e1e4f60543607892493a92ef2b52c76270872",
+  "current_runner_head": "5d2edfa22ea62eaa844101914e364fb5239e0f5b",
   "debug_summary": {
     "aggregate_status": "SUCCESS",
     "all_current_failures_external": null,
@@ -42,7 +42,7 @@
     "unclassified_source_failure_count": null
   },
   "dispatch": "ice",
-  "last_exported_at": "2026-09-30T16:57:49.459707Z",
+  "last_exported_at": "2026-09-30T17:06:53.870020Z",
   "last_receipt_at": "2026-09-30T04:16:29.344537Z",
   "latest_runtime_proof_date": "2026-09-30T04:15:06Z",
   "migration_status": "MIGRATED",

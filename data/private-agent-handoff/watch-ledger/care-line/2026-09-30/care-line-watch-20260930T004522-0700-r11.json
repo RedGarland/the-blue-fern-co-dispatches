@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260930T004522-0700-r11",
+  "scheduled_for": "2026-09-30T00:45:22-07:00",
+  "started_at": "2026-09-30T00:46:46-07:00",
+  "completed_at": "2026-09-30T00:48:36-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-29T23:50:13-07:00",
+    "end": "2026-09-30T00:48:36-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices was checked first on the official CMS Public Notices page. The newest notices remain dated September 25, 2026; no newer provider termination, rescission, CLIA limitation/suspension, revocation, cancellation of Medicare approval, or similar access-risk notice appeared in the bounded window.",
+    "Exactly 12 additional targeted searches were completed covering hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency-service loss, ambulance/EMS, air-medical, essential-service restoration/reopening, U.S. territories, and abrupt immediate closures/suspensions.",
+    "No qualifying new development was identified since the prior completed hourly check at 2026-09-29T23:50:13-07:00.",
+    "Atlanta Birth Center's pause of birth-center deliveries effective September 30, 2026 was excluded from this run because the official page did not establish a new announcement within the bounded window and the effective date had already begun in Georgia before this Pacific-time window opened."
+  ]
+}

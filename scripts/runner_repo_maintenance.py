@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.preflight_repo_state import build_preflight_report, classify_status_line
+from scripts.preflight_repo_state import build_preflight_report, classify_status_line, is_shared_dispatch_record_path
 
 
 DEFAULT_SOURCE_BRANCH = "add/pages-repo-default"
@@ -145,7 +145,16 @@ def _is_safe_cleanup_path(path: str) -> bool:
 def _is_pre_sync_cleanup_entry_safe(entry: dict[str, Any]) -> bool:
     status = str(entry.get("status") or "")
     path = str(entry.get("path") or "")
+    if _is_preserved_tracked_runtime_entry(entry):
+        return True
     return status in {" M", "??"} and _is_safe_cleanup_path(path)
+
+
+def _is_preserved_tracked_runtime_entry(entry: dict[str, Any]) -> bool:
+    status = str(entry.get("status") or "")
+    path = str(entry.get("path") or "")
+    tracked_modified = status == " M" or (not status and not bool(entry.get("is_untracked")))
+    return tracked_modified and is_shared_dispatch_record_path(path)
 
 
 def _build_pre_sync_cleanup_result(source_repo: Path) -> dict[str, Any]:
@@ -205,6 +214,8 @@ def build_cleanup_plan(
         path_identity = _canonical_repo_relative_path(repo_root, path)
         if path_identity in protected:
             skipped_paths.append(path)
+            continue
+        if _is_preserved_tracked_runtime_entry(entry):
             continue
         if not _is_safe_cleanup_path(path):
             skipped_paths.append(path)
@@ -335,9 +346,9 @@ def sync_runner_repos(
 
     commands = [
         (source_repo, ["git", "fetch", "origin", source_branch]),
-        (source_repo, ["git", "reset", "--hard", f"origin/{source_branch}"]),
+        (source_repo, ["git", "merge", "--ff-only", "FETCH_HEAD"]),
         (pages_repo, ["git", "fetch", "origin", pages_branch]),
-        (pages_repo, ["git", "reset", "--hard", f"origin/{pages_branch}"]),
+        (pages_repo, ["git", "merge", "--ff-only", "FETCH_HEAD"]),
     ]
     for cwd, command in commands:
         done = _run_command(command, cwd=cwd)
@@ -395,7 +406,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         subparser.add_argument("--pages-branch", default=DEFAULT_PAGES_BRANCH)
         subparser.add_argument("--protected-path", action="append", default=[], help="Path to exclude from postflight cleanup. May be repeated.")
 
-    sync_parser = subparsers.add_parser("sync", help="Fetch and hard-reset a clean runner source repo and Pages repo to their tracked branches.")
+    sync_parser = subparsers.add_parser("sync", help="Fetch and fast-forward a clean runner source repo and Pages repo to their tracked branches.")
     add_common(sync_parser)
 
     postflight_parser = subparsers.add_parser("postflight", help="Classify drift after a runner job and clean only approved generated/temp paths.")

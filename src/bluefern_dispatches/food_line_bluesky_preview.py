@@ -7,12 +7,12 @@ from pathlib import Path
 from typing import Any
 
 from bluefern_dispatches.food_line_bluesky_approval import public_url_for_edition
+from bluefern_dispatches.food_line_social_card import ensure_food_line_social_card, food_line_social_card_relative_path
 
 
 PREVIEW_DIR_NAME = "bluesky-preview"
 PREVIEW_FILENAME = "food-line-bluesky-preview.json"
 PREVIEW_HTML_FILENAME = "food-line-bluesky-preview.html"
-PREVIEW_IMAGE_PATH = Path("assets/food-line-dispatch-social.png")
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -88,7 +88,8 @@ def build_food_line_bluesky_preview(project_root: Path, edition_date: str) -> di
     post_text = _post_text(manifest, review)
     card_title = _card_title(edition_date)
     card_description = _card_description()
-    image_path = project_root / PREVIEW_IMAGE_PATH
+    image_path = ensure_food_line_social_card(project_root, edition_date)
+    image_rel = food_line_social_card_relative_path(edition_date)
     image_hash = hashlib.sha256(image_path.read_bytes()).hexdigest() if image_path.exists() else None
     payload = {
         "schema_version": 1,
@@ -98,7 +99,7 @@ def build_food_line_bluesky_preview(project_root: Path, edition_date: str) -> di
         "post_text": post_text,
         "card_title": card_title,
         "card_description": card_description,
-        "card_image_path": PREVIEW_IMAGE_PATH.as_posix(),
+        "card_image_path": image_rel.as_posix(),
         "card_image_sha256": image_hash,
         "embed": {
             "uri": public_url,

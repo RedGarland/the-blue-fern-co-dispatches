@@ -1,0 +1,33 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260929T174652-0700",
+  "scheduled_for": "2026-09-29T17:41:00-07:00",
+  "started_at": "2026-09-29T17:46:52-07:00",
+  "completed_at": "2026-09-29T17:47:48-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-29T15:50:14-07:00",
+    "end": "2026-09-29T17:47:48-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "priority_checks": [
+      "OCHA OPT checked first. Its publications/updates pages still showed the 28 September 2026 Humanitarian Situation Report dated 25 September as the latest Gaza-relevant OCHA publication; no new qualifying development was verified in the bounded interval.",
+      "WHO checked second. WHO's Gaza/occupied Palestinian territory pages surfaced no Gaza-specific health-system update newer than the 24 September 2026 humanitarian-access and health remarks; no new qualifying health development was verified in the bounded interval."
+    ],
+    "additional_targeted_searches": 12,
+    "discovery_scope": "Bounded recall searched Reuters, AP, WAFA, UNRWA, WFP, UNICEF, ICRC, MSF, civilian-casualty/military-impact, crossings/aid/fuel, hospital/ambulance/medical-evacuation/functioning-capacity, and ceasefire/hostage/detention developments. Publication time was treated as discovery context rather than an absolute eligibility gate; candidates were screened for event freshness and duplication against prior surfaced watch findings and repository story memory.",
+    "result": "No new qualifying development was verified since the prior completed hourly check at 2026-09-29T15:50:14-07:00.",
+    "exclusions": [
+      "WAFA's 29 September 18:10 Gaza-local report on two Palestinians killed and additional Jabalia casualties was excluded as stale for this window and as overlapping prior surfaced findings.",
+      "A 29 September report about an Israeli strike killing Hamas commander Izz al-Din Al-Beik and a separate Jabalia clinic-area fatality was excluded as overlapping the earlier Reuters/Jabalia finding already surfaced by the watch.",
+      "Older humanitarian, hospital-fuel, crossing, casualty-total, and regional items were excluded as stale, recycled, outside Gaza scope, or non-qualifying."
+    ],
+    "search_failures": [],
+    "continuity_note": "Production remains authoritative. The prior durable Gaza watch heartbeat on ops/watch-ledger completed at 2026-09-29T15:50:14-07:00 and was used as the recall boundary."
+  }
+}

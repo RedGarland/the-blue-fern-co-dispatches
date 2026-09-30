@@ -1,0 +1,76 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260930T124929-0700",
+  "scheduled_for": "2026-09-30T12:44:51-07:00",
+  "started_at": "2026-09-30T12:49:29-07:00",
+  "completed_at": "2026-09-30T12:50:45-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "start": "2026-09-30T11:46:37-07:00",
+    "end": "2026-09-30T12:50:45-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "since prior hourly check"
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-20260930-khan-younis-tent-4inj",
+      "canonical_source_url": "https://www.newarab.com/news/elections-near-israel-increasing-assassinations-gaza?amp=",
+      "title": "As elections near, Israel is increasing 'assassinations' in Gaza",
+      "publisher": "The New Arab",
+      "source_date": "2026-09-30",
+      "publication_date": "2026-09-30",
+      "event_date": "2026-09-30",
+      "location": "West of Khan Younis, Gaza Strip",
+      "affected_population_system": "Displaced Palestinians sheltering in a tent; four injured, including two children",
+      "exact_supporting_passage": "four Palestinians, including two children, were injured in an Israeli strike on a tent",
+      "source_type": "established_reporting",
+      "classification": "new",
+      "confidence": "medium",
+      "discovery_context": {
+        "watch_window": "2026-09-30T11:46:37-07:00/2026-09-30T12:50:45-07:00",
+        "search_bucket": "current-day civilian casualty / military-operation impact recall",
+        "discovered_at": "2026-09-30T12:50:45-07:00",
+        "notes": "Newly surfaced in this bounded recall run. The report identifies Wednesday, 30 September, but does not provide an exact incident time; treated as newly surfaced rather than minute-bounded."
+      }
+    },
+    {
+      "finding_id": "gaza-20260930-abu-al-ajeen-gunfire-3inj",
+      "canonical_source_url": "https://www.newarab.com/news/elections-near-israel-increasing-assassinations-gaza?amp=",
+      "title": "As elections near, Israel is increasing 'assassinations' in Gaza",
+      "publisher": "The New Arab",
+      "source_date": "2026-09-30",
+      "publication_date": "2026-09-30",
+      "event_date": "2026-09-30",
+      "location": "Abu al-Ajeen area, southeast of Deir al-Balah, Gaza Strip",
+      "affected_population_system": "Palestinian civilians; three wounded by gunfire, two critically",
+      "exact_supporting_passage": "three others were wounded, two of them critically, by Israeli gunfire",
+      "source_type": "established_reporting",
+      "classification": "new",
+      "confidence": "medium",
+      "discovery_context": {
+        "watch_window": "2026-09-30T11:46:37-07:00/2026-09-30T12:50:45-07:00",
+        "search_bucket": "current-day civilian casualty / military-operation impact recall",
+        "discovered_at": "2026-09-30T12:50:45-07:00",
+        "notes": "Newly surfaced in this bounded recall run. The report identifies Wednesday, 30 September, but does not provide an exact incident time; treated as newly surfaced rather than minute-bounded."
+      }
+    }
+  ],
+  "coverage_notes": {
+    "primary_checks": [
+      "OCHA OPT checked first; no new in-window Gaza-specific update surfaced.",
+      "WHO checked second; no new in-window Gaza health update surfaced."
+    ],
+    "additional_targeted_searches": 12,
+    "exclusions": [
+      "Recycled reports from earlier hourly watches were excluded, including the Tel al-Hawa vehicle strike and earlier Khan Younis/Al-Mawasi incidents already surfaced.",
+      "UN/OCHA reporting referring only to events 'in recent days' without an in-window event time was not promoted as a new finding."
+    ],
+    "limitations": [
+      "Both positive findings are from a single established regional report citing Palestinian medical sources; no independent corroboration was found within the bounded search budget.",
+      "Exact incident times were not published, so the findings are classified as newly surfaced in this run rather than definitively occurring after the prior check."
+    ]
+  }
+}

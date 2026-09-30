@@ -440,6 +440,20 @@ def test_operator_dirty_split_preserves_modified_tracked_shared_dispatch_records
     assert risky == []
 
 
+def test_git_status_lines_preserves_leading_porcelain_status_space(monkeypatch: pytest.MonkeyPatch) -> None:
+    class Completed:
+        returncode = 0
+        stdout = " M data/records/curation_decisions.json\n M data/records/dispatches.json\n"
+        stderr = ""
+
+    monkeypatch.setattr(operator, "_run_command", lambda args, *, cwd: Completed())
+
+    assert operator._git_status_lines(Path("repo")) == [
+        " M data/records/curation_decisions.json",
+        " M data/records/dispatches.json",
+    ]
+
+
 @pytest.mark.parametrize(
     "status_line",
     [

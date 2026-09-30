@@ -1256,43 +1256,37 @@ def _upload_card_thumb(access_jwt: str, project_root: Path, edition_date: str) -
     return None, "no_thumbnail", False, None, None
 
 
-def _food_line_thumbnail_candidates(project_root: Path) -> tuple[Path, ...]:
-    return (
-        project_root / "assets" / "food-line-dispatch-social.png",
-        project_root / "assets" / "food-line-logo.png",
-        project_root / "assets" / "bluefern.png",
-    )
-
-
 def _upload_food_line_card_thumb(
     access_jwt: str,
     project_root: Path,
+    card_image_path: str,
 ) -> tuple[dict[str, Any] | None, str, bool, int | None, int | None, Path | None]:
-    for path in _food_line_thumbnail_candidates(project_root):
-        if not path.exists():
-            continue
-        mime = _guess_image_mime(path)
-        if not mime:
-            continue
-        try:
-            data = path.read_bytes()
-            original_bytes = len(data)
-            if original_bytes <= BLUESKY_COMPRESS_TARGET_BYTES:
-                blob = _upload_blob(access_jwt, data, mime)
-                if blob:
-                    return blob, "uploaded", False, original_bytes, original_bytes, path
-                return None, "upload_failed", False, original_bytes, None, path
-            compressed = _compress_thumb_to_jpeg(data)
-            if not compressed:
-                return None, "skipped_too_large", False, original_bytes, None, path
-            if len(compressed) >= BLUESKY_BLOB_MAX_BYTES:
-                return None, "skipped_too_large", False, original_bytes, None, path
-            blob = _upload_blob(access_jwt, compressed, "image/jpeg")
+    rel_path = Path(card_image_path)
+    path = project_root / rel_path
+    if not path.exists():
+        return None, "missing_edition_card", False, None, None, path
+    mime = _guess_image_mime(path)
+    if not mime:
+        return None, "invalid_thumbnail", False, None, None, path
+    try:
+        data = path.read_bytes()
+        original_bytes = len(data)
+        if original_bytes <= BLUESKY_COMPRESS_TARGET_BYTES:
+            blob = _upload_blob(access_jwt, data, mime)
             if blob:
-                return blob, "uploaded_compressed", True, original_bytes, len(compressed), path
-            return None, "upload_failed", True, original_bytes, len(compressed), path
-        except Exception:  # noqa: BLE001
-            return None, "upload_failed", False, None, None, path
+                return blob, "uploaded", False, original_bytes, original_bytes, path
+            return None, "upload_failed", False, original_bytes, None, path
+        compressed = _compress_thumb_to_jpeg(data)
+        if not compressed:
+            return None, "skipped_too_large", False, original_bytes, None, path
+        if len(compressed) >= BLUESKY_BLOB_MAX_BYTES:
+            return None, "skipped_too_large", False, original_bytes, None, path
+        blob = _upload_blob(access_jwt, compressed, "image/jpeg")
+        if blob:
+            return blob, "uploaded_compressed", True, original_bytes, len(compressed), path
+        return None, "upload_failed", True, original_bytes, len(compressed), path
+    except Exception:  # noqa: BLE001
+        return None, "upload_failed", False, None, None, path
     return None, "no_thumbnail", False, None, None, None
 
 
@@ -1856,7 +1850,11 @@ def maybe_post_food_line_dispatch_to_bluesky(
                 uploaded_thumb_bytes = None
                 image_path = None
                 try:
-                    thumb_blob, thumb_status, compressed_thumb, original_thumb_bytes, uploaded_thumb_bytes, image_path = _upload_food_line_card_thumb(access_jwt, root)
+                    thumb_blob, thumb_status, compressed_thumb, original_thumb_bytes, uploaded_thumb_bytes, image_path = _upload_food_line_card_thumb(
+                        access_jwt,
+                        root,
+                        str(result["image_path"] or ""),
+                    )
                 except Exception as exc:  # noqa: BLE001
                     thumb_blob = None
                     thumb_status = "upload_failed"
@@ -1923,7 +1921,7 @@ def maybe_post_food_line_dispatch_to_bluesky(
                             "compressed_thumb": compressed_thumb,
                             "original_thumb_bytes": original_thumb_bytes,
                             "uploaded_thumb_bytes": uploaded_thumb_bytes,
-                            "image_path": str(image_path) if image_path else (FOOD_LINE_SOCIAL_IMAGE_PATH if thumb_blob else None),
+                            "image_path": str(image_path) if image_path else None,
                         }
                     )
                     state_payload = {
@@ -1933,7 +1931,7 @@ def maybe_post_food_line_dispatch_to_bluesky(
                         "post_text": result["post_text"],
                         "card_title": result["card_title"],
                         "card_description": result["card_description"],
-                        "image_path": str(image_path) if image_path else (FOOD_LINE_SOCIAL_IMAGE_PATH if thumb_blob else None),
+                        "image_path": str(image_path) if image_path else None,
                         "image_alt": FOOD_LINE_SOCIAL_IMAGE_ALT,
                         "status": "success",
                         "skip_reason": None,

@@ -7,6 +7,7 @@ import pytest
 from bluefern_dispatches import bluesky_post
 from bluefern_dispatches import food_line_bluesky_approval as approval
 from bluefern_dispatches.food_line_bluesky_preview import build_food_line_bluesky_preview
+from bluefern_dispatches.food_line_social_card import food_line_social_card_path
 
 
 @pytest.fixture(autouse=True)
@@ -17,8 +18,6 @@ def _freeze_food_line_today(monkeypatch: pytest.MonkeyPatch) -> None:
 def _fixture(tmp_path: Path, *, date: str = "2026-06-17", signals: int = 1) -> tuple[str, str]:
     public_url = approval.public_url_for_edition(date)
     summary = "Central Illinois Food Bank says SNAP cuts are straining its ability to meet demand."
-    (tmp_path / "assets").mkdir(parents=True, exist_ok=True)
-    (tmp_path / "assets" / "food-line-dispatch-social.png").write_bytes(b"stable-social-card")
     manifest_path = tmp_path / "output" / "site" / "food-line" / "editions" / date / "edition_manifest.json"
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
     manifest_path.write_text(
@@ -106,7 +105,7 @@ def test_changed_url_invalidates_approval(tmp_path: Path) -> None:
 def test_changed_social_card_invalidates_approval(tmp_path: Path) -> None:
     _fixture(tmp_path)
     _approved(tmp_path)
-    (tmp_path / "assets" / "food-line-dispatch-social.png").write_bytes(b"changed-social-card")
+    food_line_social_card_path(tmp_path, "2026-06-17").write_bytes(b"changed-social-card")
     assert approval.verify_approval(tmp_path, "2026-06-17")["reason"] == "social_image_hash_mismatch"
 
 

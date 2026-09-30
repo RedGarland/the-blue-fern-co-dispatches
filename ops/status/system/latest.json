@@ -172,31 +172,22 @@
         "state": "HANDOFF_RECEIVED_SUCCESS",
         "unaccounted_count": 0
       },
-      "aggregate_status": "FAILED",
+      "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "669a4d3047ebd4ea4fac10b4efa54067cc299985",
       "debug_summary": {
-        "aggregate_status": "FAILED",
+        "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
-        "attention_task_count": 1,
-        "attention_tasks": [
-          {
-            "artifact_id": "20260930T131503Z-current-intake.json",
-            "classification": "current_intake_failed",
-            "exit_code": 10,
-            "failure_stage": "current_intake",
-            "status": "FAILED",
-            "task_key": "food_line_current_intake"
-          }
-        ],
+        "attention_task_count": 0,
+        "attention_tasks": [],
         "external_access_restriction_count": null,
         "failed_source_count": null,
-        "operator_assessment": "FAILED_ACTION_REQUIRED",
-        "primary_classification": "current_intake_failed",
-        "primary_failure_stage": "current_intake",
-        "primary_layer": "HANDOFF",
-        "primary_task_key": "food_line_current_intake",
-        "primary_task_status": "FAILED",
+        "operator_assessment": "ACTION_REQUIRED_PENDING_REVIEW",
+        "primary_classification": null,
+        "primary_failure_stage": null,
+        "primary_layer": "EDITORIAL_HANDOFF",
+        "primary_task_key": null,
+        "primary_task_status": null,
         "private_review_count_only_gap_count": 38,
         "private_review_dispositioned_item_count": 39,
         "private_review_max_age_hours": 277,
@@ -207,7 +198,7 @@
         "publication_attempted": false,
         "publication_status": null,
         "receipt_completeness": "PARTIAL",
-        "recovery_lifecycle": "INCIDENT_OPEN",
+        "recovery_lifecycle": "HEALTHY",
         "stale_observability": false,
         "unaccounted_event_count": null,
         "unclassified_source_failure_count": null
@@ -294,7 +285,7 @@
         "pending_item_count": 48,
         "unresolved_item_count": 48
       },
-      "recovery_lifecycle": "INCIDENT_OPEN"
+      "recovery_lifecycle": "HEALTHY"
     },
     "gaza": {
       "agent_handoff": {
@@ -401,8 +392,8 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-09-30T13:15:21.109065Z",
+  "exported_at": "2026-09-30T13:25:51.156409Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
-  "system_status": "FAILED"
+  "system_status": "UNKNOWN"
 }

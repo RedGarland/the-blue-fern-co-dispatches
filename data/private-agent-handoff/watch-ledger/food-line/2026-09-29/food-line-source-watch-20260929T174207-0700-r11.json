@@ -1,0 +1,34 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260929T174207-0700-r11",
+  "scheduled_for": "2026-09-29T17:42:07-07:00",
+  "started_at": "2026-09-29T17:42:07-07:00",
+  "completed_at": "2026-09-29T17:43:27.041-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-29T16:42:07-07:00",
+    "end": "2026-09-29T17:42:07-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 10,
+    "search_budget": 12,
+    "search_failures": 0,
+    "scope": [
+      "only/sole/last/full-service grocery-store loss, closure, fire, or disaster",
+      "canceled or suspended emergency food distributions due to storm, flood, fire, outage, or facility damage",
+      "abrupt pantry/food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "notes": [
+      "No new qualifying signal was identified within the bounded hourly observation window.",
+      "Kauaʻi hurricane-recovery reporting showed emergency food distributions proceeding as scheduled rather than being canceled or suspended.",
+      "The Spencer, New York only-grocery-store fire and El Pasoans Fighting Hunger storm-related closure were older events outside the hourly window.",
+      "Routine pantry listings, resource guides, donation-oriented material, generic access content, and duplicates were excluded."
+    ]
+  }
+}

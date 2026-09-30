@@ -1,0 +1,22 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260929T184522-0700-r11",
+  "scheduled_for": "2026-09-29T18:45:22-07:00",
+  "started_at": "2026-09-29T18:48:19-07:00",
+  "completed_at": "2026-09-29T18:50:03-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-29T17:45:22-07:00",
+    "end": "2026-09-29T18:50:03-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices was checked first and retrieved successfully. The newest notices listed were dated 2026-09-25; no new termination, rescission, CLIA limitation/suspension, or similar CMS access-risk notice fell within this hourly window.",
+    "Exactly 12 additional targeted searches were completed covering hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency-service loss, ambulance/EMS, air-medical, essential-service restoration/reopening, U.S. territories, and general local healthcare-access changes.",
+    "No qualifying development was identified within the bounded window. A September 29 reopening of Hospital Susana Centeno in Vieques, Puerto Rico was surfaced but was published earlier in the day, outside this hourly window. A new Southern Arkansas air-medical program announcement was excluded because it is a new service launch, not a closure/suspension or concrete restoration of a previously lost essential service. Other surfaced items were non-U.S., previously announced, proposals/business stories without a new access effect, or duplicates."
+  ]
+}

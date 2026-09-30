@@ -126,7 +126,7 @@
         "primary_task_status": null,
         "private_review_count_only_gap_count": 38,
         "private_review_dispositioned_item_count": 39,
-        "private_review_max_age_hours": 273,
+        "private_review_max_age_hours": 274,
         "private_review_oldest_pending_date": "2026-09-19",
         "private_review_pending_date_count": 6,
         "private_review_pending_item_count": 48,
@@ -144,7 +144,7 @@
         "count_only_gap_count": 38,
         "dates": [
           {
-            "age_hours": 273,
+            "age_hours": 274,
             "count_only_gap_count": 0,
             "date": "2026-09-19",
             "dispositioned_item_count": 1,
@@ -153,7 +153,7 @@
             "unresolved_item_count": 1
           },
           {
-            "age_hours": 201,
+            "age_hours": 202,
             "count_only_gap_count": 0,
             "date": "2026-09-22",
             "dispositioned_item_count": 2,
@@ -162,7 +162,7 @@
             "unresolved_item_count": 1
           },
           {
-            "age_hours": 81,
+            "age_hours": 82,
             "count_only_gap_count": 9,
             "date": "2026-09-27",
             "dispositioned_item_count": 6,
@@ -171,7 +171,7 @@
             "unresolved_item_count": 9
           },
           {
-            "age_hours": 57,
+            "age_hours": 58,
             "count_only_gap_count": 3,
             "date": "2026-09-28",
             "dispositioned_item_count": 5,
@@ -180,7 +180,7 @@
             "unresolved_item_count": 4
           },
           {
-            "age_hours": 33,
+            "age_hours": 34,
             "count_only_gap_count": 26,
             "date": "2026-09-29",
             "dispositioned_item_count": 0,
@@ -189,7 +189,7 @@
             "unresolved_item_count": 32
           },
           {
-            "age_hours": 9,
+            "age_hours": 10,
             "count_only_gap_count": 0,
             "date": "2026-09-30",
             "dispositioned_item_count": 0,
@@ -215,7 +215,7 @@
           }
         ],
         "dispositioned_item_count": 39,
-        "max_age_hours": 273,
+        "max_age_hours": 274,
         "oldest_pending_date": "2026-09-19",
         "pending_date_count": 6,
         "pending_item_count": 48,
@@ -328,7 +328,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-09-30T09:55:11.720275Z",
+  "exported_at": "2026-09-30T10:15:07.304630Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "UNKNOWN"

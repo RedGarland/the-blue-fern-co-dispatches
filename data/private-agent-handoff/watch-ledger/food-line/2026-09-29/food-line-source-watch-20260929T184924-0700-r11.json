@@ -1,0 +1,36 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260929T184924-0700-r11",
+  "scheduled_for": "2026-09-29T18:45:54-07:00",
+  "started_at": "2026-09-29T18:49:24-07:00",
+  "completed_at": "2026-09-29T18:50:35.292-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-29T17:42:07-07:00",
+    "end": "2026-09-29T18:49:24-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "search_budget": 12,
+    "search_failures": 0,
+    "source_retrieval_failures": 1,
+    "scope": [
+      "only/sole/last/full-service grocery-store loss, closure, fire, or disaster",
+      "canceled or suspended emergency food distributions due to storm, flood, fire, outage, or facility damage",
+      "abrupt pantry/food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "notes": [
+      "No new qualifying signal was identified within the bounded observation window.",
+      "Kauaʻi hurricane-recovery reporting showed emergency food distributions proceeding as scheduled rather than being canceled or suspended.",
+      "Maryland's September 30 magstripe EBT cutoff has immediate access consequences but the official notice predates this observation window, so it was excluded as not new.",
+      "A same-day secondary Maryland EBT article surfaced in search but its page fetch was blocked by the source host; the older official Prince George's County notice was accessible and corroborated the cutoff.",
+      "Older grocery-store disruptions, routine pantry listings, resource guides, donation-oriented material, routine program promotion, generic inflation content, and duplicates were excluded."
+    ]
+  }
+}

@@ -57,6 +57,15 @@ OPERATIONAL_HEALTH_RECEIPT_RE = re.compile(
     r"(?:latest\.json|runs/[A-Za-z0-9_.-]{1,220}\.json)$",
     re.IGNORECASE,
 )
+SHARED_DISPATCH_RECORD_FILES = {
+    "curation_decisions.json",
+    "detail_packages.json",
+    "dispatches.json",
+    "editions.json",
+    "records.json",
+    "sources.json",
+    "story_memory.json",
+}
 
 
 def _run_git_status(repo: Path) -> tuple[int, list[str]]:
@@ -81,6 +90,15 @@ def _normalize_path(path_text: str) -> str:
     return text
 
 
+def is_shared_dispatch_record_path(path_text: str) -> bool:
+    path = _normalize_path(path_text).lower()
+    prefix = "data/records/"
+    if not path.startswith(prefix):
+        return False
+    name = path.removeprefix(prefix)
+    return "/" not in name and name in SHARED_DISPATCH_RECORD_FILES
+
+
 def classify_path(path_text: str) -> str:
     path = _normalize_path(path_text)
     lower = path.lower()
@@ -101,6 +119,8 @@ def classify_path(path_text: str) -> str:
         return "docs"
     if lower.startswith("src/") or lower.startswith("scripts/") or root_name in {"pyproject.toml", "requirements.txt", ".gitignore"}:
         return "source"
+    if is_shared_dispatch_record_path(path):
+        return "shared_dispatch_records"
     if EXTERNAL_HANDOFF_EVIDENCE_RE.fullmatch(lower):
         return "local_run_state"
     if RECOVERY_EXECUTION_LEDGER_RE.fullmatch(lower):
@@ -147,6 +167,7 @@ def classify_status_line(line: str) -> dict[str, Any] | None:
     allowed_tracked_runtime = status == " M" and (
         is_food_line_mutable_tracked_runtime_path(path)
         or is_operator_mutable_tracked_runtime_path(path)
+        or is_shared_dispatch_record_path(path)
     )
     return {
         "status": status,

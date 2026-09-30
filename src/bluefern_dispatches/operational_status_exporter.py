@@ -204,6 +204,34 @@ def _parse_log_scalar(value: str) -> Any:
         return text
 
 
+def _merge_log_json_fields(fields: dict[str, Any], value: Any) -> None:
+    if not isinstance(value, dict):
+        return
+    for raw_key, raw_value in value.items():
+        key = str(raw_key or "").lower()
+        if isinstance(raw_value, dict):
+            _merge_log_json_fields(fields, raw_value)
+            continue
+        if key:
+            fields[key] = raw_value
+
+
+def _merge_embedded_json_log_fields(fields: dict[str, Any], text: str) -> None:
+    decoder = json.JSONDecoder()
+    index = 0
+    while True:
+        start = text.find("{", index)
+        if start < 0:
+            return
+        try:
+            value, end = decoder.raw_decode(text[start:])
+        except json.JSONDecodeError:
+            index = start + 1
+            continue
+        _merge_log_json_fields(fields, value)
+        index = start + max(end, 1)
+
+
 def _iso(value: datetime) -> str:
     return value.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
 
@@ -385,6 +413,7 @@ def _gaza_log_fields(path: Path) -> dict[str, Any]:
     except OSError:
         return {}
     fields: dict[str, Any] = {}
+    _merge_embedded_json_log_fields(fields, text)
     for line in text.splitlines():
         match = GAZA_LOG_FIELD_RE.match(line.strip())
         if not match:

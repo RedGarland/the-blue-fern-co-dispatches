@@ -504,6 +504,36 @@ def _write_gaza_dry_run_log(source: Path, *, date: str = DATE, pushed: bool = Fa
     return path
 
 
+def _write_gaza_dry_run_json_log(source: Path, *, date: str = DATE) -> Path:
+    log_date = date.replace("-", "")
+    path = source / "logs" / f"runner-gaza-{log_date}-163635.log"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        "\n".join(
+            [
+                "Gaza dry-run result:",
+                json.dumps(
+                    {
+                        "ok": True,
+                        "operator_status": "DRY_RUN_READY",
+                        "audio_status": "audio_skipped",
+                        "pages_dry_run_ok": True,
+                        "pages_push_ok": None,
+                        "pushed": False,
+                        "bluesky_status": "skipped",
+                        "errors": [],
+                    },
+                    indent=2,
+                    sort_keys=True,
+                ),
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
 def _write_ice_day(
     tmp_path: Path,
     *,
@@ -1344,6 +1374,30 @@ def test_gaza_dry_run_recovery_proof_supersedes_audio_failed_receipt_without_pub
     assert status["stale_observability"] is False
     assert status["task_summaries"][0]["status"] == "FAILED"
     assert status["task_summaries"][0]["classification"] == "audio_failed"
+
+
+def test_gaza_dry_run_recovery_proof_accepts_embedded_json_log(tmp_path: Path) -> None:
+    source = _write_gaza_day(tmp_path, status="FAILED", classification="audio_failed")
+    proof = _write_gaza_dry_run_json_log(source)
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "DEGRADED"
+    assert status["recovery_lifecycle"] == "RECOVERY_PENDING_RUNTIME_PROOF"
+    assert status["dry_run_recovery_applied"] is True
+    assert status["dry_run_recovery_proof"]["path"] == str(proof)
+    assert status["dry_run_recovery_proof"]["operator_status"] == "DRY_RUN_READY"
+    assert status["dry_run_recovery_proof"]["audio_status"] == "audio_skipped"
+    assert status["dry_run_recovery_proof"]["pages_dry_run_ok"] is True
+    assert status["dry_run_recovery_proof"]["pages_push_ok"] is None
+    assert status["dry_run_recovery_proof"]["pushed"] is False
+    assert status["publication_attempted"] is False
+    assert status["stale_observability"] is False
 
 
 def test_gaza_dry_run_recovery_proof_keeps_system_degraded_not_success(tmp_path: Path) -> None:

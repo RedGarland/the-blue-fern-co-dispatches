@@ -5,13 +5,13 @@
   "run_id": "care-line-watch-20260930T074522-0700-r11",
   "scheduled_for": "2026-09-30T07:45:22-07:00",
   "started_at": "2026-09-30T07:41:19-07:00",
-  "completed_at": "2026-09-30T14:44:26.390-07:00",
+  "completed_at": "2026-09-30T07:45:45.666-07:00",
   "status": "DEGRADED",
   "outcome": "no_findings",
   "search_window": {
     "timezone": "America/Los_Angeles",
     "start": "2026-09-30T06:45:22-07:00",
-    "end": "2026-09-30T14:44:26.390-07:00"
+    "end": "2026-09-30T07:45:45.666-07:00"
   },
   "findings": [],
   "coverage_notes": [

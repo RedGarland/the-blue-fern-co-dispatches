@@ -1,0 +1,22 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260930T044522-0700-r11",
+  "scheduled_for": "2026-09-30T04:45:22-07:00",
+  "started_at": "2026-09-30T04:47:42-07:00",
+  "completed_at": "2026-09-30T04:50:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-30T03:45:22-07:00",
+    "end": "2026-09-30T04:45:22-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first. Current CMS table was directly retrievable; newest listed notices were dated 2026-09-25, so no new qualifying CMS termination, rescission, CLIA limitation/suspension, or similar access-risk action was identified in this hourly window.",
+    "Completed 12 additional targeted searches covering hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, ambulance/EMS, air-medical, rural emergency service loss, essential-service restoration, Puerto Rico, and other U.S. territories.",
+    "No new qualifying healthcare-access development was identified in the bounded window. Surfaced Henderson Hospital maternity/NICU shutdown reporting was previously announced and therefore excluded as non-new/duplicate."
+  ]
+}

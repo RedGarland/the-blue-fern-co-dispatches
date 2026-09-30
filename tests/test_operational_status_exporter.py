@@ -481,6 +481,29 @@ def _write_gaza_day(
     return source
 
 
+def _write_gaza_dry_run_log(source: Path, *, date: str = DATE, pushed: bool = False) -> Path:
+    log_date = date.replace("-", "")
+    path = source / "logs" / f"runner-gaza-{log_date}-163635.log"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        "\n".join(
+            [
+                "ok: true",
+                "operator_status: DRY_RUN_READY",
+                "audio_status: audio_skipped",
+                "pages_dry_run_ok: true",
+                "pages_push_ok: null",
+                f"pushed: {str(pushed).lower()}",
+                "bluesky_status: skipped",
+                "errors: []",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
 def _write_ice_day(
     tmp_path: Path,
     *,
@@ -1295,6 +1318,74 @@ def test_gaza_same_day_no_update_receipt_remains_current_after_grace_window(tmp_
     assert status["stale_observability"] is False
     assert status["debug_summary"]["primary_layer"] == "NONE"
     assert status["publication_status"] == "no_update_published"
+
+
+def test_gaza_dry_run_recovery_proof_supersedes_audio_failed_receipt_without_public_success(tmp_path: Path) -> None:
+    source = _write_gaza_day(tmp_path, status="FAILED", classification="audio_failed")
+    proof = _write_gaza_dry_run_log(source)
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "DEGRADED"
+    assert status["recovery_lifecycle"] == "RECOVERY_PENDING_RUNTIME_PROOF"
+    assert status["dry_run_recovery_applied"] is True
+    assert status["dry_run_recovery_proof"]["path"] == str(proof)
+    assert status["dry_run_recovery_proof"]["operator_status"] == "DRY_RUN_READY"
+    assert status["dry_run_recovery_proof"]["audio_status"] == "audio_skipped"
+    assert status["dry_run_recovery_proof"]["pages_dry_run_ok"] is True
+    assert status["publication_attempted"] is False
+    assert status["public_side_effects"]["publication_attempted"] is False
+    assert status["public_side_effects"]["publication_status"] == "audio_failed"
+    assert status["stale_observability"] is False
+    assert status["task_summaries"][0]["status"] == "FAILED"
+    assert status["task_summaries"][0]["classification"] == "audio_failed"
+
+
+def test_gaza_dry_run_recovery_proof_keeps_system_degraded_not_success(tmp_path: Path) -> None:
+    food_statuses = {key: (action, "completed", 0) for key, (action, _, _) in TASKS.items()}
+    food = build_food_line_status(
+        source_root=_write_day(tmp_path / "food", food_statuses),
+        date=DATE,
+        evaluated_at=EVALUATED,
+        exported_at=EVALUATED,
+    )
+    gaza_source = _write_gaza_day(tmp_path / "gaza", status="FAILED", classification="audio_failed")
+    _write_gaza_dry_run_log(gaza_source)
+    gaza = build_gaza_status(
+        source_root=gaza_source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+    )
+
+    system = build_system_status(food, source_root=tmp_path, exported_at=EVALUATED, gaza_status=gaza)
+
+    assert system["system_status"] == "DEGRADED"
+    assert system["dispatches"]["gaza"]["aggregate_status"] == "DEGRADED"
+    assert system["dispatches"]["gaza"]["recovery_lifecycle"] == "RECOVERY_PENDING_RUNTIME_PROOF"
+    assert system["dispatches"]["gaza"]["dry_run_recovery_applied"] is True
+    assert system["stale_observability"] == []
+
+
+def test_gaza_dry_run_recovery_proof_does_not_apply_when_pages_was_pushed(tmp_path: Path) -> None:
+    source = _write_gaza_day(tmp_path, status="FAILED", classification="audio_failed")
+    _write_gaza_dry_run_log(source, pushed=True)
+
+    status = build_gaza_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-09-10T20:00:00Z",
+        exported_at="2026-09-10T20:01:00Z",
+    )
+
+    assert status["aggregate_status"] == "STALE_OBSERVABILITY"
+    assert status["dry_run_recovery_applied"] is False
+    assert status["dry_run_recovery_proof"] is None
 
 
 def test_export_advances_food_and_system_timestamps_when_food_changes(tmp_path: Path) -> None:

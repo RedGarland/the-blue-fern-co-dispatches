@@ -194,31 +194,15 @@
       "debug_summary": {
         "aggregate_status": "FAILED",
         "all_current_failures_external": null,
-        "attention_task_count": 3,
+        "attention_task_count": 1,
         "attention_tasks": [
           {
-            "artifact_id": "20260930T015505Z-current-intake.json",
+            "artifact_id": "20260930T032529Z-current-intake.json",
             "classification": "current_intake_failed",
-            "exit_code": 1,
+            "exit_code": 10,
             "failure_stage": "current_intake",
             "status": "FAILED",
             "task_key": "food_line_current_intake"
-          },
-          {
-            "artifact_id": "20260930T030910Z-source-watch.json",
-            "classification": "blocked_overlapping_run",
-            "exit_code": 10,
-            "failure_stage": "source_watch",
-            "status": "FAILED",
-            "task_key": "food_line_source_watch"
-          },
-          {
-            "artifact_id": "20260930T022500Z-status-resume.json",
-            "classification": "status_resume_failed",
-            "exit_code": 10,
-            "failure_stage": "status_resume",
-            "status": "FAILED",
-            "task_key": "food_line_source_watch_resume"
           }
         ],
         "external_access_restriction_count": null,
@@ -512,7 +496,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-09-30T03:15:05.890932Z",
+  "exported_at": "2026-09-30T03:26:55.880433Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "FAILED"

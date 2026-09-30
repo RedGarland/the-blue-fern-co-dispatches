@@ -299,20 +299,20 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "MISSED",
+      "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "5d2edfa22ea62eaa844101914e364fb5239e0f5b",
       "debug_summary": {
-        "aggregate_status": "MISSED",
+        "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
         "attention_task_count": 0,
         "attention_tasks": [],
         "external_access_restriction_count": null,
         "failed_source_count": null,
-        "operator_assessment": "FAILED_ACTION_REQUIRED",
+        "operator_assessment": "HEALTHY",
         "primary_classification": null,
         "primary_failure_stage": null,
-        "primary_layer": "SCHEDULER_OR_OBSERVABILITY",
+        "primary_layer": "NONE",
         "primary_task_key": null,
         "primary_task_status": null,
         "private_review_count_only_gap_count": null,
@@ -322,9 +322,9 @@
         "private_review_pending_date_count": null,
         "private_review_pending_item_count": null,
         "private_review_unresolved_item_count": null,
-        "publication_attempted": false,
-        "publication_status": null,
-        "receipt_completeness": "NO_PROOF",
+        "publication_attempted": true,
+        "publication_status": "published_and_posted",
+        "receipt_completeness": "COMPLETE",
         "recovery_lifecycle": "HEALTHY",
         "stale_observability": false,
         "unaccounted_event_count": null,
@@ -332,12 +332,12 @@
       },
       "dry_run_recovery_applied": false,
       "latest_recovery_proof_at": null,
-      "latest_runtime_proof_date": null,
+      "latest_runtime_proof_date": "2026-09-30T17:36:21.542116Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-09-30",
-      "receipt_completeness": "NO_PROOF",
+      "receipt_completeness": "COMPLETE",
       "recovery_lifecycle": "HEALTHY",
-      "scheduled_health_available": false,
+      "scheduled_health_available": true,
       "stale_observability": false
     },
     "ice": {
@@ -392,8 +392,8 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-09-30T17:34:52.893479Z",
+  "exported_at": "2026-09-30T17:38:07.063581Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
-  "system_status": "MISSED"
+  "system_status": "DEGRADED"
 }

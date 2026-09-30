@@ -1,0 +1,28 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260930T134522-0700-r11",
+  "scheduled_for": "2026-09-30T13:45:22-07:00",
+  "started_at": "2026-09-30T13:43:52-07:00",
+  "completed_at": "2026-09-30T13:45:14-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-30T12:45:22-07:00",
+    "end": "2026-09-30T13:45:14-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices_checked_first": true,
+    "cms_public_notices_result": "No new entry beyond the 17 notices dated 2026-09-30 already observed by the prior hourly check (16 Texas providers plus California Orange Coast Hospice).",
+    "additional_targeted_searches": 12,
+    "targeted_search_result": "No new qualifying U.S. or territory healthcare-access change surfaced in the bounded search window.",
+    "exclusions_noted": [
+      "Henderson Hospital maternity/NICU shutdown was previously announced and already known; not new to this hourly window.",
+      "Proposal/funding/ownership stories without a concrete new service loss or restoration were excluded."
+    ],
+    "production_collection_authoritative": true
+  }
+}

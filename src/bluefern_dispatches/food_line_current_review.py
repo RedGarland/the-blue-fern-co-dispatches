@@ -67,7 +67,16 @@ PRIVATE_PAYLOAD_KEYS = {
     "hidden_instructions",
 }
 CURRENT_FRESHNESS_WINDOW_DAYS = 3
-PATH_CASE_INSENSITIVE_ARTICLE_HOSTS = frozenset({"unb.com.bd", "www.unb.com.bd"})
+PATH_CASE_INSENSITIVE_ARTICLE_HOSTS = frozenset(
+    {
+        "abcnews.com",
+        "csmonitor.com",
+        "unb.com.bd",
+        "www.abcnews.com",
+        "www.csmonitor.com",
+        "www.unb.com.bd",
+    }
+)
 
 
 def canonical_json(payload: Any) -> str:

@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_reconciliation.v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-09-29",
+  "generated_at": "2026-09-30T07:10:26Z",
+  "watch_ledger_ref": "ops/watch-ledger",
+  "protected_source_ref": "add/pages-repo-default",
+  "run_count": 18,
+  "success_run_count": 12,
+  "degraded_run_count": 6,
+  "successful_run_count": 18,
+  "failed_run_count": 0,
+  "zero_finding_run_count": 18,
+  "finding_count": 0,
+  "accounted_count": 0,
+  "unreconciled_count": 0,
+  "findings": [],
+  "missing_hour_slots_local": ["04","07","13","16","17","20"],
+  "material_heartbeat_absence": true,
+  "production_evidence": {
+    "protected_source_checked": true,
+    "deployed_public_checked": false,
+    "observation": "Direct public retrieval unavailable; protected rendered Care Line archive shows latest entry 2026-08-20. No watch findings required matching."
+  },
+  "operational_issue": true,
+  "operational_issue_reasons": ["MATERIAL_HEARTBEAT_ABSENCE"]
+}

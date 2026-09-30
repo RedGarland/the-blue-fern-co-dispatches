@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_reconciliation.v1",
+  "dispatch": "food-line",
+  "observation_date": "2026-09-29",
+  "generated_at": "2026-09-30T07:10:26Z",
+  "watch_ledger_ref": "ops/watch-ledger",
+  "protected_source_ref": "add/pages-repo-default",
+  "run_count": 17,
+  "success_run_count": 16,
+  "degraded_run_count": 1,
+  "successful_run_count": 17,
+  "failed_run_count": 0,
+  "zero_finding_run_count": 17,
+  "finding_count": 0,
+  "accounted_count": 0,
+  "unreconciled_count": 0,
+  "findings": [],
+  "missing_hour_slots_local": ["00","10","13","14","15","20","22"],
+  "material_heartbeat_absence": true,
+  "production_evidence": {
+    "protected_source_checked": true,
+    "deployed_public_checked": true,
+    "observation": "Latest deployed Food Line briefing dated 2026-09-28; no watch findings required matching."
+  },
+  "operational_issue": true,
+  "operational_issue_reasons": ["MATERIAL_HEARTBEAT_ABSENCE"]
+}

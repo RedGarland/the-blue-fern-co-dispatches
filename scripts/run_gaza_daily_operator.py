@@ -147,7 +147,10 @@ def _git_output(repo: Path, *args: str) -> str:
 
 
 def _git_status_lines(repo: Path) -> list[str]:
-    return [line for line in _git_output(repo, "status", "--short").splitlines() if line.strip()]
+    result = _run_command(["git", "status", "--short"], cwd=repo)
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr.strip() or result.stdout.strip() or "git status --short failed")
+    return [line for line in result.stdout.splitlines() if line.strip()]
 
 
 def _git_status_branch(repo: Path) -> str:

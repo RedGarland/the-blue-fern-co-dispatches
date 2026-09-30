@@ -206,7 +206,7 @@
         "primary_task_status": null,
         "private_review_count_only_gap_count": 37,
         "private_review_dispositioned_item_count": 39,
-        "private_review_max_age_hours": 269,
+        "private_review_max_age_hours": 270,
         "private_review_oldest_pending_date": "2026-09-19",
         "private_review_pending_date_count": 5,
         "private_review_pending_item_count": 46,
@@ -224,7 +224,7 @@
         "count_only_gap_count": 37,
         "dates": [
           {
-            "age_hours": 269,
+            "age_hours": 270,
             "count_only_gap_count": 0,
             "date": "2026-09-19",
             "dispositioned_item_count": 1,
@@ -233,7 +233,7 @@
             "unresolved_item_count": 1
           },
           {
-            "age_hours": 197,
+            "age_hours": 198,
             "count_only_gap_count": 0,
             "date": "2026-09-22",
             "dispositioned_item_count": 2,
@@ -242,7 +242,7 @@
             "unresolved_item_count": 1
           },
           {
-            "age_hours": 77,
+            "age_hours": 78,
             "count_only_gap_count": 9,
             "date": "2026-09-27",
             "dispositioned_item_count": 6,
@@ -251,7 +251,7 @@
             "unresolved_item_count": 9
           },
           {
-            "age_hours": 53,
+            "age_hours": 54,
             "count_only_gap_count": 3,
             "date": "2026-09-28",
             "dispositioned_item_count": 5,
@@ -260,7 +260,7 @@
             "unresolved_item_count": 4
           },
           {
-            "age_hours": 29,
+            "age_hours": 30,
             "count_only_gap_count": 25,
             "date": "2026-09-29",
             "dispositioned_item_count": 0,
@@ -286,7 +286,7 @@
           }
         ],
         "dispositioned_item_count": 39,
-        "max_age_hours": 269,
+        "max_age_hours": 270,
         "oldest_pending_date": "2026-09-19",
         "pending_date_count": 5,
         "pending_item_count": 46,
@@ -416,7 +416,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-09-30T05:35:04.472721Z",
+  "exported_at": "2026-09-30T06:02:17.736217Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "DEGRADED"

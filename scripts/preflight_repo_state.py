@@ -19,6 +19,7 @@ from scripts.care_line_runtime_paths import CARE_LINE_ALLOWED_DIRTY_CATEGORIES, 
 from scripts.food_line_runtime_paths import (
     FOOD_LINE_ALLOWED_DIRTY_CATEGORIES,
     classify_food_line_runtime_path,
+    is_food_line_generated_public_output_path,
     is_food_line_mutable_tracked_runtime_path,
 )
 from scripts.operator_runtime_paths import (
@@ -164,6 +165,7 @@ def classify_status_line(line: str) -> dict[str, Any] | None:
     if not path:
         return None
     category = classify_path(path)
+    allowed_food_generated_output = status in {" M", "??"} and is_food_line_generated_public_output_path(path)
     allowed_tracked_runtime = status == " M" and (
         is_food_line_mutable_tracked_runtime_path(path)
         or is_operator_mutable_tracked_runtime_path(path)
@@ -174,7 +176,9 @@ def classify_status_line(line: str) -> dict[str, Any] | None:
         "path": path,
         "category": category,
         "is_untracked": status == "??",
-        "is_risky": not allowed_tracked_runtime and (status != "??" or category not in ALLOWED_DIRTY_CATEGORIES),
+        "is_risky": not allowed_food_generated_output
+        and not allowed_tracked_runtime
+        and (status != "??" or category not in ALLOWED_DIRTY_CATEGORIES),
     }
 
 

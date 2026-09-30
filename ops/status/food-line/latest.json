@@ -12,7 +12,7 @@
   },
   "aggregate_status": "FAILED",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "201be79a097d85c545e11fe923c7d1c7b9a69e12",
+  "current_runner_head": "c1272fe6e864691b1a6e7ef99b3b7f8570b440a0",
   "debug_summary": {
     "aggregate_status": "FAILED",
     "all_current_failures_external": null,
@@ -124,7 +124,7 @@
   "incident_reference": {
     "date": "2026-09-29"
   },
-  "last_exported_at": "2026-09-30T02:15:06.392463Z",
+  "last_exported_at": "2026-09-30T02:22:00.235384Z",
   "last_receipt_at": "2026-09-30T01:55:05.874212Z",
   "latest_runtime_proof_date": "2026-09-30T01:54:56.268336Z",
   "next_expected_run": null,

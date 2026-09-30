@@ -1,0 +1,319 @@
+[
+  {
+    "story_id": "gaza-story-2026-09-30-003",
+    "title": "Israeli forces overwhelmed by violent settlers in 'terrorist attack' on Palestinian family",
+    "summary": "Settler violence in West Bank makes everyday life 'untenable' for Palestinians, says ICRC after assault on family trying to return home in Jalud. The International Committee of the Red Cross (ICRC) has said Israeli settler violence in the West Bank has made everyday life for Palestinians \"untenable\", as a mob attack on Palestinians trying to return home prompted one of Benjamin Netanyahu's main rivals to warn of a campaign of settler terror. More than 100 militant settlers overwhelmed Israeli security forces early on Tuesday to attack a Palestinian family as they attempted to reclaim their homes which had been seized by settlers in the West Bank village of Jalud. Three Israeli security officials were injured and houses were set on fire.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 78,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-30-guardian-world-89a8de044e1b"
+    ],
+    "source_ids": [
+      "gaza-2026-09-30-guardian-world-89a8de044e1b"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/sep/30/israeli-settler-violence-west-bank-attack-jalud-palestinians-icrc"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-30-guardian-world-89a8de044e1b",
+        "title": "Israeli forces overwhelmed by violent settlers in 'terrorist attack' on Palestinian family",
+        "url": "https://www.theguardian.com/world/2026/sep/30/israeli-settler-violence-west-bank-attack-jalud-palestinians-icrc",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Settler violence in West Bank makes everyday life 'untenable' for Palestinians, says ICRC after assault on family trying to return home in Jalud The International Committee of the Red Cross (ICRC) has said Israeli settler violence in the West Bank has made everyday life for Palestinians \"untenable\", as a mob attack on Palestinians trying to return home prompted one of Benjamin Netanyahu's main rivals to warn of a campaign of settler terror. More than 100 militant settlers overwhelmed Israeli security forces early on Tuesday to attack a Palestinian family as they attempted to reclaim their homes which had been seized by settlers in the West Bank village of Jalud. Three Israeli security officials were injured and houses were set on fire.",
+        "event_date": "2026-09-30T14:54:06+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-30T17:34:42.970345+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 78,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-30T14:54:06+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-29-001",
+    "prior_edition_date": "2026-09-29",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-30-005",
+    "title": "Israeli attacks on Gaza kill seven as 'ceasefire' violations continue",
+    "summary": "At least six people killed in drone attack on passenger van and one person killed in strike on residential apartment.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 57,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-30-aljazeera-middle-east-3526dab1cb99"
+    ],
+    "source_ids": [
+      "gaza-2026-09-30-aljazeera-middle-east-3526dab1cb99"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/9/30/israeli-attacks-on-gaza-kill-several-as-ceasefire-violations-continue?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-30-aljazeera-middle-east-3526dab1cb99",
+        "title": "Israeli attacks on Gaza kill seven as 'ceasefire' violations continue",
+        "url": "https://www.aljazeera.com/news/2026/9/30/israeli-attacks-on-gaza-kill-several-as-ceasefire-violations-continue?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "At least six people killed in drone attack on passenger van and one person killed in strike on residential apartment.",
+        "event_date": "2026-09-30T12:49:04+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-30T17:34:42.970345+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 57,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-30T12:49:04+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-21-004",
+    "prior_edition_date": "2026-07-21",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-30-001",
+    "title": "Girl has multiple surgeries to control infections after strike in Gaza",
+    "summary": "Witnesses say Raseel's tent was hit by an Israeli helicopter strike. Israel's military says it has no record of the attack.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 53,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-30-bbc-middle-east-b65634e115d9"
+    ],
+    "source_ids": [
+      "gaza-2026-09-30-bbc-middle-east-b65634e115d9"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/videos/c8n5d0e0n6wdo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-30-bbc-middle-east-b65634e115d9",
+        "title": "Girl has multiple surgeries to control infections after strike in Gaza",
+        "url": "https://www.bbc.co.uk/news/videos/c8n5d0e0n6wdo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Witnesses say Raseel's tent was hit by an Israeli helicopter strike. Israel's military says it has no record of the attack.",
+        "event_date": "2026-09-30T05:02:50+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-30T17:34:42.970345+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 53,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-30T05:02:50+00:00",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-30-004",
+    "title": "Palestinian archaeologists race against time to save Gaza's heritage",
+    "summary": "A Palestinian team rescued Gaza's artefacts. The question now is where to store them.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-30-aljazeera-middle-east-99caa0541827"
+    ],
+    "source_ids": [
+      "gaza-2026-09-30-aljazeera-middle-east-99caa0541827"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/features/2026/9/30/palestinian-archaeologists-race-against-time-to-save-gazas-heritage?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-30-aljazeera-middle-east-99caa0541827",
+        "title": "Palestinian archaeologists race against time to save Gaza's heritage",
+        "url": "https://www.aljazeera.com/features/2026/9/30/palestinian-archaeologists-race-against-time-to-save-gazas-heritage?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "A Palestinian team rescued Gaza's artefacts. The question now is where to store them.",
+        "event_date": "2026-09-30T13:45:56+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-30T17:34:42.970345+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-30T13:45:56+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

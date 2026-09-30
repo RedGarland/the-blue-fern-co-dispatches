@@ -1,0 +1,476 @@
+[
+  {
+    "story_id": "gaza-story-2026-09-29-003",
+    "title": "'You were right': Ed Miliband tells critics Labour was wrong on Gaza",
+    "summary": "Foreign secretary will tell party's conference 'we are not here to accept the status quo but to change it' Ed Miliband will tell campaigners and party members who raised the plight of Palestinians they were right that Labour's approach had not been enough, saying he was heeding the calls of millions of people by imposing sanctions on Israeli settlements. The foreign secretary will tell the Labour party conference that the government will take more explicitly progressive foreign policy positions under Andy Burnham, and that the UK will be a leader among like-minded countries in a new age of diplomacy.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 64,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "ceasefire_diplomacy",
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-29-guardian-world-c164a8f08d9e"
+    ],
+    "source_ids": [
+      "gaza-2026-09-29-guardian-world-c164a8f08d9e"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/politics/2026/sep/28/ed-miliband-labour-former-stance-palestine-fell-short"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-29-guardian-world-c164a8f08d9e",
+        "title": "'You were right': Ed Miliband tells critics Labour was wrong on Gaza",
+        "url": "https://www.theguardian.com/politics/2026/sep/28/ed-miliband-labour-former-stance-palestine-fell-short",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Foreign secretary will tell party's conference 'we are not here to accept the status quo but to change it' Ed Miliband will tell campaigners and party members who raised the plight of Palestinians they were right that Labour's approach had not been enough, saying he was heeding the calls of millions of people by imposing sanctions on Israeli settlements. The foreign secretary will tell the Labour party conference that the government will take more explicitly progressive foreign policy positions under Andy Burnham, and that the UK will be a leader among like-minded countries in a new age of diplomacy.",
+        "event_date": "2026-09-28T04:00:24+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-30T02:25:21.339346+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 64,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-28T04:00:24+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-02-012",
+    "prior_edition_date": "2026-09-02",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-29-001",
+    "title": "Israeli settlers attack West Bank village and block Palestinian family's return home",
+    "summary": "Two homes belonging to the al-Tubasi family were set on fire and Israeli security forces were also targeted by settlers.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 62,
+    "scoring_reasons": [
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-29-bbc-middle-east-9d2f58b83dda"
+    ],
+    "source_ids": [
+      "gaza-2026-09-29-bbc-middle-east-9d2f58b83dda"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/articles/cvlylj41egxgo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-29-bbc-middle-east-9d2f58b83dda",
+        "title": "Israeli settlers attack West Bank village and block Palestinian family's return home",
+        "url": "https://www.bbc.co.uk/news/articles/cvlylj41egxgo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "Two homes belonging to the al-Tubasi family were set on fire and Israeli security forces were also targeted by settlers.",
+        "event_date": "2026-09-29T12:39:18+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-30T02:25:21.339346+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin",
+      "west bank"
+    ],
+    "top_story_relevance_score": 62,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-29T12:39:18+00:00",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-02-009",
+    "prior_edition_date": "2026-09-02",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-29-002",
+    "title": "Israel does not have right to close UK consulate in Jerusalem, Foreign Office advised",
+    "summary": "Former attorney general Dominic Grieve says. Israel is not entitled to shut mission in occupied Palestinian territory UK politics live - latest updates. Israel does not have a legal right to act on its plan to close the British consulate in East Jerusalem, the former attorney general Dominic Grieve has advised the UK Foreign Office. Israel has said it intends to shut the consulate on 8 October in response to the sweeping ban on trade with goods from Israeli settlements announced by the foreign secretary, Ed Miliband , this month.",
+    "category": "palestinian_development",
+    "story_scope": "palestinian_development",
+    "score": 55,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "accountability_legal",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 8,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-29-guardian-world-26edebf9338c"
+    ],
+    "source_ids": [
+      "gaza-2026-09-29-guardian-world-26edebf9338c"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/politics/2026/sep/28/israel-no-right-close-jerusalem-uk-consulate-foreign-office-advised"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-29-guardian-world-26edebf9338c",
+        "title": "Israel does not have right to close UK consulate in Jerusalem, Foreign Office advised",
+        "url": "https://www.theguardian.com/politics/2026/sep/28/israel-no-right-close-jerusalem-uk-consulate-foreign-office-advised",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Former attorney general Dominic Grieve says Israel is not entitled to shut mission in occupied Palestinian territory UK politics live - latest updates Israel does not have a legal right to act on its plan to close the British consulate in East Jerusalem, the former attorney general Dominic Grieve has advised the UK Foreign Office. Israel has said it intends to shut the consulate on 8 October in response to the sweeping ban on trade with goods from Israeli settlements announced by the foreign secretary, Ed Miliband , this month.",
+        "event_date": "2026-09-28T11:28:12+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-30T02:25:21.339346+00:00",
+    "relevance_terms_matched": [
+      "east jerusalem",
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 55,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-28T11:28:12+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-09-10-011",
+    "prior_edition_date": "2026-09-10",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-29-004",
+    "title": "'Nothing is justifying this': Qatar's PM slams Israel's atrocities in Gaza",
+    "summary": "Qatar's top diplomat says. Israel has undermined Doha's efforts to broker a ceasefire in Gaza from 'day one'.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 49,
+    "scoring_reasons": [
+      "ceasefire_diplomacy",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 8,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-29-aljazeera-middle-east-4ab33b521c32"
+    ],
+    "source_ids": [
+      "gaza-2026-09-29-aljazeera-middle-east-4ab33b521c32"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/9/29/nothing-is-justifying-this-qatari-pm-slams-atrocities-in-gaza?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-29-aljazeera-middle-east-4ab33b521c32",
+        "title": "'Nothing is justifying this': Qatar's PM slams Israel's atrocities in Gaza",
+        "url": "https://www.aljazeera.com/news/2026/9/29/nothing-is-justifying-this-qatari-pm-slams-atrocities-in-gaza?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Qatar's top diplomat says Israel has undermined Doha's efforts to broker a ceasefire in Gaza from 'day one'.",
+        "event_date": "2026-09-29T23:49:18+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-30T02:25:21.339346+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 49,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-29T23:49:18+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-29-006",
+    "title": "Has Gaza broken the Israel consensus in the US?",
+    "summary": "For decades, Israel was untouchable in Washington. Josh Rushing investigates how and what comes next.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-29-aljazeera-middle-east-9e719e6c2b1b"
+    ],
+    "source_ids": [
+      "gaza-2026-09-29-aljazeera-middle-east-9e719e6c2b1b"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/lets-focus/2026/9/29/has-gaza-broken-the-israel-consensus-in-the-us?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-29-aljazeera-middle-east-9e719e6c2b1b",
+        "title": "Has Gaza broken the Israel consensus in the US?",
+        "url": "https://www.aljazeera.com/video/lets-focus/2026/9/29/has-gaza-broken-the-israel-consensus-in-the-us?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "For decades, Israel was untouchable in Washington. Gaza changed that. Josh Rushing investigates how and what comes next.",
+        "event_date": "2026-09-29T20:05:41+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-30T02:25:21.339346+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-29T20:05:41+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-09-29-005",
+    "title": "'Netanyahu targets Qatar to deflect from Gaza war crimes'",
+    "summary": "In an interview with British broadcaster Piers Morgan, Qatar's prime minister accused Israeli's Netanyahu of war crimes.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-09-29-aljazeera-middle-east-21f55e4ca8d4"
+    ],
+    "source_ids": [
+      "gaza-2026-09-29-aljazeera-middle-east-21f55e4ca8d4"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/9/29/netanyahu-targets-qatar-to-deflect-from-gaza-war?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-09-29-aljazeera-middle-east-21f55e4ca8d4",
+        "title": "'Netanyahu targets Qatar to deflect from Gaza war crimes'",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/9/29/netanyahu-targets-qatar-to-deflect-from-gaza-war?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "In an interview with British broadcaster Piers Morgan, Qatar's prime minister accused Israeli's Netanyahu of war crimes",
+        "event_date": "2026-09-29T21:24:07+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-09-30T02:25:21.339346+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-09-29T21:24:07+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260930T024522-0700-r11",
+  "scheduled_for": "2026-09-30T02:45:22-07:00",
+  "started_at": "2026-09-30T02:47:42-07:00",
+  "completed_at": "2026-09-30T02:48:44-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-30T01:45:22-07:00",
+    "end": "2026-09-30T02:47:42-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices was checked first. Direct retrieval of the current termination/public-notices page failed in the web retrieval layer; CMS-domain fallback search remained available, so the run continued as DEGRADED.",
+    "Exactly 12 additional targeted searches were run across hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural/emergency, ambulance/EMS, air-medical, U.S. territories, essential-service restoration, and state/official notices.",
+    "No new qualifying access change was identified in the bounded window. Surfaced maternity changes at Henderson Hospital and Fitzgibbon/Missouri Valley Regional Medical Center were previously announced and therefore excluded as duplicates/not new to this hourly check; other surfaced items did not meet the concrete access-effect criteria."
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260929T234554-0700-r11",
+  "scheduled_for": "2026-09-29T23:45:54-07:00",
+  "started_at": "2026-09-29T23:45:54-07:00",
+  "completed_at": "2026-09-29T23:49:30-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-09-29T22:45:54-07:00",
+    "date_to": "2026-09-29T23:45:54-07:00",
+    "edition_date": "2026-09-29"
+  },
+  "findings": [],
+  "coverage_notes": "Completed the bounded 12-search supplementary recall watch across sole/last/full-service grocery loss, canceled or suspended emergency food distributions, abrupt pantry/food-bank access reductions, and immediate SNAP/WIC/EBT interruptions. No new qualifying disruption was identified within the hourly window. Fresh results included same-day reporting about Parachute, Colorado's only grocery store loss, but the underlying closure occurred earlier in September and was outside this hourly event window; Kauaʻi recovery reporting showed emergency food distributions proceeding rather than canceled or suspended. No search failure materially reduced coverage."
+}

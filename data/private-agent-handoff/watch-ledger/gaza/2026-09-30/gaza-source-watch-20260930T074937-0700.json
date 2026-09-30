@@ -1,0 +1,33 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260930T074937-0700",
+  "scheduled_for": "2026-09-30T07:44:51-07:00",
+  "started_at": "2026-09-30T07:49:37-07:00",
+  "completed_at": "2026-09-30T07:50:54-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-30T06:45:54-07:00",
+    "end": "2026-09-30T07:50:54-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "priority_checks": [
+      "OCHA OPT checked first with a fresh, date-bounded query. No new qualifying Gaza development was surfaced in the bounded interval; surfaced OCHA material was older than the search window.",
+      "WHO checked second with a fresh, date-bounded query. No new qualifying Gaza health-system, medical-evacuation, fuel, hospital-capacity, or access development was surfaced in the bounded interval."
+    ],
+    "additional_targeted_searches": 12,
+    "discovery_scope": "Bounded recall searched Reuters, AP, WAFA, UNRWA, WFP, UNICEF, ICRC, MSF, hospital/ambulance/fuel/medical-evacuation developments, crossings and aid access, ceasefire/hostage/detention developments, and military operations with documented civilian impact. Results were screened against the prior hourly check boundary and prior surfaced findings. Production remains authoritative.",
+    "result": "No new qualifying development was verified since the prior hourly check.",
+    "exclusions": [
+      "WAFA's 30 September 16:13 Palestine-time report on a Palestinian killed and others injured in an Israeli drone strike in Khan Younis converts to approximately 06:13 Pacific and was already surfaced by the prior hourly check, so it was excluded as both outside the new window and duplicate.",
+      "WAFA's current latest-news listing showed no Gaza-specific item newer than that 16:13 Palestine-time report during this review; later 16:15 and 16:17 items concerned West Bank incidents.",
+      "Reuters, AP, UN agency, humanitarian-organization, crossings, ceasefire, detention/hostage, and military-operation searches surfaced older, duplicate, or non-qualifying material."
+    ],
+    "search_failures": [],
+    "continuity_note": "The immediately prior hourly check completed at approximately 2026-09-30T06:45:54-07:00 but its heartbeat did not persist. This run uses that completed check as the recall boundary to avoid re-reporting already reviewed material."
+  }
+}

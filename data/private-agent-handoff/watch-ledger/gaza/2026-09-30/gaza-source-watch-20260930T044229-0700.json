@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260930T044229-0700",
+  "scheduled_for": "2026-09-30T04:42:29-07:00",
+  "started_at": "2026-09-30T04:42:29-07:00",
+  "completed_at": "2026-09-30T04:43:28.576521-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-30T03:40:29-07:00",
+    "end": "2026-09-30T04:42:29-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "OCHA OPT was checked first and WHO second. Twelve additional targeted searches were completed across Reuters, AP, WAFA, UNRWA, WFP, UNICEF, ICRC, MSF, medical evacuation/hospital/fuel, crossings/aid access, ceasefire/hostages/negotiations, and military operations with civilian impact. No new traceable development was verified inside the bounded window. A September 30 Reuters/GMA report described September 29 Gaza City and Jabalia strikes already captured by earlier recall checks and was excluded as duplicate. A September 30 UN News syndication referred to Israeli fire near UN facilities and humanitarian convoys 'in recent days' without a verifiable new event inside this hourly window and had already surfaced in the prior watch context, so it was excluded. No search/source failure materially reduced coverage."
+}

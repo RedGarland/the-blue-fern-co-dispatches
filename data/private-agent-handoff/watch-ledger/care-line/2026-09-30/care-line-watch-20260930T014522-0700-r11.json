@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260930T014522-0700-r11",
+  "scheduled_for": "2026-09-30T01:45:22-07:00",
+  "started_at": "2026-09-30T01:42:27-07:00",
+  "completed_at": "2026-09-30T01:44:24-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-30T00:48:36-07:00",
+    "end": "2026-09-30T01:44:24-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices was checked first. Direct retrieval of the current CMS Public Notices page and the legacy Termination Notices URL was unavailable through the web retrieval layer; CMS-domain search returned no new qualifying provider termination, rescission, CLIA limitation/suspension, or similar access-risk notice in the bounded window.",
+    "Exactly 12 additional targeted searches were completed covering hospital/ED, maternity, behavioral health, dialysis/oncology, primary care, rural emergency-service loss, ambulance/EMS, air-medical, essential-service restoration/reopening, U.S. territories, CMS/provider termination signals, and CLIA limitation/suspension signals.",
+    "No qualifying new U.S. or territory healthcare-access development was identified since the prior completed hourly check at 2026-09-30T00:48:36-07:00.",
+    "Items surfaced by search were outside the bounded window, outside the United States/territories, proposals or risk discussions without concrete service effect, or previously known service changes."
+  ]
+}

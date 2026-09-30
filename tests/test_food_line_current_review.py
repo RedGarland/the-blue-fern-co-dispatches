@@ -150,6 +150,26 @@ def test_current_queue_accepts_unb_same_article_path_case_canonicalization() -> 
     assert validate_queue(payload) == payload
 
 
+def test_current_queue_accepts_csmonitor_same_article_path_case_canonicalization() -> None:
+    source_url = "https://www.csmonitor.com/USA/Society/2026/0929/snap-cuts-error-rate"
+    canonical_source_url = "https://www.csmonitor.com/usa/society/2026/0929/snap-cuts-error-rate"
+
+    payload = _queue([_item(source_url=source_url, canonical_source_url=canonical_source_url)])
+
+    assert validate_queue(payload) == payload
+
+
+def test_current_queue_accepts_abcnews_same_article_path_case_canonicalization() -> None:
+    source_url = "https://abcnews.com/GMA/News/long-lines-turned-la-county-food-distribution-event/story?id=132932494"
+    canonical_source_url = (
+        "https://abcnews.com/gma/news/long-lines-turned-la-county-food-distribution-event/story?id=132932494"
+    )
+
+    payload = _queue([_item(source_url=source_url, canonical_source_url=canonical_source_url)])
+
+    assert validate_queue(payload) == payload
+
+
 def test_current_queue_does_not_globally_lowercase_article_paths() -> None:
     with pytest.raises(ValueError, match="source and canonical URLs must identify the same article"):
         validate_queue(

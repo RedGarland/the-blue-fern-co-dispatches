@@ -1,0 +1,36 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260929T194309-0700-r11",
+  "scheduled_for": "2026-09-29T19:43:09-07:00",
+  "started_at": "2026-09-29T19:43:09-07:00",
+  "completed_at": "2026-09-29T19:44:26-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-29T18:49:24-07:00",
+    "end": "2026-09-29T19:43:09-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "search_budget": 12,
+    "search_failures": 0,
+    "source_retrieval_failures": 0,
+    "scope": [
+      "only/sole/last/full-service grocery-store loss, closure, fire, or disaster",
+      "canceled or suspended emergency food distributions due to storm, flood, fire, outage, or facility damage",
+      "abrupt pantry/food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "notes": [
+      "No new qualifying signal was identified within the bounded observation window.",
+      "Kauaʻi hurricane-recovery reporting showed emergency food distributions proceeding rather than being canceled or suspended.",
+      "Older qualifying disruptions surfaced in search, including the Spencer, New York only-grocery-store fire and the El Pasoans Fighting Hunger storm-damage closure, but both predated this observation window and were excluded.",
+      "A Beaumont, Texas neighborhood grocery-store closure surfaced but was published five days earlier and was outside the observation window.",
+      "Routine pantry schedules, resource guides, donation/awareness material, store-opening coverage, and duplicates were excluded."
+    ]
+  }
+}

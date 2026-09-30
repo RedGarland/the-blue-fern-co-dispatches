@@ -1,0 +1,37 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260930T014808-0700",
+  "scheduled_for": "2026-09-30T01:41:00-07:00",
+  "started_at": "2026-09-30T01:48:08-07:00",
+  "completed_at": "2026-09-30T01:49:24-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-30T00:50:00-07:00",
+    "end": "2026-09-30T01:49:24-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "priority_checks": [
+      "OCHA OPT checked first. The latest surfaced Gaza-relevant publication remained the Humanitarian Situation Report dated 25 September and posted 28 September; no new qualifying development was verified in the bounded interval.",
+      "WHO checked second. The latest surfaced Gaza-specific health update remained the 24 September humanitarian-access and health remarks; no new qualifying health-system development was verified in the bounded interval."
+    ],
+    "additional_targeted_searches": 12,
+    "discovery_scope": "Bounded recall searched Reuters, AP, WAFA, UNRWA, WFP, UNICEF, ICRC, MSF, UN News, crossings/aid/fuel, medical evacuation/hospital/fuel, and ceasefire/hostages/detention developments. Results were screened against the prior hourly check boundary at 2026-09-30T00:50:00-07:00 and prior surfaced findings. Production remains authoritative.",
+    "result": "No new qualifying development was verified since the prior hourly check.",
+    "exclusions": [
+      "WAFA's 29 September 18:10 local report on two Palestinians killed and others injured in Gaza was excluded as previously surfaced and outside the bounded interval.",
+      "A WAFA item timestamped 30 September 01:44 local time was outside the Pacific search window after timezone conversion.",
+      "AP and Reuters results surfaced older or previously covered Gaza developments and were excluded as stale or duplicate.",
+      "A same-day syndication about a senior Hamas commander concerned an event already reported on Tuesday and did not establish a new in-window civilian-impact development."
+    ],
+    "search_failures": [
+      "UN News direct retrieval was blocked by robots.txt.",
+      "Direct retrieval of one GMA Network syndication returned HTTP 403 after discovery."
+    ],
+    "continuity_note": "The immediately prior hourly check completed at approximately 2026-09-30T00:50:00-07:00 but its heartbeat did not persist. This run uses that completed check, rather than the older durable-ledger boundary, as the recall start to avoid re-reporting already reviewed material."
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260930T114759-0700-r11",
+  "scheduled_for": "2026-09-30T11:47:59-07:00",
+  "started_at": "2026-09-30T11:47:59-07:00",
+  "completed_at": "2026-09-30T11:48:38-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-30T10:44:30-07:00",
+    "end": "2026-09-30T11:48:38-07:00",
+    "basis": "since_prior_hourly_check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches_attempted": 12,
+    "searches_completed": 12,
+    "result": "No new qualifying U.S. food-access disruption identified.",
+    "notable_exclusions": [
+      "Kauai emergency food distributions were proceeding, not canceled.",
+      "Eastport, Maine only-full-service-grocery-store closure reporting predated the hourly window.",
+      "Beaumont, Texas grocery-access coverage predated the hourly window."
+    ],
+    "production_authority_note": "Production collection remains authoritative."
+  }
+}

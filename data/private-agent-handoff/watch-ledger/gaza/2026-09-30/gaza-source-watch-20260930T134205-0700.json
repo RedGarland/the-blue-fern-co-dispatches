@@ -1,0 +1,33 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260930T134205-0700",
+  "scheduled_for": "2026-09-30T13:42:05-07:00",
+  "started_at": "2026-09-30T13:42:05-07:00",
+  "completed_at": "2026-09-30T13:42:57-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-30T12:49:29-07:00",
+    "end": "2026-09-30T13:42:57-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "Checked first. Latest surfaced Gaza-relevant OCHA oPt material remained the Humanitarian Situation Report | 25 September 2026, posted 28 September; no new qualifying development surfaced in-window.",
+    "who": "Checked second. Latest surfaced Gaza-specific WHO material remained the 24 September 2026 humanitarian access and health remarks; no new qualifying development surfaced in-window.",
+    "targeted_searches_used": 12,
+    "qualifying_result": "No new traceable development since the prior hourly check. Current AP reporting repeated already surfaced same-day incidents and was excluded as duplicate/recycled.",
+    "degraded_retrievals": [
+      "Direct UN News retrieval/search was blocked by robots.txt."
+    ],
+    "exclusions": [
+      "Opinion",
+      "unsupported social claims",
+      "recycled items",
+      "duplicates",
+      "unsourced claims"
+    ]
+  }
+}

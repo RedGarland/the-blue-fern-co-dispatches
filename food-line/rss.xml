@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
   <channel>
-    <item>
-      <title>Food Line Recovery Brief: Sept. 14-28, 2026</title>
-      <link>https://dispatches.thebluefernco.com/food-line/recovery/food-line-recovery-brief-sept14-28-2026/</link>
-      <guid isPermaLink="true">https://dispatches.thebluefernco.com/food-line/recovery/food-line-recovery-brief-sept14-28-2026/</guid>
-      <description>Recovered/backfill Food Line brief covering Sept. 14-28, 2026 with 24 approved story groups and 25 source links.</description>
-    </item>
     <title>Food Line Dispatch RSS</title>
     <link>https://dispatches.thebluefernco.com/food-line/</link>
     <description>The Food Line Dispatch tracks daily signs of food insecurity across the United States - benefit disruptions, pantry strain, school-meal gaps, price pressure, and local access failures - using source-backed public records and reporting.</description>
     <language>en-us</language>
     <item>
-      <title>2026-09-12 &#8212; Recovery-disclosed Food Line publication: Hawaii Island Salvation Army pantries report staple shortages after Lala; Eastport's only full-size grocery store remains without a committed reopening; Puerto Rico water shutoffs add food-preparation and prepared-food costs; Texas SNAP redetermination delays interrupted benefits for an East Texas household</title>
+      <title>2026-09-29 — state_or_territory food-pressure, national food-pressure, and national shortage</title>
+      <link>https://dispatches.thebluefernco.com/food-line/editions/2026-09-29/</link>
+      <guid isPermaLink="true">https://dispatches.thebluefernco.com/food-line/editions/2026-09-29/</guid>
+      <pubDate>Wed, 30 Sep 2026 19:28:57 +0000</pubDate>
+    </item>
+    <item>
+      <title>2026-09-12</title>
       <link>https://dispatches.thebluefernco.com/food-line/editions/2026-09-12/</link>
       <guid isPermaLink="true">https://dispatches.thebluefernco.com/food-line/editions/2026-09-12/</guid>
       <pubDate>Sat, 12 Sep 2026 00:00:00 +0000</pubDate>
-      <description>Recovery note: These items were recovered after the September 10 Food Line collection failed. They were reconstructed from separately preserved, source-backed evidence and subsequently human reviewed. They are not artifacts from the failed production run.</description>
     </item>
     <item>
       <title>2026-08-31 — Phoenix metropolitan area; Statewide food-bank strain, Whitefish and northwest Montana, including mobile and partner-pantry service areas pantry demand, and Orange County and the broader Central Florida food-assistance service area; Statewide SNAP participation decline with documented effects in Orange County and Central Florida food pressure</title>
@@ -29,81 +28,66 @@
       <link>https://dispatches.thebluefernco.com/food-line/editions/2026-08-30/</link>
       <guid isPermaLink="true">https://dispatches.thebluefernco.com/food-line/editions/2026-08-30/</guid>
       <pubDate>Fri, 04 Sep 2026 20:50:27 +0000</pubDate>
-    </item><item>
-    <title>Food Line Dispatch - 2026-08-24</title>
-    <link>https://dispatches.thebluefernco.com/food-line/editions/2026-08-24/</link>
-    <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-08-24/</guid>
-    <description>2026-08-24</description>
-  </item><item>
-    <title>Food Line Dispatch - 2026-08-16</title>
-    <link>https://dispatches.thebluefernco.com/food-line/editions/2026-08-16/</link>
-    <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-08-16/</guid>
-    <description>2026-08-16</description>
-  </item><item>
-    <title>Food Line Dispatch - 2026-08-05</title>
-    <link>https://dispatches.thebluefernco.com/food-line/editions/2026-08-05/</link>
-    <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-08-05/</guid>
-    <description>2026-08-05</description>
-  </item><item>
-    <title>Food Line Dispatch - 2026-07-31</title>
-    <link>https://dispatches.thebluefernco.com/food-line/editions/2026-07-31/</link>
-    <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-07-31/</guid>
-    <description>2026-07-31</description>
-  </item><item>
-    <title>Food Line Dispatch - 2026-07-28</title>
-    <link>https://dispatches.thebluefernco.com/food-line/editions/2026-07-28/</link>
-    <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-07-28/</guid>
-    <description>2026-07-28</description>
-  </item><item>
-    <title>Food Line Dispatch - 2026-06-20</title>
-    <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-20/</link>
-    <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-20/</guid>
-    <description>2026-06-20</description>
-  </item><item>
-    <title>Food Line Dispatch - 2026-06-19</title>
-    <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-19/</link>
-    <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-19/</guid>
-    <description>2026-06-19</description>
-  </item><item>
-    <title>Food Line Dispatch - 2026-06-18</title>
-    <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-18/</link>
-    <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-18/</guid>
-    <description>2026-06-18</description>
-  </item><item>
-    <title>Food Line Dispatch - 2026-06-17</title>
-    <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-17/</link>
-    <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-17/</guid>
-    <description>2026-06-17</description>
-  </item><item>
-    <title>Food Line Dispatch - 2026-06-16</title>
-    <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-16/</link>
-    <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-16/</guid>
-    <description>2026-06-16</description>
-  </item><item>
-    <title>Food Line Dispatch - 2026-06-14</title>
-    <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-14/</link>
-    <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-14/</guid>
-    <description>2026-06-14</description>
-  </item><item>
-    <title>Food Line Dispatch - 2026-06-13</title>
-    <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-13/</link>
-    <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-13/</guid>
-    <description>2026-06-13</description>
-  </item><item>
-    <title>Food Line Dispatch - 2026-06-09</title>
-    <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-09/</link>
-    <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-09/</guid>
-    <description>2026-06-09</description>
-  </item><item>
-    <title>Food Line Dispatch - 2026-06-07</title>
-    <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-07/</link>
-    <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-07/</guid>
-    <description>2026-06-07</description>
-  </item><item>
-    <title>Food Line Dispatch - 2026-06-06</title>
-    <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-06/</link>
-    <guid>https://dispatches.thebluefernco.com/food-line/editions/2026-06-06/</guid>
-    <description>2026-06-06</description>
-  </item>
+    </item>
+    <item>
+      <title>2026-06-20 — No qualifying update</title>
+      <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-20/</link>
+      <guid isPermaLink="true">https://dispatches.thebluefernco.com/food-line/editions/2026-06-20/</guid>
+      <pubDate>Mon, 22 Jun 2026 01:18:26 +0000</pubDate>
+    </item>
+    <item>
+      <title>2026-06-19 — Charlotte summer meal strain</title>
+      <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-19/</link>
+      <guid isPermaLink="true">https://dispatches.thebluefernco.com/food-line/editions/2026-06-19/</guid>
+      <pubDate>Mon, 22 Jun 2026 01:18:23 +0000</pubDate>
+    </item>
+    <item>
+      <title>2026-06-18 — No qualifying update</title>
+      <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-18/</link>
+      <guid isPermaLink="true">https://dispatches.thebluefernco.com/food-line/editions/2026-06-18/</guid>
+      <pubDate>Sun, 21 Jun 2026 23:22:27 +0000</pubDate>
+    </item>
+    <item>
+      <title>2026-06-17 — United States food insecurity and United States food-pressure</title>
+      <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-17/</link>
+      <guid isPermaLink="true">https://dispatches.thebluefernco.com/food-line/editions/2026-06-17/</guid>
+      <pubDate>Sun, 21 Jun 2026 21:51:13 +0000</pubDate>
+    </item>
+    <item>
+      <title>2026-06-16 — St. Lawrence County pantry demand</title>
+      <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-16/</link>
+      <guid isPermaLink="true">https://dispatches.thebluefernco.com/food-line/editions/2026-06-16/</guid>
+      <pubDate>Thu, 18 Jun 2026 22:43:29 +0000</pubDate>
+    </item>
+    <item>
+      <title>2026-06-14 — No qualifying update</title>
+      <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-14/</link>
+      <guid isPermaLink="true">https://dispatches.thebluefernco.com/food-line/editions/2026-06-14/</guid>
+      <pubDate>Mon, 15 Jun 2026 07:30:02 +0000</pubDate>
+    </item>
+    <item>
+      <title>2026-06-13 — No qualifying update</title>
+      <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-13/</link>
+      <guid isPermaLink="true">https://dispatches.thebluefernco.com/food-line/editions/2026-06-13/</guid>
+      <pubDate>Thu, 18 Jun 2026 23:48:51 +0000</pubDate>
+    </item>
+    <item>
+      <title>2026-06-09 — No qualifying update</title>
+      <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-09/</link>
+      <guid isPermaLink="true">https://dispatches.thebluefernco.com/food-line/editions/2026-06-09/</guid>
+      <pubDate>Thu, 18 Jun 2026 23:46:18 +0000</pubDate>
+    </item>
+    <item>
+      <title>2026-06-07 — No qualifying update</title>
+      <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-07/</link>
+      <guid isPermaLink="true">https://dispatches.thebluefernco.com/food-line/editions/2026-06-07/</guid>
+      <pubDate>Thu, 18 Jun 2026 23:44:02 +0000</pubDate>
+    </item>
+    <item>
+      <title>2026-06-06 — No qualifying update</title>
+      <link>https://dispatches.thebluefernco.com/food-line/editions/2026-06-06/</link>
+      <guid isPermaLink="true">https://dispatches.thebluefernco.com/food-line/editions/2026-06-06/</guid>
+      <pubDate>Thu, 18 Jun 2026 23:41:56 +0000</pubDate>
+    </item>
   </channel>
 </rss>

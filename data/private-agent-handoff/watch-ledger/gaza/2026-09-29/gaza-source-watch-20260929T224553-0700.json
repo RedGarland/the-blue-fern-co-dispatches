@@ -1,0 +1,33 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260929T224553-0700",
+  "scheduled_for": "2026-09-29T22:41:00-07:00",
+  "started_at": "2026-09-29T22:45:53-07:00",
+  "completed_at": "2026-09-29T22:46:40-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-29T21:43:00-07:00",
+    "end": "2026-09-29T22:46:40-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "priority_checks": [
+      "OCHA OPT checked first. No new qualifying Gaza development was verified in the bounded interval; the search surfaced older OCHA situation-report material rather than a new in-window update.",
+      "WHO checked second. No new Gaza-specific WHO health-system development was verified in the bounded interval."
+    ],
+    "additional_targeted_searches": 12,
+    "discovery_scope": "Bounded recall searched Reuters, AP, WAFA, UNRWA, WFP, UNICEF, ICRC, MSF, crossings/aid/fuel/medical-evacuation, civilian-casualty/displacement/military-impact, ceasefire/hostages/detention, and infrastructure/water/healthcare developments.",
+    "result": "No new qualifying development was verified since the prior hourly check ending approximately 2026-09-29T21:43:00-07:00.",
+    "exclusions": [
+      "Reuters and AP results surfaced by the bounded searches were older than the search window, outside the qualifying miss classes, or recycled background.",
+      "WAFA search results either referred to prior-year material or developments already available before the bounded interval.",
+      "Items lacking a traceable in-window event/publication basis, opinion, unsupported social claims, and duplicate/recycled developments were excluded."
+    ],
+    "search_failures": [],
+    "continuity_note": "Production remains authoritative. This supplementary recall watch did not publish, approve, alter schedules, or disable any task."
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260929T214522-0700-r11",
+  "scheduled_for": "2026-09-29T21:45:22-07:00",
+  "started_at": "2026-09-29T21:47:31-07:00",
+  "completed_at": "2026-09-29T21:48:24-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-29T20:45:22-07:00",
+    "end": "2026-09-29T21:48:24-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices was checked first on the official CMS Public Notices page. The newest listed notices were dated September 25, 2026; no new provider termination, rescission, CLIA limitation/suspension, cancellation of Medicare approval, or similar access-risk notice appeared in this hourly window.",
+    "Exactly 12 additional targeted searches were completed covering hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency-service loss, ambulance/EMS, air-medical, essential-service restoration/reopening, and U.S. territories.",
+    "No qualifying development was identified in the bounded window. Surfaced items were older than the window, outside the United States/territories, temporary routine clinic closures without material access impact, service expansions, insurance-network negotiations, business/proposal stories without a qualifying service change, or duplicates of previously known access changes."
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260929T194522-0700-r11",
+  "scheduled_for": "2026-09-29T19:45:22-07:00",
+  "started_at": "2026-09-29T19:43:42-07:00",
+  "completed_at": "2026-09-29T19:45:10-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-29T18:50:03-07:00",
+    "end": "2026-09-29T19:45:10-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices was checked first. Direct retrieval of the current CMS Public Notices page failed through the web retrieval path, so the CMS leg is degraded; CMS-domain fallback searches succeeded and surfaced no notice newer than September 25, 2026, with no qualifying termination, rescission, CLIA limitation/suspension, or similar access-risk action in this hourly window.",
+    "Exactly 12 additional targeted searches were completed covering hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency-service loss, ambulance/EMS, air-medical, essential-service restoration/reopening, U.S. territories, and general local healthcare-access changes.",
+    "No qualifying development was identified within the bounded window. A September 29 reopening of Hospital Susana Centeno in Vieques, Puerto Rico was surfaced but was published earlier in the day and had already been identified as outside the prior hourly window; other surfaced items were outside the United States/territories, previously announced, routine relocations/expansions, proposals/business stories without a new access effect, or duplicates."
+  ]
+}

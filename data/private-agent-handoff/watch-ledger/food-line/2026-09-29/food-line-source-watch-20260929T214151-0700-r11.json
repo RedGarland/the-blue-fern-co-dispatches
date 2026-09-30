@@ -1,0 +1,59 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260929T214151-0700-r11",
+  "scheduled_for": "2026-09-29T21:41:51-07:00",
+  "started_at": "2026-09-29T21:41:51-07:00",
+  "completed_at": "2026-09-29T21:42:26-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-29T20:48:24-07:00",
+    "end": "2026-09-29T21:42:26-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "since prior hourly check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "scope": [
+      "only/sole/last/full-service grocery loss, closure, fire, or disaster",
+      "emergency food distribution cancellation or suspension from storm, flood, fire, outage, or facility damage",
+      "abrupt pantry/food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "source_priority": "fresh local news, official agency/provider notices, and direct source pages",
+    "exclusions_applied": [
+      "donation drives",
+      "resource guides",
+      "recipes",
+      "opinion",
+      "routine program promotion",
+      "generic inflation stories",
+      "duplicates",
+      "events predating the observation window"
+    ],
+    "notable_nonqualifying_hits": [
+      {
+        "title": "Family Resource Center provides Parachute with a safety net",
+        "publisher": "Aspen Public Radio",
+        "source_url": "https://www.aspenpublicradio.org/local-news/2026-09-29/family-resource-center-provides-parachute-with-a-safety-net",
+        "reason": "Reports consequences of Clark's Market closing on September 11, 2026; disruption predates the hourly observation window."
+      },
+      {
+        "title": "Car crashes into Food 4 Less store in El Monte, hitting 3 pedestrians",
+        "publisher": "ABC7 Los Angeles",
+        "source_url": "https://abc7.com/post/car-crashes-food-4-less-store-el-monte-hitting-3-pedestrians/19887596/",
+        "reason": "Fresh incident, but no evidence in the retrieved report of a qualifying community food-access loss or major service reduction."
+      },
+      {
+        "title": "Town of Spencer recovering after losing only grocery store in fire",
+        "publisher": "WBNG",
+        "source_url": "https://www.wbng.com/2026/09/14/town-spencer-recovering-after-losing-only-grocery-store-fire/",
+        "reason": "Qualifying class historically, but event and report predate the hourly observation window."
+      }
+    ],
+    "result": "No new qualifying U.S. food-access disruption identified within the bounded observation window."
+  }
+}

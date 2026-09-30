@@ -1,0 +1,32 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260930T164938-0700-r11",
+  "scheduled_for": "2026-09-30T16:45:54-07:00",
+  "started_at": "2026-09-30T16:49:38-07:00",
+  "completed_at": "2026-09-30T16:52:30-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-30T15:49:38-07:00",
+    "end": "2026-09-30T16:49:38-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "scope": [
+      "loss/closure/fire/disaster affecting the only, sole, last, or full-service grocery store in a community",
+      "canceled/suspended emergency food distributions due to storm, flood, fire, outage, or facility damage",
+      "abrupt pantry/food-bank service closure or major access reduction",
+      "new official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "result": "No new qualifying U.S. food-access disruption identified in the bounded window.",
+    "exclusions": [
+      "Kauaʻi emergency food distributions were proceeding as scheduled rather than canceled or suspended.",
+      "Other surfaced matches were stale, outside the United States, routine program information, or otherwise outside the watch criteria."
+    ],
+    "production_authority": "Primary nationwide Food Line production collection remains authoritative."
+  }
+}

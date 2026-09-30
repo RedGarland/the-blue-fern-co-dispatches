@@ -32,6 +32,7 @@ def test_classify_path_covers_expected_categories():
     assert preflight_repo_state.classify_path("status/operational-recovery/food-line/2026-09-10/2026-09-10-food_line_source_watch/latest.json") == "local_run_state"
     assert preflight_repo_state.classify_path("status/operational-health/food-line/2026-09-10/runs/food_line_current_intake-run.json") == "local_run_state"
     assert preflight_repo_state.classify_path("data/dispatches/food-line/discovery/2026-06-25/discovery_candidates.json") == "local_run_state"
+    assert preflight_repo_state.classify_path("data/records/story_memory.json") == "shared_dispatch_records"
     assert preflight_repo_state.classify_path("some/unknown/path.txt") == "unknown"
 
 
@@ -145,6 +146,52 @@ def test_operator_tracked_runtime_state_is_allowed_but_source_changes_remain_ris
     }
     assert [entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]] == [
         "scripts/blue_fern_operator.py"
+    ]
+
+
+def test_shared_dispatch_records_modified_state_is_allowed_but_unsafe_states_remain_risky(
+    monkeypatch, tmp_path
+):
+    source_repo = tmp_path / "repo"
+    source_repo.mkdir()
+    monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: None)
+    monkeypatch.setattr(
+        preflight_repo_state,
+        "_run_git_status",
+        lambda _repo: (
+            0,
+            [
+                "## add/pages-repo-default",
+                " M data/records/curation_decisions.json",
+                " M data/records/dispatches.json",
+                " M data/records/editions.json",
+                " M data/records/records.json",
+                " M data/records/sources.json",
+                " M data/records/story_memory.json",
+                "M  data/records/detail_packages.json",
+                " D data/records/records.json",
+                " M data/records/unexpected.json",
+                "?? data/records/local-export.json",
+            ],
+        ),
+    )
+
+    report = preflight_repo_state.build_preflight_report(source_repo)
+
+    assert report["ok"] is False
+    assert {entry["path"] for entry in report["source_repo"]["summary"]["allowed_entries"]} == {
+        "data/records/curation_decisions.json",
+        "data/records/dispatches.json",
+        "data/records/editions.json",
+        "data/records/records.json",
+        "data/records/sources.json",
+        "data/records/story_memory.json",
+    }
+    assert [entry["path"] for entry in report["source_repo"]["summary"]["risky_entries"]] == [
+        "data/records/detail_packages.json",
+        "data/records/records.json",
+        "data/records/unexpected.json",
+        "data/records/local-export.json",
     ]
 
 

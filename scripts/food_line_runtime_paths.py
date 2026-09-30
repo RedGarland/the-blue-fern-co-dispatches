@@ -12,6 +12,10 @@ FOOD_LINE_AGENT_INBOX_RE = re.compile(r"^data/dispatches/food-line/agent-inbox(?
 FOOD_LINE_AGENT_INTAKE_RE = re.compile(r"^data/dispatches/food-line/agent-intake(?:/.*)?$")
 FOOD_LINE_REVIEW_RE = re.compile(r"^data/dispatches/food-line/review(?:/.*)?$")
 FOOD_LINE_OUTPUT_REVIEW_RE = re.compile(r"^output/review/food-line(?:/.*)?$")
+FOOD_LINE_OUTPUT_SITE_RE = re.compile(r"^output/site/food-line(?:/.*)?$")
+FOOD_LINE_OUTPUT_DISPATCH_EDITIONS_RE = re.compile(
+    r"^output/dispatches/food-line/editions(?:/.*)?$"
+)
 FOOD_LINE_DISCOVERY_RUNS_RE = re.compile(r"^data/dispatches/food-line/discovery-runs(?:/.*)?$")
 FOOD_LINE_DATE_RECONCILIATION_RE = re.compile(
     r"^data/dispatches/food-line/date-reconciliation/\d{4}-\d{2}-\d{2}\.json$"
@@ -47,6 +51,7 @@ FOOD_LINE_AGENT_HISTORY_RE = re.compile(r"^data/agent-history-staging/food-line(
 FOOD_LINE_MUTABLE_TRACKED_RUNTIME_PATHS = frozenset()
 
 FOOD_LINE_RUNTIME_CATEGORIES = {
+    "generated_public_output",
     "local_run_state",
     "logs",
     "review_output",
@@ -111,6 +116,10 @@ def classify_food_line_runtime_path(path_text: str) -> str | None:
         return "review_output"
     if FOOD_LINE_OUTPUT_REVIEW_RE.match(lower):
         return "review_output"
+    if FOOD_LINE_OUTPUT_SITE_RE.match(lower):
+        return "generated_public_output"
+    if FOOD_LINE_OUTPUT_DISPATCH_EDITIONS_RE.match(lower):
+        return "generated_public_output"
     if FOOD_LINE_LOGS_RE.match(lower):
         return "logs"
     if FOOD_LINE_OPERATIONAL_STATUS_LOGS_RE.match(lower):
@@ -118,6 +127,11 @@ def classify_food_line_runtime_path(path_text: str) -> str | None:
     if FOOD_LINE_OPERATIONAL_STATUS_WRAPPER_LOGS_RE.match(lower):
         return "logs"
     return None
+
+
+def is_food_line_generated_public_output_path(path_text: str) -> bool:
+    path = _normalize_path(path_text).lower()
+    return bool(FOOD_LINE_OUTPUT_SITE_RE.match(path) or FOOD_LINE_OUTPUT_DISPATCH_EDITIONS_RE.match(path))
 
 
 def is_food_line_mutable_tracked_runtime_path(path_text: str) -> bool:
@@ -142,5 +156,7 @@ def food_line_runtime_paths() -> list[str]:
         "data/dispatches/food-line/coverage-gaps/",
         "data/dispatches/food-line/historical-reconstruction/",
         "output/review/food-line/",
+        "output/site/food-line/",
+        "output/dispatches/food-line/editions/",
         "data/agent-history-staging/food-line/",
     ]

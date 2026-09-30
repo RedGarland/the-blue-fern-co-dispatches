@@ -32,6 +32,11 @@ def test_food_runtime_roots_are_shared_between_scheduler_and_preflight(monkeypat
         "?? logs/operational-status-exporter-wrapper/wrapper-20260927T180449Z-a02513df.stderr.log",
         "?? src/bluefern_dispatches/__pycache__/operational_health.cpython-313.pyc",
         "?? output/review/food-line/2026-08-19/discovery_report.json",
+        " M output/site/food-line/index.html",
+        " M output/site/food-line/archive.html",
+        " M output/site/food-line/rss.xml",
+        "?? output/site/food-line/editions/2026-09-29/index.html",
+        "?? output/dispatches/food-line/editions/2026-09-29/edition_manifest.json",
         "?? status/food-line/file.json",
         "?? status/operational-health/food-line/2026-09-10/runs/food_line_current_intake-source-watch-run.json",
         "?? status/operational-recovery/food-line/2026-09-10/2026-09-10-food_line_current_intake/recovery.lock",
@@ -63,6 +68,9 @@ def test_unrelated_untracked_and_tracked_runtime_paths_fail_closed(monkeypatch, 
         "?? data/dispatches/food-line/historical-reconstruction/not-a-date/reconstruction.json",
         "?? data/dispatches/food-line/date-reconciliation/latest.json",
         "?? data/dispatches/food-line/coverage-gaps/readme.json",
+        "M  output/site/food-line/index.html",
+        " D output/site/food-line/rss.xml",
+        "?? output/site/care-line/index.html",
     ]
 
     report = _preflight_report(lines, monkeypatch, tmp_path)
@@ -75,6 +83,9 @@ def test_unrelated_untracked_and_tracked_runtime_paths_fail_closed(monkeypatch, 
         "data/dispatches/food-line/historical-reconstruction/not-a-date/reconstruction.json",
         "data/dispatches/food-line/date-reconciliation/latest.json",
         "data/dispatches/food-line/coverage-gaps/readme.json",
+        "output/site/care-line/index.html",
+        "output/site/food-line/index.html",
+        "output/site/food-line/rss.xml",
     }
 
     unexpected = food_line_daily_scheduler._unexpected_dirty_paths("\n".join(lines))
@@ -86,6 +97,9 @@ def test_unrelated_untracked_and_tracked_runtime_paths_fail_closed(monkeypatch, 
         "data/dispatches/food-line/historical-reconstruction/2026-09-09/review/notes.json",
         "data/dispatches/food-line/historical-reconstruction/not-a-date/reconstruction.json",
         "data/dispatches/food-line/random/file.json",
+        "output/site/care-line/index.html",
+        "output/site/food-line/index.html",
+        "output/site/food-line/rss.xml",
     ]
 
 
@@ -148,6 +162,9 @@ def test_expected_food_runtime_roots_have_shared_categories():
         "logs/operational-status-exporter-wrapper/wrapper-20260927T180449Z-a02513df.stderr.log": "logs",
         "src/bluefern_dispatches/__pycache__/operational_health.cpython-313.pyc": "cache",
         "output/review/food-line/2026-08-19/discovery_report.json": "review_output",
+        "output/site/food-line/index.html": "generated_public_output",
+        "output/site/food-line/editions/2026-09-29/index.html": "generated_public_output",
+        "output/dispatches/food-line/editions/2026-09-29/edition_manifest.json": "generated_public_output",
         "status/food-line/file.json": "local_run_state",
         "status/operational-health/food-line/2026-09-10/runs/food_line_current_intake-source-watch-run.json": "local_run_state",
         "status/operational-recovery/food-line/2026-09-10/2026-09-10-food_line_current_intake/recovery.lock": "local_run_state",

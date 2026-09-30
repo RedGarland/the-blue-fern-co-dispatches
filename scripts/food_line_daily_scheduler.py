@@ -22,7 +22,12 @@ if str(ROOT) not in sys.path:
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from scripts.food_line_runtime_paths import classify_food_line_runtime_path, is_food_line_mutable_tracked_runtime_path
+from scripts.food_line_runtime_paths import (
+    FOOD_LINE_ALLOWED_DIRTY_CATEGORIES,
+    classify_food_line_runtime_path,
+    is_food_line_generated_public_output_path,
+    is_food_line_mutable_tracked_runtime_path,
+)
 from bluefern_dispatches.operational_health import build_food_line_operational_receipt, write_operational_receipt
 
 PRODUCTION_BRANCH = "add/pages-repo-default"
@@ -442,7 +447,9 @@ def _unexpected_dirty_paths(status_output: str) -> list[str]:
         category = classify_food_line_runtime_path(path)
         if status == " M" and is_food_line_mutable_tracked_runtime_path(path):
             continue
-        if status != "??" or category not in {"review_output", "logs", "cache", "virtualenv", "local_run_state"}:
+        if status in {" M", "??"} and is_food_line_generated_public_output_path(path):
+            continue
+        if status != "??" or category not in FOOD_LINE_ALLOWED_DIRTY_CATEGORIES:
             unexpected.append(path)
     return sorted(unexpected)
 

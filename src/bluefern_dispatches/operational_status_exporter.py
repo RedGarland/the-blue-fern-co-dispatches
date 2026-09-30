@@ -40,6 +40,9 @@ SAFE_KEY_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 SAFE_BRANCH_RE = re.compile(r"^[A-Za-z0-9_./-]+$")
 HEX_HEAD_RE = re.compile(r"^[0-9a-f]{7,64}$", re.IGNORECASE)
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+GAZA_RUNNER_LOG_RE = re.compile(r"^runner-gaza-(?P<date>\d{8})-\d{6}\.log$")
+GAZA_DAILY_LOG_RE = re.compile(r"^gaza-daily-(?P<date>\d{8})-\d{6}\.log$")
+GAZA_LOG_FIELD_RE = re.compile(r"^(?:summary\.)?(?P<key>[a-z_]+):\s*(?P<value>.*)$", re.IGNORECASE)
 PRIVATE_KEY_RE = re.compile(r"(?:path|body|excerpt|source|raw|secret|token|credential|password|environment|env)", re.IGNORECASE)
 FAILURE_DIAGNOSTIC_KEYS = {
     "child_error_message",
@@ -184,6 +187,21 @@ def _load_json_object(path: Path) -> dict[str, Any] | None:
     except (OSError, json.JSONDecodeError):
         return None
     return value if isinstance(value, dict) else None
+
+
+def _parse_log_scalar(value: str) -> Any:
+    text = value.strip()
+    lowered = text.lower()
+    if lowered == "true":
+        return True
+    if lowered == "false":
+        return False
+    if lowered in {"none", "null"}:
+        return None
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        return text
 
 
 def _iso(value: datetime) -> str:
@@ -351,6 +369,68 @@ def load_gaza_receipts(source_root: Path, date: str) -> list[dict[str, Any]]:
         receipts.append(receipt)
     receipts.sort(key=lambda item: _handoff_time(item) or datetime.min.replace(tzinfo=timezone.utc))
     return receipts
+
+
+def _gaza_log_date(path: Path) -> str | None:
+    match = GAZA_RUNNER_LOG_RE.match(path.name) or GAZA_DAILY_LOG_RE.match(path.name)
+    if not match:
+        return None
+    raw = match.group("date")
+    return f"{raw[:4]}-{raw[4:6]}-{raw[6:]}"
+
+
+def _gaza_log_fields(path: Path) -> dict[str, Any]:
+    try:
+        text = path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return {}
+    fields: dict[str, Any] = {}
+    for line in text.splitlines():
+        match = GAZA_LOG_FIELD_RE.match(line.strip())
+        if not match:
+            continue
+        fields[match.group("key").lower()] = _parse_log_scalar(match.group("value"))
+    return fields
+
+
+def _latest_gaza_dry_run_recovery_proof(source_root: Path, date: str) -> dict[str, Any] | None:
+    logs = source_root / "logs"
+    if not logs.exists():
+        return None
+    candidates: list[dict[str, Any]] = []
+    for path in sorted([*logs.glob("runner-gaza-*.log"), *logs.glob("gaza-daily-*.log")]):
+        if _gaza_log_date(path) != date:
+            continue
+        fields = _gaza_log_fields(path)
+        operator_status = str(fields.get("operator_status") or "").upper()
+        if operator_status not in {"DRY_RUN_READY", "NO_UPDATE_DRY_RUN_READY"}:
+            continue
+        if fields.get("ok") is not True:
+            continue
+        if fields.get("pages_dry_run_ok") is not True:
+            continue
+        if str(fields.get("audio_status") or "").lower() != "audio_skipped":
+            continue
+        if fields.get("pages_push_ok") is True or fields.get("pushed") is True:
+            continue
+        if fields.get("bluesky_status") not in (None, "skipped"):
+            continue
+        completed_at = _iso(datetime.fromtimestamp(path.stat().st_mtime, timezone.utc))
+        candidates.append(
+            {
+                "path": str(path),
+                "completed_at": completed_at,
+                "operator_status": operator_status,
+                "audio_status": fields.get("audio_status"),
+                "pages_dry_run_ok": fields.get("pages_dry_run_ok"),
+                "pages_push_ok": fields.get("pages_push_ok"),
+                "pushed": fields.get("pushed"),
+                "bluesky_status": fields.get("bluesky_status"),
+            }
+        )
+    if not candidates:
+        return None
+    return max(candidates, key=lambda item: str(item.get("completed_at") or ""))
 
 
 def load_ice_receipts(source_root: Path, date: str) -> list[dict[str, Any]]:
@@ -1554,11 +1634,26 @@ def build_gaza_status(
     )
     aggregate_status = aggregate["overall_health"]
     stale_observability = bool(aggregate.get("stale_observability"))
+    dry_run_recovery_proof = _latest_gaza_dry_run_recovery_proof(source_root, date)
+    dry_run_recovery_applied = False
     if _monitor_success_overrides_stale(aggregate, receipts, task_key="gaza_daily_dispatch"):
         aggregate_status = OperationalStatus.SUCCESS.value
         stale_observability = False
     if not receipts and aggregate_status == OperationalStatus.SUCCESS.value:
         aggregate_status = OperationalStatus.UNKNOWN.value
+    if (
+        dry_run_recovery_proof
+        and aggregate_status
+        in {
+            OperationalStatus.FAILED.value,
+            OperationalStatus.MISSED.value,
+            OperationalStatus.STALE_OBSERVABILITY.value,
+            OperationalStatus.UNKNOWN.value,
+        }
+    ):
+        aggregate_status = OperationalStatus.DEGRADED.value
+        stale_observability = False
+        dry_run_recovery_applied = True
     source_heads = {_safe_head(receipt.get("source_head")) for receipt in receipts}
     source_heads.discard(None)
     publication_attempted = any(receipt.get("publication_attempted") is True for receipt in receipts)
@@ -1570,8 +1665,13 @@ def build_gaza_status(
         "observed_date": date,
         "aggregate_status": aggregate_status,
         "scheduled_health_authoritative": bool(receipts),
-        "recovery_lifecycle": _recovery_state(aggregate_status, recovery),
+        "recovery_lifecycle": RecoveryState.RECOVERY_PENDING_RUNTIME_PROOF.value
+        if dry_run_recovery_applied
+        else _recovery_state(aggregate_status, recovery),
         "latest_runtime_proof_date": aggregate.get("latest_success_at"),
+        "latest_recovery_proof_at": dry_run_recovery_proof.get("completed_at") if dry_run_recovery_proof else None,
+        "dry_run_recovery_proof": dry_run_recovery_proof,
+        "dry_run_recovery_applied": dry_run_recovery_applied,
         "receipt_completeness": completeness if receipts else "NO_PROOF",
         "task_summaries": [_task_summary(receipt, linkage) for receipt in receipts],
         "runner_source_head": sorted(source_heads)[0] if len(source_heads) == 1 else None,
@@ -1794,8 +1894,10 @@ def build_system_status(
             "scheduled_health_available": bool(gaza_status.get("scheduled_health_authoritative")),
             "observed_date": gaza_status.get("observed_date"),
             "latest_runtime_proof_date": gaza_status.get("latest_runtime_proof_date"),
+            "latest_recovery_proof_at": gaza_status.get("latest_recovery_proof_at"),
             "receipt_completeness": gaza_status.get("receipt_completeness"),
             "stale_observability": gaza_status.get("stale_observability"),
+            "dry_run_recovery_applied": gaza_status.get("dry_run_recovery_applied"),
             "current_runner_head": gaza_status.get("current_runner_head"),
             "current_runner_branch": gaza_status.get("current_runner_branch"),
             "debug_summary": gaza_status.get("debug_summary"),

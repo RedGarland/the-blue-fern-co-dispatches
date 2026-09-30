@@ -1,0 +1,35 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260930T074322-0700-r11",
+  "scheduled_for": "2026-09-30T07:43:22-07:00",
+  "started_at": "2026-09-30T07:43:22-07:00",
+  "completed_at": "2026-09-30T07:44:21-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "since": "2026-09-30T06:45:53-07:00",
+    "until": "2026-09-30T07:43:22-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "scope": [
+      "only/sole/last/full-service grocery-store loss, closure, fire, or disaster",
+      "canceled or suspended emergency food distributions due to storm, flood, fire, outage, or facility damage",
+      "abrupt pantry or food-bank closure or major access reduction",
+      "new official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "result": "No new qualifying U.S. food-access disruption was identified in the bounded hourly recall window.",
+    "exclusions": [
+      "Eastport, Maine only-grocery-store closure reporting was several weeks old and outside the window.",
+      "Smooth Rock Falls pantry closure was in Ontario, Canada and outside U.S. scope.",
+      "Current SNAP search results were policy/eligibility coverage or older interruption stories rather than a new immediate-access interruption in the hourly window.",
+      "Non-qualifying recovery/distribution coverage and unrelated fire/closure results were excluded."
+    ],
+    "source_priority": "Fresh local news, official agency/provider notices, and direct source pages were prioritized.",
+    "production_authority": "This supplementary watch is not the primary nationwide collector; production collection remains authoritative."
+  }
+}

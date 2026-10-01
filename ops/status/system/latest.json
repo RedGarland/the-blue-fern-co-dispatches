@@ -33,9 +33,9 @@
       "current_runner_head": "2daa20771417ee68dfda5bc1ebd7eb54ccceca84",
       "debug_summary": {
         "aggregate_status": "DEGRADED",
-        "all_current_failures_external": true,
+        "all_current_failures_external": false,
         "all_current_failures_non_actionable": true,
-        "attention_task_count": 1,
+        "attention_task_count": 2,
         "attention_tasks": [
           {
             "artifact_id": "20261001T130001Z-41820.json",
@@ -44,14 +44,22 @@
             "failure_stage": "care_line_collection",
             "status": "DEGRADED",
             "task_key": "care_line_collection"
+          },
+          {
+            "artifact_id": "20261001T190001Z-11920.json",
+            "classification": "partial_success",
+            "exit_code": 0,
+            "failure_stage": "care_line_collection",
+            "status": "DEGRADED",
+            "task_key": "care_line_collection"
           }
         ],
         "external_access_restriction_count": 9,
-        "failed_source_count": 9,
-        "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
+        "failed_source_count": 10,
+        "operator_assessment": "HEALTHY_WITH_TRANSIENT_SOURCE_FAILURES",
         "primary_classification": "partial_success",
         "primary_failure_stage": "care_line_collection",
-        "primary_layer": "EXTERNAL_DEPENDENCY",
+        "primary_layer": "SOURCE",
         "primary_task_key": "care_line_collection",
         "primary_task_status": "DEGRADED",
         "private_review_count_only_gap_count": null,
@@ -66,7 +74,7 @@
         "receipt_completeness": "COMPLETE",
         "recovery_lifecycle": "HEALTHY",
         "stale_observability": false,
-        "transient_source_failure_count": 0,
+        "transient_source_failure_count": 1,
         "unaccounted_event_count": null,
         "unclassified_source_failure_count": 0
       },
@@ -77,7 +85,7 @@
       "recovery_lifecycle": "HEALTHY",
       "scheduled_health_available": true,
       "source_failure_summary": {
-        "all_current_failures_external": true,
+        "all_current_failures_external": false,
         "all_current_failures_non_actionable": true,
         "external_access_restriction_count": 9,
         "external_restriction_sources": [
@@ -136,13 +144,19 @@
             "source_id": "mayo-clinic-news"
           }
         ],
-        "failed_source_count": 9,
-        "original_failed_source_count": 9,
+        "failed_source_count": 10,
+        "original_failed_source_count": 10,
         "recovered_source_count": 0,
         "recovered_sources": [],
-        "successful_attempt_count": 29,
-        "transient_source_failure_count": 0,
-        "transient_sources": [],
+        "successful_attempt_count": 28,
+        "transient_source_failure_count": 1,
+        "transient_sources": [
+          {
+            "adapter_type": "rss",
+            "failure_class": "TimeoutError",
+            "source_id": "healthcare-dive"
+          }
+        ],
         "unclassified_source_failure_count": 0
       },
       "stale_observability": false
@@ -384,7 +398,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-01T18:55:22.906277Z",
+  "exported_at": "2026-10-01T19:15:28.044727Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "DEGRADED"

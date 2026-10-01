@@ -1,0 +1,35 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261001T015021-0700-r11",
+  "scheduled_for": "2026-10-01T01:45:54-07:00",
+  "started_at": "2026-10-01T01:50:21-07:00",
+  "completed_at": "2026-10-01T01:51:14-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-01T00:49:58-07:00",
+    "end": "2026-10-01T01:50:21-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "bounded": true,
+    "summary": "Twelve targeted searches covered sole/only/last/full-service grocery loss, canceled or suspended emergency food distributions, abrupt pantry or food-bank service closure/reduction, and immediate SNAP/WIC/food-assistance interruption. No new U.S. event in the bounded window met the qualifying criteria.",
+    "source_priority": "Fresh local news, official/provider notices, and direct source pages were prioritized.",
+    "degradation": {
+      "present": false,
+      "reason": null
+    },
+    "exclusions_observed": [
+      "Kauaʻi emergency food distributions were scheduled to proceed on October 1 and October 2; no cancellation or suspension was identified.",
+      "San Antonio reporting concerned storm preparedness and food-bank availability, not a food-access service interruption.",
+      "Connecticut SNAP reporting was published before the bounded window and described ongoing eligibility-policy changes rather than a newly reported program outage or interruption within this hourly window.",
+      "Beaumont reporting on loss of a nearby grocery store was published six days earlier and was outside the bounded window.",
+      "Other results were older, non-U.S., routine, promotional, or otherwise outside scope."
+    ],
+    "production_authority_note": "This supplementary recall watch is non-authoritative; production collection remains authoritative."
+  }
+}

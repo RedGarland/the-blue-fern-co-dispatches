@@ -29,5 +29,23 @@
   "operational_issue_reasons": [
     "MATERIAL_HEARTBEAT_ABSENCE",
     "UNRECONCILED_QUALIFYING_FINDING"
-  ]
+  ],
+  "finding_reconciliation_statuses": [
+    "UNRECONCILED",
+    "UNRECONCILED",
+    "UNRECONCILED",
+    "UNRECONCILED",
+    "UNRECONCILED",
+    "UNRECONCILED",
+    "UNRECONCILED",
+    "UNRECONCILED",
+    "UNRECONCILED",
+    "UNRECONCILED",
+    "UNRECONCILED",
+    "UNRECONCILED",
+    "UNRECONCILED",
+    "UNRECONCILED",
+    "UNRECONCILED"
+  ],
+  "finding_order_basis": "watch-ledger source order for 2026-09-30"
 }

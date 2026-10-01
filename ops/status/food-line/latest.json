@@ -10,32 +10,23 @@
     "state": "HANDOFF_RECEIVED_SUCCESS",
     "unaccounted_count": 0
   },
-  "aggregate_status": "DEGRADED",
+  "aggregate_status": "SUCCESS",
   "current_runner_branch": "add/pages-repo-default",
   "current_runner_head": "92f12c052259cf84656affd8909048e523cfbebb",
   "debug_summary": {
-    "aggregate_status": "DEGRADED",
+    "aggregate_status": "SUCCESS",
     "all_current_failures_external": null,
     "all_current_failures_non_actionable": null,
-    "attention_task_count": 1,
-    "attention_tasks": [
-      {
-        "artifact_id": "20261001T203743Z-source-watch.json",
-        "classification": "completed_with_exclusions",
-        "exit_code": 0,
-        "failure_stage": "source_watch",
-        "status": "DEGRADED",
-        "task_key": "food_line_source_watch"
-      }
-    ],
+    "attention_task_count": 0,
+    "attention_tasks": [],
     "external_access_restriction_count": null,
     "failed_source_count": null,
-    "operator_assessment": "HEALTHY_WITH_SOURCE_EXCLUSIONS",
-    "primary_classification": "completed_with_exclusions",
-    "primary_failure_stage": "source_watch",
-    "primary_layer": "SOURCE",
-    "primary_task_key": "food_line_source_watch",
-    "primary_task_status": "DEGRADED",
+    "operator_assessment": "HEALTHY",
+    "primary_classification": null,
+    "primary_failure_stage": null,
+    "primary_layer": "NONE",
+    "primary_task_key": null,
+    "primary_task_status": null,
     "private_review_count_only_gap_count": 46,
     "private_review_dispositioned_item_count": 54,
     "private_review_max_age_hours": 0,
@@ -94,24 +85,19 @@
       "task_key": "food_line_daily_publish"
     },
     {
-      "artifact_id": "20261001T203743Z-source-watch.json",
-      "classification": "completed_with_exclusions",
-      "completed_at": "2026-10-01T20:37:43.118910Z",
-      "diagnostics": {
-        "failure": {
-          "collection_health": "completed_with_exclusions",
-          "failure_stage": "source_watch"
-        }
-      },
+      "artifact_id": "20261001T211515Z-source-watch.json",
+      "classification": "completed",
+      "completed_at": "2026-10-01T21:15:15.359331Z",
+      "diagnostics": null,
       "exit_code": 0,
       "next_expected_run": null,
       "public_side_effects": {},
       "publication_attempted": null,
       "publication_status": "",
-      "run_id": "food-line-proof-food-care-continuation-20261001T202826Z-2c83475d",
+      "run_id": "food-line-proof-food-care-continuation-20261001T204826Z-7e476cd4",
       "scheduled_for": "2026-10-01",
-      "started_at": "2026-10-01T20:29:09.767638Z",
-      "status": "DEGRADED",
+      "started_at": "2026-10-01T20:49:13.699023Z",
+      "status": "SUCCESS",
       "task_key": "food_line_source_watch"
     },
     {
@@ -132,9 +118,9 @@
     }
   ],
   "incident_reference": null,
-  "last_exported_at": "2026-10-01T20:38:57.310514Z",
-  "last_receipt_at": "2026-10-01T20:38:09.908857Z",
-  "latest_runtime_proof_date": "2026-10-01T20:38:09.908857Z",
+  "last_exported_at": "2026-10-01T21:15:18.163067Z",
+  "last_receipt_at": "2026-10-01T21:15:15.359331Z",
+  "latest_runtime_proof_date": "2026-10-01T21:15:15.359331Z",
   "next_expected_run": null,
   "observed_date": "2026-10-01",
   "private_review_backlog": {
@@ -1435,6 +1421,22 @@
       "scheduled_for": "2026-10-01",
       "started_at": "2026-10-01T20:29:09.767638Z",
       "status": "DEGRADED",
+      "task_key": "food_line_source_watch"
+    },
+    {
+      "artifact_id": "20261001T211515Z-source-watch.json",
+      "classification": "completed",
+      "completed_at": "2026-10-01T21:15:15.359331Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {},
+      "publication_attempted": null,
+      "publication_status": "",
+      "run_id": "food-line-proof-food-care-continuation-20261001T204826Z-7e476cd4",
+      "scheduled_for": "2026-10-01",
+      "started_at": "2026-10-01T20:49:13.699023Z",
+      "status": "SUCCESS",
       "task_key": "food_line_source_watch"
     },
     {

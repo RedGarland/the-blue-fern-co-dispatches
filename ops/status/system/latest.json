@@ -30,7 +30,7 @@
       },
       "aggregate_status": "FAILED",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "784fa04cc4fb588345fbd80797f3add0cea5c2fb",
+      "current_runner_head": "efe1daae52906602b2ce68b5879ae9bc4c38cdc1",
       "debug_summary": {
         "aggregate_status": "FAILED",
         "all_current_failures_external": false,
@@ -190,7 +190,7 @@
       },
       "aggregate_status": "DEGRADED",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "784fa04cc4fb588345fbd80797f3add0cea5c2fb",
+      "current_runner_head": "efe1daae52906602b2ce68b5879ae9bc4c38cdc1",
       "debug_summary": {
         "aggregate_status": "DEGRADED",
         "all_current_failures_external": null,
@@ -298,7 +298,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "784fa04cc4fb588345fbd80797f3add0cea5c2fb",
+      "current_runner_head": "efe1daae52906602b2ce68b5879ae9bc4c38cdc1",
       "debug_summary": {
         "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
@@ -351,7 +351,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "784fa04cc4fb588345fbd80797f3add0cea5c2fb",
+      "current_runner_head": "efe1daae52906602b2ce68b5879ae9bc4c38cdc1",
       "debug_summary": {
         "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
@@ -389,7 +389,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-01T03:02:59.477841Z",
+  "exported_at": "2026-10-01T03:09:27.710396Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "FAILED"

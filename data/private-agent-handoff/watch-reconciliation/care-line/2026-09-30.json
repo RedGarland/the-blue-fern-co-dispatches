@@ -47,5 +47,22 @@
     "UNRECONCILED",
     "UNRECONCILED"
   ],
-  "finding_order_basis": "watch-ledger source order for 2026-09-30"
+  "finding_order_basis": "watch-ledger source order for 2026-09-30",
+  "finding_keys_in_source_order": [
+    "971743",
+    "E21509",
+    "971766",
+    "453162",
+    "A91530",
+    "673157",
+    "748081",
+    "747822",
+    "747371",
+    "677942",
+    "971758",
+    "A91579",
+    "747864",
+    "679577",
+    "A91648"
+  ]
 }

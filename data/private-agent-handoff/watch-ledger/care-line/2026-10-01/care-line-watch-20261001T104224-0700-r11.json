@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261001T104224-0700-r11",
+  "scheduled_for": "2026-10-01T10:42:24-07:00",
+  "started_at": "2026-10-01T10:42:24-07:00",
+  "completed_at": "2026-10-01T10:49:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-01T09:42:24-07:00",
+    "end": "2026-10-01T10:42:24-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": "Checked first; newest notices remained dated 2026-09-30 with no 2026-10-01 entry.",
+    "additional_searches": 12,
+    "coverage": "Hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency services, ambulance/EMS, air-medical, essential-service restoration/reopening, U.S. territories, and official .gov notices.",
+    "exclusions": [
+      "Prime Healthcare obstetric suspensions at Saint Joseph Medical Center (Joliet), Mercy Medical Center (Aurora), and Resurrection Medical Center (Chicago) took effect 2026-10-01 but were announced 2026-09-01 and were not new to this prior-hour window."
+    ],
+    "result": "No new qualifying healthcare-access development verified in the search window."
+  }
+}

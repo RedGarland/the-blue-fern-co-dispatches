@@ -408,7 +408,11 @@ aggregate status. It does not replace `aggregate_status` for automation. It
 distinguishes healthy degraded states such as
 `HEALTHY_WITH_SOURCE_EXCLUSIONS` and `HEALTHY_WITH_EXTERNAL_RESTRICTIONS`
 from `FAILED_ACTION_REQUIRED` or `DEGRADED_ACTION_RECOMMENDED`, so source
-imperfections do not look like fresh infrastructure incidents.
+imperfections do not look like fresh infrastructure incidents. Care Line source
+summaries may also expose `transient_source_failure_count` and
+`all_current_failures_non_actionable`; these keep retryable source timeouts
+visible without treating a single transient fetch/network failure as a
+source-classification incident when all durable failures are already classified.
 
 Watch and operator notification policy should use `operator_assessment` as the
 alert gate:
@@ -420,11 +424,16 @@ alert gate:
   `ACTION_REQUIRED_OBSERVABILITY`.
 - Alert on `ACTION_REQUIRED_PENDING_REVIEW` because valid private Food Line
   items are waiting for editorial or publication disposition.
-- Do not alert as a failure on `HEALTHY`, `HEALTHY_WITH_SOURCE_EXCLUSIONS`, or
-  `HEALTHY_WITH_EXTERNAL_RESTRICTIONS`.
+- Do not alert as a failure on `HEALTHY`, `HEALTHY_WITH_SOURCE_EXCLUSIONS`,
+  `HEALTHY_WITH_EXTERNAL_RESTRICTIONS`, or
+  `HEALTHY_WITH_TRANSIENT_SOURCE_FAILURES`.
 - For `HEALTHY_WITH_EXTERNAL_RESTRICTIONS`, notify only when the count of
   failed external sources rises, a required source family loses all current
   coverage, or `unclassified_source_failure_count` becomes nonzero.
+- For `HEALTHY_WITH_TRANSIENT_SOURCE_FAILURES`, notify only when the transient
+  source remains unrecovered across the retry window, expands to multiple
+  current transient source failures, or any non-transient unclassified source
+  failure appears.
 - For `HEALTHY_WITH_SOURCE_EXCLUSIONS`, notify only when downstream handoff
   fails, receipt completeness is no longer `COMPLETE`, or the source-watch
   exclusion pattern changes into a nonterminal failure.

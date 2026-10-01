@@ -2026,6 +2026,67 @@ def test_care_mixed_external_and_unclassified_source_failure_reopens_incident(tm
     assert status["debug_summary"]["unclassified_source_failure_count"] == 1
 
 
+def test_care_mixed_external_and_transient_source_failure_is_non_actionable(tmp_path: Path) -> None:
+    care_source = tmp_path / "care-source"
+    _write_care_source_registry(care_source, classified_sources=("hhs-news",))
+    details = _external_failure_details(("hhs-news", "stat-health"), successful=33)
+    for row in details["failed_source_diagnostics"]:  # type: ignore[index]
+        if row["source_id"] == "stat-health":
+            row["failure_class"] = "TimeoutError"
+            row["transient"] = True
+            row["failure_reason"] = "TimeoutError: The read operation timed out"
+            row["source_url"] = "https://www.statnews.com/category/health/feed"
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_collection",
+        run_id="external-plus-transient-proof",
+        task_status="partial_success",
+        scheduled_for="2026-09-10T15:00:00Z",
+        started_at="2026-09-10T15:00:00Z",
+        completed_at="2026-09-10T15:03:00Z",
+        details=details,
+    )
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_reviewed_event_queue",
+        run_id="queue",
+        task_status="nothing_to_publish",
+        scheduled_for="2026-09-10T15:01:00Z",
+        started_at="2026-09-10T15:01:00Z",
+        completed_at="2026-09-10T15:01:30Z",
+    )
+    _write_care_custom_receipt(
+        care_source,
+        task_key="care_line_approved_release_publication",
+        run_id="publication",
+        task_status="safe_no_op",
+        publication_status="safe_no_op",
+        scheduled_for="2026-09-10T15:02:00Z",
+        started_at="2026-09-10T15:02:00Z",
+        completed_at="2026-09-10T15:02:30Z",
+    )
+
+    status = build_care_line_status(
+        source_root=care_source,
+        date=DATE,
+        evaluated_at="2026-09-10T18:00:00Z",
+        exported_at="2026-09-10T18:01:00Z",
+        expected_instances=CARE_EXPECTED_INSTANCES,
+    )
+
+    summary = status["source_failure_summary"]
+    assert status["aggregate_status"] == "DEGRADED"
+    assert status["recovery_lifecycle"] == "HEALTHY"
+    assert status["debug_summary"]["operator_assessment"] == "HEALTHY_WITH_TRANSIENT_SOURCE_FAILURES"
+    assert summary["external_access_restriction_count"] == 1
+    assert summary["transient_source_failure_count"] == 1
+    assert summary["unclassified_source_failure_count"] == 0
+    assert summary["all_current_failures_external"] is False
+    assert summary["all_current_failures_non_actionable"] is True
+    assert status["debug_summary"]["transient_source_failure_count"] == 1
+    assert status["debug_summary"]["all_current_failures_non_actionable"] is True
+
+
 def test_care_external_restriction_classification_does_not_mask_missing_receipts(tmp_path: Path) -> None:
     care_source = tmp_path / "care-source"
     _write_care_source_registry(care_source, classified_sources=("hhs-news", "hrsa-news"))

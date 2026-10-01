@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261001T134347-0700",
+  "scheduled_for": "2026-10-01T13:45:22-07:00",
+  "started_at": "2026-10-01T13:43:47-07:00",
+  "completed_at": "2026-10-01T13:48:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-01T12:43:47-07:00",
+    "end": "2026-10-01T13:43:47-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "CMS Public Notices checked first; newest notices remained dated 2026-09-30, with no 2026-10-01 notice observed. Then 12 targeted searches covered hospital/ED, maternity, behavioral health, dialysis, oncology/primary care, rural/emergency service loss, ambulance, air-medical, restoration/reopening, and U.S. territories. No new qualifying development was found. Roseland Hospital labor-and-delivery closure was excluded as already surfaced in the prior hourly check. Maine Monitor reporting on Fort Kent emergency-department staffing strain was excluded because it did not establish a closure, suspension, or concrete service loss. Production collection remains authoritative."
+}

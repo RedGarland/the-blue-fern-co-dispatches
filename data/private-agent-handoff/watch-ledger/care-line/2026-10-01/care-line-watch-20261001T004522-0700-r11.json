@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261001T004522-0700-r11",
+  "scheduled_for": "2026-10-01T00:45:22-07:00",
+  "started_at": "2026-10-01T00:50:19-07:00",
+  "completed_at": "2026-10-01T00:51:46-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-30T23:45:22-07:00",
+    "end": "2026-10-01T00:51:46-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices was checked first. The current CMS index exposed no notice dated October 1, 2026 and no newly observed qualifying CMS provider action in the bounded window.",
+    "Exactly 12 additional targeted searches were run after the CMS check, covering hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency services, ambulance/EMS, air medical, service restoration, state health notices, and U.S. territories.",
+    "No new qualifying U.S. or territory healthcare-access change was identified since the prior hourly check. Older developments, proposals without concrete access effect, ownership/business stories without service change, unsupported claims, duplicates, and non-U.S. results were excluded.",
+    "Production collection remains authoritative. This supplementary watch did not approve, publish, alter the schedule, or disable the task."
+  ]
+}

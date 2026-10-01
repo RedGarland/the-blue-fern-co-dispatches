@@ -115,6 +115,28 @@ def _write_food_release_readiness(source: Path, proposal_date: str, payload: dic
     )
 
 
+def _write_food_publication_approval(source: Path, proposal_date: str, source_urls: list[str]) -> None:
+    approval_root = source / "data" / "dispatches" / "food-line" / "review" / "publication-approval" / proposal_date
+    _write_json(
+        approval_root / f"food-line-{proposal_date}-release-readiness.json",
+        {
+            "schema_version": "food_line_release_readiness_v1",
+            "edition_date": proposal_date,
+            "status": "approved_current_review_ready_for_source_generation",
+            "pages_push_authorized": True,
+            "publication_approval_supplied_externally": True,
+        },
+    )
+    _write_json(
+        approval_root / f"food-line-{proposal_date}-approved-proposal.json",
+        {
+            "schema_version": "food_line_proposed_edition_v1",
+            "edition_date": proposal_date,
+            "items": [{"source_url": source_url, "review_status": "approved"} for source_url in source_urls],
+        },
+    )
+
+
 def _write_food_private_review_disposition(source: Path, name: str, payload: dict) -> None:
     _write_json(
         source / "data" / "dispatches" / "food-line" / "review" / "private-review-dispositions" / name,
@@ -692,6 +714,69 @@ def test_food_line_private_review_backlog_surfaces_pending_proposals(tmp_path: P
         system["dispatches"]["food-line"]["debug_summary"]["operator_assessment"]
         == "ACTION_REQUIRED_PENDING_REVIEW"
     )
+
+
+def test_food_line_private_review_backlog_subtracts_published_publication_approval_items(
+    tmp_path: Path,
+) -> None:
+    statuses = {key: (action, "completed", 0) for key, (action, _, _) in TASKS.items()}
+    source = _write_day(tmp_path, statuses)
+    _write_food_proposal(
+        source,
+        "2026-10-01",
+        {
+            "items": [
+                {
+                    "headline": "Bradford County Food Pantry running low on food, leaders say",
+                    "source_url": "https://www.wcjb.com/2026/10/01/bradford-county-food-pantry-running-low-food-leaders-say",
+                    "review_status": "pending_editorial_review",
+                },
+                {
+                    "headline": "Seniors in West LA facing long waitlist for Meals on Wheels",
+                    "source_url": "https://spectrumlocalnews.com/ca/california/human-interest/2026/10/01/meals-on-wheels-west-seniors",
+                    "review_status": "pending_editorial_review",
+                },
+                {
+                    "headline": "Still unresolved private-review item",
+                    "source_url": "https://example.test/still-pending",
+                    "review_status": "pending_editorial_review",
+                },
+            ],
+            "pending_item_count": 3,
+            "published": False,
+        },
+    )
+    _write_food_publication_approval(
+        source,
+        "2026-10-01",
+        [
+            "https://www.wcjb.com/2026/10/01/bradford-county-food-pantry-running-low-food-leaders-say",
+            "https://spectrumlocalnews.com/ca/california/human-interest/2026/10/01/meals-on-wheels-west-seniors",
+        ],
+    )
+
+    status = build_food_line_status(
+        source_root=source,
+        date=DATE,
+        evaluated_at="2026-10-01T17:30:00Z",
+        exported_at="2026-10-01T17:30:00Z",
+    )
+
+    backlog = status["private_review_backlog"]
+    assert backlog["pending_item_count"] == 1
+    assert backlog["unresolved_item_count"] == 1
+    assert backlog["dispositioned_item_count"] == 2
+    assert backlog["dates"] == [
+        {
+            "date": "2026-10-01",
+            "pending_item_count": 1,
+            "unresolved_item_count": 1,
+            "dispositioned_item_count": 2,
+            "count_only_gap_count": 0,
+            "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-10-01.json",
+            "age_hours": 17,
+        }
+    ]
 
 
 def test_food_line_private_review_backlog_subtracts_published_sidecar_by_item_id(tmp_path: Path) -> None:

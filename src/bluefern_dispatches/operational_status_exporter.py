@@ -95,6 +95,12 @@ FOOD_LINE_PROPOSED_EDITIONS_RELATIVE = (
 FOOD_LINE_RELEASE_READINESS_RELATIVE = (
     Path("data") / "dispatches" / "food-line" / "review" / "release-readiness"
 )
+FOOD_LINE_PUBLICATION_APPROVAL_RELATIVE = (
+    Path("data") / "dispatches" / "food-line" / "review" / "publication-approval"
+)
+FOOD_LINE_REVIEW_RELEASES_RELATIVE = (
+    Path("data") / "dispatches" / "food-line" / "review" / "releases"
+)
 FOOD_LINE_PRIVATE_REVIEW_DISPOSITIONS_RELATIVE = (
     Path("data") / "dispatches" / "food-line" / "review" / "private-review-dispositions"
 )
@@ -1152,6 +1158,83 @@ def _food_line_item_source_url(value: dict[str, Any]) -> str | None:
     return None
 
 
+def _food_line_source_urls_from_items(payload: dict[str, Any]) -> set[str]:
+    urls: set[str] = set()
+    for key in ("items", "sources", "source_records", "records"):
+        values = payload.get(key)
+        if not isinstance(values, list):
+            continue
+        for item in values:
+            if not isinstance(item, dict):
+                continue
+            source_url = _food_line_item_source_url(item)
+            if source_url:
+                urls.add(source_url)
+    return urls
+
+
+def _food_line_publication_approval_urls(source_root: Path, proposal_date: str) -> set[str]:
+    approval_root = source_root / FOOD_LINE_PUBLICATION_APPROVAL_RELATIVE / proposal_date
+    urls: set[str] = set()
+    if not approval_root.is_dir():
+        return urls
+    readiness_files = sorted(approval_root.glob("*release-readiness.json"))
+    readiness_approved = False
+    for path in readiness_files:
+        payload = _load_json_object(path)
+        if not payload:
+            continue
+        if (
+            payload.get("pages_push_authorized") is True
+            or payload.get("publication_approval_supplied_externally") is True
+            or str(payload.get("status") or "").strip().lower() in FOOD_LINE_RELEASE_READY_STATUSES
+        ):
+            readiness_approved = True
+    if not readiness_approved:
+        return urls
+    for path in sorted(approval_root.glob("*approved-proposal.json")):
+        payload = _load_json_object(path)
+        if payload:
+            urls.update(_food_line_source_urls_from_items(payload))
+    return urls
+
+
+def _food_line_release_manifest_urls(source_root: Path, proposal_date: str) -> set[str]:
+    release_manifest = source_root / FOOD_LINE_REVIEW_RELEASES_RELATIVE / f"{proposal_date}.json"
+    sources_manifest = (
+        source_root
+        / "output"
+        / "site"
+        / "food-line"
+        / "editions"
+        / proposal_date
+        / "sources_manifest.json"
+    )
+    if not release_manifest.is_file() or not sources_manifest.is_file():
+        return set()
+    try:
+        payload = json.loads(sources_manifest.read_text(encoding="utf-8-sig"))
+    except (OSError, json.JSONDecodeError):
+        return set()
+    urls: set[str] = set()
+    if not isinstance(payload, list):
+        return urls
+    for item in payload:
+        if not isinstance(item, dict):
+            continue
+        source_url = _food_line_item_source_url(item)
+        if source_url:
+            urls.add(source_url)
+    return urls
+
+
+def _food_line_published_private_review_urls(source_root: Path, proposal_date: str) -> set[str]:
+    return _food_line_publication_approval_urls(source_root, proposal_date) | _food_line_release_manifest_urls(
+        source_root,
+        proposal_date,
+    )
+
+
 def _food_line_disposition_entries(payload: dict[str, Any]) -> list[dict[str, Any]]:
     for key in ("items", "dispositions", "entries", "item_dispositions"):
         value = payload.get(key)
@@ -1364,11 +1447,16 @@ def food_line_private_review_backlog(*, source_root: Path, evaluated_at: str) ->
                 continue
             if _food_line_release_readiness_approved(source_root, proposal_date):
                 continue
+            published_urls = _food_line_published_private_review_urls(source_root, proposal_date)
             pending_items = _food_line_pending_items(payload)
             pending_count = max(pending_count, len(pending_items))
             dispositioned_count = 0
             unresolved_visible_count = 0
             for item in pending_items:
+                source_url = _food_line_item_source_url(item)
+                if source_url and source_url in published_urls:
+                    dispositioned_count += 1
+                    continue
                 disposition = _food_line_matching_disposition(
                     item,
                     proposal_date=proposal_date,

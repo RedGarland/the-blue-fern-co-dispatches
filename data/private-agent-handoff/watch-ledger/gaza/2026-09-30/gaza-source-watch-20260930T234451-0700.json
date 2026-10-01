@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260930T234451-0700",
+  "scheduled_for": "2026-09-30T23:44:51-07:00",
+  "started_at": "2026-09-30T23:40:44-07:00",
+  "completed_at": "2026-09-30T23:42:59-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-30T22:47:19-07:00",
+    "end": "2026-09-30T23:42:59-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "OCHA OPT and WHO were checked first, followed by exactly 12 additional targeted searches. Direct UN News and BBC retrievals were blocked by robots.txt, while useful coverage remained through alternate official and established sources. Current results repeated developments already captured earlier on September 30 or lacked sufficient timing/context to establish a distinct new in-window development. No new qualifying finding was verified after the prior heartbeat completed at 22:47:19 PT."
+}

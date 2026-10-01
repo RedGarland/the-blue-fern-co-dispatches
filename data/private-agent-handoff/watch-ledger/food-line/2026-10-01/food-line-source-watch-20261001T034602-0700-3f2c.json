@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261001T034602-0700-3f2c",
+  "scheduled_for": "2026-10-01T03:45:54-07:00",
+  "started_at": "2026-10-01T03:46:02-07:00",
+  "completed_at": "2026-10-01T03:49:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-01T02:45:54-07:00",
+    "end": "2026-10-01T03:46:02-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches_executed": 12,
+    "bounded_recall_scope": [
+      "only/sole/last/full-service grocery-store loss or closure",
+      "canceled/suspended emergency food distributions after disaster/outage",
+      "abrupt pantry or food-bank closure/major access reduction",
+      "official SNAP/WIC interruption with immediate access consequences"
+    ],
+    "source_priority": "Fresh local news, official/provider notices, and direct source pages where surfaced.",
+    "exclusions_applied": [
+      "donation drives",
+      "resource guides",
+      "recipes",
+      "opinion",
+      "routine program promotion",
+      "generic inflation stories",
+      "duplicates"
+    ],
+    "result": "No new qualifying U.S. food-access disruption was identified in the bounded window. Fresh surfaced items were non-qualifying or older than the hourly window. Kauaʻi reporting showed emergency food distributions proceeding as scheduled, and Connecticut SNAP reporting described preannounced Oct. 1 eligibility/rule changes rather than a new abrupt access interruption.",
+    "representative_nonqualifying_sources": [
+      {
+        "publisher": "Kauai Now",
+        "url": "https://kauainownews.com/2026/09/30/what-kaua%CA%BBi-county-residents-visitors-need-to-know-thursday-about-hurricane-lowell-recovery/",
+        "reason": "Emergency food distributions were scheduled/proceeding, not canceled or suspended."
+      },
+      {
+        "publisher": "CT Insider",
+        "url": "https://www.ctinsider.com/connecticut/article/ct-snap-benefits-increase-october-1-new-rules-22454095.php",
+        "reason": "Described known eligibility/rule changes effective Oct. 1, not a new official service interruption in the hourly window."
+      }
+    ]
+  }
+}

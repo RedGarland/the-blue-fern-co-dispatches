@@ -140,6 +140,38 @@ def test_scheduler_accepts_current_intake_review_state_for_the_next_run() -> Non
     assert scheduler._unexpected_dirty_paths(status) == []
 
 
+def test_scheduler_accepts_generated_public_output_residue_after_publication() -> None:
+    status = "\n".join(
+        [
+            " M output/site/assets/site.css",
+            " M output/site/food-line/index.html",
+            " M output/site/gaza/index.html",
+            "?? output/site/food-line/editions/2026-10-01/index.html",
+            "?? output/dispatches/food-line/editions/2026-10-01/edition_manifest.json",
+        ]
+    )
+
+    assert scheduler._unexpected_dirty_paths(status) == []
+
+
+@pytest.mark.parametrize("status", ["M ", "MM", " D", "D "])
+def test_scheduler_generated_public_output_staged_or_deleted_remains_risky(status: str) -> None:
+    dirty = f"{status} output/site/food-line/index.html"
+
+    assert scheduler._unexpected_dirty_paths(dirty) == ["output/site/food-line/index.html"]
+
+
+def test_scheduler_generated_public_output_does_not_hide_source_drift() -> None:
+    status = "\n".join(
+        [
+            " M output/site/food-line/index.html",
+            " M scripts/food_line_daily_scheduler.py",
+        ]
+    )
+
+    assert scheduler._unexpected_dirty_paths(status) == ["scripts/food_line_daily_scheduler.py"]
+
+
 def test_checkout_validation_preserves_durable_runtime_evidence(tmp_path: Path) -> None:
     subprocess.run(["git", "init", "-b", scheduler.PRODUCTION_BRANCH], cwd=tmp_path, check=True, capture_output=True)
     subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=tmp_path, check=True)

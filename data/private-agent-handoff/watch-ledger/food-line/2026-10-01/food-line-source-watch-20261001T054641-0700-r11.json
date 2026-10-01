@@ -1,0 +1,35 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261001T054641-0700-r11",
+  "scheduled_for": "2026-10-01T05:45:54-07:00",
+  "started_at": "2026-10-01T05:46:41-07:00",
+  "completed_at": "2026-10-01T05:49:28-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-01T04:46:41-07:00",
+    "end": "2026-10-01T05:46:41-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "bounded": true,
+    "summary": "Twelve targeted searches covered sole/only/last/full-service grocery loss, canceled or suspended emergency food distributions, abrupt pantry or food-bank service closure/reduction, and immediate SNAP/WIC/food-assistance interruption. No new U.S. event in the bounded hourly window met the qualifying criteria.",
+    "source_priority": "Fresh local news, official/provider notices, and direct source pages were prioritized.",
+    "degradation": {
+      "present": false,
+      "reason": null
+    },
+    "exclusions_observed": [
+      "Kauaʻi emergency food distributions were listed as proceeding on October 1 and October 2; no cancellation or suspension was identified.",
+      "North Carolina Beacon of Hope coverage described new storm-resilience infrastructure at an operating food pantry, not a closure or service reduction.",
+      "Kansas City's Midtown Costco closure was announced before the bounded window, is a planned conversion, and was not established as the only, sole, last, or full-service grocery option for a community.",
+      "SNAP/WIC search results were older or prospective policy coverage and did not establish a newly reported immediate access interruption within the bounded window.",
+      "Other results were older, non-U.S., routine, promotional, or otherwise outside scope."
+    ],
+    "production_authority_note": "This supplementary recall watch is non-authoritative; production collection remains authoritative."
+  }
+}

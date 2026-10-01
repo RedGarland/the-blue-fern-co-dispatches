@@ -1726,6 +1726,32 @@ def maybe_post_food_line_dispatch_to_bluesky(
             result["card_description"] = str(preview["card_description"])
             result["image_path"] = str(preview["card_image_path"])
             result["edition_date_verified"] = True
+            if len(str(result["post_text"] or "")) > BLUESKY_MAX_POST_LENGTH:
+                result["status"] = "blocked"
+                result["reason"] = "post_text_too_long"
+                result["error_message"] = f"Food Line Bluesky post text exceeds {BLUESKY_MAX_POST_LENGTH} characters."
+                state_payload = {
+                    "dispatch_slug": FOOD_LINE_DISPATCH_SLUG,
+                    "edition_date": edition_date,
+                    "public_url": str(public_url),
+                    "post_text": result["post_text"],
+                    "card_title": result["card_title"],
+                    "card_description": result["card_description"],
+                    "image_path": result["image_path"],
+                    "image_alt": FOOD_LINE_SOCIAL_IMAGE_ALT,
+                    "status": "blocked",
+                    "skip_reason": "post_text_too_long",
+                    "dry_run": bool(dry_run),
+                    "forced_post": bool(force_post),
+                    "post_uri": None,
+                    "post_cid": None,
+                    "embed_type": None,
+                    "thumb_status": "not_attempted",
+                    "posted_at": None,
+                }
+                if allow_publish and not dry_run:
+                    _write_food_line_post_state(root, edition_date, state_payload)
+                return result
             if allow_publish and not dry_run:
                 approval = verify_approval(root, edition_date, allow_archival=allow_archival_bluesky_post)
                 result["approval_status"] = approval

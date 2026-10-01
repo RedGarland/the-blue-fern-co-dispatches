@@ -13,6 +13,7 @@ def _fixture_root(tmp_path: Path) -> Path:
     (tmp_path / "output" / "site" / "food-line" / "editions" / "2026-08-14").mkdir(parents=True, exist_ok=True)
     (tmp_path / "data" / "dispatches" / "food-line" / "review" / "proposed-editions").mkdir(parents=True, exist_ok=True)
     (tmp_path / "assets").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "assets" / "food-line-dispatch-social.png").write_bytes(Path("assets/food-line-dispatch-social.png").read_bytes())
     (tmp_path / "output" / "site" / "food-line" / "editions" / "2026-08-14" / "edition_manifest.json").write_text(
         json.dumps(
             {
@@ -58,8 +59,11 @@ def test_preview_builds_deterministic_editorial_payload(tmp_path: Path) -> None:
     preview_2 = build_food_line_bluesky_preview(root, "2026-08-14")
 
     assert preview_1 == preview_2
+    assert preview_1["schema_version"] == 2
+    assert preview_1["account"] == {"display_name": "The Blue Fern Co.", "handle": "@thebluefernco.com", "avatar_path": "assets/bluefern.png"}
     assert preview_1["card_title"].startswith("Food Line")
     assert preview_1["card_description"] == "Read the source-backed U.S. food pressure update from The Blue Fern Co."
+    assert preview_1["card_domain"] == "dispatches.thebluefernco.com"
     assert preview_1["embed"] == {
         "uri": "https://dispatches.thebluefernco.com/food-line/editions/2026-08-14/",
         "title": preview_1["card_title"],
@@ -81,19 +85,31 @@ def test_preview_written_artifacts_are_stable(tmp_path: Path) -> None:
     result = write_food_line_bluesky_preview(root, "2026-08-14")
     json_path = result["json_path"]
     html_path = result["html_path"]
+    in_feed_html_path = result["in_feed_html_path"]
+    in_feed_png_path = result["in_feed_png_path"]
 
     assert json_path.exists()
     assert html_path.exists()
+    assert in_feed_html_path.exists()
+    assert in_feed_png_path.exists()
     payload = json.loads(json_path.read_text(encoding="utf-8"))
     assert payload["edition_date"] == "2026-08-14"
+    assert payload["account"]["display_name"] == "The Blue Fern Co."
+    assert payload["account"]["avatar_path"] == "assets/bluefern.png"
     assert payload["embed"]["uri"] == "https://dispatches.thebluefernco.com/food-line/editions/2026-08-14/"
     assert payload["embed"]["title"].startswith("Food Line")
     assert payload["embed"]["description"] == "Read the source-backed U.S. food pressure update from The Blue Fern Co."
     assert payload["card_image_path"] == "output/site/food-line/editions/2026-08-14/social-card.png"
     assert payload["content_sha256"]
     html_text = html_path.read_text(encoding="utf-8")
-    assert "Food Line Bluesky Preview" in html_text
+    assert "Food Line Bluesky In-Feed Preview" in html_text
+    assert "The Blue Fern Co." in html_text
+    assert "@thebluefernco.com" in html_text
+    assert "dispatches.thebluefernco.com" in html_text
+    assert "The Blue Fern Co. avatar" in html_text
+    assert "Private in-feed preview only" in html_text
     assert "no network" not in html_text.lower()
+    assert in_feed_png_path.read_bytes()[:8] == b"\x89PNG\r\n\x1a\n"
 
 
 def test_preview_generates_date_specific_food_line_social_card(tmp_path: Path) -> None:

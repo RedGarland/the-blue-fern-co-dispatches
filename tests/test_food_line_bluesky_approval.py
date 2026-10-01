@@ -15,7 +15,14 @@ def _freeze_food_line_today(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(approval, "current_pacific_date", lambda: date(2026, 6, 20))
 
 
+def _copy_social_template(root: Path) -> None:
+    target = root / "assets" / "food-line-dispatch-social.png"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_bytes(Path("assets/food-line-dispatch-social.png").read_bytes())
+
+
 def _fixture(tmp_path: Path, *, date: str = "2026-06-17", signals: int = 1) -> tuple[str, str]:
+    _copy_social_template(tmp_path)
     public_url = approval.public_url_for_edition(date)
     summary = "Central Illinois Food Bank says SNAP cuts are straining its ability to meet demand."
     manifest_path = tmp_path / "output" / "site" / "food-line" / "editions" / date / "edition_manifest.json"
@@ -56,7 +63,7 @@ def _fixture(tmp_path: Path, *, date: str = "2026-06-17", signals: int = 1) -> t
 
 def _approved(tmp_path: Path, date: str = "2026-06-17") -> dict:
     payload = approval.build_pending_approval(tmp_path, date)
-    payload.update({"approved": True, "approved_at": "2026-07-27T00:00:00Z", "approved_by": "operator"})
+    payload.update({"approved": True, "approval_status": "approved", "approved_at": "2026-07-27T00:00:00Z", "approved_by": "operator"})
     approval.write_approval(tmp_path, payload)
     return payload
 
@@ -143,8 +150,20 @@ def test_no_public_signal_edition_cannot_be_approved(tmp_path: Path) -> None:
 def test_current_update_manifest_without_legacy_bluesky_fields_still_builds_pending_approval(tmp_path: Path) -> None:
     public_url, draft = _fixture(tmp_path)
     payload = approval.build_pending_approval(tmp_path, "2026-06-17")
+    preview = build_food_line_bluesky_preview(tmp_path, "2026-06-17")
+    image_path = food_line_social_card_path(tmp_path, "2026-06-17")
     assert payload["public_url"] == public_url
+    assert payload["schema_version"] == 2
+    assert payload["approval_type"] == "food_line_bluesky_in_feed_preview"
     assert payload["draft_text"] == draft
+    assert payload["post_text"] == draft
+    assert payload["post_text_sha256"] == approval.post_text_sha256(draft)
+    assert payload["card_title"] == preview["card_title"]
+    assert payload["card_description"] == preview["card_description"]
+    assert payload["card_image_path"] == "output/site/food-line/editions/2026-06-17/social-card.png"
+    assert payload["card_image_sha256"] == approval.hashlib.sha256(image_path.read_bytes()).hexdigest()
+    assert payload["preview_content_hash"]
+    assert payload["approval_status"] == "pending_review"
     assert payload["approved"] is False
     manifest = json.loads((tmp_path / "output" / "site" / "food-line" / "editions" / "2026-06-17" / "edition_manifest.json").read_text())
     assert manifest["public_rendered"] is True
@@ -179,6 +198,35 @@ def test_approval_serialization_is_deterministic_and_atomic(tmp_path: Path, monk
     approval.write_approval(tmp_path, payload)
     assert first == path.read_bytes()
     assert calls
+
+
+def test_missing_in_feed_status_fails_closed(tmp_path: Path) -> None:
+    _fixture(tmp_path)
+    payload = _approved(tmp_path)
+    payload.pop("approval_status")
+    approval.write_approval(tmp_path, payload)
+    assert approval.verify_approval(tmp_path, "2026-06-17")["reason"] == "approval_not_granted"
+
+
+def test_changed_card_metadata_invalidates_approval(tmp_path: Path) -> None:
+    _fixture(tmp_path)
+    payload = _approved(tmp_path)
+    payload["card_title"] = "Changed title"
+    approval.write_approval(tmp_path, payload)
+    assert approval.verify_approval(tmp_path, "2026-06-17")["reason"] == "card_title_mismatch"
+
+    payload = _approved(tmp_path)
+    payload["card_description"] = "Changed description"
+    approval.write_approval(tmp_path, payload)
+    assert approval.verify_approval(tmp_path, "2026-06-17")["reason"] == "card_description_mismatch"
+
+
+def test_changed_card_path_invalidates_approval(tmp_path: Path) -> None:
+    _fixture(tmp_path)
+    payload = _approved(tmp_path)
+    payload["card_image_path"] = "output/site/food-line/editions/2026-06-17/other-card.png"
+    approval.write_approval(tmp_path, payload)
+    assert approval.verify_approval(tmp_path, "2026-06-17")["reason"] == "card_image_path_mismatch"
 
 
 def test_pilot_metadata_and_shared_image_metadata_are_preserved() -> None:

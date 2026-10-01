@@ -14,6 +14,8 @@ from zoneinfo import ZoneInfo
 from bluefern_dispatches.food_line_social_card import ensure_food_line_social_card, food_line_social_card_relative_path
 
 FOOD_LINE_POSTING_MODEL = "food_line_daily_edition_v1"
+APPROVAL_SCHEMA_VERSION = 2
+APPROVAL_TYPE = "food_line_bluesky_in_feed_preview"
 APPROVAL_FILENAME = "bluesky_approval.json"
 BASE_URL = "https://dispatches.thebluefernco.com"
 FOOD_LINE_MAX_AGE_DAYS = 3
@@ -40,13 +42,41 @@ def social_image_sha256(project_root: Path, edition_date: str) -> str:
     return hashlib.sha256(social_image_path(project_root, edition_date).read_bytes()).hexdigest()
 
 
-def _content_payload(*, edition_date: str, draft_text: str, public_url: str, social_image_hash: str) -> dict[str, str]:
-    return {
+def post_text_sha256(post_text: str) -> str:
+    return hashlib.sha256(post_text.encode("utf-8")).hexdigest()
+
+
+def _content_payload(
+    *,
+    edition_date: str,
+    draft_text: str,
+    public_url: str,
+    social_image_hash: str,
+    post_text_hash: str | None = None,
+    card_title: str | None = None,
+    card_description: str | None = None,
+    card_image_path: str | None = None,
+) -> dict[str, str]:
+    payload = {
         "posting_model": FOOD_LINE_POSTING_MODEL,
         "edition_date": edition_date,
         "draft_text": draft_text,
         "public_url": public_url,
         "social_image_sha256": social_image_hash,
+    }
+    if post_text_hash is not None:
+        payload.update(
+            {
+                "approval_type": APPROVAL_TYPE,
+                "post_text_sha256": post_text_hash,
+                "card_title": card_title or "",
+                "card_description": card_description or "",
+                "card_image_path": card_image_path or "",
+            }
+        )
+    return {
+        key: str(value)
+        for key, value in payload.items()
     }
 
 
@@ -57,6 +87,34 @@ def draft_content_hash(*, edition_date: str, draft_text: str, public_url: str, s
             draft_text=draft_text,
             public_url=public_url,
             social_image_hash=social_image_hash,
+        ),
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    ).encode("utf-8")
+    return hashlib.sha256(canonical).hexdigest()
+
+
+def preview_content_hash(
+    *,
+    edition_date: str,
+    post_text: str,
+    public_url: str,
+    card_title: str,
+    card_description: str,
+    card_image_path: str,
+    card_image_sha256: str,
+) -> str:
+    canonical = json.dumps(
+        _content_payload(
+            edition_date=edition_date,
+            draft_text=post_text,
+            public_url=public_url,
+            social_image_hash=card_image_sha256,
+            post_text_hash=post_text_sha256(post_text),
+            card_title=card_title,
+            card_description=card_description,
+            card_image_path=card_image_path,
         ),
         sort_keys=True,
         separators=(",", ":"),
@@ -112,7 +170,7 @@ def freshness_status(edition_date: str | None, *, today: date | None = None, all
     }
 
 
-def _current_draft(project_root: Path, edition_date: str) -> dict[str, Any]:
+def _current_draft(project_root: Path, edition_date: str, *, refresh_card: bool = False) -> dict[str, Any]:
     manifest = _load_json(_manifest_path(project_root, edition_date))
     if not manifest:
         return {"ok": False, "reason": "edition_not_bluesky_ready", "manifest": {}}
@@ -129,24 +187,51 @@ def _current_draft(project_root: Path, edition_date: str) -> dict[str, Any]:
         return {"ok": False, "reason": "edition_not_bluesky_ready", "manifest": manifest, "public_url": public_url, "draft_text": ""}
     from bluefern_dispatches.food_line_bluesky_preview import build_food_line_bluesky_preview
 
-    preview = build_food_line_bluesky_preview(project_root, edition_date)
+    preview = build_food_line_bluesky_preview(project_root, edition_date, refresh_card=refresh_card)
     draft_text = str(preview.get("post_text") or "").strip()
     if not draft_text:
         return {"ok": False, "reason": "edition_not_bluesky_ready", "manifest": manifest, "public_url": public_url, "draft_text": draft_text}
-    return {"ok": True, "reason": None, "manifest": manifest, "public_url": public_url, "draft_text": draft_text}
+    return {
+        "ok": True,
+        "reason": None,
+        "manifest": manifest,
+        "public_url": public_url,
+        "draft_text": draft_text,
+        "preview": preview,
+    }
 
 
 def build_pending_approval(project_root: Path, edition_date: str) -> dict[str, Any]:
-    current = _current_draft(project_root, edition_date)
+    current = _current_draft(project_root, edition_date, refresh_card=True)
     if not current.get("draft_text"):
         raise ValueError(str(current.get("reason") or "edition_not_bluesky_ready"))
-    image_hash = social_image_sha256(project_root, edition_date)
+    preview = current.get("preview") if isinstance(current.get("preview"), dict) else {}
+    image_hash = str(preview.get("card_image_sha256") or social_image_sha256(project_root, edition_date))
     public_url = str(current["public_url"])
     draft_text = str(current["draft_text"])
+    card_image_path = str(preview.get("card_image_path") or food_line_social_card_relative_path(edition_date).as_posix())
+    card_title = str(preview.get("card_title") or "")
+    card_description = str(preview.get("card_description") or "")
     return {
-        "schema_version": 1,
+        "schema_version": APPROVAL_SCHEMA_VERSION,
+        "approval_type": APPROVAL_TYPE,
         "edition_date": edition_date,
         "public_url": public_url,
+        "post_text": draft_text,
+        "post_text_sha256": post_text_sha256(draft_text),
+        "card_title": card_title,
+        "card_description": card_description,
+        "card_image_path": card_image_path,
+        "card_image_sha256": image_hash,
+        "preview_content_hash": preview_content_hash(
+            edition_date=edition_date,
+            post_text=draft_text,
+            public_url=public_url,
+            card_title=card_title,
+            card_description=card_description,
+            card_image_path=card_image_path,
+            card_image_sha256=image_hash,
+        ),
         "draft_text": draft_text,
         "draft_content_hash": draft_content_hash(
             edition_date=edition_date,
@@ -154,9 +239,10 @@ def build_pending_approval(project_root: Path, edition_date: str) -> dict[str, A
             public_url=public_url,
             social_image_hash=image_hash,
         ),
-        "social_image_path": food_line_social_card_relative_path(edition_date).as_posix(),
+        "social_image_path": card_image_path,
         "social_image_sha256": image_hash,
         "posting_model": FOOD_LINE_POSTING_MODEL,
+        "approval_status": "pending_review",
         "approved": False,
         "approved_at": None,
         "approved_by": None,
@@ -184,7 +270,7 @@ def verify_approval(project_root: Path, edition_date: str | None, *, allow_archi
     date_check = freshness_status(edition_date, allow_archival=allow_archival)
     if date_check["reason"] in {"edition_date_missing", "edition_date_invalid"}:
         return {"ok": False, "reason": date_check["reason"], "edition_date": edition_date, "freshness": date_check}
-    current = _current_draft(project_root, edition_date)
+    current = _current_draft(project_root, edition_date, refresh_card=False)
     if not current.get("ok"):
         return {"ok": False, "reason": current.get("reason"), "edition_date": edition_date, "public_url": current.get("public_url")}
     path = approval_path(project_root, edition_date)
@@ -194,22 +280,46 @@ def verify_approval(project_root: Path, edition_date: str | None, *, allow_archi
     freshness = freshness_status(edition_date, allow_archival=allow_archival)
     public_url = str(current["public_url"])
     draft_text = str(current["draft_text"])
-    image_hash = social_image_sha256(project_root, edition_date)
+    preview = current.get("preview") if isinstance(current.get("preview"), dict) else {}
+    image_hash = str(preview.get("card_image_sha256") or social_image_sha256(project_root, edition_date))
+    card_image_path = str(preview.get("card_image_path") or food_line_social_card_relative_path(edition_date).as_posix())
+    card_title = str(preview.get("card_title") or "")
+    card_description = str(preview.get("card_description") or "")
     expected_hash = draft_content_hash(
         edition_date=edition_date,
         draft_text=draft_text,
         public_url=public_url,
         social_image_hash=image_hash,
     )
+    expected_post_text_hash = post_text_sha256(draft_text)
+    expected_preview_hash = preview_content_hash(
+        edition_date=edition_date,
+        post_text=draft_text,
+        public_url=public_url,
+        card_title=card_title,
+        card_description=card_description,
+        card_image_path=card_image_path,
+        card_image_sha256=image_hash,
+    )
     if not freshness.get("ok"):
         reason = freshness["reason"]
-    elif not bool(approval.get("approved")):
+    elif not bool(approval.get("approved")) or str(approval.get("approval_status") or "") != "approved":
         reason = "approval_not_granted"
     elif str(approval.get("public_url") or "") != public_url:
         reason = "public_url_mismatch"
+    elif str(approval.get("post_text_sha256") or "") != expected_post_text_hash:
+        reason = "draft_hash_mismatch"
+    elif str(approval.get("card_title") or "") != card_title:
+        reason = "card_title_mismatch"
+    elif str(approval.get("card_description") or "") != card_description:
+        reason = "card_description_mismatch"
+    elif str(approval.get("card_image_path") or approval.get("social_image_path") or "") != card_image_path:
+        reason = "card_image_path_mismatch"
     elif str(approval.get("social_image_sha256") or "") != image_hash:
         reason = "social_image_hash_mismatch"
     elif str(approval.get("draft_text") or "") != draft_text or str(approval.get("draft_content_hash") or "") != expected_hash:
+        reason = "draft_hash_mismatch"
+    elif str(approval.get("preview_content_hash") or "") != expected_preview_hash:
         reason = "draft_hash_mismatch"
     elif str(approval.get("posting_model") or "") != FOOD_LINE_POSTING_MODEL:
         reason = "draft_hash_mismatch"
@@ -224,8 +334,14 @@ def verify_approval(project_root: Path, edition_date: str | None, *, allow_archi
         "public_url": public_url,
         "draft_text": draft_text,
         "draft_content_hash": expected_hash,
+        "post_text_sha256": expected_post_text_hash,
+        "card_title": card_title,
+        "card_description": card_description,
+        "card_image_sha256": image_hash,
+        "card_image_path": card_image_path,
+        "preview_content_hash": expected_preview_hash,
         "social_image_sha256": image_hash,
-        "social_image_path": food_line_social_card_relative_path(edition_date).as_posix(),
+        "social_image_path": card_image_path,
         "posting_model": FOOD_LINE_POSTING_MODEL,
         "freshness": freshness,
         "archival_override": bool(allow_archival),
@@ -235,7 +351,7 @@ def verify_approval(project_root: Path, edition_date: str | None, *, allow_archi
 def approve_draft(project_root: Path, edition_date: str, approved_by: str, approval_note: str | None = None) -> dict[str, Any]:
     if not approved_by.strip():
         raise ValueError("approved_by is required")
-    current = _current_draft(project_root, edition_date)
+    current = _current_draft(project_root, edition_date, refresh_card=True)
     if not current.get("ok"):
         return {"ok": False, "reason": current.get("reason"), "edition_date": edition_date}
     freshness = freshness_status(edition_date)
@@ -245,6 +361,7 @@ def approve_draft(project_root: Path, edition_date: str, approved_by: str, appro
     payload.update(
         {
             "approved": True,
+            "approval_status": "approved",
             "approved_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
             "approved_by": approved_by.strip(),
             "approval_note": approval_note,
@@ -257,6 +374,7 @@ def approve_draft(project_root: Path, edition_date: str, approved_by: str, appro
 def revoke_approval(project_root: Path, edition_date: str, approval_note: str | None = None) -> dict[str, Any]:
     payload = build_pending_approval(project_root, edition_date)
     payload["approval_note"] = approval_note
+    payload["approval_status"] = "revoked"
     path = write_approval(project_root, payload)
     return {"ok": True, "reason": "approval_revoked", "approval_path": str(path), "approval": payload}
 
@@ -275,7 +393,7 @@ def expire_approval(project_root: Path, edition_date: str, *, expired_at: str | 
 
 
 def inspect_draft(project_root: Path, edition_date: str) -> dict[str, Any]:
-    current = _current_draft(project_root, edition_date)
+    current = _current_draft(project_root, edition_date, refresh_card=False)
     result = {
         "ok": bool(current.get("draft_text")),
         "edition_date": edition_date,

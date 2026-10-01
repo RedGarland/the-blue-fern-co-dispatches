@@ -1,0 +1,30 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260930T234620-0700-r11",
+  "scheduled_for": "2026-09-30T23:45:54-07:00",
+  "started_at": "2026-09-30T23:46:20-07:00",
+  "completed_at": "2026-09-30T23:47:12-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-30T21:50:03-07:00",
+    "end": "2026-09-30T23:46:20-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "bounded": true,
+    "summary": "Twelve targeted searches covered sole/only/last/full-service grocery loss, canceled or suspended emergency food distributions, abrupt pantry or food-bank service closure or major access reduction, and immediate SNAP/WIC/food-assistance interruption. No new U.S. event in the bounded window met the qualifying criteria.",
+    "exclusions_observed": [
+      "Eastport, Maine only-grocery-store closure reporting was several weeks old and outside the bounded window.",
+      "Kauaʻi emergency food distributions were reported as proceeding as scheduled rather than canceled or suspended.",
+      "Searches for pantry/food-bank closures surfaced older or non-U.S. items rather than a new qualifying U.S. access reduction.",
+      "SNAP/WIC searches did not surface a new official interruption with immediate access consequences in the bounded window."
+    ],
+    "source_priority": "Fresh local news, official/provider notices, and direct source pages were prioritized.",
+    "production_authority_note": "This supplementary recall watch is non-authoritative; production collection remains authoritative."
+  }
+}

@@ -1,9 +1,11 @@
 import io
 import json
+from datetime import date
 from pathlib import Path
 from urllib import error
 
 from bluefern_dispatches import bluesky_post
+from bluefern_dispatches import food_line_bluesky_approval as food_approval
 
 
 def test_builds_expected_gaza_post_text_without_url(tmp_path: Path):
@@ -2027,3 +2029,118 @@ def test_receipt_never_contains_secrets(monkeypatch, tmp_path: Path):
     assert "refreshJwt" not in receipt_text
     assert "Authorization" not in receipt_text
     assert "Bearer " not in receipt_text
+
+
+def write_food_line_edition_artifacts(root: Path, edition_date: str = "2026-06-17", summary: str = "A local food bank reports rising pantry demand tied to SNAP pressure.") -> str:
+    public_url = food_approval.public_url_for_edition(edition_date)
+    template = root / "assets" / "food-line-dispatch-social.png"
+    template.parent.mkdir(parents=True, exist_ok=True)
+    template.write_bytes(Path("assets/food-line-dispatch-social.png").read_bytes())
+    manifest = root / "output" / "site" / "food-line" / "editions" / edition_date / "edition_manifest.json"
+    manifest.parent.mkdir(parents=True, exist_ok=True)
+    manifest.write_text(
+        json.dumps(
+            {
+                "edition_date": edition_date,
+                "public_url": public_url,
+                "public_rendered": True,
+                "public_signal_count": 1,
+                "edition_mode": "current_update",
+                "validation_status": "ok",
+                "public_summary": summary,
+            }
+        ),
+        encoding="utf-8",
+    )
+    review = root / "data" / "dispatches" / "food-line" / "review" / "proposed-editions" / f"{edition_date}.json"
+    review.parent.mkdir(parents=True, exist_ok=True)
+    review.write_text(
+        json.dumps(
+            {
+                "layout": {
+                    "todays_read": [{"summary": summary}],
+                    "core_food_pressure_signals": [{"summary": summary}],
+                },
+                "items": [{"review_item_id": f"{edition_date}-food-001"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    return public_url
+
+
+def write_food_line_approval(root: Path, edition_date: str = "2026-06-17") -> None:
+    payload = food_approval.build_pending_approval(root, edition_date)
+    payload.update({"approved": True, "approval_status": "approved", "approved_at": "2026-06-17T18:00:00Z", "approved_by": "operator"})
+    food_approval.write_approval(root, payload)
+
+
+def test_food_line_real_post_blocks_without_in_feed_approval(monkeypatch, tmp_path: Path):
+    public_url = write_food_line_edition_artifacts(tmp_path)
+    monkeypatch.setattr(bluesky_post, "_post_json", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("network must not run")))
+    monkeypatch.setattr(bluesky_post.request, "urlopen", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("network must not run")))
+
+    result = bluesky_post.maybe_post_food_line_dispatch_to_bluesky(
+        edition_date="2026-06-17",
+        public_url=public_url,
+        post_text=None,
+        run_succeeded=True,
+        public_rendered=True,
+        public_signal_count=1,
+        post_requested=True,
+        project_root=tmp_path,
+    )
+
+    assert result["status"] == "skipped"
+    assert result["reason"] == "approval_missing"
+
+
+def test_food_line_real_post_blocks_if_preview_changes_after_approval(monkeypatch, tmp_path: Path):
+    monkeypatch.setattr(food_approval, "current_pacific_date", lambda: date(2026, 6, 20))
+    public_url = write_food_line_edition_artifacts(tmp_path)
+    write_food_line_approval(tmp_path)
+    manifest = tmp_path / "output" / "site" / "food-line" / "editions" / "2026-06-17" / "edition_manifest.json"
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload["public_summary"] = "A materially different food-bank summary changes the approved in-feed preview."
+    manifest.write_text(json.dumps(payload), encoding="utf-8")
+    monkeypatch.setattr(bluesky_post, "_post_json", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("network must not run")))
+    monkeypatch.setattr(bluesky_post.request, "urlopen", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("network must not run")))
+
+    result = bluesky_post.maybe_post_food_line_dispatch_to_bluesky(
+        edition_date="2026-06-17",
+        public_url=public_url,
+        post_text=None,
+        run_succeeded=True,
+        public_rendered=True,
+        public_signal_count=1,
+        post_requested=True,
+        project_root=tmp_path,
+    )
+
+    assert result["reason"] == "draft_hash_mismatch"
+
+
+def test_food_line_post_text_limit_blocks_before_upload_or_post(monkeypatch, tmp_path: Path):
+    long_summary = (
+        "A regional food bank reported severe pantry demand, longer household lines, pressure on SNAP households, "
+        "school meal strain, grocery access gaps, and emergency feeding needs across several counties while local "
+        "partners described continued funding uncertainty and distribution constraints."
+    )
+    public_url = write_food_line_edition_artifacts(tmp_path, summary=long_summary)
+    monkeypatch.setattr(bluesky_post, "_post_json", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("session must not start")))
+    monkeypatch.setattr(bluesky_post.request, "urlopen", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("upload/post must not run")))
+
+    result = bluesky_post.maybe_post_food_line_dispatch_to_bluesky(
+        edition_date="2026-06-17",
+        public_url=public_url,
+        post_text=None,
+        run_succeeded=True,
+        public_rendered=True,
+        public_signal_count=1,
+        post_requested=True,
+        project_root=tmp_path,
+    )
+
+    assert result["status"] == "blocked"
+    assert result["reason"] == "post_text_too_long"
+    assert len(str(result["post_text"])) > bluesky_post.BLUESKY_MAX_POST_LENGTH

@@ -4818,7 +4818,7 @@ def test_food_line_bluesky_dry_run_state_and_duplicate_guard(tmp_path: Path, mon
     assert not state_path.exists()
 
     approval_payload = food_line_bluesky_approval.build_pending_approval(tmp_path, edition_date)
-    approval_payload.update({"approved": True, "approved_at": "2026-06-11T00:00:00Z", "approved_by": "test"})
+    approval_payload.update({"approved": True, "approval_status": "approved", "approved_at": "2026-06-11T00:00:00Z", "approved_by": "test"})
     food_line_bluesky_approval.write_approval(tmp_path, approval_payload)
 
     state_path.write_text(

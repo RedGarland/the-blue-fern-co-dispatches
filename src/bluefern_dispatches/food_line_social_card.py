@@ -8,6 +8,7 @@ from typing import Any
 CARD_WIDTH = 1200
 CARD_HEIGHT = 630
 CARD_RELATIVE_PATH_TEMPLATE = "output/site/food-line/editions/{edition_date}/social-card.png"
+TEMPLATE_RELATIVE_PATH = Path("assets/food-line-dispatch-social.png")
 
 
 def food_line_social_card_relative_path(edition_date: str) -> Path:
@@ -28,6 +29,8 @@ def _font(size: int, *, bold: bool = False) -> Any:
     from PIL import ImageFont  # type: ignore
 
     names = (
+        "C:/Windows/Fonts/georgiab.ttf" if bold else "C:/Windows/Fonts/georgia.ttf",
+        "C:/Windows/Fonts/arialbd.ttf" if bold else "C:/Windows/Fonts/arial.ttf",
         "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf" if bold else "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
         "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf" if bold else "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
     )
@@ -39,47 +42,59 @@ def _font(size: int, *, bold: bool = False) -> Any:
     return ImageFont.load_default()
 
 
-def render_food_line_social_card_png_bytes(edition_date: str) -> bytes:
+def _cover_template_date(draw: Any) -> None:
+    # These coordinates are for the resized 1200x630 locked Food Line template.
+    # The old date lives in this open background band; the mask avoids touching
+    # the gold separator above it or the publisher footer below it.
+    left, top, right, bottom = 445, 405, 755, 454
+    for y in range(top, bottom):
+        blend = (y - top) / max(1, bottom - top)
+        r = int(10 + 4 * blend)
+        g = int(28 + 7 * blend)
+        b = int(18 + 4 * blend)
+        draw.line((left, y, right, y), fill=(r, g, b))
+    # Add a little deterministic texture so the patch does not read as a flat box.
+    for x in range(left, right, 5):
+        y = top + ((x * 37) % (bottom - top))
+        shade = 23 + ((x * 11) % 14)
+        draw.point((x, y), fill=(shade, shade + 22, shade + 8))
+
+
+def render_food_line_social_card_png_bytes(edition_date: str, *, template_path: Path | None = None) -> bytes:
     from io import BytesIO
 
     from PIL import Image, ImageDraw  # type: ignore
 
     date.fromisoformat(edition_date)
-    image = Image.new("RGB", (CARD_WIDTH, CARD_HEIGHT), "#102018")
+    if template_path is None or not template_path.exists():
+        raise FileNotFoundError(template_path or TEMPLATE_RELATIVE_PATH)
+
+    image = Image.open(template_path).convert("RGB").resize((CARD_WIDTH, CARD_HEIGHT), Image.Resampling.LANCZOS)
     draw = ImageDraw.Draw(image)
+    _cover_template_date(draw)
 
-    # Layer simple vector-like shapes so the generated card is deterministic and
-    # independent of the old static social image.
-    draw.rectangle((42, 42, CARD_WIDTH - 42, CARD_HEIGHT - 42), outline="#b7c0a7", width=3)
-    draw.rectangle((64, 64, CARD_WIDTH - 64, CARD_HEIGHT - 64), outline="#435846", width=2)
-    draw.ellipse((-150, 390, 260, 800), fill="#233528")
-    draw.polygon([(780, 375), (1110, 315), (1115, 475), (800, 500)], fill="#26372c")
-
-    title_font = _font(78, bold=True)
-    subtitle_font = _font(34)
-    date_font = _font(34, bold=True)
-    brand_font = _font(26)
-
-    title = "Food Line Dispatch"
-    subtitle = "Source-backed daily briefing\non U.S. food pressure"
     display_date = _display_date(edition_date)
-
-    draw.text((180, 182), title, font=title_font, fill="#f0eadc")
-    draw.multiline_text((252, 285), subtitle, font=subtitle_font, fill="#d9d1bd", spacing=8, align="center")
-    draw.text((454, 386), display_date, font=date_font, fill="#caa45f")
-    draw.text((454, 455), "The Blue Fern Co.", font=brand_font, fill="#d9d1bd")
-    draw.line((188, 152, 430, 152), fill="#556b58", width=2)
-    draw.line((770, 152, 1012, 152), fill="#556b58", width=2)
+    date_font = _font(34, bold=True)
+    bbox = draw.textbbox((0, 0), display_date, font=date_font)
+    text_width = bbox[2] - bbox[0]
+    text_height = bbox[3] - bbox[1]
+    x = (CARD_WIDTH - text_width) / 2
+    y = 421 - text_height / 2
+    draw.text((x + 2, y + 2), display_date, font=date_font, fill="#5e461c")
+    draw.text((x, y), display_date, font=date_font, fill="#d4a53f")
 
     buffer = BytesIO()
     image.save(buffer, format="PNG", optimize=True)
     return buffer.getvalue()
 
 
-def ensure_food_line_social_card(project_root: Path, edition_date: str) -> Path:
+def ensure_food_line_social_card(project_root: Path, edition_date: str, *, refresh_existing: bool = False) -> Path:
     path = food_line_social_card_path(project_root, edition_date)
-    if path.exists():
+    if path.exists() and not refresh_existing:
+        return path
+    rendered = render_food_line_social_card_png_bytes(edition_date, template_path=project_root / TEMPLATE_RELATIVE_PATH)
+    if path.exists() and path.read_bytes() == rendered:
         return path
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_bytes(render_food_line_social_card_png_bytes(edition_date))
+    path.write_bytes(rendered)
     return path

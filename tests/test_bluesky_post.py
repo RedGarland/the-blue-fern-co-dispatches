@@ -342,6 +342,116 @@ def test_july_8_post_omits_near_duplicate_also_covered_story(tmp_path: Path):
     assert len(text) <= bluesky_post.BLUESKY_MAX_POST_LENGTH
 
 
+def test_gaza_bluesky_ignores_unrendered_curation_rows_even_when_dedupe_does_not_suppress_them(tmp_path: Path):
+    edition_date = "2026-10-01"
+    public_url = "https://dispatches.thebluefernco.com/gaza/editions/2026-10-01/"
+    edition_dir = tmp_path / "output" / "dispatches" / "gaza" / "editions" / edition_date
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    repeated_url = "https://www.theguardian.com/world/2026/sep/30/israeli-settler-violence-west-bank-attack-jalud-palestinians-icrc"
+    (edition_dir / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "gaza-2026-10-01-guardian-world-89a8de044e1b",
+                    "url": repeated_url,
+                    "title": "Israeli forces overwhelmed by violent settlers in 'terrorist attack' on Palestinian family",
+                    "summary": "Settler violence in West Bank makes everyday life untenable for Palestinians.",
+                    "score": 99,
+                    "included_in_public_summary": True,
+                    "include_decision": "skip",
+                    "public_rendered": False,
+                },
+                {
+                    "source_record_id": "gaza-2026-10-01-aljazeera-middle-east-d13ab6d1dd34",
+                    "url": "https://www.aljazeera.com/news/2026/10/1/palestinians-to-bury-remains-of-105-people-killed-in-israeli-attack-on-gaza",
+                    "title": "Palestinians to bury remains of 105 people killed in Israeli attack on Gaza",
+                    "summary": "Coffins containing the remains of those killed will be carried in a funeral procession involving family members.",
+                    "score": 80,
+                    "included_in_public_summary": True,
+                    "include_decision": "include",
+                    "public_rendered": True,
+                },
+                {
+                    "source_record_id": "gaza-2026-10-01-guardian-world-0fbc58be0dfd",
+                    "url": "https://www.theguardian.com/world/2026/oct/01/new-google-maps-images-reveal-massive-scale-of-devastation-in-gaza",
+                    "title": "New Google Maps images reveal massive scale of devastation in Gaza",
+                    "summary": "Satellite imagery shows further destruction of homes, businesses and places of worship.",
+                    "score": 70,
+                    "included_in_public_summary": True,
+                    "include_decision": "include",
+                    "public_rendered": True,
+                },
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (edition_dir / "edition_manifest.json").write_text(
+        json.dumps({"edition_date": edition_date, "source_count": 6, "publisher_count": 3, "source_adequacy_status": "limited_source_update"}),
+        encoding="utf-8",
+    )
+    dedupe_dir = tmp_path / "data" / "dispatches" / "gaza" / "editions" / edition_date
+    dedupe_dir.mkdir(parents=True, exist_ok=True)
+    (dedupe_dir / "dedupe_report.json").write_text(json.dumps({"edition_date": edition_date, "suppressed_candidates": []}), encoding="utf-8")
+    site_dir = tmp_path / "output" / "site" / "gaza" / "editions" / edition_date
+    site_dir.mkdir(parents=True, exist_ok=True)
+    (site_dir / "index.html").write_text("<html><body><p>October 1, 2026</p></body></html>", encoding="utf-8")
+
+    text = bluesky_post.build_gaza_bluesky_post_text(edition_date, public_url, project_root=tmp_path)
+    description = bluesky_post.build_gaza_card_description(edition_date, tmp_path)
+
+    assert "Israeli forces overwhelmed by violent settlers" not in text
+    assert "Israeli forces overwhelmed by violent settlers" not in description
+    assert "Coffins containing the remains of those killed" in text
+    assert "Coffins containing the remains of those killed" in description
+    assert len(text) <= bluesky_post.BLUESKY_MAX_POST_LENGTH
+
+
+def test_gaza_bluesky_prefers_fresh_lead_when_prior_post_topic_repeats(tmp_path: Path):
+    prior_date = "2026-09-30"
+    current_date = "2026-10-01"
+    repeated = "Israeli forces overwhelmed by violent settlers in 'terrorist attack' on Palestinian family"
+    prior_dir = tmp_path / "output" / "dispatches" / "gaza" / "editions" / prior_date
+    prior_dir.mkdir(parents=True, exist_ok=True)
+    (prior_dir / "curation_manifest.json").write_text(
+        json.dumps([{"title": repeated, "summary": repeated, "score": 90, "included_in_public_summary": True}]),
+        encoding="utf-8",
+    )
+    (prior_dir / "edition_manifest.json").write_text(json.dumps({"edition_date": prior_date, "source_count": 1, "publisher_count": 1}), encoding="utf-8")
+    current_dir = tmp_path / "output" / "dispatches" / "gaza" / "editions" / current_date
+    current_dir.mkdir(parents=True, exist_ok=True)
+    (current_dir / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {"title": repeated, "summary": repeated, "score": 90, "included_in_public_summary": True},
+                {
+                    "title": "Palestinians to bury remains of 105 people killed in Israeli attack on Gaza",
+                    "summary": "Coffins containing the remains of those killed will be carried in a funeral procession involving family members.",
+                    "score": 80,
+                    "included_in_public_summary": True,
+                },
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (current_dir / "edition_manifest.json").write_text(json.dumps({"edition_date": current_date, "source_count": 2, "publisher_count": 2}), encoding="utf-8")
+    for edition_date in (prior_date, current_date):
+        site_dir = tmp_path / "output" / "site" / "gaza" / "editions" / edition_date
+        site_dir.mkdir(parents=True, exist_ok=True)
+        (site_dir / "index.html").write_text(f"<html><body><p>{edition_date}</p></body></html>", encoding="utf-8")
+
+    text = bluesky_post.build_gaza_bluesky_post_text(
+        current_date,
+        "https://dispatches.thebluefernco.com/gaza/editions/2026-10-01/",
+        project_root=tmp_path,
+    )
+
+    assert text.startswith(("In the October 1 Gaza briefing:", "New in the October 1 Gaza briefing:"))
+    first_sentence = text.split(".", 1)[0]
+    assert "Coffins containing the remains of those killed" in first_sentence
+    assert "Israeli forces overwhelmed by violent settlers" not in first_sentence
+    assert len(text) <= bluesky_post.BLUESKY_MAX_POST_LENGTH
+
+
 def test_july_6_post_uses_site_artifacts_when_dispatch_output_is_absent(tmp_path: Path):
     edition_date = "2026-07-06"
     public_url = "https://dispatches.thebluefernco.com/gaza/editions/2026-07-06/"

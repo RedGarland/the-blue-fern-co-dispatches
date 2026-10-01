@@ -198,6 +198,64 @@ def _gaza_bluesky_artifact_paths(project_root: Path, edition_date: str) -> list[
     ]
 
 
+def _gaza_dedupe_report_path(project_root: Path, edition_date: str) -> Path:
+    return project_root / "data" / "dispatches" / "gaza" / "editions" / edition_date / "dedupe_report.json"
+
+
+def _gaza_social_candidate_identity_keys(record: dict[str, Any]) -> set[str]:
+    keys: set[str] = set()
+    for field in ("story_id", "source_record_id"):
+        value = str(record.get(field) or "").strip()
+        if value:
+            keys.add(f"id:{_normalize_story_phrase(value)}")
+    title = str(record.get("title") or "").strip()
+    if title:
+        keys.add(f"title:{_normalize_story_phrase(title)}")
+    for field in ("canonical_url", "source_url", "url", "og_url", "public_url"):
+        normalized = dedupe_normalize_url(record.get(field))
+        if normalized:
+            keys.add(f"url:{normalized}")
+    return keys
+
+
+def _gaza_suppressed_social_candidate_keys(project_root: Path, edition_date: str) -> tuple[set[str], Path | None]:
+    path = _gaza_dedupe_report_path(project_root, edition_date)
+    if not path.exists():
+        return set(), None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:  # noqa: BLE001
+        return set(), path
+    if not isinstance(payload, dict):
+        return set(), path
+    keys: set[str] = set()
+    for row in payload.get("suppressed_candidates") or []:
+        if isinstance(row, dict):
+            keys.update(_gaza_social_candidate_identity_keys(row))
+    return keys, path
+
+
+def _gaza_filter_suppressed_social_rows(rows: list[dict[str, Any]], suppressed_keys: set[str]) -> list[dict[str, Any]]:
+    if not suppressed_keys:
+        return rows
+    filtered: list[dict[str, Any]] = []
+    for row in rows:
+        row_keys = _gaza_social_candidate_identity_keys(row)
+        if row_keys and row_keys & suppressed_keys:
+            continue
+        filtered.append(row)
+    return filtered
+
+
+def _gaza_rendered_social_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rendered = [
+        row
+        for row in rows
+        if row.get("public_rendered") is True or str(row.get("include_decision") or "").strip().casefold() == "include"
+    ]
+    return rendered or rows
+
+
 def _artifact_mentions_other_edition_date(text: str, edition_date: str) -> bool:
     for match in GAZA_EDITION_DATE_PATH_RE.finditer(text):
         if match.group(1) != edition_date:
@@ -408,6 +466,11 @@ def _gaza_bluesky_context(project_root: Path, edition_date: str) -> dict[str, An
             story_rows.extend(item for item in payload if isinstance(item, dict))
         elif isinstance(payload, dict):
             story_rows.extend(_collect_story_like_records(payload))
+    suppressed_keys, dedupe_report_path = _gaza_suppressed_social_candidate_keys(project_root, edition_date)
+    if dedupe_report_path is not None:
+        source_artifact_paths.append(str(dedupe_report_path))
+    story_rows = _gaza_filter_suppressed_social_rows(story_rows, suppressed_keys)
+    story_rows = _gaza_rendered_social_rows(story_rows)
 
     curated_rows = [row for row in story_rows if row.get("included_in_public_summary") is not False]
     selected_rows = select_gaza_audio_stories(curated_rows) if curated_rows else []
@@ -788,6 +851,56 @@ def _gaza_bluesky_story_topics(project_root: Path, edition_date: str, max_topics
     return topics[:max_topics]
 
 
+def _previous_gaza_edition_dates(project_root: Path, edition_date: str, limit: int = 3) -> list[str]:
+    roots = [
+        project_root / "data" / "dispatches" / "gaza" / "editions",
+        project_root / "output" / "dispatches" / "gaza" / "editions",
+        project_root / "output" / "site" / "gaza" / "editions",
+        project_root / "bluefern-dispatches-pages" / "gaza" / "editions",
+    ]
+    dates: set[str] = set()
+    for root in roots:
+        if not root.exists():
+            continue
+        for child in root.iterdir():
+            if child.is_dir() and DATE_VALUE_RE.match(child.name) and child.name < edition_date:
+                dates.add(child.name)
+    return sorted(dates, reverse=True)[:limit]
+
+
+def _topic_nearly_matches_any(topic: str, prior_topics: list[str]) -> bool:
+    normalized = _normalize_story_phrase(topic)
+    if not normalized:
+        return False
+    for prior in prior_topics:
+        prior_normalized = _normalize_story_phrase(prior)
+        if not prior_normalized:
+            continue
+        if normalized == prior_normalized or normalized in prior_normalized or prior_normalized in normalized:
+            return True
+        if dedupe_similarity(normalized, prior_normalized) >= 0.82:
+            return True
+    return False
+
+
+def _prior_gaza_bluesky_topics(project_root: Path, edition_date: str, max_topics: int = 2) -> list[str]:
+    for prior_date in _previous_gaza_edition_dates(project_root, edition_date):
+        topics = _gaza_bluesky_story_topics(project_root, prior_date, max_topics=max_topics)
+        if topics:
+            return topics
+    return []
+
+
+def _prefer_fresh_lead_topic(topics: list[str], prior_topics: list[str]) -> tuple[list[str], bool]:
+    if not topics or not prior_topics or not _topic_nearly_matches_any(topics[0], prior_topics):
+        return topics, False
+    fresh = [topic for topic in topics if not _topic_nearly_matches_any(topic, prior_topics)]
+    repeated = [topic for topic in topics if _topic_nearly_matches_any(topic, prior_topics)]
+    if not fresh:
+        return topics, False
+    return [*fresh, *repeated], True
+
+
 def _derive_gaza_focus_topics(project_root: Path, edition_date: str, max_topics: int = 5) -> list[str]:
     return _gaza_bluesky_story_topics(project_root, edition_date, max_topics=max_topics)
 
@@ -886,6 +999,7 @@ def build_gaza_bluesky_post_text(
     clean_date = str(edition_date or "").strip()
     context = _gaza_bluesky_context(root, clean_date)
     topics = _gaza_bluesky_story_topics(root, clean_date, max_topics=2)
+    topics, used_fresh_lead = _prefer_fresh_lead_topic(topics, _prior_gaza_bluesky_topics(root, clean_date, max_topics=2))
     public_summary = _gaza_public_summary_for_bluesky(root, clean_date, max_length=180)
     if not topics and not public_summary:
         return BLUESKY_GAZA_POST_FALLBACK
@@ -901,9 +1015,11 @@ def build_gaza_bluesky_post_text(
 
     if topics:
         if len(topics) == 1:
-            intro = f"In the {date_text} {intro_label}: {topics[0]}."
+            prefix = "New in" if used_fresh_lead else "In"
+            intro = f"{prefix} the {date_text} {intro_label}: {topics[0]}."
         elif len(topics) == 2:
-            intro = f"In the {date_text} {intro_label}: {topics[0]}. Also covered: {topics[1]}."
+            prefix = "New in" if used_fresh_lead else "In"
+            intro = f"{prefix} the {date_text} {intro_label}: {topics[0]}. Also covered: {topics[1]}."
         else:
             intro = f"In the {date_text} {intro_label}: {topics[0]}. Also covered: {topics[1]}."
         candidate = _with_suffix(intro)
@@ -1073,8 +1189,9 @@ def _extract_top_story_summary(project_root: Path, edition_date: str, max_length
     preferred: list[str] = []
     fallback: list[str] = []
     if isinstance(payload, list):
-        eligible_items = select_gaza_audio_stories([item for item in payload if isinstance(item, dict)])
-        for item in eligible_items or payload:
+        payload_rows = _gaza_rendered_social_rows([item for item in payload if isinstance(item, dict)])
+        eligible_items = select_gaza_audio_stories(payload_rows)
+        for item in eligible_items or payload_rows:
             if not isinstance(item, dict):
                 continue
             cleaned = _best_story_reader_text(item, max_length)

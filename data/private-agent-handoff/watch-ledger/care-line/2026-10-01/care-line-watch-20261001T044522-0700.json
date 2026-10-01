@@ -1,0 +1,22 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261001T044522-0700",
+  "scheduled_for": "2026-10-01T04:45:22-07:00",
+  "started_at": "2026-10-01T04:48:29-07:00",
+  "completed_at": "2026-10-01T04:50:01-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-01T03:48:56-07:00",
+    "end": "2026-10-01T04:50:01-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first. The newest entries remained 17 notices dated 2026-09-30 (16 Texas provider terminations plus California Orange Coast Hospice, CCN A11750); no 2026-10-01 notice was present at observation time.",
+    "Completed exactly 12 additional targeted searches covering hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural/emergency service loss, ground ambulance/EMS, air medical, essential-service restoration, official .gov notices, and U.S. territories.",
+    "No new qualifying development was found in the bounded window. St. Joseph Medical Center (Joliet) obstetrics suspension reporting was published 2026-09-29 and therefore predates the prior hourly check; Fremont County ambulance-transition reporting was published 2026-09-22 and did not establish a new lapse in service during this window; CONFIRE's October 1 EMS launch is a service transition/continuity item rather than an access loss. Generic federal-shutdown access-risk coverage was excluded because it did not document a concrete local service closure or suspension."
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261001T024636-0700-r11",
+  "scheduled_for": "2026-10-01T02:45:54-07:00",
+  "started_at": "2026-10-01T02:46:36-07:00",
+  "completed_at": "2026-10-01T02:47:50-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-01T01:51:14-07:00",
+    "end": "2026-10-01T02:46:36-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "bounded": true,
+    "summary": "Twelve targeted searches covered sole/only/last/full-service grocery loss, canceled or suspended emergency food distributions, abrupt pantry or food-bank closure/access reduction, and immediate SNAP/WIC/food-assistance interruption. No new U.S. event in the bounded window met the qualifying criteria.",
+    "source_priority": "Fresh local news, official/provider notices, and direct source pages were prioritized.",
+    "degradation": {
+      "present": false,
+      "reason": null
+    },
+    "exclusions_observed": [
+      "Kauaʻi emergency food distributions were scheduled to proceed on October 1 and October 2; no cancellation or suspension was identified.",
+      "San Antonio reporting concerned storm preparedness and food-bank availability, not a food-access service interruption.",
+      "Connecticut SNAP reporting was published before the bounded window and described ongoing eligibility-policy changes rather than a newly reported program outage or interruption within this hourly window.",
+      "Pennsylvania SNAP reporting described routine annual adjustments, not an access interruption.",
+      "Beaumont and Spencer grocery-loss reports predated the bounded window.",
+      "Other results were older, non-U.S., routine, promotional, generic policy coverage, or otherwise outside scope."
+    ],
+    "production_authority_note": "This supplementary recall watch is non-authoritative; production collection remains authoritative."
+  }
+}

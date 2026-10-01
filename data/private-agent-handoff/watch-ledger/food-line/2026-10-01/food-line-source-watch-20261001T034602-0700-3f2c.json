@@ -5,9 +5,9 @@
   "run_id": "food-line-source-watch-20261001T034602-0700-3f2c",
   "scheduled_for": "2026-10-01T03:45:54-07:00",
   "started_at": "2026-10-01T03:46:02-07:00",
-  "completed_at": "2026-10-01T03:49:00-07:00",
-  "status": "SUCCESS",
-  "outcome": "no_findings",
+  "completed_at": "2026-10-01T03:49:56-07:00",
+  "status": "FAILED",
+  "outcome": "failed",
   "search_window": {
     "timezone": "America/Los_Angeles",
     "date_from": "2026-10-01T02:45:54-07:00",
@@ -15,5 +15,5 @@
     "edition_date": "2026-10-01"
   },
   "findings": [],
-  "coverage_notes": "Executed 12 bounded targeted searches across the four audited high-value miss classes. No new qualifying U.S. food-access disruption was identified in the hourly window. Fresh surfaced items were non-qualifying or older than the window: Kauaʻi reporting showed emergency food distributions proceeding as scheduled, and Connecticut SNAP reporting described preannounced Oct. 1 eligibility/rule changes rather than a new abrupt access interruption. No material search/source failure prevented useful coverage. Excluded donation drives, resource guides, recipes, opinion, routine program promotion, generic inflation stories, and duplicates."
+  "coverage_notes": "Executed 12 bounded targeted searches across the four audited high-value miss classes. No new qualifying U.S. food-access disruption was identified in the hourly window. Search coverage itself was usable and had no material source-access failure. However, the mandatory durable heartbeat could not be advanced onto ops/watch-ledger: direct contents write and fast-forward ref update were blocked by repository-write safety controls, and pull-request fallback was also blocked. This recovery copy preserves the failed execution state only; it is not the authoritative ledger branch."
 }

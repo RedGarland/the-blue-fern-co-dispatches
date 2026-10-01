@@ -50,6 +50,7 @@ from bluefern_dispatches.care_line_sources import (
     validate_pressure_source_registry as validate_care_line_pressure_registry,
 )
 from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
+from bluefern_dispatches.public_site_visuals import validate_public_site_visuals
 from bluefern_dispatches.public_prose import html_contains_public_prose_violations
 from bluefern_dispatches.source_based_retrospective_archive import (
     discover_deployed_retrospective_archive_entries,
@@ -4936,6 +4937,7 @@ def publish_pages(
     allow_listing_shrink: bool = False,
     shared_homepage_dispatch: str | None = None,
     artifact_family: str | None = None,
+    visual_validation: bool = True,
 ) -> dict[str, Any]:
     pages_repo = pages_repo.resolve()
     lightweight_git = _pages_repo_is_fake_worktree(pages_repo)
@@ -5139,6 +5141,7 @@ def publish_pages(
     removed_gaza_no_update_markers: list[str] = []
     nested_duplicate_paths = list_nested_duplicate_dispatch_paths(pages_repo)
     commit_result = {"would_commit": bool(commit), "committed": False, "commit_sha": None, "committed_branch": None, "message": "not attempted"}
+    visual_validation_result: dict[str, Any] | None = None
     preserved_pages_editions: list[dict[str, str]] = []
     pages_editions_before = list_pages_public_edition_folders(pages_repo, only_dispatches=only_dispatches)
     backfilled_build_editions = [dict(item) for item in build.get("backfilled_public_editions", [])]
@@ -5236,28 +5239,40 @@ def publish_pages(
         if not errors:
             if not dry_run and not no_update_publish:
                 removed_nested_duplicate_paths = remove_nested_duplicate_dispatch_paths(pages_repo, dry_run=False)
-            commit_result = maybe_commit_pages_repo(
-                pages_repo,
-                dry_run=dry_run,
-                commit=commit,
-                pages_branch=pages_branch,
-                lightweight_git=lightweight_git,
-            )
-            if commit and not commit_result["committed"] and commit_result["message"] not in {"dry run; no commit created", "no changes to commit"}:
-                errors.append(commit_result["message"])
-            pages_editions_after = list_pages_public_edition_folders(pages_repo, only_dispatches=only_dispatches)
-            removed_keys = {(item.get("dispatch", ""), item.get("edition_date", "")) for item in removed_non_publishable}
-            for slug, edition_date in sorted(pages_editions_before):
-                if (slug, edition_date) in removed_keys:
-                    continue
-                if (slug, edition_date) in pages_editions_after:
-                    preserved_pages_editions.append(
-                        {
-                            "dispatch": slug,
-                            "edition_date": edition_date,
-                            "reason": "preexisting_pages_public_edition_preserved",
-                        }
-                    )
+            if commit and visual_validation and not dry_run and not no_update_publish:
+                visual_validation_result = validate_public_site_visuals(
+                    pages_repo,
+                    screenshot_dir=root / "output" / "review" / "public-site-visuals",
+                )
+                if not visual_validation_result.get("ok"):
+                    for issue in visual_validation_result.get("issues") or []:
+                        page = issue.get("page") or "public site"
+                        check = issue.get("check") or "visual_validation"
+                        message = issue.get("message") or "failed"
+                        errors.append(f"public site visual validation failed for {page} [{check}]: {message}")
+            if not errors:
+                commit_result = maybe_commit_pages_repo(
+                    pages_repo,
+                    dry_run=dry_run,
+                    commit=commit,
+                    pages_branch=pages_branch,
+                    lightweight_git=lightweight_git,
+                )
+                if commit and not commit_result["committed"] and commit_result["message"] not in {"dry run; no commit created", "no changes to commit"}:
+                    errors.append(commit_result["message"])
+                pages_editions_after = list_pages_public_edition_folders(pages_repo, only_dispatches=only_dispatches)
+                removed_keys = {(item.get("dispatch", ""), item.get("edition_date", "")) for item in removed_non_publishable}
+                for slug, edition_date in sorted(pages_editions_before):
+                    if (slug, edition_date) in removed_keys:
+                        continue
+                    if (slug, edition_date) in pages_editions_after:
+                        preserved_pages_editions.append(
+                            {
+                                "dispatch": slug,
+                                "edition_date": edition_date,
+                                "reason": "preexisting_pages_public_edition_preserved",
+                            }
+                        )
 
     return {
         "ok": not errors,
@@ -5313,6 +5328,7 @@ def publish_pages(
         "gaza_public_surface_history": gaza_history_diagnostics,
         "gaza_homepage_recent_edition_guard": gaza_homepage_guard,
         "care_line_public_surface_history": care_line_history_diagnostics,
+        "public_site_visual_validation": visual_validation_result,
     }
 
 

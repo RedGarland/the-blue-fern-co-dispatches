@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20260930T184522-0700-r11",
+  "scheduled_for": "2026-09-30T18:45:22-07:00",
+  "started_at": "2026-09-30T18:45:41-07:00",
+  "completed_at": "2026-09-30T18:46:53-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-30T17:45:22-07:00",
+    "end": "2026-09-30T18:45:41-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices": "Checked first. CMS Public Notices loaded successfully and remained unchanged from the prior check: 17 notices dated 2026-09-30 (16 Texas provider terminations and California Orange Coast Hospice, CCN A11750). No newer CMS provider termination, rescission, CLIA limitation/suspension, or similar access-risk notice was observed.",
+    "targeted_searches": "Completed exactly 12 additional targeted searches covering hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural/emergency services, ambulance, air-medical bases, concrete service restoration, U.S. territories, and CLIA actions.",
+    "exclusions": "No qualifying new development identified. Search results surfaced older closures, risk/proposal stories without a new concrete access effect, unrelated service launches/expansions, and non-U.S. items; these were excluded as stale, non-qualifying, or duplicate.",
+    "production_authority": "Supplementary recall watch only; production Care Line collection remains authoritative."
+  }
+}

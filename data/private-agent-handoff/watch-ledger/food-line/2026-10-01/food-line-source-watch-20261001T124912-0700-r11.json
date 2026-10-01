@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261001T124912-0700-r11",
+  "scheduled_for": "2026-10-01T12:49:12-07:00",
+  "started_at": "2026-10-01T12:49:12-07:00",
+  "completed_at": "2026-10-01T12:49:12-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "since": "2026-10-01T11:41:45-07:00",
+    "until": "2026-10-01T12:49:12-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall watch completed with 12 targeted web searches across sole/only/last/full-service grocery loss, emergency food-distribution cancellation/suspension, pantry/food-bank closure or major access reduction, and official SNAP/WIC/food-assistance interruption. No qualifying new U.S. signal was identified within the bounded window. Fresh surfaced coverage included San Antonio storm-preparedness resources with food-bank access available rather than interrupted service; other surfaced candidates were stale, outside the bounded window, non-U.S., routine program activity, or otherwise outside the specified miss classes."
+}

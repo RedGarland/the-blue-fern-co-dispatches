@@ -878,6 +878,8 @@ def _food_line_public_inclusion_reason(row: dict[str, Any]) -> str:
         return "missing source URL"
     if str(row.get("pressure_verification_status") or "").strip().lower() == "demoted_context":
         return "resource-only / no pressure signal"
+    if _food_line_editor_approved_public_story(row):
+        return ""
     if not bool(row.get("pressure_signal")):
         if source_role in {"policy_context", "research_signal", "institutional_context_signal", "data_anchor_signal"} and (
             source_family in POLICY_FAMILIES or _food_line_pressure_type_key(row) in PUBLIC_INCLUSION_PRESSURE_TYPES
@@ -898,6 +900,16 @@ def _food_line_public_inclusion_reason(row: dict[str, Any]) -> str:
 
 def _food_line_qualifies_for_public_inclusion(row: dict[str, Any]) -> bool:
     return not bool(_food_line_public_inclusion_reason(row))
+
+
+def _food_line_editor_approved_public_story(row: dict[str, Any]) -> bool:
+    return bool(
+        str(row.get("source_type") or "").strip() == "approved_proposal"
+        and bool(row.get("source_public_story_eligible", True))
+        and bool(row.get("public_claim_eligible"))
+        and str(row.get("review_status") or "").strip().lower() == "approved"
+        and bool(row.get("pressure_signal"))
+    )
 
 
 def _food_line_candidate_traceability_status(row: dict[str, Any]) -> str:

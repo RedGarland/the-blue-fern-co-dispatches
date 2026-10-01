@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261001T134759-0700-r11",
+  "scheduled_for": "2026-10-01T13:45:54-07:00",
+  "started_at": "2026-10-01T13:47:59-07:00",
+  "completed_at": "2026-10-01T13:47:59-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-01T12:47:59-07:00",
+    "end": "2026-10-01T13:47:59-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Completed 12 bounded targeted web searches across the four audit-defined miss classes.",
+    "Prioritized fresh local reporting, provider pages, and official/state assistance signals.",
+    "No new source in the bounded window established loss of an only/sole/last/full-service grocery store, cancellation or suspension of emergency food distribution, abrupt pantry/food-bank closure or major access reduction, or a new official SNAP/WIC interruption with immediate access consequences.",
+    "Current flood and storm reporting in New Mexico and Texas did not establish a qualifying food-access disruption.",
+    "Older incidents, routine operating calendars, preparedness/resource notices, and non-disruptive program information were excluded as out of window or non-qualifying."
+  ]
+}

@@ -5,8 +5,8 @@
   "run_id": "food-line-source-watch-20261001T064554-0700",
   "scheduled_for": "2026-10-01T06:45:54-07:00",
   "started_at": "2026-10-01T06:44:59-07:00",
-  "completed_at": "2026-10-01T06:46:11-07:00",
-  "status": "SUCCESS",
+  "completed_at": "2026-10-01T06:48:05-07:00",
+  "status": "DEGRADED",
   "outcome": "no_findings",
   "search_window": {
     "timezone": "America/Los_Angeles",
@@ -25,6 +25,17 @@
       "South Tucson only-full-service-grocery closure result was older reporting and not new to this hourly window.",
       "SNAP/WIC search results surfaced routine or previously announced policy/benefit information, not a new immediate-access interruption."
     ],
-    "search_failures": []
+    "search_failures": [],
+    "persistence": {
+      "required_branch": "ops/watch-ledger",
+      "required_path": "data/private-agent-handoff/watch-ledger/food-line/2026-10-01/food-line-source-watch-20261001T064554-0700.json",
+      "target_branch_persisted": false,
+      "direct_contents_write": "blocked_by_safety_controls",
+      "low_level_commit_created": "051b2858736686f4454f1c6cdefa046225d8d0f4",
+      "target_ref_update": "blocked_by_safety_controls",
+      "pull_request_fallback": "blocked_by_safety_controls",
+      "recovery_branch": "automation/food-line-watch-20261001T064554-0700",
+      "note": "Recovery copy preserved; required target-branch ledger contract was not satisfied."
+    }
   }
 }

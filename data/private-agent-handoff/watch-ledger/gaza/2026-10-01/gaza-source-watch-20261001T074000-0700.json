@@ -1,0 +1,30 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261001T074000-0700",
+  "scheduled_for": "2026-10-01T07:40:00-07:00",
+  "started_at": "2026-10-01T07:40:00-07:00",
+  "completed_at": "2026-10-01T07:40:59-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-01T06:44:59-07:00",
+    "end": "2026-10-01T07:40:59-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "Checked first. No new in-window Gaza development surfaced; search results returned older OCHA humanitarian situation reports, latest surfaced report dated 21 September covering 18 September 2026.",
+    "who": "Checked second. No new in-window Gaza health-system development surfaced.",
+    "additional_searches": 12,
+    "additional_searches_summary": "Targeted Reuters, AP, Al Jazeera, UNRWA, WFP, UNICEF, ICRC, UN News, crossings, medical evacuation/hospital/fuel/ambulance, ceasefire/hostages, and infrastructure/civilian-impact queries.",
+    "degraded_reasons": [
+      "Direct UN News retrieval was blocked by robots.txt; alternate coverage remained usable."
+    ],
+    "duplicate_exclusions": [
+      "Al Jazeera's 1 October report on recovery/burial of 105 remains from the 25 October 2023 Al-Taj strike was already surfaced in the prior hourly watch and excluded as a duplicate/follow-up already captured."
+    ],
+    "result": "No new qualifying, traceable development was verified within the bounded search window."
+  }
+}

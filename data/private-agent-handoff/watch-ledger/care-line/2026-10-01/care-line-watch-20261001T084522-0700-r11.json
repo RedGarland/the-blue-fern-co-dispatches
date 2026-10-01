@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261001T084522-0700-r11",
+  "scheduled_for": "2026-10-01T08:45:22-07:00",
+  "started_at": "2026-10-01T08:46:41-07:00",
+  "completed_at": "2026-10-01T08:49:30-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-01T07:48:31-07:00",
+    "end": "2026-10-01T08:49:30-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first. No notice dated 2026-10-01 was present; the newest notices remained the 17 entries dated 2026-09-30.",
+    "Exactly 12 additional targeted searches were run across hospital/ED, maternity/obstetrics, behavioral health, dialysis, oncology, primary care/rural clinics, rural emergency services, ambulance/EMS, air-medical bases, essential-service restoration/reopening, U.S. territories, and CMS/CLIA access-risk notices.",
+    "No newly published or announced qualifying U.S. or territory healthcare-access development was identified within the 2026-10-01T07:48:31-07:00 to 2026-10-01T08:49:30-07:00 window.",
+    "Prime Healthcare's closure of obstetrics services at three Chicago-area hospitals was excluded as pre-window because the CBS Chicago report was published at 06:24 CDT (04:24 PDT) and had already been evaluated in the prior watch. ARC Seton Northwest's October 1 closure was excluded as a previously announced May 13, 2026 transition rather than a new development in this hourly window.",
+    "Proposals without concrete access effect, ownership/business stories without service change, opinion, unsupported social claims, duplicates, and non-U.S. results were excluded."
+  ]
+}

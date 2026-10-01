@@ -56,6 +56,61 @@
 .food-line-panel h3:first-child {
   margin-top: 0;
 }
+.food-line-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 1rem;
+}
+.food-line-actions a {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.45rem 0.75rem;
+  background: #F3EBDD;
+  font-weight: 700;
+  text-decoration: none;
+}
+.food-line-briefing-meta,
+.food-line-note,
+.food-line-edition-meta {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.food-line-note {
+  border-left: 4px solid var(--fern-green);
+  margin: 0.9rem 0 1rem;
+  padding: 0.7rem 0 0.7rem 0.9rem;
+  background: #F6F0E6;
+}
+.food-line-story-list,
+.food-line-recent-list {
+  display: grid;
+  gap: 0.85rem;
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+.food-line-story-list li,
+.food-line-recent-list li {
+  border-top: 1px solid var(--border);
+  padding-top: 0.85rem;
+}
+.food-line-story-list li:first-child,
+.food-line-recent-list li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.food-line-story-list a,
+.food-line-recent-title {
+  font-weight: 700;
+}
+.food-line-recent-title {
+  display: block;
+  margin-top: 0.15rem;
+}
+.food-line-open-archive {
+  margin-top: 1rem;
+}
 .food-line-source-table {
   width: 100%;
   border-collapse: collapse;
@@ -180,21 +235,21 @@
 <main class="container briefing food-line-shell">
   <section class="hero food-line-hero">
     <img class="hero-logo food-line-logo food-line-logo--edition" src="../../assets/food-line-logo.png" alt="The Food Line Dispatch">
-    <p class="eyebrow">August 24, 2026</p>
+    <p class="eyebrow">October 1, 2026</p>
     <h1>Food Line Claim Ledger</h1>
     <p>What exactly did each public Food Line source support?</p>
   </section>
   <section class="food-line-panel">
-    <p>This ledger records 1 public claim supported by source-backed Food Line signals for August 24, 2026.</p><p>Records reviewed: 1. Public claims: 1. Excluded records: 0.</p>
+    <p>This ledger records 1 public claim supported by source-backed Food Line signals for October 1, 2026.</p><p>Records reviewed: 2. Public claims: 1. Excluded records: 0.</p>
     <table class="food-line-source-table">
       <tr>
         <th>Claim</th><th>Interpretation / why it matters</th><th>Supporting source</th><th>Publisher</th><th>Source URL</th><th>Published date</th><th>Retrieved date</th><th>Evidence level</th><th>Confidence</th><th>Freshness role</th><th>Location scope</th><th>Limitation</th>
       </tr>
-      <tr><td>AP reported that a prolonged Gary power outage spoiled food and forced families to seek hot meals and emergency food support.</td><td>This points to local food-access strain in local.</td><td>Gary power outage spoils food and drives emergency meal need</td><td>Associated Press</td><td><a href="https://apnews.com/article/e0fbdd4a721b6269e8ec62e512299b11" target="_blank" rel="noopener noreferrer">https://apnews.com/article/e0fbdd4a721b6269e8ec62e512299b11</a></td><td>2026-08-24T12:00:00Z</td><td>2026-08-24T13:00:00Z</td><td>news report</td><td>high</td><td>current</td><td>local</td><td>The source does not quantify the full household count affected.</td></tr>
+      <tr><td>Bradford County pantry organizers said nonperishable donations are needed to keep the pantry running.</td><td>This is a national policy-pressure signal related to food assistance access.</td><td>Bradford County Food Pantry running low on food, leaders say</td><td>WCJB | TV20</td><td><a href="https://www.wcjb.com/2026/10/01/bradford-county-food-pantry-running-low-food-leaders-say" target="_blank" rel="noopener noreferrer">https://www.wcjb.com/2026/10/01/bradford-county-food-pantry-running-low-food-leaders-say</a></td><td>2026-10-01</td><td>2026-10-01T16:48:02.418363Z</td><td>background context</td><td>low</td><td>current</td><td>local</td><td>Review wording must remain limited to the traceable supporting evidence.</td></tr>
     </table>
     <h2>Diagnostics</h2>
     <ul>
-      <li>Records reviewed: 1</li><li>Qualified current records: 1</li><li>Excluded stale: 0</li><li>Excluded duplicate: 0</li><li>Excluded resource-only / no pressure signal: 0</li><li>Excluded weak pressure signal: 0</li><li>Excluded insufficient source traceability: 0</li>
+      <li>Records reviewed: 2</li><li>Qualified current records: 1</li><li>Excluded stale: 0</li><li>Excluded duplicate: 0</li><li>Excluded resource-only / no pressure signal: 0</li><li>Excluded weak pressure signal: 0</li><li>Excluded insufficient source traceability: 0</li>
     </ul>
     <p><a href="./source_table.html">Open the public source table</a></p>
     <p><a href="./">Return to the edition</a></p>

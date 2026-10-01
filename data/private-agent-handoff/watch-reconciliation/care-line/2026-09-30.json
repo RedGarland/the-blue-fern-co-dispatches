@@ -1,5 +1,33 @@
 {
   "schema_version": "bluefern.watch_reconciliation.v1",
   "dispatch": "care-line",
-  "observation_date": "2026-09-30"
+  "observation_date": "2026-09-30",
+  "generated_at": "2026-10-01T06:48:34Z",
+  "watch_ledger_ref": "ops/watch-ledger",
+  "protected_source_ref": "add/pages-repo-default",
+  "run_count": 15,
+  "success_run_count": 11,
+  "degraded_run_count": 4,
+  "successful_run_count": 15,
+  "failed_run_count": 0,
+  "zero_finding_run_count": 14,
+  "finding_count": 15,
+  "accounted_count": 0,
+  "unreconciled_count": 15,
+  "missing_hour_slots_local": [
+    "09",
+    "10",
+    "12",
+    "14",
+    "15",
+    "16",
+    "17",
+    "20"
+  ],
+  "material_heartbeat_absence": true,
+  "operational_issue": true,
+  "operational_issue_reasons": [
+    "MATERIAL_HEARTBEAT_ABSENCE",
+    "UNRECONCILED_QUALIFYING_FINDING"
+  ]
 }

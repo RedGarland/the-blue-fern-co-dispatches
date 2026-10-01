@@ -150,7 +150,11 @@ def classify_path(path_text: str) -> str:
     return "unknown"
 
 
-def classify_status_line(line: str) -> dict[str, Any] | None:
+def classify_status_line(
+    line: str,
+    *,
+    allow_generated_public_output_residue: bool = False,
+) -> dict[str, Any] | None:
     text = line.rstrip()
     if not text or text.startswith("## "):
         return None
@@ -166,6 +170,11 @@ def classify_status_line(line: str) -> dict[str, Any] | None:
         return None
     category = classify_path(path)
     allowed_food_generated_output = status in {" M", "??"} and is_food_line_generated_public_output_path(path)
+    allowed_generated_public_output_residue = (
+        allow_generated_public_output_residue
+        and status in {" M", "??"}
+        and category == "generated_public_output"
+    )
     allowed_tracked_runtime = status == " M" and (
         is_food_line_mutable_tracked_runtime_path(path)
         or is_operator_mutable_tracked_runtime_path(path)
@@ -177,6 +186,7 @@ def classify_status_line(line: str) -> dict[str, Any] | None:
         "category": category,
         "is_untracked": status == "??",
         "is_risky": not allowed_food_generated_output
+        and not allowed_generated_public_output_residue
         and not allowed_tracked_runtime
         and (status != "??" or category not in ALLOWED_DIRTY_CATEGORIES),
     }
@@ -223,9 +233,19 @@ def _detect_pages_repo(source_repo: Path) -> Path | None:
     return None
 
 
-def _load_repo_report(repo: Path) -> dict[str, Any]:
+def _load_repo_report(repo: Path, *, allow_generated_public_output_residue: bool = False) -> dict[str, Any]:
     rc, lines = _run_git_status(repo)
-    entries = [entry for entry in (classify_status_line(line) for line in lines) if entry is not None]
+    entries = [
+        entry
+        for entry in (
+            classify_status_line(
+                line,
+                allow_generated_public_output_residue=allow_generated_public_output_residue,
+            )
+            for line in lines
+        )
+        if entry is not None
+    ]
     summary = summarize_entries(entries)
     return {
         "path": str(repo),
@@ -241,7 +261,7 @@ def build_preflight_report(source_repo: Path | None = None, pages_repo: Path | N
     resolved_pages_repo = pages_repo or _detect_pages_repo(source_repo)
     pages_repo = resolved_pages_repo.resolve() if resolved_pages_repo else None
 
-    source_report = _load_repo_report(source_repo)
+    source_report = _load_repo_report(source_repo, allow_generated_public_output_residue=True)
     pages_report = _load_repo_report(pages_repo) if pages_repo else None
     risky_source = list(source_report["summary"]["risky_entries"])
     risky_pages = list(pages_report["summary"]["risky_entries"]) if pages_report else []

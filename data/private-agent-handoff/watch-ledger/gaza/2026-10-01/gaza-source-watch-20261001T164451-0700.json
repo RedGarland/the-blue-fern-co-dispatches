@@ -1,0 +1,31 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261001T164451-0700",
+  "scheduled_for": "2026-10-01T16:44:51-07:00",
+  "started_at": "2026-10-01T16:48:14-07:00",
+  "completed_at": "2026-10-01T16:49:29-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-01T15:44:51-07:00",
+    "end": "2026-10-01T16:49:29-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "Checked first. No new in-window Gaza development surfaced; newest relevant OCHA OPT Gaza situation reporting surfaced was older than the search window.",
+    "who": "Checked second. No new in-window Gaza health-system development surfaced.",
+    "additional_targeted_searches": 12,
+    "degraded_sources": [
+      {
+        "source": "UN News",
+        "issue": "news.un.org retrieval blocked by robots.txt",
+        "impact": "Direct UN News coverage unavailable; alternate official humanitarian and established reporting searches remained usable."
+      }
+    ],
+    "exclusions": "Excluded older/recycled items, duplicate prior-watch material, opinion, unsupported social claims, and reports without a distinct new in-window event.",
+    "conclusion": "No new qualifying, traceable Gaza development verified within the bounded search window."
+  }
+}

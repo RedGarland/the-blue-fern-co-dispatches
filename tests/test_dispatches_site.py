@@ -3471,7 +3471,17 @@ def test_pages_publish_commits_on_gh_pages_branch(built_site):
     pages_repo = make_pages_repo(work / "bluefern-dispatches-pages")
     add_shared_dispatch_directory_template(pages_repo)
 
-    result = publish_pages(work, pages_repo, None, dry_run=False, commit=True, no_push=True, backup_root=backup_root, pages_branch="gh-pages")
+    result = publish_pages(
+        work,
+        pages_repo,
+        None,
+        dry_run=False,
+        commit=True,
+        no_push=True,
+        backup_root=backup_root,
+        pages_branch="gh-pages",
+        visual_validation=False,
+    )
 
     assert result["ok"] is True
     assert result["current_branch"] == "main"

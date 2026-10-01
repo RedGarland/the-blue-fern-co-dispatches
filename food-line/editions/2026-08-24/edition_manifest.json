@@ -1,0 +1,63 @@
+{
+  "dispatch_slug": "food-line",
+  "dispatch_name": "Food Line Dispatch",
+  "edition_date": "2026-08-24",
+  "generated_at": "2026-08-26T01:17:54.908091+00:00",
+  "generator_source_commit": "0b7cd6b55d281147994bb5d3d638f07655592e4a",
+  "generation_mode": "approved_current_review_proposal",
+  "source_count": 1,
+  "story_count": 1,
+  "source_adequacy": {
+    "status": "limited",
+    "label": "Limited / sparse source day",
+    "source_count": 1,
+    "source_families": [
+      "local_news"
+    ],
+    "local_signal_count": 1,
+    "state_signal_count": 1,
+    "national_context_count": 0
+  },
+  "lead_source_record_id": "food_line_source_ce05f13f7cb1322d",
+  "lead_source_canonical_url": "https://apnews.com/article/e0fbdd4a721b6269e8ec62e512299b11",
+  "previous_edition_date": "2026-06-20",
+  "primary_signal_status": "new_primary",
+  "public_rendered": true,
+  "public_signal_count": 1,
+  "qualified_primary_count": 1,
+  "claim_count": 1,
+  "claim_ledger_path": "/food-line/editions/2026-08-24/claim_ledger.html",
+  "source_table_path": "/food-line/editions/2026-08-24/source_table.html",
+  "edition_mode": "current_update",
+  "validation_status": "ok",
+  "approved_proposal_path": "data/dispatches/food-line/review/proposed-editions/2026-08-24.json",
+  "approved_proposal_sha256": "51787eb43187829eabc3e334f55580c63cb6148c6ef74dd0a6e30fc80bdd3ee0",
+  "review_queue_path": "data/dispatches/food-line/review/current-signal-review.json",
+  "review_queue_sha256": "04fe8a2fd084710dee72e94dc01d05a8cfb75c597217769e70f3c26e6a76dbfa",
+  "approved_item_provenance": [
+    {
+      "review_item_id": "gary-food-outage-20260824",
+      "finding_id": "finding_gary_food_outage_20260824",
+      "editorial_decision": "approve",
+      "decision_operator": "Operator",
+      "decision_timestamp": "2026-08-24T13:00:00Z",
+      "source_url": "https://apnews.com/article/e0fbdd4a721b6269e8ec62e512299b11",
+      "canonical_source_url": "https://apnews.com/article/e0fbdd4a721b6269e8ec62e512299b11",
+      "source_published_at": "2026-08-24T12:00:00Z"
+    }
+  ],
+  "publication_status": "unpublished",
+  "publication_approval": false,
+  "publication_eligible": false,
+  "pages_status": "not_synced",
+  "bluesky_status": "not_posted",
+  "audio_status": "not_generated",
+  "map_status": "not_published",
+  "podcast_status": "not_generated",
+  "schedule_status": "not_changed",
+  "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-08-24/",
+  "bluesky_post_text": null,
+  "bluesky_post_ready": false,
+  "public_release_status": "published",
+  "pages_release_status": "synced"
+}

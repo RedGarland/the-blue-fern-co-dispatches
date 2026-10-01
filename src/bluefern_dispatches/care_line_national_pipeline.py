@@ -586,6 +586,62 @@ def fetch_source(source: CareLineSource, *, timeout: int = 20, allow_insecure_tl
     return fetch_url(source.feed_url, timeout=timeout, allow_insecure_tls=allow_insecure_tls)
 
 
+class SourceFetchRetryExhausted(RuntimeError):
+    def __init__(self, failure_reason: str, *, first_failure_reason: str, retry_count: int) -> None:
+        super().__init__(failure_reason)
+        self.failure_reason = failure_reason
+        self.first_failure_reason = first_failure_reason
+        self.retry_count = retry_count
+
+
+def _exception_failure_reason(exc: BaseException) -> str:
+    return f"{type(exc).__name__}: {exc}"
+
+
+def _is_transient_source_exception(exc: BaseException) -> bool:
+    failure = _exception_failure_reason(exc)
+    failure_class = _source_failure_class(failure)
+    return _source_failure_transient(failure, failure_class)
+
+
+def _fetch_source_with_transient_retry(
+    source: CareLineSource,
+    *,
+    timeout: int,
+    allow_insecure_tls: bool,
+    max_retries: int = 1,
+) -> tuple[bytes, dict[str, Any]]:
+    try:
+        payload, meta = fetch_source(source, timeout=timeout, allow_insecure_tls=allow_insecure_tls)
+    except Exception as first_exc:  # noqa: BLE001
+        if max_retries <= 0 or not _is_transient_source_exception(first_exc):
+            raise
+        first_failure = _exception_failure_reason(first_exc)
+        try:
+            payload, meta = fetch_source(source, timeout=timeout, allow_insecure_tls=allow_insecure_tls)
+        except Exception as retry_exc:  # noqa: BLE001
+            raise SourceFetchRetryExhausted(
+                _exception_failure_reason(retry_exc),
+                first_failure_reason=first_failure,
+                retry_count=1,
+            ) from retry_exc
+        retry_meta = dict(meta)
+        retry_meta.update(
+            {
+                "retry_state": "retried_success",
+                "retry_attempted": True,
+                "retry_count": 1,
+                "first_failure_reason": first_failure,
+            }
+        )
+        return payload, retry_meta
+    retry_meta = dict(meta)
+    retry_meta.setdefault("retry_state", "not_retried")
+    retry_meta.setdefault("retry_attempted", False)
+    retry_meta.setdefault("retry_count", 0)
+    return payload, retry_meta
+
+
 def _rss_items(payload: bytes) -> list[dict[str, Any]]:
     root = ET.fromstring(payload)
     items = []
@@ -4299,11 +4355,19 @@ def _source_failure_transient(failure: str, failure_class: str) -> bool:
     return False
 
 
-def _source_failure_payload(source: CareLineSource, failure: str) -> dict[str, Any]:
+def _source_failure_payload(
+    source: CareLineSource,
+    failure: str,
+    *,
+    retry_attempted: bool = False,
+    retry_count: int = 0,
+    retry_state: str = "not_retried",
+    first_failure_reason: str = "",
+) -> dict[str, Any]:
     source_url = str(source.feed_url or source.homepage_url or "")
     domain = urlparse(source_url).netloc.lower()
     failure_class = _source_failure_class(failure)
-    return {
+    payload = {
         "schema_version": f"{PIPELINE_SCHEMA_VERSION}.source_failure",
         "source_id": source.source_id,
         "source_name": source.name,
@@ -4317,10 +4381,14 @@ def _source_failure_payload(source: CareLineSource, failure: str) -> dict[str, A
         "failure_class": failure_class,
         "failure_reason": failure,
         "transient": _source_failure_transient(failure, failure_class),
-        "retry_attempted": False,
-        "retry_count": 0,
+        "retry_attempted": bool(retry_attempted),
+        "retry_count": int(retry_count),
+        "retry_state": retry_state,
         "alternate_discovery_coverage": "not_evaluated_in_collection_attempt",
     }
+    if first_failure_reason:
+        payload["first_failure_reason"] = first_failure_reason
+    return payload
 
 
 def run_collection_attempt(
@@ -4380,8 +4448,9 @@ def run_collection_attempt(
         )
         _atomic_write(run_dir / _source_attempt_filename(source.source_id), attempt.to_payload())
         return {"attempt": attempt.to_payload(), "raw_items": [], "event_leads": [], "candidates": [], "exclusions": [], "failed_extractions": [], "manual_review": [], "failure": attempt.failure_reason}
+    fetch_meta: dict[str, Any] = {"retry_state": "not_retried", "retry_attempted": False, "retry_count": 0}
     try:
-        payload, fetch_meta = fetch_source(source, timeout=fetch_timeout, allow_insecure_tls=allow_insecure_tls)
+        payload, fetch_meta = _fetch_source_with_transient_retry(source, timeout=fetch_timeout, allow_insecure_tls=allow_insecure_tls)
         items = parse_source_items(
             source,
             payload,
@@ -4392,7 +4461,14 @@ def run_collection_attempt(
         )
     except ET.ParseError as exc:
         failure = f"ParseError: {exc}"
-        failure_payload = _source_failure_payload(source, failure)
+        failure_payload = _source_failure_payload(
+            source,
+            failure,
+            retry_attempted=bool(fetch_meta.get("retry_attempted")),
+            retry_count=int(fetch_meta.get("retry_count") or 0),
+            retry_state=str(fetch_meta.get("retry_state") or "not_retried"),
+            first_failure_reason=str(fetch_meta.get("first_failure_reason") or ""),
+        )
         attempt = CollectionAttempt(
             source_id=source.source_id,
             source_name=source.name,
@@ -4409,13 +4485,32 @@ def run_collection_attempt(
             completed_at=utc_now(),
             source_urls=(),
             failure_reason=failure,
+            retry_state=str(fetch_meta.get("retry_state") or "not_retried"),
         )
         _atomic_write(run_dir / _source_attempt_filename(source.source_id), attempt.to_payload())
         _atomic_write(run_dir / _source_failure_filename(source.source_id), failure_payload)
         return {"attempt": attempt.to_payload(), "raw_items": [], "event_leads": [], "candidates": [], "exclusions": [], "failed_extractions": [], "manual_review": [], "failure": failure, "failure_diagnostic": failure_payload}
     except Exception as exc:  # noqa: BLE001
-        failure = f"{type(exc).__name__}: {exc}"
-        failure_payload = _source_failure_payload(source, failure)
+        if isinstance(exc, SourceFetchRetryExhausted):
+            failure = exc.failure_reason
+            retry_attempted = True
+            retry_count = exc.retry_count
+            retry_state = "retried_failed"
+            first_failure_reason = exc.first_failure_reason
+        else:
+            failure = _exception_failure_reason(exc)
+            retry_attempted = False
+            retry_count = 0
+            retry_state = "not_retried"
+            first_failure_reason = ""
+        failure_payload = _source_failure_payload(
+            source,
+            failure,
+            retry_attempted=retry_attempted,
+            retry_count=retry_count,
+            retry_state=retry_state,
+            first_failure_reason=first_failure_reason,
+        )
         attempt = CollectionAttempt(
             source_id=source.source_id,
             source_name=source.name,
@@ -4432,6 +4527,7 @@ def run_collection_attempt(
             completed_at=utc_now(),
             source_urls=(),
             failure_reason=failure,
+            retry_state=retry_state,
         )
         _atomic_write(run_dir / _source_attempt_filename(source.source_id), attempt.to_payload())
         _atomic_write(run_dir / _source_failure_filename(source.source_id), failure_payload)
@@ -4511,6 +4607,7 @@ def run_collection_attempt(
         source_urls=tuple(sorted({_text(row, "item_url") for row in raw_items if _text(row, "item_url")})),
         failure_reason=source.limitations if source_readiness_status(source) == "AUTOMATED_PARTIAL" else "",
         content_hash=content_hash,
+        retry_state=str(fetch_meta.get("retry_state") or "not_retried"),
     )
     _atomic_write(run_dir / _source_attempt_filename(source.source_id), attempt.to_payload())
     _atomic_write(

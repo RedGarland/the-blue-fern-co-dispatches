@@ -4,6 +4,7 @@ import builtins
 import json
 import sys
 import types
+import urllib.error
 from pathlib import Path
 
 import pytest
@@ -953,7 +954,7 @@ def test_care_line_qualifies_birth_center_future_delivery_pause_without_total_cl
 
 
 def test_failed_care_source_writes_durable_failure_diagnostic(tmp_path: Path, monkeypatch) -> None:
-    source = _care_source(source_id="blocked-source", name="Blocked Source")
+    source = _care_source(source_id="blocked", name="Blocked Source")
 
     def fail_fetch(*args, **kwargs):  # noqa: ANN001
         raise TimeoutError("connection timed out")
@@ -969,18 +970,80 @@ def test_failed_care_source_writes_durable_failure_diagnostic(tmp_path: Path, mo
     )
 
     failure = result["failure_diagnostic"]
-    failure_path = tmp_path / "data" / "dispatches" / "care-line" / "collection-runs" / "2026-09-14" / "run-failure" / "blocked-source.failure.json"
+    failure_path = tmp_path / "data" / "dispatches" / "care-line" / "collection-runs" / "2026-09-14" / "run-failure" / "blocked.failure.json"
     stored = json.loads(failure_path.read_text(encoding="utf-8"))
 
     assert result["attempt"]["collection_status"] == "failed"
-    assert failure["source_id"] == "blocked-source"
+    assert failure["source_id"] == "blocked"
     assert failure["source_name"] == "Blocked Source"
     assert failure["domain"] == "example.org"
     assert failure["failure_class"] == "TimeoutError"
     assert failure["transient"] is True
-    assert failure["retry_attempted"] is False
+    assert failure["retry_attempted"] is True
+    assert failure["retry_count"] == 1
+    assert failure["retry_state"] == "retried_failed"
+    assert failure["first_failure_reason"] == "TimeoutError: connection timed out"
     assert failure["alternate_discovery_coverage"] == "not_evaluated_in_collection_attempt"
+    assert result["attempt"]["retry_state"] == "retried_failed"
     assert stored == failure
+
+
+def test_transient_care_source_timeout_retries_once_and_succeeds(tmp_path: Path, monkeypatch) -> None:
+    source = _care_source(source_id="flaky", name="Flaky Source")
+    calls = {"count": 0}
+
+    def flaky_fetch(_source, timeout=20, allow_insecure_tls=False):  # noqa: ANN001
+        calls["count"] += 1
+        if calls["count"] == 1:
+            raise TimeoutError("first attempt timed out")
+        return b"<rss><channel></channel></rss>", {"final_url": "https://example.org/feed.xml"}
+
+    monkeypatch.setattr(pipeline, "fetch_source", flaky_fetch)
+    collection_root = Path("r")
+    (tmp_path / collection_root / "2026-10-01" / "run-flaky").mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    result = pipeline.run_collection_attempt(
+        tmp_path,
+        run_date="2026-10-01",
+        run_id="run-flaky",
+        source_row={"source": source},
+        fetch_timeout=1,
+        collection_runs_root=collection_root,
+    )
+
+    assert calls["count"] == 2
+    assert result["attempt"]["collection_status"] == "ok"
+    assert result["attempt"]["retry_state"] == "retried_success"
+    assert result["failure"] == ""
+
+
+def test_persistent_http_source_failure_is_not_retried(tmp_path: Path, monkeypatch) -> None:
+    source = _care_source(source_id="blocked", name="Blocked Source")
+    calls = {"count": 0}
+
+    def blocked_fetch(_source, timeout=20, allow_insecure_tls=False):  # noqa: ANN001
+        calls["count"] += 1
+        raise urllib.error.HTTPError("https://example.org/feed.xml", 403, "Forbidden", {}, None)
+
+    monkeypatch.setattr(pipeline, "fetch_source", blocked_fetch)
+
+    result = pipeline.run_collection_attempt(
+        tmp_path,
+        run_date="2026-10-01",
+        run_id="run-blocked",
+        source_row={"source": source},
+        fetch_timeout=1,
+    )
+
+    assert calls["count"] == 1
+    assert result["attempt"]["collection_status"] == "failed"
+    assert result["attempt"]["retry_state"] == "not_retried"
+    assert result["failure_diagnostic"]["failure_class"] == "HTTPError"
+    assert result["failure_diagnostic"]["transient"] is False
+    assert result["failure_diagnostic"]["retry_attempted"] is False
 
 
 def test_partial_success_manifest_separates_source_failures_from_zero_findings(tmp_path: Path, monkeypatch) -> None:

@@ -205,11 +205,56 @@ def _visual_checks_with_playwright(
                             const cs = window.getComputedStyle(el);
                             return {x: r.x, y: r.y, width: r.width, height: r.height, display: cs.display, gridTemplateColumns: cs.gridTemplateColumns};
                           };
+                          const parseRgb = (value) => {
+                            const match = String(value || '').match(/rgba?\\((\\d+),\\s*(\\d+),\\s*(\\d+)/i);
+                            return match ? [Number(match[1]), Number(match[2]), Number(match[3])] : null;
+                          };
+                          const luminance = (rgb) => {
+                            const channel = (value) => {
+                              const normalized = value / 255;
+                              return normalized <= 0.03928 ? normalized / 12.92 : Math.pow((normalized + 0.055) / 1.055, 2.4);
+                            };
+                            return (0.2126 * channel(rgb[0])) + (0.7152 * channel(rgb[1])) + (0.0722 * channel(rgb[2]));
+                          };
+                          const contrast = (foreground, background) => {
+                            const fg = parseRgb(foreground);
+                            const bg = parseRgb(background);
+                            if (!fg || !bg) return null;
+                            const a = luminance(fg);
+                            const b = luminance(bg);
+                            return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+                          };
+                          const style = (selector) => {
+                            const el = document.querySelector(selector);
+                            if (!el) return null;
+                            const cs = window.getComputedStyle(el);
+                            return {
+                              color: cs.color,
+                              backgroundColor: cs.backgroundColor,
+                              backgroundImage: cs.backgroundImage,
+                              display: cs.display,
+                              gap: cs.gap,
+                              columnGap: cs.columnGap,
+                              rowGap: cs.rowGap,
+                              fontWeight: cs.fontWeight,
+                              textDecorationLine: cs.textDecorationLine,
+                              contrast: contrast(cs.color, cs.backgroundColor)
+                            };
+                          };
+                          const cardActions = document.querySelector('.active-grid .dispatch-card .card-actions, .dispatch-grid .dispatch-card .card-actions');
+                          const cardActionsStyle = cardActions ? window.getComputedStyle(cardActions) : null;
                           return {
+                            paperToken: window.getComputedStyle(document.documentElement).getPropertyValue('--paper').trim(),
+                            body: style('body'),
+                            primaryButton: style('.active-grid .dispatch-card .card-actions .button, .dispatch-grid .dispatch-card .card-actions .button, .actions .button, .button'),
                             hero: box('.hero'),
                             latestDesk: box('.edition-grid'),
-                            activeGrid: box('.active-grid'),
+                            activeGrid: box('.active-grid, .dispatch-grid'),
                             activeCardCount: document.querySelectorAll('.dispatch-card--featured, .dispatch-card').length,
+                            activeCardActionCount: document.querySelectorAll('.active-grid .dispatch-card .card-actions a, .dispatch-grid .dispatch-card .card-actions a').length,
+                            activeCardPrimaryButtonCount: document.querySelectorAll('.active-grid .dispatch-card .card-actions .button, .dispatch-grid .dispatch-card .card-actions .button').length,
+                            activeCardSupportLinkCount: document.querySelectorAll('.active-grid .dispatch-card .card-actions .support-link, .active-grid .dispatch-card .card-actions .text-link, .dispatch-grid .dispatch-card .card-actions .support-link, .dispatch-grid .dispatch-card .card-actions .text-link').length,
+                            activeCardActionGapPx: cardActionsStyle ? Number.parseFloat(cardActionsStyle.columnGap || cardActionsStyle.gap || '0') : null,
                             editionCardCount: document.querySelectorAll('.edition-card').length,
                             foodHero: box('.food-line-hero'),
                             foodLogo: box('.food-line-logo--edition, .food-line-logo--home, .hero-logo'),
@@ -233,9 +278,23 @@ def _visual_checks_with_playwright(
                     if not css_loaded:
                         issues.append(VisualIssue(path, "stylesheet", "shared /assets/site.css did not load with HTTP 200"))
                     if path == "/":
+                        body = metrics.get("body") or {}
+                        primary_button = metrics.get("primaryButton") or {}
                         hero = metrics.get("hero") or {}
                         latest = metrics.get("latestDesk") or {}
                         active = metrics.get("activeGrid") or {}
+                        paper_token = str(metrics.get("paperToken") or "").lower()
+                        if paper_token not in {"#efe7da", "rgb(239, 231, 218)"}:
+                            issues.append(VisualIssue(path, "body_background", f"expected warm Dispatches paper token #EFE7DA, got {metrics.get('paperToken')!r}"))
+                        if str(body.get("backgroundImage") or "none") == "none":
+                            issues.append(VisualIssue(path, "body_background", "body background did not render the warm page gradient"))
+                        contrast_ratio = primary_button.get("contrast")
+                        if contrast_ratio is None:
+                            issues.append(VisualIssue(path, "primary_button_contrast", "primary button contrast could not be measured"))
+                        elif float(contrast_ratio) < 4.5:
+                            issues.append(VisualIssue(path, "primary_button_contrast", f"primary button contrast is below 4.5:1: {contrast_ratio:.2f}"))
+                        if str(primary_button.get("color") or "").lower() not in {"rgb(255, 253, 248)", "#fffdf8", "white"}:
+                            issues.append(VisualIssue(path, "primary_button_contrast", f"primary button text color is not the approved light tone: {primary_button.get('color')}"))
                         if not latest:
                             issues.append(VisualIssue(path, "latest_desk", "homepage latest desk/grid was not found"))
                         elif float(latest.get("y") or 9999) > 1200:
@@ -246,6 +305,15 @@ def _visual_checks_with_playwright(
                             issues.append(VisualIssue(path, "active_dispatch_cards", "active dispatch cards/grid did not render"))
                         elif str(active.get("display")) not in {"grid", "flex"}:
                             issues.append(VisualIssue(path, "active_dispatch_cards", f"active dispatch container display is {active.get('display')}"))
+                        if int(metrics.get("activeCardPrimaryButtonCount") or 0) < 3:
+                            issues.append(VisualIssue(path, "active_dispatch_action_links", "active dispatch cards are missing primary button class links"))
+                        if int(metrics.get("activeCardSupportLinkCount") or 0) < 3:
+                            issues.append(VisualIssue(path, "active_dispatch_action_links", "active dispatch cards are missing secondary text/support links"))
+                        gap = metrics.get("activeCardActionGapPx")
+                        if gap is None:
+                            issues.append(VisualIssue(path, "active_dispatch_action_links", "active dispatch card action cluster was not found"))
+                        elif float(gap) < 10:
+                            issues.append(VisualIssue(path, "active_dispatch_action_links", f"active dispatch action link gap is too tight: {gap}px"))
                     if path == "/dispatches/" and (int(metrics.get("editionCardCount") or 0) + int(metrics.get("activeCardCount") or 0)) < 3:
                         issues.append(VisualIssue(path, "edition_cards", "dispatch directory rendered fewer than three cards"))
                     if path == "/food-line/":

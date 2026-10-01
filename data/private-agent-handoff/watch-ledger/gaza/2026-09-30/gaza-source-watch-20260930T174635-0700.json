@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260930T174635-0700",
+  "scheduled_for": "2026-09-30T17:44:51-07:00",
+  "started_at": "2026-09-30T17:46:35-07:00",
+  "completed_at": "2026-09-30T17:47:37-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-30T16:46:29-07:00",
+    "end": "2026-09-30T17:47:37-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Checked OCHA OPT first. The latest surfaced Gaza-relevant OCHA material remained the Humanitarian Situation Report dated 25 September 2026; no new in-window qualifying development was identified.",
+    "Checked WHO second. No new in-window Gaza health-system development was identified.",
+    "Completed 10 additional targeted searches covering Reuters, AP, WAFA, UN News, PRCS, UNICEF, WFP, ICRC, ceasefire/hostage negotiations, and crossings/aid access.",
+    "Direct UN News retrieval was blocked by robots.txt; a syndicated copy of the September 30 UN News brief was accessible. Its Gaza item about Israeli fire near UN facilities and humanitarian convoys had already been surfaced in the prior watch and was excluded as a duplicate.",
+    "Current September 30 casualty reporting surfaced in Haaretz/search results was consistent with incidents already captured in earlier hourly checks, including the Tel al-Hawa vehicle strike, the Al-Mawasi mosque-area strike, and the Qarara strike; these were excluded as recycled/duplicate findings.",
+    "Useful coverage remained despite the UN News direct-access failure, so the run is DEGRADED rather than FAILED."
+  ]
+}

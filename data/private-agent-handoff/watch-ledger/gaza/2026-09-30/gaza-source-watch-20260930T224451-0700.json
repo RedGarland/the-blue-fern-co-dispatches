@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260930T224451-0700",
+  "scheduled_for": "2026-09-30T22:44:51-07:00",
+  "started_at": "2026-09-30T22:45:57-07:00",
+  "completed_at": "2026-09-30T22:47:19-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-30T21:53:30-07:00",
+    "end": "2026-09-30T22:47:19-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "OCHA OPT and WHO were checked first. Exactly 12 additional targeted searches completed. Direct UN News search was blocked by robots.txt; useful coverage remained through other sources, including UN syndication. No new qualifying Gaza development was verified in-window; AP and other current reporting repeated previously surfaced September 30 casualty incidents and were excluded as duplicates/recycled items."
+}

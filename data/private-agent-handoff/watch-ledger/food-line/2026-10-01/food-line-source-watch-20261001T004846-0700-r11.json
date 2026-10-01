@@ -1,0 +1,36 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261001T004846-0700-r11",
+  "scheduled_for": "2026-10-01T00:45:54-07:00",
+  "started_at": "2026-10-01T00:48:46-07:00",
+  "completed_at": "2026-10-01T00:49:58-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-30T21:50:03-07:00",
+    "end": "2026-10-01T00:48:46-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "bounded": true,
+    "summary": "Twelve targeted searches covered sole/only/last/full-service grocery loss, canceled or suspended emergency food distributions, abrupt pantry or food-bank service closure/reduction, and immediate SNAP/WIC/EBT interruption. No new U.S. event in the bounded window met the qualifying criteria.",
+    "source_priority": "Fresh local news, official/provider notices, and direct source pages were prioritized.",
+    "degradation": {
+      "present": true,
+      "reason": "One fresh local-news source page (953 MNC, LaPorte County storm-recovery food distribution) returned HTTP 403 on direct fetch after the search result was retrieved. The available search result described distributions proceeding, not a cancellation; useful coverage remained from the other searches and direct-source opens."
+    },
+    "exclusions_observed": [
+      "Kauaʻi emergency food distributions were scheduled to proceed on October 1 and October 2; a weather cancellation applied to debris pickup, not food distribution.",
+      "North Texas reporting concerned flood preparedness and sandbag distribution, not an interruption of food access.",
+      "Ohio SNAP reporting concerned administrative cost shifts taking effect October 1, not an immediate interruption of recipient access.",
+      "CBS reporting on SNAP work-requirement losses described ongoing policy effects and was published before the bounded window.",
+      "Massachusetts EBT theft reporting concerned an individual fraud loss from September 11, not a new official program interruption.",
+      "Other results were older, non-U.S., promotional, resilience-focused, or otherwise outside scope."
+    ],
+    "production_authority_note": "This supplementary recall watch is non-authoritative; production collection remains authoritative."
+  }
+}

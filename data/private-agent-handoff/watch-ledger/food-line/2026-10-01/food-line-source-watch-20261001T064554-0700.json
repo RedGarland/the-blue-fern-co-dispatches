@@ -1,0 +1,30 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261001T064554-0700",
+  "scheduled_for": "2026-10-01T06:45:54-07:00",
+  "started_at": "2026-10-01T06:44:59-07:00",
+  "completed_at": "2026-10-01T06:46:11-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-01T05:46:41-07:00",
+    "end": "2026-10-01T06:46:11-07:00",
+    "basis": "since prior hourly supplementary check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_searches_completed": 12,
+    "targeted_search_limit": 12,
+    "result": "No new qualifying signal located in the bounded search window.",
+    "notable_nonqualifying_results": [
+      "Kauai hurricane-recovery coverage described ongoing recovery/distribution activity, not a newly canceled or suspended distribution.",
+      "San Antonio storm-preparedness coverage described proactive food-bank/community response resources, not an access interruption.",
+      "South Tucson only-full-service-grocery closure result was older reporting and not new to this hourly window.",
+      "SNAP/WIC search results surfaced routine or previously announced policy/benefit information, not a new immediate-access interruption."
+    ],
+    "search_failures": []
+  }
+}

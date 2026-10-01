@@ -101,9 +101,9 @@
       "task_key": "food_line_source_watch"
     },
     {
-      "artifact_id": "20261001T185442Z-status-resume.json",
+      "artifact_id": "20261001T185545Z-status-resume.json",
       "classification": "resume_not_required",
-      "completed_at": "2026-10-01T18:54:42.876347Z",
+      "completed_at": "2026-10-01T18:55:45.059147Z",
       "diagnostics": null,
       "exit_code": 0,
       "next_expected_run": null,
@@ -112,15 +112,15 @@
       "publication_status": "",
       "run_id": "food-line-proof-food-care-continuation-20261001T182826Z-8a6bcdf0",
       "scheduled_for": "2026-10-01",
-      "started_at": "2026-10-01T18:54:35.889121Z",
+      "started_at": "2026-10-01T18:55:34.212549Z",
       "status": "SAFE_NO_OP",
       "task_key": "food_line_source_watch_resume"
     }
   ],
   "incident_reference": null,
-  "last_exported_at": "2026-10-01T18:55:22.906277Z",
-  "last_receipt_at": "2026-10-01T18:54:57.553050Z",
-  "latest_runtime_proof_date": "2026-10-01T18:54:57.553050Z",
+  "last_exported_at": "2026-10-01T18:56:10.316986Z",
+  "last_receipt_at": "2026-10-01T18:55:45.059147Z",
+  "latest_runtime_proof_date": "2026-10-01T18:55:45.059147Z",
   "next_expected_run": null,
   "observed_date": "2026-10-01",
   "private_review_backlog": {
@@ -1714,9 +1714,9 @@
       "task_key": "food_line_source_watch_resume"
     },
     {
-      "artifact_id": "20261001T185442Z-status-resume.json",
+      "artifact_id": "20261001T185545Z-status-resume.json",
       "classification": "resume_not_required",
-      "completed_at": "2026-10-01T18:54:42.876347Z",
+      "completed_at": "2026-10-01T18:55:45.059147Z",
       "diagnostics": null,
       "exit_code": 0,
       "next_expected_run": null,
@@ -1725,7 +1725,7 @@
       "publication_status": "",
       "run_id": "food-line-proof-food-care-continuation-20261001T182826Z-8a6bcdf0",
       "scheduled_for": "2026-10-01",
-      "started_at": "2026-10-01T18:54:35.889121Z",
+      "started_at": "2026-10-01T18:55:34.212549Z",
       "status": "SAFE_NO_OP",
       "task_key": "food_line_source_watch_resume"
     },

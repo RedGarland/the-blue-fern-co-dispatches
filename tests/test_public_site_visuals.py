@@ -8,12 +8,19 @@ from bluefern_dispatches.public_site_visuals import validate_public_site_visuals
 
 
 GOOD_CSS = """
-body { margin: 0; font-family: Georgia, serif; }
+:root { --ink: #1E3F4F; --paper: #EFE7DA; --muted: #4E6B79; --white: #fffdf8; --line: #b9aa96; }
+body { margin: 0; font-family: Georgia, serif; background: linear-gradient(180deg, #f7f1e8 0, var(--paper) 34rem); color: var(--ink); }
 .hero { min-height: 260px; padding: 48px; box-sizing: border-box; }
 .section-block { padding: 32px 48px; }
 .edition-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-.edition-card, .dispatch-card { border: 1px solid #c5d2d0; border-radius: 8px; padding: 20px; background: #fff; }
+.edition-card, .dispatch-card { border: 1px solid var(--line); border-radius: 8px; padding: 20px; background: var(--white); box-shadow: 0 18px 45px rgba(30, 63, 79, 0.08); }
 .active-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.actions, .card-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem; }
+.button, .button:visited { display: inline-block; background: #1E3F4F; color: #fffdf8; border: 1px solid #1E3F4F; border-radius: 3px; padding: 0.72rem 1.1rem; font: 700 0.82rem/1.2 system-ui, sans-serif; text-decoration: none; }
+.button:hover { background: #2F6F88; color: #fffdf8; }
+.button:focus, .button:focus-visible { outline: 3px solid #2F6F88; outline-offset: 3px; }
+.text-link, .support-link { font: 700 0.82rem/1.2 system-ui, sans-serif; }
+.support-link { color: var(--muted); }
 .food-line-hero { display: grid; place-items: center; padding: 40px; min-height: 220px; }
 .food-line-logo--edition, .food-line-logo--home { width: 320px; height: 120px; object-fit: contain; }
 .food-line-source-card { border: 1px solid #c5d2d0; border-radius: 8px; padding: 18px; margin: 20px 0; }
@@ -28,7 +35,7 @@ def _write(path: Path, text: str) -> None:
 def _root_html(*, hero_class: str = "hero") -> str:
     return f"""<!doctype html><html><head><link rel="stylesheet" href="/assets/site.css"><title>Dispatches</title></head>
 <body><main>
-<section class="{hero_class}"><h1>Dispatches From The Blue Fern Co.</h1><p>Source-backed public briefings.</p></section>
+<section class="{hero_class}"><h1>Dispatches From The Blue Fern Co.</h1><p>Source-backed public briefings.</p><p class="actions"><a class="button" href="/dispatches/">View latest dispatches</a><a class="button button--quiet" href="/about/">Explore the public record</a></p></section>
 <section class="section-block"><div class="section-heading"><p>The current edition desk</p><h2>Latest published developments</h2></div>
 <div class="edition-grid">
 <article class="edition-card edition-card--food-line"><h3><a href="/food-line/editions/2026-10-01/">Bradford County Food Pantry running low on food, leaders say</a></h3></article>
@@ -36,9 +43,9 @@ def _root_html(*, hero_class: str = "hero") -> str:
 <article class="edition-card edition-card--care-line"><h3><a href="/care-line/editions/2026-08-20/">Care latest public edition</a></h3></article>
 </div></section>
 <section class="section-block"><h2>Active dispatches</h2><div class="active-grid">
-<article class="dispatch-card dispatch-card--featured"><h2>Dispatches From Gaza</h2><a href="/gaza/editions/2026-10-01/">Read latest</a></article>
-<article class="dispatch-card dispatch-card--featured"><h2>Food Line Dispatch</h2><a href="/food-line/editions/2026-10-01/">Read latest</a></article>
-<article class="dispatch-card dispatch-card--featured"><h2>The Care Line Dispatch</h2><a href="/care-line/editions/2026-08-20/">Read latest</a></article>
+<article class="dispatch-card dispatch-card--featured"><h2>Dispatches From Gaza</h2><div class="card-actions"><a class="button" href="/gaza/editions/2026-10-01/">Read latest</a><a class="text-link" href="/gaza/archive.html">Archive</a><a class="support-link" href="/gaza/rss.xml">Feed</a></div></article>
+<article class="dispatch-card dispatch-card--featured"><h2>Food Line Dispatch</h2><div class="card-actions"><a class="button" href="/food-line/editions/2026-10-01/">Read latest</a><a class="text-link" href="/food-line/archive.html">Archive</a><a class="support-link" href="/food-line/podcast.xml">Podcast</a></div></article>
+<article class="dispatch-card dispatch-card--featured"><h2>The Care Line Dispatch</h2><div class="card-actions"><a class="button" href="/care-line/editions/2026-08-20/">Read latest</a><a class="text-link" href="/care-line/archive.html">Archive</a><a class="support-link" href="/care-line/rss.xml">Feed</a></div></article>
 </div></section>
 </main></body></html>"""
 
@@ -126,6 +133,36 @@ def test_excessive_homepage_hero_height_fails(tmp_path: Path) -> None:
 
     assert result["ok"] is False
     assert "hero_height" in _issue_checks(result)
+
+
+def test_cold_body_background_token_fails(tmp_path: Path) -> None:
+    css = GOOD_CSS.replace("--paper: #EFE7DA", "--paper: #F7F8F4")
+    root = _make_pages_root(tmp_path, css=css)
+
+    result = validate_public_site_visuals(root)
+
+    assert result["ok"] is False
+    assert "body_background" in _issue_checks(result)
+
+
+def test_low_contrast_primary_button_fails(tmp_path: Path) -> None:
+    css = GOOD_CSS + "\n.button, .button:visited { background: #1E3F4F; color: #172126; }\n"
+    root = _make_pages_root(tmp_path, css=css)
+
+    result = validate_public_site_visuals(root)
+
+    assert result["ok"] is False
+    assert "primary_button_contrast" in _issue_checks(result)
+
+
+def test_cramped_active_dispatch_action_links_fail(tmp_path: Path) -> None:
+    css = GOOD_CSS + "\n.card-actions { gap: 2px; }\n"
+    root = _make_pages_root(tmp_path, css=css)
+
+    result = validate_public_site_visuals(root)
+
+    assert result["ok"] is False
+    assert "active_dispatch_action_links" in _issue_checks(result)
 
 
 def test_food_edition_oversized_logo_proof_layout_fails(tmp_path: Path) -> None:

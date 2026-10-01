@@ -184,10 +184,18 @@
         "aggregate_status": "FAILED",
         "all_current_failures_external": null,
         "all_current_failures_non_actionable": null,
-        "attention_task_count": 1,
+        "attention_task_count": 2,
         "attention_tasks": [
           {
-            "artifact_id": "20261001T165412Z-status-resume.json",
+            "artifact_id": "20261001T174045Z-source-watch.json",
+            "classification": "blocked_overlapping_run",
+            "exit_code": 10,
+            "failure_stage": "source_watch",
+            "status": "FAILED",
+            "task_key": "food_line_source_watch"
+          },
+          {
+            "artifact_id": "20261001T174009Z-status-resume.json",
             "classification": "status_resume_failed",
             "exit_code": 10,
             "failure_stage": "status_resume",
@@ -198,10 +206,10 @@
         "external_access_restriction_count": null,
         "failed_source_count": null,
         "operator_assessment": "FAILED_ACTION_REQUIRED",
-        "primary_classification": "status_resume_failed",
-        "primary_failure_stage": "status_resume",
-        "primary_layer": "TASK",
-        "primary_task_key": "food_line_source_watch_resume",
+        "primary_classification": "blocked_overlapping_run",
+        "primary_failure_stage": "source_watch",
+        "primary_layer": "SOURCE",
+        "primary_task_key": "food_line_source_watch",
         "primary_task_status": "FAILED",
         "private_review_count_only_gap_count": 44,
         "private_review_dispositioned_item_count": 54,
@@ -393,7 +401,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-01T17:39:01.229452Z",
+  "exported_at": "2026-10-01T17:58:07.647082Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "FAILED"

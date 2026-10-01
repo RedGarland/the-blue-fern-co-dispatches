@@ -1314,12 +1314,16 @@ def food_line_private_review_backlog(*, source_root: Path, evaluated_at: str) ->
                     continue
                 unresolved_visible_count += 1
             count_only_gap = max(0, pending_count - len(pending_items))
-            unresolved_count = unresolved_visible_count + count_only_gap
+            # Count-only gaps usually mean a proposal-level pending count is
+            # larger than the item rows available for item-level review. Keep
+            # the diagnostic visible, but do not treat undispositionable counts
+            # as actionable private-review items.
+            unresolved_count = unresolved_visible_count
+            total_count_only_gap += count_only_gap
             if unresolved_count <= 0:
                 total_dispositioned += dispositioned_count
                 continue
             total_dispositioned += dispositioned_count
-            total_count_only_gap += count_only_gap
             row = {
                 "date": proposal_date,
                 "pending_item_count": unresolved_count,

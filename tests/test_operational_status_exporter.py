@@ -652,23 +652,14 @@ def test_food_line_private_review_backlog_surfaces_pending_proposals(tmp_path: P
 
     assert status["aggregate_status"] == "SUCCESS"
     assert status["private_review_backlog"] == {
-        "pending_date_count": 2,
-        "pending_item_count": 4,
+        "pending_date_count": 1,
+        "pending_item_count": 2,
         "dispositioned_item_count": 0,
-        "unresolved_item_count": 4,
+        "unresolved_item_count": 2,
         "count_only_gap_count": 2,
-        "oldest_pending_date": "2026-09-09",
-        "max_age_hours": 40,
+        "oldest_pending_date": "2026-09-10",
+        "max_age_hours": 16,
         "dates": [
-            {
-                "date": "2026-09-09",
-                "pending_item_count": 2,
-                "unresolved_item_count": 2,
-                "dispositioned_item_count": 0,
-                "count_only_gap_count": 2,
-                "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-09.json",
-                "age_hours": 40,
-            },
             {
                 "date": "2026-09-10",
                 "pending_item_count": 2,
@@ -688,15 +679,15 @@ def test_food_line_private_review_backlog_surfaces_pending_proposals(tmp_path: P
     }
     assert status["debug_summary"]["operator_assessment"] == "ACTION_REQUIRED_PENDING_REVIEW"
     assert status["debug_summary"]["primary_layer"] == "EDITORIAL_HANDOFF"
-    assert status["debug_summary"]["private_review_pending_date_count"] == 2
-    assert status["debug_summary"]["private_review_pending_item_count"] == 4
+    assert status["debug_summary"]["private_review_pending_date_count"] == 1
+    assert status["debug_summary"]["private_review_pending_item_count"] == 2
     assert status["debug_summary"]["private_review_dispositioned_item_count"] == 0
-    assert status["debug_summary"]["private_review_unresolved_item_count"] == 4
+    assert status["debug_summary"]["private_review_unresolved_item_count"] == 2
     assert status["debug_summary"]["private_review_count_only_gap_count"] == 2
-    assert status["debug_summary"]["private_review_oldest_pending_date"] == "2026-09-09"
+    assert status["debug_summary"]["private_review_oldest_pending_date"] == "2026-09-10"
 
     system = build_system_status(status, source_root=source, exported_at=EVALUATED)
-    assert system["dispatches"]["food-line"]["private_review_backlog"]["pending_item_count"] == 4
+    assert system["dispatches"]["food-line"]["private_review_backlog"]["pending_item_count"] == 2
     assert (
         system["dispatches"]["food-line"]["debug_summary"]["operator_assessment"]
         == "ACTION_REQUIRED_PENDING_REVIEW"
@@ -850,7 +841,7 @@ def test_food_line_private_review_backlog_keeps_needs_source_check_and_missing_d
     assert status["debug_summary"]["operator_assessment"] == "ACTION_REQUIRED_PENDING_REVIEW"
 
 
-def test_food_line_private_review_backlog_keeps_count_only_gap_visible(tmp_path: Path) -> None:
+def test_food_line_private_review_backlog_tracks_count_only_gap_without_alerting(tmp_path: Path) -> None:
     statuses = {key: (action, "completed", 0) for key, (action, _, _) in TASKS.items()}
     source = _write_day(tmp_path, statuses)
     _write_food_proposal(
@@ -886,12 +877,13 @@ def test_food_line_private_review_backlog_keeps_count_only_gap_visible(tmp_path:
 
     status = build_food_line_status(source_root=source, date=DATE, evaluated_at=EVALUATED, exported_at=EVALUATED)
 
-    assert status["private_review_backlog"]["pending_item_count"] == 2
+    assert status["private_review_backlog"]["pending_item_count"] == 0
     assert status["private_review_backlog"]["dispositioned_item_count"] == 1
-    assert status["private_review_backlog"]["unresolved_item_count"] == 2
+    assert status["private_review_backlog"]["unresolved_item_count"] == 0
     assert status["private_review_backlog"]["count_only_gap_count"] == 2
-    assert status["private_review_backlog"]["dates"][0]["count_only_gap_count"] == 2
-    assert status["debug_summary"]["operator_assessment"] == "ACTION_REQUIRED_PENDING_REVIEW"
+    assert status["private_review_backlog"]["dates"] == []
+    assert status["debug_summary"]["operator_assessment"] == "HEALTHY"
+    assert status["debug_summary"]["private_review_count_only_gap_count"] == 2
 
 
 def test_food_line_private_review_backlog_ignores_malformed_unknown_sidecar_entries_fail_safe(tmp_path: Path) -> None:

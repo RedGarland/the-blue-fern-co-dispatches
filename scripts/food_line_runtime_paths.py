@@ -12,6 +12,7 @@ FOOD_LINE_AGENT_INBOX_RE = re.compile(r"^data/dispatches/food-line/agent-inbox(?
 FOOD_LINE_AGENT_INTAKE_RE = re.compile(r"^data/dispatches/food-line/agent-intake(?:/.*)?$")
 FOOD_LINE_REVIEW_RE = re.compile(r"^data/dispatches/food-line/review(?:/.*)?$")
 FOOD_LINE_OUTPUT_REVIEW_RE = re.compile(r"^output/review/food-line(?:/.*)?$")
+PUBLIC_SITE_VISUAL_REVIEW_RE = re.compile(r"^output/review/public-site-visuals(?:[-_/].*)?$")
 FOOD_LINE_OUTPUT_SITE_RE = re.compile(r"^output/site/food-line(?:/.*)?$")
 FOOD_LINE_OUTPUT_DISPATCH_EDITIONS_RE = re.compile(
     r"^output/dispatches/food-line/editions(?:/.*)?$"
@@ -114,6 +115,8 @@ def classify_food_line_runtime_path(path_text: str) -> str | None:
         return "local_run_state"
     if FOOD_LINE_REVIEW_RE.match(lower):
         return "review_output"
+    if PUBLIC_SITE_VISUAL_REVIEW_RE.match(lower):
+        return "review_output"
     if FOOD_LINE_OUTPUT_REVIEW_RE.match(lower):
         return "review_output"
     if FOOD_LINE_OUTPUT_SITE_RE.match(lower):
@@ -156,6 +159,7 @@ def food_line_runtime_paths() -> list[str]:
         "data/dispatches/food-line/coverage-gaps/",
         "data/dispatches/food-line/historical-reconstruction/",
         "output/review/food-line/",
+        "output/review/public-site-visuals",
         "output/site/food-line/",
         "output/dispatches/food-line/editions/",
         "data/agent-history-staging/food-line/",

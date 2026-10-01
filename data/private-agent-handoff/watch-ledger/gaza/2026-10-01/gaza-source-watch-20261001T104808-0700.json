@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261001T104808-0700",
+  "scheduled_for": "2026-10-01T10:44:51-07:00",
+  "started_at": "2026-10-01T10:48:08-07:00",
+  "completed_at": "2026-10-01T10:48:59-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-01T09:47:45-07:00",
+    "end": "2026-10-01T10:48:59-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "Checked first; no new in-window qualifying Gaza development surfaced. Search results surfaced OCHA material dated September 18, 2026 or earlier.",
+    "who": "Checked second; no new in-window qualifying Gaza health-system development surfaced.",
+    "additional_searches": 12,
+    "coverage": "Twelve bounded targeted searches covered civilian casualties, displacement, aid access, food and water access, hospitals, ambulances, fuel, medical evacuation, health-system functioning capacity, infrastructure damage, crossings, detention and hostages, ceasefire negotiations, and military operations with documented civilian impact across primary humanitarian sources and established reporting.",
+    "degraded_reasons": [],
+    "result": "No new qualifying traceable development was verified in the search window; older, recycled, and duplicate material was excluded."
+  }
+}

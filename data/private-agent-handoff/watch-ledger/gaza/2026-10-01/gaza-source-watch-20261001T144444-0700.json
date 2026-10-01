@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261001T144444-0700",
+  "scheduled_for": "2026-10-01T14:44:51-07:00",
+  "started_at": "2026-10-01T14:44:44-07:00",
+  "completed_at": "2026-10-01T14:47:30-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-01T13:43:30-07:00",
+    "end": "2026-10-01T14:47:30-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Checked OCHA OPT first; the newest surfaced Gaza humanitarian situation report remained dated 2026-09-18, with no development traceable to this observation window.",
+    "Checked WHO second; a 2026-10-01 WHO Netherlands partnership update mentioned continued need for essential health services for patients from Gaza but supplied no new Gaza operational event or in-window change, so it was not promoted.",
+    "Completed exactly 12 additional targeted searches covering Reuters, AP, UNRWA, WFP, UNICEF, WHO EMRO/medical evacuation, Gaza crossings, ceasefire/hostages/detention, military operations with documented civilian impact, UNOSAT infrastructure damage, ICRC, and MSF.",
+    "No qualifying new in-window development was verified from those searches.",
+    "A Muslim Network/Anadolu report on breast-cancer diagnostic collapse was published about six hours before this check and described a same-day ministry warning without a publication/event time establishing it as new since 2026-10-01T13:43:30-07:00; excluded as outside/uncertain window.",
+    "A Saudi Gazette agencies report timestamped 2026-10-01 14:44 at the publisher described Wednesday casualty events and therefore did not establish a new event in this Pacific-time hourly window; excluded as recycled/earlier-event reporting.",
+    "Previously captured October 1 recovery and burial of 105 remains from the October 2023 Al-Taj strike was excluded as a duplicate."
+  ]
+}

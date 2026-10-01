@@ -6783,6 +6783,39 @@ def test_food_line_public_inclusion_helpers_separate_lead_from_public_eligibilit
     assert food_line._food_line_public_inclusion_reason(resource_only) == "resource-only / no pressure signal"
 
 
+def test_food_line_editor_approved_proposal_context_type_still_renders_public_story():
+    row = {
+        "source_record_id": "food-line-approved-spectrum-20261001",
+        "title": "Seniors in West LA facing long waitlist for Meals on Wheels",
+        "url": "https://spectrumlocalnews.com/ca/california/human-interest/2026/10/01/meals-on-wheels-west-seniors",
+        "canonical_source_url": "https://spectrumlocalnews.com/ca/california/human-interest/2026/10/01/meals-on-wheels-west-seniors",
+        "publisher": "Spectrum News",
+        "published_at": "2026-10-01",
+        "summary_or_snippet": "Spectrum News reported that some West LA seniors face challenges getting proper meals and a long Meals on Wheels waitlist.",
+        "pressure_summary": "Spectrum News reported that some West LA seniors face challenges getting proper meals and a long Meals on Wheels waitlist.",
+        "evidence_text": "Seniors in West LA facing long waitlist for Meals on Wheels.",
+        "evidence_text_basis": "operator_reviewed_exact_passage",
+        "evidence_level": "background context",
+        "pressure_signal": True,
+        "pressure_verification_status": "source_text_verified",
+        "pressure_type": "context only",
+        "source_role": "local_signal",
+        "source_family": "local_news",
+        "source_type": "approved_proposal",
+        "source_purpose": "current_news",
+        "supported_product_geography": True,
+        "source_public_story_eligible": True,
+        "source_freshness_status": "current",
+        "public_claim_eligible": True,
+        "review_status": "approved",
+    }
+
+    assert food_line._food_line_qualifies_for_public_inclusion(row) is True
+    assert food_line._food_line_public_usage_label(row, None, []) == "Current secondary item"
+    assert food_line._food_line_public_story_rows([row], None, []) == [row]
+    assert food_line._food_line_public_page_usage_visible("Current secondary item") is True
+
+
 def test_food_line_qualified_but_not_public_count_warns_when_public_rows_are_omitted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     _ensure_assets(tmp_path)
     date = "2026-06-12"

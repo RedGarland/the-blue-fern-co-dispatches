@@ -198,6 +198,15 @@ def read(path):
     return path.read_text(encoding="utf-8")
 
 
+def test_source_css_preserves_dispatches_homepage_card_styles():
+    css_text = read(Path(__file__).resolve().parents[1] / "assets" / "site.css")
+
+    assert ".edition-card" in css_text
+    assert ".dispatch-card--featured" in css_text
+    assert ".active-grid" in css_text
+    assert ".topic-badge--food-line" in css_text
+
+
 def assert_favicon_links(html):
     expected = [
         '<link rel="icon" href="/assets/favicon.ico" sizes="any">',
@@ -257,6 +266,10 @@ def test_landing_page_links_and_blue_fern_scheme(built_site):
     assert "z-index: 2;" in css_text
     assert "background-position: center" in css_text
     assert "background-size: min(76%, 19rem) auto" in css_text
+    assert ".edition-card" in css_text
+    assert ".dispatch-card--featured" in css_text
+    assert ".active-grid" in css_text
+    assert ".topic-badge--food-line" in css_text
     assert f'src="assets/{ROOT_MASTHEAD_ASSET}"' in html
     assert ROOT_DESCRIPTION in html
     assert "<h1>Dispatches From The Blue Fern Co.</h1>" not in html

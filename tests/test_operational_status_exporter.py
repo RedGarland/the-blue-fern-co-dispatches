@@ -841,6 +841,149 @@ def test_food_line_private_review_backlog_keeps_needs_source_check_and_missing_d
     assert status["debug_summary"]["operator_assessment"] == "ACTION_REQUIRED_PENDING_REVIEW"
 
 
+def test_food_line_private_review_backlog_keeps_unsuperseded_duplicate_hold_alertable(tmp_path: Path) -> None:
+    statuses = {key: (action, "completed", 0) for key, (action, _, _) in TASKS.items()}
+    source = _write_day(tmp_path, statuses)
+    _write_food_proposal(
+        source,
+        "2026-09-10",
+        {
+            "items": [
+                {
+                    "item_id": "pa-snap",
+                    "headline": "SNAP benefit update",
+                    "source_url": "https://example.test/pa-snap",
+                    "review_status": "pending_editorial_review",
+                }
+            ],
+            "published": False,
+        },
+    )
+    _write_food_private_review_disposition(
+        source,
+        "a-source-check-hold.json",
+        {
+            "schema_version": "food_line_private_review_dispositions_v1",
+            "disposition_id": "source-check-hold",
+            "items": [
+                {
+                    "date": "2026-09-10",
+                    "item_id": "pa-snap",
+                    "disposition": "needs_source_check",
+                }
+            ],
+        },
+    )
+    _write_food_private_review_disposition(
+        source,
+        "b-rejection-without-supersedes.json",
+        {
+            "schema_version": "food_line_private_review_dispositions_v1",
+            "disposition_id": "later-rejection",
+            "items": [
+                {
+                    "date": "2026-09-10",
+                    "item_id": "pa-snap",
+                    "disposition": "rejected_or_weak",
+                }
+            ],
+        },
+    )
+
+    status = build_food_line_status(source_root=source, date=DATE, evaluated_at=EVALUATED, exported_at=EVALUATED)
+
+    backlog = status["private_review_backlog"]
+    assert backlog["pending_item_count"] == 1
+    assert backlog["dispositioned_item_count"] == 0
+    assert backlog["disposition_diagnostics"]["duplicate_entry_count"] == 1
+    assert status["debug_summary"]["operator_assessment"] == "ACTION_REQUIRED_PENDING_REVIEW"
+
+
+def test_food_line_private_review_backlog_allows_explicit_superseding_disposition(tmp_path: Path) -> None:
+    statuses = {key: (action, "completed", 0) for key, (action, _, _) in TASKS.items()}
+    source = _write_day(tmp_path, statuses)
+    _write_food_proposal(
+        source,
+        "2026-09-10",
+        {
+            "items": [
+                {
+                    "item_id": "pa-snap",
+                    "headline": "SNAP benefit update",
+                    "source_url": "https://example.test/pa-snap",
+                    "review_status": "pending_editorial_review",
+                }
+            ],
+            "published": False,
+        },
+    )
+    _write_food_private_review_disposition(
+        source,
+        "a-source-check-hold.json",
+        {
+            "schema_version": "food_line_private_review_dispositions_v1",
+            "disposition_id": "source-check-hold",
+            "items": [
+                {
+                    "date": "2026-09-10",
+                    "item_id": "pa-snap",
+                    "disposition": "needs_source_check",
+                }
+            ],
+        },
+    )
+    _write_food_private_review_disposition(
+        source,
+        "b-source-check-resolution.json",
+        {
+            "schema_version": "food_line_private_review_dispositions_v1",
+            "disposition_id": "source-check-resolution",
+            "items": [
+                {
+                    "date": "2026-09-10",
+                    "item_id": "pa-snap",
+                    "disposition": "rejected_or_weak",
+                    "supersedes_disposition_ids": ["source-check-hold"],
+                }
+            ],
+        },
+    )
+
+    status = build_food_line_status(source_root=source, date=DATE, evaluated_at=EVALUATED, exported_at=EVALUATED)
+
+    backlog = status["private_review_backlog"]
+    assert backlog["pending_item_count"] == 0
+    assert backlog["dispositioned_item_count"] == 1
+    assert backlog["unresolved_item_count"] == 0
+    assert backlog["dates"] == []
+    assert backlog["disposition_diagnostics"]["duplicate_entry_count"] == 0
+    assert backlog["disposition_sources"] == [
+        {
+            "disposition_artifact": (
+                "data/dispatches/food-line/review/private-review-dispositions/a-source-check-hold.json"
+            ),
+            "entry_count": 1,
+            "subtracting_entry_count": 0,
+            "applied_item_count": 0,
+            "ignored_entry_count": 0,
+            "malformed_entry_count": 0,
+            "unknown_disposition_count": 0,
+        },
+        {
+            "disposition_artifact": (
+                "data/dispatches/food-line/review/private-review-dispositions/b-source-check-resolution.json"
+            ),
+            "entry_count": 1,
+            "subtracting_entry_count": 1,
+            "applied_item_count": 1,
+            "ignored_entry_count": 0,
+            "malformed_entry_count": 0,
+            "unknown_disposition_count": 0,
+        },
+    ]
+    assert status["debug_summary"]["operator_assessment"] == "HEALTHY"
+
+
 def test_food_line_private_review_backlog_tracks_count_only_gap_without_alerting(tmp_path: Path) -> None:
     statuses = {key: (action, "completed", 0) for key, (action, _, _) in TASKS.items()}
     source = _write_day(tmp_path, statuses)

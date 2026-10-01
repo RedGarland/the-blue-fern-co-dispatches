@@ -1160,6 +1160,40 @@ def _food_line_sidecar_default_date(path: Path, payload: dict[str, Any]) -> str 
     return path.stem if DATE_RE.fullmatch(path.stem) else None
 
 
+def _food_line_disposition_id(entry: dict[str, Any], payload: dict[str, Any], artifact: str) -> str:
+    for value in (entry.get("disposition_id"), payload.get("disposition_id")):
+        disposition_id = str(value or "").strip()
+        if disposition_id:
+            return disposition_id
+    return artifact
+
+
+def _food_line_superseded_disposition_ids(entry: dict[str, Any]) -> set[str]:
+    values: list[Any] = []
+    for key in ("supersedes_disposition_ids", "supersedes_dispositions"):
+        value = entry.get(key)
+        if isinstance(value, list):
+            values.extend(value)
+    for key in ("supersedes_disposition_id", "supersedes_disposition"):
+        value = entry.get(key)
+        if isinstance(value, str):
+            values.append(value)
+    return {str(value).strip() for value in values if str(value or "").strip()}
+
+
+def _food_line_disposition_bucket_superseded(
+    bucket: list[dict[str, Any]],
+    normalized: dict[str, Any],
+) -> bool:
+    new_id = str(normalized.get("disposition_id") or "")
+    new_supersedes = set(normalized.get("supersedes_disposition_ids") or [])
+    existing_ids = {str(item.get("disposition_id") or "") for item in bucket}
+    existing_supersedes: set[str] = set()
+    for item in bucket:
+        existing_supersedes.update(str(value) for value in item.get("supersedes_disposition_ids") or [])
+    return bool(new_supersedes & existing_ids) or bool(new_id and new_id in existing_supersedes)
+
+
 def _food_line_load_private_review_dispositions(source_root: Path) -> dict[str, Any]:
     disposition_root = source_root / FOOD_LINE_PRIVATE_REVIEW_DISPOSITIONS_RELATIVE
     result: dict[str, Any] = {
@@ -1211,23 +1245,25 @@ def _food_line_load_private_review_dispositions(source_root: Path) -> dict[str, 
                 result["diagnostics"]["malformed_entry_count"] += 1
                 continue
             normalized = {
+                "disposition_id": _food_line_disposition_id(entry, payload, relative),
                 "disposition": disposition,
                 "source_artifact": relative,
                 "subtracts": disposition in FOOD_LINE_PRIVATE_REVIEW_SUBTRACTING_DISPOSITIONS,
+                "supersedes_disposition_ids": sorted(_food_line_superseded_disposition_ids(entry)),
             }
             if normalized["subtracts"]:
                 source_summary["subtracting_entry_count"] += 1
             if item_id:
                 key = (entry_date, item_id)
                 bucket = result["by_item_id"].setdefault(key, [])
-                if bucket:
+                if bucket and not _food_line_disposition_bucket_superseded(bucket, normalized):
                     source_summary["ignored_entry_count"] += 1
                     result["diagnostics"]["duplicate_entry_count"] += 1
                 bucket.append(normalized)
             if source_url:
                 key = (entry_date, source_url)
                 bucket = result["by_source_url"].setdefault(key, [])
-                if bucket:
+                if bucket and not _food_line_disposition_bucket_superseded(bucket, normalized):
                     source_summary["ignored_entry_count"] += 1
                     result["diagnostics"]["duplicate_entry_count"] += 1
                 bucket.append(normalized)
@@ -1257,8 +1293,18 @@ def _food_line_resolve_disposition_match(
     matches: list[dict[str, Any]],
     disposition_index: dict[str, Any],
 ) -> dict[str, Any]:
-    non_subtracting = [item for item in matches if not item.get("subtracts")]
-    selected = non_subtracting[0] if non_subtracting else matches[0]
+    superseded_ids: set[str] = set()
+    for item in matches:
+        superseded_ids.update(str(value) for value in item.get("supersedes_disposition_ids") or [])
+    active_matches = [
+        item
+        for item in matches
+        if not str(item.get("disposition_id") or "") or str(item.get("disposition_id") or "") not in superseded_ids
+    ]
+    if not active_matches:
+        active_matches = matches
+    non_subtracting = [item for item in active_matches if not item.get("subtracts")]
+    selected = non_subtracting[0] if non_subtracting else active_matches[0]
     if selected.get("subtracts"):
         source = disposition_index["sources"].get(selected["source_artifact"])
         if isinstance(source, dict):

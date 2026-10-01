@@ -344,6 +344,7 @@ Recommended sidecar schema:
       "item_id": "optional-stable-item-id",
       "source_url": "https://publisher.example/story",
       "disposition": "published_in_recovery_brief",
+      "supersedes_disposition_ids": ["optional-prior-disposition-id"],
       "reason": "included in the approved recovery brief",
       "evidence_paths": ["data/dispatches/food-line/review/proposed-editions/2026-09-28.json"],
       "public_url": "https://dispatches.thebluefernco.com/food-line/recovery/..."
@@ -367,6 +368,13 @@ Only `published_in_recovery_brief`, `rejected_or_weak`, and
 entries fail safe: they do not clear the alert. Exported backlog diagnostics
 include sanitized `disposition_sources[]` rows plus malformed, unknown, and
 duplicate entry counts so a bad sidecar cannot silently turn a backlog green.
+
+When a later source check resolves an earlier hold, the later sidecar entry may
+set `supersedes_disposition_ids` to the prior sidecar or entry disposition ID.
+The exporter then ignores the superseded match when choosing the active
+disposition and does not count that pair as duplicate-match noise. Without an
+explicit supersession link, duplicate matches remain fail-safe: a non-subtracting
+hold such as `needs_source_check` continues to keep the item alertable.
 
 `debug_summary` is the first field to inspect when a line is not healthy. It
 contains a small, dispatch-neutral diagnosis pointer:

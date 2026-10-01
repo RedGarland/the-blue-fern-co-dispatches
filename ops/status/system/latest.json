@@ -189,7 +189,7 @@
         "attention_task_count": 1,
         "attention_tasks": [
           {
-            "artifact_id": "20261001T000519Z-source-watch.json",
+            "artifact_id": "20261001T002519Z-source-watch.json",
             "classification": "completed_with_exclusions",
             "exit_code": 0,
             "failure_stage": "source_watch",
@@ -205,7 +205,7 @@
         "primary_layer": "EDITORIAL_HANDOFF",
         "primary_task_key": "food_line_source_watch",
         "primary_task_status": "DEGRADED",
-        "private_review_count_only_gap_count": 43,
+        "private_review_count_only_gap_count": 44,
         "private_review_dispositioned_item_count": 51,
         "private_review_max_age_hours": 48,
         "private_review_oldest_pending_date": "2026-09-29",
@@ -222,7 +222,7 @@
       },
       "migration_status": "MIGRATED",
       "private_review_backlog": {
-        "count_only_gap_count": 43,
+        "count_only_gap_count": 44,
         "dates": [
           {
             "age_hours": 48,
@@ -235,7 +235,7 @@
           },
           {
             "age_hours": 24,
-            "count_only_gap_count": 5,
+            "count_only_gap_count": 6,
             "date": "2026-09-30",
             "dispositioned_item_count": 4,
             "pending_item_count": 2,
@@ -391,7 +391,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-01T00:14:33.927602Z",
+  "exported_at": "2026-10-01T00:25:44.800894Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "DEGRADED"

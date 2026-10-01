@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261001T134049-0700",
+  "scheduled_for": "2026-10-01T13:44:51-07:00",
+  "started_at": "2026-10-01T13:40:49-07:00",
+  "completed_at": "2026-10-01T13:43:30-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-01T12:47:00-07:00",
+    "end": "2026-10-01T13:43:30-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Checked OCHA OPT first; newest surfaced Gaza humanitarian situation report was dated 2026-09-18, with no in-window development.",
+    "Checked WHO second; no new Gaza health-system development surfaced in the observation window.",
+    "Completed 12 additional targeted searches across Reuters, AP, WFP/UNRWA, UNICEF, health/medical evacuation, crossings, detention/hostages/ceasefire, military operations with civilian impact, ICRC, UN News, Haaretz, and Al Jazeera.",
+    "UN News retrieval was blocked by robots.txt. Useful alternate coverage remained, so the run is DEGRADED rather than FAILED.",
+    "Reuters Connect and L'Orient Today surfaced the October 1 mass funeral/recovery of 105 remains from October 2023 strikes; this was already captured by the prior watch and was excluded as a duplicate.",
+    "L'Orient Today also cited a Gaza health ministry aggregate of 16 deaths and 57 wounded over the prior 48 hours, but no distinct event time within this watch window was established; it was excluded as non-traceable to a new in-window development."
+  ]
+}

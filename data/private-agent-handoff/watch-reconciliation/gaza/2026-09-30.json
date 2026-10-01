@@ -1,0 +1,60 @@
+{
+  "schema_version": "bluefern.watch_reconciliation.v1",
+  "dispatch": "gaza",
+  "observation_date": "2026-09-30",
+  "generated_at": "2026-10-01T06:48:34Z",
+  "watch_ledger_ref": "ops/watch-ledger",
+  "protected_source_ref": "add/pages-repo-default",
+  "run_count": 12,
+  "success_run_count": 3,
+  "degraded_run_count": 9,
+  "successful_run_count": 12,
+  "failed_run_count": 0,
+  "zero_finding_run_count": 11,
+  "finding_count": 2,
+  "accounted_count": 0,
+  "unreconciled_count": 2,
+  "findings": [
+    {
+      "finding_id": "gaza-20260930-khan-younis-tent-4inj",
+      "canonical_source_url": "https://www.newarab.com/news/elections-near-israel-increasing-assassinations-gaza?amp=",
+      "title": "As elections near, Israel is increasing 'assassinations' in Gaza",
+      "reconciliation_status": "UNRECONCILED",
+      "qualifying": true,
+      "evidence": "No matching finding ID, canonical URL, or clearly identical Khan Younis tent-strike event found in protected source/default candidate/review/public state or the deployed 2026-09-30 Gaza edition."
+    },
+    {
+      "finding_id": "gaza-20260930-abu-al-ajeen-gunfire-3inj",
+      "canonical_source_url": "https://www.newarab.com/news/elections-near-israel-increasing-assassinations-gaza?amp=",
+      "title": "As elections near, Israel is increasing 'assassinations' in Gaza",
+      "reconciliation_status": "UNRECONCILED",
+      "qualifying": true,
+      "evidence": "No matching finding ID, canonical URL, or clearly identical Abu al-Ajeen gunfire event found in protected source/default candidate/review/public state or the deployed 2026-09-30 Gaza edition."
+    }
+  ],
+  "missing_hour_slots_local": [
+    "00",
+    "02",
+    "03",
+    "05",
+    "06",
+    "08",
+    "09",
+    "10",
+    "11",
+    "14",
+    "15",
+    "16"
+  ],
+  "material_heartbeat_absence": true,
+  "production_evidence": {
+    "protected_source_checked": true,
+    "deployed_public_checked": true,
+    "observation": "Protected source/default contains no current-date Gaza source/curated/edition directory and code search found neither watch finding ID nor canonical URL. Deployed Gaza edition dated 2026-09-30 contains four other developments and does not contain either watch event."
+  },
+  "operational_issue": true,
+  "operational_issue_reasons": [
+    "MATERIAL_HEARTBEAT_ABSENCE",
+    "UNRECONCILED_QUALIFYING_FINDING"
+  ]
+}

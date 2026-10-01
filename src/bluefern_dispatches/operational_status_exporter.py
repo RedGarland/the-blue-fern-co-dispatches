@@ -861,10 +861,13 @@ def _care_source_failure_summary(
             "original_failed_source_count": 0,
             "recovered_source_count": 0,
             "external_access_restriction_count": 0,
+            "transient_source_failure_count": 0,
             "unclassified_source_failure_count": 0,
             "external_restriction_sources": [],
+            "transient_sources": [],
             "recovered_sources": [],
             "all_current_failures_external": False,
+            "all_current_failures_non_actionable": False,
             "successful_attempt_count": None,
         }
     failed_rows = _care_failed_source_rows(receipt)
@@ -893,6 +896,7 @@ def _care_source_failure_summary(
             unresolved_failed_rows.append(row)
     failed_count = max(0, original_failed_count - len(recovered_failed_rows))
     external_sources: list[dict[str, Any]] = []
+    transient_sources: list[dict[str, Any]] = []
     unclassified_count = 0
     for row in unresolved_failed_rows:
         source_id = _safe_identifier(row.get("source_id"))
@@ -906,17 +910,33 @@ def _care_source_failure_summary(
                     "remediation_available": policy["remediation_available"],
                 }
             )
+        elif row.get("transient") is True:
+            transient_sources.append(
+                {
+                    "source_id": source_id,
+                    "failure_class": _safe_identifier(row.get("failure_class")),
+                    "adapter_type": _safe_identifier(row.get("adapter_type")),
+                }
+            )
         else:
             unclassified_count += 1
     unreported_count = max(0, failed_count - len(unresolved_failed_rows))
     unclassified_count += unreported_count
+    all_external = failed_count > 0 and len(external_sources) == failed_count and unclassified_count == 0
+    all_non_actionable = (
+        failed_count > 0
+        and len(external_sources) + len(transient_sources) == failed_count
+        and unclassified_count == 0
+    )
     return {
         "failed_source_count": failed_count,
         "original_failed_source_count": original_failed_count,
         "recovered_source_count": len(recovered_failed_rows),
         "external_access_restriction_count": len(external_sources),
+        "transient_source_failure_count": len(transient_sources),
         "unclassified_source_failure_count": unclassified_count,
         "external_restriction_sources": external_sources,
+        "transient_sources": transient_sources,
         "recovered_sources": [
             {
                 "source_id": _safe_identifier(row.get("source_id")),
@@ -924,9 +944,8 @@ def _care_source_failure_summary(
             }
             for row in recovered_failed_rows
         ],
-        "all_current_failures_external": failed_count > 0
-        and len(external_sources) == failed_count
-        and unclassified_count == 0,
+        "all_current_failures_external": all_external,
+        "all_current_failures_non_actionable": all_non_actionable,
         "successful_attempt_count": _care_detail_count(receipt, "successful_attempt_count"),
     }
 
@@ -1456,13 +1475,16 @@ def _care_adjusted_aggregate_status(
         return OperationalStatus.FAILED.value
     latest_status = str(latest_collection.get("status") or "")
     successful_attempts = source_failure_summary.get("successful_attempt_count")
-    external_only_current_failure = (
+    non_actionable_current_failure = (
         latest_status == OperationalStatus.DEGRADED.value
         and isinstance(successful_attempts, int)
         and successful_attempts > 0
-        and source_failure_summary["all_current_failures_external"]
+        and (
+            source_failure_summary["all_current_failures_external"]
+            or source_failure_summary.get("all_current_failures_non_actionable") is True
+        )
     )
-    if not external_only_current_failure:
+    if not non_actionable_current_failure:
         return aggregate_status
     failed_tasks = [str(task) for task in aggregate.get("failed_tasks", [])]
     has_non_collection_failure = any(

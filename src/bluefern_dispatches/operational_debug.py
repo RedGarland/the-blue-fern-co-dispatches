@@ -128,6 +128,10 @@ def _operator_assessment(
     if recovery_lifecycle == "HEALTHY":
         if source_summary.get("all_current_failures_external") is True:
             return "HEALTHY_WITH_EXTERNAL_RESTRICTIONS"
+        if source_summary.get("all_current_failures_non_actionable") is True and _int(
+            source_summary.get("transient_source_failure_count")
+        ):
+            return "HEALTHY_WITH_TRANSIENT_SOURCE_FAILURES"
         if primary and primary.get("task_key") == "food_line_source_watch":
             classification = (_text(primary.get("classification")) or "").lower()
             if classification in {"completed_with_exclusions", "success_with_exclusions"}:
@@ -187,10 +191,14 @@ def build_debug_summary(status: dict[str, Any]) -> dict[str, Any]:
         "attention_tasks": attention[:5],
         "failed_source_count": _int(source_summary.get("failed_source_count")),
         "external_access_restriction_count": _int(source_summary.get("external_access_restriction_count")),
+        "transient_source_failure_count": _int(source_summary.get("transient_source_failure_count")),
         "unclassified_source_failure_count": _int(source_summary.get("unclassified_source_failure_count")),
         "unaccounted_event_count": unaccounted_count,
         "all_current_failures_external": source_summary.get("all_current_failures_external")
         if "all_current_failures_external" in source_summary
+        else None,
+        "all_current_failures_non_actionable": source_summary.get("all_current_failures_non_actionable")
+        if "all_current_failures_non_actionable" in source_summary
         else None,
         "publication_attempted": publication_attempted if isinstance(publication_attempted, bool) else None,
         "publication_status": _text(status.get("publication_status")),

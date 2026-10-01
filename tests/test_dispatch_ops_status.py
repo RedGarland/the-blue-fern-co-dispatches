@@ -496,6 +496,43 @@ def test_system_alerts_do_not_notify_for_external_only_degradation(tmp_path: Pat
     assert payload["suppressed_dispatches"][0]["dispatch"] == "care-line"
 
 
+def test_system_alerts_do_not_notify_for_transient_source_degradation(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    _write_json(
+        tmp_path / "ops/status/system/latest.json",
+        {
+            "schema_version": "bluefern_external_system_status_v1",
+            "exported_at": "2026-10-01T05:00:00Z",
+            "system_status": "DEGRADED",
+            "dispatches": {
+                "care-line": {
+                    "aggregate_status": "DEGRADED",
+                    "recovery_lifecycle": "HEALTHY",
+                    "debug_summary": {
+                        "operator_assessment": "HEALTHY_WITH_TRANSIENT_SOURCE_FAILURES",
+                        "primary_layer": "SOURCE",
+                        "primary_task_key": "care_line_collection",
+                        "failed_source_count": 5,
+                        "external_access_restriction_count": 4,
+                        "transient_source_failure_count": 1,
+                        "unclassified_source_failure_count": 0,
+                        "all_current_failures_non_actionable": True,
+                    },
+                },
+            },
+        },
+    )
+
+    result = main(["system", "--alerts-json", "--root", str(tmp_path)])
+    payload = json.loads(capsys.readouterr().out)
+
+    assert result == 0
+    assert payload["alert_required"] is False
+    assert payload["alert_dispatches"] == []
+    assert payload["suppressed_dispatches"][0]["dispatch"] == "care-line"
+    assert payload["suppressed_dispatches"][0]["operator_assessment"] == "HEALTHY_WITH_TRANSIENT_SOURCE_FAILURES"
+    assert "HEALTHY_WITH_TRANSIENT_SOURCE_FAILURES" in payload["policy"]["non_failure_operator_assessments"]
+
+
 def test_system_alerts_notify_for_food_private_review_backlog(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     _write_json(
         tmp_path / "ops/status/system/latest.json",

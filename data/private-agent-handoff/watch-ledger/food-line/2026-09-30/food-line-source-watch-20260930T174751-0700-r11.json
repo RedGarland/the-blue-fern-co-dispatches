@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20260930T174751-0700-r11",
+  "scheduled_for": "2026-09-30T17:45:54-07:00",
+  "started_at": "2026-09-30T17:47:51-07:00",
+  "completed_at": "2026-09-30T17:50:30-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-09-30T16:45:54-07:00",
+    "end": "2026-09-30T17:47:51-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Completed 12 targeted web searches bounded to the four supplementary recall miss classes.",
+    "No new qualifying U.S. food-access disruption was identified within the search window.",
+    "Fresh same-day results were excluded when outside scope, stale relative to the prior hourly check, non-U.S., routine/promotional, or lacking an immediate food-access interruption.",
+    "Notable excluded result: Connecticut SNAP rule-change coverage was updated at 12:52 p.m. on September 30 and therefore predated this hourly window; it also described implementation of previously announced eligibility rules rather than a new interruption.",
+    "No search failure materially reduced useful coverage."
+  ]
+}

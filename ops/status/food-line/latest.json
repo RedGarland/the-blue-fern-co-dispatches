@@ -46,9 +46,9 @@
   "dispatch": "food-line",
   "effective_task_summaries": [
     {
-      "artifact_id": "20261001T074558Z-current-intake.json",
+      "artifact_id": "20261001T081513Z-current-intake.json",
       "classification": "success",
-      "completed_at": "2026-10-01T07:45:58.578872Z",
+      "completed_at": "2026-10-01T08:15:13.965739Z",
       "diagnostics": null,
       "exit_code": 0,
       "next_expected_run": null,
@@ -62,9 +62,9 @@
       },
       "publication_attempted": null,
       "publication_status": "",
-      "run_id": "food-line-proof-food-care-continuation-20261001T071826Z-c3657d84",
+      "run_id": "food-line-proof-food-care-continuation-20261001T074825Z-b35d4d4a",
       "scheduled_for": "2026-10-01",
-      "started_at": "2026-10-01T07:45:52.491494Z",
+      "started_at": "2026-10-01T08:15:12.272429Z",
       "status": "SUCCESS",
       "task_key": "food_line_current_intake"
     },
@@ -102,9 +102,9 @@
     }
   ],
   "incident_reference": null,
-  "last_exported_at": "2026-10-01T08:15:11.925960Z",
-  "last_receipt_at": "2026-10-01T08:15:11.432712Z",
-  "latest_runtime_proof_date": "2026-10-01T08:15:11.432712Z",
+  "last_exported_at": "2026-10-01T08:15:31.368766Z",
+  "last_receipt_at": "2026-10-01T08:15:13.965739Z",
+  "latest_runtime_proof_date": "2026-10-01T08:15:13.965739Z",
   "next_expected_run": null,
   "observed_date": "2026-10-01",
   "private_review_backlog": {
@@ -193,6 +193,29 @@
       "run_id": "food-line-proof-food-care-continuation-20261001T071826Z-c3657d84",
       "scheduled_for": "2026-10-01",
       "started_at": "2026-10-01T07:45:52.491494Z",
+      "status": "SUCCESS",
+      "task_key": "food_line_current_intake"
+    },
+    {
+      "artifact_id": "20261001T081513Z-current-intake.json",
+      "classification": "success",
+      "completed_at": "2026-10-01T08:15:13.965739Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "bluesky": false,
+        "maps": false,
+        "pages": false,
+        "public_output": false,
+        "schedule": false
+      },
+      "publication_attempted": null,
+      "publication_status": "",
+      "run_id": "food-line-proof-food-care-continuation-20261001T074825Z-b35d4d4a",
+      "scheduled_for": "2026-10-01",
+      "started_at": "2026-10-01T08:15:12.272429Z",
       "status": "SUCCESS",
       "task_key": "food_line_current_intake"
     },

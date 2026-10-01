@@ -177,23 +177,32 @@
         "state": "HANDOFF_RECEIVED_SUCCESS",
         "unaccounted_count": 0
       },
-      "aggregate_status": "SUCCESS",
+      "aggregate_status": "DEGRADED",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "78405b4f58436cf106a0c66665555f853966e4e8",
       "debug_summary": {
-        "aggregate_status": "SUCCESS",
+        "aggregate_status": "DEGRADED",
         "all_current_failures_external": null,
         "all_current_failures_non_actionable": null,
-        "attention_task_count": 0,
-        "attention_tasks": [],
+        "attention_task_count": 1,
+        "attention_tasks": [
+          {
+            "artifact_id": "20261001T155509Z-source-watch.json",
+            "classification": "completed_with_exclusions",
+            "exit_code": 0,
+            "failure_stage": "source_watch",
+            "status": "DEGRADED",
+            "task_key": "food_line_source_watch"
+          }
+        ],
         "external_access_restriction_count": null,
         "failed_source_count": null,
         "operator_assessment": "ACTION_REQUIRED_PENDING_REVIEW",
-        "primary_classification": null,
-        "primary_failure_stage": null,
+        "primary_classification": "completed_with_exclusions",
+        "primary_failure_stage": "source_watch",
         "primary_layer": "EDITORIAL_HANDOFF",
-        "primary_task_key": null,
-        "primary_task_status": null,
+        "primary_task_key": "food_line_source_watch",
+        "primary_task_status": "DEGRADED",
         "private_review_count_only_gap_count": 44,
         "private_review_dispositioned_item_count": 52,
         "private_review_max_age_hours": 15,
@@ -394,7 +403,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-01T15:32:50.109962Z",
+  "exported_at": "2026-10-01T15:55:45.315891Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "DEGRADED"

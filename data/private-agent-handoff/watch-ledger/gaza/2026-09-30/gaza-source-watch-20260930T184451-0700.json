@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260930T184451-0700",
+  "scheduled_for": "2026-09-30T18:44:51-07:00",
+  "started_at": "2026-09-30T18:44:52-07:00",
+  "completed_at": "2026-09-30T18:45:57-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-30T17:47:37-07:00",
+    "end": "2026-09-30T18:45:57-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Checked OCHA OPT first. No new qualifying Gaza development surfaced in the observation window; the latest surfaced Gaza-relevant OCHA publication remained the Humanitarian Situation Report dated 25 September 2026.",
+    "Checked WHO second. No new in-window Gaza health-system, hospital, ambulance, fuel, medical-evacuation, or functioning-capacity development surfaced.",
+    "Completed exactly 12 additional targeted searches covering Reuters, AP, WAFA, UN News, PRCS, WFP, UNICEF, ICRC, crossings/aid access, ceasefire/hostage negotiations, and two late-evening broad recall queries.",
+    "Direct UN News search/retrieval was blocked by robots.txt. Useful coverage remained through other sources, so the run is DEGRADED rather than FAILED.",
+    "Current AP, Reuters-syndicated, WAFA, Al Jazeera, and Anadolu results repeated already-surfaced September 30 incidents, including the Gaza City apartment strike, Tel al-Hawa vehicle/bus strike, Khan Younis tent strike, Deir al-Balah gunfire injuries, and Qarara strike; these were excluded as duplicates or recycled reporting.",
+    "No new, traceable qualifying development was verified after the prior heartbeat completed at 17:47:37 PT."
+  ]
+}

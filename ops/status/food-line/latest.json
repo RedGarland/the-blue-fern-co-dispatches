@@ -36,12 +36,12 @@
     "primary_task_key": "food_line_source_watch",
     "primary_task_status": "DEGRADED",
     "private_review_count_only_gap_count": 43,
-    "private_review_dispositioned_item_count": 42,
-    "private_review_max_age_hours": 287,
-    "private_review_oldest_pending_date": "2026-09-19",
-    "private_review_pending_date_count": 6,
-    "private_review_pending_item_count": 55,
-    "private_review_unresolved_item_count": 55,
+    "private_review_dispositioned_item_count": 51,
+    "private_review_max_age_hours": 96,
+    "private_review_oldest_pending_date": "2026-09-27",
+    "private_review_pending_date_count": 4,
+    "private_review_pending_item_count": 46,
+    "private_review_unresolved_item_count": 46,
     "publication_attempted": false,
     "publication_status": "skipped_not_release_ready",
     "receipt_completeness": "COMPLETE",
@@ -130,7 +130,7 @@
     }
   ],
   "incident_reference": null,
-  "last_exported_at": "2026-09-30T23:56:24.312922Z",
+  "last_exported_at": "2026-10-01T00:02:39.160396Z",
   "last_receipt_at": "2026-09-30T23:56:15.601573Z",
   "latest_runtime_proof_date": "2026-09-30T23:56:15.601573Z",
   "next_expected_run": null,
@@ -139,25 +139,7 @@
     "count_only_gap_count": 43,
     "dates": [
       {
-        "age_hours": 287,
-        "count_only_gap_count": 0,
-        "date": "2026-09-19",
-        "dispositioned_item_count": 1,
-        "pending_item_count": 1,
-        "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-19.json",
-        "unresolved_item_count": 1
-      },
-      {
-        "age_hours": 215,
-        "count_only_gap_count": 0,
-        "date": "2026-09-22",
-        "dispositioned_item_count": 2,
-        "pending_item_count": 1,
-        "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-22.json",
-        "unresolved_item_count": 1
-      },
-      {
-        "age_hours": 95,
+        "age_hours": 96,
         "count_only_gap_count": 9,
         "date": "2026-09-27",
         "dispositioned_item_count": 6,
@@ -166,31 +148,31 @@
         "unresolved_item_count": 9
       },
       {
-        "age_hours": 71,
+        "age_hours": 72,
         "count_only_gap_count": 3,
         "date": "2026-09-28",
-        "dispositioned_item_count": 5,
-        "pending_item_count": 4,
+        "dispositioned_item_count": 6,
+        "pending_item_count": 3,
         "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-28.json",
-        "unresolved_item_count": 4
+        "unresolved_item_count": 3
       },
       {
-        "age_hours": 47,
+        "age_hours": 48,
         "count_only_gap_count": 26,
         "date": "2026-09-29",
-        "dispositioned_item_count": 3,
-        "pending_item_count": 29,
+        "dispositioned_item_count": 5,
+        "pending_item_count": 27,
         "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-29.json",
-        "unresolved_item_count": 29
+        "unresolved_item_count": 27
       },
       {
-        "age_hours": 23,
+        "age_hours": 24,
         "count_only_gap_count": 5,
         "date": "2026-09-30",
-        "dispositioned_item_count": 0,
-        "pending_item_count": 11,
+        "dispositioned_item_count": 4,
+        "pending_item_count": 7,
         "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-09-30.json",
-        "unresolved_item_count": 11
+        "unresolved_item_count": 7
       }
     ],
     "disposition_diagnostics": {
@@ -209,6 +191,15 @@
         "unknown_disposition_count": 0
       },
       {
+        "applied_item_count": 9,
+        "disposition_artifact": "data/dispatches/food-line/review/private-review-dispositions/food-line-backlog-triage-2026-09-30-dispositions.json",
+        "entry_count": 10,
+        "ignored_entry_count": 0,
+        "malformed_entry_count": 0,
+        "subtracting_entry_count": 9,
+        "unknown_disposition_count": 0
+      },
+      {
         "applied_item_count": 39,
         "disposition_artifact": "data/dispatches/food-line/review/private-review-dispositions/food-line-recovery-brief-sept14-28-2026-dispositions.json",
         "entry_count": 39,
@@ -218,12 +209,12 @@
         "unknown_disposition_count": 0
       }
     ],
-    "dispositioned_item_count": 42,
-    "max_age_hours": 287,
-    "oldest_pending_date": "2026-09-19",
-    "pending_date_count": 6,
-    "pending_item_count": 55,
-    "unresolved_item_count": 55
+    "dispositioned_item_count": 51,
+    "max_age_hours": 96,
+    "oldest_pending_date": "2026-09-27",
+    "pending_date_count": 4,
+    "pending_item_count": 46,
+    "unresolved_item_count": 46
   },
   "public_side_effects": {
     "publication_attempted": false,

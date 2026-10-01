@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20260930T194451-0700",
+  "scheduled_for": "2026-09-30T19:44:51-07:00",
+  "started_at": "2026-09-30T19:46:56-07:00",
+  "completed_at": "2026-09-30T19:47:58-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-09-30T18:45:57-07:00",
+    "end": "2026-09-30T19:47:58-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Checked OCHA OPT first. No new qualifying Gaza development surfaced in the observation window; the latest surfaced Gaza-relevant OCHA items remained the 28 September 2026 publication of the 23 September impact snapshot and the Humanitarian Situation Report dated 25 September 2026.",
+    "Checked WHO second. No new in-window Gaza health-system, hospital, ambulance, transport, fuel, medical-evacuation, or functioning-capacity development surfaced.",
+    "Completed exactly 12 additional targeted searches covering Reuters, AP, WAFA, UN News, PRCS, WFP, UNICEF, ICRC, crossings/aid/fuel, ceasefire-hostage negotiations, hospital/ambulance/medical evacuation, and displacement/water/food access.",
+    "Direct UN News retrieval/search was blocked by robots.txt. Useful coverage remained through syndicated UN News content and other sources, so the run is DEGRADED rather than FAILED.",
+    "The Reuters Connect/Anadolu funeral item concerned four people killed on 29 September and was not a new in-window incident. The UN News/OCHA item about Israeli fire near UN facilities and humanitarian convoys was already surfaced by an earlier watch and was excluded as a duplicate.",
+    "No new, traceable qualifying development was verified after the prior heartbeat completed at 18:45:57 PT."
+  ]
+}

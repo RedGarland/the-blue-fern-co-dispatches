@@ -189,7 +189,7 @@
         "attention_task_count": 1,
         "attention_tasks": [
           {
-            "artifact_id": "20261001T002519Z-source-watch.json",
+            "artifact_id": "20261001T003700Z-source-watch.json",
             "classification": "completed_with_exclusions",
             "exit_code": 0,
             "failure_stage": "source_watch",
@@ -391,7 +391,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-01T00:25:44.800894Z",
+  "exported_at": "2026-10-01T00:37:31.733853Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "DEGRADED"

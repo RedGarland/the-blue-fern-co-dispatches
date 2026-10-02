@@ -1,0 +1,38 @@
+{
+  "schema_version": "bluefern.watch_reconciliation.v1",
+  "dispatch": "gaza",
+  "observation_date": "2026-10-01",
+  "generated_at": "2026-10-02T07:06:40Z",
+  "watch_ledger_ref": "ops/watch-ledger",
+  "protected_source_ref": "add/pages-repo-default",
+  "run_count": 16,
+  "success_run_count": 2,
+  "degraded_run_count": 14,
+  "successful_run_count": 16,
+  "failed_run_count": 0,
+  "zero_finding_run_count": 16,
+  "finding_count": 0,
+  "accounted_count": 0,
+  "unreconciled_count": 0,
+  "findings": [],
+  "missing_hour_slots_local": [
+    "02",
+    "06",
+    "11",
+    "14",
+    "18",
+    "19",
+    "22",
+    "23"
+  ],
+  "material_heartbeat_absence": true,
+  "production_evidence": {
+    "protected_source_checked": true,
+    "deployed_public_checked": true,
+    "observation": "No watch findings required matching. The protected source/default branch contains no 2026-10-01 Gaza production artifacts; deployed gh-pages contains a Gaza edition for 2026-10-01."
+  },
+  "operational_issue": true,
+  "operational_issue_reasons": [
+    "MATERIAL_HEARTBEAT_ABSENCE"
+  ]
+}

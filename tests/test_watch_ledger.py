@@ -157,6 +157,13 @@ def test_runner_submission_uses_workflow_dispatch_without_direct_ledger_write(
     assert not (tmp_path / LEDGER_ROOT).exists()
 
 
+def test_runner_submission_accepts_windows_utf8_bom_payload(tmp_path: Path) -> None:
+    payload_path = tmp_path / "heartbeat.json"
+    payload_path.write_text(json.dumps(_run(outcome="no_findings")), encoding="utf-8-sig")
+
+    assert submit._load_payload(payload_path)["run_id"] == "20260925T120000Z-care"
+
+
 def test_final_ref_update_blocked_fails_heartbeat_without_schedule_mutation(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

@@ -21,7 +21,7 @@ def _utc_now() -> str:
 
 
 def _load_payload(path: Path) -> dict[str, Any]:
-    value = json.loads(path.read_text(encoding="utf-8"))
+    value = json.loads(path.read_text(encoding="utf-8-sig"))
     if not isinstance(value, dict):
         raise ValueError("watch heartbeat payload must be a JSON object")
     errors = validate_watch_run(value)

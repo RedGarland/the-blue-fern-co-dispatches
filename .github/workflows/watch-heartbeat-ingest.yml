@@ -1,0 +1,47 @@
+name: Watch heartbeat ingest
+
+on:
+  workflow_dispatch:
+    inputs:
+      heartbeat_json_b64:
+        description: "Base64-encoded bluefern.watch_run.v1 heartbeat payload"
+        required: true
+        type: string
+      ledger_branch:
+        description: "Authoritative watch-ledger branch"
+        required: true
+        default: "ops/watch-ledger"
+        type: string
+
+concurrency:
+  group: watch-heartbeat-ingest-${{ inputs.ledger_branch }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: src
+    steps:
+      - name: Check out watch ledger branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ledger_branch }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Ingest heartbeat
+        run: >-
+          python scripts/ingest_watch_heartbeat.py
+          --payload-base64 '${{ inputs.heartbeat_json_b64 }}'
+          --prepare-branch '${{ inputs.ledger_branch }}'
+          --commit
+          --push
+          --commit-message 'Append scheduled watch heartbeat'

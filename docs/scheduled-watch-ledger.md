@@ -18,11 +18,34 @@ Use schema `bluefern.watch_run.v1` with:
 - `findings`: array; empty is valid for `no_findings`
 - `coverage_notes`
 
-Persist to:
+Persist to the authoritative ledger path:
 
-`data/private-agent-handoff/watch-ledger/<dispatch>/<YYYY-MM-DD>/<run-id>.json`
+`ops/watch-ledger/<dispatch>/<YYYY-MM-DD>/<run-id>.json`
 
 Identical retries are safe no-ops. A reused run ID with different content fails closed.
+
+## Persistence architecture
+
+Scheduled watches must not commit directly from their runtime worktrees. The
+runner submits the validated heartbeat payload to the repository-side workflow
+`watch-heartbeat-ingest.yml`. That workflow checks out the dedicated
+`ops/watch-ledger` branch, appends exactly one validated
+`bluefern.watch_run.v1` file under `ops/watch-ledger/`, commits only that
+subtree, and pushes the final ref update.
+
+`ops/watch-ledger` is authoritative for scheduled watch heartbeats. Historical
+local files under `data/private-agent-handoff/watch-ledger/` may remain as
+preserved evidence, but new success accounting must come from
+`ops/watch-ledger`.
+
+Temporary `automation/...` branch commits are diagnostic evidence only. They do
+not prove heartbeat persistence and must not be treated as successful scheduled
+watch accounting.
+
+Heartbeat persistence failures never authorize disabling, pausing, or mutating a
+watch schedule. If ingestion or the final ref update fails, classify that watch
+run as `FAILED` or `DEGRADED` according to the watch result, preserve the local
+receipt/error evidence, and leave the schedule untouched.
 
 ## Reconciliation
 

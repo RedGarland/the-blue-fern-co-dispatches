@@ -487,6 +487,15 @@ authorization to reactivate Cascadia.
 
 Use one serialized exporter. Do not have every scheduled task independently commit and push. The exporter should use a dedicated operational-status clone/worktree or isolated checkout. Production runners should not need to push from dirty runtime worktrees.
 
+The same contention rule applies to Scheduled Dispatch Watch heartbeat
+persistence. Watches submit `bluefern.watch_run.v1` payloads to the
+repository-side `watch-heartbeat-ingest.yml` workflow; the workflow owns the
+append-only commit to the dedicated `ops/watch-ledger` branch and only stages
+paths under `ops/watch-ledger/`. Fallback `automation/...` branches are
+diagnostic-only and are not authoritative heartbeat evidence. A heartbeat
+ingestion failure is an observability/runtime failure, not authorization to
+disable, pause, or mutate the watch schedule.
+
 ## Scheduled operational-status export
 
 The single Windows task `\Blue Fern Co\Blue Fern Operational Status Export`

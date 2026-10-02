@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261001T204937-0700-r11",
+  "scheduled_for": "2026-10-01T20:45:54-07:00",
+  "started_at": "2026-10-01T20:49:37-07:00",
+  "completed_at": "2026-10-01T20:50:36.952-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-01T19:51:21-07:00",
+    "end": "2026-10-01T20:49:37-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 12 targeted web searches focused on the four audited Food Line miss classes. No qualifying new U.S. food-access disruption was identified in the bounded window. Fresh returned material was either outside the window or non-qualifying; for example, the Kauaʻi Hurricane Lowell recovery update was published before this window and did not report a qualifying grocery loss, canceled emergency food distribution, abrupt pantry/food-bank service reduction, or immediate SNAP/WIC/EBT interruption. Production collection remains authoritative."
+}

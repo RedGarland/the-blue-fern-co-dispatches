@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261002T074432-0700-r11",
+  "scheduled_for": "2026-10-02T07:45:54-07:00",
+  "started_at": "2026-10-02T07:44:32-07:00",
+  "completed_at": "2026-10-02T07:46:22-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-02T06:47:35-07:00",
+    "end": "2026-10-02T07:44:32-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "production_collection_authoritative": true,
+    "supplementary_scope_only": true,
+    "searches_executed": 12,
+    "search_failures": 0,
+    "targeted_miss_classes": [
+      "loss/closure/fire/disaster affecting the only, sole, last, or full-service grocery store in a community",
+      "canceled/suspended emergency food distributions due to storm, flood, fire, outage, or facility damage",
+      "abrupt pantry/food-bank service closure or major access reduction",
+      "new official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "result_summary": "No new qualifying U.S. food-access disruption was identified since the prior completed hourly watch.",
+    "notable_exclusions": [
+      "October 2 San Luis Obispo County food-bank grant announcement: funding/promotion, no access interruption",
+      "October 1 San Antonio storm-preparedness reporting: preparedness/resources, no documented canceled distribution or abrupt food-access loss",
+      "routine SNAP payment schedule/COLA and older SNAP interruption reporting: no new immediate interruption in the bounded window",
+      "older only/full-service grocery-store fire or closure reports: stale and outside the bounded window"
+    ],
+    "exclusions_applied": [
+      "donation drives",
+      "resource guides",
+      "recipes",
+      "opinion",
+      "routine program promotion",
+      "generic inflation stories",
+      "duplicates"
+    ]
+  }
+}

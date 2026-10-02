@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261002T144451-0700",
+  "scheduled_for": "2026-10-02T14:44:51-07:00",
+  "started_at": "2026-10-02T14:46:49-07:00",
+  "completed_at": "2026-10-02T14:48:30-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-02T12:48:00-07:00",
+    "end": "2026-10-02T14:48:30-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      "OCHA OPT checked first. No new qualifying Gaza development was found in the observation window; the newest surfaced OCHA Gaza situation report remained dated 18 September 2026.",
+      "WHO checked second. No new qualifying Gaza-specific development was found in the observation window; the WHO conflict page surfaced no Gaza-specific update newer than the 24 September 2026 UNGA remarks."
+    ],
+    "additional_searches": 12,
+    "search_scope": [
+      "civilian casualties and military operations with documented civilian impact",
+      "displacement",
+      "aid access and crossings",
+      "food and water access",
+      "healthcare disruption, hospitals, ambulances, fuel, functioning capacity, and medical evacuation",
+      "detention and hostages",
+      "ceasefire and negotiation changes"
+    ],
+    "exclusions": [
+      "older or recycled items",
+      "opinion",
+      "unsupported social claims",
+      "duplicates",
+      "unsourced claims",
+      "same-day material without a verifiable publication/event time inside the observation window",
+      "broad status commentary without a distinct new operational development"
+    ],
+    "degradation": [
+      "UN News direct retrieval was blocked by robots.txt; the same-day UN-associated syndicated item surfaced only broad ongoing humanitarian-access, water, sanitation, shelter, healthcare and reconstruction constraints and did not establish a distinct in-window change. Remaining humanitarian and established-source coverage was usable."
+    ],
+    "result": "No distinct development within the observation window met the novelty and traceability threshold."
+  }
+}

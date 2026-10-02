@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261002T003956-0700",
+  "scheduled_for": "2026-10-01T23:44:51-07:00",
+  "started_at": "2026-10-02T00:39:56-07:00",
+  "completed_at": "2026-10-02T00:40:51-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-01T22:47:11-07:00",
+    "end": "2026-10-02T00:40:51-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT was checked first; no new qualifying Gaza development was surfaced within the bounded search window.",
+    "WHO was checked second; no new qualifying Gaza health-system, medical-evacuation, fuel, ambulance, or functioning-capacity change was surfaced within the bounded search window.",
+    "Exactly 12 additional targeted searches were run across Reuters, AP, UN News, WFP, UNICEF, ICRC, MSF, WAFA, Al Jazeera, Times of Israel, the Palestinian Ministry of Health, and Israeli government/COGAT sources.",
+    "UN News retrieval was blocked by robots.txt. Remaining humanitarian and established-reporting coverage was usable, so the run is DEGRADED rather than FAILED.",
+    "No distinct, traceable, non-duplicate development meeting the watch criteria was verified after the prior hourly check."
+  ]
+}

@@ -1548,7 +1548,9 @@ def test_food_line_2026_06_06_blocks_stale_prior_year_current_story_candidates(t
     assert "What the source says" in source_table_html
     assert "stale current-story candidate source" in source_table_html
     assert "food-line-auto-" in source_table_html
-    _assert_food_line_recent_entry(index_html, "2026-06-06", "No qualifying update")
+    assert '<h2>Latest Briefing</h2>' in index_html
+    assert '<h3><a href="editions/2026-06-06/">No qualifying update</a></h3>' in index_html
+    _assert_food_line_recent_entry_absent(index_html, "2026-06-06")
     assert "editions/2026-06-06/" in index_html
     assert 'href="/american-pressure/"' not in index_html
     _assert_food_line_primary_nav_contract(index_html)
@@ -1961,7 +1963,8 @@ def test_food_line_homepage_omits_pressure_map_link_when_map_artifact_is_absent(
     index_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
     archive_html = (tmp_path / "output" / "site" / "food-line" / "archive.html").read_text(encoding="utf-8")
 
-    _assert_food_line_recent_entry(index_html, "2026-06-07", "No qualifying update")
+    assert '<h3><a href="editions/2026-06-07/">No qualifying update</a></h3>' in index_html
+    _assert_food_line_recent_entry_absent(index_html, "2026-06-07")
     assert '<span class="edition-date">2026-06-07</span><a href="editions/2026-06-07/">No qualifying update</a>' in archive_html
     assert '<span class="edition-date">2026-06-06</span><a href="editions/2026-06-06/">No qualifying update</a>' in archive_html
     assert "2026-06-05" not in index_html
@@ -2014,7 +2017,8 @@ def test_food_line_homepage_omits_pressure_map_link_when_marker_count_is_zero(tm
 
     index_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
 
-    _assert_food_line_recent_entry(index_html, "2026-06-07", "No qualifying update")
+    assert '<h3><a href="editions/2026-06-07/">No qualifying update</a></h3>' in index_html
+    _assert_food_line_recent_entry_absent(index_html, "2026-06-07")
     assert 'href="map/"' not in index_html
 
 
@@ -2061,7 +2065,8 @@ def test_food_line_homepage_shows_pressure_map_link_when_marker_count_is_positiv
 
     index_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
 
-    _assert_food_line_recent_entry(index_html, "2026-06-07", "No qualifying update")
+    assert '<h3><a href="editions/2026-06-07/">No qualifying update</a></h3>' in index_html
+    _assert_food_line_recent_entry_absent(index_html, "2026-06-07")
     assert 'href="map/"' in index_html
 
 
@@ -3887,13 +3892,15 @@ def test_food_line_home_recent_editions_are_relative_and_date_descending(tmp_pat
     home_html = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
     recent_html = home_html.split("<h2>Recent Editions</h2>", 1)[1].split("</section>", 1)[0]
 
-    assert 'href="editions/2026-06-12/"' in recent_html
     assert 'href="editions/2026-06-11/"' in recent_html
     assert 'href="editions/2026-06-10/"' in recent_html
+    assert 'href="editions/2026-06-12/"' not in recent_html
     assert 'href="/food-line/editions/2026-06-12/"' not in recent_html
-    assert "2026-06-12" in recent_html
-    assert "FRAC warns SNAP eligibility proposal could increase hunger" in recent_html
-    assert recent_html.index("2026-06-12") < recent_html.index("2026-06-11")
+    assert "2026-06-12" not in recent_html
+    assert "FRAC warns SNAP eligibility proposal could increase hunger" not in recent_html
+    latest_html = home_html.split("<h2>Latest Briefing</h2>", 1)[1].split("</section>", 1)[0]
+    assert 'href="editions/2026-06-12/"' in latest_html
+    assert "FRAC warns SNAP eligibility proposal could increase hunger" in latest_html
     assert recent_html.index("2026-06-11") < recent_html.index("2026-06-10")
 
 
@@ -3919,6 +3926,10 @@ def _food_line_recent_entry_titles(html_text: str) -> dict[str, str]:
 
 def _assert_food_line_recent_entry(html_text: str, date: str, title: str) -> None:
     assert _food_line_recent_entry_titles(html_text)[date] == title
+
+
+def _assert_food_line_recent_entry_absent(html_text: str, date: str) -> None:
+    assert date not in _food_line_recent_entry_titles(html_text)
 
 
 def _assert_food_line_primary_nav_contract(html_text: str) -> None:
@@ -3980,7 +3991,7 @@ def test_food_line_landing_page_uses_clean_current_inventory_sections(tmp_path: 
         entry.select_one(".food-line-edition-meta").get_text(strip=True): entry.select_one(".food-line-recent-title").get_text(strip=True)
         for entry in recent_entries
     }
-    assert recent_titles["2026-09-12"] == "Food Line recovery-disclosed publication"
+    assert "2026-09-12" not in recent_titles
     assert recent_titles["2026-08-31"] == "Food Line retrospective: benefit losses and rising demand"
     assert recent_titles["2026-08-30"] == "Food Line retrospective: August service interruptions"
     assert "Phoenix metropolitan area; Statewide" not in html_text

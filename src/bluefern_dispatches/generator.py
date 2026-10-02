@@ -1976,15 +1976,17 @@ def render_edition_list_item(site_root: Path, dispatch: DispatchConfig, date: st
         if map_path.exists():
             actions += ' | <a href="editions/{0}/map.html">View map</a>'.format(date)
         actions += "</span>"
+    if label == date and not actions:
+        return f'      <li><a class="edition-date" href="editions/{date}/">{html.escape(date)}</a>{subtitle_html}</li>'
     return (
-        f'      <li><span class="edition-date">{html.escape(date)}</span>'
+        f'      <li><span class="edition-date">{html.escape(date)}</span> '
         f'<a href="editions/{date}/">{html.escape(label)}</a>{actions}{subtitle_html}</li>'
     )
 
 
 def render_gaza_historical_catchup_list_item(entry: GazaHistoricalCatchupEntry) -> str:
     return (
-        f'      <li class="historical-catchup"><span class="edition-date">{html.escape(entry.publication_date)}</span>'
+        f'      <li class="historical-catchup"><span class="edition-date">{html.escape(entry.publication_date)}</span> '
         f'<a href="catchups/{html.escape(entry.catchup_id)}/">Historical catch-up / '
         f'{html.escape(entry.publication_date)} — {html.escape(entry.title)}</a></li>'
     )
@@ -2038,7 +2040,7 @@ def render_gaza_no_update_list_item(entry: GazaNoUpdateEntry) -> str:
         else ""
     )
     return (
-        f'      <li class="no-update"><span class="edition-date">{html.escape(entry.date)}</span>'
+        f'      <li class="no-update"><span class="edition-date">{html.escape(entry.date)}</span> '
         f'<span class="no-update-label">No update</span> '
         f'<span>{html.escape(entry.message)}</span>{source_note}</li>'
     )

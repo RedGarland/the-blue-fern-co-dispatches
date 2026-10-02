@@ -124,6 +124,10 @@ def _assert_html_basics(pages_root: Path, issues: list[VisualIssue]) -> dict[str
     food_index = food_dir / "index.html"
     root_html = _read_text(pages_root / "index.html")
     food_html = _read_text(food_index)
+    food_home = pages_root / "food-line" / "index.html"
+    food_home_soup = _soup(food_home) if food_home.exists() else None
+    gaza_home = pages_root / "gaza" / "index.html"
+    gaza_home_soup = _soup(gaza_home) if gaza_home.exists() else None
     expected_count = _expected_food_story_count(food_dir)
     rendered_count = len(_soup(food_index).select("article.food-line-source-card"))
 
@@ -140,6 +144,92 @@ def _assert_html_basics(pages_root: Path, issues: list[VisualIssue]) -> dict[str
     for rejected in REJECTED_FOOD_TEXT:
         if rejected in food_html:
             issues.append(VisualIssue(food_path, "food_rejected_absent", f"rejected Food text is present: {rejected}"))
+    if food_home_soup is None:
+        issues.append(VisualIssue("/food-line/", "food_latest_duplicate", "Food Line landing page is missing"))
+    else:
+        for heading in food_home_soup.find_all(["h2", "h3"]):
+            if heading.get_text(" ", strip=True).lower() != "latest briefing":
+                continue
+            panel = heading.find_parent(["section", "article", "div"]) or food_home_soup
+            links_seen: set[tuple[str, str]] = set()
+            for link in panel.find_all("a"):
+                key = (str(link.get("href") or "").strip(), link.get_text(" ", strip=True))
+                if key in links_seen:
+                    issues.append(VisualIssue("/food-line/", "food_latest_duplicate", f"Latest Briefing repeats the same title/link: {key[1]}"))
+                    break
+                links_seen.add(key)
+            latest_title_link = heading.find_next("h3")
+            latest_anchor = latest_title_link.find("a") if latest_title_link else None
+            if latest_anchor is not None:
+                latest_key = (
+                    str(latest_anchor.get("href") or "").strip(),
+                    latest_anchor.get_text(" ", strip=True),
+                )
+                repeated_title_links = [
+                    link
+                    for link in food_home_soup.find_all("a")
+                    if (str(link.get("href") or "").strip(), link.get_text(" ", strip=True)) == latest_key
+                ]
+                if len(repeated_title_links) > 1:
+                    issues.append(
+                        VisualIssue(
+                            "/food-line/",
+                            "food_latest_duplicate",
+                            f"Food Line landing page repeats latest briefing title/link outside the latest panel: {latest_key[1]}",
+                        )
+                    )
+            break
+    if gaza_home_soup is None:
+        issues.append(VisualIssue("/gaza/", "gaza_recent_duplicate_date_link", "Gaza landing page is missing"))
+    else:
+        for heading in gaza_home_soup.find_all(["h2", "h3"]):
+            if heading.get_text(" ", strip=True).lower() != "recent editions":
+                continue
+            recent_list = heading.find_next("ul", class_="edition-list")
+            if recent_list is None:
+                break
+            for item in recent_list.find_all("li", recursive=False):
+                date_node = item.find(class_="edition-date", recursive=False)
+                link = item.find("a", recursive=False)
+                date_text = date_node.get_text(" ", strip=True) if date_node else ""
+                link_text = link.get_text(" ", strip=True) if link else ""
+                raw_item = str(item)
+                item_text = item.get_text("", strip=True)
+                if (
+                    date_node is not None
+                    and link is not None
+                    and date_node is not link
+                    and date_text
+                    and link_text == date_text
+                    and re.fullmatch(r"\d{4}-\d{2}-\d{2}", date_text)
+                ):
+                    issues.append(
+                        VisualIssue(
+                            "/gaza/",
+                            "gaza_recent_duplicate_date_link",
+                            f"Gaza Recent Editions repeats adjacent date text/link: {date_text}",
+                        )
+                    )
+                    break
+                if re.search(r"(\d{4}-\d{2}-\d{2})\1", item_text):
+                    issues.append(
+                        VisualIssue(
+                            "/gaza/",
+                            "gaza_recent_duplicate_date_link",
+                            f"Gaza Recent Editions contains concatenated adjacent dates: {item_text[:80]}",
+                        )
+                    )
+                    break
+                if re.search(r'<span class="edition-date">\d{4}-\d{2}-\d{2}</span><(?:span|a)\b', raw_item):
+                    issues.append(
+                        VisualIssue(
+                            "/gaza/",
+                            "gaza_recent_duplicate_date_link",
+                            f"Gaza Recent Editions jams date text against the next label: {item_text[:80]}",
+                        )
+                    )
+                    break
+            break
 
     if "/food-line/editions/" not in root_html:
         issues.append(VisualIssue("/", "latest_food_link", "root page does not link to a Food Line edition"))
@@ -233,6 +323,22 @@ def _visual_checks_with_playwright(
 
                     page.on("response", on_response)
                     response = page.goto(f"{base_url}{path}", wait_until="networkidle")
+                    try:
+                        page.wait_for_function(
+                            "() => Array.from(document.images || []).every((img) => img.complete)",
+                            timeout=5000,
+                        )
+                        page.evaluate(
+                            """
+                            () => Promise.all(
+                              Array.from(document.images || []).map((img) =>
+                                img.decode ? img.decode().catch(() => undefined) : Promise.resolve()
+                              )
+                            )
+                            """
+                        )
+                    except Exception:
+                        pass
                     status = response.status if response else None
                     metrics = page.evaluate(
                         """
@@ -320,7 +426,9 @@ def _visual_checks_with_playwright(
                             editionCardCount: document.querySelectorAll('.edition-card').length,
                             foodHero: box('.food-line-hero'),
                             foodLogo: box('.food-line-logo--edition, .food-line-logo--home, .hero-logo'),
+                            productLogo: box('.home .hero-logo, .briefing .hero-logo, .food-line-logo--home, .food-line-logo--edition'),
                             foodStoryCardCount: document.querySelectorAll('article.food-line-source-card').length,
+                            gazaRecentEditionTexts: Array.from(document.querySelectorAll('.edition-list > li')).map((item) => item.textContent ? item.textContent.replace(/\\s+/g, '') : ''),
                             bodyText: document.body ? document.body.innerText : ''
                           };
                         }
@@ -377,9 +485,9 @@ def _visual_checks_with_playwright(
                             issues.append(VisualIssue(path, "primary_button_contrast", f"primary button text color is not the approved light tone: {primary_button.get('color')}"))
                         if not latest:
                             issues.append(VisualIssue(path, "latest_desk", "homepage latest desk/grid was not found"))
-                        elif float(latest.get("y") or 9999) > 1200:
+                        elif float(latest.get("y") or 9999) > 680:
                             issues.append(VisualIssue(path, "latest_desk", f"homepage latest desk starts below first viewport: y={latest.get('y')}"))
-                        if hero and float(hero.get("height") or 0) > 720:
+                        if hero and float(hero.get("height") or 0) > 640:
                             issues.append(VisualIssue(path, "hero_height", f"homepage hero is too tall: {hero.get('height')}px"))
                         if not active or int(metrics.get("activeCardCount") or 0) < 3:
                             issues.append(VisualIssue(path, "active_dispatch_cards", "active dispatch cards/grid did not render"))
@@ -398,15 +506,37 @@ def _visual_checks_with_playwright(
                         issues.append(VisualIssue(path, "edition_cards", "dispatch directory rendered fewer than three cards"))
                     if path == "/food-line/":
                         hero = metrics.get("foodHero") or metrics.get("hero") or {}
+                        logo = metrics.get("productLogo") or metrics.get("foodLogo") or {}
                         if hero and float(hero.get("height") or 0) > 760:
                             issues.append(VisualIssue(path, "food_hero_height", f"Food landing hero is too tall: {hero.get('height')}px"))
+                        if logo and float(logo.get("width") or 0) > 300:
+                            issues.append(VisualIssue(path, "product_logo_size", f"Food landing logo is too wide: {logo.get('width')}px"))
                     if path.startswith("/food-line/editions/"):
                         hero = metrics.get("foodHero") or {}
                         logo = metrics.get("foodLogo") or {}
                         if hero and float(hero.get("height") or 0) > 760:
                             issues.append(VisualIssue(path, "food_edition_hero_height", f"Food edition hero is too tall: {hero.get('height')}px"))
-                        if logo and (float(logo.get("height") or 0) > 520 or float(logo.get("width") or 0) > 620):
+                        if logo and (float(logo.get("height") or 0) > 360 or float(logo.get("width") or 0) > 280):
                             issues.append(VisualIssue(path, "food_edition_logo", f"Food edition logo/header is oversized: {logo.get('width')}x{logo.get('height')}"))
+                    if path in {"/gaza/", "/care-line/"}:
+                        logo = metrics.get("productLogo") or {}
+                        hero = metrics.get("hero") or {}
+                        if logo and float(logo.get("width") or 0) > 300:
+                            issues.append(VisualIssue(path, "product_logo_size", f"product logo is too wide: {logo.get('width')}px"))
+                        if hero and float(hero.get("height") or 0) > 620:
+                            issues.append(VisualIssue(path, "product_hero_height", f"product landing hero is too tall: {hero.get('height')}px"))
+                    if path == "/gaza/":
+                        for text in metrics.get("gazaRecentEditionTexts") or []:
+                            match = re.search(r"(20\d{2}-\d{2}-\d{2})\1", str(text))
+                            if match:
+                                issues.append(
+                                    VisualIssue(
+                                        path,
+                                        "gaza_recent_duplicate_date_link",
+                                        f"Gaza Recent Editions rendered duplicated adjacent dates: {match.group(0)}",
+                                    )
+                                )
+                                break
             finally:
                 browser.close()
 

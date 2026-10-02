@@ -165,7 +165,7 @@ a:focus-visible {
 }
 
 main {
-  padding: clamp(2.5rem, 6vw, 5rem) 0;
+  padding: clamp(1.15rem, 3vw, 2.4rem) 0;
 }
 
 .home,
@@ -187,21 +187,29 @@ main {
 
 .hero {
   max-width: 900px;
-  padding-bottom: clamp(2.4rem, 5vw, 4.8rem);
+  padding-bottom: clamp(0.9rem, 2.2vw, 1.8rem);
 }
 
 .root-hero {
-  padding-bottom: clamp(1.5rem, 4vw, 3rem);
+  padding-bottom: clamp(0.7rem, 1.8vw, 1.25rem);
 }
 
 .root-masthead,
 .hero-logo {
   display: block;
-  width: min(520px, 90%);
+  width: min(260px, 64vw);
   max-width: 100%;
   height: auto;
   object-fit: contain;
   margin: 0 auto;
+}
+
+.home .hero-logo {
+  width: min(260px, 64vw);
+}
+
+.briefing .hero-logo {
+  width: min(220px, 58vw);
 }
 
 .root-masthead {
@@ -228,10 +236,11 @@ h3 {
 }
 
 .hero h1 {
-  max-width: 21ch;
-  margin: 0.3rem 0 1.2rem;
-  font-size: clamp(2.15rem, 5.4vw, 4.85rem);
+  max-width: 24ch;
+  margin: 0.15rem 0 0.65rem;
+  font-size: clamp(1.85rem, 3.65vw, 3.25rem);
   font-weight: 600;
+  line-height: 1.04;
   overflow-wrap: anywhere;
 }
 
@@ -672,11 +681,11 @@ h3 {
 
 .food-line-logo--home,
 .food-line-logo--audio {
-  width: min(360px, 90vw);
+  width: min(260px, 72vw);
 }
 
 .food-line-logo--edition {
-  width: min(360px, 90vw);
+  width: min(240px, 68vw);
 }
 
 .food-line-logo--map {
@@ -693,12 +702,12 @@ h3 {
 }
 
 .briefing .food-line-logo--edition {
-  width: min(280px, 72vw);
+  width: min(220px, 60vw);
 }
 
 .briefing .food-line-hero h1 {
   margin: 0.15rem 0 0.35rem;
-  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-size: clamp(1.9rem, 3.6vw, 2.85rem);
 }
 
 .food-line-panel h2:first-child,
@@ -959,7 +968,7 @@ h3 {
   .food-line-logo--map,
   .food-line-logo--audio,
   .food-line-logo--home {
-    width: 90vw;
+    width: min(72vw, 260px);
   }
 }
 

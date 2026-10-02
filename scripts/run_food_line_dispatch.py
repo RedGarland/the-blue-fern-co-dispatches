@@ -555,10 +555,10 @@ def _food_line_theme_styles() -> str:
   margin: 0 auto;
 }
 .food-line-logo--home {
-  width: min(360px, 90vw);
+  width: min(260px, 72vw);
 }
 .food-line-logo--edition {
-  width: min(360px, 90vw);
+  width: min(240px, 68vw);
 }
 .food-line-logo--map {
   width: min(520px, 90vw);
@@ -582,11 +582,11 @@ def _food_line_theme_styles() -> str:
   padding-bottom: 0.9rem;
 }
 .briefing .food-line-logo--edition {
-  width: min(280px, 72vw);
+  width: min(220px, 60vw);
 }
 .briefing .food-line-hero h1 {
   margin: 0.15rem 0 0.35rem;
-  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-size: clamp(1.9rem, 3.6vw, 2.85rem);
 }
 .food-line-actions {
   display: flex;
@@ -754,7 +754,7 @@ def _food_line_theme_styles() -> str:
   .food-line-logo--map,
   .food-line-logo--audio,
   .food-line-logo--home {
-    width: 90vw;
+    width: min(72vw, 260px);
   }
   .food-line-source-table {
     font-size: 0.9rem;
@@ -7437,34 +7437,41 @@ def _update_index_archive(
         return pages_labels.get(public_date) or _food_line_public_edition_label(root, public_date)
     latest_public_date = public_dates[0] if public_dates else ""
     latest_public_title = _food_line_landing_display_title(root, latest_public_date) if latest_public_date else ""
+    latest_recovery_note = _food_line_landing_recovery_note(root, latest_public_date) if latest_public_date else ""
     latest_story_rows = _food_line_landing_story_rows(root, latest_public_date) if latest_public_date else []
     latest_story_list_html = "".join(
-        (
-            '<li>'
-            f'<a href="editions/{html.escape(latest_public_date)}/">{html.escape(row["title"])}</a>'
-            f'{f"<div class=\"food-line-edition-meta\">{html.escape(row["event_date"])}</div>" if row["event_date"] else ""}'
-            '</li>'
-        )
-        for row in latest_story_rows
+        f'<li><a href="editions/{html.escape(latest_public_date)}/">{html.escape(str(row.get("title") or "Food pressure signal"))}</a></li>'
+        for row in latest_story_rows[:6]
     )
-    latest_recovery_note = _food_line_landing_recovery_note(root, latest_public_date) if latest_public_date else ""
-    recent_public_dates = public_dates[: min(len(public_dates), 8)]
-    recent_entries_html = "".join(
-        (
+    latest_story_list_block = f'    <ul class="food-line-story-list">{latest_story_list_html}</ul>\n' if latest_story_list_html else ""
+    recent_public_dates = public_dates[1 : min(len(public_dates), 9)] if latest_public_date else public_dates[:8]
+    recent_entries: list[str] = []
+    for public_date in recent_public_dates:
+        recent_title = _food_line_landing_display_title(root, public_date)
+        story_count = _food_line_landing_story_count(root, public_date)
+        recent_entries.append(
             '<li>'
             f'<div class="food-line-edition-meta">{html.escape(public_date)}</div>'
-            f'<a class="food-line-recent-title" href="editions/{html.escape(public_date)}/">{html.escape(_food_line_landing_display_title(root, public_date))}</a>'
-            f'<div class="food-line-edition-meta">{html.escape(str(_food_line_landing_story_count(root, public_date)))} source-backed {"development" if _food_line_landing_story_count(root, public_date) == 1 else "developments"}</div>'
+            f'<a class="food-line-recent-title" href="editions/{html.escape(public_date)}/">{html.escape(recent_title)}</a>'
+            f'<div class="food-line-edition-meta">{html.escape(str(story_count))} source-backed {"development" if story_count == 1 else "developments"}</div>'
             '</li>'
         )
-        for public_date in recent_public_dates
-    )
+    recent_entries_html = "".join(recent_entries)
     action_links = [
         f'<a href="editions/{html.escape(latest_public_date)}/">Read briefing</a>' if latest_public_date else "",
         '<a href="audio/index.html">Audio</a>' if _food_line_audio_index_is_available(root) else "",
         '<a href="archive.html">Archive</a>',
         '<a href="map/">Map</a>' if _food_line_map_is_available(root) else "",
     ]
+    latest_panel_html = (
+        f'    <div class="food-line-briefing-meta">{html.escape(latest_public_date)}</div>\n'
+        f'    <h3><a href="editions/{html.escape(latest_public_date)}/">{html.escape(latest_public_title)}</a></h3>\n'
+        f'{f"    <p class=\"food-line-note\">{html.escape(latest_recovery_note)}</p>\n" if latest_recovery_note else ""}'
+        f'{latest_story_list_block}'
+        f'    <div class="food-line-actions">{"".join(link for link in action_links if link)}</div>\n'
+        if latest_public_date
+        else '    <p>No public editions have been published yet.</p>\n'
+    )
     page_footer = footer("")
     idx_body = "".join(
         [
@@ -7479,15 +7486,7 @@ def _update_index_archive(
             '  </section>\n',
             '  <section class="food-line-panel">\n',
             '    <h2>Latest Briefing</h2>\n',
-            (
-                f'    <div class="food-line-briefing-meta">{html.escape(latest_public_date)}</div>\n'
-                f'    <h3><a href="editions/{html.escape(latest_public_date)}/">{html.escape(latest_public_title)}</a></h3>\n'
-                f'{f"    <p class=\"food-line-note\">{html.escape(latest_recovery_note)}</p>\n" if latest_recovery_note else ""}'
-                f'    <ul class="food-line-story-list">{latest_story_list_html}</ul>\n'
-                f'    <div class="food-line-actions">{"".join(link for link in action_links if link)}</div>\n'
-                if latest_public_date
-                else '    <p>No public editions have been published yet.</p>\n'
-            ),
+            latest_panel_html,
             '  </section>\n',
             '  <section class="food-line-panel">\n',
             '    <h2>About Food Line</h2>\n',

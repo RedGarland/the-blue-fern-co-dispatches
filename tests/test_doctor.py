@@ -614,6 +614,55 @@ def test_doctor_accepts_cascadia_2026_05_03_weekly_public_links():
         _cleanup_contract_root(root)
 
 
+def test_doctor_ignores_cascadia_subproduct_edition_links():
+    root = _make_contract_root()
+    try:
+        _write(
+            root / "output" / "site" / "cascadia" / "index.html",
+            '<a href="editions/2026-05-10/">The Cascadia Briefing - May 4-10, 2026</a>'
+            '<a href="/cascadia/detention-watch/editions/2026-05-26/">Open the May 26, 2026 starting record</a>',
+        )
+
+        results = _result_map(root)
+
+        assert results["Cascadia weekly public links"].ok
+        assert "2026-05-26" not in results["Cascadia weekly public links"].message
+    finally:
+        _cleanup_contract_root(root)
+
+
+def test_doctor_requires_manifest_for_rooted_main_cascadia_links():
+    root = _make_contract_root()
+    try:
+        _write(
+            root / "output" / "site" / "cascadia" / "index.html",
+            '<a href="/cascadia/editions/2026-05-31/">The Cascadia Briefing - May 25-31, 2026</a>',
+        )
+
+        result = _result_map(root)["Cascadia weekly public links"]
+
+        assert not result.ok
+        assert "recent:2026-05-31 missing edition manifest" in result.message
+    finally:
+        _cleanup_contract_root(root)
+
+
+def test_doctor_requires_manifest_for_relative_main_cascadia_links():
+    root = _make_contract_root()
+    try:
+        _write(
+            root / "output" / "site" / "cascadia" / "archive.html",
+            '<a href="editions/2026-05-31/">The Cascadia Briefing - May 25-31, 2026</a>',
+        )
+
+        result = _result_map(root)["Cascadia weekly public links"]
+
+        assert not result.ok
+        assert "archive:2026-05-31 missing edition manifest" in result.message
+    finally:
+        _cleanup_contract_root(root)
+
+
 def test_doctor_flags_bad_json_and_smtp_password_log_marker():
     root = _make_contract_root()
     try:

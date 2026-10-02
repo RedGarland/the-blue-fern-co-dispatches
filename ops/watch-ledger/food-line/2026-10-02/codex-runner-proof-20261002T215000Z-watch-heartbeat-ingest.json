@@ -1,0 +1,18 @@
+{
+  "completed_at": "2026-10-02T21:50:00Z",
+  "coverage_notes": "Non-public post-deployment proof from the synced Operator scheduled-watch submission environment. No publication, Pages push, Bluesky, audio generation, scheduler mutation, or evidence deletion.",
+  "dispatch": "food-line",
+  "findings": [],
+  "outcome": "no_findings",
+  "run_id": "codex-runner-proof-20261002T215000Z-watch-heartbeat-ingest",
+  "scheduled_for": "2026-10-02T21:50:00Z",
+  "schema_version": "bluefern.watch_run.v1",
+  "search_window": {
+    "date_from": "2026-10-02",
+    "date_to": "2026-10-02",
+    "edition_date": "2026-10-02"
+  },
+  "started_at": "2026-10-02T21:50:00Z",
+  "status": "SUCCESS",
+  "watch_name": "Codex post-deployment scheduled-watch runner proof"
+}

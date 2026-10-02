@@ -1,0 +1,22 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261001T194522-0700-r11",
+  "scheduled_for": "2026-10-01T19:45:22-07:00",
+  "started_at": "2026-10-01T19:45:34-07:00",
+  "completed_at": "2026-10-01T19:47:45-07:00",
+  "status": "DEGRADED",
+  "outcome": "failed",
+  "search_window": {
+    "start": "2026-10-01T18:45:22-07:00",
+    "end": "2026-10-01T19:47:45-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first.",
+    "Exactly 12 additional targeted searches completed.",
+    "A qualifying service restoration was identified, but required durable finding persistence was blocked."
+  ]
+}

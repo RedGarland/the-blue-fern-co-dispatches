@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261001T204522-0700-r11",
+  "scheduled_for": "2026-10-01T20:45:22-07:00",
+  "started_at": "2026-10-01T20:45:22-07:00",
+  "completed_at": "2026-10-01T20:48:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "findings",
+  "search_window": {
+    "start": "2026-10-01T19:47:45-07:00",
+    "end": "2026-10-01T20:48:00-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [
+    {
+      "finding_id": "care-2026-10-01-va-fluvanna-volunteer-ems-suspension",
+      "canonical_source_url": "https://fluvannareview.com/2026/10/fluvanna-fire-seeks-to-restore-ems-authority-after-suspension-2/",
+      "title": "Fluvanna Fire seeks to restore EMS authority after suspension",
+      "publisher": "Fluvanna Review",
+      "exact_supporting_passage": "The suspension has prevented volunteer personnel from providing EMS care through the department.",
+      "source_published_date": "2026-10-01",
+      "state": "Virginia",
+      "city": null,
+      "county": "Fluvanna County",
+      "territory": null,
+      "event_type": "emergency_service_suspension",
+      "service_line": "emergency medical services",
+      "access_consequences": "Volunteer personnel at Palmyra, Kents Store, and Fork Union cannot provide EMS care through the department; paid county EMS remains fully operational.",
+      "affected_population": "Residents served by Fluvanna County Volunteer Fire Department companies at Palmyra, Kents Store, and Fork Union",
+      "effective_date": "2026-09-11",
+      "announcement_date": null,
+      "confidence": "high",
+      "source_role": "strong_local_reporting",
+      "review_status": "pending_review",
+      "exclusion_reason": null
+    }
+  ],
+  "coverage_notes": [
+    "CMS Public Notices checked first; newest listed notice date remained 2026-09-30.",
+    "Exactly 12 additional targeted searches completed.",
+    "One late-discovered recall miss was identified: suspension of volunteer EMS authority affecting three Fluvanna County fire companies; paid county EMS remains operational.",
+    "Previously surfaced Prime Healthcare obstetric suspensions, Henderson Hospital maternity/NICU closure, and Glenwood Springs Planned Parenthood reopening were excluded as duplicates.",
+    "No approval, publication, schedule alteration, or task disablement was performed."
+  ]
+}

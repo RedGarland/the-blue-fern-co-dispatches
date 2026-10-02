@@ -1,0 +1,34 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261001T224933-0700-r11",
+  "scheduled_for": "2026-10-01T22:45:54-07:00",
+  "started_at": "2026-10-01T22:49:33-07:00",
+  "completed_at": "2026-10-01T22:50:43-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-01T21:45:54-07:00",
+    "end": "2026-10-01T22:49:33-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "bounded": true,
+    "summary": "Twelve targeted searches covered loss of an only/sole/last/full-service grocery store, canceled or suspended emergency food distributions, abrupt pantry or food-bank service closure/access reduction, and immediate SNAP/WIC/food-assistance interruptions. No new U.S. event in the bounded hourly window met the qualifying criteria.",
+    "source_priority": "Fresh local news, official agency/provider notices, and direct source pages were prioritized.",
+    "degradation": {
+      "present": false,
+      "reason": null
+    },
+    "exclusions_observed": [
+      "Only/sole/last/full-service grocery-store results were older events, reopenings, planned closures, or non-window items.",
+      "Emergency food-distribution searches surfaced preparedness, recovery activity, routine operations, or older weather disruptions rather than a new cancellation or suspension.",
+      "Pantry and food-bank searches did not surface a new abrupt U.S. closure or major access reduction in the bounded window.",
+      "SNAP/WIC/food-assistance searches primarily surfaced older shutdown-era or policy-change coverage, not a new official interruption with immediate access consequences."
+    ],
+    "production_authority_note": "This supplementary recall watch is non-authoritative; production collection remains authoritative."
+  }
+}

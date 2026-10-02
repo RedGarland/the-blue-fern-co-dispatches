@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261002T004522-0700-r11",
+  "scheduled_for": "2026-10-02T00:45:22-07:00",
+  "started_at": "2026-10-02T00:46:52-07:00",
+  "completed_at": "2026-10-02T00:48:11.784320-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "since": "2026-10-01T23:45:22-07:00",
+    "through": "2026-10-02T00:45:22-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first; newest listed notices remained dated 2026-09-30, with no newer provider termination, rescission, CLIA limitation/suspension, or comparable access-risk notice identified.",
+    "Completed exactly 12 additional targeted web searches covering hospital/ED, maternity, behavioral health, dialysis, oncology, rural/emergency service, ambulance, air-medical, primary care, service restoration/reopening, and U.S. territories.",
+    "No new qualifying U.S. or territory healthcare-access change was identified since the prior hourly check.",
+    "Previously surfaced Prime Healthcare obstetric suspensions, Henderson Hospital maternity/NICU closure, Roseland Community Hospital labor-and-delivery closure, Fluvanna volunteer EMS suspension, Saint Joseph Hospital Elgin Level II trauma suspension, and Glenwood Springs Planned Parenthood reopening were treated as duplicates and excluded.",
+    "Production Care Line collection remains authoritative; this supplementary watch made no approval, publication, schedule, or task-state changes."
+  ]
+}

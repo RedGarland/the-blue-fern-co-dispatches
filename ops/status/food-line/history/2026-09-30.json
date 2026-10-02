@@ -12,7 +12,7 @@
   },
   "aggregate_status": "DEGRADED",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "c6be1631af296dfa435d637798bf3e970bee8eeb",
+  "current_runner_head": "6de94184424bd49a0815d8b115e74905f8393219",
   "debug_summary": {
     "aggregate_status": "DEGRADED",
     "all_current_failures_external": null,
@@ -36,8 +36,8 @@
     "primary_layer": "SOURCE",
     "primary_task_key": "food_line_source_watch",
     "primary_task_status": "DEGRADED",
-    "private_review_count_only_gap_count": 38,
-    "private_review_dispositioned_item_count": 48,
+    "private_review_count_only_gap_count": 46,
+    "private_review_dispositioned_item_count": 54,
     "private_review_max_age_hours": 0,
     "private_review_oldest_pending_date": null,
     "private_review_pending_date_count": 0,
@@ -132,13 +132,13 @@
     }
   ],
   "incident_reference": null,
-  "last_exported_at": "2026-10-01T07:08:55.578134Z",
+  "last_exported_at": "2026-10-02T04:00:02Z",
   "last_receipt_at": "2026-10-01T07:08:38.559371Z",
   "latest_runtime_proof_date": "2026-10-01T07:08:38.559371Z",
   "next_expected_run": null,
   "observed_date": "2026-09-30",
   "private_review_backlog": {
-    "count_only_gap_count": 38,
+    "count_only_gap_count": 46,
     "dates": [],
     "disposition_diagnostics": {
       "duplicate_entry_count": 0,
@@ -147,7 +147,7 @@
     },
     "disposition_sources": [
       {
-        "applied_item_count": 3,
+        "applied_item_count": 1,
         "disposition_artifact": "data/dispatches/food-line/review/private-review-dispositions/food-line-2026-09-29-editorial-dispositions.json",
         "entry_count": 8,
         "ignored_entry_count": 0,
@@ -156,7 +156,16 @@
         "unknown_disposition_count": 0
       },
       {
-        "applied_item_count": 5,
+        "applied_item_count": 4,
+        "disposition_artifact": "data/dispatches/food-line/review/private-review-dispositions/food-line-2026-10-01-backlog-dispositions.json",
+        "entry_count": 4,
+        "ignored_entry_count": 0,
+        "malformed_entry_count": 0,
+        "subtracting_entry_count": 4,
+        "unknown_disposition_count": 0
+      },
+      {
+        "applied_item_count": 3,
         "disposition_artifact": "data/dispatches/food-line/review/private-review-dispositions/food-line-backlog-triage-2026-09-30-dispositions.json",
         "entry_count": 10,
         "ignored_entry_count": 0,
@@ -183,7 +192,7 @@
         "unknown_disposition_count": 0
       }
     ],
-    "dispositioned_item_count": 48,
+    "dispositioned_item_count": 54,
     "max_age_hours": 0,
     "oldest_pending_date": null,
     "pending_date_count": 0,

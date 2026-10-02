@@ -13,7 +13,7 @@
   "aggregate_status": "DEGRADED",
   "dispatch": "food-line",
   "incident_reference": null,
-  "last_exported_at": "2026-09-20T16:15:08.050560Z",
+  "last_exported_at": "2026-09-21T21:45:23Z",
   "last_receipt_at": "2026-09-20T15:30:01.648769Z",
   "latest_runtime_proof_date": "2026-09-20T15:30:01.648769Z",
   "next_expected_run": null,

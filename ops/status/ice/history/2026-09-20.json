@@ -12,7 +12,7 @@
   },
   "aggregate_status": "STALE_OBSERVABILITY",
   "dispatch": "ice",
-  "last_exported_at": "2026-09-21T11:15:07.146915Z",
+  "last_exported_at": "2026-09-21T21:45:23Z",
   "last_receipt_at": "2026-09-21T04:16:30.028759Z",
   "latest_runtime_proof_date": "2026-09-21T04:15:04Z",
   "migration_status": "MIGRATED",

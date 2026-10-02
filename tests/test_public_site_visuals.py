@@ -34,8 +34,9 @@ html, body { margin: 0; font-family: Georgia, serif; background: var(--bf-backgr
 .button:focus, .button:focus-visible { outline: 3px solid var(--bf-soft-steel-grey); outline-offset: 3px; }
 .text-link, .support-link { font: 700 0.82rem/1.2 system-ui, sans-serif; }
 .support-link { color: var(--muted); }
+.hero-logo { display: block; width: 260px; height: 160px; object-fit: contain; }
 .food-line-hero { display: grid; place-items: center; padding: 40px; min-height: 220px; }
-.food-line-logo--edition, .food-line-logo--home { width: 320px; height: 120px; object-fit: contain; }
+.food-line-logo--edition, .food-line-logo--home { width: 260px; height: 120px; object-fit: contain; }
 .food-line-source-card { border: 1px solid #c5d2d0; border-radius: 8px; padding: 18px; margin: 20px 0; }
 """
 
@@ -98,6 +99,10 @@ def _simple_dispatch_html(title: str) -> str:
     return f'<!doctype html><html><head><link rel="stylesheet" href="/assets/site.css"></head><body><main><section class="hero"><h1>{title}</h1></section><p><a href="editions/2026-10-01/">Read latest</a></p></main></body></html>'
 
 
+def _dispatch_logo_html(title: str) -> str:
+    return f'<!doctype html><html><head><link rel="stylesheet" href="/assets/site.css"></head><body><main class="home"><section class="hero"><img class="hero-logo" src="/assets/food-line-logo.png" alt="{title}"></section><h2>Latest Briefing</h2><p><a href="editions/2026-10-01/">Read latest</a></p></main></body></html>'
+
+
 def _make_pages_root(tmp_path: Path, *, css: str = GOOD_CSS, story_count: int = 2, source_yes_count: int = 2, oversized_logo: bool = False) -> Path:
     root = tmp_path / "pages"
     if css:
@@ -148,6 +153,16 @@ def test_excessive_homepage_hero_height_fails(tmp_path: Path) -> None:
     assert "hero_height" in _issue_checks(result)
 
 
+def test_homepage_latest_desk_below_first_viewport_fails(tmp_path: Path) -> None:
+    css = GOOD_CSS + "\n.edition-grid { margin-top: 860px; }\n"
+    root = _make_pages_root(tmp_path, css=css)
+
+    result = validate_public_site_visuals(root)
+
+    assert result["ok"] is False
+    assert "latest_desk" in _issue_checks(result)
+
+
 def test_cold_body_background_token_fails(tmp_path: Path) -> None:
     css = GOOD_CSS.replace("--bf-background-cream: #EFE7DA", "--bf-background-cream: #F7F8F4")
     root = _make_pages_root(tmp_path, css=css)
@@ -186,6 +201,66 @@ def test_cramped_active_dispatch_action_links_fail(tmp_path: Path) -> None:
 
     assert result["ok"] is False
     assert "active_dispatch_action_links" in _issue_checks(result)
+
+
+def test_food_landing_duplicate_latest_title_link_fails(tmp_path: Path) -> None:
+    root = _make_pages_root(tmp_path)
+    duplicate = """<!doctype html><html><head><link rel="stylesheet" href="/assets/site.css"></head>
+<body><main><section class="food-line-hero"><img class="food-line-logo food-line-logo--home" src="/assets/food-line-logo.png" alt="Food Line"><h1>Food Line Dispatch</h1></section>
+<section class="food-line-panel"><h2>Latest Briefing</h2>
+<h3><a href="editions/2026-10-01/">Bradford County Food Pantry running low on food, leaders say</a></h3>
+<div class="food-line-actions"><a href="editions/2026-10-01/">Read briefing</a></div>
+</section>
+<section class="food-line-panel"><h2>Recent Editions</h2>
+<ul class="food-line-recent-list"><li><a class="food-line-recent-title" href="editions/2026-10-01/">Bradford County Food Pantry running low on food, leaders say</a></li></ul>
+</section></main></body></html>"""
+    _write(root / "food-line" / "index.html", duplicate)
+
+    result = validate_public_site_visuals(root)
+
+    assert result["ok"] is False
+    assert "food_latest_duplicate" in _issue_checks(result)
+
+
+def test_gaza_recent_editions_duplicate_adjacent_date_link_fails(tmp_path: Path) -> None:
+    root = _make_pages_root(tmp_path)
+    duplicate = """<!doctype html><html><head><link rel="stylesheet" href="/assets/site.css"></head>
+<body><main class="home"><section class="hero"><img class="hero-logo" src="/assets/food-line-logo.png" alt="Dispatches From Gaza"></section>
+<h2>Latest Briefing</h2><p><a href="editions/2026-10-01/">Read the latest briefing</a></p>
+<h2>Recent Editions</h2>
+<ul class="edition-list"><li><span class="edition-date">2026-10-01</span><a href="editions/2026-10-01/">2026-10-01</a></li></ul>
+</main></body></html>"""
+    _write(root / "gaza" / "index.html", duplicate)
+
+    result = validate_public_site_visuals(root)
+
+    assert result["ok"] is False
+    assert "gaza_recent_duplicate_date_link" in _issue_checks(result)
+
+
+def test_gaza_recent_editions_jammed_no_update_date_text_fails(tmp_path: Path) -> None:
+    root = _make_pages_root(tmp_path)
+    duplicate = """<!doctype html><html><head><link rel="stylesheet" href="/assets/site.css"></head>
+<body><main class="home"><section class="hero"><img class="hero-logo" src="/assets/food-line-logo.png" alt="Dispatches From Gaza"></section>
+<h2>Recent Editions</h2>
+<ul class="edition-list"><li class="no-update"><span class="edition-date">2026-09-28</span><span class="no-update-label">No update</span></li></ul>
+</main></body></html>"""
+    _write(root / "gaza" / "index.html", duplicate)
+
+    result = validate_public_site_visuals(root)
+
+    assert result["ok"] is False
+    assert "gaza_recent_duplicate_date_link" in _issue_checks(result)
+
+
+def test_product_landing_oversized_logo_fails(tmp_path: Path) -> None:
+    root = _make_pages_root(tmp_path, css=GOOD_CSS + "\n.home .hero-logo { width: 760px; height: 420px; }\n")
+    _write(root / "gaza" / "index.html", _dispatch_logo_html("Dispatches From Gaza"))
+
+    result = validate_public_site_visuals(root)
+
+    assert result["ok"] is False
+    assert "product_logo_size" in _issue_checks(result)
 
 
 def test_food_edition_oversized_logo_proof_layout_fails(tmp_path: Path) -> None:

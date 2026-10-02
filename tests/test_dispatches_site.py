@@ -3616,6 +3616,33 @@ def test_gaza_public_lists_do_not_apply_later_runner_dedupe_to_pages_history(tmp
     assert {path: path.read_bytes() for path in audio_files} == audio_before
 
 
+def test_generated_gaza_index_recent_editions_do_not_duplicate_date_links(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    dispatch = DispatchConfig(
+        slug="gaza",
+        name="Dispatches From Gaza",
+        edition_date="2026-10-01",
+        tagline="Daily briefing",
+        logo="gaza-logo.png",
+        sources=[],
+        stories=[],
+        detail_artifacts=[],
+    )
+
+    index_html = generator.render_dispatch_index_for_dates(
+        dispatch,
+        ["2026-10-01", "2026-09-30", "2026-09-29"],
+        site_root,
+    )
+    recent_html = index_html.split('<ul class="edition-list">', 1)[1].split("</ul>", 1)[0]
+    recent_text = re.sub(r"<[^>]+>", "", recent_html)
+    compact_recent_text = re.sub(r"\s+", "", recent_text)
+
+    assert '<span class="edition-date">2026-10-01</span><a href="editions/2026-10-01/">2026-10-01</a>' not in index_html
+    assert '<li><a class="edition-date" href="editions/2026-10-01/">2026-10-01</a></li>' in index_html
+    assert not re.search(r"(20\d{2}-\d{2}-\d{2})\1", compact_recent_text)
+
+
 def test_gaza_pages_history_still_rejects_malformed_edition(tmp_path: Path):
     site_root = tmp_path / "output" / "site"
     pages_root = tmp_path / "bluefern-dispatches-pages"

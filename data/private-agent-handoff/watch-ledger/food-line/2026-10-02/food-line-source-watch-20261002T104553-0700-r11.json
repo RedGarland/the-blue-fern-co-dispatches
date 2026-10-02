@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261002T104553-0700-r11",
+  "scheduled_for": "2026-10-02T10:45:54-07:00",
+  "started_at": "2026-10-02T10:45:53-07:00",
+  "completed_at": "2026-10-02T10:46:53-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-02T09:45:53-07:00",
+    "end": "2026-10-02T10:45:53-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 12 bounded targeted web searches across the four audited miss classes. No new qualifying U.S. food-access disruption was identified in the prior-hour observation window. Fresh-looking results were excluded as non-qualifying or stale, including a Kansas City Costco remodel/relocation item and South Texas Food Bank flood monitoring that did not report a canceled distribution, closure, or major access reduction. Production collection remains authoritative; no approval, publication, schedule change, or task disablement was performed."
+}

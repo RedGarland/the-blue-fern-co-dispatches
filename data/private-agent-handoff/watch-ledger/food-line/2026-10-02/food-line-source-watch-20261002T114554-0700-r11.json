@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261002T114554-0700-r11",
+  "scheduled_for": "2026-10-02T11:45:54-07:00",
+  "started_at": "2026-10-02T11:48:43-07:00",
+  "completed_at": "2026-10-02T11:49:44-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-02T10:45:54-07:00",
+    "end": "2026-10-02T11:48:43-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Executed 12 targeted web searches focused on sole/only/full-service grocery loss, disaster-related food-distribution cancellation, abrupt pantry/food-bank access reduction, and immediate SNAP/WIC/EBT interruption.",
+    "No qualifying signal was verified within the bounded prior-hour window.",
+    "Hill Country Community Ministries listed its October 2 Bethany United Methodist Church Fresh Food For All distribution as canceled, but the direct page provided no disaster/outage/facility-damage cause and no publication/update timestamp establishing that the cancellation was newly posted in-window, so it was excluded.",
+    "South Texas Food Bank was monitoring flood conditions on October 2, but available reporting described preparedness/continued assistance rather than a canceled distribution or service interruption.",
+    "Older sole-grocery-store and food-bank storm-closure incidents were excluded as stale/duplicate candidates."
+  ]
+}

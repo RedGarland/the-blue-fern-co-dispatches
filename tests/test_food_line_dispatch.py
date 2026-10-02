@@ -4004,6 +4004,66 @@ def test_food_line_landing_page_uses_clean_current_inventory_sections(tmp_path: 
     food_line._update_index_archive(root, "2026-09-12", mission, max_edition_date="2026-09-12")
     assert (root / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8") == html_text
 
+def test_food_line_landing_latest_story_list_omits_duplicate_lead_title(tmp_path: Path):
+    _ensure_assets(tmp_path)
+    edition_date = "2026-10-01"
+    edition_dir = tmp_path / "output" / "site" / "food-line" / "editions" / edition_date
+    edition_dir.mkdir(parents=True, exist_ok=True)
+    (edition_dir / "index.html").write_text("<html><body><h1>Lead pantry shortage title</h1></body></html>", encoding="utf-8")
+    (edition_dir / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "food-line",
+                "edition_date": edition_date,
+                "edition_mode": "current_update",
+                "public_rendered": True,
+                "public_signal_count": 2,
+                "source_freshness_status": "passed",
+                "freshness_window_days": 14,
+                "stale_public_story_count": 0,
+                "excluded_stale_source_count": 0,
+                "stale_source_ids": [],
+                "qualified_primary_count": 1,
+                "skip_reason": "",
+                "lead_source_record_id": "lead",
+                "continuing_pressure_source_record_ids": ["second"],
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (edition_dir / "sources_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": "lead",
+                    "title": "Lead pantry shortage title",
+                    "public_inclusion_bucket": "included_primary",
+                },
+                {
+                    "source_record_id": "second",
+                    "title": "Second source-backed food-bank development",
+                    "public_inclusion_bucket": "included_context",
+                },
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    food_line._update_index_archive(tmp_path, edition_date, "Food Line mission", max_edition_date=edition_date)
+
+    html_text = (tmp_path / "output" / "site" / "food-line" / "index.html").read_text(encoding="utf-8")
+    soup = BeautifulSoup(html_text, "html.parser")
+    latest = soup.find("h2", string="Latest Briefing").find_parent("section")
+    recent_titles = _food_line_recent_entry_titles(html_text)
+
+    assert latest.select_one("h3 a").get_text(strip=True) == "Lead pantry shortage title"
+    assert [a.get_text(strip=True) for a in latest.select(".food-line-story-list li a")] == [
+        "Second source-backed food-bank development"
+    ]
+    assert "2026-10-01" not in recent_titles
+
 
 def test_food_line_landing_actions_include_audio_and_map_only_when_artifacts_exist(tmp_path: Path):
     root = _copy_current_food_line_public_inventory(tmp_path)

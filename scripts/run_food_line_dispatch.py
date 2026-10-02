@@ -7439,6 +7439,11 @@ def _update_index_archive(
     latest_public_title = _food_line_landing_display_title(root, latest_public_date) if latest_public_date else ""
     latest_recovery_note = _food_line_landing_recovery_note(root, latest_public_date) if latest_public_date else ""
     latest_story_rows = _food_line_landing_story_rows(root, latest_public_date) if latest_public_date else []
+    latest_story_rows = [
+        row
+        for row in latest_story_rows
+        if str(row.get("title") or "").strip().lower() != latest_public_title.strip().lower()
+    ]
     latest_story_list_html = "".join(
         f'<li><a href="editions/{html.escape(latest_public_date)}/">{html.escape(str(row.get("title") or "Food pressure signal"))}</a></li>'
         for row in latest_story_rows[:6]

@@ -26,6 +26,7 @@ def test_classify_path_covers_expected_categories():
     assert preflight_repo_state.classify_path("output/dispatches/american-pressure/review/report.md") == "review_output"
     assert preflight_repo_state.classify_path("logs/gaza-daily-2026-06-22.log") == "logs"
     assert preflight_repo_state.classify_path(".pytest-temp-gaza-wide/") == "cache"
+    assert preflight_repo_state.classify_path(".pytest-tmp-bluefern-layout-deploy/pages/index.html") == "cache"
     assert preflight_repo_state.classify_path("scripts/__pycache__/food_line_daily_scheduler.cpython-313.pyc") == "cache"
     assert preflight_repo_state.classify_path(".venv/Scripts/python.exe") == "virtualenv"
     assert preflight_repo_state.classify_path("status/food-line/runtime/source_performance_history.json") == "local_run_state"
@@ -533,6 +534,7 @@ def test_generated_public_output_residue_is_allowed_in_source_checkout_but_not_p
                 " M output/site/assets/site.css",
                 " M output/site/gaza/index.html",
                 " D output/site/food-line/editions/2026-09-12/index.html",
+                "?? .pytest-tmp-bluefern-layout-deploy/test_pages_publish/repo/output/site/index.html",
                 "?? output/site/gaza/editions/2026-09-20/index.html",
                 "?? output/dispatches/gaza/editions/2026-09-20/index.html",
             ]
@@ -553,6 +555,7 @@ def test_generated_public_output_residue_is_allowed_in_source_checkout_but_not_p
         "output/site/assets/site.css",
         "output/site/gaza/index.html",
         "output/site/food-line/editions/2026-09-12/index.html",
+        ".pytest-tmp-bluefern-layout-deploy/test_pages_publish/repo/output/site/index.html",
         "output/site/gaza/editions/2026-09-20/index.html",
         "output/dispatches/gaza/editions/2026-09-20/index.html",
     }
@@ -575,6 +578,7 @@ def test_generated_public_output_residue_only_does_not_fail_source_preflight(mon
             " M output/site/gaza/index.html",
             " D output/site/food-line/editions/2026-09-12/index.html",
             " D output/dispatches/food-line/editions/2026-09-12/edition_manifest.json",
+            "?? .pytest-tmp-bluefern-layout-deploy/test_pages_publish/repo/output/site/index.html",
             "?? output/site/food-line/editions/2026-10-01/index.html",
             "?? output/dispatches/food-line/editions/2026-10-01/index.html",
         ]
@@ -592,6 +596,7 @@ def test_generated_public_output_residue_only_does_not_fail_source_preflight(mon
         "output/site/gaza/index.html",
         "output/site/food-line/editions/2026-09-12/index.html",
         "output/dispatches/food-line/editions/2026-09-12/edition_manifest.json",
+        ".pytest-tmp-bluefern-layout-deploy/test_pages_publish/repo/output/site/index.html",
         "output/site/food-line/editions/2026-10-01/index.html",
         "output/dispatches/food-line/editions/2026-10-01/index.html",
     }

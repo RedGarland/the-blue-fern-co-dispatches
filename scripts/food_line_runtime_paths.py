@@ -82,7 +82,16 @@ def classify_food_line_runtime_path(path_text: str) -> str | None:
     lower = path.lower()
     if not path:
         return None
-    if "__pycache__/" in lower:
+    if (
+        lower.startswith(".pytest_cache/")
+        or lower.startswith(".pytest-temp")
+        or lower.startswith(".pytest-tmp")
+        or lower.startswith(".pytest_tmp")
+        or lower.startswith(".tmp")
+        or lower.startswith("tmp/")
+        or "__pycache__/" in lower
+        or "/cache/" in lower
+    ):
         return "cache"
     if FOOD_LINE_AGENT_INBOX_RE.match(lower):
         return "local_run_state"

@@ -1,0 +1,18 @@
+{
+  "completed_at": "2026-10-02T21:20:05Z",
+  "coverage_notes": "Non-public architecture proof heartbeat for PR 581-584 ingestion path; no collection, publication, Pages, Bluesky, audio, or scheduler mutation.",
+  "dispatch": "food-line",
+  "findings": [],
+  "outcome": "no_findings",
+  "run_id": "codex-proof-20261002T212000Z-watch-heartbeat-ingest",
+  "scheduled_for": "2026-10-02T21:20:00Z",
+  "schema_version": "bluefern.watch_run.v1",
+  "search_window": {
+    "date_from": "2026-10-02",
+    "date_to": "2026-10-02",
+    "edition_date": "2026-10-02"
+  },
+  "started_at": "2026-10-02T21:20:01Z",
+  "status": "SUCCESS",
+  "watch_name": "Codex watch heartbeat ingestion proof"
+}

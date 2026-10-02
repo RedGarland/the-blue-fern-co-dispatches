@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261002T054208-0700",
+  "scheduled_for": "2026-10-02T05:44:51-07:00",
+  "started_at": "2026-10-02T05:42:08-07:00",
+  "completed_at": "2026-10-02T05:43:25-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-02T04:50:30-07:00",
+    "end_at": "2026-10-02T05:43:25-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "Checked first; no new in-window operational update surfaced.",
+    "who": "Checked second; no new in-window operational update surfaced.",
+    "additional_searches": 12,
+    "degraded_searches": [{"source":"BBC","issue":"robots.txt blocked one targeted retrieval","impact":"Other authoritative and established-source coverage remained usable."}],
+    "exclusions": "No distinct in-window item met the novelty and traceability threshold.",
+    "authority_note": "Supplementary recall watch only; production remains authoritative. No approval, publication, schedule change, or task disablement performed."
+  }
+}

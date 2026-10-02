@@ -93,8 +93,8 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-10-02T21:15:08.625456Z",
-  "last_receipt_at": "2026-10-02T21:05:34.991275Z",
+  "last_exported_at": "2026-10-02T21:37:03.265331Z",
+  "last_receipt_at": "2026-10-02T21:36:53.586216Z",
   "latest_runtime_proof_date": "2026-10-02T15:30:25Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
@@ -938,6 +938,27 @@
       "run_id": "care-proof-only-food-care-continuation-20261002T203826Z-3e7bfc70",
       "scheduled_for": "2026-10-02",
       "started_at": "2026-10-02T21:05:32Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    },
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261002T210826Z-529a35e6.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-02T21:36:53Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261002T210826Z-529a35e6",
+      "scheduled_for": "2026-10-02",
+      "started_at": "2026-10-02T21:36:44Z",
       "status": "SAFE_NO_OP",
       "task_key": "care_line_approved_release_publication"
     }

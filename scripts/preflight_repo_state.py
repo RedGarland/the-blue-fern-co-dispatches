@@ -113,7 +113,7 @@ def classify_path(path_text: str) -> str:
         return "virtualenv"
     if lower.startswith("logs/") or lower.endswith(".log") or "/logs/" in lower:
         return "logs"
-    if lower.startswith(".pytest_cache/") or lower.startswith(".pytest-temp") or lower.startswith(".pytest_tmp") or "/cache/" in lower or lower.startswith("cache/") or lower.startswith("tmp/") or lower.startswith(".tmp") or "__pycache__/" in lower:
+    if lower.startswith(".pytest_cache/") or lower.startswith(".pytest-temp") or lower.startswith(".pytest-tmp") or lower.startswith(".pytest_tmp") or "/cache/" in lower or lower.startswith("cache/") or lower.startswith("tmp/") or lower.startswith(".tmp") or "__pycache__/" in lower:
         return "cache"
     if lower.startswith("tests/") or "/tests/" in lower:
         return "tests"
@@ -210,6 +210,7 @@ def summarize_entries(entries: list[dict[str, Any]]) -> dict[str, Any]:
         ignored_recommendations.append("output/site/")
         ignored_recommendations.append("output/dispatches/")
     if any(entry["category"] == "cache" for entry in entries):
+        ignored_recommendations.append(".pytest-tmp*/")
         ignored_recommendations.append(".pytest-temp*/")
     return {
         "entry_count": len(entries),

@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261002T004548-0700-r11",
+  "scheduled_for": "2026-10-02T00:45:54-07:00",
+  "started_at": "2026-10-02T00:45:48-07:00",
+  "completed_at": "2026-10-02T00:47:03-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-01T23:45:54-07:00",
+    "end": "2026-10-02T00:45:54-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 12 targeted web searches across the four bounded Food Line miss classes. No new qualifying U.S. food-access disruption was identified in the prior-hour window. Results reviewed were stale, outside the bounded window, or non-qualifying; examples included older sole/only/full-service grocery-store closures and fires, past storm-related pantry outages, and historical SNAP/WIC interruptions. No fresh local-news or official/provider notice within the window documented a qualifying sole/last/full-service grocery loss, canceled or suspended emergency food distribution, abrupt pantry/food-bank access reduction, or immediate SNAP/WIC interruption. Donation drives, resource guides, routine program promotion, generic inflation/policy coverage, and duplicates were excluded."
+}

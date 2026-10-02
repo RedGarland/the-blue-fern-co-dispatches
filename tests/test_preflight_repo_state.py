@@ -532,6 +532,7 @@ def test_generated_public_output_residue_is_allowed_in_source_checkout_but_not_p
                 "## add/pages-repo-default",
                 " M output/site/assets/site.css",
                 " M output/site/gaza/index.html",
+                " D output/site/food-line/editions/2026-09-12/index.html",
                 "?? output/site/gaza/editions/2026-09-20/index.html",
                 "?? output/dispatches/gaza/editions/2026-09-20/index.html",
             ]
@@ -551,6 +552,7 @@ def test_generated_public_output_residue_is_allowed_in_source_checkout_but_not_p
     } == {
         "output/site/assets/site.css",
         "output/site/gaza/index.html",
+        "output/site/food-line/editions/2026-09-12/index.html",
         "output/site/gaza/editions/2026-09-20/index.html",
         "output/dispatches/gaza/editions/2026-09-20/index.html",
     }
@@ -571,6 +573,8 @@ def test_generated_public_output_residue_only_does_not_fail_source_preflight(mon
             "## add/pages-repo-default",
             " M output/site/assets/site.css",
             " M output/site/gaza/index.html",
+            " D output/site/food-line/editions/2026-09-12/index.html",
+            " D output/dispatches/food-line/editions/2026-09-12/edition_manifest.json",
             "?? output/site/food-line/editions/2026-10-01/index.html",
             "?? output/dispatches/food-line/editions/2026-10-01/index.html",
         ]
@@ -586,13 +590,15 @@ def test_generated_public_output_residue_only_does_not_fail_source_preflight(mon
     } == {
         "output/site/assets/site.css",
         "output/site/gaza/index.html",
+        "output/site/food-line/editions/2026-09-12/index.html",
+        "output/dispatches/food-line/editions/2026-09-12/edition_manifest.json",
         "output/site/food-line/editions/2026-10-01/index.html",
         "output/dispatches/food-line/editions/2026-10-01/index.html",
     }
     assert report["source_repo"]["summary"]["risky_entries"] == []
 
 
-def test_staged_or_deleted_generated_public_output_remains_risky(monkeypatch, tmp_path):
+def test_staged_generated_public_output_remains_risky(monkeypatch, tmp_path):
     source_repo = tmp_path / "repo"
     source_repo.mkdir()
     monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: None)
@@ -601,7 +607,7 @@ def test_staged_or_deleted_generated_public_output_remains_risky(monkeypatch, tm
         return 0, [
             "## add/pages-repo-default",
             "M  output/site/gaza/index.html",
-            " D output/site/gaza/old.html",
+            "D  output/site/gaza/old.html",
         ]
 
     monkeypatch.setattr(preflight_repo_state, "_run_git_status", fake_run_git_status)

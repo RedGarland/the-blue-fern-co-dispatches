@@ -89,7 +89,6 @@ def test_unrelated_untracked_and_tracked_runtime_paths_fail_closed(monkeypatch, 
         "data/dispatches/food-line/date-reconciliation/latest.json",
         "data/dispatches/food-line/coverage-gaps/readme.json",
         "output/site/food-line/index.html",
-        "output/site/food-line/rss.xml",
     }
 
     unexpected = food_line_daily_scheduler._unexpected_dirty_paths("\n".join(lines))
@@ -104,7 +103,6 @@ def test_unrelated_untracked_and_tracked_runtime_paths_fail_closed(monkeypatch, 
         "output/review/bluefern visuals/root.png",
         "output/review/bluefern/loose.png",
         "output/site/food-line/index.html",
-        "output/site/food-line/rss.xml",
     ]
 
 

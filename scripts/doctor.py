@@ -29,7 +29,11 @@ OLD_PROJECT_NEEDLES = (
     "old Gaza project",
 )
 RUNTIME_PATTERNS = ("*.py", "*.ps1")
-LINKED_EDITION_RE = re.compile(r"editions/(\d{4}-\d{2}-\d{2})/")
+CASCADIA_MAIN_EDITION_LINK_RE = re.compile(
+    r"https?://[^\"'<>\s]+/cascadia/editions/(?P<absolute>\d{4}-\d{2}-\d{2})/"
+    r"|/cascadia/editions/(?P<rooted>\d{4}-\d{2}-\d{2})/"
+    r"|(?<![A-Za-z0-9_/\-])editions/(?P<relative>\d{4}-\d{2}-\d{2})/"
+)
 AP_CANDIDATE_FILE_RE = re.compile(
     r"^data/dispatches/american-pressure/candidates/\d{4}-\d{2}-\d{2}/candidate_sources\.json$"
 )
@@ -299,7 +303,10 @@ def _linked_cascadia_dates(root: Path) -> dict[str, set[str]]:
     linked: dict[str, set[str]] = {}
     for label, path in files.items():
         if path.exists():
-            linked[label] = set(LINKED_EDITION_RE.findall(_read_text(path)))
+            linked[label] = {
+                next(value for value in match.groupdict().values() if value)
+                for match in CASCADIA_MAIN_EDITION_LINK_RE.finditer(_read_text(path))
+            }
         else:
             linked[label] = set()
     return linked

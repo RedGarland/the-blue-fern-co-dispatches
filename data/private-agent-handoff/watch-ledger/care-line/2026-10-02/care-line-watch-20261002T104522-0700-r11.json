@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261002T104522-0700-r11",
+  "scheduled_for": "2026-10-02T10:45:22-07:00",
+  "started_at": "2026-10-02T10:40:44-07:00",
+  "completed_at": "2026-10-02T10:40:44-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-02T09:45:22-07:00",
+    "end": "2026-10-02T10:40:44-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first. The newest notice observed was the 2026-10-02 Comfort Care Home Health (CCN 559197, California) termination notice; it was already surfaced in the prior hourly check and was excluded as a duplicate.",
+    "Completed exactly 12 additional targeted searches covering hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency service loss, ambulance, air-medical, essential-service restoration/reopening, and U.S. territories.",
+    "No new qualifying healthcare-access development was identified since the prior hourly check. Previously surfaced Roseland Community Hospital maternity closure, Prime Healthcare obstetric suspensions, Henderson Hospital maternity/NICU closure, Saint Joseph Hospital trauma-designation suspension, and other known items were excluded as duplicates.",
+    "Searches returned nonqualifying proposals, ownership/workforce stories without concrete service change, out-of-window items, and non-U.S. developments; these were excluded under the watch criteria.",
+    "Production collection remains authoritative. No item was approved or published, and no schedule or task state was altered."
+  ]
+}

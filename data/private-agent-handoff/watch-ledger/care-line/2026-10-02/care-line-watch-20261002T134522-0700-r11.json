@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261002T134522-0700-r11",
+  "scheduled_for": "2026-10-02T13:45:22-07:00",
+  "started_at": "2026-10-02T13:50:14-07:00",
+  "completed_at": "2026-10-02T13:51:06-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-02T12:42:34-07:00",
+    "end": "2026-10-02T13:51:06-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first. The newest notice observed remained the 2026-10-02 Comfort Care Home Health termination notice (CCN 559197, California), already surfaced before this window and excluded as a duplicate.",
+    "Completed exactly 12 additional targeted searches covering hospital/ED, maternity/NICU, behavioral health, dialysis, oncology, primary care, rural emergency service loss, ambulance, air-medical, restoration/reopening, and U.S. territories.",
+    "No new qualifying U.S. or territory healthcare-access development was identified since the prior hourly check.",
+    "Newport Academy St. Cloud layoffs remained insufficient to establish a qualifying service closure or suspension and had already been excluded by the prior watch. Prime Healthcare obstetric changes and other previously surfaced closures were treated as duplicates. Expansion projects and foreign service changes were excluded.",
+    "Production collection remains authoritative. No item was approved or published, and no schedule or task state was altered."
+  ]
+}

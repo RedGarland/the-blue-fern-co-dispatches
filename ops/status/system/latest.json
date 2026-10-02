@@ -30,7 +30,7 @@
       },
       "aggregate_status": "DEGRADED",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "4e8ee032639bdd874fc58eac50c10f0398794473",
+      "current_runner_head": "6de94184424bd49a0815d8b115e74905f8393219",
       "debug_summary": {
         "aggregate_status": "DEGRADED",
         "all_current_failures_external": true,
@@ -203,7 +203,7 @@
       },
       "aggregate_status": "FAILED",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "4e8ee032639bdd874fc58eac50c10f0398794473",
+      "current_runner_head": "6de94184424bd49a0815d8b115e74905f8393219",
       "debug_summary": {
         "aggregate_status": "FAILED",
         "all_current_failures_external": null,
@@ -211,7 +211,7 @@
         "attention_task_count": 1,
         "attention_tasks": [
           {
-            "artifact_id": "20261002T011554Z-current-intake.json",
+            "artifact_id": "20261002T014550Z-current-intake.json",
             "classification": "current_intake_failed",
             "exit_code": 1,
             "failure_stage": "current_intake",
@@ -322,7 +322,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "4e8ee032639bdd874fc58eac50c10f0398794473",
+      "current_runner_head": "6de94184424bd49a0815d8b115e74905f8393219",
       "debug_summary": {
         "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
@@ -377,7 +377,7 @@
       },
       "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "4e8ee032639bdd874fc58eac50c10f0398794473",
+      "current_runner_head": "6de94184424bd49a0815d8b115e74905f8393219",
       "debug_summary": {
         "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
@@ -417,7 +417,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-02T01:21:57.427739Z",
+  "exported_at": "2026-10-02T01:47:22.196306Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "FAILED"

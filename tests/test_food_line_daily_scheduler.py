@@ -154,6 +154,29 @@ def test_scheduler_accepts_generated_public_output_residue_after_publication() -
     assert scheduler._unexpected_dirty_paths(status) == []
 
 
+def test_scheduler_accepts_public_site_visual_review_artifacts() -> None:
+    status = "\n".join(
+        [
+            "?? output/review/public-site-visuals-current/root.png",
+            "?? output/review/public-site-visuals-current/food-line__editions__2026-10-01.png",
+            "?? output/review/public-site-visuals/root.png",
+        ]
+    )
+
+    assert scheduler._unexpected_dirty_paths(status) == []
+
+
+def test_scheduler_visual_review_artifacts_do_not_hide_source_drift() -> None:
+    status = "\n".join(
+        [
+            "?? output/review/public-site-visuals-current/root.png",
+            " M scripts/food_line_daily_scheduler.py",
+        ]
+    )
+
+    assert scheduler._unexpected_dirty_paths(status) == ["scripts/food_line_daily_scheduler.py"]
+
+
 @pytest.mark.parametrize("status", ["M ", "MM", " D", "D "])
 def test_scheduler_generated_public_output_staged_or_deleted_remains_risky(status: str) -> None:
     dirty = f"{status} output/site/food-line/index.html"

@@ -44,9 +44,9 @@
     "unclassified_source_failure_count": null
   },
   "dispatch": "ice",
-  "last_exported_at": "2026-10-02T04:15:30.043108Z",
-  "last_receipt_at": "2026-10-02T00:53:46.388703Z",
-  "latest_runtime_proof_date": "2026-10-02T00:52:16Z",
+  "last_exported_at": "2026-10-02T05:15:22.394721Z",
+  "last_receipt_at": "2026-10-02T04:17:04.693056Z",
+  "latest_runtime_proof_date": "2026-10-02T04:15:14Z",
   "migration_status": "MIGRATED",
   "next_expected_run": null,
   "observed_date": "2026-10-01",
@@ -107,6 +107,28 @@
       "run_id": "ice-monitor-proof-20261002T-safe-cadence",
       "scheduled_for": "2026-09-30",
       "started_at": "2026-10-02T00:52:16Z",
+      "status": "SUCCESS",
+      "task_key": "ice_monitor"
+    },
+    {
+      "artifact_id": "monitor_receipt.json",
+      "classification": "healthy",
+      "completed_at": "2026-10-02T04:17:04Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "pages": false,
+        "publication": false,
+        "rss": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "not_authorized_monitor_only",
+      "run_id": "ice-monitor-20261002T041501Z-3cc751fd",
+      "scheduled_for": "2026-10-01",
+      "started_at": "2026-10-02T04:15:15Z",
       "status": "SUCCESS",
       "task_key": "ice_monitor"
     }

@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261002T124522-0700-r11",
+  "scheduled_for": "2026-10-02T12:45:22-07:00",
+  "started_at": "2026-10-02T12:41:11-07:00",
+  "completed_at": "2026-10-02T12:42:34-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-02T11:45:22-07:00",
+    "end": "2026-10-02T12:42:34-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first. The newest notice observed remained the 2026-10-02 Comfort Care Home Health termination notice (CCN 559197, California), already surfaced before this window and excluded as a duplicate.",
+    "Completed exactly 12 additional targeted searches covering hospital/ED, maternity/NICU, behavioral health, dialysis, oncology, primary care, rural emergency service loss, ambulance, air-medical, restoration/reopening, and U.S. territories.",
+    "No new qualifying healthcare-access development was identified since the prior hourly check.",
+    "Watsonville Community Hospital maternity closure remained prospective with no board decision or effective closure date; a currently closed NICU lacked evidence of a new change in this window and was excluded. Newport Academy staffing layoffs did not independently establish a qualifying service closure or suspension. New behavioral-health capacity openings were expansions rather than restorations of previously lost essential services.",
+    "Production collection remains authoritative. No item was approved or published, and no schedule or task state was altered."
+  ]
+}

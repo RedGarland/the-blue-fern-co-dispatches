@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261001T174642-0700",
+  "scheduled_for": "2026-10-01T17:44:51-07:00",
+  "started_at": "2026-10-01T17:46:42-07:00",
+  "completed_at": "2026-10-01T17:47:24-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-01T16:44:51-07:00",
+    "end": "2026-10-01T17:46:42-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first; no new in-window Gaza development surfaced. Latest surfaced OCHA situation reporting was older than the watch window.",
+    "WHO checked second; no new in-window Gaza health-system development surfaced.",
+    "Exactly 12 additional targeted searches were used across casualties, displacement, aid access, food/water, health/medical evacuation/fuel, infrastructure, crossings, detention/hostages/negotiations, military operations with civilian impact, UN News, WAFA, and Al Jazeera.",
+    "BBC and UN News direct retrieval were blocked by robots.txt. Alternate established and humanitarian-source coverage remained usable, so the run is DEGRADED rather than FAILED.",
+    "A WAFA report published 1 October 2026 at 21:58 local Gaza time described one Palestinian killed and several injured in a drone strike on a tent sheltering displaced people in Al-Mawasi, Khan Younis. Its publication/event timing predates this watch window and it was excluded as not new since the prior hourly check.",
+    "No qualifying new, traceable development was verified inside the bounded search window. Opinion, unsupported social claims, recycled items, duplicates, and unsourced claims were excluded."
+  ]
+}

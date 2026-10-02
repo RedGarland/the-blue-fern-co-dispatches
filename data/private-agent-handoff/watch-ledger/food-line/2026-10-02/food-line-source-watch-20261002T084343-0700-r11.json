@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261002T084343-0700-r11",
+  "scheduled_for": "2026-10-02T08:43:43-07:00",
+  "started_at": "2026-10-02T08:43:43-07:00",
+  "completed_at": "2026-10-02T08:44:29-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-02T07:43:43-07:00",
+    "end": "2026-10-02T08:43:43-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 12 targeted web searches across the four bounded Food Line recall miss classes: sole/only/last/full-service grocery loss; canceled or suspended emergency food distributions due to disaster/outage/facility damage; abrupt pantry/food-bank closure or major access reduction; and official SNAP/WIC/EBT/food-assistance interruption. Fresh-result review found no qualifying new U.S. disruption within the bounded prior-hour window. Excluded stale, international, preparedness/resource, routine program, policy-background, inflation, and non-access-impact results. Production collection remains authoritative."
+}

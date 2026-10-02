@@ -43,6 +43,12 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Configure ledger commit identity
+        working-directory: ledger
+        run: |
+          git config user.name "blue-fern-watch-ingest"
+          git config user.email "actions@github.com"
+
       - name: Ingest heartbeat
         run: >-
           python source/scripts/ingest_watch_heartbeat.py

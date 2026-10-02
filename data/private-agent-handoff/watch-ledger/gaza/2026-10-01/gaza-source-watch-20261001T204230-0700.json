@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261001T204230-0700",
+  "scheduled_for": "2026-10-01T20:44:51-07:00",
+  "started_at": "2026-10-01T20:42:30-07:00",
+  "completed_at": "2026-10-01T20:43:33-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-01T19:44:55-07:00",
+    "end": "2026-10-01T20:43:33-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first; no new in-window update surfaced.",
+    "WHO checked second; no new in-window health-system update surfaced.",
+    "Exactly 12 additional targeted searches were completed across the requested high-value miss classes.",
+    "No distinct qualifying development was verified in the bounded window; recycled, duplicate, opinion, unsupported social, and unsourced items were excluded.",
+    "Supplementary recall watch only; production remains authoritative. No approval, publication, schedule change, or task disablement was performed."
+  ]
+}

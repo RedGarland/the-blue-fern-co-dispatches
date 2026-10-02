@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261002T034841-0700",
+  "scheduled_for": "2026-10-02T03:44:51-07:00",
+  "started_at": "2026-10-02T03:48:41-07:00",
+  "completed_at": "2026-10-02T03:50:01-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-02T02:46:25-07:00",
+    "end_at": "2026-10-02T03:50:01-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "Checked first. No new in-window OCHA OPT update surfaced; newest relevant result surfaced was the 18 September 2026 Humanitarian Situation Report.",
+    "who": "Checked second. No new in-window WHO Gaza update surfaced; newest relevant result surfaced was the 24 September 2026 WHO Director-General Gaza humanitarian access and health remarks.",
+    "additional_searches": 12,
+    "targeted_coverage": [
+      "UNICEF",
+      "WFP",
+      "UNRWA",
+      "ICRC",
+      "UN News",
+      "Reuters",
+      "Associated Press",
+      "BBC",
+      "WAFA",
+      "IDF",
+      "Gaza aid/crossings official data",
+      "MSF"
+    ],
+    "degraded_searches": [
+      {
+        "source": "BBC",
+        "issue": "robots.txt blocked direct retrieval",
+        "impact": "Search coverage remained usable through other primary humanitarian and established reporting sources."
+      },
+      {
+        "source": "UN News",
+        "issue": "robots.txt blocked direct retrieval",
+        "impact": "Search coverage remained usable through OCHA, WHO, other UN/humanitarian sources, and established reporting."
+      }
+    ],
+    "exclusions": "No distinct development in the observation window met the traceability and novelty threshold. WAFA surfaced a Gaza casualty item timestamped 10:11 on 2 October in Gaza (00:11 America/Los_Angeles), before the 02:46:25 PT window start, and it was excluded. Older, recycled, opinion, unsupported social, duplicate, and unsourced items were excluded.",
+    "authority_note": "Supplementary recall watch only; production remains authoritative. No approval, publication, schedule change, or task disablement performed."
+  }
+}

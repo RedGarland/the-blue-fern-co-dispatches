@@ -1,0 +1,45 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261002T064453-0700",
+  "scheduled_for": "2026-10-02T06:44:51-07:00",
+  "started_at": "2026-10-02T06:44:53-07:00",
+  "completed_at": "2026-10-02T06:45:42-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-02T05:42:08-07:00",
+    "end": "2026-10-02T06:45:42-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      "OCHA OPT checked first; newest surfaced Gaza-relevant situation report was dated 2026-09-18.",
+      "WHO checked second; newest surfaced Gaza-specific item was dated 2026-09-24."
+    ],
+    "additional_searches": 12,
+    "search_scope": [
+      "civilian casualties",
+      "aid access and crossings",
+      "displacement",
+      "food and water access",
+      "healthcare and medical evacuation",
+      "hospital and ambulance disruption",
+      "ceasefire and hostage negotiations",
+      "military operations with documented civilian impact"
+    ],
+    "exclusions": [
+      "older/recycled items",
+      "opinion",
+      "unsupported social claims",
+      "duplicates",
+      "unsourced claims"
+    ],
+    "degradation": [
+      "UN News targeted retrieval was blocked by robots.txt; remaining humanitarian and established-source coverage was usable."
+    ],
+    "result": "No distinct development within the observation window met the novelty and traceability threshold."
+  }
+}

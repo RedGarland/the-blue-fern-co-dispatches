@@ -20,7 +20,7 @@
     "attention_task_count": 1,
     "attention_tasks": [
       {
-        "artifact_id": "20261002T004537Z-current-intake.json",
+        "artifact_id": "20261002T011554Z-current-intake.json",
         "classification": "current_intake_failed",
         "exit_code": 1,
         "failure_stage": "current_intake",
@@ -55,9 +55,9 @@
   "dispatch": "food-line",
   "effective_task_summaries": [
     {
-      "artifact_id": "20261002T004537Z-current-intake.json",
+      "artifact_id": "20261002T011554Z-current-intake.json",
       "classification": "current_intake_failed",
-      "completed_at": "2026-10-02T00:45:37.399505Z",
+      "completed_at": "2026-10-02T01:15:54.877323Z",
       "diagnostics": {
         "failure": {
           "failure_stage": "current_intake"
@@ -70,7 +70,7 @@
       "publication_status": "",
       "run_id": "",
       "scheduled_for": "2026-10-01",
-      "started_at": "2026-10-02T00:45:23.488468Z",
+      "started_at": "2026-10-02T01:15:48.977791Z",
       "status": "FAILED",
       "task_key": "food_line_current_intake"
     },
@@ -126,8 +126,8 @@
   "incident_reference": {
     "date": "2026-10-01"
   },
-  "last_exported_at": "2026-10-02T01:15:46.407021Z",
-  "last_receipt_at": "2026-10-02T01:15:46.371179Z",
+  "last_exported_at": "2026-10-02T01:21:57.427739Z",
+  "last_receipt_at": "2026-10-02T01:15:54.877323Z",
   "latest_runtime_proof_date": "2026-10-02T01:15:46.371179Z",
   "next_expected_run": null,
   "observed_date": "2026-10-01",
@@ -897,9 +897,9 @@
       "task_key": "food_line_current_intake"
     },
     {
-      "artifact_id": "20261002T004537Z-current-intake.json",
+      "artifact_id": "20261002T011554Z-current-intake.json",
       "classification": "current_intake_failed",
-      "completed_at": "2026-10-02T00:45:37.399505Z",
+      "completed_at": "2026-10-02T01:15:54.877323Z",
       "diagnostics": {
         "failure": {
           "failure_stage": "current_intake"
@@ -912,7 +912,7 @@
       "publication_status": "",
       "run_id": "",
       "scheduled_for": "2026-10-01",
-      "started_at": "2026-10-02T00:45:23.488468Z",
+      "started_at": "2026-10-02T01:15:48.977791Z",
       "status": "FAILED",
       "task_key": "food_line_current_intake"
     },

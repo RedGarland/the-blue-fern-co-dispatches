@@ -207,3 +207,11 @@ def test_ingestion_sources_do_not_define_disable_or_pause_watch_recovery_paths()
     assert "disable-scheduledtask" not in combined
     assert "disable watch" not in combined
     assert "pause watch" not in combined
+
+
+def test_ingestion_workflow_uses_separate_source_and_ledger_checkouts() -> None:
+    workflow = Path(".github/workflows/watch-heartbeat-ingest.yml").read_text(encoding="utf-8")
+    assert "path: source" in workflow
+    assert "path: ledger" in workflow
+    assert "python source/scripts/ingest_watch_heartbeat.py" in workflow
+    assert "--repo-root ledger" in workflow

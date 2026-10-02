@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261001T234807-0700-r11",
+  "scheduled_for": "2026-10-01T23:45:54-07:00",
+  "started_at": "2026-10-01T23:48:07-07:00",
+  "completed_at": "2026-10-01T23:51:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-01T22:45:54-07:00",
+    "end": "2026-10-01T23:45:54-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 12 targeted web searches across the four bounded Food Line miss classes. No new qualifying U.S. food-access disruption was identified in the prior-hour window. Fresh candidates reviewed included Kauai hurricane-recovery notices with emergency food distributions proceeding as scheduled, San Antonio storm-preparedness/resource guidance without a documented food-access interruption, and a previously announced Kansas City Costco conversion that did not meet the sole/only/last/full-service community-loss criterion. Stale, promotional, generic policy/inflation, donation/resource-guide, and duplicate results were excluded."
+}

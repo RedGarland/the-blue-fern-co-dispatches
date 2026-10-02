@@ -141,7 +141,7 @@
         "primary_task_status": "DEGRADED",
         "private_review_count_only_gap_count": 46,
         "private_review_dispositioned_item_count": 54,
-        "private_review_max_age_hours": 9,
+        "private_review_max_age_hours": 10,
         "private_review_oldest_pending_date": "2026-10-02",
         "private_review_pending_date_count": 1,
         "private_review_pending_item_count": 1,
@@ -160,7 +160,7 @@
         "count_only_gap_count": 46,
         "dates": [
           {
-            "age_hours": 9,
+            "age_hours": 10,
             "count_only_gap_count": 0,
             "date": "2026-10-02",
             "dispositioned_item_count": 0,
@@ -222,7 +222,7 @@
           }
         ],
         "dispositioned_item_count": 54,
-        "max_age_hours": 9,
+        "max_age_hours": 10,
         "oldest_pending_date": "2026-10-02",
         "pending_date_count": 1,
         "pending_item_count": 1,
@@ -339,7 +339,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-02T09:55:52.041963Z",
+  "exported_at": "2026-10-02T10:15:16.132175Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "DEGRADED"

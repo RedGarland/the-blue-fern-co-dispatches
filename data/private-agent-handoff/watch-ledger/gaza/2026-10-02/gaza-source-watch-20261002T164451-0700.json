@@ -1,0 +1,60 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261002T164451-0700",
+  "scheduled_for": "2026-10-02T16:44:51-07:00",
+  "started_at": "2026-10-02T16:45:19-07:00",
+  "completed_at": "2026-10-02T16:47:02-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-02T15:42:35-07:00",
+    "end": "2026-10-02T16:47:02-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      "OCHA OPT checked first. No new qualifying Gaza development was found in the observation window; the newest surfaced Gaza-relevant OCHA situation report was dated 25 September 2026, while the most recent surfaced Gaza-specific situation report was dated 18 September 2026.",
+      "WHO checked second. No new qualifying Gaza-specific operational development was found in the observation window; the freshest surfaced WHO item mentioning Gaza was a 1 October 2026 global partnership update, while the latest surfaced Gaza-specific WHO remarks were dated 24 September 2026."
+    ],
+    "additional_searches": 12,
+    "search_scope": [
+      "civilian casualties and military operations with documented civilian impact",
+      "displacement",
+      "aid access and crossings",
+      "food and water access",
+      "healthcare disruption, hospitals, ambulances, transport, fuel, functioning capacity, and medical evacuation",
+      "detention and hostages",
+      "ceasefire and negotiation changes"
+    ],
+    "sources_targeted": [
+      "UN News",
+      "UNRWA",
+      "UNICEF",
+      "WFP",
+      "ICRC",
+      "Palestine Red Crescent Society",
+      "Reuters",
+      "Associated Press",
+      "BBC",
+      "WAFA",
+      "COGAT/Israeli government",
+      "IDF"
+    ],
+    "exclusions": [
+      "older or recycled items",
+      "opinion",
+      "unsupported social claims",
+      "duplicates",
+      "unsourced claims",
+      "material without a verifiable publication or event time inside the observation window",
+      "broad status commentary without a distinct new operational development"
+    ],
+    "degradation": [
+      "Direct retrieval/search coverage for UN News and BBC was blocked by robots.txt. Remaining official humanitarian and established-source coverage was usable."
+    ],
+    "result": "No distinct development within the observation window met the novelty and traceability threshold."
+  }
+}

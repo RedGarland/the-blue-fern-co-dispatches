@@ -1,0 +1,42 @@
+{
+  "schema_version": "bluefern.watch_reconciliation.v1",
+  "dispatch": "food-line",
+  "observation_date": "2026-10-01",
+  "generated_at": "2026-10-02T07:06:40Z",
+  "watch_ledger_ref": "ops/watch-ledger",
+  "protected_source_ref": "add/pages-repo-default",
+  "run_count": 12,
+  "success_run_count": 11,
+  "degraded_run_count": 1,
+  "successful_run_count": 12,
+  "failed_run_count": 0,
+  "zero_finding_run_count": 12,
+  "finding_count": 0,
+  "accounted_count": 0,
+  "unreconciled_count": 0,
+  "findings": [],
+  "missing_hour_slots_local": [
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "13",
+    "14",
+    "16",
+    "17",
+    "19"
+  ],
+  "material_heartbeat_absence": true,
+  "production_evidence": {
+    "protected_source_checked": true,
+    "deployed_public_checked": true,
+    "observation": "No watch findings required matching. The protected source/default branch contains no 2026-10-01 Food Line production artifacts; deployed gh-pages contains a Food Line edition for 2026-10-01."
+  },
+  "operational_issue": true,
+  "operational_issue_reasons": [
+    "MATERIAL_HEARTBEAT_ABSENCE"
+  ]
+}

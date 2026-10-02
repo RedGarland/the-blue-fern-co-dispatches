@@ -447,7 +447,7 @@ def _unexpected_dirty_paths(status_output: str) -> list[str]:
         category = classify_food_line_runtime_path(path)
         if status == " M" and is_food_line_mutable_tracked_runtime_path(path):
             continue
-        if status in {" M", "??"} and _is_generated_public_output_path(path):
+        if status in {" M", " D", "??"} and _is_generated_public_output_path(path):
             continue
         if status != "??" or category not in FOOD_LINE_ALLOWED_DIRTY_CATEGORIES:
             unexpected.append(path)

@@ -67,6 +67,7 @@ SHARED_DISPATCH_RECORD_FILES = {
     "sources.json",
     "story_memory.json",
 }
+WORKTREE_GENERATED_RESIDUE_STATUSES = {" M", " D", "??"}
 
 
 def _run_git_status(repo: Path) -> tuple[int, list[str]]:
@@ -169,10 +170,13 @@ def classify_status_line(
     if not path:
         return None
     category = classify_path(path)
-    allowed_food_generated_output = status in {" M", "??"} and is_food_line_generated_public_output_path(path)
+    allowed_food_generated_output = (
+        status in WORKTREE_GENERATED_RESIDUE_STATUSES
+        and is_food_line_generated_public_output_path(path)
+    )
     allowed_generated_public_output_residue = (
         allow_generated_public_output_residue
-        and status in {" M", "??"}
+        and status in WORKTREE_GENERATED_RESIDUE_STATUSES
         and category == "generated_public_output"
     )
     allowed_tracked_runtime = status == " M" and (

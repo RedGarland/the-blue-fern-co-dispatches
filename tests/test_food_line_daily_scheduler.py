@@ -146,6 +146,8 @@ def test_scheduler_accepts_generated_public_output_residue_after_publication() -
             " M output/site/assets/site.css",
             " M output/site/food-line/index.html",
             " M output/site/gaza/index.html",
+            " D output/site/food-line/editions/2026-09-12/index.html",
+            " D output/dispatches/food-line/editions/2026-09-12/edition_manifest.json",
             "?? output/site/food-line/editions/2026-10-01/index.html",
             "?? output/dispatches/food-line/editions/2026-10-01/edition_manifest.json",
         ]
@@ -179,8 +181,8 @@ def test_scheduler_visual_review_artifacts_do_not_hide_source_drift() -> None:
     assert scheduler._unexpected_dirty_paths(status) == ["scripts/food_line_daily_scheduler.py"]
 
 
-@pytest.mark.parametrize("status", ["M ", "MM", " D", "D "])
-def test_scheduler_generated_public_output_staged_or_deleted_remains_risky(status: str) -> None:
+@pytest.mark.parametrize("status", ["M ", "MM", "D "])
+def test_scheduler_generated_public_output_staged_or_partly_staged_remains_risky(status: str) -> None:
     dirty = f"{status} output/site/food-line/index.html"
 
     assert scheduler._unexpected_dirty_paths(dirty) == ["output/site/food-line/index.html"]
@@ -195,6 +197,63 @@ def test_scheduler_generated_public_output_does_not_hide_source_drift() -> None:
     )
 
     assert scheduler._unexpected_dirty_paths(status) == ["scripts/food_line_daily_scheduler.py"]
+
+
+def test_source_watch_dirty_check_accepts_sanctioned_review_and_generated_residue(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    (tmp_path / ".git").mkdir()
+
+    def fake_run(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
+        if command[:2] == ["git", "status"]:
+            return subprocess.CompletedProcess(
+                command,
+                0,
+                stdout="\n".join(
+                    [
+                        "?? output/review/bluefern-layout-deploy-screenshots-20261002T1730/root.png",
+                        " D output/site/food-line/editions/2026-09-12/index.html",
+                        " M output/site/assets/site.css",
+                    ]
+                ),
+                stderr="",
+            )
+        if command == ["git", "branch", "--show-current"]:
+            return subprocess.CompletedProcess(command, 0, stdout=f"{scheduler.PRODUCTION_BRANCH}\n", stderr="")
+        if command == ["git", "rev-parse", "HEAD"]:
+            return subprocess.CompletedProcess(command, 0, stdout="test-source-commit\n", stderr="")
+        raise AssertionError(f"unexpected command: {command}")
+
+    monkeypatch.setattr(scheduler, "_run", fake_run)
+
+    assert scheduler.verify_checkout(tmp_path, scheduler.PRODUCTION_BRANCH, update=False) == "test-source-commit"
+
+
+def test_source_watch_dirty_check_still_blocks_source_drift(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    (tmp_path / ".git").mkdir()
+
+    def fake_run(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
+        if command[:2] == ["git", "status"]:
+            return subprocess.CompletedProcess(
+                command,
+                0,
+                stdout="\n".join(
+                    [
+                        "?? output/review/bluefern-layout-deploy-screenshots-20261002T1730/root.png",
+                        " D output/site/food-line/editions/2026-09-12/index.html",
+                        " M scripts/food_line_daily_scheduler.py",
+                    ]
+                ),
+                stderr="",
+            )
+        raise AssertionError(f"unexpected command: {command}")
+
+    monkeypatch.setattr(scheduler, "_run", fake_run)
+
+    with pytest.raises(scheduler.SchedulerError, match="runner checkout is dirty"):
+        scheduler.verify_checkout(tmp_path, scheduler.PRODUCTION_BRANCH, update=False)
 
 
 def test_checkout_validation_preserves_durable_runtime_evidence(tmp_path: Path) -> None:
@@ -1754,6 +1813,97 @@ def test_source_watch_after_resume_preinitialization_noop_can_complete(
     run_record = json.loads((tmp_path / "status" / "food-line" / "runs" / "2026-09-07.json").read_text(encoding="utf-8"))
     assert run_record["source_watch_status"] == "completed"
     assert run_record["source_receipt_path"]
+
+
+def test_resume_dirty_check_accepts_sanctioned_review_and_generated_residue(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    edition_date = "2026-09-07"
+    run_id = "source-watch-test"
+    (tmp_path / ".git").mkdir()
+    _write_source_watch_artifacts(tmp_path, edition_date=edition_date, run_id=run_id, status="completed")
+    _write_run_record(tmp_path, edition_date=edition_date, run_id=run_id, status="completed")
+
+    def fake_run(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
+        if command[:2] == ["git", "status"]:
+            return subprocess.CompletedProcess(
+                command,
+                0,
+                stdout="\n".join(
+                    [
+                        "?? output/review/bluefern-layout-deploy-screenshots-20261002T1730/root.png",
+                        " D output/site/food-line/editions/2026-09-12/index.html",
+                        " D output/dispatches/food-line/editions/2026-09-12/edition_manifest.json",
+                        " M output/site/assets/site.css",
+                    ]
+                ),
+                stderr="",
+            )
+        if command == ["git", "branch", "--show-current"]:
+            return subprocess.CompletedProcess(command, 0, stdout=f"{scheduler.PRODUCTION_BRANCH}\n", stderr="")
+        if command == ["git", "rev-parse", "HEAD"]:
+            return subprocess.CompletedProcess(command, 0, stdout="test-source-commit\n", stderr="")
+        raise AssertionError(f"unexpected command: {command}")
+
+    monkeypatch.setattr(scheduler, "_run", fake_run)
+    monkeypatch.setattr(scheduler, "run_preflight", lambda *args, **kwargs: None)
+    monkeypatch.setattr(scheduler, "surviving_worker_pids", lambda *args, **kwargs: [])
+    monkeypatch.setattr(
+        scheduler,
+        "_invoke_python",
+        lambda python, root, arguments: subprocess.CompletedProcess([str(python), *arguments], 0, stdout="", stderr=""),
+    )
+    args = _resume_args(tmp_path, edition_date=edition_date)
+    args.test_mode = False
+
+    assert scheduler.run_resume(args) == 0
+    receipt = json.loads(
+        next((tmp_path / "logs" / "food-line" / "source-watch" / edition_date).glob("*-status-resume.json")).read_text(
+            encoding="utf-8"
+        )
+    )
+    assert receipt["final_status"] == "completed"
+    assert receipt["resume_status"] == "resume_not_required"
+    assert receipt["exit_code"] == 0
+
+
+def test_resume_dirty_check_still_blocks_source_drift(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    edition_date = "2026-09-07"
+    run_id = "source-watch-test"
+    (tmp_path / ".git").mkdir()
+    _write_source_watch_artifacts(tmp_path, edition_date=edition_date, run_id=run_id, status="completed")
+    _write_run_record(tmp_path, edition_date=edition_date, run_id=run_id, status="completed")
+
+    def fake_run(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
+        if command[:2] == ["git", "status"]:
+            return subprocess.CompletedProcess(
+                command,
+                0,
+                stdout="\n".join(
+                    [
+                        "?? output/review/bluefern-layout-deploy-screenshots-20261002T1730/root.png",
+                        " D output/site/food-line/editions/2026-09-12/index.html",
+                        " M scripts/food_line_daily_scheduler.py",
+                    ]
+                ),
+                stderr="",
+            )
+        raise AssertionError(f"unexpected command: {command}")
+
+    monkeypatch.setattr(scheduler, "_run", fake_run)
+    args = _resume_args(tmp_path, edition_date=edition_date)
+    args.test_mode = False
+
+    assert scheduler.run_resume(args) == 10
+    receipt = json.loads(
+        next((tmp_path / "logs" / "food-line" / "source-watch" / edition_date).glob("*-status-resume.json")).read_text(
+            encoding="utf-8"
+        )
+    )
+    assert receipt["final_status"] == "status_resume_failed"
+    assert receipt["reason"] == "runner checkout is dirty; scheduled operation failed closed"
 
 
 def test_source_watch_active_lock_collision_writes_daily_contract(

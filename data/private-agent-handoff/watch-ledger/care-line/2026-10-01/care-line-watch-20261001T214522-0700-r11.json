@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261001T214522-0700-r11",
+  "scheduled_for": "2026-10-01T21:45:22-07:00",
+  "started_at": "2026-10-01T21:49:44-07:00",
+  "completed_at": "2026-10-01T21:50:52-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-01T20:48:00-07:00",
+    "end": "2026-10-01T21:50:52-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first; newest listed notice date remained 2026-09-30.",
+    "Exactly 12 additional targeted searches completed across hospital/ED/maternity, behavioral health, dialysis, oncology, primary care, ambulance/air-medical, CMS termination, reopening/restoration, rural emergency access, and U.S. territories.",
+    "No new qualifying healthcare-access development was identified since the prior hourly check.",
+    "Roseland Community Hospital labor-and-delivery closure was excluded as a previously surfaced duplicate despite new confirming local coverage published during this window.",
+    "Northern Maine Medical Center emergency-department staffing losses were reviewed but excluded because the emergency department remains continuously open and the reporting did not establish a concrete service closure or suspension.",
+    "No approval, publication, schedule alteration, or task disablement was performed."
+  ]
+}

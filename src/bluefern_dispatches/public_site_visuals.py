@@ -23,6 +23,26 @@ REJECTED_FOOD_TEXT = (
     "Denver7",
 )
 
+CANONICAL_TOKENS = {
+    "--bf-dark-blue": "#1E3F4F",
+    "--bf-background-cream": "#EFE7DA",
+    "--bf-accent-blue-grey": "#4E6B79",
+    "--bf-soft-steel-grey": "#9BAEB5",
+    "--bf-pale-beige": "#D9CEC0",
+    "--bf-white": "#FFFFFF",
+    "--bf-text": "#1E3F4F",
+}
+
+CANONICAL_RGB = {
+    "--bf-dark-blue": "rgb(30, 63, 79)",
+    "--bf-background-cream": "rgb(239, 231, 218)",
+    "--bf-accent-blue-grey": "rgb(78, 107, 121)",
+    "--bf-soft-steel-grey": "rgb(155, 174, 181)",
+    "--bf-pale-beige": "rgb(217, 206, 192)",
+    "--bf-white": "rgb(255, 255, 255)",
+    "--bf-text": "rgb(30, 63, 79)",
+}
+
 
 class PublicSiteVisualValidationError(RuntimeError):
     pass
@@ -133,6 +153,25 @@ def _assert_html_basics(pages_root: Path, issues: list[VisualIssue]) -> dict[str
     }
 
 
+def _assert_css_tokens(pages_root: Path, issues: list[VisualIssue]) -> None:
+    css_path = pages_root / "assets" / "site.css"
+    if not css_path.exists():
+        issues.append(VisualIssue("/assets/site.css", "canonical_tokens", "shared stylesheet is missing"))
+        return
+    css = _read_text(css_path).lower()
+    for token, value in CANONICAL_TOKENS.items():
+        expected = f"{token.lower()}: {value.lower()}"
+        compact_expected = expected.replace(" ", "")
+        if expected not in css and compact_expected not in css.replace(" ", ""):
+            issues.append(
+                VisualIssue(
+                    "/assets/site.css",
+                    "canonical_tokens",
+                    f"required token {token}: {value} is missing from shared stylesheet",
+                )
+            )
+
+
 def _free_port() -> int:
     with contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
         sock.bind(("127.0.0.1", 0))
@@ -241,11 +280,34 @@ def _visual_checks_with_playwright(
                               contrast: contrast(cs.color, cs.backgroundColor)
                             };
                           };
+                          const styleForElement = (el) => {
+                            const cs = window.getComputedStyle(el);
+                            return {
+                              color: cs.color,
+                              backgroundColor: cs.backgroundColor,
+                              contrast: contrast(cs.color, cs.backgroundColor),
+                              text: el.textContent ? el.textContent.trim() : ''
+                            };
+                          };
+                          const rootStyle = window.getComputedStyle(document.documentElement);
+                          const canonicalTokens = {
+                            '--bf-dark-blue': rootStyle.getPropertyValue('--bf-dark-blue').trim(),
+                            '--bf-background-cream': rootStyle.getPropertyValue('--bf-background-cream').trim(),
+                            '--bf-accent-blue-grey': rootStyle.getPropertyValue('--bf-accent-blue-grey').trim(),
+                            '--bf-soft-steel-grey': rootStyle.getPropertyValue('--bf-soft-steel-grey').trim(),
+                            '--bf-pale-beige': rootStyle.getPropertyValue('--bf-pale-beige').trim(),
+                            '--bf-white': rootStyle.getPropertyValue('--bf-white').trim(),
+                            '--bf-text': rootStyle.getPropertyValue('--bf-text').trim()
+                          };
+                          const buttons = Array.from(document.querySelectorAll('.button')).map(styleForElement);
                           const cardActions = document.querySelector('.active-grid .dispatch-card .card-actions, .dispatch-grid .dispatch-card .card-actions');
                           const cardActionsStyle = cardActions ? window.getComputedStyle(cardActions) : null;
                           return {
+                            canonicalTokens,
                             paperToken: window.getComputedStyle(document.documentElement).getPropertyValue('--paper').trim(),
+                            html: style('html'),
                             body: style('body'),
+                            buttons,
                             primaryButton: style('.active-grid .dispatch-card .card-actions .button, .dispatch-grid .dispatch-card .card-actions .button, .actions .button, .button'),
                             hero: box('.hero'),
                             latestDesk: box('.edition-grid'),
@@ -277,23 +339,41 @@ def _visual_checks_with_playwright(
                         issues.append(VisualIssue(path, "http_status", f"expected HTTP 200, got {status}"))
                     if not css_loaded:
                         issues.append(VisualIssue(path, "stylesheet", "shared /assets/site.css did not load with HTTP 200"))
+                    tokens = metrics.get("canonicalTokens") or {}
+                    for token, expected_rgb in CANONICAL_RGB.items():
+                        observed = str(tokens.get(token) or "").lower()
+                        if observed not in {expected_rgb.lower(), CANONICAL_TOKENS[token].lower()}:
+                            issues.append(VisualIssue(path, "canonical_tokens", f"{token} computed as {tokens.get(token)!r}, expected {expected_rgb}"))
+                    html_style = metrics.get("html") or {}
+                    body = metrics.get("body") or {}
+                    html_background = str(html_style.get("backgroundColor") or "").lower()
+                    body_background = str(body.get("backgroundColor") or "").lower()
+                    if html_background != CANONICAL_RGB["--bf-background-cream"]:
+                        issues.append(VisualIssue(path, "body_background", f"html background is {html_style.get('backgroundColor')}, expected {CANONICAL_RGB['--bf-background-cream']}"))
+                    if body_background != CANONICAL_RGB["--bf-background-cream"]:
+                        issues.append(VisualIssue(path, "body_background", f"body background is {body.get('backgroundColor')}, expected {CANONICAL_RGB['--bf-background-cream']}"))
+                    for button in metrics.get("buttons") or []:
+                        contrast_ratio = button.get("contrast")
+                        if contrast_ratio is None:
+                            issues.append(VisualIssue(path, "primary_button_contrast", f"button contrast could not be measured: {button.get('text')}"))
+                        elif float(contrast_ratio) < 4.5:
+                            issues.append(VisualIssue(path, "primary_button_contrast", f"button contrast is below 4.5:1: {contrast_ratio:.2f} ({button.get('text')})"))
+                        if str(button.get("backgroundColor") or "").lower() == CANONICAL_RGB["--bf-dark-blue"] and str(button.get("color") or "").lower() != CANONICAL_RGB["--bf-white"]:
+                            issues.append(VisualIssue(path, "primary_button_contrast", f"dark primary button text is not white: {button.get('color')} ({button.get('text')})"))
                     if path == "/":
-                        body = metrics.get("body") or {}
                         primary_button = metrics.get("primaryButton") or {}
                         hero = metrics.get("hero") or {}
                         latest = metrics.get("latestDesk") or {}
                         active = metrics.get("activeGrid") or {}
                         paper_token = str(metrics.get("paperToken") or "").lower()
-                        if paper_token not in {"#efe7da", "rgb(239, 231, 218)"}:
+                        if paper_token not in {"#efe7da", CANONICAL_RGB["--bf-background-cream"]}:
                             issues.append(VisualIssue(path, "body_background", f"expected warm Dispatches paper token #EFE7DA, got {metrics.get('paperToken')!r}"))
-                        if str(body.get("backgroundImage") or "none") == "none":
-                            issues.append(VisualIssue(path, "body_background", "body background did not render the warm page gradient"))
                         contrast_ratio = primary_button.get("contrast")
                         if contrast_ratio is None:
                             issues.append(VisualIssue(path, "primary_button_contrast", "primary button contrast could not be measured"))
                         elif float(contrast_ratio) < 4.5:
                             issues.append(VisualIssue(path, "primary_button_contrast", f"primary button contrast is below 4.5:1: {contrast_ratio:.2f}"))
-                        if str(primary_button.get("color") or "").lower() not in {"rgb(255, 253, 248)", "#fffdf8", "white"}:
+                        if str(primary_button.get("color") or "").lower() not in {CANONICAL_RGB["--bf-white"], "#ffffff", "white"}:
                             issues.append(VisualIssue(path, "primary_button_contrast", f"primary button text color is not the approved light tone: {primary_button.get('color')}"))
                         if not latest:
                             issues.append(VisualIssue(path, "latest_desk", "homepage latest desk/grid was not found"))
@@ -342,6 +422,7 @@ def validate_public_site_visuals(
     if not pages_root.exists():
         raise PublicSiteVisualValidationError(f"pages root does not exist: {pages_root}")
     issues: list[VisualIssue] = []
+    _assert_css_tokens(pages_root, issues)
     html_metrics = _assert_html_basics(pages_root, issues)
     paths = _required_paths(pages_root)
     pages = _visual_checks_with_playwright(pages_root, paths, screenshot_dir, issues)

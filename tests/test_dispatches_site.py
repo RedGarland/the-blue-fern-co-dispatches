@@ -259,11 +259,15 @@ def test_landing_page_links_and_blue_fern_scheme(built_site):
     assert "dispatch-card-links" not in html
     assert "Cascadia Systems Dispatch" not in html
     css_text = read(css)
-    assert "--blue-fern: #2F6F88" in css_text
-    assert "opacity: 0.05;" in css_text
+    assert "--bf-dark-blue: #1E3F4F" in css_text
+    assert "--bf-background-cream: #EFE7DA" in css_text
+    assert "--bf-accent-blue-grey: #4E6B79" in css_text
+    assert "--blue-fern: var(--bf-accent-blue-grey)" in css_text
+    assert "opacity: 0.045;" in css_text
     assert "pointer-events: none;" in css_text
     assert "position: absolute;" in css_text
-    assert "z-index: 2;" in css_text
+    assert "z-index: 0;" in css_text
+    assert "z-index: 1;" in css_text
     assert "background-position: center" in css_text
     assert "background-size: min(76%, 19rem) auto" in css_text
     assert ".edition-card" in css_text
@@ -378,7 +382,7 @@ def test_landing_page_uses_scalable_card_grid_and_copies_masthead(built_site):
     assert 'class="dispatch-card-watermark"' in index
     assert 'class="dispatch-card-content"' in index
     assert 'grid-template-columns: repeat(2, minmax(0, 1fr));' in css_text
-    assert '@media (max-width: 768px)' in css_text
+    assert '@media (max-width: 800px)' in css_text
     assert 'grid-template-columns: 1fr;' in css_text
     assert (work / "output" / "site" / "assets" / ROOT_MASTHEAD_ASSET).exists()
     assert (work / "output" / "site" / "food-line" / "assets" / "food-line-logo.png").exists()

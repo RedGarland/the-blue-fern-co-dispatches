@@ -8,17 +8,30 @@ from bluefern_dispatches.public_site_visuals import validate_public_site_visuals
 
 
 GOOD_CSS = """
-:root { --ink: #1E3F4F; --paper: #EFE7DA; --muted: #4E6B79; --white: #fffdf8; --line: #b9aa96; }
-body { margin: 0; font-family: Georgia, serif; background: linear-gradient(180deg, #f7f1e8 0, var(--paper) 34rem); color: var(--ink); }
+:root {
+  --bf-dark-blue: #1E3F4F;
+  --bf-background-cream: #EFE7DA;
+  --bf-accent-blue-grey: #4E6B79;
+  --bf-soft-steel-grey: #9BAEB5;
+  --bf-pale-beige: #D9CEC0;
+  --bf-white: #FFFFFF;
+  --bf-text: #1E3F4F;
+  --ink: var(--bf-text);
+  --paper: var(--bf-background-cream);
+  --muted: var(--bf-accent-blue-grey);
+  --white: var(--bf-white);
+  --line: var(--bf-pale-beige);
+}
+html, body { margin: 0; font-family: Georgia, serif; background: var(--bf-background-cream); color: var(--ink); }
 .hero { min-height: 260px; padding: 48px; box-sizing: border-box; }
 .section-block { padding: 32px 48px; }
 .edition-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
 .edition-card, .dispatch-card { border: 1px solid var(--line); border-radius: 8px; padding: 20px; background: var(--white); box-shadow: 0 18px 45px rgba(30, 63, 79, 0.08); }
 .active-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
 .actions, .card-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem; }
-.button, .button:visited { display: inline-block; background: #1E3F4F; color: #fffdf8; border: 1px solid #1E3F4F; border-radius: 3px; padding: 0.72rem 1.1rem; font: 700 0.82rem/1.2 system-ui, sans-serif; text-decoration: none; }
-.button:hover { background: #2F6F88; color: #fffdf8; }
-.button:focus, .button:focus-visible { outline: 3px solid #2F6F88; outline-offset: 3px; }
+.button, .button:visited { display: inline-block; background: var(--bf-dark-blue); color: var(--bf-white); border: 1px solid var(--bf-dark-blue); border-radius: 3px; padding: 0.72rem 1.1rem; font: 700 0.82rem/1.2 system-ui, sans-serif; text-decoration: none; }
+.button:hover { background: var(--bf-accent-blue-grey); color: var(--bf-white); }
+.button:focus, .button:focus-visible { outline: 3px solid var(--bf-soft-steel-grey); outline-offset: 3px; }
 .text-link, .support-link { font: 700 0.82rem/1.2 system-ui, sans-serif; }
 .support-link { color: var(--muted); }
 .food-line-hero { display: grid; place-items: center; padding: 40px; min-height: 220px; }
@@ -136,13 +149,23 @@ def test_excessive_homepage_hero_height_fails(tmp_path: Path) -> None:
 
 
 def test_cold_body_background_token_fails(tmp_path: Path) -> None:
-    css = GOOD_CSS.replace("--paper: #EFE7DA", "--paper: #F7F8F4")
+    css = GOOD_CSS.replace("--bf-background-cream: #EFE7DA", "--bf-background-cream: #F7F8F4")
     root = _make_pages_root(tmp_path, css=css)
 
     result = validate_public_site_visuals(root)
 
     assert result["ok"] is False
     assert "body_background" in _issue_checks(result)
+
+
+def test_missing_canonical_palette_token_fails(tmp_path: Path) -> None:
+    css = GOOD_CSS.replace("  --bf-pale-beige: #D9CEC0;\n", "")
+    root = _make_pages_root(tmp_path, css=css)
+
+    result = validate_public_site_visuals(root)
+
+    assert result["ok"] is False
+    assert "canonical_tokens" in _issue_checks(result)
 
 
 def test_low_contrast_primary_button_fails(tmp_path: Path) -> None:

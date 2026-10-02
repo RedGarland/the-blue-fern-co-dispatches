@@ -514,14 +514,21 @@ def _food_line_theme_styles() -> str:
     return """
 <style>
 :root {
+  --bf-dark-blue: #1E3F4F;
+  --bf-background-cream: #EFE7DA;
+  --bf-accent-blue-grey: #4E6B79;
+  --bf-soft-steel-grey: #9BAEB5;
+  --bf-pale-beige: #D9CEC0;
+  --bf-white: #FFFFFF;
+  --bf-text: #1E3F4F;
   --ink: #1E3F4F;
   --navy: #1E3F4F;
   --blue-fern: #4E6B79;
   --soft-blue: #EFE7DA;
   --fern-green: #4E6B79;
-  --paper: #FBF7EF;
-  --border: #D2C5B4;
-  --panel: #FFFDF8;
+  --paper: #EFE7DA;
+  --border: #D9CEC0;
+  --panel: #FFFFFF;
   --muted: #4E6B79;
 }
 .food-line-shell {
@@ -551,7 +558,7 @@ def _food_line_theme_styles() -> str:
   width: min(360px, 90vw);
 }
 .food-line-logo--edition {
-  width: min(460px, 90vw);
+  width: min(360px, 90vw);
 }
 .food-line-logo--map {
   width: min(520px, 90vw);
@@ -570,6 +577,17 @@ def _food_line_theme_styles() -> str:
 .food-line-panel h3:first-child {
   margin-top: 0;
 }
+.briefing .food-line-hero {
+  gap: 0.45rem;
+  padding-bottom: 0.9rem;
+}
+.briefing .food-line-logo--edition {
+  width: min(280px, 72vw);
+}
+.briefing .food-line-hero h1 {
+  margin: 0.15rem 0 0.35rem;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+}
 .food-line-actions {
   display: flex;
   flex-wrap: wrap;
@@ -580,7 +598,8 @@ def _food_line_theme_styles() -> str:
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 0.45rem 0.75rem;
-  background: #F3EBDD;
+  background: var(--paper);
+  color: var(--ink);
   font-weight: 700;
   text-decoration: none;
 }
@@ -594,7 +613,7 @@ def _food_line_theme_styles() -> str:
   border-left: 4px solid var(--fern-green);
   margin: 0.9rem 0 1rem;
   padding: 0.7rem 0 0.7rem 0.9rem;
-  background: #F6F0E6;
+  background: var(--paper);
 }
 .food-line-story-list,
 .food-line-recent-list {
@@ -639,7 +658,7 @@ def _food_line_theme_styles() -> str:
 .food-line-source-table th {
   text-align: left;
   color: var(--navy);
-  background: #F3EBDD;
+  background: var(--paper);
   position: sticky;
   top: 0;
 }
@@ -687,7 +706,7 @@ def _food_line_theme_styles() -> str:
   width: 0.8rem;
   height: 0.8rem;
   border-radius: 50%;
-  border: 1px solid #1B2F39;
+  border: 1px solid var(--ink);
   display: inline-block;
 }
 .food-line-map-popup {
@@ -721,7 +740,7 @@ def _food_line_theme_styles() -> str:
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 1rem 1rem 0.9rem;
-  background: #FFFDF9;
+  background: var(--panel);
   box-shadow: 0 10px 24px rgba(30, 63, 79, 0.06);
 }
 .food-line-source-card h3 {

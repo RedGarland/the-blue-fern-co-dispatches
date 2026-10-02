@@ -24,13 +24,19 @@ jobs:
   ingest:
     runs-on: ubuntu-latest
     env:
-      PYTHONPATH: src
+      PYTHONPATH: source/src
     steps:
+      - name: Check out source workflow code
+        uses: actions/checkout@v4
+        with:
+          path: source
+
       - name: Check out watch ledger branch
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ledger_branch }}
           fetch-depth: 0
+          path: ledger
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -39,8 +45,9 @@ jobs:
 
       - name: Ingest heartbeat
         run: >-
-          python scripts/ingest_watch_heartbeat.py
+          python source/scripts/ingest_watch_heartbeat.py
           --payload-base64 '${{ inputs.heartbeat_json_b64 }}'
+          --repo-root ledger
           --prepare-branch '${{ inputs.ledger_branch }}'
           --commit
           --push

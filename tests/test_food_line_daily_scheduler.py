@@ -212,6 +212,7 @@ def test_source_watch_dirty_check_accepts_sanctioned_review_and_generated_residu
                 stdout="\n".join(
                     [
                         "?? output/review/bluefern-layout-deploy-screenshots-20261002T1730/root.png",
+                        "?? output/tmp-backups-pages/gaza/2026-10-02/index.html",
                         "?? .pytest-tmp-bluefern-layout-deploy/test_pages_publish/repo/output/site/index.html",
                         " D output/site/food-line/editions/2026-09-12/index.html",
                         " M output/site/assets/site.css",
@@ -243,6 +244,7 @@ def test_source_watch_dirty_check_still_blocks_source_drift(
                 stdout="\n".join(
                     [
                         "?? output/review/bluefern-layout-deploy-screenshots-20261002T1730/root.png",
+                        "?? output/tmp-backups-pages/gaza/2026-10-02/index.html",
                         "?? .pytest-tmp-bluefern-layout-deploy/test_pages_publish/repo/output/site/index.html",
                         " D output/site/food-line/editions/2026-09-12/index.html",
                         " M scripts/food_line_daily_scheduler.py",
@@ -1834,6 +1836,7 @@ def test_resume_dirty_check_accepts_sanctioned_review_and_generated_residue(
                 stdout="\n".join(
                     [
                         "?? output/review/bluefern-layout-deploy-screenshots-20261002T1730/root.png",
+                        "?? output/tmp-backups-pages/gaza/2026-10-02/index.html",
                         "?? .pytest-tmp-bluefern-layout-deploy/test_pages_publish/repo/output/site/index.html",
                         " D output/site/food-line/editions/2026-09-12/index.html",
                         " D output/dispatches/food-line/editions/2026-09-12/edition_manifest.json",
@@ -1887,6 +1890,7 @@ def test_resume_dirty_check_still_blocks_source_drift(
                 stdout="\n".join(
                     [
                         "?? output/review/bluefern-layout-deploy-screenshots-20261002T1730/root.png",
+                        "?? output/tmp-backups-pages/gaza/2026-10-02/index.html",
                         "?? .pytest-tmp-bluefern-layout-deploy/test_pages_publish/repo/output/site/index.html",
                         " D output/site/food-line/editions/2026-09-12/index.html",
                         " M scripts/food_line_daily_scheduler.py",

@@ -138,6 +138,8 @@ def classify_path(path_text: str) -> str:
     operator_category = classify_operator_runtime_path(path)
     if operator_category:
         return operator_category
+    if lower.startswith("output/tmp-backups-pages/"):
+        return "review_output"
     if lower.startswith("output/review/") or "/review/" in lower or lower.startswith("output/dispatches/") and "/review/" in lower:
         return "review_output"
     if (

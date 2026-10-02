@@ -160,6 +160,7 @@ def test_scheduler_accepts_public_site_visual_review_artifacts() -> None:
             "?? output/review/public-site-visuals-current/root.png",
             "?? output/review/public-site-visuals-current/food-line__editions__2026-10-01.png",
             "?? output/review/public-site-visuals/root.png",
+            "?? output/review/bluefern-live-repair-screenshots-20261002T1610/root.png",
         ]
     )
 
@@ -170,6 +171,7 @@ def test_scheduler_visual_review_artifacts_do_not_hide_source_drift() -> None:
     status = "\n".join(
         [
             "?? output/review/public-site-visuals-current/root.png",
+            "?? output/review/bluefern-live-repair-screenshots-20261002T1610/root.png",
             " M scripts/food_line_daily_scheduler.py",
         ]
     )

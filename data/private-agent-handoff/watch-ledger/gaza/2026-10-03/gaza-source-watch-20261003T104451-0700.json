@@ -1,0 +1,41 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261003T104451-0700",
+  "scheduled_for": "2026-10-03T10:44:51-07:00",
+  "started_at": "2026-10-03T10:45:00-07:00",
+  "completed_at": "2026-10-03T10:46:03-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-03T09:49:07-07:00",
+    "end": "2026-10-03T10:46:03-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      "OCHA OPT checked first; no new in-window Gaza-specific update surfaced. The newest surfaced OCHA OPT humanitarian situation report was dated 25 September 2026.",
+      "WHO checked second; no new in-window Gaza-specific operational update surfaced."
+    ],
+    "additional_targeted_searches_used": 12,
+    "additional_targeted_searches_limit": 12,
+    "targeted_coverage": [
+      "UNRWA humanitarian situation reporting",
+      "UNICEF Gaza water, food, displacement, and child-impact reporting",
+      "Palestine Red Crescent ambulance and hospital reporting",
+      "ICRC detention, hostage, and humanitarian reporting",
+      "MSF hospital, medical-evacuation, and fuel reporting",
+      "Reuters Gaza casualties, aid, ceasefire, hostages, and crossings",
+      "Associated Press Gaza casualties, strikes, hospitals, and ceasefire",
+      "Rafah/Kerem Shalom/COGAT crossing and aid-access reporting",
+      "ceasefire, negotiation, and hostage developments",
+      "military operations with documented civilian impact",
+      "hospital, ambulance, medical-evacuation, functioning-capacity, and fuel changes",
+      "food, water, aid-access, and infrastructure-damage changes"
+    ],
+    "degraded_searches": [],
+    "assessment": "No distinct qualifying development was verified in the bounded observation window. A Gaza Information Index item published on 3 October summarized 25 September-1 October crossing and aid data and was excluded as recycled/outside-window material. Other surfaced Gaza casualty reporting concerned previously captured events or events outside this observation window."
+  }
+}

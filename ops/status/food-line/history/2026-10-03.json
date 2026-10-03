@@ -20,7 +20,7 @@
     "attention_task_count": 1,
     "attention_tasks": [
       {
-        "artifact_id": "20261003T212938Z-source-watch.json",
+        "artifact_id": "20261003T220909Z-source-watch.json",
         "classification": "failed",
         "exit_code": 10,
         "failure_stage": "source_watch",
@@ -94,9 +94,9 @@
       "task_key": "food_line_daily_publish"
     },
     {
-      "artifact_id": "20261003T212938Z-source-watch.json",
+      "artifact_id": "20261003T220909Z-source-watch.json",
       "classification": "failed",
-      "completed_at": "2026-10-03T21:29:38.260689Z",
+      "completed_at": "2026-10-03T22:09:09.881864Z",
       "diagnostics": {
         "failure": {
           "collection_health": "failed",
@@ -108,9 +108,9 @@
       "public_side_effects": {},
       "publication_attempted": null,
       "publication_status": "",
-      "run_id": "food-line-proof-food-care-continuation-20261003T212826Z-dd195bf8",
+      "run_id": "food-line-proof-food-care-continuation-20261003T220826Z-54cecd40",
       "scheduled_for": "2026-10-03",
-      "started_at": "2026-10-03T21:29:37.096103Z",
+      "started_at": "2026-10-03T22:09:08.823203Z",
       "status": "FAILED",
       "task_key": "food_line_source_watch"
     },
@@ -134,8 +134,8 @@
   "incident_reference": {
     "date": "2026-10-03"
   },
-  "last_exported_at": "2026-10-03T21:38:30.754237Z",
-  "last_receipt_at": "2026-10-03T21:29:38.260689Z",
+  "last_exported_at": "2026-10-03T22:15:06.714243Z",
+  "last_receipt_at": "2026-10-03T22:09:09.881864Z",
   "latest_runtime_proof_date": "2026-10-03T19:35:15.063756Z",
   "next_expected_run": null,
   "observed_date": "2026-10-03",
@@ -1497,6 +1497,90 @@
       "run_id": "food-line-proof-food-care-continuation-20261003T212826Z-dd195bf8",
       "scheduled_for": "2026-10-03",
       "started_at": "2026-10-03T21:29:37.096103Z",
+      "status": "FAILED",
+      "task_key": "food_line_source_watch"
+    },
+    {
+      "artifact_id": "20261003T213919Z-source-watch.json",
+      "classification": "failed",
+      "completed_at": "2026-10-03T21:39:19.652529Z",
+      "diagnostics": {
+        "failure": {
+          "collection_health": "failed",
+          "failure_stage": "source_watch"
+        }
+      },
+      "exit_code": 10,
+      "next_expected_run": null,
+      "public_side_effects": {},
+      "publication_attempted": null,
+      "publication_status": "",
+      "run_id": "food-line-proof-food-care-continuation-20261003T213827Z-cc8212c0",
+      "scheduled_for": "2026-10-03",
+      "started_at": "2026-10-03T21:39:18.399221Z",
+      "status": "FAILED",
+      "task_key": "food_line_source_watch"
+    },
+    {
+      "artifact_id": "20261003T214940Z-source-watch.json",
+      "classification": "failed",
+      "completed_at": "2026-10-03T21:49:40.352816Z",
+      "diagnostics": {
+        "failure": {
+          "collection_health": "failed",
+          "failure_stage": "source_watch"
+        }
+      },
+      "exit_code": 10,
+      "next_expected_run": null,
+      "public_side_effects": {},
+      "publication_attempted": null,
+      "publication_status": "",
+      "run_id": "food-line-proof-food-care-continuation-20261003T214826Z-e5a052c9",
+      "scheduled_for": "2026-10-03",
+      "started_at": "2026-10-03T21:49:39.201636Z",
+      "status": "FAILED",
+      "task_key": "food_line_source_watch"
+    },
+    {
+      "artifact_id": "20261003T215931Z-source-watch.json",
+      "classification": "failed",
+      "completed_at": "2026-10-03T21:59:31.214004Z",
+      "diagnostics": {
+        "failure": {
+          "collection_health": "failed",
+          "failure_stage": "source_watch"
+        }
+      },
+      "exit_code": 10,
+      "next_expected_run": null,
+      "public_side_effects": {},
+      "publication_attempted": null,
+      "publication_status": "",
+      "run_id": "food-line-proof-food-care-continuation-20261003T215826Z-435d49ac",
+      "scheduled_for": "2026-10-03",
+      "started_at": "2026-10-03T21:59:30.195012Z",
+      "status": "FAILED",
+      "task_key": "food_line_source_watch"
+    },
+    {
+      "artifact_id": "20261003T220909Z-source-watch.json",
+      "classification": "failed",
+      "completed_at": "2026-10-03T22:09:09.881864Z",
+      "diagnostics": {
+        "failure": {
+          "collection_health": "failed",
+          "failure_stage": "source_watch"
+        }
+      },
+      "exit_code": 10,
+      "next_expected_run": null,
+      "public_side_effects": {},
+      "publication_attempted": null,
+      "publication_status": "",
+      "run_id": "food-line-proof-food-care-continuation-20261003T220826Z-54cecd40",
+      "scheduled_for": "2026-10-03",
+      "started_at": "2026-10-03T22:09:08.823203Z",
       "status": "FAILED",
       "task_key": "food_line_source_watch"
     },

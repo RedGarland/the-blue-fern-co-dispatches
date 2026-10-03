@@ -10,21 +10,21 @@
     "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
     "unaccounted_count": 0
   },
-  "aggregate_status": "UNKNOWN",
+  "aggregate_status": "SUCCESS",
   "current_runner_branch": "add/pages-repo-default",
   "current_runner_head": "9d70bd18010514d9bb5a0ea7535ed3b2ea0a042c",
   "debug_summary": {
-    "aggregate_status": "UNKNOWN",
+    "aggregate_status": "SUCCESS",
     "all_current_failures_external": false,
     "all_current_failures_non_actionable": false,
     "attention_task_count": 0,
     "attention_tasks": [],
     "external_access_restriction_count": 0,
     "failed_source_count": 0,
-    "operator_assessment": "FAILED_ACTION_REQUIRED",
+    "operator_assessment": "HEALTHY",
     "primary_classification": null,
     "primary_failure_stage": null,
-    "primary_layer": "UNKNOWN",
+    "primary_layer": "NONE",
     "primary_task_key": null,
     "primary_task_status": null,
     "private_review_count_only_gap_count": null,
@@ -35,8 +35,8 @@
     "private_review_pending_item_count": null,
     "private_review_unresolved_item_count": null,
     "publication_attempted": false,
-    "publication_status": null,
-    "receipt_completeness": "NO_PROOF",
+    "publication_status": "safe_no_op",
+    "receipt_completeness": "PARTIAL",
     "recovery_lifecycle": "HEALTHY",
     "stale_observability": false,
     "transient_source_failure_count": 0,
@@ -76,22 +76,22 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-10-03T08:15:15.793067Z",
-  "last_receipt_at": null,
+  "last_exported_at": "2026-10-03T08:47:27.243729Z",
+  "last_receipt_at": "2026-10-03T08:47:14.279305Z",
   "latest_runtime_proof_date": null,
   "migration_status": "MIGRATED",
   "next_expected_run": null,
   "observed_date": "2026-10-03",
   "public_side_effects": {
     "publication_attempted": false,
-    "publication_status": null
+    "publication_status": "safe_no_op"
   },
   "publication_attempted": false,
-  "publication_status": null,
-  "receipt_completeness": "NO_PROOF",
+  "publication_status": "safe_no_op",
+  "receipt_completeness": "PARTIAL",
   "recovery_lifecycle": "HEALTHY",
-  "runner_source_head": null,
-  "scheduled_health_authoritative": false,
+  "runner_source_head": "9d70bd18010514d9bb5a0ea7535ed3b2ea0a042c",
+  "scheduled_health_authoritative": true,
   "scheduled_task_keys": [
     "care_line_collection",
     "care_line_reviewed_event_queue",
@@ -113,5 +113,27 @@
     "unclassified_source_failure_count": 0
   },
   "stale_observability": false,
-  "task_summaries": []
+  "task_summaries": [
+    {
+      "artifact_id": "care-proof-only-food-care-continuation-20261003T083826Z-3ba21c9c.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-03T08:47:14Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "care-proof-only-food-care-continuation-20261003T083826Z-3ba21c9c",
+      "scheduled_for": "2026-10-03",
+      "started_at": "2026-10-03T08:47:04Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
+    }
+  ]
 }

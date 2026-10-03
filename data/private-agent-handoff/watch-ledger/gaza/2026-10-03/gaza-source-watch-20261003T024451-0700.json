@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261003T024451-0700",
+  "scheduled_for": "2026-10-03T02:44:51-07:00",
+  "started_at": "2026-10-03T02:45:09-07:00",
+  "completed_at": "2026-10-03T02:47:10.878480-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-03T01:44:51-07:00",
+    "end": "2026-10-03T02:47:10.878480-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first.",
+    "WHO checked second.",
+    "Exactly 12 additional targeted searches completed.",
+    "No new qualifying development found.",
+    "A previously identified October 3 item was excluded as a duplicate."
+  ]
+}

@@ -150,7 +150,9 @@ def test_public_site_staging_renders_gaza_archive_through_max_runner_date(tmp_pa
     )
 
     archive = (stage / "gaza" / "archive.html").read_text(encoding="utf-8")
-    assert '<p class="archive-latest-date">2026-10-02</p>' in archive
+    latest = archive.split('<section class="archive-latest"', 1)[1].split("</section>", 1)[0]
+    assert '<p class="archive-latest-date">2026-10-01</p>' in latest
+    assert "No qualifying update" not in latest
     assert '<span class="no-update-label">No qualifying update</span><span class="archive-row-note">22 sources checked</span>' in archive
     assert "2026-10-03" not in archive
     assert 'href="editions/2026-10-03/"' not in archive

@@ -2183,6 +2183,16 @@ def _render_gaza_archive_latest_entry(
     )
 
 
+def _gaza_latest_readable_archive_row(
+    rows: list[tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry]],
+) -> tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry] | None:
+    for row in rows:
+        kind, _ = row
+        if kind in {"daily", "catchup"}:
+            return row
+    return None
+
+
 def _render_gaza_archive_grouped_history(
     site_root: Path,
     dispatch: DispatchConfig,
@@ -2190,7 +2200,10 @@ def _render_gaza_archive_grouped_history(
 ) -> str:
     if not rows:
         return "<p>No public Gaza archive entries are currently listed.</p>"
-    sections: list[str] = [_render_gaza_archive_latest_entry(site_root, dispatch, rows[0])]
+    readable_latest = _gaza_latest_readable_archive_row(rows)
+    sections: list[str] = []
+    if readable_latest is not None:
+        sections.append(_render_gaza_archive_latest_entry(site_root, dispatch, readable_latest))
     active_month = ""
     active_items: list[str] = []
     for row in rows:

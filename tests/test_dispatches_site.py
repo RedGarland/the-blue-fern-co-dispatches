@@ -3702,6 +3702,60 @@ def test_gaza_archive_compact_no_update_rows_are_not_edition_links(tmp_path: Pat
     assert "No new source-backed Gaza update met publication threshold today." not in archive_html
 
 
+def test_gaza_archive_latest_entry_skips_newer_no_update_rows(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    add_gaza_public_history_surface(site_root, ["2026-09-30"])
+    add_gaza_site_edition(site_root, "2026-09-30")
+    add_gaza_no_update_status(site_root, "2026-10-02", source_count=3)
+    dispatch = DispatchConfig(
+        slug="gaza",
+        name="Dispatches From Gaza",
+        edition_date="2026-10-02",
+        tagline="Daily briefing",
+        logo="gaza-logo.png",
+        sources=[],
+        stories=[],
+        detail_artifacts=[],
+    )
+
+    archive_html = generator.render_archive_for_dates(dispatch, ["2026-09-30"], site_root)
+    latest_html = archive_html.split('<section class="archive-latest"', 1)[1].split("</section>", 1)[0]
+
+    assert '<p class="archive-latest-date">2026-09-30</p>' in latest_html
+    assert '<a class="button" href="editions/2026-09-30/">Read latest</a>' in latest_html
+    assert "No qualifying update" not in latest_html
+    assert '<li class="archive-row archive-row--no-update"><span class="edition-date">2026-10-02</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">3 sources checked</span></li>' in archive_html
+
+
+def test_gaza_archive_latest_entry_can_use_catchup_after_newer_no_update(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    add_gaza_public_history_surface(site_root, [])
+    add_gaza_no_update_status(site_root, "2026-10-02", source_count=3)
+    add_gaza_historical_catchup_publication(
+        site_root,
+        catchup_id="gaza-historical-catchup-2026-09-30",
+        publication_date="2026-09-30",
+    )
+    dispatch = DispatchConfig(
+        slug="gaza",
+        name="Dispatches From Gaza",
+        edition_date="2026-10-02",
+        tagline="Daily briefing",
+        logo="gaza-logo.png",
+        sources=[],
+        stories=[],
+        detail_artifacts=[],
+    )
+
+    archive_html = generator.render_archive_for_dates(dispatch, [], site_root)
+    latest_html = archive_html.split('<section class="archive-latest"', 1)[1].split("</section>", 1)[0]
+
+    assert '<p class="archive-latest-date">2026-09-30</p>' in latest_html
+    assert "<h2>Recovered Gaza development</h2>" in latest_html
+    assert '<a class="button" href="catchups/gaza-historical-catchup-2026-09-30/">Read catch-up</a>' in latest_html
+    assert '<li class="archive-row archive-row--no-update"><span class="edition-date">2026-10-02</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">3 sources checked</span></li>' in archive_html
+
+
 def test_gaza_archive_edition_links_have_local_targets(tmp_path: Path):
     site_root = tmp_path / "output" / "site"
     add_gaza_public_history_surface(site_root, ["2026-10-01", "2026-09-30"])

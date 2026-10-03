@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261003T134522-0700-r11",
+  "scheduled_for": "2026-10-03T13:45:22-07:00",
+  "started_at": "2026-10-03T13:46:09-07:00",
+  "completed_at": "2026-10-03T13:46:58.549109-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-03T10:46:52.840-07:00",
+    "end": "2026-10-03T13:46:58.549109-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices was checked first. The newest notice remained the 2026-10-02 Comfort Care Home Health termination notice (CCN 559197, California), already surfaced previously and excluded as a duplicate; no 2026-10-03 notice was present.",
+    "Completed exactly 12 additional targeted searches covering hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural emergency services, ambulance, air-medical, essential-service restoration/reopening, official/state service changes, and U.S. territories.",
+    "No new qualifying U.S. or territory healthcare-access development was identified in the recall window.",
+    "The latest durable heartbeat on ops/watch-ledger completed at 2026-10-03T10:46:52.840-07:00; the expected 11:45 PT and 12:45 PT heartbeats were absent, so this run widened its search window from that durable checkpoint and is marked DEGRADED for ledger continuity.",
+    "Excluded proposals without a concrete access effect, ownership/business stories without service change, non-U.S. events, unsupported claims, previously surfaced developments, and access expansions that were not concrete restorations/reopenings of a previously lost essential service.",
+    "Production collection remains authoritative. No item was approved or published, and no schedule or task state was altered."
+  ]
+}

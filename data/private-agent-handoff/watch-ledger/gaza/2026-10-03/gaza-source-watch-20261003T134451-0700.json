@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261003T134451-0700",
+  "scheduled_for": "2026-10-03T13:44:51-07:00",
+  "started_at": "2026-10-03T13:44:04-07:00",
+  "completed_at": "2026-10-03T13:47:00-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-03T12:43:08.938-07:00",
+    "end": "2026-10-03T13:47:00-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      "OCHA OPT checked first; no new in-window Gaza-specific update surfaced. The newest Gaza-relevant OCHA result surfaced was the 25 September 2026 Humanitarian Situation Report.",
+      "WHO checked second; no new in-window Gaza-specific operational update surfaced."
+    ],
+    "additional_targeted_searches_used": 12,
+    "additional_targeted_searches_limit": 12,
+    "targeted_sources": [
+      "Reuters",
+      "Associated Press",
+      "WAFA",
+      "UNRWA",
+      "UNICEF",
+      "Palestine Red Crescent Society",
+      "ICRC",
+      "MSF",
+      "COGAT",
+      "IDF",
+      "Reuters hostage/ceasefire search",
+      "Reuters crossings/aid search"
+    ],
+    "degraded_searches": [
+      {
+        "source": "UNRWA",
+        "issue": "Direct retrieval of the surfaced UNRWA situation report returned HTTP 403 Forbidden; indexed search metadata remained available and other coverage was sufficient."
+      }
+    ],
+    "duplicate_or_outside_window_notes": [
+      "Associated Press material updated during the window repeated the previously captured overnight Gaza City strike that killed five people; excluded as a duplicate.",
+      "The IDF-reported killing of Ali Ahmed Al-Amoudi was previously surfaced and did not document civilian impact qualifying for this watch."
+    ],
+    "assessment": "No distinct new qualifying development was verified within the bounded window. Useful coverage remained despite the UNRWA retrieval failure, so the run is DEGRADED rather than FAILED."
+  }
+}

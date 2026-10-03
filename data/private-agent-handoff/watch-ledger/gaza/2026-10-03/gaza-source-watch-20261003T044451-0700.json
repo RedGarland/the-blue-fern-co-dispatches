@@ -1,0 +1,49 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261003T044451-0700",
+  "scheduled_for": "2026-10-03T04:44:51-07:00",
+  "started_at": "2026-10-03T04:48:08-07:00",
+  "completed_at": "2026-10-03T04:49:50-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-03T02:47:00-07:00",
+    "end": "2026-10-03T04:49:50-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "official_checks_first": [
+      {
+        "source": "OCHA OPT",
+        "result": "No new in-window Gaza-specific update surfaced; newest Gaza-relevant OCHA result located was the 25 September 2026 Humanitarian Situation Report."
+      },
+      {
+        "source": "WHO",
+        "result": "No new in-window Gaza-specific operational update surfaced; newest Gaza-specific WHO item located was 24 September 2026."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "targeted_coverage": [
+      "Reuters",
+      "Associated Press",
+      "WAFA",
+      "UNRWA",
+      "UNICEF",
+      "Palestine Red Crescent Society",
+      "ICRC",
+      "MSF",
+      "COGAT",
+      "IDF",
+      "ceasefire/hostage negotiations",
+      "hospital/ambulance/fuel/crossing/medical-evacuation changes"
+    ],
+    "exclusions": [
+      "Previously captured 3 October 2026 AP civilian-casualty report was treated as a duplicate and not re-counted.",
+      "Older, recycled, opinion, unsupported social, and unsourced material excluded."
+    ],
+    "assessment": "Useful coverage remained across primary humanitarian and established reporting sources; no qualifying development newly traceable to the bounded observation window was verified."
+  }
+}

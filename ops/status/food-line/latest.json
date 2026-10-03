@@ -55,9 +55,9 @@
   "dispatch": "food-line",
   "effective_task_summaries": [
     {
-      "artifact_id": "20261003T130605Z-current-intake.json",
+      "artifact_id": "20261003T131026Z-current-intake.json",
       "classification": "success",
-      "completed_at": "2026-10-03T13:06:05.973675Z",
+      "completed_at": "2026-10-03T13:10:26.295310Z",
       "diagnostics": null,
       "exit_code": 0,
       "next_expected_run": null,
@@ -73,7 +73,7 @@
       "publication_status": "",
       "run_id": "food-line-proof-food-care-continuation-20261003T125825Z-72231503",
       "scheduled_for": "2026-10-03",
-      "started_at": "2026-10-03T13:05:51.871019Z",
+      "started_at": "2026-10-03T13:10:05.328552Z",
       "status": "SUCCESS",
       "task_key": "food_line_current_intake"
     },
@@ -116,9 +116,9 @@
     }
   ],
   "incident_reference": null,
-  "last_exported_at": "2026-10-03T13:06:45.633774Z",
-  "last_receipt_at": "2026-10-03T13:06:05.973675Z",
-  "latest_runtime_proof_date": "2026-10-03T13:06:05.973675Z",
+  "last_exported_at": "2026-10-03T13:15:02.754028Z",
+  "last_receipt_at": "2026-10-03T13:10:26.295310Z",
+  "latest_runtime_proof_date": "2026-10-03T13:10:26.295310Z",
   "next_expected_run": null,
   "observed_date": "2026-10-03",
   "private_review_backlog": {
@@ -432,9 +432,9 @@
       "task_key": "food_line_current_intake"
     },
     {
-      "artifact_id": "20261003T130605Z-current-intake.json",
+      "artifact_id": "20261003T131026Z-current-intake.json",
       "classification": "success",
-      "completed_at": "2026-10-03T13:06:05.973675Z",
+      "completed_at": "2026-10-03T13:10:26.295310Z",
       "diagnostics": null,
       "exit_code": 0,
       "next_expected_run": null,
@@ -450,7 +450,7 @@
       "publication_status": "",
       "run_id": "food-line-proof-food-care-continuation-20261003T125825Z-72231503",
       "scheduled_for": "2026-10-03",
-      "started_at": "2026-10-03T13:05:51.871019Z",
+      "started_at": "2026-10-03T13:10:05.328552Z",
       "status": "SUCCESS",
       "task_key": "food_line_current_intake"
     },

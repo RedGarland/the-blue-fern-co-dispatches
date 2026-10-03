@@ -1,0 +1,29 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261003T164451-0700",
+  "scheduled_for": "2026-10-03T16:44:51-07:00",
+  "started_at": "2026-10-03T16:47:32-07:00",
+  "completed_at": "2026-10-03T16:48:41-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-03T15:43:39-07:00",
+    "end": "2026-10-03T16:48:41-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      "OCHA OPT checked first; no new in-window Gaza-specific humanitarian update surfaced. The newest surfaced OCHA Gaza-relevant situation report was dated 25 September 2026.",
+      "WHO checked second; no new in-window Gaza-specific operational update surfaced. The newest surfaced Gaza-specific WHO item was dated 24 September 2026."
+    ],
+    "additional_targeted_searches_used": 12,
+    "additional_targeted_searches_limit": 12,
+    "degraded_searches": [
+      "UN News targeted retrieval was blocked by robots.txt; remaining official and established-source coverage was usable."
+    ],
+    "assessment": "No distinct qualifying development was verified since the prior completed hourly check at 15:43:39 PT. Searches prioritized AP, Reuters, WAFA, UNRWA, UNICEF, PRCS, ICRC, MSF, COGAT, IDF, UN News, and WFP; recycled, duplicate, unsupported, and out-of-window material was excluded."
+  }
+}

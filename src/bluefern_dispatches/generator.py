@@ -973,7 +973,7 @@ def header(
 def footer(asset_prefix: str) -> str:
     return f"""  <footer class="site-footer">
     <div class="publisher">
-      <a href="{BLUE_FERN_URL}/" target="_blank" rel="noopener noreferrer"><img class="publisher-mark" src="{asset_prefix}assets/bluefern.png" alt="The Blue Fern Co."></a>
+      <a href="{BLUE_FERN_URL}/" target="_blank" rel="noopener noreferrer"><img class="publisher-mark" src="/assets/bluefern.png" alt="The Blue Fern Co."></a>
       <p class="publisher-label">Published by <a href="{BLUE_FERN_URL}/" target="_blank" rel="noopener noreferrer">The Blue Fern Company</a></p>
     </div>
   </footer>"""
@@ -2041,8 +2041,31 @@ def render_gaza_no_update_list_item(entry: GazaNoUpdateEntry) -> str:
     )
     return (
         f'      <li class="no-update"><span class="edition-date">{html.escape(entry.date)}</span> '
-        f'<span class="no-update-label">No update</span> '
+        f'<span class="no-update-label">No qualifying update</span> '
         f'<span>{html.escape(entry.message)}</span>{source_note}</li>'
+    )
+
+
+def _gaza_history_row_date(
+    row: tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry],
+) -> str:
+    kind, value = row
+    if kind == "catchup" and isinstance(value, GazaHistoricalCatchupEntry):
+        return value.publication_date
+    if kind == "no-update" and isinstance(value, GazaNoUpdateEntry):
+        return value.date
+    return str(value)
+
+
+def _gaza_history_row_sort_key(
+    row: tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry],
+) -> tuple[str, int, str, str]:
+    kind, value = row
+    return (
+        _gaza_history_row_date(row),
+        1 if kind == "catchup" else 0,
+        value.published_at if isinstance(value, GazaHistoricalCatchupEntry) else "",
+        value.catchup_id if isinstance(value, GazaHistoricalCatchupEntry) else "",
     )
 
 
@@ -2052,31 +2075,16 @@ def _gaza_public_history_rows(
 ) -> list[tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry]]:
     rows: list[tuple[str, str | GazaHistoricalCatchupEntry]] = [("daily", date) for date in dict.fromkeys(edition_dates)]
     rows.extend(("catchup", entry) for entry in {entry.catchup_id: entry for entry in catchups}.values())
-    return sorted(
-        rows,
-        key=lambda row: (
-            row[1].publication_date
-            if isinstance(row[1], GazaHistoricalCatchupEntry)
-            else row[1].date
-            if isinstance(row[1], GazaNoUpdateEntry)
-            else row[1],
-            1 if row[0] == "catchup" else 0,
-            row[1].published_at if isinstance(row[1], GazaHistoricalCatchupEntry) else "",
-            row[1].catchup_id if isinstance(row[1], GazaHistoricalCatchupEntry) else "",
-        ),
-        reverse=True,
-    )
+    return sorted(rows, key=_gaza_history_row_sort_key, reverse=True)
 
 
-def _render_gaza_public_history_list(
+def _gaza_public_history_rows_with_no_updates(
     site_root: Path,
-    dispatch: DispatchConfig,
     edition_dates: list[str],
     catchups: list[GazaHistoricalCatchupEntry],
     *,
-    limit: int | None = None,
     gaza_publication_dates: tuple[str, ...] = (),
-) -> str:
+) -> list[tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry]]:
     edition_dates = [
         date
         for date in edition_dates
@@ -2090,19 +2098,137 @@ def _render_gaza_public_history_list(
     no_updates_by_date = {entry.date: entry for entry in discover_gaza_no_update_entries(site_root)}
     existing_dates = {str(date) for date in edition_dates}
     rows.extend(("no-update", entry) for date, entry in no_updates_by_date.items() if date not in existing_dates)
-    rows = sorted(
-        rows,
-        key=lambda row: (
-            row[1].publication_date
-            if isinstance(row[1], GazaHistoricalCatchupEntry)
-            else row[1].date
-            if isinstance(row[1], GazaNoUpdateEntry)
-            else row[1],
-            1 if row[0] == "catchup" else 0,
-            row[1].published_at if isinstance(row[1], GazaHistoricalCatchupEntry) else "",
-            row[1].catchup_id if isinstance(row[1], GazaHistoricalCatchupEntry) else "",
-        ),
-        reverse=True,
+    return sorted(rows, key=_gaza_history_row_sort_key, reverse=True)
+
+
+def _gaza_month_heading(date_text: str) -> str:
+    try:
+        return datetime.strptime(date_text, "%Y-%m-%d").strftime("%B %Y")
+    except ValueError:
+        return date_text
+
+
+def _render_gaza_archive_daily_row(site_root: Path, dispatch: DispatchConfig, date: str) -> str:
+    label = public_edition_label(site_root, dispatch, date)
+    subtitle = public_edition_subtitle(site_root, dispatch, date)
+    title = label if label != date else "Daily briefing"
+    subtitle_html = f'<span class="archive-row-note">{html.escape(subtitle)}</span>' if subtitle else ""
+    return (
+        f'      <li class="archive-row archive-row--daily"><span class="edition-date">{html.escape(date)}</span>'
+        f'<a href="editions/{html.escape(date)}/">{html.escape(title)}</a>{subtitle_html}</li>'
+    )
+
+
+def _render_gaza_archive_catchup_row(entry: GazaHistoricalCatchupEntry) -> str:
+    return (
+        f'      <li class="archive-row archive-row--catchup"><span class="edition-date">{html.escape(entry.publication_date)}</span>'
+        f'<a href="catchups/{html.escape(entry.catchup_id)}/">{html.escape(entry.title)}</a>'
+        f'<span class="archive-row-note">Historical catch-up</span></li>'
+    )
+
+
+def _render_gaza_archive_no_update_row(entry: GazaNoUpdateEntry) -> str:
+    source_note = (
+        f'<span class="archive-row-note">{entry.source_count} sources checked</span>'
+        if entry.source_count is not None
+        else ""
+    )
+    return (
+        f'      <li class="archive-row archive-row--no-update"><span class="edition-date">{html.escape(entry.date)}</span>'
+        f'<span class="no-update-label">No qualifying update</span>{source_note}</li>'
+    )
+
+
+def _render_gaza_archive_row(
+    site_root: Path,
+    dispatch: DispatchConfig,
+    row: tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry],
+) -> str:
+    kind, value = row
+    if kind == "catchup" and isinstance(value, GazaHistoricalCatchupEntry):
+        return _render_gaza_archive_catchup_row(value)
+    if kind == "no-update" and isinstance(value, GazaNoUpdateEntry):
+        return _render_gaza_archive_no_update_row(value)
+    return _render_gaza_archive_daily_row(site_root, dispatch, str(value))
+
+
+def _render_gaza_archive_latest_entry(
+    site_root: Path,
+    dispatch: DispatchConfig,
+    row: tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry],
+) -> str:
+    kind, value = row
+    date = _gaza_history_row_date(row)
+    if kind == "catchup" and isinstance(value, GazaHistoricalCatchupEntry):
+        title = value.title
+        detail = "Historical catch-up"
+        link = f'<a class="button" href="catchups/{html.escape(value.catchup_id)}/">Read catch-up</a>'
+    elif kind == "no-update" and isinstance(value, GazaNoUpdateEntry):
+        title = "No qualifying update"
+        detail = f"{value.source_count} sources checked" if value.source_count is not None else value.message
+        link = ""
+    else:
+        label = public_edition_label(site_root, dispatch, date)
+        title = label if label != date else "Daily briefing"
+        detail = public_edition_subtitle(site_root, dispatch, date) or "Daily Gaza briefing"
+        link = f'<a class="button" href="editions/{html.escape(date)}/">Read latest</a>'
+    return (
+        '    <section class="archive-latest" aria-label="Latest archive entry">\n'
+        '      <p class="eyebrow">Latest entry</p>\n'
+        f'      <p class="archive-latest-date">{html.escape(date)}</p>\n'
+        f'      <h2>{html.escape(title)}</h2>\n'
+        f'      <p>{html.escape(detail)}</p>\n'
+        f"      {link}\n"
+        "    </section>"
+    )
+
+
+def _render_gaza_archive_grouped_history(
+    site_root: Path,
+    dispatch: DispatchConfig,
+    rows: list[tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry]],
+) -> str:
+    if not rows:
+        return "<p>No public Gaza archive entries are currently listed.</p>"
+    sections: list[str] = [_render_gaza_archive_latest_entry(site_root, dispatch, rows[0])]
+    active_month = ""
+    active_items: list[str] = []
+    for row in rows:
+        month = _gaza_month_heading(_gaza_history_row_date(row))
+        if active_month and month != active_month:
+            sections.append(
+                f'    <section class="archive-month"><h2>{html.escape(active_month)}</h2>\n'
+                '      <ul class="edition-list archive-list">\n'
+                + "\n".join(active_items)
+                + "\n      </ul>\n    </section>"
+            )
+            active_items = []
+        active_month = month
+        active_items.append(_render_gaza_archive_row(site_root, dispatch, row))
+    if active_month:
+        sections.append(
+            f'    <section class="archive-month"><h2>{html.escape(active_month)}</h2>\n'
+            '      <ul class="edition-list archive-list">\n'
+            + "\n".join(active_items)
+            + "\n      </ul>\n    </section>"
+        )
+    return "\n".join(sections)
+
+
+def _render_gaza_public_history_list(
+    site_root: Path,
+    dispatch: DispatchConfig,
+    edition_dates: list[str],
+    catchups: list[GazaHistoricalCatchupEntry],
+    *,
+    limit: int | None = None,
+    gaza_publication_dates: tuple[str, ...] = (),
+) -> str:
+    rows = _gaza_public_history_rows_with_no_updates(
+        site_root,
+        edition_dates,
+        catchups,
+        gaza_publication_dates=gaza_publication_dates,
     )
     if limit is not None:
         rows = rows[:limit]
@@ -2767,13 +2893,25 @@ def render_archive_for_dates(
         ]
         if gaza_catchups is None:
             gaza_catchups = discover_gaza_historical_catchups(site_root)
-        items = _render_gaza_public_history_list(
+        rows = _gaza_public_history_rows_with_no_updates(
             site_root,
-            dispatch,
             edition_dates,
             gaza_catchups,
             gaza_publication_dates=gaza_publication_dates,
         )
+        grouped_archive = _render_gaza_archive_grouped_history(site_root, dispatch, rows)
+        body = f"""{header(dispatch.name, "", "archive.html")}
+  <main class="archive archive--gaza">
+    <section class="hero">
+      <img class="hero-logo" src="assets/{dispatch.logo}" alt="{html.escape(dispatch.name)}">
+    </section>
+    <p class="eyebrow">Archive</p>
+    <h1>Edition Archive</h1>
+    {gaza_audio_link}
+{grouped_archive}
+  </main>
+{footer("")}"""
+        return page(f"{dispatch.name} Archive", f"{BASE_URL}/{dispatch.slug}/archive.html", "assets/site.css", body, dispatch.name)
     else:
         items = "\n".join(
             render_edition_list_item(site_root, dispatch, date)
@@ -4785,7 +4923,7 @@ def validate_gaza_public_link_consistency(
             )
         index_text = _read_text_if_exists(gaza_root / "index.html")
         archive_text = _read_text_if_exists(gaza_root / "archive.html")
-        if entry.date not in index_text or entry.date not in archive_text or "No update" not in index_text + archive_text:
+        if entry.date not in index_text or entry.date not in archive_text or "No qualifying update" not in index_text + archive_text:
             errors.append(f"gaza no-update date missing rendered no-update row: {entry.date}")
     return sorted(set(errors))
 

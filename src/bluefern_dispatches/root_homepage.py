@@ -330,7 +330,7 @@ def select_homepage_cards(releases: list[PublicRelease], *, limit: int = CARD_LI
         if len(selected) >= limit:
             break
         selected.append(release)
-    return sorted(selected, key=lambda item: item.sort_key, reverse=True)
+    return selected
 
 
 def select_effective_latest(releases: list[PublicRelease]) -> dict[str, PublicRelease]:

@@ -261,10 +261,10 @@ def test_homepage_refresh_discovers_all_active_products_and_fills_extra_slots(tm
     assert len(cards) == 5
     assert [card.relative_url for card in cards] == [
         "/gaza/editions/2026-08-05/",
+        "/food-line/editions/2026-07-31/",
         "/care-line/editions/2026-08-05/",
         "/gaza/editions/2026-08-04/",
         "/gaza/editions/2026-08-03/",
-        "/food-line/editions/2026-07-31/",
     ]
     assert "CARE LINE" in rendered
     assert "Miles Hospital proposes closing its labor and delivery center" in rendered

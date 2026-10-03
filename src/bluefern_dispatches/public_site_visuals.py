@@ -113,6 +113,8 @@ def _expected_food_story_count(food_edition_dir: Path) -> int:
 
 def _required_paths(pages_root: Path) -> list[str]:
     paths = ["/", "/dispatches/", "/food-line/", _find_latest_food_path(pages_root), "/gaza/"]
+    if (pages_root / "gaza" / "archive.html").exists():
+        paths.append("/gaza/archive.html")
     if (pages_root / "care-line" / "index.html").exists():
         paths.append("/care-line/")
     return paths
@@ -427,7 +429,31 @@ def _visual_checks_with_playwright(
                             foodHero: box('.food-line-hero'),
                             foodLogo: box('.food-line-logo--edition, .food-line-logo--home, .hero-logo'),
                             productLogo: box('.home .hero-logo, .briefing .hero-logo, .food-line-logo--home, .food-line-logo--edition'),
+                            gazaArchiveLatest: box('.archive--gaza .archive-latest'),
+                            gazaArchiveFirstMonth: box('.archive--gaza .archive-month'),
+                            gazaArchiveFirstRow: box('.archive--gaza .archive-list .archive-row'),
+                            gazaArchiveHeroLogo: box('.archive--gaza .hero-logo'),
+                            gazaArchiveMonthCount: document.querySelectorAll('.archive--gaza .archive-month').length,
+                            gazaArchiveRowCount: document.querySelectorAll('.archive--gaza .archive-list .archive-row').length,
+                            gazaArchiveNoUpdateCount: document.querySelectorAll('.archive--gaza .archive-row--no-update').length,
                             foodStoryCardCount: document.querySelectorAll('article.food-line-source-card').length,
+                            brokenImages: Array.from(document.images || [])
+                              .filter((img) => img.naturalWidth === 0 || img.naturalHeight === 0)
+                              .map((img) => ({
+                                src: img.getAttribute('src') || '',
+                                currentSrc: img.currentSrc || '',
+                                alt: img.getAttribute('alt') || '',
+                                complete: img.complete,
+                                naturalWidth: img.naturalWidth,
+                                naturalHeight: img.naturalHeight
+                              })),
+                            editionCardDeskOrder: Array.from(document.querySelectorAll('.edition-grid .edition-card'))
+                              .map((card) => {
+                                const classes = Array.from(card.classList || []);
+                                const match = classes.find((name) => name.startsWith('edition-card--'));
+                                return match ? match.replace('edition-card--', '') : '';
+                              })
+                              .filter(Boolean),
                             gazaRecentEditionTexts: Array.from(document.querySelectorAll('.edition-list > li')).map((item) => item.textContent ? item.textContent.replace(/\\s+/g, '') : ''),
                             bodyText: document.body ? document.body.innerText : ''
                           };
@@ -447,6 +473,14 @@ def _visual_checks_with_playwright(
                         issues.append(VisualIssue(path, "http_status", f"expected HTTP 200, got {status}"))
                     if not css_loaded:
                         issues.append(VisualIssue(path, "stylesheet", "shared /assets/site.css did not load with HTTP 200"))
+                    for image in metrics.get("brokenImages") or []:
+                        issues.append(
+                            VisualIssue(
+                                path,
+                                "broken_image",
+                                f"image failed to load or decode: {image.get('src')} alt={image.get('alt')!r}",
+                            )
+                        )
                     tokens = metrics.get("canonicalTokens") or {}
                     for token, expected_rgb in CANONICAL_RGB.items():
                         observed = str(tokens.get(token) or "").lower()
@@ -468,6 +502,17 @@ def _visual_checks_with_playwright(
                             issues.append(VisualIssue(path, "primary_button_contrast", f"button contrast is below 4.5:1: {contrast_ratio:.2f} ({button.get('text')})"))
                         if str(button.get("backgroundColor") or "").lower() == CANONICAL_RGB["--bf-dark-blue"] and str(button.get("color") or "").lower() != CANONICAL_RGB["--bf-white"]:
                             issues.append(VisualIssue(path, "primary_button_contrast", f"dark primary button text is not white: {button.get('color')} ({button.get('text')})"))
+                    if path in {"/", "/dispatches/"}:
+                        desk_order = list(metrics.get("editionCardDeskOrder") or [])
+                        expected_order = ["gaza", "food-line", "care-line"]
+                        if desk_order[:3] != expected_order:
+                            issues.append(
+                                VisualIssue(
+                                    path,
+                                    "latest_card_active_desk_order",
+                                    f"first latest cards are {desk_order[:3]}, expected {expected_order}",
+                                )
+                            )
                     if path == "/":
                         primary_button = metrics.get("primaryButton") or {}
                         hero = metrics.get("hero") or {}
@@ -537,6 +582,25 @@ def _visual_checks_with_playwright(
                                     )
                                 )
                                 break
+                    if path == "/gaza/archive.html":
+                        logo = metrics.get("gazaArchiveHeroLogo") or {}
+                        latest = metrics.get("gazaArchiveLatest") or {}
+                        month = metrics.get("gazaArchiveFirstMonth") or {}
+                        first_row = metrics.get("gazaArchiveFirstRow") or {}
+                        if logo and float(logo.get("width") or 0) > 220:
+                            issues.append(VisualIssue(path, "gaza_archive_logo_size", f"Gaza archive logo is too wide: {logo.get('width')}px"))
+                        if not latest:
+                            issues.append(VisualIssue(path, "gaza_archive_latest", "Gaza archive latest-entry block was not found"))
+                        elif float(latest.get("y") or 9999) > 420:
+                            issues.append(VisualIssue(path, "gaza_archive_latest", f"Gaza archive latest-entry block starts too low: y={latest.get('y')}"))
+                        if int(metrics.get("gazaArchiveMonthCount") or 0) < 1:
+                            issues.append(VisualIssue(path, "gaza_archive_months", "Gaza archive month grouping was not found"))
+                        if int(metrics.get("gazaArchiveRowCount") or 0) < 1:
+                            issues.append(VisualIssue(path, "gaza_archive_rows", "Gaza archive rows were not found"))
+                        if month and float(month.get("y") or 9999) > 760:
+                            issues.append(VisualIssue(path, "gaza_archive_first_viewport", f"Gaza archive month grouping starts below first viewport: y={month.get('y')}"))
+                        if first_row and float(first_row.get("y") or 9999) > 860:
+                            issues.append(VisualIssue(path, "gaza_archive_first_viewport", f"Gaza archive rows start below first viewport: y={first_row.get('y')}"))
             finally:
                 browser.close()
 

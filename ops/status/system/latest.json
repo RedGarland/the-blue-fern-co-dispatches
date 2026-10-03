@@ -193,23 +193,32 @@
         "state": "HANDOFF_RECEIVED_SUCCESS",
         "unaccounted_count": 0
       },
-      "aggregate_status": "SUCCESS",
+      "aggregate_status": "DEGRADED",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "9d70bd18010514d9bb5a0ea7535ed3b2ea0a042c",
       "debug_summary": {
-        "aggregate_status": "SUCCESS",
+        "aggregate_status": "DEGRADED",
         "all_current_failures_external": null,
         "all_current_failures_non_actionable": null,
-        "attention_task_count": 0,
-        "attention_tasks": [],
+        "attention_task_count": 1,
+        "attention_tasks": [
+          {
+            "artifact_id": "20261003T063548Z-source-watch.json",
+            "classification": "completed_with_exclusions",
+            "exit_code": 0,
+            "failure_stage": "source_watch",
+            "status": "DEGRADED",
+            "task_key": "food_line_source_watch"
+          }
+        ],
         "external_access_restriction_count": null,
         "failed_source_count": null,
-        "operator_assessment": "HEALTHY",
-        "primary_classification": null,
-        "primary_failure_stage": null,
-        "primary_layer": "NONE",
-        "primary_task_key": null,
-        "primary_task_status": null,
+        "operator_assessment": "HEALTHY_WITH_SOURCE_EXCLUSIONS",
+        "primary_classification": "completed_with_exclusions",
+        "primary_failure_stage": "source_watch",
+        "primary_layer": "SOURCE",
+        "primary_task_key": "food_line_source_watch",
+        "primary_task_status": "DEGRADED",
         "private_review_count_only_gap_count": 55,
         "private_review_dispositioned_item_count": 66,
         "private_review_max_age_hours": 0,
@@ -418,7 +427,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-03T05:26:31.932145Z",
+  "exported_at": "2026-10-03T06:36:33.459259Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "DEGRADED"

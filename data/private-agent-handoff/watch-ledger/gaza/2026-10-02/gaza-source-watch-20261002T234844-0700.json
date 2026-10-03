@@ -1,0 +1,37 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261002T234844-0700",
+  "scheduled_for": "2026-10-02T23:44:51-07:00",
+  "started_at": "2026-10-02T23:48:44-07:00",
+  "completed_at": "2026-10-02T23:49:40-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-02T22:52:00-07:00",
+    "end": "2026-10-02T23:49:40-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt": "Checked first. The freshest surfaced OCHA OPT humanitarian situation report was dated 2026-09-25; no qualifying development was identified within the observation window.",
+    "who": "Checked second. The freshest surfaced Gaza-specific WHO material was dated 2026-09-24; no qualifying development was identified within the observation window.",
+    "additional_searches": 12,
+    "additional_coverage": [
+      "Reuters",
+      "Associated Press",
+      "WAFA",
+      "UNRWA",
+      "UNICEF",
+      "Palestine Red Crescent Society",
+      "Médecins Sans Frontières",
+      "International Committee of the Red Cross",
+      "COGAT / Government of Israel",
+      "Israel Defense Forces",
+      "ceasefire/hostage negotiations",
+      "medical evacuation/hospital capacity/fuel/crossings"
+    ],
+    "assessment": "No new, traceable development met the watch's novelty and qualification threshold. Opinion, recycled material, duplicates, unsupported social claims, and unsourced claims were excluded."
+  }
+}

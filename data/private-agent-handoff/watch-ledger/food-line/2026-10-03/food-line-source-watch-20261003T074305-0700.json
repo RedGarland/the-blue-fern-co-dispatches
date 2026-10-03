@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261003T074305-0700",
+  "scheduled_for": "2026-10-03T07:43:05-07:00",
+  "started_at": "2026-10-03T07:43:05-07:00",
+  "completed_at": "2026-10-03T07:43:33-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-10-03T06:46:16-07:00",
+    "date_to": "2026-10-03T07:43:33-07:00",
+    "edition_date": "2026-10-03"
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary Food Line recall watch completed with 12 targeted web searches across sole/only/last/full-service grocery loss, disaster-canceled emergency food distributions, abrupt pantry/food-bank closure or major access reduction, and immediate SNAP/WIC/EBT interruption classes. America/Los_Angeles observation window used from the prior authoritative heartbeat completed_at through this run. Fresh results were stale, background, or non-qualifying; examples included an unrelated cookie-chain closure, an Oklahoma City Walmart remodel scheduled for October 12, and ongoing Kauai hurricane recovery without a newly reported qualifying food-access interruption in-window. Production collection remains authoritative. No approval, publication, schedule, or production state was changed."
+}

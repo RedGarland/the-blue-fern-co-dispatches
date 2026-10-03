@@ -569,6 +569,84 @@ def test_generated_public_output_residue_is_allowed_in_source_checkout_but_not_p
     assert report["pages_repo_status"] == "dirty"
 
 
+def test_pages_generated_public_output_residue_is_allowed_only_when_opted_in(
+    monkeypatch, tmp_path
+):
+    source_repo = tmp_path / "repo"
+    source_repo.mkdir()
+    pages_repo = tmp_path / "bluefern-dispatches-pages"
+    pages_repo.mkdir()
+    monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: pages_repo)
+
+    def fake_run_git_status(repo: Path):
+        if repo.resolve() == source_repo.resolve():
+            return 0, ["## add/pages-repo-default"]
+        return 0, [
+            "## gh-pages...origin/gh-pages [behind 1]",
+            " M index.html",
+            " M dispatches/index.html",
+            " M food-line/index.html",
+            " M food-line/audio/podcast.xml",
+            "?? food-line/editions/2026-10-02/index.html",
+        ]
+
+    monkeypatch.setattr(preflight_repo_state, "_run_git_status", fake_run_git_status)
+
+    strict = preflight_repo_state.build_preflight_report(source_repo)
+    tolerant = preflight_repo_state.build_preflight_report(
+        source_repo,
+        allow_pages_generated_public_output_residue=True,
+    )
+
+    assert strict["ok"] is False
+    assert strict["pages_repo_status"] == "dirty"
+    assert tolerant["ok"] is True
+    assert tolerant["pages_repo_status"] == "allowed-only"
+    assert tolerant["pages_repo"]["summary"]["risky_entries"] == []
+    assert {
+        entry["path"] for entry in tolerant["pages_repo"]["summary"]["allowed_entries"]
+    } == {
+        "index.html",
+        "dispatches/index.html",
+        "food-line/index.html",
+        "food-line/audio/podcast.xml",
+        "food-line/editions/2026-10-02/index.html",
+    }
+
+
+def test_pages_generated_public_output_residue_opt_in_still_blocks_staged_and_unknown_pages_dirt(
+    monkeypatch, tmp_path
+):
+    source_repo = tmp_path / "repo"
+    source_repo.mkdir()
+    pages_repo = tmp_path / "bluefern-dispatches-pages"
+    pages_repo.mkdir()
+    monkeypatch.setattr(preflight_repo_state, "_detect_pages_repo", lambda _repo: pages_repo)
+
+    def fake_run_git_status(repo: Path):
+        if repo.resolve() == source_repo.resolve():
+            return 0, ["## add/pages-repo-default"]
+        return 0, [
+            "## gh-pages...origin/gh-pages [behind 1]",
+            " M index.html",
+            "M  food-line/index.html",
+            "?? private-note.txt",
+        ]
+
+    monkeypatch.setattr(preflight_repo_state, "_run_git_status", fake_run_git_status)
+
+    report = preflight_repo_state.build_preflight_report(
+        source_repo,
+        allow_pages_generated_public_output_residue=True,
+    )
+
+    assert report["ok"] is False
+    assert [entry["path"] for entry in report["pages_repo"]["summary"]["risky_entries"]] == [
+        "food-line/index.html",
+        "private-note.txt",
+    ]
+
+
 def test_generated_public_output_residue_only_does_not_fail_source_preflight(monkeypatch, tmp_path):
     source_repo = tmp_path / "repo"
     source_repo.mkdir()

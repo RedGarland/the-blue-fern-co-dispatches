@@ -37,12 +37,12 @@
     "primary_task_key": "food_line_source_watch",
     "primary_task_status": "DEGRADED",
     "private_review_count_only_gap_count": 50,
-    "private_review_dispositioned_item_count": 55,
+    "private_review_dispositioned_item_count": 58,
     "private_review_max_age_hours": 25,
     "private_review_oldest_pending_date": "2026-10-02",
     "private_review_pending_date_count": 1,
-    "private_review_pending_item_count": 5,
-    "private_review_unresolved_item_count": 5,
+    "private_review_pending_item_count": 2,
+    "private_review_unresolved_item_count": 2,
     "publication_attempted": false,
     "publication_status": "skipped_not_release_ready",
     "receipt_completeness": "COMPLETE",
@@ -132,7 +132,7 @@
     }
   ],
   "incident_reference": null,
-  "last_exported_at": "2026-10-03T01:19:09.555931Z",
+  "last_exported_at": "2026-10-03T01:26:14.379531Z",
   "last_receipt_at": "2026-10-03T01:18:42.953303Z",
   "latest_runtime_proof_date": "2026-10-03T01:18:42.953303Z",
   "next_expected_run": null,
@@ -144,10 +144,10 @@
         "age_hours": 25,
         "count_only_gap_count": 4,
         "date": "2026-10-02",
-        "dispositioned_item_count": 1,
-        "pending_item_count": 5,
+        "dispositioned_item_count": 4,
+        "pending_item_count": 2,
         "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-10-02.json",
-        "unresolved_item_count": 5
+        "unresolved_item_count": 2
       }
     ],
     "disposition_diagnostics": {
@@ -184,6 +184,15 @@
         "unknown_disposition_count": 0
       },
       {
+        "applied_item_count": 3,
+        "disposition_artifact": "data/dispatches/food-line/review/private-review-dispositions/food-line-2026-10-02-followup-dispositions.json",
+        "entry_count": 3,
+        "ignored_entry_count": 0,
+        "malformed_entry_count": 0,
+        "subtracting_entry_count": 3,
+        "unknown_disposition_count": 0
+      },
+      {
         "applied_item_count": 5,
         "disposition_artifact": "data/dispatches/food-line/review/private-review-dispositions/food-line-backlog-triage-2026-09-30-dispositions.json",
         "entry_count": 10,
@@ -211,12 +220,12 @@
         "unknown_disposition_count": 0
       }
     ],
-    "dispositioned_item_count": 55,
+    "dispositioned_item_count": 58,
     "max_age_hours": 25,
     "oldest_pending_date": "2026-10-02",
     "pending_date_count": 1,
-    "pending_item_count": 5,
-    "unresolved_item_count": 5
+    "pending_item_count": 2,
+    "unresolved_item_count": 2
   },
   "public_side_effects": {
     "publication_attempted": false,

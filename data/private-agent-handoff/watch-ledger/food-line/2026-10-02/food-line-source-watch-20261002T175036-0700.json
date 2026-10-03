@@ -1,0 +1,43 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261002T175036-0700",
+  "scheduled_for": "2026-10-02T17:00:00-07:00",
+  "started_at": "2026-10-02T17:50:36-07:00",
+  "completed_at": "2026-10-02T17:51:03-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-02T15:46:22-07:00",
+    "end": "2026-10-02T17:51:03-07:00",
+    "basis": "since prior authoritative hourly Food Line Source Watch completion"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches_run": 12,
+    "search_scope": [
+      "only/sole/last/full-service grocery loss, closure, fire, disaster, or outage",
+      "canceled or suspended emergency food distributions caused by storm, flood, fire, outage, or facility damage",
+      "abrupt pantry or food-bank closure or major service reduction caused by disaster, outage, or facility damage",
+      "official SNAP/WIC/EBT/food-assistance interruption with immediate access consequences"
+    ],
+    "result": "No new qualifying U.S. food-access disruption was identified in the bounded search window. Returned candidates were stale historical incidents, recovery/resource coverage, routine program information, or outside the specified miss classes/window.",
+    "exclusions_applied": [
+      "donation drives",
+      "resource guides",
+      "recipes",
+      "opinion",
+      "routine program promotion",
+      "generic inflation coverage",
+      "duplicates",
+      "events outside the bounded search window"
+    ],
+    "prior_authoritative_run_id": "food-line-source-watch-20261002T154551-0700",
+    "prior_authoritative_completed_at": "2026-10-02T15:46:22-07:00",
+    "observation_timezone": "America/Los_Angeles",
+    "production_collection_authoritative": true,
+    "note": "Latest authoritative ledger heartbeat preceded this run by just over two hours; the bounded search window was extended back to that completion time to avoid an unobserved gap."
+  }
+}

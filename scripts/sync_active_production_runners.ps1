@@ -136,7 +136,10 @@ function Invoke-RunnerValidation {
         return [pscustomobject]@{ Ok = $false; Stage = "validation_capability"; Message = "missing $doctor" }
     }
 
-    $preflightOutput = @(& $python $preflight --source-repo $Root 2>&1)
+    # Guarded source sync is non-public and does not push Pages. Allow known
+    # generated Pages surface residue so a stale/dirty nested Pages checkout
+    # cannot block receiving the source fix that classifies it correctly.
+    $preflightOutput = @(& $python $preflight --source-repo $Root --allow-pages-generated-public-output-residue 2>&1)
     $preflightCode = $LASTEXITCODE
     if ($preflightCode -ne 0) {
         return [pscustomobject]@{

@@ -1,0 +1,50 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261003T054451-0700",
+  "scheduled_for": "2026-10-03T05:44:51-07:00",
+  "started_at": "2026-10-03T05:43:11-07:00",
+  "completed_at": "2026-10-03T05:44:50-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-03T04:49:50-07:00",
+    "end": "2026-10-03T05:44:50-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "official_checks_first": [
+      {
+        "source": "OCHA OPT",
+        "result": "No new in-window Gaza-specific update surfaced; the official-targeted search returned no current Gaza item in the observation window."
+      },
+      {
+        "source": "WHO",
+        "result": "No new in-window Gaza-specific operational update surfaced; returned WHO material was older and outside the observation window."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "targeted_coverage": [
+      "Reuters",
+      "Associated Press",
+      "WAFA",
+      "UNRWA",
+      "UNICEF",
+      "Palestine Red Crescent Society",
+      "ICRC",
+      "MSF",
+      "COGAT",
+      "IDF",
+      "ceasefire/hostage negotiations",
+      "medical evacuation/crossing/fuel/hospital humanitarian changes"
+    ],
+    "exclusions": [
+      "Associated Press material updated during the window concerned the same five-death Gaza City strike already captured in the prior watch and was excluded as a duplicate.",
+      "Reuters Connect carried Anadolu footage/reporting on the same previously captured five-death Gaza City strike and was excluded as a duplicate.",
+      "Older, recycled, opinion, unsupported social, and unsourced material excluded."
+    ],
+    "assessment": "All bounded checks completed. No qualifying development newly traceable to the observation window was verified."
+  }
+}

@@ -416,11 +416,11 @@ def test_gaza_content_and_requested_logo_placement(built_site):
     gaza_edition = read(work / "output" / "site" / "gaza" / "editions" / "2026-05-03" / "index.html")
 
     assert 'src="assets/gaza-logo.png"' in gaza_index
-    assert 'src="assets/bluefern.png"' in gaza_index
+    assert 'src="/assets/bluefern.png"' in gaza_index
     assert 'href="https://thebluefernco.com/"' in gaza_index
     assert "How Israel Is Using the Same Tactics in Lebanon That It Did in Gaza" in gaza_edition
     assert 'src="../../assets/gaza-logo.png"' in gaza_edition
-    assert 'src="../../assets/bluefern.png"' in gaza_edition
+    assert 'src="/assets/bluefern.png"' in gaza_edition
 
 
 def test_dispatch_pages_link_back_to_dispatches_home(built_site):

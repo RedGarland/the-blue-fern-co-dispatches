@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import shutil
 from pathlib import Path
 
@@ -51,14 +52,24 @@ def _write(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def _write_png(path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(
+        base64.b64decode(
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAA"
+            "DUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+        )
+    )
+
+
 def _root_html(*, hero_class: str = "hero") -> str:
     return f"""<!doctype html><html><head><link rel="stylesheet" href="/assets/site.css"><title>Dispatches</title></head>
 <body><main>
 <section class="{hero_class}"><h1>Dispatches From The Blue Fern Co.</h1><p>Source-backed public briefings.</p><p class="actions"><a class="button" href="/dispatches/">View latest dispatches</a><a class="button button--quiet" href="/about/">Explore the public record</a></p></section>
 <section class="section-block"><div class="section-heading"><p>The current edition desk</p><h2>Latest published developments</h2></div>
 <div class="edition-grid">
-<article class="edition-card edition-card--food-line"><h3><a href="/food-line/editions/2026-10-01/">Bradford County Food Pantry running low on food, leaders say</a></h3></article>
 <article class="edition-card edition-card--gaza"><h3><a href="/gaza/editions/2026-10-01/">Gaza latest public edition</a></h3></article>
+<article class="edition-card edition-card--food-line"><h3><a href="/food-line/editions/2026-10-01/">Bradford County Food Pantry running low on food, leaders say</a></h3></article>
 <article class="edition-card edition-card--care-line"><h3><a href="/care-line/editions/2026-08-20/">Care latest public edition</a></h3></article>
 </div></section>
 <section class="section-block"><h2>Active dispatches</h2><div class="active-grid">
@@ -126,7 +137,7 @@ def _make_pages_root(tmp_path: Path, *, css: str = GOOD_CSS, story_count: int = 
     root = tmp_path / "pages"
     if css:
         _write(root / "assets" / "site.css", css)
-    _write(root / "assets" / "food-line-logo.png", b"fake".decode("ascii"))
+    _write_png(root / "assets" / "food-line-logo.png")
     _write(root / "index.html", _root_html())
     _write(root / "dispatches" / "index.html", _root_html())
     _write(root / "food-line" / "index.html", _food_home_html())
@@ -211,6 +222,35 @@ def test_low_contrast_primary_button_fails(tmp_path: Path) -> None:
 
     assert result["ok"] is False
     assert "primary_button_contrast" in _issue_checks(result)
+
+
+def test_broken_required_route_image_fails(tmp_path: Path) -> None:
+    root = _make_pages_root(tmp_path)
+    (root / "assets" / "food-line-logo.png").unlink()
+
+    result = validate_public_site_visuals(root)
+
+    assert result["ok"] is False
+    assert "broken_image" in _issue_checks(result)
+
+
+def test_latest_card_active_desk_order_fails_when_gaza_drops_from_first_row(tmp_path: Path) -> None:
+    root = _make_pages_root(tmp_path)
+    wrong_order = _root_html().replace(
+        '<article class="edition-card edition-card--gaza"><h3><a href="/gaza/editions/2026-10-01/">Gaza latest public edition</a></h3></article>\n'
+        '<article class="edition-card edition-card--food-line"><h3><a href="/food-line/editions/2026-10-01/">Bradford County Food Pantry running low on food, leaders say</a></h3></article>\n'
+        '<article class="edition-card edition-card--care-line"><h3><a href="/care-line/editions/2026-08-20/">Care latest public edition</a></h3></article>',
+        '<article class="edition-card edition-card--food-line"><h3><a href="/food-line/editions/2026-10-01/">Bradford County Food Pantry running low on food, leaders say</a></h3></article>\n'
+        '<article class="edition-card edition-card--care-line"><h3><a href="/care-line/editions/2026-08-20/">Care latest public edition</a></h3></article>\n'
+        '<article class="edition-card edition-card--gaza"><h3><a href="/gaza/editions/2026-10-01/">Gaza latest public edition</a></h3></article>',
+    )
+    _write(root / "index.html", wrong_order)
+    _write(root / "dispatches" / "index.html", wrong_order)
+
+    result = validate_public_site_visuals(root)
+
+    assert result["ok"] is False
+    assert "latest_card_active_desk_order" in _issue_checks(result)
 
 
 def test_cramped_active_dispatch_action_links_fail(tmp_path: Path) -> None:

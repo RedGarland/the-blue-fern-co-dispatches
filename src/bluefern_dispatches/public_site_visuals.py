@@ -437,6 +437,23 @@ def _visual_checks_with_playwright(
                             gazaArchiveRowCount: document.querySelectorAll('.archive--gaza .archive-list .archive-row').length,
                             gazaArchiveNoUpdateCount: document.querySelectorAll('.archive--gaza .archive-row--no-update').length,
                             foodStoryCardCount: document.querySelectorAll('article.food-line-source-card').length,
+                            brokenImages: Array.from(document.images || [])
+                              .filter((img) => img.naturalWidth === 0 || img.naturalHeight === 0)
+                              .map((img) => ({
+                                src: img.getAttribute('src') || '',
+                                currentSrc: img.currentSrc || '',
+                                alt: img.getAttribute('alt') || '',
+                                complete: img.complete,
+                                naturalWidth: img.naturalWidth,
+                                naturalHeight: img.naturalHeight
+                              })),
+                            editionCardDeskOrder: Array.from(document.querySelectorAll('.edition-grid .edition-card'))
+                              .map((card) => {
+                                const classes = Array.from(card.classList || []);
+                                const match = classes.find((name) => name.startsWith('edition-card--'));
+                                return match ? match.replace('edition-card--', '') : '';
+                              })
+                              .filter(Boolean),
                             gazaRecentEditionTexts: Array.from(document.querySelectorAll('.edition-list > li')).map((item) => item.textContent ? item.textContent.replace(/\\s+/g, '') : ''),
                             bodyText: document.body ? document.body.innerText : ''
                           };
@@ -456,6 +473,14 @@ def _visual_checks_with_playwright(
                         issues.append(VisualIssue(path, "http_status", f"expected HTTP 200, got {status}"))
                     if not css_loaded:
                         issues.append(VisualIssue(path, "stylesheet", "shared /assets/site.css did not load with HTTP 200"))
+                    for image in metrics.get("brokenImages") or []:
+                        issues.append(
+                            VisualIssue(
+                                path,
+                                "broken_image",
+                                f"image failed to load or decode: {image.get('src')} alt={image.get('alt')!r}",
+                            )
+                        )
                     tokens = metrics.get("canonicalTokens") or {}
                     for token, expected_rgb in CANONICAL_RGB.items():
                         observed = str(tokens.get(token) or "").lower()
@@ -477,6 +502,17 @@ def _visual_checks_with_playwright(
                             issues.append(VisualIssue(path, "primary_button_contrast", f"button contrast is below 4.5:1: {contrast_ratio:.2f} ({button.get('text')})"))
                         if str(button.get("backgroundColor") or "").lower() == CANONICAL_RGB["--bf-dark-blue"] and str(button.get("color") or "").lower() != CANONICAL_RGB["--bf-white"]:
                             issues.append(VisualIssue(path, "primary_button_contrast", f"dark primary button text is not white: {button.get('color')} ({button.get('text')})"))
+                    if path in {"/", "/dispatches/"}:
+                        desk_order = list(metrics.get("editionCardDeskOrder") or [])
+                        expected_order = ["gaza", "food-line", "care-line"]
+                        if desk_order[:3] != expected_order:
+                            issues.append(
+                                VisualIssue(
+                                    path,
+                                    "latest_card_active_desk_order",
+                                    f"first latest cards are {desk_order[:3]}, expected {expected_order}",
+                                )
+                            )
                     if path == "/":
                         primary_button = metrics.get("primaryButton") or {}
                         hero = metrics.get("hero") or {}

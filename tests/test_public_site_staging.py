@@ -23,7 +23,7 @@ def _json(path: Path, payload: dict) -> None:
 
 def _make_source(root: Path) -> Path:
     _write(root / "assets" / "site.css", "body { background: current; }")
-    for asset in ("gaza-logo.png", "food-line-logo.png", "care-line-logo.png"):
+    for asset in ("gaza-logo.png", "food-line-logo.png", "care-line-logo.png", "bluefern.png"):
         _write(root / "assets" / asset, "fake image")
     return root
 
@@ -93,7 +93,10 @@ def _make_gaza_runner(root: Path) -> Path:
 
 def _make_care_runner(root: Path) -> Path:
     site = root / "output" / "site"
-    _write(site / "care-line" / "index.html", '<link rel="stylesheet" href="/assets/site.css"><a href="editions/2026-09-30/">Latest Care</a>')
+    _write(
+        site / "care-line" / "index.html",
+        '<link rel="stylesheet" href="/assets/site.css"><img src="assets/bluefern.png" alt="The Blue Fern Co."><a href="editions/2026-09-30/">Latest Care</a>',
+    )
     _write_public_edition(site, "care-line", "2026-09-30", "Care Line public access briefing")
     return root
 
@@ -129,6 +132,7 @@ def test_public_site_staging_builds_release_faithful_required_routes(tmp_path: P
     assert (stage / "assets" / "site.css").read_text(encoding="utf-8") == "body { background: current; }"
     assert "stale Gaza copied from Food runner" not in (stage / "gaza" / "index.html").read_text(encoding="utf-8")
     assert "stale Care copied from Food runner" not in (stage / "care-line" / "index.html").read_text(encoding="utf-8")
+    assert 'src="/assets/bluefern.png"' in (stage / "care-line" / "index.html").read_text(encoding="utf-8")
 
 
 def test_public_site_staging_renders_gaza_archive_through_max_runner_date(tmp_path: Path) -> None:
@@ -207,3 +211,22 @@ def test_public_site_staging_integrity_rejects_missing_required_route(tmp_path: 
 
     with pytest.raises(RuntimeError, match="required staged route is missing"):
         _assert_staging_integrity(root, ["/dispatches/"])
+
+
+def test_public_site_staging_integrity_rejects_broken_required_route_image(tmp_path: Path) -> None:
+    root = tmp_path / "stage"
+    _write(root / "food-line" / "index.html", '<html><body><img src="assets/food-line-logo.png" alt="Food Line"></body></html>')
+
+    with pytest.raises(RuntimeError, match="staged route image is missing"):
+        _assert_staging_integrity(root, ["/food-line/"])
+
+
+def test_public_site_staging_integrity_accepts_nested_relative_logo_path(tmp_path: Path) -> None:
+    root = tmp_path / "stage"
+    _write(
+        root / "food-line" / "editions" / "2026-10-02" / "index.html",
+        '<html><body><img src="../../assets/food-line-logo.png" alt="Food Line"></body></html>',
+    )
+    _write(root / "food-line" / "assets" / "food-line-logo.png", "fake image")
+
+    _assert_staging_integrity(root, ["/food-line/editions/2026-10-02/"])

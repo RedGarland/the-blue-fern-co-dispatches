@@ -8,6 +8,7 @@ import shutil
 from datetime import date
 from pathlib import Path
 from typing import Any
+from urllib.parse import unquote, urlparse
 
 from bluefern_dispatches.generator import DispatchConfig, render_archive_for_dates, render_dispatch_index_for_dates
 from bluefern_dispatches.public_site_visuals import validate_public_site_visuals
@@ -25,7 +26,7 @@ DEFAULT_GAZA_ROOT = Path(r"C:\BlueFernRunner\GazaDispatchesCurrent6")
 DEFAULT_CARE_ROOT = Path(r"C:\BlueFernRunner\CareLineNationalCurrent8")
 FALLBACK_TEXT_SENTINELS = ("Old Gaza", "Old Food", "Old Care")
 FALLBACK_SHARED_SURFACE_SENTINELS = ("2026-08-05",)
-REQUIRED_SHARED_ASSETS = ("site.css",)
+REQUIRED_SHARED_ASSETS = ("site.css", "bluefern.png")
 REQUIRED_DISPATCH_LOGOS = {
     "gaza": "gaza-logo.png",
     "food-line": "food-line-logo.png",
@@ -169,18 +170,47 @@ def _prune_gaza_no_update_markers_after(stage_root: Path, max_gaza_date: str | N
             shutil.move(str(path), str(overflow_root / path.name))
 
 
+def _normalize_shared_asset_references(stage_root: Path) -> None:
+    for html_path in stage_root.rglob("*.html"):
+        text = html_path.read_text(encoding="utf-8", errors="replace")
+        updated = re.sub(
+            r'src="(?:\.\./){0,6}assets/bluefern\.png"',
+            'src="/assets/bluefern.png"',
+            text,
+        )
+        if updated != text:
+            html_path.write_text(updated, encoding="utf-8")
+
+
 def _route_path(stage_root: Path, route: str) -> Path:
     if route.endswith("/"):
         return stage_root / route.strip("/") / "index.html" if route != "/" else stage_root / "index.html"
     return stage_root / route.lstrip("/")
 
 
+def _local_asset_path(stage_root: Path, html_path: Path, src: str) -> Path | None:
+    parsed = urlparse(src.strip())
+    if parsed.scheme in {"http", "https", "data", "mailto", "tel"}:
+        return None
+    if parsed.netloc:
+        return None
+    clean_path = unquote(parsed.path)
+    if not clean_path:
+        return None
+    if clean_path.startswith("/"):
+        return stage_root / clean_path.lstrip("/")
+    return html_path.parent / clean_path
+
+
 def _assert_staging_integrity(stage_root: Path, routes: list[str]) -> None:
     errors: list[str] = []
+    route_paths: list[Path] = []
     for route in routes:
         path = _route_path(stage_root, route)
         if not path.is_file():
             errors.append(f"required staged route is missing: {route} ({path})")
+        else:
+            route_paths.append(path)
     shared_surface_paths = {
         _route_path(stage_root, "/"),
         _route_path(stage_root, "/dispatches/"),
@@ -198,6 +228,20 @@ def _assert_staging_integrity(stage_root: Path, routes: list[str]) -> None:
             for sentinel in FALLBACK_SHARED_SURFACE_SENTINELS:
                 if sentinel in text:
                     errors.append(f"fallback sentinel {sentinel!r} found in staged shared-surface HTML: {html_path}")
+    for html_path in route_paths:
+        try:
+            text = html_path.read_text(encoding="utf-8", errors="replace")
+        except OSError as exc:
+            errors.append(f"could not read staged route HTML for image check: {html_path}: {exc}")
+            continue
+        for match in re.finditer(r'<img\b[^>]*\bsrc=["\']([^"\']+)["\']', text, flags=re.IGNORECASE):
+            src = html.unescape(match.group(1))
+            asset_path = _local_asset_path(stage_root, html_path, src)
+            if asset_path is None:
+                continue
+            if not asset_path.is_file():
+                relative_html = html_path.relative_to(stage_root)
+                errors.append(f"staged route image is missing: {relative_html} -> {src} ({asset_path})")
     if errors:
         raise RuntimeError("staging integrity check failed:\n" + "\n".join(errors))
 
@@ -393,6 +437,7 @@ def stage_public_site_preview(
     _refresh_food_line_surfaces(stage_root)
     _render_gaza_surfaces(stage_root, max_gaza_date=max_gaza_date)
     _refresh_shared_surfaces(stage_root)
+    _normalize_shared_asset_references(stage_root)
     latest_food = next(iter(_dated_dirs(stage_root / "food-line" / "editions")), None)
 
     routes = [

@@ -973,7 +973,7 @@ def header(
 def footer(asset_prefix: str) -> str:
     return f"""  <footer class="site-footer">
     <div class="publisher">
-      <a href="{BLUE_FERN_URL}/" target="_blank" rel="noopener noreferrer"><img class="publisher-mark" src="{asset_prefix}assets/bluefern.png" alt="The Blue Fern Co."></a>
+      <a href="{BLUE_FERN_URL}/" target="_blank" rel="noopener noreferrer"><img class="publisher-mark" src="/assets/bluefern.png" alt="The Blue Fern Co."></a>
       <p class="publisher-label">Published by <a href="{BLUE_FERN_URL}/" target="_blank" rel="noopener noreferrer">The Blue Fern Company</a></p>
     </div>
   </footer>"""

@@ -1,0 +1,14 @@
+{
+  "schema_version":"bluefern.watch_run.v1",
+  "dispatch":"care-line",
+  "watch_name":"Care Line Watch",
+  "run_id":"care-line-watch-20261003T014522-0700-r11",
+  "scheduled_for":"2026-10-03T01:45:22-07:00",
+  "started_at":"2026-10-03T01:50:11-07:00",
+  "completed_at":"2026-10-03T01:52:00-07:00",
+  "status":"SUCCESS",
+  "outcome":"no_findings",
+  "search_window":{"start":"2026-10-03T00:51:02-07:00","end":"2026-10-03T01:52:00-07:00","timezone":"America/Los_Angeles"},
+  "findings":[],
+  "coverage_notes":["CMS Public Notices checked first.","Exactly 12 additional targeted searches completed.","No new qualifying development found."]
+}

@@ -84,6 +84,12 @@ def test_sync_helper_validates_before_and_after_rollout() -> None:
     assert '"FAST_FORWARDED_VALIDATION_FAILED"' in text
 
 
+def test_sync_helper_allows_generated_pages_residue_for_nonpublic_source_sync() -> None:
+    text = _text()
+    assert "--allow-pages-generated-public-output-residue" in text
+    assert "does not push Pages" in text
+
+
 def test_sync_helper_does_not_trigger_production_or_scheduler_mutation() -> None:
     text = _text()
     assert 'StatusExporterTask = Get-StatusExporterTaskEvidence' in text

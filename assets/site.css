@@ -604,6 +604,14 @@ h3 {
   border-bottom: 0;
 }
 
+.gaza-check-list .no-update-check {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, auto) minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0.55rem 1rem;
+  color: var(--bf-accent-blue-grey);
+}
+
 .archive--gaza .hero {
   margin-bottom: 0.45rem;
   padding-bottom: 0.35rem;
@@ -684,6 +692,10 @@ h3 {
 
 @media (max-width: 720px) {
   .archive-list .archive-row {
+    grid-template-columns: 1fr;
+  }
+
+  .gaza-check-list .no-update-check {
     grid-template-columns: 1fr;
   }
 

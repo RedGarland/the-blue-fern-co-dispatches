@@ -118,7 +118,10 @@ GAZA_HISTORICAL_CATCHUP_REQUIRED_FILES = (
 )
 GAZA_AUDIO_INDEX_DATE_RE = re.compile(r'<span class="gaza-audio-index-date"><strong>(\d{4}-\d{2}-\d{2})</strong>')
 GAZA_AUDIO_PODCAST_DATE_RE = re.compile(r"/gaza/audio/(\d{4}-\d{2}-\d{2})-transcript\.html")
-GAZA_HOME_EDITION_LIST_RE = re.compile(r'<ul class="edition-list">(.*?)</ul>', re.DOTALL)
+GAZA_HOME_EDITION_LIST_RE = re.compile(
+    r'<ul class="(?P<class>[^"]*\bedition-list\b[^"]*)">(?P<body>.*?)</ul>',
+    re.DOTALL,
+)
 EXPECT_DISPATCH_CHOICES = ("gaza", "cascadia", "american-pressure", "food-line", "care-line", "all")
 ALL_EXPECT_DISPATCHES = ("gaza", "cascadia", "american-pressure", "food-line", "care-line")
 DISPATCH_CATALOG: dict[str, dict[str, Any]] = {
@@ -1864,17 +1867,18 @@ def _care_line_public_surface_history_diagnostics(
 def _gaza_homepage_recent_edition_dates_from_html(html_text: str) -> list[str]:
     if not html_text:
         return []
-    match = GAZA_HOME_EDITION_LIST_RE.search(html_text)
-    if not match:
-        return []
-    block = match.group(1)
     dates: list[str] = []
     seen: set[str] = set()
-    for edition_date in GAZA_PUBLIC_HISTORY_DATE_RE.findall(block):
-        if edition_date in seen:
+    for match in GAZA_HOME_EDITION_LIST_RE.finditer(html_text):
+        classes = set(str(match.group("class") or "").split())
+        if "gaza-check-list" in classes:
             continue
-        seen.add(edition_date)
-        dates.append(edition_date)
+        block = match.group("body")
+        for edition_date in GAZA_PUBLIC_HISTORY_DATE_RE.findall(block):
+            if edition_date in seen:
+                continue
+            seen.add(edition_date)
+            dates.append(edition_date)
     return dates
 
 
@@ -2046,6 +2050,18 @@ def render_gaza_no_update_list_item(entry: GazaNoUpdateEntry) -> str:
     )
 
 
+def render_gaza_no_update_check_list_item(entry: GazaNoUpdateEntry) -> str:
+    source_note = (
+        f'<span class="archive-row-note">{entry.source_count} sources checked</span>'
+        if entry.source_count is not None
+        else ""
+    )
+    return (
+        f'      <li class="no-update-check"><span class="edition-date">{html.escape(entry.date)}</span>'
+        f'<span class="no-update-label">No qualifying update</span>{source_note}</li>'
+    )
+
+
 def _gaza_history_row_date(
     row: tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry],
 ) -> str:
@@ -2191,6 +2207,47 @@ def _gaza_latest_readable_archive_row(
         if kind in {"daily", "catchup"}:
             return row
     return None
+
+
+def _gaza_readable_history_rows(
+    rows: list[tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry]],
+) -> list[tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry]]:
+    return [row for row in rows if row[0] in {"daily", "catchup"}]
+
+
+def _gaza_no_update_history_rows(
+    rows: list[tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry]],
+) -> list[GazaNoUpdateEntry]:
+    return [value for kind, value in rows if kind == "no-update" and isinstance(value, GazaNoUpdateEntry)]
+
+
+def _render_gaza_readable_history_list(
+    site_root: Path,
+    dispatch: DispatchConfig,
+    rows: list[tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry]],
+    *,
+    limit: int | None = None,
+) -> str:
+    readable_rows = _gaza_readable_history_rows(rows)
+    if limit is not None:
+        readable_rows = readable_rows[:limit]
+    return "\n".join(
+        render_gaza_historical_catchup_list_item(value)
+        if kind == "catchup" and isinstance(value, GazaHistoricalCatchupEntry)
+        else render_edition_list_item(site_root, dispatch, str(value))
+        for kind, value in readable_rows
+    )
+
+
+def _render_gaza_recent_checks_list(
+    rows: list[tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry]],
+    *,
+    limit: int | None = None,
+) -> str:
+    checks = _gaza_no_update_history_rows(rows)
+    if limit is not None:
+        checks = checks[:limit]
+    return "\n".join(render_gaza_no_update_check_list_item(entry) for entry in checks)
 
 
 def _render_gaza_archive_grouped_history(
@@ -2678,6 +2735,7 @@ def render_dispatch_index_for_dates(
     )
     site_root = site_root or Path("output") / "site"
     gaza_status_line = ""
+    gaza_recent_sections = ""
     if dispatch.slug == "gaza":
         edition_dates = [
             date
@@ -2691,23 +2749,34 @@ def render_dispatch_index_for_dates(
         latest = edition_dates[0] if edition_dates else ""
         if gaza_catchups is None:
             gaza_catchups = discover_gaza_historical_catchups(site_root)
-        no_updates = discover_gaza_no_update_entries(site_root)
-        if no_updates:
-            latest_check = no_updates[0]
-            latest_actual_edition = max(edition_dates) if edition_dates else ""
-            if latest_check.date > latest_actual_edition:
-                gaza_status_line = (
-                    '\n    <p class="dispatch-status">'
-                    f"{html.escape(_display_date(latest_check.date))} — {html.escape(latest_check.message)}"
-                    "</p>"
-                )
-        recent = _render_gaza_public_history_list(
+        gaza_rows = _gaza_public_history_rows_with_no_updates(
             site_root,
-            dispatch,
-            edition_dates[:GAZA_HOME_RECENT_EDITION_LIMIT],
+            edition_dates,
             gaza_catchups,
             gaza_publication_dates=gaza_publication_dates,
         )
+        latest_readable = _gaza_latest_readable_archive_row(gaza_rows)
+        if latest_readable is not None:
+            latest = _gaza_history_row_date(latest_readable)
+        recent = _render_gaza_readable_history_list(
+            site_root,
+            dispatch,
+            gaza_rows,
+            limit=GAZA_HOME_RECENT_EDITION_LIMIT,
+        )
+        recent_checks = _render_gaza_recent_checks_list(
+            gaza_rows,
+            limit=GAZA_HOME_RECENT_EDITION_LIMIT,
+        )
+        gaza_recent_sections = f"""
+    <h2>Recent Checks</h2>
+    <ul class="edition-list gaza-check-list">
+{recent_checks if recent_checks else "      <li>No recent no-update checks are currently listed.</li>"}
+    </ul>
+    <h2>Readable Briefings</h2>
+    <ul class="edition-list gaza-readable-list">
+{recent if recent else "      <li>No readable Gaza briefing is currently listed.</li>"}
+    </ul>"""
     else:
         recent = "\n".join(
             render_edition_list_item(site_root, dispatch, date)
@@ -2732,6 +2801,15 @@ def render_dispatch_index_for_dates(
     elif dispatch.slug == CARE_LINE_DISPATCH_SLUG:
         map_link = '\n    <p>No map is published for Care Line yet. Future maps will show where current source-backed healthcare-access pressure signals were found. Areas without markers should not be read as places without healthcare strain.</p>'
     latest_link = f'<p><a href="editions/{latest}/">Read the latest briefing</a></p>' if latest else "<p>No public edition is currently listed.</p>"
+    latest_heading = "Latest Briefing"
+    if dispatch.slug == "gaza":
+        latest_heading = "Latest Readable Update"
+        if latest_readable is not None:
+            kind, value = latest_readable
+            if kind == "catchup" and isinstance(value, GazaHistoricalCatchupEntry):
+                latest_link = f'<p><a href="catchups/{html.escape(value.catchup_id)}/">Read the latest readable update</a></p>'
+            else:
+                latest_link = f'<p><a href="editions/{html.escape(latest)}/">Read the latest readable update</a></p>'
     gaza_audio_link = ""
     if dispatch.slug == "gaza" and (site_root / "gaza" / "audio" / "index.html").exists():
         gaza_audio_link = '\n    <p><a href="/gaza/audio/index.html">Gaza audio and transcript archive</a></p>'
@@ -2742,6 +2820,7 @@ def render_dispatch_index_for_dates(
             if latest
             else "<p>No public edition is currently listed.</p>"
         )
+        latest_heading = "Most recent archived briefing"
         cascadia_intro = "<p>Historical Cascadia archive. Cascadia is currently inactive; previously published briefings remain available for reference, and no scheduled new briefings are currently being produced.</p>"
     care_line_intro = ""
     care_line_at_a_glance = ""
@@ -2761,6 +2840,19 @@ def render_dispatch_index_for_dates(
             '\n    <p>No map is published for Care Line yet. Future maps will show where current source-backed healthcare-access '
             'pressure signals were found. Areas without markers should not be read as places without healthcare strain.</p>'
         )
+    recent_sections = (
+        gaza_recent_sections
+        if dispatch.slug == "gaza"
+        else f"""
+    <h2>Recent Editions</h2>
+    <ul class="edition-list">
+{recent}
+    </ul>"""
+    )
+    map_section = f"""
+    <h2>Pressure Map</h2>
+    {map_link}
+    {dashboard_link}""" if (map_link or dashboard_link) else ""
     body = f"""{header(dispatch.name, "", "archive.html")}
   <main class="home">
     <section class="hero">
@@ -2770,20 +2862,15 @@ def render_dispatch_index_for_dates(
     {cascadia_intro}
     <p class="lede">{html.escape(description)}</p>
     {care_line_archive_link}
-    <h2>{"Most recent archived briefing" if dispatch.slug == "cascadia" else "Latest Briefing"}</h2>
+    <h2>{latest_heading}</h2>
     {latest_link}
     {gaza_status_line}
     {gaza_audio_link}
-    <h2>Pressure Map</h2>
-    {map_link}
-    {dashboard_link}
+{map_section}
     {explainer_block}
     {care_line_at_a_glance}
     {signal_pack_note}
-    <h2>Recent Editions</h2>
-    <ul class="edition-list">
-{recent}
-    </ul>
+{recent_sections}
   </main>
 {footer("")}"""
     return page(dispatch.name, f"{BASE_URL}/{dispatch.slug}/", "assets/site.css", body, dispatch.name)

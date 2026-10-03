@@ -150,6 +150,7 @@ def test_public_site_staging_renders_gaza_archive_through_max_runner_date(tmp_pa
     )
 
     archive = (stage / "gaza" / "archive.html").read_text(encoding="utf-8")
+    gaza_index = (stage / "gaza" / "index.html").read_text(encoding="utf-8")
     latest = archive.split('<section class="archive-latest"', 1)[1].split("</section>", 1)[0]
     assert '<p class="archive-latest-date">2026-10-01</p>' in latest
     assert "No qualifying update" not in latest
@@ -157,6 +158,19 @@ def test_public_site_staging_renders_gaza_archive_through_max_runner_date(tmp_pa
     assert "2026-10-03" not in archive
     assert 'href="editions/2026-10-03/"' not in archive
     assert (stage / "gaza" / "status" / "no-updates-after-staging-horizon" / "2026-10-03.json").exists()
+    assert "<h2>Latest Readable Update</h2>" in gaza_index
+    assert "<h2>Readable Briefings</h2>" in gaza_index
+    assert "<h2>Recent Checks</h2>" in gaza_index
+    assert "<h2>Recent Editions</h2>" not in gaza_index
+    latest_section = gaza_index.split("<h2>Latest Readable Update</h2>", 1)[1].split("<h2>Recent Checks</h2>", 1)[0]
+    readable_list = gaza_index.split('<ul class="edition-list gaza-readable-list">', 1)[1].split("</ul>", 1)[0]
+    checks_list = gaza_index.split('<ul class="edition-list gaza-check-list">', 1)[1].split("</ul>", 1)[0]
+    assert 'href="editions/2026-10-01/">Read the latest readable update</a>' in latest_section
+    assert "No qualifying update" not in latest_section
+    assert 'href="editions/2026-10-01/">2026-10-01</a>' in readable_list
+    assert "2026-10-02" not in readable_list
+    assert '<span class="edition-date">2026-10-02</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">22 sources checked</span>' in checks_list
+    assert 'href="editions/2026-10-02/"' not in gaza_index
 
 
 def test_public_site_staging_fails_fast_when_required_css_is_missing(tmp_path: Path) -> None:

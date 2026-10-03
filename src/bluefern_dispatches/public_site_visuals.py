@@ -184,11 +184,38 @@ def _assert_html_basics(pages_root: Path, issues: list[VisualIssue]) -> dict[str
     if gaza_home_soup is None:
         issues.append(VisualIssue("/gaza/", "gaza_recent_duplicate_date_link", "Gaza landing page is missing"))
     else:
+        gaza_heading_texts = {heading.get_text(" ", strip=True).lower() for heading in gaza_home_soup.find_all(["h2", "h3"])}
+        if gaza_home_soup.find(class_="no-update-label") is not None:
+            if "recent checks" not in gaza_heading_texts:
+                issues.append(
+                    VisualIssue(
+                        "/gaza/",
+                        "gaza_recent_checks_section",
+                        "Gaza no-update accountability rows are present without a Recent Checks section",
+                    )
+                )
+            if "latest readable update" not in gaza_heading_texts and "latest briefing" not in gaza_heading_texts:
+                issues.append(
+                    VisualIssue(
+                        "/gaza/",
+                        "gaza_latest_readable_update",
+                        "Gaza landing page with no-update checks is missing a latest readable update section",
+                    )
+                )
         for heading in gaza_home_soup.find_all(["h2", "h3"]):
             if heading.get_text(" ", strip=True).lower() != "recent editions":
                 continue
             recent_list = heading.find_next("ul", class_="edition-list")
             if recent_list is None:
+                break
+            if recent_list.find(class_="no-update-label") is not None:
+                issues.append(
+                    VisualIssue(
+                        "/gaza/",
+                        "gaza_recent_no_update_mislabeled",
+                        "Gaza no-update checks must not be listed under Recent Editions",
+                    )
+                )
                 break
             for item in recent_list.find_all("li", recursive=False):
                 date_node = item.find(class_="edition-date", recursive=False)

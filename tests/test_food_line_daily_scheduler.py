@@ -199,6 +199,34 @@ def test_scheduler_generated_public_output_does_not_hide_source_drift() -> None:
     assert scheduler._unexpected_dirty_paths(status) == ["scripts/food_line_daily_scheduler.py"]
 
 
+def test_runtime_preflight_opts_into_pages_generated_residue_allowance(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    (tmp_path / "scripts").mkdir()
+    script = tmp_path / "scripts" / "preflight_repo_state.py"
+    script.write_text("# preflight\n", encoding="utf-8")
+    python = tmp_path / ".venv" / "Scripts" / "python.exe"
+    calls: list[list[str]] = []
+
+    def fake_run(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
+        calls.append(command)
+        return subprocess.CompletedProcess(command, 0, stdout="", stderr="")
+
+    monkeypatch.setattr(scheduler, "_run", fake_run)
+
+    scheduler.run_preflight(tmp_path, python, test_mode=False)
+
+    assert calls == [
+        [
+            str(python),
+            str(script),
+            "--source-repo",
+            str(tmp_path),
+            "--allow-pages-generated-public-output-residue",
+        ]
+    ]
+
+
 def test_source_watch_dirty_check_accepts_sanctioned_review_and_generated_residue(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

@@ -512,7 +512,16 @@ def run_preflight(root: Path, python: Path, *, test_mode: bool) -> None:
     if test_mode:
         return
     script = root / "scripts" / "preflight_repo_state.py"
-    result = _run([str(python), str(script), "--source-repo", str(root)], cwd=root)
+    result = _run(
+        [
+            str(python),
+            str(script),
+            "--source-repo",
+            str(root),
+            "--allow-pages-generated-public-output-residue",
+        ],
+        cwd=root,
+    )
     if result.returncode != 0:
         raise _command_error("repository preflight", result)
 

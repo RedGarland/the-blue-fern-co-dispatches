@@ -68,6 +68,25 @@ SHARED_DISPATCH_RECORD_FILES = {
     "story_memory.json",
 }
 WORKTREE_GENERATED_RESIDUE_STATUSES = {" M", " D", "??"}
+PAGES_PUBLIC_SURFACE_ROOTS = {
+    "american-pressure",
+    "assets",
+    "care-line",
+    "cascadia",
+    "data",
+    "dispatches",
+    "food-line",
+    "gaza",
+}
+PAGES_PUBLIC_SURFACE_FILES = {
+    "404.html",
+    "cname",
+    "index.html",
+    "podcast.xml",
+    "rss.xml",
+    "robots.txt",
+    "sitemap.xml",
+}
 
 
 def _run_git_status(repo: Path) -> tuple[int, list[str]]:
@@ -99,6 +118,16 @@ def is_shared_dispatch_record_path(path_text: str) -> bool:
         return False
     name = path.removeprefix(prefix)
     return "/" not in name and name in SHARED_DISPATCH_RECORD_FILES
+
+
+def is_pages_public_surface_path(path_text: str) -> bool:
+    path = _normalize_path(path_text).lower()
+    if not path or path.startswith("."):
+        return False
+    if path in PAGES_PUBLIC_SURFACE_FILES:
+        return True
+    root = path.split("/", 1)[0]
+    return root in PAGES_PUBLIC_SURFACE_ROOTS
 
 
 def classify_path(path_text: str) -> str:
@@ -157,6 +186,7 @@ def classify_status_line(
     line: str,
     *,
     allow_generated_public_output_residue: bool = False,
+    allow_pages_generated_public_output_residue: bool = False,
 ) -> dict[str, Any] | None:
     text = line.rstrip()
     if not text or text.startswith("## "):
@@ -181,6 +211,13 @@ def classify_status_line(
         and status in WORKTREE_GENERATED_RESIDUE_STATUSES
         and category == "generated_public_output"
     )
+    allowed_pages_generated_public_output_residue = (
+        allow_pages_generated_public_output_residue
+        and status in WORKTREE_GENERATED_RESIDUE_STATUSES
+        and is_pages_public_surface_path(path)
+    )
+    if allowed_pages_generated_public_output_residue and category == "unknown":
+        category = "generated_public_output"
     allowed_tracked_runtime = status == " M" and (
         is_food_line_mutable_tracked_runtime_path(path)
         or is_operator_mutable_tracked_runtime_path(path)
@@ -193,6 +230,7 @@ def classify_status_line(
         "is_untracked": status == "??",
         "is_risky": not allowed_food_generated_output
         and not allowed_generated_public_output_residue
+        and not allowed_pages_generated_public_output_residue
         and not allowed_tracked_runtime
         and (status != "??" or category not in ALLOWED_DIRTY_CATEGORIES),
     }
@@ -240,7 +278,12 @@ def _detect_pages_repo(source_repo: Path) -> Path | None:
     return None
 
 
-def _load_repo_report(repo: Path, *, allow_generated_public_output_residue: bool = False) -> dict[str, Any]:
+def _load_repo_report(
+    repo: Path,
+    *,
+    allow_generated_public_output_residue: bool = False,
+    allow_pages_generated_public_output_residue: bool = False,
+) -> dict[str, Any]:
     rc, lines = _run_git_status(repo)
     entries = [
         entry
@@ -248,6 +291,7 @@ def _load_repo_report(repo: Path, *, allow_generated_public_output_residue: bool
             classify_status_line(
                 line,
                 allow_generated_public_output_residue=allow_generated_public_output_residue,
+                allow_pages_generated_public_output_residue=allow_pages_generated_public_output_residue,
             )
             for line in lines
         )
@@ -263,13 +307,25 @@ def _load_repo_report(repo: Path, *, allow_generated_public_output_residue: bool
     }
 
 
-def build_preflight_report(source_repo: Path | None = None, pages_repo: Path | None = None) -> dict[str, Any]:
+def build_preflight_report(
+    source_repo: Path | None = None,
+    pages_repo: Path | None = None,
+    *,
+    allow_pages_generated_public_output_residue: bool = False,
+) -> dict[str, Any]:
     source_repo = (source_repo or ROOT).resolve()
     resolved_pages_repo = pages_repo or _detect_pages_repo(source_repo)
     pages_repo = resolved_pages_repo.resolve() if resolved_pages_repo else None
 
     source_report = _load_repo_report(source_repo, allow_generated_public_output_residue=True)
-    pages_report = _load_repo_report(pages_repo) if pages_repo else None
+    pages_report = (
+        _load_repo_report(
+            pages_repo,
+            allow_pages_generated_public_output_residue=allow_pages_generated_public_output_residue,
+        )
+        if pages_repo
+        else None
+    )
     risky_source = list(source_report["summary"]["risky_entries"])
     risky_pages = list(pages_report["summary"]["risky_entries"]) if pages_report else []
     ok = not risky_source and not risky_pages
@@ -341,6 +397,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Preflight git state for source and Pages repos.")
     parser.add_argument("--source-repo", default=str(ROOT))
     parser.add_argument("--pages-repo", default="")
+    parser.add_argument(
+        "--allow-pages-generated-public-output-residue",
+        action="store_true",
+        help=(
+            "Allow unstaged generated public Pages surface residue in a nested Pages checkout. "
+            "Use only for non-public runtime proofs; publication and Pages sync paths should remain strict."
+        ),
+    )
     return parser.parse_args(argv)
 
 
@@ -348,7 +412,11 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     source_repo = Path(args.source_repo)
     pages_repo = Path(args.pages_repo) if args.pages_repo else None
-    report = build_preflight_report(source_repo, pages_repo)
+    report = build_preflight_report(
+        source_repo,
+        pages_repo,
+        allow_pages_generated_public_output_residue=args.allow_pages_generated_public_output_residue,
+    )
     print(render_report(report), end="")
     return 0 if report["ok"] else 1
 

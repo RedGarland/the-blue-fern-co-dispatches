@@ -1,0 +1,29 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261003T114451-0700",
+  "scheduled_for": "2026-10-03T11:44:51-07:00",
+  "started_at": "2026-10-03T11:46:04-07:00",
+  "completed_at": "2026-10-03T11:48:18-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-03T10:46:03-07:00",
+    "end": "2026-10-03T11:48:18-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      "OCHA OPT checked first; no new in-window Gaza-specific update surfaced. The newest surfaced OCHA OPT humanitarian situation report was dated 25 September 2026.",
+      "WHO checked second; no new in-window Gaza-specific operational update surfaced."
+    ],
+    "additional_targeted_searches_used": 12,
+    "additional_targeted_searches_limit": 12,
+    "degraded_searches": [
+      "Direct UNRWA homepage retrieval returned an internal error; the targeted UNRWA search remained usable and surfaced no in-window update."
+    ],
+    "assessment": "No distinct qualifying development was verified. WAFA's latest Gaza-specific headline visible on its live page was timestamped 17:59 Palestine time on 3 October, before this window; later visible WAFA items were West Bank-related. AP's Gaza hub surfaced no newer in-window Gaza development. Older or cumulative casualty items were excluded as outside-window or recycled material."
+  }
+}

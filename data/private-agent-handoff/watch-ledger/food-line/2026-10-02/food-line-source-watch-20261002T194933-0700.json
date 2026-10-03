@@ -1,0 +1,30 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261002T194933-0700",
+  "scheduled_for": "2026-10-02T19:49:33-07:00",
+  "started_at": "2026-10-02T19:49:33-07:00",
+  "completed_at": "2026-10-02T19:50:33-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-02T18:50:53-07:00",
+    "end": "2026-10-02T19:50:33-07:00",
+    "basis": "since prior completed supplementary recall-watch execution on ops/watch-ledger"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "searches_run": 12,
+    "search_limit": 12,
+    "coverage": [
+      "only/sole/last/full-service grocery-store loss, closure, fire, or disaster",
+      "canceled or suspended emergency food distributions due to storm, flood, fire, outage, or facility damage",
+      "abrupt pantry or food-bank closure or major access reduction",
+      "official SNAP/WIC/EBT interruption with immediate access consequences"
+    ],
+    "result": "No new qualifying U.S. food-access disruption was identified in the bounded window. A fresh Kauai hurricane-recovery update within the window described ongoing recovery and utility disruptions but no qualifying new grocery, emergency-distribution, pantry/food-bank, SNAP, WIC, or EBT access interruption. Other returned items were stale, outside the window, or excluded background/promotion/recovery coverage.",
+    "search_failures": []
+  }
+}

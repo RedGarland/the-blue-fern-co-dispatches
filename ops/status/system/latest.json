@@ -35,7 +35,7 @@
         "aggregate_status": "DEGRADED",
         "all_current_failures_external": true,
         "all_current_failures_non_actionable": true,
-        "attention_task_count": 2,
+        "attention_task_count": 3,
         "attention_tasks": [
           {
             "artifact_id": "20261002T130001Z-20348.json",
@@ -47,6 +47,14 @@
           },
           {
             "artifact_id": "20261002T190001Z-3540.json",
+            "classification": "partial_success",
+            "exit_code": 0,
+            "failure_stage": "care_line_collection",
+            "status": "DEGRADED",
+            "task_key": "care_line_collection"
+          },
+          {
+            "artifact_id": "20261003T010001Z-30772.json",
             "classification": "partial_success",
             "exit_code": 0,
             "failure_stage": "care_line_collection",
@@ -195,7 +203,7 @@
         "attention_task_count": 1,
         "attention_tasks": [
           {
-            "artifact_id": "20261003T005716Z-source-watch.json",
+            "artifact_id": "20261003T010659Z-source-watch.json",
             "classification": "completed_with_exclusions",
             "exit_code": 0,
             "failure_stage": "source_watch",
@@ -212,12 +220,12 @@
         "primary_task_key": "food_line_source_watch",
         "primary_task_status": "DEGRADED",
         "private_review_count_only_gap_count": 50,
-        "private_review_dispositioned_item_count": 56,
-        "private_review_max_age_hours": 24,
+        "private_review_dispositioned_item_count": 55,
+        "private_review_max_age_hours": 25,
         "private_review_oldest_pending_date": "2026-10-02",
         "private_review_pending_date_count": 1,
-        "private_review_pending_item_count": 4,
-        "private_review_unresolved_item_count": 4,
+        "private_review_pending_item_count": 5,
+        "private_review_unresolved_item_count": 5,
         "publication_attempted": false,
         "publication_status": "skipped_not_release_ready",
         "receipt_completeness": "COMPLETE",
@@ -232,13 +240,13 @@
         "count_only_gap_count": 50,
         "dates": [
           {
-            "age_hours": 24,
+            "age_hours": 25,
             "count_only_gap_count": 4,
             "date": "2026-10-02",
-            "dispositioned_item_count": 2,
-            "pending_item_count": 4,
+            "dispositioned_item_count": 1,
+            "pending_item_count": 5,
             "proposal_artifact": "data/dispatches/food-line/review/proposed-editions/2026-10-02.json",
-            "unresolved_item_count": 4
+            "unresolved_item_count": 5
           }
         ],
         "disposition_diagnostics": {
@@ -266,7 +274,7 @@
             "unknown_disposition_count": 0
           },
           {
-            "applied_item_count": 2,
+            "applied_item_count": 1,
             "disposition_artifact": "data/dispatches/food-line/review/private-review-dispositions/food-line-2026-10-02-backlog-dispositions.json",
             "entry_count": 2,
             "ignored_entry_count": 0,
@@ -302,12 +310,12 @@
             "unknown_disposition_count": 0
           }
         ],
-        "dispositioned_item_count": 56,
-        "max_age_hours": 24,
+        "dispositioned_item_count": 55,
+        "max_age_hours": 25,
         "oldest_pending_date": "2026-10-02",
         "pending_date_count": 1,
-        "pending_item_count": 4,
-        "unresolved_item_count": 4
+        "pending_item_count": 5,
+        "unresolved_item_count": 5
       },
       "recovery_lifecycle": "HEALTHY"
     },
@@ -420,7 +428,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-03T00:57:46.667303Z",
+  "exported_at": "2026-10-03T01:08:05.763173Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "DEGRADED"

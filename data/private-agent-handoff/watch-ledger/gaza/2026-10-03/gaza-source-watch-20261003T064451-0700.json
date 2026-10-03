@@ -1,0 +1,48 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261003T064451-0700",
+  "scheduled_for": "2026-10-03T06:44:51-07:00",
+  "started_at": "2026-10-03T06:41:50-07:00",
+  "completed_at": "2026-10-03T06:45:04-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-03T05:44:50-07:00",
+    "end": "2026-10-03T06:45:04-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      "OCHA OPT checked first; no Gaza-specific development published or surfaced within the observation window. The newest surfaced OCHA Gaza material remained outside the window.",
+      "WHO checked second; no Gaza-specific health, hospital-capacity, fuel, medical-access, or medical-evacuation development published or surfaced within the observation window."
+    ],
+    "additional_targeted_searches_used": 12,
+    "additional_targeted_searches_limit": 12,
+    "sources_targeted": [
+      "UNRWA",
+      "UNICEF",
+      "Palestine Red Crescent Society",
+      "MSF",
+      "ICRC",
+      "WAFA",
+      "Reuters",
+      "Associated Press",
+      "BBC",
+      "IDF",
+      "COGAT",
+      "ceasefire/hostage negotiations"
+    ],
+    "degradation": [
+      "BBC targeted retrieval was blocked by robots.txt; remaining official/humanitarian and established reporting coverage was sufficient to complete the watch."
+    ],
+    "exclusions": [
+      "Associated Press material updated before the observation window concerned the same five-death Gaza City strike already captured by the prior watch and was excluded as a duplicate.",
+      "WAFA's Gaza casualty update at 14:04 Palestine time and Beit Lahia drone-strike item at 14:30 Palestine time were published before the observation window and excluded as pre-window material.",
+      "Older, recycled, opinion, unsupported social, duplicate, and unsourced material was excluded."
+    ],
+    "conclusion": "No distinct, traceable qualifying development was verified within the observation window."
+  }
+}

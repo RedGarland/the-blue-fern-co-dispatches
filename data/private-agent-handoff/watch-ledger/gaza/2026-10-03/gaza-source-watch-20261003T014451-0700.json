@@ -1,0 +1,52 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261003T014451-0700",
+  "scheduled_for": "2026-10-03T01:44:51-07:00",
+  "started_at": "2026-10-03T01:47:49-07:00",
+  "completed_at": "2026-10-03T01:49:16-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-03T00:44:51-07:00",
+    "end": "2026-10-03T01:49:16-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      {
+        "publisher": "OCHA OPT",
+        "result": "checked_first",
+        "note": "No Gaza-specific development in the search window; newest surfaced OCHA Gaza situation reporting predates the window."
+      },
+      {
+        "publisher": "WHO",
+        "result": "checked_second",
+        "note": "No Gaza-specific development in the search window; newest surfaced WHO Gaza-specific material predates the window."
+      }
+    ],
+    "targeted_searches_total": 12,
+    "targeted_coverage": [
+      "Reuters: casualties/aid/ceasefire",
+      "Associated Press: casualties/aid/ceasefire",
+      "WAFA: Gaza developments",
+      "UNRWA: aid/displacement",
+      "UNICEF: food/water/children",
+      "Palestine Red Crescent Society: ambulance/hospital/medical",
+      "MSF: hospital/medical access",
+      "ICRC: hostages/detention/humanitarian",
+      "COGAT/gov.il: crossings/aid/fuel",
+      "IDF: military operations/civilian impact",
+      "Reuters: ceasefire/hostage negotiations",
+      "ReliefWeb: medical evacuation/hospital capacity"
+    ],
+    "exclusions": [
+      "AP's October 3 Gaza casualty item was excluded as a duplicate of the prior hourly watch finding; its later page update did not surface a distinct new qualifying Gaza development.",
+      "Older humanitarian situation reports and recycled background items were excluded.",
+      "Opinion, unsupported social claims, and unsourced claims were excluded."
+    ],
+    "coverage_assessment": "Useful coverage remained across official humanitarian and established reporting sources; no material source failure warranted DEGRADED status."
+  }
+}

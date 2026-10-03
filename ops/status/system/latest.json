@@ -193,42 +193,25 @@
         "state": "HANDOFF_RECEIVED_SUCCESS",
         "unaccounted_count": 0
       },
-      "aggregate_status": "FAILED",
+      "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "9d70bd18010514d9bb5a0ea7535ed3b2ea0a042c",
       "debug_summary": {
-        "aggregate_status": "FAILED",
+        "aggregate_status": "SUCCESS",
         "all_current_failures_external": null,
         "all_current_failures_non_actionable": null,
-        "attention_task_count": 2,
-        "attention_tasks": [
-          {
-            "artifact_id": "20261003T025950Z-source-watch.json",
-            "classification": "blocked_overlapping_run",
-            "exit_code": 10,
-            "failure_stage": "source_watch",
-            "status": "FAILED",
-            "task_key": "food_line_source_watch"
-          },
-          {
-            "artifact_id": "20261003T015715Z-status-resume.json",
-            "classification": "status_resume_failed",
-            "exit_code": 10,
-            "failure_stage": "status_resume",
-            "status": "FAILED",
-            "task_key": "food_line_source_watch_resume"
-          }
-        ],
+        "attention_task_count": 0,
+        "attention_tasks": [],
         "external_access_restriction_count": null,
         "failed_source_count": null,
-        "operator_assessment": "FAILED_ACTION_REQUIRED",
-        "primary_classification": "blocked_overlapping_run",
-        "primary_failure_stage": "source_watch",
-        "primary_layer": "SOURCE",
-        "primary_task_key": "food_line_source_watch",
-        "primary_task_status": "FAILED",
-        "private_review_count_only_gap_count": 50,
-        "private_review_dispositioned_item_count": 60,
+        "operator_assessment": "HEALTHY",
+        "primary_classification": null,
+        "primary_failure_stage": null,
+        "primary_layer": "NONE",
+        "primary_task_key": null,
+        "primary_task_status": null,
+        "private_review_count_only_gap_count": 54,
+        "private_review_dispositioned_item_count": 66,
         "private_review_max_age_hours": 0,
         "private_review_oldest_pending_date": null,
         "private_review_pending_date_count": 0,
@@ -237,7 +220,7 @@
         "publication_attempted": false,
         "publication_status": "skipped_not_release_ready",
         "receipt_completeness": "COMPLETE",
-        "recovery_lifecycle": "INCIDENT_OPEN",
+        "recovery_lifecycle": "HEALTHY",
         "stale_observability": false,
         "transient_source_failure_count": null,
         "unaccounted_event_count": null,
@@ -245,7 +228,7 @@
       },
       "migration_status": "MIGRATED",
       "private_review_backlog": {
-        "count_only_gap_count": 50,
+        "count_only_gap_count": 54,
         "dates": [],
         "disposition_diagnostics": {
           "duplicate_entry_count": 0,
@@ -272,7 +255,7 @@
             "unknown_disposition_count": 0
           },
           {
-            "applied_item_count": 1,
+            "applied_item_count": 2,
             "disposition_artifact": "data/dispatches/food-line/review/private-review-dispositions/food-line-2026-10-02-backlog-dispositions.json",
             "entry_count": 2,
             "ignored_entry_count": 0,
@@ -281,7 +264,7 @@
             "unknown_disposition_count": 0
           },
           {
-            "applied_item_count": 3,
+            "applied_item_count": 6,
             "disposition_artifact": "data/dispatches/food-line/review/private-review-dispositions/food-line-2026-10-02-followup-dispositions.json",
             "entry_count": 3,
             "ignored_entry_count": 0,
@@ -317,14 +300,14 @@
             "unknown_disposition_count": 0
           }
         ],
-        "dispositioned_item_count": 60,
+        "dispositioned_item_count": 66,
         "max_age_hours": 0,
         "oldest_pending_date": null,
         "pending_date_count": 0,
         "pending_item_count": 0,
         "unresolved_item_count": 0
       },
-      "recovery_lifecycle": "INCIDENT_OPEN"
+      "recovery_lifecycle": "HEALTHY"
     },
     "gaza": {
       "agent_handoff": {
@@ -435,8 +418,8 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-03T03:15:22.426068Z",
+  "exported_at": "2026-10-03T03:26:25.618662Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
-  "system_status": "FAILED"
+  "system_status": "DEGRADED"
 }

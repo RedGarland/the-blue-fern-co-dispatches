@@ -1,0 +1,29 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261003T094451-0700",
+  "scheduled_for": "2026-10-03T09:44:51-07:00",
+  "started_at": "2026-10-03T09:47:35-07:00",
+  "completed_at": "2026-10-03T09:49:07-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-03T08:44:23-07:00",
+    "end": "2026-10-03T09:49:07-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      "OCHA OPT checked first; no new in-window Gaza-specific update surfaced. The newest surfaced OCHA OPT humanitarian situation report was dated 25 September 2026.",
+      "WHO checked second; no new in-window Gaza-specific operational update surfaced."
+    ],
+    "additional_targeted_searches_used": 12,
+    "additional_targeted_searches_limit": 12,
+    "degraded_searches": [
+      "BBC targeted search was blocked by robots.txt; remaining targeted coverage was usable."
+    ],
+    "assessment": "No distinct qualifying development was verified in the bounded observation window. The Associated Press rolling Middle East item was last updated at 08:19 local publisher time and repeated the previously captured overnight Gaza City strike that killed five people, so it was excluded as a duplicate. A Jerusalem Post report published at 11:35 Israel time described an earlier-morning IDF operation targeting Hamas Gaza leader Ali al-Amoudi; it was outside the observation window and did not document civilian impact, so it did not qualify."
+  }
+}

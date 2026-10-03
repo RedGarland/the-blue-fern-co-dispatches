@@ -1,0 +1,64 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261002T174451-0700",
+  "scheduled_for": "2026-10-02T17:44:51-07:00",
+  "started_at": "2026-10-02T17:47:36-07:00",
+  "completed_at": "2026-10-02T17:48:37-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-02T16:47:00-07:00",
+    "end": "2026-10-02T17:47:36-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      {
+        "source": "OCHA OPT",
+        "result": "No new Gaza-specific development in the observation window; latest surfaced OCHA Gaza situation reporting predates the window."
+      },
+      {
+        "source": "WHO",
+        "result": "No new Gaza-specific health-system or medical-access development in the observation window; surfaced WHO Gaza material predates the window."
+      }
+    ],
+    "additional_targeted_searches_used": 12,
+    "additional_targeted_searches_limit": 12,
+    "classes_checked": [
+      "civilian casualties",
+      "displacement",
+      "aid access",
+      "food/water access",
+      "healthcare disruption",
+      "hospital/ambulance/transport/fuel/medical evacuation/functioning capacity",
+      "infrastructure damage",
+      "crossings",
+      "detention/hostages",
+      "ceasefire/negotiation changes",
+      "military operations with documented civilian impact"
+    ],
+    "sources_targeted": [
+      "Reuters",
+      "Associated Press",
+      "WAFA",
+      "UNRWA",
+      "WFP",
+      "UNICEF",
+      "Palestine Red Crescent Society",
+      "ICRC",
+      "Israeli government/COGAT"
+    ],
+    "exclusions": [
+      "opinion",
+      "unsupported social claims",
+      "recycled items",
+      "duplicates",
+      "unsourced claims",
+      "items published or event-dated before the observation window"
+    ],
+    "conclusion": "No distinct, traceable, qualifying development was verified within the bounded observation window."
+  }
+}

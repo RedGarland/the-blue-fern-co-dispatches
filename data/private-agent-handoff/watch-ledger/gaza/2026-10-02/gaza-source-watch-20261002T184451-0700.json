@@ -1,0 +1,43 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261002T184451-0700",
+  "scheduled_for": "2026-10-02T18:44:51-07:00",
+  "started_at": "2026-10-02T18:42:27-07:00",
+  "completed_at": "2026-10-02T18:43:33-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-02T17:48:37-07:00",
+    "end": "2026-10-02T18:42:27-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      "OCHA OPT checked first; no in-window Gaza-specific development surfaced.",
+      "WHO checked second; no in-window Gaza-specific health or medical-access development surfaced."
+    ],
+    "additional_targeted_searches_used": 12,
+    "additional_targeted_searches_limit": 12,
+    "sources_targeted": [
+      "Reuters",
+      "Associated Press",
+      "WAFA",
+      "UNRWA",
+      "WFP",
+      "UNICEF",
+      "Palestine Red Crescent Society",
+      "ICRC",
+      "COGAT",
+      "BBC",
+      "Al Jazeera"
+    ],
+    "degradation": [
+      "BBC retrieval blocked by robots.txt.",
+      "COGAT direct page retrieval returned an internal error."
+    ],
+    "conclusion": "No distinct traceable qualifying development verified in the observation window; remaining coverage was sufficient to complete the watch."
+  }
+}

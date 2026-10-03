@@ -1,0 +1,68 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-10-03",
+  "generated_at": "2026-10-03T13:01:11.149991Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-10-03.mp3",
+  "audio_url": "/gaza/audio/2026-10-03.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1048,
+  "tts_input_word_count": 166,
+  "tts_story_count": 4,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1281792,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-10-03T13:01:11.149961Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-10-03-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-10-03/",
+  "script_text": "This is the Gaza Dispatch audio briefing for October 3, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Palestinians gather for football amid Gaza's ruins. Displaced Palestinians gathered to watch a friendly football match in Gaza's Khan Younis. This was reported by Al Jazeera.\n\n2. Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters. Israeli forces detain and assault journalists in Jabal Qamass area in Beita, south of Nablus. This was reported by Al Jazeera.\n\n3. Israeli air attack on residential apartment in Gaza kills 5 Palestinians. An Israeli air attack on a residential apartment in Gaza City has killed at least five Palestinians. This was reported by Al Jazeera.\n\n4. MEDICAL EVACUATION OF PATIENTS FROM GAZA 2806 (27%) 11 363 5646 10 382 3386 - emro.who.int. MEDICAL EVACUATION OF PATIENTS FROM GAZA 2806 (27%) 11 363 5646 10 382 3386 emro.who.int. This was reported by WHO.\n\nFor the full source-backed dispatch, read the October 3, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 4,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-10-03-aljazeera-middle-east-506ad88b5658",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/10/3/palestinians-gather-for-football-amid-gazas-ruins?traffic_source=rss",
+      "title": "Palestinians gather for football amid Gaza's ruins"
+    },
+    {
+      "source_record_id": "gaza-2026-10-03-aljazeera-middle-east-f852a83a4a45",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/10/3/israeli-settlers-attack-palestinian-olive-pickers-in-the-west-bank?traffic_source=rss",
+      "title": "Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters"
+    },
+    {
+      "source_record_id": "gaza-2026-10-03-aljazeera-middle-east-52912abb93a5",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/10/3/israeli-air-attack-on-residential-apartment-in-gaza-kills-5-palestinians?traffic_source=rss",
+      "title": "Israeli air attack on residential apartment in Gaza kills 5 Palestinians"
+    },
+    {
+      "source_record_id": "gaza-2026-10-03-who-gaza-evacuation-query-6171f85463f6",
+      "publisher": "WHO",
+      "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTFBXZXQ4YmVDaVhmMVhqdzJIMTB1cXNXYWwtQlF6SFBKajBWQ3hWUjBQYkpGQWZWMWNoOENKbTRmSldrR2dKalFHTGw4QzFxUUxqdUZjLWFfWS1lLVhyX1VZX19ZM2FGdVVQUDU2MlJmQUtDdWxYU1NsVGlB?oc=5",
+      "title": "MEDICAL EVACUATION OF PATIENTS FROM GAZA 2806 (27%) 11 363 5646 10 382 3386 - emro.who.int"
+    }
+  ]
+}

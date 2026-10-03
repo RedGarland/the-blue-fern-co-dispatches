@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Thu, 01 Oct 2026 13:03:21 +0000</lastBuildDate>
+  <lastBuildDate>Sat, 03 Oct 2026 13:01:11 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for October 3, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-10-03-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-10-03-transcript.html</guid>
+    <pubDate>Sat, 03 Oct 2026 00:00:00 +0000</pubDate>
+    <description>Palestinians gather for football amid Gaza's ruins. Displaced Palestinians gathered to watch a friendly football match in Gaza's Khan Younis. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-10-03.mp3" length="1281792" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for October 1, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-10-01-transcript.html</link>

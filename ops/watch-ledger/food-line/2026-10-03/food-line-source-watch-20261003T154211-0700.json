@@ -1,0 +1,19 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261003T154211-0700",
+  "scheduled_for": "2026-10-03T15:42:11-07:00",
+  "started_at": "2026-10-03T15:42:11-07:00",
+  "completed_at": "2026-10-03T15:43:37-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "date_from": "2026-10-03T12:44:37-07:00",
+    "date_to": "2026-10-03T15:43:37-07:00",
+    "edition_date": "2026-10-03",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 12 bounded targeted web searches across the four recall miss classes. No search/tool failures. No new qualifying U.S. food-access disruption was identified in the window. Excluded stale/older sole-grocery closures and fire losses, routine promotion/resource coverage, disaster-response items without a documented access interruption, and an Oct. 2 Hawaii DHS SNAP replacement-benefit notice that predates the window and addresses anticipated food spoilage rather than an interruption of SNAP access."
+}

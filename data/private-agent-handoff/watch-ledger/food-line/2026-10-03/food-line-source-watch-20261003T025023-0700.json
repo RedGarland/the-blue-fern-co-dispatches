@@ -1,0 +1,37 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261003T025023-0700",
+  "scheduled_for": "2026-10-03T02:50:23-07:00",
+  "started_at": "2026-10-03T02:50:23-07:00",
+  "completed_at": "2026-10-03T02:51:05-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-03T01:50:23-07:00",
+    "end": "2026-10-03T02:51:05-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "scope": [
+      "only/sole/last/full-service grocery-store loss, closure, fire, disaster, or outage",
+      "emergency food-distribution cancellation/suspension from storm, flood, fire, outage, or facility damage",
+      "abrupt pantry/food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "result": "No new qualifying U.S. food-access disruption was identified in the bounded window. Returned items were stale, outside the observation window, or excluded routine/background material such as SNAP COLA/policy coverage and non-food-access storm information.",
+    "exclusions_applied": [
+      "donation drives",
+      "resource guides",
+      "recipes",
+      "opinion",
+      "routine program promotion",
+      "generic inflation stories",
+      "duplicates",
+      "items outside the observation window"
+    ]
+  }
+}

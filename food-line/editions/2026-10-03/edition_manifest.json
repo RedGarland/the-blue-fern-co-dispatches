@@ -1,0 +1,69 @@
+{
+    "dispatch_slug":  "food-line",
+    "dispatch_name":  "Food Line Dispatch",
+    "edition_date":  "2026-10-03",
+    "generated_at":  "2026-10-03T18:34:46.239861+00:00",
+    "generator_source_commit":  "5753864c30dcd10828cb2d54a9b1ef2014b88dd7",
+    "generation_mode":  "approved_current_review_proposal",
+    "source_count":  1,
+    "story_count":  1,
+    "source_adequacy":  {
+                            "status":  "limited",
+                            "label":  "Limited / sparse source day",
+                            "source_count":  1,
+                            "source_families":  [
+                                                    "local_news"
+                                                ],
+                            "local_signal_count":  1,
+                            "state_signal_count":  0,
+                            "national_context_count":  1
+                        },
+    "lead_source_record_id":  "food_line_source_e8cb2565d4bdf80a",
+    "lead_source_canonical_url":  "https://www.orlandosentinel.com/2026/10/03/central-florida-families-struggle-to-buy-groceries-after-losing-food-stamps",
+    "previous_edition_date":  "2026-10-02",
+    "primary_signal_status":  "new_primary",
+    "public_rendered":  true,
+    "public_signal_count":  1,
+    "qualified_primary_count":  1,
+    "claim_count":  1,
+    "claim_ledger_path":  "/food-line/editions/2026-10-03/claim_ledger.html",
+    "source_table_path":  "/food-line/editions/2026-10-03/source_table.html",
+    "edition_mode":  "current_update",
+    "validation_status":  "ok",
+    "approved_proposal_path":  "data/dispatches/food-line/review/proposed-editions/2026-10-03.json",
+    "approved_proposal_sha256":  "875975f055e3e2b5c45356abdcd03927df80c1e1b4714f644021b5cbf573ece5",
+    "review_queue_path":  "status/food-line/runtime/current-signal-review.json",
+    "review_queue_sha256":  "ed6e1e5b63a714fe2d0008e40cc0f716c8fc1dd89af9511123ecf5b4eaf02f9e",
+    "approved_item_provenance":  [
+                                     {
+                                         "review_item_id":  "finding_404e036b54dda630f21c489c",
+                                         "finding_id":  "finding_404e036b54dda630f21c489c",
+                                         "editorial_decision":  "approve_with_edit",
+                                         "decision_operator":  "codex-user-approved-publication-2026-10-03",
+                                         "decision_timestamp":  "2026-10-03T18:31:28Z",
+                                         "source_url":  "https://www.orlandosentinel.com/2026/10/03/central-florida-families-struggle-to-buy-groceries-after-losing-food-stamps",
+                                         "canonical_source_url":  "https://www.orlandosentinel.com/2026/10/03/central-florida-families-struggle-to-buy-groceries-after-losing-food-stamps",
+                                         "source_published_at":  "2026-10-03"
+                                     }
+                                 ],
+    "pages_status":  "not_synced",
+    "bluesky_status":  "not_posted",
+    "audio_status":  "not_generated",
+    "map_status":  "not_published",
+    "podcast_status":  "not_generated",
+    "schedule_status":  "not_changed",
+    "public_url":  "https://dispatches.thebluefernco.com/food-line/editions/2026-10-03/",
+    "bluesky_post_text":  null,
+    "bluesky_post_ready":  false,
+    "publication_status":  "approved_for_publication",
+    "publication_approval":  true,
+    "publication_eligible":  true,
+    "source_freshness_status":  "passed",
+    "freshness_window_days":  3,
+    "stale_public_story_count":  0,
+    "excluded_stale_source_count":  0,
+    "stale_source_ids":  [
+
+                         ],
+    "audio_requested":  false
+}

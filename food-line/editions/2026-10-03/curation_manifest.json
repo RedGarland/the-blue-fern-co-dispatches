@@ -1,0 +1,61 @@
+{
+  "stories": [
+    {
+      "source_record_id": "food_line_source_e8cb2565d4bdf80a",
+      "title": "Central Florida families struggle to buy groceries after losing food stamps",
+      "url": "https://www.orlandosentinel.com/2026/10/03/central-florida-families-struggle-to-buy-groceries-after-losing-food-stamps",
+      "canonical_source_url": "https://www.orlandosentinel.com/2026/10/03/central-florida-families-struggle-to-buy-groceries-after-losing-food-stamps",
+      "publisher": "Orlando Sentinel",
+      "published_at": "2026-10-03",
+      "source_published_date": "2026-10-03",
+      "retrieved_at": "2026-10-03T18:31:28Z",
+      "summary_or_snippet": "Orlando Sentinel reported that some Central Florida families were struggling to buy groceries after losing food-stamp benefits.",
+      "pressure_summary": "Orlando Sentinel reported that some Central Florida families were struggling to buy groceries after losing food-stamp benefits.",
+      "approved_public_summary": "Orlando Sentinel reported that some Central Florida families were struggling to buy groceries after losing food-stamp benefits.",
+      "approved_why_it_matters": "The captured/source-visible evidence directly concerns household grocery hardship after food-stamp benefit loss.",
+      "approved_uncertainty_note": "Use only captured/source-visible facts; do not add broad SNAP policy claims beyond the reported Central Florida grocery hardship after benefit loss.",
+      "evidence_text": "Central Florida families struggle to buy groceries after losing food stamps - Orlando Sentinel <a href=\"https://news.google.com/rss/articles/CBMiuwFBVV95cUxQRmI4Rml2Nml0M0dOTmVCQzNzS1RJV3hPdjdRSU5uQ2hCSGlabzE1YUdwN0dRVWVIQXI3LTdFSkJFSVJiY1VLV0wwZFM4aFNhOXhSSjlXOUZjM3hTd1A2S25zeTJvWTFfYjd2bVpiR21WdUR4LTNHYl9samp2d2Q1cnlTc1NLQXBOckl3bm1tZUl2UE0waE8ydGFGRXFSdm9rYjFuSkhtN0dHTkYtQnh2R2pqTmhmV0dqaEJB?oc=5\" target=\"_blank\">Central Florida families struggle to buy groceries after losing food stamps</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">Orlando Sentinel</font> Orlando Sentinel Central Florida families struggle to buy groceries after losing food stamps The Trump administration's Big Beautiful Bill has lead to cuts to the federal food stamp program, leaving some Floridians without benefits and putting the state on the hook for massive bills. Central Florida families struggle after losing food stamps Skip to content All Sections Subscribe Now Saturday, October 3rd 2026 Daily e-Edition Evening e-Edition Home Page Daily e-Edition Evening e-Edition News News Latest Headlines Politics Education National News Local News Local News Lake County Orange County Osceola County Seminole County Health Healt",
+      "exact_supporting_passage": "Central Florida families struggle to buy groceries after losing food stamps - Orlando Sentinel <a href=\"https://news.google.com/rss/articles/CBMiuwFBVV95cUxQRmI4Rml2Nml0M0dOTmVCQzNzS1RJV3hPdjdRSU5uQ2hCSGlabzE1YUdwN0dRVWVIQXI3LTdFSkJFSVJiY1VLV0wwZFM4aFNhOXhSSjlXOUZjM3hTd1A2S25zeTJvWTFfYjd2bVpiR21WdUR4LTNHYl9samp2d2Q1cnlTc1NLQXBOckl3bm1tZUl2UE0waE8ydGFGRXFSdm9rYjFuSkhtN0dHTkYtQnh2R2pqTmhmV0dqaEJB?oc=5\" target=\"_blank\">Central Florida families struggle to buy groceries after losing food stamps</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">Orlando Sentinel</font> Orlando Sentinel Central Florida families struggle to buy groceries after losing food stamps The Trump administration's Big Beautiful Bill has lead to cuts to the federal food stamp program, leaving some Floridians without benefits and putting the state on the hook for massive bills. Central Florida families struggle after losing food stamps Skip to content All Sections Subscribe Now Saturday, October 3rd 2026 Daily e-Edition Evening e-Edition Home Page Daily e-Edition Evening e-Edition News News Latest Headlines Politics Education National News Local News Local News Lake County Orange County Osceola County Seminole County Health Healt",
+      "evidence_text_basis": "operator_reviewed_exact_passage",
+      "evidence_level": "direct reporting",
+      "confidence": "medium",
+      "pressure_signal": true,
+      "pressure_verification_status": "source_text_verified",
+      "pressure_type": "household_hardship",
+      "pressure_reason": "approved current-review source documents a food-access pressure signal",
+      "pressure_match_terms": [
+        "pantry",
+        "closed",
+        "distributed"
+      ],
+      "source_role": "local_signal",
+      "source_family": "local_news",
+      "source_type": "approved_proposal",
+      "source_purpose": "current_news",
+      "collector_source_type": "manual_review",
+      "location_name": "national",
+      "state": "US",
+      "location_scope": "local",
+      "affected_groups": [
+        "low-income households"
+      ],
+      "supported_product_geography": true,
+      "source_public_story_eligible": true,
+      "freshness_status": "current",
+      "source_freshness_status": "current",
+      "source_freshness_date_basis": "source_published_at",
+      "freshness_role": "current",
+      "primary_eligible": true,
+      "qualifies_for_public_inclusion": true,
+      "public_inclusion_reason": "",
+      "public_inclusion_bucket": "included_as_lead",
+      "included": true,
+      "included_as_lead": true,
+      "review_status": "approved",
+      "traceability_status": "traceable",
+      "public_claim_eligible": true,
+      "public_claim_blockers": [],
+      "map_eligible": false
+    }
+  ]
+}

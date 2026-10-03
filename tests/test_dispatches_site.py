@@ -3643,6 +3643,96 @@ def test_generated_gaza_index_recent_editions_do_not_duplicate_date_links(tmp_pa
     assert not re.search(r"(20\d{2}-\d{2}-\d{2})\1", compact_recent_text)
 
 
+def test_gaza_archive_groups_entries_by_month_and_highlights_latest(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    add_gaza_public_history_surface(site_root, ["2026-10-01", "2026-09-30"])
+    add_gaza_site_edition(site_root, "2026-10-01")
+    add_gaza_site_edition(site_root, "2026-09-30")
+    add_gaza_no_update_status(site_root, "2026-09-29", source_count=7)
+    add_gaza_historical_catchup_publication(
+        site_root,
+        catchup_id="gaza-historical-catchup-2026-09-30",
+        publication_date="2026-09-30",
+    )
+    dispatch = DispatchConfig(
+        slug="gaza",
+        name="Dispatches From Gaza",
+        edition_date="2026-10-01",
+        tagline="Daily briefing",
+        logo="gaza-logo.png",
+        sources=[],
+        stories=[],
+        detail_artifacts=[],
+    )
+
+    archive_html = generator.render_archive_for_dates(
+        dispatch,
+        ["2026-10-01", "2026-09-30"],
+        site_root,
+    )
+
+    assert '<section class="archive-latest"' in archive_html
+    assert "<h2>October 2026</h2>" in archive_html
+    assert "<h2>September 2026</h2>" in archive_html
+    assert archive_html.index("<h2>October 2026</h2>") < archive_html.index("<h2>September 2026</h2>")
+    assert '<li class="archive-row archive-row--daily"><span class="edition-date">2026-09-30</span><a href="editions/2026-09-30/">Daily briefing</a>' in archive_html
+    assert '<li class="archive-row archive-row--catchup"><span class="edition-date">2026-09-30</span><a href="catchups/gaza-historical-catchup-2026-09-30/">Recovered Gaza development</a><span class="archive-row-note">Historical catch-up</span></li>' in archive_html
+
+
+def test_gaza_archive_compact_no_update_rows_are_not_edition_links(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    add_gaza_public_history_surface(site_root, ["2026-09-30"])
+    add_gaza_site_edition(site_root, "2026-09-30")
+    add_gaza_no_update_status(site_root, "2026-10-01", source_count=6)
+    dispatch = DispatchConfig(
+        slug="gaza",
+        name="Dispatches From Gaza",
+        edition_date="2026-10-01",
+        tagline="Daily briefing",
+        logo="gaza-logo.png",
+        sources=[],
+        stories=[],
+        detail_artifacts=[],
+    )
+
+    archive_html = generator.render_archive_for_dates(dispatch, ["2026-09-30"], site_root)
+
+    assert '<li class="archive-row archive-row--no-update"><span class="edition-date">2026-10-01</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">6 sources checked</span></li>' in archive_html
+    assert 'href="editions/2026-10-01/"' not in archive_html
+    assert "No new source-backed Gaza update met publication threshold today." not in archive_html
+
+
+def test_gaza_archive_edition_links_have_local_targets(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    add_gaza_public_history_surface(site_root, ["2026-10-01", "2026-09-30"])
+    add_gaza_site_edition(site_root, "2026-10-01")
+    add_gaza_site_edition(site_root, "2026-09-30")
+    add_gaza_no_update_status(site_root, "2026-09-29", source_count=3)
+    dispatch = DispatchConfig(
+        slug="gaza",
+        name="Dispatches From Gaza",
+        edition_date="2026-10-01",
+        tagline="Daily briefing",
+        logo="gaza-logo.png",
+        sources=[],
+        stories=[],
+        detail_artifacts=[],
+    )
+
+    archive_html = generator.render_archive_for_dates(
+        dispatch,
+        ["2026-10-01", "2026-09-30"],
+        site_root,
+    )
+    linked_dates = re.findall(r'href="editions/(\d{4}-\d{2}-\d{2})/"', archive_html)
+
+    assert linked_dates == ["2026-10-01", "2026-10-01", "2026-09-30"]
+    for linked_date in linked_dates:
+        assert (site_root / "gaza" / "editions" / linked_date / "index.html").exists()
+    assert "2026-09-29" in archive_html
+    assert "2026-09-29" not in linked_dates
+
+
 def test_gaza_pages_history_still_rejects_malformed_edition(tmp_path: Path):
     site_root = tmp_path / "output" / "site"
     pages_root = tmp_path / "bluefern-dispatches-pages"
@@ -3696,7 +3786,7 @@ def test_gaza_no_update_beats_stale_local_same_day_edition_residue(tmp_path: Pat
     assert dates == ["2026-09-24"]
     assert 'href="editions/2026-09-24/">Read the latest briefing</a>' in index_html
     assert "2026-09-25" in index_html
-    assert "No update" in index_html
+    assert "No qualifying update" in index_html
     assert "5 source records checked." in index_html
     assert 'href="editions/2026-09-25/"' not in index_html
     assert 'href="editions/2026-09-25/"' not in archive_html
@@ -3745,7 +3835,7 @@ def test_gaza_committed_pages_edition_may_supersede_same_day_no_update(tmp_path:
 
     assert dates == ["2026-09-25", "2026-09-24"]
     assert 'href="editions/2026-09-25/">Read the latest briefing</a>' in index_html
-    assert "No update" not in index_html
+    assert "No qualifying update" not in index_html
 
 
 def test_gaza_unpushed_pages_commit_cannot_supersede_same_day_no_update(tmp_path: Path):

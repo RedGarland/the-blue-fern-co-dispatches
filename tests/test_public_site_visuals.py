@@ -35,6 +35,11 @@ html, body { margin: 0; font-family: Georgia, serif; background: var(--bf-backgr
 .text-link, .support-link { font: 700 0.82rem/1.2 system-ui, sans-serif; }
 .support-link { color: var(--muted); }
 .hero-logo { display: block; width: 260px; height: 160px; object-fit: contain; }
+.archive--gaza .hero { min-height: 0; padding: 8px 48px 6px; }
+.archive--gaza .hero-logo { width: 180px; height: 100px; object-fit: contain; }
+.archive-latest { margin: 14px 0; padding: 14px; border: 1px solid var(--line); }
+.archive-month { margin: 16px 0; }
+.archive-list .archive-row { display: grid; grid-template-columns: 8rem 1fr auto; padding: 8px 0; border-top: 1px solid var(--line); }
 .food-line-hero { display: grid; place-items: center; padding: 40px; min-height: 220px; }
 .food-line-logo--edition, .food-line-logo--home { width: 260px; height: 120px; object-fit: contain; }
 .food-line-source-card { border: 1px solid #c5d2d0; border-radius: 8px; padding: 18px; margin: 20px 0; }
@@ -103,6 +108,20 @@ def _dispatch_logo_html(title: str) -> str:
     return f'<!doctype html><html><head><link rel="stylesheet" href="/assets/site.css"></head><body><main class="home"><section class="hero"><img class="hero-logo" src="/assets/food-line-logo.png" alt="{title}"></section><h2>Latest Briefing</h2><p><a href="editions/2026-10-01/">Read latest</a></p></main></body></html>'
 
 
+def _gaza_archive_html() -> str:
+    return """<!doctype html><html><head><link rel="stylesheet" href="/assets/site.css"><title>Gaza Archive</title></head>
+<body><main class="archive archive--gaza"><section class="hero"><img class="hero-logo" src="/assets/food-line-logo.png" alt="Dispatches From Gaza"></section>
+<p class="eyebrow">Archive</p><h1>Edition Archive</h1>
+<section class="archive-latest" aria-label="Latest archive entry"><p class="eyebrow">Latest entry</p><p class="archive-latest-date">2026-10-01</p><h2>Daily briefing</h2><p>Daily Gaza briefing</p><a class="button" href="editions/2026-10-01/">Read latest</a></section>
+<section class="archive-month"><h2>October 2026</h2><ul class="edition-list archive-list">
+<li class="archive-row archive-row--daily"><span class="edition-date">2026-10-01</span><a href="editions/2026-10-01/">Daily briefing</a></li>
+</ul></section>
+<section class="archive-month"><h2>September 2026</h2><ul class="edition-list archive-list">
+<li class="archive-row archive-row--no-update"><span class="edition-date">2026-09-30</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">22 sources checked</span></li>
+</ul></section>
+</main></body></html>"""
+
+
 def _make_pages_root(tmp_path: Path, *, css: str = GOOD_CSS, story_count: int = 2, source_yes_count: int = 2, oversized_logo: bool = False) -> Path:
     root = tmp_path / "pages"
     if css:
@@ -116,6 +135,7 @@ def _make_pages_root(tmp_path: Path, *, css: str = GOOD_CSS, story_count: int = 
     _write(food_edition / "source_table.html", _source_table_html(yes_count=source_yes_count))
     _write(food_edition / "edition_manifest.json", '{"story_count": 2, "source_count": 2}')
     _write(root / "gaza" / "index.html", _simple_dispatch_html("Dispatches From Gaza"))
+    _write(root / "gaza" / "archive.html", _gaza_archive_html())
     _write(root / "care-line" / "index.html", _simple_dispatch_html("The Care Line Dispatch"))
     return root
 
@@ -251,6 +271,18 @@ def test_gaza_recent_editions_jammed_no_update_date_text_fails(tmp_path: Path) -
 
     assert result["ok"] is False
     assert "gaza_recent_duplicate_date_link" in _issue_checks(result)
+
+
+def test_gaza_archive_logo_splash_or_rows_below_viewport_fails(tmp_path: Path) -> None:
+    css = GOOD_CSS + "\n.archive--gaza .hero-logo { width: 540px; height: 360px; }\n.archive-latest { margin-top: 520px; }\n.archive-month { margin-top: 640px; }\n"
+    root = _make_pages_root(tmp_path, css=css)
+
+    result = validate_public_site_visuals(root)
+
+    assert result["ok"] is False
+    checks = _issue_checks(result)
+    assert "gaza_archive_logo_size" in checks
+    assert "gaza_archive_first_viewport" in checks
 
 
 def test_product_landing_oversized_logo_fails(tmp_path: Path) -> None:

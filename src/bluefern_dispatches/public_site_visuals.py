@@ -113,6 +113,8 @@ def _expected_food_story_count(food_edition_dir: Path) -> int:
 
 def _required_paths(pages_root: Path) -> list[str]:
     paths = ["/", "/dispatches/", "/food-line/", _find_latest_food_path(pages_root), "/gaza/"]
+    if (pages_root / "gaza" / "archive.html").exists():
+        paths.append("/gaza/archive.html")
     if (pages_root / "care-line" / "index.html").exists():
         paths.append("/care-line/")
     return paths
@@ -427,6 +429,13 @@ def _visual_checks_with_playwright(
                             foodHero: box('.food-line-hero'),
                             foodLogo: box('.food-line-logo--edition, .food-line-logo--home, .hero-logo'),
                             productLogo: box('.home .hero-logo, .briefing .hero-logo, .food-line-logo--home, .food-line-logo--edition'),
+                            gazaArchiveLatest: box('.archive--gaza .archive-latest'),
+                            gazaArchiveFirstMonth: box('.archive--gaza .archive-month'),
+                            gazaArchiveFirstRow: box('.archive--gaza .archive-list .archive-row'),
+                            gazaArchiveHeroLogo: box('.archive--gaza .hero-logo'),
+                            gazaArchiveMonthCount: document.querySelectorAll('.archive--gaza .archive-month').length,
+                            gazaArchiveRowCount: document.querySelectorAll('.archive--gaza .archive-list .archive-row').length,
+                            gazaArchiveNoUpdateCount: document.querySelectorAll('.archive--gaza .archive-row--no-update').length,
                             foodStoryCardCount: document.querySelectorAll('article.food-line-source-card').length,
                             gazaRecentEditionTexts: Array.from(document.querySelectorAll('.edition-list > li')).map((item) => item.textContent ? item.textContent.replace(/\\s+/g, '') : ''),
                             bodyText: document.body ? document.body.innerText : ''
@@ -537,6 +546,25 @@ def _visual_checks_with_playwright(
                                     )
                                 )
                                 break
+                    if path == "/gaza/archive.html":
+                        logo = metrics.get("gazaArchiveHeroLogo") or {}
+                        latest = metrics.get("gazaArchiveLatest") or {}
+                        month = metrics.get("gazaArchiveFirstMonth") or {}
+                        first_row = metrics.get("gazaArchiveFirstRow") or {}
+                        if logo and float(logo.get("width") or 0) > 220:
+                            issues.append(VisualIssue(path, "gaza_archive_logo_size", f"Gaza archive logo is too wide: {logo.get('width')}px"))
+                        if not latest:
+                            issues.append(VisualIssue(path, "gaza_archive_latest", "Gaza archive latest-entry block was not found"))
+                        elif float(latest.get("y") or 9999) > 420:
+                            issues.append(VisualIssue(path, "gaza_archive_latest", f"Gaza archive latest-entry block starts too low: y={latest.get('y')}"))
+                        if int(metrics.get("gazaArchiveMonthCount") or 0) < 1:
+                            issues.append(VisualIssue(path, "gaza_archive_months", "Gaza archive month grouping was not found"))
+                        if int(metrics.get("gazaArchiveRowCount") or 0) < 1:
+                            issues.append(VisualIssue(path, "gaza_archive_rows", "Gaza archive rows were not found"))
+                        if month and float(month.get("y") or 9999) > 760:
+                            issues.append(VisualIssue(path, "gaza_archive_first_viewport", f"Gaza archive month grouping starts below first viewport: y={month.get('y')}"))
+                        if first_row and float(first_row.get("y") or 9999) > 860:
+                            issues.append(VisualIssue(path, "gaza_archive_first_viewport", f"Gaza archive rows start below first viewport: y={first_row.get('y')}"))
             finally:
                 browser.close()
 

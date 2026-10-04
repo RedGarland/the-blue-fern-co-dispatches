@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261004T134451-0700",
+  "scheduled_for": "2026-10-04T13:44:51-07:00",
+  "started_at": "2026-10-04T13:44:40-07:00",
+  "completed_at": "2026-10-04T13:46:10-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-04T12:44:51-07:00",
+    "end": "2026-10-04T13:44:51-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt_checked_first": true,
+    "who_checked_second": true,
+    "additional_targeted_searches": 12,
+    "ocha_result": "No new in-window OCHA OPT operational update surfaced; freshest targeted result was the 18 September 2026 Humanitarian Situation Report.",
+    "who_result": "No new in-window WHO Gaza operational update surfaced.",
+    "additional_coverage": "Targeted searches covered Reuters, AP, WAFA, UNRWA, UNICEF, ICRC, PRCS, crossings/aid/fuel, ceasefire/hostages/detainees, military operations with civilian impact, food/water access, and hospital/medical-evacuation capacity.",
+    "exclusions": "October 4 Deir al-Balah civilian-vehicle strike resurfaced but was already captured by an earlier hourly watch and excluded as duplicate/recycled. Older or non-Gaza results were excluded. No unsupported social claims or opinion were used.",
+    "material_search_failures": []
+  }
+}

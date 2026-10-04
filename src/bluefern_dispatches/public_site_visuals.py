@@ -684,6 +684,7 @@ def validate_public_site_visuals(
     pages_root: Path,
     *,
     screenshot_dir: Path | None = None,
+    paths: list[str] | None = None,
 ) -> dict[str, Any]:
     pages_root = pages_root.resolve()
     if not pages_root.exists():
@@ -691,13 +692,13 @@ def validate_public_site_visuals(
     issues: list[VisualIssue] = []
     _assert_css_tokens(pages_root, issues)
     html_metrics = _assert_html_basics(pages_root, issues)
-    paths = _required_paths(pages_root)
-    pages = _visual_checks_with_playwright(pages_root, paths, screenshot_dir, issues)
+    paths_to_check = paths or _required_paths(pages_root)
+    pages = _visual_checks_with_playwright(pages_root, paths_to_check, screenshot_dir, issues)
     screenshots = [page.screenshot for page in pages if page.screenshot]
     return {
         "ok": not issues,
         "pages_root": str(pages_root),
-        "paths_checked": paths,
+        "paths_checked": paths_to_check,
         "html_metrics": html_metrics,
         "pages": [asdict(page) for page in pages],
         "screenshots": screenshots,
@@ -710,6 +711,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Validate rendered Dispatches public Pages surfaces.")
     parser.add_argument("--pages-root", type=Path, default=Path("bluefern-dispatches-pages"), help="Local Pages checkout/static root to validate.")
     parser.add_argument("--screenshot-dir", type=Path, help="Optional directory for first-viewport review screenshots.")
+    parser.add_argument("--path", action="append", dest="paths", help="Route path to validate. Repeat to scope validation; defaults to required public routes.")
     parser.add_argument("--json", action="store_true", help="Print machine-readable JSON.")
     return parser
 
@@ -717,7 +719,7 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
-        result = validate_public_site_visuals(args.pages_root, screenshot_dir=args.screenshot_dir)
+        result = validate_public_site_visuals(args.pages_root, screenshot_dir=args.screenshot_dir, paths=args.paths)
     except Exception as exc:
         result = {"ok": False, "error": str(exc), "issues": [{"page": "", "check": "exception", "message": str(exc)}]}
     if args.json:

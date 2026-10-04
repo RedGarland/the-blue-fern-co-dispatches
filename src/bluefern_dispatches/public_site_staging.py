@@ -10,7 +10,14 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import unquote, urlparse
 
-from bluefern_dispatches.generator import DispatchConfig, render_archive_for_dates, render_dispatch_index_for_dates
+from bluefern_dispatches.generator import (
+    DispatchConfig,
+    briefing_presentation_for_edition,
+    render_archive_for_dates,
+    render_briefing_archive_row,
+    render_briefing_list_item,
+    render_dispatch_index_for_dates,
+)
 from bluefern_dispatches.public_site_visuals import validate_public_site_visuals
 from bluefern_dispatches.root_homepage import (
     discover_public_releases,
@@ -293,25 +300,24 @@ def _refresh_food_line_surfaces(stage_root: Path) -> None:
     if not dates:
         return
     latest = dates[0]
-    latest_title = _food_title(stage_root, latest)
+    dispatch = DispatchConfig(
+        slug="food-line",
+        name="Food Line Dispatch",
+        edition_date=latest,
+        tagline="Source-backed food access pressure briefing.",
+        logo="food-line-logo.png",
+        sources=[],
+        stories=[],
+        detail_artifacts=[],
+    )
+    latest_row = briefing_presentation_for_edition(stage_root, dispatch, latest)
+    latest_title = latest_row.title
     recent_items = []
     archive_items = []
     for edition_date in dates:
-        title = _food_title(stage_root, edition_date)
-        count = _food_story_count(stage_root, edition_date)
-        development = "development" if count == 1 else "developments"
-        recent_items.append(
-            '<li>'
-            f'<div class="food-line-edition-meta">{html.escape(edition_date)}</div>'
-            f'<a class="food-line-recent-title" href="editions/{html.escape(edition_date)}/">{html.escape(title)}</a>'
-            f'<div class="food-line-edition-meta">{count} source-backed {development}</div>'
-            '</li>'
-        )
-        archive_items.append(
-            f'<li><span class="edition-date">{html.escape(edition_date)}</span>'
-            f'<a href="editions/{html.escape(edition_date)}/">{html.escape(title)}</a>'
-            f'<br><small>{count} source-backed {development}</small></li>'
-        )
+        row = briefing_presentation_for_edition(stage_root, dispatch, edition_date)
+        recent_items.append(render_briefing_list_item(row))
+        archive_items.append(render_briefing_archive_row(row))
     recent_html = "".join(recent_items[1:9])
     archive_html = "".join(archive_items)
     mission = (

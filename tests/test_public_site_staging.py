@@ -167,11 +167,11 @@ def test_public_site_staging_renders_gaza_archive_through_max_runner_date(tmp_pa
     checks_list = gaza_index.split('<ul class="edition-list gaza-check-list">', 1)[1].split("</ul>", 1)[0]
     assert '<article class="gaza-latest-card">' in latest_section
     assert '<p class="edition-date">2026-10-01</p>' in latest_section
-    assert "<h3>Daily briefing</h3>" in latest_section
+    assert "<h3>Gaza daily briefing</h3>" in latest_section
     assert 'href="editions/2026-10-01/">Read briefing</a>' in latest_section
     assert "Read the latest readable update" not in latest_section
     assert "No qualifying update" not in latest_section
-    assert 'href="editions/2026-10-01/">2026-10-01</a>' in readable_list
+    assert 'href="editions/2026-10-01/">Gaza daily briefing</a>' in readable_list
     assert "2026-10-02" not in readable_list
     assert '<span class="edition-date">2026-10-02</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">22 sources checked</span>' in checks_list
     assert checks_list.count('class="no-update-check"') <= 3

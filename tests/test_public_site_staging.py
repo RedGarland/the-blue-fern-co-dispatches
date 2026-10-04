@@ -95,7 +95,8 @@ def _make_care_runner(root: Path) -> Path:
     site = root / "output" / "site"
     _write(
         site / "care-line" / "index.html",
-        '<link rel="stylesheet" href="/assets/site.css"><img src="assets/bluefern.png" alt="The Blue Fern Co."><a href="editions/2026-09-30/">Latest Care</a>',
+        '<link rel="stylesheet" href="/assets/site.css"><img src="assets/bluefern.png" alt="The Blue Fern Co.">'
+        '<img src="care-line/assets/care-line-logo.png" alt="The Care Line Dispatch"><a href="editions/2026-09-30/">Latest Care</a>',
     )
     _write_public_edition(site, "care-line", "2026-09-30", "Care Line public access briefing")
     return root
@@ -130,9 +131,15 @@ def test_public_site_staging_builds_release_faithful_required_routes(tmp_path: P
     ):
         assert (stage / relative).exists(), relative
     assert (stage / "assets" / "site.css").read_text(encoding="utf-8") == "body { background: current; }"
+    assert (stage / "assets" / "bluefern.png").exists()
+    assert (stage / "food-line" / "assets" / "bluefern.png").exists()
+    assert (stage / "care-line" / "assets" / "care-line-logo.png").exists()
     assert "stale Gaza copied from Food runner" not in (stage / "gaza" / "index.html").read_text(encoding="utf-8")
     assert "stale Care copied from Food runner" not in (stage / "care-line" / "index.html").read_text(encoding="utf-8")
-    assert 'src="/assets/bluefern.png"' in (stage / "care-line" / "index.html").read_text(encoding="utf-8")
+    care_index = (stage / "care-line" / "index.html").read_text(encoding="utf-8")
+    assert 'src="/assets/bluefern.png"' in care_index
+    assert 'src="assets/care-line-logo.png"' in care_index
+    assert 'src="care-line/assets/care-line-logo.png"' not in care_index
 
 
 def test_public_site_staging_renders_gaza_archive_through_max_runner_date(tmp_path: Path) -> None:

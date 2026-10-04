@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import os
 import re
 import shutil
 from datetime import date
@@ -177,14 +178,28 @@ def _prune_gaza_no_update_markers_after(stage_root: Path, max_gaza_date: str | N
             shutil.move(str(path), str(overflow_root / path.name))
 
 
-def _normalize_shared_asset_references(stage_root: Path) -> None:
+def _relative_asset_url(from_dir: Path, target: Path) -> str:
+    return os.path.relpath(target, from_dir).replace(os.sep, "/")
+
+
+def _normalize_asset_references(stage_root: Path) -> None:
     for html_path in stage_root.rglob("*.html"):
         text = html_path.read_text(encoding="utf-8", errors="replace")
         updated = re.sub(
-            r'src="(?:\.\./){0,6}assets/bluefern\.png"',
+            r'\bsrc=(["\'])(?:\.\./){0,6}assets/bluefern\.png\1',
             'src="/assets/bluefern.png"',
             text,
         )
+        for dispatch, logo in REQUIRED_DISPATCH_LOGOS.items():
+            dispatch_root = stage_root / dispatch
+            if html_path.parent != dispatch_root and dispatch_root not in html_path.parents:
+                continue
+            replacement = f'src="{_relative_asset_url(html_path.parent, dispatch_root / "assets" / logo)}"'
+            updated = re.sub(
+                rf'\bsrc=(["\'])(?:(?:\./)|(?:(?:\.\./)+))?{re.escape(dispatch)}/assets/{re.escape(logo)}\1',
+                replacement,
+                updated,
+            )
         if updated != text:
             html_path.write_text(updated, encoding="utf-8")
 
@@ -443,7 +458,7 @@ def stage_public_site_preview(
     _refresh_food_line_surfaces(stage_root)
     _render_gaza_surfaces(stage_root, max_gaza_date=max_gaza_date)
     _refresh_shared_surfaces(stage_root)
-    _normalize_shared_asset_references(stage_root)
+    _normalize_asset_references(stage_root)
     latest_food = next(iter(_dated_dirs(stage_root / "food-line" / "editions")), None)
 
     routes = [

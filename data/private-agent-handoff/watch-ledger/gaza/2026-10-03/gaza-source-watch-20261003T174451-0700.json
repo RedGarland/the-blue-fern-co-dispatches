@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261003T174451-0700",
+  "scheduled_for": "2026-10-03T17:44:51-07:00",
+  "started_at": "2026-10-03T17:49:31-07:00",
+  "completed_at": "2026-10-03T17:50:20-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-03T16:48:41-07:00",
+    "end": "2026-10-03T17:50:20-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      "OCHA OPT checked first; no new in-window Gaza-specific humanitarian update surfaced. The newest surfaced OCHA Gaza-relevant situation report remained dated 25 September 2026.",
+      "WHO checked second; no new in-window Gaza-specific operational update surfaced. The newest surfaced Gaza-specific WHO item remained dated 24 September 2026."
+    ],
+    "additional_targeted_searches_used": 12,
+    "additional_targeted_searches_limit": 12,
+    "degraded_searches": [],
+    "assessment": "No distinct qualifying development was verified since the prior completed hourly check at 16:48:41 PT. Targeted searches covered Reuters, AP, WAFA, PRCS, UNRWA, UNICEF, ICRC, MSF, crossings/aid/fuel, ceasefire/hostages, IDF, and COGAT. An AP report updated at 17:18 PT repeated the already captured overnight Gaza City strike that killed five people and an earlier IDF claim concerning Ali Ahmed Al-Amoudi; both were excluded as duplicates/out-of-window follow-up rather than new developments. Opinion, unsupported social claims, recycled items, duplicates, and unsourced claims were excluded."
+  }
+}

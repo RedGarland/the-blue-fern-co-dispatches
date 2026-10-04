@@ -1,0 +1,30 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261003T184451-0700",
+  "scheduled_for": "2026-10-03T18:44:51-07:00",
+  "started_at": "2026-10-03T18:42:57-07:00",
+  "completed_at": "2026-10-03T18:44:57-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-03T17:50:20-07:00",
+    "end": "2026-10-03T18:44:57-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      "OCHA OPT checked first; no new in-window Gaza-specific humanitarian update surfaced. The newest surfaced OCHA Gaza-relevant situation report remained dated 25 September 2026.",
+      "WHO checked second; no new in-window Gaza-specific operational update surfaced."
+    ],
+    "additional_targeted_searches_used": 12,
+    "additional_targeted_searches_limit": 12,
+    "degraded_searches": [
+      "UN News targeted retrieval was blocked by robots.txt.",
+      "BBC targeted retrieval was blocked by robots.txt."
+    ],
+    "assessment": "No distinct qualifying development was verified since the prior watch coverage ended at 17:50:20 PT. The 12 targeted searches covered UNRWA, WFP, UNICEF, ICRC, PRCS, UN News, AP, Reuters, BBC, WAFA, IDF, and ReliefWeb. AP surfaced the already-captured October 3 Gaza City strike that killed five people, and Reuters surfaced the same incident; both were excluded as duplicates. Opinion, unsupported social claims, recycled items, duplicates, and unsourced claims were excluded. Remaining official and established-source coverage was usable despite the two robots.txt blocks."
+  }
+}

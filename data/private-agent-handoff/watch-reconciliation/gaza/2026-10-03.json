@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_reconciliation.v1",
+  "dispatch": "gaza",
+  "observation_date": "2026-10-03",
+  "generated_at": "2026-10-04T06:37:18Z",
+  "watch_ledger_ref": "ops/watch-ledger",
+  "protected_source_ref": "add/pages-repo-default",
+  "run_count": 14,
+  "success_run_count": 7,
+  "degraded_run_count": 7,
+  "successful_run_count": 14,
+  "failed_run_count": 0,
+  "zero_finding_run_count": 14,
+  "finding_count": 0,
+  "accounted_count": 0,
+  "unreconciled_count": 0,
+  "findings": [],
+  "missing_hour_slots_local": [
+    "00",
+    "02",
+    "03",
+    "05",
+    "13",
+    "17",
+    "18",
+    "19",
+    "21"
+  ],
+  "hour_slot_evaluation": {
+    "timezone": "America/Los_Angeles",
+    "evaluated_through_hour": "22",
+    "excluded_from_missing_evaluation": [
+      "23"
+    ]
+  },
+  "material_heartbeat_absence": true,
+  "production_evidence": {
+    "protected_source_checked": true,
+    "deployed_public_checked": true,
+    "observation": "No watch findings required matching. Protected source/default has no 2026-10-03 Gaza curated or edition artifact. Deployed public state has no 2026-10-03 Gaza briefing/check; the latest recent no-update check shown is 2026-10-02."
+  },
+  "operational_issue": true,
+  "operational_issue_reasons": [
+    "MATERIAL_HEARTBEAT_ABSENCE"
+  ],
+  "finding_reconciliation_statuses": []
+}

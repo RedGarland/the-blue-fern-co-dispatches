@@ -1,0 +1,61 @@
+{
+  "dispatch_slug": "food-line",
+  "dispatch_name": "Food Line Dispatch",
+  "edition_date": "2026-10-04",
+  "generated_at": "2026-10-04T20:07:14.326648+00:00",
+  "generator_source_commit": "dc9b8f1b6207e373a73580b45efaaf17334f4f2c",
+  "generation_mode": "approved_current_review_proposal",
+  "source_count": 1,
+  "story_count": 1,
+  "source_adequacy": {
+    "status": "limited",
+    "label": "Limited / sparse source day",
+    "source_count": 1,
+    "source_families": [
+      "local_news"
+    ],
+    "local_signal_count": 1,
+    "state_signal_count": 0,
+    "national_context_count": 1
+  },
+  "lead_source_record_id": "food_line_source_bf142914a823ced5",
+  "lead_source_canonical_url": "https://jcpost.com/posts/d70512a7-3101-4c22-9fe9-1ecdb6451878",
+  "previous_edition_date": "2026-10-03",
+  "primary_signal_status": "new_primary",
+  "public_rendered": true,
+  "public_signal_count": 1,
+  "qualified_primary_count": 1,
+  "claim_count": 1,
+  "claim_ledger_path": "/food-line/editions/2026-10-04/claim_ledger.html",
+  "source_table_path": "/food-line/editions/2026-10-04/source_table.html",
+  "edition_mode": "current_update",
+  "validation_status": "ok",
+  "approved_proposal_path": "data/dispatches/food-line/review/proposed-editions/2026-10-04.json",
+  "approved_proposal_sha256": "488eae2cbf0ebc773b1424c1e62baa2d4be90fe897d135ebe9cc618627ae6f4a",
+  "review_queue_path": "status/food-line/runtime/current-signal-review.json",
+  "review_queue_sha256": "f83a2eef15abf62db4d6cfa25c4eedc282a0f7bd975d27d59259925b4aae374c",
+  "approved_item_provenance": [
+    {
+      "review_item_id": "finding_21e483e8b5e2d8e98b81a9d3",
+      "finding_id": "finding_21e483e8b5e2d8e98b81a9d3",
+      "editorial_decision": "approve_with_edit",
+      "decision_operator": "operator-approved-chat-2026-10-04",
+      "decision_timestamp": "2026-10-04T20:04:53.571333+00:00",
+      "source_url": "https://jcpost.com/posts/d70512a7-3101-4c22-9fe9-1ecdb6451878",
+      "canonical_source_url": "https://jcpost.com/posts/d70512a7-3101-4c22-9fe9-1ecdb6451878",
+      "source_published_at": "2026-10-04"
+    }
+  ],
+  "publication_status": "unpublished",
+  "publication_approval": false,
+  "publication_eligible": false,
+  "pages_status": "not_synced",
+  "bluesky_status": "not_posted",
+  "audio_status": "not_generated",
+  "map_status": "not_published",
+  "podcast_status": "not_generated",
+  "schedule_status": "not_changed",
+  "public_url": "https://dispatches.thebluefernco.com/food-line/editions/2026-10-04/",
+  "bluesky_post_text": null,
+  "bluesky_post_ready": false
+}

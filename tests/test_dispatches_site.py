@@ -1170,20 +1170,44 @@ def test_pages_publish_excludes_paid_detail_folders(built_site):
     assert "output/detail/" in result["files_that_would_be_skipped"]
 
 
-def add_gaza_site_edition(site_root: Path, edition_date: str) -> None:
+def add_gaza_site_edition(
+    site_root: Path,
+    edition_date: str,
+    *,
+    title: str | None = None,
+    summary: str | None = None,
+    source_count: int = 1,
+    story_count: int = 1,
+) -> None:
     edition = site_root / "gaza" / "editions" / edition_date
     edition.mkdir(parents=True, exist_ok=True)
-    (edition / "index.html").write_text("<html><body>Gaza daily</body></html>", encoding="utf-8")
+    h1 = title or "Gaza daily"
+    (edition / "index.html").write_text(f"<html><body><h1>{h1}</h1></body></html>", encoding="utf-8")
+    manifest = {"dispatch_slug": "gaza", "edition_date": edition_date, "source_count": source_count, "story_count": story_count}
+    if title is not None:
+        manifest["public_archive_title"] = title
+    if summary is not None:
+        manifest["public_archive_subtitle"] = summary
     (edition / "edition_manifest.json").write_text(
-        json.dumps({"dispatch_slug": "gaza", "edition_date": edition_date, "source_count": 1, "story_count": 1}),
+        json.dumps(manifest),
         encoding="utf-8",
     )
     (edition / "sources_manifest.json").write_text(
-        json.dumps([{"source_id": "gaza-src-001", "url": "https://example.com/gaza"}]),
+        json.dumps([{"source_id": f"gaza-src-{index:03d}", "url": "https://example.com/gaza"} for index in range(1, source_count + 1)]),
         encoding="utf-8",
     )
     (edition / "curation_manifest.json").write_text(
-        json.dumps([{"story_id": "gaza-story-001", "source_ids": ["gaza-src-001"]}]),
+        json.dumps(
+            [
+                {
+                    "story_id": f"gaza-story-{index:03d}",
+                    "title": title or "Gaza daily",
+                    "summary": summary or "",
+                    "source_ids": ["gaza-src-001"],
+                }
+                for index in range(1, story_count + 1)
+            ]
+        ),
         encoding="utf-8",
     )
     archive = site_root / "gaza" / "archive.html"
@@ -1347,6 +1371,44 @@ def add_gaza_historical_catchup_publication(
     return public_url, immutable
 
 
+def add_food_line_site_edition(
+    site_root: Path,
+    edition_date: str,
+    *,
+    title: str,
+    summary: str = "",
+    source_count: int = 2,
+    story_count: int = 1,
+    edition_mode: str = "current_update",
+    qualified_primary_count: int | None = None,
+) -> None:
+    edition = site_root / "food-line" / "editions" / edition_date
+    edition.mkdir(parents=True, exist_ok=True)
+    (edition / "index.html").write_text(f"<html><body><h1>{title}</h1></body></html>", encoding="utf-8")
+    manifest = {
+        "dispatch_slug": "food-line",
+        "edition_date": edition_date,
+        "public_rendered": True,
+        "edition_mode": edition_mode,
+        "source_freshness_status": "current",
+        "freshness_window_days": 3,
+        "qualified_primary_count": story_count if qualified_primary_count is None else qualified_primary_count,
+        "public_archive_title": title,
+        "public_archive_subtitle": summary,
+        "source_count": source_count,
+        "story_count": story_count,
+    }
+    (edition / "edition_manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+    (edition / "sources_manifest.json").write_text(
+        json.dumps([{"source_id": f"food-src-{index:03d}", "url": "https://example.com/food"} for index in range(1, source_count + 1)]),
+        encoding="utf-8",
+    )
+    (edition / "curation_manifest.json").write_text(
+        json.dumps([{"story_id": "food-story-001", "title": title, "summary": summary, "public_rendered": True}]),
+        encoding="utf-8",
+    )
+
+
 def add_gaza_public_history_surface(
     site_root: Path,
     dates: list[str],
@@ -1469,7 +1531,7 @@ def test_later_gaza_daily_regeneration_preserves_historical_catchup_union(tmp_pa
     assert second == replay
     assert '<article class="gaza-latest-card">' in second["index.html"]
     assert '<p class="edition-date">2026-09-05</p>' in second["index.html"]
-    assert '<h3>Daily briefing</h3>' in second["index.html"]
+    assert '<h3>Gaza daily</h3>' in second["index.html"]
     assert 'href="editions/2026-09-05/">Read briefing</a>' in second["index.html"]
     assert "Read the latest readable update" not in second["index.html"]
     assert len(set(re.findall(r'editions/(\d{4}-\d{2}-\d{2})/', second["index.html"]))) == 8
@@ -1477,8 +1539,8 @@ def test_later_gaza_daily_regeneration_preserves_historical_catchup_union(tmp_pa
     assert "gaza-historical-catchup-second" in second["index.html"]
     assert "2026-08-24" in second["archive.html"]
     assert "2026-08-23" not in second["index.html"]
-    assert second["archive.html"].count("catchups/gaza-historical-catchup-synthetic-history/") == 1
-    assert second["archive.html"].count("catchups/gaza-historical-catchup-second/") == 1
+    assert second["archive.html"].count('href="catchups/gaza-historical-catchup-synthetic-history/"') == 2
+    assert second["archive.html"].count('href="catchups/gaza-historical-catchup-second/"') == 2
     assert second["rss.xml"].count(public_url) == 2
     assert second["rss.xml"].count(second_public_url) == 2
     for edition_date in ("2026-08-29", "2026-09-02", "2026-09-03", "2026-09-04", "2026-09-05"):
@@ -3649,7 +3711,7 @@ def test_generated_gaza_index_recent_editions_do_not_duplicate_date_links(tmp_pa
     assert "<h2>Recent Checks</h2>" in index_html
     assert '<article class="gaza-latest-card">' in index_html
     assert '<span class="edition-date">2026-10-01</span><a href="editions/2026-10-01/">2026-10-01</a>' not in index_html
-    assert '<li><a class="edition-date" href="editions/2026-10-01/">2026-10-01</a></li>' in index_html
+    assert '<a class="briefing-row-title" href="editions/2026-10-01/">Daily briefing</a>' in index_html
     assert not re.search(r"(20\d{2}-\d{2}-\d{2})\1", compact_recent_text)
 
 
@@ -3677,12 +3739,12 @@ def test_gaza_landing_separates_readable_briefings_from_no_update_checks(tmp_pat
     assert "<h2>Recent Editions</h2>" not in index_html
     assert '<article class="gaza-latest-card">' in latest_html
     assert '<p class="edition-date">2026-09-30</p>' in latest_html
-    assert "<h3>Daily briefing</h3>" in latest_html
+    assert "<h3>Gaza daily</h3>" in latest_html
     assert "Daily briefing" in latest_html
     assert 'href="editions/2026-09-30/">Read briefing</a>' in latest_html
     assert "Read the latest readable update" not in latest_html
     assert "No qualifying update" not in latest_html
-    assert 'href="editions/2026-09-30/">2026-09-30</a>' in readable_html
+    assert 'href="editions/2026-09-30/">Gaza daily</a>' in readable_html
     assert "2026-10-02" not in readable_html
     assert '<li class="no-update-check"><span class="edition-date">2026-10-02</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">3 sources checked</span></li>' in checks_html
     assert 'href="editions/2026-10-02/"' not in index_html
@@ -3718,7 +3780,7 @@ def test_gaza_landing_latest_readable_update_can_use_catchup_after_newer_no_upda
     assert 'href="catchups/gaza-historical-catchup-2026-09-03/">Read catch-up</a>' in latest_html
     assert "Read the latest readable update" not in latest_html
     assert "No qualifying update" not in latest_html
-    assert '<span class="edition-date">2026-09-03</span> <a href="catchups/gaza-historical-catchup-2026-09-03/">Historical catch-up / 2026-09-03' in index_html
+    assert '<a class="briefing-row-title" href="catchups/gaza-historical-catchup-2026-09-03/">Recovered Gaza development</a>' in index_html
     assert '<li class="no-update-check"><span class="edition-date">2026-10-02</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">3 sources checked</span></li>' in index_html
 
 
@@ -3759,7 +3821,7 @@ def test_gaza_landing_keeps_older_catchups_beyond_recent_daily_limit(tmp_path: P
     readable_html = index_html.split('<ul class="edition-list gaza-readable-list">', 1)[1].split("</ul>", 1)[0]
 
     assert "gaza-historical-catchup-aug29-sep02-2026-batch-01" in readable_html
-    assert '<span class="edition-date">2026-09-02</span> <a href="catchups/gaza-historical-catchup-aug29-sep02-2026-batch-01/">Historical catch-up / 2026-09-02' in readable_html
+    assert '<a class="briefing-row-title" href="catchups/gaza-historical-catchup-aug29-sep02-2026-batch-01/">Recovered Gaza development</a>' in readable_html
 
 
 def test_gaza_landing_limits_recent_checks_to_three_and_links_archive(tmp_path: Path):
@@ -3822,8 +3884,8 @@ def test_gaza_archive_groups_entries_by_month_and_highlights_latest(tmp_path: Pa
     assert "<h2>October 2026</h2>" in archive_html
     assert "<h2>September 2026</h2>" in archive_html
     assert archive_html.index("<h2>October 2026</h2>") < archive_html.index("<h2>September 2026</h2>")
-    assert '<li class="archive-row archive-row--daily"><span class="edition-date">2026-09-30</span><a href="editions/2026-09-30/">Daily briefing</a>' in archive_html
-    assert '<li class="archive-row archive-row--catchup"><span class="edition-date">2026-09-30</span><a href="catchups/gaza-historical-catchup-2026-09-30/">Recovered Gaza development</a><span class="archive-row-note">Historical catch-up</span></li>' in archive_html
+    assert '<a class="briefing-row-title" href="editions/2026-09-30/">Gaza daily</a>' in archive_html
+    assert '<a class="briefing-row-title" href="catchups/gaza-historical-catchup-2026-09-30/">Recovered Gaza development</a>' in archive_html
 
 
 def test_gaza_archive_compact_no_update_rows_are_not_edition_links(tmp_path: Path):
@@ -3847,6 +3909,133 @@ def test_gaza_archive_compact_no_update_rows_are_not_edition_links(tmp_path: Pat
     assert '<li class="archive-row archive-row--no-update"><span class="edition-date">2026-10-01</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">6 sources checked</span></li>' in archive_html
     assert 'href="editions/2026-10-01/"' not in archive_html
     assert "No new source-backed Gaza update met publication threshold today." not in archive_html
+
+
+def test_gaza_latest_card_uses_real_title_when_metadata_exists(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    add_gaza_public_history_surface(site_root, ["2026-10-01"])
+    add_gaza_site_edition(
+        site_root,
+        "2026-10-01",
+        title="Gaza crossings update after new aid restrictions",
+        summary="Aid agencies described reduced access at crossings.",
+        source_count=4,
+    )
+    dispatch = DispatchConfig(
+        slug="gaza",
+        name="Dispatches From Gaza",
+        edition_date="2026-10-01",
+        tagline="Daily briefing",
+        logo="gaza-logo.png",
+        sources=[],
+        stories=[],
+        detail_artifacts=[],
+    )
+
+    index_html = generator.render_dispatch_index_for_dates(dispatch, ["2026-10-01"], site_root)
+    latest_html = index_html.split("<h2>Latest Readable Update</h2>", 1)[1].split("<h2>Recent Checks</h2>", 1)[0]
+    readable_html = index_html.split('<ul class="edition-list gaza-readable-list">', 1)[1].split("</ul>", 1)[0]
+
+    assert "<h3>Gaza crossings update after new aid restrictions</h3>" in latest_html
+    assert "<h3>Daily briefing</h3>" not in latest_html
+    assert "Aid agencies described reduced access at crossings." in latest_html
+    assert "4 sources" in latest_html
+    assert "Gaza crossings update after new aid restrictions" in readable_html
+    assert '<a class="briefing-row-title" href="editions/2026-10-01/">2026-10-01</a>' not in readable_html
+
+
+def test_gaza_archive_preserves_no_update_rows_and_renders_readable_metadata(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    add_gaza_public_history_surface(site_root, ["2026-10-01"])
+    add_gaza_site_edition(
+        site_root,
+        "2026-10-01",
+        title="Gaza hospital access update",
+        summary="Hospitals reported access constraints in public source records.",
+        source_count=3,
+    )
+    add_gaza_no_update_status(site_root, "2026-10-02", source_count=8)
+    dispatch = DispatchConfig(
+        slug="gaza",
+        name="Dispatches From Gaza",
+        edition_date="2026-10-02",
+        tagline="Daily briefing",
+        logo="gaza-logo.png",
+        sources=[],
+        stories=[],
+        detail_artifacts=[],
+    )
+
+    archive_html = generator.render_archive_for_dates(dispatch, ["2026-10-01"], site_root)
+
+    assert "Gaza hospital access update" in archive_html
+    assert "Hospitals reported access constraints in public source records." in archive_html
+    assert "3 sources" in archive_html
+    assert "Daily briefing" in archive_html
+    assert '<li class="archive-row archive-row--no-update"><span class="edition-date">2026-10-02</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">8 sources checked</span></li>' in archive_html
+    assert 'href="editions/2026-10-02/"' not in archive_html
+
+
+def test_food_archive_rows_render_title_source_count_and_secondary_no_update(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    add_food_line_site_edition(
+        site_root,
+        "2026-10-04",
+        title="Kansas SNAP access reporting from JC Post and Kansas Reflector",
+        summary="The item documented source-visible SNAP access pressure in Kansas.",
+        source_count=2,
+    )
+    add_food_line_site_edition(
+        site_root,
+        "2026-10-03",
+        title="Food Line no-current-update review",
+        summary="No qualifying current public item met the line.",
+        source_count=5,
+        story_count=0,
+        edition_mode="no_current_update",
+        qualified_primary_count=0,
+    )
+    dispatch = DispatchConfig(
+        slug="food-line",
+        name="Food Line Dispatch",
+        edition_date="2026-10-04",
+        tagline="Food access pressure briefing",
+        logo="food-line-logo.png",
+        sources=[],
+        stories=[],
+        detail_artifacts=[],
+    )
+
+    archive_html = generator.render_archive_for_dates(dispatch, ["2026-10-04", "2026-10-03"], site_root)
+
+    assert "Kansas SNAP access reporting from JC Post and Kansas Reflector" in archive_html
+    assert "The item documented source-visible SNAP access pressure in Kansas." in archive_html
+    assert "2 sources" in archive_html
+    assert '<li class="archive-row archive-row--no-update"><span class="edition-date">2026-10-03</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">5 sources checked</span></li>' in archive_html
+    assert 'href="editions/2026-10-03/"' not in archive_html
+
+
+def test_shared_briefing_metadata_extraction_falls_back_for_sparse_older_editions(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    add_gaza_public_history_surface(site_root, ["2026-09-20"])
+    add_gaza_site_edition(site_root, "2026-09-20")
+    dispatch = DispatchConfig(
+        slug="gaza",
+        name="Dispatches From Gaza",
+        edition_date="2026-09-20",
+        tagline="Daily briefing",
+        logo="gaza-logo.png",
+        sources=[],
+        stories=[],
+        detail_artifacts=[],
+    )
+
+    row = generator.briefing_presentation_for_edition(site_root, dispatch, "2026-09-20")
+    html = generator.render_archive_for_dates(dispatch, ["2026-09-20"], site_root)
+
+    assert row.title in {"Gaza daily", "2026-09-20"}
+    assert "2026-09-20" in html
+    assert 'href="editions/2026-09-20/"' in html
 
 
 def test_gaza_archive_latest_entry_skips_newer_no_update_rows(tmp_path: Path):
@@ -3927,7 +4116,7 @@ def test_gaza_archive_edition_links_have_local_targets(tmp_path: Path):
     )
     linked_dates = re.findall(r'href="editions/(\d{4}-\d{2}-\d{2})/"', archive_html)
 
-    assert linked_dates == ["2026-10-01", "2026-10-01", "2026-09-30"]
+    assert set(linked_dates) == {"2026-10-01", "2026-09-30"}
     for linked_date in linked_dates:
         assert (site_root / "gaza" / "editions" / linked_date / "index.html").exists()
     assert "2026-09-29" in archive_html

@@ -206,6 +206,18 @@ class GazaNoUpdateEntry:
     collection_report_path: str
 
 
+@dataclass(frozen=True)
+class BriefingPresentation:
+    date: str
+    href: str
+    title: str
+    summary: str
+    source_count: int | None
+    story_count: int | None
+    type_label: str
+    is_no_update: bool = False
+
+
 GAZA_BODY_HTML = """<p><strong>Dispatches From Gaza</strong></p>
 <p>Daily Briefing - 2026-05-03</p>
 <p>Today's Gaza briefing: Israel has issued threats to resume war in
@@ -1925,6 +1937,201 @@ def _gaza_homepage_recent_edition_guard(
     }
 
 
+def _html_fragment_text(fragment: str) -> str:
+    cleaned = re.sub(r"(?is)<script\b.*?</script>|<style\b.*?</style>", " ", fragment)
+    cleaned = re.sub(r"<[^>]+>", " ", cleaned)
+    return re.sub(r"\s+", " ", html.unescape(cleaned)).strip()
+
+
+def _first_clean_text(payload: dict[str, Any], keys: tuple[str, ...]) -> str:
+    for key in keys:
+        value = payload.get(key)
+        if isinstance(value, str):
+            cleaned = re.sub(r"\s+", " ", value).strip()
+            if cleaned:
+                return cleaned
+    return ""
+
+
+def _coerce_positive_int(value: Any) -> int | None:
+    try:
+        number = int(value)
+    except (TypeError, ValueError):
+        return None
+    return number if number >= 0 else None
+
+
+def _briefing_title_is_generic(title: str, dispatch: DispatchConfig, edition_date: str) -> bool:
+    normalized = re.sub(r"\s+", " ", title).strip().casefold()
+    if not normalized:
+        return True
+    generic = {
+        edition_date.casefold(),
+        "daily briefing",
+        "latest briefing",
+        "edition archive",
+        dispatch.name.casefold(),
+        dispatch.tagline.casefold(),
+        f"{dispatch.name} - {edition_date}".casefold(),
+        f"{dispatch.name} {edition_date}".casefold(),
+        f"{dispatch.tagline} - {edition_date}".casefold(),
+    }
+    return normalized in generic
+
+
+def _first_page_heading_or_title(index_path: Path) -> str:
+    if not index_path.exists():
+        return ""
+    try:
+        text = index_path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return ""
+    selectors = (
+        r"<h1(?:\s[^>]*)?>(.*?)</h1>",
+        r"<article\b[^>]*class=['\"][^'\"]*food-line-source-card[^'\"]*['\"][^>]*>.*?<h3\b[^>]*>(.*?)</h3>",
+        r"<title(?:\s[^>]*)?>(.*?)</title>",
+    )
+    for pattern in selectors:
+        match = re.search(pattern, text, re.DOTALL | re.IGNORECASE)
+        if match:
+            cleaned = _html_fragment_text(match.group(1))
+            if cleaned:
+                return cleaned
+    return ""
+
+
+def _curation_rows(edition_dir: Path) -> list[dict[str, Any]]:
+    payload = _load_json_file(edition_dir / "curation_manifest.json")
+    if isinstance(payload, list):
+        return [row for row in payload if isinstance(row, dict)]
+    if isinstance(payload, dict):
+        for key in ("stories", "items", "curated_stories"):
+            rows = payload.get(key)
+            if isinstance(rows, list):
+                return [row for row in rows if isinstance(row, dict)]
+    return []
+
+
+def _sources_count_from_manifest(edition_dir: Path) -> int | None:
+    payload = _load_json_file(edition_dir / "sources_manifest.json")
+    if isinstance(payload, list):
+        return len(payload)
+    if isinstance(payload, dict):
+        for key in ("sources", "items", "records"):
+            rows = payload.get(key)
+            if isinstance(rows, list):
+                return len(rows)
+    return None
+
+
+def briefing_presentation_for_edition(site_root: Path, dispatch: DispatchConfig, edition_date: str) -> BriefingPresentation:
+    edition_dir = site_root / dispatch.slug / "editions" / edition_date
+    manifest = public_edition_manifest(site_root, dispatch.slug, edition_date)
+    title = _first_clean_text(
+        manifest,
+        (
+            "public_archive_title",
+            "archive_title",
+            "headline",
+            "lead_headline",
+            "title",
+            "edition_title",
+            "display_title",
+        ),
+    )
+    if _briefing_title_is_generic(title, dispatch, edition_date):
+        page_title = _first_page_heading_or_title(edition_dir / "index.html")
+        if not _briefing_title_is_generic(page_title, dispatch, edition_date):
+            title = page_title
+    curation_rows = _curation_rows(edition_dir)
+    if _briefing_title_is_generic(title, dispatch, edition_date):
+        for row in curation_rows:
+            candidate = _first_clean_text(row, ("title", "headline", "source_title"))
+            if not _briefing_title_is_generic(candidate, dispatch, edition_date):
+                title = candidate
+                break
+    if _briefing_title_is_generic(title, dispatch, edition_date):
+        title = edition_date
+
+    summary = _first_clean_text(
+        manifest,
+        (
+            "public_archive_subtitle",
+            "deck",
+            "dek",
+            "public_summary",
+            "summary",
+            "description",
+            "edition_summary",
+        ),
+    )
+    if not summary:
+        for row in curation_rows:
+            summary = _first_clean_text(
+                row,
+                (
+                    "public_summary",
+                    "summary",
+                    "summary_or_snippet",
+                    "pressure_summary",
+                    "claim_supported",
+                    "description",
+                ),
+            )
+            if summary:
+                break
+
+    source_count = None
+    for key in ("public_source_count", "qualified_source_count", "source_count", "total_source_count"):
+        source_count = _coerce_positive_int(manifest.get(key))
+        if source_count is not None:
+            break
+    if source_count is None:
+        source_count = _sources_count_from_manifest(edition_dir)
+
+    story_count = None
+    for key in ("public_story_count", "public_signal_count", "qualified_primary_count", "story_count"):
+        story_count = _coerce_positive_int(manifest.get(key))
+        if story_count is not None:
+            break
+    if story_count is None and curation_rows:
+        story_count = len(
+            [
+                row
+                for row in curation_rows
+                if row.get("included_in_public_summary") is not False and row.get("public_rendered") is not False
+            ]
+        )
+
+    edition_mode = str(manifest.get("edition_mode") or manifest.get("briefing_type") or manifest.get("edition_type") or "").strip().lower()
+    is_no_update = edition_mode == "no_current_update" or (
+        dispatch.slug == "food-line"
+        and story_count == 0
+        and str(manifest.get("source_freshness_status") or "").strip()
+    )
+    type_label = "Historical catch-up" if edition_mode == "historical_retrospective" else "Daily briefing"
+    if is_no_update:
+        type_label = "No qualifying update"
+    return BriefingPresentation(
+        date=edition_date,
+        href=f"editions/{edition_date}/",
+        title=title,
+        summary=summary,
+        source_count=source_count,
+        story_count=story_count,
+        type_label=type_label,
+        is_no_update=is_no_update,
+    )
+
+
+def _count_label(row: BriefingPresentation) -> str:
+    if row.source_count is not None:
+        return f"{row.source_count} {'source' if row.source_count == 1 else 'sources'}"
+    if row.story_count is not None:
+        return f"{row.story_count} {'story' if row.story_count == 1 else 'stories'}"
+    return ""
+
+
 def public_edition_label(site_root: Path, dispatch: DispatchConfig, edition_date: str) -> str:
     if dispatch.slug != "cascadia":
         if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
@@ -1934,6 +2141,8 @@ def public_edition_label(site_root: Path, dispatch: DispatchConfig, edition_date
                 or manifest.get("public_summary")
                 or edition_date
             ).strip()
+        if dispatch.slug in {"gaza", "food-line"}:
+            return briefing_presentation_for_edition(site_root, dispatch, edition_date).title
         return edition_date
     manifest = public_edition_manifest(site_root, dispatch.slug, edition_date)
     if manifest.get("coverage_label"):
@@ -1948,7 +2157,14 @@ def public_edition_subtitle(site_root: Path, dispatch: DispatchConfig, edition_d
         if dispatch.slug == CARE_LINE_DISPATCH_SLUG:
             manifest = public_edition_manifest(site_root, dispatch.slug, edition_date)
             return str(manifest.get("public_archive_subtitle") or manifest.get("public_summary") or "").strip()
-        return ""
+        if dispatch.slug not in {"gaza", "food-line"}:
+            return ""
+        row = briefing_presentation_for_edition(site_root, dispatch, edition_date)
+        parts = [row.summary]
+        count = _count_label(row)
+        if count:
+            parts.append(count)
+        return " | ".join(part for part in parts if part)
     manifest = public_edition_manifest(site_root, dispatch.slug, edition_date)
     if manifest.get("public_story_count") == 0:
         if manifest.get("minimum_review_threshold_met") is True or manifest.get("zero_story_review_status") == "credible":
@@ -1971,6 +2187,8 @@ def public_edition_subtitle(site_root: Path, dispatch: DispatchConfig, edition_d
 
 
 def render_edition_list_item(site_root: Path, dispatch: DispatchConfig, date: str) -> str:
+    if dispatch.slug in {"gaza", "food-line"}:
+        return render_briefing_list_item(briefing_presentation_for_edition(site_root, dispatch, date))
     label = public_edition_label(site_root, dispatch, date)
     subtitle = public_edition_subtitle(site_root, dispatch, date)
     subtitle_html = f'<br><small>{html.escape(subtitle)}</small>' if subtitle else ""
@@ -1989,11 +2207,54 @@ def render_edition_list_item(site_root: Path, dispatch: DispatchConfig, date: st
     )
 
 
-def render_gaza_historical_catchup_list_item(entry: GazaHistoricalCatchupEntry) -> str:
+def render_briefing_list_item(row: BriefingPresentation) -> str:
+    if row.is_no_update:
+        count = _count_label(row)
+        count_html = f'<span class="archive-row-note">{html.escape(count)} checked</span>' if count else ""
+        return (
+            f'      <li class="briefing-row briefing-row--no-update"><span class="edition-date">{html.escape(row.date)}</span>'
+            f'<span class="no-update-label">No qualifying update</span>{count_html}</li>'
+        )
+    count = _count_label(row)
+    title = row.title if row.title != row.date else row.type_label
+    summary_html = f'<span class="briefing-row-summary">{html.escape(row.summary)}</span>' if row.summary else ""
+    meta = " | ".join(part for part in (row.type_label, count) if part)
+    meta_html = f'<span class="briefing-row-meta">{html.escape(meta)}</span>' if meta else ""
     return (
-        f'      <li class="historical-catchup"><span class="edition-date">{html.escape(entry.publication_date)}</span> '
-        f'<a href="catchups/{html.escape(entry.catchup_id)}/">Historical catch-up / '
-        f'{html.escape(entry.publication_date)} — {html.escape(entry.title)}</a></li>'
+        f'      <li class="briefing-row briefing-row--readable"><span class="edition-date">{html.escape(row.date)}</span>'
+        f'<span class="briefing-row-main"><a class="briefing-row-title" href="{html.escape(row.href)}">{html.escape(title)}</a>'
+        f'{summary_html}{meta_html}</span>'
+        f'<a class="briefing-row-cta" href="{html.escape(row.href)}">Read briefing</a></li>'
+    )
+
+
+def render_briefing_archive_row(row: BriefingPresentation) -> str:
+    if row.is_no_update:
+        count = _count_label(row)
+        count_html = f'<span class="archive-row-note">{html.escape(count)} checked</span>' if count else ""
+        return (
+            f'      <li class="archive-row archive-row--no-update"><span class="edition-date">{html.escape(row.date)}</span>'
+            f'<span class="no-update-label">No qualifying update</span>{count_html}</li>'
+        )
+    count = _count_label(row)
+    title = row.title if row.title != row.date else row.type_label
+    summary_bits = [row.summary, count, row.type_label]
+    summary = " | ".join(bit for bit in summary_bits if bit)
+    summary_html = f'<span class="archive-row-note">{html.escape(summary)}</span>' if summary else ""
+    return (
+        f'      <li class="archive-row archive-row--daily"><span class="edition-date">{html.escape(row.date)}</span>'
+        f'<span class="briefing-row-main"><a class="briefing-row-title" href="{html.escape(row.href)}">{html.escape(title)}</a>'
+        f'{summary_html}</span><a class="briefing-row-cta" href="{html.escape(row.href)}">Read</a></li>'
+    )
+
+
+def render_gaza_historical_catchup_list_item(entry: GazaHistoricalCatchupEntry) -> str:
+    description_html = f'<span class="briefing-row-summary">{html.escape(entry.description)}</span>' if entry.description else ""
+    return (
+        f'      <li class="briefing-row briefing-row--catchup historical-catchup"><span class="edition-date">{html.escape(entry.publication_date)}</span>'
+        f'<span class="briefing-row-main"><a class="briefing-row-title" href="catchups/{html.escape(entry.catchup_id)}/">{html.escape(entry.title)}</a>'
+        f'{description_html}<span class="briefing-row-meta">Historical catch-up</span></span>'
+        f'<a class="briefing-row-cta" href="catchups/{html.escape(entry.catchup_id)}/">Read catch-up</a></li>'
     )
 
 
@@ -2126,21 +2387,17 @@ def _gaza_month_heading(date_text: str) -> str:
 
 
 def _render_gaza_archive_daily_row(site_root: Path, dispatch: DispatchConfig, date: str) -> str:
-    label = public_edition_label(site_root, dispatch, date)
-    subtitle = public_edition_subtitle(site_root, dispatch, date)
-    title = label if label != date else "Daily briefing"
-    subtitle_html = f'<span class="archive-row-note">{html.escape(subtitle)}</span>' if subtitle else ""
-    return (
-        f'      <li class="archive-row archive-row--daily"><span class="edition-date">{html.escape(date)}</span>'
-        f'<a href="editions/{html.escape(date)}/">{html.escape(title)}</a>{subtitle_html}</li>'
-    )
+    return render_briefing_archive_row(briefing_presentation_for_edition(site_root, dispatch, date))
 
 
 def _render_gaza_archive_catchup_row(entry: GazaHistoricalCatchupEntry) -> str:
+    detail_parts = [entry.description, "Historical catch-up"]
+    detail = " | ".join(part for part in detail_parts if part)
+    detail_html = f'<span class="archive-row-note">{html.escape(detail)}</span>' if detail else ""
     return (
         f'      <li class="archive-row archive-row--catchup"><span class="edition-date">{html.escape(entry.publication_date)}</span>'
-        f'<a href="catchups/{html.escape(entry.catchup_id)}/">{html.escape(entry.title)}</a>'
-        f'<span class="archive-row-note">Historical catch-up</span></li>'
+        f'<span class="briefing-row-main"><a class="briefing-row-title" href="catchups/{html.escape(entry.catchup_id)}/">{html.escape(entry.title)}</a>'
+        f'{detail_html}</span><a class="briefing-row-cta" href="catchups/{html.escape(entry.catchup_id)}/">Read</a></li>'
     )
 
 
@@ -2178,16 +2435,17 @@ def _render_gaza_archive_latest_entry(
     date = _gaza_history_row_date(row)
     if kind == "catchup" and isinstance(value, GazaHistoricalCatchupEntry):
         title = value.title
-        detail = "Historical catch-up"
+        detail = value.description or "Historical catch-up"
         link = f'<a class="button" href="catchups/{html.escape(value.catchup_id)}/">Read catch-up</a>'
     elif kind == "no-update" and isinstance(value, GazaNoUpdateEntry):
         title = "No qualifying update"
         detail = f"{value.source_count} sources checked" if value.source_count is not None else value.message
         link = ""
     else:
-        label = public_edition_label(site_root, dispatch, date)
-        title = label if label != date else "Daily briefing"
-        detail = public_edition_subtitle(site_root, dispatch, date) or "Daily Gaza briefing"
+        presentation = briefing_presentation_for_edition(site_root, dispatch, date)
+        title = presentation.title if presentation.title != date else "Daily briefing"
+        detail_parts = [presentation.summary, _count_label(presentation), presentation.type_label]
+        detail = " | ".join(part for part in detail_parts if part) or "Daily Gaza briefing"
         link = f'<a class="button" href="editions/{html.escape(date)}/">Read latest</a>'
     return (
         '    <section class="archive-latest" aria-label="Latest archive entry">\n'
@@ -2279,19 +2537,25 @@ def _gaza_landing_latest_card(
     if kind == "catchup" and isinstance(value, GazaHistoricalCatchupEntry):
         title = value.title or "Recovered Gaza developments"
         type_label = "Historical catch-up"
+        detail = value.description
         href = f"catchups/{html.escape(value.catchup_id)}/"
         cta = "Read catch-up"
     else:
-        title = public_edition_label(site_root, dispatch, date)
+        presentation = briefing_presentation_for_edition(site_root, dispatch, date)
+        title = presentation.title
         if title == date:
             title = "Daily briefing"
         type_label = "Daily briefing"
+        detail_parts = [presentation.summary, _count_label(presentation)]
+        detail = " | ".join(part for part in detail_parts if part)
         href = f"editions/{html.escape(date)}/"
         cta = "Read briefing"
+    detail_html = f"      <p>{html.escape(detail)}</p>\n" if detail else ""
     return (
         '    <article class="gaza-latest-card">\n'
         f'      <p class="edition-date">{html.escape(date)}</p>\n'
         f"      <h3>{html.escape(title)}</h3>\n"
+        f"{detail_html}"
         f'      <p class="topic-badge topic-badge--gaza">{html.escape(type_label)}</p>\n'
         f'      <p><a class="button" href="{href}">{html.escape(cta)}</a></p>\n'
         "    </article>"
@@ -2856,6 +3120,20 @@ def render_dispatch_index_for_dates(
     if dispatch.slug == "gaza":
         latest_heading = "Latest Readable Update"
         latest_link = latest_card
+    elif dispatch.slug == "food-line" and latest:
+        latest_row = briefing_presentation_for_edition(site_root, dispatch, latest)
+        count = _count_label(latest_row)
+        summary_parts = [latest_row.summary, count, latest_row.type_label]
+        summary = " | ".join(part for part in summary_parts if part)
+        summary_html = f"<p>{html.escape(summary)}</p>" if summary else ""
+        latest_link = (
+            '<article class="food-line-latest-card">'
+            f'<p class="edition-date">{html.escape(latest)}</p>'
+            f'<h3><a href="editions/{html.escape(latest)}/">{html.escape(latest_row.title)}</a></h3>'
+            f"{summary_html}"
+            f'<p><a class="button" href="editions/{html.escape(latest)}/">Read briefing</a></p>'
+            "</article>"
+        )
     gaza_audio_link = ""
     if dispatch.slug == "gaza" and (site_root / "gaza" / "audio" / "index.html").exists():
         gaza_audio_link = '\n    <p><a href="/gaza/audio/index.html">Gaza audio and transcript archive</a></p>'
@@ -2889,6 +3167,12 @@ def render_dispatch_index_for_dates(
     recent_sections = (
         gaza_recent_sections
         if dispatch.slug == "gaza"
+        else f"""
+    <h2>Recent Editions</h2>
+    <ul class="food-line-recent-list">
+{recent}
+    </ul>"""
+        if dispatch.slug == "food-line"
         else f"""
     <h2>Recent Editions</h2>
     <ul class="edition-list">
@@ -3056,6 +3340,34 @@ def render_archive_for_dates(
     <h1>Edition Archive</h1>
     {gaza_audio_link}
 {grouped_archive}
+  </main>
+{footer("")}"""
+        return page(f"{dispatch.name} Archive", f"{BASE_URL}/{dispatch.slug}/archive.html", "assets/site.css", body, dispatch.name)
+    if dispatch.slug == "food-line":
+        items = "\n".join(
+            render_briefing_archive_row(briefing_presentation_for_edition(site_root, dispatch, date))
+            for date in edition_dates
+        )
+        latest = edition_dates[0] if edition_dates else ""
+        latest_row = briefing_presentation_for_edition(site_root, dispatch, latest) if latest else None
+        latest_link = f'<p><a href="editions/{latest}/">Read the latest briefing</a></p>' if latest else "<p>No public edition is currently listed.</p>"
+        latest_title = latest_row.title if latest_row is not None else ""
+        latest_count = _count_label(latest_row) if latest_row is not None else ""
+        latest_detail = " | ".join(part for part in ((latest_row.summary if latest_row else ""), latest_count) if part)
+        latest_detail_html = f"<p>{html.escape(latest_detail)}</p>" if latest_detail else ""
+        body = f"""{header(dispatch.name, "", "archive.html")}
+  <main class="archive archive--food-line">
+    <section class="hero">
+      <img class="hero-logo" src="assets/{dispatch.logo}" alt="{html.escape(dispatch.name)}">
+    </section>
+    <p class="eyebrow">Archive</p>
+    <h1>Food Line Archive</h1>
+    {latest_link}
+    <p>{html.escape(latest_title)}</p>
+    {latest_detail_html}
+    <ul class="edition-list archive-list food-line-archive-list">
+{items}
+    </ul>
   </main>
 {footer("")}"""
         return page(f"{dispatch.name} Archive", f"{BASE_URL}/{dispatch.slug}/archive.html", "assets/site.css", body, dispatch.name)

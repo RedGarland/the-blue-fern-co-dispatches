@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261004T154451-0700",
+  "scheduled_for": "2026-10-04T15:44:51-07:00",
+  "started_at": "2026-10-04T15:46:58-07:00",
+  "completed_at": "2026-10-04T15:47:55-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-04T14:44:51-07:00",
+    "end": "2026-10-04T15:44:51-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt_checked_first": true,
+    "who_checked_second": true,
+    "additional_targeted_searches": 12,
+    "ocha_result": "No new in-window OCHA OPT operational update surfaced; the freshest targeted result remained the 18 September 2026 Humanitarian Situation Report.",
+    "who_result": "No new in-window WHO Gaza operational update surfaced.",
+    "additional_coverage": "Exactly 12 targeted searches covered Reuters/AP civilian casualties and military operations, WAFA, UNRWA, Palestine Red Crescent, UNICEF, WFP, ICRC, crossings and aid/fuel/medical evacuation, ceasefire/hostages/detention, hospital functioning capacity, and infrastructure/water/food/displacement.",
+    "exclusions": "A Reuters Connect funeral video concerning the already-known Khan Younis strike was treated as recycled follow-up without a new operational development. Older, non-Gaza, duplicate, opinion, unsupported social, and unsourced material were excluded.",
+    "material_search_failures": []
+  }
+}

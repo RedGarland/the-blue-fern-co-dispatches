@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261004T024522-0700-r11",
+  "scheduled_for": "2026-10-04T02:45:22-07:00",
+  "started_at": "2026-10-04T02:43:52-07:00",
+  "completed_at": "2026-10-04T02:45:24-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-04T01:48:58-07:00",
+    "end": "2026-10-04T02:45:24-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first; the newest listed notice remains 2026-10-02 Comfort Care Home Health (CA), with no newer notice listed.",
+    "Exactly 12 additional targeted searches completed across hospital/ED, maternity, behavioral-health, dialysis, oncology, primary-care, rural/emergency service loss, ambulance, air-medical, restoration/reopening, CLIA enforcement, and U.S. territory coverage.",
+    "No new qualifying U.S. or territory healthcare-access development was found in the search window.",
+    "The October 1 Chicago-area obstetrics service closures surfaced again but predate this search window and were excluded as previously known/duplicate material.",
+    "Proposals without concrete access effect, ownership/business-only stories, foreign results, unsupported social claims, and other duplicates were excluded.",
+    "No approval, publication, schedule change, or task-state change was performed."
+  ]
+}

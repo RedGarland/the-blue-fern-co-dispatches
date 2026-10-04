@@ -365,6 +365,48 @@ def _hash_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _wait_for_images_to_decode(page: Any) -> None:
+    page.evaluate(
+        """
+        async () => {
+          const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+          const waitForSettledImages = () => Promise.all(
+            Array.from(document.images || []).map((img) => {
+              if (img.complete) return Promise.resolve();
+              return new Promise((resolve) => {
+                img.addEventListener('load', resolve, {once: true});
+                img.addEventListener('error', resolve, {once: true});
+              });
+            })
+          );
+          const decodeImages = () => Promise.all(
+            Array.from(document.images || []).map((img) =>
+              img.decode ? img.decode().catch(() => undefined) : Promise.resolve()
+            )
+          );
+          const loaded = () => Array.from(document.images || []).every((img) =>
+            img.complete && img.naturalWidth > 0 && img.naturalHeight > 0
+          );
+          for (let attempt = 0; attempt < 4; attempt += 1) {
+            await waitForSettledImages();
+            await decodeImages();
+            if (loaded()) return;
+            for (const img of Array.from(document.images || [])) {
+              if (!img.complete || img.naturalWidth > 0 || img.naturalHeight > 0) continue;
+              const src = img.getAttribute('src') || '';
+              if (!src || src.startsWith('data:')) continue;
+              const original = img.dataset.bfVisualOriginalSrc || src.replace(/[?&]bf_visual_retry=\\d+$/, '');
+              img.dataset.bfVisualOriginalSrc = original;
+              const separator = original.includes('?') ? '&' : '?';
+              img.setAttribute('src', `${original}${separator}bf_visual_retry=${attempt + 1}`);
+            }
+            await sleep(250);
+          }
+        }
+        """
+    )
+
+
 def _visual_checks_with_playwright(
     pages_root: Path,
     paths: list[str],
@@ -399,19 +441,7 @@ def _visual_checks_with_playwright(
                     page.on("response", on_response)
                     response = page.goto(f"{base_url}{path}", wait_until="networkidle")
                     try:
-                        page.wait_for_function(
-                            "() => Array.from(document.images || []).every((img) => img.complete)",
-                            timeout=5000,
-                        )
-                        page.evaluate(
-                            """
-                            () => Promise.all(
-                              Array.from(document.images || []).map((img) =>
-                                img.decode ? img.decode().catch(() => undefined) : Promise.resolve()
-                              )
-                            )
-                            """
-                        )
+                        _wait_for_images_to_decode(page)
                     except Exception:
                         pass
                     status = response.status if response else None

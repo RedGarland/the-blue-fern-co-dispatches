@@ -1467,7 +1467,11 @@ def test_later_gaza_daily_regeneration_preserves_historical_catchup_union(tmp_pa
     }
 
     assert second == replay
-    assert 'href="editions/2026-09-05/">Read the latest readable update</a>' in second["index.html"]
+    assert '<article class="gaza-latest-card">' in second["index.html"]
+    assert '<p class="edition-date">2026-09-05</p>' in second["index.html"]
+    assert '<h3>Daily briefing</h3>' in second["index.html"]
+    assert 'href="editions/2026-09-05/">Read briefing</a>' in second["index.html"]
+    assert "Read the latest readable update" not in second["index.html"]
     assert len(set(re.findall(r'editions/(\d{4}-\d{2}-\d{2})/', second["index.html"]))) == 8
     assert "gaza-historical-catchup-synthetic-history" in second["index.html"]
     assert "gaza-historical-catchup-second" in second["index.html"]
@@ -3643,6 +3647,7 @@ def test_generated_gaza_index_recent_editions_do_not_duplicate_date_links(tmp_pa
     assert "<h2>Recent Editions</h2>" not in index_html
     assert "<h2>Readable Briefings</h2>" in index_html
     assert "<h2>Recent Checks</h2>" in index_html
+    assert '<article class="gaza-latest-card">' in index_html
     assert '<span class="edition-date">2026-10-01</span><a href="editions/2026-10-01/">2026-10-01</a>' not in index_html
     assert '<li><a class="edition-date" href="editions/2026-10-01/">2026-10-01</a></li>' in index_html
     assert not re.search(r"(20\d{2}-\d{2}-\d{2})\1", compact_recent_text)
@@ -3670,7 +3675,12 @@ def test_gaza_landing_separates_readable_briefings_from_no_update_checks(tmp_pat
     checks_html = index_html.split('<ul class="edition-list gaza-check-list">', 1)[1].split("</ul>", 1)[0]
 
     assert "<h2>Recent Editions</h2>" not in index_html
-    assert 'href="editions/2026-09-30/">Read the latest readable update</a>' in latest_html
+    assert '<article class="gaza-latest-card">' in latest_html
+    assert '<p class="edition-date">2026-09-30</p>' in latest_html
+    assert "<h3>Daily briefing</h3>" in latest_html
+    assert "Daily briefing" in latest_html
+    assert 'href="editions/2026-09-30/">Read briefing</a>' in latest_html
+    assert "Read the latest readable update" not in latest_html
     assert "No qualifying update" not in latest_html
     assert 'href="editions/2026-09-30/">2026-09-30</a>' in readable_html
     assert "2026-10-02" not in readable_html
@@ -3701,10 +3711,43 @@ def test_gaza_landing_latest_readable_update_can_use_catchup_after_newer_no_upda
     index_html = generator.render_dispatch_index_for_dates(dispatch, [], site_root)
     latest_html = index_html.split("<h2>Latest Readable Update</h2>", 1)[1].split("<h2>Recent Checks</h2>", 1)[0]
 
-    assert 'href="catchups/gaza-historical-catchup-2026-09-03/">Read the latest readable update</a>' in latest_html
+    assert '<article class="gaza-latest-card">' in latest_html
+    assert '<p class="edition-date">2026-09-03</p>' in latest_html
+    assert "<h3>Recovered Gaza development</h3>" in latest_html
+    assert "Historical catch-up" in latest_html
+    assert 'href="catchups/gaza-historical-catchup-2026-09-03/">Read catch-up</a>' in latest_html
+    assert "Read the latest readable update" not in latest_html
     assert "No qualifying update" not in latest_html
     assert '<span class="edition-date">2026-09-03</span> <a href="catchups/gaza-historical-catchup-2026-09-03/">Historical catch-up / 2026-09-03' in index_html
     assert '<li class="no-update-check"><span class="edition-date">2026-10-02</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">3 sources checked</span></li>' in index_html
+
+
+def test_gaza_landing_limits_recent_checks_to_three_and_links_archive(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    add_gaza_public_history_surface(site_root, ["2026-09-30"])
+    add_gaza_site_edition(site_root, "2026-09-30")
+    for index, date in enumerate(["2026-10-02", "2026-09-28", "2026-09-25", "2026-09-21"], start=1):
+        add_gaza_no_update_status(site_root, date, source_count=index)
+    dispatch = DispatchConfig(
+        slug="gaza",
+        name="Dispatches From Gaza",
+        edition_date="2026-10-02",
+        tagline="Daily briefing",
+        logo="gaza-logo.png",
+        sources=[],
+        stories=[],
+        detail_artifacts=[],
+    )
+
+    index_html = generator.render_dispatch_index_for_dates(dispatch, ["2026-09-30"], site_root)
+    checks_html = index_html.split('<ul class="edition-list gaza-check-list">', 1)[1].split("</ul>", 1)[0]
+
+    assert checks_html.count('class="no-update-check"') == 3
+    assert "2026-10-02" in checks_html
+    assert "2026-09-28" in checks_html
+    assert "2026-09-25" in checks_html
+    assert "2026-09-21" not in checks_html
+    assert '<a href="archive.html">Open full archive history</a>' in index_html
 
 
 def test_gaza_archive_groups_entries_by_month_and_highlights_latest(tmp_path: Path):
@@ -3902,7 +3945,7 @@ def test_gaza_no_update_beats_stale_local_same_day_edition_residue(tmp_path: Pat
     rss_xml = generator.render_rss_for_dates(dispatch, dates, site_root)
 
     assert dates == ["2026-09-24"]
-    assert 'href="editions/2026-09-24/">Read the latest readable update</a>' in index_html
+    assert 'href="editions/2026-09-24/">Read briefing</a>' in index_html
     assert "2026-09-25" in index_html
     assert "No qualifying update" in index_html
     assert "5 sources checked" in index_html
@@ -3952,7 +3995,7 @@ def test_gaza_committed_pages_edition_may_supersede_same_day_no_update(tmp_path:
     index_html = generator.render_dispatch_index_for_dates(dispatch, dates, site_root)
 
     assert dates == ["2026-09-25", "2026-09-24"]
-    assert 'href="editions/2026-09-25/">Read the latest readable update</a>' in index_html
+    assert 'href="editions/2026-09-25/">Read briefing</a>' in index_html
     assert "No qualifying update" not in index_html
 
 

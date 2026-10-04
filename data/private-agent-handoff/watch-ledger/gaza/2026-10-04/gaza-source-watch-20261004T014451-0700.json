@@ -1,0 +1,53 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261004T014451-0700",
+  "scheduled_for": "2026-10-04T01:44:51-07:00",
+  "started_at": "2026-10-04T01:42:08-07:00",
+  "completed_at": "2026-10-04T01:44:16-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-04T00:48:00-07:00",
+    "end": "2026-10-04T01:44:16-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Since the prior hourly check, whose completion was reported at approximately 00:48 PT."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "required_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "result": "No new in-window Gaza operational update surfaced; search returned older OCHA humanitarian situation material."
+      },
+      {
+        "source": "WHO",
+        "result": "No new in-window Gaza operational update surfaced; search returned older WHO Gaza/OPT material."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "additional_sources_checked": [
+      "Reuters",
+      "Associated Press",
+      "UNRWA",
+      "Palestine Red Crescent Society",
+      "World Food Programme",
+      "UNICEF",
+      "ICRC",
+      "MSF",
+      "WAFA",
+      "BBC",
+      "UN News",
+      "bounded general Gaza latest search"
+    ],
+    "degradations": [
+      "Direct retrieval for BBC and UN News was blocked by robots.txt; other targeted coverage remained usable."
+    ],
+    "exclusions": [
+      "Reuters' October 4 report on Gazans displaced abroad was surfaced again but excluded as a duplicate because it was captured in the prior hourly watch.",
+      "Older and recycled Gaza items outside the observation window were excluded."
+    ],
+    "assessment": "No new qualifying, traceable development was verified in the observation window."
+  }
+}

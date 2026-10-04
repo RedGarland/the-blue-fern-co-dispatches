@@ -14,6 +14,7 @@ FOOD_LINE_REVIEW_RE = re.compile(r"^data/dispatches/food-line/review(?:/.*)?$")
 FOOD_LINE_OUTPUT_REVIEW_RE = re.compile(r"^output/review/food-line(?:/.*)?$")
 PUBLIC_SITE_VISUAL_REVIEW_RE = re.compile(r"^output/review/public-site-visuals(?:[-_/].*)?$")
 BLUEFERN_PUBLIC_SURFACE_REVIEW_RE = re.compile(r"^output/review/bluefern-[a-z0-9_-]+(?:/.*)?$")
+GAZA_ARCHIVE_REVIEW_RE = re.compile(r"^output/review/gaza-archive-[a-z0-9_-]+(?:/.*)?$")
 PUBLIC_SURFACE_BACKUP_RE = re.compile(r"^output/tmp-backups-pages(?:/.*)?$")
 FOOD_LINE_OUTPUT_SITE_RE = re.compile(r"^output/site/food-line(?:/.*)?$")
 FOOD_LINE_OUTPUT_DISPATCH_EDITIONS_RE = re.compile(
@@ -130,6 +131,8 @@ def classify_food_line_runtime_path(path_text: str) -> str | None:
         return "review_output"
     if BLUEFERN_PUBLIC_SURFACE_REVIEW_RE.match(lower):
         return "review_output"
+    if GAZA_ARCHIVE_REVIEW_RE.match(lower):
+        return "review_output"
     if FOOD_LINE_OUTPUT_REVIEW_RE.match(lower):
         return "review_output"
     if PUBLIC_SURFACE_BACKUP_RE.match(lower):
@@ -176,6 +179,7 @@ def food_line_runtime_paths() -> list[str]:
         "output/review/food-line/",
         "output/review/public-site-visuals",
         "output/review/bluefern-",
+        "output/review/gaza-archive-",
         "output/tmp-backups-pages/",
         "output/site/food-line/",
         "output/dispatches/food-line/editions/",

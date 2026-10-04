@@ -28,11 +28,11 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "SUCCESS",
+      "aggregate_status": "DEGRADED",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "e83103baee5a4d9f8d7549e2b26d1a151c8f71ae",
       "debug_summary": {
-        "aggregate_status": "SUCCESS",
+        "aggregate_status": "DEGRADED",
         "all_current_failures_external": true,
         "all_current_failures_non_actionable": true,
         "attention_task_count": 1,
@@ -48,7 +48,7 @@
         ],
         "external_access_restriction_count": 9,
         "failed_source_count": 9,
-        "operator_assessment": "HEALTHY",
+        "operator_assessment": "HEALTHY_WITH_EXTERNAL_RESTRICTIONS",
         "primary_classification": "partial_success",
         "primary_failure_stage": "care_line_collection",
         "primary_layer": "EXTERNAL_DEPENDENCY",
@@ -187,7 +187,7 @@
         "attention_task_count": 3,
         "attention_tasks": [
           {
-            "artifact_id": "20261004T140914Z-source-watch.json",
+            "artifact_id": "20261004T150923Z-source-watch.json",
             "classification": "failed",
             "exit_code": 10,
             "failure_stage": "source_watch",
@@ -339,11 +339,11 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "UNKNOWN",
+      "aggregate_status": "MISSED",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "e83103baee5a4d9f8d7549e2b26d1a151c8f71ae",
       "debug_summary": {
-        "aggregate_status": "UNKNOWN",
+        "aggregate_status": "MISSED",
         "all_current_failures_external": null,
         "all_current_failures_non_actionable": null,
         "attention_task_count": 0,
@@ -353,7 +353,7 @@
         "operator_assessment": "FAILED_ACTION_REQUIRED",
         "primary_classification": null,
         "primary_failure_stage": null,
-        "primary_layer": "UNKNOWN",
+        "primary_layer": "SCHEDULER_OR_OBSERVABILITY",
         "primary_task_key": null,
         "primary_task_status": null,
         "private_review_count_only_gap_count": null,
@@ -436,7 +436,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-04T14:15:07.427625Z",
+  "exported_at": "2026-10-04T15:15:05.666549Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "FAILED"

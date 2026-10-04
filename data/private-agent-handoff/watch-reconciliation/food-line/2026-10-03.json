@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_reconciliation.v1",
+  "dispatch": "food-line",
+  "observation_date": "2026-10-03",
+  "run_count": 17,
+  "success_run_count": 17,
+  "degraded_run_count": 0,
+  "failed_run_count": 0,
+  "zero_finding_run_count": 17,
+  "finding_count": 0,
+  "accounted_count": 0,
+  "unreconciled_count": 0,
+  "findings": [],
+  "missing_hour_slots_local": ["07", "12", "15", "17", "19", "22"],
+  "material_heartbeat_absence": true,
+  "operational_issue": true,
+  "operational_issue_reasons": ["MATERIAL_HEARTBEAT_ABSENCE"]
+}

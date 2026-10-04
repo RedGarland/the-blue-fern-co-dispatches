@@ -1,0 +1,57 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261004T004451-0700",
+  "scheduled_for": "2026-10-04T00:44:51-07:00",
+  "started_at": "2026-10-04T00:46:59-07:00",
+  "completed_at": "2026-10-04T00:48:49-07:00",
+  "status": "DEGRADED",
+  "outcome": "findings",
+  "search_window": {
+    "start": "2026-10-03T23:50:30-07:00",
+    "end": "2026-10-04T00:48:49-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [
+    {
+      "finding_id": "gaza-displacement-overseas-return-20261004-reuters",
+      "canonical_source_url": "https://www.reuters.com/world/middle-east/haunted-by-grief-gazas-displaced-still-wait-overseas-return-2026-10-04/",
+      "title": "Haunted by grief, Gaza's displaced still wait overseas for return",
+      "publisher": "Reuters",
+      "source_date": "2026-10-04",
+      "publication_date": "2026-10-04T07:03:00Z",
+      "event_date": null,
+      "location": "Gaza Strip and Egypt",
+      "affected_population_system": "Gazans displaced outside the Gaza Strip; return and repatriation",
+      "exact_supporting_passage": "Some 7,000 have returned to Gaza, many remain abroad.",
+      "source_type": "established_reporting",
+      "classification": "follow-up",
+      "confidence": "high",
+      "bounded_discovery_context": "Published at 00:03 PT, after the prior heartbeat completed at 23:50:30 PT. Reuters reports current Palestinian Authority displacement figures and a return count."
+    }
+  ],
+  "coverage_notes": {
+    "summary": "One new qualifying displacement follow-up was found. OCHA OPT and WHO were checked first and had no separate in-window operational update.",
+    "additional_targeted_searches": 12,
+    "additional_sources_checked": [
+      "UNRWA",
+      "ICRC",
+      "Palestine Red Crescent Society",
+      "UNICEF",
+      "WFP",
+      "Reuters",
+      "Associated Press",
+      "BBC",
+      "Al Jazeera",
+      "WAFA",
+      "UN News",
+      "ReliefWeb"
+    ],
+    "degraded_sources": [
+      {"source": "BBC", "reason": "robots.txt blocked retrieval"},
+      {"source": "UN News", "reason": "robots.txt blocked retrieval"}
+    ],
+    "bounded_discovery_context": "Twelve additional targeted searches covered the requested miss classes. Production remains authoritative. This finding was not approved or published."
+  }
+}

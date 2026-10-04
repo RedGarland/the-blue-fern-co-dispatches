@@ -328,6 +328,40 @@ def test_gaza_no_update_checks_without_recent_checks_section_fail(tmp_path: Path
     assert "gaza_recent_checks_section" in _issue_checks(result)
 
 
+def test_gaza_latest_readable_generic_link_fails(tmp_path: Path) -> None:
+    root = _make_pages_root(tmp_path)
+    generic = """<!doctype html><html><head><link rel="stylesheet" href="/assets/site.css"></head>
+<body><main class="home home--gaza"><section class="hero"><img class="hero-logo" src="/assets/food-line-logo.png" alt="Dispatches From Gaza"></section>
+<h2>Latest Readable Update</h2>
+<p><a href="editions/2026-09-30/">Read the latest readable update</a></p>
+<h2>Recent Checks</h2>
+<ul class="edition-list gaza-check-list"><li class="no-update-check"><span class="edition-date">2026-10-02</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">22 sources checked</span></li></ul>
+</main></body></html>"""
+    _write(root / "gaza" / "index.html", generic)
+
+    result = validate_public_site_visuals(root)
+
+    assert result["ok"] is False
+    assert "gaza_latest_card" in _issue_checks(result)
+
+
+def test_gaza_latest_card_after_recent_checks_fails(tmp_path: Path) -> None:
+    root = _make_pages_root(tmp_path)
+    wrong_order = """<!doctype html><html><head><link rel="stylesheet" href="/assets/site.css"></head>
+<body><main class="home home--gaza"><section class="hero"><img class="hero-logo" src="/assets/food-line-logo.png" alt="Dispatches From Gaza"></section>
+<h2>Latest Readable Update</h2>
+<h2>Recent Checks</h2>
+<ul class="edition-list gaza-check-list"><li class="no-update-check"><span class="edition-date">2026-10-02</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">22 sources checked</span></li></ul>
+<article class="gaza-latest-card"><p class="edition-date">2026-09-30</p><h3>Daily briefing</h3><p><a class="button" href="editions/2026-09-30/">Read briefing</a></p></article>
+</main></body></html>"""
+    _write(root / "gaza" / "index.html", wrong_order)
+
+    result = validate_public_site_visuals(root)
+
+    assert result["ok"] is False
+    assert "gaza_latest_card_order" in _issue_checks(result)
+
+
 def test_gaza_archive_logo_splash_or_rows_below_viewport_fails(tmp_path: Path) -> None:
     css = GOOD_CSS + "\n.archive--gaza .hero-logo { width: 540px; height: 360px; }\n.archive-latest { margin-top: 520px; }\n.archive-month { margin-top: 640px; }\n"
     root = _make_pages_root(tmp_path, css=css)

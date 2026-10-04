@@ -101,6 +101,7 @@ CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_SURFACED = "Reviewed week | No qualifying so
 CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE = CASCADIA_ZERO_STORY_PUBLIC_SUBTITLE_SURFACED
 GAZA_HOME_RECENT_EDITION_LIMIT = 10
 GAZA_HOME_RECENT_EDITION_MIN = 3
+GAZA_HOME_RECENT_CHECK_LIMIT = 3
 GAZA_NO_UPDATE_MESSAGE = "No new source-backed Gaza update met publication threshold today."
 GAZA_NO_UPDATE_CLASSIFICATION = "no_publication_needed"
 GAZA_PUBLIC_HISTORY_DATE_RE = re.compile(r"(?:/gaza/)?editions/(\d{4}-\d{2}-\d{2})/")
@@ -2250,6 +2251,41 @@ def _render_gaza_recent_checks_list(
     return "\n".join(render_gaza_no_update_check_list_item(entry) for entry in checks)
 
 
+def _gaza_landing_latest_card(
+    site_root: Path,
+    dispatch: DispatchConfig,
+    row: tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry] | None,
+) -> str:
+    if row is None:
+        return (
+            '    <article class="gaza-latest-card">\n'
+            '      <p class="edition-meta">No readable Gaza briefing is currently listed.</p>\n'
+            "    </article>"
+        )
+    kind, value = row
+    date = _gaza_history_row_date(row)
+    if kind == "catchup" and isinstance(value, GazaHistoricalCatchupEntry):
+        title = value.title or "Recovered Gaza developments"
+        type_label = "Historical catch-up"
+        href = f"catchups/{html.escape(value.catchup_id)}/"
+        cta = "Read catch-up"
+    else:
+        title = public_edition_label(site_root, dispatch, date)
+        if title == date:
+            title = "Daily briefing"
+        type_label = "Daily briefing"
+        href = f"editions/{html.escape(date)}/"
+        cta = "Read briefing"
+    return (
+        '    <article class="gaza-latest-card">\n'
+        f'      <p class="edition-date">{html.escape(date)}</p>\n'
+        f"      <h3>{html.escape(title)}</h3>\n"
+        f'      <p class="topic-badge topic-badge--gaza">{html.escape(type_label)}</p>\n'
+        f'      <p><a class="button" href="{href}">{html.escape(cta)}</a></p>\n'
+        "    </article>"
+    )
+
+
 def _render_gaza_archive_grouped_history(
     site_root: Path,
     dispatch: DispatchConfig,
@@ -2766,13 +2802,16 @@ def render_dispatch_index_for_dates(
         )
         recent_checks = _render_gaza_recent_checks_list(
             gaza_rows,
-            limit=GAZA_HOME_RECENT_EDITION_LIMIT,
+            limit=GAZA_HOME_RECENT_CHECK_LIMIT,
         )
+        latest_card = _gaza_landing_latest_card(site_root, dispatch, latest_readable)
         gaza_recent_sections = f"""
     <h2>Recent Checks</h2>
+    <p class="gaza-checks-note">Recent monitoring checks that did not produce a public briefing. Full accountability history remains in the archive.</p>
     <ul class="edition-list gaza-check-list">
 {recent_checks if recent_checks else "      <li>No recent no-update checks are currently listed.</li>"}
     </ul>
+    <p class="gaza-checks-archive-link"><a href="archive.html">Open full archive history</a></p>
     <h2>Readable Briefings</h2>
     <ul class="edition-list gaza-readable-list">
 {recent if recent else "      <li>No readable Gaza briefing is currently listed.</li>"}
@@ -2804,12 +2843,7 @@ def render_dispatch_index_for_dates(
     latest_heading = "Latest Briefing"
     if dispatch.slug == "gaza":
         latest_heading = "Latest Readable Update"
-        if latest_readable is not None:
-            kind, value = latest_readable
-            if kind == "catchup" and isinstance(value, GazaHistoricalCatchupEntry):
-                latest_link = f'<p><a href="catchups/{html.escape(value.catchup_id)}/">Read the latest readable update</a></p>'
-            else:
-                latest_link = f'<p><a href="editions/{html.escape(latest)}/">Read the latest readable update</a></p>'
+        latest_link = latest_card
     gaza_audio_link = ""
     if dispatch.slug == "gaza" and (site_root / "gaza" / "audio" / "index.html").exists():
         gaza_audio_link = '\n    <p><a href="/gaza/audio/index.html">Gaza audio and transcript archive</a></p>'
@@ -2853,8 +2887,9 @@ def render_dispatch_index_for_dates(
     <h2>Pressure Map</h2>
     {map_link}
     {dashboard_link}""" if (map_link or dashboard_link) else ""
+    main_class = "home home--gaza" if dispatch.slug == "gaza" else "home"
     body = f"""{header(dispatch.name, "", "archive.html")}
-  <main class="home">
+  <main class="{main_class}">
     <section class="hero">
       <img class="hero-logo" src="assets/{dispatch.logo}" alt="{html.escape(dispatch.name)}">
     </section>

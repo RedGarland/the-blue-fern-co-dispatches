@@ -185,6 +185,52 @@ def _assert_html_basics(pages_root: Path, issues: list[VisualIssue]) -> dict[str
         issues.append(VisualIssue("/gaza/", "gaza_recent_duplicate_date_link", "Gaza landing page is missing"))
     else:
         gaza_heading_texts = {heading.get_text(" ", strip=True).lower() for heading in gaza_home_soup.find_all(["h2", "h3"])}
+        latest_heading = next(
+            (
+                heading
+                for heading in gaza_home_soup.find_all(["h2", "h3"])
+                if heading.get_text(" ", strip=True).lower() in {"latest readable update", "latest briefing"}
+            ),
+            None,
+        )
+        latest_card = gaza_home_soup.find(class_="gaza-latest-card")
+        if latest_heading is not None and ("recent checks" in gaza_heading_texts or latest_heading.get_text(" ", strip=True).lower() == "latest readable update"):
+            if latest_card is None:
+                issues.append(
+                    VisualIssue(
+                        "/gaza/",
+                        "gaza_latest_card",
+                        "Gaza latest readable update must render as a public latest-card, not a generic link",
+                    )
+                )
+            else:
+                card_text = latest_card.get_text(" ", strip=True)
+                if not latest_card.find(class_="edition-date") or not latest_card.find("h3") or not latest_card.find("a"):
+                    issues.append(
+                        VisualIssue(
+                            "/gaza/",
+                            "gaza_latest_card",
+                            "Gaza latest card is missing date, title, or CTA",
+                        )
+                    )
+                if "Read the latest readable update" in card_text:
+                    issues.append(
+                        VisualIssue(
+                            "/gaza/",
+                            "gaza_latest_card",
+                            "Gaza latest card uses generic latest-readable link text",
+                        )
+                    )
+                latest_position = str(gaza_home_soup).find(str(latest_card))
+                checks_position = str(gaza_home_soup).find("Recent Checks")
+                if checks_position != -1 and latest_position != -1 and latest_position > checks_position:
+                    issues.append(
+                        VisualIssue(
+                            "/gaza/",
+                            "gaza_latest_card_order",
+                            "Gaza latest card should appear before Recent Checks",
+                        )
+                    )
         if gaza_home_soup.find(class_="no-update-label") is not None:
             if "recent checks" not in gaza_heading_texts:
                 issues.append(

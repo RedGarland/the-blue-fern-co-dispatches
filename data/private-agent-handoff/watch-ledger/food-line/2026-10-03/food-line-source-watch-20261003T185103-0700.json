@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261003T185103-0700",
+  "scheduled_for": "2026-10-03T18:43:37-07:00",
+  "started_at": "2026-10-03T18:51:03-07:00",
+  "completed_at": "2026-10-03T18:51:42-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-03T17:44:48-07:00",
+    "end": "2026-10-03T18:51:42-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "Completed 12 targeted web searches covering sole/last/full-service grocery loss, disaster-related emergency food distribution cancellations or suspensions, abrupt pantry/food-bank service closure or major access reduction, and official SNAP/WIC/EBT interruptions. Returned results were stale, outside the bounded window, or non-qualifying; no new qualifying U.S. food-access disruption was identified. Production collection remains authoritative."
+}

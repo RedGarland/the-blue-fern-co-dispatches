@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_reconciliation.v1",
+  "dispatch": "care-line",
+  "observation_date": "2026-10-03",
+  "run_count": 15,
+  "success_run_count": 10,
+  "degraded_run_count": 5,
+  "failed_run_count": 0,
+  "zero_finding_run_count": 15,
+  "finding_count": 0,
+  "accounted_count": 0,
+  "unreconciled_count": 0,
+  "findings": [],
+  "missing_hour_slots_local": ["02", "03", "08", "11", "12", "14", "16", "17"],
+  "material_heartbeat_absence": true,
+  "operational_issue": true,
+  "operational_issue_reasons": ["MATERIAL_HEARTBEAT_ABSENCE"]
+}

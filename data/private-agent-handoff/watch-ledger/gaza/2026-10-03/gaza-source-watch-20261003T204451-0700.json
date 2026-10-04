@@ -1,0 +1,30 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261003T204451-0700",
+  "scheduled_for": "2026-10-03T20:44:51-07:00",
+  "started_at": "2026-10-03T20:48:36-07:00",
+  "completed_at": "2026-10-03T20:50:00-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-03T18:44:57-07:00",
+    "end": "2026-10-03T20:50:00-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      "OCHA OPT checked first; no new in-window Gaza-specific humanitarian update surfaced.",
+      "WHO checked second; no new in-window Gaza-specific operational update surfaced."
+    ],
+    "additional_targeted_searches_used": 12,
+    "additional_targeted_searches_limit": 12,
+    "degraded_searches": [
+      "UN News targeted retrieval was blocked by robots.txt.",
+      "BBC targeted retrieval was blocked by robots.txt."
+    ],
+    "assessment": "No distinct qualifying development was verified since the prior completed hourly check ended at 18:44:57 PT. The 12 targeted searches covered UNRWA, PRCS, UNICEF, WFP, UN News, ICRC, AP, Reuters, BBC, WAFA, IDF, and one bounded cross-source Gaza search. Opinion, unsupported social claims, recycled items, duplicates, unsourced claims, and out-of-window material were excluded. Remaining official and established-source coverage was usable despite the two robots.txt blocks."
+  }
+}

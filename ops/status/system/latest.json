@@ -78,7 +78,7 @@
         "private_review_pending_item_count": null,
         "private_review_unresolved_item_count": null,
         "publication_attempted": false,
-        "publication_status": "failure",
+        "publication_status": "safe_no_op",
         "receipt_completeness": "COMPLETE",
         "recovery_lifecycle": "HEALTHY",
         "stale_observability": false,
@@ -203,7 +203,7 @@
         "attention_task_count": 1,
         "attention_tasks": [
           {
-            "artifact_id": "20261004T223523Z-status-resume.json",
+            "artifact_id": "20261004T230540Z-status-resume.json",
             "classification": "status_resume_failed",
             "exit_code": 10,
             "failure_stage": "status_resume",
@@ -463,7 +463,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-04T22:48:38.959582Z",
+  "exported_at": "2026-10-04T23:05:40.943466Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "FAILED"

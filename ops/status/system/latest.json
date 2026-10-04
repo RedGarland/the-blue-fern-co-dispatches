@@ -187,15 +187,23 @@
       },
       "aggregate_status": "FAILED",
       "current_runner_branch": "add/pages-repo-default",
-      "current_runner_head": "dc9b8f1b6207e373a73580b45efaaf17334f4f2c",
+      "current_runner_head": "a72494a20c07725c3090ca2c3d5e89ff43fe88e1",
       "debug_summary": {
         "aggregate_status": "FAILED",
         "all_current_failures_external": null,
         "all_current_failures_non_actionable": null,
-        "attention_task_count": 1,
+        "attention_task_count": 2,
         "attention_tasks": [
           {
-            "artifact_id": "20261004T201509Z-status-resume.json",
+            "artifact_id": "20261004T201839Z-source-watch.json",
+            "classification": "failed",
+            "exit_code": 10,
+            "failure_stage": "source_watch",
+            "status": "FAILED",
+            "task_key": "food_line_source_watch"
+          },
+          {
+            "artifact_id": "20261004T201823Z-status-resume.json",
             "classification": "status_resume_failed",
             "exit_code": 10,
             "failure_stage": "status_resume",
@@ -206,10 +214,10 @@
         "external_access_restriction_count": null,
         "failed_source_count": null,
         "operator_assessment": "FAILED_ACTION_REQUIRED",
-        "primary_classification": "status_resume_failed",
-        "primary_failure_stage": "status_resume",
-        "primary_layer": "TASK",
-        "primary_task_key": "food_line_source_watch_resume",
+        "primary_classification": "failed",
+        "primary_failure_stage": "source_watch",
+        "primary_layer": "SOURCE",
+        "primary_task_key": "food_line_source_watch",
         "primary_task_status": "FAILED",
         "private_review_count_only_gap_count": 55,
         "private_review_dispositioned_item_count": 66,
@@ -446,7 +454,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-04T20:15:33.774827Z",
+  "exported_at": "2026-10-04T20:19:16.571523Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "FAILED"

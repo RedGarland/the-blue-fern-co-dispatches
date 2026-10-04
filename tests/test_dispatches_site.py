@@ -3722,6 +3722,46 @@ def test_gaza_landing_latest_readable_update_can_use_catchup_after_newer_no_upda
     assert '<li class="no-update-check"><span class="edition-date">2026-10-02</span><span class="no-update-label">No qualifying update</span><span class="archive-row-note">3 sources checked</span></li>' in index_html
 
 
+def test_gaza_landing_keeps_older_catchups_beyond_recent_daily_limit(tmp_path: Path):
+    site_root = tmp_path / "output" / "site"
+    daily_dates = [
+        "2026-10-03",
+        "2026-10-01",
+        "2026-09-30",
+        "2026-09-29",
+        "2026-09-27",
+        "2026-09-26",
+        "2026-09-24",
+        "2026-09-23",
+        "2026-09-22",
+        "2026-09-18",
+    ]
+    add_gaza_public_history_surface(site_root, daily_dates)
+    for date_text in daily_dates:
+        add_gaza_site_edition(site_root, date_text)
+    add_gaza_historical_catchup_publication(
+        site_root,
+        catchup_id="gaza-historical-catchup-aug29-sep02-2026-batch-01",
+        publication_date="2026-09-02",
+    )
+    dispatch = DispatchConfig(
+        slug="gaza",
+        name="Dispatches From Gaza",
+        edition_date="2026-10-03",
+        tagline="Daily briefing",
+        logo="gaza-logo.png",
+        sources=[],
+        stories=[],
+        detail_artifacts=[],
+    )
+
+    index_html = generator.render_dispatch_index_for_dates(dispatch, daily_dates, site_root)
+    readable_html = index_html.split('<ul class="edition-list gaza-readable-list">', 1)[1].split("</ul>", 1)[0]
+
+    assert "gaza-historical-catchup-aug29-sep02-2026-batch-01" in readable_html
+    assert '<span class="edition-date">2026-09-02</span> <a href="catchups/gaza-historical-catchup-aug29-sep02-2026-batch-01/">Historical catch-up / 2026-09-02' in readable_html
+
+
 def test_gaza_landing_limits_recent_checks_to_three_and_links_archive(tmp_path: Path):
     site_root = tmp_path / "output" / "site"
     add_gaza_public_history_surface(site_root, ["2026-09-30"])

@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261004T124522-0700-r11",
+  "scheduled_for": "2026-10-04T12:45:22-07:00",
+  "started_at": "2026-10-04T12:42:41-07:00",
+  "completed_at": "2026-10-04T12:45:26-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-04T11:46:36-07:00",
+    "end": "2026-10-04T12:45:26-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices was checked first. Search-based verification found no newer CMS termination/public-notice item than the previously observed 2026-10-02 Comfort Care Home Health (CA) notice, but the direct CMS termination-notices page was not accessible through the web retrieval path during this run; coverage is therefore marked DEGRADED rather than FAILED.",
+    "Exactly 12 additional targeted searches were completed across hospital/ED, maternity, behavioral-health, dialysis, oncology, primary-care, rural/emergency service loss, ambulance, air-medical, essential-service restoration/reopening, and U.S. territory coverage.",
+    "No new qualifying U.S. or territory healthcare-access development was found since the prior completed Care Line Watch heartbeat at 2026-10-04T11:46:36-07:00.",
+    "Returned items were stale or outside the search window, including previously reported Chicago-area obstetrics service closures effective 2026-10-01; other results were outside the qualifying service-loss/restoration classes, foreign, proposal-only, business/ownership-only, or otherwise excluded under the watch rules.",
+    "No approval, publication, schedule change, or task-state change was performed."
+  ]
+}

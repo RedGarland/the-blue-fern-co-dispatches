@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261004T154418-0700",
+  "scheduled_for": "2026-10-04T15:44:18-07:00",
+  "started_at": "2026-10-04T15:44:18-07:00",
+  "completed_at": "2026-10-04T15:44:40-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-04T14:46:18-07:00",
+    "end": "2026-10-04T15:44:40-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "Completed exactly 12 bounded targeted web searches for the four high-value Food Line recall miss classes. Returned material was stale, outside the U.S., outside the observation window, or non-qualifying; no new qualifying signal was verified. Production collection remains authoritative. No approval, publication, schedule, or production collector state was changed."
+}

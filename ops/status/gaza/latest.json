@@ -12,7 +12,7 @@
   },
   "aggregate_status": "SUCCESS",
   "current_runner_branch": "add/pages-repo-default",
-  "current_runner_head": "4f0f7ef9f62bdfa30926e3d16b383b3ad2c15db7",
+  "current_runner_head": "e83103baee5a4d9f8d7549e2b26d1a151c8f71ae",
   "debug_summary": {
     "aggregate_status": "SUCCESS",
     "all_current_failures_external": null,
@@ -46,7 +46,7 @@
   "dispatch": "gaza",
   "dry_run_recovery_applied": false,
   "dry_run_recovery_proof": null,
-  "last_exported_at": "2026-10-04T02:00:02Z",
+  "last_exported_at": "2026-10-04T03:53:45.440138Z",
   "last_receipt_at": "2026-10-03T13:02:46.030028Z",
   "latest_recovery_proof_at": null,
   "latest_runtime_proof_date": "2026-10-03T13:02:45.941603Z",

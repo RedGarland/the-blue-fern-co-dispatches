@@ -44,8 +44,8 @@
     "private_review_pending_item_count": null,
     "private_review_unresolved_item_count": null,
     "publication_attempted": false,
-    "publication_status": null,
-    "receipt_completeness": "PARTIAL",
+    "publication_status": "safe_no_op",
+    "receipt_completeness": "COMPLETE",
     "recovery_lifecycle": "HEALTHY",
     "stale_observability": false,
     "transient_source_failure_count": 0,
@@ -85,19 +85,19 @@
       "task_name": "\\Blue Fern Co.\\Blue Fern Care Line National Collection"
     }
   ],
-  "last_exported_at": "2026-10-04T15:15:05.666549Z",
-  "last_receipt_at": "2026-10-04T15:00:02.733911Z",
+  "last_exported_at": "2026-10-04T16:15:07.937233Z",
+  "last_receipt_at": "2026-10-04T15:30:13.127515Z",
   "latest_runtime_proof_date": null,
   "migration_status": "MIGRATED",
   "next_expected_run": null,
   "observed_date": "2026-10-04",
   "public_side_effects": {
     "publication_attempted": false,
-    "publication_status": null
+    "publication_status": "safe_no_op"
   },
   "publication_attempted": false,
-  "publication_status": null,
-  "receipt_completeness": "PARTIAL",
+  "publication_status": "safe_no_op",
+  "receipt_completeness": "COMPLETE",
   "recovery_lifecycle": "HEALTHY",
   "runner_source_head": "e83103baee5a4d9f8d7549e2b26d1a151c8f71ae",
   "scheduled_health_authoritative": true,
@@ -355,6 +355,27 @@
       "started_at": "2026-10-04T15:00:02.725485Z",
       "status": "SAFE_NO_OP",
       "task_key": "care_line_reviewed_event_queue"
+    },
+    {
+      "artifact_id": "20261004T153002Z-35776.json",
+      "classification": "safe_no_op",
+      "completed_at": "2026-10-04T15:30:13Z",
+      "diagnostics": null,
+      "exit_code": 0,
+      "next_expected_run": null,
+      "public_side_effects": {
+        "audio": false,
+        "editorial_approval_creation": false,
+        "queue_promotion": false,
+        "social": false
+      },
+      "publication_attempted": false,
+      "publication_status": "safe_no_op",
+      "run_id": "20261004T153002Z-35776",
+      "scheduled_for": "2026-10-04",
+      "started_at": "2026-10-04T15:30:03Z",
+      "status": "SAFE_NO_OP",
+      "task_key": "care_line_approved_release_publication"
     }
   ]
 }

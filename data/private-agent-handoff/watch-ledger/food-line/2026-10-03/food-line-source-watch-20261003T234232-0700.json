@@ -1,0 +1,19 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261003T234232-0700",
+  "scheduled_for": "2026-10-03T23:00:00-07:00",
+  "started_at": "2026-10-03T23:42:32-07:00",
+  "completed_at": "2026-10-03T23:42:59-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "since": "2026-10-03T22:48:49-07:00",
+    "until": "2026-10-03T23:42:59-07:00",
+    "targeted_searches": 12
+  },
+  "findings": [],
+  "coverage_notes": "Bounded supplementary recall watch completed all 12 targeted searches across the four audited high-value miss classes. No new qualifying U.S. food-access disruption was found in the search window. Returned items were stale/outside-window or non-qualifying (for example routine/recovery coverage, historical SNAP/WIC interruption material, and prior grocery-loss reporting). Production collection remains authoritative. No approval, publication, schedule change, or task disablement was performed."
+}

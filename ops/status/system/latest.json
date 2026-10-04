@@ -28,23 +28,32 @@
         "state": "NO_EXTERNAL_HANDOFF_EXPECTED",
         "unaccounted_count": 0
       },
-      "aggregate_status": "UNKNOWN",
+      "aggregate_status": "SUCCESS",
       "current_runner_branch": "add/pages-repo-default",
       "current_runner_head": "e83103baee5a4d9f8d7549e2b26d1a151c8f71ae",
       "debug_summary": {
-        "aggregate_status": "UNKNOWN",
-        "all_current_failures_external": false,
-        "all_current_failures_non_actionable": false,
-        "attention_task_count": 0,
-        "attention_tasks": [],
-        "external_access_restriction_count": 0,
-        "failed_source_count": 0,
-        "operator_assessment": "FAILED_ACTION_REQUIRED",
-        "primary_classification": null,
-        "primary_failure_stage": null,
-        "primary_layer": "UNKNOWN",
-        "primary_task_key": null,
-        "primary_task_status": null,
+        "aggregate_status": "SUCCESS",
+        "all_current_failures_external": true,
+        "all_current_failures_non_actionable": true,
+        "attention_task_count": 1,
+        "attention_tasks": [
+          {
+            "artifact_id": "20261004T130001Z-8592.json",
+            "classification": "partial_success",
+            "exit_code": 0,
+            "failure_stage": "care_line_collection",
+            "status": "DEGRADED",
+            "task_key": "care_line_collection"
+          }
+        ],
+        "external_access_restriction_count": 9,
+        "failed_source_count": 9,
+        "operator_assessment": "HEALTHY",
+        "primary_classification": "partial_success",
+        "primary_failure_stage": "care_line_collection",
+        "primary_layer": "EXTERNAL_DEPENDENCY",
+        "primary_task_key": "care_line_collection",
+        "primary_task_status": "DEGRADED",
         "private_review_count_only_gap_count": null,
         "private_review_dispositioned_item_count": null,
         "private_review_max_age_hours": null,
@@ -54,7 +63,7 @@
         "private_review_unresolved_item_count": null,
         "publication_attempted": false,
         "publication_status": null,
-        "receipt_completeness": "NO_PROOF",
+        "receipt_completeness": "PARTIAL",
         "recovery_lifecycle": "HEALTHY",
         "stale_observability": false,
         "transient_source_failure_count": 0,
@@ -64,19 +73,74 @@
       "latest_runtime_proof_date": null,
       "migration_status": "MIGRATED",
       "observed_date": "2026-10-04",
-      "receipt_completeness": "NO_PROOF",
+      "receipt_completeness": "PARTIAL",
       "recovery_lifecycle": "HEALTHY",
-      "scheduled_health_available": false,
+      "scheduled_health_available": true,
       "source_failure_summary": {
-        "all_current_failures_external": false,
-        "all_current_failures_non_actionable": false,
-        "external_access_restriction_count": 0,
-        "external_restriction_sources": [],
-        "failed_source_count": 0,
-        "original_failed_source_count": 0,
+        "all_current_failures_external": true,
+        "all_current_failures_non_actionable": true,
+        "external_access_restriction_count": 9,
+        "external_restriction_sources": [
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "hhs-news"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "hrsa-news"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "fierce-healthcare"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "virginia-mercury-health"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "ohio-capital-journal-health"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "missouri-independent-health"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "florida-phoenix-health"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "michigan-advance-health"
+          },
+          {
+            "classification": "PERSISTENT_EXTERNAL_ACCESS_RESTRICTION",
+            "coverage_reduced": true,
+            "remediation_available": false,
+            "source_id": "mayo-clinic-news"
+          }
+        ],
+        "failed_source_count": 9,
+        "original_failed_source_count": 9,
         "recovered_source_count": 0,
         "recovered_sources": [],
-        "successful_attempt_count": null,
+        "successful_attempt_count": 29,
         "transient_source_failure_count": 0,
         "transient_sources": [],
         "unclassified_source_failure_count": 0
@@ -120,15 +184,31 @@
         "aggregate_status": "FAILED",
         "all_current_failures_external": null,
         "all_current_failures_non_actionable": null,
-        "attention_task_count": 1,
+        "attention_task_count": 3,
         "attention_tasks": [
           {
-            "artifact_id": "20261004T120916Z-source-watch.json",
+            "artifact_id": "20261004T130929Z-source-watch.json",
             "classification": "failed",
             "exit_code": 10,
             "failure_stage": "source_watch",
             "status": "FAILED",
             "task_key": "food_line_source_watch"
+          },
+          {
+            "artifact_id": "20261004T131001Z-current-intake.json",
+            "classification": "upstream_blocked",
+            "exit_code": 0,
+            "failure_stage": null,
+            "status": "UPSTREAM_BLOCKED",
+            "task_key": "food_line_current_intake"
+          },
+          {
+            "artifact_id": "20261004T130001Z-status-resume.json",
+            "classification": "upstream_blocked",
+            "exit_code": 0,
+            "failure_stage": null,
+            "status": "UPSTREAM_BLOCKED",
+            "task_key": "food_line_source_watch_resume"
           }
         ],
         "external_access_restriction_count": null,
@@ -356,7 +436,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-04T12:15:03.652452Z",
+  "exported_at": "2026-10-04T13:15:04.489176Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "FAILED"

@@ -70,7 +70,7 @@
         "unaccounted_event_count": null,
         "unclassified_source_failure_count": 0
       },
-      "latest_runtime_proof_date": null,
+      "latest_runtime_proof_date": "2026-10-04T15:00:02.729327Z",
       "migration_status": "MIGRATED",
       "observed_date": "2026-10-04",
       "receipt_completeness": "COMPLETE",
@@ -187,7 +187,7 @@
         "attention_task_count": 3,
         "attention_tasks": [
           {
-            "artifact_id": "20261004T160921Z-source-watch.json",
+            "artifact_id": "20261004T170918Z-source-watch.json",
             "classification": "failed",
             "exit_code": 10,
             "failure_stage": "source_watch",
@@ -436,7 +436,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-04T16:15:07.937233Z",
+  "exported_at": "2026-10-04T17:15:06.757458Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "FAILED"

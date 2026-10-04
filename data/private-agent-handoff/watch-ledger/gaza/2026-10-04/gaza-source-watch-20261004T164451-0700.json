@@ -1,0 +1,27 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261004T164451-0700",
+  "scheduled_for": "2026-10-04T16:44:51-07:00",
+  "started_at": "2026-10-04T16:39:59-07:00",
+  "completed_at": "2026-10-04T16:43:23-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-04T15:44:51-07:00",
+    "end": "2026-10-04T16:43:23-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "ocha_opt_checked_first": true,
+    "who_checked_second": true,
+    "additional_targeted_searches": 12,
+    "ocha_result": "No new in-window OCHA OPT operational update surfaced.",
+    "who_result": "No new in-window WHO Gaza operational update surfaced.",
+    "additional_coverage": "Exactly 12 targeted searches covered Reuters and AP civilian casualties and military operations, UNRWA, Palestine Red Crescent, WFP, UNICEF, ICRC, crossings and aid access, ceasefire negotiations, hospital and medical-evacuation changes, and displacement/infrastructure damage.",
+    "exclusions": "The AP rolling Middle East report repeated the already-captured central Gaza civilian-vehicle strike and Deniz Feneri aid-volunteer death. Reuters Connect funeral footage restated the already-captured Deir al-Balah vehicle-strike casualty. Older, unrelated, duplicate, opinion, unsupported social, and unsourced material were excluded.",
+    "material_search_failures": []
+  }
+}

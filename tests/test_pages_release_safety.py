@@ -296,6 +296,104 @@ def _seed_pages_no_update(pages: Path, date_text: str = "2026-09-19") -> None:
     )
 
 
+def _seed_pages_gaza_catchup(
+    pages: Path,
+    *,
+    catchup_id: str = "gaza-historical-catchup-aug29-sep02-2026-batch-01",
+    publication_date: str = "2026-09-02",
+    published_at: str = "2026-09-02T19:54:18Z",
+) -> None:
+    public_path = f"gaza/catchups/{catchup_id}/"
+    public_url = f"{generator.BASE_URL}/{public_path}"
+    package = pages / public_path
+    package.mkdir(parents=True, exist_ok=True)
+    candidate_id = "GZ-CATCHUP-AUG29-SEP02"
+    event_fingerprint = "sha256:" + "c" * 64
+    story_id = "gaza-catchup-aug29-sep02"
+    title = "Recovered Gaza development"
+    disclosure = "Recovered through historical review and published retrospectively."
+    (package / "index.html").write_text(
+        f'<html><body><link rel="canonical" href="{public_url}"><h1>{title}</h1></body></html>',
+        encoding="utf-8",
+    )
+    (package / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "gaza_historical_catchup_edition_v2",
+                "dispatch_slug": "gaza",
+                "briefing_type": "historical_catchup",
+                "catchup_id": catchup_id,
+                "edition_date": publication_date,
+                "published_at": published_at,
+                "edition_title": title,
+                "retrospective_disclosure": disclosure,
+                "approval_commit": "a" * 40,
+                "approval_path": f"approvals/gaza/{catchup_id}-approval-v2.json",
+                "approval_sha256": "b" * 64,
+                "source_head": "d" * 40,
+                "pages_pre_publish_head": "e" * 40,
+                "public_path": public_path,
+                "public_url": public_url,
+                "public_exposed": True,
+                "story_count": 1,
+                "source_count": 1,
+                "audio_authorized": False,
+                "social_authorized": False,
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    (package / "sources_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "historical_candidate_id": candidate_id,
+                    "event_fingerprint": event_fingerprint,
+                    "canonical_url": "https://example.com/gaza-history",
+                    "url": "https://example.com/gaza-history",
+                }
+            ],
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    (package / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": story_id,
+                    "historical_candidate_id": candidate_id,
+                    "event_fingerprint": event_fingerprint,
+                    "historical_catchup": True,
+                    "historical_catchup_id": catchup_id,
+                    "included_in_public_summary": True,
+                    "public_url": public_url,
+                    "title": title,
+                }
+            ],
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    (package / "dedupe_report.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "gaza_historical_catchup_dedupe_v1",
+                "catchup_id": catchup_id,
+                "publication_date": publication_date,
+                "candidate_ids": [candidate_id],
+                "event_fingerprints": [event_fingerprint],
+                "input_candidate_count": 1,
+                "kept_candidate_count": 1,
+                "suppressed_candidate_count": 0,
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+
+
 def _stub_gaza_build(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         generator,
@@ -377,6 +475,72 @@ def test_gaza_no_update_scope_local_commit_changes_only_intended_pages_files(rel
     assert not (pages / "gaza/editions/2026-09-19/index.html").exists()
     assert "2026-09-18" in (pages / "gaza/audio/index.html").read_text(encoding="utf-8")
     assert "2026-09-18" in (pages / "gaza/podcast.xml").read_text(encoding="utf-8")
+
+
+def test_gaza_no_update_scope_preserves_existing_pages_no_updates_and_catchups(
+    release_repos: tuple[Path, Path],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source, pages = release_repos
+    _write_gaza_no_update_site(source, date_text="2026-10-04")
+    _write_gaza_pages_history(pages)
+    for date_text in ("2026-09-19", "2026-09-21", "2026-09-25"):
+        _seed_pages_no_update(pages, date_text)
+    _seed_pages_gaza_catchup(pages)
+    _commit_repo(pages, "published no-update history and catchup")
+    _stub_gaza_build(monkeypatch)
+
+    dry_run_report = generator.publish_pages(
+        source,
+        pages,
+        remote_url=None,
+        dry_run=True,
+        commit=True,
+        no_push=True,
+        only_dispatches=("gaza",),
+        artifact_family="no-update",
+        expect_date="2026-10-04",
+    )
+
+    assert dry_run_report["ok"] is True, dry_run_report["errors"]
+    assert _rel_pages_paths(dry_run_report["files_that_would_be_copied"], pages) == [
+        "gaza/archive.html",
+        "gaza/index.html",
+        "gaza/status/no-updates/2026-10-04.json",
+    ]
+
+    report = generator.publish_pages(
+        source,
+        pages,
+        remote_url=None,
+        dry_run=False,
+        commit=True,
+        no_push=True,
+        only_dispatches=("gaza",),
+        artifact_family="no-update",
+        expect_date="2026-10-04",
+    )
+
+    assert report["ok"] is True, report["errors"]
+    assert _rel_pages_paths(report["files_copied"], pages) == [
+        "gaza/archive.html",
+        "gaza/index.html",
+        "gaza/status/no-updates/2026-10-04.json",
+    ]
+    index_html = (pages / "gaza/index.html").read_text(encoding="utf-8")
+    archive_html = (pages / "gaza/archive.html").read_text(encoding="utf-8")
+    for date_text in ("2026-10-04", "2026-09-25", "2026-09-21"):
+        assert date_text in index_html
+        assert date_text in archive_html
+        assert f'href="editions/{date_text}/"' not in index_html
+        assert f'href="editions/{date_text}/"' not in archive_html
+    assert "2026-09-19" not in index_html
+    assert "2026-09-19" in archive_html
+    assert 'href="editions/2026-09-19/"' not in archive_html
+    assert "gaza-historical-catchup-aug29-sep02-2026-batch-01" in index_html
+    assert "gaza-historical-catchup-aug29-sep02-2026-batch-01" in archive_html
+    index_report = next(item for item in report["gaza_public_surface_history"] if item["surface"] == "gaza/index.html")
+    assert index_report["dropped_catchups"] == []
 
 
 def test_gaza_no_update_scope_does_not_run_unrelated_pages_cleanup(release_repos: tuple[Path, Path], monkeypatch: pytest.MonkeyPatch) -> None:

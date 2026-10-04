@@ -2231,7 +2231,19 @@ def _render_gaza_readable_history_list(
 ) -> str:
     readable_rows = _gaza_readable_history_rows(rows)
     if limit is not None:
-        readable_rows = readable_rows[:limit]
+        limited_rows = readable_rows[:limit]
+        limited_ids = {
+            value.catchup_id if kind == "catchup" and isinstance(value, GazaHistoricalCatchupEntry) else f"{kind}:{value}"
+            for kind, value in limited_rows
+        }
+        overflow_catchups = [
+            row
+            for row in readable_rows[limit:]
+            if row[0] == "catchup"
+            and isinstance(row[1], GazaHistoricalCatchupEntry)
+            and row[1].catchup_id not in limited_ids
+        ]
+        readable_rows = [*limited_rows, *overflow_catchups]
     return "\n".join(
         render_gaza_historical_catchup_list_item(value)
         if kind == "catchup" and isinstance(value, GazaHistoricalCatchupEntry)
@@ -5034,6 +5046,7 @@ def validate_gaza_public_link_consistency(
                     "without a valid public edition directory"
                 )
     no_update_entries = discover_gaza_no_update_entries(site_root)
+    recent_no_update_dates = {entry.date for entry in no_update_entries[:GAZA_HOME_RECENT_CHECK_LIMIT]}
     for entry in no_update_entries:
         if entry.date in set(gaza_publication_dates):
             local_edition_dir = site_root / "gaza" / "editions" / entry.date
@@ -5058,7 +5071,12 @@ def validate_gaza_public_link_consistency(
             )
         index_text = _read_text_if_exists(gaza_root / "index.html")
         archive_text = _read_text_if_exists(gaza_root / "archive.html")
-        if entry.date not in index_text or entry.date not in archive_text or "No qualifying update" not in index_text + archive_text:
+        missing_archive_row = entry.date not in archive_text or "No qualifying update" not in archive_text
+        missing_recent_index_row = (
+            entry.date in recent_no_update_dates
+            and (entry.date not in index_text or "No qualifying update" not in index_text)
+        )
+        if missing_archive_row or missing_recent_index_row:
             errors.append(f"gaza no-update date missing rendered no-update row: {entry.date}")
     return sorted(set(errors))
 
@@ -5274,11 +5292,22 @@ def publish_pages(
     )
     root = root.resolve()
     site_root = root / "output" / "site"
+    publish_site_root = site_root
+    no_update_publish_temp: tempfile.TemporaryDirectory[str] | None = None
+    if no_update_publish and pages_repo.exists():
+        no_update_publish_temp = tempfile.TemporaryDirectory(prefix="bluefern-gaza-no-update-publish-")
+        publish_site_root = _materialize_gaza_dry_run_validation_site(
+            site_root,
+            pages_repo,
+            Path(no_update_publish_temp.name),
+            max_public_date=public_max_dates.get("gaza"),
+            gaza_publication_dates=gaza_publication_dates,
+        )
     errors = list(build["errors"])
     errors.extend(artifact_family_errors)
     validation_errors, validation_warnings = validate_pages_publish(
         root,
-        site_root,
+        publish_site_root,
         pages_repo,
         require_git=not dry_run,
         expect_date=expect_date,
@@ -5300,7 +5329,7 @@ def publish_pages(
             )
         )
     if no_update_publish:
-        _no_update_files, no_update_errors = _gaza_no_update_publish_source_files(site_root, expect_date)
+        _no_update_files, no_update_errors = _gaza_no_update_publish_source_files(publish_site_root, expect_date)
         errors.extend(no_update_errors)
     warnings = list(build["warnings"])
     warnings.extend(validation_warnings)
@@ -5325,7 +5354,7 @@ def publish_pages(
         pages_gaza_audio_root = pages_repo / "gaza" / "audio"
         if not site_gaza_audio_root.exists() and pages_gaza_audio_root.exists():
             gaza_audio_root = pages_repo / "gaza"
-        gaza_validation_site_root = site_root
+        gaza_validation_site_root = publish_site_root if no_update_publish else site_root
         dry_run_validation_temp: tempfile.TemporaryDirectory[str] | None = None
         if dry_run and not no_update_publish and pages_repo.exists():
             dry_run_validation_temp = tempfile.TemporaryDirectory(prefix="bluefern-gaza-pages-dry-run-")
@@ -5441,7 +5470,7 @@ def publish_pages(
         if no_update_publish:
             shared_surface_refresh_planned = bool(shared_homepage_dispatch)
         copied, skipped = copy_public_site_to_pages(
-            site_root,
+            publish_site_root if no_update_publish else site_root,
             pages_repo,
             dry_run=dry_run,
             only_dispatches=only_dispatches,

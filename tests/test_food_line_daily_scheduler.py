@@ -163,6 +163,11 @@ def test_scheduler_accepts_public_site_visual_review_artifacts() -> None:
             "?? output/review/public-site-visuals-current/food-line__editions__2026-10-01.png",
             "?? output/review/public-site-visuals/root.png",
             "?? output/review/bluefern-live-repair-screenshots-20261002T1610/root.png",
+            "?? output/review/gaza-archive-artifact-repair-20261003T123528/gaza/archive.html",
+            "?? output/review/gaza-archive-artifact-repair-screenshots-20261003T123528/root.png",
+            "?? output/review/gaza-archive-readable-pages-checkout-20261003T132035/.gitignore",
+            "?? output/review/gaza-archive-readable-pages-repair-20261003T131949/gaza/index.html",
+            "?? output/review/gaza-archive-readable-pages-repair-screenshots-20261003T131949/root.png",
         ]
     )
 

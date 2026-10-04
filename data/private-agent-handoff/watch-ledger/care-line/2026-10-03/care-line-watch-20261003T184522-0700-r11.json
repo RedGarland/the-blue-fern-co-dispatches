@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261003T184522-0700-r11",
+  "scheduled_for": "2026-10-03T18:45:22-07:00",
+  "started_at": "2026-10-03T18:48:34-07:00",
+  "completed_at": "2026-10-03T18:48:34-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-03T15:49:11-07:00",
+    "end": "2026-10-03T18:48:34-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first; newest notice remains 2026-10-02 Comfort Care Home Health (CA), already known; no 2026-10-03 notice present.",
+    "Exactly 12 additional targeted searches completed across the specified high-value access-loss and restoration classes.",
+    "No new qualifying U.S. or territory development found.",
+    "16:45 PT and 17:45 PT heartbeat files are absent, so coverage was widened from the last durable completion at 15:49:11 PT; status DEGRADED for ledger continuity.",
+    "Previously surfaced Chicago maternity changes and nonqualifying proposals/business-only stories were excluded as duplicates or outside scope.",
+    "No approval, publication, schedule change, or task-state change was performed."
+  ]
+}

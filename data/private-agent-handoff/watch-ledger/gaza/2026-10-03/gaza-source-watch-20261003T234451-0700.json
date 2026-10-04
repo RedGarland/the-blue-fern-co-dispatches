@@ -1,0 +1,58 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261003T234451-0700",
+  "scheduled_for": "2026-10-03T23:44:51-07:00",
+  "started_at": "2026-10-03T23:45:41-07:00",
+  "completed_at": "2026-10-03T23:50:30-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-03T22:48:03-07:00",
+    "end": "2026-10-03T23:50:30-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "summary": "No new qualifying, traceable Gaza development was verified within the bounded observation window.",
+    "primary_checks": [
+      {
+        "source": "OCHA OPT",
+        "result": "No in-window Gaza operational update surfaced; targeted results were older material."
+      },
+      {
+        "source": "WHO",
+        "result": "No in-window Gaza health-system, medical-evacuation, hospital-capacity, or operational update surfaced; targeted results were older material."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "additional_sources_checked": [
+      "UNRWA",
+      "ICRC",
+      "Palestine Red Crescent Society",
+      "UNICEF",
+      "WFP",
+      "Reuters",
+      "Associated Press",
+      "BBC",
+      "Al Jazeera",
+      "WAFA",
+      "United Nations",
+      "ReliefWeb"
+    ],
+    "degraded_sources": [
+      {
+        "source": "BBC",
+        "reason": "robots.txt blocked retrieval"
+      }
+    ],
+    "exclusions": [
+      "Opinion and analysis without a new traceable operational development",
+      "Unsupported social claims",
+      "Recycled or out-of-window reports",
+      "Duplicate developments already captured by earlier checks"
+    ],
+    "bounded_discovery_context": "OCHA OPT and WHO were checked first. Twelve additional targeted searches covered aid/displacement, health and ambulance access, food/water, crossings, detention/hostages, ceasefire/negotiations, military activity with civilian impact, and established breaking-news reporting. Search results were filtered against the prior completed heartbeat at 2026-10-03T22:48:03-07:00."
+  }
+}

@@ -82,7 +82,7 @@ def _root_html(*, hero_class: str = "hero") -> str:
 
 def _food_home_html() -> str:
     return """<!doctype html><html><head><link rel="stylesheet" href="/assets/site.css"><title>Food Line</title></head>
-<body><main><section class="food-line-hero"><img class="food-line-logo food-line-logo--home" src="/assets/food-line-logo.png" alt="Food Line"><h1>Food Line Dispatch</h1></section>
+<body><main><section class="food-line-hero"><img class="food-line-logo food-line-logo--home" src="assets/food-line-logo.png" alt="Food Line"><h1>Food Line Dispatch</h1></section>
 <h2>Latest Briefing</h2><p><a href="editions/2026-10-01/">Read the latest briefing</a></p>
 <article class="food-line-source-card"><h3>Bradford County Food Pantry running low on food, leaders say</h3></article>
 <article class="food-line-source-card"><h3>Seniors in West LA facing long waitlist for Meals on Wheels</h3></article>
@@ -115,6 +115,10 @@ def _simple_dispatch_html(title: str) -> str:
     return f'<!doctype html><html><head><link rel="stylesheet" href="/assets/site.css"></head><body><main><section class="hero"><h1>{title}</h1></section><p><a href="editions/2026-10-01/">Read latest</a></p></main></body></html>'
 
 
+def _care_home_html() -> str:
+    return '<!doctype html><html><head><link rel="stylesheet" href="/assets/site.css"></head><body><main class="home"><section class="hero"><img class="hero-logo" src="assets/care-line-logo.png" alt="The Care Line Dispatch"><h1>The Care Line Dispatch</h1></section><p><a href="editions/2026-08-20/">Read latest</a></p></main></body></html>'
+
+
 def _dispatch_logo_html(title: str) -> str:
     return f'<!doctype html><html><head><link rel="stylesheet" href="/assets/site.css"></head><body><main class="home"><section class="hero"><img class="hero-logo" src="/assets/food-line-logo.png" alt="{title}"></section><h2>Latest Briefing</h2><p><a href="editions/2026-10-01/">Read latest</a></p></main></body></html>'
 
@@ -138,6 +142,8 @@ def _make_pages_root(tmp_path: Path, *, css: str = GOOD_CSS, story_count: int = 
     if css:
         _write(root / "assets" / "site.css", css)
     _write_png(root / "assets" / "food-line-logo.png")
+    _write_png(root / "food-line" / "assets" / "food-line-logo.png")
+    _write_png(root / "care-line" / "assets" / "care-line-logo.png")
     _write(root / "index.html", _root_html())
     _write(root / "dispatches" / "index.html", _root_html())
     _write(root / "food-line" / "index.html", _food_home_html())
@@ -147,7 +153,7 @@ def _make_pages_root(tmp_path: Path, *, css: str = GOOD_CSS, story_count: int = 
     _write(food_edition / "edition_manifest.json", '{"story_count": 2, "source_count": 2}')
     _write(root / "gaza" / "index.html", _simple_dispatch_html("Dispatches From Gaza"))
     _write(root / "gaza" / "archive.html", _gaza_archive_html())
-    _write(root / "care-line" / "index.html", _simple_dispatch_html("The Care Line Dispatch"))
+    _write(root / "care-line" / "index.html", _care_home_html())
     return root
 
 

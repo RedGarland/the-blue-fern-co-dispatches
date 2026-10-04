@@ -1,0 +1,51 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261004T054451-0700",
+  "scheduled_for": "2026-10-04T05:44:51-07:00",
+  "started_at": "2026-10-04T05:41:42-07:00",
+  "completed_at": "2026-10-04T05:43:26-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-04T04:44:51-07:00",
+    "end": "2026-10-04T05:43:26-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "Bounded recall window since the prior hourly check."
+  },
+  "findings": [],
+  "coverage_notes": {
+    "required_first_checks": [
+      {
+        "source": "OCHA OPT",
+        "result": "No new in-window Gaza operational update surfaced; results were older humanitarian situation material."
+      },
+      {
+        "source": "WHO",
+        "result": "No new in-window Gaza-specific operational health update surfaced; results were older WHO Gaza/OPT material."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "additional_search_targets": [
+      "Reuters civilian casualties and military operations",
+      "Associated Press civilian casualties and hospitals",
+      "WAFA casualties, hospitals, and ambulances",
+      "UNRWA displacement, aid, and shelter",
+      "World Food Programme food and aid access",
+      "UNICEF water, displacement, children, and infrastructure",
+      "ICRC hospitals, ambulances, detention, and hostages",
+      "MSF hospital, medical, fuel, and capacity changes",
+      "Palestine Red Crescent Society ambulance and emergency operations",
+      "COGAT/Israel government aid, crossings, and fuel",
+      "Reuters/AP ceasefire and negotiation changes",
+      "Reuters/AP hostage and detention changes"
+    ],
+    "degradations": [],
+    "exclusions": [
+      "A Reuters Connect item dated October 4 concerning an earlier Gaza City strike was excluded as recycled/duplicate material rather than a new in-window development.",
+      "Older Gaza reports and humanitarian updates outside the observation window were excluded."
+    ],
+    "assessment": "No new qualifying, traceable development was verified in the observation window."
+  }
+}

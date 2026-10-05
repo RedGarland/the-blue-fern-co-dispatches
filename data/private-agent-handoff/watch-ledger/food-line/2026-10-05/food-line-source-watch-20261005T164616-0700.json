@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261005T164616-0700",
+  "scheduled_for": "2026-10-05T16:45:54-07:00",
+  "started_at": "2026-10-05T16:46:16-07:00",
+  "completed_at": "2026-10-05T16:47:05-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-05T15:45:21-07:00",
+    "end_at": "2026-10-05T16:47:05-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Completed exactly 12 targeted searches covering sole/only/last/full-service grocery loss, disaster-canceled or suspended emergency food distributions, abrupt pantry/food-bank service reductions, and official SNAP/WIC interruptions. One fresh same-day candidate was a WTHR report of a fire inside a Kroger cooler in Indianapolis; direct retrieval returned HTTP 403, and available search evidence did not establish store closure or a material grocery-access loss. A same-day Watertown, New York Save A Lot closure result was already surfaced before this observation window and did not establish loss of the community's only/sole/last/full-service grocery option. No qualifying new SNAP/WIC interruption, canceled emergency distribution, pantry/food-bank access reduction, or grocery-access disruption was identified. Because one direct source was inaccessible while useful coverage remained, this run is DEGRADED."
+}

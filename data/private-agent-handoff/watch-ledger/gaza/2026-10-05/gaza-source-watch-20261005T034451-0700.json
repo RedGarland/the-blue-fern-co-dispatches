@@ -1,0 +1,24 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261005T034451-0700",
+  "scheduled_for": "2026-10-05T03:44:51-07:00",
+  "started_at": "2026-10-05T03:44:36-07:00",
+  "completed_at": "2026-10-05T03:45:22-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-05T02:44:51-07:00",
+    "end": "2026-10-05T03:44:51-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "Checked OCHA OPT first; freshest surfaced Gaza situation report was dated 2026-09-18, outside the observation window.",
+    "Checked WHO second; no new in-window WHO Gaza operational update surfaced.",
+    "Completed 12 additional targeted searches covering Reuters, AP, UNRWA, WFP, UNICEF, ICRC, MSF, Palestine Red Crescent, WAFA, crossings/aid access, ceasefire/hostage negotiations, and Israeli military operations.",
+    "No new traceable development in the defined high-value miss classes was verified within the hourly observation window.",
+    "Retrospective or previously known material, including a Reuters feature on freed hostages and October 4 Gaza casualty reporting, was excluded as non-new or recycled."
+  ]
+}

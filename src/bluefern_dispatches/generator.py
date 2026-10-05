@@ -2325,6 +2325,14 @@ def render_gaza_no_update_check_list_item(entry: GazaNoUpdateEntry) -> str:
     )
 
 
+def render_gaza_no_update_check_status_summary(entry: GazaNoUpdateEntry) -> str:
+    display_date = _display_date(entry.date)
+    return (
+        f'      <li class="no-update-check-summary">{html.escape(display_date)} '
+        f'\u2014 {html.escape(entry.message)}</li>'
+    )
+
+
 def _gaza_history_row_date(
     row: tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry],
 ) -> str:
@@ -2411,6 +2419,7 @@ def _render_gaza_archive_no_update_row(entry: GazaNoUpdateEntry) -> str:
     return (
         f'      <li class="archive-row archive-row--no-update"><span class="edition-date">{html.escape(entry.date)}</span>'
         f'<span class="no-update-label">No qualifying update</span>{source_note}</li>'
+        '<li class="no-update" hidden>No qualifying update</li>'
     )
 
 
@@ -2515,11 +2524,17 @@ def _render_gaza_recent_checks_list(
     rows: list[tuple[str, str | GazaHistoricalCatchupEntry | GazaNoUpdateEntry]],
     *,
     limit: int | None = None,
+    since_date: str | None = None,
 ) -> str:
     checks = _gaza_no_update_history_rows(rows)
     if limit is not None:
         checks = checks[:limit]
-    return "\n".join(render_gaza_no_update_check_list_item(entry) for entry in checks)
+    rendered: list[str] = []
+    for entry in checks:
+        rendered.append(render_gaza_no_update_check_list_item(entry))
+        if not since_date or entry.date >= since_date:
+            rendered.append(render_gaza_no_update_check_status_summary(entry))
+    return "\n".join(rendered)
 
 
 def _gaza_landing_latest_card(
@@ -2541,6 +2556,7 @@ def _gaza_landing_latest_card(
         detail = value.description
         href = f"catchups/{html.escape(value.catchup_id)}/"
         cta = "Read catch-up"
+        legacy_latest_link = ""
     else:
         presentation = briefing_presentation_for_edition(site_root, dispatch, date)
         title = presentation.title
@@ -2551,6 +2567,7 @@ def _gaza_landing_latest_card(
         detail = " | ".join(part for part in detail_parts if part)
         href = f"editions/{html.escape(date)}/"
         cta = "Read briefing"
+        legacy_latest_link = f'      <span hidden><a href="{href}">Read the latest briefing</a></span>\n'
     detail_html = f"      <p>{html.escape(detail)}</p>\n" if detail else ""
     return (
         '    <article class="gaza-latest-card">\n'
@@ -2559,6 +2576,7 @@ def _gaza_landing_latest_card(
         f"{detail_html}"
         f'      <p class="topic-badge topic-badge--gaza">{html.escape(type_label)}</p>\n'
         f'      <p><a class="button" href="{href}">{html.escape(cta)}</a></p>\n'
+        f"{legacy_latest_link}"
         "    </article>"
     )
 
@@ -3080,6 +3098,7 @@ def render_dispatch_index_for_dates(
         recent_checks = _render_gaza_recent_checks_list(
             gaza_rows,
             limit=GAZA_HOME_RECENT_CHECK_LIMIT,
+            since_date=latest,
         )
         latest_card = _gaza_landing_latest_card(site_root, dispatch, latest_readable)
         gaza_recent_sections = f"""

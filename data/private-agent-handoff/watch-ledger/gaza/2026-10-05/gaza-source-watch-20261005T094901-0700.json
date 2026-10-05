@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261005T094901-0700",
+  "scheduled_for": "2026-10-05T09:49:01-07:00",
+  "started_at": "2026-10-05T09:49:01-07:00",
+  "completed_at": "2026-10-05T09:50:00-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-05T08:40:28-07:00",
+    "end": "2026-10-05T09:49:01-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      {"source":"OCHA OPT","result":"Checked first. No new in-window Gaza update surfaced; freshest surfaced OCHA Gaza humanitarian situation report was dated 2026-09-18."},
+      {"source":"WHO","result":"Checked second. No new in-window Gaza operational update surfaced."}
+    ],
+    "targeted_searches_completed": 12,
+    "targeted_search_scope": ["Reuters casualty/aid/health disruption","Associated Press casualty/aid/health disruption","UNRWA","WFP","UNICEF","ICRC","MSF","Palestine Red Crescent Society","WAFA","ceasefire/negotiations/hostages","crossings and aid access","military operations with documented civilian impact"],
+    "exclusions": ["Previously captured October 5 MSF Yellow Line humanitarian-access update excluded as duplicate.","Surfaced items outside the bounded window were excluded.","Opinion, unsupported social claims, recycled items, duplicates, and unsourced claims excluded."]
+  }
+}

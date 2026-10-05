@@ -462,7 +462,7 @@
       "stale_observability": false
     }
   },
-  "exported_at": "2026-10-05T05:04:58.170470Z",
+  "exported_at": "2026-10-05T05:35:42.105363Z",
   "schema_version": "bluefern_external_system_status_v1",
   "stale_observability": [],
   "system_status": "DEGRADED"

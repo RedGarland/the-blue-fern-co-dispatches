@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261005T024451-0700",
+  "scheduled_for": "2026-10-05T02:44:51-07:00",
+  "started_at": "2026-10-05T02:47:57-07:00",
+  "completed_at": "2026-10-05T02:49:07.053-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-05T01:43:51-07:00",
+    "end": "2026-10-05T02:49:07.053-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "OCHA OPT and WHO were checked first. OCHA OPT's freshest surfaced Gaza situation report remained 2026-09-18; WHO surfaced no new in-window Gaza operational update. Exactly 12 additional targeted searches covered civilian casualties, displacement, aid/crossings/fuel, food/water, health/medical evacuation, infrastructure, Rafah/Kerem Shalom, detainees/hostages, ceasefire negotiations, military operations with civilian impact, ICRC, and MSF. A newly surfaced AP-syndicated item about an Israeli strike on a civilian vehicle in central Gaza was excluded as a previously captured duplicate. No new qualifying development was verified in the bounded window."
+}

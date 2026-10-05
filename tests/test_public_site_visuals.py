@@ -80,6 +80,17 @@ def _root_html(*, hero_class: str = "hero") -> str:
 </main></body></html>"""
 
 
+def _dispatches_active_only_html(*, order: tuple[str, ...] = ("gaza", "food-line", "care-line")) -> str:
+    cards = {
+        "gaza": '<article class="dispatch-card dispatch-card--featured"><h2>Dispatches From Gaza</h2><div class="card-actions"><a class="button" href="/gaza/">Read latest</a><a class="text-link" href="/gaza/archive.html">Archive</a><a class="support-link" href="/gaza/rss.xml">Feed</a></div></article>',
+        "food-line": '<article class="dispatch-card dispatch-card--featured"><h2>Food Line Dispatch</h2><div class="card-actions"><a class="button" href="/food-line/editions/2026-10-01/">Read latest</a><a class="text-link" href="/food-line/archive.html">Archive</a><a class="support-link" href="/food-line/rss.xml">Feed</a></div></article>',
+        "care-line": '<article class="dispatch-card dispatch-card--featured"><h2>The Care Line Dispatch</h2><div class="card-actions"><a class="button" href="/care-line/editions/2026-08-20/">Read latest</a><a class="text-link" href="/care-line/archive.html">Archive</a><a class="support-link" href="/care-line/rss.xml">Feed</a></div></article>',
+    }
+    return """<!doctype html><html><head><link rel="stylesheet" href="/assets/site.css"><title>Dispatches</title></head>
+<body><main><section class="section-block"><div class="section-heading"><p>Active dispatches</p><h2>Public desks</h2></div>
+<div class="active-grid">""" + "".join(cards[slug] for slug in order) + "</div></section></main></body></html>"
+
+
 def _food_home_html() -> str:
     return """<!doctype html><html><head><link rel="stylesheet" href="/assets/site.css"><title>Food Line</title></head>
 <body><main><section class="food-line-hero"><img class="food-line-logo food-line-logo--home" src="assets/food-line-logo.png" alt="Food Line"><h1>Food Line Dispatch</h1></section>
@@ -170,6 +181,29 @@ def test_current_repaired_public_site_fixture_passes(tmp_path: Path) -> None:
     assert result["html_metrics"]["expected_food_story_count"] == 2
     assert result["html_metrics"]["rendered_food_story_count"] == 2
     assert result["screenshots"]
+
+
+def test_dispatches_active_only_directory_passes_visual_contract(tmp_path: Path) -> None:
+    root = _make_pages_root(tmp_path)
+    _write(root / "dispatches" / "index.html", _dispatches_active_only_html())
+
+    result = validate_public_site_visuals(root, paths=["/dispatches/"])
+
+    assert result["ok"] is True
+    metrics = result["pages"][0]["metrics"]
+    assert metrics["editionCardCount"] == 0
+    assert metrics["activeCardCount"] == 3
+    assert metrics["activeCardDeskOrder"] == ["gaza", "food-line", "care-line"]
+
+
+def test_dispatches_active_card_order_fails_when_gaza_drops_from_first_row(tmp_path: Path) -> None:
+    root = _make_pages_root(tmp_path)
+    _write(root / "dispatches" / "index.html", _dispatches_active_only_html(order=("food-line", "care-line", "gaza")))
+
+    result = validate_public_site_visuals(root, paths=["/dispatches/"])
+
+    assert result["ok"] is False
+    assert "active_card_desk_order" in _issue_checks(result)
 
 
 def test_missing_css_plain_fallback_homepage_fails(tmp_path: Path) -> None:

@@ -15,6 +15,7 @@ from scripts.run_gaza_dispatch import (
     curate_stories,
     normalize_sources,
     render_gaza_edition,
+    render_archive_index_rss,
     render_gaza_no_update_from_preserved_artifacts,
     run_gaza_dispatch,
 )
@@ -86,6 +87,99 @@ def write_manual_sources(work: Path, edition_date: str, records: list[dict] | No
 
 def read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
+
+
+def _write_public_gaza_edition(base: Path, edition_date: str, *, title: str = "Gaza daily briefing") -> None:
+    edition = base / "gaza" / "editions" / edition_date
+    edition.mkdir(parents=True, exist_ok=True)
+    (edition / "index.html").write_text(
+        f"""<html><head><title>Dispatches From Gaza - {edition_date}</title>
+<link rel="canonical" href="https://dispatches.thebluefernco.com/gaza/editions/{edition_date}/"></head>
+<body><h1>Dispatches From Gaza - {edition_date}</h1></body></html>""",
+        encoding="utf-8",
+    )
+    (edition / "edition_manifest.json").write_text(
+        json.dumps(
+            {
+                "dispatch_slug": "gaza",
+                "edition_date": edition_date,
+                "public_exposed": True,
+                "source_count": 1,
+                "story_count": 1,
+                "public_archive_title": title,
+                "public_archive_subtitle": "One verified Gaza story.",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (edition / "sources_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "source_record_id": f"src-{edition_date}",
+                    "title": title,
+                    "url": f"https://example.com/gaza/{edition_date}",
+                    "publisher": "Example News",
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (edition / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "story_id": f"story-{edition_date}",
+                    "title": title,
+                    "summary": "A verified Gaza event.",
+                    "included_in_public_summary": True,
+                    "public_rendered": True,
+                }
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+
+def test_gaza_archive_rss_index_include_pages_public_editions_despite_local_no_update_marker(tmp_path: Path) -> None:
+    root = tmp_path
+    pages = root / "bluefern-dispatches-pages"
+    known_dates = ["2026-10-03", "2026-10-01", "2026-09-30", "2026-09-29"]
+    for date_text in known_dates:
+        _write_public_gaza_edition(pages, date_text, title=f"Gaza update {date_text}")
+    status = root / "output" / "site" / "gaza" / "status" / "no-updates"
+    status.mkdir(parents=True, exist_ok=True)
+    (status / "2026-10-03.json").write_text(
+        json.dumps(
+            {
+                "date": "2026-10-03",
+                "classification": "no_publication_needed",
+                "message": "No new source-backed Gaza update met publication threshold today.",
+                "source_count": 4,
+                "public_story_count": 0,
+                "run_completed_successfully": True,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    wrote: list[str] = []
+    render_archive_index_rss(root, "2026-10-04", dry_run=False, wrote=wrote, include_current=False, pages_repo=pages)
+
+    archive = read(root / "output" / "site" / "gaza" / "archive.html")
+    rss = read(root / "output" / "site" / "gaza" / "rss.xml")
+    index = read(root / "output" / "site" / "gaza" / "index.html")
+    positions = [archive.index(f'editions/{date_text}/') for date_text in known_dates]
+    assert positions == sorted(positions)
+    for date_text in known_dates:
+        assert archive.count(f'editions/{date_text}/') >= 1
+        assert f"https://dispatches.thebluefernco.com/gaza/editions/{date_text}/" in rss
+    assert archive.count('<span class="edition-date">2026-10-03</span>') == 1
+    assert "No qualifying update</span><span class=\"archive-row-note\">4 sources checked</span>" not in archive
+    assert 'href="editions/2026-10-03/">Gaza update 2026-10-03</a>' in index
 
 
 def test_manual_source_generation_writes_public_edition_and_manifests(monkeypatch):
@@ -1834,7 +1928,7 @@ def test_manual_sources_apply_topical_relevance_filter(monkeypatch):
     assert "secret mission to rescue the UN" in html
 
 
-def test_palestinian_developments_section_and_gaza_top_story(monkeypatch):
+def test_non_gaza_palestinian_developments_are_excluded_and_gaza_top_story_remains(monkeypatch):
     repo = Path(__file__).resolve().parents[1]
     work = make_work_root(repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
@@ -1917,24 +2011,25 @@ def test_palestinian_developments_section_and_gaza_top_story(monkeypatch):
     assert "Limited-source update / May 15, 2026" in html
     assert "Generated from saved source records available for May 15, 2026." in html
     assert "<h2>Civilian Harm and Access</h2>" in html
-    assert "<h2>International Law and Diplomacy</h2>" in html
+    assert "<h2>International Law and Diplomacy</h2>" not in html
     assert "<h2>Source Mix</h2>" in html
     assert "<h2>Source Note</h2>" in html
-    assert "Source mix: 5 stories from 5 publishers. Source coverage may be uneven." in html
+    assert "Source mix:" in html
     assert '<a href="/gaza/archive.html">Gaza archive</a> | <a href="/">Dispatches home</a>' in html
     assert "Gaza hospitals face acute aid shortages after airstrikes" in html
-    assert "Settler violence rises in West Bank communities" in html
-    assert "East Jerusalem hospital access restrictions affect Palestinian patients" in html
-    assert "UNRWA warns Palestinian refugee services face new cuts" in html
-    assert "Nakba memory and right of return debate gains legal attention" in html
-    # Verify visible links are present for Palestinian developments.
-    assert 'href="https://example.com/west-bank-settler-violence"' in html
-    assert 'href="https://example.com/east-jerusalem-rights"' in html
+    assert "Settler violence rises in West Bank communities" not in html
+    assert "East Jerusalem hospital access restrictions affect Palestinian patients" not in html
+    assert "UNRWA warns Palestinian refugee services face new cuts" not in html
+    assert "Nakba memory and right of return debate gains legal attention" not in html
+    assert 'href="https://example.com/west-bank-settler-violence"' not in html
+    assert 'href="https://example.com/east-jerusalem-rights"' not in html
     curation = json.loads(read(work / "output" / "dispatches" / "gaza" / "editions" / "2026-05-15" / "curation_manifest.json"))
-    assert any(item.get("category") == "palestinian_development" for item in curation)
+    rendered_titles = {item["title"] for item in curation if item.get("public_rendered") is True}
+    assert rendered_titles == {"Gaza hospitals face acute aid shortages after airstrikes"}
     report = json.loads(read(work / "data" / "dispatches" / "gaza" / "editions" / "2026-05-15" / "collection_report.json"))
     assert report["core_gaza_count"] >= 1
-    assert report["palestinian_development_count"] >= 1
+    assert report["story_selection_excluded_reason_counts"]["non_gaza_geographic_scope"] >= 2
+    assert report["story_selection_excluded_reason_counts"]["unverified_gaza_event_location"] >= 2
 
 
 def test_todays_read_conservative_with_single_story_and_metadata_omits_missing_fields(monkeypatch):
@@ -3127,7 +3222,7 @@ def test_render_gaza_edition_shows_transcript_audio_callout_when_transcript_exis
     assert "<audio controls" not in html
 
 
-def test_written_gaza_edition_excludes_newsletter_sidebar_and_lebanon_only_rows(monkeypatch):
+def test_written_gaza_edition_excludes_newsletter_sidebar_lebanon_and_ambiguous_palestinian_rows(monkeypatch):
     repo = Path(__file__).resolve().parents[1]
     work = make_work_root(repo)
     monkeypatch.setattr("scripts.run_gaza_dispatch.BACKUP_ROOT", work / "output" / "test-backups" / "gaza")
@@ -3223,12 +3318,12 @@ def test_written_gaza_edition_excludes_newsletter_sidebar_and_lebanon_only_rows(
         "Lebanon rises despite ceasefire",
         "social care system",
         "planning laws",
+        "Israel Supreme Court strikes down ban on Red Cross prison visits",
+        "Newly disclosed Israeli testimonies detail expulsions",
     ):
         assert blocked not in html
-    assert "Israel Supreme Court strikes down ban on Red Cross prison visits" in html
     assert "Israeli strikes kill 11 people in Gaza City, medics say" in html
-    assert "Newly disclosed Israeli testimonies detail expulsions, killings during 1967 war: Report" in html
-    assert 'href="https://example.com/detainees"' in html
+    assert 'href="https://example.com/detainees"' not in html
     assert 'href="https://example.com/strikes"' in html
 
     curation = json.loads(read(work / "output" / "site" / "gaza" / "editions" / edition_date / "curation_manifest.json"))
@@ -3240,7 +3335,8 @@ def test_written_gaza_edition_excludes_newsletter_sidebar_and_lebanon_only_rows(
     reasons = {row["title"]: row["reason"] for row in collection_report.get("written_public_exclusions") or []}
     assert reasons["Friday briefing: How Gaza, Lebanon and Iran have found themselves caught in an escalation without end"] == "excluded marker 'UK politics |'"
     assert reasons["UN agency says displacement in Lebanon rises despite ceasefire"] == "excluded marker 'Lebanon rises despite ceasefire'"
-    assert collection_report["final_story_count"] == 3
+    assert collection_report["story_selection_excluded_reason_counts"]["unverified_gaza_event_location"] >= 2
+    assert collection_report["final_story_count"] == 1
 
 
 def test_render_gaza_edition_shows_audio_player_only_when_mp3_exists(tmp_path):

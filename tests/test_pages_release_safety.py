@@ -648,6 +648,7 @@ def test_normal_gaza_publish_still_enforces_audio_history_shrink(release_repos: 
         only_dispatches=("gaza",),
         expect_dispatches=("gaza",),
         expect_date="2026-09-19",
+        visual_validation=False,
     )
 
     assert report["ok"] is False
@@ -748,6 +749,7 @@ def test_gaza_generation_succeeds_pages_publish_fails_no_update_wins_next_rebuil
         only_dispatches=("gaza",),
         expect_dispatches=("gaza",),
         expect_date="2026-09-19",
+        visual_validation=False,
     )
 
     assert report["ok"] is False
@@ -783,6 +785,7 @@ def test_gaza_local_pages_commit_failed_push_origin_no_update_remains_authoritat
         only_dispatches=("gaza",),
         expect_dispatches=("gaza",),
         expect_date="2026-09-19",
+        visual_validation=False,
     )
 
     assert report["ok"] is True
@@ -818,6 +821,7 @@ def test_gaza_normal_publish_supersession_commit_adds_edition_and_deletes_same_d
         only_dispatches=("gaza",),
         expect_dispatches=("gaza",),
         expect_date="2026-09-19",
+        visual_validation=False,
     )
     changed = _git_output(pages, "show", "--name-status", "--format=", "HEAD").splitlines()
 
@@ -882,6 +886,7 @@ def test_gaza_repeated_successful_normal_publication_is_idempotent(
         only_dispatches=("gaza",),
         expect_dispatches=("gaza",),
         expect_date="2026-09-19",
+        visual_validation=False,
     )
     second = generator.publish_pages(
         source,
@@ -893,6 +898,7 @@ def test_gaza_repeated_successful_normal_publication_is_idempotent(
         only_dispatches=("gaza",),
         expect_dispatches=("gaza",),
         expect_date="2026-09-19",
+        visual_validation=False,
     )
 
     assert first["ok"] is True

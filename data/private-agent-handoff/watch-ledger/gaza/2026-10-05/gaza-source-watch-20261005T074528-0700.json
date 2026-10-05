@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261005T074528-0700",
+  "scheduled_for": "2026-10-05T07:44:51-07:00",
+  "started_at": "2026-10-05T07:45:28-07:00",
+  "completed_at": "2026-10-05T07:47:02-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-05T06:46:59-07:00",
+    "end": "2026-10-05T07:47:02-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "OCHA OPT and WHO were checked first. OCHA's freshest surfaced Gaza situation report remained dated 2026-09-18; WHO surfaced no new in-window Gaza operational update. Exactly 12 additional targeted searches were completed across Reuters, AP, UNRWA/UN, WFP, UNICEF, MSF, Palestine Red Crescent Society, and ICRC, covering civilian casualties, displacement, humanitarian aid and crossings, food/water access, healthcare/ambulance/fuel/medical evacuation, infrastructure damage, detention/hostages, ceasefire negotiations, and military operations with documented civilian impact. No distinct traceable development newer than the prior completed hourly check at 2026-10-05T06:46:59-07:00 qualified after excluding older, recycled, duplicate, unsupported, opinion, and unsourced material. The previously captured 2026-10-05 MSF Yellow Line access update remained a duplicate and was not counted again."
+}

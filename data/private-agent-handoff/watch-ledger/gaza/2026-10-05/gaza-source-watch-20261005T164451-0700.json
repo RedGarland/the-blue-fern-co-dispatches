@@ -1,0 +1,26 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261005T164451-0700",
+  "scheduled_for": "2026-10-05T16:44:51-07:00",
+  "started_at": "2026-10-05T16:44:15-07:00",
+  "completed_at": "2026-10-05T16:45:24-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-05T15:44:51-07:00",
+    "end": "2026-10-05T16:45:24-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first. Its latest 5 October publication, Humanitarian Situation Report | 2 October 2026, was already known and reports primarily on 21-27 September; no new in-window development was identified.",
+    "WHO checked second. WHO's Gaza emergency pages and search results yielded no new in-window Gaza operational update.",
+    "Exactly 12 additional targeted searches were run across civilian casualties, displacement, aid access, food/water, healthcare and ambulances, fuel and medical evacuation, infrastructure, crossings, detention/hostages, ceasefire negotiations, military operations with documented civilian impact, UN humanitarian reporting, and Gaza Health Ministry casualty reporting.",
+    "The UN News targeted search was blocked by robots.txt. Useful coverage remained from OCHA, WHO, Reuters/AP-targeted searches, UNRWA, UNICEF, WFP and other established/official sources, so this run is DEGRADED rather than FAILED.",
+    "No new qualifying civilian-casualty, displacement, aid-access, food/water, healthcare, infrastructure, crossing, detention/hostage, ceasefire/negotiation, or military-operation development was traceably established within this bounded window.",
+    "Opinion, unsupported social claims, recycled items, duplicates, and unsourced claims were excluded.",
+    "No publication, approval, schedule change, or task disablement was performed."
+  ]
+}

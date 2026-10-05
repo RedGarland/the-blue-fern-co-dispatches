@@ -1,0 +1,37 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261005T114419-0700",
+  "scheduled_for": "2026-10-05T11:44:19-07:00",
+  "started_at": "2026-10-05T11:44:19-07:00",
+  "completed_at": "2026-10-05T11:46:30-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-05T10:47:29-07:00",
+    "end": "2026-10-05T11:44:19-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_searches_run": 12,
+    "search_failures": 0,
+    "scope": [
+      "sole/only/last/full-service grocery loss or disaster closure",
+      "disaster-related emergency food distribution cancellation/suspension",
+      "abrupt pantry/food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "exclusions_applied": [
+      "donation drives",
+      "resource guides",
+      "recipes",
+      "opinion",
+      "routine program promotion",
+      "generic inflation stories",
+      "duplicates"
+    ],
+    "result": "No new qualifying U.S. food-access disruption was identified in the bounded recall window. Fresh surfaced items were non-qualifying: a Kroger expansion in Princeton, Texas; a Save A Lot closure in Watertown, New York without evidence it is the community's sole/last/full-service grocery; and routine scheduled food distribution at F.O.R. Maricopa Food Bank. Other surfaced results were stale or outside the search window."
+  }
+}

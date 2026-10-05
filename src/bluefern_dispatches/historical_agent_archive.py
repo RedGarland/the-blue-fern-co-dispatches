@@ -294,6 +294,90 @@ def gaza_stable_event_fingerprint(inputs: dict[str, str]) -> str:
     )
 
 
+def gaza_withdrawal_target_identity_inputs(
+    *,
+    story_id: str,
+    edition_date: str,
+    source_records: list[dict[str, Any]],
+    provenance: dict[str, Any],
+) -> dict[str, str]:
+    """Derive a narrow identity for historical story-withdrawal targets.
+
+    This is intentionally not a current-story or candidate identity. It is for
+    already-published public artifacts where the correction action is removing
+    the story from the edition, not rewriting the factual claim.
+    """
+    canonical_urls = sorted(
+        {
+            str(row.get("canonical_url") or row.get("url") or "").strip()
+            for row in source_records
+            if isinstance(row, dict)
+        }
+    )
+    canonical_source_url = canonical_urls[0] if len(canonical_urls) == 1 else ""
+    artifacts = provenance.get("artifacts") if isinstance(provenance, dict) else None
+    artifact_set_sha256 = _canonical_fingerprint(
+        [
+            {
+                "role": row.get("role"),
+                "path": row.get("path"),
+                "sha256": row.get("sha256"),
+            }
+            for row in artifacts or []
+            if isinstance(row, dict)
+        ]
+    )
+    inputs = {
+        "identity_type": "published_story_withdrawal",
+        "dispatch": "gaza",
+        "edition_date": edition_date,
+        "story_id": story_id,
+        "canonical_source_url": canonical_source_url,
+        "pages_head": str(provenance.get("observed_head_at_backfill") or ""),
+        "artifact_set_sha256": artifact_set_sha256,
+    }
+    missing = [key for key, value in inputs.items() if not value]
+    if missing:
+        raise ValueError(
+            "published Gaza withdrawal identity fields are missing: "
+            + ", ".join(missing)
+        )
+    if not re.fullmatch(r"20\d{2}-\d{2}-\d{2}", edition_date):
+        raise ValueError("published Gaza withdrawal edition date is invalid")
+    if not re.fullmatch(r"gaza-story-20\d{2}-\d{2}-\d{2}-\d{3}", story_id):
+        raise ValueError("published Gaza withdrawal story ID is invalid")
+    return inputs
+
+
+def gaza_withdrawal_target_fingerprint(inputs: dict[str, str]) -> str:
+    expected = {
+        "identity_type",
+        "dispatch",
+        "edition_date",
+        "story_id",
+        "canonical_source_url",
+        "pages_head",
+        "artifact_set_sha256",
+    }
+    if set(inputs) != expected:
+        raise ValueError("Gaza withdrawal target identity inputs are incomplete or unsupported")
+    if inputs["identity_type"] != "published_story_withdrawal" or inputs["dispatch"] != "gaza":
+        raise ValueError("Gaza withdrawal target identity type is invalid")
+    if not str(inputs["canonical_source_url"]).startswith("https://"):
+        raise ValueError("Gaza withdrawal canonical source URL is invalid")
+    if not re.fullmatch(r"[0-9a-f]{40}", str(inputs["pages_head"])):
+        raise ValueError("Gaza withdrawal Pages head is invalid")
+    if not re.fullmatch(r"sha256:[0-9a-f]{64}", str(inputs["artifact_set_sha256"])):
+        raise ValueError("Gaza withdrawal artifact-set identity is invalid")
+    return _canonical_fingerprint(
+        {
+            "canonicalization_version": GAZA_PUBLISHED_LINEAGE_CANONICALIZATION,
+            "identity_type": "published_story_withdrawal",
+            "inputs": inputs,
+        }
+    )
+
+
 def _number_from_claim(value: Any) -> int | None:
     text = _lineage_text(value)
     words = {
@@ -548,8 +632,6 @@ def build_gaza_published_story_lineage(
         }
         if projection not in dedupe_evidence:
             dedupe_evidence.append(projection)
-    stable_inputs = gaza_stable_event_identity_inputs(story)
-    stable_fingerprint = gaza_stable_event_fingerprint(stable_inputs)
     from .story_dedupe import topic_fingerprint
 
     claim_inputs = {
@@ -567,6 +649,23 @@ def build_gaza_published_story_lineage(
         "artifacts": artifacts,
     }
     provenance["provenance_fingerprint"] = _canonical_fingerprint(provenance)
+    withdrawal_identity: dict[str, Any] | None = None
+    try:
+        stable_inputs = gaza_stable_event_identity_inputs(story)
+        stable_fingerprint = gaza_stable_event_fingerprint(stable_inputs)
+    except ValueError:
+        stable_inputs = gaza_withdrawal_target_identity_inputs(
+            story_id=story_id,
+            edition_date=edition_date,
+            source_records=source_evidence,
+            provenance=provenance,
+        )
+        stable_fingerprint = gaza_withdrawal_target_fingerprint(stable_inputs)
+        withdrawal_identity = {
+            "inputs": stable_inputs,
+            "fingerprint": stable_fingerprint,
+            "correction_type": "story_withdrawal",
+        }
     record = {
         "schema_version": GAZA_PUBLISHED_LINEAGE_SCHEMA,
         "domain": "gaza",
@@ -605,6 +704,8 @@ def build_gaza_published_story_lineage(
         "review_authority": False,
         "approval_authority": False,
     }
+    if withdrawal_identity is not None:
+        record["withdrawal_target_identity"] = withdrawal_identity
     if not record["backfill_reason"]:
         raise ValueError("published lineage backfill reason is required")
     record["record_fingerprint"] = _lineage_record_fingerprint(record)
@@ -637,6 +738,9 @@ def validate_gaza_published_story_lineage(record: dict[str, Any]) -> dict[str, A
         "approval_authority",
         "record_fingerprint",
     }
+    has_withdrawal_identity = "withdrawal_target_identity" in record
+    if has_withdrawal_identity:
+        expected_record_fields = set(expected_record_fields) | {"withdrawal_target_identity"}
     if set(record) != expected_record_fields:
         raise ValueError("Gaza published-story lineage fields are incomplete or unsupported")
     if record.get("domain") != "gaza":
@@ -824,11 +928,36 @@ def validate_gaza_published_story_lineage(record: dict[str, Any]) -> dict[str, A
     stable = record.get("stable_event_identity")
     if not isinstance(stable, dict) or set(stable) != {"inputs", "fingerprint"}:
         raise ValueError("Gaza published-story lineage stable event identity is missing")
-    derived_inputs = gaza_stable_event_identity_inputs(story)
-    if stable.get("inputs") != derived_inputs:
-        raise ValueError("Gaza published-story lineage stable event inputs differ")
-    if stable.get("fingerprint") != gaza_stable_event_fingerprint(derived_inputs):
-        raise ValueError("Gaza published-story lineage stable event fingerprint differs")
+    try:
+        derived_inputs = gaza_stable_event_identity_inputs(story)
+    except ValueError:
+        if not has_withdrawal_identity:
+            raise
+        withdrawal = record.get("withdrawal_target_identity")
+        if (
+            not isinstance(withdrawal, dict)
+            or set(withdrawal) != {"inputs", "fingerprint", "correction_type"}
+            or withdrawal.get("correction_type") != "story_withdrawal"
+        ):
+            raise ValueError("Gaza published-story withdrawal identity is invalid")
+        derived_inputs = gaza_withdrawal_target_identity_inputs(
+            story_id=story_id,
+            edition_date=edition_date,
+            source_records=sources,
+            provenance=provenance,
+        )
+        if stable.get("inputs") != derived_inputs or withdrawal.get("inputs") != derived_inputs:
+            raise ValueError("Gaza published-story withdrawal identity inputs differ")
+        fingerprint = gaza_withdrawal_target_fingerprint(derived_inputs)
+        if stable.get("fingerprint") != fingerprint or withdrawal.get("fingerprint") != fingerprint:
+            raise ValueError("Gaza published-story withdrawal identity fingerprint differs")
+    else:
+        if has_withdrawal_identity:
+            raise ValueError("Gaza published-story withdrawal identity is not allowed for normal event lineage")
+        if stable.get("inputs") != derived_inputs:
+            raise ValueError("Gaza published-story lineage stable event inputs differ")
+        if stable.get("fingerprint") != gaza_stable_event_fingerprint(derived_inputs):
+            raise ValueError("Gaza published-story lineage stable event fingerprint differs")
     claim_identity = record.get("prior_claim_identity")
     if not isinstance(claim_identity, dict) or set(claim_identity) != {"inputs", "fingerprint"}:
         raise ValueError("Gaza published-story lineage prior claim identity is missing")

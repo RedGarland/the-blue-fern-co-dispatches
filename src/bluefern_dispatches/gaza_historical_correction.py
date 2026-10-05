@@ -73,6 +73,17 @@ UNCHANGED_PATHS = {
     "original_audio": "gaza/audio/{date}.mp3",
 }
 
+WITHDRAWAL_PREVIEW_PATHS = {
+    **PREVIEW_PATHS,
+    "sources_manifest": "gaza/editions/{date}/sources_manifest.json",
+}
+
+WITHDRAWAL_UNCHANGED_PATHS = {
+    role: path
+    for role, path in UNCHANGED_PATHS.items()
+    if role != "sources_manifest"
+}
+
 NEW_ROLES = {
     "correction_page",
     "correction_manifest",
@@ -80,6 +91,22 @@ NEW_ROLES = {
     "correction_transcript",
     "correction_audio",
 }
+
+
+def _correction_type(correction: dict[str, Any]) -> str:
+    return str(correction.get("correction_type") or "claim_correction")
+
+
+def _preview_paths_for(correction: dict[str, Any]) -> dict[str, str]:
+    return WITHDRAWAL_PREVIEW_PATHS if _correction_type(correction) == "story_withdrawal" else PREVIEW_PATHS
+
+
+def _unchanged_paths_for(correction: dict[str, Any]) -> dict[str, str]:
+    return WITHDRAWAL_UNCHANGED_PATHS if _correction_type(correction) == "story_withdrawal" else UNCHANGED_PATHS
+
+
+def _new_roles_for(correction: dict[str, Any]) -> set[str]:
+    return set(NEW_ROLES)
 
 
 class CorrectionValidationError(ValueError):
@@ -746,8 +773,11 @@ def _validate_proposal_shape(proposal: Any) -> dict[str, Any]:
 
 
 def _validate_correction(proposal: dict[str, Any]) -> dict[str, Any]:
+    raw_correction = proposal["correction"]
+    if isinstance(raw_correction, dict) and raw_correction.get("correction_type") == "story_withdrawal":
+        return _validate_withdrawal_correction(raw_correction)
     correction = _exact_fields(
-        proposal["correction"],
+        raw_correction,
         {
             "correction_id",
             "story_id",
@@ -831,9 +861,84 @@ def _validate_correction(proposal: dict[str, Any]) -> dict[str, Any]:
     return correction
 
 
+def _validate_withdrawal_correction(correction_value: Any) -> dict[str, Any]:
+    correction = _exact_fields(
+        correction_value,
+        {
+            "correction_type",
+            "correction_id",
+            "story_id",
+            "owning_edition_date",
+            "correction_date",
+            "target_identity_fingerprint",
+            "prior_claim_fingerprint",
+            "withdrawal_fingerprint",
+            "prior_claim",
+            "withdrawal_reason",
+            "source_attribution",
+            "evidence_references",
+            "public_artifact_bindings",
+            "audio_impacted",
+        },
+        "withdrawal correction identity",
+    )
+    if correction["correction_type"] != "story_withdrawal":
+        raise CorrectionValidationError("withdrawal correction type is invalid")
+    story_id = str(correction["story_id"])
+    edition_date = str(correction["owning_edition_date"])
+    correction_date = str(correction["correction_date"])
+    if not re.fullmatch(r"gaza-story-20\d{2}-\d{2}-\d{2}-\d{3}", story_id):
+        raise CorrectionValidationError("withdrawal story ID is invalid")
+    if not re.fullmatch(r"20\d{2}-\d{2}-\d{2}", edition_date) or not re.fullmatch(
+        r"20\d{2}-\d{2}-\d{2}", correction_date
+    ):
+        raise CorrectionValidationError("withdrawal dates are invalid")
+    for field in ("target_identity_fingerprint", "withdrawal_fingerprint"):
+        _require_sha(correction[field], f"withdrawal {field}", prefix=True)
+    if not re.fullmatch(r"topic_fingerprint_v1:[0-9a-f]{16}", str(correction["prior_claim_fingerprint"])):
+        raise CorrectionValidationError("withdrawal prior claim fingerprint is invalid")
+    for field in ("prior_claim", "withdrawal_reason", "source_attribution"):
+        if not isinstance(correction[field], str) or not correction[field].strip():
+            raise CorrectionValidationError(f"withdrawal {field} is required")
+    evidence_references = correction["evidence_references"]
+    if not isinstance(evidence_references, list) or len(evidence_references) < 2:
+        raise CorrectionValidationError("withdrawal requires public-artifact and source evidence")
+    for item in evidence_references:
+        if not isinstance(item, dict) or not str(item.get("role") or "").strip():
+            raise CorrectionValidationError("withdrawal evidence references are invalid")
+        if item.get("role") == "source_url":
+            if not str(item.get("url") or "").startswith("https://"):
+                raise CorrectionValidationError("withdrawal source evidence URL is invalid")
+        elif not str(item.get("path") or "").startswith("gaza/"):
+            raise CorrectionValidationError("withdrawal public-artifact evidence path is invalid")
+        if not str(item.get("supporting_detail") or "").strip():
+            raise CorrectionValidationError("withdrawal evidence detail is required")
+    bindings = correction["public_artifact_bindings"]
+    if not isinstance(bindings, dict) or bindings.get("pages_head") is None:
+        raise CorrectionValidationError("withdrawal public artifact bindings are required")
+    if not re.fullmatch(r"[0-9a-f]{40}", str(bindings.get("pages_head"))):
+        raise CorrectionValidationError("withdrawal Pages binding is invalid")
+    for key, value in bindings.items():
+        if key.endswith("_sha256"):
+            _require_sha(value, f"withdrawal binding {key}")
+    if not isinstance(correction["audio_impacted"], bool):
+        raise CorrectionValidationError("withdrawal audio impact must be explicit")
+    expected_id = correction_identity(
+        story_id,
+        correction["target_identity_fingerprint"],
+        correction["prior_claim_fingerprint"],
+        correction["withdrawal_fingerprint"],
+    )
+    if correction["correction_id"] != expected_id:
+        raise CorrectionValidationError("withdrawal correction identity is not deterministic")
+    return correction
+
+
 def _validate_private_evidence(
     source_root: Path, proposal: dict[str, Any], correction: dict[str, Any]
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    if _correction_type(correction) == "story_withdrawal":
+        return _validate_withdrawal_private_evidence(source_root, proposal, correction)
     evidence = _exact_fields(
         proposal["private_evidence"],
         {
@@ -967,8 +1072,98 @@ def _validate_private_evidence(
     return lineage, review, audit
 
 
+def _validate_withdrawal_private_evidence(
+    source_root: Path, proposal: dict[str, Any], correction: dict[str, Any]
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    evidence = _exact_fields(
+        proposal["private_evidence"],
+        {
+            "lineage_path",
+            "lineage_sha256",
+            "review_path",
+            "review_sha256",
+            "decision_audit_path",
+            "decision_audit_sha256",
+        },
+        "withdrawal private evidence",
+    )
+    paths: dict[str, Path] = {}
+    for key in ("lineage", "review", "decision_audit"):
+        relative = evidence[f"{key}_path"]
+        if not isinstance(relative, str) or not relative:
+            raise CorrectionValidationError(f"withdrawal private {key} path is required")
+        paths[key] = _repo_path(source_root, relative, f"withdrawal private {key}")
+        if sha256_file(paths[key]) != _require_sha(evidence[f"{key}_sha256"], f"withdrawal private {key} hash"):
+            raise CorrectionValidationError(f"withdrawal private {key} hash differs")
+
+    lineage_matches = []
+    lineage_root = source_root / "data" / "agent-history" / "gaza" / "lineage" / "published-stories"
+    for path in lineage_root.glob("*.json"):
+        payload = _load_json(path, "published lineage")
+        if isinstance(payload, dict) and payload.get("story_id") == correction["story_id"]:
+            lineage_matches.append(path.resolve())
+    if lineage_matches != [paths["lineage"]]:
+        raise CorrectionValidationError("withdrawal lineage is missing, ambiguous, or duplicated")
+
+    lineage = _load_json(paths["lineage"], "published lineage")
+    try:
+        validate_gaza_published_story_lineage(lineage)
+    except ValueError as exc:
+        raise CorrectionValidationError(f"withdrawal lineage is invalid: {exc}") from exc
+    review = _load_json(paths["review"], "editorial review")
+    audit = _load_json(paths["decision_audit"], "decision audit")
+    if audit != review:
+        raise CorrectionValidationError("withdrawal decision audit must bind the exact review artifact")
+    if lineage.get("story_id") != correction["story_id"]:
+        raise CorrectionValidationError("withdrawal lineage resolves another story")
+    if lineage.get("edition_date") != correction["owning_edition_date"]:
+        raise CorrectionValidationError("withdrawal lineage resolves another edition")
+    withdrawal_identity = lineage.get("withdrawal_target_identity")
+    if not isinstance(withdrawal_identity, dict) or withdrawal_identity.get("correction_type") != "story_withdrawal":
+        raise CorrectionValidationError("withdrawal lineage lacks a withdrawal-only identity")
+    if withdrawal_identity.get("fingerprint") != correction["target_identity_fingerprint"]:
+        raise CorrectionValidationError("withdrawal target identity changed")
+    if lineage.get("prior_claim_identity", {}).get("fingerprint") != correction["prior_claim_fingerprint"]:
+        raise CorrectionValidationError("withdrawal prior claim fingerprint changed")
+    if lineage.get("prior_claim", {}).get("text") != correction["prior_claim"]:
+        raise CorrectionValidationError("withdrawal prior public claim differs from lineage")
+    if review.get("schema_version") != "gaza_historical_editorial_review_v2":
+        raise CorrectionValidationError("withdrawal review schema is unsupported")
+    if review.get("decision") != "confirmed_public_scope_contamination":
+        raise CorrectionValidationError("withdrawal review is not a confirmed scope-contamination decision")
+    if review.get("resulting_review_state") != "substantively_reviewed":
+        raise CorrectionValidationError("withdrawal review is not substantively reviewed")
+    if review.get("target_story_id") != correction["story_id"] or review.get("target_public_edition_date") != correction["owning_edition_date"]:
+        raise CorrectionValidationError("withdrawal review targets another story or edition")
+    for key in (
+        "current_publication_eligible",
+        "current_publication_approval",
+        "publication_authorized",
+        "queue_authorized",
+        "source_record_authorized",
+        "cluster_authorized",
+        "audio_authorized",
+    ):
+        if review.get(key) is not False:
+            raise CorrectionValidationError(f"withdrawal review improperly authorizes {key}")
+    scope = review.get("scope_assessment") or {}
+    if scope.get("materially_concerns_gaza") is not False:
+        raise CorrectionValidationError("withdrawal review does not prove non-Gaza scope contamination")
+    if scope.get("recommended_public_correction") is not True:
+        raise CorrectionValidationError("withdrawal review lacks a public correction recommendation")
+    if review.get("decision_reason") != correction["withdrawal_reason"]:
+        raise CorrectionValidationError("withdrawal reason differs from review")
+    if review.get("evidence_references") != correction["evidence_references"]:
+        raise CorrectionValidationError("withdrawal evidence differs from review")
+    bindings = review.get("public_artifact_bindings")
+    if bindings != correction["public_artifact_bindings"]:
+        raise CorrectionValidationError("withdrawal public artifact bindings differ from review")
+    return lineage, review, audit
+
+
 def _expected_public_path(role: str, correction: dict[str, Any]) -> str:
-    return REPLACEMENT_PATHS[role].format(
+    paths = _preview_paths_for(correction) if role == "sources_manifest" else REPLACEMENT_PATHS
+    return paths[role].format(
         date=correction["owning_edition_date"], correction_id=correction["correction_id"]
     )
 
@@ -978,6 +1173,26 @@ def _json_document(value: Any) -> bytes:
 
 
 def _public_correction_record(correction: dict[str, Any]) -> dict[str, Any]:
+    if _correction_type(correction) == "story_withdrawal":
+        return {
+            key: correction[key]
+            for key in (
+                "correction_type",
+                "correction_id",
+                "story_id",
+                "owning_edition_date",
+                "correction_date",
+                "target_identity_fingerprint",
+                "prior_claim_fingerprint",
+                "withdrawal_fingerprint",
+                "prior_claim",
+                "withdrawal_reason",
+                "source_attribution",
+                "evidence_references",
+                "public_artifact_bindings",
+                "audio_impacted",
+            )
+        }
     return {
         key: correction[key]
         for key in (
@@ -1067,6 +1282,36 @@ def _join_names(values: list[str]) -> str:
 
 
 def _reader_correction_copy(correction: dict[str, Any]) -> _ReaderCorrectionCopy:
+    if _correction_type(correction) == "story_withdrawal":
+        edition_date = _natural_date(correction["owning_edition_date"], "owning edition", include_year=False)
+        correction_date = _natural_date(correction["correction_date"], "correction date")
+        source = str(correction["source_attribution"]).strip()
+        prior = str(correction["prior_claim"]).strip()
+        heading = f"Correction — {correction_date}"
+        story_update = (
+            "Withdrawn: this item described a West Bank event and has been removed "
+            "from the Gaza edition."
+        )
+        notice = (
+            f"The {edition_date} Gaza dispatch previously included a story citing {source}: "
+            f"{prior} The item was outside the Gaza scope and has been withdrawn from "
+            "the edition. The correction preserves the original public evidence and removes "
+            "the story from corrected reader-facing derivatives."
+        )
+        audio_script = (
+            f"A correction to our {edition_date} Gaza dispatch: a story citing {source} "
+            "described a West Bank event outside the Gaza scope. It has been withdrawn "
+            "from the Gaza edition."
+        )
+        return _ReaderCorrectionCopy(
+            heading=heading,
+            notice=notice,
+            story_update=story_update,
+            today_update=story_update,
+            audio_script=audio_script,
+            feed_description=f"{heading}. {notice}",
+            source_labels={},
+        )
     prior = str(correction["prior_claim"]).strip()
     prior_without_period = prior[:-1] if prior.endswith(".") else prior
     prior_match = re.fullmatch(
@@ -1164,12 +1409,19 @@ def _correction_script(correction: dict[str, Any]) -> str:
 def _correction_notice_html(correction: dict[str, Any]) -> str:
     record = _public_correction_record(correction)
     reader = _reader_correction_copy(correction)
-    links = "".join(
-        f'<li><a href="{html.escape(item["url"], quote=True)}">'
-        f'{html.escape(reader.source_labels[item["url"]], quote=False)}</a>: '
-        f'{html.escape(item["supporting_passage"], quote=False)}</li>'
-        for item in record["evidence_references"]
-    )
+    links = ""
+    for item in record["evidence_references"]:
+        if item.get("url"):
+            label = reader.source_labels.get(item["url"]) or item.get("role") or "source"
+            detail = item.get("supporting_passage") or item.get("supporting_detail") or ""
+            links += (
+                f'<li><a href="{html.escape(item["url"], quote=True)}">'
+                f'{html.escape(str(label), quote=False)}</a>: '
+                f'{html.escape(str(detail), quote=False)}</li>'
+            )
+        else:
+            detail = item.get("supporting_detail") or item.get("path") or item.get("role") or ""
+            links += f'<li>{html.escape(str(detail), quote=False)}</li>'
     return (
         f'<section class="formal-correction" id="correction-{record["correction_id"]}">'
         f'<h2>{html.escape(reader.heading, quote=False)}</h2>'
@@ -1597,6 +1849,226 @@ def _render_original_audio_metadata_json(
     return document.render(edits)
 
 
+def _remove_story_from_json_list(payload: Any, story_id: str, label: str) -> list[Any]:
+    if not isinstance(payload, list):
+        raise CorrectionValidationError(f"{label} must be a list")
+    removed = [row for row in payload if isinstance(row, dict) and row.get("story_id") == story_id]
+    if len(removed) != 1:
+        raise CorrectionValidationError(f"{label} does not contain the withdrawal story exactly once")
+    return [row for row in payload if not (isinstance(row, dict) and row.get("story_id") == story_id)]
+
+
+def _withdrawal_notice_comment(correction: dict[str, Any]) -> str:
+    reader = _reader_correction_copy(correction)
+    return (
+        f"<section class=\"formal-correction\" id=\"correction-{correction['correction_id']}\">"
+        f"<h2>{html.escape(reader.heading, quote=False)}</h2>"
+        f"<p>{html.escape(reader.notice, quote=False)}</p></section>"
+    )
+
+
+def _render_withdrawal_edition_html(text: str, correction: dict[str, Any], lineage: dict[str, Any]) -> str:
+    title = html.escape(str(lineage.get("story_title") or ""), quote=False)
+    claim = html.escape(str(correction["prior_claim"]), quote=False)
+    if not title or not claim:
+        raise CorrectionValidationError("withdrawal lineage lacks rendered title or claim")
+    if text.count(claim) < 2:
+        raise CorrectionValidationError("withdrawal edition HTML does not expose both public story occurrences")
+    today_section = re.search(r"<h2>Today.*?</h2>(?P<body>.*?)<h2>At A Glance</h2>", text, flags=re.DOTALL)
+    if today_section is None:
+        raise CorrectionValidationError("withdrawal Today section is missing")
+    today_pattern = re.compile(r"^[ \t]*<p>" + re.escape(claim) + r"</p>[ \t]*(?:\r?\n)?", flags=re.MULTILINE)
+    today_matches = list(today_pattern.finditer(today_section.group("body")))
+    if len(today_matches) != 1:
+        raise CorrectionValidationError("withdrawal Today projection is ambiguous")
+    article_pattern = re.compile(
+        r"<article\b(?P<attrs>[^>]*)>.*?<h3>"
+        + re.escape(title)
+        + r"</h3>.*?"
+        + re.escape(claim)
+        + r".*?</article>\s*",
+        flags=re.DOTALL,
+    )
+    matches = list(article_pattern.finditer(text))
+    if len(matches) != 1:
+        raise CorrectionValidationError("withdrawal story article is ambiguous")
+    body_start = today_section.start("body")
+    today_start = body_start + today_matches[0].start()
+    today_end = body_start + today_matches[0].end()
+    without_today = text[:today_start] + text[today_end:]
+    start, end = matches[0].span()
+    removed_article = text[start:end]
+    if claim not in removed_article:
+        raise CorrectionValidationError("withdrawal story article does not own the public claim")
+    adjusted_start = without_today.find(removed_article)
+    if adjusted_start < 0:
+        raise CorrectionValidationError("withdrawal article shifted unexpectedly")
+    adjusted = without_today[:adjusted_start] + without_today[adjusted_start + len(removed_article):]
+    marker = "</main>" if "</main>" in adjusted else "</body>"
+    return _append_before(adjusted, marker, _withdrawal_notice_comment(correction), "withdrawal edition HTML")
+
+
+def _withdrawal_audio_impacted(pages_root: Path, correction: dict[str, Any]) -> bool:
+    date = correction["owning_edition_date"]
+    needle = str(correction["prior_claim"])
+    for relative in (
+        f"gaza/audio/{date}.json",
+        f"gaza/audio/{date}-transcript.html",
+        "gaza/flash-briefing.json",
+    ):
+        path = _repo_path(pages_root, relative, "withdrawal audio impact")
+        if path.is_file() and needle in path.read_text(encoding="utf-8", errors="ignore"):
+            return True
+    return False
+
+
+def _render_withdrawal_payloads(
+    pages_root: Path,
+    correction: dict[str, Any],
+    audio_request: dict[str, Any],
+) -> dict[str, bytes]:
+    payloads: dict[str, bytes] = {}
+    date = correction["owning_edition_date"]
+    reader = _reader_correction_copy(correction)
+    record = _public_correction_record(correction)
+    lineage_path = pages_root  # placeholder to keep this renderer source-only
+    del lineage_path
+    curation_path = _repo_path(pages_root, f"gaza/editions/{date}/curation_manifest.json", "curation")
+    curation = _load_json(curation_path, "curation manifest")
+    target_rows = [row for row in curation if isinstance(row, dict) and row.get("story_id") == correction["story_id"]]
+    if len(target_rows) != 1:
+        raise CorrectionValidationError("withdrawal target story is ambiguous in curation")
+    lineage = {
+        "story_title": target_rows[0].get("title"),
+    }
+    payloads["curation_manifest"] = _json_document(
+        _remove_story_from_json_list(curation, correction["story_id"], "curation manifest")
+    )
+
+    sources = _load_json(
+        _repo_path(pages_root, f"gaza/editions/{date}/sources_manifest.json", "sources manifest"),
+        "sources manifest",
+    )
+    if not isinstance(sources, list):
+        raise CorrectionValidationError("sources manifest must be a list")
+    adjusted_sources = []
+    for source in sources:
+        if not isinstance(source, dict):
+            adjusted_sources.append(source)
+            continue
+        used = [value for value in source.get("used_in_story_ids") or [] if value != correction["story_id"]]
+        if used:
+            adjusted = {**source, "used_in_story_ids": used}
+            adjusted_sources.append(adjusted)
+    payloads["sources_manifest"] = _json_document(adjusted_sources)
+
+    dedupe = _load_json(
+        _repo_path(pages_root, f"gaza/editions/{date}/dedupe_report.json", "dedupe report"),
+        "dedupe report",
+    )
+    if not isinstance(dedupe, dict):
+        raise CorrectionValidationError("dedupe report must be an object")
+    adjusted_dedupe = json.loads(json.dumps(dedupe))
+    removed_any = False
+    for key, value in list(adjusted_dedupe.items()):
+        if isinstance(value, list):
+            filtered = [row for row in value if not (isinstance(row, dict) and row.get("story_id") == correction["story_id"])]
+            removed_any = removed_any or len(filtered) != len(value)
+            adjusted_dedupe[key] = filtered
+    if not removed_any:
+        raise CorrectionValidationError("dedupe report does not reference the withdrawal story")
+    adjusted_dedupe["corrections"] = [record]
+    payloads["dedupe_report"] = _json_document(adjusted_dedupe)
+
+    edition = _load_json(
+        _repo_path(pages_root, f"gaza/editions/{date}/edition_manifest.json", "edition manifest"),
+        "edition manifest",
+    )
+    if not isinstance(edition, dict):
+        raise CorrectionValidationError("edition manifest must be an object")
+    adjusted_edition = dict(edition)
+    for key in ("story_count", "included_story_count", "source_count"):
+        if isinstance(adjusted_edition.get(key), int) and adjusted_edition[key] > 0:
+            adjusted_edition[key] -= 1
+    adjusted_edition["corrections"] = [{**record, "aggregates_recomputed_after_story_withdrawal": True}]
+    payloads["edition_manifest"] = _json_document(adjusted_edition)
+    payloads["correction_manifest"] = _json_document(record)
+
+    edition_artifact = _read_text_artifact(
+        _repo_path(pages_root, f"gaza/editions/{date}/index.html", "edition HTML"),
+        "edition HTML",
+    )
+    payloads["edition_html"] = edition_artifact.encode(
+        _render_withdrawal_edition_html(edition_artifact.text, correction, lineage),
+        "edition HTML",
+    )
+
+    notice = _correction_notice_html(correction)
+    for role, relative in (
+        ("rss", "gaza/rss.xml"),
+        ("podcast", "gaza/podcast.xml"),
+        ("audio_podcast", "gaza/audio/podcast.xml"),
+        ("audio_index", "gaza/audio/index.html"),
+        ("gaza_index", "gaza/index.html"),
+        ("gaza_archive", "gaza/archive.html"),
+        ("root_index", "index.html"),
+    ):
+        current = _read_text_artifact(_repo_path(pages_root, relative, role), role)
+        marker = "</channel>" if role in {"rss", "podcast", "audio_podcast"} else "</main>" if "</main>" in current.text else "</body>"
+        payloads[role] = current.encode(_append_before(current.text, marker, notice, role), role)
+
+    audio_metadata = _load_json(
+        _repo_path(pages_root, f"gaza/audio/{date}.json", "prior audio metadata"),
+        "prior audio metadata",
+    )
+    if isinstance(audio_metadata, dict):
+        script = str(audio_metadata.get("script_text") or "")
+        audio_metadata["audio_status"] = "superseded_by_formal_withdrawal_correction"
+        audio_metadata["superseded_by_correction_id"] = correction["correction_id"]
+        audio_metadata["script_text"] = script.replace(str(correction["prior_claim"]), reader.story_update)
+    payloads["original_audio_metadata"] = _json_document(audio_metadata)
+    payloads["correction_audio_metadata"] = _json_document(
+        {
+            "audio_status": "formal_correction",
+            "render_status": "pending_approved_render",
+            "rendered_audio_sha256": None,
+            "correction_id": correction["correction_id"],
+            "story_id": correction["story_id"],
+            "owning_edition_date": correction["owning_edition_date"],
+            "correction_date": correction["correction_date"],
+            "script_text": audio_request["script_text"],
+            "script_sha256": audio_request["script_sha256"],
+            "tts_provider": audio_request["tts_provider"],
+            "tts_model": audio_request["tts_model"],
+            "tts_voice": audio_request["tts_voice"],
+            "withdrawal": True,
+        }
+    )
+    prior_transcript = _read_text_artifact(
+        _repo_path(pages_root, f"gaza/audio/{date}-transcript.html", "prior transcript"),
+        "prior transcript",
+    )
+    payloads["original_transcript"] = prior_transcript.encode(
+        prior_transcript.text.replace(str(correction["prior_claim"]), reader.story_update),
+        "prior transcript",
+    )
+    payloads["correction_transcript"] = (
+        "<!doctype html><html><body><main>" + notice +
+        f"<p>{html.escape(audio_request['script_text'], quote=False)}</p></main></body></html>"
+    ).encode("utf-8")
+    payloads["correction_page"] = (
+        "<!doctype html><html><body><main>" + notice + "</main></body></html>"
+    ).encode("utf-8")
+    flash = _load_json(_repo_path(pages_root, "gaza/flash-briefing.json", "flash briefing"), "flash briefing")
+    if isinstance(flash, list):
+        for item in flash:
+            if isinstance(item, dict) and isinstance(item.get("mainText"), str):
+                item["mainText"] = item["mainText"].replace(str(correction["prior_claim"]), reader.story_update)
+                item["uid"] = str(item.get("uid") or "") + "-withdrawal-corrected"
+    payloads["flash_briefing"] = _json_document(flash)
+    return payloads
+
+
 def _canonical_public_path(value: Any, label: str) -> str:
     if not isinstance(value, str) or not value or value != value.strip():
         raise CorrectionValidationError(f"{label} is not a canonical public URL or path")
@@ -1838,6 +2310,13 @@ def _render_preview_payloads(
     correction: dict[str, Any],
     audio_request: dict[str, Any],
 ) -> dict[str, bytes]:
+    if _correction_type(correction) == "story_withdrawal":
+        payloads = _render_withdrawal_payloads(pages_root, correction, audio_request)
+        expected = set(_preview_paths_for(correction))
+        if set(payloads) != expected:
+            missing = sorted(expected - set(payloads))
+            raise CorrectionValidationError(f"withdrawal preview renderer is incomplete: {missing}")
+        return payloads
     record = _public_correction_record(correction)
     reader = _reader_correction_copy(correction)
     payloads: dict[str, bytes] = {}
@@ -2026,37 +2505,72 @@ def prepare_correction_proposal(
     lineage = _load_json(lineage_path, "published lineage")
     review = _load_json(review_file, "editorial review")
     audit = _load_json(audit_file, "decision audit")
-    correction_lineage = review.get("correction_lineage", {})
-    correction = {
-        "correction_id": "",
-        "story_id": story_id,
-        "owning_edition_date": lineage.get("edition_date"),
-        "correction_date": correction_date,
-        "stable_event_fingerprint": lineage.get("stable_event_identity", {}).get("fingerprint"),
-        "prior_claim_fingerprint": lineage.get("prior_claim_identity", {}).get("fingerprint"),
-        "corrected_claim_fingerprint": review.get("candidate_event_fingerprint"),
-        "prior_claim": lineage.get("prior_claim", {}).get("text"),
-        "corrected_claim": review.get("attribution_assessment", {}).get("safe_future_wording"),
-        "change_reason": review.get("decision_reason"),
-        "source_attribution": review.get("attribution_assessment", {}).get("attributed_to"),
-        "evidence_references": review.get("evidence_references"),
-        "casualty_change": {
-            "field": correction_lineage.get("field_or_claim"),
-            "previous_value": correction_lineage.get("previous_value"),
-            "corrected_value": correction_lineage.get("corrected_value"),
-            "operation": "replace",
-        },
-        "injury_disagreement": {
-            "unresolved": review.get("attribution_assessment", {}).get("dispute_unresolved"),
-            "reports": review.get("attribution_assessment", {}).get("disputed_values"),
-        },
-    }
-    correction["correction_id"] = correction_identity(
-        story_id,
-        correction["stable_event_fingerprint"],
-        correction["prior_claim_fingerprint"],
-        correction["corrected_claim_fingerprint"],
-    )
+    if review.get("decision") == "confirmed_public_scope_contamination":
+        withdrawal_fingerprint = fingerprint_payload(
+            {
+                "story_id": story_id,
+                "owning_edition_date": lineage.get("edition_date"),
+                "decision": review.get("decision"),
+                "reason": review.get("decision_reason"),
+                "prior_claim": lineage.get("prior_claim", {}).get("text"),
+                "withdrawal_fingerprint": "",
+            },
+            "withdrawal_fingerprint",
+        )
+        correction = {
+            "correction_type": "story_withdrawal",
+            "correction_id": "",
+            "story_id": story_id,
+            "owning_edition_date": lineage.get("edition_date"),
+            "correction_date": correction_date,
+            "target_identity_fingerprint": lineage.get("withdrawal_target_identity", {}).get("fingerprint"),
+            "prior_claim_fingerprint": lineage.get("prior_claim_identity", {}).get("fingerprint"),
+            "withdrawal_fingerprint": withdrawal_fingerprint,
+            "prior_claim": lineage.get("prior_claim", {}).get("text"),
+            "withdrawal_reason": review.get("decision_reason"),
+            "source_attribution": lineage.get("source_attribution"),
+            "evidence_references": review.get("evidence_references"),
+            "public_artifact_bindings": review.get("public_artifact_bindings"),
+            "audio_impacted": False,
+        }
+        correction["correction_id"] = correction_identity(
+            story_id,
+            correction["target_identity_fingerprint"],
+            correction["prior_claim_fingerprint"],
+            correction["withdrawal_fingerprint"],
+        )
+    else:
+        correction_lineage = review.get("correction_lineage", {})
+        correction = {
+            "correction_id": "",
+            "story_id": story_id,
+            "owning_edition_date": lineage.get("edition_date"),
+            "correction_date": correction_date,
+            "stable_event_fingerprint": lineage.get("stable_event_identity", {}).get("fingerprint"),
+            "prior_claim_fingerprint": lineage.get("prior_claim_identity", {}).get("fingerprint"),
+            "corrected_claim_fingerprint": review.get("candidate_event_fingerprint"),
+            "prior_claim": lineage.get("prior_claim", {}).get("text"),
+            "corrected_claim": review.get("attribution_assessment", {}).get("safe_future_wording"),
+            "change_reason": review.get("decision_reason"),
+            "source_attribution": review.get("attribution_assessment", {}).get("attributed_to"),
+            "evidence_references": review.get("evidence_references"),
+            "casualty_change": {
+                "field": correction_lineage.get("field_or_claim"),
+                "previous_value": correction_lineage.get("previous_value"),
+                "corrected_value": correction_lineage.get("corrected_value"),
+                "operation": "replace",
+            },
+            "injury_disagreement": {
+                "unresolved": review.get("attribution_assessment", {}).get("dispute_unresolved"),
+                "reports": review.get("attribution_assessment", {}).get("disputed_values"),
+            },
+        }
+        correction["correction_id"] = correction_identity(
+            story_id,
+            correction["stable_event_fingerprint"],
+            correction["prior_claim_fingerprint"],
+            correction["corrected_claim_fingerprint"],
+        )
     correction = _validate_correction({"correction": correction})
     private_evidence = {
         "lineage_path": lineage_relative,
@@ -2065,10 +2579,15 @@ def prepare_correction_proposal(
         "review_sha256": sha256_file(review_file),
         "decision_audit_path": decision_audit_path,
         "decision_audit_sha256": sha256_file(audit_file),
-        "raw_sha256": review.get("raw_sha256"),
-        "normalized_artifact_sha256": review.get("normalized_artifact_sha256"),
-        "report_artifact_sha256": review.get("report_artifact_sha256"),
     }
+    if _correction_type(correction) != "story_withdrawal":
+        private_evidence.update(
+            {
+                "raw_sha256": review.get("raw_sha256"),
+                "normalized_artifact_sha256": review.get("normalized_artifact_sha256"),
+                "report_artifact_sha256": review.get("report_artifact_sha256"),
+            }
+        )
     validation_shell = {"private_evidence": private_evidence}
     _validate_private_evidence(source_root, validation_shell, correction)
     script = _correction_script(correction)
@@ -2090,9 +2609,17 @@ def prepare_correction_proposal(
     if any(not audio_request[key] for key in ("tts_provider", "tts_model", "tts_voice")):
         raise CorrectionValidationError("audio request provider, model, and voice are required")
     preview_payloads = _render_preview_payloads(pages_root, correction, audio_request)
+    if _correction_type(correction) == "story_withdrawal":
+        correction["audio_impacted"] = _withdrawal_audio_impacted(pages_root, correction)
+        correction = _validate_correction({"correction": correction})
+        script = _correction_script(correction)
+        audio_request["script_text"] = script
+        audio_request["script_sha256"] = "sha256:" + sha256_bytes(script.encode("utf-8"))
+        preview_payloads = _render_preview_payloads(pages_root, correction, audio_request)
     target = output_root / correction["correction_id"]
     representations = []
-    for role in sorted(PREVIEW_PATHS):
+    preview_paths = _preview_paths_for(correction)
+    for role in sorted(preview_paths):
         public_path = _expected_public_path(role, correction)
         current_path = _repo_path(pages_root, public_path, f"{role} public artifact")
         representations.append(
@@ -2116,7 +2643,7 @@ def prepare_correction_proposal(
                 )
             ),
         }
-        for role, template in sorted(UNCHANGED_PATHS.items())
+        for role, template in sorted(_unchanged_paths_for(correction).items())
     ]
     audio_request_bytes = _json_document(audio_request)
     audio_request_entry = {
@@ -2173,7 +2700,7 @@ def prepare_correction_proposal(
         "approval_request.json": _json_document(approval_request),
         **{
             f"preview/{_expected_public_path(role, correction)}": preview_payloads[role]
-            for role in PREVIEW_PATHS
+            for role in _preview_paths_for(correction)
         },
     }
     if target.exists():
@@ -2360,11 +2887,13 @@ def _validate_pages_and_representations(
     if _git(pages_root, "rev-parse", "HEAD") != pages["expected_head"]:
         raise CorrectionValidationError("Pages history drifted from the approved head")
 
+    preview_paths = _preview_paths_for(correction)
+    unchanged_paths = _unchanged_paths_for(correction)
     rows = pages["representations"]
-    if not isinstance(rows, list) or len(rows) != len(PREVIEW_PATHS):
+    if not isinstance(rows, list) or len(rows) != len(preview_paths):
         raise CorrectionValidationError("correction representation inventory is partial")
     by_role = {str(row.get("role")): row for row in rows if isinstance(row, dict)}
-    if set(by_role) != set(PREVIEW_PATHS) or len(by_role) != len(rows):
+    if set(by_role) != set(preview_paths) or len(by_role) != len(rows):
         raise CorrectionValidationError("correction representation roles are missing or duplicated")
     for role, row in by_role.items():
         _exact_fields(row, {"role", "public_path", "input_path", "prior_sha256", "corrected_sha256"}, f"{role} representation")
@@ -2374,7 +2903,7 @@ def _validate_pages_and_representations(
         if not input_path.is_file() or sha256_file(input_path) != _require_sha(row["corrected_sha256"], f"{role} corrected hash"):
             raise CorrectionValidationError(f"{role} corrected artifact hash differs")
         public_path = _repo_path(pages_root, row["public_path"], f"{role} public artifact")
-        if role in NEW_ROLES:
+        if role in _new_roles_for(correction):
             if row["prior_sha256"] is not None or public_path.exists():
                 raise CorrectionValidationError(f"{role} would overwrite existing correction history")
         else:
@@ -2382,12 +2911,12 @@ def _validate_pages_and_representations(
                 raise CorrectionValidationError(f"{role} Pages artifact drifted")
 
     unchanged = pages["unchanged_dependencies"]
-    if not isinstance(unchanged, list) or len(unchanged) != len(UNCHANGED_PATHS):
+    if not isinstance(unchanged, list) or len(unchanged) != len(unchanged_paths):
         raise CorrectionValidationError("unchanged Pages dependency inventory is incomplete")
     unchanged_by_role = {str(row.get("role")): row for row in unchanged if isinstance(row, dict)}
-    if set(unchanged_by_role) != set(UNCHANGED_PATHS) or len(unchanged_by_role) != len(unchanged):
+    if set(unchanged_by_role) != set(unchanged_paths) or len(unchanged_by_role) != len(unchanged):
         raise CorrectionValidationError("unchanged Pages dependencies are missing or duplicated")
-    for role, template in UNCHANGED_PATHS.items():
+    for role, template in unchanged_paths.items():
         row = _exact_fields(unchanged_by_role[role], {"role", "public_path", "sha256"}, f"{role} dependency")
         expected = template.format(date=correction["owning_edition_date"])
         if row["public_path"] != expected:
@@ -2588,6 +3117,47 @@ def _validate_feed(path: Path, role: str, correction: dict[str, Any]) -> None:
 def _validate_representation_semantics(
     input_root: Path, rows: dict[str, dict[str, Any]], correction: dict[str, Any]
 ) -> None:
+    if _correction_type(correction) == "story_withdrawal":
+        for role, row in rows.items():
+            path = _repo_path(input_root, row["input_path"], f"{role} input")
+            if role == "correction_audio":
+                if path.stat().st_size < 4 or path.read_bytes()[:3] != b"ID3":
+                    raise CorrectionValidationError("correction audio is not an independently supplied MP3 asset")
+                continue
+            if role in {"curation_manifest", "sources_manifest"}:
+                payload = _load_json(path, role)
+                if not isinstance(payload, list):
+                    raise CorrectionValidationError(f"{role} must remain a list")
+                if any(isinstance(item, dict) and item.get("story_id") == correction["story_id"] for item in payload):
+                    raise CorrectionValidationError(f"{role} still contains the withdrawn story")
+                if any(
+                    isinstance(item, dict)
+                    and correction["story_id"] in [str(value) for value in item.get("used_in_story_ids") or []]
+                    for item in payload
+                ):
+                    raise CorrectionValidationError(f"{role} still links a source to the withdrawn story")
+            elif role in {"dedupe_report", "edition_manifest", "correction_manifest"}:
+                payload = _load_json(path, role)
+                corrections = payload.get("corrections") if role != "correction_manifest" and isinstance(payload, dict) else [payload]
+                if not isinstance(corrections, list) or not any(
+                    isinstance(item, dict)
+                    and item.get("correction_id") == correction["correction_id"]
+                    and item.get("correction_type") == "story_withdrawal"
+                    for item in corrections
+                ):
+                    raise CorrectionValidationError(f"{role} lacks withdrawal correction lineage")
+            elif role in {"original_audio_metadata", "flash_briefing"}:
+                if correction["prior_claim"] in path.read_text(encoding="utf-8", errors="ignore"):
+                    raise CorrectionValidationError(f"{role} still contains the withdrawn claim")
+            elif role == "edition_html":
+                visible = _visible_html_text(path, role)
+                _require_reader_prose(
+                    visible,
+                    correction,
+                    role,
+                    expected=(_reader_correction_copy(correction).notice,),
+                )
+        return
     for role, row in rows.items():
         path = _repo_path(input_root, row["input_path"], f"{role} input")
         if role == "correction_audio":
@@ -2765,6 +3335,7 @@ def plan_correction(
         "status": "validated_plan",
         "operation": "formal_historical_correction",
         "domain": "gaza",
+        "correction_type": _correction_type(correction),
         "correction_id": correction["correction_id"],
         "story_id": correction["story_id"],
         "owning_edition_date": correction["owning_edition_date"],
@@ -2832,7 +3403,11 @@ def stage_correction_package(
     audio_content = rendered_audio_path.read_bytes()
     rendered_audio_sha256 = sha256_bytes(audio_content)
     preview_rows = plan.get("representations")
-    if not isinstance(preview_rows, list) or len(preview_rows) != len(PREVIEW_PATHS):
+    expected_preview_roles = set(_preview_paths_for(plan))
+    if (
+        not isinstance(preview_rows, list)
+        or {row.get("role") for row in preview_rows if isinstance(row, dict)} != expected_preview_roles
+    ):
         raise CorrectionValidationError("validated preview representation set is incomplete")
     final_content: dict[str, bytes] = {}
     final_rows: list[dict[str, str]] = []
@@ -2957,7 +3532,10 @@ def verify_staged_package(
     ):
         raise CorrectionValidationError("staged package manifest fingerprint differs")
     rows = manifest.get("representations")
-    if not isinstance(rows, list) or {row.get("role") for row in rows if isinstance(row, dict)} != set(REPLACEMENT_PATHS):
+    expected_roles = set(REPLACEMENT_PATHS)
+    if manifest.get("correction_type") == "story_withdrawal":
+        expected_roles.add("sources_manifest")
+    if not isinstance(rows, list) or {row.get("role") for row in rows if isinstance(row, dict)} != expected_roles:
         raise CorrectionValidationError("staged package representation set is incomplete")
     for row in rows:
         path = _repo_path(package_root, row["public_path"], "staged representation")

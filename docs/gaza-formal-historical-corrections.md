@@ -4,6 +4,22 @@ This capability packages a correction to an already published Gaza story. It is
 not the daily generator, a historical-edition publisher, or an editorial approval
 workflow. It cannot mutate or publish Pages.
 
+The proposal validator supports two correction shapes:
+
+- the original same-story `claim_correction` path for the GZ-01 casualty-count
+  correction; and
+- `story_withdrawal`, for a previously published story that is proven to be
+  outside the Gaza edition scope and must be removed from the corrected edition
+  and affected derivative artifacts.
+
+`story_withdrawal` is not a current-publication qualification path. It is
+available only through private historical correction lineage that binds the
+published story ID, edition date, source identity, exact Pages head, and prior
+public artifact hashes. When a withdrawn target lacks ordinary Gaza stable-event
+fields such as `incident_object`, the lineage builder may derive a
+withdrawal-only published-story identity instead of weakening normal Gaza event
+identity validation.
+
 ## Authority boundary
 
 The workflow has a non-authorizing preapproval phase and an independently
@@ -133,6 +149,13 @@ domain, changed fingerprints, evidence or public hash drift, altered approval,
 resolved injury uncertainty, double-counted deaths, partial public surfaces,
 stale audio/feed/transcript content, new-edition behavior, and second-story
 behavior.
+
+For `story_withdrawal`, the validator additionally fails closed when the target
+story is absent or ambiguous, the review is not a confirmed public-scope
+contamination decision, the corrected edition still renders the withdrawn story,
+the corrected source/curation/dedupe manifests still link the story, audio or
+flash derivatives retain the withdrawn claim, or the approval fingerprint does
+not cover the full withdrawal artifact set.
 
 For legacy edition HTML, the correction renderer binds the target through the
 stable story's unique curation position and source-manifest URLs. It requires

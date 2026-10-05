@@ -146,6 +146,102 @@ def build_record(pages: Path, commit: str, **overrides: object) -> dict:
     return build_gaza_published_story_lineage(pages, **values)
 
 
+def init_withdrawal_pages_repo(root: Path) -> tuple[Path, str]:
+    pages = root / "withdrawal-pages"
+    pages.mkdir()
+    subprocess.run(["git", "init", "-b", "gh-pages", str(pages)], check=True, capture_output=True)
+    git(pages, "config", "user.email", "tests@example.com")
+    git(pages, "config", "user.name", "Tests")
+    git(pages, "remote", "add", "origin", GAZA_PAGES_REPOSITORY)
+    story_id = "gaza-story-2026-10-03-003"
+    title = "Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters"
+    claim = "Israeli forces detain and assault journalists in Jabal Qamass area in Beita, south of Nablus."
+    source = {
+        "source_record_id": "gaza-2026-10-03-aljazeera-west-bank",
+        "title": title,
+        "publisher": "Al Jazeera",
+        "url": "https://www.aljazeera.com/news/2026/10/3/israeli-settlers-attack-palestinian-olive-pickers-in-the-west-bank?traffic_source=rss",
+        "canonical_url": "https://www.aljazeera.com/news/2026/10/3/israeli-settlers-attack-palestinian-olive-pickers-in-the-west-bank?traffic_source=rss",
+        "published_at": "2026-10-03T12:00:00+00:00",
+        "dispatch_slug": "gaza",
+        "category_hint": "conflict",
+        "used_in_story_ids": [story_id],
+    }
+    source["claim_fingerprint"] = story_claim_fingerprint(source)
+    story = {
+        "story_id": story_id,
+        "title": title,
+        "summary": claim,
+        "category": "palestinian_development",
+        "event_date": "2026-10-03T12:00:00+00:00",
+        "location": "Gaza",
+        "development_type": "",
+        "casualty_counts": {},
+        "attribution": "Al Jazeera",
+        "publisher_names": ["Al Jazeera"],
+        "source_record_ids": [source["source_record_id"]],
+        "source_urls": [source["url"]],
+        "public_rendered": True,
+        "included_in_public_summary": True,
+    }
+    base = pages / "gaza" / "editions" / "2026-10-03"
+    write_json(base / "curation_manifest.json", [story])
+    write_json(base / "sources_manifest.json", [source])
+    write_json(
+        base / "dedupe_report.json",
+        {
+            "included_stories": [
+                {
+                    "story_id": story_id,
+                    "title": title,
+                    "classification": "new",
+                    "include_decision": "include",
+                    "public_rendered": True,
+                }
+            ]
+        },
+    )
+    (base / "index.html").write_text(
+        f"<html><body><h3>{title}</h3><p>{claim}</p></body></html>\n",
+        encoding="utf-8",
+    )
+    git(pages, "add", "gaza")
+    git(pages, "commit", "-m", "Publish withdrawal target")
+    return pages, git(pages, "rev-parse", "HEAD")
+
+
+def test_withdrawal_lineage_binds_without_incident_object(tmp_path: Path):
+    pages, commit = init_withdrawal_pages_repo(tmp_path)
+    record = build_gaza_published_story_lineage(
+        pages,
+        pages_commit=commit,
+        story_id="gaza-story-2026-10-03-003",
+        edition_date="2026-10-03",
+        expected_title="Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters",
+        expected_prior_claim="Israeli forces detain and assault journalists in Jabal Qamass area in Beita, south of Nablus.",
+        backfill_reason="Synthetic withdrawal target lineage.",
+        created_at="2026-10-05T00:00:00+00:00",
+    )
+
+    assert record["withdrawal_target_identity"]["correction_type"] == "story_withdrawal"
+    assert record["stable_event_identity"]["inputs"]["identity_type"] == "published_story_withdrawal"
+    assert validate_gaza_published_story_lineage(record) == record
+
+
+def test_withdrawal_identity_not_allowed_for_normal_event_lineage(tmp_path: Path):
+    pages, _, commit = init_pages_repo(tmp_path)
+    record = build_record(pages, commit)
+    record["withdrawal_target_identity"] = {
+        "inputs": record["stable_event_identity"]["inputs"],
+        "fingerprint": record["stable_event_identity"]["fingerprint"],
+        "correction_type": "story_withdrawal",
+    }
+    record["record_fingerprint"] = _lineage_record_fingerprint(record)
+
+    with pytest.raises(ValueError, match="withdrawal identity is not allowed"):
+        validate_gaza_published_story_lineage(record)
+
+
 def test_valid_provenance_dry_run_apply_replay_and_resolution(tmp_path: Path):
     pages, _, commit = init_pages_repo(tmp_path)
     repo = tmp_path / "source"

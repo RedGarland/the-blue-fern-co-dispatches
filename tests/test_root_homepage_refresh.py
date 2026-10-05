@@ -65,7 +65,7 @@ def _dispatch_card(html: str, product_name: str) -> str:
 
 
 def _edition_card(html: str, slug: str) -> str:
-    match = re.search(rf'<article class="edition-card edition-card--{re.escape(slug)}">.*?</article>', html, re.DOTALL)
+    match = re.search(rf'<article class="edition-card[^"]*edition-card--{re.escape(slug)}[^"]*">.*?</article>', html, re.DOTALL)
     assert match is not None
     return match.group(0)
 
@@ -119,6 +119,24 @@ def _write_release(
         path = dispatch_root / filename
         existing = path.read_text(encoding="utf-8") if path.exists() else prefix + suffix
         path.write_text(existing.replace(suffix, linked + suffix), encoding="utf-8")
+
+
+def _write_gaza_no_update(root: Path, edition_date: str, *, source_count: int = 4) -> None:
+    status_path = root / "gaza" / "status" / "no-updates" / f"{edition_date}.json"
+    status_path.parent.mkdir(parents=True, exist_ok=True)
+    status_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "gaza-no-update-status-v1",
+                "date": edition_date,
+                "classification": "no_publication_needed",
+                "message": "No new source-backed Gaza update met publication threshold today.",
+                "source_count": source_count,
+                "public_story_count": 0,
+            }
+        ),
+        encoding="utf-8",
+    )
 
 
 def _write_recovery_shaped_food_release(root: Path, edition_date: str) -> None:
@@ -242,7 +260,7 @@ def test_homepage_refresh_prefers_care_signal_h3_over_generic_edition_h1(tmp_pat
     assert releases[0].title not in {"The Care Line Dispatch", "Limited-source update"}
 
 
-def test_homepage_refresh_discovers_all_active_products_and_fills_extra_slots(tmp_path):
+def test_homepage_refresh_current_desk_has_one_card_per_active_public_product(tmp_path):
     public_root = tmp_path / "pages"
     homepage = TEMPLATE_HTML
     _write_release(public_root, "gaza", "2026-08-05", title="Gaza latest", source_count=7, time_key="actual_run_local_time", time_value="2026-08-05T06:00:42-07:00")
@@ -257,20 +275,21 @@ def test_homepage_refresh_discovers_all_active_products_and_fills_extra_slots(tm
     cards = select_homepage_cards(releases)
     rendered = render_homepage_from_template(homepage, cards)
 
-    assert {card.slug for card in cards} == {"gaza", "food-line", "care-line"}
-    assert len(cards) == 5
+    assert [card.slug for card in cards] == ["gaza", "food-line", "care-line"]
+    assert len(cards) == 3
     assert [card.relative_url for card in cards] == [
         "/gaza/editions/2026-08-05/",
         "/food-line/editions/2026-07-31/",
         "/care-line/editions/2026-08-05/",
-        "/gaza/editions/2026-08-04/",
-        "/gaza/editions/2026-08-03/",
     ]
+    assert rendered.count('<article class="edition-card') == 3
     assert "CARE LINE" in rendered
     assert "Miles Hospital proposes closing its labor and delivery center" in rendered
     assert "Care Line &middot; August 5, 2026" in rendered
     assert "1 public source" in rendered
     assert "Gaza latest" in rendered
+    assert "Gaza prior" not in rendered
+    assert "Gaza third" not in rendered
     assert "Dispatches From Gaza &middot; August 5, 2026 &middot; 6:00 AM PT" in rendered
     assert "AMERICAN PRESSURE" not in rendered
     assert "CASCADIA" not in rendered
@@ -430,11 +449,13 @@ def test_homepage_card_rendering_uses_descriptive_story_titles_for_gaza_and_care
     assert "Methodist Hospitals Gary outage update" in _dispatch_card(rendered_directory, "The Care Line Dispatch")
 
 
-def test_homepage_card_selection_preserves_represented_grid_slots_before_unrepresented_fillers(tmp_path):
+def test_homepage_card_selection_removes_older_secondary_food_and_care_cards(tmp_path):
     public_root = tmp_path / "pages"
     for edition_date in ("2026-09-14", "2026-09-13", "2026-09-12", "2026-09-11", "2026-09-10", "2026-09-09"):
         _write_release(public_root, "gaza", edition_date, title=f"Gaza {edition_date}", source_count=2)
+    _write_release(public_root, "food-line", "2026-09-05", title="Older Food Line secondary card", source_count=1)
     _write_recovery_shaped_food_release(public_root, "2026-09-12")
+    _write_release(public_root, "care-line", "2026-06-19", title="Older Care Line secondary card", source_count=1)
     _write_release(public_root, "care-line", "2026-08-20", title="Methodist Hospitals Gary outage update", source_count=1)
     homepage = (
         '<article class="edition-card edition-card--gaza"><h3><a href="/gaza/editions/2026-09-14/">Old</a></h3></article>'
@@ -452,14 +473,63 @@ def test_homepage_card_selection_preserves_represented_grid_slots_before_unrepre
 
     assert [card.relative_url for card in cards] == [
         "/gaza/editions/2026-09-14/",
-        "/gaza/editions/2026-09-12/",
         "/food-line/editions/2026-09-12/",
-        "/gaza/editions/2026-09-11/",
-        "/gaza/editions/2026-09-10/",
-        "/gaza/editions/2026-09-09/",
         "/care-line/editions/2026-08-20/",
     ]
-    assert "/gaza/editions/2026-09-13/" not in [card.relative_url for card in cards]
+    rendered = render_homepage_from_template(TEMPLATE_HTML, cards)
+    assert rendered.count('<article class="edition-card') == 3
+    assert "Older Food Line secondary card" not in rendered
+    assert "Older Care Line secondary card" not in rendered
+
+
+def test_homepage_current_desk_uses_latest_food_release(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_release(public_root, "gaza", "2026-09-27", title="Latest readable Gaza briefing", source_count=3)
+    _write_release(public_root, "food-line", "2026-09-28", title="Older Food Line release", source_count=2)
+    _write_release(
+        public_root,
+        "food-line",
+        "2026-10-04",
+        title="As Kansans lose SNAP benefits, state lawmakers examine system hurdles",
+        source_count=1,
+    )
+    food_manifest_path = public_root / "food-line" / "editions" / "2026-10-04" / "edition_manifest.json"
+    food_manifest = json.loads(food_manifest_path.read_text(encoding="utf-8"))
+    food_manifest.update(
+        {
+            "publication_status": "unpublished",
+            "pages_status": "not_synced",
+            "public_rendered": True,
+            "validation_status": "ok",
+        }
+    )
+    food_manifest_path.write_text(json.dumps(food_manifest), encoding="utf-8")
+    _write_release(public_root, "care-line", "2026-08-20", title="Methodist Hospitals Gary outage update", source_count=1)
+
+    cards = select_homepage_cards(discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 10, 4), homepage_html=TEMPLATE_HTML))
+    food = next(card for card in cards if card.slug == "food-line")
+
+    assert food.edition_date == "2026-10-04"
+    assert food.relative_url == "/food-line/editions/2026-10-04/"
+    assert "Kansans lose SNAP benefits" in food.title
+
+
+def test_homepage_current_desk_uses_gaza_no_update_over_stale_june_release(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_release(public_root, "gaza", "2026-06-20", title="June 20 historical fallback briefing", source_count=2)
+    _write_gaza_no_update(public_root, "2026-10-04", source_count=4)
+    _write_release(public_root, "food-line", "2026-10-04", title="As Kansans lose SNAP benefits, state lawmakers examine system hurdles", source_count=1)
+    _write_release(public_root, "care-line", "2026-08-20", title="Methodist Hospitals Gary outage update", source_count=1)
+
+    cards = select_homepage_cards(discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 10, 4), homepage_html=TEMPLATE_HTML))
+    rendered = render_homepage_from_template(TEMPLATE_HTML, cards)
+    gaza_card = _edition_card(rendered, "gaza")
+
+    assert '<h3><a href="/gaza/">No qualifying update</a></h3>' in gaza_card
+    assert "Current status" in gaza_card
+    assert "October 4, 2026" in gaza_card
+    assert "4 sources checked" in gaza_card
+    assert "June 20 historical fallback briefing</a></h3>" not in gaza_card
 
 
 def test_homepage_refresh_supports_legacy_manifestless_release_when_listed_publicly(tmp_path):

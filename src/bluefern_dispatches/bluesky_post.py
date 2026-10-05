@@ -409,6 +409,26 @@ def _extract_gaza_edition_identity(project_root: Path, edition_date: str, public
     return result
 
 
+def _gaza_archive_surface_contains_edition(project_root: Path, edition_date: str) -> dict[str, Any]:
+    marker = f"editions/{edition_date}/"
+    candidates = [
+        project_root / "bluefern-dispatches-pages" / "gaza" / "archive.html",
+        project_root / "output" / "site" / "gaza" / "archive.html",
+    ]
+    checked: list[str] = []
+    for path in candidates:
+        checked.append(str(path))
+        if not path.exists():
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        if marker in text or f"/gaza/{marker}" in text:
+            return {"ok": True, "path": str(path), "checked_paths": checked}
+    return {"ok": False, "path": None, "checked_paths": checked}
+
+
 def _collect_artifact_date_issues(payload: Any, edition_date: str, *, artifact_path: Path | None = None) -> list[str]:
     issues: list[str] = []
     label = str(artifact_path) if artifact_path else "<artifact>"
@@ -1566,6 +1586,15 @@ def maybe_post_gaza_dispatch_to_bluesky(
     if verification.get("date_issues"):
         result["status"] = "blocked"
         result["reason"] = "current-edition-date-mismatch"
+        result["stale_content_guard_status"] = "blocked"
+        return result
+    archive_surface = _gaza_archive_surface_contains_edition(root, edition_date)
+    result["archive_surface_verified"] = bool(archive_surface.get("ok"))
+    result["archive_surface_path"] = archive_surface.get("path")
+    result["archive_surface_checked_paths"] = list(archive_surface.get("checked_paths") or [])
+    if not archive_surface.get("ok") and allow_publish:
+        result["status"] = "blocked"
+        result["reason"] = "current-edition-missing-from-gaza-archive"
         result["stale_content_guard_status"] = "blocked"
         return result
     verification_fields = {

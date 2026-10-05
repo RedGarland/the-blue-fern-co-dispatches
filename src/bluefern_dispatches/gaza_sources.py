@@ -133,6 +133,20 @@ GROUND_DEVELOPMENT_TERMS = (
     "jabalia",
     "deir al-balah",
 )
+VERIFIED_GAZA_EVENT_LOCATION_TERMS = re.compile(
+    r"\b(gaza(?: city| strip)?|rafah|khan younis|deir al-?balah|jabalia|nuseirat|beit hanou?n|beit lahia|shuja'?iyya|"
+    r"zaytoun|tal al-?hawa|al-?qarara|al-?mawasi|al-?shifa|shifa hospital)\b",
+    re.I,
+)
+WEST_BANK_EVENT_LOCATION_TERMS = re.compile(
+    r"\b(west bank|beita|nablus|jabal qamass|hebron|ramallah|jenin|tulkarem|qalqilya|bethlehem|jericho|east jerusalem)\b",
+    re.I,
+)
+AMBIGUOUS_PALESTINIAN_EVENT_TERMS = re.compile(
+    r"\b(accountability|detention|detainee|prisoner|human rights|civil rights|refugee|unrwa|nakba|right of return|"
+    r"expulsion(?:s)?|killing(?:s)?|killed|injured|violence|strike(?:s)?)\b",
+    re.I,
+)
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 PLACEHOLDER_RE = re.compile(r"^(replace with|actual source|actual publisher|actual-source-url)", re.I)
 WHITESPACE_RE = re.compile(r"\s+")
@@ -280,6 +294,22 @@ def is_palestinian_development_text(text: str) -> bool:
     if PALESTINIAN_POLICY_IMPACT_TERMS.search(haystack):
         return True
     return bool(re.search(r"\b(west bank|east jerusalem|unrwa|nakba|right of return)\b", haystack, re.I))
+
+
+def _gaza_geographic_scope_exclusion_reason(text: str) -> str | None:
+    haystack = str(text or "")
+    if VERIFIED_GAZA_EVENT_LOCATION_TERMS.search(haystack):
+        return None
+    if WEST_BANK_EVENT_LOCATION_TERMS.search(haystack):
+        return "non_gaza_geographic_scope"
+    if PALESTINE_TERMS.search(haystack) and (
+        PALESTINIAN_DEVELOPMENT_TERMS.search(haystack)
+        or PALESTINIAN_POLICY_IMPACT_TERMS.search(haystack)
+        or AMBIGUOUS_PALESTINIAN_EVENT_TERMS.search(haystack)
+        or any(term in haystack.lower() for term in GROUND_DEVELOPMENT_TERMS)
+    ):
+        return "unverified_gaza_event_location"
+    return None
 
 
 def _looks_like_google_news_wrapper(url: str) -> bool:
@@ -523,6 +553,12 @@ def gaza_story_selection_exclusion_reason(item: dict[str, Any], source: SourceDe
         if is_labeled_context_source(item, source):
             return "opinion/editorial/commentary source retained as labeled context"
         return "opinion/editorial/commentary source excluded from Gaza story selection"
+    title = clean_feed_text(str(item.get("segment_title") or item.get("title") or ""))
+    summary = clean_feed_text(str(item.get("segment_text") or item.get("summary_or_snippet") or ""))
+    url = str(item.get("url") or "")
+    scope_reason = _gaza_geographic_scope_exclusion_reason(" ".join([title, summary, url]))
+    if scope_reason:
+        return scope_reason
     return None
 
 
@@ -2042,6 +2078,9 @@ def gaza_relevance_decision(item: dict[str, str], source: SourceDefinition | Non
         return True, "wafa_hebrew_al_qarara_query_match"
     if any(marker in weak_markers for marker in WEAK_ONLY_GAZA_PATTERNS) and not (strong_title or strong_url or substantive_ground):
         return False, "weak_liveblog_unrelated_topic"
+    scope_reason = _gaza_geographic_scope_exclusion_reason(haystack)
+    if scope_reason:
+        return False, scope_reason
     if strong_title or strong_url:
         return True, "strong_title_or_url"
     if is_palestinian_development_text(haystack):

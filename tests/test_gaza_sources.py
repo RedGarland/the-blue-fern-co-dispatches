@@ -1324,7 +1324,7 @@ def test_relevance_rejects_generic_un_human_rights_without_palestinian_anchor():
     assert reason == "rejected_no_palestinian_anchor"
 
 
-def test_relevance_keeps_foreign_protest_when_directly_tied_to_palestinian_accountability():
+def test_relevance_rejects_foreign_protest_without_verified_gaza_event_location():
     source = gaza_sources.SourceDefinition(
         source_id="global-rights",
         name="Global Rights",
@@ -1342,8 +1342,8 @@ def test_relevance_keeps_foreign_protest_when_directly_tied_to_palestinian_accou
         "summary_or_snippet": "Protesters demand accountability tied to Israeli detention policy affecting Palestinians.",
     }
     accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
-    assert accepted is True
-    assert reason == "palestinian_development_material"
+    assert accepted is False
+    assert reason == "unverified_gaza_event_location"
 
 
 def test_feed_html_summary_is_cleaned_to_plain_text():
@@ -4113,6 +4113,106 @@ def test_relevance_rejects_giza_pyramids_as_non_gaza_geographic_entity():
 
     assert accepted is False
     assert reason == "non_gaza_geographic_entity"
+
+
+def test_relevance_rejects_west_bank_only_event_from_gaza_selection():
+    source = gaza_sources.SourceDefinition(
+        source_id="aljazeera-middle-east",
+        name="Al Jazeera Middle East",
+        url="https://example.com/rss.xml",
+        type="rss",
+        enabled=True,
+        publisher="Al Jazeera",
+        reliability_tier="reported-public-source",
+        category_hint="conflict",
+        region_scope="Gaza",
+    )
+    item = {
+        "title": "Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters",
+        "url": "https://example.com/west-bank/beita-nablus",
+        "summary_or_snippet": "Israeli forces detain and assault journalists in Jabal Qamass area in Beita, south of Nablus.",
+    }
+
+    accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
+
+    assert accepted is False
+    assert reason == "non_gaza_geographic_scope"
+    assert gaza_sources.gaza_story_selection_exclusion_reason(item, source) == "non_gaza_geographic_scope"
+
+
+def test_relevance_keeps_gaza_event_with_west_bank_context():
+    source = gaza_sources.SourceDefinition(
+        source_id="ap-gaza-attribution-query",
+        name="AP Gaza Attribution Query",
+        url="https://example.com/rss.xml",
+        type="rss",
+        enabled=True,
+        publisher="Associated Press",
+        reliability_tier="reported-public-source",
+        category_hint="conflict",
+        region_scope="Gaza",
+    )
+    item = {
+        "title": "Israeli strikes kill 5 in Gaza and 3 in West Bank",
+        "url": "https://example.com/gaza-west-bank-strikes",
+        "summary_or_snippet": "Health officials said an Israeli strike in Gaza City killed five people; separate West Bank violence was also reported.",
+    }
+
+    accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
+
+    assert accepted is True
+    assert reason in {"strong_title_or_url", "palestinian_development_material", "palestine_with_gaza_context"}
+    assert gaza_sources.gaza_story_selection_exclusion_reason(item, source) is None
+
+
+def test_relevance_keeps_gaza_wide_humanitarian_ceasefire_story():
+    source = gaza_sources.SourceDefinition(
+        source_id="ocha-opt-updates",
+        name="OCHA oPt Updates",
+        url="https://example.com/rss.xml",
+        type="rss",
+        enabled=True,
+        publisher="OCHA",
+        reliability_tier="official",
+        category_hint="humanitarian",
+        region_scope="Gaza",
+    )
+    item = {
+        "title": "Gaza ceasefire monitors warn humanitarian access remains constrained",
+        "url": "https://example.com/gaza/ceasefire-aid",
+        "summary_or_snippet": "Aid agencies said crossings into Gaza remain constrained despite ceasefire commitments.",
+    }
+
+    accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
+
+    assert accepted is True
+    assert reason in {"strong_title_or_url", "palestinian_development_material", "palestine_with_gaza_context"}
+    assert gaza_sources.gaza_story_selection_exclusion_reason(item, source) is None
+
+
+def test_relevance_fails_closed_for_ambiguous_palestinian_geography_without_gaza_event_location():
+    source = gaza_sources.SourceDefinition(
+        source_id="middle-east-query",
+        name="Middle East Query",
+        url="https://example.com/rss.xml",
+        type="rss",
+        enabled=True,
+        publisher="Example Wire",
+        reliability_tier="reported-public-source",
+        category_hint="conflict",
+        region_scope="Gaza",
+    )
+    item = {
+        "title": "Palestinian human rights groups report new detention concerns",
+        "url": "https://example.com/palestinian-detention-concerns",
+        "summary_or_snippet": "The report describes accountability and detention concerns involving Palestinians without identifying where the event occurred.",
+    }
+
+    accepted, reason = gaza_sources.gaza_relevance_decision(item, source)
+
+    assert accepted is False
+    assert reason == "unverified_gaza_event_location"
+    assert gaza_sources.gaza_story_selection_exclusion_reason(item, source) == "unverified_gaza_event_location"
 
 
 @pytest.mark.parametrize(

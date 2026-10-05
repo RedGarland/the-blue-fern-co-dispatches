@@ -1,0 +1,46 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261004T224529-0700",
+  "scheduled_for": "2026-10-04T22:44:51-07:00",
+  "started_at": "2026-10-04T22:45:29-07:00",
+  "completed_at": "2026-10-04T22:46:04-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-04T21:44:51-07:00",
+    "end": "2026-10-04T22:44:51-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      {
+        "source": "OCHA OPT",
+        "result": "No new in-window Gaza operational update surfaced; freshest targeted result remained the 18 September 2026 Humanitarian Situation Report."
+      },
+      {
+        "source": "WHO",
+        "result": "No new in-window Gaza operational update surfaced in the targeted WHO check."
+      }
+    ],
+    "additional_searches_completed": 12,
+    "additional_targets": [
+      "Reuters",
+      "Associated Press",
+      "UNRWA",
+      "WFP",
+      "UNICEF",
+      "ICRC",
+      "MSF",
+      "Palestine Red Crescent Society",
+      "WAFA",
+      "Gaza crossings / humanitarian access",
+      "ceasefire / hostages negotiations",
+      "military operations with documented civilian impact"
+    ],
+    "exclusions": "Excluded older material, duplicates, opinion, unsupported social claims, recycled items, and unsourced claims. No qualifying new development was verified in the bounded window.",
+    "production_authority": "This supplementary recall watch did not approve, publish, alter schedules, or modify production authority."
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "schema_version": "bluefern.watch_reconciliation.v1",
+  "dispatch": "food-line",
+  "observation_date": "2026-10-04",
+  "generated_at": "2026-10-05T06:25:53Z",
+  "watch_ledger_ref": "ops/watch-ledger",
+  "protected_source_ref": "add/pages-repo-default",
+  "run_count": 20,
+  "success_run_count": 20,
+  "degraded_run_count": 0,
+  "failed_run_count": 0,
+  "zero_finding_run_count": 20,
+  "finding_count": 0,
+  "accounted_count": 0,
+  "unreconciled_count": 0,
+  "findings": [],
+  "missing_hour_slots_local": ["11","15","20"],
+  "hour_slot_evaluation": {
+    "timezone": "America/Los_Angeles",
+    "evaluated_through_hour": "22",
+    "excluded_from_missing_evaluation": ["23"]
+  },
+  "material_heartbeat_absence": true,
+  "production_evidence": {
+    "protected_source_checked": true,
+    "deployed_public_checked": true,
+    "observation": "No watch findings required matching. Protected source/default current Food Line review snapshot is older than the observation date and committed public output is not current for 2026-10-04. Deployed Food Line public state has a 2026-10-04 full-source edition with 1 saved source record and 1 qualifying public signal from JC Post / Kansas Reflector."
+  },
+  "operational_issue": true,
+  "operational_issue_reasons": ["MATERIAL_HEARTBEAT_ABSENCE"],
+  "finding_reconciliation_statuses": []
+}

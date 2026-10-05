@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261005T014304-0700",
+  "scheduled_for": "2026-10-05T01:43:04-07:00",
+  "started_at": "2026-10-05T01:43:04-07:00",
+  "completed_at": "2026-10-05T01:43:51-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-05T00:44:51-07:00",
+    "end": "2026-10-05T01:43:51-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "OCHA OPT and WHO were checked first. OCHA OPT's freshest surfaced Gaza situation report remained 2026-09-18; WHO surfaced no new in-window Gaza operational update. Twelve additional targeted searches covered Reuters, AP, UN News, UNRWA, WFP, UNICEF, PRCS, MSF, ICRC, WAFA, ceasefire/hostage developments, and crossings/aid access. UN News retrieval was blocked by robots.txt; other useful coverage remained, so the run is DEGRADED. Surfaced Gaza items were older than the bounded window or previously captured; no new qualifying development was verified."
+}

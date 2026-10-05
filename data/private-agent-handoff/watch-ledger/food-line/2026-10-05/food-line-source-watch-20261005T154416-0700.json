@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261005T154416-0700",
+  "scheduled_for": "2026-10-05T15:45:54-07:00",
+  "started_at": "2026-10-05T15:44:16-07:00",
+  "completed_at": "2026-10-05T15:45:21-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start_at": "2026-10-05T14:49:53-07:00",
+    "end_at": "2026-10-05T15:45:21-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": "Completed exactly 12 targeted searches covering sole/only/last/full-service grocery loss, disaster-canceled or suspended emergency food distributions, abrupt pantry/food-bank access reductions, and official SNAP/WIC interruptions. No search failed. Same-day surfaced items included a planned Save A Lot closure in Watertown, New York without evidence that it is the community's only/sole/last/full-service grocery option, and a Kroger expansion in Princeton, Texas; both are non-qualifying. Other surfaced incidents were stale, outside the U.S., routine/non-disruptive, or outside the observation window. No qualifying new signal was identified."
+}

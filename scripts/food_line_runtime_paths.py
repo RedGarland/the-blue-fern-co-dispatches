@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import re
 from pathlib import Path
 
@@ -17,6 +18,9 @@ BLUEFERN_PUBLIC_SURFACE_REVIEW_RE = re.compile(r"^output/review/bluefern-[a-z0-9
 GAZA_ARCHIVE_REVIEW_RE = re.compile(r"^output/review/gaza-archive-[a-z0-9_-]+(?:/.*)?$")
 DISPATCHES_DIRECTORY_REPAIR_RE = re.compile(
     r"^output/review/dispatches-directory-repair-[a-z0-9_-]+(?:/.*)?$"
+)
+HOMEPAGE_CURRENT_DESK_REPAIR_RE = re.compile(
+    r"^output/review/homepage-current-desk-pages-repair(?:[-_/].*)?$"
 )
 PUBLIC_SURFACE_BACKUP_RE = re.compile(r"^output/tmp-backups-pages(?:/.*)?$")
 FOOD_LINE_OUTPUT_SITE_RE = re.compile(r"^output/site/food-line(?:/.*)?$")
@@ -74,9 +78,15 @@ FOOD_LINE_ALLOWED_DIRTY_CATEGORIES = {
 
 
 def _normalize_path(path_text: str) -> str:
-    text = path_text.strip().replace("\\", "/")
+    text = path_text.strip()
     if " -> " in text:
         text = text.split(" -> ", 1)[1].strip()
+    if len(text) >= 2 and text[0] == '"' and text[-1] == '"':
+        try:
+            text = str(ast.literal_eval(text))
+        except (SyntaxError, ValueError):
+            text = text[1:-1]
+    text = text.replace("\\", "/")
     if text.startswith("./"):
         return text[2:]
     return text
@@ -138,6 +148,8 @@ def classify_food_line_runtime_path(path_text: str) -> str | None:
         return "review_output"
     if DISPATCHES_DIRECTORY_REPAIR_RE.match(lower):
         return "review_output"
+    if HOMEPAGE_CURRENT_DESK_REPAIR_RE.match(lower):
+        return "review_output"
     if FOOD_LINE_OUTPUT_REVIEW_RE.match(lower):
         return "review_output"
     if PUBLIC_SURFACE_BACKUP_RE.match(lower):
@@ -186,6 +198,7 @@ def food_line_runtime_paths() -> list[str]:
         "output/review/bluefern-",
         "output/review/gaza-archive-",
         "output/review/dispatches-directory-repair-",
+        "output/review/homepage-current-desk-pages-repair",
         "output/tmp-backups-pages/",
         "output/site/food-line/",
         "output/dispatches/food-line/editions/",

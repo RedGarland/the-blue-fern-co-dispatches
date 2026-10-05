@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import re
 import subprocess
 from collections import Counter, defaultdict
@@ -103,9 +104,15 @@ def _run_git_status(repo: Path) -> tuple[int, list[str]]:
 
 
 def _normalize_path(path_text: str) -> str:
-    text = path_text.strip().replace("\\", "/")
+    text = path_text.strip()
     if " -> " in text:
         text = text.split(" -> ", 1)[1].strip()
+    if len(text) >= 2 and text[0] == '"' and text[-1] == '"':
+        try:
+            text = str(ast.literal_eval(text))
+        except (SyntaxError, ValueError):
+            text = text[1:-1]
+    text = text.replace("\\", "/")
     if text.startswith("./"):
         return text[2:]
     return text

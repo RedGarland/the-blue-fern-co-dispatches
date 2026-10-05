@@ -1,0 +1,47 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261005T014554-0700",
+  "scheduled_for": "2026-10-05T01:45:54-07:00",
+  "started_at": "2026-10-05T01:50:33-07:00",
+  "completed_at": "2026-10-05T01:51:24.478629-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-05T00:45:54-07:00",
+    "end": "2026-10-05T01:51:24.478629-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "since prior hourly scheduled check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "search_count": 12,
+    "scope": "Supplementary bounded recall watch only; production collection remains authoritative.",
+    "targeted_queries": [
+      "\"only grocery store\" (closed OR closure OR fire OR destroyed OR disaster) food access United States",
+      "\"sole grocery store\" (closed OR closure OR fire OR destroyed) community United States",
+      "\"last grocery store\" (closed OR closure OR fire OR destroyed) town United States",
+      "\"full-service grocery store\" (closed OR closure OR fire OR disaster) community United States",
+      "\"food distribution\" (canceled OR cancelled OR suspended) (storm OR flood OR fire OR outage) United States",
+      "\"emergency food distribution\" (canceled OR cancelled OR suspended) (storm OR flood OR fire OR outage)",
+      "\"food pantry\" (closed OR closure OR suspended OR outage OR fire OR flood) United States",
+      "\"food bank\" (closed OR closure OR suspended OR outage OR fire OR flood) service interruption",
+      "SNAP benefits interruption outage official state October 5 2026",
+      "WIC interruption outage official state October 5 2026",
+      "EBT outage SNAP official state October 5 2026",
+      "\"food assistance\" (interruption OR suspended OR closure) official October 5 2026 United States"
+    ],
+    "result": "No qualifying new U.S. food-access disruption published or newly reported within the bounded window. Returned items were stale, outside the U.S., routine program/change coverage, or did not establish an immediate access interruption matching the four miss classes.",
+    "exclusions_applied": [
+      "donation drives",
+      "resource guides",
+      "recipes",
+      "opinion",
+      "routine program promotion",
+      "generic inflation stories",
+      "duplicates",
+      "items outside the search window"
+    ]
+  }
+}

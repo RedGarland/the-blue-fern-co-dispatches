@@ -1461,17 +1461,18 @@ def run_intake(args: argparse.Namespace) -> int:
             raise SchedulerError(f"intake blocked by surviving source-watch workers: {survivors}")
         if not collection_qualifies(state):
             raise SchedulerError(f"intake blocked by nonqualifying source-watch state: {state.get('status')}")
-        result = _invoke_python(
-            python,
-            root,
-            [
-                "scripts/process_food_line_current_intake.py",
-                "--edition-date", edition_date,
-                "--inbox", str(PRIVATE_AGENT_INBOX_ROOT),
-                "--build-review-queue",
-                "--build-proposed-edition",
-            ],
-        )
+        intake_arguments = [
+            "scripts/process_food_line_current_intake.py",
+            "--edition-date", edition_date,
+            "--inbox", str(PRIVATE_AGENT_INBOX_ROOT),
+            "--build-review-queue",
+            "--build-proposed-edition",
+        ]
+        agent_export = state.get("agent_export") if isinstance(state.get("agent_export"), dict) else {}
+        agent_export_path = _nonempty_text(agent_export.get("path"))
+        if agent_export_path:
+            intake_arguments.extend(["--source-file", agent_export_path])
+        result = _invoke_python(python, root, intake_arguments)
         command_exit = int(result.returncode)
         report_path = root / "data" / "dispatches" / "food-line" / "review" / "reports" / edition_date / "current-intake.json"
         report = read_json(report_path)

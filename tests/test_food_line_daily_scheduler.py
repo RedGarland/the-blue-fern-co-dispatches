@@ -650,6 +650,89 @@ def test_current_intake_multiple_current_handoffs_are_deterministic(tmp_path: Pa
     ]
 
 
+def test_current_intake_source_file_ignores_stale_same_day_handoffs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    inbox = tmp_path / "data" / "dispatches" / "food-line" / "agent-inbox"
+    inbox.mkdir(parents=True, exist_ok=True)
+    stale_path = inbox / "food-line-source-watch-2026-08-17-stale.json"
+    selected_path = inbox / "food-line-source-watch-2026-08-17-selected.json"
+    stale_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "food_line_source_watch_agent_export_v1",
+                "agent_name": "Food Line Source Watch",
+                "agent_run_id": "stale-run",
+                "edition_date": "2026-08-17",
+                "findings": [{"title": "stale"}],
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    selected_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "food_line_source_watch_agent_export_v1",
+                "agent_name": "Food Line Source Watch",
+                "agent_run_id": "selected-run",
+                "edition_date": "2026-08-17",
+                "findings": [{"title": "selected"}],
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+
+    consumed_titles: list[str] = []
+
+    class Finding:
+        def __init__(self, title: str) -> None:
+            self.title = title
+
+        def to_dict(self) -> dict[str, str]:
+            return {"title": self.title}
+
+    def fake_adapt(payload: dict[str, object], *, agent_name: str, agent_run_id: str) -> list[Finding]:
+        return [Finding(str(row["title"])) for row in payload.get("findings", [])]
+
+    def fake_map(finding: Finding, *, edition_date: str) -> dict[str, object]:
+        consumed_titles.append(finding.title)
+        return {
+            "title": finding.title,
+            "source_url": f"https://example.org/{finding.title}",
+            "canonical_source_url": f"https://example.org/{finding.title}",
+            "publisher": "Example News",
+            "source_published_at": f"{edition_date}T10:00:00Z",
+            "summary": finding.title,
+            "eligible_for_review": False,
+            "exclusion_reason": "not reviewable",
+        }
+
+    monkeypatch.setattr(current_intake_compat, "adapt_food_line_agent_output", fake_adapt)
+    monkeypatch.setattr(current_intake_compat, "map_finding_to_food_line_candidate", fake_map)
+
+    code = current_intake_compat.main(
+        [
+            "--edition-date",
+            "2026-08-17",
+            "--inbox",
+            str(inbox),
+            "--source-file",
+            str(selected_path),
+            "--build-review-queue",
+            "--build-proposed-edition",
+        ]
+    )
+
+    assert code == 0
+    assert consumed_titles == ["selected"]
+    report = json.loads(
+        (tmp_path / "data/dispatches/food-line/review/reports/2026-08-17/current-intake.json").read_text(encoding="utf-8")
+    )
+    assert report["selected_input_count"] == 1
+    assert report["selected_inputs"][0]["path"].endswith("food-line-source-watch-2026-08-17-selected.json")
+
+
 def test_current_intake_no_current_handoff_writes_empty_private_noop(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.chdir(tmp_path)
     inbox = tmp_path / "data" / "dispatches" / "food-line" / "agent-inbox"
@@ -2257,8 +2340,10 @@ def test_completed_with_exclusions_missing_record_reconciles_for_current_intake(
     monkeypatch.setattr(scheduler, "verify_checkout", lambda *args, **kwargs: "test-source-commit")
     monkeypatch.setattr(scheduler, "run_preflight", lambda *args, **kwargs: None)
     monkeypatch.setattr(scheduler, "surviving_worker_pids", lambda *args, **kwargs: [])
+    invoked_arguments: list[str] = []
 
     def fake_invoke(python: Path, root: Path, arguments: list[str]) -> subprocess.CompletedProcess[str]:
+        invoked_arguments.extend(arguments)
         report = root / "data" / "dispatches" / "food-line" / "review" / "reports" / "2026-09-07" / "current-intake.json"
         report.parent.mkdir(parents=True, exist_ok=True)
         report.write_text(
@@ -2288,6 +2373,8 @@ def test_completed_with_exclusions_missing_record_reconciles_for_current_intake(
     receipt = json.loads(next((tmp_path / "logs" / "food-line" / "current-intake" / "2026-09-07").glob("*-current-intake.json")).read_text(encoding="utf-8"))
     assert receipt["source_status"] == "completed_with_exclusions"
     assert receipt.get("status") != scheduler.UPSTREAM_NOT_INITIALIZED_STATUS
+    source_file_index = invoked_arguments.index("--source-file")
+    assert Path(invoked_arguments[source_file_index + 1]).name == "food-line-source-watch-2026-09-07-test.json"
 
 
 @pytest.mark.parametrize(

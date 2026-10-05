@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261005T134451-0700",
+  "scheduled_for": "2026-10-05T13:44:51-07:00",
+  "started_at": "2026-10-05T13:44:34-07:00",
+  "completed_at": "2026-10-05T13:45:05-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-05T12:44:51-07:00",
+    "end": "2026-10-05T13:44:51-07:00"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "OCHA OPT checked first; no new in-window Gaza development beyond material already captured by the prior watch.",
+    "WHO checked second; no new in-window Gaza operational update identified.",
+    "Exactly 12 additional targeted searches were run covering Reuters, AP, WFP, UNICEF, ICRC, MSF, PRCS, WAFA, crossings/aid access, ceasefire/hostages, military operations with civilian impact, and hospital/fuel/medical-evacuation changes.",
+    "The 5 October 2026 MSF Yellow Line/healthcare/water material was treated as a duplicate of the prior watch and not emitted as a new finding.",
+    "Opinion, unsupported social claims, recycled items, duplicates, and unsourced claims were excluded.",
+    "No publication, approval, schedule change, or task disablement was performed."
+  ]
+}

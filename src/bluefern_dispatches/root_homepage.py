@@ -9,11 +9,11 @@ from pathlib import Path
 from typing import Any
 
 BASE_URL = "https://dispatches.thebluefernco.com"
-LATEST_DEVELOPMENTS_HEADING = "Latest published developments"
+LATEST_DEVELOPMENTS_HEADING = "Current state by desk"
 ACTIVE_PRODUCTS = ("gaza", "food-line", "care-line")
 CARD_LIMIT = 7
 SECTION_RE = re.compile(
-    r'<section class="section-block"><div class="section-heading"><p class="eyebrow">The current edition desk</p><h2>Latest published developments</h2></div><div class="edition-grid">.*?</div></section>',
+    r'<section class="section-block"><div class="section-heading"><p class="eyebrow">The current edition desk</p><h2>(?:Latest published developments|Current state by desk)</h2></div><div class="edition-grid">.*?</div></section>',
     re.DOTALL,
 )
 SHARED_FOOTER_SEPARATOR_RE = re.compile(
@@ -56,6 +56,8 @@ class PublicRelease:
     publication_time_text: str | None
     manifest_path: str | None
     authorized: bool
+    type_label: str = "Daily briefing"
+    summary: str = ""
 
     @property
     def sort_key(self) -> tuple[datetime, int, str]:
@@ -108,6 +110,10 @@ def _format_long_date(edition_date: str) -> str:
 
 def _format_source_count(count: int) -> str:
     return f"{count} public source" if count == 1 else f"{count} public sources"
+
+
+def _format_status_source_count(count: int) -> str:
+    return f"{count} source checked" if count == 1 else f"{count} sources checked"
 
 
 def _current_homepage_links(homepage_html: str) -> set[str]:
@@ -167,6 +173,31 @@ def _resolve_title(slug: str, edition_dir: Path, manifest: dict[str, Any]) -> st
         if m:
             return html.unescape(re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", m.group(1)))).strip()
     return ""
+
+
+def _resolve_summary(manifest: dict[str, Any]) -> str:
+    for key in ("public_archive_subtitle", "public_summary", "deck", "summary", "description"):
+        value = str(manifest.get(key) or "").strip()
+        if value:
+            return value
+    return ""
+
+
+def _release_type_label(manifest: dict[str, Any]) -> str:
+    values = " ".join(
+        str(manifest.get(key) or "")
+        for key in (
+            "briefing_type",
+            "edition_type",
+            "publication_type",
+            "run_mode",
+            "release_type",
+        )
+    )
+    normalized = re.sub(r"[^a-z0-9]+", "_", values.lower()).strip("_")
+    if "catchup" in normalized or "catch_up" in normalized or "historical" in normalized:
+        return "Historical catch-up"
+    return "Daily briefing"
 
 
 def _positive_int(value: Any) -> int:
@@ -242,16 +273,24 @@ def _release_is_eligible(*, public_root: Path, verify_root: Path | None, slug: s
     if verified_from_public_inventory:
         live_verified = (verify_root / slug / "editions" / edition_date / "index.html").exists()
     archive_listed = _public_archive_mentions(public_root, slug, edition_date)
+    validation_status = str(manifest.get("validation_status") or "").strip().lower()
+    live_rendered_public_artifact = (
+        verified_from_public_inventory
+        and live_verified
+        and archive_listed
+        and manifest.get("public_rendered") is True
+        and validation_status in {"", "ok"}
+    )
     legacy_ok = not release_status and not pages_status and _dispatch_listing_mentions(public_root, slug, edition_date)
     transitional_pages_status = pages_status == "not_synced"
     transitional_live_release = transitional_pages_status and verified_from_public_inventory and live_verified and archive_listed
-    if has_terminal_status:
+    if has_terminal_status and not live_rendered_public_artifact:
         return False, release_status, pages_status, live_verified
     if not archive_listed:
         return False, release_status, pages_status, live_verified
     if transitional_pages_status and not transitional_live_release:
         return False, release_status, pages_status, live_verified
-    if not (has_positive_status or transitional_live_release or live_verified or legacy_ok):
+    if not (has_positive_status or transitional_live_release or live_rendered_public_artifact or live_verified or legacy_ok):
         return False, release_status, pages_status, live_verified
     return True, release_status, pages_status, live_verified
 
@@ -299,8 +338,13 @@ def discover_public_releases(public_root: Path, *, verify_root: Path | None = No
                     publication_time_text=_authorized_publication_time(manifest),
                     manifest_path=str(edition_dir / "edition_manifest.json") if (edition_dir / "edition_manifest.json").exists() else None,
                     authorized=authorized,
+                    type_label=_release_type_label(manifest),
+                    summary=_resolve_summary(manifest),
                 )
             )
+    gaza_status = _latest_gaza_no_update_release(public_root, today=today, represented=represented)
+    if gaza_status is not None:
+        releases.append(gaza_status)
     return releases
 
 
@@ -309,28 +353,53 @@ def select_homepage_cards(releases: list[PublicRelease], *, limit: int = CARD_LI
     for release in sorted(releases, key=lambda item: item.sort_key, reverse=True):
         by_slug.setdefault(release.slug, []).append(release)
     selected: list[PublicRelease] = []
-    chosen = {(release.slug, release.edition_date) for release in selected}
     for slug in ACTIVE_PRODUCTS:
         if by_slug.get(slug):
             release = by_slug[slug][0]
             selected.append(release)
-            chosen.add((release.slug, release.edition_date))
-    represented = [
-        release
-        for release in sorted(releases, key=lambda item: item.sort_key, reverse=True)
-        if release.represented_on_homepage and (release.slug, release.edition_date) not in chosen
-    ]
-    for release in represented:
-        if len(selected) >= limit:
-            break
-        selected.append(release)
-        chosen.add((release.slug, release.edition_date))
-    remaining = [release for release in sorted(releases, key=lambda item: item.sort_key, reverse=True) if (release.slug, release.edition_date) not in chosen]
-    for release in remaining:
-        if len(selected) >= limit:
-            break
-        selected.append(release)
-    return selected
+    return selected[:limit]
+
+
+def _latest_gaza_no_update_release(public_root: Path, *, today: date, represented: set[str]) -> PublicRelease | None:
+    status_root = public_root / "gaza" / "status" / "no-updates"
+    if not status_root.exists():
+        return None
+    candidates: list[tuple[date, Path]] = []
+    for path in status_root.glob("*.json"):
+        parsed = _parse_date(path.stem)
+        if parsed is not None and parsed <= today:
+            candidates.append((parsed, path))
+    if not candidates:
+        return None
+    status_date, path = max(candidates, key=lambda item: item[0])
+    try:
+        payload = _parse_json(path)
+    except json.JSONDecodeError:
+        return None
+    metadata = PRODUCT_META["gaza"]
+    source_count = _positive_int(payload.get("source_count"))
+    message = str(payload.get("message") or "No source-backed Gaza update met publication threshold.").strip()
+    classification = str(payload.get("classification") or "no_publication_needed").strip()
+    return PublicRelease(
+        slug="gaza",
+        edition_date=status_date.isoformat(),
+        title="No qualifying update",
+        public_url=f"{BASE_URL}/gaza/",
+        relative_url="/gaza/",
+        source_count=source_count,
+        publication_name=metadata["publication_name"],
+        badge_label=metadata["badge"],
+        badge_class=metadata["badge_class"],
+        release_status=classification,
+        pages_status="synced",
+        represented_on_homepage="/gaza/" in represented,
+        age_days=(today - status_date).days,
+        publication_time_text=None,
+        manifest_path=str(path),
+        authorized=True,
+        type_label="Current status",
+        summary=message,
+    )
 
 
 def select_effective_latest(releases: list[PublicRelease]) -> dict[str, PublicRelease]:
@@ -341,6 +410,8 @@ def select_effective_latest(releases: list[PublicRelease]) -> dict[str, PublicRe
 
 
 def _release_age_note(release: PublicRelease) -> str:
+    if release.type_label == "Current status":
+        return ""
     if release.age_days < OLDER_PUBLIC_RELEASE_DAYS:
         return ""
     return OLDER_PUBLIC_RELEASE_NOTE
@@ -353,20 +424,31 @@ def _render_latest_development_card(card: PublicRelease) -> str:
         if freshness
         else ""
     )
+    summary_html = f'<p class="edition-summary">{html.escape(card.summary)}</p>' if card.summary else ""
     publication_time = (
         f" &middot; {html.escape(card.publication_time_text)}"
         if card.publication_time_text
         else ""
     )
+    card_classes = f"edition-card edition-card--{html.escape(card.badge_class)}"
+    if card.type_label == "Current status":
+        card_classes += " edition-card--status"
+    source_count = (
+        _format_status_source_count(card.source_count)
+        if card.type_label == "Current status"
+        else _format_source_count(card.source_count)
+    )
     return (
-        f'<article class="edition-card edition-card--{html.escape(card.badge_class)}">'
+        f'<article class="{card_classes}">'
         f'<p class="topic-badge topic-badge--{html.escape(card.badge_class)}">{html.escape(card.badge_label)}</p>'
+        f'<p class="edition-type">{html.escape(card.type_label)}</p>'
         f'<h3><a href="{html.escape(card.relative_url)}">{html.escape(card.title)}</a></h3>'
         f'<p class="edition-source">{html.escape(card.publication_name)} &middot; {html.escape(_format_long_date(card.edition_date))}'
         f'{publication_time}</p>'
+        f'{summary_html}'
         f'{freshness_html}'
-        f'<p class="edition-provenance">Based on public source reporting</p>'
-        f'<p class="edition-meta">{html.escape(_format_source_count(card.source_count))}</p>'
+        f'<p class="edition-provenance">{"Based on daily source checks" if card.type_label == "Current status" else "Based on public source reporting"}</p>'
+        f'<p class="edition-meta">{html.escape(source_count)}</p>'
         f"</article>"
     )
 
@@ -415,11 +497,17 @@ def _replace_release_fields(card_html: str, release: PublicRelease, *, include_s
 
 
 def _replace_latest_edition_card(template_html: str, release: PublicRelease) -> str:
-    pattern = re.compile(rf'<article class="edition-card edition-card--{re.escape(release.badge_class)}">.*?</article>', re.DOTALL)
+    pattern = re.compile(rf'<article class="edition-card[^"]*edition-card--{re.escape(release.badge_class)}[^"]*">.*?</article>', re.DOTALL)
     match = pattern.search(template_html)
     if match is None:
         raise ValueError(f"Latest edition card not found for {release.slug}")
     card = match.group(0)
+    card = re.sub(
+        r'<article class="[^"]*">',
+        f'<article class="edition-card edition-card--{html.escape(release.badge_class)}">',
+        card,
+        count=1,
+    )
     headline = f'<h3><a href="{html.escape(release.relative_url)}">{html.escape(release.title)}</a></h3>'
     updated, headline_count = re.subn(r'<h3><a href="[^"]+">.*?</a></h3>', headline, card, count=1, flags=re.DOTALL)
     if headline_count != 1:
@@ -435,7 +523,7 @@ def _replace_latest_edition_card(template_html: str, release: PublicRelease) -> 
 
 def _has_latest_edition_card(template_html: str, release: PublicRelease) -> bool:
     pattern = re.compile(
-        rf'<article class="edition-card edition-card--{re.escape(release.badge_class)}">',
+        rf'<article class="edition-card[^"]*edition-card--{re.escape(release.badge_class)}[^"]*">',
         re.DOTALL,
     )
     return pattern.search(template_html) is not None

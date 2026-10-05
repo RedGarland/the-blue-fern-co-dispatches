@@ -16,6 +16,13 @@ SECTION_RE = re.compile(
     r'<section class="section-block"><div class="section-heading"><p class="eyebrow">The current edition desk</p><h2>(?:Latest published developments|Current state by desk)</h2></div><div class="edition-grid">.*?</div></section>',
     re.DOTALL,
 )
+DIRECTORY_CURRENT_DESK_SECTION_RE = re.compile(
+    r'\s*<section class="[^"]*\bsection-block\b[^"]*">'
+    r'(?:(?!</section>).)*<p class="eyebrow">The current edition desk</p>'
+    r'(?:(?!</section>).)*<div class="edition-grid">'
+    r'(?:(?!</section>).)*</section>',
+    re.DOTALL,
+)
 SHARED_FOOTER_SEPARATOR_RE = re.compile(
     r'(?P<methodology><a href="/methodology/">How we work</a>)\s+'
     r'(?:\u00c3\u201a\u00c2\u00b7|&middot;)\s+'
@@ -360,6 +367,10 @@ def select_homepage_cards(releases: list[PublicRelease], *, limit: int = CARD_LI
     return selected[:limit]
 
 
+def select_current_desk_by_slug(releases: list[PublicRelease]) -> dict[str, PublicRelease]:
+    return {release.slug: release for release in select_homepage_cards(releases)}
+
+
 def _latest_gaza_no_update_release(public_root: Path, *, today: date, represented: set[str]) -> PublicRelease | None:
     status_root = public_root / "gaza" / "status" / "no-updates"
     if not status_root.exists():
@@ -417,6 +428,14 @@ def _release_age_note(release: PublicRelease) -> str:
     return OLDER_PUBLIC_RELEASE_NOTE
 
 
+def _directory_context_note(release: PublicRelease) -> str:
+    if release.type_label == "Current status":
+        return f"Current status; {release.summary}" if release.summary else "Current status; no qualifying public update."
+    if release.slug == "care-line" and _release_age_note(release):
+        return "Latest public release; monitoring continues between editions."
+    return _release_age_note(release)
+
+
 def _render_latest_development_card(card: PublicRelease) -> str:
     freshness = _release_age_note(card)
     freshness_html = (
@@ -471,11 +490,19 @@ def _release_date_line(release: PublicRelease) -> str:
 
 def _replace_release_fields(card_html: str, release: PublicRelease, *, include_source_count: bool) -> str:
     card_html = re.sub(r'<p class="latest-context">.*?</p>', "", card_html, flags=re.DOTALL)
+    latest_label = "Current status" if release.type_label == "Current status" else "Latest public release"
+    card_html = re.sub(
+        r'<p class="latest-label">.*?</p>',
+        f'<p class="latest-label">{html.escape(latest_label)}</p>',
+        card_html,
+        count=1,
+        flags=re.DOTALL,
+    )
     headline = f'<h3 class="latest-headline"><a href="{html.escape(release.relative_url)}">{html.escape(release.title)}</a></h3>'
     updated, headline_count = re.subn(r'<h3 class="latest-headline"><a href="[^"]+">.*?</a></h3>', headline, card_html, count=1, flags=re.DOTALL)
     if headline_count != 1:
         raise ValueError(f"Latest headline field not found for {release.slug}")
-    context_note = _release_age_note(release)
+    context_note = _directory_context_note(release)
     context_html = f'<p class="latest-context">{html.escape(context_note)}</p>' if context_note else ""
     updated, date_count = re.subn(
         r'<p class="date-line">.*?</p>',
@@ -490,7 +517,12 @@ def _replace_release_fields(card_html: str, release: PublicRelease, *, include_s
     if button_count != 1:
         raise ValueError(f"Read latest link not found for {release.slug}")
     if include_source_count:
-        updated, source_count = re.subn(r'<p class="edition-meta">.*?</p>', f'<p class="edition-meta">{html.escape(_format_source_count(release.source_count))}</p>', updated, count=1, flags=re.DOTALL)
+        source_count_text = (
+            _format_status_source_count(release.source_count)
+            if release.type_label == "Current status"
+            else _format_source_count(release.source_count)
+        )
+        updated, source_count = re.subn(r'<p class="edition-meta">.*?</p>', f'<p class="edition-meta">{html.escape(source_count_text)}</p>', updated, count=1, flags=re.DOTALL)
         if source_count != 1:
             raise ValueError(f"Source-count field not found for {release.slug}")
     return updated
@@ -736,6 +768,9 @@ def render_dispatch_directory_from_releases(
     if missing:
         raise ValueError(f"No eligible public release found for active dispatches: {', '.join(missing)}")
     refreshed = template_html
+    has_modern_active_cards = any(_has_active_dispatch_card(refreshed, latest[slug]) for slug in slugs)
+    if has_modern_active_cards and not legacy_target_only:
+        refreshed = DIRECTORY_CURRENT_DESK_SECTION_RE.sub("", refreshed, count=1)
     refresh_latest_cards = (
         legacy_target_only
         or re.search(r'<article class="edition-card\b', refreshed) is not None

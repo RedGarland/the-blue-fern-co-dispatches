@@ -13,6 +13,7 @@ from bluefern_dispatches.root_homepage import (
     render_dispatch_directory_from_releases,
     render_homepage_from_template,
     render_sitewide_homepage_from_template,
+    select_current_desk_by_slug,
     select_effective_latest,
     select_homepage_cards,
 )
@@ -137,6 +138,20 @@ def _write_gaza_no_update(root: Path, edition_date: str, *, source_count: int = 
         ),
         encoding="utf-8",
     )
+
+
+def _mark_live_rendered_public_artifact(root: Path, slug: str, edition_date: str) -> None:
+    manifest_path = root / slug / "editions" / edition_date / "edition_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest.update(
+        {
+            "publication_status": "unpublished",
+            "pages_status": "not_synced",
+            "public_rendered": True,
+            "validation_status": "ok",
+        }
+    )
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
 
 
 def _write_recovery_shaped_food_release(root: Path, edition_date: str) -> None:
@@ -652,6 +667,82 @@ def test_dispatch_directory_refreshes_all_active_products_and_is_byte_idempotent
         assert (public_root / link.strip("/") / "index.html").exists()
 
 
+def test_dispatch_directory_uses_current_desk_contract_for_gaza_status_and_food_live_artifact(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_release(public_root, "gaza", "2026-10-01", title="Stale Oct. 1 Gaza readable context", source_count=3)
+    _write_gaza_no_update(public_root, "2026-10-04", source_count=4)
+    _write_release(
+        public_root,
+        "food-line",
+        "2026-10-03",
+        title="Prior Food Line edition",
+        source_count=2,
+    )
+    _write_release(
+        public_root,
+        "food-line",
+        "2026-10-04",
+        title="As Kansans lose SNAP benefits, state lawmakers examine system hurdles",
+        source_count=1,
+    )
+    _mark_live_rendered_public_artifact(public_root, "food-line", "2026-10-04")
+    _write_release(public_root, "care-line", "2026-08-20", title="Methodist Hospitals Gary outage update", source_count=1)
+
+    releases = discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 10, 4), homepage_html=TEMPLATE_HTML)
+    current_desk = select_current_desk_by_slug(releases)
+    rendered = render_dispatch_directory_from_releases(DIRECTORY_TEMPLATE, current_desk)
+    gaza_card = _dispatch_card(rendered, "Dispatches From Gaza")
+    food_card = _dispatch_card(rendered, "Food Line Dispatch")
+    care_card = _dispatch_card(rendered, "The Care Line Dispatch")
+
+    assert '<h3 class="latest-headline"><a href="/gaza/">No qualifying update</a></h3>' in gaza_card
+    assert "Current status; No new source-backed Gaza update met publication threshold today." in gaza_card
+    assert "Stale Oct. 1 Gaza readable context" not in gaza_card
+    assert "October 1, 2026" not in gaza_card
+    assert "/food-line/editions/2026-10-04/" in food_card
+    assert "As Kansans lose SNAP benefits, state lawmakers examine system hurdles" in food_card
+    assert "/food-line/editions/2026-10-03/" not in food_card
+    assert "Latest public release; monitoring continues between editions." in care_card
+
+
+def test_dispatch_directory_has_one_active_block_per_public_desk(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_release(public_root, "gaza", "2026-10-01", title="Gaza readable context", source_count=3)
+    _write_gaza_no_update(public_root, "2026-10-04", source_count=4)
+    _write_release(public_root, "food-line", "2026-10-04", title="Food current", source_count=1)
+    _write_release(public_root, "care-line", "2026-08-20", title="Care latest public release", source_count=1)
+    current_desk = select_current_desk_by_slug(
+        discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 10, 4), homepage_html=TEMPLATE_HTML)
+    )
+
+    rendered = render_dispatch_directory_from_releases(DIRECTORY_TEMPLATE, current_desk)
+
+    assert rendered.count('<article class="dispatch-card dispatch-card--featured">') == 3
+    assert rendered.count("<h2>Dispatches From Gaza</h2>") == 1
+    assert rendered.count("<h2>Food Line Dispatch</h2>") == 1
+    assert rendered.count("<h2>The Care Line Dispatch</h2>") == 1
+
+
+def test_dispatch_directory_removes_duplicate_current_desk_shelf_when_active_cards_exist(tmp_path):
+    public_root = tmp_path / "pages"
+    _write_release(public_root, "gaza", "2026-10-01", title="Gaza readable context", source_count=3)
+    _write_gaza_no_update(public_root, "2026-10-04", source_count=4)
+    _write_release(public_root, "food-line", "2026-10-04", title="Food current", source_count=1)
+    _write_release(public_root, "care-line", "2026-08-20", title="Care latest public release", source_count=1)
+    current_desk = select_current_desk_by_slug(
+        discover_public_releases(public_root, verify_root=public_root, as_of=date(2026, 10, 4), homepage_html=SHARED_ROOT_TEMPLATE)
+    )
+
+    rendered = render_dispatch_directory_from_releases(SHARED_ROOT_TEMPLATE, current_desk)
+
+    assert "The current edition desk" not in rendered
+    assert '<article class="edition-card' not in rendered
+    assert rendered.count('<article class="dispatch-card dispatch-card--featured">') == 3
+    assert "/gaza/" in _dispatch_card(rendered, "Dispatches From Gaza")
+    assert "/food-line/editions/2026-10-04/" in _dispatch_card(rendered, "Food Line Dispatch")
+    assert "/care-line/editions/2026-08-20/" in _dispatch_card(rendered, "The Care Line Dispatch")
+
+
 def test_shared_root_render_normalizes_only_footer_separator_and_is_byte_idempotent(tmp_path):
     public_root = tmp_path / "pages"
     _write_current_directory_inventory(public_root)
@@ -704,6 +795,49 @@ def test_shared_release_refresh_reports_exact_changed_surfaces(tmp_path):
     assert "/gaza/editions/2026-09-04/" in directory
     assert "/food-line/editions/2026-08-31/" in directory
     assert "/care-line/editions/2026-08-20/" in directory
+
+
+def test_shared_release_refresh_uses_current_desk_for_dispatches_directory(tmp_path):
+    public_root = tmp_path / "pages"
+    public_root.mkdir(parents=True)
+    root_template = SHARED_ROOT_TEMPLATE.replace(
+        '</article></div></section><div class="directory-list">',
+        '</article><article class="edition-card edition-card--food-line"><h3><a href="/food-line/editions/2026-10-03/">Prior Food</a></h3>'
+        '<p class="edition-source">Food Line Dispatch &middot; October 3, 2026</p>'
+        '<p class="edition-meta">2 public sources</p></article>'
+        '<article class="edition-card edition-card--care-line"><h3><a href="/care-line/editions/2026-08-20/">Care</a></h3>'
+        '<p class="edition-source">Care Line &middot; August 20, 2026</p>'
+        '<p class="edition-meta">1 public source</p></article></div></section><div class="directory-list">',
+        1,
+    )
+    (public_root / "index.html").write_text(root_template, encoding="utf-8")
+    (public_root / "dispatches").mkdir()
+    (public_root / "dispatches" / "index.html").write_text(DIRECTORY_TEMPLATE, encoding="utf-8")
+    _write_release(public_root, "gaza", "2026-10-01", title="Stale Oct. 1 Gaza readable context", source_count=3)
+    _write_gaza_no_update(public_root, "2026-10-04", source_count=4)
+    _write_release(public_root, "food-line", "2026-10-03", title="Prior Food Line edition", source_count=2)
+    _write_release(public_root, "food-line", "2026-10-04", title="As Kansans lose SNAP benefits, state lawmakers examine system hurdles", source_count=1)
+    _mark_live_rendered_public_artifact(public_root, "food-line", "2026-10-04")
+    _write_release(public_root, "care-line", "2026-08-20", title="Methodist Hospitals Gary outage update", source_count=1)
+
+    result = refresh_shared_release_surfaces_from_pages_inventory(
+        public_root,
+        dry_run=False,
+        target_dispatch="gaza",
+    )
+
+    assert result["ok"] is True
+    assert "dispatches/index.html" in result["changed_surfaces"]
+    directory = (public_root / "dispatches" / "index.html").read_text(encoding="utf-8")
+    gaza_card = _dispatch_card(directory, "Dispatches From Gaza")
+    food_card = _dispatch_card(directory, "Food Line Dispatch")
+    care_card = _dispatch_card(directory, "The Care Line Dispatch")
+    assert "/gaza/" in gaza_card
+    assert "No qualifying update" in gaza_card
+    assert "Stale Oct. 1 Gaza readable context" not in gaza_card
+    assert "/food-line/editions/2026-10-04/" in food_card
+    assert "As Kansans lose SNAP benefits, state lawmakers examine system hurdles" in food_card
+    assert "Latest public release; monitoring continues between editions." in care_card
 
 
 def test_shared_release_refresh_rebuilds_legacy_gaza_directory_surface(tmp_path):

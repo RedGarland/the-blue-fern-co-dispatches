@@ -528,6 +528,16 @@ def _visual_checks_with_playwright(
                             activeCardPrimaryButtonCount: document.querySelectorAll('.active-grid .dispatch-card .card-actions .button, .dispatch-grid .dispatch-card .card-actions .button').length,
                             activeCardSupportLinkCount: document.querySelectorAll('.active-grid .dispatch-card .card-actions .support-link, .active-grid .dispatch-card .card-actions .text-link, .dispatch-grid .dispatch-card .card-actions .support-link, .dispatch-grid .dispatch-card .card-actions .text-link').length,
                             activeCardActionGapPx: cardActionsStyle ? Number.parseFloat(cardActionsStyle.columnGap || cardActionsStyle.gap || '0') : null,
+                            activeCardDeskOrder: Array.from(document.querySelectorAll('.active-grid .dispatch-card, .dispatch-grid .dispatch-card'))
+                              .map((card) => {
+                                const heading = card.querySelector('h2');
+                                const text = heading && heading.textContent ? heading.textContent.trim().toLowerCase() : '';
+                                if (text.includes('gaza')) return 'gaza';
+                                if (text.includes('food line')) return 'food-line';
+                                if (text.includes('care line')) return 'care-line';
+                                return '';
+                              })
+                              .filter(Boolean),
                             editionCardCount: document.querySelectorAll('.edition-card').length,
                             foodHero: box('.food-line-hero'),
                             foodLogo: box('.food-line-logo--edition, .food-line-logo--home, .hero-logo'),
@@ -605,7 +615,7 @@ def _visual_checks_with_playwright(
                             issues.append(VisualIssue(path, "primary_button_contrast", f"button contrast is below 4.5:1: {contrast_ratio:.2f} ({button.get('text')})"))
                         if str(button.get("backgroundColor") or "").lower() == CANONICAL_RGB["--bf-dark-blue"] and str(button.get("color") or "").lower() != CANONICAL_RGB["--bf-white"]:
                             issues.append(VisualIssue(path, "primary_button_contrast", f"dark primary button text is not white: {button.get('color')} ({button.get('text')})"))
-                    if path in {"/", "/dispatches/"}:
+                    if path == "/":
                         desk_order = list(metrics.get("editionCardDeskOrder") or [])
                         expected_order = ["gaza", "food-line", "care-line"]
                         if desk_order[:3] != expected_order:
@@ -614,6 +624,17 @@ def _visual_checks_with_playwright(
                                     path,
                                     "latest_card_active_desk_order",
                                     f"first latest cards are {desk_order[:3]}, expected {expected_order}",
+                                )
+                            )
+                    if path == "/dispatches/":
+                        active_order = list(metrics.get("activeCardDeskOrder") or [])
+                        expected_order = ["gaza", "food-line", "care-line"]
+                        if active_order[:3] != expected_order:
+                            issues.append(
+                                VisualIssue(
+                                    path,
+                                    "active_card_desk_order",
+                                    f"first active desk cards are {active_order[:3]}, expected {expected_order}",
                                 )
                             )
                     if path == "/":
@@ -650,8 +671,8 @@ def _visual_checks_with_playwright(
                             issues.append(VisualIssue(path, "active_dispatch_action_links", "active dispatch card action cluster was not found"))
                         elif float(gap) < 10:
                             issues.append(VisualIssue(path, "active_dispatch_action_links", f"active dispatch action link gap is too tight: {gap}px"))
-                    if path == "/dispatches/" and (int(metrics.get("editionCardCount") or 0) + int(metrics.get("activeCardCount") or 0)) < 3:
-                        issues.append(VisualIssue(path, "edition_cards", "dispatch directory rendered fewer than three cards"))
+                    if path == "/dispatches/" and int(metrics.get("activeCardCount") or 0) != 3:
+                        issues.append(VisualIssue(path, "active_dispatch_cards", "dispatch directory must render exactly three active public desk cards"))
                     if path == "/food-line/":
                         hero = metrics.get("foodHero") or metrics.get("hero") or {}
                         logo = metrics.get("productLogo") or metrics.get("foodLogo") or {}

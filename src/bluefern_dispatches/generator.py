@@ -28,6 +28,7 @@ from bluefern_dispatches.root_homepage import (
     render_about_from_public_inventory,
     render_dispatch_directory_from_releases,
     render_sitewide_homepage_from_template,
+    select_current_desk_by_slug,
     select_effective_latest,
 )
 from bluefern_dispatches.care_line_release_render import (
@@ -4631,8 +4632,9 @@ def refresh_shared_release_surfaces_from_pages_inventory(
             "message": "shared homepage refresh skipped; template has no refreshable Gaza card",
         }
     releases = discover_public_releases(pages_repo, verify_root=pages_repo, homepage_html=template_html)
+    current_desk = select_current_desk_by_slug(releases)
     latest = select_effective_latest(releases)
-    release = latest.get(target_dispatch)
+    release = current_desk.get(target_dispatch) or latest.get(target_dispatch)
     if release is None:
         return {
             "ok": False,
@@ -4656,7 +4658,7 @@ def refresh_shared_release_surfaces_from_pages_inventory(
     refreshed_directory_html = annotate_shared_public_state(
         render_dispatch_directory_from_releases(
             directory_html,
-            latest,
+            current_desk,
             target_dispatch=target_dispatch,
         ),
         pages_repo,

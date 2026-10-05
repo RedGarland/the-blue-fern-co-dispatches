@@ -1,0 +1,25 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261005T104522-0700-r11",
+  "scheduled_for": "2026-10-05T10:45:22-07:00",
+  "started_at": "2026-10-05T10:45:40-07:00",
+  "completed_at": "2026-10-05T10:46:35-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-05T09:45:22-07:00",
+    "end": "2026-10-05T10:46:35-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first. Latest notices remain dated 2026-10-02: Comfort Care Home Health termination (California) and The Pediatric Center of Tullahoma, PC CLIA limitation (Tennessee); no newer CMS public notice found.",
+    "Ran exactly 12 additional targeted searches across hospital/ED, maternity, behavioral health, dialysis, oncology, primary care, rural service loss, ambulance, air-medical, restoration/reopening, and U.S. territory access changes.",
+    "No new qualifying access-loss or restoration event was identified in the search window.",
+    "Excluded Spartanburg Regional's 11-bed adolescent behavioral-health unit opening because it is an expansion, not restoration/reopening of a previously lost essential service.",
+    "Excluded Watsonville Community Hospital maternity reporting because it describes a possible future closure with no concrete access effect yet.",
+    "Excluded Latitude Air Ambulance crash/search-suspension coverage because it does not establish closure or suspension of a U.S. air-medical service/base."
+  ]
+}

@@ -1,0 +1,160 @@
+{
+  "approval_authority": false,
+  "backfill_reason": "Restore immutable private lineage for confirmed Oct. 3, 2026 non-Gaza public scope-contamination correction review.",
+  "canonicalization_version": "gaza_published_story_lineage_c14n_v1",
+  "created_at": "2026-10-05T20:42:46.567340+00:00",
+  "domain": "gaza",
+  "edition_date": "2026-10-03",
+  "evidence": {
+    "dedupe": [
+      {
+        "classification": "major_update",
+        "include_decision": "include",
+        "public_rendered": true,
+        "story_id": "gaza-story-2026-10-03-003",
+        "title": "Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters"
+      }
+    ],
+    "dedupe_sha256": "sha256:bc33ce0579da713b5e68554c6c1cfb3f8b5f6ab0a2eededda3b3ca8a48ff2b6e",
+    "rendered_claim": "Israeli forces detain and assault journalists in Jabal Qamass area in Beita, south of Nablus.",
+    "rendered_title": "Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters",
+    "sources": [
+      {
+        "canonical_url": "https://www.aljazeera.com/news/2026/10/3/israeli-settlers-attack-palestinian-olive-pickers-in-the-west-bank?traffic_source=rss",
+        "category_hint": "conflict",
+        "claim_fingerprint": "gaza|al jazeera|israeli settlers attack farmers in west bank pogrom soldiers hit reporters|conflict|2026-10-03",
+        "dispatch_slug": "gaza",
+        "published_at": "2026-10-03T12:18:24+00:00",
+        "publisher": "Al Jazeera",
+        "source_record_id": "gaza-2026-10-03-aljazeera-middle-east-f852a83a4a45",
+        "title": "Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters",
+        "url": "https://www.aljazeera.com/news/2026/10/3/israeli-settlers-attack-palestinian-olive-pickers-in-the-west-bank?traffic_source=rss",
+        "used_in_story_ids": [
+          "gaza-story-2026-10-03-003"
+        ]
+      }
+    ],
+    "sources_sha256": "sha256:0767aca0285cefb0f21fc2520b0895d0793f7c4ed11f25e1b17b66ea8e65e741",
+    "story": {
+      "attribution": "Al Jazeera",
+      "casualty_counts": {},
+      "category": "palestinian_development",
+      "development_type": "primary_report",
+      "event_date": "2026-10-03T12:18:24+00:00",
+      "included_in_public_summary": true,
+      "location": "Gaza",
+      "public_rendered": true,
+      "publisher_names": [
+        "Al Jazeera"
+      ],
+      "source_record_ids": [
+        "gaza-2026-10-03-aljazeera-middle-east-f852a83a4a45"
+      ],
+      "source_urls": [
+        "https://www.aljazeera.com/news/2026/10/3/israeli-settlers-attack-palestinian-olive-pickers-in-the-west-bank?traffic_source=rss"
+      ],
+      "story_id": "gaza-story-2026-10-03-003",
+      "summary": "Israeli forces detain and assault journalists in Jabal Qamass area in Beita, south of Nablus.",
+      "title": "Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters"
+    },
+    "story_sha256": "sha256:73aa3ad3fe648243eb5a61386b80f13daadcc16e963f37655b12ae7d87ee1108"
+  },
+  "pages_provenance": {
+    "artifacts": [
+      {
+        "byte_length": 11690,
+        "git_blob_oid": "a79ac46e173d7e4ce9ac24e528557bdbd1768008",
+        "path": "gaza/editions/2026-10-03/curation_manifest.json",
+        "role": "curation_manifest",
+        "sha256": "0c37cc7c91359db27d8f077adcdb2e03a3904d6a8b576f87eece67d656f47375"
+      },
+      {
+        "byte_length": 7003,
+        "git_blob_oid": "3accebd7a5d90c7944c7a7f9dcf58d5eeadf9a78",
+        "path": "gaza/editions/2026-10-03/dedupe_report.json",
+        "role": "dedupe_report",
+        "sha256": "b45703d94dead37df21f46a2688313f3b452f44b82397381c2fa4353df5eb222"
+      },
+      {
+        "byte_length": 13220,
+        "git_blob_oid": "5adf2579b4cb07c79ffd7566e32f352c8be60371",
+        "path": "gaza/editions/2026-10-03/sources_manifest.json",
+        "role": "sources_manifest",
+        "sha256": "e4d066c78247d290824f044ddfbb4635f6145498f9495c29991551218538dddd"
+      },
+      {
+        "byte_length": 6733,
+        "git_blob_oid": "a46d1ccf53a9cf1443ba975f5ac11781789b148e",
+        "path": "gaza/editions/2026-10-03/index.html",
+        "role": "rendered_edition",
+        "sha256": "f2c6cf3c4731031b2ff5055566710a8e83ce45e5ea505b8b3e57a59ccd753c9d"
+      }
+    ],
+    "branch": "gh-pages",
+    "observed_head_at_backfill": "be649b38d070bef1e0f8d44d486483bf725fe624",
+    "observed_head_contains_pinned_commit": true,
+    "pinned_commit": "be649b38d070bef1e0f8d44d486483bf725fe624",
+    "provenance_fingerprint": "sha256:863aa5f4e8f69cd859c1a7a831ce2b077c415bf149138f4f3fa7675744692406",
+    "repository": "https://github.com/RedGarland/the-blue-fern-co-dispatches.git"
+  },
+  "prior_claim": {
+    "casualty_counts": {},
+    "text": "Israeli forces detain and assault journalists in Jabal Qamass area in Beita, south of Nablus."
+  },
+  "prior_claim_identity": {
+    "fingerprint": "topic_fingerprint_v1:0e2c1ef92ce4dc29",
+    "inputs": {
+      "category": "palestinian_development",
+      "summary": "Israeli forces detain and assault journalists in Jabal Qamass area in Beita, south of Nablus.",
+      "title": "Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters"
+    }
+  },
+  "publication_mutation": false,
+  "record_fingerprint": "sha256:3510694f103541795180171f3a6158af27668ded7f5a4dcbccb19142b4278d6d",
+  "review_authority": false,
+  "schema_version": "gaza_published_story_lineage_v1",
+  "source_attribution": "Al Jazeera",
+  "source_records": [
+    {
+      "canonical_url": "https://www.aljazeera.com/news/2026/10/3/israeli-settlers-attack-palestinian-olive-pickers-in-the-west-bank?traffic_source=rss",
+      "category_hint": "conflict",
+      "claim_fingerprint": "gaza|al jazeera|israeli settlers attack farmers in west bank pogrom soldiers hit reporters|conflict|2026-10-03",
+      "dispatch_slug": "gaza",
+      "published_at": "2026-10-03T12:18:24+00:00",
+      "publisher": "Al Jazeera",
+      "source_record_id": "gaza-2026-10-03-aljazeera-middle-east-f852a83a4a45",
+      "title": "Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters",
+      "url": "https://www.aljazeera.com/news/2026/10/3/israeli-settlers-attack-palestinian-olive-pickers-in-the-west-bank?traffic_source=rss",
+      "used_in_story_ids": [
+        "gaza-story-2026-10-03-003"
+      ]
+    }
+  ],
+  "stable_event_identity": {
+    "fingerprint": "sha256:6fc0440fc96e4b5155696301317f798748d4027fbe19e977a7c259dcc1e715ef",
+    "inputs": {
+      "artifact_set_sha256": "sha256:5bfa13cac9cc237b7a0637e0a7ea29cd23430fe453c8650c4930e6431451615d",
+      "canonical_source_url": "https://www.aljazeera.com/news/2026/10/3/israeli-settlers-attack-palestinian-olive-pickers-in-the-west-bank?traffic_source=rss",
+      "dispatch": "gaza",
+      "edition_date": "2026-10-03",
+      "identity_type": "published_story_withdrawal",
+      "pages_head": "be649b38d070bef1e0f8d44d486483bf725fe624",
+      "story_id": "gaza-story-2026-10-03-003"
+    }
+  },
+  "story_id": "gaza-story-2026-10-03-003",
+  "story_title": "Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters",
+  "withdrawal_target_identity": {
+    "correction_type": "story_withdrawal",
+    "fingerprint": "sha256:6fc0440fc96e4b5155696301317f798748d4027fbe19e977a7c259dcc1e715ef",
+    "inputs": {
+      "artifact_set_sha256": "sha256:5bfa13cac9cc237b7a0637e0a7ea29cd23430fe453c8650c4930e6431451615d",
+      "canonical_source_url": "https://www.aljazeera.com/news/2026/10/3/israeli-settlers-attack-palestinian-olive-pickers-in-the-west-bank?traffic_source=rss",
+      "dispatch": "gaza",
+      "edition_date": "2026-10-03",
+      "identity_type": "published_story_withdrawal",
+      "pages_head": "be649b38d070bef1e0f8d44d486483bf725fe624",
+      "story_id": "gaza-story-2026-10-03-003"
+    }
+  }
+}

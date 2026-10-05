@@ -1,0 +1,23 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261004T204522-0700-r11",
+  "scheduled_for": "2026-10-04T20:45:22-07:00",
+  "started_at": "2026-10-04T20:46:00-07:00",
+  "completed_at": "2026-10-04T20:47:13-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-04T13:46:19-07:00",
+    "end": "2026-10-04T20:47:13-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": [
+    "CMS Public Notices checked first; newest listed notice dated 2026-10-02.",
+    "Exactly 12 additional targeted searches completed.",
+    "No new qualifying development found.",
+    "Window widened to last durable Care Line heartbeat because intervening heartbeats are absent from ops/watch-ledger."
+  ]
+}

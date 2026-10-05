@@ -170,6 +170,15 @@ def test_current_queue_accepts_abcnews_same_article_path_case_canonicalization()
     assert validate_queue(payload) == payload
 
 
+def test_current_queue_accepts_news12_same_article_path_case_canonicalization() -> None:
+    source_url = "https://connecticut.news12.com/2026/10/04/bridgeport-church-steps-up-to-fight-local-hunger-amid-historic-snap-benefit-cuts/1mSWkQfH3gE7OkL3kR1dWB"
+    canonical_source_url = "https://connecticut.news12.com/2026/10/04/bridgeport-church-steps-up-to-fight-local-hunger-amid-historic-snap-benefit-cuts/1mswkqfh3ge7okl3kr1dwb"
+
+    payload = _queue([_item(source_url=source_url, canonical_source_url=canonical_source_url)])
+
+    assert validate_queue(payload) == payload
+
+
 def test_current_queue_does_not_globally_lowercase_article_paths() -> None:
     with pytest.raises(ValueError, match="source and canonical URLs must identify the same article"):
         validate_queue(

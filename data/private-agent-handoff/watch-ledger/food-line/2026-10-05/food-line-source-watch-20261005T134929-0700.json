@@ -1,0 +1,58 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "food-line",
+  "watch_name": "Food Line Source Watch",
+  "run_id": "food-line-source-watch-20261005T134929-0700",
+  "scheduled_for": "2026-10-05T13:45:54-07:00",
+  "started_at": "2026-10-05T13:49:29-07:00",
+  "completed_at": "2026-10-05T13:50:45-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-05T12:47:49-07:00",
+    "end": "2026-10-05T13:49:29-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "targeted_searches_run": 12,
+    "search_failures": 0,
+    "source_fetch_failures": 1,
+    "scope": [
+      "sole/only/last/full-service grocery loss or disaster closure",
+      "disaster-related emergency food distribution cancellation/suspension",
+      "abrupt pantry/food-bank closure or major access reduction",
+      "official SNAP/WIC/food-assistance interruption with immediate access consequences"
+    ],
+    "exclusions_applied": [
+      "donation drives",
+      "resource guides",
+      "recipes",
+      "opinion",
+      "routine program promotion",
+      "generic inflation stories",
+      "duplicates"
+    ],
+    "near_hits": [
+      {
+        "title": "Man accused of setting fire inside cooler at Kroger on Indy's near east side",
+        "publisher": "WTHR",
+        "source_published_at": "2026-10-05",
+        "reason_excluded": "Fresh local grocery-fire report, but search evidence did not establish loss of the community's only, sole, last, or full-service grocery access; direct source fetch returned HTTP 403."
+      },
+      {
+        "title": "Save A Lot grocery store to close for good as discount chain pulls the shutters down 11 years after grand renovation",
+        "publisher": "The U.S. Sun",
+        "source_published_at": "2026-10-05T04:02:00-04:00",
+        "reason_excluded": "Watertown, New York location is scheduled to close October 10, but the report does not establish that it is the community's only, sole, last, or full-service grocery store."
+      },
+      {
+        "title": "This H-E-B rival left San Antonio, now it's building a new $40M Texas store",
+        "publisher": "MySA",
+        "source_published_at": "2026-10-05",
+        "reason_excluded": "Routine grocery expansion, not a food-access disruption."
+      }
+    ],
+    "result": "No new qualifying U.S. food-access disruption was identified in the bounded recall window. Coverage remains useful, but one fresh local-news source could not be opened directly, so the run is DEGRADED rather than SUCCESS."
+  }
+}

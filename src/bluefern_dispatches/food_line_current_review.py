@@ -70,6 +70,7 @@ CURRENT_FRESHNESS_WINDOW_DAYS = 3
 PATH_CASE_INSENSITIVE_ARTICLE_HOSTS = frozenset(
     {
         "abcnews.com",
+        "connecticut.news12.com",
         "csmonitor.com",
         "unb.com.bd",
         "www.abcnews.com",

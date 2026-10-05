@@ -4,8 +4,28 @@ from datetime import date
 from pathlib import Path
 from urllib import error
 
+import pytest
+
 from bluefern_dispatches import bluesky_post
 from bluefern_dispatches import food_line_bluesky_approval as food_approval
+
+
+def _write_gaza_archive_surface(root: Path, edition_date: str) -> None:
+    archive = root / "bluefern-dispatches-pages" / "gaza" / "archive.html"
+    archive.parent.mkdir(parents=True, exist_ok=True)
+    existing = archive.read_text(encoding="utf-8") if archive.exists() else "<html><body></body></html>"
+    marker = f"editions/{edition_date}/"
+    if marker not in existing:
+        existing = existing.replace("</body>", f'<a href="{marker}">{edition_date}</a></body>')
+    archive.write_text(existing, encoding="utf-8")
+
+
+@pytest.fixture(autouse=True)
+def _default_gaza_archive_surface(request, tmp_path: Path) -> None:
+    if request.node.name == "test_gaza_post_blocks_when_public_edition_is_missing_from_archive_surface":
+        return
+    for edition_date in ("2026-05-07", "2026-06-07", "2026-06-22", "2026-06-26", "2026-07-03"):
+        _write_gaza_archive_surface(tmp_path, edition_date)
 
 
 def test_builds_expected_gaza_post_text_without_url(tmp_path: Path):
@@ -105,6 +125,7 @@ def write_current_edition_artifacts(root: Path, edition_date: str = "2026-05-07"
     run_manifest = root / "data" / "dispatches" / "gaza" / "editions" / edition_date / "run_manifest.json"
     run_manifest.parent.mkdir(parents=True, exist_ok=True)
     run_manifest.write_text(json.dumps({"social_summary": summary}), encoding="utf-8")
+    _write_gaza_archive_surface(root, edition_date)
 
 
 def test_focus_fallback_when_no_topics_derived(tmp_path: Path):
@@ -1080,6 +1101,7 @@ def test_gaza_post_allows_prior_day_source_date_and_previous_edition_link_when_i
         """,
         encoding="utf-8",
     )
+    _write_gaza_archive_surface(tmp_path, "2026-07-03")
 
     allowed_text = "A July 2 source record appears in the July 3 edition."
     monkeypatch.setattr(bluesky_post, "build_gaza_bluesky_post_text", lambda *_args, **_kwargs: allowed_text)
@@ -1126,6 +1148,61 @@ def test_gaza_post_allows_prior_day_source_date_and_previous_edition_link_when_i
     assert result["mismatched_field"] is None
     assert result["manifest_edition_date"] == "2026-07-03"
     assert result["canonical_url"] == "https://dispatches.thebluefernco.com/gaza/editions/2026-07-03/"
+
+
+def test_gaza_post_blocks_when_public_edition_is_missing_from_archive_surface(monkeypatch, tmp_path: Path):
+    monkeypatch.setenv("BLUESKY_ENABLED", "1")
+    monkeypatch.setenv("BLUESKY_POST_AFTER_GAZA", "1")
+    monkeypatch.setenv("BLUESKY_HANDLE", "bluefern.test")
+    monkeypatch.setenv("BLUESKY_APP_PASSWORD", "app-pass")
+    edition_date = "2026-07-03"
+    current = tmp_path / "output" / "dispatches" / "gaza" / "editions" / edition_date
+    current.mkdir(parents=True, exist_ok=True)
+    (current / "curation_manifest.json").write_text(
+        json.dumps(
+            [
+                {
+                    "title": "Current Gaza edition summary",
+                    "summary": "A source-backed Gaza City update is ready.",
+                    "included_in_public_summary": True,
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (current / "edition_manifest.json").write_text(
+        json.dumps({"edition_date": edition_date, "source_count": 1, "publisher_count": 1, "publishers": ["Example News"]}),
+        encoding="utf-8",
+    )
+    site = tmp_path / "output" / "site" / "gaza" / "editions" / edition_date
+    site.mkdir(parents=True, exist_ok=True)
+    (site / "index.html").write_text(
+        f"""<html><head><title>Dispatches From Gaza - {edition_date}</title>
+<link rel="canonical" href="https://dispatches.thebluefernco.com/gaza/editions/{edition_date}/"></head>
+<body><h1>Dispatches From Gaza - {edition_date}</h1></body></html>""",
+        encoding="utf-8",
+    )
+    (tmp_path / "bluefern-dispatches-pages" / "gaza").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "bluefern-dispatches-pages" / "gaza" / "archive.html").write_text(
+        '<html><body><a href="editions/2026-07-02/">older</a></body></html>',
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(bluesky_post, "_post_json", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("network must not run")))
+    monkeypatch.setattr(bluesky_post.request, "urlopen", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("network must not run")))
+
+    result = bluesky_post.maybe_post_gaza_dispatch_to_bluesky(
+        edition_date=edition_date,
+        public_url=f"https://dispatches.thebluefernco.com/gaza/editions/{edition_date}/",
+        run_succeeded=True,
+        post_requested=True,
+        project_root=tmp_path,
+        force_post=True,
+    )
+
+    assert result["status"] == "blocked"
+    assert result["reason"] == "current-edition-missing-from-gaza-archive"
+    assert result["archive_surface_verified"] is False
+    assert result["stale_content_guard_status"] == "blocked"
 
 
 def test_gaza_post_blocks_when_canonical_url_date_mismatches_requested_date(monkeypatch, tmp_path: Path):

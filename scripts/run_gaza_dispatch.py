@@ -32,6 +32,7 @@ from bluefern_dispatches.generator import (
     render_archive_for_dates,
     render_dispatch_index_for_dates,
     render_rss_for_dates,
+    reconcile_gaza_public_editions,
 )
 from bluefern_dispatches.gaza_sources import filter_recent_duplicate_sources
 from bluefern_dispatches.gaza_sources import canonicalize_url, extract_canonical_from_google_wrapper
@@ -1994,12 +1995,25 @@ def render_gaza_edition(
     return page(f"{DISPATCH_NAME} - {edition_date}", f"{BASE_URL}/gaza/editions/{edition_date}/", "../../assets/site.css", body, DISPATCH_NAME)
 
 
-def discover_edition_dates(site_root: Path) -> list[str]:
-    return discover_public_edition_dates(site_root, DISPATCH_SLUG)
+def _default_pages_repo(root: Path) -> Path | None:
+    pages_repo = root / "bluefern-dispatches-pages"
+    return pages_repo if pages_repo.exists() else None
 
 
-def render_archive_index_rss(root: Path, edition_date: str, dry_run: bool, wrote: list[str], include_current: bool = True) -> None:
+def discover_edition_dates(site_root: Path, pages_repo: Path | None = None) -> list[str]:
+    return discover_public_edition_dates(site_root, DISPATCH_SLUG, pages_repo=pages_repo)
+
+
+def render_archive_index_rss(
+    root: Path,
+    edition_date: str,
+    dry_run: bool,
+    wrote: list[str],
+    include_current: bool = True,
+    pages_repo: Path | None = None,
+) -> None:
     site_root = root / "output" / "site"
+    pages_repo = pages_repo or _default_pages_repo(root)
     dispatch = DispatchConfig(
         slug=DISPATCH_SLUG,
         name=DISPATCH_NAME,
@@ -2010,7 +2024,9 @@ def render_archive_index_rss(root: Path, edition_date: str, dry_run: bool, wrote
         stories=[],
         detail_artifacts=[],
     )
-    dates = discover_edition_dates(site_root)
+    if pages_repo is not None:
+        reconcile_gaza_public_editions(root, site_root, dry_run=dry_run, wrote=wrote, pages_repo=pages_repo)
+    dates = discover_edition_dates(site_root, pages_repo=pages_repo)
     if include_current and edition_date not in dates:
         dates = sorted([*dates, edition_date], reverse=True)
     gaza_root = site_root / DISPATCH_SLUG

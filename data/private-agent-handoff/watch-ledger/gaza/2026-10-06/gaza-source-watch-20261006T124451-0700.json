@@ -1,0 +1,54 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261006T124451-0700",
+  "scheduled_for": "2026-10-06T12:44:51-07:00",
+  "started_at": "2026-10-06T12:45:19-07:00",
+  "completed_at": "2026-10-06T12:46:11-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-06T11:44:51-07:00",
+    "end": "2026-10-06T12:44:51-07:00"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "primary_checks": [
+      {
+        "source": "OCHA OPT",
+        "result": "No new in-window Gaza operational update surfaced. Search results did not surface anything newer than the previously established October 5 publication of the Humanitarian Situation Report | 2 October 2026."
+      },
+      {
+        "source": "WHO",
+        "result": "No new in-window Gaza operational health update surfaced."
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "targeted_sources": [
+      "Reuters",
+      "Associated Press",
+      "UNRWA",
+      "WFP",
+      "UNICEF",
+      "ICRC",
+      "Palestine Red Crescent Society",
+      "MSF",
+      "WAFA",
+      "IDF",
+      "Al Jazeera",
+      "UN News"
+    ],
+    "exclusions": [
+      "Reuters October 6 retrospective/explainer was not a new event in the hourly window and was excluded.",
+      "UNICEF October 6 El Niño release was not Gaza-specific and was excluded.",
+      "Older/recycled Gaza reports and duplicate background material were excluded."
+    ],
+    "degraded_reasons": [
+      "UN News was blocked by robots.txt.",
+      "UNRWA direct page retrieval returned HTTP 403, though search-index coverage remained available."
+    ],
+    "conclusion": "No new traceable qualifying development was established in the bounded hourly window."
+  }
+}

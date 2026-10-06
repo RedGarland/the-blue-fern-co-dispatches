@@ -563,9 +563,22 @@ h3 {
   background: var(--bf-white);
 }
 
+.edition-card--status {
+  border-top-color: var(--bf-pale-beige);
+  background: var(--bf-background-cream);
+}
+
 .edition-card h3 {
   margin: 0.25rem 0 0.35rem;
   font-size: 1.2rem;
+}
+
+.edition-type {
+  margin: 0 0 0.35rem;
+  color: var(--bf-accent-blue-grey);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 .edition-summary {

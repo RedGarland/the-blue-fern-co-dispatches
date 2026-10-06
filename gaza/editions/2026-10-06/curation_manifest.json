@@ -1,0 +1,314 @@
+[
+  {
+    "story_id": "gaza-story-2026-10-06-002",
+    "title": "Former UN food agency official claims he was fired for highlighting hunger in Gaza",
+    "summary": "Benjamin Davis said the leadership of the Food and Agriculture Organization (FAO) had refused to renew his contract as director of its rural transformation and gender equality division because his team had published a brief on hunger in Gaza and held a seminar on the subject last year, and because he taken part in weekly \"moment of silence\" vigils on FAO grounds for those killed. Benjamin Davis appealing against dismissal from FAO, after being accused by director general of playing 'political games' A former senior UN food agency official has alleged he was fired last week for his work highlighting hunger in Gaza, and has launched an appeal against his dismissal.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 74,
+    "scoring_reasons": [
+      "humanitarian_impact",
+      "civilian_harm",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 12,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 12,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-06-guardian-world-17e9248249a7"
+    ],
+    "source_ids": [
+      "gaza-2026-10-06-guardian-world-17e9248249a7"
+    ],
+    "source_urls": [
+      "https://www.theguardian.com/world/2026/oct/06/former-un-food-agency-official-fao-benjamin-davis-hunger-gaza"
+    ],
+    "publisher_names": [
+      "The Guardian"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-06-guardian-world-17e9248249a7",
+        "title": "Former UN food agency official claims he was fired for highlighting hunger in Gaza",
+        "url": "https://www.theguardian.com/world/2026/oct/06/former-un-food-agency-official-fao-benjamin-davis-hunger-gaza",
+        "publisher": "The Guardian",
+        "summary_or_snippet": "Benjamin Davis appealing against dismissal from FAO, after being accused by director general of playing 'political games' A former senior UN food agency official has alleged he was fired last week for his work highlighting hunger in Gaza, and has launched an appeal against his dismissal. Benjamin Davis said the leadership of the Food and Agriculture Organization (FAO) had refused to renew his contract as director of its rural transformation and gender equality division because his team had published a brief on hunger in Gaza and held a seminar on the subject last year, and because he taken part in weekly \"moment of silence\" vigils on FAO grounds for those killed.",
+        "event_date": "2026-10-06T11:31:00+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "The Guardian",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-06T15:16:12.679341+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 74,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-10-06T11:31:00+00:00",
+    "attribution": "The Guardian",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-10-06-003",
+    "title": "How Palestinian reporters defied Israel's genocide to redefine journalism",
+    "summary": "Western media under scrutiny for promoting Israeli narrative rather than standing up for vulnerable journalists in Gaza.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 44,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-06-aljazeera-middle-east-69e7c60481f4"
+    ],
+    "source_ids": [
+      "gaza-2026-10-06-aljazeera-middle-east-69e7c60481f4"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/news/2026/10/6/how-palestinian-reporters-defied-israels-genocide-to-redefine-journalism?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-06-aljazeera-middle-east-69e7c60481f4",
+        "title": "How Palestinian reporters defied Israel's genocide to redefine journalism",
+        "url": "https://www.aljazeera.com/news/2026/10/6/how-palestinian-reporters-defied-israels-genocide-to-redefine-journalism?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Western media under scrutiny for promoting Israeli narrative rather than standing up for vulnerable journalists in Gaza.",
+        "event_date": "2026-10-06T11:47:03+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-06T15:16:12.679341+00:00",
+    "relevance_terms_matched": [
+      "gaza",
+      "palestin"
+    ],
+    "top_story_relevance_score": 44,
+    "substantive_ground": false,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": false,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-10-06T11:47:03+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": "gaza-story-2026-07-23-003",
+    "prior_edition_date": "2026-07-23",
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-10-06-001",
+    "title": "Teenager shows BBC life inside Gaza displacement camp",
+    "summary": "13-year-old Lara lives in a displacement camp in Gaza City.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 41,
+    "scoring_reasons": [
+      "displacement",
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 10
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-06-bbc-middle-east-1c69f1dd1e5c"
+    ],
+    "source_ids": [
+      "gaza-2026-10-06-bbc-middle-east-1c69f1dd1e5c"
+    ],
+    "source_urls": [
+      "https://www.bbc.co.uk/news/videos/c3x2w5dd21eyo?at_medium=RSS&at_campaign=rss"
+    ],
+    "publisher_names": [
+      "BBC News"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-06-bbc-middle-east-1c69f1dd1e5c",
+        "title": "Teenager shows BBC life inside Gaza displacement camp",
+        "url": "https://www.bbc.co.uk/news/videos/c3x2w5dd21eyo?at_medium=RSS&at_campaign=rss",
+        "publisher": "BBC News",
+        "summary_or_snippet": "13-year-old Lara lives in a displacement camp in Gaza City.",
+        "event_date": "2026-10-05T16:31:33+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "BBC News",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-06T15:16:12.679341+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 41,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-10-05T16:31:33+00:00",
+    "attribution": "BBC News",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  },
+  {
+    "story_id": "gaza-story-2026-10-06-004",
+    "title": "Gaza woman rescues books from rubble to keep education alive",
+    "summary": "Amid the destruction of Gaza's schools and universities, Niveen Al-Gharabli has built a makeshift book stall.",
+    "category": "conflict",
+    "story_scope": "core_gaza",
+    "score": 38,
+    "scoring_reasons": [
+      "source_reliability",
+      "date_confidence"
+    ],
+    "candidate_score_breakdown": {
+      "humanitarian_impact": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "displacement": 0,
+      "health_infrastructure": 0,
+      "accountability_legal": 0,
+      "source_reliability": 14,
+      "date_confidence": 18
+    },
+    "included_in_public_summary": true,
+    "included_in_detail_dataset": false,
+    "source_record_ids": [
+      "gaza-2026-10-06-aljazeera-middle-east-fd82aedbbe19"
+    ],
+    "source_ids": [
+      "gaza-2026-10-06-aljazeera-middle-east-fd82aedbbe19"
+    ],
+    "source_urls": [
+      "https://www.aljazeera.com/video/newsfeed/2026/10/6/gaza-woman-rescues-books-from-rubble-to-keep-education-alive?traffic_source=rss"
+    ],
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "source_records": [
+      {
+        "source_record_id": "gaza-2026-10-06-aljazeera-middle-east-fd82aedbbe19",
+        "title": "Gaza woman rescues books from rubble to keep education alive",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/10/6/gaza-woman-rescues-books-from-rubble-to-keep-education-alive?traffic_source=rss",
+        "publisher": "Al Jazeera",
+        "summary_or_snippet": "Amid the destruction of Gaza's schools and universities, Niveen Al-Gharabli has built a makeshift book stall.",
+        "event_date": "2026-10-06T08:43:07+00:00",
+        "location": "Gaza",
+        "development_type": "primary_report",
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "uncertainty": "reported source",
+        "casualty_counts": {}
+      }
+    ],
+    "generated_at": "2026-10-06T15:16:12.679341+00:00",
+    "relevance_terms_matched": [
+      "gaza"
+    ],
+    "top_story_relevance_score": 38,
+    "substantive_ground": true,
+    "flotilla_only": false,
+    "attribution_mode": "reported_public_source",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "development_type": "primary_report",
+    "affected_system": "conflict",
+    "location": "Gaza",
+    "event_date": "2026-10-06T08:43:07+00:00",
+    "attribution": "Al Jazeera",
+    "uncertainty": "reported source",
+    "casualty_counts": {},
+    "include_decision": "include",
+    "public_rendered": true,
+    "prior_story_matched": null,
+    "prior_edition_date": null,
+    "dedupe_classification": "new",
+    "dedupe_reasons": []
+  }
+]

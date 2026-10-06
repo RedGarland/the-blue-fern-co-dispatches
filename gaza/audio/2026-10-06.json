@@ -1,0 +1,68 @@
+{
+  "dispatch_slug": "gaza",
+  "edition_date": "2026-10-06",
+  "generated_at": "2026-10-06T13:03:39.937482Z",
+  "audio_status": "audio_file_ready",
+  "audio_file": "2026-10-06.mp3",
+  "audio_url": "/gaza/audio/2026-10-06.mp3",
+  "audio_mime_type": "audio/mpeg",
+  "tts_provider": "openai",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_voice": "alloy",
+  "tts_error": null,
+  "voice_mode": "single",
+  "tts_voices_used": [
+    "alloy"
+  ],
+  "segment_voice_map": [
+    {
+      "segment_index": 0,
+      "segment_type": "full",
+      "voice": "alloy"
+    }
+  ],
+  "tts_input_character_count": 1335,
+  "tts_input_word_count": 211,
+  "tts_story_count": 4,
+  "tts_segment_count": 1,
+  "audio_duration_seconds": null,
+  "audio_file_size_bytes": 1363968,
+  "estimated_cost_usd": null,
+  "estimated_cost_note": "pricing input not configured",
+  "tts_pricing_basis": null,
+  "tts_pricing_model": null,
+  "cost_logged_at": "2026-10-06T13:03:39.937448Z",
+  "segue_chime": "none",
+  "segue_chime_count": 0,
+  "segue_chime_asset": null,
+  "transcript_url": "https://dispatches.thebluefernco.com/gaza/audio/2026-10-06-transcript.html",
+  "edition_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-10-06/",
+  "script_text": "This is the Gaza Dispatch audio briefing for October 6, 2026.\n\nHere are the key source-backed developments from today's edition.\n\n1. Former UN food agency official claims he was fired for highlighting hunger in Gaza. Benjamin Davis said the leadership of the Food and Agriculture Organization (FAO) had refused to renew his contract as director of its rural transformation and gender equality division because his team had published a brief on hunger in Gaza and held a seminar on the subject last year, and because he taken part in weekly \"moment of silence\" vigils on FAO grounds for those killed. This was reported by The Guardian.\n\n2. How Palestinian reporters defied Israel's genocide to redefine journalism. Western media under scrutiny for promoting Israeli narrative rather than standing up for vulnerable journalists in Gaza. This was reported by Al Jazeera.\n\n3. Teenager shows BBC life inside Gaza displacement camp. 13-year-old Lara lives in a displacement camp in Gaza City. This was reported by BBC News.\n\n4. Gaza woman rescues books from rubble to keep education alive. Amid the destruction of Gaza's schools and universities, Niveen Al-Gharabli has built a makeshift book stall. This was reported by Al Jazeera.\n\nFor the full source-backed dispatch, read the October 6, 2026 Gaza edition at dispatches.thebluefernco.com.",
+  "source_count": 4,
+  "sources": [
+    {
+      "source_record_id": "gaza-2026-10-06-guardian-world-17e9248249a7",
+      "publisher": "The Guardian",
+      "url": "https://www.theguardian.com/world/2026/oct/06/former-un-food-agency-official-fao-benjamin-davis-hunger-gaza",
+      "title": "Former UN food agency official claims he was fired for highlighting hunger in Gaza"
+    },
+    {
+      "source_record_id": "gaza-2026-10-06-aljazeera-middle-east-69e7c60481f4",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/news/2026/10/6/how-palestinian-reporters-defied-israels-genocide-to-redefine-journalism?traffic_source=rss",
+      "title": "How Palestinian reporters defied Israel's genocide to redefine journalism"
+    },
+    {
+      "source_record_id": "gaza-2026-10-06-bbc-middle-east-1c69f1dd1e5c",
+      "publisher": "BBC News",
+      "url": "https://www.bbc.co.uk/news/videos/c3x2w5dd21eyo?at_medium=RSS&at_campaign=rss",
+      "title": "Teenager shows BBC life inside Gaza displacement camp"
+    },
+    {
+      "source_record_id": "gaza-2026-10-06-aljazeera-middle-east-fd82aedbbe19",
+      "publisher": "Al Jazeera",
+      "url": "https://www.aljazeera.com/video/newsfeed/2026/10/6/gaza-woman-rescues-books-from-rubble-to-keep-education-alive?traffic_source=rss",
+      "title": "Gaza woman rescues books from rubble to keep education alive"
+    }
+  ]
+}

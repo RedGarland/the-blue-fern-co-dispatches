@@ -18,7 +18,15 @@
   </itunes:owner>
   <itunes:image href="https://dispatches.thebluefernco.com/gaza/audio/podcast-artwork.png" />
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://dispatches.thebluefernco.com/gaza/audio/podcast.xml" rel="self" type="application/rss+xml" />
-  <lastBuildDate>Sat, 03 Oct 2026 13:01:11 +0000</lastBuildDate>
+  <lastBuildDate>Tue, 06 Oct 2026 15:16:14 +0000</lastBuildDate>
+  <item>
+    <title>Gaza Briefing for October 6, 2026</title>
+    <link>https://dispatches.thebluefernco.com/gaza/audio/2026-10-06-transcript.html</link>
+    <guid>https://dispatches.thebluefernco.com/gaza/audio/2026-10-06-transcript.html</guid>
+    <pubDate>Tue, 06 Oct 2026 00:00:00 +0000</pubDate>
+    <description>Former UN food agency official claims he was fired for highlighting hunger in Gaza. Benjamin Davis said the leadership of the Food and Agriculture Organization (FAO) had refused to renew his contract as director of its rural transformation and gender equality division because his team had published a brief on hunger in Gaza and held a seminar on the subject last year, and because he taken part in weekly "moment of silence" vigils on FAO grounds for those killed. Transcript and source links are available from The Blue Fern Co.</description>
+    <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-10-06.mp3" length="1363968" type="audio/mpeg" />
+  </item>
   <item>
     <title>Gaza Briefing for October 3, 2026</title>
     <link>https://dispatches.thebluefernco.com/gaza/audio/2026-10-03-transcript.html</link>
@@ -768,5 +776,5 @@
     <description>Israeli forces kill Palestinian who allegedly carried out car-ramming attack in occupied West Bank. Suspected attacker shot dead at scene, Israeli media reports. Transcript and source links are available from The Blue Fern Co.</description>
     <enclosure url="https://dispatches.thebluefernco.com/gaza/audio/2026-05-31.mp3" length="1780224" type="audio/mpeg" />
   </item>
-<item><title>Correction — October 5, 2026</title><link>https://dispatches.thebluefernco.com/gaza/corrections/gaza-correction-v1-f41fb90fc692a7f19395/</link><guid isPermaLink="false">gaza-correction-v1-f41fb90fc692a7f19395</guid><description>Correction — October 5, 2026. The October 3 Gaza dispatch previously included a story citing Al Jazeera: Israeli forces detain and assault journalists in Jabal Qamass area in Beita, south of Nablus. The item was outside the Gaza scope and has been withdrawn from the edition. The correction preserves the original public evidence and removes the story from corrected reader-facing derivatives.</description><enclosure url="https://dispatches.thebluefernco.com/gaza/audio/corrections/gaza-correction-v1-f41fb90fc692a7f19395.mp3" type="audio/mpeg" length="172042" /></item></channel>
+</channel>
 </rss>

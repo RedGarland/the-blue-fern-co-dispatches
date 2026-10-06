@@ -1,0 +1,48 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "care-line",
+  "watch_name": "Care Line Watch",
+  "run_id": "care-line-watch-20261005T214103-0700-r11",
+  "scheduled_for": "2026-10-05T21:45:22-07:00",
+  "started_at": "2026-10-05T21:41:03-07:00",
+  "completed_at": "2026-10-05T21:44:30-07:00",
+  "status": "SUCCESS",
+  "outcome": "no_findings",
+  "search_window": {
+    "start": "2026-10-05T20:45:22-07:00",
+    "end": "2026-10-05T21:41:03-07:00",
+    "timezone": "America/Los_Angeles",
+    "basis": "since prior hourly check"
+  },
+  "findings": [],
+  "coverage_notes": {
+    "cms_public_notices_checked_first": true,
+    "cms_public_notices_url": "https://www.cms.gov/medicare/health-safety-standards/certification-compliance/public-notices",
+    "cms_current_items_reviewed": [
+      {
+        "date": "2026-10-05",
+        "provider": "Compassionate Care Angels LLC",
+        "action": "Rescission of Termination Notice",
+        "state": "TX",
+        "disposition": "duplicate_of_prior_watch"
+      },
+      {
+        "date": "2026-10-05",
+        "provider": "O.M.K Healthcare Services LLC",
+        "action": "Rescission of Termination Notice",
+        "state": "TX",
+        "disposition": "duplicate_of_prior_watch"
+      }
+    ],
+    "additional_targeted_searches": 12,
+    "search_failures": 0,
+    "qualifying_new_findings": 0,
+    "exclusions_summary": [
+      "Bradford Regional Medical Center reporting published 2026-10-05 describes service loss effective 2026-05-17, outside the new-event window.",
+      "Roseland Hospital maternity reporting predates this hourly window and therefore is not a new development for this run.",
+      "Nantucket air-ambulance reporting concerns an aircraft crash/search suspension, not closure or suspension of a U.S. air-medical service or base.",
+      "Other returned items were non-U.S., proposals/policy stories without concrete service change, or unrelated."
+    ],
+    "authority_note": "Supplementary recall watch only; production Care Line collection remains authoritative."
+  }
+}

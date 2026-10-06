@@ -2370,9 +2370,14 @@ def _is_status_path(path: str) -> bool:
     return normalized == "ops/status" or normalized.startswith("ops/status/")
 
 
+def _git_args(status_checkout: Path, *args: str) -> list[str]:
+    safe_directory = status_checkout.resolve().as_posix()
+    return ["git", "-c", f"safe.directory={safe_directory}", *args]
+
+
 def git_status_paths(status_checkout: Path) -> list[str]:
     result = subprocess.run(
-        ["git", "status", "--porcelain=v1", "--untracked-files=all"],
+        _git_args(status_checkout, "status", "--porcelain=v1", "--untracked-files=all"),
         cwd=status_checkout,
         capture_output=True,
         text=True,
@@ -2389,7 +2394,7 @@ def git_status_paths(status_checkout: Path) -> list[str]:
 
 def classify_status_checkout_state(status_checkout: Path) -> StatusCheckoutGitState:
     result = subprocess.run(
-        ["git", "status", "--porcelain=v1", "--untracked-files=all"],
+        _git_args(status_checkout, "status", "--porcelain=v1", "--untracked-files=all"),
         cwd=status_checkout,
         capture_output=True,
         text=True,
@@ -2398,7 +2403,7 @@ def classify_status_checkout_state(status_checkout: Path) -> StatusCheckoutGitSt
     if result.returncode:
         raise ExportError(result.stderr.strip() or "cannot inspect status checkout")
     ignored_status = subprocess.run(
-        ["git", "status", "--porcelain=v1", "--untracked-files=all", "--ignored=matching", "--", "ops/status"],
+        _git_args(status_checkout, "status", "--porcelain=v1", "--untracked-files=all", "--ignored=matching", "--", "ops/status"),
         cwd=status_checkout,
         capture_output=True,
         text=True,
@@ -2449,7 +2454,7 @@ def classify_status_checkout_state(status_checkout: Path) -> StatusCheckoutGitSt
 
 def _git(status_checkout: Path, *args: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
-        ["git", *args],
+        _git_args(status_checkout, *args),
         cwd=status_checkout,
         capture_output=True,
         text=True,

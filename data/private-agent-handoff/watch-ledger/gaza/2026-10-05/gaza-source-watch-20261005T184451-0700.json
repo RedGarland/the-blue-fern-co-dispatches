@@ -1,0 +1,18 @@
+{
+  "schema_version": "bluefern.watch_run.v1",
+  "dispatch": "gaza",
+  "watch_name": "Gaza Source Watch",
+  "run_id": "gaza-source-watch-20261005T184451-0700",
+  "scheduled_for": "2026-10-05T18:44:51-07:00",
+  "started_at": "2026-10-05T18:44:43-07:00",
+  "completed_at": "2026-10-05T18:45:31-07:00",
+  "status": "DEGRADED",
+  "outcome": "no_findings",
+  "search_window": {
+    "timezone": "America/Los_Angeles",
+    "start": "2026-10-05T17:45:31-07:00",
+    "end": "2026-10-05T18:45:31-07:00"
+  },
+  "findings": [],
+  "coverage_notes": "OCHA OPT checked first; its latest surfaced Gaza humanitarian situation report was the 5 October publication titled Humanitarian Situation Report | 2 October 2026, already known from the prior watch and primarily covering 21-27 September. WHO checked second; no new in-window Gaza/oPt operational update surfaced. Exactly 12 additional targeted searches were completed across Reuters, AP, UNRWA, WFP, UNICEF, ICRC, Palestine Red Crescent, WAFA, Al Jazeera, BBC, MSF, and ReliefWeb. BBC was blocked by robots.txt; useful coverage remained, so the run is DEGRADED. Reuters' 5 October item on previously freed hostages was retrospective survivor reporting and did not constitute a new hostage, ceasefire, casualty, access, or humanitarian-operations development. No new qualifying development was traceably established. Opinion, unsupported social claims, recycled items, duplicates, and unsourced claims were excluded. No publication, approval, schedule change, or task disablement occurred."
+}

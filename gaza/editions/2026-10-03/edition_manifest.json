@@ -1,77 +1,137 @@
 {
+  "actual_run_local_time": "2026-10-03T06:00:54-07:00",
+  "allow_post_edition_date_sources": false,
+  "contains_later_same_day_update": false,
+  "contains_post_edition_date_update": false,
+  "corrections": [
+    {
+      "aggregates_recomputed_after_story_withdrawal": true,
+      "audio_impacted": true,
+      "correction_date": "2026-10-05",
+      "correction_id": "gaza-correction-v1-f41fb90fc692a7f19395",
+      "correction_type": "story_withdrawal",
+      "evidence_references": [
+        {
+          "role": "source_url",
+          "supporting_detail": "The source and public summary identify Beita, south of Nablus, in the occupied West Bank rather than Gaza.",
+          "url": "https://www.aljazeera.com/news/2026/10/3/israeli-settlers-attack-palestinian-olive-pickers-in-the-west-bank?traffic_source=rss"
+        },
+        {
+          "path": "gaza/editions/2026-10-03/index.html",
+          "role": "edition_html",
+          "supporting_detail": "The October 3 Gaza edition renders the target title and the Beita/Nablus prior claim as a public story."
+        },
+        {
+          "path": "gaza/editions/2026-10-03/curation_manifest.json",
+          "role": "curation_manifest",
+          "supporting_detail": "The curation manifest includes gaza-story-2026-10-03-003 with the target title and Beita/Nablus summary."
+        },
+        {
+          "path": "gaza/audio/2026-10-03.json",
+          "role": "audio_metadata",
+          "supporting_detail": "The dated audio metadata includes the target title and Beita/Nablus prior claim in the script."
+        },
+        {
+          "path": "gaza/flash-briefing.json",
+          "role": "flash_briefing",
+          "supporting_detail": "The current flash briefing mainText includes the same target title and Beita/Nablus prior claim."
+        }
+      ],
+      "owning_edition_date": "2026-10-03",
+      "prior_claim": "Israeli forces detain and assault journalists in Jabal Qamass area in Beita, south of Nablus.",
+      "prior_claim_fingerprint": "topic_fingerprint_v1:0e2c1ef92ce4dc29",
+      "public_artifact_bindings": {
+        "audio_metadata_sha256": "e6aed6fbff6d04c8590b1e11ab7d4ed41263c8f7b5ba0c3c8404ddbc5c16cfd2",
+        "audio_podcast_sha256": "68eeeb46834656e1252b0160881b266b7e72396c7247214f46ea25c0c4f6691e",
+        "audio_transcript_sha256": "4cc9b9ba5de8514fb0d812e677e5566b4579f6f79d1ea64dd870f1e91bbf60e8",
+        "curation_manifest_sha256": "adde0f305a13979d848e0c8c0d3c30b7d0148ab0a1d908e761ca5be5dc147678",
+        "dedupe_report_sha256": "020e507bc32509634398f2675869841af3b3ed5b173eef6cd81c57da26ff26d5",
+        "edition_html_sha256": "7517cf67131928d553c04ac29efa8faceb7da8e7e4e033668fa57e2192409547",
+        "edition_manifest_sha256": "c840b640eee2da1e6905058978b0133128a86b4dca59ec9ac9d20a78575f2fee",
+        "flash_briefing_sha256": "d624dd7401777cac97e646225d7c464e931ee4e4cc39267b07dbd5351d0501d4",
+        "gaza_archive_sha256": "ed804c1e817d420b5185da00f36879d64c3d14ea06b7fc0514d84c8478f68572",
+        "gaza_index_sha256": "e708e4a167fe2895631d359ced9f19f620732ed9b75fecbfc8441fe4f45f3310",
+        "pages_head": "be649b38d070bef1e0f8d44d486483bf725fe624",
+        "podcast_sha256": "68eeeb46834656e1252b0160881b266b7e72396c7247214f46ea25c0c4f6691e",
+        "rss_sha256": "6bcf88e8f50b5bd2a7d22aaa855079de4f236ab223eb795d3155b6c1bc8d045d",
+        "sources_manifest_sha256": "9cb62ccccebd10610f24446427b420e46418983302f5721b42d0712639152292"
+      },
+      "source_attribution": "Al Jazeera",
+      "story_id": "gaza-story-2026-10-03-003",
+      "target_identity_fingerprint": "sha256:6fc0440fc96e4b5155696301317f798748d4027fbe19e977a7c259dcc1e715ef",
+      "withdrawal_fingerprint": "sha256:913e73457d0a021f4a37e0ea2e8379756a6360f1b73d0f06135e9283c349ba28",
+      "withdrawal_reason": "The story concerns a West Bank-only Beita/Nablus settler and soldier incident and does not materially concern Gaza; it was incorrectly included in the October 3, 2026 Gaza edition and should be withdrawn from that edition and affected derivative artifacts."
+    }
+  ],
+  "curation_manifest_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-10-03\\curation_manifest.json",
+  "detail_artifacts_publicly_exposed": false,
   "dispatch_name": "Dispatches From Gaza",
   "dispatch_slug": "gaza",
   "edition_date": "2026-10-03",
-  "generated_at": "2026-10-03T13:00:54.948684+00:00",
-  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-10-03/",
-  "local_output_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-10-03",
-  "local_dispatch_output_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\dispatches\\gaza\\editions\\2026-10-03",
-  "local_backup_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\tmp-backups-pages\\gaza\\2026-10-03",
-  "template_version": "gaza-source-record-v1",
-  "source_count": 5,
-  "story_count": 4,
-  "source_adequacy_status": "limited_source_update",
-  "source_adequacy_label": "Limited-source update",
-  "publisher_count": 3,
-  "publishers": [
-    "Al Jazeera",
-    "The Guardian",
-    "WHO"
-  ],
-  "source_adequacy_warnings": [
-    "This is a limited-source update generated from 5 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing."
-  ],
-  "allow_post_edition_date_sources": false,
-  "post_edition_date_sources_included": false,
-  "post_edition_date_source_count": 0,
-  "source_manifest_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-10-03\\sources_manifest.json",
-  "curation_manifest_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-10-03\\curation_manifest.json",
+  "errors": [],
+  "first_source_retrieved_at": "2026-10-03T13:00:43.923849Z",
   "free_public_artifacts": [
     "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-10-03\\index.html",
     "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-10-03\\edition_manifest.json",
     "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-10-03\\sources_manifest.json",
     "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-10-03\\curation_manifest.json"
   ],
-  "paid_or_detail_artifacts": [],
-  "detail_artifacts_publicly_exposed": false,
-  "is_free_public": true,
+  "generated_at": "2026-10-03T13:00:54.948684+00:00",
   "has_detail_tier": false,
-  "public_exposed": true,
-  "warnings": [
-    "This is a limited-source update generated from 5 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.",
-    "manual supplement recommended: add source-backed records at C:\\BlueFernRunner\\GazaDispatchesCurrent6\\data\\dispatches\\gaza\\sources\\2026-10-03\\manual_sources.template.json",
-    "source diversity warning: rendered_story_count>=4_with_low_unique_rendered_publishers(<3), single_publisher_supplies_more_than_60_percent_of_rendered_stories"
-  ],
-  "errors": [],
-  "scheduled_run_local_time": "2026-10-03T06:00:00-07:00",
-  "actual_run_local_time": "2026-10-03T06:00:54-07:00",
-  "source_window_start_utc": "2026-10-01T09:27:40Z",
-  "source_window_end_utc": "2026-10-03T12:18:24Z",
-  "first_source_retrieved_at": "2026-10-03T13:00:43.923849Z",
+  "is_free_public": true,
   "last_source_retrieved_at": "2026-10-03T13:00:43.923849Z",
-  "contains_later_same_day_update": false,
-  "later_same_day_update_count": 0,
   "later_same_day_update_batch_count": 0,
+  "later_same_day_update_count": 0,
   "later_same_day_update_source_count": 0,
-  "contains_post_edition_date_update": false,
-  "post_edition_date_update_count": 0,
-  "post_edition_date_update_batch_count": 0,
-  "post_edition_date_update_source_count": 0,
+  "local_backup_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\tmp-backups-pages\\gaza\\2026-10-03",
+  "local_dispatch_output_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\dispatches\\gaza\\editions\\2026-10-03",
+  "local_output_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-10-03",
+  "paid_or_detail_artifacts": [],
   "post_edition_date_retrieval_batches": [],
+  "post_edition_date_source_count": 0,
+  "post_edition_date_sources_included": false,
+  "post_edition_date_update_batch_count": 0,
+  "post_edition_date_update_count": 0,
+  "post_edition_date_update_source_count": 0,
+  "public_exposed": true,
+  "public_url": "https://dispatches.thebluefernco.com/gaza/editions/2026-10-03/",
+  "publisher_count": 3,
+  "publishers": [
+    "Al Jazeera",
+    "The Guardian",
+    "WHO"
+  ],
   "retrieval_batches": [
     {
+      "batch_classification": "scheduled_or_pre_scheduled_batch",
       "retrieved_at": "2026-10-03T13:00:43.923849Z",
       "retrieved_at_local": "2026-10-03T06:00:43-07:00",
       "retrieved_local_date": "2026-10-03",
-      "batch_classification": "scheduled_or_pre_scheduled_batch",
+      "source_count": 5,
       "source_record_ids": [
         "gaza-2026-10-03-who-gaza-evacuation-query-6171f85463f6",
         "gaza-2026-10-03-guardian-world-ba350ffd5f5f",
         "gaza-2026-10-03-aljazeera-middle-east-f852a83a4a45",
         "gaza-2026-10-03-aljazeera-middle-east-506ad88b5658",
         "gaza-2026-10-03-aljazeera-middle-east-52912abb93a5"
-      ],
-      "source_count": 5
+      ]
     }
+  ],
+  "scheduled_run_local_time": "2026-10-03T06:00:00-07:00",
+  "source_adequacy_label": "Limited-source update",
+  "source_adequacy_status": "limited_source_update",
+  "source_adequacy_warnings": [
+    "This is a limited-source update generated from 5 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing."
+  ],
+  "source_count": 4,
+  "source_manifest_path": "C:\\BlueFernRunner\\GazaDispatchesCurrent6\\output\\site\\gaza\\editions\\2026-10-03\\sources_manifest.json",
+  "source_window_end_utc": "2026-10-03T12:18:24Z",
+  "source_window_start_utc": "2026-10-01T09:27:40Z",
+  "story_count": 3,
+  "template_version": "gaza-source-record-v1",
+  "warnings": [
+    "This is a limited-source update generated from 5 saved source records from 3 publishers. It should be read as a partial update, not a full daily briefing.",
+    "manual supplement recommended: add source-backed records at C:\\BlueFernRunner\\GazaDispatchesCurrent6\\data\\dispatches\\gaza\\sources\\2026-10-03\\manual_sources.template.json",
+    "source diversity warning: rendered_story_count>=4_with_low_unique_rendered_publishers(<3), single_publisher_supplies_more_than_60_percent_of_rendered_stories"
   ]
 }

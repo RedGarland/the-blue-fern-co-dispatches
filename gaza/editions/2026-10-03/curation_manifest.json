@@ -1,249 +1,202 @@
 [
   {
-    "story_id": "gaza-story-2026-10-03-004",
-    "title": "Palestinians gather for football amid Gaza's ruins",
-    "summary": "Displaced Palestinians gathered to watch a friendly football match in Gaza's Khan Younis.",
+    "affected_system": "conflict",
+    "attribution": "Al Jazeera",
+    "attribution_mode": "reported_public_source",
+    "candidate_score_breakdown": {
+      "accountability_legal": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "date_confidence": 18,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "humanitarian_impact": 0,
+      "source_reliability": 14
+    },
+    "casualty_counts": {},
     "category": "conflict",
-    "story_scope": "core_gaza",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "dedupe_classification": "new",
+    "dedupe_reasons": [],
+    "development_type": "primary_report",
+    "event_date": "2026-10-03T11:08:17+00:00",
+    "flotilla_only": false,
+    "generated_at": "2026-10-03T13:00:54.948684+00:00",
+    "include_decision": "include",
+    "included_in_detail_dataset": false,
+    "included_in_public_summary": true,
+    "location": "Gaza",
+    "prior_edition_date": null,
+    "prior_story_matched": null,
+    "public_rendered": true,
+    "publisher_names": [
+      "Al Jazeera"
+    ],
+    "relevance_terms_matched": [
+      "gaza",
+      "khan younis",
+      "palestin"
+    ],
     "score": 64,
     "scoring_reasons": [
       "displacement",
       "source_reliability",
       "date_confidence"
     ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 8,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
+    "source_ids": [
+      "gaza-2026-10-03-aljazeera-middle-east-506ad88b5658"
+    ],
     "source_record_ids": [
       "gaza-2026-10-03-aljazeera-middle-east-506ad88b5658"
     ],
-    "source_ids": [
-      "gaza-2026-10-03-aljazeera-middle-east-506ad88b5658"
+    "source_records": [
+      {
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "casualty_counts": {},
+        "development_type": "primary_report",
+        "event_date": "2026-10-03T11:08:17+00:00",
+        "location": "Gaza",
+        "publisher": "Al Jazeera",
+        "source_record_id": "gaza-2026-10-03-aljazeera-middle-east-506ad88b5658",
+        "summary_or_snippet": "Displaced Palestinians gathered to watch a friendly football match in Gaza's Khan Younis.",
+        "title": "Palestinians gather for football amid Gaza's ruins",
+        "uncertainty": "reported source",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/10/3/palestinians-gather-for-football-amid-gazas-ruins?traffic_source=rss"
+      }
     ],
     "source_urls": [
       "https://www.aljazeera.com/video/newsfeed/2026/10/3/palestinians-gather-for-football-amid-gazas-ruins?traffic_source=rss"
     ],
-    "publisher_names": [
-      "Al Jazeera"
-    ],
-    "source_records": [
-      {
-        "source_record_id": "gaza-2026-10-03-aljazeera-middle-east-506ad88b5658",
-        "title": "Palestinians gather for football amid Gaza's ruins",
-        "url": "https://www.aljazeera.com/video/newsfeed/2026/10/3/palestinians-gather-for-football-amid-gazas-ruins?traffic_source=rss",
-        "publisher": "Al Jazeera",
-        "summary_or_snippet": "Displaced Palestinians gathered to watch a friendly football match in Gaza's Khan Younis.",
-        "event_date": "2026-10-03T11:08:17+00:00",
-        "location": "Gaza",
-        "development_type": "primary_report",
-        "affected_system": "conflict",
-        "attribution": "Al Jazeera",
-        "uncertainty": "reported source",
-        "casualty_counts": {}
-      }
-    ],
-    "generated_at": "2026-10-03T13:00:54.948684+00:00",
-    "relevance_terms_matched": [
-      "gaza",
-      "khan younis",
-      "palestin"
-    ],
-    "top_story_relevance_score": 64,
+    "story_id": "gaza-story-2026-10-03-004",
+    "story_scope": "core_gaza",
     "substantive_ground": true,
-    "flotilla_only": false,
-    "attribution_mode": "reported_public_source",
-    "claim_status": "reported_public_source",
-    "context_only": false,
-    "core_ground_development": true,
-    "development_type": "primary_report",
-    "affected_system": "conflict",
-    "location": "Gaza",
-    "event_date": "2026-10-03T11:08:17+00:00",
-    "attribution": "Al Jazeera",
-    "uncertainty": "reported source",
-    "casualty_counts": {},
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
-    "dedupe_reasons": []
+    "summary": "Displaced Palestinians gathered to watch a friendly football match in Gaza's Khan Younis.",
+    "title": "Palestinians gather for football amid Gaza's ruins",
+    "top_story_relevance_score": 64,
+    "uncertainty": "reported source"
   },
   {
-    "story_id": "gaza-story-2026-10-03-003",
-    "title": "Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters",
-    "summary": "Israeli forces detain and assault journalists in Jabal Qamass area in Beita, south of Nablus.",
-    "category": "palestinian_development",
-    "story_scope": "palestinian_development",
-    "score": 62,
-    "scoring_reasons": [
-      "civilian_harm",
-      "source_reliability",
-      "date_confidence"
-    ],
+    "affected_system": "conflict",
+    "attribution": "Al Jazeera",
+    "attribution_mode": "reported_public_source",
     "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
+      "accountability_legal": 0,
       "aid_access": 0,
       "ceasefire_diplomacy": 0,
       "civilian_harm": 12,
+      "date_confidence": 18,
       "displacement": 0,
       "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
+      "humanitarian_impact": 0,
+      "source_reliability": 14
     },
-    "included_in_public_summary": true,
+    "casualty_counts": {},
+    "category": "conflict",
+    "claim_status": "reported_public_source",
+    "context_only": false,
+    "core_ground_development": true,
+    "dedupe_classification": "major_update",
+    "dedupe_reasons": [],
+    "development_type": "primary_report",
+    "event_date": "2026-10-03T07:57:47+00:00",
+    "flotilla_only": false,
+    "generated_at": "2026-10-03T13:00:54.948684+00:00",
+    "include_decision": "include",
     "included_in_detail_dataset": false,
-    "source_record_ids": [
-      "gaza-2026-10-03-aljazeera-middle-east-f852a83a4a45"
-    ],
-    "source_ids": [
-      "gaza-2026-10-03-aljazeera-middle-east-f852a83a4a45"
-    ],
-    "source_urls": [
-      "https://www.aljazeera.com/news/2026/10/3/israeli-settlers-attack-palestinian-olive-pickers-in-the-west-bank?traffic_source=rss"
-    ],
+    "included_in_public_summary": true,
+    "location": "Gaza",
+    "prior_edition_date": "2026-09-30",
+    "prior_story_matched": "gaza-story-2026-09-30-005",
+    "public_rendered": true,
     "publisher_names": [
       "Al Jazeera"
     ],
-    "source_records": [
-      {
-        "source_record_id": "gaza-2026-10-03-aljazeera-middle-east-f852a83a4a45",
-        "title": "Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters",
-        "url": "https://www.aljazeera.com/news/2026/10/3/israeli-settlers-attack-palestinian-olive-pickers-in-the-west-bank?traffic_source=rss",
-        "publisher": "Al Jazeera",
-        "summary_or_snippet": "Israeli forces detain and assault journalists in Jabal Qamass area in Beita, south of Nablus.",
-        "event_date": "2026-10-03T12:18:24+00:00",
-        "location": "Gaza",
-        "development_type": "primary_report",
-        "affected_system": "conflict",
-        "attribution": "Al Jazeera",
-        "uncertainty": "reported source",
-        "casualty_counts": {}
-      }
-    ],
-    "generated_at": "2026-10-03T13:00:54.948684+00:00",
     "relevance_terms_matched": [
       "gaza",
-      "palestin",
-      "west bank"
+      "palestin"
     ],
-    "top_story_relevance_score": 62,
-    "substantive_ground": false,
-    "flotilla_only": false,
-    "attribution_mode": "reported_public_source",
-    "claim_status": "reported_public_source",
-    "context_only": false,
-    "core_ground_development": false,
-    "development_type": "primary_report",
-    "affected_system": "conflict",
-    "location": "Gaza",
-    "event_date": "2026-10-03T12:18:24+00:00",
-    "attribution": "Al Jazeera",
-    "uncertainty": "reported source",
-    "casualty_counts": {},
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-09-02-009",
-    "prior_edition_date": "2026-09-02",
-    "dedupe_classification": "major_update",
-    "dedupe_reasons": []
-  },
-  {
-    "story_id": "gaza-story-2026-10-03-005",
-    "title": "Israeli air attack on residential apartment in Gaza kills 5 Palestinians",
-    "summary": "An Israeli air attack on a residential apartment in Gaza City has killed at least five Palestinians.",
-    "category": "conflict",
-    "story_scope": "core_gaza",
     "score": 59,
     "scoring_reasons": [
       "civilian_harm",
       "source_reliability",
       "date_confidence"
     ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 0,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 12,
-      "displacement": 0,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 14,
-      "date_confidence": 18
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
+    "source_ids": [
+      "gaza-2026-10-03-aljazeera-middle-east-52912abb93a5"
+    ],
     "source_record_ids": [
       "gaza-2026-10-03-aljazeera-middle-east-52912abb93a5"
     ],
-    "source_ids": [
-      "gaza-2026-10-03-aljazeera-middle-east-52912abb93a5"
+    "source_records": [
+      {
+        "affected_system": "conflict",
+        "attribution": "Al Jazeera",
+        "casualty_counts": {},
+        "development_type": "primary_report",
+        "event_date": "2026-10-03T07:57:47+00:00",
+        "location": "Gaza",
+        "publisher": "Al Jazeera",
+        "source_record_id": "gaza-2026-10-03-aljazeera-middle-east-52912abb93a5",
+        "summary_or_snippet": "An Israeli air attack on a residential apartment in Gaza City has killed at least five Palestinians.",
+        "title": "Israeli air attack on residential apartment in Gaza kills 5 Palestinians",
+        "uncertainty": "reported source",
+        "url": "https://www.aljazeera.com/video/newsfeed/2026/10/3/israeli-air-attack-on-residential-apartment-in-gaza-kills-5-palestinians?traffic_source=rss"
+      }
     ],
     "source_urls": [
       "https://www.aljazeera.com/video/newsfeed/2026/10/3/israeli-air-attack-on-residential-apartment-in-gaza-kills-5-palestinians?traffic_source=rss"
     ],
-    "publisher_names": [
-      "Al Jazeera"
-    ],
-    "source_records": [
-      {
-        "source_record_id": "gaza-2026-10-03-aljazeera-middle-east-52912abb93a5",
-        "title": "Israeli air attack on residential apartment in Gaza kills 5 Palestinians",
-        "url": "https://www.aljazeera.com/video/newsfeed/2026/10/3/israeli-air-attack-on-residential-apartment-in-gaza-kills-5-palestinians?traffic_source=rss",
-        "publisher": "Al Jazeera",
-        "summary_or_snippet": "An Israeli air attack on a residential apartment in Gaza City has killed at least five Palestinians.",
-        "event_date": "2026-10-03T07:57:47+00:00",
-        "location": "Gaza",
-        "development_type": "primary_report",
-        "affected_system": "conflict",
-        "attribution": "Al Jazeera",
-        "uncertainty": "reported source",
-        "casualty_counts": {}
-      }
-    ],
-    "generated_at": "2026-10-03T13:00:54.948684+00:00",
-    "relevance_terms_matched": [
-      "gaza",
-      "palestin"
-    ],
-    "top_story_relevance_score": 59,
+    "story_id": "gaza-story-2026-10-03-005",
+    "story_scope": "core_gaza",
     "substantive_ground": true,
-    "flotilla_only": false,
-    "attribution_mode": "reported_public_source",
-    "claim_status": "reported_public_source",
-    "context_only": false,
-    "core_ground_development": true,
-    "development_type": "primary_report",
-    "affected_system": "conflict",
-    "location": "Gaza",
-    "event_date": "2026-10-03T07:57:47+00:00",
-    "attribution": "Al Jazeera",
-    "uncertainty": "reported source",
-    "casualty_counts": {},
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": "gaza-story-2026-09-30-005",
-    "prior_edition_date": "2026-09-30",
-    "dedupe_classification": "major_update",
-    "dedupe_reasons": []
+    "summary": "An Israeli air attack on a residential apartment in Gaza City has killed at least five Palestinians.",
+    "title": "Israeli air attack on residential apartment in Gaza kills 5 Palestinians",
+    "top_story_relevance_score": 59,
+    "uncertainty": "reported source"
   },
   {
-    "story_id": "gaza-story-2026-10-03-001",
-    "title": "MEDICAL EVACUATION OF PATIENTS FROM GAZA 2806 (27%) 11 363 5646 10 382 3386 - emro.who.int",
-    "summary": "MEDICAL EVACUATION OF PATIENTS FROM GAZA 2806 (27%) 11 363 5646 10 382 3386 emro.who.int.",
+    "affected_system": "health",
+    "attribution": "WHO",
+    "attribution_mode": "official_humanitarian",
+    "candidate_score_breakdown": {
+      "accountability_legal": 0,
+      "aid_access": 0,
+      "ceasefire_diplomacy": 0,
+      "civilian_harm": 0,
+      "date_confidence": 10,
+      "displacement": 8,
+      "health_infrastructure": 0,
+      "humanitarian_impact": 12,
+      "source_reliability": 20
+    },
+    "casualty_counts": {},
     "category": "health",
-    "story_scope": "core_gaza",
+    "claim_status": "official_humanitarian",
+    "context_only": false,
+    "core_ground_development": true,
+    "dedupe_classification": "new",
+    "dedupe_reasons": [],
+    "development_type": "primary_report",
+    "event_date": "2026-10-01T09:27:40+00:00",
+    "flotilla_only": false,
+    "generated_at": "2026-10-03T13:00:54.948684+00:00",
+    "include_decision": "include",
+    "included_in_detail_dataset": false,
+    "included_in_public_summary": true,
+    "location": "Gaza",
+    "prior_edition_date": null,
+    "prior_story_matched": null,
+    "public_rendered": true,
+    "publisher_names": [
+      "WHO"
+    ],
+    "relevance_terms_matched": [
+      "gaza"
+    ],
     "score": 49,
     "scoring_reasons": [
       "humanitarian_impact",
@@ -251,70 +204,37 @@
       "source_reliability",
       "date_confidence"
     ],
-    "candidate_score_breakdown": {
-      "humanitarian_impact": 12,
-      "aid_access": 0,
-      "ceasefire_diplomacy": 0,
-      "civilian_harm": 0,
-      "displacement": 8,
-      "health_infrastructure": 0,
-      "accountability_legal": 0,
-      "source_reliability": 20,
-      "date_confidence": 10
-    },
-    "included_in_public_summary": true,
-    "included_in_detail_dataset": false,
+    "source_ids": [
+      "gaza-2026-10-03-who-gaza-evacuation-query-6171f85463f6"
+    ],
     "source_record_ids": [
       "gaza-2026-10-03-who-gaza-evacuation-query-6171f85463f6"
     ],
-    "source_ids": [
-      "gaza-2026-10-03-who-gaza-evacuation-query-6171f85463f6"
+    "source_records": [
+      {
+        "affected_system": "health",
+        "attribution": "WHO",
+        "casualty_counts": {},
+        "development_type": "primary_report",
+        "event_date": "2026-10-01T09:27:40+00:00",
+        "location": "Gaza",
+        "publisher": "WHO",
+        "source_record_id": "gaza-2026-10-03-who-gaza-evacuation-query-6171f85463f6",
+        "summary_or_snippet": "MEDICAL EVACUATION OF PATIENTS FROM GAZA 2806 (27%) 11 363 5646 10 382 3386 emro.who.int",
+        "title": "MEDICAL EVACUATION OF PATIENTS FROM GAZA 2806 (27%) 11 363 5646 10 382 3386 - emro.who.int",
+        "uncertainty": "reported source",
+        "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTFBXZXQ4YmVDaVhmMVhqdzJIMTB1cXNXYWwtQlF6SFBKajBWQ3hWUjBQYkpGQWZWMWNoOENKbTRmSldrR2dKalFHTGw4QzFxUUxqdUZjLWFfWS1lLVhyX1VZX19ZM2FGdVVQUDU2MlJmQUtDdWxYU1NsVGlB?oc=5"
+      }
     ],
     "source_urls": [
       "https://news.google.com/rss/articles/CBMiekFVX3lxTFBXZXQ4YmVDaVhmMVhqdzJIMTB1cXNXYWwtQlF6SFBKajBWQ3hWUjBQYkpGQWZWMWNoOENKbTRmSldrR2dKalFHTGw4QzFxUUxqdUZjLWFfWS1lLVhyX1VZX19ZM2FGdVVQUDU2MlJmQUtDdWxYU1NsVGlB?oc=5"
     ],
-    "publisher_names": [
-      "WHO"
-    ],
-    "source_records": [
-      {
-        "source_record_id": "gaza-2026-10-03-who-gaza-evacuation-query-6171f85463f6",
-        "title": "MEDICAL EVACUATION OF PATIENTS FROM GAZA 2806 (27%) 11 363 5646 10 382 3386 - emro.who.int",
-        "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTFBXZXQ4YmVDaVhmMVhqdzJIMTB1cXNXYWwtQlF6SFBKajBWQ3hWUjBQYkpGQWZWMWNoOENKbTRmSldrR2dKalFHTGw4QzFxUUxqdUZjLWFfWS1lLVhyX1VZX19ZM2FGdVVQUDU2MlJmQUtDdWxYU1NsVGlB?oc=5",
-        "publisher": "WHO",
-        "summary_or_snippet": "MEDICAL EVACUATION OF PATIENTS FROM GAZA 2806 (27%) 11 363 5646 10 382 3386 emro.who.int",
-        "event_date": "2026-10-01T09:27:40+00:00",
-        "location": "Gaza",
-        "development_type": "primary_report",
-        "affected_system": "health",
-        "attribution": "WHO",
-        "uncertainty": "reported source",
-        "casualty_counts": {}
-      }
-    ],
-    "generated_at": "2026-10-03T13:00:54.948684+00:00",
-    "relevance_terms_matched": [
-      "gaza"
-    ],
-    "top_story_relevance_score": 49,
+    "story_id": "gaza-story-2026-10-03-001",
+    "story_scope": "core_gaza",
     "substantive_ground": true,
-    "flotilla_only": false,
-    "attribution_mode": "official_humanitarian",
-    "claim_status": "official_humanitarian",
-    "context_only": false,
-    "core_ground_development": true,
-    "development_type": "primary_report",
-    "affected_system": "health",
-    "location": "Gaza",
-    "event_date": "2026-10-01T09:27:40+00:00",
-    "attribution": "WHO",
-    "uncertainty": "reported source",
-    "casualty_counts": {},
-    "include_decision": "include",
-    "public_rendered": true,
-    "prior_story_matched": null,
-    "prior_edition_date": null,
-    "dedupe_classification": "new",
-    "dedupe_reasons": []
+    "summary": "MEDICAL EVACUATION OF PATIENTS FROM GAZA 2806 (27%) 11 363 5646 10 382 3386 emro.who.int.",
+    "title": "MEDICAL EVACUATION OF PATIENTS FROM GAZA 2806 (27%) 11 363 5646 10 382 3386 - emro.who.int",
+    "top_story_relevance_score": 49,
+    "uncertainty": "reported source"
   }
 ]

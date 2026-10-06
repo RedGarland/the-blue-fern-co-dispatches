@@ -1,0 +1,15 @@
+{
+  "audio_status": "formal_correction",
+  "correction_date": "2026-10-05",
+  "correction_id": "gaza-correction-v1-f41fb90fc692a7f19395",
+  "owning_edition_date": "2026-10-03",
+  "render_status": "rendered_for_private_review",
+  "rendered_audio_sha256": "62b094725cb33e58ea2e1de9501f770041cd9473c4af4c4ee41c78ea3ce5bd81",
+  "script_sha256": "sha256:5c5237228d5d070b712f181130cadc3e3bda58b551867e57c9602aa912687da6",
+  "script_text": "A correction to our October 3 Gaza dispatch: a story citing Al Jazeera described a West Bank event outside the Gaza scope. It has been withdrawn from the Gaza edition.",
+  "story_id": "gaza-story-2026-10-03-003",
+  "tts_model": "gpt-4o-mini-tts",
+  "tts_provider": "openai",
+  "tts_voice": "alloy",
+  "withdrawal": true
+}

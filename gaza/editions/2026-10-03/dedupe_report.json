@@ -1,139 +1,118 @@
 {
-  "dispatch_slug": "gaza",
-  "edition_date": "2026-10-03",
   "candidates_seen": 4,
-  "included_stories": [
+  "continuing_developments": [],
+  "corrections": [
     {
-      "story_id": "gaza-story-2026-10-03-004",
-      "title": "Palestinians gather for football amid Gaza's ruins",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
+      "audio_impacted": true,
+      "correction_date": "2026-10-05",
+      "correction_id": "gaza-correction-v1-f41fb90fc692a7f19395",
+      "correction_type": "story_withdrawal",
+      "evidence_references": [
+        {
+          "role": "source_url",
+          "supporting_detail": "The source and public summary identify Beita, south of Nablus, in the occupied West Bank rather than Gaza.",
+          "url": "https://www.aljazeera.com/news/2026/10/3/israeli-settlers-attack-palestinian-olive-pickers-in-the-west-bank?traffic_source=rss"
+        },
+        {
+          "path": "gaza/editions/2026-10-03/index.html",
+          "role": "edition_html",
+          "supporting_detail": "The October 3 Gaza edition renders the target title and the Beita/Nablus prior claim as a public story."
+        },
+        {
+          "path": "gaza/editions/2026-10-03/curation_manifest.json",
+          "role": "curation_manifest",
+          "supporting_detail": "The curation manifest includes gaza-story-2026-10-03-003 with the target title and Beita/Nablus summary."
+        },
+        {
+          "path": "gaza/audio/2026-10-03.json",
+          "role": "audio_metadata",
+          "supporting_detail": "The dated audio metadata includes the target title and Beita/Nablus prior claim in the script."
+        },
+        {
+          "path": "gaza/flash-briefing.json",
+          "role": "flash_briefing",
+          "supporting_detail": "The current flash briefing mainText includes the same target title and Beita/Nablus prior claim."
+        }
       ],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
+      "owning_edition_date": "2026-10-03",
+      "prior_claim": "Israeli forces detain and assault journalists in Jabal Qamass area in Beita, south of Nablus.",
+      "prior_claim_fingerprint": "topic_fingerprint_v1:0e2c1ef92ce4dc29",
+      "public_artifact_bindings": {
+        "audio_metadata_sha256": "e6aed6fbff6d04c8590b1e11ab7d4ed41263c8f7b5ba0c3c8404ddbc5c16cfd2",
+        "audio_podcast_sha256": "68eeeb46834656e1252b0160881b266b7e72396c7247214f46ea25c0c4f6691e",
+        "audio_transcript_sha256": "4cc9b9ba5de8514fb0d812e677e5566b4579f6f79d1ea64dd870f1e91bbf60e8",
+        "curation_manifest_sha256": "adde0f305a13979d848e0c8c0d3c30b7d0148ab0a1d908e761ca5be5dc147678",
+        "dedupe_report_sha256": "020e507bc32509634398f2675869841af3b3ed5b173eef6cd81c57da26ff26d5",
+        "edition_html_sha256": "7517cf67131928d553c04ac29efa8faceb7da8e7e4e033668fa57e2192409547",
+        "edition_manifest_sha256": "c840b640eee2da1e6905058978b0133128a86b4dca59ec9ac9d20a78575f2fee",
+        "flash_briefing_sha256": "d624dd7401777cac97e646225d7c464e931ee4e4cc39267b07dbd5351d0501d4",
+        "gaza_archive_sha256": "ed804c1e817d420b5185da00f36879d64c3d14ea06b7fc0514d84c8478f68572",
+        "gaza_index_sha256": "e708e4a167fe2895631d359ced9f19f620732ed9b75fecbfc8441fe4f45f3310",
+        "pages_head": "be649b38d070bef1e0f8d44d486483bf725fe624",
+        "podcast_sha256": "68eeeb46834656e1252b0160881b266b7e72396c7247214f46ea25c0c4f6691e",
+        "rss_sha256": "6bcf88e8f50b5bd2a7d22aaa855079de4f236ab223eb795d3155b6c1bc8d045d",
+        "sources_manifest_sha256": "9cb62ccccebd10610f24446427b420e46418983302f5721b42d0712639152292"
+      },
+      "source_attribution": "Al Jazeera",
       "story_id": "gaza-story-2026-10-03-003",
-      "title": "Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters",
-      "classification": "major_update",
-      "material_update": false,
-      "material_update_reasons": [],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-10-03-005",
-      "title": "Israeli air attack on residential apartment in Gaza kills 5 Palestinians",
-      "classification": "major_update",
-      "material_update": false,
-      "material_update_reasons": [],
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-10-03-001",
-      "title": "MEDICAL EVACUATION OF PATIENTS FROM GAZA 2806 (27%) 11 363 5646 10 382 3386 - emro.who.int",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "include_decision": "include",
-      "public_rendered": true
+      "target_identity_fingerprint": "sha256:6fc0440fc96e4b5155696301317f798748d4027fbe19e977a7c259dcc1e715ef",
+      "withdrawal_fingerprint": "sha256:913e73457d0a021f4a37e0ea2e8379756a6360f1b73d0f06135e9283c349ba28",
+      "withdrawal_reason": "The story concerns a West Bank-only Beita/Nablus settler and soldier incident and does not materially concern Gaza; it was incorrectly included in the October 3, 2026 Gaza edition and should be withdrawn from that edition and affected derivative artifacts."
     }
   ],
+  "dispatch_slug": "gaza",
+  "duplicate_groups": [],
   "duplicate_skipped": [],
-  "continuing_developments": [],
-  "major_updates": [
+  "edition_date": "2026-10-03",
+  "included_stories": [
     {
-      "story_id": "gaza-story-2026-10-03-003",
-      "title": "Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters",
-      "classification": "major_update",
-      "material_update": false,
-      "material_update_reasons": [],
-      "duplicate_reasons": [],
-      "watchlist_status": "publication_candidate",
-      "prior_story_matched": "gaza-story-2026-09-02-009",
-      "prior_edition_date": "2026-09-02",
+      "classification": "new",
       "include_decision": "include",
-      "public_rendered": true
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "public_rendered": true,
+      "story_id": "gaza-story-2026-10-03-004",
+      "title": "Palestinians gather for football amid Gaza's ruins"
     },
     {
-      "story_id": "gaza-story-2026-10-03-005",
-      "title": "Israeli air attack on residential apartment in Gaza kills 5 Palestinians",
       "classification": "major_update",
+      "include_decision": "include",
       "material_update": false,
       "material_update_reasons": [],
-      "duplicate_reasons": [],
-      "watchlist_status": "publication_candidate",
-      "prior_story_matched": "gaza-story-2026-09-30-005",
-      "prior_edition_date": "2026-09-30",
+      "public_rendered": true,
+      "story_id": "gaza-story-2026-10-03-005",
+      "title": "Israeli air attack on residential apartment in Gaza kills 5 Palestinians"
+    },
+    {
+      "classification": "new",
       "include_decision": "include",
-      "public_rendered": true
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "public_rendered": true,
+      "story_id": "gaza-story-2026-10-03-001",
+      "title": "MEDICAL EVACUATION OF PATIENTS FROM GAZA 2806 (27%) 11 363 5646 10 382 3386 - emro.who.int"
+    }
+  ],
+  "major_updates": [
+    {
+      "classification": "major_update",
+      "duplicate_reasons": [],
+      "include_decision": "include",
+      "material_update": false,
+      "material_update_reasons": [],
+      "prior_edition_date": "2026-09-30",
+      "prior_story_matched": "gaza-story-2026-09-30-005",
+      "public_rendered": true,
+      "story_id": "gaza-story-2026-10-03-005",
+      "title": "Israeli air attack on residential apartment in Gaza kills 5 Palestinians",
+      "watchlist_status": "publication_candidate"
     }
   ],
   "merged_sources": 0,
-  "duplicate_groups": [],
-  "reasons": [
-    {
-      "story_id": "gaza-story-2026-10-03-004",
-      "title": "Palestinians gather for football amid Gaza's ruins",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "duplicate_reasons": [],
-      "watchlist_status": "material_follow_up",
-      "prior_story_matched": null,
-      "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-10-03-003",
-      "title": "Israeli settlers attack farmers in West Bank pogrom, soldiers hit reporters",
-      "classification": "major_update",
-      "material_update": false,
-      "material_update_reasons": [],
-      "duplicate_reasons": [],
-      "watchlist_status": "publication_candidate",
-      "prior_story_matched": "gaza-story-2026-09-02-009",
-      "prior_edition_date": "2026-09-02",
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-10-03-005",
-      "title": "Israeli air attack on residential apartment in Gaza kills 5 Palestinians",
-      "classification": "major_update",
-      "material_update": false,
-      "material_update_reasons": [],
-      "duplicate_reasons": [],
-      "watchlist_status": "publication_candidate",
-      "prior_story_matched": "gaza-story-2026-09-30-005",
-      "prior_edition_date": "2026-09-30",
-      "include_decision": "include",
-      "public_rendered": true
-    },
-    {
-      "story_id": "gaza-story-2026-10-03-001",
-      "title": "MEDICAL EVACUATION OF PATIENTS FROM GAZA 2806 (27%) 11 363 5646 10 382 3386 - emro.who.int",
-      "classification": "new",
-      "material_update": true,
-      "material_update_reasons": [
-        "new_story"
-      ],
-      "duplicate_reasons": [],
-      "watchlist_status": "material_follow_up",
-      "prior_story_matched": null,
-      "prior_edition_date": null,
-      "include_decision": "include",
-      "public_rendered": true
-    }
-  ],
   "prior_editions_checked": [
     "2026-10-02",
     "2026-10-01",
@@ -265,5 +244,50 @@
     "2026-05-04",
     "2026-05-03",
     "2026-04-30"
+  ],
+  "reasons": [
+    {
+      "classification": "new",
+      "duplicate_reasons": [],
+      "include_decision": "include",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "prior_edition_date": null,
+      "prior_story_matched": null,
+      "public_rendered": true,
+      "story_id": "gaza-story-2026-10-03-004",
+      "title": "Palestinians gather for football amid Gaza's ruins",
+      "watchlist_status": "material_follow_up"
+    },
+    {
+      "classification": "major_update",
+      "duplicate_reasons": [],
+      "include_decision": "include",
+      "material_update": false,
+      "material_update_reasons": [],
+      "prior_edition_date": "2026-09-30",
+      "prior_story_matched": "gaza-story-2026-09-30-005",
+      "public_rendered": true,
+      "story_id": "gaza-story-2026-10-03-005",
+      "title": "Israeli air attack on residential apartment in Gaza kills 5 Palestinians",
+      "watchlist_status": "publication_candidate"
+    },
+    {
+      "classification": "new",
+      "duplicate_reasons": [],
+      "include_decision": "include",
+      "material_update": true,
+      "material_update_reasons": [
+        "new_story"
+      ],
+      "prior_edition_date": null,
+      "prior_story_matched": null,
+      "public_rendered": true,
+      "story_id": "gaza-story-2026-10-03-001",
+      "title": "MEDICAL EVACUATION OF PATIENTS FROM GAZA 2806 (27%) 11 363 5646 10 382 3386 - emro.who.int",
+      "watchlist_status": "material_follow_up"
+    }
   ]
 }
